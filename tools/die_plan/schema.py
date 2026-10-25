@@ -989,6 +989,13 @@ def tap_grid(P, tn):
     only ADDS sink-anchored taps (taps.py) for face-register clusters after the grid taps, numbered on from the grid;
     a sink tap within taps.SEP_UM of a grid tap is dropped (same spine drop)."""
     t = P.types[tn]
+    if t.get("hard") and not t.get("hard_cores"):
+        # A bare hard macro (e.g. a PHY with registered FDI pins, COORD 10-25 11:31 option B) has ONE physical clock
+        # terminal, its LEF/lib clk pin at clock.tap_um: no R4 grid, no sink taps.  Same rule as die_clock.plan_taps,
+        # so the die tree, the die top, the kit stand-ins and the binder agree on the macro clock ports.
+        xy = t.get("clock", {}).get("tap_um")
+        if isinstance(xy, (list, tuple)) and len(xy) == 2:
+            return [("clk", float(xy[0]), float(xy[1]))]
     if t.get("clock", {}).get("tap_mode") == "density":
         import taps
         return [(n, x, y) for n, x, y, _, _ in taps.density_taps(P, tn)]
