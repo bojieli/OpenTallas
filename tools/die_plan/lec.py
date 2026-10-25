@@ -765,22 +765,28 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
         st[m.onames[i]] = "differs" if lit_val(val, mask, m.outs[i]) else "undecided"
     left = [i for i in left if st[m.onames[i]] == "undecided"]
     pending = left[:single_cap]
-    if pending:
+    # one cone at a time: naive SAT (x10 the sweep's conflicts), then what it leaves UNDECIDED (a solver limit, not a
+    # difference) by SAT sweeping inside the cone (&cec -m without -n, x100 / x1000): wide XOR trees (ECC encoders)
+    # that naive SAT cannot finish collapse there (PATH-KV-PC4 10-25: 77 kvs_pc ECC / write-queue cones undecided at
+    # 1M naive conflicts, each proved by &cec -m in ~1 s).  Only what no pass answers stays undecided.
+    for opt, factor in (("-n -m", 10), ("-m", 100), ("-m", 1000)):
+        if not pending:
+            break
         from concurrent.futures import ThreadPoolExecutor
         jobs = max(1, PROVE_JOBS)
         size = len(pending) if jobs == 1 else max(1, (len(pending) + jobs * 4 - 1) // (jobs * 4))
         batches = [pending[i:i+size] for i in range(0, len(pending), size)]
-        def one_batch(ids):
-            script = [f"&r {swept}; &cone -O {i}; &cec -n -m -C {conflicts * 10}" for i in ids]
+        def one_batch(ids, factor=factor, opt=opt):
+            script = [f"&r {swept}; &cone -O {i}; &cec {opt} -C {conflicts * factor}" for i in ids]
             # one command per line in a script file (abc -f): a long batch passed as one -c argument exceeds the
             # kernel per-argument limit (MAX_ARG_STRLEN 128 KiB; OSError E2BIG on the 48k-output kvs_pc miters)
-            sf = work / f"{tag}_cones_{ids[0]}_{ids[-1]}.abc"
+            sf = work / f"{tag}_cones_{ids[0]}_{ids[-1]}_x{factor}{opt.replace(' ', '')}.abc"
             sf.write_text("\n".join(script) + "\n")
             r = subprocess.run([abc, "-f", str(sf)], capture_output=True, text=True)
             return ids, r.stdout + r.stderr
         with ThreadPoolExecutor(max_workers=jobs) as ex:
             for ids, t in ex.map(one_batch, batches):
-                log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]}\n{t}")
+                log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]} (&cec {opt} conflicts x{factor})\n{t}")
                 # Naive SAT reports one aggregate line for a nontrivial cone; trivial
                 # cones use the CEC sentence. Keep UNDECIDED in sequence: dropping it
                 # would shift a later proof onto the wrong output.
@@ -796,6 +802,7 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
                                    "differs" if (u, sat, undec) == (0, 1, 0) else "undecided")
                 for i, status in zip(ids, res):
                     st[m.onames[i]] = status
+        pending = [i for i in pending if st[m.onames[i]] == "undecided"]
     return st
 
 

@@ -251,7 +251,7 @@ def test_naive_cone_unknown_does_not_shift_later_status(tmp_path, monkeypatch):
         if '&fraig' in script:
             (tmp_path / 'mixed_swept.aig').touch()
             return SimpleNamespace(stdout='Undef calls 3', stderr='')
-        assert '&cec -n -m' in script
+        assert '&cec -n -m' in script or '&cec -m' in script     # naive pass, then SAT-sweeping escalation
         ids = [int(i) for i in re.findall(r'&cone -O (\d+)', script)]
         replies = ['UNSAT = 0. SAT = 0. UNDEC = 1. Trivial = 0.',
                    'Networks are equivalent. Time = 0.0 sec',
@@ -397,3 +397,34 @@ def test_hint_pairs_a_rare_event_twin_and_a_wrong_hint_is_dropped(tmp_path, monk
 def test_hints_are_read_from_the_kit_and_passed_into_the_image():
     s = Path(lec.__file__).read_text()
     assert 'Path(kit) / "lec_hints.json"' in s and '"--hints", "/lecout/hints.json"' in s
+
+
+def test_undecided_naive_cone_escalates_to_sat_sweeping(tmp_path, monkeypatch):
+    """PATH-KV-PC4 10-25: an ECC XOR cone naive SAT cannot finish (UNDEC) is retried with &cec -m (SAT sweeping
+    inside the cone), where it is proved; a cone every pass leaves open stays undecided (never 'proved')."""
+    import re
+    from types import SimpleNamespace
+    m = lec.Aig()
+    x = m.add_input('x')
+    m.outs, m.onames = [x, x], ['xor_tree', 'hard']
+    monkeypatch.setattr(lec, 'abc_bin', lambda: 'fake-abc')
+    monkeypatch.setattr(lec, 'aig_outputs', lambda p: [2, 2])
+    monkeypatch.setattr(lec, 'lit_val', lambda *args: 0)
+    monkeypatch.setattr(lec, 'PROVE_JOBS', 1)
+    seen = []
+    def run(args, **kwargs):
+        script = Path(args[-1]).read_text() if args[1] == "-f" else args[-1]
+        if '&fraig' in script:
+            (tmp_path / 'esc_swept.aig').touch()
+            return SimpleNamespace(stdout='Undef calls 2', stderr='')
+        out = []
+        for line in script.splitlines():
+            i = int(re.search(r'&cone -O (\d+)', line)[1])
+            naive = '&cec -n -m' in line
+            seen.append((i, naive))
+            out.append('UNSAT = 0. SAT = 0. UNDEC = 1. Trivial = 0.' if naive or i == 1 else
+                       'Networks are equivalent. Time = 1.2 sec')
+        return SimpleNamespace(stdout='\n'.join(out), stderr='')
+    monkeypatch.setattr(lec.subprocess, 'run', run)
+    assert lec.prove(m, tmp_path, 100, [], tag='esc') == {'xor_tree': 'proved', 'hard': 'undecided'}
+    assert (0, True) in seen and (0, False) in seen and seen.count((0, False)) == 1   # proved once: not retried
