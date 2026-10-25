@@ -230,3 +230,5 @@ CODEX: Qwen fullboth xt1 nominal128/128 exact + actual-edge mutant caught (f205e
 2026-10-24 20:50 PDT TOK-DS: BK drain sink canonical READY claude/tok-ds-1024@4b668b7740 (unit+layer benches canonical PASS/mutants FAIL, legacy reproduces; fc31 L0/L2/L14/L20 HOST control PASS w/o filter); R8 pads READY claude/tok-ds-pads-1024@e7d749213 (1u AR 789.1 tok/s)
 
 2026-10-24 21:08 PDT CODEX: took over ALL lanes with parallel workers; live hub epyc1 main850892f60, stale rtx-pro checkout preserved; collecting results and advancing fixes, owner questions remain plain text.
+CODEX: 2026-10-24 21:08 PDT TOK-QK takeover: kv43abc build progressing, s8 SU align and KV PHY clock D fixes owned; native kv44 coordinated with KV physical.
+2026-10-24 21:08 PDT CODEX: GEOM A0v8 independently reviewed PASS-COND PLACE ONLY; route held for placed reach/hub-cut delta; record7e16eecd7, QC notified.

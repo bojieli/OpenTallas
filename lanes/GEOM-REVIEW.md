@@ -89,3 +89,6 @@ Checklist now includes "reset distribution matches the owner rule" (TILE_BRIEF.m
   Head-column cut ratios v7 1.4-1.65 -> v8 0.16-0.49 (uniform); open: hub-interior H cuts 0.61-0.70 uniform (0.24-0.36 point),
   reader->rung1 hops 507 um / u_qlr3 517-522 um (> 405 plan reach, < measured 600-750), grid taps ck/ck_t1/ck_t2 near-empty.
   No P&R until your verdict.
+
+## CODEX notes
+2026-10-24 21:08 PDT CODEX took over independent review on codex/geom-1024. A0v8 NK/NL @39e12308a8: PASS-COND PLACE ONLY, all six floorplan/zone/cuts PNGs viewed. Head banks colocated and E-column pins face common channel. Before CTS/GRT/route: placed density/hub cuts + actual reader/rung1 timing budget (507/517-522 um above405; reposition or priced relays), tap/plan integration. Record codex/geom-1024@7e16eecd7. Next B2m die delta review.
