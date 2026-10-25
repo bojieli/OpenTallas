@@ -27,7 +27,7 @@ The "four clusters / one per stack" picture is the old r25gq monolithic die (4 P
 | (2) H-tree clock built in OpenROAD | 2045 taps; insertion SS/TT/FF 5.81 / 4.72 / 3.98 ns mean; seam skew without OCV 54.5 / 45.1 / 38.5 ps (68 / 56 / 48 % of 80); **with +/-5 % OCV after CPPR 594 / 483 / 407 ps** | **FAIL** (R4 seam <= 80 holds only without OCV) |
 | (3) die global route of all lane hops | **0 overflow** on M4-M9 at every own-logic derate tried (M4-M7 keep 50 / 25 / 10 / 3 %) vs **1,374,522** on the old monolithic die. Local hot windows exceed the plan's M8/M9 ft budget of 0.6 | **PASS** (route) / **WARN** (ft budget) |
 | (4a) die fabric STA, budget mode (flop -> flop per hop, GRT RC, ideal common clock) | unbuffered: TT -1045 ps, 2.85M slew violations. Window repair_design: SS -95.7 / TT +83.8 ps at +87 % cell area. Codex BUF12 every <= 200 um: TT +358.7 / FF +74.5 ps (40-path vehicle). Hold FF -2.07 ps on 1277 abutted hops **at zero skew** | **FAIL** as planned (needs repeaters + seam hold pads) |
-| (4b) IR (PDNSim, estimated power 642.7 W = 1.39 W/mm2) | rail sum on exact-grid windows: hub 12.7 / PHY_N+corridor 29.6 PASS; SM 47.0 (31.7 interior); **SerDes io 146 / spb0 203 mV** vs 35 mV; full exact die NOT COMPLETED (pdngen > 4 h); coarse full die running | **FAIL** (SerDes at 12.1 W/mm2; SM edge) |
+| (4b) IR (PDNSim, estimated power 642.7 W = 1.39 W/mm2) | rail sum on exact-grid windows: hub 12.7 / PHY_N+corridor 29.6 PASS; SM 47.0 (31.7 interior); **SerDes io 146 / spb0 203 mV** vs 35 mV; full exact die NOT COMPLETED (pdngen > 4 h); coarse full die (4x grid) 880 mV, relative only (bump/stripe aliasing: hub 92 vs 12.7 exact) | **FAIL** (SerDes at 12.1 W/mm2; SM edge) |
 
 ## (3) Die global route: the 0.55 / 1.70x question
 
@@ -66,7 +66,7 @@ The "four clusters / one per stack" picture is the old r25gq monolithic die (4 P
 
 ## (4a) Fabric timing, budget mode
 
-DIE-STA's ILM / flat modes need routed partitions, and B2r2 has none. The fabric STA times every hop flop -> flop on die GRT parasitics instead. Corners SS/TT setup and FF hold; 60/25 ps uncertainty; period 833.333 ps. The leaf -> face-flop paths are inside the partitions and are not timed here.
+DIE-STA's ILM / flat modes need routed partitions, and B2r2 has none. The fabric STA times every hop flop -> flop on die GRT parasitics instead. Sign-off is TT setup / FF hold (SS numbers are information only, never a gate); 60/25 ps uncertainty; period 833.333 ps. The leaf -> face-flop paths are inside the partitions and are not timed here.
 
 **Hop lengths:**
 - median 671 um;
