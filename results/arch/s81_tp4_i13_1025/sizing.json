@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.s81.tp4.i13_model.v1",
+  "status": "SIZED_BEFORE_RTL",
+  "clock_ps": 833,
+  "macs_per_cycle": 0,
+  "replicas_per_bk_partition": 1,
+  "precision": "scores16 BF16, exact original20bit index; no arithmetic/reduction reorder",
+  "throughput": {
+    "lookups_per_cycle": 1,
+    "candidates_per_i13_word": 13,
+    "link_bits_per_cycle": 276,
+    "link_beats_per_word": 2,
+    "i13_words_upper": 44,
+    "link_beats_upper": 88,
+    "lookup_cycles": 512,
+    "lookup_pipeline_edges": 3,
+    "reserved_grid_slots": 640,
+    "added_rank_headers_upper": 4
+  },
+  "memory": {
+    "dense_bits": 2097152,
+    "dense_read_bytes_per_cycle": 32,
+    "dense_write_bytes_per_cycle": 32,
+    "candidate_cache_bits": 73728,
+    "cache_entries_per_bank": 1024,
+    "cache_banks": 2,
+    "input_fifo_words": 128,
+    "input_fifo_bits": 62592,
+    "worst_input_candidates": 1024,
+    "lookup_cache_read_bits_per_cycle": 36864,
+    "cache_write_bits_per_cycle": 36
+  },
+  "crossing": {
+    "inputs": [
+      "vi276",
+      "vo276"
+    ],
+    "outputs": [
+      "lo276",
+      "st16"
+    ],
+    "extra_pins": 0,
+    "external_cycles": 0,
+    "same_pin_windows": true,
+    "signals_layers": "M1-M7; clock/reset/PG M8-M9"
+  },
+  "floorplan": {
+    "slot_um": [
+      626.4,
+      561.6
+    ],
+    "slot_area_um2": 351786.24,
+    "native_dense_sram_area_proxy_um2": 56774.75788800001,
+    "new_data_control_ff_bits": 139944,
+    "new_logic_cells_proxy": 60864,
+    "total_cells_proxy": 200808,
+    "hard_cap_cells": 400000,
+    "stdcell_area_proxy_um2": 48111.3504,
+    "free_area_after_sram_um2": 295011.482112,
+    "standard_cell_fill_proxy": 0.16308297580680167,
+    "physical_status": "NOT FIT/CTS/ROUTE; render channels and RAM groups after synthesis"
+  },
+  "latency": {
+    "old_dense_slot_budget": 1600,
+    "new_i13_slot_budget": 640,
+    "per_tp_stage_max_cycles": 643,
+    "full_two_stage_core_cycles": 1286,
+    "link_plan_cycles": "added from current six-lane plan, not assumed away",
+    "model_admission": "candidate only; measured RTL and composed schedule must replace640 before claim"
+  },
+  "gates": {
+    "sizing": true,
+    "exact_rtl": false,
+    "production_throughput": false,
+    "physical": false
+  },
+  "failure_policy": [
+    "tag miss faults",
+    "duplicate ID faults",
+    "out-of-order quarter faults",
+    "no host/fixture fallback",
+    "input FIFO overflow faults"
+  ]
+}
