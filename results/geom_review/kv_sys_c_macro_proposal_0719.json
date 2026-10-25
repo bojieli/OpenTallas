@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "type": "kv3_sys_c",
+ "image": "results/geom_review/kv_sys_c_macro_proposal_0719.png",
+ "verdict": "PASS-COND",
+ "scope": "macro placement proposal only, no P&R or route approval",
+ "findings": [
+  "Viewed5macro floorplan. UCIe777.6square atScentre keeps both W/E logic regions~691umwide and freeNinterface band241.92umhigh. NfaceFDIpinsface openchannel. Four57.912x67.512SRAMs form one short stack W ofPHY, their Wpinfaces see open~596umlogicregion; SRAM->PHYgap37.128um, no macro wall/sliver.",
+  "Native bound-kit synthesis contains exactly4p288SRAM+1UCIe, notallmodules listed as candidatehardmacros. Names/views inresults/kv_kits_0719/sys_c_macro_proposal/proposal.json. Physicalviews areacademicmemory/licensedPHYabstracts.",
+  "Currentf5FWDresetlink and implicitFT1 crossmacrooutlines: FAIL until registeredNcorridor detour and latency/R8price. CurrentG2macro-lessCLEANdoesnotapply. Mustre-runG2withrealM4/M5OBSaftercorrection.",
+  "SeparatePHY PG+bump domain and legalmacroavoiding clock/reset taps required before G3. SRAMcapture flops share regionalmacroclock basis."
+ ]
+}
