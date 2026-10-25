@@ -24,7 +24,12 @@ VTRACK = {'M3': (.036, .009), 'M5': (.048, .024), 'M7': (.064, .032)}
 def write():
     old = json.loads((D/'inputs/core_pins/dsfd_su_t_rxsf.json').read_text())
     lef = subprocess.check_output(['git', '-C', str(REPO), 'show', 'HEAD:'+old['lef']], text=True)
-    pins = copy.deepcopy(old['pins'])
+    # Preserve the accepted W-clock / W-output spreading structural remedy.
+    # This exact seed is the source pin contract of the in-flight rxsf_w kit.
+    seed = json.loads((HERE/'rxsf_w_0719_pins.json').read_text())
+    pins = [dict(name=p['bus']+(f"[{p['bit']}]" if p['bit'] is not None else ''),
+                 layer=p['layer'],x=p['x'],y=p['y']) for p in seed]
+    assert {p['name'] for p in pins} == {p['name'] for p in old['pins']}
     moved = []
     for p in pins:
         if p['name'] == 'i_v' or re.fullmatch(r'i_x\[\d+\]', p['name']):
@@ -54,7 +59,6 @@ def write():
         def block(m):
             name=m[1]
             if name not in by:return m[0] if re.search(r'USE\s+(POWER|GROUND)',m[0]) else ''
-            if variant=='north' and name not in moved:return m[0]
             p=by[name]; x,y=p['x'],p['y']
             vertical=p['layer'] in VTRACK
             dx,dy=(.009,.042) if vertical else (.042,.012)
@@ -71,7 +75,7 @@ def write():
             txt=a+b
         rel=f'physical/die_plan/s81/cores/leaf/lef/dsfd_su_t_rxsf_{variant}.lef'
         (REPO/rel).write_text(txt)
-        data=dict(module='dsfd_su_t_rxsf',lef=rel,source=f'LEAF0719 planned {variant} successor: 33 input pins N/M3, base outputs preserved W; 0 RTL cycles; NOT SIGNED',
+        data=dict(module='dsfd_su_t_rxsf',lef=rel,source=f'LEAF0719 planned {variant} successor: 33 input pins N/M3 on accepted rxsf_w clock/output-spread seed; 0 RTL cycles; NOT SIGNED',
                   pinhash=hashlib.sha256(json.dumps(pp,sort_keys=True).encode()).hexdigest()[:12],pins=pp)
         (D/f'inputs/core_pins/dsfd_su_t_rxsf_{variant}.json').write_text(json.dumps(data,indent=1)+'\n')
         print(variant,len(pp),'pins',data['pinhash'])
