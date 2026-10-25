@@ -229,3 +229,13 @@ def test_top_level_gate_scripts_propagate_before_first_estimate(name):
     est = [i for i, ln in enumerate(lines) if "estimate_parasitics" in ln]
     prop = [i for i, ln in enumerate(lines) if "set_propagated_clock" in ln]
     assert est and prop and min(prop) < min(est), name
+
+
+def test_ff_grt_step_runs_cts_in_kit_corners_first():
+    """CLOCK-RESET 10-25 (KV core canary TT -222.85): `make grt CORNERS=bc` builds every missing prerequisite, so the
+    floorplan .. CTS repair must already exist (built in the kit's own tc+bc corners) before the FF-only GRT step."""
+    import core_flow
+    s = core_flow.FF_GRT_STEP
+    assert s.index("\\$M cts;") < s.index("\\$M grt CORNER=BC CORNERS=bc")
+    kv = (Path(__file__).resolve().parents[2] / "physical/die_plan/qwen_kvsys/cores/harden/run_kit_kv.sh").read_text()
+    assert kv.index("\\$M cts;") < kv.index("\\$M grt CORNER=BC CORNERS=bc")
