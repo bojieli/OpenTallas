@@ -1,0 +1,4 @@
+IDX_VM_QUERY_N12 MUT8 rq_rly1 rr_rly2 commits514 reads514 blocks128 quant32 errors0 fault0 firstblock34 lastblock288 firstquant314
+L74_IDX_PERIOD period=2 req_phase=1 rr_phase=1 phase_errors=1024
+FATAL: rtl/test/hbm_idx_static/tb_vm_query_n12.sv:100: L74 request/response parity mismatch
+       Time: 4270000  Scope: tb_vm_query_n12
