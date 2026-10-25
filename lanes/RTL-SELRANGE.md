@@ -147,3 +147,5 @@ Earlier forms of xrt (lines 270/383/395/419/532/551) and kv_bank (236-240) exist
 
 ## CODEX notes 2026-10-25 02:43 PDT
 Standalone approved checker fc4d5fa9c supplied to KV cores and CLOCK/CP1 runner integration. Whole-runner adoption waits source-local S81 benign-select waivers; csa31 real fix already merged. Old redo paths absent and PIDs gone; no live job duplicated.
+
+2026-10-25 02:54 PDT CODEX source waivers ready codex/selrange-waivers-1025@3fb680539 basedbatchf19254160:4files9 source-local comments, eachselect+constantguard+triage section3 reference; comment-stripped tokenexactnessPASS. Source/runtime semantics unchanged. Sentroot+commonrunner owner.
