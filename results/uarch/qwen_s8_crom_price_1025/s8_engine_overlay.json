@@ -1,0 +1,28 @@
+{
+ "engine_sc_hop": 4,
+ "engine_st_hop": 4,
+ "rewritten_sites": {
+  "tools/qwen_layerbench/dv_lower_vec.py: 2 * (N - 1 - s)": 3,
+  "tools/qwen_layerbench/dv_lower_vec.py: 2 * max(s, N - 1 - s)": 1,
+  "tools/qwen_layerbench/dv_lower_xhead.py: e5 - 2 * (n - 1 - s)": 1,
+  "tools/qwen_layerbench/dv_lower_xhead.py: e_s + 2 * abs(m - s)": 1,
+  "tools/qwen_layerbench/dv_layer.py: ['ssq_psum_out'][-1] + 2 * (N - 1) + 61": 1,
+  "tools/qwen_layerbench/dv_lower_mat.py: ['ssq_psum_out'][-1] + 2 * (N - 1) + 61": 1
+ },
+ "dropped_dv_age_deltas": {
+  "per_su_command": 18,
+  "vm_write_extra": 3,
+  "keys": {
+   "slice": [
+    "ssq_psum_out"
+   ],
+   "vec": [
+    "add_psum_out",
+    "xs_out",
+    "silu_out",
+    "red_vm",
+    "d2d"
+   ]
+  }
+ }
+}

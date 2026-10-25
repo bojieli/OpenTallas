@@ -168,7 +168,8 @@ def qkv_roles(own):
     for b in own['qkv']['blocks']:
         role = 'q' if b['block'] < NQ else ('k' if b['block'] == NQ else 'v')
         out[b['slice']] = dict(block=b['block'], role=role, head=b['block'] if role == 'q' else 0)
-    if sorted(out) != [0, 2, 4, 6, 8, 10]:
+    receivers = [1, 3, 5, 6, 8, 10] if D.SLICE_RTL == 's8' else [0, 2, 4, 6, 8, 10]
+    if sorted(out) != receivers:
         raise LowerError(f'qkv receivers {sorted(out)}')
     return out
 
