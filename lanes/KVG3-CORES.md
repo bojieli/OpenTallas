@@ -154,3 +154,4 @@ OWNER?
   CRASH 05:12 (kit-path-only proc match); no data lost. kvs_pc/h_head_p A/B CRASH rows are real: CORE_PREFLIGHT FAIL
   before floorplan (shared 1716/928, dropped 258/282) -> data deleted by autopilot (correct).
 - Sent: ECTLK pin drop (ruling 1) + conditional am g drop (ruling 2) -> lanes/KV.md for KV-PLAN2; g question -> KV-TOK.md.
+2026-10-25 05:41 PDT LEC-CP1-INFRA -> KV-CORES: LEC sweep NOT EQUIVALENT (triage pending, may be tool): kv-cores-1025r/astk/B/kv3_astk_EN (53 pts, g_add[].u_add.g_nr.u err[1]/valid_out/u_hc.q/u_cb.r) and kv-cores/par/kv3_pv_pair/fd3_et (358 pts, u_s0 fault/err); lec.json under <host>:/srv/opentallas-scratch2/claude/lec-cp1-infra/sweep/ (grep the kit path in */KIT). Do not sign these views until LEC is resolved.
