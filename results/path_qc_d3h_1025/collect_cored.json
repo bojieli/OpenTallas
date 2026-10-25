@@ -1,0 +1,1117 @@
+{
+ "cbn_q00": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 23699524,
+    "demand": 260693,
+    "usage_pct": 1.1,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 26571572,
+    "demand": 1629719,
+    "usage_pct": 6.13,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 19896528,
+    "demand": 162375,
+    "usage_pct": 0.82,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 19917380,
+    "demand": 779566,
+    "usage_pct": 3.91,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 39661626,
+    "demand": 38228,
+    "usage_pct": 0.1,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 39678496,
+    "demand": 66385,
+    "usage_pct": 0.17,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 0,
+  "wirelength_um": 1699672.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "capacity_valid": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "cbn_q00",
+  "instance": "c_W5_bn_00",
+  "outline_um": [
+   1235.52,
+   2609.28
+  ],
+  "pins": 5158,
+  "flops": 9644,
+  "leaf_blockages": 4,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 30,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "status": "DONE",
+  "gap_repeaters": {
+   "passes": [
+    {
+     "stage": "place",
+     "moved": 45,
+     "new": 8516
+    },
+    {
+     "stage": "grt",
+     "moved": 0,
+     "new": 0
+    }
+   ],
+   "moved": 45,
+   "last_pass_moved": 0,
+   "passed": false,
+   "fail": 7,
+   "islands": null,
+   "max_dx_um": null,
+   "max_dy_um": null,
+   "max_ribbon_dev_um": null,
+   "unrepeatable": 26
+  },
+  "sta": {
+   "tt_setup_wns": 210.84,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 10133,
+   "ff_hold_wns": -2.07,
+   "ff_hold_tns": -76.1,
+   "ff_hold_viol": 76,
+   "ff_hold_endpoints": 10133
+  },
+  "repair_buffers": 8546,
+  "drv": {
+   "violators": 515,
+   "source": "drv_class.tsv",
+   "internal_slew": 0,
+   "internal_cap": 0,
+   "port_leg_slew": 0,
+   "port_leg_cap": 0,
+   "port_pin_slew": 515,
+   "port_pin_slew_max_ps": 909.8,
+   "port_pin_cap": 0,
+   "internal_worst": []
+  },
+  "peak_gb": 21.82,
+  "wall": "2:01.36",
+  "hot_gcells": 0,
+  "displacement_um": {
+   "st": {
+    "max": 5.3,
+    "p90": 0.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 5.7,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 1,
+   "max_hop_um": 369.33,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {},
+   "actual_sites": true,
+   "errors": [],
+   "station_cells": 5150,
+   "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins"
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "skeleton FF hold WNS -2.1 ps (76 endpoints); repeater island check failed (7 of 45 island repeaters in a core or off the ribbon); 26 repeaters on hard-core crossings longer than the 290-um single-span reach (plan item: re-aspect the core or route the ribbon through a repeater channel); port legs: 0 driver + 515 port max-slew (die hop, last station -> neighbour first station, in the die reach scan)",
+   "hot_frac": 0.0
+  }
+ },
+ "cbn_q01": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 23925228,
+    "demand": 710835,
+    "usage_pct": 2.97,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 26826257,
+    "demand": 2448712,
+    "usage_pct": 9.13,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 20089302,
+    "demand": 589272,
+    "usage_pct": 2.93,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 20108390,
+    "demand": 1117109,
+    "usage_pct": 5.56,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 39793752,
+    "demand": 126575,
+    "usage_pct": 0.32,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 39808561,
+    "demand": 78275,
+    "usage_pct": 0.2,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 0,
+  "wirelength_um": 2931011.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "capacity_valid": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "cbn_q01",
+  "instance": "c_W5_bn_01",
+  "outline_um": [
+   1235.52,
+   2617.92
+  ],
+  "pins": 5158,
+  "flops": 12237,
+  "leaf_blockages": 4,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 30,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "status": "DONE",
+  "gap_repeaters": {
+   "passes": [
+    {
+     "stage": "place",
+     "moved": 4,
+     "new": 15390
+    },
+    {
+     "stage": "grt",
+     "moved": 1,
+     "new": 8
+    },
+    {
+     "stage": "grt",
+     "moved": 0,
+     "new": 0
+    }
+   ],
+   "moved": 5,
+   "last_pass_moved": 0,
+   "passed": true,
+   "fail": 0,
+   "islands": 5,
+   "max_dx_um": 2.91,
+   "max_dy_um": 0.065,
+   "max_ribbon_dev_um": 2.91,
+   "unrepeatable": 537
+  },
+  "sta": {
+   "tt_setup_wns": 238.65,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 13241,
+   "ff_hold_wns": -2.44,
+   "ff_hold_tns": -82.3,
+   "ff_hold_viol": 80,
+   "ff_hold_endpoints": 13241
+  },
+  "repair_buffers": 15428,
+  "drv": {
+   "violators": 594,
+   "source": "drv_class.tsv",
+   "internal_slew": 0,
+   "internal_cap": 0,
+   "port_leg_slew": 22,
+   "port_leg_slew_max_ps": 335.06,
+   "port_leg_cap": 0,
+   "port_pin_slew": 572,
+   "port_pin_slew_max_ps": 857.92,
+   "port_pin_cap": 0,
+   "internal_worst": []
+  },
+  "peak_gb": 22.1,
+  "wall": "2:56.96",
+  "hot_gcells": 0,
+  "displacement_um": {
+   "st": {
+    "max": 3.4,
+    "p90": 0.2,
+    "over50": 0
+   },
+   "bf": {
+    "max": 4.5,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 370.008,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {},
+   "actual_sites": true,
+   "errors": [],
+   "station_cells": 8755,
+   "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins"
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "skeleton FF hold WNS -2.4 ps (80 endpoints); 5 over-core repeaters in islands (max dx 2.91 / dy 0.065 um, last pass moved 0); 537 repeaters on hard-core crossings longer than the 290-um single-span reach (plan item: re-aspect the core or route the ribbon through a repeater channel); port legs: 22 driver + 572 port max-slew (die hop, last station -> neighbour first station, in the die reach scan)",
+   "hot_frac": 0.0
+  }
+ },
+ "cbn_q11": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 23931680,
+    "demand": 21012,
+    "usage_pct": 0.09,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 26814071,
+    "demand": 37020,
+    "usage_pct": 0.14,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 20089302,
+    "demand": 6518,
+    "usage_pct": 0.03,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 20116514,
+    "demand": 11766,
+    "usage_pct": 0.06,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 39793752,
+    "demand": 3901,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 39808561,
+    "demand": 14067,
+    "usage_pct": 0.04,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 0,
+  "wirelength_um": 59222.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "capacity_valid": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "cbn_q11",
+  "instance": "c_W5_bn_11",
+  "outline_um": [
+   1235.52,
+   2617.92
+  ],
+  "pins": 4128,
+  "flops": 4376,
+  "leaf_blockages": 4,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 30,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "status": "DONE",
+  "gap_repeaters": {
+   "passes": [
+    {
+     "stage": "place",
+     "moved": 0,
+     "new": 164
+    },
+    {
+     "stage": "grt",
+     "moved": 0,
+     "new": 0
+    }
+   ],
+   "moved": 0,
+   "last_pass_moved": 0,
+   "passed": true,
+   "fail": 0,
+   "islands": 0,
+   "max_dx_um": 0.0,
+   "max_dy_um": 0.0,
+   "max_ribbon_dev_um": 0.0,
+   "unrepeatable": 8
+  },
+  "sta": {
+   "tt_setup_wns": 369.36,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 4346,
+   "ff_hold_wns": -2.14,
+   "ff_hold_tns": -69.4,
+   "ff_hold_viol": 56,
+   "ff_hold_endpoints": 4346
+  },
+  "repair_buffers": 194,
+  "drv": {
+   "violators": 0,
+   "source": "drv_class.tsv",
+   "internal_slew": 0,
+   "internal_cap": 0,
+   "port_leg_slew": 0,
+   "port_leg_cap": 0,
+   "port_pin_slew": 0,
+   "port_pin_cap": 0,
+   "internal_worst": []
+  },
+  "peak_gb": 21.59,
+  "wall": "1:07.98",
+  "hot_gcells": 0,
+  "displacement_um": {
+   "bf": {
+    "max": 2.7,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 0,
+   "max_hop_um": 0.0,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {},
+   "actual_sites": true,
+   "errors": []
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "skeleton FF hold WNS -2.1 ps (56 endpoints); 8 repeaters on hard-core crossings longer than the 290-um single-span reach (plan item: re-aspect the core or route the ribbon through a repeater channel)",
+   "hot_frac": 0.0
+  }
+ },
+ "cbx_q10": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 23704734,
+    "demand": 47655,
+    "usage_pct": 0.2,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 26559386,
+    "demand": 72612,
+    "usage_pct": 0.27,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 19896528,
+    "demand": 19910,
+    "usage_pct": 0.1,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 19925504,
+    "demand": 17680,
+    "usage_pct": 0.09,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 39661626,
+    "demand": 1836,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 39678496,
+    "demand": 11950,
+    "usage_pct": 0.03,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 0,
+  "wirelength_um": 103407.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "capacity_valid": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "cbx_q10",
+  "instance": "c_W5_bf_10",
+  "outline_um": [
+   1235.52,
+   2609.28
+  ],
+  "pins": 3613,
+  "flops": 3350,
+  "leaf_blockages": 4,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 30,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "status": "DONE",
+  "gap_repeaters": {
+   "passes": [
+    {
+     "stage": "place",
+     "moved": 0,
+     "new": 182
+    },
+    {
+     "stage": "grt",
+     "moved": 0,
+     "new": 0
+    }
+   ],
+   "moved": 0,
+   "last_pass_moved": 0,
+   "passed": true,
+   "fail": 0,
+   "islands": 0,
+   "max_dx_um": 0.0,
+   "max_dy_um": 0.0,
+   "max_ribbon_dev_um": 0.0,
+   "unrepeatable": 8
+  },
+  "sta": {
+   "tt_setup_wns": 341.06,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 3835,
+   "ff_hold_wns": -1.85,
+   "ff_hold_tns": -50.2,
+   "ff_hold_viol": 48,
+   "ff_hold_endpoints": 3835
+  },
+  "repair_buffers": 212,
+  "drv": {
+   "violators": 100,
+   "source": "drv_class.tsv",
+   "internal_slew": 0,
+   "internal_cap": 0,
+   "port_leg_slew": 15,
+   "port_leg_slew_max_ps": 331.13,
+   "port_leg_cap": 0,
+   "port_pin_slew": 85,
+   "port_pin_slew_max_ps": 396.82,
+   "port_pin_cap": 0,
+   "internal_worst": []
+  },
+  "peak_gb": 21.51,
+  "wall": "1:02.93",
+  "hot_gcells": 0,
+  "displacement_um": {
+   "st": {
+    "max": 1.4,
+    "p90": 1.2,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.7,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 1,
+   "max_hop_um": 181.353,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {},
+   "actual_sites": true,
+   "errors": [],
+   "station_cells": 515,
+   "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins"
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "skeleton FF hold WNS -1.9 ps (48 endpoints); 8 repeaters on hard-core crossings longer than the 290-um single-span reach (plan item: re-aspect the core or route the ribbon through a repeater channel); port legs: 15 driver + 85 port max-slew (die hop, last station -> neighbour first station, in the die reach scan)",
+   "hot_frac": 0.0
+  }
+ },
+ "slw_su_c": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 23210672,
+    "demand": 1024841,
+    "usage_pct": 4.42,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 25959260,
+    "demand": 2037010,
+    "usage_pct": 7.85,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 19487727,
+    "demand": 488538,
+    "usage_pct": 2.51,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 19466750,
+    "demand": 317634,
+    "usage_pct": 1.63,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 20215098,
+    "demand": 109125,
+    "usage_pct": 0.54,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 20216280,
+    "demand": 446720,
+    "usage_pct": 2.21,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 0,
+  "wirelength_um": 2564909.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "capacity_valid": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "slw_su_c",
+  "instance": "sl_W5_su_c",
+  "outline_um": [
+   1226.88,
+   1339.2
+  ],
+  "pins": 10569,
+  "flops": 14964,
+  "leaf_blockages": 8,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 18,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "status": "DONE",
+  "gap_repeaters": {
+   "passes": [
+    {
+     "stage": "place",
+     "moved": 782,
+     "new": 11269
+    },
+    {
+     "stage": "grt",
+     "moved": 27,
+     "new": 346
+    },
+    {
+     "stage": "grt",
+     "moved": 6,
+     "new": 42
+    },
+    {
+     "stage": "grt",
+     "moved": 0,
+     "new": 1
+    }
+   ],
+   "moved": 815,
+   "last_pass_moved": 0,
+   "passed": false,
+   "fail": 22,
+   "islands": null,
+   "max_dx_um": null,
+   "max_dy_um": null,
+   "max_ribbon_dev_um": null,
+   "unrepeatable": 1339
+  },
+  "sta": {
+   "tt_setup_wns": 195.92,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 16892,
+   "ff_hold_wns": -2.22,
+   "ff_hold_tns": -27.0,
+   "ff_hold_viol": 33,
+   "ff_hold_endpoints": 16892
+  },
+  "repair_buffers": 11684,
+  "drv": {
+   "violators": 982,
+   "source": "drv_class.tsv",
+   "internal_slew": 0,
+   "internal_cap": 0,
+   "port_leg_slew": 62,
+   "port_leg_slew_max_ps": 357.13,
+   "port_leg_cap": 0,
+   "port_pin_slew": 920,
+   "port_pin_slew_max_ps": 954.84,
+   "port_pin_cap": 0,
+   "internal_worst": []
+  },
+  "peak_gb": 11.1,
+  "wall": "3:12.70",
+  "hot_gcells": 0,
+  "displacement_um": {
+   "st": {
+    "max": 4.4,
+    "p90": 1.3,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.7,
+    "p90": 1.4,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 380.673,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {},
+   "actual_sites": true,
+   "errors": [],
+   "station_cells": 8163,
+   "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins"
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "skeleton FF hold WNS -2.2 ps (33 endpoints); repeater island check failed (22 of 815 island repeaters in a core or off the ribbon); 1339 repeaters on hard-core crossings longer than the 290-um single-span reach (plan item: re-aspect the core or route the ribbon through a repeater channel); port legs: 62 driver + 920 port max-slew (die hop, last station -> neighbour first station, in the die reach scan)",
+   "hot_frac": 0.0
+  }
+ },
+ "slw_su_l0": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 8343314,
+    "demand": 91757,
+    "usage_pct": 1.1,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 9357052,
+    "demand": 1054250,
+    "usage_pct": 11.27,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 7003782,
+    "demand": 16428,
+    "usage_pct": 0.23,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 7016496,
+    "demand": 166848,
+    "usage_pct": 2.38,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 4769988,
+    "demand": 7834,
+    "usage_pct": 0.16,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 10251368,
+    "demand": 7828,
+    "usage_pct": 0.08,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 0,
+  "wirelength_um": 778044.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "capacity_valid": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "slw_su_l0",
+  "instance": "sl_W5_su_l0",
+  "outline_um": [
+   622.08,
+   1339.2
+  ],
+  "pins": 4198,
+  "flops": 5304,
+  "leaf_blockages": 4,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 11,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "status": "DONE",
+  "gap_repeaters": {
+   "passes": [
+    {
+     "stage": "place",
+     "moved": 10,
+     "new": 3148
+    },
+    {
+     "stage": "grt",
+     "moved": 2,
+     "new": 3
+    },
+    {
+     "stage": "grt",
+     "moved": 0,
+     "new": 0
+    }
+   ],
+   "moved": 12,
+   "last_pass_moved": 0,
+   "passed": true,
+   "fail": 0,
+   "islands": 12,
+   "max_dx_um": 0.049,
+   "max_dy_um": 247.59,
+   "max_ribbon_dev_um": 0.049,
+   "unrepeatable": 0
+  },
+  "sta": {
+   "tt_setup_wns": 215.97,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 5813,
+   "ff_hold_wns": -1.8,
+   "ff_hold_tns": -6.9,
+   "ff_hold_viol": 11,
+   "ff_hold_endpoints": 5813
+  },
+  "repair_buffers": 3161,
+  "drv": {
+   "violators": 517,
+   "source": "drv_class.tsv",
+   "internal_slew": 0,
+   "internal_cap": 0,
+   "port_leg_slew": 0,
+   "port_leg_cap": 0,
+   "port_pin_slew": 517,
+   "port_pin_slew_max_ps": 864.49,
+   "port_pin_cap": 0,
+   "internal_worst": []
+  },
+  "peak_gb": 5.95,
+  "wall": "0:50.95",
+  "hot_gcells": 0,
+  "displacement_um": {
+   "st": {
+    "max": 3.4,
+    "p90": 1.7,
+    "over50": 0
+   },
+   "bf": {
+    "max": 4.0,
+    "p90": 1.2,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 1,
+   "max_hop_um": 359.414,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {},
+   "actual_sites": true,
+   "errors": [],
+   "station_cells": 2068,
+   "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins"
+  },
+  "classify": {
+   "cls": "CLEAN",
+   "why": "skeleton FF hold WNS -1.8 ps (11 endpoints); 12 over-core repeaters in islands (max dx 0.049 / dy 247.59 um, last pass moved 0); port legs: 0 driver + 517 port max-slew (die hop, last station -> neighbour first station, in the die reach scan)",
+   "hot_frac": 0.0
+  }
+ },
+ "slw_su_l1": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 8351746,
+    "demand": 137292,
+    "usage_pct": 1.64,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 9357052,
+    "demand": 1970766,
+    "usage_pct": 21.06,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 7014828,
+    "demand": 55460,
+    "usage_pct": 0.79,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 7018376,
+    "demand": 752406,
+    "usage_pct": 10.72,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 4777507,
+    "demand": 20070,
+    "usage_pct": 0.42,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 10251368,
+    "demand": 937213,
+    "usage_pct": 9.14,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 0,
+  "wirelength_um": 2238943.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "capacity_valid": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "slw_su_l1",
+  "instance": "sl_W5_su_l1",
+  "outline_um": [
+   622.08,
+   1339.2
+  ],
+  "pins": 6197,
+  "flops": 10421,
+  "leaf_blockages": 4,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 11,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "status": "DONE",
+  "gap_repeaters": {
+   "passes": [
+    {
+     "stage": "place",
+     "moved": 1466,
+     "new": 10410
+    },
+    {
+     "stage": "grt",
+     "moved": 47,
+     "new": 180
+    },
+    {
+     "stage": "grt",
+     "moved": 6,
+     "new": 55
+    },
+    {
+     "stage": "grt",
+     "moved": 2,
+     "new": 3
+    },
+    {
+     "stage": "grt",
+     "moved": 0,
+     "new": 0
+    }
+   ],
+   "moved": 1521,
+   "last_pass_moved": 0,
+   "passed": true,
+   "fail": 0,
+   "islands": 1521,
+   "max_dx_um": 2.99,
+   "max_dy_um": 253.515,
+   "max_ribbon_dev_um": 2.99,
+   "unrepeatable": 0
+  },
+  "sta": {
+   "tt_setup_wns": 212.09,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 11962,
+   "ff_hold_wns": -1.16,
+   "ff_hold_tns": -8.0,
+   "ff_hold_viol": 13,
+   "ff_hold_endpoints": 11962
+  },
+  "repair_buffers": 10658,
+  "drv": {
+   "violators": 1030,
+   "source": "drv_class.tsv",
+   "internal_slew": 0,
+   "internal_cap": 0,
+   "port_leg_slew": 0,
+   "port_leg_cap": 0,
+   "port_pin_slew": 1030,
+   "port_pin_slew_max_ps": 900.64,
+   "port_pin_cap": 0,
+   "internal_worst": []
+  },
+  "peak_gb": 6.24,
+  "wall": "2:16.67",
+  "hot_gcells": 0,
+  "displacement_um": {
+   "st": {
+    "max": 3.8,
+    "p90": 1.4,
+    "over50": 0
+   },
+   "bf": {
+    "max": 1.6,
+    "p90": 1.2,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 3,
+   "max_hop_um": 367.578,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {},
+   "actual_sites": true,
+   "errors": [],
+   "station_cells": 7220,
+   "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins"
+  },
+  "classify": {
+   "cls": "CLEAN",
+   "why": "skeleton FF hold WNS -1.2 ps (13 endpoints); 1521 over-core repeaters in islands (max dx 2.99 / dy 253.515 um, last pass moved 0); port legs: 0 driver + 1030 port max-slew (die hop, last station -> neighbour first station, in the die reach scan)",
+   "hot_frac": 0.0
+  }
+ }
+}
