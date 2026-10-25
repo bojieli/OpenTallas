@@ -2192,6 +2192,13 @@ class Binder:
                 candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
                               target["inst"] in {self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
                 if not candidates:
+                    # Plan-local matrix names commonly compact coordinate
+                    # separators (u_t00 versus RTL u_t_0_0). Accept only a unique
+                    # punctuation-only alias; never select a different replica.
+                    key = target["inst"].replace("_", "")
+                    candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
+                                  self.rel_of(ci).replace("_", "") == key]
+                if not candidates:
                     modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and F.cells[ci].module in modules]
                 if len(candidates) != 1:
