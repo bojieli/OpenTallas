@@ -20,8 +20,10 @@
 #
 # Exact values from a path end (OpenSTA PathEnd::clk_skew = Lsrc - Ctgt - crpr, crpr >= 0 for BOTH checks; verified
 # against report_checks on kr_dsdv_svc_sx_hrow_c 2026-10-24 and CP1 r9; uncertainty zeroed first):
-#   setup: s = -clk_skew                 crpr_s = data_required - tgt_arrival + margin   (mod period, edge removed)
-#   hold : h = -clk_skew - 2 crpr_h      crpr_h = tgt_arrival + margin - data_required   (mod period, edge removed)
+#   setup: s = -clk_skew - launch_insertion      crpr_s = data_required - tgt_arrival + margin   (mod period, edge removed)
+#   hold : h = -clk_skew - launch_insertion - 2 crpr_h   crpr_h = tgt_arrival + margin - data_required   (mod period, edge removed)
+# OpenSTA removes launch source insertion in clk_skew but retains capture insertion; restore it using
+# the signed source-port clock arrival measured before path searches. This matters for early hard-core taps.
 # Each credited pair is cross-checked against the CK pin arrivals (Cmin + crpr - Lmax etc.); max |difference| is
 # reported as verify_ps (a large value means an edge/arrival mismatch -- treat the measurement as suspect).
 #
@@ -87,12 +89,26 @@ proc ot_ps_ckarr {pin clk which} {
 proc ot_ps_regs {} {
   # inst -> {ckpin clock late early} for every register clock pin with exactly one clock and a unique clock arrival
   set R {}; set ::ot_ps_noarr 0
+  set ::ot_ps_insertion {}
   foreach p [all_registers -clock_pins] {
     set cl [get_property $p clocks]
     if {[llength $cl] != 1} continue
     set a [ot_ps_ckarr $p [lindex $cl 0] max]; set b [ot_ps_ckarr $p [lindex $cl 0] min]
     if {$a eq "" || $b eq ""} { incr ::ot_ps_noarr; continue }
-    dict set R [ot_ps_inst [get_full_name $p]] [list [get_full_name $p] [get_full_name [lindex $cl 0]] $a $b]
+    set cn [get_full_name [lindex $cl 0]]
+    if {![dict exists $::ot_ps_insertion $cn]} {
+      set roots {}
+      foreach src [get_property [lindex $cl 0] sources] {
+        set late [ot_ps_ckarr $src [lindex $cl 0] max]
+        set early [ot_ps_ckarr $src [lindex $cl 0] min]
+        if {$late eq "" || $early eq ""} continue
+        lappend roots [list $late $early]
+      }
+      set roots [lsort -unique $roots]
+      if {[llength $roots] != 1} { error "clock $cn has no unique source insertion arrival" }
+      dict set ::ot_ps_insertion $cn [lindex $roots 0]
+    }
+    dict set R [ot_ps_inst [get_full_name $p]] [list [get_full_name $p] $cn $a $b]
   }
   return $R
 }
@@ -142,6 +158,12 @@ proc ot_ps_path {l dn dly} {
   set per [expr {[get_property [$pe target_clk] period] * 1e-12}]
   set sk [$pe clk_skew]; set req [$pe data_required_time]; set tarr [$tp arrival]; set mg [$pe margin]
   set et [[$pe target_clk_edge] time]
+  # PathEndCheck::sourceClkDelay subtracts source insertion from the launch
+  # path; targetClkDelay keeps capture insertion. Restore the launch insertion
+  # so both sides use full physical CK arrivals (including signed early taps).
+  set lc [lindex [dict get $::ot_ps_R $l] 1]
+  set ins_ps [lindex [dict get $::ot_ps_insertion $lc] [expr {$dly eq "max" ? 0 : 1}]]
+  set sk [expr {$sk + $ins_ps * 1e-12}]
   unset pes pe tp
   if {$role eq "setup"} {
     set x [expr {$req - $tarr + $mg - $et}]
