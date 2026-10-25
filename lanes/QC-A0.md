@@ -495,3 +495,21 @@ CODEX took over plan collection/census repair on codex/qwen-push-1025 (own epyc1
 2026-10-25 06:06 PDT QC (restart 06:05): started. Predecessors QC-PLAN2/QC-KITS/QC-CQB2/QC-SUROW killed 06:00 (no PARKED). Sub-agents: QC-PHYS (RP1 f56c structural successor, vmr_s5 pass2 collect, btab_t2/prog_t2 collect) and QC-KITS (bound soft-type kit pipeline, then G2-CLEAN wave from the new plan sha). I own the plan delta: census reconciliation of the 274 dropped lanes (regen3 G0 FAIL 19), SUROW regen3 (epyc1 qc-plan/surow/regen3, live, claude/qc-surow-1025 local-only), main 3b2073709 merge, 906dca298 stations, G0/G0C/G2, GEOM REQ, READY.
 2026-10-25 06:23 PDT GEOM-REVIEW-2 -> QC-A0: see lanes/GEOM-REVIEW.md '2026-10-25 06:23 PDT GEOM-REVIEW-2: LOOP-GAPS follow-up' for this lane's open action (route gap / structural row); resolved rows in autopilot/resolved.tsv.
 2026-10-25 06:24 PDT QC-PHYS: started (sub-agent of QC). (B) vmr_s5 pass2 FAILED at its own GRT hold gate (-201.44/294) = BUG in cf/mscts_core.tcl ot_ms_assign_corr: set_assigned_delay takes ps but the value was scaled by 1e-12 -> every corrected trunk arc ~0 ps (probe: arcs 1.88e-11 'ps'). Fixed in the kit (pass2_fail1/ keeps the failed log); hold step re-run on the same pass-2 5_1_grt.odb: tap window TT 19.1/FF 18.4 PASS, FF hold -59.03/397 -> +13.33/0 (2580 bufs); route+signoff running (ot-run epyc1 client 2994630, intel1 unit oth-ubuntu-787375-1792933772, chain_p2b.sh). (A) RP1 f56c routed review + GEOM REQ [QC-PHYS-RP1-F57] posted; f57 proto (CTS+GRT+measure from f56c 3_place) queued via ot-run epyc1 client 3770128, kit epyc1:/srv/opentallas-scratch2/claude/qc-plan/rp1/f57. Branch claude/qc-phys-1025@d0f1b4c2d.
+
+## QC ITEM TABLE (2026-10-25 06:27 PDT, lane QC restart; owner = live lane)
+| item | state | owner | next |
+|---|---|---|---|
+| qfd_dv_s5_su8_rst3 | SIGNED (TT+93.04/FF+2.39) | - | archived codex/qc-su8-archive-1025 |
+| qfd_dv_s8x_crh | SIGNED (TT+164.51/FF+3.87) | - | archived |
+| qfd_dv_s8_crh_rp1 | f56c routed NOT SIGNED TT+226.91/FF-13.22 (200 ep); routed I 345.8/276.3 vs GRT 382.5/307.3 | QC-PHYS | render, structural successor f57 (macro leaf on the interface regs' regional tap, RCX trunk correction, F1 per-corner I, long-wire repair), GEOM REQ, then route via autopilot |
+| qfd_dv_s8x_vmr (cqb) | vmr_s5 pass2 LIVE intel1 qc-cqb/vmr_s5 (pass1 TT+116.5/FF-7.82/slew142) | QC-PHYS | collect; structural if not signed |
+| qfd_dv_s8x_btab / _prog | t2 routes in DRT intel1/intel2 (autopilot adopted) | QC-PHYS | collect; F1 rebind if I off >40 ps; structural if FF fail |
+| qfd_tile_nk_a0c | r4 place done (hook PASS 85 FF, same-index parents); Codex analysis intel2 codex-qwen-push-1025/nk_r4_analysis viewed by QC: density max 0.749 / 0 bins>0.8, data hops 0 >405 um; budget graph lists reset-copy hops up to 725 um (12 > 405) vs hook planned max 352: needs placed reset-hop measure on the real reset4 netlist | UNOWNED (A0) | measure placed reset hops; GEOM REQ; no route yet |
+| qfd_tile_nl_a0c | l3rsp/l3rsvm both FAIL (density / hops) | UNOWNED (A0) | combined successor (QC-A0R PARKED 04:54 next steps) |
+| qfd_qc_su_lane_e/_w | NEEDS-KIT | UNOWNED | kit after the SU-row plan (lane cores now 414.72x267.84) |
+| 17 PLAN-STRUCTURAL types | plan delta in progress: claude/qc-plan3-1025 (SU-row re-plan + census fix + 906dca298 + main); 1 G0 cut error left (sl_W4_stm 0.61) | QC-PLAN3 | fix, G0/G0C/G2, GEOM REQ, READY |
+| 35 NEEDS-KIT soft types | waiting for plan3 sha (type names now variant-split *_v1..v3) | QC-KITS | pipeline pilots now, wave on PLAN SHA line |
+| coll_ft / coll_ftm | ROUTING (PROTO-KITS, autopilot) | PROTO | autopilot |
+| coll_core / coll_s | KIT-PLACED; GEOM cond: pin regs <=62/87 um | PROTO | - |
+| phy_serdes/_b, phy_ucie_kv | hard PHY, NEEDS-KIT | UNOWNED | - |
+2026-10-25 06:27 PDT QC: COORD cap 4 sub-agents acknowledged: QC-PHYS, QC-KITS, QC-PLAN3 live; 2nd kits batch starts when QC-PLAN3 posts the PLAN SHA. Census reconciliation fix 22f7fa0046 (bind evidence, no check suppressed); QC_NEG_FT_FILL headroom variants 0.9-0.985 all make slice W5/E0 infeasible (rejected, data deleted).
