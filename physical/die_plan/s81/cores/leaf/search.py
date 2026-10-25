@@ -21,10 +21,16 @@ import gen_plan_v4 as G   # noqa: E402
 SPEC = G.NONFRAME_HC["leaf"]
 K = "leaf"
 XV = SPEC["xmirror_views"]
-VIEWABLE = sorted(SPEC["views"][XV])
 CORES = {c["inst"]: c for c in SPEC["cores"]}
-SIZE = {i: G._lef_size(c["lef"]) for i, c in CORES.items()}
-NAMES = list(CORES)
+CSIZE = {i: G._lef_size(c["lef"]) for i, c in CORES.items()}
+# placement blocks (spec "blocks": the split vn / ve pairs move as one block, children at fixed offsets)
+BLOCKS = SPEC.get("blocks", {})
+CHILD = {ci: b for b, ch in BLOCKS.items() for ci, _, _ in ch}
+NAMES = list(dict.fromkeys(CHILD.get(i, i) for i in CORES))
+SIZE = {i: CSIZE[i] for i in CORES if i not in CHILD}
+for b_, ch_ in BLOCKS.items():
+    SIZE[b_] = [max(ox + CSIZE[ci][0] for ci, ox, _ in ch_), max(oy + CSIZE[ci][1] for ci, _, oy in ch_)]
+VIEWABLE = sorted({CHILD.get(i, i) for i in SPEC["views"][XV]})
 LANES = [n for n in NAMES if ".g_ln[" in n]
 DX, DY = G.CORE_TRACK_OFFSET
 LAT = G.G
@@ -51,10 +57,18 @@ class Type:
     def cores(self, P, V):
         """hard_cores[] in the type frame (y mirror for S-bus types, as gen mirrored())."""
         o = []
-        for i in NAMES:
-            cw, ch = SIZE[i]
-            x, y = P[i]
-            e = G._core_view(SPEC, CORES[i], V.get(i), origin_um=[x, y], outline_um=[cw, ch], orient="R0",
+        for i in CORES:
+            cw, ch = CSIZE[i]
+            b = CHILD.get(i)
+            if b:
+                ox, oy = next((ox, oy) for ci, ox, oy in BLOCKS[b] if ci == i)
+                if V.get(b):
+                    # x-mirrored view of a block: the children swap sides inside the block box (their pins mirrored)
+                    ox = SIZE[b][0] - ox - cw
+                x, y = P[b][0] + ox, P[b][1] + oy
+            else:
+                x, y = P[i]
+            e = G._core_view(SPEC, CORES[i], V.get(b or i), origin_um=[x, y], outline_um=[cw, ch], orient="R0",
                              track_offset_um=[DX, DY])
             if self.my:
                 e["origin_um"] = [x, round(math.floor(round((self.h - (y + DY + ch) - DY) / LAT, 6)) * LAT, 4)]
@@ -115,6 +129,19 @@ def shaping(T, o, ents):
                     continue
                 L = abs(ga[0] - q[0]) + abs(ga[1] - q[1])
                 s += ga[2] * max(0.0, L - 0.6 * SMAX) * 0.05 + ga[2] * L * 0.002
+    # lanes behind vn's lane face (hq_d of vn_a / vn_b): the 256-b h buses wrap the core (GEOM review r6: lanes up to
+    # 1.1 mm on the far side of vn) -- 200 per um behind the face plane
+    NRM = dict(N=(0, 1), S=(0, -1), E=(1, 0), W=(-1, 0))
+    for vi in [i for i in pl if i.startswith("u_lf.u_vn")]:
+        g = pl[vi][1].get("hq_d")
+        if not g:
+            continue
+        f = max(g[3], key=lambda k: len(g[3][k]) if hasattr(g[3][k], "__len__") else g[3][k])
+        n = NRM[f]
+        for ln in LANES:
+            bx = pl[ln][0]
+            dx_, dy_ = (bx[0] + bx[2]) / 2 - g[0], (bx[1] + bx[3]) / 2 - g[1]
+            s += 200.0 * max(0.0, -(dx_ * n[0] + dy_ * n[1]))
     return s
 
 
@@ -147,7 +174,7 @@ def xmirror(T, P, V):
 def anneal(T, P, V, iters, T0=3e4):
     cur, det = evaluate(T, P, V)
     best = (cur, {k: list(v) for k, v in P.items()}, dict(V), det)
-    E_ = ["u_lf.u_vs", "u_lf.u_ve"]
+    E_ = ["u_lf.u_vs", "u_lf.u_ve"]   # blocks: u_lf.u_ve = ve_s + ve_m, u_lf.u_vn = vn_a + vn_b
     EC = E_ + ["u_lf.u_vsw", "u_lf.u_rxsf", "u_lf.u_rxsb", "u_lf.u_vq"]
     VN = ["u_lf.u_vn", "u_lf.u_vp.u_b0", "u_lf.u_vp.u_b1"]
     groups = [LANES, EC, EC + VN, NAMES, E_, VN, VN + LANES, ["u_lf.u_rxsf", "u_lf.u_rxsb"]] + [[n] for n in NAMES]

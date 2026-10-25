@@ -384,6 +384,30 @@
     ]
    },
    {
+    "type": "dsdv_slice_kv512_C__t1",
+    "slot": "ft0",
+    "stations": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t6",
+    "slot": "ft1",
+    "stations": [
+     3,
+     4
+    ]
+   },
+   {
+    "type": "dsdv_slice_lepe_mu_C__t1",
+    "slot": "ft0",
+    "stations": [
+     3,
+     4
+    ]
+   },
+   {
     "type": "svc_lo_dsdv_svc_rs_w__t1",
     "slot": "ft0",
     "stations": [
@@ -646,24 +670,6 @@
    },
    {
     "type": "ot_s81sl_leaf__t1",
-    "slot": "ft6",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t2",
-    "slot": "ft3",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t7",
     "slot": "ft1",
     "stations": [
      4,
@@ -672,43 +678,7 @@
     "why": "core escape at the 405-um kit reach"
    },
    {
-    "type": "ot_s81sl_leaf__t8",
-    "slot": "ft0",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t8",
-    "slot": "ft1",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t8",
-    "slot": "ft2",
-    "stations": [
-     4,
-     6
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t8",
-    "slot": "ft3",
-    "stations": [
-     4,
-     6
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t8",
+    "type": "ot_s81sl_leaf__t1",
     "slot": "ft4",
     "stations": [
      4,
@@ -717,7 +687,16 @@
     "why": "core escape at the 405-um kit reach"
    },
    {
-    "type": "ot_s81sl_leaf__t8",
+    "type": "ot_s81sl_leaf__t1",
+    "slot": "ft14",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t2",
     "slot": "ft5",
     "stations": [
      4,
@@ -726,8 +705,8 @@
     "why": "core escape at the 405-um kit reach"
    },
    {
-    "type": "ot_s81sl_leaf__t8",
-    "slot": "ft6",
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft4",
     "stations": [
      4,
      5
@@ -735,25 +714,7 @@
     "why": "core escape at the 405-um kit reach"
    },
    {
-    "type": "ot_s81sl_leaf__t8",
-    "slot": "ft11",
-    "stations": [
-     4,
-     6
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t14",
-    "slot": "ft5",
-    "stations": [
-     3,
-     4
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t18",
+    "type": "ot_s81sl_leaf__t6",
     "slot": "ft0",
     "stations": [
      4,
@@ -762,7 +723,133 @@
     "why": "core escape at the 405-um kit reach"
    },
    {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t8",
+    "slot": "ft0",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t8",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t11",
+    "slot": "ft4",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t12",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t12",
+    "slot": "ft6",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t12",
+    "slot": "ft8",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t13",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t14",
+    "slot": "ft0",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t16",
+    "slot": "ft2",
+    "stations": [
+     3,
+     4
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t17",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
     "type": "ot_s81sl_leaf__t18",
+    "slot": "ft7",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t18",
+    "slot": "ft8",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t21",
+    "slot": "ft0",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t21",
     "slot": "ft1",
     "stations": [
      4,
@@ -780,6 +867,33 @@
     "why": "core escape at the 405-um kit reach"
    },
    {
+    "type": "ot_s81sl_leaf__t21",
+    "slot": "ft4",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t22",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t23",
+    "slot": "ft6",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
     "type": "ot_s81sl_leaf__t27",
     "slot": "ft1",
     "stations": [
@@ -790,7 +904,7 @@
    },
    {
     "type": "ot_s81sl_leaf__t28",
-    "slot": "ft2",
+    "slot": "ft0",
     "stations": [
      5,
      6
@@ -799,19 +913,10 @@
    },
    {
     "type": "ot_s81sl_leaf__t28",
-    "slot": "ft3",
+    "slot": "ft1",
     "stations": [
      4,
-     6
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t28",
-    "slot": "ft5",
-    "stations": [
-     5,
-     6
+     5
     ],
     "why": "core escape at the 405-um kit reach"
    },
@@ -821,6 +926,24 @@
     "stations": [
      7,
      8
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t32",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
     ],
     "why": "core escape at the 405-um kit reach"
    },
@@ -853,7 +976,7 @@
    },
    {
     "type": "ot_s81sl_leaf__t36",
-    "slot": "ft8",
+    "slot": "ft5",
     "stations": [
      4,
      5
@@ -861,11 +984,47 @@
     "why": "core escape at the 405-um kit reach"
    },
    {
-    "type": "ot_s81sl_leaf__t41",
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft9",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t38",
+    "slot": "ft0",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t42",
     "slot": "ft1",
     "stations": [
-     5,
-     6
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t43",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t45",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
     ],
     "why": "core escape at the 405-um kit reach"
    },
@@ -874,16 +1033,34 @@
     "slot": "ft2",
     "stations": [
      5,
-     6
+     7
     ],
     "why": "core escape at the 405-um kit reach"
    },
    {
-    "type": "ot_s81sl_leaf__t51",
-    "slot": "ft1",
+    "type": "ot_s81sl_leaf__t46",
+    "slot": "ft2",
     "stations": [
      4,
      5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t47",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t52",
+    "slot": "ft4",
+    "stations": [
+     3,
+     4
     ],
     "why": "core escape at the 405-um kit reach"
    },
@@ -943,25 +1120,88 @@
    },
    {
     "type": "ot_s81sl_leaf__t55",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t55",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t55",
+    "slot": "ft9",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t56",
     "slot": "ft1",
     "stations": [
-     7,
-     8
+     4,
+     5
     ],
     "why": "core escape at the 405-um kit reach"
    },
    {
-    "type": "ot_s81sl_leaf__t55",
-    "slot": "ft4",
+    "type": "ot_s81sl_leaf__t56",
+    "slot": "ft7",
     "stations": [
-     7,
-     8
+     4,
+     5
     ],
     "why": "core escape at the 405-um kit reach"
    },
    {
-    "type": "ot_s81sl_leaf__t55",
-    "slot": "ft5",
+    "type": "ot_s81sl_leaf__t56",
+    "slot": "ft10",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t56",
+    "slot": "ft11",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t56",
+    "slot": "ft12",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t57",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t57",
+    "slot": "ft2",
     "stations": [
      4,
      5
@@ -970,16 +1210,142 @@
    },
    {
     "type": "ot_s81sl_leaf__t58",
+    "slot": "ft0",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t60",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t60",
+    "slot": "ft5",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t61",
+    "slot": "ft6",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t62",
     "slot": "ft7",
     "stations": [
-     3,
-     4
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t65",
+    "slot": "ft0",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t65",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t65",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t66",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t66",
+    "slot": "ft9",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft8",
+    "stations": [
+     4,
+     5
     ],
     "why": "core escape at the 405-um kit reach"
    },
    {
     "type": "ot_s81sl_leaf__t70",
     "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft6",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft7",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft8",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t71",
+    "slot": "ft3",
     "stations": [
      4,
      5
@@ -1001,60 +1367,6 @@
     "stations": [
      4,
      5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t72",
-    "slot": "ft2",
-    "stations": [
-     4,
-     6
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t72",
-    "slot": "ft3",
-    "stations": [
-     4,
-     6
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t72",
-    "slot": "ft4",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t72",
-    "slot": "ft5",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t72",
-    "slot": "ft6",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t72",
-    "slot": "ft11",
-    "stations": [
-     4,
-     6
     ],
     "why": "core escape at the 405-um kit reach"
    },

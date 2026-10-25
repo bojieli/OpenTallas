@@ -19,8 +19,7 @@ import repin                 # noqa: E402  (track grid, pin shapes, stub LEF wri
 import drop_const_pins       # noqa: E402
 
 # variant -> (source plan pin table, LEF the directions come from, outline W x H)
-SRC = {
-    "ot_s81sl_vn": ("ot_s81sl_vn", "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef", (356.4, 356.4)),
+SRC = {   # vn: superseded by the split views (cores/leaf/split.py builds vn_a / vn_b / ve_s / ve_m and their _xm)
     "ot_s81sl_vq": ("ot_s81sl_vq_lfp", "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq/ot_s81sl_vq.lef", (172.8, 129.6)),
     "ot_s81sl_vs": ("ot_s81sl_vs_lfp", "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs/ot_s81sl_vs.lef", (172.8, 172.8)),
 }

@@ -13,11 +13,11 @@
     "N": 276
    },
    "partner": "bus:leafup_o0",
-   "manhattan_um": 711,
-   "cos": 0.957,
+   "manhattan_um": 772,
+   "cos": 0.934,
    "a": [
-    403,
-    700
+    455,
+    691
    ],
    "b": [
     219,
@@ -25,725 +25,1238 @@
    ]
   },
   {
-   "core": "u_ve",
-   "port": "a_h",
-   "bits": 256,
-   "faces": {
-    "E": 256
-   },
-   "partner": "core:u_lf.u_vs",
-   "manhattan_um": 266,
-   "cos": -0.093,
-   "a": [
-    795,
-    841
-   ],
-   "b": [
-    600,
-    769
-   ]
-  },
-  {
-   "core": "u_ve",
+   "core": "u_m",
    "port": "a_val",
    "bits": 256,
    "faces": {
-    "E": 256
+    "S": 256
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 353,
-   "cos": -0.093,
+   "manhattan_um": 201,
+   "cos": 0.836,
    "a": [
-    795,
-    927
+    857,
+    838
    ],
    "b": [
-    600,
-    769
+    674,
+    821
    ]
   },
   {
-   "core": "u_ve",
-   "port": "o_y",
-   "bits": 256,
-   "faces": {
-    "E": 256
-   },
-   "partner": "core:u_lf.u_vs",
-   "manhattan_um": 456,
-   "cos": -0.093,
-   "a": [
-    795,
-    1030
-   ],
-   "b": [
-    600,
-    769
-   ]
-  },
-  {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[0].u_l",
-   "manhattan_um": 1016,
-   "cos": -0.275,
+   "manhattan_um": 952,
+   "cos": -0.998,
    "a": [
-    78,
-    878
+    190,
+    797
    ],
    "b": [
-    446,
-    230
+    1094,
+    748
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[1].u_l",
-   "manhattan_um": 964,
-   "cos": -0.998,
+   "manhattan_um": 710,
+   "cos": -0.033,
    "a": [
-    78,
-    878
+    190,
+    797
    ],
    "b": [
-    1008,
-    843
+    386,
+    282
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[2].u_l",
-   "manhattan_um": 558,
-   "cos": 0.0,
+   "manhattan_um": 345,
+   "cos": 0.72,
    "a": [
-    78,
-    878
+    190,
+    797
    ],
    "b": [
-    256,
-    498
+    101,
+    541
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[3].u_l",
-   "manhattan_um": 808,
-   "cos": -0.999,
+   "manhattan_um": 304,
+   "cos": 0.46,
    "a": [
-    78,
-    878
+    190,
+    797
    ],
    "b": [
-    878,
-    869
+    230,
+    532
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[4].u_l",
-   "manhattan_um": 1206,
-   "cos": -0.983,
+   "manhattan_um": 188,
+   "cos": 0.941,
    "a": [
-    78,
-    878
+    190,
+    797
    ],
    "b": [
-    1137,
-    731
+    101,
+    895
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[5].u_l",
-   "manhattan_um": 359,
-   "cos": 0.412,
+   "manhattan_um": 544,
+   "cos": 0.335,
    "a": [
-    78,
-    878
+    190,
+    797
    ],
    "b": [
-    92,
-    532
+    178,
+    265
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[6].u_l",
-   "manhattan_um": 869,
-   "cos": -0.038,
+   "manhattan_um": 1021,
+   "cos": -0.34,
    "a": [
-    78,
-    878
+    190,
+    797
    ],
    "b": [
-    282,
-    213
+    593,
+    178
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[7].u_l",
-   "manhattan_um": 515,
-   "cos": 0.27,
+   "manhattan_um": 425,
+   "cos": 0.347,
    "a": [
-    78,
-    878
+    190,
+    797
    ],
    "b": [
-    118,
+    222,
     403
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[8].u_l",
-   "manhattan_um": 670,
-   "cos": 0.209,
+   "manhattan_um": 710,
+   "cos": -0.354,
    "a": [
-    78,
-    878
+    190,
+    797
    ],
    "b": [
-    118,
-    247
+    515,
+    411
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[9].u_l",
-   "manhattan_um": 1069,
-   "cos": -0.994,
+   "manhattan_um": 1020,
+   "cos": -0.993,
    "a": [
-    78,
-    878
+    190,
+    797
    ],
    "b": [
-    1042,
-    982
+    1120,
+    887
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[10].u_l",
-   "manhattan_um": 696,
-   "cos": -0.329,
+   "manhattan_um": 501,
+   "cos": 0.564,
    "a": [
-    78,
-    878
-   ],
-   "b": [
-    394,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
-   "manhattan_um": 1232,
-   "cos": -0.66,
-   "a": [
-    78,
-    878
-   ],
-   "b": [
-    757,
-    325
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
-   "manhattan_um": 1129,
-   "cos": -1.0,
-   "a": [
-    78,
-    878
-   ],
-   "b": [
-    1172,
-    913
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
-   "manhattan_um": 826,
-   "cos": -0.254,
-   "a": [
-    78,
-    878
-   ],
-   "b": [
-    394,
-    368
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
-   "manhattan_um": 1094,
-   "cos": -0.769,
-   "a": [
-    78,
-    878
-   ],
-   "b": [
-    766,
-    472
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
-   "manhattan_um": 705,
-   "cos": 0.0,
-   "a": [
-    78,
-    878
-   ],
-   "b": [
-    256,
-    351
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
-   "manhattan_um": 915,
-   "cos": -0.275,
-   "a": [
-    78,
-    777
-   ],
-   "b": [
-    446,
-    230
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
-   "manhattan_um": 996,
-   "cos": -0.998,
-   "a": [
-    78,
-    777
-   ],
-   "b": [
-    1008,
-    843
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
-   "manhattan_um": 457,
-   "cos": 0.0,
-   "a": [
-    78,
-    777
-   ],
-   "b": [
-    256,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
-   "manhattan_um": 893,
-   "cos": -0.999,
-   "a": [
-    78,
-    777
-   ],
-   "b": [
-    878,
-    869
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
-   "manhattan_um": 1105,
-   "cos": -0.983,
-   "a": [
-    78,
-    777
-   ],
-   "b": [
-    1137,
-    731
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
-   "manhattan_um": 258,
-   "cos": 0.412,
-   "a": [
-    78,
-    777
+    190,
+    797
    ],
    "b": [
     92,
-    532
+    394
    ]
   },
   {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
-   "manhattan_um": 768,
-   "cos": -0.038,
-   "a": [
-    78,
-    777
-   ],
-   "b": [
-    282,
-    213
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
-   "manhattan_um": 414,
-   "cos": 0.27,
-   "a": [
-    78,
-    777
-   ],
-   "b": [
-    118,
-    403
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
-   "manhattan_um": 569,
-   "cos": 0.209,
-   "a": [
-    78,
-    777
-   ],
-   "b": [
-    118,
-    247
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
-   "manhattan_um": 1169,
-   "cos": -0.994,
-   "a": [
-    78,
-    777
-   ],
-   "b": [
-    1042,
-    982
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
-   "manhattan_um": 595,
-   "cos": -0.329,
-   "a": [
-    78,
-    777
-   ],
-   "b": [
-    394,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_d",
+   "core": "u_a",
+   "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[11].u_l",
-   "manhattan_um": 1131,
-   "cos": -0.66,
+   "manhattan_um": 529,
+   "cos": -0.051,
    "a": [
-    78,
-    777
+    190,
+    797
    ],
    "b": [
-    757,
-    325
+    386,
+    463
    ]
   },
   {
-   "core": "u_vn",
-   "port": "hw_d",
+   "core": "u_a",
+   "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[12].u_l",
-   "manhattan_um": 1230,
-   "cos": -1.0,
+   "manhattan_um": 874,
+   "cos": -0.838,
    "a": [
-    78,
-    777
+    190,
+    797
    ],
    "b": [
-    1172,
-    913
+    792,
+    524
    ]
   },
   {
-   "core": "u_vn",
-   "port": "hw_d",
+   "core": "u_a",
+   "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[13].u_l",
    "manhattan_um": 725,
-   "cos": -0.254,
+   "cos": 0.342,
    "a": [
-    78,
-    777
+    190,
+    797
    ],
    "b": [
-    394,
-    368
+    126,
+    135
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 916,
+   "cos": -0.984,
+   "a": [
+    190,
+    797
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 866,
+   "cos": -0.026,
+   "a": [
+    190,
+    797
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 906,
+   "cos": -0.998,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 660,
+   "cos": -0.033,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 295,
+   "cos": 0.72,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 254,
+   "cos": 0.46,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 238,
+   "cos": 0.941,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 494,
+   "cos": 0.335,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 971,
+   "cos": -0.34,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 375,
+   "cos": 0.347,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 660,
+   "cos": -0.354,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 1070,
+   "cos": -0.993,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 451,
+   "cos": 0.564,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 479,
+   "cos": -0.051,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 824,
+   "cos": -0.838,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 675,
+   "cos": 0.342,
+   "a": [
+    190,
+    747
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_a",
    "port": "hw_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[14].u_l",
-   "manhattan_um": 993,
-   "cos": -0.769,
+   "manhattan_um": 966,
+   "cos": -0.984,
    "a": [
-    78,
-    777
+    190,
+    747
    ],
    "b": [
-    766,
-    472
+    990,
+    913
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
    "partner": "core:u_lf.u_vp.g_ln[15].u_l",
-   "manhattan_um": 604,
-   "cos": 0.0,
+   "manhattan_um": 816,
+   "cos": -0.026,
    "a": [
-    78,
-    777
+    190,
+    747
    ],
    "b": [
-    256,
-    351
+    386,
+    126
    ]
   },
   {
-   "core": "u_vn",
-   "port": "wl_d",
+   "core": "u_b",
+   "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
-   "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 429,
-   "cos": 0.39,
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 1141,
+   "cos": -0.951,
    "a": [
-    78,
-    1022
+    190,
+    986
    ],
    "b": [
-    165,
-    680
+    1094,
+    748
    ]
   },
   {
-   "core": "u_vn",
-   "port": "wl_d",
+   "core": "u_b",
+   "port": "hq_d",
    "bits": 256,
    "faces": {
     "W": 256
    },
-   "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 489,
-   "cos": 0.295,
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 899,
+   "cos": -0.025,
    "a": [
-    78,
-    1022
+    190,
+    986
    ],
    "b": [
-    174,
-    628
+    386,
+    282
    ]
   },
   {
-   "core": "u_vn",
-   "port": "y",
+   "core": "u_b",
+   "port": "hq_d",
    "bits": 256,
    "faces": {
-    "E": 256
+    "W": 256
    },
-   "partner": "core:u_lf.u_vq",
-   "manhattan_um": 248,
-   "cos": 0.478,
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 534,
+   "cos": 0.517,
    "a": [
-    434,
-    760
+    190,
+    986
    ],
    "b": [
-    311,
-    635
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 493,
+   "cos": 0.292,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 180,
+   "cos": 0.948,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 733,
+   "cos": 0.255,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 1210,
+   "cos": -0.268,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 614,
+   "cos": 0.245,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 899,
+   "cos": -0.248,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 1029,
+   "cos": -0.992,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 690,
+   "cos": 0.424,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 718,
+   "cos": -0.033,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 1063,
+   "cos": -0.676,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 914,
+   "cos": 0.274,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 873,
+   "cos": -0.993,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 1055,
+   "cos": -0.02,
+   "a": [
+    190,
+    986
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 1086,
+   "cos": -0.951,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 844,
+   "cos": -0.025,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 479,
+   "cos": 0.517,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 438,
+   "cos": 0.292,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 125,
+   "cos": 0.948,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 678,
+   "cos": 0.255,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 1155,
+   "cos": -0.268,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 559,
+   "cos": 0.245,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 844,
+   "cos": -0.248,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 974,
+   "cos": -0.992,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 635,
+   "cos": 0.424,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 663,
+   "cos": -0.033,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 1008,
+   "cos": -0.676,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 859,
+   "cos": 0.274,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 818,
+   "cos": -0.993,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_d",
+   "bits": 256,
+   "faces": {
+    "W": 256
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 1000,
+   "cos": -0.02,
+   "a": [
+    190,
+    931
+   ],
+   "b": [
+    386,
+    126
    ]
   },
   {
@@ -754,34 +1267,15 @@
     "E": 256
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 130,
-   "cos": 0.973,
+   "manhattan_um": 190,
+   "cos": 0.879,
    "a": [
-    484,
-    633
+    536,
+    625
    ],
    "b": [
-    510,
-    737
-   ]
-  },
-  {
-   "core": "u_vq",
-   "port": "y",
-   "bits": 256,
-   "faces": {
-    "W": 256
-   },
-   "partner": "core:u_lf.u_vn",
-   "manhattan_um": 247,
-   "cos": 0.478,
-   "a": [
-    311,
-    636
-   ],
-   "b": [
-    434,
-    760
+    562,
+    789
    ]
   },
   {
@@ -795,12 +1289,12 @@
    "manhattan_um": 247,
    "cos": 0.995,
    "a": [
-    683,
-    655
+    734,
+    707
    ],
    "b": [
-    855,
-    730
+    907,
+    782
    ]
   },
   {
@@ -811,34 +1305,15 @@
     "W": 256
    },
    "partner": "core:u_lf.u_vq",
-   "manhattan_um": 128,
-   "cos": 0.973,
+   "manhattan_um": 188,
+   "cos": 0.879,
    "a": [
-    510,
-    737
+    562,
+    788
    ],
    "b": [
-    484,
-    635
-   ]
-  },
-  {
-   "core": "u_vs",
-   "port": "ve_ah",
-   "bits": 256,
-   "faces": {
-    "N": 256
-   },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 194,
-   "cos": 0.996,
-   "a": [
-    635,
-    769
-   ],
-   "b": [
-    665,
-    933
+    536,
+    626
    ]
   },
   {
@@ -848,35 +1323,16 @@
    "faces": {
     "N": 256
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 167,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 137,
+   "cos": 0.836,
    "a": [
-    662,
-    769
+    709,
+    821
    ],
    "b": [
-    665,
-    933
-   ]
-  },
-  {
-   "core": "u_vs",
-   "port": "ve_oy",
-   "bits": 256,
-   "faces": {
-    "N": 256
-   },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 221,
-   "cos": 0.996,
-   "a": [
-    609,
-    769
-   ],
-   "b": [
-    665,
-    933
+    830,
+    838
    ]
   },
   {
@@ -887,14 +1343,14 @@
     "W": 256
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 396,
-   "cos": 1.0,
+   "manhattan_um": 328,
+   "cos": 0.992,
    "a": [
-    510,
-    629
+    562,
+    681
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
@@ -906,14 +1362,14 @@
     "W": 256
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 337,
-   "cos": 0.992,
+   "manhattan_um": 406,
+   "cos": 0.972,
    "a": [
-    510,
-    629
+    562,
+    681
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
@@ -925,14 +1381,14 @@
     "W": 256
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 349,
-   "cos": 1.0,
+   "manhattan_um": 384,
+   "cos": 0.992,
    "a": [
-    510,
-    684
+    562,
+    736
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
@@ -944,14 +1400,14 @@
     "W": 256
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 392,
-   "cos": 0.992,
+   "manhattan_um": 461,
+   "cos": 0.972,
    "a": [
-    510,
-    684
+    562,
+    736
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
@@ -966,27 +1422,27 @@
    "manhattan_um": 237,
    "cos": 0.1,
    "a": [
-    834,
-    768
+    886,
+    820
    ],
    "b": [
-    683,
-    683
+    734,
+    734
    ]
   },
   {
    "core": "u_vs",
    "port": "s_d",
-   "bits": 160,
+   "bits": 158,
    "faces": {
-    "N": 160
+    "N": 158
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 675,
-   "cos": 0.914,
+   "manhattan_um": 640,
+   "cos": 0.86,
    "a": [
-    573,
-    769
+    589,
+    821
    ],
    "b": [
     355,
@@ -994,113 +1450,246 @@
    ]
   },
   {
-   "core": "u_ve",
-   "port": "r_h",
+   "core": "u_m",
+   "port": "a_h",
+   "bits": 128,
+   "faces": {
+    "S": 128
+   },
+   "partner": "core:u_lf.u_vs",
+   "manhattan_um": 164,
+   "cos": 0.836,
+   "a": [
+    821,
+    838
+   ],
+   "b": [
+    674,
+    821
+   ]
+  },
+  {
+   "core": "u_m",
+   "port": "m_dd",
    "bits": 128,
    "faces": {
     "W": 128
    },
-   "partner": "core:u_lf.u_vs",
-   "manhattan_um": 215,
-   "cos": 0.093,
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 130,
+   "cos": 1.0,
    "a": [
-    449,
-    833
+    743,
+    1124
    ],
    "b": [
-    600,
-    769
+    726,
+    1011
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_m",
+   "port": "m_hh",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 128,
+   "cos": 1.0,
+   "a": [
+    743,
+    900
+   ],
+   "b": [
+    726,
+    1011
+   ]
+  },
+  {
+   "core": "u_m",
+   "port": "m_kk",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 18,
+   "cos": 1.0,
+   "a": [
+    743,
+    1012
+   ],
+   "b": [
+    726,
+    1011
+   ]
+  },
+  {
+   "core": "u_m",
+   "port": "o_y",
+   "bits": 128,
+   "faces": {
+    "S": 128
+   },
+   "partner": "core:u_lf.u_vs",
+   "manhattan_um": 243,
+   "cos": 0.836,
+   "a": [
+    899,
+    838
+   ],
+   "b": [
+    674,
+    821
+   ]
+  },
+  {
+   "core": "u_m",
    "port": "r_k",
    "bits": 128,
    "faces": {
-    "W": 128
+    "S": 128
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 286,
-   "cos": 0.093,
+   "manhattan_um": 116,
+   "cos": 0.836,
    "a": [
-    449,
-    904
+    772,
+    838
    ],
    "b": [
-    600,
-    769
+    674,
+    821
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_m",
    "port": "r_w",
    "bits": 128,
    "faces": {
-    "W": 128
+    "S": 128
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 357,
-   "cos": 0.093,
+   "manhattan_um": 140,
+   "cos": 0.836,
    "a": [
-    449,
-    975
+    796,
+    838
    ],
    "b": [
-    600,
-    769
+    674,
+    821
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_s",
+   "port": "m_dd",
+   "bits": 128,
+   "faces": {
+    "E": 128
+   },
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 130,
+   "cos": 1.0,
+   "a": [
+    726,
+    1124
+   ],
+   "b": [
+    743,
+    1011
+   ]
+  },
+  {
+   "core": "u_s",
+   "port": "m_hh",
+   "bits": 128,
+   "faces": {
+    "E": 128
+   },
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 129,
+   "cos": 1.0,
+   "a": [
+    726,
+    900
+   ],
+   "b": [
+    743,
+    1011
+   ]
+  },
+  {
+   "core": "u_s",
+   "port": "m_kk",
+   "bits": 128,
+   "faces": {
+    "E": 128
+   },
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 18,
+   "cos": 1.0,
+   "a": [
+    726,
+    1012
+   ],
+   "b": [
+    743,
+    1011
+   ]
+  },
+  {
+   "core": "u_a",
    "port": "n_pre",
    "bits": 128,
    "faces": {
     "W": 128
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 355,
-   "cos": 0.39,
+   "manhattan_um": 222,
+   "cos": 0.748,
    "a": [
-    78,
-    948
+    190,
+    859
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "n_pre",
    "bits": 128,
    "faces": {
     "W": 128
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 416,
-   "cos": 0.295,
+   "manhattan_um": 248,
+   "cos": 0.684,
    "a": [
-    78,
-    948
+    190,
+    859
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "n_pre",
    "bits": 128,
    "faces": {
     "W": 128
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 556,
-   "cos": -0.287,
+   "manhattan_um": 533,
+   "cos": 0.03,
    "a": [
-    78,
-    948
+    190,
+    859
    ],
    "b": [
     355,
@@ -1108,22 +1697,212 @@
    ]
   },
   {
+   "core": "u_a",
+   "port": "wl_d",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "core:u_lf.u_vp.u_b0",
+   "manhattan_um": 198,
+   "cos": 0.748,
+   "a": [
+    190,
+    834
+   ],
+   "b": [
+    234,
+    680
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "wl_d",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "core:u_lf.u_vp.u_b1",
+   "manhattan_um": 224,
+   "cos": 0.684,
+   "a": [
+    190,
+    834
+   ],
+   "b": [
+    208,
+    628
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "n_pre",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "core:u_lf.u_vp.u_b0",
+   "manhattan_um": 417,
+   "cos": 0.403,
+   "a": [
+    190,
+    1054
+   ],
+   "b": [
+    234,
+    680
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "n_pre",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "core:u_lf.u_vp.u_b1",
+   "manhattan_um": 443,
+   "cos": 0.41,
+   "a": [
+    190,
+    1054
+   ],
+   "b": [
+    208,
+    628
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "n_pre",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "bus:leafdn_i0",
+   "manhattan_um": 338,
+   "cos": 0.054,
+   "a": [
+    190,
+    1054
+   ],
+   "b": [
+    355,
+    1227
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "wl_d",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "core:u_lf.u_vp.u_b0",
+   "manhattan_um": 390,
+   "cos": 0.403,
+   "a": [
+    190,
+    1027
+   ],
+   "b": [
+    234,
+    680
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "wl_d",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "core:u_lf.u_vp.u_b1",
+   "manhattan_um": 416,
+   "cos": 0.41,
+   "a": [
+    190,
+    1027
+   ],
+   "b": [
+    208,
+    628
+   ]
+  },
+  {
+   "core": "u_vq",
+   "port": "y",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "core:u_lf.u_vn.u_a",
+   "manhattan_um": 353,
+   "cos": 0.424,
+   "a": [
+    363,
+    628
+   ],
+   "b": [
+    547,
+    798
+   ]
+  },
+  {
+   "core": "u_vq",
+   "port": "y",
+   "bits": 128,
+   "faces": {
+    "W": 128
+   },
+   "partner": "core:u_lf.u_vn.u_b",
+   "manhattan_um": 539,
+   "cos": 0.22,
+   "a": [
+    363,
+    628
+   ],
+   "b": [
+    547,
+    984
+   ]
+  },
+  {
    "core": "u_vs",
-   "port": "ve_rh",
+   "port": "ve_ah",
    "bits": 128,
    "faces": {
     "N": 128
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 308,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 162,
+   "cos": 0.836,
    "a": [
-    521,
-    769
+    685,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
+   ]
+  },
+  {
+   "core": "u_vs",
+   "port": "ve_oy",
+   "bits": 128,
+   "faces": {
+    "N": 128
+   },
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 179,
+   "cos": 0.836,
+   "a": [
+    668,
+    821
+   ],
+   "b": [
+    830,
+    838
    ]
   },
   {
@@ -1133,16 +1912,16 @@
    "faces": {
     "N": 128
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 295,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 213,
+   "cos": 0.836,
    "a": [
-    534,
-    769
+    634,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
    ]
   },
   {
@@ -1152,16 +1931,16 @@
    "faces": {
     "N": 128
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 282,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 196,
+   "cos": 0.836,
    "a": [
-    548,
-    769
+    651,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
    ]
   },
   {
@@ -1172,15 +1951,72 @@
     "N": 96
    },
    "partner": "bus:leafup_o0",
-   "manhattan_um": 829,
-   "cos": 0.822,
+   "manhattan_um": 798,
+   "cos": 0.754,
    "a": [
-    590,
-    769
+    611,
+    821
    ],
    "b": [
     219,
     1227
+   ]
+  },
+  {
+   "core": "u_m",
+   "port": "r_h",
+   "bits": 64,
+   "faces": {
+    "S": 64
+   },
+   "partner": "core:u_lf.u_vs",
+   "manhattan_um": 98,
+   "cos": 0.836,
+   "a": [
+    754,
+    838
+   ],
+   "b": [
+    674,
+    821
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "y",
+   "bits": 64,
+   "faces": {
+    "E": 64
+   },
+   "partner": "core:u_lf.u_vq",
+   "manhattan_um": 355,
+   "cos": 0.424,
+   "a": [
+    547,
+    798
+   ],
+   "b": [
+    363,
+    626
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "y",
+   "bits": 64,
+   "faces": {
+    "E": 64
+   },
+   "partner": "core:u_lf.u_vq",
+   "manhattan_um": 546,
+   "cos": 0.22,
+   "a": [
+    547,
+    989
+   ],
+   "b": [
+    363,
+    626
    ]
   },
   {
@@ -1194,12 +2030,31 @@
    "manhattan_um": 193,
    "cos": 0.995,
    "a": [
-    683,
-    751
+    734,
+    802
    ],
    "b": [
-    855,
-    730
+    907,
+    782
+   ]
+  },
+  {
+   "core": "u_vs",
+   "port": "ve_rh",
+   "bits": 64,
+   "faces": {
+    "N": 64
+   },
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 225,
+   "cos": 0.836,
+   "a": [
+    622,
+    821
+   ],
+   "b": [
+    830,
+    838
    ]
   },
   {
@@ -1213,12 +2068,12 @@
    "manhattan_um": 310,
    "cos": -0.1,
    "a": [
-    855,
-    545
+    907,
+    597
    ],
    "b": [
-    683,
-    683
+    734,
+    734
    ]
   },
   {
@@ -1229,53 +2084,15 @@
     "E": 32
    },
    "partner": "core:u_lf.u_rxsf",
-   "manhattan_um": 250,
-   "cos": 0.0,
+   "manhattan_um": 277,
+   "cos": -0.095,
    "a": [
-    668,
-    391
+    737,
+    434
    ],
    "b": [
-    527,
-    501
-   ]
-  },
-  {
-   "core": "u_rxsb",
-   "port": "i_u",
-   "bits": 32,
-   "faces": {
-    "E": 32
-   },
-   "partner": "core:u_lf.u_rxsf",
-   "manhattan_um": 245,
-   "cos": 0.0,
-   "a": [
-    668,
-    396
-   ],
-   "b": [
-    527,
-    501
-   ]
-  },
-  {
-   "core": "u_rxsb",
-   "port": "i_u2",
-   "bits": 32,
-   "faces": {
-    "E": 32
-   },
-   "partner": "core:u_lf.u_rxsf",
-   "manhattan_um": 300,
-   "cos": 0.0,
-   "a": [
-    668,
-    341
-   ],
-   "b": [
-    527,
-    501
+    579,
+    553
    ]
   },
   {
@@ -1289,12 +2106,12 @@
    "manhattan_um": 174,
    "cos": -0.006,
    "a": [
-    668,
-    535
+    719,
+    587
    ],
    "b": [
-    554,
-    596
+    606,
+    648
    ]
   },
   {
@@ -1305,144 +2122,163 @@
     "W": 32
    },
    "partner": "core:u_lf.u_rxsb",
-   "manhattan_um": 325,
-   "cos": 0.0,
+   "manhattan_um": 351,
+   "cos": -0.095,
    "a": [
-    527,
-    560
+    579,
+    612
    ],
    "b": [
-    668,
-    376
+    737,
+    419
    ]
   },
   {
-   "core": "u_rxsf",
-   "port": "o_u",
-   "bits": 32,
-   "faces": {
-    "W": 32
-   },
-   "partner": "core:u_lf.u_rxsb",
-   "manhattan_um": 238,
-   "cos": 0.0,
-   "a": [
-    527,
-    473
-   ],
-   "b": [
-    668,
-    376
-   ]
-  },
-  {
-   "core": "u_rxsf",
-   "port": "o_u2",
-   "bits": 32,
-   "faces": {
-    "W": 32
-   },
-   "partner": "core:u_lf.u_rxsb",
-   "manhattan_um": 232,
-   "cos": 0.0,
-   "a": [
-    527,
-    468
-   ],
-   "b": [
-    668,
-    376
-   ]
-  },
-  {
-   "core": "u_ve",
+   "core": "u_m",
    "port": "a_g",
    "bits": 32,
    "faces": {
-    "E": 32
+    "S": 32
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 402,
-   "cos": -0.093,
+   "manhattan_um": 228,
+   "cos": 0.836,
    "a": [
-    795,
-    976
+    884,
+    838
    ],
    "b": [
-    600,
-    769
+    674,
+    821
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_s",
    "port": "p_dd",
    "bits": 32,
    "faces": {
-    "W": 32
+    "S": 32
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 446,
-   "cos": 0.093,
+   "manhattan_um": 140,
+   "cos": 1.0,
    "a": [
-    449,
-    1064
+    695,
+    838
    ],
    "b": [
-    600,
-    769
+    573,
+    821
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_s",
    "port": "p_hh",
    "bits": 32,
    "faces": {
-    "W": 32
+    "S": 32
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 407,
-   "cos": 0.093,
+   "manhattan_um": 40,
+   "cos": 1.0,
    "a": [
-    449,
-    1026
+    596,
+    838
    ],
    "b": [
-    600,
-    769
+    573,
+    821
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_s",
    "port": "p_kk",
+   "bits": 32,
+   "faces": {
+    "S": 32
+   },
+   "partner": "core:u_lf.u_vs",
+   "manhattan_um": 90,
+   "cos": 1.0,
+   "a": [
+    645,
+    838
+   ],
+   "b": [
+    573,
+    821
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "c_s",
+   "bits": 32,
+   "faces": {
+    "N": 32
+   },
+   "partner": "core:u_lf.u_vn.u_b",
+   "manhattan_um": 23,
+   "cos": 1.0,
+   "a": [
+    374,
+    881
+   ],
+   "b": [
+    368,
+    899
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "rb_d",
    "bits": 32,
    "faces": {
     "W": 32
    },
-   "partner": "core:u_lf.u_vs",
-   "manhattan_um": 427,
-   "cos": 0.093,
+   "partner": "bus:leafdn_i0",
+   "manhattan_um": 518,
+   "cos": 0.03,
    "a": [
-    449,
-    1045
+    190,
+    874
    ],
    "b": [
-    600,
-    769
+    355,
+    1227
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_b",
+   "port": "c_s",
+   "bits": 32,
+   "faces": {
+    "S": 32
+   },
+   "partner": "core:u_lf.u_vn.u_a",
+   "manhattan_um": 23,
+   "cos": 1.0,
+   "a": [
+    374,
+    899
+   ],
+   "b": [
+    368,
+    881
+   ]
+  },
+  {
+   "core": "u_b",
    "port": "p_d",
    "bits": 32,
    "faces": {
     "N": 32
    },
    "partner": "bus:leafup_o0",
-   "manhattan_um": 281,
-   "cos": 0.994,
+   "manhattan_um": 394,
+   "cos": 0.851,
    "a": [
-    346,
-    1073
+    458,
+    1071
    ],
    "b": [
     219,
@@ -1450,18 +2286,18 @@
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_b",
    "port": "rb_d",
    "bits": 32,
    "faces": {
     "N": 32
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 336,
-   "cos": 0.958,
+   "manhattan_um": 227,
+   "cos": 0.999,
    "a": [
-    174,
-    1072
+    284,
+    1071
    ],
    "b": [
     355,
@@ -1476,11 +2312,11 @@
     "N": 32
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 686,
-   "cos": 0.914,
+   "manhattan_um": 653,
+   "cos": 0.86,
    "a": [
-    583,
-    769
+    602,
+    821
    ],
    "b": [
     355,
@@ -1498,12 +2334,12 @@
    "manhattan_um": 173,
    "cos": 1.0,
    "a": [
-    555,
-    596
+    607,
+    648
    ],
    "b": [
-    668,
-    535
+    719,
+    587
    ]
   },
   {
@@ -1517,12 +2353,12 @@
    "manhattan_um": 173,
    "cos": 0.995,
    "a": [
-    683,
-    730
+    734,
+    782
    ],
    "b": [
-    855,
-    730
+    907,
+    782
    ]
   },
   {
@@ -1536,12 +2372,12 @@
    "manhattan_um": 186,
    "cos": 0.995,
    "a": [
-    683,
-    716
+    734,
+    768
    ],
    "b": [
-    855,
-    730
+    907,
+    782
    ]
   },
   {
@@ -1551,16 +2387,16 @@
    "faces": {
     "N": 32
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 176,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 119,
+   "cos": 0.836,
    "a": [
-    677,
-    769
+    728,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
    ]
   },
   {
@@ -1570,16 +2406,16 @@
    "faces": {
     "N": 32
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 266,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 84,
+   "cos": 1.0,
    "a": [
-    563,
-    769
+    577,
+    821
    ],
    "b": [
-    665,
-    933
+    644,
+    838
    ]
   },
   {
@@ -1589,16 +2425,16 @@
    "faces": {
     "N": 32
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 273,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 93,
+   "cos": 1.0,
    "a": [
-    556,
-    769
+    568,
+    821
    ],
    "b": [
-    665,
-    933
+    644,
+    838
    ]
   },
   {
@@ -1608,16 +2444,16 @@
    "faces": {
     "N": 32
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 270,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 88,
+   "cos": 1.0,
    "a": [
-    559,
-    769
+    573,
+    821
    ],
    "b": [
-    665,
-    933
+    644,
+    838
    ]
   },
   {
@@ -1631,12 +2467,12 @@
    "manhattan_um": 353,
    "cos": 0.1,
    "a": [
-    950,
-    768
+    1002,
+    820
    ],
    "b": [
-    683,
-    683
+    734,
+    734
    ]
   },
   {
@@ -1650,12 +2486,50 @@
    "manhattan_um": 331,
    "cos": 0.1,
    "a": [
-    928,
-    768
+    980,
+    820
    ],
    "b": [
-    683,
-    683
+    734,
+    734
+   ]
+  },
+  {
+   "core": "u_rxsb",
+   "port": "i_u",
+   "bits": 31,
+   "faces": {
+    "E": 31
+   },
+   "partner": "core:u_lf.u_rxsf",
+   "manhattan_um": 271,
+   "cos": -0.095,
+   "a": [
+    737,
+    440
+   ],
+   "b": [
+    579,
+    553
+   ]
+  },
+  {
+   "core": "u_rxsb",
+   "port": "i_u2",
+   "bits": 31,
+   "faces": {
+    "E": 31
+   },
+   "partner": "core:u_lf.u_rxsf",
+   "manhattan_um": 329,
+   "cos": -0.095,
+   "a": [
+    737,
+    382
+   ],
+   "b": [
+    579,
+    553
    ]
   },
   {
@@ -1666,15 +2540,53 @@
     "W": 31
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 387,
-   "cos": 0.003,
+   "manhattan_um": 379,
+   "cos": 0.052,
    "a": [
-    527,
-    320
+    596,
+    363
    ],
    "b": [
-    639,
-    596
+    690,
+    648
+   ]
+  },
+  {
+   "core": "u_rxsf",
+   "port": "o_u",
+   "bits": 31,
+   "faces": {
+    "W": 31
+   },
+   "partner": "core:u_lf.u_rxsb",
+   "manhattan_um": 264,
+   "cos": -0.095,
+   "a": [
+    579,
+    525
+   ],
+   "b": [
+    737,
+    419
+   ]
+  },
+  {
+   "core": "u_rxsf",
+   "port": "o_u2",
+   "bits": 31,
+   "faces": {
+    "W": 31
+   },
+   "partner": "core:u_lf.u_rxsb",
+   "manhattan_um": 258,
+   "cos": -0.095,
+   "a": [
+    579,
+    519
+   ],
+   "b": [
+    737,
+    419
    ]
   },
   {
@@ -1685,15 +2597,15 @@
     "S": 31
    },
    "partner": "core:u_lf.u_rxsb",
-   "manhattan_um": 385,
-   "cos": 1.0,
+   "manhattan_um": 376,
+   "cos": 0.999,
    "a": [
-    639,
-    596
+    690,
+    648
    ],
    "b": [
-    527,
-    323
+    596,
+    366
    ]
   },
   {
@@ -1704,14 +2616,14 @@
     "W": 10
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 423,
-   "cos": 1.0,
+   "manhattan_um": 354,
+   "cos": 0.992,
    "a": [
-    510,
-    602
+    562,
+    654
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
@@ -1723,14 +2635,14 @@
     "W": 10
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 363,
-   "cos": 0.992,
+   "manhattan_um": 379,
+   "cos": 0.972,
    "a": [
-    510,
-    602
+    562,
+    654
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
@@ -1742,14 +2654,14 @@
     "W": 10
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 369,
-   "cos": 1.0,
+   "manhattan_um": 355,
+   "cos": 0.992,
    "a": [
-    510,
-    656
+    562,
+    708
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
@@ -1761,14 +2673,14 @@
     "W": 10
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 364,
-   "cos": 0.992,
+   "manhattan_um": 433,
+   "cos": 0.972,
    "a": [
-    510,
-    656
+    562,
+    708
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
@@ -1780,11 +2692,11 @@
     "N": 8
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 559,
-   "cos": 0.997,
+   "manhattan_um": 555,
+   "cos": 0.988,
    "a": [
-    323,
-    700
+    375,
+    691
    ],
    "b": [
     355,
@@ -1799,15 +2711,15 @@
     "E": 8
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 70,
-   "cos": 0.973,
+   "manhattan_um": 130,
+   "cos": 0.879,
    "a": [
-    484,
-    694
+    536,
+    685
    ],
    "b": [
-    510,
-    737
+    562,
+    789
    ]
   },
   {
@@ -1818,15 +2730,15 @@
     "W": 8
    },
    "partner": "core:u_lf.u_vq",
-   "manhattan_um": 155,
-   "cos": 0.973,
+   "manhattan_um": 215,
+   "cos": 0.879,
    "a": [
-    510,
-    764
+    562,
+    816
    ],
    "b": [
-    484,
-    635
+    536,
+    626
    ]
   },
   {
@@ -1837,14 +2749,14 @@
     "W": 8
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 368,
-   "cos": 1.0,
+   "manhattan_um": 357,
+   "cos": 0.992,
    "a": [
-    510,
-    658
+    562,
+    709
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
@@ -1856,14 +2768,14 @@
     "W": 8
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 366,
-   "cos": 0.992,
+   "manhattan_um": 435,
+   "cos": 0.972,
    "a": [
-    510,
-    658
+    562,
+    709
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
@@ -1875,11 +2787,11 @@
     "N": 4
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 564,
-   "cos": 0.997,
+   "manhattan_um": 550,
+   "cos": 0.988,
    "a": [
-    318,
-    700
+    370,
+    691
    ],
    "b": [
     355,
@@ -1887,668 +2799,1314 @@
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hr_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[0].u_l",
-   "manhattan_um": 964,
-   "cos": -0.275,
+   "manhattan_um": 927,
+   "cos": -0.998,
    "a": [
-    78,
-    826
+    190,
+    771
    ],
    "b": [
-    446,
-    230
+    1094,
+    748
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hr_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[1].u_l",
-   "manhattan_um": 947,
-   "cos": -0.998,
+   "manhattan_um": 685,
+   "cos": -0.033,
    "a": [
-    78,
-    826
+    190,
+    771
    ],
    "b": [
-    1008,
-    843
+    386,
+    282
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hr_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[2].u_l",
-   "manhattan_um": 506,
-   "cos": 0.0,
+   "manhattan_um": 320,
+   "cos": 0.72,
    "a": [
-    78,
-    826
+    190,
+    771
    ],
    "b": [
-    256,
-    498
+    101,
+    541
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hr_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[3].u_l",
-   "manhattan_um": 844,
-   "cos": -0.999,
+   "manhattan_um": 279,
+   "cos": 0.46,
    "a": [
-    78,
-    826
+    190,
+    771
    ],
    "b": [
-    878,
-    869
+    230,
+    532
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hr_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[4].u_l",
-   "manhattan_um": 1154,
-   "cos": -0.983,
+   "manhattan_um": 214,
+   "cos": 0.941,
    "a": [
-    78,
-    826
+    190,
+    771
    ],
    "b": [
-    1137,
-    731
+    101,
+    895
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hr_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[5].u_l",
-   "manhattan_um": 308,
-   "cos": 0.412,
+   "manhattan_um": 519,
+   "cos": 0.335,
    "a": [
-    78,
-    826
+    190,
+    771
    ],
    "b": [
-    92,
-    532
+    178,
+    265
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hr_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[6].u_l",
-   "manhattan_um": 817,
-   "cos": -0.038,
+   "manhattan_um": 996,
+   "cos": -0.34,
    "a": [
-    78,
-    826
+    190,
+    771
    ],
    "b": [
-    282,
-    213
+    593,
+    178
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hr_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[7].u_l",
-   "manhattan_um": 463,
-   "cos": 0.27,
+   "manhattan_um": 400,
+   "cos": 0.347,
    "a": [
-    78,
-    826
+    190,
+    771
    ],
    "b": [
-    118,
+    222,
     403
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hr_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[8].u_l",
-   "manhattan_um": 619,
-   "cos": 0.209,
+   "manhattan_um": 685,
+   "cos": -0.354,
    "a": [
-    78,
-    826
+    190,
+    771
    ],
    "b": [
-    118,
-    247
+    515,
+    411
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hr_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[9].u_l",
-   "manhattan_um": 1120,
-   "cos": -0.994,
-   "a": [
-    78,
-    826
-   ],
-   "b": [
-    1042,
-    982
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_j",
-   "bits": 3,
-   "faces": {
-    "W": 3
-   },
-   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
-   "manhattan_um": 644,
-   "cos": -0.329,
-   "a": [
-    78,
-    826
-   ],
-   "b": [
-    394,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_j",
-   "bits": 3,
-   "faces": {
-    "W": 3
-   },
-   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
-   "manhattan_um": 1180,
-   "cos": -0.66,
-   "a": [
-    78,
-    826
-   ],
-   "b": [
-    757,
-    325
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_j",
-   "bits": 3,
-   "faces": {
-    "W": 3
-   },
-   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
-   "manhattan_um": 1181,
-   "cos": -1.0,
-   "a": [
-    78,
-    826
-   ],
-   "b": [
-    1172,
-    913
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_j",
-   "bits": 3,
-   "faces": {
-    "W": 3
-   },
-   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
-   "manhattan_um": 774,
-   "cos": -0.254,
-   "a": [
-    78,
-    826
-   ],
-   "b": [
-    394,
-    368
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_j",
-   "bits": 3,
-   "faces": {
-    "W": 3
-   },
-   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
-   "manhattan_um": 1042,
-   "cos": -0.769,
-   "a": [
-    78,
-    826
-   ],
-   "b": [
-    766,
-    472
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_j",
-   "bits": 3,
-   "faces": {
-    "W": 3
-   },
-   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
-   "manhattan_um": 653,
-   "cos": 0.0,
-   "a": [
-    78,
-    826
-   ],
-   "b": [
-    256,
-    351
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_j",
-   "bits": 3,
-   "faces": {
-    "W": 3
-   },
-   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
-   "manhattan_um": 865,
-   "cos": -0.275,
-   "a": [
-    78,
-    728
-   ],
-   "b": [
-    446,
-    230
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_j",
-   "bits": 3,
-   "faces": {
-    "W": 3
-   },
-   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
    "manhattan_um": 1045,
-   "cos": -0.998,
+   "cos": -0.993,
    "a": [
-    78,
-    728
+    190,
+    771
    ],
    "b": [
-    1008,
-    843
+    1120,
+    887
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 476,
+   "cos": 0.564,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 504,
+   "cos": -0.051,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 849,
+   "cos": -0.838,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 700,
+   "cos": 0.342,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 941,
+   "cos": -0.984,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 841,
+   "cos": -0.026,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 930,
+   "cos": -0.998,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 635,
+   "cos": -0.033,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[2].u_l",
-   "manhattan_um": 408,
-   "cos": 0.0,
+   "manhattan_um": 271,
+   "cos": 0.72,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    256,
-    498
+    101,
+    541
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[3].u_l",
-   "manhattan_um": 942,
-   "cos": -0.999,
+   "manhattan_um": 229,
+   "cos": 0.46,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    878,
-    869
+    230,
+    532
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[4].u_l",
-   "manhattan_um": 1063,
-   "cos": -0.983,
+   "manhattan_um": 263,
+   "cos": 0.941,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    1137,
-    731
+    101,
+    895
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[5].u_l",
-   "manhattan_um": 209,
-   "cos": 0.412,
+   "manhattan_um": 469,
+   "cos": 0.335,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    92,
-    532
+    178,
+    265
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[6].u_l",
-   "manhattan_um": 719,
-   "cos": -0.038,
+   "manhattan_um": 947,
+   "cos": -0.34,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    282,
-    213
+    593,
+    178
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[7].u_l",
-   "manhattan_um": 364,
-   "cos": 0.27,
+   "manhattan_um": 350,
+   "cos": 0.347,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    118,
+    222,
     403
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[8].u_l",
-   "manhattan_um": 520,
-   "cos": 0.209,
+   "manhattan_um": 635,
+   "cos": -0.354,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    118,
-    247
+    515,
+    411
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[9].u_l",
-   "manhattan_um": 1218,
-   "cos": -0.994,
+   "manhattan_um": 1095,
+   "cos": -0.993,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    1042,
-    982
+    1120,
+    887
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[10].u_l",
-   "manhattan_um": 546,
-   "cos": -0.329,
+   "manhattan_um": 426,
+   "cos": 0.564,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    394,
-    498
+    92,
+    394
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[11].u_l",
-   "manhattan_um": 1081,
-   "cos": -0.66,
+   "manhattan_um": 454,
+   "cos": -0.051,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    757,
-    325
+    386,
+    463
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[12].u_l",
-   "manhattan_um": 1279,
-   "cos": -1.0,
+   "manhattan_um": 800,
+   "cos": -0.838,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    1172,
-    913
+    792,
+    524
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[13].u_l",
-   "manhattan_um": 675,
-   "cos": -0.254,
+   "manhattan_um": 651,
+   "cos": 0.342,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    394,
-    368
+    126,
+    135
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[14].u_l",
-   "manhattan_um": 943,
-   "cos": -0.769,
+   "manhattan_um": 991,
+   "cos": -0.984,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    766,
-    472
+    990,
+    913
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hw_j",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.g_ln[15].u_l",
-   "manhattan_um": 554,
-   "cos": 0.0,
+   "manhattan_um": 791,
+   "cos": -0.026,
    "a": [
-    78,
-    728
+    190,
+    722
    ],
    "b": [
-    256,
-    351
+    386,
+    126
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "wl_i",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 381,
-   "cos": 0.39,
+   "manhattan_um": 185,
+   "cos": 0.748,
    "a": [
-    79,
-    975
+    190,
+    822
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "wl_i",
    "bits": 3,
    "faces": {
     "W": 3
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 442,
-   "cos": 0.295,
+   "manhattan_um": 211,
+   "cos": 0.684,
    "a": [
-    79,
-    975
+    190,
+    822
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 1113,
+   "cos": -0.951,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 871,
+   "cos": -0.025,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 507,
+   "cos": 0.517,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 465,
+   "cos": 0.292,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 152,
+   "cos": 0.948,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 705,
+   "cos": 0.255,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 1182,
+   "cos": -0.268,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 586,
+   "cos": 0.245,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 871,
+   "cos": -0.248,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 1001,
+   "cos": -0.992,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 662,
+   "cos": 0.424,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 690,
+   "cos": -0.033,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 1036,
+   "cos": -0.676,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 887,
+   "cos": 0.274,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 846,
+   "cos": -0.993,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 1027,
+   "cos": -0.02,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 1059,
+   "cos": -0.951,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 817,
+   "cos": -0.025,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 452,
+   "cos": 0.517,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 411,
+   "cos": 0.292,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 98,
+   "cos": 0.948,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 651,
+   "cos": 0.255,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 1128,
+   "cos": -0.268,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 532,
+   "cos": 0.245,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 817,
+   "cos": -0.248,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 947,
+   "cos": -0.992,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 607,
+   "cos": 0.424,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 635,
+   "cos": -0.033,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 981,
+   "cos": -0.676,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 832,
+   "cos": 0.274,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 809,
+   "cos": -0.993,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_j",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 972,
+   "cos": -0.02,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "wl_i",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.u_b0",
+   "manhattan_um": 377,
+   "cos": 0.403,
+   "a": [
+    190,
+    1013
+   ],
+   "b": [
+    234,
+    680
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "wl_i",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vp.u_b1",
+   "manhattan_um": 403,
+   "cos": 0.41,
+   "a": [
+    190,
+    1013
+   ],
+   "b": [
+    208,
+    628
+   ]
+  },
+  {
+   "core": "u_b",
    "port": "y_i",
    "bits": 3,
    "faces": {
     "E": 3
    },
    "partner": "core:u_lf.u_vq",
-   "manhattan_um": 216,
-   "cos": 0.478,
+   "manhattan_um": 466,
+   "cos": 0.22,
    "a": [
-    434,
-    728
+    547,
+    909
    ],
    "b": [
-    311,
-    635
+    363,
+    626
    ]
   },
   {
@@ -2559,11 +4117,11 @@
     "N": 3
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 566,
-   "cos": 0.997,
+   "manhattan_um": 548,
+   "cos": 0.988,
    "a": [
-    316,
-    700
+    368,
+    691
    ],
    "b": [
     355,
@@ -2578,15 +4136,15 @@
     "E": 3
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 188,
-   "cos": 0.973,
+   "manhattan_um": 248,
+   "cos": 0.879,
    "a": [
-    484,
-    576
+    536,
+    567
    ],
    "b": [
-    510,
-    737
+    562,
+    789
    ]
   },
   {
@@ -2596,16 +4154,35 @@
    "faces": {
     "W": 3
    },
-   "partner": "core:u_lf.u_vn",
-   "manhattan_um": 307,
-   "cos": 0.478,
+   "partner": "core:u_lf.u_vn.u_a",
+   "manhattan_um": 413,
+   "cos": 0.424,
    "a": [
-    311,
-    576
+    363,
+    568
    ],
    "b": [
-    434,
-    760
+    547,
+    798
+   ]
+  },
+  {
+   "core": "u_vq",
+   "port": "y_i",
+   "bits": 3,
+   "faces": {
+    "W": 3
+   },
+   "partner": "core:u_lf.u_vn.u_b",
+   "manhattan_um": 599,
+   "cos": 0.22,
+   "a": [
+    363,
+    568
+   ],
+   "b": [
+    547,
+    984
    ]
   },
   {
@@ -2616,91 +4193,91 @@
     "W": 3
    },
    "partner": "core:u_lf.u_vq",
-   "manhattan_um": 101,
-   "cos": 0.973,
+   "manhattan_um": 162,
+   "cos": 0.879,
    "a": [
-    510,
-    711
+    562,
+    762
    ],
    "b": [
-    484,
-    635
+    536,
+    626
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_m",
    "port": "a_c",
    "bits": 2,
    "faces": {
-    "E": 2
+    "S": 2
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 221,
-   "cos": -0.093,
+   "manhattan_um": 152,
+   "cos": 0.836,
    "a": [
-    794,
-    796
+    808,
+    838
    ],
    "b": [
-    600,
-    769
+    674,
+    821
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_m",
    "port": "o_c",
    "bits": 2,
    "faces": {
-    "E": 2
+    "S": 2
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 412,
-   "cos": -0.093,
+   "manhattan_um": 231,
+   "cos": 0.836,
    "a": [
-    795,
-    986
+    887,
+    838
    ],
    "b": [
-    600,
-    769
+    674,
+    821
    ]
   },
   {
-   "core": "u_ve",
-   "port": "p_c",
-   "bits": 2,
-   "faces": {
-    "W": 2
-   },
-   "partner": "core:u_lf.u_vs",
-   "manhattan_um": 395,
-   "cos": 0.093,
-   "a": [
-    451,
-    1015
-   ],
-   "b": [
-    600,
-    769
-   ]
-  },
-  {
-   "core": "u_ve",
+   "core": "u_m",
    "port": "r_c",
    "bits": 2,
    "faces": {
-    "W": 2
+    "S": 2
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 177,
-   "cos": 0.093,
+   "manhattan_um": 92,
+   "cos": 0.836,
    "a": [
-    451,
-    797
+    748,
+    838
    ],
    "b": [
-    600,
-    769
+    674,
+    821
+   ]
+  },
+  {
+   "core": "u_s",
+   "port": "p_c",
+   "bits": 2,
+   "faces": {
+    "S": 2
+   },
+   "partner": "core:u_lf.u_vs",
+   "manhattan_um": 21,
+   "cos": 1.0,
+   "a": [
+    569,
+    838
+   ],
+   "b": [
+    573,
+    821
    ]
   },
   {
@@ -2711,11 +4288,11 @@
     "N": 2
    },
    "partner": "bus:leafup_o0",
-   "manhattan_um": 824,
-   "cos": 0.822,
+   "manhattan_um": 791,
+   "cos": 0.754,
    "a": [
-    585,
-    769
+    604,
+    821
    ],
    "b": [
     219,
@@ -2730,11 +4307,11 @@
     "N": 2
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 684,
-   "cos": 0.914,
+   "manhattan_um": 650,
+   "cos": 0.86,
    "a": [
-    581,
-    769
+    600,
+    821
    ],
    "b": [
     355,
@@ -2748,16 +4325,16 @@
    "faces": {
     "N": 2
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 207,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 171,
+   "cos": 0.836,
    "a": [
-    622,
-    769
+    676,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
    ]
   },
   {
@@ -2767,16 +4344,16 @@
    "faces": {
     "N": 2
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 234,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 188,
+   "cos": 0.836,
    "a": [
-    595,
-    769
+    659,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
    ]
   },
   {
@@ -2786,16 +4363,16 @@
    "faces": {
     "N": 2
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 275,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 95,
+   "cos": 1.0,
    "a": [
-    554,
-    769
+    566,
+    821
    ],
    "b": [
-    665,
-    933
+    644,
+    838
    ]
   },
   {
@@ -2805,16 +4382,16 @@
    "faces": {
     "N": 2
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 315,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 230,
+   "cos": 0.836,
    "a": [
-    514,
-    769
+    617,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
    ]
   },
   {
@@ -2825,15 +4402,15 @@
     "E": 1
    },
    "partner": "core:u_lf.u_rxsf",
-   "manhattan_um": 248,
-   "cos": 0.0,
+   "manhattan_um": 275,
+   "cos": -0.095,
    "a": [
-    668,
-    393
+    737,
+    436
    ],
    "b": [
-    527,
-    501
+    579,
+    553
    ]
   },
   {
@@ -2844,15 +4421,15 @@
     "E": 1
    },
    "partner": "core:u_lf.u_rxsf",
-   "manhattan_um": 268,
-   "cos": 0.0,
+   "manhattan_um": 294,
+   "cos": -0.095,
    "a": [
-    668,
-    373
+    737,
+    416
    ],
    "b": [
-    527,
-    501
+    579,
+    553
    ]
   },
   {
@@ -2863,15 +4440,15 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 389,
-   "cos": 0.003,
+   "manhattan_um": 380,
+   "cos": 0.052,
    "a": [
-    527,
-    319
+    596,
+    362
    ],
    "b": [
-    639,
-    596
+    690,
+    648
    ]
   },
   {
@@ -2882,15 +4459,15 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 302,
-   "cos": 0.003,
+   "manhattan_um": 293,
+   "cos": 0.052,
    "a": [
-    527,
-    406
+    596,
+    449
    ],
    "b": [
-    639,
-    596
+    690,
+    648
    ]
   },
   {
@@ -2904,12 +4481,12 @@
    "manhattan_um": 176,
    "cos": -0.006,
    "a": [
-    668,
-    534
+    719,
+    585
    ],
    "b": [
-    554,
-    596
+    606,
+    648
    ]
   },
   {
@@ -2920,15 +4497,15 @@
     "W": 1
    },
    "partner": "core:u_lf.u_rxsb",
-   "manhattan_um": 326,
-   "cos": 0.0,
+   "manhattan_um": 352,
+   "cos": -0.095,
    "a": [
-    527,
-    562
+    579,
+    614
    ],
    "b": [
-    668,
-    376
+    737,
+    419
    ]
   },
   {
@@ -2939,1683 +4516,1797 @@
     "W": 1
    },
    "partner": "core:u_lf.u_rxsb",
-   "manhattan_um": 229,
-   "cos": 0.0,
+   "manhattan_um": 255,
+   "cos": -0.095,
    "a": [
-    527,
-    465
+    579,
+    517
    ],
    "b": [
-    668,
-    376
+    737,
+    419
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_m",
    "port": "a_v",
    "bits": 1,
    "faces": {
-    "E": 1
+    "S": 1
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 218,
-   "cos": -0.093,
+   "manhattan_um": 152,
+   "cos": 0.836,
    "a": [
-    794,
-    794
+    808,
+    838
    ],
    "b": [
-    600,
-    769
+    674,
+    821
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_m",
    "port": "fault",
    "bits": 1,
    "faces": {
     "S": 1
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 22,
-   "cos": 0.996,
+   "manhattan_um": 255,
+   "cos": 0.836,
    "a": [
-    596,
-    787
+    912,
+    838
    ],
    "b": [
-    600,
-    769
+    674,
+    821
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_m",
+   "port": "m_pre",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 184,
+   "cos": 1.0,
+   "a": [
+    743,
+    844
+   ],
+   "b": [
+    726,
+    1011
+   ]
+  },
+  {
+   "core": "u_m",
+   "port": "m_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 185,
+   "cos": 1.0,
+   "a": [
+    743,
+    843
+   ],
+   "b": [
+    726,
+    1011
+   ]
+  },
+  {
+   "core": "u_m",
    "port": "o_v",
+   "bits": 1,
+   "faces": {
+    "S": 1
+   },
+   "partner": "core:u_lf.u_vs",
+   "manhattan_um": 231,
+   "cos": 0.836,
+   "a": [
+    887,
+    838
+   ],
+   "b": [
+    674,
+    821
+   ]
+  },
+  {
+   "core": "u_m",
+   "port": "r_v",
+   "bits": 1,
+   "faces": {
+    "S": 1
+   },
+   "partner": "core:u_lf.u_vs",
+   "manhattan_um": 91,
+   "cos": 0.836,
+   "a": [
+    748,
+    838
+   ],
+   "b": [
+    674,
+    821
+   ]
+  },
+  {
+   "core": "u_s",
+   "port": "fault",
+   "bits": 1,
+   "faces": {
+    "S": 1
+   },
+   "partner": "core:u_lf.u_vs",
+   "manhattan_um": 165,
+   "cos": 1.0,
+   "a": [
+    721,
+    838
+   ],
+   "b": [
+    573,
+    821
+   ]
+  },
+  {
+   "core": "u_s",
+   "port": "m_pre",
    "bits": 1,
    "faces": {
     "E": 1
    },
-   "partner": "core:u_lf.u_vs",
-   "manhattan_um": 409,
-   "cos": -0.093,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 185,
+   "cos": 1.0,
    "a": [
-    794,
-    984
+    726,
+    844
    ],
    "b": [
-    600,
-    769
+    743,
+    1011
    ]
   },
   {
-   "core": "u_ve",
+   "core": "u_s",
+   "port": "m_v",
+   "bits": 1,
+   "faces": {
+    "E": 1
+   },
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 185,
+   "cos": 1.0,
+   "a": [
+    726,
+    843
+   ],
+   "b": [
+    743,
+    1011
+   ]
+  },
+  {
+   "core": "u_s",
    "port": "p_v",
    "bits": 1,
    "faces": {
-    "W": 1
+    "S": 1
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 393,
-   "cos": 0.093,
+   "manhattan_um": 23,
+   "cos": 1.0,
    "a": [
-    451,
-    1012
+    567,
+    838
    ],
    "b": [
-    600,
-    769
+    573,
+    821
    ]
   },
   {
-   "core": "u_ve",
-   "port": "r_v",
+   "core": "u_a",
+   "port": "c_v",
    "bits": 1,
    "faces": {
-    "W": 1
+    "N": 1
    },
-   "partner": "core:u_lf.u_vs",
-   "manhattan_um": 174,
-   "cos": 0.093,
+   "partner": "core:u_lf.u_vn.u_b",
+   "manhattan_um": 186,
+   "cos": 1.0,
    "a": [
-    451,
-    794
+    200,
+    881
    ],
    "b": [
-    600,
-    769
+    368,
+    899
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[0].u_l",
-   "manhattan_um": 968,
-   "cos": -0.275,
+   "manhattan_um": 928,
+   "cos": -0.998,
    "a": [
-    79,
-    831
+    190,
+    772
    ],
    "b": [
-    446,
-    230
+    1094,
+    748
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[1].u_l",
-   "manhattan_um": 941,
-   "cos": -0.998,
+   "manhattan_um": 686,
+   "cos": -0.033,
    "a": [
-    79,
-    831
+    190,
+    772
    ],
    "b": [
-    1008,
-    843
+    386,
+    282
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[2].u_l",
-   "manhattan_um": 510,
-   "cos": 0.0,
+   "manhattan_um": 321,
+   "cos": 0.72,
    "a": [
-    79,
-    831
+    190,
+    772
    ],
    "b": [
-    256,
-    498
+    101,
+    541
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[3].u_l",
-   "manhattan_um": 837,
-   "cos": -0.999,
+   "manhattan_um": 280,
+   "cos": 0.46,
    "a": [
-    79,
-    831
+    190,
+    772
    ],
    "b": [
-    878,
-    869
+    230,
+    532
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[4].u_l",
-   "manhattan_um": 1158,
-   "cos": -0.983,
+   "manhattan_um": 213,
+   "cos": 0.941,
    "a": [
-    79,
-    831
+    190,
+    772
    ],
    "b": [
-    1137,
-    731
+    101,
+    895
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[5].u_l",
-   "manhattan_um": 312,
-   "cos": 0.412,
+   "manhattan_um": 519,
+   "cos": 0.335,
    "a": [
-    79,
-    831
+    190,
+    772
    ],
    "b": [
-    92,
-    532
+    178,
+    265
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[6].u_l",
-   "manhattan_um": 821,
-   "cos": -0.038,
+   "manhattan_um": 997,
+   "cos": -0.34,
    "a": [
-    79,
-    831
+    190,
+    772
    ],
    "b": [
-    282,
-    213
+    593,
+    178
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[7].u_l",
-   "manhattan_um": 467,
-   "cos": 0.27,
+   "manhattan_um": 400,
+   "cos": 0.347,
    "a": [
-    79,
-    831
+    190,
+    772
    ],
    "b": [
-    118,
+    222,
     403
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[8].u_l",
-   "manhattan_um": 623,
-   "cos": 0.209,
+   "manhattan_um": 686,
+   "cos": -0.354,
    "a": [
-    79,
-    831
+    190,
+    772
    ],
    "b": [
-    118,
-    247
+    515,
+    411
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[9].u_l",
-   "manhattan_um": 1114,
-   "cos": -0.994,
-   "a": [
-    79,
-    831
-   ],
-   "b": [
-    1042,
-    982
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
-   "manhattan_um": 649,
-   "cos": -0.329,
-   "a": [
-    79,
-    831
-   ],
-   "b": [
-    394,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
-   "manhattan_um": 1184,
-   "cos": -0.66,
-   "a": [
-    79,
-    831
-   ],
-   "b": [
-    757,
-    325
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
-   "manhattan_um": 1174,
-   "cos": -1.0,
-   "a": [
-    79,
-    831
-   ],
-   "b": [
-    1172,
-    913
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
-   "manhattan_um": 778,
-   "cos": -0.254,
-   "a": [
-    79,
-    831
-   ],
-   "b": [
-    394,
-    368
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
-   "manhattan_um": 1046,
-   "cos": -0.769,
-   "a": [
-    79,
-    831
-   ],
-   "b": [
-    766,
-    472
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hq_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
-   "manhattan_um": 657,
-   "cos": 0.0,
-   "a": [
-    79,
-    831
-   ],
-   "b": [
-    256,
-    351
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
-   "manhattan_um": 966,
-   "cos": -0.275,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    446,
-    230
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
-   "manhattan_um": 943,
-   "cos": -0.998,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    1008,
-    843
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
-   "manhattan_um": 508,
-   "cos": 0.0,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    256,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
-   "manhattan_um": 840,
-   "cos": -0.999,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    878,
-    869
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
-   "manhattan_um": 1156,
-   "cos": -0.983,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    1137,
-    731
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
-   "manhattan_um": 309,
-   "cos": 0.412,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    92,
-    532
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
-   "manhattan_um": 819,
-   "cos": -0.038,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    282,
-    213
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
-   "manhattan_um": 465,
-   "cos": 0.27,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    118,
-    403
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
-   "manhattan_um": 620,
-   "cos": 0.209,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    118,
-    247
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
-   "manhattan_um": 1116,
-   "cos": -0.994,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    1042,
-    982
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
-   "manhattan_um": 646,
-   "cos": -0.329,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    394,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
-   "manhattan_um": 1182,
-   "cos": -0.66,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    757,
-    325
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
-   "manhattan_um": 1177,
-   "cos": -1.0,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    1172,
-    913
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
-   "manhattan_um": 776,
-   "cos": -0.254,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    394,
-    368
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
    "manhattan_um": 1044,
-   "cos": -0.769,
+   "cos": -0.993,
    "a": [
-    79,
-    829
+    190,
+    772
    ],
    "b": [
-    766,
-    472
+    1120,
+    887
    ]
   },
   {
-   "core": "u_vn",
-   "port": "hr_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
-   "manhattan_um": 655,
-   "cos": 0.0,
-   "a": [
-    79,
-    829
-   ],
-   "b": [
-    256,
-    351
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
-   "manhattan_um": 960,
-   "cos": -0.275,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    446,
-    230
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
-   "manhattan_um": 949,
-   "cos": -0.998,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    1008,
-    843
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
-   "manhattan_um": 502,
-   "cos": 0.0,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    256,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
-   "manhattan_um": 845,
-   "cos": -0.999,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    878,
-    869
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
-   "manhattan_um": 1150,
-   "cos": -0.983,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    1137,
-    731
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
-   "manhattan_um": 303,
-   "cos": 0.412,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    92,
-    532
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
-   "manhattan_um": 813,
-   "cos": -0.038,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    282,
-    213
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
-   "manhattan_um": 459,
-   "cos": 0.27,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    118,
-    403
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
-   "manhattan_um": 615,
-   "cos": 0.209,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    118,
-    247
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
-   "manhattan_um": 1122,
-   "cos": -0.994,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    1042,
-    982
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
+   "core": "u_a",
+   "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[10].u_l",
-   "manhattan_um": 640,
-   "cos": -0.329,
+   "manhattan_um": 476,
+   "cos": 0.564,
    "a": [
-    79,
-    823
-   ],
-   "b": [
-    394,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
-   "manhattan_um": 1176,
-   "cos": -0.66,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    757,
-    325
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
-   "manhattan_um": 1182,
-   "cos": -1.0,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    1172,
-    913
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
-   "manhattan_um": 770,
-   "cos": -0.254,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    394,
-    368
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
-   "manhattan_um": 1038,
-   "cos": -0.769,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    766,
-    472
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hr_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
-   "manhattan_um": 649,
-   "cos": 0.0,
-   "a": [
-    79,
-    823
-   ],
-   "b": [
-    256,
-    351
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
-   "manhattan_um": 869,
-   "cos": -0.275,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    446,
-    230
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
-   "manhattan_um": 1043,
-   "cos": -0.998,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    1008,
-    843
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
-   "manhattan_um": 411,
-   "cos": 0.0,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    256,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
-   "manhattan_um": 939,
-   "cos": -0.999,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    878,
-    869
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
-   "manhattan_um": 1060,
-   "cos": -0.983,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    1137,
-    731
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
-   "manhattan_um": 212,
-   "cos": 0.412,
-   "a": [
-    78,
-    731
+    190,
+    772
    ],
    "b": [
     92,
-    532
+    394
    ]
   },
   {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
-   "manhattan_um": 722,
-   "cos": -0.038,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    282,
-    213
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
-   "manhattan_um": 368,
-   "cos": 0.27,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    118,
-    403
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
-   "manhattan_um": 523,
-   "cos": 0.209,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    118,
-    247
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
-   "manhattan_um": 1216,
-   "cos": -0.994,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    1042,
-    982
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
-   "manhattan_um": 549,
-   "cos": -0.329,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    394,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
+   "core": "u_a",
+   "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[11].u_l",
-   "manhattan_um": 1085,
-   "cos": -0.66,
+   "manhattan_um": 504,
+   "cos": -0.051,
    "a": [
-    78,
-    731
+    190,
+    772
    ],
    "b": [
-    757,
-    325
+    386,
+    463
    ]
   },
   {
-   "core": "u_vn",
-   "port": "hw_hf",
+   "core": "u_a",
+   "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[12].u_l",
-   "manhattan_um": 1276,
-   "cos": -1.0,
+   "manhattan_um": 850,
+   "cos": -0.838,
    "a": [
-    78,
-    731
+    190,
+    772
    ],
    "b": [
-    1172,
-    913
+    792,
+    524
    ]
   },
   {
-   "core": "u_vn",
-   "port": "hw_hf",
+   "core": "u_a",
+   "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[13].u_l",
-   "manhattan_um": 679,
-   "cos": -0.254,
+   "manhattan_um": 701,
+   "cos": 0.342,
    "a": [
-    78,
-    731
+    190,
+    772
    ],
    "b": [
-    394,
-    368
+    126,
+    135
    ]
   },
   {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
-   "manhattan_um": 946,
-   "cos": -0.769,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    766,
-    472
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_hf",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
-   "manhattan_um": 558,
-   "cos": 0.0,
-   "a": [
-    78,
-    731
-   ],
-   "b": [
-    256,
-    351
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
-   "manhattan_um": 863,
-   "cos": -0.275,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    446,
-    230
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
-   "manhattan_um": 1048,
-   "cos": -0.998,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    1008,
-    843
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
-   "manhattan_um": 405,
-   "cos": 0.0,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    256,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
-   "manhattan_um": 945,
-   "cos": -0.999,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    878,
-    869
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
-   "manhattan_um": 1066,
-   "cos": -0.983,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    1137,
-    731
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
-   "manhattan_um": 206,
-   "cos": 0.412,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    92,
-    532
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
-   "manhattan_um": 716,
-   "cos": -0.038,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    282,
-    213
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
-   "manhattan_um": 362,
-   "cos": 0.27,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    118,
-    403
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
-   "manhattan_um": 517,
-   "cos": 0.209,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    118,
-    247
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
-   "manhattan_um": 1221,
-   "cos": -0.994,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    1042,
-    982
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
-   "manhattan_um": 543,
-   "cos": -0.329,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    394,
-    498
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
-   "manhattan_um": 1079,
-   "cos": -0.66,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    757,
-    325
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
-   "manhattan_um": 1282,
-   "cos": -1.0,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    1172,
-    913
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
-   "bits": 1,
-   "faces": {
-    "W": 1
-   },
-   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
-   "manhattan_um": 673,
-   "cos": -0.254,
-   "a": [
-    78,
-    725
-   ],
-   "b": [
-    394,
-    368
-   ]
-  },
-  {
-   "core": "u_vn",
-   "port": "hw_v",
+   "core": "u_a",
+   "port": "hq_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[14].u_l",
    "manhattan_um": 941,
-   "cos": -0.769,
+   "cos": -0.984,
    "a": [
-    78,
-    725
+    190,
+    772
    ],
    "b": [
-    766,
-    472
+    990,
+    913
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 841,
+   "cos": -0.026,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 927,
+   "cos": -0.998,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 685,
+   "cos": -0.033,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 320,
+   "cos": 0.72,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 279,
+   "cos": 0.46,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 213,
+   "cos": 0.941,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 519,
+   "cos": 0.335,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 996,
+   "cos": -0.34,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 400,
+   "cos": 0.347,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 685,
+   "cos": -0.354,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 1045,
+   "cos": -0.993,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 476,
+   "cos": 0.564,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 504,
+   "cos": -0.051,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 850,
+   "cos": -0.838,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 701,
+   "cos": 0.342,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 941,
+   "cos": -0.984,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 841,
+   "cos": -0.026,
+   "a": [
+    190,
+    772
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 927,
+   "cos": -0.998,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 685,
+   "cos": -0.033,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 320,
+   "cos": 0.72,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 279,
+   "cos": 0.46,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 214,
+   "cos": 0.941,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 518,
+   "cos": 0.335,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 996,
+   "cos": -0.34,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 400,
+   "cos": 0.347,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 685,
+   "cos": -0.354,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 1045,
+   "cos": -0.993,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 475,
+   "cos": 0.564,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 503,
+   "cos": -0.051,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 849,
+   "cos": -0.838,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 700,
+   "cos": 0.342,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 942,
+   "cos": -0.984,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 840,
+   "cos": -0.026,
+   "a": [
+    190,
+    771
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 930,
+   "cos": -0.998,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 636,
+   "cos": -0.033,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 271,
+   "cos": 0.72,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 230,
+   "cos": 0.46,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 263,
+   "cos": 0.941,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 470,
+   "cos": 0.335,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 947,
+   "cos": -0.34,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 351,
+   "cos": 0.347,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 636,
+   "cos": -0.354,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 1094,
+   "cos": -0.993,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 426,
+   "cos": 0.564,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 454,
+   "cos": -0.051,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 800,
+   "cos": -0.838,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 651,
+   "cos": 0.342,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 991,
+   "cos": -0.984,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 791,
+   "cos": -0.026,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 931,
+   "cos": -0.998,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 635,
+   "cos": -0.033,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 270,
+   "cos": 0.72,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 229,
+   "cos": 0.46,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 263,
+   "cos": 0.941,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 469,
+   "cos": 0.335,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 946,
+   "cos": -0.34,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 350,
+   "cos": 0.347,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 635,
+   "cos": -0.354,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 1095,
+   "cos": -0.993,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 426,
+   "cos": 0.564,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 454,
+   "cos": -0.051,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 799,
+   "cos": -0.838,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 650,
+   "cos": 0.342,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 991,
+   "cos": -0.984,
+   "a": [
+    190,
+    722
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_a",
    "port": "hw_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.g_ln[15].u_l",
-   "manhattan_um": 552,
-   "cos": 0.0,
+   "manhattan_um": 791,
+   "cos": -0.026,
    "a": [
-    78,
-    725
+    190,
+    722
    ],
    "b": [
-    256,
-    351
+    386,
+    126
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "n_go",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 331,
-   "cos": 0.39,
+   "manhattan_um": 210,
+   "cos": 0.748,
    "a": [
-    78,
-    924
+    190,
+    846
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "n_go",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 391,
-   "cos": 0.295,
+   "manhattan_um": 236,
+   "cos": 0.684,
    "a": [
-    78,
-    924
+    190,
+    846
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
    "port": "n_go",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 580,
-   "cos": -0.287,
+   "manhattan_um": 546,
+   "cos": 0.03,
    "a": [
-    78,
-    924
+    190,
+    846
    ],
    "b": [
     355,
@@ -4623,18 +6314,1671 @@
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_a",
+   "port": "rb_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "bus:leafdn_i0",
+   "manhattan_um": 521,
+   "cos": 0.03,
+   "a": [
+    190,
+    871
+   ],
+   "b": [
+    355,
+    1227
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "wl_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.u_b0",
+   "manhattan_um": 185,
+   "cos": 0.748,
+   "a": [
+    190,
+    821
+   ],
+   "b": [
+    234,
+    680
+   ]
+  },
+  {
+   "core": "u_a",
+   "port": "wl_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.u_b1",
+   "manhattan_um": 211,
+   "cos": 0.684,
+   "a": [
+    190,
+    821
+   ],
+   "b": [
+    208,
+    628
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "c_v",
+   "bits": 1,
+   "faces": {
+    "S": 1
+   },
+   "partner": "core:u_lf.u_vn.u_a",
+   "manhattan_um": 186,
+   "cos": 1.0,
+   "a": [
+    200,
+    899
+   ],
+   "b": [
+    368,
+    881
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 1114,
+   "cos": -0.951,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 872,
+   "cos": -0.025,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 507,
+   "cos": 0.517,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 466,
+   "cos": 0.292,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 153,
+   "cos": 0.948,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 706,
+   "cos": 0.255,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 1183,
+   "cos": -0.268,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 587,
+   "cos": 0.245,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 872,
+   "cos": -0.248,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 1002,
+   "cos": -0.992,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 663,
+   "cos": 0.424,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 691,
+   "cos": -0.033,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 1036,
+   "cos": -0.676,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 887,
+   "cos": 0.274,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 846,
+   "cos": -0.993,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hq_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 1028,
+   "cos": -0.02,
+   "a": [
+    190,
+    959
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 1114,
+   "cos": -0.951,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 872,
+   "cos": -0.025,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 507,
+   "cos": 0.517,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 466,
+   "cos": 0.292,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 153,
+   "cos": 0.948,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 706,
+   "cos": 0.255,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 1183,
+   "cos": -0.268,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 587,
+   "cos": 0.245,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 872,
+   "cos": -0.248,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 1001,
+   "cos": -0.992,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 662,
+   "cos": 0.424,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 690,
+   "cos": -0.033,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 1036,
+   "cos": -0.676,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 887,
+   "cos": 0.274,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 846,
+   "cos": -0.993,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 1027,
+   "cos": -0.02,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 1113,
+   "cos": -0.951,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 871,
+   "cos": -0.025,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 506,
+   "cos": 0.517,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 465,
+   "cos": 0.292,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 152,
+   "cos": 0.948,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 705,
+   "cos": 0.255,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 1182,
+   "cos": -0.268,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 586,
+   "cos": 0.245,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 871,
+   "cos": -0.248,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 1001,
+   "cos": -0.992,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 662,
+   "cos": 0.424,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 690,
+   "cos": -0.033,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 1035,
+   "cos": -0.676,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 886,
+   "cos": 0.274,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 845,
+   "cos": -0.993,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hr_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 1027,
+   "cos": -0.02,
+   "a": [
+    190,
+    958
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 1059,
+   "cos": -0.951,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 817,
+   "cos": -0.025,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 452,
+   "cos": 0.517,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 411,
+   "cos": 0.292,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 98,
+   "cos": 0.948,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 651,
+   "cos": 0.255,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 1128,
+   "cos": -0.268,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 532,
+   "cos": 0.245,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 817,
+   "cos": -0.248,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 947,
+   "cos": -0.992,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 608,
+   "cos": 0.424,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 636,
+   "cos": -0.033,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 982,
+   "cos": -0.676,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 833,
+   "cos": 0.274,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 809,
+   "cos": -0.993,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_hf",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 973,
+   "cos": -0.02,
+   "a": [
+    190,
+    904
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[0].u_l",
+   "manhattan_um": 1058,
+   "cos": -0.951,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    1094,
+    748
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[1].u_l",
+   "manhattan_um": 817,
+   "cos": -0.025,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    386,
+    282
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[2].u_l",
+   "manhattan_um": 452,
+   "cos": 0.517,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    101,
+    541
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[3].u_l",
+   "manhattan_um": 410,
+   "cos": 0.292,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    230,
+    532
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[4].u_l",
+   "manhattan_um": 97,
+   "cos": 0.948,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    101,
+    895
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[5].u_l",
+   "manhattan_um": 650,
+   "cos": 0.255,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    178,
+    265
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[6].u_l",
+   "manhattan_um": 1128,
+   "cos": -0.268,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    593,
+    178
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[7].u_l",
+   "manhattan_um": 531,
+   "cos": 0.245,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    222,
+    403
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[8].u_l",
+   "manhattan_um": 817,
+   "cos": -0.248,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    515,
+    411
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[9].u_l",
+   "manhattan_um": 946,
+   "cos": -0.992,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    1120,
+    887
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[10].u_l",
+   "manhattan_um": 607,
+   "cos": 0.424,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    92,
+    394
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[11].u_l",
+   "manhattan_um": 635,
+   "cos": -0.033,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    386,
+    463
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[12].u_l",
+   "manhattan_um": 981,
+   "cos": -0.676,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    792,
+    524
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[13].u_l",
+   "manhattan_um": 832,
+   "cos": 0.274,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    126,
+    135
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[14].u_l",
+   "manhattan_um": 810,
+   "cos": -0.993,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    990,
+    913
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "hw_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.g_ln[15].u_l",
+   "manhattan_um": 972,
+   "cos": -0.02,
+   "a": [
+    190,
+    903
+   ],
+   "b": [
+    386,
+    126
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "n_go",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.u_b0",
+   "manhattan_um": 404,
+   "cos": 0.403,
+   "a": [
+    190,
+    1040
+   ],
+   "b": [
+    234,
+    680
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "n_go",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vp.u_b1",
+   "manhattan_um": 430,
+   "cos": 0.41,
+   "a": [
+    190,
+    1040
+   ],
+   "b": [
+    208,
+    628
+   ]
+  },
+  {
+   "core": "u_b",
+   "port": "n_go",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "bus:leafdn_i0",
+   "manhattan_um": 352,
+   "cos": 0.054,
+   "a": [
+    190,
+    1040
+   ],
+   "b": [
+    355,
+    1227
+   ]
+  },
+  {
+   "core": "u_b",
    "port": "p_v",
    "bits": 1,
    "faces": {
     "N": 1
    },
    "partner": "bus:leafup_o0",
-   "manhattan_um": 195,
-   "cos": 0.994,
+   "manhattan_um": 308,
+   "cos": 0.851,
    "a": [
-    260,
-    1072
+    371,
+    1071
    ],
    "b": [
     219,
@@ -4642,18 +7986,18 @@
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_b",
    "port": "rb_v",
    "bits": 1,
    "faces": {
     "N": 1
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 422,
-   "cos": 0.958,
+   "manhattan_um": 314,
+   "cos": 0.999,
    "a": [
-    88,
-    1072
+    197,
+    1071
    ],
    "b": [
     355,
@@ -4661,60 +8005,60 @@
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_b",
    "port": "wl_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 379,
-   "cos": 0.39,
+   "manhattan_um": 376,
+   "cos": 0.403,
    "a": [
-    78,
-    973
+    190,
+    1013
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_b",
    "port": "wl_v",
    "bits": 1,
    "faces": {
     "W": 1
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 440,
-   "cos": 0.295,
+   "manhattan_um": 402,
+   "cos": 0.41,
    "a": [
-    78,
-    973
+    190,
+    1013
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
   {
-   "core": "u_vn",
+   "core": "u_b",
    "port": "y_v",
    "bits": 1,
    "faces": {
     "E": 1
    },
    "partner": "core:u_lf.u_vq",
-   "manhattan_um": 212,
-   "cos": 0.478,
+   "manhattan_um": 461,
+   "cos": 0.22,
    "a": [
-    434,
-    725
+    547,
+    904
    ],
    "b": [
-    311,
-    635
+    363,
+    626
    ]
   },
   {
@@ -4725,11 +8069,11 @@
     "N": 1
    },
    "partner": "bus:leafup_o0",
-   "manhattan_um": 634,
-   "cos": 0.957,
+   "manhattan_um": 694,
+   "cos": 0.934,
    "a": [
-    326,
-    700
+    377,
+    691
    ],
    "b": [
     219,
@@ -4744,11 +8088,11 @@
     "N": 1
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 562,
-   "cos": 0.997,
+   "manhattan_um": 553,
+   "cos": 0.988,
    "a": [
-    321,
-    700
+    373,
+    691
    ],
    "b": [
     355,
@@ -4763,11 +8107,11 @@
     "N": 1
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 562,
-   "cos": 0.997,
+   "manhattan_um": 552,
+   "cos": 0.988,
    "a": [
-    320,
-    700
+    372,
+    691
    ],
    "b": [
     355,
@@ -4782,11 +8126,11 @@
     "N": 1
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 563,
-   "cos": 0.997,
+   "manhattan_um": 552,
+   "cos": 0.988,
    "a": [
-    320,
-    700
+    371,
+    691
    ],
    "b": [
     355,
@@ -4801,15 +8145,15 @@
     "E": 1
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 189,
-   "cos": 0.973,
+   "manhattan_um": 249,
+   "cos": 0.879,
    "a": [
-    484,
-    575
+    536,
+    566
    ],
    "b": [
-    510,
-    737
+    562,
+    789
    ]
   },
   {
@@ -4820,15 +8164,15 @@
     "E": 1
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 72,
-   "cos": 0.973,
+   "manhattan_um": 132,
+   "cos": 0.879,
    "a": [
-    484,
-    692
+    536,
+    683
    ],
    "b": [
-    510,
-    737
+    562,
+    789
    ]
   },
   {
@@ -4839,15 +8183,15 @@
     "E": 1
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 72,
-   "cos": 0.973,
+   "manhattan_um": 132,
+   "cos": 0.879,
    "a": [
-    484,
-    691
+    536,
+    683
    ],
    "b": [
-    510,
-    737
+    562,
+    789
    ]
   },
   {
@@ -4858,15 +8202,15 @@
     "E": 1
    },
    "partner": "core:u_lf.u_vs",
-   "manhattan_um": 72,
-   "cos": 0.973,
+   "manhattan_um": 133,
+   "cos": 0.879,
    "a": [
-    484,
-    691
+    536,
+    682
    ],
    "b": [
-    510,
-    737
+    562,
+    789
    ]
   },
   {
@@ -4877,11 +8221,11 @@
     "N": 1
    },
    "partner": "bus:leafup_o0",
-   "manhattan_um": 635,
-   "cos": 0.957,
+   "manhattan_um": 695,
+   "cos": 0.934,
    "a": [
-    327,
-    700
+    379,
+    691
    ],
    "b": [
     219,
@@ -4896,11 +8240,11 @@
     "N": 1
    },
    "partner": "bus:leafup_o0",
-   "manhattan_um": 634,
-   "cos": 0.957,
+   "manhattan_um": 695,
+   "cos": 0.934,
    "a": [
-    326,
-    700
+    378,
+    691
    ],
    "b": [
     219,
@@ -4914,16 +8258,35 @@
    "faces": {
     "W": 1
    },
-   "partner": "core:u_lf.u_vn",
-   "manhattan_um": 308,
-   "cos": 0.478,
+   "partner": "core:u_lf.u_vn.u_a",
+   "manhattan_um": 415,
+   "cos": 0.424,
    "a": [
-    311,
-    575
+    363,
+    566
    ],
    "b": [
-    434,
-    760
+    547,
+    798
+   ]
+  },
+  {
+   "core": "u_vq",
+   "port": "y_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_lf.u_vn.u_b",
+   "manhattan_um": 601,
+   "cos": 0.22,
+   "a": [
+    363,
+    566
+   ],
+   "b": [
+    547,
+    984
    ]
   },
   {
@@ -4934,11 +8297,11 @@
     "N": 1
    },
    "partner": "bus:leafup_o0",
-   "manhattan_um": 824,
-   "cos": 0.822,
+   "manhattan_um": 791,
+   "cos": 0.754,
    "a": [
-    585,
-    769
+    604,
+    821
    ],
    "b": [
     219,
@@ -4953,11 +8316,11 @@
     "N": 1
    },
    "partner": "bus:leafup_o0",
-   "manhattan_um": 834,
-   "cos": 0.822,
+   "manhattan_um": 804,
+   "cos": 0.754,
    "a": [
-    595,
-    769
+    617,
+    821
    ],
    "b": [
     219,
@@ -4972,11 +8335,11 @@
     "N": 1
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 684,
-   "cos": 0.914,
+   "manhattan_um": 650,
+   "cos": 0.86,
    "a": [
-    581,
-    769
+    600,
+    821
    ],
    "b": [
     355,
@@ -4991,15 +8354,15 @@
     "S": 1
    },
    "partner": "core:u_lf.u_rxsb",
-   "manhattan_um": 424,
-   "cos": 1.0,
+   "manhattan_um": 415,
+   "cos": 0.999,
    "a": [
-    677,
-    596
+    729,
+    648
    ],
    "b": [
-    527,
-    323
+    596,
+    366
    ]
   },
   {
@@ -5013,12 +8376,12 @@
    "manhattan_um": 213,
    "cos": 1.0,
    "a": [
-    515,
-    596
+    567,
+    648
    ],
    "b": [
-    668,
-    535
+    719,
+    587
    ]
   },
   {
@@ -5029,15 +8392,15 @@
     "S": 1
    },
    "partner": "core:u_lf.u_rxsb",
-   "manhattan_um": 346,
-   "cos": 1.0,
+   "manhattan_um": 338,
+   "cos": 0.999,
    "a": [
-    600,
-    596
+    652,
+    648
    ],
    "b": [
-    527,
-    323
+    596,
+    366
    ]
   },
   {
@@ -5048,11 +8411,11 @@
     "N": 1
    },
    "partner": "bus:leafdn_i0",
-   "manhattan_um": 667,
-   "cos": 0.914,
+   "manhattan_um": 630,
+   "cos": 0.86,
    "a": [
-    564,
-    769
+    579,
+    821
    ],
    "b": [
     355,
@@ -5070,12 +8433,12 @@
    "manhattan_um": 207,
    "cos": 0.995,
    "a": [
-    683,
-    764
+    734,
+    816
    ],
    "b": [
-    855,
-    730
+    907,
+    782
    ]
   },
   {
@@ -5089,12 +8452,12 @@
    "manhattan_um": 302,
    "cos": 0.995,
    "a": [
-    683,
-    601
+    734,
+    653
    ],
    "b": [
-    855,
-    730
+    907,
+    782
    ]
   },
   {
@@ -5108,12 +8471,12 @@
    "manhattan_um": 179,
    "cos": 0.995,
    "a": [
-    683,
-    737
+    734,
+    789
    ],
    "b": [
-    855,
-    730
+    907,
+    782
    ]
   },
   {
@@ -5124,15 +8487,15 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vq",
-   "manhattan_um": 101,
-   "cos": 0.973,
+   "manhattan_um": 162,
+   "cos": 0.879,
    "a": [
-    510,
-    710
+    562,
+    762
    ],
    "b": [
-    484,
-    635
+    536,
+    626
    ]
   },
   {
@@ -5143,15 +8506,15 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vq",
-   "manhattan_um": 154,
-   "cos": 0.973,
+   "manhattan_um": 214,
+   "cos": 0.879,
    "a": [
-    510,
-    763
+    562,
+    815
    ],
    "b": [
-    484,
-    635
+    536,
+    626
    ]
   },
   {
@@ -5162,15 +8525,15 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vq",
-   "manhattan_um": 154,
-   "cos": 0.973,
+   "manhattan_um": 214,
+   "cos": 0.879,
    "a": [
-    510,
-    763
+    562,
+    815
    ],
    "b": [
-    484,
-    635
+    536,
+    626
    ]
   },
   {
@@ -5181,15 +8544,15 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vq",
-   "manhattan_um": 154,
-   "cos": 0.973,
+   "manhattan_um": 214,
+   "cos": 0.879,
    "a": [
-    510,
-    763
+    562,
+    814
    ],
    "b": [
-    484,
-    635
+    536,
+    626
    ]
   },
   {
@@ -5199,16 +8562,16 @@
    "faces": {
     "N": 1
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 207,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 171,
+   "cos": 0.836,
    "a": [
-    622,
-    769
+    676,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
    ]
   },
   {
@@ -5218,16 +8581,35 @@
    "faces": {
     "N": 1
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 234,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 230,
+   "cos": 0.836,
    "a": [
-    595,
-    769
+    617,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
+   ]
+  },
+  {
+   "core": "u_vs",
+   "port": "ve_fi",
+   "bits": 1,
+   "faces": {
+    "N": 1
+   },
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 44,
+   "cos": 1.0,
+   "a": [
+    617,
+    821
+   ],
+   "b": [
+    644,
+    838
    ]
   },
   {
@@ -5237,16 +8619,16 @@
    "faces": {
     "N": 1
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 234,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 188,
+   "cos": 0.836,
    "a": [
-    595,
-    769
+    659,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
    ]
   },
   {
@@ -5256,16 +8638,16 @@
    "faces": {
     "N": 1
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 275,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_s",
+   "manhattan_um": 95,
+   "cos": 1.0,
    "a": [
-    554,
-    769
+    566,
+    821
    ],
    "b": [
-    665,
-    933
+    644,
+    838
    ]
   },
   {
@@ -5275,16 +8657,16 @@
    "faces": {
     "N": 1
    },
-   "partner": "core:u_lf.u_ve",
-   "manhattan_um": 315,
-   "cos": 0.996,
+   "partner": "core:u_lf.u_ve.u_m",
+   "manhattan_um": 230,
+   "cos": 0.836,
    "a": [
-    514,
-    769
+    617,
+    821
    ],
    "b": [
-    665,
-    933
+    830,
+    838
    ]
   },
   {
@@ -5295,14 +8677,14 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 422,
-   "cos": 1.0,
+   "manhattan_um": 353,
+   "cos": 0.992,
    "a": [
-    510,
-    603
+    562,
+    655
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
@@ -5314,14 +8696,14 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 362,
-   "cos": 0.992,
+   "manhattan_um": 380,
+   "cos": 0.972,
    "a": [
-    510,
-    603
+    562,
+    655
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
@@ -5333,14 +8715,14 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 425,
-   "cos": 1.0,
+   "manhattan_um": 355,
+   "cos": 0.992,
    "a": [
-    510,
-    601
+    562,
+    652
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
@@ -5352,14 +8734,14 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 364,
-   "cos": 0.992,
+   "manhattan_um": 378,
+   "cos": 0.972,
    "a": [
-    510,
-    601
+    562,
+    652
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
@@ -5371,14 +8753,14 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vp.u_b0",
-   "manhattan_um": 370,
-   "cos": 1.0,
+   "manhattan_um": 354,
+   "cos": 0.992,
    "a": [
-    510,
-    655
+    562,
+    706
    ],
    "b": [
-    165,
+    234,
     680
    ]
   },
@@ -5390,14 +8772,14 @@
     "W": 1
    },
    "partner": "core:u_lf.u_vp.u_b1",
-   "manhattan_um": 363,
-   "cos": 0.992,
+   "manhattan_um": 432,
+   "cos": 0.972,
    "a": [
-    510,
-    655
+    562,
+    706
    ],
    "b": [
-    174,
+    208,
     628
    ]
   },
@@ -5412,12 +8794,12 @@
    "manhattan_um": 154,
    "cos": 0.1,
    "a": [
-    751,
-    768
+    803,
+    820
    ],
    "b": [
-    683,
-    683
+    734,
+    734
    ]
   },
   {
@@ -5431,12 +8813,12 @@
    "manhattan_um": 413,
    "cos": -0.1,
    "a": [
-    959,
-    546
+    1011,
+    597
    ],
    "b": [
-    683,
-    683
+    734,
+    734
    ]
   },
   {
@@ -5450,105 +8832,75 @@
    "manhattan_um": 207,
    "cos": -0.1,
    "a": [
-    752,
-    546
+    804,
+    597
    ],
    "b": [
-    683,
-    683
+    734,
+    734
    ]
   }
  ],
  "channels": [
   {
    "between": [
-    "u_vn",
-    "u_ve"
+    "u_m",
+    "u_s"
    ],
    "kind": "vertical",
-   "gap_um": 15.12,
-   "tracks_V": 582,
-   "span_um": 287
-  },
-  {
-   "between": [
-    "u_vn",
-    "u_vs"
-   ],
-   "kind": "vertical",
-   "gap_um": 75.6,
-   "tracks_V": 2913,
-   "span_um": 52
-  },
-  {
-   "between": [
-    "u_vn",
-    "u_vq"
-   ],
-   "kind": "horizontal",
    "gap_um": 17.28,
-   "tracks_H": 665,
-   "span_um": 123
+   "tracks_V": 665,
+   "span_um": 346
   },
   {
    "between": [
-    "u_vn",
-    "u_b0"
-   ],
-   "kind": "horizontal",
-   "gap_um": 22.1,
-   "tracks_H": 851,
-   "span_um": 174
-  },
-  {
-   "between": [
-    "u_vn",
-    "u_b1"
-   ],
-   "kind": "horizontal",
-   "gap_um": 73.94,
-   "tracks_H": 2849,
-   "span_um": 174
-  },
-  {
-   "between": [
-    "u_ve",
+    "u_m",
     "u_vsw"
    ],
    "kind": "horizontal",
    "gap_um": 17.28,
-   "tracks_H": 665,
-   "span_um": 52
+   "tracks_H": 666,
+   "span_um": 121
   },
   {
    "between": [
-    "u_ve",
-    "u_vs"
+    "u_m",
+    "u_l"
    ],
-   "kind": "horizontal",
+   "kind": "vertical",
    "gap_um": 17.28,
-   "tracks_H": 665,
+   "tracks_V": 666,
+   "span_um": 114
+  },
+  {
+   "between": [
+    "u_s",
+    "u_b"
+   ],
+   "kind": "vertical",
+   "gap_um": 15.12,
+   "tracks_V": 582,
    "span_um": 173
   },
   {
    "between": [
-    "u_ve",
-    "u_vq"
+    "u_s",
+    "u_vs"
    ],
    "kind": "horizontal",
-   "gap_um": 86.4,
-   "tracks_H": 3329,
-   "span_um": 35
+   "gap_um": 17.28,
+   "tracks_H": 666,
+   "span_um": 164
   },
   {
    "between": [
-    "u_ve",
-    "u_l"
+    "u_s",
+    "u_a"
    ],
    "kind": "vertical",
-   "gap_um": 25.92,
-   "tracks_V": 998,
-   "span_um": 114
+   "gap_um": 15.12,
+   "tracks_V": 582,
+   "span_um": 43
   },
   {
    "between": [
@@ -5575,29 +8927,9 @@
     "u_vsw",
     "u_l"
    ],
-   "kind": "horizontal",
-   "gap_um": 15.12,
-   "tracks_H": 582,
-   "span_um": 80
-  },
-  {
-   "between": [
-    "u_vsw",
-    "u_l"
-   ],
-   "kind": "horizontal",
+   "kind": "vertical",
    "gap_um": 17.28,
-   "tracks_H": 665,
-   "span_um": 17
-  },
-  {
-   "between": [
-    "u_vsw",
-    "u_l"
-   ],
-   "kind": "horizontal",
-   "gap_um": 43.2,
-   "tracks_H": 1664,
+   "tracks_V": 665,
    "span_um": 114
   },
   {
@@ -5605,10 +8937,50 @@
     "u_vsw",
     "u_l"
    ],
+   "kind": "horizontal",
+   "gap_um": 15.12,
+   "tracks_H": 582,
+   "span_um": 54
+  },
+  {
+   "between": [
+    "u_vsw",
+    "u_l"
+   ],
+   "kind": "horizontal",
+   "gap_um": 34.56,
+   "tracks_H": 1332,
+   "span_um": 86
+  },
+  {
+   "between": [
+    "u_b",
+    "u_a"
+   ],
+   "kind": "horizontal",
+   "gap_um": 17.28,
+   "tracks_H": 665,
+   "span_um": 356
+  },
+  {
+   "between": [
+    "u_b",
+    "u_l"
+   ],
    "kind": "vertical",
-   "gap_um": 112.32,
-   "tracks_V": 4329,
-   "span_um": 95
+   "gap_um": 32.4,
+   "tracks_V": 1248,
+   "span_um": 54
+  },
+  {
+   "between": [
+    "u_vs",
+    "u_a"
+   ],
+   "kind": "vertical",
+   "gap_um": 15.12,
+   "tracks_V": 582,
+   "span_um": 104
   },
   {
    "between": [
@@ -5628,7 +9000,57 @@
    "kind": "vertical",
    "gap_um": 25.92,
    "tracks_V": 998,
-   "span_um": 104
+   "span_um": 43
+  },
+  {
+   "between": [
+    "u_vs",
+    "u_l"
+   ],
+   "kind": "horizontal",
+   "gap_um": 66.96,
+   "tracks_H": 2580,
+   "span_um": 0
+  },
+  {
+   "between": [
+    "u_a",
+    "u_vq"
+   ],
+   "kind": "horizontal",
+   "gap_um": 25.92,
+   "tracks_H": 998,
+   "span_um": 173
+  },
+  {
+   "between": [
+    "u_a",
+    "u_l"
+   ],
+   "kind": "vertical",
+   "gap_um": 32.4,
+   "tracks_V": 1248,
+   "span_um": 43
+  },
+  {
+   "between": [
+    "u_a",
+    "u_b0"
+   ],
+   "kind": "horizontal",
+   "gap_um": 22.1,
+   "tracks_H": 851,
+   "span_um": 131
+  },
+  {
+   "between": [
+    "u_a",
+    "u_b1"
+   ],
+   "kind": "horizontal",
+   "gap_um": 73.94,
+   "tracks_H": 2849,
+   "span_um": 105
   },
   {
    "between": [
@@ -5636,9 +9058,29 @@
     "u_rxsf"
    ],
    "kind": "horizontal",
-   "gap_um": 32.4,
-   "tracks_H": 1248,
-   "span_um": 140
+   "gap_um": 41.04,
+   "tracks_H": 1581,
+   "span_um": 123
+  },
+  {
+   "between": [
+    "u_rxsb",
+    "u_l"
+   ],
+   "kind": "horizontal",
+   "gap_um": 15.12,
+   "tracks_H": 582,
+   "span_um": 2
+  },
+  {
+   "between": [
+    "u_rxsb",
+    "u_l"
+   ],
+   "kind": "horizontal",
+   "gap_um": 75.6,
+   "tracks_H": 2913,
+   "span_um": 54
   },
   {
    "between": [
@@ -5648,26 +9090,6 @@
    "kind": "vertical",
    "gap_um": 23.76,
    "tracks_V": 915,
-   "span_um": 19
-  },
-  {
-   "between": [
-    "u_rxsb",
-    "u_l"
-   ],
-   "kind": "vertical",
-   "gap_um": 32.4,
-   "tracks_V": 1248,
-   "span_um": 114
-  },
-  {
-   "between": [
-    "u_rxsb",
-    "u_l"
-   ],
-   "kind": "vertical",
-   "gap_um": 75.6,
-   "tracks_V": 2913,
    "span_um": 97
   },
   {
@@ -5678,7 +9100,7 @@
    "kind": "vertical",
    "gap_um": 43.2,
    "tracks_V": 1664,
-   "span_um": 11
+   "span_um": 71
   },
   {
    "between": [
@@ -5686,18 +9108,8 @@
     "u_l"
    ],
    "kind": "vertical",
-   "gap_um": 75.6,
-   "tracks_V": 2913,
-   "span_um": 114
-  },
-  {
-   "between": [
-    "u_rxsf",
-    "u_l"
-   ],
-   "kind": "vertical",
-   "gap_um": 41.04,
-   "tracks_V": 1581,
+   "gap_um": 15.12,
+   "tracks_V": 582,
    "span_um": 89
   },
   {
@@ -5706,9 +9118,19 @@
     "u_l"
    ],
    "kind": "horizontal",
-   "gap_um": 15.12,
-   "tracks_H": 582,
-   "span_um": 114
+   "gap_um": 41.04,
+   "tracks_H": 1581,
+   "span_um": 80
+  },
+  {
+   "between": [
+    "u_vq",
+    "u_l"
+   ],
+   "kind": "vertical",
+   "gap_um": 75.6,
+   "tracks_V": 2913,
+   "span_um": 28
   },
   {
    "between": [
@@ -5716,9 +9138,9 @@
     "u_l"
    ],
    "kind": "horizontal",
-   "gap_um": 15.12,
-   "tracks_H": 582,
-   "span_um": 2
+   "gap_um": 92.88,
+   "tracks_H": 3579,
+   "span_um": 78
   },
   {
    "between": [
@@ -5726,9 +9148,9 @@
     "u_b0"
    ],
    "kind": "vertical",
-   "gap_um": 59.16,
-   "tracks_V": 2280,
-   "span_um": 30
+   "gap_um": 41.88,
+   "tracks_V": 1614,
+   "span_um": 26
   },
   {
    "between": [
@@ -5736,9 +9158,19 @@
     "u_b1"
    ],
    "kind": "vertical",
-   "gap_um": 50.52,
-   "tracks_V": 1947,
+   "gap_um": 67.8,
+   "tracks_V": 2613,
    "span_um": 30
+  },
+  {
+   "between": [
+    "u_l",
+    "u_l"
+   ],
+   "kind": "horizontal",
+   "gap_um": 49.68,
+   "tracks_H": 1914,
+   "span_um": 11
   },
   {
    "between": [
@@ -5748,37 +9180,7 @@
    "kind": "horizontal",
    "gap_um": 23.76,
    "tracks_H": 915,
-   "span_um": 63
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
-   "kind": "vertical",
-   "gap_um": 49.68,
-   "tracks_V": 1914,
-   "span_um": 97
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
-   "kind": "horizontal",
-   "gap_um": 15.12,
-   "tracks_H": 582,
-   "span_um": 114
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
-   "kind": "vertical",
-   "gap_um": 23.76,
-   "tracks_V": 915,
-   "span_um": 114
+   "span_um": 89
   },
   {
    "between": [
@@ -5795,20 +9197,10 @@
     "u_l",
     "u_l"
    ],
-   "kind": "vertical",
-   "gap_um": 49.68,
-   "tracks_V": 1914,
-   "span_um": 45
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
    "kind": "horizontal",
-   "gap_um": 66.96,
-   "tracks_H": 2580,
-   "span_um": 80
+   "gap_um": 15.12,
+   "tracks_H": 582,
+   "span_um": 28
   },
   {
    "between": [
@@ -5818,6 +9210,26 @@
    "kind": "vertical",
    "gap_um": 15.12,
    "tracks_V": 582,
+   "span_um": 106
+  },
+  {
+   "between": [
+    "u_l",
+    "u_l"
+   ],
+   "kind": "horizontal",
+   "gap_um": 66.96,
+   "tracks_H": 2580,
+   "span_um": 114
+  },
+  {
+   "between": [
+    "u_l",
+    "u_l"
+   ],
+   "kind": "vertical",
+   "gap_um": 41.04,
+   "tracks_V": 1581,
    "span_um": 45
   },
   {
@@ -5826,9 +9238,39 @@
     "u_l"
    ],
    "kind": "vertical",
-   "gap_um": 23.76,
-   "tracks_V": 915,
-   "span_um": 97
+   "gap_um": 49.68,
+   "tracks_V": 1914,
+   "span_um": 54
+  },
+  {
+   "between": [
+    "u_l",
+    "u_l"
+   ],
+   "kind": "vertical",
+   "gap_um": 15.12,
+   "tracks_V": 582,
+   "span_um": 63
+  },
+  {
+   "between": [
+    "u_l",
+    "u_l"
+   ],
+   "kind": "horizontal",
+   "gap_um": 15.12,
+   "tracks_H": 582,
+   "span_um": 63
+  },
+  {
+   "between": [
+    "u_l",
+    "u_l"
+   ],
+   "kind": "vertical",
+   "gap_um": 15.12,
+   "tracks_V": 582,
+   "span_um": 89
   },
   {
    "between": [
@@ -5838,16 +9280,6 @@
    "kind": "horizontal",
    "gap_um": 41.04,
    "tracks_H": 1581,
-   "span_um": 2
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
-   "kind": "horizontal",
-   "gap_um": 32.4,
-   "tracks_H": 1248,
    "span_um": 114
   },
   {
@@ -5855,19 +9287,9 @@
     "u_l",
     "u_l"
    ],
-   "kind": "horizontal",
-   "gap_um": 23.76,
-   "tracks_H": 915,
-   "span_um": 89
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
    "kind": "vertical",
-   "gap_um": 23.76,
-   "tracks_V": 915,
+   "gap_um": 92.88,
+   "tracks_V": 3579,
    "span_um": 63
   },
   {
@@ -5876,8 +9298,18 @@
     "u_l"
    ],
    "kind": "vertical",
-   "gap_um": 23.76,
-   "tracks_V": 915,
+   "gap_um": 92.88,
+   "tracks_V": 3579,
+   "span_um": 97
+  },
+  {
+   "between": [
+    "u_l",
+    "u_l"
+   ],
+   "kind": "vertical",
+   "gap_um": 92.88,
+   "tracks_V": 3579,
    "span_um": 11
   },
   {
@@ -5888,47 +9320,7 @@
    "kind": "vertical",
    "gap_um": 15.12,
    "tracks_V": 582,
-   "span_um": 89
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
-   "kind": "vertical",
-   "gap_um": 15.12,
-   "tracks_V": 582,
-   "span_um": 2
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
-   "kind": "horizontal",
-   "gap_um": 23.76,
-   "tracks_H": 915,
-   "span_um": 80
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
-   "kind": "vertical",
-   "gap_um": 49.68,
-   "tracks_V": 1914,
-   "span_um": 80
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
-   "kind": "vertical",
-   "gap_um": 23.76,
-   "tracks_V": 915,
-   "span_um": 19
+   "span_um": 106
   },
   {
    "between": [
@@ -5936,9 +9328,9 @@
     "u_b0"
    ],
    "kind": "horizontal",
-   "gap_um": 110.16,
-   "tracks_H": 4245,
-   "span_um": 53
+   "gap_um": 66.96,
+   "tracks_H": 2580,
+   "span_um": 11
   },
   {
    "between": [
@@ -5946,19 +9338,9 @@
     "u_b1"
    ],
    "kind": "horizontal",
-   "gap_um": 58.32,
-   "tracks_H": 2247,
-   "span_um": 62
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
-   "kind": "vertical",
-   "gap_um": 49.68,
-   "tracks_V": 1914,
-   "span_um": 2
+   "gap_um": 15.12,
+   "tracks_H": 582,
+   "span_um": 37
   },
   {
    "between": [
@@ -5968,7 +9350,7 @@
    "kind": "horizontal",
    "gap_um": 15.12,
    "tracks_H": 582,
-   "span_um": 89
+   "span_um": 106
   },
   {
    "between": [
@@ -5978,7 +9360,7 @@
    "kind": "horizontal",
    "gap_um": 75.6,
    "tracks_H": 2913,
-   "span_um": 71
+   "span_um": 114
   },
   {
    "between": [
@@ -5988,17 +9370,7 @@
    "kind": "horizontal",
    "gap_um": 23.76,
    "tracks_H": 915,
-   "span_um": 63
-  },
-  {
-   "between": [
-    "u_l",
-    "u_l"
-   ],
-   "kind": "vertical",
-   "gap_um": 49.68,
-   "tracks_V": 1914,
-   "span_um": 80
+   "span_um": 114
   },
   {
    "between": [
@@ -6006,9 +9378,19 @@
     "u_l"
    ],
    "kind": "horizontal",
-   "gap_um": 41.04,
-   "tracks_H": 1581,
-   "span_um": 114
+   "gap_um": 23.76,
+   "tracks_H": 915,
+   "span_um": 71
+  },
+  {
+   "between": [
+    "u_l",
+    "u_l"
+   ],
+   "kind": "horizontal",
+   "gap_um": 118.8,
+   "tracks_H": 4578,
+   "span_um": 37
   },
   {
    "between": [
@@ -6018,9 +9400,9 @@
    "kind": "horizontal",
    "gap_um": 22.1,
    "tracks_H": 851,
-   "span_um": 165
+   "span_um": 148
   }
  ],
- "worst_manhattan_core_core": 1282,
- "min_cos": -1.0
+ "worst_manhattan_core_core": 1210,
+ "min_cos": -0.998
 }

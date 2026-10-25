@@ -315,8 +315,16 @@ NONFRAME_HC = {
                              plan_core="vp_store",
                              lef="physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/"
                                  "ot_sram_1r1w_512x128_m4_r2c2.lef") for i in range(2)] +
-                       [dict(inst="u_lf.u_vn", module="ot_s81sl_vn", lef=_rt("s81sl_vn", "ot_s81sl_vn"), cells=375145,
-                             plan_core="vn"),
+                       # S81/LEAFPLAN 10-24 (COORD C3: ve 468k > 400k cap, vn 385k at it): vn and ve split into two hard
+                       # cores each (cores/leaf/split.py, plan pin tables + stub LEFs; RTL split = hand-off): vn = lanes
+                       # 0..3 (u_a, h half 0) + lanes 4..7 (u_b, h half 1, chain tail, beat tree, p), stacked in vn's
+                       # footprint; ve = sum (u_s: pack, chunk8 x 3, trees -> p) W of multiply (u_m: mul4, add8 -> o)
+                       [dict(inst="u_lf.u_vn.u_a", module="ot_s81sl_vn_a", cells=183821, plan_core="vn",
+                             lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_a.lef",
+                             pins_file="inputs/core_pins/ot_s81sl_vn_a.json"),
+                        dict(inst="u_lf.u_vn.u_b", module="ot_s81sl_vn_b", cells=191324, plan_core="vn",
+                             lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_b.lef",
+                             pins_file="inputs/core_pins/ot_s81sl_vn_b.json"),
                         dict(inst="u_lf.u_vs", module="ot_s81sl_vs", cells=117971, plan_core="vs_vsw",
                              lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vs_lfp.lef",
                              pins_file="inputs/core_pins/ot_s81sl_vs_lfp.json"),
@@ -329,11 +337,12 @@ NONFRAME_HC = {
                              cells=82916, plan_core="vq_rx"),
                         dict(inst="u_lf.u_rxsb", module="dsfd_su_t_rxsb", lef=_rt("s81su_rxsb_ref", "dsfd_su_t_rxsb"),
                              cells=99597, plan_core="vq_rx"),
-                        # CORE-S81 10-23: ve r5 CLOSED view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021,
-                        # TT +42.12 / FF +12.74 / DRC 0; LEF regenerated from provenance/raw, sha 01b54bf1 = the record)
-                        dict(inst="u_lf.u_ve", module="ot_s81sl_ve", cells=460279, plan_core="ve",
-                             lef=_ARCH % ("ot_s81sl_ve", "s81sl_ve_r5-f51f4ec42-linked-eco-1021", "ot_s81sl_ve",
-                                          "ot_s81sl_ve"))],
+                        dict(inst="u_lf.u_ve.u_s", module="ot_s81sl_ve_s", cells=216331, plan_core="ve",
+                             lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s.lef",
+                             pins_file="inputs/core_pins/ot_s81sl_ve_s.json"),
+                        dict(inst="u_lf.u_ve.u_m", module="ot_s81sl_ve_m", cells=243948, plan_core="ve",
+                             lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef",
+                             pins_file="inputs/core_pins/ot_s81sl_ve_m.json")],
                  gaps=[],
                  # vp's own logic (36,056) + leaf glue stay soft: residual = total - hard
                  # base placement + per-type candidates: cores/leaf/alt_place.json (every hcpl lane box <= 300 um from vn;
@@ -349,8 +358,14 @@ NONFRAME_HC = {
                  # as a whole (origins mirrored on the lattice, vn / vq / vs views swapped, the other cores R0: their
                  # partner faces are N/S (vsw) or both E and W toward vs (ve) or unchecked (hcpl lanes, store SRAMs);
                  # the face rule below rejects any mirrored candidate that turns a core port away from its partner)
-                 views={"xm": {"u_lf.u_vn": dict(lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_xm.lef",
-                                                 pins_file="inputs/core_pins/ot_s81sl_vn_xm.json"),
+                 # placement blocks (alt_place keys): the split vn / ve pairs move as one block, children at fixed
+                 # offsets in the design frame (vn_b over vn_a, ve_m E of ve_s; 17.28 um facing gap)
+                 blocks={"u_lf.u_vn": [("u_lf.u_vn.u_a", 0.0, 0.0), ("u_lf.u_vn.u_b", 0.0, 181.44)],
+                         "u_lf.u_ve": [("u_lf.u_ve.u_s", 0.0, 0.0), ("u_lf.u_ve.u_m", 181.44, 0.0)]},
+                 views={"xm": {**{"u_lf.%s.u_%s" % (b_, h_): dict(
+                                  lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_%s_%s_xm.lef" % (b_[2:], h_),
+                                  pins_file="inputs/core_pins/ot_s81sl_%s_%s_xm.json" % (b_[2:], h_))
+                                  for b_, hs_ in (("u_vn", "ab"), ("u_ve", "sm")) for h_ in hs_},
                                "u_lf.u_vq": dict(lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vq_xm.lef",
                                                  pins_file="inputs/core_pins/ot_s81sl_vq_xm.json"),
                                "u_lf.u_vs": dict(lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vs_xm.lef",
@@ -396,6 +411,11 @@ NONFRAME_HC = {
                 mirrors=((False, False),)),
 }
 HC_REPORT = {}
+# declared port pairs where width / nearest matching is ambiguous: {key: {(core, port): partner port}}
+CORE_PORT_PAIRS = {k_: {("u_c.u_eg", "g"): "eg_d", ("u_c.u_eg", "g_c"): "eg_c", ("u_c.u_eg", "g_v"): "eg_v",
+                        ("u_c.u_eg", "eps"): "x_eps", ("u_c.u_eg", "scale"): "x_scale",
+                        ("u_c.u_xr", "eg_d"): "g", ("u_c.u_xr", "eg_c"): "g_c", ("u_c.u_xr", "eg_v"): "g_v",
+                        ("u_c.u_xr", "x_eps"): "eps", ("u_c.u_xr", "x_scale"): "scale"} for k_ in ("C:xrt1", "C:xrt3")}
 # S81-CORES 10-24: core connectivity for the G0C core-face rule (core_conns.json sidecar, written next to die_plan.json):
 # {key: {core inst: {core port: ["bus:<type bus>" | "core:<inst>"]}}}.  Ports whose partner is soft glue (the leaf's hc
 # lanes and store SRAMs talk only to vp's own pin flops / sequencer) are not listed (unchecked by design).
@@ -411,20 +431,29 @@ def _cc(**kw):
 
 CORE_CONNS = {
     "leaf": {
-        _LF + "u_vn": dict(_cc(**{"hw_v,hw_j,hw_hf,hw_d,hq_v,hq_d,hr_v,hr_j,hr_hf": _HC}), **_cc(**{
-            "wl_v,wl_i,wl_d": _ST, "n_go,n_pre": _ST + [_DN], "rb_v,rb_d": [_DN], "p_v,p_d": [_UP],
-            "y_v,y_i,y": ["core:u_lf.u_vq"]})),
-        _LF + "u_vq": _cc(**{"y_v,y_i,y": ["core:u_lf.u_vn"], "u_v,u_i,u,um_v,um_q,um_b,um_i": ["core:u_lf.u_vs"],
+        # S81/LEAFPLAN 10-24 split: vn_a / vn_b both on the lane h ports (each answers its half), the store gains,
+        # the dn bus (n_go / n_pre / rb); vn_a's chain partial c -> vn_b; p from vn_b; y lanes 0..3 / 4..7 -> vq.
+        # ve_m: r / a / o with vs, products m -> ve_s; ve_s: p -> vs; both faults -> vs
+        **{_LF + "u_vn.u_" + h_: dict(_cc(**{"hw_v,hw_j,hw_hf,hw_d,hq_v,hq_d,hr_v,hr_j,hr_hf": _HC}), **_cc(**{
+            "wl_v,wl_i,wl_d": _ST, "n_go,n_pre": _ST + [_DN], "rb_v,rb_d": [_DN], "y": ["core:u_lf.u_vq"],
+            "c_v,c_s": ["core:u_lf.u_vn.u_" + ("b" if h_ == "a" else "a")]}),
+            **(_cc(**{"p_v,p_d": [_UP], "y_v,y_i": ["core:u_lf.u_vq"]}) if h_ == "b" else {})) for h_ in "ab"},
+        _LF + "u_vq": _cc(**{"y_v,y_i,y": ["core:u_lf.u_vn.u_a", "core:u_lf.u_vn.u_b"],
+                             "u_v,u_i,u,um_v,um_q,um_b,um_i": ["core:u_lf.u_vs"],
                              "xf_v,xf_s,xf,fault": [_UP], "k,sid,m_v,m_q,m_b,m_i": [_DN]}),
         _LF + "u_vs": _cc(**{"s_v,s_d,g_v,g_c,g_d": [_DN], "e_v,e_c,e_d,fault": [_UP],
                              "x_rv,x_ra,x_qv,x_qd,x_wv,x_wa,x_wm,x_wd": _ST,
                              "u_v,u_i,u,um_v,um_q,um_b,um_i": ["core:u_lf.u_vq"],
-                             "ve_rv,ve_rc,ve_rh,ve_rk,ve_rw,ve_pv,ve_pc,ve_phh,ve_pkk,ve_pdd,ve_av,ve_ac,ve_ah,ve_aval,"
-                             "ve_ag,ve_ov,ve_oc,ve_oy,ve_fi": ["core:u_lf.u_ve"],
+                             "ve_rv,ve_rc,ve_rh,ve_rk,ve_rw,ve_av,ve_ac,ve_ah,ve_aval,ve_ag,ve_ov,ve_oc,ve_oy":
+                                 ["core:u_lf.u_ve.u_m"],
+                             "ve_pv,ve_pc,ve_phh,ve_pkk,ve_pdd": ["core:u_lf.u_ve.u_s"],
+                             "ve_fi": ["core:u_lf.u_ve.u_m", "core:u_lf.u_ve.u_s"],
                              "sw_v,sw_d,sw_w,sw_lim,sw_vi,sw_ri,sw_fi": ["core:u_lf.u_vsw"],
                              "ra_v,ra_x": ["core:u_lf.u_rxsf"], "ra_vi,ra_ri,ra_fi": ["core:u_lf.u_rxsb"]}),
-        _LF + "u_ve": _cc(**{"r_v,r_c,r_h,r_k,r_w,p_v,p_c,p_hh,p_kk,p_dd,a_v,a_c,a_h,a_val,a_g,o_v,o_c,o_y,fault":
-                             ["core:u_lf.u_vs"]}),
+        _LF + "u_ve.u_m": _cc(**{"r_v,r_c,r_h,r_k,r_w,a_v,a_c,a_h,a_val,a_g,o_v,o_c,o_y,fault": ["core:u_lf.u_vs"],
+                                 "m_v,m_pre,m_hh,m_kk,m_dd": ["core:u_lf.u_ve.u_s"]}),
+        _LF + "u_ve.u_s": _cc(**{"p_v,p_c,p_hh,p_kk,p_dd,fault": ["core:u_lf.u_vs"],
+                                 "m_v,m_pre,m_hh,m_kk,m_dd": ["core:u_lf.u_ve.u_m"]}),
         _LF + "u_vsw": _cc(**{"i_v,i_d,i_w,i_lim,o_v,o_d,o_f": ["core:u_lf.u_vs"]}),
         _LF + "u_rxsf": _cc(**{"i_v,i_x": ["core:u_lf.u_vs"], "o_v,o_u,o_u2,o_mx,o_f": ["core:u_lf.u_rxsb"]}),
         _LF + "u_rxsb": _cc(**{"i_v,i_u,i_u2,i_mx,i_f": ["core:u_lf.u_rxsf"], "o_v,o_r,o_f": ["core:u_lf.u_vs"]}),
@@ -435,6 +464,12 @@ CORE_CONNS = {
     "svc": {"u_rsv.u_sx.g_r[%d].g_h[%d].u_hrow" % (r, b): {
         "%s_%s" % (io, f.lower()): ["face:%s" % f] for io in ("gi", "go", "si", "so") for f in "NESW"}
         for r in range(4) for b in range(2)},
+    # S81/LEAFPLAN 10-24 (S81/KITS eg_c r7 partner distances: eg.g/g_c/g_v -> xrt eg_* up to 534 / 664 / 803 um in
+    # c1x-lepw / kv512 / c3x): the C slices' eg <-> xrt bundles (eg g / g_c / g_v -> xrt eg_d / eg_c / eg_v; xrt
+    # x_eps / x_scale -> eg eps / scale) get the R3-INTERNAL stations at 405 um like the hardened leaf types.  eg's
+    # i_* (from xfin) are not in the xfin plan table (plan gap, reported) and stay unchecked.
+    **{k_: {"u_c.u_eg": _cc(**{"g,g_c,g_v,eps,scale": ["core:u_c.u_xr"]}),
+            "u_c.u_xr": _cc(**{"eg_d,eg_c,eg_v,x_eps,x_scale": ["core:u_c.u_eg"]})} for k_ in ("C:xrt1", "C:xrt3")},
     "eng": {
         "u_eng.u_e": _cc(pci=["bus:unit_i0"], rco=["bus:unit_o0"], f_ks=["bus:unit_i1"], vi_s=["bus:xtier_i0"],
                          vo_s=["bus:xtier_o0"], vo_n=["bus:xtier_o1"], vi_n=["bus:xtier_i1"],
@@ -525,7 +560,13 @@ def _pin_groups(pins_file, W_, H_):
             e_[1] += p_["y"]
             e_[2] += 1
             e_[3][f_] = e_[3].get(f_, 0) + 1
-        _PGRP[pins_file] = {b_: (e_[0] / e_[2], e_[1] / e_[2], e_[2], e_[3]) for b_, e_ in g.items()}
+        cen_ = {b_: (e_[0] / e_[2], e_[1] / e_[2]) for b_, e_ in g.items()}
+        spr_ = {}
+        for p_ in ps:
+            b_ = re.sub(r"\[\d+\]$", "", p_["name"])
+            spr_[b_] = max(spr_.get(b_, 0.0), abs(p_["x"] - cen_[b_][0]) + abs(p_["y"] - cen_[b_][1]))
+        # (cx, cy, bits, {face: pins}, spread = the farthest pin's manhattan distance from the centroid)
+        _PGRP[pins_file] = {b_: (cen_[b_][0], cen_[b_][1], e_[2], e_[3], spr_[b_]) for b_, e_ in g.items()}
     return _PGRP[pins_file]
 
 
@@ -538,9 +579,9 @@ def _placed_groups(c):
     sw = dict(N="S", S="N", E="E", W="W") if fy else {}
     sw2 = dict(E="W", W="E") if fx else {}
     out = {}
-    for b_, (x, y, n, fc) in _pin_groups(c["pins_file"], cw, ch).items():
+    for b_, (x, y, n, fc, sp) in _pin_groups(c["pins_file"], cw, ch).items():
         out[b_] = (x0 + (cw - x if fx else x), y0 + (ch - y if fy else y), n,
-                   {sw2.get(sw.get(f_, f_), sw.get(f_, f_)): v for f_, v in fc.items()})
+                   {sw2.get(sw.get(f_, f_), sw.get(f_, f_)): v for f_, v in fc.items()}, sp)
     return (x0, y0, x0 + cw, y0 + ch), out
 
 
@@ -607,8 +648,9 @@ def _outside(x, y, boxes, w, h):
 def core_internal_stations(k, o, w, h, buses, smax=None):
     """R3 inside the hardened types (S81/LEAFPLAN, coordinator ruling 10-24 (a)): every CORE_CONNS bundle -- core port
     pin-group centroid -> bus window centre, or -> the partner core's matching port group (same width, nearest; else
-    the nearest point of the partner box) -- longer than the kit reach (405 um, no margin) gets FIRM stations at
-    j / (n + 1) on the straight line, a site inside a hard core pushed out of it (n grows until every hop <= the reach).  A core-core bundle declared from both sides is emitted
+    the nearest point of the partner box) -- longer than the kit reach (405 um, no margin) for its farthest pin (the
+    pin groups' spreads added to the end hops) gets FIRM stations at j / (n + 1) on the straight line, a site inside a
+    hard core pushed out of it (n grows until every hop of every pin <= the reach).  A core-core bundle declared from both sides is emitted
     once.  Returns (internal_stations[] entries, cycles) where cycles = sum over links (core, partner) of the largest
     station count of their bundles (each station = +1 cycle on that pair's path; a broadcast port's partner set is one
     pair)."""
@@ -619,9 +661,13 @@ def core_internal_stations(k, o, w, h, buses, smax=None):
     conns = CORE_CONNS.get(k, {})
     ents, cyc, seen = [], {}, set()
 
+    pairs = CORE_PORT_PAIRS.get(k, {})
+
     def match(a, pa, b):
-        """b's port group wired to a.pa: same width first, then nearest."""
+        """b's port group wired to a.pa: the declared pair (CORE_PORT_PAIRS), else same width first, then nearest."""
         ga = pl[a][1][pa]
+        if (a, pa) in pairs and pairs[(a, pa)] in pl[b][1]:
+            return pairs[(a, pa)]
         rev = [p_ for p_, tg in conns.get(b, {}).items() if "core:" + a in tg and p_ in pl[b][1]]
         if not rev:
             return None
@@ -636,6 +682,7 @@ def core_internal_stations(k, o, w, h, buses, smax=None):
                 continue
             for t_ in tg:
                 kd, _, nm = t_.partition(":")
+                sa_, sb_ = 0.0, ga[4]          # pin spread at the launch / capture end (every pin's hop <= reach)
                 if kd == "bus" and nm in bp:
                     fr, to, conn, cap, pair = bp[nm], (ga[0], ga[1]), "bus:" + nm, "%s.%s" % (a, pa), (a, "bus:" + nm)
                 elif kd == "core" and nm in pl and nm != a:
@@ -646,9 +693,11 @@ def core_internal_stations(k, o, w, h, buses, smax=None):
                         seen.add((a, pa, nm, pb))
                         gb = pl[nm][1][pb]
                         to, cap = (gb[0], gb[1]), "%s.%s" % (nm, pb)
+                        sa_, sb_ = ga[4], gb[4]
                     else:
                         bx = pl[nm][0]
                         to, cap = (min(max(ga[0], bx[0]), bx[2]), min(max(ga[1], bx[1]), bx[3])), nm
+                        sa_, sb_ = ga[4], 0.0
                     # one latency key per link: a single-partner link (both sides), or a port's whole partner set
                     # (a broadcast such as vn hq / hw -> the 16 hcpl lanes adds its largest station count once)
                     pair = tuple(sorted((a, nm))) if len(tg) == 1 else (a,) + tuple(sorted(tg))
@@ -656,16 +705,19 @@ def core_internal_stations(k, o, w, h, buses, smax=None):
                 else:
                     continue
                 L = abs(fr[0] - to[0]) + abs(fr[1] - to[1])
-                n = max(0, math.ceil(L / smax - 1e-9) - 1)
-                if not n:
+                if L + sa_ + sb_ <= smax + 1e-6:
                     continue
+                n = max(1, math.ceil(L / smax - 1e-9) - 1)
                 # a station is soft logic: a site inside a hard core (+ halo) is pushed to the nearest point outside
                 # it; n grows until every hop (with the escapes) is within the reach (as ft_stations_macro)
-                for _ in range(6):
+                for _ in range(12):
                     regs = [_outside(fr[0] + (to[0] - fr[0]) * j / (n + 1), fr[1] + (to[1] - fr[1]) * j / (n + 1), hb,
                                      w, h) for j in range(1, n + 1)]
                     pts_ = [fr] + regs + [to]
-                    if max(abs(p_[0] - q_[0]) + abs(p_[1] - q_[1]) for p_, q_ in zip(pts_, pts_[1:])) <= smax + 1e-6:
+                    hops_ = [abs(p_[0] - q_[0]) + abs(p_[1] - q_[1]) for p_, q_ in zip(pts_, pts_[1:])]
+                    hops_[0] += sa_
+                    hops_[-1] += sb_
+                    if max(hops_) <= smax + 1e-6:
                         break
                     n += 1
                 regs = [[round(x_, 3), round(y_, 3)] for x_, y_ in regs]
@@ -724,14 +776,40 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
         # CORE-S81 10-23: explicit connectivity-aware origins (type frame, 8.64 lattice) where the shelf packer does not
         # fit; the corner mirroring and the gap / edge legality below still apply.  S81-CORES: "alt_place" = ordered
         # per-instance overrides of the base placement, tried only when the base adds ft-slot stations in this type
+        bsz_ = {c["inst"]: _LEF_SIZE[c["lef"]] for c, _ in items}
+
+        def expand(d, views=None):
+            """S81/LEAFPLAN: placement-block keys (spec "blocks") -> their child cores at the fixed offsets; a block on
+            the x-mirror view has its children swapped inside the block box (their pins are mirrored with them)"""
+            d = dict(d)
+            for b_, ch_ in spec.get("blocks", {}).items():
+                if b_ in d:
+                    v_ = d.pop(b_)
+                    bw_ = max(ox_ + bsz_[ci_][0] for ci_, ox_, _ in ch_)
+                    for ci_, ox_, oy_ in ch_:
+                        if (views or {}).get(b_):
+                            ox_ = bw_ - ox_ - bsz_[ci_][0]
+                        d[ci_] = (round(v_[0] + ox_, 4), round(v_[1] + oy_, 4)) + tuple(v_[2:])
+            return d
+
+        def eviews(v):
+            v = dict(v or {})
+            for b_, ch_ in spec.get("blocks", {}).items():
+                if b_ in v:
+                    vv_ = v.pop(b_)
+                    v.update({ci_: vv_ for ci_, _, _ in ch_})
+            return v
+        base_place = expand(spec["place"])
+
         def explicit(over, views=None):
             o = []
+            over, views = expand(over, views), eviews(views)
             for c, (cw, ch) in items:
-                pl_ = over.get(c["inst"], spec["place"][c["inst"]])
+                pl_ = over.get(c["inst"], base_place[c["inst"]])
                 o.append(_core_view(spec, c, (views or {}).get(c["inst"]),
                                     origin_um=[pl_[0], pl_[1]], outline_um=[cw, ch],
-                                    orient=pl_[2] if len(pl_) > 2 else spec["place"][c["inst"]][2]
-                                    if len(spec["place"][c["inst"]]) > 2 else "R0",
+                                    orient=pl_[2] if len(pl_) > 2 else base_place[c["inst"]][2]
+                                    if len(base_place[c["inst"]]) > 2 else "R0",
                                     track_offset_um=list(CORE_TRACK_OFFSET)))
             return o
         alts = [explicit(a) for a in spec.get("alt_place", ())]
@@ -841,7 +919,7 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
             if not legal(o):
                 continue
             fb_ = core_faces_away(k, o, w, h, buses) if k in CORE_CONNS else 0
-            ist_, icyc_ = core_internal_stations(k, o, w, h, buses) if k in CORES_405_KEYS else ([], 0)
+            ist_, icyc_ = core_internal_stations(k, o, w, h, buses) if k in INT_STATION_KEYS else ([], 0)
             ftc_ = sum((max(0, ft_stations_macro(s_, o, w, h, **sm_) - k0_[i_]) if sm_ else
                         ft_stations_macro(s_, o, w, h) - k0_[i_]) for i_, s_ in enumerate(ftsl))
             # added cost = ft stations + internal-station cycles + internal-station flop bits / STATION_BITS_PER_CYCLE
@@ -877,7 +955,8 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
 FT_MACRO_ADD = []
 NF_HC_TYPES = []
 STATION_BITS_PER_CYCLE = 4096   # S81/LEAFPLAN: placement ranking prices 4096 station flop bits like one added cycle
-CORES_405_KEYS = ("leaf", "svc", "eng")   # S81-CORES-hardened keys sized at the 405-um kit reach
+CORES_405_KEYS = ("leaf", "svc", "eng")
+INT_STATION_KEYS = CORES_405_KEYS + ("C:xrt1", "C:xrt3")   # R3-INTERNAL stations (core_conns bundles > 405 um)
 FT_HALO = 8.64
 
 
