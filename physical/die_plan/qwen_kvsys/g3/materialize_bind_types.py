@@ -18,7 +18,7 @@ from pathlib import Path
 def materialize(raw,report,top):
     declared={v['module']:name for name,v in report['types'].items()}
     parts=raw['partitions'] if isinstance(raw['partitions'],dict) else {p['name']:p for p in raw['partitions']}
-    matches=re.findall(r'^\s+([A-Za-z_$][\w$]*)\s+([A-Za-z_$][\w$]*)\s*\(',top,re.M)
+    matches=re.findall(r'^\s+([A-Za-z_$][\w$]*)(?:\s+#\([^\n]*\))?\s+([A-Za-z_$][\w$]*)\s*\(',top,re.M)
     mods={inst:mod for mod,inst in matches if inst in parts}
     missing=sorted(set(parts)-set(mods))
     if missing:raise ValueError(f'bound top lacks partitions {missing}')
