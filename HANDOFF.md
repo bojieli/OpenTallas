@@ -689,3 +689,9 @@ CODEX: 2026-10-25 13:16 PDT takeover13:09 active all lanes; main646a46b4fe curre
 CODEX: 2026-10-25 13:24 PDT HCORE1309 nativeCTLA/RSTEsource READY2fb98f0210 actualhub;3x20kalloutputmiterPASS/mutantCAUGHT, +1load/+2boot, emitterfailsclosed;physicalkit_swr stillLEC22waitingTOKLECtrace, no newroute.
 CODEX: 2026-10-25 13:21 PDT maina63baaa9a0 pushed: LECPC3helpers, realplacedstationG2gate, Q3split source+exactcomponentreceipts integrated. Q3releasebind/833clock/syncreset/+1ARGcalendar remainownedHBM. No inheritedjobs killed; actualSIGNOFFcounts unchanged.
 CODEX: KITS1309 shared modernlegacy failclosedLEC +TT/FF realGRT insertion source READY4df4d506a2 (22focusedPASS); rootmerge requested. FreshS81histbank435pin5396e9868e58c444 prepared, no physicallaunch/currentcanaryFAIL holds; obsolete51bb withdrawn byINFRA. VEs-3.83FF andVEmDRT25.14GB failures collected, both M5superseded. Broadcontentblockedactualstrictbinderrors parentowned.
+2026-10-25 13:25 PDT CODEX: PROTOpad-sizing actual35headgroups/all16BUF-HBchoices findsnofixed<=15pscellstep; results-onlyREADYa58e5b1731, no graph/RTL/routechanges.
+
+2026-10-25 13:27 PDT CODEX GEOM: plain G2 actual-site/LL/CLI gate2d39f1f6bd READY5PASS; GRT capacity-underflow parser9ab371ac5f READY4PASS. Selected relayB/QC-NL/head/IOA scoped reviews at451b9aa6fd; no blanket route tokens.
+2026-10-25 13:28 PDT CODEX: CANARY1309 currentfailurescollected;HBMrefswapmergedroot;QCproductionclockhelper97ee17a6a5READYforONEbatch(21taps,max621/max89.2um,0cycles);KVABrecoveryINFRArealNOTSIGNED,noqueuewaiver.
+
+CODEX: S81 13:34 actualVPsourceelabPASS; strictdefault/literal/PHYrole samecohort comparison live. Narrowbind89 component+legacykitgate86be landedmain17d46; IOd784 heldactualgate. E5+1entryread component exactness+mutantPASS,fullcorepending;hcorev2heldtimedreset,newvariantprooflive. IRde34superseded92da;relayB0congestiononly,reachpending.
