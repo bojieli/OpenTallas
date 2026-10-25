@@ -22,3 +22,11 @@ Unsplit hierarchical synth: 581,881 cells, consistent with the sum of the pieces
   Five const bits per link are the off-die tx_pin_flit format bits, which are master ports.
 - `ls/`: the lockstep of the split assembly against the unsplit master. It runs under Verilator 5.050 with 4 positive seeds
   and 5 single-bit mutants on the cut wires. The result is in `ls/lockstep_n2.log`.
+
+## Lockstep result (2026-10-25, Verilator 5.050, 2000 cycles)
+
+- Positive runs: 4 seed/density combinations (1/8, 2/2, 3/32, 4/4), all PASS with 0 errors.
+- Mutants caught: 1 (reduce_core reduce_in_v), 2 (vm_core writer_rgx_v), 3 (ring_ag_core ring_lp_we) and
+  4 (body_core qcap_8 src_v).
+- Mutant 5 is NOT caught. It flips bit 0 of vmasm_sel (vm_select_pipe[80][0]) and the stimulus never observes that bit
+  in 2000 cycles. This is a stimulus coverage gap, not a mismatch. The vm cut itself is covered by mutant 2.

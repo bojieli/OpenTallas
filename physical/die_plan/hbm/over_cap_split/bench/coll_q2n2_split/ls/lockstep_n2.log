@@ -1,0 +1,9 @@
+ls_n2_s1_d8_m0.log: LOCKSTEP PASS mut=0 seed=1 dens=8 cycles=2000 errors=0  rc=0
+ls_n2_s1_d8_m1.log: LOCKSTEP FAIL mut=1 seed=1 dens=8 cycles=2000 errors=1970 MISMATCH cyc 14 fault_cause MISMATCH cyc 15 fault_cause MISMATCH cyc 16 fault_cause  rc=0
+ls_n2_s1_d8_m2.log: LOCKSTEP FAIL mut=2 seed=1 dens=8 cycles=2000 errors=3942 MISMATCH cyc 13 vm_kq MISMATCH cyc 14 vm_kq MISMATCH cyc 14 fault_cause  rc=0
+ls_n2_s1_d8_m3.log: LOCKSTEP FAIL mut=3 seed=1 dens=8 cycles=2000 errors=2536 MISMATCH cyc 24 pr_cw_o MISMATCH cyc 24 pr_ccw_o MISMATCH cyc 25 pr_ccw_o  rc=0
+ls_n2_s1_d8_m4.log: LOCKSTEP FAIL mut=4 seed=1 dens=8 cycles=2000 errors=1972 MISMATCH cyc 13 fault_cause MISMATCH cyc 14 fault_cause MISMATCH cyc 15 fault_cause  rc=0
+ls_n2_s1_d8_m5.log: LOCKSTEP PASS mut=5 seed=1 dens=8 cycles=2000 errors=0  rc=0
+ls_n2_s2_d2_m0.log: LOCKSTEP PASS mut=0 seed=2 dens=2 cycles=2000 errors=0  rc=0
+ls_n2_s3_d32_m0.log: LOCKSTEP PASS mut=0 seed=3 dens=32 cycles=2000 errors=0  rc=0
+ls_n2_s4_d4_m0.log: LOCKSTEP PASS mut=0 seed=4 dens=4 cycles=2000 errors=0  rc=0
