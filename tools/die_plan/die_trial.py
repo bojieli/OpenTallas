@@ -606,32 +606,54 @@ def bumps_tcl(P, bumps, size=4.0):
 
 
 # --------------------------------------------------------------------------------------------------------- STA kit
-def standin_netlist(P, tn, hold_contract=True):
+def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
     """budget stand-in of a partition type for die_sta.py: one face flop per pin bit next to its pin, clocked from the
     nearest plan clock tap (no internal logic: the partition's internal paths are its own G3 closure).  hold_contract:
     every input bit reaches its face flop through the boundary-hold contract cell (die_sta.bhold_cell(tol)): the port
-    -> D minimum a signed kit guarantees under the signoff.py hold_ff overlay (input min -insertion_tol)."""
+    -> D minimum a signed kit guarantees under the signoff.py hold_ff overlay (input min -insertion_tol).
+    clock_contract: every clock tap port drives ONE clock-latency contract cell (die_sta.clat_cell: input cap = the
+    kit CTS root load the die tree is balanced against, constant delay = the type's bound TT / FF pin-register
+    insertion, gen_phys.insertion_binding) and the face flops hang on its output, never on the port; face flops take
+    the nearest TYPE tap (pin registers sit on the type grid taps), early core taps (clk_c<k>) drive only their
+    contract cell at the core's insertion (the hard core's own tree).  Without it (legacy) every face flop's CLK
+    loads the port directly and core taps clock face flops too."""
     t = P.types[tn]
     pins = gen_phys.type_pins(P, tn)
     bits = defaultdict(int)
     for bus, bit, *_ in pins:
         bits[bus] = max(bits[bus], bit + 1)
-    taps = gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)
+    ctaps = gen_phys.clock_pins(P, tn)
+    cores = gen_phys.core_tap_pins(P, tn)
+    taps = ctaps + cores
     tapn = [n for n, _, _ in taps]
     dirs = {b["name"]: b["dir"] for b in t.get("buses", [])}
     for sl in t.get("ft_slots", []) or []:
         dirs[sl["name"] + "_i"], dirs[sl["name"] + "_o"] = "in", "out"
+    flop_taps = ctaps if clock_contract and ctaps else taps
 
     def near(x, y):
-        return min(taps, key=lambda q: abs(q[1] - x) + abs(q[2] - y))[0]
+        return min(flop_taps, key=lambda q: abs(q[1] - x) + abs(q[2] - y))[0]
     ports = [f"  input {n};" for n in tapn] + ["  input arst_n;"]
     for b in sorted(bits):
         ports.append(f"  {'input' if dirs.get(b) == 'in' else 'output'} [{bits[b] - 1}:0] {b};")
+    ckn, ckcells, ckwires = {n: n for n in tapn}, [], []
+    if clock_contract:
+        ib = gen_phys.insertion_binding(P, tn)
+        cins = {r[0]: r[4] for r in gen_phys.core_tap_rows(P, tn)} if cores else {}
+        for j, n in enumerate(tapn):
+            if n in cins:
+                tt = cins[n]
+                lat = die_sta.clat_cell(tt, round(gen_phys.FF_TT_INSERTION_RATIO * tt, 1))
+            else:
+                lat = die_sta.clat_cell(ib["tt"], ib["ff"])
+            ckn[n] = f"ck_{n}"
+            ckwires.append(f"  wire ck_{n};")
+            ckcells.append(f"  {lat} c{j} (.A({n}), .Y(ck_{n}));")
     cells = []
     k = 0
     bh = die_sta.bhold_cell(P.clock["insertion_tol_ps"])
     for bus, bit, ln, x, y, f in sorted(pins, key=lambda p: (p[0], p[1])):
-        ck = near(x, y)
+        ck = ckn[near(x, y)]
         if dirs.get(bus) == "in" and hold_contract:
             cells.append(f"  {bh} h{k} (.A({bus}[{bit}]), .Y(d{k}));\n  {FLOP} f{k} (.CLK({ck}), .D(d{k}), .QN(q{k}));")
         elif dirs.get(bus) == "in":
@@ -640,10 +662,10 @@ def standin_netlist(P, tn, hold_contract=True):
             cells.append(f"  {FLOP} f{k} (.CLK({ck}), .D(1'b0), .QN({bus}[{bit}]));")
         k += 1
     names = tapn + ["arst_n"] + sorted(bits)
-    v = [f"module {t['module']} ({', '.join(names)});"] + ports
+    v = [f"module {t['module']} ({', '.join(names)});"] + ports + ckwires
     v += [f"  wire q{i};" for i in range(k) if f".QN(q{i})" in cells[i]]
     v += [f"  wire d{i};" for i in range(k) if f".Y(d{i})" in cells[i]]
-    v += cells + ["endmodule"]
+    v += ckcells + cells + ["endmodule"]
     return "\n".join(v) + "\n", k
 
 
@@ -1279,7 +1301,24 @@ def main(argv=None):
     h.add_argument("parts")
     h.add_argument("--out", required=True)
     h.add_argument("--tol-ps", type=float, default=float(S.DEFAULT_CLOCK["insertion_tol_ps"]))
+    j = sub.add_parser("standins", help="write the die_sta PARTS stand-ins of every plan type (contract form: "
+                                         "boundary-hold + clock-latency cells) without a full kit")
+    j.add_argument("plan")
+    j.add_argument("--out", required=True)
+    j.add_argument("--no-clock-contract", action="store_true", help="legacy: face flops load the tap port directly")
     a = ap.parse_args(argv)
+    if a.cmd == "standins":
+        P = S.Plan(S.load(a.plan))
+        tot = {}
+        for tn, t in sorted(P.types.items()):
+            d = Path(a.out) / t["module"]
+            d.mkdir(parents=True, exist_ok=True)
+            v, k = standin_netlist(P, tn, clock_contract=not a.no_clock_contract)
+            (d / "6_final.v").write_text(v)
+            tot[t["module"]] = k
+        print(json.dumps(dict(types=len(tot), face_flops=sum(tot.values()),
+                              clock_contract=not a.no_clock_contract), indent=1))
+        return 0
     if a.cmd == "standin-contract":
         tot = {}
         for v in sorted(Path(a.parts).glob("*/6_final.v")):
