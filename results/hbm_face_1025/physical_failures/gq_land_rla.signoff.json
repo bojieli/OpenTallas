@@ -1,0 +1,560 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "hbc_ot_hgi_coll_gq_land",
+ "generated": "2026-10-25T02:28:38-07:00",
+ "host": "eternal-dove",
+ "inputs": {
+  "base": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/results/asap7/hbc_ot_hgi_coll_gq_land/base",
+  "orfs": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run",
+  "design": "hbc_ot_hgi_coll_gq_land",
+  "kit": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla",
+  "odb": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/results/asap7/hbc_ot_hgi_coll_gq_land/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/results/asap7/hbc_ot_hgi_coll_gq_land/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/constraint.sdc",
+  "sdc_source": "kit",
+  "synth": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/results/asap7/hbc_ot_hgi_coll_gq_land/base/1_synth.v",
+  "final_v": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/results/asap7/hbc_ot_hgi_coll_gq_land/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/logs/asap7/hbc_ot_hgi_coll_gq_land/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/logs/asap7/hbc_ot_hgi_coll_gq_land/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/logs/asap7/hbc_ot_hgi_coll_gq_land/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/reports/asap7/hbc_ot_hgi_coll_gq_land/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/sdc_lint.json",
+  "record": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:latest), one process per corner",
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / related pair skew CPPR <= 80 TT+FF; spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "ot_hgi_coll_gq_land",
+   "cells": 156455.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk"
+   ],
+   "inputs": [
+    "ld_desc",
+    "ld_ev_k",
+    "ld_ev_v",
+    "ld_fire",
+    "ld_p_d",
+    "ld_p_v",
+    "pa_d",
+    "pa_src",
+    "pa_tag",
+    "pa_v",
+    "pb_d",
+    "pb_src",
+    "pb_tag",
+    "pb_v",
+    "qid",
+    "rst_n"
+   ],
+   "outputs": [
+    "fault",
+    "vm_kq_hi",
+    "vm_kq_lo"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": -106.71,
+   "sdc_wns_min": -0.49,
+   "sdc_tns_max": -11516.21,
+   "sdc_tns_min": -0.49,
+   "sdc_nviol_max": 304.0,
+   "sdc_nviol_min": 1.0,
+   "std_wns_max": -106.71,
+   "std_wns_min": -0.49,
+   "std_tns_max": -11516.21,
+   "std_tns_min": -0.49,
+   "std_nviol_max": 304.0,
+   "std_nviol_min": 1.0,
+   "slew_viol": 1353.0,
+   "cap_viol": 1.0,
+   "fanout_max": 148.0,
+   "fanout_worst_net": "net11653",
+   "fanout_viol": 73.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 4550,
+    "min": 210.98,
+    "mean": 236.65,
+    "max": 281.59,
+    "spread": 70.61
+   },
+   "insertion_pinflops": {
+    "n": 3878,
+    "min": 212.31,
+    "mean": 238.46,
+    "max": 281.59,
+    "spread": 69.28
+   },
+   "pair_skew": {
+    "done": true,
+    "checks": {
+     "max": {
+      "n": 66194.0,
+      "worst_abs_ps": 77.31,
+      "bounded": false,
+      "worst_signed_ps": -77.31,
+      "worst_launch": "pl_d[39]$_DFF_P_",
+      "worst_capture": "g_face_clone_vm_kq[328].u_bout_copy/q$_DFF_PN0_",
+      "worst_crpr_ps": 1.96,
+      "p99_raw_ps": 63.24,
+      "searched": 6.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     },
+     "min": {
+      "n": 66194.0,
+      "worst_abs_ps": 66.08,
+      "bounded": false,
+      "worst_signed_ps": 66.08,
+      "worst_launch": "ln_bk[7][5]$_SDFFCE_PN0P_",
+      "worst_capture": "g_face_clone_vm_kq[1533].u_bout_copy/q$_DFF_PN0_",
+      "worst_crpr_ps": 1.96,
+      "p99_raw_ps": 61.09,
+      "searched": 85.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     }
+    },
+    "counts": {
+     "regs": 4550.0,
+     "no_clock_arrival": 0.0,
+     "data_pins": 4550.0,
+     "pairs": 66194.0,
+     "inter_clock": 0.0
+    },
+    "method": "tag",
+    "seconds": 31.0,
+    "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+    "tsv": "pair_skew.tsv"
+   },
+   "ocv5_wns_max": -165.88,
+   "ocv5_wns_min": -19.34,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  },
+  "ff": {
+   "done": true,
+   "design": "ot_hgi_coll_gq_land",
+   "cells": 156455.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk"
+   ],
+   "inputs": [
+    "ld_desc",
+    "ld_ev_k",
+    "ld_ev_v",
+    "ld_fire",
+    "ld_p_d",
+    "ld_p_v",
+    "pa_d",
+    "pa_src",
+    "pa_tag",
+    "pa_v",
+    "pb_d",
+    "pb_src",
+    "pb_tag",
+    "pb_v",
+    "qid",
+    "rst_n"
+   ],
+   "outputs": [
+    "fault",
+    "vm_kq_hi",
+    "vm_kq_lo"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": 27.15,
+   "sdc_wns_min": -20.49,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": -17136.48,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 2105.0,
+   "std_wns_max": 27.15,
+   "std_wns_min": -20.49,
+   "std_tns_max": 0.0,
+   "std_tns_min": -17136.48,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 2105.0,
+   "slew_viol": 1301.0,
+   "cap_viol": 1.0,
+   "fanout_max": 148.0,
+   "fanout_worst_net": "net11653",
+   "fanout_viol": 73.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 4550,
+    "min": 168.14,
+    "mean": 194.43,
+    "max": 237.74,
+    "spread": 69.6
+   },
+   "insertion_pinflops": {
+    "n": 3878,
+    "min": 171.35,
+    "mean": 196.27,
+    "max": 237.74,
+    "spread": 66.39
+   },
+   "pair_skew": {
+    "done": true,
+    "checks": {
+     "max": {
+      "n": 66194.0,
+      "worst_abs_ps": 72.71,
+      "bounded": false,
+      "worst_signed_ps": -72.71,
+      "worst_launch": "pl_d[39]$_DFF_P_",
+      "worst_capture": "g_face_clone_vm_kq[328].u_bout_copy/q$_DFF_PN0_",
+      "worst_crpr_ps": 1.68,
+      "p99_raw_ps": 58.75,
+      "searched": 2.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     },
+     "min": {
+      "n": 66194.0,
+      "worst_abs_ps": 61.46,
+      "bounded": false,
+      "worst_signed_ps": 61.46,
+      "worst_launch": "ln_bk[7][5]$_SDFFCE_PN0P_",
+      "worst_capture": "g_face_clone_vm_kq[1533].u_bout_copy/q$_DFF_PN0_",
+      "worst_crpr_ps": 1.68,
+      "p99_raw_ps": 57.26,
+      "searched": 114.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     }
+    },
+    "counts": {
+     "regs": 4550.0,
+     "no_clock_arrival": 0.0,
+     "data_pins": 4550.0,
+     "pairs": 66194.0,
+     "inter_clock": 0.0
+    },
+    "method": "tag",
+    "seconds": 55.0,
+    "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+    "tsv": "pair_skew.tsv"
+   },
+   "ocv5_wns_max": -22.65,
+   "ocv5_wns_min": -32.89,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  }
+ },
+ "sdc_lint": {
+  "verdict": "PASS",
+  "mode": "kit sdc_lint.json",
+  "errors": [],
+  "n_errors": 0,
+  "sdc": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/constraint.sdc",
+  "sdc_source": "kit"
+ },
+ "face_guard": {
+  "verdict": "PASS",
+  "top": "ot_hgi_coll_gq_land",
+  "checked": 3878,
+  "ok": 3878,
+  "fail_counts": {},
+  "fails": {},
+  "netlist": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/results/asap7/hbc_ot_hgi_coll_gq_land/base/1_synth.v",
+  "pins": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/pins.json",
+  "boundary_context": null,
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "FAIL",
+   "wns_ps": -106.71,
+   "tns_ps": -11516.21,
+   "violators": 304.0
+  },
+  "hold_ff": {
+   "verdict": "FAIL",
+   "wns_ps": -20.49,
+   "tns_ps": -17136.48,
+   "violators": 2105.0,
+   "sdc_wns_ps": -20.49,
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "reason": null
+  },
+  "drv": {
+   "verdict": "FAIL",
+   "by_corner": {
+    "tt": {
+     "slew": 1353.0,
+     "cap": 1.0
+    },
+    "ff": {
+     "slew": 1301.0,
+     "cap": 1.0
+    }
+   },
+   "failing": {
+    "tt": {
+     "slew": 1353.0,
+     "cap": 1.0
+    },
+    "ff": {
+     "slew": 1301.0,
+     "cap": 1.0
+    }
+   }
+  },
+  "fanout": {
+   "verdict": "WARN",
+   "limit": 64,
+   "violators": {
+    "tt": 73.0,
+    "ff": 73.0
+   },
+   "max_fanout": 148.0,
+   "worst_net": "net11653"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "pair_skew_max_ps": 80.0,
+   "spread_info_only": true,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 3878,
+      "min": 212.31,
+      "mean": 238.46,
+      "max": 281.59,
+      "spread": 69.28
+     },
+     "all": {
+      "n": 4550,
+      "min": 210.98,
+      "mean": 236.65,
+      "max": 281.59,
+      "spread": 70.61
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 66194.0,
+        "worst_abs_ps": 77.31,
+        "bounded": false,
+        "worst_signed_ps": -77.31,
+        "worst_launch": "pl_d[39]$_DFF_P_",
+        "worst_capture": "g_face_clone_vm_kq[328].u_bout_copy/q$_DFF_PN0_",
+        "worst_crpr_ps": 1.96,
+        "p99_raw_ps": 63.24,
+        "searched": 6.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 66194.0,
+        "worst_abs_ps": 66.08,
+        "bounded": false,
+        "worst_signed_ps": 66.08,
+        "worst_launch": "ln_bk[7][5]$_SDFFCE_PN0P_",
+        "worst_capture": "g_face_clone_vm_kq[1533].u_bout_copy/q$_DFF_PN0_",
+        "worst_crpr_ps": 1.96,
+        "p99_raw_ps": 61.09,
+        "searched": 85.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 4550.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 4550.0,
+       "pairs": 66194.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 31.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 3878,
+      "min": 171.35,
+      "mean": 196.27,
+      "max": 237.74,
+      "spread": 66.39
+     },
+     "all": {
+      "n": 4550,
+      "min": 168.14,
+      "mean": 194.43,
+      "max": 237.74,
+      "spread": 69.6
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 66194.0,
+        "worst_abs_ps": 72.71,
+        "bounded": false,
+        "worst_signed_ps": -72.71,
+        "worst_launch": "pl_d[39]$_DFF_P_",
+        "worst_capture": "g_face_clone_vm_kq[328].u_bout_copy/q$_DFF_PN0_",
+        "worst_crpr_ps": 1.68,
+        "p99_raw_ps": 58.75,
+        "searched": 2.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 66194.0,
+        "worst_abs_ps": 61.46,
+        "bounded": false,
+        "worst_signed_ps": 61.46,
+        "worst_launch": "ln_bk[7][5]$_SDFFCE_PN0P_",
+        "worst_capture": "g_face_clone_vm_kq[1533].u_bout_copy/q$_DFF_PN0_",
+        "worst_crpr_ps": 1.68,
+        "p99_raw_ps": 57.26,
+        "searched": 114.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 4550.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 4550.0,
+       "pairs": 66194.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 55.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": 256.0
+  },
+  "sdc_lint": {
+   "verdict": "PASS",
+   "mode": "kit sdc_lint.json",
+   "errors": [],
+   "n_errors": 0,
+   "sdc": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "PASS",
+   "top": "ot_hgi_coll_gq_land",
+   "checked": 3878,
+   "ok": 3878,
+   "fail_counts": {},
+   "fails": {},
+   "netlist": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/run/results/asap7/hbc_ot_hgi_coll_gq_land/base/1_synth.v",
+   "pins": "/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_coll_gq_land_4d3dd24bd7bf-rla/pins.json",
+   "boundary_context": null,
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  }
+ },
+ "reasons": [
+  "setup_tt: FAIL WNS -106.71 ps, 304 endpoints",
+  "hold_ff: FAIL WNS -20.49 ps, 2105 endpoints",
+  "drv: FAIL TT slew 1353.0 cap 1.0, FF slew 1301.0 cap 1.0"
+ ],
+ "verdict": "NOT SIGNED"
+}
