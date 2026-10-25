@@ -128,7 +128,7 @@ def test_check_run_rc_and_tcl_errors(tmp_path):
 
 def test_spec_complete():
     specs, d = C.load_spec()
-    assert set(specs) == {"s81", "s81_head", "qwen_compute", "qwen_kvsys", "hbm", "qwen_kvsys_core"}
+    assert set(specs) == {"s81", "s81_head", "qwen_compute", "qwen_kvsys", "hbm", "hbm_sram", "qwen_kvsys_core"}
     for c in specs.values():
         kv = dict(src="/S", gen="/G", run="/R", item=c["item"], top=c["top"], image="i", mem=c["mem_gb"], cpus=8)
         kv.update({k: C.fmt(v, **kv) for k, v in c.get("vars", {}).items()})

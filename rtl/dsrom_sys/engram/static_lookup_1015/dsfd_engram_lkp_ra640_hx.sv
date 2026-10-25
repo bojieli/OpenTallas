@@ -89,9 +89,9 @@ module ot_s81_engram_lookup_ra640_hx #(
     localparam integer ATOMS = 9;
     localparam [31:0] POLY = 32'h04C11DB7;
     assign hq_len = ATOMS[3:0];
-    initial begin
-        if (RETURN_AGE < 32 || RETURN_AGE > 65000 || CPR != 6 || PIPE != 1)
-            $fatal(1,"static lookup requires explicit service age32..65000, six columns, PIPE1");
+    // elaboration-time parameter check in generate scope (every frontend, incl. read_verilog -sv, evaluates it)
+    if (RETURN_AGE < 32 || RETURN_AGE > 65000 || CPR != 6 || PIPE != 1) begin : g_bad_params
+        $fatal(1,"static lookup requires explicit service age32..65000, six columns, PIPE1");
     end
 
     // ---- column constants -----------------------------------------------------------
@@ -280,14 +280,32 @@ module ot_s81_engram_lookup_ra640_hx #(
     reg [5:0]   rq_ea, rq_oa;
     reg [2:0]   rq_aa;
     wire [255:0] rd_e, rd_o, rd_a;
-    ot_sram_1r1w_128x256_m1_r2c2 u_row_e (.clk(clk_rd), .r_ce_in(rq_v), .r_addr_in({1'b0, rq_ea}), .rd_out(rd_e),
-        .w_ce_in(wx_e), .w_addr_in({1'b0, wx_ea}), .wd_in(wx_de), .w_mask_in({256{1'b1}}),
+`ifdef OT_S81ENG_MACRO_F6
+    wire we_e,we_o,we_a,rv_e,rv_o,rv_a;
+    wire[5:0] wa_e,wa_o,ra_e,ra_o;wire[2:0] wa_a,ra_a;
+    wire[255:0] wd_e,wd_o,wd_a;
+    ot_s81eng_pinreg_r u_wee(clk_ctl,rrst[3],wen_q&&!watom_q[0],we_e);
+    ot_s81eng_pinreg_r u_weo(clk_ctl,rrst[3],wen_q&&watom_q[0],we_o);
+    ot_s81eng_pinreg_r u_wea(clk_ctl,rrst[3],wen_q&&(watom_q==4'd8),we_a);
+    ot_s81eng_pinreg #(.W(6)) u_wae(clk_ctl,{wbank_q,watom_q[3:1]},wa_e);
+    ot_s81eng_pinreg #(.W(6)) u_wao(clk_ctl,{wbank_q,watom_q[3:1]},wa_o);
+    ot_s81eng_pinreg #(.W(3)) u_waa(clk_ctl,wbank_q,wa_a);
+    ot_s81eng_pinreg #(.W(256)) u_wde(clk_ctl,wdata_q,wd_e);
+    ot_s81eng_pinreg #(.W(256)) u_wdo(clk_ctl,wdata_q,wd_o);
+    ot_s81eng_pinreg #(.W(256)) u_wda(clk_ctl,wdata_q,wd_a);
+`else
+    wire we_e=wx_e,we_o=wx_o,we_a=wx_a,rv_e=rq_v,rv_o=rq_v,rv_a=rq_v;
+    wire[5:0] wa_e=wx_ea,wa_o=wx_oa,ra_e=rq_ea,ra_o=rq_oa;wire[2:0]wa_a=wx_aa,ra_a=rq_aa;
+    wire[255:0]wd_e=wx_de,wd_o=wx_do,wd_a=wx_da;
+`endif
+    ot_sram_1r1w_128x256_m1_r2c2 u_row_e (.clk(clk_rd), .r_ce_in(rv_e), .r_addr_in({1'b0, ra_e}), .rd_out(rd_e),
+        .w_ce_in(we_e), .w_addr_in({1'b0, wa_e}), .wd_in(wd_e), .w_mask_in({256{1'b1}}),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    ot_sram_1r1w_128x256_m1_r2c2 u_row_o (.clk(clk_rd), .r_ce_in(rq_v), .r_addr_in({1'b0, rq_oa}), .rd_out(rd_o),
-        .w_ce_in(wx_o), .w_addr_in({1'b0, wx_oa}), .wd_in(wx_do), .w_mask_in({256{1'b1}}),
+    ot_sram_1r1w_128x256_m1_r2c2 u_row_o (.clk(clk_rd), .r_ce_in(rv_o), .r_addr_in({1'b0, ra_o}), .rd_out(rd_o),
+        .w_ce_in(we_o), .w_addr_in({1'b0, wa_o}), .wd_in(wd_o), .w_mask_in({256{1'b1}}),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-    ot_sram_1r1w_128x256_m1_r2c2 u_row_a (.clk(clk_rd), .r_ce_in(rq_v), .r_addr_in({4'd0, rq_aa}), .rd_out(rd_a),
-        .w_ce_in(wx_a), .w_addr_in({4'd0, wx_aa}), .wd_in(wx_da), .w_mask_in({256{1'b1}}),
+    ot_sram_1r1w_128x256_m1_r2c2 u_row_a (.clk(clk_rd), .r_ce_in(rv_a), .r_addr_in({4'd0, ra_a}), .rd_out(rd_a),
+        .w_ce_in(we_a), .w_addr_in({4'd0, wa_a}), .wd_in(wd_a), .w_mask_in({256{1'b1}}),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
 
     // ---- issue ------------------------------------------------------------------------
@@ -388,7 +406,11 @@ module ot_s81_engram_lookup_ra640_hx #(
     wire      row_ok = (ej < CPR[2:0]);
     wire      room = 1'b1;
     wire      e0_go = (st == S_EMIT) && active && age >= RETURN_AGE + 2 && !emit_done_r && row_ok && ek < 4'd8 && room;
-    reg [255:0] e1_lo, e1_hi, e1_a8;
+`ifdef OT_S81ENG_MACRO_F6
+    wire[255:0] e1_lo,e1_hi,e1_a8;
+`else
+    reg[255:0] e1_lo,e1_hi,e1_a8;
+`endif
     reg [1:0]   e1_off;
     reg [2:0]   e1_j, e1_k;
     reg [SLW-1:0] e1_s, e2_s, e3_s;
@@ -416,6 +438,14 @@ module ot_s81_engram_lookup_ra640_hx #(
     reg [2:0]  q_j, q_k, r_j, r_k;
     reg [SLW-1:0] q_s, r_s;
     wire [3:0] ek1 = ek + 4'd1;
+`ifdef OT_S81ENG_MACRO_F6
+    ot_s81eng_pinreg_r u_rve(clk_ctl,rrst[3],e0_go,rv_e);
+    ot_s81eng_pinreg_r u_rvo(clk_ctl,rrst[3],e0_go,rv_o);
+    ot_s81eng_pinreg_r u_rva(clk_ctl,rrst[3],e0_go,rv_a);
+    ot_s81eng_pinreg #(.W(6)) u_rae(clk_ctl,{ej,ek[0]?ek1[3:1]:ek[3:1]},ra_e);
+    ot_s81eng_pinreg #(.W(6)) u_rao(clk_ctl,{ej,ek[3:1]},ra_o);
+    ot_s81eng_pinreg #(.W(3)) u_raa(clk_ctl,ej,ra_a);
+`endif
     // n32: E0q captures every cycle (r_* / E1 / the macros use it only on the e0_go -> rq_v -> e1_vn edges)
     always @(posedge clk_ctl) begin
         // ej advances to CPR after the final row. Define the inactive read, too:
@@ -449,6 +479,7 @@ module ot_s81_engram_lookup_ra640_hx #(
         for (gi = 0; gi < 64; gi = gi + 1) begin : g_rk0
             (* keep = 1 *) ot_s81eng_kq #(.W(1)) u_k (.clk(clk_rd), .d(q_k0[gi / 16]), .q(r_k0[gi]));
         end
+`ifndef OT_S81ENG_MACRO_F6
         for (gi = 0; gi < 32; gi = gi + 1) begin : g_e1m
             always @(posedge clk_rd) begin
 `ifdef OT_ENGRAM_MUT_RA512_PAR
@@ -459,6 +490,7 @@ module ot_s81_engram_lookup_ra640_hx #(
                 e1_hi[8*gi +: 8] <= r_k0[32 + gi] ? rd_e[8*gi +: 8] : rd_o[8*gi +: 8];
             end
         end
+`endif
         for (gi = 0; gi < 44; gi = gi + 1) begin : g_e1o
             (* keep = 1 *) ot_s81eng_kq #(.W(2)) u_o (.clk(clk_rd), .d(r_offc[gi / 22]), .q(e1_offc[gi]));
         end
@@ -467,9 +499,15 @@ module ot_s81_engram_lookup_ra640_hx #(
         end
     endgenerate
     always @(posedge clk_rd) begin
+`ifndef OT_S81ENG_MACRO_F6
         e1_a8 <= rd_a;
+`endif
         e1_off <= r_off; e1_j <= r_j; e1_k <= r_k; e1_s <= r_s;
     end
+`ifdef OT_S81ENG_MACRO_F6
+    ot_s81eng_row_capture u_rowcap(.ck(clk_rd),.e(rd_e),.o(rd_o),.sel(r_k0),.lo(e1_lo),.hi(e1_hi));
+    ot_s81eng_pinreg #(.W(256)) u_rowacap(clk_rd,rd_a,e1_a8);
+`endif
     // E2: byte shift
     reg [255:0] e2_d;
     reg [7:0]   e2_scale;                   // this beat's block exponent (row byte 256 + k)
