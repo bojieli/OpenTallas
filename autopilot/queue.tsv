@@ -87,3 +87,25 @@ hbm	ot_hbm_argmax_static_sw_vm_r2__struct_rc0700	intel1:/srv/opentallas-scratch2
 qwen_compute	qfd_dv_s8x_btab__t2	intel1:/srv/opentallas-scratch2/claude/qc-plan/s8bp/btab_t2	claude/qc-s8bp-1025@3097fbfc0	PASS-COND	GEOM-REVIEW REPLY [QC-S8BP 04:31] 04:33 (POST-CTS 04:41)	32	150000	QC-A0				adopt
 qwen_compute	qfd_dv_s8x_prog__t2	intel2:/srv/opentallas-scratch2/claude/qc-plan/s8bp/prog_t2	claude/qc-s8bp-1025@3097fbfc0	PASS-COND	GEOM-REVIEW REPLY [QC-S8BP 04:31] 04:33 (POST-CTS 04:41)	32	150000	QC-A0				adopt
 hbm	ot_hbm_hc_bank128_pair_core	epyc2:/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/runs_cts/ot_hbm_hc_bank128_pair_core_ba77076d4cc8.20261025051953.405262	claude/hbm-cores-w128-1025@57735a4779	REQ	HBM-CORES/W128v2	16	155000	HBM-CORES	route	/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/runs_cts/ot_hbm_hc_bank128_pair_core_ba77076d4cc8.20261025051953.405262/run_kit_hbm.sh	8
+s81	slice_station__t25	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m0/slice_station__t25	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	205874	PROTO-KITS			8
+s81	slice_station__t37	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m0/slice_station__t37	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	244685	PROTO-KITS			8
+s81	slice_station__t38	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m0/slice_station__t38	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	203411	PROTO-KITS			8
+s81	slice_station__t40	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m0/slice_station__t40	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	203005	PROTO-KITS			8
+s81	slice_station__t41	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m0/slice_station__t41	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	244247	PROTO-KITS			8
+s81	slice_station__t42	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m0/slice_station__t42	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	202998	PROTO-KITS			8
+s81	slice_station__t47	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m0/slice_station__t47	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	165706	PROTO-KITS			8
+s81	slice_station__t50	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m0/slice_station__t50	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	201663	PROTO-KITS			8
+s81	slice_station__t12	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t12	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	147459	PROTO-KITS			8
+s81	slice_station__t18	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t18	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	180077	PROTO-KITS			8
+s81	slice_station__t21	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t21	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	157906	PROTO-KITS			8
+s81	slice_station__t22	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t22	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	189488	PROTO-KITS			8
+s81	slice_station__t25	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t25	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	205874	PROTO-KITS			8
+s81	slice_station__t26	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t26	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	178396	PROTO-KITS			8
+s81	slice_station__t28	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t28	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	175574	PROTO-KITS			8
+s81	slice_station__t29	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t29	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	193340	PROTO-KITS			8
+s81	slice_station__t36	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t36	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	242938	PROTO-KITS			8
+s81	slice_station__t37	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t37	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	244685	PROTO-KITS			8
+s81	slice_station__t38	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t38	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	203411	PROTO-KITS			8
+s81	slice_station__t40	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t40	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	203005	PROTO-KITS			8
+s81	slice_station__t46	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t46	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	154173	PROTO-KITS			8
+s81	slice_station__t50	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_s81_178/m5/slice_station__t50	claude/proto-1025@0da5319bda	REQ	PROTO-KITS/S81-178 B2	24	201663	PROTO-KITS			8
