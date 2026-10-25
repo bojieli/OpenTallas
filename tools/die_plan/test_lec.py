@@ -652,3 +652,19 @@ def test_explicit_platform_buffer_loads_functional_liberty_for_gold_and_lint(tmp
         cmds = lec.read_rtl_cmds(env, tmp_path, frontend, [])
         assert cmds[0] == f'read_liberty -ignore_miss_func {tmp_path}/buf.lib'
         assert not any('read_liberty -lib ' in c for c in cmds)
+
+
+def test_structural_twin_closure_rare_carry_and_valid_pipe(tmp_path):
+    for mutant in (False, True):
+        g, gm = _seq(tmp_path, 'tw_gold', ['d', 'wrong'], ['carry', 'copy', 'valid', 'dup', 'out'],
+                     lambda m,x: {'carry':x['d'], 'copy':x['d'], 'valid':x['carry'],
+                                  'dup':x['copy'], 'out':x['dup']})
+        t, tm = _seq(tmp_path, 'tw_gate', ['d', 'wrong'], ['carry', 'valid', 'out'],
+                     lambda m,x: {'carry':x['wrong'] if mutant else x['d'],
+                                  'valid':x['carry'], 'out':x['valid']})
+        L = lec.Lec(g, gm, t, tm)
+        assert lec.structural_twin_closure(L, []) == 2
+        assert ('gold', 'ff:u_dut.dup') in L.hyp
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        status = _sim_prove(m)
+        assert ('differs' in status.values()) == mutant

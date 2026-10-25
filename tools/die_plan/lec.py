@@ -1645,6 +1645,40 @@ def structural_constant_closure(L, log):
     return total
 
 
+
+def structural_twin_closure(L, log):
+    """Propose same-side duplicate FFs by exact next-state literal identity.
+
+    Unlike random signatures this finds rare carry bits and arbitrarily deep
+    merged valid pipes. All proposals enter the next induction miter.
+    """
+    total = 0
+    while True:
+        L.build(with_compare=False, with_hyp=False)
+        new = []
+        for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
+            twins = {}
+            for c in L.matched:
+                d = L.dlit.get((side, c), 0)
+                if c.startswith("ff:") and d > 1 and (side, c) not in L.hyp:
+                    twins.setdefault(d >> 1, []).append((c, d))
+            for k in keys:
+                d = L.dlit.get((side, k), 0)
+                if not k.startswith("ff:") or (side, k) in L.hyp or d <= 1:
+                    continue
+                choices = twins.get(d >> 1, [])
+                if choices:
+                    c, dc = min(choices)
+                    new.append(((side, k), ("eq", side, c, (d ^ dc) & 1)))
+        if not new:
+            break
+        L.hyp.update(new)
+        total += len(new)
+    if total:
+        log.append(f"structural twin closure: {total} relations proposed")
+    return total
+
+
 def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
     duplicates, or the two frontends named a register differently, e.g. a register that drives an output port):
@@ -1983,7 +2017,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         log.append(f"correspondence round {rnd}: {len(st)} hypotheses, {len(bad)} failed "
                    f"({sum(st[n] == 'undecided' for n in bad)} undecided) {bad[:6]}")
         if not bad:
-            if structural_constant_closure(L, log):
+            if structural_constant_closure(L, log) or structural_twin_closure(L, log):
                 continue     # prove the new constants before returning
             if L.hyp == before or not adding:
                 return
