@@ -104,13 +104,14 @@ endmodule
 
 // ----------------------------------------------------------------------------------------------------------------------
 // Q-seat store (v2): 16 lane slices + the 8 masked-writer SRAMs + the read gather (function of qfd_native59_qseat_sram).
-module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0)(
+module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0,WIF=0)(
  input wire ck,rst_n,clear,
  input wire[7:0]write_v,input wire[71:0]write_element,input wire[255:0]write_data,
  input wire[1151:0]elem_l,input wire[127:0]valid_l,input wire[15:0]seen_clear_l,
  input wire[511:0]valid_s_l,input wire[63:0]seen_clear_s_l,input wire[127:0]valid_override_l,input wire[1279:0]elem_hi_s_l,input wire[71:0]write_element_bp,   // per lane slice replicas
  input wire[15:0]read_v_l,input wire[511:0]read_oh_l,input wire[79:0]read_beat_l,   // per lane slice read copies
  input wire[7:0]read_v_m,input wire[39:0]read_beat_m,input wire[39:0]bypass_beat_c,
+ input wire[7:0]wif_ce,input wire[39:0]wif_addr,input wire[127:0]wif_we,input wire[4095:0]wif_wd,   // WIF=1: write-face replicas
  output wire[511:0]read_data,output wire[15:0]seen_rd_l,output wire[15:0]all_seen_l,output wire[15:0]dup_l
 );
  wire[127:0]select_q;wire[383:0]select_pub;wire[383:0]bypass_hit_pub;
@@ -134,9 +135,13 @@ module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0)
   for(l=0;l<16;l=l+1)begin:g_mask
    assign mask[l]=write_element[9*w+:4]==4'(l);
   end
+  // PATH-QC-A0N59 10-25 (GEOM [PATH-QC-N59] cond 1): WIF=1 drives every write pin from a register at the write face
+  // (qbank g_wif: ce / addr / 16 we / 16 x 32-bit wd per writer), the same values one edge earlier decoded from f_*; +0 cycles.
+  wire w_ce_m=WIF?wif_ce[w]:(write_v[w]&&!clear);wire[4:0]w_addr_m=WIF?wif_addr[5*w+:5]:write_element[9*w+4+:5];
+  wire[511:0]w_wd_m=WIF?wif_wd[512*w+:512]:{16{write_data[32*w+:32]}};wire[15:0]w_we_m=WIF?wif_we[16*w+:16]:mask;
   ot_sram_1r1w_32x512_m1 u_mem(.clk(ck),.r_ce_in(read_v_m[w]),.r_addr_in(read_beat_m[5*w+:5]),.rd_out(bank_data[w]),
-   .w_ce_in(write_v[w]&&!clear),.w_addr_in(write_element[9*w+4+:5]),
-   .wd_in({16{write_data[32*w+:32]}}),.w_mask_in(mask));
+   .w_ce_in(w_ce_m),.w_addr_in(w_addr_m),
+   .wd_in(w_wd_m),.w_mask_in(w_we_m));
  end endgenerate
  generate if(LOCAL32)begin:g_bypass_local
   for(genvar bl=0;bl<16;bl=bl+1)begin:g_l
@@ -170,7 +175,7 @@ endmodule
 // qfd_native59_dv_service then runs on them exactly as it ran on the raw pins (one edge later), with its kept same-edge
 // replicas now per LANE SLICE.  Outputs registered (see the file header).
 // QB_MUT (split-only mutants, lockstep must FAIL): 1 qb_row leaves unregistered (one edge early), 2 dd_o relay one stage short.
-module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL32=0,QB_LOCAL_MUT=0)(
+module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL32=0,QB_LOCAL_MUT=0,QB_WIF=0)(
  input wire ck,rst_n,
  input wire[547:0]dd_i,input wire layer_context_v,input wire[5:0]command_stage,
  input wire q_slot,input wire[4:0]q_slot_beat,
@@ -303,16 +308,40 @@ module qfd_native59_qbank #(parameter integer MUT=0,QB_MUT=0,QB_ALIGN=0,QB_LOCAL
   assign qhit_any[gl]=dd_q&&dd_mask[gl];
   assign qhi_bad[gl]=qhit_any[gl]&&(|p_dd[345+24*gl+9+:15]);
  end endgenerate
+ // PATH-QC-A0N59 10-25 write-face interface replicas (QB_WIF=1, +0 cycles): per writer one kept register set at its SRAM
+ // write face = the p_* stage's macro write-pin values (write_v&&!clear, element addr, lane one-hot, 16 lane copies of the
+ // 32-bit slice), decoded from the same f_* D one edge earlier, same rst_pin reset value as p_*.
+ wire[7:0]wif_ce;wire[39:0]wif_addr;wire[127:0]wif_we;wire[4095:0]wif_wd;
+ generate if(QB_WIF)begin:g_wif
+  wire f_dq=f_dd[547]&&f_dd[546:545]==2'd0;wire f_begin=f_lcv&&f_stage>=1&&f_stage<=36;
+  for(genvar ww=0;ww<8;ww=ww+1)begin:g_w
+   localparam [8:0] E0=(MUT==1)?9'd1:9'd0;
+   wire[8:0]fe=f_dd[345+24*ww+:9]^E0;
+   (* keep = "true" *) reg ce_q;(* keep = "true" *) reg[4:0]addr_q;(* keep = "true" *) reg[15:0]we_q;
+   always @(posedge ck or negedge rst_pin)
+    if(!rst_pin)begin ce_q<=1'b0;addr_q<=E0[8:4];for(integer wl=0;wl<16;wl=wl+1)we_q[wl]<=E0[3:0]==4'(wl);end
+    else begin ce_q<=f_dq&&f_dd[537+ww]&&!f_begin;addr_q<=fe[8:4];for(integer wl=0;wl<16;wl=wl+1)we_q[wl]<=fe[3:0]==4'(wl);end
+   for(genvar wg=0;wg<16;wg=wg+1)begin:g_lane
+    (* keep = "true" *) reg[31:0]wd_q;   // one copy per 32-bit lane group, placed at that group's pins
+    always @(posedge ck or negedge rst_pin)
+     if(!rst_pin)wd_q<=32'd0;else wd_q<=f_dd[89+32*ww+:32];
+    assign wif_wd[512*ww+32*wg+:32]=wd_q;
+   end
+   assign wif_ce[ww]=ce_q;assign wif_addr[5*ww+:5]=addr_q;assign wif_we[16*ww+:16]=we_q;
+  end
+ end else begin:g_no_wif
+  assign wif_ce='0;assign wif_addr='0;assign wif_we='0;assign wif_wd='0;
+ end endgenerate
  reg qctx;
  always @(posedge ck or negedge rst_top)
   if(!rst_top)qctx<=0;
   else if(begin_slot)qctx<=1;
  wire[511:0]qrow;wire[15:0]seen_rd_l,all_seen_l,dup_l;
- qfd_native59_qseat_lanes #(.MUT(MUT),.LOCAL32(QB_LOCAL32),.LOCAL_MUT(QB_LOCAL_MUT)) u_qseat(
+ qfd_native59_qseat_lanes #(.MUT(MUT),.LOCAL32(QB_LOCAL32),.LOCAL_MUT(QB_LOCAL_MUT),.WIF(QB_WIF)) u_qseat(
   .ck(ck),.rst_n(rst_top),.clear(begin_slot),.write_v(qhit_any),.write_element(qe_all),.write_data(p_dd[344:89]),
   .elem_l(elem_l),.valid_l(valid_l),.seen_clear_l(clr_l),
   .valid_s_l(valid_s_l),.seen_clear_s_l(clear_s_l),.valid_override_l(valid_override_l),.elem_hi_s_l(elem_hi_s_l),.write_element_bp(bp_element),.read_v_l(rv_l),.read_oh_l(roh_l),.read_beat_l(rb_l),
-  .read_v_m(rv_m),.read_beat_m(rb_m),.bypass_beat_c(bb_c),
+  .read_v_m(rv_m),.read_beat_m(rb_m),.bypass_beat_c(bb_c),.wif_ce(wif_ce),.wif_addr(wif_addr),.wif_we(wif_we),.wif_wd(wif_wd),
   .read_data(qrow),.seen_rd_l(seen_rd_l),.all_seen_l(all_seen_l),.dup_l(dup_l));
  reg q_read_valid;reg[4:0]q_read_beat;
  always @(posedge ck or negedge rst_pin)
