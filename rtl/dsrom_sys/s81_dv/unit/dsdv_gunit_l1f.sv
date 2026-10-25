@@ -114,9 +114,15 @@ module dsdv_gunit_l1f #(
     input  wire [1:0]    bw_e, input wire [3:0] bw_a, input wire [255:0] bw_d, // bias row write {set, b}, macro enables
     // E face (collector L1c)
     input  wire          g_go, input wire [5:0] g_hit, input wire [41:0] g_a,  // gather: local {b, k} of each chosen id
-    output reg           o_v, output reg o_f, output reg o_l, output reg o_g, output reg [245:0] o_d,
+    output reg           o_v, output reg o_f, output reg o_l, output reg o_g, output wire [244:0] o_d,   // S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant / unused pins): o_d packed {d[245:206], d[204:0]} (d[205] is read by no collector)
     output reg           o_flt
 );
+    reg [245:0] o_df;   // RTLC: o_df[205] is never written and has no pin
+`ifdef OT_RTLC_MUT_L1F   // RTLC bench mutant: o_d packs d[245:1] (drops d[0], keeps d[205])
+    assign o_d = o_df[245:1];
+`else
+    assign o_d = {o_df[245:206], o_df[204:0]};
+`endif
     localparam integer EW = 41, LW = 8 * EW, NL = 16, LA = 5, NS = 7 * NL;
 `ifdef OT_S81_GUNIT_FWDOWN
     // Eight store groups plus sixteen same-edge forward row/enable owners.
@@ -343,5 +349,5 @@ module dsdv_gunit_l1f #(
         end
     wire [245:0] onext = {54'd0, gd};
     always @(posedge clk)
-        for (i = 0; i < 246; i = i + 1) o_d[i] <= gq2[i / 14] ? onext[i] : c3[i];
+        for (i = 0; i < 246; i = i + 1) if (i != 205) o_df[i] <= gq2[i / 14] ? onext[i] : c3[i];
 endmodule

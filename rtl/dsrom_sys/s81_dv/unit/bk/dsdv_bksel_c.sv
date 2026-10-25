@@ -11,12 +11,13 @@ module dsdv_bksel_c (
     input  wire [2*354-1:0] f_o_s, f_o_n,
     output wire [2*66-1:0]  t_c_s, t_c_n,
     output wire [1:0]       t_cr_s, t_cr_n,
-    output wire [513:0]     vd
+    output wire [366:0]     vd    // S81-KITS-RTLC 10-24: packed {vd[512:502], vd[356:1]} (dsdv_bk_g VD_PK)
 );
     localparam integer CB = 66, SB = 865, OB = 354;
-    wire [4*CB-1:0] tc; wire [3:0] tcr; wire vf_unused;
+    wire [4*CB-1:0] tc; wire [3:0] tcr; wire vf_unused; wire [513:0] vdw;
     dsfd_selt_c #(.SEARCH_PIPE(1), .DM(4), .PACE(2), .MRG_PIPE(1), .RQPIPE(1), .SLAT(4), .XDX(1)) u_c (.ck(ck), .rst(rst),
-        .f_s({f_s_n, f_s_s}), .f_o({f_o_n, f_o_s}), .t_c(tc), .t_cr(tcr), .vd(vd), .vf(vf_unused));
+        .f_s({f_s_n, f_s_s}), .f_o({f_o_n, f_o_s}), .t_c(tc), .t_cr(tcr), .vd(vdw), .vf(vf_unused));
+    assign vd = {vdw[512:502], vdw[356:1]};             // vdw[513], vdw[501:357]: constant 0; vdw[0]: unread (dropped pins)
     assign t_c_s = tc[0 +: 2*CB]; assign t_c_n = tc[2*CB +: 2*CB];
     assign t_cr_s = tcr[1:0]; assign t_cr_n = tcr[3:2];
 endmodule

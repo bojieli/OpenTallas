@@ -80,6 +80,14 @@ STEP = dict(E=(1, 0), W=(-1, 0), N=(0, 1), S=(0, -1))
 FRAME_BAND_CENSUS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "frame_band_census.json")
 
 
+# S81-KITS-RTLC 10-24 (owner: register every partition pin, in RTL): the band pass-through stations (dsfd_qbank_N / _S,
+# dsfd_rstg, ot_s81_sstn_payload536 / base566) gained an input pin register (+1 edge per station).  Max stations on a
+# band path ending at each band-to-band bus (tools/s81_dv/frame_band_stations.py on the band RTL; per-field breakdown in
+# results/rtl/s81_kits_rtlc_1024/frame_band_stations.json): priced as fixed cycles of the fi lane carrying that bus.
+FRAME_BAND_STATION_EDGES = {"h9": {("r0", "r1"): 3, ("r1", "r0"): 3, ("r1", "r2"): 3, ("r2", "r1"): 3},
+                            "h10": {("r0", "r1"): 4, ("r1", "r0"): 3, ("r1", "r2"): 3, ("r2", "r1"): 3}}
+
+
 def frame_internal(h):
     m = json.load(open(FRAME_BAND_CENSUS))["masters"][h]
     return [(k.split("->")[0], k.split("->")[1], w) for k, w in sorted(m.items())]
@@ -264,10 +272,17 @@ _SVC_HC = [dict(inst="u_rsv.u_att.u_eng.g_t[%d].g_ts.u_t.u_hc.g_h[%d].u_c" % (i 
                 origin_um=(round(34.56 + 172.8 * (i % 8), 4), [34.56, 311.04, 587.52, 864.0, 1321.92, 1598.4, 1874.88, 2151.36][i // 8]))
            for i in range(64)]
 NONFRAME_HC = {
+    # S81-KITS-RTLC 10-24 (ruling c): explicit hub-C placement = the former shelf rows (cap | xr | eg) with xfin moved
+    # under eg (centred, 17.28 um gap): the xfin -> eg copy link (core_conns C:xrt*: xf e_* N face -> eg i_* S face)
+    # faces its partner in every type; y-mirror only (the shelf packer never chose an x mirror for the hub C types)
     "C:xrt1": dict(cores=_C_COMMON + [dict(inst="u_c.u_xr", module="ot_s81sl_xrt1", plan_core="xg_xr", cells=67849,
-                                           lef=_rt("s81sl_xrt1", "ot_s81sl_xrt1"))], gaps=_C_GAPS),
+                                           lef=_rt("s81sl_xrt1", "ot_s81sl_xrt1"))], gaps=_C_GAPS,
+                   place={"u_c.u_cap": (34.56, 34.56), "u_c.u_xr": (388.8, 34.56), "u_c.u_xf": (751.68, 34.56),
+                          "u_c.u_eg": (717.12, 233.28)}, mirrors=((False, False), (False, True))),
     "C:xrt3": dict(cores=_C_COMMON + [dict(inst="u_c.u_xr", module="ot_s81sl_xrt3", plan_core="xg_xr", cells=78456,
-                                           lef=_rt("s81sl_xrt3_b", "ot_s81sl_xrt3"))], gaps=_C_GAPS),
+                                           lef=_rt("s81sl_xrt3_b", "ot_s81sl_xrt3"))], gaps=_C_GAPS,
+                   place={"u_c.u_cap": (34.56, 34.56), "u_c.u_xr": (388.8, 34.56), "u_c.u_xf": (1010.88, 34.56),
+                          "u_c.u_eg": (976.32, 233.28)}, mirrors=((False, False), (False, True))),
     "gunit": dict(cores=[dict(inst="u_gunit.u_" + m, module="dsdv_gunit_" + m, lef=_GU % (m, m, m), plan_core=pc,
                               cells=c, bucket=c is not None and pc != "l5f")
                          for m, pc, c in [("l0", "l0_l1_l2", 8213 + 110419 + 9853 + 43954 + 8215),
@@ -422,6 +437,10 @@ CORE_CONNS = {
         "u_eng.u_h0": _cc(**{"in_w,out_res": ["core:u_eng.u_e"]}),
         "u_eng.u_h1": _cc(**{"in_w,out_res": ["core:u_eng.u_e"]}),
     },
+    # S81-KITS-RTLC 10-24 (ruling c): the slice hub C xfin -> eg copy link (ot_s81sl_slice_c1x / c3x xe_*): the re-pinned
+    # xfin table carries e_v / e_c / e_hh / e_kk / e_dd (N face, M5) and eg reads them on i_*
+    **{k: {"u_c.u_xf": _cc(**{"e_v,e_c,e_hh,e_kk,e_dd": ["core:u_c.u_eg"]}),
+           "u_c.u_eg": _cc(**{"i_v,i_c,i_hh,i_kk,i_dd": ["core:u_c.u_xf"]})} for k in ("C:xrt1", "C:xrt3")},
 }
 CORE_CONNS_OUT = {}
 
@@ -989,7 +1008,8 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
                 for a, bb, w in frame_internal(h):
                     ia, ib = int(a[1]), int(bb[1])
                     L("fi_%s%d_p%d_%s%s" % (side, fr, pos, a, bb), fb[ia], "%s%s_o" % (a, bb), fb[ib], "%s%s_i" % (a, bb),
-                      w, cls="frame_int", role="fi_%s%s" % (a, bb), fixed=1)   # band RTL seam = K + 1 = 3 edges
+                      w, cls="frame_int", role="fi_%s%s" % (a, bb),
+                      fixed=1 + FRAME_BAND_STATION_EDGES[h][(a, bb)])   # band RTL seam = K + 1 = 3 edges; + stations
             b0 = {pos: frames[(side, fr, pos, 0)].name for pos in range(1, 7)}
             xr = x_row(fr)
             for chain, (half, base) in (("in", (inner, 1)), ("out", (outer, 4))):

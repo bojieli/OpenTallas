@@ -230,10 +230,19 @@ module ot_s81sl_slice #(
         .is_v(is_v), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_xg));
     generate if (HB != 0) begin : g_c3
 `ifdef OT_S81SL_KV_TRANSPORT
+        // S81-KITS-RTLC 10-24 (OWNER DECISION 8): xrt3 ring / band ports carry only read / non-constant bits; the parent
+        // zero-fills ci_b[1103:1076] and x_si[7] (plain logic) and packs the B word (bits 7..36 / 1076.. are not read)
+        assign ci_b[1103:1076] = 28'd0; assign x_si[7] = 1'b0;
         ot_s81sl_xrt3 u_xr (
+            .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e[1075:1]), .dl_wv(dl_wv), .dl_w(dl_w[1075:1]),
+            .dl_vv(dl_vv), .dl_vb(dl_vb[275:1]), .ci_dir(ci_dir), .ci_b(ci_b[1075:0]), .bi({bi[1075:37], bi[6:0]}), .bo(bo),
+            .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
+            .p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x),
+            .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
+            .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si[6:0]),
+            .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
 `else
         ot_s81sl_xr3 u_xr (
-`endif
             .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo),
             .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
@@ -241,12 +250,21 @@ module ot_s81sl_slice #(
             .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
             .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si),
             .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
+`endif
     end else begin : g_c1
 `ifdef OT_S81SL_KV_TRANSPORT
+        // S81-KITS-RTLC 10-24 (OWNER DECISION 8): see the C3 branch
+        assign ci_b[1103:1076] = 28'd0; assign x_si[7] = 1'b0;
         ot_s81sl_xrt1 u_xr (
+            .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e[1075:1]), .dl_wv(dl_wv), .dl_w(dl_w[1075:1]),
+            .dl_vv(dl_vv), .dl_vb(dl_vb[275:1]), .ci_dir(ci_dir), .ci_b(ci_b[1075:0]),
+            .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
+            .p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x),
+            .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
+            .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si[6:0]),
+            .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
 `else
         ot_s81sl_xr1 u_xr (
-`endif
             .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b),
             .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
@@ -254,11 +272,12 @@ module ot_s81sl_slice #(
             .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
             .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si),
             .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
+`endif
         assign bo = 513'd0;      // C1 has no band port: the C1 cluster master does not expose bi / bo
     end endgenerate
     // xfin (S81-DV leaf): sid = the slice strap (RTL-BUILD-S81: was unconnected); mode ENG -> e_* -> eg
     ot_s81dv_xfin u_xf (.clk(clk), .rst_n(rst_n), .go(x_go), .mode(x_mode), .sid(sid), .eps(x_eps), .s_v(x_sv),
-        .s_i(x_si), .s(x_s),
+        .s_i(x_si[6:0]), .s(x_s),
         .wi_v(nx_wi[172]), .wi_h(nx_wi[171:168]), .wi_b(nx_wi[167:160]), .wi_d(nx_wi[159:0]),
         .ei_v(nx_ei[172]), .ei_h(nx_ei[171:168]), .ei_b(nx_ei[167:160]), .ei_d(nx_ei[159:0]),
         .eo_v(nx_eo[172]), .eo_h(nx_eo[171:168]), .eo_b(nx_eo[167:160]), .eo_d(nx_eo[159:0]),
