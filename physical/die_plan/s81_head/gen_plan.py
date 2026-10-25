@@ -319,6 +319,14 @@ for tn, end in (("hd_spn", False), ("hd_spn_end", True)):
                      note="CLOSED s81hd_spr_m4-bb8dd356c")],
       note="spine node of one row-pair: x/go down + W/E chain heads (upper row); chain tails + level below merged "
            "(capture-all-then-fire argmax) up; ft for the S-side host / mesh lanes" + (" (bottom: no level below)" if end else ""))
+    if not end:
+        # Real existing spine leaves: strict header checking needs their source
+        # list and explicit control bindings. Internal station RTL is a separate
+        # G3 blocker; the plan's station metadata alone does not implement it.
+        types[tn]["sources"] = ["rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv",
+                                 "rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv"]
+        for child in types[tn]["contents"]:
+            child["bind"] = {"ck": "clk", "rst_n": "rst_n"}
     BUS(tn, "x_i", "in", 565, "u_spo.i")
     BUS(tn, "b_o", "out", 565, "u_spr.o")
     BUS(tn, "xw_o", "out", 565, "u_spo.ow")
