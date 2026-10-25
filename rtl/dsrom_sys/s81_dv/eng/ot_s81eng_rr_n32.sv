@@ -23,11 +23,10 @@ module ot_s81eng_xq_n32 #(
     // PATH-S81/ENG3 10-25 (E3 CTS probe: 116 TT EP, wl_code -> bf_dq -129.3, id_code -> u_aq.s0_x -135.4; ~27 levels of
     // ripple HA/FA inside ot_s81eng_rr_bfraw_byte, local wires, fanout 1-2: pure logic depth).  The bfraw decode is split
     // across the EXISTING input register (0 added cycles, same ages):
-    //   stage 1 (o_d flop in u_lkp -> kept per-element capture u_p): code pre-decode {s, nan, zero, nrm, c-10} and the
-    //            subnormal result (needs only scale[4:0]: k = scale + eb - 4, shift/round); the scale keeps its 32 kq8
-    //            capture copies for stage 2;
-    //   stage 2 (capture -> u_aq.s0_x): one 8b+5b add U = scale + (c-10) = X+127 gives xb and the overflow / normal
-    //            classes, then the 5-way select.
+    //   stage 1 (o_d flop in u_lkp -> kept per-element capture u_p): code-only pre-decode {s, nan, zero, nrm, sig, c-10,
+    //            eb-4}; no scale logic before the register (the scale keeps its 32 kq8 capture copies);
+    //   stage 2 (capture -> u_aq.s0_x): two parallel short adds (U = scale + (c-10) = X+127 -> xb + overflow / normal;
+    //            k = scale + eb - 4 -> flat select of the subnormal shift / RNE forms), then the 5-way select.
     // The wait line now stores the DECODED bf16 (32 x 16 = the 512-bit width) from a registered copy bfxq of bf_x
     // written one edge later at the registered address wa_q (same entry), read one edge later (registered address ra_q) into
     // bf_dq: the 64 wait-line decoders, wl_code, the 32 wl scale copies and the id_code_w write copies are gone.
@@ -35,16 +34,16 @@ module ot_s81eng_xq_n32 #(
     always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
     always @(posedge ck) begin ic <= o_col; ib <= o_beat; end
     wire [255:0] id_scale_c;
-    wire [607:0] pd;                       // element g: pd[19g +: 19] registered pre-decode of o_d[8g +: 8]
+    wire [639:0] pd;                       // element g: pd[20g +: 20] registered pre-decode of o_d[8g +: 8]
     for(genvar sc=0;sc<32;sc=sc+1)begin:g_scale_capture
         ot_s81eng_rr_kq8 u_i(.ck(ck),.d(o_d[263:256]),.q(id_scale_c[8*sc+:8]));
-        ot_s81eng_rr_bfpre #(.MUT((MUT==4&&sc==0)?1:0)) u_p(.ck(ck),.code(o_d[8*sc+:8]),.scale_lo(o_d[260:256]),.q(pd[19*sc+:19]));
+        ot_s81eng_rr_bfpre #(.MUT((MUT==4&&sc==0)?1:0)) u_p(.ck(ck),.code(o_d[8*sc+:8]),.q(pd[20*sc+:20]));
     end
     wire [511:0] bf_x;
     genvar g;
     generate for(g=0;g<32;g=g+1)begin:g_dec
         for(genvar by=0;by<2;by=by+1)begin:g_byte
-            ot_s81eng_rr_bfpost_byte #(.LO(8*by)) u_x(.pd(pd[19*g+:19]),.scale(id_scale_c[8*g+:8]),.q(bf_x[16*g+8*by+:8]));
+            ot_s81eng_rr_bfpost_byte #(.LO(8*by)) u_x(.pd(pd[20*g+:20]),.scale(id_scale_c[8*g+:8]),.q(bf_x[16*g+8*by+:8]));
         end
     end endgenerate
     wire [1023:0] x, xd;
@@ -611,13 +610,12 @@ endmodule
     assign q=bf16[LO+:8];
 endmodule
 
-// PATH-S81/ENG3 10-25: stage 1 of the split bfraw decode (OT_S81ENG_BF_PREDEC), registered.  Code-only fields plus the
-// subnormal result, whose scale term only matters when scale <= 9 (X < -126 needs scale + c <= 10), so it reads the 5 low
-// scale bits from the same o_d word: k = scale + eb - 4 (-3..6 there), sub = sig << k or the RNE right shift by -k.
-// q = {sub 8, c-10 (5b signed), nrm[2:0], zero, nan, s}; c = eb + p, eb = (e==0 ? 1 : e), so X + 127 = scale + c - 10.
+// PATH-S81/ENG3 10-25: stage 1 of the split bfraw decode (OT_S81ENG_BF_PREDEC): code-only fields, registered (no scale
+// logic before the register: the scale bits keep their 32 kq8 capture copies).
+// q = {eb-4 (5b signed), sig[3:0], c-10 (5b signed), nrm[2:0], zero, nan, s}; c = eb + p, eb = (e==0 ? 1 : e), so
+// X + 127 = scale + c - 10 and the subnormal shift k = scale + eb - 4 (exactly the bfraw e9/X/k terms).
 // MUT 1 (bench negative control): sign from code[6].
-(* keep_hierarchy = 1 *)module ot_s81eng_rr_bfpre #(parameter integer MUT=0)(input wire ck,input wire[7:0] code,
-    input wire[4:0] scale_lo,output reg[18:0] q);
+(* keep_hierarchy = 1 *)module ot_s81eng_rr_bfpre #(parameter integer MUT=0)(input wire ck,input wire[7:0] code,output reg[19:0] q);
     wire       s = (MUT == 1) ? code[6] : code[7];
     wire [3:0] e = code[6:3];
     wire [2:0] m = code[2:0];
@@ -626,25 +624,37 @@ endmodule
     wire [3:0] nrm = sig << (2'd3 - p);
     wire [4:0] eb = (e == 4'd0) ? 5'd1 : {1'b0, e};
     wire [4:0] cm10 = eb + {3'd0, p} - 5'd10;    // -9..8
-    wire [4:0] k = scale_lo + eb - 5'd4;           // signed 5b; exact whenever the subnormal result is selected
-    wire [1:0] r = k[4] ? (~k[1:0] + 2'd1) : 2'd0;
-    wire [3:0] quotient = sig >> r;
-    wire [3:0] rem = sig & ((4'd1 << r) - 4'd1);
-    wire [3:0] half = (r == 0) ? 4'd0 : (4'd1 << (r - 2'd1));
-    wire       up = (r != 0) && ((rem > half) || (rem == half && quotient[0]));
-    wire [7:0] sub = !k[4] ? ({4'd0, sig} << k[2:0]) : ({4'd0, quotient} + {7'd0, up});
-    always @(posedge ck) q <= {sub, cm10, nrm[2:0], (sig == 4'd0), (e == 4'hF && m == 3'h7), s};
+    wire [4:0] ebm4 = eb - 5'd4;                 // -3..11
+    always @(posedge ck) q <= {ebm4, sig, cm10, nrm[2:0], (sig == 4'd0), (e == 4'hF && m == 3'h7), s};
 endmodule
-// Stage 2: registered pre-decode + registered scale -> bf16 byte LO (same function as ot_s81eng_rr_bfraw_byte):
-// one 8b + 5b add U = X + 127, two constant compares, one 5-way select.
-(* keep_hierarchy = 1 *)module ot_s81eng_rr_bfpost_byte #(parameter integer LO=0)(input wire[18:0] pd,input wire[7:0] scale,output wire[7:0] q);
+// Stage 2: registered pre-decode + registered scale -> bf16 byte LO (same function as ot_s81eng_rr_bfraw_byte).
+// Two independent short adds from the flops: U = scale + (c-10) = X + 127 (xb, overflow / normal classes) and
+// k = scale[4:0] + (eb-4) (subnormal shift, -3..6 whenever the subnormal result is selected, i.e. scale <= 9).  The
+// subnormal result is a flat select on k of sig << k (k >= 0) or the three round-to-nearest-even right shifts, each a
+// 2-level function of the registered sig computed in parallel with the adds (no negate / compare / increment chain).
+(* keep_hierarchy = 1 *)module ot_s81eng_rr_bfpost_byte #(parameter integer LO=0)(input wire[19:0] pd,input wire[7:0] scale,output wire[7:0] q);
     wire       s = pd[0], nan = pd[1], zero = pd[2];
     wire [2:0] nrm = pd[5:3];
     wire [4:0] cm10 = pd[10:6];
-    wire [7:0] sub = pd[18:11];
+    wire [3:0] sig = pd[14:11];
+    wire [4:0] ebm4 = pd[19:15];
     wire signed [9:0] u = $signed({2'b00, scale}) + $signed({{5{cm10[4]}}, cm10});   // X + 127, -9..263
     wire       ovf = (u > 10'sd254);                          // X > 127
     wire       norm = (u >= 10'sd1);                          // X >= -126
+    wire [4:0] k = scale[4:0] + ebm4;
+    // RNE right shift by 1, 2, 3: q = sig >> r, guard g = sig[r-1], sticky = |sig[r-2:0], up = g & (sticky | q[0])
+    wire [3:0] rd1 = {1'b0, sig[3:1]} + {3'd0, sig[0] & sig[1]};
+    wire [3:0] rd2 = {2'b0, sig[3:2]} + {3'd0, sig[1] & (sig[0] | sig[2])};
+    wire [3:0] rd3 = {3'b0, sig[3]}   + {3'd0, sig[2] & (sig[1] | sig[0] | sig[3])};
+    reg [7:0] sub;
+    always @(*) begin
+        case (k)
+            5'h1D: sub = {4'd0, rd3};                          // k = -3
+            5'h1E: sub = {4'd0, rd2};                          // k = -2
+            5'h1F: sub = {4'd0, rd1};                          // k = -1
+            default: sub = {4'd0, sig} << k[2:0];              // k >= 0 (bfraw form; k <= 6 when selected)
+        endcase
+    end
     reg [15:0] bf16;
     always @(*) begin
         if (nan)       bf16 = {s, 15'h7FC0};
