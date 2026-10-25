@@ -9,10 +9,11 @@ valid or control pins. Physical callers must supply their actual input inventory
 All ID pins retain normal timing and physical pin obligations.
 """
 
-ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id'})
+KV_ID_WIDTHS = {'strap_corner': 2, 'strap_hid': 2, 'strap_bsel': 2}
+ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', *KV_ID_WIDTHS})
 
 
-def validate_parent_id_straps(descriptor, inputs=None):
+def validate_parent_id_straps(descriptor, inputs=None, pins=None):
     """Return {port: {width, value}}; inputs optionally maps input names to widths.
 
     The caller's actual input inventory is authoritative. A missing or output
@@ -23,6 +24,27 @@ def validate_parent_id_straps(descriptor, inputs=None):
     raw = descriptor.get('parent_id_straps', {})
     if not isinstance(raw, dict):
         raise ValueError('parent_id_straps must be an object')
+    raw = dict(raw)
+    physical = descriptor.get('straps', [])
+    if not isinstance(physical, list):
+        raise ValueError('hard-core ID straps must be a list')
+    seen = set()
+    for entry in physical:
+        if not isinstance(entry, dict) or not {'port','width','value'} <= set(entry) or set(entry) - {'port','width','value','note'}:
+            raise ValueError('hard-core ID strap requires port, width, value and optional note')
+        port = entry['port']
+        if port not in KV_ID_WIDTHS or port in seen or port in raw:
+            raise ValueError(f'hard-core ID strap {port!r}: unapproved or duplicate identity port')
+        seen.add(port)
+        if 'note' in entry and not isinstance(entry['note'], str):
+            raise ValueError(f'hard-core ID strap {port}: note must be a string')
+        value = entry['value']
+        if isinstance(value, str):
+            import re
+            if not re.fullmatch(r"2'[bB][01]{2}", value):
+                raise ValueError(f'hard-core ID strap {port}: require an exact two-bit binary literal')
+            value = int(value[3:], 2)
+        raw[port] = dict(width=entry['width'], value=value)
     result = {}
     for port, contract in raw.items():
         if port not in ID_PORTS:
@@ -32,11 +54,22 @@ def validate_parent_id_straps(descriptor, inputs=None):
         width, value = contract['width'], contract['value']
         if type(width) is not int or width < 1:
             raise ValueError(f'parent_id_straps {port}: width must be a positive integer')
+        if port in KV_ID_WIDTHS and width != KV_ID_WIDTHS[port]:
+            raise ValueError(f'parent_id_straps {port}: identity width must be exactly two bits')
         if type(value) is not int or value < 0 or value >= 1 << width:
             raise ValueError(f'parent_id_straps {port}: value does not fit width {width}')
         if inputs is not None and inputs.get(port) != width:
             raise ValueError(f'parent_id_straps {port}: no actual input of width {width}')
         result[port] = dict(width=width, value=value)
+    if pins is not None:
+        import re
+        names = {p if isinstance(p, str) else p[0] if isinstance(p, tuple) else p['name'] for p in pins}
+        for port, contract in result.items():
+            bits = {int(m.group(1)) for n in names if (m := re.fullmatch(re.escape(port) + r'\[(\d+)\]', n))}
+            if contract['width'] == 1 and port in names:
+                bits.add(0)
+            if bits != set(range(contract['width'])):
+                raise ValueError(f'parent_id_straps {port}: declared physical pins do not match its exact width')
     return result
 
 

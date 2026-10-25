@@ -1867,7 +1867,7 @@ class Binder:
         params = self.tparams[tn]
         pdecl, pnames = [], {}
         id_decls = {}
-        if any(d.get("parent_id_straps") for d in t.get("contents", []) + t.get("hard_cores", [])):
+        if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", [])):
             from parent_id_straps import type_parent_id_straps, validate_parent_id_straps
             try:
                 id_decls = type_parent_id_straps(t)
