@@ -1,35 +1,35 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/srv/opentallas-scratch2/claude/wt/qc-meth/physical/die_plan/qwen_compute/die_plan.json",
+ "plan": "/srv/opentallas-scratch2/claude/wt/plan-delta-qc/physical/die_plan/qwen_compute/die_plan.json",
  "verdict": "PASS",
  "mode": "G0",
  "errors": 0,
- "warnings": 111,
+ "warnings": 109,
  "summary": {
   "die": "qwen_compute",
   "partitions": 377,
   "types": {
-   "types": 56,
+   "types": 55,
    "partitions": 377,
    "singleton_types": 16,
    "max_instances": 48,
-   "near_duplicate_groups": 8,
-   "near_duplicate_types": 16,
-   "mergeable_saving": 8
+   "near_duplicate_groups": 7,
+   "near_duplicate_types": 14,
+   "mergeable_saving": 7
   },
   "ports": 3410,
   "lanes": 2207,
   "bits": 1335723,
   "taps_cores": {
-   "taps": 1645,
+   "taps": 1644,
    "hard_cores": 68,
    "core_pins": 114118,
    "core_pins_off_track": 0,
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/srv/opentallas-scratch2/claude/wt/qc-meth/physical/die_plan/qwen_compute/plan_notes.json",
-    "/srv/opentallas-scratch2/claude/wt/qc-meth/physical/die_plan/qwen_compute/plan_notes.json"
+    "/srv/opentallas-scratch2/claude/wt/plan-delta-qc/physical/die_plan/qwen_compute/plan_notes.json",
+    "/srv/opentallas-scratch2/claude/wt/plan-delta-qc/physical/die_plan/qwen_compute/plan_notes.json"
    ],
    "no_cells": []
   },
@@ -53,8 +53,8 @@
    "internal_station": 0
   },
   "g0c": {
-   "types": 56,
-   "clean": 56,
+   "types": 55,
+   "clean": 55,
    "die_level": {},
    "g3_eligible": [
     "cbf_q00",
@@ -88,7 +88,6 @@
     "sle_hc0",
     "sle_hc1",
     "sle_hc2",
-    "sle_hc3",
     "sle_sc",
     "sle_st_a",
     "sle_st_b",
@@ -944,8 +943,8 @@
     {
      "at_um": 18250,
      "bits": 5182,
-     "tracks": 369889,
-     "ratio": 0.014,
+     "tracks": 360045,
+     "ratio": 0.0144,
      "m89_only_ratio": 0.0164,
      "worst_part": "sl_E0_su_l0",
      "worst_part_ratio": 0.2117,
@@ -954,8 +953,8 @@
     {
      "at_um": 18500,
      "bits": 3078,
-     "tracks": 369889,
-     "ratio": 0.0083,
+     "tracks": 360045,
+     "ratio": 0.0085,
      "m89_only_ratio": 0.0098,
      "worst_part": "sl_E0_su_l0",
      "worst_part_ratio": 0.1073,
@@ -964,7 +963,7 @@
     {
      "at_um": 18750,
      "bits": 770,
-     "tracks": 369889,
+     "tracks": 360045,
      "ratio": 0.0021,
      "m89_only_ratio": 0.0024,
      "worst_part": "sl_E0_fe",
@@ -1044,8 +1043,8 @@
     {
      "at_um": 20750,
      "bits": 4668,
-     "tracks": 369889,
-     "ratio": 0.0126,
+     "tracks": 360045,
+     "ratio": 0.013,
      "m89_only_ratio": 0.0148,
      "worst_part": "sl_E1_su_l0",
      "worst_part_ratio": 0.2117,
@@ -1054,8 +1053,8 @@
     {
      "at_um": 21000,
      "bits": 2564,
-     "tracks": 369889,
-     "ratio": 0.0069,
+     "tracks": 360045,
+     "ratio": 0.0071,
      "m89_only_ratio": 0.0081,
      "worst_part": "sl_E1_su_l0",
      "worst_part_ratio": 0.1073,
@@ -1064,7 +1063,7 @@
     {
      "at_um": 21250,
      "bits": 0,
-     "tracks": 369889,
+     "tracks": 360045,
      "ratio": 0.0,
      "m89_only_ratio": 0.0
     },
@@ -1141,8 +1140,8 @@
     {
      "at_um": 23250,
      "bits": 5698,
-     "tracks": 369889,
-     "ratio": 0.0154,
+     "tracks": 360045,
+     "ratio": 0.0158,
      "m89_only_ratio": 0.0181,
      "worst_part": "sl_E2_su_l0",
      "worst_part_ratio": 0.2117,
@@ -1151,8 +1150,8 @@
     {
      "at_um": 23500,
      "bits": 3534,
-     "tracks": 369889,
-     "ratio": 0.0096,
+     "tracks": 360045,
+     "ratio": 0.0098,
      "m89_only_ratio": 0.0112,
      "worst_part": "sl_E2_su_l0",
      "worst_part_ratio": 0.1073,
@@ -1161,7 +1160,7 @@
     {
      "at_um": 23750,
      "bits": 514,
-     "tracks": 369889,
+     "tracks": 360045,
      "ratio": 0.0014,
      "m89_only_ratio": 0.0016,
      "worst_part": "sl_E2_fe",
@@ -1241,8 +1240,8 @@
     {
      "at_um": 25750,
      "bits": 5184,
-     "tracks": 369889,
-     "ratio": 0.014,
+     "tracks": 360045,
+     "ratio": 0.0144,
      "m89_only_ratio": 0.0164,
      "worst_part": "sl_E3_su_l0",
      "worst_part_ratio": 0.2117,
@@ -1251,8 +1250,8 @@
     {
      "at_um": 26000,
      "bits": 2504,
-     "tracks": 369889,
-     "ratio": 0.0068,
+     "tracks": 360045,
+     "ratio": 0.007,
      "m89_only_ratio": 0.0079,
      "worst_part": "sl_E3_su_l0",
      "worst_part_ratio": 0.1073,
@@ -1261,7 +1260,7 @@
     {
      "at_um": 26250,
      "bits": 0,
-     "tracks": 369889,
+     "tracks": 360045,
      "ratio": 0.0,
      "m89_only_ratio": 0.0
     },
@@ -1338,8 +1337,8 @@
     {
      "at_um": 28250,
      "bits": 5698,
-     "tracks": 369889,
-     "ratio": 0.0154,
+     "tracks": 360045,
+     "ratio": 0.0158,
      "m89_only_ratio": 0.0181,
      "worst_part": "sl_E4_su_l0",
      "worst_part_ratio": 0.2117,
@@ -1348,8 +1347,8 @@
     {
      "at_um": 28500,
      "bits": 3018,
-     "tracks": 369889,
-     "ratio": 0.0082,
+     "tracks": 360045,
+     "ratio": 0.0084,
      "m89_only_ratio": 0.0096,
      "worst_part": "sl_E4_su_l0",
      "worst_part_ratio": 0.1073,
@@ -1438,8 +1437,8 @@
     {
      "at_um": 30750,
      "bits": 3078,
-     "tracks": 369889,
-     "ratio": 0.0083,
+     "tracks": 360045,
+     "ratio": 0.0085,
      "m89_only_ratio": 0.0098,
      "worst_part": "sl_E5_su_l0",
      "worst_part_ratio": 0.1595,
@@ -1448,8 +1447,8 @@
     {
      "at_um": 31000,
      "bits": 1696,
-     "tracks": 369889,
-     "ratio": 0.0046,
+     "tracks": 360045,
+     "ratio": 0.0047,
      "m89_only_ratio": 0.0054,
      "worst_part": "sl_E5_su_l0",
      "worst_part_ratio": 0.0528,
@@ -1997,8 +1996,8 @@
     {
      "at_um": 13750,
      "bits": 12612,
-     "tracks": 419659,
-     "ratio": 0.0301,
+     "tracks": 385639,
+     "ratio": 0.0327,
      "m89_only_ratio": 0.0323,
      "worst_part": "sl_W4_hc0",
      "worst_part_ratio": 0.1838,
@@ -2007,8 +2006,8 @@
     {
      "at_um": 14000,
      "bits": 12336,
-     "tracks": 419659,
-     "ratio": 0.0294,
+     "tracks": 385639,
+     "ratio": 0.032,
      "m89_only_ratio": 0.0316,
      "worst_part": "sl_W4_hc0",
      "worst_part_ratio": 0.1813,
@@ -2017,8 +2016,8 @@
     {
      "at_um": 14250,
      "bits": 12336,
-     "tracks": 419659,
-     "ratio": 0.0294,
+     "tracks": 385639,
+     "ratio": 0.032,
      "m89_only_ratio": 0.0316,
      "worst_part": "sl_W4_hc0",
      "worst_part_ratio": 0.1813,
@@ -2027,8 +2026,8 @@
     {
      "at_um": 14500,
      "bits": 12336,
-     "tracks": 419659,
-     "ratio": 0.0294,
+     "tracks": 385639,
+     "ratio": 0.032,
      "m89_only_ratio": 0.0316,
      "worst_part": "sl_W4_hc0",
      "worst_part_ratio": 0.1813,
@@ -2037,8 +2036,8 @@
     {
      "at_um": 14750,
      "bits": 12336,
-     "tracks": 419659,
-     "ratio": 0.0294,
+     "tracks": 385639,
+     "ratio": 0.032,
      "m89_only_ratio": 0.0316,
      "worst_part": "sl_W4_hc0",
      "worst_part_ratio": 0.1813,
@@ -4664,8 +4663,8 @@
    "async_skipped": 1,
    "depth_source": "landing file",
    "checked": true,
-   "groups_file": "/srv/opentallas-scratch2/claude/wt/qc-meth/physical/die_plan/qwen_compute/r8/bus_groups.json",
-   "landing_file": "/srv/opentallas-scratch2/claude/wt/qc-meth/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
+   "groups_file": "/srv/opentallas-scratch2/claude/wt/plan-delta-qc/physical/die_plan/qwen_compute/r8/bus_groups.json",
+   "landing_file": "/srv/opentallas-scratch2/claude/wt/plan-delta-qc/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
   },
   "reset": {
    "release": "wavefront",
@@ -4673,7 +4672,7 @@
    "root": "sl_W0_ctl",
    "hop_um": 405.0,
    "relay_um": 405.0,
-   "max_release": 128,
+   "max_release": 127,
    "max_die_hop_um": 377.3,
    "unreachable": []
   },
@@ -7240,13 +7239,7 @@
     "serdes_windows": 3,
     "covered": 0
    },
-   "source": "/srv/opentallas-scratch2/claude/wt/qc-meth/physical/die_plan/qwen_compute/die_io.json"
-  },
-  "pg_supplies": {
-   "supplies": 0,
-   "parts": 0,
-   "serdes": 3,
-   "serdes_unsupplied": 3
+   "source": "/srv/opentallas-scratch2/claude/wt/plan-delta-qc/physical/die_plan/qwen_compute/die_io.json"
   },
   "cut_lines": {
    "vertical": [
@@ -8360,7 +8353,7 @@
      }
     }
    ],
-   "total_types": 56
+   "total_types": 55
   },
   "xdie_counts": {
    "hard_cores": 0,
@@ -8509,7 +8502,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "/srv/opentallas-scratch2/claude/wt/qc-meth/physical/die_plan/qwen_compute/die_plan.png"
+  "png": "/srv/opentallas-scratch2/claude/pdqc/after_g0/die_plan.png"
  },
  "findings": [
   {
@@ -8526,11 +8519,6 @@
    "level": "WARN",
    "check": "types",
    "msg": "near-duplicate types ['sle_hc2', 'slw_hc2'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
-  },
-  {
-   "level": "WARN",
-   "check": "types",
-   "msg": "near-duplicate types ['sle_hc3', 'slw_hc3'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
   },
   {
    "level": "WARN",
@@ -8773,11 +8761,6 @@
    "check": "geometry",
    "msg": "type coll_ftc slot out_rank_rr_wi: crossing ~912 um > 2 station(s) x reach 405 (see hops)",
    "type": "coll_ftc"
-  },
-  {
-   "level": "WARN",
-   "check": "pg_supply",
-   "msg": "3 SerDes io partitions on the core VDD grid (no separate PHY supply + bump rows, OWNER DECISION 7): io_serdes, io_serdes_1, io_serdes_2"
   },
   {
    "level": "WARN",
