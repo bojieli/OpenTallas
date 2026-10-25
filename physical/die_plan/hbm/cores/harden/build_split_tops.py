@@ -285,6 +285,7 @@ def recipes(a):
         if os.environ.get('OT_HBM_ONECLOCK','0')=='1' and ft in ('pgslice_side_rest','pgslice_side_softplus'):
             # The cached elaboration dependency list predates decision16a.
             # Ports are identical; select the standard LAT4 f12 arithmetic.
+            if REPO not in sys.path: sys.path.insert(0,REPO)
             from tools.hbm_layer_vehicle.adopt_pg_oneclock import source_files
             files['files']=source_files(files['files'])
         ei = sum(p[2] for p in ports if p[1] == 'input'); eo = sum(p[2] for p in ports if p[1] == 'output')

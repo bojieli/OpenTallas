@@ -8,6 +8,12 @@ module tb_hbm_side_oneclock;
  ot_hbm_su_static_side #(.MLAT(3),.ALAT(3)) ref0({6{clk}},rst_n,v,fn,x,fn,y3,f3);
  ot_hbm_su_static_side #(.MLAT(4),.ALAT(4)) dut({6{clk}},rst_n,v,fn,x,fn,y4,f4);
  ot_hbm_su_static_side #(.MLAT(4),.ALAT(4),.MUT(1)) mutant({6{clk}},rst_n,v,fn,x,fn,ym,fm);
+ wire[31:0] core_y,sp_r; wire core_fault,sp_v,sp_fault;
+ ot_hbm_su_side_rest_core rest(.clk_r({3{clk}}),.rst_n(rst_n),.v(v),.fn(fn),.x(x),.fn_out(fn),
+  .y(core_y),.fault(core_fault),.sp_v(sp_v),.sp_r(sp_r ^ ($test$plusargs("MUT_CUT")?32'd1:32'd0)),.sp_fault(sp_fault));
+ ot_hbm_su_side_softplus_core softplus(.clk({3{clk}}),.rst_n(rst_n),.v(sp_v),.x(x),.r(sp_r),.fault(sp_fault));
+ reg delayed_sp_fault; always @(posedge clk) delayed_sp_fault<=dut.f_sp;
+ wire expected_core_fault=dut.f_rsq|dut.f_sq|delayed_sp_fault|dut.f_eg1|dut.f_eg2|dut.f_eg3|dut.f_eg4;
  reg[31:0] history[0:63]; reg[31:0] expected,actual;
  integer epoch,i,k,delta,checks=0,mutant_diffs=0,seed=17;
  initial begin
@@ -27,6 +33,8 @@ module tb_hbm_side_oneclock;
     actual=$test$plusargs("MUT_FN")?ym:y4;
     if(i>300)begin
      checks=checks+1;
+     if(core_y!==y4)$fatal(1,"SIDE_ONECLOCK CUT_WORD fn=%0d i=%0d got=%h ref=%h",fn,i,core_y,y4);
+     if(core_fault!==expected_core_fault)$fatal(1,"SIDE_ONECLOCK CUT_FAULT fn=%0d i=%0d",fn,i);
      if(actual!==expected)$fatal(1,"SIDE_ONECLOCK mismatch fn=%0d i=%0d got=%h expected=%h delta=%0d",fn,i,actual,expected,delta);
      if(ym!==expected)mutant_diffs=mutant_diffs+1;
     end
