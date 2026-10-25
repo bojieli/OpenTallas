@@ -336,12 +336,14 @@ def ar_framer_order(messages):
 
 
 # ------------------------------------------------------------------------------------------------ LM head (DV side)
-def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None, running_k=False):
+def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None, running_k=False, slice_ages=None):
     """the LM-head DV schedule: clear / ROOT / ARX before the rounds, the amax STN rounds from t0 (first far word),
     collision-free emits, the token, ARX + XC gather, GATHER, the 8 rank returns' edges."""
     own = D.ownership()
     smap = D.slice_map()
-    lw = D.lower()                               # the RMSNorm ROOT fields (one ROOT cfg serves the norm and the head)
+    # the RMSNorm ROOT fields (one ROOT cfg serves the norm and the head); slice_ages = this vehicle's measured
+    # dv_lower_bench --calibrate record (the default results/rtl/qlb_c4_1018 record is the 10-18 slice2 row)
+    lw = D.lower(ages=slice_ages)
     rt = lw['root']
     pre = t0 - 60
     if D.SLICE_RTL == 's8':

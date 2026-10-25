@@ -32,7 +32,9 @@ PY
 exit 6; }
 # runlist: pos lines -> die paths
 sed -e "s|^pos |die |" -e "s| tree/| $T/|g" -e "s| pos/build/| $W/build/|g" -e "s| pos/cal_mat/| $W/cal_mat/|g" \
-    -e "s| fx/| $S/fx/|g" "$RL" > $S/runlist.txt
+    -e "s| fx/| $S/fx/|g" -e "/ --run lm /s|\$| --slice-ages $W/build/slice_ages.json|" "$RL" > $S/runlist.txt
+# lm lowers the RMSNorm ROOT fields with this vehicle's slice ages (dv_lower_bench --calibrate writes build/slice_ages.json)
+! grep -q ' --run lm ' $S/runlist.txt || [ -s $W/build/slice_ages.json ] || { echo "lm cases need $W/build/slice_ages.json"; exit 6; }
 job() { local name=$2; shift 2; local d=$S/runs/$name; mkdir -p $d; ln -sfn $W/build/obj_n12 $d/obj_n12
   DV_LOWER_VFLAGS="$(cat $W/vflags.txt)" python3 "$@" --work $d > $d/bench.out 2>&1; echo "rc=$?" >> $d/bench.out
   echo "die $name $(head -1 $d/bench.out | cut -c1-160)"; }

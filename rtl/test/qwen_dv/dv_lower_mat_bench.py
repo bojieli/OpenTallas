@@ -443,6 +443,9 @@ def okey(v):
     return (~v & 0xFFFFFFFF) if v >> 31 else (v | 0x80000000)
 
 
+SLICE_AGES = dict(ages=None)   # --slice-ages: the vehicle's measured slice ages (lm ROOT fields)
+
+
 def run_lm(work, ages, rng, mutant):
     own = D.ownership()
     lay = M.btab_layout(own)
@@ -454,7 +457,7 @@ def run_lm(work, ages, rng, mutant):
     t, _ = prelude(ev, LB.T0, tabs)
     ch = M.Chain(D.slice_map())
     row0 = 0
-    lm = M.lower_lm(200, ages, ch, row0=row0, mutant=mutant, running_k=True)
+    lm = M.lower_lm(200, ages, ch, row0=row0, mutant=mutant, running_k=True, slice_ages=SLICE_AGES['ages'])
     lo_e = min(c['edge'] for c in ch.commands())
     base = t + 20 - lo_e
     put_chain(ev, base, ch.commands())
@@ -548,6 +551,7 @@ def main():
     ap.add_argument('--run', choices=sorted(RUNS))
     ap.add_argument('--mutant')
     ap.add_argument('--ages', default=None)
+    ap.add_argument('--slice-ages', default=None, help='slice_ages.json of THIS vehicle (dv_lower_bench.py --calibrate); lm needs it')
     ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--arf', action='store_true', help='QW-LAYERGAP: expect the framed AR words (build with '
                     'DV_LOWER_VFLAGS=-GARF=1): tag = XC tag on every word, last only on the message\'s last word')
@@ -564,6 +568,8 @@ def main():
         z = np.load(a.fixture)
         FIX.update({k: z[k] for k in z.files})
     ages = M.load_ages(a.ages or M.STN_AGES)
+    if a.slice_ages:
+        SLICE_AGES['ages'] = D.load_ages(a.slice_ages)
     rng = np.random.default_rng(a.seed)
     try:
         ok, n, errs, info = RUNS[a.run](work, ages, rng, a.mutant)
