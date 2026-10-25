@@ -281,3 +281,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 22:36 PDT ROOT-MERGE: batch 6 merged main 6f905012a -> 21dee5fb1 (s81 kits nodes RTL + 5 geom views, no csa31)
 2026-10-24 22:36 PDT COORD: OWNER approved batched re-plans (decision 17); lanes already ordered at 22:4x.
 2026-10-24 22:37 PDT COORD: reset wavefront READY (offsets: s81 99, head 80, qc 135, kvsys 80, hbm 96-98 clk); folded into the dec. 17 batched re-plans; CP1 r1 proof NOT SIGNED (FF hold -2.69 on IO, slew) -- full-repair r0/r1 in GRT on intel1.
+2026-10-24 22:43 PDT COORD: KV head_eighth e1/e5/e7 SIGNED (kvsys cores 2->5?); KV-CORES rulings 1-5 YES, folded into batched re-plan.
