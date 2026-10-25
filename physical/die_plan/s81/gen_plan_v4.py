@@ -1855,18 +1855,37 @@ def poly_cells(pts):
 
 
 def candidates(a, b):
+    """Manhattan routes including adjacent-row detours around endpoint PHY rows."""
     (ax, ay), (bx, by) = a, b
+    seen = set()
+    def unique(points):
+        clean = [points[0]]
+        for point in points[1:]:
+            if point != clean[-1]:
+                clean.append(point)
+        key = tuple(clean)
+        if key in seen:
+            return None
+        seen.add(key)
+        return clean
     if ax == bx or ay == by:
-        yield [a, b]
-        return
-    yield [a, (bx, ay), b]
-    yield [a, (ax, by), b]
-    lo, hi = sorted((ax, bx))
-    for m in range(lo + 1, hi):
-        yield [a, (m, ay), (m, by), b]
-    lo, hi = sorted((ay, by))
-    for m in range(lo + 1, hi):
-        yield [a, (ax, m), (bx, m), b]
+        p = unique([a, b])
+        if p:
+            yield p
+    for points in ([a, (bx, ay), b], [a, (ax, by), b]):
+        p = unique(points)
+        if p:
+            yield p
+    # The old aligned-endpoint early return made an inboard detour impossible.
+    # Enumerate legal die rows/columns; route() checks ownership and intermediate kinds.
+    for m in sorted(range(NC), key=lambda v: abs(ax-v)+abs(bx-v)):
+        p = unique([a, (m, ay), (m, by), b])
+        if p:
+            yield p
+    for m in sorted(range(NR), key=lambda v: abs(ay-v)+abs(by-v)):
+        p = unique([a, (ax, m), (bx, m), b])
+        if p:
+            yield p
 
 
 XCOST = dict(svc=1.2, slice=0.6, unit=0.4, idx=0.4, serdes=0.6)
@@ -1938,7 +1957,9 @@ def route(grid, lanes, slices):
                             continue
                         for o in names[1:-1]:
                             q = P[o]
-                            if not q.ft_ok or q.kind == "frame" or (q.kind == "serdes" and not (s.startswith("lk_") or d.startswith("lk_"))):
+                            if (not q.ft_ok or q.kind == "serdes"
+                                    or (q.kind == "frame" and not (
+                                        (s.startswith("lk_") or d.startswith("lk_"))))):
                                 ok = False
                                 break
                             cost += XCOST.get(q.kind, 0.6)        # station / partition crossing (pin-limited kinds dearer)
