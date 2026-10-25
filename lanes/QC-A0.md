@@ -255,3 +255,8 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
 - 2026-10-24 21:58 PDT QC: decision-12 re-plan on claude/qc-ft405-1024 (epyc1 wt /srv/opentallas-scratch2/claude/wt/qc-ft405): ST_LEN 750->405,
   budgets.ft_station_max_um 405, M8/M9 ft_reserved dropped. Pass 1: 194 R3 station errors (station count off by one vs check.py's
   route/stations convention) -> pass 2 running (epyc1 pid 408360, log qc/logs/regen_ft405b.log).
+- 2026-10-24 22:19 PDT QC: (1) OWNER REVERT CONDITION MET (no revert): xt1 BOTH clusters on the final capacity bind bind_eq_cb16 = PASS -- nominal near
+  64/64, far 64/64 (QKV/O/GU/down exact); hr+1 mutant numerically 64/64 but caught by the timing-aware schedule gate on all 16 consumer
+  edges (gate PASS). Constants regen 22/22 OK, XT1_FILL_LEAD_OFFSET 8 (lead 16) read from constants. Build 43 min, sims 13 min, 76 GB.
+  Receipts claude/qc-tok-cap-eq-1024@3670fb7977 results/token_pass/qc_1024/xt1_cap_eq/. OPEN: COLL_LS/MU_CAL_LS 389->391,
+  COLL_F2/F4_PHY 351->353 moved with the serdes stations -> tp8 link pass must re-run at LS 391 (not yet).

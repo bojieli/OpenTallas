@@ -270,3 +270,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 22:07 PDT KV-FT: v3.9ft ft-crossing candidate (1523 -> 991 xings, G0/G0C PASS) on claude/kv-ft-1024r@750a0ebe4; owner rulings KV-FT-1/2 in lanes/KV-G3.md; not merged.
 2026-10-24 22:17 PDT HBM-CORES: hold root cause = kit HOLD_SLACK_MARGIN 30 (37.8k vs 1.5k FF endpoints); margin 0 + 14 finish relaunched; 30 exp-lane CTS (mem 15616) launched; 0 SIGNED (face_guard RTL issue OWNER?); claude/hbm-cores-1024@1d69cf3da1
 2026-10-24 22:17 PDT ROOT-MERGE: batch 3 merged main f83206311 -> 38db29e3f (s81-const owner decision 8; 3 other approvals already on main via CODEX)
+2026-10-24 22:19 PDT QC: capacity plan xt1 both-cluster token pass PASS on bind_eq_cb16 (64/64 near+far, mutant caught) -> no revert; READY qc-cap-1024r@2f67b44ad1 + receipts qc-tok-cap-eq-1024@3670fb7977
