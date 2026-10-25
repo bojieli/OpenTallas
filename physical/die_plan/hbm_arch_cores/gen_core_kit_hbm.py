@@ -813,7 +813,9 @@ def main():
         lines = []
         for placement in rec["macro_placement"]:
             x, y = placement["xy_um"]
-            inst = placement["inst"]
+            # ODB keeps the flat Yosys name with escaped brackets (g_read\[0\]); an unescaped path finds no
+            # macro (MPL-0020). Escape every bracket the caller's --macro-inst-fmt did not already escape.
+            inst = re.sub(r"(?<!\\)([\[\]])", r"\\\1", placement["inst"])
             orient = placement.get("orient", "R0")
             lines.append(f"place_macro -macro_name {{{inst}}} -location {{{x:g} {y:g}}} -orientation {orient} -exact")
         (kd / "macro_placement.tcl").write_text("\n".join(lines) + "\n")
