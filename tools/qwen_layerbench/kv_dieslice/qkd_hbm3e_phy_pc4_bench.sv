@@ -6,12 +6,16 @@
 //   [0] row_v  [3:1] row_op (1 = ACT)  [8:4] row_bank  [27:9] row_row  [28] col_v  [29] col_we  [34:30] col_bank
 //   [39:35] col_col  [327:40] wd (288 b = 4 x SECDED(72,64) of the 256-b sector, encoded by ot_qfd_emb_pcport)
 // Read return pi<k> = {data 288, valid 1} exactly RL hck edges after the RD column (RL 23 = the compiled calendar; the
-// same law as rtl/test/mu_qwen_1018/tb_mu_kv_pc_path_rows.sv's PHY model).  A WR column stores wd at (bank, open row,
-// col); a RD column returns the stored word (or, if never written, the PRELOAD image, else ECC(0)).
+// same law as rtl/test/mu_qwen_1018/tb_mu_kv_pc_path_rows.sv's PHY model).  A WR column stores the wd that the
+// controller drives WL hck edges after it (KV-TOK B 10-24: WL 5 = the as-built write latency on po: column at po edge t,
+// sched dv[1] t+1 -> port child pin t+2 -> ot_qfd_emb_pcport_nkw st1_wd t+3 / s2_wd t+4 -> po t+5; the same alignment
+// the controller's own write observer checks (qkd_static_kv_write_observer valid[4]); the model previously stored the
+// po wd of the column edge itself, i.e. stale data) at (bank, open row, col); a RD column returns the stored word (or,
+// if never written, the PRELOAD image, else ECC(0)).
 // Preload (history KV rows, layout CONTRACT map v2 + MU row bits): the bench calls preload(pc, bank, row, col, word288)
 // by hierarchy, or +HBM_PRELOAD=<file> with lines "<slice> <pc> <bank> <row> <col> <288-b hex>" (slice = PRELOAD_ID).
 // fh/rh = the PHY's forwarded front/return HBM clocks (4 per slice) = hck.  Write/read counters for the bench report.
-module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_ID = -1) (
+module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_ID = -1, parameter integer WL = 5) (
     input  wire         clk,
     input  wire         rst_n,
     output reg  [288:0] pi0, output reg  [288:0] pi1, output reg  [288:0] pi2, output reg  [288:0] pi3,
@@ -35,6 +39,7 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
     integer openrow [0:3][0:31];
     longint unsigned edge_n = 0, n_rd = 0, n_wr = 0, n_rd_unwritten = 0;
     reg [288:0] due [0:3][0:63];          // RL ring (RL < 64)
+    reg [31:0]  wdue [0:3][0:63];         // WL ring: {valid, key} of the WR column whose data lands on that edge
     task automatic preload(input integer pc, input integer bank, input integer row, input integer col, input [287:0] w);
         mem[{2'(pc), 5'(bank), 19'(row), 5'(col)}] = w;
     endtask
@@ -49,7 +54,7 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
     integer hlog = 0, nlog = 0, rl = RL;   // rl: RL, or RL + 1 on the partition named by +MUT_RL24=<part> (mutant m2)
     initial begin : pl
         string f, m, ps; integer fd, s, pc, b, r, c, n; reg [287:0] w; reg [255:0] d;
-        for (int k = 0; k < 4; k++) for (int j = 0; j < 64; j++) due[k][j] = '0;
+        for (int k = 0; k < 4; k++) for (int j = 0; j < 64; j++) begin due[k][j] = '0; wdue[k][j] = '0; end
         m = $sformatf("%m");
         for (int i = 0; i + 4 <= m.len(); i++) if (m.substr(i, i + 3) == "phy_") begin
             int e; e = i; while (e < m.len() && m[e] != ".") e++; part = m.substr(i, e - 1); break; end
@@ -80,6 +85,7 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
                                    po[k][3:1], po[k][28], po[k][29]);
         end
         for (int k = 0; k < 4; k++) begin
+            if (wdue[k][edge_n % 64][31]) begin mem[wdue[k][edge_n % 64][30:0]] = po[k][327:40]; wdue[k][edge_n % 64] = '0; end
             if (po[k][0] && po[k][3:1] == 3'd1) openrow[k][po[k][8:4]] = po[k][27:9];
             if (po[k][28]) begin : col
                 automatic bit [30:0] key = {2'(k), po[k][34:30], 19'(openrow[k][po[k][34:30]]), po[k][39:35]};
@@ -88,7 +94,7 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
                     $display("HBM_%s %s pc %0d bank %0d row %0d col %0d edge %0d", po[k][29] ? "WR" : "RD", part, k, po[k][34:30],
                              openrow[k][po[k][34:30]], po[k][39:35], edge_n);
                 end
-                if (po[k][29]) begin mem[key] = po[k][327:40]; n_wr++; end
+                if (po[k][29]) begin wdue[k][(edge_n + WL) % 64] = {1'b1, key}; n_wr++; end
                 else begin
                     n_rd++;
                     if (!mem.exists(key)) begin n_rd_unwritten++; due[k][(edge_n + rl) % 64] = {encode(256'd0), 1'b1}; end

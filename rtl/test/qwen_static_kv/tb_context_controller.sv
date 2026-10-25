@@ -8,7 +8,7 @@ module tb_context_controller;
  qkd_controller_context_calendar #(.MUT(MUT))cal(ck,rn,we,addr,data,seal,go,epoch,layer,owner,cmd,rd,sr,wr,ep,raw,cf,idle,T,stack,group);
  wire rv,cv,cwe,busy,fault,phaseidle;wire[2:0]rop;wire[4:0]rb,cb,cc;wire[18:0]row;
  ot_qkd_static_ctrl_pc_emb #(.CONTEXT_DESC(1),.ENABLE(1),.PC(PC),.PHASE(0),.PROFILE(0))dut(
- .clk(ck),.rst_n(rn),.cmd_v(cmd[0]),.cmd(cmd[32:1]),.cmd_first(cmd[42:33]),.reserved_rd(rd),.reserved_static_col(sr),.reserved_write_col(wr),.cmd_credit(),
+ .clk(ck),.rst_n(rn),.cmd_v(cmd[0]),.cmd(cmd[32:1]),.cmd_first(cmd[42:33]),.reserved_rd(rd),.reserved_static_col(sr),.reserved_write_col(wr),.boot_window(1'b0),.col_boot(),.cmd_credit(),
  .row_v(rv),.row_op(rop),.row_bank(rb),.row_row(row),.col_v(cv),.col_bank(cb),.col_col(cc),.col_we(cwe),.busy(busy),.fault(fault),.phase_idle(phaseidle),
  .s_context(347'b0),.col_context(),.s_v(1'b0),.s_we(1'b0),.s_bank(5'b0),.s_col(5'b0),.s_row(19'b0),.s_cr(),.col_sr());
  reg[127:0]image[0:15];integer expectsec[0:511];integer expected_rd[0:2499];integer count=0,reads=0,total=0,edge_num=0,origin=-99999,relative_edge,openrow[0:31];
