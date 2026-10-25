@@ -48,3 +48,4 @@ CODEX took over kit clock/signoff on codex/kit-clock-1024@b88258680; parked on o
 - HBM v9 clock builds launched (intel2 clock/v9/{hbm_B2l trial, hbm_B2m main plan}).
 - Sub-agents: kit density taps (claude/kit-taps-1024 from codex/kit-taps@0a71cacba, for S81-HEAD hd_tile); kit pair-skew signoff smoke (claude/kit-clock-1024 from codex/kit-clock@b88258680).
 - RULING to S81-HEAD: core-latency contract = signed kit pin->register mean (signed early + 250), not lib max - 250.
+- 2026-10-24 21:31 PDT CLOCK: ack OWNER decisions 12-13: die clock spine stays M8/M9 (die_clock.py legs M8 H / M9 V only), no reset relay sites on the spine (reset = neighbour wavefront, RESET lane). claude/clock-1024@8f87668a27: balance pads beyond the segment cap become delay stages (BUF+440 um snake) -- HBM B2m v9 stuck at 194 ps tap skew with 24 mm of pad stretched on single legs; v10 HBM B2m/B2l running intel2 clock/v10.
