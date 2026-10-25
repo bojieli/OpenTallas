@@ -1,0 +1,20 @@
+{
+  "timestamp": "2026-10-25 13:37 PDT",
+  "source": "codex/head1309@72a679bb78",
+  "checkpoint": "epyc1:/srv/opentallas-scratch2/claude/codex-head1309/elemB_if2e: exact 4_1_cts.odb per owner",
+  "image": "elemB_if2e_cts.png",
+  "verdict": "PASS-COND ONE GRT guide/RC diagnostic only",
+  "findings": [
+    "Image independently viewed; inherited ROM side channels/IF placement remain clear",
+    "F4 moved6389 sinks; cross-leaf7445->2213",
+    "PlacementRC macro0 TT226.18 capmean236.99 addr243.88; FF155.26 capmean170.40 addr176.21 capmax179.70",
+    "Reporter raw OpenSTA property values alreadyps; original HEAD_CLOCK/HEAD_HOLD incorrectly x1e12; owner corrected preserving originals",
+    "Obsolete balance flags do not prove grouping; macrodepth1 vs reg7 remains topology diagnostic"
+  ],
+  "conditions": [
+    "Complete538 F6 all-class report and existing source/LEC gates",
+    "ONE GRT noholdrepair; no DRT",
+    "Actual calibrated TT/FF macro0/1 CK vs cap/addr, exhaustive short-stage pairs and FF classes before any DRT",
+    "Residual structural failure needs grouping, never delay padding"
+  ]
+}
