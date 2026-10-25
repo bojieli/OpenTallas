@@ -238,6 +238,29 @@ def probe_blockages(t, top="M7"):
     return out
 
 
+STATION_CORE_MARGIN_UM = 2.0
+
+
+def out_of_cores(site, boxes, w, h, m=STATION_CORE_MARGIN_UM):
+    """KV-PLAN3 10-25: an ft station placed along the slot route (L*j/k) can fall inside a planned hard core
+    (kv3_hg_v3 ft2 jog through the head-core row -> GRT M2 overflow 1514 on capacity-0 GCells).  A flop can never sit
+    inside a hard core, so the probe puts it, like the placer, at the nearest point outside every core box (edge +
+    margin, inside the outline).  Sites already in a channel are unchanged."""
+    def inside(p):
+        return any(x0 < p[0] < x1 and y0 < p[1] < y1 for x0, y0, x1, y1 in boxes)
+    if not inside(site):
+        return site
+    x, y = site
+    cand = []
+    for x0, y0, x1, y1 in boxes:
+        if x0 < x < x1 and y0 < y < y1:
+            cand += [(x0 - m, y), (x1 + m, y), (x, y0 - m), (x, y1 + m)]
+    cand = [c for c in cand if m <= c[0] <= w - m and m <= c[1] <= h - m and not inside(c)]
+    if not cand:
+        return site
+    return min(cand, key=lambda c: abs(c[0] - x) + abs(c[1] - y))
+
+
 def part_probe(P, tn, out, adjust=0.5, mem=32):
     t = P.types[tn]
     w, h = t["outline_um"]
@@ -253,6 +276,8 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
     width = {b: max(v[0] for v in lst) + 1 for b, lst in by_bus.items()}
     buses = {b["name"]: b for b in t.get("buses", [])}
     slots = {s["name"]: s for s in t.get("ft_slots", [])}
+    core_boxes = [(c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
+                   c["origin_um"][1] + c["outline_um"][1]) for c in probe_blockages(t, P.type_top_layer(tn))]
     ports, cells, nets, place = [], [], [], []
 
     def inset(x, y, f):
@@ -360,6 +385,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
                     site = a  # station0 remains registered beside its input pin
                 else:
                     site = tuple(s["regs_um"][j]) if s.get("regs_um") else check.point_at(seg, L * j / k)
+                    site = out_of_cores(site, core_boxes, w, h)
                 place.append((c, *site))
                 prev = q
     v = ["module ftprobe ("] + [",\n".join(ports)] + [");"] + \
