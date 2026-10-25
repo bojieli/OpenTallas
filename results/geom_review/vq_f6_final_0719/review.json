@@ -1,0 +1,30 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "Final topology review only; current run remains NOT SIGNED and no successor route token",
+ "images": [
+  "floorplan.png",
+  "density.png",
+  "paths.png"
+ ],
+ "source_odb": "epyc3:/srv/opentallas-scratch2/claude/codex-s81-physical-0719/vq_f6_signoff/run/results/asap7/kr_ot_s81sl_vq_lfp/base/6_final.odb",
+ "findings": [
+  "172.8x129.6um body has one SRAM, broad continuous W/E/N logic channels and uniform47.5percent overall cell fill",
+  "No macro wall or long unregistered crossing visible; narrow bottom strip is empty of logic, not an active signal channel",
+  "PDN stripes appear continuous; direct SRAM pin-to-interface-flop distances have not been measured in this review",
+  "Failing reported paths terminate close to their input faces; this is a receiver min-delay/reset-removal deficit, not a long interconnect failure",
+  "rst_n removal example: vclk175.25-40 plus buffers =>187.69ps arrival vs212.77ps requirement, slack-25.07; preserve timed reset, no false path"
+ ],
+ "required": [
+  "Coherent per-corner single-FF repair/clock contract on a successor; no post-route small-tweak ECO",
+  "Actual SRAM interface locality and postCTS clock proof",
+  "Fix remaining TT/FF slew violations then run canonical signoff"
+ ],
+ "timing": {
+  "tt_setup_ps": 47.7,
+  "ff_hold_ps": -38.82,
+  "ff_endpoints": 433,
+  "tt_slew_violations": 13,
+  "ff_slew_violations": 3
+ },
+ "signoff": "NOT SIGNED"
+}
