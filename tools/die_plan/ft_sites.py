@@ -92,7 +92,7 @@ def _path(free,first,last,budget,radius,min_stages,boxes=(),first_point=None,las
     return solution
 
 
-def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40.):
+def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40.,avoid_core_routes=False):
     model=S.Plan(raw);selected=set(types) if types else set(model.types);ledger=[];explicit={}
     for tn,ty in model.types.items():
         if tn not in selected or not ty.get('hard_cores') or not ty.get('ft_slots'):continue
@@ -113,7 +113,7 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
             b=np.array([pins[(name+'_o',i)] for i in range(width)])
             budget=reach_um*margin-2.0 # reserve actual D/Q pin offsets from cell centres
             direct=float(np.abs(b-a).sum(axis=1).max())
-            if slot['stations']==1 and direct<=budget:
+            if slot['stations']==1 and direct<=budget and (not avoid_core_routes or l_route_clear(a,b,boxes).all()):
                 # Station0 is already the input-face register. Do not add a
                 # gratuitous internal pipeline stage to a short direct leg.
                 for key in ('regs_um','bit_sites_um','bit_site_cell_um'):
@@ -122,6 +122,8 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
                                    budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um))
                 continue
             blocked_targets=set();base_used=set(allocator.used);done=False
+            first_ok=_all_routes_clear(a,targets,boxes) if avoid_core_routes else None
+            last_ok=_all_routes_clear(b,targets,boxes) if avoid_core_routes else None
             for attempt in range(100):
                 allocator.used=set(base_used)
                 free=targets[[i not in blocked_targets for i in range(len(targets))]]
@@ -138,6 +140,8 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
             if not done:raise ValueError(f'{tn}/{name}: no row-legal allocation after100 target alternatives')
             chain=[a,*points,b];hops=[float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(chain,chain[1:])]
             if max(hops)>budget+1e-6:raise ValueError(f'{tn}/{name}: actual paired-bit hop {max(hops)} >{budget}')
+            if avoid_core_routes and any(not l_route_clear(p,q,boxes).all() for p,q in zip(chain,chain[1:])):
+                raise ValueError(f'{tn}/{name}: allocated bit leg leaves the macro-free channels')
             old=slot['stations'];slot['stations']=len(points)+1
             slot['regs_um']=[a.mean(axis=0).round(4).tolist()]+[free[index].round(4).tolist() for index in path]
             slot['bit_site_cell_um']=[1.404,.27]
@@ -145,7 +149,8 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
             for stage,p in enumerate(points,1):
                 explicit[tn].append(dict(slot=name,stage=stage,sites_um=p.round(5).tolist(),stats=stats[stage-1]))
             ledger.append(dict(type=tn,slot=name,stations=[old,slot['stations']],worst_paired_bit_um=round(max(hops),4),
-                               budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um))
+                               budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um,
+                               core_free_routes=avoid_core_routes))
     return ledger,explicit
 
 
