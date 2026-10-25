@@ -254,7 +254,66 @@ def lane_delta(plan, log, path=LANE_DELTA):
     return short
 
 
+CORE_RESHAPE = HERE / "B2n_inputs" / "core_reshape.json"
+FACE_COS = {(a, b): (1.0 if a == b else -1.0 if S.OPP[a] == b else 0.0) for a in "NSEW" for b in "NSEW"}
+
+
+def _repin(pins, w, h, nw, nh):
+    """re-place the pins on a new (smaller / reshaped) outline with cores_b2.place_pins: every port pulls toward its
+    old face (cos 1), takes an adjacent face (cos 0) when that is full, the opposite face only within the
+    core_faces mean rule (cores_b2.MEAN_MIN); per-face pin budget = the kit generator's (cores_b2 face_caps)."""
+    import cores_b2 as CB
+    ports = defaultdict(list)
+    for p in pins:
+        ports[CB.base(p["name"])].append(p)
+    groups = []
+    for port, ps in sorted(ports.items()):
+        f = collections_most([CB.face_of(p["x"], p["y"], w, h) for p in ps])
+        groups.append((port, [p["name"] for p in ps], f, {g: FACE_COS[(f, g)] for g in "NSEW"}))
+    out, _ = CB.place_pins(groups, nw, nh)
+    res = [dict(name=n, layer=ly, x=x, y=y) for n, ly, x, y in out]
+    assert len(res) == len(pins)
+    return res
+
+
+def collections_most(xs):
+    c = defaultdict(int)
+    for x in xs:
+        c[x] += 1
+    return max(sorted(c), key=lambda k: c[k])
+
+
+def reshape_outline(e, npins):
+    """smallest outline (4.32 grid, aspect <= ASPECT) with (a) area - pin band >= macro area (with halo) + std / UTIL,
+    (b) the largest macro + 2 pin bands inside, (c) the pins placeable at the kit face budget (place_pins)."""
+    import cores_b2 as CB
+    U = e.get("util", 0.5)
+    band, halo = 12.96, 4.32
+    mh = sum(n * (mw + 2 * halo) * (mh_ + 2 * halo) for n, mw, mh_ in e["macros"])
+    need = mh + e["std_um2"] / U
+    mw = max([m[1] for m in e["macros"]] or [0.0]) + 2 * band + 2 * halo
+    mhh = max([m[2] for m in e["macros"]] or [0.0]) + 2 * band + 2 * halo
+    best = None
+    for i in range(10, 400):
+        for j in range(10, 400):
+            w, h = i * 4.32, j * 4.32
+            if max(w, h) / min(w, h) > e.get("aspect", 1.5) + 1e-9:
+                continue
+            fits = (w >= mw and h >= mhh) or (h >= mw and w >= mhh)
+            if not fits or w * h - band * 2 * (w + h) < need:
+                continue
+            if sum(CB.face_cap(f, w, h) for f in "NSEW") < npins * e.get("pin_slack", 1.05):
+                continue
+            key = (round(w * h, 2), abs(w - h), w)
+            if best is None or key < best[0]:
+                best = (key, (round(w, 4), round(h, 4)))
+        if best and (i * 4.32) ** 2 / 1.5 > best[0][0]:
+            break
+    return best[1]
+
+
 CORE_GROW = HERE / "B2n_inputs" / "core_grow.json"
+OUTLINES = []
 LAT = 8.64
 
 
@@ -301,6 +360,10 @@ def core_grow(plan, log, out, path=CORE_GROW):
         return a[0] < b[2] + m and b[0] < a[2] + m and a[1] < b[3] + m and b[1] < a[3] + m
 
     for g in D["grow"]:
+        if "std_um2" in g and "_outline" not in g:
+            npin = max(len(json.loads((out / hc["pins_file"]).read_text())) for tn in g["types"]
+                       for hc in T[tn]["hard_cores"] if hc["module"] == g["module"])
+            g["_outline"] = reshape_outline(g, npin)
         for tn in g["types"]:
             t = T[tn]
             W, H = t["outline_um"]
@@ -324,6 +387,8 @@ def core_grow(plan, log, out, path=CORE_GROW):
                 ow, oh = hc["outline_um"]
                 if "outline" in g:
                     return tuple(g["outline"])
+                if "std_um2" in g:                 # reshape: one outline per module (max pin count of its views)
+                    return g["_outline"]
                 s_ = math.sqrt(g["area"])
                 return ru(ow * s_), ru(oh * s_)
             sites, placed = {}, []
@@ -381,7 +446,7 @@ def core_grow(plan, log, out, path=CORE_GROW):
                 best = sites[hc["inst"]]
                 pins = json.loads((out / hc["pins_file"]).read_text())
                 try:
-                    npins = _regrow_pins(pins, ow, oh, nw, nh)
+                    npins = (_repin if g.get("repin") else _regrow_pins)(pins, ow, oh, nw, nh)
                 except ValueError as e:
                     fails.append(f"{tn}.{hc['inst']}: {e}")
                     continue
@@ -436,7 +501,21 @@ def core_grow(plan, log, out, path=CORE_GROW):
                 x, y = S.tap_clear(t, x, y, [tuple(o["xy"]) for o in taps if o is not tp], clear=4.32)
                 tp["xy"] = [round(x, 4), round(y, 4)]
             rows.append(f"{tn}: {len(moved)} x {g['module']} -> {nw:g}x{nh:g} ({nre} internal links re-routed)")
-    log.append("core grow (B2n_inputs/core_grow.json, HBM-CORES): " + "; ".join(rows) +
+    for g in D["grow"]:
+        if "_outline" in g:
+            o = [hc for tn in g["types"] for hc in T[tn]["hard_cores"] if hc["module"] == g["module"]]
+            nw, nh = g["_outline"]
+            ow, oh = g["old"]
+            halo = 4.32
+            mh = sum(n * (a + 2 * halo) * (b + 2 * halo) for n, a, b in g["macros"])
+            OUTLINES.append(dict(module=g["module"], views=[f"{tn}.{hc['inst']}" for tn in g["types"]
+                                                            for hc in T[tn]["hard_cores"] if hc["module"] == g["module"]],
+                                 old_um=[ow, oh], new_um=[nw, nh], area_ratio=round(nw * nh / (ow * oh), 3),
+                                 placed=[hc["inst"] for hc in o if list(hc["outline_um"]) == [nw, nh]],
+                                 pins_files=[hc["pins_file"] for hc in o], macros=g["macros"], std_um2=g["std_um2"],
+                                 std_fill_old=round(g["std_um2"] / (ow * oh - mh), 3),
+                                 std_fill_new=round(g["std_um2"] / (nw * nh - mh), 3), why=g.get("why", "")))
+    log.append(f"core outlines ({Path(path).name}): " + "; ".join(rows) +
                (f"; NOT FIT: {'; '.join(fails)}" if fails else ""))
     return fails
 
@@ -1001,7 +1080,7 @@ def main(argv=None):
     touched, pairs = enforce_mirror(plan, log)
     worst = rewindow(plan, log, fixed_ids=touched)
     fix_mirror_pins(plan, pairs, log)
-    grow_fail = core_grow(plan, log, out)
+    grow_fail = core_grow(plan, log, out, CORE_RESHAPE) + core_grow(plan, log, out)
     su_grid(plan, log)
     fails = restation(plan, log)
     import b2m as B2M   # noqa: E402  (H-tree + tap assignment re-derived: su10/su30 / spu0/spu1 rects moved)
@@ -1041,6 +1120,11 @@ def main(argv=None):
     src_t = json.loads((src / "die_plan.json").read_text())["partition_types"]
     lc["types_changed"] = {tn: sorted(k for k in set(t) | set(src_t.get(tn, {})) if t.get(k) != src_t.get(tn, {}).get(k))
                            for tn, t in sorted(plan["partition_types"].items()) if t != src_t.get(tn)}
+    if OUTLINES and out.resolve() == (HERE / "B2n").resolve():
+        (ROOT / "results/arch/hbm_arch_1024/b2n_core_outlines.json").write_text(json.dumps(dict(
+            schema="opentallas.hbm_b2n.core_outlines.v1", plan="physical/die_plan/hbm_arch/B2n (claude/hbm-b2n-1024)",
+            source="B2n_inputs/core_reshape.json (HBM-ELEM GEOM placed2 low-fill FAILs, c6d07a7a0e)",
+            rule=reshape_outline.__doc__.strip() + " | " + _repin.__doc__.strip(), cores=OUTLINES), indent=1) + "\n")
     rp = ROOT / "results/arch/hbm_arch_1024/b2n_lane_cycles.json"
     if out.resolve() == (HERE / "B2n").resolve():
         rp.write_text(json.dumps(lc, indent=1) + "\n")
