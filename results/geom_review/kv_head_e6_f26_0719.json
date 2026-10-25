@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS-COND",
+  "stage": "placed regional lane geometry only; no route approval",
+  "image": "results/geom_review/kv_head_e6_f26_0719.png",
+  "kit": "epyc1:/srv/opentallas-scratch2/claude/kv-cores-1025r/heads/f26/e6/kv3_head_eighth_e6__216x216",
+  "findings": [
+    "16 compact lane islands form regular 4x4 grid with open corridors and no macros or walls",
+    "42% fill, max10um bin0.73, zero bins above0.8",
+    "Face flops line S/E edges; exact pin distance not measured in this render",
+    "Regional tap per lane concept fits compact islands; require actual CTS tap census and TT/FF pair measurement before route",
+    "LEC current kit ERROR from stale script; fixed tool and strap master correspondence not yet qualified",
+    "PDN continuity and parent pinmap require final authoritative plan adoption"
+  ],
+  "period_ps": 833,
+  "added_cycles": 0
+}
