@@ -29,3 +29,16 @@ gate = tools/die_plan pytest + plain G0 on s81, s81_head, qwen_compute, qwen_kvs
 2026-10-25 00:31 PDT ROOT-MERGE: dec. 17 BATCH NOT MERGED (conflicts with main a3b254752; git merge --abort, nothing pushed). methodology-align@5173eb8e3a2a: AGENTS.md conflict (Workflow habits 'Merge finished work at once' bullet: main has agents-clock 1b7b3c892's version citing ruling 9.1, branch has its own longer version). Each other member also conflicts on main alone: s81-dec12@d206dfb226 -> AGENTS.md + physical/die_plan/s81/{die_plan.json,gen_plan_v4.py,hard_core_gaps.json,type_names.json,v4_stats.json} (main now has s81-h4 48590fb90f + s81-h23 + s81-head 014a68); kv-405@f99050a59 -> AGENTS.md + tools/die_plan/test_reset_wavefront.py (main has reset-1024 6c3989757); hbm-b2n@871717c83 -> AGENTS.md. Fix: METH-ALIGN merges origin/main (a3b254752) into methodology-align first (keep both AGENTS.md intents in one bullet); then S81 / KV / HBM merge origin/main + the new methodology-align into their branches, regenerate plans (no textual merge of die_plan.json), rerun G0/G0C + full pytest, re-post READY with new shas.
 [ROOT-MERGE 2026-10-25 00:46 PDT] batch 13 MERGED main a3b254752 -> 1ace81cc8: stall-watch-1025@ebf1ad6d4 (4 new files under tools/auto_owner, report-only); 0 deletions; tools/die_plan + physical trees identical to a3b254752 (pytest 307, G0 0 err all 6 plans).
 [ROOT-MERGE 2026-10-25 01:21 PDT] batch 14 MERGED main 1ace81cc8 -> 776966c15: geom-review-1024@2e06054d87 (results/geom_review records only); 0 deletions; tools + physical trees unchanged (last gated: pytest 307, G0 0 err all 6 plans).
+
+## PARKED 2026-10-25 01:22 PDT
+- main = 776966c15 (HEAD == origin/main verified). Worktree /home/ubuntu/wt/root-merge-1024r (sparse, detached at main, clean). No live jobs.
+- Merged 14 batches since 19:36: d13ff7c78 -> a567becd8 -> 850892f60 -> 38db29e3f -> 8f1b21f68 -> 6f905012a -> 21dee5fb1 -> c5834d030
+  -> 41a70faeb -> f33ebe7cb -> 79e366c16 -> 3ad1dae4e/a3b254752 -> 1ace81cc8 -> 776966c15. Every batch: plain --no-ff, 0 deletions,
+  die_plan pytest all pass (251 -> 307 tests), G0 0 err on s81, s81_head, qwen_compute (fixed by qc-g0fix), qwen_kvsys, hbm_arch B2l, B2m.
+- Pending / not merged: dec. 17 batch (methodology-align@5173eb8e3a2a, s81-dec12@d206dfb226, kv-405@f99050a59, hbm-b2n@871717c83)
+  all CONFLICT with main (AGENTS.md; s81 plan files; test_reset_wavefront.py) -> authors must merge main and re-post.
+  s81-kits-1024r-nodes@c981d256b9 CONFLICT (const_pins_dropped.json, dsdv_bk_g.sv). selrange-gate@fc4d5fa9c waits for S81 SELRANGE fixes.
+  HOLD hbm-bind@818651e99. READY but not yet approved: s81-h4@90a9920013 (H4+DEC12), s81-rtlsplit@b5d2eabeef, s81-portbind@8dcea7c060.
+- Note: others also push to main (CODEX merges 57bb86c89/7921d65dc/a11334b98, infra f83206311).
+- Gate script /tmp/rm1024r_gate.sh <wt> <outdir> (EXTRA_PLANS env adds plans); approval tracker /tmp/rm1024r/newappr.sh + done_shas.
+- Next: relaunch ROOT-MERGE to keep watching the queue.

@@ -312,3 +312,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-25 01:11 PDT HBM-CORES3: B2n core kits x117 generated (+family SRAM placement); preflight STOP gates (face_guard/sdc_lint/SELRANGE/port-bind) + post-CTS hold gate in run_kit_hbm.sh; 118 face_guard-FAIL runs stopped+deleted; gq_land (face_guard PASS) GEOM PASS -> routing; 0 SIGNED; claude/hbm-cores-1024@ec8799b0b3
 2026-10-25 01:20 PDT GEOM-REVIEW: PARKED at claude/geom-review-1024@2e06054d87; all GEOM requests through 01:14 answered (see lanes/GEOM-REVIEW.md PARKED).
 2026-10-25 01:21 PDT ROOT-MERGE: batch 14 merged main 1ace81cc8 -> 776966c15 (geom-review records)
+2026-10-25 01:22 PDT ROOT-MERGE: PARKED at main 776966c15 after 14 batches; dec.17 batch + s81-kits-nodes wait on author conflict fixes

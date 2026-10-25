@@ -212,3 +212,4 @@ READY [S81/H4 2026-10-25 00:51 PDT] claude/s81-h4-1024r@90a9920013 = H4 merged w
 READY [S81/RTLSPLIT 2026-10-25 01:07 PDT] claude/s81-rtlsplit-1024r@b5d2eabeef: ve -> ot_s81sl_ve_m/ve_s, vn -> ot_s81sl_vn_a/vn_b (C3 400k cap). Cells 220k/222k/184k/200k; raw+ODB face_guard PASS x4; miters vs unsplit (+2 cyc) PASS + mutants caught; beat/leaf/leaf_eng PASS + mutants; G0 / G0C 0 err. Plan delta: vn c_s[31] const dropped (const_pins_dropped + split.py). Evidence results/s81_rtlsplit_1024/README.md.
 [COORD 01:21] APPROVED claude/geom-review-1024@2e06054d87 (records only).
 [ROOT-MERGE 2026-10-25 01:21 PDT] batch 14 MERGED main 1ace81cc8 -> 776966c15: geom-review-1024@2e06054d87 (results/geom_review records only); 0 deletions; tools + physical trees unchanged (last gated: pytest 307, G0 0 err all 6 plans).
+- 2026-10-25 01:22 PDT ROOT-MERGE: PARKED (6 h watch done) at main 776966c15. Relaunch ROOT-MERGE for new approvals.
