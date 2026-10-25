@@ -148,3 +148,9 @@ Parked at coordinator stop; all tracked WIP committed and pushed. Main: ARCH9c51
 
 ### Park verification
 At12:07PDT central main HEAD andorigin/main both24b2da3433, clean, noMERGE_HEAD. All three agents explicitly reported PARKED and preserved live jobs. Root has no half-written files or half-done merge. Further project work belongs to Claude; the final user reply is HANDOFF DONE.
+
+## Takeover 2026-10-24 21:08 PDT
+All design, token, seam, geometry and support lanes assigned to Codex workers. Root owns integration. Confirmed live main850892f60 on epyc1; rtx-pro local main stale, preserved. Later owner clock rule pair skew target<=80ps; spread INFO.
+
+### OWNER?
+No new owner decision required at takeover. Existing unanswered scope/contract questions remain parked while independent work progresses.
