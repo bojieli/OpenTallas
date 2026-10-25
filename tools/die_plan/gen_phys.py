@@ -705,18 +705,19 @@ exit $rc
 
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None, hold_ff_margin=None,
-               margins=None, skip_ir=False, max_wire_um=None):
+               margins=None, skip_ir=False, max_wire_um=None, plan_path=None):
     """margins (slew_pct, cap_pct): opt-in repair_design SLEW_MARGIN / CAP_MARGIN (None: not exported)."""
     """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
     import gen_rtl
-    P = S.Plan(raw)
+    # plan-relative declarations (hard-core pins_file for the reset wavefront) resolve against the plan file
+    P = S.Plan(raw, plan_path)
     out = Path(out)
     rtl_dir = out / "_rtl"
     gtypes = types
     if kit_rtl:                # kit-rtl types take the bound RTL: no generated plan wrapper for them
         gtypes = [tn for tn in (types or P.types) if tn not in kit_rtl]
-    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes)
+    files = gen_rtl.write_rtl(raw, rtl_dir, rtl_root, gtypes, plan_path=plan_path)
     cells = rtl_dir / "ot_dp_cells.sv"
     root = Path(rtl_root) if rtl_root else Path(__file__).resolve().parent.parent.parent
     rs = root / "rtl" / "lib" / "ot_reset_sync.sv"
@@ -790,12 +791,12 @@ def dropped_taps(P, views):
     return out
 
 
-def write_assembly(raw, out, views, rtl_root=None):
+def write_assembly(raw, out, views, rtl_root=None, plan_path=None):
     """die assembly kit: ORFS config for the die top with every partition as a macro (views/<type>/<module>.lef/.lib
     from each kit's generate_abstract), exact placement, die PG, die IO pins, routing on M2..M9 (abutment nets are
     zero-length; the clock / reset spine drops from M8/M9 onto the interior M7 taps)."""
     import gen_rtl
-    P = S.Plan(raw)
+    P = S.Plan(raw, plan_path)
     kd = Path(out) / "die"
     (kd / "rtl").mkdir(parents=True, exist_ok=True)
     ep = gen_rtl.bus_epochs(P)
