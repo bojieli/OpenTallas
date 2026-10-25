@@ -38,6 +38,7 @@ def emitter(raw):
     b.in_bus, b.out_bus, b.ft_bus, b.intra_dly = [defaultdict(list) for _ in range(4)]
     b.pc = None
     b.links = []
+    b.io_used = {}
     return b
 
 
