@@ -462,3 +462,32 @@ All ot-run units (containers hbmcore-<kit>_*), branch claude/hbm-cores-1024 @9e9
 ## HBM-FACE (sub-agent of lane HBM) 2026-10-25 00:54 PDT
 - 2026-10-25 00:54 PDT HBM-FACE: started; branch claude/hbm-face-1024 from claude/hbm-cores-1024@6d0262ad50, worktree epyc1:/srv/opentallas-scratch2/claude/wt/hbm-face. Building face_shell.py (per-core face-register shell, unread-input drop list, latency table) + benches.
 2026-10-25 01:00 PDT COORD (PROTO sweep3 finding, applies to every re-plan): over a hard core only M6/M7 are free for feedthroughs (cores own M1-M5, M8/M9 = clock/reset/PG per dec. 12) -> ft bundles over core fields overflow (10k..3M). Re-plans must route ft in channels BETWEEN cores, or budget ft over cores against M6/M7 tracks only, and put stations in channels (never inside core outlines). Check your re-plan against this before READY; PROTO re-sweeps every merged re-plan and only CLEAN types get kits.
+
+## HBM-CORES3 KIT-CENSUS (2026-10-25 01:01 PDT, claude/hbm-cores-1024@f00af2ec65 gates, later commits on top)
+- (1) PREFLIGHT, done and pushed (f00af2ec65). run_kit_hbm.sh now STOPs before floorplan (rc 3, marker /work/FAIL_PREFLOOR) on any of:
+  - sdc_lint FAIL;
+  - SELRANGE FAIL (tools/die_plan/selrange_gate.py from claude/selrange-gate-1024@fc4d5fa9c8; runs beside synth, 2 h cap, rc 2 = NOT RUN, continue);
+  - port-bind FAIL (new port_bind_core.py: the synth top ports must equal the plan pin bits);
+  - face_guard FAIL.
+  Post-CTS FF hold gate (hold_gate.tcl, FF libs, placement RC): WNS < -100 ps or > 2000 endpoints = STOP (rc 4, FAIL_POSTCTS, a structural plan/RTL issue).
+  - The generator ships these files in every new kit; the 388 existing kits in kits_b2l/kits_b2n are overlaid. Not overlaid: the 8 live face_guard-PASS bankq runs (their containers already hold the old script).
+  - Tested: cfg_collar_idx256r stopped at FAIL_PREFLOOR face_guard before floorplan. vm_query n12: port_bind PASS (0 missing / 0 extra), selrange rc 0; hold-gate run at CTS now.
+- (2) STOPPED 118 running HBM core runs (exact container names) and DELETED their run data:
+  - 108 had face_guard FAIL recorded: 60 B2n idx_score_quarter, 30 B2n exp lanes, bankq0 l67, programme_store x2 (base + -hy), idx_selector (16 h in place_gp), sfu split3 base x7 + _cr x7, qcore_r13 base + _cr, gq_issue base + _cr, bdring x2.
+  - 10 were B2n idx_score_quarter still in synth (same family, 60/60 FAIL).
+  - Also deleted: 19 finished B2n CTS probes with face_guard FAIL (svc_pc x10, xcal x4, inj, sfustore x2, idx tail0/1; insertion already recorded), finished bankq0 l0_2/l3_5 (NOT SIGNED), 2 ep_static (MPL-0003, plan request).
+  - Before the directive: 4 svc_pc (old 155 um outline, B2n grew it), 4 xcal _m6 (2 DPL-0033 FAIL, 2 superseded), all routed svc_pc/idx-tail B2l data.
+  - Not touched (another lane's): PROTO hbmcore-* runs in proto-cores.
+- LEFT RUNNING (face_guard PASS), 9 runs:
+  - bankq_ft lanes0_2 x2 + lanes3_5, each also as _pd42 (6 runs, GRT);
+  - bankq lanes0_2/lanes3_5 e6588042a5d1/60b283a425e3 (2 runs, GRT);
+  - vm_query n12 -t3 (gate test, to CTS).
+- WHAT EACH PREFLIGHT BLOCKS:
+  - face_guard: every B2n re-kit except gq_land (117 kits; svc_pc/xcal/inj/sfustore/idx tails measured FAIL at CTS; idx/exp/bankq0 l67/programme_store FAIL at synth).
+  - sdc_lint / SELRANGE / port-bind: none so far.
+- gq_land@4d3dd24bd7bf = the only face_guard-PASS B2n core. CTS I 256 ps. Placed review PASS-COND, kit regenerated under the contract, GEOM ROUTE REQ filed; it routes on PASS.
+- (3) Hold recipe:
+  - Generator default HOLD_SLACK_MARGIN is already 0 (dd78a34eef), inside the 0..5 ps band. Post-CTS hold STOP is in.
+  - Hard cores have no ft-station chains (ft_stations.txt empty), so the delay-cell item applies to partition kits, not cores.
+  - STALLS.txt 00:37 had no HBM-CORES run STALLED. The RUNAWAY ones (idx_selector stopped; PROTO cxport/qw_dec belong to PROTO) are handled.
+- (4) The face_guard-FAIL B2n kits are generated (kits_b2n, 117) and wait for HBM-FACE shells (claude/hbm-face-1024); no relaunch before then.
