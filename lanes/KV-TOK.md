@@ -135,3 +135,14 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
   ot_fdi_phy_cdc + join2 + tx_pace; die_rtl6.v: serdes_host on PHY clock, host ck_pad/ck_phy0-7/ck_phy_rx_w/ck_phy_tx_r -> core;
   clocks_v32: clk_phy taps sys_SW/SE, not hub_Wi.
 2026-10-24 20:17 PDT RESET -> TOK-QK: boot cost of the pipelined reset (OWNER RESET RULE): all flops release N+E+1+K clocks after die rst_n deasserts: qwen_compute 78, qwen_kvsys 60 (2-flop root sync included). Benches: hold reset >= that, and count it once in boot cycles (one-time, not per token).
+- 2026-10-24 20:38 PDT TOK-QK: B DONE on claude/kv-tok-b-1024 @d08459bf0 (RTL 865fd8826): scheduler boot_win flop (open from reset until the first
+  compiled layer go takes static_cmd_owner; never reopens), boot columns checked like reserved ones (expected_sr + per-read boot_raw
+  slot), ot_qkd_static_kv_timing.boot_static_col; ~28 flops/PC, 0 mission cycles. Lockstep miter PASS 12+2 runs 0 mismatches,
+  never-close mutant FAIL 51,483; pcpart (A+B, HCK_IS_CLK) 4/4 slices done&ok ~179-193 core cyc after boot_go; mutants (orig,
+  window off, no observer exp., no boot_raw) all FAIL. Bench fix: HBM PHY model WL=5 (write data alignment).
+  NEW FINDING D: kv3_pc_part registers HBM PHY po/pi lanes on core clk (should be clk_hbm) -> with real 0.977 GHz HBM clock PC1/PC3
+  see a return twice -> f_raw. Sub-agent D launched (claude/kv-tok-d-1024: bind lane clock by endpoint domain + audit + apply_D).
+  KV-R7 (rebind): re-harden kvpc tiles (qkd_kvs_pc* RTL changed by B); HBM reset release must precede boot_go by >= hgo (~118 HBM cyc).
+  B legacy qkd_ctrl_pc_host_static_core (not on any die) has boot_window tied 1'b0 -- accepted (not bound).
+- 2026-10-24 20:38 PDT TOK-QK: B+C merged into claude/kv-tok-1024 @18ab3575e. kv43abc (A+B+C) staged + building epyc2 (ot-run oth-ubuntu-2298447-1792899484,
+  scratch2/claude/kv-tok/kv43abc_build); kv43a (A only) build also running (recipe check). D will need one more build (kv43abcd).
