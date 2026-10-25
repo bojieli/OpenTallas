@@ -192,3 +192,8 @@ GEOM REQ [S81/H4 2026-10-25 00:51 PDT] cond (3) delta on DEC12: claude/s81-h4-10
 - Session 10-24 19:23 -> 10-25 01:20: every request through line 187 answered. PASS: bankq_ft x3, eg_c r7, vq/vs_lfp, h0/h1/hcpost, gq_land B2n. PASS-COND: S81 xdie/xdie2, H4 (closed on DEC12), head c5/c6/c9, kits r6/c3, DEC12 re-plan, slice_station x24 + x6, HBM B2l x9 families, HBM 91-view probe, KV ahub fp. FAIL: HBM pgslice exp x30, KV ectlk v3.9 (split into 2 cores), S81 leaf r9 lane star, PROTO sweep3 STRUCTURAL (H/C/O) incl. q_su10/root, 5 HBM idle cores, hd_tile prev10 (agrees with author; fenced regions).
 - Next: re-reviews when the FAILs come back revised (KV ectlk split, S81 leaf 2x8/4x4 lane array, HBM idle cores, hd_tile fenced plan, B2m floorplan pass); check that DEC12 attn_hcore reset relays are in; prune station taps/relays.
 - OWNER?: S81 xdie2 real PHY size (from 10-24, still open).
+
+## PARKED 2026-10-25 01:22 PDT
+- 2026-10-25 01:22 PDT GEOM-REVIEW: fresh agent started 01:22. The queue is empty: every GEOM REQ through 01:14 has a REPLY or ACK. claude/geom-review-1024@2e06054d87 was merged in ROOT-MERGE batch 14 (main 776966c15). No new records were added and no jobs are running.
+- Expected re-reviews, each to be answered within about 30 min of its REQ: KV ectlk 2-core split (place+CTS), S81 leaf 2x8/4x4 lane array (t6/t50), 5 HBM idle cores, S81 hd_tile fenced regions, HBM B2n/B2o floorplan (B2m O-class), PROTO re-sweeps after the dec. 17 batch merge (stations in channels, overflow 0). Still open: DEC12 attn_hcore reset relays before svc kits.
+- OWNER?: S81 xdie2 real PHY size (still open).
