@@ -554,7 +554,7 @@ def main():
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "signoff.py",
-              "lec.py"):
+              "lec.py", "selrange_gate.py"):
         shutil.copyfile(TOOL / f, kd / f)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     tb = (TOOL / "tap_balance.tcl").read_text()
