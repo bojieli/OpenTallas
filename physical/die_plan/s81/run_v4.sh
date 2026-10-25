@@ -16,6 +16,8 @@ python3 $T/gen.py latency $D/die_plan.json --inplace --out $D/lat
 # + GEOM condition 1: each SerDes window = the PHY zone beside its partition strip (63.64-um guard = the VDDPHY ring)
 python3 $T/die_io.py plan $D/die_plan.json --out $D/die_io.json --corner-keepout-um 600 --phy-zone-guard-um 63.64 --in-band-host lk_WN2=coll__lk_WN2__s_0N_LP+ctrl__s_0N_LP__seqhost,lk_WN3=coll__lk_WN3__s_0N_LP+ctrl__s_0N_LP__seqhost
 # OWNER DECISION 7 (10-24): die.io + one VDDPHY supply / bump rows per SerDes window (die.pg.domains)
-python3 $R/physical/die_plan/s81/pg_domains.py $D/die_plan.json $D/die_io.json
+# S81.IR ruling (coordinator 10-25 03:08): pg_domains --split is the default (PHY macro 2.4 mm2 at the die edge,
+# domain = macro + 63.64-um guard inside the serdes partition, core strip + core C4 for boundary flops / ft stations)
+python3 $R/physical/die_plan/s81/pg_domains.py $D/die_plan.json $D/die_io.json --split
 (cd $D && python3 $T/check.py die_plan.json --out $D/g0 ${PNG---png})
 python3 $R/physical/die_plan/s81/census_cov.py $D/die_plan.json $D/instance_map.json $IN/s81_lanes.tsv --out $D/census_cov.json

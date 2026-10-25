@@ -101,6 +101,33 @@ _order = {"enum": ["lsb_low", "lsb_high"]}
 _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
         "properties": {"part": _name, "bus": _name}}
 
+# B2 (PATH-QC-B12 10-25): hard-IP LINE SIDE of a hard core (its bumps, e.g. a UCIe PHY's link_* / far_*): pins absent
+# from the as-built die that the binder exports as die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins)
+_bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", "dir", "width"],
+                                          "additionalProperties": False,
+                                          "properties": {"pin": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+                                                         "dir": {"enum": ["input", "output"]},
+                                                         "width": {"type": "integer", "minimum": 1},
+                                                         "note": {"type": "string"}}}}
+
+# Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
+_parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
+    name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
+           "properties": {"width": ({"type": "integer", "const": 2} if name in ("strap_corner", "strap_hid", "strap_bsel")
+                                   else {"type": "integer", "minimum": 1}),
+                          "value": {"type": "integer", "minimum": 0,
+                                    **({"maximum": 3} if name in ("strap_corner", "strap_hid", "strap_bsel") else {})}}}
+    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "strap_corner", "strap_hid", "strap_bsel")}}
+
+# Native KV quadrant/head/bank IDs only; this is not a generic configuration strap.
+_core_id_straps = {"type": "array", "items": {
+    "type": "object", "required": ["port", "width", "value"], "additionalProperties": False,
+    "properties": {"port": {"enum": ["strap_corner", "strap_hid", "strap_bsel"]},
+                   "width": {"const": 2},
+                   "value": {"type": ["integer", "string"], "minimum": 0, "maximum": 3,
+                             "pattern": "^2'[bB][01]{2}$"},
+                   "note": {"type": "string"}}}}
+
 SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": SCHEMA_ID,
@@ -197,6 +224,13 @@ SCHEMA = {
                                                      "exclude_um": {"type": "array", "items": _rect, "minItems": 1}}},
                             # S81-XDIE 10-24: the domain's VDDPHY rail-clamp ESD + decap sites (no bumps over them)
                             "esd_um": {"type": "array", "items": _rect, "minItems": 1},
+                            # S81.IR split (coordinator 10-25): the PHY macro footprint (die frame) on the die-edge side,
+                            # the core strip(s) of the partition outside the domain, the core C4 rule at the domain's
+                            # core-facing edges and the macro area target (die_io.check_pg_domains)
+                            "phy_macro_um": _rect,
+                            "core_strip_um": {"type": "array", "items": _rect},
+                            "core_edge_bumps": {"enum": ["relocate", "drop"]},
+                            "phy_area_target_mm2": _pos,
                             "note": {"type": "string"}}}}}},
             }},
         "partition_types": {
@@ -241,6 +275,10 @@ SCHEMA = {
                         # (insertion_ps = TT, insertion_ff_ps = FF) = the signed view's routed RCX pin-register mean,
                         # or the parent budget before the first sign-off; insertion_basis says which
                         "insertion_ff_ps": _pos, "insertion_basis": {"type": "string"},
+                        # IO-HOLD option A: the signed view's measured guarantee (ps after vclk, FF) that no
+                        # output changes earlier = contract guarantee + worst output-hold slack; absent = contract
+                        "out_hold_guarantee_ps": {"type": "number"},
+                        "keepouts_um": {"type": "array", "items": _rect},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
@@ -289,6 +327,9 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "origin_um", "outline_um"],
                         "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
+                                       "straps": _core_id_straps,
+                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
@@ -299,14 +340,28 @@ SCHEMA = {
                                        # hardened views (repo-relative): the partition kit places the core as a
                                        # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       # routing obstruction top layer of the core (its LEF OBS/PIN top; G2 probe
+                                       # obstructs M1..obs_max, default partition_signal_max when absent)
+                                       "obs_max": _layer,
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
+                        # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
+                        "leaf_um": _xy,
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
-                        "depth": {"type": "integer", "minimum": 1}}},
+                        "depth": {"type": "integer", "minimum": 1},
+                        # reset.start = broadcast plans (reset_tree.start_roles): "mission" (default) = control state
+                        # released by reset AND run; "bootstrap" = raw delivered wavefront reset (boot/program/PHY
+                        # cal before START) + ONE local registered START tap (leaf bind "start") for the contents'
+                        # mission admission.  core_start_roles: per hard-core reset target override {inst: role}
+                        "start_role": {"enum": ["bootstrap", "mission"]},
+                        "core_start_roles": {"type": "object",
+                                             "additionalProperties": {"enum": ["bootstrap", "mission"]}}}},
                     "contents": {"type": "array", "items": {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
+                                       "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "bump_ports": _bump_ports,
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
                                        # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
@@ -317,6 +372,7 @@ SCHEMA = {
                                        "cells": {"type": "integer", "minimum": 0},   # est. std cells of this leaf
                                        # leaf port -> "clk" | "rst_n" (partition synchronised reset, active low)
                                        #   | "rst" (active high) | "net:<type net>" | "bus:<bus>" | "epoch:<bus>"
+                                       #   | "start" (bootstrap types: the local registered START tap, active high)
                                        "bind": {"type": "object", "additionalProperties": {"type": "string"}},
                                        "params": {"type": "object",
                                                   "additionalProperties": {"type": ["integer", "string"]}}}}},
@@ -331,7 +387,9 @@ SCHEMA = {
                         "properties": {"conn": {"type": "string"},    # "bus:<bus>" | "<leaf inst>.<port>" | "<a>|<b>"
                                        "from_um": _xy, "to_um": _xy, "regs_um": {"type": "array", "items": _xy},
                                        "bits": {"type": "integer", "minimum": 1}, "launch": {"type": "string"},
-                                       "capture": {"type": "string"}, "note": {"type": "string"}}}},
+                                       "capture": {"type": "string"}, "note": {"type": "string"},
+                                       # per-bit station sites (kit_istations): bit b on its own L leaf_um <-> pin b
+                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit"]}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},
@@ -393,6 +451,15 @@ SCHEMA = {
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
+            # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
+            # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
+            # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
+            "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
+                          "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
+            # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
+            # input's min input delay is its driving partition's guaranteed output-min, the related tap pair skew is
+            # checked at the parent (io_hold_parent.py); "legacy" / absent = the flat contract above
+            "io_hold": {"enum": ["legacy", "sender_min"]},
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.
@@ -427,6 +494,10 @@ SCHEMA = {
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},
+            # raw binder: the FUNCTIONAL top input that carries the mission START level to the sources' declared
+            # mission-admission inputs (e.g. KV host mission_start); every such sink binds to its partition's local
+            # registered START tap start_t<k> (bootstrap types only).  Unset: such a top port stays a die IO.
+            "start_port": _name,
             "part_depth": {"type": "integer", "minimum": 1},
             "regions": {"type": "array", "items": {
                 "type": "object", "required": ["name"], "additionalProperties": False,
@@ -513,6 +584,18 @@ def _check(v, s, path, errs):
 def validate_structure(obj):
     errs = []
     _check(obj, SCHEMA, "$", errs)
+    id_types = {tn: t for tn, t in obj.get("partition_types", {}).items()
+                if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", []))} if not errs else {}
+    if id_types:
+        try:
+            from .parent_id_straps import type_parent_id_straps
+        except ImportError:
+            from parent_id_straps import type_parent_id_straps
+        for tn, t in id_types.items():
+            try:
+                type_parent_id_straps(t)
+            except ValueError as e:
+                errs.append(f"partition type {tn}: {e}")
     return errs
 
 
@@ -932,7 +1015,8 @@ def _grid_taps(P, tn):
     nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))
     if nx == 1 and ny == 1:
         x, y = t.get("clock", {}).get("tap_um", [w / 2, h / 2])
-        return [("clk", float(x), float(y))]
+        x, y = tap_clear(t, float(x), float(y))
+        return [("clk", x, y)]
     out = []
     for j in range(ny):
         for i in range(nx):
@@ -940,6 +1024,33 @@ def _grid_taps(P, tn):
             x, y = tap_clear(t, (i + 0.5) * w / nx, (j + 0.5) * h / ny, [(a, b) for _, a, b in out])
             out.append(("clk" if k == 0 else f"clk_t{k}", x, y))
     return out
+
+
+def placed_macro_boxes(t, halo=0.0):
+    """Type-frame obstacles shared by FT siting, clock taps and geometry gates.
+
+    Planned hard cores remain obstacles even before a view exists. Physical
+    contents (LEF-bearing SRAM/ROM/hard leaves) are equally real obstacles.
+    Match kit placement: a hard-core record wins over the same content instance,
+    and its track offset is applied once. R0/MX/MY/R180 preserve box dimensions.
+    Logical contents without a physical view do not reserve a macro footprint.
+    """
+    entries = {c['inst']: c for c in t.get('hard_cores', []) or []}
+    for c in t.get('contents', []) or []:
+        if c.get('lef') and c['inst'] not in entries:
+            entries[c['inst']] = c
+    boxes = {}
+    cores = {c['inst'] for c in t.get('hard_cores', []) or []}
+    for name, c in entries.items():
+        if 'origin_um' not in c or 'outline_um' not in c:
+            raise ValueError(f"physical macro {name}: origin_um and outline_um required")
+        x, y = map(float, c['origin_um']); w, h = map(float, c['outline_um'])
+        dx, dy = c.get('track_offset_um', [0.0, 0.0]) if name in cores else (0.0, 0.0)
+        x += dx; y += dy
+        if not all(math.isfinite(v) for v in (x, y, w, h, halo)) or w <= 0 or h <= 0:
+            raise ValueError(f"physical macro {name}: nonphysical footprint")
+        boxes[name] = (x-halo, y-halo, x+w+halo, y+h+halo)
+    return boxes
 
 
 TAP_CLEAR_UM = 8.64       # tap pin (and its root buffer) >= one lattice step off every hard core / macro of the type
@@ -954,10 +1065,10 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
     without hard cores)."""
     w, h = t["outline_um"]
-    boxes = []
-    for c in t.get("hard_cores", []) or []:
-        (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
-        boxes.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
+    boxes = list(placed_macro_boxes(t, halo=clear).values())
+
+    boxes.extend((a - clear, b - clear, c + clear, d + clear)
+                 for a, b, c, d in t.get("clock", {}).get("keepouts_um", []))
 
     def free(px, py):
         if not (clear <= px <= w - clear and clear <= py <= h - clear):
@@ -967,15 +1078,28 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
         return not any(x0 < px < x1 and y0 < py < y1 for x0, y0, x1, y1 in boxes)
     if (not boxes and not strict) or free(x, y):
         return x, y
-    for r in range(1, int(max(w, h) / TAP_STEP_UM) + 1):
-        d = r * TAP_STEP_UM
-        ring = [(x + i * TAP_STEP_UM, y + s * d) for i in range(-r, r + 1) for s in (-1, 1)] + \
-               [(x + s * d, y + i * TAP_STEP_UM) for i in range(-r + 1, r) for s in (-1, 1)]
-        ok = [p for p in ring if free(*p)]
-        if ok:
-            px, py = min(ok, key=lambda p: ((p[0] - x) ** 2 + (p[1] - y) ** 2, p))
-            return round(px, 4), round(py, 4)
-    return x, y
+    # Legal regions have axis-aligned boundaries. Project each boundary onto the same origin-centred 2.16-um
+    # lattice as the old expanding rings; their Cartesian product contains the nearest legal ring site. This
+    # avoids enumerating millions of interior points when an analog window pushes a tap hundreds of um.
+    def candidates(origin, extent, edges):
+        values = {origin}
+        for edge in [clear, extent - clear] + list(edges):
+            q = (edge - origin) / TAP_STEP_UM
+            for k in (math.floor(q), math.ceil(q)):
+                v = round(origin + k * TAP_STEP_UM, 8)
+                if clear - 1e-7 <= v <= extent - clear + 1e-7:
+                    values.add(v)
+        return values
+    obs = boxes + [(a - clear, b - clear, a + clear, b + clear) for a, b in taken]
+    xs = candidates(x, w, [v for a, b, c, d in obs for v in (a, c)])
+    ys = candidates(y, h, [v for a, b, c, d in obs for v in (b, d)])
+    ok = [(px, py) for px in xs for py in ys if free(px, py)]
+    if ok:
+        px, py = min(ok, key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7),
+                                       (p[0] - x) ** 2 + (p[1] - y) ** 2, p))
+        return round(px, 4), round(py, 4)
+    raise ValueError(f"no legal clock tap site in {t.get('module', 'type')} near ({x}, {y}); "
+                     f"clearance {clear} um, {len(boxes)} keepouts")
 
 
 def has_epoch(port):

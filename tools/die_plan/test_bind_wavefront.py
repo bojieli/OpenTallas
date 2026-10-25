@@ -220,3 +220,102 @@ endmodule
 def test_raw_bound_start_broadcast_lockstep_and_mutant(tmp_path):
     assert simulate_start(tmp_path/'good') == 0
     assert simulate_start(tmp_path/'mutant', mutant=True) > 0
+
+
+def _start_sink_fixture(role):
+    raw = plan()
+    raw['reset']['start'] = 'broadcast'
+    raw['reset']['start_port'] = 'start'
+    if role:
+        raw['partition_types']['src']['reset']['start_role'] = role
+    b = emitter(raw)
+    part = next(p for p in b.parts if b.parts[p]['type'] == 'src')
+    c = SimpleNamespace(path='hub.u_host', ports={'mission_start': [1], 'rst_n': [2]}, module='host', params={})
+    b.F.cells = [c]
+    b.F.top_ports = {'start': ('input', [1])}
+    b.G.dirs = {0: {'mission_start': 'input', 'rst_n': 'input'}}
+    b.G.kind = ['leaf']
+    b.members[part] = [0]
+    b.sinks = {(0, 'mission_start', 0): ('start',), (0, 'rst_n', 0): ('rst', 'low')}
+    b.rel_of = lambda ci: 'u_host'
+    return b, part
+
+
+def test_start_consumer_binds_local_start_tap_only_in_bootstrap_type():
+    """reset.start_port: the functional START level binds to the bootstrap partition's local registered START tap;
+    its rst_n is the raw delivered wavefront tap; a mission type with a START consumer fails closed."""
+    b, part = _start_sink_fixture('bootstrap')
+    text, _ = b.emit_type('src', part)
+    T = RT.for_type(b.wavefront_plan(), 'src')
+    k = T['start_tap']
+    assert f'.mission_start(start_t{k})' in text and f'ot_dp_rgate u_rrl_' in text and f'.q(start_t{k})' in text
+    assert f'.rst_n(rst_n)' in text and 'io_start' not in text
+    b, part = _start_sink_fixture(None)
+    with pytest.raises(bind.BindError, match='only a reset.start_role'):
+        b.emit_type('src', part)
+
+
+def test_start_port_source_classified_not_die_io():
+    raw = plan()
+    raw['reset']['start_port'] = 'start'
+    b = emitter(raw)
+    from collections import Counter
+    cnt = Counter()
+    assert b._src_desc('pa', ('top', 'start', 0), cnt, 0, 'x', 0) == ('start',) and cnt['start'] == 1
+    assert b._src_desc('pa', ('top', 'din', 3), cnt, 0, 'x', 0) == ('top', 'din', 3)
+
+
+def test_raw_bound_bootstrap_type_lockstep(tmp_path):
+    """bound die with type src bootstrap: src taps at release[p] (raw), every other soft tap at S + release[p];
+    mutant = the bootstrap declaration dropped (src taps at S + release) is caught by the same checks."""
+    if not shutil.which('iverilog'):
+        pytest.skip('iverilog missing')
+
+    def run(d, role):
+        raw = plan()
+        raw['reset']['start'] = 'broadcast'
+        if role:
+            raw['partition_types']['src']['reset']['start_role'] = role
+        b = emitter(raw)
+        files = b.emit(d)
+        ref = plan()
+        ref['reset']['start'] = 'broadcast'
+        ref['partition_types']['src']['reset']['start_role'] = 'bootstrap'
+        P = schema.Plan(ref)
+        W = RT.wf_plan(P)
+        S = 6
+        checks = []
+        for p, row in W['parts'].items():
+            if row['type'] not in W['types']:
+                continue
+            T = RT.for_type(P, row['type'])
+            boot = T.get('start_role') == 'bootstrap'
+            for k in range(T['n_clock_taps']):
+                rel = row['release'] if boot else S + row['release']
+                checks.append(f"if (cyc >= 0 && u.{bind.sv_id(p)}.rst_n_t{k} !== (cyc + 1 >= {rel})) bad = bad + 1;")
+            if boot and role == 'bootstrap':
+                checks.append(f"if (cyc >= 0 && u.{bind.sv_id(p)}.start_t{T['start_tap']} !== "
+                              f"(cyc + 1 >= {S + row['release']})) bad = bad + 1;")
+        mx = W['max_release'] + S
+        tb = d/'tb.sv'
+        tb.write_text(f'''`timescale 1ns/1ps
+module tb;
+reg clk=0, rst_n=0, start=0; always #0.5 clk=~clk;
+tiny_bound_top u(.clk_core(clk), .rst_n(rst_n), .start(start));
+integer cyc=-{mx+20}, bad=0;
+always @(posedge clk) begin
+ #0.1;
+ {' '.join(checks)}
+ if(cyc == -1) rst_n=1;
+ if(cyc == {S - 1}) start=1;
+ cyc=cyc+1;
+end
+initial begin repeat({2*mx+40}) @(posedge clk); #0.2; $display("BAD %0d", bad); $finish; end
+endmodule
+''')
+        exe = d/'a.out'
+        subprocess.run(['iverilog','-g2012','-o',str(exe),str(tb),*[str(f) for f in files]], check=True)
+        out = subprocess.run(['vvp',str(exe)], capture_output=True,text=True,check=True).stdout
+        return int(re.search(r'BAD (\d+)',out).group(1))
+    assert run(tmp_path/'good', 'bootstrap') == 0
+    assert run(tmp_path/'mutant', 'mission') > 0

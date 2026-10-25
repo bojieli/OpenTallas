@@ -1,0 +1,226 @@
+{
+ "lane": "S81-HEAD/KITS",
+ "date": "2026-10-25",
+ "plan": "physical/die_plan/s81_head/die_plan.json",
+ "kits_root": "epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m{0,5}/<type>",
+ "recipe": "gen.py phys --hold-ff-margin {0,5} --max-wire-um 100 (F1 per-corner vclk + F2 setRC_rcx defaults); hd_spn/_end --kit-rtl rtl_spine/<type>/kit_rtl.f from tools/s81_head/spine_kit.py (kit_istations leaf anchors)",
+ "placed": "m5 3_place (m0 = same geometry, OT_HOLD_FF_MARGIN 0)",
+ "types": {
+  "hd_spn_end": {
+   "rr_max": [
+    392.63400000000007,
+    "u_rrl_0/q$_DFF_P_"
+   ],
+   "rr_gt405": 0,
+   "in_pin_reg_max": [
+    [
+     10.023000000000016,
+     "hu_i[21]"
+    ]
+   ],
+   "out_pin_last_station": [
+    [
+     354.1170000000001,
+     "hd_o[226]"
+    ]
+   ],
+   "flops": 13957,
+   "taps": 35,
+   "tap_sinks_min_max": [
+    2,
+    1141
+   ],
+   "interior_pins_on_strap": [],
+   "image": "results/geom_review/s81_head_kits_1025/hd_spn_end_m5.place.png"
+  },
+  "hd_spn": {
+   "rr_max": [
+    396.306,
+    "u_rrl_4/q$_DFF_P_"
+   ],
+   "rr_gt405": 0,
+   "in_pin_reg_max": [
+    [
+     10.573000000000121,
+     "hu_i[97]"
+    ]
+   ],
+   "out_pin_last_station": [
+    [
+     354.10900000000004,
+     "hd_o[243]"
+    ]
+   ],
+   "flops": 21893,
+   "taps": 42,
+   "tap_sinks_min_max": [
+    1,
+    1101
+   ],
+   "interior_pins_on_strap": [],
+   "image": "results/geom_review/s81_head_kits_1025/hd_spn_m5.place.png"
+  },
+  "hd_st_k5": {
+   "rr_max": [
+    379.72800000000007,
+    "u_rst_in/q$_DFF_P_"
+   ],
+   "rr_gt405": 0,
+   "in_pin_reg_max": [
+    [
+     9.656999999999993,
+     "u_i[470]"
+    ]
+   ],
+   "out_pin_last_station": [
+    [
+     362.74899999999997,
+     "tx_o[17]"
+    ]
+   ],
+   "flops": 4738,
+   "taps": 16,
+   "tap_sinks_min_max": [
+    1,
+    1078
+   ],
+   "interior_pins_on_strap": [],
+   "image": "results/geom_review/s81_head_kits_1025/hd_st_k5_m5.place.png"
+  },
+  "hd_st_m": {
+   "rr_max": [
+    364.7160000000001,
+    "u_rrl_23/q$_DFF_P_"
+   ],
+   "rr_gt405": 0,
+   "in_pin_reg_max": [
+    [
+     7.537000000000033,
+     "tx_i[47]"
+    ]
+   ],
+   "out_pin_last_station": [
+    [
+     363.6410000000001,
+     "tx_o[35]"
+    ]
+   ],
+   "flops": 657,
+   "taps": 16,
+   "tap_sinks_min_max": [
+    2,
+    187
+   ],
+   "interior_pins_on_strap": [],
+   "image": "results/geom_review/s81_head_kits_1025/hd_st_m_m5.place.png"
+  },
+  "hd_st_n3": {
+   "rr_max": [
+    376.677,
+    "u_rrl_57/q$_DFF_P_"
+   ],
+   "rr_gt405": 0,
+   "in_pin_reg_max": [
+    [
+     8.741000000000042,
+     "u1_i[105]"
+    ]
+   ],
+   "out_pin_last_station": [
+    [
+     363.7690000000002,
+     "u2_o[13]"
+    ]
+   ],
+   "flops": 9314,
+   "taps": 16,
+   "tap_sinks_min_max": [
+    8,
+    1073
+   ],
+   "interior_pins_on_strap": [],
+   "image": "results/geom_review/s81_head_kits_1025/hd_st_n3_m5.place.png"
+  },
+  "hd_st_n4": {
+   "rr_max": [
+    379.35,
+    "u_rst_in/q$_DFF_P_"
+   ],
+   "rr_gt405": 0,
+   "in_pin_reg_max": [
+    [
+     7.509000000000025,
+     "u2_i[512]"
+    ]
+   ],
+   "out_pin_last_station": [
+    [
+     363.699,
+     "u2_o[470]"
+    ]
+   ],
+   "flops": 8274,
+   "taps": 16,
+   "tap_sinks_min_max": [
+    3,
+    1178
+   ],
+   "interior_pins_on_strap": [],
+   "image": "results/geom_review/s81_head_kits_1025/hd_st_n4_m5.place.png"
+  },
+  "hd_st_str": {
+   "rr_max": [
+    380.15999999999997,
+    "u_rrl_30/q$_DFF_P_"
+   ],
+   "rr_gt405": 0,
+   "in_pin_reg_max": [
+    [
+     7.743000000000011,
+     "u_i[126]"
+    ]
+   ],
+   "out_pin_last_station": [
+    [
+     363.63700000000006,
+     "u_o[417]"
+    ]
+   ],
+   "flops": 4172,
+   "taps": 16,
+   "tap_sinks_min_max": [
+    2,
+    1073
+   ],
+   "interior_pins_on_strap": [],
+   "image": "results/geom_review/s81_head_kits_1025/hd_st_str_m5.place.png"
+  },
+  "hd_st_turn": {
+   "rr_max": [
+    379.62000000000006,
+    "u_rrl_35/q$_DFF_P_"
+   ],
+   "rr_gt405": 0,
+   "in_pin_reg_max": [
+    [
+     8.509000000000185,
+     "u_i[415]"
+    ]
+   ],
+   "out_pin_last_station": [
+    [
+     344.173,
+     "u_o[1]"
+    ]
+   ],
+   "flops": 6742,
+   "taps": 16,
+   "tap_sinks_min_max": [
+    3,
+    1078
+   ],
+   "interior_pins_on_strap": [],
+   "image": "results/geom_review/s81_head_kits_1025/hd_st_turn_m5.place.png"
+  }
+ }
+}

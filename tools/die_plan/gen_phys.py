@@ -128,6 +128,7 @@ def _snap_tap(P, x, y, pg_legal=True):
             (snap(x, Lb, below), snap(y, L, top)))
 
 
+
 def clock_pins(P, tn):
     """every clock tap pin of a type (COORD 10-23 R4 grid, schema.tap_grid), snapped: [(port, x, y)]."""
     return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y in S.tap_grid(P, tn)]
@@ -268,9 +269,148 @@ def ft_hop_in_share(P):
     return float(P.clock.get("ft_hop_in_share", FT_HOP_IN_SHARE))
 
 
+# CLOCK-RESET IO-HOLD 10-25 (opt-in plan clock.seam_hold {sender_ps, seam_ps}; absent = the legacy contract above).
+# Seam hold composes from the two kit checks: the sender's output hold (set_output_delay -min -sender_ps, its half
+# uncertainty 12.5) guarantees port data >= vclk + 12.5 + sender_ps in its own propagated frame; the receiver's input
+# hold (set_input_delay -min sender_ps - seam_ps, its half 12.5) guarantees port -> D >= capture - vclk + t_hold +
+# 12.5 + seam_ps - sender_ps.  Summed in the die frame: seam hold slack >= seam_ps - (e_rx - e_tx), e = each kit's
+# die-tap delivery error vs its sign-off (RCX-rebound) pin-register mean, i.e. the die related tap skew.  So seam_ps
+# only has to cover the die tap skew bound (20 ps, decision 5 balance target) + routed-RCX error (5 ps); the 25 ps
+# die hold uncertainty is already the two 12.5 halves.  The legacy contract (sender 0, receiver -tol 40) credits no
+# clk->q: a pin-registered output has cq + port buffer 55.5-58 ps at FF (payload536 4_cts), so sender_ps 25 costs no
+# sender padding while the receiver pads 40 ps less per seam bit (results/clock_iohold_0810).
+SEAM_HOLD_MIN_PS = 25.0
+
+
+def seam_hold(P):
+    """{in_min_ps, out_min_ps, seam_ps, basis}: the kit min input / output delays vs vclk (ps) of the seam hold contract."""
+    sh = P.clock.get("seam_hold")
+    if not sh:
+        tol = float(P.clock["insertion_tol_ps"])
+        return dict(in_min_ps=-tol, out_min_ps=HOLD_OUT_MIN_PS, seam_ps=tol - HOLD_OUT_MIN_PS,
+                    basis="legacy: receiver pads the whole insertion window (-insertion_tol), sender 0")
+    snd, seam = float(sh["sender_ps"]), float(sh["seam_ps"])
+    if snd < 0 or seam < SEAM_HOLD_MIN_PS:
+        raise ValueError(f"clock.seam_hold: sender_ps {snd:g} must be >= 0 and seam_ps {seam:g} >= "
+                         f"{SEAM_HOLD_MIN_PS:g} (die tap skew bound + RCX error)")
+    return dict(in_min_ps=snd - seam, out_min_ps=-snd, seam_ps=seam,
+                basis=f"clock.seam_hold: sender {snd:g} ps after vclk, seam {seam:g} ps")
+
+
 def hold_in_min_ps(P):
     """seam-hold padding: the kit's min input delay vs vclk (ps)."""
-    return -float(P.clock["insertion_tol_ps"])
+    return seam_hold(P)["in_min_ps"]
+
+
+def hold_out_min_ps(P):
+    """the kit's min output delay vs vclk (ps, <= 0): the sender's share of the seam hold contract."""
+    return seam_hold(P)["out_min_ps"]
+
+
+# IO-HOLD option A (COORD ruling 2026-10-25 10:23, KITS-SPARE PROPOSAL IO-HOLD-2; opt-in: plan clock.io_hold =
+# "sender_min" or env OT_IO_HOLD=sender_min at generation).  The flat receiver min input delay (-insertion_tol, or
+# the seam_hold receiver share) assumes the neighbour's face flop may change its output at vclk - 40 ps with no
+# clk->q.  Every partition output is a pin register whose own sign-off proves it changes no earlier than
+#     vclk + (1 - UNC_SPLIT) x UNC_HOLD_PS - out_min        (its output hold check, kit frame)
+# (12.5 ps with the legacy out_min 0; measured payload536 / cfg7bfp registered outputs land 53-65 ps after the bound,
+# so the guarantee is far from tight).  Option A: each partition input's min input delay = that guarantee of the
+# partition that drives it (per port, from the plan's port list; a sender type's signed view may publish a larger
+# measured guarantee as types[].clock.out_hold_guarantee_ps).  Ports driven from the die edge (@die), through a
+# planned die channel, or with any instance of the type undriven keep the fallback (seam_hold / legacy) contract.
+# What the kits then no longer cover -- the related tap pair skew between sender and receiver and the 12.5-ps
+# receiver uncertainty half the sender guarantee already used -- is checked ONCE at the parent: a related-pair FF
+# hold check with CPPR on the assembled real views (io_hold_parent.py over die_sta.py).  A kit signed off under A
+# counts only once that parent check covers its input seams (COORD 10:23).
+IO_HOLD_MODES = ("legacy", "sender_min")
+
+
+def io_hold_mode(P):
+    """'legacy' (flat in_min on every input, default) or 'sender_min' (option A): plan clock.io_hold > env OT_IO_HOLD."""
+    import os
+    v = P.clock.get("io_hold")
+    if v is None:
+        v = os.environ.get("OT_IO_HOLD") or "legacy"
+    if v not in IO_HOLD_MODES:
+        raise ValueError(f"clock.io_hold / OT_IO_HOLD: '{v}' not in {IO_HOLD_MODES}")
+    return v
+
+
+def sender_out_guarantee_ps(P, snd_type):
+    """(ps after vclk, basis): the earliest a registered output of partition type snd_type changes, as its own
+    signed-off output hold check guarantees: the signed view's published types[].clock.out_hold_guarantee_ps,
+    else the plan contract (1 - UNC_SPLIT) x UNC_HOLD_PS - hold_out_min_ps."""
+    ck = P.types.get(snd_type, {}).get("clock", {}) or {}
+    if ck.get("out_hold_guarantee_ps") is not None:
+        return float(ck["out_hold_guarantee_ps"]), f"signed view {snd_type}"
+    return (1 - UNC_SPLIT) * UNC_HOLD_PS - hold_out_min_ps(P), "plan contract"
+
+
+def input_hold_min(P, tn):
+    """IO-HOLD option A: {sv input port: dict(in_min_ps, basis, senders)} for every bus / ft-slot input of type tn
+    whose min input delay differs from the fallback hold_in_min_ps(P).  Empty in legacy mode.  One value per port
+    (the type is hardened once): the minimum over every instance's driver."""
+    if io_hold_mode(P) != "sender_min":
+        return {}
+    import gen_rtl
+    insts = sorted(n for n, p in P.parts.items() if p["type"] == tn)
+    if not insts:
+        return {}
+    drv = {}                                   # (inst, bus) -> [port records]
+    for pid, pr in P.ports.items():
+        if pr["dst"]["part"] in insts:
+            drv.setdefault((pr["dst"]["part"], pr["dst"]["bus"]), []).append((pid, pr))
+    t = P.types[tn]
+    in_buses = [b["name"] for b in t.get("buses", []) if b["dir"] == "in"]
+    in_buses += [s["name"] + "_i" for s in t.get("ft_slots", [])]
+    out = {}
+    for bus in in_buses:
+        vals, why = [], None
+        for inst in insts:
+            prs = drv.get((inst, bus))
+            if not prs:
+                why = f"{inst}.{bus} undriven"
+                break
+            for pid, pr in prs:
+                s = pr["src"]["part"]
+                if s == DIE_PART or s not in P.parts:
+                    why = f"{pid} from the die edge"
+                elif P.channel_of(pid) is not None:
+                    why = f"{pid} through a die channel"
+                if why:
+                    break
+                g, basis = sender_out_guarantee_ps(P, P.parts[s]["type"])
+                vals.append((g, basis, P.parts[s]["type"]))
+            if why:
+                break
+        if why or not vals:
+            continue
+        g = min(v[0] for v in vals)
+        out[gen_rtl.sv_id(bus)] = dict(in_min_ps=round(g, 4), basis=sorted({v[1] for v in vals if v[0] == g})[0],
+                                       senders=sorted({v[2] for v in vals}))
+    return out
+
+
+def io_hold_tcl(P, tn):
+    """kit io_hold.tcl (sender_min kits only): proc ot_io_hold_apply {vclk} re-applies the per-port min input delays
+    of input_hold_min after a tool overlay set the fallback on every input (hold_gate.tcl, signoff.py)."""
+    m = input_hold_min(P, tn)
+    if not m:
+        return None
+    lines = [f"# GENERATED by tools/die_plan/gen.py phys: IO-HOLD option A per-port min input delays of {tn} "
+             f"(plan {P.name}); fallback {hold_in_min_ps(P):g} ps on every other input",
+             "proc ot_io_hold_apply {vclk} {"]
+    for v, ports in _group_in_min(m):
+        lines.append(f"  set_input_delay -min {t_lib(v):.4f} -clock $vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]")
+    lines += [f"  puts \"OT_IO_HOLD sender_min ports {len(m)} fallback {hold_in_min_ps(P):g}\"", "}"]
+    return "\n".join(lines) + "\n"
+
+
+def _group_in_min(m):
+    """[(in_min_ps, [ports])] sorted, one SDC command per distinct value."""
+    g = {}
+    for p, d in m.items():
+        g.setdefault(d["in_min_ps"], []).append(p)
+    return sorted((v, sorted(ps)) for v, ps in g.items())
 
 
 # FLOW 10-25 (METHODOLOGY ruling 9.7, BRIEFING decision 5e; NEARMISS-STRUCT: 4 of 7 near misses = output pin register
@@ -332,6 +472,21 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # FLOW 10-25: default FF-only GRT hold repair margin (run_kit.sh grt CORNERS=bc with the FF-bound vclk); = the
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
 HOLD_FF_MARGIN_DEFAULT = 5.0
+# FLOW-INFRA-2 10-25: GRT-RC tap pre-pass (tapbal_grt.tcl) between CTS and the FF GRT step.  Opt-in until the flow
+# canaries pass with it (plan clock.tap_grt_pre, or OT_GEN_TAP_GRT_PRE=1 at generation for A/B kits); then default on.
+TAP_GRT_PRE_DEFAULT = False
+
+
+def _tap_grt_pre(P, t):
+    """True when the kit runs the GRT-RC tap pre-pass (type clock.tap_grt_pre > plan clock.tap_grt_pre > env > default)."""
+    import os
+    v = t.get("clock", {}).get("tap_grt_pre", P.clock.get("tap_grt_pre"))
+    if v is None:
+        e = os.environ.get("OT_GEN_TAP_GRT_PRE")
+        v = TAP_GRT_PRE_DEFAULT if e is None else e not in ("", "0")
+    return bool(v)
+
+
 HOLD_OUT_MIN_PS = 0.0   # min output delay of every partition output vs vclk (sdc_lint: must be <= 0)
 
 
@@ -405,10 +560,15 @@ def sdc(P, tn, pins):
     # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
     # no clk-to-q / wire credit: min input delay hold_in_min_ps (-tol) on every input
     out += (f"set_input_delay -min {t_lib(hold_in_min_ps(P)):.4f} -clock vclk $non_clk_in\n")
+    # IO-HOLD option A (opt-in clock.io_hold sender_min): partition-driven inputs take their sender's guaranteed
+    # output-min instead; the related tap pair skew is checked at the parent (io_hold_parent.py)
+    for v, ports in _group_in_min(input_hold_min(P, tn)):
+        out += (f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n"
+                f"set_input_delay -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
     # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
-    out += (f"set_output_delay -min {t_lib(HOLD_OUT_MIN_PS):.4f} -clock vclk [all_outputs]\n")
+    out += (f"set_output_delay -min {t_lib(hold_out_min_ps(P)):.4f} -clock vclk [all_outputs]\n")
     return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -438,20 +598,42 @@ def type_macros(P, tn):
     return out
 
 
-def core_latency_files(P, tn, kd, root=None):
-    """CP2: per kit, the hard cores' internal clock latency (core inst -> clock pin -> TT lib max_clock_tree_path,
-    rise; 0 when the core has no lib or the pin no arc) -> core_latency.json + core_latency.txt (`inst pin ps tap`,
-    read by tap_balance.tcl), and the early core taps -> core_taps.txt (`port inst pin|* early_ps`, read by
-    clock_taps.tcl).  Types without hard cores write nothing (kits unchanged)."""
-    import cores as C
-    rows = C.latency_table(P, tn, root) if P.types[tn].get("hard_cores") else []
+def core_latency_files(P, tn, kd, root=None, mean_contract=False, require_signed=True):
+    """Write authoritative TT/FF boundary-register mean contracts for hard cores.
+
+    Opt in with mean_contract=True; strict release export requires matching SIGNED measurements.
+    The scalar CTS file uses TT; the JSON and FF file retain corner/source basis.
+    ETM max_clock_tree_path is never substituted for a pin-register mean.
+    """
+    import core_clock_contract as CC
+    rows = []
+    if P.types[tn].get("hard_cores"):
+        if mean_contract:
+            rows = CC.latency_table(P, tn, root, require_signed=require_signed)
+        else:
+            # Existing kits retain their historical bound until their owner opts
+            # into a measured mean or an explicit first-route parent budget.
+            import cores as C
+            rows = C.latency_table(P, tn, root)
+            for row in rows:
+                row.update(basis="legacy_etm_max_bound", signed=False, release_qualified=False)
     taps = core_tap_rows(P, tn)
+    if mean_contract:
+        for _port, inst, pin, _early, insertion in taps:
+            matching = [r for r in rows if r["inst"] == inst and (pin == "*" or r["pin"] == pin)]
+            if not matching or any(abs(r["rise_ps"] - insertion) > .01 for r in matching):
+                raise CC.ContractError(f"{tn}/{inst}.{pin}: planned early core tap does not match selected TT mean; regenerate from means")
     if rows:
         (kd / "core_latency.json").write_text(json.dumps(dict(type=tn, edge="rise", target_ps=P.clock["insertion_ps"],
                                                               rows=rows), indent=1) + "\n")
         (kd / "core_latency.txt").write_text(
-            "# inst pin max_clock_tree_path_rise_ps tap   (GENERATED by gen.py phys; TT lib of each hard core)\n" +
+            ("# inst pin mean_pin_register_insertion_ps tap (TT; corner/source basis in JSON)\n" if mean_contract else
+             "# inst pin ETM_MAX_BOUND_ps tap (legacy diagnostic, NOT a mean/SIGNED contract)\n") +
             "".join(f"{r['inst']} {r['pin']} {r['rise_ps']:g} {r['tap']}\n" for r in rows))
+    if rows and mean_contract:
+        (kd / "core_latency_ff.txt").write_text(
+            "# inst pin mean_pin_register_insertion_ps tap (FF; corner/source basis in JSON)\n" +
+            "".join(f"{r['inst']} {r['pin']} {r['corners']['ff']['mean_ps']:g} {r['tap']}\n" for r in rows))
     if taps:
         (kd / "core_taps.txt").write_text("# port inst pin|* early_ps insertion_ps   (GENERATED; CP2 early core taps)\n" +
                                           "".join(f"{n} {i} {p} {e:g} {ins:g}\n" for n, i, p, e, ins in taps))
@@ -550,6 +732,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
+    ioh = io_hold_tcl(P, tn)            # IO-HOLD option A: per-port min input delays for the hold_gate / sign-off overlays
+    if ioh:
+        (kd / "io_hold.tcl").write_text(ioh)
     (kd / "prects_estimate.tcl").write_text(clock_phase_tcl(P, tn))
     import reset_tree as RT
     leaf_check = ""
@@ -563,6 +748,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     lctx = sdc_lint.kit_context(P, tn)
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("sdc_lint.py"), kd / "sdc_lint.py")
+    shutil.copyfile(Path(__file__).with_name("rtl_lint.py"), kd / "rtl_lint.py")
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise sdc_lint.SdcLintError(f"type {tn}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
@@ -633,6 +819,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # FLOW 10-25 (ruling 9.7 / decision 5e): bound pin-register insertion per corner (vclk_corner.tcl)
            f"export OT_VCLK_TT = {t_lib(ib['tt']):.4f}",
            f"export OT_VCLK_FF = {t_lib(ib['ff']):.4f}",
+           # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
+           f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
+           f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_ps(P)):.4f}",
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
            # RCX (setRC_rcx_asap7.tcl; the stock setRC.tcl put clock sinks 11-57 ps above RCX).  ORFS reads
            # LAYER_PARASITICS_FILE (this image) / SET_RC_TCL (newer variables.yaml) instead of the platform setRC.tcl.
@@ -678,11 +867,18 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
     # grt_post.tcl: density GRT-RC tap pass + vclk back to the SDC value before 5_1_grt.sdc is written)
     cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
+    if _tap_grt_pre(P, t):
+        # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
+        # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
+        cfg += ["export OT_TAP_GRT_PRE = 1", "export OT_PINREG_PAD = 1"]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl"):
+              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
+        if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
+            hook = kd / f
+            hook.write_text(f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n" + hook.read_text())
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
@@ -783,7 +979,7 @@ IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 NAME=dpkit-$(basename "$K")-$$
 # Preserve existing gate verdicts when a corrected kit reuses a run directory.
 HISTORY="$K/preflight_history/$(date +%Y%m%d_%H%M%S)_$$"
-for f in sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
+for f in rtl_lint.json sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
   if [ -f "$K/$f" ]; then mkdir -p "$HISTORY"; cp -p "$K/$f" "$HISTORY/$f"; fi
 done
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
@@ -791,6 +987,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
+  if [ \$rc = 0 ]; then python3 -I /work/rtl_lint.py /work; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \\\
   SRP=; if [ \$rc = 0 ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
   if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py gen --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR adder_map_dontuse' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
@@ -808,13 +1005,16 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
+    if [ \$rc = 0 ] && grep -q '^export OT_TAP_GRT_PRE = 1' /work/config.mk; then \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
+      if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS GRT-RC tap pre-pass (tapbal_grt.tcl)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
     if [ \$rc = 0 ]; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
         OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
+        OT_HOLD_IN_MIN=\$(sed -n 's/^export OT_HOLD_IN_MIN = //p' /work/config.mk) OT_HOLD_OUT_MIN=\$(sed -n 's/^export OT_HOLD_OUT_MIN = //p' /work/config.mk) \
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS FF structural hold gate (or NOT RUN)' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
-  HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); \
+  HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
     for c in TT FF; do OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \

@@ -17,6 +17,20 @@ all_inputs -no_clocks, corner-scoped macro libs, route do-finish/do-generate_abs
   * post-GRT DRV/hold pass (the VQ r10-r12 lesson: extracted-route slew needs 40 % estimation margin);
   * hard children (spec children[]) are refused: their views must be signed first.
 
+MODERN FLOW (KITS-SPARE/S81C 10-25, default ON; --legacy-flow = the old fixed-vclk / stock-RC kit, bit for bit), the
+FLOW-FIX core-kit defaults through tools/die_plan/core_flow.py (same keys / files as gen_phys and the HBM / KV / QC
+core generators, claude/flow-fix-1025b):
+  * F2 calibrated RCX wire RC (setRC_rcx.tcl: LAYER_PARASITICS_FILE + SET_RC_TCL);
+  * per-corner IO vclk insertion (OT_VCLK_TT / OT_VCLK_FF, clock_binding.json, sdc_lint.json insertion_ff_ps ->
+    signoff --ff-vclk auto = bound-ff): no fixed 250-ps vclk for both corners;
+  * hold is repaired ONLY in the FF frame: CTS-stage repair is setup-only, the FF-only GRT hold repair
+    (OT_VCLK_CORNER=ff make grt CORNERS=bc) runs before route/finish (the old CTS MCMM hold repair against the TT vclk put
+    15-36k IO hold buffers into bksel_c / xrt3 / l5_n32 / eg, GEOM-REVIEW-3 06:20);
+  * pre-synth rtl_lint (exit 8) and post-synth reg_fanout gate (exit 7: a register driving > 64 data pins);
+  * optional recipe "regional_taps" {nx, ny, split, protect_spine, rep_um, win_ps} (F5): structured clock = buffered
+    trunk + symmetric H-tree + one regional tap per region (rt/regional_taps.tcl, S81-CORES/SPLIT + Codex spine guard),
+    taps balanced <= win_ps (rt/regional_taps_balance.tcl), planned spine dont_touch + post-CTS guard.
+
     python3 gen_core_kit_legacy.py --module dsdv_gunit_l0 [--out DIR]
 """
 import argparse
@@ -34,6 +48,8 @@ S81 = REPO / "physical/die_plan/s81"
 TOOL = REPO / "tools/die_plan"
 sys.path.insert(0, str(TOOL))
 import sdc_lint  # noqa: E402
+import core_flow  # noqa: E402  (FLOW-FIX 10-25 core-kit flow defaults: RC cal, per-corner vclk, lint, FF-only GRT hold)
+TIME_UNIT_PS = 1.0   # constraint.sdc time unit (ASAP7 liberty: ps)
 
 CORE_MARGIN_UM = 4.32
 RECT = {"M3": (0.018, 0.038), "M4": (0.084, 0.024), "M5": (0.024, 0.084)}   # repin.py: (w, h) of a pin shape
@@ -205,7 +221,8 @@ echo "image $IMAGE $($DOCKER image inspect --format '{{.Id}}' $IMAGE) host $(hos
 $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
-  python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
+  @LINT_STEP@\
+  if [ \$rc = 0 ]; then python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_synth.v 2>/dev/null | tail -1); \
   RAW=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
@@ -213,6 +230,8 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
     if [ \$rc != 0 ]; then echo 'FACE_GUARD RAW FAIL (COORD 00:32: stop before floorplan)'; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard_core.py \$N $TOP '$SKIP' /work/pins.json /work/face_guard.json; rc=\$?; \
     if [ \$rc != 0 ] && [ -f /work/face_guard_continue ]; then echo 'FACE_GUARD FAIL: PATHFINDING physical run continues (face_guard_continue), FAIL recorded'; rc=0; fi; fi; \
+  @REG_FANOUT_STEP@\
+  @FF_GRT_STEP@\
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then \$M do-finish && \$M do-generate_abstract; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = place ]; then P=\$(ls /work/run/results/asap7/*/base/3_place.odb | tail -1); ODB=\$P OUT=/work/placed.csv openroad -python -exit /work/dump_placed.py > /work/dump_placed.log 2>&1; fi; \
@@ -226,13 +245,40 @@ $DOCKER run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/n
 echo "end $(date -Is) rc $rc" >> "$K/image.txt"
 tail -5 "$K/run_$GOAL.log"
 # SIGNOFF (main f942bf2f72): uniform verdict in KIT/signoff/signoff.json; a core is closed only when it says SIGNED.
-if [ $rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; } && [ -f "$K/signoff.py" ]; then
+if [ $rc = 0 ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then
+  if [ ! -f "$K/signoff.py" ]; then
+    echo "SIGNOFF FAIL: missing $K/signoff.py" >&2
+    rc=4
+  else
   SIGNOFF_DOCKER="$DOCKER" python3 -I "$K/signoff.py" run --run-dir "$K/run" --kit "$K" --corners tt,ff \
     --out "$K/signoff" --image "$IMAGE" > "$K/signoff.log" 2>&1
+  rc=$?
   grep -E '^SIGNOFF|^  - ' "$K/signoff.log" | head -12
+  fi
 fi
 exit $rc
 """
+
+REG_FANOUT_STEP = ("if [ \\$rc = 0 ] && [ -f /work/reg_fanout_gate.py ]; then python3 -I /work/reg_fanout_gate.py \\$N --top $TOP "
+                   "--out /work/reg_fanout.json > /work/reg_fanout.log 2>&1; rc=\\$?; head -12 /work/reg_fanout.log; "
+                   "if [ \\$rc != 0 ]; then echo 'FAIL_PREFLOOR reg_fanout (register > 64 data loads: merged replicas; or NOT RUN), "
+                   "see reg_fanout.json' | tee -a /work/FAIL_PREFLOOR; rc=7; fi; fi; ")
+
+
+def run_kit(modern):
+    """run_kit.sh text: modern = rtl_lint first, reg_fanout after face_guard, FF-only GRT hold step before the goal
+    (core_flow); legacy = the pre-10-25 script bit for bit."""
+    t = RUN_KIT
+    for k, v in (("@LINT_STEP@", core_flow.LINT_STEP), ("@REG_FANOUT_STEP@", REG_FANOUT_STEP),
+                 ("@FF_GRT_STEP@", core_flow.FF_GRT_STEP)):
+        t = t.replace("  " + k + "\\\n", "  " + v + "\\\n" if modern else "")
+    if not modern:   # the old first step had no rc guard
+        t = t.replace("  if [ \\$rc = 0 ]; then python3 -I /work/sdc_lint.py", "  python3 -I /work/sdc_lint.py", 1)
+        t = t.replace("2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\\$?; tail -3 /work/sdc_lint.log; fi; ",
+                      "2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\\$?; tail -3 /work/sdc_lint.log; ", 1)
+    assert "@" not in t.split("bash -lc", 1)[1].split("> \"$K/run_$GOAL.log\"", 1)[0], "RUN_KIT placeholder left"
+    return t
+
 
 MACRO_TCL = """# GENERATED by gen_core_kit_legacy.py: fixed macro sites (core frame um; y on the M4 track phase of the macro pins).
 # Instances are found by master (flattened names differ by stage / frontend); several instances of one master take the
@@ -416,6 +462,84 @@ def lef_contract(path, module):
     return [w, h], pins
 
 
+def pin_expand(pins, exp, w, h, step=0.096):
+    """KITS-SPARE-2/HB 10-25: widen scalar / narrow contract pins into one pin per kept capture flop (recipe
+    "pin_expand": {bus: n_bits}).  The bus keeps its face and layer; its old centres are reused (in order) and the extra
+    bits take the free tracks of that face nearest the old centroid, >= step um from every other pin of the face."""
+    out = list(pins)
+    for bus, n in exp.items():
+        old = [q for q in out if re.sub(r"\[\d+\]$", "", q["name"]) == bus]
+        if not old:
+            raise SystemExit(f"pin_expand: bus {bus} not in the contract")
+        f = face_of(old[0]["x"], old[0]["y"], w, h)
+        L = old[0]["layer"]
+        ax = "x" if f in "NS" else "y"
+        pitch, off = {"M3": (0.036, 0.009), "M4": (0.048, 0.012), "M5": (0.048, 0.012)}[L]
+        rest = [q for q in out if q not in old]
+        taken = sorted(q[ax] for q in rest if face_of(q["x"], q["y"], w, h) == f)
+        cen = sum(q[ax] for q in old) / len(old)
+        lim = (w if ax == "x" else h) - CORE_MARGIN_UM
+        cand, k0 = [], round((cen - off) / pitch)
+        for d in range(0, int(lim / pitch) * 2):
+            for k in ((k0 + d // 2) if d % 2 == 0 else (k0 - (d + 1) // 2),):
+                c = round(off + k * pitch, 4)
+                if CORE_MARGIN_UM <= c <= lim and all(abs(c - t) >= step - 1e-6 for t in taken + cand):
+                    cand.append(c)
+            if len(cand) >= n:
+                break
+        if len(cand) < n:
+            raise SystemExit(f"pin_expand: {bus}: only {len(cand)} free {f} tracks")
+        perp = old[0]["y"] if ax == "x" else old[0]["x"]
+        new = []
+        for i, c in enumerate(sorted(cand[:n])):
+            new.append(dict(name=f"{bus}[{i}]", layer=L, x=c if ax == "x" else perp, y=perp if ax == "x" else c))
+        out = rest + new
+    return out
+
+
+def core_insertion(rec, plan):
+    """FLOW 10-25 per-corner IO vclk binding (gen_core_kit_qc.core_insertion form): TT = recipe insertion_ps (measured
+    core) else the plan clock insertion_ps; FF = recipe insertion_ff_ps, else plan clock.insertion_ff_ps (only with the
+    plan TT), else core_flow.FF_TT_INSERTION_RATIO x TT."""
+    pc = plan["clock"]
+    tol = float(rec.get("insertion_tol_ps", pc["insertion_tol_ps"]))
+    if "insertion_ps" in rec:
+        tt, tb = rec["insertion_ps"], rec.get("insertion_basis", "recipe insertion_ps (measured core)")
+        ff, fb = rec.get("insertion_ff_ps"), rec.get("insertion_basis", "recipe insertion_ff_ps (measured core)")
+    else:
+        tt, tb = pc["insertion_ps"], "plan clock.insertion_ps"
+        ff = rec.get("insertion_ff_ps", pc.get("insertion_ff_ps"))
+        fb = "recipe insertion_ff_ps" if "insertion_ff_ps" in rec else "plan clock.insertion_ff_ps"
+    try:
+        return core_flow.binding(tt, ff, tol, basis_tt=tb, basis_ff=fb if ff is not None else None)
+    except ValueError as e:
+        raise SystemExit(str(e))
+
+
+RT_FILES = ("regional_taps.tcl", "regional_taps_balance.tcl", "clock_spine_guard.tcl")
+RT_CTS_ARGS = ("-sink_clustering_enable -obstruction_aware -sink_clustering_size 24 -sink_clustering_max_diameter 30 "
+               "-delay_buffer_derate 1.0 -repair_clock_nets")
+
+
+def regional_taps_cfg(kd, rt, ckb):
+    """F5 structured clock (recipe "regional_taps"): copy rt/*.tcl into the kit, return config.mk lines (PRE_CTS =
+    trunk + H-tree + regional taps, POST_CTS = tap balance <= win_ps + spine guard; CTS repair skipped, setup-only
+    repair inside the balance hook unless the kit is legacy)."""
+    for f in RT_FILES:
+        shutil.copyfile(HERE / "rt" / f, kd / f)
+    nx, ny = int(rt["nx"]), int(rt["ny"])
+    for v in (nx, ny):
+        if v < 1 or v & (v - 1):
+            raise SystemExit(f"regional_taps nx/ny must be powers of 2 (got {nx}x{ny})")
+    return [f"export PRE_CTS_TCL = /work/regional_taps.tcl", "export POST_CTS_TCL = /work/regional_taps_balance.tcl",
+            f"export OT_RT_NX = {nx}", f"export OT_RT_NY = {ny}", f"export OT_RT_PORT = {rt.get('port', ckb)}",
+            f"export OT_RT_SPLIT = {rt.get('split', 'count')}", f"export OT_RT_WIN_PS = {rt.get('win_ps', 20):g}",
+            f"export OT_RT_PROTECT_SPINE = {int(rt.get('protect_spine', 1))}",
+            *([f"export OT_RT_REP_UM = {rt['rep_um']:g}"] if "rep_um" in rt else []),
+            *([f"export OT_RT_BUF = {rt['buf']}"] if "buf" in rt else []),
+            "export SKIP_CTS_REPAIR_TIMING = 1", f"export CTS_ARGS = {rt.get('cts_args', RT_CTS_ARGS)}"]
+
+
 def git_show(spec):
     return subprocess.run(["git", "-C", str(REPO), "show", spec], capture_output=True, text=True, check=True).stdout
 
@@ -426,12 +550,38 @@ def main():
     ap.add_argument("--recipes", default=str(HERE / "recipes.json"))
     ap.add_argument("--out", default=str(HERE / "kits"))
     ap.add_argument("--plan", default=str(S81 / "die_plan.json"))
+    ap.add_argument("--legacy-flow", action="store_true",
+                    help="old kit (opt-out): stock setRC, one fixed plan-insertion vclk for TT and FF, MCMM CTS hold repair, "
+                         "no rtl_lint / reg_fanout / FF-only GRT hold step")
+    ap.add_argument("--hold-ff-margin", type=float, default=None, help="FF-only GRT hold margin ps (recipe hold_ff_margin, 5)")
+    ap.add_argument("--regional-taps", default=None, help="NXxNY: override / add the recipe regional_taps grid")
+    ap.add_argument("--suffix", default=None, help="kit suffix (variant), default recipe suffix or c")
     a = ap.parse_args()
+    modern = not a.legacy_flow
     rec = json.load(open(a.recipes))[a.module]
     plan = json.load(open(a.plan))
     if rec.get("plan"):
         plan = json.load(open(REPO / rec["plan"]))
-    if rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
+    if rec.get("child_of"):
+        # KITS-SPARE-2/HB 10-25 (COORD ruling 10:23 item 3): a HARD CHILD master of a plan hard core (e.g. the 16
+        # hist_bank children of dsdv_bksel_q) gets ONE kit before its parent.  Pin contract = the child view LEF the
+        # parent's spec binds (every children[] entry of the parent must name exactly that view); plan type = the
+        # parent's plan type (the child has no plan row of its own).
+        par = rec["child_of"]
+        prec = json.load(open(a.recipes))[par]
+        pspec = json.loads(git_show(prec["spec_git"])) if prec.get("spec_git") else \
+            json.load(open(REPO / prec["ref_tile"] / "spec.json"))
+        views = sorted({c["view"] for c in pspec.get("children", [])})
+        want = str(Path(rec["lef_contract"]).parent)
+        if views != [want]:
+            raise SystemExit(f"{a.module}: parent {par} children views {views} != [{want}] (one master required)")
+        ptype, _ = plan_core(plan, par)
+        outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
+        if rec.get("pin_expand"):
+            lpins = pin_expand(lpins, rec["pin_expand"], *outline)
+        hc = dict(module=a.module, outline_um=outline, lef=rec["lef_contract"], pins=lpins,
+                  pins_file=rec["lef_contract"], child_of=par, child_count=len(pspec["children"]))
+    elif rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
         ptype = rec["plan_type"]
         assert any(c.get("module") == a.module for c in plan["partition_types"][ptype].get("contents", [])), ptype
         outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
@@ -447,12 +597,20 @@ def main():
         raise SystemExit(f"{mod}: hard children {[c['view'] for c in spec['children']]} must be signed first (refused)")
     w, h = hc["outline_um"]
     per = float(plan["die"]["period_ps"])
-    ins = float(plan["clock"]["insertion_ps"])
-    tol = float(plan["clock"]["insertion_tol_ps"])
+    if modern:
+        ib = core_insertion(rec, plan)   # FLOW 10-25: bound IO vclk insertion per corner
+        ins, tol = ib["tt"], ib["tol"]
+    else:
+        ins = float(plan["clock"]["insertion_ps"])
+        tol = float(plan["clock"]["insertion_tol_ps"])
+    rt = dict(rec.get("regional_taps") or {})
+    if a.regional_taps:
+        nx_, ny_ = a.regional_taps.lower().split("x")
+        rt.update(nx=int(nx_), ny=int(ny_))
     pins = hc["pins"] if "pins" in hc else json.load(open(S81 / hc["pins_file"]))["pins"]
     dirs = lef_dirs(REPO / hc["lef"])
     shapes = lef_pin_rects(REPO / hc["lef"])
-    suffix = rec.get("suffix", "c")
+    suffix = a.suffix or rec.get("suffix", "c")
     kd = Path(a.out) / f"{mod}_{suffix}"
     if kd.exists():
         shutil.rmtree(kd)
@@ -460,7 +618,8 @@ def main():
     srcs = []
     patches = {pt["file"]: pt for pt in rec.get("rtl_patches", [])}
     bbs = set()
-    for f in spec["sources"] + rec.get("includes", []):
+    drop = set(rec.get("drop_sources", []))   # bench-only golden models listed in a historic spec (not synthesised)
+    for f in [s for s in spec["sources"] if s not in drop] + rec.get("includes", []):
         dst = kd / "rtl" / Path(f).name
         if dst.exists() and dst.read_bytes() != (REPO / f).read_bytes():
             raise SystemExit(f"rtl name clash {dst.name}")
@@ -578,18 +737,20 @@ def main():
     floor = {b: IO_BUDGET * per for b in buses_in + buses_out}
     lctx = dict(period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, clock_ports=clks, inputs=buses_in,
                 outputs=buses_out, unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS,
-                time_unit_ps=1.0, io_floor_ps=floor, port_latency_ps={})
+                time_unit_ps=1.0, io_floor_ps=floor, port_latency_ps={},
+                **({"insertion_ff_ps": ib["ff"]} if modern else {}))
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise SystemExit(f"{mod}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
-    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "signoff.py", "pair_skew.tcl"):
+    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "signoff.py", "pair_skew.tcl") \
+            + (("reg_fanout_gate.py",) if modern else ()):
         shutil.copyfile(TOOL / f, kd / f)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     # S81/KITS 10-24: clock-insertion balance to the plan insertion before the CTS repair (the SIGNED c2 / VQ r12
     # recipe).  Without it a small core's tree (~60-200 ps) sits far below the vclk budget and the CTS hold repair
     # pads every output (LLd: 1818 buffers, RSZ-0060).  Kit clock ports are 1-bit buses (clk[0]).
-    if rec.get("insertion_balance", True):
+    if rec.get("insertion_balance", True) and not rt:
         tb = (TOOL / "tap_balance.tcl").read_text()
         # Override after the helper's OT_TAP_PORT family selection. The current
         # clock helper otherwise replaces our ck[0] regex with scalar ck only,
@@ -600,7 +761,9 @@ def main():
         (kd / "tap_balance.tcl").write_text(tb.replace(anchor, pattern + "\n" + anchor, 1))
         (kd / "cts_post.tcl").write_text(
             "# GENERATED by gen_core_kit_legacy.py: POST_CTS = clock-insertion balance, then the (skipped) CTS repair\n"
-            "source /work/tap_balance.tcl\nestimate_parasitics -placement\nrepair_timing_helper\n"
+            "source /work/tap_balance.tcl\nestimate_parasitics -placement\n"
+            + ("# modern flow: setup-only here; hold is repaired only in the FF frame (FF-only GRT step)\n"
+               "repair_timing_helper -setup\n" if modern else "repair_timing_helper\n") +
             "detailed_placement\ncheck_placement -verbose\nestimate_parasitics -placement\n")
         (kd / "hold_budget.tcl").write_text(
             "# GENERATED by gen_core_kit_legacy.py: repair_timing may add buffers up to max_buffer_percent\n"
@@ -650,8 +813,15 @@ def main():
     (kd / "drv.tcl").write_text("# GENERATED by gen_core_kit_legacy.py: fanout cap for repair_design (resize + GRT stages)\n"
                                 f"set_max_fanout {rec.get('max_fanout', 24)} [current_design]\n")
     (kd / "post_grt_drv.tcl").write_text(POST_GRT + "".join(rec.get("post_grt_extra", [])))
-    (kd / "run_kit.sh").write_text(RUN_KIT)
+    (kd / "run_kit.sh").write_text(run_kit(modern))
     (kd / "run_kit.sh").chmod(0o755)
+    flow_cfg = []
+    if modern:
+        # core_flow: rtl_lint.py, vclk_corner.tcl, grt_pre/post.tcl, setRC_rcx.tcl, clock_binding.json; the kit's own GRT
+        # hooks (drv.tcl fanout cap / post_grt_drv.tcl DRV + hold pass) chained into grt_*_core.tcl
+        hm = a.hold_ff_margin if a.hold_ff_margin is not None else float(rec.get("hold_ff_margin", 5.0))
+        flow_cfg = core_flow.apply(kd, ib, mod, time_unit_ps=TIME_UNIT_PS, rc_cal=True, hold_ff_margin=hm,
+                                   grt_pre_extra=["/work/drv.tcl"], grt_post_extra=["/work/post_grt_drv.tcl"])
     if mplace:
         (kd / "macro_place.tcl").write_text(MACRO_TCL % " ".join(
             f"{ms} {{{' '.join('{%g %g %s}' % s for s in v)}}}" for ms, v in mplace.items()))
@@ -709,7 +879,7 @@ def main():
            f"export CTS_ARGS = {cts}",
            *([f"export OT_TAP_TARGET_PS = {ins:g}", f"export OT_TAP_WINDOW_PS = {tol:g}", "export OT_TAP_PITCH_UM = 600",
               "export SKIP_CTS_REPAIR_TIMING = 1", "export POST_CTS_TCL = /work/cts_post.tcl",
-              "export PRE_CTS_TCL = /work/hold_budget.tcl"] if rec.get("insertion_balance", True) else []),
+              "export PRE_CTS_TCL = /work/hold_budget.tcl"] if rec.get("insertion_balance", True) and not rt else []),
            *([f"export ADDITIONAL_LEFS = {' '.join(lefs)}", f"export ADDITIONAL_LIBS = {' '.join(libs)}",
               "export MACRO_PLACE_HALO = 4.32 4.32", "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl",
               f"export MACRO_ROWS_HALO_X = {rec.get('macro_rows_halo', 4.32):g}",
@@ -717,18 +887,30 @@ def main():
              if mplace else []),
            # legacy closures used the default Yosys frontend (it keeps 1-bit [0:0] buses: plan pins ck[0], fo[0])
            *(["export SYNTH_HDL_FRONTEND = slang"] if rec.get("slang") else []),
-           *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()]]
+           *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
+           # F5 regional taps (recipe regional_taps / --regional-taps), after the recipe vars so its hooks win
+           *(regional_taps_cfg(kd, rt, ckb) + (["export OT_RT_NO_REPAIR = 0", "export OT_RT_SETUP_ONLY = 1"] if modern else [])
+             if rt else []),
+           # FLOW-FIX 10-25 (core_flow, LAST so its override PRE/POST_GLOBAL_ROUTE_TCL win)
+           *(flow_cfg if modern else [])]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
                          text=True).stdout.strip() or "?"
     fz = dict(schema="opentallas.s81.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),
+              **({"child_of": hc["child_of"], "child_count": hc["child_count"], "drop_sources": sorted(drop),
+                   "pin_expand": rec.get("pin_expand", {})}
+                 if hc.get("child_of") else {}),
               pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else S81 / hc["pins_file"]), pins=len(pins), plan_lef=hc["lef"],
               clocks=clks, resets=rsts,
               recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, unc_setup_ps=UNC_SETUP_PS, unc_hold_ps=UNC_HOLD_PS,
-              gates=["sdc_lint (pre-synth)", "face_guard (post-synth)", "pin_audit", "signoff.py tt,ff"], repo_rev=rev,
+              **({"flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)", "insertion_ff_ps": ib["ff"],
+                  "insertion_basis": ib["basis"], "rc": core_flow.RC_CAL_FILE} if modern else {}),
+              **({"regional_taps": rt} if rt else {}),
+              gates=(["rtl_lint (pre-synth)"] if modern else []) + ["sdc_lint (pre-synth)", "face_guard (post-synth)"]
+              + (["reg_fanout (post-synth)"] if modern else []) + ["pin_audit", "signoff.py tt,ff"], repo_rev=rev,
               sdc_lint_sha256=sha(TOOL / "sdc_lint.py"), face_guard_sha256=sha(TOOL / "face_guard.py"),
               signoff_sha256=sha(TOOL / "signoff.py"), macros=mplace,
               rtl_patches=[dict(file=f, why=pt["why"], sha256=hashlib.sha256(json.dumps(pt["edits"]).encode()).hexdigest())

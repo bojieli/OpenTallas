@@ -1309,10 +1309,27 @@
      1036.8
     ],
     "layer": "M9",
-    "insertion_ps": 250
+    "insertion_ps": 250,
+    "tap_mode": "density",
+    "sink_sites_um": [
+     [
+      785.966,
+      1883.6,
+      746
+     ],
+     [
+      935.49,
+      1883.6,
+      746
+     ]
+    ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "leaf_um": [
+     860.728,
+     1883.6
+    ]
    },
    "contents": [
     {
@@ -1320,17 +1337,45 @@
      "module": "ot_s81hd_spo",
      "status": "reuse",
      "kit": "physical/ref_tile/s81hd_spo_m",
-     "note": "CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; historical SS sensitivity -70.45; requires uniform TT setup/FF hold signoff)"
+     "note": "CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; historical SS sensitivity -70.45; requires uniform TT setup/FF hold signoff)",
+     "bind": {
+      "ck": "clk",
+      "rst_n": "rst_n"
+     },
+     "origin_um": [
+      765.966,
+      1863.6
+     ],
+     "outline_um": [
+      40.0,
+      40.0
+     ]
     },
     {
      "inst": "u_spr",
      "module": "ot_s81hd_spr",
      "status": "reuse",
      "kit": "physical/ref_tile/s81hd_spr_m4",
-     "note": "CLOSED s81hd_spr_m4-bb8dd356c"
+     "note": "CLOSED s81hd_spr_m4-bb8dd356c",
+     "bind": {
+      "ck": "clk",
+      "rst_n": "rst_n"
+     },
+     "origin_um": [
+      915.49,
+      1863.6
+     ],
+     "outline_um": [
+      40.0,
+      40.0
+     ]
     }
    ],
    "note": "spine node of one row-pair: x/go down + W/E chain heads (upper row); chain tails + level below merged (capture-all-then-fire argmax) up; ft for the S-side host / mesh lanes",
+   "sources": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv",
+    "rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv"
+   ],
    "buses": [
     {
      "name": "x_i",
@@ -1495,6 +1540,11 @@
       ]
      ],
      "bits": 566,
+     "leaf_um": [
+      785.966,
+      1883.6
+     ],
+     "bit_route": "per_bit",
      "note": "x_i -> xw_o (spo / spr registers at the ends)"
     },
     {
@@ -1522,6 +1572,11 @@
       ]
      ],
      "bits": 566,
+     "leaf_um": [
+      785.966,
+      1883.6
+     ],
+     "bit_route": "per_bit",
      "note": "x_i -> xe_o (spo / spr registers at the ends)"
     },
     {
@@ -1565,6 +1620,11 @@
       ]
      ],
      "bits": 566,
+     "leaf_um": [
+      935.49,
+      1883.6
+     ],
+     "bit_route": "per_bit",
      "note": "bw_i -> b_o (spo / spr registers at the ends)"
     },
     {
@@ -1600,6 +1660,11 @@
       ]
      ],
      "bits": 566,
+     "leaf_um": [
+      935.49,
+      1883.6
+     ],
+     "bit_route": "per_bit",
      "note": "be_i -> b_o (spo / spr registers at the ends)"
     },
     {
@@ -1639,6 +1704,11 @@
       ]
      ],
      "bits": 566,
+     "leaf_um": [
+      785.966,
+      1883.6
+     ],
+     "bit_route": "per_bit",
      "note": "x_i -> x_o (spo / spr registers at the ends)"
     },
     {
@@ -1678,6 +1748,11 @@
       ]
      ],
      "bits": 566,
+     "leaf_um": [
+      935.49,
+      1883.6
+     ],
+     "bit_route": "per_bit",
      "note": "b_i -> b_o (spo / spr registers at the ends)"
     }
    ],
@@ -1818,10 +1893,27 @@
      1036.8
     ],
     "layer": "M9",
-    "insertion_ps": 250
+    "insertion_ps": 250,
+    "tap_mode": "density",
+    "sink_sites_um": [
+     [
+      785.966,
+      1883.6,
+      746
+     ],
+     [
+      935.49,
+      1883.6,
+      746
+     ]
+    ]
    },
    "reset": {
-    "sync_stages": 2
+    "sync_stages": 2,
+    "leaf_um": [
+     860.728,
+     1883.6
+    ]
    },
    "contents": [
     {
@@ -1829,17 +1921,53 @@
      "module": "ot_s81hd_spo",
      "status": "reuse",
      "kit": "physical/ref_tile/s81hd_spo_m",
-     "note": "CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; historical SS sensitivity -70.45; requires uniform TT setup/FF hold signoff)"
+     "note": "CLOSED s81hd_spo_m-6398c44bc (TT +19.69 / FF +40.87; historical SS sensitivity -70.45; requires uniform TT setup/FF hold signoff)",
+     "bind": {
+      "ck": "clk",
+      "rst_n": "rst_n",
+      "o": "net:bottom_seed"
+     },
+     "origin_um": [
+      765.966,
+      1863.6
+     ],
+     "outline_um": [
+      40.0,
+      40.0
+     ]
     },
     {
      "inst": "u_spr",
      "module": "ot_s81hd_spr",
      "status": "reuse",
      "kit": "physical/ref_tile/s81hd_spr_m4",
-     "note": "CLOSED s81hd_spr_m4-bb8dd356c"
+     "note": "CLOSED s81hd_spr_m4-bb8dd356c",
+     "bind": {
+      "ck": "clk",
+      "rst_n": "rst_n",
+      "i": "net:bottom_seed"
+     },
+     "origin_um": [
+      915.49,
+      1863.6
+     ],
+     "outline_um": [
+      40.0,
+      40.0
+     ]
     }
    ],
    "note": "spine node of one row-pair: x/go down + W/E chain heads (upper row); chain tails + level below merged (capture-all-then-fire argmax) up; ft for the S-side host / mesh lanes (bottom: no level below)",
+   "sources": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv",
+    "rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv"
+   ],
+   "nets": [
+    {
+     "name": "bottom_seed",
+     "width": 565
+    }
+   ],
    "buses": [
     {
      "name": "x_i",
@@ -1970,6 +2098,11 @@
       ]
      ],
      "bits": 566,
+     "leaf_um": [
+      785.966,
+      1883.6
+     ],
+     "bit_route": "per_bit",
      "note": "x_i -> xw_o (spo / spr registers at the ends)"
     },
     {
@@ -1997,6 +2130,11 @@
       ]
      ],
      "bits": 566,
+     "leaf_um": [
+      785.966,
+      1883.6
+     ],
+     "bit_route": "per_bit",
      "note": "x_i -> xe_o (spo / spr registers at the ends)"
     },
     {
@@ -2040,6 +2178,11 @@
       ]
      ],
      "bits": 566,
+     "leaf_um": [
+      935.49,
+      1883.6
+     ],
+     "bit_route": "per_bit",
      "note": "bw_i -> b_o (spo / spr registers at the ends)"
     },
     {
@@ -2075,6 +2218,11 @@
       ]
      ],
      "bits": 566,
+     "leaf_um": [
+      935.49,
+      1883.6
+     ],
+     "bit_route": "per_bit",
      "note": "be_i -> b_o (spo / spr registers at the ends)"
     }
    ],
@@ -17668,6 +17816,7 @@
   "insertion_tol_ps": 40,
   "neighbour_skew_ps": 80,
   "face_xing": "budgeted",
+  "ft_hop_in_share": 0.16,
   "spine": {
    "layers": [
     "M8",

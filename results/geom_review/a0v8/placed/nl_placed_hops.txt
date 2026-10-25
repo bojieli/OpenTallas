@@ -1,0 +1,24 @@
+  hop ot_rrs__rst_n__ot_rlv__c12 {'n': 1, 'p50': 807.4, 'p99': 807.4, 'max': 807.4, 'over405': 1}
+  hop u_ot_pr_core.u_g.u_tile {'n': 2, 'p50': 650.6, 'p99': 650.6, 'max': 650.6, 'over405': 1}
+  hop u_me.s2_x[] {'n': 128, 'p50': 303.4, 'p99': 613.0, 'max': 650.4, 'over405': 5}
+  hop ot_rrs__rst_n__ot_rlv__c9 {'n': 1, 'p50': 649.7, 'p99': 649.7, 'max': 649.7, 'over405': 1}
+  hop g_xm9.u_xr.u_safe {'n': 1380, 'p50': 19.8, 'p99': 633.2, 'max': 638.7, 'over405': 20}
+  hop rst_n__ot_rl0 {'n': 1, 'p50': 637.9, 'p99': 637.9, 'max': 637.9, 'over405': 1}
+  hop u_me.k_r[] {'n': 18, 'p50': 588.1, 'p99': 615.9, 'max': 615.9, 'over405': 18}
+  hop u_me.g_issue_fast.u_a10 {'n': 18, 'p50': 532.3, 'p99': 588.0, 'max': 588.0, 'over405': 18}
+  hop g_gocp.g_c[].q {'n': 14, 'p50': 392.5, 'p99': 582.7, 'max': 582.7, 'over405': 6}
+  hop ot_rrs__rst_n__ot_rlv__c15 {'n': 1, 'p50': 566.7, 'p99': 566.7, 'max': 566.7, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c16 {'n': 1, 'p50': 561.8, 'p99': 561.8, 'max': 561.8, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c22 {'n': 1, 'p50': 559.5, 'p99': 559.5, 'max': 559.5, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c17 {'n': 1, 'p50': 554.2, 'p99': 554.2, 'max': 554.2, 'over405': 1}
+  hop ot_rrs__rst_n__ot_rlv__c23 {'n': 1, 'p50': 553.9, 'p99': 553.9, 'max': 553.9, 'over405': 1}
+DIAG ('u_me.fault_q[]', 'seq', 'u_ot_pr_core.u_g.u_tile.tile_fault', '') n 5 over405 5 worst (422.9, 198.9, 982.4, 441.7, 802.3)
+DIAG ('head5.u_qlr3', 'seq', 'genblk3.g_toreg.t_out_q[]', '') n 64 over405 0 worst (377.1, 307.8, 1036.9, 4.0, 963.7)
+DIAG ('head6.u_qlr3', 'seq', 'genblk3.g_toreg.t_out_q[]', '') n 64 over405 0 worst (369.4, 328.2, 931.9, 4.0, 977.1)
+DIAG ('head2.u_qlr2c', 'seq', 'u_me.g_hier.g_sl[].g_hd.g_tx9.g_r[].u_tx/q[]', '') n 994 over405 0 worst (352.9, 216.0, 776.1, 81.5, 994.5)
+DIAG ('head4.u_qlr3', 'seq', 'genblk3.g_toreg.t_out_q[]', '') n 64 over405 0 worst (346.3, 310.5, 915.2, 4.0, 955.0)
+DIAG ('head2.u_qlr2w', 'seq', 'u_me.g_hier.g_sl[].g_hd.g_tx9.g_r[].u_tx/q[]', '') n 64 over405 0 worst (339.2, 218.6, 781.2, 80.8, 982.7)
+DIAG ('head2.u_qlr2e', 'seq', 'u_me.g_hier.g_sl[].g_hd.g_tx9.g_r[].u_tx/q[]', '') n 64 over405 0 worst (335.7, 219.2, 791.2, 79.8, 987.5)
+DIAG ('head7.u_qlr3', 'seq', 'genblk3.g_toreg.t_out_q[]', '') n 64 over405 0 worst (332.8, 319.8, 978.9, 4.0, 995.9)
+DIAG ('head0.u_qlr3', 'seq', 'u_me.fault_q[]', '') n 9 over405 0 worst (322.9, 80.4, 777.5, 198.9, 981.9)
+DIAG ('head7.u_qlr2c', 'seq', 'u_me.g_hier.g_sl[].g_hd.g_tx9.g_r[].u_tx/q[]', '') n 994 over405 0 worst (321.9, 280.6, 801.8, 329.6, 1074.7)

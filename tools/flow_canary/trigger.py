@@ -42,6 +42,50 @@ def live_dies(root, now=None):
     return out
 
 
+def source_snapshot(src, sha, root):
+    """An immutable sparse source per revision; no checkout underneath any live canary."""
+    dest = Path(root).parent / "sources" / sha[:12]
+    if dest.exists():
+        head = git(dest, "rev-parse", "HEAD")
+        if head.returncode or head.stdout.strip() != sha:
+            raise RuntimeError(f"canary source snapshot {dest} is not pinned to {sha}")
+        return dest
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    r = git(src, "worktree", "add", "--no-checkout", "--detach", str(dest), sha)
+    if r.returncode:
+        raise RuntimeError(r.stderr)
+    patterns = "/*\n!/results/\n!/docs/\n!/.qscratch/\n!/physical/\n/physical/die_plan/\n/physical/common_flow/\n/physical/ref_tile/\n!/physical/ref_tile/*/\n!/physical/die_plan/*/cores/harden/results/\n"
+    r = subprocess.run(["git", "-C", str(dest), "sparse-checkout", "set", "--no-cone", "--stdin"],
+                       input=patterns, text=True, capture_output=True)
+    if r.returncode:
+        raise RuntimeError(r.stderr)
+    r = git(dest, "checkout", "--detach", sha)
+    if r.returncode:
+        raise RuntimeError(r.stderr)
+    return dest
+
+
+def ready_dies(src, new, specs, watch, state, busy, force=False):
+    """One slow reference holds only its own die; remember each die's submitted revision."""
+    revisions = dict(state.get("die_sha", {}))
+    ready, hits_all = [], set()
+    for die in specs:
+        old = revisions.get(die, state.get("last_sha"))
+        if die in busy:
+            continue
+        if old == new and not force:
+            revisions[die] = new
+            continue
+        diff = git(src, "diff", "--name-only", old, new) if old and not force else None
+        hits = touched(diff.stdout.split(), watch) if diff and diff.returncode == 0 else ["(first / forced / diff unavailable)"]
+        if hits:
+            ready.append(die)
+            hits_all.update(hits)
+        else:
+            revisions[die] = new
+    return ready, revisions, sorted(hits_all)
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--src", required=True)
@@ -56,39 +100,27 @@ def main(argv=None):
         print("FLOW_CANARY_TRIGGER fetch failed")
         return 2
     new = git(a.src, "rev-parse", "origin/main").stdout.strip()
-    last = state.get("last_sha")
-    if new == last and not a.force:
-        print(f"FLOW_CANARY_TRIGGER idle main {new[:9]}")
-        return 0
     spec = json.loads((HERE / "canaries.json").read_text())
-    if last and not a.force:
-        diff = git(a.src, "diff", "--name-only", last, new)
-        hits = touched(diff.stdout.split(), spec["watch"]) if diff.returncode == 0 else ["(diff failed)"]
-    else:
-        hits = ["(first run / --force)"]
-    if not hits:
-        print(f"FLOW_CANARY_TRIGGER main {last[:9]}..{new[:9]}: no flow-tool change")
-        state.update(last_sha=new, checked=time.strftime("%F %T %Z"))
-    else:
-        busy = live_dies(a.root)
-        if busy:      # the live canaries build from this worktree: never check it out under them; retry next tick
-            print(f"FLOW_CANARY_TRIGGER main {new[:9]}: flow tools changed {hits[:8]}; WAIT, canaries still running "
-                  f"{sorted(busy)}")
-            return 0
-        dies = [c["die"] for c in spec["canaries"]]
-        print(f"FLOW_CANARY_TRIGGER main {new[:9]}: flow tools changed {hits[:8]}; submit {dies} (still running: "
-              f"{sorted(busy)})")
-        if a.dry:
-            return 0
-        if git(a.src, "checkout", "-q", "--detach", new).returncode:
-            print("FLOW_CANARY_TRIGGER checkout failed")
+    specs = [c["die"] for c in spec["canaries"]]
+    busy = live_dies(a.root)
+    dies, revisions, hits = ready_dies(a.src, new, specs, spec["watch"], state, busy, a.force)
+    print(f"FLOW_CANARY_TRIGGER main {new[:9]}: submit {dies}; existing live {sorted(busy)}; changes {hits[:8]}")
+    if a.dry:
+        return 0
+    if dies:
+        try:
+            pinned_src = source_snapshot(a.src, new, a.root)
+        except RuntimeError as e:
+            print(f"FLOW_CANARY_TRIGGER source staging failed: {e}")
             return 2
-        if dies:
-            r = subprocess.run([sys.executable, "-I", str(HERE / "canary.py"), "submit",
-                                "--src", a.src, "--root", a.root] + sum([["--die", d] for d in dies], []))
-            if r.returncode:
-                return r.returncode
-        state.update(last_sha=new, submitted=time.strftime("%F %T %Z"), hits=hits[:20], dies=dies)
+        r = subprocess.run([sys.executable, "-I", str(HERE / "canary.py"), "submit",
+                            "--src", str(pinned_src), "--root", a.root] + sum([["--die", d] for d in dies], []))
+        if r.returncode:
+            return r.returncode
+        revisions.update({die: new for die in dies})
+    state.update(die_sha=revisions, checked=time.strftime("%F %T %Z"), hits=hits[:20], dies=dies)
+    if all(revisions.get(die) == new for die in specs):
+        state["last_sha"] = new
     st.parent.mkdir(parents=True, exist_ok=True)
     st.write_text(json.dumps(state, indent=1) + "\n")
     return 0

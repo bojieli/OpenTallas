@@ -1,0 +1,9 @@
+Qwen bound S8 component closure receipts collected 2026-10-25
+
+This collection records terminal inherited jobs without rerunning them. The MAT family passes all112 expected outcomes. CROM-aligned L0 representative residual, QK and SiLU data cuts pass; the actual SFU-return alignment miter passes and its wrong-depth mutant fails.
+
+- mat_result.json: PASS112/112, problems[], source vehicle tb_qfd_dv2 FACE3, all36layers QKV/GU/OD plus LM/embedding/protocol. Host intel2 /srv/opentallas-scratch2/claude/codex-qc-mat-all-1025/stgdie/result.json. This uses the fixed-start bound row and corrected compiler ownership/prearm, with CROM alignment OFF; MAT is independent of that path. Source compiler a725ada856, combined source57e2d3bb6.
+- resid.out: PASS28/28,4097/4097 ISA words,span1173cycles; qk.out: PASS7/7,768/768 ISA words,span1192; silu.out: PASS2/2,1536/1536 ISA words,span945. Host intel2 /srv/opentallas-scratch2/claude/codex-qc-crom-cal-1025/representative/{resid,qk,silu}/bench.out. Pinned CROM-enabled row binary sourcec1c42f554, OT_S8_CROM_ALIGN. Published ages copied alongside the outputs.
+- run_clean.log: S8_MEMALIGN_SFU PASS6336checks/320outputs/0mismatches; fiveclasses64outputs each, requests128/128/64. run_mutant.log: FAIL480mismatches as required. Host intel2 /srv/opentallas-scratch2/claude/codex-s8-crom-sfu-1025, source0854ca24e (already on main).
+
+The source-only composed rate remains HELD; this component receipt grants no full-die G5 or physical signoff. CROM+3/SUop predicted cost is already priced in results/uarch/qwen_s8_crom_price_1025. Whole current-plan reset/START bind and physical reclosure remain separate. No259-case CROM full-stage was run here. The prior redundant calibration attempt truncated only historical slice calibration stdout; original slice_ages.json and all copied representative PASS records remain intact. That setup incident and both stopped exact units are recorded in coord/CODEX-LOG.md 05:59 handoff.

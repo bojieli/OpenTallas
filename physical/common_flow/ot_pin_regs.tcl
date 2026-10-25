@@ -18,13 +18,15 @@ set ot_pr_regs [expr {!([info exists ::env(OT_RST_LAND)] && $::env(OT_RST_LAND) 
 set ot_rl_on [expr {[info exists ::env(OT_RST_LAND)] && $::env(OT_RST_LAND) eq "1"}]
 set ot_rl_n [expr {[info exists ::env(OT_RST_LAND_STAGES)] && [string is integer -strict $::env(OT_RST_LAND_STAGES)] ? $::env(OT_RST_LAND_STAGES) : 2}]
 if {$ot_rl_on && ($ot_rl_n < 1 || $ot_rl_n > 4)} { error "OT_RST_LAND: OT_RST_LAND_STAGES must be 1..4, got $ot_rl_n" }
+set ot_rl_distributed [expr {[info exists ::env(OT_RST_LAND_DISTRIBUTED)] && $::env(OT_RST_LAND_DISTRIBUTED) eq "1"}]
+if {$ot_rl_distributed && $ot_rl_n < 3} { error "distributed reset chain needs >=3 stages" }
 set ot_rl_fc [dict create]
 if {[info exists ::env(OT_RST_LAND_FIRST_COPIES)] && [string trim $::env(OT_RST_LAND_FIRST_COPIES)] ne ""} {
   foreach it [split $::env(OT_RST_LAND_FIRST_COPIES) ","] {
     if {![regexp {^([A-Za-z_][A-Za-z0-9_]*)=([0-9]+)$} [string trim $it] -> cpn cpc] || $cpc < 1 || $cpc > 32} {
       error "OT_RST_LAND_FIRST_COPIES: expected port=N (1..32), got $it"
     }
-    if {$ot_rl_n != 2} { error "OT_RST_LAND_FIRST_COPIES requires exactly two stages" }
+    if {$ot_rl_n != 2 && !$ot_rl_distributed} { error "OT_RST_LAND_FIRST_COPIES requires exactly two stages" }
     dict set ot_rl_fc $cpn $cpc
   }
 }
@@ -145,6 +147,17 @@ foreach p $ports {
       # over the final family. No edge is added and signatures stay strict.
       append v "  (* keep *) reg \[[expr {$f - 2}]:0\] ${n}__ot_rl0c;\n  always @(posedge $ck) ${n}__ot_rl0c <= {[expr {$f - 1}]{$n}};\n"
       append v "  wire \[[expr {$f - 1}]:0\] ${n}__ot_rl0v = {${n}__ot_rl0c, ${n}__ot_rl0};\n"
+    }
+    # Opt-in equal-depth distributed reset. Every intermediate level has its own identical copy family, proved
+    # together on the immutable pre-rewire snapshot by ot_rst_copies.py. The physical hook may put each chain along
+    # a <=405-um path; all paths still take exactly OT_RST_LAND_STAGES clocks, including assertion.
+    if {$ot_rl_distributed} {
+      if {![dict exists $ot_rl_fc $n] || ![dict exists $ot_rl_cp $n]} { error "distributed reset needs first/final copies" }
+      set c [dict get $ot_rl_cp $n]
+      for {set k 1} {$k < $ot_rl_n - 1} {incr k} {
+        append v "  (* keep *) reg \[[expr {$c - 2}]:0\] ${n}__ot_rl${k}c;\n  always @(posedge $ck) ${n}__ot_rl${k}c <= {[expr {$c - 1}]{${n}__ot_rl[expr {$k - 1}]}};\n"
+        append v "  wire \[[expr {$c - 1}]:0\] ${n}__ot_rl${k}v = {${n}__ot_rl${k}c, ${n}__ot_rl${k}};\n"
+      }
     }
     # KV-RELAYGEN 2026-10-19 (OT_RST_LAND_COPIES "port=N,..."): the last landing stage gets N-1 KEPT identical copies
     # <port>__ot_rlc beside it; <port>__ot_rlv = {copies, last stage} is the copy family that ot_rst_copies.tcl spreads

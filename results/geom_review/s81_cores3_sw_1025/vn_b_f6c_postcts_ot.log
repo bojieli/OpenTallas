@@ -1,0 +1,18 @@
+OT_FACE_FLOPS placed 951 pin registers FIRM at their faces (0 signal ports without a flop within 2 buffers; 0 cells duplicated for output ports sharing a merged flop); 0 ft stations j>=1 FIRM on their routes (0 missing)
+OT_MACRO_IF u_h1: 256 interface registers FIRM beside their pin edge
+OT_MACRO_IF placed 256 registers (pin->reg um p50 9.8 p90 10.9 max 10.9); 259 already FIRM (pin registers), 0 without a free site
+OT_ANCHOR pre_c*: 128 of 128 registers FIRM in a 19.0 x 2.2 um block at (178.2,86.4); 0 without a slot
+OT_RT sinks: 29947 registers, 1 macro clock pins, 0 other (kept on the root)
+OT_RT macro group u_h1: 711 interface registers
+OT_RT H-tree (count split): 3 levels, 8 leaf nodes (taps), region 86.9 x 82.1 um, 15 spine buffers
+OT_RT macro tap u_h1 at (24.2,79.1) from region 0 node (72.8,57.4)
+OT_RT tap loads: 6 3663 7 3644 1 3654 4 3657 5 3653 0 3658 3 3648 2 3659; macro groups 1
+OT_RT_BAL it0: ot_rt_h3_0=347(314-416,3658) ot_rt_h3_1=300(291-310,3654) ot_rt_h3_2=293(288-300,3659) ot_rt_h3_3=293(288-297,3648) ot_rt_h3_4=340(333-346,3657) ot_rt_h3_5=340(332-351,3653) ot_rt_h3_6=338(333-342,3663) ot_rt_h3_7=339(331-348,3644) ot_rt_mtap0=301(233-305,712)
+OT_RT_BAL it1: ot_rt_h3_0=344(311-414,3658) ot_rt_h3_1=345(336-355,3654) ot_rt_h3_2=338(333-344,3659) ot_rt_h3_3=338(333-342,3648) ot_rt_h3_4=340(333-346,3657) ot_rt_h3_5=340(332-351,3653) ot_rt_h3_6=338(333-342,3663) ot_rt_h3_7=339(331-348,3644) ot_rt_mtap0=344(277-349,712)
+OT_RT_MACRO pass0 u_h1 clk 277 vs interface regs mean 345 (711 regs): -68 ps
+OT_RT_MACRO pass1 u_h1 clk 352 vs interface regs mean 345 (711 regs): +8 ps
+OT_RT_BAL done: 11 pad cells; tap means 338..345 ps (window 7 vs 20)
+OT_RT_INS all registers 29948: min 311.4 p50 339.1 max 414.3 (placement RC, TT)
+OT_RT_HOLD_PRE_REPAIR worst -67.86 ps; viol 2253
+OT_LEAF_AFF pairs 14013 groups 3211 cross_leaf_before 8479 cross_leaf_after 6159 groups_moved 1534 sinks_moved 2415 same_leaf_already 421 skip_big 104 skip_far 799 skip_cap 353 skip_driver 0 leaf_cap 28 radius_um 30.0 report_only 0
+CTS_HOLD_FF wns_ps -70.72 violators 1411

@@ -1,0 +1,52 @@
+# KITS-SPARE/S81C 2026-10-25: rtl_lint loop-index fix (selector RTL) -- lint + equivalence evidence
+rtl_lint (yosys proc; check -assert, dsdv_bksel_c top): before 38 problems (shared integer loop indices l / i / s across always blocks), after 0 (lint rc 0)
+equivalence (yosys flatten, async2sync, equiv_make/equiv_simple -seq 2/equiv_induct -seq 2, top dsdv_bksel_c old vs new):
+Found 235956 $equiv cells in eq:
+  Of those cells 235956 are proven and 0 are unproven.
+  Equivalence successfully proven!
+script:
+  verilog_defines -DSYNTHESIS
+  read_verilog -sv -I/p/old /p/old/ot_s81ph_sel_pipeline.sv
+  read_verilog -sv -I/p/old /p/old/ot_hdc_prefix.sv
+  read_verilog -sv -I/p/old /p/old/ot_s81ph_sel.sv
+  read_verilog -sv -I/p/old /p/old/ot_hdc_v41x_sel_lib.sv
+  read_verilog -sv -I/p/old /p/old/ot_hdc_v41x_sel_slice.sv
+  read_verilog -sv -I/p/old /p/old/ot_hdc_v41x_sel.sv
+  read_verilog -sv -I/p/old /p/old/ot_fwd_link_stage.sv
+  read_verilog -sv -I/p/old /p/old/ot_s81ph_native_sel.sv
+  read_verilog -sv -I/p/old /p/old/ot_s81ph_native_sel_lib.sv
+  read_verilog -sv -I/p/old /p/old/ot_s81ph_native_sel_slice.sv
+  read_verilog -sv -I/p/old /p/old/ot_s81ph_sel_ctl_half.sv
+  read_verilog -sv -I/p/old /p/old/ot_s81ph_sel_ctl_pp.sv
+  read_verilog -sv -I/p/old /p/old/ot_s81ph_sel_tile.sv
+  read_verilog -sv -I/p/old /p/old/dsdv_bksel_c.sv
+  hierarchy -top dsdv_bksel_c
+  proc; flatten; opt_clean
+  rename dsdv_bksel_c gold
+  design -stash gold
+  read_verilog -sv -I/p/new /p/new/ot_s81ph_sel_pipeline.sv
+  read_verilog -sv -I/p/new /p/new/ot_hdc_prefix.sv
+  read_verilog -sv -I/p/new /p/new/ot_s81ph_sel.sv
+  read_verilog -sv -I/p/new /p/new/ot_hdc_v41x_sel_lib.sv
+  read_verilog -sv -I/p/new /p/new/ot_hdc_v41x_sel_slice.sv
+  read_verilog -sv -I/p/new /p/new/ot_hdc_v41x_sel.sv
+  read_verilog -sv -I/p/new /p/new/ot_fwd_link_stage.sv
+  read_verilog -sv -I/p/new /p/new/ot_s81ph_native_sel.sv
+  read_verilog -sv -I/p/new /p/new/ot_s81ph_native_sel_lib.sv
+  read_verilog -sv -I/p/new /p/new/ot_s81ph_native_sel_slice.sv
+  read_verilog -sv -I/p/new /p/new/ot_s81ph_sel_ctl_half.sv
+  read_verilog -sv -I/p/new /p/new/ot_s81ph_sel_ctl_pp.sv
+  read_verilog -sv -I/p/new /p/new/ot_s81ph_sel_tile.sv
+  read_verilog -sv -I/p/new /p/new/dsdv_bksel_c.sv
+  hierarchy -top dsdv_bksel_c
+  proc; flatten; opt_clean
+  rename dsdv_bksel_c gate
+  design -stash gate
+  design -copy-from gold -as gold gold
+  design -copy-from gate -as gate gate
+  memory -nomap; opt_clean; async2sync
+  equiv_make gold gate eq
+  hierarchy -top eq
+  equiv_simple -seq 2
+  equiv_induct -seq 2
+  equiv_status -assert

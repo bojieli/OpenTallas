@@ -1,7 +1,7 @@
 #!/bin/bash
 # KVG3-CORES (gen_core_kit_kv.py): run one KV core kit through ORFS in docker: synth .. finish (TC), generate_abstract,
-# sdc_lint gate (CP1-R10, fail-closed) before synth, the DONT_USE-honouring adder map (adder_map_dontuse.py gen, ruling 4
-# 10-25) before synth and its DONT_USE netlist check after synth (fail-closed), typed face_guard gates after synth and synth ODB export,
+# RTL lint (rtl_lint.py, FAIL_PREFLOOR lint rc 8) and sdc_lint gate (CP1-R10, fail-closed) before synth, the DONT_USE-honouring adder map (adder_map_dontuse.py gen, ruling 4
+# 10-25) before synth and its DONT_USE netlist check after synth (fail-closed), FF-only GRT hold repair in the FF vclk frame before the goal (FLOW-FIX 10-25, core_flow.py), typed face_guard gates after synth and synth ODB export,
 # LEC (lec.py, 10-24) after the synth ODB gate: NOT EQUIVALENT stops the kit, UNPROVEN is recorded in lec/lec.json,
 # pin audit of the routed ODB, then corners.tcl at TT / FF (STA + write_timing_model), then signoff.py (SIGNED = closed).  Outputs chowned back.
 #   GOAL: finish (full ORFS finish incl. GDS merge: needs every macro GDS) | route (route + do-finish + abstract, no GDS
@@ -16,7 +16,8 @@ NAME=kvcore-$(basename "$K" | tr -c 'A-Za-z0-9_.-' _ | cut -c1-60)-$$
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
-  rc=0; python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
+  rc=0; if [ $GOAL != post ] && [ -f /work/rtl_lint.py ]; then python3 -I /work/rtl_lint.py /work > /work/rtl_lint.log 2>&1; rc=\$?; tail -3 /work/rtl_lint.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR lint (implicit / undriven nets, missing module or port; or NOT RUN), see rtl_lint.json' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \
+  if [ \$rc = 0 ]; then python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then python3 -I /work/selrange_gate.py /work --out /work/selrange.json > /work/selrange.log 2>&1; src=\$?; tail -3 /work/selrange.log; if [ \$src = 1 ]; then rc=1; elif [ \$src != 0 ]; then echo \"SELRANGE NOT RUN (frontend cannot elaborate; see selrange.log)\"; fi; fi; \
   PD=/OpenROAD-flow-scripts/flow/platforms/asap7; \
   if [ \$rc = 0 ] && [ $GOAL != post ] && grep -q '^export ADDER_MAP_FILE = /work/adder_map_dontuse.v' /work/config.mk; then python3 -I /work/adder_map_dontuse.py gen --platform-dir \$PD --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; fi; \
@@ -32,6 +33,7 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/lec.py ] && [ -n \"\$N\" ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'LEC NOT EQUIVALENT: the kit stops (lec/lec.json)'; rc=1; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
+  HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); VF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk); if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ -n \"\$VF\" ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; if [ \$rc != 0 ]; then echo 'FF-only GRT hold repair (FF vclk frame) failed'; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ] || [ $GOAL = post ]; }; then \$M do-generate_abstract; rc=\$?; fi; \

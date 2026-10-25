@@ -1,0 +1,31 @@
+OT_HOLD_GATE FAIL FF wns_ps -144.80 endpoints 2333 (true negative slack)
+CENSUS IN_REG n 2330 worst -144.80 tns -119526.1
+CENSUS R2R n 3 worst -56.59 tns -94.3
+CENSUS REG_OUT n 0 worst 0 tns 0
+CENSUS_BUS ard_wo_in_data_i 513
+CENSUS_BUS arl_wo_in_last_i 2
+CENSUS_BUS arm_wo_in_mode_i 2
+CENSUS_BUS arst_n 1
+CENSUS_BUS art_wo_in_tag_i 33
+CENSUS_BUS arv_wo_in_valid_i 2
+CENSUS_BUS ccm_wo_cmd_mode_i 2
+CENSUS_BUS cct_wo_cmd_tag_i 33
+CENSUS_BUS ccv_wo_cmd_v_i 2
+CENSUS_BUS ccw_wo_cmd_words_i 17
+CENSUS_BUS cmd_free_io_cmd_free_i 2
+CENSUS_BUS crec_rx_s0_i 548
+CENSUS_BUS crec_tx_s0_i 550
+CENSUS_BUS fault_io_fault_i 2
+CENSUS_BUS fltc_i 2
+CENSUS_BUS flte_i 2
+CENSUS_BUS fltk_i 2
+CENSUS_BUS fltv_i 18
+CENSUS_BUS fltvc_i 71
+CENSUS_BUS out_data_rd_wi_i 513
+CENSUS_BUS out_err_re_wi_i 2
+CENSUS_BUS out_last_rl_wi_i 2
+CENSUS_BUS out_rank_rr_wi_i 4
+CENSUS_BUS out_valid_rv_wi_i 2
+CENSUS_BUS shared_fault_io_shared_fault_i 2
+CENSUS_BUS start_i 1
+CENSUS_TOTAL 2333

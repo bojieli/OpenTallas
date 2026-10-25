@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.geom_review.request.v1",
+ "lane": "S81-CORES/SPLIT",
+ "date": "2026-10-25",
+ "cores": ["ot_s81sl_vn_a", "ot_s81sl_vn_b", "ot_s81sl_vsw"],
+ "dropped": {"ve_m": "coordinator 04:37 (lane FLOW rebuilds)", "ve_s": "coordinator 04:37"},
+ "routed_inputs": {
+  "vn_a": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-split/ot_s81sl_vn_a_k_p0 (signoff 04:06 NOT SIGNED)",
+  "vn_b": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-split/ot_s81sl_vn_b_k_m0",
+  "vsw": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/ot_s81sl_vsw_c"
+ },
+ "routed_findings": {
+  "tree": "one TritonCTS tree from the W-face clk pin: 24.8k (vn_a) / 29.9k (vn_b) / 13.1k (vsw) sinks, 7 binary H levels + leaf; root buffer clkbuf_regs_0_clk drives an 85-87 ps unbuffered run to the sink centroid (x~265); 9-10 BUFx24 stages",
+  "west_half": "vn_a/vn_b: west-half branch points pushed off the SRAM (below/above it), leaves run diagonally over the macro to the NW/SW (leaf delay up to 117 ps); west sinks RCX 400-480 ps vs east 350-370 -> spread 136 ps, go_q->gf setup pair skew 133 ps",
+  "macro": "SRAM clk pin on its own 1-sink macro tree, delay_buffer_derate 0.5 -> u_h0 clk 344 ps vs its rd capture reg g_x[400] 480 ps (RCX TT) = 141 ps pair skew; interface regs not next to the SRAM (F6, needs re-place)",
+  "io_hold": "vclk source latency 250 with input min -40 vs real pin-flop insertion 357-466 TT / 291-391 FF -> 5217 hold endpoints, 12677 hold buffers in CTS (+GRT) = the 16-30-deep W-face chains; cause is the insertion overshoot, not the SDC form (decision 5 seam pair = neighbour at 250 vs us at 426 = 176 ps real seam skew)",
+  "grt_vs_rcx": "owner item c PRESENT: GRT-estimate clock arrival minus routed RCX per register, TT: vn_a +11.9..+52.7 (p50 +38.8), vn_b +12.2..+57.2 (p50 +42.0), ve_m +21..+36, ve_s +16..+28 (routed_clock_arrival_cts_grt_rcx.txt) -> GRT hold repair sees a wrong, non-uniform skew"
+ },
+ "fix_recipe": {
+  "branch_path": "physical/die_plan/s81/cores/split_clock/",
+  "F5_regional_taps": "regional_taps.tcl (PRE_CTS): clk port -> buffered trunk -> symmetric binary H-tree (equal Manhattan length per level) -> NX x NY regional taps; TritonCTS restricted to the tap nets (-clk_nets), -obstruction_aware, cluster size 24 / diameter 30 um",
+  "F3_macro_skew_group": "per SRAM: clk pin + its interface regs (launch regs of wd/addr/ctl, capture regs of rd_out, through <=1 buffer) on their own tap, sibling of the region leaf tap; POST_CTS pads the macro clk pin to its interface-register mean",
+  "tap_balance": "regional_taps_balance.tcl (POST_CTS): taps padded (in front of the tap buffer, never on leaves) to the slowest tap, window <= 20 ps",
+  "hold_budget": "hold_budget.tcl (repair at max_buffer_percent 100) dropped",
+  "needs_shared_flow": ["F1/ruling 9.7-5e: bind vclk source latency per corner to the measured pin-reg insertion (FLOW lane); without it the IO hold debt remains (pre-repair FF-hold -169..-195 ps, all at the input faces)", "F2: GRT RC calibrated to RCX for GRT hold repair (FLOW lane)"],
+  "not_in_cts_only_rebuild": ["F6 SRAM interface registers within ~20 um / macro rotate-mirror: needs a re-place (vn_b and vsw GEOM FAIL items)", "F4 pin-reg/successor same-leaf clustering", "vsw: N-face v_q broadcast re-registered near consumers (RTL, NEARMISS 04:35)", "vn_b: pre_c next to u_g"]
+ },
+ "postcts_results_flow_placement_rc_tt": {
+  "vn_a_t42": {"taps": "354..367 (12 ps)", "all_regs": "336.3..375.7 p50 360.3", "u_h0_vs_if_regs_ps": 12, "hold_pre_repair": "-169.21/1381", "hold_buffers": 6606, "was": "344-452 (spread 108), 12677 hold buffers"},
+  "vn_b_t42": {"taps": "353..369 (15 ps)", "all_regs": "335.5..375.4 p50 361.3", "u_h1_vs_if_regs_ps": 14, "hold_pre_repair": "-171.32/1770", "hold_buffers": 7393},
+  "vsw_t22": {"taps": "365..385 (21 ps)", "all_regs": "349.0..398.9 p50 368.3", "sram_vs_if_regs_ps": [9, -4], "hold_pre_repair": "-194.98/804", "hold_buffers": 7185, "was": "294-346 (308 mean), 5891 hold buffers", "note": "N band 380-399 behind long leaves from one tap: F6 + v_q re-register needed"},
+  "vn_a_t82": {"taps": "360..374", "all_regs": "277..378", "note": "no macro latency match (v1 hook); t42 preferred"},
+  "vn_b_t82": {"taps": "373..392", "all_regs": "298.6..400.8"},
+  "vsw_t44": {"taps": "381..402", "all_regs": "321.4..406.4"}
+ },
+ "insertion_contract": "I ~360 TT (flow placement RC tracked routed RCX to +-0 on the original vn_a: 367/367) vs 250+-40: the deepest part is the 13-30k-sink tree itself (10 BUFx24 stages at ~23 ps); meeting 250 needs either the parent early tap (decision 5e core-latency contract, as NEARMISS proposed for ve_m) or fewer/stronger stages. Request: bind I per corner (ruling 9.7/5e) instead of padding the parent",
+ "renders": ["vn_a_routed_clock.png", "vn_b_routed_clock.png", "vn_a_t42_postcts_clock.png", "vn_b_t42_postcts_clock.png", "vsw_t22_postcts_clock.png"],
+ "postcts_runs": "epyc2:/srv/opentallas-scratch2/claude/s81-cores-split/{vn_a_t42,vn_b_t42,vsw_t22,vn_a_t82,vn_b_t82,vsw_t44} (4_cts.odb; route_from_cts.sh continues)",
+ "author_verdict": "vn_a_t42: PASS-COND to route (conditions: I bound per corner per 9.7/5e, F2 calibration); vn_b_t42 and vsw_t22: clock part fixed, FAIL on F6 placement (re-place needed) -> do not route"
+}

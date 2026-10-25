@@ -9,7 +9,9 @@
 //   gates on g_* (the eg values of the fixture), vs op 14 ADD (a0 A0, a1 400, n 32)
 //   vp HLOAD 400 (results -> vn h store), vp HSTORE 500, vp RDOUT 500 x 16 -> lo checked against y.
 // -GMUT=7 / 8 (vs MUT: wrong gate copy / K as W) must FAIL.
-module tb_s81sl_leaf_eng #(parameter integer MUT = 0);
+module tb_s81sl_leaf_eng #(parameter integer MUT = 0,
+    // S81-PLAN R3 (10-25): ot_s81sl_leaf core<->core station depths (0 = the pre-R3 leaf)
+    parameter integer CS_HI_D = 0, parameter integer CS_HI_GS = 0, parameter integer CS_HO_D = 0, parameter integer CS_HO_GS = 0, parameter integer CS_VNI_D = 0, parameter integer CS_VNO_D = 0, parameter integer CS_Y_D = 0, parameter integer CS_U_D = 0, parameter integer CS_SW_D = 0, parameter integer CS_SWR_D = 0, parameter integer CS_RA_D = 0, parameter integer CS_RAR_D = 0, parameter integer CS_VE_D = 0, parameter integer CS_VER_D = 0, parameter integer CS_PVS_D = 0, parameter integer CS_VSP_D = 0, parameter integer CS_H_G = 4);
     localparam [9:0] A0 = 10'd704;
     reg clk = 1'b0;
     always #0.5 clk = ~clk;
@@ -19,7 +21,7 @@ module tb_s81sl_leaf_eng #(parameter integer MUT = 0);
     reg [159:0] c_d = 0; reg [9:0] sw_a = 0; reg [255:0] sw_d = 0; reg [7:0] sw_m = 0; reg [1:0] g_c = 0; reg [31:0] g_d = 0;
     wire lo_v; wire [255:0] lo_d; wire xf_v, xf_s; wire [275:0] xf; wire p_v, f_lf, e_v; wire [31:0] p_d; wire [1:0] e_c;
     wire [95:0] e_d;
-    ot_s81sl_leaf #(.AQ_XMEM(2), .VS_MUT(MUT)) u_lf (.clk(clk), .rst_n(rst_n), .sid(4'd3), .k(3'd2),
+    ot_s81sl_leaf #(.AQ_XMEM(2), .VS_MUT(MUT), .CS_HI_D(CS_HI_D), .CS_HI_GS(CS_HI_GS), .CS_HO_D(CS_HO_D), .CS_HO_GS(CS_HO_GS), .CS_VNI_D(CS_VNI_D), .CS_VNO_D(CS_VNO_D), .CS_Y_D(CS_Y_D), .CS_U_D(CS_U_D), .CS_SW_D(CS_SW_D), .CS_SWR_D(CS_SWR_D), .CS_RA_D(CS_RA_D), .CS_RAR_D(CS_RAR_D), .CS_VE_D(CS_VE_D), .CS_VER_D(CS_VER_D), .CS_PVS_D(CS_PVS_D), .CS_VSP_D(CS_VSP_D), .CS_H_G(CS_H_G)) u_lf (.clk(clk), .rst_n(rst_n), .sid(4'd3), .k(3'd2),
         .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(2'b00), .cw_a(24'd0), .cw_d(64'd0), .lo_v(lo_v), .lo_d(lo_d), .rb_v(1'b0), .rb_d(32'd0),
         .p_v(p_v), .p_d(p_d), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .e_v(e_v), .e_c(e_c), .e_d(e_d),

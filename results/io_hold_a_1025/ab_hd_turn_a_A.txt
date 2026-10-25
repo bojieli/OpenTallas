@@ -1,0 +1,7 @@
+OT_HOLD_GATE PASS FF wns_ps -78.43 endpoints 567 (true negative slack)
+CENSUS IN_REG n 567 worst -78.43 tns -20166.8
+CENSUS R2R n 0 worst 0 tns 0
+CENSUS REG_OUT n 0 worst 0 tns 0
+CENSUS_BUS arst_n 1
+CENSUS_BUS t_i 566
+CENSUS_TOTAL 567
