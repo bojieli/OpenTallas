@@ -45,6 +45,29 @@
     },
     "setup_tt": -30.71,
     "hold_ff": 8.26
+   },
+   {
+    "path": "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/hfd_hgi_vm_calendar_f20_dd5b84a9fbfa/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -30.71 ps, 83 endpoints",
+     "drv: FAIL TT slew 126.0 cap 0.0, FF slew 132.0 cap 0.0",
+     "face_guard: FAIL {'shared': 3}"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "PASS",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -30.71,
+    "hold_ff": 8.26
    }
   ],
   "host": "intel1",
@@ -119,6 +142,27 @@
   "history": [
    {
     "path": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_argmax_static_sw_vm_r2_ff8fa2bb6d4c/signoff",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "face_guard: FAIL {'shared': 111, 'feedthrough': 360, 'dropped': 256, 'unregistered': 18}"
+    ],
+    "checks": {
+     "setup_tt": "PASS",
+     "hold_ff": "PASS",
+     "drv": "PASS",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": 25.76,
+    "hold_ff": 14.18
+   },
+   {
+    "path": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_argmax_static_sw_vm_r2_ff8fa2bb6d4c/signoff_pairskew",
     "verdict": "NOT SIGNED",
     "reasons": [
      "face_guard: FAIL {'shared': 111, 'feedthrough': 360, 'dropped': 256, 'unregistered': 18}"
@@ -288,6 +332,30 @@
     },
     "setup_tt": -88.63,
     "hold_ff": -7.93
+   },
+   {
+    "path": "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_hc_root_static__hcp_sys1_eeab1883a31b/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -88.63 ps, 46 endpoints",
+     "hold_ff: FAIL WNS -7.93 ps, 33 endpoints",
+     "drv: FAIL TT slew 119.0 cap 0.0, FF slew 124.0 cap 0.0",
+     "face_guard: FAIL {'shared': 57, 'unregistered': 166}"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "FAIL",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -88.63,
+    "hold_ff": -7.93
    }
   ],
   "host": "intel1",
@@ -347,6 +415,31 @@
      "hold_ff: FAIL WNS -55.83 ps, 343 endpoints",
      "drv: FAIL TT slew 323.0 cap 0.0, FF slew 312.0 cap 0.0",
      "clock: FAIL TT pin-flop spread 88.9 ps > 80; FF pin-flop spread 83.7 ps > 80",
+     "face_guard: FAIL {'dropped': 4, 'shared': 3}"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "FAIL",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "FAIL",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -143.86,
+    "hold_ff": -55.83
+   },
+   {
+    "path": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_idx_query_static_57472ecfc79f/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -143.86 ps, 271 endpoints",
+     "hold_ff: FAIL WNS -55.83 ps, 343 endpoints",
+     "drv: FAIL TT slew 323.0 cap 0.0, FF slew 312.0 cap 0.0",
+     "clock: FAIL TT setup related pair skew 101.6 ps > 80 (bd_r[963]$_DFF_P_ -> core.quant.s0_x[963]$_DFF_P_); TT hold related pair skew 123.3 ps > 80 (core.scmem -> ql_sc[22]$_DFF_P_); FF setup related pair skew 95.3 ps > 80 (bd_r[963]$_DFF_P_ -> core.quant.s0_x[963]$_DFF_P_); FF hold related pair skew 115.3 ps > 80 (core.scmem -> ql_sc[22]$_DFF_P_)",
      "face_guard: FAIL {'dropped': 4, 'shared': 3}"
     ],
     "checks": {
@@ -848,6 +941,28 @@
     },
     "setup_tt": 34.29,
     "hold_ff": -6.71
+   },
+   {
+    "path": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_idx_score_quarter_static__tail0_9c94121ae264/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "hold_ff: FAIL WNS -6.71 ps, 18 endpoints",
+     "face_guard: FAIL {'unregistered': 1, 'shared': 1}"
+    ],
+    "checks": {
+     "setup_tt": "PASS",
+     "hold_ff": "FAIL",
+     "drv": "PASS",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": 34.29,
+    "hold_ff": -6.71
    }
   ],
   "host": "localhost",
@@ -859,6 +974,28 @@
   "history": [
    {
     "path": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_idx_score_quarter_static__tail1_fd8a24ead83a/signoff",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "hold_ff: FAIL WNS -9.91 ps, 44 endpoints",
+     "face_guard: FAIL {'unregistered': 1, 'shared': 1}"
+    ],
+    "checks": {
+     "setup_tt": "PASS",
+     "hold_ff": "FAIL",
+     "drv": "PASS",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": 35.45,
+    "hold_ff": -9.91
+   },
+   {
+    "path": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_idx_score_quarter_static__tail1_fd8a24ead83a/signoff_pairskew",
     "verdict": "NOT SIGNED",
     "reasons": [
      "hold_ff: FAIL WNS -9.91 ps, 44 endpoints",
@@ -916,6 +1053,31 @@
      "hold_ff: FAIL WNS -8.74 ps, 111 endpoints",
      "drv: FAIL TT slew 306.0 cap 0.0, FF slew 275.0 cap 0.0",
      "clock: FAIL TT pin-flop spread 116.8 ps > 80; FF pin-flop spread 96.9 ps > 80",
+     "face_guard: FAIL {'shared': 2153, 'unregistered': 12, 'feedthrough': 84}"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "FAIL",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "FAIL",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -29.66,
+    "hold_ff": -8.74
+   },
+   {
+    "path": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_sm_vm_wr_q_t_lanes4_c732439590f8/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -29.66 ps, 40 endpoints",
+     "hold_ff: FAIL WNS -8.74 ps, 111 endpoints",
+     "drv: FAIL TT slew 306.0 cap 0.0, FF slew 275.0 cap 0.0",
+     "clock: FAIL TT hold related pair skew 89.7 ps > 80 (u_wrq.g_sm[0].rl$_DFF_P_ -> u_wrq.g_sm[0].d_mir$_SDFFE_PN0P_)",
      "face_guard: FAIL {'shared': 2153, 'unregistered': 12, 'feedthrough': 84}"
     ],
     "checks": {
@@ -1037,6 +1199,31 @@
     },
     "setup_tt": -155.58,
     "hold_ff": -34.08
+   },
+   {
+    "path": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_31be7c8a3d52/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -155.58 ps, 247 endpoints",
+     "hold_ff: FAIL WNS -34.08 ps, 85 endpoints",
+     "drv: FAIL TT slew 231.0 cap 54.0, FF slew 179.0 cap 56.0",
+     "clock: FAIL TT setup related pair skew 142.7 ps > 80 (controller.on.bank[8].wrr[1]$_SDFFE_PN0P_ -> controller.on.c_bank[2]$_SDFF_PN0_); TT hold related pair skew 183.2 ps > 80 (g_wpay.u_write_payload -> g_oreg.q_cd[197]$_DFF_P_); FF setup related pair skew 133.7 ps > 80 (controller.on.bank[8].wrr[1]$_SDFFE_PN0P_ -> controller.on.c_bank[2]$_SDFF_PN0_); FF hold related pair skew 169.0 ps > 80 (g_wpay.u_write_payload -> g_oreg.q_cd[197]$_DFF_P_)",
+     "face_guard: FAIL {'unregistered': 3, 'shared': 287, 'feedthrough': 1}"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "FAIL",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "FAIL",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -155.58,
+    "hold_ff": -34.08
    }
   ],
   "host": "localhost",
@@ -1075,6 +1262,30 @@
     },
     "setup_tt": -47.26,
     "hold_ff": 10.91
+   },
+   {
+    "path": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_3f2f98babe4c/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -47.26 ps, 58 endpoints",
+     "drv: FAIL TT slew 172.0 cap 3.0, FF slew 158.0 cap 3.0",
+     "clock: FAIL TT setup related pair skew 95.4 ps > 80 (controller.on.fault_r$_SDFFE_PN0P_ -> g_wpay.u_write_payload); TT hold related pair skew 94.0 ps > 80 (g_wpay.u_write_payload -> g_oreg.q_cd[77]$_DFF_P_); FF setup related pair skew 88.7 ps > 80 (controller.on.fault_r$_SDFFE_PN0P_ -> g_wpay.u_write_payload); FF hold related pair skew 87.0 ps > 80 (g_wpay.u_write_payload -> g_oreg.q_cd[77]$_DFF_P_)",
+     "face_guard: FAIL {'unregistered': 3, 'shared': 287, 'feedthrough': 1}"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "PASS",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "FAIL",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -47.26,
+    "hold_ff": 10.91
    }
   ],
   "host": "epyc3",
@@ -1106,6 +1317,30 @@
      "fanout": "WARN",
      "unconstrained": "PASS",
      "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -81.79,
+    "hold_ff": 9.53
+   },
+   {
+    "path": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_684f400248e5/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -81.79 ps, 77 endpoints",
+     "drv: FAIL TT slew 479.0 cap 0.0, FF slew 497.0 cap 0.0",
+     "clock: FAIL TT setup related pair skew 92.1 ps > 80 (g_phy_return.data[229]$_DFF_P_ -> u_response_payload); TT hold related pair skew 92.1 ps > 80 (u_response_payload -> u_skid_kr.g_slice[3].t[41]$_DFFE_PP_); FF setup related pair skew 82.3 ps > 80 (g_phy_return.data[229]$_DFF_P_ -> u_response_payload); FF hold related pair skew 82.3 ps > 80 (u_response_payload -> u_skid_kr.g_slice[3].t[41]$_DFFE_PP_)",
+     "face_guard: FAIL {'unregistered': 3, 'shared': 287, 'feedthrough': 1}"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "PASS",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "FAIL",
      "sdc_lint": "PASS",
      "face_guard": "FAIL",
      "drc": "PASS",
@@ -1318,6 +1553,28 @@
     },
     "setup_tt": 18.74,
     "hold_ff": -16.39
+   },
+   {
+    "path": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_xp_aq_tree13_fmt_55d250ae9185/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "hold_ff: FAIL WNS -16.39 ps, 555 endpoints",
+     "face_guard: FAIL {'shared': 32, 'feedthrough': 32}"
+    ],
+    "checks": {
+     "setup_tt": "PASS",
+     "hold_ff": "FAIL",
+     "drv": "PASS",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": 18.74,
+    "hold_ff": -16.39
    }
   ],
   "host": "localhost",
@@ -1329,6 +1586,29 @@
   "history": [
    {
     "path": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_xp_aq_tree13_fmt_a7982cec9a7d/signoff",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -14.36 ps, 3 endpoints",
+     "hold_ff: FAIL WNS -10.18 ps, 273 endpoints",
+     "face_guard: FAIL {'shared': 32, 'feedthrough': 32}"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "FAIL",
+     "drv": "PASS",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -14.36,
+    "hold_ff": -10.18
+   },
+   {
+    "path": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_xp_aq_tree13_fmt_a7982cec9a7d/signoff_pairskew",
     "verdict": "NOT SIGNED",
     "reasons": [
      "setup_tt: FAIL WNS -14.36 ps, 3 endpoints",
@@ -1590,21 +1870,21 @@
   "view": "ot_hbm_hc_bankq_ft_static__lanes0_2@43d2a3be8b5a",
   "history": [],
   "host": "localhost",
-  "kit_hash": "c56751eaafde64dd",
+  "kit_hash": "89f47f91bf783152",
   "verdict": "NOT RUN"
  },
  "ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862": {
   "view": "ot_hbm_hc_bankq_ft_static__lanes0_2@d7bcdf811862",
   "history": [],
   "host": "localhost",
-  "kit_hash": "cbad262641704a53",
+  "kit_hash": "cb50e32c508cf2d9",
   "verdict": "NOT RUN"
  },
  "ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3": {
   "view": "ot_hbm_hc_bankq_ft_static__lanes3_5@1d3df82b9ed3",
   "history": [],
   "host": "intel1",
-  "kit_hash": "79590be5dbb80600",
+  "kit_hash": "7f73d30b8a0d5bf9",
   "verdict": "NOT RUN"
  },
  "ot_hbm_hc_bankq_ft_static__lanes3_5_20947a7cbdde": {
@@ -1618,210 +1898,210 @@
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp0@f4260de3a745",
   "history": [],
   "host": "localhost",
-  "kit_hash": "794ee955d53f47d6",
+  "kit_hash": "0ad5d862df9b1356",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp10_3902ba786f1f": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp10@3902ba786f1f",
   "history": [],
   "host": "localhost",
-  "kit_hash": "6cb664a496e70fc0",
+  "kit_hash": "6a05f7a7a6a34bdf",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp10_cdab528a3523": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp10@cdab528a3523",
   "history": [],
   "host": "localhost",
-  "kit_hash": "f092a1e2595a6693",
+  "kit_hash": "3c816a1e8d861278",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp11_41000f85c440": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp11@41000f85c440",
   "history": [],
   "host": "intel1",
-  "kit_hash": "c5a0e085ea049d26",
+  "kit_hash": "c3f5fabc8aaca060",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp11_cd46a885af6c": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp11@cd46a885af6c",
   "history": [],
   "host": "localhost",
-  "kit_hash": "2280ae15fe7b2238",
+  "kit_hash": "f5f0c29fbfa4fbdd",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp12_832f35030626": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp12@832f35030626",
   "history": [],
   "host": "intel2",
-  "kit_hash": "00714f72b7d58051",
+  "kit_hash": "a3d86ab2ff6a59c5",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp12_f9b7578c2d46": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp12@f9b7578c2d46",
   "history": [],
   "host": "localhost",
-  "kit_hash": "e83fb42db0555a85",
+  "kit_hash": "c5d1ef7fbbe86c02",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp13_d2d04c202775": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp13@d2d04c202775",
   "history": [],
   "host": "intel1",
-  "kit_hash": "5e17dbcb258f53b3",
+  "kit_hash": "af9bf63ffded4921",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp13_ee054eacab0f": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp13@ee054eacab0f",
   "history": [],
   "host": "epyc3",
-  "kit_hash": "dd264fdbf607ee53",
+  "kit_hash": "8a65d18b279eae95",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp14_0aa5ae0c4a16": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp14@0aa5ae0c4a16",
   "history": [],
   "host": "epyc2",
-  "kit_hash": "0e31c098e24584ad",
+  "kit_hash": "0c6d95d449ef7f71",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp14_ae74e585c4b2": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp14@ae74e585c4b2",
   "history": [],
   "host": "epyc2",
-  "kit_hash": "eda1f3b02a294e9b",
+  "kit_hash": "cd20b2a0bab9c364",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp1_1f3670ca53a4": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp1@1f3670ca53a4",
   "history": [],
   "host": "localhost",
-  "kit_hash": "05089f2d7fee1dcb",
+  "kit_hash": "28478bd630b0b355",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp1_26b9599d5540": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp1@26b9599d5540",
   "history": [],
   "host": "localhost",
-  "kit_hash": "5c3719b845c79cef",
+  "kit_hash": "0f58c143127531a0",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp2_c09772cac4ee": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp2@c09772cac4ee",
   "history": [],
   "host": "epyc3",
-  "kit_hash": "9cebbffc8780c73f",
+  "kit_hash": "21615e709e30af60",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp2_de562e97562d": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp2@de562e97562d",
   "history": [],
   "host": "intel2",
-  "kit_hash": "072cc5b0be87a894",
+  "kit_hash": "ef912e5de58ffeff",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp3_7637efd0080a": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp3@7637efd0080a",
   "history": [],
   "host": "epyc2",
-  "kit_hash": "4eaf2829bcff2e9d",
+  "kit_hash": "8157b652ee70f149",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp3_953ddd655d82": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp3@953ddd655d82",
   "history": [],
   "host": "intel1",
-  "kit_hash": "c2279b6eb9fed456",
+  "kit_hash": "68e8e7bd973f50f0",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp4_3bbe6b04b241": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp4@3bbe6b04b241",
   "history": [],
   "host": "epyc3",
-  "kit_hash": "b7d36da4abe6b634",
+  "kit_hash": "df1f3317592497ac",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp4_e2edf8618205": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp4@e2edf8618205",
   "history": [],
   "host": "epyc3",
-  "kit_hash": "adad9b5ef203c3d7",
+  "kit_hash": "7e45f53f6b795cf7",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp5_fa5d09aa2efe": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp5@fa5d09aa2efe",
   "history": [],
   "host": "intel2",
-  "kit_hash": "bb142b5cbd2297ff",
+  "kit_hash": "ea7bc30770cc32a8",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp5_ffeb082cfe27": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp5@ffeb082cfe27",
   "history": [],
   "host": "intel1",
-  "kit_hash": "0c5f419e53989b00",
+  "kit_hash": "400aea0625504369",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp6_02295511db66": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp6@02295511db66",
   "history": [],
   "host": "intel1",
-  "kit_hash": "d7ca1f6c20c5c6d6",
+  "kit_hash": "33c61d802485d323",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp6_885c0bb0d945": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp6@885c0bb0d945",
   "history": [],
   "host": "epyc2",
-  "kit_hash": "15f1c13e96840364",
+  "kit_hash": "8ff60cf84b3713cd",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp7_059f6ce06578": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp7@059f6ce06578",
   "history": [],
   "host": "epyc3",
-  "kit_hash": "5e782684bcbb7090",
+  "kit_hash": "abdb34c8697f606b",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp7_4bcaf4f8b16b": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp7@4bcaf4f8b16b",
   "history": [],
   "host": "localhost",
-  "kit_hash": "fa9ff5b923195faf",
+  "kit_hash": "7bb2279902373a29",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp8_acad9084ae48": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp8@acad9084ae48",
   "history": [],
   "host": "intel1",
-  "kit_hash": "4fb0711ada2c358c",
+  "kit_hash": "07a159a7c92118de",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp9_7b5a181caac3": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp9@7b5a181caac3",
   "history": [],
   "host": "epyc3",
-  "kit_hash": "eb9eba401a585305",
+  "kit_hash": "e7f030eaef1bccdb",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp9_b20af5f8bd8a": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp9@b20af5f8bd8a",
   "history": [],
   "host": "localhost",
-  "kit_hash": "678672cd415a23e6",
+  "kit_hash": "418e05ad18b419f6",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp_l_49e428ab0c53": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp_l@49e428ab0c53",
   "history": [],
   "host": "localhost",
-  "kit_hash": "641a56ae4ba99f90",
+  "kit_hash": "8792b8762c28341c",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp_l_4c0a010fe678": {
   "view": "ot_hbm_su_static_pgslice_lg__lane_exp_l@4c0a010fe678",
   "history": [],
   "host": "localhost",
-  "kit_hash": "4a0091c8fa08b9cf",
+  "kit_hash": "5095eeb840a5a987",
   "verdict": "NOT RUN"
  },
  "ot_hbm_su_static_pgslice_lg__lanes0_3_edae47abf4e2": {
@@ -2221,6 +2501,118 @@
   "history": [],
   "host": "localhost",
   "kit_hash": "974e2b834c4a3c11",
+  "verdict": "NOT RUN"
+ },
+ "ot_hbm_hc_bankq_ft_static__lanes0_2_43d2a3be8b5a_pd42": {
+  "view": "ot_hbm_hc_bankq_ft_static__lanes0_2@43d2a3be8b5a",
+  "history": [],
+  "host": "epyc3",
+  "kit_hash": "89f47f91bf783152",
+  "verdict": "NOT RUN"
+ },
+ "ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862_pd42": {
+  "view": "ot_hbm_hc_bankq_ft_static__lanes0_2@d7bcdf811862",
+  "history": [],
+  "host": "intel2",
+  "kit_hash": "cb50e32c508cf2d9",
+  "verdict": "NOT RUN"
+ },
+ "ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3_pd42": {
+  "view": "ot_hbm_hc_bankq_ft_static__lanes3_5@1d3df82b9ed3",
+  "history": [],
+  "host": "intel2",
+  "kit_hash": "7f73d30b8a0d5bf9",
+  "verdict": "NOT RUN"
+ },
+ "ot_hbm_su_static_qcore_r13_30cedff7c089_cr": {
+  "view": "ot_hbm_su_static_qcore_r13@30cedff7c089",
+  "history": [],
+  "host": "epyc3",
+  "kit_hash": "fac4db30d3f646f0",
+  "verdict": "NOT RUN"
+ },
+ "ot_hbm_svc_sm_xcal_rel_t_2fe24f8b638c_m6": {
+  "view": "ot_hbm_svc_sm_xcal_rel_t@2fe24f8b638c",
+  "history": [],
+  "host": "intel2",
+  "kit_hash": "d43fb67417237d21",
+  "verdict": "NOT RUN"
+ },
+ "ot_hbm_svc_sm_xcal_rel_t_9ee64da70704_m6": {
+  "view": "ot_hbm_svc_sm_xcal_rel_t@9ee64da70704",
+  "history": [],
+  "host": "epyc3",
+  "kit_hash": "10e8f6e118e883b5",
+  "verdict": "NOT RUN"
+ },
+ "ot_hbm_svc_sm_xcal_rel_t_afccc19766de_m6": {
+  "view": "ot_hbm_svc_sm_xcal_rel_t@afccc19766de",
+  "history": [],
+  "host": "intel2",
+  "kit_hash": "630ea001f9ac5bba",
+  "verdict": "NOT RUN"
+ },
+ "ot_hbm_svc_sm_xcal_rel_t_f9e949331096_m6": {
+  "view": "ot_hbm_svc_sm_xcal_rel_t@f9e949331096",
+  "history": [],
+  "host": "epyc3",
+  "kit_hash": "50d9753c0c0f812e",
+  "verdict": "NOT RUN"
+ },
+ "ot_hgi_coll_gq_issue_620157ecc938_cr": {
+  "view": "ot_hgi_coll_gq_issue@620157ecc938",
+  "history": [],
+  "host": "intel2",
+  "kit_hash": "6e48d6c2e3c5545a",
+  "verdict": "NOT RUN"
+ },
+ "ot_hgi_sfu_core_split3__lane14_66f75664efb4_cr": {
+  "view": "ot_hgi_sfu_core_split3__lane14@66f75664efb4",
+  "history": [],
+  "host": "intel2",
+  "kit_hash": "f41214db64bb12a8",
+  "verdict": "NOT RUN"
+ },
+ "ot_hgi_sfu_core_split3__lane15_ed3d202ade36_cr": {
+  "view": "ot_hgi_sfu_core_split3__lane15@ed3d202ade36",
+  "history": [],
+  "host": "epyc3",
+  "kit_hash": "7f8a052222525adb",
+  "verdict": "NOT RUN"
+ },
+ "ot_hgi_sfu_core_split3__lane2_2ba0e7ec37ee_cr": {
+  "view": "ot_hgi_sfu_core_split3__lane2@2ba0e7ec37ee",
+  "history": [],
+  "host": "intel2",
+  "kit_hash": "640725cec7d113fc",
+  "verdict": "NOT RUN"
+ },
+ "ot_hgi_sfu_core_split3__lane4_ef3314d95b46_cr": {
+  "view": "ot_hgi_sfu_core_split3__lane4@ef3314d95b46",
+  "history": [],
+  "host": "epyc3",
+  "kit_hash": "839a3c4a56553372",
+  "verdict": "NOT RUN"
+ },
+ "ot_hgi_sfu_core_split3__lane5_9818e0f96722_cr": {
+  "view": "ot_hgi_sfu_core_split3__lane5@9818e0f96722",
+  "history": [],
+  "host": "intel2",
+  "kit_hash": "d6fc701d3bd4a6db",
+  "verdict": "NOT RUN"
+ },
+ "ot_hgi_sfu_core_split3__lane6_c8a5f8831c4a_cr": {
+  "view": "ot_hgi_sfu_core_split3__lane6@c8a5f8831c4a",
+  "history": [],
+  "host": "epyc3",
+  "kit_hash": "dbd288b157ccc8ec",
+  "verdict": "NOT RUN"
+ },
+ "ot_hgi_sfu_core_split3__lane9_9617422dda57_cr": {
+  "view": "ot_hgi_sfu_core_split3__lane9@9617422dda57",
+  "history": [],
+  "host": "intel2",
+  "kit_hash": "171a588767b8f80b",
   "verdict": "NOT RUN"
  }
 }
