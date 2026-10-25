@@ -250,7 +250,10 @@ def _rt(kit, mod):
 _ARCH_SRC = "/home/ubuntu/closed_archive/%s/%s/run/record/views/%s/%s.lef.zst"
 # S81-P9: the closed-archive views are imported into the repo (physical/s81_die_views/closed_import/<m>/, see PROVENANCE)
 _ARCH = "physical/s81_die_views/closed_import/%s/%.0s%.0s%s.lef"
-_C_COMMON = [dict(inst="u_c.u_eg", module="ot_s81sl_eg", lef=_rt("s81sl_eg", "ot_s81sl_eg"), cells=261681, plan_core="eg"),
+# S81/LEAFPLAN 10-24 (S81/KITS r6 geom FAIL ot_s81sl_eg_c): eg re-pinned (cores/leaf/repin.py ot_s81sl_eg): clk / rst_n
+# from the W-top corner to the S-face centre, every face spread evenly (S peak 26.5 -> 0.7 pins/um); same ports, same size
+_C_COMMON = [dict(inst="u_c.u_eg", module="ot_s81sl_eg", lef="physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef",
+                  pins_file="inputs/core_pins/ot_s81sl_eg_c.json", cells=261681, plan_core="eg"),
              dict(inst="u_c.u_xf", module="ot_s81dv_xfin", lef=_rt("s81dv_xfin", "ot_s81dv_xfin"), cells=135954,
                   plan_core="xf_cap"),
              dict(inst="u_c.u_cap", module="ot_s81sl_capc5r", lef=_rt("s81sl_capc5r", "ot_s81sl_capc5r"), cells=22959,
@@ -339,7 +342,20 @@ NONFRAME_HC = {
                                                                             "cores/leaf/alt_place.json")))["base"].items()},
                  alt_place_file="cores/leaf/alt_place.json",
                  # the leaf bus face picks the variant: N bus = as placed, S bus = y mirror (every core MX'd with it)
-                 mirrors=((False, False), (False, True)), mirror_by_bus=True),
+                 mirrors=((False, False), (False, True)), mirror_by_bus=True,
+                 # S81/LEAFPLAN 10-24 (coordinator ruling (b)): x-mirrored PIN VARIANTS of vn / vq / vs (new core views,
+                 # cores/leaf/xmirror.py: pins at x' = W - x snapped to the plan tracks; an MY orient cannot be placed).
+                 # A candidate (alt_place.json "views") picks a view per core; every candidate is also tried x-mirrored
+                 # as a whole (origins mirrored on the lattice, vn / vq / vs views swapped, the other cores R0: their
+                 # partner faces are N/S (vsw) or both E and W toward vs (ve) or unchecked (hcpl lanes, store SRAMs);
+                 # the face rule below rejects any mirrored candidate that turns a core port away from its partner)
+                 views={"xm": {"u_lf.u_vn": dict(lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_xm.lef",
+                                                 pins_file="inputs/core_pins/ot_s81sl_vn_xm.json"),
+                               "u_lf.u_vq": dict(lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vq_xm.lef",
+                                                 pins_file="inputs/core_pins/ot_s81sl_vq_xm.json"),
+                               "u_lf.u_vs": dict(lef="physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vs_xm.lef",
+                                                 pins_file="inputs/core_pins/ot_s81sl_vs_xm.json")}},
+                 xmirror_views="xm"),
     # S81-CORES 10-24: the attention engine as 64 ot_s81c_attn_hcore (CORE-S81-SVC: one head + its own hgrp_s HG1 PCOLP1
     # front end, every pin registered; tb_s81c_hgrp lockstep vs hgrp_s HG4 PASS every output every cycle, mutants caught;
     # GEOM-REVIEW8 PASS of this 8 x 8 grid, cores/svc/cores_svc.json; route gate record: TT -25.29 ps, re-close by the S81
@@ -373,6 +389,10 @@ NONFRAME_HC = {
                 # the split replaces the whole monolith: its soft residual is the type glue only
                 replaces=418942,
                 place={"u_eng.u_e": (1028.16, 717.12), "u_eng.u_h0": (1028.16, 432.0), "u_eng.u_h1": (1209.6, 432.0)},
+                # S81/LEAFPLAN 10-24 (ruling (a)): the GR8 E/H0/H1 group translated W toward the N-face unit / xtier windows
+                # (x 523..832), ranked with the base by the generator key (internal-station cycles + ft stations)
+                alt_place=[{"u_eng.u_e": (round(1028.16 - d_, 4), 717.12), "u_eng.u_h0": (round(1028.16 - d_, 4), 432.0),
+                            "u_eng.u_h1": (round(1209.6 - d_, 4), 432.0)} for d_ in (86.4 * k_ for k_ in range(1, 7))],
                 mirrors=((False, False),)),
 }
 HC_REPORT = {}
@@ -456,6 +476,207 @@ def _lef_size(lef):
 
 
 _LEF_SIZE = {}
+CORE_INT_REACH_UM = FT_KIT_REACH_UM   # S81/LEAFPLAN 10-24 ruling (a): R3 inside the hardened leaf / svc / eng types
+_PGRP = {}
+
+
+def _core_view(spec, c, view, **kw):
+    """one hard_cores[] entry of core spec c on pin view `view` (None = the base view; spec["views"][view][inst])."""
+    vw = spec.get("views", {}).get(view, {}).get(c["inst"]) if view else None
+    e = dict(inst=c["inst"], module=c["module"], lef=(vw or c)["lef"], **kw)
+    e["pins_file"] = (vw or {}).get("pins_file") or c.get("pins_file", "inputs/core_pins/%s.json" % c["module"])
+    if vw:
+        e["note"] = "view %s: x-mirrored pin variant of %s (cores/leaf/xmirror.py)" % (view, c.get("pins_file") or
+                                                                                      c["module"])
+    return e
+
+
+def _xmirror(spec, byi, o, w):
+    """candidate o mirrored in x as a whole (type frame, 8.64 lattice, same track offsets, orients kept), every core
+    with an x-mirror view (spec xmirror_views) switched to the other view: R0 <-> x-mirrored pins."""
+    xv = spec["xmirror_views"]
+    r = []
+    for c in o:
+        (x_, y_), (cw, ch) = c["origin_um"], c["outline_um"]
+        dx = c["track_offset_um"][0]
+        x_ = math.floor(round((w - (x_ + dx + cw) - dx) / G, 6)) * G
+        base = byi[c["inst"]]
+        if c["inst"] in spec.get("views", {}).get(xv, {}):
+            view = None if c.get("note", "").startswith("view %s" % xv) else xv
+            r.append(_core_view(spec, base, view, origin_um=[round(x_, 4), y_], outline_um=[cw, ch],
+                                orient=c.get("orient", "R0"), track_offset_um=list(c["track_offset_um"])))
+        else:
+            r.append(dict(c, origin_um=[round(x_, 4), y_]))
+    return r
+
+
+def _pin_groups(pins_file, W_, H_):
+    """{port: (cx, cy, bits, {face: pins})} of one plan pin table, core frame R0, outline W_ x H_ (cached); the face of a
+    pin is its nearest outline edge (check.py _core_face)."""
+    if pins_file not in _PGRP:
+        js = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), pins_file)))
+        ps = js["pins"]
+        g = {}
+        for p_ in ps:
+            b_ = re.sub(r"\[\d+\]$", "", p_["name"])
+            f_ = min([(p_["x"], "W"), (W_ - p_["x"], "E"), (p_["y"], "S"), (H_ - p_["y"], "N")])[1]
+            e_ = g.setdefault(b_, [0.0, 0.0, 0, {}])
+            e_[0] += p_["x"]
+            e_[1] += p_["y"]
+            e_[2] += 1
+            e_[3][f_] = e_[3].get(f_, 0) + 1
+        _PGRP[pins_file] = {b_: (e_[0] / e_[2], e_[1] / e_[2], e_[2], e_[3]) for b_, e_ in g.items()}
+    return _PGRP[pins_file]
+
+
+def _placed_groups(c):
+    """(box, {port: (x, y, bits, {face: pins})}) of a placed core in the type frame (orient R0 / MX / MY / R180)."""
+    x0, y0 = c["origin_um"][0] + c["track_offset_um"][0], c["origin_um"][1] + c["track_offset_um"][1]
+    cw, ch = c["outline_um"]
+    o = c.get("orient", "R0")
+    fx, fy = o in ("MY", "R180"), o in ("MX", "R180")
+    sw = dict(N="S", S="N", E="E", W="W") if fy else {}
+    sw2 = dict(E="W", W="E") if fx else {}
+    out = {}
+    for b_, (x, y, n, fc) in _pin_groups(c["pins_file"], cw, ch).items():
+        out[b_] = (x0 + (cw - x if fx else x), y0 + (ch - y if fy else y), n,
+                   {sw2.get(sw.get(f_, f_), sw.get(f_, f_)): v for f_, v in fc.items()})
+    return (x0, y0, x0 + cw, y0 + ch), out
+
+
+def _bus_pts(buses, w, h):
+    r = {}
+    for b_ in buses:
+        if b_.get("face") in ("N", "S", "E", "W"):
+            m_ = sum(b_["window_um"]) / 2
+            r[b_["name"]] = dict(N=(m_, h), S=(m_, 0.0), E=(w, m_), W=(0.0, m_))[b_["face"]]
+    return r
+
+
+_NRM = dict(N=(0.0, 1.0), S=(0.0, -1.0), E=(1.0, 0.0), W=(-1.0, 0.0))
+
+
+def core_faces_away(k, o, w, h, buses):
+    """number of declared core ports whose pins' mean best cos(face normal, direction to a partner) < -0.1: the G0C
+    core-face rule (tools/die_plan/check.py check_core_faces) on a candidate, partners = core box centres / bus window
+    centres / face points (FIRM internal stations keep the direction of their straight window -> pin line)."""
+    pl = {c["inst"]: _placed_groups(c) for c in o}
+    cen = {i_: ((b_[0] + b_[2]) / 2, (b_[1] + b_[3]) / 2) for i_, (b_, _) in pl.items()}
+    bp = _bus_pts(buses, w, h)
+    bad = 0
+    for ci, ports in CORE_CONNS.get(k, {}).items():
+        if ci not in pl:
+            continue
+        cx, cy = cen[ci]
+        for p_, tg in ports.items():
+            g = pl[ci][1].get(p_)
+            if not g:
+                continue
+            pts = []
+            for t_ in tg:
+                kd, _, nm = t_.partition(":")
+                if kd == "bus" and nm in bp:
+                    pts.append(bp[nm])
+                elif kd == "core" and nm in cen and nm != ci:
+                    pts.append(cen[nm])
+                elif kd == "face" and nm in _NRM:
+                    pts.append(dict(N=(cx, h), S=(cx, 0.0), E=(w, cy), W=(0.0, cy))[nm])
+            dirs = [((tx - cx) / math.hypot(tx - cx, ty - cy), (ty - cy) / math.hypot(tx - cx, ty - cy))
+                    for tx, ty in pts if math.hypot(tx - cx, ty - cy) > 1e-6]
+            if not dirs:
+                continue
+            fc = g[3]
+            mean = sum(v * max(_NRM[f_][0] * ux + _NRM[f_][1] * uy for ux, uy in dirs) for f_, v in fc.items()) / g[2]
+            bad += mean < -0.1
+    return bad
+
+
+def _outside(x, y, boxes, w, h):
+    """(x, y) moved to the nearest point outside every box it falls in (station legalisation), clamped to the outline."""
+    for _ in range(4):
+        hit = [b_ for b_ in boxes if b_[0] < x < b_[2] and b_[1] < y < b_[3]]
+        if not hit:
+            break
+        b_ = hit[0]
+        x, y = min([(x - b_[0], (b_[0], y)), (b_[2] - x, (b_[2], y)), (y - b_[1], (x, b_[1])),
+                    (b_[3] - y, (x, b_[3]))])[1]
+        x, y = min(max(x, 0.0), w), min(max(y, 0.0), h)
+    return (x, y)
+
+
+def core_internal_stations(k, o, w, h, buses, smax=None):
+    """R3 inside the hardened types (S81/LEAFPLAN, coordinator ruling 10-24 (a)): every CORE_CONNS bundle -- core port
+    pin-group centroid -> bus window centre, or -> the partner core's matching port group (same width, nearest; else
+    the nearest point of the partner box) -- longer than the kit reach (405 um, no margin) gets FIRM stations at
+    j / (n + 1) on the straight line, a site inside a hard core pushed out of it (n grows until every hop <= the reach).  A core-core bundle declared from both sides is emitted
+    once.  Returns (internal_stations[] entries, cycles) where cycles = sum over links (core, partner) of the largest
+    station count of their bundles (each station = +1 cycle on that pair's path; a broadcast port's partner set is one
+    pair)."""
+    smax = smax or CORE_INT_REACH_UM          # decision 12 (COORD 10-24): hops <= 405 um exactly
+    pl = {c["inst"]: _placed_groups(c) for c in o}
+    hb = [(b_[0] - FT_HALO, b_[1] - FT_HALO, b_[2] + FT_HALO, b_[3] + FT_HALO) for b_, _ in pl.values()]
+    bp = _bus_pts(buses, w, h)
+    conns = CORE_CONNS.get(k, {})
+    ents, cyc, seen = [], {}, set()
+
+    def match(a, pa, b):
+        """b's port group wired to a.pa: same width first, then nearest."""
+        ga = pl[a][1][pa]
+        rev = [p_ for p_, tg in conns.get(b, {}).items() if "core:" + a in tg and p_ in pl[b][1]]
+        if not rev:
+            return None
+        return min(rev, key=lambda p_: (pl[b][1][p_][2] != ga[2],
+                                        abs(pl[b][1][p_][0] - ga[0]) + abs(pl[b][1][p_][1] - ga[1])))
+    for a, ports in conns.items():
+        if a not in pl:
+            continue
+        for pa, tg in ports.items():
+            ga = pl[a][1].get(pa)
+            if not ga:
+                continue
+            for t_ in tg:
+                kd, _, nm = t_.partition(":")
+                if kd == "bus" and nm in bp:
+                    fr, to, conn, cap, pair = bp[nm], (ga[0], ga[1]), "bus:" + nm, "%s.%s" % (a, pa), (a, "bus:" + nm)
+                elif kd == "core" and nm in pl and nm != a:
+                    pb = match(a, pa, nm)
+                    if pb is not None:
+                        if (nm, pb, a, pa) in seen:
+                            continue
+                        seen.add((a, pa, nm, pb))
+                        gb = pl[nm][1][pb]
+                        to, cap = (gb[0], gb[1]), "%s.%s" % (nm, pb)
+                    else:
+                        bx = pl[nm][0]
+                        to, cap = (min(max(ga[0], bx[0]), bx[2]), min(max(ga[1], bx[1]), bx[3])), nm
+                    # one latency key per link: a single-partner link (both sides), or a port's whole partner set
+                    # (a broadcast such as vn hq / hw -> the 16 hcpl lanes adds its largest station count once)
+                    pair = tuple(sorted((a, nm))) if len(tg) == 1 else (a,) + tuple(sorted(tg))
+                    fr, conn = (ga[0], ga[1]), "core:%s.%s|core:%s" % (a, pa, nm)
+                else:
+                    continue
+                L = abs(fr[0] - to[0]) + abs(fr[1] - to[1])
+                n = max(0, math.ceil(L / smax - 1e-9) - 1)
+                if not n:
+                    continue
+                # a station is soft logic: a site inside a hard core (+ halo) is pushed to the nearest point outside
+                # it; n grows until every hop (with the escapes) is within the reach (as ft_stations_macro)
+                for _ in range(6):
+                    regs = [_outside(fr[0] + (to[0] - fr[0]) * j / (n + 1), fr[1] + (to[1] - fr[1]) * j / (n + 1), hb,
+                                     w, h) for j in range(1, n + 1)]
+                    pts_ = [fr] + regs + [to]
+                    if max(abs(p_[0] - q_[0]) + abs(p_[1] - q_[1]) for p_, q_ in zip(pts_, pts_[1:])) <= smax + 1e-6:
+                        break
+                    n += 1
+                regs = [[round(x_, 3), round(y_, 3)] for x_, y_ in regs]
+                n = len(regs)
+                ents.append(dict(conn=conn, from_um=[round(fr[0], 3), round(fr[1], 3)],
+                                 to_um=[round(to[0], 3), round(to[1], 3)], regs_um=regs, bits=ga[2],
+                                 launch=conn.split("|")[0] if kd == "core" else "face bus " + nm, capture=cap,
+                                 note="R3 inside cores (coordinator ruling 10-24 (a)): %.0f um > %.0f-um kit reach: "
+                                      "%d FIRM station(s), +%d cycle(s)" % (L, CORE_INT_REACH_UM, n, n)))
+                cyc[pair] = max(cyc.get(pair, 0), n)
+    return ents, sum(cyc.values())
 
 
 def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
@@ -503,20 +724,25 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
         # CORE-S81 10-23: explicit connectivity-aware origins (type frame, 8.64 lattice) where the shelf packer does not
         # fit; the corner mirroring and the gap / edge legality below still apply.  S81-CORES: "alt_place" = ordered
         # per-instance overrides of the base placement, tried only when the base adds ft-slot stations in this type
-        def explicit(over):
+        def explicit(over, views=None):
             o = []
             for c, (cw, ch) in items:
                 pl_ = over.get(c["inst"], spec["place"][c["inst"]])
-                o.append(dict(inst=c["inst"], module=c["module"], lef=c["lef"], origin_um=[pl_[0], pl_[1]],
-                              outline_um=[cw, ch], orient=pl_[2] if len(pl_) > 2 else spec["place"][c["inst"]][2]
-                              if len(spec["place"][c["inst"]]) > 2 else "R0", track_offset_um=list(CORE_TRACK_OFFSET),
-                              pins_file=c.get("pins_file", "inputs/core_pins/%s.json" % c["module"])))
+                o.append(_core_view(spec, c, (views or {}).get(c["inst"]),
+                                    origin_um=[pl_[0], pl_[1]], outline_um=[cw, ch],
+                                    orient=pl_[2] if len(pl_) > 2 else spec["place"][c["inst"]][2]
+                                    if len(spec["place"][c["inst"]]) > 2 else "R0",
+                                    track_offset_um=list(CORE_TRACK_OFFSET)))
             return o
         alts = [explicit(a) for a in spec.get("alt_place", ())]
         if spec.get("alt_place_file"):
-            alts += [explicit({kk: tuple(v) for kk, v in c_["place"].items()})
+            alts += [explicit({kk: tuple(v) for kk, v in c_["place"].items()}, c_.get("views"))
                      for c_ in json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), spec["alt_place_file"])))["candidates"]]
         out = explicit({})
+        if spec.get("xmirror_views"):
+            # S81/LEAFPLAN: every candidate x-mirrored as a whole, vn / vq / vs on the other pin view (after the others)
+            byi = {c["inst"]: c for c, _ in items}
+            alts += [_xmirror(spec, byi, o_, w) for o_ in [out] + alts]
         items = []
     for c, (cw, ch) in items:
         if x + dx + cw > w - HC_EDGE_UM:
@@ -526,7 +752,7 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
                 tn, c["inst"], cw, ch, w, h))
         out.append(dict(inst=c["inst"], module=c["module"], lef=c["lef"], origin_um=[round(x, 4), round(y, 4)],
                         outline_um=[cw, ch], orient="R0", track_offset_um=list(CORE_TRACK_OFFSET),
-                        pins_file="inputs/core_pins/%s.json" % c["module"]))
+                        pins_file=c.get("pins_file", "inputs/core_pins/%s.json" % c["module"])))
         x = up(x + dx + cw + HC_GAP_UM)
         row_h = max(row_h, ch)
     # corner choice: the packed block is mirrored to each outline corner (lattice-snapped); the first variant that adds no
@@ -571,6 +797,10 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
         return True
     best = None
     variants = spec.get("mirrors", ((False, False), (False, True), (True, False), (True, True)))
+    if os.environ.get("S81_HC_DUMP"):
+        # S81/LEAFPLAN: the exact per-type search inputs (cores/leaf/search.py) -- outline, buses, ft slots before cores
+        with open(os.environ["S81_HC_DUMP"], "a") as f_:
+            f_.write(json.dumps(dict(type=tn, key=k, w=w, h=h, buses=list(buses), ftsl=list(ftsl))) + "\n")
     if spec.get("mirror_by_bus"):
         # S81-CORES: the cores' bus-side ports face N as placed; a type whose buses sit on its S face takes the y mirror
         bf = {b.get("face") for b in buses if b.get("face") in ("N", "S")}
@@ -601,22 +831,36 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
     sm_ = {"smax": min(FT_STATION_MAX, FT_KIT_REACH_UM) * 0.98} if k in CORES_405_KEYS else {}
     k0_ = [ft_stations_macro(s_, [dict(origin_um=[-1e6, -1e6], outline_um=[1, 1])], w, h, **sm_) if sm_ else s_["stations"]
            for s_ in ftsl]
+    # S81/LEAFPLAN 10-24 (coordinator ruling (a)): R3 applies inside the hardened types: every declared core-core /
+    # bus-core bundle (CORE_CONNS) over the 405-um kit reach gets FIRM internal stations (priced cycles).  Candidates rank
+    # by (core ports facing away (G0C face rule, must be 0), bus reach excess over FT_STATION_MAX, added cycles = ft
+    # stations over the no-core model + internal-station cycles per core pair + station flop bits / 4096, order)
     for ai, base_ in enumerate([out] + alts):
         for mx, my in variants:
             o = mirrored(mx, my, base_)
             if not legal(o):
                 continue
-            key = (reach_excess(o), sum((max(0, ft_stations_macro(s_, o, w, h, **sm_) - k0_[i_]) if sm_ else
-                                        ft_stations_macro(s_, o, w, h) - k0_[i_]) for i_, s_ in enumerate(ftsl)))
-            if best is None or key < best[0]:
-                best = (key, o, (mx, my), ai)
-            if key == (0, 0):
+            fb_ = core_faces_away(k, o, w, h, buses) if k in CORE_CONNS else 0
+            ist_, icyc_ = core_internal_stations(k, o, w, h, buses) if k in CORES_405_KEYS else ([], 0)
+            ftc_ = sum((max(0, ft_stations_macro(s_, o, w, h, **sm_) - k0_[i_]) if sm_ else
+                        ft_stations_macro(s_, o, w, h) - k0_[i_]) for i_, s_ in enumerate(ftsl))
+            # added cost = ft stations + internal-station cycles + internal-station flop bits / STATION_BITS_PER_CYCLE
+            # (a far lane / wide bundle pays its station area, not only its worst-hop cycle)
+            key = (fb_, reach_excess(o), round(icyc_ + ftc_ + sum(len(e_["regs_um"]) * e_["bits"] for e_ in ist_)
+                                               / STATION_BITS_PER_CYCLE, 2), ftc_)
+            if best is None or key[:3] < best[0][:3]:
+                best = (key, o, (mx, my), ai, ist_, icyc_)
+            if key[:3] == (0, 0, 0):
                 break
-        if best is not None and best[0] == (0, 0):
+        if best is not None and best[0][:3] == (0, 0, 0):
             break
     if best is not None:
-        rep["bus_reach_excess_um"] = best[0][0]
-        best = (best[0][1],) + best[1:]
+        rep["bus_reach_excess_um"] = best[0][1]
+        rep["faces_away"] = best[0][0]
+        rep["internal_station_cycles"] = best[5]
+        rep["internal_stations"] = best[4]
+        rep["internal_station_bits"] = sum(len(e_["regs_um"]) * e_["bits"] for e_ in best[4])
+        best = (best[0][3],) + best[1:]
     if best is None:
         raise SystemExit("S81-P9-HC: type %s: no legal core packing" % tn)
     rep["emitted"] = True
@@ -626,11 +870,13 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
     rep["ft_stations_added"] = best[0]
     if alts:
         rep["alt_place"] = best[3]
+        rep["views"] = {c["inst"]: c["note"].split()[1].rstrip(":") for c in best[1] if c.get("note", "").startswith("view ")}
     return best[1]
 
 
 FT_MACRO_ADD = []
 NF_HC_TYPES = []
+STATION_BITS_PER_CYCLE = 4096   # S81/LEAFPLAN: placement ranking prices 4096 station flop bits like one added cycle
 CORES_405_KEYS = ("leaf", "svc", "eng")   # S81-CORES-hardened keys sized at the 405-um kit reach
 FT_HALO = 8.64
 
@@ -1846,6 +2092,8 @@ def emit(parts, lanes, routes, chans, fmap, out):
             if s_["layers"] is None:
                 s_.pop("layers")
         nf_ = nonframe_hard_cores(rep, rep.w, rep.h, tn, ftsl, buses)
+        # S81/LEAFPLAN (ruling (a)): the FIRM internal stations of the chosen core arrangement (type frame)
+        ist_ = HC_REPORT.get(tn, {}).pop("internal_stations", None) if nf_ else None
         hc_ = frame_hard_cores(rep.contents, buses) + nf_   # S81-P9-HC
         nf_ = nf_ if nonframe_hc_key(rep) in CORES_405_KEYS else []   # S81-CORES scope (other keys: S81's 750 model)
         if nf_:
@@ -1870,6 +2118,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
                   reset=dict(sync_stages=2), contents=frame_contents(rep.contents, buses),
                   **({"sources": FRAME_SOURCES(rep.contents)} if FRAME_SOURCES(rep.contents) else {}),
                   **({"hard_cores": hc_} if hc_ else {}),
+                  **({"internal_stations": ist_} if ist_ else {}),
                   note="%s partition; %d instance(s) (%s)" % (rep.kind, len(names),
                                                               ",".join(sorted({P[n].orient for n in names}))))
         if tn.startswith("col_"):
@@ -1955,7 +2204,10 @@ def emit(parts, lanes, routes, chans, fmap, out):
                     "note": "FT census of the bound as-built die (1364 rows); finer partition-level check incl. "
                             "bus-aware lep rx/tx and src-bus dedup: census_cov.py -> v3/census_cov.json"}],
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
-                    "cut_ratio_max": 0.6, "cut_step_um": 250},
+                    "cut_ratio_max": 0.6, "cut_step_um": 250,
+                    # S81/LEAFPLAN 10-24 (coordinator ruling (a)): R3 inside the hardened leaf / svc / eng types at the
+                    # 405-um kit reach (core_conns.json bundles; FIRM internal_stations[])
+                    "core_internal_reach_um": CORE_INT_REACH_UM},
     }
     STATS_V4["macrofree_ft_reach"] = macrofree_ft_reach(plan)
     from tools.die_plan.ft_reach import resize

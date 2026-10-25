@@ -1657,6 +1657,10 @@
     "io_edge_max_um": {
      "type": "number",
      "exclusiveMinimum": 0
+    },
+    "core_internal_reach_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
     }
    }
   }
