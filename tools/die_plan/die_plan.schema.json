@@ -1533,6 +1533,16 @@
      "exclusiveMinimum": 0,
      "exclusiveMaximum": 0.5
     },
+    "ft_in_hold": {
+     "enum": [
+      "off",
+      "liberty"
+     ]
+    },
+    "ft_in_hold_ps": {
+     "type": "number",
+     "minimum": 0
+    },
     "face_xing": {
      "enum": [
       "budgeted",
