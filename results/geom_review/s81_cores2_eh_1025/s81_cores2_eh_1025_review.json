@@ -1,0 +1,22 @@
+{
+ "lane": "S81-CORES2/EH",
+ "date": "2026-10-25",
+ "dsdv_eng_rr_e_e1": {
+  "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-cores2-eh/dsdv_eng_rr_e_e1 (floorplan probe, pre-41f01591c2 RTL); e1r = same floorplan on fixed aq_n32 RTL (claude/s81-cores2-1025@41f01591c2), epyc2 .../dsdv_eng_rr_e_e1r",
+  "finding": "GEOM 04:44/04:45 'SRAM stack abutting the E edge, pins facing W' is infeasible: every macro LEF (ot_sram_1r1w_{64x512,128x256,512x128}_r2c2, ot_rom_4096x72_m8 and their p192/mir/escape variants) has M4 pins on BOTH W and E edges: 64x512 W = clk/ce/addr + rd_out[512] + wd_in[0:265], E = wd_in[266:511] + w_mask_in[512] + rr/cr repair (ties); 128x256 W 410 / E 409; 512x128 W 219 / E 218; ROM W = clk/ce/addr[12] + rd_out[29], E = rd_out[43]. Abutting any macro edge to another macro or the core edge strands those pins; every macro column needs a channel on BOTH sides. With M5 max and OBS M1-M4 there is no horizontal crossing of a macro.",
+  "outline_arithmetic": "columns ROM 38 + ROM 38 + SRAM 174 = 250 of 337 um core width -> ~87 um for 4 channels (C3 plan: 13/31/27/19 um). No re-arrangement inside 345.6 x 466.56 gives each SRAM pin edge (10 pins/um) a channel >= ~30 um.",
+  "e1_plan": "outline grown E 345.6 -> 410.4 (E face has 0 pins: all 2690 plan pins unchanged, N/S pins keep x). W->E: W ch 26 (pci + ROM-A W pins) | ROM col A x30.24 | ch 31 (ROM-A rd / ROM-B addr) | ROM col B x99.36 | main ch 57 (ROM-B rd + SRAM W pins: rd_out, wd low half) | SRAM stack x194.4 abutted vertically (pins only W/E) | E ch 38 (SRAM wd high half + ties) joined to S band (39) and the 117x123 NE pocket; ck/rst_n (S x172.7) now under the main channel, not a macro.",
+  "e1_place": {
+   "png": "eng_rr_e_e1_place.png",
+   "gpl_routing_overflow": 6436.9,
+   "gpl_overflow_tiles_pct": 40.14,
+   "old_c_gpl_routing_overflow": 12268.9,
+   "old_c_gpl_overflow_tiles_pct": 48.04,
+   "max_bin": 0.62,
+   "cells": 136771,
+   "flops": 15972
+  },
+  "grt_probe": "pending (run_kit.sh grt, ot-run epyc2)",
+  "plan_delta": "outline 345.6 -> 410.4 x 466.56 (+18.75% area), E face 0 pins; alternatives if the slot cannot grow: (a) M6 over macros (COORD fallback), (b) move u_lkp (3 x 128x256) to another core"
+ }
+}
