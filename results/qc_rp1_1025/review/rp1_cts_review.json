@@ -1,0 +1,8 @@
+{"element":"qfd_dv_s8_crh_rp1","view":"rw100 tree + codex leaf balance 4_1_cts (epyc1 codex-qc-clock/rp1_leaf), placement RC; placement = rp1clk/lb 3_place",
+ "prior_signoff":"rw100 NOT SIGNED TT +163.75 FF -8.19/1 pair TT 108.7 FF 100.4 (ptw_d[376]->u_twcd/q[376]; u_twcd/q[277]->g_crb[1].u_m), I 313.2",
+ "cts_stage":{"hold_wns_ff":-73.5,"hold_ep_ff":798,"hold_wns_tt":-89.8},
+ "macro_clk_tt_ps":310.1,"reg_clk_tt_ps":{"W":[212,239,272],"E":[226,246,254],"S":[212,238,260]},
+ "ff_hold_classes":{"u_twcd->macro wd_in":300,"pin-reg q -> out port (I binding, F1)":256,"reset/fault":3},
+ "f6_interface_dist_um":{"wd_in W b0 mean/max":[64,287],"wd_in W b1":[20,224],"wd_in E b0":[20,97],"wd_in E b1":[19,41],"w_addr/w_ce b0":[115,128],"w_addr/w_ce b1":[210,223],"r_addr (pin regs pcr_addr, F4 at W face)":[78,91],"rd_out capture":[12,37]},
+ "causes":["macro clk pins are a separate late branch (TT 310 vs interface regs 212-272): every wd_in captures late -> 300 FF hold violators, setup pair 98-100","twcd wd regs for W-edge pins left at the south face (up to 287 um), shared twca/twcw drive both macros 115-223 um","clock tree = long diagonal runs over the south strip, E strip fed from one far junction; no regional taps"],
+ "fix":["F6 PRE_GLOBAL_PLACE anchor: each u_twcd bit FIRM next to its wd_in pin (W/E edge column), u_twca per-macro clone FIRM next to w_addr; release before DPL","F5 PRE_CTS regional taps W0/W1/E0/E1/SW/SE: tap buffers at region centroids, sinks partitioned by region, macro clk pin on its region tap, CTS builds local trees; post-CTS tap balance <=20 ps","F1 I from routed RCX, F2 GRT RC calibrated (reuse QC-CQB2 rc_fit)"]}

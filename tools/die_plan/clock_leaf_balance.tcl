@@ -12,6 +12,10 @@
 #   CQB_MACRO_SAFE 1 = a delay chain feeding a macro clock pin is seeded just outside the macro outline (on the
 #             side nearest the pin) instead of at the macro origin, so no clock buffer lands inside a macro outline
 #             before legalisation (GEOM qc_clock_1025 PASS-COND condition) (default 0)
+# QC-RP1 10-25: ORFS runs POST_CTS/POST_GRT hooks via source_step_tcl -> source INSIDE a proc, so plain top-level
+# set made proc locals and cqb_seed failed on ::cqb_msafe (rp1clk lb/lbw cts.tcl:87).  Run the whole hook at global scope
+# (same as face_flops.tcl / tap_balance.tcl) so the knobs are real globals for the procs.
+uplevel #0 {
 source /work/clock_family.tcl
 proc cqb_env {name def} { expr {[info exists ::env($name)] && $::env($name) ne "" ? $::env($name) : $def} }
 set cqb_off   [cqb_env CQB_OFF 10.0]
@@ -136,3 +140,4 @@ for {set cqb_iter 0} {$cqb_iter<$cqb_iters} {incr cqb_iter} {
   if {[info exists ::env(CQB_GRT)] && $::env(CQB_GRT)} {global_route -end_incremental}
 }
 puts "CQB done buffers$cqb_added (clock only; measured signoff required)"
+}
