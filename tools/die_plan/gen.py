@@ -189,9 +189,10 @@ def main(argv=None):
                 kits = gen_phys.write_phys(S.load(a.plan), a.out, a.rtl_root,
                                            a.types.split(",") if a.types else None, a.util, a.proof,
                                            dict(x.split("=", 1) for x in a.kit_rtl), a.hold_ff_margin,
-                                           (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um)
+                                           (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um,
+                                           plan_path=Path(a.plan).resolve())
             else:
-                kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views)]
+                kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve())]
         except gen_rtl.GenError as e:
             print(f"gen {a.cmd}: ERROR {e}")
             return 1
@@ -200,7 +201,8 @@ def main(argv=None):
     if a.cmd == "rtl":
         import gen_rtl
         try:
-            files = gen_rtl.write_rtl(S.load(a.plan), a.out, a.rtl_root, a.types.split(",") if a.types else None)
+            files = gen_rtl.write_rtl(S.load(a.plan), a.out, a.rtl_root, a.types.split(",") if a.types else None,
+                                     plan_path=Path(a.plan).resolve())
         except gen_rtl.GenError as e:
             print(f"gen rtl: ERROR {e}")
             return 1
