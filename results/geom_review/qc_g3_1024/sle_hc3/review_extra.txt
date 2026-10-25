@@ -1,0 +1,15 @@
+SYNTH (yosys, ORFS asap7lock): 255,330 cells (plan est ~15k), 54.9k flops,
+  std area 34,175 um2 = 5.1% of 671,846 um2 outline
+SDC_LINT PASS (0 errors)
+FACE_GUARD FAIL 2620/2640:
+  dropped 18 = b_hw_i[1574..1591] (plan 1592 > bound 1574:
+    lane_eq/CB16 pad bits, no register)
+  shared 2  = flt_o[1:0] tied 2d0 (plan fault lane, no
+    as-built driver -> constant output)
+RESET in kit: 10-24 equal-depth pipelined tree
+  (u_rst_in @centre + 14 u_rrl relays, K=5, hop<=360um)
+  -> superseded by decision 13 (neighbour wavefront)
+  leaf xhead3 keeps its own ot_rst_relay (2-flop sync x12)
+REACH: b_hw_i in on S face (y=0), cw_n3 out on N face
+  (y=1080, x 4..93): 516-bit path crosses 1080 um with
+  no internal station (2 hops >= 540 um > 405 reach)

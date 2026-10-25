@@ -1,0 +1,5 @@
+{"at": "2026-10-24T21:49:17-07:00", "plan": "claude/qc-cap-1024r@806bcb4058", "bind": "epyc1:/srv/opentallas-scratch2/claude/qc/bind_eq_cb16",
+ "coll_n": "NOT KITTED: bound-only clocks clk_coll + clk_serdes (kit-rtl bound_only_pins) with no plan clock per domain; contains planned hard core u_coll_face_s0 qfd_coll_static_face (~116k cells, ot_sram_1r1w2c_64x546_m1 macros; core kit gates FAIL, not hardened). Needs plan clocks per domain (or single-clock RTL) + the face core view.",
+ "coll_s": "NOT KITTED: same as coll_n (clk_coll + clk_serdes bound-only; hard cores u_coll_face_s1/s2 not hardened).",
+ "sle_hc1": "kit-rtl + kit generated then WITHDRAWN (lane QC 10-24: ft-slot types wait for the decision-12 re-plan); note it also carries ot_rom_4096x266_m8 macros and 12+12+1 constant spare output bits (x_st_a_o/x_st_b_o/x_ctl_o).",
+ "sle_hc2": "WITHDRAWN as sle_hc1 (1 ft slot); 1 constant spare bit on x_ctl_o."}

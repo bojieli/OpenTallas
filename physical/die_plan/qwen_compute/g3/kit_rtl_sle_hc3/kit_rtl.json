@@ -1,0 +1,92 @@
+{
+ "schema": "opentallas.die_plan.kit_rtl.v1",
+ "plan_type": "sle_hc3",
+ "plan_module": "qfd_qc_sle_hc3",
+ "bound_type": "sle_hc3",
+ "bound_module": "qfd_qc_sle_hc3_bound",
+ "variants": [
+  "sle_hc3"
+ ],
+ "bind_out": "/srv/opentallas-scratch2/claude/qc/bind_eq_cb16",
+ "instances": [
+  "sl_E0_hc3",
+  "sl_E1_hc3",
+  "sl_E2_hc3",
+  "sl_E3_hc3",
+  "sl_E4_hc3",
+  "sl_E5_hc3"
+ ],
+ "params": "",
+ "taps": [
+  "clk_t1",
+  "clk_t2",
+  "clk_t3",
+  "clk_t4",
+  "clk_t5"
+ ],
+ "spare_out_bits": [
+  {
+   "port": "flt_o",
+   "bits": 2
+  }
+ ],
+ "spare_ft_passthrough": [],
+ "narrow_buses": [
+  {
+   "port": "b_hw_i",
+   "plan": 1592,
+   "bound": 1574
+  }
+ ],
+ "plan_buses_unbound": [
+  "flt_o"
+ ],
+ "bound_only_pins": [],
+ "defines": [
+  "OT_QFD_UP4_CK_ENTRIES"
+ ],
+ "files": [
+  "/srv/opentallas-scratch2/claude/qc/g3/kit_rtl/sle_hc3/qfd_qc_sle_hc3.sv",
+  "/srv/opentallas-scratch2/claude/qc/g3/kit_rtl/sle_hc3/qfd_qc_sle_hc3_bound.sv",
+  "/srv/opentallas-scratch2/claude/qc/g3/kit_rtl/sle_hc3/kit_cells.sv",
+  "/srv/opentallas-scratch2/claude/qc/g3/kit_rtl/sle_hc3/bind_cells_kit.sv",
+  "/srv/opentallas-scratch2/claude/wt/qc-g3/rtl/lib/ot_reset_sync.sv",
+  "/srv/opentallas-scratch/claude/wt/elem-qk/rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv",
+  "/srv/opentallas-scratch/claude/wt/elem-qk/rtl/lib/ot_rst_relay.sv",
+  "/srv/opentallas-scratch/claude/wt/elem-qk/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "/srv/opentallas-scratch/claude/wt/elem-qk/rtl/lib/ot_rst_pipe.sv",
+  "/srv/opentallas-scratch/claude/wt/elem-qk/rtl/hdc/ot_hdc_delay.sv"
+ ],
+ "packages": [],
+ "sim_files": "kit_rtl_sim.f",
+ "package_inlined": {},
+ "hard_macros": {},
+ "hard_macros_note": "memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys type_macros); kit_rtl_sim.f carries the behavioural models",
+ "kit_rsync": {
+  "taps": 6,
+  "firm_repointed": 5,
+  "firm_nearest": 5,
+  "ste": 4,
+  "converted_from": "u_rst_sync",
+  "bound_sync_stages": 2,
+  "leaf_tap": 2,
+  "reset_tree": {
+   "entry": "relayed",
+   "depth": 5,
+   "own_depth": 2,
+   "relays": 14,
+   "tree_relays": 6,
+   "pad_relays": 8,
+   "max_hop_um": 360.0,
+   "reach_um": 405.0,
+   "root_um": [
+    311.072,
+    535.648
+   ],
+   "sync_stages": 2,
+   "entry_stages": 1,
+   "release_clocks": 6,
+   "note": "OWNER RESET RULE 10-24: one root synchroniser per die region + equal-depth synchronous relays"
+  }
+ }
+}

@@ -1,0 +1,132 @@
+{
+ "schema": "opentallas.die_plan.partition_budget.v1",
+ "die": "qwen_compute",
+ "type": "sle_hc3",
+ "module": "qfd_qc_sle_hc3",
+ "outline_um": [
+  622.08,
+  1080.0
+ ],
+ "period_ps": 833,
+ "pins": 2640,
+ "signal_max": "M7",
+ "clock": {
+  "tap_um": [
+   311.04,
+   535.68
+  ],
+  "insertion_ps": 250.0,
+  "insertion_tol_ps": 40,
+  "tap_mode": "grid",
+  "tap_pitch_um": 400.0,
+  "grid_taps": 6,
+  "taps": [
+   {
+    "name": "clk",
+    "xy": [
+     155.52,
+     180.0
+    ],
+    "kind": "grid"
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     466.56000000000006,
+     180.0
+    ],
+    "kind": "grid"
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     155.52,
+     540.0
+    ],
+    "kind": "grid"
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     466.56000000000006,
+     540.0
+    ],
+    "kind": "grid"
+   },
+   {
+    "name": "clk_t4",
+    "xy": [
+     155.52,
+     900.0
+    ],
+    "kind": "grid"
+   },
+   {
+    "name": "clk_t5",
+    "xy": [
+     466.56000000000006,
+     900.0
+    ],
+    "kind": "grid"
+   }
+  ],
+  "sink_taps": [],
+  "taps_snapped": [
+   {
+    "name": "clk",
+    "xy": [
+     155.552,
+     180.0
+    ]
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     466.592,
+     180.0
+    ]
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     155.552,
+     540.0
+    ]
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     466.592,
+     540.0
+    ]
+   },
+   {
+    "name": "clk_t4",
+    "xy": [
+     155.552,
+     900.0
+    ]
+   },
+   {
+    "name": "clk_t5",
+    "xy": [
+     466.592,
+     900.0
+    ]
+   }
+  ],
+  "core_taps": [],
+  "uncertainty_split": 0.5
+ },
+ "core_latency": [],
+ "pin_reg_p90_um": 30.0,
+ "io_budget": 0.2,
+ "instances": [
+  "sl_E0_hc3",
+  "sl_E1_hc3",
+  "sl_E2_hc3",
+  "sl_E3_hc3",
+  "sl_E4_hc3",
+  "sl_E5_hc3"
+ ]
+}

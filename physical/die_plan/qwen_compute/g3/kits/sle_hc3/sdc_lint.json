@@ -1,0 +1,37 @@
+{
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "clock_ports": [
+  "clk",
+  "clk_t1",
+  "clk_t2",
+  "clk_t3",
+  "clk_t4",
+  "clk_t5"
+ ],
+ "inputs": [
+  "arst_n",
+  "b_hw_i"
+ ],
+ "outputs": [
+  "cw_n3",
+  "cw_s3",
+  "x_ctl_o",
+  "x_hc2_o",
+  "flt_o"
+ ],
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "time_unit_ps": 1.0,
+ "io_floor_ps": {
+  "cw_n3": 166.60000000000002,
+  "cw_s3": 166.60000000000002,
+  "b_hw_i": 166.60000000000002,
+  "x_ctl_o": 166.60000000000002,
+  "x_hc2_o": 166.60000000000002,
+  "flt_o": 166.60000000000002,
+  "arst_n": 166.60000000000002
+ },
+ "port_latency_ps": {}
+}

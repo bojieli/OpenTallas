@@ -1,0 +1,61 @@
+{
+ "top": "qfd_qc_sle_hc3",
+ "checked": 2640,
+ "ok": 2620,
+ "fails": {
+  "dropped": [
+   "b_hw_i[1591]: no load on b_hw_i[1591] (register removed)",
+   "b_hw_i[1590]: no load on b_hw_i[1590] (register removed)",
+   "b_hw_i[1589]: no load on b_hw_i[1589] (register removed)",
+   "b_hw_i[1588]: no load on b_hw_i[1588] (register removed)",
+   "b_hw_i[1587]: no load on b_hw_i[1587] (register removed)",
+   "b_hw_i[1586]: no load on b_hw_i[1586] (register removed)",
+   "b_hw_i[1585]: no load on b_hw_i[1585] (register removed)",
+   "b_hw_i[1584]: no load on b_hw_i[1584] (register removed)",
+   "b_hw_i[1583]: no load on b_hw_i[1583] (register removed)",
+   "b_hw_i[1582]: no load on b_hw_i[1582] (register removed)",
+   "b_hw_i[1581]: no load on b_hw_i[1581] (register removed)",
+   "b_hw_i[1580]: no load on b_hw_i[1580] (register removed)",
+   "b_hw_i[1579]: no load on b_hw_i[1579] (register removed)",
+   "b_hw_i[1578]: no load on b_hw_i[1578] (register removed)",
+   "b_hw_i[1577]: no load on b_hw_i[1577] (register removed)",
+   "b_hw_i[1576]: no load on b_hw_i[1576] (register removed)",
+   "b_hw_i[1575]: no load on b_hw_i[1575] (register removed)",
+   "b_hw_i[1574]: no load on b_hw_i[1574] (register removed)"
+  ],
+  "shared": [
+   "flt_o[1]: net u_bound.u_bout_cw_s3/d[514] has 81 loads besides the port chain",
+   "flt_o[0]: net u_bound.u_bout_cw_s3/d[514] has 81 loads besides the port chain"
+  ]
+ },
+ "flops": {
+  "cw_n3[516]": "u_bound.u_bout_cw_n3/u_ep/eq$_DFF_PN0_",
+  "cw_n3[515]": "u_bound.u_bout_cw_n3/q[515]$_DFF_P_",
+  "cw_n3[514]": "u_bound.u_bout_cw_n3/q[514]$_DFF_P_",
+  "cw_n3[513]": "u_bound.u_bout_cw_n3/q[513]$_DFF_P_",
+  "cw_n3[512]": "u_bound.u_bout_cw_n3/q[512]$_DFF_P_",
+  "cw_n3[511]": "u_bound.u_bout_cw_n3/q[511]$_DFF_P_",
+  "cw_n3[510]": "u_bound.u_bout_cw_n3/q[510]$_DFF_P_",
+  "cw_n3[509]": "u_bound.u_bout_cw_n3/q[509]$_DFF_P_",
+  "cw_n3[508]": "u_bound.u_bout_cw_n3/q[508]$_DFF_P_",
+  "cw_n3[507]": "u_bound.u_bout_cw_n3/q[507]$_DFF_P_",
+  "cw_n3[506]": "u_bound.u_bout_cw_n3/q[506]$_DFF_P_",
+  "cw_n3[505]": "u_bound.u_bout_cw_n3/q[505]$_DFF_P_",
+  "cw_n3[504]": "u_bound.u_bout_cw_n3/q[504]$_DFF_P_",
+  "cw_n3[503]": "u_bound.u_bout_cw_n3/q[503]$_DFF_P_",
+  "cw_n3[502]": "u_bound.u_bout_cw_n3/q[502]$_DFF_P_",
+  "cw_n3[501]": "u_bound.u_bout_cw_n3/q[501]$_DFF_P_",
+  "cw_n3[500]": "u_bound.u_bout_cw_n3/q[500]$_DFF_P_",
+  "cw_n3[499]": "u_bound.u_bout_cw_n3/q[499]$_DFF_P_",
+  "cw_n3[498]": "u_bound.u_bout_cw_n3/q[498]$_DFF_P_",
+  "cw_n3[497]": "u_bound.u_bout_cw_n3/q[497]$_DFF_P_"
+ },
+ "planned_bits": 2640,
+ "missing_ports": 0,
+ "fail_counts": {
+  "dropped": 18,
+  "shared": 2
+ },
+ "verdict": "FAIL",
+ "netlist": "/work/run/results/asap7/dp_sle_hc3/base/1_2_yosys.v"
+}

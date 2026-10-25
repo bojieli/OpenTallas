@@ -1,0 +1,9 @@
+/srv/opentallas-scratch2/claude/qc/g3/kit_rtl/sle_hc3/qfd_qc_sle_hc3.sv
+/srv/opentallas-scratch2/claude/qc/g3/kit_rtl/sle_hc3/qfd_qc_sle_hc3_bound.sv
+/srv/opentallas-scratch2/claude/qc/bind_eq_cb16/rtl/bind_cells.sv
+/srv/opentallas-scratch2/claude/wt/qc-g3/rtl/lib/ot_reset_sync.sv
+/srv/opentallas-scratch/claude/wt/elem-qk/rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv
+/srv/opentallas-scratch/claude/wt/elem-qk/rtl/lib/ot_rst_relay.sv
+/srv/opentallas-scratch/claude/wt/elem-qk/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv
+/srv/opentallas-scratch/claude/wt/elem-qk/rtl/lib/ot_rst_pipe.sv
+/srv/opentallas-scratch/claude/wt/elem-qk/rtl/hdc/ot_hdc_delay.sv
