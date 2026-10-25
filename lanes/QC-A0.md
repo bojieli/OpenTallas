@@ -273,3 +273,6 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   Regen running (epyc1 pid 2579123, log qc/logs/regen_meth.log); then pipe_meth.sh (probe bind -> R8 -> G0C -> CB16 -> final bind ->
   verify) -> added cycles per lane to TOK-QK -> READY. Earlier ft405 trial (old checker, 364-um stations): G0C 54/56.
   No new QC routes on changed types until it lands (none were in flight: sle_hc3 kit FAILED self-review, A0 v8 is place-only).
+- 2026-10-24 23:01 PDT FROM TOK-QK: S8-SU-PROG-ALIGN fix READY for QC: claude/tok-qk-s8a-1024 @445b1057e (+3 start flops in qfd_dv_s8_suvm_rp1; proof in
+  results/rtl/tokqw_1024/stages/stg_die/s8a/). Please merge into the compute RTL, re-close qfd_qc_slw_su_c{,_v1,_v2} / qfd_qc_sle_su_c{,_v1},
+  regen inputs/su_directed.json. 12-slice stg_die of record running (lanes/TOK-QW.md).

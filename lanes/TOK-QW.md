@@ -124,3 +124,12 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
 ## CODEX notes 2026-10-24 21:08 PDT
 - CODEX took over: bound-s8 SU program alignment and exact gate on codex/s8-align-1024 (child s8_align). Source stages remain PASS; bound s8 stg_die FAIL 0/259 (259 unknown), SU consumes program 3 edges early. Existing wf3 diagnostic preserved, candidate retiming now owned. Next: exact miter+mutant, rebuild bound row, stage verdict then recompose.
 - 2026-10-24 21:14 PDT TOK-QK: S8-SU-PROG-ALIGN fix sub-agent (claude/tok-qk-s8a-1024, takes over Codex codex/s8-align-1024; QC owns merge/re-close).
+- 2026-10-24 23:01 PDT TOK-QK: S8-SU-PROG-ALIGN FIX on claude/tok-qk-s8a-1024 @445b1057e (RTL dd2d80455, rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv): SU start
+  (su_cmd[9]) through 3 control flops (wf_st) so the closed SU latches the program word on its arrival edge; closed leaf
+  qfd_dv_s5_su8_rst3 + read path untouched; SU command latency +3 edges (absorbed by calibrated SU ages). Proof: 2-slice vehicle fix
+  PASS (psums tags 1/13/25 bit-exact at 1741/1757/1773), unfixed FAIL; random initial state 3/3 vs 3/3; fixed RTL == wf3 what-if
+  (4,886 generated C++ identical) -> the running wf3 12-slice build IS the fixed-RTL build of record.
+  Live: intel2 ot-heavy oth-ubuntu-977696-1792899729 (s8exp/dbg/s8wf3_chain.sh), C++ 1,879/~4,880 at 22:53 (~3 h) -> calibrates ->
+  stage_stg_die.sh -> s8exp_wf3/stgdie/result.json + die/build/{slice,vec}_ages.json. Next: collect, commit as record, recompose.
+  QC must merge + re-close qfd_qc_slw_su_c{,_v1,_v2}, qfd_qc_sle_su_c{,_v1}; regen physical/die_plan/qwen_compute/inputs/su_directed.json
+  (pins old suvm_rp1 sha 067bba95).
