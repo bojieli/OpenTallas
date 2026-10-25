@@ -67,7 +67,7 @@ module ot_s81_cfg7_seq_local #(
     input  wire [1:0]          ef,          // PQ: {bank_free, sh_free} of the element
     output wire [1:0]          go_tag,      // PQ: the op tag that rides with go
     output wire [6:0]          ce_local,
-    output wire [53:0]         cfg_local,
+    output wire [5:0]          cfg_local,   // {cfg[53] (valid), cfg[4:0] (addr)}: the only cfg bits the BFP programme reads
     output wire               go_local
 );
     initial begin
@@ -102,7 +102,7 @@ module ot_s81_cfg7_seq_local #(
     generate if (PINREG != 0) begin : g_pin
         reg [PHW+4:0] lc_r; reg [1:0] ef_r;
         reg [47:0] q0_r, q1_r, q2_r, q3_r, q4_r, q5_r, q6_r;
-        reg [11:0] a_r; (* keep = "true" *) reg [6:0] ce_r; (* keep = "true" *) reg [53:0] cfg_r; (* keep = "true" *) reg go_e_r; reg [1:0] st_r, go_tag_r;
+        reg [11:0] a_r; reg [6:0] ce_r; reg [53:0] cfg_r; reg go_e_r; reg [1:0] st_r, go_tag_r;
         always @(posedge clk[0] or negedge rst_p)
             if (!rst_p) begin lc_r <= '0; ef_r <= 2'b00; end
             else begin lc_r <= lc; ef_r <= ef; end
@@ -110,24 +110,26 @@ module ot_s81_cfg7_seq_local #(
         always @(posedge clk[0] or negedge rst_p)
             if (!rst_p) begin a_r <= 12'd0; ce_r <= 7'd0; cfg_r <= 54'd0; go_e_r <= 1'b0; st_r <= 2'b00; go_tag_r <= 2'b00; end
             else begin a_r <= a_c; ce_r <= ce_c; cfg_r <= cfg_c; go_e_r <= go_e_c; st_r <= st_c; go_tag_r <= go_tag_c; end
-        // Same-edge private copies keep boundary output Qs free of local loads.
+        // Same-edge private copies keep boundary output Qs free of local loads.  keep sits on the private copies only:
+        // ot_keep_regs.tcl then keeps those flop cells, opt_merge leaves them alone, and the port flops ce_r/cfg_r/go_e_r
+        // stay plain (a keep on the port-flop wire made Yosys hang a dangling BUFx2 off ce0..6/go_e = face_guard shared).
         if (LOCAL_COPY != 0) begin : g_local
         (* keep = "true" *) reg [6:0] ce_l;
-        (* keep = "true" *) reg [53:0] cfg_l;
+        (* keep = "true" *) reg [5:0] cfg_l;
         (* keep = "true" *) reg go_l;
         always @(posedge clk[0] or negedge rst_p)
             if (!rst_p) begin ce_l <= '0; cfg_l <= '0; go_l <= 1'b0; end
-            else begin ce_l <= ce_c; cfg_l <= cfg_c; go_l <= go_e_c; end
+            else begin ce_l <= ce_c; cfg_l <= {cfg_c[53], cfg_c[4:0]}; go_l <= go_e_c; end
         assign ce_local = ce_l; assign cfg_local = cfg_l; assign go_local = go_l;
         end else begin : g_no_local
-            assign ce_local = ce_r; assign cfg_local = cfg_r; assign go_local = go_e_r;
+            assign ce_local = ce_r; assign cfg_local = {cfg_r[53], cfg_r[4:0]}; assign go_local = go_e_r;
         end
         assign lc_i = lc_r; assign ef_i = ef_r;
         assign q0_i = q0_r; assign q1_i = q1_r; assign q2_i = q2_r; assign q3_i = q3_r; assign q4_i = q4_r; assign q5_i = q5_r; assign q6_i = q6_r;
         assign a = a_r; assign {ce6, ce5, ce4, ce3, ce2, ce1, ce0} = ce_r;
         assign cfg = cfg_r; assign go_e = go_e_r; assign st = st_r; assign go_tag = go_tag_r;
     end else begin : g_nopin
-        assign ce_local = ce_c; assign cfg_local = cfg_c; assign go_local = go_e_c;
+        assign ce_local = ce_c; assign cfg_local = {cfg_c[53], cfg_c[4:0]}; assign go_local = go_e_c;
         assign lc_i = lc; assign ef_i = ef;
         assign q0_i = q0; assign q1_i = q1; assign q2_i = q2; assign q3_i = q3; assign q4_i = q4; assign q5_i = q5; assign q6_i = q6;
         assign a = a_c; assign {ce6, ce5, ce4, ce3, ce2, ce1, ce0} = ce_c;
@@ -314,7 +316,7 @@ module ot_s81_cfg7_seq_bf_local #(
     output wire [0:0]          go_e,
     output wire [1:0]          st,
     output wire [6:0]          ce_local,
-    output wire [53:0]         cfg_local,
+    output wire [5:0]          cfg_local,
     output wire               go_local
 );
     wire [1:0] go_tag_0;      // constant 0 at PQ 0

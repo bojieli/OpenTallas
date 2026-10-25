@@ -33,7 +33,7 @@ module ot_s81_cfg7_seq_bfp #(
     wire [1:0] st_ld;
     wire pfault;
     wire [6:0] ce_local;
-    wire [53:0] cfg_local;
+    wire [5:0] cfg_local;
     wire go_local;
     ot_s81_cfg7_seq_bf_local #(.NSEG(NSEG), .PHW(PHW), .NROM(NROM), .LAYOUT(LAYOUT), .LOCAL_COPY(PINREG != 0), .PINREG(PINREG)) u_ld (.clk(clk), .rst_n(rst_n), .lc(lc), .a(a),
         .ce0(ce0), .ce1(ce1), .ce2(ce2), .ce3(ce3), .ce4(ce4), .ce5(ce5), .ce6(ce6),
@@ -91,7 +91,7 @@ module ot_s81_cfg7_seq_bfp #(
     wire [23:0] sp_a = (PINREG != 0) ? sp_q2 : sp_q;
 `endif
     reg [95:0] desc;
-    wire       c_v = cfg_local[53];
+    wire       c_v = cfg_local[5];
     wire [4:0] c_a = cfg_local[4:0];
     always @(posedge clk[0] or negedge rn)
         if (!rn) desc <= 96'd0;
