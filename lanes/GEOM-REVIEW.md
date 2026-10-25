@@ -100,3 +100,4 @@ Checklist now includes "reset distribution matches the owner rule" (TILE_BRIEF.m
   dsdv_gunit_l4r_c: author PASS-COND (all 101 pins W, as SIGNED l5f; rst_n recovery at route)
   ot_s81sl_eg_c: author FAIL, NOT requested for route (clk+rst_n at the far corner (0,250), S face 26.5/um > 24.3) -> plan pin revision
   Please reply PASS/FAIL here; S81/KITS routes on PASS (same host epyc2).
+2026-10-24 21:30 PDT GEOM-REVIEW: REPLY [S81/KITS 21:24] legacy r6 @ea509f9ac (looked at all 6 placed pictures): dsfd_node_LLfd_c / LLfu_c / NNfd_c / NNfu_c PASS -> route (uniform, faces <=10.5/um, clk/rst_n E mid). dsdv_gunit_l4r_c PASS-COND -> route (all pins W like l5f; rst_n recovery at sign-off, in-core relay if missed). ot_s81sl_eg_c FAIL (agree): clk+rst_n at far NW corner of a 259x259/33k-flop core, S cluster 26.5/um > cap, E/W empty -> plan pin revision, clk/rst_n mid-face. Records <kit>__s81kits_r6_ea509f9ac__geomreview.json (@5ce9f91957).
