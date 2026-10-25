@@ -1,0 +1,4 @@
+# AUTOPILOT queue (tools/autopilot/autopilot.py): die	type	kit	src	geom	geom_ref	mem_gb	cells	lane	goal	runner	threads	mode
+s81_head	hd_turn_a	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits/m5/hd_turn_a	claude/proto-1025@7b777a3ed9	PASS-COND	GEOM-REVIEW [PROTO-KITS 04:25] reply 04:29	24	24334	PROTO	route			adopt
+s81_head	hd_turn_b	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits/m5/hd_turn_b	claude/proto-1025@7b777a3ed9	PASS-COND	GEOM-REVIEW [PROTO-KITS 04:25] reply 04:29	24	23726	PROTO	route			adopt
+qwen_compute	coll_ftm	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_compute/m5/coll_ftm	claude/proto-1025@4f739fa4bf	PASS-COND	GEOM-REVIEW [PROTO-KITS 04:25] reply 04:35	32	108743	PROTO	route			adopt
