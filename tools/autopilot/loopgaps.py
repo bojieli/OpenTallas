@@ -44,16 +44,23 @@ def parse_ts(line, default=None):
 
 
 def tag_of(s):
-    """'S81/KITS 02:07 + 02:16' / 'S81/H4 2026-10-25 00:51 PDT' / 'PROTO hbm_b2m' -> canonical first token"""
+    """Keep the full review identity, including batch/variant words; remove only dates/times."""
     s = TS.sub("", s)
     s = HHMM.sub("", s)
-    return s.replace("PDT", "").replace("PST", "").strip().split(" ")[0].strip(" ,;") if s.strip() else ""
+    s = re.sub(r"\b(?:PDT|PST)\b", "", s)
+    return re.sub(r"\s+", " ", s).strip(" ,;+ ")
 
 
 def geom_events(text):
-    """-> (reqs, replies): reqs [(t, tag, line)], replies [(t, tag, verdict|None, line)] in file order"""
+    """Parse complete review entries, including their indented kit/verdict lists."""
     reqs, reps, last_t = [], [], None
+    entries = []
     for line in text.splitlines():
+        if line[:1].isspace() and entries and parse_ts(line) is None:
+            entries[-1] += " " + line.strip()
+        else:
+            entries.append(line)
+    for line in entries:
         t = parse_ts(line, None)
         if t is not None:
             last_t = t
