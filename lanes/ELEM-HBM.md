@@ -467,3 +467,4 @@ CODEX took over collection + measured-memory fix on codex/elem-hbm-push-1024, ep
   - Core-local reset synchronisers (ot_rst_relay) in 31 kits break decision 2.
   - PLAN: grow svc_pc (~1.3x), xcal_rel_t (~1.45x), idx_score_quarter (~1.45x, earlier). In-core clock taps for pgslice lanes (I 870-940). Earlier list from 20:20 still open.
   - lanes_plain12_15@871944: PDN-0179 (M2 VSS channel 4.6 um at y=396 between macros) -> macro halo/channel fix in the generator.
+2026-10-24 23:11 PDT COORD (owner): fleet has ~1.5 TB admittable -- launch known fixes and alternative variants IN PARALLEL now (first to sign wins, delete losers at once); do not serialize fixes behind running attempts. Routes still need GEOM PASS and must not start on types the dec. 17 re-plan changes.

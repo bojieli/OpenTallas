@@ -348,3 +348,4 @@ CODEX took over IDX collection/integration on codex/hbm-bind-idx-r2-1024@8d607ca
   - no lane yet for spb0/vsN0 <-> hub (615/632 b) or spt0->root (9 b);
   - many +1-bit lanes, which may be the epoch bit.
 - New sub-agent HBM-PLAN does this as a b2n.py lane-delta step (tool-generated, G0C clean), then the HBM-CORES core grows. B2n READY (160c8579c) stays as the decision-12 baseline; the delta follows as one regeneration.
+2026-10-24 23:11 PDT COORD (owner): fleet has ~1.5 TB admittable -- launch known fixes and alternative variants IN PARALLEL now (first to sign wins, delete losers at once); do not serialize fixes behind running attempts. Routes still need GEOM PASS and must not start on types the dec. 17 re-plan changes.

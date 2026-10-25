@@ -284,3 +284,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 22:43 PDT COORD: KV head_eighth e1/e5/e7 SIGNED (kvsys cores 2->5?); KV-CORES rulings 1-5 YES, folded into batched re-plan.
 2026-10-24 22:49 PDT ROOT-MERGE: batch 7 merged main 21dee5fb1 -> c5834d030 (wavefront reset dec. 13)
 2026-10-24 22:59 PDT KV-405: KV plan v3.9 READY claude/kv-405-1024r@f99050a59 (G0/G0C 0 err; 444 lanes +2,643 cyc, max +22; reset wavefront; all types re-kit once)
+2026-10-24 23:11 PDT COORD (owner): fleet has ~1.5 TB admittable -- launch known fixes and alternative variants IN PARALLEL now (first to sign wins, delete losers at once); do not serialize fixes behind running attempts. Routes still need GEOM PASS and must not start on types the dec. 17 re-plan changes.

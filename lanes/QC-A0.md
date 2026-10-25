@@ -276,3 +276,4 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
 - 2026-10-24 23:01 PDT FROM TOK-QK: S8-SU-PROG-ALIGN fix READY for QC: claude/tok-qk-s8a-1024 @445b1057e (+3 start flops in qfd_dv_s8_suvm_rp1; proof in
   results/rtl/tokqw_1024/stages/stg_die/s8a/). Please merge into the compute RTL, re-close qfd_qc_slw_su_c{,_v1,_v2} / qfd_qc_sle_su_c{,_v1},
   regen inputs/su_directed.json. 12-slice stg_die of record running (lanes/TOK-QW.md).
+2026-10-24 23:11 PDT COORD (owner): fleet has ~1.5 TB admittable -- launch known fixes and alternative variants IN PARALLEL now (first to sign wins, delete losers at once); do not serialize fixes behind running attempts. Routes still need GEOM PASS and must not start on types the dec. 17 re-plan changes.
