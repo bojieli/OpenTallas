@@ -1158,7 +1158,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '
                     'edge the producer\'s output register takes it; boundary offdie = beyond the die\'s elastic link '
                     'layer (no fixed-cycle cut word); dir internal = inside one instance, carried_by its CTL template',
-        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links), indent=1) + '\n')
+        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links,
+        all_links=die.links if entry_norm == 'all' else None), indent=1) + '\n')
     ul = die.unlanded()
     die_gaps = [dict(module='results/arch/s81_dv_1016/bind9/die.v (S81 die GEN, lead S81-DIE6/7)',
                      port=', '.join(sorted(x['link'] for x in ul)),

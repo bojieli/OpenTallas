@@ -114,7 +114,7 @@ def predicted_edges(schedule, die, q_after_root):
     return roots, {inst: edge + q_after_root for inst, edge in roots.items()}
 
 
-def events(die, quant, q_edges):
+def events(die, quant, q_edges, v_paths):
     """Own, V-partner and forwarded XQ/XB words, preserving each global beat index.
 
     The caller must reject collisions before adopting this schedule. Keeping
@@ -153,25 +153,35 @@ def events(die, quant, q_edges):
     for inst, q0 in sorted(q_edges.items()):
         sid = slices[inst]['sid']
         partner = by_pos[sid >> 1, 1 - (sid & 1)]
-        vage = N._lane0(die, inst, 'vo')[3]
+        if inst not in v_paths or not v_paths[inst].get('path'):
+            raise ValueError('quant encoder requires the complete V route for ' + inst)
         for b in quant['beats'][5 * sid:5 * sid + 5]:
             for kind, offset, payload in [(1, 4 * b['leaf'], b['xq']), (2, 20 + 4 * b['leaf'], b['xb'])]:
                 edge = q0 + offset
-                for k, fragment in enumerate(fragments(payload, b['index'], sid, kind)):
+                fragments4 = fragments(payload, b['index'], sid, kind)
+                for k, fragment in enumerate(fragments4):
                     append(inst, 'vo', edge - 4 + k, fragment, 276,
                            f'attn.q.v.o{sid}.b{b["index"]}.k{kind}.f{k}', 'XQFRAG')
+                cursor = edge - 4
+                for step in v_paths[inst]['path']:
+                    cursor += step['cycles']
+                    if 'bridge' not in step:
+                        continue
+                    for k, fragment in enumerate(fragments4):
+                        append(step['bridge'], step['dst'], cursor + k, fragment, 276,
+                               f'attn.q.v.o{sid}.b{b["index"]}.k{kind}.{step["bridge"]}.f{k}', 'XQFRAG')
                 for side in ('e', 'w'):
                     walk(inst, side, edge, payload, b['index'], sid, kind, sid)
-                    walk(partner, side, edge + vage + 2, payload, b['index'],
+                    walk(partner, side, edge + v_paths[inst]['assembled_after_own_line'], payload, b['index'],
                          slices[partner]['sid'], kind, sid)
     return result
 
 
-def emit(die, prog, fixtures, q_edges):
+def emit(die, prog, fixtures, q_edges, v_paths):
     """Adopt a static quant schedule only after every output slot is exclusive."""
     from collections import defaultdict
     quant = golden(fixtures)
-    encoded = events(die, quant, q_edges)
+    encoded = events(die, quant, q_edges, v_paths)
     occupied = defaultdict(list)
     for e in prog.events + encoded:
         if e.get('dir') != 'out' or not e.get('words'):
@@ -190,10 +200,9 @@ def emit(die, prog, fixtures, q_edges):
     for inst, q0 in q_edges.items():
         sid = die.slices()[inst]['sid']
         partner = by_sid[sid ^ 1]
-        vage = N._lane0(die, inst, 'vo')[3]
         for d in list(range(0, 20, 4)) + list(range(20, 40, 4)):
             occ[inst, q0 + d].append(('own', inst))
-            occ[partner, q0 + d + vage + 2].append(('assembled', inst))
+            occ[partner, q0 + d + v_paths[inst]['assembled_after_own_line']].append(('assembled', inst))
     if any(len(v) > 1 for v in occ.values()):
         raise ValueError('quant own/assembled schedule collision')
     prog.events[:] = [e for e in prog.events if not

@@ -36,6 +36,40 @@ V_ASM = None           # own beat on the line outputs -> the column partner's as
 #                        ({inst: edges} or one value; rstop: 2 + the V lane age, the 4-fragment train being 4 edges a beat)
 
 
+def v_paths(die, bridge_cycles):
+    """Walk the full V rung, including transparent host/BK stops.
+
+    bridge_cycles must be supplied from the selected RTL contracts. A source
+    vo lane that lands at seqhost or BK is not the column partner's input.
+    """
+    import norm_nx as N
+    slices = die.slices()
+    result = {}
+    for origin in slices:
+        at, port, total, path, visited = origin, 'vo', 0, [], set()
+        while True:
+            if (at, port) in visited:
+                raise ValueError('cyclic V route from ' + origin)
+            visited.add((at, port))
+            lane, dst, input_port, age = N._lane0(die, at, port)
+            path.append(dict(lane=lane, src=at + '.' + port, dst=dst + '.' + input_port, cycles=age))
+            total += age
+            if dst in slices:
+                if slices[dst]['sid'] != slices[origin]['sid'] ^ 1:
+                    raise ValueError('V route ends at a different column: ' + origin + ' -> ' + dst)
+                result[origin] = dict(peer=dst, wire_and_bridge_cycles=total,
+                                      assembled_after_own_line=total + 2, path=path)
+                break
+            if dst not in bridge_cycles or input_port not in ('vi_s', 'vi_n'):
+                raise ValueError('unmodeled V bridge: ' + dst + '.' + input_port)
+            delay = bridge_cycles[dst]
+            output_port = 'vo_n' if input_port == 'vi_s' else 'vo_s'
+            path.append(dict(bridge=dst, src=input_port, dst=output_port, cycles=delay))
+            total += delay
+            at, port = dst, output_port
+    return result
+
+
 def isadd(n):
     """the verbatim g_add condition of ot_s81dv_norm_finish"""
     H = HB - (_clog2(n + 1) - 1)
