@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-CONDITIONAL",
+  "reviewer": "Codex",
+  "picture": "results/geom_review/s81_head_img/elemB_rb_c4_final.png",
+  "scope": "Head elemB c8/c9 own warm GRT successors; same ROM sites/pins and macro geometry",
+  "findings": [
+    "Viewed routed same-geometry elemB picture: two centred ROMs, open W/E bands and inter-ROM channel, modest local density peaks. No macro wall or sliver. Pin locations and clock access retain earlier reviewed repair.",
+    "FF hold c8 residual one internal endpoint -4.79ps; c9 -14.34ps/180 endpoints. Existing hooks repair default TT, insufficient at FF. Warm GRT repair at BC with 5ps margin then TT slew repair; no cycle change."
+  ],
+  "conditions": [
+    "No SIGNED claim until actual current signoff.py says SIGNED",
+    "Check FF hold and TT slew after extracted route, clock metric source-latency bug tracked separately"
+  ]
+}
