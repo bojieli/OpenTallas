@@ -53,9 +53,15 @@ def main():
     ap.add_argument('--ages', required=True)
     ap.add_argument('--rs', required=True)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--rd-shape-k', help='candidate K burst,gap (for example 8,3); full compile, not a rate-only estimate')
+    ap.add_argument('--rd-shape-v', help='candidate V burst,gap')
     ap.add_argument('--hbm-ps', type=float, help='WHAT-IF: compile the calendars with this controller period (decision 14: '
                     '833.334 = die clock) instead of static_kv_calendar.HBM_PS; the image is not written')
     a = ap.parse_args()
+    if a.rd_shape_k:
+        os.environ['OT_KV_RD_SHAPE_K'] = a.rd_shape_k
+    if a.rd_shape_v:
+        os.environ['OT_KV_RD_SHAPE_V'] = a.rd_shape_v
     from tools.qwen_kv_die import kv_static_programme as P
     if a.hbm_ps:
         P.KC.SOURCED['hbm_ps'] = a.hbm_ps

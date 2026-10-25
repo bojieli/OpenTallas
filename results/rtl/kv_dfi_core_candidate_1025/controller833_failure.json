@@ -1,0 +1,15 @@
+{
+ "verdict": "FAIL",
+ "controller_ps_candidate": 833.334,
+ "K_shape": [8,3],
+ "V_shape": [8,3],
+ "bound_profile": "kv44",
+ "failure": "put offsets are not the regular paced form: p0 8 gap 3",
+ "first_nonrepresentable_sector": 192,
+ "actual_put_offset": 267,
+ "single_law_put_offset": 264,
+ "diagnosis": "At the faster controller rate the V return-ring availability imposes extra waits after sector192; the existing front/landing calendar can encode only one P0/GAP law. Changing K rate alone cannot compile a decision14 image.",
+ "remaining": ["derive a representable V pacing law within the existing64-slot ring", "replace legacy625/768 phase-launch law for one core clock domain", "convert and requalify HBM timing constants in833ps cycles", "compile matching controller RTL/calendar image and run boot+token"],
+ "host_run": "epyc2:/srv/opentallas-scratch2/claude/codex-kv-token-1025",
+ "unit": "oth-ubuntu-3643661-1792921188"
+}
