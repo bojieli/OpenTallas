@@ -1,0 +1,6 @@
+== pass: SSTN_SPLIT_EXACT PASS five actual roles 4000 cycles both edges warm resets checked_bits=44245300
+== base_control: SSTN_SPLIT_MISMATCH e0c0sinf.so cycle3 got1 want3
+== base_status_unreg: SSTN_SPLIT_MISMATCH e0c0.so cycle1 got3 want0
+== payload_bit: SSTN_SPLIT_MISMATCH e0c0.x2 cycle0 got58c47fc5fde38dc9cd4f592776b264ccdd6a15a502095fde12cbbe120433fdfc0ef895a4c9dec424724986f9dc21a2463191f4
+== payload_reset: SSTN_SPLIT_MISMATCH e0c0.x2 cycle0 got58c47fc5fde38dc9cd4f592776b264ccdd6a15a502095fde12cbbe120433fdfc0ef895a4c9dec424724986f9dc21a2463191f4
+== payload_edge: SSTN_SPLIT_MISMATCH e0c0.x2 cycle0 gotxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

@@ -7,6 +7,9 @@
 # over ins + tol is an OT_TAP_CHECK WARN with the tap pitch that would fit (the generator re-sizes the grid:
 # partition clock.tap_pitch_um).  OT_TAP_REPORT_ONLY=1: measure only, on the parasitics the caller loaded (post-route
 # SPEF) -> OT_TAP_RC line.
+# Decision 5 (owner 10-24) GRT-RC hook (density kits, tap_balance_grt.tcl as POST_GLOBAL_ROUTE): OT_TAP_EST=grt measures
+# on estimate_parasitics -global_routing, wraps every netlist change in global_route -start/-end_incremental, and tags
+# its cells OT_TAP_TAG (unique names next to the CTS-stage pass).  Unset: placement RC, names unchanged.
 if {![llength [info commands ot_cf_wire_transition]]} {
   set tb_helper [file join [file dirname [info script]] clock_family.tcl]
   if {![file exists $tb_helper]} {
@@ -16,11 +19,23 @@ if {![llength [info commands ot_cf_wire_transition]]} {
 }
 uplevel #0 {
 set tb_blk [ord::get_db_block]
+# QC-A0 10-24: tap port family OT_TAP_PORT (default clk) and its SDC clock OT_TAP_CLOCK (default the port name)
+set tb_port [expr {[info exists ::env(OT_TAP_PORT)] ? $::env(OT_TAP_PORT) : "clk"}]
+set tb_clock [expr {[info exists ::env(OT_TAP_CLOCK)] ? $::env(OT_TAP_CLOCK) : $tb_port}]
 set tb_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set tb_target [expr {[info exists ::env(OT_TAP_TARGET_PS)] ? $::env(OT_TAP_TARGET_PS) : 250.0}]
 set tb_win [expr {[info exists ::env(OT_TAP_WINDOW_PS)] ? $::env(OT_TAP_WINDOW_PS) : 40.0}]
 set tb_tol [expr {[info exists ::env(OT_TAP_TOL_PS)] ? $::env(OT_TAP_TOL_PS) : 15.0}]
 set tb_ronly [expr {[info exists ::env(OT_TAP_REPORT_ONLY)] && $::env(OT_TAP_REPORT_ONLY)}]
+set tb_grt [expr {[info exists ::env(OT_TAP_EST)] && $::env(OT_TAP_EST) eq "grt"}]
+set tb_tag [expr {[info exists ::env(OT_TAP_TAG)] ? $::env(OT_TAP_TAG) : ""}]
+# netlist edits: GRT mode keeps the global routes current (ORFS post-GRT repair pattern)
+proc tb_begin {} { global tb_grt; if {$tb_grt} { global_route -start_incremental } }
+proc tb_end {placed} {
+  global tb_grt
+  if {$placed} { detailed_placement }
+  if {$tb_grt} { global_route -end_incremental }
+}
 set tb_pitch [expr {[info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0}]
 set tb_cell [expr {[info exists ::env(OT_TAP_DELAY_CELL)] ? $::env(OT_TAP_DELAY_CELL) : "BUFx4_ASAP7_75t_R"}]
 set tb_master [[ord::get_db] findMaster $tb_cell]
@@ -40,7 +55,9 @@ if {[info exists ::env(OT_CORE_LAT)] && [file exists $::env(OT_CORE_LAT)]} {
   close $fh
 }
 set tb_cores {}
+# QC-A0 10-24: the family follows OT_TAP_PORT (A0 hard cores: ck / ck_t<i>)
 set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}
+if {$tb_port ne "clk"} { set tb_port_re "^${tb_port}(_t\[0-9\]+|_c\[0-9\]+)?\$" }
 proc tb_is_buf {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "CKINV*" $m] || [string match "HB*" $m]}]
@@ -70,10 +87,10 @@ proc tb_rise {pin {buffer_output 0}} {
   return [ot_cf_wire $pin $clock]
 }
 proc tb_measure {{est 1}} {
-  global tb_blk tb_clat tb_cores tb_port_re
+  global tb_blk tb_clat tb_cores tb_port_re tb_grt
   set tb_cores {}
   set_propagated_clock [all_clocks]
-  if {$est} { estimate_parasitics -placement }
+  if {$est} { if {$tb_grt} { estimate_parasitics -global_routing } else { estimate_parasitics -placement } }
   ot_cf_refresh
   set res {}
   foreach bt [$tb_blk getBTerms] {
@@ -215,8 +232,9 @@ for {set it 0} {$it < 4} {incr it} {
       set tgt $tb_target
     }
   }
-  puts "[tb_line "OT_TAP_BALANCE it$it target [format %.0f $tgt]:" $m]"
+  puts "[tb_line "OT_TAP_BALANCE[expr {$tb_grt ? { GRT} : {}}] it$it target [format %.0f $tgt]:" $m]"
   set todo 0
+  tb_begin
   dict for {n v} $m {
     set d [expr {min($tgt - [lindex $v 0], $tb_target + $tb_win - [lindex $v 2])}]
     if {$d <= $tb_tol} continue
@@ -228,13 +246,13 @@ for {set it 0} {$it < 4} {incr it} {
     set bb [$bt getBBox]
     set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}]
     # the tree hangs off a new net; the chain runs tap port -> buf ... -> new net
-    set tree [odb::dbNet_create $tb_blk "${n}_tb${it}_tree"]
+    set tree [odb::dbNet_create $tb_blk "${n}_tb${tb_tag}${it}_tree"]
     $tree setSigType CLOCK
     foreach t [$root getITerms] { $t disconnect; $t connect $tree }
     set prev $root
     for {set b 0} {$b < $nb} {incr b} {
-      set inst [odb::dbInst_create $tb_blk $tb_master "${n}_tb${it}_d$b"]
-      set nxt [expr {$b == $nb - 1 ? $tree : [odb::dbNet_create $tb_blk "${n}_tb${it}_n$b"]}]
+      set inst [odb::dbInst_create $tb_blk $tb_master "${n}_tb${tb_tag}${it}_d$b"]
+      set nxt [expr {$b == $nb - 1 ? $tree : [odb::dbNet_create $tb_blk "${n}_tb${tb_tag}${it}_n$b"]}]
       if {$nxt ne $tree} { $nxt setSigType CLOCK }
       foreach t [$inst getITerms] {
         set mt [$t getMTerm]
@@ -247,8 +265,8 @@ for {set it 0} {$it < 4} {incr it} {
       incr tb_added
     }
   }
+  tb_end $todo
   if {!$todo} break
-  detailed_placement
 }
 # CP2 core pass: every hard-core clock pin on a GRID tap whose effective arrival (pin + internal latency) misses the
 # target by > tol is re-hung: too late -> its own delay chain straight from the tap port (the earliest point of that
@@ -259,6 +277,7 @@ if {[dict size $tb_clat]} {
   for {set ci 0} {$ci < 3} {incr ci} {
     set m [tb_measure]
     set todo 0
+    tb_begin
     foreach c $tb_cores {
       lassign $c p tap a L
       if {[string match clk_c* $tap]} continue
@@ -296,13 +315,13 @@ if {[dict size $tb_clat]} {
         set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
       }
       lassign [tb_outside $it] x y
-      set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_cb${ci}"
+      set tag "[regsub -all {[^A-Za-z0-9_]} $p _]_cb${tb_tag}${ci}"
       incr tb_added [tb_hang $it $src $nb $tag $x $y]
       dict set tb_hung $p 1
       set todo 1
     }
+    tb_end $todo
     if {!$todo} break
-    detailed_placement
   }
 }
 set m [tb_measure]

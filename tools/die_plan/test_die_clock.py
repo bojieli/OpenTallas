@@ -118,3 +118,27 @@ def test_slide_escapes_wide_macro():
     x, y, side = DC._slide((5000.0, 1500.0), (4000.0, 1500.0), (6000.0, 1500.0), K)
     assert not K.hit(x, y)
     assert abs(x - 5000.0) + abs(y - 1500.0) <= 1501.0 + 1e-6
+
+
+def test_delay_stage_pads_keep_netlist_consistent():
+    """a balance pad far beyond the segment cap becomes BUF + SNAKE_UM stages; every cell keeps one input and
+    one output net, the port net keeps its name, the electrical length is conserved."""
+    T = DC.Tree()
+    T.ports = [("input", "root"), ("output", "t_a__clk")]
+    T.cell("n0_0", 0.0, 0.0, "node", 0)
+    T.cell("c_a", 100.0, 0.0, "chain", 1)
+    T.nets = [dict(name="root", drv="port:root", branches=[(10.0, "M8", "n0_0", 10.0)]),
+              dict(name="w_n0_0", drv="n0_0", branches=[(100.0, "M8", "c_a", 100.0)]),
+              dict(name="t_a__clk", drv="c_a", branches=[(200.0, "M8", "port:t_a__clk", 200.0)])]
+    pads = {("w_n0_0", 0): 1500.0, ("t_a__clk", 0): 1000.0}
+    E, st = DC.expand_pads(T, pads)
+    assert st == int((1600 - 440) // DC.SNAKE_UM) + int((1200 - 440) // DC.SNAKE_UM)
+    names = [n["name"] for n in E.nets]
+    assert len(names) == len(set(names)) and "t_a__clk" in names
+    drv = [n["drv"] for n in E.nets]
+    assert len(drv) == len(set(drv))
+    loads = [b[2] for n in E.nets for b in n["branches"]]
+    assert sorted(set(loads)) == sorted(loads)
+    assert set(c for c in E.cells) == set(d for d in drv if not d.startswith("port:"))
+    tot = sum(b[0] for n in E.nets for b in n["branches"])
+    assert abs(tot - (10 + 100 + 200 + 1500 + 1000)) < 1e-6

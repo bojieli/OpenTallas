@@ -116,6 +116,11 @@ def main(pd, tn, out):
         if r["bits"] >= 32:
             ax.text((r["a"][0] + r["b"][0]) / 2, (r["a"][1] + r["b"][1]) / 2, "%s %d b %d um" % (r["port"], r["bits"], r["manhattan_um"]),
                     fontsize=5, color=col)
+    # S81/LEAFPLAN: FIRM internal stations (R3 inside cores, 405-um kit reach): every register site + its chain
+    for e in T.get("internal_stations", []):
+        pts = [e["from_um"]] + e["regs_um"] + [e["to_um"]]
+        ax.plot([p[0] for p in pts], [p[1] for p in pts], lw=0.4, color="black", ls=":", alpha=0.7)
+        ax.scatter([p[0] for p in e["regs_um"]], [p[1] for p in e["regs_um"]], marker="x", s=14, color="black")
     # ft-slot station sites (straight in->out line, 16 sampled bits, j/k of the way; face_flops.tcl placement)
     def fpt(face, win, tt):
         q = win[0] + tt * (win[1] - win[0])
@@ -129,7 +134,10 @@ def main(pd, tn, out):
             ax.scatter([a_[0] + (b_[0] - a_[0]) * j / k for j in range(1, k)],
                        [a_[1] + (b_[1] - a_[1]) * j / k for j in range(1, k)], s=1.5, color="purple")
     ax.set_xlim(-20, W + 20); ax.set_ylim(-20, H + 20); ax.set_aspect("equal")
-    ax.set_title("%s: hard cores + every declared bundle (pin-group centroid -> partner; red > 405 um or cos < -0.1)" % tn, fontsize=9)
+    ax.set_title("%s: hard cores (views: %s) + every declared bundle (pin-group centroid -> partner; red > 405 um or "
+                 "cos < -0.1); x = FIRM internal station (%d)" % (tn, ",".join(sorted({hc["inst"].split(".")[-1] + ":xm"
+                 for hc in T["hard_cores"] if "_xm." in hc.get("pins_file", "")})) or "R0",
+                 sum(len(e["regs_um"]) for e in T.get("internal_stations", []))), fontsize=9)
     fig.tight_layout(); fig.savefig(out + ".png", dpi=110)
     return res
 

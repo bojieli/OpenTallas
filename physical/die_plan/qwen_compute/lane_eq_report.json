@@ -1,0 +1,232 @@
+{
+ "families_unequal": 3,
+ "added": [
+  {
+   "slot": "cbf_q01_s2.rx_flit_serdes_rx",
+   "stations_from": 7,
+   "stations_to": 8,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_flit_serdes_rx"
+   ]
+  },
+  {
+   "slot": "sle_fe_v1.x_fw_ctl_p2",
+   "stations_from": 3,
+   "stations_to": 4,
+   "family": [
+    "sle_ctl",
+    "x_fw_p2_i"
+   ],
+   "lanes": [
+    "sl_E0_fw__x_fw_ctl_p2",
+    "sl_E2_fw__x_fw_ctl_p2",
+    "sl_E4_fw__x_fw_ctl_p2"
+   ]
+  },
+  {
+   "slot": "sle_fe_v2.x_fw_ctl_p2",
+   "stations_from": 3,
+   "stations_to": 4,
+   "family": [
+    "sle_ctl",
+    "x_fw_p2_i"
+   ],
+   "lanes": [
+    "sl_E1_fw__x_fw_ctl_p2",
+    "sl_E3_fw__x_fw_ctl_p2"
+   ]
+  },
+  {
+   "slot": "sle_fe_v3.x_fw_ctl_p2",
+   "stations_from": 3,
+   "stations_to": 4,
+   "family": [
+    "sle_ctl",
+    "x_fw_p2_i"
+   ],
+   "lanes": [
+    "sl_E5_fw__x_fw_ctl_p2"
+   ]
+  },
+  {
+   "slot": "slw_stm.x_fw_ctl_p1",
+   "stations_from": 3,
+   "stations_to": 4,
+   "family": [
+    "sle_ctl",
+    "x_fw_p1_i"
+   ],
+   "lanes": [
+    "sl_W0_fw__x_fw_ctl_p1",
+    "sl_W1_fw__x_fw_ctl_p1",
+    "sl_W2_fw__x_fw_ctl_p1",
+    "sl_W3_fw__x_fw_ctl_p1",
+    "sl_W4_fw__x_fw_ctl_p1",
+    "sl_W5_fw__x_fw_ctl_p1"
+   ]
+  },
+  {
+   "slot": "slw_sc.x_fw_ctl_p1",
+   "stations_from": 3,
+   "stations_to": 4,
+   "family": [
+    "sle_ctl",
+    "x_fw_p1_i"
+   ],
+   "lanes": [
+    "sl_W0_fw__x_fw_ctl_p1",
+    "sl_W1_fw__x_fw_ctl_p1",
+    "sl_W2_fw__x_fw_ctl_p1",
+    "sl_W3_fw__x_fw_ctl_p1",
+    "sl_W4_fw__x_fw_ctl_p1",
+    "sl_W5_fw__x_fw_ctl_p1"
+   ]
+  },
+  {
+   "slot": "slw_stm.x_fw_ctl_p1",
+   "stations_from": 4,
+   "stations_to": 5,
+   "family": [
+    "sle_ctl",
+    "x_fw_p1_i"
+   ],
+   "lanes": [
+    "sl_W0_fw__x_fw_ctl_p1",
+    "sl_W1_fw__x_fw_ctl_p1",
+    "sl_W2_fw__x_fw_ctl_p1",
+    "sl_W3_fw__x_fw_ctl_p1",
+    "sl_W4_fw__x_fw_ctl_p1",
+    "sl_W5_fw__x_fw_ctl_p1"
+   ]
+  },
+  {
+   "slot": "slw_sc.x_fw_ctl_p1",
+   "stations_from": 4,
+   "stations_to": 5,
+   "family": [
+    "sle_ctl",
+    "x_fw_p1_i"
+   ],
+   "lanes": [
+    "sl_W0_fw__x_fw_ctl_p1",
+    "sl_W1_fw__x_fw_ctl_p1",
+    "sl_W2_fw__x_fw_ctl_p1",
+    "sl_W3_fw__x_fw_ctl_p1",
+    "sl_W4_fw__x_fw_ctl_p1",
+    "sl_W5_fw__x_fw_ctl_p1"
+   ]
+  },
+  {
+   "slot": "slw_stm.x_fw_ctl_p1",
+   "stations_from": 5,
+   "stations_to": 6,
+   "family": [
+    "sle_ctl",
+    "x_fw_p1_i"
+   ],
+   "lanes": [
+    "sl_W0_fw__x_fw_ctl_p1",
+    "sl_W1_fw__x_fw_ctl_p1",
+    "sl_W2_fw__x_fw_ctl_p1",
+    "sl_W3_fw__x_fw_ctl_p1",
+    "sl_W4_fw__x_fw_ctl_p1",
+    "sl_W5_fw__x_fw_ctl_p1"
+   ]
+  },
+  {
+   "slot": "slw_sc.x_fw_ctl_p1",
+   "stations_from": 5,
+   "stations_to": 6,
+   "family": [
+    "sle_ctl",
+    "x_fw_p1_i"
+   ],
+   "lanes": [
+    "sl_W0_fw__x_fw_ctl_p1",
+    "sl_W1_fw__x_fw_ctl_p1",
+    "sl_W2_fw__x_fw_ctl_p1",
+    "sl_W3_fw__x_fw_ctl_p1",
+    "sl_W4_fw__x_fw_ctl_p1",
+    "sl_W5_fw__x_fw_ctl_p1"
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.rx_flit_serdes_rx",
+   "stations_from": 8,
+   "stations_to": 9,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_flit_serdes_rx"
+   ]
+  },
+  {
+   "slot": "cbf_q00_s2.rx_flit_serdes_rx",
+   "stations_from": 7,
+   "stations_to": 8,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_flit_serdes_rx"
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.rx_flit_serdes_rx",
+   "stations_from": 9,
+   "stations_to": 10,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_flit_serdes_rx"
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.rx_v_serdes_rx_valid",
+   "stations_from": 8,
+   "stations_to": 9,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_v_serdes_rx_valid"
+   ]
+  },
+  {
+   "slot": "cbf_q00_s2.rx_v_serdes_rx_valid",
+   "stations_from": 7,
+   "stations_to": 8,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_v_serdes_rx_valid"
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.rx_v_serdes_rx_valid",
+   "stations_from": 9,
+   "stations_to": 10,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_v_serdes_rx_valid"
+   ]
+  }
+ ],
+ "unfixed": [],
+ "families_unequal_after": []
+}

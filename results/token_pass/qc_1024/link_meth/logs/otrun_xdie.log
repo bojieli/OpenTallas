@@ -1,0 +1,13 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: intel1         admits   745 GB (avail 811, reserve 0, fresh 0, peak 1.9, headroom 0, waiters 0/0 GB) load 77/112 running 21 disk 2274 GB 
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-941609-1792918059 after 1 s
+  "cur_old_k22_image": "FAIL as required"
+ }
+}
+runs: {'cur_bound_image': ('PASS', 'PASS'), 'cur_bound_image_mut_result_bit': ('FAIL', 'FAIL'), 'cur_bound_image_sfm3': ('PASS', 'PASS'), 'cur_bound_image_t8192': ('PASS', 'PASS'), 'cur_bound_image_tile_sd0': ('FAIL', 'FAIL'), 'cur_c_rx_codec1': ('FAIL', 'FAIL'), 'cur_kseam_d22bu_bound': ('FAIL', 'FAIL'), 'cur_kseam_d22bu_route_r': ('PASS', 'PASS'), 'cur_mut_kseam_rx_torn': ('FAIL', 'FAIL'), 'cur_mut_kv_run_late': ('FAIL', 'FAIL'), 'cur_mut_no_base': ('FAIL', 'FAIL'), 'cur_mut_phy_bit': ('FAIL', 'FAIL'), 'cur_mut_result_bit': ('FAIL', 'FAIL'), 'cur_mut_status_done': ('FAIL', 'FAIL'), 'cur_mut_txdp_c_off1': ('FAIL', 'FAIL'), 'cur_no_status_tail': ('FAIL', 'FAIL'), 'cur_old_k22_image': ('FAIL', 'FAIL'), 'cur_pair': ('PASS', 'PASS'), 'cur_pair_l0': ('PASS', 'PASS'), 'cur_pair_phy9': ('PASS', 'PASS'), 'cur_pair_t8192': ('PASS', 'PASS'), 'cur_shift_only_sd0': ('PASS', 'PASS')}
+rc=0
+ot-run: RAN on intel1 (unit oth-ubuntu-941609-1792918059): exit 0

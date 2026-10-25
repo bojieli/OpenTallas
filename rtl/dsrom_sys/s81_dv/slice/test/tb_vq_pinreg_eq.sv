@@ -14,7 +14,7 @@ module tb_vq_pinreg_eq;
     ot_s81sl_vq_ref #(.AQ_XMEM(2)) u_ref (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y), .u_v(u_v), .u_i(u_i), .u(u),
         .sid(sid), .k(k), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .xf_v(rv), .xf_s(rs), .xf(rx), .fault(rf));
-    ot_s81sl_vq #(.AQ_XMEM(2)) u_new (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y), .u_v(u_v), .u_i(u_i), .u(u),
+    ot_s81sl_vq #(.AQ_XMEM(2)) u_new (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y({y[255:240], y[223:208], y[191:176], y[159:144], y[127:112], y[95:80], y[63:48], y[31:16]}), .u_v(u_v), .u_i(u_i), .u(u),
         .sid(sid), .k(k), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .xf_v(nv), .xf_s(ns), .xf(nx), .fault(nf));
     integer cyc = 0, mism = 0, frags = 0, starts = 0, vec = 0, i, j, gap, chk = 1, rf_at = -1, nf_at = -1;
@@ -35,7 +35,7 @@ module tb_vq_pinreg_eq;
     end
     // garbage on every command/data field in idle cycles (a raw-pin mux select or a crossed field shows up)
     task idle; begin m_q = $urandom; m_b = $urandom; m_i = $urandom; um_q = $urandom; um_b = $urandom; um_i = $urandom;
-        y = {8{rf32(0)}}; u = {8{rf32(0)}}; y_i = $urandom; u_i = $urandom; end endtask
+        y = {8{rf32(0)}} & {8{32'hFFFF0000}}; /* vn's y is BF16: low halves 0 (packed pins) */ u = {8{rf32(0)}}; y_i = $urandom; u_i = $urandom; end endtask
     task tick; begin @(negedge clk); end endtask
     initial begin
         idle; repeat (4) tick; rst_n = 1; repeat (8) tick;
@@ -47,7 +47,7 @@ module tb_vq_pinreg_eq;
             gap = $urandom % 6; repeat (gap) begin tick; idle; end
             i = $urandom % 2;    // stream y or u for this vector
             for (j = 0; j < 8; j = j + 1) begin
-                if (i) begin y_v = 1; y_i = j; for (gap = 0; gap < 8; gap = gap + 1) y[32 * gap +: 32] = rf32(0); end
+                if (i) begin y_v = 1; y_i = j; for (gap = 0; gap < 8; gap = gap + 1) y[32 * gap +: 32] = rf32(0) & 32'hFFFF0000; end
                 else begin u_v = 1; u_i = j; for (gap = 0; gap < 8; gap = gap + 1) u[32 * gap +: 32] = rf32(0); end
                 tick; y_v = 0; u_v = 0; idle;
                 gap = $urandom % 3; repeat (gap) begin tick; idle; end

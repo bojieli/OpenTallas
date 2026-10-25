@@ -249,6 +249,18 @@
        },
        "rack_macro": {
         "type": "string"
+       },
+       "bump_exclude_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        },
+        "minItems": 1
        }
       }
      }
@@ -351,74 +363,6 @@
            "type": "string",
            "minLength": 1
           }
-         }
-        }
-       }
-      },
-      "supplies": {
-       "type": "array",
-       "items": {
-        "type": "object",
-        "required": [
-         "name",
-         "nets",
-         "parts",
-         "bumps"
-        ],
-        "additionalProperties": false,
-        "properties": {
-         "name": {
-          "type": "string",
-          "minLength": 1
-         },
-         "nets": {
-          "type": "array",
-          "items": {
-           "type": "string",
-           "minLength": 1
-          },
-          "minItems": 1
-         },
-         "parts": {
-          "type": "array",
-          "items": {
-           "type": "string",
-           "minLength": 1
-          },
-          "minItems": 1
-         },
-         "bumps": {
-          "type": "object",
-          "required": [
-           "rows",
-           "pitch_um"
-          ],
-          "additionalProperties": false,
-          "properties": {
-           "rows": {
-            "type": "integer",
-            "minimum": 1
-           },
-           "pitch_um": {
-            "type": "number",
-            "exclusiveMinimum": 0
-           },
-           "over": {
-            "enum": [
-             "io_window",
-             "partition"
-            ]
-           },
-           "note": {
-            "type": "string"
-           }
-          }
-         },
-         "basis": {
-          "type": "string"
-         },
-         "note": {
-          "type": "string"
          }
         }
        }
@@ -531,8 +475,32 @@
            },
            "note": {
             "type": "string"
+           },
+           "exclude_um": {
+            "type": "array",
+            "items": {
+             "type": "array",
+             "items": {
+              "type": "number"
+             },
+             "minItems": 4,
+             "maxItems": 4
+            },
+            "minItems": 1
            }
           }
+         },
+         "esd_um": {
+          "type": "array",
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          },
+          "minItems": 1
          },
          "note": {
           "type": "string"
@@ -789,6 +757,13 @@
         "type": "number",
         "minimum": 0
        },
+       "insertion_ff_ps": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "insertion_basis": {
+        "type": "string"
+       },
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0
@@ -797,16 +772,81 @@
         "enum": [
          "grid",
          "grid+sinks",
-         "sinks"
+         "sinks",
+         "density"
         ]
        },
        "tap_radius_um": {
         "type": "number",
         "exclusiveMinimum": 0
        },
+       "edge_clocks": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "port",
+          "tap_um"
+         ],
+         "additionalProperties": false,
+         "properties": {
+          "port": {
+           "type": "string",
+           "minLength": 1
+          },
+          "tap_um": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 2,
+           "maxItems": 2
+          },
+          "period_mult": {
+           "type": "integer",
+           "minimum": 1
+          },
+          "source": {
+           "type": "string"
+          },
+          "note": {
+           "type": "string"
+          }
+         }
+        }
+       },
        "tap_max_sinks": {
         "type": "integer",
         "minimum": 1
+       },
+       "tap_target_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "tap_min_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "sink_sites_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 3,
+         "items": {
+          "type": "number"
+         }
+        }
+       },
+       "sink_bins_file": {
+        "type": "string"
+       },
+       "tap_balance_rc": {
+        "enum": [
+         "placement",
+         "grt_report",
+         "grt"
+        ]
        },
        "core_taps": {
         "enum": [
@@ -984,6 +1024,10 @@
        "sync_stages": {
         "type": "integer",
         "minimum": 2
+       },
+       "depth": {
+        "type": "integer",
+        "minimum": 1
        }
       }
      },
@@ -1460,6 +1504,14 @@
       "type": "integer",
       "minimum": 0
      },
+     "beats": {
+      "type": "integer",
+      "minimum": 2
+     },
+     "word_bits": {
+      "type": "integer",
+      "minimum": 1
+     },
      "reach_um": {
       "type": "number",
       "exclusiveMinimum": 0
@@ -1555,6 +1607,10 @@
      "minimum": 0
     },
     "neighbour_skew_ps": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "insertion_ff_ps": {
      "type": "number",
      "exclusiveMinimum": 0
     },
@@ -1673,12 +1729,38 @@
     "release": {
      "enum": [
       "counted",
-      "pipelined"
+      "pipelined",
+      "wavefront"
      ]
     },
     "relay_um": {
      "type": "number",
      "exclusiveMinimum": 0
+    },
+    "hop_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "in_sites": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+     }
+    },
+    "root_part": {
+     "type": "string",
+     "minLength": 1
+    },
+    "start": {
+     "enum": [
+      "none",
+      "broadcast"
+     ]
     },
     "part_depth": {
      "type": "integer",
@@ -1756,6 +1838,13 @@
         "type": "integer",
         "minimum": 0
        },
+       "beats": {
+        "type": "integer",
+        "minimum": 2
+       },
+       "word_cycles": {
+        "type": "integer"
+       },
        "param": {
         "type": "string"
        }
@@ -1815,6 +1904,10 @@
      "exclusiveMinimum": 0
     },
     "io_edge_max_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "core_internal_reach_um": {
      "type": "number",
      "exclusiveMinimum": 0
     }

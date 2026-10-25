@@ -1,0 +1,6 @@
+{
+  "verdict": "BUILD_FAIL",
+  "scope": "first head-miter staging attempt",
+  "cause": "Missing ot_sram_1r1w2c_128x64_m1 in benchmark source list",
+  "fix": "Added existing physical/asap7_memory_macros_v2 model to source list; no RTL change needed for staging"
+}

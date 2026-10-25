@@ -29,7 +29,15 @@ module ot_link_afifo #(
     parameter integer SYNC = 2,
     // RCOPY > 0 (S-ELEM-PQ 2026-10-15, host_c route: u_hx rbin[1] drove 8,230 read-mux loads): the head read selects
     // each ceil(W/RCOPY)-bit slice with its own kept copy of the read address, loaded with rbin on the same edge.
-    parameter integer RCOPY = 0
+    parameter integer RCOPY = 0,
+    // SAMECLK = 1 (KV-CORE-RTL/HR 2026-10-25, BRIEFING 16a; opt-in, 0 = unchanged): wclk and rclk are the SAME clock
+    // (KV hub_Wi host/ingest logic on the die clock).  The crossing becomes a plain register stage: binary pointers,
+    // each published to the other side through ONE register (wbin -> wbin_q on rclk, rbin -> rbin_q on wclk); no Gray
+    // code, no synchroniser.  Cycle behaviour = this module with SYNC = 1 on one clock (proven by the lockstep miter
+    // results/kv_cores_1025/hr_cdc_miter.json): an entry is visible 2 edges after its write edge (SYNC = 2: 3),
+    // credits (wfreed) return 1 edge earlier than SYNC = 2.  Storage, flags, ovf and ports unchanged; caller ties
+    // wclk/rclk to one net.
+    parameter integer SAMECLK = 0
 ) (
     input  wire          wclk,
     input  wire          wrst_n,
@@ -74,15 +82,19 @@ module ot_link_afifo #(
     wire [AW:0] rgray_w = rgray_s[SYNC-1];
     wire [AW:0] wbin_n = wbin + 1'b1;
     wire [AW:0] wgray_n = wbin_n ^ (wbin_n >> 1);
-    assign wfull = (wgray == {~rgray_w[AW:AW-1], rgray_w[AW-2:0]});
+    reg  [AW:0] rbin_q, wbin_q;            // SAMECLK: the one register stage per direction
+    assign wfull = (SAMECLK != 0) ? (wbin == {~rbin_q[AW], rbin_q[AW-1:0]})
+                                  : (wgray == {~rgray_w[AW:AW-1], rgray_w[AW-2:0]});
     wire        push = wr && !wfull;
-    wire [AW:0] rbin_w = g2b(rgray_w);
+    wire [AW:0] rbin_w = (SAMECLK != 0) ? rbin_q : g2b(rgray_w);
     integer i;
     always @(posedge wclk or negedge wrst_n) begin
         if (!wrst_n) begin
             wbin <= 0; wgray <= 0; ovf <= 1'b0; rbin_seen <= 0; wfreed <= 0;
             for (i = 0; i < SYNC; i = i + 1) rgray_s[i] <= 0;
+            rbin_q <= 0;
         end else begin
+            rbin_q <= rbin;
             rgray_s[0] <= rgray_seam;
             for (i = 1; i < SYNC; i = i + 1) rgray_s[i] <= rgray_s[i-1];
             wfreed <= rbin_w - rbin_seen;
@@ -100,7 +112,12 @@ module ot_link_afifo #(
     wire [AW:0] rbin_n = rbin + 1'b1;
     reg  [AW:0] wgray_s [0:SYNC-1];
     wire [AW:0] wgray_r = wgray_s[SYNC-1];
-    assign rempty = (rgray == wgray_r);
+`ifdef OT_LINK_AFIFO_MUT_SAMECLK
+    // negative control for the SAMECLK miter: the register stage is dropped (head visible on the write edge itself)
+    assign rempty = (SAMECLK != 0) ? (rbin == wbin) : (rgray == wgray_r);
+`else
+    assign rempty = (SAMECLK != 0) ? (rbin == wbin_q) : (rgray == wgray_r);
+`endif
     wire [W-1:0] raw_rdata;
     localparam integer RS = (RCOPY > 0) ? (W + RCOPY - 1) / RCOPY : W;
     if (RCOPY > 0) begin : g_rcopy
@@ -131,12 +148,14 @@ module ot_link_afifo #(
 `else
     assign rdata=raw_rdata;
 `endif
-    assign rcount = g2b(wgray_r) - rbin;
+    assign rcount = ((SAMECLK != 0) ? wbin_q : g2b(wgray_r)) - rbin;
     always @(posedge rclk or negedge rrst_n) begin
         if (!rrst_n) begin
             rbin <= 0; rgray <= 0;
             for (i = 0; i < SYNC; i = i + 1) wgray_s[i] <= 0;
+            wbin_q <= 0;
         end else begin
+            wbin_q <= wbin;
             wgray_s[0] <= wgray_seam;
             for (i = 1; i < SYNC; i = i + 1) wgray_s[i] <= wgray_s[i-1];
             if (rd && !rempty) begin

@@ -73,14 +73,14 @@ module ot_s81sl_leaf #(
     input  wire [31:0]   g_d,
     output wire          fault
 );
-    wire vr_v, vp_v, va_v, vo_v, vef; wire [1:0] vr_c, vp_c, va_c, vo_c; wire [127:0] vr_h, vr_k, vr_w;
-    wire [31:0] vp_hh, vp_kk, vp_dd, va_g; wire [255:0] va_h, va_val, vo_y;
+    wire vr_v, vp_v, va_v, vo_v, vef; wire [1:0] vr_c, vp_c, va_c, vo_c; wire [63:0] vr_h; wire [127:0] vr_k, vr_w;
+    wire [31:0] vp_hh, vp_kk, vp_dd, va_g; wire [127:0] va_h; wire [255:0] va_val; wire [127:0] vo_y;
     wire hw_v, hw_hf, hr_v, hr_hf, hq_v, n_go, m_v, m_q, m_b, wl_v, y_v;
-    wire [2:0] hw_j, hr_j, wl_i, y_i; wire [255:0] hw_d, hq_d, wl_d, y; wire [127:0] n_pre; wire [7:0] m_i;
+    wire [2:0] hw_j, hr_j, wl_i, y_i; wire [255:0] hw_d, hq_d, wl_d; wire [127:0] y; wire [127:0] n_pre; wire [7:0] m_i;
     wire s_v; wire [159:0] s_d; wire x_rv, x_qv, x_wv; wire [9:0] x_ra, x_wa; wire [7:0] x_wm; wire [255:0] x_qd, x_wd;
     wire u_v, um_v, um_q, um_b; wire [2:0] u_i; wire [255:0] u; wire [7:0] um_i;
     wire swv, swvi, swfi; wire [255:0] swd; wire [31:0] sww, swl; wire [63:0] swri;
-    wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rfu, rfu2, rfmx; wire [30:0] rari;
+    wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rfmx; wire [30:0] rfu, rfu2, rari;
     wire f_vp, f_vn, f_vq, f_vs;
     wire vs_xrv,vs_xwv;wire [9:0]vs_xra,vs_xwa;wire[7:0]vs_xwm;wire[255:0]vs_xwd;
     wire kvbusy,kvdone,kvfault,kv_xrv,kv_xwv;wire[9:0]kv_xra,kv_xwa;wire[7:0]kv_xwm;wire[255:0]kv_xwd;
@@ -107,7 +107,8 @@ module ot_s81sl_leaf #(
         .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d), .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf),
         .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(f_vp));
-    ot_s81sl_vn u_vn (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
+    ot_s81sl_vn_sp u_vn (   // S81/RTLSPLIT: vn = u_a (ot_s81sl_vn_a) + u_b (ot_s81sl_vn_b), p +2 edges
+   .clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d),
         .p_v(p_v), .p_d(p_d), .y_v(y_v), .y_i(y_i), .y(y), .fault(f_vn));
@@ -117,7 +118,7 @@ module ot_s81sl_leaf #(
     // Frozen hard child: its Liberty/blackbox has no parameters.
     ot_s81sl_vs u_vs (
 `endif
-        .clk(clk), .rst_n(rst_n), .s_v(s_v && !kv_cmd), .s_d(s_d),
+        .clk(clk), .rst_n(rst_n), .s_v(s_v && !kv_cmd), .s_d({s_d[159:64], s_d[62], s_d[60:0]}),
         .x_rv(vs_xrv), .x_ra(vs_xra), .x_qv(x_qv && !kvbusy), .x_qd(x_qd), .x_wv(vs_xwv), .x_wa(vs_xwa), .x_wm(vs_xwm), .x_wd(vs_xwd),
         .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .sw_v(swv), .sw_d(swd), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
@@ -127,7 +128,8 @@ module ot_s81sl_leaf #(
         .ve_av(va_v), .ve_ac(va_c), .ve_ah(va_h), .ve_aval(va_val), .ve_ag(va_g),
         .ve_ov(vo_v), .ve_oc(vo_c), .ve_oy(vo_y), .ve_fi(vef),
         .e_v(e_v), .e_c(e_c), .e_d(e_d), .g_v(g_v), .g_c(g_c), .g_d(g_d), .fault(f_vs));
-    ot_s81sl_ve u_ve (.clk(clk), .rst_n(rst_n), .r_v(vr_v), .r_c(vr_c), .r_h(vr_h), .r_k(vr_k), .r_w(vr_w),
+    ot_s81sl_ve_sp u_ve (   // S81/RTLSPLIT: ve = u_m (ot_s81sl_ve_m) + u_s (ot_s81sl_ve_s), reduce stream +2 edges
+   .clk(clk), .rst_n(rst_n), .r_v(vr_v), .r_c(vr_c), .r_h(vr_h), .r_k(vr_k), .r_w(vr_w),
         .p_v(vp_v), .p_c(vp_c), .p_hh(vp_hh), .p_kk(vp_kk), .p_dd(vp_dd),
         .a_v(va_v), .a_c(va_c), .a_h(va_h), .a_val(va_val), .a_g(va_g),
         .o_v(vo_v), .o_c(vo_c), .o_y(vo_y), .fault(vef));
@@ -230,10 +232,19 @@ module ot_s81sl_slice #(
         .is_v(is_v), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_xg));
     generate if (HB != 0) begin : g_c3
 `ifdef OT_S81SL_KV_TRANSPORT
+        // S81-KITS-RTLC 10-24 (OWNER DECISION 8): xrt3 ring / band ports carry only read / non-constant bits; the parent
+        // zero-fills ci_b[1103:1076] and x_si[7] (plain logic) and packs the B word (bits 7..36 / 1076.. are not read)
+        assign ci_b[1103:1076] = 28'd0; assign x_si[7] = 1'b0;
         ot_s81sl_xrt3 u_xr (
+            .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e[1075:1]), .dl_wv(dl_wv), .dl_w(dl_w[1075:1]),
+            .dl_vv(dl_vv), .dl_vb(dl_vb[275:1]), .ci_dir(ci_dir), .ci_b(ci_b[1075:0]), .bi({bi[1075:37], bi[6:0]}), .bo(bo),
+            .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
+            .p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x),
+            .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
+            .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si[6:0]),
+            .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
 `else
         ot_s81sl_xr3 u_xr (
-`endif
             .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo),
             .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
@@ -241,12 +252,21 @@ module ot_s81sl_slice #(
             .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
             .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si),
             .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
+`endif
     end else begin : g_c1
 `ifdef OT_S81SL_KV_TRANSPORT
+        // S81-KITS-RTLC 10-24 (OWNER DECISION 8): see the C3 branch
+        assign ci_b[1103:1076] = 28'd0; assign x_si[7] = 1'b0;
         ot_s81sl_xrt1 u_xr (
+            .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e[1075:1]), .dl_wv(dl_wv), .dl_w(dl_w[1075:1]),
+            .dl_vv(dl_vv), .dl_vb(dl_vb[275:1]), .ci_dir(ci_dir), .ci_b(ci_b[1075:0]),
+            .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
+            .p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x),
+            .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
+            .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si[6:0]),
+            .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
 `else
         ot_s81sl_xr1 u_xr (
-`endif
             .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b),
             .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
@@ -254,11 +274,12 @@ module ot_s81sl_slice #(
             .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
             .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si),
             .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
+`endif
         assign bo = 513'd0;      // C1 has no band port: the C1 cluster master does not expose bi / bo
     end endgenerate
     // xfin (S81-DV leaf): sid = the slice strap (RTL-BUILD-S81: was unconnected); mode ENG -> e_* -> eg
     ot_s81dv_xfin u_xf (.clk(clk), .rst_n(rst_n), .go(x_go), .mode(x_mode), .sid(sid), .eps(x_eps), .s_v(x_sv),
-        .s_i(x_si), .s(x_s),
+        .s_i(x_si[6:0]), .s(x_s),
         .wi_v(nx_wi[172]), .wi_h(nx_wi[171:168]), .wi_b(nx_wi[167:160]), .wi_d(nx_wi[159:0]),
         .ei_v(nx_ei[172]), .ei_h(nx_ei[171:168]), .ei_b(nx_ei[167:160]), .ei_d(nx_ei[159:0]),
         .eo_v(nx_eo[172]), .eo_h(nx_eo[171:168]), .eo_b(nx_eo[167:160]), .eo_d(nx_eo[159:0]),

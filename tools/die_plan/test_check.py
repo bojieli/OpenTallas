@@ -690,3 +690,35 @@ def test_gen_latency_fold_r8():
         assert js["r8"]["rebase"]["moved"] == 1
         inpl = json.loads(plan.read_text())["latency"]["lanes"]
         assert inpl["r"]["cycles"] == 5 and "r8_pad" not in inpl["r"]       # in-plan table stays base (binder, G0)
+
+
+def test_two_beat_lane():
+    """DEC12: a lane carrying word_bits in `beats` beats: port = ceil(word / beats) + beat-index bits, latency
+    word_cycles = cycles + beats - 1, census credit = word_bits."""
+    def mut(word):
+        def m(p):
+            ln = next(x for x in p["lanes"] if x["id"] == "din")
+            ln.update(beats=2, word_bits=word)
+            p["latency"]["lanes"] = gen.latency_table(schema.Plan(p))
+        return m
+    assert not errs(mut(62), "latency")                      # 32 = 31 + 1 beat bit
+    p = copy.deepcopy(EX)
+    mut(62)(p)
+    d = p["latency"]["lanes"]["din"]
+    assert d["beats"] == 2 and d["word_cycles"] == d["cycles"] + 1
+    assert any("need port width 33" in e for e in errs(mut(64), "latency"))
+
+
+def test_run_keeps_plan_path_for_plan_relative_files(tmp_path, monkeypatch):
+    """check.run must give the Plan its directory: reset_tree.core_reset_targets resolves core pins_file from P.path."""
+    seen = []
+    real = check.S.Plan
+
+    def spy(raw, path=None):
+        P = real(raw, path)
+        seen.append(P)
+        return P
+    monkeypatch.setattr(check.S, "Plan", spy)
+    check.run(json.loads((HERE / "examples" / "tiny_plan.json").read_text()), plan_dir=tmp_path)
+    P = seen[-1]  # schema.validate builds its own path-free structural Plan first
+    assert P.path is not None and Path(P.path).parent == tmp_path

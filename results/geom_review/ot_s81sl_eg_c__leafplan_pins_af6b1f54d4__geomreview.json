@@ -1,0 +1,16 @@
+{
+ "element": "ot_s81sl_eg_c (+ vq_lfp/vs_lfp/vq_xm/vs_xm clk pins)",
+ "kit": "claude/s81-leafplan-1024r@af6b1f54d4 physical/die_plan/s81/inputs/core_pins/ot_s81sl_eg_c.json",
+ "stage": "plan pins",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T21:50:00-07:00",
+ "reasons": "[2026-10-24 21:50] Looked at eg_c_pins.png and vq_vs_clk_pins.png. eg_c: clk/rst_n move from the NW corner (0,250) to S-face centre (128,0), so the farthest corner is 390 um Manhattan instead of 510; the S face goes from 3 clusters at 26.5/um to an even spread over 4-255 um (~1/um); N 32-b bus spread across the face. vq_lfp/vq_xm: clk/rst_n at N-face middle. vs_lfp/vs_xm: clk/rst_n at S-face middle; vs N face 1589 pins peak 11/um, under the 24.3 cap. Answers my r6 FAIL.",
+ "fixes": "Re-kit OK. Conditions: (1) the spread S/N pins of eg_c must still face their partners in the parent plan (rerun G0C/partner-face check: no new bits facing away, no pin->partner over 405 um); (2) placed picture of the eg_c re-kit back here before route (expect pin flops along the whole S face, tree root at S centre); (3) TT/FF sign-off as usual.",
+ "images": [
+  "results/geom_review/s81_leafplan_1024/eg_c_pins.png",
+  "results/geom_review/s81_leafplan_1024/vq_vs_clk_pins.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

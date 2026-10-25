@@ -19,12 +19,19 @@ module dsdv_bk_g #(
     parameter integer MUT = 0,
     // COORD ruling 2026-10-24 18:55: the addressed-drain sink is canonical (the BK drain / slice-CTL namespace collision
     // is a functional bug); 0 = the retired transparent-forwarding behaviour, kept only to reproduce old records.
-    parameter integer BK_DRAIN_SINK = 1
+    parameter integer BK_DRAIN_SINK = 1,
+    // S81-KITS-RTLC 10-24 (ruling b): VD_PK = 1 (default; the S81 die master under dsdv_bk_sel): vd is the PACKED
+    // dsfd_selt_c word {vd[512:502], vd[356:1]} (367 bits); vd[513] (kind msb) and vd[501:357] are constant 0 at
+    // the producer (ot_s81ph_sel_tile.sv o_d kinds 3/4/5/7) and vd[0] (rst copy) is never read here: not pins.
+    // VD_PK = 0: legacy 514-bit vd.
+    parameter integer VD_PK = 1
 ) (
     input  wire [0:0]        clk,
     input  wire [0:0]        rst_n,       // die reset net (active low)
-    input  wire [7:0]        tap_k,
-    input  wire [7:0]        sink_k,
+    // S81-KITS-RTLC 10-25: tap_k / sink_k bits 1 / 2 (kinds K_XQ / K_XB) are never read by ot_dsdv_vstop (it
+    // excludes those kinds): packed straps {k[7:3], k[0]}, not pins
+    input  wire [5:0]        tap_k,
+    input  wire [5:0]        sink_k,
     input  wire [2:0]        ik,
     input  wire [2:0]        ek,
     input  wire [7:0]        uid,
@@ -37,7 +44,7 @@ module dsdv_bk_g #(
     output wire [514:0]      ln1,
     output wire [514:0]      ln2,
     output wire [514:0]      ln3,
-    input  wire [513:0]      vd,          // the merger / select control's vd {data 512, valid, rst}
+    input  wire [(VD_PK ? 366 : 513):0] vd,   // the merger / select control's vd {data 512, valid, rst} (VD_PK: packed)
     output reg  [0:0]        fault
 );
     reg [1:0] rs;
@@ -45,11 +52,18 @@ module dsdv_bk_g #(
     wire rn = rs[1];
     reg [2:0] ik_c, ek_c; reg [7:0] uid_c; reg egn_c;
     always @(posedge clk[0]) begin ik_c <= ik; ek_c <= ek; uid_c <= uid; egn_c <= eg_n[0]; end
+    wire [513:0] vdu;                                  // vd unpacked (VD_PK: dropped constant bits are 0)
     reg vdv; reg [511:0] vdd;                          // vd captured at the pin
-    always @(posedge clk[0] or negedge rn) if (!rn) vdv <= 1'b0; else vdv <= vd[1];
-    always @(posedge clk[0]) vdd <= vd[513:2];
+    always @(posedge clk[0] or negedge rn) if (!rn) vdv <= 1'b0; else vdv <= vdu[1];
+`ifdef OT_RTLC_MUT_BKVD   // bench mutant: the packed kind / seg_tag field lands one bit high
+    generate if (VD_PK) begin : g_vpk assign vdu = {vd[366:356], 1'b0, 145'd0, vd[355:0], 1'b0}; end
+`else
+    generate if (VD_PK) begin : g_vpk assign vdu = {1'b0, vd[366:356], 145'd0, vd[355:0], 1'b0}; end
+`endif
+    else begin : g_vfl assign vdu = vd; end endgenerate
+    always @(posedge clk[0]) vdd <= vdu[513:2];
     wire dnv, dsv; wire [V-1:0] dn, ds, ob; wire vs_f, vi_f, vo_f, ov;
-    ot_dsdv_vstop #(.V(V), .BK_DRAIN_SINK(BK_DRAIN_SINK)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k(tap_k), .sink_k(sink_k), .bk_uid(uid), .vi_s(vi_s), .vo_n(vo_n),
+    ot_dsdv_vstop #(.V(V), .BK_DRAIN_SINK(BK_DRAIN_SINK)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k({tap_k[5:1], 2'b00, tap_k[0]}), .sink_k({sink_k[5:1], 2'b00, sink_k[0]}), .bk_uid(uid), .vi_s(vi_s), .vo_n(vo_n),
         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(dnv), .dl_n(dn), .dl_sv(dsv), .dl_s(ds),
         .in_nv(ov && egn_c), .in_n(ob), .in_sv(ov && !egn_c), .in_s(ob), .fault(vs_f));
     wire drv; wire [7:0] drn, drd; wire [4*515-1:0] ln;

@@ -18,8 +18,11 @@ What it does (kit-local copies only; the bind output is never touched):
      copies it into the kit; face_flops.tcl sources it before reset_taps.tcl).
 Cycle behaviour: reset assertion and release are synchronous at every tap, on the same cycle (kit_rtl.json
 kit_rsync.reset_tree.release_clocks after the arst_n pin).  Data paths unchanged.
-usage: kit_rsync.py PLAN.json TYPE KIT_RTL_DIR [--release pipelined]
-       (after bind.py kit-rtl, before gen.py phys --kit-rtl; --release pipelined treats the plan as switched)"""
+Wavefront plans (OWNER DECISION 13, reset.release "wavefront"): the tree also reaches the type's registered reset outs
+(reset_tree.out_pins): `output wire rst_o_<k>` is added after `input wire arst_n,` in the bound module and in the
+port-only wrapper (kit_rtl.json files[0]), and `.rst_o_<k>(rst_o_<k>)` after the wrapper's `.arst_n(arst_n),`.
+usage: kit_rsync.py PLAN.json TYPE KIT_RTL_DIR [--release wavefront|pipelined]
+       (after bind.py kit-rtl, before gen.py phys --kit-rtl; --release treats the plan as switched)"""
 import json
 import re
 import sys
@@ -34,8 +37,38 @@ import schema as S  # noqa: E402
 FIRM = re.compile(r"^\s*ot_dp_st\s+#\(\.W\(\d+\)\)\s+(u_(?:bin|bout|ft)_\w+)\s*\(")
 TAPSYNC = re.compile(r"^\s*(?:wire rst_n_t\d+;|ot_dp_rsync_s(\d)\s+u_rsync_t\d+\s*\(.*\);.*|assign rst_n = rst_n_t\d+;)\s*$")
 # an earlier reset_tree conversion (re-running kit_rsync re-plans the tree)
-TREE = re.compile(r"^\s*(?://\s*OWNER RESET RULE 10-24 \(tools/die_plan/reset_tree\.py\).*|wire rst_root_n;|wire rst_rl_\d+;|"
-                  r"ot_dp_rsync_s(\d)\s+u_rst_root\s*\(.*|ot_dp_rrelay\s+u_(?:rst_in|rrl_\d+)\s*\(.*)\s*$")
+TREE = re.compile(r"^\s*(?://\s*OWNER RESET RULE 10-24 (?:\+ DECISION 13c )?\(tools/die_plan/reset_tree\.py\).*|"
+                  r"wire rst_root_n(?:, run_root)?;|wire (?:rn_)?(?:rst_rl_\d+|rr_t\d+);|"
+                  r"ot_dp_rsync_s(\d)\s+u_(?:rst|run)_root\s*\(.*|ot_dp_rrelay\s+u_(?:rst_in|run_in|[rs]rl_\d+(?:_r)?)\s*\(.*|"
+                  r"assign (?:rst|start)_o_\d+ = (?:rst_n_t|rr_t|rn_rr_t)\d+;.*)\s*$")
+# reset wavefront outs (OWNER DECISION 13): port declarations / wrapper connections of an earlier conversion
+ROUT = re.compile(r"^\s*(?:output\s+wire\s+(?:rst|start)_o_\d+\s*,.*|\.(?:rst|start)_o_\d+\((?:rst|start)_o_\d+\)\s*,.*|"
+                  r"input\s+wire\s+start_i\s*,.*|\.start_i\(start_i\)\s*,.*)$")
+ARST_DECL = re.compile(r"^(\s*)input\s+wire\s+arst_n\s*,")
+ARST_CONN = re.compile(r"^(\s*)\.arst_n\(arst_n\)\s*,")
+
+
+def add_reset_outs(lines, outs, conn=False, start=False):
+    """insert the wavefront rst_o port declarations after `input wire arst_n,` (and, conn=True, the
+    .rst_o_k(rst_o_k) connections after `.arst_n(arst_n),`); earlier ones are dropped first (idempotent)."""
+    out, nd, nc = [], 0, 0
+    for ln in lines:
+        if ROUT.match(ln):
+            continue
+        out.append(ln)
+        m = ARST_DECL.match(ln)
+        if m:
+            if start:                                   # decision 13c START broadcast in, beside arst_n
+                out.append(f"{m.group(1)}input  wire start_i,  // START IN (wavefront broadcast)\n")
+            out += [f"{m.group(1)}output wire {n},  // registered reset OUT (wavefront) at ({x:.1f}, {y:.1f}) um\n"
+                    for n, x, y in outs]
+            nd += 1
+        m = ARST_CONN.match(ln) if conn else None
+        if m:
+            out += [f"{m.group(1)}.start_i(start_i),\n"] if start else []
+            out += [f"{m.group(1)}.{n}({n}),\n" for n, _, _ in outs]
+            nc += 1
+    return out, nd, nc
 RSYNC = re.compile(r"^(\s*)ot_reset_sync\s+#\(\.ASYNC_STAGES\((\d+)\)\)\s+u_rst_sync\s*\(\.clk\(clk\),\s*"
                    r"\.async_rst_n\(arst_n\),\s*\.sync_rst_n\(rst_n\)\);\s*$")
 
@@ -156,8 +189,23 @@ def main(argv):
         raise SystemExit(f"kit_rsync: {tn}: no ot_reset_sync u_rst_sync (clk, arst_n -> rst_n), no per-tap "
                          f"u_rsync_t<i> and no reset_tree lines in {bfile.name}")
     # rst_n was declared as a wire driven by u_rst_sync: keep the declaration, it is now driven by the assign
+    routs = reset_tree.out_pins(P, tn) + reset_tree.start_out_pins(P, tn)
+    st = reset_tree.start_broadcast(P)
+    if routs or st or any(ROUT.match(x) for x in out):
+        out, nd, _ = add_reset_outs(out, routs, start=st)
+        if routs and nd != 1:
+            raise SystemExit(f"kit_rsync: {tn}: {bfile.name}: expected one 'input wire arst_n,' header line, found {nd}")
     nb = kd / bfile.name
     nb.write_text("".join(out))
+    wfile = files[0] if files and files[0] != bfile and files[0].stem == P.types[tn]["module"] else None
+    if wfile is not None and (routs or st or any(ROUT.match(x) for x in wfile.read_text().splitlines(keepends=True))):
+        wl, nd, nc = add_reset_outs(wfile.read_text().splitlines(keepends=True), routs, conn=True, start=st)
+        if routs and (nd != 1 or nc != 1):
+            raise SystemExit(f"kit_rsync: {tn}: wrapper {wfile.name}: expected one 'input wire arst_n,' and one "
+                             f"'.arst_n(arst_n),' (found {nd} / {nc})")
+        nw = kd / wfile.name
+        nw.write_text("".join(wl))
+        files[0] = nw
     (kd / "kit_cells.sv").write_text(cells_text())
     if cfile is not None:
         (kd / "bind_cells_kit.sv").write_text(strip_module(cfile.read_text(), "ot_dp_st"))
@@ -175,7 +223,8 @@ def main(argv):
     man["files"] = [str(x) for x in nf]
     (kd / "reset_tree.tcl").write_text(reset_tree.tcl_text(tree))
     man["kit_rsync"] = dict(taps=len(taps), firm_repointed=nfirm, firm_nearest=nnear, ste=nste, converted_from=conv,
-                            bound_sync_stages=ns, leaf_tap=leaf, reset_tree=reset_tree.summary(tree))
+                            bound_sync_stages=ns, leaf_tap=leaf, reset_tree=reset_tree.summary(tree),
+                            reset_outs=[n for n, _, _ in routs])
     (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
     print(json.dumps(dict(type=tn, kit=str(kd), **man["kit_rsync"])))
     return 0

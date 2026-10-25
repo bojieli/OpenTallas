@@ -64,7 +64,7 @@ def test_plan_trees_and_g0():
         assert T["entry"] == "relayed" and T["depth"] == K and RT.verify(T) == []
         assert RT.release_clocks(T) == 1 + K
     e, w, info = RT.check(P)
-    assert e == [] and w == [] and info["part_depth_K"] == K
+    assert e == [] and len(w) == 1 and "DECISION 13" in w[0] and info["part_depth_K"] == K   # superseded mode
     r = info["regions"][0]
     assert r["members"] == 2 and r["release_clocks"] == 2 + r["die_depth_E"] + 1 + K
     # a counted plan is flagged (warning) but not failed
@@ -108,7 +108,7 @@ def test_gen_rtl_pipelined_partition_and_die_top():
             r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {t}; synth -top t; stat"],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
-            assert re.search(r"ot_dp_rrelay\s+2", r.stdout), r.stdout        # identical relays are NOT merged
+            assert re.search(r"(?m)^\s*(?:ot_dp_rrelay\s+2|2\s+ot_dp_rrelay)\s*$", r.stdout), r.stdout        # identical relays are NOT merged
 
 
 def test_tiny_die_releases_every_tap_on_one_cycle():

@@ -84,26 +84,35 @@ endmodule
 // per-tap copies have identical inputs and would otherwise be merged back into one (Yosys opt_merge).
 (* keep_hierarchy *)
 module ot_dp_rsync_s2 (input wire clk, input wire async_rst_n, output wire sync_rst_n);
+    // Intentional reset CDC shift register; only this async_reg declaration
+    // mixes asynchronous assertion with synchronous release/feedback.
+    /* verilator lint_off SYNCASYNCNET */
     (* async_reg = "true" *) reg [1:0] p;
+    /* verilator lint_on SYNCASYNCNET */
     always @(posedge clk or negedge async_rst_n)
         if (!async_rst_n) p <= 2'b0; else p <= {p[0], 1'b1};
     assign sync_rst_n = p[1];
 endmodule
 (* keep_hierarchy *)
 module ot_dp_rsync_s3 (input wire clk, input wire async_rst_n, output wire sync_rst_n);
+    // Intentional reset CDC shift register; only this async_reg declaration
+    // mixes asynchronous assertion with synchronous release/feedback.
+    /* verilator lint_off SYNCASYNCNET */
     (* async_reg = "true" *) reg [2:0] p;
+    /* verilator lint_on SYNCASYNCNET */
     always @(posedge clk or negedge async_rst_n)
         if (!async_rst_n) p <= 3'b0; else p <= {p[1:0], 1'b1};
     assign sync_rst_n = p[2];
 endmodule
 // ot_dp_rrelay: one synchronous reset relay flop (OWNER RESET RULE 10-24, tools/die_plan/reset_tree.py).  No reset
 // of its own: the synchronised reset is carried like data, so assertion is synchronous too (the clock runs at boot).
-// keep_hierarchy + keep: the per-tap relays have identical inputs and would otherwise be merged (Yosys opt_merge).
-(* keep_hierarchy *)
-module ot_dp_rrelay (input wire clk, input wire d, output wire q);
-    (* keep *) reg r;
-    always @(posedge clk) r <= d;
-    assign q = r;
+// keep_hierarchy + keep: the per-tap relays have identical inputs and would otherwise be merged (Yosys opt_merge), and a
+// relay whose tap has no sinks is kept.  The flop drives q DIRECTLY (output reg, like ot_dp_ep): an internal kept alias
+// (keep reg r; assign q = r) made ORFS insbuf hang a dangling BUFx2 q->r on every relay output, so a registered
+// rst_o_<k> / start_o_<k> pin register had a load besides its port (face_guard 'shared', S81 stations 10-25).
+(* keep_hierarchy, keep *)
+module ot_dp_rrelay (input wire clk, input wire d, output reg q);
+    always @(posedge clk) q <= d;
 endmodule
 `default_nettype wire
 """
@@ -202,10 +211,28 @@ def wrapper(P, tn, epochs, rtl_root=None):
                       "(clock_taps.tcl) hangs the core's clock pins on it; the spine delivers it "
                       f"{S.core_tap_early_ps(P, tp):g} ps early"))
     import reset_tree as RT
-    rtree = RT.for_type(P, tn) if RT.pipelined(P) else None
+    rtree = RT.for_type(P, tn) if RT.delivered(P) else None
     if rtree is None:
         ports.append(("input  wire arst_n", "die reset: asynchronous assert; released through " +
                       ("the per-tap u_rsync_t<i>" if len(S.tap_grid(P, tn)) > 1 else "u_rst_sync")))
+    elif RT.wavefront(P):
+        ports.append(("input  wire arst_n", (
+            "reset IN (OWNER DECISION 13 wavefront): at the root partition the die rst_n (asynchronous, into the ONE "
+            "root synchroniser u_rst_root), elsewhere a neighbour's registered rst_o (synchronous)"
+            if rtree["entry"] == "sync" else "SYNCHRONOUS reset IN from a neighbour's registered rst_o (OWNER DECISION "
+            "13 wavefront): pin register u_rst_in") + f" + {rtree['depth']} relay stages; every tap and rst_o released "
+            f"{RT.release_clocks(rtree)} clocks after this pin"))
+        for n, x, y in RT.out_pins(P, tn):
+            ports.append((f"output wire {n}", f"registered reset OUT to a neighbour's arst_n (wavefront) at "
+                          f"({x:.0f}, {y:.0f}) um"))
+        if rtree.get("start"):
+            ports.append(("input  wire start_i", "START IN (OWNER DECISION 13c broadcast, beside arst_n): " + (
+                "the die start pin (asynchronous level) into the ONE START synchroniser u_run_root"
+                if rtree["entry"] == "sync" else "a neighbour's registered start_o (synchronous): pin register u_run_in")
+                + "; control state releases on reset AND run"))
+            for n, x, y in RT.start_out_pins(P, tn):
+                ports.append((f"output wire {n}", f"registered START OUT beside rst_o_{n.rsplit('_', 1)[1]} at "
+                              f"({x:.0f}, {y:.0f}) um"))
     elif rtree["entry"] == "sync":
         ports.append(("input  wire arst_n", f"die reset (region root): asynchronous, into the region's ONE root "
                       f"synchroniser u_rst_root; every tap released {RT.release_clocks(rtree)} clocks after deassert"))
@@ -415,6 +442,17 @@ def die_top(P, epochs, dropped=None):
                 conn.setdefault(pr[side]["part"], []).append((pr[side]["bus"], net))
     import reset_tree as RT
     rlines, rnet = RT.die_rtl(P) if RT.pipelined(P) else ([], {})
+    wouts, snet = {}, {}
+    if RT.wavefront(P):
+        rlines, rnet, wouts = RT.wf_die_rtl(P)
+        miss = sorted(n for n in P.parts if n not in rnet)
+        if miss:
+            raise GenError(f"reset wavefront: partitions without a reset source (reset_tree.py offsets): {miss[:10]}")
+        if RT.start_broadcast(P):
+            sl, snet, souts = RT.wf_die_start(P)
+            rlines += sl
+            for q, d in souts.items():
+                wouts.setdefault(q, {}).update(d)
     for name, p in P.parts.items():
         t = P.types[p["type"]]
         # dropped taps (kit clock_taps.tcl: no sinks, COORD 10-23) stay unconnected: no dead spine drop
@@ -422,21 +460,25 @@ def die_top(P, epochs, dropped=None):
         cs = [f"        .{n}({'' if n in dr else 'clk'})" for n, _, _ in S.tap_grid(P, p["type"])] + \
             [f"        .{n}(clk)" for n, _, _, _ in S.core_taps(P, p["type"])] + \
             [f"        .arst_n({rnet.get(name, 'rst_n')})"] + \
+            [f"        .{n}({wouts.get(name, {}).get(n, '')})" for n, _, _ in RT.out_pins(P, p["type"])] + \
+            ([f"        .start_i({snet[name]})"] if name in snet else []) + \
+            [f"        .{n}({wouts.get(name, {}).get(n, '')})" for n, _, _ in RT.start_out_pins(P, p["type"])] + \
             [f"        .{sv_id(b)}({net})" for b, net in sorted(conn.get(name, []))]
         insts.append(f"    {t['module']} {sv_id(name)} (\n" + ",\n".join(cs) + "\n    );")
     mod = f"{sv_id(P.name)}_top"
     return (f"// GENERATED by tools/die_plan/gen.py rtl: die top of {P.name} (partitions abutted; die nets = clk spine,\n"
             "// rst_n, and the zero-length abutment wires w_<port>).  Do not edit.\n`timescale 1ns/1ps\n"
             "`default_nettype none\n"
-            f"module {mod} (\n    input  wire clk,\n    input  wire rst_n" + "".join(",\n" + x for x in io) + "\n);\n"
+            f"module {mod} (\n    input  wire clk,\n    input  wire rst_n" +
+            (",\n    input  wire start" if RT.start_broadcast(P) else "") + "".join(",\n" + x for x in io) + "\n);\n"
             + "\n".join(wires + rlines) + "\n" + "\n".join(insts) + f"\nendmodule : {mod}\n`default_nettype wire\n")
 
 
-def write_rtl(raw, out, rtl_root=None, types=None):
+def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None):
     errs = S.validate(raw)
     if errs:
         raise GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
-    P = S.Plan(raw)
+    P = S.Plan(raw, plan_path)
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     ep = bus_epochs(P)

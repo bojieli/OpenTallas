@@ -1,0 +1,19 @@
+SEQHOST_MU PASS starts=88 users=44 user0_identical=True zero_latency_vs_plain=True kd_tagged=88/88 events=1384 max_outstanding=1 
+SEQHOST_MU PASS starts=26 users=13 user0_identical=True zero_latency_vs_plain=True kd_tagged=26/26 events=410 max_outstanding=1 
+SEQHOST_MU FAULT1 PASS (fault raised) t_mf=0110 first=[(64341, 1), (64406, 2)] issuer=[]
+SEQHOST_MU FAULT1 PASS (fault raised) t_mf=0110 first=[(64441, 1), (64506, 2)] issuer=[]
+SEQHOST_MU FAULT1 PASS (fault raised) t_mf=1110 first=[(449, 1), (489, 3)] issuer=[]
+SEQHOST_MU FAULT0 PASS (fault raised) t_mf=1101 first=[(489, 0), (489, 3)] issuer=[]
+SEQHOST_MU FAULT2 PASS (fault raised) t_mf=0100 first=[(2398, 2)] issuer=[]
+SEQHOST_MU FAIL starts=88 users=44 user0_identical=True zero_latency_vs_plain=True kd_tagged=88/88 events=1384 max_outstanding=1 (b) 86 expected events missing (first ('KD', 23096, '2003ef004000ce')); (b) 86 unexpected events (first ('KD', 23096, '2003ef000000ce'))
+mutant 1 (user field dropped) detected (FAIL as required)
+SEQHOST_MU FAULT0 FAIL t_mf=1100 first=[(489, 3), (554, 2)] issuer=[]
+mutant 2 (collision check dropped) detected (FAIL as required)
+SEQHOST_MU FAIL starts=88 users=44 user0_identical=True zero_latency_vs_plain=True kd_tagged=3/88 events=1384 max_outstanding=1 (b) 85 expected events missing (first ('KD', 64500, '2003fd00c0025e')); (b) 85 unexpected events (first ('KD', 64500, '2003fd00000000')); (c) fault line in the multi run: PROG MF 64437 bit 1
+mutant 5 (gap index stuck) detected (FAIL as required)
+lint dsdv_mu_hslot clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)
+lint dsdv_mu_hwin clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)
+lint dsdv_seq_host_mux clean (verilator -Wall: 0 errors, 0 unwaived warnings in dsdv_mu_hslot.sv / dsdv_mu_hwin.sv)
+MU_HOST_GATE PASS
+MU_HWIN_GATE PASS
+SEQHOST_MU_GATE PASS

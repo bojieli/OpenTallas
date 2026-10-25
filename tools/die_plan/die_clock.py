@@ -60,7 +60,7 @@ import schema as S  # noqa: E402
 BUF = "BUFx24_ASAP7_75t_R"
 BUF_CIN_FF = 2.35                       # BUFx24 A pin (TT lib)
 TAP_LOAD_FF = 3.0                       # partition tap port load (the partition's first tap buffer, ASSUMED)
-PERIOD_PS = 833.333
+PERIOD_PS = 833.000
 GATE_PS = 80.0                          # decision 5: related pair skew <= 80 ps (TT, FF)
 TARGET_PS = 20.0                        # design window
 OCV = (0.03, 0.05)                      # INFO derates on the uncommon clock path
@@ -68,6 +68,7 @@ OCV = (0.03, 0.05)                      # INFO derates on the uncommon clock pat
 LAYER_RC = {"M8": (8.44765e-3, 1.03962e-1), "M9": (8.89556e-3, 9.28446e-2)}
 NDR_R, NDR_C = 0.5, 1.1
 PAD_CAP_UM = 440.0                      # balance pads fill segments up to this length before any goes wide
+SNAKE_UM = 440.0                        # a pad beyond the segment cap becomes delay stages: BUF + SNAKE_UM wire each
 WIDE_UM = 520.0                         # longer segments use the 4W NDR
 VIA_KOHM = {"M8": 0.0172 * 3 + 0.0118 * 2 + 0.0082 * 2, "M9": 0.0172 * 3 + 0.0118 * 2 + 0.0082 * 2 + 0.0063}
 LADDER_UM = 50.0                        # pi-section length of the RC ladder
@@ -114,6 +115,10 @@ def keepouts(P):
     out = []
     for n, p in P.parts.items():
         t = P.types[p["type"]]
+        for i, rect in enumerate(t.get("clock", {}).get("keepouts_um", [])):
+            corners = [P.to_die(n, (x, y)) for x in (rect[0], rect[2]) for y in (rect[1], rect[3])]
+            out.append((min(x for x, y in corners), min(y for x, y in corners),
+                        max(x for x, y in corners), max(y for x, y in corners), f"{n}/clock_keepout_{i}"))
         for hc in t.get("hard_cores", []) or []:
             (x0, y0), (w, h) = hc["origin_um"], hc["outline_um"]
             a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x0 + w, y0 + h))
@@ -237,13 +242,119 @@ def choose_split(lo, hi, ax, coords, pairs, edges, window):
     return best[1], best[0][0]
 
 
+def phy_domains(P):
+    """Only explicit PHY supply domains block die clock wires, not ordinary hard macros."""
+    return [(tuple(d['rect_um']), d['name']) for d in (P.die.get('pg', {}) or {}).get('domains', [])]
+
+
+def route_domain_tree(T, tree, P, clear_um=8.64, rep_um=450.0):
+    """Route physical clock branches around full PHY PG domains; keep fixed tap interfaces.
+
+    Mixed M8/M9 legs are retained in each net's routes for SPEF, rendering and
+    subsequent STA balance. New legal repeaters become real netlist cells.
+    """
+    import clock_corridor as C
+    domains = phy_domains(P)
+    if not domains:
+        tree['meta']['domain_corridors'] = dict(domains=0, changed_edges=0, repeaters=0)
+        return
+    boxes = [(x0-clear_um,y0-clear_um,x1+clear_um,y1+clear_um) for (x0,y0,x1,y1),_ in domains]
+    taps = {'port:'+t['port']:tuple(t['xy']) for t in tree['taps']}
+    taps['port:root'] = tuple(tree['meta']['root_um'])
+    blocked = [(p,xy) for p,xy in taps.items() if any(C.inside(xy,r) for r in boxes)]
+    if blocked:
+        raise ValueError(f'fixed clock ports inside PHY PG clearance: {blocked[:12]}')
+    keep = keepouts(P)+[(*r,'PG/'+name) for (r,name) in zip(boxes,[n for _,n in domains])]
+    K = KeepIndex(keep,die=(P.W,P.H))
+    for name,c in T.cells.items():
+        if K.hit(c['x'],c['y']):
+            x,y,_ = _slide((c['x'],c['y']),(c['x'],c['y']),(c['x'],c['y']),K)
+            c.update(x=round(x,3),y=round(y,3))
+    def xy(name):
+        return taps[name] if name.startswith('port:') else (T.cells[name]['x'],T.cells[name]['y'])
+    def length(route):
+        return sum(abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(route,route[1:]))
+    changed=0; added=0; extra_um=0.; remap={}; result=[]
+    for old in T.nets:
+        net=dict(old,branches=[],routes=[])
+        additions=[]
+        for bi,(L,layer,load,geo) in enumerate(old['branches']):
+            a,b=xy(old['drv']),xy(load)
+            path=C.route(a,b,boxes,(P.W,P.H))
+            plen=length(path)
+            extra_um+=max(0.,plen-geo)
+            if plen>geo+1e-6: changed+=1
+            mids=[]
+            for pa,pb in zip(path,path[1:]):
+                n=max(1,math.ceil((abs(pa[0]-pb[0])+abs(pa[1]-pb[1]))/rep_um-1e-9))
+                for q in _leg_points(pa,pb,n):
+                    if abs(q[0]-b[0])+abs(q[1]-b[1])<1e-6: continue
+                    x,y,_=_slide(q,pa,pb,K)
+                    q=(round(x,3),round(y,3))
+                    if abs(q[0]-a[0])+abs(q[1]-a[1])<1 or (mids and q==mids[-1]): continue
+                    if q!=b: mids.append(q)
+            cells=[]
+            for q in mids:
+                name=T.cell(f'ncr{added}',*q,'corridor',None);added+=1;cells.append(name)
+            chain=cells+[load];prev=old['drv'];targets=[]
+            for j,dst in enumerate(chain):
+                route=C.route(xy(prev),xy(dst),boxes,(P.W,P.H))
+                g=length(route)
+                lay='M8' if len(route)<2 or route[-1][1]==route[-2][1] else 'M9'
+                branch=(max(1e-3,g)+max(0.,L-geo) if j==0 else max(1e-3,g),lay,dst,g)
+                if j==0:
+                    net['branches'].append(branch);net['routes'].append(route)
+                    targets.append([old['name'],len(net['branches'])-1])
+                else:
+                    nn=old['name'] if dst.startswith('port:') else f'w_{cells[j-1]}'
+                    additions.append(dict(name=nn,drv=prev,branches=[branch],routes=[route]))
+                    targets.append([nn,0])
+                prev=dst
+            if cells and load.startswith('port:'):
+                # Port name must remain on its last physical hop.
+                net['name']=f"w_pre_{old['name']}"
+                targets[0][0]=net['name']
+            remap[(old['name'],bi)]=targets
+        result.append(net);result.extend(additions)
+    T.nets=result
+    for t in tree['taps']:
+        t['pad_nets']=[r for target in t['pad_nets'] for r in remap.get(tuple(target),[target])]
+    for nd in tree['nodes'].values():
+        for _,targets in nd.get('kids',[]):
+            targets[:]=[r for target in targets for r in remap.get(tuple(target),[target])]
+    parent={ld:n['drv'] for n in T.nets for _,_,ld,_ in n['branches']}
+    def path_to(load):
+        path=[];seen=set();p=load
+        while p!='port:root':
+            if p in seen or p not in parent: raise ValueError(f'broken clock corridor ancestry at {p}')
+            seen.add(p)
+            if not p.startswith('port:'):path.append(p)
+            p=parent[p]
+        return list(reversed(path))
+    for t in tree['taps']:t['path']=path_to('port:'+t['port'])
+    for name,nd in tree['nodes'].items():
+        nd['path']=path_to(name);nd['xy']=list(xy(name))
+    bad_cells=[n for n,c in T.cells.items() if any(C.inside((c['x'],c['y']),r) for r in boxes)]
+    bad_wires=[n['name'] for n in T.nets for route in n['routes'] for a,b in zip(route,route[1:])
+               if any(C.intersects(a,b,r) for r in boxes)]
+    if bad_cells or bad_wires:raise ValueError(f'PG corridor invariant failed: cells {bad_cells[:5]} wires {bad_wires[:5]}')
+    tree['meta'].update(cells=len(T.cells),wire_um=round(sum(L for n in T.nets for L,*_ in n['branches']),1))
+    tree['meta']['domain_corridors']=dict(domains=len(domains),clear_um=clear_um,changed_edges=changed,
+        extra_physical_um=round(extra_um,3),repeaters=added,cell_violations=0,wire_violations=0,
+        max_physical_hop_um=round(max(g for n in T.nets for *_,g in n['branches']),3))
+
+
 def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=None, window=None, aware_levels=None,
-          pad="sta"):
+          pad="sta", domain_corridors=False, domain_clear_um=8.64):
     W, H = float(P.W), float(P.H)
     window = SPLIT_WINDOW if window is None else window
     aware_levels = AWARE_LEVELS if aware_levels is None else aware_levels
     taps = plan_taps(P) if taps is None else taps
-    K = KeepIndex(keep if keep is not None else keepouts(P), die=(W, H))
+    base_keep = list(keep if keep is not None else keepouts(P))
+    if domain_corridors:
+        base_keep += [(r[0]-domain_clear_um,r[1]-domain_clear_um,r[2]+domain_clear_um,r[3]+domain_clear_um,
+                       'PG/'+n) for r,n in phy_domains(P)]
+    K = KeepIndex(base_keep, die=(W, H))
     T = Tree()
     sp = P.clock.get("spine", {}) or {}
     root = tuple(sp.get("die_root_um") or sp.get("root_um") or (W / 2, H / 2))
@@ -595,6 +706,8 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     nodes = {ncell(k): dict(level=k[0], xy=list(pos.get(k, npos[k])), region=[round(v, 3) for v in region[k]],
                             path=path_of.get(k), kids=children.get(ncell(k), [])) for k in live}
     tree = dict(meta=meta, taps=tap_rows, nodes=nodes, root_node=ncell((0, 0)))
+    if domain_corridors:
+        route_domain_tree(T, tree, P, domain_clear_um, rep_um)
     return T, tree
 
 
@@ -623,6 +736,56 @@ def early_chain(std, layers, early_ps, ps_per_um=None):
 
 
 # ------------------------------------------------------------------------------------------------------------ writers
+def expand_pads(T, pads, snake_um=SNAKE_UM):
+    """the electrical tree: every balance pad folded into its branch length; the part of a branch beyond
+    PAD_CAP_UM + its routed hop that is pad becomes delay stages (BUF + snake_um of 2W2S wire each, placed at the
+    driver), so a large balance delay never stretches one RC segment (slew) -- the industry delay-buffer pad.
+    -> (Tree, stages).  The netlist/SPEF writers take this tree; tree.json paths are unchanged (stages sit below
+    their driver, inside the uncommon path)."""
+    E = Tree()
+    E.ports = list(T.ports)
+    E.cells = dict(T.cells)
+    E.nets = []
+    stages = 0
+    for n in T.nets:
+        branches = []
+        routes = list(n.get("routes") or [])
+        for bi, (L, layer, load, geo) in enumerate(n["branches"]):
+            p = pads.get((n["name"], bi), 0.0)
+            tot = L + p
+            m = int(max(0.0, min(p, tot - max(geo, PAD_CAP_UM))) // snake_um) if snake_um > 0 else 0
+            if m <= 0:
+                branches.append((tot, layer, load, geo))
+                continue
+            dx, dy = (T.cells[n["drv"]]["x"], T.cells[n["drv"]]["y"]) if n["drv"] in T.cells else (0.0, 0.0)
+            names = [f"s{stages + j}_{n['name']}" for j in range(m)]
+            for j, sn in enumerate(names):
+                E.cells[sn] = dict(x=dx, y=dy, kind="snake", level=None)
+            branches.append((snake_um, layer, names[0], 0.0 if routes else min(geo, snake_um)))
+            original_route=routes[bi] if routes else None
+            if routes:routes[bi]=[[dx,dy],[dx,dy]]
+            for j in range(m):
+                last = j == m - 1
+                item=dict(name=n["name"] if (last and load.startswith("port:")) else f"w_{names[j]}",
+                          drv=names[j],branches=[(tot-m*snake_um,layer,load,geo) if last
+                                                else (snake_um,layer,names[j+1],0.0 if routes else min(geo,snake_um))])
+                if routes:item["routes"]=[original_route if last else [[dx,dy],[dx,dy]]]
+                E.nets.append(item)
+            stages += m
+        item=dict(n,branches=branches)
+        if routes:item["routes"]=routes
+        E.nets.append(item)
+    # a port net whose last stage took its name: the driver-side net is renamed
+    names = defaultdict(int)
+    for x in E.nets:
+        names[x["name"]] += 1
+    for x in E.nets:
+        if names[x["name"]] > 1 and not x["drv"].startswith("s"):
+            names[x["name"]] -= 1
+            x["name"] = f"w_pre_{x['name']}"
+    return E, stages
+
+
 def write_verilog(T, path):
     outs = [p for d, p in T.ports if d == "output"]
     L = ["// GENERATED by tools/die_plan/die_clock.py: structured die clock tree", "module die_ctree (root, " +
@@ -670,21 +833,31 @@ def write_spef(T, path, design="die_ctree", pads=None):
             return f"{name}:{k[0]}"
         for bi, (L, layer, load, geo) in enumerate(n["branches"]):
             L = L + pads.get((name, bi), 0.0)
-            r, c = layer_rc(layer, geo)         # NDR class fixed by the routed hop, never by a pad
             lpin = load[5:] if load.startswith("port:") else f"{load}:A"
             conn.append(f"*P {lpin} O" if load.startswith("port:") else f"*I {lpin} I")
-            a = node()
-            ress.append((dpin, a, VIA_KOHM[layer]))
-            m = max(1, math.ceil(L / LADDER_UM))
-            seg = L / m
-            prev = a
-            for s in range(m):
-                b = node()
-                ress.append((prev, b, r * seg))
-                caps.append((prev, c * seg / 2))
-                caps.append((b, c * seg / 2))
-                prev = b
-            ress.append((prev, lpin, VIA_KOHM[layer]))
+            routes = n.get("routes")
+            if routes:
+                points = routes[bi]
+                pieces = [(abs(a[0]-b[0])+abs(a[1]-b[1]), "M8" if a[1]==b[1] else "M9")
+                          for a,b in zip(points,points[1:]) if a!=b]
+                physical = sum(x[0] for x in pieces)
+                pad_length = max(0.0,L-physical)
+                if pad_length or not pieces:pieces.append((max(1e-3,pad_length),layer))
+            else:pieces=[(L,layer)]
+            prev = node()
+            ress.append((dpin,prev,VIA_KOHM[pieces[0][1]]))
+            last_layer=pieces[0][1]
+            for wire,lay in pieces:
+                if lay!=last_layer:
+                    via=node();ress.append((prev,via,abs(VIA_KOHM[lay]-VIA_KOHM[last_layer])))
+                    prev=via
+                r,c=layer_rc(lay,wire if routes else geo)
+                m=max(1,math.ceil(wire/LADDER_UM));seg=wire/m
+                for _ in range(m):
+                    nxt=node();ress.append((prev,nxt,r*seg))
+                    caps.append((prev,c*seg/2));caps.append((nxt,c*seg/2));prev=nxt
+                last_layer=lay
+            ress.append((prev,lpin,VIA_KOHM[last_layer]))
         cap = defaultdict(float)
         for nd, v in caps:
             cap[nd] += v
@@ -724,7 +897,9 @@ def cmd_build(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
-    T, tree = build(P, a.leaf_um, a.rep_um, a.core_early, window=a.window, aware_levels=a.aware_levels, pad=a.pad)
+    T, tree = build(P, a.leaf_um, a.rep_um, a.core_early, window=a.window, aware_levels=a.aware_levels, pad=a.pad,
+                    domain_corridors=getattr(a,"domain_corridors",False),
+                    domain_clear_um=getattr(a,"domain_clear_um",8.64))
     write_verilog(T, out / "ctree.v")
     write_spef(T, out / "ctree.spef")
     import hashlib
@@ -765,6 +940,7 @@ def cmd_sta(a):
 
 # ----------------------------------------------------------------------------------------------------------- balance
 R_DRV_KOHM = 0.12                       # BUFx24 effective drive (ASSUMED; only scales the pad step, STA closes it)
+STAGE_PS = 15.0                         # BUFx24 intrinsic (ASSUMED; only scales the pad step, STA closes it)
 
 
 def load_tree(d):
@@ -776,7 +952,7 @@ def load_tree(d):
     return T
 
 
-def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0):
+def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False):
     """one balance pass: every tap up to the latest tap of its leaf, every child subtree up to its latest sibling,
     by wire pads on the child's last leg segment (a tap's last chain segment).  arrs: [(tap arr, node arr)] per
     corner; the delta is the corner mean.  Returns the largest residual delta (ps) before this pass."""
@@ -805,6 +981,10 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0):
         L += pads.get((net, bi), 0.0)
         r, c = layer_rc(layer, geo)
         cl = TAP_LOAD_FF if load.startswith("port:") else BUF_CIN_FF
+        if L > max(geo, PAD_CAP_UM) + SNAKE_UM:      # the pad is now delay stages: one stage per SNAKE_UM
+            r2, c2 = layer_rc(layer, min(geo, SNAKE_UM))
+            S_ = SNAKE_UM
+            return (STAGE_PS + R_DRV_KOHM * c2 * S_ + r2 * c2 * S_ * S_ / 2 + r2 * S_ * BUF_CIN_FF) / S_
         return R_DRV_KOHM * c + r * c * L + r * cl
 
     def elen(net, bi):
@@ -826,19 +1006,53 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0):
             pads[(net, bi)] = pads.get((net, bi), 0.0) + um
             need -= um * sens(net, bi)
             moved += um
-    for node, nd in tree["nodes"].items():
-        m = memo.get(node)
-        if m is None:
-            continue
-        for kid, targets in nd["kids"]:
-            km = memo.get(kid)
-            if km is not None and m - km > 0.05:
-                worst = max(worst, m - km)
-                add(targets, m - km)
-        for p in leaf_taps.get(node, ()):
-            if all(p in ta for ta, _ in arrs) and m - tap_a(p) > 0.05:
-                worst = max(worst, m - tap_a(p))
-                add(tap_pad[p], m - tap_a(p))
+    def removable(targets):
+        return sum(pads.get(tuple(t), 0.0) * sens(*t) for t in targets)
+
+    def rem(targets, dps):
+        """take pad back (longest pad first) until the delay surplus is removed: pads are never a ratchet."""
+        targets = [tuple(t) for t in targets]
+        need = damp * dps
+        while need > 1e-3:
+            t = max(targets, key=lambda t: pads.get(t, 0.0))
+            have = pads.get(t, 0.0)
+            if have <= 1e-6:
+                break
+            um = min(50.0, have, need / sens(*t))
+            pads[t] = have - um
+            if pads[t] <= 1e-6:
+                del pads[t]
+            need -= um * sens(*t)
+    # bottom-up: the level each node's members can all reach (the lowest common level once surplus pad is taken
+    # back), then every member moves to it: kids by their leg pads, taps by their chain pads
+    level = {}
+
+    def members(node):
+        out = [(level[k], targets) for k, targets in tree["nodes"][node]["kids"] if level.get(k) is not None]
+        out += [(tap_a(p), tap_pad[p]) for p in leaf_taps.get(node, ()) if all(p in ta for ta, _ in arrs)]
+        return out
+
+    order = []
+
+    def walk(node):
+        for k, _ in tree["nodes"][node]["kids"]:
+            walk(k)
+        mm = members(node)
+        level[node] = max((v - (removable(t) if take_back else 0.0) for v, t in mm), default=None) if mm else None
+        if mm:
+            level[node] = max(level[node], min(v for v, _ in mm))
+            order.append(node)
+    walk(tree["root_node"])
+    for node in order:
+        mm = members(node)
+        vals = [v for v, _ in mm]
+        worst = max(worst, max(vals) - min(vals))
+        L = level[node]
+        for v, t in mm:
+            if L - v > 0.05:
+                add(t, L - v)
+            elif v - L > 0.05:
+                rem(t, v - L)
     return worst
 
 
@@ -851,28 +1065,34 @@ def cmd_run(a):
     pads = {}
     hist = []
     best = None
+    def emit(pads):
+        E, st = expand_pads(T, pads)
+        write_verilog(E, out / "ctree.v")
+        write_spef(E, out / "ctree.spef")
+        return st
     for it in range(a.iters + 1):
-        write_spef(T, out / "ctree.spef", pads=pads)
+        st = emit(pads)
         rc = cmd_sta(argparse.Namespace(dir=str(out), corner=a.corner, libdir=a.libdir))
         if rc:
             return rc
         arrs = [read_arr(out / f"arr_{c}.txt") for c in a.corner]
         sk = {c: round(max(x[0].values()) - min(x[0].values()), 2) for c, x in zip(a.corner, arrs)}
-        hist.append(dict(iter=it, tap_skew_ps=sk, pads=len(pads), pad_um=round(sum(pads.values()), 1)))
+        hist.append(dict(iter=it, tap_skew_ps=sk, pads=len(pads), pad_um=round(sum(pads.values()), 1), stages=st))
         print(json.dumps(hist[-1]))
         if best is None or max(sk.values()) < best[0]:
             best = (max(sk.values()), it, dict(pads))
         if it == a.iters or max(sk.values()) <= a.stop_ps:
             break
-        pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads)
+        pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads, take_back=getattr(a, "take_back", False))
     if best[1] != hist[-1]["iter"]:                 # keep the best iteration (the loop may oscillate)
         pads = best[2]
-        write_spef(T, out / "ctree.spef", pads=pads)
+        st = emit(pads)
         cmd_sta(argparse.Namespace(dir=str(out), corner=a.corner, libdir=a.libdir))
         hist.append(dict(iter=f"best={best[1]}", tap_skew_ps=best[0]))
     tree["meta"]["balance"] = hist
     tree["meta"]["pads"] = len(pads)
     tree["meta"]["pad_um"] = round(sum(pads.values()), 1)
+    tree["meta"]["delay_stages"] = st
     (out / "tree.json").write_text(json.dumps(tree) + "\n")
     (out / "pads.json").write_text(json.dumps([[k[0], k[1], round(v, 3)] for k, v in sorted(pads.items())]) + "\n")
     return cmd_report(argparse.Namespace(dir=str(out), plan=a.plan))
@@ -1060,7 +1280,16 @@ def cmd_render(a):
         ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, lw=0.3, ec="0.6"))
     for r in keepouts(P):
         ax.add_patch(Rectangle((r[0], r[1]), r[2] - r[0], r[3] - r[1], fc="tan", ec="none", alpha=0.5))
-    for k, nd in tree["nodes"].items():
+    nj=json.loads((d / "nets.json").read_text())
+    routed=any(n.get("routes") for n in nj["nets"])
+    if routed:
+        for rect,name in phy_domains(P):
+            ax.add_patch(Rectangle((rect[0],rect[1]),rect[2]-rect[0],rect[3]-rect[1],
+                                   fc="magenta",ec="purple",alpha=0.25))
+        for net in nj["nets"]:
+            for points in net.get("routes",[]):
+                if len(points)>1:ax.plot([q[0] for q in points],[q[1] for q in points],lw=0.35,c="tab:blue")
+    for k, nd in ([] if routed else tree["nodes"].items()):
         for kid, _ in nd.get("kids", []):
             pth = tree["nodes"][kid]["path"]
             leg = [c for c in pth[len(nd["path"]) - 1:] if c in cells]
@@ -1108,6 +1337,8 @@ def main(argv=None):
     b.add_argument("--core-early", choices=("off", "pad"), default="off")
     b.add_argument("--window", type=float, default=SPLIT_WINDOW)
     b.add_argument("--pad", choices=("sta", "level"), default="sta")
+    b.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
+    b.add_argument("--domain-clear-um", type=float, default=8.64)
     b.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
     u = sub.add_parser("run")
     u.add_argument("plan")
@@ -1117,10 +1348,14 @@ def main(argv=None):
     u.add_argument("--core-early", choices=("off", "pad"), default="off")
     u.add_argument("--window", type=float, default=SPLIT_WINDOW)
     u.add_argument("--pad", choices=("sta", "level"), default="sta")
+    u.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
+    u.add_argument("--domain-clear-um", type=float, default=8.64)
     u.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
     u.add_argument("--corner", action="append")
     u.add_argument("--libdir")
     u.add_argument("--iters", type=int, default=10)
+    u.add_argument("--take-back", action="store_true",
+                   help="balance may take surplus pad back (lower insertion; oscillates on very unbalanced trees)")
     u.add_argument("--stop-ps", type=float, default=2.0)
     s = sub.add_parser("sta")
     s.add_argument("dir")

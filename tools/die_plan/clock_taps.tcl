@@ -2,11 +2,15 @@
 # The type has one clock port per die-spine tap (clk, clk_t1, ...; pitch <= 600 um, schema.tap_grid).  The RTL
 # clocks every flop from 'clk'; here every sink on the clk net moves to the net of its NEAREST tap port, so CTS builds
 # one local tree per tap (radius <= ~300 um) instead of one tree from one interior tap (CP1: 1176 ps, 29-32 levels).
+# QC-A0 10-24: the tap port family is OT_TAP_PORT (default clk: plan partitions clk / clk_t<i>; the A0 hard cores
+# ck / ck_t<i>), so hard-core kits use this tool unchanged instead of private copies.
+global ct_taps ct_k ct_pinned ct_grp ct_blk ct_fre
+set ct_port [expr {[info exists ::env(OT_TAP_PORT)] ? $::env(OT_TAP_PORT) : "clk"}]
 set ct_blk [ord::get_db_block]
 set ct_taps {}
 foreach bt [$ct_blk getBTerms] {
   set n [$bt getName]
-  if {![regexp {^clk(_t[0-9]+)?$} $n]} continue
+  if {![regexp "^${ct_port}(_t\[0-9\]+)?\$" $n]} continue
   set bb [$bt getBBox]
   set net [$bt getNet]
   if {$net eq "NULL" || $net eq ""} {
@@ -21,7 +25,7 @@ foreach bt [$ct_blk getBTerms] {
 # tap port's own net BEFORE the nearest-tap split, so the core hangs on the tap the spine delivers early (its internal
 # clock latency exceeds the common latency).  Ports clk_c<k> are not grid taps: no flop is ever moved onto them.
 if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
-  set ct_root [[$ct_blk findBTerm clk] getNet]
+  set ct_root [[$ct_blk findBTerm $ct_port] getNet]
   set fh [open $::env(OT_CORE_TAPS)]; set ct_cl [split [read $fh] "\n"]; close $fh
   foreach l $ct_cl {
     if {[string match "#*" $l] || [llength $l] < 3} continue
@@ -54,7 +58,7 @@ if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
 if {[llength $ct_taps] < 2} {
   puts "OT_CLOCK_TAPS single tap: nothing to split"
 } else {
-  set root [[$ct_blk findBTerm clk] getNet]
+  set root [[$ct_blk findBTerm $ct_port] getNet]
   set cnt {}
   set moved 0
   foreach it [$root getITerms] {
@@ -74,7 +78,93 @@ if {[llength $ct_taps] < 2} {
       incr moved
     }
   }
-  puts "OT_CLOCK_TAPS [llength $ct_taps] taps, $moved sinks moved off clk: [lsort -stride 2 -index 0 $cnt]"
+  puts "OT_CLOCK_TAPS [llength $ct_taps] taps, $moved sinks moved off $ct_port: [lsort -stride 2 -index 0 $cnt]"
+}
+# CLOCK-RESET 10-25 (GEOM-REVIEW-3/-4 06:16-06:3x, S81 adopt178 t41/t42: 36 of 105 stations split over two taps,
+# 4539 of 4545 FF hold fails cross-tap): the assignment UNIT of a registered group is the group, never the flop.
+# Every sink whose instance matches OT_TAP_GROUP_RE (capture 1 = group key; default = ft stations u_ft_<x>_s<k>)
+# goes, with all bits of its group, to the tap nearest the group's sink centroid; a reset relay u_rrl_<k> (or
+# OT_TAP_FOLLOW_RE) follows the tap that clocks most of the flops it resets.  Grouped and following sinks are
+# pinned: the cap pass and the small-tap merge below move whole taps or ungrouped sinks only.
+global ct_taps ct_k ct_pinned  ;# sourced from inside an ORFS proc: procs below read these as globals
+set ct_pinned {}
+set ct_gre [expr {[info exists ::env(OT_TAP_GROUP_RE)] ? $::env(OT_TAP_GROUP_RE) : {(?:^|[/.])(u_ft_[A-Za-z0-9]+_s[0-9]+)[/.]}}]
+set ct_fre [expr {[info exists ::env(OT_TAP_FOLLOW_RE)] ? $::env(OT_TAP_FOLLOW_RE) : {(?:^|[/.])(u_rrl_[0-9]+)[/.]}}]
+proc ct_tapnets {} { global ct_taps; set d {}; foreach tp $ct_taps { dict set d [[lindex $tp 1] getName] $tp }; return $d }
+proc ct_clk_iterm {inst} {
+  set tn [ct_tapnets]
+  foreach it [$inst getITerms] {
+    set n [$it getNet]
+    if {$n ne "NULL" && $n ne "" && [dict exists $tn [$n getName]] && [[$it getMTerm] getIoType] eq "INPUT"} { return $it }
+  }
+  return ""
+}
+# followers (reset relays): tap of the majority of the flops their output tree (through buf/inv) reaches
+proc ct_follow {} {
+  global ct_blk ct_fre ct_pinned
+  set ct_fmoved 0; set ct_fn 0
+  foreach inst [$ct_blk getInsts] {
+    if {$ct_fre eq "" || ![regexp -- $ct_fre [$inst getName]]} continue
+    set cit [ct_clk_iterm $inst]
+    if {$cit eq ""} continue
+    set votes {}; set seen {}; set todo {}
+    foreach it [$inst getITerms] { if {[[$it getMTerm] getIoType] eq "OUTPUT" && [$it getNet] ne "NULL"} { lappend todo [$it getNet] } }
+    while {[llength $todo]} {
+      set n [lindex $todo 0]; set todo [lrange $todo 1 end]
+      if {[dict exists $seen [$n getName]]} continue
+      dict set seen [$n getName] 1
+      foreach it [$n getITerms] {
+        if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+        set li [$it getInst]
+        if {[regexp {^(BUF|INV|HB)} [[$li getMaster] getName]]} {
+          foreach o [$li getITerms] { if {[[$o getMTerm] getIoType] eq "OUTPUT" && [$o getNet] ne "NULL"} { lappend todo [$o getNet] } }
+          continue
+        }
+        set lc [ct_clk_iterm $li]
+        if {$lc ne ""} { dict incr votes [[$lc getNet] getName] }
+      }
+    }
+    if {![dict size $votes]} continue
+    incr ct_fn
+    set win ""; set wv -1
+    dict for {n v} $votes { if {$v > $wv} { set win $n; set wv $v } }
+    set tp [dict get [ct_tapnets] $win]
+    if {[$cit getNet] ne [lindex $tp 1]} { $cit disconnect; $cit connect [lindex $tp 1]; incr ct_fmoved }
+    dict set ct_pinned $cit 1
+  }
+  return [list $ct_fn $ct_fmoved]
+}
+if {[llength $ct_taps] >= 2 && $ct_gre ne ""} {
+  set ct_grp {}
+  foreach tp $ct_taps {
+    foreach it [[lindex $tp 1] getITerms] {
+      if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+      if {[regexp -- $ct_gre [[$it getInst] getName] -> g]} { dict lappend ct_grp $g $it }
+    }
+  }
+  set ct_gmoved 0; set ct_gsplit 0
+  dict for {g its} $ct_grp {
+    set sx 0.0; set sy 0.0; set owners {}
+    foreach it $its {
+      lassign [[$it getInst] getLocation] x y
+      set sx [expr {$sx + $x}]; set sy [expr {$sy + $y}]
+      dict set owners [[$it getNet] getName] 1
+    }
+    if {[dict size $owners] > 1} { incr ct_gsplit }
+    set cx [expr {$sx / [llength $its]}]; set cy [expr {$sy / [llength $its]}]
+    set best ""; set bd 0
+    foreach tp $ct_taps {
+      if {[lindex $tp 2] eq ""} continue
+      set d [expr {abs($cx - [lindex $tp 2]) + abs($cy - [lindex $tp 3])}]
+      if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
+    }
+    foreach it $its {
+      if {[$it getNet] ne [lindex $best 1]} { $it disconnect; $it connect [lindex $best 1]; incr ct_gmoved }
+      dict set ct_pinned $it 1
+    }
+  }
+  lassign [ct_follow] ct_fn ct_fmoved
+  puts "OT_CLOCK_TAPS GROUPS [dict size $ct_grp] groups (re '$ct_gre'): $ct_gsplit were split over taps by the nearest-flop pass, $ct_gmoved sinks moved, 0 split now; followers $ct_fn ('$ct_fre'), $ct_fmoved re-hung on their sinks' tap"
 }
 # COORD 10-23: size taps by SINK COUNT.  No tap keeps more than OT_TAP_MAX_SINKS (~3k): the sinks of an over-full
 # tap that cost the least extra distance move to their next-nearest tap with room (capacity-constrained nearest
@@ -85,6 +175,8 @@ set ct_cap [expr {[info exists ::env(OT_TAP_MAX_SINKS)] ? $::env(OT_TAP_MAX_SINK
 # tap gave 465-ps trees); a dense region beyond that needs a finer tap pitch, not longer trees
 set ct_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ct_maxx [expr {0.5 * ([info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0) * $ct_dbu}]
+# density taps (decision 5, gen.py phys OT_TAP_REASSIGN_UM = clock.tap_radius_um): no pitch; the cluster radius bounds it
+if {[info exists ::env(OT_TAP_REASSIGN_UM)]} { set ct_maxx [expr {$::env(OT_TAP_REASSIGN_UM) * $ct_dbu}] }
 if {[llength $ct_taps] >= 2} {
   set ct_by {}
   foreach tp $ct_taps {
@@ -107,6 +199,7 @@ if {[llength $ct_taps] >= 2} {
     # extra distance of each sink to every other tap with room
     set cand {}
     foreach it [dict get $ct_by $on] {
+      if {[dict exists $ct_pinned $it]} continue
       set loc [[$it getInst] getLocation]; set x [lindex $loc 0]; set y [lindex $loc 1]
       set d0 [expr {abs($x - [lindex $over 2]) + abs($y - [lindex $over 3])}]
       set best ""; set bd 0
@@ -116,6 +209,33 @@ if {[llength $ct_taps] >= 2} {
         if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
       }
       if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $it $best] }
+    }
+    if {![llength $cand] && [info exists ct_grp]} {
+      # CLOCK-RESET 10-25: over-full tap of pinned groups -> move the WHOLE group (with its followers' sinks staying
+      # on their own nets) that costs the least extra centroid distance to a tap with room for all of it
+      set gbest ""; set gbd 0; set gtgt ""
+      dict for {g its} $ct_grp {
+        if {[[lindex $its 0] getNet] ne [lindex $over 1]} continue
+        set sx 0.0; set sy 0.0
+        foreach it $its { lassign [[$it getInst] getLocation] x y; set sx [expr {$sx + $x}]; set sy [expr {$sy + $y}] }
+        set cx [expr {$sx / [llength $its]}]; set cy [expr {$sy / [llength $its]}]
+        set d0 [expr {abs($cx - [lindex $over 2]) + abs($cy - [lindex $over 3])}]
+        foreach tp $ct_taps {
+          if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] + [llength $its] > $ct_cap} continue
+          set d [expr {abs($cx - [lindex $tp 2]) + abs($cy - [lindex $tp 3]) - $d0}]
+          if {$d <= $ct_maxx && ($gbest eq "" || $d < $gbd)} { set gbest $g; set gbd $d; set gtgt $tp }
+        }
+      }
+      if {$gbest ne ""} {
+        set tn [lindex $gtgt 0]; set keep [dict get $ct_by $on]; set add [dict get $ct_by $tn]
+        foreach it [dict get $ct_grp $gbest] {
+          $it disconnect; $it connect [lindex $gtgt 1]
+          set keep [lsearch -all -inline -not -exact $keep $it]; lappend add $it
+        }
+        dict set ct_by $on $keep; dict set ct_by $tn $add
+        incr ct_moves [llength [dict get $ct_grp $gbest]]
+        continue
+      }
     }
     if {![llength $cand]} {
       # COORD 10-23 19:55: sinks per tap are guidance (WARN), not a gate
@@ -144,6 +264,43 @@ if {[llength $ct_taps] >= 2} {
   set l {}
   foreach tp $ct_taps { lappend l "[lindex $tp 0] [llength [dict get $ct_by [lindex $tp 0]]]" }
   puts "OT_CLOCK_TAPS cap $ct_cap sinks/tap: $ct_moves sinks re-assigned; per tap: [join $l {, }]"
+  if {[info exists ct_grp]} {
+    lassign [ct_follow] ct_fn ct_fmoved
+    puts "OT_CLOCK_TAPS followers after cap pass: $ct_fmoved of $ct_fn re-hung on their sinks' tap"
+  }
+}
+# CLOCK-RESET 10-25 (GEOM-REVIEW-4 06:16 item 5): a tap with fewer than OT_TAP_MIN_SINKS (default 50) sinks is a
+# nearly empty tree that tap_balance must pad (t18: 42 -> 246 ps with 49 delay cells) and that launches early into
+# its neighbours: its sinks (whole groups included) join the nearest tap that has >= the minimum, if that tap lies
+# within one tap pitch; otherwise it stays (WARN).  The emptied tap is then dropped like any tap without sinks.
+set ct_min [expr {[info exists ::env(OT_TAP_MIN_SINKS)] ? $::env(OT_TAP_MIN_SINKS) : 50}]
+if {[llength $ct_taps] >= 2 && $ct_min > 0} {
+  set ct_k {}
+  foreach tp $ct_taps {
+    set l {}
+    foreach it [[lindex $tp 1] getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT"} { lappend l $it } }
+    dict set ct_k [lindex $tp 0] $l
+  }
+  set ct_merged {}
+  foreach tp [lsort -command {apply {{a b} {global ct_k; expr {[llength [dict get $ct_k [lindex $a 0]]] - [llength [dict get $ct_k [lindex $b 0]]]}}}} $ct_taps] {
+    set n [llength [dict get $ct_k [lindex $tp 0]]]
+    if {$n == 0 || $n >= $ct_min} continue
+    set best ""; set bd 0
+    foreach t2 $ct_taps {
+      if {[lindex $t2 0] eq [lindex $tp 0] || [llength [dict get $ct_k [lindex $t2 0]]] < $ct_min} continue
+      set d [expr {abs([lindex $tp 2] - [lindex $t2 2]) + abs([lindex $tp 3] - [lindex $t2 3])}]
+      if {$best eq "" || $d < $bd} { set best $t2; set bd $d }
+    }
+    if {$best eq "" || $bd > 2.0 * $ct_maxx} {
+      puts "OT_CLOCK_TAPS WARN [lindex $tp 0] keeps $n sinks < $ct_min: no tap with >= $ct_min sinks within one pitch"
+      continue
+    }
+    foreach it [dict get $ct_k [lindex $tp 0]] { $it disconnect; $it connect [lindex $best 1] }
+    dict set ct_k [lindex $best 0] [concat [dict get $ct_k [lindex $best 0]] [dict get $ct_k [lindex $tp 0]]]
+    dict set ct_k [lindex $tp 0] {}
+    lappend ct_merged "[lindex $tp 0]($n)->[lindex $best 0]"
+  }
+  puts "OT_CLOCK_TAPS MIN $ct_min sinks/tap: [llength $ct_merged] small taps merged [join $ct_merged { }]"
 }
 # COORD 10-23 (CP1 r9: 7 of 16 grid taps over macros / empty areas): per-tap sink counts after the cap pass, and
 # every tap that got NO sink is DROPPED: its port stays (plan pins unchanged) but carries no tree, and the die

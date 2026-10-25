@@ -27,7 +27,7 @@ Modes
   arcs from the MAX arrival only (MakeTimingModel::min_max_ is fixed to max), so ETM hold at a seam is optimistic by
   the clk->q max/min spread; etm is kept for setup cross-checks only and is never a hold verdict.
 
-Constraints (AGENTS.md): one clock on the die clk port, period from --period-ps (default 833.333 = 1.2 GHz),
+Constraints (AGENTS.md): one clock on the die clk port, period from --period-ps (default 833.000 ps (owner clock contract)),
 propagated through each partition's own routed tree, setup uncertainty 60 ps / hold 25 ps, CPPR on.  Gate (owner,
 BRIEFING decision 5, 2026-10-24): setup at TT >= 0, hold at FF >= 0, and the RELATED launch/capture register pair
 skew with CPPR credit <= 80 ps at TT and FF (seam pairs and intra-partition pairs) (``--corner TT --corner FF``, the
@@ -71,7 +71,7 @@ from pathlib import Path
 
 UNC_SETUP_PS = 60.0
 UNC_HOLD_PS = 25.0
-PERIOD_PS = 833.333
+PERIOD_PS = 833.000
 SIGNOFF = {"TT": "max", "FF": "min"}          # AGENTS.md (owner 2026-10-24): setup at TT, hold at FF; never SS
 SKEW_PS = 80.0                                 # related launch/capture pair skew with CPPR credit (owner, gate)
 SPREAD_PS = 80.0                               # face-flop (pin-flop) clock arrival spread: INFO only since 10-24
@@ -82,6 +82,61 @@ ORFS_LIBS = ("asap7sc7p5t_AO_RVT_{c}_nldm_211120.lib.gz", "asap7sc7p5t_INVBUF_RV
 LIB_DIRS = ("/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM", "~/.cache/opentallas/asap7_nldm")
 ORFS_IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 CLOCK_PORT_RE = r"^clk(_t\d+)?$"
+
+# Boundary-hold contract of a budget stand-in (CLOCK-RESET/hold 2026-10-25).  Every signed partition passes hold_ff
+# under the signoff.py standard overlay: set_input_delay -min -insertion_tol (40 ps) and set_output_delay -min 0 vs
+# its IO virtual clock (latency = budgeted / FF pin-flop-mean insertion L).  So a real receiver pads port -> D until
+# data arriving at L - tol still holds (d_in >= I_cap - L + t_hold + tol + unc/2) and a real sender guarantees
+# I_launch + clk->q + Q -> port >= L + unc/2.  Summed over a seam: hold slack >= (T_launch + L_tx) - (T_capture + L_rx)
+# + tol + top wire, i.e. the die tree only has to keep the related tap pair skew inside the tolerance.  A bare
+# stand-in (port -> D = 0, no padding) instead reads clk->q - t_hold - 25 ~ -3 ps on EVERY seam regardless of the
+# tree: an STA-model artefact.  The stand-in carries the receiver's guaranteed minimum as one OT_BHOLD_<ps> cell
+# (constant delay = tol) between each input port bit and its face flop.  Credit is conservative: the sender's
+# +unc/2 and the receiver's t_hold + unc/2 terms are not credited (model slack <= contract slack by unc - (clk->q -
+# t_hold) ~ 3-15 ps at FF).
+BHOLD_RE = re.compile(r"\bOT_BHOLD_(\d+)p(\d)\b")
+BHOLD_SLEW_PS = 10.0
+
+
+def bhold_cell(ps):
+    """cell name of a boundary-hold contract delay of `ps` (0.1-ps resolution): 40 -> OT_BHOLD_40p0."""
+    return f"OT_BHOLD_{float(ps):.1f}".replace(".", "p")
+
+
+def bhold_lib(cells):
+    """liberty text of the OT_BHOLD_<ps> contract cells (constant A -> Y delay, corner independent: the contract is a
+    timing number, not a circuit).  cells = iterable of cell names."""
+    out = ["library (ot_boundary_hold) {", '  delay_model : table_lookup;', '  time_unit : "1ps";',
+           '  voltage_unit : "1V";', '  current_unit : "1mA";', '  pulling_resistance_unit : "1kohm";',
+           "  capacitive_load_unit (1, ff);", "  nom_process : 1;", "  nom_voltage : 0.7;", "  nom_temperature : 25;",
+           "  input_threshold_pct_rise : 50;", "  input_threshold_pct_fall : 50;",
+           "  output_threshold_pct_rise : 50;", "  output_threshold_pct_fall : 50;",
+           "  slew_lower_threshold_pct_rise : 10;", "  slew_upper_threshold_pct_rise : 90;",
+           "  slew_lower_threshold_pct_fall : 10;", "  slew_upper_threshold_pct_fall : 90;"]
+    for c in sorted(set(cells)):
+        m = BHOLD_RE.fullmatch(c)
+        if not m:
+            raise ValueError(f"not a boundary-hold contract cell: {c}")
+        d = f"{m.group(1)}.{m.group(2)}"
+        arcs = "".join(f"        {k} (scalar) {{ values (\"{v}\"); }}\n" for k, v in
+                       (("cell_rise", d), ("cell_fall", d), ("rise_transition", f"{BHOLD_SLEW_PS:g}"),
+                        ("fall_transition", f"{BHOLD_SLEW_PS:g}")))
+        out += [f"  cell ({c}) {{", "    area : 0;", "    pin (A) { direction : input; capacitance : 0.5; }",
+                "    pin (Y) {", "      direction : output;", '      function : "A";', "      max_capacitance : 1000;",
+                "      timing () {", '        related_pin : "A";', "        timing_sense : positive_unate;",
+                arcs.rstrip("\n"), "      }", "    }", "  }"]
+    return "\n".join(out + ["}"]) + "\n"
+
+
+def bhold_cells_used(paths):
+    """OT_BHOLD_* cell names instantiated by any of the netlists."""
+    used = set()
+    for p in paths:
+        with _open(p) as f:
+            for line in f:
+                if "OT_BHOLD_" in line:
+                    used.update(m.group(0) for m in BHOLD_RE.finditer(line))
+    return used
 
 
 # ----------------------------------------------------------------------------------------------------------- libraries
@@ -1454,6 +1509,17 @@ def cmd_run(a):
         groups[f"{s['src']}->{s['dst']}/{s['dst_bus']}"].add((f"{s['dst']}/{s['dst_pin']}", f"{s['src']}/{s['src_pin']}"))
     groups = sorted((g, sorted(p)) for g, p in groups.items())
     (out / "seams.json").write_text(json.dumps(dict(top=top.name, seams=seams), indent=0) + "\n")
+    # boundary-hold contract cells of budget stand-ins: write their liberty next to the run (fails closed: a stand-in
+    # that instantiates the cell can never link to a black box)
+    bh = bhold_cells_used(sorted(str(parts[m] / "6_final.v") for m in set(inst_mods.values())))
+    bh_lib, bh_info = [], None
+    if bh:
+        p = out / "ot_boundary_hold.lib"
+        p.write_text(bhold_lib(bh))
+        bh_lib = [str(p.resolve())]
+        bh_info = dict(cells=sorted(bh), lib=str(p.resolve()), note=(
+            "stand-in input bits carry the signed-kit receiver padding guarantee (signoff.py hold_ff overlay: "
+            "input min -insertion_tol, output min 0); sender unc/2 and receiver t_hold+unc/2 not credited"))
     mod_files, abstracts = {}, {}
     for m in sorted(set(inst_mods.values())):
         d = parts[m]
@@ -1463,7 +1529,7 @@ def cmd_run(a):
         elif a.mode == "ilm":
             ad = out / "ilm" / m
             if not (ad / "ilm.json").is_file() or a.rebuild:
-                st = make_ilm(d / "6_final.v", sp if sp.is_file() else None, ad, corner_libs("TT", a.libdir, a.lib),
+                st = make_ilm(d / "6_final.v", sp if sp.is_file() else None, ad, corner_libs("TT", a.libdir, a.lib) + bh_lib,
                               sdc=d / "6_final.sdc")
             else:
                 st = json.loads((ad / "ilm.json").read_text())
@@ -1476,6 +1542,8 @@ def cmd_run(a):
                spine="tree" if a.spine_tree else "branch" if a.spine_branch else ("routed" if a.die_spef else "ideal"),
                instances=inst_mods, parts={m: str(parts[m]) for m in mod_files or parts}, abstracts=abstracts, corners={},
                seam_groups=len(groups), seam_bits=len(seams))
+    if bh_info:
+        res["boundary_hold_contract"] = bh_info
     top_path = Path(a.top).resolve()
     extra_v, pdirs = [], {m: port_dirs(parts[m] / "6_final.v") for m in set(inst_mods.values())}
     inst_spef = {i: mod_files[m]["spef"] for i, m in inst_mods.items() if mod_files.get(m, {}).get("spef")}
@@ -1501,7 +1569,7 @@ def cmd_run(a):
     for corner in a.corner:
         # '{c}' in --spine-branch: one spine file per corner (die_trial.py writes spine_<corner>.json)
         spine = load_spine(a.spine_branch.replace("{c}", corner) if a.spine_branch else None, set(inst_mods))
-        libs = corner_libs(corner, a.libdir, a.lib)
+        libs = corner_libs(corner, a.libdir, a.lib) + bh_lib
         etm_libs = None
         if a.mode == "etm":
             etm_libs = []

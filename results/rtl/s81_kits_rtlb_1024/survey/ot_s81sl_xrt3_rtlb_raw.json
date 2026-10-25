@@ -1,0 +1,103 @@
+{
+ "kit": "ot_s81sl_xrt3",
+ "top": "ot_s81sl_xrt3",
+ "netlist": "ot_s81sl_xrt3/run/results/asap7/kl_ot_s81sl_xrt3_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 9266,
+ "ok": 8053,
+ "fail_counts": {
+  "dropped": 117,
+  "shared": 1081,
+  "feedthrough": 15
+ },
+ "groups": [
+  {
+   "bus": "bi",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 58,
+   "bits": "[7..36,1076..1103]"
+  },
+  {
+   "bus": "ci_b",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 1043,
+   "bits": "[0..3,37..1075]"
+  },
+  {
+   "bus": "ci_b",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "nonflop",
+   "n": 28,
+   "bits": "[1076..1103]"
+  },
+  {
+   "bus": "ci_dir",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 3,
+   "bits": "[0..2]"
+  },
+  {
+   "bus": "dl_e",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 29,
+   "bits": "[0,1076..1103]"
+  },
+  {
+   "bus": "dl_vb",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 1,
+   "bits": "[0]"
+  },
+  {
+   "bus": "dl_w",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 29,
+   "bits": "[0,1076..1103]"
+  },
+  {
+   "bus": "sw_m",
+   "dir": "output",
+   "cls": "feedthrough",
+   "sub": "",
+   "n": 15,
+   "bits": "[5..7,13..15,21..23,29..31,37..39]"
+  },
+  {
+   "bus": "sw_m",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 5,
+   "bits": "[4,12,20,28,36]"
+  },
+  {
+   "bus": "x_mode",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 1,
+   "bits": ""
+  },
+  {
+   "bus": "x_si",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "nonflop",
+   "n": 1,
+   "bits": "[7]"
+  }
+ ]
+}

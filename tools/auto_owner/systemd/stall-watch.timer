@@ -1,0 +1,9 @@
+[Unit]
+Description=OpenTallas stall watchdog every 15 minutes (writes ~/coord/STALLS.txt)
+
+[Timer]
+OnCalendar=*-*-* *:05,20,35,50:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

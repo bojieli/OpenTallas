@@ -1,0 +1,13 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: intel1         admits   738 GB (avail 839, reserve 0, fresh 35, peak 1.5, headroom 0, waiters 0/0 GB) load 54/112 running 17 disk 2268 GB 
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: localhost      skipped: no /srv/opentallas-scratch2/claude/qc-tok-meth/link/rr
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-980977-1792918387 after 1 s
+  "codec2_mut_slot": "FAIL as required",
+  "codec2_mut_user": "FAIL as required"
+ }
+}
+rc=0
+ot-run: RAN on intel1 (unit oth-ubuntu-980977-1792918387): exit 0
