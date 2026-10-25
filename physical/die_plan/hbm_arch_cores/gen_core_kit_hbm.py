@@ -409,6 +409,9 @@ def main():
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
+    ap.add_argument("--io-tt-ps", type=float, default=None, help="Measured TT boundary pin-register clock insertion; overrides historical core table")
+    ap.add_argument("--io-ff-ps", type=float, default=None, help="Measured FF boundary pin-register insertion; default FLOW calibrated 0.81 x TT budget")
+    ap.add_argument("--pre-route-ff-hold", action="store_true", help="Require FF GRT hold >=0 before DRT (GEOM condition)")
     ap.add_argument("--clock-taps", default="off", choices=["off", "density"],
                     help="HBM-CLKSTRUCT 10-25 (owner decision 5 / 10-23 MSCTS): density = structured in-core clock "
                          "(port -> CTS trunk -> density taps of <= --clock-tap-sinks sinks within --clock-tap-dmax um -> "
@@ -621,6 +624,11 @@ def main():
                             measured_kit=ce.get("kit"))
             if ce["insertion_mean_ps"] > common:
                 ins = float(ce["insertion_mean_ps"])
+    if a.io_tt_ps is not None:
+        ins = a.io_tt_ps
+    ff_ins = a.io_ff_ps if a.io_ff_ps is not None else round(0.81 * ins, 1)
+    if not 0 < ff_ins <= ins:
+        raise SystemExit("IO clock binding requires 0 < FF <= TT")
     (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common))
     sys.path.insert(0, str(TOOL))
     import sdc_lint
@@ -640,7 +648,7 @@ def main():
         dirs = {n: d for n, d, _ in tports}
     if not dirs:
         raise SystemExit("cannot derive port directions for sdc_lint")
-    lctx = dict(period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, clock_ports=sorted({base(c) for c in clks}),
+    lctx = dict(period_ps=per, insertion_ps=ins, insertion_ff_ps=ff_ins, insertion_basis="measured CLI" if a.io_ff_ps is not None else "FLOW 0.81 FF/TT budget", insertion_tol_ps=tol, clock_ports=sorted({base(c) for c in clks}),
                 inputs=[b for b in sig_in if dirs.get(b) == "input"],
                 outputs=[b for b in pb if dirs.get(b) == "output"],
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
@@ -650,11 +658,13 @@ def main():
     if rst_in != rsts:                                               # output) is a data output, never an input delay
         rsts = rst_in
         (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common))
-    lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
+    lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **{k: v for k, v in lctx.items() if k not in ("insertion_ff_ps", "insertion_basis")})
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
-    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "signoff.py", "pair_skew.tcl"):
+    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "signoff.py", "pair_skew.tcl", "vclk_corner.tcl", "postcts_gate.tcl"):
         shutil.copyfile(TOOL / f, kd / f)
+    (kd / "core_grt_pre.tcl").write_text("source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n")
+    (kd / "core_grt_post.tcl").write_text("if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq \"ff\"} { ot_vclk_bind tt }\n")
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     tb = (TOOL / "tap_balance.tcl").read_text()
     tb = tb.replace("set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}", "set tb_port_re {^(" + "|".join(re.escape(c) for c in sorted(set(clks))) + ")$}")
@@ -732,7 +742,12 @@ def main():
            # ELEM-HBM 10-24 (gq_land RSZ0060): ORFS cts.tcl repairs hold BEFORE the POST_CTS tap_balance, i.e. on an
            # unbalanced tree -> thousands of needless hold buffers; repair after GRT instead, on the balanced tree.
            "export SKIP_CTS_REPAIR_TIMING = 1",
-           "export PRE_GLOBAL_ROUTE_TCL = /work/hold_cap.tcl",
+           "export PRE_GLOBAL_ROUTE_TCL = /work/core_grt_pre.tcl",
+           "export POST_GLOBAL_ROUTE_TCL = /work/core_grt_post.tcl",
+           f"export OT_VCLK_TT = {ins:g}",
+           f"export OT_VCLK_FF = {ff_ins:g}",
+           f"export OT_HOLD_FF_MARGIN = {a.hold_margin:g}",
+           f"export OT_PRE_ROUTE_FF_HOLD = {int(a.pre_route_ff_hold)}",
            f"export OT_TAP_TARGET_PS = {ins:g}",
            f"export OT_TAP_WINDOW_PS = {tol:g}",
            "export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",

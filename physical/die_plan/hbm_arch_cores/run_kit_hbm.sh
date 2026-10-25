@@ -4,6 +4,7 @@
 #   timing evidence) -> GOAL (finish) -> generate_abstract -> pin audit -> corners_hbm.tcl at SS / FF / TT
 #   (STA, face-flop CK spread, ETM).  Outputs chowned back to the caller.
 #   run_kit_hbm.sh KITDIR [GOAL=finish] [MEM_GB=32] [CPUS=16]     (heavy: call through ot-run --mem MEM_GB)
+#   GOAL=route: continue detailed route through finish and abstract generation, then sign off.
 #   GOAL=post: no flow steps; pin audit + corners + signoff on the run's existing routed ODB (HBM-ELEM 10-24: the
 #   corners step used to read 'make print-X' as 'X = ...' but ORFS prints 'X: ...' -> empty libs -> STA-0453 -> rc+100
 #   -> signoff skipped on every finished kit).
@@ -35,10 +36,21 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
     if [ \$rc = 0 ] && [ -n \"\$C\" ] && [ -f /work/hold_gate.tcl ]; then \
       S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); S=\${S:-/work/constraint.sdc}; \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\$C SDC=\$S PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
+        OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
+        LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; grep OT_HOLD_GATE /work/hold_gate.log; \
       if grep -q 'OT_HOLD_GATE FAIL' /work/hold_gate.log; then grep OT_HOLD_GATE /work/hold_gate.log | sed 's/^/FAIL_POSTCTS /' | tee /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
+  HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then OT_VCLK_CORNER=ff \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$HM\" ] && { [ $GOAL = route ] || [ $GOAL = finish ]; }; then O5=\$(ls /work/run/results/asap7/*/base/5_1_grt.odb | tail -1); \
+    for c in TT FF; do OT_POSTCTS_GRT=1 OT_CORNER=\$c ODB=\$O5 openroad -exit /work/postcts_gate.tcl > /work/postcts_gate_\$c.log 2>&1; \
+      grc=\$?; if [ \$grc != 0 ] || ! grep -q 'OT_POSTCTS_GATE.*PASS' /work/postcts_gate_\$c.log; then echo \"FAIL_POSTCTS per-corner insertion gate \$c\" | tee -a /work/FAIL_POSTCTS; rc=6; fi; done; \
+    if grep -q '^export OT_PRE_ROUTE_FF_HOLD = 1' /work/config.mk; then \
+      python3 -c 'import json,sys; d=json.load(open(\"/work/postcts_gate_ff.json\")); print(\"FF_PRE_ROUTE_HOLD\",d[\"hold_wns_est_ps\"]); sys.exit(d[\"hold_wns_est_ps\"] < 0)' > /work/pre_route_ff_hold.log 2>&1; \
+      if [ \$? != 0 ]; then cat /work/pre_route_ff_hold.log | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != cts ] && [ $GOAL != synth ]; then \$M $GOAL; rc=\$?; fi; \
-  if [ \$rc = 0 ] && [ $GOAL = finish ]; then \$M generate_abstract; rc=\$?; fi; fi; \
+  if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
+  if [ \$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ]; }; then \$M do-generate_abstract; rc=\$?; fi; fi; \
   R=\$(ls -d /work/run/results/asap7/*/base | head -1); \
   O=\$(ls \$R/5_route.odb \$R/6_final.odb 2>/dev/null | tail -1); \
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit_core.py > /work/pin_audit.log 2>&1; fi; \
@@ -61,7 +73,7 @@ rc=$?
 $DK run --rm -v "$K":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
 tail -5 "$K/run_$GOAL.log"
 # signoff whenever the flow itself finished (a corners/ETM error is rc >= 100 and must not hide the verdict)
-if { [ "$GOAL" = finish ] || [ "$GOAL" = post ]; } && [ $((rc % 100)) = 0 ] && ls "$K"/run/results/asap7/*/base/6_final.odb >/dev/null 2>&1; then
+if { [ "$GOAL" = finish ] || [ "$GOAL" = route ] || [ "$GOAL" = post ]; } && [ $((rc % 100)) = 0 ] && ls "$K"/run/results/asap7/*/base/6_final.odb >/dev/null 2>&1; then
   SO="$K/signoff"
   [ ! -e "$SO/signoff.json" ] || SO="$K/signoff_$(date +%Y%m%d_%H%M%S)"
   python3 "$K/signoff.py" run --run-dir "$K/run" --kit "$K" --corners tt,ff --out "$SO" --docker "$DK" || rc=1
