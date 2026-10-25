@@ -155,6 +155,27 @@ def plan_taps(P):
     return out
 
 
+def plan_tap_early(P):
+    """{(part, port): {"TT": ps, "FF": ps}}: how early each core tap must arrive at each sign-off corner (schema
+    core_tap_early_ps per corner: core insertion - die common latency at THAT corner; CORELAT 10-25)."""
+    import gen_phys
+    out = {}
+    by_type = {}
+    for n, p in sorted(P.parts.items()):
+        tn = p["type"]
+        if tn not in by_type:
+            by_type[tn] = {port: {c: S.core_tap_early_ps(P, tp, c) for c in ("TT", "FF")}
+                           for port, _, _, tp in S.core_taps(P, tn)}
+        for port, e in by_type[tn].items():
+            out[(n, port)] = e
+    return out
+
+
+def tap_early(t, corner):
+    """a tree tap's early shift at a corner (trees built before CORELAT carry the TT number only)."""
+    return float((t.get("early_corner_ps") or {}).get(corner, t["early_ps"]))
+
+
 def keepouts(P):
     """die-frame rects no die buffer may sit on: every hard core / ROM macro of every partition + die PHY macros."""
     out = []
@@ -395,6 +416,7 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     window = SPLIT_WINDOW if window is None else window
     aware_levels = AWARE_LEVELS if aware_levels is None else aware_levels
     taps = plan_taps(P) if taps is None else taps
+    early_c = plan_tap_early(P) if core_early == "pad" else {}
     base_keep = list(keep if keep is not None else keepouts(P))
     if domain_corridors:
         base_keep += [(r[0]-domain_clear_um,r[1]-domain_clear_um,r[2]+domain_clear_um,r[3]+domain_clear_um,
@@ -678,7 +700,8 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                     prev, prevpt = cn, (xx, yy)
             if not cuts:
                 nets.append(dict(name=out, drv=prev, branches=[(STUB_UM, "M8", "port:" + out, 0.0)]))
-            tap_rows.append(dict(part=part, tap=port, port=out, xy=[X, Y], early_ps=early, leaf=ncell(key),
+            tap_rows.append(dict(part=part, tap=port, port=out, xy=[X, Y], early_ps=early,
+                                 early_corner_ps=early_c.get((part, port)) if early > 0 else None, leaf=ncell(key),
                                  path=path_of[key] + [dn] + cells, pad_nets=[[f"w_{c}", 0] for c in cells] + [[out, 0]]))
     # chain standard per segment index = the longest legalised chain segment of that index (balance by construction);
     # a core-early chain keeps its cut below the standard
@@ -1000,7 +1023,7 @@ def load_tree(d):
     return T
 
 
-def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False):
+def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False, corners=None):
     """one balance pass: every tap up to the latest tap of its leaf, every child subtree up to its latest sibling,
     by wire pads on the child's last leg segment (a tap's last chain segment).  arrs: [(tap arr, node arr)] per
     corner; the delta is the corner mean.  Returns the largest residual delta (ps) before this pass."""
@@ -1010,8 +1033,13 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False):
     for t in tree["taps"]:
         leaf_taps[t["leaf"]].append(t["port"])
 
+    early = {}
+    if corners and tree["meta"].get("core_early") == "pad":
+        early = {t["port"]: [tap_early(t, c) for c in corners] for t in tree["taps"] if t["early_ps"] > 0}
+
     def tap_a(p):
-        return sum(ta[p] for ta, _ in arrs) / len(arrs)
+        e = early.get(p)
+        return sum(ta[p] + (e[i] if e else 0.0) for i, (ta, _) in enumerate(arrs)) / len(arrs)
     memo = {}
 
     def smax(node):
@@ -1104,6 +1132,13 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False):
     return worst
 
 
+def eff_skew(tree, corner, tarr):
+    """tap skew of the effective flop clock: arrival + the core tap's early shift at that corner (core_early pad)."""
+    pad_ = tree["meta"].get("core_early") == "pad"
+    v = [tarr[t["port"]] + (tap_early(t, corner) if pad_ else 0.0) for t in tree["taps"] if t["port"] in tarr]
+    return round(max(v) - min(v), 2) if v else 0.0
+
+
 def cmd_run(a):
     """build + STA-driven wire-pad balance (iterations) + final STA + report: the full die clock step."""
     out = Path(a.out)
@@ -1124,14 +1159,15 @@ def cmd_run(a):
         if rc:
             return rc
         arrs = [read_arr(out / f"arr_{c}.txt") for c in a.corner]
-        sk = {c: round(max(x[0].values()) - min(x[0].values()), 2) for c, x in zip(a.corner, arrs)}
+        sk = {c: eff_skew(tree, c, x[0]) for c, x in zip(a.corner, arrs)}
         hist.append(dict(iter=it, tap_skew_ps=sk, pads=len(pads), pad_um=round(sum(pads.values()), 1), stages=st))
         print(json.dumps(hist[-1]))
         if best is None or max(sk.values()) < best[0]:
             best = (max(sk.values()), it, dict(pads))
         if it == a.iters or max(sk.values()) <= a.stop_ps:
             break
-        pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads, take_back=getattr(a, "take_back", False))
+        pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads, take_back=getattr(a, "take_back", False),
+                 corners=a.corner)
     if best[1] != hist[-1]["iter"]:                 # keep the best iteration (the loop may oscillate)
         pads = best[2]
         st = emit(pads)
@@ -1237,8 +1273,16 @@ def cmd_report(a):
         if early:
             std = [tarr[t["port"]] for t in taps if t["early_ps"] == 0 and t["port"] in tarr]
             ref = max(std) if std else ins[-1]
-            err = [abs((ref - tarr[t["port"]]) - t["early_ps"]) for t in early if t["port"] in tarr]
+            err = [abs((ref - tarr[t["port"]]) - tap_early(t, corner)) for t in early if t["port"] in tarr]
             cr["core_early_err_max_ps"] = round(max(err), 2) if err else None
+            # per declared core value (CORELAT): delivered early shift vs contract at this corner
+            grp = defaultdict(list)
+            for t in early:
+                if t["port"] in tarr:
+                    grp[round(tap_early(t, corner), 2)].append(ref - tarr[t["port"]])
+            cr["core_early_by_contract"] = {f"{k:g}": dict(taps=len(v), delivered_min_ps=round(min(v), 2),
+                                                          delivered_max_ps=round(max(v), 2)) for k, v in sorted(grp.items())}
+            cr["eff_tap_skew_ps"] = eff_skew(tree, corner, tarr)
 
         def lca_arr(pa, pb):
             A, B = paths[pa], paths[pb]
@@ -1253,7 +1297,7 @@ def cmd_report(a):
 
         def eff(port):
             # effective flop clock: a core tap's early shift is paid back by the core insertion (contract)
-            return tarr[port] + (by_port[port]["early_ps"] if tree["meta"].get("core_early") == "pad" else 0.0)
+            return tarr[port] + (tap_early(by_port[port], corner) if tree["meta"].get("core_early") == "pad" else 0.0)
 
         def rows_of(pairs, weight=None):
             rows = []

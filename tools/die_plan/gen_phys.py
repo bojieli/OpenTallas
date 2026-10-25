@@ -425,7 +425,7 @@ def _group_in_min(m):
 # ratio: ve_s 219.5/270.3 0.81, vmr_cqb 287.2/359.6 0.80, idx_vm 192/234 0.82, crh 240.6/292.5 0.82).  Sign-off
 # rebinds each corner to its routed RCX pin-register mean and FAILs when it is more than insertion_tol_ps away from
 # the bound value (signoff.py clock check).
-FF_TT_INSERTION_RATIO = 0.81
+FF_TT_INSERTION_RATIO = S.FF_TT_INSERTION_RATIO   # 0.81: one constant (schema)
 
 
 def insertion_binding(P, tn):
