@@ -50,12 +50,11 @@ proc ot_ps_zero_unc {} {
 proc ot_ps_inst {pinname} { return [regsub {/[^/]+$} $pinname {}] }
 
 proc ot_ps_rise {pin which} {
-  # rise-edge clock arrival (tap_balance.tcl tb_rise): arrival_<which>_rise can be the falling edge (+T/2)
+  # rise arrival at a register clock pin (ps, from the clock's time origin), NO T/2 fold: the 10-24 routed smoke on
+  # qkd_ctrl_kc (insertion around T/2) showed the tap_balance-style fold (a >= T/2 -> a - T/2) corrupts every pair that
+  # straddles T/2 (raw 341 ps vs path 8 ps).  A genuinely inverted clock leaf would differ from its path-end skew by
+  # T/2 here; the per-pair cross-check (verify_ps) then fails the measurement closed instead of hiding it.
   if {[catch {set a [get_property $pin arrival_${which}_rise]}] || $a eq "" || [string match *INF* $a]} { return "" }
-  set c [get_property $pin clocks]
-  if {![llength $c]} { return "" }
-  set half [expr {[get_property [lindex $c 0] period] / 2.0}]
-  if {$a >= $half} { set a [expr {$a - $half}] }
   return $a
 }
 
