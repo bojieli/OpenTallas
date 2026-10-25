@@ -1,0 +1,53 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "four L14 candidate types; approval for skeleton G2 only",
+  "pictures": [
+    "results/geom_review/s81_leaf_l14_0719/t7_packed_final.png",
+    "results/geom_review/s81_leaf_l14_0719/t55_packed_final.png",
+    "results/geom_review/s81_leaf_l14_0719/t56_packed_final.png",
+    "results/geom_review/s81_leaf_l14_0719/t57_packed_final.png"
+  ],
+  "findings": [
+    "Viewed all four candidates: regular4x4 lane field adjacent vn pair, ray pairs adjacent with rxsf W output facing rxsb E, new rxsf north input facing vs; dedicated row corridors and open perimeter routes.",
+    "Hard core origins now8.64um lattice; core halos legal in all72 warm rebuilt types, selected four pin-track/core-face/completeness checks0errors.",
+    "Explicit paired-bit FT packing maximum t7=364.965,t55=356.961,t56=369.630,t57=375.840um; all under405. Internal planned max404.95um.",
+    "Side-by-side rx pair avoids unsupported mx relay; new N-input successor requires actual native physical view closure. VN_a clockS and rxsf Wclock/output spread successors are explicit source dependencies.",
+    "Actual ot_s81sl_slice parent does NOT yet forward CS_*; kit_istations coherence is not native RTL realization. Hold logic P&R/adoption until the native source+compiler schedule reflect these exact depths.",
+    "Existing KV designated u_s_3N special five types are not this72leaf decomposition; do not apply PVS/VSP1 to KV enabled leaf without its fixed timeline proof."
+  ],
+  "core_gate": "PASS four named types (check_taps_cores + check_core_faces + check_completeness); full G0C pending",
+  "native_rtl": "NOT REALIZED in old bound parent",
+  "leaf_instances": {
+    "ot_s81sl_leaf__t7": "ot_s81sl_leaf #(.CS_HI_D(2), .CS_HI_GS(0), .CS_HO_D(2), .CS_HO_GS(0), .CS_H_G(4), .CS_PVS_D(1), .CS_SWR_D(1), .CS_U_D(1), .CS_VNI_D(1), .CS_VSP_D(1), .CS_Y_D(1)) u_lf (",
+    "ot_s81sl_leaf__t55": "ot_s81sl_leaf #(.CS_HI_D(2), .CS_HI_GS(0), .CS_HO_D(2), .CS_HO_GS(0), .CS_H_G(4), .CS_PVS_D(1), .CS_SWR_D(1), .CS_U_D(1), .CS_VNI_D(1), .CS_VSP_D(1), .CS_Y_D(1)) u_lf (",
+    "ot_s81sl_leaf__t56": "ot_s81sl_leaf #(.CS_HI_D(2), .CS_HI_GS(0), .CS_HO_D(2), .CS_HO_GS(0), .CS_H_G(4), .CS_PVS_D(1), .CS_SWR_D(1), .CS_U_D(1), .CS_VNI_D(1), .CS_VSP_D(1), .CS_Y_D(1)) u_lf (",
+    "ot_s81sl_leaf__t57": "ot_s81sl_leaf #(.CS_HI_D(2), .CS_HI_GS(0), .CS_HO_D(2), .CS_HO_GS(0), .CS_H_G(4), .CS_PVS_D(1), .CS_SWR_D(1), .CS_U_D(1), .CS_VNI_D(1), .CS_VSP_D(1), .CS_Y_D(1)) u_lf ("
+  },
+  "lane_cycle_changes": {
+    "x_E1_in": [
+      28,
+      29
+    ],
+    "xtier__bk_sel__seqhost": [
+      80,
+      81
+    ],
+    "xtier__eng__s_6N_C": [
+      69,
+      70
+    ],
+    "xtier__s_6S_C__eng": [
+      39,
+      40
+    ],
+    "sid_s_0S_C__s_0N_C": [
+      26,
+      27
+    ]
+  },
+  "source_fixes": [
+    "template origins snap to8.64 lattice",
+    "side-by-side rxsf->rxsb withN-input pin successor",
+    "corridor widen_template idempotent across parent preflight and workers"
+  ]
+}
