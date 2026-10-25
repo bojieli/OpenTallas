@@ -16,6 +16,10 @@
   "physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv"
  ],
  "prefer": [
+  "rtl/physical/qfd_tile_nk_rp2_romleaf_rr.sv",
+  "rtl/physical/qfd_tile_nl_rp2_romleaf_rr.sv",
+  "rtl/physical/qfd_tile_nk_rp2_45.sv",
+  "rtl/physical/qfd_tile_nl_rp2_45.sv",
   "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1.sv",
   "physical/qwen_missing_phy/nface_tall_1017/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v",
   "physical/qwen_missing_phy/nface_tall_g5_lclk_1020/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v",
@@ -355,5 +359,6 @@
  "land_r8_note": "BINDER3: r8 table = QC-P5 @c0152774b (plan 9d96cdb52) + qc_treq_pads.json (treq lanes of e3f313354 land with their cmd twin; treq_pads.py)",
  "land_r8_extra": [
   "physical/die_plan/qwen_compute/bind/qc_treq_pads.json"
- ]
+ ],
+ "prefer_note_qc_a0_1024": "QC-A0 10-24: the A0 tile files the r56 die and bound_r8 resolved (rtl/physical/qfd_tile_n{k,l}_rp2_romleaf_rr.sv REGROOT 2 + qfd_tile_n{k,l}_rp2_45.sv) pinned: the A0 kit snapshot dirs rtl/physical/a0_rc1[45]_selected_2000/ define the same module names and sort first, which silently swapped the bound tile for the rc14 RTL in kit-rtl closures."
 }

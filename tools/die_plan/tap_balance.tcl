@@ -16,6 +16,9 @@ if {![llength [info commands ot_cf_wire_transition]]} {
 }
 uplevel #0 {
 set tb_blk [ord::get_db_block]
+# QC-A0 10-24: tap port family OT_TAP_PORT (default clk) and its SDC clock OT_TAP_CLOCK (default the port name)
+set tb_port [expr {[info exists ::env(OT_TAP_PORT)] ? $::env(OT_TAP_PORT) : "clk"}]
+set tb_clock [expr {[info exists ::env(OT_TAP_CLOCK)] ? $::env(OT_TAP_CLOCK) : $tb_port}]
 set tb_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set tb_target [expr {[info exists ::env(OT_TAP_TARGET_PS)] ? $::env(OT_TAP_TARGET_PS) : 250.0}]
 set tb_win [expr {[info exists ::env(OT_TAP_WINDOW_PS)] ? $::env(OT_TAP_WINDOW_PS) : 40.0}]
@@ -40,7 +43,9 @@ if {[info exists ::env(OT_CORE_LAT)] && [file exists $::env(OT_CORE_LAT)]} {
   close $fh
 }
 set tb_cores {}
+# QC-A0 10-24: the family follows OT_TAP_PORT (A0 hard cores: ck / ck_t<i>)
 set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}
+if {$tb_port ne "clk"} { set tb_port_re "^${tb_port}(_t\[0-9\]+|_c\[0-9\]+)?\$" }
 proc tb_is_buf {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "CKINV*" $m] || [string match "HB*" $m]}]
