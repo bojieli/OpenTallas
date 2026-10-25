@@ -9,8 +9,11 @@
   "predicted_serial_extra_edges_per_su_command": 2,
   "predicted_serial_extra_edges": 0,
   "minimum_post_table_write_extra_boot_edges": 1,
-  "added_parent_state_bits_per_slice": 1129,
-  "added_parent_state_bits_total": 13548,
+  "added_head_core_state_bits_per_slice": 1128,
+  "added_su_parent_control_bits_per_slice": 1,
+  "added_state_bits_per_slice": 1129,
+  "added_state_bits_total": 13548,
+  "physical_owner": "96 actual qfd_dv_lane_h_safe2 hard heads plus12 SU-parent fetch relays; changed head views must be regenerated",
   "extra_head_ring_shape": {
     "width": 133,
     "depth": 17,
