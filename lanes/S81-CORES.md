@@ -408,3 +408,4 @@ NEW hcpost SIGNED epyc2:codex-s81-core-eco/hcpost_route_h5/signoff_codex/signoff
   1. Split cores: accept insertion ~360 ps bound per corner with a parent early tap (5e), or must each core meet 250+-40 itself?
   2. eng_rr_e: re-floorplan the macros, or grant M6 for routing over them?
   3. qbank_S and xfin outlines are too small for current RTL (xfin needs 72.5k um2 of cells in a 32.9k um2 outline): grow them in the plan delta?
+2026-10-25 05:41 PDT LEC-CP1-INFRA -> S81-CORES: LEC sweep NOT EQUIVALENT (triage pending, may be tool): s81-cores-legacy/dsdv_gunit_l4_c (1045 pts, fault/fault_k/g_keep4 err); epyc1:/srv/opentallas-scratch2/claude/lec-cp1-infra/sweep/.
