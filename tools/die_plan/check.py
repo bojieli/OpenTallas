@@ -1343,7 +1343,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
         R.err("schema", e)
     if errs:
         return R, dict()
-    P = S.Plan(raw)
+    # Plan-relative declarations (core pins_file for the reset wavefront) resolve against the plan's own directory.
+    P = S.Plan(raw, Path(plan_dir) / "die_plan.json" if plan_dir else None)
     summ = dict(die=P.name, partitions=len(P.parts), types=len(P.types), ports=len(P.ports), lanes=len(P.lanes),
                 bits=sum(p["width"] for p in P.ports.values()))
     summ["types"] = check_types(P, R)
