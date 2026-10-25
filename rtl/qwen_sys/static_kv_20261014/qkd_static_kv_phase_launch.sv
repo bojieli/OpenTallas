@@ -12,7 +12,8 @@
 // PH0 and SAFE limits must come from actual clock/pin/relay profiles. Default
 // zero limits are deliberately illegal, not an unchecked production budget.
 module qkd_static_kv_phase_launch #(
- parameter integer PH0=0, SAFE_LOW_U=0, SAFE_HIGH_U=0, META_HOLD_CORE=0, MUT=0
+ parameter integer PH0=0, SAFE_LOW_U=0, SAFE_HIGH_U=0, META_HOLD_CORE=0, MUT=0,
+ parameter integer SAME_CLOCK=0
 )(
  input wire ck,rst_n,hck,hrst_n,
  input wire ctrl_go,kgo,vgo,input wire[13:0]ctx_t,input wire[15:0]epoch,input wire[5:0]layer,
@@ -20,16 +21,19 @@ module qkd_static_kv_phase_launch #(
  output reg fault_core,fault_hbm,output reg idle_core,idle_hbm
 );
  initial begin
-  if(PH0<0||PH0>=768||SAFE_LOW_U<=0||SAFE_HIGH_U>=768||SAFE_HIGH_U<SAFE_LOW_U||META_HOLD_CORE<6||META_HOLD_CORE>255)
+  if((!SAME_CLOCK && (PH0<0||PH0>=768||SAFE_LOW_U<=0||SAFE_HIGH_U>=768||SAFE_HIGH_U<SAFE_LOW_U))||META_HOLD_CORE<6||META_HOLD_CORE>255)
    $fatal(1,"actual phase profile and held-metadata budget required");
  end
+ // Decision14: both domains use the same clock tree. Keep the transport
+ // pipeline/metadata contract; the ratio-phase state has no meaning here.
+ wire dst_ck = SAME_CLOCK ? ck : hck;
  (* keep *)reg rn,hr;
  always @(posedge ck)rn<=rst_n;
- always @(posedge hck)hr<=hrst_n;
+ always @(posedge dst_ck)hr<=hrst_n;
  reg[2:0]go_q,tag;reg[35:0]meta_q,held;
  reg[9:0]q;reg[7:0]hold_q;reg[7:0]lane_hold[0:2];
  wire[9:0]next_gap=(q==0)?10'd768:q;
- wire phase_ok=(next_gap>=10'(SAFE_LOW_U)&&next_gap<=10'(SAFE_HIGH_U));
+ wire phase_ok=SAME_CLOCK||(next_gap>=10'(SAFE_LOW_U)&&next_gap<=10'(SAFE_HIGH_U));
  reg gap_bad;integer i;
  always @*begin
   gap_bad=0;for(integer k=0;k<3;k=k+1)if(go_q[k]&&lane_hold[k]!=0)gap_bad=1;
@@ -41,7 +45,7 @@ module qkd_static_kv_phase_launch #(
    for(i=0;i<3;i=i+1)lane_hold[i]<=0;
   end else begin
    go_q<={vgo,kgo,ctrl_go};
-   q<=(q>=625)?q-10'd625:q+10'd143;
+   q<=SAME_CLOCK ? 10'd0 : ((q>=625)?q-10'd625:q+10'd143);
    if(hold_q!=0)hold_q<=hold_q-1'b1;
    for(i=0;i<3;i=i+1)if(lane_hold[i]!=0)lane_hold[i]<=lane_hold[i]-1'b1;
    idle_core<=hold_q==0&&go_q==0&&!ctrl_go&&!kgo&&!vgo;
@@ -58,7 +62,7 @@ module qkd_static_kv_phase_launch #(
  reg[2:0]seen;
  wire[2:0]observed=(MUT==1)?tag_meta:tag_sync;
  wire[2:0]events=observed^seen;
- always @(posedge hck or negedge hr)begin
+ always @(posedge dst_ck or negedge hr)begin
   if(!hr)begin
    tag_meta<=0;tag_sync<=0;seen<=0;ctrl_go_h<=0;kgo_h<=0;vgo_h<=0;
    ctx_t_h<=0;epoch_h<=0;layer_h<=0;fault_hbm<=0;idle_hbm<=0;

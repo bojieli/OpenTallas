@@ -8,7 +8,7 @@
 // Event first pin edge = captured go edge + start + 2 (input/output pin FFs).
 // Every descriptor advances independently on absolute cycles; collisions fault
 // without delaying any following event. Image capacity is checked by compiler.
-module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
+module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0, CORE_CLOCK=0)(
  input wire hck,rst_n,
  input wire cfg_we,input wire [4:0] cfg_addr,input wire [63:0] cfg_data,
  input wire seal,go,input wire [15:0] epoch,input wire [5:0] layer,
@@ -48,7 +48,7 @@ module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  wire raw,unused_put;wire [15:0] unused_epoch;
  // Compiler accounts original controller pin-to-raw offset exactly. This leaf
  // feeds the reservation pins, so its own two pin edges precede this pipe.
- qkd_static_kv_return_calendar raw_calendar(.pll_hbm(hck),.hrst(rn),
+ qkd_static_kv_return_calendar #(.CORE_CLOCK(CORE_CLOCK)) raw_calendar(.pll_hbm(hck),.hrst(rn),
  .reserved_rd(reserved_rd),.reserved_static_read(reserved_static_col&&static_read_q),
  .reservation_epoch(static_epoch),.expected_raw_valid(raw),.compiled_hbm_put(unused_put),.expected_return_epoch(unused_epoch));
  assign expected_raw_valid=raw;

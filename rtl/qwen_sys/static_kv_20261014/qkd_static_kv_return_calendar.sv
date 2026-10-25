@@ -8,7 +8,8 @@
 // Physical route stages/clock phase are separate compiler inputs. This module
 // does not schedule the RD reservation, refresh or source command producer.
 module qkd_static_kv_return_calendar #(
- parameter integer PHYSICAL_CMD_EDGES=4, HBM_RL=23, CORRECTED_EDGES=5
+ parameter integer CORE_CLOCK=0,
+ parameter integer PHYSICAL_CMD_EDGES=4, HBM_RL=CORE_CLOCK ? ((23*1024+832)/833) : 23, CORRECTED_EDGES=5
 )(
  input wire pll_hbm,hrst,
  input wire reserved_rd,reserved_static_read,

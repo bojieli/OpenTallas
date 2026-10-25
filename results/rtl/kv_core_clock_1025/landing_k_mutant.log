@@ -1,0 +1,10 @@
+R put c290 sector 8 / want c290 sector 128 (#8)
+R put c291 sector 9 / want c291 sector 129 (#9)
+R put c292 sector 10 / want c292 sector 130 (#10)
+R put c293 sector 11 / want c293 sector 131 (#11)
+R put c294 sector 12 / want c294 sector 132 (#12)
+L put c294 sector 8 / want c294 (#8)
+FAIL landing_cal s0 e0 T2048 nk64 nv64 ph0 0 xu 626 h0 228 rc 3 ld 4 errors 112
+[2506000] %Fatal: tb_qkd_kv_landing_cal.sv:67: Assertion failed in tb_qkd_kv_landing_cal: landing calendar mismatch
+%Error: test/tb_qkd_kv_landing_cal.sv:67: Verilog $stop
+Aborting...
