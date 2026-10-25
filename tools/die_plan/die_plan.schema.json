@@ -1539,6 +1539,32 @@
         }
        }
       }
+     },
+     "face_pins_per_um": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "N": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 16
+       },
+       "S": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 16
+       },
+       "E": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 16
+       },
+       "W": {
+        "type": "number",
+        "exclusiveMinimum": 0,
+        "maximum": 16
+       }
+      }
      }
     }
    }

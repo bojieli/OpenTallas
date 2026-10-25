@@ -372,6 +372,11 @@ SCHEMA = {
                                        "layers": {"type": "array", "items": _layer, "minItems": 1},
                                        "die_share": {"type": "number", "minimum": 0, "maximum": 1},
                                        "note": {"type": "string"}}}},
+                    # per-face pin density budget of this type (DIE-FT-HBM v2 10-25, GEOM-REVIEW 12:18: ~12/um on M4+M6
+                    # alternating tracks inside die FT bands); absent = budgets.face_pins_per_um
+                    "face_pins_per_um": {"type": "object", "additionalProperties": False,
+                                         "properties": {f: {"type": "number", "exclusiveMinimum": 0, "maximum": 16}
+                                                        for f in FACES}},
                 }}},
         "partitions": {"type": "array", "minItems": 1, "items": {
             "type": "object", "required": ["name", "type", "origin_um"], "additionalProperties": False,
