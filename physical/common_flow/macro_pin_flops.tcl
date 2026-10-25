@@ -9,12 +9,18 @@
 # PLACED.  Placement only, 0 cycles, no netlist / SDC change.
 #   OT_MPF_HOPS (default 4)   OT_MPF_GAP_UM (default 0.54: clearance beyond the halo)
 #   OT_MPF_HALO_UM (default MACRO_ROWS_HALO_X, else 5.4)
+#   OT_MPF_ENMUX (default 0; PATH-S81/E4 10-25): also accept a read capture whose D is reached through at most
+#     OT_MPF_ENMUX_HOPS (default 2) single-fanout combinational std cells, provided one of them takes the capture flop's
+#     OWN Q / QN as an input (directly or through <= 2 std cells) = the enable-feedback mux Yosys maps a DFFE to on ASAP7 (DFFHQN + NAND2 / OAI21 hold
+#     loop, or AO21 + AND2(INV(QN), !en): S81 eng CPRE bank_words, 0/544 ROM captures anchored without it).  Any other gate cone is still refused.
 set ot_mpf_blk [ord::get_db_block]
 set ot_mpf_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 proc ot_mpf_env {k d} { expr {[info exists ::env($k)] && $::env($k) ne "" ? $::env($k) : $d} }
 set ot_mpf_hops [ot_mpf_env OT_MPF_HOPS 4]
 set ot_mpf_gap [ot_mpf_env OT_MPF_GAP_UM 0.54]
 set ot_mpf_halo [ot_mpf_env OT_MPF_HALO_UM [ot_mpf_env MACRO_ROWS_HALO_X 5.4]]
+set ot_mpf_enmux [ot_mpf_env OT_MPF_ENMUX 0]
+set ot_mpf_enmux_hops [ot_mpf_env OT_MPF_ENMUX_HOPS 2]
 set ot_mpf_core [$ot_mpf_blk getCoreArea]
 proc ot_mpf_isff {inst} { set m [[$inst getMaster] getName]; expr {[string match "DFF*" $m] || [string match "ASYNC_DFF*" $m]} }
 proc ot_mpf_isbuf {inst} { set m [[$inst getMaster] getName]; expr {[string match "INV*" $m] || [string match "BUF*" $m] || [string match "HB*" $m]} }
@@ -27,14 +33,44 @@ proc ot_mpf_xy {it dbu} {
   set bb [$it getBBox]
   return [list [expr {double([$bb xMin] + [$bb xMax]) / 2.0 / $dbu}] [expr {double([$bb yMin] + [$bb yMax]) / 2.0 / $dbu}]]
 }
-# (a) macro output pin -> the single flop it feeds (D pin)
-proc ot_mpf_capture {net hops} {
-  for {set h 0} {$h <= $hops} {incr h} {
+# (a) macro output pin -> the single flop it feeds (D pin); with OT_MPF_ENMUX also through the DFFE enable-feedback
+# gates (single-fanout std cells, <= enmux_hops of them, one of which reads the capture flop's own Q / QN)
+proc ot_mpf_isgate {inst} {
+  set m [$inst getMaster]
+  if {[$m isBlock] || [$m isSequential]} { return 0 }
+  set no 0; foreach it [$inst getITerms] { if {[$it isOutputSignal]} { incr no } }
+  expr {$no == 1}
+}
+proc ot_mpf_reads {net qs depth} {
+  if {[$net getName] in $qs} { return 1 }
+  if {$depth <= 0} { return 0 }
+  set d [ot_mpf_drv $net]; if {$d eq ""} { return 0 }
+  set i [$d getInst]; if {![ot_mpf_isgate $i]} { return 0 }
+  foreach t [$i getITerms] { if {[$t isInputSignal] && [$t getNet] ne "NULL" && [ot_mpf_reads [$t getNet] $qs [expr {$depth - 1}]]} { return 1 } }
+  return 0
+}
+proc ot_mpf_capture {net hops {enmux 0} {gate_hops 2}} {
+  set gates {}
+  for {set h 0} {$h <= $hops + $gate_hops} {incr h} {
     if {[ot_mpf_nports $net]} { return "" }
     set s [ot_mpf_sinks $net]; if {[llength $s] != 1} { return "" }
     set it [lindex $s 0]; set inst [$it getInst]
-    if {[ot_mpf_isff $inst]} { return [expr {[[$it getMTerm] getName] eq "D" ? $inst : ""}] }
-    if {![ot_mpf_isbuf $inst]} { return "" }
+    if {[ot_mpf_isff $inst]} {
+      if {[[$it getMTerm] getName] ne "D"} { return "" }
+      if {![llength $gates]} { return $inst }
+      # enable-feedback signature: some traversed gate reads this flop's own output, directly or through <= 2 std
+      # cells (AO21 hold form: D = q_rom & en | AND2(INV(QN), !en))
+      set qs {}
+      foreach o [$inst getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend qs [[$o getNet] getName] } }
+      foreach g $gates { foreach gi [$g getITerms] {
+        if {[$gi isInputSignal] && [$gi getNet] ne "NULL" && [ot_mpf_reads [$gi getNet] $qs 2]} { return $inst }
+      } }
+      return ""
+    }
+    if {[ot_mpf_isbuf $inst]} {
+    } elseif {$enmux && [llength $gates] < $gate_hops && [ot_mpf_isgate $inst]} {
+      lappend gates $inst
+    } else { return "" }
     set net [ot_mpf_out_net $inst]; if {$net eq ""} { return "" }
   }
   return ""
@@ -92,7 +128,7 @@ foreach mac [$ot_mpf_blk getInsts] {
     if {[$net getSigType] in {POWER GROUND CLOCK}} continue
     if {[[$it getMTerm] getSigType] eq "CLOCK"} continue
     if {[$it isOutputSignal]} {
-      set ff [ot_mpf_capture $net $ot_mpf_hops]
+      set ff [ot_mpf_capture $net $ot_mpf_hops $ot_mpf_enmux $ot_mpf_enmux_hops]
       if {$ff eq "" || [$ff isFixed] || [$ff getPlacementStatus] eq "FIRM" || [dict exists $ot_mpf_seen [$ff getName]]} continue
       lassign [ot_mpf_xy $it $ot_mpf_dbu] px py
       ot_mpf_anchor $ff $mac $px $py; incr ot_mpf_na
