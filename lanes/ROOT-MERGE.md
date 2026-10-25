@@ -7,3 +7,4 @@ gate = tools/die_plan pytest + plain G0 on s81, s81_head, qwen_compute, qwen_kvs
 2026-10-24 19:36 PDT ROOT-MERGE: baseline main d13ff7c78: pytest 251 pass 2 skip (rc 0, 7 min); G0 s81 PASS 0/1150w, s81_head PASS 0/4w,
   qwen_compute FAIL 1 err (known R8 landing digest e56a != c56f), qwen_kvsys PASS 0/1788w, hbm_arch/B2l PASS 0/330w.
 2026-10-24 19:36 PDT ROOT-MERGE: queue has READY [QC 19:33] claude/qc-g0fix-1024@9aceac11be -- waiting for a COORD APPROVED line.
+2026-10-24 19:39 PDT ROOT-MERGE: pre-test (not pushed) qc-g0fix@9aceac11be on main d13ff7c78: 0 deletions, pytest 251/2 skip, G0 qwen_compute 1 -> 0 err, others unchanged. Ready to merge on COORD APPROVED.
