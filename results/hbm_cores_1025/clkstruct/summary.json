@@ -1,0 +1,114 @@
+{
+ "schema": "opentallas.hbm_cores.clkstruct.v1",
+ "date": "2026-10-25",
+ "basis": "post-CTS 4_cts.odb, FF libs, placement RC, hold_gate.tcl (reg2reg FAIL < -100 ps or > 2000 ep)",
+ "views": {
+  "ep57_base": {
+   "before": {
+    "ff_arr_min": 382.869232,
+    "ff_arr_max": 678.867432,
+    "ff_arr_mean": 476.4647720667344,
+    "rr_hold_ep": 1260,
+    "rr_wns": -195.676086,
+    "clock_buffers": 1040
+   },
+   "after": {
+    "taps": 30,
+    "tap_mean_spread": 23.640321937587032,
+    "max_in_tap_spread": 26.952515000000062,
+    "ff_arr_min": 514.978088,
+    "ff_arr_max": 557.749878,
+    "ff_arr_mean": 540.9288443869985,
+    "rr_hold_ep": 130,
+    "rr_wns": -20.641211,
+    "clock_buffers": 1253
+   }
+  },
+  "ep57_pd42": {
+   "before": {
+    "ff_arr_min": 362.157135,
+    "ff_arr_max": 524.072754,
+    "ff_arr_mean": 405.2779664830879,
+    "rr_hold_ep": 918,
+    "rr_wns": -96.617683,
+    "clock_buffers": 1208
+   },
+   "after": {
+    "taps": 33,
+    "tap_mean_spread": 24.682138115431144,
+    "max_in_tap_spread": 16.722656999999913,
+    "ff_arr_min": 510.599182,
+    "ff_arr_max": 544.984863,
+    "ff_arr_mean": 531.2650504038598,
+    "rr_hold_ep": 128,
+    "rr_wns": -14.651835,
+    "clock_buffers": 1081
+   }
+  },
+  "f790_pd42": {
+   "before": {
+    "ff_arr_min": 364.132019,
+    "ff_arr_max": 570.174255,
+    "ff_arr_mean": 424.36162520822757,
+    "rr_hold_ep": 913,
+    "rr_wns": -119.080635,
+    "clock_buffers": 1132
+   },
+   "after": {
+    "taps": 36,
+    "tap_mean_spread": 29.45146730566978,
+    "max_in_tap_spread": 20.148375999999985,
+    "ff_arr_min": 654.214661,
+    "ff_arr_max": 697.896423,
+    "ff_arr_mean": 674.5321320220415,
+    "rr_hold_ep": 120,
+    "rr_wns": -17.468803,
+    "clock_buffers": 1292
+   }
+  },
+  "sfu_base": {
+   "before": {
+    "ff_arr_min": 365.153107,
+    "ff_arr_max": 487.93692,
+    "ff_arr_mean": 417.4434603910272,
+    "rr_hold_ep": 506,
+    "rr_wns": -111.308487,
+    "clock_buffers": 545
+   },
+   "after": {
+    "taps": 41,
+    "tap_mean_spread": 31.244957598360656,
+    "max_in_tap_spread": 26.022766000000047,
+    "ff_arr_min": 514.603943,
+    "ff_arr_max": 555.926636,
+    "ff_arr_mean": 536.2467011704841,
+    "rr_hold_ep": 52,
+    "rr_wns": -20.028923,
+    "clock_buffers": 955
+   }
+  },
+  "sfu_pd42": {
+   "before": {
+    "ff_arr_min": 360.196777,
+    "ff_arr_max": 466.506287,
+    "ff_arr_mean": 410.0455879430933,
+    "rr_hold_ep": 459,
+    "rr_wns": -119.637665,
+    "clock_buffers": 592
+   },
+   "after": {
+    "taps": 39,
+    "tap_mean_spread": 50.4636538333333,
+    "max_in_tap_spread": 20.58966099999998,
+    "ff_arr_min": 516.375244,
+    "ff_arr_max": 567.283875,
+    "ff_arr_mean": 538.1938684580874,
+    "rr_hold_ep": 34,
+    "rr_wns": -24.539814,
+    "clock_buffers": 1026
+   }
+  }
+ },
+ "runs_after": "intel1/intel2:/srv/opentallas-scratch2/claude/hbm-cores-1025/clk/runs/<view>_<base|pd42>_v4 (kit = Codex runs_cts/<view>_<variant> placement, CTS re-run only)",
+ "programme_store_b0729904377c": "no CTS: GPL-0305 divergence 3_3_place_gp, 70.9% GRT tiles overflowed; 44 SRAM 512x256 = 79% of 574.56x738.72 incl halo, ~8.6 um channels, MAX_ROUTING_LAYER M5 -> floorplan redesign, not a clock fix"
+}
