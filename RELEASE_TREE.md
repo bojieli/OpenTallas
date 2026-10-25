@@ -64,7 +64,7 @@ Gates: G0 plan, G1 geometry review, G2 prototype, G3 signed physical partitions/
 
 ## INFRA · fleet and coordination
 - [ ] INFRA.SIGNOFF Current-plan signoff coverage · S81 / QC / KV / HBM · RUNNING · 138 lost-DB historical closures are not SIGNED; track only matching current signoff records. Source-local SELRANGE waivers and fail-closed common runner integrated in candidate batch
-- [ ] INFRA.DISK Fleet admission and scratch headroom · COORD · RUNNING · epyc1 bus recovered without killing scopes; epyc2 new admissions held for measured scratch growth. Other hosts continue; sparse worktrees and staged inputs
+- [ ] INFRA.DISK Fleet admission and scratch headroom · COORD · RUNNING · 05:25 rtx-pro root 91%, epyc2 scratch2 94%, epyc1 92% -> INFRA-DISK lane pruning (target root <=85%, scratch >=15% free)
 
 ## WAITS · who
 ### Waiting on the owner
