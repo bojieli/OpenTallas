@@ -315,10 +315,18 @@ def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
     incs = sorted({str(Path(f).parent) for f in list(tops) + list(full) + list(lib) + list(inc_files)})
     iflags = " ".join(f"-I{d}" for d in incs)
     lines = []
-    for f in lib:
-        lines.append(f"read_verilog -sv -lib -overwrite {dflags} {iflags} {f}")
-    for f in full + tops:
-        lines.append(f"read_verilog -sv -overwrite {dflags} {iflags} {f}")
+    if ab.get("frontend", "native") == "slang":
+        # One compilation unit preserves cross-file parameterisation; interface
+        # stubs are explicit empty blackboxes, structural parents retain names.
+        lines.append(f"read_slang --keep-hierarchy --empty-blackboxes --top {ab.get('_elab_top', ab['top'])} "
+                     f"{dflags} {iflags} " + " ".join(lib + full + tops))
+    elif ab.get("frontend", "native") == "native":
+        for f in lib:
+            lines.append(f"read_verilog -sv -lib -overwrite {dflags} {iflags} {f}")
+        for f in full + tops:
+            lines.append(f"read_verilog -sv -overwrite {dflags} {iflags} {f}")
+    else:
+        raise ElabError(f"unknown asbuilt.frontend {ab['frontend']}")
     subst = ab.get("substitute", {})
     pvar = sorted({r["module"] for r in ab.get("substitute_parent", [])})
     top = ab.get("_elab_top", ab["top"])
@@ -350,6 +358,29 @@ def run_yosys(script_path, log_path, mounts, mem_gb=32):
     if r.returncode != 0:
         tail = (r.stderr or "")[-3000:] + (Path(log_path).read_text()[-3000:] if Path(log_path).exists() else "")
         raise ElabError(f"yosys failed (rc {r.returncode}):\n{tail}")
+
+
+def string_parameter_compat(files, out):
+    """Stage typed string parameters for native Yosys, preserving literal defaults.
+
+    Enabled only by asbuilt.string_parameter_compat; real verification sources
+    remain unchanged. Native read_verilog accepts untyped string-valued parameters.
+    """
+    import hashlib
+    staged, record = [], []
+    for name in files:
+        f = Path(name)
+        text = f.read_text()
+        fixed = re.sub(r"\b(parameter|localparam)\s+string\b", r"\1", text)
+        if fixed == text:
+            staged.append(str(f))
+            continue
+        out.mkdir(parents=True, exist_ok=True)
+        dest = out / (hashlib.sha256(str(f).encode()).hexdigest()[:12] + "_" + f.name)
+        dest.write_text(fixed)
+        staged.append(str(dest))
+        record.append(dict(original=str(f), staged=str(dest)))
+    return staged, record
 
 
 def elab(ab, base, out_dir, mem_gb=32, idx=None):
@@ -393,7 +424,14 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
     ylib = lib
     if ab.get("lib_stubs", True):
         ylib = [lib_stubs(lib, out / "asbuilt_lib_stubs.sv")] if lib else []
-    sc.write_text(yosys_script(ab, tops, full, ylib, js, inc_files=lib))
+    parse_tops, parse_full, parse_lib = tops, full, ylib
+    if ab.get("string_parameter_compat", False):
+        compat = out / "string_parameter_compat"
+        parse_tops, rt = string_parameter_compat(tops, compat)
+        parse_full, rf = string_parameter_compat(full, compat)
+        parse_lib, rl = string_parameter_compat(ylib, compat)
+        rec["string_parameter_compat"] = rt + rf + rl
+    sc.write_text(yosys_script(ab, parse_tops, parse_full, parse_lib, js, inc_files=lib + tops + full))
     mounts = [out, Path(base).resolve(), REPO] + [Path(f).parent for f in tops + full + lib]
     roots = sorted({str(Path(m).resolve()) for m in mounts}, key=len)
     mounts = [m for i, m in enumerate(roots) if not any(m.startswith(r + "/") for r in roots[:i])]
