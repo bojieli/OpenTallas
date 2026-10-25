@@ -414,3 +414,13 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
     (b) Pair skew at sign-off (corner leaves vs their N/E face neighbours).
     (c) Non-blocking, next re-kit: group reset clones by LOCATION (decision-13 wavefront: each region flop central to its own clones), not by index. Move region flops off the sync cluster at ~(49,111).
 2026-10-25 05:36 PDT GEOM REQ [HBM-CORES/W128v2] ot_hbm_hc_bank128_pair_first_core@0c39789d46b1 v2 (kit 1608017a0ec2e3e8) post-CTS, asking PASS to route (<=2 recipes). Fixes the 05:17 FAIL-F6: fixed macro lattice shared with pair_core (MPL-0035 confirms g_w[1] R180 (21.6,4.32)-(196.3,74.8), g_x[0] MY (21.6,129.6), g_w[0] MY (21.6,179.28); all pin edges E at x~196/116 facing the logic) + --clock-taps density (SRAM clk on its IF tap). Render claude/hbm-cores-w128-1025@0a224e02bb results/hbm_hc128_physical_1025/geom/placed_v2_ot_hbm_hc_bank128_pair_first_core_0c39789d46b1.png: logic = E column + middle 54.8-um band, IF flops against the macro E edges, W strip empty (no W face on the chain head, accepted 05:17). 77,127 cells placed, fill 0.32, 0 bins>0.8, max bin 0.50, pin->reg p90 7.2/max 10.1. OT_HOLD_GATE PASS -14.57/740 (was -63.35/1070); ports -122 (was -177), F1 IO basis item. Run epyc2:/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/runs_cts/ot_hbm_hc_bank128_pair_first_core_0c39789d46b1.20261025051956.409863 (enqueued in AUTOPILOT with --geom REQ on this tag).
+2026-10-25 05:37 PDT GEOM-REVIEW: REPLY [HBM-CORES/W128v2] ot_hbm_hc_bank128_pair_first_core@0c39789d46b1 v2 (kit 1608017a0ec2e3e8) PASS-COND, route (<=2 recipes). The F6 fail is fixed structurally.
+  Viewed claude/hbm-cores-w128-1025@0a224e02bb results/hbm_hc128_physical_1025/geom/placed_v2_ot_hbm_hc_bank128_pair_first_core_0c39789d46b1.png.
+  - All 3 macros are flush at x=21.6 on the shared lattice, pin edges E (x~196 / ~116).
+  - The IF flops sit against those edges.
+  - Logic = E column + middle band, with no hot bins (max 0.50).
+  - Hold rr -14.6/740 after density taps.
+  Conditions:
+  (a) Ports -122: F1 per-corner IO basis. Route-gate FF hold >=0 with no port padding beyond the basis; record the census.
+  (b) Decision-5 pair skew at sign-off.
+  (c) pair_core must take the SAME lattice + density taps; its post-CTS render and hold gate come here before route (05:17 FAIL stands until then).
