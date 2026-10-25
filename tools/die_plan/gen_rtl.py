@@ -202,10 +202,20 @@ def wrapper(P, tn, epochs, rtl_root=None):
                       "(clock_taps.tcl) hangs the core's clock pins on it; the spine delivers it "
                       f"{S.core_tap_early_ps(P, tp):g} ps early"))
     import reset_tree as RT
-    rtree = RT.for_type(P, tn) if RT.pipelined(P) else None
+    rtree = RT.for_type(P, tn) if RT.delivered(P) else None
     if rtree is None:
         ports.append(("input  wire arst_n", "die reset: asynchronous assert; released through " +
                       ("the per-tap u_rsync_t<i>" if len(S.tap_grid(P, tn)) > 1 else "u_rst_sync")))
+    elif RT.wavefront(P):
+        ports.append(("input  wire arst_n", (
+            "reset IN (OWNER DECISION 13 wavefront): at the root partition the die rst_n (asynchronous, into the ONE "
+            "root synchroniser u_rst_root), elsewhere a neighbour's registered rst_o (synchronous)"
+            if rtree["entry"] == "sync" else "SYNCHRONOUS reset IN from a neighbour's registered rst_o (OWNER DECISION "
+            "13 wavefront): pin register u_rst_in") + f" + {rtree['depth']} relay stages; every tap and rst_o released "
+            f"{RT.release_clocks(rtree)} clocks after this pin"))
+        for n, x, y in RT.out_pins(P, tn):
+            ports.append((f"output wire {n}", f"registered reset OUT to a neighbour's arst_n (wavefront) at "
+                          f"({x:.0f}, {y:.0f}) um"))
     elif rtree["entry"] == "sync":
         ports.append(("input  wire arst_n", f"die reset (region root): asynchronous, into the region's ONE root "
                       f"synchroniser u_rst_root; every tap released {RT.release_clocks(rtree)} clocks after deassert"))
@@ -415,6 +425,12 @@ def die_top(P, epochs, dropped=None):
                 conn.setdefault(pr[side]["part"], []).append((pr[side]["bus"], net))
     import reset_tree as RT
     rlines, rnet = RT.die_rtl(P) if RT.pipelined(P) else ([], {})
+    wouts = {}
+    if RT.wavefront(P):
+        rlines, rnet, wouts = RT.wf_die_rtl(P)
+        miss = sorted(n for n in P.parts if n not in rnet)
+        if miss:
+            raise GenError(f"reset wavefront: partitions without a reset source (reset_tree.py offsets): {miss[:10]}")
     for name, p in P.parts.items():
         t = P.types[p["type"]]
         # dropped taps (kit clock_taps.tcl: no sinks, COORD 10-23) stay unconnected: no dead spine drop
@@ -422,6 +438,7 @@ def die_top(P, epochs, dropped=None):
         cs = [f"        .{n}({'' if n in dr else 'clk'})" for n, _, _ in S.tap_grid(P, p["type"])] + \
             [f"        .{n}(clk)" for n, _, _, _ in S.core_taps(P, p["type"])] + \
             [f"        .arst_n({rnet.get(name, 'rst_n')})"] + \
+            [f"        .{n}({wouts.get(name, {}).get(n, '')})" for n, _, _ in RT.out_pins(P, p["type"])] + \
             [f"        .{sv_id(b)}({net})" for b, net in sorted(conn.get(name, []))]
         insts.append(f"    {t['module']} {sv_id(name)} (\n" + ",\n".join(cs) + "\n    );")
     mod = f"{sv_id(P.name)}_top"
