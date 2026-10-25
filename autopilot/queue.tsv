@@ -263,3 +263,5 @@ hbm	ot_hbm_idx_score_quarter_static__r0c0_k0h1_59bebf732a32	epyc3:/srv/opentalla
 s81_head	hd_st_k5__m5	epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m5/hd_st_k5	claude/s81-head-kits-1025@73b82056f0	REQ	[S81-HEAD/KITS 07:05]	24	18372	S81-HEAD	route		8
 hbm	ot_hbm_idx_score_quarter_static__r0c0_k1h0_59bebf732a32	intel2:/srv/opentallas-scratch2/claude/hbm-kits-1025/batch1/runs/ot_hbm_idx_score_quarter_static__r0c0_k1h0_59bebf732a32	claude/hbm-kits-b2-1025@282321554f	REQ	HBM-KITS/B1 07:08	48	240000	HBM-KITS	finish		8
 s81_head	hd_st_k5__m0	epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m0/hd_st_k5	claude/s81-head-kits-1025@73b82056f0	REQ	[S81-HEAD/KITS 07:05]	24	18372	S81-HEAD	route		8
+hbm	ot_hbm_idx_score_quarter_static__tail0_5cf6e5ff5f5a	epyc2:/srv/opentallas-scratch2/claude/hbm-kits-1025/batch1/runs/ot_hbm_idx_score_quarter_static__tail0_5cf6e5ff5f5a	claude/hbm-kits-b2-1025@282321554f	REQ	HBM-KITS/B1 07:08	24	70000	HBM-KITS	finish		8
+s81_head	hd_st_m__m5	epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m5/hd_st_m	claude/s81-head-kits-1025@73b82056f0	REQ	[S81-HEAD/KITS 07:05]	24	2491	S81-HEAD	route		8
