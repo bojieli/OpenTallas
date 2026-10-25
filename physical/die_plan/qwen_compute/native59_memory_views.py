@@ -11,7 +11,7 @@ def attach(raw):
     """Two mirrored columns put the 512-bit read outputs toward the mux spine.
 
     The outside write/control pins face the surrounding lane-local registers.
-    Keep a 282.6-um central logic/clock corridor and 33.86-um row channels.
+    Keep a 281.88-um central logic/clock corridor and >=27.54-um row channels; origins on8.64um pin-access lattice.
     These are physical views of memories already present in the native RTL.
     """
     t = raw['partition_types']['native59']
@@ -20,7 +20,7 @@ def attach(raw):
     entries = []
     for i in range(8):
         col, row = i // 4, i % 4
-        x, y, orient = (80.0 if col == 0 else 530.0), 40.0 + 110.0 * row, ('R0' if col == 0 else 'MY')
+        x, y, orient = (77.76 if col == 0 else 527.04), (43.2,146.88,259.2,371.52)[row], ('R0' if col == 0 else 'MY')
         entries.append(dict(inst=f'{PREFIX}.g_writer[{i}].u_mem', module=MODULE, status='reuse',
                             outline_um=[WIDTH, HEIGHT], origin_um=[x, y], orient=orient,
                             lef=f'physical/asap7_memory_macros/{MODULE}/{MODULE}.lef',
