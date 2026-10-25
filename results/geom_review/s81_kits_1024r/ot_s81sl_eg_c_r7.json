@@ -1,0 +1,146 @@
+{
+ "review": "S81/KITS author review, stage-1 place r7 of ot_s81sl_eg_c on LEAFPLAN revised pins (af6b1f54d4); answers GEOM 21:55 condition (placed picture + partner distances)",
+ "when_pdt": "2026-10-24 23:07",
+ "kit": "epyc1:/srv/opentallas-scratch2/claude/s81-kits/eg_r7/ot_s81sl_eg_c (claude/s81-kits-eg-1024r @c01625855b; ran on intel2)",
+ "image": "results/geom_review/s81_kits_1024r/img/ot_s81sl_eg_c_r7.png",
+ "placed": "229,655 cells, 33,432 flops, max bin 0.62, 0 bins > 0.8; raw face_guard PASS 199/199 (no hook)",
+ "findings": [
+  "clk + rst_n at the S-face centre (128.1/129.6, 0); farthest flop ~390 um manhattan (was ~510 from the NW corner)",
+  "S face 165 pins spread 4-255 um (1.0/um), N 36 pins spread (0.5/um); W/E empty faces; density even, slight light bands at the N-W corner and S edge only",
+  "partner distances (plan origins, R0; eg ports -> u_xr (eps/scale/g/g_c/g_v) inside u_c): see partner[]; the xf->eg i_* partner pins are NOT in the plan table ot_s81dv_xfin.json (no e_* ports) -> plan gap (xfin ENG ports vs plan, known OWNER/plan item)",
+  "eg.g/g_c/g_v -> xrt eg_d/eg_c/eg_v: up to 534 um (c1x/lepw 12 types), 664 um (kv512 3 types), 803 um (c3x 1 type); 20/45/67 bits > 405 um (old pins: 35/35/67) -> these need leaf internal stations (LEAFPLAN R3-INTERNAL) or an xrt eg_* repin toward eg; the eg repin alone neither causes nor fixes them",
+  "SDC note: this place ran on the pre-wavefront rst SDC; the route kit will be regenerated with rst_n as a sync data-budget input (generator @3cae99f7c7)"
+ ],
+ "partner": [
+  {
+   "types": 12,
+   "example": "dsdv_slice_lepw_mus_C__t1",
+   "eg_origin": [
+    717.12,
+    34.56
+   ],
+   "xr": [
+    388.8,
+    34.56
+   ],
+   "xr_mod": "ot_s81sl_xrt1",
+   "xf": [
+    993.6,
+    34.56
+   ],
+   "old": {
+    "n": 99,
+    "max_um": 506.3,
+    "mean_um": 268.6,
+    "over_405": 35,
+    "per_port_max": {
+     "eps": 68.5,
+     "g": 506.3,
+     "g_c": 504.2,
+     "g_v": 506.0,
+     "scale": 215.7
+    }
+   },
+   "new": {
+    "n": 99,
+    "max_um": 534.4,
+    "mean_um": 263.8,
+    "over_405": 20,
+    "per_port_max": {
+     "eps": 112.6,
+     "g": 534.4,
+     "g_c": 303.6,
+     "g_v": 312.3,
+     "scale": 287.7
+    }
+   }
+  },
+  {
+   "types": 3,
+   "example": "dsdv_slice_kv512_C__t1",
+   "eg_origin": [
+    717.12,
+    924.48
+   ],
+   "xr": [
+    388.8,
+    794.88
+   ],
+   "xr_mod": "ot_s81sl_xrt1",
+   "xf": [
+    993.6,
+    1002.24
+   ],
+   "old": {
+    "n": 99,
+    "max_um": 635.9,
+    "mean_um": 398.2,
+    "over_405": 35,
+    "per_port_max": {
+     "eps": 198.1,
+     "g": 635.9,
+     "g_c": 633.8,
+     "g_v": 635.6,
+     "scale": 345.3
+    }
+   },
+   "new": {
+    "n": 99,
+    "max_um": 664.0,
+    "mean_um": 393.4,
+    "over_405": 45,
+    "per_port_max": {
+     "eps": 242.2,
+     "g": 664.0,
+     "g_c": 433.2,
+     "g_v": 441.9,
+     "scale": 417.2
+    }
+   }
+  },
+  {
+   "types": 1,
+   "example": "dsdv_slice_c3x_C__t1",
+   "eg_origin": [
+    976.32,
+    34.56
+   ],
+   "xr": [
+    388.8,
+    34.56
+   ],
+   "xr_mod": "ot_s81sl_xrt3",
+   "xf": [
+    34.56,
+    466.56
+   ],
+   "old": {
+    "n": 99,
+    "max_um": 774.4,
+    "mean_um": 535.2,
+    "over_405": 67,
+    "per_port_max": {
+     "eps": 333.7,
+     "g": 774.4,
+     "g_c": 772.0,
+     "g_v": 773.1,
+     "scale": 481.9
+    }
+   },
+   "new": {
+    "n": 99,
+    "max_um": 802.6,
+    "mean_um": 530.3,
+    "over_405": 67,
+    "per_port_max": {
+     "eps": 377.9,
+     "g": 802.6,
+     "g_c": 571.3,
+     "g_v": 579.5,
+     "scale": 553.9
+    }
+   }
+  }
+ ],
+ "verdict": "PASS (geometry) - route held: wavefront kit regen + DEC12 list + GEOM PASS"
+}
