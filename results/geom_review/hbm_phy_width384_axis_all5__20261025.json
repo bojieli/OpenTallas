@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS-COND",
+ "image": "/srv/opentallas-scratch/claude/codex-hbm-trial-1025/phy_w384_axis/review_all.png",
+ "scope": "ISOLATED IR ONLY; dense PG adoption blocked on clock corridor co-design",
+ "findings": [
+  "Viewed all five exact PHY load/bump domains; complete45um checkerboard rows cover both rails at every macro edge.",
+  "All20um bump boxes remain inside declared windows;3.84um M8/M9 same-layer gaps0.48um; isolated supply continuity shown in first two measured cases.",
+  "Existing B2o clock segments intersect these PG domains; no clock or signal routing approved."
+ ]
+}

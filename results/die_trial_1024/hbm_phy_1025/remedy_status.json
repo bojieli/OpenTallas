@@ -1,0 +1,19 @@
+{
+ "verdict": "ISOLATED IR PASS2/5; adoptionBLOCKED on clockcorridors",
+ "source_plan": "B2o@b6cbd6362",
+ "width_um": 3.84,
+ "pitch_um": 8.64,
+ "bumps": "45um axis-aligned checkerboard centred in declared PHY bump rectangle",
+ "passed_rail_sum_mv": {
+  "NW_io": 21.639,
+  "NW_spb0": 27.657
+ },
+ "pending": [
+  "vsN0",
+  "NE_io",
+  "NE_spb0"
+ ],
+ "budget_mv": 35,
+ "clock_blocker": "Current B2o H-tree intersects every PHY supply domain. CLOCK owns rerouting outside full PG domains before plan adoption.",
+ "scope": "Estimated4.368W per PHY; isolated VDDPHY mesh and its own VSS return; surrounding core return contribution excluded; no timing sign-off."
+}
