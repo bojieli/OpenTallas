@@ -377,10 +377,11 @@ def rtl_port_dirs(kd, srcs, top, params, defines):
     return out
 
 
-def plan_core(plan, module):
+def plan_core(plan, module, pins_file=None):
+    # S81-CORES2/NC 10-25: one module can have several plan pin views (vs lfp / xm x-mirror): recipe plan_pins_file picks one
     for t, v in plan["partition_types"].items():
         for h in v.get("hard_cores", []):
-            if h["module"] == module:
+            if h["module"] == module and (pins_file is None or h.get("pins_file") == pins_file):
                 return t, h
     raise SystemExit(f"{module}: not a hard core of the plan")
 
@@ -438,7 +439,7 @@ def main():
         hc = dict(module=a.module, outline_um=outline, lef=rec["lef_contract"], pins=lpins,
                   pins_file=rec["lef_contract"])
     else:
-        ptype, hc = plan_core(plan, rec.get("plan_module", a.module))
+        ptype, hc = plan_core(plan, rec.get("plan_module", a.module), rec.get("plan_pins_file"))
     spec_src = rec.get("spec_git")       # "<rev>:<path>" for a kit spec that is only in history (sources from the tree)
     spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
     mod = spec["top"]

@@ -127,5 +127,16 @@
  },
  "dsfd_bf_front_roots": {
   "ref_tile": "physical/ref_tile/s81bf_front_five_roots_nlock_h03"
+ },
+ "ot_s81sl_vs": {
+  "ref_tile": "physical/ref_tile/s81sl_vs",
+  "plan_pins_file": "inputs/core_pins/ot_s81sl_vs_lfp.json",
+  "suffix": "lfp"
+ },
+ "ot_s81sl_vs_xm": {
+  "ref_tile": "physical/ref_tile/s81sl_vs",
+  "plan_module": "ot_s81sl_vs",
+  "plan_pins_file": "inputs/core_pins/ot_s81sl_vs_xm.json",
+  "suffix": "xm"
  }
 }
