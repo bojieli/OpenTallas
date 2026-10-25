@@ -1,0 +1,349 @@
+{
+ "meta": {
+  "win_um": 27.0,
+  "gcell_um": 10.799999999999272,
+  "nets": 33641,
+  "nx": 649,
+  "ny": 651
+ },
+ "layers": {
+  "M4": {
+   "peak": 0.519,
+   "p99": 0.398,
+   "windows_over_1": 0,
+   "windows_over_0p8": 0,
+   "peak_xy_um": [
+    8788.5,
+    15700.5
+   ],
+   "peak_part": "ctl"
+  },
+  "M5": {
+   "peak": 0.647,
+   "p99": 0.462,
+   "windows_over_1": 0,
+   "windows_over_0p8": 0,
+   "peak_xy_um": [
+    9112.5,
+    12919.5
+   ],
+   "peak_part": "sp1"
+  },
+  "M6": {
+   "peak": 0.683,
+   "p99": 0.465,
+   "windows_over_1": 0,
+   "windows_over_0p8": 0,
+   "peak_xy_um": [
+    8788.5,
+    15700.5
+   ],
+   "peak_part": "ctl"
+  },
+  "M7": {
+   "peak": 0.863,
+   "p99": 0.616,
+   "windows_over_1": 0,
+   "windows_over_0p8": 4,
+   "peak_xy_um": [
+    9112.5,
+    12919.5
+   ],
+   "peak_part": "sp1"
+  },
+  "M8": {
+   "peak": 0.0,
+   "p99": 0,
+   "windows_over_1": 0,
+   "windows_over_0p8": 0,
+   "peak_xy_um": [
+    13.5,
+    13.5
+   ],
+   "peak_part": null
+  },
+  "M9": {
+   "peak": 0.0,
+   "p99": 0,
+   "windows_over_1": 0,
+   "windows_over_0p8": 0,
+   "peak_xy_um": [
+    13.5,
+    13.5
+   ],
+   "peak_part": null
+  }
+ },
+ "worst": [
+  {
+   "layer": "M7",
+   "util": 0.863,
+   "xy_um": [
+    9112.5,
+    10840.5
+   ],
+   "part": "sp2"
+  },
+  {
+   "layer": "M7",
+   "util": 0.863,
+   "xy_um": [
+    9112.5,
+    4630.5
+   ],
+   "part": "sp5"
+  },
+  {
+   "layer": "M7",
+   "util": 0.863,
+   "xy_um": [
+    9112.5,
+    6709.5
+   ],
+   "part": "sp3"
+  },
+  {
+   "layer": "M7",
+   "util": 0.863,
+   "xy_um": [
+    9112.5,
+    12919.5
+   ],
+   "part": "sp1"
+  },
+  {
+   "layer": "M7",
+   "util": 0.774,
+   "xy_um": [
+    17320.5,
+    9814.5
+   ],
+   "part": "turnE2b"
+  },
+  {
+   "layer": "M7",
+   "util": 0.772,
+   "xy_um": [
+    17320.5,
+    11893.5
+   ],
+   "part": "turnE1a"
+  },
+  {
+   "layer": "M7",
+   "util": 0.77,
+   "xy_um": [
+    9220.5,
+    10840.5
+   ],
+   "part": "sp2"
+  },
+  {
+   "layer": "M7",
+   "util": 0.77,
+   "xy_um": [
+    9220.5,
+    6709.5
+   ],
+   "part": "sp3"
+  },
+  {
+   "layer": "M7",
+   "util": 0.77,
+   "xy_um": [
+    9220.5,
+    4630.5
+   ],
+   "part": "sp5"
+  },
+  {
+   "layer": "M7",
+   "util": 0.77,
+   "xy_um": [
+    9220.5,
+    12919.5
+   ],
+   "part": "sp1"
+  },
+  {
+   "layer": "M7",
+   "util": 0.766,
+   "xy_um": [
+    17320.5,
+    7735.5
+   ],
+   "part": "turnE3b"
+  },
+  {
+   "layer": "M7",
+   "util": 0.759,
+   "xy_um": [
+    17320.5,
+    5656.5
+   ],
+   "part": "turnE4b"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9031.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9382.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9085.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9112.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9139.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9166.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9193.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9220.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9247.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9274.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9301.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M6",
+   "util": 0.683,
+   "xy_um": [
+    9328.5,
+    15700.5
+   ],
+   "part": "ctl"
+  },
+  {
+   "layer": "M5",
+   "util": 0.647,
+   "xy_um": [
+    9112.5,
+    10840.5
+   ],
+   "part": "sp2"
+  },
+  {
+   "layer": "M5",
+   "util": 0.647,
+   "xy_um": [
+    9112.5,
+    4630.5
+   ],
+   "part": "sp5"
+  },
+  {
+   "layer": "M5",
+   "util": 0.647,
+   "xy_um": [
+    9112.5,
+    6709.5
+   ],
+   "part": "sp3"
+  },
+  {
+   "layer": "M5",
+   "util": 0.647,
+   "xy_um": [
+    9112.5,
+    12919.5
+   ],
+   "part": "sp1"
+  },
+  {
+   "layer": "M5",
+   "util": 0.59,
+   "xy_um": [
+    17266.5,
+    11893.5
+   ],
+   "part": "turnE1a"
+  },
+  {
+   "layer": "M5",
+   "util": 0.582,
+   "xy_um": [
+    256.5,
+    11893.5
+   ],
+   "part": "turnW1a"
+  }
+ ]
+}

@@ -1,0 +1,349 @@
+{
+ "meta": {
+  "win_um": 27.0,
+  "gcell_um": 10.799999999999272,
+  "nets": 178418,
+  "nx": 401,
+  "ny": 1002
+ },
+ "layers": {
+  "M4": {
+   "peak": 1.488,
+   "p99": 0.998,
+   "windows_over_1": 565,
+   "windows_over_0p8": 2812,
+   "peak_xy_um": [
+    4522.5,
+    40.5
+   ],
+   "peak_part": "pv_S_0"
+  },
+  "M5": {
+   "peak": 1.316,
+   "p99": 1.088,
+   "windows_over_1": 1806,
+   "windows_over_0p8": 3306,
+   "peak_xy_um": [
+    7708.5,
+    25474.5
+   ],
+   "peak_part": "hg_EN_0"
+  },
+  "M6": {
+   "peak": 1.856,
+   "p99": 1.176,
+   "windows_over_1": 4643,
+   "windows_over_0p8": 8737,
+   "peak_xy_um": [
+    3172.5,
+    25636.5
+   ],
+   "peak_part": "hg_WN_0"
+  },
+  "M7": {
+   "peak": 1.695,
+   "p99": 1.071,
+   "windows_over_1": 2695,
+   "windows_over_0p8": 10759,
+   "peak_xy_um": [
+    7168.5,
+    16888.5
+   ],
+   "peak_part": "hgi_EN_5"
+  },
+  "M8": {
+   "peak": 0.0,
+   "p99": 0,
+   "windows_over_1": 0,
+   "windows_over_0p8": 0,
+   "peak_xy_um": [
+    13.5,
+    13.5
+   ],
+   "peak_part": "phy_WS_0"
+  },
+  "M9": {
+   "peak": 0.0,
+   "p99": 0,
+   "windows_over_1": 0,
+   "windows_over_0p8": 0,
+   "peak_xy_um": [
+    13.5,
+    13.5
+   ],
+   "peak_part": "phy_WS_0"
+  }
+ },
+ "worst": [
+  {
+   "layer": "M6",
+   "util": 1.856,
+   "xy_um": [
+    3172.5,
+    25636.5
+   ],
+   "part": "hg_WN_0"
+  },
+  {
+   "layer": "M6",
+   "util": 1.834,
+   "xy_um": [
+    3172.5,
+    24124.5
+   ],
+   "part": "hg_WN_1"
+  },
+  {
+   "layer": "M6",
+   "util": 1.817,
+   "xy_um": [
+    3172.5,
+    25582.5
+   ],
+   "part": "hg_WN_0"
+  },
+  {
+   "layer": "M6",
+   "util": 1.75,
+   "xy_um": [
+    3172.5,
+    16510.5
+   ],
+   "part": "hg_WN_6"
+  },
+  {
+   "layer": "M6",
+   "util": 1.731,
+   "xy_um": [
+    3172.5,
+    22504.5
+   ],
+   "part": "hg_WN_2"
+  },
+  {
+   "layer": "M6",
+   "util": 1.72,
+   "xy_um": [
+    3172.5,
+    18022.5
+   ],
+   "part": "hg_WN_5"
+  },
+  {
+   "layer": "M6",
+   "util": 1.705,
+   "xy_um": [
+    3172.5,
+    21100.5
+   ],
+   "part": "hg_WN_3"
+  },
+  {
+   "layer": "M7",
+   "util": 1.695,
+   "xy_um": [
+    7168.5,
+    16888.5
+   ],
+   "part": "hgi_EN_5"
+  },
+  {
+   "layer": "M6",
+   "util": 1.684,
+   "xy_um": [
+    3172.5,
+    11218.5
+   ],
+   "part": "hg_WS_7"
+  },
+  {
+   "layer": "M6",
+   "util": 1.667,
+   "xy_um": [
+    3172.5,
+    17968.5
+   ],
+   "part": "hg_WN_5"
+  },
+  {
+   "layer": "M6",
+   "util": 1.663,
+   "xy_um": [
+    3172.5,
+    16402.5
+   ],
+   "part": "hg_WN_6"
+  },
+  {
+   "layer": "M6",
+   "util": 1.65,
+   "xy_um": [
+    3172.5,
+    14944.5
+   ],
+   "part": "hg_WN_7"
+  },
+  {
+   "layer": "M6",
+   "util": 1.65,
+   "xy_um": [
+    3172.5,
+    19480.5
+   ],
+   "part": "hg_WN_4"
+  },
+  {
+   "layer": "M7",
+   "util": 1.633,
+   "xy_um": [
+    3604.5,
+    22963.5
+   ],
+   "part": "hgi_WN_2"
+  },
+  {
+   "layer": "M7",
+   "util": 1.621,
+   "xy_um": [
+    7168.5,
+    21451.5
+   ],
+   "part": "hgi_EN_2"
+  },
+  {
+   "layer": "M7",
+   "util": 1.616,
+   "xy_um": [
+    7438.5,
+    22963.5
+   ],
+   "part": "hgi_EN_2"
+  },
+  {
+   "layer": "M7",
+   "util": 1.608,
+   "xy_um": [
+    7438.5,
+    21451.5
+   ],
+   "part": "hgi_EN_2"
+  },
+  {
+   "layer": "M7",
+   "util": 1.602,
+   "xy_um": [
+    7438.5,
+    16888.5
+   ],
+   "part": "hgi_EN_5"
+  },
+  {
+   "layer": "M7",
+   "util": 1.599,
+   "xy_um": [
+    7168.5,
+    19912.5
+   ],
+   "part": "hgi_EN_4"
+  },
+  {
+   "layer": "M7",
+   "util": 1.593,
+   "xy_um": [
+    7168.5,
+    22963.5
+   ],
+   "part": "hgi_EN_2"
+  },
+  {
+   "layer": "M7",
+   "util": 1.591,
+   "xy_um": [
+    3604.5,
+    19912.5
+   ],
+   "part": "hgi_WN_4"
+  },
+  {
+   "layer": "M7",
+   "util": 1.589,
+   "xy_um": [
+    3280.5,
+    19912.5
+   ],
+   "part": "hgi_WN_4"
+  },
+  {
+   "layer": "M7",
+   "util": 1.587,
+   "xy_um": [
+    3604.5,
+    21451.5
+   ],
+   "part": "hgi_WN_2"
+  },
+  {
+   "layer": "M7",
+   "util": 1.585,
+   "xy_um": [
+    3388.5,
+    19912.5
+   ],
+   "part": "hgi_WN_4"
+  },
+  {
+   "layer": "M4",
+   "util": 1.488,
+   "xy_um": [
+    4522.5,
+    40.5
+   ],
+   "part": "pv_S_0"
+  },
+  {
+   "layer": "M4",
+   "util": 1.402,
+   "xy_um": [
+    4549.5,
+    40.5
+   ],
+   "part": "pv_S_0"
+  },
+  {
+   "layer": "M4",
+   "util": 1.387,
+   "xy_um": [
+    6304.5,
+    40.5
+   ],
+   "part": "pv_S_0"
+  },
+  {
+   "layer": "M4",
+   "util": 1.321,
+   "xy_um": [
+    4576.5,
+    40.5
+   ],
+   "part": "pv_S_0"
+  },
+  {
+   "layer": "M5",
+   "util": 1.316,
+   "xy_um": [
+    7330.5,
+    19912.5
+   ],
+   "part": "hgi_EN_4"
+  },
+  {
+   "layer": "M5",
+   "util": 1.316,
+   "xy_um": [
+    7708.5,
+    25474.5
+   ],
+   "part": "hg_EN_0"
+  }
+ ]
+}

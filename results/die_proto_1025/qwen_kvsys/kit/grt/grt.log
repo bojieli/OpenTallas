@@ -1,0 +1,200 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1_part_r1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1_part_r2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1_part_r3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1_part_r4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1_part_r5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v2_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v3_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v2_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v3_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v4_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v5_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v6_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v7_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v8_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hroot_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hub_C_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hub_Ei_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hub_Eo_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hub_Wi_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hub_Wo_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_io_cor_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_io_cor_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_io_ft_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_io_ft_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pc_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pc_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pc_v2_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pc_v3_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_phy_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_phy_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v10_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v11_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v12_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v2_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v3_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v4_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v5_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v6_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v7_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v8_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v9_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_sys_SD_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_sys_SD_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_sys_c_part.lef, created 1 library cells
+[WARNING ORD-2011] LEF master kv3_hg_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1_part_r1 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1_part_r2 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1_part_r3 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1_part_r4 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1_part_r5 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v2_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v3_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v3_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v4_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v5_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v2_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v6_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v7_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v8_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hroot_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hub_C_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hub_Ei_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hub_Eo_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hub_Wi_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hub_Wo_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_io_cor_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_io_ft_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_io_ft_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_io_cor_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pc_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pc_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pc_v2_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pc_v3_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_phy_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_phy_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v8_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v9_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v2_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v10_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v4_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v11_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v6_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v12_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v3_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v5_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v7_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_sys_SD_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_sys_SD_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_sys_c_part has no liberty cell.
+[INFO IFP-0001] Added 100160 rows of 200320 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 10817.300 27043.200 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 10817.280 27043.200 ) um
+[INFO IFP-0102] Core area:                    292533866.496 um^2
+[INFO IFP-0103] Total instances area:         292533866.496 um^2
+[INFO IFP-0104] Effective utilization:                1.000
+[INFO IFP-0105] Number of instances:                    160
+OT_T floorplan 8
+OT_T placed 8
+OT_T obs 8
+[WARNING GRT-0300] Timing is not available, setting critical nets percentage to 0.
+[INFO GRT-0020] Min routing layer: M4
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 160
+[INFO GRT-0004] Blockages: 3064
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 161
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   380909776      94893390          75.09%
+M5         Vertical     378669737      94295138          75.10%
+M6         Horizontal   353334129      88128802          75.06%
+M7         Vertical     394170484      97821875          75.18%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/50
+[INFO GRT-0102] Start extra iteration 2/50
+[INFO GRT-0102] Start extra iteration 3/50
+[INFO GRT-0197] Via related to pin nodes: 201199
+[INFO GRT-0198] Via related Steiner nodes: 16
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 872798
+[INFO GRT-0112] Final usage 3D: 30617326
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4            94893390       5826863            6.14%             0 /  0 /  0
+M5            94295138       4299935            4.56%             0 /  0 /  0
+M6            88128802       9408880           10.68%             0 /  0 /  0
+M7            97821875       8463254            8.65%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        375139205       27998932            7.46%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 310713256 um
+[INFO GRT-0014] Routed nets: 178418
+[INFO GRT-0303] Global routing runtime = 00:03:44
+OT_T grt 233
+OT_NO_LAYER_WL Wrong number of arguments :grt::report_layer_wire_lengths global_route detailed_route  argument 1
+OT_T guides 233
+OT_DONE
+	Command being timed: "openroad -no_init -threads 16 -exit /work/grt/grt.tcl"
+	User time (seconds): 229.45
+	System time (seconds): 5.41
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:53.70
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 6081304
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2524249
+	Voluntary context switches: 90
+	Involuntary context switches: 709
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 121696
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+EXIT 0

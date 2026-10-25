@@ -1,0 +1,149 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_NE_io.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_NW_io.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_PHY_N.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b000.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b001.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b002.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b003.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b010.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b011.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b012.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b013.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b100.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b101.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b102.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b103.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b110.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b111.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b112.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_b113.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_hub.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_mca.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_mcb.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_sm0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_sm1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_sm2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_sm3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_spb0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_spb1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_spb2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_spt0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_spt1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_spt2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_spu0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_spu1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_su00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_su01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_su10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_su11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_su20.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_su21.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_su30.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_q_su31.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_root.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_vsN0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_vsN1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_vsN2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_vsN4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_vsN5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/hbm_arch_vsN6.lef, created 1 library cells
+[WARNING ORD-2011] LEF master hbm_arch_q_b000 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b001 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b002 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b003 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b010 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b011 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b012 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b013 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b100 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b101 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b102 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b103 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b110 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b111 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b112 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_b113 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_hub has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_NE_io has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_mca has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_mcb has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_sm0 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_sm1 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_sm2 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_sm3 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_spb0 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_spb1 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_spb2 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_spt0 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_spt1 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_spt2 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_spu0 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_spu1 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_su00 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_su01 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_su10 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_su11 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_su20 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_su21 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_su30 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_q_su31 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_NW_io has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_PHY_N has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_root has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_vsN0 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_vsN1 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_vsN2 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_vsN4 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_vsN5 has no liberty cell.
+[WARNING ORD-2011] LEF master hbm_arch_vsN6 has no liberty cell.
+[INFO IFP-0001] Added 67968 rows of 520320 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 28097.300 18351.400 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 28097.280 18351.360 ) um
+[INFO IFP-0102] Core area:                    515623300.301 um^2
+[INFO IFP-0103] Total instances area:         515623300.301 um^2
+[INFO IFP-0104] Effective utilization:                1.000
+[INFO IFP-0105] Number of instances:                     88
+OT_T floorplan 10
+OT_T placed 10
+OT_T obs 10
+[WARNING GRT-0300] Timing is not available, setting critical nets percentage to 0.
+[INFO GRT-0020] Min routing layer: M4
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 88
+[INFO GRT-0004] Blockages: 1638
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 89
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   501439994      125076180          75.06%
+M5         Vertical     497130061      123872987          75.08%
+M6         Horizontal   559192354      139669758          75.02%
+M7         Vertical     694590866      172430743          75.18%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/50
+[INFO GRT-0102] Start extra iteration 2/50

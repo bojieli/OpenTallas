@@ -1,0 +1,405 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_bk_sel__t2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h10_r0_p1__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h10_r0_p4__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h10_r1__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h10_r2__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h9_r0_p1__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h9_r0_p2__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h9_r0_p3__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h9_r0_p4__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h9_r0_p5__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h9_r0_p6__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h9_r1__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_col_h9_r2__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_c1x_C__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_c1x_C__t10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_c1x_C__t3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_c1x_C__t4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_c1x_C__t5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_c1x_C__t6.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_c1x_C__t7.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_c1x_C__t8.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_c1x_C__t9.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_c3x_C__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_iq_C__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_kv512_C__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_lepe_mu_C__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_lepe_mu_LP__t2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_lepe_nh_mus_C__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_lepe_nh_mus_LP__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_lepw_mu_C__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_lepw_mu_LP__t2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_lepw_mus_C__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_dsdv_slice_lepw_mus_LP__t2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_eng__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_gunit__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_iqf__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_kv_leaf__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_kv_leaf__t2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_kv_leaf__t3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_kv_leaf__t4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_kv_leaf__t5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t14.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t15.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t16.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t17.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t21.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t22.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t23.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t24.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t25.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t26.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t27.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t28.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t29.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t30.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t31.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t32.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t33.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t34.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t35.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t36.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t37.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t38.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t39.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t40.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t41.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t42.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t43.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t44.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t45.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t46.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t47.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t48.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t49.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t50.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t51.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t52.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t53.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t54.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t55.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t56.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t57.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t58.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t59.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t6.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t60.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t61.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t62.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t63.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t64.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t65.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t66.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t67.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t68.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t69.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t7.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t70.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t71.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t72.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t73.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t74.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t75.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t8.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_ot_s81sl_leaf__t9.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_phy__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_seqhost__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t13.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t14.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t15.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t16.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_serdes__t6.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t14.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t17.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t18.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t20.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t21.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t22.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t23.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t24.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t25.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t26.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t27.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t28.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t29.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t30.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t31.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t36.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t37.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t38.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t40.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t41.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t42.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t43.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t44.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t45.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t46.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t47.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t48.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t49.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t50.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t51.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t52.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t6.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t7.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_slice_station__t8.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_hi_dsdv_svc_pvso_entry__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_hi_dsdv_svc_pvso_entry__t2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_hi_dsdv_svc_rs__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_hi_dsdv_svc_rs__t2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_hi_dsdv_svc_rs__t3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_hi_dsdv_svc_rs__t4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_hi_dsdv_svc_rs__t5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_hi_dsdv_svc_rs__t6.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_lo_dsdv_svc_rs__t1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_lo_dsdv_svc_rs__t2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_lo_dsdv_svc_rs__t3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_lo_dsdv_svc_rs__t4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_lo_dsdv_svc_rs__t5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_lo_dsdv_svc_rs__t6.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_lo_dsdv_svc_rs__t7.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/s81p_svc_lo_dsdv_svc_rs_w__t1.lef, created 1 library cells
+[WARNING ORD-2011] LEF master s81p_bk_sel__t2 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_eng__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h10_r0_p1__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h10_r1__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h10_r2__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h9_r0_p2__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h9_r1__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h9_r2__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h9_r0_p3__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h10_r0_p4__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h9_r0_p5__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h9_r0_p6__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h9_r0_p1__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_col_h9_r0_p4__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_gunit__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_iqf__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t15 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t16 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t13 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t14 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t5 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t6 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t3 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t2 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t4 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_serdes__t12 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_phy__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_lepw_mu_C__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t7 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t8 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t6 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t9 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t10 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_lepw_mu_LP__t2 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t6 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t7 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t41 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t42 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t43 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t44 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_lepw_mus_C__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t2 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t3 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t4 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t5 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_lepw_mus_LP__t2 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t49 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t36 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t50 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t37 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t38 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t8 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_c1x_C__t10 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t17 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t75 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t16 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t53 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t54 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t45 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_c1x_C__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t13 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t14 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t12 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t15 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t11 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t12 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_c1x_C__t4 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t27 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t28 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t26 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t29 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t30 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t46 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_c1x_C__t3 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t22 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t23 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t21 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t24 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t25 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t14 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_kv512_C__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_kv_leaf__t2 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_kv_leaf__t3 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_kv_leaf__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_kv_leaf__t4 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_kv_leaf__t5 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t47 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_iq_C__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t32 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t33 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t31 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t34 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t35 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_c1x_C__t5 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t42 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t43 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t41 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t44 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t40 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t48 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_c3x_C__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t38 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t39 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t37 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t36 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t17 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_c1x_C__t7 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t51 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t52 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t50 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_c1x_C__t6 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t46 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t47 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t45 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t48 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t49 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t18 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_c1x_C__t9 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t61 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t62 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t60 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t63 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t64 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t21 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_c1x_C__t8 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t57 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t58 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t56 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t59 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t55 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t20 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_lepe_mu_C__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t71 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t72 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t70 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t73 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t74 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_lepe_mu_LP__t2 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t31 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t29 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t30 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t51 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t40 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t52 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_lepe_nh_mus_C__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t66 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t67 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t65 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t68 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_ot_s81sl_leaf__t69 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_dsdv_slice_lepe_nh_mus_LP__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t22 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t23 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t24 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t25 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t26 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t27 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_slice_station__t28 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_seqhost__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_lo_dsdv_svc_rs_w__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_hi_dsdv_svc_rs__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_lo_dsdv_svc_rs__t5 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_hi_dsdv_svc_pvso_entry__t2 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_lo_dsdv_svc_rs__t6 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_hi_dsdv_svc_rs__t5 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_lo_dsdv_svc_rs__t7 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_hi_dsdv_svc_rs__t6 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_lo_dsdv_svc_rs__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_hi_dsdv_svc_rs__t2 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_lo_dsdv_svc_rs__t2 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_hi_dsdv_svc_pvso_entry__t1 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_lo_dsdv_svc_rs__t3 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_hi_dsdv_svc_rs__t3 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_lo_dsdv_svc_rs__t4 has no liberty cell.
+[WARNING ORD-2011] LEF master s81p_svc_hi_dsdv_svc_rs__t4 has no liberty cell.
+[INFO IFP-0001] Added 91648 rows of 591679 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 31950.700 24745.000 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 31950.666 24744.960 ) um
+[INFO IFP-0102] Core area:                    790617952.143 um^2
+[INFO IFP-0103] Total instances area:         771824907.878 um^2
+[INFO IFP-0104] Effective utilization:                0.976
+[INFO IFP-0105] Number of instances:                    398
+OT_T floorplan 16
+OT_T placed 16
+OT_T obs 16
+[WARNING GRT-0300] Timing is not available, setting critical nets percentage to 0.
+[INFO GRT-0020] Min routing layer: M4
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 398
+[INFO GRT-0004] Blockages: 34060
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 399
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   994267881      247551100          75.10%
+M5         Vertical     999042960      248947432          75.08%
+M6         Horizontal   830337461      206898101          75.08%
+M7         Vertical     836954917      207888761          75.16%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/50
+[INFO GRT-0102] Start extra iteration 2/50

@@ -1,0 +1,215 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_cb_f_q00.lef, created 1 library cells
+[WARNING ODB-0229] Error: library (qfd_qc_cb_f_q00) already exists
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_cb_f_q01.lef, created 1 library cells
+[WARNING ODB-0229] Error: library (qfd_qc_cb_f_q01) already exists
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_cb_f_q11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_cb_n_q00.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_cb_n_q01.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_cb_n_q11.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_cb_x_q10.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_coll_core_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_coll_ft_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_coll_ftc_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_coll_ftm_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_coll_ftn_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_coll_n_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_coll_s_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_coll_ucie_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_glue_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_native59_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_qfd_serdes_112g_x12_phy_s597.lef, created 1 library cells
+[WARNING ODB-0229] Error: library (ot_qfd_serdes_112g_x12_phy_s597) already exists
+[INFO ODB-0227] LEF file: /work/abstracts/ot_qkvd_ucie_x64_phy.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_ctl.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_fe.lef, created 1 library cells
+[WARNING ODB-0229] Error: library (qfd_qc_sle_fe) already exists
+[WARNING ODB-0229] Error: library (qfd_qc_sle_fe) already exists
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_fw.lef, created 1 library cells
+[WARNING ODB-0229] Error: library (qfd_qc_sle_fw) already exists
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_hc0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_hc1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_hc2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_hc3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_sc.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_st_a.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_st_b.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_stm.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_su_c.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_su_l0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_sle_su_l1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_fe.lef, created 1 library cells
+[WARNING ODB-0229] Error: library (qfd_qc_slw_fe) already exists
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_fw.lef, created 1 library cells
+[WARNING ODB-0229] Error: library (qfd_qc_slw_fw) already exists
+[WARNING ODB-0229] Error: library (qfd_qc_slw_fw) already exists
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_hc0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_hc1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_hc2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_hc3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_sc.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_st_a.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_st_b.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_stm.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_su_c.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_su_l0.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_slw_su_l1.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/qfd_qc_tt_ctlm_part.lef, created 1 library cells
+[WARNING STA-0201] /work/grt/route.v line 1414, instance sl_E0_fe port l9_eo_l9_wi_i not found.
+[WARNING STA-0201] /work/grt/route.v line 1414, instance sl_E0_fe port l9_eo_l9_wi_o not found.
+[WARNING STA-0201] /work/grt/route.v line 1442, instance sl_E2_fe port l9_eo_l9_wi_i not found.
+[WARNING STA-0201] /work/grt/route.v line 1442, instance sl_E2_fe port l9_eo_l9_wi_o not found.
+[WARNING STA-0201] /work/grt/route.v line 1470, instance sl_E4_fe port l9_eo_l9_wi_i not found.
+[WARNING STA-0201] /work/grt/route.v line 1470, instance sl_E4_fe port l9_eo_l9_wi_o not found.
+[WARNING ORD-2011] LEF master qfd_qc_cb_f_q00 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_cb_f_q01 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_cb_x_q10 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_cb_f_q11 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_cb_n_q00 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_cb_n_q01 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_cb_n_q11 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_coll_core_part has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_coll_ft_part has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_coll_ftm_part has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_coll_ftc_part has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_coll_ftn_part has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_coll_n_part has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_coll_s_part has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_coll_ucie_part has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_glue_part has no liberty cell.
+[WARNING ORD-2011] LEF master ot_qfd_serdes_112g_x12_phy_s597 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_native59_part has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_ctl has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_fe has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_fw has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_hc0 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_hc1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_hc2 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_hc3 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_sc has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_st_a has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_st_b has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_stm has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_su_c has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_su_l0 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_sle_su_l1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_fe has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_fw has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_hc0 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_hc1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_hc2 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_hc3 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_sc has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_st_a has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_st_b has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_stm has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_su_c has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_su_l0 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_slw_su_l1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_qc_tt_ctlm_part has no liberty cell.
+[WARNING ORD-2011] LEF master ot_qkvd_ucie_x64_phy has no liberty cell.
+[INFO IFP-0001] Added 93440 rows of 578079 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 31216.300 25228.800 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 31216.266 25228.800 ) um
+[INFO IFP-0102] Core area:                    787548931.661 um^2
+[INFO IFP-0103] Total instances area:         769781449.728 um^2
+[INFO IFP-0104] Effective utilization:                0.977
+[INFO IFP-0105] Number of instances:                    377
+OT_T floorplan 7
+OT_T placed 7
+OT_T obs 7
+[WARNING GRT-0300] Timing is not available, setting critical nets percentage to 0.
+[INFO GRT-0020] Min routing layer: M4
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 377
+[INFO GRT-0004] Blockages: 1920
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 378
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   699148943      174229802          75.08%
+M5         Vertical     691012763      172231808          75.08%
+M6         Horizontal   828401447      206770628          75.04%
+M7         Vertical     1062725660      263873718          75.17%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/5
+[INFO GRT-0102] Start extra iteration 2/5
+[INFO GRT-0102] Start extra iteration 3/5
+[INFO GRT-0102] Start extra iteration 4/5
+[INFO GRT-0102] Start extra iteration 5/5
+[INFO GRT-0197] Via related to pin nodes: 278311
+[INFO GRT-0198] Via related Steiner nodes: 0
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 1249235
+[INFO GRT-0112] Final usage 3D: 63364447
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           174229802       8001207            4.59%             5 /  0 / 747
+M5           172231808       13373694            7.76%             0 /  7 / 170
+M6           206770628       12640263            6.11%            49 /  0 / 407499
+M7           263873718       25601578            9.70%            67 / 33 / 1251165
+---------------------------------------------------------------------------------------
+Total        817105956       59616742            7.30%            121 / 40 / 1659581
+
+[INFO GRT-0018] Total wirelength: 660946165 um
+[INFO GRT-0014] Routed nets: 533416
+[WARNING GRT-0704] Try reduce the layer adjustment from 75% to 63%
+[WARNING GRT-0115] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+[INFO GRT-0303] Global routing runtime = 00:34:15
+OT_T grt 2062
+OT_NO_LAYER_WL Wrong number of arguments :grt::report_layer_wire_lengths global_route detailed_route  argument 1
+OT_T guides 2064
+OT_DONE
+	Command being timed: "openroad -no_init -threads 16 -exit /work/grt/grt.tcl"
+	User time (seconds): 2050.99
+	System time (seconds): 15.30
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 34:25.60
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 12997504
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 7144770
+	Voluntary context switches: 100
+	Involuntary context switches: 4368
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 253240
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+EXIT 0
