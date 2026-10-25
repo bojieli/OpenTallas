@@ -3,15 +3,19 @@
 # env SPARSE=1: rare full-set valids (few sticky faults), J = verilator build jobs.
 # S81-KITS-RTLB 10-24: ot_s81sl_xrt FACE_LAND vs the pre-fix module (REF_REV, default origin/main) with the lo / p / e
 # inputs one edge later (LAND = 1) or undelayed (LAND = 0).  Every output bit, every cycle.  base must PASS; mutants FAIL.
+# TOK-DS NORM-DESKEW 10-25: REF_REV=WT takes the REF from the working-tree file (both sides with the default norm deskew
+# PDSK = 15'o01234: the landing must sit in front of the deskew as a pure delay); EQ_DEF adds defines to both sides, e.g.
+# EQ_DEF=+define+OT_S81SL_XRT_NO_DSK with REF_REV=<pre-deskew rev> proves PDSK = 0 is the pre-deskew module exactly.
 set -u; O=$1; H=$2; L=$3; S=${4:-1}; N=${5:-20000}; M=${6:-none}; mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 command -v $V >/dev/null || V=$HOME/.local/opentallas-tools/bin/verilator
-git show ${REF_REV:-origin/main}:rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv | sed -e 's/\bot_s81sl_xrt\b/ref_s81sl_xrt/g' \
+{ if [ "${REF_REV:-origin/main}" = WT ]; then cat rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv
+  else git show ${REF_REV:-origin/main}:rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv; fi; } | sed -e 's/\bot_s81sl_xrt\b/ref_s81sl_xrt/g' \
   -e 's/\bot_s81sl_xrt1\b/ref_s81sl_xrt1/g' -e 's/\bot_s81sl_xrt3\b/ref_s81sl_xrt3/g' -e 's/\bot_s81sl_xr_cp\b/ref_s81sl_xr_cp/g' \
   -e 's/\bot_s81sl_xr_rcp\b/ref_s81sl_xr_rcp/g' -e 's/^`define OT_S81SL_XR_FOREG_DEF/`define REF_XR_FOREG_DEF/' \
-  -e 's/`OT_S81SL_XR_FOREG_DEF/`REF_XR_FOREG_DEF/g' > $O/ref_s81sl_xrt.sv
+  -e 's/`OT_S81SL_XR_FOREG_DEF/`REF_XR_FOREG_DEF/g' -e 's/OT_S81SL_XRT_PDSK_DEF/REF_XRT_PDSK_DEF/g' > $O/ref_s81sl_xrt.sv
 grep -q "module ref_s81sl_xrt1" $O/ref_s81sl_xrt.sv || { echo "REF_NOT_BUILT"; exit 4; }
-DEF=""; case $M in land_pv) DEF="+define+OT_S81SL_XRT_MUT_LAND_PV";; land_evpin) DEF="+define+OT_S81SL_XRT_MUT_LAND_EVPIN";; none) ;; *) exit 2;; esac
+DEF="${EQ_DEF:-}"; case $M in land_pv) DEF="$DEF +define+OT_S81SL_XRT_MUT_LAND_PV";; land_evpin) DEF="$DEF +define+OT_S81SL_XRT_MUT_LAND_EVPIN";; none) ;; *) exit 2;; esac
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GHB=$H -GLAND=$L -GSEED=$S -GNC=$N -GSPARSE=${SPARSE:-0} \
   --top-module tb_s81sl_xrt_land_eq -Mdir $O/obj rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv \
   $O/ref_s81sl_xrt.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xrt_land_eq.sv --build-jobs ${J:-4} \
