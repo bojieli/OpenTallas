@@ -17,7 +17,9 @@ def run(schedule,report,bound,out,fast_lib=None):
     sl=report['slices']; names=sorted(sl,key=lambda n:sl[n]['sid']); bysid={sl[i]['sid']:i for i in names}
     pos={i:(sl[i]['sid']>>1,sl[i]['sid']&1) for i in names};byct={v:k for k,v in pos.items()}
     geo=dict(pos=pos,partner={i:byct[(c,1-t)] for i,(c,t) in pos.items()},age={(i,s):report['line_age'][i+'.'+s] for i in names for s in ('e','w') if i+'.'+s in report['line_age']})
-    Q.V_ASM={i:2+report['v_age'][i] for i in names}
+    if report.get('v_paths_complete') is not True or set(report.get('v_assembly_age',{}))!=set(names):
+        raise ValueError('Full V assembly path model required, including column4 seqhost/bk_sel transit')
+    Q.V_ASM={i:int(report['v_assembly_age'][i]) for i in names}
     en=schedule['smoke']['entry_norm']; old=en['g_shift']; G=en['G'];smoke=schedule['smoke']['slice']
     words=[]
     for e in schedule['events']:
