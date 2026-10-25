@@ -101,12 +101,29 @@ def plan_taps(P):
     """[(part, port, x_die, y_die, early_ps)]: every partition clock tap exactly as the kits / stand-ins see it."""
     import gen_phys
     out = []
+    by_type = {}
     for n, p in sorted(P.parts.items()):
         tn = p["type"]
-        early = {nm: S.core_tap_early_ps(P, tp) for nm, _, _, tp in S.core_taps(P, tn)}
-        for port, x, y in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn):
+        if tn not in by_type:
+            t = P.types[tn]
+            if t.get("hard") and not t.get("hard_cores"):
+                # A hard macro terminal is fixed by its physical view, rather
+                # than a proposed standard-cell buffer location.
+                xy = t.get("clock", {}).get("tap_um")
+                if not isinstance(xy, (list, tuple)) or len(xy) != 2:
+                    raise ValueError(f"hard type {tn} requires an explicit clock.tap_um")
+                x, y = map(float, xy)
+                w, h = map(float, t["outline_um"])
+                if not (math.isfinite(x) and math.isfinite(y) and 0 <= x <= w and 0 <= y <= h):
+                    raise ValueError(f"hard type {tn} has an invalid clock.tap_um: {xy}")
+                by_type[tn] = [("clk", x, y, 0.0)]
+            else:
+                early = {nm: S.core_tap_early_ps(P, tp) for nm, _, _, tp in S.core_taps(P, tn)}
+                by_type[tn] = [(port, x, y, float(early.get(port, 0.0)))
+                               for port, x, y in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)]
+        for port, x, y, early_ps in by_type[tn]:
             X, Y = P.to_die(n, (x, y))
-            out.append((n, port, round(X, 3), round(Y, 3), float(early.get(port, 0.0))))
+            out.append((n, port, round(X, 3), round(Y, 3), early_ps))
     return out
 
 
