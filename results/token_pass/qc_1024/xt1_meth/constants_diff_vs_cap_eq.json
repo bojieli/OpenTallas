@@ -1,0 +1,318 @@
+{
+ "schema": "opentallas.qc_tok.constants_diff.v1",
+ "base": {
+  "bound": "/srv/opentallas-scratch2/claude/qc/bind_eq_cb16",
+  "bound_sha": "f3d6351afcf8a654",
+  "verdict": {
+   "OK": 22
+  }
+ },
+ "new": {
+  "bound": "/srv/opentallas-scratch2/claude/qc/bind_meth_cb16",
+  "bound_sha": "e17cec0512a1870d",
+  "verdict": {
+   "OK": 22
+  }
+ },
+ "tool": "tools/die_plan/regen_constants.py @a281ceb5ce (same tool on both binds; base values == committed constants_cap_eq.json)",
+ "same": [
+  "COLL_F3_PHY",
+  "TREQ_CMD_OFFSET",
+  "TREQ_HOPS",
+  "XDIE_SEAM_C",
+  "D2D_TXDP_C"
+ ],
+ "changed": {
+  "COLL_LS": [
+   {
+    "path": "",
+    "cap_eq": 391,
+    "meth": 407
+   }
+  ],
+  "MU_CAL_LS": [
+   {
+    "path": "",
+    "cap_eq": 391,
+    "meth": 407
+   }
+  ],
+  "COLL_F2_PHY": [
+   {
+    "path": "",
+    "cap_eq": 353,
+    "meth": 362
+   }
+  ],
+  "COLL_F2_L": [
+   {
+    "path": "",
+    "cap_eq": 391,
+    "meth": 407
+   }
+  ],
+  "COLL_F2_R": [
+   {
+    "path": "",
+    "cap_eq": 7,
+    "meth": 11
+   }
+  ],
+  "COLL_F2_PEER_R": [
+   {
+    "path": "",
+    "cap_eq": 8,
+    "meth": 11
+   }
+  ],
+  "COLL_F3_L": [
+   {
+    "path": "",
+    "cap_eq": 391,
+    "meth": 407
+   }
+  ],
+  "COLL_F3_R": [
+   {
+    "path": "",
+    "cap_eq": 8,
+    "meth": 11
+   }
+  ],
+  "COLL_F3_PEER_R": [
+   {
+    "path": "",
+    "cap_eq": 8,
+    "meth": 11
+   }
+  ],
+  "COLL_F4_PHY": [
+   {
+    "path": "",
+    "cap_eq": 353,
+    "meth": 361
+   }
+  ],
+  "COLL_F4_L": [
+   {
+    "path": "",
+    "cap_eq": 391,
+    "meth": 407
+   }
+  ],
+  "COLL_F4_R": [
+   {
+    "path": "",
+    "cap_eq": 8,
+    "meth": 11
+   }
+  ],
+  "COLL_F4_PEER_R": [
+   {
+    "path": "",
+    "cap_eq": 7,
+    "meth": 11
+   }
+  ],
+  "COLL_BENCH_ARGS": [
+   {
+    "path": "",
+    "cap_eq": "--relays 0 7 8 8 --lanes 2 2 12 2 2 12 --lx 14 4 14",
+    "meth": "--relays 0 11 11 11 --lanes 2 2 21 2 2 20 --lx 23 4 22"
+   }
+  ],
+  "COLL_SLICE_LEGS": [
+   {
+    "path": ".cmd.delta",
+    "cap_eq": [
+     -3
+    ],
+    "meth": [
+     0
+    ]
+   },
+   {
+    "path": ".cmd.landed",
+    "cap_eq": [
+     8,
+     9
+    ],
+    "meth": [
+     11,
+     12
+    ]
+   },
+   {
+    "path": ".in.delta",
+    "cap_eq": [
+     -3
+    ],
+    "meth": [
+     0
+    ]
+   },
+   {
+    "path": ".in.landed",
+    "cap_eq": [
+     6,
+     7,
+     8
+    ],
+    "meth": [
+     9,
+     10,
+     11
+    ]
+   },
+   {
+    "path": ".out.delta",
+    "cap_eq": [
+     -4
+    ],
+    "meth": [
+     -1
+    ]
+   },
+   {
+    "path": ".out.landed",
+    "cap_eq": [
+     6,
+     7
+    ],
+    "meth": [
+     9,
+     10
+    ]
+   }
+  ],
+  "XT1_FILL_LEAD_OFFSET": [
+   {
+    "path": "",
+    "cap_eq": 8,
+    "meth": 16
+   }
+  ],
+  "XT1_FILL_SLICES": [
+   {
+    "path": "[0].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[0].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[10].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[10].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[11].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[11].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[1].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[1].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[2].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[2].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[3].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[3].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[4].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[4].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[5].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[5].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[6].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[6].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[7].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[7].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[8].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[8].offset",
+    "cap_eq": 8,
+    "meth": 16
+   },
+   {
+    "path": "[9].hr",
+    "cap_eq": 12,
+    "meth": 20
+   },
+   {
+    "path": "[9].offset",
+    "cap_eq": 8,
+    "meth": 16
+   }
+  ]
+ }
+}
