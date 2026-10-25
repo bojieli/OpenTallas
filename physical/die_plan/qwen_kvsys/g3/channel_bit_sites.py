@@ -2,7 +2,7 @@
 """Allocate actual per-bit cells along declared channel paths, preserving macro-free wires.
 
 This refines channel_paths.py's centroids into the kit's explicit cell-site
-contract. It reserves 40um per endpoint cohort in each reach-bounded hop, and
+contract. It reserves 50um per endpoint cohort in each reach-bounded hop, and
 keeps every candidate target on the existing channel polylines.
 """
 import argparse
@@ -108,7 +108,9 @@ def main():
     ap=argparse.ArgumentParser();ap.add_argument('plan');ap.add_argument('out');ap.add_argument('--types',nargs='+',required=True)
     args=ap.parse_args();raw=json.load(open(args.plan));P=S.Plan(raw);ledger=[]
     for tn in args.types:
-        t=raw['partition_types'][tn];W,H=t['outline_um'];obs=boxes(t)
+        t=raw['partition_types'][tn];W,H=t['outline_um']
+        # Same4.32um macro halo as the existing KV per-bit site generator.
+        obs=[(x0+4.32,y0+4.32,x1-4.32,y1-4.32) for x0,y0,x1,y1 in boxes(t)]
         pins={}
         for bus,bit,layer,x,y,face in type_pins(P,tn):pins[(bus,bit)]=(x,y)
         allocator=RowAllocator((4.32,4.32,W-4.32,H-4.32),blocked=obs,cell_size=(1.404,.27),column_pitch=2.16,row_pitch=.27,origin=(4.32,4.32))
@@ -118,7 +120,7 @@ def main():
             centre=[tuple(v) for v in slot.get('regs_um',[])]+[tuple(b.mean(axis=0))]
             if centre:centre[0]=tuple(a.mean(axis=0))
             if len(centre)<2:raise ValueError(f'{tn}/{name}: channel centroids required')
-            targets=targets_on_path(centre,obs);radius=40.;budget=403.;used=set(allocator.used);denied=set()
+            targets=targets_on_path(centre,obs);radius=50.;budget=403.;used=set(allocator.used);denied=set()
             print(f'ALLOCATE {tn}/{name} bits{n} targets{len(targets)}',flush=True)
             while True:
                 allocator.used=set(used);free=targets[[i not in denied for i in range(len(targets))]]
