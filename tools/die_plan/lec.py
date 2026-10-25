@@ -1528,6 +1528,36 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                                 tried[("gold", k, "sib")] += 1
                                 L.hyp[("gold", k)] = ("eq", "gold", c, 0)
                                 new += 1
+                    # merged into a matched register of ANOTHER vector (HBM tkm tile: self-holding X[0..3][j] ->
+                    # up_out[86 i + j], gt[64..67][j] -> q_bg[8][86 j + 85]): the same cofactor test with every
+                    # matched register held at 0 / at 1; a pair proposed here is proved by induction like any other
+                    ug2 = [k for k in ug if ("gold", k) not in L.hyp and tried[("gold", k, "sib")] < 3]
+                    if ug2:
+                        hall = {k for k in L.matched if k.startswith("ff:")}
+                        hof = []
+                        for c in (0, 1):
+                            mc, _ = L.build(with_compare=False, with_hyp=False, free_const=c, hold_matched=hall)
+                            vc, _ = mc.simulate(words, seed=43 * rnd + it + 11)
+                            hof.append(lambda side, k, vc=vc, dl=dict(L.dlit): lit_val(vc, mask, dl[(side, k)]))
+                        hm = {}
+                        for k in hall:
+                            if ("both", k) not in L.hyp:
+                                a = (hof[0]("gold", k), hof[1]("gold", k))
+                                if a[0] not in (0, mask) or a[1] not in (0, mask):
+                                    hm.setdefault(a, []).append(k)
+                        m, kind = L.build(with_compare=False, with_hyp=False)
+                        v2, _ = m.simulate(words, seed=47 * rnd + it + 13)
+                        for k in ug2:
+                            a = (hof[0]("gold", k), hof[1]("gold", k))
+                            if (a[0] in (0, mask) and a[1] in (0, mask)) or len(hm.get(a, [])) > 8 or \
+                                    (tried[("gold", k, "c")] < 1 and lit_val(v2, mask, L.dlit[("gold", k)]) in (0, mask)):
+                                continue
+                            c = next((c for c in closest(k, hm.get(a, [])) if tried[("gold", k, c, 0)] < 1), None)
+                            if c:
+                                tried[("gold", k, "sib")] += 1
+                                tried[("gold", k, c, 0)] += 1
+                                L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+                                new += 1
                 # Duplicate feedback copies can choose different representatives in each frontend.
                 # Group on gold signatures even before individual gold/gate D functions agree;
                 # the hypothesis miter below proves the equality on BOTH sides simultaneously.

@@ -399,3 +399,57 @@ def test_parse_config_make_append_and_conditional(tmp_path):
     assert env["VERILOG_DEFINES"] == "-DSYNTHESIS"
     assert env["SYNTH_BLACKBOXES"] == "ot_rom_bb"
     assert env["DESIGN_NAME"] == "top2"
+
+
+def _aig_bytes(I, latches, ands):
+    """binary AIGER from latch next-state literals and AND gates [(lhs, r0, r1)] (lhs ascending from 2 (I + L) + 2)."""
+    def enc(x):
+        out = bytearray()
+        while x >= 0x80:
+            out.append(x & 0x7F | 0x80)
+            x >>= 7
+        out.append(x)
+        return bytes(out)
+    L = len(latches)
+    b = f"aig {I + L + len(ands)} {I} {L} 0 {len(ands)}\n".encode() + b"".join(f"{n}\n".encode() for n in latches)
+    for lhs, r0, r1 in ands:
+        r0, r1 = max(r0, r1), min(r0, r1)
+        b += enc(lhs - r0) + enc(r0 - r1)
+    return b
+
+
+def _merged_hold_design(tmp_path, x_enable_lit):
+    """HBM tkm tile 10-25: synthesis merged the self-holding gold register X[0][0] (X <= en ? d : X) into the
+    matched register up_out[0] of ANOTHER vector (same enable, same data).  Gold: up_out, X (loading on
+    `x_enable_lit`), o <= X.  Gate: up_out, o <= up_out.  Inputs en = 2, d = 4."""
+    names = lambda ks: {i: [(f"u_dut.{k}$_DFF_P_.lecq", 0)] for i, k in enumerate(ks)}
+    # gold vars: en 1, d 2, up_out 3, X 4, o 5; ANDs 6..: hold mux q' = !(!(en & d) & !(!en & q))
+    g = tmp_path / "gold.aig"
+    g.write_bytes(_aig_bytes(2, [17, 23, 8], [(12, 2, 4), (14, 3, 6), (16, 13, 15),     # up_out' = lit 17
+                                                (18, x_enable_lit, 4), (20, x_enable_lit ^ 1, 8),
+                                                (22, 19, 21)]))                          # X' = lit 23
+    # gate vars: en 1, d 2, up_out 3, o 4; ANDs 5..: up_out' = en ? d : up_out
+    t = tmp_path / "gate.aig"
+    t.write_bytes(_aig_bytes(2, [15, 6], [(10, 2, 4), (12, 3, 6), (14, 11, 13)]))
+    gm = {"input": {0: [("en", 0)], 1: [("d", 0)]}, "latch": names(["up_out[0]", "X[0][0]", "o"]), "output": {}}
+    tm = {"input": {0: [("en", 0)], 1: [("d", 0)]}, "latch": names(["up_out[0]", "o"]), "output": {}}
+    return lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+
+
+def test_self_holding_register_merged_into_another_vector(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    L = _merged_hold_design(tmp_path, 2)                     # gold X loads on en: a legal merge
+    assert L.gonly == ["ff:u_dut.X[0][0]"]
+    lec.correspond(L, tmp_path, 100, [])
+    assert L.hyp.get(("gold", "ff:u_dut.X[0][0]")) == ("eq", "gold", "ff:u_dut.up_out[0]", 0)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {"proved"}
+
+
+def test_self_holding_merge_mutant_still_differs(tmp_path, monkeypatch):
+    """negative control: gold X loads on !en (a wrong merge) -> no pair survives, o differs."""
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    L = _merged_hold_design(tmp_path, 3)
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert "differs" in set(_sim_prove(m).values())
