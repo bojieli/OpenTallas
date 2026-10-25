@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.kv_channel_proposal.v1",
+  "verdict": "CANDIDATE_NOT_ADOPTED",
+  "base": "claude/kv-405-1024r@f99050a59",
+  "g0c": {
+    "verdict": "PASS",
+    "errors": 0,
+    "types_clean": 49,
+    "types": 49
+  },
+  "channel_types": 37,
+  "failed_channel_slots": [],
+  "changed_station_counts": 458,
+  "added_type_slot_cycles": 531,
+  "natural_latency": {
+    "lanes": 2416,
+    "changed": 318,
+    "unchanged": 2098,
+    "max_delta": 21,
+    "min_delta": 1,
+    "sum_delta": 1029,
+    "mean_delta_changed": 3.236,
+    "histogram": {
+      "0": 2098,
+      "1": 103,
+      "2": 56,
+      "3": 86,
+      "4": 11,
+      "5": 6,
+      "6": 10,
+      "7": 12,
+      "8": 28,
+      "16": 2,
+      "20": 2,
+      "21": 2
+    }
+  },
+  "r8": {
+    "members": 5537,
+    "classes": 3810,
+    "replica_links": 9,
+    "padded_members": 214,
+    "padded_bits": 7083,
+    "pad_flops": 22410,
+    "max_pad": 18,
+    "max_depth_before": 64,
+    "max_depth_after": 69,
+    "max_offset_before": 64,
+    "max_offset_after": 64,
+    "binder_landed_max": 42,
+    "landed_bundles": 0,
+    "landed_over_margin": 0
+  },
+  "physical": "2G2 pilots pending on intel2, no G3",
+  "review": "results/geom_review/kv_channel_pilot_r3_1025.json",
+  "replay": "bash physical/die_plan/qwen_kvsys/g3/run_channel.sh physical/die_plan/qwen_kvsys/die_plan.json OUTDIR"
+}
