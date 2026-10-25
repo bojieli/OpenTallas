@@ -278,3 +278,31 @@ def test_naive_cone_unknown_does_not_shift_later_status(tmp_path, monkeypatch):
         return SimpleNamespace(stdout='\n'.join(replies[i] for i in ids), stderr='')
     monkeypatch.setattr(lec.subprocess, 'run', run)
     assert lec.prove(m, tmp_path, 100, [], tag='mixed') == {'unknown': 'undecided', 'proved': 'proved', 'different': 'differs'}
+
+
+def test_constant_cohort_representative_is_a_constant(tmp_path, monkeypatch):
+    """10-25 triage: each lane's non-reset register with a constant next state (s1_small[27] of every FP-add lane)
+    is one replica cohort; synthesis removed them all (opt_dff).  The cohort representative must get the constant
+    hypothesis too, else it stays a free input and the downstream register y differs (false NOT EQUIVALENT)."""
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    g = tmp_path / 'gold.aig'
+    # inputs d0; latches g_add[0].c (next 0), g_add[1].c (next 0), y (next = c0 | c1 = !(!c0 & !c1): AND 10 = 7 & 5,
+    # binary deltas 3, 2)
+    g.write_bytes(b'aig 5 1 3 0 1\n0\n0\n11\n' + bytes([3, 2]))
+    gm = {'input': {0: [('d0', 0)]}, 'output': {},
+          'latch': {0: [('u_dut.g_add[0].c$_DFF_P_.lecq', 0)], 1: [('u_dut.g_add[1].c$_DFF_P_.lecq', 0)],
+                    2: [('u_dut.y$_DFF_P_.lecq', 0)]}}
+    t = tmp_path / 'gate.aig'
+    t.write_bytes(b'aig 2 1 1 0 0\n0\n')
+    tm = {'input': {0: [('d0', 0)]}, 'output': {}, 'latch': {0: [('u_dut.y$_DFF_P_.lecq', 0)]}}
+    L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {'proved'}, L.hyp
+
+
+def test_implicit_net_lint_pattern():
+    l = ("../work/rtl/ot_s81eng_aq_n32.sv:111:49: warning: implicit net 'ep_next' created [-Wimplicit-net]")
+    m = lec.IMPLICIT_NET.match(l)
+    assert m and (m[1], m[2], m[3]) == ("../work/rtl/ot_s81eng_aq_n32.sv", "111", "ep_next")
+    assert not lec.IMPLICIT_NET.match("x.sv:3:1: warning: implicit conversion truncates [-Wwidth-trunc]")
