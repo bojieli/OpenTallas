@@ -495,6 +495,20 @@ def variant_port_bits(ports, variant, params, mapping):
     return selected
 
 
+def core_reset_hierarchy_candidates(cells, members, target, modules):
+    """Exact source hierarchy suffix inside one already-mapped partition.
+
+    A plan core includes the consumed structural parent name (u_r0.u_e0)
+    while rel_of strips that parent root (u_e0). Preserve every replica token;
+    match original full source path, expected master and reset pin together.
+    No module-wide fallback or normalization that erases hierarchy.
+    """
+    suffix = "." + target["inst"]
+    return [ci for ci in members if target["pin"] in cells[ci].ports and
+            cells[ci].module in modules and
+            (cells[ci].path == target["inst"] or cells[ci].path.endswith(suffix))]
+
+
 class Binder:
     def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
@@ -2240,6 +2254,9 @@ class Binder:
                 pin = target["pin"]
                 candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
                               target["inst"] in {self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
+                if not candidates:
+                    modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
+                    candidates = core_reset_hierarchy_candidates(F.cells, self.members[p], target, modules)
                 if not candidates:
                     # Plan-local matrix names commonly compact coordinate
                     # separators (u_t00 versus RTL u_t_0_0). Accept only a unique
