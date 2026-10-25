@@ -93,3 +93,19 @@ def test_sta_skew_and_spine(tmp_path, pad):
         sp = json.loads((tmp_path / f"spine_{c}.json").read_text())
         assert sum(len(p["taps"]) for p in sp["parts"].values()) == cr["taps"]
         assert max(t["offset_ps"] for p in sp["parts"].values() for t in p["taps"].values()) < lim
+
+
+def test_long_hop_repeater_keeps_netlist_consistent(tmp_path):
+    """macros over every other repeater site: far slides get a local repeater; every net has one name and driver,
+    every tap port is driven, the netlist links."""
+    P = S.Plan(json.loads(PLANS[1].read_text()))
+    T0, _ = DC.build(P, leaf_um=300.0, keep=[])
+    cells = [c for c in T0.cells.values() if c["kind"] in ("rep", "chain")]
+    keep = [(c["x"] - 300, c["y"] - 300, c["x"] + 300, c["y"] + 300, "k") for c in cells[::2]]
+    T, tree = DC.build(P, leaf_um=300.0, keep=keep)
+    assert tree["meta"]["long_hop_repeaters"] > 0
+    names = [n["name"] for n in T.nets]
+    assert len(names) == len(set(names))
+    loads = {ld for n in T.nets for _, _, ld, _ in n["branches"]}
+    assert all("port:" + t["port"] in loads for t in tree["taps"])
+    assert all(n["name"] == ld[5:] for n in T.nets for _, _, ld, _ in n["branches"] if ld.startswith("port:"))

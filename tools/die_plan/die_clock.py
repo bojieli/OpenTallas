@@ -516,6 +516,40 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
             std_k = max(chain_std[n["ck"]], cmax[n["ck"]]) if pad == "level" else max(geo, 1.0)
             n["branches"][0] = (max(1.0, std_k - n.pop("cut")), layer, load, geo)
             n.pop("ck")
+    # a legalised hop still longer than 1.15 rep_um (a cut that had to slide far off a macro) gets a local repeater at
+    # its free midpoint; the STA balance pads every other path up by that one stage (pad=sta only)
+    split = 0
+    if pad == "sta":
+        tap_xy = {"port:" + t["port"]: tuple(t["xy"]) for t in tap_rows}
+        extra = defaultdict(list)
+        for _ in range(3):
+            todo = [n for n in nets if len(n["branches"]) == 1 and n["branches"][0][3] > max_seg
+                    and n["drv"] in T.cells]
+            if not todo:
+                break
+            for n in todo:
+                L, layer, load, geo = n["branches"][0]
+                a_ = (T.cells[n["drv"]]["x"], T.cells[n["drv"]]["y"])
+                b_ = tap_xy.get(load) or (T.cells[load]["x"], T.cells[load]["y"])
+                m_ = ((a_[0] + b_[0]) / 2, (a_[1] + b_[1]) / 2)
+                x, y, side = _slide(m_, a_, b_, K)
+                hn = T.cell(f"h{split}_{n['drv']}", x, y, "rep", None)
+                g1 = abs(x - a_[0]) + abs(y - a_[1]) + side
+                g2 = max(abs(b_[0] - x) + abs(b_[1] - y) + side, geo - g1)
+                n["branches"][0] = (max(g1, 1.0), layer, hn, g1)
+                if load.startswith("port:"):            # the port net keeps its name on the last hop
+                    nets.append(dict(name=n["name"], drv=hn, branches=[(max(g2, 1.0), layer, load, g2)]))
+                    n["name"] = f"w_{hn}"
+                    extra[nets[-1]["name"]].append(n["name"])
+                else:
+                    nets.append(dict(name=f"w_{hn}", drv=hn, branches=[(max(g2, 1.0), layer, load, g2)]))
+                    extra[n["name"]].append(f"w_{hn}")
+                split += 1
+        for t in tap_rows:
+            t["pad_nets"] += [[e, 0] for nn, _ in list(t["pad_nets"]) for e in extra.get(nn, [])]
+        for kl in children.values():
+            for _, targets in kl:
+                targets += [[e, 0] for nn, _ in list(targets) for e in extra.get(nn, [])]
     over = max(geo - L for n in nets for L, _, _, geo in n["branches"])
     tot_w = sum(w for _, _, w in pairs)
     meta = dict(leaf_um=leaf_um, rep_um=rep_um, pad=pad, levels=D, split_axes="".join("xy"[a] for a in levels),
@@ -523,7 +557,7 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 leaves_live=len(leaf_keys), tap_drivers_per_leaf=F,
                 last_mile_pad_um=[round(Lx, 2), round(Ly, 2)], last_mile_stages=[kx, ky],
                 core_early=core_early, core_taps=sum(1 for t in taps if t[4] > 0),
-                cells=len(T.cells), dummies=sum(1 for c in T.cells.values() if c["kind"] == "dummy"),
+                long_hop_repeaters=split, cells=len(T.cells), dummies=sum(1 for c in T.cells.values() if c["kind"] == "dummy"),
                 buffer=BUF, ndr="2W2S R/2 C*1.1", geometry_over_standard_um=round(over, 3),
                 level_segments={lev: dict(leg_max_um=round(L, 1), cuts=n, std_um=round(seg_std[lev], 1))
                                 for lev, (L, n) in leg_len.items()},
