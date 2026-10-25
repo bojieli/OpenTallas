@@ -7,7 +7,9 @@ geom_verdicts() to submit a queued kit within one tick of its GEOM PASS (the onl
 Gaps:
   (1) GEOM-REQ-UNANSWERED    a GEOM REQ in lanes/GEOM-REVIEW.md with no REPLY / VERDICT / ACK of its tag after 20 min
   (2) GEOM-PASS-NOT-ROUTED   a GEOM PASS / PASS-COND reply that clears a route, with no autopilot submit of a kit under
-                             that tag after 20 min (queued kits are submitted by the tick itself)
+                             that tag after 20 min (queued kits are submitted by the tick itself), unless coord/state
+                             autopilot/resolved.tsv carries that verdict (tag + verdict time): its kits were signed off,
+                             superseded, routed outside the autopilot or the reply is not a route clearance
   (3) RUN-NOT-CLASSIFIED     an autopilot run whose client / render ended but is still unclassified after one tick
   (4) REVIEW-NO-ACTION       a review.tsv / structural.tsv row with no GEOM REQ or fix line (naming its type or id) in
                              the owning lane file or GEOM-REVIEW.md after 60 min
@@ -118,7 +120,27 @@ def _answers(tag, req_line, rtag, rep_line):
     return any(w in rep_line for w in toks)
 
 
-def gaps_geom(text, now, queue_tags_submitted):
+RESOLVED_HEAD = "# tag\tverdict_time (YYYY-MM-DD HH:MM of the REPLY line)\tresolution\tkits\tlane\trecorded\tnote"
+
+
+def parse_resolved(text):
+    """coord/state autopilot/resolved.tsv -> {(tag, verdict epoch)}: GEOM PASS verdicts whose kits need no autopilot
+    submit (SIGNED / SUPERSEDED / ROUTED by hand / NOT-ROUTE); gap (2) stops flagging exactly that verdict, so a later
+    PASS under the same tag is still flagged"""
+    out = set()
+    for raw in text.splitlines():
+        if not raw.strip() or raw.lstrip().startswith("#"):
+            continue
+        f = raw.split("\t")
+        if len(f) < 3 or not f[2].strip():
+            continue                                       # a resolution is required
+        t = parse_ts(f[1], None)
+        if t is not None and tag_of(f[0]):
+            out.add((tag_of(f[0]), t))
+    return out
+
+
+def gaps_geom(text, now, queue_tags_submitted, resolved=frozenset()):
     out = []
     reqs, reps = geom_events(text)
     for t, tag, line in reqs:
@@ -132,9 +154,10 @@ def gaps_geom(text, now, queue_tags_submitted):
         tail = line[line.find(v):]
         if not ROUTE_OK.search(tail) or re.search(r"\bno (new )?(route|P&R)\b|not for route", tail, re.I):
             continue
-        if tag not in queue_tags_submitted:
+        if tag not in queue_tags_submitted and (tag, t) not in resolved:
             out.append((t, f"GEOM-PASS-NOT-ROUTED [{tag}] {v}: no autopilot submit under this tag (if the lane routed "
-                           f"it by hand, enqueue it next time: tools/autopilot/enqueue.py) -- {line.strip()[:140]}"))
+                           f"it by hand, enqueue it next time: tools/autopilot/enqueue.py; signed / superseded: "
+                           f"autopilot/resolved.tsv) -- {line.strip()[:140]}"))
     return out
 
 
