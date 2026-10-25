@@ -41,9 +41,19 @@ module tb_s81sl_lep_idxnet #(parameter integer N = 96, parameter integer SEED = 
                .l0_f(fl[12*X +: 3]), .l1_f(fl[12*X+3 +: 3]), .mu_c(34'd0), .mu_rt(), .ml_wv(), .ml_wd(), .ml_rv(1'b0), \
                .ml_rd(1104'd0), .ml_f(1'b0), .fault(f[X])
 `define PRM #(.SRAM(1), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1))
-    ot_s81sl_lep_mu_h_tp `PRM u_d0 (`COM(0), .l0_st(2'b00), .l1_st(2'b00), .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+`ifdef OT_S81SL_TEST_HAB_TP
+    ot_s81sl_lep_mu_hab_tp `PRM u_d0
+`else
+    ot_s81sl_lep_mu_h_tp `PRM u_d0
+`endif
+    (`COM(0), .l0_st(2'b00), .l1_st(2'b00), .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
         .tp_i(tpi[0]), .tp_o(tpo[0]));
-    ot_s81sl_lep_mu_h_tp `PRM u_d1 (`COM(1), .l0_st(2'b00), .l1_st(2'b00), .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+`ifdef OT_S81SL_TEST_HAB_TP
+    ot_s81sl_lep_mu_hab_tp `PRM u_d1
+`else
+    ot_s81sl_lep_mu_h_tp `PRM u_d1
+`endif
+    (`COM(1), .l0_st(2'b00), .l1_st(2'b00), .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
         .tp_i(tpi[1]), .tp_o(tpo[1]));
     ot_s81sl_lep_mu_a_tpt `PRM u_d2 (`COM(2), .tp_i(tpi[2]));
     ot_s81sl_lep_mu_a_tpr `PRM u_d3 (`COM(3), .tp_o(tpo[3]));

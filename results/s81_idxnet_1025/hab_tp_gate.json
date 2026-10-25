@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS_FUNCTIONAL",
+  "module": "ot_s81sl_lep_mu_hab_tp",
+  "contract": "HOST_EN1 AB_EN1 IDX_EN1 IDX_TP1; pairA TP+host, pairB reserve multiuser; 0 added cycles",
+  "cases": {
+    "mu_production_opts": "280 copyA +240 copyB beats bitexact; 120latency-user cycles/values identical; return240cutthrough+160landed exact; F1/F2/F3 caught",
+    "wrongcopy_mutant": "CAUGHT (copyB0/240,80mismatches,identity failure)",
+    "tp_production_opts": "PASS seven-endpoint TP/query scoreboard with s7N host+AB+TP core"
+  },
+  "runs": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-idxnet/{hab_mu,hab_tp}; hab_mu spilled epyc3; both ot-run exit0",
+  "physical": "NOT SIGNED; parent/core canonical PORTFIX merge and actual die binding still required"
+}
