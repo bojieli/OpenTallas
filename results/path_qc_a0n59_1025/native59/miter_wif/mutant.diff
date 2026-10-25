@@ -1,0 +1,4 @@
+327c327
+<      if(!rst_pin)wd_q<=32'd0;else wd_q<=f_dd[89+32*ww+:32];
+---
+>      if(!rst_pin)wd_q<=32'd0;else wd_q<=f_dd[89+32*((ww==3&&wg==5)?4:ww)+:32];

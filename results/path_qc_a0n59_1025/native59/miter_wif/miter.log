@@ -1,0 +1,4 @@
+wif_a0l0: MITER QB_ALIGN=0 QB_LOCAL32=0 cycles 200000 q_write_cycles 111833 read_cycles 100103 nonzero_rows 100093 mismatch_cycles 0 (array 0, outputs 0) => EQUIVALENT
+off_a1l1: MITER QB_ALIGN=1 QB_LOCAL32=1 cycles 200000 q_write_cycles 111833 read_cycles 100103 nonzero_rows 100095 mismatch_cycles 0 (array 0, outputs 0) => EQUIVALENT
+mut_a1l1: MITER QB_ALIGN=1 QB_LOCAL32=1 cycles 200000 q_write_cycles 111833 read_cycles 100103 nonzero_rows 100095 mismatch_cycles 199880 (array 199880, outputs 24861) =>  DIFFERENT
+wif_a1l1: MITER QB_ALIGN=1 QB_LOCAL32=1 cycles 200000 q_write_cycles 111833 read_cycles 100103 nonzero_rows 100095 mismatch_cycles 0 (array 0, outputs 0) => EQUIVALENT

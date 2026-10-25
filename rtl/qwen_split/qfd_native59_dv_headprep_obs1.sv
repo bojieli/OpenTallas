@@ -36,7 +36,13 @@ module qfd_native59_dv_headprep_obs1 #(
  assign obs_native={completed,completed_tag};
  wire[547:0]rl_dd;wire rl_lcv;wire[5:0]rl_stage;
  wire qb_v;wire[4:0]qb_beat;wire[511:0]qb_row;wire qb_full,qb_committed,qb_bad;
- qfd_native59_qbank #(.MUT((SMUT==1||SMUT==7)?SMUT:0),.QB_MUT(QB_MUT),.QB_ALIGN(QB_ALIGN),.QB_LOCAL32(QB_LOCAL32),.QB_LOCAL_MUT(QB_LOCAL_MUT)) u_qb(
+ // PATH-QC-A0N59 10-25: OT_N59_WIF selects the write-face SRAM interface replicas (qbank QB_WIF, +0 cycles, miter-proven)
+`ifdef OT_N59_WIF
+ localparam integer QB_WIF_SEL=1;
+`else
+ localparam integer QB_WIF_SEL=0;
+`endif
+ qfd_native59_qbank #(.MUT((SMUT==1||SMUT==7)?SMUT:0),.QB_MUT(QB_MUT),.QB_ALIGN(QB_ALIGN),.QB_LOCAL32(QB_LOCAL32),.QB_LOCAL_MUT(QB_LOCAL_MUT),.QB_WIF(QB_WIF_SEL)) u_qb(
   .ck(ck),.rst_n(rst_n),.dd_i(dd_i),.layer_context_v(layer_context_v),.command_stage(command_stage),
   .q_slot(q_slot),.q_slot_beat(q_slot_beat),.dd_o(rl_dd),.lcv_o(rl_lcv),.stage_o(rl_stage),
   .qb_v(qb_v),.qb_beat(qb_beat),.qb_row(qb_row),.qb_full(qb_full),.qb_committed(qb_committed),.qb_bad(qb_bad));
