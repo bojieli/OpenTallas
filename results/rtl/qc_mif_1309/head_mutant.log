@@ -1,0 +1,11 @@
+ALIGN valid mismatch cycle298 ref00000001f40b2ce8000020 got30000001f40b2ce8000020
+ALIGN data mismatch cycle298 ref00000001f40b2ce8000020 got30000001f40b2ce8000020
+ALIGN data mismatch cycle299 ref30000001f40b37a8000020 got30000001f40ac1e8000020
+ALIGN data mismatch cycle329 ref30000001f40bf708000020 got38000001f40bf708000020
+ALIGN valid mismatch cycle330 ref38000001f40c0158000020 got00000001f40c0158000020
+MIF_HEAD checked=2272 outputs=288 mismatches=45
+MIF_HEAD FAIL
+- tools/qwen_dv/mif1309/tb_mif_head.sv:267: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.016 s; speed 1.529 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB

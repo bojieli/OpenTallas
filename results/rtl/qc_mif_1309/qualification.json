@@ -1,0 +1,36 @@
+{
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "defaults": "MIF0; explicit OT_QC_SRAM_MIF is required",
+  "group": {
+    "cycles": 4096,
+    "checks": 48768,
+    "nonzero": 15616,
+    "result": "PASS"
+  },
+  "head": {
+    "checks": 2272,
+    "outputs": 288,
+    "result": "PASS",
+    "nominal": "head_clean_r2.log"
+  },
+  "mutants": {
+    "group": "missing memory edge caught",
+    "head": "missing common head edge caught",
+    "fetch": "one-edge-early SU start caught atcycle105"
+  },
+  "diagnosed": {
+    "head_clean": "133x17 ring exceeded former2048-bit engineering cap; narrow exact2128-bit shape supported",
+    "fetch_r3": "test drove retirement before any programme; progress counters were advancing before start, so same-edge external feedback cannot equal a global one-edge-shifted trace; successor gates retirement to active command windows and delays consumer feedback"
+  },
+  "fetch": {
+    "result": "PASS",
+    "checks": 1335,
+    "active_live_edges": 1293,
+    "scope": "actual programme SRAM, actual SU8 parent with correspondingly delayed downstream retirement feedback"
+  },
+  "qualification_remaining": [
+    "fresh compiler age calibration for MIF1",
+    "parent/head physicalarea/fit and TT/FF833ps signoff",
+    "complete source-bound QC/KV token proof"
+  ]
+}

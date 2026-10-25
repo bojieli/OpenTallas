@@ -1,0 +1,6 @@
+MIF_HEAD checked=2272 outputs=288 mismatches=0
+MIF_HEAD PASS
+- tools/qwen_dv/mif1309/tb_mif_head.sv:267: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 24us; walltime 0.016 s; speed 1.479 ms/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB

@@ -92,7 +92,7 @@ module qfd_dv_lane_h_safe1 #(parameter integer CONTROL_SAFE=1) (
         .sx_rsq_v(sx_rsq_v), .sx_rsq_x(sx_rsq_x), .sy_rsq_y(sy_rsq_y), .sy_rsq_f(sy_rsq_f));
 endmodule
 
-// safe2 = safe1 with every fixed-age ring (all < 2 kb) in flops: qfd_dv_s1_flop_ring (16-bit slices, own pointer,
+// safe2 = safe1 with every fixed-age ring (MIF1 metadata max2128bits) in flops: qfd_dv_s1_flop_ring (16-bit slices, own pointer,
 // N = D - 1 slots, write and read the same slot each edge = age D), no 32x64 macros; TLS 128x64 natives kept.
 module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=0, MEMORY_READ_EXTRA=0) (
     input  wire              clk,
