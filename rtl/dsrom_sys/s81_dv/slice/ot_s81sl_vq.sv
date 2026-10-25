@@ -106,10 +106,28 @@ module ot_s81sl_vq #(
             if (sv_) begin nexp <= si_ + 3'd1; if (si_ != nexp) ord_f <= 1'b1; end
         end
     always @(posedge clk) bbk <= si_[2];
+    // S81-CORES3/RT (2026-10-25, vq_bfq GRT-RC TT estimate -219.9 on yv_c -> si_ decode -> load enable of 256 blk flops x 4,
+    // the same broadcast class as bf): the blk write is staged once, from the pin flops: 4 per-quarter write enables
+    // blk_en[j] = (sv_ && si_[1:0] == j) and the sub-beat blk_d = sd_, and blk takes the staged write one edge later.
+    // Every reader sees blk_x = blk with the staged write forwarded (blk_en[j] ? blk_d : blk quarter j), which equals the
+    // closed RTL's blk on every cycle: 0 cycles (tools/s81_slice/vq_pinreg_eq.sh; mutant OT_VQ_MUT_BLKF drops the forward
+    // and must FAIL).  The pin flops now load 4 + 256 flops instead of 1024 enables.
+    reg [3:0] blk_en; (* keep *) reg [255:0] blk_d; integer jq;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) blk_en <= 4'd0;
+        else for (jq = 0; jq < 4; jq = jq + 1) blk_en[jq] <= sv_ && si_[1:0] == jq;
+    always @(posedge clk) blk_d <= sd_;
     always @(posedge clk)
-        if (sv_) begin
-            for (j = 0; j < 4; j = j + 1) if (si_[1:0] == j) blk[256 * j +: 256] <= sd_;
-        end
+        for (j = 0; j < 4; j = j + 1) if (blk_en[j]) blk[256 * j +: 256] <= blk_d;
+    wire [1023:0] blk_x;
+    genvar gq;
+    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_blkx
+`ifdef OT_VQ_MUT_BLKF
+        assign blk_x[256 * gq +: 256] = blk[256 * gq +: 256];                          // mutant: no forward (must FAIL)
+`else
+        assign blk_x[256 * gq +: 256] = blk_en[gq] ? blk_d : blk[256 * gq +: 256];
+`endif
+    end endgenerate
     // the quantiser registers x itself (aq12 S0): blk feeds it directly; bv is high in the cycle after the block's last
     // sub-beat was written, so aq12 samples the complete block (the next sub-beat lands on the same edge)
     wire vo, af; wire [255:0] q; wire signed [9:0] e; wire [511:0] qy;
@@ -161,9 +179,9 @@ module ot_s81sl_vq #(
     endgenerate
     generate
         if (AQ_XMEM == 2) begin : g_aqx
-            ot_s81sl_aq12x u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af), .xd(xr_w));
+            ot_s81sl_aq12x u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk_x), .vo(vo), .q(q), .e(e), .y(qy), .fault(af), .xd(xr_w));
         end else begin : g_aq
-            ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk), .vo(vo), .q(q), .e(e), .y(qy), .fault(af));
+            ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rs_q), .v(bv), .x(blk_x), .vo(vo), .q(q), .e(e), .y(qy), .fault(af));
         end
     endgenerate
     // block index rides the quantiser latency
