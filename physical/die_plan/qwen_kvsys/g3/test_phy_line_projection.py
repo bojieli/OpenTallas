@@ -36,6 +36,8 @@ class Projection(unittest.TestCase):
         with self.assertRaises(ValueError):P.project(native().replace('.clk(clk)','.new_pin(clk),\n.clk(clk)'))
     def test_wrong_direct_connection(self):
         with self.assertRaises(ValueError):P.project(native().replace('.far_v(bump_ucie_rom_far_v)',".far_v(1'b0)"))
+    def test_same_line_extra_connection(self):
+        with self.assertRaises(ValueError):P.project(native().replace(".clk(clk),\n", "").replace(".far_v(bump_ucie_rom_far_v),\n", ".far_v(bump_ucie_rom_far_v), .clk(clk),\n"))
     def test_wrong_wrapper_module(self):
         with self.assertRaises(ValueError):P.project(wrapper().replace('kv3_sys_c_part_bound','other_bound'),instance='u_bound',wrapper=True)
     def test_filelist(self):
