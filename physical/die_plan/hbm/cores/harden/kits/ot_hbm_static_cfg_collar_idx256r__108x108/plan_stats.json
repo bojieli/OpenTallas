@@ -1,0 +1,73 @@
+{
+ "type": "ot_hbm_static_cfg_collar_idx256r__108x108",
+ "outline_um": [
+  108.0,
+  108.0
+ ],
+ "pins": 1559,
+ "area_um2": 11664.0,
+ "faces": {
+  "E": {
+   "pins": 389,
+   "span_um": 108.0,
+   "per_um": 3.6,
+   "max_10um": 38,
+   "max_10um_per_um": 3.8,
+   "layers": {
+    "M4": 389
+   },
+   "pin_per_track": 0.173,
+   "extent_um": [
+    1.74,
+    106.28
+   ]
+  },
+  "N": {
+   "pins": 390,
+   "span_um": 108.0,
+   "per_um": 3.61,
+   "max_10um": 38,
+   "max_10um_per_um": 3.8,
+   "layers": {
+    "M5": 390
+   },
+   "pin_per_track": 0.173,
+   "extent_um": [
+    1.74,
+    106.28
+   ]
+  },
+  "S": {
+   "pins": 390,
+   "span_um": 108.0,
+   "per_um": 3.61,
+   "max_10um": 38,
+   "max_10um_per_um": 3.8,
+   "layers": {
+    "M5": 390
+   },
+   "pin_per_track": 0.173,
+   "extent_um": [
+    1.74,
+    106.28
+   ]
+  },
+  "W": {
+   "pins": 390,
+   "span_um": 108.0,
+   "per_um": 3.61,
+   "max_10um": 38,
+   "max_10um_per_um": 3.8,
+   "layers": {
+    "M4": 390
+   },
+   "pin_per_track": 0.173,
+   "extent_um": [
+    1.74,
+    106.28
+   ]
+  }
+ },
+ "worst_10um_per_um": 3.8,
+ "face_rule": "PASS"
+}

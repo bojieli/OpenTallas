@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS-CONDITIONAL: place only",
+ "picture": "/srv/opentallas-scratch/claude/codex-hbm/xcal_r2_plan.png",
+ "findings": [
+  "Viewed explicit SRAM placement: >7um external bands,4.32um channels between all SRAM rows and two table halves.",
+  "Previous halo-only r1 failed review: two larger SRAMs only0.024um apart. All three new kits use same explicit coordinates; require placed review before route.",
+  "PDN macro halo2.0um fits within4.32um channels. Clock and1273um2 logic occupy perimeter/channels."
+ ]
+}

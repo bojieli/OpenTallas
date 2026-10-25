@@ -359,3 +359,42 @@ def main(argv=None):
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+def check_pg_domains(P, R):
+    """OWNER DECISION 7 (2026-10-24): IR over SerDes windows -> a separate PHY supply + dedicated bump rows per window.
+    ERROR: a domain names an unknown io window, does not cover its windows, has bumps outside its rect or not over
+    the window, or straps on a non-die layer.  WARN: a serdes window without a domain (not yet adopted)."""
+    pg = P.die.get("pg", {}) or {}
+    doms = pg.get("domains", []) or []
+    io = {w["name"]: w for w in P.die.get("io", []) or []}
+    die_layers = set(P.layer_budget.get("die_layers", []))
+
+    def inside(a, b, e=0.01):
+        return a[0] >= b[0] - e and a[1] >= b[1] - e and a[2] <= b[2] + e and a[3] <= b[3] + e
+    covered = set()
+    for d in doms:
+        r = d["rect_um"]
+        for n in d["io"]:
+            w = io.get(n)
+            if w is None:
+                R.err("pg_domain", f"pg domain {d['name']}: io window {n} not in die.io")
+                continue
+            covered.add(n)
+            if not inside(w["rect_um"], r):
+                R.err("pg_domain", f"pg domain {d['name']}: rect {r} does not cover io window {n} {w['rect_um']}")
+            b = d["bumps"]["rect_um"]
+            if not (b[0] < w["rect_um"][2] and b[2] > w["rect_um"][0] and b[1] < w["rect_um"][3] and b[3] > w["rect_um"][1]):
+                R.err("pg_domain", f"pg domain {d['name']}: bump rows {b} not over io window {n}")
+        if not inside(d["bumps"]["rect_um"], r):
+            R.err("pg_domain", f"pg domain {d['name']}: bump rect outside the domain rect")
+        for g in d["grid"]:
+            if die_layers and g["layer"] not in die_layers:
+                R.err("pg_domain", f"pg domain {d['name']}: strap layer {g['layer']} not a die layer {sorted(die_layers)}")
+            if g["width_um"] >= g["pitch_um"] / 2:
+                R.err("pg_domain", f"pg domain {d['name']}: {g['layer']} width {g['width_um']} >= half pitch (two nets)")
+    for n, w in io.items():
+        if w.get("iface") == "serdes" and n not in covered:
+            R.warn("pg_domain", f"serdes window {n}: no separate PHY supply / bump rows (OWNER decision 7)")
+    return dict(domains=len(doms), serdes_windows=sum(1 for w in io.values() if w.get("iface") == "serdes"),
+                covered=len(covered))

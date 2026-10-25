@@ -56,9 +56,19 @@ python3 -m pytest -q tools/die_plan/
   boundary flops is `clock.insertion_ps` +/- `insertion_tol_ps` (250 +/- 40), and neighbour skew is <= 80 ps.
   `face_xing` = `budgeted` means abutted faces are timed as ordinary synchronous hops under that budget.
   `forwarded_landing` means a forwarded clock plus a landing at every abutted face.
-- **Reset**: there is one async-assert / sync-deassert synchronizer per partition (`sync_stages`). Data and ft flops have
-  no reset (`data_reset` is const false), and each station carries one epoch bit (`epoch_bit` is const true). Release age
-  is counted, never padded.
+- **Reset** (OWNER RESET RULE 2026-10-24, `reset.release: "pipelined"`, tool `reset_tree.py`): exactly ONE root 2-flop
+  synchroniser per die REGION (`reset.regions`, default one region = the die, root at the die `rst_n` pin); its async
+  input is the only reset false path. From it the synchronised reset travels as a SYNCHRONOUS signal through relay flops
+  (`ot_dp_rrelay`) every <= `reset.relay_um` (405) um with EQUAL depth to every clock tap, so every block releases on the
+  same known cycle. A partition takes `arst_n` as a synchronous input: a pin register `u_rst_in` at the reset tap, then
+  an equal-depth relay tree `u_rrl_<k>` of exactly `reset.part_depth` (K, plan-wide; default the deepest type's own
+  depth) stages to every tap (`rst_n_t<i>`); local flops use their nearest tap's `rst_n_t<i>` with normal timed
+  recovery/removal. Every tap of a region releases `sync_stages + E + 1 + K` clocks after the die reset (E = the die
+  relay tree depth, `reset_tree.py die`). Assertion is synchronous too (hold the die reset >= that many clocks at boot).
+  No recovery waivers. Die-level relays need hosting inside partitions (open; `reset_tree.py die` reports it).
+  Legacy `release: "counted"`: one async-assert / sync-deassert synchroniser per partition (per tap for a tap grid);
+  G0 warns that it does not meet the rule. Data and ft flops have no reset (`data_reset` is const false), and each
+  station carries one epoch bit (`epoch_bit` is const true).
 - **Budgets**, with these defaults:
   - `face_pins_per_um` 6 on `face_pin_layers` 2, also measured over any `face_window_um` 10 um window;
   - `pin_track_max` 0.6;
@@ -76,7 +86,7 @@ python3 -m pytest -q tools/die_plan/
 | `ports` | `[{id, src{part,bus}, dst{part,bus}, width, kind data/ctl/clock/reset, face, layers, window_um, order lsb_low/lsb_high}]` |
 | `lanes` | `[{id, ports[], fixed_cycles, reach_um (override, e.g. half-cycle), param}]` |
 | `clock` | `source`, `insertion_ps`, `insertion_tol_ps`, `neighbour_skew_ps`, `face_xing`, `spine{layers, root_um, topology}` |
-| `reset` | `source`, `sync_stages`, `data_reset` (false), `epoch_bit` (true), `release` ("counted") |
+| `reset` | `source`, `sync_stages`, `data_reset` (false), `epoch_bit` (true), `release` ("pipelined" = owner reset rule; "counted" legacy), `relay_um` (405), `part_depth` (K), `regions[]{name, parts, root_um}` |
 | `latency` | `{lanes: {lane: {cycles, stations, faces, fixed, param}}}` (generated) |
 | `budgets` | see above |
 
@@ -182,6 +192,31 @@ python3 tools/die_plan/gen.py latency PLAN.json [--inplace] [--out DIR]
 This writes `latency.lanes` back into the plan (with `--inplace`), `<die>_lat_pkg.sv` (one `localparam int` per lane,
 named by `lane.param` or `LAT_<ID>`) and `<die>_latency.json` (the compiler's input, which carries the plan digest).
 A die-IO lane counts 1 cycle: the boundary flop of its partition end.
+
+## Pipelined reset (`reset_tree.py`, lane RESET, OWNER RESET RULE 2026-10-24)
+
+One tool for every die (replaces the per-tap `u_rsync_t<i>` synchronisers, KV-G3's per-partition tree and S81's
+per-tap `ot_dp_rpipe` chains).
+
+```
+python3 tools/die_plan/reset_tree.py all  PLAN.json        # G0 rule check (also run by check.py: summary.reset)
+python3 tools/die_plan/reset_tree.py type PLAN.json TYPE   # one type: entry, depth K, relays, release clocks
+python3 tools/die_plan/reset_tree.py die  PLAN.json [--out J]   # regions: die depth E, release clocks, hosting
+python3 tools/die_plan/kit_rsync.py PLAN.json TYPE KIT_RTL_DIR [--release pipelined]   # bound kit -> tree
+```
+
+- Switch a plan: `"reset": {..., "release": "pipelined"}` (optional `relay_um`, `part_depth`, `regions`). G0 then
+  checks every type's tree (hops <= relay_um, equal depth K) and the die region trees; `counted` plans get one WARN.
+- Generated kits (`gen.py rtl` + `gen.py phys`): the wrapper gets `u_rst_in` + `u_rrl_<k>`; `gen.py phys` writes
+  `reset_tree.tcl` (FIRM sites, sourced by `face_flops.tcl` before `reset_taps.tcl`; it prints `OT_RESET_TREE ... placed
+  max hop ... PASS|FAIL`). The die top holds the region root synchroniser(s) and the die relay tree (functional model).
+- Bound kits (`bind.py kit-rtl`): run `kit_rsync.py` before `gen.py phys --kit-rtl`; it replaces `u_rst_sync` (or old
+  per-tap / tree lines) and writes `reset_tree.tcl` next to the kit RTL. `--release pipelined` lets a kit trial use the
+  rule before its plan lane switches the plan.
+- Relays are planned at `relay_um - 25` um (legalisation slack) and never inside hard cores / macro leaves (+4.32 um);
+  a tap over a fully tiled macro array gets its relay at the nearest free site (`tap_offset_um`).
+- Boot price: `release_clocks` (die: `sync_stages + E + 1 + K`) in `reset_tree.py die`; boot benches hold the die reset
+  at least that many clocks (assertion is synchronous) and count the release that many clocks after deassert.
 
 ## G2 probes (`g2.py`, redefined by COORD on 10-23)
 

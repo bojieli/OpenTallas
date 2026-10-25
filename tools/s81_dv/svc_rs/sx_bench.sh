@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # S81U-SVC: build + run the dsdv_svc_sx exact bench (16 slices vs the golden engine lane tree).
 # S81U-SVCX4: the split form (8 x dsdv_svc_sx_hrow half-row centre leaves + closed dsfd_dvrly_276 relay stations).
-# Usage (repo root): tools/s81_dv/svc_rs/sx_bench.sh OUTDIR [base|mut1|mut2|mutorder|mutskew|fmask] [seed...]
+# Usage (repo root): tools/s81_dv/svc_rs/sx_bench.sh OUTDIR [base|mut1|mut2|mutorder|mutskew|selmut|fmask] [seed...]
 set -euo pipefail
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 O=$1; V=${2:-base}; shift 2 || true; SEEDS=${*:-1 2}
@@ -9,7 +9,8 @@ D=rtl/dsrom_sys/s81_dv/svc_rs
 DEF=()
 case "$V" in
   base) ;; mut1) DEF=(-DMUT=1);; mut2) DEF=(-DMUT=2);; mutorder) DEF=(-DDSDV_SX_MUT_ORDER);;
-  mutskew) DEF=(-DSX_MUT_SKEW);; fmask) DEF=(-DSX_FMASK);; fmaskmut) DEF=(-DSX_FMASK -DSX_FMASK_MUT);;   # S81-P9-FACE: role-derived face-masked slices
+  mutskew) DEF=(-DSX_MUT_SKEW);; selmut) DEF=(-DOT_HROW_SEL_MUT);;   # S81-KITS-HROW: one replicated select copy wrong
+  fmask) DEF=(-DSX_FMASK);; fmaskmut) DEF=(-DSX_FMASK -DSX_FMASK_MUT);;   # S81-P9-FACE: role-derived face-masked slices
   *) echo "variant?" >&2; exit 2;;
 esac
 mkdir -p "$O/$V"
