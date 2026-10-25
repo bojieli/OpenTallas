@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-25",
+  "reviewer": "CODEX KV",
+  "picture": "results/geom_review/kv_channel_pilot_r3_1025.png",
+  "types": [
+    "kv3_hgi_v6",
+    "kv3_pv_v6"
+  ],
+  "verdict": "PASS-COND",
+  "scope": "G2 skeleton diagnostic only",
+  "findings": [
+    "Baseline v3.9 chains pass through hard cores: do not route baseline again.",
+    "Successor places relay-centroid routes in horizontal/vertical core gaps, adds a station at every turn and caps straight relay hops at405um.",
+    "Pins and core outlines unchanged; wide vertical bundles concentrate in west channels and must pass per-bit congestion probe.",
+    "Clock/reset/PG unchanged; no physical signoff claimed.",
+    "Actual pin-bit reach audit all37 types: max404.616um at input/output endpoints, no endpoint over405um; intermediate straight hops<=405um."
+  ],
+  "conditions": [
+    "Per-bit GRT must show channel capacity and no station legalization into cores.",
+    "Regenerate per-lane latency and R8, price cycles before plan adoption.",
+    "Full kit geometry and clock/PDN review still required before G3."
+  ],
+  "revision": "r3 actual endpoint-bit reach"
+}
