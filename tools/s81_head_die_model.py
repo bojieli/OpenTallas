@@ -47,8 +47,11 @@ BUNDLE_GO_TO_RESULT = 8_359 + 54 + 3        # IOREG 1 / SAFE 1 (tile README, SAF
 # hd_tile pipelining (S81-HEAD 10-24 hd_tile preview review FAIL: merge c1/res/sel_q -144/-288/-422 ps, x skew-line
 # tail -> A x pins 600-700 um): ot_s81hd_tile A_INPUT_STAGES 1 + MERGE_HOP 1 (+3 on the own result) and CMP_STAGES 3
 # (+3 a tile on the chain best; CMP_STAGES 3 after tile_prev2 placement STA: better_q -38 ps); mini array (2 tiles): 8,430 -> 8,439 (tools/s81_head/hd_tile_bench.sh)
-TILE_PIPE = dict(A_INPUT_STAGES=1, MERGE_HOP=1, CMP_STAGES=3)
-BUNDLE_GO_TO_RESULT += TILE_PIPE["A_INPUT_STAGES"] + 2 * TILE_PIPE["MERGE_HOP"]
+# S81/HEAD2 10-24 (COORD ruling on hd_tile prev5 FAIL: x/bd transport): A_SKEW_LINES 1 = per-A-core skew lines (0 cycles,
+# same per-bit depth) + BD_HOPS 2 on each core's own B-root line (+2 on the own result: the B last root is the late one at
+# the A join); mini array 8,441 -> 8,443 (hd_tile_asl_bench_1024.txt)
+TILE_PIPE = dict(A_INPUT_STAGES=1, MERGE_HOP=1, CMP_STAGES=3, A_SKEW_LINES=1, BD_HOPS=2)
+BUNDLE_GO_TO_RESULT += TILE_PIPE["A_INPUT_STAGES"] + 2 * TILE_PIPE["MERGE_HOP"] + TILE_PIPE["BD_HOPS"]
 X_BEATS = D_MODEL * 16 // 512            # 160 beats of 512 b on the stage circuit (XB in)
 ELEM_VIEW = dict(A=dict(job="dshead-elemA-ss-f11f3cc47", um=317.672, ss_ps=133.67, ff_ps=10.81,
                         cells=None, cells_basis="ASSUMED: elemB cells x area ratio (no elemA count committed)"),
