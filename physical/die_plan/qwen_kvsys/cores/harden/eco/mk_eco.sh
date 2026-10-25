@@ -17,7 +17,7 @@ test ! -e "$OUT" || { echo "mk_eco: $OUT exists (never relaunch into a run dir)"
 RS=$(ls -d $KIT/run/results/asap7/*/base); NICK=$(basename $(dirname $RS))
 test -f $RS/5_2_route.odb -a -f $RS/6_final.spef || { echo "mk_eco: $RS lacks 5_2_route.odb / 6_final.spef"; exit 2; }
 mkdir -p $OUT
-rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' --exclude '/run_*.log' $KIT/ $OUT/
+rsync -a --exclude /run --exclude /views --exclude /signoff --exclude '/signoff_*' --exclude '/signoff*.log' --exclude '/run_*.log' --exclude /rc.txt $KIT/ $OUT/
 B=$OUT/run/results/asap7/$NICK/base
 mkdir -p $B $OUT/run/logs/asap7/$NICK/base $OUT/run/reports/asap7/$NICK/base $OUT/run/objects/asap7/$NICK/base
 cp $RS/5_2_route.odb $B/4_cts.odb
