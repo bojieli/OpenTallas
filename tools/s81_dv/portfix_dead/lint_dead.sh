@@ -13,7 +13,7 @@ SRCS="$SRCS $S/ot_s81sl_cap_tr.sv $S/ot_s81sl_cap_rt.sv rtl/dsrom_sys/s81_dv/eng
  rtl/common/landed_parent/ot_pl_land_n32.sv rtl/common/landed_parent/ot_pl_land_rst_copy.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv
  $S/lp/ot_s81sl_capc5r.sv $S/lp/ot_s81sl_capc5r_w3.sv $S/lp/ot_s81sl_capc5r_e6.sv
  $S/cap_end/ot_s81_retn_fwd.sv $S/cap_end/ot_s81sl_cap_trn.sv $S/cap_end/ot_s81sl_cap_rt_w.sv $S/cap_end/ot_s81sl_cap_end.sv
- $S/cap_end/ot_s81sl_capc2_w3.sv $S/cap_end/ot_s81sl_slice_w3.sv
+ $S/cap_end/ot_s81sl_capc2_w3.sv $S/cap_end/ot_s81sl_slice_w3.sv $S/ot_s81sl_slice_c3x.sv
  $L/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv $L/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv $L/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv
  $L/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_e6.sv $L/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv
  $L/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_lp_w3.sv $L/c3x_k8_cap5r/ot_s81sl_slice_c3x_k8_cap5r_w_w3.sv
