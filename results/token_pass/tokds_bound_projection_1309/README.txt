@@ -1,0 +1,5 @@
+Current bound producer-word projection integration; requires binder11972dc07b exact source_bits + source_bit_order=lsb_first.
+BoundSources refuses any strict bind errors, missing emitted bound_top, missing/ambiguous packing. CLI --bound DIR --lane NAME --values actualproducer.json --source-cycle N --out projection.json. Values keyed exact original path.port; @previouslane entries are actual landed forward traces at current physical source edge.
+Maps every original producer bit to exact physical bus bit; supports gapped/multisource HOST/CW when all actual values supplied. Never guesses missing producers or reuses original values across forwarded transport. Keeps source issue edge; computes landing using actual bind_latency bound_stages.
+10053bit KS words preserve age41; gappedCW knownpacking and delayedforward trace PASS. WrongSTARTbit mutant caught; missingproducer/missingforwardtrace/badstrictreport rejected; actualvp_cst208errors partialemit rejected.
+No qualified current S81 bound_top exists yet; no actual RTL token PASS or physical claim. This is the needed boundary ABI adapter before carving actual source RTL.
