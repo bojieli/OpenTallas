@@ -710,3 +710,16 @@ endmodule
 (* keep_hierarchy=1 *)module ot_s81eng_rr_headsel(input wire[2:0]ix,input wire v,output wire[5:0]q);
  for(genvar h=0;h<6;h=h+1)begin:g_s assign q[h]=v&&(ix==3'(h));end
 endmodule
+// PATH-S81/E5 10-25 (GEOM F6 all macro pins): MACRO PIN REGISTERS.  One instance per macro and pin group, kept as its own
+// hierarchy so Yosys opt_merge never folds per-macro copies with equal D back into one broadcast register (the E4
+// wx_de/wx_do/wx_da, rq_ea/q_j and bfxq/u_aq.s0_x merges).  Q drives only that macro's pins (no logic between),
+// so macro_pin_flops.tcl anchors it within 20 um of the pin face.
+(* keep_hierarchy=1 *)module ot_s81eng_pinreg #(parameter integer W=1)(input wire ck,input wire[W-1:0] d,output reg[W-1:0] q);
+ always @(posedge ck)q<=d;
+endmodule
+(* keep_hierarchy=1 *)module ot_s81eng_pinreg_r #(parameter integer W=1)(input wire ck,rn,input wire[W-1:0] d,output reg[W-1:0] q);
+ always @(posedge ck or negedge rn)if(!rn)q<={W{1'b0}};else q<=d;
+endmodule
+(* keep_hierarchy=1 *)module ot_s81eng_pinreg_e #(parameter integer W=1)(input wire ck,en,input wire[W-1:0] d,output reg[W-1:0] q);
+ always @(posedge ck)if(en)q<=d;
+endmodule
