@@ -1,0 +1,12 @@
+TOK-SCHED 2026-10-25 KV strict bind of the folded aef2 plan (runs epyc1|epyc3:/srv/opentallas-scratch2/claude/tok-sched/kvbind)
+Tools/plan: this branch = main 2cf25f6d7 + codex/kv-plan-1309@aef2c3062 (folded plan, merged with POR v3.9s(a)) + CLOCK compose chain d84e78d100/5a5eaf0996/88d25368c5/a65d20eb69.
+As-built: reused Codex fresh ELAB (codex-kv-token-1309/asbuilt.json, recipe inputs byte-identical); recipe = kv45/asbuilt_mission_pass0.json + (mk_recipe.py, then b2 edits):
+  compose = 1024 head eighths (Codex all_head_compose, receipt 2516767d) + 4 ASTK corners (astk_compose.py: strap_corner[b] = ctl.st[b] + zn1..3.zc[b], values checked vs plan),
+  map parts merged, straps += native_composite_.*\.strap_(hid|bsel|corner), internal_stations_types [kv3_sys_c], pack_by_sink, type_canon.
+b1 (heads only): 14 errors = 13 TYPE_SPLIT + EMIT parent ID kv3_hub_Eo (astk strap_corner not composed).  [bind0 Codex: 15 = 14 TYPE_SPLIT + parent ID kv3_hg]
+b2 (heads + ASTK): 13 errors = 13 TYPE_SPLIT only. unbound 0 / tied 0 / undriven 0 / multiply_bound 0, straps 2070, plan_driven 1935;
+  bound top qfd_die emitted (74 files, variants for the splits); POR gate PASS (io_pad_por_n, lock 16 + 3); parent-ID straps + strap tie audit PASS.
+  kv3_phy_v1 split is gone (pack_by_sink). STRICT = FAIL until the 13 splits are fixed structurally (split_diag.json):
+  (P) receiver pad per instance (same type, different lane cycles): kv3_hg (vo_d1 12 vs 14), kv3_hg_v3 (acal 6/7), kv3_hroot (host die/hbm rst pads 6 vs 3, ctl_o_hroot 14/12), parts of pc_v1/pc_v3/hg_v1/pv_v6
+  (I) intra-partition as-built delay depth per instance (kept ot_dp_dly): kv3_pc / pc_v1 / pc_v3 slg<->kvpc_k o_grp 1..5 stages; kv3_pv_v1/v3/v5 vport -> bank 51..94 stages
+  (S) source structure per instance: kv3_hg_v1 ectl.cfg = 5-bit slice at offset 5k of the daisy-chained hroot o_cN bus (width 10..35); kv3_pv_v1..v6 N vs S mirror: banks fed from i_vport_E vs _d1 / astk_E vs astk_W
