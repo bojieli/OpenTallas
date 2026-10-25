@@ -1516,15 +1516,52 @@ def proved_state_constant(L, side, key, seen=None):
     if node in seen:
         return None
     seen.add(node)
-    h = L.hyp.get(node, L.hyp.get(("both", key)))
+    h = L.hyp.get(node)
+    both = h is None
+    if both:
+        h = L.hyp.get(("both", key))
     if not h:
         return None
     if h[0] == "const":
         return int(h[1])
     if h[0] == "eq":
-        c = proved_state_constant(L, h[1], h[2], seen)
+        c = proved_state_constant(L, side if both else h[1], h[2], seen)
         return None if c is None else c ^ int(h[3])
     return None
+
+
+
+def preserved_cohort_copies(L, declared):
+    """Admit renamed copies only when a proved cohort has enough actual FFs."""
+    parent = {}
+    def find(n):
+        parent.setdefault(n, n)
+        if parent[n] != n:
+            parent[n] = find(parent[n])
+        return parent[n]
+    def join(a, b):
+        a, b = find(a), find(b)
+        if a != b:
+            parent[a] = b
+    for k in set(L.gp) & set(L.tp):
+        if k.startswith("ff:"):
+            join(("gold",k), ("gate",k))
+    for (side,k),h in L.hyp.items():
+        if h[0] != "eq" or not k.startswith("ff:"):
+            continue
+        if side == "both":
+            for sd in ("gold","gate"):
+                join((sd,k),(sd,h[2]))
+        else:
+            join((side,k),(h[1],h[2]))
+    need, have = collections.defaultdict(set), collections.defaultdict(set)
+    for k in declared:
+        if proved_state_constant(L,"gold",k) is None:
+            need[find(("gold",k))].add(k)
+    for k in L.tp:
+        if k.startswith("ff:"):
+            have[find(("gate",k))].add(k)
+    return {k for root,ks in need.items() if len(have[root]) >= len(ks) for k in ks}
 
 
 def kept_registers(L, keep_file):
@@ -1560,6 +1597,7 @@ def kept_registers(L, keep_file):
         if m and m.group(1) in relaid:
             gold_rel[m.group(1)] += 1
     renamed = {h[2] for (sd, c), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[2] in L.gp}
+    preserved = preserved_cohort_copies(L, declared)
     missing, const = [], []
     for k in sorted(declared):
         if k in gate or k in renamed:
@@ -1570,7 +1608,8 @@ def kept_registers(L, keep_file):
         if proved_state_constant(L, "gold", k) is not None:
             const.append(k)
             continue
-        missing.append(k)
+        if k not in preserved:
+            missing.append(k)
     return sorted(declared), missing, const
 
 

@@ -700,3 +700,18 @@ def test_keeper_accepts_only_proved_constant_alias_chain(tmp_path):
     assert len(lec.kept_registers(L,keep)[1]) == 3
     L.hyp[('gold','ff:u_dut.a')]=('eq','gold','ff:u_dut.c',0)
     assert len(lec.kept_registers(L,keep)[1]) == 3
+
+
+def test_keeper_cohort_counts_distinct_gate_flops(tmp_path):
+    keep=tmp_path/'copies.keep'
+    keep.write_text(chr(10).join('lec_top/u_dut.g'+str(i) for i in range(5))+chr(10))
+    for count in (4,5):
+        g,gm=_seq(tmp_path,'cohort_gold',['d'],['g'+str(i) for i in range(5)],lambda m,x:{'g'+str(i):x['d'] for i in range(5)})
+        t,tm=_seq(tmp_path,'cohort_gate',['d'],['t'+str(i) for i in range(count)],lambda m,x:{'t'+str(i):x['d'] for i in range(count)})
+        L=lec.Lec(g,gm,t,tm)
+        for i in range(1,5):L.hyp['gold','ff:u_dut.g'+str(i)]=('eq','gold','ff:u_dut.g0',0)
+        for i in range(count):L.hyp['gate','ff:u_dut.t'+str(i)]=('eq','gold','ff:u_dut.g0',0)
+        m,_=L.build(with_compare=True,with_hyp=True)
+        assert set(_sim_prove(m).values())=={'proved'}
+        missing=lec.kept_registers(L,keep)[1]
+        assert bool(missing)==(count<5)
