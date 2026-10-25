@@ -84,7 +84,6 @@ def hub_wi(p):
     assert n == 1, "d4 instance"
     s, n = re.subn(r"    assign w_serdes_host_u_sub_and_kv_phy_slices_sv_197_2_Y = [^\n]*\n", "", s)
     assert n == 1, "AND assign"
-    assert "kv_phy_slices_sv_197" not in s
     s = sub1(s, "        .ck_pad(clk_clk_phy),\n", "        .ck_pad(clk),\n", "ck_pad")
     s = sub1(s, "        .ck_phy({clk_clk_phy, clk_clk_phy, clk_clk_phy, clk_clk_phy, clk_clk_phy, clk_clk_phy, clk_clk_phy, clk_clk_phy}),\n",
              "        .ck_phy({clk, clk, clk, clk, clk, clk, clk, clk}),\n", "ck_phy")
@@ -95,6 +94,7 @@ def hub_wi(p):
              "        .phy_rx_flit(w_fdi_rx_flit),\n", "phy_rx_flit")
     s = sub1(s, "        .phy_rx_v(d4_serdes_host_u_sub_and_kv_phy_slices_sv_197_2_Y[0]),\n", "        .phy_rx_v(w_fdi_rx_v),\n", "phy_rx_v")
     s = sub1(s, "        .phy_up(and_0),\n", "        .phy_up(w_fdi_phy_up),\n", "phy_up")
+    assert "kv_phy_slices_sv_197" not in s
     blk = ("    // " + MARK + " (C1 + C2): host SerDes FDI face.  Each x6 half arrives from its own ot_fdi_phy_cdc (sys_SW / sys_SE: the\n"
            "    // ONE clock crossing) with its valid in the same lane word as its data; the halves are paired by order\n"
            "    // (ot_fdi_join2), replacing AND(W.rx_v, E.rx_v) + the kept as-built ot_dp_dly D=4 the data never got (C1: valid 4\n"
