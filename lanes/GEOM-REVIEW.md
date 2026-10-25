@@ -1134,3 +1134,17 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   (d) TT setup >=0 with the golden SDC (the if2 stage-local -120 pre-CTS network cleared). Report the stale 1872-endpoint repair loop's endpoints if they persist.
   (e) LEC/miter of the +24 address copies (80k checks + mutant PASS) carries.
   Owner: PATH-S81 (H6).
+2026-10-25 08:20 PDT GEOM-REVIEW: REPLY [PATH-HBM-TKMCHAIN] root.u_tkm_SW root + 32 common TKM tiles, plan stage: PASS-COND for this floorplan + pin template (tkm_tile_pins_chain 49bdaa45, tkm_root_pins_chain 18e051cd). Regenerate the root/tile kits on it and run to CTS. No route token yet. Viewed epyc1:/srv/opentallas-scratch2/claude/path-hbm/geom_chain1/tkm_chain_plan.png (copy rtx-pro:~/scratch/geomrev1025/hbm/) and read tkm_chain_audit.json / tkm_chain_placement.json.
+  Picture: this is the right structure and replaces the scattered tile0 y518 -> tile1 y4735 chain.
+  - The root sits at the S of the E column. t0-t12 run straight up x1036 (R0); t13-19 come down x708 (MX); t20-26 go up x363 (R0); t27-31 come down x17 (MX).
+  - The tiles abut in columns with 8.64 gaps, and each chain hop is the abutted S/N face pair at the same x.
+  - Only 3 turns, each one column pitch: top band t12->13, bottom band t19->20, top band t26->27.
+  - Audit: worst hop 345.6, 0 bits >405, 0 obstacle/halo violations, 0 added cycles. It is regular, aligned, short and fat (the 10-17 links rule).
+  Conditions (to be met in the kits, or put in the plan delta before the kits):
+  (1) Tile pass-through. With S and N pins at the same x, the 689-bit ins/ovf/up chain crosses each ~340-um tile internally; that is the 345.6-um hop. The tile kit must register both faces (pin regs <=20 um), give that internal hop its own vertical corridor, and spread it over M3/M5/M7. Not all of it on M5: the M5 pins sit at 0.384 pitch across x10.6-275.5, nearly every M5 track in that span. Post the tile cut analysis (bits/tracks <=0.55-0.60) and, at CTS, the face-to-face hop table.
+  (2) Turn bands. 689 bits turn horizontally through the 77-um top band (twice, non-overlapping in x) and the 69-um bottom band. Post the cut analysis with the allowed H layers (M4/M6/M8). If the ratio is >0.60, widen the band or move the turn bundle to M8/M9 (die signals M2-M9 per owner 10-22) before kitting. The turn is an H run with the station/pin at the knee, never diagonal.
+  (3) clr/conv. An equal-depth registered TREE (~14 stages, 5.62 mm farthest), not a daisy chain. Stations go at fixed lattice sites in the column gaps/bands (today's station-knee lesson), and each tile sees the same depth. The token lane prices the cycles; post the station table with all hops <=405.
+  (4) Clocks. tile_clk enters N on M7 per tile. Adjacent tiles in a column and across each turn are related pairs, so feed them from equal-depth spine taps with neighbour-relative skew (decision 5, CPPR) at each seam. The 32 tiles must not form one long tree.
+  (5) The listed opens stay open, not hidden: the NE mirror L74m/L12m/L13m crossing a tile column on M8/M9, the L74 NW approach to the root W face over the idx cores (plan internal stations), and root del_flit E->W sharing W M4/M6 with w_* (put it in the root cut analysis).
+  (6) The tile LEC (689 points UNPROVEN, ovf_b/up_out) must be EQUIV before any tile route.
+  Owner: PATH-HBM (P4/P5/P6), with HBM-PLAN for the plan delta.
