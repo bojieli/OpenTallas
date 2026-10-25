@@ -39143,6 +39143,26 @@
     "layer": "M9",
     "insertion_ps": 250,
     "insertion_tol_ps": 40,
+    "edge_clocks": [
+     {
+      "port": "clk_coll",
+      "tap_um": [
+       406.08,
+       406.08
+      ],
+      "period_mult": 1,
+      "source": "collective core clock"
+     },
+     {
+      "port": "clk_serdes",
+      "tap_um": [
+       423.36,
+       406.08
+      ],
+      "period_mult": 1,
+      "source": "SerDes PHY parallel clock (die period)"
+     }
+    ],
     "taps": [
      {
       "name": "u_coll_face_s1.ck",
@@ -41303,6 +41323,26 @@
     "layer": "M9",
     "insertion_ps": 250,
     "insertion_tol_ps": 40,
+    "edge_clocks": [
+     {
+      "port": "clk_coll",
+      "tap_um": [
+       406.08,
+       406.08
+      ],
+      "period_mult": 1,
+      "source": "collective core clock"
+     },
+     {
+      "port": "clk_serdes",
+      "tap_um": [
+       423.36,
+       406.08
+      ],
+      "period_mult": 1,
+      "source": "SerDes PHY parallel clock (die period)"
+     }
+    ],
     "taps": [
      {
       "name": "u_coll_face_s0.ck",
@@ -41629,6 +41669,26 @@
     "layer": "M9",
     "insertion_ps": 250,
     "insertion_tol_ps": 40,
+    "edge_clocks": [
+     {
+      "port": "clk_coll",
+      "tap_um": [
+       406.08,
+       829.44
+      ],
+      "period_mult": 1,
+      "source": "collective core clock"
+     },
+     {
+      "port": "clk_coll_blk",
+      "tap_um": [
+       423.36,
+       829.44
+      ],
+      "period_mult": 6,
+      "source": "qfd_ckdiv6 /6 block clock"
+     }
+    ],
     "taps": [
      {
       "name": "u_io_ucie.ck",
@@ -42967,6 +43027,17 @@
     "layer": "M9",
     "insertion_ps": 250,
     "insertion_tol_ps": 40,
+    "edge_clocks": [
+     {
+      "port": "clk_d2d",
+      "tap_um": [
+       406.08,
+       613.44
+      ],
+      "period_mult": 1,
+      "source": "forwarded d2d clock (mesochronous)"
+     }
+    ],
     "taps": [
      {
       "name": "glue_00",

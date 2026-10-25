@@ -251,6 +251,15 @@ SCHEMA = {
                         # for face-register clusters; sink taps never replace the grid (CP1 r8: interior logic
                         # 4.5-5.7k sinks piled on one tap, spread 133 ps)
                         "tap_mode": {"enum": ["grid", "grid+sinks", "sinks"]}, "tap_radius_um": _pos,
+                        # OWNER DEC. 16 / FP32 audit (COORD 10-25): PHY-edge clocks a soft type takes as a bound-only
+                        # port (QC clk_coll / clk_serdes / clk_d2d at the die period, clk_coll_blk = the /6 block
+                        # clock of qfd_ckdiv6).  Each is an interior pin at tap_um and a kit clock (create_clock, period
+                        # period_mult x the die period, synchronous with clk: no exception, no clock group).
+                        "edge_clocks": {"type": "array", "items": {
+                            "type": "object", "required": ["port", "tap_um"], "additionalProperties": False,
+                            "properties": {"port": _name, "tap_um": _xy,
+                                           "period_mult": {"type": "integer", "minimum": 1},
+                                           "source": {"type": "string"}, "note": {"type": "string"}}}},
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
                         # CP2: "early" turns the kind 'core' taps[] into kit clock ports clk_c<k> (core_taps()): the
                         # core's clock pins hang on their own tap, which the spine delivers (insertion_ps - common

@@ -1678,6 +1678,27 @@ def stagger_coll_ft_stations(P, tap_keep=40.0, site_sep=24.0, step=8.64):
             s0 = (round(min(max(a[0], 1.0), W - 1.0), 3), round(min(max(a[1], 1.0), H - 1.0), 3))
             s["regs_um"] = [list(s0), list(best[1])]
 
+# OWNER DEC. 16 + FP32 audit (COORD 10-25): PHY-edge clocks the bound coll / glue partitions take as bound-only ports
+# (bind kit-rtl), declared so the kit SDC clocks them (create_clock, synchronous with clk) instead of leaving them
+# unconstrained: clk_coll / clk_serdes = the collective core clock (die period), clk_d2d = the forwarded d2d clock
+# (mesochronous, die period), clk_coll_blk = qfd_ckdiv6's /6 block clock (5000 ps).
+EDGE_CLOCKS = {"coll_n": [("clk_coll", 1, "collective core clock"), ("clk_serdes", 1, "SerDes PHY parallel clock (die period)")],
+               "coll_s": [("clk_coll", 1, "collective core clock"), ("clk_serdes", 1, "SerDes PHY parallel clock (die period)")],
+               "coll_ucie": [("clk_coll", 1, "collective core clock"), ("clk_coll_blk", 6, "qfd_ckdiv6 /6 block clock")],
+               "glue": [("clk_d2d", 1, "forwarded d2d clock (mesochronous)")]}
+
+
+def edge_clocks(P):
+    """interior pins one lattice step apart, E of the type's clock tap (never on a tap: GRT-0080)."""
+    for tn, lst in EDGE_CLOCKS.items():
+        t = P.types.get(tn)
+        if t is None:
+            continue
+        x0, y0 = t["clock"]["tap_um"]
+        t["clock"]["edge_clocks"] = [{"port": n, "tap_um": [round(x0 + 2 * G8 * (k + 1), 4), round(y0 + G8, 4)],
+                                      "period_mult": m, "source": src} for k, (n, m, src) in enumerate(lst)]
+
+
 def ft_fracs(P):
     """sparse soft partitions give more of their M4-M7 tracks to feedthroughs (G0 cut model default 0.25)."""
     for tn, t in P.types.items():
@@ -2340,6 +2361,7 @@ def main():
     merged = merge_types(P)
     bind_leaves(P)
     ft_fracs(P)
+    edge_clocks(P)
     chans = [{"rect_um": [0.0, 4648.32, SUB_W, 7603.2],
               "reason": "west-strip edge column below coll_ucie: the strip width is set by the serdes PHY depth "
                         "(1563.84 um); coll (786.24 wide) is taller than the edge-column content. PHY bump/decap/ESD "
