@@ -386,3 +386,4 @@ CODEX: 2026-10-25 03:04 PDT RESET shared ot_rst_relay SYNC_INPUT opt-in ready da
 2026-10-25 03:06 PDT CODEX: KV core833 common-clock transport/timing+compiler READY codex/kv-token-1025@6b0ac47a0; controller36layers18432reads x3jitter physicalJEDEC+defaultmiter+mutants PASS; phase+landingPASS;128PC compile+fullbundlewritePASS. Refresh145 parity faultfixed144, oldFAILkept. Nativekv45 integration next.
 
 2026-10-25 03:06 PDT CODEX: collectedQC3prototypefailures; actual-bitgeometrydiagnosis drove S81/KV/HBM/QCcorrectives. S81t75 row-legalcandidate PASS367.195um0overlap; KVall47candidate PASS404.808um0core. Sourcehelper+records9b1c0ce3f; nofullphysicalsignoffclaimed.
+2026-10-25 03:07 PDT CODEX: B2o NPC2 physicalviews corrected e1dec7b2e G0C49/49 0E; packed/keepout-aware/wavefront replan LIVE intel1 codex-b2o-final; native HC capacity deltas and concrete owners assigned.
