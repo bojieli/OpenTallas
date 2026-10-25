@@ -136,6 +136,14 @@ def main():
         return v
     child = take("--child")
     views_out = take("--views-out")
+    # --src <commit>: RTL/spec commit (default SRC); --extra-define A,B: added to the half defines (e.g. OT_SMH_FACE_CLONE,
+    # the opt-in one-register-per-face-pin copies on claude/path-hbm-sm-rtl-1025)
+    global SRC
+    s = take("--src")
+    if s:
+        SRC = subprocess.run(["git", "-C", str(G.REPO), "rev-parse", f"{s}^{{commit}}"], capture_output=True, text=True,
+                             check=True).stdout.strip()
+    extra = [d for d in (take("--extra-define") or "").split(",") if d]
     c = CHILDREN[child]
     half = json.loads(git_show("physical/hbm_next/sm4/hnx_rp3lp3h_n_spec.json"))
     half_s = json.loads(git_show("physical/hbm_next/sm4/hnx_rp3lp3h_s_spec.json"))
@@ -169,7 +177,7 @@ def main():
                              pins=len(pins), family="SM-CHILD", instances=insts, placed=len(insts), recipe_keys=[c["top"]],
                              pin_source=pin_src, snap_max_move_um=round(moved, 4))])
     vf.write_text(json.dumps(V, indent=1) + "\n")
-    rec = dict(files=cspec["sources"], top=c["top"], params={}, defines=half["defines"], source_commit=SRC, read_at_commit=True,
+    rec = dict(files=cspec["sources"], top=c["top"], params={}, defines=half["defines"] + [d for d in extra if d not in half["defines"]], source_commit=SRC, read_at_commit=True,
                util=float(cspec.get("route", {}).get("pd", 0.5)), src_spec=f"{c['spec']}@{SRC}",
                cluster=f"physical/hbm_next/sm4/hnx_rp3lp3h_{{n,s}}_spec.json@{SRC}")
     if cspec.get("macros"):
