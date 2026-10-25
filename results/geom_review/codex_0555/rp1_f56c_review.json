@@ -1,0 +1,27 @@
+{
+  "request": "QC-RP1-F56C",
+  "source": "claude/qc-rp1-1025@027e31509",
+  "picture": "results/geom_review/codex_0555/rp1_f56c_postcts.png",
+  "verdict": "PASS-COND physical clock/floorplan direction, existing diagnostic route only; adoption awaits extracted signoff",
+  "review": "Viewed all three panels. Macro interface registers hug both SRAM pin edges; W address/read corridor and E write strip remain clear. Six regional taps follow face bands; SRAM clock feeds terminate at W-edge clock pins. Both macros use one common early target, a macro clock-latency group based on macro setup/hold windows, rather than per-endpoint tuning. Actual achieved early offset about 7 ps TT / 3-8 ps FF vs regional mean. Sparse lower area carries face bands and clock spine; no new macro wall. PDN continuity is not demonstrated by this image and remains a physical DRC/signoff condition.",
+  "metrics": {
+    "TT_setup_GRT_ps": 213.37,
+    "FF_hold_GRT_ps": 1.68,
+    "TT_pair_setup_hold_ps": [
+      44.11,
+      42.07
+    ],
+    "FF_pair_setup_hold_ps": [
+      34.54,
+      33.65
+    ],
+    "TT_pin_I_ps": 382.5,
+    "FF_pin_I_ps": 307.3
+  },
+  "conditions": [
+    "Route is already running as coordinator-authorized data; this review adds no new variant or offset tuning.",
+    "Use actual per-corner extracted pin-register insertion and parent early-tap budgets per COORD 05:36 item 1; preserve complete source clock trunk in measurements.",
+    "FLOW must explain the 4.50 ps hold discrepancy between repair session +6.18 and independent measure +1.68; extracted FF hold must pass unchanged 25 ps uncertainty.",
+    "Macro-interface write/read related-pair skew and slew must pass extracted TT/FF signoff, all boundary/LEC gates retained."
+  ]
+}
