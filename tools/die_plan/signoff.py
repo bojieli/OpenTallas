@@ -720,7 +720,10 @@ def run_face_guard(disc, clock_ports=()):
         Path(disc["pins"]).with_name("ft_stations.txt") if disc.get("pins") else None)
     try:
         ft1 = face_guard.read_ft1(ft_file) if ft_file and ft_file.is_file() else set()
-        r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re, ft1=ft1)
+        # OWNER 10-25 option B: declared ID straps (kit straps.json / core.json id_strap) need no pin register
+        sl = face_guard.kit_strap_list(disc["kit"]) if disc.get("kit") else []
+        r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re, ft1=ft1,
+                             straps=sl)
     except Exception as e:
         return dict(verdict="NOT RUN", reason=f"face_guard error: {e}", netlist=disc["synth"])
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),

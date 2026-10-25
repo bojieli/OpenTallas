@@ -1889,10 +1889,19 @@ class Binder:
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
         f.write_text(self.emit_top())
         files.append(f)
+        man = dict(schema="opentallas.parent_id_straps.v1", types=self.parent_id_ports,
+                   instances=self.parent_id_values, added_data_cycles=0)
         if any(self.parent_id_ports.values()):
-            (out.parent / "bind_parent_id_straps.json").write_text(json.dumps(dict(
-                schema="opentallas.parent_id_straps.v1", types=self.parent_id_ports,
-                instances=self.parent_id_values, added_data_cycles=0), indent=1) + "\n")
+            (out.parent / "bind_parent_id_straps.json").write_text(json.dumps(man, indent=1) + "\n")
+        # tie-off audit (OWNER 10-25 option B): a literal on a partition pin is legal ONLY on a declared ID strap;
+        # each strap bit then gets its own TIEHI/TIELO next to the pin (die_constant_cells.tcl; strap_ties_check.tcl)
+        import straps as STR
+        aud = STR.audit_top_ties(f.read_text(), man, {self.types[tn]["module"]: tn for tn in self.types})
+        (out.parent / "bind_tie_audit.json").write_text(json.dumps(aud, indent=1) + "\n")
+        if aud["verdict"] != "PASS":
+            raise BindError(f"tie-off audit: {aud['reason']}")
+        if aud["rows"]:
+            (out.parent / "strap_ties_check.tcl").write_text(STR.tie_check_tcl(aud["rows"]))
         return files
 
     def _pname(self, k):
@@ -1930,6 +1939,8 @@ class Binder:
             for b, vals in bitsv.items():
                 v0[b] = vals[0] if vals[0] in "01" else "0"
             if pn in id_decls.get(r, {}):
+                # OWNER 10-25 option B rule 1: the partition-level ID input is a declared strap, named strap_*
+                nm = short_id(f"strap_{r}__{pn}", 80)
                 actual_inputs = {name: len(bits) for name, bits in F.cells[ci].ports.items()
                                  if G.dirs[ci].get(name) == "input"}
                 try:
@@ -1949,14 +1960,14 @@ class Binder:
         missing_ids = {(r, pn) for r, ids in id_decls.items() for pn in ids} - used_ids
         if missing_ids:
             raise BindError(f"parent ID {tn}: declarations do not match bound known strap inputs {sorted(missing_ids)}")
-        self.parent_id_ports[tn] = id_ports
+        self.__dict__.setdefault("parent_id_ports", {})[tn] = id_ports   # test vehicles skip __init__ and emit
         for k, vals in params.items():
             if k[0] == "param":
                 nm = short_id(f"P_{k[1]}__{k[2]}", 80)
                 pdecl.append(f"    parameter {nm} = {vals[0]}")
                 pnames[k] = (nm, None)
         ports = ["    input  wire clk", "    input  wire arst_n"]
-        ports += [f"    input wire [{d['width'] - 1}:0] {nm}   // parent-driven ID, normally timed"
+        ports += [f"    input wire [{d['width'] - 1}:0] {nm}   // parent-tied ID strap (OWNER 10-25 B): quasi-static"
                   for nm, d in sorted(id_ports.items())]
         # die IO inputs (pads) read by this partition's leaves: one partition port per die port, named io_<port>
         io = set()
@@ -2281,14 +2292,14 @@ class Binder:
                     for kk, val in self.tvals[tn][p].items():
                         if kk[0] == "strap" and kk[1] == r and kk[2] == port:
                             v[kk[3]] = val if val in "01" else "0"
-                    if nm in self.parent_id_ports.get(tn, {}):
+                    if nm in self.__dict__.get("parent_id_ports", {}).get(tn, {}):
                         actual_bits = {kk[3]: val for kk, val in self.tvals[tn][p].items()
                                        if kk[0] == "strap" and kk[1] == r and kk[2] == port}
                         if set(actual_bits) != set(range(width)) or any(val not in "01" for val in actual_bits.values()):
                             raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID bits")
                         expr = f"{width}'b{''.join(reversed(v))}"
                         parent_ids.append((nm, expr))
-                        self.parent_id_values.setdefault(p, {})[nm] = dict(width=width,
+                        self.__dict__.setdefault("parent_id_values", {}).setdefault(p, {})[nm] = dict(width=width,
                             value=int(''.join(reversed(v)), 2))
                     else:
                         ov.append(f".{nm}({width}'b{''.join(reversed(v))})")

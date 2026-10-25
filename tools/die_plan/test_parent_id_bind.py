@@ -28,15 +28,18 @@ def test_parent_ids_match_golden_and_wrong_id_is_caught(tmp_path):
     for cmd in ['elab','bind','verify']:
         assert bind.main([cmd,str(plan),'--out',str(out),'--mem','4'])==0
     mod=(out/'rtl'/'bt_ta.sv').read_text()
-    assert 'input wire [3:0] S_u_b_tile_id' in mod
-    assert 'parameter [3:0] S_u_b_tile_id' not in mod
-    assert '.tile_id({S_u_b_tile_id[3], S_u_b_tile_id[2], S_u_b_tile_id[1], S_u_b_tile_id[0]})' in mod or '.tile_id(S_u_b_tile_id[3:0])' in mod
+    assert 'input wire [3:0] strap_u_b_tile_id' in mod
+    assert 'parameter [3:0] strap_u_b_tile_id' not in mod
+    assert '.tile_id({strap_u_b_tile_id[3], strap_u_b_tile_id[2], strap_u_b_tile_id[1], strap_u_b_tile_id[0]})' in mod or '.tile_id(strap_u_b_tile_id[3:0])' in mod
     manifest=json.loads((out/'bind_parent_id_straps.json').read_text())
-    assert manifest['instances']['A0']['S_u_b_tile_id']==dict(width=4,value=5)
-    assert manifest['instances']['A1']['S_u_b_tile_id']==dict(width=4,value=6)
+    assert manifest['instances']['A0']['strap_u_b_tile_id']==dict(width=4,value=5)
+    assert manifest['instances']['A1']['strap_u_b_tile_id']==dict(width=4,value=6)
     assert manifest['added_data_cycles']==0
+    aud=json.loads((out/'bind_tie_audit.json').read_text())   # OWNER 10-25 B: ties only on declared straps
+    assert aud['verdict']=='PASS' and {r[0] for r in aud['rows']}>={'A0','A1'}
+    assert 'ot_strap_tie_check {A0} {strap_u_b_tile_id[0]} 1' in (out/'strap_ties_check.tcl').read_text()
     bad=tmp_path/'wrong_id';shutil.copytree(out,bad)
     top=bad/'rtl'/'bind_tiny_bound_top.sv'
-    text=top.read_text();old=".S_u_b_tile_id(4'b0110)";assert old in text
-    top.write_text(text.replace(old,".S_u_b_tile_id(4'b0111)"))
+    text=top.read_text();old=".strap_u_b_tile_id(4'b0110)";assert old in text
+    top.write_text(text.replace(old,".strap_u_b_tile_id(4'b0111)"))
     assert bind.main(['verify',str(plan),'--out',str(bad),'--mem','4'])!=0
