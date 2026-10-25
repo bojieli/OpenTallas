@@ -67,6 +67,7 @@ def main(argv=None):
     ap.add_argument("--v-layers", nargs="*", default=["M7"])
     ap.add_argument("--die-share", type=float, default=1.0)
     ap.add_argument("--pins-per-um", type=float, default=12.0)
+    ap.add_argument("--pack-per-um", type=float, default=11.5)
     ap.add_argument("--use", type=float, default=0.55)
     ap.add_argument("--knee-max", type=float, default=50.0)
     ap.add_argument("--halo", type=float, default=2.0)
@@ -117,13 +118,50 @@ def main(argv=None):
             fr.append((cur, h))
         return [(max(0.0, p), min(h, q)) for p, q in fr if q - p > 1.0]
 
-    def free_y(n):
+    def station_y_type(tn, grow, gap_max=330.0, slack=40.0):
+        """type-frame y intervals where a horizontal ft line can be stationed within reach: the free x segments
+        (outside the grown hard cores) along the line leave no gap > gap_max between the two faces; widened by
+        `slack` (a short jog from the pin window to the stationable line)."""
+        w, h = T[tn]["outline_um"]
+        cr = tcores(tn, grow)
+        ok = []
+        y = 0.0
+        while y <= h:
+            xs = sorted((max(0.0, r[0]), min(w, r[2])) for r in cr if r[1] < y < r[3])
+            un = []
+            for x0_, x1_ in xs:
+                if un and x0_ <= un[-1][1]:
+                    un[-1][1] = max(un[-1][1], x1_)
+                else:
+                    un.append([x0_, x1_])
+            segs, cur = [(0.0, 0.0)], 0.0
+            for x0_, x1_ in un:
+                if x0_ - cur >= 4.0:
+                    segs.append((cur, x0_))
+                cur = x1_
+            if w - cur >= 4.0:
+                segs.append((cur, w))
+            segs.append((w, w))
+            gmax = max(q[0] - p[1] for p, q in zip(segs, segs[1:]))
+            ok.append((y, gmax <= gap_max))
+            y += 4.32
+        iv = []
+        for y_, g in ok:
+            if g:
+                if iv and y_ - iv[-1][1] <= 4.33:
+                    iv[-1][1] = y_
+                else:
+                    iv.append([y_, y_])
+        return [(max(0.0, p - slack), min(h, q + slack)) for p, q in iv]
+
+    def free_y(n, fn=None):
         """die-y intervals of partition n free of hard cores across its full width (MX/R180 flip y)."""
         p = parts[n]
         h = T[p["type"]]["outline_um"][1]
         oy = p["origin_um"][1]
         fl = p.get("orient", "R0") in ("MX", "R180")
-        return [(oy + (h - q if fl else q0), oy + (h - q0 if fl else q)) for q0, q in free_y_type(p["type"], a.halo)]
+        src_ = fn(p["type"], a.halo) if fn else free_y_type(p["type"], a.halo)
+        return [(oy + (h - q if fl else q0), oy + (h - q0 if fl else q)) for q0, q in src_]
 
     new_win = {}
     for y0 in a.row:
@@ -182,16 +220,19 @@ def main(argv=None):
         def newlen(c):
             """v2: window length of the chain at --pins-per-um on its pin layers (pin_track_max kept)."""
             pr = ports[c[0]]
-            return snap(S.window_for(0.0, S.port_pins_count(pr), pr["layers"], per_um=a.pins_per_um), "up")
+            # sized at --pack-per-um (11.5: the G0 10-um sliding window + gaps stay under the 12/um type budget), at
+            # least 8.64 um (two M6 PG periods: tiny ports keep usable tracks off the PG stripes)
+            return max(8.64, snap(S.window_for(0.0, S.port_pins_count(pr), pr["layers"], per_um=a.pack_per_um), "up"))
 
-        def chain_free(c):
-            """die-y intervals free of hard cores across the full width of every row partition the chain touches."""
+        def chain_free(c, fn=None):
+            """die-y intervals free of hard cores across the full width of every row partition the chain touches
+            (fn=station_y_type: stationable within reach instead)."""
             iv = [(y0, y1)]
             for p in c:
                 for side in ("src", "dst"):
                     n = ports[p][side]["part"]
                     if n in parts and n not in a.fixed:
-                        fr = free_y(n)
+                        fr = free_y(n, fn)
                         iv = [(max(a_, c_), min(b_, d_)) for a_, b_ in iv for c_, d_ in fr
                               if min(b_, d_) - max(a_, c_) > 1.0]
             return iv
@@ -272,7 +313,8 @@ def main(argv=None):
                 for a_, b_ in occ[seam_ports[p]]:
                     cands += [a_ - GAP, b_ + GAP]
             fr = chain_free(c) if top_down else []
-            for a_, b_ in fr:
+            fs = chain_free(c, station_y_type) if top_down else []
+            for a_, b_ in fr + fs:
                 cands += [b_ - 1.0, a_ + 1.0 + L]
             if top_down:
                 vs = sorted({snap(v, "down") for v in cands + [y1 - MARGIN] if v - L >= y0 + MARGIN - 1e-6}, reverse=True)
@@ -281,8 +323,11 @@ def main(argv=None):
                 vs = sorted({snap(v, "up") for v in cands + [y0 + MARGIN] if v + L <= y1 - MARGIN + 1e-6})
                 spans = [(v, snap(v + L, "up")) for v in vs]
             infree = [sp for sp in spans if any(a_ - 1e-6 <= sp[0] and sp[1] <= b_ + 1e-6 for a_, b_ in fr)]
-            for lo, hi in infree + spans:
+            instat = [sp for sp in spans if any(a_ - 1e-6 <= sp[0] and sp[1] <= b_ + 1e-6 for a_, b_ in fs)]
+            for lo, hi in infree + instat + spans:
                 if lo >= y0 + MARGIN - 1e-6 and hi <= y1 - MARGIN + 1e-6 and free(c, lo, hi):
+                    if top_down and (lo, hi) not in infree and (lo, hi) not in instat:
+                        rep.setdefault("unstationable", []).append(dict(chain=c, window=[lo, hi]))
                     put(c, lo, hi)
                     return True
             return False
@@ -451,7 +496,7 @@ def main(argv=None):
                                 continue
                             pv, nx_ = pts[j - 1], pts[j + 1]
                             mh = max(abs(cx - pv[0]) + abs(cy - pv[1]), abs(cx - nx_[0]) + abs(cy - nx_[1]))
-                            key = (mh > reach, abs(dx) + abs(dy), mh)
+                            key = (mh > 0.9 * reach, abs(dx) + abs(dy), mh)   # G0C reach.py: 0.9 x reach
                             if best_ is None or key < best_[0]:
                                 best_ = (key, cx, cy)
                     if best_ is not None:
