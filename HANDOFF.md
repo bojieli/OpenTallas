@@ -591,3 +591,9 @@ CODEX: 2026-10-25 07:54 PDT HBM selected NW TKM II8->L74 two-beat->shared actual
 
 2026-10-25 08:01 PDT CODEX: LEAF0719 four named L14 packed candidates1a2771382 (core gates0E, FT<=375.84um), corrected rxsf N/Wseed1317cfd094; discovered actual native parent CS forwarding gap and special KV physical decomposition gap, root notified; G0C/G2 live.
 2026-10-25 07:58 PDT CODEX: ONE TKM path canonicalroot+32commontiles/exactL74/coherentreturn/goldenlockstep source21e3a5e66c LIVEintel1unit2167534; L74masks and INDEXphase components READY81b82e350d.
+2026-10-25 07:57 PDT CODEX: new canary trigger exposed actual nohup/systemd cgroup lifetime failure (3 incomplete admitted, HBM NOT RUN); fixed independent transient clients15df76b0c2 READY,5 focused checks + real child-survival PASS; original S81 and failure artifacts preserved, no memory mislabel.
+2026-10-25 08:03 PDT CODEX: FLOW/GEOM0719 parked on Claude reset; shared FF CTS proof TT+122.21/FF+.0116 READY5d46, IR source694eef READY; RR real failure insertion/TT setup, mixed-scene attribution corrected; children parking, jobs preserved.
+2026-10-25 08:04 PDT CODEX: KV0719 takeover parked on explicitClaude reset; candidateb0b916 WIP/G0C20, nativegraphcomplete+14TYPE_SPLIT/3R8FAIL retained; exactsourceABI/STARTdeadlockdiagnosed, selectedQwenpathchildrenparking, jobs preserved.
+2026-10-25 08:04 PDT CODEX: PROTO/IR child parked on ClaudeRESET; source694eef529 READY8tests+imageinstaller, RR_s2 FAILI/TTsetup (FF+5.007), noDRT/no ownlivejobs; detailedCODEX-LOG.
+
+2026-10-25 08:04 PDT CODEX: QC plan child parked on reset; criticalSTART1c0e347be4 G0C56/56 READY, strictKV-ID9cbce06154READY62checks+100contracts; owncollectordisabled, inherited7a/7blive, detailedCODEX-LOG.
