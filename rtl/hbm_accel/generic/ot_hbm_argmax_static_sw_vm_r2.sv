@@ -35,7 +35,8 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     parameter [1:0] SID = 2'd0,
     // CNTW (HBM-BIND B2 2026-10-24): width of the E_WAIT / E_END edge counter (all-ones = the STREAM "armed" sentinel).
     // 6 (as built, bit-identical) holds ACK / ELAT <= 62. The B2 die's hub echo crosses the two-stop VM ring (ACK = 13 +
-    // CR_RT, tools/hbm_b2/b2_delays.py: 111 on B2m), so the counter widens to 8 automatically when ACK or ELAT > 62.
+    // CR_RT, tools/hbm_b2/b2_delays.py: 111 on B2m, 183 on B2n), so the counter widens to 8 automatically when ACK or
+    // ELAT > 62 (8 bits hold ACK / ELAT <= 254).
     // Same edges for every ACK / ELAT (bench rtl/test/hbm_netlist_v16/run_argmax_r2_ack.sh; mutant = CNTW 6 at ACK 111).
     parameter integer CNTW = (ACK > 62 || ELAT > 62) ? 8 : 6
 )(

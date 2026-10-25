@@ -217,7 +217,8 @@ def main():
         have = sum(x[2] for x in ls)
         cap.append(dict(src=A, dst=B, kind=kd, need=len(bits), lanes=[x[0] for x in ls], width=have,
                         status='OK' if len(bits) <= have else 'OVER'))
-    out = dict(schema='opentallas.hbm_b2.delays.v1', plan_note=plan.get('note', '')[:200],
+    out = dict(schema='opentallas.hbm_b2.delays.v1', plan_source=plan.get('source', a.plan), plan_sha=plan.get('plan_sha'),
+               plan_note=plan.get('note', '')[:200],
                rule=__doc__.split('\n\n')[0], bank_latency=summ,
                params={k: v for k, v in sorted(params.items())}, derivations=der,
                score_chain=dict(edges=sc, formula='lane(score -> xq_N) + 2 (xq node) + lane(xq_N -> selector)'),
