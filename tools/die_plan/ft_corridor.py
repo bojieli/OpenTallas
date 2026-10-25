@@ -89,7 +89,7 @@ def in_boxes(pts, boxes):
     return hit
 
 
-def place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog=None, step=2.0, look=8.0, band=None):
+def place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog=None, step=2.0, look=8.0, band=None, route=None):
     """retry with a tighter hop target when the bit spread (L corners, lane offsets) exceeds the slack."""
     base = set(alloc.used)
     for proj in (MAX_PROJ, 3 * MAX_PROJ, 6 * MAX_PROJ):
@@ -97,7 +97,8 @@ def place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog=None, step
         for _ in range(12):
             alloc.used = set(base)
             try:
-                return _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, look, extra, proj, band)
+                return _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, look, extra, proj, band,
+                                   route)
             except HopError as e:
                 extra += e.excess + 2.0
             except NoChain:
@@ -162,10 +163,38 @@ def _band_offsets(pts, c, band, axis):
     return off, nc
 
 
-def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, look, extra, max_proj, band=None):
-    """returns (sites per internal station [(width+1)x2 centres], centroids, path, ledger dict)."""
+def manhattan_route(ca, cb, waypoints, fin):
+    """polyline ca -> waypoints -> cb with an axis-aligned corner inserted wherever two points differ in both axes
+    (the corner continues the previous direction; the first leg leaves the in-face perpendicularly)."""
+    pts = [np.asarray(ca, float)] + [np.asarray(p, float) for p in waypoints] + [np.asarray(cb, float)]
+    out = [pts[0]]
+    horiz = fin in "EW"
+    for q in pts[1:]:
+        p = out[-1]
+        if abs(q[0] - p[0]) > 1e-6 and abs(q[1] - p[1]) > 1e-6:
+            out.append(np.array([q[0], p[1]]) if horiz else np.array([p[0], q[1]]))
+            horiz = not horiz
+        elif abs(q[0] - p[0]) > 1e-6:
+            horiz = True
+        elif abs(q[1] - p[1]) > 1e-6:
+            horiz = False
+        else:
+            continue
+        out.append(q)
+    return out
+
+
+def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, look, extra, max_proj, band=None,
+                route=None):
+    """returns (sites per internal station [(width+1)x2 centres], centroids, path, ledger dict).
+
+    route=(waypoints, band_um): the bundle follows the given Manhattan polyline as a band of band_um width, each bit at
+    a fixed LEFT-NORMAL offset by its rank on the in-face (no transposition at turns, no collapse on legs parallel to
+    the in-face, which the plain lane-offset model has on Z/U legs)."""
     k = int(slot["stations"])
     ca, cb = a.mean(axis=0), b.mean(axis=0)
+    if route is not None:
+        return _place_route(slot, a, b, fin, w, h, boxes, alloc, budget, step, extra, max_proj, route)
     off_in, off_out = a - ca, b - cb
     if band is not None:
         # corridor band (straight legs only): the bundle runs inside [lo, hi] across the type, compressing once at
@@ -255,7 +284,93 @@ def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, lo
                                     path=[[round(float(v), 2) for v in p] for p in path])
 
 
-def place_split_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, split_bits):
+def _place_route(slot, a, b, fin, w, h, boxes, alloc, budget, step, extra, max_proj, route):
+    k = int(slot["stations"])
+    ca, cb = a.mean(axis=0), b.mean(axis=0)
+    waypoints, band_um = route
+    path = manhattan_route(ca, cb, waypoints, fin)
+    seg, cum = _cum(path)
+    L = cum[-1]
+    nb = len(a)
+    axis = 1 if fin in "EW" else 0
+    d0 = point_dir(path, 1e-3)[1]
+    n0 = np.array([-d0[1], d0[0]])
+    rank = np.argsort(np.argsort(a[:, axis] * np.sign(n0[axis] or 1.0)))
+    off = (rank / max(nb - 1, 1) - .5) * band_um
+
+    def lane_points(s):
+        p, d = point_dir(path, s)
+        n = np.array([-d[1], d[0]])
+        return p[None] + off[:, None] * n[None]
+
+    bounds = (4.32 + 1, 4.32 + 1, w - 4.32 - 1, h - 4.32 - 1)
+    cs, Q, Dm = [], [], []
+    for s in np.arange(step, L - step / 2, step):
+        q, dist = project(lane_points(s), boxes, bounds)
+        if dist.max() <= max_proj:
+            cs.append(s)
+            Q.append(q)
+            Dm.append(float(dist.mean()))
+    cands, Q, Dm = np.array(cs), np.array(Q), np.array(Dm)
+    n = len(cands)
+    if n < k - 1:
+        raise NoChain(f"{slot[name]}: {n} free station positions on a {L:.0f}-um route, need {k - 1}")
+    H = budget - SLACK - extra
+    ideal = L / k
+    INF = 1e18
+    pen = PROJ_W * Dm ** 2
+    hop_a = np.abs(Q - a[None]).sum(axis=2).max(axis=1)
+    hop_b = np.abs(Q - b[None]).sum(axis=2).max(axis=1)
+    cost = np.full((k - 1, n), INF)
+    prev = np.full((k - 1, n), -1, int)
+    cost[0] = np.where(hop_a <= H, (hop_a - ideal) ** 2 + pen, INF)
+    for i in range(1, n):
+        lo = np.searchsorted(cands, cands[i] - 2 * H - 1)
+        if lo >= i:
+            continue
+        hop = np.abs(Q[lo:i] - Q[i][None]).sum(axis=2).max(axis=1)
+        ok = (hop <= H) & (cands[i] - cands[lo:i] > 2.0)
+        add = np.where(ok, (hop - ideal) ** 2 + pen[i], INF)
+        for j in range(1, k - 1):
+            c = cost[j - 1, lo:i] + add
+            m = int(np.argmin(c))
+            if c[m] < INF:
+                cost[j, i] = c[m]
+                prev[j, i] = lo + m
+    final = cost[k - 2] + np.where(hop_b <= H, (hop_b - ideal) ** 2, INF)
+    i = int(np.argmin(final))
+    if final[i] >= INF:
+        raise NoChain(f"{slot[name]}: no station chain with hops <= {H:.0f} um on a {L:.0f}-um route")
+    chosen = [i]
+    for j in range(k - 2, 0, -1):
+        i = prev[j, i]
+        chosen.append(int(i))
+    chosen = chosen[::-1]
+    sites, cents = [], []
+    for c in chosen:
+        q = Q[c]
+        d = point_dir(path, cands[c])[1]
+        perp = np.array([abs(d[1]), abs(d[0])])
+        out = np.zeros((nb, 2))
+        for bi in np.argsort(q @ perp):
+            p, _ = alloc.allocate(q[bi], 1, max_radius_um=40.0)
+            out[bi] = p[0]
+        sites.append(out)
+        cents.append(out.mean(axis=0))
+    chain = [a, *sites, b]
+    hops = [float(np.abs(q - p).sum(axis=1).max()) for p, q in zip(chain, chain[1:])]
+    if max(hops) > budget + 1e-6:
+        raise HopError(max(hops) - budget)
+    disp = max(float(np.abs(sites[j] - Q[c]).sum(axis=1).max()) for j, c in enumerate(chosen))
+    return sites, cents, path, dict(len_um=round(L, 1), stations=k, route_band_um=band_um,
+                                    positions_um=[round(float(cands[c]), 1) for c in chosen],
+                                    proj_mean_um=[round(float(Dm[c]), 1) for c in chosen],
+                                    max_proj_um=max_proj, hops_um=[round(x, 1) for x in hops],
+                                    max_alloc_disp_um=round(disp, 2),
+                                    path=[[round(float(v), 2) for v in p] for p in path])
+
+
+def place_split_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, split_bits, routes=None):
     """Route contiguous bit bands separately through an L corner, preserving every bit's pipeline depth."""
     if split_bits < 1:
         raise ValueError("split_bits must be positive")
@@ -265,7 +380,9 @@ def place_split_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, split_bi
         for start in range(0, len(a), split_bits):
             stop = min(start + split_bits, len(a))
             try:
-                results.append(place_slot(slot, a[start:stop], b[start:stop], fin, fout, w, h, boxes, alloc, budget))
+                rt = routes[start // split_bits] if routes else None
+                results.append(place_slot(slot, a[start:stop], b[start:stop], fin, fout, w, h, boxes, alloc, budget,
+                                          route=rt))
             except ValueError as e:
                 raise ValueError(f"{slot['name']} bits{start}:{stop} stations{slot['stations']}: {e}") from e
     except Exception:
@@ -285,12 +402,17 @@ def place_split_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, split_bi
     return sites, cents, results[0][2], ledger
 
 
-def place(raw, types, reach_um=405., margin=.98, jogs=None, bands=None, split_bits=None):
+def place(raw, types, reach_um=405., margin=.98, jogs=None, bands=None, split_bits=None, routes=None, order=None,
+          only=None):
+    """routes: {type/slot: [(waypoints, band_um) per split group]} (or one entry when not split);
+    order: {type: [slot names placed first]} (default: widest first)."""
     model = S.Plan(raw)
     ledger = []
     jogs = jogs or {}
     bands = bands or {}
     split_bits = split_bits or {}
+    routes = routes or {}
+    order = order or {}
     for tn in types:
         ty = model.types[tn]
         w, h = ty["outline_um"]
@@ -304,18 +426,33 @@ def place(raw, types, reach_um=405., margin=.98, jogs=None, bands=None, split_bi
         alloc = RowAllocator((4.32, 4.32, w - 4.32, h - 4.32), blocked=boxes, cell_size=CELL,
                              column_pitch=2.16, row_pitch=.27, origin=(4.32, 4.32))
         budget = reach_um * margin - 2.0
-        for slot in sorted(ty["ft_slots"], key=lambda s: -s["width"]):
+        keep = [s for s in ty["ft_slots"] if only and tn in only and s["name"] not in only[tn]]
+        for s in keep:          # slots not re-placed keep their sites; reserve them so nothing lands on top
+            cw_, ch_ = s.get("bit_site_cell_um", CELL)
+            for stage in s.get("bit_sites_um", []):
+                for x, y in stage:
+                    alloc.reserve_rectangle((x, y, x + cw_, y + ch_))
+        for st in ty.get("internal_stations", []):   # leaf internal reg-reg stations: keep a box around each reg
+            half = max(2.0, (float(st.get("bits", 1)) * CELL[0] * CELL[1] * 4) ** .5 / 2)
+            for x, y in st.get("regs_um", []):
+                alloc.reserve_rectangle((x - half, y - half, x + half, y + half))
+        first = order.get(tn, [])
+        todo = [s for s in ty["ft_slots"] if not (only and tn in only) or s["name"] in only[tn]]
+        for slot in sorted(todo, key=lambda s: (s["name"] not in first,
+                                                         first.index(s["name"]) if s["name"] in first else 0,
+                                                         -s["width"])):
             name = slot["name"]
             wd = slot["width"] + 1
             a = np.array([pins[(name + "_i", i)] for i in range(wd)])
             b = np.array([pins[(name + "_o", i)] for i in range(wd)])
             args = (slot, a, b, slot["in_face"], slot["out_face"], w, h, boxes, alloc, budget)
             width = split_bits.get(f"{tn}/{name}")
+            rts = routes.get(f"{tn}/{name}")
             if width:
-                sites, cents, path, led = place_split_slot(*args, split_bits=width)
+                sites, cents, path, led = place_split_slot(*args, split_bits=width, routes=rts)
             else:
                 sites, cents, path, led = place_slot(*args, jog=jogs.get(f"{tn}/{name}"),
-                                                     band=bands.get(f"{tn}/{name}"))
+                                                     band=bands.get(f"{tn}/{name}"), route=rts[0] if rts else None)
             slot["regs_um"] = [a.mean(axis=0).round(4).tolist()] + [c.round(4).tolist() for c in cents]
             slot["bit_site_cell_um"] = list(CELL)
             slot["bit_sites_um"] = [(p - np.array([CELL[0] / 2, CELL[1] / 2])).round(6).tolist() for p in sites]
@@ -335,12 +472,18 @@ def main():
     ap.add_argument("--jog", action="append", default=[], help="type/slot=coord: Z-path jog coordinate")
     ap.add_argument("--band", action="append", default=[], help="type/slot=lo,hi: corridor band of a straight slot")
     ap.add_argument("--split-bits", action="append", default=[], help="type/slot=N: independent contiguous N-bit corridor bands, identical pipeline depth")
+    ap.add_argument("--routes", help="JSON {type/slot: [[waypoints, band_um] per group]}, {type: {order: [slots first]}} under key _order")
     a = ap.parse_args()
     raw = json.loads(Path(a.plan).read_text())
     jogs = {k: float(v) for k, v in (j.split("=") for j in a.jog)}
     bands = {k: tuple(map(float, v.split(","))) for k, v in (j.split("=") for j in a.band)}
     splits = {k: int(v) for k, v in (j.split("=") for j in a.split_bits)}
-    ledger = place(raw, a.types.split(","), jogs=jogs, bands=bands, split_bits=splits)
+    rj = json.loads(Path(a.routes).read_text()) if a.routes else {}
+    order = rj.pop("_order", {})
+    only = {k: set(v) for k, v in rj.pop("_only", {}).items()}
+    rts = {k: [(wp, float(bw)) for wp, bw in v] for k, v in rj.items()}
+    ledger = place(raw, a.types.split(","), jogs=jogs, bands=bands, split_bits=splits, routes=rts, order=order,
+                   only=only)
     Path(a.out or a.plan).write_text(json.dumps(raw, indent=0) + "\n")
     if a.ledger:
         Path(a.ledger).write_text(json.dumps(ledger, indent=1) + "\n")
