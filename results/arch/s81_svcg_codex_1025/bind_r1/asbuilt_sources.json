@@ -1,0 +1,109 @@
+{
+ "modules": 118,
+ "full_files": 12,
+ "lib_files": 44,
+ "ambiguous": {
+  "dsdv_gunit": [
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv",
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_dv/unit/landed/dsdv_gunit_lpwrap.sv",
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/e7e8416624d5_dsdv_gunit.sv"
+  ],
+  "ot_hbm3e_phy_v41x_aw30_e8p5_k": [
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_link/ot_hbm3e_phy_v41x_aw30_e8p5_k.sv",
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/066c5552d2ef_ot_hbm3e_phy_v41x_aw30_e8p5_k.sv"
+  ],
+  "ot_pdie_serdes_col": [
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv",
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/9f8208fb9b5f_ot_pdie_serdes_col.sv"
+  ],
+  "ot_s81sl_ckf": [
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/0dfbefb4022d_ot_s81sl_slice_glue.sv"
+  ],
+  "ot_s81sl_mk": [
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/0dfbefb4022d_ot_s81sl_slice_glue.sv"
+  ],
+  "ot_s81sl_sflt": [
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/0dfbefb4022d_ot_s81sl_slice_glue.sv"
+  ],
+  "ot_s81sl_xr1": [
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/a15cc1de442c_ot_s81sl_xr.sv"
+  ],
+  "ot_s81sl_xr3": [
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+   "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/a15cc1de442c_ot_s81sl_xr.sv"
+  ]
+ },
+ "undefined": [],
+ "substituted": [],
+ "aliased": {},
+ "json": "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/asbuilt.json",
+ "script": "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/asbuilt.ys",
+ "top": "dv_die",
+ "tops": [
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/asb/die_f2b.v"
+ ],
+ "full": [
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/cf9fd8dff30f_ot_s81sl_slice_w3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/b71359bdb2f0_ot_s81sl_slice_lepw_mu_72.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/49b453f024de_ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/b669f12a072c_ot_s81sl_slice_lepw_mab_hbc_prod_mu_72.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/6926fb7ffd74_ot_s81sl_slice_lepe_nh_mu_72.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/e13d2e536149_ot_s81sl_slice_lepe_mu_72.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/a861f5ddc0bd_ot_s81sl_slice_c3x_k8_cap5r_w_w3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/8a220a2a15de_ot_s81sl_slice_c3x_k8_cap5r_lp_w3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/a8f0f9561261_ot_s81sl_slice_c1x_k8_cap5r_w_w3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/a8503a85894d_ot_s81sl_slice_c1x_k8_cap5r_lp_w3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/4989aaa56f76_ot_s81sl_slice_c1x_k8_cap5r_w_e6.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/58eefda4cfd4_s81_asb_models.sv"
+ ],
+ "lib": [
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/2db9ca7221ff_ot_s81sl_xrt.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xr.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/6140e3a15528_ot_s81sl_xg.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/d827faf5d6e8_ot_s81sl_slice.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/d581cb5eeea2_ot_s81sl_eg.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/f0d90cfc96ba_ot_s81sl_capc2_w3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/25419e9ec233_ot_s81dv_norm.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/7b70ff9021d0_ot_s81sl_xgt_xo.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/ac5b419ee15e_ot_s81sl_capc5r_e6.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/5f1c33b56e1c_ot_pl_land.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/475ecc89e7fa_ot_pl_land_reset_forest.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/bddc7bbd1efe_ot_pl_land_kept_enable.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/f2d04cc46e69_ot_pl_land_n32.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/4cefee158a2a_ot_s81sl_slice_lep.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/e370076605fb_ot_s81_mu72_lnland.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/10e029a3144c_ot_s81_mu72_land.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/9abb157047d6_ot_s81ph_coll_lane_safe4.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/2c8cbd9e45a7_dsdv_mu_land.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/d09a584ff0ed_dsdv_hostb_stage_hbc.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/26668e5b0e6f_dsdv_idx_bsplit.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/9267cdf9ab92_ot_s81sl_capc5r_w3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/7a09c1019abf_ot_s81_frs.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_link/ot_hbm3e_phy_v41x_aw30_e8p5_k.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/5a6bd2539f3d_dsfd_rly_masters_gen18.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/db3992dc4655_dsfd_rly_masters_dvh.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/c31a3492234f_dsfd_dvland_pvrd.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/074242d941e1_dsfd_dvland.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/9b7810eb900d_dsfd_ctrl_rg3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/f2b_src/dsdv_svc_rs_fv_f2b.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/21c89f324cc3_dsdv_svc_busland.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/6b32a517e9d2_dsdv_pv_local_n32_source4.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/ae0ac786ca78_dsdv_idx_rg3_nq.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/5c90da130be0_dsdv_idx_rg3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/82630b462be5_dsdv_idx_tree.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/6a4e5e090049_dsdv_hostb_seqhost_mux.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/tree/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/3e4b9c7c281e_dsdv_eng_rr.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/0e4787e0c8c5_dsdv_idx_l20s.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/c43467d1c45e_dsdv_bk_col.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/ca4f0748983d_col_h9_l4_lp_plan_kit.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/a5a36e9c07ca_col_h10_l4_lp_plan_kit.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/source_cache_r6/cd189f21f625_cells_used.v"
+ ]
+}

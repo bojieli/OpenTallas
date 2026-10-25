@@ -1,0 +1,1988 @@
+{
+ "schema": "opentallas.die_plan.bind.v1",
+ "die": "s81",
+ "top": "dv_die",
+ "cells": {
+  "transport": 43541,
+  "leaf": 557,
+  "source": 1,
+  "glue": 16
+ },
+ "dissolved": 104,
+ "partitions": 396,
+ "types": {
+  "bk_sel__t2": {
+   "instances": 1,
+   "module": "s81p_bk_sel__t2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 6,
+   "out_buses": 4,
+   "in_buses": 5
+  },
+  "col_h10_r0_p1__t1": {
+   "instances": 6,
+   "module": "s81p_col_h10_r0_p1__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "col_h10_r0_p4__t1": {
+   "instances": 6,
+   "module": "s81p_col_h10_r0_p4__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "col_h10_r1__t1": {
+   "instances": 12,
+   "module": "s81p_col_h10_r1__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "col_h10_r2__t1": {
+   "instances": 12,
+   "module": "s81p_col_h10_r2__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "col_h9_r0_p1__t1": {
+   "instances": 6,
+   "module": "s81p_col_h9_r0_p1__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "col_h9_r0_p2__t1": {
+   "instances": 12,
+   "module": "s81p_col_h9_r0_p2__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "col_h9_r0_p3__t1": {
+   "instances": 12,
+   "module": "s81p_col_h9_r0_p3__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "col_h9_r0_p4__t1": {
+   "instances": 6,
+   "module": "s81p_col_h9_r0_p4__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "col_h9_r0_p5__t1": {
+   "instances": 12,
+   "module": "s81p_col_h9_r0_p5__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 2
+  },
+  "col_h9_r0_p6__t1": {
+   "instances": 12,
+   "module": "s81p_col_h9_r0_p6__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "col_h9_r1__t1": {
+   "instances": 60,
+   "module": "s81p_col_h9_r1__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "col_h9_r2__t1": {
+   "instances": 60,
+   "module": "s81p_col_h9_r2__t1",
+   "leaves": 1,
+   "params": 1,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "dsdv_slice_c1x_C__t1": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_c1x_C__t1",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 10,
+   "in_buses": 12
+  },
+  "dsdv_slice_c1x_C__t10": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_c1x_C__t10",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 10,
+   "in_buses": 12
+  },
+  "dsdv_slice_c1x_C__t3": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_c1x_C__t3",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 11,
+   "in_buses": 15
+  },
+  "dsdv_slice_c1x_C__t4": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_c1x_C__t4",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 11,
+   "in_buses": 15
+  },
+  "dsdv_slice_c1x_C__t5": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_c1x_C__t5",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 10,
+   "in_buses": 12
+  },
+  "dsdv_slice_c1x_C__t6": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_c1x_C__t6",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 11,
+   "in_buses": 15
+  },
+  "dsdv_slice_c1x_C__t7": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_c1x_C__t7",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 11,
+   "in_buses": 15
+  },
+  "dsdv_slice_c1x_C__t8": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_c1x_C__t8",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 10,
+   "in_buses": 12
+  },
+  "dsdv_slice_c1x_C__t9": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_c1x_C__t9",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 10,
+   "in_buses": 12
+  },
+  "dsdv_slice_c3x_C__t1": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_c3x_C__t1",
+   "leaves": 9,
+   "params": 0,
+   "straps": 6,
+   "out_buses": 11,
+   "in_buses": 13
+  },
+  "dsdv_slice_iq_C__t1": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_iq_C__t1",
+   "leaves": 16,
+   "params": 0,
+   "straps": 6,
+   "out_buses": 12,
+   "in_buses": 13
+  },
+  "dsdv_slice_kv512_C__t1": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_kv512_C__t1",
+   "leaves": 14,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 10,
+   "in_buses": 13
+  },
+  "dsdv_slice_lepe_mu_C__t1": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_lepe_mu_C__t1",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 12,
+   "in_buses": 16
+  },
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_lepe_mu_LP__t2",
+   "leaves": 6,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 5,
+   "in_buses": 5
+  },
+  "dsdv_slice_lepe_nh_mus_C__t1": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_lepe_nh_mus_C__t1",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 12,
+   "in_buses": 16
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_lepe_nh_mus_LP__t1",
+   "leaves": 6,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 4,
+   "in_buses": 5
+  },
+  "dsdv_slice_lepw_mu_C__t1": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_lepw_mu_C__t1",
+   "leaves": 9,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 13,
+   "in_buses": 17
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_lepw_mu_LP__t2",
+   "leaves": 10,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 9,
+   "in_buses": 8
+  },
+  "dsdv_slice_lepw_mus_C__t1": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_lepw_mus_C__t1",
+   "leaves": 8,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 12,
+   "in_buses": 16
+  },
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "instances": 1,
+   "module": "s81p_dsdv_slice_lepw_mus_LP__t2",
+   "leaves": 6,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 4,
+   "in_buses": 5
+  },
+  "eng__t1": {
+   "instances": 1,
+   "module": "s81p_eng__t1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "gunit__t1": {
+   "instances": 1,
+   "module": "s81p_gunit__t1",
+   "leaves": 2,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 3,
+   "in_buses": 4
+  },
+  "iqf__t1": {
+   "instances": 1,
+   "module": "s81p_iqf__t1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 1
+  },
+  "ot_s81sl_kv_leaf__t1": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_kv_leaf__t1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_kv_leaf__t2": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_kv_leaf__t2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_kv_leaf__t3": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_kv_leaf__t3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_kv_leaf__t4": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_kv_leaf__t4",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_kv_leaf__t5": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_kv_leaf__t5",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t1": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t10": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t10",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t11": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t11",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t12": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t12",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t13": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t13",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t14": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t14",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t15": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t15",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t16": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t16",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t17": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t17",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t2": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t21": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t21",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t22": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t22",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t23": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t23",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t24": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t24",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t25": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t25",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t26": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t26",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t27": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t27",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t28": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t28",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t29": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t29",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t3": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t30": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t30",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t31": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t31",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t32": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t32",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t33": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t33",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t34": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t34",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t35": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t35",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t36": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t36",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t37": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t37",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t38": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t38",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t39": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t39",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t4": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t4",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t40": {
+   "instances": 2,
+   "module": "s81p_ot_s81sl_leaf__t40",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t41": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t41",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t42": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t42",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t43": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t43",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t44": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t44",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t45": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t45",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t46": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t46",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t47": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t47",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t48": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t48",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t49": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t49",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t5": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t5",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t50": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t50",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t51": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t51",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t52": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t52",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t53": {
+   "instances": 2,
+   "module": "s81p_ot_s81sl_leaf__t53",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t54": {
+   "instances": 2,
+   "module": "s81p_ot_s81sl_leaf__t54",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t55": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t55",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t56": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t56",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t57": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t57",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t58": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t58",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t59": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t59",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t6": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t6",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t60": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t60",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t61": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t61",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t62": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t62",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t63": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t63",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t64": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t64",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t65": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t65",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t66": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t66",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t67": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t67",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t68": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t68",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t69": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t69",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t7": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t7",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t70": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t70",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t71": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t71",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t72": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t72",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t73": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t73",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t74": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t74",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t75": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t75",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t8": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t8",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "ot_s81sl_leaf__t9": {
+   "instances": 1,
+   "module": "s81p_ot_s81sl_leaf__t9",
+   "leaves": 1,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "phy__t1": {
+   "instances": 1,
+   "module": "s81p_phy__t1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 9,
+   "in_buses": 8
+  },
+  "seqhost__t1": {
+   "instances": 1,
+   "module": "s81p_seqhost__t1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 13,
+   "in_buses": 9
+  },
+  "serdes__t1": {
+   "instances": 1,
+   "module": "s81p_serdes__t1",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "serdes__t10": {
+   "instances": 1,
+   "module": "s81p_serdes__t10",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "serdes__t12": {
+   "instances": 1,
+   "module": "s81p_serdes__t12",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "serdes__t13": {
+   "instances": 1,
+   "module": "s81p_serdes__t13",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "serdes__t2": {
+   "instances": 1,
+   "module": "s81p_serdes__t2",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "serdes__t3": {
+   "instances": 1,
+   "module": "s81p_serdes__t3",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "serdes__t4": {
+   "instances": 1,
+   "module": "s81p_serdes__t4",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "serdes__t5": {
+   "instances": 1,
+   "module": "s81p_serdes__t5",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "serdes__t6": {
+   "instances": 1,
+   "module": "s81p_serdes__t6",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "serdes__t7": {
+   "instances": 1,
+   "module": "s81p_serdes__t7",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "serdes__t8": {
+   "instances": 1,
+   "module": "s81p_serdes__t8",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "serdes__t9": {
+   "instances": 1,
+   "module": "s81p_serdes__t9",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 1
+  },
+  "slice_station__t12": {
+   "instances": 1,
+   "module": "s81p_slice_station__t12",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t14": {
+   "instances": 1,
+   "module": "s81p_slice_station__t14",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t17": {
+   "instances": 1,
+   "module": "s81p_slice_station__t17",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t18": {
+   "instances": 1,
+   "module": "s81p_slice_station__t18",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t20": {
+   "instances": 1,
+   "module": "s81p_slice_station__t20",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t21": {
+   "instances": 1,
+   "module": "s81p_slice_station__t21",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t22": {
+   "instances": 1,
+   "module": "s81p_slice_station__t22",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t23": {
+   "instances": 1,
+   "module": "s81p_slice_station__t23",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t24": {
+   "instances": 3,
+   "module": "s81p_slice_station__t24",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t25": {
+   "instances": 1,
+   "module": "s81p_slice_station__t25",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t26": {
+   "instances": 1,
+   "module": "s81p_slice_station__t26",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t27": {
+   "instances": 1,
+   "module": "s81p_slice_station__t27",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t28": {
+   "instances": 1,
+   "module": "s81p_slice_station__t28",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t29": {
+   "instances": 2,
+   "module": "s81p_slice_station__t29",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t30": {
+   "instances": 3,
+   "module": "s81p_slice_station__t30",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t31": {
+   "instances": 1,
+   "module": "s81p_slice_station__t31",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t35": {
+   "instances": 3,
+   "module": "s81p_slice_station__t35",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t36": {
+   "instances": 1,
+   "module": "s81p_slice_station__t36",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t37": {
+   "instances": 1,
+   "module": "s81p_slice_station__t37",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t38": {
+   "instances": 1,
+   "module": "s81p_slice_station__t38",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t39": {
+   "instances": 2,
+   "module": "s81p_slice_station__t39",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t40": {
+   "instances": 2,
+   "module": "s81p_slice_station__t40",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t41": {
+   "instances": 1,
+   "module": "s81p_slice_station__t41",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t42": {
+   "instances": 2,
+   "module": "s81p_slice_station__t42",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t43": {
+   "instances": 1,
+   "module": "s81p_slice_station__t43",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t44": {
+   "instances": 1,
+   "module": "s81p_slice_station__t44",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t45": {
+   "instances": 1,
+   "module": "s81p_slice_station__t45",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t46": {
+   "instances": 1,
+   "module": "s81p_slice_station__t46",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t47": {
+   "instances": 1,
+   "module": "s81p_slice_station__t47",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t48": {
+   "instances": 1,
+   "module": "s81p_slice_station__t48",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t6": {
+   "instances": 2,
+   "module": "s81p_slice_station__t6",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t7": {
+   "instances": 3,
+   "module": "s81p_slice_station__t7",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "slice_station__t8": {
+   "instances": 1,
+   "module": "s81p_slice_station__t8",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "svc_hi_dsdv_svc_pvso_entry__t1": {
+   "instances": 1,
+   "module": "s81p_svc_hi_dsdv_svc_pvso_entry__t1",
+   "leaves": 3,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 9,
+   "in_buses": 10
+  },
+  "svc_hi_dsdv_svc_pvso_entry__t2": {
+   "instances": 1,
+   "module": "s81p_svc_hi_dsdv_svc_pvso_entry__t2",
+   "leaves": 3,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 8,
+   "in_buses": 10
+  },
+  "svc_hi_dsdv_svc_rs__t1": {
+   "instances": 1,
+   "module": "s81p_svc_hi_dsdv_svc_rs__t1",
+   "leaves": 3,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 4,
+   "in_buses": 6
+  },
+  "svc_hi_dsdv_svc_rs__t2": {
+   "instances": 1,
+   "module": "s81p_svc_hi_dsdv_svc_rs__t2",
+   "leaves": 3,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 6,
+   "in_buses": 7
+  },
+  "svc_hi_dsdv_svc_rs__t3": {
+   "instances": 1,
+   "module": "s81p_svc_hi_dsdv_svc_rs__t3",
+   "leaves": 3,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 6,
+   "in_buses": 7
+  },
+  "svc_hi_dsdv_svc_rs__t4": {
+   "instances": 1,
+   "module": "s81p_svc_hi_dsdv_svc_rs__t4",
+   "leaves": 3,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 6,
+   "in_buses": 6
+  },
+  "svc_hi_dsdv_svc_rs__t5": {
+   "instances": 1,
+   "module": "s81p_svc_hi_dsdv_svc_rs__t5",
+   "leaves": 3,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 5,
+   "in_buses": 6
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "instances": 1,
+   "module": "s81p_svc_hi_dsdv_svc_rs__t6",
+   "leaves": 3,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 5,
+   "in_buses": 7
+  },
+  "svc_lo_dsdv_svc_rs__t1": {
+   "instances": 1,
+   "module": "s81p_svc_lo_dsdv_svc_rs__t1",
+   "leaves": 8,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 9,
+   "in_buses": 8
+  },
+  "svc_lo_dsdv_svc_rs__t2": {
+   "instances": 1,
+   "module": "s81p_svc_lo_dsdv_svc_rs__t2",
+   "leaves": 8,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 10,
+   "in_buses": 9
+  },
+  "svc_lo_dsdv_svc_rs__t3": {
+   "instances": 1,
+   "module": "s81p_svc_lo_dsdv_svc_rs__t3",
+   "leaves": 8,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 10,
+   "in_buses": 9
+  },
+  "svc_lo_dsdv_svc_rs__t4": {
+   "instances": 1,
+   "module": "s81p_svc_lo_dsdv_svc_rs__t4",
+   "leaves": 8,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 9,
+   "in_buses": 10
+  },
+  "svc_lo_dsdv_svc_rs__t5": {
+   "instances": 1,
+   "module": "s81p_svc_lo_dsdv_svc_rs__t5",
+   "leaves": 8,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 11,
+   "in_buses": 9
+  },
+  "svc_lo_dsdv_svc_rs__t6": {
+   "instances": 1,
+   "module": "s81p_svc_lo_dsdv_svc_rs__t6",
+   "leaves": 8,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 9,
+   "in_buses": 8
+  },
+  "svc_lo_dsdv_svc_rs__t7": {
+   "instances": 1,
+   "module": "s81p_svc_lo_dsdv_svc_rs__t7",
+   "leaves": 8,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 10,
+   "in_buses": 9
+  },
+  "svc_lo_dsdv_svc_rs_w__t1": {
+   "instances": 1,
+   "module": "s81p_svc_lo_dsdv_svc_rs_w__t1",
+   "leaves": 8,
+   "params": 0,
+   "straps": 5,
+   "out_buses": 8,
+   "in_buses": 7
+  }
+ },
+ "load_bits": {
+  "clock": 623,
+  "crossing": 588524,
+  "strap": 1292,
+  "reset": 445,
+  "intra_kept_stages": 48340,
+  "intra": 148329,
+  "die_io": 5963
+ },
+ "crossings": 856,
+ "crossing_bits": 588423,
+ "lanes": {
+  "planned": 863,
+  "carrying": 855,
+  "unused": 8,
+  "unused_examples": [
+   "coll__lk_EN2__s_7N_LP",
+   "coll__lk_EN3__s_7N_LP",
+   "coll__lk_WS2__s_0S_LP",
+   "coll__lk_WS3__s_0S_LP",
+   "coll__s_0S_LP__lk_WS2",
+   "coll__s_0S_LP__lk_WS3",
+   "coll__s_7N_LP__lk_EN2",
+   "coll__s_7N_LP__lk_EN3"
+  ],
+  "lane_bits": 588419,
+  "unplanned_bits": 4,
+  "unplanned_pairs": {
+   "svc_14->svc_15": 4
+  },
+  "unplanned_bit_list": [
+   {
+    "src_part": "svc_14",
+    "dst_part": "svc_15",
+    "driver": "u_rsv_14.up_o_n[12]",
+    "sink_ports": [
+     "u_rsv_15.up_i_s"
+    ]
+   },
+   {
+    "src_part": "svc_14",
+    "dst_part": "svc_15",
+    "driver": "u_rsv_14.up_o_n[13]",
+    "sink_ports": [
+     "u_rsv_15.up_i_s"
+    ]
+   },
+   {
+    "src_part": "svc_14",
+    "dst_part": "svc_15",
+    "driver": "u_rsv_14.up_o_n[14]",
+    "sink_ports": [
+     "u_rsv_15.up_i_s"
+    ]
+   },
+   {
+    "src_part": "svc_14",
+    "dst_part": "svc_15",
+    "driver": "u_rsv_14.up_o_n[15]",
+    "sink_ports": [
+     "u_rsv_15.up_i_s"
+    ]
+   }
+  ],
+  "reset_spine_bits": {},
+  "landing_alignment": {
+   "groups": 0,
+   "padded_groups": 0,
+   "padded_bits": 0,
+   "pad_flops": 0,
+   "max_pad": 0
+  },
+  "ft_hops": 1326,
+  "forwarded_bits": 26448,
+  "forwarding_partitions": {
+   "fW5_p1_b0": 1102,
+   "fW5_p4_b0": 1102,
+   "fW0_p1_b0": 1102,
+   "fW0_p4_b0": 1102,
+   "fW3_p1_b0": 1102,
+   "fW2_p1_b0": 1102,
+   "fW4_p1_b0": 1102,
+   "fW4_p4_b0": 1102,
+   "fW1_p1_b0": 1102,
+   "fW1_p4_b0": 1102,
+   "fW3_p4_b0": 1102,
+   "fW2_p4_b0": 1102,
+   "fE3_p4_b0": 1102,
+   "fE2_p4_b0": 1102,
+   "fE4_p1_b0": 1102,
+   "fE4_p4_b0": 1102,
+   "fE1_p1_b0": 1102,
+   "fE1_p4_b0": 1102,
+   "fE3_p1_b0": 1102,
+   "fE2_p1_b0": 1102,
+   "fE5_p1_b0": 1102,
+   "fE5_p4_b0": 1102,
+   "fE0_p1_b0": 1102,
+   "fE0_p4_b0": 1102
+  },
+  "forwarded_pairs": {
+   "s_0N_C->fW5_p2_b0": 1102,
+   "s_0N_C->fW5_p5_b0": 1102,
+   "s_0S_C->fW0_p2_b0": 1102,
+   "s_0S_C->fW0_p5_b0": 1102,
+   "s_1N_C->fW3_p2_b0": 1102,
+   "s_1S_C->fW2_p2_b0": 1102,
+   "s_2N_C->fW4_p2_b0": 1102,
+   "s_2N_C->fW4_p5_b0": 1102,
+   "s_2S_C->fW1_p2_b0": 1102,
+   "s_2S_C->fW1_p5_b0": 1102,
+   "s_3N_C->fW3_p5_b0": 1102,
+   "s_3S_C->fW2_p5_b0": 1102,
+   "s_4N_C->fE3_p5_b0": 1102,
+   "s_4S_C->fE2_p5_b0": 1102,
+   "s_5N_C->fE4_p2_b0": 1102,
+   "s_5N_C->fE4_p5_b0": 1102,
+   "s_5S_C->fE1_p2_b0": 1102,
+   "s_5S_C->fE1_p5_b0": 1102,
+   "s_6N_C->fE3_p2_b0": 1102,
+   "s_6S_C->fE2_p2_b0": 1102,
+   "s_7N_C->fE5_p2_b0": 1102,
+   "s_7N_C->fE5_p5_b0": 1102,
+   "s_7S_C->fE0_p2_b0": 1102,
+   "s_7S_C->fE0_p5_b0": 1102
+  }
+ },
+ "unmapped": 0,
+ "open_outputs": 46,
+ "open_output_examples": [
+  "u_f_0L01.u_r0.xo_o0",
+  "u_f_0L10.u_r0.xo_o0",
+  "u_f_0R01.u_r0.xo_o0",
+  "u_f_0R10.u_r0.xo_o0",
+  "u_f_1L01.u_r0.xo_o0",
+  "u_f_1L10.u_r0.xo_o0",
+  "u_f_2L01.u_r0.xo_o0",
+  "u_f_2L10.u_r0.xo_o0",
+  "u_f_2R01.u_r0.xo_o0",
+  "u_f_2R10.u_r0.xo_o0",
+  "u_f_3L01.u_r0.xo_o0",
+  "u_f_3L10.u_r0.xo_o0",
+  "u_f_4R01.u_r0.xo_o0",
+  "u_f_4R10.u_r0.xo_o0",
+  "u_f_5L01.u_r0.xo_o0",
+  "u_f_5L10.u_r0.xo_o0",
+  "u_f_5R01.u_r0.xo_o0",
+  "u_f_5R10.u_r0.xo_o0",
+  "u_f_6R01.u_r0.xo_o0",
+  "u_f_6R10.u_r0.xo_o0",
+  "u_f_7L01.u_r0.xo_o0",
+  "u_f_7L10.u_r0.xo_o0",
+  "u_f_7R01.u_r0.xo_o0",
+  "u_f_7R10.u_r0.xo_o0",
+  "u_iqf.qc0",
+  "u_iqf.qc1",
+  "u_lk_EN0.pma_tck",
+  "u_lk_EN0.pma_tx",
+  "u_lk_EN1.pma_tck",
+  "u_lk_EN1.pma_tx",
+  "u_lk_ES0.pma_tck",
+  "u_lk_ES0.pma_tx",
+  "u_lk_ES1.pma_tck",
+  "u_lk_ES1.pma_tx",
+  "u_lk_WN0.pma_tck",
+  "u_lk_WN0.pma_tx",
+  "u_lk_WN1.pma_tck",
+  "u_lk_WN1.pma_tx",
+  "u_lk_WN2.pma_tck",
+  "u_lk_WN2.pma_tx",
+  "u_lk_WN3.pma_tck",
+  "u_lk_WN3.pma_tx",
+  "u_lk_WS0.pma_tck",
+  "u_lk_WS0.pma_tx",
+  "u_lk_WS1.pma_tck",
+  "u_lk_WS1.pma_tx"
+ ],
+ "proof": {
+  "unbound": 4,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 1292,
+  "plan_driven": 0
+ },
+ "errors": [
+  "UNPLANNED svc_14 -> svc_15: 4 as-built crossing bits with no plan lane path (3234 b planned on direct lanes)",
+  "EMPTY_PARTITION lk_WS2: no as-built cell maps to it and no lane passes through it",
+  "EMPTY_PARTITION lk_EN3: no as-built cell maps to it and no lane passes through it"
+ ],
+ "n_errors": 3,
+ "warnings": [],
+ "files": [
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/bind_cells.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_bk_sel__t2.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h10_r0_p1__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h10_r0_p4__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h10_r1__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h10_r2__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h9_r0_p1__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h9_r0_p2__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h9_r0_p3__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h9_r0_p4__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h9_r0_p5__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h9_r0_p6__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h9_r1__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_col_h9_r2__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_c1x_C__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_c1x_C__t10.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_c1x_C__t3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_c1x_C__t4.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_c1x_C__t5.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_c1x_C__t6.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_c1x_C__t7.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_c1x_C__t8.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_c1x_C__t9.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_c3x_C__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_iq_C__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_kv512_C__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_lepe_mu_C__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_lepe_mu_LP__t2.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_lepe_nh_mus_LP__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_lepw_mu_C__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_lepw_mu_LP__t2.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_dsdv_slice_lepw_mus_LP__t2.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_eng__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_gunit__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_iqf__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_kv_leaf__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_kv_leaf__t2.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_kv_leaf__t3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_kv_leaf__t4.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_kv_leaf__t5.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t10.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t11.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t12.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t13.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t14.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t15.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t16.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t17.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t2.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t21.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t22.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t23.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t24.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t25.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t26.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t27.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t28.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t29.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t30.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t31.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t32.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t33.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t34.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t35.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t36.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t37.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t38.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t39.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t4.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t40.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t41.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t42.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t43.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t44.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t45.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t46.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t47.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t48.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t49.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t5.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t50.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t51.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t52.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t53.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t54.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t55.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t56.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t57.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t58.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t59.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t6.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t60.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t61.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t62.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t63.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t64.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t65.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t66.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t67.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t68.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t69.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t7.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t70.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t71.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t72.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t73.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t74.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t75.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t8.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_ot_s81sl_leaf__t9.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_phy__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_seqhost__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t10.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t12.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t13.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t2.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t4.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t5.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t6.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t7.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t8.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_serdes__t9.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t12.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t14.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t17.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t18.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t20.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t21.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t22.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t23.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t24.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t25.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t26.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t27.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t28.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t29.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t30.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t31.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t35.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t36.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t37.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t38.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t39.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t40.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t41.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t42.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t43.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t44.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t45.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t46.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t47.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t48.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t6.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t7.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_slice_station__t8.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_hi_dsdv_svc_pvso_entry__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_hi_dsdv_svc_pvso_entry__t2.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_hi_dsdv_svc_rs__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_hi_dsdv_svc_rs__t2.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_hi_dsdv_svc_rs__t3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_hi_dsdv_svc_rs__t4.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_hi_dsdv_svc_rs__t5.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_hi_dsdv_svc_rs__t6.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_lo_dsdv_svc_rs__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_lo_dsdv_svc_rs__t2.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_lo_dsdv_svc_rs__t3.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_lo_dsdv_svc_rs__t4.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_lo_dsdv_svc_rs__t5.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_lo_dsdv_svc_rs__t6.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_lo_dsdv_svc_rs__t7.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81p_svc_lo_dsdv_svc_rs_w__t1.sv",
+  "/srv/opentallas-scratch2/claude/codex-s81-f2b-bind/out/rtl/s81_bound_top.sv"
+ ],
+ "findings": [],
+ "extra_lib": [],
+ "parent_variants": [],
+ "variants": {
+  "instances": 0,
+  "removed_input_bits": {},
+  "list": []
+ },
+ "type_splits": [],
+ "tied_by_port": {},
+ "bus_groups": {
+  "landing_groups": 997,
+  "landing_misaligned_by_lanes": 165,
+  "landing_misaligned_after_pads": 165,
+  "replica_sets": 100,
+  "replica_unequal": 100
+ }
+}
