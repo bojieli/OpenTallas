@@ -565,6 +565,7 @@ class Binder:
         self.findings, self.type_splits = [], []
         self.strict_types = False
         self.tied_by_port = defaultdict(int)
+        self.tied_pins = defaultdict(list)   # (path, port) -> [(bit, value, source)]; every tied bit, uncapped
         self.rewire, self.rewire_stats = {}, {}
         # as-built die-port names of RTL ports (GEN bundle-wrapper masters renamed 1:1), for plan-name affinity
         self.die_port_name = {}
@@ -1001,6 +1002,7 @@ class Binder:
                 return ("strap", s[1])
             cnt["tied"] += 1
             self.tied_by_port[f"{self.F.cells[ci].module}.{pn} <- {s[2]}"] += 1
+            self.tied_pins[(self.F.cells[ci].path, pn, self.F.cells[ci].module)].append((i, s[1], s[2]))
             self.errors.append(f"TIED {pin}[{i}] = {s[1]} ({s[2]})") if cnt["tied"] <= 200 else None
             return ("tied", s[1])
         if k == "top":
@@ -3146,6 +3148,15 @@ def cmd_bind(a):
         files = B.emit(out)
     except BindError as e:
         B.errors.append(f"EMIT {e}")
+    n_tied = sum(len(v) for v in B.tied_pins.values())
+    if n_tied > 200:
+        # the per-bit TIED list is capped at 200 lines; state the true count so a strict report is honest
+        B.errors.append(f"TIED_TOTAL {n_tied} tied bits on {len(B.tied_pins)} leaf pins in "
+                        f"{len(B.tied_by_port)} (type.port <- source) classes (TIED lines capped at 200; "
+                        f"full list bind_tied.json)")
+    (out / "bind_tied.json").write_text(json.dumps(
+        [dict(path=k[0], port=k[1], module=k[2], bits=[b[0] for b in v], values="".join(str(b[1]) for b in v),
+              sources=sorted({b[2] for b in v})) for k, v in sorted(B.tied_pins.items())], indent=0) + "\n")
     rep, lat = B.report()
     if getattr(B, "_reg_hard", None):
         rep["registered_pins"] = {p: dict(v, stations_removed=len(B.in_bus.get(p, [])) + len(B.out_bus.get(p, [])),
