@@ -1,0 +1,14 @@
+{
+  "type": "slice_station__t37",
+  "stage": "CTS proof only",
+  "structural_gate": "PASS",
+  "signed": "NOT RUN",
+  "tt_ft_input_setup_min_ps": 73.88,
+  "tt_ft_input_setup_violators": 0,
+  "ft_input_bits": 6873,
+  "ff_hold_wns_ps": -51.68,
+  "ff_hold_violators": 747,
+  "ff_ft_input_hold_violators": 742,
+  "remaining": "Late clock branches and5 reset entry/relay hold endpoints. No route on old clock tree; density t8 successor first. Initial protected-cell PG problem separately fixed by ft_hold_pg.tcl.",
+  "added_cycles": 0
+}

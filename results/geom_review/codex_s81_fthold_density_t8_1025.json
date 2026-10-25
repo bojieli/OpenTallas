@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS-COND",
+  "picture": "results/geom_review/codex_s81_fthold_density_t8_1025.png",
+  "findings": [
+    "Viewed 39 taps placed at actual register clusters; max933 sinks and151.2um L1 reach. Macro-free sparse field, pins/station coordinates unchanged.",
+    "Small isolated reset clusters get their own taps (tap_min_sinks1) to avoid378..448um clock branches. PG-protected delay cells explicitly connected beforeGPL; reset pins use181eaa1e0 legalization.",
+    "CTS proof only. No route until actual balanced clocks and timing reviewed."
+  ],
+  "source_sha": "9516fdda1",
+  "review_record_before_launch": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-fthold/density_gen/slice_station__t8/codex_geom_review.json"
+}
