@@ -1,0 +1,15 @@
+n	worst_ps	class	kind	pair_um_max	launch_tap->capture_tap	capture_minus_launch_CK_FF_ps(max)	(prog_s7 5_1_grt_prehold FF, fresh GRT, margin 0, vclk FF 381.14)
+254	-14.42	g_prog.g_r.u_lo_wd/q -> g_prog.u_lo/wd_in	reg->macro	-	Ehi>macro_leaf:120 Wlo>macro_leaf:134	11.0
+1	-9.75	g_prog.g_r.u_lo_we/q -> g_prog.u_lo/w_ce_in	reg->macro	-	Wlo>macro_leaf:1	9.6
+171	-9.28	g_prog.g_r.u_hi_wd/q -> g_prog.u_hi/wd_in	reg->macro	-	Ehi>macro_leaf:65 Wlo>macro_leaf:103 Whi>macro_leaf:3	6.2
+8	-9.28	g_prog.g_r.u_lo_wa/q -> g_prog.u_lo/w_addr_in	reg->macro	-	Wlo>macro_leaf:8	10.9
+15	-7.46	g_prog.g_r.u_lo_ra/q -> g_prog.u_lo/r_addr_in	reg->macro	-	Wlo>macro_leaf:8 Whi>macro_leaf:7	9.6
+2	-7.42	g_prog.g_r.u_lo_rce/q -> g_prog.u_lo/r_ce_in	reg->macro	-	Wlo>macro_leaf:1 Whi>macro_leaf:1	7.4
+6	-4.19	g_prog.g_r.u_hi_wa/q -> g_prog.u_hi/w_addr_in	reg->macro	-	Wlo>macro_leaf:6	4.8
+1	-0.70	g_prog.g_r.u_hi_we/q -> g_prog.u_hi/w_ce_in	reg->macro	-	Wlo>macro_leaf:1	1.2
+2	-19.43	g_cb1.u_rbk/q -> u_p1/q/D	reg->reg	22.2	Wlo>Whi:2	24.5
+20	-13.82	u_twd0/q -> g_prog.g_r.u_hi_wd/q/D	reg->reg	41.5	SE>Elo:20	12.6
+5	-12.03	u_p1/q -> g_psel.u/q/D	reg->reg	6.6	Wlo>Whi:5	24.4
+3	-2.26	u_twd1/q -> g_prog.g_r.u_hi_wd/q/D	reg->reg	8.7	Whi>Whi:3	6.3
+1	-0.06	u_twd0/q -> g_prog.g_r.u_lo_wd/q/D	reg->reg	5.7	Wlo>Wlo:1	4.9
+# totals {'reg->macro': 458, 'reg->reg': 31}; input class (port->pin reg) 935 EP not listed

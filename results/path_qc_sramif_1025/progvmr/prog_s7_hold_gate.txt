@@ -1,0 +1,32 @@
+S6_GRT_GATE PASS vclk_ff 381.14 hold_ff_before -72.00 ep 1424 hold_ff 0.04 ep 0 hold_bufs 4150 census in 2788 out 0 int 1362 margin 0 setup_ff_est 404.72 | pass2 pre-hold TT record: S5_GRT_TT setup_tt 320.60 ep 0 slew 0 cap 0 tap_window PASS I_grt 502.70 rc_cal 0.8,0.9 Sun Oct 25 16:46:07 UTC 2026 | Sun Oct 25 17:27:04 UTC 2026
+vclk_ff 381.14 margin 0 hold_bufs_pre 0 new_chain_cells 4150 by_chain_source in 2788 out 0 int 1362
+before in {935 -72.00} out {0 0.00} int {489 -19.43}
+after in {0 0.00} out {0 0.00} int {0 0.00}
+OT_MSCTS_TAP hold_ff TT Ehi n 381 mean 392.8 min 383.0 max 406.6
+OT_MSCTS_TAP hold_ff TT Elo n 763 mean 394.5 min 384.7 max 405.3
+OT_MSCTS_TAP hold_ff TT SE n 391 mean 383.1 min 377.3 max 386.6
+OT_MSCTS_TAP hold_ff TT SW n 714 mean 380.9 min 374.6 max 387.5
+OT_MSCTS_TAP hold_ff TT Whi n 916 mean 401.7 min 392.7 max 411.6
+OT_MSCTS_TAP hold_ff TT Wlo n 1113 mean 376.1 min 367.2 max 387.1
+OT_MSCTS_WINDOW hold_ff TT tap-mean window 25.6 ps (limit 20) FAIL
+OT_MSCTS_MACRO hold_ff TT g_prog\[0\].u_hi clk 368.7 interface regs n 420 mean 378.0 (367.2..405.3) diff -9.3
+OT_MSCTS_MACRO hold_ff TT g_prog\[0\].u_lo clk 377.8 interface regs n 530 mean 377.3 (368.5..390.4) diff +0.5
+OT_MSCTS_MACRO hold_ff TT g_prog\[1\].u_hi clk 393.3 interface regs n 420 mean 400.8 (391.2..406.9) diff -7.5
+OT_MSCTS_MACRO hold_ff TT g_prog\[1\].u_lo clk 392.1 interface regs n 530 mean 397.7 (385.9..411.6) diff -5.6
+OT_MSCTS_TAP hold_ff FF Ehi n 381 mean 382.5 min 373.7 max 394.8
+OT_MSCTS_TAP hold_ff FF Elo n 763 mean 383.5 min 375.1 max 392.9
+OT_MSCTS_TAP hold_ff FF SE n 391 mean 373.8 min 368.9 max 376.6
+OT_MSCTS_TAP hold_ff FF SW n 714 mean 371.2 min 365.8 max 376.4
+OT_MSCTS_TAP hold_ff FF Whi n 916 mean 390.6 min 383.2 max 400.1
+OT_MSCTS_TAP hold_ff FF Wlo n 1113 mean 365.4 min 357.8 max 375.1
+OT_MSCTS_WINDOW hold_ff FF tap-mean window 25.2 ps (limit 20) FAIL
+OT_MSCTS_MACRO hold_ff FF g_prog\[0\].u_hi clk 363.8 interface regs n 420 mean 367.2 (357.8..392.9) diff -3.5
+OT_MSCTS_MACRO hold_ff FF g_prog\[0\].u_lo clk 372.8 interface regs n 530 mean 367.0 (358.8..379.9) diff +5.9
+OT_MSCTS_MACRO hold_ff FF g_prog\[1\].u_hi clk 387.9 interface regs n 420 mean 390.1 (381.7..395.4) diff -2.2
+OT_MSCTS_MACRO hold_ff FF g_prog\[1\].u_lo clk 386.7 interface regs n 530 mean 386.7 (375.7..400.1) diff +0.0
+S6_HOLD_FF_BEFORE -72.00 ep 1424 (vclk FF 381.14, margin 0)
+S6_HOLD_CLASS before in {935 -72.00} out {0 0.00} int {489 -19.43}
+S6_HOLD_PASS 2 start -2.42 ep 24
+S6_HOLD_CLASS after in {0 0.00} out {0 0.00} int {0 0.00}
+S6_HOLD_FF_AFTER 0.04 ep 0 hold buffers 4150 census in 2788 out 0 int 1362
+S6_GATE PASS
