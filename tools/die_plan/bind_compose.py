@@ -49,6 +49,7 @@ def compose(F, rules, spec, Cell):
             raise CompositionError(f'{path}: missing/inout terminal direction')
         nets={b for b,_ in endpoints.values() if isinstance(b,int)}
         boundary={b for b in nets if outside[b]-ms or b in topnets}
+        wire={b:f'n{i}' for i,b in enumerate(dict.fromkeys(b for c in cs for p in sorted(c.ports) for b in c.ports[p] if isinstance(b,int)))}
         ports={}; dirs={}; mapped={}; netports={}; declarations=[]; assigns=[]
         for pn,pd in core['ports'].items():
             if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_$]*',pn): raise CompositionError('unsafe port name')
@@ -72,15 +73,23 @@ def compose(F, rules, spec, Cell):
                     if k in mapped: raise CompositionError(f'{path}: terminal mapped twice')
                     mapped[k]=ref
                 if isinstance(b,int):
-                    if b in netports: raise CompositionError(f'{path}: duplicate physical ports on one net')
-                    netports[b]=(d,ref)
-                    assigns.append(f'    assign '+(f'n{b} = {ref};' if d=='input' else f'{ref} = n{b};'))
+                    netports.setdefault(b,[]).append((d,ref))
                 elif d!='input' or b not in ('0','1'):
                     raise CompositionError(f'{path}: only known input constant straps supported')
         if boundary-set(netports): raise CompositionError(f'{path}: omitted boundary nets {sorted(boundary-set(netports))[:8]}')
         # Check directions against real drivers. An output boundary has exactly one
         # original internal driver; input boundary has none. No driver disappears.
-        for b,(d,_) in netports.items():
+        for b,aliases in netports.items():
+            d=aliases[0][0]
+            if any(ad!=d for ad,_ in aliases) or (d=='output' and len(aliases)!=1):
+                raise CompositionError(f'{path}: incompatible aliases on original net {b}')
+            if len(aliases)>1:
+                required={k for k,(v,di) in endpoints.items() if v==b and di=='input'}
+                if not required.issubset(mapped):
+                    raise CompositionError(f'{path}: live input aliases require exact complete terminal coverage {b}')
+            else:
+                ref=aliases[0][1]
+                assigns.append('    assign '+(f'{wire[b]} = {ref};' if d=='input' else f'{ref} = {wire[b]};'))
             drivers=[k for k,(v,di) in endpoints.items() if v==b and di=='output']
             if len(drivers)!=(1 if d=='output' else 0): raise CompositionError(f'{path}: boundary driver mismatch {b}')
         for b in nets:
@@ -91,9 +100,9 @@ def compose(F, rules, spec, Cell):
             if not drivers and b not in netports:
                 if not constant or constant[0] not in ('0','1'):
                     raise CompositionError(f'{path}: original net has no preserved driver {b}')
-                assigns.append(f"    assign n{b} = 1'b{constant[0]};")
+                assigns.append(f"    assign {wire[b]} = 1'b{constant[0]};")
         body=[f'module {mod} (',',\n'.join(declarations),');']
-        body += [f'    wire n{b};' for b in sorted(nets)] + assigns
+        body += [f'    wire {w};' for w in wire.values()] + assigns
         terminal_record=[]
         for ci,c in enumerate(cs):
             conns=[]
@@ -101,7 +110,7 @@ def compose(F, rules, spec, Cell):
                 expr=[]
                 for i,b in enumerate(bs):
                     key=(c.path,pn,i)
-                    e=(mapped[key] if isinstance(b,str) and key in mapped else f"1'b{b}" if isinstance(b,str) else f'n{b}')
+                    e=(mapped[key] if key in mapped and c.dirs[pn]=='input' else f"1'b{b}" if isinstance(b,str) else wire[b])
                     expr.append(e)
                     terminal_record.append([c.path,pn,i,c.dirs[pn],b,e])
                 conns.append(f'.{ident(pn)}({"{"+", ".join(reversed(expr))+"}"})')
