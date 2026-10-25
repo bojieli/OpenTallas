@@ -290,7 +290,8 @@ Optional FT bit sites: a slot may declare `bit_sites_um` as internal stages j=1.
 python3 tools/die_plan/die_sta.py extract --odb KIT/run/results/asap7/*/base/5_route.odb --out PARTS/<type>   # RCX
 python3 tools/die_plan/die_sta.py top  --plan PLAN.json --out DIE/die_top.v [--views VIEWS]   # = die_top_struct.v
 python3 tools/die_plan/die_sta.py run  --top DIE/die_top.v --parts PARTS --out OUT [--mode ilm|flat|etm]
-        [--corner TT --corner FF] [--spine-branch DIE/spine_branch.json] [--die-spef DIE/6_final.spef] [--threads N]
+        [--corner TT --corner FF] [--spine-branch DIE/spine_branch.json | --spine-tree CTREE_DIR]
+        [--die-spef DIE/6_final.spef] [--crpr-pairs 200] [--intra-pairs 200] [--no-stitch] [--threads N]
 python3 tools/die_plan/die_sta.py compare OUT_FLAT/die_sta.json OUT_ILM/die_sta.json --tol 2
 python3 tools/die_plan/die_sta.py replica --netlist P/6_final.v --spef P/6_final.spef --n N --out DIR   # capacity
 ```
@@ -298,15 +299,42 @@ python3 tools/die_plan/die_sta.py replica --netlist P/6_final.v --spef P/6_final
 `PARTS/<x>/6_final.v|.spef` per partition (found by the module name in the netlist; `6_final.sdc` names the clock
 ports).  Seams are found from the die top (every internal net from a partition output to another partition's input)
 and reported per `src->dst/bus`: worst slack, path count, violating endpoints, TNS, launch/capture clock arrival.
-Constraints follow AGENTS.md (owner 2026-10-24): one clock on die `clk`, propagated through each partition's own routed
-tree, 60 ps setup / 25 ps hold uncertainty; signoff = setup at TT, hold at FF (the default `--corner TT --corner FF`),
-plus the R4 face-flop spread: clock arrival spread over every register launching into / capturing from a seam,
-<= 80 ps per partition at TT and FF (`FFSPREAD`).  SS may be run for information and never gates.
-`verdict.status` is PASS only when TT setup and FF hold ran, every seam slack is >= 0 and every spread <= 80 ps;
-otherwise FAIL or NOT RUN.
+Constraints follow AGENTS.md: one clock on die `clk`, propagated through each partition's own routed tree, 60 ps setup /
+25 ps hold uncertainty, CPPR on (`sta_crpr_enabled 1`).  Gate (owner, BRIEFING decision 5, 2026-10-24): setup at TT
+and hold at FF >= 0 (the default `--corner TT --corner FF`) AND related launch/capture pair skew with CPPR credit
+<= 80 ps at TT and FF, seam pairs and intra-partition pairs.  `verdict`: `setup_<c>`, `hold_<c>`, `pairskew_<c>`
+(worst |skew| with CPPR), `pairskew_<c>_over` (pairs over 80 ps before credit: conservative), `pairskew_<c>_pairs`,
+`ffspread_<c>_info` (max-min face-flop spread per partition, INFO only, no longer a gate), `status` PASS / FAIL /
+NOT RUN.  SS may be run for information and never gates.
+Related pairs: every seam bit's launch registers (fan-in startpoints of the source pin) x capture registers (fan-out
+endpoints of the destination pin), all combinations; skew = capture - launch clock arrival at the CK pins (pin
+arrival properties, no per-bit search; hold side late capture - early launch, + hurts hold; setup side early capture
+- late launch, - hurts setup).  CPPR credit (`check_crpr` of the launch->capture path) is searched for the
+`--crpr-pairs` worst pairs (each seam group's worst hold- and setup-side pair).  Per corner `pairskew[group]` (n,
+max/min raw and `_cppr`, worst pairs, p99 |skew|, over) and the summary `pair_skew`.  Intra-partition pairs (flat
+mode, `--intra-pairs K`): the K worst internal setup and hold paths of every partition instance, skew = capture -
+launch arrival -/+ CPPR -> `intra[inst][max|min]` (worst, pair, p99, over); ILM drops internal paths (not timed),
+a stand-in partition has 0 pairs.
 Die spine: ideal by default (taps at the plan's common latency), `--spine-branch` (CP2 H-tree branch offsets as
-source latency on every tap pin), or the routed die SPEF.  All current plans (s81, qwen_compute, qwen_kvsys, hbm)
-have no channel ports, so every seam wire is a zero-length abutment; channel seams need the routed die SPEF.
+source latency on every tap pin), `--spine-tree DIR` (DIR/ctree.v, module `die_ctree` with input `root` and one output
+`t_<inst>__<port>` per partition clock tap, + DIR/ctree.spef from die_clock.py: instantiated as `u_dieclk`, die clk ->
+root, each tap pin -> its output, one clock on clk, so CPPR sees the real common path; a tap without an output is an
+error), or the routed die SPEF.  All current plans (s81, qwen_compute, qwen_kvsys, hbm) have no channel ports, so
+every seam wire is a zero-length abutment; channel seams need the routed die SPEF.
+
+SPEF stitch (lane CLOCK 10-24).  OpenSTA (2.6.0 and the fleet be771a0) keys a parasitic network on the top net it
+reaches from the driver pin, while `read_spef -path <inst>` leaves a partition's port nets on the partition-internal
+net: every net crossing a partition port (clock tap nets, both halves of every seam) lost its routed RC in the die
+run.  Tiny proof (two instances of a 4-cell partition, port-net RC 1.5 k + 1.5 k on the tap, 0.8 k + 0.8 k / 1 k + 1 k
+on the seam halves, TT): tap-wire delay 16.7 ps -> 0.0, flop CK arrival 49.6 -> 18.2 ps, seam slack 140.3 ->
+190.5 ps (50 ps optimistic) against the flattened netlist + SPEF; identical on both binaries.  Now each partition
+(and die_ctree) SPEF is split once per module into `OUT/stitch/<module>.core.spef` (no port nets, read with `-path`)
+and every top net joining partition ports is written as ONE network in `OUT/stitch/stitch.spef` (port-net segments
+with the instance path prefixed, the partition `*P` nodes as junction nodes, plus the die-level segment of
+`--die-spef`, whose remaining nets go to `die.core.spef`), read last without `-path`.  Coupling caps are grounded on
+the local node (read_spef default).  Port nets joining two top nets (partition feedthroughs) or unconnected ports stay
+in the core SPEF (`stitch.skipped_multi_top`).  Stitched == flattened to < 0.01 ps (test_die_sta.py, flat and ilm,
+with and without die tree / die segment).  `--no-stitch` restores the old reads.
 
 Modes:
 - **ilm** (default, continuous die check): each partition is replaced by its interface logic model, extracted from
