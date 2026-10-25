@@ -1,0 +1,99 @@
+{
+ "interior_rail_sum_mv": 880.217,
+ "interior_note": "tiles >= one per-rail bump pitch (63.64 um) from the die edge: the checkerboard bump lattice (VSS at k x 63.64, VDD at 31.82 + k x 63.64) loses its die-edge VSS row/column (x = 0 / y = 0), so edge tiles see one-sided bump support (edge artefact of the assumed bump map)",
+ "manifest": {
+  "schema": "opentallas.die_trial.ir_case.v1",
+  "plan": "physical/die_plan/hbm_arch/B2r2/die_plan.json",
+  "power": "results/die_trial_1024/hbm_b2/ir/power_map.json",
+  "power_total_w": 642.71,
+  "inner_um": [
+   0.0,
+   0.0,
+   25194.24,
+   18316.8
+  ],
+  "solved_um": [
+   0.0,
+   0.0,
+   25194.24,
+   18316.8
+  ],
+  "guard_um": 0,
+  "tile_um": 172.8,
+  "loads": 15476,
+  "load_w": 642.7125,
+  "grid": {
+   "layers": [
+    "M8",
+    "M9"
+   ],
+   "width_um": 1.92,
+   "pitch_um": 34.56,
+   "offset_um": 17.28,
+   "scale": 4.0,
+   "per_net_coverage": 0.05555555555555555,
+   "plan_exact": false
+  },
+  "partition_pg": "mock-LEF M7 stripes (VDD 4.128 / VSS 4.512 mod 8.64, 0.288 um) on <= tile loads",
+  "bumps": {
+   "array_um": 45.0,
+   "per_net_pitch_um": 63.63961030678927,
+   "size_um": 20.0,
+   "n": {
+    "VDD": 114048,
+    "VSS": 113365
+   },
+   "removed_in": []
+  },
+  "voltage_v": 0.7,
+  "budget_mv": 35.0
+ },
+ "pdn_pass": true,
+ "pg_connected": {
+  "VDD": true,
+  "VSS": true
+ },
+ "done": true,
+ "rails": {
+  "VDD": {
+   "nodes": 15476,
+   "worst_mv": 286.549,
+   "worst_at_um": [
+    24451.01,
+    6307.2
+   ],
+   "worst_inst": "T_141_36",
+   "interior_worst_mv": 286.549,
+   "interior_worst_at_um": [
+    24451.01,
+    6307.2
+   ]
+  },
+  "VSS": {
+   "nodes": 15476,
+   "worst_mv": 593.668,
+   "worst_at_um": [
+    19785.79,
+    259.2
+   ],
+   "worst_inst": "T_114_1",
+   "interior_worst_mv": 593.668,
+   "interior_worst_at_um": [
+    19785.79,
+    259.2
+   ]
+  }
+ },
+ "rail_sum_mv": 880.217,
+ "verdict": "FAIL",
+ "budget_mv": 35.0,
+ "runtime": {
+  "elapsed": "5:44:24",
+  "peak_rss_gb": 201.09,
+  "phases": [
+   "OT_PDN PASS 994 s",
+   "OT_IR net=VDD PASS 1066 s",
+   "OT_IR net=VSS PASS 1586 s"
+  ]
+ }
+}
