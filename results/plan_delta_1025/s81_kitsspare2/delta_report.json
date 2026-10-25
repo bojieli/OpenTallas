@@ -1,0 +1,349 @@
+{
+ "core_taps": [
+  {
+   "type": "bk_sel__t2",
+   "inst": "u_bk_sel.u_sel.u_c",
+   "module": "dsdv_bksel_c",
+   "clk_pin": "ck[0]",
+   "tap_xy": [
+    3736.866,
+    167.064
+   ],
+   "insertion_ps": 430.0,
+   "early_ps": 180.0
+  },
+  {
+   "type": "gunit__t1",
+   "inst": "u_gunit.u_l5",
+   "module": "dsdv_gunit_l5",
+   "clk_pin": "clk",
+   "tap_xy": [
+    1531.59,
+    135.912
+   ],
+   "insertion_ps": 520.0,
+   "early_ps": 270.0
+  }
+ ],
+ "xrt3_pins": {
+  "S": {
+   "pins": 3217,
+   "face_um": 207.36,
+   "per_layer": {
+    "M3": 1609,
+    "M5": 1608
+   },
+   "pins_per_um_per_layer": 8.28
+  },
+  "W": {
+   "pins": 2070,
+   "face_um": 164.16,
+   "per_layer": {
+    "M4": 1035,
+    "M6": 1035
+   },
+   "pins_per_um_per_layer": 6.85
+  },
+  "N": {
+   "pins": 1678,
+   "face_um": 207.36,
+   "per_layer": {
+    "M3": 839,
+    "M5": 839
+   },
+   "pins_per_um_per_layer": 4.32
+  },
+  "E": {
+   "pins": 2157,
+   "face_um": 164.16,
+   "per_layer": {
+    "M4": 1080,
+    "M6": 1077
+   },
+   "pins_per_um_per_layer": 7.14
+  }
+ },
+ "xrt3": [
+  {
+   "type": "dsdv_slice_c3x_C__t1",
+   "inst": "u_c.u_xr",
+   "old_origin": [
+    388.8,
+    794.88
+   ],
+   "origin": [
+    570.24,
+    1019.52
+   ],
+   "orient": "MX"
+  }
+ ],
+ "xrt3_fill": 0.3843,
+ "knee": [
+  {
+   "type": "slice_station__t46",
+   "slot": "ft0",
+   "old_stations": 4,
+   "new_stations": 4,
+   "added_cycles": 0,
+   "worst_paired_bit_um": 362.3230000000001,
+   "targets_um": [
+    [
+     1442.8800000000035,
+     640.2125631768954
+    ],
+    [
+     1082.1600000000026,
+     640.2125631768954
+    ],
+    [
+     721.4400000000018,
+     640.2125631768954
+    ],
+    [
+     360.72000000000094,
+     640.2125631768954
+    ],
+    [
+     0.0,
+     640.2125631768954
+    ]
+   ],
+   "bank_stats": [
+    {
+     "count": 277,
+     "max_distance_um": 1.6029999999975644,
+     "span_um": [
+      2.160000000000082,
+      58.860000000000014
+     ],
+     "spine_segment": 0,
+     "fraction": 0.25000000000000006
+    },
+    {
+     "count": 277,
+     "max_distance_um": 1.6029999999983602,
+     "span_um": [
+      2.159999999999968,
+      58.860000000000014
+     ],
+     "spine_segment": 0,
+     "fraction": 0.5
+    },
+    {
+     "count": 277,
+     "max_distance_um": 1.602999999999156,
+     "span_um": [
+      2.160000000000025,
+      58.860000000000014
+     ],
+     "spine_segment": 0,
+     "fraction": 0.75
+    }
+   ],
+   "added_flops": 0
+  },
+  {
+   "type": "slice_station__t46",
+   "slot": "ft1",
+   "old_stations": 4,
+   "new_stations": 4,
+   "added_cycles": 0,
+   "worst_paired_bit_um": 308.577,
+   "targets_um": [
+    [
+     36.07809386281588,
+     0.0
+    ],
+    [
+     36.07809386281588,
+     306.7200000000008
+    ],
+    [
+     36.07809386281588,
+     613.4400000000016
+    ],
+    [
+     36.07809386281588,
+     920.1600000000025
+    ],
+    [
+     36.07809386281588,
+     1226.8800000000033
+    ]
+   ],
+   "bank_stats": [
+    {
+     "count": 277,
+     "max_distance_um": 1.8570000000008449,
+     "span_um": [
+      60.48000000000001,
+      2.6999999999999886
+     ],
+     "spine_segment": 0,
+     "fraction": 0.25
+    },
+    {
+     "count": 277,
+     "max_distance_um": 1.8570000000015838,
+     "span_um": [
+      60.48000000000001,
+      2.699999999999932
+     ],
+     "spine_segment": 0,
+     "fraction": 0.5
+    },
+    {
+     "count": 277,
+     "max_distance_um": 1.8570000000023796,
+     "span_um": [
+      60.48000000000001,
+      2.7000000000000455
+     ],
+     "spine_segment": 0,
+     "fraction": 0.75
+    }
+   ],
+   "added_flops": 0
+  },
+  {
+   "type": "slice_station__t46",
+   "slot": "ft2",
+   "old_stations": 4,
+   "new_stations": 4,
+   "added_cycles": 0,
+   "worst_paired_bit_um": 362.30100000000016,
+   "targets_um": [
+    [
+     0.0,
+     518.4693140794221
+    ],
+    [
+     360.7200000000009,
+     518.4693140794221
+    ],
+    [
+     721.4400000000018,
+     518.4693140794221
+    ],
+    [
+     1082.1600000000026,
+     518.4693140794221
+    ],
+    [
+     1442.8800000000035,
+     518.4693140794221
+    ]
+   ],
+   "bank_stats": [
+    {
+     "count": 277,
+     "max_distance_um": 1.5810000000009268,
+     "span_um": [
+      2.160000000000025,
+      60.480000000000075
+     ],
+     "spine_segment": 0,
+     "fraction": 0.25
+    },
+    {
+     "count": 277,
+     "max_distance_um": 1.5810000000017226,
+     "span_um": [
+      2.159999999999968,
+      60.480000000000075
+     ],
+     "spine_segment": 0,
+     "fraction": 0.5
+    },
+    {
+     "count": 277,
+     "max_distance_um": 1.581000000002632,
+     "span_um": [
+      2.160000000000082,
+      60.480000000000075
+     ],
+     "spine_segment": 0,
+     "fraction": 0.75
+    }
+   ],
+   "added_flops": 0
+  },
+  {
+   "type": "slice_station__t46",
+   "slot": "ft3",
+   "old_stations": 4,
+   "new_stations": 4,
+   "added_cycles": 0,
+   "worst_paired_bit_um": 362.3010000000003,
+   "targets_um": [
+    [
+     0.0,
+     579.7318700361011
+    ],
+    [
+     360.7200000000009,
+     579.7318700361011
+    ],
+    [
+     721.4400000000018,
+     579.7318700361011
+    ],
+    [
+     1082.1600000000026,
+     579.7318700361011
+    ],
+    [
+     1442.8800000000035,
+     579.7318700361011
+    ]
+   ],
+   "bank_stats": [
+    {
+     "count": 277,
+     "max_distance_um": 1.5810000000010405,
+     "span_um": [
+      2.160000000000025,
+      60.479999999999905
+     ],
+     "spine_segment": 0,
+     "fraction": 0.25
+    },
+    {
+     "count": 277,
+     "max_distance_um": 1.5810000000018363,
+     "span_um": [
+      2.159999999999968,
+      60.479999999999905
+     ],
+     "spine_segment": 0,
+     "fraction": 0.5
+    },
+    {
+     "count": 277,
+     "max_distance_um": 1.5810000000027458,
+     "span_um": [
+      2.160000000000082,
+      60.479999999999905
+     ],
+     "spine_segment": 0,
+     "fraction": 0.75
+    }
+   ],
+   "added_flops": 0
+  }
+ ],
+ "station_clock": {
+  "slice_station__t46": {
+   "tap_um": [
+    725.76,
+    613.44
+   ],
+   "layer": "M9",
+   "tap_mode": "density",
+   "tap_target_sinks": 600,
+   "tap_max_sinks": 1500,
+   "tap_radius_um": 150.0
+  }
+ }
+}
