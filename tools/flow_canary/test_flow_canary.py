@@ -149,3 +149,13 @@ def test_submit_dry(tmp_path):
     import subprocess
     subprocess.run(["git", "init", "-q", str(tmp_path / "src")], check=True)
     assert T.main(["--src", str(tmp_path / "src"), "--root", str(tmp_path / "runs"), "--state", str(tmp_path / "st.json")]) == 2  # no origin: fetch fails, NOT RUN
+
+
+def test_hold_gate_verdict_is_not_a_tcl_crash():
+    import canary
+    log = ("OT_HOLD_GATE FAIL FF wns_ps -152.02 endpoints 1053 (true negative slack)\n"
+           "Error: hold_gate.tcl, 40 structural FF hold failure: revise plan/RTL/boundary before repair\n")
+    m = list(canary.TCL_ERR_RE.finditer(log))
+    assert m and all(canary.GATE_ERR_RE.search(log[x.start():].split("\n", 1)[0]) for x in m)
+    crash = "Error: cts.tcl, 6 can't read \"rt_named_nets\": no such variable\n"
+    assert not canary.GATE_ERR_RE.search(crash)
