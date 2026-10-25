@@ -922,14 +922,26 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
         return not any(x0 < px < x1 and y0 < py < y1 for x0, y0, x1, y1 in boxes)
     if (not boxes and not strict) or free(x, y):
         return x, y
-    for r in range(1, int(max(w, h) / TAP_STEP_UM) + 1):
-        d = r * TAP_STEP_UM
-        ring = [(x + i * TAP_STEP_UM, y + s * d) for i in range(-r, r + 1) for s in (-1, 1)] + \
-               [(x + s * d, y + i * TAP_STEP_UM) for i in range(-r + 1, r) for s in (-1, 1)]
-        ok = [p for p in ring if free(*p)]
-        if ok:
-            px, py = min(ok, key=lambda p: ((p[0] - x) ** 2 + (p[1] - y) ** 2, p))
-            return round(px, 4), round(py, 4)
+    # Legal regions have axis-aligned boundaries. Project each boundary onto the same origin-centred 2.16-um
+    # lattice as the old expanding rings; their Cartesian product contains the nearest legal ring site. This
+    # avoids enumerating millions of interior points when an analog window pushes a tap hundreds of um.
+    def candidates(origin, extent, edges):
+        values = {origin}
+        for edge in [clear, extent - clear] + list(edges):
+            q = (edge - origin) / TAP_STEP_UM
+            for k in (math.floor(q), math.ceil(q)):
+                v = round(origin + k * TAP_STEP_UM, 8)
+                if clear - 1e-7 <= v <= extent - clear + 1e-7:
+                    values.add(v)
+        return values
+    obs = boxes + [(a - clear, b - clear, a + clear, b + clear) for a, b in taken]
+    xs = candidates(x, w, [v for a, b, c, d in obs for v in (a, c)])
+    ys = candidates(y, h, [v for a, b, c, d in obs for v in (b, d)])
+    ok = [(px, py) for px in xs for py in ys if free(px, py)]
+    if ok:
+        px, py = min(ok, key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7),
+                                       (p[0] - x) ** 2 + (p[1] - y) ** 2, p))
+        return round(px, 4), round(py, 4)
     raise ValueError(f"no legal clock tap site in {t.get('module', 'type')} near ({x}, {y}); "
                      f"clearance {clear} um, {len(boxes)} keepouts")
 
