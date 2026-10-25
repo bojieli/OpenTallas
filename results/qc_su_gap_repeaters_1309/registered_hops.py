@@ -19,7 +19,7 @@ for master,name,body in re.findall(r'\b((?:DFF|BUF|INV)\w+)\s+(\S+)\s*\((.*?)\);
 actual={}
 for ln in (base/'su_gap_apply/post_dpl_insts.tsv').read_text().splitlines():
  a=ln.split('\t');z=list(map(float,a[2:6]));actual[a[0]]=((z[0]+z[2])/2000,(z[1]+z[3])/2000)
-ports={find(n):(float(x),float(y)) for n,x,y in re.findall(r'place_pin -pin_name \{([^}]+)\} -layer \S+ -location \{([\d.]+) ([\d.]+)\}',(base/'su_gap_predpl/io.tcl').read_text())}
+ports={find(n):(float(x),float(y)) for n,x,y in re.findall(r'place_pin -pin_name \{?([^{} ]+)\}? -layer \S+ -location \{([\d.]+) ([\d.]+)\}',(base/'su_gap_predpl/io.tcl').read_text())}
 def origin(net):
  seen=set();hops=[]
  while net in driver:

@@ -1,12 +1,11 @@
 {
  "scope": "Every DFF D endpoint plus every driven physical BPin, combinational BUF/INV aliases traced back to FF Q/QN or input BPin; actual postDPL FFcenters/exact plannedBPinpoints; constants excluded",
- "count": 11956,
+ "count": 11964,
  "max_um": 380.1329999999999,
  "status": "PARTIAL_SKELETON_REGISTERED_LEDGER_NOT_FULL_BOUND_PROOF",
- "unknown_count": 1571,
+ "unknown_count": 1569,
  "unknown_classes": {
-  "intentional_functional_core_nd_stub": 1569,
-  "reset_start_alias_unresolved": 2
+  "intentional_functional_output_boundary_stub_exactset": 1569
  },
  "over405_count": 0,
  "worst_pairs": [
@@ -152,6 +151,8 @@
   }
  ],
  "full_ledger_path": "/srv/opentallas-scratch2/claude/codex-qc-plan-1309/registered_hops.json",
- "full_ledger_sha256": "165db986f5d9abea9ab9117926f25d5bc70cb02c6414257e1781f306ae5831a4",
- "gate": "GRT HELD pending registered endpoint scope decision or preserved anchor variant"
+ "full_ledger_sha256": "55285554beec98743eca821faa73e17cd41aaefaed36d1edc1a902438ba6116d",
+ "gate": "GRT HELD pending registered endpoint scope decision or preserved anchor variant",
+ "scope_contract": "tools/die_plan/g2.py:325 deliberately undriven functional OUT D ports, NOT modeled core legs. Exactunknownset equals all outputbus width+epoch bits; every FT/reset/run registeredpair resolved. No fullfunctionalhardcore proof.",
+ "g2_source_sha256": "54260189e454e3de540c808140782745c2d91d9a0eae0179a9e8b9421c76c05e"
 }
