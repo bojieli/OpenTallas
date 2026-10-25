@@ -1,0 +1,140 @@
+{
+  "schema": "opentallas.hbm.selected_tkm.fieldmap.v1",
+  "module": "ot_hbm_tkm_path_ft21",
+  "data_bits": 3749,
+  "side_bits": 33,
+  "beat_bits": 2341,
+  "root_instance": "actual_root",
+  "source_scope": "NW raw native packed envelope into shared SW TKM root; remaining envelope returned through rx_word/rx_side",
+  "direct_root_fields": [
+    {
+      "root_port": "arg_mode",
+      "rx_word_lsb": 19,
+      "width": 1
+    },
+    {
+      "root_port": "cfg_n",
+      "rx_word_lsb": 50,
+      "width": 12
+    },
+    {
+      "root_port": "cfg_k",
+      "rx_word_lsb": 37,
+      "width": 13
+    },
+    {
+      "root_port": "cfg_g",
+      "rx_word_lsb": 20,
+      "width": 8
+    },
+    {
+      "root_port": "cfg_gbase",
+      "rx_word_lsb": 28,
+      "width": 8
+    },
+    {
+      "root_port": "cfg_pf",
+      "rx_word_lsb": 115,
+      "width": 16
+    },
+    {
+      "root_port": "cfg_nout",
+      "rx_word_lsb": 62,
+      "width": 13
+    },
+    {
+      "root_port": "cfg_obase",
+      "rx_word_lsb": 75,
+      "width": 40
+    },
+    {
+      "root_port": "cfg_rbase",
+      "rx_word_lsb": 131,
+      "width": 40
+    },
+    {
+      "root_port": "cfg_has_r",
+      "rx_word_lsb": 36,
+      "width": 1
+    },
+    {
+      "root_port": "del_slot",
+      "rx_word_lsb": 2351,
+      "width": 4
+    },
+    {
+      "root_port": "del_valid",
+      "rx_word_lsb": 2355,
+      "width": 4
+    }
+  ],
+  "runtime_start": {
+    "root_port": "start",
+    "rx_word_lsb": 2359,
+    "width": 1,
+    "extra_register_edges": 1,
+    "tx_producer_schedule": "send one edge earlier than original unframed logical start"
+  },
+  "compact_flit": {
+    "root_port": "del_flit",
+    "width": 2116,
+    "native_flit_width": 2180,
+    "native_rx_word_lsb": 171,
+    "source_note": "Exact assigned live bit subset; omitted native bits are discarded by selected actual core cut",
+    "ranges": [
+      {
+        "destination_lsb": 0,
+        "rx_word_lsb": 171,
+        "width": 520
+      },
+      {
+        "destination_lsb": 520,
+        "rx_word_lsb": 699,
+        "width": 8
+      },
+      {
+        "destination_lsb": 528,
+        "rx_word_lsb": 715,
+        "width": 521
+      },
+      {
+        "destination_lsb": 1049,
+        "rx_word_lsb": 1244,
+        "width": 8
+      },
+      {
+        "destination_lsb": 1057,
+        "rx_word_lsb": 1260,
+        "width": 521
+      },
+      {
+        "destination_lsb": 1578,
+        "rx_word_lsb": 1789,
+        "width": 8
+      },
+      {
+        "destination_lsb": 1586,
+        "rx_word_lsb": 1805,
+        "width": 521
+      },
+      {
+        "destination_lsb": 2107,
+        "rx_word_lsb": 2334,
+        "width": 8
+      },
+      {
+        "destination_lsb": 2115,
+        "rx_word_lsb": 2350,
+        "width": 1
+      }
+    ]
+  },
+  "serializer_masks_hex": {
+    "CONTROL_MASK": "100000000004000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ff800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a01",
+    "HOLD_MASK": "a00000001fffffffffffffffff0000000000000000ffffe0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "SIDE_CONTROL_MASK": "80005000",
+    "SIDE_HOLD_MASK": "1007fa00f"
+  },
+  "clock_reset_id_contract": "clock_reset_id_ft21.json",
+  "adoption": "WIP_BOUND_R2_NUMERIC_GATE_PENDING_AND_LEGACY_RESET_ID_VIEWS_BLOCKED"
+}
