@@ -1,0 +1,21 @@
+{
+  "boot_source": "/srv/opentallas-scratch2/claude/wt/tok-ds-bind178/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+  "split_source": "/srv/opentallas-scratch2/claude/wt/codex-s81-bindadopt-0719/rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv",
+  "cycles_added": 0,
+  "status_cycles_added": 0,
+  "mutant": 0,
+  "actual_cores": [
+    "u_e",
+    "u_h0",
+    "u_h1"
+  ],
+  "required_defines": [
+    "OT_S81ENG_RR_N32"
+  ],
+  "preserves_boot_decoder": true,
+  "sha256": {
+    "boot": "810b0ddd9b3e12df6946e37f7d93039dcb4594367ee2be2d0ce1132fd6845e35",
+    "split": "8eb6cf736ed85cb0e98ea612decbf90d6874c574541db38cb7eab1c528cc5710",
+    "emitted": "cb6f6848fa0ac1879f7c450f358daa3416ed677089b007e7bec78de394b15775"
+  }
+}
