@@ -1906,11 +1906,13 @@ class Binder:
         mod = t["module"]
         params = self.tparams[tn]
         pdecl, pnames = [], {}
-        from parent_id_straps import type_parent_id_straps, validate_parent_id_straps
-        try:
-            id_decls = type_parent_id_straps(t)
-        except ValueError as e:
-            raise BindError(str(e)) from e
+        id_decls = {}
+        if any(d.get("parent_id_straps") for d in t.get("contents", []) + t.get("hard_cores", [])):
+            from parent_id_straps import type_parent_id_straps, validate_parent_id_straps
+            try:
+                id_decls = type_parent_id_straps(t)
+            except ValueError as e:
+                raise BindError(str(e)) from e
         id_ports = {}
         # strap parameters: one per (leaf, port), the port width, constant bits in place
         straps = defaultdict(dict)
