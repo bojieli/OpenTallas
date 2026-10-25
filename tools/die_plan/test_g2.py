@@ -594,3 +594,16 @@ def test_part_probe_wavefront_outputs_have_registered_drivers():
             assert tree['max_hop_um'] <= RT.relay_um(P)
             checked += len(outs)
     assert checked
+
+
+def test_probe_blockages_keeps_hard_cores_no_leaf_names():
+    """KV-PLAN 10-25: a planned hard core not named by any content leaf (KV head_eighth) is still an obstruction,
+    up to the partition signal ceiling unless the core declares obs_max."""
+    t = {"contents": [{"inst": "head2__g_front_0__u_front", "module": "x"},
+                      {"inst": "bq", "module": "y", "origin_um": [0, 0], "outline_um": [5, 5]}],
+         "hard_cores": [{"inst": "head2_e0", "module": "kv3_head_eighth_e0", "origin_um": [17.28, 17.28],
+                         "outline_um": [216.0, 216.0]},
+                        {"inst": "bq_0", "module": "c", "origin_um": [0, 0], "outline_um": [2, 2]},
+                        {"inst": "e1", "module": "d", "origin_um": [300, 0], "outline_um": [9, 9], "obs_max": "M5"}]}
+    obs = {o["inst"]: o.get("obs_max") for o in g2.probe_blockages(t, "M7")}
+    assert obs == {"bq_0": "M5", "head2_e0": "M7", "e1": "M5"}
