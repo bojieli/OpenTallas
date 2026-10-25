@@ -206,7 +206,8 @@ def test_check_setup_counts():
 
 def test_session_tcl_spef_vs_rcx_and_no_verdict_derate():
     t = signoff.session_tcl("ss", ["/ml0/m_ss.lib"], spef="/x/6_final.spef")
-    assert "read_spef /base/6_final.spef" in t and "read_liberty /ml0/m_ss.lib" in t and "_RVT_SS_" in t
+    assert "read_spef /base/6_final.spef" in t and "ot_lib_load SS /out/libraries.json" in t
+    assert "foreach l [glob" not in t and "read_liberty /ml0/m_ss.lib" not in t
     # the derate comes after the verdict numbers and is removed before the clock measurement
     assert t.index("so_timing STD") < t.index("set_timing_derate -late 1.05") < t.index("unset_timing_derate")
     t = signoff.session_tcl("ff", [], spef=None)

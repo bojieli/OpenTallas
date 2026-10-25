@@ -17,7 +17,7 @@ Macro / hard-child liberty files come from the kit config.mk ADDITIONAL_LIBS (/w
 
 ENGINE: OpenSTA as built into OpenROAD in the pinned ORFS image (openroad/orfs:latest = :asap7lock), one process per
 corner (MCMM = TT + FF (+ SS for information with --corners tt,ff,ss) x 1 functional mode, run in parallel), ASAP7 NLDM
-RVT+LVT+SLVT liberty of that corner.
+the exact TC/BC_LIB_FILES selected by the routed kit make configuration, including macro views.
 
 CORNER RULE (owner, restated 2026-10-24, AGENTS.md c7ce2ed69a; supersedes the 2026-09-30 SS rule): timing closes at the
 TYPICAL corner -- setup at TT, hold at FF, 60 / 25 ps uncertainty, related flop-pair skew with CPPR <= 80 ps (spread is INFO).  SS never gates; with
@@ -285,12 +285,73 @@ if {[llength $so_vclk] == 1} {
 }
 """
 
+EXACT_TIMING_LIBRARIES_TCL = r"""# Resolve the exact libraries selected by this kit's ORFS make configuration.
+# No directory glob or installed-version fallback is permitted.
+proc ot_lib_json_string {value} {
+  return "\"[string map [list \\ \\\\ \" \\\" \n \\n \r \\r \t \\t] $value]\""
+}
+proc ot_lib_validate {corner files} {
+  if {$corner ni {TT FF SS}} {error "OT_TIMING_LIBS: unsupported corner $corner"}
+  if {![llength $files]} {error "OT_TIMING_LIBS: empty exact library list"}
+  set seen {}; set groups {}; set present {}
+  foreach f $files {
+    if {[file pathtype $f] ne "absolute"} {error "OT_TIMING_LIBS: relative library $f"}
+    if {[regexp {[*?\[\]$]} $f] || ![file isfile $f]} {error "OT_TIMING_LIBS: missing or unresolved library $f"}
+    set path [file normalize $f]
+    if {[dict exists $seen $path]} {error "OT_TIMING_LIBS: duplicate library $f"}
+    dict set seen $path 1
+    if {[regexp {^asap7sc7p5t_([^_]+)_(RVT|LVT|SLVT)_(TT|FF|SS)_nldm_} [file tail $f] -> group vt actual]} {
+      if {$actual ne $corner} {error "OT_TIMING_LIBS: wrong corner $f"}
+      set key $group/$vt
+      if {[dict exists $groups $key]} {error "OT_TIMING_LIBS: ambiguous installed versions for $key"}
+      dict set groups $key $path
+      dict set present $group 1
+    } elseif {[regexp -nocase {_(tt|ff|ss|typ)\.lib(?:\.gz)?$} [file tail $f] -> actual]} {
+      set actual [string toupper $actual]
+      if {$actual eq "TYP"} {set actual TT}
+      if {$actual ne $corner} {error "OT_TIMING_LIBS: wrong macro corner $f"}
+    }
+  }
+  foreach group {AO INVBUF OA SEQ SIMPLE} {
+    if {![dict exists $present $group]} {error "OT_TIMING_LIBS: missing standard-cell group $group"}
+  }
+  return $files
+}
+proc ot_lib_resolve {corner {config /work/config.mk}} {
+  if {![file isfile $config]} {error "OT_TIMING_LIBS: missing exact ORFS config $config"}
+  set field [dict get {TT TC_LIB_FILES FF BC_LIB_FILES SS WC_LIB_FILES} $corner]
+  set output [exec bash -c {source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1 || exit; exec make --no-print-directory -s -C /OpenROAD-flow-scripts/flow "DESIGN_CONFIG=$1" "print-$2"} otlibs $config $field]
+  set records {}
+  foreach line [split $output \n] {
+    if {[regexp "^${field}\\s*\[:=\]\\s*(.*)$" $line -> value]} {lappend records $value}
+  }
+  if {[llength $records] != 1} {error "OT_TIMING_LIBS: missing or ambiguous make $field result"}
+  set files [regexp -all -inline {\S+} [lindex $records 0]]
+  return [ot_lib_validate $corner $files]
+}
+proc ot_lib_load {corner receipt {config /work/config.mk}} {
+  if {[file exists $receipt]} {file rename $receipt ${receipt}.previous.[clock clicks]}
+  set files [ot_lib_resolve $corner $config]
+  set rows {}
+  foreach f $files {
+    set digest [lindex [exec sha256sum -- $f] 0]
+    lappend rows "{\"path\":[ot_lib_json_string $f],\"sha256\":[ot_lib_json_string $digest]}"
+  }
+  set digest [lindex [exec sha256sum -- $config] 0]
+  foreach f $files {read_liberty $f}
+  set fp [open $receipt w]
+  puts $fp "{\"status\":\"LOADED\",\"corner\":[ot_lib_json_string $corner],\"source\":\"ORFS make print corner LIB_FILES\",\"config\":[ot_lib_json_string $config],\"config_sha256\":[ot_lib_json_string $digest],\"libraries\":\[[join $rows ,]\]}"
+  close $fp
+  puts "OT_TIMING_LIBS $corner exact_count [llength $files] receipt $receipt"
+  return $files
+}
+"""
+
 SESSION_TCL = r"""
 proc so {k args} { puts "SO $k [join $args { }]" }
 proc so_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }; return [format %.2f [sta::time_sta_ui $t]] }
-foreach l [glob @PLAT@/lib/NLDM/*_RVT_@C@_*] { read_liberty $l }
-foreach l [glob -nocomplain @PLAT@/lib/NLDM/*_LVT_@C@_* @PLAT@/lib/NLDM/*_SLVT_@C@_*] { if {![string match *FAKE* $l]} { read_liberty $l } }
-@MACRO_LIBS@
+@TIMING_LIBRARIES@
+ot_lib_load @C@ /out/libraries.json
 read_db /base/@ODB@
 @PARASITICS@
 read_sdc /sdc/golden.sdc
@@ -416,7 +477,9 @@ exit
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None):
-    """hold_in_min / hold_out_min: the kit's seam hold contract (sdc_lint.json hold_in_min_ps / hold_out_min_ps,
+    """mlibs_ctr is retained for API compatibility; exact make-selected libraries include all macro views.
+
+    hold_in_min / hold_out_min: the kit's seam hold contract (sdc_lint.json hold_in_min_ps / hold_out_min_ps,
     CLOCK-RESET IO-HOLD 10-25); None = legacy overlay (min input -ins_tol, min output 0).  hold_in_min_ports
     {input port: ps}: IO-HOLD option A per-port min input delays (sdc_lint.json hold_in_min_ports_ps) applied after
     the uniform one; None / {} = no per-port lines (session byte-identical)."""
@@ -441,7 +504,7 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
     else:
         t = SESSION_TCL.replace("@FF_VCLK@", FF_VCLK_TCL if on else "")
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
-                 ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
+                 ("@TIMING_LIBRARIES@", EXACT_TIMING_LIBRARIES_TCL),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@IN_MIN@", f"[expr {{-{ins_tol:g}}}]" if hold_in_min is None else f"{hin:g}"),
                  ("@IN_MIN_LOG@", f"{hin:g}"), ("@OUT_MIN@", f"{hout:g}"),
                  ("@IN_MIN_PORTS@\n", "".join(
@@ -599,10 +662,12 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     mounts = [("base", disc["base"]), ("sdc", str(od / "sdcdir")), ("out", str(od))]
     (od / "sdcdir").mkdir(exist_ok=True)
     (od / "sdcdir" / "golden.sdc").write_text(Path(disc["sdc"]).read_text())
+    libconfig = Path(disc["library_config"]) if disc.get("library_config") else (Path(disc["kit"]) / "config.mk" if disc.get("kit") else None)
+    if libconfig is None or not libconfig.is_file():
+        raise ValueError("signoff: exact corner libraries require --kit/config.mk or explicit --library-config")
+    mounts.append(("work", disc.get("kit") or str(libconfig.parent)))
+    mounts.append(("work/config.mk", str(libconfig)))
     ml_ctr = []
-    for i, lp in enumerate(mlibs):
-        mounts.append((f"ml{i}", str(Path(lp).parent)))
-        ml_ctr.append(f"/ml{i}/{Path(lp).name}")
     lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text()) if disc.get("sdc_lint_ctx") else {}
     (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name, ff_vclk=ff_vclk,
                                                 ff_bound_ps=disc.get("ff_bound_ps"),
@@ -987,6 +1052,7 @@ def cmd_run(a):
     disc = discover(base, kit=a.kit, sdc=a.sdc, record=a.record)
     if not disc["sdc"]:
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
+    disc["library_config"] = str(Path(a.library_config).resolve()) if getattr(a, "library_config", None) else None
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
     bound = None
@@ -1033,7 +1099,7 @@ def cmd_run(a):
                            derate="none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); "
                                   "ocv5_* = flat late 1.05 / early 0.95, information only",
                            engine=f"OpenSTA in OpenROAD ({a.image}), one process per corner",
-                           libs="ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+                           libs="Exact routed-kit ORFS make TC/BC_LIB_FILES; per-corner hashed receipt",
                            corner_rule="setup TT / hold FF / 60-25 ps / related pair skew CPPR <= 80 TT+FF; spread INFO; SS information only "
                                        "(owner 2026-10-24, AGENTS.md c7ce2ed69a)"),
                tool_commit=_git_head())
@@ -1085,6 +1151,7 @@ def main(argv=None):
     g.add_argument("--run-dir")
     g.add_argument("--base")
     r.add_argument("--kit")
+    r.add_argument("--library-config", help="Explicit exact ORFS library-selection config for no-kit runs; macros resolve under its directory")
     r.add_argument("--sdc")
     r.add_argument("--record")
     r.add_argument("--name")
