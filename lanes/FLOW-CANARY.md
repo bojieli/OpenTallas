@@ -39,3 +39,14 @@ Claude reset. Main394765 still has broken nohup client lifecycle; epyc1 flow-can
 2026-10-25 08:24 PDT FLOW-INFRA: canary s81_head on 0372e55a4 FAIL = CTS Tcl crash from cece3ea38 (reset_taps rt_named_nets scope); fix READY claude/reset-taps-scope-1025@66346540c.
 2026-10-25 08:30 PDT FLOW-INFRA: canaries 0372e55a4: qwen_compute coll_ftm + qwen_kvsys kv3_io_ft FAIL with the SAME CTS crash (rt_named_nets, cece3ea38) -> 3/3 gen_phys dies broken on current main until claude/reset-taps-scope-1025@66346540c merges; s81 0372 still running.
 2026-10-25 08:35 PDT FLOW-INFRA: canaries on 0372e55a4 = 5/5 FAIL. hbm = harness (face_shell import, fix READY flow-canary-hbmgen-1025@1f564083c); s81 t12 / s81_head / qwen_compute / qwen_kvsys = CTS crash rt_named_nets (cece3ea38; fix READY reset-taps-scope-1025@66346540c). Insertion -22..-26 ps on 202a canaries -> PROPOSAL in queue (tap_balance vs postcts_gate quantity; owner CLOCK-RESET). Rerun canaries once both merge.
+2026-10-25 11:35 PDT FLOW-CANARY (fresh lane ~11:30): newest canaries per die (epyc1 /srv/opentallas-scratch2/claude/flow-canary/runs, all on tender-ray via ot-run):
+- s81 t12 183f0b03b RUNNING (placement). 863d FAIL = structural FF hold -311.79/690 (it was -77.12 PASS on 202a) -> FLOW BUG: group-tap regression 5ac03806f.
+- s81_head hd_turn_a 183f RUNNING. 863d FAIL = grt_gate insertion TT 225.06/FF 178.87 vs 250/202.5 (known early insertion; tapgrt pre-pass is opt-in on main). It gates no rows.
+- qwen_compute coll_ftm 183f FAIL = hold -113.66/2320. Group-tap regression on top of a REAL structural defect in the reference (202a was already -94.01/2329; GEOM-REVIEW-4 06:06: tap grid too coarse). After the taps fix it is a reference-kit problem (re-pitch or another QC reference).
+- qwen_kvsys kv3_io_ft 183f FAIL = hold -124.84/1053 (202a PASSed the hold gate) -> FLOW BUG, group-tap.
+- qwen_kvsys_core head_e1 863d+183f FAIL = rtl_lint false positive (no -defer: $fatal default-param guard) -> FLOW BUG.
+- hbm calendar 183f FAIL = FAIL_POSTCTS insertion TT 304.90/FF 266.39 vs 250/202.5. Same on 00b7/863d (deterministic), plus vclk_basis no clock_binding. REFERENCE-KIT problem (B2l view, fixed vclk 250, main core generator has no per-corner binding); canary.json also mis-reported grt_gate PASS (spec false) -> canary bug.
+- 5236ba8c1 canaries were launched 11:32 by the trigger for qwen_compute/qwen_kvsys/qwen_kvsys_core/hbm. They will repeat the same FAILs until the fixes merge.
+- cp1 has no canary of its own: it maps to s81.
+READY posted: URGENT flowcan-taps-1025@abbb97a91, flowcan-lint-1025@74181b806, canary-bind-1025@15dd0b1a2 (autopilot binding), flowcan-hbmgate-1025@45a4706dc.
+A/B canaries on candidate claude/flowcan-cand-1025@335b3d5a4 (taps+lint), in a SEPARATE root epyc1 /srv/opentallas-scratch2/claude/flow-canary/ab/runs (the autopilot never binds them): s81, qwen_kvsys, qwen_compute, qwen_kvsys_core. The KV core lint already PASSes there.
