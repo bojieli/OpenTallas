@@ -540,3 +540,11 @@ CODEX: 2026-10-25 06:02 PDT HANDOFF to Claude: all lanes parked; main3b207 pushe
 2026-10-25 07:24 PDT CODEX: CP1 Wpair both CTS CRASH la_d diagnosed; existing main8234352a5 applied to fresh kits, codex/cp1-0719@4559ed6f1 pushed/G0PASS/14testsPASS; autopilot enqueue r0d45eab6c2682, postGRT conditions owed.
 2026-10-25 07:24 PDT CODEX: QC START prerequisite READY codex/qc-token-0719@dbe1a9e85e (d2d03fe94 dedicated rgate on main; conflict keeps kit source-picks),12focusedSTARTtestsPASS. Compact inherited CROM/MAT component receipts READY50c8dcd3ac; no rerun/no G5/rate claim.
 2026-10-25 07:26 PDT CODEX: S81 I13 currentfanout-repairedRTL bench6PASS native554cycles; actualsynth/floorplangate10liveintel2, previousnativefanoutFAILmax2119diagnosed; plan/cores/kits0719groupsactive.
+
+2026-10-25 07:27 PDT CODEX: KV-TOK FIFO sim-historyguardREADY65f5373a3b (synth-identical,32words+2mutants); nativepcpart+wholeEbootfixbuilds live separateowncopies.
+2026-10-25 07:28 PDT CODEX: S81 legacy runner failclosed da791126a8 READY5mockcases; qbankN autopilotCRASH diagnosed missingpairskew, nativeF1signoffNOTSIGNED TT+148.74/FF-8.72/135EP despite oldfixedbasisSIGNED, no viewpromotion; BFcolICGregionalpreflight18gates functionpreserved but2tapsROMoverlap, structurallegalizer next.
+2026-10-25 07:32 PDT CODEX: PROTO lateleaf8 structural3.72Moverflow collected; proposedRTLlint production5dieinputs5/5PASS, actualot-runEXIT0; resultsonlyREADY33fd931058.
+2026-10-25 07:31 PDT CODEX: INFRA installedmissingmatplotlib4workers, fixedhubcoordqueuemerge92c729636a, READYautopilotsafetye40d36e922 (canarywavegate+explicitcorrective, diagnosisretention, GRTroutingstage, enqueuepublishedcheck);50testsPASS1skip+6focusedPASS; canarytimermainrepointed, livejobspreserved.
+CODEX: 2026-10-25 07:31 PDT S81CCONN xfin measured-fit362.88² all16parents G0C177/1770E/2testsPASS,0cycles, READYd3d96d460a; nativecorekit/signoffowed.
+
+2026-10-25 07:29 PDT CODEX: Qwen ROM synthesis parameter mismatch fixed READY8376afdfe1 (2testsPASS,0cycles,current8ROMbb+hashes); plan7a/b live, f57corrective route engaged; new inventorycodex-qwen-0719-inventory.md.
