@@ -411,3 +411,4 @@ CODEX: 2026-10-25 03:28 PDT TOK-DS reprice READY codex/tok-ds-price-1025@b1f00a2
 2026-10-25 03:31 PDT CODEX CORRECTION legacy: historicalkit-localface_guardPASSusedrejectedpair-IN/OUTparser. CANONICAL face_guard FAIL merged132rstg/1072payload; notjustclockgate. Zero-internal-pairclockcensusnowPASS66/536allclocked. CLOCK/reset_targetsownsoff-defaultgenuine2stageRTL,+1cycleandphysicalgates. One-stageTT/FFpositiveevidenceretained; neverSIGNED/registered. results/s81_legacy_codex_1025/CANONICAL_FACE_GUARD_CORRECTION.json recordsfacts.
 
 2026-10-25 03:33 PDT CODEX: S81exactFT94typesPASS; QCcorrectedCBN/FTCprototypeCLEAN; MMFFreferencehelper0fa24094d inHBMactualrepairtrial; releasepagecurrentwithbranch/mainseparation(rendererf29777445).
+2026-10-25 03:34 PDT GEOM-REVIEW: split cores x4 PASS-COND, xdie3 PHY zone PASS-COND, LEAFPLAN2 FAIL; READY claude/geom-review-1024@cdb65ccf70.
