@@ -1,0 +1,20 @@
+{
+ "element": "qwen_kvsys_plan",
+ "kit": "physical/die_plan/qwen_kvsys/die_plan.json v3.9 (claude/kv-405-1024r, run_v39.sh on v3.8x)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "ee1aee202f31df7a7a95be9b2dd3ec651640549586ce317542ba3aecc8abe042",
+ "reasons": "[2026-10-24 22:58 PDT] [KV-405 author review, owner order 2026-10-24 08:05] Looked at die_v39.png vs die_v38x_methalign.png and type renders hub_C / hub_Wi / pv_v4. Outline, partitions, port windows, lanes unchanged vs v3.8x (no re-placement; v3.9ft crossing moves NOT applied). Die: 0 red lanes (v3.8x on METH-ALIGN tools: 1318 G0 errors, every long ft corridor red). Stations: every ft hop / station spacing / internal-station hop <= 405 um (render_type_plan hop_max 404.4 hub_C, 404.0 hub_Wi, 404.4 pv_v4, 0 legs > 405); 0 of 2,771 interior station points inside a hard core (v3.8x 8: hub_C ahub, hub_Wi host cores) -- in hub_Wi they sit in the 17-um core-row gaps and the y~1060 / 790 / 460 row channels, in hub_C in the free band under ahub and beside kvs_ctl. hub_Ei ft station counts identical to Codex reach405 (vK/vL/vM kits). Reset wavefront: root hub_C, every partition IN pin <= 362.9 um from a neighbour rst_o (kv3_phy taps moved to the E face; was 440.6). ahub r2 shrink leaves a free N/W strip in hub_C (stations use it). CONCERN: wires. ft legs are station-to-station Ls; ~50% of ft leg-bits in hg/hgi/pv types (140k of 281k) cross M7-capped hard cores (head_eighth, pv_pair kits MAX_ROUTING_LAYER M7) on both L orientations, so on <= M7 they cannot go over those cores and must take the 95-104 um core gaps; hub_Wi host cores and hub_C ahub are M5-capped (M6/M7 over-the-core OK). This was already true in v3.8x (110k of 174k leg-bits) and is the GEOM-REVIEW8 gap-capacity question, now without the M8/M9 escape.",
+ "fixes": "(1) Before any hg/hgi/pv kit: per-type GRT probe with the real core OBS (M1-M7 for head_eighth / pv_pair) or a channel-route station generator (stations + legs in the core gaps, gap capacity <= 0.6) -- KV v3.9b; alternative: re-harden head_eighth / pv_pair at MAX_ROUTING_LAYER M5 (e1/e5/e7 SIGNED at M7 would re-sign). (2) TOK-QK: price lat_delta_v39.json (landed_after) -- d2d rx sys_c->hub_C 32 -> 56 landed, kvs_attn tx 31 -> 51. (3) Re-bind (KV-BIND kv45) on v3.9 for the real R8 table (this one is kv44 groups rebased). (4) Independent GEOM-REVIEW second review of the batch.",
+ "images": [
+  "physical/die_plan/qwen_kvsys/g3/review/die_v39.png",
+  "physical/die_plan/qwen_kvsys/g3/review/die_v38x_methalign.png",
+  "physical/die_plan/qwen_kvsys/g3/review/type_kv3_hub_C_v39.png",
+  "physical/die_plan/qwen_kvsys/g3/review/type_kv3_hub_Wi_v39.png",
+  "physical/die_plan/qwen_kvsys/g3/review/type_kv3_pv_v4_v39.png"
+ ],
+ "metrics": "physical/die_plan/qwen_kvsys/g0_summary_v39.json",
+ "owner_lane": "KV-G3",
+ "reviewer": "KV-405 (author)",
+ "at": "2026-10-24T22:58:53-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route (author record; independent second review pending)"
+}
