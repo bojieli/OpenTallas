@@ -439,3 +439,10 @@ def test_bound_ff_session_tcl():
     assert "mode bound_ff" not in signoff.session_tcl("tt", [], None, ff_vclk="bound-ff", ff_bound_ps=198.4)
     with pytest.raises(ValueError):
         signoff.session_tcl("ff", [], None, ff_vclk="bound-ff")
+
+
+def test_ff_bound_ps_cli_requires_bound_ff_and_contract():
+    for extra in (['--ff-bound-ps', '198.4'], ['--ff-bound-ps', '198.4', '--ff-vclk', 'bound-ff']):
+        with pytest.raises(SystemExit) as e:
+            signoff.main(['run', '--base', '/unused', '--out', '/unused'] + extra)
+        assert e.value.code == 2

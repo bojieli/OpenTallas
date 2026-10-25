@@ -981,9 +981,11 @@ def cmd_run(a):
         # per-corner FF insertion (insertion_ff_ps: HBM / KV / QC core generators, the value the in-flow FF-only GRT
         # hold repair bound) times FF hold against that declared value ('bound-ff'); no rebind, no clock-check bound
         # (ROOT-MERGE2).  Without it the FF hold check FAILs ff_ref_missing.
-        if disc.get("sdc_lint_ctx"):
+        if getattr(a, "ff_bound_ps", None) is not None:                # explicit declared value (CLI-checked)
+            disc["ff_bound_ps"] = float(a.ff_bound_ps)
+        elif disc.get("sdc_lint_ctx"):
             lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text())
-            if lctx.get("insertion_ff_ps") is not None and a.ff_vclk == "auto":
+            if lctx.get("insertion_ff_ps") is not None and a.ff_vclk in ("auto", "bound-ff"):
                 a.ff_vclk = "bound-ff"
                 disc["ff_bound_ps"] = float(lctx["insertion_ff_ps"]) / float(lctx.get("time_unit_ps") or 1.0)
                 a.ff_vclk_contract = a.ff_vclk_contract or f"declared core FF insertion {disc['sdc_lint_ctx']}"
@@ -1075,11 +1077,18 @@ def main(argv=None):
                    help="IO virtual-clock reference: auto = rebind when the kit carries a per-corner insertion "
                         "binding (FLOW 10-25), else sdc; pin-flop-mean = opt-in FF-only measured reference")
     r.add_argument("--ff-vclk-contract", help="source-pinned measured core clock contract authorizing the FF reference")
+    r.add_argument("--ff-bound-ps", type=float,
+                   help="bound-ff: declared FF IO insertion (ps) for an already-routed core kit whose sdc_lint ctx has no "
+                        "insertion_ff_ps; requires --ff-vclk bound-ff and --ff-vclk-contract naming its source")
     r.add_argument("--dry", action="store_true")
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)
     a = ap.parse_args(argv)
+    if a.cmd == "run" and a.ff_bound_ps is not None and a.ff_vclk != "bound-ff":
+        ap.error("--ff-bound-ps requires --ff-vclk bound-ff")
+    if a.cmd == "run" and a.ff_bound_ps is not None and not (a.ff_vclk_contract or "").strip():
+        ap.error("--ff-bound-ps requires --ff-vclk-contract (source of the declared FF insertion)")
     if a.cmd == "run" and a.ff_vclk == "pin-flop-mean" and not (a.ff_vclk_contract or "").strip():
         ap.error("--ff-vclk pin-flop-mean requires --ff-vclk-contract (measured core clock contract)")
     return cmd_run(a) if a.cmd == "run" else cmd_verdict(a)
