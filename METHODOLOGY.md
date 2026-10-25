@@ -225,7 +225,7 @@ Sources: B = ~/coord/BRIEFING.md "OWNER DECISIONS 2026-10-24" #n; A = AGENTS.md 
 - 9.3 ALL signal routing (partition ft AND die-top nets) on <= M7; M8/M9 only die clock spine / reset / PG (dec. 12 supersedes the 10-22 M9-for-signals record). Tools drop M8/M9 ft; reach = 405 um.
 - 9.4 ft_station_max_um default 405.
 - 9.5 Wavefront reset (RESET lane); README reset section rewritten when the tool lands.
-- 9.6 OWNER QUESTION (pending): retire the 0.9 GHz serial-chain domain; units that cannot make 833 ps run as clock-enabled 2-cycle (half-rate) paths on the die clock.
+- 9.6 OWNER QUESTION (pending, revised): half-rate on the die clock is SLOWER than 0.9 GHz (1.67 vs 1.11 ns per stage). Options: (a) re-pipeline the FP32 add LAT3->LAT4 at 1.2 GHz (same 3.33 ns per dependent add if it fits 833 ps; LAT5 fallback +25% chain time); (b) keep 0.9 GHz as a ratio-synchronous 3:4 clock from the same PLL (STA-timed, no async CDC). Coordinator leans (a), pending a fit check of the add at LAT4.
 - 9.7 I = signed pin-register mean insertion of that core type's SIGNED view (lib max only before first signoff).
 - 9.8 Keep -40 ps hold padding until the spine is measured; then set it to the measured related-pair window + 10 ps.
 - 9.9 New seams are budgeted synchronous under MSCTS; LANDED only for R8 bundles and off-die links.
