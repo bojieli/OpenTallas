@@ -36,7 +36,7 @@
             "for d in {src}/physical/die_plan/*; do b=$(basename $d); [ $b = hbm_arch_cores ] || ln -sfn $d {run}/src/physical/die_plan/$b; done; cp -a {src}/physical/die_plan/hbm_arch_cores {run}/src/physical/die_plan/",
             "git -C {src} archive HEAD physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 | tar -x -C {run}/src"],
    "gen_cwd": "{run}/src/physical/die_plan/hbm_arch_cores", "gen_env": {"GIT_DIR": "{src}/.git"},
-   "gen": "python3 -I gen_core_kit_hbm.py --views views_b2l.json --view {item} --out {gen}",
+   "gen": "python3 -E -s gen_core_kit_hbm.py --views views_b2l.json --view {item} --out {gen}",
    "kit": "{gen}/hfd_hgi_vm_calendar_f20_dd5b84a9fbfa", "run": "bash {kit}/run_kit_hbm.sh {kit} finish {mem} {cpus}",
    "grt_gate": false,
    "golden": {"verdict": "NOT SIGNED", "setup_tt_wns": -30.71, "hold_ff_wns": 8.26,
