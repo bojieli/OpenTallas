@@ -457,6 +457,7 @@ class Aig:
         self.ands = array("q")
         self.outs, self.onames = [], []
         self.strash = {}
+        self.parity_expr, self.parity_cache = {}, {}
 
     def add_input(self, name):
         if self.ands:
@@ -466,6 +467,19 @@ class Aig:
         return 2 * self.ni
 
     def AND(self, a, b):
+        # ~(x & y) & ~(~x & ~y) == x ^ y. Recognise the AIG XOR
+        # encoding while importing both frontends so differently factored CRC
+        # matrices share one GF(2) expression before SAT (no assumptions).
+        if a & 1 and b & 1 and a > 1 and b > 1:
+            ia, ib = (a >> 1) - self.ni - 1, (b >> 1) - self.ni - 1
+            if ia >= 0 and ib >= 0:
+                x = self.ands[2 * ia:2 * ia + 2]
+                y = self.ands[2 * ib:2 * ib + 2]
+                if set(x) == {v ^ 1 for v in y}:
+                    return self.XOR(*x)
+        return self._and(a, b)
+
+    def _and(self, a, b):
         if a < b:
             a, b = b, a
         if b == 0 or a == (b ^ 1):
@@ -480,8 +494,38 @@ class Aig:
             self.strash[(a, b)] = r
         return r
 
+    def _parity(self, a):
+        if a <= 1:
+            return frozenset(), a
+        if a in self.parity_expr:
+            return self.parity_expr[a]
+        if a ^ 1 in self.parity_expr:
+            terms, const = self.parity_expr[a ^ 1]
+            return terms, const ^ 1
+        return frozenset([a & ~1]), a & 1
+
     def XOR(self, a, b):
-        return self.AND(self.AND(a, b ^ 1) ^ 1, self.AND(a ^ 1, b) ^ 1) ^ 1
+        aa, ac = self._parity(a)
+        bb, bc = self._parity(b)
+        terms, const = aa ^ bb, ac ^ bc
+        if not terms:
+            return const
+        if terms in self.parity_cache:
+            return self.parity_cache[terms] ^ const
+
+        def build(ts):
+            if len(ts) == 1:
+                return ts[0]
+            mid = len(ts) // 2
+            x, y = build(ts[:mid]), build(ts[mid:])
+            r = self._and(self._and(x, y ^ 1) ^ 1, self._and(x ^ 1, y) ^ 1) ^ 1
+            self.parity_expr[r] = (frozenset(ts), 0)
+            return r
+
+        r = build(sorted(terms))
+        self.parity_expr[r] = (terms, 0)
+        self.parity_cache[terms] = r
+        return r ^ const
 
     def write(self, path, outs=None):
         outs = self.outs if outs is None else outs
@@ -1075,6 +1119,22 @@ def anchored(L):
     adders, 2026-10-25)."""
     ms = set(L.matched)
     return {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and (sd != "gold" or h[2] in ms)}
+def register_alias_proposals(L, log):
+    """Propose an exact register/_r alias across frontends; every proposal is
+    still proved on its next-state cone before any result is accepted."""
+    n = 0
+    strip = lambda k: re.sub(r"_r(?=(?:\[\d+\])*$)", "", k)
+    by_name = collections.defaultdict(list)
+    for k in L.gonly:
+        by_name[strip(k)].append(k)
+    for k in L.tonly:
+        cand = by_name.get(strip(k), [])
+        if len(cand) == 1 and ("gate", k) not in L.hyp:
+            L.hyp[("gate", k)] = ("eq", "gold", cand[0], 0)
+            n += 1
+    log.append(f"register aliases: {n} same-name / _r relations proposed")
+
+
 def cone_sim(m, lits, fixed, words, seed):
     """bit-parallel simulation of only the cone of `lits` (inputs: `fixed` {var: int}, others random)."""
     import random
@@ -1206,6 +1266,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
     relayout(L, log)
     renamed(L, log)
     replica_proposals(L, log)
+    register_alias_proposals(L, log)
     fsm_proposals(L, log)
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
     for rnd in range(rounds + 40):
@@ -1385,6 +1446,10 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                         changed += 1
                 if not changed:
                     break
+        if adding:
+            # State relations rejected before aliases/copies settled can become
+            # inductive later; retry while candidates are still being added.
+            fsm_proposals(L, log)
         if not L.hyp:
             return
         m, kind = L.build(with_compare=False, with_hyp=True)

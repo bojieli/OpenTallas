@@ -306,3 +306,61 @@ def test_implicit_net_lint_pattern():
     m = lec.IMPLICIT_NET.match(l)
     assert m and (m[1], m[2], m[3]) == ("../work/rtl/ot_s81eng_aq_n32.sv", "111", "ep_next")
     assert not lec.IMPLICIT_NET.match("x.sv:3:1: warning: implicit conversion truncates [-Wwidth-trunc]")
+
+
+def test_parity_reassociation_and_imported_xor_are_exact():
+    """CRC XOR trees normalise across associations; a flipped input stays different."""
+    m = lec.Aig()
+    a, b, c, d, e = [m.add_input(n) for n in 'abcde']
+    x = m.XOR(m.XOR(a, b), m.XOR(c, d))
+    assert x == m.XOR(d, m.XOR(c, m.XOR(b, a)))
+    assert m.XOR(m.XOR(a, b), a) == b
+    assert m.XOR(m.XOR(a, b ^ 1), a) == b ^ 1
+    # Import the raw three-AND representation instead of calling XOR.
+    imported = m.AND(m._and(a, b) ^ 1, m._and(a ^ 1, b ^ 1) ^ 1)
+    assert imported == m.XOR(a, b)
+    assert m.XOR(x, e) != x
+    # Exhaust every input assignment and check all canonical-expression records
+    # against their underlying Boolean AIG rather than the same normaliser.
+    val, mask = [0] * (m.ni + len(m.ands) // 2 + 1), (1 << 32) - 1
+    for v in range(1, 6):
+        val[v] = sum(((pattern >> (v - 1)) & 1) << pattern for pattern in range(32))
+    for k in range(len(m.ands) // 2):
+        r0, r1 = m.ands[2 * k:2 * k + 2]
+        val[m.ni + k + 1] = lec.lit_val(val, mask, r0) & lec.lit_val(val, mask, r1)
+    for lit, (terms, const) in m.parity_expr.items():
+        want = mask if const else 0
+        for t in terms:
+            want ^= lec.lit_val(val, mask, t)
+        assert lec.lit_val(val, mask, lit) == want
+
+
+def test_fsm_cube_induction_rejects_wrong_state_mapping(tmp_path):
+    """A binary/one-hot cycle proves; an incorrect recoding constraint fails."""
+    def design(gate):
+        m = lec.Aig()
+        reset = m.add_input('reset')
+        q = [m.add_input(str(i)) for i in range(3 if gate else 2)]
+        if gate:
+            nxt = [m.AND(reset ^ 1, q[2]) ^ 1, m.AND(reset ^ 1, q[0]), m.AND(reset ^ 1, q[1])]
+            # q0' = reset | q2, q1' = !reset & q0, q2' = !reset & q1
+            nxt[0] = m.AND(reset ^ 1, q[2] ^ 1) ^ 1
+        else:
+            nxt = [m.AND(reset ^ 1, m.AND(q[0] ^ 1, q[1] ^ 1)),
+                   m.AND(reset ^ 1, m.AND(q[0], q[1] ^ 1))]
+        d = dict(I=1, L=len(q), O=0, A=len(m.ands) // 2, latches=nxt, outputs=[], ands=m.ands)
+        keys = [f'u_dut.st[{i}]' for i in range(len(q))]
+        mp = {'input': {0: [('reset', 0)]}, 'output': {},
+              'latch': {i: [(k + '$_DFF_P_.lecq', 0)] for i, k in enumerate(keys)}}
+        return d, mp
+    g, gm = design(False)
+    t, tm = design(True)
+    L = lec.Lec(g, gm, t, tm)
+    assert lec.fsm_proposals(L, []) == 3
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {'proved'}
+    key = next(k for k, h in L.hyp.items() if h[0] == 'cube')
+    h = L.hyp[key]
+    L.hyp[key] = (h[0], h[1], h[2], [v ^ 1 for v in h[3]])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert 'differs' in _sim_prove(m).values()
