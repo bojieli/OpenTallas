@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS-COND",
+  "images": [
+    "/srv/opentallas-scratch/claude/codex-s81-fthold/review/t8.png",
+    "/srv/opentallas-scratch/claude/codex-s81-fthold/review/t37.png"
+  ],
+  "findings": [
+    "Viewed both wavefront placements: macro-free low density station fields (max bins 0.11/0.15), face registers ordered along abutting faces, station chains and clock taps spread through the field.",
+    "Delay cells are combinational before first input face flop: no additional cycles and no changed station coordinates. Hold cells occupy sparse free space beside face flops.",
+    "Condition: only CTS proof; check deterministic cells survive remove_buffers, verify actual TT setup and FF hold after propagated CTS. No route approval yet."
+  ],
+  "change": "REMOVE_ABC_BUFFERS=1 avoids pre-placement setup-repair loop on ideal capture clock; original proofs untouched"
+}
