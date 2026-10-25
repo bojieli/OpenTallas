@@ -1,0 +1,3 @@
+read_verilog /rest/coll_q2n2_body_rest.parent.v
+opt_clean
+write_json /out/parent.json

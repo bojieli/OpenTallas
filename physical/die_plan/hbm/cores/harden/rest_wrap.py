@@ -93,6 +93,9 @@ def main():
     ports = single
     for nm, d, w in ports:
         c = clean(topname.get(nm, nm))
+        while c in used_names:      # several core ports on bits of ONE master port (NLINK 2: link0/link1 tx_pin_v)
+            c += '_'
+        used_names.add(c)
         ref = nm if not nm.startswith('\\') else nm + ' '
         if d == 'output' and nm in unused:
             conns.append(f'.{ref}()')
