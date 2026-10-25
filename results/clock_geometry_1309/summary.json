@@ -1,0 +1,27 @@
+{
+ "schema":"opentallas.clock_geometry_export.v1",
+ "verdict":"EXPORTED_READ_ONLY",
+ "source_tool":"tools/die_plan/dump_clock_geometry.py",
+ "sta_or_pnr_run":false,
+ "coordinates":"integer DBU, no scaling guesses",
+ "E4":{
+  "host":"epyc1",
+  "source_odb":"/srv/opentallas-scratch2/claude/path-s81-eng/dsdv_eng_rr_e_e4/run/results/asap7/kr_dsdv_eng_rr_e_e4/base/4_cts.odb",
+  "output":"/srv/opentallas-scratch2/claude/codex-cp1-1309/clock_geometry/e4.tsv",
+  "ot_run_unit":"oth-ubuntu-3677063-1792959819",
+  "exit":0,"dbu":1000,"core":[4320,4320,406080,462240],
+  "root_port":"ck","root":[172809,19],"rows":5347,"placed_cells":95782,"tap_roots":122,
+  "clock_master":"BUFx24_ASAP7_75t_R","clock_master_wh":[1620,270]
+ },
+ "HBM_TKM":{
+  "host":"epyc1",
+  "source_odb":"/srv/opentallas-scratch2/claude/codex-hbm-physical-1309/canary_clock/4_cts.odb",
+  "output":"/srv/opentallas-scratch2/claude/codex-cp1-1309/clock_geometry/hbm_tkm.tsv",
+  "ot_run_unit":"oth-ubuntu-3818401-1792959827",
+  "exit":0,"dbu":1000,"core":[4320,4320,315360,341280],
+  "root_port":"tile_clk","root":[317352,96],"rows":1248,"placed_cells":189672,"tap_roots":35,
+  "clock_master":"BUFx24_ASAP7_75t_R","clock_master_wh":[1620,270]
+ },
+ "format":["DBU n","CORE x0 y0 x1 y1","ROOT x y","ROOT_NAME port","MASTER name w h","ROW xorigin yorigin sitewidth rowheight nsites","ROW_ORIENT name xorigin yorigin orientation spacing direction","CELL name xMin yMin xMax yMax isBlock","TAP name centerX centerY inputNet outputNet","COUNTS nrows ncells ntaps"],
+ "limitation":"Geometry export enables row-legal shallow-trunk planning; it is no timing/signoff claim. Source views and existing F6 flops were not modified."
+}
