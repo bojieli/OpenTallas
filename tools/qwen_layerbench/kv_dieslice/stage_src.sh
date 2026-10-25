@@ -24,7 +24,7 @@ while read -r f; do [ -z "$f" ] && continue; case "$f" in *ot_qkvd_ucie_x64_phy_
   d=$(dirname $f); stage_dir $d; echo "$O/src/$(tag $d)/$(basename $f)" >> $O/files.f; done < $B/bind.f
 : > $O/hostside.f
 # host board-side end of the SerDes link (real host link adapter + CDC RTL = the off-die host model's transport)
-A=/home/ubuntu/scratch/binder2-1023/kv_src_e33504a6f
+A=${HOSTSIDE_SRC:-/home/ubuntu/scratch/binder2-1023/kv_src_e33504a6f}   # PATH-KV-TOK 10-25: override (native t47 tree)
 # the bind source root (leaf search roots for resolve_missing.py): the tree most bind.f entries come from
 sed -n "s#/rtl/.*##p" $B/bind.f | sort | uniq -c | sort -rn | awk '{print $2}' > $O/src_roots.txt
 for f in $A/rtl/test/qwen_host/qkd_host_board_port_fixture.sv $A/rtl/physical/ot_qfd_link_adp512_split.sv; do

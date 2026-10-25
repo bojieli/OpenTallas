@@ -29,6 +29,20 @@ module tb_kvslice;
     wire [1042:0] h2d_flit;
     wire         c2k_v;
     wire [582:0] c2k_flit;
+`ifdef KV_NATIVE_TOP
+    // PATH-KV-TOK 10-25: native f5 bound top (codex-kv-bind-0719 run4 successor): ports rst_n, start, clk_core, clk_clk_phy,
+    // pad_*; the HOST/HBM/ingest logic clocks are clk_core (native 833 common clock).  start = the die START pin (decision
+    // 13c broadcast): +START_AT=<core cycles after rst_n release> (default 0 = START with reset release).  DIAGNOSTIC until
+    // CLOCK-RESET start_role bootstrap|mission lands (today every consumer tap waits for START, so a late START stalls boot).
+    reg start_pin = 0; integer start_at = 0;
+    initial if (!$value$plusargs("START_AT=%d", start_at)) start_at = 0;
+    always @(posedge ck_core) if (rst_n) begin
+        if (start_at <= 0) start_pin <= 1'b1; else start_at <= start_at - 1;
+    end
+    qwen_kvsys_bound_top dut (
+        .rst_n(rst_n), .start(start_pin), .clk_clk_phy(ck_phy), .clk_core(ck_core),
+        .pad_die_id(die_id), .pad_por_n(por_n), .pad_refclk(ck_ref));
+`else
     qwen_kvsys_bound_top dut (
         .rst_n(rst_n), .clk_clk_fwd(ck_core),
 `ifndef KV_DFI_CORE   // TOK-QK/D dfi-core (owner decision 14): the HBM PHY DFI clock is clk_core -> the top has no HBM clock input
@@ -36,6 +50,7 @@ module tb_kvslice;
 `endif
         .clk_clk_host(ck_host), .clk_clk_ingest(ck_ing), .clk_clk_phy(ck_phy), .clk_core(ck_core),
         .pad_die_id(die_id), .pad_por_n(por_n), .pad_refclk(ck_ref));
+`endif
     // ------------------------------------------------------------------ compute-die far end on the UCIe link (+FAR=1)
     // KV-TOK 10-24 token phase: kvs_compute_end.sv (the compute die's real d2d master + calendar sequencer + record codec
     // + KVN transport on the pair image of the KV boot image; see that file).  +FAR=0 (default): the link is silent.

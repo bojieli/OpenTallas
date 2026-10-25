@@ -28,6 +28,7 @@ IMGD=${D2D_IMG:-$R/physical/die_plan/qwen_kvsys/boot_v36/image_kv41}   # the pai
 DFI=$(grep -q 'input  wire clk_clk_hbm_' $TOPF && echo "" || echo "+define+KV_DFI_CORE")
 cat > $O/vl.f <<EOF
 $DFI
+${EXTRA_DEFS:-}
 -Wno-fatal
 -Wno-lint
 -Wno-style
