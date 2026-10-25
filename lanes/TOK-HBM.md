@@ -138,3 +138,6 @@ PARKED safely on reset notice. Ready tokenbranch codex/hbm-token-1025@844c203de 
 
 ## CODEX notes 2026-10-25 05:58 PDT
 CODEX took over token collection and side oneclock completion on codex/hbm-token-push-1025. Inherited corrected-clock SU31 build PASS05:50, replay LIVE epyc2:/srv/opentallas-scratch2/claude/codex-hbm-token-1025/full/diag, simulatorPID3661199 under unitoth-ubuntu-3686175-1792921264. No duplicate. Side oneclock temporal miter now implements II1 LAT3-vs-LAT4 exact-word comparison with priced delays RSQRT+12/SQRT0/SPSQRT+36/EGATE+16 and function mutant; not yet run. Native top integration owned HBM parent.
+
+## CODEX PARKED 2026-10-25 06:01 PDT — Claude reset
+Own codex/hbm-token-push-1025 source is WIP NOT READY;724bd168c adds side LAT4 temporal vehicle, later WIP migrates side split source lists to f12/C12. Minimum II1 temporal gate COMPILING epyc1:/srv/opentallas-scratch2/claude/codex-hbm-side-push/base unitoth-ubuntu-2623004-1792933133; negative +MUT_FN not yet run. Inherited corrected-clock SU31 BUILD_PASS05:50, replay LIVE epyc2 codex-hbm-token-1025/full/diag PID3661199; no final verdict. Full branch/jobs/failures/next in CODEX-LOG06:01 handoff. No new OWNER?.
