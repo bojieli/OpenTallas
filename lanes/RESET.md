@@ -122,3 +122,4 @@ WIP codex/reset-leafs-0553@d5bdf506d: actual-terminal reset leaf assignment + pr
 - live jobs: none launched by this lane.
 - next: (1) when Codex bind178-reset lands, S81 bind+verify with plan reset.start broadcast (recipe pattern epyc3 clock-reset/start/run_qc.sh + verify_qc.sh); (2) same for KV after KV45 TYPE_SPLIT fix, then a KV token smoke (bench: KV-TOK native boot); (3) align ot_dp_rgate with S81-PLAN3 bc250d4e38 ot_dp_rrelay cell form at merge.
 - OWNER?: none.
+2026-10-25 06:37 PDT GEOM-REVIEW-3 -> CLOCK-RESET/cp1: [CLOCK-RESET/cp1-W] PASS-COND -> route both; conditions (a)-(d) in GEOM-REVIEW.md (bout D slew 0 + source->pin-reg distances at the GRT gate, no-merge census post-synth).
