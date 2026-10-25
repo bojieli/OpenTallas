@@ -338,7 +338,7 @@ def memh(words, width):
 
 
 # ================================================================================================= op-level schedule
-def layer_schedule(tree, layer, workload='ar'):
+def layer_schedule(tree, layer, workload='ar', hcore_profile=None):
     """the priced p4l static schedule of one layer (dv_layer_price.py: dv_price dv_base deltas + p4l land plan,
     half-cycle), node start / end rebased to the layer's first start"""
     import dv_layer_price as lp
@@ -364,6 +364,10 @@ def layer_schedule(tree, layer, workload='ar'):
     for node in doc['nodes']:
         if re.fullmatch(r'ffn\.(?:shared_)?swiglu(?:\.r\d+)?', node.get('op', '')):
             delta[node['id']] = delta.get(node['id'], 0.0) + VSW_LR_CYCLES
+    if hcore_profile:
+        for node in doc['nodes']:
+            if re.fullmatch(r'attn\.(?:scores|pv)(?:\.r\d+)?', node.get('op', '')):
+                delta[node['id']] = delta.get(node['id'], 0.0) + hcore_profile['load_guard_cycles']
     _, end = ac.solve(doc['nodes'], doc['edges'], delta)
     by = {n['id']: n for n in doc['nodes']}
     if layer in LAYERS:
@@ -987,7 +991,7 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, hcore_profile_manifest=None, hcore_boot_witness=None):
     if entry_norm and not fixtures:
         raise ValueError('--entry-norm-check needs --fixtures (the layer-entry inputs and the reference model checks)')
     if dense_stage is not None and mu_ctx:
@@ -998,7 +1002,17 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
     wl = workload or ('mtp' if layer == 'mtp_draft' else 'ar')
-    sched = layer_schedule(tree, layer, wl)
+    hcore_profile = None
+    if hcore_profile_manifest:
+        from layer_prog.hcore_schedule import load_profile, boot_witness
+        hcore_profile = load_profile(hcore_profile_manifest)
+        if not hcore_boot_witness:
+            raise ValueError('native hcore profile requires a bound reset/START readiness witness')
+        ready = boot_witness(hcore_profile, hcore_boot_witness)
+        (out / 'prog/hcore_readiness.json').write_text(json.dumps(ready, indent=1) + '\n')
+    elif hcore_boot_witness:
+        raise ValueError('hcore reset/START witness requires its selected source profile')
+    sched = layer_schedule(tree, layer, wl, hcore_profile=hcore_profile)
     if dense_stage is not None:
         required = dict(OT_XS_DENSE_SPLIT2=dense_stage, OT_XS_APROJ_TOPO='1',
                         OT_XS_APROJ_ALIGN4='1', OT_XS_APROJ_RANK_TAGS='1', OT_XS_APROJ_CAP_PLAN='1')
@@ -1012,7 +1026,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     low = []
     fams = family_lowerings()
     ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag,
-               svc_owner_epoch=svc_owner_epoch, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
+               svc_owner_epoch=svc_owner_epoch, hcore_profile=hcore_profile, line_avoid={k: frozenset(v) for k, v in (line_avoid or {}).items()})
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -1240,6 +1254,8 @@ def main(argv=None):
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
+    ap.add_argument('--hcore-profile-manifest', help='qualified selected native CTLA/RSTE cohort; adds query/P readiness guards')
+    ap.add_argument('--hcore-boot-witness', help='bound core-pin release/START witness including +2 core readiness')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
                     help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
     ap.add_argument('--entry-norm-check', nargs='?', const='smoke', choices=('smoke', 'all'), default=None,
@@ -1261,7 +1277,8 @@ def main(argv=None):
             return
     tree = die_tree(a.die_ref, a.die_src)
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
-                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check)
+                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check,
+                      hcore_profile_manifest=a.hcore_profile_manifest, hcore_boot_witness=a.hcore_boot_witness)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
