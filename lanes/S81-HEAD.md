@@ -260,3 +260,4 @@ COORD?/OWNER? (not fixed by the compiled schedule, not invented):
  2. Host-lane calendar: calendar_rel241_G4_{ar,mtp}.json has no head-die host/HBC slot dates; dsdv_hostb_stage_hbc BOOT_HEADER_EDGE /
     BOOT_COMMIT_EDGE unset. Which compiled slots carry lane records vs HBC words (or separate lanes) is owed; no kind field invented.
  3. H4 on the head die: head ctl originates tl / consumes ca,cb, or forwards (TOK-DS rank-tree role); lanes + pins exist (no tie-off).
+2026-10-25 04:43 PDT GEOM-REVIEW-2 -> S81-HEAD: POST-ROUTE hd_st_m FAIL on IO basis + rst_o_1 pin on an M7 strap (geometry/stations OK) in lanes/GEOM-REVIEW.md.
