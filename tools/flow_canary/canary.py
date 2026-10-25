@@ -104,8 +104,34 @@ def parse_lint(log, rc):
                 n_undriven=len(undriven), multi_driven=multi[:20], errors=errors[:20])
 
 
+def lint_via_rtl_lint(kit, image, tool):
+    """FLOW-FIX 10-25: the canary lint = the flow's own tools/die_plan/rtl_lint.py (slang -Wimplicit-net + read_verilog
+    -noautowire with -defer elaboration, so unreachable `$fatal` parameter checks are not false errors), mapped to the
+    canary lint.json fields."""
+    out = kit / "canary_rtl_lint.json"
+    sh(f"python3 -I {shlex.quote(str(tool))} {shlex.quote(str(kit))} --image {image} --out {shlex.quote(str(out))}")
+    rj = jload(out) or {}
+    p = (rj.get("passes") or {}).get(rj.get("frontend") or "verilog") or {}
+    imp = [h["net"] for q in (rj.get("passes") or {}).values() for h in q.get("implicit", [])]
+    v = rj.get("verdict", "NOT RUN")
+    return dict(verdict="PASS" if v == "PASS" else "FAIL", rc=p.get("rc"), implicit=imp[:50], n_implicit=len(imp),
+                undriven=p.get("undriven", [])[:50], n_undriven=len(p.get("undriven", [])),
+                multi_driven=p.get("multi_driven", [])[:20], errors=(p.get("errors") or rj.get("why") or [])[:20],
+                why=rj.get("why", [])[:20], rtl_lint=str(out))
+
+
 def cmd_lint(a):
     kit = Path(a.kit).resolve()
+    tool = HERE / "rtl_lint.py"
+    if not tool.is_file():
+        tool = HERE.parent / "die_plan" / "rtl_lint.py"
+    if tool.is_file():
+        res = lint_via_rtl_lint(kit, a.image, tool)
+        res.update(top=a.top, kit=str(kit), tool="tools/die_plan/rtl_lint.py")
+        Path(a.out).write_text(json.dumps(res, indent=1) + "\n")
+        print(f"CANARY_LINT {res['verdict']} implicit={res['n_implicit']} undriven={res['n_undriven']} "
+              f"errors={len(res['errors'])} {'; '.join(res['why'][:3])}")
+        return 0 if res["verdict"] == "PASS" else 1
     (kit / "canary_lint.ys").write_text(lint_script(kit, a.top))
     r = sh(f"docker run --rm -v {kit}:/work {a.image} bash -lc "
            f"'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; cd /work; yosys -q -l /work/canary_lint.log "
@@ -414,6 +440,9 @@ def cmd_submit(a):
         kit = fmt(c["kit"], **kv)
         kv["kit"] = kit
         (run / "canary.py").write_text((HERE / "canary.py").read_text())
+        rtl = HERE.parent / "die_plan" / "rtl_lint.py"
+        if rtl.is_file():
+            (run / "rtl_lint.py").write_text(rtl.read_text())
         rfg = HERE.parent / "die_plan" / "reg_fanout_gate.py"
         if rfg.is_file():
             (run / "reg_fanout_gate.py").write_text(rfg.read_text())

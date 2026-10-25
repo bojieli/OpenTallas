@@ -19,14 +19,14 @@ def test_port_bits_missing_extra_and_scalar():
     assert PB.check(net,'wrong',pins)['verdict']=='FAIL'
 
 
-@pytest.mark.parametrize('gate,code', [('sdc_lint',1),('selrange_gate',1),('selrange_gate',2),
+@pytest.mark.parametrize('gate,code', [('rtl_lint',1),('rtl_lint',2),('sdc_lint',1),('selrange_gate',1),('selrange_gate',2),
                                       ('port_bind_gate',1),('face_guard',1),('hold_gate',1)])
 def test_runner_stops_before_costly_stage(tmp_path,gate,code):
     kit=tmp_path/'kit'; kit.mkdir(); fake=tmp_path/'bin'; fake.mkdir()
     (kit/'config.mk').write_text('')
     out=kit/'run/results/asap7/top/base';out.mkdir(parents=True)
     for f in ['1_2_yosys.v','1_synth.odb','4_cts.odb','4_cts.sdc']:(out/f).write_text('')
-    for name in ['sdc_lint','selrange_gate','port_bind_gate','face_guard','signoff','pin_audit']:
+    for name in ['rtl_lint','reg_fanout_gate','sdc_lint','selrange_gate','port_bind_gate','face_guard','signoff','pin_audit']:
         (kit/(name+'.py')).write_text('import sys\nraise SystemExit('+str(code if name==gate else 0)+')\n')
     envsh=tmp_path/'env.sh'; envsh.write_text('export PATH='+str(fake)+':$PATH\n')
     (fake/'docker').write_text('#!'+sys.executable+'\nimport os,subprocess,sys\na=sys.argv[1:]\n'
@@ -49,6 +49,8 @@ def test_runner_stops_before_costly_stage(tmp_path,gate,code):
     else:
         assert not any(' cts' in line for line in calls.splitlines()),calls
         assert (kit/'FAIL_PREFLOOR').exists()
+        if gate=='rtl_lint':   # FLOW-FIX 10-25: lint is the first gate, rc 8, before sdc_lint / synth
+            assert 'FAIL_PREFLOOR lint' in (kit/'FAIL_PREFLOOR').read_text() and p.returncode==8 and not calls
 
 
 @pytest.mark.parametrize('wns,count,failed', [(-100,2000,False),(-100.01,1,True),(0,2001,True),(-0.1,2000,False)])

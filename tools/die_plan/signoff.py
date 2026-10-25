@@ -730,6 +730,29 @@ def run_face_guard(disc, clock_ports=()):
 
 
 # ---- verdict -------------------------------------------------------------------------------------------------------
+FF_REF_TOL_PS = 10.0   # COORD 10-25 (GEOM-REVIEW-3 HBM argmax la1/s2f2): FF IO latency == TT vs measured FF mean
+
+
+def ff_reference_problem(rec, cff, requested):
+    """COORD 10-25: FF hold must be timed against a per-corner FF insertion reference, never silently against the
+    kit SDC's single (TT) IO vclk latency.  HBM argmax la1/s2f2 signed FF hold vs 250 ps while its routed FF
+    pin-register mean was 198.4 ps (-27.8 reported, ~+24 real).  -> 'FAIL_SIGNOFF ff_ref_missing: ...' or None.
+      * ff_vclk 'sdc' (no rebind / pin-flop-mean reference) and no per-corner FF bound -> FAIL;
+      * a FF bound equal to the TT value while the measured FF pin-register mean differs from it by > 10 ps -> FAIL."""
+    pol = rec.get("policy", {})
+    b = pol.get("insertion_bound") or {}
+    ffm = (cff.get("insertion_pinflops") or {}).get("mean")
+    if requested == "sdc" and b.get("ff") is None:
+        return ("FAIL_SIGNOFF ff_ref_missing: no per-corner FF insertion reference (ff_vclk sdc: FF hold timed against "
+                "the single SDC/TT IO vclk latency" + (f"; measured FF pin-register mean {ffm:.1f} ps" if ffm is not None
+                                                       else "") + "); regenerate the kit with the per-corner binding")
+    if b.get("ff") is not None and b.get("tt") is not None and abs(float(b["ff"]) - float(b["tt"])) < 0.5 \
+            and ffm is not None and abs(ffm - float(b["ff"])) > FF_REF_TOL_PS:
+        return (f"FAIL_SIGNOFF ff_ref_missing: FF IO latency {float(b['ff']):g} ps equals the TT value while the measured "
+                f"FF pin-register mean is {ffm:.1f} ps (> {FF_REF_TOL_PS:g} ps apart)")
+    return None
+
+
 def evaluate(rec, insertion_target=None):
     """fills rec['checks'] and rec['verdict'] / rec['reasons'] from rec['corners'] + record checks."""
     C = rec.get("corners", {})
@@ -768,9 +791,12 @@ def evaluate(rec, insertion_target=None):
         reference_ok = (requested == "sdc" or (reference or "").startswith("applied mode pin_flop_mean "))
         if not ov.startswith("applied ") or not reference_ok:
             v = "NOT RUN"
+        why = None if v != "NOT RUN" else "standard boundary-hold overlay was not applied or requested FF clock reference was unavailable"
+        ffr = ff_reference_problem(rec, C["ff"], requested)
+        if ffr:
+            v, why = "FAIL", ffr
         put("hold_ff", v, wns_ps=w, tns_ps=C["ff"].get("std_tns_min"), violators=C["ff"].get("std_nviol_min"),
-            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov, ff_vclk_reference=reference,
-            reason=None if v != "NOT RUN" else "standard boundary-hold overlay was not applied or requested FF clock reference was unavailable")
+            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov, ff_vclk_reference=reference, reason=why)
     else:
         put("hold_ff", "NOT RUN")
     if ok_corner("ss"):
@@ -871,7 +897,8 @@ def evaluate(rec, insertion_target=None):
 
 def _detail(k, c):
     if k in ("setup_tt", "hold_ff") and c.get("wns_ps") is not None:
-        return f" WNS {c['wns_ps']:+.2f} ps, {int(c.get('violators') or 0)} endpoints"
+        r = f"; {c['reason']}" if k == "hold_ff" and str(c.get("reason") or "").startswith("FAIL_SIGNOFF") else ""
+        return f" WNS {c['wns_ps']:+.2f} ps, {int(c.get('violators') or 0)} endpoints{r}"
     if k == "drv" and c.get("failing"):
         return " " + ", ".join(f"{x.upper()} slew {v['slew']} cap {v['cap']}" for x, v in c["failing"].items())
     if k == "unconstrained" and c.get("counts"):

@@ -67,6 +67,11 @@ def record(**kw):
     rec["sdc_lint"] = dict(verdict=kw.get("sdc", "PASS"))
     rec["face_guard"] = dict(verdict=kw.get("fg", "PASS"))
     rec["route"] = dict(drc=kw.get("drc", 0), antenna_nets=kw.get("ant", 0), drc_source="t", antenna_source="t")
+    # COORD 10-25: a per-corner FF insertion reference is required (ff_ref_missing otherwise)
+    # (default: a bound at the session's own pin-flop means, so the clock insertion check is neutral here)
+    m = {c: (rec["corners"].get(c, {}).get("insertion_pinflops") or {}).get("mean") for c in ("tt", "ff")}
+    rec["policy"] = kw.get("policy", dict(ff_vclk="sdc", insertion_bound=dict(
+        tt=m["tt"] if m["tt"] is not None else 250.0, ff=(m["ff"] if m["ff"] is not None else 202.5) - 1.0, tol=40.0)))
     return rec
 
 
@@ -393,3 +398,21 @@ def test_ff_vclk_cli_requires_measured_contract():
     with pytest.raises(SystemExit) as e:
         signoff.main(['run', '--base', '/unused', '--out', '/unused', '--ff-vclk', 'pin-flop-mean'])
     assert e.value.code == 2
+
+
+def test_ff_ref_missing_without_ff_reference():
+    """COORD 10-25 (HBM argmax la1/s2f2): ff_vclk sdc without a per-corner FF bound never signs FF hold off."""
+    rec = signoff.evaluate(record(policy=dict(ff_vclk="sdc")))
+    h = rec["checks"]["hold_ff"]
+    assert h["verdict"] == "FAIL" and h["reason"].startswith("FAIL_SIGNOFF ff_ref_missing")
+    assert rec["verdict"] == "NOT SIGNED" and any("ff_ref_missing" in r for r in rec["reasons"])
+
+
+def test_ff_ref_equal_to_tt_with_far_ff_mean_fails():
+    rec = record(policy=dict(ff_vclk="sdc", insertion_bound=dict(tt=250.0, ff=250.0, tol=40.0)))
+    mean = rec["corners"]["ff"]["insertion_pinflops"]["mean"]
+    rec["policy"]["insertion_bound"].update(tt=mean + 10.5, ff=mean + 10.5)
+    h = signoff.evaluate(rec)["checks"]["hold_ff"]
+    assert h["verdict"] == "FAIL" and "equals the TT value" in h["reason"]
+    rec = record(policy=dict(ff_vclk="sdc", insertion_bound=dict(tt=mean + 9.5, ff=mean + 9.5, tol=40.0)))
+    assert signoff.evaluate(rec)["checks"]["hold_ff"]["verdict"] == "PASS"
