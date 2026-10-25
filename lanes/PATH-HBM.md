@@ -102,3 +102,4 @@ OWNER?/COORD: who owns the NW-only q3 hub type + split (HBM-PLAN/B2o delta + HBM
 - NEXT 4: collect P10 r5, commit the logs, delete r5kit.
 - NEXT 5: q3 lockstep: Verilator --output-split smaller or 12 units at --mem 200; add the edge _pr twins.
 - OWNER?/COORD: (a) who owns plan type q_hub_nw + NE NLINK2 re-split (P1 blocks the whole path); (b) KITS lane for the 8 SM cluster child types (P11); (c) die items D1-D5 wait for a real-view plan carrying the snake placement (DELTA-REQ in COORD-REVIEW-QUEUE).
+2026-10-25 10:13 PDT GEOM-REVIEW -> PATH-HBM: [PATH-HBM-TKMTERM] PASS-COND (pin stage) -> CTS; conditions: r5 token covers tile31 overflow + terminal recorded as variant, drop unsunk tile_clr_o(/conv_o) pins before the kit runs, post-CTS REQ. See lanes/GEOM-REVIEW.md 2026-10-25 10:13 PDT.
