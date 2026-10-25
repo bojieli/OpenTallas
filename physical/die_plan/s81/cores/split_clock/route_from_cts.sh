@@ -1,9 +1,12 @@
 #!/bin/bash
-# route_from_cts.sh KITDIR [MEM_GB=32] [CPUS=16]: continue a cts_only.sh kit (4_cts present) through GRT (BC, as run_kit.sh),
+# route_from_cts.sh KITDIR [GOAL] [MEM_GB=32] [CPUS=16]: continue a cts_only.sh kit (4_cts present) through GRT (BC, as run_kit.sh),
 # detail route, finish, abstract, pin audit, TT/FF corner STA and the repo sign-off (KIT/signoff/signoff.json).
 # Launch only after a GEOM PASS for the kit (owner rule 10-25).
 set -uo pipefail
-K=$(cd "$1" && pwd); MEM=${2:-32}; CPUS=${3:-16}
+K=$(cd "$1" && pwd); shift
+# autopilot calls RUNNER KIT GOAL MEM THREADS: drop a non-numeric goal
+case "${1:-}" in ""|*[!0-9]*) [ $# -gt 0 ] && shift;; esac
+MEM=${1:-32}; CPUS=${2:-16}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 TOP=$(sed -n 's/^export DESIGN_NAME = //p' "$K/config.mk")
 docker run --rm --name s81split-route-$(basename $K) --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
