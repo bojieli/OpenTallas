@@ -320,7 +320,7 @@ class Sched:
             if kind == 'psum':
                 out += [(('sc', m, e + D.sc_down_edges(self.smap, s, m)), j) for m in range(s, -1, -1)]
             elif kind == 'x':
-                out += [(('x', m, e + 2 * abs(m - s)), j) for m in range(N)]
+                out += [(('x', m, e + D.ST_HOP * abs(m - s)), j) for m in range(N)]
             elif kind == 'd2d':
                 out.append((('d', e + 2 * s), j))
         return out
