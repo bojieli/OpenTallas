@@ -174,3 +174,22 @@ def test_sparse_nearby_group_may_merge_without_long_clock_arm():
     result=taps._absorb(leaves,1000,50,175)
     assert sorted(q[2] for q in result)==[1,201]
     assert max(q[3] for q in result)<=175
+
+
+def test_face_legalisation_cannot_silently_extend_radius(monkeypatch):
+    _no_pins(monkeypatch)
+    # Median y=2 is clamped to the interior; the former 160 um radius then
+    # becomes 175.28 um and needs another legal tap, rather than a false bound.
+    P=_plan([[100,2,200],[260,2,1]],cores=[],tap_max_sinks=1250,
+            tap_target_sinks=1000,tap_radius_um=175,tap_min_sinks=50)
+    tl=taps.density_taps(P,'hd')
+    assert len(tl)==2
+    assert max(t[4] for t in tl)<=175
+
+
+def test_capacity_move_cannot_break_absolute_density_radius():
+    tl=[('clk',100,100),('clk_t1',300,100)]
+    sinks=[(100+i*.01,100,1) for i in range(30)]
+    load,far,_=taps.assign(tl,sinks,20,250,max_distance_um=175)
+    assert load==[30,0]
+    assert max(far)<1
