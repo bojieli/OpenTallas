@@ -26,6 +26,12 @@ Sources: B = ~/coord/BRIEFING.md "OWNER DECISIONS 2026-10-24" #n; A = AGENTS.md 
     and cut analysis (bits per cut / tracks <= 0.55-0.60) before RTL. [A design method 1, M:cut-analysis-before-rtl 10-12]
 1.8 No stubs, shells, tie-offs, open inputs or bench glue in any die target; only test/debug ports may be tied. A
     port-bind check (bind.py) gates every die revision; unbound bus = G0 ERROR. [M:no-stubs 10-14, P "Bus", R7]
+    NOTE R7 amendment, ID straps only (owner 10-25, option B): ID straps (tile/lane/head/variant IDs) may be INPUT pins
+    of ONE hardened design tied to constants at the parent: (1) declared in the plan core/type entry as "straps",
+    named strap_*; tie-off audits accept ties only on declared straps; (2) quasi-static inside the block: no pin
+    register, kit SDC set_false_path -from [strap ports], block works for all values (no case analysis); (3) the
+    parent ties each with TIEHI/TIELO next to the pin; (4) LEC/lockstep per master vs every constant variant.
+    Every other input stays driven. [COORD-REVIEW-QUEUE OWNER DECISION 10-25 07:01; tools/die_plan/straps.py]
 1.9 Register every partition pin: one boundary flop at the source pin and one at the destination pin of every port
     (R2 face flops, FIRM at the pin, pin-to-reg p90 <= 30 um). [P conventions "Port"/budgets, M:pin-registers 10-15]
 1.10 No constant output pins: an output that is constant is removed from the plan and RTL, not exempted.

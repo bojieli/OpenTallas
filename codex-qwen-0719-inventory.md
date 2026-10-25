@@ -6,3 +6,6 @@
 - TOK-QW childtokens: CROMrepresentative28/28residual7/7QK2/2SiLU;SFU6336checks320outputs+mutant;MAT112/112PASS terminal, no duplicates. Compactreceiptcollecting; full259 unnecessary.
 - ELEM-QK obsoleteKVrruns alreadyterminal/failurediagnosed currentKVgroupowns; QCtt_ctlm awaitingROMbb+macroviewplanrepair thenfreshkit.
 - TRIAL-QK obsoleteplanresults diagnostic only; currentdieprototype ownerrootDIE-PROTO; no duplicate oldSTA. Pending correctedplanG0+geometrybeforecurrenttrial.
+
+## 07:48 owner critical-path update
+Currentmain+explicitSTART selected while7b stillCPU/nooutput. tokens maps real QK512 fixture to nativeKV service; planchildnarrowSTARTpublication; physicalf57r4liveandqueueADOPT; A0childmappingminimalphysicalcuts, no newvariants. ParentROM8376READYpromotedpendingrootgate missingconfigs/memories diagnosed, notRTLfail. Broader memoryhelpersWIPc282parkedsourceonly: actualinventories matched butFT/pintrack/clock/PDNconditionsopen; no new memoryroute. All earlierlane failures remainassigned, not silentlyclosed.

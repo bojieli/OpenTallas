@@ -380,3 +380,7 @@ PENDING:
 | R1 B | t24 t25 t26 t27 t28 t29 t30 t36 t37 t38 | 20/20 | 317-390 | 362-395 | 0 | REQ | autopilot on PASS |
 | R1 C | t40 t41 t42 t45 t46 t47 t48 t50 t51 | 18/18 | 317-383 | 363-394 | 0 | REQ | autopilot on PASS |
 | held | t8 | 2/2 | 357 | 447 (u_rrl_33) | 1 | not asked | WITHDRAWN (reset_tree leaf bound) |
+
+## CODEX notes 2026-10-25 07:27 PDT
+CODEX takeover genericPROTO on codex/proto-0719, stationwave separately S81/kits0719. Late leaf8 epyc2 spill finishedEXIT0: STRUCTURALoverflow3724986,hotbbox73.6%,TT+18.03/FF-2.46ps. Updatedbaseline103CLEAN/6HOTSPOT/68STRUCTURAL. B2nq_su31 remainsliveGRTextraiteration2/3,no duplicate. TenCLEANS81contenttypes held on boundkitRTL nestedreset blocker,CLOCK/S81plan informed. Oldcoll_ftm/io_ft report247 failures likelymemorycap but oldclock/F1recipe requires structural successor; no stale reroute.
+2026-10-25 08:17 PDT KITS-SPARE (LOOP-GAP owner per COORD 08:4x): FIX 01c2b39db6c1 coll_ftm (m5): see lanes/PROTO-KITS.md same time (OOM at 6_report; coll_ft* in QC-PLAN3 delta; rebuild after it).
