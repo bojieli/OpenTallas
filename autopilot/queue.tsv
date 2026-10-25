@@ -322,3 +322,4 @@ qwen_kvsys	kv3_head_eighth_e2	epyc1:/srv/opentallas-scratch2/claude/path-kv/head
 qwen_kvsys	kv3_head_eighth_e6	epyc1:/srv/opentallas-scratch2/claude/path-kv/heads/m3/e6/kv3_head_eighth_e6__216x216	claude/path-kv-head-1025@0bc101e228	REQ	PATH-KV-HEAD m3 09:19	24	160000	PATH-KV
 s81	dsdv_eng_rr_e	epyc1:/srv/opentallas-scratch2/claude/path-s81-eng/dsdv_eng_rr_e_e3	claude/path-s81-eng-1025@d2d23d2ebb	REQ	GEOM REQ [PATH-S81/ENG E3 09:21]	32	200000	PATH-S81	finish	/srv/opentallas-scratch2/claude/path-s81-eng/dsdv_eng_rr_e_e3/run_checked.sh
 qwen_compute	qfd_tile_nk_a0c	intel2:/srv/opentallas-scratch2/claude/path-qc-nk/r5/apkit	claude/path-qc-nk-1025@54da33dfab	REQ	[PATH-QC-NK-R5]	48	191000	PATH-QC	finish
+hbm	ot_hgi_coll_tkm_tp192_tile_core__idpin	epyc1:/srv/opentallas-scratch2/claude/path-hbm/kits_chain1/ot_hgi_coll_tkm_tp192_tile_core__idpin	claude/hbm-tkm-lec-1025@6663387df2	PASS-COND	PATH-HBM-TKMCHAIN	32	150000	PATH-HBM			8	adopt
