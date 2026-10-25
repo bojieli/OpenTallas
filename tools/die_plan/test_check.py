@@ -84,6 +84,28 @@ def test_face_density():
     assert any("/um > 6" in x for x in e)
 
 
+def test_face_density_type_budget():
+    """COORD KV RULING 10-25 (a): a type may declare a G2-proven face budget above the die's 6 pins/um, hard cap 16."""
+    def crowd(p):
+        for x in ("x0", "x1", "x2"):
+            port(p, x).update(window_um=[400.0, 410.0])
+
+    def typed(v, ref=True):
+        def m(p):
+            crowd(p)
+            for t in p["partition_types"].values():
+                t["face_pins_per_um"] = v
+                if ref:
+                    t["face_budget_g2"] = "g2 probe record"
+        return m
+    base = [x for x in errs(crowd, "faces") if "pins in the" in x]
+    assert base and all("/um > 6" in x for x in base)
+    assert [x for x in errs(typed(16.0), "faces") if "pins in the" in x] == []
+    assert any("without face_budget_g2" in x for x in errs(typed(16.0, ref=False), "faces"))
+    assert any("/um > 5.5" in x for x in errs(typed(5.5), "faces"))   # the type value is the limit
+    assert any("face_pins_per_um" in x for x in errs(typed(20.0)))     # schema: above the hard cap
+
+
 def test_layer_budget():
     assert any("above partition_signal_max" in x for x in errs(lambda p: port(p, "c0").update(layers=["M8"])))
 

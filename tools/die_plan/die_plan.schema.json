@@ -1245,6 +1245,15 @@
        "maximum": 1
       }
      },
+     "face_pins_per_um": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 16.0
+     },
+     "face_budget_g2": {
+      "type": "string",
+      "minLength": 3
+     },
      "face_layers": {
       "type": "object",
       "additionalProperties": false,

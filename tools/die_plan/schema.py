@@ -63,6 +63,7 @@ ASAP7_LAYERS = [
 BASE_LATTICE_UM = 2.16
 GRID_UM = 8.64
 
+FACE_PINS_HARD_CAP = 16.0   # pins/um per face pin layer pair: no type budget above this (COORD KV RULING 10-25 (a))
 DEFAULT_BUDGETS = dict(face_pins_per_um=6.0, face_pin_layers=2, face_window_um=10.0, pin_track_max=0.6,
                        cut_ratio_max=0.6, cut_step_um=250.0, pin_reg_p90_um=30.0,
                        # R3 (METHODOLOGY 5.1 / ruling 9.4, 2026-10-24; was 750 COORD 10-23): ft stations at most
@@ -340,6 +341,12 @@ SCHEMA = {
                     # ft_track_frac); M8 / M9 keys are G0 ERRORs (m89_signals: no over-the-top ft)
                     "ft_budget": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                              "maximum": 1}},
+                    # per-type face pin density budget (COORD KV RULING 10-25 05:07 (a)): above the die budget only
+                    # after the pins sit in channel gaps, up to the density a per-type G2 probe with hard cores
+                    # obstructing routes clean (face_budget_g2: the probe record), pin_track_max unchanged, hard cap
+                    # FACE_PINS_HARD_CAP pins/um
+                    "face_pins_per_um": {"type": "number", "exclusiveMinimum": 0, "maximum": 16.0},
+                    "face_budget_g2": {"type": "string", "minLength": 3},
                     # per-face pin layer sets (type frame faces); every layer <= M7 (an M8 / M9 face layer, e.g. the
                     # 10-23 S81 svc fold / rail faces, is a G0 ERROR since ruling 9.3)
                     "face_layers": {"type": "object", "additionalProperties": False, "properties": {
