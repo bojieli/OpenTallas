@@ -229,6 +229,8 @@ def main():
     ap.add_argument("--wf-start", type=int, default=130, help="START broadcast, clocks after the LATEST die rst_n (r3 carve: 130 "
                     "= max_release 128 + 2); negative controls set it earlier")
     ap.add_argument("--wf-skew", type=int, default=0, help="die g rst_n deasserts ((5g+3) mod 8) * SKEW clocks late (independent die resets)")
+    ap.add_argument("--wf-start-pin", type=int, default=0, help="decision 13c die START pin cycle S (CLOCK-RESET start broadcast): "
+                    "partitions release at max(die rst_n, S) + offset; 0 = pin tied high (plain wavefront)")
     ap.add_argument("--wf-override", nargs="*", default=[], metavar="WF_X=V", help="negative controls: override one group's release")
     a = ap.parse_args()
     if a.wavefront:
@@ -243,11 +245,12 @@ def main():
             assert k_ in WF["plus"], k_
             WF["plus"][k_] = int(v_)
         WF["plus"]["WF_SKEW"] = a.wf_skew
-        last_rst = WF_D0 + 7 * a.wf_skew                       # latest die rst_n deassert
+        last_rst = max(WF_D0 + 7 * a.wf_skew, a.wf_start_pin)   # latest release origin (die rst_n, or the START pin S)
+        WF["plus"]["WF_SPIN"] = a.wf_start_pin
         START = last_rst + a.wf_start                          # the START broadcast (one cycle on every die)
         WF["pw0"] = START - 20                                 # program write window: same distance to start as before
         WF["start_rel"] = a.wf_start
-        latest = max(v for k, v in WF["plus"].items() if k != "WF_SKEW")
+        latest = max(v for k, v in WF["plus"].items() if k not in ("WF_SKEW", "WF_SPIN"))
         print(f"WAVEFRONT {a.wavefront} sha256 {WF['sha'][:12]} releases {WF['plus']} latest {latest} -> START {START} "
               f"(= latest die rst_n {last_rst} + {a.wf_start}), PW0 {WF['pw0']}", flush=True)
     if a.mu_cal:

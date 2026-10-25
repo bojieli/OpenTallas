@@ -66,7 +66,7 @@ module tb_coll_tp8_static_links #(
     //   WF_UCIE coll_ucie: u_io.u_shared + u_io.g_six_five.u_gearbox + the UCIe PHY model (io_ucie)
     //   WF_FT   coll_f0..f5 (feedthrough transport stages) -> the SerDes faces' paid relay rows (latest coll_f release)
     //   WF_SERj io_serdes{,_1,_2}: SerDes PHY model of port j        WF_ISS: the issuer (cmd source sl_W5_fw)
-    integer WF_D0, WF_SKEW, WF_ISS, WF_CORE, WF_N, WF_S, WF_UCIE, WF_FT, WF_SER0, WF_SER1, WF_SER2;
+    integer WF_D0, WF_SPIN, WF_SKEW, WF_ISS, WF_CORE, WF_N, WF_S, WF_UCIE, WF_FT, WF_SER0, WF_SER1, WF_SER2;
 `endif
 `ifdef OT_TP8S_SEQSU
     // sequencer stage identity carried in every command/producer tag: {token, position, message}
@@ -126,13 +126,17 @@ module tb_coll_tp8_static_links #(
         for (g = 0; g < ND; g = g + 1) begin : g_die
             localparam integer P = g / 2, D = g % 2;
 `ifdef OT_TP8S_WAVEFRONT
-            wire [31:0] wf_t0 = WF_D0 + ((5 * g + 3) % 8) * WF_SKEW;     // die g rst_n deassert cycle
+            // die g rst_n deasserts at WF_D0 + skew; with the decision-13c die START pin (+WF_SPIN = its cycle, 0 = tied high =
+            // plain wavefront) the run relays ride the reset relay sites, so every partition releases at max(rst, S) + offset
+            wire [31:0] wf_rst = WF_D0 + ((5 * g + 3) % 8) * WF_SKEW;
+            wire [31:0] wf_t0 = (wf_rst > WF_SPIN) ? wf_rst : WF_SPIN;
             // registered taps (the bind's ot_dp_rrelay reset relays): each goes high on the edge that makes cyc = t0 + release
             reg wf_iss = 0, wf_core = 0, wf_n = 0, wf_s = 0, wf_ucie = 0, wf_ft = 0; reg [2:0] wf_ser = 0;
             always @(posedge clk) begin
                 wf_iss <= cyc + 1 >= wf_t0 + WF_ISS; wf_core <= cyc + 1 >= wf_t0 + WF_CORE; wf_n <= cyc + 1 >= wf_t0 + WF_N;
                 wf_s <= cyc + 1 >= wf_t0 + WF_S; wf_ucie <= cyc + 1 >= wf_t0 + WF_UCIE; wf_ft <= cyc + 1 >= wf_t0 + WF_FT;
-                wf_ser <= {cyc + 1 >= wf_t0 + WF_SER2, cyc + 1 >= wf_t0 + WF_SER1, cyc + 1 >= wf_t0 + WF_SER0};
+                // hard SerDes PHY parts have no start pin: raw reset only (CLOCK-RESET hard_parts_raw_reset)
+                wf_ser <= {cyc + 1 >= wf_rst + WF_SER2, cyc + 1 >= wf_rst + WF_SER1, cyc + 1 >= wf_rst + WF_SER0};
             end
 `else
             wire wf_iss = rst_n, wf_ucie = rst_n;
@@ -462,6 +466,7 @@ module tb_coll_tp8_static_links #(
 `ifdef OT_TP8S_WAVEFRONT
         WF_D0 = 15;   // = the cycle the tb's rst_n (rcnt == F) deasserts
         if (!$value$plusargs("WF_SKEW=%d", WF_SKEW)) WF_SKEW = 0;
+        if (!$value$plusargs("WF_SPIN=%d", WF_SPIN)) WF_SPIN = 0;
         if (!$value$plusargs("WF_ISS=%d", WF_ISS)) WF_ISS = 0;
         if (!$value$plusargs("WF_CORE=%d", WF_CORE)) WF_CORE = 0;
         if (!$value$plusargs("WF_N=%d", WF_N)) WF_N = 0;
@@ -471,8 +476,8 @@ module tb_coll_tp8_static_links #(
         if (!$value$plusargs("WF_SER0=%d", WF_SER0)) WF_SER0 = 0;
         if (!$value$plusargs("WF_SER1=%d", WF_SER1)) WF_SER1 = 0;
         if (!$value$plusargs("WF_SER2=%d", WF_SER2)) WF_SER2 = 0;
-        $display("TP8SL_WF d0=%0d skew=%0d iss=%0d core=%0d n=%0d s=%0d ucie=%0d ft=%0d ser=%0d/%0d/%0d pw0=%0d start=%0d",
-                 WF_D0, WF_SKEW, WF_ISS, WF_CORE, WF_N, WF_S, WF_UCIE, WF_FT, WF_SER0, WF_SER1, WF_SER2, PW0, START);
+        $display("TP8SL_WF spin=%0d d0=%0d skew=%0d iss=%0d core=%0d n=%0d s=%0d ucie=%0d ft=%0d ser=%0d/%0d/%0d pw0=%0d start=%0d",
+                 WF_SPIN, WF_D0, WF_SKEW, WF_ISS, WF_CORE, WF_N, WF_S, WF_UCIE, WF_FT, WF_SER0, WF_SER1, WF_SER2, PW0, START);
 `endif
         if (!$value$plusargs("DROP=%d", DROP)) DROP = -1;
         if (!$value$plusargs("CORRUPT=%d", CORRUPT)) CORRUPT = -1;
