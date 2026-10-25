@@ -17,6 +17,7 @@ Inputs (die_plan.json, key `asbuilt`; README "As-built binding"):
   clocks        clock source pins (regex on "path.port") -> domain; a partition loads one die clock per domain
   resets        reset source pins replaced by the partition's own synchroniser (polarity low/high)
   substitute_inst  per-INSTANCE plan variant of a leaf master ({"inst": path regex, "module": variant}; ports a subset)
+  internal_primitive_constants  opt-in: preserve existing literals inside Yosys glue primitives; named leaf pins stay strict
   straps        constant leaf inputs that are declared position straps (-> partition parameters); others are TIED
   map           {"parts": {path prefix: partition | [partition, local name]}, "rules": [[regex, partition], ...]}: every leaf / glue cell of the
                 as-built die maps to exactly one partition (longest prefix, then the first rule)
@@ -138,6 +139,9 @@ def short_id(s, n=60):
 # ------------------------------------------------------------------------------------------------ rules
 class Rules:
     def __init__(self, ab):
+        self.internal_primitive_constants = ab.get("internal_primitive_constants", False)
+        if type(self.internal_primitive_constants) is not bool:
+            raise BindError("asbuilt.internal_primitive_constants must be boolean")
         self.transport = [(re.compile(r["module"]), r) for r in ab.get("transport", [])]
         self.reducers = [(re.compile(r["module"]), r) for r in ab.get("reducers", [])]
         self.sources = [(re.compile(r["module"]), r) for r in ab.get("sources", [])]
@@ -923,6 +927,16 @@ class Binder:
             self.reset_age[p].append(s[2])
             return ("rst", s[1])
         if k == "const":
+            # A literal already present on a Yosys primitive is part of the
+            # arithmetic inside this partition, not an external leaf pin.
+            # Keep named module inputs and the emitted top R7 audit strict.
+            cell = self.F.cells[ci]
+            if (self.R.internal_primitive_constants and self.G.kind[ci] == "glue"
+                    and cell.module.startswith("$")):
+                if s[1] not in ("0", "1", "x", "z"):
+                    raise BindError(f"invalid primitive literal {s[1]!r}")
+                cnt["internal_primitive_literals"] += 1
+                return ("literal", s[1])
             pin = f"{self.F.cells[ci].path}.{pn}"
             if self.R.is_strap(pin):
                 cnt["strap"] += 1
@@ -955,7 +969,7 @@ class Binder:
     def _classify(self, p, ci, pn, i, s, cnt):
         if s[0] in ("or", "and"):
             subs = [self._src_desc(p, u, cnt, ci, pn, i) for u in s[1]]
-            subs = [x for x in subs if x[0] in ("int", "x", "strap", "tied", "top")]
+            subs = [x for x in subs if x[0] in ("int", "x", "strap", "tied", "literal", "top")]
             cnt["or_input"] += 1
             if not subs:
                 cnt["or_empty"] += 1
@@ -2292,6 +2306,8 @@ class Binder:
                 return render(d[1])
             if k == "top" and d[1] in F.top_ports:
                 return f"io_{sv_id(d[1])}[{d[2]}]"
+            if k == "literal":
+                return f"1'b{d[1]}"
             if k in ("tied", "top", "err"):
                 # never a constant: an unresolved bit stays an undriven wire, reported (bind_report proof)
                 nm = f"ub_{len(ub)}"
@@ -2512,6 +2528,8 @@ class Binder:
                               undriven=c.get("undriven", 0), multiply_bound=c.get("multi_driven", 0),
                               straps=c.get("strap", 0), plan_driven=c.get("plan_driven", 0)),
                    errors=self.errors[:2000], n_errors=len(self.errors), warnings=self.warns[:500])
+        if self.R.internal_primitive_constants:
+            rep["internal_primitive_literals"] = c.get("internal_primitive_literals", 0)
         if getattr(self, "glue_moved", None):
             rep["glue_moved"] = {f"{a}->{b}": n for (a, b), n in sorted(self.glue_moved.items())}
         return rep, lat
