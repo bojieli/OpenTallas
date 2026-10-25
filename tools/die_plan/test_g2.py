@@ -73,7 +73,7 @@ def test_assembly_die_flow():
         kd = gen_phys.write_assembly(PAIR, d, str(Path(d) / "views"))
         kd = Path(d) / "die"
         tcl = (kd / "die_flow.tcl").read_text()
-        assert "place_macro -macro_name pfb -location {1434.24 0} -orientation R0 -exact" in tcl and "detailed_route" in tcl
+        assert "findInst {pfb}]" in tcl and "setLocation [expr {round(1434.24 * $_d)}] [expr {round(0 * $_d)}]" in tcl and "detailed_route" in tcl
         v = (kd / "die_top_struct.v").read_text()
         assert "endmodule :" not in v and "w_x" in v
         assert (kd / "seams.json").is_file() and (kd / "abut_audit.py").is_file() and (kd / "run_die.sh").is_file()

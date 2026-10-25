@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_su_programme_pslice_c5",
+ "view": "ot_hbm_su_programme_pslice_c5@235c14e8a0eb",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_su_programme_pslice_c5_235c14e8a0eb, B2r2 pins 235c14e8a0eb, plan e1c50d83cff2)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "351ab6d9eab91890",
+ "reasons": "plan-stage (B2l, GEOM-REVIEW die PASS-COND e1c50d83cff2): 939.6x760.32 um, 2789 pins, faces E:316,S:2,W:2471; worst 0.158 pins/track per layer (<=0.6 OK), pins on lattice, spread along faces. Context q_hub/u_pgp_Q: 12/14 buses with core_conns partners (nearest endpoint per net); 0 of 2787 connected bits leave a face pointing away from the nearest partner; 2787 bits > 365 um to the nearest partner (plan internal stations, HBM-ARCH). Macros: ['ot_sram_1r1w_128x256_m1_r2c2']. Fill, density, face-flop distance, clock taps judged at the placed stage.",
+ "fixes": "Place only; route + signoff only after the placed-stage review.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_su_programme_pslice_c5_235c14e8a0eb/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_su_programme_pslice_c5_235c14e8a0eb/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T12:25:28-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

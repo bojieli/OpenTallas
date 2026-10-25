@@ -354,6 +354,123 @@
          }
         }
        }
+      },
+      "domains": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "name",
+         "nets",
+         "io",
+         "rect_um",
+         "grid",
+         "bumps"
+        ],
+        "additionalProperties": false,
+        "properties": {
+         "name": {
+          "type": "string",
+          "minLength": 1
+         },
+         "nets": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "minLength": 1
+          },
+          "minItems": 2
+         },
+         "io": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "minLength": 1
+          },
+          "minItems": 1
+         },
+         "rect_um": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+         },
+         "grid": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+           "type": "object",
+           "required": [
+            "layer",
+            "width_um",
+            "pitch_um",
+            "offset_um"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "layer": {
+             "type": "string",
+             "pattern": "^M[1-9]$"
+            },
+            "width_um": {
+             "type": "number",
+             "exclusiveMinimum": 0
+            },
+            "pitch_um": {
+             "type": "number",
+             "exclusiveMinimum": 0
+            },
+            "offset_um": {
+             "type": "number",
+             "minimum": 0
+            },
+            "nets": {
+             "type": "array",
+             "items": {
+              "type": "string",
+              "minLength": 1
+             }
+            }
+           }
+          }
+         },
+         "bumps": {
+          "type": "object",
+          "required": [
+           "rect_um",
+           "pitch_um"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "rect_um": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4
+           },
+           "pitch_um": {
+            "type": "number",
+            "exclusiveMinimum": 0
+           },
+           "use": {
+            "enum": [
+             "power_ground"
+            ]
+           },
+           "note": {
+            "type": "string"
+           }
+          }
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       }
       }
      }
     }
@@ -1487,8 +1604,51 @@
     },
     "release": {
      "enum": [
-      "counted"
+      "counted",
+      "pipelined"
      ]
+    },
+    "relay_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "part_depth": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "regions": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "name": {
+        "type": "string",
+        "minLength": 1
+       },
+       "parts": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "root_um": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     }
     }
    }
   },

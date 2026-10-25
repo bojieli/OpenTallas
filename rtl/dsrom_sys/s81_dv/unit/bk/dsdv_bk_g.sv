@@ -17,7 +17,9 @@
 module dsdv_bk_g #(
     parameter integer V   = 276,
     parameter integer MUT = 0,
-    parameter integer BK_DRAIN_SINK = 0
+    // COORD ruling 2026-10-24 18:55: the addressed-drain sink is canonical (the BK drain / slice-CTL namespace collision
+    // is a functional bug); 0 = the retired transparent-forwarding behaviour, kept only to reproduce old records.
+    parameter integer BK_DRAIN_SINK = 1
 ) (
     input  wire [0:0]        clk,
     input  wire [0:0]        rst_n,       // die reset net (active low)
