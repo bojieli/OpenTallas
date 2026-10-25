@@ -1,0 +1,17 @@
+{
+ "element": "qfd_tile_nl_a0c",
+ "kit": "physical/ref_tile/qfd_tile_nl_a0cv8 + tools/qwen_romleaf/repack/qfd_tile_nl_a0v8_regions.tcl (v8b) (branch claude/qc-a0v8-1024@2dfc218c4c)",
+ "verdict": "FAIL",
+ "hash": "108eb26a8fad24aede8021e9339bf0af0c7de9d450c979ff89c0b539510f2e75",
+ "reasons": "[2026-10-24T23:12:32-07:00] [QC-A0 SELF-REVIEW, PLACE-ONLY ORFS 3_place, no CTS/GRT] kit physical/ref_tile/qfd_tile_nl_a0cv8 at claude/qc-a0v8-1024@2dfc218c4c (v8b regions: face box split at the LSL pin groups, rung1 of sl2/sl5 in the row-1/2 channel, u_qlr3 placed per consumer, fault_q boxed; 0 cycles, no RTL change). Run epyc1:/srv/opentallas-scratch2/claude/qc/a0v8place/run_nl_v8b (ot-run, 16 thr), 187176 std cells after place (<= 400k). Looked at results/geom_review/a0v8/placed/qfd_tile_nl_a0cv8b_placed.png. HEAD-WORD HOPS (placed sites, register -> farthest endpoint, Manhattan): u_qlr3 max 377 (0 > 405), u_qlr2c max 353 (0 > 405), u_qlr2w max 339 (0 > 405), u_qlr2e max 336 (0 > 405), u_qlw3 max 242 (0 > 405), l2c max 237 (0 > 405), rung1 max 148 (0 > 405), u_qlw2e max 125 (0 > 405), u_qlw2w max 117 (0 > 405), tc max 90 (0 > 405), g_lrr max 88 (0 > 405), u_lh max 59 (0 > 405); GEOM-REVIEW condition 'reader/rung1 507, u_qlr3 517-522 um > 405' MET with 0 cycles (no relay; latency record unchanged). CUTS (placed, budget 0.6): W_col 0.45, M_col 0.40, gap 0.18, E_col 0.10, H_full.row0 0.26, H_full.row01 0.26, H_full.row1 0.22, H_full.row12 0.19, H_full.row2 0.18, H_east.row0 0.39, H_east.row01 0.32. DENSITY (std-cell area / free rows): LSL zone mean 0.162 p99 0.894 max 0.964 (22 10-um bins > 0.8), 20-um bins max 0.815 (1 > 0.8), ROM zone mean 0.154 max 0.782; hub fill 0.245; region boxes max fill qrl_rnw@201,397 0.443. TIMING at 3_place (TT libs, ideal clocks, 770-ps route period, 60 ps unc.; INFO): WNS -260.7 ps TNS -24.7 ns, worst head5 ring writer u_qlw2w.u_safe rqd -> g_s[3].dq: both flops in hub hd5 (y ~810-820) but the 3-gate enable cone was placed in the die-top strip y ~1150 (9 BUFx6f, ~700-um round trip). TAPS: kit a0_core_taps.json v8 == a0c8 taps == kit M7 pins == RTL ports (check_a0c8_taps.py PASS); plan qc-cap-1024r@2f67b44ad1 = v7 taps (FAIL, regen needed). GPL scattered logic over the empty node-less W slot (x 22-100) and the die-top strip: 2,391 std cells (80 flops) at y > 1137 vs 17 in NK; control / x-operand hops > 405 um: g_xm9.u_xr.u_safe 639 (20 bits), u_me.s2_x 650, u_me.k_r 616 (18), u_me.g_issue_fast 588/534, g_gocp 583, tap_q 535, tile_id 523, ib_i 462 (21), fault_q -> tile_fault 423 (the v8b fltq box; tile_fault FREE at the E edge), 22 reset landing copies 425-807.",
+ "fixes": "Not ready for CTS/GRT. Next kit rev (no cycles): fence the NL whitespace (placement blockage / filler region over the empty node slot x 22-75 and the y > 1137 top strip, or box the u_me control + g_xm9 landing next to the hub), move fltq to the row-0/1 channel W of the hub (<= 405 to tile_fault), re-run place-only and re-measure. Independent GEOM-REVIEW of the placed result required before any CTS/GRT.",
+ "images": [
+  "results/geom_review/a0v8/placed/qfd_tile_nl_a0cv8b_placed.png"
+ ],
+ "stage": "3_place (PLACE-ONLY; no CTS/GRT)",
+ "owner_lane": "QC-A0",
+ "reviewer": "QC-A0 self-review (not independent)",
+ "at": "2026-10-24T23:12:32-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route; GEOM-REVIEW codex/geom-1024@7e16eecd7 A0v8 PASS-COND PLACE ONLY",
+ "hash_basis": "sha256 over '<relpath> <git blob id>' of the kit dir (excl. run/views/gate_layout/record/*.log) + the v8b regions tcl"
+}

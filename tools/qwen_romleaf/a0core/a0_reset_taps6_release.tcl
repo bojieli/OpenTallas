@@ -1,3 +1,8 @@
+# Multi-level synchronous reset is opt-in; the legacy hook remains unchanged for existing kits.
+if {[info exists ::env(OT_RST_LAND_DISTRIBUTED)] && $::env(OT_RST_LAND_DISTRIBUTED) eq "1"} {
+  source /src/tools/qwen_romleaf/a0core/a0_reset_paths_release.tcl
+  return
+}
 # QC-P6-A0 10-23 A0 v6: PRE_DETAIL_PLACE release of the per-tap reset landing copies (a0_reset_taps6.tcl) for DPL.
 set rt6r_blk [ord::get_db_block]
 set rt6r_n 0
