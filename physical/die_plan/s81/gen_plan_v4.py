@@ -469,6 +469,15 @@ PF_PORT_BUS = {
 }
 
 
+# S81/PORTFIX 10-25: the derived file covers the 14 hard-core types CORE_CONNS misses (12 landed-frame types col_h9 /
+# col_h10 r0 p1..p6, r1, r2; gunit__t1; bk_sel__t2) but NONE is consumed yet: consumed, G0C core_faces reports real
+# far-face pins -- frames 72 errors (~1100 qbank / node / station ports vs the resited band macros), gunit 14 ports
+# (u_l5 vi_n / vo_n, u_l4r ...), bk_sel 15 ports (g_q[*].u_q t_o / lane / f_c vs u_c / u_g).  Those need core re-pin /
+# re-site (core owners + GEOM), filed by S81/PORTFIX (results/s81_portfix_1024/core_conns_findings.md); add a module
+# here once its type is re-pinned.
+PF_DERIVED_USE = set()
+
+
 def derived_core_conns(types):
     """S81/PORTFIX: CORE_CONNS_OUT entries for every hard-core type with no hand-written CORE_CONNS key."""
     if not os.path.exists(CORE_CONNS_DERIVED):
@@ -479,7 +488,7 @@ def derived_core_conns(types):
             continue
         c = t["contents"][0]
         d = der.get(c["module"])
-        if d is None:
+        if d is None or c["module"] not in PF_DERIVED_USE:
             continue
         buses = {b["name"] for b in t.get("buses", [])}
         pb = {k: v[4:] for k, v in (c.get("bind") or {}).items() if str(v).startswith("bus:")}
