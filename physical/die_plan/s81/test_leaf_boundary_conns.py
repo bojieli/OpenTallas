@@ -27,9 +27,9 @@ def validate(entry):
 def test_leaf_boundary_follows_actual_rtl_and_generator():
     text=(ROOT/'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv').read_text()
     header=text.split('module ot_s81sl_leaf',1)[1].split(');',1)[0]
-    header=re.sub(r'//[^\n]*', '', header)
+    identifiers=set(re.findall('[A-Za-z_][A-Za-z_0-9]*', ' '.join(line.split('//',1)[0] for line in header.splitlines())))
     for n in ('n_go','n_pre','m_v','m_q','m_b','m_i'):
-        assert not re.search(r'\b'+n+r'\b', header)
+        assert n not in identifiers
     assert '.n_go(n_go_n), .n_pre(n_pre_n)' in text
     assert '.d({m_q_p, m_b_p, m_i_p})' in text
     assert '.rb_v(rb_v), .rb_d(rb_d)' in text
