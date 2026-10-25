@@ -330,11 +330,11 @@ def reached_modules(files, top):
 # regions = 29 ps intra-adder skew): zone boxes as fractions of the core.  Chain zn_0 (zi pins, N face x 6-39) NW ->
 # zn_1 NE -> zn_2 SE -> zn_3 SW -> ctl S band (aq/am/ap/cal pins on the S face, xi on E, qo/tc face flops on N stay
 # pinned at their pins by face_flops.tcl).
-ASTK_ZONES = (("zn0", r"^u_u_strip_u_strip_g_zn_0_u_zn[./]", 0.000, 0.660, 0.494, 1.000),
-              ("zn1", r"^u_u_strip_u_strip_g_zn_1_u_zn[./]", 0.506, 0.660, 1.000, 1.000),
-              ("zn2", r"^u_u_strip_u_strip_g_zn_2_u_zn[./]", 0.506, 0.322, 1.000, 0.648),
-              ("zn3", r"^u_u_strip_u_strip_g_zn_3_u_zn[./]", 0.000, 0.322, 0.494, 0.648),
-              ("ctl", r"^u_u_strip_u_strip_u_ctl[./]", 0.000, 0.000, 1.000, 0.310))
+ASTK_ZONES = (("zn0", r"^u_u_strip_u_strip_g_zn_0_u_zn[./]", 0.000, 0.606, 0.494, 1.000),
+              ("zn1", r"^u_u_strip_u_strip_g_zn_1_u_zn[./]", 0.506, 0.606, 1.000, 1.000),
+              ("zn2", r"^u_u_strip_u_strip_g_zn_2_u_zn[./]", 0.506, 0.212, 1.000, 0.594),
+              ("zn3", r"^u_u_strip_u_strip_g_zn_3_u_zn[./]", 0.000, 0.212, 0.494, 0.594),
+              ("ctl", r"^u_u_strip_u_strip_u_ctl[./]", 0.000, 0.000, 1.000, 0.200))
 ASTK_TAP_RE = r"^(u_u_strip_u_strip_g_zn_[0-9]_u_zn)[./]"
 
 
@@ -365,6 +365,9 @@ def astk_zone_fences(kd, cfg, w, h, m):
         raise SystemExit(f"--astk-zone-fences: config lacks {sorted(set(sub) - seen)} (needs face_flops + flow basis)")
     if any(l.startswith("export CTS_ARGS") for l in out):
         raise SystemExit("--astk-zone-fences: CTS_ARGS already set")
+    # Fence membership is fixed for the GPL phase. Resize after GPL, when the
+    # fences are released; mid-GPL repair creates unowned cells outside the zones.
+    out.append("export GPL_TIMING_DRIVEN = 0")
     out.append("export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels")
     (kd / "astk_zone_delta.json").write_text(json.dumps(dict(
         cause="GEOM 10:05 FAIL kv3_astk W2: zones fragmented (zn_1 2 islands, zn_2 2), adder skew 29 ps from one zone on 2 leaf regions",
