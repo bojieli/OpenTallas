@@ -1968,6 +1968,10 @@ class Binder:
             else:
                 rtree = RT.for_type(P, ptn)
                 ports += [f"    output wire {n}   // registered reset to neighbour" for n, _x, _y in RT.out_pins(P, ptn)]
+                if RT.start_broadcast(P):              # OWNER DECISION 13c: START broadcast beside the reset
+                    ports.append("    input  wire start_i   // START in (wavefront broadcast)")
+                    ports += [f"    output wire {n}   // registered START to neighbour"
+                              for n, _x, _y in RT.start_out_pins(P, ptn)]
                 body += RT.rtl_lines(rtree)
                 body.append(f"    wire rst_n = rst_n_t{RT.leaf_tap(P, ptn)};")
         else:
@@ -2222,6 +2226,11 @@ class Binder:
         die = sv_id(self.plan["die"]["name"])
         doms = sorted({d for p in self.members for d in self.clk_dom[p]} | {self.ab.get("default_clock", "core")})
         ports = ["    input  wire rst_n"] + [f"    input  wire clk_{sv_id(d)}" for d in doms]
+        P = self.wavefront_plan()
+        if P is not None:
+            import reset_tree as RT
+            if RT.start_broadcast(P):
+                ports.insert(1, "    input  wire start")
         if self.ab.get("io_roles"):
             io = sorted({v["name"] for p in self.members for v in self.io_bindings(p).values()})
             ports += [f"    {self.F.top_ports[n][0]} wire [{len(self.F.top_ports[n][1]) - 1}:0] {sv_id(n)}" for n in io]
@@ -2231,9 +2240,15 @@ class Binder:
         wires, insts = [], []
         reset_in, reset_out = {}, {}
         P = self.wavefront_plan()
+        start_in = {}
         if P is not None:
             import reset_tree as RT
             wires, reset_in, reset_out = RT.wf_die_rtl(P)
+            if RT.start_broadcast(P):
+                sl, start_in, sout = RT.wf_die_start(P)
+                wires += sl
+                for q, d in sout.items():
+                    reset_out.setdefault(q, {}).update(d)
         conn = defaultdict(list)            # part -> [(port, wire)]
         for L in self.links:
             hops = L.get("hops") or [(L["src"], L["oname"], L["dst"], L["iname"])]
@@ -2262,6 +2277,8 @@ class Binder:
                     ov.append(f".{nm}({self.tvals[tn][p].get(k)})")
             dd = self.default_domain(p)
             cs = [f"        .clk(clk_{sv_id(dd)})", f"        .arst_n({reset_in.get(p, 'rst_n')})"]
+            if p in start_in:
+                cs.append(f"        .start_i({start_in[p]})")
             cs += [f"        .{port}({net})" for port, net in sorted(reset_out.get(p, {}).items())]
             for d in sorted(self.clk_dom[p] - {dd}, key=lambda d: self.cport(p, d)):
                 cs.append(f"        .{self.cport(p, d)}(clk_{sv_id(d)})")

@@ -29,6 +29,7 @@ class Base(unittest.TestCase):
         os.environ["AP_DIR"] = self.tmp.name
         os.environ["AP_QUEUE_FILE"] = str(Path(self.tmp.name) / "queue.tsv")
         os.environ["AP_COORD_FILES"] = str(Path(self.tmp.name) / "coord")
+        os.environ["AP_RELEASE_CACHE"] = str(Path(self.tmp.name) / "release_cache.json")
         (Path(self.tmp.name) / "coord" / "lanes").mkdir(parents=True)
         import autopilot
         self.ap = importlib.reload(autopilot)
@@ -36,7 +37,7 @@ class Base(unittest.TestCase):
 
     def tearDown(self):
         self.tmp.cleanup()
-        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES"):
+        for k in ("AP_DIR", "AP_QUEUE_FILE", "AP_COORD_FILES", "AP_RELEASE_CACHE", "AP_REPO_FILES"):
             os.environ.pop(k, None)
 
     def queue(self, *rows):
@@ -384,7 +385,7 @@ class TestGeomAutoSubmit(TickBase):
                 "| next 16-thread 32 GB job -> epyc4", "") if cmd[-1] == "--status" else (0, "", ""))
         self.tick()
         g = (Path(self.tmp.name) / "LOOP-GAPS.txt").read_text().splitlines()
-        body = g[1:]
+        body = [l for l in g if not l.startswith("#")]
         self.assertRegex(body[0].strip(), r"^9[01] m ", body)
         self.assertIn("GEOM-REQ-UNANSWERED [S81/H4]", body[0])
         self.assertTrue(any("GEOM-PASS-NOT-ROUTED [QC-CQB]" in l for l in body))
@@ -392,6 +393,20 @@ class TestGeomAutoSubmit(TickBase):
         self.assertFalse(any("claude/a-1025" in l for l in body))
         self.assertTrue(any("HOST-IDLE epyc4" in l for l in body))
         self.assertFalse(any("epyc2" in l or "[NEW]" in l or "QC-VMR" in l for l in body))
+
+    def test_resolved_verdict_is_not_a_gap(self):
+        self.geom(f"{ts(300)} GEOM-REVIEW: REPLY [S81/KITS {ts(305)[11:16]}] eg_c r7: PASS -> route\n"
+                  f"{ts(100)} GEOM-REVIEW: REPLY [S81/KITS {ts(105)[11:16]}] slice_station x6: PASS-COND -> route\n"
+                  f"{ts(90)} GEOM-REVIEW: REPLY [HBM-CORES] gq_land: PASS -> route\n")
+        (Path(self.tmp.name) / "coord" / "autopilot").mkdir()
+        (Path(self.tmp.name) / "coord" / "autopilot" / "resolved.tsv").write_text(
+            self.ap.LG.RESOLVED_HEAD + "\n" + f"S81/KITS\t{ts(300)[:16]}\tSUPERSEDED\teg_c\tPASS-RECON\tx\tlegacy kit\n"
+            f"HBM-CORES\t{ts(90)[:16]}\t\tgq_land\tPASS-RECON\tx\tno resolution -> still a gap\n")
+        self.tick()
+        g = (Path(self.tmp.name) / "LOOP-GAPS.txt").read_text()
+        self.assertNotIn("eg_c r7", g)                       # resolved verdict
+        self.assertIn("slice_station x6", g)                 # same tag, other verdict: still flagged
+        self.assertIn("GEOM-PASS-NOT-ROUTED [HBM-CORES]", g)  # empty resolution does not count
 
     def test_review_row_without_lane_action(self):
         p = Path(self.tmp.name)
@@ -479,6 +494,164 @@ Path Type: max
         with tempfile.TemporaryDirectory() as d:
             p = R.draw_paths(layout, [((0, 0, 255), R.violated_blocks(self.LOG, "min"))], Path(d) / "p.png", "t")
             self.assertTrue(Path(p).read_bytes().startswith(b"\x89PNG"))
+
+
+class TestOwnership(TickBase):
+    """OWNERS.tsv + OWNERSHIP summary + UNOWNED-ITEM gaps (ownership.py) from fake origin/main + coord files"""
+    def setUp(self):
+        super().setUp()
+        p = Path(self.tmp.name)
+        repo = p / "repo"
+        os.environ["AP_REPO_FILES"] = str(repo)
+        self.ap = importlib.reload(self.ap)                # re-read the env (REPO_FILES)
+        self.f = FakeHosts(self.ap)
+        self.ap.rpy, self.ap.launch_unit = self.f.rpy, self.f.launch
+        self.ap.unit_active = lambda u: u in self.f.active
+        self.ap.rbash = lambda host, script, timeout=0: (0, "", "")
+        self.ap.hub_procs = lambda path: []
+        self.ps = ""
+        self.ap.sh = lambda cmd, timeout=0, input=None: (0, self.ps, "") if cmd[0] == "ps" else (0, "", "")
+        s81 = {"partition_types": {
+            "slice_station__t5": {"module": "s81p_slice_station__t5", "hard_cores": [{"module": "dsfd_qbank_N"}]},
+            "slice_station__t6": {"module": "s81p_slice_station__t6"},
+            "slice_station__t7": {"module": "s81p_slice_station__t7"},
+            "ot_s81sl_leaf__t1": {"module": "s81p_leaf__t1"},
+            "ot_s81sl_leaf__t10": {"module": "s81p_leaf__t10"},
+            "eng__t1": {"module": "s81p_eng__t1", "hard_cores": [{"module": "dsdv_eng_rr_h0"}, {"module": "dsdv_gunit_l1"}]}}}
+        head = {"partition_types": {"hd_turn_a": {"module": "ot_s81hd_turn_a"},
+                                    "hd_tile": {"module": "ot_s81hd_tile_p", "hard_cores": [{"module": "ot_s81hd_elemB_cv"}]}}}
+        qc = {"partition_types": {"coll_ft": {"module": "qfd_coll_ft"},
+                                  "sle_sc": {"module": "qfd_sle_sc", "hard_cores": [{"module": "qfd_dv_s8x_vmr"}]}}}
+        kv = {"partition_types": {"kv3_hg": {"module": "kv3_hg_part"}, "kv3_hg_v2": {"module": "kv3_hg_v2_part"}}}
+        hbm = {"partition_types": {"q_b000": {"module": "hbm_arch_q_b000", "hard_cores": [{"module": "ot_hbm_x_core"}]},
+                                   "root": {"module": "hbm_arch_root"}}}
+        for d, P in (("s81", s81), ("s81_head", head), ("qwen_compute", qc), ("qwen_kvsys", kv), ("hbm_arch/B2n", hbm)):
+            (repo / "physical/die_plan" / d).mkdir(parents=True)
+            (repo / "physical/die_plan" / d / "die_plan.json").write_text(json.dumps(P))
+        (repo / "results/proto_1025/geom").mkdir(parents=True)
+        (repo / "results/proto_1025/g2").mkdir(parents=True)
+        (repo / "results/proto_1025/geom/B2n.json").write_text(json.dumps(
+            {"plan": "x", "types": {"q_b000": {"verdict": "FAIL"}, "root": {"verdict": "PASS"}}}))
+        (repo / "results/proto_1025/g2/res_qwen_kvsys.json").write_text(json.dumps(
+            {"kv3_hg": {"classify": {"cls": "STRUCTURAL", "why": "GRT ov 5000"}}, "kv3_hg_v2": {"classify": {"cls": "CLEAN"}}}))
+        (p / "release_cache.json").write_text(json.dumps({"plans": {"s81": {"signed_types": {"slice_station__t7": ["x"]},
+                                                                            "signed_cores": {}}},
+                                                          "signed_records": [{"name": "kr_dsdv_gunit_l1_lfp", "top": None,
+                                                                              "path": "/a/signoff.json", "scan_host": "epyc1"}]}))
+
+    def lane(self, name, text):
+        (Path(self.tmp.name) / "coord" / "lanes" / f"{name}.md").write_text(text)
+
+    def owners(self):
+        lines = (Path(self.tmp.name) / "OWNERS.tsv").read_text().splitlines()
+        head = lines[1].split("\t")
+        return {(r["die"], r["item"]): r for r in (dict(zip(head, l.split("\t"))) for l in lines[2:])}
+
+    def test_matcher_longest_prefix_and_aliases(self):
+        import ownership as O
+        items = O.plan_items("qwen_kvsys", {"partition_types": {"kv3_hg": {"module": "kv3_hg_part"},
+                                                                "kv3_hg_v2": {}, "glue": {"module": "qfd_glue"}}})
+        items += O.plan_items("s81_head", {"partition_types": {"hd_tile": {"hard_cores": [{"module": "ot_s81hd_elemB_cv"}]}}})
+        M = O.Matcher(items)
+        self.assertEqual(M.text("kv3_hg_v2__190.08x181.44"), {("qwen_kvsys", "kv3_hg_v2")})
+        self.assertEqual(M.text("gen/qwen_kvsys/part_kv3_hg"), {("qwen_kvsys", "kv3_hg")})
+        self.assertEqual(M.text("kits/elemB_rb hd_elemB_rb__s2_c60"), {("s81_head", "ot_s81hd_elemB_cv")})
+        self.assertEqual(M.text("glue logic in the kv3_hgx tile"), set())          # short key / no boundary
+        self.assertEqual(O.default_owner("qwen_compute", "core", "qfd_dv_s8x_vmr"), "QC-CQB")
+        self.assertEqual(O.default_owner("s81", "core", "x"), "S81-CORES")
+        self.assertEqual(O.default_owner("hbm", "type", "x"), "HBM-PLAN")
+
+    def test_states_owners_and_unowned_gap(self):
+        p = Path(self.tmp.name)
+        self.lane("S81", f"{ts(30)} S81: slice_station__t6 kit regenerated, GEOM REQ next\n")
+        self.lane("PROTO", f"{ts(200)} PROTO: hd_tile kit waits\n")
+        (p / "coord" / "lanes" / "GEOM-REVIEW.md").write_text(
+            f"{ts(90)} S81-CORES: GEOM REQ [S81-CORES/X] dsdv_eng_rr_h0_c placed\n"
+            f"{ts(80)} QC: GEOM REQ [QC-A] coll_ft kit\n{ts(70)} GEOM-REVIEW: REPLY [QC-A] coll_ft: PASS -> route\n"
+            f"{ts(65)} PROTO: GEOM REQ [PROTO kv] kv3_hg_v2 skeleton prototypes\n"
+            f"{ts(60)} GEOM-REVIEW: REPLY [PROTO kv] kv3_hg_v2 skeleton PASS\n")
+        old = time.strftime("%Y-%m-%d %H:%M:%S %Z", time.localtime(time.time() - 7200))
+        (p / "review.tsv").write_text(self.ap.TSV_HEAD["review.tsv"] + "\n" + "\t".join(
+            [old, "abc123", "s81_head", "hd_turn_a", "x@1234567", "epyc1", KIT, "NEAR-MISS", "r", "/rv/abc123", "", "",
+             "PROTO-KITS"]) + "\n")
+        self.ps = ("4242 300 python3 /home/ubuntu/.local/bin/ot-run --mem 24 --dir /srv/opentallas-scratch2/claude/x/"
+                   "ot_s81sl_leaf__t1 -- bash /srv/x/run_kit.sh /srv/x route 24 8\n"
+                   "4243 30 python3 /home/ubuntu/.local/bin/ot-run --mem 40 --dir /srv/opentallas-scratch2/claude/proto/"
+                   "gen/B2n/part_root -- bash run.sh\n")
+        self.tick()
+        o = self.owners()
+        st = lambda k: o[k]["state"]
+        self.assertEqual(st(("s81", "slice_station__t7")), "SIGNED")              # cache per-plan list
+        self.assertEqual(st(("s81", "dsdv_gunit_l1")), "SIGNED")                  # cache record, kr_/_lfp rule
+        self.assertEqual(st(("s81", "ot_s81sl_leaf__t1")), "ROUTING")             # live ot-run route, not t10
+        self.assertEqual(st(("s81", "ot_s81sl_leaf__t10")), "NEEDS-KIT")
+        self.assertEqual(st(("s81", "dsdv_eng_rr_h0")), "GEOM-REQ")
+        self.assertEqual(st(("qwen_compute", "coll_ft")), "KIT-PLACED")
+        self.assertEqual(st(("s81_head", "hd_turn_a")), "REVIEW")
+        self.assertEqual(o[("s81_head", "hd_turn_a")]["owner"], "PROTO-KITS")
+        self.assertEqual(st(("qwen_kvsys", "kv3_hg")), "PLAN-STRUCTURAL")          # G2 STRUCTURAL
+        self.assertEqual(st(("qwen_kvsys", "kv3_hg_v2")), "NEEDS-KIT")            # skeleton review is not a kit event
+        self.assertEqual(st(("hbm", "q_b000")), "PLAN-STRUCTURAL")                # PROTO geom FAIL
+        self.assertEqual(st(("hbm", "root")), "NEEDS-KIT")                        # G2 probe live: state kept
+        self.assertIn("ot-run pid 4243", o[("hbm", "root")]["live_job"])
+        self.assertEqual(o[("s81", "slice_station__t6")]["owner"], "S81")
+        self.assertEqual(o[("s81", "slice_station__t5")]["owner"], "S81-PLAN")
+        self.assertEqual(o[("s81", "dsfd_qbank_N")]["owner"], "S81-CORES")
+        self.assertEqual(o[("qwen_compute", "qfd_dv_s8x_vmr")]["owner"], "QC-CQB")
+        g = (p / "LOOP-GAPS.txt").read_text()
+        self.assertIn("# OWNERSHIP", g)
+        self.assertRegex(g, r"#   s81 +\d+: .*SIGNED 2 \| UNOWNED \d+")
+        self.assertIn("UNOWNED-ITEM s81 -> S81-PLAN", g)
+        self.assertIn("slice_station__t5", g)
+        unowned = [l for l in g.splitlines() if "UNOWNED-ITEM" in l]
+        self.assertFalse(any("slice_station__t6" in l or "slice_station__t7" in l or "ot_s81sl_leaf__t1 " in l
+                             or " root" in l for l in unowned))
+        self.assertIn("hd_tile(PROTO)", g)                                         # 200 min ago: unowned, last lane shown
+
+    def test_ownership_failure_never_stops_the_gap_report(self):
+        import ownership as O
+        orig = O.build
+        O.build = lambda inp, now=None: 1 / 0
+        try:
+            self.tick()
+        finally:
+            O.build = orig
+        g = (Path(self.tmp.name) / "LOOP-GAPS.txt").read_text()
+        self.assertIn("OWNERSHIP unavailable", g)
+
+
+class TestChainSafety(Base):
+    def test_parent_staging_client_and_spill_are_busy(self):
+        k = "/srv/opentallas-scratch2/claude/kv/heads/e2/kit"
+        for flag in ("--dir", "--stage"):
+            self.assertTrue(self.ap.process_uses_kit("python3 /home/ubuntu/.local/bin/ot-run " + flag +
+                " /srv/opentallas-scratch2/claude/kv/heads/e2 -- bash /srv/opentallas-scratch2/claude/kv/heads/e2/go.sh", k))
+        self.assertFalse(self.ap.process_uses_kit("ot-run --dir /srv/opentallas-scratch2/claude/kv/heads/e20", k))
+
+    def test_signoff_does_not_finish_busy_adopted_chain(self):
+        self.ap.hub_procs = lambda path: []
+        self.ap.probe_job = lambda j: so()
+        self.ap.rpy = lambda *a, **kw: {"busy": True, "log_age_s": 3000}
+        self.ap.finish = lambda *a: self.fail("finished a live chain")
+        self.ap.poll_adopted({}, {"host": "epyc2", "path": "/kit"})
+
+
+class TestReviewIdentity(unittest.TestCase):
+    def test_batches_never_share_clearance(self):
+        import loopgaps as L
+        text = "2026-10-25 05:20 GEOM REQ [PROTO-KITS/S81-178 B1] t12 @0123456789ab\n" \
+               "2026-10-25 05:21 GEOM REQ [PROTO-KITS/S81-178 B2] t25 @0123456789ab\n" \
+               "2026-10-25 05:44 GEOM-REVIEW: REPLY [PROTO-KITS/S81-178 B2] PASS-COND route t25 @0123456789ab\n"
+        self.assertIsNone(L.geom_verdicts(text, "PROTO-KITS/S81-178 B1", "slice_station__t12", "0123456789ab"))
+        self.assertEqual(L.geom_verdicts(text, "PROTO-KITS/S81-178 B2", "slice_station__t25", "0123456789ab")[0], "PASS-COND")
+
+    def test_continuation_verdict_names_are_retained(self):
+        import loopgaps as L
+        text = "2026-10-25 05:20 GEOM REQ [BATCH B1] t12 t18\n" \
+               "2026-10-25 05:44 GEOM-REVIEW: REPLY [BATCH B1] reviewed:\n" \
+               "  t12 PASS-COND route; t18 FAIL pins\n"
+        self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t12", "")[0], "PASS-COND")
+        self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t18", "")[0], "FAIL")
 
 
 if __name__ == "__main__":

@@ -50,6 +50,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import gen_phys  # noqa: E402
+import die_sta  # noqa: E402
 import gen_rtl  # noqa: E402
 import schema as S  # noqa: E402
 
@@ -605,9 +606,11 @@ def bumps_tcl(P, bumps, size=4.0):
 
 
 # --------------------------------------------------------------------------------------------------------- STA kit
-def standin_netlist(P, tn):
+def standin_netlist(P, tn, hold_contract=True):
     """budget stand-in of a partition type for die_sta.py: one face flop per pin bit next to its pin, clocked from the
-    nearest plan clock tap (no internal logic: the partition's internal paths are its own G3 closure)."""
+    nearest plan clock tap (no internal logic: the partition's internal paths are its own G3 closure).  hold_contract:
+    every input bit reaches its face flop through the boundary-hold contract cell (die_sta.bhold_cell(tol)): the port
+    -> D minimum a signed kit guarantees under the signoff.py hold_ff overlay (input min -insertion_tol)."""
     t = P.types[tn]
     pins = gen_phys.type_pins(P, tn)
     bits = defaultdict(int)
@@ -626,9 +629,12 @@ def standin_netlist(P, tn):
         ports.append(f"  {'input' if dirs.get(b) == 'in' else 'output'} [{bits[b] - 1}:0] {b};")
     cells = []
     k = 0
+    bh = die_sta.bhold_cell(P.clock["insertion_tol_ps"])
     for bus, bit, ln, x, y, f in sorted(pins, key=lambda p: (p[0], p[1])):
         ck = near(x, y)
-        if dirs.get(bus) == "in":
+        if dirs.get(bus) == "in" and hold_contract:
+            cells.append(f"  {bh} h{k} (.A({bus}[{bit}]), .Y(d{k}));\n  {FLOP} f{k} (.CLK({ck}), .D(d{k}), .QN(q{k}));")
+        elif dirs.get(bus) == "in":
             cells.append(f"  {FLOP} f{k} (.CLK({ck}), .D({bus}[{bit}]), .QN(q{k}));")
         else:
             cells.append(f"  {FLOP} f{k} (.CLK({ck}), .D(1'b0), .QN({bus}[{bit}]));")
@@ -636,8 +642,38 @@ def standin_netlist(P, tn):
     names = tapn + ["arst_n"] + sorted(bits)
     v = [f"module {t['module']} ({', '.join(names)});"] + ports
     v += [f"  wire q{i};" for i in range(k) if f".QN(q{i})" in cells[i]]
+    v += [f"  wire d{i};" for i in range(k) if f".Y(d{i})" in cells[i]]
     v += cells + ["endmodule"]
     return "\n".join(v) + "\n", k
+
+
+_STANDIN_IN = re.compile(r"^(\s*)(" + re.escape(FLOP) + r") f(\d+) \(\.CLK\(([^)]*)\), \.D\(([^)']+)\), \.QN\(q\3\)\);\s*$")
+
+
+def standin_add_contract(text, tol_ps):
+    """an existing bare stand-in netlist (standin_netlist without hold_contract) -> the contract form: every
+    `FLOP fK (.CLK(c), .D(<port bit>), .QN(qK));` gets the OT_BHOLD cell between the port bit and D.  Returns
+    (text, bits).  Refuses a netlist that is not a pure stand-in (any other cell type) or already has the cell."""
+    bh = die_sta.bhold_cell(tol_ps)
+    out, n, wires = [], 0, []
+    for ln in text.splitlines():
+        if "OT_BHOLD_" in ln:
+            raise ValueError("stand-in already carries the boundary-hold contract")
+        m = _STANDIN_IN.match(ln)
+        if m:
+            ind, cell, k, ck, d = m.groups()
+            out += [f"{ind}{bh} h{k} (.A({d}), .Y(d{k}));", f"{ind}{cell} f{k} (.CLK({ck}), .D(d{k}), .QN(q{k}));"]
+            wires.append(f"  wire d{k};")
+            n += 1
+            continue
+        s = ln.strip()
+        if s and not re.match(r"(module|input|output|wire|endmodule|\)|//)", s) and not s.startswith(FLOP):
+            raise ValueError(f"not a budget stand-in netlist line: {s[:120]}")
+        out.append(ln)
+    if wires:
+        i = next(j for j, ln in enumerate(out) if ln.strip().startswith(FLOP) or ln.strip().startswith(bh))
+        out[i:i] = wires
+    return "\n".join(out) + "\n", n
 
 
 # ------------------------------------------------------------------------------------------------------------- kit
@@ -1238,7 +1274,22 @@ def main(argv=None):
     c = sub.add_parser("clock")
     c.add_argument("dir")
     c.add_argument("--plan")
+    h = sub.add_parser("standin-contract", help="copy a die_sta PARTS dir of bare stand-ins with the boundary-hold "
+                                                "contract cell added (re-time an existing trial without a new kit)")
+    h.add_argument("parts")
+    h.add_argument("--out", required=True)
+    h.add_argument("--tol-ps", type=float, default=float(S.DEFAULT_CLOCK["insertion_tol_ps"]))
     a = ap.parse_args(argv)
+    if a.cmd == "standin-contract":
+        tot = {}
+        for v in sorted(Path(a.parts).glob("*/6_final.v")):
+            t, n = standin_add_contract(v.read_text(), a.tol_ps)
+            d = Path(a.out) / v.parent.name
+            d.mkdir(parents=True, exist_ok=True)
+            (d / "6_final.v").write_text(t)
+            tot[v.parent.name] = n
+        print(json.dumps(dict(cell=die_sta.bhold_cell(a.tol_ps), types=len(tot), input_bits=sum(tot.values())), indent=1))
+        return 0
     if a.cmd == "kit":
         m = write_kit(a.plan, a.out, a.views, a.leaf_um, a.rep_um, a.coarse_um, a.density)
         print(json.dumps({k: m[k] for k in ("die", "parts", "types", "closed_views", "hard_cores", "clock_tree", "grt",

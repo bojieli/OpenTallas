@@ -7,7 +7,9 @@ geom_verdicts() to submit a queued kit within one tick of its GEOM PASS (the onl
 Gaps:
   (1) GEOM-REQ-UNANSWERED    a GEOM REQ in lanes/GEOM-REVIEW.md with no REPLY / VERDICT / ACK of its tag after 20 min
   (2) GEOM-PASS-NOT-ROUTED   a GEOM PASS / PASS-COND reply that clears a route, with no autopilot submit of a kit under
-                             that tag after 20 min (queued kits are submitted by the tick itself)
+                             that tag after 20 min (queued kits are submitted by the tick itself), unless coord/state
+                             autopilot/resolved.tsv carries that verdict (tag + verdict time): its kits were signed off,
+                             superseded, routed outside the autopilot or the reply is not a route clearance
   (3) RUN-NOT-CLASSIFIED     an autopilot run whose client / render ended but is still unclassified after one tick
   (4) REVIEW-NO-ACTION       a review.tsv / structural.tsv row with no GEOM REQ or fix line (naming its type or id) in
                              the owning lane file or GEOM-REVIEW.md after 60 min
@@ -15,6 +17,9 @@ Gaps:
                              after 30 min
   (6) HOST-IDLE              a fleet host admitting > 100 GB at load < 60 % of its cores while the autopilot queue has
                              nothing waiting
+  (7) UNOWNED-ITEM           (ownership.py) a release-plan partition type / hard core, not SIGNED, with no live job and
+                             no lane activity for > 60 min, grouped per die + owner lane; the OWNERSHIP summary
+                             ('#' lines) heads the file and the full table is autopilot/OWNERS.tsv
 """
 import re
 import time
@@ -39,16 +44,23 @@ def parse_ts(line, default=None):
 
 
 def tag_of(s):
-    """'S81/KITS 02:07 + 02:16' / 'S81/H4 2026-10-25 00:51 PDT' / 'PROTO hbm_b2m' -> canonical first token"""
+    """Keep the full review identity, including batch/variant words; remove only dates/times."""
     s = TS.sub("", s)
     s = HHMM.sub("", s)
-    return s.replace("PDT", "").replace("PST", "").strip().split(" ")[0].strip(" ,;") if s.strip() else ""
+    s = re.sub(r"\b(?:PDT|PST)\b", "", s)
+    return re.sub(r"\s+", " ", s).strip(" ,;+ ")
 
 
 def geom_events(text):
-    """-> (reqs, replies): reqs [(t, tag, line)], replies [(t, tag, verdict|None, line)] in file order"""
+    """Parse complete review entries, including their indented kit/verdict lists."""
     reqs, reps, last_t = [], [], None
+    entries = []
     for line in text.splitlines():
+        if line[:1].isspace() and entries and parse_ts(line) is None:
+            entries[-1] += " " + line.strip()
+        else:
+            entries.append(line)
+    for line in entries:
         t = parse_ts(line, None)
         if t is not None:
             last_t = t
@@ -111,14 +123,34 @@ def _answers(tag, req_line, rtag, rep_line):
     a kit token of the REQ"""
     if rtag == tag:
         return True
-    fam = lambda x: re.split(r"[-/]", x)[0]
+    fam = lambda x: re.split(r"[-/\s]", x)[0]
     if fam(rtag) != fam(tag):
         return False
     toks = {w for w in re.findall(r"[A-Za-z0-9]+(?:_[A-Za-z0-9]+)+", req_line) if len(w) >= 6}
     return any(w in rep_line for w in toks)
 
 
-def gaps_geom(text, now, queue_tags_submitted):
+RESOLVED_HEAD = "# tag\tverdict_time (YYYY-MM-DD HH:MM of the REPLY line)\tresolution\tkits\tlane\trecorded\tnote"
+
+
+def parse_resolved(text):
+    """coord/state autopilot/resolved.tsv -> {(tag, verdict epoch)}: GEOM PASS verdicts whose kits need no autopilot
+    submit (SIGNED / SUPERSEDED / ROUTED by hand / NOT-ROUTE); gap (2) stops flagging exactly that verdict, so a later
+    PASS under the same tag is still flagged"""
+    out = set()
+    for raw in text.splitlines():
+        if not raw.strip() or raw.lstrip().startswith("#"):
+            continue
+        f = raw.split("\t")
+        if len(f) < 3 or not f[2].strip():
+            continue                                       # a resolution is required
+        t = parse_ts(f[1], None)
+        if t is not None and tag_of(f[0]):
+            out.add((tag_of(f[0]), t))
+    return out
+
+
+def gaps_geom(text, now, queue_tags_submitted, resolved=frozenset()):
     out = []
     reqs, reps = geom_events(text)
     for t, tag, line in reqs:
@@ -132,9 +164,10 @@ def gaps_geom(text, now, queue_tags_submitted):
         tail = line[line.find(v):]
         if not ROUTE_OK.search(tail) or re.search(r"\bno (new )?(route|P&R)\b|not for route", tail, re.I):
             continue
-        if tag not in queue_tags_submitted:
+        if tag not in queue_tags_submitted and (tag, t) not in resolved:
             out.append((t, f"GEOM-PASS-NOT-ROUTED [{tag}] {v}: no autopilot submit under this tag (if the lane routed "
-                           f"it by hand, enqueue it next time: tools/autopilot/enqueue.py) -- {line.strip()[:140]}"))
+                           f"it by hand, enqueue it next time: tools/autopilot/enqueue.py; signed / superseded: "
+                           f"autopilot/resolved.tsv) -- {line.strip()[:140]}"))
     return out
 
 
@@ -210,9 +243,9 @@ def gaps_hosts(status_text, queue_waiting, now):
     return out
 
 
-def render(gaps, now):
+def render(gaps, now, head=()):
     lines = [f"# LOOP-GAPS -- autopilot tick {time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(now))} "
-             f"(read-only; oldest first; age = since the event)"]
+             f"(read-only; oldest first; age = since the event)"] + list(head)
     for t, msg in sorted(gaps, key=lambda g: g[0]):
         age = max(0, now - t) / 60
         lines.append(f"{age / 60:6.1f} h  {msg}" if age >= 120 else f"{age:6.0f} m  {msg}")
