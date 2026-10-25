@@ -43,5 +43,15 @@
   "straps": 11568,
   "plan_driven": 0
  },
- "scope": "Twelve direct station-to-controller lanes only; historical267 receipt preserved"
+ "scope": "Twelve direct station-to-controller lanes only; historical267 receipt preserved",
+ "model_price": {
+  "additional_boundary_FF_bits": 24,
+  "additional_feedthrough_FF_bits": 0,
+  "data_cycles_added": 0,
+  "token_cycles_added": 0,
+  "additional_cell_body_um2": 9.097919999999998,
+  "FF_cell_body_um2": 0.37908,
+  "basis": "existing tools/uarch_model.py ASAP7 FF body estimate; excludes unmeasured clock/reset/buffer and route overhead",
+  "unified_model_api": "qwen_station_ctl_width_1309_model"
+ }
 }
