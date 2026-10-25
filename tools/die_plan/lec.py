@@ -32,6 +32,9 @@ equivalence of every next-state / output function) plus register correspondence.
 Kept registers (fail-closed): every register bit the RTL declares kept ((* keep *) or a flop in a keep_hierarchy
         cell: pin flops, placement replicas) must be a flop of its own name in the netlist; one merged into its twin
         (opt_merge) passes correspondence, so it is counted here: KEEP FAIL (exit 1, the kit stops like NOT EQUIVALENT).
+Hints (KIT/lec_hints.json or --hints; PATH-KV-PC4 10-25): untrusted register correspondences ('user match') for twins
+        the signature search cannot find (rare-event bits, frontend array layouts); every hint is proved by the same
+        induction and dropped if it fails, never a waiver (apply_hints).
 Verdict (DIR/lec.json; DIR defaults to KITDIR/lec):
   EQUIVALENT      every compare point proved (unmatched registers, if any, were free inputs: unobservable);
   NOT EQUIVALENT  >= 1 compare point differs and its cone sees only matched / proved key points and RTL registers the
@@ -994,22 +997,28 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
         st[m.onames[i]] = "differs" if lit_val(val, mask, m.outs[i]) else "undecided"
     left = [i for i in left if st[m.onames[i]] == "undecided"]
     pending = left[:single_cap]
-    if pending:
+    # one cone at a time: naive SAT (x10 the sweep's conflicts), then what it leaves UNDECIDED (a solver limit, not a
+    # difference) by SAT sweeping inside the cone (&cec -m without -n, x100 / x1000): wide XOR trees (ECC encoders)
+    # that naive SAT cannot finish collapse there (PATH-KV-PC4 10-25: 77 kvs_pc ECC / write-queue cones undecided at
+    # 1M naive conflicts, each proved by &cec -m in ~1 s).  Only what no pass answers stays undecided.
+    for opt, factor in (("-n -m", 10), ("-m", 100), ("-m", 1000)):
+        if not pending:
+            break
         from concurrent.futures import ThreadPoolExecutor
         jobs = max(1, PROVE_JOBS)
         size = len(pending) if jobs == 1 else max(1, (len(pending) + jobs * 4 - 1) // (jobs * 4))
         batches = [pending[i:i+size] for i in range(0, len(pending), size)]
-        def one_batch(ids):
-            script = [f"&r {swept}; &cone -O {i}; &cec -n -m -C {conflicts * 10}" for i in ids]
+        def one_batch(ids, factor=factor, opt=opt):
+            script = [f"&r {swept}; &cone -O {i}; &cec {opt} -C {conflicts * factor}" for i in ids]
             # one command per line in a script file (abc -f): a long batch passed as one -c argument exceeds the
             # kernel per-argument limit (MAX_ARG_STRLEN 128 KiB; OSError E2BIG on the 48k-output kvs_pc miters)
-            sf = work / f"{tag}_cones_{ids[0]}_{ids[-1]}.abc"
+            sf = work / f"{tag}_cones_{ids[0]}_{ids[-1]}_x{factor}{opt.replace(' ', '')}.abc"
             sf.write_text("\n".join(script) + "\n")
             r = subprocess.run([abc, "-f", str(sf)], capture_output=True, text=True)
             return ids, r.stdout + r.stderr
         with ThreadPoolExecutor(max_workers=jobs) as ex:
             for ids, t in ex.map(one_batch, batches):
-                log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]}\n{t}")
+                log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]} (&cec {opt} conflicts x{factor})\n{t}")
                 # Naive SAT reports one aggregate line for a nontrivial cone; trivial
                 # cones use the CEC sentence. Keep UNDECIDED in sequence: dropping it
                 # would shift a later proof onto the wrong output.
@@ -1025,6 +1034,7 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
                                    "differs" if (u, sat, undec) == (0, 1, 0) else "undecided")
                 for i, status in zip(ids, res):
                     st[m.onames[i]] = status
+        pending = [i for i in pending if st[m.onames[i]] == "undecided"]
     unknown = [i for i, n in enumerate(m.onames) if st[n] == "undecided"]
     if unknown:
         st.update(xor_sat(m, unknown, log))
@@ -1905,6 +1915,80 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     log.append("correspondence: refinement did not converge; all unmatched flops free")
 
 
+def apply_hints(L, hints, work, conflicts, log, rounds=40):
+    """Untrusted correspondence hints (the commercial 'user match' / 'add mapped points'; PATH-KV-PC4 10-25):
+    [[side, key, ['eq', oside, okey, inv] | ['const', c]], ...] for registers the signature search cannot pair
+    (rare-event twins such as an opcode bit that only a refresh sets, which random simulation never excites;
+    unpacked arrays whose layout differs between the two frontends).  A hint is never a waiver: hints override the
+    discovered hypothesis of the same register, then the whole set is proved by the same simultaneous induction as
+    every other hypothesis and every failing one is dropped until the set is inductive (a wrong hint only leaves its
+    register free; the compare points then fail or stay unproved).  Unnamed latches (no public wire on the Q net)
+    become side-only keys ff:__<side>_anon_<var> paired by a unique simulation signature, proved the same way.
+    -> dict(given, applied, skipped, anon, dropped, kept)."""
+    rec = dict(given=len(hints), applied=0, skipped=[], anon=0, dropped=[], kept=0)
+    keys = lambda sd: L.gp if sd in ("gold", "both") else L.tp
+    for e in hints:
+        try:
+            sd, k, h = e[0], e[1], tuple(e[2])
+            ok = (sd in ("gold", "gate", "both") and k.startswith("ff:") and "__" not in k and k in keys(sd)
+                  and (sd != "both" or k in L.matched) and
+                  ((h[0] == "const" and h[1] in (0, 1)) or
+                   (h[0] == "eq" and h[1] in ("gold", "gate") and h[3] in (0, 1) and "__" not in h[2]
+                    and h[2] in keys(h[1]))))
+        except (IndexError, TypeError, AttributeError):
+            ok = False
+        if not ok:
+            rec["skipped"].append(e)
+            continue
+        if h[0] == "eq" and k in L.matched and h[1] == "gold" and h[2] in L.gonly:
+            sd, k, h = "gold", h[2], ("eq", "gold", k, h[3])     # a gold-only twin points at the matched register
+        L.hyp[(sd, k)] = h
+        rec["applied"] += 1
+    anon = []
+    for side in ("gold", "gate"):
+        points, compare, only = (L.gp, L.gc, L.gonly) if side == "gold" else (L.tp, L.tc, L.tonly)
+        for lit, nxt in (L.ganon if side == "gold" else L.tanon):
+            k = f"ff:__{side}_anon_{lit >> 1}"
+            points[k], compare[k] = lit, nxt
+            only.append(k)
+            anon.append((side, k))
+    L.ganon, L.tanon = [], []
+    if anon:
+        m, _ = L.build(with_compare=False, with_hyp=False)
+        val, mask = m.simulate(32, seed=20261025)
+        sv = lambda sd, k: lit_val(val, mask, L.dlit[(sd, k)])
+        sigs = collections.defaultdict(set)
+        for sd, ks in (("gold", L.gp), ("gate", L.tp)):
+            for c in ks:
+                if c.startswith("ff:") and (sd, c) not in L.hyp and "__" not in c:
+                    s = sv(sd, c)
+                    sigs[s].add((sd if c not in L.matched else "gold", c, 0))
+                    sigs[s ^ mask].add((sd if c not in L.matched else "gold", c, 1))
+        for side, k in anon:
+            s = sv(side, k)
+            hits = sigs.get(s, set())
+            if s not in (0, mask) and len(hits) == 1:
+                osd, c, inv = next(iter(hits))
+                L.hyp[(side, k)] = ("eq", osd, c, inv)
+                rec["anon"] += 1
+    for rnd in range(rounds):
+        m, _ = L.build(with_compare=False, with_hyp=True)
+        st = prove(m, work, conflicts, log, tag=f"hint{rnd}")
+        bad = [n for n, s in st.items() if s != "proved"]
+        log.append(f"hint refinement round {rnd}: {len(st)} hypotheses, {len(bad)} failed {bad[:6]}")
+        if not bad:
+            rec["kept"] = len(L.hyp)
+            return rec
+        for n in bad:
+            _, side, k = n.split(":", 2)
+            if L.hyp.pop(("both" if side == "bothg" else side, k), None) is not None:
+                rec["dropped"].append(k)
+    L.hyp.clear()
+    rec["kept"] = 0
+    log.append("hint refinement did not converge; all unmatched flops free")
+    return rec
+
+
 # ---------------------------------------------------------------------------------------------- driver
 def run_yosys(script, path, log):
     Path(path).write_text(script)
@@ -1918,7 +2002,7 @@ def run_yosys(script, path, log):
     return r
 
 
-def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False):
+def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
     out.mkdir(parents=True, exist_ok=True)
@@ -1984,6 +2068,15 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         L = Lec(read_aig(out / "gold.aig"), read_map(out / "gold.map"),
                 read_aig(out / "gate.aig"), read_map(out / "gate.map"), port_map)
         correspond(L, out, conflicts, log)
+        hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
+        if hf.is_file():
+            import hashlib
+            rec["hints"] = dict(file=str(hf), sha256=hashlib.sha256(hf.read_bytes()).hexdigest())
+            rec["hints"].update(apply_hints(L, json.loads(hf.read_text()), out, conflicts, log))
+            rec["hints"]["skipped"] = len(rec["hints"]["skipped"])
+            rec["hints"]["dropped"] = dict(n=len(rec["hints"]["dropped"]), first=rec["hints"]["dropped"][:40])
+        elif hints:
+            raise LecError(f"hints file {hints} not found")
         (out / "hyp.json").write_text(json.dumps([[sd, k, list(h)] for (sd, k), h in sorted(L.hyp.items())]) + "\n")
         m, kind = L.build(with_compare=True, with_hyp=True)
         rec["t_corr_s"] = round(time.time() - t1, 1)
@@ -2109,6 +2202,9 @@ def via_docker(args, image, mem):
         inner += ["--reuse"]
     if args.gold_frontend:
         inner += ["--gold-frontend", args.gold_frontend]
+    if args.hints:
+        shutil.copyfile(args.hints, Path(out) / "hints.json")
+        inner += ["--hints", "/lecout/hints.json"]
     if args.port_map:
         shutil.copyfile(args.port_map, Path(out) / "port_map.json")
         inner += ["--port-map", "/lecout/port_map.json"]
@@ -2126,6 +2222,8 @@ def main(argv=None):
     ap.add_argument("--gold-frontend", choices=("verilog", "slang"),
                     help="default: the frontend synthesis did NOT use")
     ap.add_argument("--port-map", help="JSON {gate port bit: gold port bit} (renamed packed buses)")
+    ap.add_argument("--hints", help="untrusted correspondence hints JSON, each proved by induction (default: "
+                    "KIT/lec_hints.json when present)")
     ap.add_argument("--conflicts", type=int, default=1000)
     ap.add_argument("--reuse", action="store_true", help="reuse OUT/gold|gate.aig from an earlier run (debug)")
     ap.add_argument("--image", default=None, help="run inside this docker image (default when not in the ORFS image)")
@@ -2141,7 +2239,7 @@ def main(argv=None):
                   f"({r.get('t_total_s')} s)")
         return rc
     pm = json.loads(Path(a.port_map).read_text()) if a.port_map else None
-    r = check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse)
+    r = check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
     c = r.get("counts", {})
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "

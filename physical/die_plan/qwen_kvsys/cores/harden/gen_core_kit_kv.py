@@ -355,6 +355,8 @@ def main():
                     help="COORD ruling 2 (10-25): drop the constant LMAX head-group bit g (am[1]) from qkd_ahub am0..3 and the "
                          "ASTK am input (+ its qo[537] copy); ASTK ctl AM_G_PIN=0/G_CONST=0; plan pins renamed compactly "
                          "(old b -> b-1 above the dropped bit) in memory until the KV-PLAN3 delta lands (am_g_drop.py)")
+    ap.add_argument("--kvspc-face-ports", action="store_true", help="kvs_pc / kvs_pc_h_head_p boundary recut: one clock (hck + HBM data clocks := ck), dead-pin drop (land_er[258:1]; head ki[30:21]/[14:1]) as an in-memory plan delta until KV-PLAN3 lands it, ki/ko split (+1 hclk per kc station), fi landing (+1 fault edge), po / land_es private port flops (0 cycles); miter results/kvspc_face_1025")
+    ap.add_argument("--kvspc-private-ports", action="store_true", help="with --kvspc-face-ports: private output ports (kvspc_private_ports.py, PATH-KV-PC 10-25): return actual_* port flops with internal hold copy + actual_valid kept (0 cycles), o_grp[296:289] status pin flops (+1 fault/drain observation edge; o_grp[294] no longer a pc__fo feedthrough), o_prev private launch (+1 edge per o_prev hop, non-head), pi[0] single capture, pc/cfg_stack single landing (chain station reads the landed copy), head upo kept pin flops (0 cycles)")
     ap.add_argument("--stock-flow", action="store_true",
                     help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=0.6)
@@ -375,6 +377,11 @@ def main():
         if cj["module"].startswith("kv3_astk_") and not a.astk_face_ports:
             raise SystemExit("--am-g-drop on ASTK needs --astk-face-ports (repo qkd_astk_static_leaves.sv carries AM_G_PIN)")
         am_g_drop.core_json(cj)
+    if a.kvspc_face_ports:
+        if cj["module"] not in ("qkd_kvs_pc", "qkd_kvs_pc_h_head_p"):
+            raise SystemExit("--kvspc-face-ports only applies to qkd_kvs_pc / qkd_kvs_pc_h_head_p")
+        import kvspc_face_ports as KVSPC
+        cj = KVSPC.core_json_update(cj)
     if a.ectlk_three_taps:
         if cj["module"] != "qkd_ectlk":
             raise SystemExit("--ectlk-three-taps only applies to qkd_ectlk")
@@ -466,6 +473,24 @@ def main():
         (kd / "ectlk_clock_delta.json").write_text(json.dumps(dict(
             source_ports=["ck[0]", "ck[1]", "ck[2]"], related_clock="one die clock, all edges co-timed",
             clock_period_ps=833, added_cycles=0, pin_geometry="unchanged plan pins"), indent=1) + "\n")
+    if a.kvspc_face_ports:
+        KVSPC.apply_kit(kd / "rtl", mod)
+        if a.kvspc_private_ports:
+            import kvspc_private_ports as KVPP
+            for f in KVPP.apply_kit(kd / "rtl", mod):
+                srcs.append(f"/work/rtl/{f}")
+            (kd / "kvspc_private_delta.json").write_text(json.dumps(dict(
+                transform="kvspc_private_ports.py", cycles=dict(
+                    o_prev="n/a (head)" if mod.endswith("_h_head_p") else "+1 edge per o_prev chain hop (private launch flop)",
+                    o_grp_289_296="+1 edge (fault / drain observation flags: cal_fault_hbm, completion_fault, drain_fault_core, drain_fault_hbm, er[260], fo copy, front_fault_go_hbm, front_fault_overflow_hbm)",
+                    other=0), straps="pc__pc / pc__cfg_stack: one landing register per bit; strap_* rename = plan delta (STRAP_RENAME off)",
+                miter="results/kvspc_private_1025"), indent=1) + "\n")
+        hd = mod.endswith("_h_head_p")
+        (kd / "kvspc_face_delta.json").write_text(json.dumps(dict(
+            plan_dropped_pins=KVSPC.dropped_pins(hd), plan_delta="IN-MEMORY until KV-PLAN3 lands it",
+            renamed_buses=["pc__land_er[260:259] -> pc__land_er_259"] + (["pc__ki[20:15] -> pc__ki_15", "pc__ki[32:31] -> pc__ki_31"] if hd else []),
+            cycles=dict(kc_ko="n/a (head: no ko)" if hd else "+1 hclk per kc chain station", fi="n/a (head: no fi)" if hd else "+1 upstream-fault edge", other=0),
+            miter="results/kvspc_face_1025"), indent=1) + "\n")
     if a.astk_face_ports:
         (kd / "astk_face_delta.json").write_text(json.dumps(dict(
             extra_flops_estimate=78, command_cycles=0, local_fault_cycles=0, external_fault_cycles=1,
@@ -528,6 +553,8 @@ def main():
                    for p, d in am_g_drop.drops_for(mod).items()},
             plan_pins=("renamed in memory (KV-PLAN3 delta pending): dropped " + ", ".join(g_dropped)) if g_dropped
             else "plan already carries the delta"), indent=1) + "\n")
+    if a.kvspc_face_ports:
+        pins = KVSPC.plan_pins_update(pins, mod.endswith("_h_head_p"))
     have = {p["name"] for p in pins}
     names = []
     for n, c in cj["pin_class"].items():

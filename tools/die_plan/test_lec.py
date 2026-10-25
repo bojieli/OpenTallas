@@ -276,7 +276,7 @@ def test_naive_cone_unknown_does_not_shift_later_status(tmp_path, monkeypatch):
         if '&fraig' in script:
             (tmp_path / 'mixed_swept.aig').touch()
             return SimpleNamespace(stdout='Undef calls 3', stderr='')
-        assert '&cec -n -m' in script
+        assert '&cec -n -m' in script or '&cec -m' in script     # naive pass, then SAT-sweeping escalation
         ids = [int(i) for i in re.findall(r'&cone -O (\d+)', script)]
         replies = ['UNSAT = 0. SAT = 0. UNDEC = 1. Trivial = 0.',
                    'Networks are equivalent. Time = 0.0 sec',
@@ -594,3 +594,97 @@ def test_structural_twin_closure_rare_carry_and_valid_pipe(tmp_path):
         m, _ = L.build(with_compare=True, with_hyp=True)
         status = _sim_prove(m)
         assert ('differs' in status.values()) == mutant
+
+
+def _exact_prove(m, *a, **k):
+    """exhaustive stand-in for ABC (every input pattern; small test designs only): exact, unlike _sim_prove,
+    so a rare event that random simulation never excites is still seen."""
+    n = m.ni
+    assert n <= 20
+    W = 1 << n
+    mask = (1 << W) - 1
+    val = [0] * (n + len(m.ands) // 2 + 1)
+    for v in range(1, n + 1):
+        blk = 1 << (v - 1)
+        pat = ((1 << blk) - 1) << blk                    # 0..0 1..1 repeated: input bit v-1 of the pattern index
+        rep = 0
+        for s in range(0, W, 2 * blk):
+            rep |= pat << s
+        val[v] = rep & mask
+    for k in range(len(m.ands) // 2):
+        r0, r1 = m.ands[2 * k], m.ands[2 * k + 1]
+        val[n + 1 + k] = lec.lit_val(val, mask, r0) & lec.lit_val(val, mask, r1)
+    return {nm: ("proved" if lec.lit_val(val, mask, o) == 0 else "differs") for nm, o in zip(m.onames, m.outs)}
+
+
+def test_hint_pairs_a_rare_event_twin_and_a_wrong_hint_is_dropped(tmp_path, monkeypatch):
+    """PATH-KV-PC4 10-25 (ot_qkd_static_kv_timing with REF_MODE=1: the row opcode is PRE 0 / ACT 1 / REFPB 6, so
+    c_op[2] == c_op[1]; synthesis merged the twins c_op[2] -> c_op[1], row_op[2] -> row_op[1]).  Both bits are set
+    only by a refresh, which random simulation never excites: their signatures look constant, the constant hypothesis
+    fails the proof and no partner is ever proposed, so every consumer of row_op[2] differed (591 points).  A hint
+    pairs them and the same induction proves it; a wrong hint (inverted) is dropped, never a waiver."""
+    monkeypatch.setattr(lec, "prove", _exact_prove)
+    ins = [f"a{i}" for i in range(14)]
+
+    def rare(m, l):
+        r = l["a0"]
+        for i in ins[1:]:
+            r = m.AND(r, l[i])
+        return r                                          # 1 in 16384 patterns
+    g, gm = _seq(tmp_path, "gold", ins, ["c1", "c2", "o"],
+                 lambda m, l: {"c1": rare(m, l), "c2": rare(m, l), "o": m.XOR(l["c2"], l["a0"])})
+    t, tm = _seq(tmp_path, "gate", ins, ["c1", "o"],
+                 lambda m, l: {"c1": rare(m, l), "o": m.XOR(l["c1"], l["a0"])})
+    for hint, want in (([["gold", "ff:u_dut.c2", ["eq", "gold", "ff:u_dut.c1", 0]]], "proved"),
+                       ([["gold", "ff:u_dut.c2", ["eq", "gold", "ff:u_dut.c1", 1]]], "differs"),
+                       ([["gold", "ff:u_dut.c2", ["const", 0]]], "differs"),
+                       ([["gold", "ff:u_dut.nope", ["eq", "gold", "ff:u_dut.c1", 0]]], "differs")):
+        L = lec.Lec(g, gm, t, tm)
+        assert L.gonly == ["ff:u_dut.c2"] and not L.tonly
+        sig, mask = L.build(with_compare=False, with_hyp=False)[0].simulate(16, seed=7)
+        assert lec.lit_val(sig, mask, L.dlit[("gold", "ff:u_dut.c2")]) == 0      # looks constant to the signatures
+        r = lec.apply_hints(L, hint, tmp_path, 100, [])
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        assert _exact_prove(m)["ff:u_dut.o"] == want
+        if want == "proved":
+            assert r["applied"] == 1 and not r["dropped"] and L.hyp[("gold", "ff:u_dut.c2")][2] == "ff:u_dut.c1"
+        elif "nope" in hint[0][1]:
+            assert r["skipped"] and not r["applied"]
+        else:
+            assert r["dropped"] == ["ff:u_dut.c2"] and ("gold", "ff:u_dut.c2") not in L.hyp
+
+
+def test_hints_are_read_from_the_kit_and_passed_into_the_image():
+    s = Path(lec.__file__).read_text()
+    assert 'Path(kit) / "lec_hints.json"' in s and '"--hints", "/lecout/hints.json"' in s
+
+
+def test_undecided_naive_cone_escalates_to_sat_sweeping(tmp_path, monkeypatch):
+    """PATH-KV-PC4 10-25: an ECC XOR cone naive SAT cannot finish (UNDEC) is retried with &cec -m (SAT sweeping
+    inside the cone), where it is proved; a cone every pass leaves open stays undecided (never 'proved')."""
+    import re
+    from types import SimpleNamespace
+    m = lec.Aig()
+    x = m.add_input('x')
+    m.outs, m.onames = [x, x], ['xor_tree', 'hard']
+    monkeypatch.setattr(lec, 'abc_bin', lambda: 'fake-abc')
+    monkeypatch.setattr(lec, 'aig_outputs', lambda p: [2, 2])
+    monkeypatch.setattr(lec, 'lit_val', lambda *args: 0)
+    monkeypatch.setattr(lec, 'PROVE_JOBS', 1)
+    seen = []
+    def run(args, **kwargs):
+        script = Path(args[-1]).read_text() if args[1] == "-f" else args[-1]
+        if '&fraig' in script:
+            (tmp_path / 'esc_swept.aig').touch()
+            return SimpleNamespace(stdout='Undef calls 2', stderr='')
+        out = []
+        for line in script.splitlines():
+            i = int(re.search(r'&cone -O (\d+)', line)[1])
+            naive = '&cec -n -m' in line
+            seen.append((i, naive))
+            out.append('UNSAT = 0. SAT = 0. UNDEC = 1. Trivial = 0.' if naive or i == 1 else
+                       'Networks are equivalent. Time = 1.2 sec')
+        return SimpleNamespace(stdout='\n'.join(out), stderr='')
+    monkeypatch.setattr(lec.subprocess, 'run', run)
+    assert lec.prove(m, tmp_path, 100, [], tag='esc') == {'xor_tree': 'proved', 'hard': 'undecided'}
+    assert (0, True) in seen and (0, False) in seen and seen.count((0, False)) == 1   # proved once: not retried
