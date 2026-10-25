@@ -1,0 +1,705 @@
+{
+ "schema": "opentallas.die_trial_summary.v1",
+ "die": "qwen_compute",
+ "lane": "TRIAL-QK",
+ "plan": {
+  "branch": "claude/qc-cap-1024r",
+  "commit": "78992be86f",
+  "file": "physical/die_plan/qwen_compute/die_plan.json",
+  "sha256_16": "4b445d10a0a3912c",
+  "parts": 377,
+  "types": 56,
+  "lanes": 2207
+ },
+ "tool": "claude/trial-qk-1024 tools/die_plan/die_trial.py --clock-topo seam (ce539a878 + 9188ddba0) + clock_pad_probe.py --at-branches --corner FF (fd294fccc)",
+ "build": {
+  "nets": 1926323,
+  "kinds": {
+   "abut": 1083397,
+   "ft": 842926
+  },
+  "taps": 6703
+ },
+ "gate_rule": "hop STA TT setup / FF hold (60/25 ps, kit seam hold padding per contract) on the die tree + related launch/capture pair skew with CPPR <= 80 ps at TT and FF; OCV, insertion_tol window, bare hold and max-min spread are INFO",
+ "gate": {
+  "verdict": "PASS",
+  "setup_TT_neg": 0,
+  "hold_FF_neg": 0,
+  "pair_skew_max_TT_ps": 24.4,
+  "pair_skew_max_FF_ps": 34.4,
+  "pair_skew_over_80_TT": 0,
+  "pair_skew_over_80_FF": 0,
+  "info_spread_ps": {
+   "TT": 51.0,
+   "FF": 74.1,
+   "SS": 175.5
+  },
+  "worst_hold_seams": [
+   {
+    "src": "sl_W0_fe",
+    "dst": "sl_E0_fw",
+    "bits": 2763,
+    "hold_FF_gate_ps": 3.9
+   },
+   {
+    "src": "sl_W1_su_c",
+    "dst": "sl_W1_stm",
+    "bits": 552,
+    "hold_FF_gate_ps": 18.7
+   },
+   {
+    "src": "sl_W1_fw",
+    "dst": "sl_W1_stm",
+    "bits": 3255,
+    "hold_FF_gate_ps": 20.1
+   }
+  ],
+  "hop_length": "GRT guides"
+ },
+ "clock": {
+  "topology": "seam_bisection",
+  "cells": {
+   "BUFx16f_ASAP7_75t_R": 23844,
+   "DFFHQNx2_ASAP7_75t_R": 6703
+  },
+  "corners": {
+   "TT": {
+    "taps": 6703,
+    "insertion_min_ps": 8548.7,
+    "insertion_max_ps": 8599.7,
+    "insertion_mean_ps": 8574.1,
+    "global_skew_ps": 51.0
+   },
+   "FF": {
+    "taps": 6703,
+    "insertion_min_ps": 7215.4,
+    "insertion_max_ps": 7289.4,
+    "insertion_mean_ps": 7252.8,
+    "global_skew_ps": 74.1
+   },
+   "SS": {
+    "taps": 6703,
+    "insertion_min_ps": 10484.6,
+    "insertion_max_ps": 10660.2,
+    "insertion_mean_ps": 10571.4,
+    "global_skew_ps": 175.5
+   }
+  },
+  "grt_overflow": 0,
+  "slew_cap_violations": {
+   "TT": 0,
+   "FF": 0,
+   "SS": 0
+  },
+  "pair_skew": {
+   "TT": {
+    "pairs": 2477,
+    "max_ps": 24.4,
+    "p99_ps": 19.4,
+    "over_80": 0
+   },
+   "FF": {
+    "pairs": 2477,
+    "max_ps": 34.4,
+    "p99_ps": 16.5,
+    "over_80": 0
+   },
+   "SS": {
+    "pairs": 2477,
+    "max_ps": 90.8,
+    "p99_ps": 32.6,
+    "over_80": 3
+   }
+  },
+  "padding": {
+   "measured_corner": "FF",
+   "target_ps": 7282.523926,
+   "estimated_buffer_ps": 16.96,
+   "buffers": 2943,
+   "histogram": {
+    "15": 1,
+    "7": 1,
+    "1": 1870,
+    "2": 399,
+    "3": 69,
+    "4": 9,
+    "5": 2
+   },
+   "added_data_cycles": 0,
+   "mode": "branches"
+  }
+ },
+ "route": {
+  "g0": {
+   "layers": {
+    "M1": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M2": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M3": {
+     "resource": 0,
+     "demand": 0,
+     "usage_pct": 0.0,
+     "overflow": 0
+    },
+    "M4": {
+     "resource": 203518165,
+     "demand": 9778145,
+     "usage_pct": 4.8,
+     "overflow": 16917
+    },
+    "M5": {
+     "resource": 199876294,
+     "demand": 22814514,
+     "usage_pct": 11.41,
+     "overflow": 29780
+    },
+    "M6": {
+     "resource": 230481583,
+     "demand": 8261426,
+     "usage_pct": 3.58,
+     "overflow": 6656
+    },
+    "M7": {
+     "resource": 316443264,
+     "demand": 12927898,
+     "usage_pct": 4.09,
+     "overflow": 15291
+    },
+    "M8": {
+     "resource": 541885500,
+     "demand": 6807187,
+     "usage_pct": 1.26,
+     "overflow": 10072
+    },
+    "M9": {
+     "resource": 541976370,
+     "demand": 6987342,
+     "usage_pct": 1.29,
+     "overflow": 5389
+    }
+   },
+   "total_overflow": 84105,
+   "wirelength_um": 686965065.0,
+   "errors": [],
+   "pin_access_warnings": 0,
+   "pin_access_no_ap": {},
+   "pin_access_done": false,
+   "reach": {},
+   "done": true,
+   "grt_seconds": 9700,
+   "peak_rss_gb": 22.4,
+   "windows": {
+    "window_um": 250.0,
+    "gcell_p10_pct": 67.87,
+    "gcell_p50_pct": 82.55,
+    "gcell_p99_pct": 93.83,
+    "gcell_max_pct": 177.82,
+    "gcells_ge_100": 3270,
+    "top_windows": [
+     {
+      "x_um": 17000.0,
+      "y_um": 10750.0,
+      "mean_pct": 93.36,
+      "part": "sl_E0_su_c"
+     },
+     {
+      "x_um": 19500.0,
+      "y_um": 10750.0,
+      "mean_pct": 93.19,
+      "part": "sl_E1_su_c"
+     },
+     {
+      "x_um": 30000.0,
+      "y_um": 10750.0,
+      "mean_pct": 93.12,
+      "part": "sl_E5_su_c"
+     },
+     {
+      "x_um": 28000.0,
+      "y_um": 10750.0,
+      "mean_pct": 92.91,
+      "part": "sl_E4_su_l0"
+     },
+     {
+      "x_um": 22250.0,
+      "y_um": 10750.0,
+      "mean_pct": 92.75,
+      "part": "sl_E2_su_c"
+     },
+     {
+      "x_um": 30500.0,
+      "y_um": 10750.0,
+      "mean_pct": 92.69,
+      "part": "sl_E5_su_l0"
+     },
+     {
+      "x_um": 24500.0,
+      "y_um": 10750.0,
+      "mean_pct": 92.19,
+      "part": "sl_E3_su_c"
+     },
+     {
+      "x_um": 27500.0,
+      "y_um": 10750.0,
+      "mean_pct": 92.17,
+      "part": "sl_E4_su_c"
+     },
+     {
+      "x_um": 22000.0,
+      "y_um": 10750.0,
+      "mean_pct": 92.08,
+      "part": "sl_E2_su_c"
+     },
+     {
+      "x_um": 24750.0,
+      "y_um": 10750.0,
+      "mean_pct": 91.99,
+      "part": "sl_E3_su_c"
+     },
+     {
+      "x_um": 19500.0,
+      "y_um": 10500.0,
+      "mean_pct": 91.97,
+      "part": "sl_E1_su_c"
+     },
+     {
+      "x_um": 29500.0,
+      "y_um": 10750.0,
+      "mean_pct": 91.73,
+      "part": "sl_E5_su_c"
+     },
+     {
+      "x_um": 25500.0,
+      "y_um": 10750.0,
+      "mean_pct": 91.69,
+      "part": "sl_E3_su_c"
+     },
+     {
+      "x_um": 17250.0,
+      "y_um": 10750.0,
+      "mean_pct": 91.67,
+      "part": "sl_E0_su_c"
+     },
+     {
+      "x_um": 19750.0,
+      "y_um": 10750.0,
+      "mean_pct": 91.63,
+      "part": "sl_E1_su_c"
+     }
+    ],
+    "top_gcells": [
+     {
+      "x_um": 21110.0,
+      "y_um": 12070.0,
+      "pct": 177.8,
+      "part": "sl_E1_fe"
+     },
+     {
+      "x_um": 13700.0,
+      "y_um": 12070.0,
+      "pct": 177.8,
+      "part": "sl_W1_fe"
+     },
+     {
+      "x_um": 8755.0,
+      "y_um": 12070.0,
+      "pct": 177.8,
+      "part": "sl_W3_fe"
+     },
+     {
+      "x_um": 31000.0,
+      "y_um": 12070.0,
+      "pct": 176.7,
+      "part": "sl_E5_fe"
+     },
+     {
+      "x_um": 6288.0,
+      "y_um": 12070.0,
+      "pct": 176.7,
+      "part": "sl_W4_fe"
+     },
+     {
+      "x_um": 16170.0,
+      "y_um": 12070.0,
+      "pct": 175.6,
+      "part": "sl_W0_fe"
+     },
+     {
+      "x_um": 3811.0,
+      "y_um": 12070.0,
+      "pct": 175.6,
+      "part": "sl_W5_fe"
+     },
+     {
+      "x_um": 11230.0,
+      "y_um": 12070.0,
+      "pct": 174.9,
+      "part": "sl_W2_fe"
+     },
+     {
+      "x_um": 28520.0,
+      "y_um": 12070.0,
+      "pct": 174.2,
+      "part": "sl_E4_fe"
+     },
+     {
+      "x_um": 28280.0,
+      "y_um": 13150.0,
+      "pct": 174.0,
+      "part": "sl_E4_st_a"
+     }
+    ]
+   },
+   "overflow_by_part": {
+    "entries": 3390,
+    "by_layer": {
+     "Horizontal": 1143,
+     "Vertical": 2247
+    },
+    "top_parts": [
+     [
+      "c_W5_bf_01",
+      71
+     ],
+     [
+      "coll_f4",
+      68
+     ],
+     [
+      "sl_E2_su_c",
+      64
+     ],
+     [
+      "sl_W2_su_c",
+      59
+     ],
+     [
+      "sl_E1_su_c",
+      51
+     ],
+     [
+      "sl_E3_su_c",
+      50
+     ],
+     [
+      "sl_W3_su_c",
+      48
+     ],
+     [
+      "sl_E5_su_c",
+      48
+     ],
+     [
+      "sl_E4_su_c",
+      48
+     ],
+     [
+      "sl_W1_su_c",
+      47
+     ],
+     [
+      "sl_E0_su_c",
+      46
+     ],
+     [
+      "sl_W5_su_c",
+      45
+     ],
+     [
+      "sl_W0_su_c",
+      45
+     ],
+     [
+      "c_W5_bf_00",
+      44
+     ],
+     [
+      "sl_W4_su_c",
+      41
+     ],
+     [
+      "c_W0_bn_01",
+      40
+     ],
+     [
+      "c_E5_bn_01",
+      40
+     ],
+     [
+      "c_E2_bn_01",
+      40
+     ],
+     [
+      "c_W5_bn_01",
+      40
+     ],
+     [
+      "c_E4_bn_01",
+      40
+     ]
+    ]
+   }
+  }
+ },
+ "sta_stats": {
+  "abut": {
+   "hops": 1083397,
+   "setup_neg": 11195,
+   "setup_cal_neg": 11195,
+   "hold_neg": 497226,
+   "hold_budget_neg": 233218,
+   "hold_gate_neg": 30556,
+   "hold_gate_nom_neg": 0,
+   "setup_nom_neg": 0,
+   "hold_budget_nom_neg": 0,
+   "hold_nom_neg": 342470,
+   "setup_lt_tol": 11536,
+   "hold_lt_tol": 548708
+  },
+  "ft": {
+   "hops": 842926,
+   "setup_neg": 3090,
+   "setup_cal_neg": 3092,
+   "hold_neg": 281452,
+   "hold_budget_neg": 214369,
+   "hold_gate_neg": 26994,
+   "hold_gate_nom_neg": 0,
+   "setup_nom_neg": 0,
+   "hold_budget_nom_neg": 0,
+   "hold_nom_neg": 156243,
+   "setup_lt_tol": 3389,
+   "hold_lt_tol": 393955
+  }
+ },
+ "variants": {
+  "htree_bpad": {
+   "verdict": "FAIL",
+   "setup_TT_neg": 0,
+   "hold_FF_neg": 16742,
+   "pair_skew_max_TT_ps": 29.6,
+   "pair_skew_max_FF_ps": 45.2,
+   "pair_skew_over_80_TT": 0,
+   "pair_skew_over_80_FF": 0,
+   "info_spread_ps": {
+    "TT": 38.2,
+    "FF": 59.5,
+    "SS": 75.6
+   },
+   "worst_hold_seams": [
+    {
+     "src": "c_W1_tn_00",
+     "dst": "c_W1_tn_01",
+     "bits": 1034,
+     "hold_FF_gate_ps": -6.1
+    },
+    {
+     "src": "sl_W3_su_c",
+     "dst": "sl_W3_su_l1",
+     "bits": 1584,
+     "hold_FF_gate_ps": -5.1
+    },
+    {
+     "src": "c_W1_tn_10",
+     "dst": "c_W1_tn_11",
+     "bits": 2064,
+     "hold_FF_gate_ps": -4.3
+    }
+   ],
+   "hop_length": "Manhattan (GRT pending)",
+   "clock_cells": {
+    "BUFx16f_ASAP7_75t_R": 31558,
+    "DFFHQNx2_ASAP7_75t_R": 6703
+   }
+  },
+  "htree_pad": {
+   "verdict": "FAIL",
+   "setup_TT_neg": 0,
+   "hold_FF_neg": 17556,
+   "pair_skew_max_TT_ps": 33.7,
+   "pair_skew_max_FF_ps": 51.3,
+   "pair_skew_over_80_TT": 0,
+   "pair_skew_over_80_FF": 0,
+   "info_spread_ps": {
+    "TT": 56.0,
+    "FF": 74.5,
+    "SS": 89.3
+   },
+   "worst_hold_seams": [
+    {
+     "src": "c_W1_tn_10",
+     "dst": "c_W1_tn_11",
+     "bits": 2064,
+     "hold_FF_gate_ps": -12.8
+    },
+    {
+     "src": "c_E2_tn_00",
+     "dst": "c_E2_tn_01",
+     "bits": 1034,
+     "hold_FF_gate_ps": -12.1
+    },
+    {
+     "src": "c_E5_tn_00",
+     "dst": "c_E5_tn_01",
+     "bits": 1034,
+     "hold_FF_gate_ps": -11.9
+    }
+   ],
+   "hop_length": "Manhattan (GRT pending)",
+   "clock_cells": {
+    "BUFx16f_ASAP7_75t_R": 79859,
+    "DFFHQNx2_ASAP7_75t_R": 6703
+   }
+  },
+  "seam_bpad": {
+   "verdict": "FAIL",
+   "setup_TT_neg": 0,
+   "hold_FF_neg": 887,
+   "pair_skew_max_TT_ps": 24.6,
+   "pair_skew_max_FF_ps": 39.1,
+   "pair_skew_over_80_TT": 0,
+   "pair_skew_over_80_FF": 0,
+   "info_spread_ps": {
+    "TT": 46.4,
+    "FF": 95.7,
+    "SS": 126.4
+   },
+   "worst_hold_seams": [
+    {
+     "src": "sl_W0_fe",
+     "dst": "sl_E0_fw",
+     "bits": 2763,
+     "hold_FF_gate_ps": -0.8
+    },
+    {
+     "src": "sl_E0_st_b",
+     "dst": "sl_E0_fw",
+     "bits": 1408,
+     "hold_FF_gate_ps": 19.7
+    },
+    {
+     "src": "sl_W3_su_c",
+     "dst": "sl_W3_su_l1",
+     "bits": 1584,
+     "hold_FF_gate_ps": 20.5
+    }
+   ],
+   "hop_length": "Manhattan (GRT pending)",
+   "clock_cells": {
+    "BUFx16f_ASAP7_75t_R": 23938,
+    "DFFHQNx2_ASAP7_75t_R": 6703
+   }
+  },
+  "seam_bpadff": {
+   "verdict": "PASS",
+   "setup_TT_neg": 0,
+   "hold_FF_neg": 0,
+   "pair_skew_max_TT_ps": 24.4,
+   "pair_skew_max_FF_ps": 34.4,
+   "pair_skew_over_80_TT": 0,
+   "pair_skew_over_80_FF": 0,
+   "info_spread_ps": {
+    "TT": 51.0,
+    "FF": 74.1,
+    "SS": 175.5
+   },
+   "worst_hold_seams": [
+    {
+     "src": "sl_W0_fe",
+     "dst": "sl_E0_fw",
+     "bits": 2763,
+     "hold_FF_gate_ps": 3.9
+    },
+    {
+     "src": "sl_W1_su_c",
+     "dst": "sl_W1_stm",
+     "bits": 552,
+     "hold_FF_gate_ps": 18.7
+    },
+    {
+     "src": "tt_ctlm",
+     "dst": "coll_f4",
+     "bits": 1670,
+     "hold_FF_gate_ps": 19.3
+    }
+   ],
+   "hop_length": "Manhattan (GRT pending)",
+   "clock_cells": {
+    "BUFx16f_ASAP7_75t_R": 23844,
+    "DFFHQNx2_ASAP7_75t_R": 6703
+   }
+  },
+  "seam_pad": {
+   "verdict": "FAIL",
+   "setup_TT_neg": 0,
+   "hold_FF_neg": 2763,
+   "pair_skew_max_TT_ps": 43.3,
+   "pair_skew_max_FF_ps": 65.8,
+   "pair_skew_over_80_TT": 0,
+   "pair_skew_over_80_FF": 0,
+   "info_spread_ps": {
+    "TT": 91.8,
+    "FF": 124.6,
+    "SS": 130.7
+   },
+   "worst_hold_seams": [
+    {
+     "src": "sl_W0_fe",
+     "dst": "sl_E0_fw",
+     "bits": 2763,
+     "hold_FF_gate_ps": -27.5
+    },
+    {
+     "src": "sl_W2_su_l1",
+     "dst": "sl_W2_su_c",
+     "bits": 3707,
+     "hold_FF_gate_ps": 6.8
+    },
+    {
+     "src": "sl_W5_hc0",
+     "dst": "c_W5_tn_00",
+     "bits": 517,
+     "hold_FF_gate_ps": 10.0
+    }
+   ],
+   "hop_length": "Manhattan (GRT pending)",
+   "clock_cells": {
+    "BUFx16f_ASAP7_75t_R": 113902,
+    "DFFHQNx2_ASAP7_75t_R": 6703
+   }
+  }
+ },
+ "ir": {
+  "status": "RUNNING",
+  "host": "epyc3 (ot-run spill from epyc2; results copy back to epyc2:/srv/opentallas-scratch2/claude/trial-qk/qc_cap_4b445d_ir_t4)",
+  "container": "trialqk-ir-3003628",
+  "path": "epyc3:/srv/opentallas-scratch2/claude/trial-qk/qc_cap_4b445d_ir_t4",
+  "pdn_s": 592,
+  "est_power_w": 234.1,
+  "tile_um": 138.24,
+  "note": "PSM started ~20:30 PDT; old QC plan PSM took 7.4 h at 235 GB peak"
+ },
+ "notes": [
+  "GRT here = 3 congestion iterations (epyc3, 2 h 42 m, 22.4 GB): total overflow 84105 (M4 16917, M5 29780, M6 6656, M7 15291, M8 10072, M9 5389), NOT comparable with the old v3.8s 30-iteration 4659; the 30-iteration GRT of the same build is still running on epyc1 (iteration 4/30 after 4 h).",
+  "Overflow hotspots: point hotspots at lane station/pin terminals, repeated per cluster column (vertical slice->tile feed lanes on the W edge of each 2-tile column, jogs at y~6.6/18.6 mm), the slice su_c/su_l0 band (y 10.5-10.75 mm, windows 92-93 %), slice fe gcells at y 12.07 mm (178 %), coll_f4 (68 entries), c_W5_bf_01 (71). The old W system column hotspot (coll_f3/coll_f4/tt_ctlm) is reduced to coll_f4 only.",
+  "Clock: H-tree baseline on the new plan (old recipe, tap padding at TT) = FAIL 17556 FF-hold negative hops on tn/bn x0/x1 vertical seams (decision 5(f) violation), pair skew 33.7 TT / 51.3 FF.",
+  "Seam-aligned tree (min-cut bisection on related-pair weight) + branch padding balanced on FF arrivals: 0 setup / 0 hold negative, pair skew max 24.4 TT / 34.4 FF ps, 2943 pad buffers (tap padding would need 93001). Worst hold +3.9 ps on the root-cut seam sl_W0_fe->sl_E0_fw (the middle slice row is an abutting chain across the die, so some slice seam must be cut at the root); TT-balanced branch padding left it at -0.8 ps (887 hops), FF balancing fixes it at a cost of <= ~26 ps TT skew (TT setup slack >= 375 ps).",
+  "INFO: max-min spread TT 51 / FF 74 / SS 175.5 ps (SS info only; 3 SS pairs > 80 ps)."
+ ],
+ "images": [
+  "htree_baseline_clock_tree.png",
+  "htree_baseline_sta_negative.png",
+  "seam_clock_tree.png",
+  "seam_congestion.png",
+  "seam_floorplan_lanes.png",
+  "seam_sta_negative.png"
+ ]
+}
