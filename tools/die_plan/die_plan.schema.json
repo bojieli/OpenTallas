@@ -1604,8 +1604,51 @@
     },
     "release": {
      "enum": [
-      "counted"
+      "counted",
+      "pipelined"
      ]
+    },
+    "relay_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "part_depth": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "regions": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "name": {
+        "type": "string",
+        "minLength": 1
+       },
+       "parts": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "root_um": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     }
     }
    }
   },

@@ -37,9 +37,10 @@ def part(p, n):
 
 def test_example_passes():
     R, summ = g0()
-    assert R.errors() == [] and [i["check"] for i in R.items] == ["types", "census"], R.items   # census: none
+    # reset: the example plans are reset.release "counted" -> one WARN (OWNER RESET RULE 10-24, reset_tree.py)
+    assert R.errors() == [] and [i["check"] for i in R.items] == ["types", "reset", "census"], R.items  # census: none
     R2, _ = check.run(json.loads((HERE / "examples" / "tiny_plan_typegeo.json").read_text()))
-    assert [i["check"] for i in R2.items] == ["census"], R2.items
+    assert [i["check"] for i in R2.items] == ["reset", "census"], R2.items
     assert summ["geometry"]["fill"] == 1.0
     assert summ["latency"]["x"] == 4
 
