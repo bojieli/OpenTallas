@@ -429,15 +429,50 @@ proc ot_hold_stop {rt_args} {
   catch { lassign [ot_hold_stats] w t v; puts [format "OT_HOLD_STOP stage=%s done: hold ws %.2f tns %.1f viol %d" $stage $w $t $v] }
   return 1
 }
-proc ot_repair_timing {rt_args} {
-  if {![ot_hold_guard_on] || [lsearch -exact $rt_args -setup] >= 0 || [lsearch -exact $rt_args -hold] >= 0} {
-    if {[lsearch -exact $rt_args -setup] >= 0} { return [log_cmd repair_timing {*}$rt_args] }
-    if {[lsearch -exact $rt_args -hold] < 0} { return [log_cmd repair_timing {*}[ot_hm_guard $rt_args]] }
-    # a hold-only call: RC-CAL clock trees
-    return [ot_rc_cal_hold { log_cmd repair_timing {*}[ot_hm_guard $rt_args] }]
+# Owner 2026-10-25: structural FF hold failures must stop BEFORE repair_timing. Its
+# -max_iterations bounds inner passes, not the endpoint sweep, so the stall guard
+# cannot interrupt a single call that adds hundreds of thousands of buffers.
+# Count true negative-slack endpoints (ot_hold_stats), never the repair margin.
+proc ot_hold_structural_gate {} {
+  # ot_mm_sync creates/times the real FF BC scene with its own FF boundary SDC.
+  # A primary-corner min path is not evidence of FF hold: fail closed without it.
+  if {![info exists ::ot_mm_active] || !$::ot_mm_active ||
+      ![info exists ::ot_mm_synced] || !$::ot_mm_synced} {
+    return -code error -errorcode {OPENTALLAS HOLD_FF_UNAVAILABLE} "OT_HOLD_STRUCTURAL: synchronized FF scene BC unavailable; enable multi-mode FF timing before hold repair"
   }
+  lassign [ot_hold_stats] w t n
+  if {$w >= -100.0 && $n <= 2000} { return }
+  set stage [ot_hold_stage]
+  set msg [format "OT_HOLD_STRUCTURAL stage=%s: FF hold ws %.2f ps, %d true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair" $stage $w $n]
+  puts $msg
+  catch {
+    set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hold_structural_${stage}.rpt" : "ot_hold_structural_${stage}.rpt"}]
+    set fh [open $f w]; puts $fh $msg; close $fh
+  }
+  return -code error -errorcode {OPENTALLAS HOLD_STRUCTURAL} $msg
+}
+proc ot_repair_timing {rt_args} {
+  set setup [expr {[lsearch -exact $rt_args -setup] >= 0}]
+  set hold [expr {[lsearch -exact $rt_args -hold] >= 0}]
+  if {$setup && !$hold} { return [log_cmd repair_timing {*}$rt_args] }
+  if {$hold && !$setup} {
+    return [ot_rc_cal_hold {
+      ot_hold_structural_gate
+      log_cmd repair_timing {*}[ot_hm_guard $rt_args]
+    }]
+  }
+  # Explicit -setup -hold and the no-flag form both request combined repair.
+  # Keep setup on normal RC, then gate/repair hold on calibrated FF clock RC.
+  set args {}
+  foreach arg $rt_args { if {$arg ni {-setup -hold}} { lappend args $arg } }
+  set rt_args $args
   log_cmd repair_timing {*}$rt_args -setup
-  # RC-CAL: the whole hold part (margin guard statistics, stop cap, chunks) times the RCX-calibrated clock trees
+  if {![ot_hold_guard_on]} {
+    return [ot_rc_cal_hold {
+      ot_hold_structural_gate
+      log_cmd repair_timing {*}[ot_hm_guard $rt_args] -hold
+    }]
+  }
   return [ot_rc_cal_hold { ot_repair_hold_guarded $rt_args }]
 }
 proc ot_repair_hold_guarded {rt_args} {
@@ -446,6 +481,7 @@ proc ot_repair_hold_guarded {rt_args} {
   set chunk [expr {int([ot_env_num OT_HOLD_CHUNK 1000])}]
   set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
   set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
+  ot_hold_structural_gate
   set hm_asked $hm
   set rt_args [ot_hm_guard $rt_args]
   if {[ot_hold_stop $rt_args]} { return }
