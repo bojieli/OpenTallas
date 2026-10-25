@@ -776,10 +776,12 @@ class Binder:
                 self.errors.append(f"MAP_PARTITION {c.path} -> {p}: not a plan partition")
                 continue
             self.cpart[ci] = p
-            self.members[p].append(ci)
             lo = self.R.local_of(c.path)
             if lo:
                 self.local[ci] = lo
+        self.glue_moved = self._glue_follow_sinks() if self.ab.get("glue_follows_sinks") else {}
+        for ci, p in self.cpart.items():
+            self.members[p].append(ci)
         for u in unmapped[:200]:
             self.errors.append(f"UNMAPPED {u} ({F.cells[[c.path for c in F.cells].index(u)].module})")
         if len(unmapped) > 200:
@@ -794,6 +796,65 @@ class Binder:
             for k, v in seen.items():
                 if len(v) > 1:
                     self.errors.append(f"LOCAL_NAME_CLASH {p}: {k} <- {v[:4]}")
+
+    def _glue_follow_sinks(self):
+        """asbuilt.glue_follows_sinks (opt-in; PATH-S81/COLL 10-25, COORD re-decision): a bit-preserving glue cell
+        ($buf / $pos / $not = a continuous assign of the as-built RTL, no state) whose partition comes only from a
+        parent-prefix fallback of the map follows its loads when every load bit sits in ONE other partition.  E.g. the
+        S81 lep slice top 'assign lrx0 = {rx0[512], rx0[513], rx0[511:0], n0rxv}' feeds u_ln0 (LP) but was mapped with
+        the slice top to C, so the bind read lk -> C -> LP for a pure wire.  A load on a die output, an unmapped cell
+        (transport / reducer / source) or a split load set keeps the cell where the map put it.  Fixpoint over chains of
+        such cells.  Only a pure pass-through moves: when an input bit is driven from the cell's own partition the cell
+        stays (a move would only shift the crossing and split replicated types by an anonymous glue name).  Returns
+        {(from part, to part): cells moved}."""
+        G, F = self.G, self.F
+        top_out = set()
+        for pn, (d, bits) in F.top_ports.items():
+            if d != "input":
+                top_out.update(b for b in bits if not isinstance(b, str))
+        cand = [ci for ci in self.cpart if G.kind[ci] == "glue"
+                and getattr(F.cells[ci], "ytype", None) in ("$buf", "$pos", "$not") and F.cells[ci].path not in self.R.parts]
+        cset = set(cand)                 # a chain of such cells is judged by its ends: inputs from a candidate are skipped
+        moved = defaultdict(int)
+        for _ in range(16):
+            changed = False
+            for ci in cand:
+                ps, ok = set(), True
+                for pn, bits in F.cells[ci].ports.items():
+                    if G.dirs[ci].get(pn) != "output":
+                        continue
+                    for b in bits:
+                        if isinstance(b, str):
+                            continue
+                        if b in top_out:
+                            ok = False
+                        for lci, _pn, _i in G.loads.get(b, ()):
+                            lp = self.cpart.get(lci)
+                            if lp is None:
+                                ok = False
+                            ps.add(lp)
+                if ok and len(ps) == 1:
+                    (np,) = ps
+                    # only a pure pass-through moves: no input bit is driven from the cell's own partition (moving
+                    # such a cell would only shift a crossing and split replicated types by an anonymous glue name)
+                    own = self.cpart[ci]
+                    for pn, bits in F.cells[ci].ports.items():
+                        if G.dirs[ci].get(pn) != "input":
+                            continue
+                        for b in bits:
+                            sv = G.source(b) if not isinstance(b, str) else ("const",)
+                            if sv[0] == "pin" and sv[1] not in cset and self.cpart.get(sv[1]) == own:
+                                ok = False
+                    if ok and np != own:
+                        moved[(self.cpart[ci], np)] += 1
+                        self.cpart[ci] = np
+                        self.local.pop(ci, None)
+                        changed = True
+            if not changed:
+                break
+        self.warns.append(f"GLUE_FOLLOWS_SINKS {sum(moved.values())} bit-preserving glue cells moved to their loads' "
+                          f"partition: " + ", ".join(f"{a}->{b} {n}" for (a, b), n in sorted(moved.items())[:40]))
+        return dict(moved)
 
     def rel_of(self, ci):
         if ci in self.local:
@@ -2401,6 +2462,8 @@ class Binder:
                               undriven=c.get("undriven", 0), multiply_bound=c.get("multi_driven", 0),
                               straps=c.get("strap", 0), plan_driven=c.get("plan_driven", 0)),
                    errors=self.errors[:2000], n_errors=len(self.errors), warnings=self.warns[:500])
+        if getattr(self, "glue_moved", None):
+            rep["glue_moved"] = {f"{a}->{b}": n for (a, b), n in sorted(self.glue_moved.items())}
         return rep, lat
 
 
