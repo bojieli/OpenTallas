@@ -1,0 +1,1 @@
+Head endpoints PARKED on Claude reset. hd_ctl/host/mesh need real RTL on current contracts; H11 source is incompatible. hd_serdes exact adapter exists on main; plan rx/status binding defect diagnosed. hd_lep binder closure lost; regenerate. Own clean branch codex/head-endpoints-1025@cdf4a6412; no jobs or code changes.
