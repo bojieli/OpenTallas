@@ -604,10 +604,13 @@ def evaluate(rec, insertion_target=None):
         w = C["ff"]["std_wns_min"]
         ov = C["ff"].get("overlay") or ""
         v = "PASS" if w >= 0 else "FAIL"
-        if not ov.startswith("applied"):
-            v = "FAIL" if w < 0 else "PASS"
+        # STD_* is printed even when the overlay could not be applied. In that
+        # case it is only another raw-SDC measurement, not boundary-hold proof.
+        if not ov.startswith("applied "):
+            v = "NOT RUN"
         put("hold_ff", v, wns_ps=w, tns_ps=C["ff"].get("std_tns_min"), violators=C["ff"].get("std_nviol_min"),
-            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov)
+            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov,
+            reason=None if v != "NOT RUN" else "standard boundary-hold overlay was not applied")
     else:
         put("hold_ff", "NOT RUN")
     if ok_corner("ss"):
