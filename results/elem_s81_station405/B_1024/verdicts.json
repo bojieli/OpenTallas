@@ -129,6 +129,63 @@
    "record": "epyc3:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t2/signoff/signoff.json"
   },
   {
+   "type": "slice_station__t5",
+   "verdict": "SIGNED",
+   "generated": "2026-10-24T19:54:09-07:00",
+   "tt_setup_wns_ps": 5.44,
+   "ff_hold_wns_ps": 10.34,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 4362,
+      "min": 215.47,
+      "mean": 242.08,
+      "max": 275.64,
+      "spread": 60.17
+     },
+     "all": {
+      "n": 8740,
+      "min": 215.47,
+      "mean": 243.96,
+      "max": 275.64,
+      "spread": 60.17
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 4362,
+      "min": 169.24,
+      "mean": 193.16,
+      "max": 223.15,
+      "spread": 53.91
+     },
+     "all": {
+      "n": 8740,
+      "min": 169.24,
+      "mean": 194.59,
+      "max": 223.15,
+      "spread": 53.91
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [],
+   "cause": "",
+   "record": "intel1:/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t5/signoff/signoff.json"
+  },
+  {
    "type": "slice_station__t11",
    "verdict": "NOT SIGNED",
    "generated": "2026-10-24T18:17:47-07:00",
@@ -589,6 +646,67 @@
    "record": "epyc1:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t21/signoff/signoff.json"
   },
   {
+   "type": "slice_station__t23",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T19:52:07-07:00",
+   "tt_setup_wns_ps": -68.88,
+   "ff_hold_wns_ps": 10.37,
+   "drv": {
+    "tt": {
+     "slew": 13.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 6.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 4112,
+      "min": 217.32,
+      "mean": 252.66,
+      "max": 340.97,
+      "spread": 123.65
+     },
+     "all": {
+      "n": 7719,
+      "min": 217.32,
+      "mean": 251.25,
+      "max": 340.97,
+      "spread": 123.65
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 4112,
+      "min": 170.14,
+      "mean": 201.23,
+      "max": 275.78,
+      "spread": 105.64
+     },
+     "all": {
+      "n": 7719,
+      "min": 170.14,
+      "mean": 199.64,
+      "max": 275.78,
+      "spread": 105.64
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -68.88 ps, 7 endpoints",
+    "drv: FAIL TT slew 13.0 cap 0.0, FF slew 6.0 cap 0.0",
+    "clock: FAIL TT pin-flop spread 123.7 ps > 80; FF pin-flop spread 105.6 ps > 80"
+   ],
+   "cause": "RESET: arst_n -> u_rsync_t13 recovery -68.88 + DRV 13 slew (TT) + CLOCK spread 123.7/105.6 (taps far from station lines)",
+   "record": "epyc3:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t23/signoff/signoff.json"
+  },
+  {
    "type": "slice_station__t24",
    "verdict": "NOT SIGNED",
    "generated": "2026-10-24T19:06:28-07:00",
@@ -647,6 +765,66 @@
    ],
    "cause": "CLOCK: TT in2reg setup -7.71 (same class as t2); spread 91.2",
    "record": "epyc3:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t24/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t26",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T19:26:24-07:00",
+   "tt_setup_wns_ps": -116.49,
+   "ff_hold_wns_ps": 9.44,
+   "drv": {
+    "tt": {
+     "slew": 2.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 1.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 5768,
+      "min": 193.17,
+      "mean": 230.32,
+      "max": 267.73,
+      "spread": 74.56
+     },
+     "all": {
+      "n": 12163,
+      "min": 176.4,
+      "mean": 230.68,
+      "max": 271.27,
+      "spread": 94.87
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 5768,
+      "min": 154.14,
+      "mean": 184.76,
+      "max": 216.29,
+      "spread": 62.15
+     },
+     "all": {
+      "n": 12163,
+      "min": 141.16,
+      "mean": 185.35,
+      "max": 220.6,
+      "spread": 79.44
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -116.49 ps, 4 endpoints",
+    "drv: FAIL TT slew 2.0 cap 0.0, FF slew 1.0 cap 0.0"
+   ],
+   "cause": "RESET: arst_n -> u_rsync_t11 recovery -116.49 + DRV 2 slew (t11 class); in2reg min -21 at TT info",
+   "record": "intel2:/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t26/signoff/signoff.json"
   },
   {
    "type": "slice_station__t30",
@@ -766,6 +944,65 @@
    ],
    "cause": "DRV 27 slew (t11 class, all on >=125 um segments) + CLOCK: TT in2reg setup -5.27 (early tap)",
    "record": "intel1:/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t33",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T19:31:29-07:00",
+   "tt_setup_wns_ps": -9.54,
+   "ff_hold_wns_ps": 10.31,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 4112,
+      "min": 219.73,
+      "mean": 249.65,
+      "max": 280.84,
+      "spread": 61.11
+     },
+     "all": {
+      "n": 8240,
+      "min": 217.48,
+      "mean": 249.11,
+      "max": 280.84,
+      "spread": 63.36
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 4112,
+      "min": 172.42,
+      "mean": 199.18,
+      "max": 226.62,
+      "spread": 54.2
+     },
+     "all": {
+      "n": 8240,
+      "min": 170.88,
+      "mean": 198.74,
+      "max": 226.62,
+      "spread": 55.74
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -9.54 ps, 21 endpoints"
+   ],
+   "cause": "CLOCK: TT in2reg setup -9.54 at station-0 on an early tap (t2 class); spread 61.1",
+   "record": "epyc3:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t33/signoff/signoff.json"
   },
   {
    "type": "slice_station__t34",
