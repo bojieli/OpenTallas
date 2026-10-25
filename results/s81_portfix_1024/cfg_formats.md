@@ -117,3 +117,20 @@ CONFIG frame therefore raises the sticky `fault`.
 Benches (Verilator 5.050, epyc1): `rtl/dsrom_sys/s81_dv/eng/test/run_eng_cfg.sh`,
 `rtl/dsrom_sys/s81_dv/idx/test/run_idx_qf.sh`, `tools/s81_dv/eng_rr/bench_rr_snapshot.sh` (base / cfg1 / cfg2 / sref),
 `tools/s81_dv/eng_rr/bench_rr_split.sh`.
+
+## Bench results (Verilator 5.050, epyc1; source ec5e2a782a)
+
+| bench | variant | result |
+|---|---|---|
+| run_eng_cfg.sh (tb_dsdv_eng_cfg) | MUT 0 / 1-5 | PASS / all 5 FAIL (caught) |
+| run_idx_qf.sh (tb_dsdv_idx_qf) | MUT 0 / 1-5, BS_MUT 2 | PASS / all 6 FAIL (caught) |
+| bench_rr_snapshot.sh (tb_dsdv_eng_rr, die master configured by the cfg op) | base | PASS |
+| | sref (old-strap dsdv_eng_rr_c in lockstep) | PASS, 6,823 cycles, 0 mismatches |
+| | cfg1 (rank bits swapped) / cfg2 (decode on kind only) | FAIL / FAIL (caught: wrong cfg register -> windows / XQ idx out of rank) |
+| | xq1 (idx) / onesc (one scale) | FAIL / FAIL (caught: python idx check / row beat mismatches) |
+| bench_rr_split.sh (split lockstep vs monolith) | base | PASS, 0 mismatches |
+| | sm1 (crossing bit flip) / sm2 (halves swapped) | FAIL / FAIL (caught; sm1 12,812 lockstep mismatches) |
+
+xq1 / onesc / sm1 ran in the docker probe (`dead/probe.sh`, host toolchain, 4 GB) while ot-heavy's user bus was down on
+epyc1; the rest ran via ot-run. Run dirs: `/srv/opentallas-scratch2/claude/s81-portfix/cfg/{eng_cfg,idx_qf,rr_*,sp_*}`
+and `cfg/kit/out/{rr_xq1,rr_onesc,sp_sm1}`.
