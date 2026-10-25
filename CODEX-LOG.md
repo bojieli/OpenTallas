@@ -403,3 +403,9 @@ PARKED clean codex/geom-hbm-1024@f12669bb8 (pushed), /home/ubuntu/wt/codex-geom-
 Root handback final additions: unmerged gated base-latency repair codex/die-ci-refresh-1024@03032ef99 (4 generated files KV2416/B2l298 lanes, gate_latency PASS; no R8/token adoption). Shared clock/signoff WIP codex/kit-clock-1024@b88258680 includes overlay fix9fd7d7ec1 and CPPR helper;27 Python tests PASS, physical smoke NOT RUN, not merge-ready. GEOM vK CTS dump finished exit127 missing openroad PATH, no GEOM job live. All lane leaders ordered park; inherited progressing jobs preserved.
 
 Final park confirmations: S81 stopped only own wrapper2316012, checkout child2316357 continues; no MERGE_HEAD and no queued merge, c85a1e498b unchanged. HBM all children parked; unmerged pushed tok-hbm-r2@53e6ebba0 corrects pad-stage inventory (2 testsPASS), geom-hbm@f12669bb8 G1PASS-COND only. PART-CAP own checkout2033126 D-state may finish+commit review via wrapper2033122; no heavy job/new merge. All live jobs can be checked from host:path entries above.
+
+## Takeover 2026-10-25 02:36 PDT
+All lanes assigned across eight groups; all inherit result collection, failure diagnosis and next-step execution. Root integrating dec17 from codex/integrate-1025; preserves stale local main c2b6b4e72 and existing untracked files. epyc1 user manager alive with unlinked sockets; non-disruptive repair under INFRA, no restart of live scopes.
+
+OWNER?
+None newly required; earlier questions are checked against BRIEFING decisions before escalation.

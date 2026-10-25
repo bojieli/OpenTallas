@@ -323,3 +323,5 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-25 02:10 PDT S81/LEAFPLAN2: leaf lane-side rule READY claude/s81-leafplan-1024r@6b66fea917 (bits 792k->611k, cyc 922->882, lanes behind 0; G0/G0C 0 err); DEC12R rebase pending
 2026-10-25 02:19 PDT HBM-FACE: INFRA epyc1 user bus socket gone -> ot-run jobs placed on epyc1 fail immediately (exit 1, 'Failed to connect to user scope bus'); needs root fix
 2026-10-25 02:25 PDT COORD hourly: signed off QC cores 0->1, KV cores 3->4; S81 flat 2 h (4 types/11 cores) -- blocked on dec12-1025 regen + head relaunch; HBM 0 (face_guard stop rule). Fleet half idle (89 jobs, ~2.2 TB free on epyc2/intel1/intel2) -> fleet-fill steward launched; GEOM lane restarted for S81 split-core + xdie3 REQs; epyc1 scratch2 89% -> prune ordered; leafplan approved-if folded.
+
+2026-10-25 02:36 PDT CODEX: all lanes taken over; S81 replan generated gates recovered, dec17 integration in own branch; eight worker groups collecting results and executing fixes; epyc1 bus repair preserves running scopes.
