@@ -94,9 +94,9 @@ puts "OFF [catch {::ot_dtsh::trunk_ndr}]"
 namespace eval ord {proc get_db {} {return db}}
 proc db {m} {return tech}
 set created 0
-proc tech {m name} {global created;if {$m eq "findLayer"} {return layer};if {$created} {return ndr};return NULL}
+proc tech {m name} {if {$m eq "findLayer"} {return layer};return NULL}
 proc layer {m} {if {$m eq "getWidth"} {return 20};return 30}
-proc blk {m} {return 1000}
+proc blk {m args} {global created;if {$m eq "getDbUnitsPerMicron"} {return 1000};if {$m eq "findNonDefaultRule"} {if {$created} {return ndr};return NULL};error "blk $m"}
 proc root {m v} {lappend ::assigned [list root $m $v]}
 proc planned {m v} {lappend ::assigned [list planned $m $v]}
 proc create_ndr {args} {set ::created 1;set ::ndrargs $args}
