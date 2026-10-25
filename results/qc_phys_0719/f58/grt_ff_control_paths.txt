@@ -1,0 +1,46 @@
+fault$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)  318.88  316.39   -2.49 (VIOLATED)
+ot_prs_00000_ff/RESETN (DFFASRHQNx1_ASAP7_75t_R)  317.61  316.43   -1.18 (VIOLATED)
+c1_off[11]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  309.35  315.21    5.86 (MET)
+g_crb[0].u_m/wd_in[51] (ot_sram_1r1w_1024x256_m2_r2c2)  303.90  310.53    6.63 (MET)
+g_crb[0].u_m/wd_in[56] (ot_sram_1r1w_1024x256_m2_r2c2)  303.91  310.55    6.64 (MET)
+q[112] (output)                       393.50  329.02  -64.48 (VIOLATED)
+q[27] (output)                        393.50  329.16  -64.34 (VIOLATED)
+q[109] (output)                       393.50  329.26  -64.24 (VIOLATED)
+worst slack min -64.48
+worst slack max 314.29
+PRB_CBK 0 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 1 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 2 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 3 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 4 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 5 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 6 clknet_leaf_21_ot_ctap_W0_n dnet c1_bank
+PRB_CBK 7 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 8 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 9 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 10 clknet_leaf_21_ot_ctap_W0_n dnet c1_bank
+PRB_CBK 11 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 12 clknet_leaf_21_ot_ctap_W0_n dnet c1_bank
+PRB_CBK 13 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+PRB_CBK 14 clknet_leaf_21_ot_ctap_W0_n dnet c1_bank
+PRB_CBK 15 clknet_leaf_16_ot_ctap_W1_n dnet c1_bank_w
+g_cbk[12].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  309.40  321.63   12.23 (MET)
+g_cbk[14].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  308.91  321.52   12.61 (MET)
+g_cbk[6].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  309.01  321.62   12.61 (MET)
+g_cbk[10].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  308.99  321.60   12.61 (MET)
+g_cbk[4].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  321.07  338.92   17.85 (MET)
+g_cbk[8].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  320.99  338.92   17.93 (MET)
+g_cbk[2].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  320.92  338.93   18.00 (MET)
+g_cbk[3].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  320.92  338.93   18.01 (MET)
+g_cbk[0].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  320.95  338.96   18.01 (MET)
+g_cbk[15].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  320.74  338.89   18.15 (MET)
+g_cbk[5].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  320.75  338.93   18.18 (MET)
+g_cbk[1].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  319.97  338.38   18.41 (MET)
+g_cbk[9].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  320.63  339.12   18.49 (MET)
+g_cbk[13].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  320.57  339.06   18.50 (MET)
+g_cbk[7].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  320.60  339.10   18.50 (MET)
+g_cbk[11].u/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  320.61  339.12   18.50 (MET)
+u_c1w/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  323.61  412.35   88.74 (MET)
+u_c1/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)  309.10  410.11  101.00 (MET)
+          18.49   slack (MET)
+u_c1w/q$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R) 1048.44  434.38  614.06 (MET)

@@ -1,0 +1,11 @@
+37a38,43
+>     // PATH-QC-RP1 F58 kit patch (2026-10-25, structural fix of f57r4 FF hold -13.91/12 EP): physical replica of the c1
+>     // control register, same D (pcr_addr[3]) and same clock edge, placed in the W1 clock region; it drives the W1-region
+>     // consumers (mask 16'hABBF = g_cbk 0-5,7,8,9,11,13,15) so launch and capture share the receiving leaf. Identical value
+>     // every cycle (proof codex/rp1-control-proof0719@19dc8bd8d8 + LEC); +0 cycles. Netlist edit: kit rp1_ctl_replica.tcl.
+>     wire c1_bank_w;
+>     qfd_dv_s8x_kff #(.W(1), .ID(3401)) u_c1w (.ck(ck), .d(pcr_addr[3]), .q(c1_bank_w));
+46c52
+<         qfd_dv_s8x_kff #(.W(1), .ID(3500 + gk)) u (.ck(ck), .d(c1_bank), .q(bq));
+---
+>         qfd_dv_s8x_kff #(.W(1), .ID(3500 + gk)) u (.ck(ck), .d(((16'hABBF >> gk) & 16'h1) != 16'h0 ? c1_bank_w : c1_bank), .q(bq));

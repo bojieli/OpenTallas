@@ -1,0 +1,13 @@
+RP1_CTS_GATE internal hold_wns -3.92 (all groups incl. vclk boundary -103.23)
+RP1_CTS_GATE hold_wns -3.92 hold_endpoints 259 setup_wns 215.56
+RP1_CTS_GATE clock_drivers 148 in_macro 0
+RP1_GRT hold_wns -86.17 hold_endpoints 330 setup_wns 220.99 slew_viol 0
+RP1_M TT setup_wns 217.38 setup_ep 0 hold_wns -40.70 hold_ep 740
+RP1_PAIR TT max n 10366 worst 42.2 bounded 0 signed -42.2 launch {u_twcd/q[488]$_DFF_P_} capture {g_crb[1].u_m} crpr 3.22 p99_raw 42.48 searched 118 nopath 0 verify 0.000 rows {{{u_twcd/q[488]$_DFF_P_} {g_crb[1].u_m} -42.20 3.22 45.42} {{u_twcd/q[483]$_DFF_P_} {g_crb[1].u_m} -42.20 3.22 45.42} {{u_twcd/q[486]$_DFF_P_} {g_crb[1].u_m} -42.20 3.22 45.42} {{u_twcd/q[494]$_DFF_P_} {g_crb[1].u_m} -42.17
+RP1_PAIR TT min n 10366 worst 33.2 bounded 0 signed 33.2 launch {g_crb[1].u_m} capture {ccap[297]$_DFF_P_} crpr 6.13 p99_raw 35.98 searched 214 nopath 0 verify 0.000 rows {{{g_crb[1].u_m} {ccap[297]$_DFF_P_} 33.20 6.13 39.33} {{g_crb[1].u_m} {ccap[277]$_DFF_P_} 33.16 6.13 39.29} {{g_crb[0].u_m} {ccap[28]$_DFF_P_} 31.08 7.29 38.37} {{g_crb[0].u_m} {ccap[25]$_DFF_P_} 31.07 7.29 38.35} {{g_crb[0].u_m
+RP1_INS TT pinflops 998 mean 348.92 min 339.69 max 362.00 all 2221 mean_all 348.67
+RP1_M FF vclk source latency := 283.5 (OT_VCLK_FF=auto, arrival_max_rise)
+RP1_M FF setup_wns 314.29 setup_ep 0 hold_wns -72.63 hold_ep 743
+RP1_PAIR FF max n 10366 worst 30.67 bounded 0 signed -30.67 launch {u_twcd/q[488]$_DFF_P_} capture {g_crb[1].u_m} crpr 2.73 p99_raw 31.41 searched 135 nopath 0 verify 0.000 rows {{{pcr_addr[5]$_DFF_P_} {g_crb[1].u_m} -29.93 3.63 33.56} {{pcr_addr[12]$_DFF_P_} {g_crb[1].u_m} -29.79 3.63 33.42} {{u_twcd/q[488]$_DFF_P_} {g_crb[1].u_m} -30.67 2.73 33.39} {{u_twcd/q[483]$_DFF_P_} {g_crb[1].u_m} -30.67 
+RP1_PAIR FF min n 10366 worst 31.13 bounded 0 signed 31.13 launch {g_crb[1].u_m} capture {ccap[297]$_DFF_P_} crpr 5.3 p99_raw 32.16 searched 151 nopath 0 verify 0.000 rows {{{g_crb[1].u_m} {ccap[297]$_DFF_P_} 31.13 5.30 36.43} {{g_crb[1].u_m} {ccap[277]$_DFF_P_} 31.08 5.30 36.38} {{g_crb[0].u_m} {ccap[28]$_DFF_P_} 28.44 6.18 34.62} {{g_crb[0].u_m} {ccap[25]$_DFF_P_} 28.43 6.18 34.60} {{g_crb[0].u_
+RP1_INS FF pinflops 998 mean 283.49 min 274.54 max 297.31 all 2221 mean_all 284.54

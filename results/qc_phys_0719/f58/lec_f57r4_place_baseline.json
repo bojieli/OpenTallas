@@ -1,0 +1,311 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-25T15:18:08+0000",
+ "verdict": "UNPROVEN",
+ "top": "qfd_dv_s8_crh_rp1",
+ "netlist": "/work/orig_lec.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_sram_1r1w_1024x256_m2_r2c2": 12
+ },
+ "ports": {
+  "inputs": 741,
+  "outputs": 257
+ },
+ "t_aig_s": 4.5,
+ "t_corr_s": 1.6,
+ "keypoints": {
+  "gold": {
+   "inputs": 744,
+   "flops": 4052,
+   "outputs": 0,
+   "ands": 5385
+  },
+  "gate": {
+   "inputs": 748,
+   "flops": 4063,
+   "outputs": 0,
+   "ands": 5407
+  },
+  "matched": 2720,
+  "gold_constant_flops": {
+   "n": 0,
+   "first": []
+  },
+  "paired_flops": {
+   "n": 686,
+   "first": [
+    "gate:ff:u_dut.g_cbk[0].u/q=ff:u_dut.g_cbk[0].u.q",
+    "gate:ff:u_dut.g_cbk[10].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[11].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[12].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[13].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[14].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[15].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[1].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[2].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[3].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[4].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[5].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[6].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[7].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[8].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cbk[9].u/q=ff:u_dut.g_cbk[0].u/q",
+    "gate:ff:u_dut.g_cext[0].u0/q[0]=ff:u_dut.g_cext[0].u0.q[0]",
+    "gate:ff:u_dut.g_cext[0].u0/q[1]=ff:u_dut.g_cext[0].u0.q[1]",
+    "gate:ff:u_dut.g_cext[0].u0/q[2]=ff:u_dut.g_cext[0].u0.q[2]",
+    "gate:ff:u_dut.g_cext[0].u0/q[3]=ff:u_dut.g_cext[0].u0.q[3]",
+    "gate:ff:u_dut.g_cext[0].u0/q[4]=ff:u_dut.g_cext[0].u0.q[4]",
+    "gate:ff:u_dut.g_cext[0].u0/q[5]=ff:u_dut.g_cext[0].u0.q[5]",
+    "gate:ff:u_dut.g_cext[0].u0/q[6]=ff:u_dut.g_cext[0].u0.q[6]",
+    "gate:ff:u_dut.g_cext[0].u0/q[7]=ff:u_dut.g_cext[0].u0.q[7]",
+    "gate:ff:u_dut.g_cext[0].u1/q[0]=ff:u_dut.g_cext[0].u1.q[0]",
+    "gate:ff:u_dut.g_cext[0].u1/q[1]=ff:u_dut.g_cext[0].u1.q[1]",
+    "gate:ff:u_dut.g_cext[0].u1/q[2]=ff:u_dut.g_cext[0].u1.q[2]",
+    "gate:ff:u_dut.g_cext[0].u1/q[3]=ff:u_dut.g_cext[0].u1.q[3]",
+    "gate:ff:u_dut.g_cext[0].u1/q[4]=ff:u_dut.g_cext[0].u1.q[4]",
+    "gate:ff:u_dut.g_cext[0].u1/q[5]=ff:u_dut.g_cext[0].u1.q[5]",
+    "gate:ff:u_dut.g_cext[0].u1/q[6]=ff:u_dut.g_cext[0].u1.q[6]",
+    "gate:ff:u_dut.g_cext[0].u1/q[7]=ff:u_dut.g_cext[0].u1.q[7]",
+    "gate:ff:u_dut.g_cext[1].u0/q[0]=ff:u_dut.g_cext[1].u0.q[0]",
+    "gate:ff:u_dut.g_cext[1].u0/q[1]=ff:u_dut.g_cext[1].u0.q[1]",
+    "gate:ff:u_dut.g_cext[1].u0/q[2]=ff:u_dut.g_cext[1].u0.q[2]",
+    "gate:ff:u_dut.g_cext[1].u0/q[3]=ff:u_dut.g_cext[1].u0.q[3]",
+    "gate:ff:u_dut.g_cext[1].u0/q[4]=ff:u_dut.g_cext[1].u0.q[4]",
+    "gate:ff:u_dut.g_cext[1].u0/q[5]=ff:u_dut.g_cext[1].u0.q[5]",
+    "gate:ff:u_dut.g_cext[1].u0/q[6]=ff:u_dut.g_cext[1].u0.q[6]",
+    "gate:ff:u_dut.g_cext[1].u0/q[7]=ff:u_dut.g_cext[1].u0.q[7]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 10,
+   "first": [
+    "ff:u_dut.u_twca/q[0]$_DFF_P__mif1",
+    "ff:u_dut.u_twca/q[1]$_DFF_P__mif2",
+    "ff:u_dut.u_twca/q[2]$_DFF_P__mif3",
+    "ff:u_dut.u_twca/q[3]$_DFF_P__mif4",
+    "ff:u_dut.u_twca/q[4]$_DFF_P__mif5",
+    "ff:u_dut.u_twca/q[5]$_DFF_P__mif6",
+    "ff:u_dut.u_twca/q[6]$_DFF_P__mif7",
+    "ff:u_dut.u_twca/q[7]$_DFF_P__mif8",
+    "ff:u_dut.u_twca/q[8]$_DFF_P__mif9",
+    "ff:u_dut.u_twca/q[9]$_DFF_P__mif10"
+   ]
+  },
+  "gold_x_sources": 3,
+  "gate_x_sources": 7,
+  "gold_only_compare": {
+   "n": 670,
+   "first": [
+    "ff:u_dut.g_cbk[0].u.q",
+    "ff:u_dut.g_cbk[10].u.q",
+    "ff:u_dut.g_cbk[11].u.q",
+    "ff:u_dut.g_cbk[12].u.q",
+    "ff:u_dut.g_cbk[13].u.q",
+    "ff:u_dut.g_cbk[14].u.q",
+    "ff:u_dut.g_cbk[15].u.q",
+    "ff:u_dut.g_cbk[1].u.q",
+    "ff:u_dut.g_cbk[2].u.q",
+    "ff:u_dut.g_cbk[3].u.q",
+    "ff:u_dut.g_cbk[4].u.q",
+    "ff:u_dut.g_cbk[5].u.q",
+    "ff:u_dut.g_cbk[6].u.q",
+    "ff:u_dut.g_cbk[7].u.q",
+    "ff:u_dut.g_cbk[8].u.q",
+    "ff:u_dut.g_cbk[9].u.q",
+    "ff:u_dut.g_cext[0].u0.q[0]",
+    "ff:u_dut.g_cext[0].u0.q[1]",
+    "ff:u_dut.g_cext[0].u0.q[2]",
+    "ff:u_dut.g_cext[0].u0.q[3]",
+    "ff:u_dut.g_cext[0].u0.q[4]",
+    "ff:u_dut.g_cext[0].u0.q[5]",
+    "ff:u_dut.g_cext[0].u0.q[6]",
+    "ff:u_dut.g_cext[0].u0.q[7]",
+    "ff:u_dut.g_cext[0].u1.q[0]",
+    "ff:u_dut.g_cext[0].u1.q[1]",
+    "ff:u_dut.g_cext[0].u1.q[2]",
+    "ff:u_dut.g_cext[0].u1.q[3]",
+    "ff:u_dut.g_cext[0].u1.q[4]",
+    "ff:u_dut.g_cext[0].u1.q[5]",
+    "ff:u_dut.g_cext[0].u1.q[6]",
+    "ff:u_dut.g_cext[0].u1.q[7]",
+    "ff:u_dut.g_cext[1].u0.q[0]",
+    "ff:u_dut.g_cext[1].u0.q[1]",
+    "ff:u_dut.g_cext[1].u0.q[2]",
+    "ff:u_dut.g_cext[1].u0.q[3]",
+    "ff:u_dut.g_cext[1].u0.q[4]",
+    "ff:u_dut.g_cext[1].u0.q[5]",
+    "ff:u_dut.g_cext[1].u0.q[6]",
+    "ff:u_dut.g_cext[1].u0.q[7]"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 681,
+   "first": [
+    "ff:u_dut.g_cbk[0].u/q",
+    "ff:u_dut.g_cbk[10].u/q",
+    "ff:u_dut.g_cbk[11].u/q",
+    "ff:u_dut.g_cbk[12].u/q",
+    "ff:u_dut.g_cbk[13].u/q",
+    "ff:u_dut.g_cbk[14].u/q",
+    "ff:u_dut.g_cbk[15].u/q",
+    "ff:u_dut.g_cbk[1].u/q",
+    "ff:u_dut.g_cbk[2].u/q",
+    "ff:u_dut.g_cbk[3].u/q",
+    "ff:u_dut.g_cbk[4].u/q",
+    "ff:u_dut.g_cbk[5].u/q",
+    "ff:u_dut.g_cbk[6].u/q",
+    "ff:u_dut.g_cbk[7].u/q",
+    "ff:u_dut.g_cbk[8].u/q",
+    "ff:u_dut.g_cbk[9].u/q",
+    "ff:u_dut.g_cext[0].u0/q[0]",
+    "ff:u_dut.g_cext[0].u0/q[1]",
+    "ff:u_dut.g_cext[0].u0/q[2]",
+    "ff:u_dut.g_cext[0].u0/q[3]",
+    "ff:u_dut.g_cext[0].u0/q[4]",
+    "ff:u_dut.g_cext[0].u0/q[5]",
+    "ff:u_dut.g_cext[0].u0/q[6]",
+    "ff:u_dut.g_cext[0].u0/q[7]",
+    "ff:u_dut.g_cext[0].u1/q[0]",
+    "ff:u_dut.g_cext[0].u1/q[1]",
+    "ff:u_dut.g_cext[0].u1/q[2]",
+    "ff:u_dut.g_cext[0].u1/q[3]",
+    "ff:u_dut.g_cext[0].u1/q[4]",
+    "ff:u_dut.g_cext[0].u1/q[5]",
+    "ff:u_dut.g_cext[0].u1/q[6]",
+    "ff:u_dut.g_cext[0].u1/q[7]",
+    "ff:u_dut.g_cext[1].u0/q[0]",
+    "ff:u_dut.g_cext[1].u0/q[1]",
+    "ff:u_dut.g_cext[1].u0/q[2]",
+    "ff:u_dut.g_cext[1].u0/q[3]",
+    "ff:u_dut.g_cext[1].u0/q[4]",
+    "ff:u_dut.g_cext[1].u0/q[5]",
+    "ff:u_dut.g_cext[1].u0/q[6]",
+    "ff:u_dut.g_cext[1].u0/q[7]"
+   ]
+  }
+ },
+ "t_prove_s": 0.1,
+ "x_dont_care_points": {
+  "n": 0,
+  "first": []
+ },
+ "counts": {
+  "compare_points": 3556,
+  "proved": 3546,
+  "differs": 10,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [
+  {
+   "point": "bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[0]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gate_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.u_twca/q[0]$_DFF_P__mif1"
+   ]
+  },
+  {
+   "point": "bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[1]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gate_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.u_twca/q[1]$_DFF_P__mif2"
+   ]
+  },
+  {
+   "point": "bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[2]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gate_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.u_twca/q[2]$_DFF_P__mif3"
+   ]
+  },
+  {
+   "point": "bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[3]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gate_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.u_twca/q[3]$_DFF_P__mif4"
+   ]
+  },
+  {
+   "point": "bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[4]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gate_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.u_twca/q[4]$_DFF_P__mif5"
+   ]
+  },
+  {
+   "point": "bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[5]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gate_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.u_twca/q[5]$_DFF_P__mif6"
+   ]
+  },
+  {
+   "point": "bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[6]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gate_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.u_twca/q[6]$_DFF_P__mif7"
+   ]
+  },
+  {
+   "point": "bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[7]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gate_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.u_twca/q[7]$_DFF_P__mif8"
+   ]
+  },
+  {
+   "point": "bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[8]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gate_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.u_twca/q[8]$_DFF_P__mif9"
+   ]
+  },
+  {
+   "point": "bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[9]",
+   "status": "differs",
+   "cone_unmatched": [
+    "gate_only"
+   ],
+   "cone_unmatched_keys": [
+    "ff:u_dut.u_twca/q[9]$_DFF_P__mif10"
+   ]
+  }
+ ],
+ "reason": "10 compare points not proved; each depends on X (don't-care) sources, synthesis-only registers or hit the solver limit (first: bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[0], bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[1], bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[2], bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[3], bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[4], bb:u_dut.g_crb[1].u_m.lec_bbi_w_addr_in[5])",
+ "t_total_s": 6.8
+}
