@@ -1666,6 +1666,101 @@ def _lay_aligned(P, a, b, prs, targets):
     return False
 
 
+# PATH-QC-PLAN2 10-25: QC_SLICE_TRANSIT_FIRST=0 restores the 10-25 QC-PLAN3 alignment (all windows ordered by target)
+SLICE_TRANSIT_FIRST = __import__("os").environ.get("QC_SLICE_TRANSIT_FIRST", "1") == "1"
+
+
+def _lay_transit_first(P, a, b, prs, tg, transit):
+    """PATH-QC-PLAN2 10-25 (G2 slw_stm_v3 M3-V overflow 156,908): a slice partition's E face is laid TRANSITS FIRST.
+    The straight E<->W pass-throughs take the y span of their W-face window (one shared ordered transit list per W/E
+    face pair: forward/backward legaliser over the transits only), and the partition's own E buses (and turns) then
+    fill the spans the transits leave free, each in the free span nearest its target.  _lay_aligned ordered ALL windows
+    of a nearly full face by target, so every own bus below a transit pushed it up: on sl_W5_stm the fw<->fe chain
+    (x_fw_fe*, x_fe_fw*, x_st_b_fe, x_sc_fw: ~3.2k bits) jogged 224-474 um inside the partition, up and down across
+    each other.  False when no density step fits; the caller then uses _lay_aligned."""
+    f, lo, hi = shared_face(P, a, b)
+    ll = a if P.parts[a]["orient"] == "R0" else b
+    x0, y0, x1, y1 = P.rect(ll)
+    fl = f if ll == a else OPP[f]
+    slo = max(y0 if fl in "EW" else x0, lo) + EDGE
+    shi = min(y1 if fl in "EW" else x1, hi) - EDGE
+    tr = sorted([pr for pr in prs if pr["id"] in transit], key=lambda pr: (tg[pr["id"]], pr["id"]))
+    own = [pr for pr in prs if pr["id"] not in transit]
+    for fm in [5.0, 5.5, 5.8, None]:
+        L = lambda pr, st: qlen(pr["width"] + 1, PIN_MAX, pr["layers"], st, False, fmax=fm)
+        st, cur = [], slo
+        for pr in tr:
+            x = max(cur, tg[pr["id"]][0] - L(pr, max(cur, slo)) / 2)
+            st.append(x)
+            cur = x + L(pr, x) + GAP
+        top = shi
+        for i in range(len(tr) - 1, -1, -1):
+            pr = tr[i]
+            if st[i] + L(pr, st[i]) > top:
+                x = top - L(pr, max(slo, top - L(pr, st[i])))
+                for _ in range(3):
+                    x = top - L(pr, max(slo, x))
+                st[i] = x
+            top = st[i] - GAP
+        if tr and st[0] < slo - 1e-6:
+            continue
+        wins = {}
+        free = [[slo, shi]]
+        ok = True
+        for pr, x in zip(tr, st):
+            e = x + L(pr, x)
+            if (wins and x < max(w[1] for w in wins.values()) + GAP - 1e-6) or e > shi + 1e-6:
+                ok = False
+                break
+            wins[pr["id"]] = [x, e]
+            nf = []
+            for u, v in free:
+                if x - GAP > u + 1e-9:
+                    nf.append([u, min(v, x - GAP)])
+                if e + GAP < v - 1e-9:
+                    nf.append([max(u, e + GAP), v])
+            free = [iv for iv in nf if iv[1] - iv[0] > 1e-6]
+        if not ok:
+            continue
+        for order in (sorted(own, key=lambda pr: (tg[pr["id"]], pr["id"])),
+                      sorted(own, key=lambda pr: (-pr["width"], tg[pr["id"]], pr["id"]))):
+            fr, ow, ok = [list(iv) for iv in free], {}, True
+            for pr in order:
+                t = tg[pr["id"]][0]
+                best = None
+                for k, (u, v) in enumerate(fr):
+                    x = min(max(u, t - L(pr, max(u, t)) / 2), v)
+                    for _ in range(3):
+                        if x + L(pr, x) > v:
+                            x = max(u, v - L(pr, x))
+                    if x < u - 1e-9 or x + L(pr, x) > v + 1e-6:
+                        continue
+                    d = abs(x + L(pr, x) / 2 - t)
+                    if best is None or d < best[0]:
+                        best = (d, k, x)
+                if best is None:
+                    ok = False
+                    break
+                _, k, x = best
+                e = x + L(pr, x)
+                ow[pr["id"]] = [x, e]
+                u, v = fr.pop(k)
+                if e + GAP < v - 1e-9:
+                    fr.insert(k, [e + GAP, v])
+                if x - GAP > u + 1e-9:
+                    fr.insert(k, [u, x - GAP])
+            if ok:
+                break
+        if not ok:
+            continue
+        wins.update(ow)
+        for pr in prs:
+            pr["window_um"] = [round(wins[pr["id"]][0], 4), round(wins[pr["id"]][1], 4)]
+            pr.pop("order", None)
+        return True
+    return False
+
+
 def align_slice_transits(P, facepairs, lanes, ports):
     """QC-PLAN3 10-25 (G0 cuts: sl_W4_stm horizontal cut 0.61): a straight E<->W feedthrough slot of a slice partition
     has its E window laid at the height of its W window (the same rule as the coll feedthroughs, "straight slots run
@@ -1695,7 +1790,8 @@ def align_slice_transits(P, facepairs, lanes, ports):
             continue
         # x = the partition whose E face this is (its W face is already final when processed W -> E)
         x = k[0] if face_of(prs[0], k[0]) == "E" else k[1]
-        tg, nt = {}, 0
+        tg, nt, transit = {}, 0, set()
+        X0, Y0, X1, Y1 = P.rect(x)
         for pr in prs:
             c = sum(pr["window_um"]) / 2
             tg[pr["id"]] = (c, 0)
@@ -1703,9 +1799,17 @@ def align_slice_transits(P, facepairs, lanes, ports):
             if q is not None and face_of(pmap[q], x) == "W":
                 tg[pr["id"]] = (sum(pmap[q]["window_um"]) / 2, 0)
                 nt += 1
+                transit.add(pr["id"])
+            elif q is not None and face_of(pmap[q], x) in "NS" and SLICE_TRANSIT_FIRST:
+                # PATH-QC-PLAN2 (G2 slw_su_l1: rsf/rsn S->E turn crossed): a turn's E window is nested at the corner,
+                # the partner nearest the E edge lands nearest the corner (no crossing L's); the turns stay packed at
+                # the corner (target = corner + 1e-3 x the partner's distance from the E edge: order only)
+                px = sum(pmap[q]["window_um"]) / 2
+                tg[pr["id"]] = ((Y0 + 1e-3 * (X1 - px)) if face_of(pmap[q], x) == "S" else (Y1 - 1e-3 * (X1 - px)), 0)
         if nt:
             before = {pr["id"]: list(pr["window_um"]) for pr in prs}
-            if not _lay_aligned(P, *k, prs, tg):
+            if not ((SLICE_TRANSIT_FIRST and _lay_transit_first(P, *k, prs, tg, transit))
+                    or _lay_aligned(P, *k, prs, tg)):
                 kept.append(f"{k[0]}|{k[1]}")
             moved += sum(1 for pr in prs if pr["window_um"] != before[pr["id"]])
     print(f"align_slice_transits: {moved} slice E/W windows re-laid at their straight-transit partner height; "
