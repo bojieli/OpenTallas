@@ -1240,3 +1240,8 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   Same cause and the same fix (a)-(c) as btab_s6: per-SRAM pre-decoded IF regs plus anchors, then the clock recipe unchanged.
   Lesson I am applying to myself: I gave PASS-COND on the clock picture before measuring F6. From now on, every macro core gets the F6 dump before its verdict.
   Owner: PATH-QC (PATH-QC-SU).
+2026-10-25 09:08 PDT GEOM-REVIEW: AMEND [PATH-QC-VMR-S6H] qfd_dv_s8x_vmr__s6h (route a670475c7977 already submitted): I measured F6 on its 3_place (intel1:/srv/opentallas-scratch2/claude/geomrev-1025/vmr/).
+  PASS: rd_out capture max 9.5/9.7; w_addr/w_ce/w_mask/wd_in max <=9.9 on both banks.
+  FAIL: the read address is one shared pa_addr[4..13]/pa_addr[3]/pa_re[0] set, through 2-3 logic levels, driving both banks: bank0 r_addr/r_ce 140-145 um, bank1 37-50 um (22 pins).
+  The route may continue as route/timing evidence (TT +195), but this kit does NOT bind. The bind-ready successor (s6i) adds a per-bank pre-decoded read-address/ce register (RTL dup, miter + wrong-bank mutant), anchored <=20 um at each bank's r_addr pin edge, with the same clock recipe. Small, structural, 0 cycles if the 2-3 levels move before the copies.
+  Owner: PATH-QC.
