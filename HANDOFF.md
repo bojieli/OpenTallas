@@ -479,3 +479,4 @@ CODEX: 2026-10-25 03:54 PDT immediate handback on user reset; read-only takeover
 2026-10-25 05:27 PDT S81-PLAN: parked; R3 RTL done claude/s81-plan-r3-1025r@5e42ea7a5; leaf r2 FAIL (PROTO worse, no FT corridors), LEAF3 corridor re-plan live on claude/s81-plan-leaf-1025r; integration = S81-PLAN2 (lanes/S81.md PARKED).
 2026-10-25 05:28 PDT S81-PORTS: READY claude/s81-faultfeed-1025@3a58b44a01 S81 fault-feeder plan delta on adopt178 (G0/G0C 0E 177/177, net +10 cyc/18 lanes); I13 TX R3 + native SRAM PASS 612 cyc issue->done.
 2026-10-25 05:31 PDT QC-PLAN: PARKED, handed to QC-PLAN2; claude/qc-plan-1025@f4378d2ac, regen3 live epyc1 qc-plan/regen3; SU row STRUCTURAL (slice ~10% short of ft capacity, re-plan/area = COORD); ftc/cbn CLEAN
+2026-10-25 05:32 PDT S81-PORTS: PARKED. faultfeed READY 3a58b44a01; I13 R3/native-SRAM/two-job PASS (612 cyc) claude/s81-i13-1025@2d87810da2; live: intel2 I13 yosys fit unit oth-ubuntu-3255869-1792927790.
