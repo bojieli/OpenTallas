@@ -613,6 +613,19 @@ def job_rank_tree(fx, rank=0, k_dies=None, layer='L20', t_q=0, tag0=0x30, boot_d
 #   * the parent's drain waits for the RESERVED end of every child grid (static: data never moves a compiled edge).
 CHILD_LANES = (2, 3)
 TX_UID, TX_OP = 0x5C, 2
+# S81/IDXNET+H23 pin-to-pin contracts (2026-10-25). These are added RTL
+# edges, separate from the plan lane's registered transport depth.
+IDXNET_CONTRACT = dict(tx_destination_bits=[101, 100], tx_loop_bit=102,
+    tx_destinations={0:'tree', 1:'TP rank+2 north', 2:'TP rank+1 south', 3:'none'},
+    own_loop_to_selector_edges=3, external_pin_to_selector_edges=2,
+    lep_tm_to_ca_edges=3, lep_rx_tree_to_ca_edges=2,
+    iqf_qs_to_qc_beat_edges=[4,5], iqf_qc_old_edges=3,
+    lep_rx_release_to_ql_edges=2, q_relay_release_to_frame_edges=3,
+    tx_encoding='HDR/REBASE/BEAT; indexed13 TX is not implemented')
+SELIDS_CONTRACT = dict(uid=0x5C, op=3, bk_north_added_edges=1,
+    seqhost_hostwrite_added_edges=1, part1_to_entry_old_plan_edges={'svc_5':81,'svc_11':85},
+    mandatory_free_slots=['bk_sel.vo_n relay pair','seqhost host-write relay pair','svc entry q relay pair'],
+    required_consumer='WIN_LOAD open before SEL_IDS', host_substitution=False)
 TX_SM = 1600             # worst-case tx beats: HDR + 512 x (REBASE + 2 BEAT) = 1,537 + the first-IDX lead (~15) + margin
 TX_R = 1
 # MU.S81.CAL booking (STW-S81c-DIE4 10-22): TOPK TX x (dsdv_idx_tx_n32 RIL+RDL, RTL 100457dd6 / census b7b57b3d4) has the
@@ -656,10 +669,60 @@ def reader_beats(keys, b0, n, k, tag, om, e0, p=READER_P, ik=4):
     return out
 
 
-def tx_payload(lane, ptag, k, hb, otag, dly, r, sm):
+def tx_payload(lane, ptag, k, hb, otag, dly, r, sm, *, dst=0, loop=False):
     assert 0 <= dly < 1 << 16 and 1 <= r < 8 and 0 < sm < 1 << 12 and hb % 16 == 0
+    assert 0 <= lane < 4 and 1 <= k <= K_MAX and 0 <= hb < 1 << 20
+    assert 0 <= ptag < 256 and 0 <= otag < 256
+    assert isinstance(dst, int) and dst in range(4), 'DST: 0 tree, 1 TP north, 2 TP south, 3 none'
+    assert loop in (False, True), 'LOOP must be a single bit'
     return (TX_UID | TX_OP << 8 | 31 << 16 | (lane & 3) << 21 | (ptag & 0xFF) << 23 | (k & 0x3FF) << 31 |
-            (hb & 0xFFFFF) << 41 | (otag & 0xFF) << 61 | dly << 69 | r << 85 | sm << 88)
+            (hb & 0xFFFFF) << 41 | (otag & 0xFF) << 61 | dly << 69 | r << 85 | sm << 88 | dst << 100 | int(loop) << 102)
+
+
+
+def selids_payload(k, otag, mask=1):
+    """H23 dsdv_bk_selids CTL op3; the job precedes the final IDX egress."""
+    assert 1 <= k <= K_MAX and 0 <= otag < 256 and 0 <= mask < 16
+    return TX_UID | 3 << 8 | k << 31 | otag << 61 | mask << 69
+
+
+def selids_relay_beats(ids, first=0, mask=1):
+    """Exact H23 north-rung words of one prefix-valid IDX word (maximum16 IDs)."""
+    ids = [int(i) for i in ids]
+    assert 1 <= len(ids) <= 16 and 0 <= first < 1024 and first + len(ids) <= K_MAX
+    assert all(0 <= i < 1 << 20 for i in ids) and 0 <= mask < 16
+    out = []
+    for part in (0, 1):
+        beat = 1 | 0xB << 9 | 0xA5 << 13 | part << 189 | first << 190 | len(ids) << 200 | mask << 205
+        for j, pos in enumerate(ids[8 * part:8 * part + 8]):
+            beat |= pos << (21 + 21 * j)
+        out.append(beat)
+    return out
+
+
+def tp4_slot_phases(leg_edges, loop_edges=3, vmux_edges=2):
+    """Reserve non-colliding TX slots for own lane3 and peer lane2 at all4 roots.
+
+    leg_edges[r] is source lo to receiving root's external pin for the incoming
+    peer at r. Find a regular pitch, never a traffic-dependent arbitration.
+    Stage1 peer=r^2; stage2 peer=(r-1)%4. All phase choices are compiler static.
+    """
+    from itertools import product
+    assert len(leg_edges) == 4 and all(int(x) == x and x >= 0 for x in leg_edges)
+    result = {}
+    for stage, peer in ((1, lambda r: r ^ 2), (2, lambda r: (r - 1) % 4)):
+        for pitch in range(2, 8):
+            phase = next((ps for ps in product(range(pitch), repeat=4)
+                          if all((ps[r] + loop_edges) % pitch !=
+                                 (ps[peer(r)] + leg_edges[r] + vmux_edges) % pitch for r in range(4))), None)
+            if phase is not None:
+                result[stage] = dict(pitch=pitch, phases=list(phase),
+                                     incoming_peer=[peer(r) for r in range(4)],
+                                     max_tx_span=TX_SM * pitch,
+                                     loop_edges=loop_edges, vmux_edges=vmux_edges)
+                break
+        assert stage in result, 'no legal static TX pitch through7'
+    return result
 
 
 def drain_for(t_last, n_words_max):
@@ -905,6 +968,7 @@ def lower(die, op, ctx):
     res = dict(status='PARTIAL', unit='dsdv_bk_sel (u_bk_sel)', insts=[INST, 'u_seqhost'], rows=[], templates=[],
                gunit_rows=[], svc_jobs=[], files={}, events=[], bench=BENCH, deps=[],
                gap=GAPS['producer'])
+    res['transport_contract'] = dict(idxnet=IDXNET_CONTRACT, selids=SELIDS_CONTRACT)
     uid = die.strap(INST, 'uid') if hasattr(die, 'strap') else 0x5B
     ik = die.strap(INST, 'ik') or 4
     ek = die.strap(INST, 'ek') or 5
@@ -968,9 +1032,22 @@ def lower(die, op, ctx):
     res['rows'] = [dict(eng=1, issue=issue, arg=0, what=f'{name}: bk_sel drain CTL n {plan["drain"]["n"]} d {D_DRAIN}')]
     if res.get('tx_job'):
         tj = res['tx_job']
+        if ctx.get('bk_tx_dst') is not None or ctx.get('bk_tx_loop'):
+            tj['dst'], tj['loop'] = int(ctx.get('bk_tx_dst', 0)), bool(ctx.get('bk_tx_loop', False))
+            tj['payload'] = tx_payload(tj['lane'], tj['ptag'], K_MAX, tj['hb'], plan['tag'],
+                                       tj['dly'], tj['r'], tj['sm'], dst=tj['dst'], loop=tj['loop'])
         res['templates'].append((f'{name}.tx', tj['payload']))
         res['rows'].append(dict(eng=1, issue=tj['ctl_vi_n'] - v_cmd_to_vo - int(math.ceil(age)), arg=0,
                                 what=f'{name}: dsdv_idx_tx job CTL lane {tj["lane"]} -> die {tj["parent"]} DLY {tj["dly"]}'))
+    if name.endswith('topk_final') and ctx.get('bk_selids'):
+        if not ctx.get('svc_win_load_ready'):
+            raise ValueError('SEL_IDS needs an open WIN_LOAD plus reserved relay/host-write/q slots')
+        sel_ctl_edge = plan['drain']['vi_n_edge'] - 8
+        res['templates'].append((f'{name}.selids', selids_payload(len(plan['selection']), plan['tag'])))
+        res['rows'].append(dict(eng=1, issue=sel_ctl_edge - v_cmd_to_vo - int(math.ceil(age)), arg=0,
+                                what=f'{name}: H23 SEL_IDS op3, K {len(plan["selection"])}'))
+        res['selids_job'] = dict(ctl_vi_n=sel_ctl_edge, k=len(plan['selection']), tag=plan['tag'],
+                                expected_ids=plan['selection'], contract=SELIDS_CONTRACT)
     hexw = lambda b: f'{b:x}'
     res['events'].append(dict(cycle=plan['ingress'][0][0], inst=INST, port='vi_s', ports=['vi_s'], dir='in', kind='BK',
                               tag=f'{name}.ingress', valid_bit=0, payload=f'{len(plan["ingress"])} BK beats',

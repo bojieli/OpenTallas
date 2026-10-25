@@ -1,0 +1,73 @@
+{
+  "selector_relay_cosim": {
+    "jobs": 4,
+    "k": [
+      7,
+      32,
+      512,
+      19
+    ],
+    "expected_beats": 74,
+    "seen_beats": 74,
+    "mismatches": 0,
+    "fault": 0,
+    "mutant_mismatches": 66,
+    "mutant_fault": 1,
+    "verdict": "PASS"
+  },
+  "contracts": {
+    "idxnet": {
+      "tx_destination_bits": [
+        101,
+        100
+      ],
+      "tx_loop_bit": 102,
+      "tx_destinations": {
+        "0": "tree",
+        "1": "TP rank+2 north",
+        "2": "TP rank+1 south",
+        "3": "none"
+      },
+      "own_loop_to_selector_edges": 3,
+      "external_pin_to_selector_edges": 2,
+      "lep_tm_to_ca_edges": 3,
+      "lep_rx_tree_to_ca_edges": 2,
+      "iqf_qs_to_qc_beat_edges": [
+        4,
+        5
+      ],
+      "iqf_qc_old_edges": 3,
+      "lep_rx_release_to_ql_edges": 2,
+      "q_relay_release_to_frame_edges": 3,
+      "tx_encoding": "HDR/REBASE/BEAT; indexed13 TX is not implemented"
+    },
+    "selids": {
+      "uid": 92,
+      "op": 3,
+      "bk_north_added_edges": 1,
+      "seqhost_hostwrite_added_edges": 1,
+      "part1_to_entry_old_plan_edges": {
+        "svc_5": 81,
+        "svc_11": 85
+      },
+      "mandatory_free_slots": [
+        "bk_sel.vo_n relay pair",
+        "seqhost host-write relay pair",
+        "svc entry q relay pair"
+      ],
+      "required_consumer": "WIN_LOAD open before SEL_IDS",
+      "host_substitution": false
+    }
+  },
+  "scope": "Encoders and static slot planner. Full TP4 exchange and compressed-row lowering remain PARTIAL.",
+  "new_api": [
+    "tx_payload(dst=,loop=)",
+    "selids_payload",
+    "selids_relay_beats",
+    "tp4_slot_phases",
+    "ik_row_frame",
+    "selected_ids_frames"
+  ],
+  "host": "intel2",
+  "job": "oth-ubuntu-1055049-1792922062"
+}

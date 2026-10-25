@@ -184,6 +184,36 @@ def hdr(typ, ln, tag, spec=0, pos=777, user=USER, end=False, mask=1):
     return w | (pos & ((1 << 21) - 1)) << 459 | (user & 1023) << 449 | (spec & ((1 << 449) - 1))
 
 
+
+def ik_row_frame(codes, scales, position, kb, *, tag=0, user=USER, mask=1):
+    """H23 type15: exact stored index key, no quantization or fixture substitution."""
+    codes, scales = [int(c) for c in codes], [int(s) for s in scales]
+    assert len(codes) == 128 and all(0 <= c < 16 for c in codes)
+    assert len(scales) == 4 and all(0 <= s < 256 for s in scales)
+    assert 0 <= position < 1 << 21 and 0 <= kb < 1 << 30
+    assert 0 <= tag < 256 and 0 <= user < 1024 and 0 <= mask < 16
+    spec = kb | sum(s << (32 + 8 * i) for i, s in enumerate(scales))
+    return [hdr(15, 1, tag, spec=spec, pos=position, user=user, mask=mask),
+            sum(c << (4 * i) for i, c in enumerate(codes))]
+
+
+def selected_ids_frames(ids, *, first=0, mask=1, tag=0):
+    """H23 entry SEL_IDS q words (normally produced on-chip by SEL op3).
+
+    This encoder is an expected-event oracle, never a host substitute for the
+    bk_sel->seqhost hardware producer. Payload position uses32bits per rank.
+    """
+    ids = [int(i) for i in ids]
+    assert 1 <= len(ids) <= 512 and 0 <= first and first + len(ids) <= 512
+    assert all(0 <= i < 1 << 20 for i in ids) and 0 <= mask < 16
+    out = []
+    for i in range(0, len(ids), 16):
+        part = ids[i:i + 16]
+        spec = (len(part) << 10) | (first + i)
+        out.append([hdr(7, 1, tag, spec=spec, pos=0, user=0, mask=mask), sum(pos << (32 * j) for j, pos in enumerate(part))])
+    return out
+
+
 def cfg_spec(wb=WB, stack=ST, owner=None, tag=0, user=USER, allq=False):
     """Optional source launch identity, disjoint from legacy CFG bits [32:0]; [54] = ALLQ (RTLGAP-SO, dsdv_svc_att
     -DOT_SVC_ALLQ: allq_r <= q_d[54] on every CFG header)"""
