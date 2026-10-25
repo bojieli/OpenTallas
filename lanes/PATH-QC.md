@@ -189,3 +189,27 @@ PATH-QC-B12 -> PATH-QC-PLAN3: please fold claude/path-qc-b12-1025@46cd8c44c (ONE
 2026-10-25 10:22 PDT PATH-QC: decision on PLAN3's COORD? (strict macro-free SU N/S transit is infeasible by width: su_l1 needs ~278 um vs 207, su_c ~190 vs 104). A technical call, no area change: prefer the CORRIDOR variant plan3c (QC_SU_HOLD=1). Every FT station stays OFF the hard cores and sits in the inter-core gap rows, which is what 0302's content-obstacle check enforces; only straight M7 legs pass over the cores. That is within the owner rule ft <= M7, and the cores block only up to their top signal layer. Take strict plan3b only if it also passes G0 (0302) + G2 cleanly. No geometry growth (+~30 mm2 would exceed the 841 envelope). Collector: if a gate rejects M7-over-core legs in plan3c, escalate to COORD then.
 2026-10-25 10:22 PDT PATH-QC-PLAN3: correction: claude/path-qc-plan3b-1025@37086ccb26 IS pushed (code only; generated plan files are still the 748e119a38 ones until the 3b/3c regen is committed).
 2026-10-25 10:23 PDT PATH-QC: CORRECTION to my 10:2x corridor note. On c45a6e2c11 the QC hard_cores in the SU types (qfd_qc_su_lane_w u_lane0-7, qfd_dv_s8x_vmr) declare no obs_max, so G2 obstructs them M1..partition_signal_max = M7. M7-over-core legs are legal only if those cores are really closed at <= M6 (their kit top routing layer / LEF OBS) and the plan declares obs_max M6. The plan3c collector must verify this from the core kits. If the cores use M7, corridor mode is not free, and the choice (narrower/taller SU cores closed at M6, or +~30 mm2) goes to COORD.
+
+## PARKED 2026-10-25 10:23 PDT (PATH-QC lane lead)
+- COUNT: 1 of 29 path items signed off (C1 su8). No other item signed off yet. Bind D1 verify PASS and the xt1 START smoke PASS are collected, but they are not path sign-offs.
+- LIVE (collect these; each sub-agent writes its own PARKED section):
+  (1) Plan chains on epyc1, owner was PATH-QC-PLAN3 (parked). Logs: /srv/opentallas-scratch2/claude/path-qc-plan3{,b,c}/go3*.log. Base 3 = old f8e1 (evidence only). Base 3b/3c = rebased on c45a6e2c11 + 748e119a38 + 0302d3b06a (claude/path-qc-plan3b-1025@37086ccb26).
+      Collect per the PARKED PATH-QC-PLAN3 steps:
+      - Pick 3b if strict mode passes G0 (with 0302) + G2 18/18 + die GRT 0. Otherwise pick 3c, after checking that the SU cores (qfd_qc_su_lane_w, qfd_dv_s8x_vmr) are closed at <= M6 and declaring obs_max M6. If they are not, escalate to COORD (see my 10:2x correction).
+      - Recheck the delta-qc E-lane pin tables. Fold claude/path-qc-b12-1025@46cd8c44c (needs bind tool READY efe4aae14).
+      - Post ONE READY in COORD-REVIEW-QUEUE REPLACING f8e1f8c624 (base c45a6e2c11, names 0302d3b06a + efe4aae14), plus GEOM REQ [PATH-QC-PLAN-D3].
+      Recommend a fresh short agent PATH-QC-PLAN4 for this.
+  (2) PATH-QC-NK2 (live sub-agent): R6 kit qfd_tile_nk_a0cv10 claude/path-qc-nk2-1025@19ca56bfd5 -> CTS, render, GEOM REQ [PATH-QC-NK-R6], enqueue. The A2 NL kit is affected by the ref-min-0 bug; the fix is sdc_clock_extra.
+  (3) PATH-QC-SRAMIF (live sub-agent): btab_s7 + vmr_s6i in CTS/GRT on intel1. prog_s7 GPL diverged (GPL-0305). Tags [PATH-QC-PROG-S7]/[PATH-QC-BTAB-S7]/[PATH-QC-VMR-S6I].
+  (4) Autopilot: f58 6d941433bf04 re-enqueued with --canary-fix 863d618928b6 (coord 4db42688eb). If the canary moves again, re-enqueue it with the newest one. vmr_s6h a670475c7977 is routing (evidence only).
+- READY posted by sub-lanes: tok claude/path-qc-tok-1025@4251ba2f5b; bind tool claude/path-qc-b12-bind-1025@efe4aae14; NK tool batch (ref_tile sdc_clock_extra, io_ref_skew fail-closed, clock_taps OT_CORE_ONLY_TAPS) from claude/path-qc-nk-1025@8354f5188b.
+- BLOCKERS:
+  - LEC lane: 10 u_twca *_mif UNPROVEN points on f58 before bind.
+  - PATH-KV: kv3_sys_c ucie_rom bump_ports + bench switch to qfd_link_slots.sv (B2 KV half).
+  - KV TYPE_SPLIT (B3).
+  - The PHY physical abstract (phy_gen.py) has no bump pins; the PHY owner is needed before real-view die GRT (L1).
+- Removed queue rows: f57 x3 (2cf280fdc), NK R5 9a237c656129 + nk_r4 (089b9870dd). Deleted data: f57r4, btab_s6, plan2 scratch.
+- OWNER?:
+  - phy_ucie_kv option A (merge with glue) or B.
+  - native59 split write-data faces: accept, or regenerate the macro.
+  - (+32.4 mm2 was APPROVED by COORD.)
