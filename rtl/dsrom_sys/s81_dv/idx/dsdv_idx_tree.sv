@@ -16,8 +16,11 @@
 //   dsdv_idx_tx    tree transmit (child die): score store + IDX -> BEAT re-encoder + slot-grid emitter onto the tree
 //                  link to the parent (the parent's lane L, the parent's tag).
 //   dsdv_idx_qf    query fan-out (every die): tree frame (type 10) from the parent link or the local source ->
-//                  forwarded unchanged to both child links; this die's IDX_S job (type 4, ITS spec picked from the
-//                  frame's spec table by the die uid) into the reader chain head.
+//                  this die's IDX_S job (type 4, ITS spec picked from the frame's spec table by the die uid) into the
+//                  reader chain head.  S81/IDXNET 10-25 (S81 DECISION 2): qc0 forwards only the words of a tree frame
+//                  from the LOCAL source qs (the root's own frame) to the s_0N lep, which relays frames NEXT-ward by the
+//                  header relay count (d[7:4]); the second child link qc1 is gone (shard dies are consecutive NEXT-ward
+//                  stages: one link, the lep relay).  Words from ql are never forwarded by qf.
 // Pins: every input lands in a flop at the pin, every output leaves a flop.  One clock ck.  Reset rst: async assert,
 // 2-flop synchronous release (reset_landing).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -469,8 +472,7 @@ module dsdv_idx_qf #(
     input  wire [512:0]  qs,         // local frame source (s_3S)
     input  wire [512:0]  ql,         // parent tree link
     output wire [512:0]  qr,         // -> irg_00 qi
-    output wire [512:0]  qc0,        // -> child link 0
-    output wire [512:0]  qc1,        // -> child link 1
+    output wire [512:0]  qc0,        // -> the s_0N lep (via dsdv_idx_qfs 2-beat): the root's own tree frame words only
     output reg  [3:0]    st          // {no-entry seen, bad frame, collision, fault}
 );
     localparam integer NOUT=32;
@@ -484,14 +486,14 @@ module dsdv_idx_qf #(
     (* keep = "true" *) reg [7:0] rnk;
     always @(posedge ck or negedge rs0) if (!rs0) rnk <= 8'd0; else rnk <= 8'hFF;
     // ---- stage 1 (pin flops) and stage 2 (merged source), valid copies ----
-    reg          qs_v0, ql_v0, s1_v0, qc0_v, qc1_v;
-    reg  [511:0] qs_d, ql_d, s1_d, qc0_d, qc1_d;
+    reg          qs_v0, ql_v0, s1_v0, qc0_v, s1_qs;
+    reg  [511:0] qs_d, ql_d, s1_d, qc0_d;
     wire [NJ-1:0] qs_vk, ql_vk;   // independent kept copies; each masks <=24 payload bits
     wire [NOUT+3:0] s1_vk;          // [NJ-1:0] qr rewrite select; [NJ] framing; [NJ+1] counters
     always @(posedge ck or negedge rnk[0])
-        if (!rnk[0]) begin qs_v0 <= 1'b0; ql_v0 <= 1'b0; s1_v0 <= 1'b0; qc0_v <= 1'b0; qc1_v <= 1'b0; end
+        if (!rnk[0]) begin qs_v0 <= 1'b0; ql_v0 <= 1'b0; s1_v0 <= 1'b0; s1_qs <= 1'b0; end
         else begin
-            qs_v0 <= qs[0]; ql_v0 <= ql[0]; s1_v0 <= qs_v0 | ql_v0; qc0_v <= s1_v0; qc1_v <= s1_v0;
+            qs_v0 <= qs[0]; ql_v0 <= ql[0]; s1_v0 <= qs_v0 | ql_v0; s1_qs <= qs_v0;
 
         end
     wire qs_vctrl,ql_vctrl;
@@ -505,7 +507,7 @@ module dsdv_idx_qf #(
     for(genvar k=0;k<NOUT+4;k=k+1)begin:g_scopy
         dsdv_qf_copy #(.W(1),.ID(200+k))u(.ck(ck),.rn((k<18)?rnk[2]:rnk[4]),.d((k<18)?(qs_v0|ql_v0):(qs_vctrl|ql_vctrl)),.q(s1_vk[k]));
     end endgenerate
-    always @(posedge ck) begin qs_d <= qs[512:1]; ql_d <= ql[512:1]; qc0_d <= s1_d; qc1_d <= s1_d; end
+    always @(posedge ck) begin qs_d <= qs[512:1]; ql_d <= ql[512:1]; qc0_d <= s1_d; end
     generate for (j = 0; j < NJ; j = j + 1) begin : g_m
         localparam integer LO=24*j,N=(512-LO<24)?512-LO:24;
         wire qsm = qs_vk[j] && !(MUT == 2 && j == NJ - 1);
@@ -513,7 +515,6 @@ module dsdv_idx_qf #(
         always @(posedge ck)s1_d[LO+:N]<=s1_next[LO+:N];
     end endgenerate
     assign qc0 = {qc0_d, qc0_v};
-    assign qc1 = {qc1_d, qc1_v};
     wire [511:0] d = s1_d;
     wire         v  = s1_vk[NOUT];       // framing copy
     wire         vc = s1_vk[NOUT + 1];   // counter copy
@@ -586,6 +587,14 @@ module dsdv_idx_qf #(
     wire tree_next = (v&&!infr) ? is_tree : tree;
     wire [3:0] nsl_next = vc ? (!infr ? (is_tree ? d[3:0] : nsl) :
                                ((tree&&nsl!=4'd0) ? nsl-4'd1 : nsl)) : nsl;
+    // S81/IDXNET: qc0 valid = a word of a TREE frame from the local source (qs), same edge as before (s1 -> qc0)
+    always @(posedge ck or negedge rnk[0])
+        if (!rnk[0]) qc0_v <= 1'b0;
+`ifdef DSDV_IDX_QF_MUT_FWDALL
+        else qc0_v <= s1_v0;                                   // MUTANT: every word forwarded (old qf)
+`else
+        else qc0_v <= s1_v0 && s1_qs && tree_next;
+`endif
     wire [83:0] pc;
     wire [5:0] svspec;
     generate for(genvar b=0;b<14;b=b+1)begin:g_parser_copy

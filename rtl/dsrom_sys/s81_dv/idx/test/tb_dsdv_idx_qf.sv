@@ -1,8 +1,8 @@
 `timescale 1ns/1ps
 // S81-L20DIE (10-19): self-checking bench of dsdv_idx_qf (query fan-out).  uid 3.  Sequence on the parent link ql:
 // (1) a tree frame (type 10, NS 2: entries for uids 0..5) + 64 query words; (2) a non-tree frame (type 1, len 2) on the
-// local source qs; (3) a tree frame whose spec table has no entry for uid 3.  Checks: qc0 / qc1 == the input words
-// delayed exactly 3 edges (every word); qr == [type-4 header with uid 3's spec, the frame's tag / user, len 64] in the
+// local source qs; (3) a tree frame whose spec table has no entry for uid 3.  Checks: qc0 never valid (S81/IDXNET 10-25:
+// qc0 carries only tree frames from the local source qs, none here; qc1 is gone; dsdv_idx_qfs bench covers qc0); qr == [type-4 header with uid 3's spec, the frame's tag / user, len 64] in the
 // cycle of the last spec word, then the 64 query words, END 3 edges after its pin edge; the type-1 frame unchanged on
 // qr (3 edges); nothing on qr for frame (3); st fault bit 0, st no-entry bit 1.  Prints TB_QF PASS / FAIL.
 module tb_dsdv_idx_qf;
@@ -10,9 +10,9 @@ module tb_dsdv_idx_qf;
     reg ck = 0, rst = 0;
     always #0.5 ck = ~ck;
     reg  [512:0] qs = 0, ql = 0;
-    wire [512:0] qr, qc0, qc1;
+    wire [512:0] qr, qc0;
     wire [3:0] st;
-    dsdv_idx_qf #(.MUT(MUT)) dut (.ck(ck), .rst(rst), .uid(8'd3), .qs(qs), .ql(ql), .qr(qr), .qc0(qc0), .qc1(qc1), .st(st));
+    dsdv_idx_qf #(.MUT(MUT)) dut (.ck(ck), .rst(rst), .uid(8'd3), .qs(qs), .ql(ql), .qr(qr), .qc0(qc0), .st(st));
     integer cyc = 0, nerr = 0;
     reg [512:0] inw [int];               // word driven for edge e (either port)
     reg [512:0] expr [int];              // expected qr after edge e
@@ -31,7 +31,7 @@ module tb_dsdv_idx_qf;
     always @(posedge ck) begin
         #0.1;
         if (rst) begin
-            if (qc0 !== (inw.exists(cyc - 2) ? inw[cyc - 2] : 513'd0) || qc1 !== qc0) begin
+            if (qc0[0] !== 1'b0) begin
                 nerr++; if (nerr < 6) $display("TB_QF child mismatch cyc %0d got %h", cyc, qc0[16:0]);
             end
             // qr: valid bit every edge, data when valid (the chain ignores data bits of an idle word)

@@ -9,6 +9,7 @@
 // 0.764 off-die cap, RX 12/12).  Die ports tx<i>/rx<i> belong to region N<i>.  MUT 5/6/7 = landing mutants (bench).
 // Original LP +3 crossings and +2 fault output stages remain unchanged.
 // G3 (LEAD-S81-G3 10-21): u_sl = ot_s81sl_slice_c1x_k8_cap5r_lp (capc5r + fixed-depth CAP reset forests, one release edge).
+// S81/IDXNET 10-25: s_7S: u_lep = ot_s81sl_lep_mu_a_tpt (+ topk_final step-2 TX to d+1: tp_i <- bk_sel tps_o, pair A); every other cycle unchanged.
 module ot_s81sl_slice_lepe_nh_mu_72 #(
     parameter integer MUT = 0
 ) (
@@ -39,7 +40,9 @@ module ot_s81sl_slice_lepe_nh_mu_72 #(
     input wire ck_K, ck_ML,
     input wire ck_N0, ck_N1,
     input wire ck_L0, ck_L1, ck_L3, ck_L4,
-    input wire ck_CAP_RT, ck_CAP_CW, ck_CAP_CE, ck_CAP_RN, ck_CAP_RS
+    input wire ck_CAP_RT, ck_CAP_CW, ck_CAP_CE, ck_CAP_RN, ck_CAP_RS,
+    // S81/IDXNET 10-25 (region K, pin flops in u_lep)
+    input wire [275:0] tp_i
 );
     wire  fault__o;   // out_regs: flat driver of fault
     wire [1103:0] lro, lri; wire sf;
@@ -108,6 +111,6 @@ module ot_s81sl_slice_lepe_nh_mu_72 #(
         .k_lo_v(l1v), .k_lo_d(l1d), .k_lo_r(l1r), .k_li_v(i1v), .k_li_d(i1d), .k_li_r(i1r), .k_rxv(n1rxk), .k_flt(f1), .k_st(n1stk),
         .n_lo_v(n1lv), .n_lo_d(n1ld), .n_lo_r(n1lr), .n_li_v(n1iv), .n_li_d(n1id), .n_li_r(n1ir), .n_rxv(n1rxv), .n_flt(n1f), .n_st(rx1[513:512]));   // K <-> N1, +3 each way
     dsfd_coll_lane_e_safe8_ntf #(.CORE_CRED(12)) u_ln1 (.ck(ck_N1), .rs(lpr_c_u_ln1), .chb(ch_b), .rx(lrx1), .tx(tx1), .lo_v(n1lv), .lo_r(n1lr), .lo_d(n1ld), .li_v(n1iv), .li_r(n1ir), .li_d(n1id), .flt(n1f));   // region N1, t = 0
-    ot_s81sl_lep_mu_a #(.CRED(12), .DR(12), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf), .fault(fault__o));   // region K, t = 0
+    ot_s81sl_lep_mu_a_tpt #(.CRED(12), .DR(12), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf), .fault(fault__o), .tp_i(tp_i));   // region K, t = 0
     dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)) u_land (.clk(ck_ML), .rst_n(lpr_c_u_land), .wv(mwv_ml), .wd(mwd_ml), .rc(mu_rc_ml), .rv(mrv_ml), .rd(mrd_ml), .fault(mf_ml)); // region ML
 endmodule
