@@ -26,6 +26,12 @@ if {[info exists ::env(GLOBAL_ROUTE_ARGS)] && $::env(GLOBAL_ROUTE_ARGS) ne ""} {
     lappend tg_args $a
   }
 }
+# as ORFS global_route.tcl: -resistance_aware when the platform/kit enables it (the FF GRT step routes the clock nets
+# that way; without it this pass read the pin-register clock ~14 ps later than the post-GRT gate, head + KV 10-25)
+set ::ot_grt_res_aware ""
+if {[llength [info commands append_env_var]]} { append_env_var ::ot_grt_res_aware ENABLE_RESISTANCE_AWARE -resistance_aware 0 }
+set tg_args [concat $tg_args $::ot_grt_res_aware]
+puts "OT_TAP_GRT_PRE global_route $tg_args"
 global_route {*}$tg_args
 estimate_parasitics -global_routing
 set ::env(OT_TAP_EST) grt
