@@ -432,6 +432,14 @@ def main():
     # the ORFS default 4096-bit inference guard rejects it before mapping.
     if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)", module):
         rec["synth_memory_max_bits"] = max(256 * 61, rec.get("synth_memory_max_bits", 0))
+        # Every exp view uses the plan's family placement.  A bulk kit
+        # regeneration must not silently return to unconstrained SRAM packing.
+        if not a.macro_placement and all(abs(x - y) < 0.01 for x, y in zip((w, h), (440.64, 207.36))):
+            family_placement = pdir.parent / "B2n_inputs" / "exp_lane.json"
+            if not family_placement.is_file():
+                raise SystemExit(f"{a.view}: exp family MACRO_PLACEMENT missing: {family_placement}")
+            a.macro_placement = str(family_placement)
+            a.macro_inst_fmt = "u_core.u_bank.u_data.g_read[{k}].u_m"
     if a.macro_placement:
         if not a.macro_inst_fmt:
             raise SystemExit("--macro-placement needs --macro-inst-fmt")

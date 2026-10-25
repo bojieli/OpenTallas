@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS",
+  "scope": "argmax_shell and c20: route allowed after preflight and postCTS gates pass",
+  "kit_hash": "117a5386717ae2b2",
+  "image": "argmax_shell_placed.png",
+  "findings": [
+    "Identical placed.csv and images for both CTS variants: shared placement.",
+    "29% fill, no bins>80%; face flops align at N/S pin edges with p90 8.9um, max13.2um.",
+    "No macro walls, open central space and edge bands; no bus hop approaching405um within118.8um core.",
+    "Standard core PDN, no macro interruptions. Gate propagated clocks and FF hold before routing."
+  ]
+}
