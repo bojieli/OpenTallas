@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Named L14 path eng parent reservation and exact planned bit sites; native E2 still requires actual SIGNED view",
+  "findings": [
+    "E2 width410.4 height466.56 at855.36,717.12 replacesobsolete345.6width. Actualruntime2690pincoordinatecontract imported fromepyc2s81-cores3/dsdv_eng_rr_e_e2/pins.json (freeze2f284040e522392a3fed698b3fd2ad2df935e2efe04889e390d36121729b57b7). Eface0pins.",
+    "Viewedparent.png: H0/H1 retain17.28um N-Sgap underE; Wwidebus feedthrough followsleftcorridor, N-WFT0 followsrightcorridor andclearbottomchannel. Enewrightedge1265.76, shiftedstationcellmin1280.88 (15.12umclear).",
+    "FT0 first3stagecolumns+69.12um, fourth+34.56um, firststage+34.56umY. Same9FT0/6FT1registeredstages. Actualpairedcellcenter+facepinmax402.133/371.749um,0stationcell/coreoverlap;D/Qoffsetallowance2umstill<=405.",
+    "NaiveshiftinitialFAIL436.693/417.690um fixedbeforeanyroute.Noextraedge/modelcycle. ParentnowreferencesactualmechanicalE2LEF/pintablefromphysical32288c0abd (NOT_SIGNED), originalcanonical345.6viewretainedashistory.",
+    "CorePDN/clocknativecontracts remain physical-lane obligations; parentcorridors visiblycontinuous.",
+    "FinalmechanicalE2faceaudit13groups/3968pins,0away/0unchecked acrossE,H0,H1.TheprototypeLEFissolelyaninterfaceview;actualSIGNOFFunachieved."
+  ],
+  "latency_delta_cycles": 0
+}
