@@ -812,6 +812,51 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
     return out
 
 
+def check_station_sites(P, R):
+    """R3 registers are real standard cells: none may be inside a hard core."""
+    summary = dict(points=0, entries=0, violations=0, types=[])
+    def xy_leaves(value):
+        if isinstance(value, (list, tuple)):
+            if len(value) == 2 and all(isinstance(v, (int, float)) for v in value):
+                yield value
+            else:
+                for child in value:
+                    yield from xy_leaves(child)
+    for tn, t in P.types.items():
+        boxes = []
+        for c in t.get("hard_cores", []) or []:
+            x,y = c["origin_um"]
+            dx,dy = c.get("track_offset_um", [0,0])
+            w,h = c["outline_um"]
+            boxes.append((c["inst"], x+dx, y+dy, x+dx+w, y+dy+h))
+        if not boxes:
+            continue
+        entries = [("internal", e.get("conn", str(i)), e.get("regs_um", []))
+                   for i,e in enumerate(t.get("internal_stations", []) or [])]
+        for e in t.get("ft_slots", []) or []:
+            entries.append(("ft", e["name"], e.get("regs_um", [])))
+            entries.append(("ft_bits", e["name"], e.get("bit_sites_um", [])))
+        bad_type = False
+        for kind, name, points in entries:
+            bad = []
+            summary["entries"] += 1
+            for q in xy_leaves(points):
+                summary["points"] += 1
+                hit = next((n for n,x0,y0,x1,y1 in boxes
+                            if x0+EPS < q[0] < x1-EPS and y0+EPS < q[1] < y1-EPS), None)
+                if hit:
+                    summary["violations"] += 1
+                    if len(bad) < 4:
+                        bad.append(dict(xy=list(q), core=hit))
+            if bad:
+                bad_type = True
+                R.err("station_sites", f"type {tn} {kind} {name}: register sites inside hard cores: {bad}",
+                      type=tn)
+        if bad_type:
+            summary["types"].append(tn)
+    return summary
+
+
 # ------------------------------------------------------------------------------------- hard-core face rule
 _NORMAL = dict(N=(0.0, 1.0), S=(0.0, -1.0), E=(1.0, 0.0), W=(-1.0, 0.0))
 FACE_AWAY_COS = -0.1     # a core port whose pins' mean best cos(face normal, direction to a partner) is below this
@@ -1349,6 +1394,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
                 bits=sum(p["width"] for p in P.ports.values()))
     summ["types"] = check_types(P, R)
     summ["taps_cores"] = check_taps_cores(P, R, plan_dir, evidence)
+    summ["station_sites"] = check_station_sites(P, R)
     summ["core_faces"] = check_core_faces(P, R, plan_dir, core_conns)
     summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()),
                                           side=load_core_conns(plan_dir, core_conns))
