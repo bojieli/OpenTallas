@@ -166,3 +166,15 @@ CODEX progress: Capacity56 candidate nowregenerated25/25constantsPASS,433915padf
   digest error; gen.py latency --groups v5 reproduces it: same 7720 members / 248,396 pad flops / max pad 5; only 4
   members' lane label UNPLANNED -> coll_ucie__fltu. Committed as r8/bus_groups.json + regenerated landing + r8 latency/pkg.
   G0 PASS 0 errors / 88 warn, G0C 52/56 (unchanged; capacity plan next).
+- 2026-10-24 19:41 PDT QC: capacity adoption branch claude/qc-cap-1024r (epyc1 worktree qc-1024r) = g0fix 9aceac11be + merge claude/qc-a0-1024@0850852fc0
+  (codex capacity 406d/72ec/f553 + ft_regs ab490d1fbb + 5-station serdes TX + A0 v7 taps). NEW physical/die_plan/qwen_compute/lane_eq.py
+  (QC-TOK equalisation proposal, generic): every lane family into one hardened type (dst type+bus) gets one natural depth, short lanes
+  padded with ft STATIONS on slots whose every lane has the same deficit (CB families left to CB16 pads). Only unequal family on the
+  capacity plan: sle_ctl.x_fw_p1_i (E 9 / W 6) -> slw_stm.x_fw_ctl_p1 2->4, slw_sc.x_fw_ctl_p1 2->3 (6 W slices). Wired into gen_plan
+  before/after ft_regs. Regen running epyc1 pid 3512489 (log /srv/opentallas-scratch/claude/qc/logs/regen_cap.log); R8 groups =
+  codex-qwen/qcp_capacity_probe/bus_groups.json (5b3a39e809083115) until the rebind.
+- 2026-10-24 19:41 PDT QC: A0 +1 PRICED: results/uarch/qwen_a0_latency_compat_1024.json -> ADOPTED: +1 cycle x 4 serial matvecs (qkv/o/gu/down) x 36
+  layers + lm_head = +145 cyc/token on 271,106 = 0.053 % (4,428.1 -> 4,425.7 tok/s 1u). Compiler/R8 integration in the rebind.
+- 2026-10-24 19:41 PDT QC: sub-agents: (a) A0 v7 NK/NL congestion structural review (no new P&R), (b) TRIAL-QK v3.8s route/IR collection + die_trial
+  gate fix (owner decision 5: FF hold STA with real trees decides; insertion_tol 40 = guidance/INFO).
+- TRIAL-QK OWNER? ANSWERED (BRIEFING decision 5): FF hold STA with real trees decides; insertion_tol is guidance.
