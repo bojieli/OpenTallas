@@ -75,6 +75,21 @@ module qfd_tile_nk_a0c #(
     input  wire          ck_t39,
     input  wire          ck_t40,
     input  wire          ck_t41,
+`ifdef OT_A0_CK_TAPS53
+    // PATH-QC-NK2 10-25 A0 v10 (NK R6): core-only taps at the LSL fp1 / bottom ROM-leaf clock pins (ck_t42..ck_t49)
+    // + 3 re-pitch flop taps (ck_t50..ck_t52), gen_a0c10_core_clock.py.  No RTL loads.
+    input  wire          ck_t42,
+    input  wire          ck_t43,
+    input  wire          ck_t44,
+    input  wire          ck_t45,
+    input  wire          ck_t46,
+    input  wire          ck_t47,
+    input  wire          ck_t48,
+    input  wire          ck_t49,
+    input  wire          ck_t50,
+    input  wire          ck_t51,
+    input  wire          ck_t52,
+`endif
 `endif
 `endif
 `endif

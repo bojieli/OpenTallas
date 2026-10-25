@@ -1,0 +1,205 @@
+{
+ "core_only_taps": [
+  "ck_t2",
+  "ck_t48",
+  "ck_t49",
+  "ck_t1",
+  "ck_t3",
+  "ck_t42",
+  "ck_t44",
+  "ck_t45",
+  "ck_t43",
+  "ck_t46",
+  "ck_t47"
+ ],
+ "sites": {
+  "ck_t48": {
+   "xy": [
+    201.232,
+    43.936
+   ],
+   "why": "core-only ot_qwen_tile_romleaf u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf clk pin (195.222,43.932)"
+  },
+  "ck_t49": {
+   "xy": [
+    256.72,
+    43.936
+   ],
+   "why": "core-only ot_qwen_tile_romleaf u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf clk pin (262.698,43.932)"
+  },
+  "ck_t1": {
+   "xy": [
+    94.864,
+    736.912
+   ],
+   "why": "core-only ot_qwen_tile_lsl_fp1 u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh clk pin (100.848,736.908)"
+  },
+  "ck_t3": {
+   "xy": [
+    94.864,
+    897.424
+   ],
+   "why": "core-only ot_qwen_tile_lsl_fp1 u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh clk pin (100.848,897.420)"
+  },
+  "ck_t42": {
+   "xy": [
+    94.864,
+    1057.936
+   ],
+   "why": "core-only ot_qwen_tile_lsl_fp1 u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh clk pin (100.848,1057.932)"
+  },
+  "ck_t44": {
+   "xy": [
+    306.064,
+    897.424
+   ],
+   "why": "core-only ot_qwen_tile_lsl_fp1 u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh clk pin (300.048,897.420)"
+  },
+  "ck_t45": {
+   "xy": [
+    306.064,
+    1057.936
+   ],
+   "why": "core-only ot_qwen_tile_lsl_fp1 u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh clk pin (300.048,1057.932)"
+  },
+  "ck_t43": {
+   "xy": [
+    329.872,
+    736.912
+   ],
+   "why": "core-only ot_qwen_tile_lsl_fp1 u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh clk pin (335.856,736.908)"
+  },
+  "ck_t46": {
+   "xy": [
+    329.872,
+    897.424
+   ],
+   "why": "core-only ot_qwen_tile_lsl_fp1 u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh clk pin (335.856,897.420)"
+  },
+  "ck_t47": {
+   "xy": [
+    329.872,
+    1057.936
+   ],
+   "why": "core-only ot_qwen_tile_lsl_fp1 u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh clk pin (335.856,1057.932)"
+  },
+  "ck_t50": {
+   "xy": [
+    16.912,
+    1078.0
+   ],
+   "why": "flop tap: W pin-flop column top (from ck_t6: 255 sinks x 4-13 / y 1052-1103)"
+  },
+  "ck_t51": {
+   "xy": [
+    387.024,
+    664.0
+   ],
+   "why": "flop tap: ck_t24 east strip (476 sinks, centroid 387,664)"
+  },
+  "ck_t52": {
+   "xy": [
+    440.656,
+    523.504
+   ],
+   "why": "flop tap: ck_t18 E strip (716 sinks, centroid 444,524)"
+  }
+ },
+ "cores": [
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[0\\].u_leaf}",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t48"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_single.g_col\\[0\\].u_leaf}",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t9"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_single.g_col\\[0\\].u_leaf}",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t12"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_single.g_col\\[0\\].u_leaf}",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t20"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_single.g_col\\[0\\].u_leaf}",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t15"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[1\\].u_leaf}",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t49"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_single.g_col\\[1\\].u_leaf}",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t8"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_single.g_col\\[1\\].u_leaf}",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t13"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_single.g_col\\[1\\].u_leaf}",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t19"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_single.g_col\\[1\\].u_leaf}",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t14"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[0\\].g_hd.u_lh}",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t1"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[1\\].g_hd.u_lh}",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t3"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[2\\].g_hd.u_lh}",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t42"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[4\\].g_hd.u_lh}",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t44"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[5\\].g_hd.u_lh}",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t45"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[3\\].g_hd.u_lh}",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t43"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[6\\].g_hd.u_lh}",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t46"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[7\\].g_hd.u_lh}",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t47"
+  },
+  {
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node}",
+   "cell": "ot_qwen_tile_node",
+   "tap": "ck_t2"
+  }
+ ]
+}

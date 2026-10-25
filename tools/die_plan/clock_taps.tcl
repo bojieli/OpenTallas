@@ -20,7 +20,8 @@ foreach bt [$ct_blk getBTerms] {
   # PATH-QC-NK 10-25: a CORE-ONLY tap (OT_CORE_ONLY_TAPS, space-separated port names) carries only the hard-core clock
   # pins OT_CORE_TAPS hangs on it; it is no grid tap, so the nearest-tap split and the cap pass never move a flop onto it
   # (a register sharing a tap with a core is balanced by CTS to core pin + ETM insertion: nk_r4 ck_t28 396 ps).
-  if {[info exists ::env(OT_CORE_ONLY_TAPS)] && $n in $::env(OT_CORE_ONLY_TAPS)} { puts "OT_CLOCK_TAPS core-only tap $n"; continue }
+  # PATH-QC-NK2 10-25: comma- or space-separated (ref_tile orfs_vars values carry no whitespace)
+  if {[info exists ::env(OT_CORE_ONLY_TAPS)] && $n in [split $::env(OT_CORE_ONLY_TAPS) ", "]} { puts "OT_CLOCK_TAPS core-only tap $n"; continue }
   lappend ct_taps [list $n $net [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]]
 }
 # CP2 (COORD 10-23): EARLY core taps (gen.py phys core_taps.txt, env OT_CORE_TAPS; plan clock.taps[] kind 'core' with
