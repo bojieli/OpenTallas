@@ -47,4 +47,13 @@ def assess(row, root, repo, run_git):
     changed = [p for p in paths.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)]
     if changed:
         return False, 'flow changed since newest PASS: ' + ', '.join(changed[:4]) + remedy
+    kit_source = row.get('src', '').rsplit('@', 1)[-1]
+    if not kit_source:
+        return False, 'queued kit source is missing'
+    rc, paths, _ = run_git(['git', '-C', str(repo), 'diff', '--name-only', kit_source, 'main'], timeout=60)
+    if rc:
+        return False, 'cannot compare queued kit flow source to current main'
+    changed = [p for p in paths.splitlines() if any(fnmatch.fnmatch(p, w) for w in watch)]
+    if changed:
+        return False, 'queued kit uses different flow tools; regenerate from canaried flow: ' + ', '.join(changed[:4]) + remedy
     return True, 'newest PASS covers current flow: ' + exact

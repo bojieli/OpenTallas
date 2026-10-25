@@ -295,6 +295,20 @@ if {[llength $ct_taps] >= 2 && $ct_min > 0} {
       puts "OT_CLOCK_TAPS WARN [lindex $tp 0] keeps $n sinks < $ct_min: no tap with >= $ct_min sinks within one pitch"
       continue
     }
+    # Density radius is a physical reach bound, including sparse control flops.
+    # Tap-to-tap distance alone can hide a long arm at the far end of a bank.
+    if {[info exists ::env(OT_TAP_REASSIGN_UM)]} {
+      set far 0
+      foreach it [dict get $ct_k [lindex $tp 0]] {
+        lassign [[$it getInst] getLocation] sx sy
+        set d [expr {abs($sx-[lindex $best 2])+abs($sy-[lindex $best 3])}]
+        if {$d > $ct_maxx} { set far 1; break }
+      }
+      if {$far} {
+        puts "OT_CLOCK_TAPS keeps sparse [lindex $tp 0]($n): merge exceeds density sink radius"
+        continue
+      }
+    }
     foreach it [dict get $ct_k [lindex $tp 0]] { $it disconnect; $it connect [lindex $best 1] }
     dict set ct_k [lindex $best 0] [concat [dict get $ct_k [lindex $best 0]] [dict get $ct_k [lindex $tp 0]]]
     dict set ct_k [lindex $tp 0] {}

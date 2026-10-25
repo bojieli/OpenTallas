@@ -203,7 +203,7 @@ def test_leaf_affinity_state_is_global_when_sourced_from_a_proc():
     t = (HERE / "leaf_affinity.tcl").read_text()
     first_set = t.index("set la_um")
     import re
-    m = re.search(r"^global (la_\w+ ?){3}$", t, re.M)
-    assert m and set(m.group(0).split()[1:]) == {"la_ck", "la_d", "la_par"}
+    m = re.search(r"^global (la_\w+ ?)+$", t, re.M)
+    assert m and set(m.group(0).split()[1:]) == {"la_ck", "la_d", "la_par", "la_clock"}
     decl = m.start()
     assert decl < first_set

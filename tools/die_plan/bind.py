@@ -462,6 +462,32 @@ def rel(path, root):
     return path[len(root) + 1:] if root and path.startswith(root + ".") else path
 
 
+def variant_port_bits(ports, variant, params, mapping):
+    """Validate an explicit LSB-first bit selection before changing any leaf.
+
+    Opt-in substitute_inst.port_bits preserves each selected as-built net and
+    rejects implicit width changes on every shared port in that rule.
+    """
+    if not isinstance(mapping, dict):
+        raise BindError("port_bits must be a port-to-index-list object")
+    selected = {}
+    env = variant.env({k: v for k, v in params.items() if k in variant.params})
+    for pn, indices in mapping.items():
+        if pn not in ports or pn not in variant.ports:
+            raise BindError(f"{pn}: not a shared original/variant port")
+        if not isinstance(indices, list) or any(type(i) is not int for i in indices):
+            raise BindError(f"{pn}: expected integer source indices in LSB-first order")
+        if len(set(indices)) != len(indices) or any(i < 0 or i >= len(ports[pn]) for i in indices):
+            raise BindError(f"{pn}: duplicate or out-of-range source index")
+        selected[pn] = [ports[pn][i] for i in indices]
+    for pn in set(ports) & set(variant.ports):
+        width = variant.width(pn, env)
+        actual = len(selected.get(pn, ports[pn]))
+        if width is None or width != actual:
+            raise BindError(f"{pn}: variant width {width}, selected width {actual}; explicit mapping required")
+    return selected
+
+
 class Binder:
     def __init__(self, plan, yjs, plan_dir, base=None):
         self.plan = plan
@@ -699,6 +725,20 @@ class Binder:
                 ins_new = [p for p in new_ports if vm.ports[p][0] != "output"]
                 if ins_new:
                     self.errors.append(f"VARIANT_NEW_INPUT {c.path} -> {m}: {ins_new} (not in the as-built master)")
+                # An interior pin removal (e.g. ASTK am.g at bit1) must name
+                # retained source indices explicitly. Never truncate the old
+                # vector to the variant width: that would drop real MSB data.
+                selected = {}
+                if "port_bits" in r:
+                    try:
+                        selected = variant_port_bits(c.ports, vm, c.params, r["port_bits"])
+                    except BindError as e:
+                        self.errors.append(f"VARIANT_PORT_BITS {c.path} -> {m}: {e}")
+                        continue
+                    for p, bs in selected.items():
+                        if c.dirs.get(p) == "input":
+                            self.variant_removed[f"{m}.{p}"] += len(c.ports[p]) - len(bs)
+                    c.ports.update(selected)
                 for p in [p for p in c.ports if p not in vm.ports]:
                     d = c.dirs.get(p)
                     if d == "input":
