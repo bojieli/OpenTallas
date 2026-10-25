@@ -287,6 +287,36 @@ def parse_resolved(text):
     return out
 
 
+GFAS_COORD = re.compile(r"\[COORD[^\]]*\]\s*GEOM-FAIL-AFTER-SUBMIT\s+([0-9a-f]{8,40})\b[^\n]*?:\s*(KEEP|CANCEL)", re.I)
+
+
+def geom_fail_cleared(resolved_text, coord_text):
+    """GEOM-FAIL-AFTER-SUBMIT alerts COORD has ruled on -> {row id: ruling epoch or None (any alert)}.
+    resolved.tsv: a row whose tag column is 'GEOM-FAIL-AFTER-SUBMIT <rowid>' (or the bare row id) with a resolution;
+    its verdict_time column, when given, is the ruling time.  COORD-REVIEW-QUEUE.md: a line
+    '[COORD <date> <time> PDT] GEOM-FAIL-AFTER-SUBMIT <rowid> ...: KEEP' (or CANCEL).  A ruling clears only alerts
+    raised before it (autopilot.py compares with the alert time), so a newer FAIL verdict alerts again."""
+    out = {}
+
+    def put(rid, t):
+        if rid not in out or (out[rid] is not None and (t is None or t > out[rid])):
+            out[rid] = t
+    for raw in resolved_text.splitlines():
+        if not raw.strip() or raw.lstrip().startswith("#"):
+            continue
+        f = raw.split("\t")
+        if len(f) < 3 or not f[2].strip():
+            continue
+        m = re.fullmatch(r"(?:GEOM-FAIL-AFTER-SUBMIT\s+)?([0-9a-f]{12})", f[0].strip())
+        if m:
+            put(m.group(1), parse_ts(f[1], None))
+    for line in coord_text.splitlines():
+        m = GFAS_COORD.search(line)
+        if m:
+            put(m.group(1), parse_ts(line, None))
+    return out
+
+
 def gaps_geom(text, now, queue_tags_submitted, resolved=frozenset()):
     out = []
     reqs, reps = geom_events(text)

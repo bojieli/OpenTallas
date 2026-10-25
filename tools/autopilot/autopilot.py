@@ -326,8 +326,11 @@ out["config"] = os.path.isfile(os.path.join(K, "config.mk"))
 out["has_run"] = os.path.isdir(os.path.join(K, "run"))
 out["signoff_dirs"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(K, "signoff*")) if os.path.isdir(p))
 B = os.path.join(K, "run", "results", "asap7", "*", "base")
-out["routed"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(B, "5_*.odb")) + glob.glob(os.path.join(B, "6_*.odb"))
-                       if not os.path.basename(p).startswith("5_1_grt"))
+# only real route outputs count as routed (ORFS 5_route / 5_2_route / 5_3_fillcell / 6_*): 5_1_grt and the GRT hold
+# step's 5_hold_batch_*.odb checkpoints are placed-kit state, not a route (2026-10-25 PATH-QC had to move them aside)
+ROUTED = re.compile(r"^(?:5_route|5_2_route|5_3_fillcell|6_[0-9A-Za-z_]+)\.odb$")
+out["routed"] = sorted({os.path.basename(p) for p in glob.glob(os.path.join(B, "*.odb"))
+                        if ROUTED.match(os.path.basename(p))})
 out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS") if os.path.exists(os.path.join(K, f))]
 lm = [os.path.getmtime(p) for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*")) +
       glob.glob(os.path.join(K, "*.log"))]
@@ -693,15 +696,31 @@ def submit(st, j, attempt_note=""):
             f"{attempt_note} (src {j['src']}, geom {j['geom']} {j['geom_ref']})")
 
 
+def real_geom_fail(r):
+    """the row's geom is a FAIL verdict read from lanes/GEOM-REVIEW.md by resolve_geom (LG.geom_verdicts: a REPLY of the
+    row's tag that names its type / kit dir / row id), never a hand-entered queue FAIL"""
+    return (not r["error"] and r["mode"] != "adopt" and r["geom"].upper() == "FAIL"
+            and (r.get("geom_auto") or "").startswith("FAIL "))
+
+
 def geom_fail_after_submit(st, j, r):
     """a GEOM verdict that is no longer PASS for a job already submitted / running / finished: never demoted or
     cancelled here (owner: the autopilot does not stop runs on its own); warn once per verdict in log.txt, add a
     geom_alerts.tsv row (rsynced to rtx-pro) and keep a GEOM-FAIL-AFTER-SUBMIT line in LOOP-GAPS while it runs"""
-    if r["error"] or r["mode"] == "adopt" or "FAIL" not in r["geom"].upper():
-        return                                         # only a FAIL verdict (a new REQ is a re-review, not a FAIL)
+    if not real_geom_fail(r):
+        # only a FAIL verdict parsed from lanes/GEOM-REVIEW.md that names this row's type / kit / row id counts; a
+        # hand-written queue FAIL (2026-10-25 e0cca96daff3: queue line 389 'FAIL WITHDRAWN obsolete recipe ... existing
+        # live job preserved') is a lane's withdrawal of the row, not a review verdict.  A stale alert is dropped.
+        if j.get("geom_fail_alert") and not r["error"]:
+            log(f"CLEAR GEOM-FAIL-AFTER-SUBMIT {j['id']} {r['die']}/{r['type']}: queue line {r['line']} carries no "
+                f"GEOM-REVIEW FAIL verdict (was: {j['geom_fail_alert'][:160]})")
+            j.pop("geom_fail_alert", None)
+            j.pop("geom_fail_alert_t", None)
+            save_state(st)
+        return
     if not (j.get("geom") or "").upper() in GEOM_OK:
         return
-    key = r.get("geom_auto") or f"line {r['line']} geom {r['geom']}"
+    key = r["geom_auto"]
     if j.get("geom_fail_alert") == key:
         return
     j["geom_fail_alert"] = key
@@ -1143,7 +1162,11 @@ def write_loop_gaps(st, rows, geom_text):
     gaps += LG.gaps_review(trows, lane_texts, geom_text, now)
     gaps += LG.gaps_ready(read_coord("lanes/COORD-REVIEW-QUEUE.md"), now)
     gaps += LG.gaps_geom_ambiguous(geom_text, geom_groups(rows), now)
+    cleared = LG.geom_fail_cleared(read_coord("autopilot/resolved.tsv"), read_coord("lanes/COORD-REVIEW-QUEUE.md"))
     for j in jobs:                                     # oldest-first render; keeps the line while the run is live
+        if j["id"] in cleared and (cleared[j["id"]] is None or cleared[j["id"]] >= (j.get("geom_fail_alert_t") or 0)
+                                   - 60):
+            continue                                   # COORD ruled KEEP / CANCEL (or a resolved.tsv row) on this alert
         if j.get("geom_fail_alert") and j.get("status") == "RUNNING":
             gaps.append((j.get("geom_fail_alert_t") or now,
                          f"GEOM-FAIL-AFTER-SUBMIT {j['id']} {j.get('die')}/{j.get('type')} unit {j.get('unit', '-')}: "
