@@ -6,8 +6,8 @@
 // MUT 0 pass; 1 weight word, 2 query word, 3 query index (data mutants of tb_vm_query_static);
 // 4 vm_rr relay removed (n+11), 5 extra vm_rr relay (n+13), 6 the n+10 master on the n+12 path, 7 vm_rq relay removed.
 module tb_vm_query_n12;
- parameter integer MUT=0, PERIOD=1;
- localparam integer RQ_RLY=(MUT==7)?0:1, RR_RLY=(MUT==4)?0:(MUT==5)?2:1;
+ parameter integer MUT=0, PERIOD=1, PAD_RETURN=0;
+ localparam integer RQ_RLY=(MUT==7)?0:1, RR_RLY=(MUT==4)?0:(MUT==5)?2:1+PAD_RETURN;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,weight_slot=0,query_slot=0;reg[6:0]query_index=0;
  reg[15:0]weight_sector=512,query_sector=0;
@@ -20,7 +20,7 @@ module tb_vm_query_n12;
    .weight_sector(weight_sector),.query_sector(query_sector),.vm_rq(vm_rq),.vm_rr(vm_rr),.block_v(block_v),.block_head(block_head),.block_number(block_number),
    .block_data(block_data),.head_weight(head_weight),.fault(operand_fault));
  end else begin:g_n12
-  ot_hbm_idx_vm_query_static_n12 operand(.clk(clk),.rst_n(rst_n),.sid(2'd0),.weight_slot(weight_slot),.query_slot(query_slot),.query_index(query_index),
+  ot_hbm_idx_vm_query_static_n12 #(.VM_RT_EXTRA(4+PAD_RETURN)) operand(.clk(clk),.rst_n(rst_n),.sid(2'd0),.weight_slot(weight_slot),.query_slot(query_slot),.query_index(query_index),
    .weight_sector(weight_sector),.query_sector(query_sector),.vm_rq(vm_rq),.vm_rr(vm_rr),.block_v(block_v),.block_head(block_head),.block_number(block_number),
    .block_data(block_data),.head_weight(head_weight),.fault(operand_fault));
  end endgenerate

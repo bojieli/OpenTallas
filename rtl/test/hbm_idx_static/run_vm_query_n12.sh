@@ -14,7 +14,7 @@ src=(rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv rtl/hbm_accel/index/o
  rtl/proto/ot_fp32_add_rne_pipe.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/test/hbm_idx_static/tb_vm_query_n12.sv)
 single=${2:-}
 for m in ${single:-0 1 2 3 4 5 6 7}; do
- iverilog -g2012 -s tb_vm_query_n12 -Ptb_vm_query_n12.MUT="$m" -Ptb_vm_query_n12.PERIOD="${PERIOD:-1}" -o "$out/vqn$m.vvp" "${src[@]}" > "$out/vqnbuild$m.log" 2>&1
+ iverilog -g2012 -s tb_vm_query_n12 -Ptb_vm_query_n12.MUT="$m" -Ptb_vm_query_n12.PERIOD="${PERIOD:-1}" -Ptb_vm_query_n12.PAD_RETURN="${PAD_RETURN:-0}" -o "$out/vqn$m.vvp" "${src[@]}" > "$out/vqnbuild$m.log" 2>&1
  set +e
  (cd "$out"&&vvp "vqn$m.vvp") > "$out/vqnrun$m.log" 2>&1
  rc=$?
