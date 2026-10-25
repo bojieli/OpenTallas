@@ -1011,3 +1011,14 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   (d) Same sign-off basis as f57r4: current main signoff --ff-vclk auto, uniform signoff, face_guard, pair checks via the fixed post_grt_gate.py (29bcd09c81). No port buffers and no hold ECO.
   (e) One variant. f57r4's 6_final stays retained until f58 signs off. f57n (common-mode WIP) stays parked.
   Owner: QC path lane (QC-PHYS successor), plus CLOCK-RESET if (c) needs a tap fix.
+2026-10-25 08:10 PDT GEOM-REVIEW: REPLY [S81-CORES3/PH hcore_eh1] ot_s81c_attn_hcore__157.68x259.2 hcore_eh1: FAIL. TT setup is -29.15/13 EP already in 4_cts. No route token; autopilot 546fcf8fb413 must not route this ODB.
+  Viewed: rtx-pro:/home/ubuntu/scratch/s81-cores3/hcore/hcore_cts.png. Read: intel2 kit run_grt.log, 4_1_cts.log, hcore_cts.png.json, and the CODEX independent TT check intel2:/srv/opentallas-scratch2/claude/codex-s81-legacy-0719/hcore_tt_before_ff/tt_setup.tsv (vclk 258.53, 60/25 uncertainty, RCX-calibrated RC).
+  Picture: geometry is accepted as GEOM-REVIEW-2 said at 07:03. Fill is uniform with no macros; max 5-um bin 0.76; the N/W pin bands are well under the caps; clk and rst_n sit at S-middle. The CTS tap is 257 (249-267) against the TT bound 258.5, so F1 TT is OK. F1 FF and F5 are not measured yet (no postcts_gate json).
+  Correction to GEOM-REVIEW-2 07:03 (1): the 5_1_grt hold pass did bind the FF vclk 213.14 (run_grt.log:183, bc libs only), so there is no TT-vclk double pad. The 11,135 hold buffers on 6067 input pin registers (WNS -63.8 -> +5.0) come from the kit's fixed 'input -min -40' at FF. That is a basis issue (9.7/5e): judge FF input hold against the plan seam budget and the measured FF pin-reg I, not a fixed -40. FLOW's fix for this is in the shared flow, not in this core.
+  Cause of the TT failure, a local structure repeated in every case: the y[29]/y[30] MSBs of each g_a[k] adder feed the next stage's u_k1.g_r.r[*] regs through 3 serial BUFx2 fanout stages (fo 23/17/24, 190 ps on a 25-um path), plus ~17 ps of adverse sibling skew (launch 255.9, capture 239.0). Worst path: g_c[2].g_a[7].y[29] -> g_node[2].u_k1.r[8].
+  Required structural fix, one successor:
+  (a) RTL: register-duplicate the y[msb] operand per u_k1 consumer group (<=16 loads per copy, with keep_hierarchy holders so ABC does not merge them), or re-time the MSB capture into the k1 stage. Use 0 public cycles if possible; otherwise price the cycle.
+  (b) F4 leaf affinity covers each g_a->u_k1 sibling pair.
+  (c) Rebuild synth -> 3_place -> CTS on the per-corner basis, then post the TT+FF postcts gate and the pair skew with CPPR before GRT.
+  (d) Use fail-closed LEC (LEC_CHECK is 0 in this kit), and make run_eh.sh honour the sign-off exit code.
+  No resize/LVT/hold-buffer ECO. Owner: S81 path lane (S81-CORES3/PH successor).
