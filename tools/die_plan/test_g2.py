@@ -564,6 +564,34 @@ def test_die_sta_reports_face_flop_spread():
     assert "FFSPREAD" in t and "u_(bin|bout)_" in t and t.index("FFSPREAD") < t.index("close $fh")
 
 
+def test_part_probe_uses_explicit_internal_bit_sites():
+    import copy
+    raw=copy.deepcopy(PAIR)
+    slot=raw['partition_types']['fa']['ft_slots'][0]
+    slot['bit_site_cell_um']=[1.4,.28]
+    slot['bit_sites_um']=[[[100+j*100+b*.02,20+j] for b in range(slot['width']+1)] for j in range(slot['stations']-1)]
+    # Deliberately inconsistent old centroid table must not override per-bit LLs.
+    slot['regs_um']=[[777,777]]*slot['stations']
+    with tempfile.TemporaryDirectory() as d:
+        out=g2.part_probe(schema.Plan(raw),'fa',d)
+        text=(out/'probe.tcl').read_text()
+        assert 'st_fz_7_1 -location {100.840 20.140}' in text
+        assert 'st_fz_7_2 -location {200.840 21.140}' in text
+        assert '777.000 777.000' not in text
+        # Payload and epoch bit both use their own allocated cell envelope.
+        assert 'st_fz_64_1 -location {101.980 20.140}' in text
+
+
+def test_part_probe_rejects_incomplete_bit_site_stage():
+    import copy
+    import pytest
+    raw=copy.deepcopy(PAIR)
+    slot=raw['partition_types']['fa']['ft_slots'][0]
+    slot['bit_site_cell_um']=[1.4,.28]
+    slot['bit_sites_um']=[[[100,20]]]*(slot['stations']-1)
+    with tempfile.TemporaryDirectory() as d:
+        with pytest.raises(ValueError,match='width\\+1'):
+            g2.part_probe(schema.Plan(raw),'fa',d)
 def test_part_probe_wavefront_outputs_have_registered_drivers():
     """The IO script's scalar rst_o pins must exist in the probe netlist."""
     import copy
