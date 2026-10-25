@@ -1,0 +1,5 @@
+SU_LANE PASS lane=205 quarter=1 outputs=1984 checks=3968 first_output=41 issue_to_output=29 MLAT=4 ALAT=4 LEAF=1
+- rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_lane_leaf.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 80us; walltime 9.879 s; speed 8.121 us/s
+- Verilator: cpu 9.825 s on 1 threads; allocated 17 MB

@@ -1,0 +1,11 @@
+SU_LANE ERROR op=0 cycle=41 word=0 got=3f07e5c9 want=3effcb92
+SU_LANE ERROR op=0 cycle=42 word=1 got=3effcb92 want=3f07e5c9
+SU_LANE ERROR op=0 cycle=43 word=2 got=3f17e5c9 want=3f0fe5c9
+SU_LANE ERROR op=0 cycle=44 word=3 got=3f0fe5c9 want=3f17e5c9
+SU_LANE ERROR op=0 cycle=45 word=4 got=3f27e5c9 want=3f1fe5c9
+SU_LANE ERROR op=0 cycle=46 word=5 got=3f1fe5c9 want=3f27e5c9
+SU_LANE ERROR op=0 cycle=47 word=6 got=3f37e5c9 want=3f2fe5c9
+SU_LANE ERROR op=0 cycle=48 word=7 got=3f2fe5c9 want=3f37e5c9
+[80230000] %Fatal: tb_su_static_lane_leaf.sv:95: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=3968 errors=3508 outputs=1984
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_lane_leaf.sv:95: Verilog $stop
+Aborting...

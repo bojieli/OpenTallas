@@ -26,6 +26,6 @@ for mode in base ADDR DATA PHASE;do
  rc=$?
  set -e
  echo "$rc" > "$O/$mode.exit"
- if [ "$mode" = base ];then test "$rc" = 0;rg 'SU_LANE PASS' "$O/$mode.log";else test "$rc" != 0;rg -q 'SU_LANE FAIL' "$O/$mode.log";fi
+ if [ "$mode" = base ];then test "$rc" = 0;grep 'SU_LANE PASS' "$O/$mode.log";else test "$rc" != 0;grep -q 'SU_LANE FAIL' "$O/$mode.log";fi
 done
 echo 'SU_ONECLOCK_SUITE PASS ALAT4_f12 MLAT4 actual_SRAMs=6 wrong_address/data/phase mutants_CAUGHT' | tee "$O/done"

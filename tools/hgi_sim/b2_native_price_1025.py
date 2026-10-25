@@ -4,7 +4,7 @@
 B2_NATIVE_MODE=baseline preserves the plan_study_price_1017 B2o point.
 B2_NATIVE_MODE=oneclock adopts ALAT4/MLAT4, one 1.2GHz domain and leaf splits.
 B2_NATIVE_MODE=hc128 additionally charges +4 cycles per HC_MIX/HC_MIX_POST
-for the seventh W128 reduction add; this is an exposed conservative bound.
+net for the W128 half tree (+TLA7) and smaller root tree (-3); exposed bound.
 L74 second-beat and shell crossing charges are pending native record maps;
 output is a model update, never a native token-pass/physical sign-off claim.
 """
@@ -28,8 +28,8 @@ if MODE!='baseline':
         def added(r):
             a,why=old(r)
             op=getattr(r,'orig_op',f'{r.unit}.{r.op}')
-            if op in ('HC.HC_MIX','HC.HC_MIX_POST'):
-                return a+4, (why+'+' if why else '')+'hc128_7th_add'
+            if op in ('HC.HC_MIX','FUSED.HC_PRE_NORM'):
+                return a+4, (why+'+' if why else '')+'hc128_half_plus7_root_minus3'
             return a,why
         LSP.added=added
 
