@@ -1,0 +1,38 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+HEAD_CLOCK TT all n 7787 min 208.000718 mean 230.981683 max 255.613038
+HEAD_CLOCK TT cap0 n 256 min 225.738145 mean 236.991453 max 247.304460
+HEAD_CLOCK TT cap1 n 256 min 210.934007 mean 219.716823 max 231.322557
+HEAD_CLOCK TT chain n 17847 min 204.800675 mean 228.816620 max 252.809587
+HEAD_CLOCK TT macro:u_m.u_rom0 n 1 min 226.176499 mean 226.176499 max 226.176499
+HEAD_CLOCK TT macro:u_m.u_rom1 n 1 min 225.877839 mean 225.877839 max 225.877839
+HEAD_CLOCK TT addr0 n 12 min 243.585847 mean 243.875827 max 244.075074
+HEAD_CLOCK TT addr1 n 12 min 215.228761 mean 226.730339 max 231.338059
+HEAD_STA TT basis PLACEMENT_ONLY setup 116.64302903536797 hold -53.46358099835938
+HEAD_HOLD TT input n 307 min -53.463581 mean -34.108236 max -13.999372
+HEAD_HOLD TT reset n 1 min -21.276703 mean -21.276703 max -21.276703
+HEAD_HOLD TT chain n 58 min -16.145752 mean -5.464031 max -0.197425
+HEAD_HOLD TT r2r n 18 min -12.921720 mean -5.149813 max -0.122014

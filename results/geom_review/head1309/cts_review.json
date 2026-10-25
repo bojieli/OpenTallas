@@ -1,0 +1,24 @@
+{
+  "source": "72a679bb78",
+  "checkpoint": "/srv/opentallas-scratch2/claude/codex-head1309/elemB_if2e/run/results/asap7/hd_elemB_rb/base/4_1_cts.odb",
+  "F6": {
+    "capture": 512,
+    "address_CE": 26,
+    "total": 538,
+    "over20um": 0,
+    "worst_capture_um": 12.213,
+    "worst_launch_um": 11.7
+  },
+  "F4": {
+    "cross_leaf_before": 7445,
+    "cross_leaf_after": 2213,
+    "moved_sinks": 6389
+  },
+  "limitations": [
+    "balance_levels and obstruction_aware are obsolete in this OpenROAD; depth1 macro versus depth7 register trees persists",
+    "placement timing is diagnostic only; actual calibrated GRT pending",
+    "original diagnostic logs incorrectly scaled already-ps properties by 1e12; original retained, corrected files explicitly named",
+    "ONE GRT diagnostic approved by GEOM; no hold repair and no DRT"
+  ],
+  "verdict": "CTS geometry PASS-COND for one actual-guide GRT diagnostic; NOT SIGNED"
+}
