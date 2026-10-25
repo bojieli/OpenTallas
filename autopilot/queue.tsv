@@ -247,3 +247,4 @@ qwen_kvsys	kv3_io_ft	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_k
 qwen_kvsys	kv3_io_ft_v1	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_kvsys/m0/kv3_io_ft_v1	claude/proto-1025@534647904e	PASS-COND	GEOM-REVIEW REPLY [PROTO-KITS] kv3_io_ft	48	150000	KV	route		8	submit
 qwen_kvsys	kv3_io_ft	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_kvsys/m5/kv3_io_ft	claude/proto-1025@534647904e	PASS-COND	GEOM-REVIEW REPLY [PROTO-KITS] kv3_io_ft	48	150000	KV	route		8	submit
 qwen_kvsys	kv3_io_ft_v1	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_kvsys/m5/kv3_io_ft_v1	claude/proto-1025@534647904e	PASS-COND	GEOM-REVIEW REPLY [PROTO-KITS] kv3_io_ft	48	150000	KV	route		8	submit
+qwen_compute	qfd_dv_s8_crh_rp1__f57	epyc1:/srv/opentallas-scratch2/claude/qc-plan/rp1/f57	claude/qc-phys-1025@f39c763b03	REQ	QC-PHYS-RP1-F57	12	45000	QC-A0	route	/srv/opentallas-scratch2/claude/qc-plan/rp1/f57/run_f57.sh	8
