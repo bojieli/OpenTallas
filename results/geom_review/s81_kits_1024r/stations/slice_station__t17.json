@@ -1,0 +1,13 @@
+{
+ "review": "S81/KITS author review, stage-1 place, slice_station wavefront kit (gen.py phys on claude/s81-dec12-1024r @d206dfb226 + RESET face_flops fix 6c3989757); parent batch add 10-25 (old async-reset signed views not die-usable)",
+ "when_pdt": "2026-10-25 01:40",
+ "kit": "epyc1:/srv/opentallas-scratch2/claude/s81-st-rst/kitsW/slice_station__t17",
+ "image": "results/geom_review/s81_kits_1024r/stations/img_t17.png",
+ "findings": [
+  "9023 cells, 2216 flops, 1128 pins, max bin 0.10 (ft-station chains only; the outline is mostly empty by plan: slice station band)",
+  "wavefront reset: 129 relay/pad flops FIRM, OT_RESET_TREE PASS (entry relayed depth 5, placed max hop 379.4 um, 0 hops > 405)",
+  "ft chains straight N-S in the W column, evenly stationed; per-hop Manhattan from the placed ODB (D source / Q sinks traced through buffers, every u_ft flop): 0 hops > 405, max 315.8 um",
+  "clock: 16 grid taps (4x4) over the whole outline incl. the empty area -> pair skew is the CLOCK decision-5 sign-off item (same as the x24 batch)"
+ ],
+ "verdict": "PASS-COND (route; sign-off: DRV with --max-wire-um 100, clock decision-5 pair skew <= 80)"
+}
