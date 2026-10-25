@@ -325,3 +325,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-25 02:25 PDT COORD hourly: signed off QC cores 0->1, KV cores 3->4; S81 flat 2 h (4 types/11 cores) -- blocked on dec12-1025 regen + head relaunch; HBM 0 (face_guard stop rule). Fleet half idle (89 jobs, ~2.2 TB free on epyc2/intel1/intel2) -> fleet-fill steward launched; GEOM lane restarted for S81 split-core + xdie3 REQs; epyc1 scratch2 89% -> prune ordered; leafplan approved-if folded.
 
 2026-10-25 02:36 PDT CODEX: all lanes taken over; S81 replan generated gates recovered, dec17 integration in own branch; eight worker groups collecting results and executing fixes; epyc1 bus repair preserves running scopes.
+2026-10-25 02:38 PDT CODEX: Qwen source-bind takeover codex/qc-bind-1025@1b9b6f587; fixed-SU fresh bind pipeline running epyc1 codex-qc-bind-1025 PID1910174; meth xt1 nominal both64/64 collected, mutant follows.
