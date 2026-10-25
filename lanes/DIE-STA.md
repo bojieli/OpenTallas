@@ -108,3 +108,18 @@ CODEX 10:45 PDT: N512 COLLECTED, completed09:05 (was stale markedrunning). 73,36
 
 ## CODEX notes 2026-10-24 21:10 PDT
 CODEX took over die-level collection on codex/die-clock-1024. intel2 run_ttff_v2 complete S81/head/KV/HBM: same setup/hold as v1 (S81 +654.375/-52.519; head +626.315/-82.069; KV +501.875/-173.359; HBM +411.195/-417.019 ps); QC v2 remains live. New-spine head run_ttff_clk complete FAIL: TT setup +701.049, FF hold -10.263 ps/210114 bits, spread TT 3.77/FF 2.88. Remaining negative hold is zero-delay budget stand-in data path vs 25 ps uncertainty, requiring real input hold delay; no clock relaxation. Other four new-spine STA jobs live; no duplicate launches.
+
+## CODEX notes 2026-10-25 02:42 PDT
+CODEX took over CLOCK/DIE-STA collection and early-tap measurement fix on codex/clock-reset-1025 (from claude/clock-1024@161826bb1, origin/main merged). Approved clock/tap/pair metric tools already merged in batch5; newer report-only CLOCK commit161826bb1 awaits root integration.
+- v11 die budget trials collected: S81 TT+704.671/FF-6.751, head+704.618/-8.514, QC+702.892/-8.510, KV+705.395/-5.810 ps: FAIL hold. Related-pair max TT/FF respectively3.53/3.47,3.59/5.30,5.31/5.23,2.81/2.53 ps PASS. Remaining hold is zero-delay stand-in seam data against25ps uncertainty, requiring real boundary delay; not a clock-skew problem. Trials use historical833.333ps, diagnostic only (release833.000 unchanged).
+- HBM B2m v12 clock related pairs66.67/67.66 ps PASS but target20 missed;24 plan taps on macro keepouts persist (generated cells0), insertion~21.6ns and max slew396/388ps. HBM notified to fix taps in successor B2n; no obsolete B2m rerun launched.
+- Fixed OpenSTA pair_skew.tcl launch source insertion asymmetry. Read-only routed elemB_c9 TT173612 exhaustive pairs: setup63.68/hold62.02ps, verify0.000 (old setup179.65, verify120). FF collection in progress epyc3:/srv/opentallas-scratch2/claude/codex-clock-reset/elemB_c9 via ot-run; original failed record unchanged. Six signed/zero/positive-source Tcl regression cases +29 signoff tests PASS.
+
+## Handoff to Claude 2026-10-25 03:35 PDT — CODEX
+Parked on explicit CLAUDE RESET; no newjobs/merges. Full CLOCK/RESET-group sourceSHAs, runningjobpaths/units, results/failures andOWNER? recorded in CODEX-LOG.md matchingtimestamp. Existing runningjobs preserved; childhandoffs add lastatomicstate. Ownclock-resetbranchd446e377f andsingle-stagebranch8c724b052 clean/pushed. Single-stage2cores remainNOTSIGNEDfaceguard underrejectedone-floppairrule; no exceptionadopted.
+
+## CODEX notes 2026-10-25 05:56 PDT
+CODEX took over: contract-budget result collection + current B2o PG-corridor clock integration on codex/clock-push-1025. Six inherited intel2 hold runs remain live, no duplicate. Head diagnostic TT+666.062/FF+31.086ps, pair3.59/5.30,833.333ps historical; actual G4 not claimed. B2o generator PHY_N tap failure is owned HBM-PLAN; current full artifact precedes new clock STA.
+
+## CODEX notes 2026-10-25 07:24 PDT
+Collected completed historical833.333ps budget-standin TT/FF runs intel2:/srv/opentallas-scratch2/claude/clock-reset/hold: S81 TTsetup+666.115/FFhold+32.849ps,pair3.53/3.47; QC+664.336/+31.090,pair5.31/5.23; KV+666.839/+33.790,pair2.81/2.53. All6 exit0. Contract stand-ins resolve prior zero-data-delay floor, not current physical die SIGNED or833.000 release gates. No reruns.

@@ -613,3 +613,6 @@ First model attempt ring1 epyc1:/srv/opentallas-scratch2/claude/codex-hbm-plan-0
 
 ## CODEX notes 2026-10-25 07:54 PDT — owner one-path priority
 Current named path = hb_coll_NW static II8 TKM stream -> L74 two-beat -> shared root tkm_SW actual TP192 compute/buffer -> return to hb_coll_NW. Return DATA L13 currently2cycles vs VALID/status L12 11cycles; token models DATA+9 while plan worker prioritizes direct coherent L12/L13. L74 direct2341b candidate cutsPASS but visualreviewFAIL touching core walls; correcting17.28um capture bands before any route. Existing W1282x4ring capacity prototype cutPASS0.5437<0.6 parked except collecting ongoingjobs. Physical generalflow f90c555daf now main394765394378; nativeID/tool changes not claimed adopted until actual binder/plan integration. Token side5996checks PASS; correctedSU31 remainsFAIL632/1046 and diagnosed independently by token worker.
+
+## CODEX notes — PARKED 2026-10-25 08:04 PDT
+Clean hub branchcodex/hbm-plan-0719@ecfb97d718. NamedL74/L12/L13 direct2cycles each,cutPASS0.5968, reviewed17.28capturebands; evidenceecfb/source7ffclock-data-relayfilter2testsPASS. Actualroot/tile0return remainsFAIL511.44um/75bits>405; 0cycleS-interfacefixUNIMPLEMENTED, physicalowns. Exploratoryring2liveactual-bitFT, diagnostic oldsource; no newbroadreplan. Full exact handback CODEX-LOG 2026-10-25 08:04 PDT.

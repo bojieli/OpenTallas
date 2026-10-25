@@ -14,3 +14,6 @@ OWNER?
 - Old-fleet scratch filesystems found on unpartitioned nvme0n1 (signature wiped, backup superblocks intact):
   intel1 3.5T (ex ot-gold1), intel2 3.5T (ex ot-gold2), epyc2 894G (ex ot-epyc9, claude/ I/O errors).
   Mounted READ-ONLY at /mnt/old-nvme0 (not fstab). NOT formatted. Recover 10-23 outputs, then reformat as scratch?
+
+## CODEX notes 2026-10-25 02:40 PDT
+Current live5-host fleet PASS; epyc1 restored after /run/user incident without user@ restart, all5 admit. Legacy old-nvme OWNER? above is CLOSED/OVERTAKEN by owner wipe07:03 (BRIEFING decision10); no recovery or formatting task remains. Native launcher localhost selftest PASS.

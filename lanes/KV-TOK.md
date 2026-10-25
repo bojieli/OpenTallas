@@ -245,3 +245,18 @@ Write+observer component gates PASS on local codex/kv-token-0553@1ade61299; full
   - Isolated pcpart passes for any gap >= 2, because the head part's PCs have small straps.
 - Next: rebind kv43abcd with the fix, then a whole-die E nominal rerun via ot-run. The objs are cleaned, so this is about 1.5 h of build plus about 2.7 h of sim. Expect 128/128 slices. Then Codex's WL7 is optional.
 - OWNER?: none.
+
+## CODEX notes 2026-10-25 07:19 takeover
+CODEX took over whole E successor on codex/kv-token-0719@127e5066ea. Live epyc2:codex-kv-token-0719 unitoth-ubuntu-2326031-1792938218 200GB32threads: isolatedkv43abcd source+T_HBM_GO160, nc32 proven sim-only reset guard,XINITunique. Freshhierbuild then automatic13imageboot with128sliceobservations. No currentplan45/nativeSTART/G5claim; v3.9f plan rebind still owed.
+
+CODEX07:27 READY65f5373a3b FIFO sim-onlyhistoryarm: random32wordsPASS, write/readGraymutantsFAIL, SYNTHESISpreprocessbyte-identical. Native45pcpartowncopy live epyc1:codex-kv-native-0719 unit2003930,48GB4threads; wholeEbuild live epyc2:codex-kv-token-0719 unit2326031.
+
+## Current one-token path focus07:47
+- Coordinate /root/qwen/tokens: actual computeSTARTfixture epyc3:clock-reset/start/qc_bind, START200/cal330/XT1near+far64/64 (main1a6db); KV actualnativepcpart RL29WL7boot4/4PASS at493.
+- Nativef5bindpass0 regeneratedsynthetic20tables68cells0errors; FAIL14TYPE_SPLITfamilies(76bound/40physical)+4unplannedAMgdropoldinterface bits. Run2g0variant NO_MATCH dueflattenedunderscore paths; exactcause fixedregex toexistingbinder separators, run3live own t47/run3 usingAM_G_PIN0masterM+explicitretain[0,2..35]sourcebits. No suppression ofTYPE_SPLIT, no silentmaterialize76.
+- Genericportbitselector aeece78a54 READYpushed;9tests+3legacyendtoendPASS. Rootnotifiedserialization.
+- WholeEresume unit2377587 live epyc2 384GB/16threads; firstunit2326031 OOMscope200GB32parallel preservedbuild_oom200_j32.log; resume peak139304280064bytes vs prior214748368896OOM. Sourcefailnone; completingobjects.
+- Native4slice result74f46c7184 pushed oncodex/kv-token-0719; genericFIFOguard65f537 synthesizedbyte-identical,9 unitmapping(notFIFO) tests separate.
+
+## CODEX PARKED 2026-10-25 08:05 PDT
+SourceREADY65f537/74f46/aeece adoptedROOT; WIP HOSTmissionSTART helper localb50208132d NOTGATED. Eboot160384GB16thr buildstillLIVE epyc2unit2377587 (16archives,peak139GB), automaticreplayafterbuild. Native4slice833bootPASS4/4 at493. Nativef5run3completegraph0unbound/tied/undriven but14TYPE_SPLIT76vs40; run4withR8actual79variants same14FAIL. FreshR8FAIL3families(configage+PCtoken). Criticalboot-beforeSTARTdeadlockdiagnosed, sharedrolefixandHOSTmissiongateNOTimplemented/gated. DetailedhandoffCODEX-LOG. No otherliveownjob.

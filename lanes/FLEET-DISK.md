@@ -34,3 +34,8 @@ Merged to main 1ed91ad4ca + 6281884e3d (census resync); ~/.local/bin/ot-run re-i
 
 ## CODEX notes
 - 2026-10-24 09:01 PDT: CODEX root collected background movers: no new failure, live-source directories remain unmoved. Removed only own unused interrupted checkout (40GB); no active source moved.
+
+## CODEX notes 2026-10-25 02:40 PDT
+Background inherited epyc1 cleanup PID1823050 still progressing, not interrupted. epyc1 /26%, scratch2 84%/559GB ->64%/1.2TB at02:40; all workers above scratch floor (epyc2 minimum130GB). No new destructive cleanup started by CODEX. Existing worker movers need no intervention.
+
+2026-10-25 02:46 PDT CODEX: epyc2 NEW admissions HELD by root order for measured scratch depletion103GB->83GB/2min after fleet fill; live jobs untouched. All lane leaders notified use --stage/other4. Remove only this held_hosts line once safe measured growth headroom returns.

@@ -6,3 +6,6 @@ Branch claude/kv-g3-1024 in ~/wt/kv-g3 (commits by explicit path; KV-G3 merges).
 
 ## CODEX notes
 - DONE: hub_Wi core pins merged a7e29a44ac; no new job. Remaining broad KV binding/host hardening tracked under KV-G3.
+
+## CODEX notes 2026-10-25 02:43 PDT
+Original hub_Wi pin task remains DONE (22/22 cores pinned, G0C0 missing); no live sub-lane job. Current native host binding/clock/boot work is owned by KV-BIND/KV-TOK, hardening by KVG3-CORES; no separate duplicate work opened.
