@@ -1,0 +1,206 @@
+{
+  "schema": "opentallas.qc_a0.clock_contract_diagnosis.v1",
+  "policy": "TT setup / FF hold,833ps60/25; related-pair<=80; source means require currentSIGNED",
+  "families": [
+    {
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "historical_insertion_source": "/srv/opentallas-scratch2/claude/qc-plan/a0r/nk_r4/src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/insertion.json",
+      "historical_routed_base": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_romleaf-a0-4fe0c00bd/routes/ot_qwen_tile_romleaf_a0_4fe0c00bd/work/orfs/results/asap7/opentallas_ot_qwen_tile_romleaf_asap7_ref_ot_qwen_tile_romleaf_a0_4fe0c00bd/base",
+      "historical_boundary": {
+        "tt": {
+          "n": 529,
+          "mean": 206.9,
+          "min": 184.1,
+          "max": 228.0
+        },
+        "ff": {
+          "n": 529,
+          "mean": 173.9,
+          "min": 152.0,
+          "max": 194.9
+        }
+      },
+      "etm_max_clock_tree_path_tt_ps": 228.09293,
+      "current_signed_record": null,
+      "release_adoption": "BLOCKED missing current SIGNED mean source; max is never mean"
+    },
+    {
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "historical_insertion_source": "/srv/opentallas-scratch2/claude/qc-plan/a0r/nk_r4/src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/insertion.json",
+      "historical_routed_base": "/srv/opentallas/claude/closure-loop/qfd_tile_lsl_fp1r-r1-953045312/routes/qfd_tile_lsl_fp1r_r1_953045312/work/orfs/results/asap7/opentallas_ot_qwen_tile_lsl_fp1_asap7_ref_qfd_tile_lsl_fp1r_r1_953045312/base",
+      "historical_boundary": {
+        "tt": {
+          "n": 272,
+          "mean": 165.7,
+          "min": 160.1,
+          "max": 172.0
+        },
+        "ff": {
+          "n": 272,
+          "mean": 133.9,
+          "min": 128.7,
+          "max": 140.2
+        }
+      },
+      "etm_max_clock_tree_path_tt_ps": 176.68619,
+      "current_signed_record": null,
+      "release_adoption": "BLOCKED missing current SIGNED mean source; max is never mean"
+    },
+    {
+      "view": "physical/ref_tile/qw_a0_rc14_children/node_nb1/ot_qwen_tile_node",
+      "historical_insertion_source": "/srv/opentallas-scratch2/claude/qc-plan/a0r/nk_r4/src/physical/ref_tile/qw_a0_rc14_children/node_nb1/ot_qwen_tile_node/insertion.json",
+      "historical_routed_base": "/srv/opentallas-scratch2/claude/closure-loop/ot_qwen_tile_node-nb1-7dd3b1974/routes/ot_qwen_tile_node_nb1_7dd3b1974/work/orfs/results/asap7/opentallas_ot_qwen_tile_node_asap7_ref_ot_qwen_tile_node_nb1_7dd3b1974/base",
+      "historical_boundary": {
+        "tt": {
+          "n": 2058,
+          "mean": 245.9,
+          "min": 231.0,
+          "max": 263.4
+        },
+        "ff": {
+          "n": 2058,
+          "mean": 199.6,
+          "min": 185.4,
+          "max": 216.9
+        }
+      },
+      "etm_max_clock_tree_path_tt_ps": 267.63058,
+      "current_signed_record": null,
+      "release_adoption": "BLOCKED missing current SIGNED mean source; max is never mean"
+    }
+  ],
+  "children": [
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    },
+    {
+      "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node",
+      "clock_pin": "clk",
+      "view": "physical/ref_tile/qw_a0_rc14_children/node_nb1/ot_qwen_tile_node",
+      "mapping": "runtime nearest ck/ck_t* by clock_taps.tcl; actual CTS mapping unavailable after cleanup"
+    }
+  ],
+  "current_kit_omission": "a0_clock_taps7 invokes shared clock_taps/tap_balance but config has no OT_CORE_LAT or OT_CORE_TAPS",
+  "nk_failure": {
+    "gate_ff_wns_ps": -316.66,
+    "gate_endpoints": 2066,
+    "retained_internal_path": {
+      "source": "ROMleaf1.g_lrr.rq",
+      "destination": "ROMleaf1.rst_n",
+      "launch_clock_ff_ps": 179.82,
+      "data_arrival_ps": 238.18,
+      "macro_clock_ff_ps": 201.17,
+      "lib_hold_ff_ps": 106.65,
+      "uncertainty_hold_ps": 25,
+      "slack_ff_ps": -94.64
+    },
+    "suspected_extra_basis_bug": "signoff.sdc prints reference min0 before RC estimate; max-only timing refresh. Not proven or waived.",
+    "checkpoints": "autopilot8fffd9b75f35 classified07:22 and deleted original run/results + run/objects. Only logs/reports/rawYosys and older placed inst.tsv remain. No original data deletion by Codex."
+  },
+  "max_based_candidate": "own generator stopped before writing table or launching job when node max267.63058 required negative raw target; CLOCK confirmed mean245.9/199.6 historical, no17.63 early shift authorized"
+}
