@@ -1,3 +1,4 @@
+# s3 (HEAD-ELEM3 10-25): FF-only hold repair under OT_HOLD_MM (sync/unsync around step 1) + hold-buffer census in route_gate.json.
 # post_cts_gate_s2.tcl -- S81-HEAD head element rebuild s2 (HEAD-ELEM2 2026-10-25), POST_CTS_TCL with
 # SKIP_CTS_REPAIR_TIMING=1.  GEOM-REVIEW 04:49/04:50 PASS-COND [S81-HEAD/HEAD-ELEM 04:48] condition (4): route only if
 # the RCX-calibrated FF hold estimate is >= 0 (pair skew <= 80: recorded here, gated at sign-off); (1) elemB: t_r -> w_r
@@ -7,6 +8,43 @@
 #  step 3 (new): route gate -> /work/route_gate.json; on FAIL also /work/FAIL_POSTCTS (autopilot: STRUCTURAL
 #  post-cts-hold) + 4_1_cts_gate.odb, and the run stops before GRT.  The gate never changes the design.
 estimate_parasitics -placement
+# s3 cond (c): with the FLOW-HOLD session (OT_HOLD_MM=1, orfs_hold_mm.tcl) the hold scene BC (mode ff) gets the propagated
+# CTS clocks only in ot_mm_sync; sync before the step-1 measurement, unsync before repair_timing_helper (which re-syncs,
+# repairs hold in scene BC only, and unsyncs).  TT hold is never repaired.
+set ot_mm [expr {[info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1"}]
+if {$ot_mm && !([info exists ::ot_mm_active] && $::ot_mm_active)} { error "OT_CTS_GATE: OT_HOLD_MM=1 but no multi-mode session" }
+if {$ot_mm} { ot_mm_sync }
+# hold-buffer census (cond c): repair_timing names its hold cells hold<N>; count them in total and on input-port chains
+proc ot_g_hold_census {} {
+  set blk [ord::get_db_block]; set tot 0
+  foreach i [$blk getInsts] { if {[string match hold* [$i getName]]} { incr tot } }
+  set inb 0; set seen [dict create]
+  foreach bt [$blk getBTerms] {
+    if {[$bt getIoType] ne "INPUT" || [$bt getSigType] eq "CLOCK"} continue
+    set front [list [$bt getNet]]
+    while {[llength $front]} {
+      set n [lindex $front 0]; set front [lrange $front 1 end]
+      if {$n eq "NULL" || $n eq ""} continue
+      foreach it [$n getITerms] {
+        if {[$it getIoType] ne "INPUT"} continue
+        set i [$it getInst]; set nm [$i getName]
+        if {![string match hold* $nm] || [dict exists $seen $nm]} continue
+        dict set seen $nm 1; incr inb
+        foreach o [$i getITerms] { if {[$o getIoType] eq "OUTPUT"} { lappend front [$o getNet] } }
+      }
+    }
+  }
+  return [list $tot $inb]
+}
+proc ot_g_in_hold {corner} {
+  # worst FF hold slack over paths that start at an input port (the FF need of the x[] / input pin registers)
+  set w 1e9; set n 0
+  foreach p [find_timing_paths -corner $corner -from [all_inputs -no_clocks] -path_delay min -group_path_count 100000 -endpoint_path_count 1] {
+    set s [get_property $p slack]; if {$s eq "INF"} continue
+    incr n; if {$s < $w} { set w $s }
+  }
+  return [list [expr {$n ? $w : 0.0}] $n]
+}
 proc ot_g_corner {names what} {
   foreach n $names { if {![catch {find_timing_paths -corner $n -path_delay min -group_path_count 1}]} { return $n } }
   error "OT_CTS_GATE: no $what corner"
@@ -38,6 +76,9 @@ if {$ot_hw < -100.0 || $ot_hn > 2000} {
   ot_g_stop "structural FF hold before repair (WNS $ot_hw ps, $ot_hn endpoints)"
 }
 unset ot_ps
+lassign [ot_g_in_hold $ot_ff] ot_ih_pre ot_ih_n
+lassign [ot_g_hold_census] ot_hb_tot0 ot_hb_in0
+if {$ot_mm} { ot_mm_unsync }
 repair_timing_helper
 detailed_placement
 check_placement -verbose
@@ -80,6 +121,10 @@ set ot_pair {}
 foreach c [list $ot_tt $ot_ff] { foreach d {max min} { lassign [ot_g_pairs $c $d] w n wl; dict set ot_pair "${c}_$d" [list $w $n $wl]; puts "OT_ROUTE_GATE pair $c $d worst [format %.2f $w] n $n $wl" } }
 foreach l $ot_unc { eval $l }
 set ot_pw -1e9; dict for {k v} $ot_pair { if {[lindex $v 0] > $ot_pw} { set ot_pw [lindex $v 0] } }
+lassign [ot_g_hold_census] ot_hb_tot1 ot_hb_in1
+lassign [ot_g_in_hold $ot_ff] ot_ih_post ot_ih_n2
+puts [format "OT_CTS_GATE hold census: hold cells %d -> %d, on input chains %d -> %d; FF input-path hold %.2f -> %.2f ps (%d paths); repair scenes %s" \
+  $ot_hb_tot0 $ot_hb_tot1 $ot_hb_in0 $ot_hb_in1 $ot_ih_pre $ot_ih_post $ot_ih_n [expr {$ot_mm ? "BC (FF) only" : "all"}]]
 lassign [ot_g_hold $ot_ff] ot_hw2 ot_hn2 ot_ps2
 unset ot_ps2
 # elemB lane transport (GEOM cond 1): u_m.t_r[i] -> u_m.w_r[i] Manhattan, um
@@ -105,9 +150,10 @@ if {[info exists ::env(OT_GATE_PAIR)] && $::env(OT_GATE_PAIR) && $ot_pw > 80.0} 
 if {$ot_trw_gate && $ot_tn == 0} { lappend why "t_r->w_r gate: no u_m.t_r/w_r register pairs found" }
 if {$ot_trw_gate && ($ot_tmed > 20.0 || $ot_t100 > 0)} { lappend why "t_r->w_r median [format %.1f $ot_tmed] um / $ot_t100 > 100 um" }
 set fh [open /work/route_gate.json w]
-puts $fh [format "{\"basis\": \"LAYER_PARASITICS_FILE %s, placement parasitics after CTS repair\", \"ff_hold_wns_ps\": %.2f, \"ff_hold_viol\": %d, \"pair_skew_worst_ps\": %.2f, \"pair\": {%s}, \"t_r_w_r_um\": {\"n\": %d, \"median\": %.2f, \"max\": %.2f, \"over_100\": %d, \"gated\": %d}, \"verdict\": \"%s\", \"why\": \"%s\"}" \
+puts $fh [format "{\"basis\": \"LAYER_PARASITICS_FILE %s, placement parasitics after CTS repair\", \"ff_hold_wns_ps\": %.2f, \"ff_hold_viol\": %d, \"pair_skew_worst_ps\": %.2f, \"pair\": {%s}, \"t_r_w_r_um\": {\"n\": %d, \"median\": %.2f, \"max\": %.2f, \"over_100\": %d, \"gated\": %d}, \"hold_repair_scenes\": \"%s\", \"hold_census\": {\"hold_cells_before\": %d, \"hold_cells_after\": %d, \"input_chain_before\": %d, \"input_chain_after\": %d, \"ff_input_hold_pre_ps\": %.2f, \"ff_input_hold_post_ps\": %.2f, \"ff_input_paths\": %d}, \"verdict\": \"%s\", \"why\": \"%s\"}" \
   [expr {[info exists ::env(LAYER_PARASITICS_FILE)] ? $::env(LAYER_PARASITICS_FILE) : "platform setRC.tcl"}] $ot_hw2 $ot_hn2 $ot_pw \
   [join [lmap {k v} $ot_pair {format "\"%s\": %.2f" $k [lindex $v 0]}] ", "] $ot_tn $ot_tmed $ot_tmax $ot_t100 $ot_trw_gate \
+  [expr {$ot_mm ? "BC (FF) only" : "all"}] $ot_hb_tot0 $ot_hb_tot1 $ot_hb_in0 $ot_hb_in1 $ot_ih_pre $ot_ih_post $ot_ih_n \
   [expr {[llength $why] ? "STOP" : "ROUTE"}] [join $why "; "]]
 close $fh
 puts "OT_ROUTE_GATE ff_hold [format %.2f $ot_hw2] ($ot_hn2) pair [format %.2f $ot_pw] t_r->w_r med [format %.1f $ot_tmed] max [format %.1f $ot_tmax] >100 $ot_t100 -> [expr {[llength $why] ? "STOP" : "ROUTE"}]"
