@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS-COND",
+  "supersedes_geometry_only": "gq_land_final_review.json (retained; density inference was incorrect)",
+  "scope": "gq_land routed base/RLA: warm ECO after coherent FF boundary contract",
+  "images": [
+    "gq_land_functional_base.png",
+    "gq_land_functional_rla.png"
+  ],
+  "correction": "The previous renderer counted DECAP/FILLER/TAPCELL in functional density. That made a normal final physical fill look congested. This was a reviewer/tool error, corrected without deleting the earlier record.",
+  "findings": [
+    "Functional fill is21.5%, about50.5k cells and5,726um\u00b2, zero bins above0.8, maximum0.64. Physical-only105,963 cells occupy20,886um\u00b2 separately.",
+    "Healthy open core; face-flop bands follow pins with p90 10.3um and max22.5um. No macros or long internal hops near405um. Standard PDN has no macro interruption.",
+    "Timing failures remain real: TT setup about-100ps, >1.2k slew violations and fanout148. Fix fanout/slew via MCMM repair with fanout24, without changing clock or uncertainty.",
+    "Fixed virtual clock256ps versus measured FF tree194.8ps still needs a coherent input/output corner contract in repair and signoff. No new ECO until that helper is available; no outline growth required."
+  ]
+}

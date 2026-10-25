@@ -25,7 +25,12 @@ def main(kd, csvf, fff, outp):
     core = (W - 2 * m) * (H - 2 * m)
     mac = [r for r in inst if r["kind"] == "macro"]
     mac_a = sum((float(r["w"]) + 4.32) * (float(r["h"]) + 4.32) for r in mac)
-    std = [r for r in inst if r["kind"] in ("std", "ff", "buf")]
+    # A final ODB contains decaps, fillers and taps that intentionally occupy
+    # whitespace. They are not functional placement density; including them
+    # makes every completed layout appear nearly 100% occupied.
+    physical_only = [r for r in inst if r["master"].startswith(("DECAP", "FILLER", "TAPCELL"))]
+    std = [r for r in inst if r["kind"] in ("std", "ff", "buf")
+           and not r["master"].startswith(("DECAP", "FILLER", "TAPCELL"))]
     std_a = sum(float(r["w"]) * float(r["h"]) for r in std)
     buf_a = sum(float(r["w"]) * float(r["h"]) for r in std if r["kind"] == "buf")
     nb = int(np.ceil(W / 10)), int(np.ceil(H / 10))
@@ -42,7 +47,9 @@ def main(kd, csvf, fff, outp):
                 d.append(abs(float(p["x"]) - float(q["x"])) + abs(float(p["y"]) - float(q["y"])))
     d.sort()
     st = dict(type=fz["view"], kit_hash=fz["kit_hash"], outline_um=[W, H], cells=len(std), ffs=sum(r["kind"] == "ff" for r in std),
-              macros=len(mac), std_area_um2=round(std_a, 1), free_area_um2=round(core - mac_a, 1),
+              macros=len(mac), physical_only_cells=len(physical_only),
+              physical_only_area_um2=round(sum(float(r["w"]) * float(r["h"]) for r in physical_only), 1),
+              std_area_um2=round(std_a, 1), free_area_um2=round(core - mac_a, 1),
               fill_of_free=round(std_a / max(1.0, core - mac_a), 3), bufinv_area_share=round(buf_a / max(1.0, std_a), 3),
               bins_over_0p8=int((den > 0.8).sum()), max_bin=round(float(den.max()), 2), face_flops=len(d),
               pin_reg_um=dict(p50=round(d[len(d) // 2], 1) if d else None, p90=round(d[int(len(d) * 0.9)], 1) if d else None,
