@@ -24,6 +24,7 @@ Verdict: PASS (all A ports PASS) / FAIL (any A port FAIL) / INCOMPLETE (no FAIL,
 ilm and flat are hold verdicts; etm is refused (its clock->output arcs are MAX-only, die_sta docstring).
 """
 import argparse
+import math
 import json
 import sys
 from pathlib import Path
@@ -34,6 +35,7 @@ import die_sta  # noqa: E402
 import gen_phys  # noqa: E402
 import gen_rtl  # noqa: E402
 import schema as S  # noqa: E402
+from io_hold_qualification import view_snapshot, plan_digest
 from schema import DIE_PART  # noqa: E402
 
 HOLD_CORNER = "FF"            # owner sign-off: hold at FF (setup TT); never SS
@@ -64,7 +66,24 @@ def check(P, sta, standin_types=(), all_seams=False):
     if sta.get("mode") == "etm":
         raise ValueError("etm die STA is not a hold verdict (MAX-only clock->output arcs); run flat or ilm")
     corners = sta.get("corners") or {}
-    miss = [c for c in (HOLD_CORNER,) + PAIR_CORNERS if c not in corners or corners[c].get("exit", 0) != 0]
+    policy_problems = []
+    if sta.get('mode') not in ('flat', 'ilm'):
+        policy_problems.append('real flat/ilm parent STA required')
+    for field, expected in (('period_ps',833.0),('unc_setup_ps',60.0),('unc_hold_ps',25.0)):
+        value=sta.get(field)
+        if not isinstance(value,(int,float)) or not math.isfinite(value) or abs(value-expected)>0.0001:
+            policy_problems.append(f'{field} must be {expected:g}')
+    if sta.get('spine') not in ('tree','routed'):
+        policy_problems.append('actual parent clock-tree or routed clock evidence required')
+    if sta.get('boundary_hold_contract') or sta.get('clock_latency_contract'):
+        policy_problems.append('parent contains budget stand-in contract cells')
+    views = dict(sta.get('view_evidence') or {})
+    def view(module):
+        if module not in views:
+            path=(sta.get('parts') or {}).get(module)
+            views[module]=view_snapshot(path) if path else dict(kind='unknown')
+        return views[module]
+    miss = [c for c in (HOLD_CORNER,) + PAIR_CORNERS if c not in corners or corners[c].get("exit") != 0]
     grp = {c: _groups(corners[c]) for c in corners}
     a_cache, rows = {}, []
     for pid, pr in (_all_seam_ports(sta) if all_seams else sorted(P.ports.items())):
@@ -86,7 +105,17 @@ def check(P, sta, standin_types=(), all_seams=False):
             key = (gen_rtl.sv_id(s), gen_rtl.sv_id(d), bus)
         row = dict(port=pid, src=s, dst=d, dst_type=dt, src_type=st, bus=pr["dst"]["bus"], in_min_ps=a["in_min_ps"],
                    basis=a["basis"])
-        why = []
+        row['sv_bus'] = key[2]
+        sm=(sta.get('instances') or {}).get(key[0], P.types[st]['module'] if P is not None and st in P.types else st)
+        dm=(sta.get('instances') or {}).get(key[1], P.types[dt]['module'] if P is not None and dt in P.types else dt)
+        sv,dv=view(sm),view(dm)
+        row['receiver_netlist_sha256']=dv.get('netlist_sha256')
+        row['sender_netlist_sha256']=sv.get('netlist_sha256')
+        row['receiver_spef_sha256']=dv.get('spef_sha256')
+        why = list(policy_problems)
+        for module,v in ((sm,sv),(dm,dv)):
+            if v.get('kind')!='real' or not v.get('spef_present') or not v.get('netlist_sha256') or not v.get('spef_sha256'):
+                why.append(f'{module}: actual routed netlist/SPEF evidence missing or budget stand-in')
         if st in standin_types or dt in standin_types:
             why.append("budget stand-in view")
         if miss:
@@ -96,10 +125,14 @@ def check(P, sta, standin_types=(), all_seams=False):
             why.append("no FF hold path in die_sta")
         else:
             h = seam[0]["min"]
-            row.update(hold_ff_ps=h["worst"], neg=h["neg"], tns_ps=h["tns"], worst_from=h["start"], worst_to=h["end"])
+            if not h.get('paths') or not isinstance(h.get('worst'),(int,float)) or not math.isfinite(h['worst']):
+                why.append('no finite timed FF hold paths')
+            else:
+                row.update(hold_ff_ps=h["worst"], neg=h["neg"], tns_ps=h["tns"], worst_from=h["start"], worst_to=h["end"])
         for c in PAIR_CORNERS:
             ps = grp.get(c, {}).get(key, (None, None))[1]
-            if ps and ps.get("max_cppr") is not None:
+            if ps and ps.get('n',0)>0 and all(isinstance(ps.get(k),(int,float)) and math.isfinite(ps[k])
+                                            for k in ('max_cppr','min_cppr')):
                 row[f"pair_hold_skew_cppr_{c}"] = ps.get("max_cppr")
                 row[f"pair_setup_skew_cppr_{c}"] = ps.get("min_cppr")
             elif not miss:
@@ -108,7 +141,7 @@ def check(P, sta, standin_types=(), all_seams=False):
             row.update(status="NOT_TIMED", why="; ".join(why))
         else:
             bad = []
-            if row["hold_ff_ps"] < 0:
+            if row["hold_ff_ps"] < 0 or row['neg'] > 0:
                 bad.append(f"FF seam hold {row['hold_ff_ps']:g} ps / {row['neg']} ep")
             for c in PAIR_CORNERS:
                 sk = [abs(v) for v in (row.get(f"pair_hold_skew_cppr_{c}"), row.get(f"pair_setup_skew_cppr_{c}"))
@@ -122,10 +155,12 @@ def check(P, sta, standin_types=(), all_seams=False):
     cnt["pass"] = cnt.pop("pass_")
     verdict = "FAIL" if cnt["fail"] else ("INCOMPLETE" if cnt["not_timed"] or not rows else "PASS")
     worst = min((r for r in rows if "hold_ff_ps" in r), key=lambda r: r["hold_ff_ps"], default=None)
-    return dict(schema="opentallas.io_hold_parent.v1", plan=P.name if P is not None else None, mode=sta.get("mode"), verdict=verdict,
-                counts=cnt, worst=worst, kit_types=sorted(a_cache),
+    return dict(schema="opentallas.io_hold_parent.v2", plan=P.name if P is not None else None, mode=sta.get("mode"), verdict=verdict,
+                counts=cnt, worst=worst, kit_types=sorted(a_cache), plan_sha256=plan_digest(P.raw) if P is not None else None,
                 gate=(f"every plan port into an IO-HOLD A input: FF seam hold >= 0 (25 ps unc, CPPR, real propagated "
                       f"trees) and related pair skew with CPPR <= {die_sta.SKEW_PS:g} ps at TT and FF"),
+                view_evidence=views, qualification=dict(complete=verdict=='PASS',
+                    requirements='833ps TT/FF 60/25; actual routed views and parent clock; finite hold/pair paths; no stand-ins'),
                 ports=rows)
 
 
@@ -137,7 +172,7 @@ def main(argv=None):
     ap.add_argument("--standin-types", default="", help="comma list of partition types that are budget stand-ins")
     ap.add_argument("--all-seams", action="store_true", help="check every die_sta seam group (no plan selection)")
     a = ap.parse_args(argv)
-    P = None if a.all_seams and a.plan == "-" else S.Plan(json.loads(Path(a.plan).read_text()))
+    P = None if a.all_seams and a.plan == "-" else S.Plan(json.loads(Path(a.plan).read_text()), Path(a.plan))
     r = check(P, json.loads(Path(a.die_sta_json).read_text()),
               standin_types={x for x in a.standin_types.split(",") if x}, all_seams=a.all_seams)
     if a.out:
