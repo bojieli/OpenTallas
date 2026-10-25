@@ -31,6 +31,10 @@ class Gate(unittest.TestCase):
         self.row['canary_fix']='abc123456789@'+str(p/'canary.json');self.assertTrue(self.gate())
     def test_new_flow_blocks_old_pass(self):
         self.runref('old','PASS');self.git=lambda *a,**kw:(0,'tools/die_plan/hold_gate.tcl\n','');self.assertFalse(self.gate())
+    def test_cp1_uses_s81_reference_but_unknown_die_cannot_bypass(self):
+        self.runref('s81_ref','PASS')
+        self.row['die']='cp1';self.assertTrue(self.gate())
+        self.row['die']='unknown';self.assertFalse(self.gate())
     def test_adopt_never_stalls_observation(self):
         self.row['mode']='adopt';self.assertTrue(self.gate())
 
