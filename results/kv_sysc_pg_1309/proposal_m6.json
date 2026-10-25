@@ -1,0 +1,106 @@
+{
+ "type": "kv3_sys_c",
+ "outline_um": [
+  2160,
+  1036.8
+ ],
+ "macros": [
+  {
+   "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[0].u_store.g_p288.u_sram",
+   "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+   "status": "new",
+   "origin_um": [
+    596.16,
+    17.28
+   ],
+   "outline_um": [
+    57.912,
+    67.512
+   ],
+   "orient": "R0",
+   "lef": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+   "lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+   "obs_max": "M4",
+   "note": "Actual native45 bound-kit elaborated macro; licensed PHY/memory ABSTRACT, physical-model proposal only"
+  },
+  {
+   "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[1].u_store.g_p288.u_sram",
+   "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+   "status": "new",
+   "origin_um": [
+    596.16,
+    103.68
+   ],
+   "outline_um": [
+    57.912,
+    67.512
+   ],
+   "orient": "R0",
+   "lef": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+   "lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+   "obs_max": "M4",
+   "note": "Actual native45 bound-kit elaborated macro; licensed PHY/memory ABSTRACT, physical-model proposal only"
+  },
+  {
+   "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[2].u_store.g_p288.u_sram",
+   "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+   "status": "new",
+   "origin_um": [
+    596.16,
+    190.08
+   ],
+   "outline_um": [
+    57.912,
+    67.512
+   ],
+   "orient": "R0",
+   "lef": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+   "lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+   "obs_max": "M4",
+   "note": "Actual native45 bound-kit elaborated macro; licensed PHY/memory ABSTRACT, physical-model proposal only"
+  },
+  {
+   "inst": "u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank[3].u_store.g_p288.u_sram",
+   "module": "d2d_sram_1r1w_64x137_m1_r2c2_p288",
+   "status": "new",
+   "origin_um": [
+    596.16,
+    276.48
+   ],
+   "outline_um": [
+    57.912,
+    67.512
+   ],
+   "orient": "R0",
+   "lef": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef",
+   "lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_tt.lib",
+   "obs_max": "M4",
+   "note": "Actual native45 bound-kit elaborated macro; licensed PHY/memory ABSTRACT, physical-model proposal only"
+  },
+  {
+   "inst": "u_bound.u_ucie_rom",
+   "module": "ot_qkvd_ucie_x64_phy",
+   "status": "new",
+   "origin_um": [
+    691.2,
+    17.28
+   ],
+   "outline_um": [
+    777.6,
+    777.6
+   ],
+   "orient": "R0",
+   "lef": "physical/die_plan/qwen_kvsys/cores/sys_c_views_m6/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy.lef",
+   "lib": "physical/die_plan/qwen_kvsys/cores/sys_c_views_m6/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_tt.lib",
+   "obs_max": "M5",
+   "note": "Actual native45 bound-kit elaborated macro; licensed PHY/memory ABSTRACT, physical-model proposal only | generated M6 external PG interface above M5 OBS; model only"
+  }
+ ],
+ "source": "native_r8_a kit-rtl source snapshot; proc+flatten macro inventory after decl-order-only hoist",
+ "not_release_ready": [
+  "UCIe PHY hasN-facing FDI pins at y794.88; keep at least34.56um N interface channel, reserve PHY separate supply+bump domain under ownerdecision7",
+  "FWD o_host_link_rst_n oldpoints x1099/1466 y589 collide with UCIe. Re-route aroundNedge in main plan andprice cycles.",
+  "FT ft1 width522 mustroute throughNcorridor with stations outsideUCIe andSRAM; current6station implicitroute invalid after macro adoption. Run actualmacro G2 afterstationdelta.",
+  "Clock/reset taps mustavoid macro outlines; SRAM clock and capture flops share regional taps; f5actual bound RTL regenerate beforekit."
+ ]
+}
