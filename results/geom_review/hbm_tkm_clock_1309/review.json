@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.geom_review.v1",
+  "design": "HBM TKM tile reference clock",
+  "source": "flow-canary hbm_e68a26c61_1025_121753_405831 / core flow e68a26c61",
+  "stage": "4_cts",
+  "picture": "results/geom_review/hbm_tkm_clock_1309/tkm_clock_cts_failure.png",
+  "verdict": "FAIL",
+  "reviewed": "2026-10-25 13:29 PDT",
+  "observed": {
+    "sink_count": 13724,
+    "density_taps": 35,
+    "natural_tap_mean_ps": [477.1, 519.8],
+    "padded_tap_mean_ps": [511.8, 533.8],
+    "bound_tt_ps": 250,
+    "clock_port_um": [2.328, 345.6],
+    "path_clock_port_um": [159.84, 345.6],
+    "macro_count": 0
+  },
+  "findings": [
+    "Body logic occupies the right two-thirds; the N-corner clock root crosses the sparse left strip before reaching the body.",
+    "Tiny 19/25/34/37-sink groups at the N face and N-middle are separate clock trees; the slow 25-sink branch sets the target and pads the large body groups.",
+    "The full corner-fed CTS trunk plus local trees produces approximately twice the intended insertion; tap padding cannot shorten it.",
+    "There are no macros or macro walls. Local clock-region loads and trunk depth are the required structural changes."
+  ],
+  "required_fix": [
+    "A reviewed shallow spatial trunk with bounded fanout/depth, protected trunks and local CTS below the density taps.",
+    "Merge tiny face groups into a face-band group; use the reviewed central N clock entry of the selected path master.",
+    "Keep the 250 ps TT bound; qualify per-corner insertion and the 20 ps local tap window on GRT/routed RC before route."
+  ],
+  "scope": "Existing CTS clock geometry and logs; logical connection segments are not routed wire shapes. No new STA, P&R or signoff claim."
+}
