@@ -383,6 +383,11 @@ def main():
                          "--macro-inst-fmt gives the instance path of k")
     ap.add_argument("--macro-inst-fmt", default=None,
                     help="instance path of macro k, python format with {k}, e.g. 'u_core.u_bank.u_data.g_read\\[{k}\\].u_m'")
+    ap.add_argument("--face-shell", default="on", choices=["on", "off"],
+                    help="HBM-FACE 10-25: wrap the core in its face-register shell (face_shell.py; +1 cycle per crossing, "
+                         "latency table results/arch/hbm_arch_1024/core_face_shell_latency.json); default on")
+    ap.add_argument("--face-shell-drop", default="on", choices=["on", "off"],
+                    help="drop unread input bits (top-of-bus / whole bus) from the shelled pin table; default on")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
@@ -518,6 +523,35 @@ def main():
         if bad:
             raise SystemExit(f"PORT_MISMATCH {a.view}: {len(bad)} buses differ, e.g. {bad[:6]}")
         design, dparams = module, params
+    # HBM-FACE 10-25 (default ON, --face-shell off to disable): wrap the core in its face-register shell
+    # (face_shell.py): one kept flop per signal pin bit at the face (+1 cycle in / +1 out), clock/reset pins through,
+    # unread input bits dropped from the pin table (top-of-bus / whole-bus drops keep pin names; report in
+    # face_shell.json, plan change for the lane owner).  The kit top keeps the plan module name.
+    shell = None
+    if a.face_shell == "on":
+        import face_shell as FS
+        mlibs = []
+        for m_ in rec.get("macros", []):
+            md_ = REPO / (rec.get("macro_dirs", {}).get(m_) or f"physical/asap7_memory_macros_v2/{m_}")
+            if (md_ / f"{m_}_tt.lib").is_file():
+                mlibs.append(str(md_ / f"{m_}_tt.lib"))
+        try:
+            shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, CLK_RE, RST_RE,
+                             drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_})
+        except RuntimeError as e:
+            raise SystemExit(f"FACE_SHELL {a.view}: {e}")
+        for f_ in shell["files"]:
+            srcs.append(f"/work/rtl/{f_}")
+            local.append(str(kd / "rtl" / f_))
+        dparams = {}
+        drop_ = set(shell["dropped"])
+        pins = [p_ for p_ in pins if p_["name"] not in drop_]
+        names = [p_["name"] for p_ in pins]
+        pb = buses_of(names)
+        tports = [(n_, d_, shell["keep"][n_]) for n_, d_ in shell["dirs"].items() if shell["keep"][n_] > 0]
+        bad = [b for b, (wd, _) in pb.items() if shell["keep"].get(b) != wd]
+        if bad:
+            raise SystemExit(f"FACE_SHELL {a.view}: shell ports != pruned plan pins, e.g. {bad[:6]}")
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
     clks = [n for n in names if re.match(CLK_RE, base(n))]
     rsts = [n for n in names if re.match(RST_RE, base(n)) and n not in clks]
@@ -558,6 +592,8 @@ def main():
         for m in re.finditer(r"^\s+(input|output) wire (?:\[\d+:0\] )?([^\s,]+),?$", txt, re.M):
             dirs[m.group(2)] = m.group(1)
     else:
+        dirs = {n: d for n, d, _ in tports}
+    if shell:
         dirs = {n: d for n, d, _ in tports}
     if not dirs:
         raise SystemExit("cannot derive port directions for sdc_lint")
@@ -722,10 +758,16 @@ def main():
               plan=str(plan_path), plan_sha256=sha(plan_path), pins_file=v["pins_file"], pins_sha256=v["pins_sha256"],
               pins=len(pins), clocks=clks, resets=rsts, period_ps=per, common_latency_ps=ins, corner=a.corner,
               plan_common_latency_ps=common, core_clock_contract=contract, orfs_var_overrides=a.orfs_var,
-              sdc_lint="PASS (gen)", macros=rec.get("macros", []), kit_hash=kit_hash(kd))
+              sdc_lint="PASS (gen)", macros=rec.get("macros", []),
+              face_shell=(dict(core=shell["core"], in_cycles=1, out_cycles=1, face_flops=shell["face_flops"],
+                               dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),
+                               const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
+                               plan_pins=len(names) + len(shell["dropped"]))
+                          if shell else None),
+              kit_hash=kit_hash(kd))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=len(rsts), design=design, top=top,
-                          wrapper=bool(wrap_rep), kit_hash=fz["kit_hash"])))
+                          wrapper=bool(wrap_rep), face_shell=fz["face_shell"], kit_hash=fz["kit_hash"])))
 
 
 if __name__ == "__main__":
