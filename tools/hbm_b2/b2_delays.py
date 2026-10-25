@@ -41,6 +41,10 @@ import d4g_bank_latency as BL  # noqa: E402
 # params that are compiler-visible budgets (the die pads its lanes up to them): kept when the lanes fit
 BUDGET = {(m, 'RR_RT'): 'd4g_bank_latency.DMA_RR_RT_BUDGET (compiler dma_min_drain_lag)'
           for m in ('ot_hgi_dma_back_static_vp4_banks_cp', 'ot_hgi_dma_back_static_vp4_banks')}
+# share clients whose RTL declares no such round-trip param (fixed internal read latency): the d4g rule's default
+# client param does not exist on them, so nothing is applied; the row is kept as a derivation with `not_applied`.
+NO_PARAM = {('ot_hgi_qdq_lg_port_group_r2', 'VM_RT'):
+            'ot_hgi_qdq_lg_port_group_r2 has only BANKS (transport RL/DL fixed inside); NW-local, wired as r18h5'}
 PRM = re.compile(r"\.(\w+)\(([^()]*)\)")
 
 
@@ -165,6 +169,9 @@ def main():
         if (r['master'], r['param']) in BUDGET and r.get('have') is not None and r['have'] >= r['want']:
             der[-1]['kept'] = f'compiler budget {BUDGET[(r["master"], r["param"])]}: die pads the lanes up to it'
             continue
+        if (r['master'], r['param']) in NO_PARAM:
+            der[-1]['not_applied'] = NO_PARAM[(r['master'], r['param'])]
+            continue
         if r.get('have') != r['want']:
             params[r['client']][r['param']] = r['want']
     # scalar share / client rows report `rt` (not want) when PASS/FAIL on the param: recompute want for those
@@ -177,7 +184,9 @@ def main():
                 have = inst[r['client']]['params'].get(r['param'], rule[3])
                 der.append(dict(inst=r['client'], param=r['param'], have=have, want=want, status=r['status'],
                                 rule='d4g_bank_latency', rt=r['rt'], bad=r['bad'][:3]))
-                if have != want:
+                if (m, r['param']) in NO_PARAM:
+                    der[-1]['not_applied'] = NO_PARAM[(m, r['param'])]
+                elif have != want:
                     params[r['client']][r['param']] = want
 
     def lc(si, sp, ki, kp):
