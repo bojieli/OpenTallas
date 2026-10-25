@@ -1,0 +1,279 @@
+{
+  "status": "UNADOPTED_Q3_W_DRAFT_NOT_CURRENT_R1",
+  "source": "/srv/opentallas-scratch2/claude/path-hbm/plan_delta/q_hub_nw/plan_nw/die_plan.json",
+  "sha256": "3044f0bc3fc628cdd80aa7b5f3e2fbd1446cfcd5b1499ffb2420be729fe9df74",
+  "rows": [
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_14_g3_w_o_u_out_u_dst_d",
+      "bits": 512,
+      "stations": 26,
+      "route_um": 9142.976,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        34.579,
+        600.497
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_13_g3_w_o_u_out_u_dst_d",
+      "bits": 512,
+      "stations": 26,
+      "route_um": 9208.876,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        34.579,
+        718.237
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_12_g3_w_o_u_out_u_dst_d",
+      "bits": 512,
+      "stations": 26,
+      "route_um": 8947.373,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        34.579,
+        404.894
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_11_g3_w_o_u_out_u_dst_d",
+      "bits": 512,
+      "stations": 26,
+      "route_um": 9123.831,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        34.579,
+        581.352
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_3_u_d3",
+      "bits": 6,
+      "stations": 24,
+      "route_um": 8307.631,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        959.021,
+        750.112
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_4_u_d3",
+      "bits": 14,
+      "stations": 24,
+      "route_um": 8323.636,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        959.021,
+        766.117
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_6_u_d3",
+      "bits": 88,
+      "stations": 26,
+      "route_um": 9051.91,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        34.579,
+        509.431
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_7_u_d3",
+      "bits": 75,
+      "stations": 26,
+      "route_um": 9175.99,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        379.704,
+        611.086
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_8_u_d3",
+      "bits": 96,
+      "stations": 26,
+      "route_um": 9073.067,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        34.579,
+        530.588
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_9_u_d3",
+      "bits": 10,
+      "stations": 24,
+      "route_um": 8314.031,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        959.021,
+        756.512
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_u_upipe_SL_15_u_d3",
+      "bits": 15,
+      "stations": 24,
+      "route_um": 8335.262,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        959.021,
+        777.743
+      ]
+    },
+    {
+      "conn": "bus:L74_o",
+      "capture": "u_hb_coll_Q_body_core.u_body_g_qout_0_g3_w_o_u_out_u_dst_v",
+      "bits": 16,
+      "stations": 24,
+      "route_um": 8347.671,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8516.54,
+        0.0
+      ],
+      "to_um": [
+        959.021,
+        790.152
+      ]
+    },
+    {
+      "conn": "bus:L13_i",
+      "capture": "u_hb_coll_Q_body_core.tkx_busy",
+      "bits": 1,
+      "stations": 24,
+      "route_um": 8271.219,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8726.4,
+        468.344
+      ],
+      "to_um": [
+        959.021,
+        37.656
+      ]
+    },
+    {
+      "conn": "bus:L13_i",
+      "capture": "u_hb_coll_Q_body_core.tkx_done",
+      "bits": 1,
+      "stations": 24,
+      "route_um": 8271.459,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8726.4,
+        468.344
+      ],
+      "to_um": [
+        959.021,
+        37.896
+      ]
+    },
+    {
+      "conn": "bus:L13_i",
+      "capture": "u_hb_coll_Q_body_core.tkx_fault",
+      "bits": 1,
+      "stations": 24,
+      "route_um": 8271.699,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8726.4,
+        468.344
+      ],
+      "to_um": [
+        959.021,
+        38.136
+      ]
+    },
+    {
+      "conn": "bus:L13_i",
+      "capture": "u_hb_coll_Q_vm.writer_tkw_v",
+      "bits": 1,
+      "stations": 26,
+      "route_um": 9024.579,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8726.4,
+        468.344
+      ],
+      "to_um": [
+        1943.981,
+        1686.984
+      ]
+    },
+    {
+      "conn": "bus:L13_i",
+      "capture": "u_hb_coll_Q_vm.writer_tkw_d",
+      "bits": 568,
+      "stations": 26,
+      "route_um": 9132.966,
+      "max_hop_um": 358.265,
+      "from_um": [
+        8726.4,
+        468.344
+      ],
+      "to_um": [
+        1943.981,
+        2010.869
+      ]
+    }
+  ]
+}

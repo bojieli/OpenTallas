@@ -1,0 +1,2821 @@
+{
+  "source": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1309/joint_hops_v2/die_plan.json",
+  "target_count": 153,
+  "failures": [
+    {
+      "type": "q_su31",
+      "inst": "u_su_Q3_lanes20_23",
+      "pin": "rst_n",
+      "pin_um": [
+        933.72,
+        820.819
+      ],
+      "relay_um": [
+        1594.09,
+        820.819
+      ],
+      "distance_um": 660.37,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": false
+    },
+    {
+      "type": "q_su31",
+      "inst": "u_su_Q3_lanes28_31",
+      "pin": "rst_n",
+      "pin_um": [
+        818.4720000000001,
+        820.819
+      ],
+      "relay_um": [
+        818.472,
+        1550.88
+      ],
+      "distance_um": 730.061,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": false
+    }
+  ],
+  "targets": [
+    {
+      "type": "NE_io",
+      "inst": "u_ep_N2",
+      "pin": "rst_n",
+      "pin_um": [
+        201.672,
+        1114.579
+      ],
+      "relay_um": [
+        194.39,
+        1122.29
+      ],
+      "distance_um": 14.993,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "NW_io",
+      "inst": "u_ep_N0",
+      "pin": "rst_n",
+      "pin_um": [
+        236.232,
+        1114.579
+      ],
+      "relay_um": [
+        228.95,
+        1122.29
+      ],
+      "distance_um": 14.993,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "NW_io",
+      "inst": "u_host_ep",
+      "pin": "rst_n",
+      "pin_um": [
+        377.832,
+        1503.379
+      ],
+      "relay_um": [
+        377.832,
+        1499.03
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_b000",
+      "inst": "u_hcb_Q0_lanes6_7_bank",
+      "pin": "rst_n",
+      "pin_um": [
+        446.76,
+        924.499
+      ],
+      "relay_um": [
+        446.76,
+        920.15
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_b001",
+      "inst": "u_hcb_Q1_lanes6_7_bank",
+      "pin": "rst_n",
+      "pin_um": [
+        10.720000000000045,
+        924.499
+      ],
+      "relay_um": [
+        10.72,
+        920.15
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_b002",
+      "inst": "u_hcb_Q2_lanes6_7_bank",
+      "pin": "rst_n",
+      "pin_um": [
+        10.967999999999975,
+        1408.301
+      ],
+      "relay_um": [
+        10.968,
+        1412.65
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_b003",
+      "inst": "u_hcb_Q3_lanes6_7_bank",
+      "pin": "rst_n",
+      "pin_um": [
+        8.563000000000006,
+        1546.728
+      ],
+      "relay_um": [
+        4.32,
+        1546.728
+      ],
+      "distance_um": 4.243,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_b010",
+      "inst": "u_hcb_Q7_lanes6_7_bank",
+      "pin": "rst_n",
+      "pin_um": [
+        537.824,
+        1218.259
+      ],
+      "relay_um": [
+        537.824,
+        1213.91
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_b011",
+      "inst": "u_hcb_Q6_lanes6_7_bank",
+      "pin": "rst_n",
+      "pin_um": [
+        371.501,
+        1475.2559999999999
+      ],
+      "relay_um": [
+        375.84000000000003,
+        1475.256
+      ],
+      "distance_um": 4.339,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_b012",
+      "inst": "u_hcb_Q5_lanes6_7_bank",
+      "pin": "rst_n",
+      "pin_um": [
+        10.720000000000045,
+        1028.179
+      ],
+      "relay_um": [
+        10.72,
+        1023.83
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_b013",
+      "inst": "u_hcb_Q4_lanes6_7_bank",
+      "pin": "rst_n",
+      "pin_um": [
+        537.824,
+        1045.459
+      ],
+      "relay_um": [
+        537.824,
+        1041.11
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_b113",
+      "inst": "u_sfucore_Q_ctl",
+      "pin": "rst_n",
+      "pin_um": [
+        1174.963,
+        224.76
+      ],
+      "relay_um": [
+        1170.71,
+        224.76
+      ],
+      "distance_um": 4.253,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_sfup_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        699.859,
+        1324.104
+      ],
+      "relay_um": [
+        695.51,
+        1324.104
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_pgp_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        3367.4210000000003,
+        1181.496
+      ],
+      "relay_um": [
+        3371.77,
+        1181.496
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hc_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        4180.8240000000005,
+        423.379
+      ],
+      "relay_um": [
+        4180.824,
+        419.03
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hb_coll_Q_ring_ag",
+      "pin": "rst_n",
+      "pin_um": [
+        7775.981000000001,
+        1324.1280000000002
+      ],
+      "relay_um": [
+        7780.33,
+        1324.128
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hb_coll_Q_reduce",
+      "pin": "rst_n",
+      "pin_um": [
+        1060.008,
+        838.099
+      ],
+      "relay_um": [
+        1060.008,
+        833.75
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hb_coll_Q_body",
+      "pin": "rst_n",
+      "pin_um": [
+        587.104,
+        561.619
+      ],
+      "relay_um": [
+        587.104,
+        557.27
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_cij_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        3879.379,
+        564.072
+      ],
+      "relay_um": [
+        3875.03,
+        564.072
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hb_vms_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        8714.932999999999,
+        1617.824
+      ],
+      "relay_um": [
+        8719.282,
+        1617.824
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_smw_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        3533.683,
+        1012.8720000000001
+      ],
+      "relay_um": [
+        3529.43,
+        1012.872
+      ],
+      "distance_um": 4.253,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xl_Q_ctl",
+      "pin": "rst_n",
+      "pin_um": [
+        6989.779,
+        1637.4
+      ],
+      "relay_um": [
+        6985.43,
+        1637.4
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmb_Q0",
+      "pin": "rst_n",
+      "pin_um": [
+        7256.472,
+        529.181
+      ],
+      "relay_um": [
+        7256.472,
+        533.53
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmb_Q1",
+      "pin": "rst_n",
+      "pin_um": [
+        6357.912,
+        1220.381
+      ],
+      "relay_um": [
+        6357.912,
+        1224.73
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmb_Q2",
+      "pin": "rst_n",
+      "pin_um": [
+        6644.179,
+        1216.536
+      ],
+      "relay_um": [
+        6639.83,
+        1216.536
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmb_Q3",
+      "pin": "rst_n",
+      "pin_um": [
+        357.48,
+        1635.101
+      ],
+      "relay_um": [
+        357.48,
+        1639.45
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmb_Q4",
+      "pin": "rst_n",
+      "pin_um": [
+        6426.647999999999,
+        736.5409999999999
+      ],
+      "relay_um": [
+        6426.648,
+        740.89
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmb_Q5",
+      "pin": "rst_n",
+      "pin_um": [
+        7256.088,
+        1220.381
+      ],
+      "relay_um": [
+        7256.088,
+        1224.73
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmb_Q6",
+      "pin": "rst_n",
+      "pin_um": [
+        7670.807999999999,
+        1289.501
+      ],
+      "relay_um": [
+        7670.808,
+        1293.85
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmb_Q7",
+      "pin": "rst_n",
+      "pin_um": [
+        6910.871999999999,
+        321.82099999999997
+      ],
+      "relay_um": [
+        6910.872,
+        326.17
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xq_Q_p0_bfq0",
+      "pin": "rst_n",
+      "pin_um": [
+        7289.832,
+        1667.539
+      ],
+      "relay_um": [
+        7289.832,
+        1663.19
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xq_Q_p0_bfq1",
+      "pin": "rst_n",
+      "pin_um": [
+        6944.232,
+        1736.659
+      ],
+      "relay_um": [
+        6944.232,
+        1732.31
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xq_Q_p0_bfq2",
+      "pin": "rst_n",
+      "pin_um": [
+        6460.392,
+        1321.939
+      ],
+      "relay_um": [
+        6460.392,
+        1317.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xq_Q_p0_bfq3",
+      "pin": "rst_n",
+      "pin_um": [
+        7151.592000000001,
+        2082.2589999999996
+      ],
+      "relay_um": [
+        7151.592,
+        2077.91
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xq_Q_p1_bfq0",
+      "pin": "rst_n",
+      "pin_um": [
+        7289.832,
+        561.619
+      ],
+      "relay_um": [
+        7289.832,
+        557.27
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xq_Q_p1_bfq1",
+      "pin": "rst_n",
+      "pin_um": [
+        6944.232,
+        561.619
+      ],
+      "relay_um": [
+        6944.232,
+        557.27
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xq_Q_p1_bfq2",
+      "pin": "rst_n",
+      "pin_um": [
+        6045.6720000000005,
+        838.099
+      ],
+      "relay_um": [
+        6045.672,
+        833.75
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xq_Q_p1_bfq3",
+      "pin": "rst_n",
+      "pin_um": [
+        7635.432,
+        630.739
+      ],
+      "relay_um": [
+        7635.432,
+        626.39
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_sucore_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        3004.3920000000003,
+        1252.819
+      ],
+      "relay_um": [
+        3004.392,
+        1248.47
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_sfus_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        4234.632,
+        8.659
+      ],
+      "relay_um": [
+        4234.632,
+        4.32
+      ],
+      "distance_um": 4.339,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hb_quant_Q__u_dec",
+      "pin": "rst_n",
+      "pin_um": [
+        5312.232,
+        976.339
+      ],
+      "relay_um": [
+        5312.232,
+        971.99
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hb_dbk_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        6735.712,
+        1700.981
+      ],
+      "relay_um": [
+        6735.712,
+        1705.33
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hcollgi_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        2596.205,
+        1261.896
+      ],
+      "relay_um": [
+        2600.65,
+        1261.896
+      ],
+      "distance_um": 4.445,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hcollgl_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        2427.859,
+        351.81600000000003
+      ],
+      "relay_um": [
+        2423.51,
+        351.816
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hb_idx__qctl_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        8359.613,
+        79.944
+      ],
+      "relay_um": [
+        8363.962,
+        79.944
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hb_idx__q_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        4708.819,
+        159.57600000000002
+      ],
+      "relay_um": [
+        4704.47,
+        159.576
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p00",
+      "pin": "rst_n",
+      "pin_um": [
+        3672.019,
+        1975.128
+      ],
+      "relay_um": [
+        3667.67,
+        1975.128
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p01",
+      "pin": "rst_n",
+      "pin_um": [
+        5123.539000000001,
+        2256.6479999999997
+      ],
+      "relay_um": [
+        5119.19,
+        2256.648
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p02",
+      "pin": "rst_n",
+      "pin_um": [
+        4017.6189999999997,
+        1975.128
+      ],
+      "relay_um": [
+        4013.27,
+        1975.128
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p03",
+      "pin": "rst_n",
+      "pin_um": [
+        4017.6189999999997,
+        2182.4880000000003
+      ],
+      "relay_um": [
+        4013.27,
+        2182.488
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p04",
+      "pin": "rst_n",
+      "pin_um": [
+        7335.379,
+        1940.232
+      ],
+      "relay_um": [
+        7331.03,
+        1940.232
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p05",
+      "pin": "rst_n",
+      "pin_um": [
+        7197.139,
+        2044.2479999999998
+      ],
+      "relay_um": [
+        7192.79,
+        2044.248
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p06",
+      "pin": "rst_n",
+      "pin_um": [
+        7957.459,
+        1987.512
+      ],
+      "relay_um": [
+        7953.11,
+        1987.512
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p07",
+      "pin": "rst_n",
+      "pin_um": [
+        8372.179,
+        1947.528
+      ],
+      "relay_um": [
+        8367.83,
+        1947.528
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p08",
+      "pin": "rst_n",
+      "pin_um": [
+        4017.6189999999997,
+        1911.048
+      ],
+      "relay_um": [
+        4013.27,
+        1911.048
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p09",
+      "pin": "rst_n",
+      "pin_um": [
+        3464.6589999999997,
+        2113.368
+      ],
+      "relay_um": [
+        3460.31,
+        2113.368
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p10",
+      "pin": "rst_n",
+      "pin_um": [
+        3227.885,
+        1836.888
+      ],
+      "relay_um": [
+        3232.234,
+        1836.888
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p11",
+      "pin": "rst_n",
+      "pin_um": [
+        3464.6589999999997,
+        2021.736
+      ],
+      "relay_um": [
+        3460.31,
+        2021.736
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p12",
+      "pin": "rst_n",
+      "pin_um": [
+        5054.419,
+        1906.008
+      ],
+      "relay_um": [
+        5050.07,
+        1906.008
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p13",
+      "pin": "rst_n",
+      "pin_um": [
+        4294.099,
+        1491.288
+      ],
+      "relay_um": [
+        4289.75,
+        1491.288
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p14",
+      "pin": "rst_n",
+      "pin_um": [
+        5469.139,
+        1975.128
+      ],
+      "relay_um": [
+        5464.79,
+        1975.128
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_ctl_Q_p15",
+      "pin": "rst_n",
+      "pin_um": [
+        4017.6189999999997,
+        1560.408
+      ],
+      "relay_um": [
+        4013.27,
+        1560.408
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_calendar_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        3741.1389999999997,
+        1068.3120000000001
+      ],
+      "relay_um": [
+        3736.79,
+        1068.312
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_hb_idx__op_Q",
+      "pin": "rst_n",
+      "pin_um": [
+        6989.779,
+        112.776
+      ],
+      "relay_um": [
+        6985.43,
+        112.776
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmdel_Q0",
+      "pin": "rst_n",
+      "pin_um": [
+        4477.416,
+        1321.939
+      ],
+      "relay_um": [
+        4477.416,
+        1317.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmdel_Q1",
+      "pin": "rst_n",
+      "pin_um": [
+        5168.616,
+        1252.819
+      ],
+      "relay_um": [
+        5168.616,
+        1248.47
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmdel_Q2",
+      "pin": "rst_n",
+      "pin_um": [
+        4477.416,
+        1291.661
+      ],
+      "relay_um": [
+        4477.416,
+        1296.01
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmdel_Q3",
+      "pin": "rst_n",
+      "pin_um": [
+        3959.448,
+        1321.939
+      ],
+      "relay_um": [
+        3959.448,
+        1317.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmdel_Q4",
+      "pin": "rst_n",
+      "pin_um": [
+        5583.264,
+        1252.819
+      ],
+      "relay_um": [
+        5583.264,
+        1248.47
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmdel_Q5",
+      "pin": "rst_n",
+      "pin_um": [
+        6747.04,
+        531.341
+      ],
+      "relay_um": [
+        6747.04,
+        535.69
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmdel_Q6",
+      "pin": "rst_n",
+      "pin_um": [
+        6965.352,
+        1252.819
+      ],
+      "relay_um": [
+        6965.352,
+        1248.47
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_vmdel_Q7",
+      "pin": "rst_n",
+      "pin_um": [
+        5306.784,
+        768.979
+      ],
+      "relay_um": [
+        5306.784,
+        764.63
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xl_Q_aqhi",
+      "pin": "rst_n",
+      "pin_um": [
+        6963.816,
+        1498.925
+      ],
+      "relay_um": [
+        6963.816,
+        1503.37
+      ],
+      "distance_um": 4.445,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_hub",
+      "inst": "u_xl_Q_aqlo",
+      "pin": "rst_n",
+      "pin_um": [
+        6509.304,
+        1321.939
+      ],
+      "relay_um": [
+        6509.304,
+        1317.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_spb0",
+      "inst": "u_ep_S0",
+      "pin": "rst_n",
+      "pin_um": [
+        218.952,
+        1114.579
+      ],
+      "relay_um": [
+        211.67,
+        1122.29
+      ],
+      "distance_um": 14.993,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_spb2",
+      "inst": "u_xc_Q2",
+      "pin": "rst_n",
+      "pin_um": [
+        803.539,
+        1246.344
+      ],
+      "relay_um": [
+        799.19,
+        1246.344
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_spb2",
+      "inst": "u_xc_Q3",
+      "pin": "rst_n",
+      "pin_um": [
+        1408.339,
+        1246.344
+      ],
+      "relay_um": [
+        1403.99,
+        1246.344
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_spt0",
+      "inst": "u_xc_Q0",
+      "pin": "rst_n",
+      "pin_um": [
+        216.019,
+        246.12
+      ],
+      "relay_um": [
+        211.67,
+        246.12
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_spt0",
+      "inst": "u_xc_Q1",
+      "pin": "rst_n",
+      "pin_um": [
+        1512.019,
+        10.824000000000002
+      ],
+      "relay_um": [
+        1507.67,
+        10.824
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_lane_exp0",
+      "pin": "rst_n",
+      "pin_um": [
+        304.72799999999995,
+        25.939
+      ],
+      "relay_um": [
+        304.728,
+        21.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_lane_exp2",
+      "pin": "rst_n",
+      "pin_um": [
+        788.088,
+        527.059
+      ],
+      "relay_um": [
+        788.088,
+        522.71
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_lane_exp4",
+      "pin": "rst_n",
+      "pin_um": [
+        1203.288,
+        924.461
+      ],
+      "relay_um": [
+        1203.288,
+        928.81
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_lane_exp6",
+      "pin": "rst_n",
+      "pin_um": [
+        807.192,
+        751.699
+      ],
+      "relay_um": [
+        807.192,
+        747.35
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_lane_exp8",
+      "pin": "rst_n",
+      "pin_um": [
+        357.912,
+        250.579
+      ],
+      "relay_um": [
+        357.912,
+        246.23
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_lane_exp10",
+      "pin": "rst_n",
+      "pin_um": [
+        1256.472,
+        492.499
+      ],
+      "relay_um": [
+        1196.63,
+        514.09
+      ],
+      "distance_um": 81.433,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_lane_exp12",
+      "pin": "rst_n",
+      "pin_um": [
+        1136.808,
+        285.101
+      ],
+      "relay_um": [
+        1136.808,
+        289.45
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_lane_exp14",
+      "pin": "rst_n",
+      "pin_um": [
+        754.0079999999999,
+        302.419
+      ],
+      "relay_um": [
+        754.008,
+        298.07
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_lanes_plain0_3",
+      "pin": "rst_n",
+      "pin_um": [
+        2001.336,
+        25.939
+      ],
+      "relay_um": [
+        2001.336,
+        21.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_lanes_plain8_11",
+      "pin": "rst_n",
+      "pin_um": [
+        1290.5040000000001,
+        25.939
+      ],
+      "relay_um": [
+        1290.504,
+        21.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_side_softplus",
+      "pin": "rst_n",
+      "pin_um": [
+        304.72799999999995,
+        475.219
+      ],
+      "relay_um": [
+        304.728,
+        470.87
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su00",
+      "inst": "u_su_Q0_pretree",
+      "pin": "rst_n",
+      "pin_um": [
+        1815.912,
+        492.499
+      ],
+      "relay_um": [
+        1827.37,
+        492.499
+      ],
+      "distance_um": 11.458,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_lane_exp1",
+      "pin": "rst_n",
+      "pin_um": [
+        1794.792,
+        25.939
+      ],
+      "relay_um": [
+        1794.792,
+        21.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_lane_exp3",
+      "pin": "rst_n",
+      "pin_um": [
+        1794.792,
+        457.901
+      ],
+      "relay_um": [
+        1794.792,
+        462.25
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_lane_exp5",
+      "pin": "rst_n",
+      "pin_um": [
+        356.088,
+        682.5409999999999
+      ],
+      "relay_um": [
+        356.088,
+        686.89
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_lane_exp7",
+      "pin": "rst_n",
+      "pin_um": [
+        1622.472,
+        475.219
+      ],
+      "relay_um": [
+        1622.472,
+        470.87
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_lane_exp9",
+      "pin": "rst_n",
+      "pin_um": [
+        962.712,
+        699.859
+      ],
+      "relay_um": [
+        962.712,
+        695.51
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_lane_exp11",
+      "pin": "rst_n",
+      "pin_um": [
+        805.368,
+        475.219
+      ],
+      "relay_um": [
+        805.368,
+        686.89
+      ],
+      "distance_um": 211.671,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_lane_exp13",
+      "pin": "rst_n",
+      "pin_um": [
+        513.432,
+        699.859
+      ],
+      "relay_um": [
+        513.432,
+        695.51
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_lane_exp_l",
+      "pin": "rst_n",
+      "pin_um": [
+        1741.608,
+        699.859
+      ],
+      "relay_um": [
+        1741.608,
+        695.51
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_lanes_plain4_7",
+      "pin": "rst_n",
+      "pin_um": [
+        996.744,
+        8.659
+      ],
+      "relay_um": [
+        996.744,
+        4.32
+      ],
+      "distance_um": 4.339,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_lanes_plain12_15",
+      "pin": "rst_n",
+      "pin_um": [
+        460.248,
+        8.659
+      ],
+      "relay_um": [
+        460.248,
+        4.32
+      ],
+      "distance_um": 4.339,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su01",
+      "inst": "u_su_Q0_side_rest",
+      "pin": "rst_n",
+      "pin_um": [
+        10.968,
+        8.659
+      ],
+      "relay_um": [
+        10.968,
+        4.32
+      ],
+      "distance_um": 4.339,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_lane_exp0",
+      "pin": "rst_n",
+      "pin_um": [
+        1281.048,
+        898.541
+      ],
+      "relay_um": [
+        1281.048,
+        902.89
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_lane_exp2",
+      "pin": "rst_n",
+      "pin_um": [
+        140.568,
+        483.821
+      ],
+      "relay_um": [
+        140.568,
+        488.17
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_lane_exp4",
+      "pin": "rst_n",
+      "pin_um": [
+        245.592,
+        501.139
+      ],
+      "relay_um": [
+        245.592,
+        496.79
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_lane_exp6",
+      "pin": "rst_n",
+      "pin_um": [
+        831.768,
+        898.541
+      ],
+      "relay_um": [
+        831.768,
+        902.89
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_lane_exp8",
+      "pin": "rst_n",
+      "pin_um": [
+        435.672,
+        725.779
+      ],
+      "relay_um": [
+        435.672,
+        721.43
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_lane_exp10",
+      "pin": "rst_n",
+      "pin_um": [
+        554.424,
+        259.18100000000004
+      ],
+      "relay_um": [
+        554.424,
+        263.53
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_lane_exp12",
+      "pin": "rst_n",
+      "pin_um": [
+        641.688,
+        673.9010000000001
+      ],
+      "relay_um": [
+        641.688,
+        678.25
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_lane_exp14",
+      "pin": "rst_n",
+      "pin_um": [
+        1113.096,
+        466.579
+      ],
+      "relay_um": [
+        1113.096,
+        678.25
+      ],
+      "distance_um": 211.671,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_lanes_plain0_3",
+      "pin": "rst_n",
+      "pin_um": [
+        1126.344,
+        0.019
+      ],
+      "relay_um": [
+        1481.77,
+        4.32
+      ],
+      "distance_um": 359.727,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_lanes_plain8_11",
+      "pin": "rst_n",
+      "pin_um": [
+        677.064,
+        0.019
+      ],
+      "relay_um": [
+        583.19,
+        4.32
+      ],
+      "distance_um": 98.175,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_side_softplus",
+      "pin": "rst_n",
+      "pin_um": [
+        1730.328,
+        466.579
+      ],
+      "relay_um": [
+        1730.328,
+        462.23
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su10",
+      "inst": "u_su_Q1_pretree",
+      "pin": "rst_n",
+      "pin_um": [
+        1769.6879999999999,
+        0.019
+      ],
+      "relay_um": [
+        1758.23,
+        4.32
+      ],
+      "distance_um": 15.759,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_lane_exp1",
+      "pin": "rst_n",
+      "pin_um": [
+        1086.792,
+        699.859
+      ],
+      "relay_um": [
+        1086.792,
+        695.51
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_lane_exp3",
+      "pin": "rst_n",
+      "pin_um": [
+        1358.808,
+        8.659
+      ],
+      "relay_um": [
+        1358.808,
+        4.32
+      ],
+      "distance_um": 4.339,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_lane_exp5",
+      "pin": "rst_n",
+      "pin_um": [
+        1392.888,
+        233.299
+      ],
+      "relay_um": [
+        1392.888,
+        228.95
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_lane_exp7",
+      "pin": "rst_n",
+      "pin_um": [
+        1120.8719999999998,
+        475.219
+      ],
+      "relay_um": [
+        1120.872,
+        470.87
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_lane_exp9",
+      "pin": "rst_n",
+      "pin_um": [
+        1134.168,
+        457.939
+      ],
+      "relay_um": [
+        1134.168,
+        453.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_lane_exp11",
+      "pin": "rst_n",
+      "pin_um": [
+        1345.5120000000002,
+        8.659
+      ],
+      "relay_um": [
+        1345.512,
+        4.32
+      ],
+      "distance_um": 4.339,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_lane_exp13",
+      "pin": "rst_n",
+      "pin_um": [
+        1345.5120000000002,
+        233.299
+      ],
+      "relay_um": [
+        1345.512,
+        228.95
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_lane_exp_l",
+      "pin": "rst_n",
+      "pin_um": [
+        671.592,
+        475.219
+      ],
+      "relay_um": [
+        671.592,
+        686.89
+      ],
+      "distance_um": 211.671,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_lanes_plain4_7",
+      "pin": "rst_n",
+      "pin_um": [
+        896.232,
+        8.659
+      ],
+      "relay_um": [
+        896.232,
+        4.32
+      ],
+      "distance_um": 4.339,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_lanes_plain12_15",
+      "pin": "rst_n",
+      "pin_um": [
+        69.72,
+        466.541
+      ],
+      "relay_um": [
+        69.72,
+        470.89
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su11",
+      "inst": "u_su_Q1_side_rest",
+      "pin": "rst_n",
+      "pin_um": [
+        1583.4479999999999,
+        457.939
+      ],
+      "relay_um": [
+        1583.448,
+        453.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su20",
+      "inst": "u_su_Q2_lanes0_3",
+      "pin": "rst_n",
+      "pin_um": [
+        1891.56,
+        768.979
+      ],
+      "relay_um": [
+        1891.56,
+        764.63
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su20",
+      "inst": "u_su_Q2_lanes8_11",
+      "pin": "rst_n",
+      "pin_um": [
+        460.248,
+        43.219
+      ],
+      "relay_um": [
+        460.248,
+        38.87
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su20",
+      "inst": "u_su_Q2_lanes16_19",
+      "pin": "rst_n",
+      "pin_um": [
+        1993.5120000000002,
+        25.939
+      ],
+      "relay_um": [
+        1993.512,
+        21.59
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su20",
+      "inst": "u_su_Q2_lanes24_27",
+      "pin": "rst_n",
+      "pin_um": [
+        1215.912,
+        786.259
+      ],
+      "relay_um": [
+        1215.912,
+        781.91
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su20",
+      "inst": "u_su_Q2_pretree",
+      "pin": "rst_n",
+      "pin_um": [
+        292.248,
+        302.419
+      ],
+      "relay_um": [
+        292.248,
+        298.07
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su21",
+      "inst": "u_su_Q2_lanes4_7",
+      "pin": "rst_n",
+      "pin_um": [
+        1433.64,
+        820.819
+      ],
+      "relay_um": [
+        1542.24,
+        820.819
+      ],
+      "distance_um": 108.6,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su21",
+      "inst": "u_su_Q2_lanes12_15",
+      "pin": "rst_n",
+      "pin_um": [
+        112.92,
+        820.819
+      ],
+      "relay_um": [
+        4.32,
+        820.819
+      ],
+      "distance_um": 108.6,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su21",
+      "inst": "u_su_Q2_lanes20_23",
+      "pin": "rst_n",
+      "pin_um": [
+        1535.592,
+        86.41900000000001
+      ],
+      "relay_um": [
+        1535.592,
+        82.07
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su21",
+      "inst": "u_su_Q2_lanes28_31",
+      "pin": "rst_n",
+      "pin_um": [
+        10.968,
+        86.41900000000001
+      ],
+      "relay_um": [
+        10.968,
+        82.07
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su30",
+      "inst": "u_su_Q3_lanes0_3",
+      "pin": "rst_n",
+      "pin_um": [
+        1148.52,
+        820.819
+      ],
+      "relay_um": [
+        1148.52,
+        816.47
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su30",
+      "inst": "u_su_Q3_lanes8_11",
+      "pin": "rst_n",
+      "pin_um": [
+        28.248,
+        77.77900000000001
+      ],
+      "relay_um": [
+        28.248,
+        73.43
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su30",
+      "inst": "u_su_Q3_lanes16_19",
+      "pin": "rst_n",
+      "pin_um": [
+        1374.36,
+        820.819
+      ],
+      "relay_um": [
+        1374.36,
+        816.47
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su30",
+      "inst": "u_su_Q3_lanes24_27",
+      "pin": "rst_n",
+      "pin_um": [
+        805.848,
+        77.77900000000001
+      ],
+      "relay_um": [
+        805.848,
+        73.43
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su30",
+      "inst": "u_su_Q3_pretree",
+      "pin": "rst_n",
+      "pin_um": [
+        200.23199999999997,
+        1546.5410000000002
+      ],
+      "relay_um": [
+        200.232,
+        1550.88
+      ],
+      "distance_um": 4.339,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su31",
+      "inst": "u_su_Q3_lanes4_7",
+      "pin": "rst_n",
+      "pin_um": [
+        1587.4320000000002,
+        86.41900000000001
+      ],
+      "relay_um": [
+        1587.432,
+        82.07
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su31",
+      "inst": "u_su_Q3_lanes12_15",
+      "pin": "rst_n",
+      "pin_um": [
+        62.808,
+        86.41900000000001
+      ],
+      "relay_um": [
+        62.808,
+        82.07
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "q_su31",
+      "inst": "u_su_Q3_lanes20_23",
+      "pin": "rst_n",
+      "pin_um": [
+        933.72,
+        820.819
+      ],
+      "relay_um": [
+        1594.09,
+        820.819
+      ],
+      "distance_um": 660.37,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": false
+    },
+    {
+      "type": "q_su31",
+      "inst": "u_su_Q3_lanes28_31",
+      "pin": "rst_n",
+      "pin_um": [
+        818.4720000000001,
+        820.819
+      ],
+      "relay_um": [
+        818.472,
+        1550.88
+      ],
+      "distance_um": 730.061,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": false
+    },
+    {
+      "type": "root",
+      "inst": "u_tkm_SW_root",
+      "pin": "rst_n",
+      "pin_um": [
+        480.024,
+        1356.461
+      ],
+      "relay_um": [
+        505.45,
+        1356.461
+      ],
+      "distance_um": 25.426,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "root",
+      "inst": "u_hc_eng_tail0_sk_steady",
+      "pin": "rst_n",
+      "pin_um": [
+        991.272,
+        1010.899
+      ],
+      "relay_um": [
+        991.272,
+        1006.55
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "root",
+      "inst": "u_hc_eng_tail1_sk_steady",
+      "pin": "rst_n",
+      "pin_um": [
+        1483.752,
+        1010.899
+      ],
+      "relay_um": [
+        1483.752,
+        1006.55
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "root",
+      "inst": "u_hb_idx__link",
+      "pin": "rst_n",
+      "pin_um": [
+        34.579,
+        532.44
+      ],
+      "relay_um": [
+        30.23,
+        532.44
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "root",
+      "inst": "u_hb_idx__selector",
+      "pin": "rst_n",
+      "pin_um": [
+        1299.8690000000001,
+        63.0
+      ],
+      "relay_um": [
+        1304.218,
+        63.0
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "root",
+      "inst": "u_host_cp_rxs",
+      "pin": "rst_n",
+      "pin_um": [
+        34.579,
+        546.504
+      ],
+      "relay_um": [
+        30.23,
+        546.504
+      ],
+      "distance_um": 4.349,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "root",
+      "inst": "u_hb_idx__ctl",
+      "pin": "rst_n",
+      "pin_um": [
+        959.021,
+        801.336
+      ],
+      "relay_um": [
+        959.021,
+        807.85
+      ],
+      "distance_um": 6.514,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "root",
+      "inst": "u_hb_argmax",
+      "pin": "rst_n",
+      "pin_um": [
+        600.456,
+        812.179
+      ],
+      "relay_um": [
+        606.97,
+        812.179
+      ],
+      "distance_um": 6.514,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "root",
+      "inst": "u_col_idx",
+      "pin": "rst_n",
+      "pin_um": [
+        967.699,
+        791.88
+      ],
+      "relay_um": [
+        963.35,
+        807.85
+      ],
+      "distance_um": 20.319,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    },
+    {
+      "type": "vsN0",
+      "inst": "u_ep_S1",
+      "pin": "rst_n",
+      "pin_um": [
+        218.952,
+        1114.579
+      ],
+      "relay_um": [
+        211.67,
+        1122.29
+      ],
+      "distance_um": 14.993,
+      "legal": true,
+      "limit_um": 380.0,
+      "pass_terminal": true
+    }
+  ],
+  "type_results": [
+    {
+      "type": "NE_io",
+      "errors": []
+    },
+    {
+      "type": "NW_io",
+      "errors": []
+    },
+    {
+      "type": "q_b000",
+      "errors": []
+    },
+    {
+      "type": "q_b001",
+      "errors": []
+    },
+    {
+      "type": "q_b002",
+      "errors": []
+    },
+    {
+      "type": "q_b003",
+      "errors": []
+    },
+    {
+      "type": "q_b010",
+      "errors": []
+    },
+    {
+      "type": "q_b011",
+      "errors": []
+    },
+    {
+      "type": "q_b012",
+      "errors": []
+    },
+    {
+      "type": "q_b013",
+      "errors": []
+    },
+    {
+      "type": "q_b100",
+      "errors": []
+    },
+    {
+      "type": "q_b101",
+      "errors": []
+    },
+    {
+      "type": "q_b102",
+      "errors": []
+    },
+    {
+      "type": "q_b103",
+      "errors": []
+    },
+    {
+      "type": "q_b110",
+      "errors": []
+    },
+    {
+      "type": "q_b111",
+      "errors": []
+    },
+    {
+      "type": "q_b112",
+      "errors": []
+    },
+    {
+      "type": "q_b113",
+      "errors": []
+    },
+    {
+      "type": "q_hub",
+      "errors": []
+    },
+    {
+      "type": "q_mca",
+      "errors": []
+    },
+    {
+      "type": "q_mcb",
+      "errors": []
+    },
+    {
+      "type": "q_spb0",
+      "errors": []
+    },
+    {
+      "type": "q_spb1",
+      "errors": []
+    },
+    {
+      "type": "q_spb2",
+      "errors": []
+    },
+    {
+      "type": "q_spt0",
+      "errors": []
+    },
+    {
+      "type": "q_spt1",
+      "errors": []
+    },
+    {
+      "type": "q_spt2",
+      "errors": []
+    },
+    {
+      "type": "q_spu0",
+      "errors": []
+    },
+    {
+      "type": "q_spu1",
+      "errors": []
+    },
+    {
+      "type": "q_su00",
+      "errors": []
+    },
+    {
+      "type": "q_su01",
+      "errors": []
+    },
+    {
+      "type": "q_su10",
+      "errors": []
+    },
+    {
+      "type": "q_su11",
+      "errors": []
+    },
+    {
+      "type": "q_su20",
+      "errors": []
+    },
+    {
+      "type": "q_su21",
+      "errors": []
+    },
+    {
+      "type": "q_su30",
+      "errors": []
+    },
+    {
+      "type": "q_su31",
+      "error": "type q_su31: reset relay -> u_su_Q3_lanes20_23.rst_n exceeds reach (660.37 um)"
+    },
+    {
+      "type": "root",
+      "errors": []
+    },
+    {
+      "type": "vsN0",
+      "errors": []
+    },
+    {
+      "type": "vsN1",
+      "errors": []
+    },
+    {
+      "type": "vsN2",
+      "errors": []
+    },
+    {
+      "type": "vsN4",
+      "errors": []
+    },
+    {
+      "type": "vsN5",
+      "errors": []
+    },
+    {
+      "type": "vsN6",
+      "errors": []
+    }
+  ]
+}

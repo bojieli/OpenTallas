@@ -1,0 +1,108 @@
+{
+  "schema": "opentallas.hbm.tkx.site_candidate.v1",
+  "status": "REVIEW_CANDIDATE_NOT_ADOPTED",
+  "raw_bits": 2341,
+  "beat_bits": 1171,
+  "pulse_bits": {
+    "lsb": 2332,
+    "width": 9
+  },
+  "hold_bits": 0,
+  "sites": [
+    {
+      "type": "q_hub_nw",
+      "origin_um": [
+        34.56,
+        1321.92
+      ],
+      "outline_um": [
+        302.4,
+        302.4
+      ],
+      "area_um2": 91445.76,
+      "collisions": [],
+      "nearest_hard_cores": [
+        [
+          17.28,
+          "u_hb_coll_Q_edge"
+        ],
+        [
+          17.28,
+          "u_vmb_Q3"
+        ],
+        [
+          362.88,
+          "u_sfup_Q"
+        ]
+      ],
+      "adoption": "BLOCKED actual mapped cell count and exact per-bit endpoint/clock graph required"
+    },
+    {
+      "type": "root",
+      "origin_um": [
+        34.56,
+        1010.88
+      ],
+      "outline_um": [
+        129.6,
+        345.6
+      ],
+      "area_um2": 44789.76,
+      "collisions": [],
+      "nearest_hard_cores": [
+        [
+          17.28,
+          "u_tkm_SW_root"
+        ],
+        [
+          17.28,
+          "u_tkm_SW_tile0"
+        ],
+        [
+          34.56,
+          "u_host_cp_rxs"
+        ]
+      ],
+      "adoption": "BLOCKED actual mapped cell count and exact per-bit endpoint/clock graph required"
+    }
+  ],
+  "notes": [
+    "Old q3 RAW2341 L74 chains remain immutable evidence; replace them only after native bit permutation binds TX",
+    "TX to RX carries 1171 actual beat wires, not RAW2341",
+    "Capacity pending actual mapped TX/RX cells, no route or STA authorized",
+    "RX hard-pin interface still to be checked against delivered-reset actual root view"
+  ],
+  "auxiliary_root_access": [
+    {
+      "role": "cfg and69flitSbits candidate strip",
+      "origin_um": [
+        181.44,
+        984.96
+      ],
+      "outline_um": [
+        319.68,
+        17.28
+      ]
+    },
+    {
+      "role": "slot4 valid4 start1 candidate stdcell relay",
+      "xy_um": [
+        484,
+        1360.8
+      ],
+      "note": "8.64um root/leaf gap; exact site allocator and cohort padding pending"
+    }
+  ],
+  "root_input_pin_manifest": "/srv/opentallas-scratch2/claude/codex-hbm-physical-1309/root_delivered_rx_pin_manifest.json",
+  "review": {
+    "verdict": "PASS_COND_SITE_RESERVES_ONLY",
+    "viewed": true,
+    "failures_open": [
+      "mapped TX/RX cells and utilization",
+      "native raw bit permutation and typed1171beat channel",
+      "per-bit preTX and postRX station graph plus cohort equalization",
+      "actual nw_clk/root clock taps and delivered boot reset",
+      "parent G0C coreface repairs"
+    ]
+  }
+}
