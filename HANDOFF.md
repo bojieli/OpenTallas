@@ -353,3 +353,6 @@ CODEX: 2026-10-25 02:43 PDT QC-CORES su8 signed views archived codex/qc-cores-10
 2026-10-25 02:43 PDT CODEX: READY codex/hold-stop-1025@666c6ac70 pre-repair structural FF hold stop (<-100ps/>2000 true endpoints); 5 Tcl fixtures +39 hold-stop tests PASS.
 
 2026-10-25 02:43 PDT CODEX: GEOM split4 route PASS-COND + LEAFPLAN2/DEC12R PHY plan PASS-COND records fda531177; signoff FF-vclk correction smoke live; current proto gates stay held until CLEAN.
+2026-10-25 02:44 PDT CODEX: CLOCK pair-skew launch-source fix b0613e9d9 ready; routed head elemB TT63.68/62.02 FF59.39/57.26 verify0.000,35 testsPASS; original failed record retained.
+2026-10-25 02:43 PDT CODEX: S81 PORTFIX cfaaa9a09 pushed: scratch audit import fixed + die rewrite preserved; config/fault die-top gaps removed, mixed-source bind FAIL diagnosed, current-source re-elab and missing legacy mutants running.
+2026-10-25 02:45 PDT CODEX: HBM native HC integration PASS (cut0,width0,newFAIL0) on codex/hbm-native-1025@591bcf802; physical W128 sizing and B2o concrete-cut capacity reconciliation active.
