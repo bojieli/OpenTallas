@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "placement only",
+  "image": "nl_combined0719_review.png",
+  "findings": [
+    "Control corridor outside 5.4um macro halo: x441..455.7 y540..658.5 plus x330.3..455.7 y658.5..668.4; moves issue/s1/s2 toward split_fault318,741.",
+    "Keeps W vout pocket and unchanged macro placement/pin order/clock taps/PDN. Source body unchanged; existing four-stage reset adds2 boot cycles and0 data cycles.",
+    "No route approval: require actual placed density <=0.8, all data/reset hops <=405um, actual same-index chain/polarity mapping and postCTS structural review."
+  ],
+  "source": "NL l3rsvm + existing NK reset4 c53469487 + control corridor"
+}

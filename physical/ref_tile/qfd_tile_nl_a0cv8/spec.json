@@ -323,7 +323,8 @@
    "size": 16,
    "diameter_um": 35,
    "extra": "-distance_between_buffers 50"
-  }
+  },
+  "signoff_period_ps": 833.0
  },
  "refglob": "*",
  "inter": [],
@@ -401,7 +402,7 @@
  "slot_change_request": "QC-A0 10-24 v8: core clock = the v7 tap pins with 2 moved + 4 added in the hub (tools/qwen_romleaf/a0core/qfd_tile_nl_a0c8_pins.tcl, a0c8_nl_taps.json); declare per CB quad in physical/die_plan/qwen_compute/inputs/a0_core_taps.json (variants updated to the v8 kits). QC-P6-A0 10-23 v6: core clock = 31 interior M7 tap pins (tools/qwen_romleaf/a0core/qfd_tile_nl_a0c6_pins.tcl), each a die-spine M8->M7 drop at the plan insertion; declared per CB quad in physical/die_plan/qwen_compute/inputs/a0_core_taps.json. QC-P5 10-23 v4: core clock = 20 interior M7 tap pins (tools/qwen_romleaf/a0core/qfd_tile_nl_a0c4_pins.tcl), each a die-spine drop at equal arrival (80 per CB quad); the E-face ck pin is gone. QC-A0 10-23: core outline/pins = rpf (plan contents u_t00..u_t11); clock ports ck_* removed, one ck at E (457.824, 668.076). Report to QC-P2: core tap = ck pin, budget measured at gate.",
  "io_tcl": "tools/qwen_romleaf/a0core/qfd_tile_nl_a0c8_pins.tcl",
  "pin_hook_before_flops": [
-  "tools/qwen_romleaf/repack/qfd_tile_nl_a0v8_regions.tcl",
+  "tools/qwen_romleaf/a0core/nl_combined0719_hook.tcl",
   "tools/qwen_romleaf/repack/qfd_tile_nl_romleaf_rpf_request_decode.tcl"
  ],
  "pin_regs": {
@@ -419,15 +420,21 @@
   "OT_TAP_TARGET_PS": "250",
   "OT_A0_RST_TAPS": "tools/qwen_romleaf/a0core/a0c8_nl_rst_taps.tsv",
   "OT_TAP_PORT": "ck",
-  "OT_TAP_CLOCK": "core_clk"
+  "OT_TAP_CLOCK": "core_clk",
+  "OT_A0_RESET_PATHS": "tools/qwen_romleaf/a0core/a0c8_nl_reset_paths.tsv",
+  "GPL_ROUTABILITY_DRIVEN": "0"
  },
  "hold_merge": "CRITICAL A0 (critical_tiles.txt): gate PNG + checklist review only; no REVIEW.json / submit by the lane agent.",
  "reset_landing": {
   "enable": true,
-  "stages": 2,
+  "stages": 4,
   "clock": "ck",
+  "distributed_chain": true,
   "copies": {
    "rst_n": 32
+  },
+  "first_copies": {
+   "rst_n": 1
   }
  },
  "reset_relay_split": {
@@ -440,7 +447,7 @@
   "tools/qwen_romleaf/rc14_2000/release_placement_reservations.tcl",
   "tools/qwen_romleaf/a0core/a0_reset_taps6_release.tcl"
  ],
- "reroute_reason": "QC-A0 10-23: plan-derived core clock interface (one entry per planned core).",
+ "reroute_reason": "NL structural successor: retain vout W-pocket/ROM relief; move issue/s1/s2 control cone into macro-free upper ROM/east corridor next to split_fault; four-stage synchronous reset same-index chains (+2 boot, +0 data cycles). Placement only pending actual density/data/reset-hop review.",
  "safe_design_checklist": {
   "1_pins": "Pin helper and all data/clock/reset landing stages byte-exact original9873; no external pin movement. Every actual child origin43.2um lattice.",
   "2_reach": "Original per-consumer compact clock-sink placement groups retained during GPL; initial native landing ring spans and fixed hard-child/pin shapes unchanged. Actual reach and postrepair drift measured at gate.",
@@ -449,7 +456,7 @@
   "5_storage": "19 exact hard children NK/18 NL with original pin contracts and43.2 origins; node binding actual CLOSED NB1 record with exact inherited geometry, original provenance marker retained historically.",
   "6_floorplan": "Same820.8x907.2 hard layout and actual legal rows. Source FF reservations shape GPL only; opening adjacent repair row capacity fixes illegal wire placements causally at max3.4um displacement/0percentHPWL on actual failedODB.",
   "7_clock": "ONE core clock ck entered at 37 interior tap pins (R4 grid 400 um + v6 sink additions); face (pin) flop spread <= 80 ps TT+FF on RC and mean within 80 of 250 is the hard rule; per-tree insertion / sinks per tap are guidance.",
-  "8_reset": "Original two-edge reset landing and max32 relay splitting unchanged; no reset/data contract modification."
+  "8_reset": "Four-stage distributed same-index chain as NK (existing exact reset mechanism), +2 boot cycles/+0 data cycles; real-netlist reach must pass before routing."
  },
  "clock": "cts",
  "sdc_extra": [
