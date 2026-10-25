@@ -7,6 +7,7 @@
 // edge-for-edge identical to the historical cv_q / cdata_q / rv_q / rd_q; the column arrives one edge early from the
 // remainder (dv[LW-2]) and is captured at this pin (= dv[LW-1]).
 module qkd_ctrl_pc_port_child #(
+    parameter integer CORE_CLOCK = 0,
     parameter integer RQD = 64,
     parameter integer MUT = 0
 ) (
@@ -25,6 +26,16 @@ module qkd_ctrl_pc_port_child #(
     output wire [257:0] em_d,
     output wire         fault
 );
+    // CORE833 PHY write latency is7 cycles (ceil5x1024/833).
+    // The legacy controller data path is5 cycles; add2 data-only stages.
+    wire [287:0] wd_raw;
+    generate if(CORE_CLOCK)begin:g_wdata2
+        reg [287:0] wd_q1,wd_q2;
+        always @(posedge hclk)begin wd_q1<=wd_raw;wd_q2<=wd_q1;end
+        assign wd=wd_q2;
+    end else begin:g_wdata0
+        assign wd=wd_raw;
+    end endgenerate
     (* keep *) reg hr_q;
     always @(posedge hclk) hr_q <= hrst;
     wire h_rn = hr_q;
@@ -39,7 +50,7 @@ module qkd_ctrl_pc_port_child #(
     always @(posedge hclk) begin cdata_q <= kw_di; rd_q <= pi[288:1]; w_d_q <= w_d; end
     ot_qfd_emb_pcport #(.KVW(2), .RQD(RQD), .MUT(MUT)) u_port (
         .clk(hclk), .rst_n(h_rn), .col_v(col_v_q), .col_we(col_we_q), .col_sr(col_sr_q),
-        .w_v(w_v_q), .w_d(w_d_q), .wd(wd), .kw_v(cv_q), .kw_d(cdata_q),
+        .w_v(w_v_q), .w_d(w_d_q), .wd(wd_raw), .kw_v(cv_q), .kw_d(cdata_q),
         .r_v(rv_q), .r_d(rd_q), .kv_v(kv_v), .kv_d(kv_d), .em_v(em_v), .em_d(em_d), .fault(fault));
 endmodule
 

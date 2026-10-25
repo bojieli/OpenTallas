@@ -1,0 +1,21 @@
+{
+  "status": "COMPONENT_PASS_NOT_NATIVE_BOOT_QUALIFIED",
+  "write_miter": {
+    "words": 128,
+    "changing_words": 125,
+    "added_data_cycles": 2,
+    "nominal": "PASS",
+    "bypass_one_stage_mutant": "FAIL_EXPECTED",
+    "host": "intel2",
+    "run": "/srv/opentallas-scratch2/claude/codex-kv-write-0553",
+    "unit": "oth-ubuntu-3423088-1792933133"
+  },
+  "observer": {
+    "WL5": "PASS",
+    "WL7": "PASS",
+    "corrupt_physical_data_mutants": "FAIL_EXPECTED",
+    "unit": "oth-ubuntu-3438088-1792933222"
+  },
+  "inherited_failure_diagnosis": "First WDATA beat was driven before hr_q reset release; 3 words queued then4WR consumed random fourth entry. Wait4edges before traffic repairs vehicle.",
+  "native_boot": "NOT_RUN_WITH_WRITE_FIX"
+}

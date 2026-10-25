@@ -349,7 +349,7 @@ module qkd_ctrl_pc_host_static_core #(
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) fo <= 1'b0;
         else fo <= fo | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | raw_bad | native_observer_fault;
-    qkd_static_kv_write_observer #(.STRICT(PROFILE==0)) u_native_write_observer(
+    qkd_static_kv_write_observer #(.STRICT(PROFILE==0),.WL(CORE_CLOCK ? 7 : 5)) u_native_write_observer(
         .hclk(hclk),.rst_n(h_rn),.po(po),.static_column(physical_col_sr),.expected_static_column(expected_sr_pipe[3]),.context_word(physical_context),
         .commit_valid(obs_commit_valid),.commit_identity(obs_commit_identity),.commit_address(obs_commit_address),.fault(native_observer_fault));
     // Output pin stage (structural fix of the e2 native_commit_identity output path): the observer's commit flops sit
@@ -1141,7 +1141,7 @@ endmodule
 // KVCTRL core_s7: observer child -- the native write observer behind input pin registers (po / context / static column /
 // expected static column all delayed by the same one hclk edge, so the observer's internal alignment is unchanged) and
 // the native commit output pin registers. Observation +1 hclk vs core_s6 (observation only; no traffic edge).
-module qkd_ctrl_pc_obs_child #(parameter integer PROFILE = 0)(
+module qkd_ctrl_pc_obs_child #(parameter integer PROFILE = 0, CORE_CLOCK = 0)(
     input  wire         pll_hbm,
     input  wire         hrst,
     input  wire [327:0] po,
@@ -1164,7 +1164,7 @@ module qkd_ctrl_pc_obs_child #(parameter integer PROFILE = 0)(
     always @(posedge hclk or negedge h_rn) if(!h_rn)begin po_q<=0;sc_q<=0;esc_q<=0;end else begin po_q<=po;sc_q<=static_column;esc_q<=expected_static_column;end
     always @(posedge hclk) ctx_q<=context_word;
     wire [60:0] obs_commit_identity; wire [28:0] obs_commit_address;
-    qkd_static_kv_write_observer #(.STRICT(PROFILE==0)) u_native_write_observer(
+    qkd_static_kv_write_observer #(.STRICT(PROFILE==0),.WL(CORE_CLOCK ? 7 : 5)) u_native_write_observer(
         .hclk(hclk),.rst_n(h_rn),.po(po_q),.static_column(sc_q),.expected_static_column(esc_q),.context_word(ctx_q),
         .commit_valid(obs_commit_valid),.commit_identity(obs_commit_identity),.commit_address(obs_commit_address),.fault(fault));
     (* keep *) reg nc_v_q;(* keep *) reg [60:0] nc_id_q;(* keep *) reg [28:0] nc_ad_q;
