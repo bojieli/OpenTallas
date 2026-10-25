@@ -515,6 +515,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
     if ist:
         shutil.copyfile(ist[0], kd / "istations.tcl")
+    # OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): FIRM sites of the reset entry stage + synchronous relay
+    # tree.  kit_rsync writes reset_tree.tcl next to bound kit RTL; a gen_rtl kit of a pipelined plan gets it from the
+    # plan (the same tree gen_rtl emitted).
+    rtt = [Path(f).parent / "reset_tree.tcl" for f in rtl_files[:1] if (Path(f).parent / "reset_tree.tcl").is_file()]
+    import reset_tree as RT
+    if rtt:
+        shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
+    elif RT.pipelined(P):
+        (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
