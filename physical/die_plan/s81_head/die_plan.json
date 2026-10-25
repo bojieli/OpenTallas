@@ -1025,7 +1025,10 @@
      "kit": "physical/ref_tile/s81hd_tile_m",
      "cells": 50000,
      "params": {
-      "CV": "1"
+      "CV": "1",
+      "A_INPUT_STAGES": "1",
+      "MERGE_HOP": "1",
+      "CMP_STAGES": "2"
      },
      "bind": {
       "ck": "clk",
