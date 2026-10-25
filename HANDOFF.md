@@ -567,3 +567,6 @@ CODEX: 2026-10-25 07:39 PDT RESET sharedleaf false-zeroPASS FIXREADY cece3ea38d 
 2026-10-25 07:40 PDT CODEX: QC hc0/fwfaultfailure diagnosed stale m5preflight: exact48unusedfaultlanes already currentunloaded274 (plan0719setdiff0); realhead/SU/stationfaultpaths retained. Freshsource/elabPASS,7bcurrentbind next; noextra replan.
 2026-10-25 07:38 PDT CODEX: AUTOPILOT07:32 actual tick preserved KV failed checkpoints, held bulk waves and dispatched reviewed CP1 corrective pair; stale CP1 source rows superseded in coord8ed5b32ce5. Canary isolation/queued-flow matching/clock-cover correction READY e54d57b84e, true HBM3shared faults retained; original canary failures unchanged.
 2026-10-25 07:41 PDT CODEX: KV-KITS exact405FTlattice READYdb9b8251a3(all3053bits,max402.57/output19.71,+5832FF/+34slotcycles); parentf7fold; G2r2+macroinventorylive; oldioFT48GBjobsretained.
+CODEX: 2026-10-25 08:02 PDT HBM ring exactW128 analyticalcut PASS0errors worstpart0.5437/full0.2039 vsnativeold1.19; samearea2x4ring, sourcecodex/hbm-plan-0719. Nativewidths-before-PathFinder fixesprior0.6007FAIL retained. FullG0/FT/bind/clockstillopen.
+
+2026-10-25 07:43 PDT CODEX: parent-ID schema/validator+binder inputs READY source-onlybd298/92cbb/54fe/bd2d/af19;31schema/helperchecks+3end-to-endfixturesPASS (gold64/64+IDmutant). QC7b stillregenerating; no routeclaim.
