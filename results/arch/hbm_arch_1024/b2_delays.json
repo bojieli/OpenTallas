@@ -36,9 +36,6 @@
   "hb_idx__op_NW": {
    "VM_RT_EXTRA": 5
   },
-  "hb_quant_NW__quant_NW0_lg": {
-   "VM_RT": 3
-  },
   "hc_NE0": {
    "READ_RETURN": 23,
    "WRITE_RETURN": 37
@@ -788,7 +785,8 @@
    "bad": [
     "share hb_idx__nwsh.b_rq pairs driven by different clients ['hb_quant_NW__quant_NW0_lg', 'hb_quant_NW__quant_NW1_lg', 'hb_quant_NW__quant_NW2_lg', 'hb_quant_NW__quant_NW3_lg']",
     "hb_quant_NW__quant_NW0_lg.VM_RT = 0, need 3 (ref 0 + share hb_idx__nwsh excess 1 + face extra 2 + lanes 0 - ref lanes 0)"
-   ]
+   ],
+   "not_applied": "ot_hgi_qdq_lg_port_group_r2 has only BANKS (transport RL/DL fixed inside); NW-local, wired as r18h5"
   },
   {
    "inst": "hb_coll_NE",

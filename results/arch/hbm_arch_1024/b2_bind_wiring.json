@@ -120,7 +120,7 @@
   {
    "id": "D-DELAY",
    "kind": "param",
-   "status": "done (63 params from b2_delays.json)",
+   "status": "done (62 params from b2_delays.json)",
    "what": "every VM bank client / share round-trip param (d4g bank-latency rules), SEL_LAT and the root hub echo (CR_RT / ACK) re-derived from the plan lane latency table; regenerate with tools/hbm_b2/b2_delays.py when the plan changes"
   }
  ],
@@ -236,10 +236,6 @@
   "hb_idx__op_NW": {
    "master": "ot_hbm_idx_vm_query_static_n12",
    "params": ".VM_RT_EXTRA(5)"
-  },
-  "hb_quant_NW__quant_NW0_lg": {
-   "master": "ot_hgi_qdq_lg_port_group_r2",
-   "params": ".BANKS(2), .VM_RT(3)"
   },
   "hc_NE0": {
    "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
