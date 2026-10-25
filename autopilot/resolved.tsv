@@ -43,3 +43,4 @@ PATH-QC-BTAB-S6	2026-10-25 09:07	NOT-ROUTE/SUPERSEDED	qfd_dv_s8x_btab__s6	PATH-Q
 PATH-KV plan f7ch	2026-10-25 09:36	NOT-ROUTE	KV plan geometry claude/path-kv-1025@cd5885c33b	PATH-KV	2026-10-25 10:18 PDT	plan-only PASS: geometry of the plan, nothing to route; kits follow under their own REQs
 PATH-S81/FT	2026-10-25 09:58	NOT-ROUTE	FT re-plan hi t6 + leaf t55 claude/path-s81-ft-1025@875763b6cb	PATH-S81	2026-10-25 10:45 PDT	plan-only PASS-COND -> G0C + G2 probes (running); partitions route under their own kit REQs
 PATH-KV-HUBWI	2026-10-25 10:02	NOT-ROUTE	kv3_hub_Wi plan claude/path-kv-hubwi-1025@8a79a4b45	PATH-KV	2026-10-25 10:45 PDT	plan geometry PASS-COND; the hub_Wi kit gets its own REQ
+slice_station__t47	2026-10-25 09:50	SUPERSEDED	structural.tsv d626956be69a	PROTO-KITS	2026-10-25 11:15 PDT	superseded per GEOM-REVIEW-2 10:0x (no route); successor via S81 batched delta
