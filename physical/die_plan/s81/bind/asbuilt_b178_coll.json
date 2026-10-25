@@ -1,5 +1,5 @@
 {
- "note": "TOK-DS/BIND 10-25: adopt178 (main) integrated S81 bind: CODEX PORTFIX r6 as-built (cap30 + boot/fault/dead ABI) + 24 frame forwards + six IDXNET lanes + four reserve PHYs; NO F2B (COORD gather ruling B, full-width fold); current sources from this branch (main + PORTFIX/IDXNET RTL); io_roles for the repeated SerDes PHY. | PATH-S81/COLL 10-25: + glue_follows_sinks (bit-preserving slice-top glue follows its loads)",
+ "note": "TOK-DS/BIND 10-25: adopt178 (main) integrated S81 bind: CODEX PORTFIX r6 as-built (cap30 + boot/fault/dead ABI) + 24 frame forwards + six IDXNET lanes + four reserve PHYs; NO F2B (COORD gather ruling B, full-width fold); current sources from this branch (main + PORTFIX/IDXNET RTL); io_roles for the repeated SerDes PHY. | PATH-S81/COLL 10-25: + glue_follows_sinks (bit-preserving slice-top glue follows its loads) | PATH-S81/SPLITS 10-25: + pack_by_sink (col_h9_r1 p3/p6 frame_int_i1 66-bit group rotation: source band r0 vs r0_nx named the same group differently) + type_canon (leaf t24/t25/t40/t44/t53/t54: auto-glue serial numbers and u_lf3/u_lf4 prefix only; structural names, merge confirmed by the complete signature).",
  "netlist": [
   "/srv/opentallas-scratch2/claude/tok-ds/bind178/asb/die_b178.v"
  ],
@@ -1154,5 +1154,7 @@
  "lint_jobs": 6,
  "string_parameter_compat": false,
  "frontend": "slang",
- "glue_follows_sinks": true
+ "glue_follows_sinks": true,
+ "pack_by_sink": true,
+ "type_canon": true
 }

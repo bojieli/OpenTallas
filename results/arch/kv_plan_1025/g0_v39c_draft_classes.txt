@@ -1,0 +1,12 @@
+613
+313 latency | lane L0: table says 8 cycles, plan gives 9
+236 faces | hg_EN_7.W: 106 pins in the 10-um window at 14070.60 (10.60/um > 6)
+56 abutment | type kv3_hg: instance hg_ES_0 pin table differs from hg_EN_0 (2262 entries, e.g. ft0_o[0] ('M4', 'W', 648.888)) -- a replicated type must have identical pins
+1 abutment | type kv3_hroot: instance hroot_WN pin table differs from hroot_EN (400 entries, e.g. ft10_i[0] ('M5', 'S', 1839.144)) -- a replicated type must have identical pins
+1 abutment | type kv3_hroot: instance hroot_WS pin table differs from hroot_EN (400 entries, e.g. ft10_i[0] ('M5', 'S', 1839.144)) -- a replicated type must have identical pins
+1 faces | hub_C.E: 85 pins in the 10-um window at 12990.60 (8.50/um > 6)
+1 faces | hub_Ei.W: 85 pins in the 10-um window at 12990.60 (8.50/um > 6)
+1 faces | hroot_WS.S: 128 pins in the 10-um window at 1358.94 (12.80/um > 6)
+1 faces | hroot_WN.N: 128 pins in the 10-um window at 1358.94 (12.80/um > 6)
+1 faces | hroot_ES.S: 128 pins in the 10-um window at 8944.86 (12.80/um > 6)
+1 faces | hroot_EN.N: 128 pins in the 10-um window at 8944.86 (12.80/um > 6)

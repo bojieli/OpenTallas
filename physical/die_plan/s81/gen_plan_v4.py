@@ -575,6 +575,21 @@ def derived_core_conns(types):
                 CORE_CONNS_OUT[tn] = ent
 
 
+# PATH-S81 10-25 (Codex S81-bind 14:13 EMIT finding): the slice hub's xrt master follows the slice's HB parameter, not
+# its plan master name.  As built (die top die_b178.v): u_s_3S = ot_s81sl_slice_iq_w3 #(.HB(1)) -> u_sl.g_c3.u_xr =
+# ot_s81sl_xrt3; u_s_4S = ot_s81sl_slice_c3x_k8_cap5r_w (HB=1 by construction) -> xrt3; every other normal slice HB=0
+# -> xrt1.  The old 'c3x' substring test planned xrt1 for dsdv_slice_iq (s_3S_C).  Fail closed if a c3x master ever
+# appears outside this set.
+SLICE_HB1 = ("s_3S", "s_4S")
+
+
+def slice_xrt(p, m):
+    hb = getattr(p, "group", None) in SLICE_HB1
+    if "c3x" in m and not hb:
+        raise SystemExit("slice_xrt: c3x master %s on %s outside SLICE_HB1 %s" % (m, p.name, SLICE_HB1))
+    return "xrt3" if hb else "xrt1"
+
+
 def nonframe_hc_key(p):
     m = p.contents[0]["module"] if p.contents else ""
     if p.kind == "svc":
@@ -582,7 +597,7 @@ def nonframe_hc_key(p):
     if p.kind == "slice":
         role = getattr(p, "role", "X")
         if role == "C":
-            return "C:xrt3" if "c3x" in m else "C:xrt1"
+            return "C:" + slice_xrt(p, m)
         if role.startswith("L") and "kv_leaf" not in m:
             return "leaf"
         return None
@@ -1736,7 +1751,7 @@ def cells_core_plan(p):
         role = getattr(p, "role", "X")
         m = p.contents[0]["module"] if p.contents else ""
         if role == "C":
-            k = "xrt3" if "c3x" in m else "xrt1"
+            k = slice_xrt(p, m)
             return C_CORES[k], 60000, "slice hub: xgt_xo/xrt/xfin/capc5r/eg measured; landing ~40k flops (glue est)"
         if role == "LP":
             mm = m.split(".")[0]

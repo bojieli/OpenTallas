@@ -18,6 +18,12 @@ Inputs (die_plan.json, key `asbuilt`; README "As-built binding"):
   resets        reset source pins replaced by the partition's own synchroniser (polarity low/high)
   substitute_inst  per-INSTANCE plan variant of a leaf master ({"inst": path regex, "module": variant}; ports a subset)
   internal_primitive_constants  opt-in: preserve existing literals inside Yosys glue primitives; named leaf pins stay strict
+  pack_by_sink  opt-in: a partition pair's crossing source pins are packed in the order of their sink pins (destination-
+                relative leaf, port), so every replica of a destination type receives one in-bus bit order
+  type_canon    opt-in: instances of one plan type whose signatures differ only by NAMES (Yosys/Slang auto glue names
+                such as $auto$opt_expr.cc:768:replace_const_cells$N / $N, or a whole-partition leaf-index prefix u_lf3 vs
+                u_lf4) are compared under structural names (canon_names) and, when the complete signature is equal
+                under that renaming, bind as one module; fails closed (ambiguous cells keep their names)
   straps        constant leaf inputs that are declared position straps (-> partition parameters); others are TIED
   map           {"parts": {path prefix: partition | [partition, local name]}, "rules": [[regex, partition], ...]}: every leaf / glue cell of the
                 as-built die maps to exactly one partition (longest prefix, then the first rule)
@@ -1147,8 +1153,16 @@ class Binder:
             # asbuilt.pack_by_rel (KV-P5 15:59 type-split ask): order a pair's source pins by their PARTITION-RELATIVE
             # leaf name, so replicas of one type pack the same pins onto the same lanes (full paths sort differently
             # per quadrant / instance and split the type by width packing)
-            items = sorted(groups.items(), key=(lambda kv: (self.rel_of(kv[0][0]), kv[0][1], F.cells[kv[0][0]].path))
-                           if self.ab.get("pack_by_rel") else (lambda kv: (F.cells[kv[0][0]].path, kv[0][1])))
+            # asbuilt.pack_by_sink (PATH-S81/SPLITS 10-25): order them by their SINK pins first (the destination's
+            # partition-relative (leaf, port), smallest first), so replicas of one destination type receive one bit
+            # order although their source partitions are different types (S81 col_h9 r1: the r0 vs r0_nx band below
+            # names the same 66-bit frame group differently, which rotated frame_int_i1 by 66 bits on p3/p6)
+            if self.ab.get("pack_by_sink"):
+                items = sorted(groups.items(), key=lambda kv: (min(self.cross_sinks[(sp, dp) + kv[0]], default=("", "")),
+                                                               self.rel_of(kv[0][0]), kv[0][1], F.cells[kv[0][0]].path))
+            else:
+                items = sorted(groups.items(), key=(lambda kv: (self.rel_of(kv[0][0]), kv[0][1], F.cells[kv[0][0]].path))
+                               if self.ab.get("pack_by_rel") else (lambda kv: (F.cells[kv[0][0]].path, kv[0][1])))
             if not use_lanes:
                 direct += [(sp, dp, sci, spn, sorted(bits)) for (sci, spn), bits in items]
                 continue
@@ -1341,29 +1355,31 @@ class Binder:
         return best
 
     # -- types
-    def type_signature(self, p):
-        """canonical description of partition p (relative names); per-instance values separated out."""
+    def type_signature(self, p, names=None):
+        """canonical description of partition p (relative names); per-instance values separated out.
+        names: {ci: name} overrides rel_of (asbuilt.type_canon structural names; see canon_names)."""
         F = self.F
+        nm = (lambda ci: names.get(ci) or self.rel_of(ci)) if names else self.rel_of
         leaves = {}
         inst_vals = {}
         for ci in self.members[p]:
             c = F.cells[ci]
-            r = self.rel_of(ci)
+            r = nm(ci)
             leaves[r] = (c.module, tuple(sorted(c.params)), self.G.kind[ci], c.ytype if self.G.kind[ci] == "glue" else None)
             for k, v in sorted(c.params.items()):
                 inst_vals[("param", r, k)] = v
         conns = {}
         for ci in self.members[p]:
-            r = self.rel_of(ci)
+            r = nm(ci)
             for pn, bits in self.F.cells[ci].ports.items():
                 if self.G.dirs[ci].get(pn) != "input":
                     continue
                 row = []
                 for i in range(len(bits)):
                     d = self.sinks[(ci, pn, i)]
-                    row.append(self._rel_desc(p, d, inst_vals, (r, pn, i)))
+                    row.append(self._rel_desc(p, d, inst_vals, (r, pn, i), nm))
                 conns[(r, pn)] = tuple(row)
-        obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((self.rel_of(it[1]), it[2], it[3]) if it[0] == "leaf" else
+        obus = sorted((L["oname"], ("plan", L["width"]) if L.get("plan") else tuple((nm(it[1]), it[2], it[3]) if it[0] == "leaf" else
                                          ("fwd", it[1]["iname"], it[2]) for it in L["items"]))
                       for L in self.out_bus[p])
         ibus = sorted((L["iname"], L["width"], lane_pad(L)) for L in self.in_bus[p])     # the source is outside the module
@@ -1372,7 +1388,7 @@ class Binder:
                    clocks=tuple(sorted(self.cport(p, d) for d in self.clk_dom[p])))
         if self.ab.get("io_roles"):
             sig["die_io"] = tuple((role, v["direction"], v["width"],
-                                   tuple((self.rel_of(d[1]), d[2], d[3]) for d in v["drivers"]))
+                                   tuple((nm(d[1]), d[2], d[3]) for d in v["drivers"]))
                                   for role, v in sorted(self.io_bindings(p).items()))
         return sig, inst_vals
 
@@ -1850,10 +1866,10 @@ class Binder:
                                  replica_sets=len(replicas), replica_unequal=sum(1 for r in replicas if not r["equal"])),
                     landing=groups, replica=replicas)
 
-    def _rel_desc(self, p, d, inst_vals, where):
+    def _rel_desc(self, p, d, inst_vals, where, nm=None):
         k = d[0]
         if k == "int":
-            return ("int", self.rel_of(d[1]), d[2], d[3], d[4])
+            return ("int", (nm or self.rel_of)(d[1]), d[2], d[3], d[4])
         if k == "x":
             L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
             return ("bus", L["iname"], j) + ((d[7],) if len(d) > 7 else ())
@@ -1861,7 +1877,7 @@ class Binder:
             inst_vals[("strap",) + where] = d[1]
             return ("strap",)
         if k in ("or", "and"):
-            return (k, tuple(self._rel_desc(p, x, inst_vals, where + (j,)) for j, x in enumerate(d[1])))
+            return (k, tuple(self._rel_desc(p, x, inst_vals, where + (j,), nm) for j, x in enumerate(d[1])))
         if k == "clk":
             return ("clk", self.cport(p, d[1]))
         if k == "top" and self.ab.get("io_roles"):
@@ -1944,6 +1960,144 @@ class Binder:
         """the partition module's clock port that carries die clock domain d"""
         return "clk" if d == self.default_domain(p) else f"clk_{sv_id(self.clk_role(p, d))}"
 
+    def canon_names(self, p):
+        """asbuilt.type_canon: structural names for comparing partition p with the other instances of its type.
+
+        Named cells keep their relative name, minus the common parent prefix of all named cells ("@" marks a stripped
+        name), so a leaf partition rooted one level up (glue_follows_sinks moved a slice-level $buf in) compares equal
+        across leaf indices.  Auto-named cells (last path segment '$...': Yosys $auto$...$N, Slang $N) are named by a
+        Weisfeiler-Lehman hash of their type, parameters, port shape, parent and the complete per-bit fan-in and
+        intra-partition fan-out, refined to a fixpoint; cells still tied are individualised by the natural order of
+        their original names and refined again.  A cell whose final hash is still not unique keeps its (stripped)
+        original name.  The names only serve to FIND a correspondence: _canon_merge accepts it only when the complete
+        signature (every cell, parameter key and per-bit connection) is equal under it, so no guess can merge
+        different hardware."""
+        F, G = self.F, self.G
+        mem = self.members[p]
+        raw = {ci: self.rel_of(ci) for ci in mem}
+
+        def is_auto(r):             # '$...' hierarchy component ('.' may occur inside it: $auto$opt_expr.cc:768:...)
+            return r.startswith("$") or ".$" in r
+        named = [r for r in raw.values() if not is_auto(r)]
+        pre = common_root(named) if named else ""
+        base = {ci: ("@" + r[len(pre) + 1:] if pre and r.startswith(pre + ".") else r) for ci, r in raw.items()}
+        autos = sorted(ci for ci in mem if is_auto(raw[ci]))
+        if not autos:
+            return base
+        aset = set(autos)
+
+        def h(x):
+            return hashlib.sha256(repr(x).encode()).hexdigest()
+
+        def parent(ci):             # the hierarchy above the auto component ('@' = the stripped common prefix)
+            return base[ci][:base[ci].index("$")].rstrip(".")
+        lab = {}
+        for ci in autos:
+            c = F.cells[ci]
+            lab[ci] = h((parent(ci), c.module, getattr(c, "ytype", None), sorted(c.params.items()),
+                         sorted((pn, G.dirs[ci].get(pn), len(b)) for pn, b in c.ports.items())))
+        fan = defaultdict(list)
+
+        def refs(cj, pn, i, d):
+            if d and d[0] == "int" and d[1] in aset:
+                fan[d[1]].append((cj, pn, i, d[2], d[3], d[4]))
+            elif d and d[0] in ("or", "and"):
+                for u in d[1]:
+                    refs(cj, pn, i, u)
+        for cj in mem:
+            for pn, bits in F.cells[cj].ports.items():
+                if G.dirs[cj].get(pn) == "input":
+                    for i in range(len(bits)):
+                        refs(cj, pn, i, self.sinks[(cj, pn, i)])
+        ins = {ci: [(pn, i, self.sinks[(ci, pn, i)]) for pn, bits in sorted(F.cells[ci].ports.items())
+                    if G.dirs[ci].get(pn) == "input" for i in range(len(bits))] for ci in autos}
+        def refine(lab):
+            n = len(set(lab.values()))
+            for _ in range(64):
+                if n == len(autos):
+                    break
+                nm = (lambda c: lab[c] if c in aset else base[c])
+                new = {}
+                for ci in autos:
+                    fi = tuple((pn, i, self._rel_desc(p, d, {}, (), nm)) for pn, i, d in ins[ci])
+                    fo = sorted((nm(cj), pn, i, sp, sb, st) for cj, pn, i, sp, sb, st in fan[ci])
+                    new[ci] = h((lab[ci], fi, fo))
+                lab = new
+                m = len(set(lab.values()))
+                if m == n:
+                    break
+                n = m
+            return lab
+
+        def natural(r):
+            return [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", r)]
+        lab = refine(lab)
+        for _ in range(8):
+            # cells the refinement cannot tell apart (symmetric, e.g. two $procmux of one RTL case with the same
+            # fan-in and fan-out): individualise by the natural order of their original names ($procmux$46183 <
+            # $procmux$46186; Yosys numbers one module's cells in one order), then refine again.  Any wrong guess
+            # only yields unequal signatures (kept split); _canon_merge accepts nothing the signature does not.
+            tied = defaultdict(list)
+            for ci in autos:
+                tied[lab[ci]].append(ci)
+            tied = {k: v for k, v in tied.items() if len(v) > 1}
+            if not tied:
+                break
+            for k, v in tied.items():
+                for rank, ci in enumerate(sorted(v, key=lambda ci: natural(raw[ci]))):
+                    lab[ci] = h((k, "rank", rank))
+            lab = refine(lab)
+        count = defaultdict(int)
+        for ci in autos:
+            count[lab[ci]] += 1
+        out = dict(base)
+        for ci in autos:
+            if count[lab[ci]] == 1:
+                out[ci] = parent(ci) + "|$wl_" + lab[ci][:24]          # '|' never occurs in a cell path
+        return out
+
+    def _canon_merge(self, tn, ps, sigs):
+        """asbuilt.type_canon: re-group the instances of type tn under canon_names; an instance whose canonical
+        signature equals an earlier instance's takes that reference's relative names (self.local), after which its
+        ordinary signature must equal the reference's exactly (else the renaming is undone: fail closed)."""
+        cn = {p: self.canon_names(p) for p in ps}
+        for p in ps:
+            if len(set(cn[p].values())) != len(cn[p]):
+                self.warns.append(f"TYPE_CANON {tn}: {p} canonical names not unique; type compared by raw names")
+                return
+        cs = {p: self.type_signature(p, cn[p])[0] for p in ps}
+        refs = []
+        merged = getattr(self, "type_canon_merged", [])
+        self.type_canon_merged = merged
+        for p in ps:
+            ref = next((r for r in refs if cs[r] == cs[p]), None)
+            if ref is None:
+                refs.append(p)
+                continue
+            if sigs[p][0] == sigs[ref][0]:
+                continue
+            inv = {v: ci for ci, v in cn[ref].items()}
+            old = {}
+            for ci in self.members[p]:
+                tgt = self.rel_of(inv[cn[p][ci]])
+                if tgt != self.rel_of(ci):
+                    old[ci] = self.local.get(ci)
+                    self.local[ci] = tgt
+            s = self.type_signature(p)
+            if s[0] == sigs[ref][0]:
+                sigs[p] = s
+                merged.append(dict(type=tn, inst=p, ref=ref, renamed=len(old)))
+            else:
+                for ci, v in old.items():
+                    if v is None:
+                        self.local.pop(ci, None)
+                    else:
+                        self.local[ci] = v
+                self.warns.append(f"TYPE_CANON {tn}: {p} vs {ref} canonical match not confirmed by the signature; kept split")
+        if merged:
+            self.warns.append(f"TYPE_CANON {tn}: " + ", ".join(f"{m['inst']}->{m['ref']} ({m['renamed']} renamed)"
+                                                               for m in merged if m["type"] == tn))
+
     def check_types(self):
         self.tsig, self.tvals, self.tparams = {}, {}, {}
         split_more = []
@@ -1955,6 +2109,8 @@ class Binder:
             sigs = {}
             for p in ps:
                 sigs[p] = self.type_signature(p)
+            if self.ab.get("type_canon") and any(sigs[q][0] != sigs[ps[0]][0] for q in ps[1:]):
+                self._canon_merge(tn, ps, sigs)
             groups = []                 # instances with identical contents share one module
             for p in ps:
                 for g in groups:
@@ -2927,6 +3083,7 @@ def cmd_bind(a):
     rep["variants"] = dict(instances=len(B.variants), removed_input_bits=dict(getattr(B, "variant_removed", {})),
                            list=B.variants[:500])
     rep["type_splits"] = B.type_splits
+    rep["type_canon_merged"] = getattr(B, "type_canon_merged", [])
     if B.param_regen:
         rep["param_regen"] = B.param_regen
         (out / "param_regen.json").write_text(json.dumps(B.param_regen, indent=1))

@@ -1,0 +1,117 @@
+{
+ "schema": "opentallas.kv_g2_type_table.v1",
+ "rule": "COORD KV RULING 2026-10-25 05:07 (a)",
+ "use_max_pct": 60.0,
+ "types": {
+  "kv3_hgi": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 15.72,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": null,
+   "leaf_blockages": null,
+   "wirelength_um": 6584496.0,
+   "probe": "/srv/opentallas-scratch2/claude/path-kv/f7ch_g2/kv3_hgi/part_kv3_hgi"
+  },
+  "kv3_hgi_v3": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 27.29,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": null,
+   "leaf_blockages": null,
+   "wirelength_um": 10524024.0,
+   "probe": "/srv/opentallas-scratch2/claude/path-kv/f7ch_g2/kv3_hgi_v3/part_kv3_hgi_v3"
+  },
+  "kv3_hgi_v5": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 20.58,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": null,
+   "leaf_blockages": null,
+   "wirelength_um": 6279675.0,
+   "probe": "/srv/opentallas-scratch2/claude/path-kv/f7ch_g2/kv3_hgi_v5/part_kv3_hgi_v5"
+  },
+  "kv3_hgi_v6": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 30.98,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": null,
+   "leaf_blockages": null,
+   "wirelength_um": 11980774.0,
+   "probe": "/srv/opentallas-scratch2/claude/path-kv/f7ch_g2/kv3_hgi_v6/part_kv3_hgi_v6"
+  },
+  "kv3_hub_Eo": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 17.86,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": null,
+   "leaf_blockages": null,
+   "wirelength_um": 7108924.0,
+   "probe": "/srv/opentallas-scratch2/claude/path-kv/f7ch_g2/kv3_hub_Eo/part_kv3_hub_Eo"
+  },
+  "kv3_hub_Wo": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 14.98,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": null,
+   "leaf_blockages": null,
+   "wirelength_um": 7232370.0,
+   "probe": "/srv/opentallas-scratch2/claude/path-kv/f7ch_g2/kv3_hub_Wo/part_kv3_hub_Wo"
+  },
+  "kv3_pc_v3": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.17,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": null,
+   "leaf_blockages": null,
+   "wirelength_um": 87618.0,
+   "probe": "/srv/opentallas-scratch2/claude/path-kv/f7ch_g2/kv3_pc_v3/part_kv3_pc_v3"
+  }
+ },
+ "summary": {
+  "pass": [
+   "kv3_hgi",
+   "kv3_hgi_v3",
+   "kv3_hgi_v5",
+   "kv3_hgi_v6",
+   "kv3_hub_Eo",
+   "kv3_hub_Wo",
+   "kv3_pc_v3"
+  ],
+  "fail": []
+ }
+}

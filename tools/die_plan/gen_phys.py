@@ -425,7 +425,7 @@ def _group_in_min(m):
 # ratio: ve_s 219.5/270.3 0.81, vmr_cqb 287.2/359.6 0.80, idx_vm 192/234 0.82, crh 240.6/292.5 0.82).  Sign-off
 # rebinds each corner to its routed RCX pin-register mean and FAILs when it is more than insertion_tol_ps away from
 # the bound value (signoff.py clock check).
-FF_TT_INSERTION_RATIO = 0.81
+FF_TT_INSERTION_RATIO = S.FF_TT_INSERTION_RATIO   # 0.81: one constant (schema)
 
 
 def insertion_binding(P, tn):
@@ -874,7 +874,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl"):
+              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl",
+              "pinreg_measure.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
