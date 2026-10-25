@@ -1859,6 +1859,47 @@ class Binder:
             self._wavefront_plan = schema.Plan(self.plan, self.plan_dir / "die_plan.json")
         return self._wavefront_plan
 
+    def bump_pins(self):
+        """declared HARD-IP LINE SIDE (B2, PATH-QC-B12 10-25): a plan type's contents[] / hard_cores[] entry may list
+        `bump_ports` [{pin, dir, width}] = pins of that hard core that leave the die (its bumps, e.g. a UCIe PHY's
+        link_* / far_*).  The as-built die has no line side, so these pins are ABSENT from the as-built netlist; the
+        binder connects each one to a partition port bump_<leaf>_<pin> and to a die-top port <partition>_<pin> (sv_id names) of the
+        same direction (no register, no logic: the bump is the hard IP's own pin).  Data-driven, no names; a plan
+        without the declaration binds byte-identically.  -> {part: [dict(ci, rel, pin, dir, width, pport, dport)]}"""
+        if getattr(self, "_bumps", None) is not None:
+            return self._bumps
+        F = self.F
+        res = {}
+        for p in sorted(self.members):
+            t = self.types[self.parts[p]["type"]]
+            for e in t.get("contents", []) + t.get("hard_cores", []):
+                if not e.get("bump_ports"):
+                    continue
+                cands = [ci for ci in self.members[p] if self.G.kind[ci] == "leaf" and
+                         (not e.get("module") or F.cells[ci].module == e["module"])]
+                named = [ci for ci in cands if e["inst"] in (self.rel_of(ci), "u_" + self.rel_of(ci), F.cells[ci].path)]
+                pick = named or cands
+                if len(pick) != 1:
+                    raise BindError(f"bump_ports {p}/{e['inst']} ({e.get('module')}): expected one bound hard-core leaf, "
+                                    f"found {len(pick)}")
+                ci = pick[0]
+                rel = self.rel_of(ci)
+                for b in e["bump_ports"]:
+                    pin, d, w = b["pin"], b["dir"], int(b["width"])
+                    if d not in ("input", "output") or w < 1:
+                        raise BindError(f"bump_ports {p}/{e['inst']}.{pin}: dir {d!r} / width {w} invalid")
+                    if pin in F.cells[ci].ports:
+                        raise BindError(f"bump_ports {p}/{e['inst']}.{pin}: an as-built pin of {F.cells[ci].path}; a "
+                                        "declared bump (hard-IP line side) must be absent from the as-built netlist")
+                    res.setdefault(p, []).append(dict(ci=ci, rel=rel, pin=pin, dir=d, width=w,
+                                                      pport=short_id(f"bump_{rel}__{pin}", 90),
+                                                      dport=short_id(f"{sv_id(p)}__{pin}", 120)))
+        names = [b["dport"] for bs in res.values() for b in bs]
+        if len(names) != len(set(names)):
+            raise BindError(f"bump_ports: die-top port names collide {sorted(n for n in names if names.count(n) > 1)[:5]}")
+        self._bumps = res
+        return res
+
     def emit(self, out):
         out = Path(out) / "rtl"            # generated RTL only; rewritten from scratch on every bind
         if out.exists():
@@ -1991,6 +2032,11 @@ class Binder:
         doms = sorted(self.clk_dom[p] - {self.default_domain(p)}, key=lambda d: self.cport(p, d))
         for d in doms:
             ports.append(f"    input  wire {self.cport(p, d)}")
+        bumps = {}
+        for b in self.bump_pins().get(p, []):
+            ports.append(f"    {b['dir']:6} wire [{b['width'] - 1}:0] {b['pport']}   // hard-IP line side (bump) "
+                         f"{b['rel']}.{b['pin']} -> die port")
+            bumps.setdefault(b["ci"], []).append((b["pin"], b["pport"]))
         decl, body = [], []
         P = self.wavefront_plan()
         rtree = None
@@ -2214,6 +2260,7 @@ class Binder:
                 elif dd == "input":
                     e = [expr(self.sinks[(ci, pn, i)], ci, pn, i) for i in range(len(bits))]
                     conns.append((pn, _concat(e)))
+            conns += bumps.get(ci, [])
             if G.kind[ci] == "glue":
                 insts.append(_glue(c, dict(conns), r))
                 continue
@@ -2268,6 +2315,8 @@ class Binder:
                 ports.insert(1, "    input  wire start")
         io = sorted({n for tn in self.by_type for n in self.io_used.get(tn, [])})
         ports += [f"    input  wire [{len(self.F.top_ports[n][1]) - 1}:0] {sv_id(n)}" for n in io]
+        bumps = self.bump_pins()
+        ports += [f"    {b['dir']:6} wire [{b['width'] - 1}:0] {b['dport']}" for p in sorted(bumps) for b in bumps[p]]
         wires, insts = [], []
         reset_in, reset_out = {}, {}
         P = self.wavefront_plan()
@@ -2327,6 +2376,7 @@ class Binder:
                 cs.append(f"        .{self.cport(p, d)}(clk_{sv_id(d)})")
             for n in self.io_used.get(tn, []):
                 cs.append(f"        .io_{sv_id(n)}({sv_id(n)})")
+            cs += [f"        .{b['pport']}({b['dport']})" for b in bumps.get(p, [])]
             for port, w in sorted(conn[p]):
                 cs.append(f"        .{port}({w})")
             pstr = (" #(" + ", ".join(ov) + ")") if ov else ""
@@ -2592,6 +2642,19 @@ def cmd_bind(a):
     sinks = {}
     for (ci, pn, i), d in B.sinks.items():
         sinks[f"{B.F.cells[ci].path}.{pn}[{i}]"] = _desc_json(B, d, B.cpart.get(ci))
+    try:
+        bumps = B.bump_pins()
+    except BindError:
+        bumps = {}                          # already reported as an EMIT error
+    for p, bs in sorted(bumps.items()):
+        for b in bs:
+            if b["dir"] == "input":         # the die-top port drives the hard core's line-side input (bind_verify)
+                for i in range(b["width"]):
+                    sinks[f"{B.F.cells[b['ci']].path}.{b['pin']}[{i}]"] = ["top", b["dport"]]
+    if bumps:
+        rep["bump_ports"] = [dict(die_port=b["dport"], dir=b["dir"], width=b["width"], partition=p,
+                                  leaf=f"{sv_id(p)}.{short_id('u_' + b['rel'], 90)}", pin=b["pin"], part_port=b["pport"])
+                             for p, bs in sorted(bumps.items()) for b in bs]
     (out / "bind_sinks.json").write_text(json.dumps(sinks))
     bg = B.bus_groups()
     rep["bus_groups"] = bg["summary"]
