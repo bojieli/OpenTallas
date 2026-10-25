@@ -1046,3 +1046,29 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   (1) TT setup -58.59 / 30 EP: u_f.m_u2 (ot_hdc_fp32_mul_x2, u^2) s2_sh -> y = 824 ps of logic in one stage (~31 levels: sub-normal shift by s2_sh, round KSA, carry, pack, fault mux). The same structure on u_exp.m_t failed at 04:38 and was cured with TFTZ (dead subnormal encode). Here u = t/(t+2) can be tiny, so u^2 subnormal is NOT obviously dead: no FTZ unless an equivalence proof like rxsf_ftz_eq.sh shows the o_u2 consumers (rxsb) see identical outputs. Default fix: move the stage boundary in mul_x2 (a CUT=2 mode: register sub_shifted/rb/st/is_sub after the shift, round+pack in the next stage); LM = 3 + PCUT grows by 1, d_u/d_mx delays follow T_U2, +1 cycle on the core (accepted range), lockstep bench + mutant, LEC vs the variant.
   (2) FF hold -2.73 / 20 EP at i_x[*] -> x_q: input ports vs vclk 250 ideal while FF pin-reg mean is 214.8 -> per-corner vclk binding (FF 202.5). No port buffers.
   Next: RTL successor (1) on this floorplan + (2), then autopilot route straight (placement already passed GEOM-REVIEW-3 06:59; no new geometry REQ needed unless the re-synth moves the pin regs). Delete this run data once the successor kits. Owner S81-CORES (CORES3/RT); told in lanes/S81-CORES.md.
+2026-10-25 08:12 PDT GEOM-REVIEW: POST-ROUTE [AUTOPILOT structural.tsv c48fe31df9f2] dsfd_su_t_rxsf rxsf_w (epyc2 s81-cores3-rt kits/dsfd_su_t_rxsf_w @1e47604d8; TT -58.59/30, FF -2.73/23). STRUCTURAL. Viewed paths.png, paths_zoom.png, floorplan.png, density.png (copies at rtx-pro:~/scratch/geomrev_sub/rxsf); read paths_tt_setup/paths_ff_hold and signoff.json.
+  Geometry still PASS, as at 06:59: pins spread on W96/E34, fill 0.43, and the failing paths are local (<~15 um).
+  Setup cause is logic depth: u_f.m_u2.s2_sh[2] -> u_f.m_u2.y[12] is ~30 cells (~750 ps) in 833. m_u2 is the same qmul normalise/round stage as u_exp.m_t, but the TFTZ fix (0 cycles) covered only u_exp.m_t. Skew is not the cause (launch 281 vs capture 267).
+  F1/F2: the routed pin-reg mean is TT 271 / FF 215 against the bound 249/199 (TT +21.6, just over the limit). Post-CTS placement RC CK is 196-205 vs RCX 256-290, so F2 is uncalibrated. The tree has a 3-stage serial BUFx4 entry (72 ps) plus 6 levels for a 140-um block.
+  FF -2.7 is the input -min -40 budget (shared flow item, see FLOW note below), not geometry.
+  Successor (1 variant):
+  (a) RTL: give u_f.m_u2 the TFTZ treatment (0-cycle proof + bench + mutant), or a register between s2_sh and round/y-select (+1 cycle via the S81 plan delta).
+  (b) Re-kit from synth on the rxsf_w pins with F2 RC in CTS/GRT/hold and a shallow entry (no serial chain), pin-reg mean within 20.
+  Owner: S81 path lane / S81-CORES (RT).
+2026-10-25 08:12 PDT GEOM-REVIEW: POST-ROUTE [AUTOPILOT structural.tsv 5ead1de2248f] slice_station__t24 (old kitsW recipe claude/s81-dec12-1024r@6c3989757; FF -25.93/3, face_guard shared 3). Viewed paths.png and floorplan.png. STRUCTURAL and SUPERSEDED.
+  Causes: rst_o_0/1/2 are launched by reset relays u_rrl_50/49/55 at FF CK 180 against vclk fixed 250 (F1), and those relays also drive a local load (a shared face reg, same as t20/t13).
+  The k1 re-kit [S81-KITS/R1 B] t24 already carries the per-corner basis, the STFG relay fix and face_guard incl. rst_o. No new successor. Withdraw the old kitsW t24 adopt row in queue.tsv and delete its run data. Owner S81-KITS.
+2026-10-25 08:12 PDT GEOM-REVIEW: POST-ROUTE [AUTOPILOT structural.tsv e72f8267ae87] kv3_pv_pair fd4_cc (intel1 kv-cores-1025r/par/kv3_pv_pair/fd4_cc @aba4a9446c; TT -0.02/1, FF -17.59/971, pair skew 80.7/85.5). STRUCTURAL. Viewed paths.png and floorplan.png (380x190; 8 SRAM 32x128 on the S edge; all signal pins N; fill 0.41).
+  Causes:
+  (1) F1 not applied: vclk is 250 at FF (ff_vclk_reference None) vs the FF pin-reg mean 210.5, so output hold fails.
+  (2) F6/F5 macro interface: SRAM clock vs old[] capture regs, pair skew 85 (g_mem[2].u_mem -> old[0][364]).
+  (3) An 11-level tree for 29.7k sinks with spread 89, and lane pairs split across leaves (F4). 447.6k cells is above the 400k cap.
+  (4) Setup: c_r face reg broadcasts unregistered to 16 lanes (the fd3 item, still open).
+  Successor (1 variant):
+  (a) Harden the replicated slice once (~190x190, ~224k cells, instanced twice).
+  (b) SRAM clock + capture regs on one regional tap, capture regs <=20 um from DO, macro insertion in the balance.
+  (c) A registered per-lane c_r stage (bench + mutant; any cycle via the KV plan delta).
+  (d) F1/F2/F4.
+  Owner: KV-CORES (KVG3-CORES).
+2026-10-25 08:12 PDT GEOM-REVIEW -> FLOW (cross-cutting, from hcore_eh1 / rxsf_w / head elem s4): the kit-wide 'input -min -40' at FF makes every input pin reg need ~57-64 ps of data delay. That is 11k hold buffers on hcore and ~2 per input everywhere. Per 9.7/5e, FF input hold uses the plan seam budget against the measured FF pin-reg I. Please make the seam min-delay come from the plan (neighbour routed launch) in the shared sign-off/hold SDC, once, not per kit. This is a structural flow item, not a waiver.
+2026-10-25 08:12 PDT GEOM-REVIEW-2: CLAIM [AUTOPILOT structural.tsv 8fffd9b75f35 qfd_tile_nk_a0c post-CTS hold -316/2066 + 92cd4ba072f2 cp1 col_h10_r0_p1__t1 post-CTS hold]
