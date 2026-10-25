@@ -44,6 +44,8 @@ def main():
     ap.add_argument("--new-mod", help="new top module name (strap master: kv3_astk)")
     ap.add_argument("--strap", action="append", default=[], help="NEW-only input PORT=VALUE held constant (ID straps)")
     ap.add_argument("--no-drops", action="store_true", help="old kit already carries the am g drop (compare 1:1)")
+    ap.add_argument("--mask", action="append", default=[],
+                    help="PORT=HEX random input AND-masked each cycle (small schedule ages so windows open between rare starts)")
     ap.add_argument("--bias", action="append", default=[],
                     help="PORT=BIT:N input bit set 1-in-N per cycle instead of the bit-0 1-in-4 default (e.g. a rare start, "
                          "so the chain state between starts is exercised; PATH-KV-ASTK 10-25 ES-swap mutant gap)")
@@ -59,6 +61,7 @@ def main():
     nmod = a.new_mod or mod
     straps = dict(s.split("=", 1) for s in a.strap)
     bias = [tuple(x.split("=", 1)) for x in a.bias]
+    masks = dict(x.split("=", 1) for x in a.mask)
     for bp, _ in bias:
         if bp not in cjo["port_decl"]:
             raise SystemExit(f"--bias port {bp} not in the old core")
@@ -160,6 +163,8 @@ def main():
             continue
         words = (hi + 32) // 32
         L.append(f"      i_{p} = {{{', '.join(['$urandom'] * words)}}}; i_{p}[0] = ($urandom % 4 == 0);")
+        if p in masks:
+            L.append(f"      i_{p} = i_{p} & {hi + 1}'h{masks[p]};")
         for bp, bv in bias:
             if bp == p:
                 bb, bn = bv.split(":")
