@@ -1,0 +1,1456 @@
+{
+ "total": {
+  "types": 72,
+  "station_bits": 401449,
+  "station_bits_core_core": 279903,
+  "station_bits_per_link_sum": 2617217,
+  "core_core_cycles": 1296,
+  "crossings": 471,
+  "max_hop_um": 405.0,
+  "overcore_fail_types": [],
+  "overcore_worst": 0.0,
+  "cut_worst": 0.672
+ },
+ "types": {
+  "ot_s81sl_leaf__t1": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5364,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36128,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6543,
+    "at": "x=300",
+    "bits": 29266
+   }
+  },
+  "ot_s81sl_leaf__t2": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5236,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36012,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6227,
+    "at": "x=300",
+    "bits": 27852
+   }
+  },
+  "ot_s81sl_leaf__t3": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5787,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36556,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6573,
+    "at": "x=300",
+    "bits": 29400
+   }
+  },
+  "ot_s81sl_leaf__t4": {
+   "entries": 337,
+   "core_core": 312,
+   "bus": 25,
+   "station_bits": 5208,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 35970,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.542,
+    "at": "x=300",
+    "bits": 24242
+   }
+  },
+  "ot_s81sl_leaf__t5": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5994,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36752,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 400.04,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5365,
+    "at": "x=400",
+    "bits": 23996
+   }
+  },
+  "ot_s81sl_leaf__t6": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5991,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36752,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 404.34,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5952,
+    "at": "x=400",
+    "bits": 26624
+   }
+  },
+  "ot_s81sl_leaf__t7": {
+   "entries": 339,
+   "core_core": 312,
+   "bus": 27,
+   "station_bits": 5334,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36099,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.542,
+    "at": "x=300",
+    "bits": 24242
+   }
+  },
+  "ot_s81sl_leaf__t8": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 6182,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36993,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 403.84,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.672,
+    "at": "x=350",
+    "bits": 30060
+   }
+  },
+  "ot_s81sl_leaf__t9": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5236,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36012,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6133,
+    "at": "x=300",
+    "bits": 27432
+   }
+  },
+  "ot_s81sl_leaf__t10": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5367,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36128,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5834,
+    "at": "x=350",
+    "bits": 26096
+   }
+  },
+  "ot_s81sl_leaf__t11": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 6777,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 37506,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5609,
+    "at": "x=300",
+    "bits": 25088
+   }
+  },
+  "ot_s81sl_leaf__t12": {
+   "entries": 338,
+   "core_core": 312,
+   "bus": 26,
+   "station_bits": 5664,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36428,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.586,
+    "at": "x=400",
+    "bits": 26210
+   }
+  },
+  "ot_s81sl_leaf__t13": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5363,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36128,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5718,
+    "at": "x=350",
+    "bits": 25578
+   }
+  },
+  "ot_s81sl_leaf__t14": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5461,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36290,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 396.74,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6007,
+    "at": "x=300",
+    "bits": 26870
+   }
+  },
+  "ot_s81sl_leaf__t15": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5993,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36753,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5365,
+    "at": "x=350",
+    "bits": 23996
+   }
+  },
+  "ot_s81sl_leaf__t16": {
+   "entries": 338,
+   "core_core": 312,
+   "bus": 26,
+   "station_bits": 5273,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36034,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5493,
+    "at": "x=400",
+    "bits": 24572
+   }
+  },
+  "ot_s81sl_leaf__t17": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5179,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36014,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5781,
+    "at": "x=300",
+    "bits": 25858
+   }
+  },
+  "ot_s81sl_leaf__t75": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 6275,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 37075,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6573,
+    "at": "x=300",
+    "bits": 29400
+   }
+  },
+  "ot_s81sl_leaf__t53": {
+   "entries": 338,
+   "core_core": 312,
+   "bus": 26,
+   "station_bits": 5666,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36428,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5245,
+    "at": "x=400",
+    "bits": 23460
+   }
+  },
+  "ot_s81sl_leaf__t54": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 6533,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 37261,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 405.0,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5365,
+    "at": "x=300",
+    "bits": 23996
+   }
+  },
+  "ot_s81sl_leaf__t21": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5365,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36129,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5521,
+    "at": "x=300",
+    "bits": 24694
+   }
+  },
+  "ot_s81sl_leaf__t22": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5236,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36012,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6511,
+    "at": "x=300",
+    "bits": 29122
+   }
+  },
+  "ot_s81sl_leaf__t23": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5012,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 35821,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6279,
+    "at": "x=400",
+    "bits": 28086
+   }
+  },
+  "ot_s81sl_leaf__t24": {
+   "entries": 339,
+   "core_core": 312,
+   "bus": 27,
+   "station_bits": 5334,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36096,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 399.41,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.542,
+    "at": "x=300",
+    "bits": 24242
+   }
+  },
+  "ot_s81sl_leaf__t25": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5957,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36751,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 399.99,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5365,
+    "at": "x=400",
+    "bits": 23996
+   }
+  },
+  "ot_s81sl_leaf__t26": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5954,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36751,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 399.99,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5658,
+    "at": "x=400",
+    "bits": 25310
+   }
+  },
+  "ot_s81sl_leaf__t27": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5364,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36129,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 403.7,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.542,
+    "at": "x=300",
+    "bits": 24242
+   }
+  },
+  "ot_s81sl_leaf__t28": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 6148,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36910,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 400.75,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6637,
+    "at": "x=300",
+    "bits": 29686
+   }
+  },
+  "ot_s81sl_leaf__t29": {
+   "entries": 338,
+   "core_core": 312,
+   "bus": 26,
+   "station_bits": 5549,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36310,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 398.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5153,
+    "at": "x=300",
+    "bits": 23048
+   }
+  },
+  "ot_s81sl_leaf__t30": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 6301,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 37061,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 399.23,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5365,
+    "at": "x=300",
+    "bits": 23996
+   }
+  },
+  "ot_s81sl_leaf__t31": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5364,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36128,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.587,
+    "at": "x=300",
+    "bits": 26256
+   }
+  },
+  "ot_s81sl_leaf__t32": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5236,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36012,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6209,
+    "at": "x=400",
+    "bits": 27772
+   }
+  },
+  "ot_s81sl_leaf__t33": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5429,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36174,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 395.48,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6578,
+    "at": "x=300",
+    "bits": 29422
+   }
+  },
+  "ot_s81sl_leaf__t34": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5368,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36129,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5718,
+    "at": "x=300",
+    "bits": 25578
+   }
+  },
+  "ot_s81sl_leaf__t35": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5831,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36557,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5245,
+    "at": "x=350",
+    "bits": 23460
+   }
+  },
+  "ot_s81sl_leaf__t36": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 6627,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 37357,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 404.0,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5886,
+    "at": "x=300",
+    "bits": 26326
+   }
+  },
+  "ot_s81sl_leaf__t37": {
+   "entries": 339,
+   "core_core": 312,
+   "bus": 27,
+   "station_bits": 5335,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36099,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5406,
+    "at": "x=300",
+    "bits": 24182
+   }
+  },
+  "ot_s81sl_leaf__t38": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5180,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36014,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6271,
+    "at": "x=300",
+    "bits": 28048
+   }
+  },
+  "ot_s81sl_leaf__t39": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5461,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36257,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 395.55,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5713,
+    "at": "x=300",
+    "bits": 25556
+   }
+  },
+  "ot_s81sl_leaf__t40": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5993,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36753,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5365,
+    "at": "x=350",
+    "bits": 23996
+   }
+  },
+  "ot_s81sl_leaf__t41": {
+   "entries": 338,
+   "core_core": 312,
+   "bus": 26,
+   "station_bits": 5273,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36034,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.52,
+    "at": "x=300",
+    "bits": 23258
+   }
+  },
+  "ot_s81sl_leaf__t42": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5179,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36014,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5781,
+    "at": "x=300",
+    "bits": 25858
+   }
+  },
+  "ot_s81sl_leaf__t43": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5459,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36290,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5985,
+    "at": "x=300",
+    "bits": 26772
+   }
+  },
+  "ot_s81sl_leaf__t44": {
+   "entries": 337,
+   "core_core": 312,
+   "bus": 25,
+   "station_bits": 5207,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 35970,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.542,
+    "at": "x=300",
+    "bits": 24242
+   }
+  },
+  "ot_s81sl_leaf__t45": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5361,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36128,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5493,
+    "at": "x=400",
+    "bits": 24572
+   }
+  },
+  "ot_s81sl_leaf__t46": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5238,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36045,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5945,
+    "at": "x=400",
+    "bits": 26592
+   }
+  },
+  "ot_s81sl_leaf__t47": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5459,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36290,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6279,
+    "at": "x=300",
+    "bits": 28086
+   }
+  },
+  "ot_s81sl_leaf__t48": {
+   "entries": 337,
+   "core_core": 312,
+   "bus": 25,
+   "station_bits": 5207,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 35970,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.542,
+    "at": "x=300",
+    "bits": 24242
+   }
+  },
+  "ot_s81sl_leaf__t49": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5993,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36753,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5365,
+    "at": "x=350",
+    "bits": 23996
+   }
+  },
+  "ot_s81sl_leaf__t50": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5991,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36753,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 395.55,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5658,
+    "at": "x=400",
+    "bits": 25310
+   }
+  },
+  "ot_s81sl_leaf__t51": {
+   "entries": 338,
+   "core_core": 312,
+   "bus": 26,
+   "station_bits": 5236,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36002,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.542,
+    "at": "x=300",
+    "bits": 24242
+   }
+  },
+  "ot_s81sl_leaf__t52": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5429,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36174,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 395.48,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6573,
+    "at": "x=300",
+    "bits": 29400
+   }
+  },
+  "ot_s81sl_leaf__t55": {
+   "entries": 338,
+   "core_core": 312,
+   "bus": 26,
+   "station_bits": 5272,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36034,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5596,
+    "at": "x=300",
+    "bits": 25030
+   }
+  },
+  "ot_s81sl_leaf__t56": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5457,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36257,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 400.99,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6429,
+    "at": "x=300",
+    "bits": 28758
+   }
+  },
+  "ot_s81sl_leaf__t57": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5235,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36012,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 404.67,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.614,
+    "at": "x=300",
+    "bits": 27466
+   }
+  },
+  "ot_s81sl_leaf__t58": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5044,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 35853,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6306,
+    "at": "x=300",
+    "bits": 28206
+   }
+  },
+  "ot_s81sl_leaf__t59": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5830,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36557,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5245,
+    "at": "x=350",
+    "bits": 23460
+   }
+  },
+  "ot_s81sl_leaf__t60": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5363,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36129,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.574,
+    "at": "x=350",
+    "bits": 25676
+   }
+  },
+  "ot_s81sl_leaf__t61": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5170,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 35981,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 403.82,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6511,
+    "at": "x=300",
+    "bits": 29122
+   }
+  },
+  "ot_s81sl_leaf__t62": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5907,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36681,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 403.73,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6573,
+    "at": "x=300",
+    "bits": 29400
+   }
+  },
+  "ot_s81sl_leaf__t63": {
+   "entries": 339,
+   "core_core": 312,
+   "bus": 27,
+   "station_bits": 5334,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36096,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 399.41,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.542,
+    "at": "x=300",
+    "bits": 24242
+   }
+  },
+  "ot_s81sl_leaf__t64": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5957,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36751,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 399.99,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5365,
+    "at": "x=400",
+    "bits": 23996
+   }
+  },
+  "ot_s81sl_leaf__t65": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5457,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36257,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 396.72,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6547,
+    "at": "x=350",
+    "bits": 29284
+   }
+  },
+  "ot_s81sl_leaf__t66": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5235,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36012,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 401.76,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6258,
+    "at": "x=350",
+    "bits": 27992
+   }
+  },
+  "ot_s81sl_leaf__t67": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5810,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36582,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 402.44,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6573,
+    "at": "x=300",
+    "bits": 29400
+   }
+  },
+  "ot_s81sl_leaf__t68": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5367,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36129,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.542,
+    "at": "x=300",
+    "bits": 24242
+   }
+  },
+  "ot_s81sl_leaf__t69": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5951,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36716,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 399.45,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5245,
+    "at": "x=300",
+    "bits": 23460
+   }
+  },
+  "ot_s81sl_leaf__t70": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5952,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36716,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 401.25,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5832,
+    "at": "x=400",
+    "bits": 26088
+   }
+  },
+  "ot_s81sl_leaf__t71": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5364,
+   "station_bits_core_core": 3887,
+   "station_bits_per_link_sum": 36129,
+   "core_core_cycles": 18,
+   "crossings": 6,
+   "max_hop_um": 395.06,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.542,
+    "at": "x=300",
+    "bits": 24242
+   }
+  },
+  "ot_s81sl_leaf__t72": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 6182,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36993,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 403.84,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.672,
+    "at": "x=350",
+    "bits": 30060
+   }
+  },
+  "ot_s81sl_leaf__t73": {
+   "entries": 341,
+   "core_core": 312,
+   "bus": 29,
+   "station_bits": 5236,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36012,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.6133,
+    "at": "x=300",
+    "bits": 27432
+   }
+  },
+  "ot_s81sl_leaf__t74": {
+   "entries": 340,
+   "core_core": 312,
+   "bus": 28,
+   "station_bits": 5367,
+   "station_bits_core_core": 3888,
+   "station_bits_per_link_sum": 36128,
+   "core_core_cycles": 18,
+   "crossings": 7,
+   "max_hop_um": 394.2,
+   "overcore_worst": 0.0,
+   "overcore_fails": [],
+   "overcore_n_fail": 0,
+   "stations_in_core": [],
+   "cut": {
+    "ratio": 0.5834,
+    "at": "x=350",
+    "bits": 26096
+   }
+  }
+ }
+}

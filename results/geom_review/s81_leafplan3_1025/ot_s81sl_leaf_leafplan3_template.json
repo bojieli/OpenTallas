@@ -1,0 +1,41 @@
+{
+ "req": "S81/LEAFPLAN3 leaf template (GEOM 03:33 LEAFPLAN2 FAIL fix)",
+ "author_verdict": "FAIL (not adoptable yet): G0C core_faces 12 ports/type face away (vn wl/n_* -> stores E of vn; vsw o_* S face -> vs above; rxsb); 396 ft stations added in 38 types; PROTO G2 gate not run",
+ "template": "4x4 hcpl block (pitch 129.6, rows = lanes 4k..4k+3 bit order) abutting abutted vn_a/vn_b W face; vq/stores, ve_s|ve_m, vs, vsw, rxsb/rxsf E; same relative arrangement in all 72 types (translation + bus-face MX only)",
+ "depth_table": {
+  "vn->lanes hq_v/hq_d (broadcast)": 2,
+  "lanes->vn hw_*/hr_* (gather)": 2,
+  "vn_a/b wl_*,n_go,n_pre -> stores": 1,
+  "vs<->rxsb ra_ri/ra_vi/ra_fi, rxsb o_f": 1,
+  "vs<->vsw sw_ri, vsw o_v": 1,
+  "all other core-core": 0,
+  "bus->core": "per type (window position), 1-4"
+ },
+ "leafplan3": {
+  "types": 72,
+  "station_bits": 401449,
+  "station_bits_core_core": 279903,
+  "station_bits_per_link_sum": 2617217,
+  "core_core_cycles": 1296,
+  "crossings": 471,
+  "max_hop_um": 405.0,
+  "overcore_fail_types": [],
+  "overcore_worst": 0.0,
+  "cut_worst": 0.672
+ },
+ "main": {
+  "types": 72,
+  "station_bits": 590985,
+  "station_bits_core_core": 542778,
+  "station_bits_per_link_sum": 593917,
+  "core_core_cycles": 862,
+  "crossings": 163784,
+  "max_hop_um": 404.93,
+  "overcore_fail_types": [],
+  "overcore_worst": 0.138,
+  "cut_worst": 0.2877
+ },
+ "g0": "130 errors (core_faces)",
+ "g0c": "562 errors, 106/178 types clean (main 178/178)",
+ "schema": "PASS"
+}
