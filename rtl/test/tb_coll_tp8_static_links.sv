@@ -54,7 +54,20 @@ module tb_coll_tp8_static_links #(
     reg [FW-1:0] sum  [0:MAXW-1];
     reg [159:0]  cmdv [0:4095];
     reg [73:0]   pwv  [0:255];        // {addr 10, data 64}
-    integer NMSG, NPW, START, DROP, CORRUPT, MAXCYC;
+    integer NMSG, NPW, START, DROP, CORRUPT, MAXCYC, PW0;
+`ifdef OT_TP8S_WAVEFRONT
+    // QC-TOK 10-25 (owner decision 13, opt-in): WAVEFRONT reset.  Die g's rst_n deasserts at WF_D0 + skew(g) (dies have
+    // independent rst_n; skew(g) = ((5g+3) mod 8) * WF_SKEW); each die partition of the collective path releases its
+    // flops a PUBLISHED number of clocks after its die's rst_n (bind_reset.json parts[].release, plusargs below; the
+    // bench maps them).  The schedule starts on the explicit START broadcast (+START, one cycle on every die), never on
+    // a reset edge.  Partition -> tb instance (bind_names.json of the r3 wavefront bind):
+    //   WF_CORE coll_core: u_io.u_collective (collective + IO calendar), u_io.g_face[0..1] (UCIe P / R faces)
+    //   WF_N    coll_n   : u_io.g_face[2] (SerDes face 0)      WF_S coll_s: u_io.g_face[3..4] (SerDes faces 1, 2)
+    //   WF_UCIE coll_ucie: u_io.u_shared + u_io.g_six_five.u_gearbox + the UCIe PHY model (io_ucie)
+    //   WF_FT   coll_f0..f5 (feedthrough transport stages) -> the SerDes faces' paid relay rows (latest coll_f release)
+    //   WF_SERj io_serdes{,_1,_2}: SerDes PHY model of port j        WF_ISS: the issuer (cmd source sl_W5_fw)
+    integer WF_D0, WF_SKEW, WF_ISS, WF_CORE, WF_N, WF_S, WF_UCIE, WF_FT, WF_SER0, WF_SER1, WF_SER2;
+`endif
 `ifdef OT_TP8S_SEQSU
     // sequencer stage identity carried in every command/producer tag: {token, position, message}
     localparam [17:0] TOKEN = 18'h2A5C3;
@@ -73,7 +86,7 @@ module tb_coll_tp8_static_links #(
 
     // program write (all dies receive the same compiled stage program) and the stage start
     integer pi = 0;
-    wire pw_go = rst_n && cyc >= 20 && pi < NPW;
+    wire pw_go = rst_n && cyc >= PW0 && pi < NPW;   // PW0 = 20 unless +PW0 (wavefront: after the issuer release)
     wire [9:0]  pw_a = pwv[pi][73:64];
     wire [63:0] pw_d = pwv[pi][63:0];
     always @(posedge clk) if (pw_go) pi <= pi + 1;
@@ -112,6 +125,15 @@ module tb_coll_tp8_static_links #(
     generate
         for (g = 0; g < ND; g = g + 1) begin : g_die
             localparam integer P = g / 2, D = g % 2;
+`ifdef OT_TP8S_WAVEFRONT
+            wire [31:0] wf_t0 = WF_D0 + ((5 * g + 3) % 8) * WF_SKEW;     // die g rst_n deassert cycle
+            wire wf_iss = cyc >= wf_t0 + WF_ISS, wf_core = cyc >= wf_t0 + WF_CORE, wf_n = cyc >= wf_t0 + WF_N;
+            wire wf_s = cyc >= wf_t0 + WF_S, wf_ucie = cyc >= wf_t0 + WF_UCIE, wf_ft = cyc >= wf_t0 + WF_FT;
+            wire [2:0] wf_ser = {cyc >= wf_t0 + WF_SER2, cyc >= wf_t0 + WF_SER1, cyc >= wf_t0 + WF_SER0};
+`else
+            wire wf_iss = rst_n, wf_ucie = rst_n;
+            wire [2:0] wf_ser = {3{rst_n}};
+`endif
             // ---------------- issuer ----------------
 `ifdef OT_TP8S_SEQSU
             // Actual sequencer collective face (qfd_seq_su_collective_calendar, as instantiated by qfd_seq_su_static /
@@ -122,13 +144,13 @@ module tb_coll_tp8_static_links #(
             wire [49:0]  scmd;
             assign dh = {68'd0, pw_go, (10'd944 + pw_a), ((TAGBAD && pw_a == 10'd1) ? 64'd3 : pw_d), 1'b0, stage_start,
                          6'd0, (TOKMUT ? (TOKEN ^ 18'd1) : TOKEN), 10'd0, POSN};
-            qfd_seq_su_collective_calendar u_seqc (.ck(clk), .rsi(rst_n), .dh(dh), .cmd_free(cfree[g]), .cmd(scmd),
+            qfd_seq_su_collective_calendar u_seqc (.ck(clk), .rsi(wf_iss), .dh(dh), .cmd_free(cfree[g]), .cmd(scmd),
                 .cfg_ready(iact[g]), .fault(ifl[g]));
             assign icv[g] = scmd[49]; assign itag[g*TAGW +: TAGW] = scmd[48:17];
             assign imode[g] = scmd[16]; assign iwords[g*16 +: 16] = scmd[15:0];
             assign idone[g] = 1'b0;
 `else
-            ot_coll_cmd_issue #(.DEPTH(ISSUE_DEPTH), .BASE(0)) u_iss (.clk(clk), .rst_n(rst_n), .pw_v(pw_go), .pw_addr(pw_a),
+            ot_coll_cmd_issue #(.DEPTH(ISSUE_DEPTH), .BASE(0)) u_iss (.clk(clk), .rst_n(wf_iss), .pw_v(pw_go), .pw_addr(pw_a),
                 .pw_data(pw_d), .start(stage_start), .cmd_free(cfree[g]), .cmd_v(icv[g]), .cmd_mode(imode[g]),
                 .cmd_words(iwords[g*16 +: 16]), .cmd_tag(itag[g*TAGW +: TAGW]), .active(iact[g]), .done(idone[g]),
                 .fault(ifl[g]));
@@ -172,6 +194,43 @@ module tb_coll_tp8_static_links #(
             // Read-only source observations used by the existing latency meter.
 `ifdef OT_TP8S_PRODUCTION_WRAPPER
             assign upv[g]=u_parent.u_io.up_valid;assign dpv[g]=u_parent.u_io.dp_valid;
+`ifdef OT_TP8S_WAVEFRONT
+            // per-partition reset of the production parent's leaves (the parent has one rst_n port; the bound top gives
+            // each partition its own wavefront tap).  The parent's rst_n has no other load (u_io's five face kinds,
+            // relays, share, gearbox and the collective are all re-driven here).
+            initial begin
+                force u_parent.u_io.u_collective.rst_n = wf_core;
+                force u_parent.u_io.g_face[0].u_face.rst_n = wf_core;
+                force u_parent.u_io.g_face[1].u_face.rst_n = wf_core;
+                force u_parent.u_io.g_face[2].u_face.rst_n = wf_n;
+                force u_parent.u_io.g_face[3].u_face.rst_n = wf_s;
+                force u_parent.u_io.g_face[4].u_face.rst_n = wf_s;
+                force u_parent.u_io.u_shared.rst_n = wf_ucie;
+                force u_parent.u_io.g_six_five.u_gearbox.rst_n = wf_ucie;
+            end
+            if (RS0 > 0) begin : g_wf_r0
+                initial begin force u_parent.u_io.g_face[2].g_relay.u_txrelay.rst_n = wf_ft;
+                               force u_parent.u_io.g_face[2].g_relay.u_rxrelay.rst_n = wf_ft; end
+            end
+            if (RS1 > 0) begin : g_wf_r1
+                initial begin force u_parent.u_io.g_face[3].g_relay.u_txrelay.rst_n = wf_ft;
+                               force u_parent.u_io.g_face[3].g_relay.u_rxrelay.rst_n = wf_ft; end
+            end
+            if (RS2 > 0) begin : g_wf_r2
+                initial begin force u_parent.u_io.g_face[4].g_relay.u_txrelay.rst_n = wf_ft;
+                               force u_parent.u_io.g_face[4].g_relay.u_rxrelay.rst_n = wf_ft; end
+            end
+            if (RU > 0) begin : g_wf_ru
+                initial $fatal(1, "OT_TP8S_WAVEFRONT: UCIe relays (RU>0) have no partition map");
+            end
+            // release witness: every partition reset low one cycle before its release and high at it (die g)
+            always @(posedge clk) begin
+                if (cyc == wf_t0 + WF_CORE - 1 && u_parent.u_io.u_collective.rst_n) $display("WF_BAD die=%0d core early", g);
+                if (cyc == wf_t0 + WF_S - 1 && u_parent.u_io.g_face[4].u_face.rst_n) $display("WF_BAD die=%0d coll_s early", g);
+                if (cyc == START && !(wf_core && wf_n && wf_s && wf_ucie && wf_ft && (&wf_ser) && wf_iss))
+                    $display("WF_START_BEFORE_RELEASE die=%0d start=%0d t0=%0d", g, START, wf_t0);
+            end
+`endif
             assign sxv[g*3+:3]={u_parent.u_io.sx2_valid,u_parent.u_io.sx1_valid,u_parent.u_io.sx0_valid};
             assign srv[g*3+:3]={u_parent.u_io.sr2_valid,u_parent.u_io.sr1_valid,u_parent.u_io.sr0_valid};
 `else
@@ -180,6 +239,9 @@ module tb_coll_tp8_static_links #(
             assign srv[g*3+:3]={u_parent.sr2_valid,u_parent.sr1_valid,u_parent.sr0_valid};
 `endif
 `else
+`ifdef OT_TP8S_WAVEFRONT
+            initial $fatal(1, "OT_TP8S_WAVEFRONT needs the production parent (--six-five)");
+`endif
             assign shareflt[g]=0;
             // ---------------- collective ----------------
 `ifdef OT_TP8S_QFD
@@ -246,7 +308,7 @@ module tb_coll_tp8_static_links #(
 `endif
             // ---------------- PHY models (link domain, fixed latency) ----------------
             if(SHARED)begin:g_one_ucie
-            tb_phy_pipe #(.W(1043),.L((SIXFIVE?4:PU)+XU))u_phy(.clk(SIXFIVE?fdi_ck:lck),.rst_n(rst_n),.v_in(sharetxv[g]),.d_in(sharetx[g*1043+:1043]),.flip(1'b0),.v_out(sharerxv[g^1]),.d_out(sharerx[(g^1)*1043+:1043]));
+            tb_phy_pipe #(.W(1043),.L((SIXFIVE?4:PU)+XU))u_phy(.clk(SIXFIVE?fdi_ck:lck),.rst_n(wf_ucie),.v_in(sharetxv[g]),.d_in(sharetx[g*1043+:1043]),.flip(1'b0),.v_out(sharerxv[g^1]),.d_out(sharerx[(g^1)*1043+:1043]));
             assign prxv[g]=0;assign rrxv[g]=0;assign prx[g*FP+:FP]=0;assign rrx[g*FR+:FR]=0;
             end else begin:g_dual_diagnostic
             tb_phy_pipe #(.W(FP), .L(PU + XU)) u_pp (.clk(lck), .rst_n(rst_n), .v_in(ptxv[g]), .d_in(ptx[g*FP +: FP]),
@@ -293,7 +355,7 @@ module tb_coll_tp8_static_links #(
                                  j, NTJ, NTVJ, KTJ, KTVJ, c_to - c_ti, R2, J2, NRJ, NRVJ, KRJ, KRVJ, c_ro - c_ri);
                 end
 `else
-                tb_phy_pipe #(.W(FP), .L(PS + XS + ETJ + ERJ), .LV((j == 2) ? EV2 : 0)) u_sp (.clk(lck), .rst_n(rst_n), .v_in(stxv[g*3 + j]),
+                tb_phy_pipe #(.W(FP), .L(PS + XS + ETJ + ERJ), .LV((j == 2) ? EV2 : 0)) u_sp (.clk(lck), .rst_n(wf_ser[j]), .v_in(stxv[g*3 + j]),
                     .d_in(stx[(g*3 + j)*FP +: FP]), .flip(g == 6 && j == 0 && CORRUPT >= 0 && nf == CORRUPT),
                     .v_out(srxv[R2*3 + J2]), .d_out(srx[(R2*3 + J2)*FP +: FP]));
 `endif
@@ -373,6 +435,22 @@ module tb_coll_tp8_static_links #(
         if (!$value$plusargs("NMSG=%d", NMSG)) NMSG = 1;
         if (!$value$plusargs("NPW=%d", NPW)) NPW = 0;
         if (!$value$plusargs("START=%d", START)) START = 40;
+        if (!$value$plusargs("PW0=%d", PW0)) PW0 = 20;
+`ifdef OT_TP8S_WAVEFRONT
+        WF_D0 = 15;   // = the cycle the tb's rst_n (rcnt == F) deasserts
+        if (!$value$plusargs("WF_SKEW=%d", WF_SKEW)) WF_SKEW = 0;
+        if (!$value$plusargs("WF_ISS=%d", WF_ISS)) WF_ISS = 0;
+        if (!$value$plusargs("WF_CORE=%d", WF_CORE)) WF_CORE = 0;
+        if (!$value$plusargs("WF_N=%d", WF_N)) WF_N = 0;
+        if (!$value$plusargs("WF_S=%d", WF_S)) WF_S = 0;
+        if (!$value$plusargs("WF_UCIE=%d", WF_UCIE)) WF_UCIE = 0;
+        if (!$value$plusargs("WF_FT=%d", WF_FT)) WF_FT = 0;
+        if (!$value$plusargs("WF_SER0=%d", WF_SER0)) WF_SER0 = 0;
+        if (!$value$plusargs("WF_SER1=%d", WF_SER1)) WF_SER1 = 0;
+        if (!$value$plusargs("WF_SER2=%d", WF_SER2)) WF_SER2 = 0;
+        $display("TP8SL_WF d0=%0d skew=%0d iss=%0d core=%0d n=%0d s=%0d ucie=%0d ft=%0d ser=%0d/%0d/%0d pw0=%0d start=%0d",
+                 WF_D0, WF_SKEW, WF_ISS, WF_CORE, WF_N, WF_S, WF_UCIE, WF_FT, WF_SER0, WF_SER1, WF_SER2, PW0, START);
+`endif
         if (!$value$plusargs("DROP=%d", DROP)) DROP = -1;
         if (!$value$plusargs("CORRUPT=%d", CORRUPT)) CORRUPT = -1;
         if (!$value$plusargs("MAXCYC=%d", MAXCYC)) MAXCYC = 400000;
