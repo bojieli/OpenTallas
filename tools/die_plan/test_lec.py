@@ -57,6 +57,11 @@ def test_array_maps_relates_the_two_frontend_layouts():
     assert len(maps) >= 2                                # outer-index reversed variants too
 
 
+def test_merged_copy_pairs_with_its_own_name_shape():
+    c = ["ff:u.g_ctl[1].u_c.g_c[0].f[0]", "ff:u.g_ctl[0].u_c.g_c[0].f[1]", "ff:u.g_ctl[0].u_c.g_c[0].f[0]"]
+    assert lec.closest("ff:u.g_ctl[0].u_c.g_c[10].f[0]", c)[0] == "ff:u.g_ctl[0].u_c.g_c[0].f[0]"
+
+
 def _sim_prove(m, *a, **k):
     """stand-in for ABC in pure-python tests: 1024 random patterns (enough for these tiny cones)."""
     val, mask = m.simulate(16, seed=12345)
@@ -88,6 +93,23 @@ def test_correspondence_pairs_a_renamed_register(tmp_path, monkeypatch):
     assert L.hyp[("gate", "ff:u_dut.q1x")] == ("eq", "gold", "ff:u_dut.q1", 0)
     m, kind = L.build(with_compare=True, with_hyp=True)
     assert set(_sim_prove(m).values()) == {"proved"}
+
+
+def test_rtl_x_is_a_dont_care(tmp_path, monkeypatch):
+    """gold q' = d | X (an out-of-range select): gate q' = 1 refines it (equal wherever the RTL is not X),
+    gate q' = 0 does not (d = 1)."""
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    g = tmp_path / "g.aig"
+    g.write_bytes(b"aig 4 2 1 0 1\n9\n" + bytes([3, 2]))            # inputs d, x; q' = !(!d & !x)
+    gm = {"input": {0: [("d", 0)]}, "latch": {0: [("u_dut.q$_DFF_P_.lecq", 0)]}, "output": {}}
+    for nxt, want in ((1, "proved"), (0, "differs")):
+        t = tmp_path / f"t{nxt}.aig"
+        t.write_bytes(f"aig 2 1 1 0 0\n{nxt}\n".encode())
+        tm = {"input": {0: [("d", 0)]}, "latch": {0: [("u_dut.q$_DFF_P_.lecq", 0)]}, "output": {}}
+        L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+        assert L.gx and "ff:u_dut.q" in L.matched
+        m, kind = L.build(with_compare=True, with_hyp=False)
+        assert _sim_prove(m)["ff:u_dut.q"] == want
 
 
 # ------------------------------------------------------------------------------------------------ integration
