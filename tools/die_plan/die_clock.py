@@ -821,7 +821,7 @@ def load_tree(d):
     return T
 
 
-def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0):
+def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False):
     """one balance pass: every tap up to the latest tap of its leaf, every child subtree up to its latest sibling,
     by wire pads on the child's last leg segment (a tap's last chain segment).  arrs: [(tap arr, node arr)] per
     corner; the delta is the corner mean.  Returns the largest residual delta (ps) before this pass."""
@@ -907,7 +907,7 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0):
         for k, _ in tree["nodes"][node]["kids"]:
             walk(k)
         mm = members(node)
-        level[node] = max((v - removable(t) for v, t in mm), default=None) if mm else None
+        level[node] = max((v - (removable(t) if take_back else 0.0) for v, t in mm), default=None) if mm else None
         if mm:
             level[node] = max(level[node], min(v for v, _ in mm))
             order.append(node)
@@ -952,7 +952,7 @@ def cmd_run(a):
             best = (max(sk.values()), it, dict(pads))
         if it == a.iters or max(sk.values()) <= a.stop_ps:
             break
-        pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads)
+        pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads, take_back=a.take_back)
     if best[1] != hist[-1]["iter"]:                 # keep the best iteration (the loop may oscillate)
         pads = best[2]
         st = emit(pads)
@@ -1210,6 +1210,8 @@ def main(argv=None):
     u.add_argument("--corner", action="append")
     u.add_argument("--libdir")
     u.add_argument("--iters", type=int, default=10)
+    u.add_argument("--take-back", action="store_true",
+                   help="balance may take surplus pad back (lower insertion; oscillates on very unbalanced trees)")
     u.add_argument("--stop-ps", type=float, default=2.0)
     s = sub.add_parser("sta")
     s.add_argument("dir")
