@@ -1,6 +1,7 @@
 #!/bin/bash
 # KVG3-CORES (gen_core_kit_kv.py): run one KV core kit through ORFS in docker: synth .. finish (TC), generate_abstract,
-# sdc_lint gate (CP1-R10, fail-closed) before synth, face_guard after synth (REPORT ONLY for cores),
+# sdc_lint gate (CP1-R10, fail-closed) before synth, face_guard after synth (REPORT ONLY for cores), LEC (lec.py,
+# 10-24) after face_guard: NOT EQUIVALENT stops the kit, UNPROVEN is recorded in lec/lec.json and the flow continues,
 # pin audit of the routed ODB, then corners.tcl at TT / FF (STA + write_timing_model), then signoff.py (SIGNED = closed).  Outputs chowned back.
 #   GOAL: finish (full ORFS finish incl. GDS merge: needs every macro GDS) | route (route + do-finish + abstract, no GDS
 #   merge: cores with SRAM macros whose GDS is missing) | place (review stop) | post (existing 6_final.odb: abstract,
@@ -20,6 +21,8 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   if [ \$rc = 0 ] && [ $GOAL != post ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json > /work/face_guard.log 2>&1; echo \"face_guard rc \$? (report only: core pins are leaf pins, not planned face registers)\"; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$D\" ] && { [ $GOAL != post ] || [ ! -f /work/face_guard_odb.json ]; }; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; python3 -I /work/face_guard.py /work/1_synth_odb.v --pins /work/pins.json --out /work/face_guard_odb.json > /work/face_guard_odb.log 2>&1; echo \"face_guard 1_synth.odb rc \$? (report only; signoff.py judges)\"; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/lec.py ] && [ -n \"\$N\" ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
+    if [ \$lr = 1 ]; then echo 'LEC NOT EQUIVALENT: the kit stops (lec/lec.json)'; rc=1; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = finish ] || [ $GOAL = route ] || [ $GOAL = post ]; }; then \$M do-generate_abstract; rc=\$?; fi; \
