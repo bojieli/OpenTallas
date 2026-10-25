@@ -295,6 +295,22 @@ def write_core_contract(kd, cj, clks, rsts):
         data_pin_exemptions=[]), indent=1) + "\n")
 
 
+def static_refresh_kit(rtl, kd):
+    """--kvspc-static-refresh (PATH-KV-PC5 10-25): the PC path controller instance (u_ctrl in
+    qkd_static_kv_pc_path_nc.sv, the only place the PC path sets the controller parameters; every level below threads
+    STATIC_REFRESH down to ot_qkd_static_kv_timing, default 0) gets .STATIC_REFRESH(1)."""
+    p = rtl / "qkd_static_kv_pc_path_nc.sv"
+    s = p.read_text()
+    old = "qkd_ctrl_pc_host_static_nc #(.ROW0(64),"
+    if s.count(old) != 1 or "STATIC_REFRESH" in s:
+        raise SystemExit(f"--kvspc-static-refresh: expected one u_ctrl instance without STATIC_REFRESH in {p}")
+    p.write_text(s.replace(old, "qkd_ctrl_pc_host_static_nc #(.STATIC_REFRESH(1), .ROW0(64),"))
+    (kd / "kvspc_static_refresh.json").write_text(json.dumps(dict(
+        transform="u_ctrl .STATIC_REFRESH(1) (qkd_static_kv_pc_path_nc.sv)", refresh="REFpb every T_REFIPB at REF_PHASE "
+        "(unchanged); bank = refresh_rr round robin (was run-time argmin of s1k/s2k)", requires="PULLIN=0, REF_MODE=1",
+        source="PATH-KV-PC4 15:19 observation; COORD rules adoption"), indent=1) + "\n")
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and "run" not in p.relative_to(kd).parts[:1]
@@ -357,6 +373,14 @@ def main():
                          "(old b -> b-1 above the dropped bit) in memory until the KV-PLAN3 delta lands (am_g_drop.py)")
     ap.add_argument("--kvspc-face-ports", action="store_true", help="kvs_pc / kvs_pc_h_head_p boundary recut: one clock (hck + HBM data clocks := ck), dead-pin drop (land_er[258:1]; head ki[30:21]/[14:1]) as an in-memory plan delta until KV-PLAN3 lands it, ki/ko split (+1 hclk per kc station), fi landing (+1 fault edge), po / land_es private port flops (0 cycles); miter results/kvspc_face_1025")
     ap.add_argument("--kvspc-private-ports", action="store_true", help="with --kvspc-face-ports: private output ports (kvspc_private_ports.py, PATH-KV-PC 10-25): return actual_* port flops with internal hold copy + actual_valid kept (0 cycles), o_grp[296:289] status pin flops (+1 fault/drain observation edge; o_grp[294] no longer a pc__fo feedthrough), o_prev private launch (+1 edge per o_prev hop, non-head), pi[0] single capture, pc/cfg_stack single landing (chain station reads the landed copy), head upo kept pin flops (0 cycles)")
+    ap.add_argument("--kvspc-static-refresh", action="store_true",
+                    help="with --kvspc-face-ports: PC controller u_ctrl (qkd_static_kv_pc_path_nc) instantiated with "
+                         "STATIC_REFRESH=1: REFpb bank = round-robin refresh_rr (compiler-known) instead of the run-time "
+                         "argmin of the bank-state keys; needs PULLIN=0 + REF_MODE=1 (ot_qkd_static_kv_timing $fatal "
+                         "otherwise; both hold on the PC path). PATH-KV-PC5 10-25 fallback variant, COORD rules adoption")
+    ap.add_argument("--lec-hints", default=None,
+                    help="untrusted LEC correspondence hints copied into the kit as lec_hints.json (lec.py proves each "
+                         "by induction and drops failing ones; never a waiver)")
     ap.add_argument("--stock-flow", action="store_true",
                     help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=0.6)
@@ -485,6 +509,8 @@ def main():
                     o_grp_289_296="+1 edge (fault / drain observation flags: cal_fault_hbm, completion_fault, drain_fault_core, drain_fault_hbm, er[260], fo copy, front_fault_go_hbm, front_fault_overflow_hbm)",
                     other=0), straps="pc__pc / pc__cfg_stack: one landing register per bit; strap_* rename = plan delta (STRAP_RENAME off)",
                 miter="results/kvspc_private_1025"), indent=1) + "\n")
+        if a.kvspc_static_refresh:
+            static_refresh_kit(kd / "rtl", kd)
         hd = mod.endswith("_h_head_p")
         (kd / "kvspc_face_delta.json").write_text(json.dumps(dict(
             plan_dropped_pins=KVSPC.dropped_pins(hd), plan_delta="IN-MEMORY until KV-PLAN3 lands it",
@@ -625,6 +651,8 @@ def main():
     shutil.copyfile(Path(a.tool) / "adder_map_dontuse.py", kd / "adder_map_dontuse.py")
     shutil.copyfile(Path(a.tool) / "selrange_gate.py", kd / "selrange_gate.py")
     shutil.copyfile(Path(a.tool) / "lec.py", kd / "lec.py")       # LEC 10-24: RTL vs netlist after synth (run_kit_kv.sh)
+    if a.lec_hints:
+        shutil.copyfile(a.lec_hints, kd / "lec_hints.json")         # lec.py reads KIT/lec_hints.json (PATH-KV-PC4)
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
     shutil.copyfile(Path(a.tool) / "signoff.py", kd / "signoff.py")
     shutil.copyfile(Path(a.tool) / "pair_skew.tcl", kd / "pair_skew.tcl")   # signoff.py reads it beside itself (crashed without it 10-25)
