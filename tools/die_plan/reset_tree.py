@@ -919,8 +919,16 @@ def core_reset_targets(P, tn):
     for c in t.get("hard_cores", []):
         pd = None
         if c.get("pins_file") and not Path(c["pins_file"]).is_absolute():
+            # The declaration's plan directory is authoritative. Pin tables may
+            # use "core" rather than "module" metadata, and the LEF may be absent
+            # during a logical bind, so do not infer context from either one.
+            if P.path is not None:
+                plan_dir = Path(P.path).resolve().parent
+                if (plan_dir / c["pins_file"]).is_file():
+                    pd = plan_dir
             lef = cores.resolve(c.get("lef", "."))
-            pd = next((a for a in lef.parents if (a / c["pins_file"]).is_file()), None)
+            if pd is None:
+                pd = next((a for a in lef.parents if (a / c["pins_file"]).is_file()), None)
             if pd is None:
                 # Views may live outside their plan (physical/ref_tile); resolve the plan-relative pin table by
                 # its declared module, and refuse differing candidates instead of silently choosing another die.

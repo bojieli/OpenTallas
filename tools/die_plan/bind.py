@@ -1806,7 +1806,7 @@ class Binder:
             return None
         if not hasattr(self, "_wavefront_plan"):
             import schema
-            self._wavefront_plan = schema.Plan(self.plan)
+            self._wavefront_plan = schema.Plan(self.plan, self.plan_dir / "die_plan.json")
         return self._wavefront_plan
 
     def emit(self, out):
