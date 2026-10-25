@@ -49,6 +49,8 @@ def main(argv=None):
     ap.add_argument("--types", default=r"^q_b[01]\d\d$|^q_su30$",
                     help="regex of the types that get die_ft_bands (default: the ruling's b0xx/b1xx blocks + su30)")
     ap.add_argument("--layers", nargs="*", default=["M4", "M6"])
+    ap.add_argument("--keep-turns", action=argparse.BooleanOptionalAction, default=True,
+                    help="ports of turn slots keep their windows (anchors), default on")
     ap.add_argument("--v-layers", nargs="*", default=["M5", "M7"])
     ap.add_argument("--die-share", type=float, default=1.0)
     a = ap.parse_args(argv)
@@ -141,8 +143,20 @@ def main(argv=None):
                 new_win[p] = [lo, hi]
 
         anchored, ftc, rest = [], [], []
+        def turn_end(p):
+            """port feeding / fed by a turn slot (E/W <-> N/S) of a row partition: its window stays, so the turn's
+            stations (sited for that corner) keep their hop lengths."""
+            for side in ("src", "dst"):
+                e = ports[p][side]
+                if e["part"] in parts and e["part"] not in a.fixed:
+                    s = slot_of(e["part"], e["bus"])
+                    if s and (s["in_face"] in "EW") != (s["out_face"] in "EW"):
+                        return True
+            return False
+
         for c in chains:
-            fx = [p for p in c if ports[p]["src"]["part"] in a.fixed or ports[p]["dst"]["part"] in a.fixed]
+            fx = [p for p in c if ports[p]["src"]["part"] in a.fixed or ports[p]["dst"]["part"] in a.fixed
+                  or (a.keep_turns and turn_end(p))]
             (anchored if fx else ftc if is_ft(c) else rest).append((c, fx))
         for c, fx in anchored:
             ws = {tuple(sorted(ports[p]["window_um"])) for p in fx}
