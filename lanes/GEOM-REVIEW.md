@@ -896,3 +896,4 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
   hd_spn_end: max 392.6, 0 >405 (was 1078, max 551); reset tree PASS 392.9; in <=10.0; out <=354.1; nearest-tap 2..1141 over 35 taps (was 2114).
   All: 0 interior signal pins on the M7 strap pair; face_guard/sdc_lint/port-bind/LEC preflight passed in the place runs.
   Known residuals (not kit-local): grid-tap load is uneven (taps with 1-12 sinks beside 1000+; none zero, kit clock_taps.tcl drops empty ones at CTS) -> decision-5 pair skew at sign-off; out legs ~354-364 um are the sender's 0.84 T share, the receiving face register (<=10 um) gets 0.16 T; dec-5 pair skew across each seam at sign-off. hd_st_turn is NOT the hd_turn_a/b strip (no 0.92 T t_i budget now). Autopilot rows queued --geom REQ (goal route).
+2026-10-25 07:05 PDT GEOM-REVIEW-2: CLAIM [S81-HEAD/KITS 07:05]
