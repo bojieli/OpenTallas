@@ -449,7 +449,8 @@
  ],
  "pre_dpl_extra": [
   "tools/qwen_romleaf/rc14_2000/release_placement_reservations.tcl",
-  "tools/qwen_romleaf/a0core/a0_reset_taps6_release.tcl"
+  "tools/qwen_romleaf/a0core/a0_reset_taps6_release.tcl",
+  "tools/qwen_romleaf/a0core/nl_a0v10c_dpl.tcl"
  ],
  "reroute_reason": "PATH-QC-NL 10-25 v10: combined0719 placement diverged (GPL-0307); structural control-corridor rebuild + clock-first SDC + core-only taps. NL structural successor: retain vout W-pocket/ROM relief; move issue/s1/s2 control cone into macro-free upper ROM/east corridor next to split_fault; four-stage synchronous reset same-index chains (+2 boot, +0 data cycles). Placement only pending actual density/data/reset-hop review.",
  "safe_design_checklist": {
