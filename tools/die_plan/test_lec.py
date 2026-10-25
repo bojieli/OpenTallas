@@ -437,3 +437,90 @@ def test_parse_config_make_append_and_conditional(tmp_path):
     assert env["VERILOG_DEFINES"] == "-DSYNTHESIS"
     assert env["SYNTH_BLACKBOXES"] == "ot_rom_bb"
     assert env["DESIGN_NAME"] == "top2"
+
+
+def _aig_bytes(ni, latches, ands):
+    """binary AIGER from ands [(r0, r1)] (lhs implied, in order after the inputs and latches; r0 >= r1)."""
+    def enc(x):
+        out = bytearray()
+        while x >= 0x80:
+            out.append((x & 0x7F) | 0x80)
+            x >>= 7
+        out.append(x)
+        return bytes(out)
+    nl, na = len(latches), len(ands)
+    b = f"aig {ni + nl + na} {ni} {nl} 0 {na}\n".encode() + b"".join(f"{n}\n".encode() for n in latches)
+    lhs = 2 * (ni + nl)
+    for r0, r1 in ands:
+        lhs += 2
+        r0, r1 = max(r0, r1), min(r0, r1)
+        b += enc(lhs - r0) + enc(r0 - r1)
+    return b
+
+
+def _exact_prove(m, *a, **k):
+    """exhaustive stand-in for ABC (every input pattern; <= 20 inputs): rare events are not missed."""
+    n = m.ni
+    assert n <= 20
+    W = 1 << n
+    mask = (1 << W) - 1
+    val = [0] * (n + len(m.ands) // 2 + 1)
+    for v in range(1, n + 1):
+        blk = 1 << (v - 1)
+        pat = ((1 << blk) - 1) << blk                     # blk zeros then blk ones, repeated
+        p, w = 0, 2 * blk
+        while w <= W:
+            p |= pat
+            pat <<= 2 * blk
+            w += 2 * blk
+        val[v] = p & mask
+    base = n + 1
+    for kk in range(len(m.ands) // 2):
+        r0, r1 = m.ands[2 * kk], m.ands[2 * kk + 1]
+        val[base + kk] = (val[r0 >> 1] ^ (mask if r0 & 1 else 0)) & (val[r1 >> 1] ^ (mask if r1 & 1 else 0))
+    return {nm: ("proved" if lec.lit_val(val, mask, o) == 0 else "differs") for nm, o in zip(m.onames, m.outs)}
+
+
+def _rare_twin(tmp_path, gold_r24_next_is_rare):
+    """elemB 10-25 (PATH-S81/BLEC): ot_v41_fadd SPLIT9 keeps g_cy_copy.cyq <= r8[24] (the round carry) and the
+    u_c8 cut register r[24] <= r8[24] too; synthesis merged r[24] into the kept cyq.  r8[24] is set only when the
+    rounded mantissa is all ones, so random simulation sees a constant 0 and the signature pairing skipped it: r[24]
+    stayed a free input and man_q[23] of 23 adders 'differed'.  Here rare = AND of 12 inputs."""
+    names = lambda ks: {i: [(f'u_dut.{k}$_DFF_P_.lecq', 0)] for i, k in enumerate(ks)}
+    ni = 12
+    def chain(first_lhs):                                 # rare = d0 & d1 & ... & d11
+        ands, prev = [], 2
+        for j in range(1, ni):
+            ands.append((prev, 2 * (j + 1)))
+            prev = first_lhs + 2 * (j - 1)
+        return ands, prev
+    ga, grare = chain(2 * (ni + 3) + 2)                   # gold latches cyq, r24, o
+    r24_next = grare if gold_r24_next_is_rare else 2      # (negative control: r24 <= d0, not a duplicate)
+    g = tmp_path / 'gold.aig'
+    g.write_bytes(_aig_bytes(ni, [grare, r24_next, 2 * (ni + 2)], ga))          # o <= r24
+    ta, trare = chain(2 * (ni + 2) + 2)                   # gate latches cyq, o
+    t = tmp_path / 'gate.aig'
+    t.write_bytes(_aig_bytes(ni, [trare, 2 * (ni + 1)], ta))                     # o <= cyq
+    ins = {i: [(f'd{i}', 0)] for i in range(ni)}
+    gm = {'input': ins, 'latch': names(['g_cy_copy.cyq', 'u_c8.r24', 'o']), 'output': {}}
+    tm = {'input': ins, 'latch': names(['g_cy_copy.cyq', 'o']), 'output': {}}
+    return lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+
+
+def test_rare_event_merged_duplicate_pairs_by_structure(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, 'prove', _exact_prove)
+    L = _rare_twin(tmp_path, True)
+    assert set(L.gonly) == {'ff:u_dut.u_c8.r24'}
+    lec.correspond(L, tmp_path, 100, [])
+    assert L.hyp.get(('gold', 'ff:u_dut.u_c8.r24')) == ('eq', 'gold', 'ff:u_dut.g_cy_copy.cyq', 0), L.hyp
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    res = _exact_prove(m)
+    assert set(res.values()) == {'proved'}, res
+
+
+def test_rare_event_non_duplicate_still_differs(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, 'prove', _exact_prove)
+    L = _rare_twin(tmp_path, False)                       # r24 <= d0: o differs from cyq
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert _exact_prove(m)['ff:u_dut.o'] == 'differs'

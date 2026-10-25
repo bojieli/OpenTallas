@@ -1401,6 +1401,25 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                     a, b = IDXK.match(k), h[0] == "eq" and IDXK.match(h[2])
                     if sd == "gold" and a and b and a.group(1) == b.group(1):
                         strides[a.group(1)][int(b.group(2)) - int(a.group(2))] += 1
+                # structural twins: a gold-only register whose next state is the very same gold AIG node as a
+                # matched register's is the duplicate that opt_merge folded into it.  Checked before the signature
+                # test, which skips constant-looking bits: elemB ot_v41_fadd SPLIT9 u_c8 r[24] (the round carry,
+                # almost never 1 in random simulation) == g_cy_copy.cyq[k] (kept copies of the same r8[24]); left
+                # free, it made man_q[23] of 23 adders differ (PATH-S81/BLEC 10-25)
+                twins = {}
+                for c in L.matched:
+                    if c.startswith("ff:") and L.dlit.get(("gold", c), 0) > 1:
+                        twins.setdefault(L.dlit[("gold", c)] >> 1, []).append(c)
+                for k in L.gonly:
+                    if not k.startswith("ff:") or ("gold", k) in L.hyp:
+                        continue
+                    dk = L.dlit.get(("gold", k), 0)
+                    for c in (sorted(twins.get(dk >> 1, [])) if dk > 1 else []):
+                        inv = (dk ^ L.dlit[("gold", c)]) & 1
+                        if ("gold", c) not in L.hyp and tried[("gold", k, c, inv)] < 2:
+                            L.hyp[("gold", k)] = ("eq", "gold", c, inv)
+                            new += 1
+                            break
                 # a cohort representative (partnered: other gold flops' "eq" partner) pairs too: synthesis may
                 # have merged the whole cohort into a third, name-matched register (kv3_pv_pair: every lane's
                 # u_prod.v3 == the slice's fc[2]; the rep left free made all 32 lane fault registers differ)
@@ -1566,7 +1585,10 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
-            tried[(side, k, "c") if h[0] == "const" else (side, k, str(h[2]), str(h[3]))] += 1
+            # (keys as the candidate checks read them: (side, k, partner, int inv); only an unhashable partner
+            # (an FSM cube) is stringified -- str() on every key made every "< 2" retry limit a no-op)
+            hk = lambda x: x if isinstance(x, (str, int)) else repr(x)
+            tried[(side, k, "c") if h[0] == "const" else (side, k, hk(h[2]), hk(h[3]))] += 1
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
