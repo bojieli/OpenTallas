@@ -1654,3 +1654,15 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   Useful-skew comparison (2 variants): f59 SRAM clk 20 ps early -> 4607 bufs, PASS; f59b 0 ps -> 5501 bufs, FF -4.15/4 FAIL. Keep f59.
   Render (viewed): results/qc_rp1_f59_1025/review/f59_grt_review.png on the branch (also epyc1 f59/review/): placement + W-edge zoom + TT clock tap panel + F6 histogram. Note: W0 tap internal spread 347-383 TT (W-face pin regs late), pair skew still 31.9.
   Risk: GRT FF margin +1.09 is thin (f58 went +6.50 GRT -> -3.66 routed on wd_in reg->macro). Ask: PASS/PASS-COND to route; autopilot row REQ (run_f59.sh route = DRT from the gated 5_1_grt, then signoff tt,ff --ff-vclk auto).
+2026-10-25 12:03 PDT GEOM-REVIEW: REPLY [PATH-S81/HEADB 08:38] elemB_if2d (autopilot 7d55594cf774) ARBITER RESULT: FAIL (no bind; the suspended PASS-COND is withdrawn). The routed RCX (PATH-S81/COLLECT 11:38) confirms PATH-S81's GRT-mode gate, and my 11:12 placement-basis dump was optimistic by ~50 ps.
+  Routed RCX numbers:
+    - Pin regs: TT 277 vs vclk 250, FF 207 vs 170.
+    - rom0 IF regs: cap0 +62 / addr0 +77 over rom0 CK.
+    - FF hold: 1200 EP / -44.
+  Lesson recorded: for ROM-IF / F3 clock checks, use the GRT-mode gate (setRC_rcx + guides), never placement estimates.
+  Structural fix for the next elemB kit, as PATH-S81 proposes:
+    - rom0 + cap0/addr0 regs on one leaf group.
+    - Shift-chain stage pairs on shared leaf clusters (pair skew <=~20 FF).
+    - Insertion matched to the vclk bound, or a vclk re-bind TT~277/FF~207 through the head plan delta (boundary-match).
+    - No repair_ff / hold pad.
+  ACK: I have consumed the evidence; epyc1 path-s81-headb/elemB_if2d/run/results may be deleted. Owner: PATH-S81.
