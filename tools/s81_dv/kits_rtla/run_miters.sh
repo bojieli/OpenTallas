@@ -22,12 +22,13 @@ declare -A OLDF=([ot_s81sl_vsw_c]=ot_s81sl_vsw.sv [ot_s81sl_vn_c]=ot_s81sl_vn.sv
                  [ot_dsrom_su_hcpost_lane_pr_c]=ot_dsrom_su_hcpost_lane_pr.sv+KITRTL/ot_dsrom_su_hcpost.sv)
 declare -A NEWF=([ot_s81sl_vsw_c]=rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv [ot_s81sl_vn_c]=rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv
                  [ot_s81sl_ve_c]=rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv [ot_dsrom_su_hcpost_lane_pr_c]=rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv)
-# mutant: file, exact old text, new text (drop the duplicated state update)
+# mutant: file, exact old text, new text (drop the duplicated state update; ve: the pin flop loads the old state instead
+# of the next value -- dropping ve's fault_s update is masked: every OR term but f_lock is itself sticky in ve's units)
 declare -A MF=([ot_s81sl_vsw_c]=rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vsw.sv [ot_s81sl_vn_c]=rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv
                [ot_s81sl_ve_c]=rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv [ot_dsrom_su_hcpost_lane_pr_c]=rtl/hdc/v41x/ot_dsrom_su_hcpost.sv)
-declare -A MO=([ot_s81sl_vsw_c]='od_h <= od_n;' [ot_s81sl_vn_c]='fault_s <= fault_n;' [ot_s81sl_ve_c]='fault_s <= fault_n; end'
+declare -A MO=([ot_s81sl_vsw_c]='od_h <= od_n;' [ot_s81sl_vn_c]='fault_s <= fault_n;' [ot_s81sl_ve_c]='fault <= fault_n; fault_s'
                [ot_dsrom_su_hcpost_lane_pr_c]='else q <= q | x;')
-declare -A MN=([ot_s81sl_vsw_c]='od_h <= od_h;' [ot_s81sl_vn_c]='fault_s <= 1'"'"'b0;' [ot_s81sl_ve_c]='fault_s <= 1'"'"'b0; end'
+declare -A MN=([ot_s81sl_vsw_c]='od_h <= od_h;' [ot_s81sl_vn_c]='fault_s <= 1'"'"'b0;' [ot_s81sl_ve_c]='fault <= fault_s; fault_s'
                [ot_dsrom_su_hcpost_lane_pr_c]='else q <= 1'"'"'b0;')
 declare -A DEF=([ot_s81sl_ve_c]="+define+OT_S81_VE_LOADSAFE5")
 declare -A PACK=([ot_s81sl_vn_c]="--pack y" [ot_s81sl_ve_c]="--pack o_y")
