@@ -1,8 +1,8 @@
 {
 "module": "ot_s81dv_xfin",
 "lef": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef",
-"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef (largest non-M1 rect centre, CORE-KS rule)",
-"pinhash": "50a9e85da4f0",
+"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 1 constant pins dropped (inputs/const_pins_dropped.json)",
+"pinhash": "3f620d8e2d06",
 "pins": [
 {
 "name": "clk",
@@ -2726,12 +2726,6 @@
 "name": "s_i[6]",
 "layer": "M5",
 "x": 1.5,
-"y": 181.398
-},
-{
-"name": "s_i[7]",
-"layer": "M5",
-"x": 1.596,
 "y": 181.398
 },
 {

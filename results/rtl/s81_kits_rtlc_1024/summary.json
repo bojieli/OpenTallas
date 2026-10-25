@@ -1,0 +1,144 @@
+{
+ "schema": "s81_kits_rtlc_1024/v1",
+ "lane": "S81-KITS-RTLC",
+ "date": "2026-10-24",
+ "items": {
+  "1_stations_2flop": {
+   "modules": [
+    "dsfd_qbank_N",
+    "dsfd_qbank_S",
+    "dsfd_rstg",
+    "ot_s81_sstn_payload536",
+    "ot_s81_sstn_base566"
+   ],
+   "cycles": "+1 per station",
+   "plan": "gen_plan_v4.py FRAME_BAND_STATION_EDGES added to fi-lane fixed cycles: h9 all buses +3; h10 r0->r1 +4, others +3 (288 fi lanes: 276 x +3, 12 x +4); die top lane idx__svc_14__bk_sel 68 -> 68 (unchanged)",
+   "bench": "rtl_delay_eq qN/qS/rg PASS (origin/main 1-flop as mutant FAIL); bench_sstn_split pass SSTN_SPLIT_EXACT; 7 mutants incl base_data_1flop / payload_1flop rejected"
+  },
+  "2_xrt_face_land": {
+   "cycles": "FACE_LAND=1 default: lo/p/e collection +1; ci twins, x_mode, fault fixes 0 cycles",
+   "bench": "xrt_land_eq h0/h1/h0-sparse PASS; mutants citwin, fpin caught; xrt_bench base h0/h1 PASS (citwin blind in xrt_bench, caught by land_eq)"
+  },
+  "3_const_unused_drops": {
+   "json": "physical/die_plan/s81/inputs/const_pins_dropped.json (RTLC entries: dsdv_gunit_l0/l1/l1c/l2/l3/l4/l5, ot_s81sl_xrt1/xrt3, ot_s81dv_xfin)",
+   "not_done": {
+    "dsdv_bksel_c vd[357..501,513] (146 TIELO) and vd[0]": "receiver dsdv_bk_g is one shared master whose vd is non-constant from bk_col (dsfd_colt_mrg o_d); dropping needs a split bk_g master",
+    "dsdv_gunit_l1f fronts 1..3 o_v/o_f/o_l/o_g": "same L1f master as front 0 (read): outputs stay, open at L1c (dropped there)"
+   }
+  },
+  "4_selt_c_keep": {
+   "cycles": 0,
+   "evidence": "dsdv_bksel_c raw face_guard: merged quarter copies t_c_n/t_c_s gone; only the 146 vd TIELO remain",
+   "lockstep": "not run: rtl_lockstep_eq on dsfd_selt_c did not elaborate (iverilog: tb clock name ck/clk mismatch in the preprocessed repo); equivalence is by construction (array -> per-generate reg, same D) and the bksel_c netlist shows the 4 quarter copies"
+  },
+  "extra_face_guard_fixes_0_cycles": "gunit L0/L1/L4 held pin regs -> kept twins; L2 hc_* kind-7 qualified (dl fold); cw_a packed 8 b along L2->L0->L4"
+ },
+ "gunit_bench": "run_gunit_bench GUNIT_GATE PASS (router_lat 38, hc_lat 1004 = HEAD tree); RTLC mutants L0/L1/L1C/L1F/L2/L3/L4/L5 caught",
+ "plan": "run_v4 regen G0 PASS 0 errors, G0C PASS 0 errors (174/174 types)",
+ "face_guard_raw": {
+  "dsdv_bksel_c": {
+   "verdict": "FAIL",
+   "checked": 5658,
+   "ok": 5512,
+   "fails": {
+    "shared": 50
+   }
+  },
+  "dsdv_gunit_l0": {
+   "verdict": "PASS",
+   "checked": 3497,
+   "ok": 3497,
+   "fails": {}
+  },
+  "dsdv_gunit_l1": {
+   "verdict": "PASS",
+   "checked": 3519,
+   "ok": 3519,
+   "fails": {}
+  },
+  "dsdv_gunit_l1c": {
+   "verdict": "PASS",
+   "checked": 1304,
+   "ok": 1304,
+   "fails": {}
+  },
+  "dsdv_gunit_l2": {
+   "verdict": "PASS",
+   "checked": 3142,
+   "ok": 3142,
+   "fails": {}
+  },
+  "dsdv_gunit_l3": {
+   "verdict": "PASS",
+   "checked": 1538,
+   "ok": 1538,
+   "fails": {}
+  },
+  "dsdv_gunit_l4": {
+   "verdict": "PASS",
+   "checked": 2523,
+   "ok": 2523,
+   "fails": {}
+  },
+  "dsdv_gunit_l5_n32": {
+   "verdict": "FAIL",
+   "checked": 1751,
+   "ok": 1732,
+   "fails": {
+    "shared": 19
+   }
+  },
+  "dsfd_qbank_N": {
+   "verdict": "PASS",
+   "checked": 256,
+   "ok": 256,
+   "fails": {}
+  },
+  "dsfd_qbank_S": {
+   "verdict": "PASS",
+   "checked": 1208,
+   "ok": 1208,
+   "fails": {}
+  },
+  "dsfd_rstg": {
+   "verdict": "PASS",
+   "checked": 132,
+   "ok": 132,
+   "fails": {}
+  },
+  "ot_s81_sstn_base566": {
+   "verdict": "PASS",
+   "checked": 1141,
+   "ok": 1141,
+   "fails": {}
+  },
+  "ot_s81_sstn_payload536": {
+   "verdict": "PASS",
+   "checked": 1072,
+   "ok": 1072,
+   "fails": {}
+  },
+  "ot_s81sl_xrt1": {
+   "verdict": "PASS",
+   "checked": 7561,
+   "ok": 7561,
+   "fails": {}
+  },
+  "ot_s81sl_xrt3": {
+   "verdict": "PASS",
+   "checked": 9120,
+   "ok": 9120,
+   "fails": {}
+  },
+  "ot_s81dv_xfin": {
+   "verdict": "FAIL",
+   "checked": 903,
+   "ok": 804,
+   "fails": {
+    "shared": 99
+   },
+   "note": "s_i bits all pass; failures are the e_c / e_dd / e_hh / e_kk ENG-triple ports present in current ot_s81dv_norm.sv but absent from the r2 kit pins.json (100 extra ports, e_hh 32 + e_kk 16 hold loops, e_c 2): pre-existing kit/RTL skew, not RTLC"
+  }
+ },
+ "gunit_lp_lockstep": "dsdv_gunit_lp_bench.sh (verilator): AUDIT PASS, MUT0 LP_LOCKSTEP PASS, MUT1/2/4 FAIL (caught); landing flops 8,443"
+}

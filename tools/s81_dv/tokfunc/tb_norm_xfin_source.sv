@@ -16,7 +16,7 @@ module tb_norm_xfin_source;
  genvar g;
  generate for(g=0;g<16;g=g+1)begin:sl
   wire[3:0]sid=(mut==1&&g==3)?4'd4:4'(g);
-  ot_s81dv_xfin #(.NS(16),.NVL(5),.LM(5),.LA(6)) xf(
+  ot_s81dv_xfin #(.NS(16),.NVL(5),.LM(5),.LA(6),.SIW(8)) xf(
    .clk(clk),.rst_n(rst_n),.go(go),.mode(1'b0),.sid(sid),.eps(eps[0]),
    .s_v(sv),.s_i(si),.s(partials[5*g+si]),
    .wi_v(wi[g][172]),.wi_h(wi[g][171:168]),.wi_b(wi[g][167:160]),.wi_d(wi[g][159:0]),

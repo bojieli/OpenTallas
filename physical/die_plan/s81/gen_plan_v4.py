@@ -80,6 +80,14 @@ STEP = dict(E=(1, 0), W=(-1, 0), N=(0, 1), S=(0, -1))
 FRAME_BAND_CENSUS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "frame_band_census.json")
 
 
+# S81-KITS-RTLC 10-24 (owner: register every partition pin, in RTL): the band pass-through stations (dsfd_qbank_N / _S,
+# dsfd_rstg, ot_s81_sstn_payload536 / base566) gained an input pin register (+1 edge per station).  Max stations on a
+# band path ending at each band-to-band bus (tools/s81_dv/frame_band_stations.py on the band RTL; per-field breakdown in
+# results/rtl/s81_kits_rtlc_1024/frame_band_stations.json): priced as fixed cycles of the fi lane carrying that bus.
+FRAME_BAND_STATION_EDGES = {"h9": {("r0", "r1"): 3, ("r1", "r0"): 3, ("r1", "r2"): 3, ("r2", "r1"): 3},
+                            "h10": {("r0", "r1"): 4, ("r1", "r0"): 3, ("r1", "r2"): 3, ("r2", "r1"): 3}}
+
+
 def frame_internal(h):
     m = json.load(open(FRAME_BAND_CENSUS))["masters"][h]
     return [(k.split("->")[0], k.split("->")[1], w) for k, w in sorted(m.items())]
@@ -981,7 +989,8 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
                 for a, bb, w in frame_internal(h):
                     ia, ib = int(a[1]), int(bb[1])
                     L("fi_%s%d_p%d_%s%s" % (side, fr, pos, a, bb), fb[ia], "%s%s_o" % (a, bb), fb[ib], "%s%s_i" % (a, bb),
-                      w, cls="frame_int", role="fi_%s%s" % (a, bb), fixed=1)   # band RTL seam = K + 1 = 3 edges
+                      w, cls="frame_int", role="fi_%s%s" % (a, bb),
+                      fixed=1 + FRAME_BAND_STATION_EDGES[h][(a, bb)])   # band RTL seam = K + 1 = 3 edges; + stations
             b0 = {pos: frames[(side, fr, pos, 0)].name for pos in range(1, 7)}
             xr = x_row(fr)
             for chain, (half, base) in (("in", (inner, 1)), ("out", (outer, 4))):
