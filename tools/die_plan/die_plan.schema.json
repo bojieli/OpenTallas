@@ -1495,6 +1495,50 @@
         }
        }
       }
+     },
+     "die_ft_bands": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "required": [
+        "dir",
+        "span_um",
+        "layers"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "dir": {
+         "enum": [
+          "EW",
+          "NS"
+         ]
+        },
+        "span_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "layers": {
+         "type": "array",
+         "items": {
+          "type": "string",
+          "pattern": "^M[1-9]$"
+         },
+         "minItems": 1
+        },
+        "die_share": {
+         "type": "number",
+         "minimum": 0,
+         "maximum": 1
+        },
+        "note": {
+         "type": "string"
+        }
+       }
+      }
      }
     }
    }
