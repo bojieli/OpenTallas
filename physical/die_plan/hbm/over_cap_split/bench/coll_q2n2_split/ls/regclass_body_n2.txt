@@ -1,0 +1,5 @@
+('cut', 'input', 'ok') 2597 {'reg': 2597}
+('cut', 'output', 'ok') 5740 {'reg': 5735, 'const': 5}
+('master', 'input', 'ok') 2644 {'reg': 2586, 'ff-ctl:CLK': 47, 'ff-ctl:CLK/logic': 10, 'ff-ctl:ARST/reg': 1}
+('master', 'output', 'ok') 1150 {'reg': 1145, 'const': 5}
+cut ports not registered: 0 0

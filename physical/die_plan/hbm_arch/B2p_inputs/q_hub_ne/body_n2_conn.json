@@ -1,0 +1,1792 @@
+{
+"top": "ot_hfd_coll_q2n2_body_core",
+"source": "PATH-HBM/NE2 10-25 conn.py on the rest_extract parent view of ot_hfd_coll_q2_hard_v8g_s NLINK 2",
+"ports": {
+"u_body_g_qout_3_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_11_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_10_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_9_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_8_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_6_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_5_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_4_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"tx_pin_flit": {
+"direction": "output",
+"width": 612,
+"partners": [
+[
+[
+"port:tx_pin_flit"
+],
+[
+[
+0,
+611
+]
+]
+]
+]
+},
+"tx_pin_flit_": {
+"direction": "output",
+"width": 612,
+"partners": [
+[
+[
+"port:tx_pin_flit"
+],
+[
+[
+0,
+611
+]
+]
+]
+]
+},
+"u_body_g_qout_16_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 160,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+128,
+159
+]
+]
+]
+]
+},
+"u_body_g_qout_17_g2_n_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 5,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+3
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+4,
+4
+]
+]
+]
+]
+},
+"u_body_g_qout_15_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_14_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_7_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_13_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_12_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_2_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_1_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_0_g2_w_o_u_out_u_dst_d": {
+"direction": "output",
+"width": 288,
+"partners": [
+[
+[
+"port:del_flit"
+],
+[
+[
+0,
+127
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+128,
+255
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+256,
+287
+]
+]
+]
+]
+},
+"u_body_g_qout_0_g2_w_o_u_out_u_dst_v": {
+"direction": "output",
+"width": 9,
+"partners": [
+[
+[
+"port:del_valid"
+],
+[
+[
+0,
+3
+]
+]
+],
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+4,
+7
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+8,
+8
+]
+]
+]
+]
+},
+"u_body_g_qcap_8_u_cap_src_v": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"u_body_g_qcap_8_u_cap_src_d": {
+"direction": "input",
+"width": 545,
+"partners": [
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+0,
+544
+]
+]
+]
+]
+},
+"fault_cause": {
+"direction": "output",
+"width": 16,
+"partners": [
+[
+[
+"port:fault_cause"
+],
+[
+[
+0,
+15
+]
+]
+]
+]
+},
+"inj_rd": {
+"direction": "output",
+"width": 2,
+"partners": [
+[
+[
+"port:inj_rd"
+],
+[
+[
+0,
+1
+]
+]
+]
+]
+},
+"inj_idx": {
+"direction": "output",
+"width": 32,
+"partners": [
+[
+[
+"port:inj_idx"
+],
+[
+[
+0,
+31
+]
+]
+]
+]
+},
+"hgi_inj_addr": {
+"direction": "output",
+"width": 160,
+"partners": [
+[
+[
+"port:hgi_inj_addr"
+],
+[
+[
+0,
+159
+]
+]
+]
+]
+},
+"hgi_del_obase": {
+"direction": "output",
+"width": 160,
+"partners": [
+[
+[
+"port:hgi_del_obase"
+],
+[
+[
+0,
+159
+]
+]
+]
+]
+},
+"u_body_g_q2_genblk1_n_u_control_r_u_control_u_u_rgx_addr_pin": {
+"direction": "output",
+"width": 160,
+"partners": [
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+0,
+159
+]
+]
+]
+]
+},
+"stat_cycles": {
+"direction": "output",
+"width": 32,
+"partners": [
+[
+[
+"port:stat_cycles"
+],
+[
+[
+0,
+31
+]
+]
+]
+]
+},
+"vm_rq": {
+"direction": "output",
+"width": 128,
+"partners": [
+[
+[
+"port:vm_rq"
+],
+[
+[
+0,
+127
+]
+]
+]
+]
+},
+"vm_rq_": {
+"direction": "output",
+"width": 8,
+"partners": [
+[
+[
+"port:vm_rq"
+],
+[
+[
+0,
+7
+]
+]
+]
+]
+},
+"u_body_g_q2_genblk1_n_u_control_r_u_control_u_u_vm_select_pipe_80": {
+"direction": "output",
+"width": 24,
+"partners": [
+[
+[
+"cell:u_body.u_vmasm"
+],
+[
+[
+0,
+23
+]
+]
+]
+]
+},
+"u_body_u_upipe_SL_6_u_d3": {
+"direction": "output",
+"width": 88,
+"partners": [
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+0,
+45
+]
+]
+],
+[
+[
+"port:isa_ring"
+],
+[
+[
+46,
+87
+]
+]
+]
+]
+},
+"u_body_u_upipe_SL_7_u_d3": {
+"direction": "output",
+"width": 17,
+"partners": [
+[
+[
+"port:isa_ring"
+],
+[
+[
+0,
+15
+]
+]
+],
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+16,
+16
+]
+]
+]
+]
+},
+"u_body_u_upipe_SL_15_u_d3": {
+"direction": "output",
+"width": 15,
+"partners": [
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+0,
+14
+]
+]
+]
+]
+},
+"u_body_g_ariter_t_idx": {
+"direction": "output",
+"width": 16,
+"partners": [
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+0,
+15
+]
+]
+]
+]
+},
+"u_body_g_ariter_t_pb": {
+"direction": "output",
+"width": 4,
+"partners": [
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+0,
+3
+]
+]
+]
+]
+},
+"u_body_g_ariter_t_pa": {
+"direction": "output",
+"width": 4,
+"partners": [
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+0,
+3
+]
+]
+]
+]
+},
+"u_body_g_ariter_t_read": {
+"direction": "output",
+"width": 4,
+"partners": [
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+0,
+3
+]
+]
+]
+]
+},
+"u_body_g_ariter_t_load": {
+"direction": "output",
+"width": 4,
+"partners": [
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+0,
+3
+]
+]
+]
+]
+},
+"u_body_vm_as_il": {
+"direction": "input",
+"width": 2048,
+"partners": [
+[
+[
+"cell:u_body.u_vmasm"
+],
+[
+[
+0,
+2047
+]
+]
+]
+]
+},
+"clk_control": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"port:clk_control"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"rst_n": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"cell:u_body.u_reduce",
+"cell:u_body.u_ring",
+"cell:u_body.u_writer",
+"port:rst_n"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"qid": {
+"direction": "input",
+"width": 2,
+"partners": [
+[
+[
+"cell:u_body.u_ring",
+"cell:u_body.u_writer",
+"port:qid"
+],
+[
+[
+0,
+1
+]
+]
+]
+]
+},
+"cfg_v": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"port:cfg_v"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"cfg_target": {
+"direction": "input",
+"width": 8,
+"partners": [
+[
+[
+"port:cfg_target"
+],
+[
+[
+0,
+7
+]
+]
+]
+]
+},
+"cfg_addr": {
+"direction": "input",
+"width": 12,
+"partners": [
+[
+[
+"port:cfg_addr"
+],
+[
+[
+0,
+11
+]
+]
+]
+]
+},
+"cfg_data": {
+"direction": "input",
+"width": 256,
+"partners": [
+[
+[
+"port:cfg_data"
+],
+[
+[
+0,
+255
+]
+]
+]
+]
+},
+"desc_v": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"port:desc_v"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"desc_base": {
+"direction": "input",
+"width": 12,
+"partners": [
+[
+[
+"port:desc_base"
+],
+[
+[
+0,
+11
+]
+]
+]
+]
+},
+"desc_limit": {
+"direction": "input",
+"width": 13,
+"partners": [
+[
+[
+"port:desc_limit"
+],
+[
+[
+0,
+12
+]
+]
+]
+]
+},
+"desc_loops": {
+"direction": "input",
+"width": 16,
+"partners": [
+[
+[
+"port:desc_loops"
+],
+[
+[
+0,
+15
+]
+]
+]
+]
+},
+"launch_v": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"port:launch_v"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"rc_v": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"port:rc_v"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"rc_tag": {
+"direction": "input",
+"width": 3,
+"partners": [
+[
+[
+"port:rc_tag"
+],
+[
+[
+0,
+2
+]
+]
+]
+]
+},
+"phy_up": {
+"direction": "input",
+"width": 2,
+"partners": [
+[
+[
+"port:phy_up"
+],
+[
+[
+0,
+1
+]
+]
+]
+]
+},
+"rx_pin_v": {
+"direction": "input",
+"width": 2,
+"partners": [
+[
+[
+"port:rx_pin_v"
+],
+[
+[
+0,
+1
+]
+]
+]
+]
+},
+"rx_pin_flit": {
+"direction": "input",
+"width": 1224,
+"partners": [
+[
+[
+"port:rx_pin_flit"
+],
+[
+[
+0,
+1223
+]
+]
+]
+]
+},
+"clk_program": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"port:clk_program"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"clk_upipe": {
+"direction": "input",
+"width": 16,
+"partners": [
+[
+[
+"port:clk_upipe"
+],
+[
+[
+0,
+15
+]
+]
+]
+]
+},
+"clk_issue": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"port:clk_issue"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"clk_qslots": {
+"direction": "input",
+"width": 27,
+"partners": [
+[
+[
+"port:clk_qslots"
+],
+[
+[
+0,
+26
+]
+]
+]
+]
+},
+"clk_reduce": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"cell:u_body.u_reduce",
+"port:clk_reduce"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"clk_link": {
+"direction": "input",
+"width": 10,
+"partners": [
+[
+[
+"port:clk_link"
+],
+[
+[
+0,
+9
+]
+]
+]
+]
+},
+"inj_d": {
+"direction": "input",
+"width": 1024,
+"partners": [
+[
+[
+"port:inj_d"
+],
+[
+[
+0,
+1023
+]
+]
+]
+]
+},
+"vm_rr": {
+"direction": "input",
+"width": 8,
+"partners": [
+[
+[
+"port:vm_rr"
+],
+[
+[
+0,
+7
+]
+]
+]
+]
+},
+"tx_pin_v": {
+"direction": "output",
+"width": 1,
+"partners": [
+[
+[
+"port:tx_pin_v"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"retry_requested": {
+"direction": "output",
+"width": 1,
+"partners": [
+[
+[
+"port:retry_requested"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"tx_pin_v_": {
+"direction": "output",
+"width": 1,
+"partners": [
+[
+[
+"port:tx_pin_v"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"retry_requested_": {
+"direction": "output",
+"width": 1,
+"partners": [
+[
+[
+"port:retry_requested"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"program_configured": {
+"direction": "output",
+"width": 1,
+"partners": [
+[
+[
+"port:program_configured"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"program_init_busy": {
+"direction": "output",
+"width": 1,
+"partners": [
+[
+[
+"port:program_init_busy"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"program_fault": {
+"direction": "output",
+"width": 1,
+"partners": [
+[
+[
+"port:program_fault"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"fault": {
+"direction": "output",
+"width": 1,
+"partners": [
+[
+[
+"port:fault",
+"port:hgi_fault"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"u_body_g_q2_n_u_fj_u_fj_u_reduce_fault": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"cell:u_body.u_reduce"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"u_body_g_q2_n_u_fj_u_fj_u_writer_fault": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"cell:u_body.u_writer"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"u_body_g_q2_n_u_fj_u_fj_u_ring_fault": {
+"direction": "input",
+"width": 1,
+"partners": [
+[
+[
+"cell:u_body.u_ring"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"hgi_busy": {
+"direction": "output",
+"width": 1,
+"partners": [
+[
+[
+"port:hgi_busy"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+},
+"done": {
+"direction": "output",
+"width": 1,
+"partners": [
+[
+[
+"port:done",
+"port:hgi_done"
+],
+[
+[
+0,
+0
+]
+]
+]
+]
+}
+}
+}

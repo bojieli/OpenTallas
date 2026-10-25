@@ -1,0 +1,8 @@
+read_verilog -lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v
+read_verilog -lib /src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v
+read_verilog -lib /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v
+read_verilog /rest/coll_q2n2_body_rest.v
+hierarchy -top coll_q2n2_body_rest
+proc
+opt_clean
+write_json /out/rest.json
