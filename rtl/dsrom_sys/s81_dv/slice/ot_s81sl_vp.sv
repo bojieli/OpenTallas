@@ -407,6 +407,7 @@ module ot_s81sl_cst1 #(parameter integer W = 1, parameter integer V = 1) (
     always @(posedge clk or negedge rst_n) if (!rst_n) qv <= {V{1'b0}}; else qv <= dv;
 endmodule
 
+/* verilator lint_off UNUSEDSIGNAL */   // D = 0: clk / rst_n unused (a wire)
 module ot_s81sl_cst #(parameter integer W = 1, parameter integer V = 1, parameter integer D = 0) (
     input wire clk, input wire rst_n, input wire [W-1:0] d, input wire [V-1:0] dv, output wire [W-1:0] q, output wire [V-1:0] qv
 );
@@ -422,3 +423,4 @@ module ot_s81sl_cst #(parameter integer W = 1, parameter integer V = 1, paramete
         assign q = cd[D]; assign qv = cv[D];
     end endgenerate
 endmodule
+/* verilator lint_on UNUSEDSIGNAL */
