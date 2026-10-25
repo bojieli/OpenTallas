@@ -1,0 +1,30 @@
+{
+  "element": "HBM B2m die delta",
+  "source": "claude/hbm-1024r@9ef5eebb2; die_plan9d5b448b017a",
+  "reviewer": "CODEX GEOM independent",
+  "at": "2026-10-24T21:10:41.378108-07:00",
+  "verdict": "PASS-CONDITIONAL",
+  "scope": "G1 plan-level delta only; no new G3 P&R approval",
+  "images": [
+    "physical/die_plan/hbm_arch/B2m/die_plan.png",
+    "physical/die_plan/hbm_arch/B2m/clock_htree.png",
+    "physical/die_plan/hbm_arch/B2m/clock_zst_info.png",
+    "results/geom_review/codex_b2m/root_gap.png"
+  ],
+  "findings": [
+    "Looked at all three full die images and rendered/viewed root hard-core crop. Symmetric H-tree branches traverse M8/M9; tap-driver shifts are visible around SM channels, hub cores and IO/PHY exclusions. Datapath layout retains B2l corridors; unchanged bus/face findings remain inherited.",
+    "Root driver at13988.16,9175.68 is off u_tkm_SW_tile19 (left edge13996.8); clearance8.64um with60.48um stub to H-tree mathematical centre. Root-over-core condition fixed for point placement, but cell footprint and halo must be reserved in kit.",
+    "1829 active tap drivers with max4 partition-tap loads. 518 moved up to380.16um; eight last-mile tap legs exceed400um, maximum468.9um. Requires explicit final buffer/repeater placement and routed latency balance before physical acceptance.",
+    "In-band host marker is at NW_io; standalone host window removed, geometry leaves compaction room rather than introducing a pin crossing. Native host VC routing remains an RTL bind condition.",
+    "Five separate VDDPHY/VSS domains and dedicated45um bump rectangles cover SerDes windows. These are declarations, not routed PDN qualification; reported62-75mV remains FAIL against35mV budget. Core-grid continuity around domain boundaries needs actual PDN connectivity.",
+    "SM clock-tap count correction: plan has32 taps per q_sm type x8 physical SM partitions =256 physical core taps (128 unique type-level sites). All insertion values still250ps and explicitly unmeasured; no early compensation demonstrated.",
+    "Top binary-tree cuts split27 partitions among top2 branches; OCV5% seam80ps excursions remain INFO per owner decision3. Nominal related-pair CPPR and propagated TT/FF STA are still required; a symmetric diagram does not establish them. Alternative partition-aware tree picture adds224.3mm serpentine and is not adopted."
+  ],
+  "conditions": [
+    "Before G3: bind actual internal/FT relays and host VC; apply unified synchronous delivered reset with equal-depth <=405um relay tree (current plan reset.release=counted). Re-render affected kit.",
+    "Reserve root-driver footprint+halo in8.64um edge gap; maintain q_sm channels and root crossing band as blockages, no driver/relay on core/PHY.",
+    "Implement the eight >400um final clock legs with explicit repeaters; replace250ps SM placeholders with measured internal insertion contract and routed local-tree balance<=20ps. Verify related-pair CPPR<=80ps TT/FF and propagated TT setup/FF hold60/25 without waivers.",
+    "Resolve SerDes IR by a measured physical supply/area change and rerun actual-metal PDN connectivity/IR before power closure. Retain current FAIL.",
+    "Prior B2l per-core/split pin-facing/reach constraints stand; this delta does not release held bankq/pgslice/tkm route kits."
+  ]
+}
