@@ -1,0 +1,2 @@
+v1 (die_sta @ad1240791a): seam slacks valid; launch/capture/FFSPREAD clock arrivals were wrapped by period/2 (bug, fixed next commit) -> hbm_B2l NW_sm2 440 ps tap hidden; spread verdict of v1 not trustworthy. v2 rerun in progress.
+source kits: intel2:/srv/opentallas-scratch2/claude/die-sta/trial/<die>/sta (die_trial.py kit+clock on current main plans; stand-ins = 1 face flop per pin bit; spine = trial H-tree per tap)

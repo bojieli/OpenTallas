@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_hc_bankq0_static__lanes0_2",
+ "view": "ot_hbm_hc_bankq0_static__lanes0_2@dd531b18f8f6",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_hc_bankq0_static__lanes0_2_dd531b18f8f6, B2r2 pins dd531b18f8f6, plan c1bc2d0f7ada)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "20c0c5ffe5c69d93",
+ "reasons": "plan-stage: 172.8x345.6 um, 1951 pins on faces E:784,N:129,S:268,W:770; worst 10-um window 2.4 pins/um all layers, 0.115 pins/track per layer (<= 0.6 OK); pins spread along whole faces, no corner clusters; tracks on the plan lattice (gen lattice check). Context in q_b000: no core_conns for this core (one of the unchecked cores): data-flow/face orientation NOT CHECKED. Macros: none. Utilisation/fill, density, face-flop distance and clock taps are judged at the placed stage.",
+ "fixes": "Place only (TT corner kit); route/STA only after the placed-stage review is recorded. Facing-away / long-reach findings go to HBM-ARCH (plan owner).",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_hc_bankq0_static__lanes0_2_dd531b18f8f6/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_hc_bankq0_static__lanes0_2_dd531b18f8f6/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T08:17:41-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

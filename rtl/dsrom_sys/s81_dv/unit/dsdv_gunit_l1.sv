@@ -40,15 +40,18 @@ module dsdv_gunit_l1 #(
     input  wire          rst_n,
     // N face (L2)
     input  wire [275:0]  rn_i,  output wire [275:0] rn_o,
-    input  wire          dl_av, input wire [275:0] dl_a, input wire dl_bv, input wire [275:0] dl_b,
-    input  wire          cw_v, input wire [9:0] cw_a, input wire [255:0] cw_d, input wire [3:0] sid_i,
-    output reg           ct_v, output reg [275:0] ct_b, output reg fault,
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant / unused pins): dl_a / dl_b packed {dl[275:52], dl[49:40], dl[3:1]} (bits 0, 4..39, 50, 51 are
+    // not read), cw_a packed {cw_a[9:8], cw_a[5:0]} (cw_a[7:6] not read), ct_b / w_b = the packed CTL row (ctlpk), rw_x
+    // [191:0] (rw_x[511:192] were 0).  Unpacked into the same internal registers: function and edges unchanged.
+    input  wire          dl_av, input wire [236:0] dl_a, input wire dl_bv, input wire [236:0] dl_b,
+    input  wire          cw_v, input wire [7:0] cw_a, input wire [255:0] cw_d, input wire [3:0] sid_i,
+    output reg           ct_v, output reg [169:0] ct_b, output reg fault,
     // S face (L3)
     output wire [275:0]  rs_o,  input wire [275:0] rs_i,
-    output reg           rw_st, output reg rw_v, output reg rw_l, output reg [511:0] rw_x,
+    output reg           rw_st, output reg rw_v, output reg rw_l, output reg [191:0] rw_x,
     output reg  [31:0]   rw_scale, output reg [9:0] rw_row, output reg [4:0] rw_lm, output reg [15:0] rw_sm,
     output reg  [3:0]    sid_o,
-    input  wire          w_v, input wire [275:0] w_b, input wire f3,
+    input  wire          w_v, input wire [169:0] w_b, input wire f3,
     // E face: the four fronts (shared buses + per-front q-packed enables)
     output reg  [5:0]    sa_r, output reg [223:0] sa_d, output reg [5:0] sb_r, output reg [223:0] sb_d,
     output reg  [55:0]   we, output reg c_go, output reg c_fw, output reg c_l, output reg [2:0] c_bn,
@@ -71,7 +74,12 @@ module dsdv_gunit_l1 #(
         if (!rq[2]) begin dav <= 1'b0; dbv <= 1'b0; wv <= 1'b0; wv3 <= 1'b0; f3_q <= 1'b0; fc_q <= 1'b0; gv <= 1'b0; iv <= 1'b0; end
         else begin dav <= dl_av; dbv <= dl_bv; wv <= cw_v; wv3 <= w_v; f3_q <= f3; fc_q <= fc; gv <= gs_v; iv <= i_v; end
     always @(posedge clk) begin
-        ab <= dl_a; bb <= dl_b; wa <= cw_a; wd <= cw_d; sid_c <= sid_i; wb3 <= w_b; sid_o <= sid_c; gd <= gs_d; ids <= i_ids;
+`ifdef OT_RTLC_MUT_L1   // RTLC bench mutant: dl_a unpack: the ra field (bits 40..45) lands one bit low
+        ab <= {dl_a[236:13], 3'd0, dl_a[12:3], 35'd0, dl_a[2:0], 1'b0}; bb <= {dl_b[236:13], 2'd0, dl_b[12:3], 36'd0, dl_b[2:0], 1'b0};
+`else
+        ab <= {dl_a[236:13], 2'd0, dl_a[12:3], 36'd0, dl_a[2:0], 1'b0}; bb <= {dl_b[236:13], 2'd0, dl_b[12:3], 36'd0, dl_b[2:0], 1'b0};
+`endif
+        wa <= {cw_a[7:6], 2'd0, cw_a[5:0]}; wd <= cw_d; sid_c <= sid_i; wb3 <= ctlup(w_b); sid_o <= sid_c; gd <= gs_d; ids <= i_ids;
     end
     wire av = dav && ab[3:1] == 3'd5, bv = dbv && bb[3:1] == 3'd5;
     wire [SB-1:0] wset = wa[8 +: SB];
@@ -103,18 +111,24 @@ module dsdv_gunit_l1 #(
     wire [2:0]  bn_n = (st == S_SEL) ? n : 3'd0;
     wire [3:0]  nb_n = last ? nbs_c : nbs;
     wire [8:0]  ne_n = last ? ne_x : ne;
+    // S81-KITS-RTLC 10-24 (raw face_guard, 0 edges): the held pin registers fault (sticky) and rw_scale have kept internal
+    // twins that hold; each pin flop loads twin-next, never its own Q.
+    (* keep = "true" *) reg fault_k; (* keep = "true" *) reg [31:0] rws_k; reg fs;
+    always @(posedge clk) rw_scale <= (st == S_IN && take) ? rscale[jset] : rws_k;
     always @(posedge clk or negedge rq[3])
         if (!rq[3]) begin
+            fs = 1'b0; fault_k <= 1'b0;
             st <= S_IN; seen <= 64'd0; nseen <= 7'd0; fault <= 1'b0; jv <= 1'b0; c_go <= 1'b0; we <= 56'd0; re <= 1'b0;
             rw_st <= 1'b0; rw_v <= 1'b0; ct_v <= 1'b0;
         end else begin
+            fs = 1'b0;
             rw_st <= 1'b0; rw_v <= 1'b0;
-            if (fc_q || f3_q || (iv && wv3)) fault <= 1'b1;
-            if (av && (ab[49:46] != 4'd0 || seen[ra_a])) fault <= 1'b1;
-            if (bv && (bb[49:46] != 4'd0 || seen[ra_b] || (av && ra_a == ra_b))) fault <= 1'b1;
-            if ((av || bv) && st != S_IN) fault <= 1'b1;
+            if (fc_q || f3_q || (iv && wv3)) fs = 1'b1;
+            if (av && (ab[49:46] != 4'd0 || seen[ra_a])) fs = 1'b1;
+            if (bv && (bb[49:46] != 4'd0 || seen[ra_b] || (av && ra_a == ra_b))) fs = 1'b1;
+            if ((av || bv) && st != S_IN) fs = 1'b1;
             if (job_w) begin
-                if (jv && !take) fault <= 1'b1;
+                if (jv && !take) fs = 1'b1;
                 jv <= 1'b1;
             end
             // SC word enables per front: word j of a beat with row r is index 7 r + j, front (7 r + j)[5:4]
@@ -128,7 +142,7 @@ module dsdv_gunit_l1 #(
             case (st)
                 S_IN: begin
                     if (take) begin
-                        if (!jv) fault <= 1'b1;
+                        if (!jv) fs = 1'b1;
                         jv <= job_w;
                     end
                     seen <= seen | (av ? 64'd1 << ra_a : 64'd0) | (bv ? 64'd1 << ra_b : 64'd0);
@@ -143,6 +157,7 @@ module dsdv_gunit_l1 #(
                 end
                 default: st <= S_IN;
             endcase
+            fault_k <= fault_k | fs; fault <= fault_k | fs;
         end
     // the job / window registers (no reset: loaded only on a job write / the window's first beat / the sequencer steps)
     always @(posedge clk) begin
@@ -151,7 +166,7 @@ module dsdv_gunit_l1 #(
             S_IN: begin
                 if (take) begin
                     cset <= jset; ne <= jne; row <= jrow; lmask <= jlm; smask <= jsm;
-                    nsc <= 7'((jne + 9'd6) / 9'd7); rw_scale <= rscale[jset];
+                    nsc <= 7'((jne + 9'd6) / 9'd7); rws_k <= rscale[jset];
                 end
                 if (last) begin n <= 3'd1; nbs <= nbs_c; end
             end
@@ -174,7 +189,7 @@ module dsdv_gunit_l1 #(
         ra <= (st == S_SEL) ? {cset, n + 3'd1} : last ? {set_t, 3'd1} : {set_x, 3'd0};
         rw_row <= row; rw_lm <= lmask; rw_sm <= smask;
         rw_l <= gv;
-        rw_x <= 512'd0;
+        rw_x <= 192'd0;
         if (gv) rw_x[191:0] <= gd;
         else for (i2 = 0; i2 < K; i2 = i2 + 1) rw_x[32 * i2 +: IW] <= i2[IW-1:0];
     end
@@ -188,11 +203,18 @@ module dsdv_gunit_l1 #(
             ctl = {V{1'b0}}; ctl[0] = 1'b1; ctl[12:9] = s; ctl[21 +: 186] = p;
         end
     endfunction
+    // CTL row bus packed (S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant / unused pins)): a CTL row word has 106 bits that are constant 0 on every
+    // producer (bits 1..8, 13..20, 38, 40, 41 and 189..275 of ctl(): the 5'd5 kind field's zeros, the free header bits and
+    // the tail above the 128-bit data); the seam carries the other 170 = {w[188:42], w[39], w[37:21], w[12:9], w[0]}.
+    function automatic [169:0] ctlpk(input [275:0] w); ctlpk = {w[188:42], w[39], w[37:21], w[12:9], w[0]}; endfunction
+    function automatic [275:0] ctlup(input [169:0] p);
+        ctlup = {87'd0, p[169:23], 2'd0, p[22], 1'b0, p[21:5], 8'd0, p[4:1], 8'd0, p[0]};
+    endfunction
     // the collector's ids are zero when idle: header gated by its valid, ids OR'd in (both from this leaf's pin flops)
     wire [31:0] pk0 = {5'd0, ids[IW * 2 +: IW], ids[IW * 1 +: IW], ids[IW * 0 +: IW]};
     wire [31:0] pk1 = {5'd0, ids[IW * 5 +: IW], ids[IW * 4 +: IW], ids[IW * 3 +: IW]};
     reg [V-1:0] idb;
     always @(*) begin idb = {V{1'b0}}; idb[61 +: 64] = {pk1, pk0}; end
     always @(posedge clk)
-        ct_b <= (iv ? ctl(row, 4'h3, 128'd0, smask, lmask, sid_c) : {V{1'b0}}) | idb | (wv3 ? wb3 : {V{1'b0}});
+        ct_b <= ctlpk((iv ? ctl(row, 4'h3, 128'd0, smask, lmask, sid_c) : {V{1'b0}}) | idb | (wv3 ? wb3 : {V{1'b0}}));
 endmodule

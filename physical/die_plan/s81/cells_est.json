@@ -1807,6 +1807,38 @@
   "basis": "hard PHY model (no std cells counted)",
   "max_core": 0
  },
+ "lk_WS2": {
+  "cells": 0,
+  "glue": 0,
+  "cores": [],
+  "n_cores": 0,
+  "basis": "hard PHY model (no std cells counted)",
+  "max_core": 0
+ },
+ "lk_WS3": {
+  "cells": 0,
+  "glue": 0,
+  "cores": [],
+  "n_cores": 0,
+  "basis": "hard PHY model (no std cells counted)",
+  "max_core": 0
+ },
+ "lk_EN2": {
+  "cells": 0,
+  "glue": 0,
+  "cores": [],
+  "n_cores": 0,
+  "basis": "hard PHY model (no std cells counted)",
+  "max_core": 0
+ },
+ "lk_EN3": {
+  "cells": 0,
+  "glue": 0,
+  "cores": [],
+  "n_cores": 0,
+  "basis": "hard PHY model (no std cells counted)",
+  "max_core": 0
+ },
  "phy_hbm": {
   "cells": 0,
   "glue": 0,
@@ -1816,17 +1848,17 @@
   "max_core": 0
  },
  "iqf": {
-  "cells": 21296,
+  "cells": 21836,
   "glue": 10000,
   "cores": [
    {
     "name": "idx_qf",
-    "cells": 11296
+    "cells": 11836
    }
   ],
   "n_cores": 1,
-  "basis": "dsdv_idx_qf 11,296 (F gold2)",
-  "max_core": 11296
+  "basis": "dsdv_idx_qf 11,296 (F gold2) + S81/IDXNET qc serializer ~540 (256 hold + 258 out + copies) - qc1 513 flops not removed from the estimate (conservative)",
+  "max_core": 11836
  },
  "seqhost": {
   "cells": 139319,
@@ -7377,12 +7409,12 @@
   "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
- "s_0S_x06": {
-  "cells": 5000,
-  "glue": 5000,
+ "s_0S_LP": {
+  "cells": 365489,
+  "glue": 365489,
   "cores": [],
   "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
+  "basis": "lep core + coll lanes + MU land measured (flattened, < cap)",
   "max_core": 0
  },
  "s_0S_x07": {
@@ -7393,12 +7425,12 @@
   "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
- "s_0S_LP": {
-  "cells": 192356,
-  "glue": 192356,
+ "s_0S_x08": {
+  "cells": 5000,
+  "glue": 5000,
   "cores": [],
   "n_cores": 0,
-  "basis": "lep core + coll lanes + MU land measured (flattened, < cap)",
+  "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
  "s_0S_x09": {
@@ -7409,23 +7441,7 @@
   "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
- "s_0S_x010": {
-  "cells": 5000,
-  "glue": 5000,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
- "s_0S_x011": {
-  "cells": 5000,
-  "glue": 5000,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
- "s_0S_x15": {
+ "s_0S_x13": {
   "cells": 5000,
   "glue": 5000,
   "cores": [],
@@ -10133,14 +10149,6 @@
   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
   "max_core": 375145
  },
- "s_5N_x06": {
-  "cells": 5000,
-  "glue": 5000,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
  "s_6S_L4": {
   "cells": 2162983,
   "glue": 15000,
@@ -11173,14 +11181,6 @@
   "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
- "s_7N_x07": {
-  "cells": 5000,
-  "glue": 5000,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
  "s_7N_x10": {
   "cells": 5000,
   "glue": 5000,
@@ -11198,8 +11198,8 @@
   "max_core": 0
  },
  "s_7N_LP": {
-  "cells": 207657,
-  "glue": 207657,
+  "cells": 380790,
+  "glue": 380790,
   "cores": [],
   "n_cores": 0,
   "basis": "lep core + coll lanes + MU land measured (flattened, < cap)",
@@ -11237,22 +11237,6 @@
   "basis": "station-only partition (ft flops)",
   "max_core": 0
  },
- "s_7N_x17": {
-  "cells": 5000,
-  "glue": 5000,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
- "bk_col": {
-  "cells": 186882,
-  "glue": 186882,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "bk_col FLATTENED: Yosys (PLAN-S81v4-SYN 10-23, ORFS asap7lock RVT) dsdv_bkcol_l 15,770 x4 (2 SRAM each) + dsdv_bkcol_m 73,514 + bk_g 2 x 25,144 measured = 186,882 cells, 8 SRAM macros",
-  "max_core": 0
- },
  "gunit": {
   "cells": 483967,
   "glue": 10000,
@@ -11275,7 +11259,7 @@
   "max_core": 195577
  },
  "bk_sel": {
-  "cells": 808579,
+  "cells": 811179,
   "glue": 10000,
   "cores": [
    {
@@ -11292,11 +11276,11 @@
    },
    {
     "name": "bkg_tx_vmux",
-    "cells": 85437
+    "cells": 88037
    }
   ],
   "n_cores": 4,
-  "basis": "dsdv_bk_sel_vmtx parts (whole pa_lp 1,243,436)",
+  "basis": "dsdv_bk_sel_vmtx parts (whole pa_lp 1,243,436); S81/IDXNET 10-25 +2,600 est: dsdv_idx_vmux6 2 more inputs + tl/tpn/tps/loop regs 4 x 276",
   "max_core": 260094
  },
  "eng": {

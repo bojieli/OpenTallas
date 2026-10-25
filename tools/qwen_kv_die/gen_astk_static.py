@@ -197,6 +197,55 @@ ct = once(ct, "(`KVD_AKMUT == 4) ? pxq[262:7] : pyq[262:7]", "pyq[262:7]")
 ct = once(ct, "if (z_emit) ap[42:1] <= {z_s,", "if (z_emit) ap[42:1] <= {z_s ^ ((`KVD_STMUT == 3) ? 32'd1 : 32'd0),")
 assert 'ap[45' not in ct and 'ap[564' not in ct
 
+# KV core boundary contract: external copies of the controller command launch
+# on the original qo edge, separately from qo and the core's local consumers.
+ct = once(ct, '    parameter integer Z_STRIDE=4\n',
+          '    parameter integer Z_STRIDE=4, parameter integer PORT_REGS=0\n')
+ct = once(ct, '    output reg  [571:0]  qo,\n',
+          '    output reg  [571:0]  qo,\n    output wire [59:0] tc_faces,\n    output wire [571:0] qo_face,\n')
+ct = ct.rsplit('endmodule', 1)[0] + r"""
+    generate if (PORT_REGS != 0) begin : g_tc_faces
+        genvar face;
+        for (face=0; face<4; face=face+1) begin : g_face
+            (* keep_hierarchy *) qkd_astk_tc_face u_face
+                (.ck(ck), .rn(rn_q), .start(start), .t(T), .q(tc_faces[15*face +: 15]));
+        end
+        (* keep_hierarchy *) qkd_astk_qo_face u_qo_face
+            (.ck(ck), .rn(rn_q), .d({am_q[35:1], am_q[0], kdone, aq_q[539:22], aq_q[21], T, start}), .q(qo_face));
+    end else begin : g_tc_disabled
+        assign tc_faces=60'd0;
+        assign qo_face=572'd0;
+    end endgenerate
+endmodule
+
+// Each instance stays distinct through synthesis, like the existing plan relay
+// cells. Same valid/data edge as ctl.qo[14:0]; no output feedback or alias loads.
+(* keep_hierarchy *) module qkd_astk_qo_face(
+    input wire ck, rn, input wire [571:0] d, output reg [571:0] q);
+`ifdef KVG3_ASTK_QOMUT
+    wire [571:0] pd = d ^ (572'd1 << 535);
+`else
+    wire [571:0] pd = d;
+`endif
+    always @(posedge ck or negedge rn)
+        if (!rn) begin q[0]<=0; q[15]<=0; q[536:534]<=0; end
+        else begin q[0]<=pd[0]; q[15]<=pd[15]; q[536:534]<=pd[536:534]; end
+    always @(posedge ck) begin q[14:1]<=pd[14:1]; q[533:16]<=pd[533:16]; q[571:537]<=pd[571:537]; end
+endmodule
+
+(* keep_hierarchy *) module qkd_astk_tc_face(
+    input wire ck, rn, start, input wire [13:0] t, output reg [14:0] q);
+    always @(posedge ck or negedge rn)
+        if (!rn) q[0] <= 1'b0;
+        else q[0] <= start;
+`ifdef KVG3_ASTK_TCMUT
+    always @(posedge ck) q[14:1] <= t ^ 14'h2000;
+`else
+    always @(posedge ck) q[14:1] <= t;
+`endif
+endmodule
+"""
+
 hdr = f'''`timescale 1ns/1ps
 `ifndef KVD_STMUT
 `define KVD_STMUT 0

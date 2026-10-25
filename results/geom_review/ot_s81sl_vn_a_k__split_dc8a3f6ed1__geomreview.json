@@ -1,0 +1,16 @@
+{
+ "element": "ot_s81sl_vn_a",
+ "kit": "claude/s81-kits-split-1024r@dc8a3f6ed1 (kit epyc1:/srv/opentallas-scratch2/claude/s81-kits/split/ot_s81sl_vn_a_k, RTL claude/s81-rtlsplit-1024r@b5d2eabeef)",
+ "stage": "4_cts",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-25T03:45:00-07:00",
+ "reasons": "[2026-10-25 03:45] Looked at the placed picture. 356.4x164.16, 148.3k cells, SRAM u_h0 73 um from the W data face with a clean halo, logic on all sides, max bin 0.59; W 819 pins 5.5/um (cap 10.4); N c_s span 9.6-336.3 matches vn_b S c_s. Measured pin -> register distance on 4_cts.odb (bterm centre to the nearest flop through buffer/hold-buffer chains, Manhattan): W 819 pins p50 9.8 / p90 11.8 / max 16.1 um; N 32 max 8.7; E 65 max 6.9; 294 W inputs (n_pre 128, wl_d 128, rb_d 32, controls) reach their flop only through >16 hold buffers (n_pre[0]: 17 buffers, flop at x=10 um). Every face flop sits at its pin; the 0.5-1.5/um side faces are well under cap. No 405-um issue inside the core (largest outline edge 356 um).",
+ "fixes": "Route OK. Conditions: (1) usual sign-off TT/FF 60/25, GRT 0 overflow (watch the 5-5.5/um W/S data faces on M3/M5), DRC/antenna 0; (2) the long hold-buffer chains in front of input face flops (up to 30 deep; vn_a 294 W inputs >16 deep) come from the input min-delay in the kit SDC, not from distance (flops are <=16 um from the pins): check the IO hold budget against the wavefront/neighbour clock plan (decision 5 related-pair skew + CPPR) and relax a pessimistic hold budget in the SDC instead of burning ~5k buffers per core; (3) clock decision 5 pair skew at sign-off; (4) the LEAFPLAN lane re-plan must not change these pin tables (else re-kit).",
+ "images": [
+  "results/geom_review/s81_kits_split/ot_s81sl_vn_a_k_placed.png (on claude/s81-kits-split-1024r)"
+ ],
+ "probe": "epyc1:/srv/opentallas-scratch2/claude/geom-review/p2r/vn_a_4.txt (tool epyc1:/srv/opentallas-scratch2/claude/geom-review-p2r4.tcl)",
+ "owner_lane": "S81",
+ "rule": "register every partition pin; decision 5; OWNER 10-23 review before route"
+}

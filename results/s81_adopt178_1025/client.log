@@ -1,0 +1,213 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-ft-exact/adopt178
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-s81-ft-exact/adopt178
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-ft-exact/adopt178
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-s81-ft-exact/adopt178
+ot-run: localhost      admits   225 GB (avail 443, reserve 0, fresh 145.7, peak 8.1, headroom 0, waiters 0/0 GB) load 81/256 running 25 disk 960 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-3835785-1792924060 after 1 s
+Reused 98 unchanged exact types; placed 18 FT slots; max new actual paired-bit hop 376.60 um
+860 lanes -> /srv/opentallas-scratch2/claude/codex-s81-ft-exact/adopt178/lat/s81_lat_pkg.sv, /srv/opentallas-scratch2/claude/codex-s81-ft-exact/adopt178/lat/s81_latency.json, /srv/opentallas-scratch2/claude/codex-s81-ft-exact/adopt178/die_plan.json
+WARN  [types] near-duplicate types ['serdes__t15', 'serdes__t3'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['serdes__t1', 'serdes__t16', 'serdes__t5'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['serdes__t14', 'serdes__t2', 'serdes__t6'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['ot_s81sl_leaf__t72', 'ot_s81sl_leaf__t8'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['ot_s81sl_leaf__t73', 'ot_s81sl_leaf__t9'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['ot_s81sl_leaf__t10', 'ot_s81sl_leaf__t74'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['ot_s81sl_leaf__t24', 'ot_s81sl_leaf__t63'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['ot_s81sl_leaf__t25', 'ot_s81sl_leaf__t64'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['ot_s81sl_leaf__t40', 'ot_s81sl_leaf__t49'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [types] near-duplicate types ['ot_s81sl_leaf__t44', 'ot_s81sl_leaf__t48'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)
+WARN  [core_faces] type col_h10_r0_p1__t1: 87/87 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h10_r1__t1: 77/77 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h10_r2__t1: 67/67 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h9_r0_p2__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h9_r1__t1: 73/73 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h9_r2__t1: 67/67 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h9_r0_p3__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h10_r0_p4__t1: 87/87 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h9_r0_p5__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h9_r0_p6__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h9_r0_p1__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type col_h9_r0_p4__t1: 76/76 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_lo_dsdv_svc_rs_w__t1: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_hi_dsdv_svc_rs__t1: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_lo_dsdv_svc_rs__t1: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_hi_dsdv_svc_rs__t2: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_lo_dsdv_svc_rs__t2: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_hi_dsdv_svc_pvso_entry__t1: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_lo_dsdv_svc_rs__t3: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_hi_dsdv_svc_rs__t3: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_lo_dsdv_svc_rs__t4: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_hi_dsdv_svc_rs__t4: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_lo_dsdv_svc_rs__t5: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_hi_dsdv_svc_pvso_entry__t2: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_lo_dsdv_svc_rs__t6: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_hi_dsdv_svc_rs__t5: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_lo_dsdv_svc_rs__t7: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type svc_hi_dsdv_svc_rs__t6: 64/72 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t1 core u_lf.u_vsw port o_d: 64 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.09, 64 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t1 core u_lf.u_vsw port o_f: 1 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t1 core u_lf.u_vsw port o_v: 1 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t1 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t1 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t1 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t1 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t1 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.09, 32 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t1: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t2 core u_lf.u_vsw port o_d: 64 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.04, 64 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t2 core u_lf.u_vsw port o_f: 1 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.04, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t2 core u_lf.u_vsw port o_v: 1 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.04, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t2 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.07, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t2 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.07, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t2 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.07, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t2 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t2 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.10, 32 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t2: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_lepw_mus_C__t1: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t3 core u_lf.u_vsw port o_d: 64 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 64 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t3 core u_lf.u_vsw port o_f: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t3 core u_lf.u_vsw port o_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t3 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t3 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t3 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t3 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.04, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t3 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.04, 32 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t3: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t4 core u_lf.u_vsw port o_d: 64 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.10, 64 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t4 core u_lf.u_vsw port o_f: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t4 core u_lf.u_vsw port o_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t4 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t4 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t4 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t4 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t4 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.10, 32 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t4: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t5 core u_lf.u_vsw port o_d: 64 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 64 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t5 core u_lf.u_vsw port o_f: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t5 core u_lf.u_vsw port o_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t5 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t5 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.08, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t5 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t5 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.00, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t5 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.00, 32 pins on the far side (re-pin to face S) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t5: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t6 core u_lf.u_vsw port i_d: 256 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 256 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t6 core u_lf.u_vsw port i_lim: 32 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 32 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t6 core u_lf.u_vsw port i_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t6 core u_lf.u_vsw port i_w: 32 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 32 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t6 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t6 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t6 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t6 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.00, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t6 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.00, 32 pins on the far side (re-pin to face N) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t6: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t7 core u_lf.u_vsw port o_d: 64 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.10, 64 pins on the far side (re-pin to face W) [about perpendicular: WARN]
+WARN  [core_faces] type ot_s81sl_leaf__t7: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_lepw_mu_C__t1: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t8: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t9: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t10: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t11: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t12: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t13: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_c1x_C__t1: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t14: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t15: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t16: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t17: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_c1x_C__t10: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t75: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t53: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t54: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t21: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t22: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_c1x_C__t3: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t23: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t24: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t25: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t26: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t27: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_c1x_C__t4: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t28: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t29: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t30: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t31: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t32: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_iq_C__t1: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t33: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t34: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t35: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_kv512_C__t1: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t36: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t37: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t38: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_c3x_C__t1: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t39: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t40: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t41: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t42: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_c1x_C__t5: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t43: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t44: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t45: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t46: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_c1x_C__t6: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t47: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t48: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t49: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t50: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t51: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_c1x_C__t7: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t52: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t55: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t56: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t57: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_c1x_C__t8: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t58: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t59: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t60: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t61: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_c1x_C__t9: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t62: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t63: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t64: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t65: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t66: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_lepe_nh_mus_C__t1: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t67: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t68: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t69: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t70: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t71: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type dsdv_slice_lepe_mu_C__t1: 2/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t72: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t73: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type ot_s81sl_leaf__t74: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type gunit__t1: 10/10 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [core_faces] type bk_sel__t2: 7/7 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them
+WARN  [geometry] type serdes__t4 slot ft0: crossing ~2056 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t4 slot ft1: crossing ~2056 um > 3 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t4 slot ft2: crossing ~2056 um > 3 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t4 slot ft3: crossing ~2056 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t4 slot ft4: crossing ~2056 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t4 slot ft5: crossing ~2056 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t12 slot ft3: crossing ~1948 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t12 slot ft4: crossing ~1948 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t13 slot ft0: crossing ~2056 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t13 slot ft1: crossing ~2056 um > 2 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t13 slot ft2: crossing ~2056 um > 5 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t13 slot ft3: crossing ~2056 um > 1 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t13 slot ft4: crossing ~2056 um > 1 station(s) x reach 405 (see hops)
+WARN  [geometry] type serdes__t13 slot ft5: crossing ~2056 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type svc_lo_dsdv_svc_rs__t7 slot ft0: crossing ~1948 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type svc_lo_dsdv_svc_rs__t7 slot ft3: crossing ~1948 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type svc_lo_dsdv_svc_rs__t7 slot ft4: crossing ~1948 um > 4 station(s) x reach 405 (see hops)
+WARN  [geometry] type slice_station__t8 slot ft0: crossing ~1335 um > 3 station(s) x reach 405 (see hops)
+WARN  [geometry] type slice_station__t8 slot ft1: crossing ~1335 um > 3 station(s) x reach 405 (see hops)
+WARN  [geometry] type slice_station__t8 slot ft4: crossing ~1335 um > 3 station(s) x reach 405 (see hops)
+WARN  [geometry] type slice_station__t8 slot ft11: crossing ~1335 um > 3 station(s) x reach 405 (see hops)
+WARN  [geometry] type slice_station__t43 slot ft2: crossing ~1335 um > 3 station(s) x reach 405 (see hops)
+... 1066 more in g0_report.json
+G0C per type: 178/178 types clean (G3-eligible: 178); die-level {}; ERRORs
+G0C PASS: 0 errors, 1266 warnings; 178 types / 399 partitions (22 in near-duplicate groups); worst cut {'ratio': 0.1423, 'at': 'horizontal@18750'}, worst partition segment {'ratio': 0.3922, 'at': 'horizontal@18750:s_7N_L1'}; report /srv/opentallas-scratch2/claude/codex-s81-ft-exact/adopt178/g0c/g0_report.json
+ot-run: RAN on localhost (unit oth-ubuntu-3835785-1792924060): exit 0

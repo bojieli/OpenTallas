@@ -82,8 +82,94 @@ def core_ports(core, root=None):
     return ins, outs, sorted(cks)
 
 
-def proof_leaf(module, ins, outs, cores=()):
-    """ins/outs: [(bus, width)].  Registered: every out bit = XOR of a rotated fold of all input bits.
+LEAF_HOP_UM = None   # set from reach.py at use: OWNER_LOCAL_PLAN_UM x MARGIN (405 x 0.9 = 364.5 um per reg-reg hop)
+
+
+def leaf_hop_um():
+    import reach as RCH
+    return min(RCH.layer_reach(n) for n in RCH.PARTITION_LAYERS) * RCH.MARGIN
+
+
+def _man(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+
+def reach_plan(ins, outs, geo, hop_um):
+    """CP1-R10 (12:30): the reach-aware proof-leaf dataflow.  geo {bus: (x, y)} = the bus pin centroid (type frame).
+    Every out bus takes its NEAREST in bus; every in bus feeds its NEAREST out bus (so no input is dead).  A pair at
+    Manhattan distance d gets ceil(d / hop_um) register hops between the in face flop and the out face flop: the
+    leaf's in-register q, its fold register f_s0, s = max(0, hops - 4) pipeline stages, the leaf's out-register (4 hops
+    in face flop -> q -> f_s0 -> out reg -> out face flop without stages).
+    -> {out: [(in, d_um, stages)]}"""
+    srcs = {o: set() for o, _ in outs}
+    if not ins:
+        return {o: [] for o in srcs}
+    for o, _ in outs:
+        srcs[o].add(min((i for i, _ in ins), key=lambda i: (_man(geo[i], geo[o]), i)))
+    for i, _ in ins:
+        if outs:
+            srcs[min((o for o, _ in outs), key=lambda o: (_man(geo[i], geo[o]), o))].add(i)
+    out = {}
+    for o in srcs:
+        out[o] = []
+        for i in sorted(srcs[o]):
+            d = _man(geo[i], geo[o])
+            hops = max(1, math.ceil(d / hop_um))
+            out[o].append((i, round(d, 1), max(0, hops - 4)))
+    return out
+
+
+def _unique_fold(wi, w, k, used=None):
+    """Fold an in bus of wi bits into w out bits: [sorted in-bit indices per out bit], every out bit a DISTINCT,
+    non-constant XOR (no two out bits share a term set).
+    Why (CLOCK-RESET/cp1 10-25): the old narrow-bus fold q[j % wi] ^ q[(j*7+k+1) % wi] repeats with period wi, so out
+    bits j, j+wi, j+2wi, ... were identical functions; Yosys merged their leaf registers (r1 frame_int_o0: 1230 output
+    pin registers fed by 384 leaf flops) and ONE leaf flop drove 3-4 face flops 166-254 um apart along the face ->
+    post-route D-pin slew 400-436 ps (320 limit) that no ECO repaired.  Every output pin register must have its own
+    source register (industry practice: no register sharing across ports)."""
+    used = set() if used is None else used     # shared per in bus: out buses of one in bus stay distinct too
+    if wi > w:      # wide in bus: disjoint residue classes (distinct within the bus); widen one on a cross-bus clash
+        out = []
+        for j in range(w):
+            ms = set(range(j % wi, wi, w))
+            p = (j * 7 + k + 1) % wi
+            while frozenset(ms) in used and len(ms) < wi:
+                if p not in ms:
+                    ms.add(p)
+                p = (p + 1) % wi
+            used.add(frozenset(ms))
+            out.append(sorted(ms))
+        return out
+    if wi == 1:     # one in bit: only q and ~q exist; distinctness impossible (caller's plan should not do this)
+        return [[0] for _ in range(w)]
+    out = []
+    npairs = wi * (wi - 1) // 2
+    for j in range(w):
+        a = j % wi
+        if len(used) >= npairs:     # pairs exhausted (tiny in bus): triples, still distinct up to C(wi, 3)
+            b = (a + 1 + j // wi) % wi
+            c = (b + 1 + (j * 7 + k) % max(1, wi - 2)) % wi
+            ms = tuple(sorted({a, b, c}))
+            out.append(list(ms))
+            continue
+        p = (j * 7 + k + 1 + 13 * (j // wi)) % wi
+        for _ in range(wi):
+            if p != a and frozenset((a, p)) not in used:
+                break
+            p = (p + 1) % wi
+        else:       # every partner of a used: take the first free pair anywhere
+            a, p = next((x, y) for x in range(wi) for y in range(x + 1, wi) if frozenset((x, y)) not in used)
+        used.add(frozenset((a, p)))
+        out.append(sorted((a, p)))
+    return out
+
+
+def proof_leaf(module, ins, outs, cores=(), geo=None, hop_um=None):
+    """ins/outs: [(bus, width)].  geo {bus: (x, y)} (type frame pin centroids): the reach-aware leaf (reach_plan):
+    every out bus is a registered XOR fold of its nearest in bus(es), each pipelined by its own stage count, so no
+    leaf path is longer than a reach hop (CP1 reach405 r1, 12:2x: the all-bus XOR fold below made ~1-1.4 mm
+    unpipelined face -> leaf paths, TT -241.76 ps, 1234 slew violations, none of them on the seam).  geo None: the
+    legacy leaf: every out bit = XOR of a rotated fold of all input bits.
     cores: [(leaf inst, core module, core ins, core outs, clock pins)] (CP2, --cores): each hard core is instantiated
     as a black box (its liberty view in the kit), every clock pin on clk, every input pin driven by its own stub flop
     and every output pin captured by its own stub flop (reg-to-core / core-to-reg paths; the core is a real clock
@@ -97,7 +183,38 @@ def proof_leaf(module, ins, outs, cores=()):
         body.append(f"    wire [{tot - 1}:0] cat = {{{', '.join(b for b, _ in ins)}}};")
         body.append(f"    reg [{tot - 1}:0] q;")
         body.append("    always @(posedge clk) q <= cat;")
-    for k, (b, w) in enumerate(outs):
+    if geo is not None and tot:
+        wid = dict(ins)
+        offs, o_ = {}, 0
+        for b, w in reversed(ins):          # cat = {ins[0], ..., ins[-1]}: the last bus is the LSBs
+            offs[b] = o_
+            o_ += w
+        plan = reach_plan(ins, outs, geo, hop_um or leaf_hop_um())
+        folds = {}
+        for k, (b, w) in enumerate(outs):
+            terms = []
+            for i, d, st in plan[b]:
+                wi, base = wid[i], offs[i]
+                # fold in bus i into w bits: bit j = XOR of q_i[m] for m = j, j + w, ... (+ a rotated partner when the
+                # in bus is narrower), all from ONE in bus (one face window)
+                bits = _unique_fold(wi, w, k, folds.setdefault(i, set()))
+                bits = [" ^ ".join(f"q[{base + m}]" for m in ms) for ms in bits]
+                f = f"f_{b}_{i}"
+                body.append(f"    // {b} <- {i}: {d:g} um, {st} pipeline stage(s) (hop <= {hop_um or leaf_hop_um():g} um)")
+                body.append(f"    reg [{w - 1}:0] {f}_s0;")
+                body.append(f"    always @(posedge clk) {f}_s0 <= {{{', '.join(reversed(bits))}}};")
+                for sidx in range(1, st + 1):
+                    body.append(f"    reg [{w - 1}:0] {f}_s{sidx};")
+                    body.append(f"    always @(posedge clk) {f}_s{sidx} <= {f}_s{sidx - 1};")
+                terms.append(f"{f}_s{st}")
+            if terms:
+                body.append(f"    always @(posedge clk) {b} <= {' ^ '.join(terms)};")
+            else:
+                body.append(f"    always @(posedge clk) {b} <= ~{b};")
+        outs_done = True
+    else:
+        outs_done = False
+    for k, (b, w) in enumerate(outs if not outs_done else []):
         if not tot:
             body.append(f"    always @(posedge clk) {b} <= ~{b};")
             continue
@@ -179,7 +296,41 @@ def add_core_taps(P, tn, t, target_ps, root=None):
     return added
 
 
-def extract(raw, parts, channel_um=0.0, name=None, cores=False, core_taps=False, plan_dir=None, root=None):
+def bus_centroids(P, tn):
+    """{bus: (x, y)}: the pin centroid of every bus of type tn in the type frame (gen_phys.type_pins)."""
+    import gen_phys
+    acc = {}
+    for bn, _b, _l, x, y, _f in gen_phys.type_pins(P, tn):
+        a = acc.setdefault(bn, [0.0, 0.0, 0])
+        a[0] += x
+        a[1] += y
+        a[2] += 1
+    return {k: (v[0] / v[2], v[1] / v[2]) for k, v in acc.items()}
+
+
+def leaves_for(raw, leaf="reach", hop_um=None):
+    """regenerate leaves.sv for an existing coreless pair plan (its types' buses and pins unchanged), e.g. after
+    kit_ft_resize: -> verilog text.  Only proof-leaf types (contents == one u_leaf <module>_proof_leaf) are written."""
+    P = S.Plan(raw)
+    out = ["`timescale 1ns/1ps", "`default_nettype none",
+           f"// GENERATED by tools/die_plan/pair.py --leaves-only ({leaf} leaf) for the pair plan {P.name}.",
+           "// Vehicle for the boundary / face / channel proof only; not the partitions' real logic."]
+    for tn, t in P.types.items():
+        c = t.get("contents", [])
+        if len(c) != 1 or c[0]["module"] != f"{t['module']}_proof_leaf":
+            raise SystemExit(f"type {tn}: not a pair.py proof-leaf type")
+        if t.get("hard_cores"):
+            raise SystemExit(f"type {tn}: has hard_cores (--cores pair): regenerate with extract")
+        ins = [(b["name"], b["width"]) for b in t.get("buses", []) if b["dir"] == "in"]
+        outs = [(b["name"], b["width"]) for b in t.get("buses", []) if b["dir"] == "out"]
+        geo = bus_centroids(P, tn) if leaf == "reach" else None
+        out.append(proof_leaf(t["module"], ins, outs, (), geo=geo, hop_um=hop_um)[0])
+    out.append("`default_nettype wire")
+    return "\n".join(out) + "\n"
+
+
+def extract(raw, parts, channel_um=0.0, name=None, cores=False, core_taps=False, plan_dir=None, root=None,
+            leaf="reach"):
     """cores: instantiate every hard core of each type in its proof leaf (CP2); core_taps: early core taps
     (add_core_taps); plan_dir: the source plan's directory (relative hard_cores[].pins_file become absolute)."""
     P = S.Plan(raw)
@@ -237,7 +388,13 @@ def extract(raw, parts, channel_um=0.0, name=None, cores=False, core_taps=False,
         for c in t.get("hard_cores", []):
             if c.get("pins_file") and plan_dir and not Path(c["pins_file"]).is_absolute():
                 c["pins_file"] = str((Path(plan_dir) / c["pins_file"]).resolve())
-        v, lname = proof_leaf(t["module"], ins, outs, lcores)
+        geo = None
+        if leaf == "reach":
+            geo = bus_centroids(P, tn)
+            miss = [b for b, _ in ins + outs if b not in geo]
+            if miss:
+                raise SystemExit(f"type {tn}: buses without pins {miss} (reach leaf needs every bus's geometry)")
+        v, lname = proof_leaf(t["module"], ins, outs, lcores, geo=geo)
         leaves.append(v)
         for b in t.get("buses", []):
             b["leaf"] = f"u_leaf.{b['name']}"
@@ -350,8 +507,18 @@ def main(argv=None):
     ap.add_argument("--core-taps", action="store_true",
                     help="early dedicated clock taps (clock.taps kind core) for core clock pins whose internal "
                          "latency leaves no room under the common latency")
+    ap.add_argument("--leaf", choices=("reach", "fold"), default="reach",
+                    help="proof leaf dataflow: reach (default, CP1-R10: nearest in bus per out bus, pipelined per "
+                         "reach hop) or fold (legacy all-bus XOR fold: unpipelined cross-partition paths)")
+    ap.add_argument("--leaves-only", action="store_true",
+                    help="PLAN is an existing coreless pair plan: only rewrite OUT/leaves.sv with the --leaf dataflow")
     a = ap.parse_args(argv)
     raw = S.load(a.plan)
+    if a.leaves_only:
+        Path(a.out).mkdir(parents=True, exist_ok=True)
+        (Path(a.out) / "leaves.sv").write_text(leaves_for(raw, a.leaf))
+        print(f"{Path(a.out) / 'leaves.sv'}: {a.leaf} proof leaves for {len(raw['partition_types'])} types")
+        return 0
     if a.core_views:
         import cores as C
         done, miss = C.fill_views(raw, a.core_views)
@@ -368,7 +535,7 @@ def main(argv=None):
         print("plan invalid:\n  " + "\n  ".join(errs[:20]))
         return 1
     plan, leaves = extract(raw, a.parts.split(","), a.channel, a.name, cores=a.cores, core_taps=a.core_taps,
-                           plan_dir=str(Path(a.plan).resolve().parent))
+                           plan_dir=str(Path(a.plan).resolve().parent), leaf=a.leaf)
     added = plan.pop("core_taps_added", None)
     if added:
         for tn, lst in added.items():

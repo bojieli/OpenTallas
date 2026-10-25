@@ -1,0 +1,1 @@
+Native ot_s81_cfg7_seq view (17.28x51.84 um). Uniform SIGNED: TT setup 263.12 ps (incl. rst_n recovery), FF hold 8.48 ps; DRV/DRC/antenna PASS/PASS/PASS; sdc_lint/face_guard PASS/PASS; pin audit 433/433. Clock insertion balanced to the 250 ps budget. Source in source/. Routed abstract + TT/FF timing models.

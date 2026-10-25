@@ -1,0 +1,16 @@
+{
+ "element": "hnx_rp3lp3h_n",
+ "view": "hnx_rp3lp3h_n@1938f3904f84",
+ "kit": "physical/die_plan/hbm_arch_cores (kit hnx_rp3lp3h_n_1938f3904f84-tc, B2r2 pins 1938f3904f84, plan c1bc2d0f7ada)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "e596c96a12855f33",
+ "reasons": "CODEX viewed N/S plan PNGs: pins below6/um, aligned native half interfaces, ample outline for12 actual SRAM macros. The missing LEF failure is fixed by declared macro inventory and TT/FF libs; no pin or RTL change.",
+ "fixes": "Place only, then inspect actual macros/clock/pin-register placement before route. Parent SM partition routing remains held for final column-channel design.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review/hnx_rp3lp3h_n_1938f3904f84/plan.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T09:41:33-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

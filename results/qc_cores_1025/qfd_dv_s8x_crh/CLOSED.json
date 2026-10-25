@@ -1,0 +1,20 @@
+{
+  "module": "qfd_dv_s8x_crh",
+  "status": "CLOSED",
+  "signoff": "signoff/signoff.json",
+  "tt_lib": "views/qfd_dv_s8x_crh/qfd_dv_s8x_crh_tt.lib",
+  "ff_lib": "views/qfd_dv_s8x_crh/qfd_dv_s8x_crh_ff.lib",
+  "lef": "views/qfd_dv_s8x_crh/qfd_dv_s8x_crh.lef",
+  "lef_source": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh/qfd_dv_s8x_crh.lef",
+  "lef_note": "Unchanged source LEF pin contract; pin_audit PASS and route DRC0. Generated abstract not exported.",
+  "source_run": "epyc2:/srv/opentallas-scratch2/claude/codex-qc-cores/crh_i291_m5",
+  "source_checkpoint": "crh_bd_source routed original crh_bd",
+  "clock_insertion_ps": {
+    "tt": 292.49,
+    "ff": 240.62
+  },
+  "early_tap_ps": 42.49000000000001,
+  "sdc_reference_ps": 290.93,
+  "additional_cycles": 0,
+  "recipe": "Warm FF-only hold margin5, source DRV repair retained, no RTL/netlist/clock period or uncertainty changes"
+}

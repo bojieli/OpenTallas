@@ -1,0 +1,7 @@
+MISMATCH vq2 cyc=41 xf_v 0/0 fault 1/1
+MISMATCH vq2 cyc=42 xf_v 0/0 fault 1/1
+MISMATCH vq2 cyc=45 xf_v 0/0 fault 1/1
+MISMATCH vq2 cyc=46 xf_v 0/0 fault 1/1
+MISMATCH vq2 cyc=100 xf_v 0/0 fault 1/1
+SUMMARY aq12_xmem_eq N=20000 aq_valid=13968 aq_err=0 vq_frag=1297 vq_err=0 vq2_err=3274
+FAIL aq12_xmem_eq mutwreg

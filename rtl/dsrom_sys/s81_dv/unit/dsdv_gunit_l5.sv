@@ -60,8 +60,9 @@ module dsdv_gunit_l5 #(
     input  wire [275:0]  rs_i,  output wire [275:0] rs_o,
     input  wire          launch, input wire mx_v, input wire [4:0] mx_i, input wire [31:0] mx_y, input wire t_set, input wire t_w, input wire [9:0] t_row,
     input  wire [4:0]    t_lm, input wire [15:0] t_sm,
-    input  wire          cw_v, input wire [9:0] cw_a, input wire [255:0] cw_d, input wire [3:0] sid_i,
-    output reg           ct_v, output reg [275:0] ct_b, output reg fault,
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant / unused pins): cw_a packed {a[9:8], a[5:0]} (a[7:6] not read); ct_b = the packed CTL row
+    input  wire          cw_v, input wire [7:0] cw_a, input wire [255:0] cw_d, input wire [3:0] sid_i,
+    output reg           ct_v, output reg [169:0] ct_b, output reg fault,
     // N face (unit pins, s_3N)
     output wire [275:0]  vo_n,  input wire [275:0] vi_n,
     // E face (L5f: exp / fdiv)
@@ -82,6 +83,21 @@ module dsdv_gunit_l5 #(
         ot_rst_relay #(.REGIONS(4)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
         assign rr = 16'd0;
     end endgenerate
+    // S81-KITS-RTLC 10-24 (COORD-approved +1 edge; raw face_guard: every input pin drives exactly one flop): launch, the mix
+    // stream (mx_*), the cw stream (cw_*) and the L5f results (ye_* / yd_*) land in one pin register per bit; every copy /
+    // decode below reads the pin register.  launch + mixes +1 edge, cw (table writes) +1, the L5f round trip +1 each way
+    // it is used (tail XS 3 -> 4: exp phase +1, fdiv phase +1).  fault: sticky state in the kept fault_k, the pin flop
+    // loads its next value (0 edges).
+    reg launch_p, mx_vp, cw_vp, ye_vp, yd_vp; reg [4:0] mx_ip; reg [31:0] mx_yp; reg [7:0] cw_ap; reg [255:0] cw_dp;
+    reg [31:0] ye_yp, yd_yp; reg ye_fp, yd_fp;
+    always @(posedge clk or negedge rq[1])
+        if (!rq[1]) begin launch_p <= 1'b0; mx_vp <= 1'b0; cw_vp <= 1'b0; ye_vp <= 1'b0; yd_vp <= 1'b0; end
+        else begin launch_p <= launch; mx_vp <= mx_v; cw_vp <= cw_v; ye_vp <= ye_v; yd_vp <= yd_v; end
+`ifdef OT_RTLC_MUT_L5P   // RTLC bench mutant: the landed cw address loses a[0]
+    always @(posedge clk) begin mx_ip <= mx_i; mx_yp <= mx_y; cw_ap <= cw_a & 8'hfe; cw_dp <= cw_d; ye_yp <= ye_y; ye_fp <= ye_f; yd_yp <= yd_y; yd_fp <= yd_f; end
+`else
+    always @(posedge clk) begin mx_ip <= mx_i; mx_yp <= mx_y; cw_ap <= cw_a; cw_dp <= cw_d; ye_yp <= ye_y; ye_fp <= ye_f; yd_yp <= yd_y; yd_fp <= yd_f; end
+`endif
     dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rq[0]), .d(rs_i), .q(vo_n));
     dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rq[0]), .d(vi_n), .q(rs_o));
     // ---------------------------------------------------------------- input flops
@@ -89,12 +105,12 @@ module dsdv_gunit_l5 #(
     reg [9:0] wa; reg [255:0] wd; reg [3:0] sid_c; reg [9:0] rj_row; reg [4:0] rj_lm; reg [15:0] rj_sm;
     always @(posedge clk or negedge rq[1])
         if (!rq[1]) begin ln0 <= 1'b0; ln <= 1'b0; wv <= 1'b0; qm_v <= 1'b0; end
-        else begin ln0 <= launch; ln <= ln0; wv <= cw_v; qm_v <= mx_v; end
+        else begin ln0 <= launch_p; ln <= ln0; wv <= cw_vp; qm_v <= mx_vp; end
     wire [2:0] ln_c;                                    // ln: tail launch | rj_row/lm enable | rj_sm enable
     always @(posedge clk) begin
-        qm_i <= mx_i; qm_y <= mx_y;
+        qm_i <= mx_ip; qm_y <= mx_yp;
         tj_set <= t_set; tj_w <= t_w; tj_row <= t_row; tj_lm <= t_lm; tj_sm <= t_sm;
-        wa <= cw_a; wd <= cw_d; sid_c <= sid_i;
+        wa <= {cw_ap[7:6], 2'd0, cw_ap[5:0]}; wd <= cw_dp; sid_c <= sid_i;
     end
     generate if (FANOUT_SAFE) begin : g_in_safe
         // ln: three kept same-edge copies (D = ln0, same reset) replace the 76-load ln.
@@ -109,8 +125,8 @@ module dsdv_gunit_l5 #(
         // decoded enable, 6 decode gates a copy bit).
         for (genvar mc = 0; mc < 8; mc = mc + 1) begin : g_mq
             wire qv; wire [4:0] qi;
-            (* keep = 1 *) dsdv_gunit_control_first u_v (.clk(clk), .rst_n(rr[15]), .d(mx_v), .q(qv));
-            (* keep = 1 *) dsdv_gunit_index5 u_i (.clk(clk), .d(mx_i), .q(qi));
+            (* keep = 1 *) dsdv_gunit_control_first u_v (.clk(clk), .rst_n(rr[15]), .d(mx_vp), .q(qv));
+            (* keep = 1 *) dsdv_gunit_index5 u_i (.clk(clk), .d(mx_ip), .q(qi));
             for (genvar mw = 6 * (mc / 2); mw < 6 * (mc / 2) + 6; mw = mw + 1) begin : g_w
                 for (genvar mq = 0; mq < 2; mq = mq + 1) begin : g_q      // kept enable gate per 8 bits
                     wire en;
@@ -129,7 +145,7 @@ module dsdv_gunit_l5 #(
     wire [3:0] launch_pre;
     generate if (CONTROL_SAFE) begin : g_launch_first
         for (genvar lc = 0; lc < 4; lc = lc + 1) begin : g_copy
-            (* keep = 1 *) dsdv_gunit_control_first u_q (.clk(clk), .rst_n(FANOUT_SAFE ? rr[15] : rq[1]), .d(launch), .q(launch_pre[lc]));
+            (* keep = 1 *) dsdv_gunit_control_first u_q (.clk(clk), .rst_n(FANOUT_SAFE ? rr[15] : rq[1]), .d(launch_p), .q(launch_pre[lc]));
         end
     end else assign launch_pre = {4{ln0}}; endgenerate
     // ---------------------------------------------------------------- tables: bases, scales
@@ -165,8 +181,8 @@ module dsdv_gunit_l5 #(
         // scales: 4 x 96 flops; 16 kept write enables (24 bits each) predicted from the cw pins (= wv && !wa[9] &&
         // wa[5:0] == 62 && wa[8] == set, one edge early, same reset region as wv's peers).
         reg [95:0] scl_t [0:NSET*2-1];
-        wire scw_d0 = cw_v && !cw_a[9] && cw_a[5:0] == 6'd62 && !cw_a[8];
-        wire scw_d1 = cw_v && !cw_a[9] && cw_a[5:0] == 6'd62 &&  cw_a[8];
+        wire scw_d0 = cw_vp && !cw_ap[7] && cw_ap[5:0] == 6'd62 && !cw_ap[6];     // packed: cw_a[7:6] = a[9:8]
+        wire scw_d1 = cw_vp && !cw_ap[7] && cw_ap[5:0] == 6'd62 &&  cw_ap[6];
         for (g = 0; g < 32; g = g + 1) begin : g_scw
             wire we;
             (* keep = 1 *) dsdv_gunit_control_first u_q (.clk(clk), .rst_n((g % 2) ? rr[13] : rr[2]), .d((g / 16) ? scw_d1 : scw_d0), .q(we));
@@ -215,25 +231,25 @@ module dsdv_gunit_l5 #(
     wire tl_v, tl_f; wire [767:0] coef;
     reg qe_v, qe_f, qd_v, qd_f; reg [31:0] qe_y, qd_y;   // L5f results: input flops
     always @(posedge clk or negedge rq[1])
-        if (!rq[1]) begin qe_v <= 1'b0; qd_v <= 1'b0; end else begin qe_v <= ye_v; qd_v <= yd_v; end
-    always @(posedge clk) begin qe_y <= ye_y; qe_f <= ye_f; qd_y <= yd_y; qd_f <= yd_f; end
+        if (!rq[1]) begin qe_v <= 1'b0; qd_v <= 1'b0; end else begin qe_v <= ye_vp; qd_v <= yd_vp; end
+    always @(posedge clk) begin qe_y <= ye_yp; qe_f <= ye_fp; qd_y <= yd_yp; qd_f <= yd_fp; end
     generate if (FANOUT_SAFE) begin : g_tail_safe
     // dsdv_gunit_tail_fs (CONTROL_SAFE + Q4 built in): 12 kept launch copies one edge early (== ln0), 4 kept landing
     // copies of each L5f valid (same pin, same reset), so no launch / valid flop drives more than ~24 loads.
     wire [11:0] lp12; wire [3:0] qe_vc, qd_vc;
     for (genvar lc = 0; lc < 12; lc = lc + 1) begin : g_lp
-        (* keep = 1 *) dsdv_gunit_control_first u_q (.clk(clk), .rst_n(lc < 6 ? rr[15] : rr[2]), .d(launch), .q(lp12[lc]));
+        (* keep = 1 *) dsdv_gunit_control_first u_q (.clk(clk), .rst_n(lc < 6 ? rr[15] : rr[2]), .d(launch_p), .q(lp12[lc]));
     end
     for (genvar vc = 0; vc < 4; vc = vc + 1) begin : g_vc
-        (* keep = 1 *) dsdv_gunit_control_first u_e (.clk(clk), .rst_n(rr[1]), .d(ye_v), .q(qe_vc[vc]));
-        (* keep = 1 *) dsdv_gunit_control_first u_d (.clk(clk), .rst_n(rr[1]), .d(yd_v), .q(qd_vc[vc]));
+        (* keep = 1 *) dsdv_gunit_control_first u_e (.clk(clk), .rst_n(rr[1]), .d(ye_vp), .q(qe_vc[vc]));
+        (* keep = 1 *) dsdv_gunit_control_first u_d (.clk(clk), .rst_n(rr[1]), .d(yd_vp), .q(qd_vc[vc]));
     end
-    dsdv_gunit_tail_fs #(.PIN_COPY(PIN_COPY), .NAT32(NAT32), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rr[6]), .rst_v(rr[14:7]), .launch(ln_c[0]), .launch_pre(lp12), .mixes(mx), .bases(bases), .scales(scales),
+    dsdv_gunit_tail_fs #(.PIN_COPY(PIN_COPY), .NAT32(NAT32), .XS(4), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rr[6]), .rst_v(rr[14:7]), .launch(ln_c[0]), .launch_pre(lp12), .mixes(mx), .bases(bases), .scales(scales),
         .result_v(tl_v), .result(coef), .fault(tl_f),
         .xe_v(xe_v), .xe_x(xe_x), .xe_vo(qe_vc), .xe_y(qe_y), .xe_f(qe_f),
         .xd_v(xd_v), .xd_b(xd_b), .xd_vo(qd_vc), .xd_y(qd_y), .xd_f(qd_f));
     end else begin : g_tail_legacy
-    dsdv_gunit_tail #(.PIN_COPY(PIN_COPY), .CONTROL_SAFE(CONTROL_SAFE), .Q4(Q4), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rq[2]), .launch(ln), .launch_pre(launch_pre), .mixes(mx), .bases(bases), .scales(scales),
+    dsdv_gunit_tail #(.PIN_COPY(PIN_COPY), .CONTROL_SAFE(CONTROL_SAFE), .Q4(Q4), .XS(4), .MUT_PRE(MUT == 8 ? 1 : 0), .MUT_SK(MUT == 10 ? 1 : 0)) u_tail (.clk(clk), .rst_n(rq[2]), .launch(ln), .launch_pre(launch_pre), .mixes(mx), .bases(bases), .scales(scales),
         .result_v(tl_v), .result(coef), .fault(tl_f),
         .xe_v(xe_v), .xe_x(xe_x), .xe_vo(qe_v), .xe_y(qe_y), .xe_f(qe_f),
         .xd_v(xd_v), .xd_b(xd_b), .xd_vo(qd_v), .xd_y(qd_y), .xd_f(qd_f));
@@ -247,14 +263,18 @@ module dsdv_gunit_l5 #(
             ctl = {V{1'b0}}; ctl[0] = 1'b1; ctl[12:9] = s; ctl[21 +: 186] = p;
         end
     endfunction
-    reg c_on; reg [2:0] c_i;
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8): the CTL row leaves packed (bits 1..8, 13..20, 38, 40, 41, 189..275 of ctl()
+    // are constant 0; see dsdv_gunit_l3 / L2 unpacks before the vstop inject)
+    function automatic [169:0] ctlpk(input [275:0] w); ctlpk = {w[188:42], w[39], w[37:21], w[12:9], w[0]}; endfunction
+    reg c_on; reg [2:0] c_i; (* keep = "true" *) reg fault_k;
+    wire f_set = tl_f || (tl_v && c_on) || tbl_f;
     always @(posedge clk or negedge rq[3])
-        if (!rq[3]) begin c_on <= 1'b0; c_i <= 3'd0; ct_v <= 1'b0; fault <= 1'b0; end
+        if (!rq[3]) begin c_on <= 1'b0; c_i <= 3'd0; ct_v <= 1'b0; fault <= 1'b0; fault_k <= 1'b0; end
         else begin
             if (tl_v) begin c_on <= 1'b1; c_i <= 3'd0; end
             else if (c_on) begin c_i <= c_i + 3'd1; if (c_i == 3'd5) c_on <= 1'b0; end
             ct_v <= c_on;
-            if (tl_f || (tl_v && c_on) || tbl_f) fault <= 1'b1;
+            fault_k <= fault_k | f_set; fault <= fault_k | f_set;
         end
     generate if (FANOUT_SAFE) begin : g_ct_safe
         // Same-edge kept copies: on (2 x c_on, header gating) and the registered one-hot row select rs[r] = c_on &&
@@ -282,14 +302,22 @@ module dsdv_gunit_l5 #(
         // loads; on[1]: bits 37..60 target / lm / a / mask, 21 loads; the data field of hdr is constant 0)
         wire [V-1:0] hdr = ctl(rj_row + {7'd0, c_i}, 128'd0, rj_sm, rj_lm, sid_c);
         wire [V-1:0] gate = {{(V-37){on[1]}}, {37{on[0]}}};
-        always @(posedge clk) ct_b <= (hdr & gate) | {{(V-61-128){1'b0}}, cq, 61'd0};
+`ifdef OT_RTLC_MUT_L5   // RTLC bench mutant: packed coefficient row loses data bit 0 (w[61])
+        always @(posedge clk) ct_b <= ctlpk((hdr & gate) | {{(V-61-128){1'b0}}, cq, 61'd0}) & ~(170'd1 << 42);
+`else
+        always @(posedge clk) ct_b <= ctlpk((hdr & gate) | {{(V-61-128){1'b0}}, cq, 61'd0});
+`endif
     end else begin : g_ct_legacy
     reg [127:0] cq;                                     // coefficient row c_i (decoded constant-index slices)
     always @(*) case (c_i)
         3'd0: cq = coef[127:0];   3'd1: cq = coef[255:128]; 3'd2: cq = coef[383:256];
         3'd3: cq = coef[511:384]; 3'd4: cq = coef[639:512]; default: cq = coef[767:640];
     endcase
-    always @(posedge clk) ct_b <= c_on ? ctl(rj_row + {7'd0, c_i}, cq, rj_sm, rj_lm, sid_c) : {V{1'b0}};
+`ifdef OT_RTLC_MUT_L5   // RTLC bench mutant: packed coefficient row loses data bit 0 (w[61])
+    always @(posedge clk) ct_b <= ctlpk(c_on ? ctl(rj_row + {7'd0, c_i}, cq, rj_sm, rj_lm, sid_c) : {V{1'b0}}) & ~(170'd1 << 42);
+`else
+    always @(posedge clk) ct_b <= ctlpk(c_on ? ctl(rj_row + {7'd0, c_i}, cq, rj_sm, rj_lm, sid_c) : {V{1'b0}});
+`endif
     end endgenerate
 endmodule
 // FANOUT_SAFE kept index copy (fixed width: the module name survives synthesis; instances are (* keep *)).

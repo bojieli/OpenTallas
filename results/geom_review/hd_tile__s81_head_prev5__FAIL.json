@@ -1,0 +1,9 @@
+{
+ "element": "hd_tile",
+ "verdict": "FAIL",
+ "hash": "preview-not-for-route",
+ "kit": "hd_tile PREVIEW prev2..prev5 (claude/s81-head-1024r @59a2f733c1..4ec133d015 + unsigned c8/c4 views_rb, not committed), 3_place only; placement STA TT ideal clocks, placement RC",
+ "reasons": "[2026-10-24 23:01 PDT S81-HEAD self review, follow-up of hd_tile__s81_head_prev1__FAIL] prev1 278 viol / TNS -32.2 ns / WNS -422 -> prev2 (MERGE_HOP, A_INPUT_STAGES 1, CMP_STAGES 2): 86 / -9.6 / -290 (merge c1/res/sel_q gone; Yosys opt_merge folded the 4 per-core x/bd copies into one 305-b bank; eA1 fault -> bflt_q -224; better_q -38) -> prev3 (kept-cell copies ot_s81hd_kreg, fault land+hop, CMP_STAGES 3): 77 / -14.2 / -615, all at the per-core copy D pins (GPL puts each copy next to its A x pins, so the shared skew-line tail -> copy hop is 400-650 um) -> prev4 (A_INPUT_STAGES 2): 46 / -9.7 / -549 (the extra stage collapses onto the copy) -> prev5 (bus window TWIN 700..1000 -> 354..654): 51 / -5.9 / -325, 50 at the copy D pins (xsa lanes + bd_r bits from eB), 1 eA2 x pin. Merge / compare / fault / reset classes are closed.",
+ "fixes": "Open: x/bd transport to the 4 A cores (shared skew lines + bd_r -> 4 cores 350-700 um apart; GPL collapses relay stages). Options: (a) kit relay placement with declared sites (relay_mid needs fixed endpoints; skew tails are not fixed) - ask the kit/plan tool owner; (b) per-core skew lines after the copy (+29.6k flops, ~+1.4% tile area, std fill 3.5%) so 11..77-stage chains span the distance; (c) both. Still needed before route: signed views (c9/c6), CLOCK density taps (claude/kit-taps-1024), RESET wavefront (claude/reset-1024 @0a08a66af) on main.",
+ "reviewer": "S81-HEAD (Claude) self review"
+}

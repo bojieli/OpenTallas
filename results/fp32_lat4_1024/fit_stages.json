@@ -1,0 +1,235 @@
+{
+ "rule": "833 ps, ASAP7 RVT, ORFS synth/floorplan/place (CORNER TC), OpenSTA placement parasitics, ideal clock, setup TT 60 ps / hold FF 25 ps; wrapper = 65 operand/valid input flops (inside area/regs); stage slack = worst endpoint of each capture register group in pipeline order; input-port hold (-23 ps, wrapper IO artifact) excluded",
+ "units": {
+  "add_l3b": {
+   "lat": 3,
+   "stage_setup_tt_ps": [
+    80.9,
+    -37.4,
+    5.1
+   ],
+   "wns_setup_tt_ps": -37.41,
+   "reg2reg_hold_ff_ps": 3.4,
+   "synth_area_um2": 313.58664,
+   "regs": 268,
+   "cells": 2927
+  },
+  "add_lat3k": {
+   "lat": 3,
+   "stage_setup_tt_ps": [
+    130.1,
+    -82.7,
+    74.3
+   ],
+   "wns_setup_tt_ps": -82.68,
+   "reg2reg_hold_ff_ps": 3.4,
+   "synth_area_um2": 414.23238,
+   "regs": 268,
+   "cells": 3105
+  },
+  "add_lat4": {
+   "lat": 4,
+   "stage_setup_tt_ps": [
+    92.6,
+    352.0,
+    6.2,
+    79.2
+   ],
+   "wns_setup_tt_ps": 6.17,
+   "reg2reg_hold_ff_ps": 2.7,
+   "synth_area_um2": 441.03042,
+   "regs": 368,
+   "cells": 3344
+  },
+  "add_lat4i": {
+   "lat": 4,
+   "stage_setup_tt_ps": [
+    332.3,
+    196.6,
+    -66.5,
+    -1.0
+   ],
+   "wns_setup_tt_ps": -66.5,
+   "reg2reg_hold_ff_ps": 3.5,
+   "synth_area_um2": 451.26558,
+   "regs": 387,
+   "cells": 3383
+  },
+  "add_lat5": {
+   "lat": 5,
+   "stage_setup_tt_ps": [
+    339.4,
+    186.1,
+    334.2,
+    40.7,
+    64.2
+   ],
+   "wns_setup_tt_ps": 40.66,
+   "reg2reg_hold_ff_ps": 2.7,
+   "synth_area_um2": 473.90832,
+   "regs": 487,
+   "cells": 3608
+  },
+  "add_f12_l4": {
+   "lat": 4,
+   "stage_setup_tt_ps": [
+    107.9,
+    78.3,
+    219.5,
+    272.2
+   ],
+   "wns_setup_tt_ps": 78.29,
+   "reg2reg_hold_ff_ps": 3.4,
+   "synth_area_um2": 405.4698,
+   "regs": 372,
+   "cells": 3086
+  },
+  "add_f12_l5": {
+   "lat": 5,
+   "stage_setup_tt_ps": [
+    357.4,
+    205.3,
+    63.1,
+    215.7,
+    212.5
+   ],
+   "wns_setup_tt_ps": 63.13,
+   "reg2reg_hold_ff_ps": 3.4,
+   "synth_area_um2": 439.32456,
+   "regs": 487,
+   "cells": 3278
+  },
+  "add_f12_l5x": {
+   "lat": 5,
+   "stage_setup_tt_ps": [
+    376.0,
+    119.5,
+    58.9,
+    233.2,
+    193.9
+   ],
+   "wns_setup_tt_ps": 58.94,
+   "reg2reg_hold_ff_ps": 3.4,
+   "synth_area_um2": 450.8136,
+   "regs": 488,
+   "cells": 3342
+  },
+  "add_f12_l5s": {
+   "lat": 5,
+   "stage_setup_tt_ps": [
+    116.3,
+    332.9,
+    147.2,
+    231.2,
+    233.5
+   ],
+   "wns_setup_tt_ps": 116.35,
+   "reg2reg_hold_ff_ps": 3.4,
+   "synth_area_um2": 444.69,
+   "regs": 472,
+   "cells": 3339
+  },
+  "s81_ve_fadd_l4": {
+   "lat": 4,
+   "stage_setup_tt_ps": [
+    66.1,
+    28.8,
+    231.2,
+    262.7
+   ],
+   "wns_setup_tt_ps": 28.84,
+   "reg2reg_hold_ff_ps": 3.4,
+   "synth_area_um2": 557.20386,
+   "regs": 420,
+   "cells": 3664
+  },
+  "mul_l3": {
+   "lat": 3,
+   "stage_setup_tt_ps": [
+    14.5,
+    -33.9,
+    3.1
+   ],
+   "wns_setup_tt_ps": -33.86,
+   "reg2reg_hold_ff_ps": 3.7,
+   "synth_area_um2": 604.44306,
+   "regs": 519,
+   "cells": 5759
+  },
+  "mul_lat4": {
+   "lat": 4,
+   "stage_setup_tt_ps": [
+    29.9,
+    115.5,
+    264.2,
+    90.3
+   ],
+   "wns_setup_tt_ps": 29.85,
+   "reg2reg_hold_ff_ps": 3.1,
+   "synth_area_um2": 705.87612,
+   "regs": 561,
+   "cells": 6130
+  },
+  "mul_lat5": {
+   "lat": 5,
+   "stage_setup_tt_ps": [
+    47.9,
+    116.7,
+    381.7,
+    220.4,
+    66.3
+   ],
+   "wns_setup_tt_ps": 47.92,
+   "reg2reg_hold_ff_ps": 2.7,
+   "synth_area_um2": 779.49054,
+   "regs": 781,
+   "cells": 6759
+  },
+  "mul_f12_l5": {
+   "lat": 5,
+   "stage_setup_tt_ps": [
+    183.2,
+    198.2,
+    118.0,
+    304.0,
+    291.2
+   ],
+   "wns_setup_tt_ps": 118.05,
+   "reg2reg_hold_ff_ps": 3.4,
+   "synth_area_um2": 678.90312,
+   "regs": 550,
+   "cells": 6017
+  },
+  "mul_f12_l6": {
+   "lat": 6,
+   "stage_setup_tt_ps": [
+    454.2,
+    291.9,
+    198.4,
+    32.2,
+    284.2,
+    291.4
+   ],
+   "wns_setup_tt_ps": 32.25,
+   "reg2reg_hold_ff_ps": 3.5,
+   "synth_area_um2": 694.13922,
+   "regs": 626,
+   "cells": 6079
+  },
+  "s81_ve_fmul_l5": {
+   "lat": 5,
+   "stage_setup_tt_ps": [
+    203.1,
+    210.0,
+    238.6,
+    291.9,
+    364.0
+   ],
+   "wns_setup_tt_ps": 203.06,
+   "reg2reg_hold_ff_ps": 3.4,
+   "synth_area_um2": 807.62994,
+   "regs": 551,
+   "cells": 6349
+  }
+ }
+}

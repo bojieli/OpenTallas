@@ -1,0 +1,16 @@
+{
+ "review": "S81/LEAFPLAN author review of the plan pin revision (no P&R), answers S81/KITS r6 stage-1 FAIL results/geom_review/s81_kits_1024r/ot_s81sl_eg_c.json",
+ "when": "2026-10-24 21:49 PDT",
+ "core": "ot_s81sl_eg (kit ot_s81sl_eg_c) 259.2 x 259.2, 201 plan pins, same ports / widths as the closed view",
+ "pin_table": "physical/die_plan/s81/inputs/core_pins/ot_s81sl_eg_c.json",
+ "lef": "physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef (stub abstract: pins + OBS M1-M7; MACRO name = RTL module ot_s81sl_eg)",
+ "tool": "physical/die_plan/s81/cores/leaf/repin.py ot_s81sl_eg (keep_faces + move clk/rst_n to the S-face pin middle)",
+ "image": "results/geom_review/s81_leafplan_1024/eg_c_pins.png (left = closed-view pins, right = revision)",
+ "before": "clk + rst_n at the W-top corner (0.04, 250.5); clk -> far corner 510 um manhattan; S 163 pins in 3 clusters, peak 26.5-28 pins/um; N 36 pins in x 215-220",
+ "after": "clk (128.08, 0.04) M5 / rst_n (129.61, 0.02) M3 at the S-face centre (the face of the data clusters); clk -> far corner 390 um manhattan (288 um euclid, was ~360 to the far flops); S 165 pins spread 4.3..254.9 um, peak 0.7 pins/um (10-um window), every 2nd track M3/M5 alternating; N 36 pins spread over the face (order kept, peak 1/um)",
+ "owner_decision_13_reset": "core has one reset input (rst_n) and no reset output; the partition wavefront relay (<= 405 um) lands at the S-face centre; eg sits on the type S band in every C type (origin y 34.56 or 924.48 + R0) so the S face is the face toward the type edge relays",
+ "owner_decision_12": "pins M3/M5 (<= M7)",
+ "same_class_fixed": "ot_s81sl_vq_lfp (clk/rst_n were the N-W corner -> N-face pin middle (85.8, 129.6)), ot_s81sl_vs_lfp (S-W corner -> S-face pin middle (85.2, 0.0)) and their x-mirror views vq_xm / vs_xm; image vq_vs_clk_pins.png",
+ "same_class_reported_not_changed": "closed views ot_s81dv_xfin (rst_n at S-W corner 7.2,0.0 of 181 um; clk not at a corner) and dsdv_eng_rr_e (rst_n at W-bottom 0.1,21.7 of 341x466): closed / signed kits, a re-pin means a re-kit -> S81/KITS decision",
+ "verdict": "PASS-COND (plan pins): re-kit ot_s81sl_eg_c from this table; condition = kit geom review shows the CTS root at the S-centre pin and rst_n recovery met through the in-core relay"
+}

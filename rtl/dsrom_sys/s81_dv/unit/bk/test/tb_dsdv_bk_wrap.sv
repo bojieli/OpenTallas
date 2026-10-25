@@ -6,7 +6,7 @@
 //
 // The adapter is the bench's model of the compiled rung schedule around the unit (it is NOT hardware):
 //   frame of 8 slots per direction.  A side = the unit's egress side (S unless +mir), B side = the other.
-//   A arrivals (vi on the A side): slot 0 = the drain CTL (to the unit, travels on to B) for the NEXT frame's window;
+//   A arrivals (vi on the A side): slot 0 = the drain CTL (to the unit; canonical 10-24: consumed there, legacy: travels on to B) for the NEXT frame's window;
 //            slots 1..3 = through singles (+thru: NX / CL / kind 7 / foreign CTL) else ingress; 4..7 = ingress.
 //   B arrivals: slots 0..3 = through traffic (+thru: XQ / XB 4-fragment beats from slot 0, singles) else ingress;
 //            slots 4..7 = ingress.
@@ -165,7 +165,14 @@ module tb_dsdv_bk_wrap #(
         if (cyc < 120 && (a[0] || b[0])) $display("WRAP_DRV cyc %0d slot %0d a %h b %h", cyc, slot, a[19:0], b[19:0]);
 `endif
         // expected forwards: what arrives at cycle cyc+1 (vi visible) leaves 2 edges later
+        // COORD ruling 10-24 18:55: the BK addressed-drain sink is canonical (ot_dsdv_vstop BK_DRAIN_SINK=1): the slot-0
+        // drain CTL (kind 0, uid UID, op 1) is consumed by the unit's stop and NOT forwarded to B.  The retired legacy
+        // expectation (transparent forwarding, records up to 10-24) is kept under +define+OT_DSDV_BK_LEGACY_FWD.
+`ifdef OT_DSDV_BK_LEGACY_FWD
         fwd_b.push_back((slot == 0 || (thru && slot < 4)) ? a : '0);   // ingress beats are sunk
+`else
+        fwd_b.push_back((thru && slot < 4 && slot != 0) ? a : '0);     // ingress beats and the addressed drain are sunk
+`endif
         fwd_a.push_back((thru && slot < 4) ? b : '0);
         cyc <= cyc + 1;
     end

@@ -1,0 +1,244 @@
+H	corner	TT
+H	regs	2208
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	3350
+H	pairs	10349
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	10349
+H	max_worst	61.06
+H	max_bounded	0
+H	max_signed	-61.06
+H	max_launch	ccap[509]$_DFF_P_
+H	max_capture	q[93]$_DFF_P_
+H	max_crpr	6.94
+H	max_p99_raw	63.31
+H	max_searched	213
+H	max_nopath	0
+H	max_verify	0.000
+P	max	ccap[509]$_DFF_P_	q[93]$_DFF_P_	-61.06	6.94	68.00
+P	max	ccap[452]$_DFF_P_	q[100]$_DFF_P_	-59.21	6.94	66.15
+P	max	ccap[498]$_DFF_P_	q[82]$_DFF_P_	-59.01	6.94	65.94
+P	max	ccap[495]$_DFF_P_	q[79]$_DFF_P_	-58.98	6.94	65.91
+P	max	ccap[490]$_DFF_P_	q[74]$_DFF_P_	-58.89	6.94	65.83
+P	max	ccap[497]$_DFF_P_	q[81]$_DFF_P_	-58.88	6.94	65.81
+P	max	ccap[494]$_DFF_P_	q[78]$_DFF_P_	-58.84	6.94	65.78
+P	max	ccap[508]$_DFF_P_	q[92]$_DFF_P_	-58.82	6.94	65.76
+P	max	ccap[472]$_DFF_P_	q[88]$_DFF_P_	-58.78	6.94	65.72
+P	max	ccap[498]$_DFF_P_	q[210]$_DFF_P_	-58.78	6.94	65.72
+P	max	ccap[503]$_DFF_P_	q[87]$_DFF_P_	-58.65	6.94	65.59
+P	max	ccap[490]$_DFF_P_	q[202]$_DFF_P_	-58.62	6.94	65.55
+P	max	ccap[462]$_DFF_P_	q[78]$_DFF_P_	-58.58	6.94	65.51
+P	max	ccap[511]$_DFF_P_	q[95]$_DFF_P_	-58.53	6.94	65.47
+P	max	ccap[510]$_DFF_P_	q[126]$_DFF_P_	-58.43	6.94	65.37
+P	max	ccap[463]$_DFF_P_	q[79]$_DFF_P_	-58.42	6.94	65.36
+P	max	ccap[495]$_DFF_P_	q[207]$_DFF_P_	-58.42	6.94	65.35
+P	max	ccap[506]$_DFF_P_	q[90]$_DFF_P_	-58.32	6.94	65.26
+P	max	ccap[465]$_DFF_P_	q[81]$_DFF_P_	-58.23	6.94	65.17
+P	max	ccap[413]$_DFF_P_	q[93]$_DFF_P_	-58.20	6.94	65.13
+P	max	ccap[482]$_DFF_P_	q[98]$_DFF_P_	-58.14	6.94	65.07
+P	max	ccap[503]$_DFF_P_	q[151]$_DFF_P_	-58.13	6.94	65.07
+P	max	ccap[510]$_DFF_P_	q[62]$_DFF_P_	-58.13	6.94	65.07
+P	max	ccap[504]$_DFF_P_	q[88]$_DFF_P_	-58.12	6.94	65.05
+P	max	ccap[492]$_DFF_P_	q[76]$_DFF_P_	-58.10	6.94	65.03
+P	max	ccap[452]$_DFF_P_	q[68]$_DFF_P_	-58.05	6.94	64.98
+P	max	ccap[498]$_DFF_P_	q[146]$_DFF_P_	-58.01	6.94	64.94
+P	max	ccap[508]$_DFF_P_	q[188]$_DFF_P_	-58.00	6.94	64.93
+P	max	ccap[505]$_DFF_P_	q[57]$_DFF_P_	-57.99	6.94	64.93
+P	max	ccap[467]$_DFF_P_	q[51]$_DFF_P_	-57.99	6.94	64.92
+P	max	ccap[449]$_DFF_P_	q[97]$_DFF_P_	-57.95	6.94	64.88
+P	max	ccap[463]$_DFF_P_	q[207]$_DFF_P_	-57.86	6.94	64.80
+P	max	ccap[487]$_DFF_P_	q[71]$_DFF_P_	-57.85	6.94	64.78
+P	max	ccap[458]$_DFF_P_	q[74]$_DFF_P_	-57.81	6.94	64.75
+P	max	ccap[457]$_DFF_P_	q[73]$_DFF_P_	-57.81	6.94	64.74
+P	max	ccap[444]$_DFF_P_	q[92]$_DFF_P_	-57.75	6.94	64.68
+P	max	ccap[487]$_DFF_P_	q[199]$_DFF_P_	-57.69	6.94	64.63
+P	max	ccap[480]$_DFF_P_	q[192]$_DFF_P_	-57.69	6.94	64.62
+P	max	ccap[495]$_DFF_P_	q[143]$_DFF_P_	-57.67	6.94	64.60
+P	max	ccap[472]$_DFF_P_	q[216]$_DFF_P_	-57.63	6.94	64.57
+P	max	ccap[502]$_DFF_P_	q[150]$_DFF_P_	-57.63	6.94	64.57
+P	max	ccap[476]$_DFF_P_	q[92]$_DFF_P_	-57.57	6.94	64.51
+P	max	ccap[449]$_DFF_P_	q[65]$_DFF_P_	-57.54	6.94	64.48
+P	max	ccap[458]$_DFF_P_	q[202]$_DFF_P_	-57.54	6.94	64.48
+P	max	ccap[486]$_DFF_P_	q[70]$_DFF_P_	-57.52	6.94	64.46
+P	max	ccap[507]$_DFF_P_	q[187]$_DFF_P_	-57.51	6.94	64.44
+P	max	ccap[459]$_DFF_P_	q[43]$_DFF_P_	-57.49	6.94	64.43
+P	max	ccap[494]$_DFF_P_	q[110]$_DFF_P_	-57.43	6.94	64.37
+P	max	ccap[457]$_DFF_P_	q[137]$_DFF_P_	-57.42	6.94	64.36
+P	max	ccap[481]$_DFF_P_	q[97]$_DFF_P_	-57.39	6.94	64.33
+P	max	ccap[483]$_DFF_P_	q[67]$_DFF_P_	-57.36	6.94	64.30
+P	max	ccap[434]$_DFF_P_	q[82]$_DFF_P_	-57.32	6.94	64.26
+P	max	ccap[450]$_DFF_P_	q[98]$_DFF_P_	-57.31	6.94	64.24
+P	max	ccap[503]$_DFF_P_	q[119]$_DFF_P_	-57.30	6.94	64.23
+P	max	ccap[510]$_DFF_P_	q[190]$_DFF_P_	-57.25	6.94	64.19
+P	max	ccap[480]$_DFF_P_	q[96]$_DFF_P_	-57.24	6.94	64.17
+P	max	ccap[388]$_DFF_P_	q[100]$_DFF_P_	-57.24	6.94	64.17
+P	max	ccap[503]$_DFF_P_	q[215]$_DFF_P_	-57.23	6.94	64.16
+P	max	ccap[497]$_DFF_P_	q[145]$_DFF_P_	-57.17	6.94	64.10
+P	max	ccap[462]$_DFF_P_	q[110]$_DFF_P_	-57.17	6.94	64.10
+P	max	ccap[456]$_DFF_P_	q[200]$_DFF_P_	-57.14	6.94	64.07
+P	max	ccap[455]$_DFF_P_	q[71]$_DFF_P_	-57.13	6.94	64.06
+P	max	ccap[483]$_DFF_P_	q[99]$_DFF_P_	-57.13	6.94	64.06
+P	max	ccap[463]$_DFF_P_	q[143]$_DFF_P_	-57.11	6.94	64.05
+P	max	ccap[434]$_DFF_P_	q[210]$_DFF_P_	-57.09	6.94	64.03
+P	max	ccap[472]$_DFF_P_	q[184]$_DFF_P_	-57.07	6.94	64.00
+P	max	ccap[494]$_DFF_P_	q[142]$_DFF_P_	-57.03	6.94	63.97
+P	max	ccap[470]$_DFF_P_	q[150]$_DFF_P_	-57.00	6.94	63.94
+P	max	ccap[481]$_DFF_P_	q[65]$_DFF_P_	-56.99	6.94	63.93
+P	max	ccap[471]$_DFF_P_	q[87]$_DFF_P_	-56.98	6.94	63.92
+P	max	ccap[455]$_DFF_P_	q[199]$_DFF_P_	-56.97	6.94	63.91
+P	max	ccap[504]$_DFF_P_	q[216]$_DFF_P_	-56.96	6.94	63.90
+P	max	ccap[456]$_DFF_P_	q[136]$_DFF_P_	-56.93	6.94	63.87
+P	max	ccap[444]$_DFF_P_	q[188]$_DFF_P_	-56.92	6.94	63.86
+P	max	ccap[488]$_DFF_P_	q[200]$_DFF_P_	-56.84	6.94	63.78
+P	max	ccap[448]$_DFF_P_	q[192]$_DFF_P_	-56.82	6.94	63.76
+P	max	ccap[439]$_DFF_P_	q[87]$_DFF_P_	-56.79	6.94	63.72
+P	max	ccap[462]$_DFF_P_	q[142]$_DFF_P_	-56.77	6.94	63.70
+P	max	ccap[452]$_DFF_P_	q[196]$_DFF_P_	-56.75	6.94	63.69
+P	max	ccap[476]$_DFF_P_	q[188]$_DFF_P_	-56.75	6.94	63.68
+P	max	ccap[509]$_DFF_P_	q[189]$_DFF_P_	-56.71	6.94	63.64
+P	max	ccap[506]$_DFF_P_	q[186]$_DFF_P_	-56.69	6.94	63.63
+P	max	ccap[493]$_DFF_P_	q[141]$_DFF_P_	-56.69	6.94	63.62
+P	max	ccap[500]$_DFF_P_	q[148]$_DFF_P_	-56.66	6.94	63.60
+P	max	ccap[440]$_DFF_P_	q[88]$_DFF_P_	-56.66	6.94	63.59
+P	max	ccap[488]$_DFF_P_	q[136]$_DFF_P_	-56.63	6.94	63.57
+P	max	ccap[508]$_DFF_P_	q[124]$_DFF_P_	-56.59	6.94	63.52
+P	max	ccap[420]$_DFF_P_	q[100]$_DFF_P_	-56.58	6.94	63.51
+P	max	ccap[511]$_DFF_P_	q[127]$_DFF_P_	-56.54	6.94	63.47
+P	max	ccap[465]$_DFF_P_	q[145]$_DFF_P_	-56.53	6.94	63.46
+P	max	ccap[457]$_DFF_P_	q[201]$_DFF_P_	-56.52	6.94	63.45
+P	max	ccap[482]$_DFF_P_	q[194]$_DFF_P_	-56.52	6.94	63.45
+P	max	ccap[427]$_DFF_P_	q[43]$_DFF_P_	-56.50	6.94	63.44
+P	max	ccap[497]$_DFF_P_	q[209]$_DFF_P_	-56.48	6.94	63.42
+P	max	ccap[467]$_DFF_P_	q[211]$_DFF_P_	-56.46	6.94	63.40
+P	max	ccap[471]$_DFF_P_	q[151]$_DFF_P_	-56.46	6.94	63.40
+P	max	ccap[482]$_DFF_P_	q[130]$_DFF_P_	-56.44	6.94	63.38
+P	max	ccap[398]$_DFF_P_	q[78]$_DFF_P_	-56.43	6.94	63.37
+P	max	ccap[492]$_DFF_P_	q[204]$_DFF_P_	-56.41	6.94	63.35
+P	max	ccap[504]$_DFF_P_	q[184]$_DFF_P_	-56.40	6.94	63.34
+P	max	ccap[493]$_DFF_P_	q[205]$_DFF_P_	-56.40	6.94	63.33
+P	max	ccap[511]$_DFF_P_	q[191]$_DFF_P_	-56.39	6.94	63.32
+P	max	ccap[490]$_DFF_P_	q[138]$_DFF_P_	-56.38	6.94	63.32
+P	max	ccap[448]$_DFF_P_	q[96]$_DFF_P_	-56.37	6.94	63.31
+P	max	ccap[399]$_DFF_P_	q[79]$_DFF_P_	-56.34	6.94	63.28
+P	max	ccap[459]$_DFF_P_	q[139]$_DFF_P_	-56.32	6.94	63.26
+P	max	ccap[434]$_DFF_P_	q[146]$_DFF_P_	-56.32	6.94	63.25
+P	max	ccap[439]$_DFF_P_	q[151]$_DFF_P_	-56.27	6.94	63.20
+P	max	ccap[402]$_DFF_P_	q[82]$_DFF_P_	-56.26	6.94	63.20
+P	max	ccap[506]$_DFF_P_	q[218]$_DFF_P_	-56.26	6.94	63.19
+P	max	ccap[492]$_DFF_P_	q[140]$_DFF_P_	-56.23	6.94	63.16
+P	max	ccap[500]$_DFF_P_	q[116]$_DFF_P_	-56.23	6.94	63.16
+P	max	ccap[500]$_DFF_P_	q[212]$_DFF_P_	-56.20	6.94	63.14
+P	max	ccap[387]$_DFF_P_	q[67]$_DFF_P_	-56.19	6.94	63.13
+P	max	ccap[486]$_DFF_P_	q[198]$_DFF_P_	-56.19	6.94	63.13
+P	max	ccap[495]$_DFF_P_	q[111]$_DFF_P_	-56.19	6.94	63.12
+P	max	ccap[475]$_DFF_P_	q[187]$_DFF_P_	-56.15	6.94	63.08
+P	max	ccap[505]$_DFF_P_	q[185]$_DFF_P_	-56.15	6.94	63.08
+P	max	ccap[388]$_DFF_P_	q[68]$_DFF_P_	-56.07	6.94	63.01
+P	max	ccap[494]$_DFF_P_	q[206]$_DFF_P_	-56.06	6.94	62.99
+P	max	ccap[402]$_DFF_P_	q[210]$_DFF_P_	-56.04	6.94	62.97
+P	max	ccap[459]$_DFF_P_	q[203]$_DFF_P_	-56.03	6.94	62.97
+P	max	ccap[447]$_DFF_P_	q[95]$_DFF_P_	-56.02	6.94	62.95
+P	max	ccap[453]$_DFF_P_	q[133]$_DFF_P_	-56.00	6.94	62.94
+P	max	ccap[467]$_DFF_P_	q[147]$_DFF_P_	-56.00	6.94	62.94
+P	max	ccap[410]$_DFF_P_	q[90]$_DFF_P_	-55.98	6.94	62.92
+P	max	ccap[449]$_DFF_P_	q[193]$_DFF_P_	-55.98	6.94	62.92
+P	max	ccap[506]$_DFF_P_	q[122]$_DFF_P_	-55.97	6.94	62.91
+P	max	ccap[387]$_DFF_P_	q[99]$_DFF_P_	-55.96	6.94	62.90
+P	max	ccap[472]$_DFF_P_	q[120]$_DFF_P_	-55.92	6.94	62.85
+P	max	ccap[502]$_DFF_P_	q[118]$_DFF_P_	-55.86	6.94	62.80
+P	max	ccap[431]$_DFF_P_	q[79]$_DFF_P_	-55.86	6.94	62.80
+P	max	ccap[465]$_DFF_P_	q[209]$_DFF_P_	-55.84	6.94	62.78
+P	max	ccap[462]$_DFF_P_	q[206]$_DFF_P_	-55.79	6.94	62.73
+P	max	ccap[453]$_DFF_P_	q[197]$_DFF_P_	-55.78	6.94	62.72
+P	max	ccap[399]$_DFF_P_	q[207]$_DFF_P_	-55.78	6.94	62.72
+P	max	ccap[486]$_DFF_P_	q[134]$_DFF_P_	-55.75	6.94	62.69
+P	max	ccap[464]$_DFF_P_	q[144]$_DFF_P_	-55.74	6.94	62.68
+P	max	ccap[461]$_DFF_P_	q[141]$_DFF_P_	-55.69	6.94	62.63
+P	max	ccap[450]$_DFF_P_	q[194]$_DFF_P_	-55.69	6.94	62.62
+P	max	ccap[463]$_DFF_P_	q[111]$_DFF_P_	-55.64	6.94	62.57
+P	max	ccap[471]$_DFF_P_	q[119]$_DFF_P_	-55.63	6.94	62.56
+P	max	ccap[450]$_DFF_P_	q[130]$_DFF_P_	-55.61	6.94	62.55
+P	max	ccap[497]$_DFF_P_	q[113]$_DFF_P_	-55.60	6.94	62.53
+P	max	ccap[451]$_DFF_P_	q[67]$_DFF_P_	-55.59	6.94	62.53
+P	max	ccap[487]$_DFF_P_	q[135]$_DFF_P_	-55.58	6.94	62.52
+P	max	ccap[452]$_DFF_P_	q[132]$_DFF_P_	-55.58	6.94	62.51
+P	max	ccap[449]$_DFF_P_	q[129]$_DFF_P_	-55.57	6.94	62.51
+P	max	ccap[471]$_DFF_P_	q[215]$_DFF_P_	-55.56	6.94	62.49
+P	max	ccap[426]$_DFF_P_	q[74]$_DFF_P_	-55.54	6.94	62.48
+P	max	ccap[493]$_DFF_P_	q[109]$_DFF_P_	-55.54	6.94	62.47
+P	max	ccap[490]$_DFF_P_	q[106]$_DFF_P_	-55.52	6.94	62.46
+P	max	ccap[444]$_DFF_P_	q[124]$_DFF_P_	-55.51	6.94	62.45
+P	max	ccap[440]$_DFF_P_	q[216]$_DFF_P_	-55.51	6.94	62.44
+P	max	ccap[467]$_DFF_P_	q[115]$_DFF_P_	-55.50	6.94	62.44
+P	max	ccap[439]$_DFF_P_	q[119]$_DFF_P_	-55.43	6.94	62.37
+P	max	ccap[481]$_DFF_P_	q[193]$_DFF_P_	-55.43	6.94	62.36
+P	max	ccap[420]$_DFF_P_	q[68]$_DFF_P_	-55.41	6.94	62.35
+P	max	ccap[480]$_DFF_P_	q[128]$_DFF_P_	-55.41	6.94	62.35
+P	max	ccap[485]$_DFF_P_	q[133]$_DFF_P_	-55.41	6.94	62.34
+P	max	ccap[461]$_DFF_P_	q[205]$_DFF_P_	-55.40	6.94	62.34
+P	max	ccap[425]$_DFF_P_	q[73]$_DFF_P_	-55.40	6.94	62.34
+P	max	ccap[498]$_DFF_P_	q[114]$_DFF_P_	-55.38	6.94	62.32
+P	max	ccap[439]$_DFF_P_	q[215]$_DFF_P_	-55.36	6.94	62.30
+P	max	ccap[483]$_DFF_P_	q[195]$_DFF_P_	-55.36	6.94	62.29
+P	max	ccap[451]$_DFF_P_	q[99]$_DFF_P_	-55.36	6.94	62.29
+P	max	ccap[419]$_DFF_P_	q[67]$_DFF_P_	-55.34	6.94	62.28
+P	max	ccap[476]$_DFF_P_	q[124]$_DFF_P_	-55.34	6.94	62.27
+P	max	ccap[427]$_DFF_P_	q[139]$_DFF_P_	-55.33	6.94	62.27
+P	max	ccap[458]$_DFF_P_	q[138]$_DFF_P_	-55.30	6.94	62.24
+P	max	ccap[431]$_DFF_P_	q[207]$_DFF_P_	-55.30	6.94	62.24
+P	max	ccap[426]$_DFF_P_	q[202]$_DFF_P_	-55.26	6.94	62.20
+P	max	ccap[507]$_DFF_P_	q[123]$_DFF_P_	-55.26	6.94	62.20
+P	max	ccap[402]$_DFF_P_	q[146]$_DFF_P_	-55.26	6.94	62.19
+P	max	ccap[504]$_DFF_P_	q[120]$_DFF_P_	-55.25	6.94	62.19
+P	max	ccap[470]$_DFF_P_	q[118]$_DFF_P_	-55.24	6.94	62.17
+P	max	ccap[384]$_DFF_P_	q[192]$_DFF_P_	-55.22	6.94	62.16
+P	max	ccap[485]$_DFF_P_	q[197]$_DFF_P_	-55.19	6.94	62.12
+P	max	ccap[459]$_DFF_P_	q[107]$_DFF_P_	-55.14	6.94	62.08
+P	max	ccap[509]$_DFF_P_	q[125]$_DFF_P_	-55.11	6.94	62.05
+P	max	ccap[419]$_DFF_P_	q[99]$_DFF_P_	-55.11	6.94	62.05
+P	max	ccap[427]$_DFF_P_	q[203]$_DFF_P_	-55.04	6.94	61.98
+P	max	ccap[435]$_DFF_P_	q[51]$_DFF_P_	-55.04	6.94	61.98
+P	max	ccap[399]$_DFF_P_	q[143]$_DFF_P_	-55.03	6.94	61.97
+P	max	ccap[481]$_DFF_P_	q[129]$_DFF_P_	-55.02	6.94	61.96
+P	max	ccap[398]$_DFF_P_	q[110]$_DFF_P_	-55.02	6.94	61.96
+P	max	ccap[425]$_DFF_P_	q[137]$_DFF_P_	-55.01	6.94	61.95
+P	max	ccap[418]$_DFF_P_	q[98]$_DFF_P_	-55.00	6.94	61.94
+P	max	ccap[465]$_DFF_P_	q[113]$_DFF_P_	-54.96	6.94	61.89
+P	max	ccap[456]$_DFF_P_	q[104]$_DFF_P_	-54.95	6.94	61.89
+P	max	ccap[440]$_DFF_P_	q[184]$_DFF_P_	-54.94	6.94	61.88
+P	max	ccap[408]$_DFF_P_	q[88]$_DFF_P_	-54.92	6.94	61.86
+P	max	ccap[379]$_DFF_P_	q[187]$_DFF_P_	-54.88	6.94	61.82
+P	max	ccap[455]$_DFF_P_	q[135]$_DFF_P_	-54.87	6.94	61.80
+P	max	ccap[492]$_DFF_P_	q[108]$_DFF_P_	-54.85	6.94	61.78
+P	max	ccap[505]$_DFF_P_	q[121]$_DFF_P_	-54.84	6.94	61.77
+P	max	ccap[510]$_DFF_P_	q[94]$_DFF_P_	-54.80	6.94	61.74
+P	max	ccap[388]$_DFF_P_	q[196]$_DFF_P_	-54.77	6.94	61.71
+P	max	ccap[384]$_DFF_P_	q[96]$_DFF_P_	-54.77	6.94	61.71
+P	max	ccap[488]$_DFF_P_	q[104]$_DFF_P_	-54.65	6.94	61.59
+P	max	ccap[406]$_DFF_P_	q[150]$_DFF_P_	-54.63	6.94	61.57
+P	max	ccap[398]$_DFF_P_	q[142]$_DFF_P_	-54.62	6.94	61.56
+P	max	ccap[415]$_DFF_P_	q[95]$_DFF_P_	-54.59	6.94	61.53
+P	max	ccap[464]$_DFF_P_	q[112]$_DFF_P_	-54.59	6.94	61.53
+P	max	ccap[431]$_DFF_P_	q[143]$_DFF_P_	-54.55	6.94	61.49
+P	max	ccap[461]$_DFF_P_	q[109]$_DFF_P_	-54.54	6.94	61.48
+P	max	ccap[448]$_DFF_P_	q[128]$_DFF_P_	-54.54	6.94	61.48
+P	max	ccap[458]$_DFF_P_	q[106]$_DFF_P_	-54.44	6.94	61.38
+P	max	ccap[487]$_DFF_P_	q[103]$_DFF_P_	-54.42	6.94	61.35
+P	max	ccap[410]$_DFF_P_	q[186]$_DFF_P_	-54.35	6.94	61.29
+P	max	ccap[457]$_DFF_P_	q[105]$_DFF_P_	-54.32	6.94	61.25
+P	max	ccap[387]$_DFF_P_	q[195]$_DFF_P_	-54.19	6.94	61.13
+P	max	ccap[427]$_DFF_P_	q[107]$_DFF_P_	-54.16	6.94	61.09
+H	min_n	10349
+H	min_worst	74.36
+H	min_bounded	0
+H	min_signed	74.36
+H	min_launch	ptw_d[391]$_DFF_P_
+H	min_capture	u_twcd/q[391]$_DFF_P_
+H	min_crpr	4.21
+H	min_p99_raw	60.89
+H	min_searched	1
+H	min_nopath	0
+H	min_verify	0.000
+P	min	ptw_d[391]$_DFF_P_	u_twcd/q[391]$_DFF_P_	74.36	4.21	78.57

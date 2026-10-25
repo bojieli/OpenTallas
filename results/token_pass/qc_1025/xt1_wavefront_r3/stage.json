@@ -1,0 +1,569 @@
+{
+ "carve": {
+  "seeds": [
+   "c_W5_tf_00",
+   "c_W5_tf_01",
+   "c_W5_tf_10",
+   "c_W5_tf_11",
+   "c_W5_tn_00",
+   "c_W5_tn_01",
+   "c_W5_tn_10",
+   "c_W5_tn_11",
+   "sl_W5_ctl",
+   "sl_W5_fe",
+   "sl_W5_fw",
+   "sl_W5_hc0",
+   "sl_W5_hc1",
+   "sl_W5_hc2",
+   "sl_W5_hc3",
+   "sl_W5_sc",
+   "sl_W5_st_a",
+   "sl_W5_st_b",
+   "sl_W5_stm",
+   "sl_W5_su_c",
+   "sl_W5_su_l0",
+   "sl_W5_su_l1"
+  ],
+  "clusters": "both",
+  "clocks": [
+   "clk_core"
+  ],
+  "event_lanes": {
+   "tt_ctlm__cmd_cmd_wi": "x_coll_f4_cmd_cmd_wi_o_sl_W5_fw",
+   "tt_ctlm__hr_hr_wi": "x_coll_f4_hr_hr_wi_o_sl_W5_fw",
+   "tt_ctlm__tl_st_wi": "x_coll_f4_tl_st_wi_o_sl_W5_fw"
+  },
+  "zero_lanes": [
+   {
+    "net": "x_c_W5_bn_00_rsf_o_sl_W5_su_l1",
+    "lane": "c_W5_bf_00__rsf",
+    "width": 515,
+    "readers": [
+     [
+      "sl_W5_su_l1",
+      "rsf_i"
+     ]
+    ]
+   },
+   {
+    "net": "x_c_W5_bn_00_y_o00_sl_W5_su_l1",
+    "lane": "c_W5_bn_00__rsn",
+    "width": 515,
+    "readers": [
+     [
+      "sl_W5_su_l1",
+      "rsn_i"
+     ]
+    ]
+   },
+   {
+    "net": "x_coll_f4_dr_o_dr_wi_o_sl_W5_fw",
+    "lane": "native59__dr_o_dr_wi",
+    "width": 521,
+    "readers": [
+     [
+      "sl_W5_fw",
+      "dr_wi"
+     ]
+    ]
+   },
+   {
+    "net": "x_coll_f4_out_data_rd_wi_o_sl_W5_fw",
+    "lane": "coll_core__out_data_rd_wi",
+    "width": 513,
+    "readers": [
+     [
+      "sl_W5_fw",
+      "rd_wi"
+     ]
+    ]
+   },
+   {
+    "net": "x_coll_f4_out_err_re_wi_o_sl_W5_fw",
+    "lane": "coll_core__out_err_re_wi",
+    "width": 2,
+    "readers": [
+     [
+      "sl_W5_fw",
+      "re_wi"
+     ]
+    ]
+   },
+   {
+    "net": "x_coll_f4_out_last_rl_wi_o_sl_W5_fw",
+    "lane": "coll_core__out_last_rl_wi",
+    "width": 2,
+    "readers": [
+     [
+      "sl_W5_fw",
+      "rl_wi"
+     ]
+    ]
+   },
+   {
+    "net": "x_coll_f4_out_rank_rr_wi_o_sl_W5_fw",
+    "lane": "coll_core__out_rank_rr_wi",
+    "width": 4,
+    "readers": [
+     [
+      "sl_W5_fw",
+      "rr_wi"
+     ]
+    ]
+   },
+   {
+    "net": "x_coll_f4_out_valid_rv_wi_o_sl_W5_fw",
+    "lane": "coll_core__out_valid_rv_wi",
+    "width": 2,
+    "readers": [
+     [
+      "sl_W5_fw",
+      "rv_wi"
+     ]
+    ]
+   },
+   {
+    "net": "x_coll_f4_table_req_treq_wi_o_sl_W5_fw",
+    "lane": "tt_ctlm__table_req_treq_wi",
+    "width": 10,
+    "readers": [
+     [
+      "sl_W5_fw",
+      "treq_wi"
+     ]
+    ]
+   },
+   {
+    "net": "x_sl_W4_fw_ag_wo_sl_W5_fe",
+    "lane": "sl_W4_fw__ag_wo_ag_ei",
+    "width": 11,
+    "readers": [
+     [
+      "sl_W5_fe",
+      "ag_ei"
+     ]
+    ]
+   },
+   {
+    "net": "x_sl_W4_fw_ard_wo_sl_W5_fe",
+    "lane": "sl_W4_fw__ard_wo_ard_ei",
+    "width": 513,
+    "readers": [
+     [
+      "sl_W5_fe",
+      "ard_ei"
+     ]
+    ]
+   },
+   {
+    "net": "x_sl_W4_fw_arl_wo_sl_W5_fe",
+    "lane": "sl_W4_fw__arl_wo_arl_ei",
+    "width": 2,
+    "readers": [
+     [
+      "sl_W5_fe",
+      "arl_ei"
+     ]
+    ]
+   },
+   {
+    "net": "x_sl_W4_fw_arm_wo_sl_W5_fe",
+    "lane": "sl_W4_fw__arm_wo_arm_ei",
+    "width": 2,
+    "readers": [
+     [
+      "sl_W5_fe",
+      "arm_ei"
+     ]
+    ]
+   },
+   {
+    "net": "x_sl_W4_fw_art_wo_sl_W5_fe",
+    "lane": "sl_W4_fw__art_wo_art_ei",
+    "width": 33,
+    "readers": [
+     [
+      "sl_W5_fe",
+      "art_ei"
+     ]
+    ]
+   },
+   {
+    "net": "x_sl_W4_fw_arv_wo_sl_W5_fe",
+    "lane": "sl_W4_fw__arv_wo_arv_ei",
+    "width": 2,
+    "readers": [
+     [
+      "sl_W5_fe",
+      "arv_ei"
+     ]
+    ]
+   },
+   {
+    "net": "x_sl_W4_fw_dd_wo_sl_W5_fe",
+    "lane": "sl_W4_fw__dd_wo_dd_ei",
+    "width": 549,
+    "readers": [
+     [
+      "sl_W5_fe",
+      "dd_ei"
+     ]
+    ]
+   },
+   {
+    "net": "x_sl_W4_fw_flt_wo_sl_W5_fe",
+    "lane": "sl_W4_fw__flte",
+    "width": 2,
+    "readers": [
+     [
+      "sl_W5_fe",
+      "flt_e_i"
+     ]
+    ]
+   },
+   {
+    "net": "x_sl_W4_fw_sc_wo_sl_W5_fe",
+    "lane": "sl_W4_fw__sc_wo_sc_ei",
+    "width": 49,
+    "readers": [
+     [
+      "sl_W5_fe",
+      "sc_ei"
+     ]
+    ]
+   },
+   {
+    "net": "x_sl_W4_fw_st_wo_sl_W5_fe",
+    "lane": "sl_W4_fw__st_wo_st_ei",
+    "width": 1088,
+    "readers": [
+     [
+      "sl_W5_fe",
+      "st_ei"
+     ]
+    ]
+   }
+  ],
+  "reset": {
+   "release": "wavefront",
+   "metadata_sha256": "0cac28470a331c8c051a743100e043670ec4f593662072a1153a1f6ce228c58a",
+   "root": "sl_W0_ctl",
+   "latest_partition_release": 128,
+   "latest_published_core_pin_release": 129,
+   "calendar_start_delay": 130,
+   "boundary_prefixes": {
+    "rstw_c_W4_tf_00_rst_o_0": 90,
+    "rstw_c_W4_tn_00_rst_o_0": 83,
+    "rstw_sl_W4_fw_rst_o_1": 75,
+    "rstw_sl_W4_st_b_rst_o_0": 74,
+    "rstw_sl_W4_su_l1_rst_o_0": 72
+   },
+   "scope": "Published reset pin ages at omitted-carrier boundaries; kept partition reset RTL is real. Calendar begins after pin release; whole-die start remains the existing forwarded epoch."
+  },
+  "observe": {
+   "cw_n0": "x_sl_W5_hc0_cw_n0_c_W5_tn_00",
+   "cw_n1": "x_sl_W5_hc1_cw_n1_c_W5_tn_00",
+   "cw_n2": "x_sl_W5_hc2_cw_n2_c_W5_tn_10",
+   "cw_n3": "x_sl_W5_hc3_cw_n3_c_W5_tn_10",
+   "rs": "x_sl_W5_hc0_rsn_o_sl_W5_hc1",
+   "rsc": "x_c_W5_tn_00_y_o00_sl_W5_hc0",
+   "rs_o": "x_sl_W5_hc0_rsf_o_sl_W5_hc1",
+   "rsoc": "x_c_W5_tf_00_y_o00_c_W5_tn_01"
+  },
+  "rom_tiles": 32
+ },
+ "closure_files": 108,
+ "files": [
+  "src/bound/rtl/qfd_qc_slw_su_l1_v2.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv",
+  "src/rtl/hdc/ot_hdc_delay.sv",
+  "src/rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
+  "src/rtl/lib/ot_rst_pipe.sv",
+  "src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "src/rtl/qwen_dv/qfd_dv_stream.sv",
+  "src/rtl/qwen_dv/qfd_dv_slice_tload.sv",
+  "src/rtl/qwen_dv/qfd_dv_table_rom_loader.sv",
+  "src/physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+  "src/rtl/qwen_dv/qfd_dv_scalar2.sv",
+  "src/rtl/hdc/ot_hdc_sfu.sv",
+  "src/rtl/hdc/ot_hdc_fpu.sv",
+  "src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "src/rtl/hdc/ot_hdc_sfu_q.sv",
+  "src/rtl/hdc/ot_hdc_fastfp.sv",
+  "src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "src/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+  "src/rtl/hdc/ot_hdc_vreduce.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_vm.sv",
+  "src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+  "src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+  "src/rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+  "src/rtl/qwen_dv/qfd_dv_head_safe1.sv",
+  "src/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+  "src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v",
+  "src/rtl/hdc/ot_hdc_vstream_sfu_t.sv",
+  "src/bound/rtl/bind_cells.sv",
+  "src/bound/rtl/qfd_qc_slw_su_l0_v1.sv",
+  "src/bound/rtl/qfd_qc_slw_su_c_v2.sv",
+  "src/rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv",
+  "src/rtl/qwen_dv/s5/s8/qfd_dv_s8_vm8q_rp1.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+  "src/rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_su8.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv",
+  "src/bound/rtl/qfd_qc_slw_stm.sv",
+  "src/rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv",
+  "src/rtl/qwen_dv/qfd_dv_stream_tile.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_btab_s4.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_btab_safe.sv",
+  "src/bound/rtl/qfd_qc_slw_st_b_v1.sv",
+  "src/rtl/qwen_dv/s5/s8/qfd_dv_s8_ce.sv",
+  "src/rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv",
+  "src/rtl/qwen_dv/qfd_dv_station_math_g.sv",
+  "src/rtl/qwen_dv/qfd_dv_ring_delay.sv",
+  "src/rtl/qwen_dv/qfd_dv_reset_tree.sv",
+  "src/rtl/common/landed_parent/ot_pl_land_physical.sv",
+  "src/rtl/common/landed_parent/ot_pl_land.sv",
+  "src/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+  "src/rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv",
+  "src/rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv",
+  "src/rtl/common/landed_parent/ot_pl_land_n32.sv",
+  "src/rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded.sv",
+  "src/rtl/qwen_dv/s5/s8/qfd_dv_s8_tap_bounded_helpers.sv",
+  "src/rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv",
+  "src/rtl/qwen_dv/s5/s8/qfd_dv_s8_kept.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv",
+  "src/rtl/lib/ot_rst_relay.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_sc2_ce_leaf.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_up0.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_dn0.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_leaf.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv",
+  "src/rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv",
+  "src/bound/rtl/qfd_qc_slw_st_a_v1.sv",
+  "src/bound/rtl/qfd_qc_slw_sc_v1.sv",
+  "src/bound/rtl/qfd_qc_slw_hc3.sv",
+  "src/bound/rtl/qfd_qc_slw_hc2.sv",
+  "src/bound/rtl/qfd_qc_slw_hc1.sv",
+  "src/bound/rtl/qfd_qc_slw_hc0.sv",
+  "src/bound/rtl/qfd_qc_slw_fw__slw_fw_v3.sv",
+  "src/bound/rtl/qfd_qc_slw_fe__slw_fe_v2.sv",
+  "src/bound/rtl/qfd_qc_sle_ctl_v3.sv",
+  "src/bound/rtl/qfd_qc_cb_x_q10.sv",
+  "src/rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_romleaf_rr.sv",
+  "src/rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv",
+  "src/rtl/physical/ot_qwen_rom_tile_nk.sv",
+  "src/rtl/hdc/ot_qwen_rom_tile_w12.sv",
+  "src/physical/asap7_memory_macros/ot_rom_2048x266_m8/ot_rom_2048x266_m8.v",
+  "src/rtl/hdc/ot_qwen_w12_matvec.sv",
+  "src/rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "src/rtl/hdc/ot_qwen_w12_arith.sv",
+  "src/rtl/physical/ot_qwen_tile_operand.sv",
+  "src/rtl/physical/ot_qwen_tile_lsl_fp1.sv",
+  "src/rtl/physical/ot_qwen_tile_lsl.sv",
+  "src/rtl/physical/ot_qwen_tile_rqr_half.sv",
+  "src/rtl/physical/ot_qwen_tile_rpair.sv",
+  "src/rtl/physical/ot_qwen_tile_romleaf.sv",
+  "src/rtl/physical/ot_qwen_tile_node.sv",
+  "src/rtl/hdc/ot_qwen_me_array_w12.sv",
+  "src/rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv",
+  "src/rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+  "src/rtl/physical/qcluster/qfd_c_stn.sv",
+  "src/bound/rtl/qfd_qc_cb_n_q11.sv",
+  "src/bound/rtl/qfd_qc_cb_n_q01.sv",
+  "src/bound/rtl/qfd_qc_cb_n_q00.sv",
+  "src/bound/rtl/qfd_qc_cb_f_q11.sv",
+  "src/bound/rtl/qfd_qc_cb_f_q01__cbf_q01.sv",
+  "src/bound/rtl/qfd_qc_cb_f_q00__cbf_q00.sv"
+ ],
+ "includes": [],
+ "incdirs": [],
+ "defines": [
+  "OT_QFD_UP4_CK_ENTRIES"
+ ],
+ "ambiguous": {
+  "qfd_bmath_dff_p": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/qfd_dv_station_math_g.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_split/qfd_sysface32_helpers.sv"
+  ],
+  "qfd_tile_nl_rp2_romleaf_rr": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_romleaf_rr.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/qfd_tile_nl_rp2_romleaf_rr.sv"
+  ],
+  "ot_qwen_tx_ff": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv"
+  ],
+  "ot_qwen_rom_tile_w12": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_rom_tile_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv"
+  ],
+  "ot_qwen_w12_ksum": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv"
+  ],
+  "qfd_bmath_ao21": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers_slice_p7.sv"
+  ],
+  "qfd_dv_amax_mu": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/mu/qfd_dv_amax_mu.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/mu/qfd_dv_amax_mu_rsafe.sv"
+  ],
+  "qfd_tile_nk_rp2_romleaf_rr": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/qfd_tile_nk_rp2_romleaf_rr.sv"
+  ],
+  "qfd_bmath_dff_pn0": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers_slice_p7.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_split/qfd_sysface32_helpers.sv"
+  ],
+  "qfd_bmath_mux": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers_slice_p7.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_split/qfd_sysface32_helpers.sv"
+  ],
+  "qfd_bmath_oa21": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers_slice_p7.sv"
+  ],
+  "ot_qwen_w12_lane_slice": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv"
+  ],
+  "ot_qwen_w12_matvec_part": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv"
+  ],
+  "qfd_bmath_and": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers_slice_p7.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_split/qfd_sysface32_helpers.sv"
+  ],
+  "qfd_bmath_xor": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers_slice_p7.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_split/qfd_sysface32_helpers.sv"
+  ],
+  "qfd_bmath_sdff_pp0": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/qfd_dv_station_math_g.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_split/qfd_sysface32_helpers.sv"
+  ],
+  "qfd_dv_scalar2": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/qfd_dv_scalar2.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/qfd_dv_scalar2_csafe.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/qfd_dv_scalar2_rsafe.sv"
+  ],
+  "ot_qwen_mpr_reg": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_rom_tile_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv"
+  ],
+  "ot_qwen_arpb_reg": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_rom_tile_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv"
+  ],
+  "ot_qwen_w12_kadd": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv"
+  ],
+  "ot_qwen_w12_ladd": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv"
+  ],
+  "ot_qwen_w12_tadd": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv"
+  ],
+  "ot_qwen_rpair_logic": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_rom_tile_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv"
+  ],
+  "ot_qwen_me_spine_w12": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_me_array_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_me_array_w12.sv"
+  ],
+  "ot_hdc_ksadd_k": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_hdc_prefix.sv"
+  ],
+  "qfd_bmath_not": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/qfd_dv_station_math_g.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_split/qfd_sysface32_helpers.sv"
+  ],
+  "ot_qwen_w12_csa_tree": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv"
+  ],
+  "qfd_bmath_or": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/qfd_dv_station_math_g.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_split/qfd_sysface32_helpers.sv"
+  ],
+  "qfd_tile_nk_rp2_45": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/qfd_tile_nk_rp2_45.sv"
+  ],
+  "qfd_tile_nl_rp2_45": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/qfd_tile_nl_rp2_45.sv"
+  ],
+  "ot_qwen_rom_tile_logic_w12": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_rom_tile_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv"
+  ],
+  "qfd_dv_stream": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/qfd_dv_stream.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/qwen_dv/qfd_dv_stream_rsafe.sv"
+  ],
+  "ot_qwen_me_node_w12": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_me_array_w12.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_me_array_w12.sv"
+  ],
+  "ot_qwen_lrst_ff": [
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/hdc/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",
+   "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5/rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv"
+  ]
+ },
+ "unresolved_modules": [],
+ "top_sha256": "288c248d8471496ca15e09da8f25bc0238f37819601a6465a75826bac01740d1",
+ "asbuilt": "/srv/opentallas-scratch2/claude/codex-qc-bind-1025/wavefront_r3/recipe.json",
+ "src_tree": "/srv/opentallas-scratch2/claude/codex-qc-wavefront-run-1025/cache/src_bc11ef2dbcf5"
+}

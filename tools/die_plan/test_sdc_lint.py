@@ -177,3 +177,25 @@ def test_ft_hop_in_share_plan_field():
     assert _errs(txt, sdc_lint.kit_context(P, tn)) == []
     old = gen_phys.sdc(P0, tn, gen_phys.type_pins(P0, tn))
     assert _errs(old, sdc_lint.kit_context(P, tn))
+
+
+def test_edge_clocks_declared_and_linted():
+    """plan clock.edge_clocks (OWNER dec. 16, QC PHY-edge clocks): an interior pin + a synchronous kit clock at
+    period_mult x T; the lint accepts exactly that period and rejects any other."""
+    import copy
+    raw = copy.deepcopy(TINY)
+    P0 = schema.Plan(raw)
+    tn = next(t for t in P0.types if not P0.types[t].get("hard") and any(p["type"] == t for p in P0.parts.values()))
+    x, y = raw["partition_types"][tn]["clock"]["tap_um"] if "clock" in raw["partition_types"][tn] else (20.0, 20.0)
+    raw["partition_types"][tn].setdefault("clock", {})["edge_clocks"] = [
+        {"port": "clk_coll", "tap_um": [x + 17.28, y + 8.64]},
+        {"port": "clk_coll_blk", "tap_um": [x + 34.56, y + 8.64], "period_mult": 6}]
+    assert schema.validate(raw) == []
+    txt, ctx = _kit(raw, tn)
+    P = schema.Plan(raw)
+    per = gen_phys.t_lib(P.die["period_ps"])
+    assert f"create_clock -name clk_coll_blk -period {6 * per:.4f} [get_ports clk_coll_blk]" in txt
+    assert {"clk_coll", "clk_coll_blk"} <= {n for n, _x, _y in gen_phys.tap_pins(P, tn)}
+    assert _errs(txt, ctx) == []
+    bad = txt.replace(f"-period {6 * per:.4f} [get_ports clk_coll_blk]", f"-period {per:.4f} [get_ports clk_coll_blk]")
+    assert any("clk_coll_blk" in e and "period" in e for e in _errs(bad, ctx))

@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "six-lane die transport topology only; no partition route approval",
+  "pictures": [
+    "results/s81_idxnet_plan_1025/img/idxnet_die.png",
+    "results/s81_idxnet_plan_1025/img/idxnet_col6_iqf_s0.png",
+    "results/s81_idxnet_plan_1025/img/idxnet_bksel_col15.png"
+  ],
+  "findings": [
+    "TP bundles use the top station row and column15 instead of crossing the leaf macro field; query and return share an abutting column6 chain through svc0 to iqf. Existing H4 lanes stay in their earlier corridor.",
+    "Endpoint ordering is consistent across each abutted face. All added buses have generated registered hops and explicit59/60/25/25/50/22 cycle prices; 258bit query serialization reduces the busyface load.",
+    "This view omits detailed macro/CTS/PG geometry: adopt strict core/FT exact-site cache, re-prototype changed types, and look at each type before any P&R. New endpoint variants retain reserve pairB and require fresh actual binding.",
+    "Raw legacy lep face failures and qfs shared-valid captures are not waived. Current cell model still awaits measured indexed13/tagged-cache sizing."
+  ],
+  "conditions_before_route": [
+    "strict geometry keyed core/FT site pass",
+    "G2 prototype CLEAN per changed type",
+    "canonical functional source binding and added-cycle schedule",
+    "type-level macro/clock/PDN image review"
+  ]
+}

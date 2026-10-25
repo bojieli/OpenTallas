@@ -21,7 +21,7 @@ module tb_s81dv_xfin16e #(parameter integer LS = 9, parameter integer LE = 29, p
     generate
         for (g = 0; g < NS; g = g + 1) begin : sl
             wire [31:0] sg = pm[vv * NB + g * NVL + ll];
-            ot_s81dv_xfin #(.NS(NS), .NVL(NVL)) u (.clk(clk), .rst_n(rst_n), .go(go), .mode(1'b1), .sid(g[3:0]),
+            ot_s81dv_xfin #(.NS(NS), .NVL(NVL), .SIW(8)) u (.clk(clk), .rst_n(rst_n), .go(go), .mode(1'b1), .sid(g[3:0]),
                 .eps(32'h358637bd), .s_v(sv), .s_i(si), .s(sg),
                 .wi_v(wi[g][KW-1]), .wi_h(wi[g][KW-2 -: 4]), .wi_b(wi[g][KW-6 -: 8]), .wi_d(wi[g][NVL*32-1:0]),
                 .ei_v(ei[g][KW-1]), .ei_h(ei[g][KW-2 -: 4]), .ei_b(ei[g][KW-6 -: 8]), .ei_d(ei[g][NVL*32-1:0]),

@@ -587,3 +587,87 @@ def test_param_regen_variant_own_default(tmp_path):
     hook.write_text("def regen(ctx):\n    return dict(params={'snk': {'OLD_ONLY': 1}})\n")
     assert bind.main(['bind',str(pp),'--out',str(out),'--strict'])!=0
     assert any('OLD_ONLY: not a parameter' in e for e in report(out)['errors'])
+
+
+def test_kit_rtl_spare_ft_bits_ride_stations(tmp_path):
+    """QC-A0 10-24 (face_guard on coll_ftc): spare bits of an ft slot narrow on BOTH sides go through the slot's station
+    chain (ot_dp_st x stations) instead of an unread input + a constant output"""
+    plan = EX / "die_plan_lanes.json"
+    out = tmp_path / "o"
+    assert run(plan, out, "elab", "bind") == 0
+    P = json.loads(plan.read_text())
+    sl = P["partition_types"]["tf"]["ft_slots"][0]
+    sl["width"] += 2
+    sl["stations"] = 2
+    wide = tmp_path / "wide.json"
+    wide.write_text(json.dumps(P))
+    kd = tmp_path / "kit"
+    assert bind.main(["kit-rtl", str(wide), "--out", str(out), "--type", "tf", "--kit", str(kd)]) == 0
+    man = json.loads((kd / "kit_rtl.json").read_text())
+    n = sl["name"]
+    assert man["spare_ft_passthrough"] == [dict(slot=n, bits=2, stations=2)] and man["spare_out_bits"] == [], man
+    w = (kd / f"{P['partition_types']['tf']['module']}.sv").read_text()
+    assert f"u_ft_spare_{n}_o_s0" in w and f"u_ft_spare_{n}_o_s1" in w and "'d0;  // spare plan bits" not in w
+
+
+def test_kit_closure_needed_only_and_strip_dups(tmp_path):
+    """QC-KITS 10-25: a file picked for one module must not drag in its unrelated siblings' instantiations, and a
+    module defined in two kit files keeps the closure-picked definition only (sle_ctl ot_hdc_qadd)."""
+    import bind_elab as E
+    r = tmp_path / "rtl"
+    r.mkdir()
+    (r / "top_leaf.sv").write_text("module leaf_a (input wire a, output wire y);\n  helper u_h (.a(a), .y(y));\nendmodule\n"
+                                   "module sibling (input wire a, output wire y);\n  big_unused u_b (.a(a), .y(y));\nendmodule\n")
+    (r / "helper.sv").write_text("module helper (input wire a, output wire y);\n  assign y = a;\nendmodule\n"
+                                 "module qadd (input wire a, output wire y);\n  assign y = ~a;\nendmodule\n")
+    (r / "big.sv").write_text("module big_unused (input wire a, output wire y);\n  assign y = a;\nendmodule\n")
+    (r / "other.sv").write_text("module needs_qadd (input wire a, output wire y);\n  qadd u_q (.a(a), .y(y));\nendmodule\n"
+                                "module qadd (input wire a, output wire y);\n  assign y = a;\nendmodule\n")
+    idx = E.module_index([str(r)], [], str(tmp_path))
+    picks = {}
+    files, missing, macros = bind.kit_closure(["leaf_a"], idx, [], picks)
+    names = sorted(Path(f).name for f in files)
+    assert names == ["helper.sv", "top_leaf.sv"], names          # big.sv (sibling's child) not dragged in
+    assert not missing and not macros
+    # two needed files both define qadd: the picked definition stays, the other file gets a stripped copy
+    picks = {}
+    files, _, _ = bind.kit_closure(["leaf_a", "needs_qadd"], idx, [str(r / "other.sv")], picks)
+    assert Path(picks["qadd"]).name == "other.sv"
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    out, rec = bind.kit_strip_dups([Path(f) for f in files], kd, picks)
+    defs = {}
+    for f in out:
+        for m in E.MOD_RE.finditer(E._strip(Path(f).read_text())):
+            defs.setdefault(m.group(1), []).append(Path(f))
+    assert all(len(v) == 1 for v in defs.values()), defs
+    assert defs["qadd"][0].name == "other.sv" and defs["qadd"][0].parent == r
+    assert defs["helper"][0].parent == kd / "dedup"                # helper.sv copy without qadd
+    assert list(rec.values())[0]["removed"] == ["qadd"]
+    assert (r / "helper.sv").read_text().count("module qadd") == 1  # original unchanged
+
+
+def test_kit_inline_includes(tmp_path):
+    """QC-KITS 10-25: a flattened kit cannot open `include "sub/x.svh"`: kit-rtl inlines it (recursively, relative to
+    the including file) into KIT/inline/, and a missing include is a BindError."""
+    src = tmp_path / "src"
+    (src / "sub").mkdir(parents=True)
+    (src / "sub" / "a.svh").write_text('localparam A = 1;\n`include "b.svh"\n')
+    (src / "sub" / "b.svh").write_text("localparam B = 2;\n")
+    top = src / "top.sv"
+    top.write_text('module top;\n  `include "sub/a.svh"\nendmodule\n')
+    plain = src / "plain.sv"
+    plain.write_text("module plain; endmodule\n")
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    out, rec = bind.kit_inline_includes([top, plain], kd)
+    assert out[1] == plain and out[0] == kd / "inline" / "top.sv"
+    t = out[0].read_text()
+    assert "localparam A = 1;" in t and "localparam B = 2;" in t and "`include \"" not in t.replace("inlined `include", "")
+    assert len(rec[str(out[0])]["includes"]) == 2
+    top.write_text('module top;\n`include "nope.svh"\nendmodule\n')
+    try:
+        bind.kit_inline_includes([top], kd)
+        raise AssertionError("missing include must raise")
+    except bind.BindError:
+        pass

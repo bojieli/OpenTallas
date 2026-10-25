@@ -1,0 +1,27 @@
+{
+  "reviewer": "Codex independent geometry review",
+  "when": "2026-10-25T02:36:51.902477-07:00",
+  "source_branch": "claude/s81-leafplan-1024r@6b66fea917",
+  "images": [
+    "results/geom_review/s81_leafplan2_1025/img/ot_s81sl_leaf__t6.png",
+    "results/geom_review/s81_leafplan2_1025/img/ot_s81sl_leaf__t50.png",
+    "results/geom_review/s81_leafplan2_1025/img/ot_s81sl_leaf__t8.png",
+    "results/geom_review/s81_leafplan2_1025/img/ot_s81sl_leaf__t1.png",
+    "results/geom_review/s81_leafplan2_1025/img/ot_s81sl_leaf__t30.png",
+    "results/geom_review/s81_leafplan2_1025/img/ot_s81sl_leaf__t41.png"
+  ],
+  "verdict": "PASS-COND",
+  "scope": "Plan adoption only; no parent partition route approval",
+  "findings": [
+    "All rendered lane blocks are on the lane-facing side of the vn halves; major direction reversal from r9 is removed.",
+    "Two lane columns are visible, but fan-outs still cross and span much of the vertical lane field. t6 vn_b hq_d -> lane3 is 1217 um in bundle report.",
+    "vn split halves are independently separated; store and vs/ve paths remain long. Registered transport stations must be implemented, not inferred from shorter mean distance.",
+    "Author totals improve 791740 -> 610874 station bits and 922 -> 882 internal cycles, but die lane station count grows 79 ->97; price all actual latencies."
+  ],
+  "conditions": [
+    "Run fresh skeleton on regenerated DEC12 plans; only CLEAN types get partition kits.",
+    "Every long bundle needs explicit channel station sites and <=405 um hops; no station inside core outlines.",
+    "M6/M7 capacity across lane fan-out field and vn-half separation must be demonstrated by prototype; crossing hotspot needs neighbour ordering/placement if overflow remains.",
+    "Wavefront reset and balanced clock taps must follow final legal channels."
+  ]
+}
