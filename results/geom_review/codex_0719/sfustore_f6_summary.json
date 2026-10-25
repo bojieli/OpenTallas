@@ -1,0 +1,1719 @@
+{
+  "source": "exact sfustore kitb5a38a99cad67d17 original4_cts.odb read-only",
+  "verdict": "FAIL-F6",
+  "method": "For each macro signal pin, STA fanin startpoints (inputs) / fanout endpoints (outputs), nearest actual sequential instance by Manhattan pin-to-instance-origin distance. ODB escaped hierarchical names normalized to STA names, all16*782pins resolved. Clock signatures are placement estimates only, not signoff.",
+  "macro_summary": [
+    {
+      "macro": "u_fcore.g_bank[0].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        8.64,
+        99.564,
+        103.464,
+        140.628
+      ],
+      "n": 782,
+      "p50_um": 199.98,
+      "max_um": 314.78,
+      "over20": 782,
+      "edges": {
+        "W": {
+          "n": 407,
+          "max_um": 314.78,
+          "over20": 407
+        },
+        "E": {
+          "n": 375,
+          "max_um": 216.47,
+          "over20": 375
+        }
+      },
+      "worst_pins": [
+        [
+          "rd_out[21]",
+          "output",
+          "W",
+          314.78,
+          "u_fcore.g_bank[0].u_bank.g_rd_cap.rd_cap[21]$_DFF_P_",
+          "251.573242",
+          "154.481201",
+          "519.315002"
+        ],
+        [
+          "rd_out[53]",
+          "output",
+          "W",
+          311.71,
+          "u_fcore.g_bank[0].u_bank.g_rd_cap.rd_cap[21]$_DFF_P_",
+          "251.573242",
+          "160.034988",
+          "513.329346"
+        ],
+        [
+          "rd_out[28]",
+          "output",
+          "W",
+          311.68,
+          "u_fcore.g_bank[0].u_bank.g_rd_cap.rd_cap[28]$_DFF_P_",
+          "251.573242",
+          "162.066025",
+          "512.572693"
+        ],
+        [
+          "rd_out[85]",
+          "output",
+          "W",
+          308.63,
+          "u_fcore.g_bank[0].u_bank.g_rd_cap.rd_cap[21]$_DFF_P_",
+          "251.573242",
+          "164.173843",
+          "511.503113"
+        ],
+        [
+          "rd_out[60]",
+          "output",
+          "W",
+          308.6,
+          "u_fcore.g_bank[0].u_bank.g_rd_cap.rd_cap[28]$_DFF_P_",
+          "251.573242",
+          "170.048813",
+          "505.217102"
+        ],
+        [
+          "rd_out[30]",
+          "output",
+          "W",
+          308.35,
+          "u_fcore.g_bank[0].u_bank.g_rd_cap.rd_cap[30]$_DFF_P_",
+          "251.060486",
+          "152.704956",
+          "520.359619"
+        ],
+        [
+          "rd_out[29]",
+          "output",
+          "W",
+          305.8,
+          "u_fcore.g_bank[0].u_bank.g_rd_cap.rd_cap[29]$_DFF_P_",
+          "251.060486",
+          "108.027313",
+          "559.466187"
+        ],
+        [
+          "rd_out[117]",
+          "output",
+          "W",
+          305.56,
+          "u_fcore.g_bank[0].u_bank.g_rd_cap.rd_cap[21]$_DFF_P_",
+          "251.573242",
+          "166.411545",
+          "508.418762"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[10].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        8.64,
+        17.34,
+        103.464,
+        58.404
+      ],
+      "n": 782,
+      "p50_um": 111.34,
+      "max_um": 183.58,
+      "over20": 590,
+      "edges": {
+        "W": {
+          "n": 407,
+          "max_um": 183.58,
+          "over20": 407
+        },
+        "E": {
+          "n": 375,
+          "max_um": 71.01,
+          "over20": 183
+        }
+      },
+      "worst_pins": [
+        [
+          "rd_out[30]",
+          "output",
+          "W",
+          183.58,
+          "u_fcore.g_bank[10].u_bank.g_rd_cap.rd_cap[30]$_DFF_P_",
+          "250.411331",
+          "206.885345",
+          "452.764282"
+        ],
+        [
+          "rd_out[29]",
+          "output",
+          "W",
+          181.24,
+          "u_fcore.g_bank[10].u_bank.g_rd_cap.rd_cap[29]$_DFF_P_",
+          "250.411331",
+          "218.757843",
+          "445.806885"
+        ],
+        [
+          "rd_out[26]",
+          "output",
+          "W",
+          181.21,
+          "u_fcore.g_bank[10].u_bank.g_rd_cap.rd_cap[26]$_DFF_P_",
+          "250.629410",
+          "204.848358",
+          "454.103943"
+        ],
+        [
+          "rd_out[22]",
+          "output",
+          "W",
+          180.78,
+          "u_fcore.g_bank[10].u_bank.g_rd_cap.rd_cap[22]$_DFF_P_",
+          "250.629410",
+          "206.510971",
+          "451.981323"
+        ],
+        [
+          "rd_out[31]",
+          "output",
+          "W",
+          180.78,
+          "u_fcore.g_bank[10].u_bank.g_rd_cap.rd_cap[31]$_DFF_P_",
+          "250.411331",
+          "216.761551",
+          "446.186798"
+        ],
+        [
+          "rd_out[62]",
+          "output",
+          "W",
+          180.5,
+          "u_fcore.g_bank[10].u_bank.g_rd_cap.rd_cap[30]$_DFF_P_",
+          "250.411331",
+          "208.111191",
+          "451.189758"
+        ],
+        [
+          "rd_out[23]",
+          "output",
+          "W",
+          178.74,
+          "u_fcore.g_bank[10].u_bank.g_rd_cap.rd_cap[23]$_DFF_P_",
+          "250.629410",
+          "202.732437",
+          "452.957214"
+        ],
+        [
+          "rd_out[25]",
+          "output",
+          "W",
+          178.39,
+          "u_fcore.g_bank[10].u_bank.g_rd_cap.rd_cap[25]$_DFF_P_",
+          "250.629410",
+          "200.720551",
+          "454.323944"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[11].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        177.336,
+        17.34,
+        272.16,
+        58.404
+      ],
+      "n": 782,
+      "p50_um": 38.99,
+      "max_um": 201.21,
+      "over20": 643,
+      "edges": {
+        "W": {
+          "n": 375,
+          "max_um": 64.54,
+          "over20": 236
+        },
+        "E": {
+          "n": 407,
+          "max_um": 201.21,
+          "over20": 407
+        }
+      },
+      "worst_pins": [
+        [
+          "r_ce_in",
+          "input",
+          "E",
+          201.21,
+          "u_fcore.g_bank[11].re_q$_DFF_PN0_",
+          "251.207993",
+          "471.822144",
+          "194.123688"
+        ],
+        [
+          "w_ce_in",
+          "input",
+          "E",
+          173.38,
+          "u_fcore.g_bank[11].we_q$_DFF_PN0_",
+          "251.796890",
+          "459.594971",
+          "201.306580"
+        ],
+        [
+          "r_addr_in[0]",
+          "input",
+          "E",
+          172.49,
+          "u_fcore.g_bank[11].u_bank.a_pin[3]$_DFF_P_",
+          "252.389191",
+          "482.256897",
+          "203.980637"
+        ],
+        [
+          "r_addr_in[3]",
+          "input",
+          "E",
+          169.18,
+          "u_fcore.g_bank[11].u_bank.a_pin[6]$_DFF_P_",
+          "251.134811",
+          "488.217926",
+          "198.765366"
+        ],
+        [
+          "r_addr_in[2]",
+          "input",
+          "E",
+          168.2,
+          "u_fcore.g_bank[11].u_bank.a_pin[5]$_DFF_P_",
+          "252.389191",
+          "548.901306",
+          "134.039032"
+        ],
+        [
+          "r_addr_in[5]",
+          "input",
+          "E",
+          160.94,
+          "u_fcore.g_bank[11].u_bank.a_pin[8]$_DFF_P_",
+          "252.668304",
+          "490.057831",
+          "196.563095"
+        ],
+        [
+          "r_addr_in[4]",
+          "input",
+          "E",
+          149.05,
+          "u_fcore.g_bank[11].u_bank.a_pin[7]$_DFF_P_",
+          "248.324783",
+          "522.963867",
+          "161.380112"
+        ],
+        [
+          "w_addr_in[4]",
+          "input",
+          "E",
+          148.98,
+          "u_fcore.g_bank[11].u_bank.wa_pin[7]$_DFF_P_",
+          "251.417633",
+          "505.967041",
+          "157.392593"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[12].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        177.336,
+        140.652,
+        272.16,
+        181.716
+      ],
+      "n": 782,
+      "p50_um": 31.69,
+      "max_um": 296.19,
+      "over20": 568,
+      "edges": {
+        "W": {
+          "n": 375,
+          "max_um": 176.26,
+          "over20": 228
+        },
+        "E": {
+          "n": 407,
+          "max_um": 296.19,
+          "over20": 340
+        }
+      },
+      "worst_pins": [
+        [
+          "w_ce_in",
+          "input",
+          "E",
+          296.19,
+          "u_fcore.g_bank[12].we_q$_DFF_PN0_",
+          "250.847488",
+          "396.433929",
+          "275.048706"
+        ],
+        [
+          "r_ce_in",
+          "input",
+          "E",
+          279.7,
+          "u_fcore.g_bank[12].re_q$_DFF_PN0_",
+          "251.796890",
+          "371.658264",
+          "292.221741"
+        ],
+        [
+          "w_addr_in[2]",
+          "input",
+          "E",
+          273.8,
+          "u_fcore.g_bank[12].u_bank.wa_pin[5]$_DFF_P_",
+          "252.668304",
+          "460.976532",
+          "219.388229"
+        ],
+        [
+          "w_addr_in[0]",
+          "input",
+          "E",
+          270.58,
+          "u_fcore.g_bank[12].u_bank.wa_pin[3]$_DFF_P_",
+          "252.841278",
+          "462.921692",
+          "217.376617"
+        ],
+        [
+          "wd_in[131]",
+          "input",
+          "E",
+          254.51,
+          "u_fcore.g_bank[12].u_bank.wd_pin[3]$_DFF_P_",
+          "253.610214",
+          "419.873871",
+          "263.861145"
+        ],
+        [
+          "wd_in[130]",
+          "input",
+          "E",
+          252.95,
+          "u_fcore.g_bank[12].u_bank.wd_pin[2]$_DFF_P_",
+          "252.693588",
+          "428.183502",
+          "255.241516"
+        ],
+        [
+          "r_addr_in[2]",
+          "input",
+          "E",
+          252.56,
+          "u_fcore.g_bank[12].u_bank.a_pin[5]$_DFF_P_",
+          "247.274780",
+          "469.920227",
+          "211.423386"
+        ],
+        [
+          "wd_in[107]",
+          "input",
+          "E",
+          252.37,
+          "u_fcore.g_bank[12].u_bank.wd_pin[11]$_DFF_P_",
+          "252.722977",
+          "417.771545",
+          "266.156738"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[13].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        8.64,
+        185.532,
+        103.464,
+        226.596
+      ],
+      "n": 782,
+      "p50_um": 141.69,
+      "max_um": 487.21,
+      "over20": 625,
+      "edges": {
+        "W": {
+          "n": 407,
+          "max_um": 487.21,
+          "over20": 407
+        },
+        "E": {
+          "n": 375,
+          "max_um": 338.84,
+          "over20": 218
+        }
+      },
+      "worst_pins": [
+        [
+          "rd_out[26]",
+          "output",
+          "W",
+          487.21,
+          "u_fcore.g_bank[13].u_bank.g_rd_cap.rd_cap[26]$_DFF_P_",
+          "251.071167",
+          "68.584358",
+          "605.628845"
+        ],
+        [
+          "rd_out[58]",
+          "output",
+          "W",
+          484.13,
+          "u_fcore.g_bank[13].u_bank.g_rd_cap.rd_cap[26]$_DFF_P_",
+          "251.071167",
+          "70.263794",
+          "603.440613"
+        ],
+        [
+          "rd_out[90]",
+          "output",
+          "W",
+          481.06,
+          "u_fcore.g_bank[13].u_bank.g_rd_cap.rd_cap[26]$_DFF_P_",
+          "251.071167",
+          "75.082161",
+          "598.883850"
+        ],
+        [
+          "rd_out[122]",
+          "output",
+          "W",
+          477.99,
+          "u_fcore.g_bank[13].u_bank.g_rd_cap.rd_cap[26]$_DFF_P_",
+          "251.071167",
+          "76.740891",
+          "596.962524"
+        ],
+        [
+          "rd_out[154]",
+          "output",
+          "W",
+          474.92,
+          "u_fcore.g_bank[13].u_bank.g_rd_cap.rd_cap[26]$_DFF_P_",
+          "251.071167",
+          "77.240936",
+          "594.934021"
+        ],
+        [
+          "rd_out[186]",
+          "output",
+          "W",
+          471.85,
+          "u_fcore.g_bank[13].u_bank.g_rd_cap.rd_cap[26]$_DFF_P_",
+          "251.071167",
+          "79.958931",
+          "591.829712"
+        ],
+        [
+          "rd_out[218]",
+          "output",
+          "W",
+          468.77,
+          "u_fcore.g_bank[13].u_bank.g_rd_cap.rd_cap[26]$_DFF_P_",
+          "251.071167",
+          "82.445717",
+          "589.934021"
+        ],
+        [
+          "rd_out[250]",
+          "output",
+          "W",
+          465.7,
+          "u_fcore.g_bank[13].u_bank.g_rd_cap.rd_cap[26]$_DFF_P_",
+          "251.071167",
+          "85.143173",
+          "587.004761"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[14].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        8.64,
+        267.756,
+        103.464,
+        308.82
+      ],
+      "n": 782,
+      "p50_um": 111.8,
+      "max_um": 407.72,
+      "over20": 628,
+      "edges": {
+        "W": {
+          "n": 407,
+          "max_um": 407.72,
+          "over20": 407
+        },
+        "E": {
+          "n": 375,
+          "max_um": 88.0,
+          "over20": 221
+        }
+      },
+      "worst_pins": [
+        [
+          "r_ce_in",
+          "input",
+          "W",
+          407.72,
+          "u_fcore.g_bank[14].re_q$_DFF_PN0_",
+          "251.207993",
+          "285.334198",
+          "384.767090"
+        ],
+        [
+          "w_ce_in",
+          "input",
+          "W",
+          370.39,
+          "u_fcore.g_bank[14].we_q$_DFF_PN0_",
+          "248.582260",
+          "294.549713",
+          "385.939728"
+        ],
+        [
+          "rd_out[9]",
+          "output",
+          "W",
+          361.76,
+          "u_fcore.g_bank[14].u_bank.g_rd_cap.rd_cap[9]$_DFF_P_",
+          "246.040359",
+          "161.420593",
+          "518.589478"
+        ],
+        [
+          "rd_out[41]",
+          "output",
+          "W",
+          358.69,
+          "u_fcore.g_bank[14].u_bank.g_rd_cap.rd_cap[9]$_DFF_P_",
+          "246.040359",
+          "157.078186",
+          "522.549438"
+        ],
+        [
+          "rd_out[73]",
+          "output",
+          "W",
+          355.61,
+          "u_fcore.g_bank[14].u_bank.g_rd_cap.rd_cap[9]$_DFF_P_",
+          "246.040359",
+          "168.504318",
+          "511.350739"
+        ],
+        [
+          "rd_out[105]",
+          "output",
+          "W",
+          352.54,
+          "u_fcore.g_bank[14].u_bank.g_rd_cap.rd_cap[9]$_DFF_P_",
+          "246.040359",
+          "172.057480",
+          "507.212433"
+        ],
+        [
+          "rd_out[137]",
+          "output",
+          "W",
+          349.47,
+          "u_fcore.g_bank[14].u_bank.g_rd_cap.rd_cap[9]$_DFF_P_",
+          "246.040359",
+          "166.469788",
+          "512.671814"
+        ],
+        [
+          "rd_out[169]",
+          "output",
+          "W",
+          346.4,
+          "u_fcore.g_bank[14].u_bank.g_rd_cap.rd_cap[9]$_DFF_P_",
+          "246.040359",
+          "161.609558",
+          "517.597717"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[15].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        177.336,
+        226.62,
+        272.16,
+        267.684
+      ],
+      "n": 782,
+      "p50_um": 26.08,
+      "max_um": 393.12,
+      "over20": 501,
+      "edges": {
+        "W": {
+          "n": 375,
+          "max_um": 224.83,
+          "over20": 218
+        },
+        "E": {
+          "n": 407,
+          "max_um": 393.12,
+          "over20": 283
+        }
+      },
+      "worst_pins": [
+        [
+          "w_ce_in",
+          "input",
+          "E",
+          393.12,
+          "u_fcore.g_bank[15].we_q$_DFF_PN0_",
+          "251.796890",
+          "323.278076",
+          "354.757629"
+        ],
+        [
+          "r_ce_in",
+          "input",
+          "E",
+          375.17,
+          "u_fcore.g_bank[15].re_q$_DFF_PN0_",
+          "250.615417",
+          "351.859863",
+          "298.326141"
+        ],
+        [
+          "wd_in[224]",
+          "input",
+          "W",
+          224.83,
+          "u_fcore.g_bank[15].u_bank.wd_pin[0]$_DFF_P_",
+          "247.683868",
+          "461.437897",
+          "218.936676"
+        ],
+        [
+          "wd_in[225]",
+          "input",
+          "W",
+          223.96,
+          "u_fcore.g_bank[15].u_bank.wd_pin[1]$_DFF_P_",
+          "247.683868",
+          "462.141724",
+          "218.234970"
+        ],
+        [
+          "wd_in[192]",
+          "input",
+          "W",
+          221.76,
+          "u_fcore.g_bank[15].u_bank.wd_pin[0]$_DFF_P_",
+          "247.683868",
+          "461.243652",
+          "219.130646"
+        ],
+        [
+          "wd_in[193]",
+          "input",
+          "W",
+          220.88,
+          "u_fcore.g_bank[15].u_bank.wd_pin[1]$_DFF_P_",
+          "247.683868",
+          "461.947540",
+          "218.428940"
+        ],
+        [
+          "wd_in[226]",
+          "input",
+          "W",
+          219.52,
+          "u_fcore.g_bank[15].u_bank.wd_pin[2]$_DFF_P_",
+          "247.683868",
+          "473.784119",
+          "207.530411"
+        ],
+        [
+          "wd_in[160]",
+          "input",
+          "W",
+          218.69,
+          "u_fcore.g_bank[15].u_bank.wd_pin[0]$_DFF_P_",
+          "247.683868",
+          "461.157074",
+          "219.217163"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[1].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        8.64,
+        308.844,
+        103.464,
+        349.908
+      ],
+      "n": 782,
+      "p50_um": 124.63,
+      "max_um": 397.26,
+      "over20": 677,
+      "edges": {
+        "W": {
+          "n": 407,
+          "max_um": 397.26,
+          "over20": 407
+        },
+        "E": {
+          "n": 375,
+          "max_um": 73.6,
+          "over20": 270
+        }
+      },
+      "worst_pins": [
+        [
+          "w_ce_in",
+          "input",
+          "W",
+          397.26,
+          "u_fcore.g_bank[1].we_q$_DFF_PN0_",
+          "249.054535",
+          "275.559357",
+          "399.992432"
+        ],
+        [
+          "r_ce_in",
+          "input",
+          "W",
+          384.93,
+          "u_fcore.g_bank[1].re_q$_DFF_PN0_",
+          "250.097168",
+          "206.020981",
+          "446.279266"
+        ],
+        [
+          "w_addr_in[2]",
+          "input",
+          "W",
+          213.68,
+          "u_fcore.g_bank[1].u_bank.wa_pin[5]$_DFF_P_",
+          "247.921799",
+          "435.462738",
+          "242.451782"
+        ],
+        [
+          "rd_out[239]",
+          "output",
+          "W",
+          198.26,
+          "u_fcore.g_bank[1].u_bank.g_rd_cap.rd_cap[15]$_DFF_P_",
+          "249.394791",
+          "101.979645",
+          "566.394470"
+        ],
+        [
+          "wd_in[117]",
+          "input",
+          "W",
+          195.47,
+          "u_fcore.g_bank[1].u_bank.wd_pin[21]$_DFF_P_",
+          "247.927322",
+          "502.151642",
+          "178.773560"
+        ],
+        [
+          "rd_out[207]",
+          "output",
+          "W",
+          195.19,
+          "u_fcore.g_bank[1].u_bank.g_rd_cap.rd_cap[15]$_DFF_P_",
+          "249.394791",
+          "104.852074",
+          "563.107422"
+        ],
+        [
+          "wd_in[85]",
+          "input",
+          "W",
+          192.4,
+          "u_fcore.g_bank[1].u_bank.wd_pin[21]$_DFF_P_",
+          "247.927322",
+          "502.239532",
+          "178.688065"
+        ],
+        [
+          "rd_out[175]",
+          "output",
+          "W",
+          192.11,
+          "u_fcore.g_bank[1].u_bank.g_rd_cap.rd_cap[15]$_DFF_P_",
+          "249.394791",
+          "109.104836",
+          "561.815735"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[2].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        8.64,
+        58.428,
+        103.464,
+        99.492
+      ],
+      "n": 782,
+      "p50_um": 153.02,
+      "max_um": 298.41,
+      "over20": 782,
+      "edges": {
+        "W": {
+          "n": 407,
+          "max_um": 298.41,
+          "over20": 407
+        },
+        "E": {
+          "n": 375,
+          "max_um": 209.62,
+          "over20": 375
+        }
+      },
+      "worst_pins": [
+        [
+          "rd_out[24]",
+          "output",
+          "W",
+          298.41,
+          "u_fcore.g_bank[2].u_bank.g_rd_cap.rd_cap[24]$_DFF_P_",
+          "252.137253",
+          "186.123901",
+          "489.770782"
+        ],
+        [
+          "rd_out[23]",
+          "output",
+          "W",
+          297.86,
+          "u_fcore.g_bank[2].u_bank.g_rd_cap.rd_cap[23]$_DFF_P_",
+          "249.435196",
+          "177.809158",
+          "496.851013"
+        ],
+        [
+          "rd_out[9]",
+          "output",
+          "W",
+          296.99,
+          "u_fcore.g_bank[2].u_bank.g_rd_cap.rd_cap[9]$_DFF_P_",
+          "252.137253",
+          "164.799179",
+          "499.753784"
+        ],
+        [
+          "rd_out[56]",
+          "output",
+          "W",
+          295.34,
+          "u_fcore.g_bank[2].u_bank.g_rd_cap.rd_cap[24]$_DFF_P_",
+          "252.137253",
+          "188.839951",
+          "487.073608"
+        ],
+        [
+          "rd_out[18]",
+          "output",
+          "W",
+          295.04,
+          "u_fcore.g_bank[2].u_bank.g_rd_cap.rd_cap[18]$_DFF_P_",
+          "252.137253",
+          "162.830750",
+          "500.589691"
+        ],
+        [
+          "rd_out[55]",
+          "output",
+          "W",
+          294.79,
+          "u_fcore.g_bank[2].u_bank.g_rd_cap.rd_cap[23]$_DFF_P_",
+          "249.435196",
+          "180.336517",
+          "494.319580"
+        ],
+        [
+          "rd_out[15]",
+          "output",
+          "W",
+          294.25,
+          "u_fcore.g_bank[2].u_bank.g_rd_cap.rd_cap[15]$_DFF_P_",
+          "252.137253",
+          "165.722488",
+          "499.570007"
+        ],
+        [
+          "rd_out[41]",
+          "output",
+          "W",
+          293.92,
+          "u_fcore.g_bank[2].u_bank.g_rd_cap.rd_cap[9]$_DFF_P_",
+          "252.137253",
+          "166.073822",
+          "498.121033"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[3].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        8.64,
+        226.62,
+        103.464,
+        267.684
+      ],
+      "n": 782,
+      "p50_um": 124.96,
+      "max_um": 391.82,
+      "over20": 626,
+      "edges": {
+        "W": {
+          "n": 407,
+          "max_um": 391.82,
+          "over20": 407
+        },
+        "E": {
+          "n": 375,
+          "max_um": 101.3,
+          "over20": 219
+        }
+      },
+      "worst_pins": [
+        [
+          "rd_out[7]",
+          "output",
+          "W",
+          391.82,
+          "u_fcore.g_bank[3].u_bank.g_rd_cap.rd_cap[7]$_DFF_P_",
+          "246.692688",
+          "138.763611",
+          "544.759521"
+        ],
+        [
+          "rd_out[39]",
+          "output",
+          "W",
+          388.75,
+          "u_fcore.g_bank[3].u_bank.g_rd_cap.rd_cap[7]$_DFF_P_",
+          "246.692688",
+          "139.255325",
+          "543.694641"
+        ],
+        [
+          "rd_out[71]",
+          "output",
+          "W",
+          385.68,
+          "u_fcore.g_bank[3].u_bank.g_rd_cap.rd_cap[7]$_DFF_P_",
+          "246.692688",
+          "148.479401",
+          "536.845520"
+        ],
+        [
+          "rd_out[103]",
+          "output",
+          "W",
+          382.61,
+          "u_fcore.g_bank[3].u_bank.g_rd_cap.rd_cap[7]$_DFF_P_",
+          "246.692688",
+          "150.855103",
+          "533.539124"
+        ],
+        [
+          "rd_out[135]",
+          "output",
+          "W",
+          379.54,
+          "u_fcore.g_bank[3].u_bank.g_rd_cap.rd_cap[7]$_DFF_P_",
+          "246.692688",
+          "155.249374",
+          "529.498596"
+        ],
+        [
+          "rd_out[167]",
+          "output",
+          "W",
+          376.46,
+          "u_fcore.g_bank[3].u_bank.g_rd_cap.rd_cap[7]$_DFF_P_",
+          "246.692688",
+          "155.331589",
+          "528.813782"
+        ],
+        [
+          "rd_out[199]",
+          "output",
+          "W",
+          373.39,
+          "u_fcore.g_bank[3].u_bank.g_rd_cap.rd_cap[7]$_DFF_P_",
+          "246.692688",
+          "161.925140",
+          "524.129883"
+        ],
+        [
+          "rd_out[231]",
+          "output",
+          "W",
+          370.32,
+          "u_fcore.g_bank[3].u_bank.g_rd_cap.rd_cap[7]$_DFF_P_",
+          "246.692688",
+          "160.599152",
+          "525.027527"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[4].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        177.336,
+        267.756,
+        272.16,
+        308.82
+      ],
+      "n": 782,
+      "p50_um": 85.04,
+      "max_um": 444.03,
+      "over20": 623,
+      "edges": {
+        "W": {
+          "n": 375,
+          "max_um": 206.78,
+          "over20": 217
+        },
+        "E": {
+          "n": 407,
+          "max_um": 444.03,
+          "over20": 406
+        }
+      },
+      "worst_pins": [
+        [
+          "w_ce_in",
+          "input",
+          "E",
+          444.03,
+          "u_fcore.g_bank[4].we_q$_DFF_PN0_",
+          "250.306641",
+          "368.556732",
+          "310.251312"
+        ],
+        [
+          "r_ce_in",
+          "input",
+          "E",
+          419.82,
+          "u_fcore.g_bank[4].re_q$_DFF_PN0_",
+          "249.551163",
+          "306.305359",
+          "361.556396"
+        ],
+        [
+          "rd_out[245]",
+          "output",
+          "E",
+          289.53,
+          "u_fcore.g_bank[4].u_bank.g_rd_cap.rd_cap[21]$_DFF_P_",
+          "251.036087",
+          "168.300049",
+          "512.819946"
+        ],
+        [
+          "rd_out[229]",
+          "output",
+          "E",
+          288.67,
+          "u_fcore.g_bank[4].u_bank.g_rd_cap.rd_cap[5]$_DFF_P_",
+          "249.014618",
+          "158.915771",
+          "521.740295"
+        ],
+        [
+          "rd_out[239]",
+          "output",
+          "E",
+          288.5,
+          "u_fcore.g_bank[4].u_bank.g_rd_cap.rd_cap[15]$_DFF_P_",
+          "250.250320",
+          "159.878174",
+          "519.521423"
+        ],
+        [
+          "rd_out[241]",
+          "output",
+          "E",
+          287.66,
+          "u_fcore.g_bank[4].u_bank.g_rd_cap.rd_cap[17]$_DFF_P_",
+          "249.941071",
+          "160.763519",
+          "519.672058"
+        ],
+        [
+          "rd_out[238]",
+          "output",
+          "E",
+          287.43,
+          "u_fcore.g_bank[4].u_bank.g_rd_cap.rd_cap[14]$_DFF_P_",
+          "250.250320",
+          "158.128952",
+          "521.400391"
+        ],
+        [
+          "rd_out[246]",
+          "output",
+          "E",
+          287.17,
+          "u_fcore.g_bank[4].u_bank.g_rd_cap.rd_cap[22]$_DFF_P_",
+          "249.941071",
+          "163.016983",
+          "518.070618"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[5].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        8.64,
+        140.652,
+        103.464,
+        181.716
+      ],
+      "n": 782,
+      "p50_um": 161.23,
+      "max_um": 397.7,
+      "over20": 570,
+      "edges": {
+        "W": {
+          "n": 407,
+          "max_um": 397.7,
+          "over20": 407
+        },
+        "E": {
+          "n": 375,
+          "max_um": 168.16,
+          "over20": 163
+        }
+      },
+      "worst_pins": [
+        [
+          "rd_out[252]",
+          "output",
+          "W",
+          397.7,
+          "u_fcore.g_bank[5].u_bank.g_rd_cap.rd_cap[28]$_DFF_P_",
+          "247.264175",
+          "111.906708",
+          "565.776855"
+        ],
+        [
+          "rd_out[220]",
+          "output",
+          "W",
+          394.63,
+          "u_fcore.g_bank[5].u_bank.g_rd_cap.rd_cap[28]$_DFF_P_",
+          "247.264175",
+          "118.280327",
+          "558.344666"
+        ],
+        [
+          "rd_out[188]",
+          "output",
+          "W",
+          391.56,
+          "u_fcore.g_bank[5].u_bank.g_rd_cap.rd_cap[28]$_DFF_P_",
+          "247.264175",
+          "117.016678",
+          "557.545471"
+        ],
+        [
+          "rd_out[156]",
+          "output",
+          "W",
+          388.49,
+          "u_fcore.g_bank[5].u_bank.g_rd_cap.rd_cap[28]$_DFF_P_",
+          "247.264175",
+          "117.045540",
+          "557.267090"
+        ],
+        [
+          "rd_out[124]",
+          "output",
+          "W",
+          385.42,
+          "u_fcore.g_bank[5].u_bank.g_rd_cap.rd_cap[28]$_DFF_P_",
+          "247.264175",
+          "117.148628",
+          "558.901123"
+        ],
+        [
+          "rd_out[249]",
+          "output",
+          "W",
+          383.59,
+          "u_fcore.g_bank[5].u_bank.g_rd_cap.rd_cap[25]$_DFF_P_",
+          "252.157745",
+          "101.353203",
+          "576.280029"
+        ],
+        [
+          "rd_out[92]",
+          "output",
+          "W",
+          382.34,
+          "u_fcore.g_bank[5].u_bank.g_rd_cap.rd_cap[28]$_DFF_P_",
+          "247.264175",
+          "120.427277",
+          "555.127563"
+        ],
+        [
+          "rd_out[217]",
+          "output",
+          "W",
+          380.52,
+          "u_fcore.g_bank[5].u_bank.g_rd_cap.rd_cap[25]$_DFF_P_",
+          "252.157745",
+          "102.063911",
+          "575.263672"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[6].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        177.336,
+        99.564,
+        272.16,
+        140.628
+      ],
+      "n": 782,
+      "p50_um": 26.98,
+      "max_um": 292.34,
+      "over20": 503,
+      "edges": {
+        "W": {
+          "n": 375,
+          "max_um": 234.71,
+          "over20": 202
+        },
+        "E": {
+          "n": 407,
+          "max_um": 292.34,
+          "over20": 301
+        }
+      },
+      "worst_pins": [
+        [
+          "r_ce_in",
+          "input",
+          "E",
+          292.34,
+          "u_fcore.g_bank[6].re_q$_DFF_PN0_",
+          "249.551163",
+          "449.530701",
+          "219.417297"
+        ],
+        [
+          "w_ce_in",
+          "input",
+          "E",
+          266.08,
+          "u_fcore.g_bank[6].we_q$_DFF_PN0_",
+          "250.306641",
+          "422.390228",
+          "249.948120"
+        ],
+        [
+          "r_addr_in[0]",
+          "input",
+          "E",
+          264.98,
+          "u_fcore.g_bank[6].u_bank.a_pin[3]$_DFF_P_",
+          "250.863831",
+          "439.887909",
+          "234.081009"
+        ],
+        [
+          "r_addr_in[2]",
+          "input",
+          "E",
+          256.85,
+          "u_fcore.g_bank[6].u_bank.a_pin[5]$_DFF_P_",
+          "250.863831",
+          "440.486633",
+          "234.948120"
+        ],
+        [
+          "r_addr_in[1]",
+          "input",
+          "E",
+          255.92,
+          "u_fcore.g_bank[6].u_bank.a_pin[4]$_DFF_P_",
+          "249.487732",
+          "463.945038",
+          "212.465622"
+        ],
+        [
+          "w_addr_in[4]",
+          "input",
+          "E",
+          253.88,
+          "u_fcore.g_bank[6].u_bank.wa_pin[7]$_DFF_P_",
+          "250.757660",
+          "465.891876",
+          "210.143097"
+        ],
+        [
+          "r_addr_in[3]",
+          "input",
+          "E",
+          252.27,
+          "u_fcore.g_bank[6].u_bank.a_pin[6]$_DFF_P_",
+          "247.055511",
+          "457.562073",
+          "218.818192"
+        ],
+        [
+          "w_addr_in[0]",
+          "input",
+          "E",
+          251.84,
+          "u_fcore.g_bank[6].u_bank.wa_pin[3]$_DFF_P_",
+          "250.223587",
+          "452.093231",
+          "225.768021"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[7].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        177.336,
+        308.844,
+        272.16,
+        349.908
+      ],
+      "n": 782,
+      "p50_um": 103.28,
+      "max_um": 487.39,
+      "over20": 553,
+      "edges": {
+        "W": {
+          "n": 375,
+          "max_um": 145.09,
+          "over20": 146
+        },
+        "E": {
+          "n": 407,
+          "max_um": 487.39,
+          "over20": 407
+        }
+      },
+      "worst_pins": [
+        [
+          "w_ce_in",
+          "input",
+          "E",
+          487.39,
+          "u_fcore.g_bank[7].we_q$_DFF_PN0_",
+          "250.306641",
+          "340.369171",
+          "334.674957"
+        ],
+        [
+          "r_ce_in",
+          "input",
+          "E",
+          459.67,
+          "u_fcore.g_bank[7].re_q$_DFF_PN0_",
+          "250.306641",
+          "283.110474",
+          "380.800323"
+        ],
+        [
+          "w_addr_in[3]",
+          "input",
+          "E",
+          156.53,
+          "u_fcore.g_bank[7].u_bank.wa_pin[6]$_DFF_P_",
+          "248.103561",
+          "501.776184",
+          "161.878677"
+        ],
+        [
+          "wd_in[125]",
+          "input",
+          "E",
+          153.47,
+          "u_fcore.g_bank[7].u_bank.wd_pin[29]$_DFF_P_",
+          "249.394791",
+          "548.291382",
+          "132.165222"
+        ],
+        [
+          "wd_in[120]",
+          "input",
+          "E",
+          151.64,
+          "u_fcore.g_bank[7].u_bank.wd_pin[24]$_DFF_P_",
+          "249.394791",
+          "549.876587",
+          "130.577713"
+        ],
+        [
+          "wd_in[105]",
+          "input",
+          "E",
+          151.28,
+          "u_fcore.g_bank[7].u_bank.wd_pin[9]$_DFF_P_",
+          "249.394791",
+          "550.086487",
+          "130.301987"
+        ],
+        [
+          "wd_in[119]",
+          "input",
+          "E",
+          151.22,
+          "u_fcore.g_bank[7].u_bank.wd_pin[23]$_DFF_P_",
+          "249.394791",
+          "549.774475",
+          "130.640030"
+        ],
+        [
+          "wd_in[106]",
+          "input",
+          "E",
+          150.79,
+          "u_fcore.g_bank[7].u_bank.wd_pin[10]$_DFF_P_",
+          "249.862686",
+          "549.705933",
+          "130.488419"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[8].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        177.336,
+        185.532,
+        272.16,
+        226.596
+      ],
+      "n": 782,
+      "p50_um": 119.43,
+      "max_um": 380.96,
+      "over20": 623,
+      "edges": {
+        "W": {
+          "n": 375,
+          "max_um": 258.36,
+          "over20": 216
+        },
+        "E": {
+          "n": 407,
+          "max_um": 380.96,
+          "over20": 407
+        }
+      },
+      "worst_pins": [
+        [
+          "r_ce_in",
+          "input",
+          "E",
+          380.96,
+          "u_fcore.g_bank[8].re_q$_DFF_PN0_",
+          "250.306641",
+          "337.662231",
+          "323.537994"
+        ],
+        [
+          "w_ce_in",
+          "input",
+          "E",
+          352.54,
+          "u_fcore.g_bank[8].we_q$_DFF_PN0_",
+          "249.551163",
+          "395.694153",
+          "275.026062"
+        ],
+        [
+          "w_addr_in[2]",
+          "input",
+          "E",
+          346.42,
+          "u_fcore.g_bank[8].u_bank.wa_pin[5]$_DFF_P_",
+          "250.306641",
+          "385.568848",
+          "284.680725"
+        ],
+        [
+          "wd_in[29]",
+          "input",
+          "E",
+          326.09,
+          "u_fcore.g_bank[8].u_bank.wd_pin[29]$_DFF_P_",
+          "250.223587",
+          "373.920349",
+          "302.782715"
+        ],
+        [
+          "wd_in[61]",
+          "input",
+          "E",
+          323.02,
+          "u_fcore.g_bank[8].u_bank.wd_pin[29]$_DFF_P_",
+          "250.223587",
+          "374.002289",
+          "302.700104"
+        ],
+        [
+          "wd_in[93]",
+          "input",
+          "E",
+          319.94,
+          "u_fcore.g_bank[8].u_bank.wd_pin[29]$_DFF_P_",
+          "250.223587",
+          "374.186249",
+          "302.514923"
+        ],
+        [
+          "wd_in[125]",
+          "input",
+          "E",
+          316.87,
+          "u_fcore.g_bank[8].u_bank.wd_pin[29]$_DFF_P_",
+          "250.223587",
+          "374.450867",
+          "302.248535"
+        ],
+        [
+          "wd_in[15]",
+          "input",
+          "E",
+          314.42,
+          "u_fcore.g_bank[8].u_bank.wd_pin[15]$_DFF_P_",
+          "250.629410",
+          "442.240509",
+          "233.700943"
+        ]
+      ]
+    },
+    {
+      "macro": "u_fcore.g_bank[9].u_bank.u_data.g_read[0].u_m",
+      "bbox": [
+        177.336,
+        58.428,
+        272.16,
+        99.492
+      ],
+      "n": 782,
+      "p50_um": 146.69,
+      "max_um": 242.3,
+      "over20": 616,
+      "edges": {
+        "W": {
+          "n": 375,
+          "max_um": 148.51,
+          "over20": 212
+        },
+        "E": {
+          "n": 407,
+          "max_um": 242.3,
+          "over20": 404
+        }
+      },
+      "worst_pins": [
+        [
+          "r_ce_in",
+          "input",
+          "E",
+          242.3,
+          "u_fcore.g_bank[9].re_q$_DFF_PN0_",
+          "251.207993",
+          "412.642975",
+          "242.640549"
+        ],
+        [
+          "rd_out[12]",
+          "output",
+          "E",
+          238.97,
+          "u_fcore.g_bank[9].u_bank.g_rd_cap.rd_cap[12]$_DFF_P_",
+          "251.207993",
+          "112.697517",
+          "544.177734"
+        ],
+        [
+          "rd_out[3]",
+          "output",
+          "E",
+          237.89,
+          "u_fcore.g_bank[9].u_bank.g_rd_cap.rd_cap[3]$_DFF_P_",
+          "250.572845",
+          "176.841873",
+          "505.023926"
+        ],
+        [
+          "rd_out[0]",
+          "output",
+          "E",
+          237.21,
+          "u_fcore.g_bank[9].u_bank.g_rd_cap.rd_cap[0]$_DFF_P_",
+          "250.757660",
+          "175.124908",
+          "507.132568"
+        ],
+        [
+          "rd_out[44]",
+          "output",
+          "E",
+          235.9,
+          "u_fcore.g_bank[9].u_bank.g_rd_cap.rd_cap[12]$_DFF_P_",
+          "251.207993",
+          "115.550957",
+          "540.810852"
+        ],
+        [
+          "rd_out[6]",
+          "output",
+          "E",
+          235.66,
+          "u_fcore.g_bank[9].u_bank.g_rd_cap.rd_cap[6]$_DFF_P_",
+          "250.572845",
+          "173.470016",
+          "508.557129"
+        ],
+        [
+          "r_addr_in[2]",
+          "input",
+          "E",
+          235.15,
+          "u_fcore.g_bank[9].u_bank.a_pin[5]$_DFF_P_",
+          "252.203430",
+          "409.554047",
+          "274.660370"
+        ],
+        [
+          "rd_out[35]",
+          "output",
+          "E",
+          234.82,
+          "u_fcore.g_bank[9].u_bank.g_rd_cap.rd_cap[3]$_DFF_P_",
+          "250.572845",
+          "178.578323",
+          "502.406494"
+        ]
+      ]
+    }
+  ]
+}
