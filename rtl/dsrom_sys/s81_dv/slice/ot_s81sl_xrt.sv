@@ -443,7 +443,7 @@ module ot_s81sl_xrt #(
     reg [1023:0] rdat; reg [159:0] body; reg [V-2:0] cix;
     always @(*) begin
         for (k = 0; k < 1024; k = k + 1)
-            rdat[k] = (k < 256 && rsv_c[k / 8]) ? vb2[16 + k] : rse_c[k / 8] ? eb2[51 + k] : rsw_c[k / 8] ? wb2[51 + k] : bb2[k];
+            rdat[k] = (k < 256 && rsv_c[k / 8]) ? vb2[16 + k] : rse_c[k / 8] ? eb2[51 + k] : rsw_c[k / 8] ? wb2[51 + k] : bb2[k]; // selrange-ok: rsv_c[k/8] and vb2[16+k] are selected only for constant-unrolled k<256; guard false for k>=256; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3, probe p1
         for (k = 0; k < 160; k = k + 1)
             body[k] = bse_c[k / 8] ? eb2[46 + k] : bsw_c[k / 8] ? wb2[46 + k] : vb2[46 + k];
         for (k = 0; k < V - 1; k = k + 1)
@@ -599,7 +599,7 @@ module ot_s81sl_xrt #(
     wire [W-2:0] cixw = {{(W - V){1'b0}}, cix};
     reg [W-2:0] ci_r_nx;
     always @(*) for (i = 0; i < W - 1; i = i + 1)
-        ci_r_nx[i] = (i < V - 1 && pvs_c[i / 16]) ? pair_word[i + 1] : cis_c[i / 16] ? snd[i + 1] : sos_c[i / 16] ? so_b[i + 1] :
+        ci_r_nx[i] = (i < V - 1 && pvs_c[i / 16]) ? pair_word[i + 1] : cis_c[i / 16] ? snd[i + 1] : sos_c[i / 16] ? so_b[i + 1] : // selrange-ok: pvs_c[i/16] and pair_word[i+1] are selected only for constant-unrolled i<V-1; guard false at larger i; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3, probe p1
                      cixw[i];
     always @(posedge clk) begin ci_r <= ci_r_nx[W-30:0]; ci_rkl <= ci_r_nx[2:0]; ci_rkh <= ci_r_nx[W-30:36]; end
     generate if (HB != 0) begin : g_bo
