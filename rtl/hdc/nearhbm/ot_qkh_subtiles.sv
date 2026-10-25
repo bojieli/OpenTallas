@@ -105,10 +105,13 @@ module ot_qkh_lane8 #(
             assign lk = g3k; assign lv = g3v; assign lg = g3g; assign le = e3;
             assign lq0 = q0[d * 16 +: 16]; assign lq1 = q1[d * 16 +: 16];
         end else begin : g_s3c       // this lane's own S3 pin-flop copy (S3_COPY)
-            reg        ck3, cv3, qvl, cg3;
-            reg [15:0] el3, ql0, ql1;
-            reg [5:0]  qbl;
-            reg [1:0]  hdl, bsl;
+            // keep: identical-D copies; without it yosys opt_merge folds the 8 lane copies back into one flop
+            // (first s3 kit: 2 ck3 / 32 el3 cells per core instead of 16 / 256)
+            (* keep *) reg        ck3, cv3, qvl, cg3;
+            (* keep *) reg [15:0] el3;
+            reg [15:0] ql0, ql1;
+            (* keep *) reg [5:0]  qbl;
+            (* keep *) reg [1:0]  hdl, bsl;
             always @(posedge clk or negedge rc)
                 if (!rc) begin ck3 <= 1'b0; cv3 <= 1'b0; qvl <= 1'b0; end
                 else begin ck3 <= c_in[3]; cv3 <= c_in[2]; qvl <= q_valid_in; end
