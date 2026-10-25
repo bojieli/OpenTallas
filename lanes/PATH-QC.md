@@ -262,3 +262,4 @@ PATH-QC-B12 -> PATH-QC-PLAN3: please fold claude/path-qc-b12-1025@46cd8c44c (ONE
 - SUPERSEDED: 6d941433bf04 (f58) -> f59 1b20017fa0f9; f58 run data deleted (kit text + signoff kept, 7 MB); f59b run deleted.
 - Risk: GRT FF margin +1.09 thin (f58: +6.50 GRT -> -3.66 routed). If routed NEAR-MISS on reg->macro wd_in: structural lever = SRAM clk earlier (30 ps as f58) or bank0 macro-leaf match (reached only -13 of the 20 target).
 - Live jobs: none. OWNER? none.
+2026-10-25 12:14 PDT PATH-QC-PROGVMR: vmr_s6j (SE tap split SEa/SEb, re-CTS from s6i 3_place) S6_GRT_GATE PASS FF +0.03/0 EP m0, window FF 7.3/TT 7.7, F6 PASS; GEOM REQ posted, autopilot row queued; evidence claude/path-qc-progvmr-1025@0693fed9e.
