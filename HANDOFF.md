@@ -412,3 +412,4 @@ CODEX: 2026-10-25 03:28 PDT TOK-DS reprice READY codex/tok-ds-price-1025@b1f00a2
 
 2026-10-25 03:33 PDT CODEX: S81exactFT94typesPASS; QCcorrectedCBN/FTCprototypeCLEAN; MMFFreferencehelper0fa24094d inHBMactualrepairtrial; releasepagecurrentwithbranch/mainseparation(rendererf29777445).
 2026-10-25 03:34 PDT GEOM-REVIEW: split cores x4 PASS-COND, xdie3 PHY zone PASS-COND, LEAFPLAN2 FAIL; READY claude/geom-review-1024@cdb65ccf70.
+2026-10-25 03:34 PDT CODEX: HBMnative PARKED onClaude reset; codex/hbm-native-1025 gatedec0314a7d +WIPboot/layout; logicalbind/resetoverlayPASS, physicalHC128/TDMcalendar/finalbootremain; detailedCODEX-LOGhandoff.
