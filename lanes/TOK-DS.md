@@ -19,11 +19,14 @@ My own pre-limit results: fc31 data cuts 0S/0N L0/L2/L14/L20 replays: 0 faults, 
 - epyc3:/srv/opentallas-scratch/claude/tok-ds/fc31 (cuts/out_cut_{0S,0N,7} builds pids 85109/85110/85111; compile pid 85681)
 - epyc3 inputs: /srv/opentallas-scratch/claude/{stw-s81d-tok (ep5 layers+fc30), s81-p9-fc-1023 (fc31 + monfc31 build), stw-s81c-cap30}
 ## Results
+- 18:50 MERGED main 9721734fee: BK-sink fc31 HOST cut layer control: L0 PASS (13,541+3,332 cyc windows), L2/L14/L20 PASS_CUT_COMPONENT with --bk-drain-sink 5b (job0 847 checks 0 mism, job1 41/73/41, 0 faults, line W/E PASS, job1 hf_7N bit33 mutant CAUGHT); without the flag FAIL only on the consumed drain beat (kept). results/token_pass/tokds_bk_layers_1024. Candidate, NOT canonical.
+- 14:40 BK-drain candidate (fc31 cut_3S_ctl, BK_DRAIN_SINK=1 in the one dsdv_bk_g .uid 8'h5B; Codex build collected, idle2000 0 faults) native split-control replays epyc3 tok-ds/bk: L0 job0+job1 PASS_CUT_COMPONENT + mutant CAUGHT (regression clean). L2/L14/L20 job0+job1: fault_cycles 0 (was 122 fault cycles = BK collision FIXED); remaining 2 mismatches each = the compiler's expected bk.attn.idx.topk_final.drain beat (payload186 0xa515b) on the E/W line faces, which the sink correctly consumes. Expectation fix: opt-in dv_cut_replay/run_entry_replay --bk-drain-sink UID (claude/tok-ds-1024 c9c5cc8540; default unchanged, test_dv_cut_replay ALL PASS); recheck on existing traces = 0 trace mismatches (L2/L14 job0/job1); clean full re-sim with the flag running epyc3 tok-ds/bk2 (L2/L14/L20).
 - MERGED main 2c4e32da32: components on main (results/token_pass/tokds_comp_1024): owner fold PASS 20/20/20, dense XS cap PASS (GO 453, last capture 825), KV VP PASS (done 1028/1133), rstop PASS (egress 7..23); all mutants CAUGHT; cycles = 10-21 record. Composition (results/token_pass/tokds_compose_1024, plan v4.8 lat table): 1u AR 1,495,133 cyc = 802.6 tok/s, MTP 2,564.0 tok/s; measured-current 29.9% / old 49.8% / priced 13.8% / PHY 6.5%; MU AR 50u 40,130 agg, MTP 6u 15,384 (10u fails same-user check). Model only, no token pass.
 - 10-24 fc31 compile (main compiler, tree_fc31): L0 65 ops (23 LOWERED/38 PARTIAL/4 GAP, 131 rows), L2 83 (18/47/18), L14 92 (18/54/20), L20 84 (18/49/17).
 - fc31 cut_3S_ctl idle 400 (monfc31 build, run before the host loss, log recovered): fault_cycles=0 (fc30: fault from cycle 155). Status fault fixed in idle.
 - fc30 layer runs (10-23, recovered): all 16 cut replays FAIL: data cuts 0S/0N/7 have 0 check lines (nothing compared); 3S_ctl faulted from 155 (203 mismatches); check refused by XRT guard (since fixed 8ec7bc8bc).
 ## OWNER?
+- BK drain contract (with S81): adopt BK_DRAIN_SINK=1 (addressed consumption) as canonical? Needs profile/bind change, compiler to stop emitting addressed drains as slice CTL, legacy BK bench (transparent forward) retired. Evidence: layer control L0/L2/L14/L20 PASS on the sink build; canonical build faults on L2/L14/L20 job1.
 - (TOK-DS/COMPOSE) Latency table of record: chose lat/s81_latency.json (digest = die_plan.json v4.8) over r8/ (v4.6 bind). v4.8 R8 landed-bundle pads (r8eq_v48_checks: 76,485 pad flops, 13 bundles over margin kept) are NOT folded into any latency table (pad 0, groups []); owner/S81-P9 to confirm whether lane cycles must include them (would add up to ~13 cycles on x/xo/xring/sid lanes).
 
 ## components (sub-agent)
@@ -51,3 +54,10 @@ My own pre-limit results: fc31 data cuts 0S/0N L0/L2/L14/L20 replays: 0 faults, 
 
 
 CODEX 2026-10-24 11:24 PDT: Proven native BK drain/slice CTL namespace collision: actualL2job1 payload0xa515b acceptedBKUID5b/op1, then forwarded intoSID8 target10 and raises slice blockfault. Own opt-in vstop addressed-drain sink candidate focused actualRTL PASS (acceptedonce/forwarded0/noXRfault); unaddressed0xa515a mutant forwarded and nativeXRfaultCAUGHT. DuplicateN/Sdrains remainvisible+vinfault. Canonicalheld: oldBKwrapcontract/bench explicitly expectsforwarding (lines9/43/167), downstreamobserver review pending. ActualL2job1 fullcut candidate rebuild live epyc3 bk_drain_layer,96GB16thr, originalpinnedmodeluntouched.
+
+## COORD RULING 2026-10-24 18:55 PDT: BK drain sink -> canonical
+- The BK-drain collision is a functional bug; the sink is the fix (L0/L2/L14/L20 control PASS + mutants caught). Adopt it
+  canonically: (1) BK drain sink ON in the S81 die profile/bind (S81 owns), (2) compiler stops emitting addressed BK drains
+  as slice control beats (compiler owner / TOK-DS), (3) retire the legacy BK bench expectation (forwarded drain) with a
+  note; keep its old record. Then drop the --bk-drain-sink expectation hack in the replay.
+- v4.8 R8 landed-bundle pads: price them in the latency table now (no owner question; pricing is required).
