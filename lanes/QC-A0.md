@@ -178,3 +178,17 @@ CODEX progress: Capacity56 candidate nowregenerated25/25constantsPASS,433915padf
 - 2026-10-24 19:41 PDT QC: sub-agents: (a) A0 v7 NK/NL congestion structural review (no new P&R), (b) TRIAL-QK v3.8s route/IR collection + die_trial
   gate fix (owner decision 5: FF hold STA with real trees decides; insertion_tol 40 = guidance/INFO).
 - TRIAL-QK OWNER? ANSWERED (BRIEFING decision 5): FF hold STA with real trees decides; insertion_tol is guidance.
+- 2026-10-24 19:56 PDT QC: A0 v7 NK/NL routes COLLECTED -> FAIL (GRT non-convergent: NDR-relax loop, total overflow NK 1747 -> 2771, NL 5920 -> 7547
+  rising; ~8 min/iteration since 09:38). Stopped by exact container (intel2 gracious_fermi / interesting_heyrovsky), run data +
+  86 GB src copies deleted; logs+congestion reports kept intel2:/srv/opentallas-scratch2/claude/qc-a0/keep_a0v7_{nk,nl}.
+  Structural cause (analysis epyc1:/srv/opentallas-scratch2/claude/qc/a0cong/a0cv7_congestion_review.md + PNGs): overflow over/between
+  the 8 LSL heads (not the ROM channel): per-head 4-slot ring storage (512+512 b + 600 b ring) crosses the head columns from central
+  writers to readers at the head faces: demand 3.0-3.8k nets vs ~3.4k H tracks (0.9-1.1 vs 0.6); regions 'tx' patterns miss flattened
+  names (1,024 rung-0 flops land in the catch-all hub box); 4-um seam between writer and hub boxes piles 6,879 flops.
+  FIX F1 (same outline, 0 cycles, no RTL): readers + rung-0 next to the writers, per-head tap, only 390-b rung-1 + 73-b result cross
+  (cut ratios <= 0.5). Fallback F2: core +69 um tall -> CB quad +5.3 % (plan change). A0 v8 (F1) kit + render + self-review being
+  built (sub-agent, branch claude/qc-a0v8-1024); GEOM-REVIEW independent review before any P&R.
+- 2026-10-24 19:56 PDT QC: lane scratch moved to epyc1:/srv/opentallas-scratch2/claude/qc (root 89%; symlink left). Capacity-plan probe binds running
+  (ot-run epyc1): bind_cap_ref (codex plan 72ece79138, expect groups 5b3a) + bind_cap_probe (new plan incl. lane_eq/ft_regs/serdes).
+  FINDING: R8 type check uses BOUND stages from the bind's bus groups, so plan stations only clear the sle_ctl R8 error after
+  the probe rebind on the new plan (G0 with old probe groups still 1 error, as expected).
