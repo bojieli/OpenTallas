@@ -257,3 +257,29 @@ set rtr_ci {}
     out = subprocess.run(["tclsh"], input=stub+block+'\nputs $rtr_ci\n', text=True, capture_output=True)
     assert out.returncode == 0 and not out.stderr
     assert out.stdout.strip() == "i1 i2"
+
+
+def test_core_reset_rewire_refuses_a_private_pipeline_register():
+    stub = '''
+set rtr_terminal_qnets {terminal 1}
+proc terminal {m} {if {$m eq "getName"} {return terminal}}
+proc buffered {m} {if {$m eq "getName"} {return buffered}; return {bo}}
+proc delayed {m} {if {$m eq "getName"} {return delayed}; return {fo}}
+proc bo {m} {if {$m eq "getMTerm"} {return mout}; return buf}
+proc fo {m} {if {$m eq "getMTerm"} {return mout}; return flop}
+proc bi {m} {if {$m eq "getMTerm"} {return minput}; return terminal}
+proc mout {m} {return OUTPUT}
+proc minput {m} {return INPUT}
+proc buf {m} {if {$m eq "getMaster"} {return mbuf};return {bo bi}}
+proc flop {m} {if {$m eq "getMaster"} {return mflop};return {fo bi}}
+proc mbuf {m} {return BUFx2_ASAP7_75t_R}
+proc mflop {m} {return DFFHQNx1_ASAP7_75t_R}
+'''
+    script = stub + RT.CORE_RESET_EQ_TCL + '''
+if {![rtr_reset_equiv buffered 0 {}]} {error "buffered same-depth reset refused"}
+if {[rtr_reset_equiv delayed 0 {}]} {error "private reset pipeline bypassed"}
+puts CORE_RESET_EQ_PASS
+'''
+    out = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
+    assert out.returncode == 0 and not out.stderr, out.stderr
+    assert out.stdout.strip() == "CORE_RESET_EQ_PASS"
