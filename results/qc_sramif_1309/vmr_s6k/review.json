@@ -1,0 +1,12 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "placement/CTS/GRT prototype only; no route until actual post-GRT review",
+ "image": "results/qc_sramif_1309/vmr_s6k/vmr_s6k_interface_review.png",
+ "findings": [
+  "Viewed s6j actual placement: pre-MIF and per-SRAM MIF data stages span south-face and SRAM pin-band clock regions; worst pair39.3um apart.",
+  "Move existing512 pre-MIF dataFFs and their local decode buffers outward from corresponding SRAM MIF pin bands, preserving macro4.32um halos.",
+  "Pair clocks on a local leaf within30um and <=60 sinks; reject missing/incorrect512-pair coverage.",
+  "No RTL/data connection changes or extra cycles; inherited MIF read/write+1 remains priced."
+ ],
+ "added_data_cycles": 0
+}
