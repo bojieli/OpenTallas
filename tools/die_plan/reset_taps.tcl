@@ -68,7 +68,55 @@ proc rt_tapnet {blk i} {
 set rt_have 0
 foreach tp $rt_taps { if {[rt_tapnet $rt_blk [lindex $tp 0]] ne "NULL"} { incr rt_have } }
 if {[llength $rt_taps] < 2 || $rt_have < 2} {
-  puts "OT_RESET_TAPS single tap or no per-tap synchronisers: nothing to do"
+  if {[info exists rt_postplace] && $rt_postplace && [info exists rt_leaf_reach_um]} {
+    # Single reset terminal: nothing to re-point, but the final hop (terminal launch flop -> every placed control
+    # sink on its buffer / inverter tree) must still be bounded, fail closed (CLOCK-RESET 10-25 single-tap coverage).
+    set i ""
+    foreach tp $rt_taps { if {[rt_tapnet $rt_blk [lindex $tp 0]] ne "NULL"} { set i [lindex $tp 0]; break } }
+    if {$i eq "" && [dict exists $rt_named_nets 0]} { set i 0 }
+    if {$i eq ""} { error "OT_RESET_LEAF no reset terminal net (rst_n_t<i> / rst_n) in a pipelined/wavefront kit" }
+    set n0 [rt_tapnet $rt_blk $i]
+    set xy [rt_launch_xy $n0 {}]
+    if {[llength $xy] != 2} { error "OT_RESET_LEAF terminal [$n0 getName] has no single reset launch flop" }
+    lassign $xy lx ly
+    set seen {}; set todo [list $n0]
+    while {[llength $todo]} {
+      set net [lindex $todo 0]; set todo [lrange $todo 1 end]
+      if {[dict exists $seen [$net getName]]} continue
+      dict set seen [$net getName] 1
+      foreach it [$net getITerms] {
+        if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+        set ins [$it getInst]
+        if {![rt_is_inv $ins] && ![rt_is_buf $ins]} continue
+        foreach o [$ins getITerms] {
+          if {[[$o getMTerm] getIoType] eq "OUTPUT" && [$o getNet] ne "NULL"} { lappend todo [$o getNet] }
+        }
+      }
+    }
+    set rt_leaf_n 0; set rt_leaf_max 0; set rt_leaf_bad {}
+    foreach ins [$rt_blk getInsts] {
+      if {![string match "*DFF*" [[$ins getMaster] getName]]} continue
+      if {[$ins getPlacementStatus] ni {FIRM PLACED LOCKED}} continue
+      if {[regexp {(^|[/.])(u_rsync_t[0-9]+|u_rst_root|u_rst_in|u_rrl_[0-9]+)[/.]} [$ins getName]]} continue
+      lassign [$ins getLocation] x y
+      foreach it [$ins getITerms] {
+        if {[[$it getMTerm] getIoType] ne "INPUT"} continue
+        set net [$it getNet]
+        if {$net eq "NULL" || ![dict exists $seen [$net getName]]} continue
+        set bd [expr {abs($x - $lx) + abs($y - $ly)}]
+        incr rt_leaf_n
+        if {$bd > $rt_leaf_max} { set rt_leaf_max $bd }
+        if {$bd > $rt_leaf_reach_um * $rt_dbu} {
+          lappend rt_leaf_bad "[$ins getName]/[[$it getMTerm] getName]:[format %.3f [expr {$bd/double($rt_dbu)}]]um"
+        }
+      }
+    }
+    set verdict [expr {[llength $rt_leaf_bad] ? "FAIL" : "PASS"}]
+    puts "OT_RESET_TREE LEAF $rt_leaf_n sinks (single terminal $i), max hop [format %.3f [expr {$rt_leaf_max/double($rt_dbu)}]] um, limit $rt_leaf_reach_um um: $verdict"
+    if {[llength $rt_leaf_bad]} { error "OT_RESET_LEAF unreachable control sinks: [lrange $rt_leaf_bad 0 19]" }
+  } else {
+    puts "OT_RESET_TAPS single tap or no per-tap synchronisers: nothing to do"
+  }
 } else {
   # synchroniser nets per tap and polarity: rst_n_t<i> (parity 0) and the buffer/inverter tree below it
   set rt_cls {}   ;# net name -> {tap parity}

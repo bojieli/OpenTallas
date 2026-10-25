@@ -85,3 +85,52 @@ def test_reset_leaf_overreach_mutant_fails_closed(tmp_path):
     assert p.returncode != 0
     assert 'OT_RESET_LEAF unreachable control sinks' in p.stderr
     assert 'max hop 500.000 um, limit 405 um: FAIL' in p.stdout
+
+
+def single_hook(tmp_path, sink_x=100, launch=True):
+    """One terminal (rst_n_t0) through a buffer to a placed control sink: the final hop is still bounded."""
+    mock = r'''
+namespace eval ord {}
+proc ord::get_db_block {} {return blk}
+proc ord::get_db_tech {} {return tech}
+proc tech {m} {return 1}
+proc blk {m args} {switch $m {getNets {return {n0 nb}} getBTerms {return {b0}} getInsts {return {buf0 sink}}}}
+proc b0 {m} {switch $m {getName {return clk} getBBox {return box0}}}
+proc box0 {m} {return 0}
+proc n0 {m} {global LAUNCH; switch $m {getName {return rst_n_t0} getITerms {if {$LAUNCH} {return {q0 bi}}; return bi}}}
+proc nb {m} {switch $m {getName {return rst_buf} getITerms {return {bo si}}}}
+proc q0 {m} {switch $m {getMTerm {return out} getInst {return launch0}}}
+proc bi {m} {switch $m {getMTerm {return inp} getInst {return buf0} getNet {return n0}}}
+proc bo {m} {switch $m {getMTerm {return out} getInst {return buf0} getNet {return nb}}}
+proc out {m} {if {$m eq "getIoType"} {return OUTPUT}; return Q}
+proc inp {m} {if {$m eq "getIoType"} {return INPUT}; return RESETN}
+proc dff {m} {return DFFHQNx1}
+proc bufm {m} {return BUFx2}
+proc launch0 {m} {switch $m {getMaster {return dff} getLocation {return {0 0}} getName {return u_rrl_3/q}}}
+proc buf0 {m} {switch $m {getMaster {return bufm} getLocation {return {50 0}} getName {return rbuf} getPlacementStatus {return PLACED} getITerms {return {bi bo}}}}
+proc sink {m} {global sx; switch $m {getMaster {return dff} getLocation {return [list $sx 0]} getName {return u_epoch/eq} getPlacementStatus {return PLACED} getITerms {return si}}}
+proc si {m args} {switch $m {getMTerm {return inp} getNet {return nb} getInst {return sink}}}
+set rt_postplace 1
+set rt_leaf_reach_um 405
+'''
+    script = (mock + f'\nset sx {sink_x}\nset LAUNCH {int(launch)}\nset ::env(RESULTS_DIR) {{{tmp_path}}}\n'
+              + f'if {{[catch {{source {{{HOOK}}}}} msg]}} {{puts stderr $msg; exit 1}}\n')
+    return subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+
+
+def test_reset_leaf_single_terminal_bounded(tmp_path):
+    p = single_hook(tmp_path)
+    assert p.returncode == 0, p.stderr
+    assert 'LEAF 1 sinks (single terminal 0), max hop 100.000 um, limit 405 um: PASS' in p.stdout
+
+
+def test_reset_leaf_single_terminal_overreach_fails(tmp_path):
+    p = single_hook(tmp_path, 500)
+    assert p.returncode != 0
+    assert 'OT_RESET_LEAF unreachable control sinks' in p.stderr
+
+
+def test_reset_leaf_single_terminal_without_launch_flop_fails(tmp_path):
+    p = single_hook(tmp_path, launch=False)
+    assert p.returncode != 0
+    assert 'has no single reset launch flop' in p.stderr
