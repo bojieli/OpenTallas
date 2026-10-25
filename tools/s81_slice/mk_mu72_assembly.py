@@ -47,7 +47,9 @@ ROLES_WAB = {
 OUTLINE = {"lepw_mu": 2505.6, "lepe_mu": 2851.2, "lepe_nh_mu": 2851.2, "lepw_mab_mu": 2851.2}
 SL_AT = {"lepw_mab_mu": [1555.2, 43.2]}
 G3_SOURCES = ["rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
+              "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp_e6.sv",   # PORTFIX-DEAD D-CAPEND
               "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r.sv",
+              "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_e6.sv",
               "rtl/common/landed_parent/ot_pl_land_rst_copy.sv"]
 
 def assemble(normal, flavor, bindings):
@@ -77,16 +79,20 @@ def assemble(normal, flavor, bindings):
             # S81-LINK5B G6: the cap5r_lp end slice instantiates u_cap as ot_s81sl_capc5r (region-landed reset ports).
             # The normal spec's capc5c view is NOT this master: bind the CLOSED capc5r view only via --bindings
             # (exact source), else UNBOUND (never alias the old capc5c view onto the successor).
+            # S81/PORTFIX-DEAD D-CAPEND (10-25): the lep tops are 6-frame row ends: u_sl = c1x_k8_cap5r_lp_e6 -> u_cap =
+            # ot_s81sl_capc5r_e6 (rt_e 140 b; lanes 6 / 7 had no frame).  Its own kit; never alias the capc5r view.
             c.pop("view", None)
-            c["master"] = "ot_s81sl_capc5r"
-            if "ot_s81sl_capc5r" in bindings:
-                c.update(copy.deepcopy(bindings["ot_s81sl_capc5r"]))
+            c["master"] = "ot_s81sl_capc5r_e6"
+            if "ot_s81sl_capc5r_e6" in bindings:
+                c.update(copy.deepcopy(bindings["ot_s81sl_capc5r_e6"]))
             else:
-                c["binding_state"] = "UNBOUND: ot_s81sl_capc5r view; never old ot_s81sl_capc5c alias"
+                c["binding_state"] = "UNBOUND: ot_s81sl_capc5r_e6 view (PORTFIX-DEAD D-CAPEND); never ot_s81sl_capc5r alias"
         children.append(c)
     modules = {"u_ln0":f"dsfd_coll_lane_{side}_safe8_ntf",
                "u_ln1":f"dsfd_coll_lane_{side}_safe8_ntf",
-               "u_lep":"ot_s81sl_lep_mu_h" if flavor == "lepe_mu" else ("ot_s81sl_lep_mu_ab" if mab else "ot_s81sl_lep_mu_a"),
+               # PORTFIX-DEAD D-MURT (10-25): the TP-end leps (lepw_mu = s_0S, lepe_nh_mu = s_7S) carry no MU tag return:
+               # ot_s81sl_lep_mu_a_nrt (no mu_rt port, no return-tag build)
+               "u_lep":"ot_s81sl_lep_mu_h" if flavor == "lepe_mu" else ("ot_s81sl_lep_mu_ab" if mab else "ot_s81sl_lep_mu_a_nrt"),
                "u_land":"dsdv_mu_land"}
     if mab:
         modules.update(u_ln2=f"dsfd_coll_lane_{side}_safe8_ntf", u_ln3=f"dsfd_coll_lane_{side}_safe8_ntf")

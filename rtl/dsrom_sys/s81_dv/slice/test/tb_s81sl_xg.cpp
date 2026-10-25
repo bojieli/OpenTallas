@@ -188,7 +188,7 @@ int main(int argc, char** argv) {
         if (i > 40 && ((r.t_iss >> 2) & 1)) rfault++;
         if (i > 40 && r.cal_fault) rcal++;
         if (x.fault && xfault_at < 0) xfault_at = i;
-        if (x.xw_v != (x.xw_d[0] & 1)) { printf("FAIL xw_v != xw_d[0] at %d\n", i); return 1; }
+        // PORTFIX-DEAD D-XWV: xw_v (= xw_d[0]) is no longer a port of ot_s81sl_xg
         // own / V-assembled beats leave on the line with the default hops (E 7 - col, W col); W / E arrivals (hops 1)
         // are delivered, never forwarded; no control-plane / NX delivery for x beats
         { uint32_t ve = getbits(x.ro_e, 0, 1), ke = getbits(x.ro_e, 1, 3), he = getbits(x.ro_e, 4, 5);

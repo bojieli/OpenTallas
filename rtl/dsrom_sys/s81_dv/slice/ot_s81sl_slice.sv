@@ -220,14 +220,14 @@ module ot_s81sl_slice #(
     end endgenerate
 
     // ---------------------------------------------------------------- centre
-    wire dl_ev, dl_wv, dl_vv, is_v, cfg_v, x_go, x_sv, x_rbv, f_xg, f_xr, f_cap, f_xf, xw_v;
+    wire dl_ev, dl_wv, dl_vv, is_v, cfg_v, x_go, x_sv, x_rbv, f_xg, f_xr, f_cap, f_xf;
     wire [1103:0] dl_e, dl_w, ci_b; wire [275:0] dl_vb; wire [2:0] ci_dir; wire [159:0] is_d, cfg_d;
     wire [31:0] x_eps, x_s, x_rbd, x_scale; wire x_mode;
     wire xe_v, eg_v, f_eg; wire [1:0] xe_c, eg_c; wire [31:0] xe_hh, xe_kk, xe_dd, eg_d; wire [7:0] x_si; wire [172:0] nx_wi, nx_ei, nx_eo, nx_wo; wire [1100:0] xw_d;
     ot_s81sl_xg u_xg (.clk(clk), .rst_n(rst_n), .sid(sid), .ri_w(ri_w), .ri_e(ri_e), .ro_e(ro_e), .ro_w(ro_w),
         .vi(vi), .vo(vo), .xf_v(xfv_x), .xf_s(xfs_x), .xf(xf_x), .nx_wi(nx_wi), .nx_ei(nx_ei), .nx_eo(nx_eo), .nx_wo(nx_wo),
         .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w), .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b),
-        .is_v(is_v), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_xg));
+        .is_v(is_v), .is_d(is_d), .xw_d(xw_d), .fault(f_xg));
     generate if (HB != 0) begin : g_c3
 `ifdef OT_S81SL_KV_TRANSPORT
         // S81-KITS-RTLC 10-24 (OWNER DECISION 8): xrt3 ring / band ports carry only read / non-constant bits; the parent
@@ -297,8 +297,11 @@ module ot_s81sl_slice #(
     // x chains: the frame cfifo ingress word (dsfd_cfifo_crs): xd = {record xw[564:0], marker} (566 b, lanes 0..2),
     // xd2 = {record xw[1100:565], valid copy xw[0], marker} (538 b); marker = the slice's released reset (the forwarded
     // epoch marker of ot_s81_static_column_ingress_hr), from a registered relay of rst_n
+    // S81/PORTFIX-DEAD D-GLUE (10-25): the relay samples rst_n itself (2 plain flops, no async clear): the old form (async
+    // clear, D = 1'b1) left a constant-D flop in the dissolved slice glue.  Same marker edge after release (high 2 edges
+    // after rst_n rises); while rst_n is low it is low after 2 edges (the die reset is held far longer, decision 13).
     reg [1:0] mkq;
-    always @(posedge clk or negedge rst_n) if (!rst_n) mkq <= 2'b00; else mkq <= {mkq[0], 1'b1};
+    always @(posedge clk) mkq <= {mkq[0], rst_n};
     wire [1103:0] xw4 = {xw_d[1100:565], xw_d[0], mkq[1], xw_d[564:0], mkq[1]};
     genvar c;
     generate for (c = 0; c < 4; c = c + 1) begin : g_xc

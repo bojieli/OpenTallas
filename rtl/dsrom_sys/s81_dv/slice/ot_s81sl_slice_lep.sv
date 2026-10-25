@@ -115,6 +115,8 @@ module ot_s81sl_lep_core #(
     parameter integer NATIVE32_STD = 0, // separate opt-in standard bounded SRAM/control path
     parameter integer NATIVE32 = 0,    // opt-in MU same-age bounded control replicas
     parameter integer IDX_EN = 0,      // 1 (S81/H4 10-24): index rank-tree frames tl -> link, link -> ca / cb (see g_itx)
+    parameter integer RT_EN = 1,       // 0 (S81/PORTFIX-DEAD D-MURT 10-25): no MU RX tag return -- mu_rt is constant 0 with no
+                                       // tag register / return8 cell / valid copy behind it (top ot_s81sl_lep_mu_a_nrt: no port)
     parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
 ) (
@@ -1009,7 +1011,9 @@ module ot_s81sl_lep_core #(
       assign rbx=rb;
     end
     always @(posedge clk) mwd[0] <= rbx[0];
-    if(NATIVE32!=0 && RX_SRAM!=0) begin:g_native_return
+    if(RT_EN==0) begin:g_nort
+      // D-MURT: the endpoint's RX tag has no consumer (TP-end leps s_0S / s_7S): rtq is not built
+    end else if(NATIVE32!=0 && RX_SRAM!=0) begin:g_native_return
       wire [31:0] ring_tag={1'b1,rbx[TG+2+:10],rbx[TG+12+:21]};
       wire [31:0] replay_tag={1'b1,mrd[TG+2+:10],mrd[TG+12+:21]};
       for(genvar rt=0;rt<4;rt=rt+1) begin:g_byte
@@ -1031,7 +1035,8 @@ module ot_s81sl_lep_core #(
             mwv <= rr_land;
             if (rr_dlv && mrv) mcol <= 1'b1;            // replay against a cut-through beat
         end
-    if(RX_SRAM!=0) begin:g_return_valid
+    if(RT_EN==0) begin:g_nort_rt assign mu_rt=32'd0;   // no reader: the _nrt top has no mu_rt port
+    end else if(RX_SRAM!=0) begin:g_return_valid
         for(genvar rv=0;rv<4;rv=rv+1) begin:g_slice
             (* keep *) reg valid_r;
             always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+3+rv])
@@ -1427,6 +1432,46 @@ module ot_s81sl_lep_mu_a #(
         .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(2'b00), .l1_st(2'b00),
         .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
         .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(ml_wv), .ml_wd(ml_wd), .ml_rv(ml_rv), .ml_rd(ml_rd), .ml_f(ml_f),
+        .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
+        .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
+        .l2_f(3'd0), .l3_f(3'd0), .fault(fault));
+endmodule
+
+// S81/PORTFIX-DEAD D-MURT (2026-10-25): ot_s81sl_lep_mu_a_nrt = ot_s81sl_lep_mu_a with no MU RX tag return (core RT_EN 0):
+// the TP-end leps (s_0S / s_7S) receive no h window, so no lane carries their mu_rt (only s_0N rt / s_7N hf do).  Same
+// ports as lep_mu_a minus mu_rt, same cycles on every other port; the tag registers, return8 cells and per-slice
+// return valid copies are not built.  New hard view (kit) from lep_mu_a's kit params.
+module ot_s81sl_lep_mu_a_nrt #(
+    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire [1103:0]   ro,
+    output wire [1103:0]   ri,
+    output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,
+    output wire            lo1_v, input wire lo1_r, output wire [552:0] lo1_d,
+    input  wire            li0_v, output wire li0_r, input wire [552:0] li0_d,
+    input  wire            li1_v, output wire li1_r, input wire [552:0] li1_d,
+    output wire [1:0]      rxv,
+    input  wire            sl_f,
+    input  wire [2:0]      l0_f,
+    input  wire [2:0]      l1_f,
+    input  wire [33:0]     mu_c,
+    output wire            ml_wv,
+    output wire [1103:0]   ml_wd,
+    input  wire            ml_rv,
+    input  wire [1103:0]   ml_rd,
+    input  wire            ml_f,
+    output wire            fault
+);
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(0), .NB(NB), .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .RT_EN(0)) u (
+        .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
+        .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
+        .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
+        .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(2'b00), .l1_st(2'b00),
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+        .mu_c(mu_c), .mu_rt(), .ml_wv(ml_wv), .ml_wd(ml_wd), .ml_rv(ml_rv), .ml_rd(ml_rd), .ml_f(ml_f),
         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
         .l2_f(3'd0), .l3_f(3'd0), .fault(fault));

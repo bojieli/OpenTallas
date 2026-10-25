@@ -4,7 +4,7 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
                            parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
                            parameter logic [39:0] FM = {40{1'b1}}) (   // S81-P9-FACE face mask -> dsdv_svc_rs_c
     input  wire ck, rst, input wire [3:0] sid,
-    input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
+    input  wire [32:0] j, output wire [1:0] jd, input wire [512:0] q,   // the die's 513-b q lane {d 512, v} input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
@@ -31,7 +31,7 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     wire[19:0]so_owner,so_param_owner;wire[20:0]so_position,so_param_position;
     wire[7:0]so_se_jid,so_jid;wire[15:0]so_local_first,so_peer_first;
     wire[2:0]so_param_row;wire[511:0]so_param_d;wire[514:0]q_filtered;
-    dsdv_pv_so_program #(.ENABLE(PVSO_ENABLE)) u_program(.clk(ck),.rst_n(rst),.q(q),.q_pass(q_filtered),
+    dsdv_pv_so_program #(.ENABLE(PVSO_ENABLE),.TF(0)) u_program(.clk(ck),.rst_n(rst),.q({2'b00,q}),.q_pass(q_filtered),
       .cfg_v(so_cfg_v),.owner(so_owner),.position(so_position),.se_jid(so_se_jid),.so_jid(so_jid),
       .local_first(so_local_first),.peer_first(so_peer_first),.param_v(so_param_v),.param_row(so_param_row),
       .param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),.launch(so_launch),.fault(program_fault));
