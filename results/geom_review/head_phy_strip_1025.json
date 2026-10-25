@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS-CONDITIONAL",
+  "reviewer": "Codex",
+  "source": "claude/s81-head3-1025r@612e029779 + source-consistent XDIE3 PHY-zone policy",
+  "pictures": [
+    "results/geom_review/head_phy_strip_1025/head_pg_reserve.png",
+    "results/geom_review/head_phy_strip_1025/head_pg_pins.png"
+  ],
+  "findings": [
+    "Viewed south-edge HOST0 reserve map and local M7 prototype pin map. CORE boundary strip150um is clear, reserved PHY zone1013.24um deep starts behind63.64um guard; domain clipped to its containing partition, no neighbor spill.",
+    "All12 SerDes use one transformed type with same local PG split. PG reservation is2.924mm2; separate ot_pdie_serdes area562680.012um2 is explicitly MODEL/ASSUMPTION, not a measured physical body. No new outline or lane placement, all325 latency depths unchanged.",
+    "G0/G0C PASS0errors6warnings; earlier fail325missing latency entries fixed by required latency regeneration, no plan timing change."
+  ],
+  "conditions": [
+    "Released signed views must expose actual VDDPHY power pin and separate CORE VDD; prototype does not edit/relabel those views.",
+    "Requires XDIE3 tools/die_plan/die_io.py phy_zone API (69f1ce1a87), already part of the approved batch dependency.",
+    "Actual selected PHY shape/power/bump map and mixed-domain physical signoff remain open."
+  ]
+}
