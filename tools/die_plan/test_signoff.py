@@ -44,7 +44,8 @@ def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, sl
              f"Warning: There are {unconstrained} unconstrained endpoints." if unconstrained else "",
              "SO_PATH_END",
              "SO_CK 1 250.0 clk", f"SO_CK 1 {250.0 + sp} clk", "SO_CK 0 260.0 clk", "SO CK_ERRORS 0",
-             "SO OCV5_WNS_MAX -3", "SO OCV5_WNS_MIN -1"]
+             "SO OCV5_WNS_MAX -3", "SO OCV5_WNS_MIN -1",
+             "SO PAIR_max 2 30 30 30 launch capture", "SO PAIR_min 2 25 25 25 launch capture", "SO PAIR_DONE 1"]
         if done:
             L.append("SO DONE 1")
         out[c] = "\n".join(L)
@@ -114,10 +115,19 @@ def test_ff_hold_missing_overlay_is_not_run():
             assert rec["verdict"] == "NOT SIGNED"
 
 
-def test_spread_over_80_fails_at_tt():
+def test_spread_over_80_is_information_only():
     rec = signoff.evaluate(record(spread_tt=85.4))
-    assert rec["checks"]["clock"]["verdict"] == "FAIL"
-    assert "TT pin-flop spread 85.4 ps > 80" in rec["checks"]["clock"]["problems"][0]
+    assert rec["checks"]["clock"]["verdict"] == "PASS"
+    assert rec["checks"]["clock"]["spread_info_only"]
+
+
+def test_related_pair_skew_missing_or_over_limit_blocks():
+    rec = record()
+    rec["corners"]["tt"]["pair_skew"]["checks"]["max"]["worst_abs_ps"] = 85.4
+    assert signoff.evaluate(rec)["checks"]["clock"]["verdict"] == "FAIL"
+    rec = record()
+    del rec["corners"]["ff"]["pair_skew"]
+    assert signoff.evaluate(rec)["checks"]["clock"]["verdict"] == "FAIL"
 
 
 def test_insertion_target():
