@@ -146,7 +146,10 @@ SCHEMA = {
                                    "basis": {"type": "string"}, "note": {"type": "string"},
                                    # rack table macro name (lk_<name>) of this window when its partition is not
                                    # named after it (xdie_io.py; HBM B2l, HBM-ARCH 10-24)
-                                   "rack_macro": {"type": "string"}}}},
+                                   "rack_macro": {"type": "string"},
+                                   # S81-XDIE 10-24 (die-corner PHY windows): signal-bump depopulation rects inside the
+                                   # window (package corner stress zone); `sites` counts only the bumps outside them
+                                   "bump_exclude_um": {"type": "array", "items": _rect, "minItems": 1}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
                     # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops
@@ -180,7 +183,12 @@ SCHEMA = {
                                                "offset_um": _nonneg, "nets": {"type": "array", "items": _name}}}},
                             "bumps": {"type": "object", "required": ["rect_um", "pitch_um"], "additionalProperties": False,
                                       "properties": {"rect_um": _rect, "pitch_um": _pos,
-                                                     "use": {"enum": ["power_ground"]}, "note": {"type": "string"}}},
+                                                     "use": {"enum": ["power_ground"]}, "note": {"type": "string"},
+                                                     # S81-XDIE 10-24: no power bumps here (= the window's
+                                                     # bump_exclude_um, die-corner stress zone)
+                                                     "exclude_um": {"type": "array", "items": _rect, "minItems": 1}}},
+                            # S81-XDIE 10-24: the domain's VDDPHY rail-clamp ESD + decap sites (no bumps over them)
+                            "esd_um": {"type": "array", "items": _rect, "minItems": 1},
                             "note": {"type": "string"}}}}}},
             }},
         "partition_types": {

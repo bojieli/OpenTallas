@@ -221,3 +221,41 @@ def test_ft_budget():
 def test_g0c_summary_counts():
     R, s = run(lambda p: p["die"]["layer_budget"].update(ft_route_layers=["M4"]))
     assert s["xdie_counts"]["reach"] >= 1 and s["g0c"]["clean"] < s["g0c"]["types"]
+
+
+def test_die_io_corner_keepout():
+    """S81-XDIE 10-24: a PHY window in a die-corner slot depopulates the corner stress square (bump_exclude_um): sites
+    recounted; G0C checks the exclusion lies in the window and sites do not exceed what is left; the pg domain must
+    carry the exclusion in bumps.exclude_um."""
+    p = copy.deepcopy(EX)
+    serdes(p)
+    P = schema.Plan(p)
+    w0 = die_io.plan(P)[0]
+    w = die_io.plan(P, corner_um=300.0)[0]           # pa fills the die's W end: corners (0, 0) and (0, 864)
+    assert "bump_exclude_um" not in w0 and w0["sites"] == 25
+    assert w["bump_exclude_um"] == [[0.0, 0.0, 300.0, 300.0], [0.0, 564.0, 300.0, 864.0]] and w["sites"] == 19   # 2 x 2 + 2 x 1 centres removed
+    p["die"]["io"] = [x for x in p["die"]["io"] if not x.get("iface")] + [w]
+    assert not schema.validate(p)
+    R, _ = check.run(copy.deepcopy(p), completeness=True)
+    m = [i["msg"] for i in R.errors() if i["check"] == "die_io_plan"]
+    assert not any("bump_exclude_um" in x for x in m), m
+    b = copy.deepcopy(p)
+    b["die"]["io"][-1]["sites"] = 25                           # sites counted over the excluded corner
+    b["die"]["io"][-1]["bump_exclude_um"].append([800.0, 0.0, 900.0, 50.0])     # partly outside the window
+    R, _ = check.run(b, completeness=True)
+    m = [i["msg"] for i in R.errors() if i["check"] == "die_io_plan"]
+    assert any("sites 25 >" in x for x in m) and any("outside the window" in x for x in m), m
+    # pg domain without the exclusion -> ERROR; with it (+ esd_um) clean
+    dom = dict(name="phy_pa", nets=["VDDPHY", "VSS"], io=[w["name"]], rect_um=[0.0, 0.0, 900.0, 864.0],
+               grid=[dict(layer="M8", width_um=1.92, pitch_um=8.64, offset_um=4.32, nets=["VDDPHY", "VSS"])],
+               bumps=dict(rect_um=list(w["rect_um"]), pitch_um=45.0, use="power_ground"))
+    q = copy.deepcopy(p)
+    q["die"].setdefault("pg", {})["domains"] = [copy.deepcopy(dom)]
+    q["die"]["layer_budget"]["die_layers"] = ["M8", "M9"]
+    R, _ = check.run(copy.deepcopy(q), completeness=True)
+    assert any("not in the domain's bumps.exclude_um" in i["msg"] for i in R.errors() if i["check"] == "pg_domain")
+    q["die"]["pg"]["domains"][0]["bumps"]["exclude_um"] = copy.deepcopy(w["bump_exclude_um"])
+    q["die"]["pg"]["domains"][0]["esd_um"] = copy.deepcopy(w["bump_exclude_um"])
+    assert not schema.validate(q)
+    R, _ = check.run(q, completeness=True)
+    assert not [i for i in R.errors() if i["check"] == "pg_domain"], R.errors()

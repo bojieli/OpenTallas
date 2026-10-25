@@ -64,10 +64,10 @@
       "io_lk_WS0_u_phy"
      ],
      "rect_um": [
-      5811.56,
-      40.04,
-      8824.6,
-      1394.2
+      5875.2,
+      103.68,
+      8760.96,
+      649.188
      ],
      "grid": [
       {
@@ -96,7 +96,7 @@
        5875.2,
        103.68,
        8760.96,
-       1330.56
+       585.548
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
@@ -114,10 +114,10 @@
       "io_lk_WS1_u_phy"
      ],
      "rect_um": [
-      2925.8,
-      40.04,
-      5938.84,
-      1394.2
+      2989.44,
+      103.68,
+      5875.2,
+      649.188
      ],
      "grid": [
       {
@@ -146,7 +146,7 @@
        2989.44,
        103.68,
        5875.2,
-       1330.56
+       585.548
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
@@ -164,10 +164,10 @@
       "io_lk_WN0_u_phy"
      ],
      "rect_um": [
-      5811.56,
-      23350.76,
-      8824.6,
-      24704.92
+      5875.2,
+      23866.716,
+      8610.96,
+      24641.28
      ],
      "grid": [
       {
@@ -194,8 +194,8 @@
      "bumps": {
       "rect_um": [
        5875.2,
-       23414.4,
-       8760.96,
+       23930.356,
+       8547.32,
        24641.28
       ],
       "pitch_um": 45.0,
@@ -214,10 +214,10 @@
       "io_lk_WN1_u_phy"
      ],
      "rect_um": [
-      2925.8,
-      23350.76,
-      5938.84,
-      24704.92
+      2989.44,
+      23642.844,
+      5725.2,
+      24641.28
      ],
      "grid": [
       {
@@ -244,8 +244,8 @@
      "bumps": {
       "rect_um": [
        2989.44,
-       23414.4,
-       5875.2,
+       23706.484,
+       5661.56,
        24641.28
       ],
       "pitch_um": 45.0,
@@ -264,10 +264,10 @@
       "io_lk_WN2_u_phy"
      ],
      "rect_um": [
-      40.04,
-      23350.76,
-      3053.08,
-      24704.92
+      103.68,
+      23414.4,
+      2839.44,
+      24641.28
      ],
      "grid": [
       {
@@ -295,14 +295,30 @@
       "rect_um": [
        103.68,
        23414.4,
-       2989.44,
+       2775.8,
        24641.28
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
-      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites",
+      "exclude_um": [
+       [
+        103.68,
+        24144.96,
+        600.0,
+        24641.28
+       ]
+      ]
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap",
+     "esd_um": [
+      [
+       103.68,
+       24144.96,
+       600.0,
+       24641.28
+      ]
+     ]
     },
     {
      "name": "phy_lk_WN3",
@@ -314,10 +330,10 @@
       "io_lk_WN3_u_phy"
      ],
      "rect_um": [
-      8697.32,
-      23350.76,
-      11710.36,
-      24704.92
+      9665.052,
+      23414.4,
+      11646.72,
+      24641.28
      ],
      "grid": [
       {
@@ -343,7 +359,7 @@
      ],
      "bumps": {
       "rect_um": [
-       8760.96,
+       9728.692,
        23414.4,
        11646.72,
        24641.28
@@ -364,10 +380,10 @@
       "io_lk_ES0_u_phy"
      ],
      "rect_um": [
-      23126.12,
-      40.04,
-      26139.16,
-      1394.2
+      23189.76,
+      103.68,
+      26075.52,
+      1330.56
      ],
      "grid": [
       {
@@ -414,10 +430,10 @@
       "io_lk_ES1_u_phy"
      ],
      "rect_um": [
-      26011.88,
-      40.04,
-      29024.92,
-      1394.2
+      26225.52,
+      103.68,
+      28961.28,
+      1330.56
      ],
      "grid": [
       {
@@ -443,7 +459,7 @@
      ],
      "bumps": {
       "rect_um": [
-       26075.52,
+       26289.16,
        103.68,
        28961.28,
        1330.56
@@ -464,10 +480,10 @@
       "io_lk_EN0_u_phy"
      ],
      "rect_um": [
-      23126.12,
-      23350.76,
-      26139.16,
-      24704.92
+      23189.76,
+      24095.772,
+      26075.52,
+      24641.28
      ],
      "grid": [
       {
@@ -494,7 +510,7 @@
      "bumps": {
       "rect_um": [
        23189.76,
-       23414.4,
+       24159.412,
        26075.52,
        24641.28
       ],
@@ -514,10 +530,10 @@
       "io_lk_EN1_u_phy"
      ],
      "rect_um": [
-      26011.88,
-      23350.76,
-      29024.92,
-      24704.92
+      26075.52,
+      24095.772,
+      28961.28,
+      24641.28
      ],
      "grid": [
       {
@@ -544,7 +560,7 @@
      "bumps": {
       "rect_um": [
        26075.52,
-       23414.4,
+       24159.412,
        28961.28,
        24641.28
       ],
@@ -564,10 +580,10 @@
       "io_lk_WS2_u_phy"
      ],
      "rect_um": [
-      40.04,
-      40.04,
-      3053.08,
-      1394.2
+      103.68,
+      103.68,
+      2839.44,
+      1330.56
      ],
      "grid": [
       {
@@ -595,14 +611,30 @@
       "rect_um": [
        103.68,
        103.68,
-       2989.44,
+       2775.8,
        1330.56
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
-      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites",
+      "exclude_um": [
+       [
+        103.68,
+        103.68,
+        600.0,
+        600.0
+       ]
+      ]
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap",
+     "esd_um": [
+      [
+       103.68,
+       103.68,
+       600.0,
+       600.0
+      ]
+     ]
     },
     {
      "name": "phy_lk_WS3",
@@ -614,10 +646,10 @@
       "io_lk_WS3_u_phy"
      ],
      "rect_um": [
-      8697.32,
-      40.04,
-      10267.48,
-      2621.08
+      9610.14,
+      103.68,
+      10203.84,
+      2407.44
      ],
      "grid": [
       {
@@ -643,10 +675,10 @@
      ],
      "bumps": {
       "rect_um": [
-       8760.96,
+       9673.78,
        103.68,
        10203.84,
-       2557.44
+       2343.8
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
@@ -664,10 +696,10 @@
       "io_lk_EN2_u_phy"
      ],
      "rect_um": [
-      20240.36,
-      23350.76,
-      23253.4,
-      24704.92
+      20304.0,
+      23414.4,
+      22285.668,
+      24641.28
      ],
      "grid": [
       {
@@ -695,7 +727,7 @@
       "rect_um": [
        20304.0,
        23414.4,
-       23189.76,
+       22222.028,
        24641.28
       ],
       "pitch_um": 45.0,
@@ -714,10 +746,10 @@
       "io_lk_EN3_u_phy"
      ],
      "rect_um": [
-      28897.64,
-      23350.76,
-      31910.68,
-      24704.92
+      29111.28,
+      23414.4,
+      31847.04,
+      24641.28
      ],
      "grid": [
       {
@@ -743,16 +775,32 @@
      ],
      "bumps": {
       "rect_um": [
-       28961.28,
+       29174.92,
        23414.4,
        31847.04,
        24641.28
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
-      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites",
+      "exclude_um": [
+       [
+        31350.72,
+        24144.96,
+        31847.04,
+        24641.28
+       ]
+      ]
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap",
+     "esd_um": [
+      [
+       31350.72,
+       24144.96,
+       31847.04,
+       24641.28
+      ]
+     ]
     }
    ]
   },
@@ -813,13 +861,13 @@
      5875.2,
      103.68,
      8760.96,
-     1330.56
+     585.548
     ],
-    "sites": 152,
+    "sites": 57,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (6 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_WS1_u_phy",
@@ -830,13 +878,13 @@
      2989.44,
      103.68,
      5875.2,
-     1330.56
+     585.548
     ],
-    "sites": 152,
+    "sites": 57,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (4 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_WN0_u_phy",
@@ -845,15 +893,15 @@
     "part": "lk_WN0",
     "rect_um": [
      5875.2,
-     23414.4,
-     8760.96,
+     23930.356,
+     8547.32,
      24641.28
     ],
-    "sites": 152,
+    "sites": 68,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 711 um beside the strip (6 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_WN1_u_phy",
@@ -862,15 +910,15 @@
     "part": "lk_WN1",
     "rect_um": [
      2989.44,
-     23414.4,
-     5875.2,
+     23706.484,
+     5661.56,
      24641.28
     ],
-    "sites": 152,
+    "sites": 102,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 935 um beside the strip (4 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_WN2_u_phy",
@@ -880,14 +928,22 @@
     "rect_um": [
      103.68,
      23414.4,
-     2989.44,
+     2775.8,
      24641.28
     ],
-    "sites": 152,
+    "sites": 127,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; in-band host (no host link on this die), declared route: lk_WN2 -> [coll__lk_WN2__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost",
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 127 sites; in-band host (no host link on this die), declared route: lk_WN2 -> [coll__lk_WN2__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost",
+    "bump_exclude_um": [
+     [
+      103.68,
+      24144.96,
+      600.0,
+      24641.28
+     ]
+    ],
     "host": "in_band",
     "host_route": "lk_WN2 -> [coll__lk_WN2__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost"
    },
@@ -897,16 +953,16 @@
     "iface": "serdes",
     "part": "lk_WN3",
     "rect_um": [
-     8760.96,
+     9728.692,
      23414.4,
      11646.72,
      24641.28
     ],
-    "sites": 152,
+    "sites": 96,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; in-band host (no host link on this die), declared route: lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost",
+    "note": "die_io.py plan: u_phy; PHY zone 1918 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); in-band host (no host link on this die), declared route: lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost",
     "host": "in_band",
     "host_route": "lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost"
    },
@@ -925,7 +981,7 @@
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY ZONE OFF-SHORE: free area [23403.4, 395.76, 26075.52, 1330.56] is 396 um from the die edge (the partition's ft / bus strip is on the die-edge side; orient fix owed) -> window = whole slot"
    },
    {
     "name": "io_lk_ES1_u_phy",
@@ -933,16 +989,16 @@
     "iface": "serdes",
     "part": "lk_ES1",
     "rect_um": [
-     26075.52,
+     26289.16,
      103.68,
      28961.28,
      1330.56
     ],
-    "sites": 152,
+    "sites": 136,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_EN0_u_phy",
@@ -951,15 +1007,15 @@
     "part": "lk_EN0",
     "rect_um": [
      23189.76,
-     23414.4,
+     24159.412,
      26075.52,
      24641.28
     ],
-    "sites": 152,
+    "sites": 57,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (6 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_EN1_u_phy",
@@ -968,15 +1024,15 @@
     "part": "lk_EN1",
     "rect_um": [
      26075.52,
-     23414.4,
+     24159.412,
      28961.28,
      24641.28
     ],
-    "sites": 152,
+    "sites": 57,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (4 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_WS2_u_phy",
@@ -986,14 +1042,22 @@
     "rect_um": [
      103.68,
      103.68,
-     2989.44,
+     2775.8,
      1330.56
     ],
-    "sites": 152,
+    "sites": 127,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 127 sites",
+    "bump_exclude_um": [
+     [
+      103.68,
+      103.68,
+      600.0,
+      600.0
+     ]
+    ]
    },
    {
     "name": "io_lk_WS3_u_phy",
@@ -1001,16 +1065,16 @@
     "iface": "serdes",
     "part": "lk_WS3",
     "rect_um": [
-     8760.96,
+     9673.78,
      103.68,
      10203.84,
-     2557.44
+     2343.8
     ],
-    "sites": 144,
+    "sites": 42,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 530 x 2240 um beside the strip (14 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_EN2_u_phy",
@@ -1020,14 +1084,14 @@
     "rect_um": [
      20304.0,
      23414.4,
-     23189.76,
+     22222.028,
      24641.28
     ],
-    "sites": 152,
+    "sites": 96,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 1918 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_EN3_u_phy",
@@ -1035,16 +1099,24 @@
     "iface": "serdes",
     "part": "lk_EN3",
     "rect_um": [
-     28961.28,
+     29174.92,
      23414.4,
      31847.04,
      24641.28
     ],
-    "sites": 152,
+    "sites": 130,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 130 sites",
+    "bump_exclude_um": [
+     [
+      31350.72,
+      24144.96,
+      31847.04,
+      24641.28
+     ]
+    ]
    },
    {
     "name": "io_phy_hbm_u_phy_hbm",
@@ -136581,8 +136653,8 @@
    ],
    "note": "frame partition; 6 instance(s) (MX,R180)"
   },
-  "serdes__t7": {
-   "module": "s81p_serdes__t7",
+  "serdes__t9": {
+   "module": "s81p_serdes__t9",
    "outline_um": [
     2885.76,
     1226.88
@@ -136603,7 +136675,7 @@
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "coll_o0",
@@ -136641,7 +136713,7 @@
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft1",
@@ -136661,7 +136733,7 @@
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft2",
@@ -136722,10 +136794,10 @@
      "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
     }
    ],
-   "note": "serdes partition; 1 instance(s) (R0)"
+   "note": "serdes partition; 2 instance(s) (MX,MY)"
   },
-  "serdes__t8": {
-   "module": "s81p_serdes__t8",
+  "serdes__t10": {
+   "module": "s81p_serdes__t10",
    "outline_um": [
     2885.76,
     1226.88
@@ -136746,7 +136818,7 @@
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "coll_o0",
@@ -136784,7 +136856,7 @@
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft1",
@@ -136825,7 +136897,7 @@
      "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
     }
    ],
-   "note": "serdes partition; 1 instance(s) (R0)"
+   "note": "serdes partition; 2 instance(s) (MX,MY)"
   },
   "serdes__t3": {
    "module": "s81p_serdes__t3",
@@ -137459,254 +137531,8 @@
    ],
    "note": "serdes partition; 1 instance(s) (MY)"
   },
-  "serdes__t9": {
-   "module": "s81p_serdes__t9",
-   "outline_um": [
-    2885.76,
-    1226.88
-   ],
-   "hard": false,
-   "buses": [
-    {
-     "name": "coll_i0",
-     "dir": "in",
-     "width": 512,
-     "kind": "data",
-     "face": "E",
-     "window_um": [
-      344.448,
-      452.316
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_high"
-    },
-    {
-     "name": "coll_o0",
-     "dir": "out",
-     "width": 514,
-     "kind": "data",
-     "face": "E",
-     "window_um": [
-      231.552,
-      343.26
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_low"
-    }
-   ],
-   "ft_slots": [
-    {
-     "name": "ft0",
-     "in_face": "E",
-     "out_face": "W",
-     "width": 512,
-     "stations": 8,
-     "in_window_um": [
-      119.04,
-      228.444
-     ],
-     "out_window_um": [
-      119.04,
-      228.444
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_high"
-    },
-    {
-     "name": "ft1",
-     "in_face": "E",
-     "out_face": "W",
-     "width": 512,
-     "stations": 8,
-     "in_window_um": [
-      570.048,
-      681.372
-     ],
-     "out_window_um": [
-      570.048,
-      681.372
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_high"
-    },
-    {
-     "name": "ft2",
-     "in_face": "W",
-     "out_face": "E",
-     "width": 514,
-     "stations": 8,
-     "in_window_um": [
-      6.144,
-      117.852
-     ],
-     "out_window_um": [
-      6.144,
-      117.852
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "ft3",
-     "in_face": "W",
-     "out_face": "E",
-     "width": 514,
-     "stations": 8,
-     "in_window_um": [
-      456.96,
-      568.868
-     ],
-     "out_window_um": [
-      456.96,
-      568.868
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_low"
-    }
-   ],
-   "clock": {
-    "tap_um": [
-     1442.88,
-     613.44
-    ],
-    "layer": "M9"
-   },
-   "reset": {
-    "sync_stages": 2
-   },
-   "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
-   ],
-   "note": "serdes partition; 1 instance(s) (MY)"
-  },
-  "serdes__t10": {
-   "module": "s81p_serdes__t10",
-   "outline_um": [
-    2885.76,
-    1226.88
-   ],
-   "hard": false,
-   "buses": [
-    {
-     "name": "coll_i0",
-     "dir": "in",
-     "width": 512,
-     "kind": "data",
-     "face": "E",
-     "window_um": [
-      119.04,
-      228.444
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_high"
-    },
-    {
-     "name": "coll_o0",
-     "dir": "out",
-     "width": 514,
-     "kind": "data",
-     "face": "E",
-     "window_um": [
-      6.144,
-      117.852
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_low"
-    }
-   ],
-   "ft_slots": [
-    {
-     "name": "ft0",
-     "in_face": "E",
-     "out_face": "W",
-     "width": 512,
-     "stations": 8,
-     "in_window_um": [
-      570.048,
-      681.372
-     ],
-     "out_window_um": [
-      570.048,
-      681.372
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_high"
-    },
-    {
-     "name": "ft1",
-     "in_face": "W",
-     "out_face": "E",
-     "width": 514,
-     "stations": 8,
-     "in_window_um": [
-      456.96,
-      568.868
-     ],
-     "out_window_um": [
-      456.96,
-      568.868
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_low"
-    }
-   ],
-   "clock": {
-    "tap_um": [
-     1442.88,
-     613.44
-    ],
-    "layer": "M9"
-   },
-   "reset": {
-    "sync_stages": 2
-   },
-   "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
-   ],
-   "note": "serdes partition; 1 instance(s) (MY)"
-  },
-  "serdes__t11": {
-   "module": "s81p_serdes__t11",
+  "serdes__t14": {
+   "module": "s81p_serdes__t14",
    "outline_um": [
     2885.76,
     1226.88
@@ -137727,7 +137553,7 @@
       "M6",
       "M4"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "coll_o0",
@@ -137765,10 +137591,10 @@
      "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
     }
    ],
-   "note": "serdes partition; 1 instance(s) (R0)"
+   "note": "serdes partition; 2 instance(s) (MX,MY)"
   },
-  "serdes__t12": {
-   "module": "s81p_serdes__t12",
+  "serdes__t15": {
+   "module": "s81p_serdes__t15",
    "outline_um": [
     1442.88,
     2453.76
@@ -137780,7 +137606,7 @@
      "dir": "in",
      "width": 512,
      "kind": "data",
-     "face": "N",
+     "face": "S",
      "window_um": [
       850.368,
       961.692
@@ -137796,7 +137622,7 @@
      "dir": "out",
      "width": 514,
      "kind": "data",
-     "face": "N",
+     "face": "S",
      "window_um": [
       606.528,
       717.852
@@ -137811,39 +137637,39 @@
    "ft_slots": [
     {
      "name": "ft0",
-     "in_face": "N",
+     "in_face": "S",
      "out_face": "W",
      "width": 512,
-     "stations": 6,
+     "stations": 5,
      "in_window_um": [
       231.936,
       343.26
      ],
      "out_window_um": [
-      344.448,
-      452.316
+      1571.328,
+      1679.196
      ],
      "order": "lsb_low"
     },
     {
      "name": "ft1",
-     "in_face": "N",
+     "in_face": "S",
      "out_face": "W",
      "width": 512,
-     "stations": 7,
+     "stations": 5,
      "in_window_um": [
       344.448,
       455.772
      ],
      "out_window_um": [
-      119.04,
-      228.444
+      1345.92,
+      1455.324
      ],
      "order": "lsb_low"
     },
     {
      "name": "ft2",
-     "in_face": "N",
+     "in_face": "S",
      "out_face": "W",
      "width": 512,
      "stations": 7,
@@ -137852,20 +137678,20 @@
       849.18
      ],
      "out_window_um": [
-      570.048,
-      681.372
+      1796.928,
+      1908.252
      ],
      "order": "lsb_low"
     },
     {
      "name": "ft3",
      "in_face": "W",
-     "out_face": "N",
+     "out_face": "S",
      "width": 514,
-     "stations": 7,
+     "stations": 4,
      "in_window_um": [
-      6.144,
-      117.852
+      1233.024,
+      1344.732
      ],
      "out_window_um": [
       119.04,
@@ -137876,12 +137702,12 @@
     {
      "name": "ft4",
      "in_face": "W",
-     "out_face": "N",
+     "out_face": "S",
      "width": 514,
-     "stations": 6,
+     "stations": 4,
      "in_window_um": [
-      231.552,
-      343.26
+      1458.432,
+      1570.14
      ],
      "out_window_um": [
       6.144,
@@ -137892,12 +137718,12 @@
     {
      "name": "ft5",
      "in_face": "W",
-     "out_face": "N",
+     "out_face": "S",
      "width": 514,
-     "stations": 7,
+     "stations": 6,
      "in_window_um": [
-      456.96,
-      568.868
+      1683.84,
+      1795.748
      ],
      "out_window_um": [
       493.632,
@@ -137924,7 +137750,7 @@
      "note": "SerDes PHY model re-aspected into a 1442.88 x 2453.76 slot; a strip beside it holds the boundary flops and ft stations"
     }
    ],
-   "note": "serdes partition; 1 instance(s) (R0)"
+   "note": "serdes partition; 1 instance(s) (MX)"
   },
   "serdes__t13": {
    "module": "s81p_serdes__t13",
@@ -138065,68 +137891,6 @@
      "order": "lsb_low"
     }
    ],
-   "clock": {
-    "tap_um": [
-     1442.88,
-     613.44
-    ],
-    "layer": "M9"
-   },
-   "reset": {
-    "sync_stages": 2
-   },
-   "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
-   ],
-   "note": "serdes partition; 1 instance(s) (MY)"
-  },
-  "serdes__t14": {
-   "module": "s81p_serdes__t14",
-   "outline_um": [
-    2885.76,
-    1226.88
-   ],
-   "hard": false,
-   "buses": [
-    {
-     "name": "coll_i0",
-     "dir": "in",
-     "width": 512,
-     "kind": "data",
-     "face": "E",
-     "window_um": [
-      570.048,
-      681.372
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_high"
-    },
-    {
-     "name": "coll_o0",
-     "dir": "out",
-     "width": 514,
-     "kind": "data",
-     "face": "E",
-     "window_um": [
-      456.96,
-      568.868
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_low"
-    }
-   ],
-   "ft_slots": [],
    "clock": {
     "tap_um": [
      1442.88,
@@ -166013,8 +165777,8 @@
     ]
    }
   },
-  "slice_station__t35": {
-   "module": "s81p_slice_station__t35",
+  "slice_station__t41": {
+   "module": "s81p_slice_station__t41",
    "outline_um": [
     1442.88,
     1226.88
@@ -166120,7 +165884,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft5",
@@ -166140,7 +165904,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft6",
@@ -166160,7 +165924,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft7",
@@ -166196,8 +165960,8 @@
    "contents": [],
    "note": "slice partition; 3 instance(s) (R0)"
   },
-  "slice_station__t36": {
-   "module": "s81p_slice_station__t36",
+  "slice_station__t42": {
+   "module": "s81p_slice_station__t42",
    "outline_um": [
     1442.88,
     1226.88
@@ -166343,7 +166107,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft7",
@@ -166363,7 +166127,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft8",
@@ -166383,7 +166147,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft9",
@@ -166539,8 +166303,8 @@
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
   },
-  "slice_station__t37": {
-   "module": "s81p_slice_station__t37",
+  "slice_station__t43": {
+   "module": "s81p_slice_station__t43",
    "outline_um": [
     1442.88,
     1226.88
@@ -166734,7 +166498,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft10",
@@ -166754,7 +166518,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft11",
@@ -166774,7 +166538,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft12",
@@ -166930,8 +166694,8 @@
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
   },
-  "slice_station__t38": {
-   "module": "s81p_slice_station__t38",
+  "slice_station__t44": {
+   "module": "s81p_slice_station__t44",
    "outline_um": [
     1442.88,
     1226.88
@@ -167057,7 +166821,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft6",
@@ -167077,7 +166841,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft7",
@@ -167117,7 +166881,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "ft9",
@@ -167173,8 +166937,8 @@
    "contents": [],
    "note": "slice partition; 1 instance(s) (R0)"
   },
-  "dsdv_slice_lepw_mus_LP__t2": {
-   "module": "s81p_dsdv_slice_lepw_mus_LP__t2",
+  "dsdv_slice_lepw_mus_LP__t3": {
+   "module": "s81p_dsdv_slice_lepw_mus_LP__t3",
    "outline_um": [
     1442.88,
     1226.88
@@ -167227,7 +166991,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "coll_i1",
@@ -167243,7 +167007,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "coll_i2",
@@ -167259,7 +167023,7 @@
       "M7",
       "M5"
      ],
-     "order": "lsb_low"
+     "order": "lsb_high"
     },
     {
      "name": "coll_i3",
@@ -237538,21 +237302,21 @@
   },
   {
    "name": "lk_WS0",
-   "type": "serdes__t7",
+   "type": "serdes__t9",
    "origin_um": [
     5875.2,
     103.68
    ],
-   "orient": "R0"
+   "orient": "MX"
   },
   {
    "name": "lk_WS1",
-   "type": "serdes__t8",
+   "type": "serdes__t10",
    "origin_um": [
     2989.44,
     103.68
    ],
-   "orient": "R0"
+   "orient": "MX"
   },
   {
    "name": "lk_WN0",
@@ -237628,21 +237392,21 @@
   },
   {
    "name": "lk_WS2",
-   "type": "serdes__t11",
+   "type": "serdes__t14",
    "origin_um": [
     103.68,
     103.68
    ],
-   "orient": "R0"
+   "orient": "MX"
   },
   {
    "name": "lk_WS3",
-   "type": "serdes__t12",
+   "type": "serdes__t15",
    "origin_um": [
     8760.96,
     103.68
    ],
-   "orient": "R0"
+   "orient": "MX"
   },
   {
    "name": "lk_EN2",
@@ -237835,7 +237599,7 @@
   },
   {
    "name": "s_0S_x00",
-   "type": "slice_station__t35",
+   "type": "slice_station__t41",
    "origin_um": [
     8760.96,
     2557.44
@@ -237844,7 +237608,7 @@
   },
   {
    "name": "s_0S_x01",
-   "type": "slice_station__t36",
+   "type": "slice_station__t42",
    "origin_um": [
     8760.96,
     3784.32
@@ -237853,7 +237617,7 @@
   },
   {
    "name": "s_0S_x02",
-   "type": "slice_station__t35",
+   "type": "slice_station__t41",
    "origin_um": [
     8760.96,
     5011.2
@@ -237862,7 +237626,7 @@
   },
   {
    "name": "s_0S_x03",
-   "type": "slice_station__t35",
+   "type": "slice_station__t41",
    "origin_um": [
     8760.96,
     6238.08
@@ -237871,7 +237635,7 @@
   },
   {
    "name": "s_0S_x04",
-   "type": "slice_station__t37",
+   "type": "slice_station__t43",
    "origin_um": [
     8760.96,
     7464.96
@@ -237880,7 +237644,7 @@
   },
   {
    "name": "s_0S_x05",
-   "type": "slice_station__t38",
+   "type": "slice_station__t44",
    "origin_um": [
     8760.96,
     8691.84
@@ -237889,7 +237653,7 @@
   },
   {
    "name": "s_0S_LP",
-   "type": "dsdv_slice_lepw_mus_LP__t2",
+   "type": "dsdv_slice_lepw_mus_LP__t3",
    "origin_um": [
     8760.96,
     9918.72
@@ -272034,10 +271798,10 @@
     "M4"
    ],
    "window_um": [
-    109.824,
-    221.532
+    1212.708,
+    1324.416
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS1__s_0S_LP__1",
@@ -272057,10 +271821,10 @@
     "M4"
    ],
    "window_um": [
-    109.824,
-    221.532
+    1212.708,
+    1324.416
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS1__s_0S_LP__2",
@@ -272083,7 +271847,7 @@
     8880.0,
     8989.788
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS1__s_0S_LP__3",
@@ -272106,7 +271870,7 @@
     8880.0,
     8989.788
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS1__s_0S_LP__4",
@@ -272129,7 +271893,7 @@
     8880.0,
     8989.788
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS1__s_0S_LP__5",
@@ -272152,7 +271916,7 @@
     8880.0,
     8989.788
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS1__s_0S_LP__6",
@@ -272175,7 +271939,7 @@
     8880.0,
     8989.788
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS1__s_0S_LP__7",
@@ -272198,7 +271962,7 @@
     8880.0,
     8989.788
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS1__s_0S_LP__8",
@@ -272221,7 +271985,7 @@
     8880.0,
     8989.788
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__s_0N_LP__lk_WN2__0",
@@ -272586,8 +272350,8 @@
     "M4"
    ],
    "window_um": [
-    222.72,
-    332.124
+    1102.116,
+    1211.52
    ],
    "order": "lsb_low"
   },
@@ -272609,8 +272373,8 @@
     "M4"
    ],
    "window_um": [
-    222.72,
-    332.124
+    1102.116,
+    1211.52
    ],
    "order": "lsb_low"
   },
@@ -275209,8 +274973,8 @@
     "M4"
    ],
    "window_um": [
-    448.128,
-    555.996
+    878.244,
+    986.112
    ],
    "order": "lsb_low"
   },
@@ -275899,10 +275663,10 @@
     "M4"
    ],
    "window_um": [
-    335.232,
-    446.94
+    987.3,
+    1099.008
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS0__s_0S_LP__1",
@@ -275925,7 +275689,7 @@
     8767.104,
     8878.044
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS0__s_0S_LP__2",
@@ -275948,7 +275712,7 @@
     8767.104,
     8878.044
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS0__s_0S_LP__3",
@@ -275971,7 +275735,7 @@
     8767.104,
     8878.044
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS0__s_0S_LP__4",
@@ -275994,7 +275758,7 @@
     8767.104,
     8878.044
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS0__s_0S_LP__5",
@@ -276017,7 +275781,7 @@
     8767.104,
     8878.044
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS0__s_0S_LP__6",
@@ -276040,7 +275804,7 @@
     8767.104,
     8878.044
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS0__s_0S_LP__7",
@@ -276063,7 +275827,7 @@
     8767.104,
     8878.044
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__s_7N_LP__lk_EN0__0",
@@ -287927,8 +287691,8 @@
     "M4"
    ],
    "window_um": [
-    673.728,
-    785.052
+    649.188,
+    760.512
    ],
    "order": "lsb_low"
   },
@@ -287950,8 +287714,8 @@
     "M4"
    ],
    "window_um": [
-    673.728,
-    785.052
+    649.188,
+    760.512
    ],
    "order": "lsb_low"
   },
@@ -287973,8 +287737,8 @@
     "M4"
    ],
    "window_um": [
-    673.728,
-    785.052
+    649.188,
+    760.512
    ],
    "order": "lsb_low"
   },
@@ -287996,10 +287760,10 @@
     "M4"
    ],
    "window_um": [
-    560.64,
-    672.548
+    761.692,
+    873.6
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS2__s_0S_LP__1",
@@ -288019,10 +287783,10 @@
     "M4"
    ],
    "window_um": [
-    560.64,
-    672.548
+    761.692,
+    873.6
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS2__s_0S_LP__2",
@@ -288042,10 +287806,10 @@
     "M4"
    ],
    "window_um": [
-    560.64,
-    672.548
+    761.692,
+    873.6
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS2__s_0S_LP__3",
@@ -288068,7 +287832,7 @@
     9254.592,
     9366.3
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS2__s_0S_LP__4",
@@ -288091,7 +287855,7 @@
     9254.592,
     9366.3
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS2__s_0S_LP__5",
@@ -288114,7 +287878,7 @@
     9254.592,
     9366.3
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS2__s_0S_LP__6",
@@ -288137,7 +287901,7 @@
     9254.592,
     9366.3
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS2__s_0S_LP__7",
@@ -288160,7 +287924,7 @@
     9254.592,
     9366.3
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS2__s_0S_LP__8",
@@ -288183,7 +287947,7 @@
     9254.592,
     9366.3
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__lk_WS2__s_0S_LP__9",
@@ -288206,7 +287970,7 @@
     9254.592,
     9366.3
    ],
-   "order": "lsb_low"
+   "order": "lsb_high"
   },
   {
    "id": "coll__s_0S_LP__lk_WS3__0",
@@ -302863,12 +302627,12 @@
     "param": "LAT_COLL__LK_WN0__S_0N_LP"
    },
    "coll__lk_WS1__s_0S_LP": {
-    "cycles": 41,
-    "stations": 39,
+    "cycles": 38,
+    "stations": 36,
     "boundary": 2,
     "faces": 9,
     "fixed": 0,
-    "natural": 41,
+    "natural": 38,
     "pad": 0,
     "param": "LAT_COLL__LK_WS1__S_0S_LP"
    },
@@ -302883,12 +302647,12 @@
     "param": "LAT_COLL__S_0N_LP__LK_WN2"
    },
    "coll__s_0S_LP__lk_WS1": {
-    "cycles": 41,
-    "stations": 39,
+    "cycles": 39,
+    "stations": 37,
     "boundary": 2,
     "faces": 9,
     "fixed": 0,
-    "natural": 41,
+    "natural": 39,
     "pad": 0,
     "param": "LAT_COLL__S_0S_LP__LK_WS1"
    },
@@ -303023,12 +302787,12 @@
     "param": "LAT_COLL__S_7S_LP__LK_ES0"
    },
    "coll__s_0S_LP__lk_WS0": {
-    "cycles": 32,
-    "stations": 30,
+    "cycles": 31,
+    "stations": 29,
     "boundary": 2,
     "faces": 8,
     "fixed": 0,
-    "natural": 32,
+    "natural": 31,
     "pad": 0,
     "param": "LAT_COLL__S_0S_LP__LK_WS0"
    },
@@ -303063,12 +302827,12 @@
     "param": "LAT_COLL__S_7S_LP__LK_ES1"
    },
    "coll__lk_WS0__s_0S_LP": {
-    "cycles": 32,
-    "stations": 30,
+    "cycles": 30,
+    "stations": 28,
     "boundary": 2,
     "faces": 8,
     "fixed": 0,
-    "natural": 32,
+    "natural": 30,
     "pad": 0,
     "param": "LAT_COLL__LK_WS0__S_0S_LP"
    },
@@ -304813,12 +304577,12 @@
     "param": "LAT_COLL__S_0S_LP__LK_WS2"
    },
    "coll__lk_WS2__s_0S_LP": {
-    "cycles": 49,
-    "stations": 47,
+    "cycles": 48,
+    "stations": 46,
     "boundary": 2,
     "faces": 10,
     "fixed": 0,
-    "natural": 49,
+    "natural": 48,
     "pad": 0,
     "param": "LAT_COLL__LK_WS2__S_0S_LP"
    },
