@@ -550,6 +550,9 @@ class Lec:
         self.tonly = sorted(k for k in set(self.tp) - set(self.gp))
         # hypotheses on unmatched flops: key -> ('const', c) | ('eq', side, other_key, inv)
         self.hyp = {}
+        # state-encoding constraints (FSM recoding): (side, keys, allowed value tuples) assumed on the current state
+        # and proved on the next state together with the hypotheses (an inductive invariant like the others)
+        self.cons = []
 
     def build(self, with_compare=True, with_hyp=True, extra=None, free_const=None):
         """one AIG with every matched key point a shared input; a hypothesised gold-only flop becomes its constant /
@@ -605,7 +608,7 @@ class Lec:
                 h = self.hyp.get((side, k))
                 if h and h[0] == "const":
                     bind(lmap, p[k], h[1])
-                elif h and h[0] == "eq":
+                elif h and h[0] in ("eq", "cube"):
                     later.append((side, k, h))
                 elif free_const is not None and k.startswith("ff:"):
                     bind(lmap, p[k], free_const)  # cofactor: unpaired registers held at a constant
@@ -614,9 +617,13 @@ class Lec:
                     kind[v >> 1] = (side + "_only", k)
                     bind(lmap, p[k], v)
         # hypotheses 'eq': bind to the partner's (already bound) value; chains resolve in passes, cycles are dropped
+        cubes = []
         while later:
             nxt = []
             for side, k, h in later:
+                if h[0] == "cube":                 # bound after the X inputs (ANDs come after every input)
+                    cubes.append((side, k, h))
+                    continue
                 _, oside, ok, inv = h
                 olmap, op = (lg, self.gp) if oside == "gold" else (lt, self.tp)
                 if ok in shared:
@@ -646,6 +653,14 @@ class Lec:
                 v = m.add_input(f"{side}:anon{lit >> 1}")
                 kind[v >> 1] = (side + "_anon", f"anon{lit >> 1}")
                 bind(lmap, lit, v)
+        for side, k, h in cubes:                  # gate one-hot state bit == (gold state vector == code)
+            _, oside, oks, ovals = h
+            olmap, op = (lg, self.gp) if oside == "gold" else (lt, self.tp)
+            v = 1
+            for ok, ov in zip(oks, ovals):
+                v = m.AND(v, olmap[op[ok] & ~1] ^ (op[ok] & 1) ^ (ov ^ 1))
+            lmap, p = (lg, self.gp) if side == "gold" else (lt, self.tp)
+            bind(lmap, p[k], v)
         for d, lmap in ((self.gold, lg), (self.gate, lt)):
             base = 2 * (d["I"] + d["L"])
             a = d["ands"]
@@ -688,6 +703,14 @@ class Lec:
                     m.onames.append(f"hyp:bothg:{k}")
                     continue
                 d = self.dlit[(side, k)]
+                if h[0] == "cube":
+                    _, oside, oks, ovals = h
+                    c = 1
+                    for ok, ov in zip(oks, ovals):
+                        c = m.AND(c, self.dlit[(oside, ok)] ^ (ov ^ 1))
+                    m.outs.append(m.XOR(d, c))
+                    m.onames.append(f"hyp:{side}:{k}")
+                    continue
                 if h[0] == "const":
                     m.outs.append(m.AND(d ^ h[1], nx(k)) if side == "gold" else d ^ h[1])
                 else:
@@ -696,6 +719,23 @@ class Lec:
                     # an RTL register (k, or the gate register's gold partner ok) loaded with X may hold either
                     m.outs.append(m.AND(m.XOR(d, od ^ inv), nx(k) if side == "gold" else nx(ok)))
                 m.onames.append(f"hyp:{side}:{k}")
+        if self.cons:
+            def member(lits, allowed):
+                v = 0
+                for vals in allowed:
+                    c = 1
+                    for l, b in zip(lits, vals):
+                        c = m.AND(c, l ^ (b ^ 1))
+                    v = m.AND(v ^ 1, c ^ 1) ^ 1
+                return v
+            cur = lambda sd, k: G(self.gp[k]) if sd == "gold" else T(self.tp[k])
+            assume = 1
+            for sd, keys, allowed in self.cons:
+                assume = m.AND(assume, member([cur(sd, k) for k in keys], allowed))
+            m.outs = [m.AND(o, assume) for o in m.outs]
+            for sd, keys, allowed in self.cons:
+                m.outs.append(m.AND(assume, member([self.dlit[(sd, k)] for k in keys], allowed) ^ 1))
+                m.onames.append(f"cons:{sd}:{keys[0]}")
         return m, kind
 
 
@@ -994,6 +1034,122 @@ def replica_proposals(L, log):
     log.append(f"replica proposal: {n} generated-register relations (gold input support modulo copy indices)")
 
 
+def cone_sim(m, lits, fixed, words, seed):
+    """bit-parallel simulation of only the cone of `lits` (inputs: `fixed` {var: int}, others random)."""
+    import random
+    rnd = random.Random(seed)
+    W = 64 * words
+    mask = (1 << W) - 1
+    need, stack = set(), [l >> 1 for l in lits]
+    while stack:
+        v = stack.pop()
+        if v == 0 or v in need:
+            continue
+        need.add(v)
+        if v > m.ni:
+            k = v - m.ni - 1
+            stack += (m.ands[2 * k] >> 1, m.ands[2 * k + 1] >> 1)
+    val = {0: 0}
+    for v in sorted(need):
+        if v <= m.ni:
+            val[v] = fixed[v] if v in fixed else rnd.getrandbits(W)
+        else:
+            k = v - m.ni - 1
+            r0, r1 = m.ands[2 * k], m.ands[2 * k + 1]
+            val[v] = (val[r0 >> 1] ^ (mask if r0 & 1 else 0)) & (val[r1 >> 1] ^ (mask if r1 & 1 else 0))
+    return [val[l >> 1] ^ (mask if l & 1 else 0) for l in lits], mask
+
+
+def fsm_proposals(L, log, words=2, max_bits=4):
+    """FSM state recoding (yosys fsm: a binary RTL state vector B[n-1:0] becomes one-hot gate flops B#t[i]).
+    For each such vector the code -> one-hot-bit map is found by simulating both next-state functions from every
+    (code, one-hot bit) pair; a map consistent with every observed transition is proposed as
+      gate B#t[pi(c)] == (gold B == c)    (a 'cube' hypothesis: the gate flop is bound to the gold state compare)
+      gold B in dom(pi)                   (a state constraint: the codes the recoded FSM implements)
+    Both are proved inductively with every other hypothesis (assumed on the current state, proved on the next); a
+    wrong map can only fail and be dropped, never hide a difference."""
+    m, kind = L.build(with_compare=False, with_hyp=False)
+    var = {}
+    for v, (kd, k) in kind.items():
+        if kd in ("gold_only", "gate_only"):
+            var[(kd[:4], k)] = v
+    bound = {k for (sd, k) in L.hyp} | {h[2] for h in L.hyp.values() if h[0] == "eq"}
+    gb, tb = collections.defaultdict(dict), collections.defaultdict(dict)
+    for k in L.gonly:
+        a = IDXK.match(k)
+        if k.startswith("ff:") and a and k not in bound and ("gold", k) in var:
+            gb[a.group(1)][int(a.group(2))] = k
+    for k in L.tonly:
+        a = IDXK.match(k)
+        if k.startswith("ff:") and a and a.group(1).endswith("#t") and k not in bound and ("gate", k) in var:
+            tb[a.group(1)[:-2]][int(a.group(2))] = k
+    n_new = 0
+    for base in sorted(set(gb) & set(tb)):
+        gk = [gb[base][i] for i in sorted(gb[base])]
+        tk = [tb[base][i] for i in sorted(tb[base])]
+        n, nt = len(gk), len(tk)
+        if not (1 < n <= max_bits and 2 < nt <= (1 << n)) or sorted(gb[base]) != list(range(n)):
+            continue
+        import math
+        if math.comb(1 << n, nt) * math.factorial(nt) > 200000:
+            log.append(f"fsm: {base} ({n} gold / {nt} gate bits): encoding search too large, none proposed")
+            continue
+        dl = [L.dlit[("gold", k)] for k in gk] + [L.dlit[("gate", k)] for k in tk]
+        R = {}
+        for c in range(1 << n):
+            for j in range(nt):
+                ones = (1 << (64 * words)) - 1
+                fixed = {var[("gold", k)]: (ones if (c >> b) & 1 else 0) for b, k in enumerate(gk)}
+                fixed.update({var[("gate", k)]: (ones if i == j else 0) for i, k in enumerate(tk)})
+                vals, mask = cone_sim(m, dl, fixed, words, seed=c * 64 + j)
+                obs = collections.Counter()
+                for lane in range(64 * words):
+                    gn = sum(((vals[b] >> lane) & 1) << b for b in range(n))
+                    tn = [(vals[n + i] >> lane) & 1 for i in range(nt)]
+                    obs[(gn, tn.index(1) if sum(tn) == 1 else -1)] += 1
+                R[(c, j)] = obs
+        # the next states also depend on registers not yet paired (a renamed alias of a state flag is a free input
+        # on each side), so a transition agrees only where those agree: pick the map with the most agreeing
+        # transitions (unique best, a majority of all lanes); the induction proof decides
+        import itertools
+        lanes = 64 * words
+        best, second, pi = -1, -1, None
+        for codes in itertools.combinations(range(1 << n), nt):
+            for perm in itertools.permutations(range(nt)):
+                cand = dict(zip(codes, perm))
+                sc = sum(cnt for c, j in cand.items() for (gn, ti), cnt in R[(c, j)].items()
+                         if ti >= 0 and cand.get(gn) == ti)
+                if sc > best:
+                    best, second, pi = sc, best, cand
+                elif sc > second:
+                    second = sc
+        if pi is None or best == second or 2 * best <= nt * lanes:
+            log.append(f"fsm: {base} ({n} gold / {nt} gate bits): no unique encoding (best {best}, next {second} of "
+                       f"{nt * lanes} transitions), none proposed")
+            continue
+        for c, j in sorted(pi.items()):
+            L.hyp[("gate", tk[j])] = ("cube", "gold", list(gk), [(c >> b) & 1 for b in range(n)])
+            n_new += 1
+        L.cons.append(("gold", list(gk), [[(c >> b) & 1 for b in range(n)] for c in sorted(pi)]))
+        log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j]}" for c, j in sorted(pi.items())))
+    return n_new
+
+
+def drop_failed(L, bad):
+    """drop failing hypotheses / constraints (a failing constraint takes its FSM's cube hypotheses with it)."""
+    for n in bad:
+        if n.startswith("cons:"):
+            _, sd, k = n.split(":", 2)
+            for c in [c for c in L.cons if c[0] == sd and c[1][0] == k]:
+                L.cons.remove(c)
+                for key, h in list(L.hyp.items()):
+                    if h[0] == "cube" and list(h[2]) == list(c[1]):
+                        L.hyp.pop(key)
+            continue
+        _, sd, k = n.split(":", 2)
+        L.hyp.pop(("both" if sd == "bothg" else sd, k), None)
+
+
 def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
     duplicates, or the two frontends named a register differently, e.g. a register that drives an output port):
@@ -1009,6 +1165,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
     relayout(L, log)
     renamed(L, log)
     replica_proposals(L, log)
+    fsm_proposals(L, log)
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
     for rnd in range(rounds + 40):
         adding = rnd < rounds           # then refine only: drop what fails until the set is inductive
@@ -1198,14 +1355,18 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
             if L.hyp == before or not adding:
                 return
             continue
+        drop_failed(L, [n for n in bad if n.startswith("cons:")])
         for n in bad:
+            if n.startswith("cons:"):
+                continue
             _, side, k = n.split(":", 2)
             side = "both" if side == "bothg" else side
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
-            tried[(side, k, "c") if h[0] == "const" else (side, k, h[2], h[3])] += 1
+            tried[(side, k, "c") if h[0] == "const" else (side, k, str(h[2]), str(h[3]))] += 1
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
+    L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
 
 
