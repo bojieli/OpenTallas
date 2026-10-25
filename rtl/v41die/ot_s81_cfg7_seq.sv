@@ -113,12 +113,15 @@ module ot_s81_cfg7_seq_local #(
         // Same-edge private copies keep boundary output Qs free of local loads.  keep sits on the private copies only:
         // ot_keep_regs.tcl then keeps those flop cells, opt_merge leaves them alone, and the port flops ce_r/cfg_r/go_e_r
         // stay plain (a keep on the port-flop wire made Yosys hang a dangling BUFx2 off ce0..6/go_e = face_guard shared).
+        // The copies reset from the sequencer relay region rst_c (same release edge as rst_p, kept relay flops), so they
+        // differ from the port flops in their async-clear net and opt_merge cannot fold them (keep alone did not hold:
+        // raw synth r2 folded ce_l/go_l/cfg_l into the port flops).
         if (LOCAL_COPY != 0) begin : g_local
         (* keep = "true" *) reg [6:0] ce_l;
         (* keep = "true" *) reg [5:0] cfg_l;
         (* keep = "true" *) reg go_l;
-        always @(posedge clk[0] or negedge rst_p)
-            if (!rst_p) begin ce_l <= '0; cfg_l <= '0; go_l <= 1'b0; end
+        always @(posedge clk[0] or negedge rst_c)
+            if (!rst_c) begin ce_l <= '0; cfg_l <= '0; go_l <= 1'b0; end
             else begin ce_l <= ce_c; cfg_l <= {cfg_c[53], cfg_c[4:0]}; go_l <= go_e_c; end
         assign ce_local = ce_l; assign cfg_local = cfg_l; assign go_local = go_l;
         end else begin : g_no_local
