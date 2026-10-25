@@ -942,6 +942,33 @@ def _grid_taps(P, tn):
     return out
 
 
+def placed_macro_boxes(t, halo=0.0):
+    """Type-frame obstacles shared by FT siting, clock taps and geometry gates.
+
+    Planned hard cores remain obstacles even before a view exists. Physical
+    contents (LEF-bearing SRAM/ROM/hard leaves) are equally real obstacles.
+    Match kit placement: a hard-core record wins over the same content instance,
+    and its track offset is applied once. R0/MX/MY/R180 preserve box dimensions.
+    Logical contents without a physical view do not reserve a macro footprint.
+    """
+    entries = {c['inst']: c for c in t.get('hard_cores', []) or []}
+    for c in t.get('contents', []) or []:
+        if c.get('lef') and c['inst'] not in entries:
+            entries[c['inst']] = c
+    boxes = {}
+    cores = {c['inst'] for c in t.get('hard_cores', []) or []}
+    for name, c in entries.items():
+        if 'origin_um' not in c or 'outline_um' not in c:
+            raise ValueError(f"physical macro {name}: origin_um and outline_um required")
+        x, y = map(float, c['origin_um']); w, h = map(float, c['outline_um'])
+        dx, dy = c.get('track_offset_um', [0.0, 0.0]) if name in cores else (0.0, 0.0)
+        x += dx; y += dy
+        if not all(math.isfinite(v) for v in (x, y, w, h, halo)) or w <= 0 or h <= 0:
+            raise ValueError(f"physical macro {name}: nonphysical footprint")
+        boxes[name] = (x-halo, y-halo, x+w+halo, y+h+halo)
+    return boxes
+
+
 TAP_CLEAR_UM = 8.64       # tap pin (and its root buffer) >= one lattice step off every hard core / macro of the type
 TAP_STEP_UM = 2.16
 
@@ -954,10 +981,7 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
     without hard cores)."""
     w, h = t["outline_um"]
-    boxes = []
-    for c in t.get("hard_cores", []) or []:
-        (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
-        boxes.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
+    boxes = list(placed_macro_boxes(t, halo=clear).values())
 
     def free(px, py):
         if not (clear <= px <= w - clear and clear <= py <= h - clear):

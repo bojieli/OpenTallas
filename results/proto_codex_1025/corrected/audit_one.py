@@ -8,10 +8,11 @@ from collections import defaultdict
 from scan import scan,S,g2
 
 def footprints(P,tn):
- t=P.types[tn];blocks=list(g2.probe_blockages(t));covered={c.get('inst') for c in blocks};blocks += [c for c in t.get('hard_cores',[]) if c.get('inst') not in covered and 'origin_um' in c and 'outline_um' in c]
- cores=[]
- for c in blocks:
-  x,y=c['origin_um'];w,h=c['outline_um'];cores.append((x,y,x+w,y+h))
+ t=P.types[tn];boxes=S.placed_macro_boxes(t)
+ for c in g2.probe_blockages(t):
+  if c['inst'] not in boxes:
+   x,y=c['origin_um'];w,h=c['outline_um'];boxes[c['inst']]=(x,y,x+w,y+h)
+ cores=list(boxes.values())
  cells=[]
  for slot in t.get('ft_slots',[]):
   if not slot.get('bit_sites_um'):continue
