@@ -16,6 +16,7 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
   - [ ] SEAM.CLOCK.STA2 die_sta v2 reruns (half-period wrap fix 97fd4371ec) · CLOCK · RUNNING · intel2 die_sta pids, collect
   - [ ] SEAM.CLOCK.HEAD S81 head seam 81.9 ps TT: re-measure with pair metric · CLOCK · WAITS · → SEAM.CLOCK
 - [ ] SEAM.REPLAN One batched re-plan per die: signals <= M7, hops <= 405 um, wavefront reset (owner dec. 12/13/17) · S81 / QC / KV / HBM · RUNNING
+  - [ ] SEAM.PROTO2 Re-sweep G2 prototypes on each merged re-plan; only CLEAN types get kits · COORD · WAITS · → batch merge
 - [ ] SEAM.RESET Wavefront tool READY (reset-1024@0a08a66af); plans switch inside the dec. 17 batched re-plans; CP1 proof kits finishing on intel1 · RESET · WAITS · collect CP1 signoff when jobs end
   - [ ] SEAM.RESET.ADOPT All die/tile kits adopt wavefront reset + control-only reset · S81 / QC / KV / HBM · WAITS · → SEAM.RESET
 - [ ] SEAM.CP1 CP1 kits signed (seam PASS TT +434.5 / FF +104.9) · RESET · RUNNING · col_h10 r0/r1 in DRT intel1; ETA 10-25

@@ -461,3 +461,4 @@ All ot-run units (containers hbmcore-<kit>_*), branch claude/hbm-cores-1024 @9e9
 
 ## HBM-FACE (sub-agent of lane HBM) 2026-10-25 00:54 PDT
 - 2026-10-25 00:54 PDT HBM-FACE: started; branch claude/hbm-face-1024 from claude/hbm-cores-1024@6d0262ad50, worktree epyc1:/srv/opentallas-scratch2/claude/wt/hbm-face. Building face_shell.py (per-core face-register shell, unread-input drop list, latency table) + benches.
+2026-10-25 01:00 PDT COORD (PROTO sweep3 finding, applies to every re-plan): over a hard core only M6/M7 are free for feedthroughs (cores own M1-M5, M8/M9 = clock/reset/PG per dec. 12) -> ft bundles over core fields overflow (10k..3M). Re-plans must route ft in channels BETWEEN cores, or budget ft over cores against M6/M7 tracks only, and put stations in channels (never inside core outlines). Check your re-plan against this before READY; PROTO re-sweeps every merged re-plan and only CLEAN types get kits.
