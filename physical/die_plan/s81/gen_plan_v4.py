@@ -2610,7 +2610,12 @@ def emit(parts, lanes, routes, chans, fmap, out):
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
     json.dump(TYPE_NAMES_OUT, open(out / "type_names.json", "w"), indent=0, sort_keys=True)
-    derived_core_conns(plan["partition_types"])
+    # S81-PORTS 10-25: the derived connectivity turns on R3-INTERNAL internal_station / core_faces checks for the 13
+    # landed col_h* frames + bk_sel + gunit (Codex faultfinal G0C: 4766 + 84 ERRORs, all pre-existing core-pair hops
+    # > 405 um with no internal_stations[] entry; the missing-cores / core-relay lane owns them).  It is a separate
+    # gate expansion, not part of the fault-feeder plan delta: opt-in until that lane adopts it.
+    if os.environ.get("OT_S81_DERIVED_CORE_CONNS") == "1":
+        derived_core_conns(plan["partition_types"])
     if CORE_CONNS_OUT:
         json.dump(CORE_CONNS_OUT, open(out / "core_conns.json", "w"), indent=0, sort_keys=True)
     json.dump(dict(note="S81-P9-HC: non-frame types over %d cells: hard cores emitted / residual soft cells / gaps (children "
