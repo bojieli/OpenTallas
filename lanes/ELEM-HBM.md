@@ -414,3 +414,30 @@ CODEX took over collection + measured-memory fix on codex/elem-hbm-push-1024, ep
 - MEMORY GUARD: Codex's measured 15616-bit patch was committed (ea66e18d2f). The 30 pgslice exp lanes were regenerated and their plan renders viewed (contact sheet epyc1:/srv/opentallas-scratch/claude/elem-hbm/hbmcores_mem30_plan.png): identical ~440x460 outlines, N/S pins at <=2 pins/um, well under budget. Place+CTS probes (GOAL=cts) are launched via ot-run.
 - SPLIT2 CTS probes so far: tkm tiles I 438-445 ps; pgslice pretree 595-599; bankq_ft 326-362; lanes_plain4_7/8_11 clk_bank 475-597. lanes_plain12_15@871944 FAIL PDN-0179 (channel repair).
 - HAZARD fixed: stale run dirs of the same kit name on 2 hosts let ot-run --dir run 5 jobs on old 14:xx data (killed at once). 77 stale duplicate run dirs deleted; resume.sh no longer passes --hosts.
+- 2026-10-24 22:08 PDT HBM-CORES findings:
+  - COLLECT: collect.py gives 0 SIGNED / 15 NOT SIGNED (results/b2l_verdicts.json @34f09bd789). New since the last record: svc_pc 31be7c (TT -155.6, FF -34.1, DRV slew 231, spread 125) and 9467d1 (TT -42.9, FF -25.6).
+    - svc_pc root cause: 63% utilization in 155x155 um with an SRAM and 1229 pins on 2 faces. GRT passes only with RLA 0.10. The routed paths show 125-140 ps slews (detours) and 8-level AND5/OR4 control logic (controller.on.open -> c_oh).
+    - PLAN REQUEST: grow the svc_pc_ctrl_leaf_cfg_h9b outline to <= 50% utilization (~1.3x area), or pipeline the controller in RTL. All 7 routed svc_pc kits fail TT setup (-21..-156).
+  - FACE_GUARD (OWNER?): 348 of 370 synthesized core kits fail it. Only 22 pass, e.g. bankq_ft and bankq0 lanes0_2, which come from the registered as-built scoped masters.
+    - Classes across kits: shared 338, dropped 216, unregistered 129, feedthrough 120, merged 8.
+    - Cause is in the RTL, not the tool. The cores are as-built die logic cut at module ports, and those ports are not one flop per pin. Examples:
+      - sfu lane i_pass feeds a 3-entry delay ring (3 enabled loads).
+      - argmax vm_rq[134:0] is 8 copies of one 16-bit register (feedthrough).
+      - argmax cr[255:x] and sfu ld_terms are unread input bits (dropped).
+      - argmax imm_a and sfu i_emit feed OR2/AND2 directly (unregistered).
+    - The fix needs a decision:
+      - (a) a pin-register stage in every core wrapper (keep cells, +1 cycle per core crossing, static schedule recompile: HBM-ARCH); or
+      - (b) the plan drops unread input pins and duplicate output copies (as decision 8 did for S81 constant outputs), and the rule for hard-core pins that are timed by the 20%-T IO budget becomes INFO.
+    - Until then no core except bankq_ft/bankq0-type can SIGN.
+  - SIGNOFF (CLOCK/SIGNOFF own signoff.py; not edited):
+    - (1) The 'clock' check still gates pin-flop spread > 80 (signoff.py:645, BLOCKING), against decision 5. It blocks idx_query, sm_vm_wr_q, svc_pc 31be7c.
+    - (2) The FF corner reuses the TT IO vclk latency (the SDC value I).
+      - Measured on sfu lane14 4_cts: core tree mean 511 ps at TT, 419 ps at FF (ratio 0.82). The partition side scales the same way, so FF output hold is pessimistic by ~0.18*I (lane14 outputs -66 ps, an artifact) and FF input hold is optimistic by the same amount.
+      - svc_pc 9467d1 FF hold -25.6 is input k_tag[6] -> kp_tag[6] with vclk 270 at FF; it is worse with an honest FF vclk.
+      - Proposal for SIGNOFF: the FF corner uses vclk = I x (core FF mean / core TT mean), measured on the routed tree.
+  - RESET (decision 2): ot_rst_relay with a core-local 2-flop sync_q synchroniser sits inside 31 core kits: svc_pc x10, bankq lanes6_7_bank x12, bfqg x4, sfu ctl, qw_dec, dma_back cp, tkm root, gq_land. Decision 2 allows ONE root synchroniser per region -> RTL item for HBM-ARCH/RESET.
+  - CLOCK INSERTION (core_insertion_b2l.json @8ddbfc18f3, +53 probes): pgslice lanes0_3..28_31 I = 869-941 ps; 3400-sink clk_lane ports are fed from the face across 760x726 um (tree max 1161 ps > T).
+    - PLAN REQUEST: in-core clock taps (decision 5b: density taps from the M8/M9 spine, ~1000-1500 sinks/tap) for pgslice lanes. Edge clock pins cannot meet the contract.
+    - Also measured: lanes_plain 589-628, pretree 595-599, tkm tiles 438-445, coll_q2 259/312.
+  - xcal_rel_t: 83% utilization (33.9k um2 in 210x211 um) -> GRT-0116. PLAN REQUEST: ~250x250 um (+45% area) for <= 55%.
+  - ROUTE REQUEST sent to GEOM-REVIEW: bankq_ft lanes0_2 x2 + lanes3_5@1d3df8. face_guard PASS, kits regenerated under the contract, waiting for PASS.
