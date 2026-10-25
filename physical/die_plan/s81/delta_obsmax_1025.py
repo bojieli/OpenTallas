@@ -5,8 +5,11 @@ G2 (tools/die_plan/g2.py probe_blockages) obstructs a planned hard core that dec
 signal ceiling (M7).  That is right for an unknown core, wrong for one whose abstract leaves upper layers free: the
 svc attention cores (ot_s81c_attn_hcore, dsdv_svc_sx_hrow) obstruct M1-M5 only, ROM macros M1-M4, so the parent may
 route feedthrough bundles over them on M6/M7 (industry practice: the macro LEF defines the blockage).  This delta
-sets obs_max = highest OBS/PIN layer of the core's LEF: the plan's own hard_cores[].lef (read from git HEAD, so a
-sparse worktree works), else a copy under physical/die_plan/s81/cores (the most obstructive copy wins).  Cores with
+sets obs_max = highest OBS/PIN layer of the core's abstract, in this order: the published SIGNED view
+physical/die_plan/s81/cores/views/<module>/<module>.lef when its SIZE equals the planned outline (the routed core is
+what the parent sees; e.g. dsdv_svc_sx_hrow r15 routes M2-M5 while its 10-24 planning abstract _c.lef blocks M1-M7),
+else the plan's own hard_cores[].lef, else a copy under physical/die_plan/s81/cores (most obstructive copy wins).
+LEFs are read from git HEAD, so a sparse worktree works.  Cores with
 no LEF keep no obs_max (G2 stays pessimistic, M7).  Edits only hard_cores[].obs_max.
 
     python3 physical/die_plan/s81/delta_obsmax_1025.py IN.json [OUT.json]
@@ -38,13 +41,29 @@ def lef_index():
 
 
 _GIT = {}
+SIZE_RE = re.compile(r"SIZE\s+([\d.]+)\s+BY\s+([\d.]+)")
+
+
+def git_lef(rel):
+    """(top layer, (w, h)) of a LEF at git HEAD, or (None, None)."""
+    if rel not in _GIT:
+        r = subprocess.run(["git", "-C", str(ROOT), "show", f"HEAD:{rel}"], capture_output=True, text=True)
+        m = SIZE_RE.search(r.stdout) if r.returncode == 0 else None
+        _GIT[rel] = (top_of(r.stdout) if r.returncode == 0 else None,
+                     (float(m.group(1)), float(m.group(2))) if m else None)
+    return _GIT[rel]
 
 
 def git_lef_top(rel):
-    if rel not in _GIT:
-        r = subprocess.run(["git", "-C", str(ROOT), "show", f"HEAD:{rel}"], capture_output=True, text=True)
-        _GIT[rel] = top_of(r.stdout) if r.returncode == 0 else None
-    return _GIT[rel]
+    return git_lef(rel)[0]
+
+
+def signed_view_top(h):
+    m = h.get("module")
+    top, size = git_lef(f"physical/die_plan/s81/cores/views/{m}/{m}.lef")
+    if top and size and all(abs(a - b) < 0.01 for a, b in zip(size, h["outline_um"])):
+        return top
+    return None
 
 
 def apply(raw):
@@ -53,7 +72,8 @@ def apply(raw):
     for t in raw["partition_types"].values():
         for h in t.get("hard_cores", []):
             m = h.get("module")
-            own = git_lef_top(h["lef"]) if h.get("lef") else None
+            view = signed_view_top(h)
+            own = view or (git_lef_top(h["lef"]) if h.get("lef") else None)
             tops = {own} if own else idx.get(m)
             if not tops:
                 rep[(m, "no LEF: stays M7")] += 1
@@ -63,7 +83,7 @@ def apply(raw):
                 rep[(m, f"kept declared {h['obs_max']} (LEF {top})")] += 1
                 continue
             h["obs_max"] = top
-            rep[(m, top + (" (plan lef)" if own else " (cores/ copy)"))] += 1
+            rep[(m, top + (" (signed view)" if view else " (plan lef)" if own else " (cores/ copy)"))] += 1
     return rep
 
 
