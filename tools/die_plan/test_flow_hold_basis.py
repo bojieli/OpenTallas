@@ -105,6 +105,23 @@ def test_run_kit_binds_ff_vclk_in_ff_only_steps():
     assert "leaf_affinity.tcl" in (HERE / "cts_post.tcl").read_text()
 
 
+def test_preroute_insertion_gate():
+    # GEOM-REVIEW / GEOM-REVIEW-2 [FLOW] 05:00: pin-register I within +-20 of the bound value at TT and FF before route,
+    # measured on 5_1_grt with the calibrated GRT RC (rr_h0_c original run: 269.3 / 217.2 vs routed RCX 263.7 / 212.1);
+    # the placement estimate read the same registers ~75 ps early, so it is never the gate basis.
+    rk = gen_phys.RUN_KIT
+    i_grt, i_gate = rk.index("grt CORNER=BC CORNERS=bc"), rk.index("postcts_gate.tcl")
+    assert i_grt < i_gate < rk.index("\\$M $GOAL")
+    assert "OT_POSTCTS_GRT=1" in rk and "FAIL_POSTCTS pre-route insertion gate" in rk
+    g = (HERE / "postcts_gate.tcl").read_text()
+    for k in ("estimate_parasitics -global_routing", "OT_POSTCTS_TOL", "20.0", "OT_VCLK_FF", "all_inputs -no_clocks",
+              "ot_cf_wire", "LAYER_PARASITICS_FILE"):
+        assert k in g, k
+    with tempfile.TemporaryDirectory() as d:
+        kd = gen_phys.write_type_kit(_plan(), "src", d, [], hold_ff_margin=gen_phys.HOLD_FF_MARGIN_DEFAULT)
+        assert (kd / "postcts_gate.tcl").is_file()
+
+
 def test_sdc_lint_rejects_ff_above_tt():
     P = _plan()
     txt = gen_phys.sdc(P, "src", gen_phys.type_pins(P, "src"))
