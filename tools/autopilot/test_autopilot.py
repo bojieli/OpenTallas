@@ -211,6 +211,21 @@ class TickBase(Base):
 
 
 class TestTick(TickBase):
+    def test_commented_out_waiting_row_is_withdrawn_and_comes_back(self):
+        self.ap.canary_wave_gate = lambda row: (False, "canary failed")
+        self.queue(ROW)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "WAIT-CANARY")
+        self.queue(["# WITHDRAWN superseded: " + "\t".join(ROW)], ROW[:2] + [KIT + "x"] + ROW[3:4] + ["FAIL", "GR"] + ROW[6:])
+        jobs = self.tick()
+        self.assertEqual(jobs[j["id"]]["status"], "WITHDRAWN")
+        self.assertIn("WITHDRAWN", (Path(self.tmp.name) / "log.txt").read_text())
+        self.queue()                                       # unreadable/empty queue never withdraws
+        self.assertEqual(self.tick()[j["id"]]["status"], "WITHDRAWN")
+        self.queue(ROW)                                    # put back -> admitted again
+        self.assertEqual(self.tick()[j["id"]]["status"], "WAIT-CANARY")
+        self.assertEqual(self.f.launched, [])
+
     def test_submit_once_with_honest_mem_and_geom_gate(self):
         self.queue(ROW, ROW[:2] + [KIT + "x"] + ROW[3:4] + ["FAIL", "GR"] + ROW[6:])
         jobs = self.tick()
