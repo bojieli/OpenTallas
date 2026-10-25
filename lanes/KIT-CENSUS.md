@@ -145,3 +145,23 @@ kitsB slice stations t3/t4/t8/t9/t10/t22/t25/t27/t29/t32 in GRT hold repair 10.4
 - "killed in GRT" = run whose 5_1_grt.tmp.log stopped without a container (killed/superseded); 84/104 were in hold repair.
 - Signoff "first failing gate" in flow order: face_guard > fanout > clock > hold_ff > setup_tt > drv.
 - Scripts: rtx-pro ~/coord-scratch/kitcensus/{collect.py,collect2.py,analyse.py,classify.py,final.py}.
+
+## 8. LANES addendum (weighted by n_attempts: 1166 attempts)
+Outcomes: 24 SIGNED (19 real die kits), 535 FAIL, 328 killed/superseded, 124 running, 126 unknown (HBM probe waves), 29 stalled.
+Causes (attempts / kit-h): tool-script-bug 167/152, ff-hold-faces 128/197, killed-superseded 115/98, plan-geometry 100/166,
+rtl-boundary 73/105, infra 66/6, cts 64/59, tt-setup 62/116, sdc-lint 30/7, congestion 26/57, stalled 25.
+205 of 535 FAILs were found at CTS or later although knowable at place or earlier; 208 were knowable at plan/G0.
+Attempts to sign (lanes): vq_lfp 9 (~4.5 h), hrow 12 (~13 h), stations t5..t21 4 waves (~12 h from first wave),
+kv head_eighth e1 8 / e5,e7 7 (~13-15 h, signed via m8 ECO). HBM: ~600 core attempts, 15 reached signoff, all 15 face_guard FAIL.
+Why the GRT hold loops never converge (key evidence):
+- ELEM-HBM.md:410 -- kit HOLD_SLACK_MARGIN=30: "1467 endpoints below 0 but 37822 below 30 ... ~20 it/min with a 4000-iteration
+  cap, so it could never finish" (a flat repair margin far above the real violators = flow bug, not physics).
+- S81.md:327 -- stations "t3/t4/t25/t32 ~7-8 h more, t27 ~11 h, t9 ~20 h, then DRT ~2 h"; GEOM-REVIEW.md:140 head c9/c6
+  "blanket margin-45 repair over ~24k internal endpoints (stuck >3 h)".
+- ELEM-HBM.md:421 "348 of 370 synthesized core kits fail [face_guard] ... cause is in the RTL"; ELEM-QK.md:237 "32/33 re-runs
+  ALL NOT SIGNED ... sdc_lint 32, face_guard 26, FF hold 13".
+- KVG3-CORES.md:42 / ELEM-HBM.md:392 -- make-print parse bug ("NAME:" not "NAME=") skipped signoff on finished kits.
+- >= 6 mid-flight rule changes in 17 h (TT/FF, sdc_lint/face_guard, ft share 0.16, pair-skew gate, reset, DEC12) each forced re-kits;
+  usage-limit gaps (08:50-12:04, 14:30-18:49 10-24) left finished runs uncollected.
+Implication for change 1: set the hold repair margin to the sign-off hold margin (5 ps) + ft-chain delay cells, and stop at CTS
+when endpoints-under-margin >> real violators.
