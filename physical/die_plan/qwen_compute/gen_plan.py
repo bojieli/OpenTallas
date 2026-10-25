@@ -1872,11 +1872,14 @@ def align_slice_transits(P, facepairs, lanes, ports):
 # face it shares with the NEXT straight transit partition (not an SU face: those are laid by su free spans) is re-laid
 # at the midpoint of the two partitions' far windows, so both partitions share the jog (the station count of neither
 # grows, no cycle changes); other windows on that face keep their packed centres as targets (_lay_aligned legaliser).
+# When that face is full (no aligned fit: sl_*_ctl|sc carries ctl's three x_ctl_su_c words beside cws2) the slot takes
+# the next station count instead (k = ceil(L / (ST_LEN - NS_TIGHT_UM)), P.ns_tight): reach with the legalisation margin.
 NS_BALANCE = __import__("os").environ.get("QC_NS_BALANCE", "1") == "1"
 NS_TIGHT_UM = 8.0
 
 
 def balance_ns_transits(P, facepairs, lanes, ports):
+    P.ns_tight = set()
     if not NS_BALANCE:
         return
     pmap = {pr["id"]: pr for pr in ports}
@@ -1924,7 +1927,10 @@ def balance_ns_transits(P, facepairs, lanes, ports):
         if not _lay_aligned(P, *key, prs, tg):
             for pr in prs:
                 pr["window_um"] = before[pr["id"]]
-            print(f"balance_ns_transits: face {key[0]}|{key[1]} no aligned fit, kept packed", file=sys.stderr)
+            for pid, (t, part, nb, ida, idc, h) in mv.items():
+                P.ns_tight.add((P.parts[part]["type"], pmap[pid]["src"]["bus"][:-2]))
+            print(f"balance_ns_transits: face {key[0]}|{key[1]} no aligned fit, kept packed; +1 station on "
+                  f"{sorted((P.parts[v[1]]['type'], pmap[k]['src']['bus'][:-2]) for k, v in mv.items())}", file=sys.stderr)
             continue
         for pid, (t, part, nb, ida, idc, h) in mv.items():
             c = centre(pmap[pid])
@@ -2204,6 +2210,8 @@ def materialize(P):
             # OWNER 12: route / stations <= ST_LEN (check.py R3 convention); ft_regs then checks the ROUTED hops around
             # hard cores and adds stations where a detour exceeds it
             k = max(1, math.ceil(L / ST_LEN))
+            if ka in getattr(P, "ns_tight", ()):          # PATH-QC-PLAN-D3: unbalanced tight N/S transit
+                k = max(k, math.ceil(L / (ST_LEN - NS_TIGHT_UM)))
             slot_req[ka]["stations"] = max(slot_req[ka].get("stations", 1), k)
     # pins on the TYPE: every out bus / slot out window in its type frame (from ANY instance, inverse transform);
     # instances of one type must agree
