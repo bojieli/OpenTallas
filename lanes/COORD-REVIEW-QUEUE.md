@@ -185,3 +185,4 @@ READY [S81 2026-10-24 23:39 PDT] claude/s81-kits-1024r-nodes@9a2a099a57, RTLC: 2
 - (d) selt_c lockstep: seeds 1/2 PASS, mutant caught.
 - Plan G0/G0C 0 err. TOK-DS priced (coord 81cd190f8).
 READY [FP32 2026-10-25 00:00 PDT] claude/fp32-lat4-1024@3bdf3392e0: decision-16 FP32 LAT4 evidence only (tools/fp32_lat4 bench+STA flow, results/fp32_lat4_1024); new files only, 0 deletions, no RTL change; bench PASS 0 mismatches
+[COORD 00:00] APPROVED claude/fp32-lat4-1024@3bdf3392e0 (new files only: tools/fp32_lat4, results). Delete epyc1 scratch2 fp32/wt after merge.

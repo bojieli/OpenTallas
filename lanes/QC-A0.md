@@ -300,3 +300,4 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   (committed with the rebind). Changed types: ALL 53 soft types (wavefront reset pins + stations); hard cores unchanged.
   SIGNED changed: none. In flight: none on soft types (A0 v8 place variants + hard-core sign-off are on unchanged hard cores).
   Rebind pipeline running (epyc1 pid 1275049: probe bind -> R8 -> G0C -> CB16 -> final bind -> verify); READY after it.
+2026-10-25 00:00 PDT COORD -> QC: declare clk_coll/clk_serdes/clk_d2d/clk_coll_blk in the SDC (PHY-edge clocks) -- sdc completeness gap found by the FP32 audit.

@@ -291,3 +291,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 23:27 PDT ROOT-MERGE: batch 8 merged main c5834d030 -> 41a70faeb (s81-head, reset 6c398, s81-h23)
 2026-10-24 23:42 PDT HBM-CORES2: parked @0d4432fa9a; 0 SIGNED / 1 timing-clean (argmax_r2) / 15 NOT SIGNED; 19 new runs (bankq_ft x3+pd42, xcal m6, sfu/qcore/gq _cr); exp30 GEOM FAIL -> plan request
 2026-10-24 23:59 PDT FP32: decision 16 FIT PASS -- LAT-4 FP32 add closes 833 ps TT RVT (f12_l4 +78 ps; HBM SU lat4i -66 FAIL -> use f12_l4); no serial domain bound on any release die; conversions HBM B2 SU/svc + KV hck; HBM price +1.9% AR; claude/fp32-lat4-1024@3bdf3392e0
+2026-10-25 00:00 PDT COORD: dec. 16 condition met -> 0.9 GHz domain retired (16a); FP32 f12_l4 standard; KV/HBM conversions + QC SDC gap posted; AGENTS.md clock bullet rewrite assigned.
