@@ -1,7 +1,6 @@
 `timescale 1ns/1ps
 module tb_s81sl_rstd_release;
-    localparam [127:0] LUT={8'd45,8'd3,8'd3,8'd81,8'd105,8'd125,8'd142,8'd0,
-                            8'd129,8'd148,8'd1,8'd67,8'd4,8'd1,8'd67,8'd107};
+    localparam [127:0] LUT=128'h866f166f5f3b9a00888a3e0050029d55;
     reg clk=0;always #0.5 clk=~clk;
     reg rst_n=0,iv=0;reg[3:0]sid=0;reg[31:0]id=0;
     wire ov,bad,bv,bb;wire[31:0]od,bd;
