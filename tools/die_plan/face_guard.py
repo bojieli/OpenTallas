@@ -25,7 +25,10 @@ from pathlib import Path
 
 MAX_CHAIN = 3
 OUT_PINS = {"Y", "Q", "QN", "H", "L", "CON", "SN", "Z", "ZN", "O"}
-SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+)$"   # rst_o: reset wavefront outs (reset_tree.py)
+# Clocks and the reset/START *inputs* (arst_n / rst_n / start_i: root synchroniser or typed control) are not face
+# registers.  The registered wavefront OUTS rst_o_<k> / start_o_<k> ARE partition pins and are checked like data: one
+# dedicated relay per pin (reset_tree.py out relays; owner rule: register every partition pin, no shared fanout).
+SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_n|start_i)$"
 
 
 def is_ff(master):
