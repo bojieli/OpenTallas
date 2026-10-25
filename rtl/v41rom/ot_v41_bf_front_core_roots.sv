@@ -1634,11 +1634,18 @@ module ot_v41_bf_front_core_roots #(
     wire lu_xb = lu_f(wB, w_nx_c, w_nx[2:0]);                    //   ... or advanced (wA <= wB)
     wire lu_nx = (QX != 0) ? qx_lu_nx : (w_nx[UW-1] && w_nx[UW-2 -: 3] != w_q) ? lu_xb : lu_xa;
     always @(posedge gclk) if (cen[16])
-        if (go_e) begin w_ca_r <= ca_f(f0_go, c_first, 3'd0); w_ca_r2 <= ca_f(f0_go, c_first, 3'd0); w_ca_r3 <= ca_f(f0_go, c_first, 3'd0); end
-        else if (issue && w_seg_last && w_cl) begin
-            w_ca_r <= w_restart ? ca_f(fF0, c_live, 3'd0) : qx_ca_nx; w_ca_r2 <= w_restart ? ca_f(fF0, c_live, 3'd0) : qx_ca_nx;
-            w_ca_r3 <= w_restart ? ca_f(fF0, c_live, 3'd0) : qx_ca_nx;
-        end
+        if (go_e) w_ca_r <= ca_f(f0_go, c_first, 3'd0);
+        else if (issue && w_seg_last && w_cl) w_ca_r <= w_restart ? ca_f(fF0, c_live, 3'd0) : qx_ca_nx;
+    // S81-CORES3/NK 10-25: the kept N32 copies are flops only when N32 != 0 (N32 = 0: plain aliases in g_nbank).  They
+    // were written in the same always as w_ca_r for every N32, so N32 = 0 had two drivers (this flop + the g_nbank
+    // alias): Yosys merged w_ca_r2/3 into w_ca_r (3 DFF drivers) and asserted.  Same load conditions, own always.
+    if (N32 != 0) begin : g_ca_cp
+        always @(posedge gclk) if (cen[16])
+            if (go_e) begin w_ca_r2 <= ca_f(f0_go, c_first, 3'd0); w_ca_r3 <= ca_f(f0_go, c_first, 3'd0); end
+            else if (issue && w_seg_last && w_cl) begin
+                w_ca_r2 <= w_restart ? ca_f(fF0, c_live, 3'd0) : qx_ca_nx; w_ca_r3 <= w_restart ? ca_f(fF0, c_live, 3'd0) : qx_ca_nx;
+            end
+    end
     always @(posedge gclk) if (cen[17])
         if (go_e) w_lu_r <= lu_go;
 `ifdef QP_MUTANT_LU
@@ -2058,10 +2065,20 @@ module ot_v41_bf_front_core_roots #(
     wire [6*NSEG-1:0] qn_a_go = sbf(4'd0, 2'd3, nu_p, base_go), qn_a_rs = sbf(4'd0, 2'd3, nu_p, base_live);
     wire [NSEG-1:0] qn_ohf = qx_low(base_go), qn_ohl = qx_low(base_live);
     always @(posedge gclk) if (cen[24]) if (rst_n) begin
-        if ((N32 != 0) ? gok[GX + 1] : go_e) begin n_coh <= qn_ohf; n_cgt <= qx_gt(qn_ohf); n_ca_r <= ca_f(qn_a_go, c_first, 3'd0); n_ca_r2 <= ca_f(qn_a_go, c_first, 3'd0); end
+        if ((N32 != 0) ? gok[GX + 1] : go_e) begin n_coh <= qn_ohf; n_cgt <= qx_gt(qn_ohf); n_ca_r <= ca_f(qn_a_go, c_first, 3'd0); end
         else if (hit) begin
-            if (qx_n_end && n_more) begin n_coh <= qn_ohl; n_cgt <= qx_gt(qn_ohl); n_ca_r <= ca_f(qn_a_rs, c_live, 3'd0); n_ca_r2 <= ca_f(qn_a_rs, c_live, 3'd0); end
-            else begin n_coh <= qn_nxoh; n_cgt <= qx_gt(qn_nxoh); n_ca_r <= qn_ca_nx; n_ca_r2 <= qn_ca_nx; end
+            if (qx_n_end && n_more) begin n_coh <= qn_ohl; n_cgt <= qx_gt(qn_ohl); n_ca_r <= ca_f(qn_a_rs, c_live, 3'd0); end
+            else begin n_coh <= qn_nxoh; n_cgt <= qx_gt(qn_nxoh); n_ca_r <= qn_ca_nx; end
+        end
+    end
+    // S81-CORES3/NK 10-25: n_ca_r2 (kept N32 copy of n_ca_r) is a flop only when N32 != 0, same load conditions
+    if (N32 != 0) begin : g_nca_cp
+        always @(posedge gclk) if (cen[24]) if (rst_n) begin
+            if (gok[GX + 1]) n_ca_r2 <= ca_f(qn_a_go, c_first, 3'd0);
+            else if (hit) begin
+                if (qx_n_end && n_more) n_ca_r2 <= ca_f(qn_a_rs, c_live, 3'd0);
+                else n_ca_r2 <= qn_ca_nx;
+            end
         end
     end
 `ifdef QP_CHECK
