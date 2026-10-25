@@ -1,0 +1,1618 @@
+{
+ "checked": 95,
+ "added": [
+  {
+   "type": "q_b013",
+   "slot": "L52x1",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 376.729,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_su00",
+   "slot": "L28x3",
+   "stations": [
+    6,
+    12
+   ],
+   "worst_paired_bit_um": 399.005,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_su00",
+   "slot": "L106x6",
+   "stations": [
+    6,
+    7
+   ],
+   "worst_paired_bit_um": 361.377,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  }
+ ],
+ "slots": [
+  {
+   "type": "q_b013",
+   "slot": "L51x8",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 375.233,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_b013",
+   "slot": "L52x1",
+   "stations": [
+    3,
+    4
+   ],
+   "worst_paired_bit_um": 376.729,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_b013",
+   "slot": "L101x8",
+   "stations": [
+    4,
+    4
+   ],
+   "worst_paired_bit_um": 358.275,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_b013",
+   "slot": "L126x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 348.357,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_b102",
+   "slot": "L48x1",
+   "stations": [
+    1,
+    1
+   ],
+   "worst_paired_bit_um": 399.888,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_b102",
+   "slot": "L53x11",
+   "stations": [
+    2,
+    2
+   ],
+   "worst_paired_bit_um": 373.357,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_b103",
+   "slot": "L48x2",
+   "stations": [
+    4,
+    4
+   ],
+   "worst_paired_bit_um": 367.539,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_b103",
+   "slot": "L53x10",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 373.275,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_b111",
+   "slot": "L48x3",
+   "stations": [
+    4,
+    4
+   ],
+   "worst_paired_bit_um": 368.951,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_b111",
+   "slot": "L53x9",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 375.441,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_mcb",
+   "slot": "L8x5",
+   "stations": [
+    12,
+    12
+   ],
+   "worst_paired_bit_um": 352.448,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_mcb",
+   "slot": "L21x1",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 330.3324,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_mcb",
+   "slot": "L22x1",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 330.3182,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spb1",
+   "slot": "L152x3",
+   "stations": [
+    10,
+    10
+   ],
+   "worst_paired_bit_um": 150.336,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spb1",
+   "slot": "L151x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 300.672,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spb1",
+   "slot": "L117x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 300.672,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spb1",
+   "slot": "L138x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 300.672,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt0",
+   "slot": "L8x2",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 387.879,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_spt0",
+   "slot": "L21x4",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 379.059,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_spt0",
+   "slot": "L22x4",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 383.907,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_spt0",
+   "slot": "L66x2",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 342.63,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_spt0",
+   "slot": "L79x2",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 349.65,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_spt0",
+   "slot": "L82x3",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 367.183,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_spt1",
+   "slot": "L8x3",
+   "stations": [
+    10,
+    10
+   ],
+   "worst_paired_bit_um": 150.336,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt1",
+   "slot": "L21x3",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 187.92,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt1",
+   "slot": "L22x3",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 250.56,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt1",
+   "slot": "L66x3",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 187.92,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt1",
+   "slot": "L79x3",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 167.04,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt1",
+   "slot": "L82x2",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 300.672,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt2",
+   "slot": "L8x4",
+   "stations": [
+    10,
+    10
+   ],
+   "worst_paired_bit_um": 150.336,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt2",
+   "slot": "L21x2",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 187.92,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt2",
+   "slot": "L22x2",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 250.56,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt2",
+   "slot": "L66x4",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 187.92,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt2",
+   "slot": "L79x4",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 167.04,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spt2",
+   "slot": "L82x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 300.672,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L0x2",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 226.8,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L8x1",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 150.8206,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L21x5",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 132.016,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L22x5",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 175.9573,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L41x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 211.1488,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L50x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 211.2256,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L66x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 211.0848,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L79x1",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 176.0533,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L82x4",
+   "stations": [
+    4,
+    4
+   ],
+   "worst_paired_bit_um": 263.92,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L84x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 211.136,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L88x1",
+   "stations": [
+    4,
+    4
+   ],
+   "worst_paired_bit_um": 263.936,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L106x4",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 302.4,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L155x1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 335.744,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L125x4",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 302.4,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L140x1",
+   "stations": [
+    3,
+    3
+   ],
+   "worst_paired_bit_um": 344.0,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L147x2",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 226.8,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu0",
+   "slot": "L148x2",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 303.92,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L2x1",
+   "stations": [
+    4,
+    4
+   ],
+   "worst_paired_bit_um": 300.144,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L33x1",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 259.4027,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L40x1",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 263.904,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L48x6",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 263.2046,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L152x1",
+   "stations": [
+    10,
+    10
+   ],
+   "worst_paired_bit_um": 159.6544,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L49x1",
+   "stations": [
+    10,
+    10
+   ],
+   "worst_paired_bit_um": 159.6544,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L151x3",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 316.6464,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L53x6",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 307.072,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L83x1",
+   "stations": [
+    10,
+    10
+   ],
+   "worst_paired_bit_um": 159.6288,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L87x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 316.6464,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L117x3",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 311.088,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L138x3",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 311.04,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L139x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 311.04,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_spu1",
+   "slot": "L149x2",
+   "stations": [
+    10,
+    10
+   ],
+   "worst_paired_bit_um": 195.0976,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "q_su00",
+   "slot": "L28x3",
+   "stations": [
+    6,
+    12
+   ],
+   "worst_paired_bit_um": 399.005,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_su00",
+   "slot": "L106x6",
+   "stations": [
+    6,
+    7
+   ],
+   "worst_paired_bit_um": 361.377,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "q_su00",
+   "slot": "L125x2",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 365.727,
+   "budget_um": 403.0,
+   "cell_size_um": [
+    1.404,
+    0.27
+   ],
+   "max_radius_um": 40.0,
+   "core_free_routes": true,
+   "mode": "row-legal-per-bit"
+  },
+  {
+   "type": "vsN1",
+   "slot": "L154x2",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 187.92,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN1",
+   "slot": "L153x1",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 167.04,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN1",
+   "slot": "L118x1",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 167.04,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN1",
+   "slot": "L141x1",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 167.04,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN2",
+   "slot": "L154x1",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 166.32,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN2",
+   "slot": "L153x2",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 166.32,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN2",
+   "slot": "L118x2",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 166.32,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN2",
+   "slot": "L141x2",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 166.32,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN4",
+   "slot": "L9x2",
+   "stations": [
+    8,
+    8
+   ],
+   "worst_paired_bit_um": 166.32,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN4",
+   "slot": "L9mx2",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 221.76,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN4",
+   "slot": "L63x2",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 190.08,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN4",
+   "slot": "L63mx2",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 190.08,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN4",
+   "slot": "L114x3",
+   "stations": [
+    4,
+    4
+   ],
+   "worst_paired_bit_um": 332.64,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN4",
+   "slot": "L114mx3",
+   "stations": [
+    4,
+    4
+   ],
+   "worst_paired_bit_um": 332.64,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN5",
+   "slot": "L9x3",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 167.04,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN5",
+   "slot": "L9mx3",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 250.56,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN5",
+   "slot": "L63x3",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 214.7657,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN5",
+   "slot": "L63mx3",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 214.7657,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN5",
+   "slot": "L114x2",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 300.672,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN5",
+   "slot": "L114mx2",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 300.672,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN6",
+   "slot": "L9x4",
+   "stations": [
+    9,
+    9
+   ],
+   "worst_paired_bit_um": 167.04,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN6",
+   "slot": "L9mx4",
+   "stations": [
+    6,
+    6
+   ],
+   "worst_paired_bit_um": 250.56,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN6",
+   "slot": "L63x4",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 214.7657,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN6",
+   "slot": "L63mx4",
+   "stations": [
+    7,
+    7
+   ],
+   "worst_paired_bit_um": 214.7657,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN6",
+   "slot": "L114x1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 300.672,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  },
+  {
+   "type": "vsN6",
+   "slot": "L114mx1",
+   "stations": [
+    5,
+    5
+   ],
+   "worst_paired_bit_um": 300.672,
+   "budget_um": 403.0,
+   "mode": "per-bit-zroute",
+   "removed_centroid_sites": true
+  }
+ ],
+ "type_failures": [
+  {
+   "type": "q_b000",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_b001",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_b002",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_b003",
+   "reason": "q_b003/L18x1: no row-legal allocation after100 target alternatives"
+  },
+  {
+   "type": "q_b010",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_b011",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_b012",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_b100",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_b101",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_b110",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_b112",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_b113",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_spb2",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_su01",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_su10",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_su11",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_su20",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_su21",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_su30",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "q_su31",
+   "reason": "no reach-bounded station-target chain"
+  },
+  {
+   "type": "root",
+   "reason": "no reach-bounded station-target chain"
+  }
+ ],
+ "unfixed": [
+  {
+   "type": "q_b000",
+   "slot": "L28x1",
+   "worst_um": 457.235,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b000",
+   "slot": "L36x1",
+   "worst_um": 461.984,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b000",
+   "slot": "L42x1",
+   "worst_um": 420.224,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b001",
+   "slot": "L11x1",
+   "worst_um": 530.384,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b001",
+   "slot": "L36x3",
+   "worst_um": 455.552,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b001",
+   "slot": "L42x3",
+   "worst_um": 432.376,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b002",
+   "slot": "L17x1",
+   "worst_um": 504.216,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b002",
+   "slot": "L51x5",
+   "worst_um": 406.64,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b003",
+   "slot": "L18x1",
+   "worst_um": 533.906,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b003",
+   "slot": "L52x2",
+   "worst_um": 406.533,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b010",
+   "slot": "L14x1",
+   "worst_um": 537.385,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b010",
+   "slot": "L28x2",
+   "worst_um": 455.744,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b010",
+   "slot": "L36x2",
+   "worst_um": 455.072,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b011",
+   "slot": "L15x1",
+   "worst_um": 499.288,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b012",
+   "slot": "L10x1",
+   "worst_um": 426.899,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b100",
+   "slot": "L5x2",
+   "worst_um": 582.712,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b101",
+   "slot": "L12x1",
+   "worst_um": 607.088,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_b101",
+   "slot": "L74x1",
+   "worst_um": 495.756,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_su01",
+   "slot": "L29x1",
+   "worst_um": 492.704,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_su10",
+   "slot": "L0x1",
+   "worst_um": 622.976,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_su11",
+   "slot": "L30x1",
+   "worst_um": 409.088,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_su21",
+   "slot": "L32x1",
+   "worst_um": 497.135,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_su21",
+   "slot": "L38x1",
+   "worst_um": 441.961,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_su30",
+   "slot": "L5x1",
+   "worst_um": 588.713,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_su30",
+   "slot": "L6x1",
+   "worst_um": 576.778,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_su31",
+   "slot": "L12x2",
+   "worst_um": 617.518,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_su31",
+   "slot": "L34x1",
+   "worst_um": 407.334,
+   "stations_in_core": 0
+  },
+  {
+   "type": "q_su31",
+   "slot": "L35x1",
+   "worst_um": 464.012,
+   "stations_in_core": 0
+  },
+  {
+   "type": "root",
+   "slot": "L4x1",
+   "worst_um": 547.192,
+   "stations_in_core": 0
+  },
+  {
+   "type": "root",
+   "slot": "L4mx1",
+   "worst_um": 607.52,
+   "stations_in_core": 0
+  },
+  {
+   "type": "root",
+   "slot": "L9x1",
+   "worst_um": 473.936,
+   "stations_in_core": 0
+  },
+  {
+   "type": "root",
+   "slot": "L9mx1",
+   "worst_um": 565.952,
+   "stations_in_core": 0
+  },
+  {
+   "type": "root",
+   "slot": "L150mx2",
+   "worst_um": 407.416,
+   "stations_in_core": 0
+  }
+ ],
+ "lane_cycles": [
+  {
+   "lane": "L28",
+   "before": 15,
+   "after": 21,
+   "added": 6
+  },
+  {
+   "lane": "L28m",
+   "before": 15,
+   "after": 21,
+   "added": 6
+  },
+  {
+   "lane": "L52",
+   "before": 25,
+   "after": 26,
+   "added": 1
+  },
+  {
+   "lane": "L52m",
+   "before": 25,
+   "after": 26,
+   "added": 1
+  },
+  {
+   "lane": "L106",
+   "before": 46,
+   "after": 47,
+   "added": 1
+  },
+  {
+   "lane": "L106m",
+   "before": 46,
+   "after": 47,
+   "added": 1
+  }
+ ],
+ "pad_conflicts": [],
+ "verdict": "FAIL"
+}
