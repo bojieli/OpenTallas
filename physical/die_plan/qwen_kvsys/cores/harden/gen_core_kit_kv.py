@@ -335,6 +335,10 @@ def main():
     ap.add_argument("--astk-rep-split", action="store_true",
                     help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
                          "<= 64 loads each; kept regs were merged back: B ES rc[0] 2048 loads) + ctl z_k copies kept the same way (0 cycles)")
+    ap.add_argument("--astk-write-decode", action="store_true",
+                    help="PATH-KV-ASTK 10-25: zn write-decode next-state threshold regs lo_r (15-b pb compare out of the "
+                         "sd write-enable cycle) + 4 ctl zh replicas per z_s slice + 17 zk_r slice copies; 0 cycles "
+                         "(astk_write_decode.py; needs --astk-timing-regs --astk-rep-split)")
     ap.add_argument("--astk-strap-master", action="store_true",
                     help="OWNER option B (COORD 10-25 07:01): ONE kv3_astk master from a corner core json; the corner ID "
                          "constants (ctl st, zn zc[1:0]) come from input strap_corner[1:0] (EN 11 ES 10 WN 01 WS 00) via one "
@@ -440,6 +444,17 @@ def main():
             ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL",
             rep_split=(dict(zn_replicas=16, slice_bits=8, max_select_loads=64, kept="keep_hierarchy qkd_astk_rep5/rep4",
                             miter="kv-cores-1025r/astk/G/tb") if a.astk_rep_split else None)), indent=1) + "\n")
+    if a.astk_write_decode:
+        if not (mod.startswith("kv3_astk_") and a.astk_timing_regs and a.astk_rep_split):
+            raise SystemExit("--astk-write-decode needs a kv3_astk_* core + --astk-timing-regs --astk-rep-split")
+        from astk_write_decode import apply_kit as wdec_apply
+        wdec_apply(kd / "rtl")
+        (kd / "astk_wdec_delta.json").write_text(json.dumps(dict(added_cycles=0,
+            zn=dict(lo_r_per_zone=8, cause="tq/zq -> 15-b cb<T compare -> 128-load sd row write enable (TT -61.24, 197 EP)",
+                    fix="lo_r[j] = ({S,sgam(L,j),000} < T[8:0]) registered from next state (zc, tc[9:1]); pb = 5-b compare + 8:1"),
+            ctl=dict(zh_replicas=4, zk_r_copies=17, cause="zh -> z_s 4:1 select over z_hd -> ap (30 EP)"),
+            miter="core_miter old r3 corner kits vs master, --bias aq start rare; mutants lo_r / zh replica / ES swap"),
+            indent=1) + "\n")
     if a.astk_strap_master:
         src = kd / "rtl" / f"{mod}.sv"
         (kd / "rtl" / f"{astk_strap_master.MASTER}.sv").write_text(astk_strap_master.transform(src.read_text(), mod))

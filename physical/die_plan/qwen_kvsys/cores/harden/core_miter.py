@@ -44,6 +44,9 @@ def main():
     ap.add_argument("--new-mod", help="new top module name (strap master: kv3_astk)")
     ap.add_argument("--strap", action="append", default=[], help="NEW-only input PORT=VALUE held constant (ID straps)")
     ap.add_argument("--no-drops", action="store_true", help="old kit already carries the am g drop (compare 1:1)")
+    ap.add_argument("--bias", action="append", default=[],
+                    help="PORT=BIT:N input bit set 1-in-N per cycle instead of the bit-0 1-in-4 default (e.g. a rare start, "
+                         "so the chain state between starts is exercised; PATH-KV-ASTK 10-25 ES-swap mutant gap)")
     a = ap.parse_args()
     old, new, out = Path(a.old), Path(a.new), Path(a.out)
     shutil.rmtree(out, ignore_errors=True)
@@ -55,6 +58,10 @@ def main():
     drops = {} if a.no_drops else am_g_drop.drops_for(mod)
     nmod = a.new_mod or mod
     straps = dict(s.split("=", 1) for s in a.strap)
+    bias = [tuple(x.split("=", 1)) for x in a.bias]
+    for bp, _ in bias:
+        if bp not in cjo["port_decl"]:
+            raise SystemExit(f"--bias port {bp} not in the old core")
     extra_new = {p for p, d in cjn["port_decl"].items() if p not in cjo["port_decl"]}
     if extra_new != set(straps):
         raise SystemExit(f"new-only ports {sorted(extra_new)} must all be --strap PORT=VAL (got {sorted(straps)})")
@@ -152,6 +159,10 @@ def main():
             continue
         words = (hi + 32) // 32
         L.append(f"      i_{p} = {{{', '.join(['$urandom'] * words)}}}; i_{p}[0] = ($urandom % 4 == 0);")
+        for bp, bv in bias:
+            if bp == p:
+                bb, bn = bv.split(":")
+                L.append(f"      i_{p}[{int(bb)}] = ($urandom % {int(bn)} == 0);")
     L.append("    end")
     L.append(f"    $display(\"CORE MITER {mod} %s mismatches=%0d dropped_bit_nonzero=%0d edges=%0d dropped_port_changes=%0d\","
              " (mis == 0 && dzc == 0 && tgc > 100) ? \"PASS\" : \"FAIL\", mis, dzc, edges, tgc);")
