@@ -12,7 +12,7 @@ V layers (N/S faces) alternate M3 / M5, every second track; H layers (E/W faces)
 follow the closed views (M3 0.018 x 0.038, M4 0.084 x 0.024, M5 0.024 x 0.084, on the outline edge).
 Writes inputs/core_pins/<module>_lfp.json (plan pin table) and cores/leaf/lef/<module>_lfp.lef (stub abstract LEF:
 pins + OBS M1-M7 over the core, for plan / G1 / leaf-kit placement until the re-pinned view closes).
-usage (repo root): python3 physical/die_plan/s81/cores/leaf/repin.py"""
+usage (repo root): python3 physical/die_plan/s81/cores/leaf/repin.py [MODULE ...]   (default: all)"""
 import json, os, re, sys
 D = "physical/die_plan/s81"
 OFF = (0.108, 0.012)
@@ -22,20 +22,33 @@ RECT = {"M3": (0.018, 0.038), "M4": (0.084, 0.024), "M5": (0.024, 0.084)}   # (w
 # face groups in face order: N/S low x -> high x, E/W low y -> high y
 SPEC = {
     "ot_s81sl_vs": dict(size=(172.8, 172.8), faces=dict(
-        N=["ve_rv", "ve_rc", "ve_rh", "ve_rk", "ve_rw", "ve_pv", "ve_pc", "ve_phh", "ve_pkk", "ve_pdd",
-           "s_v", "s_d", "g_v", "g_c", "g_d", "e_v", "e_c", "e_d", "fault",
-           "ve_fi", "ve_ov", "ve_oc", "ve_oy", "ve_av", "ve_ac", "ve_ah", "ve_aval", "ve_ag"],
+        # S81/LEAFPLAN 10-24 ve split: ve_s (p) sits W of ve_m (r / a / o) over vs -> p first, r with o / a last
+        N=["ve_pv", "ve_pc", "ve_phh", "ve_pkk", "ve_pdd",
+           "s_v", "s_d", "g_v", "g_c", "g_d", "e_v", "e_c", "e_d", "fault", "ve_fi",
+           "ve_rv", "ve_rc", "ve_rh", "ve_rk", "ve_rw", "ve_ov", "ve_oc", "ve_oy", "ve_av", "ve_ac", "ve_ah", "ve_aval", "ve_ag"],
         W=["x_rv", "x_ra", "x_qv", "x_qd", "x_wv", "x_wa", "x_wm", "x_wd", "u_v", "u_i", "u", "um_v", "um_q", "um_b", "um_i"],
         E=["sw_v", "sw_d", "sw_w", "sw_lim", "sw_vi", "sw_ri", "sw_fi"],
-        S=["clk", "rst_n", "ra_v", "ra_x", "ra_vi", "ra_ri", "ra_fi"])),
+        S=["ra_v", "ra_x", "ra_vi", "ra_ri", "ra_fi"]),
+        # S81/LEAFPLAN 10-24: clk / rst_n at the S-face pin-count middle (were the S-W corner; KITS eg_c FAIL class)
+        move={"clk": "S", "rst_n": "S"}),
     "ot_s81sl_vq": dict(size=(172.8, 129.6), faces=dict(
         W=["y_v", "y_i", "y"],
         E=["u_v", "u_i", "u", "um_v", "um_q", "um_b", "um_i"],
-        N=["clk", "rst_n", "k", "sid", "m_v", "m_q", "m_b", "m_i", "fault", "xf_v", "xf_s", "xf"],
-        S=[])),
+        N=["k", "sid", "m_v", "m_q", "m_b", "m_i", "fault", "xf_v", "xf_s", "xf"],
+        S=[]),
+        move={"clk": "N", "rst_n": "N"}),
     # svc (S81-CORES): the score-exchange half row re-floorplanned from 216 x 216 to 138.24 x 164.16 so the 8 half rows
     # sit in the svc centre band between the 4 + 4 hcore rows (the exchange's hop geometry assumes the leaf cluster at the
     # slice centre: dsdv_svc_sx 'pins at the slice centre line'); faces kept (lanes face their svc face), order kept
+    # C slices (S81/LEAFPLAN 10-24, S81/KITS r6 geom FAIL ot_s81sl_eg_c): the closed-view pins put clk + rst_n at the W-top
+    # corner (0, 250), ~360 um from the far flops of the 33k-flop core, and the S face in 3 narrow clusters (peak 26.5
+    # pins/um > 24.3 cap). Faces and face order kept, every face spread evenly over its length, clk / rst_n moved to the
+    # S-face centre (the face of the data clusters; centre-fed clock / reset)
+    # S81/LEAFPLAN 10-24 r8 (G0C core-face rule with the C-type eg <-> xrt core_conns; KITS eg_c r7 partner distances):
+    # the xrt-facing ports (xrt is W of eg in every C type) g / g_c / g_v / eps / scale -> W face (were N / S)
+    "ot_s81sl_eg": dict(size=(259.2, 259.2), keep_faces=True, suffix="_c", dir="cores/eg/lef", move={"clk": "S", "rst_n": "S"},
+                        regroup={"W": ["g_v", "g_c", "g", "eps", "scale"]},
+                        src_lef="physical/ref_tile/s81sl_eg/views/ot_s81sl_eg/ot_s81sl_eg.lef"),
     "dsdv_svc_sx_hrow": dict(size=(138.24, 164.16), keep_faces=True, suffix="_c",
                              src_lef="physical/ref_tile/dsdv_svc_sx_hrow/views/dsdv_svc_sx_hrow/dsdv_svc_sx_hrow.lef"),
 }
@@ -63,14 +76,27 @@ def build(mod, spec):
     for b in base:
         base[b].sort(key=lambda n: int(re.search(r"\[(\d+)\]$", n).group(1)) if "[" in n else -1)
     if spec.get("keep_faces"):
-        W0 = max(p["x"] for p in src["pins"]) + 0.042
-        H0 = max(p["y"] for p in src["pins"]) + 0.019
+        W0, H0 = spec["size"] if "move" in spec else (max(p["x"] for p in src["pins"]) + 0.042,
+                                                       max(p["y"] for p in src["pins"]) + 0.019)
         fc = {}
         for p in src["pins"]:
             f = min([(p["x"], "W"), (W0 - p["x"], "E"), (p["y"], "S"), (H0 - p["y"], "N")])[1]
             b = re.sub(r"\[\d+\]$", "", p["name"])
             fc.setdefault(f, {}).setdefault(b, []).append(p["x"] if f in "NS" else p["y"])
         spec = dict(spec, faces={f: sorted(g, key=lambda b: sum(g[b]) / len(g[b])) for f, g in fc.items()})
+    for f, grp in spec.get("regroup", {}).items():
+        # whole port groups moved to face f in the given order (S81/LEAFPLAN: eg's xrt ports toward xrt)
+        spec = dict(spec, faces={f_: [b for b in g if b not in grp] for f_, g in spec["faces"].items()})
+        spec["faces"][f] = spec["faces"].get(f, []) + list(grp)
+    if spec.get("move"):
+        spec = dict(spec, faces={f: list(g) for f, g in spec["faces"].items()})
+        for b, f in spec["move"].items():
+            # a port moved to face f, at the pin middle of that face (clock / reset centre-fed; splits a wide group)
+            for g in spec["faces"].values():
+                if b in g:
+                    g.remove(b)
+            spec["faces"].setdefault(f, []).append(b)
+        spec["faces"] = {f: g for f, g in spec["faces"].items() if g}
     want = [b for f in spec["faces"].values() for b in f]
     miss, extra = set(base) - set(want), set(want) - set(base)
     if miss or extra:
@@ -78,7 +104,10 @@ def build(mod, spec):
     W, H = spec["size"]
     pins = []
     for face, groups in spec["faces"].items():
-        seq = [n for b in groups for n in base[b]]
+        mid = [b for b in groups if b in spec.get("move", {})]
+        seq = [n for b in groups if b not in mid for n in base[b]]
+        k = len(seq) // 2
+        seq[k:k] = [n for b in mid for n in base[b]]
         if not seq:
             continue
         vert = face in "NS"
@@ -137,7 +166,10 @@ def lef_dirs(path):
 
 
 def main():
+    only = sys.argv[1:]
     for mod, spec in SPEC.items():
+        if only and mod not in only:
+            continue
         pins, src = build(mod, spec)
         W, H = spec["size"]
         sfx = spec.get("suffix", "_lfp")
@@ -146,14 +178,20 @@ def main():
         else:
             rt = {"ot_s81sl_vs": "s81sl_vs", "ot_s81sl_vq": "s81sl_vq"}[mod]
             dirs = lef_dirs("physical/ref_tile/%s/views/%s/%s.lef" % (rt, mod, mod))
-        lp = os.path.join(D, "cores/%s/lef/%s%s.lef" % ("svc" if sfx == "_c" else "leaf", mod, sfx))
+        lp = os.path.join(D, spec.get("dir", "cores/%s/lef" % ("svc" if sfx == "_c" else "leaf")), "%s%s.lef" % (mod, sfx))
         os.makedirs(os.path.dirname(lp), exist_ok=True)
-        open(lp, "w").write(lef(mod, W, H, pins, dirs))
+        # the source pin table already carries the OWNER DECISION 8 drops / renames (src["const_rename"] = renames applied):
+        # the new table and LEF continue from that count, so drop() below applies only renames appended since
+        done = int(src.get("const_rename") or 0)
+        open(lp, "w").write(("# OT const_rename %d: inherited from the source pin table\n" % done if done else "") +
+                            lef(mod, W, H, pins, dirs))
         import hashlib
         j = dict(module=mod, lef=lp, source="S81-CORES 10-24 re-pin (cores/leaf/repin.py) of %s: same ports, "
                  "%gx%g, faces %s" % (src["lef"], W, H, {f: len(g) for f, g in spec["faces"].items()}
                                        if "faces" in spec else "kept"),
                  pinhash=hashlib.sha256(json.dumps(pins, sort_keys=True).encode()).hexdigest()[:12], pins=pins)
+        if done:
+            j["const_rename"] = done
         sys.path.insert(0, D)
         import drop_const_pins            # OWNER DECISION 8: constant pins are not plan pins
         drop_const_pins.drop(j, lp)

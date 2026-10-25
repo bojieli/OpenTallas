@@ -561,28 +561,29 @@
  },
  "r3_internal_stations": {
   "buses": {
-   "cbf_q00.na_i00": 2,
-   "cbf_q00.nb_i00": 3,
-   "cbf_q00.y_o00": 1,
-   "cbf_q00_s2.na_i00": 2,
-   "cbf_q00_s2.nb_i00": 3,
-   "cbf_q00_s2.y_o00": 1,
-   "cbf_q01.nb_i12": 2,
-   "cbf_q01.y_o12": 1,
-   "cbf_q01_s2.nb_i12": 2,
-   "cbf_q01_s2.y_o12": 1,
-   "cbf_q11.na_i22": 1,
-   "cbf_q11.nb_i22": 1,
-   "cbn_q00.na_i00": 2,
-   "cbn_q00.nb_i00": 3,
-   "cbn_q00.y_o00": 1,
-   "cbn_q01.nb_i12": 2,
-   "cbn_q01.y_o12": 1,
-   "cbn_q11.na_i22": 1,
-   "cbn_q11.nb_i22": 1
+   "cbf_q00.na_i00": 4,
+   "cbf_q00.nb_i00": 7,
+   "cbf_q00.y_o00": 3,
+   "cbf_q00_s2.na_i00": 4,
+   "cbf_q00_s2.nb_i00": 7,
+   "cbf_q00_s2.y_o00": 3,
+   "cbf_q01.nb_i12": 4,
+   "cbf_q01.y_o12": 2,
+   "cbf_q01_s2.nb_i12": 4,
+   "cbf_q01_s2.y_o12": 2,
+   "cbf_q11.na_i22": 2,
+   "cbf_q11.nb_i22": 2,
+   "cbn_q00.na_i00": 4,
+   "cbn_q00.nb_i00": 7,
+   "cbn_q00.y_o00": 3,
+   "cbn_q01.nb_i12": 4,
+   "cbn_q01.y_o12": 2,
+   "cbn_q11.na_i22": 2,
+   "cbn_q11.nb_i22": 2,
+   "cbx_q10.y_o21": 1
   },
   "lanes": 288,
-  "stations": 31
+  "stations": 69
  },
  "internal_bits_absorbed": {
   "bc00": 24768,
@@ -771,7 +772,7 @@
    "module": "qfd_coll_static_face",
    "origin_um": [
     8.64,
-    8.64
+    10.8
    ],
    "outline_um": [
     518.4,
@@ -854,19 +855,19 @@
   "insertion_tol_ps": 40,
   "neighbour_skew_ps": 80,
   "taps_per_core": {
-   "nk": 38,
-   "nl": 37
+   "nk": 42,
+   "nl": 41
   },
   "drops_per_quad": {
-   "cbf_q00": 152,
-   "cbf_q00_s2": 152,
-   "cbf_q01": 152,
-   "cbf_q01_s2": 152,
-   "cbf_q11": 152,
-   "cbn_q00": 152,
-   "cbn_q01": 152,
-   "cbn_q11": 152,
-   "cbx_q10": 151
+   "cbf_q00": 168,
+   "cbf_q00_s2": 168,
+   "cbf_q01": 168,
+   "cbf_q01_s2": 168,
+   "cbf_q11": 168,
+   "cbn_q00": 168,
+   "cbn_q01": 168,
+   "cbn_q11": 168,
+   "cbx_q10": 167
   }
  },
  "leaf_params": {

@@ -22,38 +22,48 @@ def renames(module):
 
 
 def drop(j, lef_stub=None):
-    """remove the listed pins of j['module'] from the table dict j (in place) and apply its 'rename' map (packed buses:
-    old bit name -> new bit name, same position; once per table, marked j['const_rename']); returns the number of pins
-    removed + renamed.  lef_stub: a generated stub LEF (repin _lfp) whose PIN blocks are removed / renamed as well."""
+    """remove the listed pins of j['module'] from the table dict j (in place) and apply its 'rename' map (packed /
+    narrowed buses: old bit name -> new bit name, same position).  Renames apply in map order, each once: the table
+    records how many it has applied (j['const_rename'] = N, the first N entries of the module's map; the LEF stub's
+    marker line '# OT const_rename N' likewise, a bare marker = the table's count before this call), so entries
+    appended to the map later (a second narrowing of the same module) apply on the next run.  Returns the number of
+    pins removed + renamed.  lef_stub: a generated stub LEF (repin _lfp) whose PIN blocks are removed / renamed too."""
     gone = dropped(j["module"])
-    ren = renames(j["module"])
-    if not gone and not ren:
+    items = list(renames(j["module"]).items())
+    if not gone and not items:
         return 0
-    if ren and j.get("const_rename"):
-        gone = gone - set(ren.values())    # renamed already: a new name may equal a dropped old name (packed bus)
+    done0 = int(j.get("const_rename") or 0)
+    applied, todo = dict(items[:done0]), dict(items[done0:])
+    gone = gone - set(applied.values())    # renamed already: a new name may equal a dropped old name (packed bus)
     n0 = len(j["pins"])
     j["pins"] = [p for p in j["pins"] if p["name"] not in gone]
     n = n0 - len(j["pins"])
-    if ren and not j.get("const_rename"):
-        assert not (set(ren.values()) - set(ren)) & {p["name"] for p in j["pins"]}, "rename target collides with a kept pin"
+    if todo:
+        assert not (set(todo.values()) - set(todo)) & {p["name"] for p in j["pins"]}, "rename target collides with a kept pin"
         for p in j["pins"]:
-            if p["name"] in ren:
-                p["name"] = ren[p["name"]]
+            if p["name"] in todo:
+                p["name"] = todo[p["name"]]
                 n += 1
-        j["const_rename"] = len(ren)
+        j["const_rename"] = len(items)
     if n:
         j["pinhash"] = hashlib.sha256(json.dumps(j["pins"], sort_keys=True).encode()).hexdigest()[:12]
         if "OWNER DECISION 8" not in j["source"]:
             j["source"] += "; OWNER DECISION 8 10-24: %d constant pins dropped (inputs/const_pins_dropped.json)" % n
     if lef_stub and os.path.exists(lef_stub):
         s = open(lef_stub).read()
-        if ren and "# OT const_rename" in s:
-            gone = gone - set(ren.values())
-        for nm in gone:
+        m = re.match(r"# OT const_rename(?: (\d+))?[^\n]*\n", s)
+        ldone = (int(m.group(1)) if m.group(1) else done0) if m else 0
+        lapplied, ltodo = dict(items[:ldone]), dict(items[ldone:])
+        lgone = gone | dropped(j["module"])
+        lgone = lgone - set(lapplied.values())
+        for nm in lgone:
             s = re.sub(r"  PIN %s\n.*?  END %s\n" % (re.escape(nm), re.escape(nm)), "", s, flags=re.S)
-        if ren and "# OT const_rename" not in s:
-            s = re.sub(r"^(  (?:PIN|END) )(\S+)$", lambda m: m.group(1) + ren.get(m.group(2), m.group(2)), s, flags=re.M)
-            s = "# OT const_rename: packed buses renamed (physical/die_plan/s81/inputs/const_pins_dropped.json)\n" + s
+        if ltodo:
+            s = re.sub(r"^(  (?:PIN|END) )(\S+)$", lambda mm: mm.group(1) + ltodo.get(mm.group(2), mm.group(2)), s, flags=re.M)
+        if items:
+            if m:
+                s = s[m.end():]
+            s = "# OT const_rename %d: packed / narrowed buses renamed (physical/die_plan/s81/inputs/const_pins_dropped.json)\n" % len(items) + s
         open(lef_stub, "w").write(s)
     return n
 

@@ -189,7 +189,7 @@ def _num(x, what):
 
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
-         io_floor_ps=None, port_latency_ps=None):
+         io_floor_ps=None, port_latency_ps=None, port_period_mult=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).  -> [errors]"""
@@ -236,9 +236,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 if "-waveform" in opts:
                     err.append(f"relaxation: create_clock {nm} -waveform (only the default 50% waveform is allowed)")
                 per = _num(opts["-period"], "period") * u
-                if abs(per - period_ps) > EPS:
+                srcp = _eval_obj(ctx, obj)[1] if obj is not None else []
+                mult = {int((port_period_mult or {}).get(p, 1)) for p in srcp} or {1}
+                if len(mult) > 1:
+                    err.append(f"clocks: clock {nm} mixes ports of different plan periods")
+                if abs(per - period_ps * max(mult)) > EPS:
                     err.append(f"units/relaxation: clock {nm} period {opts['-period']} x {u:g} ps = {per:g} ps, "
-                               f"plan period {period_ps:g} ps")
+                               f"plan period {period_ps * max(mult):g} ps")
                 if nm in ctx.clocks:
                     err.append(f"clocks: {nm} created twice")
                 src = []
@@ -409,6 +413,8 @@ def kit_context(P, tn):
     import gen_rtl
     t = P.types[tn]
     cks = [n for n, _, _ in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)]
+    edge = {n: m for n, _x, _y, m in gen_phys.edge_clock_pins(P, tn)}
+    cks += list(edge)
     plat = {n: -float(early) for n, _i, _p, early, _s in gen_phys.core_tap_rows(P, tn)}
     ins, outs, floor = ["arst_n"], [], {}
     per = float(P.die["period_ps"])
@@ -429,7 +435,8 @@ def kit_context(P, tn):
     return dict(period_ps=per, insertion_ps=float(P.clock["insertion_ps"]),
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
-                time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat)
+                time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
+                port_period_mult=edge)
 
 
 def lint_kit_files(kitdir, liberties=()):

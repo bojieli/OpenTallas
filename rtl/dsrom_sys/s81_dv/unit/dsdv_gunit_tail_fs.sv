@@ -26,7 +26,9 @@ module dsdv_gunit_tail_fs #(
     // (ot_s81sl_ve_qmul / _qadd: bit- and cycle-exact to the f12 LAT 5 / 4 units, valid-only reset) fed by two kept
     // same-edge operand copies; payload write gates per byte; one-hot Sinkhorn shifters (ot_hdc_sinkhorn_fs OH).
     // 0 edges added; 0 = the reviewed L5 ro3 source.
-    parameter integer NAT32 = 0
+    parameter integer NAT32 = 0,
+    // S81-KITS-RTLC 10-24: seam stages of the L5f round trip (operand out .. result in); L5 lands ye/yd in a pin register (+1)
+    parameter integer XS = 3
 ) (
     input  wire          clk, rst_n,
     input  wire [7:0]    rst_v,
@@ -40,7 +42,6 @@ module dsdv_gunit_tail_fs #(
     output wire          xe_v, output wire [31:0] xe_x, input wire [3:0] xe_vo, input wire [31:0] xe_y, input wire xe_f,
     output wire          xd_v, output wire [31:0] xd_b, input wire [3:0] xd_vo, input wire [31:0] xd_y, input wire xd_f
 );
-    localparam integer XS = 3;
     localparam integer LM = 5, LA = 4, LE = 7 * LM + 6 * LA + 2 * 6 + 5 + XS, LD = 21 + XS;
     localparam integer LMe = LM + 1, LAe = LA + 1, LEe = LE + 1, LDe = LD + 1;
     localparam integer P1 = 1, P2 = P1 + 24 + LMe, MAX = P2 + 24 + LAe, P3 = MAX + 2, P4 = P3 + 16 + LAe;

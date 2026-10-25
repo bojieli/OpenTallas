@@ -60,7 +60,7 @@ L.append("initial begin")
 L.append(f"  rs_ = 32'h1 ^ {a.seed} * 32'h9e3779b9; for (n = 0; n < 4; n = n + 1) j = r32();")
 for p, w in rsts:
     L.append(f"  {p} = 0;")
-L.append("  repeat (4) @(negedge clk);")
+L.append(f"  repeat (4) @(negedge {a.clk});")
 for p, w in rsts:
     L.append(f"  {p} = {{{w}{{1'b1}}}};")
 L.append(f"  for (n = 0; n < {a.cycles}; n = n + 1) begin")
@@ -73,11 +73,11 @@ for p, w in ins:
     L.append(f"    if {idle} {p} = 0;")
 for p, w in rsts:
     L.append(f"    {p} = (n % 1009 < 2) ? {{{w}{{1'b0}}}} : {{{w}{{1'b1}}}};")
-L.append("    @(posedge clk); #0.1; ncmp = ncmp + 1;")
+L.append(f"    @(posedge {a.clk}); #0.1; ncmp = ncmp + 1;")
 for p, w in outs:
     L.append(f"    if (d_{p} !== r_{p}) begin err = err + 1; if (err < 8) $display(\"LOCKSTEP MISMATCH {p} cycle %0d dut %h ref %h\", n, d_{p}, r_{p}); end")
     L.append(f"    if (n > 0 && d_{p} !== last_{p}) act_{p} = act_{p} + 1; last_{p} = d_{p};")
-L.append("    @(negedge clk);")
+L.append(f"    @(negedge {a.clk});")
 L.append("  end")
 acts = " ".join(f"{p}=%0d" for p, _ in outs)
 L.append(f"  $display(\"LOCKSTEP_ACT {acts}\", {', '.join('act_' + p for p, _ in outs)});")
@@ -87,11 +87,19 @@ L.append("  $finish;\nend\nendmodule")
 (out / "tb.sv").write_text("\n".join(L) + "\n")
 defs = [f"-D{d}" for d in a.define]
 srcs = [str(ROOT / s) for s in a.srcs] + [str(ROOT / a.file), str(out / "ref.sv"), str(out / "tb.sv")]
-b = subprocess.run(["iverilog", "-g2012", *defs, "-s", "tb_lockstep", "-o", str(out / "sim"), *srcs], capture_output=True, text=True)
+import os
+if os.environ.get("SIM", "iverilog") == "verilator":   # S81-KITS-RTLC 10-24: large cores (iverilog elaboration > 50 min)
+    b = subprocess.run([os.environ.get("VERILATOR", "verilator"), "--binary", "--timing", "-j", os.environ.get("VL_JOBS", "8"),
+                        "-Wno-fatal", "-Wno-lint", "-Wno-style", "-O1", *defs, "--top-module", "tb_lockstep",
+                        "-Mdir", str(out / "obj"), *srcs], capture_output=True, text=True)
+    run = [str(out / "obj" / "Vtb_lockstep")]
+else:
+    b = subprocess.run(["iverilog", "-g2012", *defs, "-s", "tb_lockstep", "-o", str(out / "sim"), *srcs], capture_output=True, text=True)
+    run = ["vvp", "-n", str(out / "sim")]
 (out / "build.log").write_text(b.stdout + b.stderr)
 if b.returncode:
     print("BUILD_FAILED"); print(b.stderr[-2000:]); sys.exit(3)
-r = subprocess.run(["vvp", "-n", str(out / "sim")], capture_output=True, text=True)
+r = subprocess.run(run, capture_output=True, text=True)
 (out / "run.log").write_text(r.stdout + r.stderr)
 for ln in r.stdout.splitlines():
     if ln.startswith(("LOCKSTEP", "PASS", "FAIL")):

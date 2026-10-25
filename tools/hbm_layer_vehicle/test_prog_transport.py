@@ -17,6 +17,27 @@ def chain(n_half, k, rly):
     return inst, hops
 
 
+def test_corrective_pad_trace(tmp_path):
+    import coll_transport as CT
+    source = """ot_codex_prog_r8_pad #(.W(8),.D(5)) pad_codex_r8_0 (.clk(clk),.rst_n(rst_n),.a(pgp_SW__command[7:0]),.y(codex_r8_0));
+consumer su_SW0 (
+ .control(codex_r8_0)
+);
+"""
+    path = tmp_path / "die.v"
+    path.write_text(source)
+    PT.load_pads(path)
+    inst = CT.parse_instances(path, {"su_SW0"})
+    lane = PT.lane(inst, "su_SW0", "control")
+    assert lane["latency_edges"] == 5
+    assert lane["root"] == "pgp_SW__command[7:0]"
+    assert lane["notes"] == []
+    # A dropped stage must be observable to the native-bind gate.
+    path.write_text(source.replace(".D(5)", ".D(4)"))
+    mutant = PT.lane(CT.parse_instances(path, {"su_SW0"}), "su_SW0", "control")
+    assert mutant["latency_edges"] != lane["latency_edges"]
+
+
 def test():
     # r18h5 pgp_SW.start: LAND n79 K1 + 13 relays = 40 + 1 + 1 + 13 = 55; cfg_we: LAND n54 K4 = 27 + 1 + 1 = 29
     assert PT.lane_latency(*chain(79, 1, 13))[0] == 55

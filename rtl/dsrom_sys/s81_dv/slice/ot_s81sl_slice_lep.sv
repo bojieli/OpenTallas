@@ -101,6 +101,8 @@
 // OT_S81SL_LEP_MUT_STALEHD (head register loads the old pointer's row: stale head after a pop / write).
 // MU-S81-2/HOSTEP (10-19): parameter-free host-plane MU top ot_s81sl_lep_mu_h (s_7N); mutant OT_S81SL_LEP_MUT_HSTAMP
 // (a THOST / TKD frame sent while a TX tag window is open gets the window's tag stamped).
+// S81-XDIE (10-24): parameter-free host-plane copy-A/B top ot_s81sl_lep_mu_hab (s_7N with the reserve pair B); mutant
+// OT_S81SL_LEP_MUT_HACCB (a HOST / KS frame accepted from pair B; bench tb_s81sl_lep_hab).
 module ot_s81sl_lep_core #(
     parameter integer DT = 512,        // TX landing FIFO depth per lane (flits; SRAM macro depth)
     parameter integer DR = 8,          // RX landing FIFO depth per lane (flits, flops) = the lane sender's CRED 8
@@ -802,7 +804,7 @@ module ot_s81sl_lep_core #(
         end
       end else begin:g_shared assign ring_meta_regions[4*rh+:4]={4{rhd[rh*(H+1)]}};end
     end endgenerate
-    wire [3:0] active_ring_flags=rpb?ring_meta_regions[2*4+:4]:ring_meta_regions[0+:4];
+    wire [3:0] active_ring_flags=rpb?ring_meta_regions[2*4+:4]:ring_meta_regions[0+:4]; // selrange-ok: ring_meta_regions[8+:4] exists at NL=4; NL=2/AB_EN=0 ties relp[1]=0, so rpb=0 selects low flags; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3
     assign li0_r = lir[0]; assign li1_r = lir[1];
     generate if (NL == 4) begin : g_rxb
         assign li2_r = lir[2]; assign li3_r = lir[3];
@@ -827,6 +829,8 @@ module ot_s81sl_lep_core #(
     // host-plane frame types this endpoint accepts (HOST 1, KS 2) -- none at HOST_EN 0, never on pair B
 `ifdef OT_S81SL_LEP_MUT_NHACC
     wire hacc = !h0[0] && (h0[3:1] == 3'd1 || h0[3:1] == 3'd2);        // MUTANT: accepted even at HOST_EN 0
+`elsif OT_S81SL_LEP_MUT_HACCB
+    wire hacc = (HOST_EN != 0) && !active_ring_flags[1] && (h0[3:1] == 3'd1 || h0[3:1] == 3'd2);   // MUTANT: also from pair B
 `else
     wire hacc = (HOST_EN != 0) && !rpb && !active_ring_flags[1] && (h0[3:1] == 3'd1 || h0[3:1] == 3'd2);
 `endif
@@ -1480,6 +1484,68 @@ module ot_s81sl_lep_mu_h #(
         .lo2_v(), .lo2_r(1'b0), .lo2_d(), .lo3_v(), .lo3_r(1'b0), .lo3_d(),
         .li2_v(1'b0), .li2_r(), .li2_d(553'd0), .li3_v(1'b0), .li3_r(), .li3_d(553'd0), .rxvb(),
         .l2_f(3'd0), .l3_f(3'd0), .fault(fault));
+endmodule
+
+// S81-XDIE (2026-10-24, RELEASE_RACK 2.1 reserve 6th pair on EVERY layer die): hardened master of the HOST-PLANE copy-A/B
+// endpoint (s_7N: host plane + pair B lk_EN2 / lk_EN3): MU_EN 1, AB_EN 1, HOST_EN 1.  Same core and cycles as
+// ot_s81sl_lep_mu #(.HOST_EN(1), .AB_EN(1)); the union of the ot_s81sl_lep_mu_h ports (host plane, l*_st) and the
+// ot_s81sl_lep_mu_ab ports (pair B lo2 / lo3, li2 / li3, rxvb, l2_f / l3_f); no tied pad, no constant output.  The core
+// already keeps the two planes apart: host frames (THOST / TKD) are pushed only while no ring beat is (push = rov || hp_go
+// || kp_go, pair B select bsel = rov && window && ab), so they always leave on pair A; HOST / KS frames are accepted only
+// from pair A (hacc needs !rpb), a host frame on pair B is a protocol fault like any unknown frame type.  Pair B carries
+// ring beats of user >= 1 windows only (user 0 stays on A).  Bench: tb_s81sl_lep_mu +define+TB_P_HAB (die P = this top,
+// pair-B copy / return phases + latency-user identity) and tb_s81sl_lep_host +define+TB_HOST_HAB (host plane through this
+// top with pair B carrying traffic at the same time).
+module ot_s81sl_lep_mu_hab #(
+    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire [1103:0]   ro,
+    output wire [1103:0]   ri,
+    output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,
+    output wire            lo1_v, input wire lo1_r, output wire [552:0] lo1_d,
+    input  wire            li0_v, output wire li0_r, input wire [552:0] li0_d,
+    input  wire            li1_v, output wire li1_r, input wire [552:0] li1_d,
+    output wire [1:0]      rxv,
+    input  wire            sl_f,
+    input  wire [2:0]      l0_f,
+    input  wire [2:0]      l1_f,
+    input  wire [1:0]      l0_st,
+    input  wire [1:0]      l1_st,
+    input  wire [76:0]     t_host,
+    input  wire [53:0]     t_kd,
+    output wire [514:0]    f_host,
+    output wire [3:0]      f_lf,
+    output wire [52:0]     f_ks,
+    input  wire [33:0]     mu_c,
+    output wire [31:0]     mu_rt,
+    output wire            ml_wv,
+    output wire [1103:0]   ml_wd,
+    input  wire            ml_rv,
+    input  wire [1103:0]   ml_rd,
+    input  wire            ml_f,
+    output wire            lo2_v, input wire lo2_r, output wire [552:0] lo2_d,
+    output wire            lo3_v, input wire lo3_r, output wire [552:0] lo3_d,
+    input  wire            li2_v, output wire li2_r, input wire [552:0] li2_d,
+    input  wire            li3_v, output wire li3_r, input wire [552:0] li3_d,
+    output wire [1:0]      rxvb,
+    input  wire [2:0]      l2_f,
+    input  wire [2:0]      l3_f,
+    output wire            fault
+);
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(1), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB),
+        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32)) u (
+        .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
+        .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
+        .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
+        .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(l0_st), .l1_st(l1_st),
+        .t_host(t_host), .t_kd(t_kd), .f_host(f_host), .f_lf(f_lf), .f_ks(f_ks),
+        .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(ml_wv), .ml_wd(ml_wd), .ml_rv(ml_rv), .ml_rd(ml_rd), .ml_f(ml_f),
+        .lo2_v(lo2_v), .lo2_r(lo2_r), .lo2_d(lo2_d), .lo3_v(lo3_v), .lo3_r(lo3_r), .lo3_d(lo3_d),
+        .li2_v(li2_v), .li2_r(li2_r), .li2_d(li2_d), .li3_v(li3_v), .li3_r(li3_r), .li3_d(li3_d), .rxvb(rxvb),
+        .l2_f(l2_f), .l3_f(l3_f), .fault(fault));
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------

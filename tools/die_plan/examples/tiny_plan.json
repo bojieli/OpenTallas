@@ -10,7 +10,7 @@
    864.0
   ],
   "period_ps": 833,
-  "reach_um": 1000.0,
+  "reach_um": 405.0,
   "rep_um": 450.0,
   "grid_um": 8.64,
   "layer_budget": {
@@ -21,12 +21,12 @@
    ],
    "die_use": [
     "clock_spine",
-    "pg",
-    "ft_reserved"
+    "reset",
+    "pg"
    ],
    "cut_avail": {
-    "M8": 0.6,
-    "M9": 0.6
+    "M8": 0.0,
+    "M9": 0.0
    }
   },
   "pg": {
@@ -70,7 +70,8 @@
     "ports": [
      "din"
     ],
-    "host": true, "note": "tool example: host input bumps"
+    "host": true,
+    "note": "tool example: host input bumps"
    },
    {
     "name": "io_e",
@@ -181,14 +182,14 @@
      "in_face": "W",
      "out_face": "E",
      "width": 64,
-     "stations": 1
+     "stations": 3
     },
     {
      "name": "fr",
      "in_face": "E",
      "out_face": "W",
      "width": 16,
-     "stations": 1
+     "stations": 3
     }
    ],
    "clock": {
@@ -653,7 +654,7 @@
   "pin_track_max": 0.6,
   "cut_ratio_max": 0.6,
   "cut_step_um": 250,
-  "ft_station_max_um": 900
+  "ft_station_max_um": 405
  },
  "latency": {
   "lanes": {
@@ -663,22 +664,28 @@
     "boundary": 1,
     "faces": 1,
     "fixed": 0,
+    "natural": 1,
+    "pad": 0,
     "param": "LAT_DIN"
    },
    "x": {
-    "cycles": 4,
-    "stations": 2,
+    "cycles": 8,
+    "stations": 6,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
+    "natural": 8,
+    "pad": 0,
     "param": "LAT_X"
    },
    "r": {
-    "cycles": 5,
-    "stations": 2,
+    "cycles": 9,
+    "stations": 6,
     "boundary": 2,
     "faces": 3,
     "fixed": 1,
+    "natural": 9,
+    "pad": 0,
     "param": "LAT_R"
    },
    "cfg01": {
@@ -687,6 +694,8 @@
     "boundary": 2,
     "faces": 1,
     "fixed": 0,
+    "natural": 2,
+    "pad": 0,
     "param": "LAT_CFG01"
    },
    "cfg12": {
@@ -695,6 +704,8 @@
     "boundary": 2,
     "faces": 1,
     "fixed": 0,
+    "natural": 2,
+    "pad": 0,
     "param": "LAT_CFG12"
    },
    "cfg23": {
@@ -703,6 +714,8 @@
     "boundary": 2,
     "faces": 1,
     "fixed": 0,
+    "natural": 2,
+    "pad": 0,
     "param": "LAT_CFG23"
    },
    "dout": {
@@ -711,6 +724,8 @@
     "boundary": 1,
     "faces": 1,
     "fixed": 0,
+    "natural": 1,
+    "pad": 0,
     "param": "LAT_DOUT"
    }
   }

@@ -1,0 +1,233 @@
+{
+ "type": "dsdv_slice_c1x_C__t1",
+ "outline": [
+  1442.88,
+  1226.88
+ ],
+ "bundles": [
+  {
+   "core": "u_eg",
+   "port": "eps",
+   "bits": 32,
+   "faces": {
+    "W": 32
+   },
+   "partner": "core:u_c.u_xr",
+   "manhattan_um": 175,
+   "cos": 0.976,
+   "a": [
+    717,
+    168
+   ],
+   "b": [
+    676,
+    35
+   ]
+  },
+  {
+   "core": "u_eg",
+   "port": "g",
+   "bits": 32,
+   "faces": {
+    "W": 32
+   },
+   "partner": "core:u_c.u_xr",
+   "manhattan_um": 94,
+   "cos": 0.976,
+   "a": [
+    717,
+    87
+   ],
+   "b": [
+    676,
+    35
+   ]
+  },
+  {
+   "core": "u_eg",
+   "port": "scale",
+   "bits": 32,
+   "faces": {
+    "W": 32
+   },
+   "partner": "core:u_c.u_xr",
+   "manhattan_um": 256,
+   "cos": 0.976,
+   "a": [
+    717,
+    249
+   ],
+   "b": [
+    676,
+    35
+   ]
+  },
+  {
+   "core": "u_xr",
+   "port": "eg_d",
+   "bits": 32,
+   "faces": {
+    "S": 32
+   },
+   "partner": "core:u_c.u_eg",
+   "manhattan_um": 156,
+   "cos": 0.22,
+   "a": [
+    691,
+    35
+   ],
+   "b": [
+    717,
+    164
+   ]
+  },
+  {
+   "core": "u_xr",
+   "port": "x_eps",
+   "bits": 32,
+   "faces": {
+    "S": 32
+   },
+   "partner": "core:u_c.u_eg",
+   "manhattan_um": 193,
+   "cos": 0.22,
+   "a": [
+    654,
+    35
+   ],
+   "b": [
+    717,
+    164
+   ]
+  },
+  {
+   "core": "u_xr",
+   "port": "x_scale",
+   "bits": 32,
+   "faces": {
+    "S": 32
+   },
+   "partner": "core:u_c.u_eg",
+   "manhattan_um": 166,
+   "cos": 0.22,
+   "a": [
+    681,
+    35
+   ],
+   "b": [
+    717,
+    164
+   ]
+  },
+  {
+   "core": "u_eg",
+   "port": "g_c",
+   "bits": 2,
+   "faces": {
+    "W": 2
+   },
+   "partner": "core:u_c.u_xr",
+   "manhattan_um": 51,
+   "cos": 0.976,
+   "a": [
+    717,
+    44
+   ],
+   "b": [
+    676,
+    35
+   ]
+  },
+  {
+   "core": "u_xr",
+   "port": "eg_c",
+   "bits": 2,
+   "faces": {
+    "S": 2
+   },
+   "partner": "core:u_c.u_eg",
+   "manhattan_um": 159,
+   "cos": 0.22,
+   "a": [
+    687,
+    35
+   ],
+   "b": [
+    717,
+    164
+   ]
+  },
+  {
+   "core": "u_eg",
+   "port": "g_v",
+   "bits": 1,
+   "faces": {
+    "W": 1
+   },
+   "partner": "core:u_c.u_xr",
+   "manhattan_um": 47,
+   "cos": 0.976,
+   "a": [
+    717,
+    40
+   ],
+   "b": [
+    676,
+    35
+   ]
+  },
+  {
+   "core": "u_xr",
+   "port": "eg_v",
+   "bits": 1,
+   "faces": {
+    "S": 1
+   },
+   "partner": "core:u_c.u_eg",
+   "manhattan_um": 161,
+   "cos": 0.22,
+   "a": [
+    685,
+    36
+   ],
+   "b": [
+    717,
+    164
+   ]
+  }
+ ],
+ "channels": [
+  {
+   "between": [
+    "u_cap",
+    "u_xr"
+   ],
+   "kind": "vertical",
+   "gap_um": 17.28,
+   "tracks_V": 666,
+   "span_um": 395
+  },
+  {
+   "between": [
+    "u_xr",
+    "u_eg"
+   ],
+   "kind": "vertical",
+   "gap_um": 17.28,
+   "tracks_V": 665,
+   "span_um": 259
+  },
+  {
+   "between": [
+    "u_eg",
+    "u_xf"
+   ],
+   "kind": "vertical",
+   "gap_um": 17.28,
+   "tracks_V": 666,
+   "span_um": 181
+  }
+ ],
+ "worst_manhattan_core_core": 256,
+ "min_cos": 0.22
+}

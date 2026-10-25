@@ -88,12 +88,16 @@ module dsdv_bk_vin #(
             end
         end
     end
-    reg [4*515-1:0] lq;                   // lane registers; bit 515*l+513 (live) comes from u_live[l] instead
+    reg [4*515-1:0] lq;                   // lane registers; bit 515*l+513 (live) comes from lv_q[l] instead
+    // S81-KITS-RTLC 10-25: one KEPT live chain per lane (the 4 identical chains were merged into one flop that fed all
+    // four ln*[513] pins); the data bits load the word and are 0 when no word arrives (no hold self-loop at the pin)
+    (* keep = "true" *) reg [3:0] lv_0, lv_q;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin lv_0 <= 4'd0; lv_q <= 4'd0; end
+        else begin lv_0 <= 4'hf; lv_q <= lv_0; end
     genvar gl;
     generate for (gl = 0; gl < 4; gl = gl + 1) begin : g_live
-        wire lv;
-        dsdv_bk_live u_live (.clk(clk), .rst_n(rst_n), .q(lv));
-        assign lanes[515 * gl +: 515] = {lq[515 * gl + 514], lv, lq[515 * gl + 1 +: 512], lq[515 * gl]};
+        assign lanes[515 * gl +: 515] = {lq[515 * gl + 514], lv_q[gl], lq[515 * gl + 1 +: 512], lq[515 * gl]};
     end endgenerate
 `ifdef OT_DSDV_BK_TRACE
     integer tc = 0;
@@ -120,7 +124,11 @@ module dsdv_bk_vin #(
         dr_n <= cn ? dl_n[39:32] : dl_s[39:32];
         dr_d <= cn ? dl_n[47:40] : dl_s[47:40];
         for (l = 0; l < 4; l = l + 1) begin
-            if (wv[l]) lq[515 * l + 1 +: 512] <= wd[l];
+`ifdef OT_RTLC_MUT_BKLN   // bench mutant: lane 1 keeps its previous word on a new word
+            lq[515 * l + 1 +: 512] <= (wv[l] && l != 1) ? wd[l] : (l == 1 ? lq[515 * l + 1 +: 512] : 512'd0);
+`else
+            lq[515 * l + 1 +: 512] <= wv[l] ? wd[l] : 512'd0;     // wd[l] is 0 when !wv[l] (comb default)
+`endif
             if ((dn && dl_n[5:4] == l && !dl_n[6]) || (!(dn && dl_n[5:4] == l) && ds && dl_s[5:4] == l && !dl_s[6]))
                 hd[l] <= (dn && dl_n[5:4] == l) ? dl_n[275:20] : dl_s[275:20];
         end
