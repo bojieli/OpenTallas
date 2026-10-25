@@ -179,7 +179,12 @@ def lift_module(text,module,width,edges,port='ot_core_rst_n',enable='OT_HIER_RST
         receipt.append(dict(edge, source_sites=len(matches)))
     # No edits to child bodies, generate syntax, arithmetic, parameter expressions,
     # reset registers, or process blocks. Splices retain all untouched source bytes.
-    for a,b,replacement in sorted(edits,key=lambda e:e[:2],reverse=True):
+    unique={}
+    for a,b,replacement in edits:
+        if (a,b) in unique and unique[(a,b)]!=replacement:
+            raise LiftError('conditional source views disagree on a shared edit')
+        unique[(a,b)]=replacement
+    for (a,b),replacement in sorted(unique.items(),reverse=True):
         text=text[:a]+replacement+text[b:]
     return text,dict(module=module,port=port,width=str(width),enable=enable,default=0,
                      added_sequential_edges=0,edges=receipt,

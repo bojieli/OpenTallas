@@ -110,3 +110,21 @@ def test_conditional_alternative_opens_share_connection_close(tmp_path):
         for defines in ([],['-DHARD']):
             p=subprocess.run(['iverilog','-g2012','-s','bank',*defines,'-o',str(tmp_path/'sim'),str(src)],capture_output=True,text=True)
             assert p.returncode==0,p.stderr
+
+
+def test_conditional_shared_reset_connection_is_edited_once(tmp_path):
+    alt=BANK.replace(' core #(.ID(BASE+j)) u_core(.clk(clk),.rst_n(rst_n),.d(d),.q(q[j*8+:8]));',
+                    '''`ifndef HARD
+ core #(.ID(BASE+j)) u_core(
+`else
+ core u_core(
+`endif
+ .clk(clk),.rst_n(rst_n),.d(d),.q(q[j*8+:8]));''')
+    new,rec=lift_module(CORE+alt,'bank','N',[dict(module='core',instance='u_core',kind='leaf',pin='rst_n',old='rst_n',source_role='external_distribution',expr='ot_core_rst_n[j]',expected=2)])
+    assert rec['edges'][0]['source_sites']==2
+    assert new.count('OT_HIER_RST ? (ot_core_rst_n[j])')==1
+    if shutil.which('iverilog'):
+        src=tmp_path/'shared.sv';src.write_text(new)
+        for defines in ([],['-DHARD']):
+            p=subprocess.run(['iverilog','-g2012','-s','bank',*defines,'-o',str(tmp_path/'sim'),str(src)],capture_output=True,text=True)
+            assert p.returncode==0,p.stderr
