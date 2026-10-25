@@ -1,0 +1,24 @@
+@HEAD@
+foreach pn {@PINS@} {
+  set p [get_pins $pn]; set n [get_nets -of_objects $p]
+  set drv [get_pins -quiet -of_objects $n -filter "direction==output"]
+  set ld [get_pins -quiet -of_objects $n -filter "direction==input"]
+  set dc ""; catch {set dc [get_property [get_cells -of_objects $drv] ref_name]}
+  set ii [[ord::get_db_block] findInst [get_full_name [get_cells -of_objects $p]]]
+  puts "NQ $pn net=[get_full_name $n] drv=[get_full_name $drv] drvcell=$dc fanout=[llength $ld] slew=[get_property $p slew_max]"
+  set dn [[ord::get_db_block] findNet [get_full_name $n]]
+  set xs {}; set ys {}
+  foreach it [$dn getITerms] { set b [[$it getInst] getBBox]; lappend xs [$b xMin]; lappend ys [$b yMin] }
+  puts "NQ_BBOX [expr {[tcl::mathfunc::min {*}$xs]/4000.0}] [expr {[tcl::mathfunc::min {*}$ys]/4000.0}] [expr {[tcl::mathfunc::max {*}$xs]/4000.0}] [expr {[tcl::mathfunc::max {*}$ys]/4000.0}]"
+  # walk back to the first non-buffer driver
+  set q $drv
+  for {set k 0} {$k < 12} {incr k} {
+    set c [get_cells -of_objects $q]; set rn [get_property $c ref_name]
+    if {![regexp {^(BUF|INV|HB)} $rn]} break
+    set ip [get_pins -of_objects $c -filter "direction==input"]; set nn [get_nets -of_objects $ip]
+    set q [get_pins -of_objects $nn -filter "direction==output"]
+    if {![llength $q]} { puts "NQ_SRC port [get_full_name $nn]"; break }
+  }
+  catch {puts "NQ_SRC [get_full_name $q] [get_property [get_cells -of_objects $q] ref_name]"}
+}
+exit

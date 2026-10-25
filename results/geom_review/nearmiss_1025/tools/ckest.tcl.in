@@ -1,0 +1,15 @@
+# GRT-estimate clock arrivals on 5_1_grt.odb (the basis CTS/GRT repair used), same libs/SDC as signoff
+@LIBS@
+read_db /base/5_1_grt.odb
+read_sdc /sdc/golden.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+set_routing_layers -signal @MINL@-@MAXL@ -clock @MINL@-@MAXL@
+read_guides /base/route.guide
+estimate_parasitics -global_routing
+set_propagated_clock [all_clocks]
+foreach c [all_clocks] { if {[llength [get_property $c sources]]} { set_clock_latency -source 0 $c } }
+set f [open /nm/ckest_[string tolower @C@].tsv w]
+foreach p [all_registers -clock_pins] { set a ""; catch {set a [get_property $p arrival_max_rise]}; puts $f "CK\t[get_full_name $p]\t$a" }
+close $f
+puts NM_CKEST_DONE
+exit

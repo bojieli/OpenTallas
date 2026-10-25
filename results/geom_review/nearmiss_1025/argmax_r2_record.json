@@ -1,0 +1,245 @@
+{
+ "run": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-face/argmax_route_base",
+ "die": "HBM",
+ "kit": "hbc_ot_hbm_argmax_static_sw_vm_r2",
+ "failing": "FF hold -18.23 / 758 ep; DRV slew 262 (TT)",
+ "cause": [
+  "480 hold = output pin registers (u_bout_cq/vm_rq/...) -> ports: vclk 250 at FF vs measured FF pin-register I 190.2 (TT 243.1)",
+  "274 hold = u_fcore shift chains dp[k]->dp[k+1], dval[k]->dval[k+1] (4-point, zero logic) with up to 11.5 ps skew on different leaves",
+  "slew 262: one flop u_fcore...u_native.bvalid[5] -> BUFx10 place2363 -> 113 loads (and more on sibling nets) = one valid bit broadcast to every lane",
+  "clock port in the SE corner (116,0): long single leaves to the N face; GRT-estimate minus RCX 13.9..26.9 ps",
+  "fill: logic in a central L, empty W/E thirds of the 118.8x118.8 outline (pin-limited N/S faces)"
+ ],
+ "fix": [
+  "bind I per corner (9.7/5e): FF vclk = 190 -> the 480 output holds become positive",
+  "replicate the bvalid/enable register per lane group (<=16-32 loads per copy, keep attribute)",
+  "F4 same-leaf clustering for shift chains",
+  "F5 clk at a data-face middle + balanced taps",
+  "F2 RC calibration"
+ ],
+ "metrics": {
+  "die_um": [
+   118.8,
+   118.8
+  ],
+  "cells": 27475,
+  "macros": 0,
+  "p2r_in": {
+   "n": 640,
+   "p90": 11.7,
+   "max": 15.4
+  },
+  "p2r_out": {
+   "n": 480,
+   "p90": 9.2,
+   "max": 13.7
+  },
+  "I_pinreg_tt": {
+   "n": 1120,
+   "mean": 243.1,
+   "min": 231.6,
+   "max": 253.5
+  },
+  "I_pinreg_ff": {
+   "n": 1120,
+   "mean": 190.2,
+   "min": 180.3,
+   "max": 199.4
+  },
+  "grt_minus_rcx_tt": {
+   "n": 7357,
+   "mean": 20.2,
+   "min": 13.9,
+   "max": 26.9
+  },
+  "I_pinreg_tt_grt_est": {
+   "n": 1120,
+   "mean": 262.4,
+   "min": 250.7,
+   "max": 270.9
+  },
+  "macro_if": {}
+ },
+ "hold_ff": {
+  "n": 758,
+  "wns": -18.234886,
+  "classes": [
+   [
+    "pinreg->port",
+    480
+   ],
+   [
+    "internal->internal",
+    274
+   ],
+   [
+    "pinreg->internal",
+    4
+   ]
+  ],
+  "skew_capture_minus_launch": {
+   "n": 278,
+   "mean": 2.6,
+   "min": -3.3,
+   "max": 11.5
+  },
+  "dist_um": {
+   "n": 758,
+   "mean": 5.8,
+   "min": 0.6,
+   "max": 13.9
+  },
+  "skew_rcx_minus_grtest_tt_basis": {
+   "n": 278,
+   "mean": 1.8,
+   "min": -2.2,
+   "max": 12.5
+  },
+  "worst": [
+   {
+    "sl": -18.23,
+    "sp": "u_bout_cq/q[20]$_DFF_P_/QN",
+    "ep": "cq[20]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 7.2,
+    "npts": 8
+   },
+   {
+    "sl": -18.13,
+    "sp": "u_bout_cq/q[11]$_DFF_P_/QN",
+    "ep": "cq[11]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 5.9,
+    "npts": 8
+   },
+   {
+    "sl": -18.09,
+    "sp": "u_bout_cq/q[91]$_DFF_P_/QN",
+    "ep": "cq[91]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 7.2,
+    "npts": 8
+   },
+   {
+    "sl": -17.81,
+    "sp": "u_bout_cq/q[195]$_DFF_P_/QN",
+    "ep": "cq[195]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 7.1,
+    "npts": 8
+   },
+   {
+    "sl": -17.79,
+    "sp": "u_bout_cq/q[12]$_DFF_P_/QN",
+    "ep": "cq[12]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 6.4,
+    "npts": 8
+   },
+   {
+    "sl": -17.7,
+    "sp": "u_bout_cq/q[79]$_DFF_P_/QN",
+    "ep": "cq[79]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 9.1,
+    "npts": 8
+   },
+   {
+    "sl": -17.58,
+    "sp": "u_bout_cq/q[218]$_DFF_P_/QN",
+    "ep": "cq[218]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 5.9,
+    "npts": 8
+   },
+   {
+    "sl": -17.55,
+    "sp": "u_bout_cq/q[14]$_DFF_P_/QN",
+    "ep": "cq[14]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 6.6,
+    "npts": 8
+   }
+  ],
+  "ep_groups": [
+   [
+    "cq",
+    338
+   ],
+   [
+    "u_fcore",
+    278
+   ],
+   [
+    "vm_rq",
+    136
+   ],
+   [
+    "cq_seq",
+    2
+   ],
+   [
+    "done",
+    1
+   ],
+   [
+    "fault",
+    1
+   ],
+   [
+    "busy",
+    1
+   ],
+   [
+    "nan_flag",
+    1
+   ]
+  ],
+  "sp_groups": [
+   [
+    "u_bout_cq",
+    338
+   ],
+   [
+    "u_fcore",
+    274
+   ],
+   [
+    "u_bout_vm_rq",
+    136
+   ],
+   [
+    "u_bin_cr",
+    4
+   ],
+   [
+    "u_bout_cq_seq",
+    2
+   ],
+   [
+    "u_bout_done",
+    1
+   ],
+   [
+    "u_bout_fault",
+    1
+   ],
+   [
+    "u_bout_busy",
+    1
+   ]
+  ]
+ },
+ "setup_tt": {
+  "n": 0
+ },
+ "render": "results/geom_review/nearmiss_1025/argmax_r2_review.png"
+}

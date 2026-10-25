@@ -1,0 +1,229 @@
+{
+ "run": "epyc2:/srv/opentallas-scratch2/claude/codex-s81-split/ot_s81sl_vn_b_k_m0",
+ "die": "S81",
+ "kit": "kr_ot_s81sl_vn_b_k",
+ "failing": "FF hold -7.44 / 29 ep; clock: pin-register spread 122/109 ps, I 425 TT",
+ "cause": [
+  "clock tree unbalanced: root on the W face (0,85), W half (input face + SRAM side) FF arrivals 340-400 ps, E half ~290 ps; pin-register spread 109-122 ps, TT I 424.7",
+  "SRAM u_h1 clock pin FF 267 ps vs its 785 interface registers mean 361 ps (-94 ps) and the interface registers sit 68-122 um from the macro (p50 68)",
+  "hold: pre_c[k] (top) -> u_g.pre_c[k] 72-92 um apart with 20-32 ps skew; other 25 internal transfers 1-14 um",
+  "GRT-estimate minus RCX -28.6..+57.2 ps (86 ps range): hold fixed at GRT reopens after route",
+  "W input face (786 pins, 5/um) carries hold-buffer columns up to 30 deep (GEOM 03:33 cond. 2: IO min-delay budget, not distance)",
+  "routing hot spot along the SRAM W edge and in a cross at x~65/y~55"
+ ],
+ "fix": [
+  "F5 structured clock: regional taps (W face band, SRAM region, E half) balanced to <=20 ps, macro clock pin on its own short leaf matched to its interface registers",
+  "F6 SRAM interface registers within ~20 um of the macro pins (placement region per macro edge; move/rotate u_h1 so its pins face the logic)",
+  "F3 SRAM clk pin + its wd/addr/rd registers one skew group",
+  "co-locate pre_c with u_g (one register next to the consumer) instead of a 90-um register-to-register hop",
+  "IO hold budget in the SDC per 9.8 instead of buffer columns",
+  "F2 RC calibration"
+ ],
+ "metrics": {
+  "die_um": [
+   356.4,
+   172.8
+  ],
+  "cells": 185198,
+  "macros": 1,
+  "p2r_in": {
+   "n": 598,
+   "p90": 13.4,
+   "max": 275.4
+  },
+  "p2r_out": {
+   "n": 359,
+   "p90": 9.3,
+   "max": 15.9
+  },
+  "I_pinreg_tt": {
+   "n": 957,
+   "mean": 424.7,
+   "min": 359.1,
+   "max": 481.1
+  },
+  "I_pinreg_ff": {
+   "n": 957,
+   "mean": 354.5,
+   "min": 292.0,
+   "max": 400.6
+  },
+  "grt_minus_rcx_tt": {
+   "n": 29948,
+   "mean": 40.9,
+   "min": -28.6,
+   "max": 57.2
+  },
+  "I_pinreg_tt_grt_est": {
+   "n": 957,
+   "mean": 458.6,
+   "min": 394.1,
+   "max": 515.1
+  },
+  "macro_if": {
+   "u_h1": {
+    "n": 785,
+    "dist_to_macro_p50": 67.7,
+    "p90": 104.7,
+    "max": 122.3,
+    "macro_clk_ff": 266.816742,
+    "if_reg_clk_ff_mean": 360.8,
+    "macro_minus_ifreg_ps": -94.0
+   }
+  }
+ },
+ "hold_ff": {
+  "n": 29,
+  "wns": -7.438161,
+  "classes": [
+   [
+    "internal->internal",
+    28
+   ],
+   [
+    "internal->pinreg",
+    1
+   ]
+  ],
+  "skew_capture_minus_launch": {
+   "n": 29,
+   "mean": 9.5,
+   "min": -5.1,
+   "max": 32.2
+  },
+  "dist_um": {
+   "n": 29,
+   "mean": 17.6,
+   "min": 1.1,
+   "max": 92.4
+  },
+  "skew_rcx_minus_grtest_tt_basis": {
+   "n": 29,
+   "mean": 2.1,
+   "min": -22.0,
+   "max": 8.7
+  },
+  "worst": [
+   {
+    "sl": -7.44,
+    "sp": "pre_c[22]$_DFFE_PP_/QN",
+    "ep": "u_g.pre_c[22]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 32.2,
+    "d": 90.6,
+    "npts": 4
+   },
+   {
+    "sl": -5.44,
+    "sp": "pre_c[4]$_DFFE_PP_/QN",
+    "ep": "u_g.pre_c[4]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 22.1,
+    "d": 71.9,
+    "npts": 4
+   },
+   {
+    "sl": -4.2,
+    "sp": "pre_c[13]$_DFFE_PP_/QN",
+    "ep": "u_g.pre_c[13]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 21.2,
+    "d": 92.4,
+    "npts": 4
+   },
+   {
+    "sl": -4.2,
+    "sp": "pre_c[6]$_DFFE_PP_/QN",
+    "ep": "u_g.pre_c[6]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 20.0,
+    "d": 74.8,
+    "npts": 4
+   },
+   {
+    "sl": -2.31,
+    "sp": "u_g.g_lane[0].u_mix.u_m2.g_l5.u.u.u_k3.g_r.r[1]$_DFF_P_/QN",
+    "ep": "u_g.g_lane[0].u_mix.u_m2.g_l5.u.u.u_k5.g_r.r[103]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 12.5,
+    "d": 13.6,
+    "npts": 2
+   },
+   {
+    "sl": -1.54,
+    "sp": "u_g.g_lane[3].u_mix.u_m0.g_l5.u.u.u_k6.g_r.r[26]$_DFF_P_/QN",
+    "ep": "u_g.g_lane[3].u_mix.u_m0.g_l5.u.u.y[7]$_DFF_PN0_/D",
+    "cls": "internal->internal",
+    "skew": 24.1,
+    "d": 8.6,
+    "npts": 6
+   },
+   {
+    "sl": -1.45,
+    "sp": "u_g.g_lane[2].u_mix.u_m0.g_l5.u.u.u_k6.g_r.r[45]$_DFF_P_/QN",
+    "ep": "u_g.g_lane[2].u_mix.u_m0.g_l5.u.u.err[0]$_DFF_PN0_/D",
+    "cls": "internal->internal",
+    "skew": 16.9,
+    "d": 34.7,
+    "npts": 4
+   },
+   {
+    "sl": -1.28,
+    "sp": "u_g.g_lane[1].u_mix.u_d3.g_line.line[333]$_DFF_P_/QN",
+    "ep": "u_g.g_lane[1].u_mix.u_d3.g_line.line[365]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": -1.6,
+    "d": 6.4,
+    "npts": 4
+   }
+  ],
+  "ep_groups": [
+   [
+    "u_g",
+    14
+   ],
+   [
+    "g_j",
+    9
+   ],
+   [
+    "u_add",
+    3
+   ],
+   [
+    "u_si",
+    2
+   ],
+   [
+    "y",
+    1
+   ]
+  ],
+  "sp_groups": [
+   [
+    "u_g",
+    11
+   ],
+   [
+    "g_j",
+    9
+   ],
+   [
+    "pre_c",
+    4
+   ],
+   [
+    "u_add",
+    3
+   ],
+   [
+    "u_si",
+    2
+   ]
+  ]
+ },
+ "setup_tt": {
+  "n": 0
+ },
+ "render": "results/geom_review/nearmiss_1025/vn_b_m0_review.png"
+}

@@ -1,0 +1,260 @@
+{
+ "run": "epyc2+intel2:/srv/opentallas-scratch2/claude/s81-kits/c3/ot_s81sl_vsw_c",
+ "die": "S81",
+ "kit": "kr_ot_s81sl_vsw_c",
+ "failing": "TT setup -11.44 / 3 ep; FF hold -10.28 / 22 ep; clock gate FAIL",
+ "cause": [
+  "setup: one N-face pin register v_q fans out to u_l.p_u[*] 116-120 um away through 38-40 points (valid/qualifier broadcast across the core)",
+  "hold: 22 internal u_l.u_exp transfers (g_keep4 r->y, d_n line[k]->line[k+9]) 1-27 um with 3-34 ps (mean 21) capture-late skew",
+  "clock port on the S edge (57,0) while the 325 input pin registers are on the N face 220 um away; N-face pin registers FF up to 275 ps vs core 223-240",
+  "two SRAMs u_la/u_lb E-centre: interface registers up to 109 um (u_la p90 105) and macro clock 9-18 ps earlier than its registers; routing hot spot along the macros' W pin edge (x~105)",
+  "GRT-estimate minus RCX 17.1..42.9 ps"
+ ],
+ "fix": [
+  "register v_q again next to u_l (replicated qualifier per consumer group) or move p_u logic to the N face",
+  "F5 regional taps (N face band, macro column, core) balanced <=20 ps, or clk at the N data face",
+  "F6 macro interface registers within ~20 um of the SRAM pins; rotate/mirror the SRAMs so their pins face the logic",
+  "F3/F4 skew groups for macro IF and same-leaf transfers",
+  "F2 RC calibration"
+ ],
+ "metrics": {
+  "die_um": [
+   224.64,
+   224.64
+  ],
+  "cells": 105313,
+  "macros": 2,
+  "p2r_in": {
+   "n": 325,
+   "p90": 8.5,
+   "max": 51.8
+  },
+  "p2r_out": {
+   "n": 66,
+   "p90": 6.3,
+   "max": 6.7
+  },
+  "I_pinreg_tt": {
+   "n": 391,
+   "mean": 301.3,
+   "min": 285.2,
+   "max": 330.3
+  },
+  "I_pinreg_ff": {
+   "n": 391,
+   "mean": 246.8,
+   "min": 230.4,
+   "max": 275.6
+  },
+  "grt_minus_rcx_tt": {
+   "n": 13099,
+   "mean": 36.5,
+   "min": 17.1,
+   "max": 42.9
+  },
+  "I_pinreg_tt_grt_est": {
+   "n": 391,
+   "mean": 336.5,
+   "min": 324.4,
+   "max": 360.9
+  },
+  "macro_if": {
+   "u_l.u_la.g_m[0].u_m": {
+    "n": 210,
+    "dist_to_macro_p50": 30.4,
+    "p90": 104.9,
+    "max": 109.3,
+    "macro_clk_ff": 223.406067,
+    "if_reg_clk_ff_mean": 240.9,
+    "macro_minus_ifreg_ps": -17.5
+   },
+   "u_l.u_lb.g_m[0].u_m": {
+    "n": 146,
+    "dist_to_macro_p50": 26.4,
+    "p90": 44.1,
+    "max": 73.9,
+    "macro_clk_ff": 223.629333,
+    "if_reg_clk_ff_mean": 232.7,
+    "macro_minus_ifreg_ps": -9.0
+   }
+  }
+ },
+ "hold_ff": {
+  "n": 22,
+  "wns": -10.278611,
+  "classes": [
+   [
+    "internal->internal",
+    22
+   ]
+  ],
+  "skew_capture_minus_launch": {
+   "n": 22,
+   "mean": 21.4,
+   "min": 3.2,
+   "max": 33.6
+  },
+  "dist_um": {
+   "n": 22,
+   "mean": 7.5,
+   "min": 1.1,
+   "max": 27.0
+  },
+  "skew_rcx_minus_grtest_tt_basis": {
+   "n": 22,
+   "mean": 7.9,
+   "min": 3.1,
+   "max": 10.2
+  },
+  "worst": [
+   {
+    "sl": -10.28,
+    "sp": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.u_k5.g_r.r[63]$_DFF_P_/QN",
+    "ep": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.y[30]$_DFF_PN0_/D",
+    "cls": "internal->internal",
+    "skew": 33.6,
+    "d": 27.0,
+    "npts": 6
+   },
+   {
+    "sl": -5.75,
+    "sp": "u_l.u_exp.d_n.g_line.line[501]$_DFF_P_/QN",
+    "ep": "u_l.u_exp.d_n.g_line.line[510]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 26.4,
+    "d": 1.3,
+    "npts": 8
+   },
+   {
+    "sl": -4.77,
+    "sp": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.u_k5.g_r.r[48]$_DFF_P_/QN",
+    "ep": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.y[15]$_DFF_PN0_/D",
+    "cls": "internal->internal",
+    "skew": 16.5,
+    "d": 18.4,
+    "npts": 4
+   },
+   {
+    "sl": -4.44,
+    "sp": "u_l.u_exp.d_n.g_line.line[533]$_DFF_P_/QN",
+    "ep": "u_l.u_exp.d_n.g_line.line[542]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 25.3,
+    "d": 1.2,
+    "npts": 8
+   },
+   {
+    "sl": -4.26,
+    "sp": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.u_k5.g_r.r[53]$_DFF_P_/QN",
+    "ep": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.y[20]$_DFF_PN0_/D",
+    "cls": "internal->internal",
+    "skew": 23.0,
+    "d": 10.3,
+    "npts": 6
+   },
+   {
+    "sl": -3.17,
+    "sp": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.u_k3.g_r.r[29]$_DFF_P_/QN",
+    "ep": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.u_k5.g_r.r[68]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 24.9,
+    "d": 14.7,
+    "npts": 4
+   },
+   {
+    "sl": -2.86,
+    "sp": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.u_k3.g_r.r[69]$_DFF_P_/QN",
+    "ep": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.u_k5.g_r.r[32]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 30.4,
+    "d": 9.2,
+    "npts": 6
+   },
+   {
+    "sl": -2.69,
+    "sp": "u_l.u_exp.g_h[6].u_a.g_keep4.u.u.y[21]$_DFF_PN0_/QN",
+    "ep": "u_l.u_exp.y[21]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 21.5,
+    "d": 2.7,
+    "npts": 6
+   }
+  ],
+  "ep_groups": [
+   [
+    "u_l",
+    22
+   ]
+  ],
+  "sp_groups": [
+   [
+    "u_l",
+    22
+   ]
+  ]
+ },
+ "setup_tt": {
+  "n": 3,
+  "wns": -11.436186,
+  "classes": [
+   [
+    "pinreg->internal",
+    3
+   ]
+  ],
+  "skew_capture_minus_launch": {
+   "n": 3,
+   "mean": -4.3,
+   "min": -9.7,
+   "max": 6.1
+  },
+  "dist_um": {
+   "n": 3,
+   "mean": 118.4,
+   "min": 116.5,
+   "max": 119.8
+  },
+  "worst": [
+   {
+    "sl": -11.44,
+    "sp": "v_q$_DFF_PN0_/QN",
+    "ep": "u_l.p_u[2]$_DFF_P_/D",
+    "cls": "pinreg->internal",
+    "skew": -9.7,
+    "d": 118.9,
+    "npts": 40
+   },
+   {
+    "sl": -1.96,
+    "sp": "v_q$_DFF_PN0_/QN",
+    "ep": "u_l.p_u[7]$_DFF_P_/D",
+    "cls": "pinreg->internal",
+    "skew": 6.1,
+    "d": 116.5,
+    "npts": 40
+   },
+   {
+    "sl": -1.76,
+    "sp": "v_q$_DFF_PN0_/QN",
+    "ep": "u_l.p_u[10]$_DFF_P_/D",
+    "cls": "pinreg->internal",
+    "skew": -9.3,
+    "d": 119.8,
+    "npts": 38
+   }
+  ],
+  "ep_groups": [
+   [
+    "u_l",
+    3
+   ]
+  ],
+  "sp_groups": [
+   [
+    "v_q$_DFF_PN0_",
+    3
+   ]
+  ]
+ },
+ "render": "results/geom_review/nearmiss_1025/vsw_c_review.png"
+}

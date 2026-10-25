@@ -1,0 +1,125 @@
+{
+ "run": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-split/ot_s81sl_ve_m_k_m5 (m0 identical)",
+ "die": "S81",
+ "kit": "kr_ot_s81sl_ve_m_k",
+ "failing": "FF hold -5.93 / 2 ep; clock gate: TT pin-register I 313.7 not within 250+-40",
+ "cause": [
+  "hold: mul.lane[k] y -> mul.hline/kline.g_ring din, 4-10 um, 10-15 ps capture-late skew: lane and ring-line flops on different leaves",
+  "clock gate: the kit contract assumes I=250, routed RCX pin-register mean is 313.7 TT / 255.3 FF (S-face pin-register band is the latest group, FF ~265 vs core 240-250, though it is next to the root)",
+  "GRT-estimate minus RCX 24.1..39.1 ps",
+  "geometry clean: W+S faces, pin->register p90 12.7/7.7 um"
+ ],
+ "fix": [
+  "bind I from this view (9.7): TT 313.7 -> parent early tap max(0,I-250)=64 ps; re-derive the vclk latency per corner",
+  "F4 same-leaf clustering for lane->ring transfers",
+  "F5 put the S-face pin-register band on its own balanced tap (not the tail of the root branch)",
+  "F2 RC calibration"
+ ],
+ "metrics": {
+  "die_um": [
+   172.8,
+   345.6
+  ],
+  "cells": 177691,
+  "macros": 0,
+  "p2r_in": {
+   "n": 753,
+   "p90": 12.7,
+   "max": 159.3
+  },
+  "p2r_out": {
+   "n": 518,
+   "p90": 7.7,
+   "max": 11.9
+  },
+  "I_pinreg_tt": {
+   "n": 1271,
+   "mean": 313.6,
+   "min": 298.1,
+   "max": 326.4
+  },
+  "I_pinreg_ff": {
+   "n": 1271,
+   "mean": 255.3,
+   "min": 241.1,
+   "max": 268.5
+  },
+  "grt_minus_rcx_tt": {
+   "n": 25502,
+   "mean": 33.1,
+   "min": 24.1,
+   "max": 39.1
+  },
+  "I_pinreg_tt_grt_est": {
+   "n": 1271,
+   "mean": 345.3,
+   "min": 334.0,
+   "max": 357.8
+  },
+  "macro_if": {}
+ },
+ "hold_ff": {
+  "n": 2,
+  "wns": -5.932282,
+  "classes": [
+   [
+    "internal->internal",
+    2
+   ]
+  ],
+  "skew_capture_minus_launch": {
+   "n": 2,
+   "mean": 12.7,
+   "min": 10.2,
+   "max": 15.3
+  },
+  "dist_um": {
+   "n": 2,
+   "mean": 6.9,
+   "min": 3.8,
+   "max": 9.9
+  },
+  "skew_rcx_minus_grtest_tt_basis": {
+   "n": 2,
+   "mean": 7.9,
+   "min": 7.7,
+   "max": 8.1
+  },
+  "worst": [
+   {
+    "sl": -5.93,
+    "sp": "mul.lane[3].mh.u.y[1]$_DFF_P_/QN",
+    "ep": "mul.hline.g_ring.u.din[97]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 15.3,
+    "d": 3.8,
+    "npts": 6
+   },
+   {
+    "sl": -4.0,
+    "sp": "mul.lane[0].mk.u.y[11]$_DFF_P_/QN",
+    "ep": "mul.kline.g_ring.u.din[11]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 10.2,
+    "d": 9.9,
+    "npts": 4
+   }
+  ],
+  "ep_groups": [
+   [
+    "mul",
+    2
+   ]
+  ],
+  "sp_groups": [
+   [
+    "mul",
+    2
+   ]
+  ]
+ },
+ "setup_tt": {
+  "n": 0
+ },
+ "render": "results/geom_review/nearmiss_1025/ve_m_m5_review.png"
+}

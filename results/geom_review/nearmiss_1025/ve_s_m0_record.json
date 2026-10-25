@@ -1,0 +1,223 @@
+{
+ "run": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-split/ot_s81sl_ve_s_k_m0 (m5 identical)",
+ "die": "S81",
+ "kit": "kr_ot_s81sl_ve_s_k",
+ "failing": "FF hold -2.33 ps / 16 ep",
+ "cause": [
+  "8 of 16 = output pin-register p_dd[*] -> port: SDC vclk source latency 250 ps at FF while the measured FF pin-register mean insertion is 219.5 (TT 270.3): the core-latency contract is not bound to the measured I (ruling 9.7 / decision 5e)",
+  "7 internal chunk_kk/tree_kk transfers 5-33 um with 3-14 ps skew on different leaves",
+  "INFO: reset synchroniser u_rst 178-222 um from the rst_n pin (pin on W/S face, sync in the core)",
+  "geometry clean: pin faces E+S, pin->register p90 6.5 um, uniform fill, no congestion hot spot"
+ ],
+ "fix": [
+  "bind I per corner from this routed RCX view (TT 270.3 / FF 219.5) in the vclk latency (9.7, 5e) -> the 8 output paths go positive by ~30 ps",
+  "F4 same-leaf clustering for the tree/chunk transfers",
+  "F2 RC calibration",
+  "place the reset entry flop at the rst_n pin (decision 13 wavefront entry)"
+ ],
+ "metrics": {
+  "die_um": [
+   164.16,
+   345.6
+  ],
+  "cells": 160623,
+  "macros": 0,
+  "p2r_in": {
+   "n": 398,
+   "p90": 6.5,
+   "max": 221.8
+  },
+  "p2r_out": {
+   "n": 100,
+   "p90": 6.6,
+   "max": 8.0
+  },
+  "I_pinreg_tt": {
+   "n": 498,
+   "mean": 270.3,
+   "min": 260.2,
+   "max": 283.2
+  },
+  "I_pinreg_ff": {
+   "n": 498,
+   "mean": 219.5,
+   "min": 210.0,
+   "max": 231.0
+  },
+  "grt_minus_rcx_tt": {
+   "n": 30810,
+   "mean": 22.6,
+   "min": 16.0,
+   "max": 28.3
+  },
+  "I_pinreg_tt_grt_est": {
+   "n": 498,
+   "mean": 293.4,
+   "min": 284.2,
+   "max": 306.3
+  },
+  "macro_if": {}
+ },
+ "hold_ff": {
+  "n": 16,
+  "wns": -2.333578,
+  "classes": [
+   [
+    "pinreg->port",
+    8
+   ],
+   [
+    "internal->internal",
+    7
+   ],
+   [
+    "pinreg->internal",
+    1
+   ]
+  ],
+  "skew_capture_minus_launch": {
+   "n": 8,
+   "mean": 9.8,
+   "min": 3.3,
+   "max": 14.2
+  },
+  "dist_um": {
+   "n": 16,
+   "mean": 11.5,
+   "min": 4.7,
+   "max": 33.3
+  },
+  "skew_rcx_minus_grtest_tt_basis": {
+   "n": 8,
+   "mean": 3.2,
+   "min": -0.3,
+   "max": 5.3
+  },
+  "worst": [
+   {
+    "sl": -2.33,
+    "sp": "tree_kk.add3.u.y[31]$_DFF_P_/QN",
+    "ep": "tree_kk.y[31]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 9.7,
+    "d": 28.8,
+    "npts": 4
+   },
+   {
+    "sl": -2.06,
+    "sp": "p_dd[7]$_DFF_P_/QN",
+    "ep": "p_dd[7]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 4.7,
+    "npts": 6
+   },
+   {
+    "sl": -2.04,
+    "sp": "p_dd[8]$_DFF_P_/QN",
+    "ep": "p_dd[8]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 6.2,
+    "npts": 6
+   },
+   {
+    "sl": -1.44,
+    "sp": "p_dd[6]$_DFF_P_/QN",
+    "ep": "p_dd[6]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 6.9,
+    "npts": 6
+   },
+   {
+    "sl": -1.3,
+    "sp": "p_dd[2]$_DFF_P_/QN",
+    "ep": "p_dd[2]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 5.2,
+    "npts": 6
+   },
+   {
+    "sl": -1.21,
+    "sp": "chunk_kk.term[5].add.u.u_code[14]$_DFF_P_/QN",
+    "ep": "chunk_kk.term[5].add.u.y[14]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 11.3,
+    "d": 10.1,
+    "npts": 4
+   },
+   {
+    "sl": -1.2,
+    "sp": "p_dd[3]$_DFF_P_/QN",
+    "ep": "p_dd[3]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 4.7,
+    "npts": 6
+   },
+   {
+    "sl": -1.15,
+    "sp": "chunk_kk.term[5].add.u.u_code[14]$_DFF_P_/QN",
+    "ep": "chunk_kk.term[5].add.u.y2[14]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 11.3,
+    "d": 9.8,
+    "npts": 4
+   }
+  ],
+  "ep_groups": [
+   [
+    "p_dd",
+    8
+   ],
+   [
+    "chunk_kk",
+    4
+   ],
+   [
+    "chunk_hh",
+    2
+   ],
+   [
+    "tree_kk",
+    1
+   ],
+   [
+    "ckk",
+    1
+   ]
+  ],
+  "sp_groups": [
+   [
+    "p_dd",
+    8
+   ],
+   [
+    "chunk_kk",
+    4
+   ],
+   [
+    "tree_kk",
+    1
+   ],
+   [
+    "chh",
+    1
+   ],
+   [
+    "chunk_hh",
+    1
+   ],
+   [
+    "mkk",
+    1
+   ]
+  ]
+ },
+ "setup_tt": {
+  "n": 0
+ },
+ "render": "results/geom_review/nearmiss_1025/ve_s_m0_review.png"
+}

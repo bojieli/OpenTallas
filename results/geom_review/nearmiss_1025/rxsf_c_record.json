@@ -1,0 +1,233 @@
+{
+ "run": "intel1+epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsfd_su_t_rxsf_c",
+ "die": "S81",
+ "kit": "kr_dsfd_su_t_rxsf_c",
+ "failing": "TT setup -6.19 / 1 ep; FF hold -2.52 / 13 ep",
+ "cause": [
+  "setup: u_f.u_exp.m_t s2_sh[2] -> y[31] is a 58-point combinational path over only 12 um: logic depth, not wire (exp normalise+shift in one stage)",
+  "hold: 11 of 13 = output pin-registers o_mx/o_v -> port; vclk 250 at FF vs measured FF pin-register I 198.6 (TT 249.4)",
+  "clock port on the E face (140,92) while every data pin is in 3 small clusters on the W face: the pin registers sit at the far end of the tree",
+  "GRT-estimate minus RCX 21.6..31.5 ps"
+ ],
+ "fix": [
+  "split u_exp.m_t into two stages (or retime the shifter) so the deepest stage is <~35 points; +1 cycle accepted range",
+  "bind I per corner (9.7/5e)",
+  "move clk to the W data face middle (as done for eg_c/vq/vs 10-24 21:49)",
+  "spread the W pin clusters along the face"
+ ],
+ "metrics": {
+  "die_um": [
+   140.4,
+   140.4
+  ],
+  "cells": 73692,
+  "macros": 0,
+  "p2r_in": {
+   "n": 35,
+   "p90": 9.1,
+   "max": 10.7
+  },
+  "p2r_out": {
+   "n": 96,
+   "p90": 9.3,
+   "max": 10.6
+  },
+  "I_pinreg_tt": {
+   "n": 131,
+   "mean": 249.4,
+   "min": 242.7,
+   "max": 254.7
+  },
+  "I_pinreg_ff": {
+   "n": 131,
+   "mean": 198.6,
+   "min": 192.3,
+   "max": 203.9
+  },
+  "grt_minus_rcx_tt": {
+   "n": 10075,
+   "mean": 27.5,
+   "min": 21.6,
+   "max": 31.5
+  },
+  "I_pinreg_tt_grt_est": {
+   "n": 131,
+   "mean": 277.0,
+   "min": 270.1,
+   "max": 282.3
+  },
+  "macro_if": {}
+ },
+ "hold_ff": {
+  "n": 13,
+  "wns": -2.516681,
+  "classes": [
+   [
+    "pinreg->port",
+    11
+   ],
+   [
+    "internal->internal",
+    2
+   ]
+  ],
+  "skew_capture_minus_launch": {
+   "n": 2,
+   "mean": 3.6,
+   "min": 3.3,
+   "max": 3.9
+  },
+  "dist_um": {
+   "n": 13,
+   "mean": 7.9,
+   "min": 5.6,
+   "max": 10.4
+  },
+  "skew_rcx_minus_grtest_tt_basis": {
+   "n": 2,
+   "mean": 2.9,
+   "min": 1.6,
+   "max": 4.2
+  },
+  "worst": [
+   {
+    "sl": -2.52,
+    "sp": "u_f.o_v$_DFF_PN0_/QN",
+    "ep": "o_v",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 5.6,
+    "npts": 8
+   },
+   {
+    "sl": -1.76,
+    "sp": "u_f.o_mx[5]$_DFF_P_/QN",
+    "ep": "o_mx[5]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 7.8,
+    "npts": 10
+   },
+   {
+    "sl": -1.36,
+    "sp": "u_f.o_mx[4]$_DFF_P_/QN",
+    "ep": "o_mx[4]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 7.4,
+    "npts": 10
+   },
+   {
+    "sl": -1.11,
+    "sp": "u_f.u_div.r_q[10][0]$_SDFF_PP1_/QN",
+    "ep": "u_f.u_div.r_q[11][2]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 3.3,
+    "d": 9.9,
+    "npts": 4
+   },
+   {
+    "sl": -1.06,
+    "sp": "u_f.o_mx[6]$_DFF_P_/QN",
+    "ep": "o_mx[6]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 7.8,
+    "npts": 10
+   },
+   {
+    "sl": -0.89,
+    "sp": "u_f.o_mx[15]$_DFF_P_/QN",
+    "ep": "o_mx[15]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 8.4,
+    "npts": 10
+   },
+   {
+    "sl": -0.57,
+    "sp": "u_f.o_mx[2]$_DFF_P_/QN",
+    "ep": "o_mx[2]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 6.1,
+    "npts": 10
+   },
+   {
+    "sl": -0.51,
+    "sp": "u_f.o_mx[8]$_DFF_P_/QN",
+    "ep": "o_mx[8]",
+    "cls": "pinreg->port",
+    "skew": null,
+    "d": 9.4,
+    "npts": 10
+   }
+  ],
+  "ep_groups": [
+   [
+    "o_mx",
+    10
+   ],
+   [
+    "u_f",
+    2
+   ],
+   [
+    "o_v",
+    1
+   ]
+  ],
+  "sp_groups": [
+   [
+    "u_f",
+    13
+   ]
+  ]
+ },
+ "setup_tt": {
+  "n": 1,
+  "wns": -6.189604,
+  "classes": [
+   [
+    "internal->internal",
+    1
+   ]
+  ],
+  "skew_capture_minus_launch": {
+   "n": 1,
+   "mean": 2.1,
+   "min": 2.1,
+   "max": 2.1
+  },
+  "dist_um": {
+   "n": 1,
+   "mean": 12.3,
+   "min": 12.3,
+   "max": 12.3
+  },
+  "worst": [
+   {
+    "sl": -6.19,
+    "sp": "u_f.u_exp.m_t.s2_sh[2]$_DFF_P_/QN",
+    "ep": "u_f.u_exp.m_t.y[31]$_DFF_PN0_/D",
+    "cls": "internal->internal",
+    "skew": 2.1,
+    "d": 12.3,
+    "npts": 58
+   }
+  ],
+  "ep_groups": [
+   [
+    "u_f",
+    1
+   ]
+  ],
+  "sp_groups": [
+   [
+    "u_f",
+    1
+   ]
+  ]
+ },
+ "render": "results/geom_review/nearmiss_1025/rxsf_c_review.png"
+}

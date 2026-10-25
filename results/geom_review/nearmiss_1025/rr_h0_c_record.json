@@ -1,0 +1,114 @@
+{
+ "run": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsdv_eng_rr_h0_c",
+ "die": "S81",
+ "kit": "kr_dsdv_eng_rr_h0_c",
+ "failing": "FF hold -0.08 ps / 1 ep (TT +3.57)",
+ "cause": [
+  "1 internal u_hash s1_13_0[1] -> s2_13_0[1] (6-pt path, 1.7 um) with 7.7 ps capture-late skew: launch and capture on different CTS leaves",
+  "GRT-estimate clock arrival is 15.8..31.6 ps above routed RCX (non-uniform 16 ps), so the post-GRT hold repair worked on a different skew than sign-off sees (same as QC cqb)",
+  "geometry clean: pin->register p90 8.7/8.1 um, max 12.5; TT setup only +3.57 (no TT margin)"
+ ],
+ "fix": [
+  "F4 cluster each pin/pipeline register with its successor on one CTS leaf (sink clustering by register pair)",
+  "F2 calibrate GRT wire RC to RCX for CTS/GRT hold repair",
+  "no outline/pin change"
+ ],
+ "metrics": {
+  "die_um": [
+   164.16,
+   267.84
+  ],
+  "cells": 142848,
+  "macros": 0,
+  "p2r_in": {
+   "n": 68,
+   "p90": 8.7,
+   "max": 12.5
+  },
+  "p2r_out": {
+   "n": 576,
+   "p90": 8.1,
+   "max": 10.0
+  },
+  "I_pinreg_tt": {
+   "n": 644,
+   "mean": 247.8,
+   "min": 240.4,
+   "max": 255.2
+  },
+  "I_pinreg_ff": {
+   "n": 644,
+   "mean": 203.5,
+   "min": 196.4,
+   "max": 210.2
+  },
+  "grt_minus_rcx_tt": {
+   "n": 18533,
+   "mean": 24.2,
+   "min": 15.8,
+   "max": 31.6
+  },
+  "I_pinreg_tt_grt_est": {
+   "n": 644,
+   "mean": 274.3,
+   "min": 265.4,
+   "max": 280.0
+  },
+  "macro_if": {}
+ },
+ "hold_ff": {
+  "n": 1,
+  "wns": -0.077299,
+  "classes": [
+   [
+    "internal->internal",
+    1
+   ]
+  ],
+  "skew_capture_minus_launch": {
+   "n": 1,
+   "mean": 7.7,
+   "min": 7.7,
+   "max": 7.7
+  },
+  "dist_um": {
+   "n": 1,
+   "mean": 1.7,
+   "min": 1.7,
+   "max": 1.7
+  },
+  "skew_rcx_minus_grtest_tt_basis": {
+   "n": 1,
+   "mean": 2.2,
+   "min": 2.2,
+   "max": 2.2
+  },
+  "worst": [
+   {
+    "sl": -0.08,
+    "sp": "u_hash.s1_13_0[1]$_DFF_P_/QN",
+    "ep": "u_hash.s2_13_0[1]$_DFF_P_/D",
+    "cls": "internal->internal",
+    "skew": 7.7,
+    "d": 1.7,
+    "npts": 6
+   }
+  ],
+  "ep_groups": [
+   [
+    "u_hash",
+    1
+   ]
+  ],
+  "sp_groups": [
+   [
+    "u_hash",
+    1
+   ]
+  ]
+ },
+ "setup_tt": {
+  "n": 0
+ },
+ "render": "results/geom_review/nearmiss_1025/rr_h0_c_review.png"
+}
