@@ -284,6 +284,28 @@ def test_tcl_hooks_complete():
     assert "OT_CORE_TAPS" in (HERE / "clock_taps.tcl").read_text()
 
 
+def test_reach_leaf_out_bits_distinct():
+    """CLOCK-RESET/cp1 10-25 (reach405R r1: 1230 frame_int_o0 pin registers fed by 384 Yosys-merged leaf flops, one flop
+    -> 3-4 face flops 166-254 um apart, D-pin slew 400-436 ps): a narrow in bus folded into a wide out bus gives every
+    out bit its own non-constant XOR term set, so no output pin register shares a source register."""
+    import pair
+    import re
+    ins = [("i0", 384)]
+    outs = [("o0", 1230), ("o1", 268)]
+    geo = {"i0": (300, 1226), "o0": (140, 1226), "o1": (310, 0)}
+    v, _ = pair.proof_leaf("m", ins, outs, (), geo=geo, hop_um=364.5)
+    seen = set()
+    for ln in v.splitlines():
+        if "_s0 <= {" not in ln:
+            continue
+        body = ln.split("<= {", 1)[1].rsplit("}", 1)[0]
+        for term in body.split(", "):
+            ts = frozenset(re.findall(r"q\[(\d+)\]", term))
+            assert ts and ts not in seen      # non-constant, never a duplicate (across out buses too)
+            seen.add(ts)
+    assert len(seen) == 1230 + 268
+
+
 def test_reach_leaf_no_cross_face_paths():
     """CP1-R10 (reach405 r1 12:2x: the legacy all-bus XOR fold made 1-1.4 mm unpipelined face -> leaf paths, TT -241.76,
     1234 slew violations): the reach leaf feeds every out bus from its nearest in bus(es) only, pipelined per hop."""
