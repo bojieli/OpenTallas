@@ -36,3 +36,21 @@ Path boundary (Codex): QKV projections are fixture-landed, so the c_W5_* CB (A0)
 OWNER?: (1) The QKV projection CB tiles (c_W5_bf/bn/tn/tf_xx, A0 NK/NL cores) are excluded from this path cut by Codex (fixture-landed QKV). Should "complete path" include them? Default: excluded for this first path.
 2026-10-25 08:09 PDT PATH-QC: started; f57r4 is routed NOT SIGNED (FF -13.91/12, not 'in DRT'). Sub-lanes live: PATH-QC-RP1 (C2 structural control replica), PATH-QC-SU (C3 vmr_s6h route, C4/C5 prog/btab collect), PATH-QC-TOK (D1 bind verify + xt1 START on fresh bind + exact-path adapter plan), PATH-QC-PLAN (exact W5 membership, PLAN-STRUCTURAL causes, west-strip kit blockers, one per-die delta).
 2026-10-25 08:11 PDT FLOW-INFRA/DIE-PROTO -> PATH-QC: qwen_compute die-top GRT kit_it5 (plan d27c3788 = main, 5 iters) overflow 1,659,581 (M4 747 H / M5 170 V / M6 407,499 H / M7 1,251,165 V; max 121H/40V), all hot gcells in band y=10-11mm (x 2-5,16-17,19-22,24-27,29-30mm), nets ft_sl_*_su_c/_su_l1 SU feed-throughs -> needs structural FT relief in SU band; 44,005 leg-inst over 405 (worst coll_ftc 500.9um). 50-iter run LIVE intel2 dtrial-grt-134732; kit2 STA TT/FF live intel1. claude/die-proto-1025@bd51e6310 results/die_proto_1025/SUMMARY.md
+
+## SCOPE ADDITIONS 2026-10-25 08:12 PDT (owner-approved via coordinator)
+(1) Die level is part of "complete". Path items:
+| # | die-level item | state | next |
+|---|---|---|---|
+| L1 | die GRT with the path's real signed-off views (stand-ins elsewhere) | NOT STARTED with path views (0 path partitions signed). DIE-PROTO kit_it5 on main plan: overflow 1,659,581, hot band y=10-11 mm = SU feed-throughs ft_sl_*_su_c/_su_l1 -> structural FT relief in SU band needed (same band as P1-P3); 50-iter run live intel2 | fold SU-band FT relief into PATH-QC-PLAN delta; rerun with path views as they sign off |
+| L2 | die STA TT setup / FF hold over the path | NOT STARTED (DIE-PROTO kit2 STA live intel1 on stand-ins) | after L1 + path views |
+| L3 | clock tree die root -> path flops (regional taps, related-pair skew + CPPR) | per-core only (RP1 pairs TT60.3/FF48.3; vmr per-corner I); die root->W5/west-strip taps not checked | die clock check on L1 database |
+| L4 | reset + START broadcast | START plan G0C PASS, xt1 START token PASS (subset of 22 parts, excludes glue/native59); bootstrap DEADLOCK (KV boot vs global START; glue D2D cal seq) OPEN at CLOCK/RESET | CLOCK fix; extend START proof to glue/native59 |
+| L5 | die-to-die link QC<->KV (glue d2d_rom FDI 583b -> ucie_kv -> KV sys_c.u_ucie_rom) | functional model only; PHY hard IP abstract; xdie adapter not built | PATH-QC-TOK + PATH-KV |
+| L6 | token test on exactly the bound views | = T1 | T1 |
+(2) Representative coverage (OWNERS.tsv replica counts, qwen_compute): qfd_tile_nk_a0c 720, cbx_q10 48, qfd_tile_nl_a0c 48, qfd_dv_s8x_vmr 36 (on path, C3), CB types 23-24, slice cores 12.
+The path did NOT cover the top three. Added (resolves my OWNER? (1): CB tile is now IN the path; QKV comes from the real projection, not the fixture):
+| A1 | core qfd_tile_nk_a0c (720 replicas; in c_W5_bn_10 u_t20/u_t21/u_t31) | REVIEW: nk_r4 FAIL_POSTCTS FF -316.66/2066 (structural.tsv 8fffd9b75f35); real internal ROM reset hold -94.64 (missing macro-internal clock compensation); ODB deleted by autopilot 07:22 | structural fix (ROM-leaf clock/reset compensation), GEOM REQ, rebuild |
+| A2 | core qfd_tile_nl_a0c (48; c_W5_bn_10 u_t30) | NEEDS-KIT; NL combined0719 GPL-0307 diverged (ctl corridor overflow 0.85/0.92) | structural: widen control corridor / re-place, GEOM REQ |
+| A3 | type cbx_q10 (48; instance c_W5_bn_10, fed by sl_W5_su_c cws2 / su_l0 cws3) | NEEDS-KIT (BLOCKED-A0: needs NK/NL abstracts) | kit after A1/A2 views |
+Why c_W5_bn_10: it is the cbx_q10 instance wired directly to the W5 slice parts already on the path (su_c cws2, su_l0 cws3), and cbx_q10 contains both A0 cores (NK x3 + NL x1), so one CB instance covers all three most-replicated items.
+Item count now 30 (21 + L1-L6 + A1-A3, L6==T1 counted once => 29). Signed off: 1 of 29.
