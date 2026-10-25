@@ -31,6 +31,8 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               PLANDIR/{r8,bind}/bus_groups.json): one added delay per as-built bus, equal across replicated consumers, no
               as-built order inversion, one landing pad per site of a replicated type (r8.py); depth = the R8 landing
               table (--landing, else PLANDIR/**/<die>_r8_landing.json from gen.py latency --groups) or the bound top
+  hard_pinreg registered-pin hard types (hard_pinreg.py): single hard core with registered_pins + lib, no ft slots;
+              every lib corner view has setup+hold on every input and clk->q on every output (fail closed)
   clock/reset every non-hard type has a clock tap inside its outline on a die layer and a reset synchronizer;
               data_reset false, epoch bit true (schema)
   G0C (--completeness): hard_cores, core_faces, complete; PLAN-TOOL5 cross-die rules die_io_plan (die_io.py),
@@ -1337,6 +1339,18 @@ def check_types(P, R):
                 near_duplicate_types=sum(len(g) for g in groups), mergeable_saving=sum(len(g) - 1 for g in groups))
 
 
+def check_registered_pins(P, R, plan_dir=None):
+    """REGISTERED-PIN hard partitions (COORD 10-25 11:31; hard_pinreg.py): declaration (hard type, single hard core,
+    lib, no ft slots) and the lib claim (setup+hold on every input, clk->q on every output, every corner view).  Fails
+    closed: an ERROR, the binder then refuses the type too."""
+    import hard_pinreg as HP
+    errs, summ = HP.check_plan(P.raw, (plan_dir,) if plan_dir else ())
+    for e in errs:
+        m = re.match(r"type (\S+):", e)
+        R.err("hard_pinreg", e, **({"type": m.group(1)} if m else {}))
+    return summ
+
+
 def check_r8(P, R, plan_dir=None, groups=None, landing=None):
     """COORD R8 (r8.py) on BINDER2's bus groups.  No bus groups -> WARN (R8 cannot be judged without the bind)."""
     import r8
@@ -1417,6 +1431,9 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
+    rp = check_registered_pins(P, R, plan_dir)
+    if rp:
+        summ["registered_pins"] = rp
     check_clock_reset(P, R)
     summ["reset"] = check_reset(P, R)
     summ["seams"] = check_seams(P, R)

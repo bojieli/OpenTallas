@@ -130,9 +130,9 @@ module qfd_native59_qseat_lanes #(parameter integer MUT=0,LOCAL32=0,LOCAL_MUT=0)
   end
  end
  generate for(w=0;w<8;w=w+1)begin:g_writer
-  wire[511:0]mask;
+  wire[15:0]mask;   // PATH-QC-N59 10-25: one write enable per 32-bit lane group (macro mask_gran 32, write port on one face)
   for(l=0;l<16;l=l+1)begin:g_mask
-   assign mask[32*l+:32]={32{write_element[9*w+:4]==4'(l)}};
+   assign mask[l]=write_element[9*w+:4]==4'(l);
   end
   ot_sram_1r1w_32x512_m1 u_mem(.clk(ck),.r_ce_in(read_v_m[w]),.r_addr_in(read_beat_m[5*w+:5]),.rd_out(bank_data[w]),
    .w_ce_in(write_v[w]&&!clear),.w_addr_in(write_element[9*w+4+:5]),

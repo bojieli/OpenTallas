@@ -1,5 +1,5 @@
 {
- "families_unequal": 5,
+ "families_unequal": 6,
  "added": [
   {
    "slot": "cbf_q01_s2.rx_flit_serdes_rx",
@@ -39,6 +39,20 @@
     "sl_E0_fw__x_fw_ctl_p2",
     "sl_E2_fw__x_fw_ctl_p2",
     "sl_E4_fw__x_fw_ctl_p2"
+   ]
+  },
+  {
+   "slot": "sle_st_a_v2.x_fw_ctl",
+   "stations_from": 2,
+   "stations_to": 3,
+   "family": [
+    "sle_ctl",
+    "x_fw_i"
+   ],
+   "lanes": [
+    "sl_E1_fw__x_fw_ctl",
+    "sl_E3_fw__x_fw_ctl",
+    "sl_E5_fw__x_fw_ctl"
    ]
   },
   {
@@ -129,17 +143,17 @@
    ]
   },
   {
-   "slot": "slw_fe_v2.x_su_l0_ctl",
-   "stations_from": 4,
-   "stations_to": 5,
+   "slot": "slw_st_a_v2.x_fw_ctl",
+   "stations_from": 2,
+   "stations_to": 3,
    "family": [
     "sle_ctl",
-    "x_su_l0_i"
+    "x_fw_i"
    ],
    "lanes": [
-    "sl_W1_su_l0__x_su_l0_ctl",
-    "sl_W3_su_l0__x_su_l0_ctl",
-    "sl_W5_su_l0__x_su_l0_ctl"
+    "sl_W1_fw__x_fw_ctl",
+    "sl_W3_fw__x_fw_ctl",
+    "sl_W5_fw__x_fw_ctl"
    ]
   },
   {
