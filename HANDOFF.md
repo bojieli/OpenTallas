@@ -221,3 +221,4 @@ CODEX: Qwen fullboth xt1 nominal128/128 exact + actual-edge mutant caught (f205e
 2026-10-24 20:02 PDT QC: capacity plan READY claude/qc-cap-1024r@78992be86f (G0 PASS, G0C 56/56); A0 v7 routes FAIL (GRT non-convergent), F1 re-region in work
 2026-10-24 20:10 PDT INFRA: release tree = current-plan layer (G0C-clean + SIGNED per die); Claude<->Codex auto-switch live on rtx-pro (lane 429 watch); old nvme overtaken (wiped 07:03); disk: rtx-pro 91->75% (495 GiB), fleet4 24 GiB, epyc1 90% needs superseded-worktree ruling. PARKED.
 2026-10-24 20:17 PDT RESET: unified pipelined reset READY (claude/reset-1024@d1152532c); G0 PASS all dies; boot +56..88 clk per die; CP1 pipelined r0/r1 kits running
+2026-10-24 20:20 PDT HBM-ELEM: B2l core collection done (13 routed NOT SIGNED, 76 FAIL w/ evidence), core_insertion_b2l.json + contract generator (claude/elem-hbm-1024 0e65b11fce), 26 contract relaunches + 91 SPLIT2 CTS probes live; parked @
