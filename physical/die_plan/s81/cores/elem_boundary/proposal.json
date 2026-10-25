@@ -1,0 +1,27 @@
+{
+  "module": "ot_v41_rom_elem_q_qxpq_w10_gb",
+  "adopted": false,
+  "parameter": {
+    "GO_BOUNDARY": 1
+  },
+  "pins_file": "inputs/core_pins/ot_v41_rom_elem_q_qxpq_w10_gb.json",
+  "lef": "physical/die_plan/s81/cores/elem_boundary/ot_v41_rom_elem_q_qxpq_w10_gb.lef",
+  "pin_delta": {
+    "before": 739,
+    "after": 737,
+    "drop": [
+      "xs_sv[0]",
+      "xs_sv[1]"
+    ],
+    "other_coordinates_changed": 0
+  },
+  "latency": {
+    "go_tag_boundary_added_cycles": 1,
+    "configuration_added_cycles": 0,
+    "x_beat_added_cycles": 0,
+    "compiler_rule": "Drive go and go_tag one edge earlier to preserve the historical internal go/config/x-beat calendar; otherwise operation begins one edge later. Do not silently adopt without schedule/reprice."
+  },
+  "source_flop_delta": 3,
+  "gate": "Exact all-output lockstep plus bypass mutant, then production raw face_guard, review/physical signoff.",
+  "replaces_module": "ot_v41_rom_elem_q_qxpq_w10"
+}

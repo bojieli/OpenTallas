@@ -1,0 +1,53 @@
+{
+  "master": "ot_v41_rom_elem_q_qxpq_w10_gb",
+  "legacy_master_unchanged": true,
+  "source_delta_ff": 3,
+  "added_go_tag_boundary_cycles": 1,
+  "schedule_rule": "Drive go/tag one edge before the historical go/tag date. Config and x-beat dates retain their existing edges. Until compiler/date adoption, the operation begins one edge later.",
+  "proposal_adopted": false,
+  "component_miter": {
+    "legacy_ref_go_tag_delayed_cycles": 1,
+    "gb2_seeds": {
+      "1": {
+        "cycles": 1831111,
+        "mismatch_cycles": 0,
+        "phases": 300,
+        "x_beats": 141784,
+        "partial_cycles": 2823,
+        "verdict": "PASS"
+      },
+      "2": {
+        "cycles": 1753478,
+        "mismatch_cycles": 0,
+        "phases": 300,
+        "x_beats": 136036,
+        "partial_cycles": 2634,
+        "verdict": "PASS"
+      }
+    },
+    "bypass_mutant": {
+      "verdict": "CAUGHT",
+      "first_mismatch_cycle": 67,
+      "mismatch_cycles": 1417710,
+      "unit": "oth-ubuntu-2615077-1792938926"
+    }
+  },
+  "raw_guard": {
+    "state": "RUNNING",
+    "unit": "oth-ubuntu-1955679-1792938996",
+    "host": "intel1",
+    "path": "/srv/opentallas-scratch2/claude/codex-elem-boundary-0719/kits/ot_v41_rom_elem_q_qxpq_w10_gb_gb2"
+  },
+  "failures_preserved": [
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-elem-boundary-0719/kits/ot_v41_rom_elem_q_qxpq_w10_gb/face_guard_raw.json",
+      "result": "FAIL dropped2/extra2 xs_sv; raw go boundary fixed; corrected by explicit gb master with port removal"
+    },
+    {
+      "path": "/srv/opentallas-scratch2/claude/codex-elem-boundary-0719/logs/mut2.otrun.log",
+      "result": "NEGATIVE CONTROL INVALID: macro name mismatch meant no mutation; corrected mut3 and gb2 actually caught bypass"
+    }
+  ],
+  "physical_signoff": "NOT RUN",
+  "route": "NOT RUN"
+}
