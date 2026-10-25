@@ -1,0 +1,33 @@
+OT_CLOCK_TAPS core-only tap ck_t1
+OT_CLOCK_TAPS core-only tap ck_t2
+OT_CLOCK_TAPS core-only tap ck_t3
+OT_CLOCK_TAPS core-only tap ck_t42
+OT_CLOCK_TAPS core-only tap ck_t43
+OT_CLOCK_TAPS core-only tap ck_t44
+OT_CLOCK_TAPS core-only tap ck_t45
+OT_CLOCK_TAPS core-only tap ck_t46
+OT_CLOCK_TAPS core-only tap ck_t47
+OT_CLOCK_TAPS core-only tap ck_t48
+OT_CLOCK_TAPS core-only tap ck_t49
+OT_CLOCK_TAPS core tap ck_t48 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_single.g_col\[0\].u_leaf/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t9 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_single.g_col\[0\].u_leaf/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t12 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[2\].g_single.g_col\[0\].u_leaf/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t20 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_single.g_col\[0\].u_leaf/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t15 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_single.g_col\[0\].u_leaf/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t49 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_single.g_col\[1\].u_leaf/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t8 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_single.g_col\[1\].u_leaf/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t13 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[2\].g_single.g_col\[1\].u_leaf/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t19 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_single.g_col\[1\].u_leaf/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t14 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_single.g_col\[1\].u_leaf/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t1 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.u_lh/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t3 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.u_lh/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t42 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.u_lh/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t44 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.u_lh/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t45 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.u_lh/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t43 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.u_lh/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t46 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.u_lh/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t47 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.u_lh/clk: 1 clock pin(s)
+OT_CLOCK_TAPS core tap ck_t2 <- u_ot_pr_core.u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node/clk: 1 clock pin(s)
+OT_CLOCK_TAPS cap 1500 sinks/tap: 1147 sinks re-assigned; per tap: ck 0, ck_t10 1187, ck_t11 915, ck_t12 1353, ck_t13 1208, ck_t14 1500, ck_t15 1500, ck_t16 941, ck_t17 1117, ck_t18 198, ck_t19 1457, ck_t20 1073, ck_t21 1500, ck_t22 1500, ck_t23 1500, ck_t24 969, ck_t25 1146, ck_t26 1316, ck_t27 1222, ck_t28 905, ck_t29 956, ck_t30 1154, ck_t31 874, ck_t32 743, ck_t33 890, ck_t34 1138, ck_t35 762, ck_t36 1481, ck_t37 1093, ck_t38 1500, ck_t39 1344, ck_t4 421, ck_t40 1290, ck_t41 800, ck_t5 766, ck_t50 391, ck_t51 435, ck_t52 1284, ck_t6 551, ck_t7 1002, ck_t8 824, ck_t9 950
+OT_TAP_BALANCE it2 target 250: ck_t1=241(241-241,1) ck_t10=254(250-260,1187) ck_t11=248(245-251,915) ck_t12=270(255-288,1353) ck_t13=280(274-285,1208) ck_t14=277(250-292,1500) ck_t15=275(268-280,1500) ck_t16=244(233-250,941) ck_t17=246(234-256,1117) ck_t18=251(246-255,198) ck_t19=272(256-285,1457) ck_t2=247(247-247,1) ck_t20=266(252-278,1073) ck_t21=252(239-261,1500) ck_t22=248(238-268,1500) ck_t23=255(246-266,1500) ck_t24=241(238-244,969) ck_t25=235(230-239,1146) ck_t26=240(236-245,1316) ck_t27=237(234-240,1222) ck_t28=251(243-259,905) ck_t29=244(235-252,956) ck_t3=241(241-241,1) ck_t30=255(246-267,1154) ck_t31=248(239-256,874) ck_t32=244(234-251,743) ck_t33=237(231-244,890) ck_t34=259(239-279,1138) ck_t35=252(245-257,762) ck_t36=253(241-263,1481) ck_t37=244(232-251,1093) ck_t38=244(240-249,1500) ck_t39=238(233-242,1344) ck_t4=249(234-262,421) ck_t40=240(235-244,1290) ck_t41=255(252-259,800) ck_t42=241(241-241,1) ck_t43=241(241-241,1) ck_t44=242(242-242,1) ck_t45=241(241-241,1) ck_t46=241(241-241,1) ck_t47=241(241-241,1) ck_t48=269(269-269,1) ck_t49=268(268-268,1) ck_t5=237(228-243,766) ck_t50=257(253-262,391) ck_t51=255(251-261,435) ck_t52=263(247-296,1284) ck_t6=258(255-261,551) ck_t7=252(242-263,1002) ck_t8=279(271-290,824) ck_t9=276(265-283,950)
+OT_TAP_CHECK WARN trees over 290 ps: ck_t14=292 ck_t52=296; re-pitch taps to <= 249 um (partition clock.tap_pitch_um)

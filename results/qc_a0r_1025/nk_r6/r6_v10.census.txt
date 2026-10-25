@@ -1,0 +1,6 @@
+== r6_v10: 1478 FF hold-violating endpoints, wns -31.83
+  IN->REG                                       n= 1272 wns=  -31.83
+  R2R_XTAP                                      n=  170 wns=  -27.42
+  R2R_SAMETAP                                   n=   36 wns=  -10.58
+  top R2R (launch tap, capture tap): [(('ck_t17', 'ck_t19'), 36), (('ck_t33', 'ck_t41'), 30), (('ck_t16', 'ck_t14'), 23), (('ck_t16', 'ck_t19'), 19), (('ck_t22', 'ck_t20'), 16), (('ck_t17', 'ck_t15'), 14), (('ck_t52', 'ck_t52'), 11), (('ck_t5', 'ck_t34'), 7)]
+  IN-> capture taps: [('ck_t28', 878), ('ck_t21', 222), ('ck_t35', 123), ('ck_t52', 49)]

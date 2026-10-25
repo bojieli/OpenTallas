@@ -1,0 +1,3 @@
+QDM PINFLOP reference: 1315 input pin flops (0 hard-child clock pins at +insertion), median arrival 194.946213 (range 185.481384 .. 216.792816)
+QDM reference pin u_ot_pr_core.u_g.tap_q[470]$_DFF_P_/CLK clock arrival max 194.946213 min 186.275284 skew 90 hold 50
+OT_HOLD_GATE PASS FF wns_ps -31.83 endpoints 1478 (true negative slack)
