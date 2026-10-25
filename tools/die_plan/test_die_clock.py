@@ -109,3 +109,12 @@ def test_long_hop_repeater_keeps_netlist_consistent(tmp_path):
     loads = {ld for n in T.nets for _, _, ld, _ in n["branches"]}
     assert all("port:" + t["port"] in loads for t in tree["taps"])
     assert all(n["name"] == ld[5:] for n in T.nets for _, _, ld, _ in n["branches"] if ld.startswith("port:"))
+
+
+def test_slide_escapes_wide_macro():
+    """a macro wider than the leg and SIDE_MAX_UM: the buffer goes to the nearest legal macro edge, never back
+    onto the macro (codex legalisation patch 10-24)."""
+    K = DC.KeepIndex([(0.0, 400.0, 10000.0, 3000.0)], die=(10000.0, 5000.0))
+    x, y, side = DC._slide((5000.0, 1500.0), (4000.0, 1500.0), (6000.0, 1500.0), K)
+    assert not K.hit(x, y)
+    assert abs(x - 5000.0) + abs(y - 1500.0) <= 1501.0 + 1e-6

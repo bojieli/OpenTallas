@@ -182,7 +182,27 @@ def _slide(pt, a, b, K, fixed=False):
                 q = (pt[0], pt[1] + s) if horiz else (pt[0] + s, pt[1])
                 if not K.hit(*q):
                     return q[0], q[1], d
-    return pt[0], pt[1], 0.0
+    # A wide macro may cover the entire incoming leg and SIDE_MAX_UM. Never silently
+    # put a buffer back at its blocked starting point. Search obstacle edges for the
+    # nearest legal channel; the caller accounts for the detour in the wire RC.
+    rects = {tuple(r) for rs in K.g.values() for r in rs}
+    xs, ys = {pt[0]}, {pt[1]}
+    for r in rects:
+        xs.update((r[0] - 1.0, r[2] + 1.0))
+        ys.update((r[1] - 1.0, r[3] + 1.0))
+    if K.die:
+        xs = {min(max(x, 1.0), K.die[0] - 1.0) for x in xs}
+        ys = {min(max(y, 1.0), K.die[1] - 1.0) for y in ys}
+    # Axial candidates normally suffice; cross products also handle overlapping walls.
+    candidates = {(x, pt[1]) for x in xs} | {(pt[0], y) for y in ys}
+    legal = [q for q in candidates if not K.hit(*q)]
+    if not legal:
+        legal = [(x, y) for x in xs for y in ys if not K.hit(x, y)]
+    if not legal:
+        raise ValueError(f"no legal clock buffer site near {pt}; macro/PHY keepouts cover the die")
+    q = min(legal, key=lambda q: (abs(q[0] - pt[0]) + abs(q[1] - pt[1]), q))
+    side = abs(q[1] - pt[1]) if horiz else abs(q[0] - pt[0])
+    return q[0], q[1], side
 
 
 def split_pairs(P, taps):
@@ -533,9 +553,13 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 b_ = tap_xy.get(load) or (T.cells[load]["x"], T.cells[load]["y"])
                 m_ = ((a_[0] + b_[0]) / 2, (a_[1] + b_[1]) / 2)
                 x, y, side = _slide(m_, a_, b_, K)
-                hn = T.cell(f"h{split}_{n['drv']}", x, y, "rep", None)
                 g1 = abs(x - a_[0]) + abs(y - a_[1]) + side
                 g2 = max(abs(b_[0] - x) + abs(b_[1] - y) + side, geo - g1)
+                # A macro may force the midpoint back beside an endpoint. Such a
+                # repeater adds a detour and delay without shortening the long hop.
+                if max(g1, g2) >= geo - 1e-3:
+                    continue
+                hn = T.cell(f"h{split}_{n['drv']}", x, y, "rep", None)
                 n["branches"][0] = (max(g1, 1.0), layer, hn, g1)
                 if load.startswith("port:"):            # the port net keeps its name on the last hop
                     nets.append(dict(name=n["name"], drv=hn, branches=[(max(g2, 1.0), layer, load, g2)]))
