@@ -314,3 +314,8 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   verify PASS). R8 pad flops grew 424k -> 826k (max pad 15) + CB16 715k: the cost of 405-um stations on unequal lanes (area, not cycles
   of record). NEXT (queued, start as sub-agent slots free): xt1 both-cluster + tp8/xdie/ovl4u link passes on bind_meth_cb16 (constants
   regen), die trial on the re-plan (seam clock tree), soft-type kits from bind_meth_cb16 with wavefront reset -> GEOM-REVIEW.
+- 2026-10-25 01:37 PDT QC (TRIAL-QK): parked. 30-iter GRT on the superseded capacity plan stopped by exact name, data deleted (log kept). IR on that
+  plan: VDD worst 89.6 mV / VSS 130.0 mV at est. 234 W (PSM 5.3 h, 224 GB); worst band = slice su_l0/su_l1/su_c y 10.5-11.5 mm.
+  Seam-aligned clock tree default on claude/trial-qk-1024@b02efc651 (not merged; READY after the re-plan trial).
+- 2026-10-25 01:37 PDT QC: LAUNCHED sub-agent: constants regen + xt1 both-cluster (nominal/mutant/schedule gate) + tp8/xdie/ovl4u link passes on the
+  re-plan bind bind_meth_cb16 (branch claude/qc-tok-meth-1024). Re-plan die trial (seam tree) launches when a sub-agent slot frees.
