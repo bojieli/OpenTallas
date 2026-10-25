@@ -126,8 +126,9 @@ def main():
         if "inst_part" in IMAP and re.match(r"(dn|up|kd|ku)_", ln["id"]):
             internal["slice_split"] += p0["width"]      # C <-> leaf / LP lanes: the slice's own band split
             continue
-        planned[(gs, gd)] += p0["width"]
-        cls_of[ln["id"]] = (gs, gd, p0["width"])
+        wb = int(ln.get("word_bits", p0["width"])) if ln.get("beats") else p0["width"]   # DEC12 2-beat lanes
+        planned[(gs, gd)] += wb
+        cls_of[ln["id"]] = (gs, gd, wb)
     # re-topologised broadcast: the plan chains x through the frame relay port xo (u_xo0..3 relay x -> xo in
     # col_h9/h10_l4_lp); as-built drives frame p2 from the slice directly.  x content reaching fB over a planned
     # xo lane fA -> fB counts as delivered from the slice that feeds fA (extra hop is in the latency table).
