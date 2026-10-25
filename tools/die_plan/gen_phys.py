@@ -665,6 +665,20 @@ def clock_phase_tcl(P, tn, before_cts=False):
             f"set_clock_latency -clock clk {t_lib(P.clock['insertion_ps']):.4f} [get_ports {{{ports}}}]\n")
 
 
+
+def _corner_libs(mlib, kd, corner):
+    """kit macro timing views of CORNER (tt/ff) for the gate/sign-off lib lists; FAIL when a macro lacks that view."""
+    out = []
+    for f in mlib:
+        m = re.match(r"^(.*)_(tt|typ|ff|ss)(\.lib(?:\.gz)?)$", Path(f).name)
+        if not m:
+            raise ValueError(f"macro lib {f}: no corner suffix")
+        name = f"{m[1]}_{corner}{m[3]}"
+        if not (kd / "macros" / name).is_file():
+            raise ValueError(f"macro lib {f}: no {corner} view {name} in the kit")
+        out.append(str(Path(f).parent / name))
+    return out
+
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
                    skip_ir=False, max_wire_um=None, rc_cal=True):
     t = P.types[tn]
@@ -856,6 +870,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if not macros else []),
            *([f"export OT_RELAY_MID_RE = {P.budgets.get('relay_mid_re', RELAY_MID_RE)}"] if macros else []),
+           # PATH-QC-A0N59 10-25: macro kits had no BC_LIB_FILES, so the post-CTS FF hold gate stopped NOT RUN
+           # ("hold gate: BC_LIB_FILES missing", native59).  Per-corner gate/sign-off lists only (implementation
+           # corner unchanged): std cells of the corner + each macro's sibling corner view copied into macros/.
+           *([f"export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) {' '.join(_corner_libs(mlib, kd, 'tt'))}",
+              f"export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) {' '.join(_corner_libs(mlib, kd, 'ff'))}"] if macros else []),
            # S81-P9 10-23: landing reset forest leaves re-clustered to identical branch flops by location after GPL
            # (forest_recluster.tcl; only kits whose sources hold ot_pl_land_reset_forest)
            *(["export POST_GLOBAL_PLACE_TCL = /work/forest_recluster.tcl"] if forest else []),
