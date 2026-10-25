@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.entry_engram_inputs.v1",
+ "layer": 14,
+ "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "fixture_meta_sha256": "21e4630930eb54a6928f5142ed2087fb25a2a25e2256d68c712659b691c86056",
+ "source": "checkpoint tensors and meta.history; no ops producers",
+ "history": [
+  19673,
+  48197,
+  13977,
+  74560,
+  112671,
+  119148,
+  47073,
+  16754
+ ],
+ "dim": 5120,
+ "hc": 4,
+ "eps": 1e-20,
+ "files": {
+  "ids": {
+   "file": "ids.bin",
+   "shape": [
+    24
+   ],
+   "dtype": "int64",
+   "sha256": "386bee4d4aa57991b13f3ed7846d131fa625b7bd75aebdb4dda9071df044822a"
+  },
+  "rows": {
+   "file": "rows.bin",
+   "shape": [
+    24,
+    256
+   ],
+   "dtype": "uint8",
+   "sha256": "848fef5b74e8e905f7b5762a34e3b2ba29e187c610ae9f2a57ed7880f1c2899d"
+  },
+  "rows_scale": {
+   "file": "rows_scale.bin",
+   "shape": [
+    24,
+    8
+   ],
+   "dtype": "uint8",
+   "sha256": "3d6e4fbf76978cf89474db0aa21c6a116df1abc6c39c1d8ebb97f96a92e22ad1"
+  },
+  "wkv": {
+   "file": "wkv.bin",
+   "shape": [
+    25600,
+    6144
+   ],
+   "dtype": "uint8",
+   "sha256": "9abdfe920afa0528c9987a7d01450f5022cc765fa8b115fb132597ddb25cb429"
+  },
+  "wkv_scale": {
+   "file": "wkv_scale.bin",
+   "shape": [
+    800,
+    192
+   ],
+   "dtype": "uint8",
+   "sha256": "8c8d7aa1ccc5a6c24f3e454de2e884db32890874263567889a0e182b3584642a"
+  }
+ }
+}

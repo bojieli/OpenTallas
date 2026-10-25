@@ -59,10 +59,10 @@
       "io_lk_WN2_u_phy"
      ],
      "rect_um": [
-      40.04,
-      16162.28,
-      3053.08,
-      17516.44
+      103.68,
+      16375.92,
+      2989.44,
+      17452.8
      ],
      "grid": [
       {
@@ -89,7 +89,7 @@
      "bumps": {
       "rect_um": [
        103.68,
-       16225.92,
+       16439.56,
        2989.44,
        17452.8
       ],
@@ -97,7 +97,7 @@
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_WN1",
@@ -109,10 +109,10 @@
       "io_lk_WN1_u_phy"
      ],
      "rect_um": [
-      2925.8,
-      16162.28,
-      5938.84,
-      17516.44
+      2989.44,
+      16375.92,
+      5875.2,
+      17452.8
      ],
      "grid": [
       {
@@ -139,7 +139,7 @@
      "bumps": {
       "rect_um": [
        2989.44,
-       16225.92,
+       16439.56,
        5875.2,
        17452.8
       ],
@@ -147,7 +147,7 @@
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_WN0",
@@ -159,10 +159,10 @@
       "io_lk_WN0_u_phy"
      ],
      "rect_um": [
-      5811.56,
-      16162.28,
-      8824.6,
-      17516.44
+      5875.2,
+      16375.92,
+      8760.96,
+      17452.8
      ],
      "grid": [
       {
@@ -189,7 +189,7 @@
      "bumps": {
       "rect_um": [
        5875.2,
-       16225.92,
+       16439.56,
        8760.96,
        17452.8
       ],
@@ -197,7 +197,7 @@
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_WN3",
@@ -209,10 +209,10 @@
       "io_lk_WN3_u_phy"
      ],
      "rect_um": [
-      8697.32,
-      16162.28,
-      11710.36,
-      17516.44
+      8760.96,
+      16375.92,
+      11646.72,
+      17452.8
      ],
      "grid": [
       {
@@ -239,7 +239,7 @@
      "bumps": {
       "rect_um": [
        8760.96,
-       16225.92,
+       16439.56,
        11646.72,
        17452.8
       ],
@@ -247,7 +247,7 @@
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_EN0",
@@ -259,10 +259,10 @@
       "io_lk_EN0_u_phy"
      ],
      "rect_um": [
-      11583.08,
-      16162.28,
-      14596.12,
-      17516.44
+      11646.72,
+      16375.92,
+      14532.48,
+      17452.8
      ],
      "grid": [
       {
@@ -289,7 +289,7 @@
      "bumps": {
       "rect_um": [
        11646.72,
-       16225.92,
+       16439.56,
        14532.48,
        17452.8
       ],
@@ -297,7 +297,7 @@
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_EN1",
@@ -309,10 +309,10 @@
       "io_lk_EN1_u_phy"
      ],
      "rect_um": [
-      14468.84,
-      16162.28,
-      17481.88,
-      17516.44
+      14532.48,
+      16375.92,
+      17418.24,
+      17452.8
      ],
      "grid": [
       {
@@ -339,7 +339,7 @@
      "bumps": {
       "rect_um": [
        14532.48,
-       16225.92,
+       16439.56,
        17418.24,
        17452.8
       ],
@@ -347,7 +347,7 @@
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_WS1",
@@ -359,10 +359,10 @@
       "io_lk_WS1_u_phy"
      ],
      "rect_um": [
-      40.04,
-      40.04,
-      3053.08,
-      1394.2
+      103.68,
+      103.68,
+      2989.44,
+      1180.56
      ],
      "grid": [
       {
@@ -391,13 +391,13 @@
        103.68,
        103.68,
        2989.44,
-       1330.56
+       1116.92
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_WS0",
@@ -409,10 +409,10 @@
       "io_lk_WS0_u_phy"
      ],
      "rect_um": [
-      2925.8,
-      40.04,
-      5938.84,
-      1394.2
+      2989.44,
+      103.68,
+      5875.2,
+      1180.56
      ],
      "grid": [
       {
@@ -441,13 +441,13 @@
        2989.44,
        103.68,
        5875.2,
-       1330.56
+       1116.92
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_HOST0",
@@ -459,10 +459,10 @@
       "io_lk_HOST0_u_phy"
      ],
      "rect_um": [
-      5811.56,
-      40.04,
-      8824.6,
-      1394.2
+      5875.2,
+      103.68,
+      8760.96,
+      1180.56
      ],
      "grid": [
       {
@@ -491,13 +491,13 @@
        5875.2,
        103.68,
        8760.96,
-       1330.56
+       1116.92
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_HOST1",
@@ -509,10 +509,10 @@
       "io_lk_HOST1_u_phy"
      ],
      "rect_um": [
-      8697.32,
-      40.04,
-      11710.36,
-      1394.2
+      8760.96,
+      103.68,
+      11646.72,
+      1180.56
      ],
      "grid": [
       {
@@ -541,13 +541,13 @@
        8760.96,
        103.68,
        11646.72,
-       1330.56
+       1116.92
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_ES0",
@@ -559,10 +559,10 @@
       "io_lk_ES0_u_phy"
      ],
      "rect_um": [
-      11583.08,
-      40.04,
-      14596.12,
-      1394.2
+      11646.72,
+      103.68,
+      14532.48,
+      1180.56
      ],
      "grid": [
       {
@@ -591,13 +591,13 @@
        11646.72,
        103.68,
        14532.48,
-       1330.56
+       1116.92
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     },
     {
      "name": "phy_lk_ES1",
@@ -609,10 +609,10 @@
       "io_lk_ES1_u_phy"
      ],
      "rect_um": [
-      14468.84,
-      40.04,
-      17481.88,
-      1394.2
+      14532.48,
+      103.68,
+      17418.24,
+      1180.56
      ],
      "grid": [
       {
@@ -641,13 +641,13 @@
        14532.48,
        103.68,
        17418.24,
-       1330.56
+       1116.92
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; reserved zone plus63.64um guard clipped to its containing partition; 150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 is a labelled assumption, separate from this reserved zone (no measured body outline claim)"
     }
    ]
   },
@@ -733,15 +733,15 @@
     "part": "lk_WN2",
     "rect_um": [
      103.68,
-     16225.92,
+     16439.56,
      2989.44,
      17452.8
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_WN1_u_phy",
@@ -750,15 +750,15 @@
     "part": "lk_WN1",
     "rect_um": [
      2989.44,
-     16225.92,
+     16439.56,
      5875.2,
      17452.8
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_WN0_u_phy",
@@ -767,15 +767,15 @@
     "part": "lk_WN0",
     "rect_um": [
      5875.2,
-     16225.92,
+     16439.56,
      8760.96,
      17452.8
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_WN3_u_phy",
@@ -784,15 +784,15 @@
     "part": "lk_WN3",
     "rect_um": [
      8760.96,
-     16225.92,
+     16439.56,
      11646.72,
      17452.8
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_EN0_u_phy",
@@ -801,15 +801,15 @@
     "part": "lk_EN0",
     "rect_um": [
      11646.72,
-     16225.92,
+     16439.56,
      14532.48,
      17452.8
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_EN1_u_phy",
@@ -818,15 +818,15 @@
     "part": "lk_EN1",
     "rect_um": [
      14532.48,
-     16225.92,
+     16439.56,
      17418.24,
      17452.8
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_WS1_u_phy",
@@ -837,13 +837,13 @@
      103.68,
      103.68,
      2989.44,
-     1330.56
+     1116.92
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_WS0_u_phy",
@@ -854,13 +854,13 @@
      2989.44,
      103.68,
      5875.2,
-     1330.56
+     1116.92
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_HOST0_u_phy",
@@ -871,13 +871,13 @@
      5875.2,
      103.68,
      8760.96,
-     1330.56
+     1116.92
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; host link (rack connections_s81.csv cls host: lk_HOST0+lk_HOST1 <-> host NIC, S81.HOST)",
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)",
     "host": true
    },
    {
@@ -889,13 +889,13 @@
      8760.96,
      103.68,
      11646.72,
-     1330.56
+     1116.92
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; host link (rack connections_s81.csv cls host: lk_HOST0+lk_HOST1 <-> host NIC, S81.HOST)",
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)",
     "host": true
    },
    {
@@ -907,13 +907,13 @@
      11646.72,
      103.68,
      14532.48,
-     1330.56
+     1116.92
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_ES1_u_phy",
@@ -924,13 +924,13 @@
      14532.48,
      103.68,
      17418.24,
-     1330.56
+     1116.92
     ],
-    "sites": 152,
+    "sites": 114,
     "pitch_um": 150.0,
     "signals": 26,
-    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy"
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
    }
   ]
  },
@@ -3122,6 +3122,57 @@
       "M6"
      ],
      "order": "lsb_low"
+    },
+    {
+     "name": "tl_i",
+     "dir": "in",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.tl_i",
+     "face": "E",
+     "window_um": [
+      859.7316,
+      921.3032
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "ca_o",
+     "dir": "out",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.ca_o",
+     "face": "E",
+     "window_um": [
+      931.3032,
+      992.8588
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "cb_o",
+     "dir": "out",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.cb_o",
+     "face": "E",
+     "window_um": [
+      1002.8588,
+      1064.4304
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
     }
    ]
   },
@@ -3402,6 +3453,57 @@
      "window_um": [
       440.0,
       466.0
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "tl_o",
+     "dir": "out",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.tl_o",
+     "face": "W",
+     "window_um": [
+      859.7316,
+      921.3032
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "ca_i",
+     "dir": "in",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.ca_i",
+     "face": "W",
+     "window_um": [
+      931.3032,
+      992.8588
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "cb_i",
+     "dir": "in",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.cb_i",
+     "face": "W",
+     "window_um": [
+      1002.8588,
+      1064.4304
      ],
      "layers": [
       "M4",
@@ -14396,6 +14498,45 @@
    "kind": "data"
   },
   {
+   "id": "h4_tl__0",
+   "src": {
+    "part": "ctl",
+    "bus": "tl_o"
+   },
+   "dst": {
+    "part": "lep0N",
+    "bus": "tl_i"
+   },
+   "width": 276,
+   "kind": "data"
+  },
+  {
+   "id": "h4_ca__0",
+   "src": {
+    "part": "lep0N",
+    "bus": "ca_o"
+   },
+   "dst": {
+    "part": "ctl",
+    "bus": "ca_i"
+   },
+   "width": 276,
+   "kind": "data"
+  },
+  {
+   "id": "h4_cb__0",
+   "src": {
+    "part": "lep0N",
+    "bus": "cb_o"
+   },
+   "dst": {
+    "part": "ctl",
+    "bus": "cb_i"
+   },
+   "width": 276,
+   "kind": "data"
+  },
+  {
    "id": "coll_WN0_u__0",
    "src": {
     "part": "lk_WN0",
@@ -17322,6 +17463,27 @@
    "ports": [
     "ctrl_lep__0"
    ]
+  },
+  {
+   "id": "h4_tl",
+   "ports": [
+    "h4_tl__0"
+   ],
+   "param": "LAT_HD_H4_TL"
+  },
+  {
+   "id": "h4_ca",
+   "ports": [
+    "h4_ca__0"
+   ],
+   "param": "LAT_HD_H4_CA"
+  },
+  {
+   "id": "h4_cb",
+   "ports": [
+    "h4_cb__0"
+   ],
+   "param": "LAT_HD_H4_CB"
   },
   {
    "id": "coll_WN0_u",
@@ -20550,6 +20712,36 @@
     "natural": 2,
     "pad": 0,
     "param": "LAT_CTRL_LEP"
+   },
+   "h4_tl": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_HD_H4_TL"
+   },
+   "h4_ca": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_HD_H4_CA"
+   },
+   "h4_cb": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_HD_H4_CB"
    },
    "coll_WN0_u": {
     "cycles": 2,

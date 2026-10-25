@@ -1,0 +1,9 @@
+{
+ "module": "kv3_head_eighth_e6",
+ "variant": "eco m8_pad2 (m8 + OT_PAD_MASTERS='FAx1_ASAP7_75t_R:1')",
+ "run": "epyc2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e6/m8_pad2",
+ "verdict": "FAILED (no signoff): DRT-1231 again -- pin u_g_t_13_u_l8.g_d[6].u_p/_1086_/CON (FAx1) has no access point in 5_2_route despite 1-site FAx1 padding (route_finish_rc=2); signoff NOT RUN",
+ "pre_route_rsz": {"setup_repair_final_wns_ps": 6.333, "hold_repair_final_ws_ps": 8.007, "hold_buffers": 10353},
+ "note": "e6 also FAILs face_guard (PORT_REGS, COORD 22:43 ruling 1) -> re-kit in the batched KV re-plan v3.9; no relaunch. Run data deleted (owner rule).",
+ "recorded": "2026-10-24 23:47 PDT KV-COLLECT"
+}

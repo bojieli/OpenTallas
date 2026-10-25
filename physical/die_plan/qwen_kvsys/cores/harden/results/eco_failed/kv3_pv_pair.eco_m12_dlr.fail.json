@@ -1,0 +1,9 @@
+{
+ "module": "kv3_pv_pair",
+ "variant": "eco m12_dlr (OT_DRV_LAST=1 OT_RETIME_LAST=1, MAX_FANOUT 24, setup margin 10, hold margin 12, corners tc/bc)",
+ "run": "intel1:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/m12_dlr",
+ "verdict": "FAILED (no signoff): OpenROAD SIGSEGV in drt::FlexPA::genInstAccessPoints -> FlexGCWorker::initPA0 during 5_1_grt pin access (route_finish_rc=2, make Error 245); signoff NOT RUN",
+ "pre_route_rsz": {"repair_timing_setup_final_wns_ps": -17.955, "setup_tns_ps": -439.5, "setup_viol": 33, "hold_repair_final_ws_ps": 12.001, "hold_buffers": 706, "rsz_0062": "Unable to repair all setup violations"},
+ "note": "pv_pair is NEEDS_RTL anyway (face_guard shared 2: fault-port flop duplication, COORD 22:43 ruling 2) -> re-kit in the batched KV re-plan v3.9; no relaunch. Run data deleted (owner rule).",
+ "recorded": "2026-10-24 23:08 PDT KV-COLLECT"
+}

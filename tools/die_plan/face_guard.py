@@ -25,7 +25,7 @@ from pathlib import Path
 
 MAX_CHAIN = 3
 OUT_PINS = {"Y", "Q", "QN", "H", "L", "CON", "SN", "Z", "ZN", "O"}
-SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_n|rst_o_[0-9]+)$"   # rst_o: reset wavefront outs (reset_tree.py)
+SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_n|rst_o_[0-9]+|start_i|start_o_[0-9]+)$"   # rst_o: reset wavefront outs (reset_tree.py)
 
 
 def is_ff(master):
