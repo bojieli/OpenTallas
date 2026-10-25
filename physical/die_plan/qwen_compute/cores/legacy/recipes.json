@@ -115,9 +115,18 @@
       "always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end",
       "always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth",
       4
+     ],
+     [
+      "    wire [9:0] pwin [0:5];",
+      "    reg [7:0] pvm_we1; always @(posedge ck) pvm_we1 <= vm_we;   // QC-CORES kit patch (face_guard: ONE pin register per input bit)\n    wire [9:0] pwin [0:5];"
+     ],
+     [
+      "        qfd_dv_s8x_kff #(.W(10), .ID(8000 + gk)) u (.ck(ck), .d({vm_we, vm_waddr[23:22]}), .q(pwin[gk]));",
+      "        assign pwin[gk] = {pvm_we1, pvm_waddr[23:22]};   // QC-CORES kit patch: was 6 kff replicas loading the same pins (face_guard shared 10); same cycle, bit-exact"
      ]
     ]
    }
-  ]
+  ],
+  "_why_face": "face_guard post-synth FAIL shared 10 (vm_we[7:0], vm_waddr[23:22] loaded by 6 kff replica pin registers + pvm_waddr): replicas replaced by one pin register each (0 cycles, bit-exact register merge)."
  }
 }
