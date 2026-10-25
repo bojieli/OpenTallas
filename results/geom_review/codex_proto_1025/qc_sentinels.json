@@ -1,0 +1,21 @@
+{
+  "when": "2026-10-25T02:46:04.804982-07:00",
+  "source": "codex/proto-current-1025 QC plan from6a3b43efb",
+  "verdict": "PASS-COND",
+  "scope": "Skeleton GRT-only diagnostic, no detailed partition route approval",
+  "images": [
+    "/tmp/codex-proto-qc-sul0.png",
+    "/tmp/codex-proto-qc-cbn.png",
+    "/tmp/codex-proto-qc-ftc.png"
+  ],
+  "findings": [
+    "Viewed three exact planned-site images before admission. SU_l0 has four macro rows and broad horizontal channels; station/boundary sites follow channel/edge bands.",
+    "CBN has two macro columns and a central vertical channel. FT sites are in legal gaps, pin windows predominantly north/south.",
+    "coll_ftc is coreless with sparse linear station chains and no macro obstruction."
+  ],
+  "conditions": [
+    "GRT must assess M6/M7 crossing capacity; setup/hold readings are ideal-clock wire diagnostics only.",
+    "Only CLEAN classification allows later full logic partition kit.",
+    "Regenerated wavefront outputs use registered reset-tree relays (g2 fix807841446)."
+  ]
+}

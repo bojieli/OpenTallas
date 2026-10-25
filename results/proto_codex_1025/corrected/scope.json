@@ -1,0 +1,8 @@
+{
+  "when": "2026-10-25T03:31:07.610468-07:00",
+  "scope": "Planned geometry and skeleton GRT diagnostics; no G3/G4/G5 signoff",
+  "s81": "86normal+7depthretry manifest types PASS,plus t75separate=94; explicitcell envelopes/core/crosscell clear",
+  "qc": "53softtypes geometryPASS max402.432um, celloverlap0; repaired CBN/FTC skeletonCLEAN; SU point/channel GRT comparison live",
+  "audit_helpers": "Operational copies require sibling tools/die_plan; original runtime directory path is /srv/opentallas-scratch2/claude/codex-proto-geometry-scan",
+  "failures_retained": "Original baselinegeometry/GRT failures and first audit-launch Python3.14 main-guard failure retained in coordination logs. No verdict overwritten."
+}

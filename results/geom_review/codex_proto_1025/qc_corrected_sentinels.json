@@ -1,0 +1,22 @@
+{
+  "when": "2026-10-25T03:16:44.133310-07:00",
+  "source_sha256": "24439dff2d0d5f32e865d7661c5081ea695a9582f5eb598f3dd4d0328b81a1a9",
+  "scope": "Corrected3QC skeleton diagnostic GRT only; no full partition route",
+  "verdict": "PASS-COND",
+  "images": [
+    "/tmp/codex-proto-qc-corrected-sul0.png",
+    "/tmp/codex-proto-qc-corrected-cbn.png",
+    "/tmp/codex-proto-qc-corrected-ftc.png"
+  ],
+  "findings": [
+    "Viewed all3 exact planned-site renders. All explicit internal station cell clusters are in horizontal/vertical channels and outside hard cores.",
+    "SU_l0 clusters distributed across horizontal macro-row gaps, correcting prior W macro-edge station pileup. Some input-to-firststage wire still crosses core field; M6/M7 capacity remains the purpose of this diagnostic.",
+    "CBN stations lie in outer/central clear bands; coreless FTC retains linear short-stage station rows.",
+    "Independent53-type candidate audit has max402.432um, zero cell/core intersections and zero cell overlaps."
+  ],
+  "conditions": [
+    "Run bounded3-round skeleton GRT to measure actual M6/M7 capacity; all overflowing types remain fullkit-held.",
+    "No whole-die or G3 signoff implied, clock is ideal in skeleton.",
+    "Channel-route stricter candidate is separately owned QC-A0; keep results separate."
+  ]
+}

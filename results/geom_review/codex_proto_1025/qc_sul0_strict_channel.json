@@ -1,0 +1,16 @@
+{
+  "when": "2026-10-25T03:29:47.827041-07:00",
+  "scope": "sle_su_l0 strict channel variant skeleton GRT only",
+  "verdict": "PASS-COND",
+  "source_sha256": "76f20867d40fda669465a84e7f66b362d69d916809a6066d976d3828fad82452",
+  "image": "/tmp/codex-proto-qc-channel-sul0.png",
+  "findings": [
+    "Viewed exact proposed station image before admission: stations occupy W outer band and top/horizontal gaps; macro rectangles remain clear.",
+    "More station groups concentrate in W channel than point-only variant; GRT must decide capacity.",
+    "No fullkit/DRT approval, ideal clock skeleton only."
+  ],
+  "conditions": [
+    "Compare exact geometry+GRT to existing point-only variant; do not select on cell placement success alone.",
+    "Price all extra station cycles and bind current reset/start contract before production kits."
+  ]
+}

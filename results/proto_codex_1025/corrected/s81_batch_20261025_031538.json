@@ -1,0 +1,152 @@
+{
+ "when": "20261025_031538",
+ "jobs": 7,
+ "counts": {
+  "PASS": 7,
+  "FAIL": 0,
+  "PENDING": 0,
+  "ERROR": 0
+ },
+ "types": [
+  {
+   "slots": 13,
+   "max_hop_um": 369.041,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "type": "ot_s81sl_leaf__t28",
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 29688,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "source_plan": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/ot_s81sl_leaf__t28/plan.json",
+   "source_sha256": "1989193cb62b559f74b091d0c4fdbcce85de34c2eb33b1fc7e5f4302bbdd60f0",
+   "verdict": "PASS",
+   "audit_path": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/ot_s81sl_leaf__t28/audit.json"
+  },
+  {
+   "slots": 10,
+   "max_hop_um": 375.595,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "type": "svc_hi_dsdv_svc_rs__t6",
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 23816,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "source_plan": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/svc_hi_dsdv_svc_rs__t6/plan.json",
+   "source_sha256": "fa7b8b3ceb70f548ab7cafcb34fa34d54fcf66cad3037d831afca4ab21bc4f93",
+   "verdict": "PASS",
+   "audit_path": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/svc_hi_dsdv_svc_rs__t6/audit.json"
+  },
+  {
+   "slots": 4,
+   "max_hop_um": 357.907,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "type": "dsdv_slice_iq_C__t1",
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 3598,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "source_plan": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/dsdv_slice_iq_C__t1/plan.json",
+   "source_sha256": "85238d9a8877e3c7e17b651c9cd83abd396bac9437042aab0cddfac8facd5fcc",
+   "verdict": "PASS",
+   "audit_path": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/dsdv_slice_iq_C__t1/audit.json"
+  },
+  {
+   "slots": 9,
+   "max_hop_um": 372.407,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "type": "ot_s81sl_leaf__t45",
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 13958,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "source_plan": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/ot_s81sl_leaf__t45/plan.json",
+   "source_sha256": "e24d5c98ef39002622debdc5003d82e8d30befc8e4eb6282ea1a91c7bef8a34f",
+   "verdict": "PASS",
+   "audit_path": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/ot_s81sl_leaf__t45/audit.json"
+  },
+  {
+   "slots": 6,
+   "max_hop_um": 356.961,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "type": "dsdv_slice_c1x_C__t8",
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 4757,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "source_plan": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/dsdv_slice_c1x_C__t8/plan.json",
+   "source_sha256": "1c3759bad12fde2f3d104abb7f382d56fed9f44bed6339d7563fd89d1f6d8931",
+   "verdict": "PASS",
+   "audit_path": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/dsdv_slice_c1x_C__t8/audit.json"
+  },
+  {
+   "slots": 3,
+   "max_hop_um": 356.961,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "type": "dsdv_slice_c1x_C__t9",
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 3324,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "source_plan": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/dsdv_slice_c1x_C__t9/plan.json",
+   "source_sha256": "4f38a26c1da4e2804c028abda559c5dad042cc579f4c049397f4c73ed717ce27",
+   "verdict": "PASS",
+   "audit_path": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/dsdv_slice_c1x_C__t9/audit.json"
+  },
+  {
+   "slots": 2,
+   "max_hop_um": 370.749,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "type": "eng__t1",
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 19047,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "source_plan": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/eng__t1/plan.json",
+   "source_sha256": "640b62e8536f808e0c4c36db064a1706c01e684e01699fff8d72574b9e0f404c",
+   "verdict": "PASS",
+   "audit_path": "/srv/opentallas-scratch2/claude/codex-s81-ft-exact/retries/depth/eng__t1/audit.json"
+  }
+ ]
+}
