@@ -597,3 +597,8 @@ CODEX: 2026-10-25 07:54 PDT HBM selected NW TKM II8->L74 two-beat->shared actual
 2026-10-25 08:04 PDT CODEX: PROTO/IR child parked on ClaudeRESET; source694eef529 READY8tests+imageinstaller, RR_s2 FAILI/TTsetup (FF+5.007), noDRT/no ownlivejobs; detailedCODEX-LOG.
 
 2026-10-25 08:04 PDT CODEX: QC plan child parked on reset; criticalSTART1c0e347be4 G0C56/56 READY, strictKV-ID9cbce06154READY62checks+100contracts; owncollectordisabled, inherited7a/7blive, detailedCODEX-LOG.
+
+CODEX: 2026-10-25 08:04 PDT HBM plan parked: namedNWpath directL74/L12/L13 all2cycles,capacity0.5968PASS and capturebandsreviewed; source7ff removesclock/resetDATArelays, evidenceecfb. Root/tile0returnR3FAIL remainsowned; ring2modelpreservedlive.
+
+2026-10-25 08:03 PDT CODEX: HBMphysical parkedRESET; sourceflowf90READY, EXP6/6SRAMretention synthPASS0cycles; namedTKMroot↔tile0 actual75bit>405FAIL/clockasdata failure diagnosed, alternativesnotimplemented; IDXS H1 currentLEC live, parentTKMsynthpreserved. DetailedCODEXLOG.
+2026-10-25 08:04 PDT CODEX: KV-KITSparkedRESET; FTlatticeG2PASS0overflow/NoAp0,clockmacrokeepout92d86READY3tests; SYS_C5macrodetourWIP0ed44(+6FT/+3FWD)PGopen; ioFT48GBfailure=PDNSimLUproven.
