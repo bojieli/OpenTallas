@@ -36,7 +36,9 @@ CHECKS (each PASS / FAIL / NOT RUN; SIGNED only if every blocking check PASSes):
   clock         per corner: active-edge clock arrival at every register clock pin (insertion min/mean/max) and
                 at the PIN FLOPS (registers whose D is in the fan-out of a data input or whose Q reaches a data
                 output); pin-flop spread = max - min <= 80 ps at TT and FF (R4, COORD 10-23); with
-                --insertion-target the pin-flop mean must be within +-insertion_tol                         blocking
+                --insertion-target the pin-flop mean must be within +-insertion_tol (a hard-core kit whose core.json
+                carries clock_contract.kind = hard_core_latency publishes its measured insertion instead:
+                signoff.json core_latency; the target applies at the parent partition tap, COORD 10-24)     blocking
   sdc_lint      tools/die_plan/sdc_lint.py on the golden SDC (kit sdc_lint.json when present, else a context derived
                 from the SDC + the routed netlist's ports with the plan period / insertion / tolerance)     blocking
   face_guard    tools/die_plan/face_guard.py on the synthesized netlist (<base>/1_synth.v | 1_2_yosys.v), with
@@ -549,6 +551,27 @@ def boundary_controls(disc):
     return controls, dict(manifest=str(manifest), source_core_json=str(source), controls=controls)
 
 
+def hard_core_latency_contract(disc):
+    """the kit's typed hard-core clock contract (boundary_guard_context.json -> core.json clock_contract), or None.
+    Only kind 'hard_core_latency' is recognised: the core publishes its measured insertion instead of meeting the
+    partition-tap target (COORD 10-24)."""
+    if not disc.get("kit"):
+        return None
+    manifest = Path(disc["kit"]) / "boundary_guard_context.json"
+    if not manifest.is_file():
+        return None
+    ctx = json.loads(manifest.read_text())
+    source = Path(ctx.get("source_core_json", ""))
+    if not source.is_absolute():
+        source = manifest.parent / source
+    if not source.is_file():
+        return None
+    cc = json.loads(source.read_text()).get("clock_contract")
+    if not isinstance(cc, dict) or cc.get("kind") != "hard_core_latency":
+        return None
+    return cc
+
+
 def run_face_guard(disc, clock_ports=()):
     import face_guard
     if not disc.get("synth"):
@@ -722,7 +745,14 @@ def cmd_run(a):
     if not disc["sdc"]:
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
     out = Path(a.out).resolve()
-    if a.insertion_target is None and disc.get("sdc_lint_ctx"):     # die-plan kit: the plan common latency
+    core_contract = hard_core_latency_contract(disc)
+    if core_contract:
+        # COORD ruling 10-24: a hard core carries a core-latency contract -- its measured insertion is published
+        # (core.json / the ETM max_clock_tree_path) and the parent tap balance subtracts it (early tap); the plan
+        # 250 +- 40 target applies at the PARTITION tap, not inside the core.  Spread / unique-arrival still gate.
+        if a.insertion_target is not None:
+            raise SystemExit("signoff: --insertion-target conflicts with the kit's hard-core latency contract")
+    elif a.insertion_target is None and disc.get("sdc_lint_ctx"):     # die-plan kit: the plan common latency
         a.insertion_target = float(json.loads(Path(disc["sdc_lint_ctx"]).read_text())["insertion_ps"])
     out.mkdir(parents=True, exist_ok=True)
     corners = [c for c in a.corners.split(",") if c]
@@ -751,6 +781,10 @@ def cmd_run(a):
     rec["face_guard"] = run_face_guard(disc, (ports or {}).get("clock_ports", ()))
     rec["route"] = route_counts(disc)
     evaluate(rec, a.insertion_target)
+    if core_contract:
+        rec["core_latency"] = dict(contract=core_contract, measured={
+            c: rec["corners"][c].get("insertion_pinflops") for c in rec["corners"] if rec["corners"][c].get("done")})
+        rec["checks"]["clock"]["core_latency_contract"] = core_contract.get("kind")
     (out / "signoff.json").write_text(json.dumps(rec, indent=1) + "\n")
     print("SIGNOFF " + summary_line(rec))
     for r in rec["reasons"]:

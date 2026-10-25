@@ -91,6 +91,9 @@ def main():
                antenna=pick(m, r"detailedroute__antenna__violating__nets", r"finish__antenna.*"),
                pin_audit=f"{pa.get('verdict', 'NOT RUN')} {pa.get('ok', 0)}/{pa.get('pins', 0)}",
                sta=sta)
+    if len(fz.get("clocks") or []) > 1:
+        rec["clock_assumption"] = ("LABELLED ASSUMPTION: clocks " + " ".join(fz["clocks"]) + " co-timed as one 833 ps clock "
+                                   "(plan has no HBM clock period; pending KV-G3)")
     views = kd / "views"
     lef = next(iter(sorted(views.glob(f"{mod}.lef"))), None)
     libs = {c: views / f"{mod}_{c}.lib" for c in ("tt", "ff", "ss")}   # SS: information only
@@ -122,6 +125,11 @@ def main():
             for f in (f"sta_{c}.json", f"sta_{c}_max.rpt", f"sta_{c}_min.rpt"):
                 if (views / f).is_file():
                     shutil.copyfile(views / f, vd / f)
+        cj = jload(kd / "core.json")
+        if cj is not None:          # the hard-core contract the parent consumes, with the measured insertion
+            cj["clock_latency_measured"] = (so.get("core_latency") or {}).get("measured") or {
+                c: (sta.get(c) or {}).get("insertion") for c in ("tt", "ff")}
+            (vd / f"{mod}.core.json").write_text(json.dumps(cj, indent=1) + "\n")
         (vd / "provenance.json").write_text(json.dumps(dict(kit=fz, verdict=verdict, views_status=rec["views_status"]),
                                                        indent=1) + "\n")
         rec["views"] = str(vd.relative_to(repo))
