@@ -710,6 +710,11 @@ def main():
     (kd / "core_grt_pre.tcl").write_text("source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n")
     (kd / "core_grt_post.tcl").write_text("if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq \"ff\"} { ot_vclk_bind tt }\n")
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
+    # HBM-KITS-B2 10-25: replicated (* keep *) registers (ot_rst_relay region copies, ...) need the ORFS
+    # SYNTH_CANONICALIZE_TCL hook physical/common_flow/ot_keep_regs.tcl: keep on the WIRE alone does not stop opt_merge
+    # folding the copies into one flop (sfustore_hw B2n: relay_q[1..3] merged -> one reset flop for 4 SRAM regions,
+    # LEC NOT EQUIVALENT 97 points + reset rule decision 2 broken).  Every route flow (run_abi3_physical.py) sets it.
+    shutil.copyfile(REPO / "physical/common_flow/ot_keep_regs.tcl", kd / "ot_keep_regs.tcl")
     tb = (TOOL / "tap_balance.tcl").read_text()
     tb = tb.replace("set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}", "set tb_port_re {^(" + "|".join(re.escape(c) for c in sorted(set(clks))) + ")$}")
     (kd / "tap_balance.tcl").write_text(tb)
@@ -786,6 +791,7 @@ def main():
            "export TNS_END_PERCENT = 100",
            "export PRE_SYNTH_TCL = /work/face_keep.tcl",
            "export POST_SYNTH_TCL = /work/post_synth_actual.tcl",
+           "export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl",
            "export POST_CTS_TCL = /work/tap_balance.tcl",
            # ELEM-HBM 10-24 (gq_land RSZ0060): ORFS cts.tcl repairs hold BEFORE the POST_CTS tap_balance, i.e. on an
            # unbalanced tree -> thousands of needless hold buffers; repair after GRT instead, on the balanced tree.
