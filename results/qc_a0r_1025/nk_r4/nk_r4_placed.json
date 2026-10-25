@@ -1,0 +1,231 @@
+{
+ "all": {
+  "bins": 1788,
+  "mean": 0.165,
+  "p90": 0.442,
+  "p99": 0.604,
+  "max": 0.749,
+  "bins_gt_0p8": 0,
+  "bins_gt_0p9": 0
+ },
+ "lsl_zone": {
+  "bins": 840,
+  "mean": 0.198,
+  "p90": 0.448,
+  "p99": 0.56,
+  "max": 0.677,
+  "bins_gt_0p8": 0,
+  "bins_gt_0p9": 0
+ },
+ "rom_zone": {
+  "bins": 938,
+  "mean": 0.131,
+  "p90": 0.409,
+  "p99": 0.627,
+  "max": 0.749,
+  "bins_gt_0p8": 0,
+  "bins_gt_0p9": 0
+ },
+ "hot_bins_gt_0p8": [],
+ "blockages": [],
+ "std_cells": 156584,
+ "region_fill": {
+  "qrl_fltq@150,980": {
+   "fill": 0.088,
+   "seq_fill": 0.004,
+   "free_um2": 465.6
+  },
+  "qrl_sfm@317,740": {
+   "fill": 0.061,
+   "seq_fill": 0.008,
+   "free_um2": 46.0
+  },
+  "qrl_f0@80,674": {
+   "fill": 0.15,
+   "seq_fill": 0.092,
+   "free_um2": 1232.0
+  },
+  "qrl_o0@80,754": {
+   "fill": 0.301,
+   "seq_fill": 0.174,
+   "free_um2": 930.2
+  },
+  "qrl_f1@80,834": {
+   "fill": 0.156,
+   "seq_fill": 0.092,
+   "free_um2": 1232.0
+  },
+  "qrl_o1@80,914": {
+   "fill": 0.309,
+   "seq_fill": 0.174,
+   "free_um2": 930.2
+  },
+  "qrl_f2@80,975": {
+   "fill": 0.121,
+   "seq_fill": 0.105,
+   "free_um2": 309.7
+  },
+  "qrl_f2@95,980": {
+   "fill": 0.275,
+   "seq_fill": 0.156,
+   "free_um2": 511.6
+  },
+  "qrl_o2@80,1075": {
+   "fill": 0.298,
+   "seq_fill": 0.173,
+   "free_um2": 930.2
+  },
+  "qrl_f3@319,674": {
+   "fill": 0.23,
+   "seq_fill": 0.144,
+   "free_um2": 865.9
+  },
+  "qrl_o3@319,754": {
+   "fill": 0.288,
+   "seq_fill": 0.177,
+   "free_um2": 653.8
+  },
+  "qrl_f4@306,834": {
+   "fill": 0.246,
+   "seq_fill": 0.131,
+   "free_um2": 880.0
+  },
+  "qrl_o4@306,914": {
+   "fill": 0.438,
+   "seq_fill": 0.243,
+   "free_um2": 664.4
+  },
+  "qrl_f5@260,980": {
+   "fill": 0.359,
+   "seq_fill": 0.211,
+   "free_um2": 426.9
+  },
+  "qrl_f5@306,975": {
+   "fill": 0.124,
+   "seq_fill": 0.105,
+   "free_um2": 221.2
+  },
+  "qrl_o5@306,1075": {
+   "fill": 0.277,
+   "seq_fill": 0.169,
+   "free_um2": 664.4
+  },
+  "qrl_q5@306,995": {
+   "fill": 0.254,
+   "seq_fill": 0.112,
+   "free_um2": 440.0
+  },
+  "qrl_f6@319,834": {
+   "fill": 0.226,
+   "seq_fill": 0.138,
+   "free_um2": 865.9
+  },
+  "qrl_o6@319,914": {
+   "fill": 0.431,
+   "seq_fill": 0.243,
+   "free_um2": 653.8
+  },
+  "qrl_f7@319,995": {
+   "fill": 0.222,
+   "seq_fill": 0.133,
+   "free_um2": 865.9
+  },
+  "qrl_o7@319,1075": {
+   "fill": 0.31,
+   "seq_fill": 0.172,
+   "free_um2": 653.8
+  },
+  "qrl_q7@319,975": {
+   "fill": 0.443,
+   "seq_fill": 0.229,
+   "free_um2": 217.7
+  },
+  "qrl_hd0@206,661": {
+   "fill": 0.387,
+   "seq_fill": 0.209,
+   "free_um2": 2076.7
+  },
+  "qrl_hd1@206,717": {
+   "fill": 0.382,
+   "seq_fill": 0.211,
+   "free_um2": 2076.6
+  },
+  "qrl_hd2@206,773": {
+   "fill": 0.416,
+   "seq_fill": 0.235,
+   "free_um2": 2076.7
+  },
+  "qrl_hd3@280,661": {
+   "fill": 0.372,
+   "seq_fill": 0.208,
+   "free_um2": 2076.7
+  },
+  "qrl_hd4@243,717": {
+   "fill": 0.387,
+   "seq_fill": 0.212,
+   "free_um2": 2076.7
+  },
+  "qrl_hd5@243,773": {
+   "fill": 0.375,
+   "seq_fill": 0.214,
+   "free_um2": 2076.7
+  },
+  "qrl_hd6@280,717": {
+   "fill": 0.39,
+   "seq_fill": 0.213,
+   "free_um2": 2076.6
+  },
+  "qrl_hd7@280,773": {
+   "fill": 0.377,
+   "seq_fill": 0.212,
+   "free_um2": 2076.7
+  },
+  "qrl_l2c@243,661": {
+   "fill": 0.228,
+   "seq_fill": 0.111,
+   "free_um2": 2076.7
+  },
+  "qrl_rnw@201,397": {
+   "fill": 0.392,
+   "seq_fill": 0.317,
+   "free_um2": 2413.6
+  },
+  "qrl_rne@248,397": {
+   "fill": 0.439,
+   "seq_fill": 0.334,
+   "free_um2": 2308.7
+  },
+  "qrl_lnw@210,413": {
+   "fill": 0.171,
+   "seq_fill": 0.142,
+   "free_um2": 2217.0
+  },
+  "qrl_lne@240,413": {
+   "fill": 0.197,
+   "seq_fill": 0.149,
+   "free_um2": 2118.5
+  },
+  "qrl_dw@219,413": {
+   "fill": 0.087,
+   "seq_fill": 0.063,
+   "free_um2": 2561.9
+  },
+  "qrl_de@229,413": {
+   "fill": 0.098,
+   "seq_fill": 0.064,
+   "free_um2": 2561.9
+  }
+ },
+ "hub_fill": {
+  "fill": 0.368,
+  "seq_fill": 0.203,
+  "free_um2": 18690.2
+ },
+ "bins20": {
+  "max": 0.618,
+  "p99": 0.514,
+  "gt_0p8": 0,
+  "gt_0p7": 0,
+  "hot": []
+ }
+}

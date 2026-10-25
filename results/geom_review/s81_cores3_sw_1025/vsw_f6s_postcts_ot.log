@@ -1,0 +1,24 @@
+OT_FACE_FLOPS placed 387 pin registers FIRM at their faces (0 signal ports without a flop within 2 buffers; 0 cells duplicated for output ports sharing a merged flop); 0 ft stations j>=1 FIRM on their routes (0 missing)
+OT_MACRO_IF u_l.u_la.g_m\[0\].u_m: 210 interface registers FIRM beside their pin edge
+OT_MACRO_IF u_l.u_lb.g_m\[0\].u_m: 80 interface registers FIRM beside their pin edge
+OT_MACRO_IF placed 290 registers (pin->reg um p50 9.2 p90 11.0 max 11.1); 0 already FIRM (pin registers), 0 without a free site
+OT_RT sinks: 13197 registers, 2 macro clock pins, 0 other (kept on the root)
+OT_RT macro group u_l.u_lb.g_m\[0\].u_m: 146 interface registers
+OT_RT macro group u_l.u_la.g_m\[0\].u_m: 210 interface registers
+OT_RT H-tree: 3 levels, 8 leaf nodes (taps), region 108.0 x 54.0 um, 15 spine buffers
+OT_RT macro tap u_l.u_lb.g_m\[0\].u_m at (99.8,115.3) from region 4 node (58.3,139.3)
+OT_RT macro tap u_l.u_la.g_m\[0\].u_m at (99.8,164.9) from region 4 node (58.3,139.3)
+OT_RT tap loads: 7 301 5 2549 2 1244 4 2604 3 2446 1 2419 0 1343 6 1; macro groups 2
+OT_RT CTS_ARGS -sink_clustering_enable -obstruction_aware -sink_clustering_size 24 -sink_clustering_max_diameter 30 -delay_buffer_derate 1.0 -repair_clock_nets -clk_nets {ot_rt_h3_0_n ot_rt_h3_1_n ot_rt_h3_2_n ot_rt_h3_3_n ot_rt_h3_4_n ot_rt_h3_5_n ot_rt_h3_6_n ot_rt_h3_7_n ot_rt_mtap0_n ot_rt_mtap1_n}
+OT_RT_BAL it0: ot_rt_h3_0=281(275-290,1343) ot_rt_h3_1=288(280-295,2419) ot_rt_h3_2=268(260-275,1244) ot_rt_h3_3=288(283-295,2446) ot_rt_h3_4=324(318-329,2604) ot_rt_h3_5=321(312-332,2549) ot_rt_h3_6=242(242-242,1) ot_rt_h3_7=317(313-320,301) ot_rt_mtap0=285(255-286,81) ot_rt_mtap1=299(248-300,211)
+OT_RT_BAL it1: ot_rt_h3_0=326(320-335,1343) ot_rt_h3_1=311(303-317,2419) ot_rt_h3_2=313(305-320,1244) ot_rt_h3_3=311(306-318,2446) ot_rt_h3_4=321(315-327,2604) ot_rt_h3_5=319(310-330,2549) ot_rt_h3_6=308(308-308,1) ot_rt_h3_7=315(311-318,301) ot_rt_mtap0=329(298-330,81) ot_rt_mtap1=321(270-322,211)
+OT_RT_BAL it2: ot_rt_h3_0=326(320-335,1343) ot_rt_h3_1=333(325-340,2419) ot_rt_h3_2=335(327-342,1244) ot_rt_h3_3=333(328-341,2446) ot_rt_h3_4=321(315-327,2604) ot_rt_h3_5=319(310-330,2549) ot_rt_h3_6=330(330-330,1) ot_rt_h3_7=315(311-318,301) ot_rt_mtap0=329(298-330,81) ot_rt_mtap1=321(270-322,211)
+OT_RT_MACRO pass0 u_l.u_lb.g_m\[0\].u_m clk 298 vs interface regs mean 329 (80 regs): -31 ps
+OT_RT_MACRO pass0 u_l.u_la.g_m\[0\].u_m clk 270 vs interface regs mean 321 (210 regs): -51 ps
+OT_RT_MACRO pass1 u_l.u_lb.g_m\[0\].u_m clk 330 vs interface regs mean 329 (80 regs): +1 ps
+OT_RT_MACRO pass1 u_l.u_la.g_m\[0\].u_m clk 323 vs interface regs mean 321 (210 regs): +2 ps
+OT_RT_BAL done: 19 pad cells; tap means 315..335 ps (window 20 vs 20)
+OT_RT_INS all registers 13199: min 309.8 p50 327.8 max 342.2 (placement RC, TT)
+OT_RT_HOLD_PRE_REPAIR worst -81.85 ps; viol 602
+OT_LEAF_AFF pairs 5654 groups 872 cross_leaf_before 3461 cross_leaf_after 2798 groups_moved 473 sinks_moved 695 same_leaf_already 146 skip_big 43 skip_far 125 skip_cap 85 skip_driver 0 leaf_cap 28 radius_um 30.0 report_only 0
+CTS_HOLD_FF wns_ps -81.85 violators 486

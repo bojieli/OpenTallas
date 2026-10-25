@@ -901,6 +901,24 @@ class TestSharedShaRows(Base):
         (g,) = self.ap.LG.gaps_geom_ambiguous(self.REQ + reply, self.ap.geom_groups(rows), now)
         self.assertIn("AMBIGUOUS-GEOM [PATH-QC-SRAMIF-S7]", g[1])
 
+    def test_later_per_row_repost_clears_ambiguous(self):
+        """2026-10-25 S81-CORES/LEGACY b1 + HBM-KITS/B2: the reviewer re-posted per row after a sha-only reply; a row
+        named by a LATER reply (type, kit dir or row id) is no longer AMBIGUOUS-GEOM, an unnamed one still is"""
+        sha_only = ("2026-10-25 10:31 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] claude/path-qc-sramif-1025@90bf56dfa: "
+                    "PASS-COND route\n")
+        now = time.mktime(time.strptime("2026-10-25 11:00", "%Y-%m-%d %H:%M"))
+        rows = self.rows("btab", "prog")
+        groups = self.ap.geom_groups(rows)
+        repost = ("2026-10-25 10:40 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] (re-post per row)\n"
+                  "    REPLY [PATH-QC-SRAMIF-S7] btab_s7: PASS-COND route\n")
+        (g,) = self.ap.LG.gaps_geom_ambiguous(self.REQ + sha_only + repost, groups, now)
+        self.assertIn("reply reaches qfd_dv_s8x_prog__s7 only", g[1])
+        repost += "    REPLY [PATH-QC-SRAMIF-S7] qfd_dv_s8x_prog__s7: FAIL outline\n"
+        self.assertEqual(self.ap.LG.gaps_geom_ambiguous(self.REQ + sha_only + repost, groups, now), [])
+        # a reply naming the row BEFORE the sha-only one does not clear it
+        self.assertEqual(len(self.ap.LG.gaps_geom_ambiguous(
+            self.REQ + repost.replace("10:40", "10:30") + sha_only, groups, now)), 1)
+
     def test_later_fail_naming_type_demotes_and_mixed_reads_fail(self):
         t = (self.REQ + "2026-10-25 10:30 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] btab_s7 PASS-COND route; "
              "prog_s7 PASS-COND route\n2026-10-25 10:40 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] prog_s7 FAIL "

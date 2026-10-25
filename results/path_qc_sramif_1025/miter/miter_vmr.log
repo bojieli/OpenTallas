@@ -1,0 +1,13 @@
+MITER_VMR N=20000 seed=1 q_mism=0 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19569
+MITER_VMR N=20000 seed=7 q_mism=0 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19613
+MITER_VMR N=20000 seed=1234 q_mism=0 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19630
+MUTANT mut_vb
+VMR MISMATCH c=25
+VMR MISMATCH c=26
+VMR MISMATCH c=27
+MITER_VMR N=20000 seed=3 q_mism=18701 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19580
+MUTANT mut_vc
+VMR MISMATCH c=58
+VMR MISMATCH c=109
+VMR MISMATCH c=172
+MITER_VMR N=20000 seed=3 q_mism=548 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19580

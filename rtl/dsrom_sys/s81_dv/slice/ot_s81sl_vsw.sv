@@ -9,7 +9,13 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_vsw #(
     parameter integer LM = 5,
-    parameter integer LA = 4
+    parameter integer LA = 4,
+    // S81-CORES2/SW 10-25 (GEOM vsw_c FAIL: v_q, the N-face pin register of i_v, broadcast to 130 lane-input muxes and
+    // through the PRE comparators into u_l.p_u 116-120 um away, 40 points, TT -11.44): LR = 1 registers the serialised
+    // lane inputs (one flop stage between the pin-register / serialiser band and the lane's PRE), so the cross-core hop
+    // carries a mux only.  +1 cycle on o_v / o_d / o_f (every output exactly one edge later; ovr delayed with it).
+    // LR = 0 = the previous design (lockstep reference, tb_s81sl_vsw_lr_eq.sv).
+    parameter integer LR = 1
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -39,12 +45,24 @@ module ot_s81sl_vsw #(
     always @(posedge clk)
         if (v_q) begin sg <= d_q[127:32]; su <= d_q[255:160]; sw <= w_q; sl <= l_q; end
         else begin sg <= {32'd0, sg[95:32]}; su <= {32'd0, su[95:32]}; end
-    wire ln_v = v_q || act;
-    wire [31:0] ln_g = v_q ? d_q[31:0] : sg[31:0], ln_u = v_q ? d_q[159:128] : su[31:0];
-    wire [31:0] ln_w = v_q ? w_q : sw, ln_l = v_q ? l_q : sl;
+    wire ln_v0 = v_q || act;
+    wire [31:0] ln_g0 = v_q ? d_q[31:0] : sg[31:0], ln_u0 = v_q ? d_q[159:128] : su[31:0];
+    wire [31:0] ln_w0 = v_q ? w_q : sw, ln_l0 = v_q ? l_q : sl;
+    wire [1:0]  ln_t0 = v_q ? 2'd0 : cnt + 2'd1;
+    wire ln_v, ovr_l; wire [31:0] ln_g, ln_u, ln_w, ln_l; wire [1:0] ln_t;
+    generate if (LR != 0) begin : g_lr
+        reg lv, lo; reg [31:0] lg, lu, lw, ll; reg [1:0] lt;
+        always @(posedge clk or negedge rs_c) if (!rs_c) begin lv <= 1'b0; lo <= 1'b0; end else begin lv <= ln_v0; lo <= ovr; end
+        always @(posedge clk) begin lg <= ln_g0; lu <= ln_u0; lw <= ln_w0; ll <= ln_l0; lt <= ln_t0; end
+        assign ln_v = lv; assign ln_g = lg; assign ln_u = lu; assign ln_w = lw; assign ln_l = ll; assign ln_t = lt;
+        assign ovr_l = lo;
+    end else begin : g_nlr
+        assign ln_v = ln_v0; assign ln_g = ln_g0; assign ln_u = ln_u0; assign ln_w = ln_w0; assign ln_l = ln_l0;
+        assign ln_t = ln_t0; assign ovr_l = ovr;
+    end endgenerate
     wire [31:0] a, ab; wire [1:0] ta; wire vo, lf;
     ot_s81_su_swl #(.LM(LM), .LA(LA), .TW(2)) u_l (.clk(clk), .rst_n(rs_l), .v(ln_v), .g(ln_g), .u(ln_u), .w(ln_w),
-        .lim(ln_l), .t(v_q ? 2'd0 : cnt + 2'd1), .a(a), .ta(ta), .vo(vo), .fault(lf));
+        .lim(ln_l), .t(ln_t), .a(a), .ta(ta), .vo(vo), .fault(lf));
     ot_dsrom_su_bf16rnd u_r (.x(a), .y(ab));
     // deserialiser: element ta -> bits 16 ta; the group leaves with its 4th result
     reg [47:0] ds; reg fs, tbad;
@@ -59,7 +77,7 @@ module ot_s81sl_vsw #(
         else begin
             o_v <= vo && ta == 2'd3;
             if (vo) begin texp <= ta + 2'd1; if (ta != texp) tbad <= 1'b1; end
-            fs <= fs | lf | ovr | tbad;
+            fs <= fs | lf | ovr_l | tbad;
             o_f <= fs;
         end
     // S81-KITS-RTLA 10-24 (face_guard: register on every pin, owner rule): o_d was a hold flop (o_d <= ld ? x : o_d),

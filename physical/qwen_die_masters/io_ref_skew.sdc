@@ -170,8 +170,16 @@ if {$ot_glob ne "" && $ot_glob ne "*"} {   ;# "*" names no reference: PINFLOP de
 if {[llength $qdm_ref] == 0} { set qdm_ref [ot_pf_ref [all_inputs -no_clocks]] }
 if {[llength $qdm_ref] == 0} { set qdm_ref [lindex [all_registers -clock_pins] 0] }
 set qdm_w [sta::worst_slack_cmd max]
+# PATH-QC-NK 10-25: the MIN clock arrival needs the HOLD side of the timing graph updated.  A session that has only run
+# max timing (an FF-only gate / sign-off process reading this SDC first) returned arrival_min_rise 0.0 for the reference
+# (nk_r4 hold_gate: 'max 275.70 min 0.0'): every input min delay then sat at 0 against 147-276 ps capture insertion and
+# the FF gate failed -316.66 ps / 2066 endpoints on the basis alone.  Update min timing first; fail closed on a zero min.
+set qdm_wmin [sta::worst_slack_cmd min]
 set qdm_lmax [ot_pf_arr $qdm_ref max]
 set qdm_lmin [ot_pf_arr $qdm_ref min]
+if {[string is double -strict $qdm_lmax] && $qdm_lmax > 0.0 && (![string is double -strict $qdm_lmin] || $qdm_lmin <= 0.0)} {
+  error "QDM reference [get_full_name $qdm_ref]: min clock arrival $qdm_lmin with max $qdm_lmax (hold timing not updated)"
+}
 puts "QDM reference pin [get_full_name $qdm_ref] clock arrival max $qdm_lmax min $qdm_lmin skew $ot_sk hold $ot_hk"
 set_input_delay [expr $ot_ib + $qdm_lmax + $ot_sk] -max -clock core_clk [all_inputs -no_clocks]
 # RULE H1 (flow-hold 2026-10-07): a die link's hold budget (die clock-arrival term OT_IO_HOLD_SKEW + hold uncertainty) is

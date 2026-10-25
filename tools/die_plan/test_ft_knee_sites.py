@@ -7,7 +7,9 @@ def alloc():
 
 def case(a,b,fin,fout,depth):
  path,banks,stats,hops=allocate_bank_chain(alloc(),a,b,fin,fout,depth)
- for p,q in zip(path,path[1:]):assert min(abs(q-p))<1e-6,(p,q)
+ # stations lie monotonically on the shared Manhattan spine (arclength targets may straddle a knee):
+ # the summed Manhattan legs equal the end-to-end Manhattan length (no detour, no backtrack)
+ assert abs(sum(float(abs(q-p).sum()) for p,q in zip(path,path[1:]))-float(abs(path[-1]-path[0]).sum()))<1e-3,path
  assert max(hops)<=403
  assert len(banks)+1>=depth
  return len(banks)+1
