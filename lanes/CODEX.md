@@ -1201,3 +1201,318 @@ Next: harvest existing results and paused uncommitted source into own branch wit
 - LEC: S81 eng exponent REAL frontend bug fixed already41f01591c2; EH synth collection S81, re-LEC mine. Residual FSM tool gap and old t1a/b NOT RUN yosys-abc missingPATH diagnosed.3 new FP-add-signature NEQ under direct triage: astk_EN53, pv_pair358, gunit_l4_c1045.5host sweep remains live; avoid duplicates.
 - RTL-SELRANGE: sweep live fivehosts /srv/opentallas-scratch2/claude/lec-cp1-infra/selsweep/*.tsv. Existing xrt snapshot guard waiver hits known; gold mem_v2 init-port/head elaboration are tool gaps. No owner decision needed.
 
+
+## CODEX all-lane takeover 2026-10-25 07:36 PDT (0719)
+Root owns integration+head assembled clock-model diagnosis. S81 parent+cores/plan/kits covers S81/ELEM/TRIAL; dedicated head worker covers all head items. Qwen covers QC-A0/QC-TOK/TOK-QW/ELEM-QK/TRIAL-QK. KV covers KV/KV-G3/KVG3/KV-CORES/KV-TOK; HBM covers HBM-ARCH/HBM-KITS/HBM-CORES/ELEM/TRIAL/TOK-HBM. CLOCK covers RESET/CP1/DIE-STA/PART-CAP/FP32 and nested bind. TOK-DS/LEC/SELRANGE owner token_lec. FLOW covers FLOW/CANARY/GEOM/PROTO/PROTO-KITS/SIGNOFF/census/methodology. INFRA covers fleet/AUTOPILOT/DIE-CI/DIE-PROTO. TYPE-REDUCE implementation owned per die; frozen analysis retained. Historical DONE tasks are covered by their groups, no duplicate routes.
+
+### codex-bindreset-0719-inventory
+# Binder reset takeover 2026-10-25 07:19 PDT
+Current: nested hard-core reset targets inside cap30 blackbox leaves block S81 wavefront emit (2787 targets118soft types; depths1/2/3/8). Own epyc1:/srv/opentallas-scratch2/claude/wt/codex-bindreset-0719 branch codex/bindreset-0719 from650532346d. No bypass; prototyping structural-ancestor manifest dissolve down to actual plan hard cores, exact matching and private reset latency retained.
+Jobs: lightweight source ancestry graph epyc1:/srv/opentallas-scratch2/claude/bindreset_ancestry0719.py; no new synthesis/P&R yet.
+Next: controlled elab+strict bind preview through ot-run, fix exposed target aliases/correspondence rather than accept fallback reset; then wavefront/START integration.
+Secondary collected: historical833.333ps budget standin TT/FF all exit0: S81 TT666.115/FFhold32.849,pair3.53/3.47; QC664.336/31.090,pair5.31/5.23; KV666.839/33.790,pair2.81/2.53. Not release signoff. N27 TT resume now externally terminated/container absent; old reset setup failure remains. N44 TT epyc3 live GRT setup -403.696/6033 at RESETN; no cancellation by this worker.
+OWNER?: none new.
+
+
+### codex-clock-0719-inventory
+# CODEX CLOCK group07:19 takeover
+- CLOCK: codex/clock-0719 currentmain sparse on actualhubepyc1. Current B2o clock PGcorridor build pending HBM artifact+PHYCK escape contract; shared stationband tap tool if density trials fail, S81-KITS collecting them.
+- DIE-STA: intel2 clock-reset/hold budget reruns: head666.062/31.086,pair3.59/5.30; S81666.115/32.849,pair3.53/3.47; KV666.839/33.790,pair2.81/2.53; QCFF31.09pair5.23 complete, QCTT final JSON absent07:20. All historical833.333budget diagnostics only,no releaseG4.
+- CP1-R10: childcp1 collecting Wpairintel2clock-reset/cp1/wf1025 autopilotc6ffea46f800/22154c121316; both crashCTS la_d scope, known mainfix8234352a5. Fresh isolated copies with sourcefix/reviewthenautopilot; source71005ce16 READY, no mergeproofleaf registers.
+- RESET: childreset_leaf0719 completing d5bdf506d actualterminal<=405 leafgate,singletaphook/epoch/startmiter; childpartcap fixing S81bind178 hierarchicalhardcore reset emitter, coordinateTOKDS.
+- PART-CAP: childpartcap quickcollect retainedN27intel1/N44epyc3 capacitydiagnosticjobs, no newroutes.
+- FP32: standalone16a complete; actualALAT4oneclock/incontextmux timing HBM/KV owners.
+- ELASTIC: rejected8e69517bf2,no openwork.
+OWNER?None new.
+
+
+### codex-cp1-0719-inventory
+# CP1 takeover 2026-10-25 07:24 PDT
+Current: both inherited Wpair jobs DONE-CRASH on intel2, r1 07:02,r0 07:12; CTS Tcl la_d undefined. No GRT/signoff data. Autopilot deleted old run/results, retained logs. Failure cause = POST_CTS sourced in procedure while leaf_affinity helper globals live elsewhere; already-fixed main8234352a5 copied to isolated new kits.
+Source: codex/cp1-0719@4559ed6f1 (pushed), own sparse /srv/opentallas-scratch/claude/wt/codex-cp1-0719, from claude/cp1-wf-1025@71005ce16 + main8234352a5.14 targeted flow tests PASS. Review results/geom_review/cp1_wf_resume_0719/review.json, pair.png viewed. Stale pair metadata G0 FAIL m89 ft_reserved corrected (actual kit routes M2-M7 already); pair G0 now0errors,405um reach, die M8/9clock-reset-PG. Geometry/RTL/latency unchanged. Cell-count/completeness dieIO warnings are proof-pair scope, not releaseG0C.
+New kits: intel2:/srv/opentallas-scratch2/claude/codex-cp1-0719/kits/{col_h10_r0_p1__t1,col_h10_r1__t1}; copied source+fixed CTS hooks, fresh run dirs, no old failed verdict overwritten. Submitted via autopilot goalfinish64G8t, GEOMPASS-COND inherited06:34 plus fresh source-only review. r0 queue id d45eab6c2682; r1 id1e504c93fb82. These originalsrc4559 unstarted rows are superseded by correctivecanary reenqueue srca55d43c2a; INFRA notified to disable oldids safely.
+Next: collect actual postGRT bout D slew=0, source->pin-reg p50/p90/max, topface density<=0.8; no-merge census already PASS06:41. If failure structural source spread per segment, no ECO. Only after signed Wpair, run actual seamSTA with renderreview.
+OWNER?: none.
+
+07:32: Added source tools/cp1_0719/grt_conditions.tcl@a55d43c2a (pushed), sourced endpostcts_gate.tcl only actualGRT, bothcorners. It reports allboutD slewviolations+source distances and max20um-bin density in top100um strip, prints standardgateFAIL to stopDRT. Actual extracted-R-r1 smoke intel1unit1882181 EXIT0 reportsFAIL correctly:124boutDviol,1499boutregs, distances92.772/245.430/274.428um p50/p90/max, density.495671. Own smoke dir intel1:/srv/opentallas-scratch2/claude/codex-cp1-0719-smoke. No designchanges. INFRA main4bbbf supports cp1alias=>S81 canary; explicit --canary-fix newestref202a50a599a2@/srv/opentallas-scratch2/claude/flow-canary/runs/s81_202a50a59_1025_0648/canary.json. Reenqueuewithrefs underway; this is single correctivepair variant.
+07:34: RUNNING viaautopilot92cd4ba072f2(r0)/1c283eb44e4f(r1),actualstart07:32; unitap-92cd4ba072f2-a1/ap-1c283eb44e4f-a1, check ~/coord/autopilot/jobs/<id>/a1.log hubandkitrun_finish.logintel2. OldunstartedrowscommentedbyINFRA8ed5b32ce5. CorrectiveS81referenceexplicit,diecp1unchanged. TT250/FF202.5 withRCXRC confirmednewkits. Preparingactualclocktree seamSTAafterSIGNED.
+
+
+### codex-flow-0719-inventory
+# FLOW/GEOM0719 inventory
+
+GEOM: child geom_queue independently reviewed HBM sixkits07:24; FAIL idx_qctl/rootctl/injjoin, placementconditional cfg_collar/ring_ag without route authority, sfustoreHOLD F6/clock proof. RESETt8leaf overlayPASS07:28 max327.348um. READY96af4abe5b hub. Currentqueue clear except live hcore_eh1 gate and sfustore measured census.
+PROTO/PROTO-KITS: child proto_kits collected leaf8spill actualFAIL3,724,986overflow and allgenericoldkits failed. Currentstationwave owned S81kits0719 (no overlap). Bound10contenttypes blocked nestedreset178 bind; clock/TOK owners notified. READYcodex/proto-0719@33fd931058 with5dieRTLlintPASS controls+lateG2 snapshots. q_su31GRTlive;no duplicate.
+FLOW: source new strictRTLlint READY63795270e codex/flow-0719 pushed17focusedPASS,realYosysnominal+implicit/undriven/missingmodulecontrolsPASS,5dieproductioncompatibilityPASS. Root merges. Threeoldproofs rr_h0/ve_s/ve_m terminalFAILmissingla_dscope atCTS, noGRT/signoff; coherentmain successors require currentdesign confirmation(S81asked). IsolatedfreshFFrepair tool WIP: headBrealCTS1136holdbufs3.93sec vs oldMMstall13.6kbufs45min; legalizer shifts leave-1.99ps69EP atmargin0 FAILpreserved. Standardmargin5run unitpendingepyc2 /srv/opentallas-scratch2/claude/codex-flow-0719/elemB. No route.
+FLOW-CANARY: inheritedQCCOLLFTMFAILFF-94.01ps2329EP structuralstop>2000, intentionalnotTclbug;headturnaFAILTTI225.83vs250/FF179.94vs202.5>20tol. Alllint/LEC/face/RC/CTSPASS. Other3pending collection;INFRAownsops/deploy+masswavegate;rootmergedtools/regfanout. StaticF1 fixedbystrictRTLlint;F2/F3 coregenerators ownedHBM/KV/QC;F4QCgeneratorpendingowner;F5postECOgoldenshistorical no newclaim.
+NEARMISS: structuralonlyfixpolicy; noECO tuning. Sevenknownphysicalcauses retaineddesignowners.
+SIGNOFF: matchingcurrentSIGNEDonly; no duplicatereruns/bookkeeping.
+KIT-CENSUS/TYPE-DEDUP/METHALIGN: historicaldone; type-reductionapproved foldedbydieplanowners, strap IDsparenttieBowner07:01. No independentjob.
+
+
+### codex-geom-0719-inventory
+GEOM-REVIEW: current HBM batch2 six exact images reviewed; three FAIL structural (qctl/rootctl/injjoin), two placement PASS-COND (cfg/ring) requiring clock/FF>=0 and LEC, sfustore HOLD F6/clock. No own running heavy jobs. Next: pending station clock diagnostics and new posted requests; coordinate HBM rebuilds. Source/records codex/geom-0719-1025 own sparse actualhub epyc1. No OWNER new. PROTO collection/kit generation delegated parent protochild, FLOW parent.
+
+07:31: actualhubbranch codex/geom-0719-1025@6206a9ad14 READY results only. Reset t8 exactoverlay PASS independent image,37sinks327.348; stationturn/clock holds remain. sfustore HOLD resolved to measuredFAIL-F6 all16*782matched p50 26..200/max487.39. Readonlyotrun6GB1thread completed ep yc2unit2398414, rawpath /srv/opentallas-scratch2/claude/codex-geom-0719/sfustore/if4_{TT,FF}.json. Initial helper name-map attempts zero-reg invalid records retained, neverPASS. No own livejob. Hcoreeh1 geometry accepted previously but liveGRT not yetpostcts gates; physicalowner collects. All current pendingGEOM tags now have verdict or explicit livegatewait; await exactnewimages while pursue physicalfailure diagnosis.
+
+
+### codex-hbm-0719-inventory
+# CODEX HBM takeover 2026-10-25 07:19 PDT
+| Lane | Current / jobs | Fail diagnosis and next action | Owner |
+| HBM-ARCH | Latest B2o fcd78fa50f; no live previous model job | G0 3/G0C6 FAIL: HC-ring transit540um, W128cut1.19, NEio reset380um and rootargmax cq338pins facingwrong. W1288pair bank lattice+transit corridor re-floorplan; SU/root FTcorridors; resetSTART; SMtypeframe merge | HBM plan worker |
+| HBM-KITS | Per-piece kits stopped, IDXS2masterCTS retained; six B2 kits reviewed07:24 | Reduce226->~71. ParentIDstraps approved IDsonly. Masterpin consolidation all16SFU+31regularTKM+1terminalTKM generation48->3; terminal retains its true data interface. GeneralF1/F2/failclosedcoreflow source to main needed | HBM parent IDs; physical flow |
+| HBM-CORES / ELEM-HBM | W128subtree/pair/argmax/gq and current IDXS collection active | EXP unsafe initpin pruning confirmed: opt-full converts bootload to constant then shell tiesld0,96rd_addrX and5/6SRAM deleted. Conservative initpreserving analysis+bootproof; current route geometry/failures must be fixed structurally | HBM physical worker |
+| TRIAL-HBM | Current isolatedPHYIR5/5PASS20.993..28.842mV, no IR joblive | Actual fullPGclock corridors need currentB2oartifact; CLOCK coordinating plan worker. No old B2trial rerun | HBMplan+CLOCK |
+| TOK-HBM | Collected correctedSU31BUILD_PASS, finalFAIL632/1046,414commitOK; all4SUfault5913,fr5940. Sidebase5996exactchecksPASS, mutantdiff5986 | Clockcorrection insufficient; minimal firstfaultreason instrumentation/relink. Sidecomposedgate liveepyc1codex-hbm-token-0719/side_compose unit1774213-1792938178. L74native calendar/reset/start integration remainsopen | HBMtoken worker; parentnative |
+
+
+### codex-hbm-physical-0719-inventory
+# HBM physical takeover 07:19
+HBM-KITS: per-piece STOP; one RTL master+template (~71 designs), parent owns ID-only straps/pin templates. B1 hcolH0intel2/H1epyc3 CTS existing; tail LEC36/8711 remains blocked. HBM-CORES/ELEM-HBM: argmaxla1 DONE-NEAR-MISS FFbasis; s2f2 DONE-STRUCTURAL superseded; gqrk19f2 preDRTFAIL -0.07 +7422buffers structuralF4/inputbasis; W128firstf2 STRUCTURAL, pairf2 live, subtreehm0/hm5 NEAR-MISS superseded by requested subtreef2. EXP flat SRAMloss traced unsafe init-input pruning causing96rd_addrX; own compare diagnosis ongoing. Remaining CLKSTRUCT F6/highI FAIL; SM2/NPC2/TKMroot preflightPASS prior handback, no new per-piece routes. No complete SIGNED set.
+Own sparse branch epyc1:/srv/opentallas-scratch2/claude/wt/codex-hbm-physical-0719 from282321554f. EXP own diagnostic run epyc1:/srv/opentallas-scratch2/claude/codex-hbm-physical-0719/exp/compare2.otrun.log launcher1824422; first attemptNOTRUN missingPATH and first fleetattempt127 missing--dir diagnosed/fixed. Next: conservative face-shell analyzer + boot miter, retain dynamic ID pins, one master regen; no physical launch until image review.
+
+
+### codex-hbm-plan-0719-inventory
+# HBM plan0719 takeover
+- Own sparse worktree epyc1:/srv/opentallas-scratch2/claude/wt/codex-hbm-plan-0719, branch codex/hbm-plan-0719 baseclaude/hbm-b2o-1025r@fcd78fa50f. No children.
+- Collected latest priorr2 completeexit0: epyc1:/srv/opentallas-scratch2/claude/hbm-plan-b2o/r2. Clock legalizerPASS; actual-bitFT32/49 vs old13/44; G0FAIL3/G0CFAIL6. RemainingHC ring oldW64 walls, L126540um, NEioepN2reset380um, argmaxcq338wrong-face pins, SU/rootcorridors.
+- Current action exactW1288pair lattice+dedicatedIOtransit corridor. Physical master keys pairba77076d4cc8/first0c39789d46b1/subtree3abde8dae72d, pair250.56x267.84; eight vertical rows+7x34.56+2x17.28=2419.2. Actual composition tools/hbm_b2/hc128_pair_compact.py and epyc3codex-hbm-hc-physical-1025 compact128/compact_port_map. NoP&R/STAnewjobs.
+- CLOCK informed exactfcd78artifact ownworktree/B2o. PHYCKescape contract still open; mustfailclosed.
+- Parent HBM owns approved parent-ID straps + unified TKM/SFU pins; pending delta integration once source ready. Per-piece kitsSTOPPED; no new ones launched.
+
+
+### codex-hbm-token-0719-inventory
+# TOK-HBM takeover 2026-10-25 07:30 PDT
+Current: side oneclock production split-core exactness completed on codex/hbm-token-0719@3e0867e321; historical SU31 corrected-clock failure under read-only first-fault diagnosis.
+Collected: old corrected-clock SU31 FAIL632/1046 (414commitOK; prior640fail), all4su faults5913, fr5940. Old layer clock correction necessary but insufficient; historical mixed-domain vehicle, no whole-token pass. Side LAT4 base5996 II1 exact words, actual rest+softplus cut composition5996 exact words/fault relation PASS; MUT_FN/MUT_CUT CAUGHT; regenerated f12/C12 lists PASS.
+Running: epyc2:/srv/opentallas-scratch2/claude/codex-hbm-token-0719/su_fault_diag; unitoth-ubuntu-2352893-1792938386; launcher epyc1PID2006541. Generated-object hardlink snapshot with detached one-SU-group diagnostic C++ printing first fault reason; originals unmodified. Build/link DONE, replay live; run.log/done.
+Completed own gates: epyc1:/srv/opentallas-scratch2/claude/codex-hbm-token-0719/side_compose unitoth-ubuntu-1774213-1792938178; mutants unit2122430-1792938484.
+Next: collect first-fault flags; fix smallest actual path if still applicable to native oneclock. Parent native L74/reset/start wiring; token to inspect actual producer-II2 scheduling. Oneclock side cycles49/31/198/120 already priced by existing C12 nativeoneclock model; current finalB2o/L74/FACE reprice waits final plan. No new OWNER?.
+
+
+### codex-head-0719-inventory
+# HEAD0719 inventory (2026-10-25 07:28 PDT)
+- Source own epyc1:/srv/opentallas-scratch2/claude/wt/codex-head0719 codex/head0719. Base head-kits73b820 + mainc4fb merge7b71649a3f reconciles rejected snap conflict: main PG-free snap protects top+lower layers at actual CORE-margin and zero-origin phases, measured M7 pair test retained.
+- Eight head kits16rows epyc1:s81-head-kits/m{0,5}: placed. GEOM accepted three straight types(hd_st_m/str/n4), rejected5 diagonal types(k5/n3/turn/spn/spn_end). All route held until band taps+actualFF>=0; own generic Manhattan bundle knee/lattice fix claimed, coordinate S81kits/KV.
+- Elements4 former s3 and2s4 stopped by prior owner, no inherited live job. s4dualMM failure proven tool-state bug; oneFFprobe converges18s0TNS/1130cells. FLOW owns repair helper. Actual A/B3_place images copied/viewed; PASS-COND CTS-only (broad channels, centeredROM, no slivers, whole extent<405), F6/clock/per-corner basis proof still owed before route. Images epyc1:codex-head0719/review/elem{A,B}.png.
+- Tile native element views not yet currentSIGNED, route held. Anchor max402.192<=405 proof retained.
+- hd_serdes plan status width defect direct rx512vs514; main ot_s81hd_serdes_link packs{st,rx} correctly. Need plan+PMA die-IO plumbing; hd_lep source closure regenerating layer binder ownedS81/TOK.
+- hd_ctl/host/mesh realRTL absent. Derive compiled schedule/ADAPTER contract before coding; H11 has incompatible two-spine/six553mesh/two553host/five-draft form. Unresolved host279vs276/calendar/H4authority remains OWNER? in CODEX-LOG, no blocking.
+- I13 physical/census belongs S81parent, no duplicate claim.
+
+
+### codex-infra-0719-inventory
+# INFRA takeover0719
+- AUTOPILOT: direct current main operational, retention/dispatch fixes READY codex/infra-0719@e40d36e922 (contains97d85c8633); root merging. Default newwave waits latestsame-diePASS and no watchedtool changes; reviewed corrective --canary-fix exactSRC@run/canary.json; cp1 aliasesS81only.50testsPASS(1optionalSKIP) plus6focusedcanaryPASS.
+- Queue failure: hubcoord mergeconflict literalmarkers found; preserved both sides andlaterCP1/QCrows, commit92c729636a pushedcoord/state. Enqueue now refusesmarkers, checks exactpublishedremote row and warns --no-commit DRAFTONLY.5_1_grt.odb is not finalrouted checkpoint now.
+- NKfailedcheckpoint vanished: confirmedAUTOPILOT07:22:09 deleted8fffd9b75f35 results+objects beforeownerdiagnosis. Fixed: retain failure bulk until explicit ID<TAB>DELETE<TAB>evidence in autopilot/failure-resolved.tsv, thenlivenesscheck. Currentrawloss remains; Qwenownerchecking underlyingnon-apkitcopies. No failedverdict erased.
+- FLOW-CANARY: tools merged rootmain499eb8179. Timer now OT_CANARY_TOOL=/home/ubuntu/OpenTallas/tools/flow_canary, source originaltriggerownedtree unchanged forlivejobs. Existing3FAIL QCcollftm holdgate true structuralFF-94.01/2329 (TclError isdeliberate gate, nottoolcrash); headturna I225.83/179.94 mismatches250/202.5; HBM faceguard+facecover+RCfilefail. S81/KVexistingstilllive. Flowownerdiagnosingphysicalfaults. No canaryPASS exists yet, bulkwaveshold; correctiveexplicitallowed.
+- Fleet missingrenderdependencyFIXED: usermatplotlib3.11.2 installed epyc2,epyc3,intel1,intel2;4importsPASS; CLOCKnotified.
+- DIE-PROTO: inherited QCkit_it5GRT liveotrunhubPID258916->epyc3; HBMclock30 livePID190562 andHBMGRT3450983; headideal/treeJSONexists, S81/KVclock/STApartial. Collectingwithoutduplicates; nodelegateslots.
+- DIE-CI: oldglobalservice3819714 continues blockinglegacytimer, no cancellation. Currentdieprototypes supersede need forduplicateoldruns. Fleet allhostsadmit, scratch hub275GB/epyc2258GB/epyc36TB/intel1/2~2TB; roots<=21% at07:21. No disksprunedbythis0719takeover, no inheritedkills. No newOWNER?.
+
+
+### codex-kv-0719-inventory
+# KV 07:19 takeover
+- KV-G3/KV plan: v3.9f claude/kv-plan3f-1025@71065da17 merges realECTLKquarters+am.gdrop+pcdeadpins+ASTKstrapmaster+type49->40. Latestf4 G0CFAIL328 =326faces +2ASTKES/WSam laststation onwrongface. Parent owncodex/kv-plan-0719 fixesManhattanbendanchor, f5 generation viaot-run epyc1:/srv/opentallas-scratch2/claude/codex-kv-plan-0719. Need collect40-typeG2 realcoreOBS, budgetonlyproven; no routes onpendingchangedtypes. Headstraponlyeven4->3implemented, notall8->3; actualHIDfromparent required.
+- KVG3-CORES/KV-CORES: /root/kv/cores collects f26heads, ASTKM, ahubr3, PCboundary andLECfixedresults. LEC1e8b9dc82 arithmeticcohortfalseNEQfixedprovenASTKall+PV; head48UNPROVEN remains. PVfd4ccTT-.02/FF-17.59,macroclock->oldcapture needs structuralinterfaceclock. PCshared1085/305remaining,deadpins droppedplan, +1chain/faultcycles. Host15nativeclock RTL591ac8caed needsplanpinadoption+constantinputreview.
+- KV-TOK: /root/kv/token resumes claude/kv-tok2-1025@127e5066ea: coldbootcause boot_go5cycles<varyingstraprelease<=116. FixT_HBM_GO160subdie32/32,mutant14/32; nextrebindwholeE. Native45TYPE_SPLIT/wavefrontSTART fullgate remains.
+- KVsoftkits: /root/kv/kits0719 collects4io_ft48GBretries (3RCXintel1,1DRTintel2), no duplicate. K1io_cor_v1 geometryFAILreset1305um,diagonalstation,facelaststation200-398um. OwnexplicitManhattanbit-site delta then currentsharedresetterminalreassign+bandclock source before route. Fiveothercleantypesblockedforwardstationsoractualmacros.
+- KVG3-WI original22pinfixDONE; currenthostnativeoneclock carriedbyplan+cores. No separatejobs.
+
+
+### codex-kv-cores-0719-inventory
+# KV core takeover 07:24 PDT
+Current: signed closures still existing odd-head records; new ASTK/head strap masters no SIGNED view.
+Running inherited: epyc1:/srv/opentallas-scratch2/claude/kv-cores-1025r/heads/f26/e{0,2,6}/kv3_head_eighth_eN__216x216 placement jobs clients173474/173478/173480 (may spill); raw+ODB face passes1788/1346/1346. LEC copied old script crashesKeyError on rsd.q#t; latest tool must rerun. No new route.
+ASTK master: .../astk/M/kv3_astk__190.08x181.44 raw+ODB face1690/1690PASS, place job inheritedclient212419 (check log), LEC running/no terminal json at collection. Miters EN/ES/WN/WS all19993edges0mismatch; wrongstrapENmutant162mismatch; ESswap mutant NOT DETECTED (do not claim).
+Ahub r3: .../ahub/r3/qkd_ahub__604.8x440.64 placed; face623/623PASS; LEC UNPROVEN hardchild ot_nhb_zh parameter gf stub mismatch. Needs hardchild-aware LEC before route.
+LEC fixed1e8b9dc82 now main: prior ASTK B/F and PV fd3/fd4 false negatives allEQUIVALENT; head s5 48UNPROVEN remains. Do not treatERROR/UNPROVEN as EQUIVALENT.
+Sources: claude/kv-headclk-1025@a321bdc532 introduces headstrap/taps/fences; own codex/kv-headclk-0719 sparse tree. ASTK claude/kv-core-rtl-1025@2c1ca5c028. PC claude/kv-core-rtl-pc-1025@4c6e890d93 boundary recut incomplete shared1085/305; parentplan3F consumes dead-pin drops.
+Next: publish exact3headmaster IDs/pins to plan; review head lane taps/fences source plus actual placed image; drive masters through exact/LEC/synth/clock gates; ASTK single master physical review+regionalclock; ahub hardchildLEC fix; PC recut later. No new heavyjobs yet.
+
+
+### codex-kv-kits-0719-inventory
+# KV soft kits takeover 07:19
+- Own codex/kv-kits-0719 sparse worktree epyc1:/srv/opentallas-scratch2/claude/wt/codex-kv-kits-0719 from e7e78bb751, integrating current main tools.
+- io_cor_v1 K1 m0/m5 PLACED but GEOM FAIL06:48: free/diagonal ft23 sites, laststation200-398um fromoutputface, resetleaf76sinks/max1305um, unbalanced area grid clock. BothAP6eec797708b5/0b167965f82a correctlyWAITGEOM FAIL. No route. Next explicit Manhattan/knee/outputface perbit sites delta, parentfold+cycleprice, re-place, currentresetterminal+bandclock proof.
+- io_ft m0 AP715d718ab2c8 unitintel1oth1305924-1792935764, io_ft_v1m0 AP57e1321e0e47 intel1oth1307872-1792935766, io_ftm5 AP3dabe8b07670 intel1oth1309137-1792935768: existing48GB resubmissions LIVE6_report RCX (allnets extracted), no signoff yet. io_ft_v1m5 APe4946479f28f intel2oth9189-1792935771 LIVE DRT0. Paths mirrored /srv/opentallas-scratch2/claude/proto1025/kits_qwen_kvsys/m*/<type>. Prior24GB RCX OOM Error247 retained, no duplicate launches.
+- Other5 clean native45 soft types held for parentfwdstations and missing real macros: io_cor fwd; hroot/sys_c SRAM/UCIe abstract+placement+fwd; sys_SD/_v1 SerDesPHYabstract+placement+PGstrip. NineTYPE_SPLIT families remain parentnativebind. hub_Eo/Wo needs structuralG2 notkittable.
+
+
+### codex-kv-token-0719-inventory
+# KV-TOK takeover07:19
+- CODEX own branch codex/kv-token-0719 at127e5066ea on epyc1:/srv/opentallas-scratch2/claude/wt/codex-kv-token-0719.
+- Whole E successor epyc2:/srv/opentallas-scratch2/claude/codex-kv-token-0719 job.sh via ot-run 200GB/32threads/disk100GB unit oth-ubuntu-2326031-1792938218. Build_driver.log/build/build.log then runs/nominal/sim.log and verdict.txt. Isolated155MB staged kv43abcd copy, default T_HBM_GO160; nc32 sim-only guards from43d43f6d6; XINITunique. No old source edits/no P&R. Native45 planTYPE_SPLIT/resetSTART remains separate.
+- Collected predecessor E13 from earlier takeover:7161frames13images but only58/128coldbootOK. Claude tok2 proved T_HBM_GO160 fixes32/32subdie vs14/32negative; no redundant sweep rerun.
+- Next collect build then nominalboot, diagnose actual first failure. Native45 assertion pre-reset/history separate task meanwhile. Latestplanv3.9f49->40 changes retained as future rebind target; current wholeE is fixed historical-binding integration smoke, not finalG5.
+
+- READY pushed65f5373a3b (codex/kv-token-0719): generic FIFO sim-history arming, synthesized preprocessedRTL byte-identical, random32wordnominalPASS/postresetwrite+readGraymutantsFAIL. Smallbench intel1:codex-kv-fifo-0719 unit1854878 completed.
+- Native45 smallest pcpart rebuild LIVE epyc1:/srv/opentallas-scratch2/claude/codex-kv-native-0719, unitoth-ubuntu-2003930-1792938383,48GB4threads. Own2GBsnapshot from prior nativeboot, source-onlyFIFOguard, BOOT_TAGhistory. build_history.log then boot_history_rand2.log. Independent of largerE; no oldtree edits.
+
+
+### codex-proto-0719-inventory
+# CODEX PROTO takeover0719 inventory
+
+Own sparse worktree epyc1:/srv/opentallas-scratch2/claude/wt/codex-proto-0719, branch codex/proto-0719 from mainc4fb12b3f.
+PROTO inherited G2 collected: S81adopt178 103CLEAN/6HOTSPOT/68STRUCTURAL (newlate leaf8spill actualEXIT0 overflow3724986/TT18.03/FF-2.46), HC-blockage12CLEAN/13HOTSPOT/25STRUCTURAL/1NOTRUNleaf50; B2n7CLEAN/5STRUCTURAL/1activeq_su31; QC34CLEAN/2HOTSPOT/2STRUCTURAL (15geomfailnotgenerated), KV20CLEAN/3STRUCTURAL (24geomfailnotgenerated), head16CLEAN. These baseline skeleton results do NOT clear correctedplans.
+Late B2nq_su31 epyc2:/srv/opentallas-scratch2/claude/proto1025/gen/B2n/part_q_su31 stillgrtextraiteration2/3, noexit, retainedno duplicate. Leaf50HC notgenerated (no retry on supersededplan).
+PROTO-KITS S81stationwave owned /root/s81/kits0719, notthisworker; coordinator informed. Allk1routeHOLD clock/lattice; no blanketPASS.
+Generic10CLEAN S81contenttypes BLOCKED adoptedkitRTL absent; nestedcore-reset2787targets118types CLOCKowner informed. PLAN3beats1fix7d6acd8849 availablemechanismbinddiagnostic only, finalplanfailedgeometry no changedtyperoute.
+Old6typePROTOkits collect: headturna/b m0/m5 NOTSIGNED setup/hold/DRV/TTI failures reviewedalready. QCcoll_ft m0/m5 structuralholdstop; QCcoll_ftm m0/m5 + KVio_ft/_v1 m0/m5 do-6_report247 afterRCX (likelymemorycap, coll_ftmpeak32GB on32G, kernelunproven), resultsremovedno6_final. Oldtap/F1defects mean no memory-only retry. Qwen/KVowners notified.
+Noheavyjobs started, noRTL/sourcechanges, nonewOWNER. Next: integrate binderkitRTL whenownerready; currentplanG2whenperdieownersfinalize.
+
+07:32 productionRTLlint compatibilitysmoke PASS5/5 actualORFSYosys on copied S81station7/headturna/QCcollftm/KVioft/HBMcalendar inputs. ot-run16GB1thread clientepyc1PID2094566 unitoth-ubuntu-2095589-1792938458 completedEXIT0. Ownscratch /srv/opentallas-scratch2/claude/codex-proto-0719/rtl_lint. EvidenceREADY+pushed codex/proto-0719@33fd931058; noRTL/toolsourceedits. Parentownsproposedrtl_lint.py adoption/negativecontrols.
+
+
+### codex-qc-token-0719-inventory
+QC-TOK: current START carve receipt1a6dbd1f6 on main47ea95f39, xt1 near64/64+far64/64 and schedule mutant, early/never negatives, tp8 3/3+2neg. No current live token job. Prerequisite d2d03fe94 ot_dp_rgate absent main; own codex/qc-token-0719 cherry-pick/gate underway epyc1 scratch2. Next committed plan reset.start broadcast + fresh bind/verify/R8/constants + plan-of-record smoke. Failures: earlier xt1 fill/skew fixed; early cal by1 numeric PASS is truthful conservative-margin evidence, not mutant credit.
+TOK-QW: source527/527 PASS; fixed S8 MAT112/112 + CROM reps residual28/28/QK7/7/SiLU2/2 and SFU6336checks/320outputs PASS/negative480 collected05:59. Earlier bound-row 2/259 FAIL all families diagnosed (CROM age3, L9 map, STN prearm, scalar/stream hop4, LM root). Source fixes gate individually, no new measured composed rate, full current plan/reset/start integration open. No inherited token jobs presumed live; do not overwrite inherited dirs. Prior accidental empty slice stdout retained, future calibration only in own snapshot if needed.
+
+
+### codex-qca0-0719-inventory
+QC A0 takeover 2026-10-25 07:19 PDT
+- NK r4: intel2:/srv/opentallas-scratch2/claude/qc-plan/a0r/nk_r4/apkit autopilot8fffd9b75f35 FAIL_POSTCTS07:18 FF−316.66ps/2066ep. Raw results/objects deleted by autopilot07:22 before diagnosis, logs/reports retained. Own read-only diag unit658042 exit1 missingODB (NOT evidence). Retained CTS report independently shows ROMleaf reset hold−94.64ps, launchclk179.82/data238.18 vs rawmacroclk201.17+hold106.65+unc25; hard-child latency/reset interface unresolved. Potential min0 IO reference issue unproven. Next rebuild needed actual paths; no waiver.
+- NK reset mapping: old budget graph predates reset4. Existing rsthop TSV measures only output-to-firstINV, not all consumers; cannot qualify405um. Actual mapping needs retained/new actualODB or mappednetlist.
+- NL old l3rsp/l3rsvm: failed density0.969 / hops468.1 and hubdensity0.944. Own combined successor branch codex/qc-a0-0719 at epyc1:/srv/opentallas-scratch2/claude/wt/codex-qc-a0-0719. Physical source intel1:/srv/opentallas-scratch2/claude/codex-qca0-0719/nl_combined/src (own hardlinks+atomically replaced edited files; inherited unchanged). Retains vout pocket, puts issue/s1/s2 control in 5.4um-clear macro-free corridor closer split_fault; adds existing four-stage reset+2boot/+0data. Predicted image reviewed PASS-COND placement only, no route.
+- NL first own gen unit1889085 exit1 stale clock_entry_constraints.py rejected exact833 leaf ownership. Correct source from NK known-good staged, retry44536 exec session pending. Next actual placement density/reach/reset source/polarity review then CTS, all route held.
+
+
+### codex-qcphys-0719-inventory
+# QC physical takeover 2026-10-25 07:19 PDT
+Source worktree: epyc1:/srv/opentallas-scratch2/claude/wt/codex-qc-physical-0719, codex/qc-physical-0719 base662ee2fe07. Root owns integration.
+- RP1: inherited f57 reviewed PASS-COND but queue row never reached hub, then autopilot rejected GRT as already-routed. Re-enqueued actualhub84fa5f5dafbf reproduced rejection. Own route copy f57r failed at SDC lint: stale insertion381 vs intended320. Failure log retained. Own f57r2 fixes context320/FF260.95 matching measured f57 TT319.67/FF260.95, runner --ff-vclkauto. Live epyc1:/srv/opentallas-scratch2/claude/codex-qc-physical-0719/f57r2, client1999661, ot-run12G/8t; check run_route.log and ../codex-qc-physical-0719.f57r2.otrun.log. Existing original f57 untouched. f57n artifact absent at takeover, common-mode successor owed.
+- CQB: inherited vmr_s6 FAIL RSZ0060 buffercap30% (6058buffers), FF−29.802 remaining. Diagnosis1252inputEP require45..65ps on proper FF basis, area+1.6% at cap; physical capacity reviewed. Own prehold successor intel1:/srv/opentallas-scratch2/claude/codex-qc-physical-0719/vmr_s6h, completes mandated per-corner repair with buffercap100%, existing margin15/clock833/uncert60/25 unchanged. LIVE unitoth-ubuntu-1849244-1792938293/client1908530. No route until repair and reviewed posthold gates clear.
+- Btab/prog: inherited t2 still progressing DRT at07:19, btab3viol (intel1), prog99viol (intel2); retain, collect when terminal. Source recipe clock/floorplan failures preserved.
+- A0 NK/NL: child a0_0719 owns. NK apkit terminal FAIL_POSTCTS−316.66/2066, actual internal SRAM reset hold−94.64 independently real; physical checkpoints disappearedbeforeanalysis likelyautopilot. Child locatingarchive/continuing independentNL. Parent notified.
+- SU lane variants and PHY cores remain plan/boundaryblocked, owned parentQwen/kit lane. No new ownerdecision requested.
+
+
+### codex-qcplan-0719-inventory
+# QC plan takeover 07:19
+Own branch codex/qc-plan-0719, sparse worktree epyc1:/srv/opentallas-scratch2/claude/wt/codex-qc-plan-0719, based claude/qc-plan3b-1025@22f7fa0046. Captured latest uncommitted gen_plan.py+inputs/bind_lane_widths.json; changes transit E/W alignment, two-pass legalizer, bind width/census, coll_ucie hard views; added reset.start=broadcast.
+Inherited runs LIVE epyc1:/srv/opentallas-scratch2/claude/qc-plan/regen7a (Python PID1256692), regen7b(PID1280229), 100%CPU buffered logs0 at07:21, no duplicate launched. Candidate7b includes width reconcile182lanes2728bits;7a does not.
+Prior failures: regen4 onecut sl_W4_stm0.61>0.6; alignfix6a cut0.58 but4abutmenterrs;7a/7b legalizer fixes target these. 19censuserrors fixed in22f7fa0046;84pairfail6b width reconcile without census preserved. Need collect7b G0/G0C, render/read, exact W/Etype merge on freshbind evidence, add parent missingmacroviews+hc0fault fix before final plan adoption. No route or signoff launched; no scope OWNER?new.
+
+
+### codex-qwen-0719-inventory
+# Qwen0719 takeover
+- QC-A0 plan owned childplan0719: inherited regen7a/7b live100%CPU buffered output, no duplicate; latest alignment legalizer+bindwidth182lanes2728bits+census fix captured owncodex/qc-plan-0719 WIP9604b96c67; STARTbroadcast/typeexactmerges to integrate aftercollection. Macroviews/faultchain parentnext.
+- QC-A0 cores childphysical: CQBvmr_s6 intel1 FAILRSZ0060 after6058buffers residual−29.8, FFbasis legitimate IOpass boundary debt; cause/fix active. RP1f57 reviewed idle because queue writtenrtx notactualhub; childenqueues actualhub now; f57n claimed butnoartifact so structural commonmodetrunk implementation next. BtabDRT3viol/prog99violprogressing. NKreset4 FAILPOSTCTS−316.66/2066; ORFSresults vanished07:22 beforediagnosis childneverdeleted, rootinfra notified. NLcombinedfloorplan successoropen.
+- QC softkits parent owncodex/qc-kits-0719 based03226b1adb: current37kits preflightPLAN/viewfailures, blockedA0CBtypes. FixROMbbdeclaresVIAMAP/INSTANCE inprogress; missingmacroviews/locations follow, futurekitwave waitsfinalplanSHA.
+- QC-TOK childtokens: receiptSTART1a6dbd existsmain, dedicatedrgate prerequisite missingmain fixeddbe1a9e85e 12testsPASS, READYroot. Freshbind mustregenerateconstants newplan. Historicalproofnear64/64far64/64+mutantsPASS; noG5finalclaim.
+- TOK-QW childtokens: CROMrepresentative28/28residual7/7QK2/2SiLU;SFU6336checks320outputs+mutant;MAT112/112PASS terminal, no duplicates. Compactreceiptcollecting; full259 unnecessary.
+- ELEM-QK obsoleteKVrruns alreadyterminal/failurediagnosed currentKVgroupowns; QCtt_ctlm awaitingROMbb+macroviewplanrepair thenfreshkit.
+- TRIAL-QK obsoleteplanresults diagnostic only; currentdieprototype ownerrootDIE-PROTO; no duplicate oldSTA. Pending correctedplanG0+geometrybeforecurrenttrial.
+
+
+### codex-resetleaf-0719-inventory
+# RESET leaf0719 inventory
+Current: main already includes actual-terminal assignment2c83110df4 and single-terminal gate1ac1b41c91; no duplicate source port. Own worktree epyc1:/srv/opentallas-scratch2/claude/wt/codex-resetleaf-0719 branchcodex/resetleaf-0719 fromc4fb12b3f6. Added true emittedRTL epoch/control-state lockstep179cycles each plainreset/START; wrong-depth and wrong-gate mutants caught.12 focusedtestsPASS. Actual t8 correctedODB viaot-run epyc1unit1936021-1792938320 EXIT0:37sinks maximum327.348um,0furtherreassign. New image inspected with local branches and sparse placement bands; independentGEOM/fullkit routedclosure owed. No live jobs. KV reK1 1305um reset leaf diagnostic coordinated: sourcegate correct, successor owner regenerates station/reset geometry; missing terminalcoverage must failclosed, sourcecannot add physicalrelays silently. Next: independentGEOM t8/reset overlay; regenerate/enqueue successor subject currentplan changes. OWNER?none.
+
+
+### codex-s81-0719-inventory
+# S81 takeover0719
+S81 PLAN+TRIAL: PLAN3 latest7d6acd8849 includes CCONN8cfc6881bf. Plan child collecting svc G2o30/leaf4/CCONN2/IR; approved type reduction 72leaf->12..16 and col12->8. Physical corrections still gate kits.
+S81-CORES: cores child current takeover CORES3 plus legacy/boundary/physical subworkers; failures enginechannel, hcore IO double-pad, VQF6 setup+merge gate, RX re-pin, VSW/VNB withdrawn geometry, legacy tap insertion/CFGinputhold. See own inventory.
+ELEM-S81/KITS: kits0719 child58k1stations face_guard/LEC/bindPASS; inherited density trials t7/t36/t37/t41/t42 running; t8reset447um held. CLOCK+RESETleaf own shared tools. Serdesneighbors23/31/43/44/49/52 holdIRdelta.
+S81-PORTS I13: own codex/s81-i13-0719 from36364ebdb plus read-only paused currentRTL fanout repairs (458insertions111deletions). Existing gates4..8 synthPASS but nativefanoutFAIL; gate5max3878; gate9NOTRUN missingPATH. Latest bench6R3/SRAM PASS and mutant3negative escapes as expected; multi still finishing. Own gate10 admitted preflight preparation to collect currentnativecensus, no route. Review unchanged two-column macroplan already viewed0553. All heavy ot-run.
+
+
+### codex-s81-boundary-0719-inventory
+# S81 boundary 0719 takeover inventory
+Own branch codex/s81-elem-boundary-0719; own worktree epyc1:/srv/opentallas-scratch2/claude/wt/codex-s81-elem-boundary-0719.
+Current: elem_q strict registered go/tag boundary opt-in; +1 command edge, unchanged legacy default. Raw go drove b_go plus bank_free and ICG lookahead; capture at specialized outer wrapper solves direct combinational primary-input consumers without changing inner state logic.
+Running: production-shape all-output lockstep reference legacy supplied +1 delayed go/tag vs new outer capture, plus bypass mutant. epyc1 clients1904382/1904389, logs /srv/opentallas-scratch2/claude/codex-elem-boundary-0719/logs/{pass2,mut2}.otrun.log; normal ot-run24GB16threads; check picked hosts/units there. First clients1875315/1875316 NOT RUN due absent output dirs; fixed mkdir and staged compact32-file source/output tree, no constraint changes.
+Next: collect tests, production raw synth/face_guard on opt-in, xs_sv[1:0] unused pin drop into plan-owner delta, render/review before physical route. No route launched.
+Remaining NC: bf_front_roots fixed multi-driver RTL but 5 clock roots+unused20 cfg/x0 pins; cfifo ring landing multi-clock/shared1120 pins; bksel_q/cap children unsigned; idx_tx actual-parent parameter mismatch. These are existing assigned gaps, no new outcome claimed.
+Prior cfg/l0r fixes adopted cdb0fae31; do not repeat them. No new OWNER?.
+
+
+### codex-s81-cconn-0719-inventory
+# S81 CCONN 0719 takeover
+Current: own codex/s81-cconn-0719 sparse WT epyc1:/srv/opentallas-scratch2/claude/wt/codex-s81-cconn-0719; based committed CCONN8cfc6881bf then fast-forward PLAN3 integration7d6acd8849.
+Inherited results: CCONNv5 defaultG0C177/177 PASS, derivedON129ERROR = bk_sel45R3 +84reported coreface summaries (14types, ~109badports/type under summaries). Real core orientation/pin repair owed before derived defaultON. CCONN metadata inserts103lane +1cycles (rt66/xo24/x12/xtier1); actual core-core RTL outside leaf unsupported, do not claim ready.
+Inherited jobs: epyc1:S2/claude/s81-plan3/cconn/v5/g2 13prototypes, numeric collection pending. Parent collected svc2/g2o30: col_h10r0p1 & eng CLEAN, other10col738..3026overflow still; true geometry not iteration cap.
+Next active fix: xfin measured75438.654um2 -> current345.6²63.16%preCTS; own geometry-search ot-run expands to362.88²131682um2 (57.29%) where all16parent slots/FTcorridors allow; pin-table idempotence repaired. Runroot epyc1:S2/claude/codex-s81-cconn-0719/grow; report xfin_report.json. No P&R/STA launched. l0r outlinegrowth also requested byCORES; waiting exact cellarea.
+Source/physical remaining: bk_sel4x648square cores cannot close c/g connectivity within1226.88 slot; reshape or implemented stations needed. Frame derived faces need dataflow templates/re-pins; type reduction col12->8 onlyif exact physical pin/content contracts permit. OwnerIDs parentstraps only.
+
+
+### codex-s81-cores-0719-inventory
+# S81-CORES takeover0719 (fresh current lane)
+- Core parent direct: vn_b/vsw F6 successors; use claude/s81-cores2-sw-1025@c2a8417f0 fresh codex/s81-sw-0719 on epyc1. No route on f6s/f6c or vsw_f6s: independent07:16 withdrawal. vn_b requires SRAM-side write stage+centroid/offmacro clipped regions; vsw u_lb orientation first0cycles plus balance/fold fix, +1 only if F6 still fails. Coordinate actual changes+cycles plan.
+- Physical child: eng_e2 current GRT ep yc2.../s81-cores3/dsdv_eng_rr_e_e2 (FAIL floorplan, u_lkp split fallback authorized), hcore_eh1 intel2.../s81-cores2-eh/hcore_eh1 doublepad hold basis, vq_f6/rxsf_w reviewed conditional routes, VN_a trunk replacement. Eng e2 GRT still extra iterations; hcore held -39.8 input hold. No old near-miss adoption.
+- Legacy child: qbankN/vn_a autopilot result collection, bksel/eg/l5 clocks, bk_g/l0/l1/l2 regional trunk lower latency, bf_col ICG-aware trees, legacy NK READY rejection07:14 gate trailer repair. l4 LEC-HOLD remains until current LEC/sim exact evidence.
+- Boundary child: elem_q registered go_pin/unused xs_sv2, BF roots multi-root clock+unused cfg/x0, cfifo multi-clock, unsigned cap/bksel children. Existing cfg/l0r exactness fixes now claude cdb0fae31; l0r rawguard735PASS but area35.8k outline172.8²FAIL, plan expansion owed; cfgc2 inputmin-40 hold OWNER? never waived.
+- Plan CCONN notified xfin measured75438.654um² =>345.6²63.16%preCTS; asks362.88²57.29%lattice-aligned target. qbankSoutline expansion and pin/width deltas plan-owned. VS/VQ XM4893d8a65 READY supersedes previousWIP.
+- 07:01 straps owner optionB IDs only tied at parent; no non-ID exception. Type reduction approved, pending changed plan types skip kits.
+
+
+### codex-s81-ir-0719-inventory
+# S81 IR takeover 0719 inventory
+Own sparse tree created epyc1:/srv/opentallas-scratch2/claude/wt/codex-s81-ir-0719 branch codex/s81-ir-0719 from claude/s81-plan3-1025r@7d6acd88491c548f7f9786043e092e7d67377cbc. No source edits/jobs/commits.
+Current: IR split12/14, short7PHY1.33-2.16mm2, WS3+ES0 unsplit; legacy WS3IR50.4/40.3mVFAIL. Requested option(a) coll buses off SerDes row; option(b)2row only if needed. No new results claim.
+DIAGNOSED implementation cause: physical/die_plan/s81/gen_plan_v4.py route(), line1941 permits every intermediate SerDes whenever source OR destination starts lk_: (q.kind==serdes and not(s.startswith(lk_) or d.startswith(lk_))). Thus each far link consumes multiple full SerDes rows en route. Existing 2.886x1.227mm SerDes have up to4FT512/514 bands across digital681um, restricting macro height. Need forbid ALL intermediate SerDes (q.kind==serdes) while allowing endpoints, then reroute coll into adjacent interior row, emit affected bus/FT/ports/lane geometry and latency. Explicit cells path already forbids intermediate SerDes. Potentially wider candidate paths required if candidates() cannot detour around terminalrow.
+NEXT: in own sparse tree change route restriction, run gen_plan_v4 via ot-run using inputs/plan.json + inputs/s81_lanes.tsv to own output; do not run old run_v4.sh blindly (contains rm-rf inputs/core_pins). Render/review routing+PHY zones before G2. Port only changed collective lane/FT/bus fields onto PLAN3 integration, preserve current hardcores/leaf fields/other lanes; reprice changed cycles. delta_ir_1025.py apply then phy_zone PGsplit/g0c. Type reduction11->5 only once physical contracts equal.
+Full live inventory delegated parent. Returned slot to ROOT at parent request; parent absorbs continuation.
+
+
+### codex-s81-kits-0719-inventory
+# S81 KITS/ELEM-S81 takeover 07:19
+Current: claude/s81-kits-1025@0ce8b41733 carries STFG direct output flop + flow scope fix; 58station kits29types x m0/m5 at epyc1:/srv/opentallas-scratch2/claude/s81-kits/k1. All face_guard rst_o checked, LEC equivalent, port_bind PASS; no new current SIGNED station.
+Running: density tap CTS pilots t7,t36,t37,t41,t42 at epyc1:.../s81-kits/dens/m5/slice_station__tN (run_cts.log and sibling cts.otrun.log); some spill hosts recorded in client logs, collecting. k2 t14 generation begun07:16, not duplicated.
+Failures: old PROTO B1/B2 m0/m5 postCTS hold failures are structural station-bank grid taps split/different depth, FF port-to-reg basis late; twelve FIX rows enumerated PROTO-KITS07:16. Main-default diag t36 -120.5/7524ep,t41 -134.3/7582,t42 -133.3/4949 (4944port->reg); t42 FF vclk202.5 versus capture285.6. No ECO. t8 reset leaf u_rrl_33->epoch447um>405; tool leaf bound pendingCLOCK.
+Hold: serdes-neighbour station t23,t31,t43,t44,t49,t52 excluded pendingIRdelta; pending-plan changed types skip. Adopt178 content kits still blocked integrated wavefront bind and currentG2. Older B station SIGNED history not release-current.
+Next: collect density trials, inspect postCTS pictures actual taps/IF/pin flop distances and publish pass/failure to CLOCK+PLAN. Integrate latest binding/clock tools in own NEW codex/s81-kits-0719 worktree before k2 successors. Route only after independent geometry conditions and current-source preflight; use autopilot. No new owner question.
+
+
+### codex-s81-leaf-0719-inventory
+# S81 LEAF0719 inventory
+Own sparse WT /srv/opentallas-scratch/claude/wt/codex-s81-leaf-0719, branch codex/s81-leaf-0719 from claude/s81-plan3-leaf-1025r@8fb91f9616.
+Collected: inherited actual G2 r3po30 t7/t24/t27 all0overflow CLEAN skeleton, TT+221.20/+96.93/+226.06ps, FF-2.32/-2.32/-2.27ps. Original collector returned{} because probe.json absent in30iterationcopies; temporary read-only symlink bundle pairs original metadata, no reroute.
+Diagnosed: inherited LEAF4 G0C12672 hard_core errors off lattice/pin tracks from template fractional coords; rxsf.o_mx->rxsb1station unimplemented in RTL causes kit_istations72/72FAIL.
+FixWIP: snap template origins to8.64lattice and side-by-side rxsf(W-output) -> rxsb(E-input), eliminating unrealised mx relay rather than adding cycles. Rebuild72existing offsets gives maxplannedhop404.87um; normalized kit_istations72/72PASS. G0C and new FT allocator/prototypes owed; current WIP not ready.
+Existing jobs untouched. No new heavy job yet. Type reduction72->12-16 with parentIDs-only remains next after geometry.
+
+
+### codex-s81-legacy-0719-inventory
+# S81 legacy/NK takeover 07:19
+Own branch codex/s81-legacy-0719 from claude/s81-cores3-nk-1025@1e71c31cf7; own sparseWT epyc1:/srv/opentallas-scratch2/claude/wt/codex-s81-legacy-0719.
+- bf_col: CTS baseline FAIL I491..663ps,18ICG clocks omitted from regional root and local CTS list. Own structural ICG-aware successor prepared from3_place at epyc1:/srv/opentallas-scratch2/claude/codex-s81-legacy-0719/bf_col_icg; geometry apply/render beforeCTS. No route.
+- bk_g/l0/l1/l2 regional reCTS all terminal exit0, hold pre-repair respectively -115.90/-150.68/-177.30/-152.12ps; landing remains~295..355 outside target. Shared lowerlatency/dont_touch trunk source owned /root/s81/cores/physical; coordinate and consume once ready, avoid duplicate shared edits.
+- bk_g2tap variant terminal0, FFprehold-113.36/951. No geometry pass.
+- xrt1 previous CTS never ran no clockport; OT_RT_PORT clk[0] needed, outline/pindensity plan delta also pending, so held.
+- bksel_c/xrt3/l5 originalCTS FAILF5, l5 F3/F6+18unregisteredpins. eg PASS-COND successor with current FLOW required. xrt3 outline delta precedes any rebuild (06:25 ruling).
+- qbankN autopilot collected current state next; l1c/l3 matcher issues need current queue reconciliation. l4 retained LEC HOLD despite valid-gated differential0errors; use newly merged LEC corrections for closure.
+- VS/raw BFroots/drop-pin/multiroot/unsigned-child/CFIFO contract blockers remain explicit in S81-CORES06:48 notes; no guessed tie-offs or blackbox kits.
+- NEW qbank_N result: autopilotCRASH = missingpairhelper; correctedexistingSDC SIGNED TT137.99/FF11.84 but nativeF1rebind NOTSIGNED TT148.74/FF-8.72/135EP. FreshcoherentnativeFLOWfrom3place attempted once, CTSI239.97/180.21, GRT RSZ0060 229buffers hold-70.993. NoDRT/ECO, ownerboundarylayoutbudget needsaction. da791126a8 READYgenericrunnerfix pushedGitHub.
+- NEW BFcol: ICG-awaregeometry18gates identityPASS, allBLOCKlegalizer removes2inROMtaps; renderedPASS-COND CTSonly. ActualCTSattemptscopeerrorfixed; explicitgatedclocknetlist CTS0056 escapedbracketnames, now rootregionalnets-only attempts recursivegateddiscovery. Ownunit/runlogs in codex-s81-legacy-0719/bf_col_icg, no route.
+
+
+### codex-s81-physical-0719-inventory
+# S81 physical0719 takeover
+- Source WT epyc1:/srv/opentallas-scratch2/claude/wt/codex-s81-physical-0719; codex/s81-physical-0719 from latest RT branch; split helper from latest SWc2a8417f0.
+- Eng e2 epyc2:/srv/opentallas-scratch2/claude/s81-cores3/dsdv_eng_rr_e_e2 GRT live extra21/30; likely failure (funnel congestion), next confirmed u_lkp extraction structural split, coordinate plan.
+- Hcore eh1 intel2:/srv/opentallas-scratch2/claude/s81-cores2-eh/hcore_eh1 live FF repair4030iteration/5292buffers,WNS-39.801; TT-vclk double-padding basis mismatch open, no gate yet. Preserve.
+- VQf6 epyc3:/srv/opentallas-scratch2/claude/s81-cores3-rt/kits/ot_s81sl_vq_f6 DRT pin-access live; next collect signoff, per-corner/model/no-merge conditions.
+- Rxsf_w epyc2:.../s81-cores3-rt/kits/dsfd_su_t_rxsf_w CTS done FF-16.39ps/378, independent GEOM06:59PASS-COND; autopilotc48fe31df9f2 follow-up route status.
+- VNa t42 original NOTSIGNED FF-29.73 from asymmetric CTS-inserted BUFx10. Own split helper successor WIP protects manifest, plannedrepeaters60um, removes global repair_clock_nets (ignores dont_touch, CLOCK confirmed), postCTS topology gate; per-stage actual SDC in probes. No own job yet.
+- SW parent /root/s81/cores owns newF6 vn_b/vsw; latest sourcec2a8417f0. Neither prior variant routes per07:16withdrawn verdict.
+
+
+### codex-s81-plan-0719-inventory
+# CODEX S81 PLAN3 takeover 2026-10-25 07:19 PDT
+Current own hub worktree epyc1:/srv/opentallas-scratch2/claude/wt/codex-s81-plan-0719 branch codex/s81-plan-0719 from claude/s81-plan3-1025r@7d6acd8849. Batched delta already includes gatherB2133x1, obs_max from actual LEF, STFG, CCONN8cfc(qbankS+row,xfin345.6²); not release-ready.
+Collected g2s3:5lo t1-t5 +5hi/pvso CLEAN(overflow0, TT>=149.62, smallFF-2.4ps), hi t5HOTSPOT55, lo t7HOTSPOT26, rs_w STRUCTURAL771, lo t6STRUCTURAL4435. hi t1/t6NOTRUN. g2o30:colh10r0p1CLEAN0 TT116.11/FF81.89; engCLEAN0 +153.47/+73.07;10othercols still738..3026overflow TTdown-247.61 even30iterations. C1xt8NOTRUN. Records epyc1:.../s81-plan3/svc2/g2{s3,o30}_collected_0719.json.
+Failure diagnosis/action: visually reviewed lo_t6 image, denseWmargin full-length FT funnels with4277redgcells, no broad channel. New optional ft_corridor --split-bits routes contiguous bands independently around Lturn while preserving everybit depth. Actual split lo_t6ft3/hi_t6ft1/ft2 allocator live viaot-run(16GB4threads) clientepyc1PID1848881 root .../codex-s81-plan-0719, logs split_t6_client.log. No P&R/STA before rendered revised geometry.
+IR cause: intermediateSerDes traversals permitted whenendpointlk_, consuming681umPHYrow. Source now forbids all intermediateSerDes endpoints unaffected; regenerated plan live viaot-run16GB4threads client1848880 regen_ir_client.log. Must port affected route/bus/FT+latency fields only, preserve currentcore/leaf.
+Leaf child leaf0719 owns corridor/template/type reductionand lattice repairs from8fb91f; existingG0C12672 errors offlattice,72/72R3classfail inclunimplementedrxsfo_mx. CCONNchildcconn0719 owns truehop/facing+measuredxfin362.88²option; derivedONstill129errors, no defaultonpromotion. IRchild finished collectiontofreeHEADslot; own clean IRtree preserved and scope absorbedhere. Coreteam owns VSW/VQ/SW RTL contracts, coordinate sourcecycles exactly; VSWorientation0cyclefirst.
+Next: harvest source-regens, render actual split/detours, fix allfailures, coherent integrated planG0C/actualbitgeometry/G2, synchronize currentparentIDonly type-reduction. No owner questionsnew. Historicalfailsretained.
+
+
+### codex-token-0719-inventory
+# TOK-DS / LEC / RTL-SELRANGE 07:19 takeover
+- TOK-DS: strictcut7 e59e9c155 andI13554price5f03a61d8 merged; no live token jobs. Wholebound die FAIL12: elevenattnhbeats2 notrulingB + nestedcore reset2787; S81plan ownsfold, clock_reset/partcap ownsmanifesthierarchy. Production norm modes FFN/q/KV/head remain actual compilerintegration work; attention16sliceQDELAYS notgeneralproof.
+- LEC: old3 FP-addNEQ resolved toolfalse-negative1e8b9dc82 onmainc4fb12b3f; donotre-diagnoseasRTL.5host old sweepstillactive with oldtool, tok-lec/refix rerunsactive all5hosts. Correctedengine e1r old155NEQ nowrepro onmain+implicitlint successor epyc2scratch2/claude/codex-token-0719/eng_e1r unit2320494-1792938187 (session94788), miter+controlsession51510. Implicit-net lint5263f1673 missingmain -> cherry011fcba5f codex/token-0719,14puretestsPASS,negativeCSA pending. Lint census all5DONE:125clean,1KVpre-fixECTL2hits(c_started/c_fin),4ERROR oldheadelab. Actualoldengine exponent source fixedmain; nofullengineproof yet.
+- RTL-SELRANGE: existing5hostsweeps unchanged; currenttool/gate updates throughLEC. HBM currentSFU/SUpgslice oldNEQ120/1752 tracked but oldtool candidatefalse-negative; requestcurrentkitfromHBM. All failuresretained; OWNER none new.
+

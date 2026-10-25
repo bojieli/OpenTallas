@@ -141,3 +141,6 @@ CODEX took over token collection and side oneclock completion on codex/hbm-token
 
 ## CODEX PARKED 2026-10-25 06:01 PDT — Claude reset
 Own codex/hbm-token-push-1025 source is WIP NOT READY;724bd168c adds side LAT4 temporal vehicle, later WIP migrates side split source lists to f12/C12. Minimum II1 temporal gate COMPILING epyc1:/srv/opentallas-scratch2/claude/codex-hbm-side-push/base unitoth-ubuntu-2623004-1792933133; negative +MUT_FN not yet run. Inherited corrected-clock SU31 BUILD_PASS05:50, replay LIVE epyc2 codex-hbm-token-1025/full/diag PID3661199; no final verdict. Full branch/jobs/failures/next in CODEX-LOG06:01 handoff. No new OWNER?.
+
+## CODEX notes 2026-10-25 07:30 PDT
+CODEX took over on codex/hbm-token-0719@3e0867e321 (pushed): side LAT4 exactness COMPLETE functionally,5996 II1 outputs+actual split-core fault relation PASS, MUT_FN/MUT_CUT CAUGHT; f12/C12 regenerated lists PASS. Existing C12 nativeoneclock model already prices49/31/198/120 scalar ages. No physical closure claim. Collected corrected-clock historicalSU31 FAIL632/1046,414commitOK,all4SUfault5913/fr5940; preserved old verdict. Read-only one-group first-fault diagnostic replay LIVE epyc2 token0719/su_fault_diag unitoth-ubuntu-2352893-1792938386 (objects reused; originalarchives/binary unchanged). Native L74/reset/start parent owns; current fulltoken gate remains open.

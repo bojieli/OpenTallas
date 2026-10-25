@@ -1,0 +1,8 @@
+# HEAD0719 inventory (2026-10-25 07:28 PDT)
+- Source own epyc1:/srv/opentallas-scratch2/claude/wt/codex-head0719 codex/head0719. Base head-kits73b820 + mainc4fb merge7b71649a3f reconciles rejected snap conflict: main PG-free snap protects top+lower layers at actual CORE-margin and zero-origin phases, measured M7 pair test retained.
+- Eight head kits16rows epyc1:s81-head-kits/m{0,5}: placed. GEOM accepted three straight types(hd_st_m/str/n4), rejected5 diagonal types(k5/n3/turn/spn/spn_end). All route held until band taps+actualFF>=0; own generic Manhattan bundle knee/lattice fix claimed, coordinate S81kits/KV.
+- Elements4 former s3 and2s4 stopped by prior owner, no inherited live job. s4dualMM failure proven tool-state bug; oneFFprobe converges18s0TNS/1130cells. FLOW owns repair helper. Actual A/B3_place images copied/viewed; PASS-COND CTS-only (broad channels, centeredROM, no slivers, whole extent<405), F6/clock/per-corner basis proof still owed before route. Images epyc1:codex-head0719/review/elem{A,B}.png.
+- Tile native element views not yet currentSIGNED, route held. Anchor max402.192<=405 proof retained.
+- hd_serdes plan status width defect direct rx512vs514; main ot_s81hd_serdes_link packs{st,rx} correctly. Need plan+PMA die-IO plumbing; hd_lep source closure regenerating layer binder ownedS81/TOK.
+- hd_ctl/host/mesh realRTL absent. Derive compiled schedule/ADAPTER contract before coding; H11 has incompatible two-spine/six553mesh/two553host/five-draft form. Unresolved host279vs276/calendar/H4authority remains OWNER? in CODEX-LOG, no blocking.
+- I13 physical/census belongs S81parent, no duplicate claim.

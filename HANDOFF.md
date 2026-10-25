@@ -537,3 +537,33 @@ CODEX: 2026-10-25 06:02 PDT HANDOFF to Claude: all lanes parked; main3b207 pushe
 - 2026-10-25 07:01 PDT OWNER: strap question = B (ID straps tied at the parent, IDs only).
 2026-10-25 07:08 PDT HBM-PLAN: parked. claude/hbm-b2o-1025r@fcd78fa50f: B2o clock legalizer PASS, FT audit 32/49 (13 of 30 PLAN-STRUCTURAL fixed), G0/G0C still FAIL on the HC-ring transit -> next: HC ring W128 re-floorplan. GEOM REQ [HBM-PLAN/B2o 2026-10-25 07:08 PDT].
 2026-10-25 07:17 PDT KV-TOK2: parked. E13 cold-boot FAIL root cause = boot_go 5 cyc after hbm_rst_n vs KV PC scheduler strap <=116 cyc (f_early -> fault chain), not WL7; fix rst_seq T_HBM_GO=160 READY claude/kv-tok2-1025@127e5066ea (sub-die 32/32, neg 14/32); next = rebind + whole-die rerun.
+2026-10-25 07:24 PDT CODEX: CP1 Wpair both CTS CRASH la_d diagnosed; existing main8234352a5 applied to fresh kits, codex/cp1-0719@4559ed6f1 pushed/G0PASS/14testsPASS; autopilot enqueue r0d45eab6c2682, postGRT conditions owed.
+2026-10-25 07:24 PDT CODEX: QC START prerequisite READY codex/qc-token-0719@dbe1a9e85e (d2d03fe94 dedicated rgate on main; conflict keeps kit source-picks),12focusedSTARTtestsPASS. Compact inherited CROM/MAT component receipts READY50c8dcd3ac; no rerun/no G5/rate claim.
+2026-10-25 07:26 PDT CODEX: S81 I13 currentfanout-repairedRTL bench6PASS native554cycles; actualsynth/floorplangate10liveintel2, previousnativefanoutFAILmax2119diagnosed; plan/cores/kits0719groupsactive.
+
+2026-10-25 07:27 PDT CODEX: KV-TOK FIFO sim-historyguardREADY65f5373a3b (synth-identical,32words+2mutants); nativepcpart+wholeEbootfixbuilds live separateowncopies.
+2026-10-25 07:28 PDT CODEX: S81 legacy runner failclosed da791126a8 READY5mockcases; qbankN autopilotCRASH diagnosed missingpairskew, nativeF1signoffNOTSIGNED TT+148.74/FF-8.72/135EP despite oldfixedbasisSIGNED, no viewpromotion; BFcolICGregionalpreflight18gates functionpreserved but2tapsROMoverlap, structurallegalizer next.
+2026-10-25 07:32 PDT CODEX: PROTO lateleaf8 structural3.72Moverflow collected; proposedRTLlint production5dieinputs5/5PASS, actualot-runEXIT0; resultsonlyREADY33fd931058.
+2026-10-25 07:31 PDT CODEX: INFRA installedmissingmatplotlib4workers, fixedhubcoordqueuemerge92c729636a, READYautopilotsafetye40d36e922 (canarywavegate+explicitcorrective, diagnosisretention, GRTroutingstage, enqueuepublishedcheck);50testsPASS1skip+6focusedPASS; canarytimermainrepointed, livejobspreserved.
+CODEX: 2026-10-25 07:31 PDT S81CCONN xfin measured-fit362.88² all16parents G0C177/1770E/2testsPASS,0cycles, READYd3d96d460a; nativecorekit/signoffowed.
+
+2026-10-25 07:29 PDT CODEX: Qwen ROM synthesis parameter mismatch fixed READY8376afdfe1 (2testsPASS,0cycles,current8ROMbb+hashes); plan7a/b live, f57corrective route engaged; new inventorycodex-qwen-0719-inventory.md.
+2026-10-25 07:30 PDT CODEX: TOK-HBM side LAT4 actual split-core5996II1 exact+2mutantsPASS READY3e0867e321; SU31 corrected-clockFAIL632/1046 diagnosed further in read-only replay epyc2unit2352893.
+2026-10-25 07:30 PDT CODEX: FLOW strictRTLlint63795270e READY17tests+5dieactualPASS;freshFFrepairheadB endsoldMMstall3.93sec1136cells butmargin0postlegalizationFAIL-1.99/69, margin5running;GEOMqueuecleared.
+
+2026-10-25 07:31 PDT CODEX GEOM: six HBMbatch2 exact reviews+resetleaf independent acceptance; sfustore F6 measuredFAIL16macros501..782pins each>20um,max487.39; structuralowners notified; results-only READY6206a9ad14 actualhub. No route started.
+2026-10-25 07:34 PDT CODEX: CP1 corrected Wpair RUNNING07:32 autopilot92cd4ba072f2/1c283eb44e4f intel2; added actualGRT TTFF boutD/distance/density stopgate a55d43c2a, oldR124slewFAILsmokeconfirmed; noSIGNEDyet.
+CODEX: 2026-10-25 07:37 PDT S81 PLAN3: optionalFT split-band source770fce5b5e(mechanismPASS,actual2typegeometryviewed), hi/lo_t6 G2 liveintel2units758336/758333; threewhole-slot+1cycles pricedpendingexactbaseline. IRallintermediatePHYavoidance requiredframeFTingress+adjacentrowdetour; route succeeds, fullplanemit livehub2232399. RSW27cores+17.28um channelwiden+FTrepack livehubclient2559505. Leaf/CCONNchildren fixingactualcoherence/lattice/outlinefailures.
+2026-10-25 07:35 PDT CODEX: KVplan0719 source54b0a1869 pushed; ASTKface2errorsfixed,G0C40/40clean326facesremain;15HRclockpinupdates dataunchanged;4G2probeslive, tokenwholeEboot160build+native833pcpart4/4PASS, masterhead/ASTKgatesprogress.
+CODEX: 2026-10-25 07:38 PDT S81CCONN l0r267.84² measured-fitREADY77523b3ce7 G0C177/177PASS/3testsPASS/0cycles; nativekit/signoffCORES.
+
+CODEX: 2026-10-25 07:36 PDT takeover0719 all-lane work active; main499eb8179 canary/boot160/START/lint and4bbbf780b autopilotdispatch+diagnosticretention pushed/HEAD==originmain. Head assembledclockFAIL diagnosed budgettap load mismatch; all lane currentinventories lanes/CODEX.md.
+CODEX: 2026-10-25 07:39 PDT RESET sharedleaf false-zeroPASS FIXREADY cece3ea38d (branch9439af93cc): actualKV K1 99sinkpins,max326.916um vsold1305;16testsPASS,+0cycles; stableSTART companionb2b31b9507 READY.
+
+2026-10-25 07:37 PDT CODEX: HBM core flow source-only f90c555daf READY; actual EXP unsafe initialization pruning fixed/analyzed842pins restored, boot miter+mutantPASS0cycles; one fullmaster synth diagnosticLIVE, parent/master pin delta owed.
+2026-10-25 07:39 PDT CODEX: S81 VN_b optional F6write-stage source3bf7d67d1c qualified119994cycles+mutant0externallatency; VSWorientation-onlyfixfailed0/4, compensatedwaitline-stagefullmiterlive. qbankcurrentF1NOTSIGNEDdespitelegacysignoff; genericlegacyrunnerfailclosedfixda791126a8 READY.
+2026-10-25 07:37 PDT CODEX: freshFFrepairAPIbbca0eeff READY;actualheadBplacementTT+122.21/FF+0.0116ps0EP,2passes~1.2kbufs vsoldMM45minstall;rootmerges,headownsroute.
+2026-10-25 07:33 PDT CODEX: TOKDS/LEC narrowinactive-read+HXsourceREADYc8496ae75 0cycles,3x3510all13portsmiterPASS+mutantCAUGHT. LECtoolimplicit-netlintREADYf6433f29314tests+CSAcontrols; currentengine28977proved,3offsetDIFFER+2statusUNDECIDED underdiagnosis,nostaleNEQwaivers.
+2026-10-25 07:40 PDT CODEX: QC hc0/fwfaultfailure diagnosed stale m5preflight: exact48unusedfaultlanes already currentunloaded274 (plan0719setdiff0); realhead/SU/stationfaultpaths retained. Freshsource/elabPASS,7bcurrentbind next; noextra replan.
+2026-10-25 07:38 PDT CODEX: AUTOPILOT07:32 actual tick preserved KV failed checkpoints, held bulk waves and dispatched reviewed CP1 corrective pair; stale CP1 source rows superseded in coord8ed5b32ce5. Canary isolation/queued-flow matching/clock-cover correction READY e54d57b84e, true HBM3shared faults retained; original canary failures unchanged.
+2026-10-25 07:41 PDT CODEX: KV-KITS exact405FTlattice READYdb9b8251a3(all3053bits,max402.57/output19.71,+5832FF/+34slotcycles); parentf7fold; G2r2+macroinventorylive; oldioFT48GBjobsretained.
