@@ -19,7 +19,7 @@ def test_only_clock_topology_changes_and_is_idempotent():
     c=raw['partition_types']['coll_ftm']['clock']
     assert 'taps' not in c and c['tap_mode']=='density'
     assert c['tap_max_sinks']==1000 and c['tap_target_sinks']<=1000
-    assert c['tap_radius_um']<=200 and c['tap_min_sinks']==0
+    assert c['tap_radius_um']<=200 and c['tap_min_sinks']==1
     assert(c['insertion_ps'],c['insertion_ff_ps'])==(250,202.5)
     once=deepcopy(raw);M.apply(raw);assert raw==once
 
@@ -27,3 +27,13 @@ def test_only_clock_topology_changes_and_is_idempotent():
 def test_missing_production_type_fails_closed():
     with pytest.raises(ValueError,match='production type'):
         M.apply({'partition_types':{}})
+
+
+def test_profile_fields_obey_production_clock_schema():
+    import sys
+    sys.path.insert(0,str(Path(__file__).resolve().parent))
+    import schema
+    clock_schema=schema.SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]
+    errors=[]
+    schema._check(M.PROFILE,clock_schema,"clock",errors)
+    assert errors==[]
