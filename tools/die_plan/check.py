@@ -612,12 +612,23 @@ def check_latency(P, R):
         R.err("latency", "no latency table (generate it: python3 tools/die_plan/gen.py latency PLAN.json --inplace)")
         return {}
     for lid in P.lanes:
+        ln_ = P.lanes[lid]
+        if ln_.get("beats") or ln_.get("word_bits"):
+            # DEC12 multi-beat lane: both keys, and the port carries ceil(word / beats) + beat-index bits
+            bt, wb = int(ln_.get("beats", 0)), int(ln_.get("word_bits", 0))
+            w0 = int(P.ports[ln_["ports"][0]]["width"])
+            need = -(-wb // bt) + max(1, (bt - 1).bit_length()) if bt and wb else None
+            if need is None or w0 != need:
+                R.err("latency", f"lane {lid}: beats {bt} / word_bits {wb} need port width {need}, got {w0}", lane=lid)
         want = P.lane_latency(lid)
         got = tab.get(lid)
         if got is None:
             R.err("latency", f"lane {lid}: missing from the latency table", lane=lid)
         elif got["cycles"] != want["cycles"]:
             R.err("latency", f"lane {lid}: table says {got['cycles']} cycles, plan gives {want['cycles']}", lane=lid)
+        elif got.get("word_cycles") != want.get("word_cycles"):
+            R.err("latency", f"lane {lid}: table word_cycles {got.get('word_cycles')} != plan {want.get('word_cycles')}",
+                  lane=lid)
     # R8: one cycle per latency group (bus groups from BINDER2 + replicated consumers), checked on the TABLE (what the
     # binder / compiler read), and pads realisable per type
     for name, kind, lids in P.latency_groups():
@@ -1020,7 +1031,7 @@ def _hops_ok(a, regs, b, smax):
     return max(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(pts, pts[1:])) <= smax + EPS
 
 
-def check_completeness(P, R, no_cells=(), max_msgs=5):
+def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
     """PLAN COMPLETENESS (COORD 10-23 ~20:00): G0 is a completeness check; a missing field is an ERROR.
     Per partition type (hard IP types: cells / clock / reset / face flops not required):
       cells            a cell estimate (type.cells, contents[].cells or cells.py evidence)
@@ -1033,9 +1044,16 @@ def check_completeness(P, R, no_cells=(), max_msgs=5):
                        without geometry; this re-counts them for the completeness table)
       internal_station every estimated internal reg-reg connection > ft_station_max_um (face window -> leaf / core
                        box, core <-> core net) has internal_stations[] whose hops are all <= the limit (R3-INTERNAL)
+                       S81 10-24 (coordinator ruling (a), R3 inside hardened types): with budgets.core_internal_reach_um
+                       set, the types with declared core connectivity (core_conns.json sidecar) use that reach for their
+                       internal_stations[] hops, and every declared core port bundle -- bus window -> core box, core box
+                       -> partner core box (lower bounds) -- longer than it needs an entry (conn "bus:<bus>" with capture
+                       "<core>.<port>", or conn "core:<core>.<port>|core:<partner>" either way round)
     Die: clock.common_latency_ps (R4 owner rule)."""
     miss = {f: 0 for f in COMPLETE_FIELDS}
-    smax = station_max(P)
+    smax0 = smax = station_max(P)
+    creach = P.budgets.get("core_internal_reach_um")
+    cside = side or {}
     n_msg = defaultdict(int)
 
     def bad(field, tn, msg):
@@ -1092,6 +1110,7 @@ def check_completeness(P, R, no_cells=(), max_msgs=5):
                 boxes[c["inst"]] = (x0, y0, x0 + c["outline_um"][0], y0 + c["outline_um"][1])
         if not boxes:
             continue
+        smax = float(creach) if creach and tn in cside else smax0
         ist = t.get("internal_stations", [])
         for e in ist:
             if not _hops_ok(e["from_um"], e["regs_um"], e["to_um"], smax):
@@ -1132,6 +1151,31 @@ def check_completeness(P, R, no_cells=(), max_msgs=5):
                     d = max(bx[0] - by[2], by[0] - bx[2], 0) + max(bx[1] - by[3], by[1] - bx[3], 0)
                     if d > smax and f"{x}|{y}" not in conns and f"{y}|{x}" not in conns:
                         todo.append((f"net {nm} ({x} <-> {y})", d))
+        if creach and tn in cside:
+            ents = {(e.get("conn"), e.get("capture")) for e in ist}
+            for ci, ports in cside[tn].items():
+                if ci not in boxes:
+                    continue
+                for lp, tgs in ports.items():
+                    for tg in tgs:
+                        kd, _, nm = tg.partition(":")
+                        if kd == "bus":
+                            if bt is None:
+                                bt = _bus_targets(P, tn)
+                            if nm not in bt:
+                                continue
+                            d = _box_dist(bt[nm][1], boxes[ci])
+                            ok = (f"bus:{nm}", f"{ci}.{lp}") in ents
+                        elif kd == "core" and nm in boxes and nm != ci:
+                            bx, by = boxes[ci], boxes[nm]
+                            d = max(bx[0] - by[2], by[0] - bx[2], 0) + max(bx[1] - by[3], by[1] - bx[3], 0)
+                            ok = any(c_ == f"core:{ci}.{lp}|core:{nm}" or
+                                     (str(c_).startswith(f"core:{nm}.") and str(c_).endswith(f"|core:{ci}")
+                                      and cap == f"{ci}.{lp}") for c_, cap in ents)
+                        else:
+                            continue
+                        if d > smax + EPS and not ok:
+                            todo.append((f"core bundle {ci}.{lp} -> {tg}", d))
         for what, d in todo:
             bad("internal_station", tn, f"internal {what} >= {d:.0f} um > {smax:g} um with no internal_stations[] "
                 "entry (R3-INTERNAL: FIRM plan stations)")
@@ -1305,7 +1349,8 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["types"] = check_types(P, R)
     summ["taps_cores"] = check_taps_cores(P, R, plan_dir, evidence)
     summ["core_faces"] = check_core_faces(P, R, plan_dir, core_conns)
-    summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()))
+    summ["complete"] = check_completeness(P, R, summ["taps_cores"].get("no_cells", ()),
+                                          side=load_core_conns(plan_dir, core_conns))
     summ["g0c"] = g0c_summary(P, R)
     summ["geometry"] = check_geometry(P, R)
     fp = check_abutment(P, R)

@@ -452,6 +452,10 @@ def verify(T):
             errs.append(f"tap {v}: no rst_n_t{v}")
         elif dep(net) != T["depth"]:
             errs.append(f"tap {v}: depth {dep(net)} != {T['depth']}")
+    for c in T.get("core_resets", []):
+        q = qs.get(f"rst_n_t{c['tap']}")
+        if q is None or _man(q["xy"], c["pin_um"]) > T["reach_um"]:
+            errs.append(f"hard-core reset {c['inst']}.{c['pin']}: missing or over-reach relay")
     del drv
     if T["max_hop_um"] > T["reach_um"] + 1e-6:
         errs.append(f"max hop {T['max_hop_um']} > {T['reach_um']}")
@@ -900,6 +904,64 @@ def out_pins(P, tn):
     return [(f"rst_o_{k}",) + tuple(sites[j]["xy"]) for k, j in enumerate(wf_solve(P)["outs"].get(tn, []))]
 
 
+def core_reset_targets(P, tn):
+    """Active-low hard-core reset pins, transformed into the type frame, with legal local relay sites.
+
+    Pin-table paths are plan-relative. The core LEF's ancestor containing that table identifies the plan directory;
+    inline tables remain useful for self-contained plans/tests. Every target is padded to the same K as the taps.
+    """
+    import check
+    import cores
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    boxes = blockages(t)
+    out = []
+    for c in t.get("hard_cores", []):
+        pd = None
+        if c.get("pins_file") and not Path(c["pins_file"]).is_absolute():
+            # The declaration's plan directory is authoritative. Pin tables may
+            # use "core" rather than "module" metadata, and the LEF may be absent
+            # during a logical bind, so do not infer context from either one.
+            if P.path is not None:
+                plan_dir = Path(P.path).resolve().parent
+                if (plan_dir / c["pins_file"]).is_file():
+                    pd = plan_dir
+            lef = cores.resolve(c.get("lef", "."))
+            if pd is None:
+                pd = next((a for a in lef.parents if (a / c["pins_file"]).is_file()), None)
+            if pd is None:
+                # Views may live outside their plan (physical/ref_tile); resolve the plan-relative pin table by
+                # its declared module, and refuse differing candidates instead of silently choosing another die.
+                base = HERE.parents[1] / "physical" / "die_plan"
+                paths = list(base.glob("*/" + c["pins_file"])) + list(base.glob("*/*/" + c["pins_file"]))
+                paths = [p for p in paths if isinstance((j := json.loads(p.read_text())), dict)
+                         and j.get("module") == c.get("module")]
+                if paths and len({p.read_bytes() for p in paths}) == 1:
+                    pd = paths[0]
+                    for _ in Path(c["pins_file"]).parts:
+                        pd = pd.parent
+                else:
+                    raise ResetError(f"type {tn}: cannot uniquely resolve hard-core pin table {c['pins_file']} from {lef}")
+        for name, _layer, x, y in check.core_pins(c, pd):
+            if name not in ("rst_n", "arst_n", "reset_n"):
+                continue
+            cw, ch = c["outline_um"]
+            o = c.get("orient", "R0")
+            x, y = {"R0": (x, y), "MX": (x, ch-y), "MY": (cw-x, y), "R180": (cw-x, ch-y),
+                    "R90": (ch-y, x), "R270": (y, cw-x), "MXR90": (y, x), "MYR90": (ch-y, cw-x)}[o]
+            ox, oy = c["origin_um"]
+            dx, dy = c.get("track_offset_um", [0, 0])
+            pin = (ox + dx + x, oy + dy + y)
+            site = push_off(pin, boxes, (CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM))
+            if not _free(site, boxes, (CLEAR_UM, CLEAR_UM, w-CLEAR_UM, h-CLEAR_UM)):
+                raise ResetError(f"type {tn}: no legal reset relay site for {c['inst']}.{name}")
+            if _man(pin, site) > relay_um(P) - MARGIN_UM:
+                raise ResetError(f"type {tn}: reset relay -> {c['inst']}.{name} exceeds reach ({_man(pin, site):g} um)")
+            out.append(dict(inst=c["inst"], pin=name, pin_um=list(pin), xy=list(site),
+                            internal_depth=int(c.get("reset", {}).get("depth", 1))))
+    return out
+
+
 def _wf_type_tree(P, tn):
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     key = ("wf_tree", tn)
@@ -908,11 +970,15 @@ def _wf_type_tree(P, tn):
         w, h = t["outline_um"]
         taps = _taps(P, tn)
         outs = out_pins(P, tn)
+        core_rst = core_reset_targets(P, tn)
         pts = list(taps) + [(f"o{k}", x, y) for k, (_, x, y) in enumerate(outs)]
+        for k, c in enumerate(core_rst):
+            c["tap"] = len(pts)
+            pts.append((f"core_rst{k}", *c["xy"]))
         topo = topology(pts, in_pin(P, tn), reach=relay_um(P), boxes=blockages(t),
                         box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM))
         T = assign(topo, None)
-        T.update(n_clock_taps=len(taps), outs=[[x, y] for _, x, y in outs])
+        T.update(n_clock_taps=len(taps), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
         cache[key] = T
     import copy
     return copy.deepcopy(cache[key])
@@ -932,7 +998,7 @@ def wf_plan(P):
         types[tn] = dict(in_um=[round(v, 4) for v in in_pin(P, tn)], outs=[[o[0], round(o[1], 4), round(o[2], 4)]
                          for o in out_pins(P, tn)], depth_K=T["depth"], entry=T["entry"],
                          entry_stages=entry_stages(T), release_after_pin=release_clocks(T), relays=len(T["relays"]),
-                         max_hop_um=T["max_hop_um"])
+                         max_hop_um=T["max_hop_um"], core_resets=T.get("core_resets", []))
     kids = {}
     for p, pr in sol["parent"].items():
         if pr is not None:
@@ -950,6 +1016,9 @@ def wf_plan(P):
             rel = base + types[tn]["release_after_pin"]
             ent, K = types[tn]["entry_stages"], types[tn]["depth_K"]
         row = dict(type=tn, parent=None if pr is None else pr[0], entry_stages=ent, depth_K=K, release=rel)
+        if tn in types:
+            row["core_release"] = {c["inst"] + "." + c["pin"]: rel + c["internal_depth"]
+                                   for c in types[tn].get("core_resets", [])}
         if pr is None:
             row.update(source="die rst_n (asynchronous: the ONE root synchroniser)")
         else:
@@ -1065,7 +1134,21 @@ def tcl_text(T):
          f"rtr_place rst_root_n {{*{ent}[./]*}} {T['root'][0]:.3f} {T['root'][1]:.3f} rentry"]
     for r in T["relays"]:
         t.append(f"rtr_place {r['q']} {{*{r['name']}[./]*}} {r['xy'][0]:.3f} {r['xy'][1]:.3f} rrl:{r['kind']}{r['depth']}")
+    for c in T.get("core_resets", []):
+        q = f"rst_n_t{c['tap']}"
+        inst, pin = c["inst"], c["pin"]
+        t += [f"# Equal-depth reset target for hard core {inst}.{pin}",
+              "set rtr_cn {}; set rtr_ci {}",
+              f"foreach n [$ff_blk getNets] {{ if {{[regexp {{(^|[/.]){q}$}} [$n getName]]}} {{ lappend rtr_cn $n }} }}",
+              f"foreach i [$ff_blk getInsts] {{ set n [$i getName]; if {{$n eq {{{inst}}} || [string range $n end-[string length {{{inst}}}] end] eq {{/{inst}}}}} {{ lappend rtr_ci $i }} }}",
+              f"if {{[llength $rtr_cn] != 1 || [llength $rtr_ci] != 1}} {{ error {{OT_RESET_CORE unresolved {inst}.{pin} or {q}}} }}",
+              f"set rtr_it [[lindex $rtr_ci 0] findITerm {{{pin}}}]",
+              f"if {{$rtr_it eq \"NULL\"}} {{ error {{OT_RESET_CORE missing {inst}.{pin}}} }}",
+              "$rtr_it disconnect; $rtr_it connect [lindex $rtr_cn 0]",
+              f"dict set rtr_at core:{c['tap']} [list [expr {{round({c['pin_um'][0]:.5f} * $ff_dbu)}}] [expr {{round({c['pin_um'][1]:.5f} * $ff_dbu)}}]]",
+              f"puts \"OT_RESET_CORE {inst}.{pin} <- {q} depth {T['depth']}\""]
     edges = " ".join(f"{r['q']} {r['d']}" for r in T["relays"])
+    edges += " " + " ".join(f"core:{c['tap']} rst_n_t{c['tap']}" for c in T.get("core_resets", []))
     t += ["close $rtr_fh",
           "# placed hop check (driver relay -> relay, Manhattan between placed sites)",
           f"set rtr_hmax 0; set rtr_hbad 0; set rtr_lim [expr {{{T['reach_um']:g} * $ff_dbu}}]",

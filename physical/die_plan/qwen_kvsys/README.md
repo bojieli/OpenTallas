@@ -164,3 +164,36 @@ spreading rule as core_pins_v37p.py; round trip at 285.12 reproduces the v3.7p f
 geometry (in-core station points 1001 -> 942, moved 974, failed 8 as before; no lane latency change) + gen.py latency +
 G0/G0C: G0 PASS 0 err / 1788 warn, G0C PASS 0 err (g0_summary_v38x.json). Only kv3_hg*/kv3_hgi* differ from v3.8w.
 Render: g3/review/part_kv3_hg_v38x.png (no pin faces a non-partner core within 60 um).
+
+## v3.9 (KV-405, 10-24) -- reach 405 exactly + signals <= M7 + reset wavefront + KV-CORES pin rulings (ONE batched re-plan, owner dec. 12/13/17)
+Tools: METH-ALIGN (claude/methodology-align-1024 @5173eb8e3, rulings 9.3/9.4) + RESET wavefront (claude/reset-1024
+@0a08a66af, cherry-picked). On those tools v3.8x was G0C FAIL 1,539 errors (879 ft slots spacing > 405, 438 lanes hop >
+405 (worst 747), 201 G0C reach > 0.9 x 405, 20 internal_station, 1 m89 ft_reserved).
+`core_pins_v39.py .` (in place, idempotent) then `run_v39.sh die_plan(v3.8x).json OUT [die_plan_reach405.json]` =
+- `post_v39.py`: die.reach_um 405, die_use without ft_reserved, cut_avail M8/M9 0, budgets.ft_station_max_um 405 +
+  reach_margin 1.0 (hops judged against 405 EXACTLY); ft slot stations = max(current, ceil(L/405) on the G0 route of
+  every crossing lane, ceil(worst pin bit/405) via ft_reach.py margin 1.0) -- kv3_hub_Ei comes out identical to Codex's
+  reach405 slots (codex/kv-hub-1024 6dd64015fd, the vK/vL/vM kits; asserted with the 3rd argument); FIRM internal
+  stations re-spaced along their path at <= 405 (one depth per bus; lane fixed_cycles += added depth); reset.release
+  wavefront; kv3_phy/kv3_phy_v1 reset.tap_um to the E face (x 842.4, toward pc_*; RESET 22:25: centre tap was 441 um
+  from the pc rst_o, now 334); qkd_ahub r2 604.8 x 440.64 with its S-E corner fixed in hub_C.
+- `g3/ft_channel_regs.py --add-stations --max-add 3`: limit now check.station_max (405; was a 750 default); per count
+  k, k+1, ..: on-route core-free fit, then `grid_fit` (core-free 8.64-um lattice, L1 reach layers, back-tracked to the
+  evenly spaced route points) BEFORE paying another station. 2,448 interior points, 1,281 in cores, all moved, 0 failed;
+  stations inside hard cores 8 (v3.8x) -> 0.
+- gen.py latency; R8: kv44 bind bus groups (bound on v3.8x) -> r8_fault_exempt -> r8_invariant_split -> `r8/r8_rebase.py`
+  (r8.rebase onto the v3.9 lane latency) -> gen.py latency --groups --bus leaf --replica type --fold-r8 (lat_v39/ carries
+  base + r8_pad per lane; the in-plan table stays base); `reset_tree.py offsets` -> reset_offsets_v39.json;
+  `lat_delta_v39.py` -> lat_delta_v39.json (per lane before/after/landed_after, histogram, token-path families).
+Result: G0 PASS 0 err / 1816 warn, G0C PASS 0 err (49/49 types clean), R8 0 unequal / 0 inversions / 0 type conflicts,
+reset wavefront 0 err (root hub_C, max release 77 clk, max die hop 362.9 um). 444 / 2,416 lanes change, +2,643 lane-cycles,
+max +22 (d2d rx sys_c->hub_C 32 -> 54, landed 56; kvs_attn tx hub_C->sys_c 31 -> 51 landed); details g0_summary_v39.json.
+Core pins: qkd_ahub r2 (S-face ck/rst_n at x 185.76 on M7), qkd_ectlk ck[0..2]/rst_n at the N-face centre (M5). Head
+e0-e7, pv_pair, astk, kvs_pc pins and outlines unchanged (e1/e5/e7 SIGNED views stand). RTL-only rulings (no plan change):
+PORT_REGS on head e0/e2/e4/e6 (claude/kv-cores-1024r 229adce8f: frontq 0 cyc, ktree g_f +1 edge, core-internal fault path,
+no plan lane), pv_pair fault-port flop duplicate (0 cyc), astk EN/ES/WN/WS face (tc broadcast / ft) re-cut.
+OPEN (review finding): ~50% of ft leg-bits in kv3_hg*/kv3_hgi*/kv3_pv* cross M7-capped hard cores (head_eighth / pv_pair
+kits route to M7) on both L orientations (v3.8x: 63%); with signals <= M7 those wires must use the core gaps (channel
+routes, capacity per GEOM-REVIEW8 gap table) or the cores must cap at M5 -- see results/geom_review KV-405 record.
+Render: g3/review/die_v39.png (before: die_v38x_methalign.png), type_kv3_hub_C_v39.png, type_kv3_hub_Wi_v39.png,
+type_kv3_pv_v4_v39.png.

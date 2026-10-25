@@ -60,3 +60,26 @@ def test_uniform_guard_honors_exact_one_station_contract(tmp_path):
     assert r['verdict'] == 'PASS' and r['one_station_ft_slots'] == ['ft0', 'ft1'], r
     table.write_text('ft0 1 S W\nft1 2 S W\n')
     assert signoff.run_face_guard(disc)['fail_counts'] == {'merged': 2}
+
+
+def test_uniform_guard_preserves_wavefront_reset_controls(tmp_path):
+    # A registered reset output can also drive a local reset relay. The canonical guard skips this
+    # typed-by-name control in raw preflight; final signoff must preserve the same contract.
+    net = NET_OK.replace('top(clk, a, o)', 'top(clk, a, o, rst_o_0)').replace(
+        'input clk;', 'input clk; output rst_o_0;')
+    reset = r"""
+  wire reset_q; wire reset_local;
+  DFFHQNx1_ASAP7_75t_R \u_rrl_0.r$_DFF_P_  (.CLK(clk), .D(1'b1), .QN(reset_q));
+  INVx3_ASAP7_75t_R reset_out (.A(reset_q), .Y(rst_o_0));
+  DFFHQNx1_ASAP7_75t_R \u_rrl_1.r$_DFF_P_  (.CLK(clk), .D(reset_q), .QN(reset_local));
+"""
+    net = net.replace('endmodule', reset + '\nendmodule')
+    synth = tmp_path / 'synth.v'
+    synth.write_text(net)
+    disc = dict(kit=str(tmp_path), synth=str(synth))
+    r = signoff.run_face_guard(disc)
+    assert r['verdict'] == 'PASS' and r['checked'] == 4, r
+    # A similarly named data output is not exempt and must still expose the shared boundary flop.
+    synth.write_text(net.replace('rst_o_0', 'rst_data_0'))
+    r = signoff.run_face_guard(disc)
+    assert r['verdict'] == 'FAIL' and r['fail_counts'].get('shared'), r

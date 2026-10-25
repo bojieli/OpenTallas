@@ -18,17 +18,30 @@ PHY_BUMP_PITCH = 45.0
 PHY_GUARD_UM = 63.64
 
 
-def domains(io, W, H):
+def part_rects(plan):
+    pr = {}
+    for p in plan["partitions"]:
+        w, h = plan["partition_types"][p["type"]]["outline_um"]
+        x, y = p["origin_um"]
+        pr[p["name"]] = (x, y, x + w, y + h)
+    return pr
+
+
+def domains(io, W, H, prect=None):
     out = []
     for w in io:
         if w.get("iface") != "serdes":
             continue
         x0, y0, x1, y1 = w["rect_um"]
         g = PHY_GUARD_UM
+        ex = w.get("bump_exclude_um") or []
+        # S81-XDIE 10-24 (GEOM condition 1): the guard ring stays inside the SerDes partition (no VDDPHY straps over the
+        # core-VDD neighbours); the window itself is the PHY zone beside the strip (die_io.py --phy-zone-guard-um)
+        bx = prect.get(w["part"], (0.0, 0.0, W, H)) if prect else (0.0, 0.0, W, H)
         out.append(dict(
             name=f"phy_{w['part']}", nets=["VDDPHY", "VSS"], io=[w["name"]],
-            rect_um=[round(max(0.0, x0 - g), 4), round(max(0.0, y0 - g), 4), round(min(W, x1 + g), 4),
-                     round(min(H, y1 + g), 4)],
+            rect_um=[round(max(bx[0], x0 - g), 4), round(max(bx[1], y0 - g), 4), round(min(bx[2], x1 + g), 4),
+                     round(min(bx[3], y1 + g), 4)],
             grid=copy.deepcopy(PHY_GRID),
             bumps=dict(rect_um=[x0, y0, x1, y1], pitch_um=PHY_BUMP_PITCH, use="power_ground",
                        note="dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside "
@@ -36,6 +49,14 @@ def domains(io, W, H):
             note="OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD "
                  "grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR "
                  "235/270 mV FAIL on the shared grid"))
+        if ex:
+            # S81-XDIE 10-24 (die-corner PHY window, lk_WS2 / lk_EN3 / lk_WN2): no power bumps in the corner stress
+            # square either, and that bump-free corner holds the domain's VDDPHY rail-clamp ESD + decap (the job the
+            # whole corner keep-out cell did before; the clamp needs no bump over it, only the domain's M8/M9 straps)
+            out[-1]["bumps"]["exclude_um"] = [list(e) for e in ex]
+            out[-1]["esd_um"] = [list(e) for e in ex]
+            out[-1]["note"] += ("; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), "
+                                "esd_um = same area: VDDPHY rail clamp + decap")
     return out
 
 
@@ -45,7 +66,7 @@ def main():
     io = json.load(open(iof))
     W, H = plan["die"]["outline_um"]
     plan["die"]["io"] = io
-    plan["die"]["pg"]["domains"] = domains(io, W, H)
+    plan["die"]["pg"]["domains"] = domains(io, W, H, part_rects(plan))
     with open(pf, "w") as f:
         json.dump(plan, f, indent=1)
         f.write("\n")

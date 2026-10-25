@@ -154,7 +154,10 @@ SCHEMA = {
                                    "basis": {"type": "string"}, "note": {"type": "string"},
                                    # rack table macro name (lk_<name>) of this window when its partition is not
                                    # named after it (xdie_io.py; HBM B2l, HBM-ARCH 10-24)
-                                   "rack_macro": {"type": "string"}}}},
+                                   "rack_macro": {"type": "string"},
+                                   # S81-XDIE 10-24 (die-corner PHY windows): signal-bump depopulation rects inside the
+                                   # window (package corner stress zone); `sites` counts only the bumps outside them
+                                   "bump_exclude_um": {"type": "array", "items": _rect, "minItems": 1}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
                     # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops
@@ -188,7 +191,12 @@ SCHEMA = {
                                                "offset_um": _nonneg, "nets": {"type": "array", "items": _name}}}},
                             "bumps": {"type": "object", "required": ["rect_um", "pitch_um"], "additionalProperties": False,
                                       "properties": {"rect_um": _rect, "pitch_um": _pos,
-                                                     "use": {"enum": ["power_ground"]}, "note": {"type": "string"}}},
+                                                     "use": {"enum": ["power_ground"]}, "note": {"type": "string"},
+                                                     # S81-XDIE 10-24: no power bumps here (= the window's
+                                                     # bump_exclude_um, die-corner stress zone)
+                                                     "exclude_um": {"type": "array", "items": _rect, "minItems": 1}}},
+                            # S81-XDIE 10-24: the domain's VDDPHY rail-clamp ESD + decap sites (no bumps over them)
+                            "esd_um": {"type": "array", "items": _rect, "minItems": 1},
                             "note": {"type": "string"}}}}}},
             }},
         "partition_types": {
@@ -358,6 +366,11 @@ SCHEMA = {
             "type": "object", "required": ["id", "ports"], "additionalProperties": False,
             "properties": {"id": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
                            "fixed_cycles": {"type": "integer", "minimum": 0},
+                           # DEC12 (S81 svc fold rung, 2026-10-24): a lane that carries a word of word_bits in `beats`
+                           # consecutive beats (endpoint RTL serialises; port width = ceil(word_bits / beats) + the
+                           # beat-index bits ceil(log2 beats), MSB).  cycles stay the lane's register stages (no bind
+                           # pads); latency adds word_cycles = cycles + beats - 1 (the last beat lands beats - 1 later)
+                           "beats": {"type": "integer", "minimum": 2}, "word_bits": {"type": "integer", "minimum": 1},
                            "reach_um": _pos, "param": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
                            "route_layers": {"type": "array", "items": _layer, "minItems": 1},
                            "note": {"type": "string"}}}},
@@ -416,11 +429,15 @@ SCHEMA = {
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
                                "natural": {"type": "integer"}, "pad": {"type": "integer", "minimum": 0},
+                               "beats": {"type": "integer", "minimum": 2}, "word_cycles": {"type": "integer"},
                                "param": {"type": "string"}}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
         "census": {"type": ["array", "object"]},
-        "budgets": {"type": "object", "additionalProperties": False, "properties": {
-            k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS}},
+        "budgets": {"type": "object", "additionalProperties": False, "properties": dict(
+            {k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS},
+            # S81 10-24 (coordinator ruling (a)): R3 reach inside hardened types with declared core connectivity
+            # (core_conns.json); no default: unset = those types keep ft_station_max_um (check.py R3-INTERNAL)
+            core_internal_reach_um=_pos)},
     },
 }
 
@@ -821,6 +838,8 @@ class Plan:
         pad = self.lane_pads()[lid]
         d["natural"], d["pad"] = d["cycles"], pad
         d["cycles"] += pad
+        if d.get("beats"):
+            d["word_cycles"] = d["cycles"] + d["beats"] - 1     # DEC12 2-beat lanes: the whole word's arrival
         return d
 
     def lane_natural(self, lid):
@@ -835,7 +854,10 @@ class Plan:
         fixed = int(ln.get("fixed_cycles", 0))
         a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
         bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
-        return dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
+        d = dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
+        if ln.get("beats"):
+            d["beats"] = int(ln["beats"])     # word_cycles (cycles + beats - 1) is added by lane_latency()
+        return d
 
 
 def tap_pitch(P, tn):

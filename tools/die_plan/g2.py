@@ -264,6 +264,31 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
         cells.append(f"  {TAPBUF} tap_{nm} (.A({nm}), .Y(tapq_{nm}));")
         nets.append(f"tapq_{nm}")
         place.append((f"tap_{nm}", x + 1.0, y))
+    # Wavefront IO pins are scalar interior pins emitted by io_tcl separately
+    # from type_pins. Model the actual generated registered reset tree so the
+    # probe contains and drives every rst_o port, including <=405-um relays.
+    reset_outs = gen_phys.reset_out_pins(P, tn)
+    if reset_outs:
+        import reset_tree as RT
+        tree = RT.for_type(P, tn)
+        for nm, _, _ in reset_outs:
+            ports.append(f"  output {nm}")
+        prev = "arst_n"
+        for j in range(RT.entry_stages(tree)):
+            c, q = f"pr_reset_entry_{j}", f"pr_reset_entry_q_{j}"
+            cells.append(f"  {FLOP} {c} (.D({prev}), .QN({q}));")
+            nets.append(q)
+            place.append((c, *tree["root"]))
+            prev = q
+        rename = {"rst_root_n": prev}
+        for rl in tree["relays"]:
+            c, q = "pr_reset_" + rl["name"], "pr_reset_" + rl["q"]
+            src = rename.get(rl["d"], "pr_reset_" + rl["d"])
+            cells.append(f"  {FLOP} {c} (.D({src}), .QN({q}));")
+            nets.append(q)
+            place.append((c, *rl["xy"]))
+        for j, (nm, _, _) in enumerate(reset_outs):
+            cells.append(f"  assign {nm} = pr_reset_rst_n_t{tree['n_clock_taps'] + j};")
     # functional buses: one boundary flop per pin bit beside its pin
     for bus, lst in sorted(by_bus.items()):
         if bus in buses:

@@ -1,0 +1,11 @@
+GATE vemitmv PASS rc=0 BAD partial copy 3: hh 43950622/4396908c kk 420c7509/4206cece dd bf511a6a/bf264e77 [414000] %Fatal: tb_s81sl_ve_spmiter.sv:101: Assertion failed in tb_s81sl_ve_spmiter: FAIL golden 4 mismatches np=4 no=32 FAIL ve spmiter MUT=0 -DOT_S81_VE_LOADSAFE5 -DOT_S81SL_SPMUT_MV 
+MITER CONTROL DIFF cyc=92 split=100 r5=000
+MITER PARTIAL DIFF cyc=92
+BAD partial copy 0: hh 7ae573a7/4347f90e kk 41ac4ae6/41bc62e0 dd 783c79ee/3f3c0458
+MITER CONTROL DIFF cyc=93 split=000 r5=100
+MITER CONTROL DIFF cyc=108 split=100 r5=000
+MITER PARTIAL DIFF cyc=108
+BAD partial copy 1: hh 433b54ca/434f3398 kk 41ebac15/41e624ef dd 3fd5db80/3fcdbe51
+BAD partial copy 2: hh 43431e8e/4335a05a kk 41ded557/41e03d4e dd bf20fa62/bf64e140
+BAD partial copy 3: hh 43950622/4396908c kk 420c7509/4206cece dd bf511a6a/bf264e77
+[414000] %Fatal: tb_s81sl_ve_spmiter.sv:101: Assertion failed in tb_s81sl_ve_spmiter: FAIL golden 4 mismatches np=4 no=32

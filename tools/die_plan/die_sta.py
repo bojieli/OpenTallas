@@ -27,7 +27,7 @@ Modes
   arcs from the MAX arrival only (MakeTimingModel::min_max_ is fixed to max), so ETM hold at a seam is optimistic by
   the clk->q max/min spread; etm is kept for setup cross-checks only and is never a hold verdict.
 
-Constraints (AGENTS.md): one clock on the die clk port, period from --period-ps (default 833.333 = 1.2 GHz),
+Constraints (AGENTS.md): one clock on the die clk port, period from --period-ps (default 833.000 ps (owner clock contract)),
 propagated through each partition's own routed tree, setup uncertainty 60 ps / hold 25 ps, CPPR on.  Gate (owner,
 BRIEFING decision 5, 2026-10-24): setup at TT >= 0, hold at FF >= 0, and the RELATED launch/capture register pair
 skew with CPPR credit <= 80 ps at TT and FF (seam pairs and intra-partition pairs) (``--corner TT --corner FF``, the
@@ -71,7 +71,7 @@ from pathlib import Path
 
 UNC_SETUP_PS = 60.0
 UNC_HOLD_PS = 25.0
-PERIOD_PS = 833.333
+PERIOD_PS = 833.000
 SIGNOFF = {"TT": "max", "FF": "min"}          # AGENTS.md (owner 2026-10-24): setup at TT, hold at FF; never SS
 SKEW_PS = 80.0                                 # related launch/capture pair skew with CPPR credit (owner, gate)
 SPREAD_PS = 80.0                               # face-flop (pin-flop) clock arrival spread: INFO only since 10-24

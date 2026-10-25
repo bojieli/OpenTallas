@@ -1,0 +1,208 @@
+{
+ "parts": {
+  "io_ucie": "coll_ucie",
+  "bump_pkg_s0": "coll_core",
+  "bump_pkg_s1": "coll_core",
+  "bump_die_ps": "coll_core",
+  "io_serdes": "io_serdes",
+  "io_serdes_1": "io_serdes_1",
+  "io_serdes_2": "io_serdes_2",
+  "ucie_kv": "ucie_kv",
+  "tt_ctlm": "tt_ctlm",
+  "native59": "native59",
+  "d2d_rom": "glue",
+  "sys_face": "glue",
+  "embed_prov": "glue",
+  "mu_ctxrx": "glue",
+  "mu_dhobs": "glue",
+  "bump_fwd_epoch": "glue",
+  "bump_fwd_lrst": "glue"
+ },
+ "rules": [
+  [
+   "c16_([WE]\\d)_0\\.(u_t_[01]_[01]|u_fab\\.u_x_[01]_[01])",
+   "c_\\1_bf_00"
+  ],
+  [
+   "c16_([WE]\\d)_0\\.(u_t_[01]_[23]|u_fab\\.u_x_[01]_[23])",
+   "c_\\1_bf_01"
+  ],
+  [
+   "c16_([WE]\\d)_0\\.(u_t_[23]_[01]|u_fab\\.u_x_[23]_[01])",
+   "c_\\1_bf_10"
+  ],
+  [
+   "c16_([WE]\\d)_0\\.(u_t_[23]_[23]|u_fab\\.u_x_[23]_[23])",
+   "c_\\1_bf_11"
+  ],
+  [
+   "c16_([WE]\\d)_0\\.u_fab\\.\\$not\\$.*",
+   "c_\\1_bf_00"
+  ],
+  [
+   "c16_([WE]\\d)_1\\.(u_t_[01]_[01]|u_fab\\.u_x_[01]_[01])",
+   "c_\\1_bn_00"
+  ],
+  [
+   "c16_([WE]\\d)_1\\.(u_t_[01]_[23]|u_fab\\.u_x_[01]_[23])",
+   "c_\\1_bn_01"
+  ],
+  [
+   "c16_([WE]\\d)_1\\.(u_t_[23]_[01]|u_fab\\.u_x_[23]_[01])",
+   "c_\\1_bn_10"
+  ],
+  [
+   "c16_([WE]\\d)_1\\.(u_t_[23]_[23]|u_fab\\.u_x_[23]_[23])",
+   "c_\\1_bn_11"
+  ],
+  [
+   "c16_([WE]\\d)_1\\.u_fab\\.\\$not\\$.*",
+   "c_\\1_bn_00"
+  ],
+  [
+   "c16_([WE]\\d)_2\\.(u_t_[01]_[01]|u_fab\\.u_x_[01]_[01])",
+   "c_\\1_tn_00"
+  ],
+  [
+   "c16_([WE]\\d)_2\\.(u_t_[01]_[23]|u_fab\\.u_x_[01]_[23])",
+   "c_\\1_tn_01"
+  ],
+  [
+   "c16_([WE]\\d)_2\\.(u_t_[23]_[01]|u_fab\\.u_x_[23]_[01])",
+   "c_\\1_tn_10"
+  ],
+  [
+   "c16_([WE]\\d)_2\\.(u_t_[23]_[23]|u_fab\\.u_x_[23]_[23])",
+   "c_\\1_tn_11"
+  ],
+  [
+   "c16_([WE]\\d)_2\\.u_fab\\.\\$not\\$.*",
+   "c_\\1_tn_00"
+  ],
+  [
+   "c16_([WE]\\d)_3\\.(u_t_[01]_[01]|u_fab\\.u_x_[01]_[01])",
+   "c_\\1_tf_00"
+  ],
+  [
+   "c16_([WE]\\d)_3\\.(u_t_[01]_[23]|u_fab\\.u_x_[01]_[23])",
+   "c_\\1_tf_01"
+  ],
+  [
+   "c16_([WE]\\d)_3\\.(u_t_[23]_[01]|u_fab\\.u_x_[23]_[01])",
+   "c_\\1_tf_10"
+  ],
+  [
+   "c16_([WE]\\d)_3\\.(u_t_[23]_[23]|u_fab\\.u_x_[23]_[23])",
+   "c_\\1_tf_11"
+  ],
+  [
+   "c16_([WE]\\d)_3\\.u_fab\\.\\$not\\$.*",
+   "c_\\1_tf_00"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_fdn",
+   "sl_\\1_fw"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_fup",
+   "sl_\\1_fe"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_fn",
+   "sl_\\1_hc1"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_frs",
+   "sl_\\1_st_a"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_fs",
+   "sl_\\1_stm"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_stm",
+   "sl_\\1_stm"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_rp",
+   "sl_\\1_ctl"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_ctl",
+   "sl_\\1_ctl"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_suvm",
+   "sl_\\1_su_c"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_red",
+   "sl_\\1_su_c"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_sc",
+   "sl_\\1_sc"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_tap",
+   "sl_\\1_ctl"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_btab",
+   "sl_\\1_st_a"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_r[0-3]",
+   "sl_\\1_st_a"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_r[4-7]",
+   "sl_\\1_st_b"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_(lrly|head|exp|rcp|rsq)[0-3]",
+   "sl_\\1_su_l0"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_(lrly|head|exp|rcp|rsq)[4-7]",
+   "sl_\\1_su_l1"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.\\$or\\$.*",
+   "sl_\\1_ctl"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_x(h0|l0_\\d)",
+   "sl_\\1_hc0"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_x(h1|l1_\\d)",
+   "sl_\\1_hc1"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_x(h2|l2_\\d)",
+   "sl_\\1_hc2"
+  ],
+  [
+   "dvs_([WE]\\d)\\.u_core\\.u_sub\\.u_x(h3|l3_\\d)",
+   "sl_\\1_hc3"
+  ],
+  [
+   "io_collective\\.u_io\\.g_face\\[[34]\\]\\..*",
+   "coll_s"
+  ],
+  [
+   "io_collective\\.u_io\\.g_face\\[2\\]\\..*",
+   "coll_n"
+  ],
+  [
+   "io_collective\\.u_io\\.(u_shared|g_six_five)(\\..*)?",
+   "coll_ucie"
+  ],
+  [
+   "io_collective\\..*",
+   "coll_core"
+  ]
+ ],
+ "note": " | ELEMQK-BIND 10-24 (P6 main plan 4b7b2b3e64): u_tap -> sl_*_ctl (QC-P6-R8 1f5b9bee38), io_ucie + io_collective u_shared/g_six_five -> coll_ucie (census/coll_map.json)"
+}

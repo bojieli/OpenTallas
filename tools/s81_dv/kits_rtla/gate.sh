@@ -16,6 +16,9 @@ case $N in
   beat)      bash tools/s81_slice/beat_bench.sh $O base > $O/out.log 2>&1; r=$?;;
   vqpr)      bash tools/s81_slice/vq_pinreg_eq.sh $O base > $O/out.log 2>&1; r=$?;;
   vqprmut)   bash tools/s81_slice/vq_pinreg_eq.sh $O mut > $O/out.log 2>&1; grep -q NEGATIVE_CONTROL_FAILED_AS_EXPECTED $O/out.log; r=$?;;
+  vqprwreg)  bash tools/s81_slice/vq_pinreg_eq.sh $O mutwreg > $O/out.log 2>&1; grep -q NEGATIVE_CONTROL_FAILED_AS_EXPECTED $O/out.log; r=$?;;
+  aq12vq2)   bash tools/s81_slice/aq12_xmem_bench.sh $O mutvq2 > $O/out.log 2>&1; r=$?; [ $r = 1 ] && grep -q "^FAIL aq12_xmem_eq" $O/out.log && r=0 || r=1;;
+  aq12wreg)  bash tools/s81_slice/aq12_xmem_bench.sh $O mutwreg > $O/out.log 2>&1; r=$?; [ $r = 1 ] && grep -q "^FAIL aq12_xmem_eq" $O/out.log && r=0 || r=1;;
   aq12)      bash tools/s81_slice/aq12_xmem_bench.sh $O base > $O/out.log 2>&1; r=$?;;
   rrbase)    J=8 bash tools/s81_dv/eng_rr/bench_rr_split.sh $O base > $O/out.log 2>&1; r=$?;;
   rrsm1)     J=8 bash tools/s81_dv/eng_rr/bench_rr_split.sh $O sm1 > $O/out.log 2>&1; r=$?; [ $r != 0 ] && r=0 || r=1;;

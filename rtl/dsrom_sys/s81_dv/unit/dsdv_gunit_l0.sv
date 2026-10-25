@@ -27,6 +27,9 @@
 // +3 edges, transaction-level exact); cw is captured ONCE (wv / wa / wd are both the job decode's input flops and the
 // first stage of the cw feedthrough; cwo_* = their output flops, still 2 edges), so no cw pin feeds two captures; j_v
 // (N output flop) has a kept internal twin ja for the job bookkeeping, so the output flop drives only its pin.  0 edges.
+// S81-KITS-RTLC 10-24 (raw face_guard, 0 edges): every held output register (j_*, go_acc, go_b, sticky fault) has a kept
+// internal twin (jk_*, gk_*, fault_k) that holds; the pin flop loads twin-next each edge, so no pin flop reads itself.
+// cw_a / cwo_a packed {a[9:8], a[5:0]} (a[7:6] read by no gunit leaf).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_gunit_l0 #(
     parameter integer MUT = 0
@@ -35,16 +38,17 @@ module dsdv_gunit_l0 #(
     input  wire          rst_n,
     // S face (L2)
     input  wire [275:0]  rs_i,  output wire [275:0] rs_o,
-    input  wire          hp_av, input wire [275:0] hp_a, input wire hp_bv, input wire [275:0] hp_b,
-    input  wire          cw_v, input wire [9:0] cw_a, input wire [255:0] cw_d, input wire [3:0] sid_i,
-    output wire          hct_v, output wire [275:0] hct_b, output reg fault,
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant / unused pins): hp_a / hp_b [243:40] (no other bit is read); hct4_b / hct_b = packed CTL rows
+    input  wire          hp_av, input wire [243:40] hp_a, input wire hp_bv, input wire [243:40] hp_b,
+    input  wire          cw_v, input wire [7:0] cw_a, input wire [255:0] cw_d, input wire [3:0] sid_i,
+    output wire          hct_v, output wire [169:0] hct_b, output reg fault,
     // N face (L4)
     output wire [275:0]  rn_o,  input wire [275:0] rn_i,
     output reg           g_v, output reg [3:0] g_i, output reg [4:0] g_acc, output reg [319:0] g_d,
     output reg           j_v, output reg j_set, output reg j_w, output reg [9:0] j_row, output reg [4:0] j_lm,
     output reg  [15:0]   j_sm,
-    output reg           cwo_v, output reg [9:0] cwo_a, output reg [255:0] cwo_d, output wire [3:0] sid_o,
-    input  wire          hct4_v, input wire [275:0] hct4_b, input wire mix_go, input wire launch, input wire f4,
+    output reg           cwo_v, output reg [7:0] cwo_a, output reg [255:0] cwo_d, output wire [3:0] sid_o,
+    input  wire          hct4_v, input wire [169:0] hct4_b, input wire mix_go, input wire launch, input wire f4,
     // E face (L0r: root store + group stream)
     output reg           wr_av, output reg [4:0] wr_agh, output reg [191:0] wr_ad,
     output reg           wr_bv, output reg [4:0] wr_bgh, output reg [191:0] wr_bd, output reg wr_b,
@@ -60,16 +64,20 @@ module dsdv_gunit_l0 #(
     // ---------------------------------------------------------------- feedthroughs
     dsdv_gunit_pass #(.W(V)) u_up (.clk(clk), .rst_n(rq[0]), .d(rs_i), .q(rn_o));
     dsdv_gunit_pass #(.W(V)) u_dn (.clk(clk), .rst_n(rq[0]), .d(rn_i), .q(rs_o));
-    dsdv_gunit_pass #(.W(277)) u_ct (.clk(clk), .rst_n(rq[0]), .d({hct4_b, hct4_v}), .q({hct_b, hct_v}));
+    dsdv_gunit_pass #(.W(171)) u_ct (.clk(clk), .rst_n(rq[0]), .d({hct4_b, hct4_v}), .q({hct_b, hct_v}));
     dsdv_gunit_pass #(.W(4)) u_sid (.clk(clk), .rst_n(rq[0]), .d(sid_i), .q(sid_o));
     // ---------------------------------------------------------------- input flops (cw: one capture, = the feedthrough's stage 1)
     reg av, bv, wv, mg, ln, f4_q; reg [V-1:0] ab, bb; reg [9:0] wa; reg [255:0] wd;
     always @(posedge clk or negedge rq[1])
         if (!rq[1]) begin av <= 1'b0; bv <= 1'b0; wv <= 1'b0; mg <= 1'b0; ln <= 1'b0; f4_q <= 1'b0; end
         else begin av <= hp_av; bv <= hp_bv; wv <= cw_v; mg <= mix_go; ln <= launch; f4_q <= f4; end
-    always @(posedge clk) begin ab <= hp_a; bb <= hp_b; wa <= cw_a; wd <= cw_d; end
+`ifdef OT_RTLC_MUT_L0   // RTLC bench mutant: hp_a unpacked one bit high
+    always @(posedge clk) begin ab <= {31'd0, hp_a, 41'd0}; bb <= {32'd0, hp_b, 40'd0}; wa <= {cw_a[7:6], 2'd0, cw_a[5:0]}; wd <= cw_d; end
+`else
+    always @(posedge clk) begin ab <= {32'd0, hp_a, 40'd0}; bb <= {32'd0, hp_b, 40'd0}; wa <= {cw_a[7:6], 2'd0, cw_a[5:0]}; wd <= cw_d; end
+`endif
     always @(posedge clk or negedge rq[0]) if (!rq[0]) cwo_v <= 1'b0; else cwo_v <= wv;   // cw feedthrough stage 2
-    always @(posedge clk) begin cwo_a <= wa; cwo_d <= wd; end
+    always @(posedge clk) begin cwo_a <= {wa[9:8], wa[5:0]}; cwo_d <= wd; end
     // ---------------------------------------------------------------- jobs: armed -> active (first beat)
     wire job_w = wv && wa[9:8] == 2'b10 && wa[0];
     reg pj_v; reg pj_set; reg pj_w; reg [9:0] pj_row; reg [4:0] pj_lm; reg [15:0] pj_sm;
@@ -89,48 +97,59 @@ module dsdv_gunit_l0 #(
         if (!rq[2]) begin wr_av <= 1'b0; wr_bv <= 1'b0; end else begin wr_av <= av; wr_bv <= bv; end
     reg rf_q;
     (* keep = "true" *) reg ja;                         // internal twin of the j_v output flop
+    (* keep = "true" *) reg jk_set, jk_w; (* keep = "true" *) reg [9:0] jk_row; (* keep = "true" *) reg [4:0] jk_lm;
+    (* keep = "true" *) reg [15:0] jk_sm; (* keep = "true" *) reg [4:0] gk_acc; (* keep = "true" *) reg gk_b, fault_k;
+    reg fs;                                             // this edge's fault conditions (combinational, block-local)
+    wire ld_j = (av || bv) && !win_o && wdone == 25'd0 && !ja;   // the job's first beat (av / bv are 0 in reset)
+    wire ld_g = (av || bv) && w_fin;
+    always @(posedge clk) begin                          // pin flops: twin-next, never their own Q
+        {j_set, j_w, j_row, j_lm, j_sm} <= ld_j ? {pj_set, pj_w, pj_row, pj_lm, pj_sm} : {jk_set, jk_w, jk_row, jk_lm, jk_sm};
+        {go_acc, go_b} <= ld_g ? {cacc, wb} : {gk_acc, gk_b};
+    end
     always @(posedge clk or negedge rq[2])
         if (!rq[2]) begin
             wb <= 1'b0; win_o <= 1'b0; win_seen <= 32'd0; win_n <= 6'd0; gap <= 6'd63; wdone <= 25'd0;
-            pj_v <= 1'b0; j_v <= 1'b0; ja <= 1'b0; go_a <= 1'b0; fault <= 1'b0;
+            pj_v <= 1'b0; j_v <= 1'b0; ja <= 1'b0; go_a <= 1'b0; fault <= 1'b0; fault_k <= 1'b0; fs = 1'b0;
         end else begin
-            go_a <= 1'b0;
+            fs = 1'b0;
+            go_a <= 1'b0; j_v <= ja;
             gap <= (gap == 6'd63) ? gap : gap + 6'd1;
             if (job_w) begin
-                if (pj_v) fault <= 1'b1;
+                if (pj_v) fs = 1'b1;
                 pj_v <= 1'b1; pj_set <= wd[40]; pj_w <= wd[41]; pj_row <= wd[30:21]; pj_lm <= wd[20:16]; pj_sm <= wd[15:0];
             end
-            if (av && (ab[51:50] != 2'd0 || aacc > 5'd24)) fault <= 1'b1;
-            if (bv && (bb[51:50] != 2'd0 || bacc > 5'd24)) fault <= 1'b1;
-            if (av && bv && (aacc != bacc || (ag == bg && ah == bh))) fault <= 1'b1;
-            if (av && win_seen[{ag, ah}]) fault <= 1'b1;
-            if (bv && win_seen[{bg, bh}]) fault <= 1'b1;
-            if ((av || bv) && win_o && cacc != win_acc) fault <= 1'b1;            // overlapping windows
+            if (av && (ab[51:50] != 2'd0 || aacc > 5'd24)) fs = 1'b1;
+            if (bv && (bb[51:50] != 2'd0 || bacc > 5'd24)) fs = 1'b1;
+            if (av && bv && (aacc != bacc || (ag == bg && ah == bh))) fs = 1'b1;
+            if (av && win_seen[{ag, ah}]) fs = 1'b1;
+            if (bv && win_seen[{bg, bh}]) fs = 1'b1;
+            if ((av || bv) && win_o && cacc != win_acc) fs = 1'b1;            // overlapping windows
             if (av || bv) begin
                 if (!win_o) begin
                     win_acc <= cacc;
                     if (wdone == 25'd0 && !ja) begin                               // the job's first beat
-                        if (!pj_v || !mixed) fault <= 1'b1;
-                        j_v <= 1'b1; ja <= 1'b1; j_set <= pj_set; j_w <= pj_w; j_row <= pj_row; j_lm <= pj_lm; j_sm <= pj_sm;
+                        if (!pj_v || !mixed) fs = 1'b1;
+                        j_v <= 1'b1; ja <= 1'b1; jk_set <= pj_set; jk_w <= pj_w; jk_row <= pj_row; jk_lm <= pj_lm; jk_sm <= pj_sm;
                         pj_v <= job_w;
                     end
-                    if (wdone[cacc]) fault <= 1'b1;                                // accumulation twice in a job
+                    if (wdone[cacc]) fs = 1'b1;                                // accumulation twice in a job
                 end
                 win_o <= !w_fin;
                 win_n <= w_fin ? 6'd0 : nn;
                 win_seen <= w_fin ? 32'd0 : win_seen | (av ? 32'd1 << {ag, ah} : 32'd0) | (bv ? 32'd1 << {bg, bh} : 32'd0);
                 if (w_fin) begin
-                    if (gap < 6'd19) fault <= 1'b1;                               // completions >= 20 edges apart
-                    gap <= 6'd0; go_a <= 1'b1; go_acc <= cacc; go_b <= wb; wb <= !wb;
+                    if (gap < 6'd19) fs = 1'b1;                               // completions >= 20 edges apart
+                    gap <= 6'd0; go_a <= 1'b1; gk_acc <= cacc; gk_b <= wb; wb <= !wb;
                     wdone <= wdone | (25'd1 << cacc);
                 end
             end
             if (mg) begin
-                if (!ja) fault <= 1'b1;
+                if (!ja) fs = 1'b1;
                 j_v <= 1'b0; ja <= 1'b0; wdone <= 25'd0;
             end
-            if (rf_q) fault <= 1'b1;                                           // L0r: a go while streaming
-            if (f4_q) fault <= 1'b1;
+            if (rf_q) fs = 1'b1;                                           // L0r: a go while streaming
+            if (f4_q) fs = 1'b1;
+            fault_k <= fault_k | fs; fault <= fault_k | fs;
         end
     always @(posedge clk or negedge rq[2]) if (!rq[2]) mixed <= 1'b1; else mixed <= mg ? 1'b0 : ln ? 1'b1 : mixed;
     // ---------------------------------------------------------------- group stream relay (L0r -> L4)

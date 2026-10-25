@@ -249,6 +249,18 @@
        },
        "rack_macro": {
         "type": "string"
+       },
+       "bump_exclude_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 4,
+         "maxItems": 4
+        },
+        "minItems": 1
        }
       }
      }
@@ -463,8 +475,32 @@
            },
            "note": {
             "type": "string"
+           },
+           "exclude_um": {
+            "type": "array",
+            "items": {
+             "type": "array",
+             "items": {
+              "type": "number"
+             },
+             "minItems": 4,
+             "maxItems": 4
+            },
+            "minItems": 1
            }
           }
+         },
+         "esd_um": {
+          "type": "array",
+          "items": {
+           "type": "array",
+           "items": {
+            "type": "number"
+           },
+           "minItems": 4,
+           "maxItems": 4
+          },
+          "minItems": 1
          },
          "note": {
           "type": "string"
@@ -1461,6 +1497,14 @@
       "type": "integer",
       "minimum": 0
      },
+     "beats": {
+      "type": "integer",
+      "minimum": 2
+     },
+     "word_bits": {
+      "type": "integer",
+      "minimum": 1
+     },
      "reach_um": {
       "type": "number",
       "exclusiveMinimum": 0
@@ -1777,6 +1821,13 @@
         "type": "integer",
         "minimum": 0
        },
+       "beats": {
+        "type": "integer",
+        "minimum": 2
+       },
+       "word_cycles": {
+        "type": "integer"
+       },
        "param": {
         "type": "string"
        }
@@ -1836,6 +1887,10 @@
      "exclusiveMinimum": 0
     },
     "io_edge_max_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "core_internal_reach_um": {
      "type": "number",
      "exclusiveMinimum": 0
     }
