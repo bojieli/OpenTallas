@@ -218,6 +218,23 @@ def kvs_ctl_reoutline(raw, cores, rep):
     rep["kvs_ctl_reoutline"] = dict(instances=n, outline=[S, S], pins=len(d["pins"]), area_frac=round(S * S / W0 / H0, 3))
 
 
+RETRACK = ("ot_qwen_tp8_pv_join_t", "qkd_kvs_ctl")
+
+
+def retrack(raw, rep):
+    """the re-pinned cores sit on the die symmetric tracks in their own frame: track_offset_um [0, 0]; the 10-19 views
+    (lef / lib) no longer match the pins -> dropped from the plan (planned core, re-kit by KV-CORES)."""
+    n = 0
+    for t in raw["partition_types"].values():
+        for c in t.get("hard_cores", []) or []:
+            if c.get("module") in RETRACK:
+                c["track_offset_um"] = [0.0, 0.0]
+                for k in ("lef", "lib"):
+                    c.pop(k, None)
+                n += 1
+    rep["retrack"] = dict(cores=n, modules=list(RETRACK), track_offset_um=[0.0, 0.0], views="dropped (re-kit)")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("plan")
@@ -231,6 +248,7 @@ def main():
     drop_am(raw, a.cores, rep)
     pv_join_snap(a.cores, rep)
     kvs_ctl_reoutline(raw, a.cores, rep)
+    retrack(raw, rep)
     raw["reset"]["start"] = "broadcast"
     rep["reset_start"] = "broadcast"
     if a.ectlk_sv:
