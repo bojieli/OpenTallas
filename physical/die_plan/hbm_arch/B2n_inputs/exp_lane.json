@@ -1,0 +1,281 @@
+{
+ "schema": "opentallas.hbm_b2n.exp_lane.v1",
+ "source": {
+  "geom": "lanes/GEOM-REVIEW.md 2026-10-24 23:29 FAIL (30 pgslice_lg lane_exp*: 13-15% fill, SRAM placement differs per variant, clock source open; GEOM 20:06 cond (1))",
+  "request": "HBM-CORES2 23:30 PLAN REQUEST + HBM lane owner: height ~205 um, one family MACRO_PLACEMENT, core clock/reset entry",
+  "insertion": "origin/claude/hbm-cores-1024@0d4432fa9a physical/die_plan/hbm_arch_cores/results/core_insertion_b2l.json blob a757200ecd6c8f1138bc52ef6569db0524491bad"
+ },
+ "rule": "every lane_exp* view: outline 440.64 x 207.36 (width kept: pin-limited; height 48 x 4.32); pins = same face, same order, spread on the plan tracks (b2n._regrow_pins); one family macro placement (6 x ot_sram_1r1w_128x256_m1_r2c2, k = SRAM instances in sorted instance-path order, core frame, R0) centred so the logic ring reaches all four pin faces; clock entry = the 17-19 clock ports, already one pin cluster at the core NW corner (N face x 0..31), all die-clock roots at the die top -> ONE early core tap (kind core) per instance beside the cluster, insertion = measured mean (core-latency contract, early by I - 250), re-measured after the re-place; reset entry = rst_lane_n (in the clock cluster) + rst_n (S face SW corner), both fed by the partition synchronised reset of the SU tile (decision 13 wavefront reaches the tile tap)",
+ "grow": [
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp*",
+   "match": "^ot_hbm_su_static_pgslice_lg__lane_exp",
+   "types": [
+    "q_su00",
+    "q_su01",
+    "q_su10",
+    "q_su11"
+   ],
+   "outline": [
+    440.64,
+    207.36
+   ],
+   "old": [
+    440.64,
+    457.92
+   ],
+   "macros": [
+    [
+     6,
+     94.824,
+     41.064
+    ]
+   ],
+   "std_um2": 24900,
+   "why": "GEOM 23:29: std 21.3-24.9k um2 + 6 SRAM in 440.64x457.92 = 13-15% fill; new std fill of free (macro halo 4.32) 35-41%"
+  }
+ ],
+ "macro_placement": [
+  {
+   "k": 0,
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    69.12,
+    57.888
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 1,
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    172.8,
+    57.888
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 2,
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    276.48,
+    57.888
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 3,
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    69.12,
+    108.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 4,
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    172.8,
+    108.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": 5,
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    276.48,
+    108.0
+   ],
+   "orient": "R0"
+  }
+ ],
+ "clock_ports": [
+  "clk_bank",
+  "clk_bank_macro[0]",
+  "clk_bank_macro[1]",
+  "clk_bank_macro[2]",
+  "clk_bank_macro[3]",
+  "clk_bank_macro[4]",
+  "clk_bank_macro[5]",
+  "clk_insert[0]",
+  "clk_insert[1]",
+  "clk_insert[2]",
+  "clk_insert[3]",
+  "clk_lane[0]",
+  "clk_lane[1]",
+  "clk_lane[2]",
+  "clk_lane[3]",
+  "clk_lane[4]",
+  "clk_lane[5]",
+  "clk_lane[6]",
+  "clk_lane[7]"
+ ],
+ "reset_ports": [
+  "rst_lane_n",
+  "rst_n"
+ ],
+ "insertion": {
+  "q_su00.u_su_Q0_lane_exp0": {
+   "mean_ps": 561,
+   "max_ps": 631,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp0@f4260de3a745"
+  },
+  "q_su10.u_su_Q1_lane_exp0": {
+   "mean_ps": 561,
+   "max_ps": 631,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp0@f4260de3a745"
+  },
+  "q_su11.u_su_Q1_lane_exp1": {
+   "mean_ps": 601,
+   "max_ps": 711,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp1@1f3670ca53a4"
+  },
+  "q_su01.u_su_Q0_lane_exp1": {
+   "mean_ps": 573,
+   "max_ps": 726,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp1@26b9599d5540"
+  },
+  "q_su10.u_su_Q1_lane_exp10": {
+   "mean_ps": 591,
+   "max_ps": 651,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp10@3902ba786f1f"
+  },
+  "q_su00.u_su_Q0_lane_exp10": {
+   "mean_ps": 559,
+   "max_ps": 797,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp10@cdab528a3523"
+  },
+  "q_su11.u_su_Q1_lane_exp11": {
+   "mean_ps": 567,
+   "max_ps": 669,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp11@41000f85c440"
+  },
+  "q_su01.u_su_Q0_lane_exp11": {
+   "mean_ps": 600,
+   "max_ps": 665,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp11@cd46a885af6c"
+  },
+  "q_su00.u_su_Q0_lane_exp12": {
+   "mean_ps": 556,
+   "max_ps": 651,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp12@832f35030626"
+  },
+  "q_su10.u_su_Q1_lane_exp12": {
+   "mean_ps": 570,
+   "max_ps": 666,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp12@f9b7578c2d46"
+  },
+  "q_su01.u_su_Q0_lane_exp13": {
+   "mean_ps": 576,
+   "max_ps": 663,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp13@d2d04c202775"
+  },
+  "q_su11.u_su_Q1_lane_exp13": {
+   "mean_ps": 556,
+   "max_ps": 641,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp13@ee054eacab0f"
+  },
+  "q_su10.u_su_Q1_lane_exp14": {
+   "mean_ps": 574,
+   "max_ps": 650,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp14@0aa5ae0c4a16"
+  },
+  "q_su00.u_su_Q0_lane_exp14": {
+   "mean_ps": 554,
+   "max_ps": 645,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp14@ae74e585c4b2"
+  },
+  "q_su00.u_su_Q0_lane_exp2": {
+   "mean_ps": 586,
+   "max_ps": 670,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp2@c09772cac4ee"
+  },
+  "q_su10.u_su_Q1_lane_exp2": {
+   "mean_ps": 586,
+   "max_ps": 672,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp2@de562e97562d"
+  },
+  "q_su11.u_su_Q1_lane_exp3": {
+   "mean_ps": 564,
+   "max_ps": 690,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp3@7637efd0080a"
+  },
+  "q_su01.u_su_Q0_lane_exp3": {
+   "mean_ps": 583,
+   "max_ps": 725,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp3@953ddd655d82"
+  },
+  "q_su00.u_su_Q0_lane_exp4": {
+   "mean_ps": 566,
+   "max_ps": 748,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp4@3bbe6b04b241"
+  },
+  "q_su10.u_su_Q1_lane_exp4": {
+   "mean_ps": 575,
+   "max_ps": 746,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp4@e2edf8618205"
+  },
+  "q_su11.u_su_Q1_lane_exp5": {
+   "mean_ps": 573,
+   "max_ps": 635,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp5@fa5d09aa2efe"
+  },
+  "q_su01.u_su_Q0_lane_exp5": {
+   "mean_ps": 596,
+   "max_ps": 722,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp5@ffeb082cfe27"
+  },
+  "q_su00.u_su_Q0_lane_exp6": {
+   "mean_ps": 575,
+   "max_ps": 717,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp6@02295511db66"
+  },
+  "q_su10.u_su_Q1_lane_exp6": {
+   "mean_ps": 585,
+   "max_ps": 666,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp6@885c0bb0d945"
+  },
+  "q_su11.u_su_Q1_lane_exp7": {
+   "mean_ps": 599,
+   "max_ps": 674,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp7@059f6ce06578"
+  },
+  "q_su01.u_su_Q0_lane_exp7": {
+   "mean_ps": 586,
+   "max_ps": 669,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp7@4bcaf4f8b16b"
+  },
+  "q_su00.u_su_Q0_lane_exp8": {
+   "mean_ps": 557,
+   "max_ps": 723,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp8@acad9084ae48"
+  },
+  "q_su10.u_su_Q1_lane_exp8": {
+   "mean_ps": 557,
+   "max_ps": 723,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp8@acad9084ae48"
+  },
+  "q_su01.u_su_Q0_lane_exp9": {
+   "mean_ps": 552,
+   "max_ps": 627,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp9@7b5a181caac3"
+  },
+  "q_su11.u_su_Q1_lane_exp9": {
+   "mean_ps": 554,
+   "max_ps": 626,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp9@b20af5f8bd8a"
+  },
+  "q_su11.u_su_Q1_lane_exp_l": {
+   "mean_ps": 559,
+   "max_ps": 640,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp_l@49e428ab0c53"
+  },
+  "q_su01.u_su_Q0_lane_exp_l": {
+   "mean_ps": 554,
+   "max_ps": 612,
+   "view": "ot_hbm_su_static_pgslice_lg__lane_exp_l@4c0a010fe678"
+  }
+ }
+}
