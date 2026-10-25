@@ -135,8 +135,9 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
         if (y_v) begin
             ny = ny + 1; if (t_y0 < 0) begin t_y0 = cyc; lat_y[blk] = cyc - t_rb; end
             for (i = 0; i < 8; i = i + 1)
-                if (y[32 * i +: 32] !== ey[64 * blk + 8 * y_i + i]) begin
-                    if (err < 12) $display("Y MISMATCH blk %0d j %0d lane %0d got %h want %h", blk, y_i, i, y[32 * i +: 32], ey[64 * blk + 8 * y_i + i]);
+                // OWNER DECISION 8: vn's y is packed BF16 (lane i at [16 i +: 16]); the golden word's low half must be 0
+                if ({y[16 * i +: 16], 16'd0} !== ey[64 * blk + 8 * y_i + i]) begin
+                    if (err < 12) $display("Y MISMATCH blk %0d j %0d lane %0d got %h want %h", blk, y_i, i, {y[16 * i +: 16], 16'd0}, ey[64 * blk + 8 * y_i + i]);
                     err = err + 1;
                 end
         end

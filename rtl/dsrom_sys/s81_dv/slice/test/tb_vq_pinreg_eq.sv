@@ -35,7 +35,7 @@ module tb_vq_pinreg_eq;
     end
     // garbage on every command/data field in idle cycles (a raw-pin mux select or a crossed field shows up)
     task idle; begin m_q = $urandom; m_b = $urandom; m_i = $urandom; um_q = $urandom; um_b = $urandom; um_i = $urandom;
-        y = {8{rf32(0)}} & {8{32'hFFFF0000}};    // vn's y is BF16 (low halves 0; packed pins) u = {8{rf32(0)}}; y_i = $urandom; u_i = $urandom; end endtask
+        y = {8{rf32(0)}} & {8{32'hFFFF0000}}; /* vn's y is BF16: low halves 0 (packed pins) */ u = {8{rf32(0)}}; y_i = $urandom; u_i = $urandom; end endtask
     task tick; begin @(negedge clk); end endtask
     initial begin
         idle; repeat (4) tick; rst_n = 1; repeat (8) tick;
