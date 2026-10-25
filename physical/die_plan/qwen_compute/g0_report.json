@@ -1,9 +1,9 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/die_plan.json",
- "verdict": "PASS",
+ "plan": "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/die_plan.json",
+ "verdict": "FAIL",
  "mode": "G0",
- "errors": 0,
+ "errors": 66,
  "warnings": 85,
  "summary": {
   "die": "qwen_compute",
@@ -28,8 +28,8 @@
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/plan_notes.json",
-    "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/plan_notes.json"
+    "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/plan_notes.json",
+    "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/plan_notes.json"
    ],
    "no_cells": []
   },
@@ -207,23 +207,23 @@
     "reach_um": 1000.0
    },
    {
-    "lane": "sl_E5_ctl__x_ctl_fw_p1",
-    "hop_um": 721.7,
+    "lane": "sl_W1_hc1__cws1",
+    "hop_um": 722.6,
     "reach_um": 1000.0
    },
    {
-    "lane": "sl_E4_ctl__x_ctl_fw_p1",
-    "hop_um": 721.7,
+    "lane": "sl_W5_hc1__cws1",
+    "hop_um": 722.6,
     "reach_um": 1000.0
    },
    {
-    "lane": "sl_E3_ctl__x_ctl_fw_p1",
-    "hop_um": 721.7,
+    "lane": "sl_W4_hc1__cws1",
+    "hop_um": 722.6,
     "reach_um": 1000.0
    },
    {
-    "lane": "sl_E1_ctl__x_ctl_fw_p1",
-    "hop_um": 721.7,
+    "lane": "sl_W3_hc1__cws1",
+    "hop_um": 722.6,
     "reach_um": 1000.0
    }
   ],
@@ -4177,10 +4177,10 @@
    "coll_core__out_valid_rv_wi": 6,
    "coll_n__serdes_tx_tx_flit": 2,
    "coll_s__serdes_tx_tx_flit": 2,
-   "coll_s__serdes_tx_tx_flit_2": 10,
+   "coll_s__serdes_tx_tx_flit_2": 12,
    "coll_n__serdes_tx_valid_tx_v": 2,
    "coll_s__serdes_tx_valid_tx_v": 2,
-   "coll_s__serdes_tx_valid_tx_v_2": 10,
+   "coll_s__serdes_tx_valid_tx_v_2": 12,
    "coll_ucie__shared_fault_io_shared_fault": 6,
    "io_serdes__rx_flit_serdes_rx": 2,
    "io_serdes__rx_v_serdes_rx_valid": 2,
@@ -4190,7 +4190,7 @@
    "io_serdes_1__tx_up_serdes_up": 2,
    "io_serdes_2__rx_flit_serdes_rx": 10,
    "io_serdes_2__rx_v_serdes_rx_valid": 10,
-   "io_serdes_2__tx_up_serdes_up": 10,
+   "io_serdes_2__tx_up_serdes_up": 12,
    "glue__ctx_x_ctx_x": 4,
    "glue__dh_user_dh_user": 4,
    "native59__dr_o_dr_wi": 4,
@@ -4648,18 +4648,18 @@
   },
   "r8": {
    "groups": 1724,
-   "groups_unequal": 0,
+   "groups_unequal": 47,
    "inversions": 0,
    "replica_sets": 597,
-   "replica_unequal": 0,
-   "types_conflicting": 0,
+   "replica_unequal": 24,
+   "types_conflicting": 1,
    "replica_mode": "all",
    "bus_mode": "part",
    "async_skipped": 1,
    "depth_source": "landing file",
    "checked": true,
-   "groups_file": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/r8/bus_groups.json",
-   "landing_file": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
+   "groups_file": "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/r8/bus_groups.json",
+   "landing_file": "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json"
   },
   "seams": {
    "nets": {
@@ -7216,9 +7216,10 @@
     ],
     "uncovered": 0,
     "off_shore": 0,
-    "over_sites": 0
+    "over_sites": 0,
+    "host_mode": "dedicated"
    },
-   "source": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/die_io.json"
+   "source": "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/die_io.json"
   },
   "cut_lines": {
    "vertical": [
@@ -7976,28 +7977,28 @@
      "frac": 0.723
     },
     {
-     "lane": "sl_E5_ctl__x_ctl_fw_p1",
-     "hop_um": 721.7,
+     "lane": "sl_W1_hc1__cws1",
+     "hop_um": 722.6,
      "reach_um": 1001.2,
-     "frac": 0.721
+     "frac": 0.722
     },
     {
-     "lane": "sl_E4_ctl__x_ctl_fw_p1",
-     "hop_um": 721.7,
+     "lane": "sl_W5_hc1__cws1",
+     "hop_um": 722.6,
      "reach_um": 1001.2,
-     "frac": 0.721
+     "frac": 0.722
     },
     {
-     "lane": "sl_E3_ctl__x_ctl_fw_p1",
-     "hop_um": 721.7,
+     "lane": "sl_W4_hc1__cws1",
+     "hop_um": 722.6,
      "reach_um": 1001.2,
-     "frac": 0.721
+     "frac": 0.722
     },
     {
-     "lane": "sl_E1_ctl__x_ctl_fw_p1",
-     "hop_um": 721.7,
+     "lane": "sl_W3_hc1__cws1",
+     "hop_um": 722.6,
      "reach_um": 1001.2,
-     "frac": 0.721
+     "frac": 0.722
     }
    ]
   },
@@ -8499,7 +8500,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "/srv/opentallas-scratch/claude/wt/codex-qc-a0/physical/die_plan/qwen_compute/die_plan.png"
+  "png": "/home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/die_plan.png"
  },
  "findings": [
   {
@@ -8631,6 +8632,336 @@
    "check": "geometry",
    "msg": "type sle_su_c slot x_su_l1_stm: crossing ~1153 um > 1 station(s) x reach 1000 (see hops)",
    "type": "sle_su_c"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 landing table /home/ubuntu/wt/qc-a0/physical/die_plan/qwen_compute/r8/qwen_compute_r8_landing.json was made from other bus groups (digest 5b3a39e809083115 != c56f7e7abff4cabb): regenerate with gen.py latency --groups"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E0.u_core.u_sub.u_fdn <- sl_E0_ctl (sl_E0_fw): unequal added delay [4, 12]; (port, as-built, landed) [('ag_own', 0, 4), ('cc_c', 0, 4), ('own_ch', 0, 12), ('st_c', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E0.u_core.u_sub.u_fdn <- sl_E0_fe (sl_E0_fw): unequal added delay [4, 5]; (port, as-built, landed) [('agu_q', 0, 5), ('chu_q', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E0.u_core.u_sub.u_fup <- sl_E0_fw (sl_E0_fe): unequal added delay [6, 12]; (port, as-built, landed) [('chr_c', 0, 6), ('cmd_q', 0, 6), ('hr_c', 0, 12), ('treq_c', 0, 12)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E0.u_core.u_sub.u_suvm <- sl_E0_su_l0 (sl_E0_su_c): unequal added delay [2, 6]; (port, as-built, landed) [('cr_addr', 0, 6), ('cr_re', 0, 6), ('kv_we', 0, 6), ('l_fault', 0, 6), ('l_last', 0, 6), ('l_retire', 0, 6)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E1.u_core.u_sub.u_fdn <- sl_E1_ctl (sl_E1_fw): unequal added delay [4, 12]; (port, as-built, landed) [('ag_own', 0, 4), ('cc_c', 0, 4), ('own_ch', 0, 12), ('st_c', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E1.u_core.u_sub.u_fdn <- sl_E1_fe (sl_E1_fw): unequal added delay [4, 5]; (port, as-built, landed) [('agu_q', 0, 5), ('chu_q', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E1.u_core.u_sub.u_fup <- sl_E1_fw (sl_E1_fe): unequal added delay [6, 12]; (port, as-built, landed) [('chr_c', 0, 6), ('cmd_q', 0, 6), ('hr_c', 0, 12), ('treq_c', 0, 12)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E1.u_core.u_sub.u_suvm <- sl_E1_su_l0 (sl_E1_su_c): unequal added delay [2, 6]; (port, as-built, landed) [('cr_addr', 0, 6), ('cr_re', 0, 6), ('kv_we', 0, 6), ('l_fault', 0, 6), ('l_last', 0, 6), ('l_retire', 0, 6)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E2.u_core.u_sub.u_fdn <- sl_E2_ctl (sl_E2_fw): unequal added delay [4, 12]; (port, as-built, landed) [('ag_own', 0, 4), ('cc_c', 0, 4), ('own_ch', 0, 12), ('st_c', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E2.u_core.u_sub.u_fdn <- sl_E2_fe (sl_E2_fw): unequal added delay [4, 5]; (port, as-built, landed) [('agu_q', 0, 5), ('chu_q', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E2.u_core.u_sub.u_fup <- sl_E2_fw (sl_E2_fe): unequal added delay [6, 12]; (port, as-built, landed) [('chr_c', 0, 6), ('cmd_q', 0, 6), ('hr_c', 0, 12), ('treq_c', 0, 12)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E2.u_core.u_sub.u_suvm <- sl_E2_su_l0 (sl_E2_su_c): unequal added delay [2, 6]; (port, as-built, landed) [('cr_addr', 0, 6), ('cr_re', 0, 6), ('kv_we', 0, 6), ('l_fault', 0, 6), ('l_last', 0, 6), ('l_retire', 0, 6)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E3.u_core.u_sub.u_fdn <- sl_E3_ctl (sl_E3_fw): unequal added delay [4, 12]; (port, as-built, landed) [('ag_own', 0, 4), ('cc_c', 0, 4), ('own_ch', 0, 12), ('st_c', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E3.u_core.u_sub.u_fdn <- sl_E3_fe (sl_E3_fw): unequal added delay [4, 5]; (port, as-built, landed) [('agu_q', 0, 5), ('chu_q', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E3.u_core.u_sub.u_fup <- sl_E3_fw (sl_E3_fe): unequal added delay [6, 12]; (port, as-built, landed) [('chr_c', 0, 6), ('cmd_q', 0, 6), ('hr_c', 0, 12), ('treq_c', 0, 12)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E3.u_core.u_sub.u_suvm <- sl_E3_su_l0 (sl_E3_su_c): unequal added delay [2, 6]; (port, as-built, landed) [('cr_addr', 0, 6), ('cr_re', 0, 6), ('kv_we', 0, 6), ('l_fault', 0, 6), ('l_last', 0, 6), ('l_retire', 0, 6)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E4.u_core.u_sub.u_fdn <- sl_E4_ctl (sl_E4_fw): unequal added delay [4, 12]; (port, as-built, landed) [('ag_own', 0, 4), ('cc_c', 0, 4), ('own_ch', 0, 12), ('st_c', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E4.u_core.u_sub.u_fdn <- sl_E4_fe (sl_E4_fw): unequal added delay [4, 5]; (port, as-built, landed) [('agu_q', 0, 5), ('chu_q', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E4.u_core.u_sub.u_fup <- sl_E4_fw (sl_E4_fe): unequal added delay [6, 12]; (port, as-built, landed) [('chr_c', 0, 6), ('cmd_q', 0, 6), ('hr_c', 0, 12), ('treq_c', 0, 12)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E4.u_core.u_sub.u_suvm <- sl_E4_su_l0 (sl_E4_su_c): unequal added delay [2, 6]; (port, as-built, landed) [('cr_addr', 0, 6), ('cr_re', 0, 6), ('kv_we', 0, 6), ('l_fault', 0, 6), ('l_last', 0, 6), ('l_retire', 0, 6)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E5.u_core.u_sub.u_fdn <- sl_E5_ctl (sl_E5_fw): unequal added delay [4, 12]; (port, as-built, landed) [('ag_own', 0, 4), ('cc_c', 0, 4), ('own_ch', 0, 12), ('st_c', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E5.u_core.u_sub.u_fup <- sl_E5_fw (sl_E5_fe): unequal added delay [6, 12]; (port, as-built, landed) [('chr_c', 0, 6), ('cmd_q', 0, 6), ('hr_c', 0, 12), ('treq_c', 0, 12)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_E5.u_core.u_sub.u_suvm <- sl_E5_su_l0 (sl_E5_su_c): unequal added delay [2, 6]; (port, as-built, landed) [('cr_addr', 0, 6), ('cr_re', 0, 6), ('kv_we', 0, 6), ('l_fault', 0, 6), ('l_last', 0, 6), ('l_retire', 0, 6)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W0.u_core.u_sub.u_fdn <- sl_W0_ctl (sl_W0_fw): unequal added delay [5, 12]; (port, as-built, landed) [('ag_own', 0, 5), ('cc_c', 0, 5), ('own_ch', 0, 12), ('st_c', 0, 5)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W0.u_core.u_sub.u_fdn <- sl_W0_fe (sl_W0_fw): unequal added delay [4, 5]; (port, as-built, landed) [('agu_q', 0, 5), ('chu_q', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W0.u_core.u_sub.u_fup <- sl_W0_fw (sl_W0_fe): unequal added delay [6, 12]; (port, as-built, landed) [('chr_c', 0, 6), ('cmd_q', 0, 6), ('hr_c', 0, 12), ('treq_c', 0, 12)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W0.u_core.u_sub.u_suvm <- sl_W0_su_l0 (sl_W0_su_c): unequal added delay [2, 6]; (port, as-built, landed) [('cr_addr', 0, 6), ('cr_re', 0, 6), ('kv_we', 0, 6), ('l_fault', 0, 6), ('l_last', 0, 6), ('l_retire', 0, 6)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W1.u_core.u_sub.u_fdn <- sl_W1_ctl (sl_W1_fw): unequal added delay [5, 12]; (port, as-built, landed) [('ag_own', 0, 5), ('cc_c', 0, 5), ('own_ch', 0, 12), ('st_c', 0, 5)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W1.u_core.u_sub.u_fdn <- sl_W1_fe (sl_W1_fw): unequal added delay [4, 5]; (port, as-built, landed) [('agu_q', 0, 5), ('chu_q', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W1.u_core.u_sub.u_fup <- sl_W1_fw (sl_W1_fe): unequal added delay [6, 12]; (port, as-built, landed) [('chr_c', 0, 6), ('cmd_q', 0, 6), ('hr_c', 0, 12), ('treq_c', 0, 12)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W1.u_core.u_sub.u_suvm <- sl_W1_su_l0 (sl_W1_su_c): unequal added delay [2, 6]; (port, as-built, landed) [('cr_addr', 0, 6), ('cr_re', 0, 6), ('kv_we', 0, 6), ('l_fault', 0, 6), ('l_last', 0, 6), ('l_retire', 0, 6)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W2.u_core.u_sub.u_fdn <- sl_W2_ctl (sl_W2_fw): unequal added delay [5, 12]; (port, as-built, landed) [('ag_own', 0, 5), ('cc_c', 0, 5), ('own_ch', 0, 12), ('st_c', 0, 5)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W2.u_core.u_sub.u_fdn <- sl_W2_fe (sl_W2_fw): unequal added delay [4, 5]; (port, as-built, landed) [('agu_q', 0, 5), ('chu_q', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W2.u_core.u_sub.u_fup <- sl_W2_fw (sl_W2_fe): unequal added delay [6, 12]; (port, as-built, landed) [('chr_c', 0, 6), ('cmd_q', 0, 6), ('hr_c', 0, 12), ('treq_c', 0, 12)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W2.u_core.u_sub.u_suvm <- sl_W2_su_l0 (sl_W2_su_c): unequal added delay [2, 6]; (port, as-built, landed) [('cr_addr', 0, 6), ('cr_re', 0, 6), ('kv_we', 0, 6), ('l_fault', 0, 6), ('l_last', 0, 6), ('l_retire', 0, 6)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W3.u_core.u_sub.u_fdn <- sl_W3_ctl (sl_W3_fw): unequal added delay [5, 12]; (port, as-built, landed) [('ag_own', 0, 5), ('cc_c', 0, 5), ('own_ch', 0, 12), ('st_c', 0, 5)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W3.u_core.u_sub.u_fdn <- sl_W3_fe (sl_W3_fw): unequal added delay [4, 5]; (port, as-built, landed) [('agu_q', 0, 5), ('chu_q', 0, 4)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W3.u_core.u_sub.u_fup <- sl_W3_fw (sl_W3_fe): unequal added delay [6, 12]; (port, as-built, landed) [('chr_c', 0, 6), ('cmd_q', 0, 6), ('hr_c', 0, 12), ('treq_c', 0, 12)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W3.u_core.u_sub.u_suvm <- sl_W3_su_l0 (sl_W3_su_c): unequal added delay [2, 6]; (port, as-built, landed) [('cr_addr', 0, 6), ('cr_re', 0, 6), ('kv_we', 0, 6), ('l_fault', 0, 6), ('l_last', 0, 6), ('l_retire', 0, 6)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 bus group dvs_W4.u_core.u_sub.u_fdn <- sl_W4_ctl (sl_W4_fw): unequal added delay [5, 12]; (port, as-built, landed) [('ag_own', 0, 5), ('cc_c', 0, 5), ('own_ch', 0, 12), ('st_c', 0, 5)]"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E0.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_E0_ctl': [4], 'sl_E0_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E0.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_E0_ctl': [4], 'sl_E0_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E1.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_E1_ctl': [4], 'sl_E1_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E1.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_E1_ctl': [4], 'sl_E1_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E2.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_E2_ctl': [4], 'sl_E2_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E2.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_E2_ctl': [4], 'sl_E2_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E3.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_E3_ctl': [4], 'sl_E3_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E3.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_E3_ctl': [4], 'sl_E3_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E4.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_E4_ctl': [4], 'sl_E4_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E4.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_E4_ctl': [4], 'sl_E4_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E5.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_E5_ctl': [4], 'sl_E5_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_E5.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_E5_ctl': [4], 'sl_E5_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W0.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_W0_ctl': [4], 'sl_W0_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W0.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_W0_ctl': [4], 'sl_W0_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W1.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_W1_ctl': [4], 'sl_W1_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W1.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_W1_ctl': [4], 'sl_W1_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W2.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_W2_ctl': [4], 'sl_W2_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W2.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_W2_ctl': [4], 'sl_W2_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W3.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_W3_ctl': [4], 'sl_W3_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W3.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_W3_ctl': [4], 'sl_W3_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W4.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_W4_ctl': [4], 'sl_W4_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W4.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_W4_ctl': [4], 'sl_W4_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W5.u_core.u_sub.u_fdn.chd_q (as-built 0): unequal added delay per sink partition {'sl_W5_ctl': [4], 'sl_W5_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 replica dvs_W5.u_core.u_sub.u_fdn.cmd_q (as-built 0): unequal added delay per sink partition {'sl_W5_ctl': [4], 'sl_W5_fe': [6]}"
+  },
+  {
+   "level": "ERROR",
+   "check": "r8",
+   "msg": "R8 type slw_sc: instances need different landing pads at 1 sites (e.g. dvs_*.u_core.u_sub.u_sc.up_i <- dvs_*.u_core.u_sub.u_fdn.scu_q: pads [0, 3]); a type is hardened once: split the type or re-plan the cut so the replicas see equal lane depth"
   },
   {
    "level": "WARN",

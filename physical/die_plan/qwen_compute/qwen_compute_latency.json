@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "qwen_compute",
- "plan_digest": "e19f7628a4b10ac1",
+ "plan_digest": "9b7068aac79a8618",
  "period_ps": 833,
  "lanes": {
   "c_E0_bf_00__a22": {
@@ -15053,12 +15053,12 @@
    "width": 597
   },
   "coll_s__serdes_tx_tx_flit_2": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_COLL_S__SERDES_TX_TX_FLIT_2",
    "src": {
@@ -15091,12 +15091,12 @@
    "width": 1
   },
   "coll_s__serdes_tx_valid_tx_v_2": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_COLL_S__SERDES_TX_VALID_TX_V_2",
    "src": {
@@ -15946,12 +15946,12 @@
    "width": 1
   },
   "io_serdes_2__tx_up_serdes_up": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_IO_SERDES_2__TX_UP_SERDES_UP",
    "src": {
@@ -41937,5 +41937,6 @@
    },
    "width": 1
   }
- }
+ },
+ "groups": []
 }

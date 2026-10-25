@@ -28,6 +28,7 @@ HALO = 8.64
 HALO_MIN = 2.16
 GRID = 8.64
 SEP = 12.0
+ADD_STATIONS = True       # OWNER 10-24 18:4x: more stations allowed (same rebind)
 
 
 class Grid:
@@ -194,6 +195,28 @@ def ft_regs_off_cores(raw, log=print):
                 break
         regs, hops, halo = best
         ok = max(hops) <= hl
+        k0 = k
+        while not ok and ADD_STATIONS and k < k0 + 3:
+            # OWNER 10-24 18:4x: a slot whose routed hops cannot meet the limit gets one more station (bound RTL + R8 +
+            # latency follow in the same rebind): insert it in the longest hop, then descend again
+            i = int(np.argmax(hops))
+            a_, b_ = regs[i], (regs[i + 1] if i + 1 < k else out_pt)
+            regs = regs[:i + 1] + [((a_[0] + b_[0]) / 2, (a_[1] + b_[1]) / 2)] + regs[i + 1:]
+            k += 1
+            best = None
+            for halo in (HALO, HALO_MIN):
+                r2, h2 = _descend(G, list(regs), out_pt, G.sites(halo), taken, hl)
+                if best is None or max(h2) < max(best[1]):
+                    best = (r2, h2, halo)
+                if max(h2) <= hl:
+                    break
+            regs, hops, halo = best
+            ok = max(hops) <= hl
+        if k != k0:
+            s["stations"] = k
+            stats.setdefault("added_stations", []).append(dict(slot=f"{tn}.{sn}", stations_from=k0, stations_to=k,
+                                                               routed_hops=[round(h) for h in hops]))
+            why += f"; stations {k0} -> {k}"
         if k > 1 or bad:
             s["regs_um"] = [[round(x, 3), round(y, 3)] for x, y in regs]
         if not ok:

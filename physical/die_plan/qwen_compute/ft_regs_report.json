@@ -1,80 +1,81 @@
 {
- "checked": 48,
- "slots": 31,
- "stations_in_cores": 51,
- "long_hops": 23,
- "unfixed": [
+ "checked": 72,
+ "slots": 53,
+ "stations_in_cores": 65,
+ "long_hops": 42,
+ "unfixed": [],
+ "added_stations": [
   {
    "slot": "cbf_q00_s2.serdes_tx_tx_flit",
-   "stations": 4,
+   "stations_from": 4,
+   "stations_to": 5,
    "routed_hops": [
-    734,
-    743,
-    743,
-    752
-   ],
-   "limit": 750,
-   "stations_needed": 5
+    613,
+    605,
+    596,
+    588,
+    588
+   ]
   },
   {
    "slot": "cbf_q00_s2.serdes_tx_valid_tx_v",
-   "stations": 4,
+   "stations_from": 4,
+   "stations_to": 5,
    "routed_hops": [
-    743,
-    752,
-    752,
-    760
-   ],
-   "limit": 750,
-   "stations_needed": 5
+    613,
+    605,
+    605,
+    596,
+    588
+   ]
   },
   {
    "slot": "cbf_q00_s2.tx_up_serdes_up",
-   "stations": 4,
+   "stations_from": 4,
+   "stations_to": 5,
    "routed_hops": [
-    760,
-    752,
-    752,
-    743
-   ],
-   "limit": 750,
-   "stations_needed": 5
+    570,
+    596,
+    605,
+    613,
+    622
+   ]
   },
   {
    "slot": "cbf_q01_s2.serdes_tx_tx_flit",
-   "stations": 4,
+   "stations_from": 4,
+   "stations_to": 5,
    "routed_hops": [
-    804,
-    804,
-    795,
-    786
-   ],
-   "limit": 750,
-   "stations_needed": 5
+    622,
+    631,
+    639,
+    648,
+    648
+   ]
   },
   {
    "slot": "cbf_q01_s2.serdes_tx_valid_tx_v",
-   "stations": 4,
+   "stations_from": 4,
+   "stations_to": 5,
    "routed_hops": [
-    778,
-    769,
-    769,
-    760
-   ],
-   "limit": 750,
-   "stations_needed": 5
+    588,
+    596,
+    622,
+    631,
+    639
+   ]
   },
   {
    "slot": "cbf_q01_s2.tx_up_serdes_up",
-   "stations": 4,
+   "stations_from": 4,
+   "stations_to": 5,
    "routed_hops": [
-    760,
-    769,
-    769,
-    778
-   ],
-   "limit": 750,
-   "stations_needed": 5
+    631,
+    622,
+    622,
+    613,
+    605
+   ]
   }
  ]
 }
