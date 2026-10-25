@@ -74,6 +74,10 @@ BEAT = dict(go_to_partial=112, go_to_partial_normr=115, rstd_to_y0=18, rstd_to_x
 # dv_price.py (S81-DV measured): beat partial -> xfin DL 4 + collector 5; xfin last partial -> rstd 234 (tb_s81dv_xfin16);
 # rstd -> XQ complete at the ring stop 59 + 4 * 4 (last leaf) + DL 4.
 XFIN = dict(dl=4, collector=5, last_partial_to_rstd=234, rstd_to_xq_ring=59 + 16 + 4)
+# TOK-DS NORM-DESKEW 10-25 (COORD ruling 01:34; claude/s81-norm-deskew-1025): ot_s81sl_xrt1 / xrt3 PDSK = leaf 0..4
+# depth 4, 3, 2, 1, 0 -- the per-leaf NORMRs must reach the slice on 5 consecutive edges in leaf order (lower_norm_smoke
+# issues them on t .. t + 4) and the partial set leaves xr 4 edges after the first one would have.
+XR_DESKEW = 4
 HOST_SLOT = 5            # tb_dsdv_seq_host: one host word every 5th edge (the compiler's host slots)
 NOPS = 128               # ot_dsdv_fixed_issue calendar rows per job (NOPS <= 128) and CTL templates (128 x 186 b)
 ENG = dict(VN=0, VS=1, GUNIT=2, SVC=4, KIT=14, END=15)
@@ -709,7 +713,9 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     prog.events.append(dict(cycle=t + 5 + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL', tag=f'{which}.XFIN_GO',
                             payload=f'template {tx}'))
     # derived internal / outgoing edges (plan values the bench checks at the slice boundary where they are visible)
-    last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector']
+    # NORM-DESKEW (10-25): xrt delays leaf k by 4 - k edges, the 5 partials meet on leaf 4's edge; the collector then
+    # serialises them, so the last partial reaches xfin XR_DESKEW edges after the old staggered (faulting) collection
+    last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector'] + XR_DESKEW
     rstd = last_partial + XFIN['last_partial_to_rstd']
     xq = rstd + XFIN['rstd_to_xq_ring']
     gap16 = ('the norm is lowered on ONE slice (smoke); the xfin NX snake (rstop K_NX) and the XQ all-gather are '

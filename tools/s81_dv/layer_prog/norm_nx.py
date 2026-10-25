@@ -43,7 +43,15 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[3]
 
-NX_AFTER_LAST_NORMR = 138     # measured on the RECLOCKED cut_0S (zero-data L0 run, gaps/zero_reclock); 136 was the frozen-clock bench
+NX_AFTER_LAST_NORMR_NODSK = 138   # measured on the RECLOCKED cut_0S (zero-data L0 run, gaps/zero_reclock); 136 was the frozen-clock bench
+# TOK-DS NORM-DESKEW 10-25 (COORD ruling 01:34): ot_s81sl_xrt aligns the 5 leaf partials on leaf 4's arrival edge with
+# static per-leaf deskew registers (depth 4 - k), so the xfin collection starts 4 edges later than the staggered
+# (faulting) collection the 138 was measured on: the flit leaves 4 edges later.  RE-MEASURED on the deskewed cuts.
+XR_DESKEW = 4
+NX_AFTER_LAST_NORMR = NX_AFTER_LAST_NORMR_NODSK + XR_DESKEW
+# the plan offsets of the deskew registers: NORMR k reaches the slice exactly k edges after NORMR 0 (one CTL a cycle)
+NORMR_OFFSET = (0, 1, 2, 3, 4)
+G_SHIFT_MAX = 6           # per-slice shift of the aligned k4 edge (NX words of one stop stay > 6 edges apart)
 NS, NVL, K_NX = 16, 5, 3
 HE, HW = NS // 2, NS - 1 - NS // 2
 ENTRY_CADENCE = 2          # target-5 CTL beats two edges apart (entry_boot.py: the qualified source cadence)
@@ -230,6 +238,8 @@ def emit_all(die, prog, smoke, fixtures, D):
     G = arr['attn.NORMR.k4']
     rel = {t: arr[t] - G for t in ('attn.HLOAD', 'attn.GAIN', 'attn.NORMR.k0', 'attn.NORMR.k1', 'attn.NORMR.k2',
                                    'attn.NORMR.k3', 'attn.XFIN_GO')}
+    if [rel.get(f'attn.NORMR.k{k}', 0) for k in range(5)] != [NORMR_OFFSET[k] - 4 for k in range(5)]:
+        raise ValueError(f'norm_nx all: smoke NORMRs not on the deskew plan offsets {NORMR_OFFSET}: {rel}')
     gap_hg = rel['attn.GAIN'] - rel['attn.HLOAD']
     gap_gn = rel['attn.NORMR.k0'] - rel['attn.GAIN']
     busy = {'S': set(), 'N': set()}
@@ -239,16 +249,80 @@ def emit_all(die, prog, smoke, fixtures, D):
     for r in prog.rows:
         if r['eng'] in (D.ENG['VN'], D.ENG['VS']):
             busy['N' if r['eng'] == D.ENG['VN'] else 'S'].add(r['issue'])
-    # pass 1: every k4 on its fixed issue edge (fail closed on a clash)
+    # NORM-DESKEW (10-25): the 5 NORMRs of a slice reach it on 5 CONSECUTIVE edges (the xrt deskew depths are static:
+    # leaf k must arrive NORMR_OFFSET[k] edges after leaf 0), so a slice needs the 5 consecutive tier issue edges
+    # i4 - 4 .. i4.  With every k4 on one edge G two slices whose CTL path latencies differ by < 5 need overlapping
+    # windows (S tier 3S / 5S: 120 / 119, 2S / 6S: 130 / 128; N tier 3N / 5N, 2N / 6N), so a slice may take
+    # G + d (0 <= d <= G_SHIFT_MAX): its flit is injected d edges later.  The snake words of all 16 origins are then
+    # checked for a shared (stop, port, edge) -- an injection meeting a forward is an xstop sticky fault -- by a
+    # depth-first search over the d's (smallest d first, fail closed).
+    order = [sl for sl in sorted(S, key=lambda x: S[x]['sid']) if sl != sm]
+
+    def window(sl, d):
+        i4 = G + d - lat[sl]
+        return [i4 - (4 - k) for k in range(5)]
+    p_all = partials(fixtures)
+    used_words = {}
+
+    def snake(o, d):
+        so = by_sid[o]
+        data = sum(v << (32 * k) for k, v in enumerate(p_all[NVL * o:NVL * o + NVL]))
+        ws = []
+        for side, hops in (('e', HE), ('w', HW)):
+            at, port, edge, h = so, side_ports(o)[side], G + d + NX_AFTER_LAST_NORMR, hops
+            while True:
+                ws.append(dict(inst=at, port=port, edge=edge, sid=S[at]['sid'], hops=h, origin=o, data=data))
+                if h <= 1:
+                    break
+                lk, nxt, inport, age = _lane0(die, at, port)
+                land = edge + age
+                nsid = S[nxt]['sid']
+                oport = side_ports(nsid)[side]
+                edge = land + NX_FWD[(_port_class(inport), _port_class(oport))]
+                at, port, h = nxt, oport, h - 1
+        return ws
+    # Solve the fixed-offset windows as a small constraint problem. A fixed SID-order
+    # DFS can revisit millions of impossible prefixes; propagate each assignment
+    # to every remaining slice and choose the smallest remaining domain first.
+    fixed = {(w['inst'], w['port'], w['edge']) for w in snake(S[sm]['sid'], 0)}
+    choices, domains = {}, {}
+    for sl in order:
+        choices[sl] = {}
+        for d in range(G_SHIFT_MAX + 1):
+            win = set(window(sl, d))
+            keys = {(w['inst'], w['port'], w['edge']) for w in snake(S[sl]['sid'], d)}
+            if win & busy[tier(sl)] or keys & fixed:
+                continue
+            choices[sl][d] = (win, keys)
+        domains[sl] = set(choices[sl])
+    compatible = {}
+    for ia, sa in enumerate(order):
+        for sb in order[ia + 1:]:
+            for da, (wa, ka) in choices[sa].items():
+                for db, (wb, kb) in choices[sb].items():
+                    ok = not (ka & kb) and not (tier(sa) == tier(sb) and wa & wb)
+                    compatible[sa, da, sb, db] = ok
+                    compatible[sb, db, sa, da] = ok
+
+    def solve(left, picked):
+        if not left:
+            return picked
+        sa = min(left, key=lambda sl: (len(left[sl]), S[sl]['sid']))
+        for da in sorted(left[sa]):
+            nxt = {sb: {db for db in ds if compatible[sa, da, sb, db]}
+                   for sb, ds in left.items() if sb != sa}
+            if any(not ds for ds in nxt.values()):
+                continue
+            answer = solve(nxt, dict(picked, **{sa: da}))
+            if answer is not None:
+                return answer
+        return None
+    shift = solve(domains, {sm: 0})
+    if shift is None:
+        raise ValueError(f'norm_nx all: no deskew-legal NORMR windows / collision-free snake with G shifts <= {G_SHIFT_MAX}')
+    for sl in order:
+        busy[tier(sl)].update(window(sl, shift[sl]))
     plan = {}
-    for sl in sorted(S, key=lambda x: S[x]['sid']):
-        if sl == sm:
-            continue
-        i4 = G - lat[sl]
-        if i4 in busy[tier(sl)]:
-            raise ValueError(f'norm_nx all: k4 of {sl} needs issue edge {i4}, taken on tier {tier(sl)}')
-        busy[tier(sl)].add(i4)
-        plan[sl] = {'attn.NORMR.k4': i4}
 
     def take(t, want, step, lo=None, hi=None):
         e = want
@@ -258,17 +332,14 @@ def emit_all(die, prog, smoke, fixtures, D):
                 raise ValueError(f'norm_nx all: no free issue edge near {want} on tier {t}')
         busy[t].add(e)
         return e
-    for sl, P in plan.items():
-        t, i4 = tier(sl), P['attn.NORMR.k4']
-        # backwards from the fixed k4: leaves 3..0 (any free edge below k4; one NORMR a leaf), then GAIN >= gain_slot
-        # before the first NORMR, HLOAD >= hload_slot before GAIN (the smoke's VP slot rules, kept as minima)
-        lo_k = i4
-        for k in (3, 2, 1, 0):
-            P[f'attn.NORMR.k{k}'] = take(t, min(lo_k - 1, i4 + rel[f'attn.NORMR.k{k}']), -1)
-            lo_k = min(lo_k, P[f'attn.NORMR.k{k}'])
-        P['attn.GAIN'] = take(t, lo_k - gap_gn, -1)
+    for sl in order:
+        t, win = tier(sl), window(sl, shift[sl])
+        P = {f'attn.NORMR.k{k}': win[k] for k in range(5)}
+        # GAIN >= gain_slot before the first NORMR, HLOAD >= hload_slot before GAIN (the smoke's VP slot rules, minima)
+        P['attn.GAIN'] = take(t, win[0] - gap_gn, -1)
         P['attn.HLOAD'] = take(t, P['attn.GAIN'] - gap_hg, -1)
-        P['attn.XFIN_GO'] = take(t, i4 + rel['attn.XFIN_GO'], +1)
+        P['attn.XFIN_GO'] = take(t, win[4] + rel['attn.XFIN_GO'], +1)
+        plan[sl] = P
     # templates / calendar rows / events (same payloads as lower_norm_smoke)
     eps = 0x358637BD
     GU_ROWS = dict(D.family_lowerings())['gu'].GU_ROWS
@@ -310,25 +381,11 @@ def emit_all(die, prog, smoke, fixtures, D):
         first[t] = last - (len(order) - 1)
         n_entry += len(order)
     # the snake: own flits at E0, forwards after landing
-    p = partials(fixtures)
     E0 = G + NX_AFTER_LAST_NORMR
     prog.events[:] = [e for e in prog.events if not (e.get('kind') == 'NX' and e.get('tag') == 'attn.partial_roots')]
     words = []
     for o in range(NS):
-        so = by_sid[o]
-        data = sum(v << (32 * k) for k, v in enumerate(p[NVL * o:NVL * o + NVL]))
-        for side, hops in (('e', HE), ('w', HW)):
-            at, port, edge, h = so, side_ports(o)[side], E0, hops
-            while True:
-                words.append(dict(inst=at, port=port, edge=edge, sid=S[at]['sid'], hops=h, origin=o, data=data))
-                if h <= 1:
-                    break
-                lk, nxt, inport, age = _lane0(die, at, port)
-                land = edge + age
-                nsid = S[nxt]['sid']
-                oport = side_ports(nsid)[side]
-                edge = land + NX_FWD[(_port_class(inport), _port_class(oport))]
-                at, port, h = nxt, oport, h - 1
+        words += snake(o, shift[by_sid[o]])
     for w in words:
         v = nxb(w['sid'], w['hops'], w['data'], base=NVL * w['origin'])
         prog.events.append(dict(cycle=w['edge'], inst=w['inst'], port=w['port'], ports=[w['port']], dir='out', kind='NX',
@@ -336,8 +393,12 @@ def emit_all(die, prog, smoke, fixtures, D):
                                 words=[[w['edge'], f'{v:x}', f'{(1 << LANE) - 1:x}']],
                                 payload=f"xfin NX flit origin sid {w['origin']} hops {w['hops']} at {w['inst']}",
                                 source='hdc_golden_v41 chunk8 partials of BF16(hc_pre(io/h_in, io/pre_in))^2'))
-    return dict(mode='all', G=G, E0=E0, nx_fwd={f'{a}->{b}': v for (a, b), v in NX_FWD.items()},
-                norm_commands=n_cmd, entry_writes=n_entry, entry_first_issue=first, nx_words=len(words),
+    # the idle die-link framing of the end-slice link lanes (from die reset; layer_prog/link_frames.py)
+    import link_frames
+    n_lk = link_frames.emit(die, prog)
+    return dict(mode='all', G=G, E0=E0, g_shift={sl: d for sl, d in sorted(shift.items()) if d}, xr_deskew=XR_DESKEW,
+                nx_after_last_normr=NX_AFTER_LAST_NORMR, nx_fwd={f'{a}->{b}': v for (a, b), v in NX_FWD.items()},
+                norm_commands=n_cmd, entry_writes=n_entry, link_frame_lanes=n_lk, entry_first_issue=first, nx_words=len(words),
                 lat=lat, plan={sl: P for sl, P in plan.items()},
                 qualification='16-slice NX snake words (own + forwards) from layer-entry inputs; NX_FWD is a calibration '
                               'constant (measured on the cut runs); rstd / XQ words not yet encoded')
