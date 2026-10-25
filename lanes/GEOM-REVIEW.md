@@ -1419,3 +1419,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
    (3) Re-REQ with the 4_cts render (layout + FF/TT arrival maps), per-tap mean/range, pin-reg mean vs bound per face, hold_gate FF, and the Manhattan hop table. Gate: every tap range <=~40, face pin regs within 20 of the bound, hold_gate FF no structural FAIL.
   Plan note (batch into the S81 delta, not this kit): t23 uses about 1/3 of its 1442x1227 slot (N->W corner). The slot is not on a link path, but the plan should check whether this outline is oversized for its type.
   Owner KITS-SPARE (sub-lane S81R). Do not post a GEOM REQ for these 4 kits; post the successor.
+2026-10-25 10:12 PDT GEOM-REVIEW: CLAIM [PATH-HBM-TKMTERM 10:08] (terminal tile31 kit pins + render)
