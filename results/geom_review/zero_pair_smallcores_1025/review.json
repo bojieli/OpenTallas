@@ -1,0 +1,19 @@
+{
+ "verdict": "PASS-COND",
+ "purpose": "Read-only routed TT/FF STA with current clock/census tool, no layout change",
+ "source_tool": "8c724b052",
+ "kits": {
+  "rstg": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-legacy/eco/rstg_h5",
+  "payload": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-legacy/eco/payload_h5"
+ },
+ "images": [
+  "rstg_routed_placement.png",
+  "payload536.png"
+ ],
+ "findings": [
+  "Viewed rstg routed-placement CSV render:38.88x34.56um,66 flops clustered below north input pins,66 matching south output pins; widest bus travels about30um, comfortably below405um. Clock/reset enter west near vertical center; no macros or macro walls, ample buffer and routing space.",
+  "rstg pin window is dense at M5 pitch; existing routed result must retain DRC0 and current face guards. No abutting-face pin order change introduced.",
+  "Viewed payload536 original placement+density:86.4x25.92um,536 flops in south band,536 N/S pins aligned across two layers, densitymax0.53 and no bins>0.8. All data distances<100um. West clock/reset taps accessible.",
+  "No macro obstacles, halos, long unstaged legs or new PG cuts introduced. This is STA-only collection on existing completed routed databases. Clock insertion and boundary hold still must pass signoff."
+ ]
+}
