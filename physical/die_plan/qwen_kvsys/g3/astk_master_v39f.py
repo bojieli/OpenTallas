@@ -44,20 +44,33 @@ CLR = 17.28                 # corridor offset off the core box (2 x 8.64 lattice
 
 
 def hops_on(path, reach=REACH):
-    """regs evenly on the polyline at <= reach"""
-    L = sum(abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(path, path[1:]))
-    n = max(0, math.ceil(L / reach - 1e-9) - 1)
-    out = []
-    for i in range(n):
-        t = L * (i + 1) / (n + 1)
-        for p, q in zip(path, path[1:]):
-            d = abs(p[0] - q[0]) + abs(p[1] - q[1])
-            if t <= d + 1e-9:
-                f = 0.0 if d == 0 else t / d
-                out.append([round(p[0] + f * (q[0] - p[0]), 3), round(p[1] + f * (q[1] - p[1]), 3)])
-                break
-            t -= d
-    return out, L
+    """Anchor each Manhattan bend, then subdivide straight segments at <= reach.
+
+    A station on the final bend makes the last hop enter the core on its pin
+    face. Equal distance placement across the whole polyline can skip this
+    bend and put the last station behind the core.
+    """
+    clean = []
+    for p in path:
+        p = tuple(p)
+        if not clean or p != clean[-1]:
+            clean.append(p)
+    out, length = [], 0.0
+    for seg, (p, q) in enumerate(zip(clean, clean[1:])):
+        if abs(p[0] - q[0]) > 1e-6 and abs(p[1] - q[1]) > 1e-6:
+            raise ValueError(f"non-Manhattan station segment: {p} -> {q}")
+        distance = abs(p[0] - q[0]) + abs(p[1] - q[1])
+        length += distance
+        pieces = max(1, math.ceil(distance / reach - 1e-9))
+        for i in range(1, pieces + 1):
+            # Every interior path corner is a station; the core/face endpoints
+            # already contain their own boundary registers.
+            if seg == len(clean) - 2 and i == pieces:
+                continue
+            f = i / pieces
+            out.append([round(p[0] + f * (q[0] - p[0]), 3),
+                        round(p[1] + f * (q[1] - p[1]), 3)])
+    return out, length
 
 
 def reroute(raw, mk, insts):
