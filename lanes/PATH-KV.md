@@ -10,8 +10,8 @@ Path: PC_EN_0 (kvpc0 h_head_p, kvpc1..3 kvs_pc) -> PHY_EN_0, HG_EN_0/HGI_EN_0 he
 | P1 | pc_EN_0 | kv3_pc (G2 12.1/um proven) | NEEDS-KIT (no face err) | kit after C1/C2 recut lands |
 | P2 | phy_EN_0 | kv3_phy | NEEDS-KIT (no face err) | kit; ck_phy PHY pad/adapters only |
 | P3 | hg_EN_0 | kv3_hg (G2 13.2 proven) | NEEDS-KIT (no face err) | kit after head masters |
-| P4 | hgi_EN_0 | kv3_hgi_v3 (no G2) | G0C FAIL 4 face errors (N/S L2045 522b@70um, E L2075_1 1056b@85um, W L2075_2 1056b@106um) | PATH-KV structural re-window |
-| P5 | hub_Eo | kv3_hub_Eo (no G2; 0 face err) | G2 f5 LIVE epyc1 unit 2069954 | collect G2; kit |
+| P4 | hgi_EN_0 | kv3_hgi_v3 | PLAN FIXED on f7ch (cd5885c33b): channel FT sites, G2 overflow 0 (27.3%), face budget 13.2, PROTO geom PASS; GEOM REQ 09:0x | GEOM verdict, then kit (needs head views) |
+| P5 | hub_Eo | kv3_hub_Eo (0 face err) | G2 PASS on f7ch sites (overflow 0, 17.9%, 0 no-AP); PROTO geom PASS; GEOM REQ | kit after ASTK master view (C11) |
 | P6 | sys_c | kv3_sys_c | NEEDS-KIT; 5-macro detour WIP 0ed44e59d; PHY PG domain hook NOT written | kits; PG hook |
 | C1 | kvpc0 core | qkd_kvs_pc_h_head_p | FIX: shared 305 + ft 1 open (recut 4c6e890d93, WIP 5dc2556f5 local-only, tree pruned) | PC recut |
 | C2 | kvpc1..3 core | qkd_kvs_pc | FIX: shared 1085 + ft 1 open (o_prev +1 hop, o_grp copies) | PC recut |
@@ -25,8 +25,8 @@ Path: PC_EN_0 (kvpc0 h_head_p, kvpc1..3 kvs_pc) -> PHY_EN_0, HG_EN_0/HGI_EN_0 he
 | C12 | PV pair | kv3_pv_pair (256 replicas) | ROUTING/NOT SIGNED: fd4_cc FF -17.59 (mem->old macro clock), pair skew 85.5>80 | structural: macro-interface clock (SRAM clk from capture-flop regional tap) |
 | C13 | PV join | ot_qwen_tp8_pv_join_t (64) | NEEDS-KIT | kit |
 | M1 | sys_c macros | UCIe 777.6^2 + 4x d2d_sram_64x137 | views present; placement proposal PASS-COND | with P6 |
-| D1 | plan G0C | f7 | FAIL 20 face errors (6 no-G2 types) | PATH-KV |
-| D2 | native bind | f5 run3/run4 | graph complete; FAIL 14 TYPE_SPLIT (79 fn vs 40 phys) | KV parent |
+| D1 | plan G0C | f7ch (path-kv-1025@cd5885c33b) | faces 20 -> 7 (hgi_v8 G2 running; hub_Wi needs geometry: no full-height FT channel); KV path base ruling pending (COORD 08:45 picked v3.9pd, which is PROTO-geom red on all path FT types) | COORD + KV-PLAN3F rebase |
+| D2 | native bind | f7 rebind bf7b | 14 TYPE_SPLIT; path instances = reference variants (hg_EN_0, pc_EN_0) | KV parent: lane-latency equalisation |
 | D3 | R8 landing | f5 run3 | FAIL 3 families (hg_v1 cal_exp, pc/pc_v1 x_tok) | KV parent |
 | T1 | START bootstrap role | reset_tree start_role | DEADLOCK: global START gates HOST/hub_Wi bootstrap | CLOCK-RESET |
 | T2 | KV boot160 (whole E) | kv43abcd vehicle | LIVE epyc2 unit oth-ubuntu-2377587-1792938490 (384 GB/16 thr) | collect |
