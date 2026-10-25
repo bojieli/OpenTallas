@@ -301,3 +301,16 @@ CODEX took over IDX collection/integration on codex/hbm-bind-idx-r2-1024@8d607ca
 - PRICE (same recipe for B2l and B2n, c_L4 X 377.6): DS AR 1587 -> 1340 (-15.5%), MTP -14.6%, Qwen -3.4%. On Codex's B2l model (1475) this is ~1246 = -34% vs d4g. Station flops: ft 1.18M -> 5.58M, internal 2.8M -> 13.8M (model).
 - OWNER? (information, not blocking): decision 12 costs HBM ~15% more DS-AR on top of the accepted B2l -22%. The recovery lever is the KV-style re-placement of communicating blocks as neighbours (hub-centric B2: PHY_N<->hub and ring lanes dominate).
 - Reset: B2n keeps the B2m reset until RESET lands the wavefront mode (decision 13). HBM-BIND has been told about control-only reset, the start broadcast, and that B2n latency values will change.
+
+2026-10-24 22:18 PDT HBM: HBM-CORES report (claude/hbm-cores-1024@1d69cf3da1). Still 0 SIGNED; 15 cores routed and signed off, all NOT SIGNED.
+- Hold repair: the root cause of the non-convergence was an extra 30 ps flow hold margin in the kits (on top of the SDC 25 ps). FF hold repair on sfu lane14 was fixing 37.8k endpoints instead of the 1,467 real violators. The kit generator default is now 0; 14 finish runs relaunched. vm_query has re-entered hold repair and is converging (4,806 violators, was 21,017); the other 13 restart from synthesis.
+- argmax_r2 is closest: TT +25.8 / FF +14.2, fails only face_guard.
+- 53/91 SPLIT2 CTS probes are folded into core_insertion. pgslice lanes measure 870-940 ps insertion (clock enters a 760x726 um core from one edge) -> they need in-core taps.
+- 30 pgslice exp lanes regenerated with the measured 15616-bit memory guard and launched to place+CTS.
+- OWNER? face_guard fails on 348/370 cores. The cause is the core RTL cuts (fan-out inputs, duplicated outputs, unread inputs, inputs straight into logic), not P&R. Options:
+  (a) a pin-register wrapper on every core: +1 cycle per core crossing, plus a schedule recompile;
+  (b) the plan drops unread/duplicate pins and face_guard is INFO for core pins already timed by the IO budget.
+  Recommend (b) for the duplicate/unread pins plus (a) only where the IO budget fails.
+- To SIGNOFF/CLOCK: signoff.py:645 still gates pin-flop spread (decision 5 makes it INFO). It also uses the TT IO clock latency at FF; core trees run 0.82x at FF, so FF output hold comes out pessimistic and FF input hold optimistic.
+- To RESET: 31 core kits carry their own ot_rst_relay synchroniser, which violates decision 13 (one die root; control-only reset). They will be fixed in the kit generator with the wavefront adoption.
+- Plan requests (lane owner, next B2n rev): svc_pc_ctrl_leaf_cfg_h9b 1.3x; xcal_rel_t 1.45x (~250x250 um; GRT at 83% utilization); idx_score_quarter 1.45x; pgslice lanes in-core clock taps.
