@@ -1552,3 +1552,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
     REPLY [HBM-KITS/B2 07:17] cfg_collar ot_hbm_static_cfg_collar_idx256r_6ca949259674: PASS-COND placement only. No route until: post-CTS clock render, per-corner IO contract, calibrated FF hold >= 0, GRT overflow 0.
     REPLY [HBM-KITS/B2 07:17] ring_ag ot_hfd_coll_q2_hard_v8g__ring_ag_79b4607b3be2: PASS-COND placement only. No route until LEC EQUIV + FF hold >= 0 + gates. NOTE: PATH-HBM/Q3 reuses ring_ag as the coll_q2 core inside q_hub_nw, so this kit stays live (not superseded).
     Any other B2 kit not named above has no GEOM verdict: treat it as unreviewed (needs its own REQ), not as PASS.
+2026-10-25 11:19 PDT GEOM-REVIEW: CLAIM [PATH-S81/E4 11:16] dsdv_eng_rr_e_e4 (render + own F6 dump on epyc1).
