@@ -46,22 +46,31 @@ module dsdv_idx_tx_i13 #(
     wire[185:0]cp=orr[21+:186];
     wire job_a=orr[0]&&orr[3:1]==0,job_b=cp[7:0]==8'h5c&&cp[10:8]==2;   // terms, for slices that re-form job locally
     wire job=job_a&&job_b;
-    wire job_x=orr[0]&&orr[3:1]==0&&cp[7:0]==8'h5c,job_y=cp[10:8]==2;   // second term pair (window / id slices)
+    // job, decoded again in keep_hierarchy holders for the slice groups (rq / pq / gf windows)
+    wire[2:0]jobs;
+    for(genvar k=0;k<3;k=k+1)begin:g_jd dsdv_i13_jdec #(.ID(k))u(.h(orr[3:0]),.c(cp[10:0]),.job(jobs[k]));end
     reg armed,done;reg[7:0]j_pt,j_ot;reg[9:0]j_k;reg[19:0]j_hb;reg[15:0]j_dly;reg[2:0]j_r;
-    reg[11:0]j_sm;reg[1:0]j_l;reg[4:0]j_shift;reg j_cam;reg[20:0]tick;reg[11:0]slots;
+    reg[11:0]j_sm;reg[1:0]j_l;reg j_cam;reg[20:0]tick;reg[11:0]slots;
     reg f_cfg,f_cap,f_idx,f_lookup,f_pack,f_out;
     // job fields: loaded by the job word before any use (armed), no reset
     (* keep *)reg jbw,jbh,jbt;   // j_ot[0] copies: candidate write side (wbusy) / walk head select / walk tail select
-    (* keep *)reg[4:0]j_shift2;(* keep *)reg j_cam2;   // rank-shift copy for the pack side; mode copy for the score pick / issue
+    (* keep *)reg j_cam2;   // mode copy for the score pick / issue
+    // S81-I13 census pass 5: rank-shift copies in keep_hierarchy holders (one per shifter output bit), loaded by the job
+    wire[4:0]jsx0,jsx1,jsk,jsz0,jsz1;
     always @(posedge ck or negedge rl[1])if(!rl[1])f_cfg<=0;
     else if(job&&((armed&&!done)||!cp[103]||cp[108:104]>19||cp[87:85]==0||cp[40:31]==0||cp[40:31]>512))f_cfg<=1;
     always @(posedge ck)begin
         if(job)begin
-            jbw<=cp[61];jbh<=cp[61];jbt<=cp[61];j_shift2<=cp[108:104];j_cam2<=cp[109];
+            jbw<=cp[61];jbh<=cp[61];jbt<=cp[61];j_cam2<=cp[109];
             j_l<=cp[22:21];j_pt<=cp[30:23];j_k<=cp[40:31];j_hb<=cp[60:41];j_ot<=cp[68:61];
-            j_dly<=cp[84:69];j_r<=cp[87:85];j_sm<=cp[99:88];j_shift<=cp[108:104];j_cam<=cp[109];tick<=0;
+            j_dly<=cp[84:69];j_r<=cp[87:85];j_sm<=cp[99:88];j_cam<=cp[109];tick<=0;
         end else if(armed)tick<=tick+1'b1;
     end
+    dsdv_i13_kreg #(.W(5),.ID(0))u_jsx0(.ck(ck),.en(job),.d(cp[108:104]),.q(jsx0));   // xr[0]
+    dsdv_i13_kreg #(.W(5),.ID(1))u_jsx1(.ck(ck),.en(job),.d(cp[108:104]),.q(jsx1));   // xr[1]
+    dsdv_i13_kreg #(.W(5),.ID(2))u_jsk(.ck(ck),.en(job),.d(cp[108:104]),.q(jsk));     // xrok
+    dsdv_i13_kreg #(.W(5),.ID(3))u_jsz0(.ck(ck),.en(job),.d(cp[108:104]),.q(jsz0));   // rankq[0]
+    dsdv_i13_kreg #(.W(5),.ID(4))u_jsz1(.ck(ck),.en(job),.d(cp[108:104]),.q(jsz1));   // rankq[1]
     // ---------------------------------------------------------------- dense score store (unchanged function)
     // Lane staging: 4 lanes x (256-b part-0 + 20-b cursor).  The lane select is a kept 2-b copy per 16-b (10-b) read
     // slice, registered from the vi pins on the same edge as vr (= vr[5:4]); the part-0 write enable is a kept
@@ -102,35 +111,77 @@ module dsdv_idx_tx_i13 #(
     // type8 word -> W0: per-word checks computed from the pin/staging registers (13-entry local, not 1024-way)
     wire packet=cv&&vr[6]&&vhave[vl]&&vw[511:508]==8;
     wire[12:0]pmask=vw[480:468];
-    (* keep *)reg[12:0]pmk;   // pin-registered copy of the prefix mask (= vr[244:232]) for the max-id / count select
-    always @(posedge ck)pmk<=vi[244:232];
+    (* keep *)reg[12:0]pmk,pmk2,pmk3;   // pin-registered copies of the prefix mask (= vr[244:232]): max-id bits [6:0]+count, [13:7], [19:14]
+    always @(posedge ck)begin pmk<=vi[244:232];pmk2<=vi[244:232];pmk3<=vi[244:232];end
     reg pok;reg[19:0]pmax;reg[3:0]pn;
     always @*begin
         pok=pmask!=0&&((pmask&(pmask+13'd1))==0);pmax=vw[16+:20];pn=0;
-        for(integer e=0;e<13;e=e+1)if(pmk[e])begin pmax=vw[36*e+16+:20];pn=4'(e+1);end
+        for(integer e=0;e<13;e=e+1)begin
+            if(pmk[e])begin pmax[6:0]=vw[36*e+16+:7];pn=4'(e+1);end
+            if(pmk2[e])pmax[13:7]=vw[36*e+23+:7];
+            if(pmk3[e])pmax[19:14]=vw[36*e+30+:6];
+        end
         for(integer e=1;e<13;e=e+1)if(pmask[e]&&!(vw[36*e+16+:20]>vw[36*(e-1)+16+:20]))pok=0;
     end
     reg w0v,w0ok,w0qv;reg[7:0]w0tag;reg[1:0]w0q;
     reg[19:0]w0first,w0max;reg[3:0]w0n;reg[480:0]w0d;
-    (* keep *)reg[1:0]w0qa,w0qb;(* keep *)reg wba,wbb,wbd;   // qslot / bank copies: lastf read, tailf+hv+lastv read, bank-state read
+    (* keep *)reg wbd,wbb,wbb2;   // bank copies: busy compare + row address / link write address (two bank halves)
     always @(posedge ck or negedge rl[0])if(!rl[0])w0v<=0;else w0v<=packet;
-    always @(posedge ck)if(packet)begin
-        w0ok<=pok;w0qv<=lqv[vl];w0q<=lqf[2*vl+:2];
-        w0qa<=lqf[2*vl+:2];w0qb<=lqf[2*vl+:2];wba<=vw[500];wbb<=vw[500];wbd<=vw[500];w0tag<=vw[507:500];w0first<=vw[16+:20];w0max<=pmax;w0n<=pn;w0d<=vw[480:0];
+    // S81-I13 census pass 5: the W0 stage captures every edge (no load enable): every use of a W0 field is qualified
+    // by w0v (wacc / f_wr) on the edge after the capture, so the 530-bit packet load enable is gone.
+    always @(posedge ck)begin
+        w0ok<=pok;w0qv<=lqv[vl];w0q<=lqf[2*vl+:2];wbd<=vw[500];wbb<=vw[500];wbb2<=vw[500];
+        w0tag<=vw[507:500];w0first<=vw[16+:20];w0max<=pmax;w0n<=pn;w0d<=vw[480:0];
     end
     // bank state: tag, row count, entry count; per {bank,qslot}: head/tail/last id; per row: next (flat arrays)
     reg[15:0]ctag;reg[1:0]ctagv;reg[2*(RB+1)-1:0]nrow;reg[2*(CW+1)-1:0]nent;
     reg[8*RB-1:0]headf,tailf;reg[8*20-1:0]lastf;reg[7:0]hv,lastv;
     reg wk_on;  // the armed job's merge walk started
-    wire wb=w0tag[0];wire[2:0]wqi={wb,w0q},wxa={wba,w0qa},wxb={wbb,w0qb};   // wqi / wb: write side
-    wire wnew=!ctagv[wbd]||ctag[8*wbd+:8]!=w0tag;
-    wire[RB:0]wrow=wnew?{(RB+1){1'b0}}:nrow[(RB+1)*wbd+:(RB+1)];
-    wire[CW:0]went=(wnew?{(CW+1){1'b0}}:nent[(CW+1)*wbd+:(CW+1)])+(CW+1)'(w0n);
-    wire wlast=!wnew&&lastv[wxb];
-    wire wbad=!w0ok||!w0qv||(MUT!=3&&wlast&&w0first<=lastf[20*wxa+:20])||wrow>=RW||went>C;
+    wire wb=w0tag[0];wire[2:0]wqi={wb,w0q};
+    // W0-word reads of the qslot / bank state: rsel slices (keep_hierarchy), each with its own select register captured
+    // on the W0 edge (= {wb,w0q} / wb), <= 6 bits per slice, so no select bit drives more than one small slice
+    wire[2:0]wq_n={vw[500],lqf[2*vl+:2]};wire wb_n=vw[500];
+    wire[19:0]lastf_w;wire[RB-1:0]tailf_w,tailf_w2;wire lastv_w,hv_w;wire[8:0]ctg_w;wire[RB:0]nrow_w;wire[CW:0]nent_w;
+    wire[15:0]hlv_d;wire[17:0]ctg_d={ctag[15:8],ctagv[1],ctag[7:0],ctagv[0]};
+    for(genvar e=0;e<8;e=e+1)begin:g_hlv assign hlv_d[2*e+:2]={lastv[e],hv[e]};end
+    for(genvar k=0;k<5;k=k+1)begin:g_rlf
+        dsdv_i13_rsel #(.N(8),.FW(20),.LO(4*k),.W(4))u(.ck(ck),.s_n(wq_n),.d(lastf),.q(lastf_w[4*k+:4]));
+    end
+    dsdv_i13_rsel #(.N(8),.FW(RB),.LO(0),.W(4),.ID(0))u_rtf0(.ck(ck),.s_n(wq_n),.d(tailf),.q(tailf_w[3:0]));
+    dsdv_i13_rsel #(.N(8),.FW(RB),.LO(4),.W(RB-4),.ID(0))u_rtf1(.ck(ck),.s_n(wq_n),.d(tailf),.q(tailf_w[RB-1:4]));
+    dsdv_i13_rsel #(.N(8),.FW(RB),.LO(0),.W(4),.ID(1))u_rtf2(.ck(ck),.s_n(wq_n),.d(tailf),.q(tailf_w2[3:0]));
+    dsdv_i13_rsel #(.N(8),.FW(RB),.LO(4),.W(RB-4),.ID(1))u_rtf3(.ck(ck),.s_n(wq_n),.d(tailf),.q(tailf_w2[RB-1:4]));
+    dsdv_i13_rsel #(.N(8),.FW(2),.LO(0),.W(2))u_rhl(.ck(ck),.s_n(wq_n),.d(hlv_d),.q({lastv_w,hv_w}));
+    dsdv_i13_rsel #(.N(2),.FW(9),.LO(0),.W(5))u_rct0(.ck(ck),.s_n(wb_n),.d(ctg_d),.q(ctg_w[4:0]));
+    dsdv_i13_rsel #(.N(2),.FW(9),.LO(5),.W(4))u_rct1(.ck(ck),.s_n(wb_n),.d(ctg_d),.q(ctg_w[8:5]));
+    dsdv_i13_rsel #(.N(2),.FW(RB+1),.LO(0),.W(RB+1))u_rnr(.ck(ck),.s_n(wb_n),.d(nrow),.q(nrow_w));
+    dsdv_i13_rsel #(.N(2),.FW(CW+1),.LO(0),.W(6))u_rne0(.ck(ck),.s_n(wb_n),.d(nent),.q(nent_w[5:0]));
+    dsdv_i13_rsel #(.N(2),.FW(CW+1),.LO(6),.W(CW-5))u_rne1(.ck(ck),.s_n(wb_n),.d(nent),.q(nent_w[CW:6]));
+    wire wnew=!ctg_w[0]||ctg_w[8:1]!=w0tag;
+    wire[RB:0]wrow=wnew?{(RB+1){1'b0}}:nrow_w;
+    wire[CW:0]went=(wnew?{(CW+1){1'b0}}:nent_w)+(CW+1)'(w0n);
+    wire wlast=!wnew&&lastv_w;
+    wire wbad=!w0ok||!w0qv||(MUT!=3&&wlast&&w0first<=lastf_w)||wrow>=RW||went>C;
     wire wbusy=armed&&!done&&j_cam&&jbw==wbd;
     wire wconf=wbusy&&((w0tag!=j_ot)||wk_on);
-    wire wacc=w0v&&!wbad&&!wconf;
+    // accept = w0v && ok, formed in 4 holders (each <= 16 enable holders); per-entry / per-bank write enables in holders
+    wire wok=!wbad&&!wconf;wire[3:0]wac;
+    for(genvar k=0;k<4;k=k+1)begin:g_wac dsdv_i13_and #(.N(2),.ID(k))u(.a({w0v,wok}),.y(wac[k]));end
+    wire wacc=wac[3];
+    wire[7:0]wdec,ehd,etl,elf0,elf1;wire hnew=wnew||!hv_w;
+    for(genvar e=0;e<8;e=e+1)begin:g_wen
+        assign wdec[e]=wqi==3'(e);
+        dsdv_i13_and #(.N(3),.ID(10+e))u_hd(.a({wac[e/4],wdec[e],hnew}),.y(ehd[e]));
+        dsdv_i13_and #(.N(2),.ID(20+e))u_tl(.a({wac[e/4],wdec[e]}),.y(etl[e]));
+        dsdv_i13_and #(.N(2),.ID(30+e))u_l0(.a({wac[2],wdec[e]}),.y(elf0[e]));
+        dsdv_i13_and #(.N(2),.ID(40+e))u_l1(.a({wac[2],wdec[e]}),.y(elf1[e]));
+    end
+    wire[1:0]ect,enr,ene;
+    for(genvar b=0;b<2;b=b+1)begin:g_ben
+        dsdv_i13_and #(.N(3),.ID(50+b))u_ct(.a({wac[3],wnew,wb==1'(b)}),.y(ect[b]));
+        dsdv_i13_and #(.N(2),.ID(52+b))u_nr(.a({wac[3],wb==1'(b)}),.y(enr[b]));
+        dsdv_i13_and #(.N(2),.ID(54+b))u_ne(.a({wac[3],wb==1'(b)}),.y(ene[b]));
+    end
     reg cwe;reg[RB:0]cwa;reg[RDW-1:0]cwd;
     always @(posedge ck)begin cwa<={wbd,wrow[RB-1:0]};cwd<={w0max,w0d};end
     // per-row next pointer: banked link table, write landed one edge later, registered per-bank read address copies
@@ -139,15 +190,22 @@ module dsdv_idx_tx_i13 #(
     // next walk row, formed twice (keep_hierarchy) so each copy drives <= 29 read-address registers
     dsdv_i13_nx #(.W(RB),.ID(0))u_nx0(.hd(wk_ld),.av(wk_av),.h(wk_hsel),.l(lnk_rd),.c(wk_row),.q(wk_row_n));
     dsdv_i13_nx #(.W(RB),.ID(1))u_nx1(.hd(wk_ld),.av(wk_av),.h(wk_hsel),.l(lnk_rd),.c(wk_row),.q(wk_row_n2));
-    dsdv_i13_lnk #(.N(2*RW),.W(RB))u_lnk(.ck(ck),.we(wacc&&!wnew&&hv[wxb]),.wa({wbb,tailf[RB*wxb+:RB]}),.wd(wrow[RB-1:0]),
-        .ra_n({jbh,wk_row_n}),.ra_n2({jbh,wk_row_n2}),.rd(lnk_rd));
+    dsdv_i13_lnk #(.N(2*RW),.W(RB))u_lnk(.ck(ck),.we(wacc&&!wnew&&hv_w),.wa({wbb,tailf_w}),.wa2({wbb2,tailf_w2}),
+        .wd(wrow[RB-1:0]),.ra_n({jbh,wk_row_n}),.ra_n2({jbh,wk_row_n2}),.rd(lnk_rd));
     reg f_wr;
     // bank tag / row / entry counts and per-qslot head/tail/last are qualified by ctagv / hv / lastv: no reset
-    always @(posedge ck)if(wacc)begin
-        if(wnew)ctag[8*wb+:8]<=w0tag;
-        if(wnew||!hv[wxb])headf[RB*wqi+:RB]<=wrow[RB-1:0];
-        tailf[RB*wqi+:RB]<=wrow[RB-1:0];lastf[20*wqi+:20]<=w0max;
-        nrow[(RB+1)*wb+:(RB+1)]<=wrow+1'b1;nent[(CW+1)*wb+:(CW+1)]<=went;
+    always @(posedge ck)begin
+        for(integer b=0;b<2;b=b+1)begin
+            if(ect[b])ctag[8*b+:8]<=w0tag;
+            if(enr[b])nrow[(RB+1)*b+:(RB+1)]<=wrow+1'b1;
+            if(ene[b])nent[(CW+1)*b+:(CW+1)]<=went;
+        end
+        for(integer e=0;e<8;e=e+1)begin
+            if(ehd[e])headf[RB*e+:RB]<=wrow[RB-1:0];
+            if(etl[e])tailf[RB*e+:RB]<=wrow[RB-1:0];
+            if(elf0[e])lastf[20*e+:10]<=w0max[9:0];
+            if(elf1[e])lastf[20*e+10+:10]<=w0max[19:10];
+        end
     end
     always @(posedge ck or negedge rl[0])if(!rl[0])begin
         cwe<=0;ctagv<=0;hv<=0;lastv<=0;f_wr<=0;
@@ -169,9 +227,9 @@ module dsdv_idx_tx_i13 #(
     reg[255:0]olow;reg oh;wire oe=orr[0]&&orr[3:1]==5;wire[511:0]ow={orr[275:20],olow};
     reg[IW:0]iw,ir;reg input_done;
     wire pushidx=oe&&orr[6]&&oh&&ow[511:508]==3&&ow[507:500]==j_ot;
-    (* keep *)reg[7:0]olw;   // olow[32 c +: 32] load (= oe && !orr[6], registered from the vo pins)
-    always @(posedge ck)olw<={8{vo[0]&&vo[3:1]==5&&!vo[6]}};
-    always @(posedge ck)for(integer c=0;c<8;c=c+1)if(olw[c])olow[32*c+:32]<=orr[20+32*c+:32];
+    (* keep *)reg[21:0]olw;   // olow[12 c +: 12] load (= oe && !orr[6], registered from the vo pins)
+    always @(posedge ck)olw<={22{vo[0]&&vo[3:1]==5&&!vo[6]}};
+    always @(posedge ck)for(integer b=0;b<256;b=b+1)if(olw[b/12])olow[b]<=orr[20+b];
     reg[1:0]pqc;reg pqi;reg[15:0]pm0,pm1;wire[319:0]pqd;wire[335:0]pq0={pm0,pqd};
     wire ire=ir!=iw&&(pqc+pqi)<2;
     wire[335:0]ird;
@@ -181,20 +239,27 @@ module dsdv_idx_tx_i13 #(
     wire[15:0]im=pm0;
     integer ii;reg ifound;always @*begin ii=0;ifound=0;for(integer q=0;q<16;q=q+1)if(im[q]&&!ifound)begin ii=q;ifound=1;end end
     wire hasid=pqc!=0&&ifound;
-    reg xv,xrok;reg[19:0]xid;reg[1:0]xr;
-    (* keep *)reg[19:0]xid2;(* keep *)reg[1:0]xr2;   // key copy for the R1 compare
+    reg xv,xrok;wire[19:0]xid,xid1,xid2;wire[1:0]xr,xr1,xr2;
+    // lookup key {xr,xid}: three copies in keep_hierarchy holders (11 b each half): R0 compare, R1 compare, issue + order
     wire xload=hasid&&(!xv||req);
     wire[15:0]im_next=xload?(im&~(16'd1<<ii)):im;
     wire pqpop=pqc!=0&&im_next==0;
     // id words: 2-entry show-ahead ring in 11 slices (<= 30 b) with own one-hot head/tail pointers; masks above
     for(genvar k=0;k<11;k=k+1)begin:g_pq
         localparam integer PLO=30*k,PWD=(320-PLO<30)?320-PLO:30;
-        dsdv_i13_ring #(.W(PWD),.NE(2),.R1(0),.ID(k))u(.ck(ck),.ja(job_x),.jb(job_y),.pu(pqi),.pa(pqc!=0),.pb(im_next==0),
+        dsdv_i13_ring #(.W(PWD),.NE(2),.R1(0),.ID(k))u(.ck(ck),.job(jobs[1]),.pu_n(ire),.pa(pqc!=0),.pb(im_next==0),
             .d(ird[PLO+:PWD]),.r0(pqd[PLO+:PWD]),.r1());
     end
-    wire[19:0]sid=pq0[20*ii+:20];wire[19:0]srk=sid>>j_shift;
+    wire[19:0]sid=pq0[20*ii+:20];wire[19:0]srk0=sid>>jsx0,srk1=sid>>jsx1,srkk=sid>>jsk;
+    wire[21:0]xkd={srk1[1],srk0[0],sid};
+    wire[65:0]xk;
+    for(genvar c=0;c<3;c=c+1)begin:g_xk
+        dsdv_i13_kreg #(.W(11),.ID(10+2*c))u_lo(.ck(ck),.en(xload),.d(xkd[10:0]),.q(xk[22*c+:11]));
+        dsdv_i13_kreg #(.W(11),.ID(11+2*c))u_hi(.ck(ck),.en(xload),.d(xkd[21:11]),.q(xk[22*c+11+:11]));
+    end
+    assign {xr1,xid1}=xk[21:0];assign {xr2,xid2}=xk[43:22];assign {xr,xid}=xk[65:44];
     always @(posedge ck)begin
-        if(xload)begin xid<=sid;xr<=srk[1:0];xrok<=srk[19:2]==0;xid2<=sid;xr2<=srk[1:0];end
+        if(xload)xrok<=srkk[19:2]==0;
         if(pqpop)pm0<=pm1;else pm0<=im_next;
         if(pqi)begin if((pqc-pqpop)==0)pm0<=ird[335:320];else pm1<=ird[335:320];end
     end
@@ -258,7 +323,7 @@ module dsdv_idx_tx_i13 #(
     always @*begin
         jsc=0;
         for(integer e=0;e<13;e=e+1)begin
-            eq0[e]=r0v&&rq0[468+e]&&rk0==xr&&rq0[36*e+16+:20]==xid;
+            eq0[e]=r0v&&rq0[468+e]&&rk0==xr1&&rq0[36*e+16+:20]==xid1;
             eq1[e]=r1v&&rq1[468+e]&&rk1==xr2&&rq1[36*e+16+:20]==xid2;
             if(eq0[e])jsc=jsc|rq0[36*e+:16];
             if(eq1[e])jsc=jsc|rq1[36*e+:16];
@@ -276,7 +341,7 @@ module dsdv_idx_tx_i13 #(
     wire[RDW+1:0]rqw={rqiq,rrd},rr0,rr1;
     for(genvar k=0;k<17;k=k+1)begin:g_rq
         localparam integer QLO=30*k,QWD=(RDW+2-QLO<30)?RDW+2-QLO:30;
-        dsdv_i13_ring #(.W(QWD),.NE(4),.R1(1),.ID(k))u(.ck(ck),.ja(job_x),.jb(job_y),.pu(rqi),.pa(rqp_a),.pb(rqp_b),
+        dsdv_i13_ring #(.W(QWD),.NE(4),.R1(1),.ID(k))u(.ck(ck),.job(jobs[0]),.pu_n(rre),.pa(rqp_a),.pb(rqp_b),
             .d(rqw[QLO+:QWD]),.r0(rr0[QLO+:QWD]),.r1(rr1[QLO+:QWD]));
     end
     assign {rk0,rq0}=rr0;assign {rk1,rq1}=rr1;
@@ -308,7 +373,7 @@ module dsdv_idx_tx_i13 #(
     // the next rank's type8 word. Quarter order is global index order.
     reg[GW:0]gw,gr;wire[467:0]pack;reg[3:0]np;reg[1:0]pq;
     reg pack_done;reg[9:0]nlook;reg[19:0]previous;reg previous_v;
-    wire[1:0]rankq=2'(ip2>>j_shift2);wire[15:0]score=j_cam2?cs2:ds2;
+    wire[19:0]rz0=ip2>>jsz0,rz1=ip2>>jsz1;wire[1:0]rankq={rz1[1],rz0[0]};wire[15:0]score=j_cam2?cs2:ds2;
     assign group_fill=gw-gr;
     wire ids_idle=input_done&&iw==ir&&!pqi&&pqc==0&&!xv;
     // control (reset leaf rl[4]) and data (no reset) halves of the same group packer
@@ -340,20 +405,22 @@ module dsdv_idx_tx_i13 #(
     // the output-control state (haveq/outq/phase), re-formed from shared terms, so no pointer or select drives > 32 pins
     // group being packed: 13 entries x 36 b in 26 half-entry slices, each forming its own load from lpv / np / ranks
     wire[35:0]pkd={ip2,score};
+    wire lv_n=lpv[LP-2]&&!job;   // = next lpv[LP-1] (slice copies register it)
     for(genvar e=0;e<13;e=e+1)begin:g_pk
         for(genvar h=0;h<2;h=h+1)begin:g_h
-            dsdv_i13_pks #(.E(e),.ID(2*e+h))u(.ck(ck),.lv(lpv[LP-1]),.np(np),.rq(rankq),.pq(pq),.d(pkd[18*h+:18]),
+            dsdv_i13_pks #(.E(e),.ID(2*e+h))u(.ck(ck),.lv_n(lv_n),.np(np),.rq(rankq),.pq(pq),.d(pkd[18*h+:18]),
                 .q(pack[36*e+18*h+:18]));
         end
     end
-    wire gwe_a=(e_lk&&e_fw)||(e_fin&&np!=0),gwe_b=!gfull;
+    wire gwe_a=(e_lk&&e_fw)||(e_fin&&np!=0),gwe_b=!gfull;wire[1:0]gwe;   // group write, two holder copies (9 / 8 slices)
+    for(genvar k=0;k<2;k=k+1)begin:g_gwe dsdv_i13_and #(.N(2),.ID(60+k))u(.a({gwe_a,gwe_b}),.y(gwe[k]));end
     wire[483:0]gwd={e_lk?(rankq!=pq):1'b1,pq,13'((14'd1<<np)-1),pack};
     wire[483:0]front;wire grid,gne;
     assign gne=gr!=gw;
     for(genvar k=0;k<17;k=k+1)begin:g_gf
         localparam integer GLO=30*k,GWD=(484-GLO<30)?484-GLO:30;
-        dsdv_i13_gfs #(.W(GWD),.GF(GF),.ID(k))u(.ck(ck),.job_a(job_a),.job_b(job_b),.grid(grid),.ne(gne),
-            .fq(front[482:481]),.we_a(gwe_a),.we_b(gwe_b),.wd(gwd[GLO+:GWD]),.q(front[GLO+:GWD]));
+        dsdv_i13_gfs #(.W(GWD),.GF(GF),.ID(k))u(.ck(ck),.job(jobs[2]),.grid(grid),.ne(gne),
+            .fq(front[482:481]),.we(gwe[k/9]),.wd(gwd[GLO+:GWD]),.q(front[GLO+:GWD]));
     end
     wire[1:0]fq=front[482:481];
     wire[511:0]i13w={4'd8,j_pt,18'd0,front[483],front[480:468],front[467:0]};
@@ -447,13 +514,13 @@ endmodule
 // combinational from registered per-bank read-address copies (ra = ra_n of the previous edge): 32-entry read slices
 // of one bit each (ra_n / ra_n2 = two copies of the next address, each feeding half the slices), then a one-hot group
 // select (kept, decoded from ra_n's group bits).
-module dsdv_i13_lnk #(parameter integer N=256,W=7)(input wire ck,we,input wire[$clog2(N)-1:0]wa,input wire[W-1:0]wd,
+module dsdv_i13_lnk #(parameter integer N=256,W=7)(input wire ck,we,input wire[$clog2(N)-1:0]wa,wa2,input wire[W-1:0]wd,
     input wire[$clog2(N)-1:0]ra_n,ra_n2,output reg[W-1:0]rd);
     localparam integer AB=$clog2(N),NH=N/32;
     initial if(N%64!=0||N<128)$fatal(1,"dsdv_i13_lnk: N must be a multiple of 64, >= 128");
     wire[N*W-1:0]q;
     for(genvar h=0;h<NH;h=h+1)begin:g_w
-        dsdv_i13_lnk_w #(.W(W),.H(h),.AB(AB))u(.ck(ck),.we(we),.wa(wa),.wd(wd),.q(q[32*W*h+:32*W]));
+        dsdv_i13_lnk_w #(.W(W),.H(h),.AB(AB))u(.ck(ck),.we(we),.wa((h<NH/2)?wa:wa2),.wd(wd),.q(q[32*W*h+:32*W]));
     end
     wire[NH*W-1:0]gq;
     for(genvar g=0;g<NH;g=g+1)begin:g_g
@@ -499,22 +566,26 @@ module dsdv_i13_octl(input wire ck,job,grid,ne,input wire[1:0]fq,output reg have
     end
 endmodule
 (* keep_hierarchy="yes" *)
-module dsdv_i13_gfs #(parameter integer W=30,GF=8,ID=0)(input wire ck,job_a,job_b,grid,ne,input wire[1:0]fq,
-    input wire we_a,we_b,input wire[W-1:0]wd,output reg[W-1:0]q);
-    wire job=job_a&&job_b,we=we_a&&we_b;
+module dsdv_i13_gfs #(parameter integer W=30,GF=8,ID=0)(input wire ck,job,grid,ne,input wire[1:0]fq,
+    input wire we,input wire[W-1:0]wd,output reg[W-1:0]q);
+    localparam integer NC=(W+14)/15;
     wire haveq,phase,hsel,pop;wire[1:0]outq;
     dsdv_i13_octl u_c(.ck(ck),.job(job),.grid(grid),.ne(ne),.fq(fq),.haveq(haveq),.phase(phase),.outq(outq),.hsel(hsel),.pop(pop));
-    (* keep *)reg[GF-1:0]wp,rp;
+    (* keep *)reg[GF-1:0]wp,rp,rp2;   // rp2 = read-pointer copy for the upper half of the word
     reg[W-1:0]m[0:GF-1];
+    wire[GF*NC-1:0]en;   // per-entry write enable, one holder per <= 15 bits
+    for(genvar e=0;e<GF;e=e+1)begin:g_e for(genvar c=0;c<NC;c=c+1)begin:g_c
+        dsdv_i13_and #(.N(2),.ID(NC*e+c))u(.a({we,wp[e]}),.y(en[NC*e+c]));
+    end end
     always @(posedge ck)begin
-        if(job)begin wp<=1;rp<=1;end
+        if(job)begin wp<=1;rp<=1;rp2<=1;end
         else begin
             if(we)wp<={wp[GF-2:0],wp[GF-1]};
-            if(pop)rp<={rp[GF-2:0],rp[GF-1]};
+            if(pop)begin rp<={rp[GF-2:0],rp[GF-1]};rp2<={rp2[GF-2:0],rp2[GF-1]};end
         end
-        for(integer e=0;e<GF;e=e+1)if(we&&wp[e])m[e]<=wd;
+        for(integer e=0;e<GF;e=e+1)for(integer b=0;b<W;b=b+1)if(en[NC*e+b/15])m[e][b]<=wd[b];
     end
-    always @*begin q=0;for(integer e=0;e<GF;e=e+1)q=q|(m[e]&{W{rp[e]}});end
+    always @*begin q=0;for(integer e=0;e<GF;e=e+1)for(integer b=0;b<W;b=b+1)q[b]=q[b]|(m[e][b]&(b<W/2?rp[e]:rp2[e]));end
 endmodule
 (* keep_hierarchy="yes" *)
 module dsdv_i13_emit #(parameter integer W=28,ID=0)(input wire ck,job_a,job_b,grid,ne,input wire[1:0]fq,
@@ -534,33 +605,72 @@ endmodule
 // with R1, head+1 (hq) pointers, all kept; push / pop / job are re-formed locally from shared terms, so no pointer or
 // enable drives more than W <= 30 pins.  Same order as the shift queue it replaces (push at head + count, pop = head).
 (* keep_hierarchy="yes" *)
-module dsdv_i13_ring #(parameter integer W=30,NE=4,R1=1,ID=0)(input wire ck,ja,jb,pu,pa,pb,input wire[W-1:0]d,
+module dsdv_i13_ring #(parameter integer W=30,NE=4,R1=1,ID=0)(input wire ck,job,pu_n,pa,pb,input wire[W-1:0]d,
     output reg[W-1:0]r0,r1);
-    wire job=ja&&jb,push=pu&&!job,pop=pa&&pb&&!job;
-    (* keep *)reg[NE-1:0]wp,hp,hq;
+    localparam integer NC=(W+14)/15;
+    (* keep *)reg pu;   // slice copy of the push valid (rqi / pqi): registered from its pre-register term (rre / ire)
+    always @(posedge ck)pu<=pu_n&&!job;
+    wire push=pu&&!job,pop=pa&&pb&&!job;
+    (* keep *)reg[NE-1:0]wp,hp,hq,hp2,hq2;   // hp2 / hq2 = head copies for the upper half of the word
     reg[W-1:0]m[0:NE-1];
+    wire[NE*NC-1:0]en;   // per-entry write enable, one holder per <= 15 bits
+    for(genvar e=0;e<NE;e=e+1)begin:g_e for(genvar c=0;c<NC;c=c+1)begin:g_c
+        dsdv_i13_and #(.N(2),.ID(NC*e+c))u(.a({push,wp[e]}),.y(en[NC*e+c]));
+    end end
     always @(posedge ck)begin
-        if(job)begin wp<=1;hp<=1;hq<=2;end
+        if(job)begin wp<=1;hp<=1;hq<=2;hp2<=1;hq2<=2;end
         else begin
             if(push)wp<={wp[NE-2:0],wp[NE-1]};
-            if(pop)begin hp<={hp[NE-2:0],hp[NE-1]};hq<={hq[NE-2:0],hq[NE-1]};end
+            if(pop)begin
+                hp<={hp[NE-2:0],hp[NE-1]};hq<={hq[NE-2:0],hq[NE-1]};
+                hp2<={hp2[NE-2:0],hp2[NE-1]};hq2<={hq2[NE-2:0],hq2[NE-1]};
+            end
         end
-        for(integer e=0;e<NE;e=e+1)if(push&&wp[e])m[e]<=d;
+        for(integer e=0;e<NE;e=e+1)for(integer b=0;b<W;b=b+1)if(en[NC*e+b/15])m[e][b]<=d[b];
     end
     always @*begin
         r0=0;r1=0;
-        for(integer e=0;e<NE;e=e+1)begin r0=r0|(m[e]&{W{hp[e]}});if(R1)r1=r1|(m[e]&{W{hq[e]}});end
+        for(integer e=0;e<NE;e=e+1)for(integer b=0;b<W;b=b+1)begin
+            r0[b]=r0[b]|(m[e][b]&(b<W/2?hp[e]:hp2[e]));
+            if(R1)r1[b]=r1[b]|(m[e][b]&(b<W/2?hq[e]:hq2[e]));
+        end
     end
 endmodule
 
 // S81-I13 census 2026-10-25: half of one pack entry. On a returned lookup: a new group (np == 0 or group flush) loads
 // entry 0 and clears the rest; otherwise entry np takes the result.
 (* keep_hierarchy="yes" *)
-module dsdv_i13_pks #(parameter integer E=0,ID=0)(input wire ck,lv,input wire[3:0]np,input wire[1:0]rq,pq,
+module dsdv_i13_pks #(parameter integer E=0,ID=0)(input wire ck,lv_n,input wire[3:0]np,input wire[1:0]rq,pq,
     input wire[17:0]d,output reg[17:0]q);
+    (* keep *)reg lv;   // slice copy of lpv[LP-1]
+    always @(posedge ck)lv<=lv_n;
     wire ng=np==0||np==13||rq!=pq;
-    always @(posedge ck)if(lv)begin
-        if(E==0)begin if(ng)q<=d;end
-        else if(ng)q<=18'd0;else if(np==4'(E))q<=d;
-    end
+    wire ld=(E==0)?ng:(ng||np==4'(E));
+    wire[1:0]en;   // load enable, one holder per 9 bits
+    dsdv_i13_and #(.N(2),.ID(0))u_e0(.a({lv,ld}),.y(en[0]));
+    dsdv_i13_and #(.N(2),.ID(1))u_e1(.a({lv,ld}),.y(en[1]));
+    wire[17:0]dv=(E==0||!ng)?d:18'd0;
+    always @(posedge ck)for(integer b=0;b<18;b=b+1)if(en[b/9])q[b]<=dv[b];
+endmodule
+
+// S81-I13 census pass 5 holders (keep_hierarchy, so synthesis cannot fold a shared term back into every bit):
+// an AND gate, a loaded register, a registered-select read slice, a job decoder.
+(* keep_hierarchy="yes" *)
+module dsdv_i13_and #(parameter integer N=2,ID=0)(input wire[N-1:0]a,output wire y);
+    assign y=&a;
+endmodule
+(* keep_hierarchy="yes" *)
+module dsdv_i13_kreg #(parameter integer W=11,ID=0)(input wire ck,en,input wire[W-1:0]d,output reg[W-1:0]q);
+    always @(posedge ck)if(en)q<=d;
+endmodule
+(* keep_hierarchy="yes" *)
+module dsdv_i13_rsel #(parameter integer N=8,FW=20,LO=0,W=4,ID=0)(input wire ck,input wire[$clog2(N)-1:0]s_n,
+    input wire[N*FW-1:0]d,output wire[W-1:0]q);
+    (* keep *)reg[$clog2(N)-1:0]s;
+    always @(posedge ck)s<=s_n;
+    assign q=d[FW*s+LO+:W];
+endmodule
+(* keep_hierarchy="yes" *)
+module dsdv_i13_jdec #(parameter integer ID=0)(input wire[3:0]h,input wire[10:0]c,output wire job);
+    assign job=h[0]&&h[3:1]==0&&c[7:0]==8'h5c&&c[10:8]==2;
 endmodule
