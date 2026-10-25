@@ -9,7 +9,7 @@
     "OT_S81ENG_RST_TIMED"
   ],
   "source_sha256": {
-    "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_rr_n32.sv": "08437b9a45d4fec0153a12eddfc83809b3ac76f4f587c0d59835bd3d4bdca248",
+    "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_rr_n32.sv": "6b6811f18fee4b3593cea8e6d37f751ffcde6279fc4789ebe87ab58383af24d3",
     "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv": "c135dfdbdddbeaee5d1120cf64cf54952e5d9b31c6cf9238fd7b414d19be03b6",
     "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv": "1e04bf97a87243913355b77f6343c5a2b34e632f90e711f0c6faa0912c7052ec"
   },
@@ -27,12 +27,14 @@
   "additional_entry_boot_edges": 1,
   "clock_ps": 833,
   "gates": {
-    "core_full": "3seeds*200000cycles allpublic+internalx/xd0mismatch",
+    "core_full": "Prior41ae3 source:3seeds*200000cycles allpublic+internalx/xd0mismatch; currentnarrowhistcommandcopy change qualified by Winalloutputs miter below",
     "xq_full": "3seeds*200000cycles PASS; wrong-ring-RA mutant CAUGHT all3",
-    "win": "3seeds*40000 allpublic0mismatch with physical nonzeroROM payload; no-forward mutant CAUGHT",
+    "win": "Currentprivatehistcommandcopies:3seeds*40000 allpublic0mismatch with nonzeroROM payload; noforwardmutantCAUGHTall3",
     "reset": "3edge goldshift PASS; depth2mutant CAUGHT"
   },
   "area_flops": "native synth pending; no measured area claim",
-  "physical": "SYNTHONLY in progress; newLEC/F6actualimage/CLKreview/signoff NOT RUN",
-  "adoption": "SOURCE ONLY; actual manifest/compiler/plan must price +1 and select exact cohort"
+  "physical": "Freshnative synth+F6connectivity pendingfinalcopies; newLEC/actualF6image/CLKreview/signoff NOT RUN",
+  "adoption": "SOURCE ONLY; actual manifest/compiler/plan must price +1 and select exact cohort",
+  "prior_full_core_source_commit": "41ae3b4f6910cdf5469a13a9227fdeca117102d0",
+  "prior_full_core_rr_sha256": "08437b9a45d4fec0153a12eddfc83809b3ac76f4f587c0d59835bd3d4bdca248"
 }

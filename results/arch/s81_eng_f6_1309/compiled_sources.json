@@ -1,5 +1,5 @@
 {
-  "source_commit": "41ae3b4f6910cdf5469a13a9227fdeca117102d0",
+  "source_commit": "pending commit: descendant of d26997bf23",
   "compiled_source_cohort": [
     {
       "basename": "dsdv_eng_rr.sv",
@@ -378,13 +378,13 @@
     },
     {
       "basename": "ot_s81eng_rr_n32.sv",
-      "compiled_path": "/srv/opentallas-scratch2/claude/codex-s81-eng-1309/miter_timed/build_core_pass/new/ot_s81eng_rr_n32.sv",
-      "sha256": "08437b9a45d4fec0153a12eddfc83809b3ac76f4f587c0d59835bd3d4bdca248",
+      "compiled_path": "/srv/opentallas-scratch2/claude/codex-s81-eng-1309/win_f6_final/new.sv",
+      "sha256": "6b6811f18fee4b3593cea8e6d37f751ffcde6279fc4789ebe87ab58383af24d3",
       "source_repo_paths": [
         "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_rr_n32.sv"
       ],
       "native_path": "/srv/opentallas-scratch2/claude/codex-s81-eng-1309/dsdv_eng_rr_e_e5/rtl/ot_s81eng_rr_n32.sv",
-      "native_sha256": "08437b9a45d4fec0153a12eddfc83809b3ac76f4f587c0d59835bd3d4bdca248",
+      "native_sha256": "6b6811f18fee4b3593cea8e6d37f751ffcde6279fc4789ebe87ab58383af24d3",
       "native_matches": true
     }
   ],
@@ -400,5 +400,6 @@
     "native_matches": true
   },
   "netlist": "/srv/opentallas-scratch2/claude/codex-s81-eng-1309/dsdv_eng_rr_e_e5/run/results/asap7/kr_dsdv_eng_rr_e_e5/base/1_2_yosys.v",
-  "note": "macro simulation models differ intentionally from native blackboxes; all other mismatches must be resolved before native source proof"
+  "note": "macro simulation models differ intentionally from native blackboxes; all other mismatches must be resolved before native source proof",
+  "qualification_delta": "onlyrrsource historymacrocommand private same-edge copy; Win3seeds*40kPASS+mutantcaught; priorfull600kcore unchangedoutsideWin"
 }
