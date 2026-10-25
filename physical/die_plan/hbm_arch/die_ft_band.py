@@ -158,17 +158,31 @@ def main(argv=None):
             fx = [p for p in c if ports[p]["src"]["part"] in a.fixed or ports[p]["dst"]["part"] in a.fixed
                   or (a.keep_turns and turn_end(p))]
             (anchored if fx else ftc if is_ft(c) else rest).append((c, fx))
+        fx_all = {p for _, fx in anchored for p in fx}
+        # multi-anchor chains stay exactly as planned (their windows were G0-clean); register them first so that
+        # single-anchor chains never land on them (10-25: 20 abutment + 12 face-density ERR when they did)
+        single = []
         for c, fx in anchored:
             ws = {tuple(sorted(ports[p]["window_um"])) for p in fx}
-            lo, hi = sorted(ws)[0]
             if len(ws) > 1:
-                rep["unaligned"].append(dict(chain=c, why="anchored ports with different windows", windows=sorted(ws)))
+                rep["unaligned"].append(dict(chain=c, why="anchored ports with different windows (chain kept as planned)",
+                                             windows=sorted(ws)))
                 for p in c:
-                    w = sorted(ports[p]["window_um"]) if p in fx else [lo, hi]
-                    occ[seam_ports[p]].append(tuple(w))
-                    new_win[p] = list(w)
+                    occ[seam_ports[p]].append(tuple(sorted(ports[p]["window_um"])))
+                rep["anchored"].append(dict(chain=c, window=None))
             else:
+                single.append((c, sorted(ws)[0]))
+        for c, fx in anchored:        # every anchor window is taken before any single-anchor chain moves
+            for p in fx:
+                occ[seam_ports[p]].append(tuple(sorted(ports[p]["window_um"])))
+        for c, (lo, hi) in single:
+            if free([p for p in c if p not in fx_all], lo, hi):
                 put(c, lo, hi)
+            else:
+                rep["unaligned"].append(dict(chain=c, why="anchor window taken by a kept chain (chain kept as planned)",
+                                             window=[lo, hi]))
+                for p in c:
+                    occ[seam_ports[p]].append(tuple(sorted(ports[p]["window_um"])))
             rep["anchored"].append(dict(chain=c, window=[lo, hi]))
         def place(c, top_down):
             L = length(c)
