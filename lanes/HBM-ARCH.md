@@ -201,3 +201,7 @@ Many 'within' kits still have a longest tree 300-580 ps (SRAM / far sinks); pin-
   4. Clock: merge the subagent's B2m_clock clock block (gate: related-pair skew with 5% OCV after CPPR <= 80 ps TT/FF).
   5. Then G0/G0C, render + G1 review (results/geom_review), G2 die + worst parts incl. hub core nets, then native bind per the RTL delta audit (order of work in the 12:58 entry).
 - OWNER?: none new.
+
+## HBM lane (rtx-pro, steward of HBM-ARCH/ELEM-HBM/TRIAL-HBM) -- started 2026-10-24 19:27 PDT
+- 2026-10-24 19:27 PDT HBM: resumed. Branch claude/hbm-1024r (from claude/hbm-arch-1024 @c411a12b86 + main), wt rtx-pro:/home/ubuntu/wt/hbm-1024r. Sub-agents: HBM-ELEM (89 B2l core kits collect, SPLIT2, core insertion list -> early taps, IO vclk = core I), HBM-BIND (native-bind RTL per b2_native_bind_delta.json, benches+mutants). Me: B2m plan (in-band host, pipelined reset, SerDes PHY supply+bump rows, balanced binary H-tree, gen_phys %g bug).
+- 2026-10-24 19:27 PDT HBM: adopted epyc3 codex-hbm/B2l_fabric_buf12_legal_r4 (container hbm-fabric-buf12-3701110): 4.63M cells / 4.43M nets M8-M9 only, GRT extra iteration 1/30 since 11:54 (7.5 h, single thread, 24 GB); NOT FINISHED, diagnostic on superseded B2l clock; left running.
