@@ -80,7 +80,7 @@ def main(argv=None):
             print("FLOW_CANARY_TRIGGER checkout failed")
             return 2
         if dies:
-            r = subprocess.run([sys.executable, "-I", str(Path(a.src) / "tools/flow_canary/canary.py"), "submit",
+            r = subprocess.run([sys.executable, "-I", str(HERE / "canary.py"), "submit",
                                 "--src", a.src, "--root", a.root] + sum([["--die", d] for d in dies], []))
             if r.returncode:
                 return r.returncode

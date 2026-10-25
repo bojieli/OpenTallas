@@ -3,5 +3,8 @@ Description=OpenTallas flow canary trigger (FLOW-CANARY): run die canaries when 
 
 [Service]
 Type=oneshot
+# OT_CANARY_SRC: detached sparse main worktree the canaries build from (trigger checks it out at each new main).
+# OT_CANARY_TOOL: the canary tool copy that runs (main's tools/flow_canary once merged; before that a staged copy).
 Environment=OT_CANARY_SRC=/srv/opentallas-scratch2/claude/wt/flow-canary
-ExecStart=/usr/bin/python3 -I ${OT_CANARY_SRC}/tools/flow_canary/trigger.py --src ${OT_CANARY_SRC}
+Environment=OT_CANARY_TOOL=/srv/opentallas-scratch2/claude/flow-canary/tool/flow_canary
+ExecStart=/usr/bin/python3 -I ${OT_CANARY_TOOL}/trigger.py --src ${OT_CANARY_SRC}
