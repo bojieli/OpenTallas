@@ -6,7 +6,7 @@ foreach i [$ff_blk getInsts] {
     if {![regexp {DFF} [[$i getMaster] getName]]} continue
     set nm [string map [list "\\" ""] [$i getName]]
     set bank "";set pn ""
-    if {[regexp {^u_m[./]u_rom_addr([01])[./]q\[([0-9]+)\]} $nm -> bank bit]} {
+    if {[regexp {^u_m[./]u_rom_addr([01])[./](?:q|addr)\[([0-9]+)\]} $nm -> bank bit]} {
         set pn "addr_in\[$bit\]"
     } elseif {[regexp {^u_m[./]cap([01])\[([0-9]+)\]} $nm -> bank bit]} {
         set pn "rd_out\[$bit\]"

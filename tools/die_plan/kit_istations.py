@@ -50,9 +50,64 @@ proc is_place {pat x y tag} {
 # ITS OWN L route between the planned leaf point (leaf_um) and its face pin <bus>[b] (epoch flop eq -> pin [W]); the
 # segment next to the pin runs perpendicular to the face at the pin row / column, so a station is a column (E/W) or
 # row (N/S) parallel to the pin window and every hop of bit b is L_b / (n+1) (the ft_bit_sites rule for ft slots).
-proc is_bits {inst bus face W lx ly k n dir tag} {
+# Common bank legs: every payload/epoch bit uses the same stage-to-leg mapping.
+# Unlike per-bit arclength fractions, a stage remains one straight column/row.
+proc is_knee_site {px py lx ly face edge edges dir geometry} {
+  lassign $geometry xmin ymin xmax ymax
+  if {$face in {E W}} {
+    set normal [expr {max(abs($xmin-$lx),abs($xmax-$lx))}]
+    set along [expr {max(abs($ymin-$ly),abs($ymax-$ly))}]
+    set cx $lx; set cy $py
+  } else {
+    set normal [expr {max(abs($ymin-$ly),abs($ymax-$ly))}]
+    set along [expr {max(abs($xmin-$lx),abs($xmax-$lx))}]
+    set cx $px; set cy $ly
+  }
+  if {$dir eq "in"} {
+    set first $normal; set second $along
+    set ax $px; set ay $py; set bx $lx; set by $ly
+  } else {
+    set first $along; set second $normal
+    set ax $lx; set ay $ly; set bx $px; set by $py
+  }
+  if {$first < 1e-8} { set split 0; set worst [expr {$second/double($edges)}]
+  } elseif {$second < 1e-8} { set split $edges; set worst [expr {$first/double($edges)}]
+  } else {
+    set split -1; set worst 1e99
+    for {set j 1} {$j < $edges} {incr j} {
+      set w [expr {max($first/double($j),$second/double($edges-$j))}]
+      if {$w < $worst} { set worst $w; set split $j }
+    }
+    if {$split < 0} { error "internal station chain has no stage for its Manhattan knee" }
+  }
+  if {$worst > 403.0} { error "internal station knee needs a plan depth change: worst ideal hop $worst >403um" }
+  if {$edge <= $split} {
+    set f [expr {$edge/double($split)}]
+    return [list [expr {$ax+$f*($cx-$ax)}] [expr {$ay+$f*($cy-$ay)}]]
+  }
+  set f [expr {($edge-$split)/double($edges-$split)}]
+  return [list [expr {$cx+$f*($bx-$cx)}] [expr {$cy+$f*($by-$cy)}]]
+}
+
+proc is_bits {inst bus face W lx ly k n dir tag {offset 0}} {
   global ff_blk ff_dbu is_n is_miss is_fh
   set hit 0
+  set xmin 1e99; set ymin 1e99; set xmax -1e99; set ymax -1e99
+  for {set bit 0} {$bit <= $W} {incr bit} {
+    set pin [$ff_blk findBTerm "${bus}\\[$bit\\]"]
+    if {$pin eq "NULL"} { error "internal station pin missing: ${bus} bit $bit" }
+    set box [$pin getBBox]
+    set x [expr {([$box xMin]+[$box xMax])/2.0/$ff_dbu}]
+    set y [expr {([$box yMin]+[$box yMax])/2.0/$ff_dbu}]
+    set xmin [expr {min($xmin,$x)}]; set xmax [expr {max($xmax,$x)}]
+    set ymin [expr {min($ymin,$y)}]; set ymax [expr {max($ymax,$y)}]
+  }
+  set geometry [list $xmin $ymin $xmax $ymax]
+  # Separate opposite-face bank corridors inside the declared leaf box.
+  if {$face eq "W"} {set lx [expr {$lx-$offset}]}
+  if {$face eq "E"} {set lx [expr {$lx+$offset}]}
+  if {$face eq "S"} {set ly [expr {$ly-$offset}]}
+  if {$face eq "N"} {set ly [expr {$ly+$offset}]}
   foreach i [$ff_blk getInsts] {
     set nm [$i getName]
     if {![string match "*${inst}/*" $nm]} continue
@@ -63,16 +118,7 @@ proc is_bits {inst bus face W lx ly k n dir tag} {
     if {$bt eq "NULL"} { lappend is_miss "$nm:nopin"; continue }
     set bb [$bt getBBox]
     set px [expr {([$bb xMin] + [$bb xMax]) / 2.0 / $ff_dbu}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2.0 / $ff_dbu}]
-    if {$face in {E W}} { set cx $lx; set cy $py } else { set cx $px; set cy $ly }
-    set L [expr {abs($px - $cx) + abs($py - $cy) + abs($cx - $lx) + abs($cy - $ly)}]
-    set d [expr {$L * ($k + 1) / double($n + 1)}]
-    if {$dir eq "in"} { set pts [list $px $py $cx $cy $lx $ly] } else { set pts [list $lx $ly $cx $cy $px $py] }
-    set x [lindex $pts end-1]; set y [lindex $pts end]
-    foreach {ax ay bx by} [list {*}[lrange $pts 0 3] {*}[lrange $pts 2 5]] {
-      set s [expr {abs($bx - $ax) + abs($by - $ay)}]
-      if {$d <= $s} { set f [expr {$s == 0 ? 0.0 : $d / $s}]; set x [expr {$ax + $f * ($bx - $ax)}]; set y [expr {$ay + $f * ($by - $ay)}]; break }
-      set d [expr {$d - $s}]
-    }
+    lassign [is_knee_site $px $py $lx $ly $face [expr {$k+1}] [expr {$n+1}] $dir $geometry] x y
     set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
     if {$got eq ""} { lappend is_miss $nm; continue }
     puts $is_fh "$nm\t$tag\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t-"
@@ -168,8 +214,11 @@ def main(argv):
             if "leaf_um" not in e or "face" not in b:
                 raise SystemExit(f"kit_istations: {tn} {bus}: bit_route per_bit needs leaf_um and a bus face")
             lx, ly = e["leaf_um"]
+            leaf = next((c for c in t.get("contents", []) if c["inst"] == b.get("leaf", "").split(".")[0]), {})
+            box = leaf.get("outline_um", [0, 0])
+            offset = max(0.0, min(15.0, box[0 if b["face"] in "EW" else 1] / 2.0 - 2.0))
             for k, nm in enumerate(names):
-                tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {k} {len(names)} {b['dir']} ist:{bus}")
+                tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {k} {len(names)} {b['dir']} ist:{bus} {offset:g}")
         else:
             for (x, y), nm in zip(regs, names):
                 tcl.append(f"is_place {{*{nm}[./]*}} {x} {y} ist:{bus}")
