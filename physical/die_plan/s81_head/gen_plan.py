@@ -289,7 +289,7 @@ HD_SRC = ["rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot
           "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv"]
 T("hd_tile", "ot_s81hd_tile_p", (TW, TH), MD["tile"]["cells"],
   contents=[dict(inst="u_core", module="ot_s81hd_tile", status="rework", kit="physical/ref_tile/s81hd_tile_m",
-                 cells=TILE_GLUE, params={"CV": "1"},
+                 cells=TILE_GLUE, params={"CV": "1", "A_INPUT_STAGES": "1", "MERGE_HOP": "1", "CMP_STAGES": "2"},
                  bind={"ck": "clk", "rst_n": "rst_n", "row0": "net:row0", "ten": "net:ten"},
                  note="tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; elements = the 5 closed "
                       "views (CV 1, CUT 0x1ff / SPLIT9 1)"),
@@ -334,7 +334,8 @@ for tn, end in (("hd_spn", False), ("hd_spn_end", True)):
 T("hd_serdes", "ot_s81hd_serdes", (SW, SH), 0,
   contents=[dict(inst="u_phy", module="ot_pdie_serdes", status="reuse",
                  note="same PHY model, slot and bump field as the layer die's serdes partitions")],
-  note="SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops")
+  note="SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops; PHY on the separate "
+       "VDDPHY domain (die.pg.domains, OWNER 10-24 decision 7) with dedicated bump rows over its window")
 BUS("hd_serdes", "coll_i0", "in", 512, "u_phy.tx")
 BUS("hd_serdes", "coll_o0", "out", 514, "u_phy.rx")
 
@@ -641,21 +642,27 @@ plan = dict(
     note="S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/"
          "s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die "
          "(253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die "
-         "s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST).",
+         "s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). "
+         "PDN (OWNER 10-24 decision 7): die.pg.domains = one VDDPHY supply + dedicated bump rows per SerDes "
+         "window (12); the core VDD/VSS M8/M9 grid does not feed the PHY. TODO (TRIAL/PDN): head PSM / IR with the "
+         "VDDPHY domains. Reset (decision 2): reset.release pipelined (tools/die_plan/reset_tree.py).",
     die=dict(name="s81_head", label="DeepSeek ROM S81 release head die (LM head / argmax / MTP / host)", tech="asap7",
              outline_um=[W, H], period_ps=833, reach_um=1500.0, rep_um=450.0, grid_um=G,
              layer_budget=dict(partition_signal_max="M7", die_layers=["M8", "M9"],
                                die_use=["clock_spine", "pg", "ft_reserved"], cut_avail={"M8": 0.6, "M9": 0.6}),
              pg=dict(partition_pg_max="M7",
                      grid=[dict(layer="M8", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"]),
-                           dict(layer="M9", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"])]),
+                           dict(layer="M9", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"])],
+                     # OWNER DECISION 7: die.pg.domains (VDDPHY per SerDes window) are added below from die.io
+                     ),
+
              channels=channels),
     partition_types=types, partitions=parts, ports=ports, lanes=lanes,
     clock=dict(source=dict(part="@die", bus="clk"), insertion_ps=250, common_latency_ps=250, insertion_tol_ps=40,
                neighbour_skew_ps=80, face_xing="budgeted",
                spine=dict(layers=["M8", "M9"], root_um=[lat(W / 2), lat(H / 2)], topology="htree")),
     reset=dict(source=dict(part="@die", bus="rst_n"), sync_stages=2, data_reset=False, epoch_bit=True,
-               release="counted"),
+               release="pipelined"),   # OWNER RESET RULE 10-24 (decision 2): one root sync per region + relays (reset_tree.py)
     census={"none": "top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the "
                     "bottom-up H10 die chain used a different block split and FAILED STA); census follows the first "
                     "bind (G3)"},
@@ -663,8 +670,46 @@ plan = dict(
                  cut_step_um=250),
     latency=dict(lanes={}),
 )
+# OWNER DECISION 7 (2026-10-24, IR over SerDes windows): die.io = the die_io.py windows (die_io.json, written by
+# `die_io.py plan --out`), and one separate PHY supply per SerDes window (die.pg.domains, same form as HBM B2m
+# physical/die_plan/hbm_arch/b2m.py pg_domains): own net VDDPHY with VSS, dense M8/M9 straps over the window + a one-bump
+# guard ring, dedicated power/ground C4 rows (45-um array) over the PHY macro; the 26 SerDes signal sites stay at the
+# shoreline edge.  check.py rule pg_domain.  TODO TRIAL/PDN: head PSM / IR with the VDDPHY domains.
+import copy  # noqa: E402
+_io = json.loads((HERE / "die_io.json").read_text()) if (HERE / "die_io.json").exists() else []
+if _io:
+    plan["die"]["io"] = _io
+    _PHY_GRID = [dict(layer="M8", width_um=1.92, pitch_um=8.64, offset_um=4.32, nets=["VDDPHY", "VSS"]),
+                 dict(layer="M9", width_um=1.92, pitch_um=8.64, offset_um=4.32, nets=["VDDPHY", "VSS"])]
+    _doms = []
+    for w in _io:
+        if w.get("iface") != "serdes":
+            continue
+        x0, y0, x1, y1 = w["rect_um"]
+        g = 63.64
+        _doms.append(dict(name=f"phy_{w['part']}", nets=["VDDPHY", "VSS"], io=[w["name"]],
+                          rect_um=[round(max(0.0, x0 - g), 4), round(max(0.0, y0 - g), 4), round(min(W, x1 + g), 4),
+                                   round(min(H, y1 + g), 4)],
+                          grid=copy.deepcopy(_PHY_GRID),
+                          bumps=dict(rect_um=[x0, y0, x1, y1], pitch_um=45.0, use="power_ground",
+                                     note="dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal "
+                                          "bumps inside except the window's own 26 SerDes sites"),
+                          note="OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes "
+                               "window; core VDD grid unchanged around it"))
+    plan["die"]["pg"]["domains"] = _doms
 from early_core_taps import add as add_early_core_taps
 add_early_core_taps(types["hd_tile"], root=ROOT)
+# core-latency contract for the REBUILT views (10-24, S81-HEAD): the element was signed with clk source latency -early
+# (its kit SDC), so its tap is delivered exactly `early` before the common latency; the lib max_clock_tree_path (max
+# over all internal flops, 441 / 435 ps) would over-advance it by ~60 ps and break the boundary timing it was signed
+# with.  MANIFEST.json (tools/s81_head/hd_views_rb.py) carries the kit early.  Request to CLOCK filed 10-24 20:5x.
+for tp in types["hd_tile"]["clock"].get("taps", []):
+    man = ROOT / Path(tp.get("budget_owner", "")).parent / "MANIFEST.json"
+    if "/views_rb/" in tp.get("budget_owner", "") and man.is_file():
+        mf = json.loads(man.read_text())
+        tp["insertion_ps"] = round(250.0 + float(mf["early_core_tap_ps"]), 5)
+        tp["note"] = (f"CP2 early core tap; core-latency contract = signed kit early {mf['early_core_tap_ps']:g} ps "
+                      f"(views_rb MANIFEST; lib max_clock_tree_path {mf['lib_max_clock_tree_path_ps']['tt']:.1f} TT, info)")
 from ft_reach import resize as resize_ft_reach
 resize_ft_reach(plan, reach_um=405.0, margin=REACH / 405.0)
 S.validate  # noqa: B018  (schema import check)
