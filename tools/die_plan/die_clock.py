@@ -67,6 +67,17 @@ OCV = (0.03, 0.05)                      # INFO derates on the uncommon clock pat
 # ASAP7 setRC.tcl (kohm / fF per um); clock NDR 2W2S: R / 2, C x 1.1 (die_trial.py, hbm_arch clock_htree.py)
 LAYER_RC = {"M8": (8.44765e-3, 1.03962e-1), "M9": (8.89556e-3, 9.28446e-2)}
 NDR_R, NDR_C = 0.5, 1.1
+# --ndr 4w (DIECLK-TOPO 10-25): every die-tree segment on the 4W NDR (R / 4, C x 1.3), not only hops > WIDE_UM.  The
+# head-die tree (17.5 mm, root->leaf ~16-24 mm, ~60 BUFx24 stages at 2W) is wire-RC bound: the early/late arrival gap
+# per pin is the liberty rise_capacitance_range (2.01..2.61 fF on BUFx24 A) times the upstream R of every stage, so it
+# grows with stage R and stage count; 4W halves the per-stage R and cuts the wire delay per um ~28 %.
+NDR_MODE = "2w"
+# --wide-levels N: the top N H-tree levels (and the trunk) on an 8W NDR (R / 8, C x 1.6, ASSUMED by extrapolating
+# 2W2S R/2 C*1.1 and 4W R/4 C*1.3).  The early/late gap a seam pair sees is ~ the input-cap range of every stage
+# times the wire R upstream of it, summed over its UNCOMMON path; for pairs that split at the top levels that is
+# dominated by the long top legs (head die: L1-L4 ~ 13.6 of ~19 mm), so widening only those few legs (2+4+8+16
+# wires) removes most of it for negligible M8/M9 tracks.
+WIDE_LEVELS = 0
 PAD_CAP_UM = 440.0                      # balance pads fill segments up to this length before any goes wide
 SNAKE_UM = 440.0                        # a pad beyond the segment cap becomes delay stages: BUF + SNAKE_UM wire each
 WIDE_UM = 520.0                         # longer segments use the 4W NDR
@@ -83,11 +94,28 @@ MAX_SEG_X = 1.15                        # a legalised segment may reach 1.15 x r
 SIDE_MAX_UM = 1500.0
 
 
-def layer_rc(layer, length_um=0.0):
+def net_leg_level(T, n):
+    """H-tree leg level a net belongs to: a node at level l drives leg l+1, a repeater of leg l drives leg l, the
+    root port / trunk repeaters (level None) are the trunk (0).  Leaf/last-mile nets return a large level."""
+    drv = n["drv"]
+    if drv.startswith("port:"):
+        return 0
+    c = T.cells.get(drv) or {}
+    lv = c.get("level")
+    if c.get("kind") == "node":
+        return (lv or 0) + 1
+    if c.get("kind") == "rep":
+        return 0 if lv is None else lv
+    return 99
+
+
+def layer_rc(layer, length_um=0.0, leg_level=99):
     """NDR wire RC per um; a segment longer than WIDE_UM (a legalised hop over a macro, or a balance pad) gets the
     wide NDR (4W: R / 4, C x 1.3) so its slew stays inside the 320-ps limit."""
     r, c = LAYER_RC[layer]
-    if length_um > WIDE_UM:
+    if WIDE_LEVELS > 0 and leg_level <= WIDE_LEVELS:
+        return r * 0.125, c * 1.6
+    if NDR_MODE == "4w" or length_um > WIDE_UM:
         return r * 0.25, c * 1.3
     return r * NDR_R, c * NDR_C
 
@@ -710,7 +738,7 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 last_mile_pad_um=[round(Lx, 2), round(Ly, 2)], last_mile_stages=[kx, ky],
                 core_early=core_early, core_taps=sum(1 for t in taps if t[4] > 0),
                 long_hop_repeaters=split, cells=len(T.cells), dummies=sum(1 for c in T.cells.values() if c["kind"] == "dummy"),
-                buffer=BUF, ndr="2W2S R/2 C*1.1", geometry_over_standard_um=round(over, 3),
+                buffer=BUF, ndr=("4W R/4 C*1.3" if NDR_MODE == "4w" else "2W2S R/2 C*1.1 (4W > %g um)" % WIDE_UM) + (f"; 8W R/8 C*1.6 on trunk + levels 1-{WIDE_LEVELS}" if WIDE_LEVELS else ""), geometry_over_standard_um=round(over, 3),
                 level_segments={lev: dict(leg_max_um=round(L, 1), cuts=n, std_um=round(seg_std[lev], 1))
                                 for lev, (L, n) in leg_len.items()},
                 pair_weight=tot_w, cut_weight_per_level={lev: round(v) for lev, v in sorted(cut_w.items())},
@@ -868,7 +896,7 @@ def write_spef(T, path, design="die_ctree", pads=None):
                 if lay!=last_layer:
                     via=node();ress.append((prev,via,abs(VIA_KOHM[lay]-VIA_KOHM[last_layer])))
                     prev=via
-                r,c=layer_rc(lay,wire if routes else geo)
+                r,c=layer_rc(lay,wire if routes else geo,net_leg_level(T,n))
                 m=max(1,math.ceil(wire/LADDER_UM));seg=wire/m
                 for _ in range(m):
                     nxt=node();ress.append((prev,nxt,r*seg))
@@ -909,6 +937,9 @@ def sta_tcl(d, corner, libdir):
 
 
 def cmd_build(a):
+    global NDR_MODE, WIDE_LEVELS
+    NDR_MODE = getattr(a, "ndr", NDR_MODE)
+    WIDE_LEVELS = getattr(a, "wide_levels", WIDE_LEVELS)
     raw = S.load(a.plan)
     P = S.Plan(raw)
     out = Path(a.out)
@@ -996,7 +1027,7 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0, take_back=False):
     def sens(net, bi):
         L, layer, load, geo = nets[net]["branches"][bi]
         L += pads.get((net, bi), 0.0)
-        r, c = layer_rc(layer, geo)
+        r, c = layer_rc(layer, geo, net_leg_level(T, nets[net]))
         cl = TAP_LOAD_FF if load.startswith("port:") else BUF_CIN_FF
         if L > max(geo, PAD_CAP_UM) + SNAKE_UM:      # the pad is now delay stages: one stage per SNAKE_UM
             r2, c2 = layer_rc(layer, min(geo, SNAKE_UM))
@@ -1357,6 +1388,8 @@ def main(argv=None):
     b.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
     b.add_argument("--domain-clear-um", type=float, default=8.64)
     b.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
+    b.add_argument("--wide-levels", type=int, default=0, help="trunk + top N H-tree levels on the 8W NDR")
+    b.add_argument("--ndr", choices=("2w", "4w"), default="2w", help="die-tree wire NDR: 2w (default; 4W only > WIDE_UM) or 4w everywhere")
     u = sub.add_parser("run")
     u.add_argument("plan")
     u.add_argument("--out", required=True)
@@ -1368,6 +1401,8 @@ def main(argv=None):
     u.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
     u.add_argument("--domain-clear-um", type=float, default=8.64)
     u.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
+    u.add_argument("--wide-levels", type=int, default=0, help="trunk + top N H-tree levels on the 8W NDR")
+    u.add_argument("--ndr", choices=("2w", "4w"), default="2w", help="die-tree wire NDR: 2w (default; 4W only > WIDE_UM) or 4w everywhere")
     u.add_argument("--corner", action="append")
     u.add_argument("--libdir")
     u.add_argument("--iters", type=int, default=10)
