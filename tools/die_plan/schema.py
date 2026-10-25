@@ -228,8 +228,19 @@ SCHEMA = {
                         # grid PLUS sink-anchored taps (taps.py k-medians of face registers + ft stations) ADDED
                         # for face-register clusters; sink taps never replace the grid (CP1 r8: interior logic
                         # 4.5-5.7k sinks piled on one tap, spread 133 ps)
-                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks"]}, "tap_radius_um": _pos,
+                        # "density" (OWNER decision 5, 10-24; opt-in): NO grid -- taps placed by sink density
+                        # (taps.density_taps: <= tap_target_sinks per tap within tap_radius_um, none on a hard
+                        # core); sinks = face / ft registers + sink_sites_um + sink_bins_file (internal inventory)
+                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density"]}, "tap_radius_um": _pos,
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
+                        "tap_target_sinks": {"type": "integer", "minimum": 1},
+                        "tap_min_sinks": {"type": "integer", "minimum": 1},
+                        "sink_sites_um": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
+                                                                     "items": {"type": "number"}}},
+                        "sink_bins_file": {"type": "string"},
+                        # density kits: tap trees re-balanced on GRT RC after global route ("grt", POST_GLOBAL_ROUTE
+                        # tap_balance.tcl) or measured only ("grt_report", default for density); "placement" = off
+                        "tap_balance_rc": {"enum": ["placement", "grt_report", "grt"]},
                         # CP2: "early" turns the kind 'core' taps[] into kit clock ports clk_c<k> (core_taps()): the
                         # core's clock pins hang on their own tap, which the spine delivers (insertion_ps - common
                         # latency) early, so the core's internal flops see the common latency.  Absent: taps[] are
@@ -876,12 +887,13 @@ TAP_CLEAR_UM = 8.64       # tap pin (and its root buffer) >= one lattice step of
 TAP_STEP_UM = 2.16
 
 
-def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM):
+def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     """S81-P8 10-23 (GEOM-REVIEW5 15:14 condition (b)): an R4 grid tap at a cell centre landed ON a ROM / hard-core
     macro in 4-10 of 10 interior pins of the S81 frame kits (h9_r1: all), so its root buffer sat on a macro.  Move the
     tap to the nearest point (rings of 2.16 um) that is >= `clear` from every hard_cores box of the type (a channel),
     inside the outline by `clear`, and >= `clear` from the taps already placed.  Types without hard cores, or whose
-    tap is already in a channel, are unchanged."""
+    tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
+    without hard cores)."""
     w, h = t["outline_um"]
     boxes = []
     for c in t.get("hard_cores", []) or []:
@@ -894,7 +906,7 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM):
         if any(abs(px - a) < clear and abs(py - b) < clear for a, b in taken):
             return False
         return not any(x0 < px < x1 and y0 < py < y1 for x0, y0, x1, y1 in boxes)
-    if free(x, y):
+    if (not boxes and not strict) or free(x, y):
         return x, y
     for r in range(1, int(max(w, h) / TAP_STEP_UM) + 1):
         d = r * TAP_STEP_UM
