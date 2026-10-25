@@ -166,7 +166,7 @@ def module(kind_entry, m):
     if kind_entry:
         L.append(f"    dsdv_svc_rs_pvso_entry #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), "
                  f".SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .FM({fmv})) u (\n"
-                 f"        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q({{2'b00, q}}), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),\n"
+                 f"        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),\n"
                  f"        {pc},\n"
                  f"        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),\n"
                  f"        .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .local_pv_landed(local_pv_landed), .peer_pv(peer_pv),\n"
@@ -195,7 +195,8 @@ def sv(ms):
            "// The 14 tree slices instantiate dsdv_svc_rs_c (ENTRY 0) like dsdv_svc_rs; the entries (rsv_05 / rsv_11) wrap",
            "// dsdv_svc_rs_pvso_entry #(.FM).  The strap sid must select the role the variant was made for (core: sticky",
            "// fault on a role face outside FM).  Entry q is the die's 513-b q lane {d 512, v}: the all-faces port's two",
-           "// upper bits (q[514] transport fault / q[513], never driven by the die's slice bo source) are not ports.",
+           "// upper bits (q[514] transport fault / q[513], never driven by the die's slice bo source) are not ports (PORTFIX-DEAD:",
+           "// dsdv_svc_rs_pvso_entry q is [512:0]; its program has TF 0, so no q[514] reader).",
            ""]
     seen = set()
     for s in range(16):

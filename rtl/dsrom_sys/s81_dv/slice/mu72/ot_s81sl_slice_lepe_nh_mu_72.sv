@@ -9,6 +9,8 @@
 // 0.764 off-die cap, RX 12/12).  Die ports tx<i>/rx<i> belong to region N<i>.  MUT 5/6/7 = landing mutants (bench).
 // Original LP +3 crossings and +2 fault output stages remain unchanged.
 // G3 (LEAD-S81-G3 10-21): u_sl = ot_s81sl_slice_c1x_k8_cap5r_lp (capc5r + fixed-depth CAP reset forests, one release edge).
+// S81/PORTFIX-DEAD D-MURT (10-25): u_lep = ot_s81sl_lep_mu_a_nrt, no mu_rt port (TP end: no MU tag return lane).
+// S81/PORTFIX-DEAD D-CAPEND (10-25): row-end (6-frame) slice: rt 420 b, u_sl = ot_s81sl_slice_c1x_k8_cap5r_lp_e6 (capc5r_e6).
 module ot_s81sl_slice_lepe_nh_mu_72 #(
     parameter integer MUT = 0
 ) (
@@ -21,7 +23,7 @@ module ot_s81sl_slice_lepe_nh_mu_72 #(
     input wire [1103:0] bi,
     output wire [512:0] bo,
     output wire [4*1104-1:0] xc,
-    input wire [8*70-1:0] rt,
+    input wire [6*70-1:0] rt,               // PORTFIX-DEAD D-CAPEND: 6 frames (lanes 6, 7 had none: tied 0 on the as-built die)
     output wire [15:0] ck_line,
     output wire [1:0] ck_v,
     output wire [15:0] ck_xc,
@@ -33,7 +35,6 @@ module ot_s81sl_slice_lepe_nh_mu_72 #(
     input wire [513:0] rx1,
     input wire [33:0] mu_c,
     input wire [10:0] mu_rc,
-    output wire [31:0] mu_rt,
     output wire fault,
     input wire ck_S,
     input wire ck_K, ck_ML,
@@ -98,7 +99,7 @@ module ot_s81sl_slice_lepe_nh_mu_72 #(
     ot_s81_mu72_land #(.W(1106)) u_ml_ret (.ck_w(ck_ML),.ck_r(ck_K),
         .rs_w(lpr_c_u_land),.rs_r(lpr_K),.i({mf_ml,mrv_ml,mrd_ml}),.o({mf,mrv,mrd}));
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
-    ot_s81sl_slice_c1x_k8_cap5r_lp #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0)) u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4),
+    ot_s81sl_slice_c1x_k8_cap5r_lp_e6 #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0)) u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4),
         .ck_CAP_RT(ck_CAP_RT), .ck_CAP_CW(ck_CAP_CW), .ck_CAP_CE(ck_CAP_CE), .ck_CAP_RN(ck_CAP_RN), .ck_CAP_RS(ck_CAP_RS), .rst_n(lpr_c_u_sl), .sid(sid), .ri_w(ri_w), .ri_e(lri__l_S), .ro_e(lro), .ro_w(ro_w), .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(sf));   // region S, t = 0
     ot_s81_mu72_lnland #(.MUT((MUT == 5) ? 1 : (MUT == 7) ? 3 : 0)) u_lnl0 (.ck_k(ck_K), .ck_n(ck_N0), .rs_k(lpr_K), .rs_n(lpr_c_u_ln0),
         .k_lo_v(l0v), .k_lo_d(l0d), .k_lo_r(l0r), .k_li_v(i0v), .k_li_d(i0d), .k_li_r(i0r), .k_rxv(n0rxk), .k_flt(f0), .k_st(n0stk),
@@ -108,6 +109,6 @@ module ot_s81sl_slice_lepe_nh_mu_72 #(
         .k_lo_v(l1v), .k_lo_d(l1d), .k_lo_r(l1r), .k_li_v(i1v), .k_li_d(i1d), .k_li_r(i1r), .k_rxv(n1rxk), .k_flt(f1), .k_st(n1stk),
         .n_lo_v(n1lv), .n_lo_d(n1ld), .n_lo_r(n1lr), .n_li_v(n1iv), .n_li_d(n1id), .n_li_r(n1ir), .n_rxv(n1rxv), .n_flt(n1f), .n_st(rx1[513:512]));   // K <-> N1, +3 each way
     dsfd_coll_lane_e_safe8_ntf #(.CORE_CRED(12)) u_ln1 (.ck(ck_N1), .rs(lpr_c_u_ln1), .chb(ch_b), .rx(lrx1), .tx(tx1), .lo_v(n1lv), .lo_r(n1lr), .lo_d(n1ld), .li_v(n1iv), .li_r(n1ir), .li_d(n1id), .flt(n1f));   // region N1, t = 0
-    ot_s81sl_lep_mu_a #(.CRED(12), .DR(12), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf), .fault(fault__o));   // region K, t = 0
+    ot_s81sl_lep_mu_a_nrt #(.CRED(12), .DR(12), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf), .fault(fault__o));   // region K, t = 0
     dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)) u_land (.clk(ck_ML), .rst_n(lpr_c_u_land), .wv(mwv_ml), .wd(mwd_ml), .rc(mu_rc_ml), .rv(mrv_ml), .rd(mrd_ml), .fault(mf_ml)); // region ML
 endmodule

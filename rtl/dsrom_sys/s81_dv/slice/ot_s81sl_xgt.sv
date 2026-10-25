@@ -18,7 +18,8 @@ module ot_s81sl_xgt (
     output wire            dl_vv, output wire [275:0] dl_vb,
     input  wire [2:0]      ci_dir, input wire [1103:0] ci_b,
     input  wire            is_v,  input wire [159:0] is_d,
-    output wire            xw_v,  output wire [1100:0] xw_d,
+    // S81/PORTFIX-DEAD D-XWV (10-25): no xw_v port -- it was xw_d[0] (the streamer's xw_q[0]) and had no load anywhere
+    output wire [1100:0]   xw_d,
     output wire            fault
 );
     wire [2:0] g_v, g_fam; wire [20:0] g_idx; wire [3071:0] g_d; wire f_r, f_s;
@@ -27,7 +28,7 @@ module ot_s81sl_xgt (
         .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .fault(f_r));
     ot_s81sl_xs u_s (.clk(clk), .rst_n(rst_n), .g_v(g_v), .g_fam(g_fam), .g_idx(g_idx), .g_d(g_d),
-        .is_v(is_v), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_s));
+        .is_v(is_v), .is_d(is_d), .xw_v(), .xw_d(xw_d), .fault(f_s));
     reg flt;
     always @(posedge clk) flt <= f_r | f_s;
     assign fault = flt;

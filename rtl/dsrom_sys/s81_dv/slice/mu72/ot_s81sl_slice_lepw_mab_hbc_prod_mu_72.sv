@@ -17,6 +17,7 @@
 // as u_ln0 / u_ln1, HF-3 CH_BOARD 700, strap ch_b) on new die ports tx2 / tx3 / rx2 / rx3 (die SerDes link_0_4 / link_0_5).
 // Pair A = stage NEXT (user 0 + every un-windowed beat), pair B = stage PREV; fixed static circuits, no destination field.
 // Same landings, reset forests, u_sl, MU landing as lepw_mu_72; no tied functional port.
+// S81/PORTFIX-DEAD D-CAPEND (10-25): row-end (6-frame) slice: rt 420 b, u_sl = ot_s81sl_slice_c1x_k8_cap5r_lp_e6 (capc5r_e6).
 module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
     parameter integer MUT = 0,
     // No production clock book is implied by physical source binding.
@@ -42,7 +43,7 @@ module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
     input wire [1103:0] bi,
     output wire [512:0] bo,
     output wire [4*1104-1:0] xc,
-    input wire [8*70-1:0] rt,
+    input wire [6*70-1:0] rt,               // PORTFIX-DEAD D-CAPEND: 6 frames (lanes 6, 7 had none: tied 0 on the as-built die)
     output wire [15:0] ck_line,
     output wire [1:0] ck_v,
     output wire [15:0] ck_xc,
@@ -140,7 +141,7 @@ module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
     ot_s81_mu72_land #(.W(1106)) u_ml_ret (.ck_w(ck_ML),.ck_r(ck_K),
         .rs_w(lpr_c_u_land),.rs_r(lpr_K),.i({mf_ml,mrv_ml,mrd_ml}),.o({mf,mrv,mrd}));
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
-    ot_s81sl_slice_c1x_k8_cap5r_lp #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0)) u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4),
+    ot_s81sl_slice_c1x_k8_cap5r_lp_e6 #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0)) u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4),
         .ck_CAP_RT(ck_CAP_RT), .ck_CAP_CW(ck_CAP_CW), .ck_CAP_CE(ck_CAP_CE), .ck_CAP_RN(ck_CAP_RN), .ck_CAP_RS(ck_CAP_RS), .rst_n(lpr_c_u_sl), .sid(sid), .ri_w(lri__l_S), .ri_e(ri_e), .ro_e(ro_e), .ro_w(lro), .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(sf));   // region S, t = 0
     ot_s81_mu72_lnland #(.MUT((MUT == 5) ? 1 : (MUT == 7) ? 3 : 0)) u_lnl0 (.ck_k(ck_K), .ck_n(ck_N0), .rs_k(lpr_K), .rs_n(lpr_c_u_ln0),
         .k_lo_v(l0v), .k_lo_d(l0d), .k_lo_r(l0r), .k_li_v(i0v), .k_li_d(i0d), .k_li_r(i0r), .k_rxv(n0rxk), .k_flt(f0), .k_st(n0stk),

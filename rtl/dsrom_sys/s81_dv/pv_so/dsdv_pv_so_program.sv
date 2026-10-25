@@ -6,7 +6,10 @@
 // subtype spec[447:444]:0 CFG len0,1 PARAM len5,2 LAUNCH len0.
 // CFG spec:owner[19:0],SEjid[27:20],SOjid[35:28],local_first[51:36],peer_first[67:52].
 // PARAM/LAUNCH carry the same owner; position is always the real outer header.
-module dsdv_pv_so_program #(parameter integer ENABLE=0)(
+// S81/PORTFIX-DEAD (10-25): TF = 1 the q port carries the transport fault bit q[514] (checked below); TF = 0 (the S81
+// die entry dsdv_svc_rs_pvso_entry: its q lane is the 513-b frame {d 512, v}, there is no q[514]) builds no reader of
+// q[514:513] (q_pass[514:513] = 0, no transport-fault check).
+module dsdv_pv_so_program #(parameter integer ENABLE=0, parameter integer TF=1)(
  input wire clk,rst_n,input wire[514:0]q,output wire[514:0]q_pass,
  output reg cfg_v,output reg[19:0]owner,output reg[20:0]position,output reg[7:0]se_jid,so_jid,
  output reg[15:0]local_first,peer_first,
@@ -16,7 +19,10 @@ module dsdv_pv_so_program #(parameter integer ENABLE=0)(
  wire v=q[0];wire[511:0]d=q[512:1];
  reg in_frame,private_frame;reg[11:0]left;reg[2:0]row_;reg[19:0]powner;reg[20:0]ppos;
  wire ph=ENABLE!=0 && v && !in_frame && d[511:508]==15;
- assign q_pass=(ENABLE!=0 && ((v&&in_frame&&private_frame)||ph))?515'd0:q;
+ wire drop_q=ENABLE!=0 && ((v&&in_frame&&private_frame)||ph);
+ assign q_pass[512:0]=drop_q?513'd0:q[512:0];
+ generate if(TF!=0)begin:g_tf assign q_pass[514:513]=drop_q?2'd0:q[514:513];
+ end else begin:g_ntf assign q_pass[514:513]=2'd0; end endgenerate   // TF 0: q[514:513] not read
  wire context_ok=d[17:0]=={d[458:449],d[502:495]} && d[506:503]==1;
  always @(posedge clk)begin
   if(v && in_frame && private_frame)begin param_d<=d;param_row<=row_;param_owner<=powner;param_position<=ppos;end
@@ -26,7 +32,7 @@ module dsdv_pv_so_program #(parameter integer ENABLE=0)(
   else begin
    cfg_v<=0;param_v<=0;launch<=0;
    if(ENABLE!=0 && v)begin
-    if(q[514])fault<=1; // private frames must preserve transport fault visibility
+    if(TF!=0 && q[514])fault<=1; // private frames must preserve transport fault visibility
     if(!in_frame)begin
      in_frame<=d[491:480]!=0;left<=d[491:480];private_frame<=d[511:508]==15;row_<=0;
      if(ph)begin
