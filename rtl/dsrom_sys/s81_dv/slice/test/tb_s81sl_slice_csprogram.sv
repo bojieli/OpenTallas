@@ -1,13 +1,8 @@
 `timescale 1ns/1ps
-// PATH-S81 X2 (10-25): exact lockstep miter for the per-leaf CS forwarding of ot_s81sl_slice.  u_a = the slice of the
-// base commit (origin/main, every module renamed O_*: no R3 station mechanism, module-scope vp loop integers), u_b = this
-// branch's slice (R3 station chains + LF_CS_* forwarding + block-local vp integers).  Random ring / V / band / return
-// inputs every cycle (tb_s81sl_slice_x stimulus), every output compared every cycle after reset.
-//   MUT 0: u_b at its defaults                           -> must PASS (byte / cycle identical)
-//   MUT 1: u_b leaf 2 LF_CS_U_D = 1 (vs -> vq station)    -> must FAIL (forwarding reaches the leaf)
-//   MUT 2: u_b leaf 0 LF_CS_HI_D = 2 (vp lane inputs)     -> must FAIL
-//   MUT 3: u_b every leaf the named normal-leaf CS set    -> must FAIL (public behaviour moves; latencies: leaf benches)
-// +define+OT_S81SL_CST_MUT_UV with MUT 0 (u_v one station off its interface) is the R3 station mutant.
+// Directed standard-slice LF_CS forwarding proof: real ring RD/CTL packets,
+// SW quantization in leaf2, HLOAD/POST/HSTORE/RDOUT in leaf0. Every public
+// output and POST producer completion compared cycle for cycle against the
+// pre-R3 default slice. This does not qualify the generated cap5r clone.
 module tb_s81sl_slice_csprogram;
     parameter integer HB = 0;
     parameter integer MUT = 0;

@@ -1,8 +1,7 @@
 #!/bin/bash
-# cs_fwd_miter.sh <outdir> <MUT> [HB] [SEED] [extra verilator args]   (cwd = repo root, a git worktree)
-# PATH-S81 X2 (10-25): exact lockstep miter, ot_s81sl_slice of BASE (default origin/main merge-base, modules renamed O_*)
-# vs this tree's ot_s81sl_slice (R3 stations + LF_CS_* forwarding).  MUT 0 must PASS; MUT 1..3 must FAIL
-# (rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_slice_csprogram.sv).  Exit 0 = the expected verdict.
+# Directed standard-slice ring program: OUT MUT HB SEED EXTRA_VERILATOR_ARGS.
+# Exact fixture command recorded; mutants1/2 and UV must fail, baseline passes.
+# Full two-slice Verilator measured47.6GB; admit64GB,8threads.
 set -u; export OT_VL_JCAP=0; O=$1; M=${2:-0}; HB=${3:-0}; SEED=${4:-1}; X=${5:-}; mkdir -p $O/old
 BASE=${CSF_BASE:-3947653943}
 python3 tools/s81_slice/vs_gold.py tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl $O/fixture L0 > $O/fixture.log 2>&1 || exit 4
