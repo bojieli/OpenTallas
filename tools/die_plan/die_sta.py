@@ -514,6 +514,9 @@ def write_ilm_verilog(nl, red, wires, path):
     for cell, inst, conns in red.insts:
         cs = []
         for p, bits in conns:
+            if not bits:
+                cs.append(f".{_vid(p).strip()}()")
+                continue
             cs.append(f".{_vid(p).strip()}({ex(bits[0]) if len(bits) == 1 else '{' + ', '.join(ex(x) for x in bits) + '}'})")
         L.append(f"  {_vid(cell)} {_vid(inst)} ({', '.join(cs)});")
     L.append("endmodule\n")
@@ -746,7 +749,7 @@ def sta_tcl(top_path, top_name, inst_mods, mod_files, corner, libs, out_txt, mod
           f"set fh [open {out_txt} w]",
           f"puts $fh \"mode {mode} corner {corner}\"",
           f"proc ot_ck {{pin}} {{ if {{[catch {{set a [get_property $pin arrival_max_rise]}}] || $a eq \"\"}} {{ return NA }}; "
-          f"if {{$a >= {period_ps / 2:.4f}}} {{ set a [expr {{$a - {period_ps / 2:.4f}}}] }}; return [format %.2f $a] }}",
+          "return [format %.2f $a] }",
           "proc ot_ckpin {pin} { set i [file dirname $pin]; foreach c {CLK CK clk} { set q [get_pins -quiet $i/$c]; "
           "if {$q ne \"\"} { return $q } }; return \"\" }",
           "proc ot_arr {pin} { set q [ot_ckpin $pin]; if {$q eq \"\"} { return NA }; return [ot_ck $q] }"]

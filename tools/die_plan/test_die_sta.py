@@ -139,3 +139,18 @@ def test_spine_models_agree(tmp_path):
         w[m] = json.loads((tmp_path / m / "die_sta.json").read_text())["corners"]["TT"]["seams"]["u0->u1/a_i"]
     assert abs(w["ports"]["max"]["worst"] - w["gclk"]["max"]["worst"]) < 0.01
     assert abs(w["ports"]["min"]["worst"] - w["gclk"]["min"]["worst"]) < 0.01
+
+
+@pytest.mark.skipif(not _have_sta(), reason="needs OpenSTA `sta` and the ASAP7 NLDM libs")
+def test_large_tap_offset_not_wrapped(tmp_path):
+    """a tap offset beyond period/2 must show up in the clock arrivals (no half-period wrap)."""
+    p = tmp_path / "parts" / "part_a"
+    p.mkdir(parents=True)
+    shutil.copy(TD / "part_a.v", p / "6_final.v")
+    sp = tmp_path / "spine.json"
+    sp.write_text(json.dumps({"parts": {"u0": {"taps": {"clk": {"offset_ps": 440.0}}},
+                                        "u1": {"taps": {"clk": {"offset_ps": 0.0}}}}}))
+    D.main(["run", "--top", str(TD / "die_top.v"), "--parts", str(tmp_path / "parts"), "--out", str(tmp_path / "o"),
+            "--mode", "flat", "--corner", "TT", "--spine-branch", str(sp)])
+    sp_u0 = json.loads((tmp_path / "o" / "die_sta.json").read_text())["corners"]["TT"]["ffspread"]["u0"]
+    assert sp_u0["min"] > 440.0
