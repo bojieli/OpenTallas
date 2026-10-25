@@ -1,5 +1,5 @@
 #!/bin/bash
-# xrt_land_eq.sh <outdir> <HB 0|1> <LAND 0|1> [SEED] [NC] [mutant: none|land_pv|land_evpin]   (cwd = repo root)
+# xrt_land_eq.sh <outdir> <HB 0|1> <LAND 0|1> [SEED] [NC] [mutant: none|land_pv|land_evpin|citwin|fpin]   (cwd = repo root)
 # env SPARSE=1: rare full-set valids (few sticky faults), J = verilator build jobs.
 # S81-KITS-RTLB 10-24: ot_s81sl_xrt FACE_LAND vs the pre-fix module (REF_REV, default origin/main) with the lo / p / e
 # inputs one edge later (LAND = 1) or undelayed (LAND = 0).  Every output bit, every cycle.  base must PASS; mutants FAIL.
@@ -11,7 +11,8 @@ git show ${REF_REV:-origin/main}:rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv | se
   -e 's/\bot_s81sl_xr_rcp\b/ref_s81sl_xr_rcp/g' -e 's/^`define OT_S81SL_XR_FOREG_DEF/`define REF_XR_FOREG_DEF/' \
   -e 's/`OT_S81SL_XR_FOREG_DEF/`REF_XR_FOREG_DEF/g' > $O/ref_s81sl_xrt.sv
 grep -q "module ref_s81sl_xrt1" $O/ref_s81sl_xrt.sv || { echo "REF_NOT_BUILT"; exit 4; }
-DEF=""; case $M in land_pv) DEF="+define+OT_S81SL_XRT_MUT_LAND_PV";; land_evpin) DEF="+define+OT_S81SL_XRT_MUT_LAND_EVPIN";; none) ;; *) exit 2;; esac
+DEF=""; case $M in land_pv) DEF="+define+OT_S81SL_XRT_MUT_LAND_PV";; land_evpin) DEF="+define+OT_S81SL_XRT_MUT_LAND_EVPIN";;
+  citwin) DEF="+define+OT_S81SL_XRT_MUT_CITWIN";; fpin) DEF="+define+OT_S81SL_XRT_MUT_FPIN";; none) ;; *) exit 2;; esac
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GHB=$H -GLAND=$L -GSEED=$S -GNC=$N -GSPARSE=${SPARSE:-0} \
   --top-module tb_s81sl_xrt_land_eq -Mdir $O/obj rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv \
   $O/ref_s81sl_xrt.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xrt_land_eq.sv --build-jobs ${J:-4} \

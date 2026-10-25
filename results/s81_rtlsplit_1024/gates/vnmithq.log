@@ -1,0 +1,8 @@
+GATE vnmithq PASS rc=0 MITER_ACT go 824 hw 4235 wl 3495 rb 1664 | p_v 380 y_v 10919 hq_v 3891 fault-edges 20072 MITER FAIL vn split cycles 40000 mismatches 19738 NEGATIVE_CONTROL_FAILED_AS_EXPECTED hq 
+MITER DIFF same-edge cyc=17 hq_v 0/0 y_v 0/0 fault 1/1
+MITER DIFF same-edge cyc=71 hq_v 0/0 y_v 0/0 fault 1/1
+MITER DIFF same-edge cyc=92 hq_v 0/0 y_v 0/0 fault 1/1
+MITER DIFF same-edge cyc=95 hq_v 0/0 y_v 0/0 fault 1/1
+MITER DIFF same-edge cyc=107 hq_v 0/0 y_v 0/0 fault 1/1
+MITER_ACT go 824 hw 4235 wl 3495 rb 1664 | p_v 380 y_v 10919 hq_v 3891 fault-edges 20072
+MITER FAIL vn split cycles 40000 mismatches 19738

@@ -16,10 +16,10 @@ module dsdv_gunit_l3 #(
     input  wire          rst_n,
     // N face (L1)
     input  wire [275:0]  rn_i,  output wire [275:0] rn_o,
-    input  wire          rw_st, input wire rw_v, input wire rw_l, input wire [511:0] rw_x,
+    input  wire          rw_st, input wire rw_v, input wire rw_l, input wire [191:0] rw_x,   // RTLC: rw_x[511:192] were 0
     input  wire [31:0]   rw_scale, input wire [9:0] rw_row, input wire [4:0] rw_lm, input wire [15:0] rw_sm,
     input  wire [3:0]    sid_i,
-    output reg           w_v, output reg [275:0] w_b, output reg fault,
+    output reg           w_v, output reg [169:0] w_b, output reg fault,   // RTLC: CTL row packed (ctlpk)
     // S face (unit pins, s_3S)
     output wire [275:0]  vo_s,  input wire [275:0] vi_s
 );
@@ -35,7 +35,7 @@ module dsdv_gunit_l3 #(
     always @(posedge clk or negedge rs_i)
         if (!rs_i) begin st_q <= 1'b0; v_q <= 1'b0; end else begin st_q <= rw_st; v_q <= rw_v; end
     always @(posedge clk) begin
-        l_q <= rw_l; x_q <= rw_x; sc_q <= rw_scale; sid_q <= sid_i;
+        l_q <= rw_l; x_q <= {320'd0, rw_x}; sc_q <= rw_scale; sid_q <= sid_i;
         row_c <= rw_row; lm_c <= rw_lm; sm_c <= rw_sm;
         if (st_q) begin row_q <= row_c; lm_q <= lm_c; sm_q <= sm_c; end
     end
@@ -51,6 +51,10 @@ module dsdv_gunit_l3 #(
             ctl = {V{1'b0}}; ctl[0] = 1'b1; ctl[12:9] = s; ctl[21 +: 186] = p;
         end
     endfunction
+    // CTL row bus packed (S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant / unused pins)): a CTL row word has 106 bits that are constant 0 on every
+    // producer (bits 1..8, 13..20, 38, 40, 41 and 189..275 of ctl(): the 5'd5 kind field's zeros, the free header bits and
+    // the tail above the 128-bit data); the seam carries the other 170 = {w[188:42], w[39], w[37:21], w[12:9], w[0]}.
+    function automatic [169:0] ctlpk(input [275:0] w); ctlpk = {w[188:42], w[39], w[37:21], w[12:9], w[0]}; endfunction
     reg e2, e3; reg [191:0] wq;
     // S81-KITS-RTLB 10-24 (owner: register every pin, in RTL): fault leaves a pin-only flop loaded with the
     // kept sticky state's next value (fault == flt_s every cycle, 0 cycles); before, the sticky flop fed its own D.
@@ -69,7 +73,12 @@ module dsdv_gunit_l3 #(
         end
     always @(posedge clk) begin
         if (o_v) wq <= o_d[191:0];
-        w_b <= e2 ? ctl(row_q + 10'd1, 4'hf, wq[127:0], sm_q, lm_q, sid_q)
-           : e3 ? ctl(row_q + 10'd2, 4'h3, {64'd0, wq[191:128]}, sm_q, lm_q, sid_q) : {V{1'b0}};
+`ifdef OT_RTLC_MUT_L3   // RTLC bench mutant: packed weight row loses data bit 0 (w[61])
+        w_b <= ctlpk(e2 ? ctl(row_q + 10'd1, 4'hf, wq[127:0], sm_q, lm_q, sid_q)
+           : e3 ? ctl(row_q + 10'd2, 4'h3, {64'd0, wq[191:128]}, sm_q, lm_q, sid_q) : {V{1'b0}}) & ~(170'd1 << 42);
+`else
+        w_b <= ctlpk(e2 ? ctl(row_q + 10'd1, 4'hf, wq[127:0], sm_q, lm_q, sid_q)
+           : e3 ? ctl(row_q + 10'd2, 4'h3, {64'd0, wq[191:128]}, sm_q, lm_q, sid_q) : {V{1'b0}});
+`endif
     end
 endmodule

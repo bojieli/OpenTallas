@@ -11435,13 +11435,21 @@ def glue_rtl(m):
                 body.append("    reg rn; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) rn <= 1'b0; else rn <= 1'b1;"
                             ' // initialization only: async assert, release +1 edge; no normal data edge')
                 qrs = 'rn'
+            # S81-KITS-RTLC 10-24 (owner: register every partition pin, in RTL): every input lands in its own pin
+            # register (l_*) and every output leaves its own pin register (r_*): 2 flops per bit, +1 cycle per station
+            body.append('    // S81-KITS-RTLC 10-24 (owner: register every partition pin, in RTL): every input lands in its own pin register')
+            body.append('    // (l_*) and every output leaves its own pin register (r_*): 2 flops per bit, +1 cycle per q-bank %s station.'
+                        % mst[-1])
             for p_ in sorted(ports, key=_pnum):
                 if p_[:2] in ('i_', 'e_'):
                     q_ = ('o_' if p_[:2] == 'i_' else 'd_') + p_[2:]
                     w = ports[p_][1]
+                    body.append(f'    reg [{w - 1}:0] l_{p_[2:]};')
+                    body.append(f'    always @(posedge ck[0] or negedge {qrs}) if (!{qrs}) l_{p_[2:]} <= {w}\'d0; '
+                                f'else l_{p_[2:]} <= {p_};')
                     body.append(f'    reg [{w - 1}:0] r_{p_[2:]};')
                     body.append(f'    always @(posedge ck[0] or negedge {qrs}) if (!{qrs}) r_{p_[2:]} <= {w}\'d0; '
-                                f'else r_{p_[2:]} <= {p_};')
+                                f'else r_{p_[2:]} <= l_{p_[2:]};')
                     body.append(f'    assign {q_} = r_{p_[2:]};')
         elif mst.startswith('dsfd_rly'):
             w = ports['i'][1]
@@ -11566,8 +11574,14 @@ def glue_rtl(m):
             body.append('    assign fo = fr;')
         elif mst.startswith('dsfd_rstg') and SSTN_REG:   # S-NET --sstn-reg: valid in a column-reset flop at the pin
             w_ = ports['i'][1]
-            body.append(f'    reg [{w_ - 1}:1] r; always @(posedge ck[0]) r <= i[{w_ - 1}:1];')
-            body.append("    reg v; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) v <= 1'b0; else v <= i[0];")
+            # S81-KITS-RTLC 10-24 (owner: register every partition pin, in RTL): input pin register stage (l / lv)
+            # before the output stage (r / v): 2 flops per bit, +1 cycle per return stage
+            body.append('    // S81-KITS-RTLC 10-24 (owner: register every partition pin, in RTL): input pin register stage (l / lv) before the')
+            body.append('    // output stage (r / v): 2 flops per bit, +1 cycle per return stage; the valid bit is a column-reset flop in both.')
+            body.append(f'    reg [{w_ - 1}:1] l; always @(posedge ck[0]) l <= i[{w_ - 1}:1];')
+            body.append("    reg lv; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) lv <= 1'b0; else lv <= i[0];")
+            body.append(f'    reg [{w_ - 1}:1] r; always @(posedge ck[0]) r <= l;')
+            body.append("    reg v; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) v <= 1'b0; else v <= lv;")
             body.append('    assign o = {r, v};                            // return valid: column-reset flop (no gate at the pin)')
         elif mst.startswith('dsfd_rstg_pq'):     # S81-DIE PQ root-row return station (registered, column clock)
             w_ = ports['i'][1]

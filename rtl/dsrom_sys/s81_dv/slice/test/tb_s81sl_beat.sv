@@ -66,7 +66,12 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
         .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
         .s_v(), .s_d(), .x_rv(1'b0), .x_ra(10'd0), .x_qv(), .x_qd(), .x_wv(1'b0), .x_wa(10'd0), .x_wm(8'd0), .x_wd(256'd0),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(fp));
-    ot_s81sl_vn u_n (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
+`ifdef OT_S81SL_VN_UNSPLIT
+    ot_s81sl_vn u_n (
+`else
+    ot_s81sl_vn_sp u_n (   // S81/RTLSPLIT: the leaf's vn (vn_a + vn_b)
+`endif
+        .clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d), .p_v(p_v), .p_d(p_d),
         .y_v(y_v), .y_i(y_i), .y(y), .fault(fn));
