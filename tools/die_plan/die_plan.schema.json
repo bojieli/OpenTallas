@@ -757,6 +757,13 @@
         "type": "number",
         "minimum": 0
        },
+       "insertion_ff_ps": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "insertion_basis": {
+        "type": "string"
+       },
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0
@@ -1600,6 +1607,10 @@
      "minimum": 0
     },
     "neighbour_skew_ps": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "insertion_ff_ps": {
      "type": "number",
      "exclusiveMinimum": 0
     },

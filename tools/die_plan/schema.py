@@ -237,6 +237,10 @@ SCHEMA = {
                                        "layers": _lays, "order": _order}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
+                        # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
+                        # (insertion_ps = TT, insertion_ff_ps = FF) = the signed view's routed RCX pin-register mean,
+                        # or the parent budget before the first sign-off; insertion_basis says which
+                        "insertion_ff_ps": _pos, "insertion_basis": {"type": "string"},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
@@ -386,6 +390,9 @@ SCHEMA = {
                            "source": {"type": "string"}, "note": {"type": "string"}}}},
         "clock": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "insertion_ps": _pos, "insertion_tol_ps": _nonneg, "neighbour_skew_ps": _pos,
+            # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
+            # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
+            "insertion_ff_ps": _pos,
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.

@@ -154,7 +154,13 @@ def main(argv=None):
     a3.add_argument("--types")
     a3.add_argument("--util", type=float, default=0.5)
     a3.add_argument("--proof", action="store_true", help="proof kit: SKIP_INCREMENTAL_REPAIR (CP1 seam proofs)")
-    a3.add_argument("--hold-ff-margin", type=float, default=None, metavar="PS",
+    a3.add_argument("--hold-mcmm", action="store_true",
+                    help="old GRT repair: one MCMM tc+bc pass with the TT-bound vclk (default since FLOW 10-25: "
+                         "FF-only GRT hold repair with the FF-bound vclk, --hold-ff-margin)")
+    a3.add_argument("--stock-rc", action="store_true",
+                    help="platform setRC.tcl for placement/CTS/GRT estimates (default since FLOW 10-25: the "
+                         "RCX-calibrated tools/die_plan/setRC_rcx_asap7.tcl)")
+    a3.add_argument("--hold-ff-margin", type=float, default=5.0, metavar="PS",
                     help="repair hold at the FF sign-off corner only (CTS-stage combined repair skipped; post-GRT "
                          "repair with CORNERS=bc and this hold margin); TT setup is judged by signoff.py")
     a3.add_argument("--slew-margin", type=float, default=None, metavar="PCT",
@@ -188,9 +194,10 @@ def main(argv=None):
             if a.cmd == "phys":
                 kits = gen_phys.write_phys(S.load(a.plan), a.out, a.rtl_root,
                                            a.types.split(",") if a.types else None, a.util, a.proof,
-                                           dict(x.split("=", 1) for x in a.kit_rtl), a.hold_ff_margin,
+                                           dict(x.split("=", 1) for x in a.kit_rtl),
+                                           None if a.hold_mcmm else a.hold_ff_margin,
                                            (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um,
-                                           plan_path=Path(a.plan).resolve())
+                                           plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc)
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve())]
         except gen_rtl.GenError as e:
