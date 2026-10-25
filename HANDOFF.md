@@ -779,3 +779,4 @@ CODEX: 2026-10-25 14:15 PDT HANDOFF to Claude on explicit RESET: main05f9f5c690 
 2026-10-25 16:02 PDT ROOT-MERGE-8: main 2cf25f6d7a -> 1c4498e78d (toksched-1025 ledger, tok-lec-1130 trace pairing); gates same as main; hub ff'd. S81 x2rb still waits for m0/m1.
 2026-10-25 16:12 PDT ROOT-MERGE-8: PARKED. main = 1c4498e78d. Left: s81-x2-1025rb@27000aab69 (waits for PATH-S81 m0/m1; merges clean). No live jobs; worktrees removed.
 2026-10-25 16:16 PDT GEOM-REVIEW-2: PARKED (lanes/GEOM-REVIEW.md). 6 REQs answered this shift; none open. Next ASTK5 kit REQ uses the sender_min basis (COORD 15:57).
+2026-10-25 16:16 PDT GEOM-REVIEW: PARKED (lanes/GEOM-REVIEW.md). 10 REQs answered 14:15-16:16 (2 FAIL, 8 PASS-COND); none open; no jobs launched.
