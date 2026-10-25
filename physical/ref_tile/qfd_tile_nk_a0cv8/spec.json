@@ -418,7 +418,8 @@
  "slot_change_request": "QC-A0 10-24 v8: core clock = the v7 tap pins with 2 moved + 4 added in the hub (tools/qwen_romleaf/a0core/qfd_tile_nk_a0c8_pins.tcl, a0c8_nk_taps.json); declare per CB quad in physical/die_plan/qwen_compute/inputs/a0_core_taps.json (variants updated to the v8 kits). QC-P6-A0 10-23 v6: core clock = 32 interior M7 tap pins (tools/qwen_romleaf/a0core/qfd_tile_nk_a0c6_pins.tcl), each a die-spine M8->M7 drop at the plan insertion; declared per CB quad in physical/die_plan/qwen_compute/inputs/a0_core_taps.json. QC-P5 10-23 v4: core clock = 20 interior M7 tap pins (tools/qwen_romleaf/a0core/qfd_tile_nk_a0c4_pins.tcl), each a die-spine drop at equal arrival (80 per CB quad); the E-face ck pin is gone. QC-A0 10-23: core outline/pins = rpf (plan contents u_t00..u_t11); clock ports ck_* removed, one ck at E (457.824, 668.076). Report to QC-P2: core tap = ck pin, budget measured at gate.",
  "io_tcl": "tools/qwen_romleaf/a0core/qfd_tile_nk_a0c8_pins.tcl",
  "pin_hook_before_flops": [
-  "tools/qwen_romleaf/repack/qfd_tile_nk_a0v8_regions.tcl",
+  "tools/qwen_romleaf/repack/qfd_tile_nk_a0v8c_k2rs_regions.tcl",
+  "tools/qwen_romleaf/a0core/a0v8c_nk_groups.tcl",
   "tools/qwen_romleaf/repack/qfd_tile_nk_romleaf_rpf_request_decode.tcl"
  ],
  "pin_regs": {
@@ -436,7 +437,8 @@
   "OT_TAP_TARGET_PS": "250",
   "OT_A0_RST_TAPS": "tools/qwen_romleaf/a0core/a0c8_nk_rst_taps.tsv",
   "OT_TAP_PORT": "ck",
-  "OT_TAP_CLOCK": "core_clk"
+  "OT_TAP_CLOCK": "core_clk",
+  "GPL_ROUTABILITY_DRIVEN": "0"
  },
  "hold_merge": "CRITICAL A0 (critical_tiles.txt): gate PNG + checklist review only; no REVIEW.json / submit by the lane agent.",
  "reset_landing": {
@@ -457,7 +459,7 @@
   "tools/qwen_romleaf/rc14_2000/release_placement_reservations.tcl",
   "tools/qwen_romleaf/a0core/a0_reset_taps6_release.tcl"
  ],
- "reroute_reason": "QC-A0 10-23: plan-derived core clock interface (one entry per planned core).",
+ "reroute_reason": "A0 v8c NK k2rs placement selected: group exclusive comb cones with their registers, shorten south L1 reader spans, locate split-fault register at midpoint. DATA placement PASS-COND, reset BLOCKED until decision-13 control-only relay adoption; no new route authorized.",
  "safe_design_checklist": {
   "1_pins": "Pin helper and all data/clock/reset landing stages byte-exact original9873; no external pin movement. Every actual child origin43.2um lattice.",
   "2_reach": "Original per-consumer compact clock-sink placement groups retained during GPL; initial native landing ring spans and fixed hard-child/pin shapes unchanged. Actual reach and postrepair drift measured at gate.",

@@ -3,7 +3,8 @@
 # one hook per step, so the two repo hooks are sourced from this kit file.
 source /src/physical/common_flow/pin_reg_split.tcl
 source /src/physical/dsrom_window_source/leaf_iohold.tcl
-source /src/tools/qwen_romleaf/repack/qfd_tile_nk_a0v8_regions.tcl
+source /src/tools/qwen_romleaf/repack/qfd_tile_nk_a0v8c_k2rs_regions.tcl
+source /src/tools/qwen_romleaf/a0core/a0v8c_nk_groups.tcl
 source /src/tools/qwen_romleaf/repack/qfd_tile_nk_romleaf_rpf_request_decode.tcl
 source /src/physical/qwen_die_masters/io_flop_at_pins.tcl
 source /src/tools/qwen_romleaf/a0core/a0_reset_taps6.tcl
