@@ -155,9 +155,14 @@ def probe(host, d, spill_ok=False):
     try:
         r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", host, cmd], capture_output=True,
                            text=True, timeout=40)
+        if r.returncode:
+            return host, {"error": f"SSH probe exit {r.returncode}: {r.stderr.strip()[-160:]}"}
         if "NODIR" in r.stdout:
             return host, None
-        row = json.loads(r.stdout.strip().splitlines()[-1])
+        lines = r.stdout.strip().splitlines()
+        if not lines:
+            return host, {"error": "SSH probe returned no admission JSON"}
+        row = json.loads(lines[-1])
         return host, scratch_disk(row, d, r.stdout)
     except Exception as e:
         return host, {"error": str(e)[:80]}
