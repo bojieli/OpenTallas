@@ -133,3 +133,12 @@ amend or squash later).
 Recorded earlier (10-23, COORD rulings now binding): R8 LANDED bundles (forwarded-clock ring, one K per bundle) are
 padded to one group depth, lane skew checked against the landing window margin; bundles over margin stay per-lane
 (collapse forbidden unless the window is widened in RTL).
+
+## OWNER DECISIONS 2026-10-24 21:31 PDT (owner: "Yes, I agree with you. Use all of your revised recommendations")
+12. FEEDTHROUGH LAYERS (KV-1): partition feedthrough nets route on <= M7 with registered stations every <= 405 um (cycles as priced in the reach405 plan). M8/M9 stay reserved for the die clock spine, die reset and PG. Follow-up plan item (KV): cut feedthrough crossings (2,416 lanes, mean 3.4 / max 12 crossings; hub-as-star) by re-placing communicating blocks as neighbours.
+13. RESET (supersedes "equal depth to every tap" in the 10-24 reset rule; keeps one root 2-flop synchroniser and <= 405-um registered hops):
+    a. Region = the WHOLE DIE: one root 2-flop synchroniser at the die rst_n pin (its async input is the only reset false path).
+    b. Delivery = NEIGHBOUR WAVEFRONT: every partition registers its incoming reset and re-drives a registered reset output to its abutted neighbours (uniform per type: +1 reset in, registered reset out pins; inside a partition relays every <= 405 um). Each tap's release cycle is DETERMINISTIC and STATICALLY KNOWN (not equal); the plan/tools publish the per-partition release offset and the compiler/static schedule accounts for it. No global reset tree, no die-top relay hosting, no per-instance variants (hardened once).
+    c. Schedule start is aligned by an explicit start broadcast after reset, not by the reset edge.
+    d. Reset only control state (FSMs, valid/sequence bits); datapath flops carry no reset.
+14. KV HBM CONTROLLER CLOCK (KV-2): kvs_pc hck = the die clock (1.2 GHz, 833 ps, same tree); one synchronous core domain; the only clock crossing is inside the HBM PHY (DFI, async FIFO there). CONDITION: KV confirms the PHY model supports a 1.2 GHz controller side (DFI 1:4 / 1:8); if not, fall back to a separate hck with an async FIFO at the kvs_pc/PHY edge and a single sdc_lint exception for that pair.
