@@ -18,13 +18,15 @@ CELL = re.compile(r"^\s+(\w+)\s+(u_u_(?:exp|head|lrly|rcp|rsq)(\d+))\s*\((.*?)\)
 PORT = re.compile(r"\.(\w+)\(([^()]*)\)")
 WIRE = re.compile(r"\bwire\s+(?:\[(\d+):(\d+)\]\s+)?(\w+)\s*;")
 REF = re.compile(r"\b(w_u_(?:exp|head|lrly|rcp|rsq)\d+_\w+)(?:\[(\d+)(?::(\d+))?\])?")
-EXT = re.compile(r"\b(x_su_c(?:_p1)?_i_q)(?:\[(\d+)(?::(\d+))?\])?")
+EXT = re.compile(r"\b([A-Za-z_]\w*)(?:\[(\d+)(?::(\d+))?\])?")
 
 
 def bitrefs(expr, widths, pattern=REF):
     out = []
     for m in pattern.finditer(expr):
         n, hi, lo = m.groups()
+        if n not in widths:
+            continue
         h, l = (widths[n]-1, 0) if hi is None else (int(hi), int(lo or hi))
         out += [(n, b) for b in range(h, l-1, -1)]
     return out
@@ -50,13 +52,15 @@ def extract(text, lane, side):
     names = {m[2] for m in cells}
     selected = {n for n in widths if re.match(rf"w_u_(exp|head|lrly|rcp|rsq){lane}_", n)}
     decls = [f"    wire [{widths[n]-1}:0] {norm(n,lane)};" for n in sorted(selected)]
-    external_widths = {n: widths[n] for n in widths if n.startswith('x_su_c')}
+    external_widths = {n: widths[n] for n in widths if n not in selected and n not in ('clk','rst_n')}
     fields, off, child_text = [], 0, []
     for m in cells:
         ports = []
         for pn, expr in PORT.findall(m[4]):
             refs = bitrefs(expr, external_widths, EXT)
             if refs:
+                if any(n in selected for n,b in bitrefs(expr,widths)) or re.search(r"\d+'[bhdoBHDO]",expr):
+                    raise ValueError(f"mixed internal/constant and external input expression needs explicit mapping: {expr}")
                 width = len(refs)
                 fields.append(dict(child=norm(m[2],lane),port=pn,offset=off,width=width,
                                    source_expr=expr, source_bits=refs))
