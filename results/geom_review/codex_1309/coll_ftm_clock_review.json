@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-10-25 13:44 PDT",
+  "source_helper": "6fadb638c3",
+  "plan_source": "codex/qc-plan-1309@78e74051f7",
+  "raw_sha_prefix": "917e77",
+  "verdict": "PASS-COND ONE placement/CTS-only clock experiment after Qwen no-duplicate confirmation",
+  "findings": [
+    "21taps follow relay bands;9041planned sinks max621/r89.2um; no zero-load plannedtap",
+    "Resetdepth6 unchanged,0 data cycles",
+    "Preserve data/PDN/clock/reset; no macro wall in displayed overlay"
+  ],
+  "conditions": [
+    "Source gates and no duplicate ownerpilot",
+    "Actual placement/tap grouping+CTS tree",
+    "Per-usedtapTTFF insertion/load and related shortstage pair skew before GRT",
+    "No GRT/DRT/default canaryPASS/timingbudget change"
+  ]
+}
