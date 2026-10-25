@@ -1,0 +1,11 @@
+{"review": "S81-HCORE placed-core review before route (owner order 10-24 08:05)", "when_pdt": "2026-10-24 13:09",
+ "kit": "physical/die_plan/s81/cores/svc/kits/ot_s81c_attn_hcore__157.68x259.2_r2",
+ "run": "epyc2:/srv/opentallas-scratch2/claude/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_r2/run (3_place.odb)",
+ "image": "physical/die_plan/s81/cores/svc/review_hcore_r2_1024/r2_placed.png",
+ "gates_before_place": {"sdc_lint": "PASS errors 0 (liberty 16)", "face_guard_yosys": "PASS 0 fails"},
+ "pins_vs_faces": "PASS: W = ld_v/ld_mode/ld_bank/ld_grp/ld_w2v/ld_w[512]/ld_wp[64] full height; N = iv/ibank/ib[576] full width; E = ov/oy[32]/oflt/gid[8] (y 18-30, 110-150); S = clk (78.8, 0) and rst_n (81.9, 0) at the face centre. 1214 pins, as the plan pins.json.",
+ "face_flops": "PASS: 1212 face flops in 4-10 um bands at their faces; pin->reg p50 5.7 / p90 6.7 / max 10.7 um",
+ "density": "PASS: std 20507 um2, 55% of free area (PLACE_DENSITY 0.6), max 10-um bin 0.64, 0 bins > 0.8, buf/inv 8.8% of area; no macros",
+ "clock": "PASS: clk on S centre: shortest trunk to both halves of the 259-um height; 28019 sinks, CTS sink clustering on",
+ "notes": "pre-CTS resizer report shows vclk-group output hold -210 ps with ideal clk vs 250 ps vclk insertion; expected to clear with the propagated CTS insertion (same SDC as the SIGNED VQ r12 kit) and the MCMM bc hold repair at CTS / post-GRT.",
+ "verdict": "PASS -> route"}

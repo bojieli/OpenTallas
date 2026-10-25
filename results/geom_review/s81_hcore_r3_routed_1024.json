@@ -1,0 +1,10 @@
+{
+ "review": "S81/KITS routed-core review of svc attn_hcore r3 (owner order 10-24 08:05)",
+ "when_pdt": "2026-10-24 19:35",
+ "kit": "physical/die_plan/s81/cores/svc/kits/ot_s81c_attn_hcore__157.68x259.2_r3",
+ "run": "intel2:/srv/opentallas-scratch2/claude/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_r3 (6_final.odb)",
+ "images": ["physical/die_plan/s81/cores/svc/signoff_hcore_r3_1024/img/final_placement.webp", "physical/die_plan/s81/cores/svc/signoff_hcore_r3_1024/img/final_congestion.webp", "physical/die_plan/s81/cores/svc/signoff_hcore_r3_1024/img/final_worst_path.webp"],
+ "findings": ["std-cell only, placement uniform, no empty regions or slivers", "congestion: continuous hot column along the W ld_* pin column (full-height 578-bit face) + scattered hot spots; routed with DRC 0", "worst path = rst_n recovery: S-face pin -> ~170 um buffer tree up the W side -> async-reset flops", "404,873 cells > 400k per-run cap"],
+ "signoff": "NOT SIGNED: TT -4.91/18 (reset recovery + reg-reg u_rc->g_m[16].ab -2.46), FF +8.56, DRV 0, DRC 0, face_guard PASS, pins PASS",
+ "verdict": "FAIL (timing): reset delivery must follow owner decision 2 (in-core pipelined reset relay); cell count must drop under 400k"
+}
