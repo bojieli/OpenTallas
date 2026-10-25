@@ -193,10 +193,17 @@ proc rt_region {x y} {
 set mtap {}
 foreach mit $macs {
   set m [$mit getInst]
+  # KITS-SPARE/L5 10-25 (F3): a macro with two clock pins (ot_sram_1r1w2c: wclk + rclk) gets ONE macro tap; the second
+  # pin joins the first pin's tap net, so both clock pins and the interface registers are one skew group.
+  if {[dict exists $mtap [$m getName]]} { $mit disconnect; $mit connect [dict get $mtap [$m getName]]; puts "OT_RT macro tap [$m getName]: 2nd clock pin [[$mit getMTerm] getName] on the same tap"; continue }
   set pbx [$mit getBBox]
   set mx [expr {([$pbx xMin]+[$pbx xMax])/2.0/$rt_dbu}]; set my [expr {([$pbx yMin]+[$pbx yMax])/2.0/$rt_dbu}]
   set mb [$m getBBox]
   if {abs($mx - [$mb xMin]/double($rt_dbu)) < abs($mx - [$mb xMax]/double($rt_dbu))} { set bx [expr {[$mb xMin]/double($rt_dbu) - 6.0}] } else { set bx [expr {[$mb xMax]/double($rt_dbu) + 6.0}] }
+  # OT_MPF_SIDE "X0 X1 L|R ..." (same variable as physical/common_flow/macro_pin_flops.tcl): the macro tap sits on the
+  # edge where its interface registers were anchored (pins with shapes on both edges otherwise default to xMax).
+  if {[info exists ::env(OT_MPF_SIDE)]} { foreach {x0 x1 s} $::env(OT_MPF_SIDE) { set mlx [expr {[$mb xMin]/double($rt_dbu)}]
+    if {$mlx >= $x0 && $mlx < $x1 && $s in {L R}} { set bx [expr {$s eq "L" ? $mlx - 6.0 : [$mb xMax]/double($rt_dbu) + 6.0}]; break } } }
   set r [rt_region $bx $my]
   # sibling of the region's leaf tap buffer (same stage count): hang from the leaf buffer's INPUT net
   lassign [dict get $tapnet $r] nx ny nn a b c d nin

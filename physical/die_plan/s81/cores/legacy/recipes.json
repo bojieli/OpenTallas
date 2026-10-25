@@ -103,7 +103,50 @@
   "plan_module": "dsdv_gunit_l5",
   "ref_tile": "physical/ref_tile/dsdv_gunit_l5_n32",
   "spec_git": "1766568f01:physical/ref_tile/dsdv_gunit_l5_n32/spec.json",
-  "suffix": "n32"
+  "suffix": "n32",
+  "regional_taps": {
+   "nx": 2,
+   "ny": 2,
+   "split": "count",
+   "win_ps": 20,
+   "protect_spine": 1
+  },
+  "macro_pin_flops": {
+   "side": "0 150 R 150 250 R 250 400 L",
+   "tree": 1,
+   "shared": 1
+  },
+  "why": "KITS-SPARE/L5 10-25 structural successor of the l5_n32 legacy kit (GEOM-REVIEW-3 06:20 FAIL-F5/F3/F6): F5 regional taps 2x2 (one per SRAM row-pair x column-half quadrant, count split, trunk + H-tree, taps <=20 ps); F3 one macro tap per SRAM (wclk + rclk + its interface registers, hung from its region node); F6 SRAM interface registers anchored at the pin edge facing the logic channel (cols x43/x173 -> E edge, x302 -> W edge: the E edge is 7 um from the core boundary); pin registers: face_flops corner-column clamp (vi_n[32:38] had no slot). Modern flow (RCX RC, per-corner vclk, FF-only GRT hold, rtl_lint, reg_fanout).",
+  "rtl_patches": [
+   {
+    "file": "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+    "why": "KITS-SPARE/L5 10-25 rtl_lint (yosys -noautowire): g_lv[LV].v referenced from inside generate block g_two is resolved as an implicit net \\v (default_nettype none from the preceding dsdv/sinkhorn files). The default frontend elaborates it correctly (checked: same s/c), so the patch only hoists the reference into one module-scope wire v_last; s and c are bit-identical (yosys equiv on ot_hdc_sk_csa + gunit bench).",
+    "edits": [
+     [
+      "    assign s = g_lv[LV].v[0 +: W];\n",
+      "    wire [N*W-1:0] v_last = g_lv[LV].v;   // module-scope copy: rtl_lint cannot resolve g_lv[LV].v inside g_two\n    assign s = v_last[0 +: W];\n"
+     ],
+     [
+      "            assign c = g_lv[LV].v[W +: W];\n",
+      "            assign c = v_last[W +: W];\n"
+     ]
+    ]
+   },
+   {
+    "file": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv",
+    "why": "KITS-SPARE/L5 10-25 rtl_lint (yosys check -assert): the loop variable 'integer k' is assigned in two always blocks -> 32 'multiple conflicting drivers for k'. Second block gets its own loop variable j; the flops (v / s shift stages) are unchanged.",
+    "edits": [
+     [
+      "    integer k;\n",
+      "    integer k, j;\n"
+     ],
+     [
+      "        for (k = 1; k < N; k = k + 1) s[k] <= s[k - 1];\n",
+      "        for (j = 1; j < N; j = j + 1) s[j] <= s[j - 1];\n"
+     ]
+    ]
+   }
+  ]
  },
  "ot_s81hd_spo": {
   "ref_tile": "physical/ref_tile/s81hd_spo_m",

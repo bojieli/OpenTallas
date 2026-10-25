@@ -163,7 +163,10 @@ foreach pass {INPUT OUTPUT} {
         }
       }
     } else {
-      set col [expr {($px - $ff_x0) / $ff_cpitch}]
+      # KITS-SPARE/L5 10-25: a N/S pin inside the core margin (x < core xMin, e.g. gunit_l5 vi_n[32:38] at x 0.9-2.1)
+      # gave a negative column, so every slot was skipped and its pin register floated ~300 um away (GEOM F-pin-reg):
+      # clamp the column into the core (the corner slot is the nearest legal one).
+      set col [expr {max(0, min(($ff_x1 - $ff_x0 - $w) / $ff_cpitch, ($px - $ff_x0) / $ff_cpitch))}]
       set placed 0
       for {set r 0} {$r < 400 && !$placed} {incr r} {
         foreach dc {0 1 -1} {
@@ -176,7 +179,7 @@ foreach pass {INPUT OUTPUT} {
         }
       }
     }
-    if {!$placed} { incr ff_miss; continue }
+    if {!$placed} { incr ff_miss; puts "OT_FACE_FLOPS no slot for $pass $nm"; continue }
     set cx [expr {$ff_x0 + (($cx - $ff_x0) / $ff_sw) * $ff_sw}]
     # orient BEFORE location: dbInst::setOrient keeps the bbox, so a later MX flip moved the flop one row down (onto
     # its neighbour: KV-P5 10-23, two FIRM flops in one site -> DPL-0033)
