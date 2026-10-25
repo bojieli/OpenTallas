@@ -1,0 +1,14 @@
+{
+  "design": "DeepSeekS81L14engE2",
+  "opt_in": "OT_S81ENG_TMAP_CPRE; defaultabsent",
+  "public_cycles_added": 0,
+  "clock_target_ps": 833,
+  "flops_added_analytical": 612,
+  "flops_formula": "17*(32bankword+5tag-1oldCID)",
+  "word_rate_per_cycle": 1,
+  "map_latency_edges": 2,
+  "exactness": "all17CID+17SELoutputs299985cycles3seeds inclresets/legalinvalid/stalls; wrongtagexactnegativecaught",
+  "measured_failure": "ROMclk505.57ps+545.93clkq+23.7wire+196.3select\u2192cidCTS-13.69; GRTmixedworst-237.161",
+  "physical_intent": "placebankwordcaptureFF<=20umofeachROMoutput; selectiononnextwindowstage",
+  "physical_status": "NOT RUN; noSIGNEDclaim"
+}

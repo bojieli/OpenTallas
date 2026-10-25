@@ -244,8 +244,13 @@ module ot_s81eng_token_map_n32 (
     wire[16:0] selected;
     wire[575:0] qb;
     for(genvar b=0;b<8;b=b+1)begin:g_q assign qb[72*b+:72]=q[b];end
+`ifdef OT_S81ENG_TMAP_CPRE
+    localparam integer TMAP_CPRE = 1;
+`else
+    localparam integer TMAP_CPRE = 0;
+`endif
     for(genvar b=0;b<17;b=b+1)begin:g_sel
-        ot_s81eng_token_bit #(.BIT(b)) u_b(.clk(clk),.rst_n(rst_n),.v(in_v),.legal(legal),.tag({in_tok[16:14],in_tok[1:0]}),.qb(qb),.sel(selected[b]),.cid(out_cid[b]));
+        ot_s81eng_token_bit #(.BIT(b), .CAPTURE_FIRST(TMAP_CPRE)) u_b(.clk(clk),.rst_n(rst_n),.v(in_v),.legal(legal),.tag({in_tok[16:14],in_tok[1:0]}),.qb(qb),.sel(selected[b]),.cid(out_cid[b]));
     end
     // S81-ELEM2-ENGRR 10-21: ROM(512 ps clk->q) -> 32-way select -> 17-bit compare -> valid copies was zero-wire -73 ps.
     // The cid range check is an image-integrity fault: it is now taken from the registered out_cid one edge later
@@ -277,7 +282,7 @@ module ot_s81eng_token_map_n32 (
     end
 endmodule
 
-(* keep_hierarchy = 1 *)module ot_s81eng_token_bit #(parameter integer BIT=0)(
+(* keep_hierarchy = 1 *)module ot_s81eng_token_bit #(parameter integer BIT=0, CAPTURE_FIRST=0)(
  input wire clk,rst_n,v,legal,input wire[4:0] tag,input wire[575:0] qb,output reg sel,output reg cid);
  reg pending;reg[4:0] selq;
  always @(posedge clk or negedge rst_n)if(!rst_n)pending<=0;else pending<=v&&legal;
@@ -287,7 +292,31 @@ endmodule
   sel=0;
   for(b=0;b<8;b=b+1)for(l=0;l<4;l=l+1)sel=sel|(qb[72*b+17*l+BIT] && selq==5'(4*b+l));
  end
- always @(posedge clk)if(pending)cid<=sel;
+ // Retiming candidate: capture each bank/word bit beside the ROM before
+ // selecting. The tag is captured on the SAME pending edge. Thus cid(t)
+ // equals the old registered select at t, including hold and reset windows;
+ // only combinational logic crosses the register cut (+0 public cycles).
+ generate if(CAPTURE_FIRST!=0)begin:g_capture_first
+  reg[31:0] bank_words;
+  reg[4:0] bank_word_tag;
+  integer cb,cl;
+  always @(posedge clk)if(pending)begin
+   for(integer rb=0;rb<8;rb=rb+1)for(integer rl=0;rl<4;rl=rl+1)
+    bank_words[4*rb+rl]<=qb[72*rb+17*rl+BIT];
+`ifdef OT_S81ENG_MUT_TMAP_TAG
+   bank_word_tag<=tag;
+`else
+   bank_word_tag<=selq;
+`endif
+  end
+  always @*begin
+   cid=0;
+   for(cb=0;cb<8;cb=cb+1)for(cl=0;cl<4;cl=cl+1)
+    cid=cid|(bank_words[4*cb+cl] && bank_word_tag==5'(4*cb+cl));
+  end
+ end else begin:g_capture_last
+  always @(posedge clk)if(pending)cid<=sel;
+ end endgenerate
 endmodule
 
 module ot_s81eng_win_n32 #(
