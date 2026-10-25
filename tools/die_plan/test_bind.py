@@ -821,3 +821,19 @@ endmodule
     assert run(f2, out2, 'elab') == 0
     assert bind.main(['bind', str(f2), '--out', str(out2), '--mem', '4', '--strict']) == 1
     assert report(out2)['type_splits']
+
+
+def test_glue_source_names_share_only_same_typed_source(tmp_path):
+    src = tmp_path / "src"
+    shutil.copytree(EX, src)
+    p = src / "par.sv"
+    p.write_text(p.read_text().replace(".i(x)", ".i(x + 8'h01)"))
+    plan = json.loads((src / "die_plan.json").read_text())
+    plan["asbuilt"].update(base=str(src), internal_primitive_constants=True, glue_source_names=True)
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    out = tmp_path / "out"
+    assert run(pf, out, "elab") == 0
+    assert bind.main(["bind", str(pf), "--out", str(out), "--strict"]) == 0
+    assert not report(out)["type_splits"]
+    assert run(pf, out, "verify") == 0 and verify(out)["verdict"] == "PASS"

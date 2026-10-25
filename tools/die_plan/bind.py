@@ -142,6 +142,9 @@ class Rules:
         self.internal_primitive_constants = ab.get("internal_primitive_constants", False)
         if type(self.internal_primitive_constants) is not bool:
             raise BindError("asbuilt.internal_primitive_constants must be boolean")
+        self.glue_source_names = ab.get("glue_source_names", False)
+        if type(self.glue_source_names) is not bool:
+            raise BindError("asbuilt.glue_source_names must be boolean")
         self.transport = [(re.compile(r["module"]), r) for r in ab.get("transport", [])]
         self.reducers = [(re.compile(r["module"]), r) for r in ab.get("reducers", [])]
         self.sources = [(re.compile(r["module"]), r) for r in ab.get("sources", [])]
@@ -807,6 +810,8 @@ class Binder:
         self.n_unmapped = len(unmapped)
         self.root = {p: (F.cells[m[0]].path if len(m) == 1 else common_root([F.cells[ci].path for ci in m]))
                      for p, m in self.members.items()}
+        if self.R.glue_source_names:
+            self._glue_source_names()
         for p, m in self.members.items():
             seen = defaultdict(list)
             for ci in m:
@@ -814,6 +819,39 @@ class Binder:
             for k, v in seen.items():
                 if len(v) > 1:
                     self.errors.append(f"LOCAL_NAME_CLASH {p}: {k} <- {v[:4]}")
+
+    def _glue_source_names(self):
+        """Opt-in stable names for unique auto glue cells; all connectivity stays in the signature.
+
+        A cell is eligible only with an original source span, primitive type,
+        complete typed port shape and primitive parameters. Ambiguous siblings
+        retain their original names and therefore cannot silently coalesce.
+        """
+        count = 0
+        for p, members in self.members.items():
+            groups = defaultdict(list)
+            for ci in members:
+                c = self.F.cells[ci]
+                if self.G.kind[ci] != "glue" or not c.module.startswith("$") or not c.src:
+                    continue
+                name = self.rel_of(ci)
+                if name.startswith("$"):
+                    parent = ""
+                elif ".$" in name:
+                    parent = name.split(".$", 1)[0] + "."
+                else:
+                    continue
+                shape = (c.src, c.ytype, c.yparams,
+                         sorted((pn, self.G.dirs[ci].get(pn), len(bits)) for pn, bits in c.ports.items()))
+                digest = hashlib.sha256(json.dumps(shape, sort_keys=True).encode()).hexdigest()[:20]
+                groups[parent + "$src_" + digest].append(ci)
+            for name, cells in groups.items():
+                if len(cells) != 1:
+                    self.warns.append(f"GLUE_SOURCE_AMBIGUOUS {p}: {name} ({len(cells)}); original names retained")
+                    continue
+                self.local[cells[0]] = name
+                count += 1
+        self.warns.append(f"GLUE_SOURCE_NAMES {count} unique auto primitive cells named by source and typed shape")
 
     def _glue_follow_sinks(self):
         """asbuilt.glue_follows_sinks (opt-in; PATH-S81/COLL 10-25, COORD re-decision): a bit-preserving glue cell
