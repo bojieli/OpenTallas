@@ -25,6 +25,17 @@ GRID=[dict(layer='M5',width_um=.12,pitch_um=4.32,offset_um=2.064),
 def emit(rect=PHY,inst=INST,phy_pg_layer="M4"):
     die=dict(outline_um=[W,H],pg=dict(grid=GRID,domains=[dict(rect_um=rect,nets=['VDDPHY','VSS'],grid=GRID)]))
     pieces=pg_regions.regions(die)
+    # Put CORE region seams between the .27um alternating power-rail centres.
+    # At the exact PHY y edge a .018um rail overhangs a region by9nm, and
+    # PDN cannot repair that channel. Move only CORE seams through the 2um
+    # macro row-clearance band; the PHY supply rectangle stays exact.
+    for piece in pieces:
+        if piece['nets'][0]=='VDDPHY':continue
+        r=piece['rect_um']
+        if abs(r[1]-rect[1])<1e-6:r[1]-=.135
+        if abs(r[3]-rect[1])<1e-6:r[3]-=.135
+        if abs(r[1]-rect[3])<1e-6:r[1]+=.135
+        if abs(r[3]-rect[3])<1e-6:r[3]+=.135
     exact=re.escape(inst)
     t=['# SYS_C actual separate PHY supply; replaces generic partition pdn.tcl.',
        'set b [ord::get_db_block]', 'set dbu [[ord::get_db_tech] getDbUnitsPerMicron]',
@@ -46,24 +57,29 @@ def emit(rect=PHY,inst=INST,phy_pg_layer="M4"):
             if r[0]<=625<=r[2] and r[1]<=50<=r[3]:sram_name=name
         t += [f'set region [odb::dbRegion_create $b {name}]',
               'odb::dbBox_create $region '+' '.join(f'[expr {{round({x:g}*$dbu)}}]' for x in r),
-              f'set_voltage_domain -name {name} -region {name} -power {power} -ground {ground}',
-              f'define_pdn_grid -name {name} -voltage_domains {{{name}}} -pins {{M7}} -starts_with GROUND']
-        if not isphy:
-            t += [f'add_pdn_connect -grid {name} -layers {{M2 M5}}']
-        for s in GRID:
-            if isphy and phy_pg_layer=="M6" and s['layer']=="M5":continue
-            axis=1 if s['layer']=='M6' else 0
-            phase=(s['offset_um']-r[axis])%s['pitch_um']
-            spacing=.072 if s['layer']=='M5' else .096
-            t.append(f"add_pdn_stripe -grid {name} -layer {s['layer']} -width {s['width_um']} -spacing {spacing} -pitch {s['pitch_um']} -offset {phase:.6f}")
-        if not isphy or phy_pg_layer!="M6":t += [f'add_pdn_connect -grid {name} -layers {{M5 M6}}']
-        t += [f'add_pdn_connect -grid {name} -layers {{M6 M7}}']
+              f'set_voltage_domain -name {name} -region {name} -power {power} -ground {ground}']
+        if isphy:
+            t += [f'define_pdn_grid -name {name} -voltage_domains {{{name}}} -pins {{M7}} -starts_with GROUND']
+            for stripe in GRID:
+                if phy_pg_layer=='M6' and stripe['layer']=='M5':continue
+                axis=1 if stripe['layer']=='M6' else 0
+                phase=(stripe['offset_um']-r[axis])%stripe['pitch_um']
+                spacing=.072 if stripe['layer']=='M5' else .096
+                t.append(f"add_pdn_stripe -grid {name} -layer {stripe['layer']} -width {stripe['width_um']} -spacing {spacing} -pitch {stripe['pitch_um']} -offset {phase:.6f}")
+            if phy_pg_layer!='M6':t += [f'add_pdn_connect -grid {name} -layers {{M5 M6}}']
+            t += [f'add_pdn_connect -grid {name} -layers {{M6 M7}}']
     if not phy_name or not sram_name:raise ValueError('SYS_C PHY/SRAM domains unresolved')
     domains=' '.join(core_names)
-    t += [f'define_pdn_grid -name core_rails -voltage_domains {{{domains}}} -starts_with GROUND',
+    t += [f'define_pdn_grid -name core_rails -voltage_domains {{{domains}}} -pins {{M7}} -starts_with GROUND',
           'add_pdn_stripe -grid core_rails -layer M1 -width .018 -pitch .54 -offset 0 -followpins',
           'add_pdn_stripe -grid core_rails -layer M2 -width .018 -pitch .54 -offset 0 -followpins',
           'add_pdn_connect -grid core_rails -layers {M1 M2}',
+          'add_pdn_stripe -grid core_rails -layer M5 -width .12 -spacing .072 -pitch 4.32 -offset 2.064 -extend_to_boundary',
+          'add_pdn_stripe -grid core_rails -layer M6 -width .288 -spacing .096 -pitch 4.32 -offset 1.968 -extend_to_boundary',
+          'add_pdn_stripe -grid core_rails -layer M7 -width .288 -spacing .096 -pitch 8.64 -offset 4.128 -extend_to_boundary',
+          'add_pdn_connect -grid core_rails -layers {M2 M5}',
+          'add_pdn_connect -grid core_rails -layers {M5 M6}',
+          'add_pdn_connect -grid core_rails -layers {M6 M7}',
           f'define_pdn_grid -macro -cells {{d2d_sram_1r1w_64x137_m1_r2c2_p288}} -name sysc_sram -voltage_domains {{{sram_name}}} -halo {{2 2}} -grid_over_boundary',
           'add_pdn_connect -grid sysc_sram -layers {M4 M5}',
           f'define_pdn_grid -macro -cells {{ot_qkvd_ucie_x64_phy}} -name sysc_phy_macro -voltage_domains {{{phy_name}}} -halo {{0 0}} -grid_over_boundary',
