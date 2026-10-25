@@ -93,7 +93,7 @@ module dsdv_svc_rs_entry_f #(
 
     dsdv_svc_sx #(.MUT(0)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v), .l_d(l_d),
         .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d),
-        .rt_v(rt_v), .rt_d(rt_d), .t_v(t_v), .t_tag(t_tag), .t_y(t_y), .t_f(t_f), .fault(x_f));
+        .rt_v(rt_v), .rt_d(rt_d), .t_v(t_v), .t_tag(t_tag), .t_y(t_y), .t_f(t_f), .gh_i(4272'd0), .gh_o(), .fault(x_f));
 
     dsdv_svc_rs_se u_se (.ck(ck), .rst(rst), .t_v(t_v), .t_tag(t_tag), .t_y(t_y), .t_f(t_f), .tjob(tjob), .go(go),
         .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd), .r_v(r_v), .r_p(r_p), .r_j(r_j), .r_d(r_d), .rcol(rcol));

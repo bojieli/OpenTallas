@@ -64,7 +64,14 @@ module dsdv_svc_rs_c #(
     // (tools/s81_dv/svc_rs/svc_rs_faces.py from the role ROMs).  A face whose bit is 0 has no flop, relay or logic in
     // this core (generate): its input is never read, its output is constant 0 and the port variant
     // (dsdv_svc_rs_fv.sv) does not carry it.  All ones (default) = the pre-mask slice, unchanged.
-    parameter logic [39:0] FM = {40{1'b1}}
+    parameter logic [39:0] FM = {40{1'b1}},
+    // S81/SVCG (2026-10-25, OWNER DECISION 12 / DEC12 FOLD 2-BEAT CONTRACT): F2B = 1 builds the slice for the die whose
+    // fold-rung score gather (svc_2k <-> svc_2k+1) travels 2-beat on gh_o / gh_i (dsdv_svc_f2b_tx / _rx in dsdv_svc_sx.sv, +1 cycle a fold hop):
+    // the role / drain-slot ROMs are the f2b ones (dsdv_svc_rs_roles_f2b.svh: compiled GO delay gd and P.V slots on
+    // the f2b leaf offsets) and FH = {GI 4, GO 4} names this slice's 2-beat gather faces (= sx_fh(sid),
+    // dsdv_svc_sx_f2b.svh; a strap sid whose fold faces differ is a sticky fault).  F2B = 0 / FH = 0: unchanged.
+    parameter bit F2B = 0,
+    parameter logic [7:0] FH = 8'h00
 ) (
     input  wire              ck,
     input  wire              rst,
@@ -90,6 +97,9 @@ module dsdv_svc_rs_c #(
     input  wire [4*2132-1:0] gi_d,
     output wire [3:0]        go_v,
     output wire [4*2132-1:0] go_d,
+    // S81/SVCG: 2-beat fold gather {beat, payload 1,067} a face (faces in FH; others: gh_o = 0, gh_i not read)
+    input  wire [4*1068-1:0] gh_i,
+    output wire [4*1068-1:0] gh_o,
     input  wire [3:0]        si_v,
     input  wire [4*1076-1:0] si_d,
     output wire [3:0]        so_v,
@@ -118,6 +128,8 @@ module dsdv_svc_rs_c #(
 );
 `include "dsdv_svc_rs_roles.svh"
 `include "dsdv_svc_rs_faces.svh"
+`include "dsdv_svc_rs_roles_f2b.svh"
+`include "dsdv_svc_sx_f2b.svh"
     localparam integer DW = 805, UW = 16;
     localparam logic [3:0] FM_DI = FM[3:0], FM_DO = FM[7:4], FM_UI = FM[11:8], FM_UO = FM[15:12], FM_RI = FM[19:16],
                            FM_RO = FM[23:20], FM_GI = FM[27:24], FM_GO = FM[31:28], FM_SI = FM[35:32], FM_SO = FM[39:36];
@@ -129,12 +141,15 @@ module dsdv_svc_rs_c #(
     // RTLGAP-SO (10-21): CFG [54] ALLQ -> every slice drains its tile's P.V in its all-owner window (rs_pvslot_all)
     reg [21:0] role; reg [9:0] pvs; reg [7:0] pf; wire a_allq;
     always @(posedge ck or negedge rn) if (!rn) begin role <= '0; pvs <= 10'd1023; pf <= 8'h00; end
-        else begin role <= rs_role(sid); pvs <= a_allq ? rs_pvslot_all(sid) : {2'b00, rs_pvslot(a_st, sid)}; pf <= rs_pface(sid); end
+        else begin role <= F2B ? rs_role_f2b(sid) : rs_role(sid);
+            pvs <= a_allq ? (F2B ? rs_pvslot_all_f2b(sid) : rs_pvslot_all(sid)) : {2'b00, (F2B ? rs_pvslot_f2b(a_st, sid) : rs_pvslot(a_st, sid))};
+            pf <= rs_pface(sid); end
 `else
     reg [21:0] role; reg [7:0] pvs, pf;
     wire [1:0] a_st;                                  // stack position (dsdv_svc_att: CFG [31:30] or the parameter ST)
     always @(posedge ck or negedge rn) if (!rn) begin role <= '0; pvs <= 8'd255; pf <= 8'h00; end
-        else begin role <= rs_role(sid); pvs <= rs_pvslot(a_st, sid); pf <= rs_pface(sid); end
+        else begin role <= F2B ? rs_role_f2b(sid) : rs_role(sid); pvs <= F2B ? rs_pvslot_f2b(a_st, sid) : rs_pvslot(a_st, sid);
+            pf <= rs_pface(sid); end
 `endif
     wire [3:0] tile = role[3:0], chm = role[7:4];
     wire [2:0] par = role[10:8];
@@ -244,8 +259,12 @@ module dsdv_svc_rs_c #(
     // ------------------------------------------------------------------ score exchange
     wire rt_v, t_v, x_f; wire [2131:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;
     reg pl_v; reg [2131:0] pl_d;                     // P beat (registered), muxed onto the engine's score-beat port
-    dsdv_svc_sx #(.MUT(0), .FM_GI(FM_GI), .FM_GO(FM_GO), .FM_SI(FM_SI), .FM_SO(FM_SO)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v || pl_v), .l_d(pl_v ? pl_d : l_d),
-        .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d),
+`ifndef SVC_F2B_MUT
+`define SVC_F2B_MUT 0
+`endif
+    dsdv_svc_sx #(.MUT(0), .FM_GI(FM_GI), .FM_GO(FM_GO), .FM_SI(FM_SI), .FM_SO(FM_SO), .FH_GO(FH[3:0]), .FH_GI(FH[7:4]),
+                  .F2B_MUT(`SVC_F2B_MUT)) u_sx (.ck(ck), .rst(rst), .sid(sid), .l_v(l_v || pl_v), .l_d(pl_v ? pl_d : l_d),
+        .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .gh_i(gh_i), .gh_o(gh_o), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d),
         .rt_v(rt_v), .rt_d(rt_d), .t_v(t_v), .t_tag(t_tag), .t_y(t_y), .t_f(t_f), .fault(x_f));
 
     // ------------------------------------------------------------------ SE row assembler (tap -> 16-score SE rows)
@@ -462,7 +481,17 @@ module dsdv_svc_rs_c #(
     end else begin : g_nofmchk
         assign fm_f = 1'b0;
     end endgenerate
-    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f | p_f | zt_f | (|sot_fc) | gw_f | (zt_ret_v && zt_ret_e) | fm_f | jf;   // jf: S81/H23 SEL injection fault (entry)
+    // S81/SVCG: an F2B slice whose strap sid has other 2-beat fold faces than FH (sx_fh) is a sticky fault
+    wire fh_f;
+    generate if (F2B) begin : g_fhchk
+        reg fhf; reg [7:0] needh;
+        always @(posedge ck or negedge rn) if (!rn) begin needh <= FH; fhf <= 1'b0; end
+            else begin needh <= sx_fh(sid); if (needh != FH) fhf <= 1'b1; end
+        assign fh_f = fhf;
+    end else begin : g_nofhchk
+        assign fh_f = 1'b0;
+    end endgenerate
+    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f | p_f | zt_f | (|sot_fc) | gw_f | (zt_ret_v && zt_ret_e) | fm_f | jf | fh_f;   // jf: S81/H23 SEL injection fault (entry)
     (* async_reg = "true" *) reg [1:0] hs0, hs1;
     reg hs_up, hs_hf, hs_f;
     always @(posedge ck or negedge rn)
@@ -534,7 +563,7 @@ module dsdv_svc_rs_entry #(parameter integer MUT = 0, parameter integer DIE_ID =
 `endif
     dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg), .dn_i(dn_i),
-        .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d),
+        .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .gh_i(4272'd0), .gh_o(),
         .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data),
         .r_tag(r_tag), .r_beat(r_beat), .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .w_v(w_v), .w_a(w_a), .w_m(w_m),
         .w_d(w_d), .w_st(w_st)
@@ -567,7 +596,45 @@ module dsdv_svc_rs #(parameter integer MUT = 0, parameter integer DIE_ID = 0, pa
     dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(33'd0), .jd(jd), .q(515'd0), .hw(292'd0), .hc(hc), .fault(fault), .st_rg(st_rg),
         .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v),
-        .go_d(go_d), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv),
+        .go_d(go_d), .gh_i(4272'd0), .gh_o(), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv),
+        .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .w_v(w_v),
+        .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st)
+`ifdef RS_OBS
+        , .obs(obs)
+`endif
+        );
+endmodule
+
+// S81/SVCG (2026-10-25): the DEC12 die master of the 14 tree slices -- dsdv_svc_rs with the 2-beat fold gather
+// (F2B = 1, FH = the slice's fold faces = sx_fh(sid), set per instance by the die / kit generator) and its gh_i / gh_o
+// faces {beat, payload 1,067} on the fold rung (lane attnh__svc_A__svc_B).  dsdv_svc_rs is the pre-DEC12 master, kept
+// unchanged for the dies / benches not yet re-bound.
+module dsdv_svc_rs_f2b #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
+                         parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
+                         parameter logic [7:0] FH = 8'h00) (
+    input  wire ck, rst, input wire [3:0] sid,
+    input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
+    input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
+    input  wire [3:0] gi_v, input wire [4*2132-1:0] gi_d, output wire [3:0] go_v, output wire [4*2132-1:0] go_d,
+    input  wire [4*1068-1:0] gh_i, output wire [4*1068-1:0] gh_o,
+    input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
+    output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
+    input  wire [2*4-1:0] r_beat, input wire [1:0] hs
+`ifdef RS_OBS
+    , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
+    , output wire [2678:0] obs
+`endif
+);
+    /*verilator hier_block*/
+`ifndef RS_OBS
+    wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
+`endif
+    wire [1:0] jd; wire [8:0] hc; wire fault; wire pv_v; wire [512:0] pv_d; wire [47:0] pv_x; wire [1:0] st_rg;
+    dsdv_svc_rs_c #(.ENTRY(0), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PV_IDENTITY),
+                    .F2B(1), .FH(FH)) u (.ck(ck),
+        .rst(rst), .sid(sid), .j(33'd0), .jd(jd), .q(515'd0), .hw(292'd0), .hc(hc), .fault(fault), .st_rg(st_rg),
+        .dn_i(dn_i), .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v),
+        .go_d(go_d), .gh_i(gh_i), .gh_o(gh_o), .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv),
         .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs), .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .w_v(w_v),
         .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st)
 `ifdef RS_OBS

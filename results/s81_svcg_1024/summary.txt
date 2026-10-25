@@ -1,0 +1,75 @@
+base s1: F2B_UNIT A: sent 3000 recv 3000 (rx err 0, port err 0) tx fault 0 rx fault 0 | B: tx fault 1 -> 1 (sticky), rx words +1 | C: rx faults 00000000000000000000000000000111 | MUT 0 F2B_UNIT PASS 
+base s2: F2B_UNIT A: sent 3000 recv 3000 (rx err 0, port err 0) tx fault 0 rx fault 0 | B: tx fault 1 -> 1 (sticky), rx words +1 | C: rx faults 00000000000000000000000000000111 | MUT 0 F2B_UNIT PASS 
+base s3: F2B_UNIT A: sent 3000 recv 3000 (rx err 0, port err 0) tx fault 0 rx fault 0 | B: tx fault 1 -> 1 (sticky), rx words +1 | C: rx faults 00000000000000000000000000000111 | MUT 0 F2B_UNIT PASS 
+mut s1: F2B_UNIT A: sent 3000 recv 1584 (rx err 1584, port err 7484) tx fault 0 rx fault 1 | B: tx fault 1 -> 1 (sticky), rx words +0 | C: rx faults 00000000000000000000000000000111 | MUT 1 F2B_UNIT FAIL 
+mut s2: F2B_UNIT A: sent 3000 recv 1547 (rx err 1547, port err 7544) tx fault 0 rx fault 1 | B: tx fault 1 -> 1 (sticky), rx words +0 | C: rx faults 00000000000000000000000000000111 | MUT 1 F2B_UNIT FAIL 
+mut s3: F2B_UNIT A: sent 3000 recv 1613 (rx err 1614, port err 7454) tx fault 0 rx fault 1 | B: tx fault 1 -> 1 (sticky), rx words +1 | C: rx faults 00000000000000000000000000000111 | MUT 1 F2B_UNIT FAIL 
+base run_s1.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX_BENCH PASS 
+base run_s2.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX_BENCH PASS 
+base run_s3.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX_BENCH PASS 
+fmask run_s1.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX_BENCH PASS 
+fmask run_s2.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX_BENCH PASS 
+fmask run_s3.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX_BENCH PASS 
+f2b run_s1.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX F2B fold lanes 11 (words 6600, lane err 0)  t_root 54  last slot 1340 SX_BENCH PASS 
+f2b run_s2.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX F2B fold lanes 11 (words 6600, lane err 0)  t_root 54  last slot 1372 SX_BENCH PASS 
+f2b run_s3.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX F2B fold lanes 11 (words 6600, lane err 0)  t_root 54  last slot 1335 SX_BENCH PASS 
+f2bfmask run_s1.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX F2B fold lanes 11 (words 6600, lane err 0)  t_root 54  last slot 1340 SX_BENCH PASS 
+f2bfmask run_s2.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX F2B fold lanes 11 (words 6600, lane err 0)  t_root 54  last slot 1372 SX_BENCH PASS 
+f2bfmask run_s3.log: SX root 600/600 beats (err 0)  taps 9600/9600 (err 0)  golden 600  fault 0000000000000000 SX F2B fold lanes 11 (words 6600, lane err 0)  t_root 54  last slot 1335 SX_BENCH PASS 
+f2bmut run_s1.log: SX root 285/600 beats (err 285)  taps 4560/9600 (err 4560)  golden 600  fault 1100101111111110 SX F2B fold lanes 11 (words 6303, lane err 12005)  t_root 54  last slot 1340 SX_BENCH FAIL 
+f2brate run_s1.log: SX root 324/600 beats (err 323)  taps 5184/9600 (err 5168)  golden 600  fault 1100111111111111 SX F2B fold lanes 11 (words 6324, lane err 2760)  t_root 54  last slot 740 SX_BENCH FAIL 
+f2bskew run_s1.log: SX root 600/600 beats (err 600)  taps 9600/9600 (err 9600)  golden 600  fault 0000000000010000 SX F2B fold lanes 11 (words 6600, lane err 0)  t_root 54  last slot 1340 SX_BENCH FAIL 
+base s1: SVCIK nik 96 (p>=2^16 94) now 24 words 693 writes_gold 1056 writes_seen 1059 extra 0 missing 0 run_faults 0 own_err 0 neg_len_fault 1 mut 0 verdict=PASS
+base s2: SVCIK nik 96 (p>=2^16 92) now 24 words 727 writes_gold 1056 writes_seen 1059 extra 0 missing 0 run_faults 0 own_err 0 neg_len_fault 1 mut 0 verdict=PASS
+base s3: SVCIK nik 96 (p>=2^16 93) now 24 words 710 writes_gold 1056 writes_seen 1059 extra 0 missing 0 run_faults 0 own_err 0 neg_len_fault 1 mut 0 verdict=PASS
+mut4 s1: SVCIK nik 96 (p>=2^16 94) now 24 words 693 writes_gold 1056 writes_seen 1059 extra 282 missing 282 run_faults 0 own_err 0 neg_len_fault 1 mut 4 verdict=FAIL
+mut4 s2: SVCIK nik 96 (p>=2^16 92) now 24 words 727 writes_gold 1056 writes_seen 1059 extra 276 missing 276 run_faults 0 own_err 0 neg_len_fault 1 mut 4 verdict=FAIL
+mut4 s3: SVCIK nik 96 (p>=2^16 93) now 24 words 710 writes_gold 1056 writes_seen 1059 extra 279 missing 279 run_faults 0 own_err 0 neg_len_fault 1 mut 4 verdict=FAIL
+mut5 s1: SVCIK nik 96 (p>=2^16 94) now 24 words 693 writes_gold 1056 writes_seen 1059 extra 96 missing 96 run_faults 0 own_err 0 neg_len_fault 1 mut 5 verdict=FAIL
+mut5 s2: SVCIK nik 96 (p>=2^16 92) now 24 words 727 writes_gold 1056 writes_seen 1059 extra 96 missing 96 run_faults 0 own_err 0 neg_len_fault 1 mut 5 verdict=FAIL
+mut5 s3: SVCIK nik 96 (p>=2^16 93) now 24 words 710 writes_gold 1056 writes_seen 1059 extra 96 missing 96 run_faults 0 own_err 0 neg_len_fault 1 mut 5 verdict=FAIL
+mut1 s1: SVCIK nik 96 (p>=2^16 94) now 24 words 693 writes_gold 1056 writes_seen 1059 extra 384 missing 384 run_faults 0 own_err 0 neg_len_fault 1 mut 1 verdict=FAIL
+mut1 s2: SVCIK nik 96 (p>=2^16 92) now 24 words 727 writes_gold 1056 writes_seen 1059 extra 384 missing 384 run_faults 0 own_err 0 neg_len_fault 1 mut 1 verdict=FAIL
+mut1 s3: SVCIK nik 96 (p>=2^16 93) now 24 words 710 writes_gold 1056 writes_seen 1059 extra 384 missing 384 run_faults 0 own_err 0 neg_len_fault 1 mut 1 verdict=FAIL
+SVCIK_GATE PASS
+base s1: SELC jobs 4 qwords_gold 110 w 113 e 114 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 0 verdict=PASS
+base s2: SELC jobs 4 qwords_gold 162 w 165 e 166 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 0 verdict=PASS
+base s3: SELC jobs 4 qwords_gold 138 w 141 e 142 pair_err 0 rung_beats 11 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 0 verdict=PASS
+selmut1 s1: SELC jobs 4 qwords_gold 110 w 113 e 114 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 1 sq_mut 0 verdict=FAIL
+selmut1 s2: SELC jobs 4 qwords_gold 162 w 165 e 166 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 1 sq_mut 0 verdict=FAIL
+selmut1 s3: SELC jobs 4 qwords_gold 138 w 141 e 142 pair_err 0 rung_beats 11 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 1 sq_mut 0 verdict=FAIL
+sqmut1 s1: SELC jobs 4 qwords_gold 110 w 113 e 114 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 1 verdict=FAIL
+sqmut1 s2: SELC jobs 4 qwords_gold 162 w 165 e 166 pair_err 0 rung_beats 9 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 1 verdict=FAIL
+sqmut1 s3: SELC jobs 4 qwords_gold 138 w 141 e 142 pair_err 0 rung_beats 11 rung_lat 6 rung_err 0 rung_lost 0 relay_leak 0 lat_part1_to_payload_W 81 E 85 neg_fault 1 sel_mut 0 sq_mut 1 verdict=FAIL
+SELCHAIN_GATE PASS
+LINT dsdv_svc_rs errors=0 warnings=14 27304176 kB 377.66 s
+LINT dsdv_svc_rs_f2b errors=0 warnings=14 27281368 kB 496.60 s
+LINT dsdv_svc_rs_pvso_entry errors=0 warnings=18 27365220 kB 591.54 s
+LINT dsdv_svc_rs_pvso_entry_f2b errors=0 warnings=18 27328500 kB 710.50 s
+LINT dsdv_svc_rs_fv_0110101001_f2b01 errors=0 warnings=7 27299728 kB 527.34 s
+LINT dsdv_svc_rs_fv_4224242442_f2b40 errors=0 warnings=8 27279476 kB 474.47 s
+LINT dsdv_svc_rs_fv_1111101001_f2b11 errors=0 warnings=7 27327828 kB 438.51 s
+LINT dsdv_svc_rs_fv_c66c2c2cc2_f2b44 errors=0 warnings=9 27350784 kB 358.52 s
+LINT dsdv_svc_rs_fv_3333101001_f2b11 errors=0 warnings=7 27349020 kB 350.39 s
+LINT dsdv_svc_rs_pvso_entry_fv_c66c0e0ee0_f2b44 errors=0 warnings=13 27379200 kB 346.12 s
+LINT dsdv_svc_rs_fv_9999101001_f2b11 errors=0 warnings=7 27347348 kB 349.05 s
+LINT dsdv_svc_rs_fv_c66c868448_f2b44 errors=0 warnings=8 27344736 kB 349.42 s
+LINT dsdv_svc_rs_fv_1221101001_f2b10 errors=0 warnings=7 27338584 kB 345.01 s
+LINT dsdv_svc_rs_fv_a44aa42442_f2b04 errors=0 warnings=8 27347040 kB 348.94 s
+LINT dsdv_svc_rs_fv_a33a101001_f2b01 errors=0 warnings=7 27344596 kB 344.53 s
+LINT dsdv_svc_rs_pvso_entry_fv_6aa60e0ee0_f2b40 errors=0 warnings=13 27386496 kB 342.23 s
+LINT dsdv_svc_rs_fv_8888101001_f2b00 errors=0 warnings=7 27342712 kB 352.20 s
+LINT dsdv_svc_rs_fv_aaaa868668_f2b00 errors=0 warnings=9 27340364 kB 357.55 s
+LINT dsdv_svc_rs_fv_cccc848448_f2b44 errors=0 warnings=8 27332064 kB 358.04 s
+LINT dsdv_svc_rs_fv_0110101001 errors=0 warnings=7 27357028 kB 352.39 s
+LINT dsdv_svc_rs_pvso_entry_fv_6aa60e0ee0 errors=3 warnings=2 78356 kB 0.41 s
+LINT dsdv_svc_rs_pvso_entry_fv_6aa60e0ee0 errors=0 warnings=13 27375284 kB 353.36 s
+FACE_GUARD fh11 PASS bits 2136 ok 2136 fails {}
+FACE_GUARD fh44 PASS bits 2136 ok 2136 fails {}
+FACE_GUARD fh01 PASS bits 1068 ok 1068 fails {}
+FACE_GUARD fh40 PASS bits 1068 ok 1068 fails {}
+CELLS fh00 total 381 dff 0 stations 144 | delta vs fh00: cells 0 dff 0 stations 0 (station = 276 b closed macro)
+CELLS fh01 total 3578 dff 2136 stations 136 | delta vs fh00: cells 3197 dff 2136 stations -8 (station = 276 b closed macro)
+CELLS fh40 total 2515 dff 2136 stations 136 | delta vs fh00: cells 2134 dff 2136 stations -8 (station = 276 b closed macro)
+CELLS fh11 total 5712 dff 4272 stations 128 | delta vs fh00: cells 5331 dff 4272 stations -16 (station = 276 b closed macro)
+CELLS fh44 total 5712 dff 4272 stations 128 | delta vs fh00: cells 5331 dff 4272 stations -16 (station = 276 b closed macro)
