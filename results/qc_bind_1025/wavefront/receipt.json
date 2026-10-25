@@ -1,0 +1,52 @@
+{
+  "verdict": "PASS_GENERATION",
+  "source_revision": "c7f22a62f",
+  "source_branch": "codex/qc-wavefront-bind-1025",
+  "source_host": "epyc3",
+  "run_dir": "/srv/opentallas-scratch2/claude/codex-qc-bind-1025/wavefront_r3",
+  "partitions": 377,
+  "bound_types": 76,
+  "crossings": 1933,
+  "crossing_bits": 792661,
+  "errors": 0,
+  "proof": {
+    "unbound": 0,
+    "tied": 0,
+    "undriven": 0,
+    "multiply_bound": 0,
+    "straps": 11568,
+    "plan_driven": 0
+  },
+  "reset": {
+    "root": "sl_W0_ctl",
+    "sync_stages": 2,
+    "latest_partition_release_cycles": 128,
+    "latest_core_release_cycles": 129,
+    "latest_core": "c_E5_tf_11/u_t33.rst_n",
+    "overall_ready_release_cycles": 129,
+    "old_raw_boundary_release_cycles": 2,
+    "added_boot_cycles": 127,
+    "added_steady_state_data_cycles": 0,
+    "max_die_hop_um": 377.3,
+    "unreachable": [],
+    "long_hops": []
+  },
+  "prior_failures": [
+    {
+      "attempt": "wavefront",
+      "cause": "hard-core pin table resolved relative to source root instead of physical plan directory",
+      "fix": "aed41cedd"
+    },
+    {
+      "attempt": "wavefront_r2",
+      "cause": "physical core u_t00 differs from bound leaf u_t_0_0; unique coordinate alias required",
+      "fix": "ebdc66950 + c5a235161"
+    }
+  ],
+  "limits": [
+    "This is a current-plan/raw-bound generation result; no full-die waveform simulation or physical signoff is claimed.",
+    "Latest core release129 includes the hard-core internal reset stage; max_release128 alone does not permit token start.",
+    "Token starts after boot/calibration/program readiness through the existing forwarded epoch broadcast.",
+    "Current plan per-bit feedthrough geometry defects are under separate repair; no new physical route was launched."
+  ]
+}
