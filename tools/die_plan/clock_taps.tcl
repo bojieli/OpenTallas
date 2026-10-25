@@ -17,6 +17,10 @@ foreach bt [$ct_blk getBTerms] {
     $bt connect $net
   }
   $net setSigType CLOCK
+  # PATH-QC-NK 10-25: a CORE-ONLY tap (OT_CORE_ONLY_TAPS, space-separated port names) carries only the hard-core clock
+  # pins OT_CORE_TAPS hangs on it; it is no grid tap, so the nearest-tap split and the cap pass never move a flop onto it
+  # (a register sharing a tap with a core is balanced by CTS to core pin + ETM insertion: nk_r4 ck_t28 396 ps).
+  if {[info exists ::env(OT_CORE_ONLY_TAPS)] && $n in $::env(OT_CORE_ONLY_TAPS)} { puts "OT_CLOCK_TAPS core-only tap $n"; continue }
   lappend ct_taps [list $n $net [expr {([$bb xMin] + [$bb xMax]) / 2}] [expr {([$bb yMin] + [$bb yMax]) / 2}]]
 }
 # CP2 (COORD 10-23): EARLY core taps (gen.py phys core_taps.txt, env OT_CORE_TAPS; plan clock.taps[] kind 'core' with
@@ -93,6 +97,8 @@ if {[llength $ct_taps] >= 2} {
   foreach tp $ct_taps {
     set l {}
     foreach it [[lindex $tp 1] getITerms] {
+      # PATH-QC-NK 10-25: a hard core's clock pin stays on the tap OT_CORE_TAPS / the split chose (never a cap move)
+      if {[info exists ::env(OT_CORE_TAPS)] && [[[$it getInst] getMaster] isBlock]} continue
       if {[[$it getMTerm] getIoType] eq "INPUT"} { lappend l $it }
     }
     dict set ct_by [lindex $tp 0] $l

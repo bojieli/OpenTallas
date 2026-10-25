@@ -1,0 +1,228 @@
+{
+ "node_tap": {
+  "port": "ck_t2",
+  "from": [
+   114.128,
+   533.52
+  ],
+  "to": [
+   75.92,
+   892.672
+  ],
+  "node_pin": [
+   69.942,
+   892.668
+  ]
+ },
+ "cores": [
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t7",
+   "pin": [
+    195.222,
+    43.932
+   ],
+   "dist_um": 93.2,
+   "mean_tt_ps": 206.9
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t9",
+   "pin": [
+    195.222,
+    174.108
+   ],
+   "dist_um": 30.3,
+   "mean_tt_ps": 206.9
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t12",
+   "pin": [
+    195.222,
+    304.284
+   ],
+   "dist_um": 11.9,
+   "mean_tt_ps": 206.9
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t20",
+   "pin": [
+    195.222,
+    564.636
+   ],
+   "dist_um": 35.8,
+   "mean_tt_ps": 206.9
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t15",
+   "pin": [
+    195.222,
+    434.46
+   ],
+   "dist_um": 20.7,
+   "mean_tt_ps": 206.9
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t8",
+   "pin": [
+    262.698,
+    43.932
+   ],
+   "dist_um": 127.6,
+   "mean_tt_ps": 206.9
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t8",
+   "pin": [
+    262.698,
+    174.108
+   ],
+   "dist_um": 24.6,
+   "mean_tt_ps": 206.9
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t13",
+   "pin": [
+    262.698,
+    304.284
+   ],
+   "dist_um": 13.9,
+   "mean_tt_ps": 206.9
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t19",
+   "pin": [
+    262.698,
+    564.636
+   ],
+   "dist_um": 22.3,
+   "mean_tt_ps": 206.9
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+   "cell": "ot_qwen_tile_romleaf",
+   "tap": "ck_t14",
+   "pin": [
+    262.698,
+    434.46
+   ],
+   "dist_um": 28.4,
+   "mean_tt_ps": 206.9
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t30",
+   "pin": [
+    100.848,
+    736.908
+   ],
+   "dist_um": 68.7,
+   "mean_tt_ps": 165.7
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t32",
+   "pin": [
+    100.848,
+    897.42
+   ],
+   "dist_um": 50.8,
+   "mean_tt_ps": 165.7
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t6",
+   "pin": [
+    100.848,
+    1057.932
+   ],
+   "dist_um": 21.5,
+   "mean_tt_ps": 165.7
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t31",
+   "pin": [
+    300.048,
+    897.42
+   ],
+   "dist_um": 52.6,
+   "mean_tt_ps": 165.7
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t37",
+   "pin": [
+    300.048,
+    1057.932
+   ],
+   "dist_um": 11.1,
+   "mean_tt_ps": 165.7
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t24",
+   "pin": [
+    335.856,
+    736.908
+   ],
+   "dist_um": 35.3,
+   "mean_tt_ps": 165.7
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t31",
+   "pin": [
+    335.856,
+    897.42
+   ],
+   "dist_um": 65.1,
+   "mean_tt_ps": 165.7
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+   "cell": "ot_qwen_tile_lsl_fp1",
+   "tap": "ck_t37",
+   "pin": [
+    335.856,
+    1057.932
+   ],
+   "dist_um": 28.1,
+   "mean_tt_ps": 165.7
+  },
+  {
+   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node",
+   "cell": "ot_qwen_tile_node",
+   "tap": "ck_t2",
+   "pin": [
+    69.942,
+    892.668
+   ],
+   "dist_um": 0.0,
+   "mean_tt_ps": 245.9
+  }
+ ]
+}
