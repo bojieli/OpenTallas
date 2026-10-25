@@ -10,8 +10,8 @@
   "DATA-CUT": "the 0S / 0N / 7 cuts encode no output check: RD all-gather beats are offdie (masked fixture rows), the NX / XQ norm exchanges were plan_only, the per-leaf norm programme is emitted on ONE slice (lower_norm_smoke)"
  },
  "counts": {
-  "items": 16,
-  "compiler_only": 12,
+  "items": 17,
+  "compiler_only": 10,
   "hardware_missing": [
    "IDX-GATHER",
    "IDX-MERGE-PATH",
@@ -21,10 +21,27 @@
    "SVC-COMPRESSED"
   ],
   "tool": [
-   "CUT-CLOCKS",
+   "CUT-CLOCKS"
+  ],
+  "note": "hardware missing = attn.gather (svc runtime-index row read + bk_col frames), attn.idx.newkey (svc index-key row write job), attn.idx.topk_merge (bk_sel IDX words -> end slice). The index SCORE unit is NOT missing on fc31 (dsdv_idx_rg3 scorers bound); it is a compiler gap plus die qualification.",
+  "compiler_only_ids": [
+   "NX-SMOKE",
+   "NORM16",
+   "Q-NORM4",
+   "OUT-ALLREDUCE",
+   "COMBINE-ALLREDUCE",
+   "PV-L0-EVIDENCE",
+   "NORMALIZE-SO",
+   "IDX-SCORE",
+   "ENG-GATE",
+   "ENG-WKV"
+  ],
+  "compiler_plus_tool": [
    "RD-ALLGATHER"
   ],
-  "note": "hardware missing = attn.gather (svc runtime-index row read + bk_col frames), attn.idx.newkey (svc index-key row write job), attn.idx.topk_merge (bk_sel IDX words -> end slice). The index SCORE unit is NOT missing on fc31 (dsdv_idx_rg3 scorers bound); it is a compiler gap plus die qualification."
+  "hardware_contract": [
+   "NORM-ISSUE"
+  ]
  },
  "items": [
   {
@@ -38,6 +55,20 @@
    "missing": "CLOCK_PORT_RE missed slice region clock pins ck_<REGION>: fc31 cut_0S / 0N / 7 / 3S_ctl benches held 11 / 10 / 22 / 9 region clocks (ck_K, ck_ML, ck_L0/L1/L3/L4, ck_CAP_*) at 0",
    "check_added": "makes every data-cut replay exercise leaves 0, 1, 3, 4 and the K / ML / CAP regions (were frozen)",
    "effort": "S (done: regex + reclock_cut.py; cuts rebuilt)"
+  },
+  {
+   "rank": 0.5,
+   "id": "NORM-ISSUE",
+   "ops": [
+    "attn.norm.*",
+    "ffn.norm.*",
+    "attn.quant (XQ idx)"
+   ],
+   "kind": "HARDWARE CONTRACT CONFLICT (found on the reclocked cuts): NORMR issue vs xr same-edge partials",
+   "exists": "lower_norm_smoke issues NORMR k0..k4 on 5 consecutive edges (one CTL beat a cycle: two CTLs in one cycle are an xr sticky fault), each with its own leaf mask 1<<k and a1 = 5 sid + k (vq takes the XQ / XB header idx from a1: ot_s81sl_vq gidx = mi = a1[7:0])",
+   "missing": "ot_s81sl_xrt requires the 5 beat partials on ONE edge (fb term (|pv) && pv != 5'b11111) and vq staggers XQ by 4k from a common q edge. Measured on the reclocked cut_0S (debug bench gaps/dbg_fault2, r4 smoke inputs): p_v_x = 00001, 00010, 00100, 01000, 10000 on bench 813..817 (layer 347..351) -> fb 815..819 -> xr fault 816 -> slice fault 822 -> o__endpoint_fault 824 (layer 358). Same edge in the pre-existing zero-data L0 replay (gaps/zero_reclock: first_fault 458 at t0 100 = layer 358). Under the frozen-clock benches the fault flop never clocked, which is why no earlier run showed it. No compiler-only fix found in the current RTL: one leaf-mask 0x1F NORMR gives all 5 leaves the same a1, so 4 of the 5 XQ / XB headers would carry the wrong global beat index.",
+   "check_added": "removes the sticky endpoint fault that fails every reclocked data-cut run with a norm (0S, 0N, 7)",
+   "effort": "S (RTL): vp / vq take the beat index as a1 + k (leaf strap) when the NORMR carries leaf mask 0x1F, so one CTL beat serves 5 leaves on one edge; compiler then issues one NORMR (S). Alternative: xr accepts the compiler's 1-edge stagger (collector keyed by leaf). Owner decision: which side changes."
   },
   {
    "rank": 1,
@@ -64,7 +95,8 @@
    "exists": "same RTL in all 16 slices; xfin finish tree (bit-identical golden, ot_s81dv_norm_finish); vq/aq12x act-quant; Codex norm_producer_r1: 16-slice actual rstd + y match the fixture scoreboard (component, ring model)",
    "missing": "lower_norm on every slice (16 x HLOAD/GAIN/5 NORMR/XFIN_GO, one CTL a line edge), entry rows for all 16 slices (3,920 target-5 beats, ~1,960 a tier at 2 edges = ~3.9k-cycle preamble), the snake schedule (inject edge + per-hop line age + rstop 2; xstop forwards hops-1, never delayed) -> NX words at every data-cut face (outputs) and the other slices' flits as driven inputs; XQ beat encoder (vq ABI) + golden act-quant codes -> XQ words",
    "check_added": "cut_0S / cut_0N / cut_7: own NX flits (outputs) + XQ all-gather beats (x FP8 codes + scales) after the replicated rstd; rstd itself is internal (checked through every XQ word)",
-   "effort": "M (2-3 days): snake model 0.5 d, entry/16-slice emission 0.5 d, XQ encoder + golden 1 d, runs 0.5 d"
+   "effort": "M (2-3 days): snake model 0.5 d, entry/16-slice emission 0.5 d, XQ encoder + golden 1 d, runs 0.5 d",
+   "status": "PARTIAL on this branch: the NX snake (own + forwarded flits, 16 slices, 240 words, 120 NORMR/XFIN commands, 3920 entry writes) is emitted by norm_nx.emit_all (--entry-norm-check all) and checks exact on cut_0S (15/15) and cut_0N (15/15); rstd return and the XQ quant beats are NOT encoded yet"
   },
   {
    "rank": 3,

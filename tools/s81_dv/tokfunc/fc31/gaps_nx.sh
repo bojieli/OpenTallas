@@ -2,7 +2,7 @@
 # TOK-DS-GAPS 10-24: data-cut arithmetic exactness -- the smoke slice's attn xfin NX flit (layer_prog/norm_nx.py) on the
 # fc31 data cut that holds it (cut_0S: u_s_0S).  Compiles the layer with --entry-norm-check into a NEW dir, replays the
 # existing fc31 cut binary (never builds), checks, then two negative controls:
-#   MUT_IN  corrupt:xrW_0S_l0:91  -- flips beat bit 91 of the first word entering the cut on the line = data bit 30 of
+#   MUT_IN  corrupt:xrW_0S_l0:91  (override MUT_IN=corrupt:<lane>:91:<sid> on 0N / 7: the word must be addressed to a cut slice) -- flips beat bit 91 of the first word entering the cut on the line = data bit 30 of
 #           the first entry target-5 write (H row 0, leaf 0: BF16 exponent MSB of HC copy 0 element 1) -> new sim; the
 #           NX flit check must FAIL (input corruption reaches the arithmetic output)
 #   MUT_EX  expect-shift:NX:1     -- same trace, every NX check one cycle late -> must FAIL (the cycle is checked)
