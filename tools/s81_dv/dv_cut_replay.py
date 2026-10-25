@@ -1056,6 +1056,21 @@ def value_at(changes, c):
     return v
 
 
+def framing_trace_end(run, ncyc):
+    """Exclusive observed end; older TBs raced trace close at the last negedge."""
+    path = Path(run) / 'trace.txt'
+    ends = [int(line.split()[1]) for line in path.read_text().splitlines()
+            if line.startswith('TRACE_END ')]
+    if ends:
+        if ends != [ncyc - 1]:
+            raise ValueError('trace completion edge differs from requested run: ' + str(ends))
+        return ncyc, False
+    # Legacy initial $finish and trace monitor share the final negedge. Only
+    # edges through NCYC-2 are guaranteed observed. Any recorded final word is
+    # still checked explicitly below; only an absent final change is unknown.
+    return ncyc - 1, True
+
+
 def check(a):
     rp = json.loads((Path(a.replay) / 'replay.json').read_text())
     xrt_proof = check_run_source(rp.get('timing_contract'), a.run,
@@ -1089,9 +1104,13 @@ def check(a):
             import link_frames as LF
             assert int(fr['base'], 16) == LF.BASE and fr['mp'] == LF.MP and fr['idle_p'] == LF.IDLE_P, fr
             fw = [(c, v) for c, v in ch if c not in exp]
-            up, fmiss, fextra = LF.check(fw, fr['g0'], b['age'], rp['ncyc'])
+            fend, legacy_tail = framing_trace_end(a.run, rp['ncyc'])
+            up, fmiss, fextra = LF.check(fw, fr['g0'], b['age'], fend)
+            if legacy_tail:
+                fextra += [c for c, v in fw if c >= fend and
+                           (c != fend or v != LF.beat(c - b['age'] - fr['g0']))]
             miss, extra, strict = miss + fmiss, fextra, True
-            exp = dict(exp, **{('framing', i): None for i in range(len(LF.changes(fr['g0'], b['age'], up or 0, rp['ncyc'])))})
+            exp.update({('framing', i): None for i in range(len(LF.changes(fr['g0'], b['age'], up or 0, fend)))})
         n_bad = len(miss) + (len(extra) if strict else 0)
         bad += n_bad
         res.append(dict(port=b['port'], lane=b['lane'], expected=len(exp), missed=sorted(miss)[:20],
