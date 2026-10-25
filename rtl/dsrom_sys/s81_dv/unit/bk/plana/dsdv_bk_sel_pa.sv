@@ -8,7 +8,7 @@ module dsdv_bk_sel_pa(
  dsfd_dvrly_276_SN u_rs(.ck(clk),.rs(rst_n),.i(vi_s),.o(vi_s_face),.ck_o(unused_s));
  dsfd_dvrly_276_NS u_rn(.ck(clk),.rs(rst_n),.i(vi_n),.o(vi_n_face),.ck_o(unused_n));
  wire[2059:0]lane_core;wire[513:0]vd,vd_raw;
- dsdv_bk_g #(.VD_PK(0)) u_g(.clk(clk),.rst_n(rst_n),.tap_k(tap_k),.sink_k(sink_k),.ik(ik),.ek(ek),.uid(uid),.eg_n(eg_n),
+ dsdv_bk_g #(.VD_PK(0)) u_g(.clk(clk),.rst_n(rst_n),.tap_k({tap_k[7:3],tap_k[0]}),.sink_k({sink_k[7:3],sink_k[0]}),.ik(ik),.ek(ek),.uid(uid),.eg_n(eg_n),
  .vi_s(vi_s_core),.vi_n(vi_n_core),.vo_s(vo_s_core),.vo_n(vo_n_core),
  .ln0(lane_core[0+:515]),.ln1(lane_core[515+:515]),.ln2(lane_core[1030+:515]),.ln3(lane_core[1545+:515]),.vd(vd),.fault(fault));
  wire[263:0]tc;wire[3:0]tcr;wire[287:0]fs0_0;wire[287:0]fs0_1;wire[288:0]fs0_2;wire[353:0]fo0;wire[287:0]fs1_0;wire[287:0]fs1_1;wire[288:0]fs1_2;wire[353:0]fo1;wire[287:0]fs2_0;wire[287:0]fs2_1;wire[288:0]fs2_2;wire[353:0]fo2;wire[287:0]fs3_0;wire[287:0]fs3_1;wire[288:0]fs3_2;wire[353:0]fo3;

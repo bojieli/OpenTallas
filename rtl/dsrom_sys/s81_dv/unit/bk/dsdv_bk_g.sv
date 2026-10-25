@@ -26,8 +26,10 @@ module dsdv_bk_g #(
 ) (
     input  wire [0:0]        clk,
     input  wire [0:0]        rst_n,       // die reset net (active low)
-    input  wire [7:0]        tap_k,
-    input  wire [7:0]        sink_k,
+    // S81-KITS-RTLC 10-25: tap_k / sink_k bits 1 / 2 (kinds K_XQ / K_XB) are never read by ot_dsdv_vstop (it
+    // excludes those kinds): packed straps {k[7:3], k[0]}, not pins
+    input  wire [5:0]        tap_k,
+    input  wire [5:0]        sink_k,
     input  wire [2:0]        ik,
     input  wire [2:0]        ek,
     input  wire [7:0]        uid,
@@ -59,7 +61,7 @@ module dsdv_bk_g #(
     else begin : g_vfl assign vdu = vd; end endgenerate
     always @(posedge clk[0]) vdd <= vdu[513:2];
     wire dnv, dsv; wire [V-1:0] dn, ds, ob; wire vs_f, vi_f, vo_f, ov;
-    ot_dsdv_vstop #(.V(V), .BK_DRAIN_SINK(BK_DRAIN_SINK)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k(tap_k), .sink_k(sink_k), .bk_uid(uid), .vi_s(vi_s), .vo_n(vo_n),
+    ot_dsdv_vstop #(.V(V), .BK_DRAIN_SINK(BK_DRAIN_SINK)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k({tap_k[5:1], 2'b00, tap_k[0]}), .sink_k({sink_k[5:1], 2'b00, sink_k[0]}), .bk_uid(uid), .vi_s(vi_s), .vo_n(vo_n),
         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(dnv), .dl_n(dn), .dl_sv(dsv), .dl_s(ds),
         .in_nv(ov && egn_c), .in_n(ob), .in_sv(ov && !egn_c), .in_s(ob), .fault(vs_f));
     wire drv; wire [7:0] drn, drd; wire [4*515-1:0] ln;
