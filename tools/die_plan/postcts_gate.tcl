@@ -46,33 +46,14 @@ foreach cf [list /work/clock_family.tcl [file join [file dirname [info script]] 
   if {[file exists $cf]} { source $cf; break }
 }
 if {[llength [info commands ot_cf_refresh]]} { catch {ot_cf_refresh} }
-set regs {}
-foreach p [all_registers -clock_pins] { dict set regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }
-set din [all_inputs -no_clocks]
-set bnd {}
-if {[llength $din]} {
-  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
-    set i [regsub {/[^/]+$} [get_full_name $p] {}]
-    if {[dict exists $regs $i]} { dict set bnd $i 1 }
-  }
-}
-if {[llength [all_outputs]]} {
-  foreach p [get_fanin -to [all_outputs] -flat -startpoints_only -trace_arcs all] {
-    set i [regsub {/[^/]+$} [get_full_name $p] {}]
-    if {[dict exists $regs $i]} { dict set bnd $i 1 }
-  }
+# pin-register set + measure: pinreg_measure.tcl (the same procs pinreg_pad.tcl, the GRT pre-pass pad, uses)
+foreach pm [list /work/pinreg_measure.tcl [file join [file dirname [info script]] pinreg_measure.tcl]] {
+  if {[file exists $pm]} { source $pm; break }
 }
 set arr {}
-dict for {i u} $bnd {
-  # same measure as the sign-off clock check (clock_family.tcl: active-edge propagated clock arrival)
-  set p [dict get $regs $i]; set a ""
-  if {[llength [info commands ot_cf_wire]]} { catch {set a [ot_cf_wire $p [get_clocks clk]]} }
-  if {$a eq ""} {
-    if {[catch {set a [get_property $p arrival_max_rise]}]} continue
-    if {[string is double -strict $a] && $a >= $per / 2.0 && $a < $per} { set a [expr {$a - $per / 2.0}] }
-  }
-  if {![string is double -strict $a]} continue
-  lappend arr $a
+dict for {i p} [ot_pinreg_set] {
+  set a [ot_pinreg_arr $p [get_clocks clk]]
+  if {$a ne ""} { lappend arr $a }
 }
 set n [llength $arr]
 set mean [expr {$n ? [tcl::mathop::+ {*}$arr] / $n : -1}]

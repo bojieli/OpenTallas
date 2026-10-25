@@ -34,7 +34,8 @@ proc tb_begin {} { global tb_grt; if {$tb_grt} { global_route -start_incremental
 proc tb_end {placed} {
   global tb_grt
   if {$placed} { detailed_placement }
-  if {$tb_grt} { global_route -end_incremental }
+  # -resistance_aware as ORFS global_route.tcl when tapbal_grt.tcl set it (same clock-net layers as the GRT step)
+  if {$tb_grt} { global_route -end_incremental {*}[expr {[info exists ::ot_grt_res_aware] ? $::ot_grt_res_aware : ""}] }
 }
 set tb_pitch [expr {[info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0}]
 set tb_cell [expr {[info exists ::env(OT_TAP_DELAY_CELL)] ? $::env(OT_TAP_DELAY_CELL) : "BUFx4_ASAP7_75t_R"}]

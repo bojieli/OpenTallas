@@ -51,10 +51,39 @@ def test_prepass_script_routes_balances_on_grt_and_rewrites_cts_odb():
 def test_pinreg_pad_uses_gate_set_and_fresh_measure():
     s = (HERE / "pinreg_pad.tcl").read_text()
     g = (HERE / "postcts_gate.tcl").read_text()
-    for frag in ("get_fanout -from", "-endpoints_only -trace_arcs all", "get_fanin -to [all_outputs]", "ot_cf_wire"):
+    for frag in ("ot_pinreg_set", "ot_pinreg_arr", "pinreg_measure.tcl"):
         assert frag in s and frag in g, frag
     m = s[s.index("proc pp_measure"):]
     assert m.index("set_propagated_clock [all_clocks]") < m.index("estimate_parasitics -global_routing")
     assert "sta::sta_to_db_pin" in s and "global_route -start_incremental" in s and "global_route -end_incremental" in s
     t = (HERE / "tapbal_grt.tcl").read_text()
     assert t.index("tap_balance.tcl]") < t.index("pinreg_pad.tcl") < t.index("write_db")
+
+
+def test_gate_and_pad_share_one_pinreg_measure():
+    # FLOW-CANARY 10-25: pad and gate must measure the same set + quantity (one proc), in the same GRT context
+    m = (HERE / "pinreg_measure.tcl").read_text()
+    for frag in ("proc ot_pinreg_set", "proc ot_pinreg_arr", "get_fanout -from $din", "get_fanin -to [all_outputs]",
+                 "ot_cf_wire"):
+        assert frag in m, frag
+    g = (HERE / "postcts_gate.tcl").read_text()
+    s = (HERE / "pinreg_pad.tcl").read_text()
+    for x in (g, s):
+        assert "pinreg_measure.tcl" in x and "ot_pinreg_set" in x and "ot_pinreg_arr" in x
+        assert "all_registers -clock_pins" not in x and "get_fanout -from" not in x
+    with tempfile.TemporaryDirectory() as d:
+        kd = gen_phys.write_type_kit(_plan(), "src", d, [], hold_ff_margin=gen_phys.HOLD_FF_MARGIN_DEFAULT)
+        assert (kd / "pinreg_measure.tcl").is_file()
+
+
+def test_prepass_grt_edits_are_resistance_aware_as_orfs():
+    # ORFS global_route.tcl routes (and re-routes incrementally) with -resistance_aware (asap7 ENABLE_RESISTANCE_AWARE=1);
+    # without it the pre-pass read the s81 t12 pin-register mean 245.94 vs 226.32 with it (gate on 5_1_grt: 226.54)
+    t = (HERE / "tapbal_grt.tcl").read_text()
+    assert "append_env_var ::ot_grt_res_aware ENABLE_RESISTANCE_AWARE -resistance_aware 0" in t
+    assert t.index("ot_grt_res_aware") < t.index("\nglobal_route {*}$tg_args")
+    for f in ("tap_balance.tcl", "pinreg_pad.tcl"):
+        s = (HERE / f).read_text()
+        for ln in s.splitlines():
+            if "global_route -end_incremental" in ln and not ln.lstrip().startswith("#"):
+                assert "ot_grt_res_aware" in ln, (f, ln)
