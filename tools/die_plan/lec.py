@@ -1076,6 +1076,15 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 for k in L.matched:
                     if k.startswith("ff:"):
                         msig.setdefault(sv("gold", k), []).append(k)
+                # gold-only registers that already have a gate partner act as matched for pairing: synthesis may
+                # merge a second gold register into the same gate flop (eng lookup: roff[j] <= r8[j][4:3] is
+                # baddr[j][4:3] since r256 is 0 mod 256; gate keeps only baddr#t[j][4:3], whose gold partner is
+                # the gold-only baddr[j][4:3]; with matched-only candidates roff stayed free -> q_off differed)
+                for (sd, c), h in L.hyp.items():
+                    ok = h[2] if h[0] == "eq" else None
+                    if sd == "gate" and h[1] == "gold" and ok in L.gp and ok not in L.tp and ok.startswith("ff:") \
+                            and ("gold", ok) not in L.hyp:
+                        msig.setdefault(sv("gold", ok), []).append(ok)
                 new = 0
                 free_g = [k for k in L.gonly if k.startswith("ff:") and ("gold", k) not in L.hyp and k not in gbound]
                 # (a bit that simulates constant pairs here only once its constant hypothesis has failed: the
@@ -1125,7 +1134,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                         if hit:
                             break
                         for c in closest(k, msig.get(t, [])):
-                            if tried[("gold", k, c, inv)] < 2:
+                            if c != k and tried[("gold", k, c, inv)] < 2:
                                 hit = ("gold", k, ("eq", "gold", c, inv))
                                 break
                         if hit:
