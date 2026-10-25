@@ -64,7 +64,9 @@ module dsdv_svc_sx_hrow #(
     wire rn = rs[1];
     // S81U-SVCX3: the sid strap lands in a pin flop first (gate 2: sid -> role ROM was 4 levels from the port); the
     // strap is static and sid_q settles during the 2-cycle reset synchroniser, so role is unchanged from rn release.
-    reg [3:0] sid_q; reg hb_q;
+    // S81-KITS-HROW: keep -- with the decode in front of the select registers, yosys memory_dff otherwise folds sid_q into
+    // the sx_role ROM as its registered address (sid port -> ROM logic -> 650 select flops; face_guard 'shared' sid[*]).
+    (* keep *) reg [3:0] sid_q; (* keep *) reg hb_q;
     always @(posedge ck) begin sid_q <= sid; hb_q <= hb; end
     // S81-KITS-HROW (2026-10-24): REGISTERED DECODED SELECTS.  r13 / r14 kit routes failed TT setup (-50.1 / -47.9 ps)
     // on role[8] -> 3-bit select decode (OR3) -> two 21..24-load fanout trees (120..180 ps slew) -> the 6:1 go_n mux:
@@ -82,7 +84,18 @@ module dsdv_svc_sx_hrow #(
     localparam integer GN = 24, NGN = (W + GN - 1) / GN;       // scatter node lane sn {tag, 264 b}: 12 groups
     localparam integer GP = 22, NGP = (NS*SL + GP - 1) / GP;    // right-split shift (132 b): 6 groups of 22
     localparam integer GT = 20, NGT = 2;                        // tap {v, tag, f, y} = 39 b: 2 groups
-    wire [43:0] rw = sx_role(sid_q);                            // what the old role register loaded every edge
+    // rw = sx_role(sid_q), what the old role register loaded every edge, written as a sid one-hot AND-OR over the 16
+    // constant role words: a case / indexed lookup becomes a yosys ROM whose memory_dff absorbs the sid_q pin flops as
+    // its registered address (r15 synth: sid ports fanned straight into the decode, face_guard 'shared' sid[*]).
+    wire [15:0] sid_oh = 16'(16'd1 << sid_q);
+    wire [43:0] rw_t [0:15];
+    genvar rr;
+    generate for (rr = 0; rr < 16; rr = rr + 1) begin : g_rw
+        localparam [43:0] RW = sx_role(4'(rr));
+        assign rw_t[rr] = {44{sid_oh[rr]}} & RW;
+    end endgenerate
+    reg [43:0] rw;
+    always @(*) begin rw = '0; for (int i = 0; i < 16; i++) rw = rw | rw_t[i]; end
     wire [2:0] w_ga = rw[2:0], w_gb = rw[5:3], w_ss = rw[21:19], w_ts = rw[38:36];
     wire [1:0] w_sh = rw[23:22]; wire w_rt = rw[18];
     wire [2:0] w_go [0:3]; wire [2:0] w_so [0:3];
