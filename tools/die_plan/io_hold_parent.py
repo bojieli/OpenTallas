@@ -3,6 +3,7 @@
 its sender's guaranteed output-min as min input delay (COORD ruling 2026-10-25 10:23; gen_phys.input_hold_min).
 
     python3 tools/die_plan/io_hold_parent.py PLAN.json DIE_STA.json [--out R.json] [--standin-types t1,t2]
+    python3 tools/die_plan/io_hold_parent.py - DIE_STA.json --all-seams      # every seam group, no plan
 
 Under option A the kits no longer pad their inputs for the related tap pair skew between sender and receiver (nor
 for the receiver's 12.5-ps hold-uncertainty half, which the sender guarantee already used); that seam is checked ONCE
@@ -49,26 +50,40 @@ def _groups(corner):
     return out
 
 
-def check(P, sta, standin_types=()):
-    """-> dict(verdict, counts, ports=[...]) for every partition->partition plan port into an option-A input."""
+def _all_seam_ports(sta):
+    """--all-seams: one pseudo port per die_sta seam group (no plan; every crossing treated as an A crossing)."""
+    keys = set()
+    for c in (sta.get("corners") or {}).values():
+        keys |= set(_groups(c))
+    return [(f"{s}->{d}/{b}", dict(src=dict(part=s, bus=b), dst=dict(part=d, bus=b))) for s, d, b in sorted(keys)]
+
+
+def check(P, sta, standin_types=(), all_seams=False):
+    """-> dict(verdict, counts, ports=[...]) for every partition->partition plan port into an option-A input
+    (all_seams: every die_sta seam group, P may be None)."""
     if sta.get("mode") == "etm":
         raise ValueError("etm die STA is not a hold verdict (MAX-only clock->output arcs); run flat or ilm")
     corners = sta.get("corners") or {}
     miss = [c for c in (HOLD_CORNER,) + PAIR_CORNERS if c not in corners or corners[c].get("exit", 0) != 0]
     grp = {c: _groups(corners[c]) for c in corners}
     a_cache, rows = {}, []
-    for pid, pr in sorted(P.ports.items()):
+    for pid, pr in (_all_seam_ports(sta) if all_seams else sorted(P.ports.items())):
         s, d = pr["src"]["part"], pr["dst"]["part"]
-        if DIE_PART in (s, d) or s not in P.parts or d not in P.parts:
-            continue
-        dt, st = P.parts[d]["type"], P.parts[s]["type"]
-        if dt not in a_cache:
-            a_cache[dt] = gen_phys.input_hold_min(P, dt)
-        bus = gen_rtl.sv_id(pr["dst"]["bus"])
-        a = a_cache[dt].get(bus)
-        if a is None:
-            continue
-        key = (gen_rtl.sv_id(s), gen_rtl.sv_id(d), bus)
+        if all_seams:
+            dt, st, bus = d, s, pr["dst"]["bus"]
+            a = dict(in_min_ps=None, basis="--all-seams")
+            key = (s, d, bus)
+        else:
+            if DIE_PART in (s, d) or s not in P.parts or d not in P.parts:
+                continue
+            dt, st = P.parts[d]["type"], P.parts[s]["type"]
+            if dt not in a_cache:
+                a_cache[dt] = gen_phys.input_hold_min(P, dt)
+            bus = gen_rtl.sv_id(pr["dst"]["bus"])
+            a = a_cache[dt].get(bus)
+            if a is None:
+                continue
+            key = (gen_rtl.sv_id(s), gen_rtl.sv_id(d), bus)
         row = dict(port=pid, src=s, dst=d, dst_type=dt, src_type=st, bus=pr["dst"]["bus"], in_min_ps=a["in_min_ps"],
                    basis=a["basis"])
         why = []
@@ -84,9 +99,11 @@ def check(P, sta, standin_types=()):
             row.update(hold_ff_ps=h["worst"], neg=h["neg"], tns_ps=h["tns"], worst_from=h["start"], worst_to=h["end"])
         for c in PAIR_CORNERS:
             ps = grp.get(c, {}).get(key, (None, None))[1]
-            if ps:
+            if ps and ps.get("max_cppr") is not None:
                 row[f"pair_hold_skew_cppr_{c}"] = ps.get("max_cppr")
                 row[f"pair_setup_skew_cppr_{c}"] = ps.get("min_cppr")
+            elif not miss:
+                why.append(f"no related-pair skew (CPPR) at {c} in die_sta (rerun with the current die_sta.py)")
         if why:
             row.update(status="NOT_TIMED", why="; ".join(why))
         else:
@@ -105,7 +122,7 @@ def check(P, sta, standin_types=()):
     cnt["pass"] = cnt.pop("pass_")
     verdict = "FAIL" if cnt["fail"] else ("INCOMPLETE" if cnt["not_timed"] or not rows else "PASS")
     worst = min((r for r in rows if "hold_ff_ps" in r), key=lambda r: r["hold_ff_ps"], default=None)
-    return dict(schema="opentallas.io_hold_parent.v1", plan=P.name, mode=sta.get("mode"), verdict=verdict,
+    return dict(schema="opentallas.io_hold_parent.v1", plan=P.name if P is not None else None, mode=sta.get("mode"), verdict=verdict,
                 counts=cnt, worst=worst, kit_types=sorted(a_cache),
                 gate=(f"every plan port into an IO-HOLD A input: FF seam hold >= 0 (25 ps unc, CPPR, real propagated "
                       f"trees) and related pair skew with CPPR <= {die_sta.SKEW_PS:g} ps at TT and FF"),
@@ -114,19 +131,20 @@ def check(P, sta, standin_types=()):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("plan")
+    ap.add_argument("plan", help="die / parent plan JSON ('-' with --all-seams)")
     ap.add_argument("die_sta_json")
     ap.add_argument("--out")
     ap.add_argument("--standin-types", default="", help="comma list of partition types that are budget stand-ins")
+    ap.add_argument("--all-seams", action="store_true", help="check every die_sta seam group (no plan selection)")
     a = ap.parse_args(argv)
-    P = S.Plan(json.loads(Path(a.plan).read_text()))
+    P = None if a.all_seams and a.plan == "-" else S.Plan(json.loads(Path(a.plan).read_text()))
     r = check(P, json.loads(Path(a.die_sta_json).read_text()),
-              standin_types={x for x in a.standin_types.split(",") if x})
+              standin_types={x for x in a.standin_types.split(",") if x}, all_seams=a.all_seams)
     if a.out:
         Path(a.out).write_text(json.dumps(r, indent=1) + "\n")
     c = r["counts"]
     w = r["worst"]
-    print(f"IO_HOLD_PARENT {r['verdict']} plan {r['plan']} A-ports {c['a_ports']} pass {c['pass']} fail {c['fail']} "
+    print(f"IO_HOLD_PARENT {r['verdict']} plan {r['plan']} mode {r['mode']} A-ports {c['a_ports']} pass {c['pass']} fail {c['fail']} "
           f"not_timed {c['not_timed']}" + (f" worst {w['port']} {w['hold_ff_ps']:g} ps" if w else ""))
     for x in r["ports"]:
         if x["status"] != "PASS":

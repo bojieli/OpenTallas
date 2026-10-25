@@ -151,3 +151,18 @@ def test_parent_check_cli(tmp_path):
                         str(tmp_path / "die_sta.json"), "--out", str(tmp_path / "r.json")], capture_output=True, text=True)
     assert p.returncode == 0, p.stdout + p.stderr
     assert json.loads((tmp_path / "r.json").read_text())["verdict"] == "PASS"
+
+
+def test_parent_check_all_seams_without_plan():
+    r = io_hold_parent.check(None, _sta(5.0), all_seams=True)
+    assert r["verdict"] == "PASS" and r["counts"]["a_ports"] == 3
+    with pytest.raises(ValueError):
+        io_hold_parent.check(None, dict(_sta(5.0), mode="etm"), all_seams=True)
+
+
+def test_parent_check_requires_pair_skew():
+    sta = _sta(5.0)
+    for c in sta["corners"].values():
+        c.pop("pairskew")
+    r = io_hold_parent.check(None, sta, all_seams=True)
+    assert r["verdict"] == "INCOMPLETE" and r["counts"]["not_timed"] == 3
