@@ -145,3 +145,16 @@ READY [S81 2026-10-24 22:32 PDT] claude/s81-kits-1024r@cf3c66ab82, supersedes @a
 - drop_const_pins/repin.py rename fix: vs_lfp 2536 pins, vq_lfp 702.
 - Gates: vs face_guard 2534/2534, ve 973/973; leaf/vs MUT0 PASS / MUT1 caught; vs old/new miter PASS; plan G0/G0C 0 err.
 - Evidence: results/s81_kits_rtla_1024/round3_vs/.
+READY [METH-ALIGN 2026-10-24 22:34 PDT] claude/methodology-align-1024@5173eb8e3a2a: METHODOLOGY section 10 rulings as tool/doc alignment (not reset wavefront, not signoff pair-skew).
+- 9.1 AGENTS.md merge: never -X ours/-X theirs; abort, merge main into the branch, resolve by hand, re-gate.
+- 9.3 tools/die_plan: signals <= M7 only (reach.py hop layers M4-M7, ft_reserved no longer routes over the top; schema die.reach_um capped 405, default die_use clock_spine/reset/pg); new G0 ERROR check.py m89_signals (ft_reserved, M8/M9 ports/buses/face_layers/route_layers/ft_budget/slots/channels, partition_signal_max > M7); cuts + cut_lines drop M8/M9 signal capacity; xdie ft_budget = ft bits on the partition's own M4-M7 ft tracks; die_trial GRT signals M4-M7.
+- 9.4 ft_station_max_um default 405 and ceiling (plan value > 405 = ERROR). README R2 (9.10) + R3 layer/reach section + "only die-plan kits are signable" (9.13).
+- examples: tiny/typegeo mid slots 1->3 stations, s81_pair 1->4 (hops <= 405), latency regenerated, tb_tiny parameterised; tests updated + new m89/405 tests.
+- Tests: tools/die_plan pytest 284 passed (after merging origin/main 5173eb8e3; clean merge-tree vs main and claude/reset-1024).
+- PLAN IMPACT (check.py --completeness; main -> branch; hops counted per register-to-register hop):
+  s81          PASS 0E -> FAIL 131E: 19 lanes / 77 hops > 405 um (worst 721), 34 ft slots > 405, m89 149 (svc fold/rail M8/M9 pins)
+  s81_head     PASS 0E -> FAIL 1E: 0 hops > 405 (worst 361); only die_use ft_reserved
+  qwen_compute FAIL 4E -> FAIL 952E: 505 lanes / 1886 hops > 405 (worst 737), 223 slots, internal_station 21 (old 4 ft_budget M8/M9 errors gone)
+  qwen_kvsys   PASS 0E -> FAIL 1539E: 438 lanes / 4076 hops > 405 (worst 747), 879 slots, internal_station 20
+  hbm B2l/B2m  PASS 0E -> FAIL 7684E each: 204 lanes / 2026 hops > 405 (worst 849), 311 slots + ft_station_max_um 900, internal_station 6925 (planned at 900), m89 701/706
+  Requests appended to lanes/S81.md, S81-HEAD.md, QC-A0.md, KV-G3.md, HBM-ARCH.md. MERGING THIS TURNS DIE-CI G0C RED ON ALL 6 PLANS until they are re-planned (expected: that is the rule).
