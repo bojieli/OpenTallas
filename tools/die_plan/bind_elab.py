@@ -318,8 +318,16 @@ def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
     if ab.get("frontend", "native") == "slang":
         # One compilation unit preserves cross-file parameterisation; interface
         # stubs are explicit empty blackboxes, structural parents retain names.
+        body_modules = ({ab['top'], ab.get('_elab_top', ab['top'])} | set(ab.get('dissolve', []))
+                        | set(ab.get('substitute', {})) | {r['module'] for r in ab.get('substitute_parent', [])})
+        all_modules = set()
+        for name in lib + full + tops:
+            all_modules.update(m.group(1) for m in MOD_RE.finditer(_strip(Path(name).read_text())))
+        # A full source file can co-host structural wrappers and physical hard
+        # cores. Blackbox leaves BEFORE elaboration, including those co-hosts.
+        bb = " ".join("--blackboxed-module " + n for n in sorted(all_modules - body_modules))
         lines.append(f"read_slang --keep-hierarchy --empty-blackboxes --allow-use-before-declare --top {ab.get('_elab_top', ab['top'])} "
-                     f"{dflags} {iflags} " + " ".join(lib + full + tops))
+                     f"{bb} {dflags} {iflags} " + " ".join(lib + full + tops))
     elif ab.get("frontend", "native") == "native":
         for f in lib:
             lines.append(f"read_verilog -sv -lib -overwrite {dflags} {iflags} {f}")
