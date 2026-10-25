@@ -30,8 +30,11 @@ module tb_kvslice;
     wire         c2k_v;
     wire [582:0] c2k_flit;
     qwen_kvsys_bound_top dut (
-        .rst_n(rst_n), .clk_clk_fwd(ck_core), .clk_clk_hbm_EN(ck_hbm), .clk_clk_hbm_ES(ck_hbm), .clk_clk_hbm_WN(ck_hbm),
-        .clk_clk_hbm_WS(ck_hbm), .clk_clk_host(ck_host), .clk_clk_ingest(ck_ing), .clk_clk_phy(ck_phy), .clk_core(ck_core),
+        .rst_n(rst_n), .clk_clk_fwd(ck_core),
+`ifndef KV_DFI_CORE   // TOK-QK/D dfi-core (owner decision 14): the HBM PHY DFI clock is clk_core -> the top has no HBM clock input
+        .clk_clk_hbm_EN(ck_hbm), .clk_clk_hbm_ES(ck_hbm), .clk_clk_hbm_WN(ck_hbm), .clk_clk_hbm_WS(ck_hbm),
+`endif
+        .clk_clk_host(ck_host), .clk_clk_ingest(ck_ing), .clk_clk_phy(ck_phy), .clk_core(ck_core),
         .pad_die_id(die_id), .pad_por_n(por_n), .pad_refclk(ck_ref));
     // ------------------------------------------------------------------ compute-die far end on the UCIe link (+FAR=1)
     // KV-TOK 10-24 token phase: kvs_compute_end.sv (the compute die's real d2d master + calendar sequencer + record codec
@@ -45,8 +48,12 @@ module tb_kvslice;
         .kv_fwd_lrst_pad(far_epraw ? dut.sys_c.w_d2d_kv_fwd_link_rst_n[0] : dut.sys_c.d5_d2d_kv_fwd_link_rst_n[0]),
         .mut_cmd_late(far_m1), .c2k_v(c2k_v), .c2k_flit(c2k_flit));
     // die host TX (two halves) -> host board port RX
-    wire d2h_v = dut.sys_SW.u_core.tx_v & dut.sys_SE.u_core.tx_v;
-    wire [1042:0] d2h_flit = {dut.sys_SE.u_core.tx_flit, dut.sys_SW.u_core.tx_flit};
+    // TOK-QK/C 10-24: the two x6 halves are separate in-order streams on clk_phy (each behind its own CDC FIFO); the board
+    // PHY deskews them by order (ot_fdi_join2 on clk_phy) -- never a same-cycle AND of the halves.
+    wire d2h_v; wire [1042:0] d2h_flit;
+    ot_fdi_join2 #(.WA(522), .WB(521), .DEPTH(16)) u_board_deskew (.clk(ck_phy), .rst_n(por_n),
+        .a_v(dut.sys_SW.u_core.tx_v), .a_d(dut.sys_SW.u_core.tx_flit), .b_v(dut.sys_SE.u_core.tx_v), .b_d(dut.sys_SE.u_core.tx_flit),
+        .o_v(d2h_v), .o_d(d2h_flit));
     reg  [1042:0] d2h_q [0:3]; reg d2h_vq [0:3];
     always @(posedge ck_phy) begin
         d2h_q[0] <= d2h_flit; d2h_vq[0] <= d2h_v;

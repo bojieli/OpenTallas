@@ -40,6 +40,10 @@ module ot_qkd_static_kv_timing #(
   output wire [2:0]  row_op, output wire [4:0] row_bank, output wire [18:0] row_row,
   output wire        col_v, output wire [4:0] col_bank, output wire [4:0] col_col,
   input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
+  // KV-TOK B 2026-10-24: controller boot window (maintenance mode before the calendar first owns the PC; driven by the
+  // parent's boot-window state, never by a reservation): the static queue head's column issues when JEDEC-legal with no
+  // reserved_static_col.  0 = original (every static column needs its reservation).
+  input wire boot_static_col,
   input wire [9:0] desc_first,
   input wire desc_context,desc_vpass,desc_k_order_b,input wire [7:0] desc_k_count0,
   output wire schedule_fault,
@@ -318,7 +322,7 @@ module ot_qkd_static_kv_timing #(
     wire s_col_ok = s_hit && ccdl_z[sb[1:0]] && !(|(sb_oh & blk)) && !rd_block &&
                     (swe ? (W && |(sb_oh & rcdw_z) && rtw_c == 0) : (|(sb_oh & rcd_z) && wtr_c == 0));
     wire legal_static = s_col_ok && (sprio || (!rd_ok_base && !(W && wr_ok0)));
-    assign s_go = legal_static && (PROFILE == 1 || reserved_static_col);
+    assign s_go = legal_static && (PROFILE == 1 || reserved_static_col || boot_static_col);
     wire legal_rd = rd_ok0 && !s_go && !(|(rd_oh & s_pblk));
     assign rd_ok = legal_rd && (PROFILE == 1 || reserved_rd);
     reg fault_schedule;

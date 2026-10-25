@@ -1,0 +1,18 @@
+REF modules renamed: 9
+== run_eq_pc0_j0_p0: PASS KV_BOOT_WINDOW_LOCKSTEP checks=144186 frames=4 jit=0 pre=0 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=0 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc0_j0_p3000: PASS KV_BOOT_WINDOW_LOCKSTEP checks=170088 frames=4 jit=0 pre=3000 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=3000 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc0_j16_p0: PASS KV_BOOT_WINDOW_LOCKSTEP checks=144186 frames=4 jit=16 pre=0 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=0 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc0_j16_p3000: PASS KV_BOOT_WINDOW_LOCKSTEP checks=170088 frames=4 jit=16 pre=3000 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=3000 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc127_j0_p0: PASS KV_BOOT_WINDOW_LOCKSTEP checks=144186 frames=4 jit=0 pre=0 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=0 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc127_j0_p3000: PASS KV_BOOT_WINDOW_LOCKSTEP checks=170088 frames=4 jit=0 pre=3000 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=3000 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc127_j16_p0: PASS KV_BOOT_WINDOW_LOCKSTEP checks=144186 frames=4 jit=16 pre=0 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=0 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc127_j16_p3000: PASS KV_BOOT_WINDOW_LOCKSTEP checks=170088 frames=4 jit=16 pre=3000 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=3000 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc45_j0_p0: PASS KV_BOOT_WINDOW_LOCKSTEP checks=144186 frames=4 jit=0 pre=0 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=0 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc45_j0_p3000: PASS KV_BOOT_WINDOW_LOCKSTEP checks=170088 frames=4 jit=0 pre=3000 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=3000 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc45_j16_p0: PASS KV_BOOT_WINDOW_LOCKSTEP checks=144186 frames=4 jit=16 pre=0 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=0 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_eq_pc45_j16_p3000: PASS KV_BOOT_WINDOW_LOCKSTEP checks=170088 frames=4 jit=16 pre=3000 pre_es=0 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=3000 pre_es=0 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_dis_pc0_j16: PASS KV_BOOT_WINDOW_LOCKSTEP checks=170088 frames=4 jit=16 pre=3000 pre_es=1 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=3000 pre_es=1 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== run_dis_pc45: PASS KV_BOOT_WINDOW_LOCKSTEP checks=170088 frames=4 jit=0 pre=3000 pre_es=1 stress=6000 mism_pre=0 boot_cols_pre=0 final_fo=1 | PHASE_P pre=3000 pre_es=1 mism_pre=0 boot_cols_pre=0 boot_cols_post=0
+== act_pc45 (window activity): PHASE_P pre=3000 pre_es=1 mism_pre=24681 boot_cols_pre=80 boot_cols_post=0
+== mutant 1 (window never closes): FAIL LOCKSTEP mismatches=51483 mism_pre=0 boot_cols_post=203 checks=144186
+PASS KV_BOOT_WINDOW_LOCKSTEP_EQ_DIS_ACTIVE_MUTANT_OBSERVED_PARENT_ELABORATES

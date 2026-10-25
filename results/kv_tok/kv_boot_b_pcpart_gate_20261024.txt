@@ -1,0 +1,15 @@
+== B.hbm: PCB END cyc 25000 sdo 1111 soo 0101 sfo 1010 | controllers_faulted 3 | HBM_PHY  reads 8 writes 8 unwritten_reads 0
+== B.hbmeq: PCB END cyc 25000 sdo 1111 soo 1111 sfo 0000 | controllers_faulted 0 | HBM_PHY  reads 8 writes 8 unwritten_reads 0
+== NOOBS.hbm: PCB END cyc 25000 sdo 1111 soo 0101 sfo 1010 | controllers_faulted 4 | HBM_PHY  reads 8 writes 8 unwritten_reads 0
+== NOOBS.hbmeq: PCB END cyc 25000 sdo 1111 soo 1111 sfo 0000 | controllers_faulted 4 | HBM_PHY  reads 8 writes 8 unwritten_reads 0
+== NORAW.hbm: PCB END cyc 25000 sdo 1111 soo 0101 sfo 1010 | controllers_faulted 4 | HBM_PHY  reads 8 writes 8 unwritten_reads 0
+== NORAW.hbmeq: PCB END cyc 25000 sdo 1111 soo 1111 sfo 0000 | controllers_faulted 4 | HBM_PHY  reads 8 writes 8 unwritten_reads 0
+== ORIG.hbm: PCB END cyc 25000 sdo 1111 soo 0000 sfo 1111 | controllers_faulted 0 | HBM_PHY  reads 0 writes 0 unwritten_reads 0
+== ORIG.hbmeq: PCB END cyc 25000 sdo 1111 soo 0000 sfo 1111 | controllers_faulted 0 | HBM_PHY  reads 0 writes 0 unwritten_reads 0
+== WOFF.hbm: PCB END cyc 25000 sdo 1111 soo 0000 sfo 1111 | controllers_faulted 0 | HBM_PHY  reads 0 writes 0 unwritten_reads 0
+== WOFF.hbmeq: PCB END cyc 25000 sdo 1111 soo 0000 sfo 1111 | controllers_faulted 0 | HBM_PHY  reads 0 writes 0 unwritten_reads 0
+== apply_B:  | controllers_faulted 0 | 
+== apply_NOOBS:  | controllers_faulted 0 | 
+== apply_NORAW:  | controllers_faulted 0 | 
+== apply_WOFF:  | controllers_faulted 0 | 
+PASS KV_BOOT_B_PCPART_ALL_SLICES_OK_MUTANTS_OBSERVED

@@ -7,6 +7,9 @@ module ot_qkd_static_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4
  input wire clk,rst_n,
  input wire cmd_v,input wire [31:0] cmd,
  input wire [9:0] cmd_first, input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
+ // KV-TOK B 2026-10-24: boot window (see ot_qkd_static_kv_timing.boot_static_col), captured in a pin flop like the
+ // reservations; col_boot marks a static column issued in the window WITHOUT a reservation (registered with col_sr).
+ input wire boot_window,output reg col_boot,
  output reg cmd_credit,
  output reg row_v,output reg [2:0] row_op,output reg [4:0] row_bank,
  output reg [18:0] row_row,
@@ -19,7 +22,7 @@ module ot_qkd_static_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4
  (* keep *) reg cmd_v_q;
  (* keep *) reg [31:0] cmd_q;
  (* keep *) reg [9:0] first_q;
- (* keep *) reg rdslot_q,srslot_q,wrslot_q;
+ (* keep *) reg rdslot_q,srslot_q,wrslot_q,bootwin_q;
  reg [9:0] first_fifo[0:7];reg [9:0] head_first;
  reg [31:0] fifo[0:7];
  reg [2:0] wp,rp;
@@ -45,7 +48,7 @@ module ot_qkd_static_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4
  ot_qkd_static_kv_timing #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.PROFILE(PROFILE),.SROW(1),.SQD(SQD),.S_STARVE(S_STARVE),.TWIN(TWIN),.TWIN_ROFF(TWIN_ROFF),.READY_CUT(1),.ENABLE(ENABLE),.REF_MODE(1),.PC(PC),
   .REF_PHASE((PHASE+(PC*118)/32)%118),.WR_EN(1),.WQ(4),.PULLIN(PULLIN),.AQ_RD(0)) core(
   .clk(clk),.rst_n(rst_n),.desc_v(live && !malformed && descriptor_head),
-  .desc_r(desc_ready),.desc_row(head[18:0]),.desc_n(context_head?{2'b0,head[27:19]}:head[29:19]),.desc_first(head_first),.desc_context(context_head),.desc_vpass(head[28]),.desc_k_order_b(head[29]),.desc_k_count0(head_first[7:0]),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.schedule_fault(schedule_fault),.phase_idle(core_idle),
+  .desc_r(desc_ready),.desc_row(head[18:0]),.desc_n(context_head?{2'b0,head[27:19]}:head[29:19]),.desc_first(head_first),.desc_context(context_head),.desc_vpass(head[28]),.desc_k_order_b(head[29]),.desc_k_count0(head_first[7:0]),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.boot_static_col(bootwin_q),.schedule_fault(schedule_fault),.phase_idle(core_idle),
   .go(live && head[31:30]==1),.next_posted(1'b0),
   .row_v(rv),.row_prio(),.row_gnt(1'b1),.row_op(rop),.row_bank(rb),.row_row(rr),
   .col_v(cv),.col_bank(cb),.col_col(cc),
@@ -69,11 +72,11 @@ module ot_qkd_static_ctrl_pc_emb #(parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4
  end
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
-   cmd_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;cmd_credit<=0;wp<=0;rp<=0;count<=0;s_v_q<=0;s_cr<=0;col_sr<=0;
+   cmd_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;bootwin_q<=0;col_boot<=0;cmd_credit<=0;wp<=0;rp<=0;count<=0;s_v_q<=0;s_cr<=0;col_sr<=0;
    row_v<=0;col_v<=0;col_we<=0;busy<=0;fault_q<=0;fault<=0;
   end else begin
    cmd_v_q<=cmd_v;rdslot_q<=reserved_rd;srslot_q<=reserved_static_col;wrslot_q<=reserved_write_col;
-   s_v_q<=s_v;s_cr<=spop;col_sr<=csr;
+   s_v_q<=s_v;s_cr<=spop;col_sr<=csr;bootwin_q<=boot_window;col_boot<=csr&&bootwin_q&&!srslot_q;
    cmd_credit<=pop;
    if(push) wp<=wp+1'b1;
    if(pop) rp<=rp+1'b1;

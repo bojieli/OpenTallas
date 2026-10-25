@@ -24,7 +24,10 @@ fi
     case $m in kv3_phy*|kv3_sys_SD*|kv3_sys_c_part) ;; *) echo "hier_block -module \"$m\"";; esac; done; } > $O/hier.vlt
 R=$(cd $H/../../.. && pwd)
 IMGD=${D2D_IMG:-$R/physical/die_plan/qwen_kvsys/boot_v36/image_kv41}   # the pair image the KV boot image carries
+# TOK-QK/D dfi-core: a top without HBM clock inputs (kv43/apply_D.sh, owner decision 14) -> the bench drives none
+DFI=$(grep -q 'input  wire clk_clk_hbm_' $TOPF && echo "" || echo "+define+KV_DFI_CORE")
 cat > $O/vl.f <<EOF
+$DFI
 -Wno-fatal
 -Wno-lint
 -Wno-style
@@ -54,7 +57,7 @@ if [ "$MODE" = lint ]; then
   echo "LINT rc=$rc errors $(grep -c '^%Error' lint.log) $(grep 'Maximum resident' lint.log)"; exit $rc
 fi
 J=${J:-48}
-/usr/bin/time -v $VL --binary --timing $([ "${HIER:-1}" = 1 ] && echo --hierarchical) -O1 --x-assign fast --x-initial fast --output-split 20000 --output-groups 256 \
+/usr/bin/time -v $VL --binary --timing $([ "${HIER:-1}" = 1 ] && echo --hierarchical) -O1 --x-assign ${XASSIGN:-fast} --x-initial ${XINIT:-fast} --output-split 20000 --output-groups 256 \
   -j $J --build-jobs $J -CFLAGS ${COPT:--O1} -Mdir obj -f vl.f > build.log 2>&1; rc=$?
 echo "BUILD rc=$rc errors $(grep -c '^%Error' build.log) $(grep -E 'Maximum resident|Elapsed' build.log | tr -s ' ' | tr '\n' ' ')"
 exit $rc
