@@ -218,3 +218,19 @@ Sources: B = ~/coord/BRIEFING.md "OWNER DECISIONS 2026-10-24" #n; A = AGENTS.md 
     10-23 is later and is taken as superseding the freeze where they conflict.
 9.15 Host naming: BRIEFING "localhost" (84.32.71.203, written during the epyc1 period) vs rtx-pro coordinator
     now; host shares in BRIEFING give "localhost" 256 threads of lane work, which conflicts with 8.2.
+
+## 10. Coordinator rulings on section 9 (2026-10-24 21:42 PDT) -- binding until the owner says otherwise
+- 9.1 Never -X ours/theirs; AGENTS.md updated to match.
+- 9.2 Spread > 80 ps is INFO; signoff.py/die_sta switch to related-pair skew + CPPR when the kit-clock branches merge (CLOCK lane).
+- 9.3 ALL signal routing (partition ft AND die-top nets) on <= M7; M8/M9 only die clock spine / reset / PG (dec. 12 supersedes the 10-22 M9-for-signals record). Tools drop M8/M9 ft; reach = 405 um.
+- 9.4 ft_station_max_um default 405.
+- 9.5 Wavefront reset (RESET lane); README reset section rewritten when the tool lands.
+- 9.6 OWNER QUESTION (pending): retire the 0.9 GHz serial-chain domain; units that cannot make 833 ps run as clock-enabled 2-cycle (half-rate) paths on the die clock.
+- 9.7 I = signed pin-register mean insertion of that core type's SIGNED view (lib max only before first signoff).
+- 9.8 Keep -40 ps hold padding until the spine is measured; then set it to the measured related-pair window + 10 ps.
+- 9.9 New seams are budgeted synchronous under MSCTS; LANDED only for R8 bundles and off-die links.
+- 9.10 Register every partition port (R2); tiles inside one partition may connect directly when timed.
+- 9.11/9.12 G2 prototype, LEC and SELRANGE gates are being added (lanes/PROTO.md, LEC.md, RTL-SELRANGE.md).
+- 9.13 Only die-plan kits are signable; ref_tile legacy kits are re-kitted in die-plan form.
+- 9.14 10-23 top-down rework supersedes the 10-22 freeze.
+- 9.15 "localhost" in BRIEFING = epyc1 period; the coordinator host is rtx-pro and runs no heavy jobs.
