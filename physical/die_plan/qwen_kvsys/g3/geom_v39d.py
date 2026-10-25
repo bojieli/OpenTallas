@@ -52,10 +52,12 @@ HUB_WI = {   # inst -> (x, y)   (outlines and orients unchanged); every block >=
     "host__qkd_hr_cdc_ch": (751.68, 1192.32),
 }
 HG_COLS = [17.28, 336.96, 656.64, 976.32]
-# quarters: the two inner columns (> 110 um from the E/W faces) take 216 x 293.76; the outer two 216 x 172.8 at the top,
+# quarters (v3.9d): inner two were 216 x 293.76, outer two 216 x 172.8 at the top so the E/W face mouth above the head rows
 # so the E/W face mouth above the head rows (y 1192..1330) stays open for hg|hgi / hg|pc pins (201.5k um2 vs 190.4k)
 Q_W = 216.0
-Q_GEOM = [(17.28, 1330.56, 172.8), (336.96, 1209.6, 293.76), (656.64, 1209.6, 293.76), (976.32, 1330.56, 172.8)]
+# KV-PLAN3 10-25: synthesized quarters (ectlk_live.json: 2-3 SRAM 128x256 + ~2.7k um2 cells, 23-28 % of the outlines)
+# fit 216 x 172.8 -> all four quarters one outline at the top (one kit frame, wider channel above the head rows)
+Q_GEOM = [(17.28, 1330.56, 172.8), (336.96, 1330.56, 172.8), (656.64, 1330.56, 172.8), (976.32, 1330.56, 172.8)]
 
 
 def snap(c, off, pitch):

@@ -22,7 +22,7 @@ from pathlib import Path
 import post_v39e as PV
 
 Q_W = 216.0
-Q_H = [172.8, 293.76, 293.76, 172.8]
+Q_H = [172.8, 172.8, 172.8, 172.8]   # = geom_v39d.Q_GEOM heights
 KEEP = 2.0
 HDR = re.compile(r"^\s*(input|output)\s+wire\s+\[(\d+):0\]\s+(\w+)")
 AO = re.compile(r"^\s*assign\s+(\w+)\[(\d+)\]\s*=\s*old_(\w+)\[(\d+)\];")
