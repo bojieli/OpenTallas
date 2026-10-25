@@ -1022,3 +1022,10 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   (c) Rebuild synth -> 3_place -> CTS on the per-corner basis, then post the TT+FF postcts gate and the pair skew with CPPR before GRT.
   (d) Use fail-closed LEC (LEC_CHECK is 0 in this kit), and make run_eh.sh honour the sign-off exit code.
   No resize/LVT/hold-buffer ECO. Owner: S81 path lane (S81-CORES3/PH successor).
+2026-10-25 08:11 PDT GEOM-REVIEW: POST-CTS [AUTOPILOT structural.tsv e28f18c4a3d8] ot_hbm_hc_bank128_pair_core__f2 (claude/hbm-kits-1025r@aea2ae39b3, epyc2 hbm-kits-1025/w128_pair_core_f2): STRUCTURAL (clock depth). Route stays stopped. This is from logs and gate JSON; there is no render in the row. Not on the HBM one-path (TKM), so it is lower priority.
+  Facts: TT pin-reg I 354.4 (333-377) on RCX/GRT against bound 250 (dev 104); FF 283.6 against 202.5 (dev 81); FF pre-route hold -6.13. 12868 hold buffers for 1567 endpoints. The tap census is NOT the first_core defect: 35 density taps carry 302-922 sinks each, with no tiny taps. The cause is depth plus upward alignment: OT_DTAP_ALIGN r1 raises taps to the slowest (final 383-404), and OT_TAP_BALANCE reports clk=392 (368-414) on 24633 sinks against target 250.
+  Required (kit rebuild from the same 3_place, no ECO):
+  (1) A planned, shallow trunk: BUFx24 stages on NDR, dont_touch, with no repair wire buffers. Align taps DOWN to the 250/202.5 contract by trimming trunk depth per branch. Never pad up to the slowest tap.
+  (2) Tap-mean window <=20 and pin-reg spread <=20 at TT and FF on GRT RCX (pass 2).
+  (3) Then post the hold census split in/out/reg2reg. Hundreds of buffers is the expectation; over ~1k comes back with the port list.
+  GEOM-REVIEW-4's 07:05 first_core rebuild (merge <50-sink taps into face-band taps) still applies to first_core only. Owner HBM-KITS, with CLOCK-RESET for (1).
