@@ -71,7 +71,7 @@ def test_run_kit_has_reg_fanout_gate():
 
 
 def test_parse_lint():
-    log = "ERROR: Identifier `foo' is implicitly declared and `default_nettype is set to none.\n"
+    log = "/work/t.sv:2: ERROR: Identifier `\\foo' is implicitly declared and `default_nettype is set to none.\n"
     r = C.parse_lint(log, 1)
     assert r["verdict"] == "FAIL" and r["implicit"] == ["foo"]
     r = C.parse_lint("Warning: Wire top.\\x is used but has no driver.\nEnd of script.\n", 0)
@@ -80,11 +80,11 @@ def test_parse_lint():
 
 def test_lint_script(tmp_path):
     (tmp_path / "macros").mkdir()
-    for f in ("m_tt.lib", "m_ff.lib"):
+    for f in ("m_tt.lib", "m_ff.lib", "m_ss.lib"):
         (tmp_path / "macros" / f).write_text("")
     (tmp_path / "config.mk").write_text("export VERILOG_FILES = /work/rtl/a.sv /work/rtl/b.sv\n")
     s = C.lint_script(tmp_path, "top")
-    assert "-noautowire /work/rtl/a.sv" in s and "m_tt.lib" in s and "m_ff.lib" not in s and "hierarchy -check -top top" in s
+    assert "-noautowire /work/rtl/a.sv" in s and "m_tt.lib" in s and "m_ff.lib" not in s and "m_ss.lib" not in s and "hierarchy -check -top top" in s
 
 
 def test_signoff_vs_golden():

@@ -60,7 +60,12 @@ def lint_script(kit, top):
     """yosys script: macros as liberty blackboxes, RTL read with default_nettype none (implicit nets are errors),
     hierarchy -check (missing modules / ports are errors), then proc + check (undriven / multi-driven wires)."""
     k = Path(kit)
-    libs = sorted({p.name for p in k.glob("macros/*.lib")} - {p.name for p in k.glob("macros/*_ff.lib")})
+    libs, seen = [], set()                     # one timing view per macro (TT preferred): blackbox interface only
+    for p in sorted(k.glob("macros/*.lib*"), key=lambda p: (not re.search(r"_tt\.lib", p.name), p.name)):
+        stem = re.sub(r"_(tt|ff|ss)?\.lib(\.gz)?$|\.lib(\.gz)?$", "", p.name)
+        if stem not in seen:
+            seen.add(stem)
+            libs.append(p.name)
     srcs = cfg_list(k, "VERILOG_FILES")
     lines = [f"read_liberty -lib -ignore_miss_func /work/macros/{x}" for x in libs]
     lines.append("verilog_defines -DSYNTHESIS")
@@ -84,7 +89,7 @@ def cfg_val(kit, var):
 def parse_lint(log, rc):
     implicit = re.findall(r"(?:Identifier|Wire) `?\\?([^'\s`]+)'? is implicitly declared|"
                           r"ERROR: Identifier `([^']+)' is implicitly declared", log)
-    implicit = [a or b for a, b in implicit]
+    implicit = [(a or b).lstrip("\\") for a, b in implicit]
     undriven = re.findall(r"Warning: [Ww]ire ([^\s]+) is used but has no driver", log)
     multi = re.findall(r"Warning: [^\n]*multiple conflicting drivers[^\n]*", log)
     errors = re.findall(r"^ERROR: .*$", log, re.M)
