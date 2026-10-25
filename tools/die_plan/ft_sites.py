@@ -303,6 +303,9 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
                 else:
                     done=True;break
             if not done:raise ValueError(f'{tn}/{name}: no row-legal allocation after100 target alternatives')
+            if bit_order and points:
+                cand=bit_ordered(a,points,b);cc=[a,*cand,b]
+                if max(float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(cc,cc[1:]))<=budget+1e-6:points=cand
             chain=[a,*points,b];hops=[float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(chain,chain[1:])]
             if max(hops)>budget+1e-6:raise ValueError(f'{tn}/{name}: actual paired-bit hop {max(hops)} >{budget}')
             old=slot['stations'];slot['stations']=len(points)+1
