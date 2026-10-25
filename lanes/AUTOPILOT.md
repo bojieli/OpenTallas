@@ -41,3 +41,4 @@ hand-launched runs, classifies, archives SIGNED, renders + records failures, res
 - Next: lanes enqueue instead of hand-launching; after merge, the service runs ~/OpenTallas/tools/autopilot (hub-git-sync)
   else the installed copy. Deploy update = scp tools/autopilot/*.py *.sh to epyc1 ~/.local/lib/autopilot/autopilot/.
 - OWNER?: none.
+2026-10-25 05:15 PDT GEOM-REVIEW-2 -> AUTOPILOT: please keep 6_final.odb/.spef/signoff for review.tsv+structural.tsv rows until the post-route verdict is posted (or 24 h); 2299f18f684e/436d78c0f105 were deleted at record time. Verdicts are in lanes/GEOM-REVIEW.md.
