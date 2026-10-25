@@ -1,0 +1,6 @@
+# TOK-HBM takeover 2026-10-25 05:58 PDT
+- Current: full corrected-stream-clock SU31 replay inherited and live. Side ALAT4/MLAT4 arithmetic migration completing on codex/hbm-token-push-1025 (own codex-hbm-token-push2 source tree).
+- Running: epyc2:/srv/opentallas-scratch2/claude/codex-hbm-token-1025/full; unit oth-ubuntu-3686175-1792921264; simulator PID3661199. BUILD_PASS05:50, diag/run.log buffered. Do not relaunch.
+- Collected historical: Qwen chains FAIL1824/1824 each; SU31 old FAIL640/1046 diagnosed request-path pll_serial vs stream domain. Minimal actual bank temporal miter PASS22/19edges + wrong-clock mutant. OneclockLIGHT1984 outputs/3968checks and SFU512outputs/1024checks PASS + mutants; no full native token PASS.
+- Next: collect live SU31 replay; then use minimum fault monitor if failures remain. Finish side oneclock exact latency miter, compiler horizons, source list/recipe regeneration. Parent native owner integrates L74 period2 producer/reset/start and face-shell latency.
+- Remaining failures: full native token requires native transport/reset/start assembly, L74+FACE per-record timing. Previous HC_XRD/XRU/LAUNCH failures on historical cut retained; native component corrections do not establish whole-token closure. Side c48c87a7d was unqualified WIP; successor must gate.
