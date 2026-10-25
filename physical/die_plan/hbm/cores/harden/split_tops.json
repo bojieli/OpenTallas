@@ -15677,5 +15677,1087 @@
     "#(.N(16),.M(16),.LWB(15),.AW(24),.NLW(16),.MACRO(1),.MUT_XBAR(0),.NS(2))"
    ]
   }
+ },
+ "coll_q3_edge": {
+  "master": "ot_hfd_coll_q3_hard_v8x_s",
+  "top": "ot_hfd_coll_q3_edge_core",
+  "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_edge_core.sv",
+  "ports": [
+   [
+    "arg_clk",
+    "input",
+    1,
+    0
+   ],
+   [
+    "arg_rst_n",
+    "input",
+    1,
+    0
+   ],
+   [
+    "arg_start",
+    "input",
+    1,
+    0
+   ],
+   [
+    "arg_mode",
+    "input",
+    1,
+    0
+   ],
+   [
+    "arg_cfg_g",
+    "input",
+    8,
+    0
+   ],
+   [
+    "arg_cfg_gbase",
+    "input",
+    8,
+    0
+   ],
+   [
+    "arg_cfg_rank",
+    "input",
+    8,
+    0
+   ],
+   [
+    "arg_in_slot",
+    "input",
+    4,
+    0
+   ],
+   [
+    "arg_in_v",
+    "input",
+    4,
+    0
+   ],
+   [
+    "arg_in_key",
+    "input",
+    256,
+    0
+   ],
+   [
+    "arg_in_meta",
+    "input",
+    132,
+    0
+   ],
+   [
+    "arg_flush_slot",
+    "input",
+    1,
+    0
+   ],
+   [
+    "arg_publish_slot",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link0_ck",
+    "input",
+    5,
+    0
+   ],
+   [
+    "link0_epoch_begin",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link0_epoch_new",
+    "input",
+    8,
+    0
+   ],
+   [
+    "link0_held_epoch",
+    "input",
+    8,
+    0
+   ],
+   [
+    "link0_wr_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link0_wr_observed_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link0_wr_seq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "link0_wr_flit",
+    "input",
+    545,
+    0
+   ],
+   [
+    "link0_rd_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link0_rd_seq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "link0_rx_expect_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link0_rx_expect_seq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "link0_phy_up",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link0_rx_pin_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link0_rx_pin_flit",
+    "input",
+    612,
+    0
+   ],
+   [
+    "link1_ck",
+    "input",
+    5,
+    0
+   ],
+   [
+    "link1_epoch_begin",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link1_held_epoch",
+    "input",
+    8,
+    0
+   ],
+   [
+    "link1_wr_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link1_wr_observed_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link1_wr_seq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "link1_wr_flit",
+    "input",
+    545,
+    0
+   ],
+   [
+    "link1_rd_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link1_rd_seq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "link1_rx_expect_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link1_rx_expect_seq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "link1_phy_up",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link1_rx_pin_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link1_rx_pin_flit",
+    "input",
+    612,
+    0
+   ],
+   [
+    "link2_ck",
+    "input",
+    5,
+    0
+   ],
+   [
+    "link2_epoch_begin",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link2_held_epoch",
+    "input",
+    8,
+    0
+   ],
+   [
+    "link2_wr_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link2_wr_observed_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link2_wr_seq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "link2_wr_flit",
+    "input",
+    545,
+    0
+   ],
+   [
+    "link2_rd_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link2_rd_seq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "link2_rx_expect_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link2_rx_expect_seq",
+    "input",
+    16,
+    0
+   ],
+   [
+    "link2_phy_up",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link2_rx_pin_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "link2_rx_pin_flit",
+    "input",
+    612,
+    0
+   ],
+   [
+    "arg_out_v",
+    "output",
+    1,
+    0
+   ],
+   [
+    "arg_out_flit",
+    "output",
+    545,
+    0
+   ],
+   [
+    "arg_fault",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link0_tx_pin_v",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link0_tx_pin_flit",
+    "output",
+    612,
+    0
+   ],
+   [
+    "link0_rx_v",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link0_rx_flit",
+    "output",
+    545,
+    0
+   ],
+   [
+    "link0_epoch_abort",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link0_retry_requested",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link1_tx_pin_v",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link1_tx_pin_flit",
+    "output",
+    612,
+    0
+   ],
+   [
+    "link1_rx_v",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link1_rx_flit",
+    "output",
+    545,
+    0
+   ],
+   [
+    "link1_epoch_abort",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link1_retry_requested",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link2_tx_pin_v",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link2_tx_pin_flit",
+    "output",
+    612,
+    0
+   ],
+   [
+    "link2_rx_v",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link2_rx_flit",
+    "output",
+    545,
+    0
+   ],
+   [
+    "link2_epoch_abort",
+    "output",
+    1,
+    0
+   ],
+   [
+    "link2_retry_requested",
+    "output",
+    1,
+    0
+   ]
+  ],
+  "pieces": {
+   "ot_hfd_coll_q3_hard_v8x_s__edge": {
+    "cut_bits": {
+     "inp": 4109,
+     "out": 4030
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "clk_arg": {
+      "arg_clk": 1
+     },
+     "rst_n": {
+      "arg_rst_n": 1
+     },
+     "u_body_g_q3_t192_u_arg_start": {
+      "arg_start": 1
+     },
+     "tkx_arg_mode": {
+      "arg_mode": 1
+     },
+     "u_body_g_q3_t192_u_arg_cfg_g": {
+      "arg_cfg_g": 8
+     },
+     "u_body_g_q3_t192_u_arg_cfg_gbase": {
+      "arg_cfg_gbase": 8
+     },
+     "u_body_g_q3_t192_u_arg_cfg_rank": {
+      "arg_cfg_rank": 8
+     },
+     "u_body_g_q3_t192_u_arg_in_slot": {
+      "arg_in_slot": 4
+     },
+     "u_body_g_q3_t192_u_arg_in_v": {
+      "arg_in_v": 4
+     },
+     "u_body_g_q3_t192_u_arg_in_key": {
+      "arg_in_key": 256
+     },
+     "u_body_g_q3_t192_u_arg_in_meta": {
+      "arg_in_meta": 132
+     },
+     "u_body_g_q3_t192_u_arg_flush_slot": {
+      "arg_flush_slot": 1
+     },
+     "u_body_g_q3_t192_u_arg_publish_slot": {
+      "arg_publish_slot": 1
+     },
+     "u_body_g_q3_t192_u_arg_out_v": {
+      "arg_out_v": 1
+     },
+     "u_body_g_q3_t192_u_arg_out_flit": {
+      "arg_out_flit": 545
+     },
+     "u_body_g_q3_t192_u_arg_fault": {
+      "arg_fault": 1
+     },
+     "clk_link": {
+      "link0_ck": 5,
+      "link1_ck": 5,
+      "link2_ck": 5
+     },
+     "u_body_g_link_0_u_link_epoch_begin": {
+      "link0_epoch_begin": 1
+     },
+     "u_body_g_link_0_u_link_epoch_new": {
+      "link0_epoch_new": 8
+     },
+     "u_body_g_link_0_u_link_held_epoch": {
+      "link0_held_epoch": 8
+     },
+     "u_body_g_link_0_u_link_wr_v": {
+      "link0_wr_v": 1
+     },
+     "u_body_g_link_0_u_link_wr_observed_v": {
+      "link0_wr_observed_v": 1
+     },
+     "u_body_g_link_0_u_link_wr_seq": {
+      "link0_wr_seq": 16
+     },
+     "u_body_g_link_0_u_link_wr_flit": {
+      "link0_wr_flit": 545
+     },
+     "u_body_g_link_0_u_link_rd_v": {
+      "link0_rd_v": 1
+     },
+     "u_body_g_link_0_u_link_rd_seq": {
+      "link0_rd_seq": 16
+     },
+     "u_body_g_link_0_u_link_rx_expect_v": {
+      "link0_rx_expect_v": 1
+     },
+     "u_body_g_link_0_u_link_rx_expect_seq": {
+      "link0_rx_expect_seq": 16
+     },
+     "phy_up": {
+      "link0_phy_up": 1,
+      "link1_phy_up": 1,
+      "link2_phy_up": 1
+     },
+     "tx_pin_v": {
+      "link0_tx_pin_v": 1,
+      "link1_tx_pin_v": 1,
+      "link2_tx_pin_v": 1
+     },
+     "tx_pin_flit": {
+      "link0_tx_pin_flit": 612,
+      "link1_tx_pin_flit": 612,
+      "link2_tx_pin_flit": 612
+     },
+     "rx_pin_v": {
+      "link0_rx_pin_v": 1,
+      "link1_rx_pin_v": 1,
+      "link2_rx_pin_v": 1
+     },
+     "rx_pin_flit": {
+      "link0_rx_pin_flit": 612,
+      "link1_rx_pin_flit": 612,
+      "link2_rx_pin_flit": 612
+     },
+     "u_body_g_link_0_u_link_rx_v": {
+      "link0_rx_v": 1
+     },
+     "u_body_g_link_0_u_link_rx_flit": {
+      "link0_rx_flit": 545
+     },
+     "u_body_g_link_0_u_link_epoch_abort": {
+      "link0_epoch_abort": 1
+     },
+     "retry_requested": {
+      "link0_retry_requested": 1,
+      "link1_retry_requested": 1,
+      "link2_retry_requested": 1
+     },
+     "u_body_g_link_1_u_link_epoch_begin": {
+      "link1_epoch_begin": 1
+     },
+     "u_body_g_link_1_u_link_held_epoch": {
+      "link1_held_epoch": 8
+     },
+     "u_body_g_link_1_u_link_wr_v": {
+      "link1_wr_v": 1
+     },
+     "u_body_g_link_1_u_link_wr_observed_v": {
+      "link1_wr_observed_v": 1
+     },
+     "u_body_g_link_1_u_link_wr_seq": {
+      "link1_wr_seq": 16
+     },
+     "u_body_g_link_1_u_link_wr_flit": {
+      "link1_wr_flit": 545
+     },
+     "u_body_g_link_1_u_link_rd_v": {
+      "link1_rd_v": 1
+     },
+     "u_body_g_link_1_u_link_rd_seq": {
+      "link1_rd_seq": 16
+     },
+     "u_body_g_link_1_u_link_rx_expect_v": {
+      "link1_rx_expect_v": 1
+     },
+     "u_body_g_link_1_u_link_rx_expect_seq": {
+      "link1_rx_expect_seq": 16
+     },
+     "u_body_g_link_1_u_link_rx_v": {
+      "link1_rx_v": 1
+     },
+     "u_body_g_link_1_u_link_rx_flit": {
+      "link1_rx_flit": 545
+     },
+     "u_body_g_link_1_u_link_epoch_abort": {
+      "link1_epoch_abort": 1
+     },
+     "u_body_g_link_2_u_link_epoch_begin": {
+      "link2_epoch_begin": 1
+     },
+     "u_body_g_link_2_u_link_held_epoch": {
+      "link2_held_epoch": 8
+     },
+     "u_body_g_link_2_u_link_wr_v": {
+      "link2_wr_v": 1
+     },
+     "u_body_g_link_2_u_link_wr_observed_v": {
+      "link2_wr_observed_v": 1
+     },
+     "u_body_g_link_2_u_link_wr_seq": {
+      "link2_wr_seq": 16
+     },
+     "u_body_g_link_2_u_link_wr_flit": {
+      "link2_wr_flit": 545
+     },
+     "u_body_g_link_2_u_link_rd_v": {
+      "link2_rd_v": 1
+     },
+     "u_body_g_link_2_u_link_rd_seq": {
+      "link2_rd_seq": 16
+     },
+     "u_body_g_link_2_u_link_rx_expect_v": {
+      "link2_rx_expect_v": 1
+     },
+     "u_body_g_link_2_u_link_rx_expect_seq": {
+      "link2_rx_expect_seq": 16
+     },
+     "u_body_g_link_2_u_link_rx_v": {
+      "link2_rx_v": 1
+     },
+     "u_body_g_link_2_u_link_rx_flit": {
+      "link2_rx_flit": 545
+     },
+     "u_body_g_link_2_u_link_epoch_abort": {
+      "link2_epoch_abort": 1
+     }
+    },
+    "straps": {}
+   }
+  },
+  "src": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_hard_v8x_s.sv #(NLINK 3, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) u_body.g_link[0..2].u_link (ot_hgi_coll_link_e_pr, ck = clk_link[5k+4:5k]) + u_body.g_q3.t192.u_arg (ot_hgi_coll_argmax_m_tp192_pr, clk_arg)",
+  "rtl": {
+   "u_link0": [
+    "ot_hgi_coll_link_e_pr",
+    ""
+   ],
+   "u_link1": [
+    "ot_hgi_coll_link_e_pr",
+    ""
+   ],
+   "u_link2": [
+    "ot_hgi_coll_link_e_pr",
+    ""
+   ],
+   "u_arg": [
+    "ot_hgi_coll_argmax_m_tp192_pr",
+    ""
+   ]
+  }
+ },
+ "coll_q3_vm": {
+  "master": "ot_hfd_coll_q3_hard_v8x_s",
+  "top": "ot_hfd_coll_q3_vm_core",
+  "file": "rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_vm_core.sv",
+  "ports": [
+   [
+    "vmasm_clk",
+    "input",
+    16,
+    0
+   ],
+   [
+    "vmasm_sel",
+    "input",
+    24,
+    0
+   ],
+   [
+    "vmasm_rd_il",
+    "input",
+    2048,
+    0
+   ],
+   [
+    "writer_clk_rgx_data0",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_rgx_data1",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_rgx_data2",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_rgx_data3",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_rgx_ctrl",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_tkw",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_meta",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_body",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_bank0",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_bank1",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_bank2",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_bank3",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_bank4",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_bank5",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_bank6",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_clk_bank7",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_rst_n",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_sid",
+    "input",
+    2,
+    0
+   ],
+   [
+    "writer_rgx_v",
+    "input",
+    4,
+    0
+   ],
+   [
+    "writer_rgx_addr",
+    "input",
+    160,
+    0
+   ],
+   [
+    "writer_rgx_data0",
+    "input",
+    512,
+    0
+   ],
+   [
+    "writer_rgx_data1",
+    "input",
+    512,
+    0
+   ],
+   [
+    "writer_rgx_data2",
+    "input",
+    512,
+    0
+   ],
+   [
+    "writer_rgx_data3",
+    "input",
+    512,
+    0
+   ],
+   [
+    "writer_rgx_vm",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_tkw_v",
+    "input",
+    1,
+    0
+   ],
+   [
+    "writer_tkw_d",
+    "input",
+    568,
+    0
+   ],
+   [
+    "writer_ingress_slot",
+    "input",
+    5,
+    0
+   ],
+   [
+    "writer_slot_valid",
+    "input",
+    8,
+    0
+   ],
+   [
+    "writer_slot_owner",
+    "input",
+    32,
+    0
+   ],
+   [
+    "vmasm_as_il",
+    "output",
+    2048,
+    0
+   ],
+   [
+    "writer_kq0",
+    "output",
+    281,
+    0
+   ],
+   [
+    "writer_kq1",
+    "output",
+    281,
+    0
+   ],
+   [
+    "writer_kq2",
+    "output",
+    281,
+    0
+   ],
+   [
+    "writer_kq3",
+    "output",
+    281,
+    0
+   ],
+   [
+    "writer_kq4",
+    "output",
+    281,
+    0
+   ],
+   [
+    "writer_kq5",
+    "output",
+    281,
+    0
+   ],
+   [
+    "writer_kq6",
+    "output",
+    281,
+    0
+   ],
+   [
+    "writer_kq7",
+    "output",
+    281,
+    0
+   ],
+   [
+    "writer_fault",
+    "output",
+    1,
+    0
+   ]
+  ],
+  "pieces": {
+   "ot_hfd_coll_q3_hard_v8x_s__vm": {
+    "cut_bits": {
+     "inp": 4934,
+     "out": 4297
+    },
+    "same_structure": true,
+    "cut_to_canonical": {
+     "clk_vmasm": {
+      "vmasm_clk": 16
+     },
+     "u_body_u_vmasm_sel": {
+      "vmasm_sel": 24
+     },
+     "vm_rr": {
+      "vmasm_rd_il": 2048
+     },
+     "u_body_u_vmasm_as_il": {
+      "vmasm_as_il": 2048
+     },
+     "clk_vmwrite": {
+      "writer_clk_rgx_data0": 1,
+      "writer_clk_rgx_data1": 1,
+      "writer_clk_rgx_data2": 1,
+      "writer_clk_rgx_data3": 1,
+      "writer_clk_rgx_ctrl": 1,
+      "writer_clk_tkw": 1,
+      "writer_clk_meta": 1,
+      "writer_clk_body": 1,
+      "writer_clk_bank0": 1,
+      "writer_clk_bank1": 1,
+      "writer_clk_bank2": 1,
+      "writer_clk_bank3": 1,
+      "writer_clk_bank4": 1,
+      "writer_clk_bank5": 1,
+      "writer_clk_bank6": 1,
+      "writer_clk_bank7": 1
+     },
+     "rst_n": {
+      "writer_rst_n": 1
+     },
+     "qid": {
+      "writer_sid": 2
+     },
+     "u_body_u_writer_rgx_v": {
+      "writer_rgx_v": 4
+     },
+     "u_body_u_writer_rgx_addr": {
+      "writer_rgx_addr": 160
+     },
+     "u_body_u_writer_rgx_data0": {
+      "writer_rgx_data0": 512
+     },
+     "u_body_u_writer_rgx_data1": {
+      "writer_rgx_data1": 512
+     },
+     "u_body_u_writer_rgx_data2": {
+      "writer_rgx_data2": 512
+     },
+     "u_body_u_writer_rgx_data3": {
+      "writer_rgx_data3": 512
+     },
+     "u_body_u_writer_rgx_vm": {
+      "writer_rgx_vm": 1
+     },
+     "tkx_w_v": {
+      "writer_tkw_v": 1
+     },
+     "tkx_w_data": {
+      "writer_tkw_d": 512
+     },
+     "tkx_w_mask": {
+      "writer_tkw_d": 16
+     },
+     "tkx_w_addr": {
+      "writer_tkw_d": 40
+     },
+     "u_body_u_writer_ingress_slot": {
+      "writer_ingress_slot": 5
+     },
+     "u_body_u_writer_slot_valid": {
+      "writer_slot_valid": 8
+     },
+     "u_body_u_writer_slot_owner": {
+      "writer_slot_owner": 32
+     },
+     "vm_kq": {
+      "writer_kq0": 281,
+      "writer_kq1": 281,
+      "writer_kq2": 281,
+      "writer_kq3": 281,
+      "writer_kq4": 281,
+      "writer_kq5": 281,
+      "writer_kq6": 281,
+      "writer_kq7": 281
+     },
+     "u_body_u_writer_fault": {
+      "writer_fault": 1
+     }
+    },
+    "straps": {}
+   }
+  },
+  "src": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_hard_v8x_s.sv #(NLINK 3, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) u_body.u_vmasm (VM read assembly, vm_rr face) + u_body.u_writer (VM write roots, vm_kq face): body_core <= ~260k",
+  "rtl": {
+   "u_vmasm": [
+    "ot_hgi_coll_vmasm_sliced_v7",
+    ""
+   ],
+   "u_writer": [
+    "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+    ""
+   ]
+  }
  }
 }
