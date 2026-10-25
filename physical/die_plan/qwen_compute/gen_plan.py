@@ -827,6 +827,13 @@ COLL_SEGS = [  # (partition, type, y0, h)
     ("coll_n", "coll_n", 12960.0, 786.24),
 ]
 COLL_PARTS = [c[0] for c in COLL_SEGS]
+# B2 (PATH-QC-B12 10-25): hard-IP LINE SIDE = the hard core's bumps, which leave the die.  The binder exports them as
+# die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins), so a 2-die bench joins QC.link_* -> KV.far_* and
+# back without hierarchical references.  Pins = ot_qkvd_ucie_x64_phy_model (physical/qwen_kv_die_phy, FW 583).
+HARD_IP_BUMPS = {
+    "ot_qkvd_ucie_x64_phy": (("link_v", "output", 1), ("link_flit", "output", 583),
+                             ("far_v", "input", 1), ("far_flit", "input", 583)),
+}
 WS = {  # name: (type, module, (w, h), (x, y), orient, hard)
     "io_serdes_2": ("phy_serdes_b", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 0.0), "R0", True),
     "io_serdes_1": ("phy_serdes", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 2324.16), "R0", True),
@@ -927,6 +934,8 @@ def build_west(P, census_blocks):
         else:
             cont.append({"inst": f"u_{n}", "module": mod, "status": "reuse",
                          "note": "hard IP used as-is (die-edge PHY)" if hard else "reuse candidate"})
+            if mod in HARD_IP_BUMPS:
+                cont[-1]["bump_ports"] = [dict(pin=a, dir=d, width=w) for a, d, w in HARD_IP_BUMPS[mod]]
         note = f"west strip: {n}"
         if n in COLL_PARTS:
             note = (f"west strip: io_collective segment {tn} (QC-FIX: coll split along y into {len(COLL_SEGS)} "
