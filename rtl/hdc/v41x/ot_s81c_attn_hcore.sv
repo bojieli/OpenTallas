@@ -56,7 +56,16 @@ module ot_s81c_attn_hcore #(
     // relay flop (async assert, synchronous release); the relay (kept, placed at the core centroid) drives every
     // reset pin of the core over a full cycle.  Release +2 cycles, static and equal for all 1024 cores (hardened once).
     wire rst_core_n;
-`ifdef OT_S81C_HCORE_RSTE
+`ifdef OT_S81C_HCORE_RST_TIMED
+    // Delivered synchronous reset: private assertion AND release cost two edges.
+    // No asynchronous root or CDC synchronizer is created inside the core.
+    (* keep = "true", dont_touch = "true" *) reg rst_e_q, rst_r_q;
+    always @(posedge clk) begin
+        rst_e_q <= rst_n;
+        rst_r_q <= rst_e_q;
+    end
+    assign rst_core_n = rst_r_q;
+`elsif OT_S81C_HCORE_RSTE
     (* keep = "true", dont_touch = "true" *) reg rst_e_q, rst_r_q;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin rst_e_q <= 1'b0; rst_r_q <= 1'b0; end
@@ -139,7 +148,11 @@ module ot_s81c_hcore_load_stage (
  input wire[7:0]ld_grp,input wire[1023:0]ld_w,input wire ld_w2v,
  output reg out_v,output reg out_mode,output reg[2:0]out_bank,
  output wire[7:0]out_grp,output reg[1023:0]out_w,output wire out_w2v);
+`ifdef OT_S81C_HCORE_RST_TIMED
+ always @(posedge clk)
+`else
  always @(posedge clk or negedge rst_n)
+`endif
    if(!rst_n) out_v<=1'b0; else out_v<=ld_v;
  always @(posedge clk) begin out_mode<=ld_mode;out_bank<=ld_bank;out_w<=ld_w;end
 `ifdef OT_S81C_LOAD_STAGE_MUT
