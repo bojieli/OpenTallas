@@ -140,30 +140,53 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
 def _man(a,b): return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 
-def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.4, min_rep=1):
+def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.0, min_rep=1, topology='htree', levels=0):
+    """topology 'htree' (default): symmetric 2x2 H-tree over the tap region,
+    pruned where a quadrant has no tap; every tap gets a private leg from its
+    H-tree leaf.  'bisect': count-balanced geometric bisection (fanout/leaf)."""
     if fanout<2 or leaf_fanout<1: raise ValueError('invalid clock fanout')
     a,b,c,d=g['core']; u=g['dbu']
     if any(not (a<=t['xy'][0]<=c and b<=t['xy'][1]<=d) for t in g['taps']):
         raise ValueError('tap buffer lies outside the physical core')
-    depth=0
-    while leaf_fanout*fanout**depth<len(g['taps']): depth+=1
     clusters=[]; legs=[]
     def cent(pts): return [sum(p['xy'][j] for p in pts)/len(pts) for j in (0,1)]
-    def build(pts,level):
-        cid=len(clusters); cl=dict(id=cid,level=level,point=cent(pts),taps=[t['name'] for t in pts],legs=[])
-        clusters.append(cl)
-        if level<depth:
-            for grp in split(pts,fanout):
-                ch=build(grp,level+1)
-                legs.append(dict(id=len(legs),level=level+1,parent=cid,child=['cluster',ch]))
-                cl['legs'].append(legs[-1]['id']); clusters[ch]['in_leg']=legs[-1]['id']
-        else:
-            for t in pts:
-                legs.append(dict(id=len(legs),level=level+1,parent=cid,child=['tap',t['name']]))
-                cl['legs'].append(legs[-1]['id'])
-        return cid
-    build(g['taps'],1)
-    # cluster points on legal free logic sites (a centroid may fall on a macro)
+    def add_taps(cid,pts,level):
+        for t in pts:
+            legs.append(dict(id=len(legs),level=level+1,parent=cid,child=['tap',t['name']]))
+            clusters[cid]['legs'].append(legs[-1]['id'])
+    def link(cid,ch,level):
+        legs.append(dict(id=len(legs),level=level+1,parent=cid,child=['cluster',ch]))
+        clusters[cid]['legs'].append(legs[-1]['id']); clusters[ch]['in_leg']=legs[-1]['id']
+    if topology=='bisect':
+        depth=0
+        while leaf_fanout*fanout**depth<len(g['taps']): depth+=1
+        def build(pts,level):
+            cid=len(clusters); clusters.append(dict(id=cid,level=level,point=cent(pts),taps=[t['name'] for t in pts],legs=[]))
+            if level<depth:
+                for grp in split(pts,fanout): link(cid,build(grp,level+1),level)
+            else: add_taps(cid,pts,level)
+            return cid
+        build(g['taps'],1)
+    elif topology=='htree':
+        xs=[t['xy'][0] for t in g['taps']]; ys=[t['xy'][1] for t in g['taps']]
+        box=[min(xs),min(ys),max(xs),max(ys)]
+        depth=levels
+        if not depth:
+            depth=1
+            while ((box[2]-box[0])+(box[3]-box[1]))/2**(depth+1)/u>1.25*rmax_um: depth+=1
+        def build(pts,r,level):
+            cid=len(clusters); clusters.append(dict(id=cid,level=level,point=[(r[0]+r[2])/2,(r[1]+r[3])/2],
+                                                   taps=[t['name'] for t in pts],legs=[],rect=r))
+            if level<=depth:
+                mx,my=(r[0]+r[2])/2,(r[1]+r[3])/2
+                for q in ([r[0],r[1],mx,my],[mx,r[1],r[2],my],[r[0],my,mx,r[3]],[mx,my,r[2],r[3]]):
+                    sub=[t for t in pts if q[0]<=t['xy'][0]<(q[2] if q[2]<r[2] else q[2]+1) and q[1]<=t['xy'][1]<(q[3] if q[3]<r[3] else q[3]+1)]
+                    if sub: link(cid,build(sub,q,level+1),level)
+            else: add_taps(cid,pts,level)
+            return cid
+        build(g['taps'],box,1)
+    else: raise ValueError(f'unknown trunk topology {topology}')
+    # cluster points on legal free logic sites (a centre may fall on a macro)
     probe=FreeSites(g)
     for cl in clusters: cl['point']=probe.legal(cl['point'],reserve=False)['xy']
     lead=dict(id=len(legs),level=0,parent=None,child=['cluster',0]); legs.append(lead); clusters[0]['in_leg']=lead['id']
@@ -173,12 +196,14 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.4, min_rep=1):
         L['C']=clusters[L['child'][1]]['point'] if L['child'][0]=='cluster' else tapxy[L['child'][1]]
         L['d']=_man(L['A'],L['C'])
     reps={}
+    tl=max(L['level'] for L in legs)
     for lv in sorted({L['level'] for L in legs}):
         dm=max(L['d'] for L in legs if L['level']==lv)/u
-        reps[lv]=max(0 if lv==0 else min_rep, math.ceil((dm if lv==0 else dm*slack)/rmax_um)-1)
+        if lv==0: reps[lv]=max(0,math.ceil(dm/rmax_um)-1)
+        elif lv==tl: reps[lv]=max(min_rep,math.ceil(dm*slack/rmax_um)-1)   # tap legs: always detour-capable
+        else: reps[lv]=max(0,math.ceil(dm*slack/rmax_um)-1)
     k=0
-    order=sorted(legs,key=lambda L:(L['level'],L['id']))
-    for L in order:
+    for L in sorted(legs,key=lambda L:(L['level'],L['id'])):
         L['n']=reps[L['level']]
         L['xmax']=max(0.0,(L['n']+1)*rmax_um*u-L['d']) if L['level'] else 0.0
         # equal-length start: every leg of a level as long as its longest
@@ -186,7 +211,7 @@ def plan_legs(g, fanout=4, leaf_fanout=2, rmax_um=100.0, slack=1.4, min_rep=1):
         L['x']=min(L['xmax'],float(dm-L['d'])) if L['level'] else 0.0
         L['bufs']=[f'ot_dtsh_{k+i}' for i in range(L['n']+1)]; k+=L['n']+1
         L['hist']=[]
-    p=dict(mode='closed_loop',clusters=clusters,legs=legs,taps=g['taps'],root=g['root'],root_name=g.get('root_name',''),
+    p=dict(mode='closed_loop',topology=topology,clusters=clusters,legs=legs,taps=g['taps'],root=g['root'],root_name=g.get('root_name',''),
            dbu=u,core=g['core'],master=g['master'],width=g['width'],height=g['height'],
            obstacles=[cc[1:5] for cc in g['cells'] if cc[5]],rmax_um=rmax_um,reps=reps,iters=[],
            fanout=fanout,leaf_fanout=leaf_fanout)
@@ -325,6 +350,8 @@ def cl_step(p,tap,buf,damp=0.8,k0=0.2,kmin=0.04,kmax=1.5):
         return pred[cid]
     visit(0)
     s=spread(tap)
+    if 'best' not in p or max(s)<p['best']['spread']:
+        p['best']=dict(iter=len(p['iters'])+1,spread=max(s),nodes=[[n['name'],n['ll'],n['orient']] for n in p['nodes']])
     p['iters'].append(dict(tt_spread=s[0],ff_spread=s[1],tt=[min(tt),max(tt)],ff=[min(ff),max(ff)],
                            capped=sum(1 for L in p['legs'] if L['level'] and L['x']>=L['xmax']-1)))
     return s
@@ -401,8 +428,18 @@ def main():
     ap.add_argument('--closed-loop',action='store_true',help='structured spine of private buffered legs (re-targeted by --cl-step)')
     ap.add_argument('--cl-step',metavar='MEAS',help='measured arrivals TSV; updates --out plan in place and writes --apply moves')
     ap.add_argument('--target-ps',type=float,default=20.0)
+    ap.add_argument('--restore-best',action='store_true',help='write --apply moves back to the best measured iteration')
     a=ap.parse_args();g=load_geometry(a.geometry)
     env=__import__('os').environ
+    if a.restore_best:
+        p=json.loads(Path(a.out).read_text())
+        b=p['best'];pos={nm:(ll,o) for nm,ll,o in b['nodes']}
+        same=all(pos[n['name']]==(n['ll'],n['orient']) for n in p['nodes'])
+        for n in p['nodes']: n['ll'],n['orient']=pos[n['name']]
+        if not same and a.apply: emit_moves(p,a.apply)
+        Path(a.out).write_text(json.dumps(p,indent=1)+'\n')
+        print(json.dumps(dict(restore=not same,best_iter=b['iter'],best_spread=round(b['spread'],2))))
+        return
     if a.cl_step:
         p=json.loads(Path(a.out).read_text())
         p['reps']={int(k):v for k,v in p['reps'].items()}
@@ -419,7 +456,8 @@ def main():
         return
     if a.closed_loop:
         p=plan_legs(g,fanout=int(env.get('OT_DTSH_FANOUT','4')),leaf_fanout=int(env.get('OT_DTSH_LEAF_FANOUT','2')),
-                    rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')))
+                    rmax_um=float(env.get('OT_DTSH_RMAX_UM','100')),topology=env.get('OT_DTSH_TOPOLOGY','htree'),
+                    levels=int(env.get('OT_DTSH_HTREE_LEVELS','0')))
     else:
         p=plan(g)
     Path(a.out).write_text(json.dumps(p,indent=1)+'\n')

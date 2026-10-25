@@ -316,7 +316,10 @@ proc ::ot_dtsh::relocate {name x y orient} {
   if {![dict exists $nodes $name]} { error "OT_DTSH relocate of unknown planned node $name" }
   check_site $x $y $orient
   set inst [dict get $nodes $name inst]
+  # OpenDB refuses to move a FIRM instance: release, move, re-firm
+  $inst setPlacementStatus PLACED
   $inst setOrient $orient; $inst setLocation $x $y
+  $inst setPlacementStatus FIRM
   set bounds [box $inst]
   if {[lrange $bounds 0 1] ne [list $x $y]} { error "OT_DTSH lower-left location mismatch for $name" }
   dict set nodes $name box $bounds
@@ -348,20 +351,30 @@ proc ::ot_dtsh::measure {path} {
 proc ::ot_dtsh::closed_loop {dir geom plan} {
   set iters [expr {[info exists ::env(OT_DTSH_CL_ITERS)] ? $::env(OT_DTSH_CL_ITERS) : 12}]
   set target [expr {[info exists ::env(OT_DTSH_CL_TARGET_PS)] ? $::env(OT_DTSH_CL_TARGET_PS) : 12}]
+  set py [list python3 /work/shallow_clock.py $geom --out $plan]
   set_propagated_clock [all_clocks]
-  set last ""
-  for {set i 1} {$i <= $iters + 1} {incr i} {
+  set last ""; set done 0
+  for {set i 1} {$i <= $iters} {incr i} {
     estimate_parasitics -placement
     set meas [file join $dir ot_dtsh_meas_$i.tsv]
     measure $meas
     set moves [file join $dir ot_dtsh_moves_$i.tcl]
     file delete -force $moves
-    # the last pass only records the final measurement (no re-placement)
-    set t [expr {$i > $iters ? 1e9 : $target}]
-    set last [exec python3 /work/shallow_clock.py $geom --out $plan --cl-step $meas --apply $moves --target-ps $t]
+    set last [exec {*}$py --cl-step $meas --apply $moves --target-ps $target]
     puts "OT_DTSH CL $last"
-    if {$i > $iters || ![file exists $moves]} break
+    if {![file exists $moves]} { set done 1; break }
     uplevel #0 [list source $moves]
+  }
+  if {!$done} {
+    # keep the best measured iteration, then record the final state
+    set moves [file join $dir ot_dtsh_moves_best.tcl]
+    file delete -force $moves
+    puts "OT_DTSH CL [exec {*}$py --restore-best --apply $moves]"
+    if {[file exists $moves]} { uplevel #0 [list source $moves] }
+    estimate_parasitics -placement
+    set meas [file join $dir ot_dtsh_meas_final.tsv]
+    measure $meas
+    set last [exec {*}$py --cl-step $meas --target-ps 1e9]
   }
   unset_propagated_clock [all_clocks]
   puts "OT_DTSH CLOSED-LOOP DONE: $last"
