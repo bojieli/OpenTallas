@@ -1548,9 +1548,9 @@ def main(argv=None):
     except HBS.RepairFailure as e:
         ft_rep = e.report
     (out / "ft_bits_report.json").write_text(json.dumps(ft_rep, indent=1, default=str) + "\n")
-    log.append(f"actual-bit FT: {ft_rep.get(checked, 0)} slots, {len(ft_rep.get(added, []))} grew, "
-               f"{len(ft_rep.get(type_failures, []))} type failures, {len(ft_rep.get(unfixed, []))} unfixed, "
-               f"{len(ft_rep.get(pad_conflicts, []))} pad conflicts (ft_bits_report.json)")
+    log.append(f"actual-bit FT: {ft_rep.get('checked', 0)} slots, {len(ft_rep.get('added', []))} grew, "
+               f"{len(ft_rep.get('type_failures', []))} type failures, {len(ft_rep.get('unfixed', []))} unfixed, "
+               f"{len(ft_rep.get('pad_conflicts', []))} pad conflicts (ft_bits_report.json)")
     import b2m as B2M  # noqa: E402
     B2M.clock(plan, out, log)
     for t in T.values():
