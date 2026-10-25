@@ -167,10 +167,11 @@ def make_tracks():
             "make_tracks M4 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048\n" + M123_TRACKS)
 
 
-def sdc(per, ins, tol, clks, rsts, tid, straps=()):
+def sdc(per, ins, tol, clks, rsts, tid, straps=(), in_min_ps=None):
     """core SDC in the sdc_lint vocabulary (CP1-R10): one real clock 'clk' on the core clock pin(s), one virtual IO clock
     at the plan common latency, 60/25 ps uncertainty split once per seam, explicit max AND min delays on every port
-    (min input = -insertion_tol: seam-hold padding as the partition kits; min output 0)."""
+    (min input = -insertion_tol: seam-hold padding as the partition kits; min output 0).  in_min_ps (IO-HOLD option A,
+    --io-hold-sender-min): the senders' guaranteed output-min instead of -insertion_tol."""
     io = IO_BUDGET * per
     multi = ("# ASSUMPTION (labelled, COORD 10-24): clock pins " + " ".join(clks) + " are separate plan clock nets (e.g. kvs_pc"
              " ck = core clock, hck = HBM-side clock, async CDC); the plan gives no HBM clock period, so all are co-timed as"
@@ -189,7 +190,11 @@ def sdc(per, ins, tol, clks, rsts, tid, straps=()):
          f"set_clock_uncertainty -from [get_clocks clk] -to [get_clocks vclk] -hold {(1 - UNC_SPLIT) * UNC_HOLD_PS:.4f}\n"
          f"set non_clk_in [all_inputs -no_clocks]\n"
          f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
-         f"set_input_delay -min {-tol:.4f} -clock vclk $non_clk_in\n"
+         + (f"set_input_delay -min {-tol:.4f} -clock vclk $non_clk_in\n" if in_min_ps is None else
+            f"# IO-HOLD option A (COORD 10:23, PATH-KV-ASTK4): every input is a sender's registered output whose own sign-off\n"
+            f"# guarantees no change before vclk + {in_min_ps:g} ps; related-pair seam hold is checked once at the parent\n"
+            f"# (io_hold_parent.py).  No flat -{tol:g} ps receiver padding.\n"
+            f"set_input_delay -min {in_min_ps:.4f} -clock vclk $non_clk_in\n") +
          f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n"
          f"set_output_delay -min 0.0000 -clock vclk [all_outputs]\n")
     if rsts:
@@ -410,6 +415,17 @@ def main():
                     help="PATH-KV-ASTK2 10-25 (GEOM 10:05): 4 contiguous zn zone GPL regions (2x2 over the upper core) + ctl "
                          "S band (zone_fence.tcl, released before DPL) and one regional clock tap per zone + ctl "
                          "(astk_zone_taps.tcl, CTS -balance_levels); needs --astk-write-decode")
+    ap.add_argument("--astk-succ4", action="store_true",
+                    help="PATH-KV-ASTK4 10-25 (CTS1 STRUCTURAL FAIL): zn_0 zi pin landing stage zp + 16 kept head read-address "
+                         "replicas (+1 cycle on the zn_0 zi input, KV-TOK reprice) and the 17 ctl zk copies as qkd_astk_zksel "
+                         "(start = last-stage select, 0 cycles); replica spec extended (astk_succ4.py); needs --astk-write-decode")
+    ap.add_argument("--astk-taps4", action="store_true",
+                    help="PATH-KV-ASTK4 10-25 (CLOCK-RESET LC1): boundary pin registers on their own face row taps (<= 500 sinks, "
+                         "<= 150 um along the face) + 4 zone taps + one ctl-band tap (astk_taps4.tcl); needs --astk-zone-fences")
+    ap.add_argument("--io-hold-sender-min", action="store_true",
+                    help="IO-HOLD option A for the core kit: min input delay = sender guarantee (1-UNC_SPLIT) x UNC_HOLD - out_min "
+                         "(12.5 ps) on every input instead of -insertion_tol; io_hold.tcl re-applies it after hold/sign-off "
+                         "overlays; the seam goes to the parent related-pair check (io_hold_parent.py)")
     ap.add_argument("--astk-strap-master", action="store_true",
                     help="OWNER option B (COORD 10-25 07:01): ONE kv3_astk master from a corner core json; the corner ID "
                          "constants (ctl st, zn zc[1:0]) come from input strap_corner[1:0] (EN 11 ES 10 WN 01 WS 00) via one "
@@ -524,6 +540,8 @@ def main():
             ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL",
             rep_split=(dict(zn_replicas=16, slice_bits=8, max_select_loads=64, kept="keep_hierarchy qkd_astk_rep5/rep4",
                             miter="kv-cores-1025r/astk/G/tb") if a.astk_rep_split else None)), indent=1) + "\n")
+    if a.astk_succ4 and not a.astk_write_decode:
+        raise SystemExit("--astk-succ4 needs --astk-write-decode")
     if a.astk_write_decode:
         if not (mod.startswith("kv3_astk_") and a.astk_timing_regs and a.astk_rep_split):
             raise SystemExit("--astk-write-decode needs a kv3_astk_* core + --astk-timing-regs --astk-rep-split")
@@ -533,6 +551,18 @@ def main():
         # before floorplan; FAIL stops the kit).  LEC cannot see a merged replica (GEOM 10:05 FAIL on W2).
         shutil.copyfile(HERE / "replica_check.py", kd / "replica_check.py")
         shutil.copyfile(HERE / "astk_replica_expect.json", kd / "replica_expect.json")
+        if a.astk_succ4:
+            import astk_succ4
+            astk_succ4.apply_kit(kd / "rtl")
+            (kd / "replica_expect.json").write_text(json.dumps(astk_succ4.expect(
+                json.loads((HERE / "astk_replica_expect.json").read_text())), indent=1) + "\n")
+            (kd / "astk_succ4_delta.json").write_text(json.dumps(dict(
+                added_cycles=dict(zn_0_zi=1, ctl=0), kv_tok="ASTK input u_strip_u_strip_g_zn_0_u_zn__zi +1 cycle (zp landing)",
+                zn_0=dict(landing="zp[137:0] plain pin register (no reset), zq <= zp", read_replicas=16, ff_per_replica=5,
+                          cause="zn_0 zq[6:2] pin flops drove the 16x128-b sd read select (leaf fan-out up to 2073)"),
+                ctl=dict(zk_copies="17 x qkd_astk_zksel (4 FF + start mux)", slot_regs="l_slot_r/z_slot_r start last select",
+                         cause="CTS1 TT -44.68/19 EP: start -> sa_n/zst_n mux -> subtract -> /Z_STRIDE -> zk copies"),
+                miter="core_miter vs CTS1 RTL with --old-delay zi 1 + zone-row==T masks; mutants"), indent=1) + "\n")
         (kd / "astk_wdec_delta.json").write_text(json.dumps(dict(added_cycles=0,
             zn=dict(lo_r_per_zone=8, kt_ke_r_per_zone=32, cause="tq/zq -> 15-b cb<T compare -> 128-load sd row write enable (TT -61.24, 197 EP)",
                     fix="lo_r[j] = ({S,sgam(L,j),000} < T[8:0]) registered from next state (zc, tc[9:1]); pb = kt_r[k] | ke_r[k] & lo_r[slot] (16:1, 16:1, 8:1 selects)"),
@@ -679,7 +709,8 @@ def main():
     if straps:
         import straps as STR
         STR.write_kit(kd, straps, source=f"plan hard_cores[{cj['inst']}] straps/parent_id_straps + core.json id_strap")
-    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid, straps))
+    in_min = (1 - UNC_SPLIT) * UNC_HOLD_PS - 0.0 if a.io_hold_sender_min else None
+    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid, straps, in_min_ps=in_min))
     # CP1-R10 fail-closed SDC gate (tools/die_plan/sdc_lint.py): context = the core's ports (+ declared ID straps, written
     # AFTER strap handling so face_guard / signoff / lint_kit_files read the same list)
     ins_ports = [b for b, d in cj["port_decl"].items() if d[0] == "input" and b not in clks]
@@ -687,6 +718,15 @@ def main():
     lctx = dict(period_ps=per, insertion_ps=ins, insertion_ff_ps=ibind["ff"], insertion_tol_ps=tol, clock_ports=clks, inputs=ins_ports, outputs=outs,
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
                 io_floor_ps={p: IO_BUDGET * per for p in ins_ports + outs}, port_latency_ps={}, straps=straps)
+    if in_min is not None:
+        lctx["hold_in_min_ports_ps"] = {p: in_min for p in ins_ports}
+        (kd / "io_hold.tcl").write_text(
+            "# GENERATED by gen_core_kit_kv.py --io-hold-sender-min (IO-HOLD option A): re-applies the per-port min input\n"
+            "# delay (sender guarantee) after a hold / sign-off overlay set the fallback on every input.\n"
+            "proc ot_io_hold_apply {vclk} {\n"
+            f"  set_input_delay -min {in_min:.4f} -clock $vclk [get_ports {{{' '.join(ins_ports)}}}]\n"
+            f"  puts \"OT_IO_HOLD sender_min ports {len(ins_ports)} in_min {in_min:g}\"\n"
+            "}\n")
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     shutil.copyfile(Path(a.tool) / "sdc_lint.py", kd / "sdc_lint.py")
     shutil.copyfile(Path(a.tool) / "straps.py", kd / "straps.py")
@@ -804,6 +844,12 @@ def main():
         if not (mod == "kv3_astk" or mod.startswith("kv3_astk_")) or not a.astk_write_decode:
             raise SystemExit("--astk-zone-fences needs a kv3_astk core + --astk-write-decode")
         cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM)
+        if a.astk_taps4:
+            shutil.copyfile(HERE / "astk_taps4.tcl", kd / "astk_taps4.tcl")
+            (kd / "zone_pre_cts.tcl").write_text("source /work/max_fanout.tcl\nset ::env(OT_LANE_RE) {" + ASTK_TAP_RE
+                                                 + "}\nsource /work/astk_taps4.tcl\n")
+    elif a.astk_taps4:
+        raise SystemExit("--astk-taps4 needs --astk-zone-fences")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
