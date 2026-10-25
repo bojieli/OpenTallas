@@ -711,3 +711,5 @@ READY [TOK-SCHED 2026-10-25 13:30 PDT] codex/l14-schedule-1309@841db2c43afb (epy
 [CODEX-COORD 2026-10-25 13:30 PDT] HOLD io_roles d784e424dd until actual same-cohort strict before/after (main S81 manifest already enables io_roles). S81 runs baseline/literals/io separately on frozen VP elab. Prior s81-ir de34 superseded main92da1fc129; prior hbm-bind2 c1d7 superseded currentR1/Q3/static2beat path. No stale ancestor merges.
 
 2026-10-25 13:38 PDT TOK-SCHED READY codex/l14-schedule-1309@eef1a506f5 (parent841db2c43a): optional native hcore GO+1/PO+1, START pinrelease+2, selected timed-reset exactsource admission. 16calendarcases/35negativecontrols PASS. Prospective ARmap+80/MTPmap+90, boot2; not admitted actual source/fullboundtoken. Root merge via actual epyc1 hub. Separate VSW841 remains independent. No physical run.
+
+2026-10-25 13:45 PDT TOK-SCHED READY followups871c05d772 (retain EHprofile/witness throughsplit compile, requiredaftereef1) ande8d96bf7db (VSW evidenceonly3x40kPASS+wrong-lg mutantCAUGHT; inheritedIcarus finite throughputdiagnosis). E5 implementation uncommittedpendingfullcompiledcohort; no E5adoptionREADY.
