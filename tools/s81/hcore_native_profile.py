@@ -31,11 +31,14 @@ def main():
   dst.write_bytes(data);mapping[src.name]=str(dst);hashes[src.name]=hashlib.sha256(data).hexdigest()
  if b"ot_s81c_hcore_load_stage u_load_stage" not in (ROOT/FILES[0]).read_bytes():raise SystemExit("missing connected native sender stage")
  for field in ["files","prefer"]:
-  arr=d.get(field,[]);seen={};n=0
+  arr=d.get(field,[]);seen=set();result=[];n=0
   for f in arr:
-   name=Path(f).name;new=mapping.get(name,f);n+=int(name in mapping);seen[new]=None
-  if n<2:raise SystemExit(field+" does not contain both selected hcore sources")
-  d[field]=list(seen)
+   name=Path(f).name
+   if name not in mapping:result.append(f);continue
+   new=mapping[name];n+=1
+   if new not in seen:result.append(new);seen.add(new)
+  if len(seen)!=len(FILES):raise SystemExit(field+" does not contain both selected hcore sources")
+  d[field]=result
  contract={"kind":"S81_CTLA_RSTE_NATIVE_LOAD_STAGE","core_WPRE":2,"reset_release_cycles_after_core_pin":2,"stationary_load_transport_added_cycles":1,"stationary_load_stage_source_FF_per_16head_tile":1029,"controls":"ld_grp/ld_w2v bypass sender data stage; all load valid/mode/bank/data fields captured once. No prediction.","source_sha256":hashes,"component_qualification":str(Path(a.qualification).resolve()),"compiler_gate":"Actual-program last load -> first IV guard must include +1 sender stage; +2 core readiness must be included in boot/start. Component PASS is not G5."}
  d["defines_note"]="Qualified physical hcore CTLA/WPRE2 + RSTE, connected sender load stage; legacy WPRE1 removed"
  d["core_profile"]=contract
