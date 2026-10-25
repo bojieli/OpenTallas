@@ -1,0 +1,21 @@
+{
+ "verdict": "NOT_SIGNED_CANONICAL_FACE_GUARD_FAIL",
+ "historical_timing": {
+  "rstg_h5": {
+   "tt_setup_ps": 355.19,
+   "ff_hold_ps": 4.42
+  },
+  "payload_h5": {
+   "tt_setup_ps": 345.06,
+   "ff_hold_ps": 1.96
+  }
+ },
+ "canonical_face_guard": {
+  "rstg": "FAIL merged132",
+  "payload536": "FAIL merged1072"
+ },
+ "cause": "Legacykit-localpairINOUTparserwasrejectedbyS81at19:34; historicalPASSisnotcanonicalclosure",
+ "clock": "zero-internal-pair clockcensussolved;66/536flopsallclocked",
+ "next": "CLOCK/reset_targetsowntwo-stageOFF-defaultsuccessors,+1cyclemodeldelta,bench+mutantsandphysicalgates",
+ "old_verdicts": "retainedunchanged"
+}
