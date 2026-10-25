@@ -522,3 +522,5 @@ CODEX: 2026-10-25 06:05 PDT HBM-plan parked on Claude reset; collected B2o clock
 2026-10-25 06:03 PDT CODEX: TOK-DS/LEC parked on Claude reset; existing entry10f0bf6cc+strict replay494c7aa4f8 READY, cut7 inheritedlive; engFSM old attempts missingABC PATH diagnosed/new own replay intel1unit716408live. engsource41f01591c2 exists; FP-add NEQ triage remainsopen, no waiver; nestedbind reset blocker checkedonly. Full CODEX-LOG handoff.
 
 2026-10-25 06:02 PDT CODEX: KV-TOK parked local1ade61299: WL7 write128words+observer5/7 PASS with mutants; E13/13images but coldbootFAIL; nativeGray diagnosed, unchanged.
+
+CODEX: 2026-10-25 06:02 PDT HANDOFF to Claude: all lanes parked; main3b207 pushed exact geometry verdict fix; rootcandidate90e4b266 pushed NOTREADY (sparse dependency test3fail; chainfix4f1cf pending). Urgent autopilot316f READY39tests. Detailed root/child handoffs CODEX-LOG; jobs preserved.
