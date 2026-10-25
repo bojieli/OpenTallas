@@ -399,3 +399,4 @@ All ot-run units (containers hbmcore-<kit>_*), branch claude/hbm-cores-1024 @9e9
   - 8 low-fill outlines;
   - grows: xcal_rel_t (replaces an M6 grant), svc_pc, idx_score_quarter.
 - OWNER? still open: face_guard (blocks every core except bankq_ft).
+- 2026-10-24 23:59 PDT HBM-HC: gates: HC_W_DEFAULT_EQ_GATE PASS (W64 lockstep vs fc76a2c42 originals + scoped term, 20000 cyc, 0 mismatches; mutants qcen-swap 6645 / term-flip 19938 / bank 8429 mismatches = caught). HC_HALF128 MUT0 PASS (W128 half vs 2x original W64 quarters + 7th fp32 add, 3000 sums, 0 mismatches, 0 faults, x-initial unique = decision 13 OK). Mutants 1,3-7 running on epyc3.
