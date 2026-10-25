@@ -722,11 +722,26 @@ def canary_wave_gate(row):
                               HOME / "OpenTallas", sh)
 
 
+def withdraw_unqueued(st, rows):
+    """A WAIT-GEOM / WAIT-CANARY job whose queue row is gone (line commented out '# WITHDRAWN ...' / '# SUPERSEDED',
+    or deleted) can never be admitted: mark it WITHDRAWN so it stops counting as a held row (FLOW-CANARY 10-25: 3 of
+    the 9 WAIT-CANARY rows were commented-out queue lines).  Never on an empty parse (unreadable queue); a row put
+    back into the queue is re-admitted normally (admit_new re-evaluates WITHDRAWN)."""
+    if not rows:
+        return
+    for jid, j in st["jobs"].items():
+        if j.get("status") in ("WAIT-GEOM", "WAIT-CANARY") and jid not in rows:
+            log(f"WITHDRAWN {jid} {j.get('die')}/{j.get('type')}: queue row gone (commented out or removed); was "
+                f"{j.get('status')}")
+            set_status(st, j, "WITHDRAWN", f"queue row gone (was {j.get('status')} at line {j.get('queue_line') or j.get('line')})")
+
+
 def admit_new(st, rows):
     submitted = 0
+    withdraw_unqueued(st, rows)
     for rid, r in sorted(rows.items(), key=lambda kv: kv[1]["line"]):
         j = st["jobs"].get(rid)
-        if j and j.get("status") not in (None, "WAIT-GEOM", "WAIT-CANARY", "REJECTED"):
+        if j and j.get("status") not in (None, "WAIT-GEOM", "WAIT-CANARY", "REJECTED", "WITHDRAWN"):
             geom_fail_after_submit(st, j, r)
             continue                                   # already handled; the queue never restarts a job
         if j and j.get("status") == "REJECTED" and j.get("queue_line") == r["line"]:

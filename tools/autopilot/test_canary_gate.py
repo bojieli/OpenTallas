@@ -11,12 +11,14 @@ class Gate(unittest.TestCase):
     def setUp(self):
         self.t=tempfile.TemporaryDirectory(); self.root=Path(self.t.name)
         self.repo=self.root/'repo'; p=self.repo/'tools/flow_canary';p.mkdir(parents=True)
-        (p/'canaries.json').write_text(json.dumps({'watch':['tools/die_plan/*']}))
+        (p/'canaries.json').write_text(json.dumps({'watch':['tools/die_plan/*'],'canaries':[{'die':'hbm','item':'tkm@new'},{'die':'qwen_kvsys_core','item':'e1'}]}))
         self.row={'die':'s81','mode':'submit','src':'codex/kit@kit123456789'}
         self.git=lambda *a,**kw:(0,'','')
     def tearDown(self):self.t.cleanup()
-    def runref(self,name,verdict=None,src='abc123456789',die='s81'):
-        p=self.root/name;p.mkdir();(p/'canary_meta.json').write_text(json.dumps({'spec':{'die':die},'src_commit':src}))
+    def runref(self,name,verdict=None,src='abc123456789',die='s81',item=None):
+        sp={'die':die}
+        if item:sp['item']=item
+        p=self.root/name;p.mkdir();(p/'canary_meta.json').write_text(json.dumps({'spec':sp,'src_commit':src}))
         if verdict:(p/'canary.json').write_text(json.dumps({'verdict':verdict,'src':src}))
         q=p/"canary_meta.json"
         os.utime(q, ns=(1000000000+len(list(self.root.glob("*/canary_meta.json"))),)*2)
@@ -73,6 +75,20 @@ class Gate(unittest.TestCase):
         self.runref('s81_ref','PASS')
         self.row['die']='cp1';self.assertTrue(self.gate())
         self.row['die']='unknown';self.assertFalse(self.gate())
+    def test_retired_reference_item_neither_binds_nor_holds(self):
+        self.row['die']='hbm'
+        self.runref('old_cal','PASS',die='hbm',item='calendar@old')
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('item tkm@new',why)
+        self.runref('new_tkm',die='hbm',item='tkm@new')
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('pending',why)
+        self.assertIn('new_tkm',why)
+    def test_kv_core_kit_binds_core_canary(self):
+        self.runref('kvio','PASS',die='qwen_kvsys');self.runref('kvcore','FAIL',die='qwen_kvsys_core',item='e1')
+        self.row['die']='qwen_kvsys';self.assertTrue(self.gate())
+        self.row['runner']='/x/run_kit_kv.sh'
+        ok,why=assess(self.row,self.root,self.repo,self.git);self.assertFalse(ok);self.assertIn('kvcore',why)
+        del self.row['runner'];k=self.root/'kit';k.mkdir();(k/'run_kit_kv.sh').write_text('')
+        self.row['kit']='epyc1:'+str(k);self.assertFalse(self.gate())
     def test_adopt_never_stalls_observation(self):
         self.row['mode']='adopt';self.assertTrue(self.gate())
 

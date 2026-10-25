@@ -5,18 +5,24 @@ Binding canary = the NEWEST COMPLETED canary run of the reference die (canary.js
 A PASS binds a kit only when the kit's watched flow files equal the PASS canary's, and
 main's watched flow is either the PASS canary's or already covered by a newer (pending)
 canary run.  A corrective kit names the reference failure by path (after the last '@').
+Only runs of the die's CURRENT reference item (tools/flow_canary/canaries.json) count: after a reference switch the
+old item's results neither bind nor hold (FLOW-CANARY 10-25: HBM rows kept binding the retired B2l calendar FAIL).
+Reference die: cp1 -> s81; a qwen_kvsys hard-core kit (runner run_kit_kv.sh, or a kit dir holding one) ->
+qwen_kvsys_core, the canary of that flow (gen_core_kit_kv.py), not the gen_phys type canary kv3_io_ft.
 """
 import fnmatch
 import json
 from pathlib import Path
 
 
-def _runs(root, die):
+def _runs(root, die, item=None):
     runs = []
     for p in Path(root).glob('*/canary_meta.json'):
         try:
             meta = json.loads(p.read_text())
             if meta['spec']['die'] != die:
+                continue
+            if item and meta['spec'].get('item', item) != item:
                 continue
             mtime = p.stat().st_mtime_ns
         except (OSError, ValueError, KeyError, TypeError):
@@ -74,18 +80,43 @@ def _corrective(correction, runs, root, die):
     return True, 'explicit corrective kit for failed canary ' + r['ref']
 
 
+def _kv_core_kit(row):
+    if Path(row.get('runner') or '').name == 'run_kit_kv.sh':
+        return True
+    path = (row.get('kit') or '').split(':', 1)[-1]
+    try:
+        return bool(path) and (Path(path) / 'run_kit_kv.sh').is_file()
+    except OSError:
+        return False
+
+
+def reference_die(row):
+    die = row['die']
+    if die == 'qwen_kvsys' and _kv_core_kit(row):
+        return 'qwen_kvsys_core'
+    return {'cp1': 's81'}.get(die, die)
+
+
 def assess(row, root, repo, run_git):
     if row.get('mode') == 'adopt':
         return True, 'existing run: observation only'
-    reference_die = {'cp1': 's81'}.get(row['die'], row['die'])
-    runs = _runs(root, reference_die)
+    ref_die = reference_die(row)
+    try:
+        spec = json.loads((Path(repo) / 'tools/flow_canary/canaries.json').read_text())
+    except (OSError, ValueError):
+        spec = None
+    item = None
+    if spec:
+        item = next((c.get('item') for c in spec.get('canaries', []) if c.get('die') == ref_die), None)
+    runs = _runs(root, ref_die, item)
     if not runs:
-        return False, 'no reference canary for die ' + reference_die + '; register a reviewed reference canary first'
+        return False, ('no reference canary for die ' + ref_die + (' item ' + item if item else '')
+                       + '; register a reviewed reference canary first')
     newest = runs[-1]
     completed = [r for r in runs if r['done']]
     correction = row.get('canary_fix')
     if correction:
-        return _corrective(correction, runs, root, reference_die)
+        return _corrective(correction, runs, root, ref_die)
     if not completed:
         return False, ('newest reference canary pending: ' + newest['ref']
                        + '; reviewed corrective kit only: re-enqueue --canary-fix ' + newest['ref'])
@@ -93,11 +124,9 @@ def assess(row, root, repo, run_git):
     if bind['verdict'] != 'PASS':
         return False, ('newest completed reference canary failed: ' + bind['ref']
                        + '; reviewed corrective kit only: re-enqueue --canary-fix ' + bind['ref'])
-    try:
-        spec = json.loads((Path(repo) / 'tools/flow_canary/canaries.json').read_text())
-        watch = spec['watch']
-    except (OSError, ValueError, KeyError):
+    if not spec or 'watch' not in spec:
         return False, 'flow canary watch specification missing'
+    watch = spec['watch']
     # main's watched flow is covered when a newer pending run already canaries it;
     # otherwise main must still carry the PASS canary's flow.
     covered = False
