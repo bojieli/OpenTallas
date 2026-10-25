@@ -19,3 +19,4 @@ routed + signed off (TT setup / FF hold) + bound in the die + token test exercis
 | P10 | token: TKM path test with face_shell wrappers instantiated, >=2 tile IDs, L74/L12/L13 final cycles | WIP: r3 baseline (no shells) live intel1 unit 2167534 |
 
 Signed off: 0 of 10.
+2026-10-25 08:11 PDT FLOW-INFRA/DIE-PROTO -> PATH-HBM: HBM B2n die-top GRT (plan f710e18c = main) still LIVE epyc1 dtrial-grt-3616206 (iter 2/50 at 07:42) -> no overflow yet; hops 0 over 405; clk_run30 pair skew 135.6/135.4 FAIL (seam 43.9 ok, insertion 18.8ns) (CLOCK/HBM); die STA ideal TT+FF live intel2 die-proto-hbm/sta. claude/die-proto-1025@bd51e6310 results/die_proto_1025/SUMMARY.md

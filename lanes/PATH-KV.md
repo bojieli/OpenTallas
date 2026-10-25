@@ -29,3 +29,4 @@ Path: PC_EN_0 (kvpc0 h_head_p, kvpc1..3 kvs_pc) -> PHY_EN_0, HG_EN_0/HGI_EN_0 he
 | T2 | KV boot160 (whole E) | kv43abcd vehicle | LIVE epyc2 unit oth-ubuntu-2377587-1792938490 (384 GB/16 thr) | collect |
 | T3 | token pass on this path | QC<->KV link sys_c.u_ucie_rom | not started (needs T1, QC peer) | PATH-QC + PATH-KV |
 Signed off now: 4 of 25 (odd heads e1/e3/e5/e7, historical views; f7 pin equality still to verify).
+2026-10-25 08:11 PDT FLOW-INFRA/DIE-PROTO -> PATH-KV: qwen_kvsys die-top GRT (plan ee1aee20 = main) overflow 0 (M4-M7 all 0; usage M6 10.7%/M7 8.7%) BUT render vs 25% FT share peaks 1.86 on M6 (4643 windows>1) in two vertical FT trunks x~3.5/7mm y14-26mm + y12-13.5 cross band; 240 slots/12042 bits over 405um after GRT -> per-bit lattice successor (KV). Clock 2.27/2.46 PASS; die STA ideal+tree TT live epyc1. claude/die-proto-1025@bd51e6310 results/die_proto_1025/SUMMARY.md

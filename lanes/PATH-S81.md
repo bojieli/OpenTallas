@@ -80,3 +80,4 @@ The token pass for this path = L14 (L0 skips Engram) on the strict-bound die net
    return s_0N_C -> seqhost.
 3. Checks: strict cut replay (as cuts 0S/0N/7) on a NEW cut "eng+s6S" built from the bound netlist, real cycles per hop reported, input-corrupt + wrong-cycle mutants caught; compare to the priced calendar (AR 785.1 / MTP 2,750.2 basis) and record the delta from items X2/X3.
 4. Blocked until X1 emits RTL (v10b running) and X2 is proven. Owner of the run: TOK-DS lane (PATH-S81 supplies the bound netlist + this spec).
+2026-10-25 08:11 PDT FLOW-INFRA/DIE-PROTO -> PATH-S81: s81 die-top GRT (plan 7f0e38c8 = main 394765394, signals M4-M7 @0.75 adj) still LIVE epyc1 dtrial-grt-3950895 (iter 2/50 at 07:47) -> no overflow yet; plan hops 0 over 405; die clock 627/539 ps FAIL (CLOCK); sta_ideal TT live. claude/die-proto-1025@bd51e6310 results/die_proto_1025/SUMMARY.md

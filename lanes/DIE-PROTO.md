@@ -8,3 +8,11 @@ Branch claude/die-proto-1025 (worktree epyc1:/srv/opentallas-scratch2/claude/wt/
   M8/M9 clock/PG obs) + die_sta.py/die_ci.py ILM with signed views. Signed partition types on current plans (release cache):
   S81 slice_station t12/t17/t20/t21, KV kv3_head_eighth e1/e3/e5/e7 (plan match to verify); QC/head none (cores only).
 2026-10-25 06:35 PDT DIE-PROTO: branch claude/die-proto-1025 pushed (=main 6a6fc12dd). 4 sub-agents launched: S81; s81_head+qwen_kvsys; qwen_compute; HBM (B2n on main G0C check first, B2o if it passes). Each: die_trial kit + die GRT (M4-M7) via ot-run, hop check vs 405, die_sta ILM with contract stand-ins + matching signed views, renders viewed. Fleet data epyc1:/srv/opentallas-scratch2/claude/die-proto/<die>/.
+## PARKED 2026-10-25 08:11 PDT (FLOW-INFRA/DIE-PROTO-COLLECT)
+Branch claude/die-proto-1025@bd51e6310 (results/die_proto_1025/SUMMARY.md + small logs/json/png). All 5 plans = main 394765394 plan sha.
+Results: s81_head GRT ovf 0 (STA ideal PASS, tree no-PHY FAIL hold -154.6/skew 213.65); qwen_kvsys GRT ovf 0 but render peak 1.86 vs 25% FT share + 240 hops >405;
+ qwen_compute it5 GRT ovf 1,659,581 (M6 407k H, M7 1.25M V) in SU FT band y10-11mm; s81 + hbm GRT pending.
+Live jobs (do not duplicate): epyc1 dtrial-grt-3950895 (s81 GRT, 50 iters, ot-run client 3768013); epyc1 dtrial-grt-3616206 (hbm GRT, client 3450983);
+ intel2 dtrial-grt-134732 (qwen_compute GRT 50 iters, client epyc1 2328984); epyc1 s81 sta_ideal (oth-ubuntu-3870481), kvsys sta_tree/sta_ideal (oth-ubuntu-3968450/3969990);
+ intel1 qwen_compute kit2 STA TT/FF (oth-ubuntu-1542297/1542814); intel2 hbm die_sta (oth-ubuntu-296097); waiting clients: kvsys run_sta_branch (epyc1 429300), s81_head run_sta_branch_nophy chain (epyc1 431301).
+Next: collect s81/hbm GRT by-layer overflow when they finish (50 iters is >20 min/iter; consider 5-iter variant only if they stall); collect die STA verdicts; QC: SU FT band structural fix (PATH-QC); KV: per-bit lattice (PATH-KV); head: clock load contract (CLOCK).
