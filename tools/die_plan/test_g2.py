@@ -382,6 +382,49 @@ def test_per_tap_reset_synchronisers():
     assert "source /work/reset_taps.tcl" in ff and (HERE / "reset_taps.tcl").is_file()
 
 
+def test_pipelined_reset_release():
+    """OWNER RESET RULE 10-24: reset.release 'pipelined' -> no asynchronous synchroniser in the partition; arst_n gets a
+    face flop and every tap an equal-depth relay chain (D = ceil(farthest tap / (relay_um - margin))), rst_n_t<i> =
+    arst_n delayed D+1 cycles; the relay copies are not merged by synthesis; reset_taps.tcl places them."""
+    import copy
+    import math
+    import re
+    import shutil
+    import subprocess
+    import gen_phys
+    import gen_rtl
+    raw = copy.deepcopy(PAIR)
+    raw.setdefault("reset", {})["release"] = "pipelined"
+    assert schema.validate(raw) == []
+    P = schema.Plan(raw)
+    taps = schema.tap_grid(P, "fa")
+    px, py = gen_phys.tap_points(P, "fa")[1]
+    D, reach = gen_rtl.reset_pipe(P, "fa")
+    far = max(abs(x - px) + abs(y - py) for _, x, y in taps)
+    assert reach == 405.0 and D == max(1, math.ceil(far / (405.0 - gen_rtl.RESET_RELAY_MARGIN_UM))) and far / D <= 380.0
+    with tempfile.TemporaryDirectory() as d:
+        gen_rtl.write_rtl(copy.deepcopy(raw), d)
+        v = (Path(d) / f"{P.types['fa']['module']}.sv").read_text()
+        assert "ot_dp_rsync" not in v and "u_rst_sync" not in v
+        assert "ot_dp_rpipe #(.N(1)) u_rpipe_in (.clk(clk), .d(arst_n), .q(arst_q));" in v
+        assert all(f"ot_dp_rpipe #(.N({D})) u_rpipe_t{i} (.clk(clk), .d(arst_q), .q(rst_n_t{i}));" in v
+                   for i in range(len(taps)))
+        cells = Path(d) / "ot_dp_cells.sv"
+        if shutil.which("yosys"):
+            top = Path(d) / "t.sv"
+            top.write_text("module t(input wire clk, input wire a, output wire y0, output wire y1);\n"
+                           "  ot_dp_rpipe #(.N(3)) u0(.clk(clk), .d(a), .q(y0));\n"
+                           "  ot_dp_rpipe #(.N(3)) u1(.clk(clk), .d(a), .q(y1));\nendmodule\n")
+            r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {top}; synth -top t; stat"],
+                               capture_output=True, text=True)
+            assert r.returncode == 0, r.stderr
+            assert len(re.findall(r"\$_DFF_P_\s+3", r.stdout)) >= 1 and "ot_dp_rpipe" in r.stdout, r.stdout
+    rt = (HERE / "reset_taps.tcl").read_text()
+    assert "u_rpipe_in" in rt and "u_rpipe_t" in rt
+    P0 = schema.Plan(copy.deepcopy(PAIR))
+    assert gen_rtl.reset_pipe(P0, "fa") is None                        # default stays counted (per-tap synchronisers)
+
+
 def test_grid_is_default_and_sink_taps_only_add():
     """CP1 r8 RULING (COORD 10-23 21:26): the R4 tap GRID (<= 400 um, covering all sinks) is the default on every die;
     clock.tap_mode 'grid+sinks' / 'sinks' (KV-P6) only ADDS sink-anchored taps after the grid taps, never replaces

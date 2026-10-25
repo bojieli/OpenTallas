@@ -90,6 +90,75 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
       }
     }
   }
+  # (1b) OWNER RESET RULE 10-24 (gen_rtl reset.release 'pipelined'): the face flop u_rpipe_in at the arst_n pin, stage j
+  # (1..D) of u_rpipe_t<i> FIRM at j/D on the straight pin -> tap i line, moved to the nearest point outside every macro
+  # halo; every hop <= OT_RESET_RELAY_UM (405) or OT_RESET_TAPS WARN.  Released for DPL like the face flops.
+  set rt_ab [$rt_blk findBTerm arst_n]
+  set rt_pipe {}; set rt_pin {}
+  foreach ins [$rt_blk getInsts] {
+    if {![string match "*DFF*" [[$ins getMaster] getName]]} continue
+    set nm [string map {\\ {}} [$ins getName]]
+    if {[regexp {(^|[/.])u_rpipe_in[/.]} $nm]} { set rt_pin $ins; continue }
+    if {[regexp {(^|[/.])u_rpipe_t([0-9]+)[/.]r\[([0-9]+)\]} $nm -> _p i j]} { dict set rt_pipe $i $j $ins
+    } elseif {[regexp {(^|[/.])u_rpipe_t([0-9]+)[/.]r[^\[]*$} $nm -> _p i]} { dict set rt_pipe $i 0 $ins }
+  }
+  if {$rt_ab ne "NULL" && $rt_pin ne "" && [dict size $rt_pipe]} {
+    set bb [$rt_ab getBBox]
+    set px [expr {([$bb xMin] + [$bb xMax]) / 2}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2}]
+    set rt_halo [expr {int(4.32 * $rt_dbu)}]
+    set rt_mac {}
+    foreach i [$rt_blk getInsts] {
+      if {[[$i getMaster] isBlock]} {
+        set b [$i getBBox]
+        lappend rt_mac [list [expr {[$b xMin]-$rt_halo}] [expr {[$b yMin]-$rt_halo}] [expr {[$b xMax]+$rt_halo}] [expr {[$b yMax]+$rt_halo}]]
+      }
+    }
+    set rt_core [$rt_blk getCoreArea]
+    proc rt_free {x y} {
+      upvar #0 rt_mac mac rt_core core
+      if {$x < [$core xMin] || $y < [$core yMin] || $x > [$core xMax] || $y > [$core yMax]} { return 0 }
+      foreach m $mac { lassign $m a b c d; if {$x > $a && $x < $c && $y > $b && $y < $d} { return 0 } }
+      return 1
+    }
+    proc rt_freept {x y} {
+      upvar #0 rt_dbu dbu
+      if {[rt_free $x $y]} { return [list $x $y] }
+      set st [expr {int(2.16 * $dbu)}]
+      for {set r 1} {$r < 300} {incr r} {
+        set d [expr {$r * $st}]
+        foreach {dx dy} [list 0 $d 0 -$d $d 0 -$d 0 $d $d -$d $d $d -$d -$d -$d] {
+          if {[rt_free [expr {$x + $dx}] [expr {$y + $dy}]]} { return [list [expr {$x + $dx}] [expr {$y + $dy}]] }
+        }
+      }
+      return [list $x $y]
+    }
+    set rt_reach [expr {([info exists ::env(OT_RESET_RELAY_UM)] ? $::env(OT_RESET_RELAY_UM) : 405.0) * $rt_dbu}]
+    set got [ff_put_near $rt_pin {*}[rt_freept $px $py]]
+    if {$got ne ""} { puts $rt_out "[$rt_pin getName]\trpipe_in\t[expr {[lindex $got 0] / double($rt_dbu)}]\t[expr {[lindex $got 1] / double($rt_dbu)}]\tarst_n" }
+    set rt_np 1; set rt_hmax 0; set rt_depths {}
+    foreach tp $rt_taps {
+      lassign $tp i tx ty
+      if {![dict exists $rt_pipe $i]} continue
+      set ch [dict get $rt_pipe $i]
+      set D [dict size $ch]
+      lappend rt_depths $D
+      set prev [$rt_pin getLocation]
+      for {set j 0} {$j < $D} {incr j} {
+        set f [dict get $ch $j]
+        set k [expr {$j + 1}]
+        lassign [rt_freept [expr {int($px + ($tx - $px) * $k / double($D))}] [expr {int($py + ($ty - $py) * $k / double($D))}]] qx qy
+        set got [ff_put_near $f $qx $qy]
+        if {$got eq ""} continue
+        puts $rt_out "[$f getName]\trpipe_t$i\t[expr {[lindex $got 0] / double($rt_dbu)}]\t[expr {[lindex $got 1] / double($rt_dbu)}]\tclk_t$i"
+        set h [expr {abs([lindex $got 0] - [lindex $prev 0]) + abs([lindex $got 1] - [lindex $prev 1])}]
+        set rt_hmax [expr {max($rt_hmax, $h)}]
+        set prev $got
+        incr rt_np
+      }
+    }
+    set w [expr {$rt_hmax > $rt_reach ? " WARN max hop > [expr {$rt_reach / double($rt_dbu)}] um" : ""}]
+    puts "OT_RESET_TAPS pipelined release: $rt_np relay flops FIRM (face flop + [dict size $rt_pipe] tap chains, depths [lsort -unique $rt_depths]), max planned hop [format %.0f [expr {$rt_hmax / double($rt_dbu)}]] um$w"
+  }
   close $rt_out
   # (2) FIRM flops -> nearest tap's synchroniser nets
   set rt_moved 0; set rt_keep 0; set rt_nopol 0

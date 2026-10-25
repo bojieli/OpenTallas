@@ -235769,7 +235769,8 @@
   "sync_stages": 2,
   "data_reset": false,
   "epoch_bit": true,
-  "release": "counted"
+  "release": "pipelined",
+  "relay_um": 405
  },
  "census": [
   {

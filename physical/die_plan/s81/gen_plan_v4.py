@@ -1702,7 +1702,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
                   "spine": {"layers": ["M8", "M9"], "root_um": [round(X0 + 11 * PX, 4), round(X0 + 10 * PY, 4)],
                             "topology": "htree"}},
         "reset": {"source": {"part": "@die", "bus": "rst_n"}, "sync_stages": 2, "data_reset": False,
-                  "epoch_bit": True, "release": "counted"},
+                  "epoch_bit": True, "release": "pipelined", "relay_um": 405},  # OWNER RESET RULE 10-24
         "census": [{"rows": "census/s81_lanes.tsv", "map": "census_map.json",
                     "note": "FT census of the bound as-built die (1364 rows); finer partition-level check incl. "
                             "bus-aware lep rx/tx and src-bus dedup: census_cov.py -> v3/census_cov.json"}],

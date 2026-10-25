@@ -76,6 +76,18 @@ endmodule
 // ot_dp_rsync_s<N>: one LOCAL reset synchroniser per clock tap region (KV-P5 10-23, COORD R4: the release of a tap
 // region's flops is timed from a synchroniser on the SAME tap, not across the tap-to-tap skew).  keep_hierarchy: the
 // per-tap copies have identical inputs and would otherwise be merged back into one (Yosys opt_merge).
+// ot_dp_rpipe: N relay flops of the pipelined reset release (OWNER RESET RULE 10-24); no reset (assertion is synchronous:
+// the clock runs at boot), keep_hierarchy + keep so the per-tap copies with identical inputs stay separate.
+(* keep_hierarchy *)
+module ot_dp_rpipe #(parameter integer N = 1) (input wire clk, input wire d, output wire q);
+    (* keep = "true" *) reg [N-1:0] r;
+    generate if (N == 1) begin : g1
+        always @(posedge clk) r <= d;
+    end else begin : gn
+        always @(posedge clk) r <= {r[N-2:0], d};
+    end endgenerate
+    assign q = r[N-1];
+endmodule
 (* keep_hierarchy *)
 module ot_dp_rsync_s2 (input wire clk, input wire async_rst_n, output wire sync_rst_n);
     (* async_reg = "true" *) reg [1:0] p;
@@ -96,6 +108,26 @@ endmodule
 
 class GenError(Exception):
     pass
+
+
+RESET_RELAY_MARGIN_UM = 25.0   # legalisation margin under the relay reach (row / site snapping, free-point moves)
+
+
+def reset_pipe(P, tn):
+    """OWNER RESET RULE 10-24 (reset.release 'pipelined', plan or type level): (D, relay_um) = the equal relay depth from
+    the reset pin's face flop to every clock tap (each hop <= relay_um - RESET_RELAY_MARGIN_UM on the straight line),
+    or None (counted release: per-tap asynchronous synchronisers) / a single-tap type."""
+    import math
+    t = P.types[tn]
+    rr = dict(P.reset, **(t.get("reset", {}) or {}))
+    taps = S.tap_grid(P, tn)
+    if rr.get("release") != "pipelined" or len(taps) < 2:
+        return None
+    import gen_phys
+    reach = float(rr.get("relay_um", 405.0))
+    px, py = gen_phys.tap_points(P, tn)[1]
+    far = max(abs(x - px) + abs(y - py) for _, x, y in taps)
+    return max(1, math.ceil(far / (reach - RESET_RELAY_MARGIN_UM))), reach
 
 
 def sv_id(s):
@@ -186,8 +218,12 @@ def wrapper(P, tn, epochs, rtl_root=None):
         ports.append((f"input  wire {n}", f"EARLY core tap {tp['name']} at ({x:.0f}, {y:.0f}) um (CP2): the kit "
                       "(clock_taps.tcl) hangs the core's clock pins on it; the spine delivers it "
                       f"{S.core_tap_early_ps(P, tp):g} ps early"))
-    ports.append(("input  wire arst_n", "die reset: asynchronous assert; released through " +
-                  ("the per-tap u_rsync_t<i>" if len(S.tap_grid(P, tn)) > 1 else "u_rst_sync")))
+    rpipe = reset_pipe(P, tn)
+    ports.append(("input  wire arst_n", (f"die reset, SYNCHRONOUS (pipelined release, OWNER RESET RULE 10-24): face flop + "
+                  f"{rpipe[0]} relay stage(s) (<= {rpipe[1]:g} um hops) to every tap, rst_n_t<i> = arst_n delayed "
+                  f"{rpipe[0] + 1} cycles") if rpipe else
+                  ("die reset: asynchronous assert; released through " +
+                   ("the per-tap u_rsync_t<i>" if len(S.tap_grid(P, tn)) > 1 else "u_rst_sync"))))
     decl, body = [], []
     for b in buses:
         w = b["width"] + (1 if b["ep"] else 0)
@@ -208,11 +244,20 @@ def wrapper(P, tn, epochs, rtl_root=None):
         # synchroniser (Yosys drops the unloaded ones), so reset_taps.tcl had to fall back to a farther tap (S81 r0:
         # u_rsync_t3 -> ft1_s0.eq 753-803 um).  The kit (reset_taps.tcl, pre-GPL) still re-points every FIRM placed one
         # to its nearest tap's synchroniser and places each synchroniser FIRM at its tap.
-        if ns not in (2, 3):
+        if rpipe:
+            # OWNER RESET RULE 10-24: arst_n is the die root synchroniser's output, pipelined like data.  Face flop at the
+            # reset pin, then one equal-depth relay chain per tap (reset_taps.tcl places stage j of D at j/D on the
+            # pin -> tap line, every hop <= relay_um); no async reset anywhere on the path, no recovery waiver.
+            body.append("    wire arst_q;\n    ot_dp_rpipe #(.N(1)) u_rpipe_in (.clk(clk), .d(arst_n), .q(arst_q));")
+            for i in range(len(taps)):
+                body.append(f"    wire rst_n_t{i};\n    ot_dp_rpipe #(.N({rpipe[0]})) u_rpipe_t{i} "
+                            f"(.clk(clk), .d(arst_q), .q(rst_n_t{i}));")
+        elif ns not in (2, 3):
             raise GenError(f"type {tn}: reset.sync_stages {ns}: per-tap synchronisers exist for 2 or 3 stages")
-        for i in range(len(taps)):
-            body.append(f"    wire rst_n_t{i};\n    ot_dp_rsync_s{ns} u_rsync_t{i} "
-                        f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n_t{i}));")
+        else:
+            for i in range(len(taps)):
+                body.append(f"    wire rst_n_t{i};\n    ot_dp_rsync_s{ns} u_rsync_t{i} "
+                            f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n_t{i}));")
         body.append("    wire rst_n = rst_n_t0;")
         rr = [0]
         try:

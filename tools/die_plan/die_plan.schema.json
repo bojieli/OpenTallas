@@ -1487,8 +1487,13 @@
     },
     "release": {
      "enum": [
-      "counted"
+      "counted",
+      "pipelined"
      ]
+    },
+    "relay_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
     }
    }
   },

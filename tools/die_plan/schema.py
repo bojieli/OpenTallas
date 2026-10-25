@@ -345,7 +345,10 @@ SCHEMA = {
                 "branch_ps_per_mm": _pos, "branch_leaf_um": _pos}}}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "sync_stages": {"type": "integer", "minimum": 2},
-            "data_reset": {"const": False}, "epoch_bit": {"const": True}, "release": {"enum": ["counted"]}}},
+            "data_reset": {"const": False}, "epoch_bit": {"const": True},
+            # OWNER DECISION 2026-10-24 (RESET RULE): "pipelined" = one root synchroniser per die region, the released reset
+            # travels as a synchronous signal through relay flops every <= relay_um (default 405), equal depth to every tap
+            "release": {"enum": ["counted", "pipelined"]}, "relay_um": _pos}},
         "latency": {"type": "object", "additionalProperties": False, "properties": {
             "lanes": {"type": "object", "additionalProperties": {
                 "type": "object", "required": ["cycles"], "additionalProperties": False,
