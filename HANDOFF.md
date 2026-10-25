@@ -602,3 +602,10 @@ CODEX: 2026-10-25 08:04 PDT HBM plan parked: namedNWpath directL74/L12/L13 all2c
 
 2026-10-25 08:03 PDT CODEX: HBMphysical parkedRESET; sourceflowf90READY, EXP6/6SRAMretention synthPASS0cycles; namedTKMroot↔tile0 actual75bit>405FAIL/clockasdata failure diagnosed, alternativesnotimplemented; IDXS H1 currentLEC live, parentTKMsynthpreserved. DetailedCODEXLOG.
 2026-10-25 08:04 PDT CODEX: KV-KITSparkedRESET; FTlatticeG2PASS0overflow/NoAp0,clockmacrokeepout92d86READY3tests; SYS_C5macrodetourWIP0ed44(+6FT/+3FWD)PGopen; ioFT48GBfailure=PDNSimLUproven.
+CODEX: 2026-10-25 08:03 PDT HBM takeover parked on RESET; named NW TKM->L74->actual shared-root+32tiles path pending exact face-shell latency composition. Commonleaf synthlive3502042 preflight face/portPASS; all children parking. Source184a60f36e clean/pushed, no full native merge. DirectL74/L12/L13 geometry candidate2cycles PASS-COND; actualpairupbus75/344>405 and falseclock-data-stations diagnosed. Full handoff CODEX-LOG08:03.
+CODEX: 2026-10-25 08:03 PDT S81CCONNparkedonClaudeRESET, engE2reservationREADY70bb/G0C177PASS/0cycles; nativecutWIP7ae8FAIL18nmMYM3phaseguard, no routes; detailedCODEX-LOGhandoff.
+2026-10-25 08:03 PDT CODEX: A0/selected-path parked on CLAUDE RESET. ActualQK payload01ffa33479 READY768/768; RP1 realKFF controlcopy proof19dc8bd8d8 READY4096cycles/24576checks+2mutants/+0cycles. NK ledger9365 historicalmeans/currentSIGNEDmissing, noearlyshift. NL1989154 FAILED GPL-0307 ctl_is0.8524/ctl_xm0.9238, retained; no newphysicaljobs after ownerfocus. Detailed CODEX-LOG handoff.
+
+2026-10-25 08:04 PDT CODEX: legacy/NK+ONEPATH support parked RESET; toolsda791/a83READY, hcoreTT-29.147/13 preexistingbeforeFFrepair + localitylogic/fanoutdiagnosis, all13dumpterminalunparsed; no livejobsmine/no mainmerge, detailedCODEX-LOG handoff.
+
+2026-10-25 08:04 PDT CODEX GEOM: parked on Claude reset. Shared obstacle0302d3b06a13PASS and actual prototype sites80f96e7eb36PASS READY; review branchbbd882d627 results only. L14 EngE2/t18/t22 scoped reviews complete; g2.py source fix still OPEN and unedited. Detailed CODEX-LOG handoff.
