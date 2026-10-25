@@ -82,16 +82,20 @@ def _names(line, kit_type, sha):
 
 
 def _verdict_for(line, start, kit_type, sha):
-    """verdict word for this kit in a reply line: the one in the clause that names the kit, else the line's only
-    verdict word; None when the line mixes verdicts and no clause names the kit (ambiguous -> no automatic action)"""
+    """verdict word for this kit in a reply line: the one in the clause that names the kit (FAIL when that clause
+    mixes FAIL with a PASS word), else the line's only verdict word; None when the line mixes verdicts and no clause
+    names the kit (ambiguous -> no automatic action)"""
     tail = line[start:]
     for seg in re.split(r";|\||\.\s", tail):
         if _names(seg, kit_type, sha):
             words = {m.group(1) for m in VERDICT_WORD.finditer(seg)}
             if len(words) == 1:
                 return words.pop()
+            if "FAIL" in words:
+                return "FAIL"                             # 'FAIL (corrects my PASS-COND)', 'PASS for one, FAIL for
+                                                          # the other': fail-safe, never leaves a PASS standing
             if words:
-                return None                               # 'PASS for one, FAIL for the other': ambiguous
+                return None                               # PASS vs PASS-COND mix: ambiguous, earlier verdict stands
     words = {m.group(1) for m in VERDICT_WORD.finditer(tail)}
     return words.pop() if len(words) == 1 else None
 
