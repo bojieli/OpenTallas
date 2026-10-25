@@ -13,7 +13,7 @@ from pathlib import Path
 import norm_q as Q
 
 
-def run(schedule,report,bound,out):
+def run(schedule,report,bound,out,fast_lib=None):
     sl=report['slices']; names=sorted(sl,key=lambda n:sl[n]['sid']); bysid={sl[i]['sid']:i for i in names}
     pos={i:(sl[i]['sid']>>1,sl[i]['sid']&1) for i in names};byct={v:k for k,v in pos.items()}
     geo=dict(pos=pos,partner={i:byct[(c,1-t)] for i,(c,t) in pos.items()},age={(i,s):report['line_age'][i+'.'+s] for i in names for s in ('e','w') if i+'.'+s in report['line_age']})
@@ -31,6 +31,17 @@ def run(schedule,report,bound,out):
         words.append(dict(inst=inst,port=e['port'],edge=e['cycle'],hops=h,origin=origin,dst=dst,land=e['cycle']+age,own=inst==bysid[origin] and h in (8,7)))
     base=Q.arrivals(words); roots={i:Q.finish_root(base[i]) for i in names}
     assert all(roots[i]==sl[i]['root_wb'] for i in names),(roots,sl)
+    finish=Q.finish_root
+    if fast_lib:
+        import ctypes
+        library=ctypes.CDLL(str(Path(fast_lib).resolve()))
+        compiled=library.norm_finish_root
+        compiled.argtypes=[ctypes.POINTER(ctypes.c_int)];compiled.restype=ctypes.c_int
+        def finish(dl):
+            result=compiled((ctypes.c_int*16)(*(dl[5*i] for i in range(16))))
+            if result<0:raise ValueError('compiled finisher did not complete')
+            return result
+        assert all(finish(base[i])==roots[i] for i in names)
     options={}
     for i in names:
         options[i]=[]
@@ -49,8 +60,9 @@ def run(schedule,report,bound,out):
     def evaluate(picked):
         nonlocal complete,best,best_score
         complete+=1
+        if complete%10000==0:print('PROGRESS',nodes,complete,best_score,flush=True);save('SEARCHING')
         delta={sl[i]['sid']:d-old.get(i,0) for i,d in picked.items()}
-        root={i:Q.finish_root({b:a+delta[b//5] for b,a in base[i].items()}) for i in names}
+        root={i:finish({b:a+delta[b//5] for b,a in base[i].items()}) for i in names}
         _,cl,oa=Q.allgather(root,geo);score=len(cl)+len(oa)
         if score<best_score:
             best_score=score;best=dict(shifts=picked,line_collision_edges=len(cl),own_asm_same_edge=len(oa),root_spread=max(root.values())-min(root.values()))
@@ -77,5 +89,5 @@ def run(schedule,report,bound,out):
     print(Path(out).read_text(),flush=True)
 
 if __name__=='__main__':
-    a=argparse.ArgumentParser();a.add_argument('schedule');a.add_argument('report');a.add_argument('--out',required=True);a.add_argument('--shift-max',type=int,default=6)
-    p=a.parse_args();run(json.loads(Path(p.schedule).read_text()),json.loads(Path(p.report).read_text()),p.shift_max,p.out)
+    a=argparse.ArgumentParser();a.add_argument('schedule');a.add_argument('report');a.add_argument('--out',required=True);a.add_argument('--shift-max',type=int,default=6);a.add_argument('--fast-lib')
+    p=a.parse_args();run(json.loads(Path(p.schedule).read_text()),json.loads(Path(p.report).read_text()),p.shift_max,p.out,p.fast_lib)
