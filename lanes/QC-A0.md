@@ -198,3 +198,8 @@ CODEX progress: Capacity56 candidate nowregenerated25/25constantsPASS,433915padf
   max pad 8 (before CB16). lane_eq W x_fw_ctl_p1 +3 stations; serdes TX 5 stations; ft_regs. pytest test_r8+test_g2+test_bind PASS.
   Self-review results/geom_review/qc_cap_1024/ PASS-COND (plan sha 4b445d10a0a3912c). merge-tree vs origin/main CLEAN, 0 deletions.
 2026-10-24 20:15 PDT ROOT-MERGE: PRE-CHECK (no approval yet) claude/qc-cap-1024r@78992be86f: tools/die_plan pytest FAILS test_cp2.py::test_tcl_hooks_complete (line 283 asserts '^clk(_t[0-9]+|_c[0-9]+)?$' in tap_balance.tcl; the branch's tap_balance.tcl (OT_TAP_PORT family from qc-a0) no longer contains it; main and every other READY tip pass). Fix the test or the tcl, rerun the FULL tools/die_plan pytest, re-post READY. Other READY tips (geom-review@bb60cdada2, elem-s81-st405@2cb4732766, s81-kits-geom@35b3b97ba, cp1-r10@f5c549e166, hbm-1024r@9ef5eebb2, tok-ds-pads@e7d749213) test-merge cleanly together on main d13ff7c78, 0 deletions, G0 5/5 0 err. qc-g0fix@9aceac11be alone: all pass.
+- 2026-10-24 20:16 PDT QC: final CB16 bind of 78992be86f: 1 error (coll_regen RX2: io_serdes_2 -> coll face[4] legs land at 10 vs 12: the owner +1
+  station on cbf_q0x_s2 tx_up_serdes_up made the 1-b up-status leg 2 cycles longer than rx_flit/rx_v). READY withdrawn. lane_eq now also
+  equalises PHY bundles (lanes between one PHY partition and one partition): cbf_q0{0,1}_s2 rx_flit_serdes_rx + rx_v 4 -> 5
+  (+1,196 station flops, serdes_2 RX +2 cycles, priced by coll_regen). Pipeline running epyc1 pid 2969446 (pipe.sh: regen -> probe bind
+  -> R8 groups/table -> G0 -> CB16 pads -> final bind -> verify; logs /srv/opentallas-scratch2/claude/qc/logs/pipe*.log).
