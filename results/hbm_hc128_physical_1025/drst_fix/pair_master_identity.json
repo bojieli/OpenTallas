@@ -1,0 +1,12 @@
+{
+ "plain==feed": {
+  "equiv_cells_proven": 3398,
+  "unproven": 0,
+  "method": "yosys equiv_make plain vs feed pair master (hcp_lanes + SRAM black boxes), equiv_simple -seq 2, equiv_induct, equiv_status -assert"
+ },
+ "plain==term": {
+  "equiv_cells_proven": 4422,
+  "unproven": 0,
+  "method": "yosys equiv_make plain vs term pair master (hcp_lanes + SRAM black boxes), equiv_simple -seq 2, equiv_induct, equiv_status -assert"
+ }
+}

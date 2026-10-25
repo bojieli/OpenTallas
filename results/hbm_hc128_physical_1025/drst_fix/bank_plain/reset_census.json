@@ -1,0 +1,118 @@
+{
+  "schema": "opentallas.hbm.hc128.reset_census.v1",
+  "module": "ot_hbm_hc_bank128_pair_core",
+  "source_sha": "591bcf802+hcp-mul-DRST(ADRST)",
+  "defines": [
+    "SYNTHESIS",
+    "OT_FP_DATA_NORST"
+  ],
+  "interpretation": "edge count from core rst_n port to reset-controlled state; directly reset flops depth1; reset-source registers add edges",
+  "reset_controlled_ff_bits_by_depth": {
+    "1": 20,
+    "2": 240
+  },
+  "reset_controlled_ff_bits": 260,
+  "plain_ff_bits": 30610,
+  "max_internal_delivery_depth": 2,
+  "reset_source_registers": [
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[0].u_lg/$procdff$10588",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[0].u_lg/$procdff$10595",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[0].u_lg/$procdff$10602",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[0].u_lg/$procdff$10609",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[0].u_lg/$procdff$10616",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[0].u_lg/$procdff$10623",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[0].u_lg/$procdff$10630",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[0].u_lg/$procdff$10637",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[1].u_lg/$procdff$10588",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[1].u_lg/$procdff$10595",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[1].u_lg/$procdff$10602",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[1].u_lg/$procdff$10609",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[1].u_lg/$procdff$10616",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[1].u_lg/$procdff$10623",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[1].u_lg/$procdff$10630",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    },
+    {
+      "name": "/u_c.u_b.u_st.g_lg.g_grp[1].u_lg/$procdff$10637",
+      "type": "$adff",
+      "bits": 1,
+      "delivery_depth": 0
+    }
+  ],
+  "unreached_reset_domains": [],
+  "ot_rst_relay_instances": 0,
+  "release_status": "SOURCE_CENSUS; final native RESET binding and timed recovery still required"
+}

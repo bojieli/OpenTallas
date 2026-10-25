@@ -13,3 +13,20 @@ IMPORTANT RESET FAILURE: `OT_FP_DATA_NORST` does not affect `ot_hdc_fp32_mul_lat
 All raw designs and scripts: epyc3:/srv/opentallas-scratch/claude/codex-hbm-hc-physical-1025/. Bank variants are `plain_norst`, `first_norst`, `feed_norst`, `term_norst` (the directory suffix is historical; see the DRST failure above), each with `native128.json`, `pair_cut`, `pair_compact/compact128.json`, exported core SV, port map, and `miter/result.json`. Qhub data in `qhub128_hier.json`, `qhub_cut`, `qhub_compact/qhub_compact128.json`, exported SV, port map and `eq_r2`. The JSON designs preserve the exact new-core-to-parent connections; a final per-pin native reference manifest has not yet been exported.
 
 Remaining: remove HC multiplier data resets and gate it; export exact per-pin binding/pin tables for all styles; render and integrate the channel-aware B2o floorplan; implement density clock taps; adopt/price face shells; re-kit and close timing. Native root still needs NQ2/TPRE7 physical cuts for its seven old NQ4 views; the old `ot_hbm_hc_root_static -> _s` alias must stay excluded until corrected. No owner question was introduced.
+
+## HBM-W128 (Claude, 2026-10-25 04:40 PDT): reset fix, regenerated cuts, kits
+
+Branch `claude/hbm-cores-w128-1025`.
+
+- **Reset fix (RTL)**: `ot_hdc_v41x_hcp_lanes` and `ot_hdc_v41x_hcp_stage` now pass `.DRST(ADRST)` to `ot_hdc_fp32_mul_lat`, the same way they already did for the adder. With ADRST 0, only the multiplier valid bits are reset; the data FFs have no reset. No cycles added.
+- **Regenerated cuts** (`drst_fix/`, tools `tools/hbm_b2/w128_drst/run_regen.sh`): all four bank styles were re-elaborated, cut, compacted and exported.
+  - Miters pass again: plain 17919 / first 21985 / feed 18407 / term 17675. The write-enable mutant is caught in each one.
+  - Pair reset census: 8388 -> **260** reset-controlled FF bits (20 at depth 1 + 240 at depth 2 = the leaf reset flops plus valid bits). 30610 plain FF bits.
+  - The qhub subtree has no multiplier, so it is unchanged: 217 valid reset bits, 0 data reset bits.
+- **One pair master**: plain, feed and term export the same circuit (`drst_fix/pair_master_identity.json`, equiv 3398/4422 proven). So there are three core types: `ot_hbm_hc_bank128_pair_core`, `ot_hbm_hc_bank128_pair_first_core` and `ot_hbm_hc_subtree32_core` (`rtl/hbm_accel/cores_w128/`).
+- **Valid-masked checks of the fix**: `tools/hbm_b2/w128_drst/{run_mul_eq.sh,run_drst_sim.sh}`.
+  - Multiplier: k-induction miter.
+  - Multiplier and 8-lane leaf: 4-state random simulation, gold = pre-fix source.
+  - Each has two mutants: valid bit unreset, and output data bit flipped.
+  - Results are in `drst_fix/drst_check.json` when collected.
+- **Views and kits** (`physical/die_plan/hbm_arch_cores/w128/`): pin tables were derived top-down from the B2o Rh bank column and q_hub slot (see `mk_w128_views.py` docstring and `geom/`). Kits use `gen_core_kit_hbm.py` with the face shell on: +1 in / +1 out cycle on every crossing.

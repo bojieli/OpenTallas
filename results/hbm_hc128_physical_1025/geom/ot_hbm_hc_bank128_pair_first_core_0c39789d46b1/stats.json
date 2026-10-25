@@ -1,0 +1,58 @@
+{
+ "view": "ot_hbm_hc_bank128_pair_first_core@0c39789d46b1",
+ "outline_um": [
+  250.56,
+  267.84
+ ],
+ "pins": 1093,
+ "off_lattice": 0,
+ "faces": {
+  "E": {
+   "pins": 514,
+   "span_um": 267.84,
+   "max_per_um_10": 2.1,
+   "max_per_track": {
+    "M4": 0.053,
+    "M6": 0.07
+   },
+   "layers": {
+    "M4": 257,
+    "M6": 257
+   },
+   "buses": [
+    "fault",
+    "sum_out"
+   ]
+  },
+  "N": {
+   "pins": 579,
+   "span_um": 250.56,
+   "max_per_um_10": 2.5,
+   "max_per_track": {
+    "M5": 0.062,
+    "M7": 0.083
+   },
+   "layers": {
+    "M5": 290,
+    "M7": 289
+   },
+   "buses": [
+    "clk",
+    "go",
+    "lane_valid",
+    "rst_n",
+    "square",
+    "weight_addr",
+    "weight_read",
+    "weight_we0",
+    "weight_we1",
+    "write_addr",
+    "write_data",
+    "x_addr",
+    "x_read",
+    "x_write"
+   ]
+  }
+ },
+ "face_budget_violations": []
+}
