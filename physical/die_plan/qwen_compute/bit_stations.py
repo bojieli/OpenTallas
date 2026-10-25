@@ -19,7 +19,7 @@ import ft_sites
 from tools.die_trial.legal_sites import RowAllocator
 
 
-def geometry_failures(raw):
+def geometry_failures(raw, check_channels=False):
     """Use actual bit faces and explicit cell centres, matching the G2 vehicle."""
     model = S.Plan(raw)
     limit = float(raw.get('budgets', {}).get('ft_station_max_um', 405.0))
@@ -30,11 +30,12 @@ def geometry_failures(raw):
         pins = {(b, i): (x, y, face) for b, i, _, x, y, face in gen_phys.type_pins(model, tn)}
         boxes = [(c['origin_um'][0], c['origin_um'][1], c['origin_um'][0]+c['outline_um'][0],
                   c['origin_um'][1]+c['outline_um'][1]) for c in ty.get('hard_cores', [])]
+        channel_boxes = [(x0-8.64,y0-8.64,x1+8.64,y1+8.64) for x0,y0,x1,y1 in boxes]
         def inset(p):
             x, y, face = p
             return {'W': (x+1, y), 'E': (x-1, y), 'S': (x, y+1), 'N': (x, y-1)}[face]
         for slot in ty['ft_slots']:
-            name = slot['name']; k = int(slot.get('stations', 1)); worst = 0.; inside = 0
+            name = slot['name']; k = int(slot.get('stations', 1)); worst = 0.; inside = 0; crossing = 0
             if 'bit_sites_um' in slot and len(slot['bit_sites_um']) != k-1:
                 failures.append(dict(type=tn, slot=name, reason='station count changed after explicit allocation'))
                 continue
@@ -56,14 +57,17 @@ def geometry_failures(raw):
                     points.append(point)
                 points.append(pb)
                 worst = max(worst, *(abs(p[0]-q[0])+abs(p[1]-q[1]) for p,q in zip(points, points[1:])))
-            if worst > limit+1e-6 or inside:
-                failures.append(dict(type=tn, slot=name, worst_um=round(worst,4), stations_in_core=inside))
+                if check_channels and channel_boxes:
+                    crossing += sum(not ft_sites.l_route_clear(p,[q],channel_boxes)[0] for p,q in zip(points,points[1:]))
+            if worst > limit+1e-6 or inside or crossing:
+                failures.append(dict(type=tn, slot=name, worst_um=round(worst,4), stations_in_core=inside,
+                                     core_crossing_legs=crossing))
     return failures
 
 
 def repair(raw, log=print, only_types=None):
     model = S.Plan(raw)
-    selected = set(only_types) if only_types else {row['type'] for row in geometry_failures(raw)}
+    selected = set(only_types) if only_types else {row['type'] for row in geometry_failures(raw, check_channels=True)}
     ledger = []
     core_types = []
     limit = float(raw.get('budgets', {}).get('ft_station_max_um', 405.0))
@@ -132,7 +136,7 @@ def repair_equalised(raw, log=print):
     report['lane_cycles'] = [dict(lane=lid, before=old_depth[lid], after=after.lane_natural(lid)['cycles'],
                                  added=after.lane_natural(lid)['cycles']-old_depth[lid])
                              for lid in after.lanes if after.lane_natural(lid)['cycles'] != old_depth[lid]]
-    report['unfixed'] = geometry_failures(raw)
+    report['unfixed'] = geometry_failures(raw, check_channels=True)
     if report['unfixed']:
         raise ValueError(f"actual-bit geometry still fails: {report['unfixed']}")
     return report
