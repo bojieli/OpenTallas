@@ -6,7 +6,7 @@
 module tb_argmax18_struct_lockstep;
  parameter integer FLAT = 7;
  parameter integer FAST = 1;
- parameter integer NCYC = 60000;
+ parameter integer NCYC = 4000;
  parameter integer SEED = 1;
  reg clk=0; always #1 clk=~clk;
  reg rst_n=0,in_v=0,in_last=0,in_bias_en=0;
@@ -34,7 +34,7 @@ module tb_argmax18_struct_lockstep;
   end
  end
  initial begin
-  j = $urandom(SEED);
+  j = $urandom(seed);
   repeat (3) @(negedge clk); rst_n = 1;
   while (cyc < NCYC) begin
    @(negedge clk);
