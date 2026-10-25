@@ -3094,14 +3094,12 @@ module ot_hbm_accel_smh_tcl #(parameter integer L = 8, parameter integer IL = 8,
     end endgenerate
 `ifdef OT_SMH_FACE_CLONE
     // PATH-HBM-SM 10-25 (face_guard R2): the sticky fault flop fed both its own hold path and the lfault pin (shared).
-    // The pin gets its own kept copy with the same D and reset (lane_fault | |lf): cycle-exact, lane_fault keeps the
-    // feedback.  Both are kept so synthesis cannot fold them back into one flop.
-    (* keep *) reg lane_fault;
-    (* keep *) reg lfault_k;
+    // The pin gets its own keep_hierarchy copy with the same D and reset (lane_fault | |lf): cycle-exact, lane_fault
+    // keeps the feedback.
+    reg lane_fault;
     always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault <= 1'b0; else lane_fault <= lane_fault | (|lf);
-    always @(posedge clk or negedge rst_n) if (!rst_n) lfault_k <= 1'b0; else lfault_k <= lane_fault | (|lf);
+    ot_hbm_accel_smh_kreg #(.W(1), .RST(1)) u_lfk (.clk(clk), .rst_n(rst_n), .en(1'b1), .d(lane_fault | (|lf)), .q(lfault));
     assign sum_o = sum_q;
-    assign lfault = lfault_k;
 `else
     reg lane_fault;
     always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault <= 1'b0; else lane_fault <= lane_fault | (|lf);
