@@ -1,0 +1,14 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-bindadopt-0719/proof
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-s81-bindadopt-0719/proof
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-bindadopt-0719/proof
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-s81-bindadopt-0719/proof
+ot-run: localhost      admits    47 GB (avail 393, reserve 0, fresh 278.6, peak 2.7, headroom 0, waiters 0/0 GB) load 65/256 running 55 disk 247 GB 
+ot-run: SPILL: copying /srv/opentallas-scratch2/claude/codex-s81-bindadopt-0719/proof (0.0 GB) localhost -> epyc3 (no host with --dir admits 48 GB now)
+ot-run: SPILL: copied 88 changed entries in 1 s; running on epyc3; written files go back to localhost after the run
+ot-heavy: admitted on eternal-dove as oth-ubuntu-2009263-1792939002 after 0 s
+ADOPT_MUTANT_CAUGHT
+ADOPT_LOCKSTEP_PASS cycles 6742
+TB_ENG_RR_STATS xq_mut 0 tap_mut 0 seed 1 lat 100 windows 6 row_beats 288 xq 144/144 reader rq 582 beats 1467 pops 582 rung 100 errs win 0 ob 0 xq 0 rd 0 rung 0 flt 0
+TB_ENG_RR PASS
+ot-run: RAN on epyc3 (unit oth-ubuntu-2009263-1792939002): exit 0
+ot-run: SPILL: outputs copied back epyc3 -> localhost; RAN on epyc3: exit 0

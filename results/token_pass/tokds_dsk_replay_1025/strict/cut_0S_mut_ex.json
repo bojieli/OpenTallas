@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.s81_dv.cut_replay.v1.check",
+ "replay": "/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/L0/cut_0S/mut_ex",
+ "run": "/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/L0/cut_0S/base/run",
+ "verdict_kind": "MUTANT",
+ "sim_pass": true,
+ "trace_mismatches": 32,
+ "partial": false,
+ "xrt_runtime_proof": "ENTRY /srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/entry_ec43c/entry_replay.json",
+ "verdict": "FAIL",
+ "ports": [
+  {
+   "port": "o__w_lt_lk_WS0_lnd",
+   "lane": "lt_lk_WS0",
+   "expected": 1219,
+   "missed": [
+    2516
+   ],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": false
+  },
+  {
+   "port": "o__w_lt_lk_WS1_lnd",
+   "lane": "lt_lk_WS1",
+   "expected": 1216,
+   "missed": [
+    2516
+   ],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": false
+  },
+  {
+   "port": "o__w_tvN_s_0S_lnd",
+   "lane": "tvN_s_0S",
+   "expected": 7,
+   "missed": [
+    2355.0,
+    2380.0,
+    2392.0,
+    2406.0,
+    2419.0,
+    2436.0,
+    2448.0
+   ],
+   "unscheduled": [
+    2354,
+    2379,
+    2391,
+    2405,
+    2418,
+    2435,
+    2447
+   ],
+   "n_unscheduled": 7,
+   "strict": true,
+   "ok": false
+  },
+  {
+   "port": "o__w_xrE_0S_l0_lnd",
+   "lane": "xrE_0S_l0",
+   "expected": 8,
+   "missed": [
+    2366.0,
+    2376.0,
+    2400.0,
+    2413.0,
+    2427.0,
+    2440.0,
+    2457.0,
+    2468.0
+   ],
+   "unscheduled": [
+    2365,
+    2375,
+    2399,
+    2412,
+    2426,
+    2439,
+    2456,
+    2467
+   ],
+   "n_unscheduled": 8,
+   "strict": true,
+   "ok": false
+  },
+  {
+   "port": "o__w_xrE_0S_l1_lnd",
+   "lane": "xrE_0S_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_0S_l2_lnd",
+   "lane": "xrE_0S_l2",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_0S_l3_lnd",
+   "lane": "xrE_0S_l3",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  }
+ ]
+}

@@ -97,21 +97,40 @@ def io_tcl(P, tn, pins):
 RELAY_MID_RE = r"^(.*[.]u_y_[A-Za-z0-9_]+)[.]"
 
 
-def _snap_tap(P, x, y):
-    """snap an interior tap pin: across the pin to the top layer's tracks, along it to the layer below's (the pin
-    centre must sit on a track crossing, else DRT-0422 "no routing tracks pass through the center" -> DRT-0255)."""
+def _snap_tap(P, x, y, pg_legal=True):
+    """Interior tap at a crossing of the top two routing layers, clear of both layers' PG access bands.
+
+    Partition stripes are offset from CORE_AREA (CORE_MARGIN_UM); the face-pin band policy also includes the
+    zero-origin phase. Keeping access clear at both phases protects the pin rectangle AND its lower-layer via.
+    Hard partition interfaces retain their declared LEF coordinates (pg_legal=False); their owner fixes the view.
+    """
     top = P.layer_budget["partition_signal_max"]
     L = P.layers[top]
-    Lb = P.layers.get(f"M{int(top[1:]) - 1}", L)
+    below = f"M{int(top[1:]) - 1}"
+    Lb = P.layers.get(below, L)
 
-    def snap(v, LL):
-        return round(LL["offset_um"] + round((v - LL["offset_um"]) / LL["pitch_um"]) * LL["pitch_um"], 4)
-    return (snap(x, L), snap(y, Lb)) if L["dir"] == "V" else (snap(x, Lb), snap(y, L))
+    def snap(v, LL, ln):
+        pitch = LL["pitch_um"]
+        k = round((v - LL["offset_um"]) / pitch)
+        if not pg_legal:
+            return round(LL["offset_um"] + k * pitch, 4)
+        # Band guards already include the stripe pair, pin half-width and at least two routing pitches.
+        def clear(q):
+            return not any(S.pg_blocked(ln, q - origin) for origin in (0.0, CORE_MARGIN_UM))
+        for radius in range(1000):
+            ks = [k] if radius == 0 else [k-radius, k+radius]
+            ok = [round(LL["offset_um"] + j*pitch, 4) for j in ks
+                  if clear(LL["offset_um"] + j*pitch)]
+            if ok:
+                return min(ok, key=lambda q: (abs(q-v), q))
+        raise ValueError(f"no PG-free interior tap track near {v:g} on {ln}")
+    return ((snap(x, L, top), snap(y, Lb, below)) if L["dir"] == "V" else
+            (snap(x, Lb, below), snap(y, L, top)))
 
 
 def clock_pins(P, tn):
     """every clock tap pin of a type (COORD 10-23 R4 grid, schema.tap_grid), snapped: [(port, x, y)]."""
-    return [(n,) + _snap_tap(P, x, y) for n, x, y in S.tap_grid(P, tn)]
+    return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y in S.tap_grid(P, tn)]
 
 
 def tap_points(P, tn):
@@ -126,12 +145,13 @@ def tap_points(P, tn):
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
         if t.get("hard_cores"):     # S81-P8 10-23: the reset tap also sits in a channel, off the clock taps
             rs = list(S.tap_clear(t, rs[0], rs[1], cks, clear=4.32))
-    return [_snap_tap(P, *ck), _snap_tap(P, *rs)]
+    return [_snap_tap(P, *ck, pg_legal=not t.get("hard")),
+            _snap_tap(P, *rs, pg_legal=not t.get("hard"))]
 
 
 def core_tap_pins(P, tn):
     """CP2 early core taps of a type (schema.core_taps; clock.core_taps 'early'), snapped: [(port, x, y)]."""
-    return [(n,) + _snap_tap(P, x, y) for n, x, y, _ in S.core_taps(P, tn)]
+    return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
 
 
 def core_tap_rows(P, tn):
@@ -531,13 +551,19 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
     (kd / "prects_estimate.tcl").write_text(clock_phase_tcl(P, tn))
-    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True))
+    import reset_tree as RT
+    leaf_check = ""
+    if RT.pipelined(P) or RT.wavefront(P):
+        leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n"
+                      "source /work/reset_taps.tcl\nunset rt_postplace\n")
+    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
     lctx = sdc_lint.kit_context(P, tn)
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("sdc_lint.py"), kd / "sdc_lint.py")
+    shutil.copyfile(Path(__file__).with_name("rtl_lint.py"), kd / "rtl_lint.py")
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise sdc_lint.SdcLintError(f"type {tn}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
@@ -658,6 +684,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
+        if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
+            hook = kd / f
+            hook.write_text(f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n" + hook.read_text())
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
@@ -720,6 +749,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
     shutil.copyfile(Path(__file__).with_name("selrange_gate.py"), kd / "selrange_gate.py")
+    # FLOW-CANARY / COORD 10-25: register fanout gate right after face_guard (kv3_astk B: Yosys merged replicas -> 2048 loads)
+    shutil.copyfile(Path(__file__).with_name("reg_fanout_gate.py"), kd / "reg_fanout_gate.py")
     for helper in ("port_bind_gate.py", "hold_gate.tcl"):
         shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
     # LEC 10-24: RTL vs synthesised netlist equivalence (run_kit.sh, right after face_guard; NOT EQUIVALENT stops)
@@ -748,14 +779,15 @@ RUN_KIT = r"""#!/bin/bash
 # LEC (10-24): lec.py proves the Yosys netlist equivalent to the kit RTL read with the OTHER HDL frontend, right after
 # face_guard: NOT EQUIVALENT stops the kit before floorplan; UNPROVEN / tool error is a warning in lec/lec.json.
 # Gate exit codes (classify by the FAIL_PREFLOOR / FAIL_POSTCTS marker text): 3 selrange, 4 FF structural hold gate,
-# 5 LEC NOT EQUIVALENT, 6 pre-route insertion gate (FLOW 10-25); other non-zero = sdc_lint / face_guard / flow step rc.
+# 5 LEC NOT EQUIVALENT, 6 pre-route insertion gate (FLOW 10-25), 7 reg_fanout (FLOW-CANARY 10-25: register > 64 data
+# loads on the Yosys netlist = replicas merged by Yosys); other non-zero = sdc_lint / face_guard / flow step rc.
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 NAME=dpkit-$(basename "$K")-$$
 # Preserve existing gate verdicts when a corrected kit reuses a run directory.
 HISTORY="$K/preflight_history/$(date +%Y%m%d_%H%M%S)_$$"
-for f in sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json; do
+for f in rtl_lint.json sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
   if [ -f "$K/$f" ]; then mkdir -p "$HISTORY"; cp -p "$K/$f" "$HISTORY/$f"; fi
 done
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
@@ -763,6 +795,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
+  if [ \$rc = 0 ]; then python3 -I /work/rtl_lint.py /work; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \\\
   SRP=; if [ \$rc = 0 ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
   if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py gen --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR adder_map_dontuse' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
@@ -771,6 +804,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/port_bind_gate.py \"\$N\" /work > /work/port_bind.log 2>&1; rc=\$?; tail -2 /work/port_bind.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
+  if [ \$rc = 0 ]; then python3 -I /work/reg_fanout_gate.py \$N --out /work/reg_fanout.json > /work/reg_fanout.log 2>&1; rc=\$?; head -12 /work/reg_fanout.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR reg_fanout (register > 64 data loads: merged replicas; or NOT RUN), see reg_fanout.json' | tee -a /work/FAIL_PREFLOOR; rc=7; fi; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; \
     if [ \$rc = 0 ]; then python3 -I /work/face_guard.py /work/1_synth_odb.v --pins /work/pins.json --out /work/face_guard_odb.json; rc=\$?; fi; \

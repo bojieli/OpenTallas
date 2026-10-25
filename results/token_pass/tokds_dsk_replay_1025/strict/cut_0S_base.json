@@ -1,0 +1,83 @@
+{
+ "schema": "opentallas.s81_dv.cut_replay.v1.check",
+ "replay": "/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/L0/cut_0S/base",
+ "run": "/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/L0/cut_0S/base/run",
+ "verdict_kind": "SCHEDULE",
+ "sim_pass": true,
+ "trace_mismatches": 0,
+ "partial": false,
+ "xrt_runtime_proof": "ENTRY /srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/entry_ec43c/entry_replay.json",
+ "verdict": "PASS",
+ "ports": [
+  {
+   "port": "o__w_lt_lk_WS0_lnd",
+   "lane": "lt_lk_WS0",
+   "expected": 1218,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_lt_lk_WS1_lnd",
+   "lane": "lt_lk_WS1",
+   "expected": 1215,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_tvN_s_0S_lnd",
+   "lane": "tvN_s_0S",
+   "expected": 7,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_0S_l0_lnd",
+   "lane": "xrE_0S_l0",
+   "expected": 8,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_0S_l1_lnd",
+   "lane": "xrE_0S_l1",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_0S_l2_lnd",
+   "lane": "xrE_0S_l2",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  },
+  {
+   "port": "o__w_xrE_0S_l3_lnd",
+   "lane": "xrE_0S_l3",
+   "expected": 0,
+   "missed": [],
+   "unscheduled": [],
+   "n_unscheduled": 0,
+   "strict": true,
+   "ok": true
+  }
+ ]
+}

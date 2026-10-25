@@ -148,3 +148,34 @@ endmodule
 """
     r = face_guard.guard(net, pins=[dict(bus="a",bit=None),dict(bus="o",bit=None)])
     assert r["verdict"] == "PASS" and r["checked"] == r["planned_bits"] == 2, r
+
+
+def test_reset_relay_cell_drives_its_output_directly():
+    """S81-PLAN2/STFG 10-25: ot_dp_rrelay must not alias its flop through a kept internal wire (ORFS insbuf then hangs a
+    dangling BUF on q, so every rst_o_<k> pin register is 'shared'); the wavefront outs are checked, not skipped."""
+    import re
+    m = re.search(r"\(\*([^*]*)\*\)\s*module ot_dp_rrelay\b(.*?)endmodule", gen_rtl.CELLS, re.S)
+    assert m and "keep_hierarchy" in m.group(1) and "keep" in m.group(1).replace("keep_hierarchy", "")
+    body = m.group(2)
+    assert "output reg q" in body and "assign" not in body and "(* keep *)" not in body
+    assert not re.match(face_guard.SKIP_RE, "rst_o_0") and not re.match(face_guard.SKIP_RE, "start_o_1")
+    assert re.match(face_guard.SKIP_RE, "arst_n") and re.match(face_guard.SKIP_RE, "start_i")
+
+
+def test_reset_relay_cell_synth_has_no_dangling_load(tmp_path):
+    """yosys + the ORFS assign-removal step (insbuf): rst_o driven by a relay has exactly one load (the port)."""
+    if not shutil.which("yosys"):
+        pytest.skip("yosys not installed")
+    cells = tmp_path / "cells.sv"
+    cells.write_text(gen_rtl.CELLS)
+    top = tmp_path / "t.sv"
+    top.write_text("module t(input wire clk, input wire a, output wire rst_o_0, output wire rst_o_1);\n"
+                   "  wire m;\n  ot_dp_rrelay u0(.clk(clk), .d(a), .q(m));\n"
+                   "  ot_dp_rrelay u1(.clk(clk), .d(m), .q(rst_o_0));\n"
+                   "  ot_dp_rrelay u2(.clk(clk), .d(m), .q(rst_o_1));\nendmodule\n")
+    out = tmp_path / "n.v"
+    r = subprocess.run(["yosys", "-q", "-p", f"read_verilog -sv {cells} {top}; synth -top t; opt_clean -purge; "
+                        f"insbuf; write_verilog -noattr {out}"], capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    n = out.read_text()
+    assert "$_BUF_" not in n.split("module ot_dp_rrelay")[1].split("endmodule")[0], n

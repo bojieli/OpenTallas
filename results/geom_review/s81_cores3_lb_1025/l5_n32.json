@@ -1,0 +1,26 @@
+{
+ "kit": "dsdv_gunit_l5_n32",
+ "outline_um": [
+  345.6,
+  302.4
+ ],
+ "regs": 37434,
+ "ck_probe_min_ps": 266.883179,
+ "ck_probe_max_ps": 275.31546,
+ "ck_probe_p50_ps": 271.916901,
+ "ck_probe_spread_ps": 8.432280999999989,
+ "ckbufs": 4058,
+ "macros": 12,
+ "macro_ck_probe_ps": [
+  242.566162,
+  261.144836
+ ],
+ "cts_tool": "I 415 (375-447), 14.9k hold bufs, hold met +15",
+ "pin_flop_um": {
+  "n": 1753,
+  "p50": 9.801000000000002,
+  "p90": 15.812999999999999,
+  "max": 308.127,
+  "over20": 18
+ }
+}

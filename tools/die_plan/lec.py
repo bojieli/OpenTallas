@@ -88,6 +88,10 @@ class LecError(Exception):
     pass
 
 
+class LintFail(Exception):
+    """RTL lint failure (implicit nets): fails the kit like NOT EQUIVALENT (exit 1)."""
+
+
 class Unproven(Exception):
     pass
 
@@ -162,9 +166,9 @@ def top_params(env):
     return list(zip(t[0::2], t[1::2]))
 
 
-def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True):
+def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
-    cells have no Verilog body in the sources (read as blackbox cells)."""
+    cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
     files = [kpath(kit, f) for f in env["VERILOG_FILES"].split()]
     incs = [kpath(kit, d) for d in env.get("VERILOG_INCLUDE_DIRS", "").split()]
     defs = env.get("VERILOG_DEFINES", "").split()
@@ -172,7 +176,7 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True):
         defs.append("-DSYNTHESIS")
     cmds = [f"read_liberty -lib -ignore_miss_func {l}" for l in lib_bbs]
     if frontend == "slang":
-        a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]]
+        a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
         a += [f"-I{i}" for i in incs] + defs + files
         for k, v in top_params(env):
             a += ["-G", f"{k}={v}"]
@@ -213,7 +217,12 @@ def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out):
           # constant-stride slices instead of a 32-stage x-filled barrel shifter): without them eng_rr_e's 552
           # strided selects expand to 31M cells (77 GB) in techmap; with them 263k cells, 1.2 GB
           "opt_expr -keepdc", "opt_clean", "wreduce -keepdc", "peepopt", "opt_clean", "wreduce -keepdc", "opt_clean",
-          "flatten -noscopeinfo", "opt_clean", "memory -nomap", "memory_map", "opt_expr -keepdc", "opt_clean",
+          "flatten -noscopeinfo", "opt_clean",
+          # -nordff: memory_dff would merge an address / data register into a synchronous read port, and memory_map
+          # then re-creates it as an anonymous '$...$rdreg' flop that no key point names (kv3_astk zn sd[k]: the
+          # zq[5:2] address register became 4 unnamed gold latches, so every oa bit was UNPROVEN); the reference keeps
+          # the RTL registers as written and an asynchronous read port
+          "memory -nomap -nordff", "memory_map", "opt_expr -keepdc", "opt_clean",
           "techmap", "opt_clean"]
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
 
@@ -223,6 +232,25 @@ def gate_script(env, netlist, stubs, wrap, lecff, out):
     s += [f"read_verilog {stubs}", f"read_verilog {netlist}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
           "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc", "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
+
+
+IMPLICIT_NET = re.compile(r"^(\S+?):(\d+):\d+: warning: implicit net '([^']+)' created \[-Wimplicit-net\]")
+
+
+def implicit_net_lint(env, kit, lib_bbs, out, log):
+    """lint gate (LEC 10-25): an identifier used before its declaration (or never declared) in a port connection
+    becomes an implicit 1-bit net.  yosys-slang (--compat=vcs, the synthesis frontend) leaves that net undriven
+    while read_verilog binds the later declaration: ot_s81eng_aq_n32 g_ec .ep_next(ep_next) tied 8 exponent
+    registers to 0 in every synthesised eng netlist.  Industry practice (`default_nettype none`, lint
+    UndrivenNet / implicit-net rules): any implicit net fails the kit.  Returns [(file, line, net)]."""
+    s = read_rtl_cmds(env, kit, "slang", lib_bbs, slang_extra=["-Wimplicit-net"])
+    run_yosys("\n".join(s) + "\n", out / "lint.ys", log)
+    hits = []
+    for l in Path(str(out / "lint.ys") + ".log").read_text(errors="replace").splitlines():
+        m = IMPLICIT_NET.match(l.strip())
+        if m and (m[1], m[2], m[3]) not in hits:
+            hits.append((m[1], m[2], m[3]))
+    return hits
 
 
 def bb_script(env, kit, frontend, lib_bbs, out):
@@ -623,7 +651,9 @@ class Lec:
                     v = shared[ok]
                 elif (op[ok] & ~1) in olmap:
                     v = olmap[op[ok] & ~1] ^ (op[ok] & 1)
-                    if v > 1 and kind.get(v >> 1, ("",))[0].endswith("_only"):
+                    # a cross-side pair (gate register == gold register) is one register; a gold-only replica
+                    # cohort bound to a gold-only representative that is itself still free stays gold_only
+                    if v > 1 and oside != side and kind.get(v >> 1, ("",))[0].endswith("_only"):
                         kind[v >> 1] = ("paired", ok)
                 else:
                     nxt.append((side, k, h))
@@ -693,8 +723,11 @@ class Lec:
                 else:
                     _, oside, ok, inv = h
                     od = self.dlit[(oside, ok)] if (oside, ok) in self.dlit else self.dlit[("gold", ok)]
-                    # an RTL register (k, or the gate register's gold partner ok) loaded with X may hold either
-                    m.outs.append(m.AND(m.XOR(d, od ^ inv), nx(k) if side == "gold" else nx(ok)))
+                    # an RTL register (k, or the gate register's gold partner ok) loaded with X may hold either;
+                    # a gate register paired with another gate register (gate-side replica cohort, possibly a
+                    # re-keyed base#t[i] name with no gold next state) has no RTL X to honour
+                    xm = nx(k) if side == "gold" else (nx(ok) if oside == "gold" and ok in self.gc else 1)
+                    m.outs.append(m.AND(m.XOR(d, od ^ inv), xm))
                 m.onames.append(f"hyp:{side}:{k}")
         return m, kind
 
@@ -994,6 +1027,16 @@ def replica_proposals(L, log):
     log.append(f"replica proposal: {n} generated-register relations (gold input support modulo copy indices)")
 
 
+def anchored(L):
+    """flops that already have a partner of their own: targets of gate-side / matched-side 'eq' hypotheses.  A gold-only
+    representative of a gold-only replica cohort (g_add[1..3].u_ca.v == g_add[0].u_ca.v, all four merged by synthesis
+    into a matched u_tag.line[9]) is NOT anchored: it must still be paired with a matched / gate flop or proved
+    constant, else the whole cohort stays a free input and every cone it feeds 'differs' (kv3_astk / kv3_pv_pair
+    adders, 2026-10-25)."""
+    ms = set(L.matched)
+    return {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and (sd != "gold" or h[2] in ms)}
+
+
 def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
     duplicates, or the two frontends named a register differently, e.g. a register that drives an output port):
@@ -1019,6 +1062,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                 val, mask = m.simulate(words, seed=7 * rnd + it + 1)
                 sv = lambda side, k: lit_val(val, mask, L.dlit[(side, k)])
                 bound = {k for (sd, k), h in L.hyp.items()} | {h[2] for h in L.hyp.values() if h[0] == "eq"}
+                gbound = {k for (sd, k), h in L.hyp.items()} | anchored(L)
                 tsig = {}
                 for k in L.tonly:
                     if k.startswith("ff:") and ("gate", k) not in L.hyp and k not in bound and \
@@ -1029,7 +1073,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                     if k.startswith("ff:"):
                         msig.setdefault(sv("gold", k), []).append(k)
                 new = 0
-                free_g = [k for k in L.gonly if k.startswith("ff:") and ("gold", k) not in L.hyp and k not in bound]
+                free_g = [k for k in L.gonly if k.startswith("ff:") and ("gold", k) not in L.hyp and k not in gbound]
                 # (a bit that simulates constant pairs here only once its constant hypothesis has failed: the
                 # MSB of a remainder that is set only on a divide by zero)
                 free_t = [k for k in L.tonly if k.startswith("ff:") and ("gate", k) not in L.hyp and k not in bound]
@@ -1042,7 +1086,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                             L.hyp[("gate", b)] = ("eq", "gold", a, 0)
                             tsig[s] = [c for c in tsig.get(s, []) if c != b]
                             new += 1
-                partnered = {h[2] for h in L.hyp.values() if h[0] == "eq"}
+                partnered = anchored(L)
                 # the index strides of the gold-only bits already paired inside their own vector (a merged operand
                 # copy: b_n[i] == a_n[i + 24]); a bit the signatures cannot place (it simulates constant: an
                 # implicit leading one) tries its vector's strides
@@ -1103,7 +1147,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                         mc, _ = L.build(with_compare=False, with_hyp=False, free_const=c)
                         vc, _ = mc.simulate(words, seed=31 * rnd + it + 5)
                         cof.append(lambda side, k, vc=vc, dl=dict(L.dlit): lit_val(vc, mask, dl[(side, k)]))
-                    partnered = {h[2] for h in L.hyp.values() if h[0] == "eq"}
+                    partnered = anchored(L)
                     ug = [k for k in L.gonly if k.startswith("ff:") and ("gold", k) not in L.hyp and k not in partnered]
                     ut = {}
                     for k in L.tonly:
@@ -1147,7 +1191,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                 if not new:
                     break
             # constants for the gold-only flops left: fixpoint in simulation, starting from 0
-            partners = {h[2] for h in L.hyp.values() if h[0] == "eq"}
+            partners = anchored(L)
             # (a constant that failed while its neighbours were wrong is retried once its next state has become
             # a structural constant under the hypotheses now in place)
             for side, keys in (("gold", L.gonly), ("gate", L.tonly)):    # gate-only flops: constant candidates too
@@ -1245,6 +1289,15 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         for f in env["VERILOG_FILES"].split():
             srcmods |= set(src_modules(kpath(kit, f)))
         lib_bbs = [l for l in macro_libs(env, kit) if not set(lib_cells(l)) <= srcmods]
+        # 0. lint: implicit nets fail the kit before any proof (see implicit_net_lint)
+        hits = implicit_net_lint(env, kit, lib_bbs, out, log)
+        rec["implicit_nets"] = [dict(file=f.replace("/work/", "", 1), line=int(n), net=w) for f, n, w in hits[:200]]
+        if hits:
+            rec["verdict"] = "LINT FAIL"
+            rec["reason"] = (f"{len(hits)} implicit net(s) created (identifier used before its declaration or "
+                             f"undeclared; undriven in the yosys-slang synthesis): " +
+                             ", ".join(f"{Path(f).name}:{n} {w}" for f, n, w in hits[:8]))
+            raise LintFail(rec["reason"])
         # 1. black boxes of the gold elaboration (ports) -> one stub file for both sides
         run_yosys(bb_script(env, kit, gold_fe, lib_bbs, out / "bb"), out / "bb.ys", log)
         bbports = parse_bb_verilog(out / "bb.v")
@@ -1285,7 +1338,7 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         hyp = L.hyp
         consts = sorted(k for (sd, k), h in hyp.items() if h[0] == "const")
         pairs = sorted(f"{sd}:{k}={'~' if h[3] else ''}{h[2]}" for (sd, k), h in hyp.items() if h[0] == "eq")
-        partners = {h[2] for h in hyp.values() if h[0] == "eq"}
+        partners = anchored(L)
         live_g = [k for k in L.gonly if ("gold", k) not in hyp and k not in partners]
         live_t = [k for k in L.tonly if ("gate", k) not in hyp]
         cpg = sorted(set(L.gc) - set(L.tc))
@@ -1348,10 +1401,14 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             if rec["x_dont_care_points"]["n"]:
                 rec["note"] += (f"; {rec['x_dont_care_points']['n']} of them reach an RTL X (don't care: equal "
                                 f"wherever the RTL is not X)")
+    except LintFail:
+        pass
     except Unproven as e:
         rec["verdict"], rec["reason"] = "UNPROVEN", str(e)
     except (LecError, OSError, subprocess.SubprocessError, ValueError, KeyError) as e:
         rec["verdict"], rec["reason"] = "ERROR", f"{type(e).__name__}: {e}"
+        import traceback
+        log.append(traceback.format_exc())
     rec["t_total_s"] = round(time.time() - t0, 1)
     (out / "lec.json").write_text(json.dumps(rec, indent=1) + "\n")
     (out / "lec.log").write_text("\n".join(log))
@@ -1418,7 +1475,7 @@ def main(argv=None):
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "
           f"({r['t_total_s']} s)")
-    return {"EQUIVALENT": 0, "NOT EQUIVALENT": 1, "UNPROVEN": 2}.get(r["verdict"], 3)
+    return {"EQUIVALENT": 0, "NOT EQUIVALENT": 1, "LINT FAIL": 1, "UNPROVEN": 2}.get(r["verdict"], 3)
 
 
 if __name__ == "__main__":

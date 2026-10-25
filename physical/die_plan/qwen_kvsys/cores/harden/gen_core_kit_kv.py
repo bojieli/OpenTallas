@@ -65,6 +65,14 @@ add_pdn_connect -grid {top} -layers {M2 M5}
 PDN_MACRO = """define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
 add_pdn_connect -grid {macro} -layers {M4 M5}
 """
+# hard children (signed core views) bring their own M5 PG stripes (5.4 pitch, not on the core 4.32 lattice): M5 cannot
+# reach M5, so the macro-composed core adds the partition M6 straps (gen_phys.py recipe: 0.288 / 4.32 / 1.968) over the
+# whole core and every child connects M5 -> M6 (ahub r3 PDN-0233 with the M4-M5 macro grid: no shapes on the children)
+PDN_HARD_CHILDREN = """add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}
+add_pdn_connect -grid {top} -layers {M5 M6}
+define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
+add_pdn_connect -grid {macro} -layers {M5 M6}
+"""
 
 
 def sha(path):
@@ -382,13 +390,25 @@ def main():
                     help="even head_eighth: BSEL constant + HID port -> strap_bsel / strap_hid input pins (OWNER 10-25 07:01 option B)")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
+    ap.add_argument("--astk-rep-split", action="store_true",
+                    help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
+                         "<= 64 loads each; kept regs were merged back: B ES rc[0] 2048 loads) + ctl z_k copies kept the same way (0 cycles)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
+    ap.add_argument("--am-g-drop", action="store_true",
+                    help="COORD ruling 2 (10-25): drop the constant LMAX head-group bit g (am[1]) from qkd_ahub am0..3 and the "
+                         "ASTK am input (+ its qo[537] copy); ASTK ctl AM_G_PIN=0/G_CONST=0; plan pins renamed compactly "
+                         "(old b -> b-1 above the dropped bit) in memory until the KV-PLAN3 delta lands (am_g_drop.py)")
     ap.add_argument("--stock-flow", action="store_true",
                     help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
     cj = json.load(open(a.core_json))
+    if a.am_g_drop:
+        import am_g_drop
+        if cj["module"].startswith("kv3_astk_") and not a.astk_face_ports:
+            raise SystemExit("--am-g-drop on ASTK needs --astk-face-ports (repo qkd_astk_static_leaves.sv carries AM_G_PIN)")
+        am_g_drop.core_json(cj)
     if a.ectlk_three_taps:
         if cj["module"] != "qkd_ectlk":
             raise SystemExit("--ectlk-three-taps only applies to qkd_ectlk")
@@ -456,6 +476,8 @@ def main():
             dst.write_text(head_lane_ltcopy(dst.read_text(), mod, kd))
         if a.head_strap_master and dst.stem == mod:
             dst.write_text(head_strap_master(dst.read_text(), mod, kd, cj))
+        if a.am_g_drop and dst.stem == mod:
+            dst.write_text(am_g_drop.transform(dst.read_text(), mod))
         if a.ectlk_three_taps and dst.stem == mod:
             text = dst.read_text()
             old = ".ck({ck[0], ck[0], ck[0]})"
@@ -471,9 +493,11 @@ def main():
         if not mod.startswith("kv3_astk_"):
             raise SystemExit("--astk-timing-regs only applies to kv3_astk_* cores")
         from astk_timing_regs import apply_kit
-        apply_kit(kd / "rtl")
+        apply_kit(kd / "rtl", split=a.astk_rep_split)
         (kd / "astk_timing_delta.json").write_text(json.dumps(dict(added_cycles=0, zn_read_replicas=8, zn_added_ff_per_z=40,
-            ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL"), indent=1) + "\n")
+            ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL",
+            rep_split=(dict(zn_replicas=16, slice_bits=8, max_select_loads=64, kept="keep_hierarchy qkd_astk_rep5/rep4",
+                            miter="kv-cores-1025r/astk/G/tb") if a.astk_rep_split else None)), indent=1) + "\n")
     if a.ectlk_face_ports:
         if mod != "qkd_ectlk":
             raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
@@ -522,6 +546,7 @@ def main():
             macros.append(m)
             lefs.append(f"/work/macros/{m}.lef")
             libs.append(f"/work/macros/{m}_tt.lib")
+            libs_ff.append(f"/work/macros/{m}_ff.lib")   # MCMM bc corner needs the child FF view (STA-1112 without it)
         mp = ["# GENERATED (gen_core_kit_kv.py --hard-children): FIRM sites of the hard children (plan proposal)",
               "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]"]
         for b in hard_children["blocks"]:
@@ -540,6 +565,14 @@ def main():
         (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
     # pins: plan pins file + added / gap / strap pins
     pins = json.load(open(plandir / hc["pins_file"]))["pins"]
+    if a.am_g_drop:
+        pins, g_dropped = am_g_drop.plan_pins(pins, mod)
+        (kd / "am_g_delta.json").write_text(json.dumps(dict(
+            ruling="COORD ruling 2 (10-25), KV-TOK 05:36 g == 0 for every scheduled op", added_cycles=0, added_flops=0,
+            ports={p: f"[{ {1: 35, 537: 571}[d] }:0] -> [{ {1: 34, 537: 570}[d] }:0], old bit {d} dropped, old b -> b-1 above it"
+                   for p, d in am_g_drop.drops_for(mod).items()},
+            plan_pins=("renamed in memory (KV-PLAN3 delta pending): dropped " + ", ".join(g_dropped)) if g_dropped
+            else "plan already carries the delta"), indent=1) + "\n")
     have = {p["name"] for p in pins}
     names = []
     for n, c in cj["pin_class"].items():
@@ -597,7 +630,7 @@ def main():
     shutil.copyfile(Path(a.tool) / "pair_skew.tcl", kd / "pair_skew.tcl")   # signoff.py reads it beside itself (crashed without it 10-25)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     write_core_contract(kd, cj, clks, rsts)
-    (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
+    (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if hard_children else PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)
     for name in ("ot_keep_regs.tcl", "ot_pin_regs.tcl"):

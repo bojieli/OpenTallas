@@ -1,0 +1,6 @@
+argmax_struct_rcx_la1 post-CTS (intel1:/srv/opentallas-scratch2/claude/clock-reset/argmax/kits/argmax_struct_rcx_la1, RTL claude/argmax-struct-1025 STRUCT=1, LAYER_PARASITICS_FILE=setRC_rcx.tcl)
+pin-reg CK arrival (RCX-calibrated RC): TT N 538 mean 265.3 [257.5,273.4] S 100 mean 261.1 [253.8,264.0]
+                                         FF N 538 mean 206.4 [200.0,214.4] S 100 mean 203.8 [197.5,206.5]  -> N/S bands within 17 ps (GEOM cond 3 alt form)
+replicas: bvalid[k] copies at their lane groups (dmax to load centroid <= 1.9 um); ring ptr fanout 49-52; reset relay 58
+slew/cap violations after CTS: 0 (TT and FF). placement: max bin 0.52, 0 bins > 0.8, pin->reg p90 8.9 / max 12.5 um
+CTS hold gate (FF): reg2reg -5.38 ps / 14 ep; ports -26.28 / 923 (vclk FF 190.2 in kit vs measured pin-reg FF mean 206.0 -> per-corner rebind at sign-off)

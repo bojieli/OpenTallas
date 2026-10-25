@@ -1,0 +1,8 @@
+WAVEFRONT /srv/opentallas-scratch2/claude/qc-tok-1025/tp8_wf/rr/tp8/bind_reset_r3.json sha256 0cac28470a33 releases {'WF_ISS': 88, 'WF_CORE': 98, 'WF_N': 94, 'WF_S': 104, 'WF_UCIE': 103, 'WF_FT': 108, 'WF_SER0': 92, 'WF_SER1': 101, 'WF_SER2': 111, 'WF_SKEW': 3} latest 111 -> START 166 (= latest die rst_n 36 + 130), PW0 146
+COLL_CALENDAR compiled LS=407 (binding port 0, LX [23, 4, 22], RS [11, 11, 11]) -> lats 406
+case qwen_ar_256w kind=pos latu=53 lats=406 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=2048 meas_lu=53 meas_ls=406 pr_overlap=0 compiled_span=825
+case qwen_layer_2x256w kind=pos latu=53 lats=406 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=4096 meas_lu=53 meas_ls=406 pr_overlap=0 compiled_span=1081
+case qwen_argmax_1w kind=pos latu=53 lats=406 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=64 meas_lu=53 meas_ls=406 pr_overlap=0 compiled_span=474
+case qwen_layer_2x256w_argmax kind=pos latu=53 lats=406 phi=0 xu=0 xs=0 mutant=- FAIL (expected FAIL) mismatches=0 extra=0 out_err=0 cmd_bad=0 coll_fault=11111111 issuer_fault=00000000 die_fault=11111111 words_out=4160 meas_lu=53 meas_ls=406 pr_overlap=0 compiled_span=1498
+COLL_TP8SL NEGATIVE-CONTROL PASS cases=4 latu=53 lats=406
+TP8_CASE cal_minus1 rc=0
