@@ -555,6 +555,29 @@ def launch_unit(unit, logfile, argv):
 
 
 # ------------------------------------------------------------------------------------------------ actions
+def process_uses_kit(argv, path):
+    """A parent staging directory owns its nested kits even when ot-run spills to another host."""
+    path = path.rstrip("/")
+    if re.search(re.escape(path) + r"(?=[/\s]|$)", argv):
+        return True
+    try:
+        words = shlex.split(argv)
+    except ValueError:
+        return True  # malformed live client: retain data until it can be identified
+    if not any(w.rsplit("/", 1)[-1] == "ot-run" for w in words):
+        return False
+    for i, word in enumerate(words):
+        candidate = None
+        if word in ("--dir", "--stage") and i + 1 < len(words):
+            candidate = words[i + 1]
+        elif word.startswith(("--dir=", "--stage=")):
+            candidate = word.split("=", 1)[1]
+        if candidate and candidate.startswith("/srv/opentallas-scratch") and "/claude/" in candidate:
+            if path.startswith(candidate.rstrip("/") + "/"):
+                return True
+    return False
+
+
 def hub_procs(path):
     """processes on the hub (ot-run clients, local docker run / run_kit.sh) whose command line names the kit dir
     -> [(pid, elapsed_s)]; ot-run clients always run here, also when the job itself spilled to another host"""
@@ -564,7 +587,7 @@ def hub_procs(path):
     res = []
     for line in out.splitlines():
         f = line.split(None, 2)
-        if len(f) == 3 and f[0].isdigit() and int(f[0]) != me and pat.search(f[2]) and "autopilot" not in f[2] \
+        if len(f) == 3 and f[0].isdigit() and int(f[0]) != me and process_uses_kit(f[2], path) and "autopilot" not in f[2] \
                 and not f[2].startswith(("ssh ", "python3 -I -")):
             res.append((int(f[0]), int(f[1])))
     return res
@@ -594,11 +617,11 @@ def poll_adopted(st, j):
     c = probe_job(j)
     if c is None:
         return
-    if not c.get("signoff"):
-        p = rpy(j["host"], PROBE_KIT, {"kit": j["path"], "runner": j.get("runner", "")}, timeout=120)
-        la = p.get("log_age_s")
-        if p.get("error") or p.get("busy") is not False or (la is not None and la < 900):
-            return
+    p = rpy(j.get("probe") or j["host"], PROBE_KIT,
+            {"kit": j["path"], "runner": j.get("runner", "")}, timeout=120)
+    la = p.get("log_age_s")
+    if p.get("error") or p.get("busy") is not False or (la is not None and la < 900):
+        return
     j.setdefault("client_done_at", time.time())
     finish(st, j, c, {"adopted": True})
 
@@ -898,7 +921,8 @@ def record_failure(st, j):
         set_status(st, j, "DONE-" + cls, j.get("reasons", "")[:200])
         return
     # owner rule: failed job data deleted at once (logs, reports, signoff records and the review bundle stay)
-    d = rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800)
+    d = ({"errors": ["live hub client owns kit or its staging ancestor"]} if hub_procs(j["path"]) else
+         rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800))
     if d.get("error") or d.get("errors"):
         log(f"DELETE {j['id']} on {host}: {d.get('error') or d.get('errors')}; retry next tick")
         j["delete_pending"] = True
@@ -914,6 +938,8 @@ def retry_pending(st):
             archive(st, j)
         elif str(j.get("status", "")).startswith("DONE-") and j.get("delete_pending"):
             host = ssh_host(j.get("probe") or j["host"])
+            if hub_procs(j["path"]):
+                continue
             d = rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800)
             if not (d.get("error") or d.get("errors")):
                 j["delete_pending"] = False

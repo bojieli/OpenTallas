@@ -620,5 +620,39 @@ class TestOwnership(TickBase):
         self.assertIn("OWNERSHIP unavailable", g)
 
 
+class TestChainSafety(Base):
+    def test_parent_staging_client_and_spill_are_busy(self):
+        k = "/srv/opentallas-scratch2/claude/kv/heads/e2/kit"
+        for flag in ("--dir", "--stage"):
+            self.assertTrue(self.ap.process_uses_kit("python3 /home/ubuntu/.local/bin/ot-run " + flag +
+                " /srv/opentallas-scratch2/claude/kv/heads/e2 -- bash /srv/opentallas-scratch2/claude/kv/heads/e2/go.sh", k))
+        self.assertFalse(self.ap.process_uses_kit("ot-run --dir /srv/opentallas-scratch2/claude/kv/heads/e20", k))
+
+    def test_signoff_does_not_finish_busy_adopted_chain(self):
+        self.ap.hub_procs = lambda path: []
+        self.ap.probe_job = lambda j: so()
+        self.ap.rpy = lambda *a, **kw: {"busy": True, "log_age_s": 3000}
+        self.ap.finish = lambda *a: self.fail("finished a live chain")
+        self.ap.poll_adopted({}, {"host": "epyc2", "path": "/kit"})
+
+
+class TestReviewIdentity(unittest.TestCase):
+    def test_batches_never_share_clearance(self):
+        import loopgaps as L
+        text = "2026-10-25 05:20 GEOM REQ [PROTO-KITS/S81-178 B1] t12 @0123456789ab\n" \
+               "2026-10-25 05:21 GEOM REQ [PROTO-KITS/S81-178 B2] t25 @0123456789ab\n" \
+               "2026-10-25 05:44 GEOM-REVIEW: REPLY [PROTO-KITS/S81-178 B2] PASS-COND route t25 @0123456789ab\n"
+        self.assertIsNone(L.geom_verdicts(text, "PROTO-KITS/S81-178 B1", "slice_station__t12", "0123456789ab"))
+        self.assertEqual(L.geom_verdicts(text, "PROTO-KITS/S81-178 B2", "slice_station__t25", "0123456789ab")[0], "PASS-COND")
+
+    def test_continuation_verdict_names_are_retained(self):
+        import loopgaps as L
+        text = "2026-10-25 05:20 GEOM REQ [BATCH B1] t12 t18\n" \
+               "2026-10-25 05:44 GEOM-REVIEW: REPLY [BATCH B1] reviewed:\n" \
+               "  t12 PASS-COND route; t18 FAIL pins\n"
+        self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t12", "")[0], "PASS-COND")
+        self.assertEqual(L.geom_verdicts(text, "BATCH B1", "slice_station__t18", "")[0], "FAIL")
+
+
 if __name__ == "__main__":
     unittest.main()
