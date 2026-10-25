@@ -101,6 +101,15 @@ _order = {"enum": ["lsb_low", "lsb_high"]}
 _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
         "properties": {"part": _name, "bus": _name}}
 
+# B2 (PATH-QC-B12 10-25): hard-IP LINE SIDE of a hard core (its bumps, e.g. a UCIe PHY's link_* / far_*): pins absent
+# from the as-built die that the binder exports as die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins)
+_bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", "dir", "width"],
+                                          "additionalProperties": False,
+                                          "properties": {"pin": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+                                                         "dir": {"enum": ["input", "output"]},
+                                                         "width": {"type": "integer", "minimum": 1},
+                                                         "note": {"type": "string"}}}}
+
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
 _parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
     name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
@@ -317,6 +326,7 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
                                        "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
@@ -348,6 +358,7 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "bump_ports": _bump_ports,
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
                                        # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
