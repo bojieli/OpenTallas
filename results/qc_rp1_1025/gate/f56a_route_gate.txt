@@ -1,0 +1,12 @@
+RP1_GRT repair_timing -hold -hold_margin 5
+RP1_GRT hold_wns 3.60 hold_endpoints 0 setup_wns 198.56 slew_viol 0
+RP1_M TT setup_wns 196.43 setup_ep 0 hold_wns -13.82 hold_ep 565
+RP1_PAIR TT max n 10365 worst 29.04 bounded 0 signed -29.04 launch {ccap[260]$_DFF_P_} capture {q[4]$_DFF_P_} crpr 4.26 p99_raw 31.47 searched 305 nopath 0 veri
+RP1_PAIR TT min n 10365 worst 32.27 bounded 0 signed 32.27 launch {ccap[156]$_DFF_P_} capture {q[252]$_DFF_P_} crpr 4.26 p99_raw 33.35 searched 197 nopath 0 ver
+RP1_INS TT pinflops 998 mean 348.40 min 340.74 max 362.13 all 2220 mean_all 350.00
+RP1_M FF setup_wns 298.09 setup_ep 0 hold_wns -2.68 hold_ep 8
+RP1_PAIR FF max n 10365 worst 25.25 bounded 0 signed -25.25 launch {ccap[258]$_DFF_P_} capture {q[98]$_DFF_P_} crpr 3.63 p99_raw 26.99 searched 254 nopath 0 ver
+RP1_PAIR FF min n 10365 worst 30.32 bounded 0 signed 30.32 launch {ptw_d[328]$_DFF_P_} capture {u_twcd/q[328]$_DFF_P_} crpr 3.63 p99_raw 30.32 searched 103 nopa
+RP1_INS FF pinflops 998 mean 282.19 min 274.12 max 296.23 all 2220 mean_all 283.84
+RP1_GATE FF hold_wns(GRT cal) -2.68
+RP1_GATE FAIL: FF hold -2.68 < 0 -- stop before detailed route
