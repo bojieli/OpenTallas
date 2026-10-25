@@ -598,9 +598,10 @@ RUN_KIT = r"""#!/bin/bash
 # Fail-closed gates (CP1-R10 10-24): sdc_lint.py against the image's liberty time_unit BEFORE synth, face_guard.py on
 # the Yosys netlist AND on 1_synth.odb (after ORFS eliminate_dead_logic) right AFTER synth (every planned face register
 # its own flop driving only its port); any failing stops the kit (sdc_lint.log / face_guard.json / face_guard_odb.json).
-# RTL-SELRANGE (10-24): selrange_gate.py BEFORE synth -- Yosys read_verilog elaboration of the kit sources under
-# DESIGN_NAME; any out-of-range part-select / index (the class the slang frontend silently drops, e.g. a[31:24] of a
-# 31-b operand inside an unrolled function loop) stops the kit (selrange.json / selrange.log).
+# RTL-SELRANGE (10-24): selrange_gate.py -- Yosys read_verilog elaboration of the kit sources under DESIGN_NAME, run
+# beside synth (it needs minutes on the large slices) and joined right after it, before face_guard; any out-of-range
+# part-select / index (the class the slang frontend silently drops, e.g. a[31:24] of a 31-b operand inside an
+# unrolled function loop) stops the kit (selrange.json / selrange.log / selrange.rc).
 #   run_kit.sh KITDIR [GOAL=route] [MEM_GB=16] [CPUS=8]       (heavy: call it through ot-run --mem MEM_GB)
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
@@ -610,8 +611,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
   if [ -f /work/sdc_lint.py ]; then python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; fi; \
-  if [ \$rc = 0 ] && [ -f /work/selrange_gate.py ]; then python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; rc=\$?; tail -3 /work/selrange.log; fi; \
+  SRP=; if [ -f /work/selrange_gate.py ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
+  if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \$rc = 0 ] && [ \"\$S\" != 0 ]; then rc=\$S; fi; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ -f /work/face_guard.py ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; rc=\$?; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
