@@ -86,14 +86,20 @@ module ot_hbm_su_programme_root5 #(
 endmodule
 
 // hard master (die instance su_pgr, d4g GEN1 with pgp_<q> = ot_hbm_su_programme_pslice_c5): same ports as root_h
-module ot_hbm_su_programme_root_h5 (
+// PARTS (HBM-BIND B2 2026-10-24; default 4 = unchanged, r18h5 part k = quadrant k: 0 SW, 1 SE, 2 NW, 3 NE): the number of
+// programme parts pgp_* = per-part ports p_fault[k], r_we[k], r_bank[16k+:16]. PARTS 2 = the B2 die (part 0 = pgp_NW,
+// part 1 = pgp_NE): bank space 2 x 320 (part k = banks 320k .. 320k + 319; a write to bank >= 640 sets the sticky
+// configuration fault), compiler su_programme_compile.lower_root5(parts=2). Same edges (SDLY 2, RRLY 1, FREG 1).
+// MUT (bench only): passed to ot_hbm_su_programme_root5 (1 SDLY 0, 2 SMACROS 98, 3 RRLY 0, 4 fault not delayed).
+module ot_hbm_su_programme_root_h5 #(parameter integer PARTS=4, MUT=0) (
   input logic clk, rst_n,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row, input logic [255:0] cfg_data,
   input logic start, input logic [15:0] length,
-  input logic [3:0] p_fault,
+  input logic [PARTS-1:0] p_fault,
   output logic r_start, output logic [15:0] r_len,
-  output logic [3:0] r_we, output logic [63:0] r_bank,
+  output logic [PARTS-1:0] r_we, output logic [16*PARTS-1:0] r_bank,
   output logic [6:0] r_row, output logic [255:0] r_data,
   output logic fault);
-  ot_hbm_su_programme_root5 #(.PARTS(4),.SMACROS({4{32'd320}}),.SDLY(2),.RRLY(1)) u_root(.*);
+  initial if (PARTS != 4 && PARTS != 2) $fatal(1, "ot_hbm_su_programme_root_h5: PARTS must be 4 or 2");
+  ot_hbm_su_programme_root5 #(.PARTS(PARTS),.SMACROS({PARTS{32'd320}}),.SDLY(2),.RRLY(1),.MUT(MUT)) u_root(.*);
 endmodule
