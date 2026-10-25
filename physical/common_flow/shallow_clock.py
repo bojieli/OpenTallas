@@ -126,6 +126,140 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
     return p
 
 
+# Delay model fitted on the E5 CTS01 trunk probe (BUFx24, NDR 4w2s, setRC_rcx TT; 21 buffers, 148 edges):
+#   buffer   = 35.2 + 0.108 * input_leg_um            (input slew from the driving leg; resid <= 6 ps)
+#   wire leg = 0.191 * leg_um + 0.0094 * net_wire_um  (resid <= 12 ps)
+# Every leg therefore costs ~0.30 ps/um to the arrival at the next cell output.
+BAL_LEG = 0.191 + 0.108
+BAL_NET = 0.0094
+
+
+def _leg(a, b, dbu):
+    return (abs(a[0]-b[0]) + abs(a[1]-b[1])) / dbu
+
+
+def balance_xy(kids, dbu, step_um=2.0, pad_um=0.0):
+    """Driver point that equalises child arrivals (DME-lite, Manhattan).
+
+    kids = [(xy, lo_ps, hi_ps)] where lo/hi are the child's own subtree arrival range from its input.
+    Minimises (max_i hi_i+leg_i) - (min_i lo_i+leg_i), then that max (insertion), on a grid over the
+    children's bounding box.  A short leg is lengthened by moving the driver, never by padding."""
+    xs = [int(k[0][0]) for k in kids]; ys = [int(k[0][1]) for k in kids]
+    st = max(1, int(step_um * dbu))
+    best = None
+    pad = int(pad_um * dbu)
+    for x in range(min(xs) - pad, max(xs) + pad + 1, st):
+        for y in range(min(ys) - pad, max(ys) + pad + 1, st):
+            legs = [_leg((x, y), k[0], dbu) for k in kids]
+            tw = BAL_NET * sum(legs)
+            hi = max(BAL_LEG*l + k[2] for l, k in zip(legs, kids)) + tw
+            lo = min(BAL_LEG*l + k[1] for l, k in zip(legs, kids)) + tw
+            v = (round(hi - lo, 1), hi, x, y)
+            if best is None or v < best: best = v
+    return [best[2], best[3]]
+
+
+def split_geo(points, count, cap):
+    """Compact split into <=count groups of <=cap taps: binary cuts at the position that minimises the
+    larger side's extent (geometric gap), not at the count median, so a far tap never shares a leaf
+    group with a dense cluster across a macro."""
+    def bis(pts, k):
+        if k <= 1 or len(pts) <= 1: return [pts]
+        w=[max(p['xy'][j] for p in pts)-min(p['xy'][j] for p in pts) for j in (0,1)]
+        ax=0 if w[0]>=w[1] else 1
+        s=sorted(pts,key=lambda p:(p['xy'][ax],p['xy'][1-ax],p['name']))
+        ka=k//2; kb=k-ka; n=len(s)
+        lo=max(1,n-kb*cap); hi=min(n-1,ka*cap)
+        if lo>hi: raise ValueError('clock group capacity exceeded')
+        v=[p['xy'][ax] for p in s]
+        i=min(range(lo,hi+1),key=lambda i:(max(v[i-1]-v[0],v[-1]-v[i]),abs(2*i-n)))
+        return bis(s[:i],ka)+bis(s[i:],kb)
+    return [gr for gr in bis(points, count) if gr]
+
+
+def plan_balanced(g, fanout=4, leaf_fanout=4, max_hop_um=400, step_um=2.0, geo=True, pad_um=0.0):
+    """Wire-balanced variant of plan(): same partition and equal depth, but every driver is placed
+    bottom-up at the point that equalises its children's modelled arrivals (leaf legs included), and
+    the arrivals are re-evaluated after row legalisation.  Root stub (port -> lead -> top) is common."""
+    if fanout<2 or leaf_fanout<1: raise ValueError('invalid clock fanout')
+    a,b,c,d=g['core']
+    if any(not (a<=t['xy'][0]<=c and b<=t['xy'][1]<=d) for t in g['taps']):
+        raise ValueError('tap buffer lies outside the physical core')
+    u=g['dbu']
+    level=0
+    while leaf_fanout*fanout**level<len(g['taps']): level+=1
+    # 1. topology top-down (same count-median split as plan())
+    groups=[]
+    def topo(pts,remaining):
+        node=dict(kids=[],taps=None)
+        if remaining:
+            parts=split_geo(pts,fanout,leaf_fanout*fanout**(remaining-1)) if geo else split(pts,fanout)
+            node['kids']=[topo(gr,remaining-1) for gr in parts]
+        else:
+            node['taps']=pts
+        return node
+    tree=topo(g['taps'],level)
+    sites=FreeSites(g)
+    nodes=[];edges=[]
+    # 2. placement bottom-up; ranges are arrivals at the children's OUTPUTS seen from this node's output
+    def place(node):
+        if node['taps'] is not None:
+            kids=[(t['xy'],0.0,0.0) for t in node['taps']]
+        else:
+            for k in node['kids']: place(k)
+            kids=[(k['xy']['xy'],k['lo'],k['hi']) for k in node['kids']]
+        node['xy']=sites.legal(balance_xy(kids,u,step_um,pad_um))
+        xy=node['xy']['xy']
+        legs=[_leg(xy,k[0],u) for k in kids]
+        tw=BAL_NET*sum(legs)
+        # 35.2 = buffer intrinsic of THIS node is common to its subtree; add it at the parent level
+        node['lo']=min(BAL_LEG*l+k[1] for l,k in zip(legs,kids))+tw+35.2
+        node['hi']=max(BAL_LEG*l+k[2] for l,k in zip(legs,kids))+tw+35.2
+    place(tree)
+    lead=dict(name='ot_dtsh_0',parent=None,depth=1,**sites.legal(g['root']))
+    nodes.append(lead)
+    def emit(node,parent,depth):
+        nm=f'ot_dtsh_{len(nodes)}'
+        nodes.append(dict(name=nm,parent=parent,depth=depth,**node['xy']))
+        edges.append([parent,nm])
+        if node['taps'] is not None:
+            for t in node['taps']: edges.append([nm,t['name']])
+        else:
+            for k in node['kids']: emit(k,nm,depth+1)
+    emit(tree,lead['name'],2)
+    xy={n['name']:n['xy'] for n in nodes}|{t['name']:t['xy'] for t in g['taps']}
+    max_hop=max(abs(xy[a][0]-xy[b][0])+abs(xy[a][1]-xy[b][1]) for a,b in edges)/u
+    stub=sum(abs(a-b) for a,b in zip(nodes[0]['xy'],g['root']))/u
+    max_hop=max(max_hop,stub)
+    if max_hop>max_hop_um: raise ValueError(f'planned clock edge {max_hop:.3f} um exceeds {max_hop_um}')
+    p=dict(nodes=nodes,edges=edges,taps=g['taps'],root=g['root'],root_name=g.get('root_name',''),
+           dbu=u,core=g['core'],master=g['master'],width=g['width'],height=g['height'],
+           obstacles=[c[1:5] for c in g['cells'] if c[5]],
+           summary=dict(mode='balanced',new_buffers=len(nodes),tap_buffers=len(g['taps']),trunk_levels=level+3,
+                        max_hop_um=max_hop,port_stub_um=stub,fanout=fanout,leaf_fanout=leaf_fanout,
+                        model_tap_input_spread_ps=round(tree['hi']-tree['lo'],1),
+                        added_cycles=0,added_area_um2=len(nodes)*g['width']*g['height']/u**2))
+    validate(p)
+    return p
+
+
+def model_arrivals(p):
+    """Modelled arrival (ps, from the lead output) at every tap INPUT for any plan, same fitted model."""
+    u=p['dbu'];xy={n['name']:n['xy'] for n in p['nodes']}|{t['name']:t['xy'] for t in p['taps']}
+    ch={};par={}
+    for a,b in p['edges']: ch.setdefault(a,[]).append(b);par[b]=a
+    root=next(n['name'] for n in p['nodes'] if n['parent'] is None)
+    out={}
+    def walk(n,t):
+        tw=BAL_NET*sum(_leg(xy[n],xy[c],u) for c in ch.get(n,[]))
+        for c in ch.get(n,[]):
+            l=_leg(xy[n],xy[c],u);at=t+0.191*l+tw
+            if c in ch: walk(c,at+35.2+0.108*l)
+            else: out[c]=at
+    walk(root,0.0)
+    return out
+
+
 def validate(p):
     names={n['name'] for n in p['nodes']}
     taps={t['name'] for t in p['taps']}
@@ -180,7 +314,10 @@ def emit_apply(p,out):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('geometry');ap.add_argument('--out',required=True);ap.add_argument('--image');ap.add_argument('--apply')
-    a=ap.parse_args();p=plan(load_geometry(a.geometry));Path(a.out).write_text(json.dumps(p,indent=1)+'\n')
+    a=ap.parse_args();import os;g=load_geometry(a.geometry)
+    if os.environ.get('OT_DTSH_BALANCE','0')=='1':p=plan_balanced(g,fanout=int(os.environ.get('OT_DTSH_FANOUT','3')),leaf_fanout=int(os.environ.get('OT_DTSH_LEAF_FANOUT','4')))
+    else:p=plan(g)
+    Path(a.out).write_text(json.dumps(p,indent=1)+'\n')
     if a.image:render(p,a.image)
     if a.apply:emit_apply(p,a.apply)
     print(json.dumps(p['summary']))
