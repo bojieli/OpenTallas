@@ -474,7 +474,12 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 HOLD_FF_MARGIN_DEFAULT = 5.0
 # FLOW-INFRA-2 10-25: GRT-RC tap pre-pass (tapbal_grt.tcl) between CTS and the FF GRT step.  Opt-in until the flow
 # canaries pass with it (plan clock.tap_grt_pre, or OT_GEN_TAP_GRT_PRE=1 at generation for A/B kits); then default on.
-TAP_GRT_PRE_DEFAULT = False
+# FLOW-CANARY 10-25 A/B (claude/flowcan-cand2-1025@1ae8ebeb0, epyc1 flow-canary/ab/runs/*_1ae8ebeb0_*): ON clears the
+# post-CTS insertion gate on s81_head hd_turn_a (TT 216.86 -> 242.91, full canary PASS, sign-off TT -24.59/FF -9.08 vs
+# golden -27.20/-20.85) and KV kv3_io_ft (TT 228.69 -> 254.84); s81 t12 unchanged (pad pass reads 245.94, gate 226.54:
+# measurement-context offset, FLOW-CANARY item).  Default ON; opt out per plan/type clock.tap_grt_pre false or
+# OT_GEN_TAP_GRT_PRE=0.
+TAP_GRT_PRE_DEFAULT = True
 
 
 def _tap_grt_pre(P, t):

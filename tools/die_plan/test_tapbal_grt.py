@@ -18,9 +18,10 @@ def _cfg(monkeypatch, env=None, type_clock=None):
         return (kd / "config.mk").read_text()
 
 
-def test_default_off_env_and_plan_on(monkeypatch):
-    assert gen_phys.TAP_GRT_PRE_DEFAULT is False
-    assert "OT_TAP_GRT_PRE" not in _cfg(monkeypatch)
+def test_default_on_env_and_plan_override(monkeypatch):
+    assert gen_phys.TAP_GRT_PRE_DEFAULT is True
+    assert "export OT_TAP_GRT_PRE = 1" in _cfg(monkeypatch)
+    assert "export OT_PINREG_PAD = 1" in _cfg(monkeypatch)
     assert "export OT_TAP_GRT_PRE = 1" in _cfg(monkeypatch, env="1")
     assert "export OT_PINREG_PAD = 1" in _cfg(monkeypatch, env="1")
     assert "OT_TAP_GRT_PRE" not in _cfg(monkeypatch, env="0")
