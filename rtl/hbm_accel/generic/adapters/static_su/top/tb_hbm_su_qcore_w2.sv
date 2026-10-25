@@ -6,7 +6,7 @@
 // PASS line: QCORE_W2 PASS checks=N errors=0.  MUTW 1 (swapped writers) must FAIL.
 module tb_hbm_su_qcore_w2;
  parameter integer MUTW = 0, NCYC = 20000;
- reg clk = 0, rst_n = 0; always #1 clk = ~clk;
+ reg clk = 0, rst_n = 0; always #1 clk = ~clk;  // --timing (Verilator) or iverilog
  reg [53:0] rd; reg [73:0] rc; reg [1:0] dr; reg [127:0] sx; reg [1:0] wv; reg [15:0] wa; reg [63:0] wd;
  reg rrv; reg [4:0] rra; reg [255:0] rrd; reg [31:0] sfx; reg [267:0] st;
  wire [127:0] bw_a, bw_b; wire [35:0] bc_a, bc_b; wire [255:0] ds_a, ds_b; wire sv_a, sv_b, rv_a, rv_b, f_a, f_b;

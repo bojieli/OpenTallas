@@ -29,6 +29,7 @@ bash rtl/hbm_accel/generic/vm/static/run_vms_status_nq.sh "$OUT/st" "$OUT/status
 # ---- 4 SU scalar tree NLEG + SU programme root PARTS
 bash rtl/hbm_accel/generic/adapters/static_su/top/run_stree_nq.sh "$OUT/stree" $BASE > "$OUT/stree.log" 2>&1 & J+=($!)
 bash rtl/hbm_accel/generic/adapters/static_su/programme/run_pgroot_nq.sh "$OUT/pg" $BASE > "$OUT/pg.log" 2>&1 & J+=($!)
+bash rtl/hbm_accel/generic/adapters/static_su/top/run_qcore_w2.sh "$OUT/qcw2" > "$OUT/qcw2.log" 2>&1 & J+=($!)
 # ---- (IDX / argmax and HC root gates are appended here when their RTL lands; see EXTRA_GATES)
 for g in ${EXTRA_GATES:-}; do bash $g "$OUT/$(basename $g .sh)" $BASE > "$OUT/$(basename $g .sh).log" 2>&1 & J+=($!); done
 for j in "${J[@]}"; do wait $j; done
@@ -37,8 +38,9 @@ for m in 1 2 3 4 5 6 7 8 9; do grep -q "^TB_HFD_EP_STATIC_VC2 MUT=$m .* FAIL$" "
 res "1 hfd_ep_static_vc2 (MUT0 PASS, MUT1..9 FAIL)" $v
 grep -q "VMS_RING2_GATE PASS" "$OUT/vm.log" && res "2 VM ring2" PASS || res "2 VM ring2" FAIL
 grep -q "VMS_STATUS_NQ_GATE PASS" "$OUT/status.log" && res "3 vm_status4 NQ" PASS || res "3 vm_status4 NQ" FAIL
-grep -q "GATE PASS" "$OUT/stree.log" && res "4a SU stree NLEG" PASS || res "4a SU stree NLEG" FAIL
+grep -q "STREE_NQ_GATE PASS" "$OUT/stree.log" && res "4a SU stree NLEG" PASS || res "4a SU stree NLEG" FAIL
 grep -q "SU_PGROOT_NQ_GATE PASS" "$OUT/pg.log" && res "4b SU programme PARTS" PASS || res "4b SU programme PARTS" FAIL
+grep -q "QCORE_W2_GATE PASS" "$OUT/qcw2.log" && res "4c SU core 2-writer" PASS || res "4c SU core 2-writer" FAIL
 for g in ${EXTRA_GATES:-}; do b=$(basename $g .sh); grep -q "GATE PASS" "$OUT/$b.log" && res "x $b" PASS || res "x $b" FAIL; done
 # ---- 5 B2 die top + port bind
 T="$OUT/top"; mkdir -p "$T/ovl"
