@@ -13,8 +13,8 @@ Path: PC_EN_0 (kvpc0 h_head_p, kvpc1..3 kvs_pc) -> PHY_EN_0, HG_EN_0/HGI_EN_0 he
 | P4 | hgi_EN_0 | kv3_hgi_v3 | PLAN FIXED on f7ch (cd5885c33b): channel FT sites, G2 overflow 0 (27.3%), face budget 13.2, PROTO geom PASS; GEOM REQ 09:0x | GEOM verdict, then kit (needs head views) |
 | P5 | hub_Eo | kv3_hub_Eo | plan G2 PASS (f7ch); GEOM REQ plan PASS (plan-only) | kit after ASTK2 master (C11 W2 FAIL 10:05) |
 | P6 | sys_c | kv3_sys_c | NEEDS-KIT; 5-macro detour WIP 0ed44e59d; PHY PG domain hook NOT written | kits; PG hook |
-| C1 | kvpc0 core | qkd_kvs_pc_h_head_p | FIXED face_guard 0/2984 (claude/path-kv-pc-1025@b739812028, private port flops, miter PASS); place via ot-run; GEOM REQ [PATH-KV-PC 09:1x] | GEOM verdict -> route (autopilot e9adf4c1f601) |
-| C2 | kvpc1..3 core | qkd_kvs_pc | FIXED face_guard 0/4126 (same branch; o_prev +1 edge per non-head hop); place live; GEOM REQ | GEOM verdict -> route (autopilot 74f6f76067a8) |
+| C1 | kvpc0 core | qkd_kvs_pc_h_head_p | REGEN vs v3.9g plan (claude/path-kv-pc2-1025@de202bd70c): face_guard 0 + port_gate 2987/2987, 3_place done (fill 19%); LEC NOT EQUIV (gold_only corr, KV-LEC); GEOM REQ [PATH-KV-PC2 11:1x] | GEOM verdict + LEC proof -> route (autopilot 3184691ce9a1) |
+| C2 | kvpc1..3 core | qkd_kvs_pc | REGEN same branch: face_guard 0 + port_gate 4129/4129, 3_place done (fill 19%); LEC NOT EQUIV (gold_only corr, KV-LEC); GEOM REQ [PATH-KV-PC2 11:1x] | GEOM verdict + LEC proof -> route (autopilot 9aaad29af17f) |
 | C3 | head even master e0 (HID/BSEL straps) | kv3_head_eighth_e0 | autopilot ROUTING 3ffc2afa4c46 (old variant?); master not signed | KV-HEADCLK |
 | C4 | head even master e2 | kv3_head_eighth_e2 | GEOM-REQ; FF hold -10..-15 structural verdict (regional tap/lane) | KV-HEADCLK |
 | C5 | head even master e6 (serves e4) | kv3_head_eighth_e6 | diagnostic only TT -71.64 / FF -73.96, no per-corner basis | structural: per-lane taps + MCMM basis |
