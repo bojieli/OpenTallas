@@ -1,0 +1,102 @@
+{
+ "kit": "/srv/opentallas-scratch/claude/elem-s81-cores/r2/dsdv_gunit_l5_n32",
+ "top": "dsdv_gunit_l5",
+ "netlist": "/srv/opentallas-scratch/claude/elem-s81-cores/r2/dsdv_gunit_l5_n32/run/results/asap7/kl_dsdv_gunit_l5_n32/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 1859,
+ "ok": 1732,
+ "fail_counts": {
+  "shared": 125,
+  "dropped": 2
+ },
+ "groups": [
+  {
+   "bus": "ct_b",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "nonflop",
+   "n": 106,
+   "bits": "[1..8,13..20,38,40..41,189..275]"
+  },
+  {
+   "bus": "cw_a",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 2,
+   "bits": "[6..7]"
+  },
+  {
+   "bus": "cw_a",
+   "dir": "input",
+   "cls": "shared",
+   "sub": "comb",
+   "n": 6,
+   "bits": "[1..5,8]"
+  },
+  {
+   "bus": "cw_a",
+   "dir": "input",
+   "cls": "shared",
+   "sub": "copies",
+   "n": 2,
+   "bits": "[0,9]"
+  },
+  {
+   "bus": "cw_v",
+   "dir": "input",
+   "cls": "shared",
+   "sub": "comb",
+   "n": 1,
+   "bits": ""
+  },
+  {
+   "bus": "fault",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "hold",
+   "n": 1,
+   "bits": ""
+  },
+  {
+   "bus": "launch",
+   "dir": "input",
+   "cls": "shared",
+   "sub": "copies",
+   "n": 1,
+   "bits": ""
+  },
+  {
+   "bus": "mx_i",
+   "dir": "input",
+   "cls": "shared",
+   "sub": "copies",
+   "n": 5,
+   "bits": "[0..4]"
+  },
+  {
+   "bus": "mx_v",
+   "dir": "input",
+   "cls": "shared",
+   "sub": "copies",
+   "n": 1,
+   "bits": ""
+  },
+  {
+   "bus": "yd_v",
+   "dir": "input",
+   "cls": "shared",
+   "sub": "copies",
+   "n": 1,
+   "bits": ""
+  },
+  {
+   "bus": "ye_v",
+   "dir": "input",
+   "cls": "shared",
+   "sub": "copies",
+   "n": 1,
+   "bits": ""
+  }
+ ]
+}
