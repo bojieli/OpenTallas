@@ -532,6 +532,104 @@ class TestGeomDemote(TickBase):
         self.assertEqual(len(alerts), 2)
         self.assertIn("GEOM-FAIL-AFTER-SUBMIT", (Path(self.tmp.name) / "LOOP-GAPS.txt").read_text())
 
+    def running_on_pass(self):
+        self.queue(self.REQ_ROW)
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: PASS\n")
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "RUNNING")
+        return j
+
+    def gaps(self):
+        return (Path(self.tmp.name) / "LOOP-GAPS.txt").read_text()
+
+    def test_hand_withdrawn_queue_fail_is_not_a_geom_fail_after_submit(self):
+        """2026-10-25 e0cca96daff3: queue line 389 'FAIL<TAB>WITHDRAWN obsolete PROTO 05:00 recipe; row e0cca96daff3;
+        ... existing live job preserved' fired 'line 389 geom FAIL' though GEOM-REVIEW never failed t29"""
+        self.running_on_pass()
+        withdrawn = ROW[:4] + ["FAIL", "WITHDRAWN obsolete PROTO 05:00 recipe; existing live job preserved"] + ROW[6:]
+        self.queue(self.REQ_ROW, withdrawn)
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "RUNNING")
+        self.assertNotIn("WARN GEOM-FAIL-AFTER-SUBMIT", self.log())
+        self.assertNotIn("GEOM-FAIL-AFTER-SUBMIT", self.gaps())
+        # a PASS-COND list naming the type is not a FAIL either
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: PASS\n"
+                  f"{ts(5)} GEOM-REVIEW: REPLY [PROTO-KITS] Verdicts below.\n  PASS-COND (route via autopilot):\n"
+                  f"    t7, slice_station__t5, t29\n  t8_m0 is NOT passed: reset hop 448 > 405.\n")
+        self.queue(self.REQ_ROW)
+        self.tick()
+        self.assertNotIn("WARN GEOM-FAIL-AFTER-SUBMIT", self.log())
+
+    def test_stale_hand_fail_alert_is_dropped(self):
+        j = self.running_on_pass()
+        st = json.loads((Path(self.tmp.name) / "state.json").read_text())
+        st["jobs"][j["id"]].update(geom_fail_alert="line 389 geom FAIL", geom_fail_alert_t=time.time() - 600)
+        (Path(self.tmp.name) / "state.json").write_text(json.dumps(st))
+        self.queue(self.REQ_ROW, ROW[:4] + ["FAIL", "WITHDRAWN row; existing live job preserved"] + ROW[6:])
+        (j,) = self.tick().values()
+        self.assertNotIn("geom_fail_alert", j)
+        self.assertIn("CLEAR GEOM-FAIL-AFTER-SUBMIT", self.log())
+        self.assertNotIn("GEOM-FAIL-AFTER-SUBMIT " + j["id"], self.gaps())
+
+    def fail_alert(self):
+        j = self.running_on_pass()
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: PASS\n"
+                  f"{ts(5)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 corrected: FAIL\n")
+        self.tick()
+        self.assertIn("GEOM-FAIL-AFTER-SUBMIT " + j["id"], self.gaps())
+        return j
+
+    def test_coord_keep_line_clears_the_gap(self):
+        j = self.fail_alert()
+        q = Path(self.tmp.name) / "coord" / "lanes" / "COORD-REVIEW-QUEUE.md"
+        later = time.strftime("%Y-%m-%d %H:%M", time.localtime(time.time() + 120))
+        q.write_text(f"[COORD {later} PDT] GEOM-FAIL-AFTER-SUBMIT {j['id']} slice_station__t5: KEEP. parser misread\n")
+        self.tick()
+        self.assertNotIn("GEOM-FAIL-AFTER-SUBMIT " + j["id"], self.gaps())
+
+    def test_old_coord_keep_does_not_clear_a_newer_alert(self):
+        j = self.fail_alert()
+        q = Path(self.tmp.name) / "coord" / "lanes" / "COORD-REVIEW-QUEUE.md"
+        q.write_text(f"[COORD {ts(240)}] GEOM-FAIL-AFTER-SUBMIT {j['id']} x: KEEP\n")
+        self.tick()
+        self.assertIn("GEOM-FAIL-AFTER-SUBMIT " + j["id"], self.gaps())
+
+    def test_resolved_tsv_row_clears_the_gap(self):
+        j = self.fail_alert()
+        (Path(self.tmp.name) / "coord" / "autopilot").mkdir(exist_ok=True)
+        (Path(self.tmp.name) / "coord" / "autopilot" / "resolved.tsv").write_text(
+            f"GEOM-FAIL-AFTER-SUBMIT {j['id']}\t\tKEEP\tslice_station__t5\tCOORD\tnow\tCOORD ruled keep\n")
+        self.tick()
+        self.assertNotIn("GEOM-FAIL-AFTER-SUBMIT " + j["id"], self.gaps())
+
+
+class TestProbeKitRouted(unittest.TestCase):
+    """2026-10-25: results/.../base/5_hold_batch_*.odb (GRT hold step checkpoints) made the autopilot REJECT placed kits
+    as 'already routed'; only real route outputs count"""
+
+    def probe(self, names):
+        import subprocess
+        with tempfile.TemporaryDirectory() as d:
+            b = Path(d) / "run" / "results" / "asap7" / "x" / "base"
+            b.mkdir(parents=True)
+            (Path(d) / "config.mk").write_text("")
+            for n in names:
+                (b / n).write_text("")
+            import autopilot as ap
+            o = subprocess.run([sys.executable, "-c", ap.PROBE_KIT, json.dumps({"kit": d, "runner": ""})],
+                               capture_output=True, text=True, env={"PATH": ""}, timeout=60).stdout
+            return json.loads(o.split("AP_JSON ", 1)[1])["routed"]
+
+    def test_hold_batches_and_grt_are_not_routed(self):
+        self.assertEqual(self.probe(["2_floorplan.odb", "3_place.odb", "4_cts.odb", "5_1_grt.odb",
+                                     "5_hold_batch_0.odb", "5_hold_batch_12.odb"]), [])
+
+    def test_route_outputs_are_routed(self):
+        self.assertEqual(self.probe(["5_1_grt.odb", "5_hold_batch_1.odb", "5_2_route.odb", "5_3_fillcell.odb",
+                                     "6_1_fill.odb", "6_final.odb"]),
+                         ["5_2_route.odb", "5_3_fillcell.odb", "6_1_fill.odb", "6_final.odb"])
+        self.assertEqual(self.probe(["5_route.odb"]), ["5_route.odb"])
+
 
 class TestRender(unittest.TestCase):
     LOG = """Startpoint: a/q_reg (rising edge-triggered flip-flop clocked by clk)
