@@ -29,8 +29,8 @@ cw_go / result edge is identical to the no-wavefront methodology pass (`../../qc
 Build 2,217 s wall / 78.6 GB peak (Verilator 5.050, 366 modules); each sim 4.5 min / 0.4 GB.
 
 ## Scope / open
-- `../xt1_wf_early` (QC-TOK): negative control, the same carve with the calendar started before the wavefront completes
-  (START_DELAY 100 and 0) must FAIL. See that README for the verdict.
+- `../xt1_wf_early` (QC-TOK): negative control. Calendar start at the reset edge (0) FAILS 0/64 + 0/64 (fault at
+  sl_W5_fw, release 88); start 100 still PASSES (first words reach the late tiles after their release 101..116).
 - tp8 with the published offsets: sub-lane, see `../tp8_wavefront` when it lands.
 - This is the xt1 carve of the bound top, not a whole-die token pass; KV side (KV-TOK) still lacks a die-wide START after
   its wavefront (r16 retirement proof keyed to RST_HOLD 273).
