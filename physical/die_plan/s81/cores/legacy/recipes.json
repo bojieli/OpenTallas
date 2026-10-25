@@ -43,7 +43,9 @@
   "ref_tile": "physical/ref_tile/s81sl_capc5r"
  },
  "ot_s81sl_eg": {
-  "ref_tile": "physical/ref_tile/s81sl_eg"
+  "ref_tile": "physical/ref_tile/s81sl_eg",
+  "pins_file": "inputs/core_pins/ot_s81sl_eg_c.json",
+  "lef": "physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef"
  },
  "ot_s81sl_xrt1": {
   "ref_tile": "physical/ref_tile/s81sl_xrt1"

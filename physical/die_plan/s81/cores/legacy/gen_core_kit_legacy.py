@@ -409,6 +409,9 @@ def main():
                   pins_file=rec["lef_contract"])
     else:
         ptype, hc = plan_core(plan, rec.get("plan_module", a.module))
+    if rec.get("pins_file"):             # revised plan pin table (S81/LEAFPLAN repin.py) ahead of the plan rewire
+        hc = {k: v for k, v in hc.items() if k != "pins"}
+        hc.update(pins_file=rec["pins_file"], lef=rec["lef"])
     spec_src = rec.get("spec_git")       # "<rev>:<path>" for a kit spec that is only in history (sources from the tree)
     spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
     mod = spec["top"]
