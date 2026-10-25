@@ -21,7 +21,10 @@ set cp_corr_on [expr {$cp_grt && [cp_env OT_CTAP_CORR ""] ne ""}]
 if {$cp_corr_on} { source [cp_env OT_CTAP_CORR ""]; puts "OT_CTAP_CORR [cp_env OT_CTAP_CORR {}] taps $ot_ctap_corr macros $ot_ctap_corr_mac" }
 proc cp_ctap {r} { global cp_corr_on ot_ctap_corr; if {$cp_corr_on && [dict exists $ot_ctap_corr $r]} { return [lindex [dict get $ot_ctap_corr $r] 0] }; return 0.0 }
 proc cp_cmac {n} { global cp_corr_on ot_ctap_corr_mac; if {$cp_corr_on} { foreach {g v} $ot_ctap_corr_mac { if {[string match $g [string map {\\ {}} $n]]} { return [lindex $v 0] } } }; return 0.0 }
-proc cp_est {} { global cp_grt; set_propagated_clock [all_clocks]; if {$cp_grt} { estimate_parasitics -global_routing } else { estimate_parasitics -placement } }
+# OT_CTAP_EST=loaded (QC 10-25, post-route report): use the parasitics the caller read (routed SPEF / RCX), never estimate
+set cp_loaded [expr {[cp_env OT_CTAP_EST place] eq "loaded"}]
+if {$cp_loaded && !$cp_ronly} { error "OT_CTAP_EST=loaded is report-only (OT_CTAP_REPORT_ONLY=1)" }
+proc cp_est {} { global cp_grt cp_loaded; set_propagated_clock [all_clocks]; if {$cp_loaded} return; if {$cp_grt} { estimate_parasitics -global_routing } else { estimate_parasitics -placement } }
 proc cp_arr {it} {
   set p [get_pins -quiet [string map {\\ \\\\} "[[$it getInst] getName]/[[$it getMTerm] getName]"]]
   if {![llength $p]} { set p [get_pins -quiet "[[$it getInst] getName]/[[$it getMTerm] getName]"] }
@@ -108,22 +111,37 @@ proc cp_regtap {it} {
   return ""
 }
 proc cp_macros {it} {
-  global cp_blk cp_corr_on
+  global cp_blk
   set out {}
   foreach m [$cp_blk getInsts] {
     if {![[$m getMaster] isBlock]} continue
     set ck ""; foreach t [$m getITerms] { if {[[$t getMTerm] getName] eq "clk"} { set ck $t } }
-    set a [cp_arr $ck]; lassign [cp_stats [cp_ifregs $m]] n mean lo hi
-    if {$cp_corr_on} {
-      # interface regs corrected by the tap that clocks each (cp_regmap), the macro pin by its own table entry
-      set a [expr {$a + [cp_cmac [$m getName]]}]
-      set sc 0.0; set nc 0; foreach t [cp_ifregs $m] { set aa [cp_arr $t]; if {$aa eq ""} continue; incr nc; set sc [expr {$sc + $aa + [cp_ctap [cp_regtap $t]]}] }
-      if {$nc} { set mean [expr {$sc / $nc}] }
+    # QC 2026-10-25 (GEOM-REVIEW-3 [QC-PHYS-RP1-F57] cond a): ONE set for every statistic. Each interface reg arrival
+    # carries the correction of the tap that clocks it (0 when OT_CTAP_CORR is off), the macro pin its own entry;
+    # n / mean / min / max and the W-side / E-side split all come from that set (before: mean corrected, min/max raw).
+    set a [cp_arr $ck]; if {$a eq ""} { set a 0.0 }; set a [expr {$a + [cp_cmac [$m getName]]}]
+    set all {}; set side [dict create W {} E {}]
+    foreach t [cp_ifregs $m] {
+      set aa [cp_arr $t]; if {$aa eq ""} continue
+      set r [cp_regtap $t]; set v [expr {$aa + [cp_ctap $r]}]
+      lappend all $v; dict lappend side [expr {[string match {E*} $r] || [string match {SE*} $r] ? "E" : "W"}] $v
     }
-    puts [format "OT_CTAP_M it%s macro %s clk %.1f ifregs n %d mean %.1f min %.1f max %.1f (clk - mean %.1f)" $it [$m getName] $a $n $mean $lo $hi [expr {$a-$mean}]]
+    lassign [cp_lstats $all] n mean lo hi
+    set sd ""
+    foreach s {W E} {
+      lassign [cp_lstats [dict get $side $s]] sn smean slo shi
+      append sd [format " %s n %d mean %.1f min %.1f (clk - min %.1f)" $s $sn $smean $slo [expr {$sn ? $a-$slo : 0.0}]]
+    }
+    puts [format "OT_CTAP_M it%s macro %s clk %.1f ifregs n %d mean %.1f min %.1f max %.1f (clk - mean %.1f) |%s" $it [$m getName] $a $n $mean $lo $hi [expr {$a-$mean}] $sd]
     lappend out [list $m $a $mean]
   }
   return $out
+}
+proc cp_lstats {vs} {
+  if {![llength $vs]} { return {0 0.0 0.0 0.0} }
+  set s 0.0; set lo 1e9; set hi -1e9
+  foreach v $vs { set s [expr {$s+$v}]; set lo [expr {min($lo,$v)}]; set hi [expr {max($hi,$v)}] }
+  return [list [llength $vs] [expr {$s/[llength $vs]}] $lo $hi]
 }
 proc cp_apply {todo} {
   global cp_grt

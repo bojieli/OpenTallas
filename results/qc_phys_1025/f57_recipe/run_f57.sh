@@ -29,7 +29,9 @@ elif [ "$PH" = route ]; then
   if [ \$rc = 0 ]; then \$M do-finish && \$M do-generate_abstract; rc=\$?; fi; \
   O=\$(ls $B/6_final.odb 2>/dev/null | tail -1); \
   if [ -n \"\$O\" ]; then ODB=\$O PINS=/work/pins.json OUT=/work/pin_audit.json openroad -python -exit /work/pin_audit.py; \
-    for c in TT FF; do OT_CORNER=\$c DESIGN_NAME=$TOP ODB=\$O SPEF=\${O%.odb}.spef openroad -exit /work/corners.tcl > /work/sta_\$c.log 2>&1; done; fi"
+    for c in TT FF; do OT_CORNER=\$c DESIGN_NAME=$TOP ODB=\$O SPEF=\${O%.odb}.spef openroad -exit /work/corners.tcl > /work/sta_\$c.log 2>&1; \
+      MC=\$c ODB=\$O SPEF=\${O%.odb}.spef SDC=\$(ls $B/6_final.sdc $B/5_route.sdc 2>/dev/null | head -1) /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/macro_rcx.tcl > /work/macro_rcx_\$c.log 2>&1; \
+      grep -h \"OT_CTAP_M itfinal\" /work/macro_rcx_\$c.log | sed \"s/^/RP1_RCX \$c /\"; done; fi"
 else echo "phase proto|route"; exit 2; fi
 echo "image $IMAGE $(docker image inspect --format '{{.Id}}' $IMAGE) host $(hostname) phase $PH start $(date -Is)" >> "$K/image.txt"
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
