@@ -596,3 +596,4 @@ Collected codex-b2o-final FAIL03:38 clock PHY keepout legalizer (gen.exit1). Fix
   (27x a492245644, 3x 2a4ad7908a, 1x 18e417dc81, tile0) -> adopt a492245644 + the 6 ID pins for all 32; SFU lanes have 9 lane pin tables at one outline 388.8x345.6 -> one table (mirror/abut by the parent
   placement, not per-lane pins); plan files: hbm/over_cap_split/ot_hgi_coll_tkm_m_tp192.split.json + ot_hgi_sfu_core_split3.split.json, B2n cores/ot_hgi_coll_tkm_m_tp192__tile*.json + ot_hgi_sfu_core_split3__lane*.json
   pin tables, views_b2n.json. Result: TKM 33 -> 2 cores (tile x32 + root), SFU 19 -> 4 (lane x16 + ctl/opstore_a/opstore_b). Owner rule 'replicated clusters hardened once'. Not edited by HBM-KITS-B2.
+2026-10-25 06:48 PDT HBM-KITS-B2: the 'HBM-KITS-B2 -> HBM-PLAN (B2o delta item)' strap->ID-pin line above is PENDING OWNER strap ruling (COORD 06:5x); TKM tiles / SFU lanes not kitted.
