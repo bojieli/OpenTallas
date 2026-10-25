@@ -438,15 +438,20 @@
   "OT_A0_RST_TAPS": "tools/qwen_romleaf/a0core/a0c8_nk_rst_taps.tsv",
   "OT_TAP_PORT": "ck",
   "OT_TAP_CLOCK": "core_clk",
-  "GPL_ROUTABILITY_DRIVEN": "0"
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "OT_A0_RESET_PATHS": "tools/qwen_romleaf/a0core/a0c8_nk_reset_paths.tsv"
  },
  "hold_merge": "CRITICAL A0 (critical_tiles.txt): gate PNG + checklist review only; no REVIEW.json / submit by the lane agent.",
  "reset_landing": {
   "enable": true,
-  "stages": 2,
+  "stages": 4,
   "clock": "ck",
+  "distributed_chain": true,
   "copies": {
    "rst_n": 32
+  },
+  "first_copies": {
+   "rst_n": 1
   }
  },
  "reset_relay_split": {
@@ -468,7 +473,7 @@
   "5_storage": "19 exact hard children NK/18 NL with original pin contracts and43.2 origins; node binding actual CLOSED NB1 record with exact inherited geometry, original provenance marker retained historically.",
   "6_floorplan": "Same820.8x907.2 hard layout and actual legal rows. Source FF reservations shape GPL only; opening adjacent repair row capacity fixes illegal wire placements causally at max3.4um displacement/0percentHPWL on actual failedODB.",
   "7_clock": "ONE core clock ck entered at 38 interior tap pins (R4 grid 400 um + v6 sink additions); face (pin) flop spread <= 80 ps TT+FF on RC and mean within 80 of 250 is the hard rule; per-tree insertion / sinks per tap are guidance.",
-  "8_reset": "Original two-edge reset landing and max32 relay splitting unchanged; no reset/data contract modification."
+  "8_reset": "Four registered landing stages on macro-free <=352.064um paths, +2 boot cycles/+0 data cycles; distributed same-level equivalent copies; physical placement proof pending."
  },
  "clock": "cts",
  "sdc_extra": [
