@@ -266,11 +266,20 @@ def main():
     ap.add_argument("--recipes", default=str(HERE / "recipes_kv.json"))
     ap.add_argument("--kit-rtl", default=str(Path.home() / "scratch/kv-g3/kit_rtl/g3"))
     ap.add_argument("--tool", default=str(REPO / "tools/die_plan"))
+    ap.add_argument("--ectlk-three-taps", action="store_true", help="restore co-timed ECTLK ck[2:0] roots, zero added cycles")
     ap.add_argument("--astk-face-ports", action="store_true", help="ASTK exclusive tc/qo copies + fault-b landing (+78FF measured WN,0 command cycles,+1 external-fault cycle)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
     cj = json.load(open(a.core_json))
+    if a.ectlk_three_taps:
+        if cj["module"] != "qkd_ectlk":
+            raise SystemExit("--ectlk-three-taps only applies to qkd_ectlk")
+        for pin in ("ck[0]", "ck[1]", "ck[2]"):
+            if cj["pin_class"].get(pin) not in {"clk", "clk_unused"}:
+                raise SystemExit(f"ECTLK missing declared clock pin {pin}")
+            cj["pin_class"][pin] = "clk"
+        cj["report"]["clock_nets"] = {"clk": "ck[2:0]"}
     plan = json.load(open(a.plan))
     plandir = Path(a.plan).resolve().parent
     mod = cj["module"]
@@ -307,11 +316,21 @@ def main():
         if a.astk_face_ports and dst.stem == mod:
             from astk_face_ports import transform
             dst.write_text(transform(dst.read_text()))
+        if a.ectlk_three_taps and dst.stem == mod:
+            text = dst.read_text()
+            old = ".ck({ck[0], ck[0], ck[0]})"
+            if text.count(old) != 1:
+                raise SystemExit("ECTLK requires exactly one collapsed three-clock leaf binding")
+            dst.write_text(text.replace(old, ".ck(ck[2:0])"))
         preserve_head_relays(dst)
         # std-cell simulation models (asap7sc7p5t_*.v, for leaves that instantiate cells): yosys takes the cells
         # from the liberty, the models are not synthesisable input
         if not f.endswith((".svh", ".vh")) and not re.match(r"asap7sc7p5t_.*\.v$", dst.name):
             srcs.append(f"/work/rtl/{dst.name}")
+    if a.ectlk_three_taps:
+        (kd / "ectlk_clock_delta.json").write_text(json.dumps(dict(
+            source_ports=["ck[0]", "ck[1]", "ck[2]"], related_clock="one die clock, all edges co-timed",
+            clock_period_ps=833, added_cycles=0, pin_geometry="unchanged plan pins"), indent=1) + "\n")
     if a.astk_face_ports:
         (kd / "astk_face_delta.json").write_text(json.dumps(dict(
             extra_flops_estimate=78, command_cycles=0, local_fault_cycles=0, external_fault_cycles=1,
