@@ -20,16 +20,44 @@ def _extent(points, xy):
     return np.maximum.reduce([abs(a-u.min()),abs(a-u.max()),abs(b-v.min()),abs(b-v.max())])
 
 
-def _path(free,first,last,budget,radius,min_stages):
+def _visible(source, targets, boxes):
+    """True when at least one Manhattan L between each point pair avoids cores.
+
+    Legal station endpoints alone are insufficient: the connecting wire can cut
+    across a core whose only free M6/M7 tracks cannot carry the wide bundle.
+    Preserve both L orders so narrow channels remain usable without moving a
+    core or increasing the reach budget.
+    """
+    source=np.asarray(source);targets=np.asarray(targets)
+    x0,y0=source[...,0],source[...,1];x1,y1=targets[...,0],targets[...,1]
+    xl,xh=np.minimum(x0,x1),np.maximum(x0,x1)
+    yl,yh=np.minimum(y0,y1),np.maximum(y0,y1)
+    xy=np.ones(np.broadcast_shapes(np.shape(x0),np.shape(x1)),dtype=bool)
+    yx=xy.copy()
+    for a,b,c,d in boxes:
+        h0=(b<y0)&(y0<d)&(xl<c)&(xh>a)
+        h1=(b<y1)&(y1<d)&(xl<c)&(xh>a)
+        v0=(a<x0)&(x0<c)&(yl<d)&(yh>b)
+        v1=(a<x1)&(x1<c)&(yl<d)&(yh>b)
+        xy &= ~(h0|v1);yx &= ~(v0|h1)
+    return xy|yx
+
+
+def _path(free,first,last,budget,radius,min_stages,boxes=(),first_point=None,last_point=None):
     parent=np.full(len(free),-2,dtype=np.int64)
-    starts=np.flatnonzero(first+radius<=budget)
+    start_ok=first+radius<=budget
+    if boxes and first_point is not None:start_ok &= _visible(first_point,free,boxes)
+    end_ok=last+radius<=budget
+    if boxes and last_point is not None:end_ok &= _visible(free,last_point,boxes)
+    starts=np.flatnonzero(start_ok)
     queue=deque(map(int,starts));parent[starts]=-1;end=None
     while queue:
         current=queue.popleft()
-        if last[current]+radius<=budget:
+        if end_ok[current]:
             end=current;break
         distance=np.abs(free-free[current]).sum(axis=1)
         near=np.flatnonzero((distance<=budget-2*radius)&(parent==-2))
+        if boxes and len(near):near=near[_visible(free[current],free[near],boxes)]
         near=near[np.argsort(last[near])];parent[near]=current;queue.extend(map(int,near))
     if end is None:raise ValueError('no reach-bounded station-target chain')
     solution=[]
@@ -65,7 +93,8 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
                 allocator.used=set(base_used)
                 free=targets[[i not in blocked_targets for i in range(len(targets))]]
                 ids=np.array([i for i in range(len(targets)) if i not in blocked_targets])
-                path=_path(free,_extent(a,free),_extent(b,free),budget,max_radius_um,slot['stations'])
+                path=_path(free,_extent(a,free),_extent(b,free),budget,max_radius_um,slot['stations'],
+                           boxes=boxes,first_point=a.mean(axis=0),last_point=b.mean(axis=0))
                 points=[];stats=[]
                 for index in path:
                     try:p,st=allocator.allocate(free[index],width,max_radius_um=max_radius_um)
