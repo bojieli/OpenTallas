@@ -26,7 +26,8 @@ class RepairFailure(ValueError):
 def repair(plan, log=print, only_types=None):
     before = S.Plan(json.loads(json.dumps(plan)))
     old = {lid: before.lane_latency(lid)['cycles'] for lid in before.lanes}
-    selected = set(only_types) if only_types is not None else {r['type'] for r in shared.geometry_failures(plan)}
+    selected = set(only_types) if only_types is not None else {tn for tn,t in plan['partition_types'].items()
+                                                                      if t.get('ft_slots') and not t.get('hard')}
     report = dict(checked=0, added=[], slots=[], type_failures=[])
     for tn in sorted(selected):
         log(f'HBM actual-bit FT type {tn}')
