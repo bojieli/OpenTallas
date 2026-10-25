@@ -1,0 +1,17 @@
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-s81-portfix
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-portfix
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-s81-portfix
+ot-run: localhost      admits    49 GB (avail 202, reserve 0, fresh 72.5, peak 16.7, headroom 0, waiters 0/0 GB) load 127/256 running 38 disk 1078 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-2775342-1792922511 after 0 s
+FRAME_FORWARD_MITER MUT=0 edges=128 bits_per_edge=26496 errors=0
+- frame_forward_miter.sv:99: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 257ns; walltime 0.001 s; speed 189.848 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+FRAME_FORWARD_MITER MUT=1 edges=128 bits_per_edge=26496 errors=128
+- frame_forward_miter.sv:99: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 257ns; walltime 0.001 s; speed 199.939 us/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB
+ot-run: RAN on localhost (unit oth-ubuntu-2775342-1792922511): exit 0
