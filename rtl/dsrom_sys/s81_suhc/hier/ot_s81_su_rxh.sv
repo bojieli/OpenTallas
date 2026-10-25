@@ -579,10 +579,13 @@ module dsfd_su_t_rxsf (
 endmodule
 module dsfd_su_t_rxsb (
     input wire ck, rst, i_v, input wire [31:0] i_u, i_u2, i_mx, input wire i_f,
-    output wire o_v, output wire [31:0] o_r, output wire o_f
+    // OWNER DECISION 8 (2026-10-24): o_r[31] = sign of sqrt (constant 0) is not a pin of this hard core
+    output wire o_v, output wire [30:0] o_r, output wire o_f
 );
+    wire [31:0] r_w;
+    assign o_r = r_w[30:0];
     ot_s81_su_rxsb #(.PCUT(1)) u_b (.clk(ck), .rst_in(rst), .i_v(i_v), .i_u(i_u), .i_u2(i_u2), .i_mx(i_mx), .i_f(i_f),
-        .o_v(o_v), .o_r(o_r), .o_f(o_f));
+        .o_v(o_v), .o_r(r_w), .o_f(o_f));
 endmodule
 module dsfd_su_t_rxqr (
     input wire ck, rst, i_v, input wire [255:0] i_x, input wire [127:0] i_c, i_s,

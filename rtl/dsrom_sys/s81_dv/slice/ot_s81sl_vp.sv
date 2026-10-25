@@ -223,7 +223,7 @@ module ot_s81sl_vp #(
         yrow_d[0] <= {128'd0, q1r}; yrow_d[1] <= yrow_d[0]; yrow_d[2] <= yrow_d[1]; yrow_d[3] <= yrow_d[2];
     end
     // lanes: r0..r3 = h copies (BF16 -> FP32 pattern), y = y[e], c_j = comb[j][k] (word 4j + k), p = post[k]
-    wire [15:0] lv, lf; wire [31:0] lo [0:15];
+    wire [15:0] lv, lf; wire [31:16] lo [0:15];   // lane o[15:0] is constant 0: not a lane pin (OWNER DECISION 8)
     reg  lane_v; reg [31:0] lr [0:15][0:3]; reg [31:0] ly [0:15];
     genvar gl;
     generate for (gl = 0; gl < 16; gl = gl + 1) begin : g_ln
