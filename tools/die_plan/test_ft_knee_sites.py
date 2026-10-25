@@ -24,5 +24,9 @@ def main():
  a=np.column_stack((np.zeros(514),np.linspace(20,120,514)))
  b=np.column_stack((np.full(514,1442.88),np.linspace(300,400,514)))
  assert case(a,b,'W','E',4)>=5
+ # an L turn whose first bit is axis-aligned with its out pin (per-bit spine must keep the knee shape)
+ a=np.column_stack((np.full(514,4.32),np.linspace(400,510.5,514)))
+ b=np.column_stack((np.linspace(4.32,114.82,514),np.full(514,4.32)))
+ case(a,b,'W','S',2)
  print('PASS3: straight depth preserved; mandatory L and Z knees; actual paired bits<=403um; exact rowlegal sites')
 if __name__=='__main__':main()
