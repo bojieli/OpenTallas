@@ -1,0 +1,314 @@
+{
+ "L0": {
+  "verdict": "PASS_CUT_COMPONENT",
+  "profile": "canonical (BK addressed-drain sink, COORD 10-24 18:55)",
+  "jobs": [
+   {
+    "job": 0,
+    "verdict": "PASS",
+    "cycles": 13545,
+    "layer_cycles": 10447,
+    "out_checks": 849,
+    "in_events": 1267,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "unencoded_total": 0,
+    "line": {
+     "W": {
+      "expected": 94,
+      "observed": 94,
+      "mismatches": 0,
+      "verdict": "PASS"
+     },
+     "E": {
+      "expected": 94,
+      "observed": 94,
+      "mismatches": 0,
+      "verdict": "PASS"
+     }
+    },
+    "bkdrain": null
+   },
+   {
+    "job": 1,
+    "verdict": "PASS",
+    "cycles": 3336,
+    "layer_cycles": 238,
+    "out_checks": 41,
+    "in_events": 65,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "unencoded_total": 0,
+    "line": {
+     "W": {
+      "expected": 5,
+      "observed": 5,
+      "mismatches": 0,
+      "verdict": "PASS"
+     },
+     "E": {
+      "expected": 5,
+      "observed": 5,
+      "mismatches": 0,
+      "verdict": "PASS"
+     }
+    },
+    "bkdrain": null
+   }
+  ],
+  "mutants": [
+   {
+    "name": "corrupt:hf_7N_l0:33",
+    "verdict": "CAUGHT",
+    "mismatches": 10
+   }
+  ],
+  "ctl_events": [
+   [
+    0,
+    122
+   ],
+   [
+    1,
+    5
+   ]
+  ]
+ },
+ "L2": {
+  "verdict": "PASS_CUT_COMPONENT",
+  "profile": "canonical (BK addressed-drain sink, COORD 10-24 18:55)",
+  "jobs": [
+   {
+    "job": 0,
+    "verdict": "PASS",
+    "cycles": 24703,
+    "layer_cycles": 21605,
+    "out_checks": 847,
+    "in_events": 1269,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "unencoded_total": 0,
+    "line": {
+     "W": {
+      "expected": 94,
+      "observed": 94,
+      "mismatches": 0,
+      "verdict": "PASS"
+     },
+     "E": {
+      "expected": 94,
+      "observed": 94,
+      "mismatches": 0,
+      "verdict": "PASS"
+     }
+    },
+    "bkdrain": {
+     "internal": 1
+    }
+   },
+   {
+    "job": 1,
+    "verdict": "PASS",
+    "cycles": 3336,
+    "layer_cycles": 238,
+    "out_checks": 41,
+    "in_events": 73,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "unencoded_total": 0,
+    "line": {
+     "W": {
+      "expected": 5,
+      "observed": 5,
+      "mismatches": 0,
+      "verdict": "PASS"
+     },
+     "E": {
+      "expected": 5,
+      "observed": 5,
+      "mismatches": 0,
+      "verdict": "PASS"
+     }
+    },
+    "bkdrain": {
+     "internal": 1
+    }
+   }
+  ],
+  "mutants": [
+   {
+    "name": "corrupt:hf_7N_l0:33",
+    "verdict": "CAUGHT",
+    "mismatches": 10
+   }
+  ],
+  "ctl_events": [
+   [
+    0,
+    122
+   ],
+   [
+    1,
+    5
+   ]
+  ]
+ },
+ "L14": {
+  "verdict": "PASS_CUT_COMPONENT",
+  "profile": "canonical (BK addressed-drain sink, COORD 10-24 18:55)",
+  "jobs": [
+   {
+    "job": 0,
+    "verdict": "PASS",
+    "cycles": 24734,
+    "layer_cycles": 21636,
+    "out_checks": 847,
+    "in_events": 1269,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "unencoded_total": 0,
+    "line": {
+     "W": {
+      "expected": 94,
+      "observed": 94,
+      "mismatches": 0,
+      "verdict": "PASS"
+     },
+     "E": {
+      "expected": 94,
+      "observed": 94,
+      "mismatches": 0,
+      "verdict": "PASS"
+     }
+    },
+    "bkdrain": {
+     "internal": 1
+    }
+   },
+   {
+    "job": 1,
+    "verdict": "PASS",
+    "cycles": 5217,
+    "layer_cycles": 2119,
+    "out_checks": 73,
+    "in_events": 105,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "unencoded_total": 0,
+    "line": {
+     "W": {
+      "expected": 9,
+      "observed": 9,
+      "mismatches": 0,
+      "verdict": "PASS"
+     },
+     "E": {
+      "expected": 9,
+      "observed": 9,
+      "mismatches": 0,
+      "verdict": "PASS"
+     }
+    },
+    "bkdrain": {
+     "internal": 1
+    }
+   }
+  ],
+  "mutants": [
+   {
+    "name": "corrupt:hf_7N_l0:33",
+    "verdict": "CAUGHT",
+    "mismatches": 18
+   }
+  ],
+  "ctl_events": [
+   [
+    0,
+    122
+   ],
+   [
+    1,
+    9
+   ]
+  ]
+ },
+ "L20": {
+  "verdict": "PASS_CUT_COMPONENT",
+  "profile": "canonical (BK addressed-drain sink, COORD 10-24 18:55)",
+  "jobs": [
+   {
+    "job": 0,
+    "verdict": "PASS",
+    "cycles": 27571,
+    "layer_cycles": 24473,
+    "out_checks": 847,
+    "in_events": 1269,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "unencoded_total": 0,
+    "line": {
+     "W": {
+      "expected": 94,
+      "observed": 94,
+      "mismatches": 0,
+      "verdict": "PASS"
+     },
+     "E": {
+      "expected": 94,
+      "observed": 94,
+      "mismatches": 0,
+      "verdict": "PASS"
+     }
+    },
+    "bkdrain": {
+     "internal": 1
+    }
+   },
+   {
+    "job": 1,
+    "verdict": "PASS",
+    "cycles": 3336,
+    "layer_cycles": 238,
+    "out_checks": 41,
+    "in_events": 73,
+    "mismatches": 0,
+    "fault_cycles": 0,
+    "unencoded_total": 0,
+    "line": {
+     "W": {
+      "expected": 5,
+      "observed": 5,
+      "mismatches": 0,
+      "verdict": "PASS"
+     },
+     "E": {
+      "expected": 5,
+      "observed": 5,
+      "mismatches": 0,
+      "verdict": "PASS"
+     }
+    },
+    "bkdrain": {
+     "internal": 1
+    }
+   }
+  ],
+  "mutants": [
+   {
+    "name": "corrupt:hf_7N_l0:33",
+    "verdict": "CAUGHT",
+    "mismatches": 10
+   }
+  ],
+  "ctl_events": [
+   [
+    0,
+    122
+   ],
+   [
+    1,
+    5
+   ]
+  ]
+ }
+}
