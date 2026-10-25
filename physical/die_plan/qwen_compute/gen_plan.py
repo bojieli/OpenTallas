@@ -929,6 +929,10 @@ def coll_contents(P, n, tn, census_blocks):
     if n == COLL_UCIE[0]:
         cont.append({"inst": "u_io_ucie", "module": "ot_qfd_ucie_x64_phy", "status": "reuse",
                      "outline_um": list(COLL_UCIE[2]), "origin_um": list(COLL_UCIE[1]),
+                     # QC-PLAN3 10-25 (QC-KITS coll_ucie synth ORD-2013 'LEF master ot_qfd_ucie_x64_phy not found'):
+                     # the PHY hard view (777.6 x 777.6, same as phy_ucie_kv's) travels with the content
+                     "lef": "physical/qwen_missing_phy/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef",
+                     "lib": "physical/qwen_missing_phy/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_tt.lib",
                      "note": "planned hard core (TOPDOWN L1 amend): the coll UCIe PHY sits in coll_core with u_shared + "
                              "u_gearbox, so its forwarded FDI clocks (lclk -> fdi_ck / fdi_rx_ck) stay inside one "
                              "partition (a seam carries no clock)"})
@@ -1373,6 +1377,78 @@ def drop_unloaded_lanes(P, path):
     return dict(dropped=sorted(set(before) & want), absent=sorted(want - set(before)))
 
 
+def bind_width_reconcile(P, path):
+    """QC-PLAN3 10-25 (QC-KITS face_guard 'shared': planned buses wider than the bound buses, e.g. sle_ctl
+    b_tw_data_st_a_o 1167 vs 1080, x_st_b_o 116 vs 29): a lane whose fixed-source bind carries fewer bits than planned
+    (inputs/bind_lane_widths.json from bind_latency.json buses[].width < planned_width; proof unbound 0 / tied 0)
+    takes the bound width -- the plan carries the as-built bits only, no padding, no tie-offs.  The planned width
+    must still equal the bind's planned_width (else the evidence is stale and the plan refuses)."""
+    if not Path(path).exists():
+        return dict(narrowed=0, bits=0)
+    ev = {r["lane"]: r for r in json.loads(Path(path).read_text())["lanes"]}
+    n = collections.Counter()
+    nar, bits, seen = 0, 0, set()
+    pairs = collections.Counter()
+    for lk in P.links:
+        base = f"{lk['path'][0]}__{lk['role']}"
+        n[base] += 1
+        lid = base if n[base] == 1 else f"{base}_{n[base]}"
+        r = ev.get(lid)
+        if r is None:
+            continue
+        seen.add(lid)
+        if (lk["path"][0], lk["path"][-1]) != (r["src"], r["dst"]) or lk["width"] < r["bound_width"]:
+            raise SystemExit(f"bind_width_reconcile: {lid} plan width {lk['width']} {lk['path'][0]}->{lk['path'][-1]} "
+                             f"vs bind evidence bound {r['bound_width']} {r['src']}->{r['dst']} (stale evidence / "
+                             f"plan narrower than the bound bus)")
+        d = lk["width"] - r["bound_width"]       # 0 when the plan already carries the bound width
+        if d == 0:
+            continue
+        for x, y in zip(lk["path"], lk["path"][1:]):
+            P.load[tuple(sorted((x, y)))] -= d
+        lk["width"] = r["bound_width"]
+        nar += 1
+        bits += d
+        pairs[(lk["path"][0], lk["path"][-1])] += d
+    missing = sorted(set(ev) - seen)
+    if missing:
+        raise SystemExit(f"bind_width_reconcile: {len(missing)} evidence lanes not in the plan: {missing[:5]}")
+    P.bind_narrowed = {k: (v["planned_width"], v["bound_width"]) for k, v in ev.items()}
+    P.bind_narrowed_pairs = dict(pairs)
+    P.bind_narrowed_src = json.loads(Path(path).read_text())["source"]
+    return dict(narrowed=nar, bits=bits)
+
+
+def bind_width_census(P, rows, parts, tag):
+    """census side of bind_width_reconcile (QC-PLAN3 10-25): the template census rows ([1] slice record x 12, [2]
+    io_collective) carry the base-RTL widths; where the fixed-source bind proves a partition pair carries fewer bits
+    (P.bind_narrowed_pairs: sum of planned - bound over that pair's narrowed lanes), the pair's census rows are reduced
+    by exactly that many bits (largest row first, never below 0) and each reduction is recorded with its evidence.
+    Pairs without bind evidence are untouched and still fail the census if under-planned."""
+    left = dict(getattr(P, "bind_narrowed_pairs", {}))
+    src = getattr(P, "bind_narrowed_src", {})
+    out, rec = [], []
+    byp = collections.defaultdict(list)
+    for i, r in enumerate(rows):
+        byp[(parts.get(r["src"]), parts.get(r["dst"]))].append(i)
+    rows = [dict(r) for r in rows]
+    for pr, idx in byp.items():
+        d = left.get(pr, 0)
+        if not d:
+            continue
+        for i in sorted(idx, key=lambda j: -rows[j]["bits"]):
+            take = min(d, rows[i]["bits"])
+            if take <= 0:
+                break
+            rec.append(dict(census=tag, pair=list(pr), src=rows[i]["src"], src_bus=rows[i]["src_bus"],
+                            dst=rows[i]["dst"], dst_bus=rows[i]["dst_bus"], template_bits=rows[i]["bits"],
+                            bound_bits=rows[i]["bits"] - take,
+                            evidence="bind_lane_widths.json " + str(src.get("bind_latency_json_sha256", ""))[:12]))
+            rows[i]["bits"] -= take
+            d -= take
+    return rows, rec
+
+
 def unloaded_census_filter(P, rows, parts, tag):
     """census reconciliation for the dropped unloaded lanes (QC 10-25): a census row is removed only when BOTH
     (a) every plan lane between its two partitions was dropped by drop_unloaded_lanes, and (b) the fixed-source bind
@@ -1547,6 +1623,95 @@ def align_coll_ft(P, facepairs, lanes, ports):
             _lay_targeted(P, *k, prs, tg)
 
 
+def _lay_aligned(P, a, b, prs, targets):
+    """QC-PLAN3 10-25: two-pass legaliser for the slice straight-transit alignment (align_slice_transits).  Forward:
+    each window (ascending target) at max(previous end + GAP, target - L/2); if the last one overruns the face, a
+    backward pass pulls windows down only as far as needed (end <= next start - GAP).  The result is verified (no
+    overlap, inside the face) -- _lay_targeted's single pass could clamp a window below the previous one's end when the
+    face top was tight (sl_E1_fe|sc: x_fw_ctl_p2 over x_fe_sc).  False when no density step fits; the caller keeps
+    the default packing for that face."""
+    f, lo, hi = shared_face(P, a, b)
+    ll = a if P.parts[a]["orient"] == "R0" else b
+    x0, y0, x1, y1 = P.rect(ll)
+    fl = f if ll == a else OPP[f]
+    slo = max(y0 if fl in "EW" else x0, lo) + EDGE
+    shi = min(y1 if fl in "EW" else x1, hi) - EDGE
+    order = sorted(prs, key=lambda pr: (targets[pr["id"]], pr["id"]))
+    for fm in [5.0, 5.5, 5.8, None]:
+        L = lambda pr, st: qlen(pr["width"] + 1, PIN_MAX, pr["layers"], st, False, fmax=fm)
+        st, cur = [], slo
+        for pr in order:
+            x = max(cur, targets[pr["id"]][0] - L(pr, max(cur, slo)) / 2)
+            st.append(x)
+            cur = x + L(pr, x) + GAP
+        top = shi
+        for i in range(len(order) - 1, -1, -1):
+            pr = order[i]
+            if st[i] + L(pr, st[i]) > top:
+                x = top - L(pr, max(slo, top - L(pr, st[i])))
+                for _ in range(3):                      # L depends on the start (PG bands): settle it
+                    x = top - L(pr, max(slo, x))
+                st[i] = x
+            top = st[i] - GAP
+        ok = st[0] >= slo - 1e-6
+        ends = [x + L(pr, x) for pr, x in zip(order, st)]
+        for i in range(len(order)):
+            if ends[i] > shi + 1e-6 or (i and st[i] < ends[i - 1] + GAP - 1e-6):
+                ok = False
+        if ok:
+            for pr, x, e in zip(order, st, ends):
+                pr["window_um"] = [round(x, 4), round(e, 4)]
+                pr.pop("order", None)
+            return True
+    return False
+
+
+def align_slice_transits(P, facepairs, lanes, ports):
+    """QC-PLAN3 10-25 (G0 cuts: sl_W4_stm horizontal cut 0.61): a straight E<->W feedthrough slot of a slice partition
+    has its E window laid at the height of its W window (the same rule as the coll feedthroughs, "straight slots run
+    straight").  With independently packed faces the two windows of one slot sat up to ~460 um apart, so the routed
+    feedthrough ran as a Z whose vertical leg crossed horizontal cuts the slice negotiation never priced (it books an
+    E/W transit as H only).  Partitions are processed W -> E inside each slice row, so a chain of straight transits
+    runs straight across the slice; ports that are not straight transits keep their packed position as target."""
+    pmap = {pr["id"]: pr for pr in ports}
+    partner = {}
+    for ln in lanes:
+        ids = ln["ports"]
+        for i in range(len(ids) - 1):
+            partner[(ids[i], pmap[ids[i]]["dst"]["part"])] = ids[i + 1]
+            partner[(ids[i + 1], pmap[ids[i + 1]]["src"]["part"])] = ids[i]
+
+    def face_of(pr, x):
+        return pr["face"] if pr["src"]["part"] == x else OPP[pr["face"]]
+
+    def slice_of(n):
+        return n.split("_")[1] if n.startswith("sl_") else None
+
+    pairs = [(k, prs) for k, prs in facepairs.items() if slice_of(k[0]) and slice_of(k[0]) == slice_of(k[1])
+             and P.parts[k[0]]["orient"] == "R0" and P.parts[k[1]]["orient"] == "R0"]
+    moved, kept = 0, []
+    for k, prs in sorted(pairs, key=lambda kp: (min(P.rect(kp[0][0])[0], P.rect(kp[0][1])[0]), kp[0])):
+        if prs[0]["face"] not in "EW":
+            continue
+        # x = the partition whose E face this is (its W face is already final when processed W -> E)
+        x = k[0] if face_of(prs[0], k[0]) == "E" else k[1]
+        tg, nt = {}, 0
+        for pr in prs:
+            c = sum(pr["window_um"]) / 2
+            tg[pr["id"]] = (c, 0)
+            q = partner.get((pr["id"], x))
+            if q is not None and face_of(pmap[q], x) == "W":
+                tg[pr["id"]] = (sum(pmap[q]["window_um"]) / 2, 0)
+                nt += 1
+        if nt:
+            before = {pr["id"]: list(pr["window_um"]) for pr in prs}
+            if not _lay_aligned(P, *k, prs, tg):
+                kept.append(f"{k[0]}|{k[1]}")
+            moved += sum(1 for pr in prs if pr["window_um"] != before[pr["id"]])
+    print(f"align_slice_transits: {moved} slice E/W windows re-laid at their straight-transit partner height; "
+          f"{len(kept)} faces kept packed (no aligned fit): {kept}", file=sys.stderr)
+
+
 def materialize(P):
     ports, lanes = [], []
     facepairs = collections.defaultdict(list)
@@ -1643,6 +1808,7 @@ def materialize(P):
                                  ", ".join(f"{pr['id']}:{pr['width']}" for pr in sp))
         del ref_lo, ref_hi
     align_coll_ft(P, facepairs, lanes, ports)
+    align_slice_transits(P, facepairs, lanes, ports)
     pmap = {pr["id"]: pr for pr in ports}
     for ln in lanes:
         for a, b in zip(ln["ports"], ln["ports"][1:]):
@@ -2365,9 +2531,11 @@ def write_census(P, geo, census, record, outdir, su_directed):
             rows1.append(dict(src=f"{nm}/{row['src']}", src_bus=row["net"],
                               dst=f"{nm}/{row['dst']}", dst_bus=row["net"], kind="data", bits=row["bits"]))
     rows1, unl1 = unloaded_census_filter(P, rows1, parts1, 1)
+    rows1, bnw1 = bind_width_census(P, rows1, parts1, 1)
     _tsv(cdir / "slice_rows.tsv.gz", rows1)
     json.dump({"note": "QC-FIX slice-region census map (gen_plan.py write_census [1])", "parts": parts1,
-               "groups": groups1, "unloaded_removed": unl1}, open(cdir / "slice_map.json", "w"), indent=1)
+               "groups": groups1, "unloaded_removed": unl1,
+               "bind_narrowed": bnw1}, open(cdir / "slice_map.json", "w"), indent=1)
     # [2] io_collective internals
     rows2 = []
     for f, (seg, _) in COLL_CORES.items():
@@ -2396,10 +2564,11 @@ def write_census(P, geo, census, record, outdir, su_directed):
                    "io_serdes_1": "io_serdes_1", "io_serdes_2": "io_serdes_2", "sys_face": "glue",
                    "dvs_W5": "slice_W5"})
     rows2, unl2 = unloaded_census_filter(P, rows2, parts2, 2)
+    rows2, bnw2 = bind_width_census(P, rows2, parts2, 2)
     _tsv(cdir / "coll_rows.tsv.gz", rows2)
     json.dump({"note": "QC-FIX io_collective internal census map (gen_plan.py write_census [2]; widths from "
                        "rtl/physical/ot_qfd_collective_static_io.sv: record W+3/W+1, PW = W+51, slots 1+1)",
-               "parts": parts2, "groups": {"slice_W5": groups["slice_W5"]}, "unloaded_removed": unl2},
+               "parts": parts2, "groups": {"slice_W5": groups["slice_W5"]}, "unloaded_removed": unl2, "bind_narrowed": bnw2},
               open(cdir / "coll_map.json", "w"), indent=1)
     # [3] CB16 cluster internals (R7, 10-23): the as-built reduction tree CB_TREE (traced from qfd_c_b16_dv_fabric)
     # per cluster (the bc relay chain u_dn<c>_rly* is BINDER2-clean and not re-traced here); parts = the tile cell's CB unit, so the 4-quad cl_* groups of [0] are
@@ -2474,6 +2643,8 @@ def main():
     fault_links(P, a.variant, geo)
     unl = drop_unloaded_lanes(P, Path(__file__).parent / "inputs" / "unloaded_lanes.json")
     print(f"unloaded lanes: dropped {len(unl['dropped'])}, absent {unl['absent']}")
+    bwr = bind_width_reconcile(P, Path(__file__).parent / "inputs" / "bind_lane_widths.json")
+    print(f"bind width reconcile: {bwr['narrowed']} lanes narrowed to the bound width, {bwr['bits']} bits")
     cov = coverage(P, census)
     ports, lanes = materialize(P)
     merged = merge_types(P)
@@ -2523,7 +2694,7 @@ def main():
                   "spine": {"layers": ["M8", "M9"], "root_um": [round(W / 2, 2), round(y_sl + SLH / 2, 2)],
                             "topology": "htree"}},
         "reset": {"source": {"part": "glue", "bus": "rstseq_rom"}, "sync_stages": 2, "data_reset": False,
-                  "epoch_bit": True, "release": "wavefront", "relay_um": REACH, "hop_um": REACH},
+                  "epoch_bit": True, "release": "wavefront", "start": "broadcast", "relay_um": REACH, "hop_um": REACH},
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
                     "cut_ratio_max": 0.6, "cut_step_um": 250, "ft_station_max_um": ST_LEN,
                     "reach_margin": 1.0},   # COORD 22:35: hops/stations <= 405 um exactly, no 0.9 margin
