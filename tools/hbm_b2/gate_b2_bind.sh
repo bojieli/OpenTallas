@@ -24,7 +24,8 @@ for f in ot_vms_rstop_static.sv ot_vms_hub_static.sv hfd_hgi_vms_static_glue.sv;
   git show $BASE:rtl/hbm_accel/generic/vm/static/$f > "$OUT/vmref/$f"; done
 bash rtl/hbm_accel/generic/vm/static/run_vms_ring2_static.sh "$OUT/vm" "$OUT/vmref" > "$OUT/vm.log" 2>&1 & J+=($!)
 # ---- 3 vm_status4 NQ 2
-git show $BASE:rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv | sed 's/\bot_vms_status4_static\b/ot_vms_status4_ref/' > "$OUT/status4_ref.sv"
+git show $BASE:rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv | sed 's/\bot_vms_status4_static\b/ot_vms_status4_ref/; s/OT_VMS_STATUS_MUT/OT_VMS_STATUS_MUT_NOT_IN_REF/' > "$OUT/status4_ref.sv"
+# (the reference must not see the bench mutant define, or the NQ 4 mutant compares equal to a mutated reference)
 bash rtl/hbm_accel/generic/vm/static/run_vms_status_nq.sh "$OUT/st" "$OUT/status4_ref.sv" > "$OUT/status.log" 2>&1 & J+=($!)
 # ---- 4 SU scalar tree NLEG + SU programme root PARTS
 bash rtl/hbm_accel/generic/adapters/static_su/top/run_stree_nq.sh "$OUT/stree" $BASE > "$OUT/stree.log" 2>&1 & J+=($!)
@@ -56,7 +57,8 @@ python3 tools/hbm_b2/b2_top.py --die physical/die_plan/hbm/bind/inputs/die_r18h5
   --delta "$T/wiring.json" --out "$T/outw" > "$T/b2.log" 2>&1 && res "5b b2_top (no CUT_UNRESOLVED / UNDRIVEN)" PASS || res "5b b2_top (no CUT_UNRESOLVED / UNDRIVEN)" FAIL
 python3 tools/die_port_bind.py "$T/outw/die_b2.v" --top hbm_b2_die --rtl-root "$BUNDLE/rtl" --rtl-root "$BUNDLE/physical" \
   -f "$T/files_abs.f" $X --out "$T/pb.json" > "$T/pb.log" 2>&1
-grep -E '^FAIL' "$T/pb.log" | grep -Ev 'INPUT_TIED|ot_hbm3e_phy_rc_e8p5 .*STUB|child ot_hbm_accel_smh_fc_' > "$T/pb_new.txt"
+# baseline classes: a master whose ONLY fail class is INPUT_TIED (die straps), the PHY behavioural box, smh_fc children
+grep -E '^FAIL' "$T/pb.log" | grep -Ev '^FAIL \S+ +x[0-9]+ +INPUT_TIED |ot_hbm3e_phy_rc_e8p5 .*STUB|child ot_hbm_accel_smh_fc_' > "$T/pb_new.txt"
 tail -1 "$T/pb.log" | cut -c1-400
 [ ! -s "$T/pb_new.txt" ] && res "5c port-bind: no FAIL beyond the r18h5 baseline classes" PASS || { cat "$T/pb_new.txt"; res "5c port-bind: no FAIL beyond the r18h5 baseline classes" FAIL; }
 [ $fail = 0 ] && echo "B2_BIND_GATE PASS" || { echo "B2_BIND_GATE FAIL"; exit 1; }
