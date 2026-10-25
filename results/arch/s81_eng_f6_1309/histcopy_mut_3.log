@@ -1,0 +1,9 @@
+WIN_DIFF cyc14 v1/1 slot2/2 ids000000001c7f2e295/0000000000000e295 f1/1
+WIN_DIFF cyc15 v0/0 slot2/2 ids000000001c7f2e295/0000000000000e295 f1/1
+WIN_DIFF cyc19 v1/1 slot5/5 ids000038fe4b4d87ff7/000000001c52a7ff7 f1/1
+WIN_DIFF cyc22 v1/1 slot0/0 ids71fc969b0ffeee372/000038fe4b4d8e372 f1/1
+WIN_MITER FAIL mis=18704 valid=30148 forward=0
+- tb.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 80us; walltime 0.198 s; speed 403.938 us/s
+- Verilator: cpu 0.198 s on 1 threads; allocated 8 MB
