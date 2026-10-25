@@ -1,0 +1,23 @@
+{
+  "when": "2026-10-25T03:22:49.690367-07:00",
+  "reviewer": "Codex independent view",
+  "verdict": "PASS-COND",
+  "scope": "CTS + FF structural gate only, not DRT approval",
+  "images": [
+    "results/reset_1024/cp1_wavefront_1025/r1_placed.png",
+    "results/reset_1024/cp1_wavefront_1025/r1_reset.png"
+  ],
+  "input_odb": "intel2:/srv/opentallas-scratch2/claude/codex-cp1-wavefront/kits/col_h10_r1__t1/run/results/asap7/dp_col_h10_r1__t1/base/3_place.odb",
+  "findings": [
+    "Actual functional cells are concentrated in short N/S boundary/leaf bands nearW, unlike the earlier unconstrained proof-leaf failure. No macro wall or narrow blocked corridor.",
+    "Peak functional bin10.6%; physical-only DECAP/FILLER/TAP omitted explicitly, not counted as logic congestion.",
+    "Reset entry atS feeds distributed synchronous relays in empty channels; plan max360.7um and deterministic release offsets retained.",
+    "56gridtaps span a large mostly empty region; actual data sink load is concentrated atN/SW strips, so nearest-tap assignment alone does not establish balanced latency."
+  ],
+  "conditions": [
+    "CTS must meet actual related-pair skew and clock-latency contract, including load imbalance at data-band taps.",
+    "Run trueFF structural stop before GRT (WNS<-100ps or>2000realnegativeendpoints stops); no margin-inflated counts.",
+    "Actual register-to-register legs, not just buffered wire segments, must be<=405um or pass priced explicit registered transport.",
+    "Review CTS/GRT clock+reset+PG access before DRT; preserve old failed pair evidence."
+  ]
+}
