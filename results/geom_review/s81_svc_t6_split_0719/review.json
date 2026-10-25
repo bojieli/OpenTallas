@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "plan geometry approval for G2 skeleton only",
+  "pictures": [
+    "/srv/opentallas-scratch2/claude/wt/codex-s81-plan-0719/results/geom_review/s81_svc_t6_split_0719/svc_hi_t6_split_review.png",
+    "/srv/opentallas-scratch2/claude/wt/codex-s81-plan-0719/results/geom_review/s81_svc_t6_split_0719/svc_lo_t6_split_review.png"
+  ],
+  "findings": [
+    "Viewed actual bit-site plans: 128-bit hi and64-bit lo contiguous bands cross L-turns through inter-core rows, avoiding full-lengthWmargin funnel.",
+    "All internal bit-site cells allocated together pertype outside real core boxes; M5core OBS leavesM6/M7 wireoverpasses.",
+    "Clocktap/PDN untouched by this FT-only trial. Both require actualkit audit at G3.",
+    "Three entire coherent slot depths +1; hi.ft1 stations9 max357.577um,hi.ft2 stations11 max319.95um,lo.ft3 stations9 max307.589um. All other slots recomputed max381.8um<=394.9um.",
+    "These images show no GRT results despite historicalrenderer title0overflow; newG2 NOTRUN atreviewtime."
+  ],
+  "conditions": [
+    "G2 actualhardcoreblockages + <=M7 routing",
+    "reprice each crossing lane for3changedslotdepths beforeadoption",
+    "currentreset/start andcoherentRTLdepth integration atG3"
+  ]
+}
