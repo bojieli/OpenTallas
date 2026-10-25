@@ -1,0 +1,6 @@
+== /srv/opentallas-scratch2/claude/codex-qc-a0-1309/nl_affinity/diag/nl_c: 577 FF hold-violating endpoints, wns -39.75
+  IN->REG                                       n=  264 wns=  -39.75
+  R2R_XTAP                                      n=  217 wns=  -39.63
+  R2R_SAMETAP                                   n=   96 wns=  -26.99
+  top R2R (launch tap, capture tap): [(('ck_t15', 'ck_t18'), 64), (('ck_t18', 'ck_t18'), 56), (('ck_t13', 'ck_t15'), 29), (('ck_t34', 'ck_t22'), 23), (('ck_t16', 'ck_t18'), 20), (('ck_t15', 'ck_t15'), 15), (('ck_t21', 'ck_t17'), 15), (('ck_t39', 'ck_t36'), 15)]
+  IN-> capture taps: [('ck_t21', 242), ('ck_t17', 22)]

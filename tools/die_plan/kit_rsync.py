@@ -86,6 +86,9 @@ def cells_text():
     return "\n".join(out) + "\n`default_nettype wire\n"
 
 
+KIT_RESET_CELLS = ("ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_rrelay", "ot_dp_rgate")
+
+
 def strip_module(txt, name):
     new, n = re.subn(rf"(//[^\n]*\n)*module {name}\b.*?\nendmodule\n", "", txt, flags=re.S)
     if n != 1:
@@ -208,7 +211,13 @@ def main(argv):
         files[0] = nw
     (kd / "kit_cells.sv").write_text(cells_text())
     if cfile is not None:
-        (kd / "bind_cells_kit.sv").write_text(strip_module(cfile.read_text(), "ot_dp_st"))
+        bc = strip_module(cfile.read_text(), "ot_dp_st")
+        # wavefront binds (10-25) also emit the reset cells; kit_cells.sv carries them (keep attributes), so drop the copies
+        for m in KIT_RESET_CELLS:
+            bc, n = re.subn(rf"(\(\*[^\n]*\*\)\n)?(//[^\n]*\n)*module {m}\b.*?\nendmodule\n", "", bc, flags=re.S)
+            if n > 1:
+                raise SystemExit(f"kit_rsync: {n} modules {m} in bind_cells.sv")
+        (kd / "bind_cells_kit.sv").write_text(bc)
     nf = []
     for f in files:
         if f == bfile:

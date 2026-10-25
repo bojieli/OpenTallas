@@ -1,0 +1,18 @@
+QDM PINFLOP reference: 287 input pin flops (0 hard-child clock pins at +insertion), median arrival 188.500824 (range 180.293915 .. 216.91156)
+QDM reference pin u_ot_pr_core.u_g.tile_id_q[15]$_DFF_P_/CLK clock arrival max 188.500824 min 180.343948 skew 90 hold 50
+OT_NK_DIAG wns -39.753617223722514 endpoints 577
+== /srv/opentallas-scratch2/claude/codex-qc-a0-1309/nl_affinity/diag/nl_c: 577 FF hold-violating endpoints, wns -39.75
+  IN->REG                                       n=  264 wns=  -39.75
+  R2R_XTAP                                      n=  217 wns=  -39.63
+  R2R_SAMETAP                                   n=   96 wns=  -26.99
+  top R2R (launch tap, capture tap): [(('ck_t15', 'ck_t18'), 64), (('ck_t18', 'ck_t18'), 56), (('ck_t13', 'ck_t15'), 29), (('ck_t34', 'ck_t22'), 23), (('ck_t16', 'ck_t18'), 20), (('ck_t15', 'ck_t15'), 15), (('ck_t21', 'ck_t17'), 15), (('ck_t39', 'ck_t36'), 15)]
+  IN-> capture taps: [('ck_t21', 242), ('ck_t17', 22)]
+# launch_tap capture_tap n_ep worst_slack launch_clk capture_clk crpr pair_skew(=capture-launch-crpr) ps
+ck_t15 ck_t18 64 -16.42 193.8 224.8 0.0 31.0
+ck_t18 ck_t18 56 -18.48 195.6 239.9 -2.3 46.6
+ck_t13 ck_t15 29 -25.11 208.1 249.6 0.0 41.5
+ck_t34 ck_t22 23 -7.03 173.8 203.7 0.0 29.9
+ck_t16 ck_t18 20 -17.29 183.4 242.4 0.0 59.0
+36 /srv/opentallas-scratch2/claude/codex-qc-a0-1309/nl_affinity/diag/nl_c.cts_taps.txt
+wrote /srv/opentallas-scratch2/claude/codex-qc-a0-1309/nl_affinity/diag/nl_c.png
+post done c
