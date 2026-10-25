@@ -107,13 +107,14 @@ module ot_s81sl_aq12x_eng_n32 (
     // also e + 127 and e + 121, so S12's two exponent differences are one subtract each, in parallel
     reg signed [9:0]  s11_e;
     wire signed[10:0] s11_ep_c[0:7],s11_dm_c[0:7];
+    // LEC 10-25: declared BEFORE the g_ec instances (else implicit undriven nets -> TIELO exponent regs)
+    wire [8:0] ce = {1'b0, prod[30:23]} + {8'd0, (prod[22:0] != 23'd0)};     // ceil_log2 + 127
+    wire [10:0] ep_next = {2'b00,ce};
+    wire [10:0] dm_next = $signed({2'b00,ce}) - 11'sd6;
     for(genvar eg=0;eg<8;eg=eg+1)begin:g_ec
         ot_s81eng_aq_exp u_e(.clk(clk),.ep_next(ep_next),.dm_next(dm_next),.ep(s11_ep_c[eg]),.dm(s11_dm_c[eg]));
     end
     reg               s11_nf;
-    wire [8:0] ce = {1'b0, prod[30:23]} + {8'd0, (prod[22:0] != 23'd0)};     // ceil_log2 + 127
-    wire [10:0] ep_next = {2'b00,ce};
-    wire [10:0] dm_next = $signed({2'b00,ce}) - 11'sd6;
     always @(posedge clk) begin
         s11_e <= $signed({1'b0, ce}) - 10'sd127;
         s11_nf <= nf10 | pfault;
