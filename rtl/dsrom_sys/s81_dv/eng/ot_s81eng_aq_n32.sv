@@ -40,7 +40,6 @@ module ot_s81sl_aq12x_eng_n32 (
     localparam integer LATENCY = 18;
     localparam [30:0] FLOOR_FP8 = 31'h38d1b717;   // float32(1e-4)
     localparam [31:0] INV_448   = 32'h3b124925;   // float32(1/448)
-    integer i;
     function automatic [30:0] mx(input [30:0] a, input [30:0] b);
         mx = (a >= b) ? a : b;
     endfunction
@@ -64,13 +63,13 @@ module ot_s81sl_aq12x_eng_n32 (
     reg        nfx;
     always @(*) begin
         nfx = 1'b0;
-        for (i = 0; i < 32; i = i + 1) nfx = nfx | (s0_x[32*i + 23 +: 8] == 8'hFF);
+        for (integer i = 0; i < 32; i = i + 1) nfx = nfx | (s0_x[32*i + 23 +: 8] == 8'hFF);
     end
     always @(posedge clk) begin
-        for (i = 0; i < 16; i = i + 1) m1[i] <= mx(s0_x[64*i +: 31], s0_x[64*i + 32 +: 31]);
-        for (i = 0; i < 8; i = i + 1)  m2[i] <= mx(m1[2*i], m1[2*i+1]);
-        for (i = 0; i < 4; i = i + 1)  m3[i] <= mx(m2[2*i], m2[2*i+1]);
-        for (i = 0; i < 2; i = i + 1)  m4[i] <= mx(m3[2*i], m3[2*i+1]);
+        for (integer i = 0; i < 16; i = i + 1) m1[i] <= mx(s0_x[64*i +: 31], s0_x[64*i + 32 +: 31]);
+        for (integer i = 0; i < 8; i = i + 1)  m2[i] <= mx(m1[2*i], m1[2*i+1]);
+        for (integer i = 0; i < 4; i = i + 1)  m3[i] <= mx(m2[2*i], m2[2*i+1]);
+        for (integer i = 0; i < 2; i = i + 1)  m4[i] <= mx(m3[2*i], m3[2*i+1]);
         nf1 <= nfx; nf2 <= nf1; nf3 <= nf2; nf4 <= nf3; nf5 <= nf4;
     end
     // -- S5: max(m4[0], m4[1], floor): three parallel compares and a select -----------------------
@@ -131,7 +130,7 @@ module ot_s81sl_aq12x_eng_n32 (
     reg signed [10:0] ev;   // max(fld, 1)
     always @(posedge clk) begin
         s12_e <= s11_e; s12_nf <= s11_nf;
-        for (i = 0; i < 32; i = i + 1) begin
+        for (integer i = 0; i < 32; i = i + 1) begin
             fld = xg[32*i + 23 +: 8];
             //: ev = exp(x) - e with exp(x) = max(fld, 1) - 127;  dd = -6 - ev = (e + 121) - max(fld, 1)
             ev = $signed({3'b000, (fld == 8'd0) ? 8'd1 : fld});
@@ -150,7 +149,7 @@ module ot_s81sl_aq12x_eng_n32 (
     reg              s13_nf;
     always @(posedge clk) begin
         s13_e <= s12_e; s13_nf <= s12_nf; s13_sgn <= s12_sgn;
-        for (i = 0; i < 32; i = i + 1) begin
+        for (integer i = 0; i < 32; i = i + 1) begin
             s13_sig[i] <= s12_sig[i];
             if (s12_dd[i] > 11'sd0) begin
                 s13_g[i] <= -5'sd6;
@@ -170,7 +169,7 @@ module ot_s81sl_aq12x_eng_n32 (
     reg [50:0]       wide;
     always @(posedge clk) begin
         s14_e <= s13_e; s14_nf <= s13_nf; s14_sgn <= s13_sgn;
-        for (i = 0; i < 32; i = i + 1) begin
+        for (integer i = 0; i < 32; i = i + 1) begin
             wide = {s13_sig[i], 27'd0} >> s13_rs[i];
             s14_tq[i] <= wide[50:27];
             s14_gd[i] <= wide[26];
@@ -186,7 +185,7 @@ module ot_s81sl_aq12x_eng_n32 (
     reg              s15_nf;
     always @(posedge clk) begin
         s15_e <= s14_e; s15_nf <= s14_nf; s15_sgn <= s14_sgn;
-        for (i = 0; i < 32; i = i + 1) begin
+        for (integer i = 0; i < 32; i = i + 1) begin
             s15_c[i] <= s14_tq[i][4:0] + {4'd0, s14_gd[i] & (s14_st[i] | s14_tq[i][0])};
             s15_g[i] <= s14_g[i];
         end
@@ -205,7 +204,7 @@ module ot_s81sl_aq12x_eng_n32 (
     reg signed [11:0] shs;
     always @(posedge clk) begin
         s16_e <= s15_e; s16_nf <= s15_nf; s16_sgn <= s15_sgn;
-        for (i = 0; i < 32; i = i + 1) begin
+        for (integer i = 0; i < 32; i = i + 1) begin
             c = s15_c[i];
             p = c[4] ? 3'd4 : c[3] ? 3'd3 : c[2] ? 3'd2 : c[1] ? 3'd1 : 3'd0;
             s16_c[i] <= c;
@@ -223,7 +222,7 @@ module ot_s81sl_aq12x_eng_n32 (
     end
     always @(posedge clk) begin
         e <= s16_e;
-        for (i = 0; i < 32; i = i + 1) begin
+        for (integer i = 0; i < 32; i = i + 1) begin
             if (s16_c[i][4])      q[8*i +: 8] <= {s16_sgn[i], s16_g4[i] + 4'd8, 3'd0};
             else if (s16_c[i][3]) q[8*i +: 8] <= {s16_sgn[i], s16_g4[i] + 4'd7, s16_c[i][2:0]};
             else                  q[8*i +: 8] <= {s16_sgn[i], 4'd0, s16_c[i][2:0]};
