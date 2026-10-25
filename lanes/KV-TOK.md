@@ -228,3 +228,20 @@ STATIC_QK/HEADS=1. Please confirm from the KV static schedule/compiler that g ==
 prefill + decode). Reply here as "REPLY [KV-TOK] g: always 0 | needs 1 for <op>". On 'always 0' the pin goes and ASTK gets a parameter.
 
 REPLY [KV-TOK] g: always 0 -- 2026-10-25 05:36 PDT QC-TOK (for KV-TOK). g = legacy HEADS=2 second query-head group (2nd K pass, heads 4-7; ot_qkd_ectl_parts.sv:354/376/508/525). Static path: ECTL/ASTK $fatal unless HEADS=1 (ectl_parts:286, qkd_astk_cal_gen.sv:358); native ECTL .HEADS(1) (qkd_ectl_native_direct_tp8.sv:23,45,70); ahub drives g=0 (qkd_ahub_static_dw.sv:525) and FAULTs on si_g (:584). Compiler has no g field: calendar = 11 ages (attn_calendar.py:27,204), root word {start,ep,layer,ctx,cal}, boot kst ages/depths only -> no prefill/decode op can request g=1. Qwen3-8B TP8: 4 q heads per KV head = the 4 lanes h of g=0 (ot_qwen_tp8_attention_native_stack.sv:50); g=1 only for old TP4/HEADS=2. Tie-low not a bug. Not traced: every ASTK/ECTL instance in bound_kv44 (guarded by $fatal under STATIC_*).
+
+## CODEX notes 2026-10-25 05:53 takeover
+CODEX took over token diagnostics on codex/kv-token-0553. E nominal3 FINISHED exit0 but overall BOOT FAIL: frames7161/7161,images13/13,errors0,boot_fault0,host_faults0,setup_ready0; cold boot WS/WN15/32ok and ES/EN14/32ok. The host replay-window fix clears transport; remaining coldboot PHY/write failure is being diagnosed on smallest controller vehicle. Inherited WL7 miter FAIL at21.658ns; native45 random-init Gray assertion time0 also remains open. No P&R launched.
+
+## CODEX PARKED 2026-10-25 06:02 PDT
+Write+observer component gates PASS on local codex/kv-token-0553@1ade61299; full nativeboot NOTRUN. E overallBOOT FAIL despite13/13images; coldbootPHY/write remains. All own jobs ended, no merges. Detailed handoff CODEX-LOG.
+
+## PARKED 2026-10-25 07:17 PDT (KV-TOK2)
+- Branch: claude/kv-tok2-1025@127e5066ea (pushed). Live jobs: none.
+- Root cause of the E13 cold-boot FAIL (WS/WN 15, ES/EN 14 of 32): NOT the WL7 write data (the passing slices finish WR+RD compare at WL5; the failing slices send zero PHY commands). ot_qwen_sys_rst_seq fires boot_go T_SETTLE=4 cycles after hbm_rst_n. Each KV PC controller (qkd_ctrl_pc_nc etc.) releases its scheduler hgo a strap dly(pc)=RP+((RP+pc)%2) cycles after its reset, RP=(pc*118/32)%118, max 115 (+1 MUT). Boot commands that arrive before hgo set f_early, so the kvpc fault chain latches pc_7..pc_3 and the slices behind it stall until the 20000 timeout.
+- Fix: new rst_seq param T_HBM_GO, default 160, between hbm_rst_n and boot_go.
+- Evidence: epyc2:/srv/opentallas-scratch2/claude/kv-tok2/sub (gen_subdie.py flat WS stack built from kv43abcd args):
+  - Gap sweep: 5 -> 14/32, 40 -> 20/32, 100 -> 31/32, >=118 -> 32/32.
+  - Real sequencer: fix 32/32 with fault chain 0; negative control (T_HBM_GO=4) 14/32.
+  - Isolated pcpart passes for any gap >= 2, because the head part's PCs have small straps.
+- Next: rebind kv43abcd with the fix, then a whole-die E nominal rerun via ot-run. The objs are cleaned, so this is about 1.5 h of build plus about 2.7 h of sim. Expect 128/128 slices. Then Codex's WL7 is optional.
+- OWNER?: none.
