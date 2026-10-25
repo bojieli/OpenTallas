@@ -572,17 +572,25 @@ module dsfd_su_t_rxrb (
 endmodule
 module dsfd_su_t_rxsf (
     input wire ck, rst, i_v, input wire [31:0] i_x,
-    output wire o_v, output wire [31:0] o_u, o_u2, o_mx, output wire o_f
+    // OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA): o_u[31] / o_u2[31] (signs of u = t / (t + 2) >= 0 and of u^2: constant
+    // 0, TIELO in the raw netlist) are not pins of this hard core; the receiver rxsb takes [30:0] and re-adds the 0.
+    output wire o_v, output wire [30:0] o_u, o_u2, output wire [31:0] o_mx, output wire o_f
 );
-    ot_s81_su_rxsf #(.PCUT(1)) u_f (.clk(ck), .rst_in(rst), .i_v(i_v), .i_x(i_x), .o_v(o_v), .o_u(o_u), .o_u2(o_u2),
+    wire [31:0] u_w, u2_w;
+    assign o_u = u_w[30:0]; assign o_u2 = u2_w[30:0];
+    ot_s81_su_rxsf #(.PCUT(1)) u_f (.clk(ck), .rst_in(rst), .i_v(i_v), .i_x(i_x), .o_v(o_v), .o_u(u_w), .o_u2(u2_w),
         .o_mx(o_mx), .o_f(o_f));
 endmodule
 module dsfd_su_t_rxsb (
-    input wire ck, rst, i_v, input wire [31:0] i_u, i_u2, i_mx, input wire i_f,
-    output wire o_v, output wire [31:0] o_r, output wire o_f
+    // OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA): i_u / i_u2 [30:0]: the sender's sign bits are constant 0 (not pins)
+    input wire ck, rst, i_v, input wire [30:0] i_u, i_u2, input wire [31:0] i_mx, input wire i_f,
+    // OWNER DECISION 8 (2026-10-24): o_r[31] = sign of sqrt (constant 0) is not a pin of this hard core
+    output wire o_v, output wire [30:0] o_r, output wire o_f
 );
-    ot_s81_su_rxsb #(.PCUT(1)) u_b (.clk(ck), .rst_in(rst), .i_v(i_v), .i_u(i_u), .i_u2(i_u2), .i_mx(i_mx), .i_f(i_f),
-        .o_v(o_v), .o_r(o_r), .o_f(o_f));
+    wire [31:0] r_w;
+    assign o_r = r_w[30:0];
+    ot_s81_su_rxsb #(.PCUT(1)) u_b (.clk(ck), .rst_in(rst), .i_v(i_v), .i_u({1'b0, i_u}), .i_u2({1'b0, i_u2}), .i_mx(i_mx),
+        .i_f(i_f), .o_v(o_v), .o_r(r_w), .o_f(o_f));
 endmodule
 module dsfd_su_t_rxqr (
     input wire ck, rst, i_v, input wire [255:0] i_x, input wire [127:0] i_c, i_s,

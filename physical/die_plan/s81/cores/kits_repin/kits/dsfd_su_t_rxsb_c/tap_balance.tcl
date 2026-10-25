@@ -40,7 +40,7 @@ if {[info exists ::env(OT_CORE_LAT)] && [file exists $::env(OT_CORE_LAT)]} {
   close $fh
 }
 set tb_cores {}
-set tb_port_re {^(ck)$}
+set tb_port_re {^(ck)(\[0\])?$}
 proc tb_is_buf {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "CKINV*" $m] || [string match "HB*" $m]}]

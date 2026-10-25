@@ -1,1 +1,0 @@
-PATHFINDING: face_guard FAIL c1 = o[15:0] constant (RTL ot_dsrom_su_hcpost.sv:129 o <= {hi, 16'd0}: 16 output pins tied 0, no register survives synthesis) + sticky fault self-loop; needs an RTL / plan decision (drop or keep the const pins) - recorded, not waived

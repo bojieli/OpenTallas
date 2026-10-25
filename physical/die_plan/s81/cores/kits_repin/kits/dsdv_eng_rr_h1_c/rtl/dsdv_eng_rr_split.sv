@@ -15,6 +15,9 @@
 //   H0 -> E      res[575:0]   H: res_n (column NEGEDGE)               ; E: res_c (ck posedge, no logic between)
 //   H1 -> E      res[575:0]   idem (E hx_res[1151:576])
 // Both hops are HALF-cycle (negedge -> posedge, 417 ps) exactly as in the monolith; the cores abut at those faces.
+// S81-KITS-RTLA 10-24: H0 / H1 register every in_w pin in ONE capture flop (was: 16 kq17 copies per pin bit): the hash
+// result reaches E one edge later than in the monolith; E's capture edge (hdone) is unchanged and the result is still
+// stable there (see the note at dsdv_eng_rr_split), so the core outputs stay cycle / bit identical to dsdv_eng_rr.
 // Static schedule: unchanged (no ready / credit / backpressure).  The hash cores have no reset (none in the RTL).
 // =====================================================================================================================
 `ifndef OT_S81ENG_RR_N32
@@ -70,18 +73,34 @@ module dsdv_eng_rr_e #(
     wire xf;
     ot_s81eng_xq_n32 #(.MUT(XQ_MUT)) u_xq (.ck(ck), .rst_n(rl[4]), .o_v(o_v), .o_col(o_col), .o_beat(o_beat), .o_d(o_d),
         .vi_a(vi_s), .vo_a(vo_s), .vi_b(vi_n), .vo_b(vo_n), .fault(xf));
+    // S81-KITS-RTLA 10-24 (face_guard: register on every pin): the sticky status lives in st_s; the pin flops st are an
+    // output-only copy loaded with the same next value (was: st fed back into its own D).  0 cycles, bit / cycle identical.
+    (* keep *) reg [3:0] st_s;
+    wire [3:0] st_n = st_s | {xf, hf | (o_v && o_slot != hr_slot) | (st_v && st_slot != hr_slot), lf | (st_v & st_bad), wf};
     always @(posedge ck or negedge rl[0])
-        if (!rl[0]) st <= 4'd0;
-        else st <= st | {xf, hf | (o_v && o_slot != hr_slot) | (st_v && st_slot != hr_slot), lf | (st_v & st_bad), wf};
+        if (!rl[0]) begin st <= 4'd0; st_s <= 4'd0; end
+        else begin st <= st_n; st_s <= st_n; end
 endmodule
 
 // hash layer cores: the column clocks of a layer are branches of ck (as in the monolith, where ck_hash = {6{ck}})
 module dsdv_eng_rr_h0 (input wire ck, input wire [67:0] in_w, output wire [575:0] out_res);
-    ot_s81_engram_hash_n32_l0 u_hash (.clk(ck), .clk_columns({3{ck}}), .in_w(in_w), .out_res(out_res));
+    // S81-KITS-RTLA 10-24 (face_guard: register on every pin): ONE capture flop per in_w bit (ck posedge, the half-cycle
+    // seam hop from E's negedge win_n lands here); the 16 kept kq17 window copies load from it.  +1 edge on the
+    // E -> H -> E hash path, absorbed by the hash result's hold window at E's hdone capture (bench_rr_split lockstep:
+    // E / split outputs bit + cycle identical to the monolith; crossing res_m = monolith hres one edge later).
+    (* keep *) reg [67:0] w_q;
+    always @(posedge ck) w_q <= in_w;
+    ot_s81_engram_hash_n32_l0 u_hash (.clk(ck), .clk_columns({3{ck}}), .in_w(w_q), .out_res(out_res));
 endmodule
 
 module dsdv_eng_rr_h1 (input wire ck, input wire [67:0] in_w, output wire [575:0] out_res);
-    ot_s81_engram_hash_n32_l1 u_hash (.clk(ck), .clk_columns({3{ck}}), .in_w(in_w), .out_res(out_res));
+    // S81-KITS-RTLA 10-24 (face_guard: register on every pin): ONE capture flop per in_w bit (ck posedge, the half-cycle
+    // seam hop from E's negedge win_n lands here); the 16 kept kq17 window copies load from it.  +1 edge on the
+    // E -> H -> E hash path, absorbed by the hash result's hold window at E's hdone capture (bench_rr_split lockstep:
+    // E / split outputs bit + cycle identical to the monolith; crossing res_m = monolith hres one edge later).
+    (* keep *) reg [67:0] w_q;
+    always @(posedge ck) w_q <= in_w;
+    ot_s81_engram_hash_n32_l1 u_hash (.clk(ck), .clk_columns({3{ck}}), .in_w(w_q), .out_res(out_res));
 endmodule
 
 // Thin wrapper: the dsdv_eng_rr ports, the three cores abutted.  SPLIT_MUT (bench negative controls only):

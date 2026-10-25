@@ -9,8 +9,8 @@
  "ref_tile": "physical/ref_tile/s81sl_vn",
  "spec_sha256": "f2ac43555f648f33ad85d27dd6ab36405e724b7ea6185eb2cf65be4b69b35ab0",
  "pins_file": "inputs/core_pins/ot_s81sl_vn.json",
- "pins_sha256": "44fd7215c9927ea802f2effc6dcee893fb5655be206a8ec5247f659e7e53e4ec",
- "pins": 1241,
+ "pins_sha256": "436e9eafecb567746d1f890d162d461ebb583972ce4f9eb4c03941e3a915f1c0",
+ "pins": 1113,
  "pins_snapped_to_lef_edge": 75,
  "clocks": [
   "clk"
@@ -28,8 +28,8 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "6be7b45a41",
- "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
+ "repo_rev": "a3ec0b419a",
+ "sdc_lint_sha256": "3b8730b0f96528ecc89969cda35d52798c0f1edc1680f823d5dce2fe8f09cdaf",
  "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
  "macros": [
   "ot_sram_1r1w_128x256_m1_r2c2 73.44 125.28 R0 {}",
@@ -38,5 +38,5 @@
   "ot_sram_1r1w_128x256_m1_r2c2 188.352 187.92 R0 {}"
  ],
  "rtl_patch": null,
- "kit_hash": "dc3e0a20bc03cfcc"
+ "kit_hash": "77cbf76e9e9a0220"
 }

@@ -9,16 +9,16 @@
  "ref_tile": "physical/ref_tile/s81sl_hcpl",
  "spec_sha256": "dfe7beaa2b346bb16fe4107defca4d0cbe4be66cb4dd5c10a38431c1cf62cf06",
  "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
- "pins_sha256": "dc4fa96c42ea8a2ec78d56daf00fea6ab442d9ee0a9f3b66af5ed172f9eede30",
- "pins": 357,
- "pins_snapped_to_lef_edge": 190,
+ "pins_sha256": "391b4572218767fee2fcdea355cf4ad866858617aac7846c51e2ef4b2b93bc63",
+ "pins": 341,
+ "pins_snapped_to_lef_edge": 174,
  "clocks": [
   "clk"
  ],
  "resets": [
   "rst_n"
  ],
- "recipe_sha256": "d67057bb7c5f30b05211f2a8fdc81dd3d0888c533ad22433e67766948db06760",
+ "recipe_sha256": "b2f09e5da46ddb5ccd2b6aea8bd198252e1b946b6ba706e0cd8b94e917e26ffc",
  "period_ps": 833.0,
  "insertion_ps": 250.0,
  "insertion_tol_ps": 40.0,
@@ -28,10 +28,10 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "6be7b45a41",
- "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
+ "repo_rev": "a3ec0b419a",
+ "sdc_lint_sha256": "3b8730b0f96528ecc89969cda35d52798c0f1edc1680f823d5dce2fe8f09cdaf",
  "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
  "macros": [],
  "rtl_patch": null,
- "kit_hash": "894f172b7dae156b"
+ "kit_hash": "87afefad7e065571"
 }

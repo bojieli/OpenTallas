@@ -17,8 +17,7 @@
    "SYNTH_HDL_FRONTEND": "slang"
   },
   "keep_pin_regs": true,
-  "pin_reg_split": true,
-  "face_guard_continue": "r2 face_guard FAIL (RTL property: 128 unused ve_oy / 2 s_d input bits have no capture flop; x_wd/u/sw_d/ve_ah/ve_rh/x_wa/... output registers also read internally; ve_aval merged with sw_d): physical run continues as pathfinding for pins / route / timing evidence"
+  "note_c3": "c3 (S81-KITS-C3 10-24): face_guard_continue and pin_reg_split removed: face_guard must PASS on the raw Yosys netlist (RTLA RTL: ra_ri[30:0], ve_oy packed [127:0]) with no netlist hooks"
  },
  "ot_s81sl_vq": {
   "suffix": "lfp",
@@ -145,7 +144,7 @@
   "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
   "clock_balance": true,
   "max_buffer_percent": 100,
-  "face_guard_continue": "PATHFINDING: face_guard FAIL c1 = o[15:0] constant (RTL ot_dsrom_su_hcpost.sv:129 o <= {hi, 16'd0}: 16 output pins tied 0, no register survives synthesis) + sticky fault self-loop; needs an RTL / plan decision (drop or keep the const pins) - recorded, not waived"
+  "note_c3": "c3: face_guard_continue removed (RTLA: o[31:16] only, sticky state in the kept ot_dsrom_su_hcpost_sticky, FDUP 1; raw face_guard PASS 339)"
  },
  "ot_s81sl_vn": {
   "suffix": "c",
