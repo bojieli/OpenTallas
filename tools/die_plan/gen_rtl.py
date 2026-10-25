@@ -90,6 +90,15 @@ module ot_dp_rsync_s3 (input wire clk, input wire async_rst_n, output wire sync_
         if (!async_rst_n) p <= 3'b0; else p <= {p[1:0], 1'b1};
     assign sync_rst_n = p[2];
 endmodule
+// ot_dp_rrelay: one synchronous reset relay flop (OWNER RESET RULE 10-24, tools/die_plan/reset_tree.py).  No reset
+// of its own: the synchronised reset is carried like data, so assertion is synchronous too (the clock runs at boot).
+// keep_hierarchy + keep: the per-tap relays have identical inputs and would otherwise be merged (Yosys opt_merge).
+(* keep_hierarchy *)
+module ot_dp_rrelay (input wire clk, input wire d, output wire q);
+    (* keep *) reg r;
+    always @(posedge clk) r <= d;
+    assign q = r;
+endmodule
 `default_nettype wire
 """
 
@@ -208,11 +217,13 @@ def wrapper(P, tn, epochs, rtl_root=None):
         # synchroniser (Yosys drops the unloaded ones), so reset_taps.tcl had to fall back to a farther tap (S81 r0:
         # u_rsync_t3 -> ft1_s0.eq 753-803 um).  The kit (reset_taps.tcl, pre-GPL) still re-points every FIRM placed one
         # to its nearest tap's synchroniser and places each synchroniser FIRM at its tap.
+        # OWNER RESET RULE 10-24 (BRIEFING OWNER DECISIONS #2): rst_n_t<i> is no longer a per-tap synchroniser but the
+        # last relay at tap i of ONE root synchroniser's synchronous relay tree (reset_tree.py: hops <= 405 um, equal
+        # depth to every tap, so every tap releases on the same cycle).
         if ns not in (2, 3):
-            raise GenError(f"type {tn}: reset.sync_stages {ns}: per-tap synchronisers exist for 2 or 3 stages")
-        for i in range(len(taps)):
-            body.append(f"    wire rst_n_t{i};\n    ot_dp_rsync_s{ns} u_rsync_t{i} "
-                        f"(.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n_t{i}));")
+            raise GenError(f"type {tn}: reset.sync_stages {ns}: root synchronisers exist for 2 or 3 stages")
+        import reset_tree
+        body += reset_tree.rtl_lines(reset_tree.for_type(P, tn), ns)
         body.append("    wire rst_n = rst_n_t0;")
         rr = [0]
         try:
