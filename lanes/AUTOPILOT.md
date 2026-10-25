@@ -63,3 +63,26 @@ S81/KITS + QC-RP1 by tag; the other 9 lines stay in LOOP-GAPS.
 2026-10-25 05:26 PDT PASS-RECON: QC-RP1 10-25 04:39 | qfd_dv_s8_crh_rp1 | NOT-ROUTE (rebuild); 05:06 route clearance -> live f56a/f56b ADOPTED 05002e6c9ab8 / dfd30ddd5d84
 2026-10-25 05:26 PDT PASS-RECON: CLOCK-RESET/relay2 10-25 04:42 | payload536_r2 + rstg_r2 | SIGNED (results/s81_relay2_1025/signoff on main)
 2026-10-25 05:26 PDT PASS-RECON: for owners (not acted on): (a) S81 x24 t6 (epyc1 ot-run 2078719/2079925, 4.4 h GRT hold loop) + t11 m5 (2095697) route superseded types -> kill?; stray intel1 container dpkit-slice_station__t24-786393 (t24 m0, no client, 4 h); t27 has no kit in kits_s81_178 (PROTO skipped it as 'live', those runs were killed 05:14). (b) HBM-CORES argmax_s1_rc0665/rc0700 produced the same 4_1_cts.odb: the asap7 image ignores SET_RC_TCL (CLOCK.md:88), use LAYER_PARASITICS_FILE; CLOCK-RESET argmax_struct kits failed CTS on cts.tcl:87 'la_d'. (c) a parallel branch claude/autopilot-owners-1025 also edits tools/autopilot: merge order matters.
+
+## ISSUE [KV-CORES2 2026-10-25 05:32 PDT] adopt mode does not see lane chains -> live runs classified CRASH; cleanup can race a chain
+(1) hub_procs() matches only the exact kit path. KV head chains run as `ot-run --dir VR --stage VR -- bash VR/go.sh` with
+    VR = the kit's PARENT (VR/<kit>, VR/chain, VR/eco_m8), so 0 hub procs. When ot-run spills the job to another host there
+    is no local container either -> poll_adopted classified 3 LIVE runs as CRASH "exit None" at 05:12 and moved them to
+    structural.tsv: 147ef624e94d + 598600015ec2 (head e2, live on intel1, containers kvcore-kv3_head_eighth_e2__216x216_-216xxxx,
+    hub clients 1663564/1663556) and acdb1455f742 (head e4 h5m8, live on epyc2, in eco_m8 since 05:27, client 1663558).
+    Their delete hit epyc1 ("nothing left"), so no data lost, but they are no longer tracked.
+(2) poll_adopted() finishes as soon as <kit>/signoff/signoff.json exists, without the busy/log-age check, and the chain
+    (route -> mk_eco copies run/results -> ECO in a sibling dir -> signoff) is invisible per (1). record_failure's delete
+    is only guarded by "a container on the PROBED host mounts the kit" -- false between the route container and the ECO
+    container, and always false for spilled jobs (the container runs elsewhere). The ECO result (sibling dir) is never classified.
+Ask (AUTOPILOT-OWN): hub_procs should also match any process whose argv names the kit path OR an ancestor dir of it that
+  contains it (ot-run --dir/--stage parent), and the ot-run client's job host; poll_adopted must wait until no such
+  proc lives even if signoff.json exists; PROBE_DELETE must run on the host where the job ran. Optional: an adopt row
+  field "chain_dir" to classify the LAST signoff.json in the chain dir.
+Until fixed: please put a HOLD (no classify / no delete) on KV-CORES adopt ids 5905ee49c1cb 713d921919dd 3ffc2afa4c46
+  906dad0a3122 c5dba9832f57 49f038e393af e72f8267ae87 and astk A/B fc016ab64d81 a33dfebd75b4 773d6e878a4a 8139467e6087
+  bf431215b25b deb403d04c70 b7b3b87a8d8f 8d12dfba2db3 (astk chains name the kit in argv, so they are seen -- lower risk).
+  KV-CORES2 collects these by hand meanwhile. kvs_pc A/B CRASH rows (1d8f9c56aa8d 3742c83ea8dc bf937593fd6e caf11deb0560)
+  are correct: CORE_PREFLIGHT FAIL before floorplan (shared 1716/928), deletion fine.
+(3) FYI all lanes: signoff.py on main reads pair_skew.tcl beside itself; kit generators / mk_eco that copy only signoff.py
+  crash at sign-off (FileNotFoundError pair_skew.tcl -- KV h0m8dlr e6 route signoff 05:30). KV kits patched in place.
