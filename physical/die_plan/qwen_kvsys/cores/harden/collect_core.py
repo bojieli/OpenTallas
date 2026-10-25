@@ -168,7 +168,19 @@ def main():
     old = jload(out)
     if old and not str(old.get("verdict", "")).startswith(("SIGNED", "INCOMPLETE")) and old.get("kit_hash") != rec["kit_hash"]:
         out = rd / f"{mod}.{rec['kit_hash']}.json"     # failed verdicts are never overwritten
+    elif old and old.get("run") != rec["run"] and not str(old.get("verdict", "")).startswith("SIGNED"):
+        # same kit, a later run of it (e.g. a post-route ECO): the earlier record is kept under a new name, never lost
+        n = 1
+        while (rd / f"{mod}.prev{n}.json").exists():
+            n += 1
+        (rd / f"{mod}.prev{n}.json").write_text(json.dumps(old, indent=1) + "\n")
+        so_old = rd / f"{mod}.signoff.json"
+        if so_old.exists():
+            (rd / f"{mod}.prev{n}.signoff.json").write_text(so_old.read_text())
+        rec["previous_record"] = f"{mod}.prev{n}.json"
     out.write_text(json.dumps(rec, indent=1) + "\n")
+    if so and out.name == f"{mod}.json":
+        (rd / f"{mod}.signoff.json").write_text(json.dumps(so, indent=1) + "\n")
     print(json.dumps(dict(module=mod, verdict=verdict, synth_cells=synth_cells, drc=rec["drc"],
                           grt_overflow=rec["grt_overflow"], pin_audit=rec["pin_audit"],
                           tt=(tt.get("setup_ws_ps"), tt.get("hold_ws_ps")), ff=(ff.get("setup_ws_ps"), hold_ff),
