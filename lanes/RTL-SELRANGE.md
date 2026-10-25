@@ -124,3 +124,23 @@ Earlier forms of xrt (lines 270/383/395/419/532/551) and kv_bank (236-240) exist
 - physical/die_plan/hbm/cores/harden/gen_core_kit.py
 - physical/die_plan/hbm_arch_cores/gen_core_kit_hbm.py
 - physical/die_plan/qwen_kvsys/cores/harden/gen_core_kit_kv.py
+
+## PARKED 2026-10-24 23:23 PDT
+
+- **Delivered:**
+  - This report.
+  - Request lines in S81, QC-A0, KV-G3 and HBM-ARCH.
+  - READY in COORD-REVIEW-QUEUE for claude/selrange-gate-1024@fc4d5fa9c.
+- **Redo status at park:**
+  - intel2 redo: 14 results so far.
+    - 11 PASS: serdes t1-t6 and hgi xload.
+    - 3 ERROR: kv3_head_eighth e1/e3, whose eco sources are gone, and gunit defparam.
+    - 0 FAIL.
+  - The 14 kits48b C-slice `main` runs are still elaborating. They run under ot-run with sweep PID 165316 on intel2; output goes to intel2:/srv/opentallas-scratch/claude/selrange-intel2/out/remote.redo.jsonl.
+  - The epyc2 local redo is sweep PID 554299; output goes to epyc2:/srv/opentallas-scratch/claude/selrange-epyc2/out/local.redo.jsonl.
+  - The same slice RTL already PASSes `main` through the b3r8 kits, so these runs only add confirmation.
+- **Next:**
+  1. When those runs finish, run `python3 rtx-pro:/home/ubuntu/scratch/selrange-1024/bin/final.py <outdir>` and check that FAIL is 0.
+  2. Delete /srv/opentallas-scratch/claude/selrange-<host> on epyc1, epyc2, epyc3, intel1 and intel2, and epyc2:/srv/opentallas-scratch/claude/selrange. The latter is on the root FS.
+  3. Lanes merge the csa31 fix and the waivers, then root-merge the gate.
+  4. Lane generators wire in the gate.
