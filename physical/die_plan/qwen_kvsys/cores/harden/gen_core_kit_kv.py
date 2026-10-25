@@ -235,6 +235,23 @@ def head_lane_ltcopy(text, mod, kd):
 
 
 
+def head_lane_s3copy(text, mod, kd):
+    """PATH-KV-HEAD 10-25 (head6ff TT -71.64 structural fix): ot_qkh_lane8 S3_COPY=1 -- every lane gets its own S3 pin-flop
+    copy of {c_in[3:2], c_in[0], e_in, q_valid_in, q_beat_in, hid, bsel} and its own q0/q1 slice write enables, so the
+    g3g / g3k / e3 broadcast (8 lanes x 16-bit a mux + valid, 3-level BUFx2 tree ~240 ps from u_l8.g3g) becomes 8 lane nets.
+    0 cycles (same D, same edges), +31 FF per lane = +248 per lane8; default S3_COPY=0 keeps the signed odd heads identical."""
+    rx = re.compile(r"(ot_qkh_lane8 #\()(?![^)]*S3_COPY)")
+    text, n = rx.subn(r"\1.S3_COPY(1), ", text)
+    if n < 1:
+        raise SystemExit(f"{mod}: --head-lane-s3copy found no parameterised ot_qkh_lane8 instance")
+    (kd / "head_lane_s3copy_delta.json").write_text(json.dumps(dict(
+        lane8_s3_copy=n, extra_flops_estimate=248 * n, added_cycles=0,
+        source="PATH-KV-HEAD 2026-10-25: head6ff TT worst u_g_t_13_u_l8.g3g -> g_d[*].u_p stage1 through a 3-level fanout "
+               "tree; rtl/hdc/nearhbm/ot_qkh_subtiles.sv S3_COPY",
+        note="default S3_COPY=0 = unchanged leaf (odd heads e1/e3/e5/e7 signed)"), indent=1) + "\n")
+    return text
+
+
 def head_strap_master(text, mod, kd, cj):
     """OWNER DECISION 2026-10-25 07:01 (option B, ID straps): the head-dependent constants of an even head_eighth become
     strap_* INPUT ports of one hardened master, tied at the parent (TIEHI/TIELO next to the pin): BSEL (the 2-bit
@@ -383,6 +400,8 @@ def main():
     ap.add_argument("--head-lane-ltcopy", action="store_true",
                     help="even head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
                          "0 cycles, COORD ruling 5); needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
+    ap.add_argument("--head-lane-s3copy", action="store_true",
+                    help="even head_eighth: ot_qkh_lane8 S3_COPY=1 (per-lane S3 pin-flop copies, 0 cycles, PATH-KV-HEAD 10-25)")
     ap.add_argument("--head-lane-taps", action=argparse.BooleanOptionalAction, default=None,
                     help="per-lane regional clock taps + GPL lane guide regions (KV-HEADCLK 10-25); default ON for the even "
                          "head_eighth cores, --no-head-lane-taps = old single-tree CTS")
@@ -474,6 +493,8 @@ def main():
             dst.write_text(head_port_regs(dst.read_text(), mod, kd))
         if a.head_lane_ltcopy and dst.stem == mod:
             dst.write_text(head_lane_ltcopy(dst.read_text(), mod, kd))
+        if a.head_lane_s3copy and dst.stem == mod:
+            dst.write_text(head_lane_s3copy(dst.read_text(), mod, kd))
         if a.head_strap_master and dst.stem == mod:
             dst.write_text(head_strap_master(dst.read_text(), mod, kd, cj))
         if a.am_g_drop and dst.stem == mod:
@@ -733,6 +754,7 @@ def main():
               signal_max=rec.get("sigmax", a.sigmax),
               flow_basis=("stock" if a.stock_flow else "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20" + (" + mcmm tc/bc" if mcmm else " (no FF macro lib: TC only)")),
               head_lane_taps=bool(a.head_lane_taps), head_strap_master=bool(a.head_strap_master),
+              head_lane_s3copy=bool(a.head_lane_s3copy),
               kit_hash=kit_hash(kd))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),

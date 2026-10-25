@@ -14,7 +14,13 @@ module ot_qkh_lane8 #(
     // (g_ltn.u_ltn): the 8-lane x 32-bit broadcast of lal / lsel (head_eighth e6 TT -12 ps from u_ltd line[39]) becomes
     // eight short lane nets.  Same D (PLAT) edges, 0 added cycles (u_ltd is one stage shorter).  LT_COPY = 0 (default) is
     // the unchanged RTL (u_ltd D = PLAT drives every lane).
-    parameter integer LT_COPY = 0
+    parameter integer LT_COPY = 0,
+    // PATH-KV-HEAD 10-25 (head6ff TT -71.6: u_l8 g3g / e3 S3 pin flops broadcast to 8 lanes x (16-bit a mux + valid) through
+    // a 3-level BUFx2 fanout tree, ~240 ps): S3_COPY = 1 gives every lane its own S3 pin-flop copy of {c_in[3:2], c_in[0],
+    // e_in, q_valid_in, q_beat_in, hid, bsel} (31 FF / lane, same D as the shared S3 flops, same edges, 0 added cycles) and
+    // its own q0/q1 16-bit slice write enables, so each copy drives one lane (~17-34 loads).  The shared c3[3:1] still feeds
+    // u_ctl.  S3_COPY = 0 (default) is the unchanged RTL (odd heads e1/e3/e5/e7 signed).
+    parameter integer S3_COPY = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -93,9 +99,33 @@ module ot_qkh_lane8 #(
         localparam integer TL = (d % 2 == 0) ? 1 : ((d == 1 || d == 5) ? 2 : ((d == 3) ? 3 : 0));
         localparam integer LA = (d == 3) ? 1 : d - 1;
         localparam integer LB = (d == 3) ? 5 : d + 1;
-        wire [15:0] qv = g3g ? q1[d * 16 +: 16] : q0[d * 16 +: 16];
-        (* keep_hierarchy *) ot_qwen_nearhbm_prod u_p (.clk(clk), .rst_n(rl), .valid_in(g3k || g3v),
-            .a(g3k ? qv : e3), .k(row3[8*d +: 8]), .y(p_y[32*d +: 32]), .fault(p_f[d]), .valid_out(p_vo[d]));
+        wire        lk, lv, lg;           // this lane's view of the S3 controls
+        wire [15:0] le, lq0, lq1;
+        if (S3_COPY == 0) begin : g_s3s
+            assign lk = g3k; assign lv = g3v; assign lg = g3g; assign le = e3;
+            assign lq0 = q0[d * 16 +: 16]; assign lq1 = q1[d * 16 +: 16];
+        end else begin : g_s3c       // this lane's own S3 pin-flop copy (S3_COPY)
+            reg        ck3, cv3, qvl, cg3;
+            reg [15:0] el3, ql0, ql1;
+            reg [5:0]  qbl;
+            reg [1:0]  hdl, bsl;
+            always @(posedge clk or negedge rc)
+                if (!rc) begin ck3 <= 1'b0; cv3 <= 1'b0; qvl <= 1'b0; end
+                else begin ck3 <= c_in[3]; cv3 <= c_in[2]; qvl <= q_valid_in; end
+            always @(posedge clk) begin
+                cg3 <= c_in[0]; el3 <= e_in; qbl <= q_beat_in; hdl <= hid; bsl <= bsel;
+            end
+            wire lw0 = qvl && (qbl == {2'b00, hdl, bsl});
+            wire lw1 = qvl && (qbl == {2'b01, hdl, bsl});
+            always @(posedge clk) begin
+                if (lw0) ql0 <= qd3[d * 16 +: 16];
+                if (lw1) ql1 <= qd3[d * 16 +: 16];
+            end
+            assign lk = ck3; assign lv = cv3; assign lg = cg3; assign le = el3; assign lq0 = ql0; assign lq1 = ql1;
+        end
+        wire [15:0] qv = lg ? lq1 : lq0;
+        (* keep_hierarchy *) ot_qwen_nearhbm_prod u_p (.clk(clk), .rst_n(rl), .valid_in(lk || lv),
+            .a(lk ? qv : le), .k(row3[8*d +: 8]), .y(p_y[32*d +: 32]), .fault(p_f[d]), .valid_out(p_vo[d]));
         wire [31:0] va = czd ? 32'd0 : fb[32*d +: 32];
         wire [31:0] vb = vd ? p_y[32*d +: 32] : 32'd0;
         wire [31:0] la, lb;
