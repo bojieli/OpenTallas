@@ -49,7 +49,9 @@ def compose(F, rules, spec, Cell):
             raise CompositionError(f'{path}: missing/inout terminal direction')
         nets={b for b,_ in endpoints.values() if isinstance(b,int)}
         boundary={b for b in nets if outside[b]-ms or b in topnets}
-        wire={b:f'n{i}' for i,b in enumerate(dict.fromkeys(b for c in cs for p in sorted(c.ports) for b in c.ports[p] if isinstance(b,int)))}
+        net_terms=defaultdict(list)
+        for k,(b,d) in endpoints.items():
+            if isinstance(b,int): net_terms[b].append((k,d))
         ports={}; dirs={}; mapped={}; netports={}; declarations=[]; assigns=[]
         for pn,pd in core['ports'].items():
             if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_$]*',pn): raise CompositionError('unsafe port name')
@@ -77,6 +79,11 @@ def compose(F, rules, spec, Cell):
                 elif d!='input' or b not in ('0','1'):
                     raise CompositionError(f'{path}: only known input constant straps supported')
         if boundary-set(netports): raise CompositionError(f'{path}: omitted boundary nets {sorted(boundary-set(netports))[:8]}')
+        # Fully anchored input terminals use their exact port expressions. Their
+        # external parent nets may alias differently across instances; retain that
+        # in F.ports, never encode unused parent-only wires in the reusable master.
+        port_only={b for b,ts in net_terms.items() if all(d=='input' and k in mapped for k,d in ts)}
+        wire={b:f'n{i}' for i,b in enumerate(dict.fromkeys(b for c in cs for p in sorted(c.ports) for b in c.ports[p] if isinstance(b,int) and b not in port_only))}
         # Check directions against real drivers. An output boundary has exactly one
         # original internal driver; input boundary has none. No driver disappears.
         for b,aliases in netports.items():
@@ -84,16 +91,16 @@ def compose(F, rules, spec, Cell):
             if any(ad!=d for ad,_ in aliases) or (d=='output' and len(aliases)!=1):
                 raise CompositionError(f'{path}: incompatible aliases on original net {b}')
             if len(aliases)>1:
-                required={k for k,(v,di) in endpoints.items() if v==b and di=='input'}
+                required={k for k,di in net_terms[b] if di=='input'}
                 if not required.issubset(mapped):
                     raise CompositionError(f'{path}: live input aliases require exact complete terminal coverage {b}')
-            else:
+            elif b not in port_only:
                 ref=aliases[0][1]
                 assigns.append('    assign '+(f'{wire[b]} = {ref};' if d=='input' else f'{ref} = {wire[b]};'))
-            drivers=[k for k,(v,di) in endpoints.items() if v==b and di=='output']
+            drivers=[k for k,di in net_terms[b] if di=='output']
             if len(drivers)!=(1 if d=='output' else 0): raise CompositionError(f'{path}: boundary driver mismatch {b}')
         for b in nets:
-            drivers=[k for k,(v,di) in endpoints.items() if v==b and di=='output']
+            drivers=[k for k,di in net_terms[b] if di=='output']
             constant=F.const_drivers.get(b)
             if len(drivers)>1 or (drivers and constant):
                 raise CompositionError(f'{path}: multiple original internal drivers {b}')

@@ -30,7 +30,7 @@ def test_preserves_registered_hid_and_exact_straps():
     f,s=fixture();sources,r=compose(f,Rules(),s,E.Cell)
     assert len(f.cells)==1 and f.cells[0].ports['strap_hid']==['0','0']
     rtl=sources[0][1]
-    assert '.hid({n4, n3})' in rtl and '.q({n4, n3})' in rtl
+    assert '.hid({n3, n2})' in rtl and '.q({n3, n2})' in rtl
     assert '.hid({strap_hid[1], strap_hid[0]})' in rtl
     assert '.W(2)' in rtl and r['cores'][0]['terminal_count']==16
     assert r['terminal_equality']
@@ -81,7 +81,7 @@ def test_dissolved_constant_driver_is_preserved():
     f,s=fixture();f.cells[2].ports['bsel']=[7,7];f.const_drivers[7]=('1','dissolved.literal')
     del s['cores'][0]['ports']['strap_bsel']
     sources,_=compose(f,Rules(),s,E.Cell)
-    assert "assign n5 = 1'b1;" in sources[0][1]
+    assert "assign n4 = 1'b1;" in sources[0][1]
 
 def test_hidden_undriven_internal_net_rejected():
     f,s=fixture();f.cells[2].ports['bsel']=[7,7]
@@ -114,3 +114,16 @@ def test_repeated_same_master_has_identical_source_despite_global_net_ids():
     f.cells+=clones;f.top_ports['out2']=('output',[15]);s['cores'].append(core)
     sources,receipt=compose(f,Rules(),s,E.Cell)
     assert len(sources)==1 and len(f.cells)==2 and len(receipt['cores'])==2
+
+
+def test_parent_input_alias_pattern_is_not_internal_master_topology():
+    a,sa=fixture();b,sb=fixture()
+    for spec in (sa,sb):
+        ports=spec['cores'][0]['ports'];old=ports.pop('clk')
+        for i,anchor in enumerate(old['bits'][0]):ports['clk'+str(i)]=dict(dir='input',bits=[[anchor]])
+    b.cells[1].ports['clk']=[7];b.cells[2].ports['clk']=[8]
+    b.top_ports['clk1']=('input',[7]);b.top_ports['clk2']=('input',[8])
+    source_a,_=compose(a,Rules(),sa,E.Cell);source_b,_=compose(b,Rules(),sb,E.Cell)
+    assert source_a==source_b
+    assert a.cells[0].ports['clk1']==[1] and b.cells[0].ports['clk1']==[7]
+    assert a.cells[0].ports['clk2']==[1] and b.cells[0].ports['clk2']==[8]
