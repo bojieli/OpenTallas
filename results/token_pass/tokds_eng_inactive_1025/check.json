@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.eng_inactive_lockstep.v1",
+ "verdict": "PASS",
+ "rtl": "33408014b",
+ "cycle_delta": 0,
+ "public_output_ports": 13,
+ "valid_masking": false,
+ "seeds": [
+  {
+   "seed": 1,
+   "cycles": 3510,
+   "windows": 3,
+   "checked_rows": 144,
+   "mismatches": 0
+  },
+  {
+   "seed": 2,
+   "cycles": 3510,
+   "windows": 3,
+   "checked_rows": 144,
+   "mismatches": 0
+  },
+  {
+   "seed": 3,
+   "cycles": 3510,
+   "windows": 3,
+   "checked_rows": 144,
+   "mismatches": 0
+  }
+ ],
+ "mutant": {
+  "verdict": "CAUGHT",
+  "cycle": 832,
+  "change": "HBM response bit0 corrupted in reference input"
+ },
+ "physical_impact": "No cycles/ports/outline change. RTL change requires new synthesis/LEC and physical re-sign-off; existing views not relabelled."
+}
