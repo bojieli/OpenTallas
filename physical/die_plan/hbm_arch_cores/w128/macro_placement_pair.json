@@ -1,0 +1,6 @@
+{"note": "HBM-W128 10-25 GEOM FAIL fix (GEOM-REVIEW 05:17): one fixed macro lattice for pair_core + pair_first_core; all 3 SRAMs flush x=21.6 against the W band, pin edges facing E logic; 54.8-um middle W->E logic band; halo 4.32 kept. k = escaped odb instance segment (MPL-0020 with unescaped [k]).",
+ "macro_placement": [
+  {"k": "g_w\\[1\\]", "macro": "ot_sram_1r1w_1024x256_m2_r2c2", "origin_um": [21.6, 4.32],   "orient": "R180"},
+  {"k": "g_x\\[0\\]", "macro": "ot_sram_1r1w_128x256_m1_r2c2",  "origin_um": [21.6, 129.6],  "orient": "MY"},
+  {"k": "g_w\\[0\\]", "macro": "ot_sram_1r1w_1024x256_m2_r2c2", "origin_um": [21.6, 179.28], "orient": "MY"}
+ ]}
