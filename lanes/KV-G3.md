@@ -159,3 +159,6 @@ Recommendation: keep r1..r5 separate (or merge only via the per-instance-paramet
   - kvs_pc HBM clock period + CDC SDC vocabulary (from KVG3-CORES);
   - die-level: the rule says one root synchroniser per die region; the kit has one per partition, so equal release ACROSS partitions needs the die spine to carry a synchronous reset (owner to confirm "region" = partition or die).
 - HANDOFF 18:58: KV-G3 parked at 6ecd9a39e2; resume at "Next (vK plan)" step 1; no live jobs of mine.
+
+## KV lane (rtx-pro, steward of KV-G3 + KVG3-CORES + KVG3-WI) RESUMED 2026-10-24 19:26 PDT
+2026-10-24 19:26 PDT KV: resumed from PARKED 18:58 (claude/kv-g3-1024 @6ecd9a39e2; epyc1 ~/wt/kv-g3 clean at that sha; rtx-pro worktree /home/ubuntu/wt/kv-1024r). Items: (1) KV re-bind from scratch (decision 9) -> sub-agent KV-BIND; (2) hub_Ei vK (pipelined reset via RESET unified tool + ft24 st2 hotspot spread, GRT-only gate, delta GEOM re-review) -> KV lead; (3) KV cores collect + pv_pair hold recipe b/early taps + astk/ectlk + core insertion publication for CLOCK -> sub-agent KV-CORES. Note: "localhost" in older lines = tender-ray = epyc1.
