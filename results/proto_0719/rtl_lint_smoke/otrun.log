@@ -1,0 +1,18 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-proto-0719/rtl_lint
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-proto-0719/rtl_lint
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-proto-0719/rtl_lint
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-proto-0719/rtl_lint
+ot-run: localhost      admits    46 GB (avail 411, reserve 0, fresh 297.1, peak 3.1, headroom 0, waiters 0/0 GB) load 58/256 running 38 disk 264 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-2095589-1792938458 after 1 s
+s81 rc=0
+RTL_LINT PASS errors 0
+head rc=0
+RTL_LINT PASS errors 0
+qc rc=0
+RTL_LINT PASS errors 0
+kv rc=0
+RTL_LINT PASS errors 0
+hbm rc=0
+RTL_LINT PASS errors 0
+ot-run: RAN on localhost (unit oth-ubuntu-2095589-1792938458): exit 0

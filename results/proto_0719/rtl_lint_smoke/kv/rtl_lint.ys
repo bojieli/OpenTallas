@@ -1,0 +1,7 @@
+verilog_defines -DSYNTHESIS
+read_verilog -sv -noautowire /work/rtl/ot_dp_cells.sv
+read_verilog -sv -noautowire /work/rtl/ot_reset_sync.sv
+read_verilog -sv -noautowire /work/rtl/kv3_io_ft_part.sv
+hierarchy -check -top kv3_io_ft_part
+proc
+check -assert

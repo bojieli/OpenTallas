@@ -1,0 +1,7 @@
+verilog_defines -DSYNTHESIS
+read_verilog -sv -noautowire /work/rtl/ot_dp_cells.sv
+read_verilog -sv -noautowire /work/rtl/ot_reset_sync.sv
+read_verilog -sv -noautowire /work/rtl/s81p_slice_station__t7.sv
+hierarchy -check -top s81p_slice_station__t7
+proc
+check -assert

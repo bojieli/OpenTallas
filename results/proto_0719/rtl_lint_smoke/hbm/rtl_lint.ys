@@ -1,0 +1,9 @@
+read_liberty -lib -ignore_miss_func /work/macros/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib
+verilog_defines -DSYNTHESIS
+read_verilog -sv -noautowire /work/rtl/hfd_hgi_vm_calendar_f20.sv
+read_verilog -sv -noautowire /work/rtl/ot_static_program_target.sv
+read_verilog -sv -noautowire /work/rtl/hfd_hgi_vm_calendar.sv
+read_verilog -sv -noautowire /work/rtl/ot_vms_calendar_static_xcap.sv
+hierarchy -check -top hfd_hgi_vm_calendar_f20
+proc
+check -assert

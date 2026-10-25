@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS",
+ "rc": 0,
+ "errors": [],
+ "command": [
+  "yosys",
+  "-q",
+  "-s",
+  "/work/rtl_lint.ys"
+ ]
+}

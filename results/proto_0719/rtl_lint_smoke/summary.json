@@ -1,0 +1,62 @@
+{
+ "tool_sha256": "1ed803ebd76af36387ecaf4cb7b0591cc75de97c085d965a76a6f1574e0a65b1",
+ "unit": "oth-ubuntu-2095589-1792938458",
+ "verdict": "PASS",
+ "die_samples": {
+  "s81": {
+   "verdict": "PASS",
+   "rc": 0,
+   "errors": [],
+   "command": [
+    "yosys",
+    "-q",
+    "-s",
+    "/work/rtl_lint.ys"
+   ]
+  },
+  "head": {
+   "verdict": "PASS",
+   "rc": 0,
+   "errors": [],
+   "command": [
+    "yosys",
+    "-q",
+    "-s",
+    "/work/rtl_lint.ys"
+   ]
+  },
+  "qc": {
+   "verdict": "PASS",
+   "rc": 0,
+   "errors": [],
+   "command": [
+    "yosys",
+    "-q",
+    "-s",
+    "/work/rtl_lint.ys"
+   ]
+  },
+  "kv": {
+   "verdict": "PASS",
+   "rc": 0,
+   "errors": [],
+   "command": [
+    "yosys",
+    "-q",
+    "-s",
+    "/work/rtl_lint.ys"
+   ]
+  },
+  "hbm": {
+   "verdict": "PASS",
+   "rc": 0,
+   "errors": [],
+   "command": [
+    "yosys",
+    "-q",
+    "-s",
+    "/work/rtl_lint.ys"
+   ]
+  }
+ }
+}
