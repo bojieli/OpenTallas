@@ -1,0 +1,168 @@
+{
+ "tool": "physical/die_plan/qwen_kvsys/boot_v36/kv_boot_image.sh",
+ "git_head": "6f0ecb76d756423b96375541e980a75cd650c827",
+ "git_dirty_paths": [],
+ "bind_dir": "/srv/opentallas-scratch2/claude/kv-tok/img_inputs/kv44_1de24d72a/physical/die_plan/qwen_kvsys/bind/bound_kv44",
+ "kst": "34,34,32,32,32,31,31",
+ "link_emb_window": 1627,
+ "link_image": "results/rtl/qwen_rom_pair_candidate_1024/d2d_cal_image.svh",
+ "link_rope": true,
+ "link_head_prep": 12,
+ "inputs": {
+  "bus_groups": "e8ebf5f3f4937bdc97408a3ebd15b44a77dd5434d3cf42583f9719df9b725d1a",
+  "pv_entry_table": "9ee7a6b804e38b58ce2f741fa84d5a8d8628ddfc4884466a9c8ccae8dab0f8f4",
+  "pair_image": "fdd258d4c2eff01bfcb895ba6d2db2f4d6c598e3d3555752bfad5a8fb34c6ed2",
+  "asbuilt/SOURCE_COMMIT": "3cad428df459de86bc89f76e5e0488a047ec3b861ad4e604e5fec470436db338",
+  "asbuilt/boot_ages.json": "1319af4c5cf813572bb7c543994cf5c4db2e85a9dd01836da692f742b5869288",
+  "asbuilt/fwd_lanes.json": "c216fc2392e5fdfb17118d41bcdc2bedfe6a2971f56b90762f784f0f8c1aa47e",
+  "asbuilt/health_successor.json": "d9ca10712615e3807d60f72f98d1a03211259b0c92d75568826f3b8b5675d131",
+  "asbuilt/kv_flags.env": "e1b3ab7ee03d6c7f8a6517d42d63abbf0b89e1551729a202a6960407048b7eb0",
+  "asbuilt/land_lag.json": "5e6d5fb5bc6627136df3b93d32dccf8d4fd6a81ec2b73432c6cde50530eaf961",
+  "asbuilt/lane_stations.json": "8012974424eb91eeba755ae851371c3db183e05fa8d8186dd1014a6ef46b51b8",
+  "asbuilt/manifest.json": "9f482ed8d19d5e2924ade6bbb15aa1b51dfa94c820fb45a34e761b44953be268",
+  "asbuilt/relay_stages.json": "64e5922f7cf1b086d5ff1c4fd8701d8c32e1c45fab97d1ee4a5d78e2fbdf4501",
+  "asbuilt/rst_regional.json": "588ba13ede150067c20614a5c3ab7c9acb562f5b53fc62105be3f1a2a182b8ae",
+  "asbuilt/static_model.json": "2df4c3516fad72dbf4002671b3f0b5648ef63f4560e773b789c096213d30cfa2"
+ },
+ "outputs": {
+  "boot_bundle.json": "92d9923fffea4624382c0366d0ea572921526e1dd788f20eed5cbd60cbb3cc2d",
+  "vehicle/frames.hex": "0407eab6d3835786e17fecc000204ac547d14980112f047fd60c11b7c21d07b7",
+  "vehicle/expect.txt": "13982e2e2154e4632ccce66b3b8b787c44721406371850ad334263eae40e23a5",
+  "vehicle/epoch.txt": "e2596498544bf5316ea0bc420884944d95028a71d653491df1cf647651904f0d",
+  "target0.hex": "c172c7510d7b02131f911b7b36b7b2ba49166ddae15eaa778d1503afe4ca32e8",
+  "target1.hex": "102041c5986de0a2816bed6b2007fdf334206f6f6b944451a924caf55a92932f",
+  "target11.hex": "7d43eb9cd5aa0ca0e3b58a774bef2fef5a1a3c03b952ca7bff6a04e681d17e7e",
+  "target12.hex": "01c6a45502782f5edc70d261835ed861d230e5f7e0d3e6404cc698a0c69b4b47",
+  "target13.hex": "4181d3ce8565b8fe1eaaa53c85c05a6845c40208c412c7d44d866a795d0fb2c2",
+  "target2.hex": "c9372c3a40d428ed3cdf0a4e76d7535b1d6b2a5890ca56be16d89676f59a9578",
+  "target3.hex": "fa3c664a90fe486f06c18c4d7d25892a01d3366a690e698e2f786463baa7e3a2",
+  "target4.hex": "678b4a040d0d65eb4033d786c44715a39e9559cc0897eec38bcad114e279771c",
+  "target5.hex": "fa68b95121bdca383eae3a7b78ba8f41297412b33a931b1818fddeee08bc7692",
+  "target6.hex": "71b271d68c94aa380d80b63094f45b12a43872eb95d29b1ec6859d93223095fe",
+  "target7.hex": "71b271d68c94aa380d80b63094f45b12a43872eb95d29b1ec6859d93223095fe",
+  "target8.hex": "71b271d68c94aa380d80b63094f45b12a43872eb95d29b1ec6859d93223095fe",
+  "target9.hex": "71b271d68c94aa380d80b63094f45b12a43872eb95d29b1ec6859d93223095fe"
+ },
+ "epoch": 2827,
+ "images": [
+  [
+   1,
+   327,
+   "9c51752d8dd617f7"
+  ],
+  [
+   2,
+   181,
+   "abe7ba21416eb901"
+  ],
+  [
+   3,
+   4,
+   "3545052503fe963b"
+  ],
+  [
+   4,
+   192,
+   "ebfc8cfcbbb1c4b9"
+  ],
+  [
+   5,
+   192,
+   "ebfc8cfcbbb1c4b8"
+  ],
+  [
+   6,
+   1024,
+   "51484f5354505241"
+  ],
+  [
+   7,
+   1024,
+   "51484f5354505240"
+  ],
+  [
+   8,
+   1024,
+   "51484f535450524f"
+  ],
+  [
+   9,
+   1024,
+   "51484f535450524e"
+  ],
+  [
+   11,
+   66,
+   "63c475adcf704f85"
+  ],
+  [
+   12,
+   1024,
+   "b62e15b70574f8f0"
+  ],
+  [
+   13,
+   8,
+   "0fe2bd5d67dd0275"
+  ],
+  [
+   0,
+   1024,
+   "514bb0b28004c8e8"
+  ]
+ ],
+ "pv_check": "PV_CHECK FAIL 25",
+ "dq_check": "DQ_CHECK PASS",
+ "hbm_duty": {
+  "hbm_ps_compiled": 1024.0,
+  "per_compiled_edge": {
+   "in_burst": {
+    "max": 1.0,
+    "mean": 1.0
+   },
+   "shape": {
+    "max": 0.8,
+    "mean": 0.8
+   },
+   "mean_active": {
+    "max": 0.43353090601185434,
+    "mean": 0.43353090601185434
+   },
+   "mean_layer": {
+    "max": 0.09255242227042661,
+    "mean": 0.09255242227042661
+   },
+   "cmd_bus_shape": {
+    "max": 0.8,
+    "mean": 0.8
+   }
+  },
+  "per_833ps_cycle": {
+   "in_burst": {
+    "max": 0.813802734375,
+    "mean": 0.813802734375
+   },
+   "shape": {
+    "max": 0.6510421875,
+    "mean": 0.6510421875
+   },
+   "mean_active": {
+    "max": 0.35280863674851815,
+    "mean": 0.35280863674851815
+   },
+   "mean_layer": {
+    "max": 0.07531941431670282,
+    "mean": 0.07531941431670282
+   },
+   "cmd_bus_shape": {
+    "max": 0.6510421875,
+    "mean": 0.6510421875
+   }
+  },
+  "verdict": {
+   "shape_per_833ps": "PASS",
+   "in_burst_per_833ps": "FAIL",
+   "note": "0.73 = 7.0 / 9.6 Gb/s: the priced bandwidth on a 9.6-Gb/s DFI 1:4 PHY (capacity 1.0 column / 833-ps cycle), so the bound applies to the sustained (shape) rate; in-burst columns are back-to-back by construction"
+  }
+ }
+}
