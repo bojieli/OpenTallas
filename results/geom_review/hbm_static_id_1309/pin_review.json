@@ -1,0 +1,17 @@
+{
+  "image": "pins.png",
+  "viewed": true,
+  "outline_um": [
+    319.68,
+    345.6
+  ],
+  "common_hash": "7a2f916258f75f1c",
+  "terminal_hash": "e1065c3944d31770",
+  "verdict": "PIN-ABI-ONLY: compatible geometry; placement/clock/context review still required before P&R",
+  "findings": [
+    "Same six ID pin coordinates and layers; rename only to declared strap_tile_tid, ID FF removed",
+    "Wide data bands preserved on S/N, no W/E crossing introduced; external outline unchanged",
+    "N-mid clock pin preserved; no claim it fixes actual reference deep-tree clock FAIL",
+    "Actual placed clock plan pending CLOCK35tap shallow-trunk corrective and canonical canary"
+  ]
+}
