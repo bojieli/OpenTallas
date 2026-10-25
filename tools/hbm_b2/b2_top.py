@@ -245,6 +245,12 @@ def main():
         m = QTAG.search(n)
         return (m is None) or (m.group(1) in keepq)
     K = [n for n in leaves if kept(n)]
+    # add_instances: inst -> {master, params, ports: {port: "in" | "out"}} -- new die-level blocks of the B2 bind (root
+    # pass-through registers, multi-beat lane ends, ...): inputs come from `rebuild`, output widths from `out_width`.
+    add_inst = delta.get('add_instances', {})
+    for n in add_inst:
+        assert n not in die.insts, f'add_instances {n} exists in the as-built die'
+    K += sorted(add_inst)
     Kset = set(K)
     remaster = delta.get('remaster', {})
     port_map = delta.get('port_map', {})      # inst -> port -> [[old_lo, old_hi, new_lo]] (kept slices; others dropped)
@@ -269,6 +275,13 @@ def main():
         return any(r.fullmatch(f'{inst}.{port}') for r in straps)
 
     for n in K:
+        if n in add_inst:
+            ai = add_inst[n]
+            new = {p: (('out', f'{n}__{p}') if d == 'out' else ('in', [])) for p, d in ai['ports'].items()}
+            conns_out[n] = dict(master=ai['master'], params=ai.get('params', ''), ports=new)
+            for p, d in ai['ports'].items():
+                assert d != 'out' or p in out_width.get(n, {}), f'add_instances {n}.{p}: out_width missing'
+            continue
         i = die.insts[n]
         rm = remaster.get(n, {})
         dp = set(drop_ports.get(n, []))
@@ -460,7 +473,7 @@ def main():
     summary = dict(schema='opentallas.hbm_b2.top_report.v1', kept_leaves=len(K), dropped_leaves=len(leaves) - len(K),
                    transport_collapsed=len(die.insts) - len(leaves), bits=dict(stats),
                    counts={k: len(v) for k, v in rep.items()},
-                   remastered=sorted(remaster), top_in=len(ports_in), top_out=len(top_out_kept))
+                   remastered=sorted(remaster), added=sorted(add_inst), top_in=len(ports_in), top_out=len(top_out_kept))
     (a.out / 'b2_top_report.json').write_text(json.dumps(dict(summary, detail=rep), indent=1))
     print(json.dumps(summary, indent=1))
     return 0 if not rep.get('CUT_UNRESOLVED') and not rep.get('UNDRIVEN') else 1
