@@ -1037,10 +1037,34 @@
  },
  "ot_hbm_idx_vm_query_static_n12_2cc6e51647e9": {
   "view": "ot_hbm_idx_vm_query_static_n12@2cc6e51647e9",
-  "history": [],
+  "history": [
+   {
+    "path": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_idx_vm_query_static_n12_2cc6e51647e9/signoff",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -3.16 ps, 1 endpoints",
+     "hold_ff: FAIL WNS -38.81 ps, 2625 endpoints",
+     "drv: FAIL TT slew 1975.0 cap 0.0, FF slew 1700.0 cap 0.0"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "FAIL",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "PASS",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -3.16,
+    "hold_ff": -38.81
+   }
+  ],
   "host": "localhost",
   "kit_hash": "a4068c4dfd5cda38",
-  "verdict": "NOT RUN"
+  "verdict": "NOT SIGNED"
  },
  "ot_hbm_sm_vm_wr_q_t_lanes4_c732439590f8": {
   "view": "ot_hbm_sm_vm_wr_q_t_lanes4@c732439590f8",
@@ -1105,6 +1129,28 @@
   "history": [
    {
     "path": "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_static_cfg_collar_idx256r_6ca949259674/signoff",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "drv: FAIL TT slew 1.0 cap 0.0, FF slew 1.0 cap 0.0",
+     "face_guard: FAIL {'shared': 1279}"
+    ],
+    "checks": {
+     "setup_tt": "PASS",
+     "hold_ff": "PASS",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": 33.38,
+    "hold_ff": 8.64
+   },
+   {
+    "path": "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_static_cfg_collar_idx256r_6ca949259674/signoff_pairskew",
     "verdict": "NOT SIGNED",
     "reasons": [
      "drv: FAIL TT slew 1.0 cap 0.0, FF slew 1.0 cap 0.0",
@@ -1387,6 +1433,31 @@
     },
     "setup_tt": -42.86,
     "hold_ff": -25.64
+   },
+   {
+    "path": "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_9467d1b02397/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -42.86 ps, 58 endpoints",
+     "hold_ff: FAIL WNS -25.64 ps, 103 endpoints",
+     "drv: FAIL TT slew 92.0 cap 0.0, FF slew 67.0 cap 0.0",
+     "clock: FAIL TT setup related pair skew 96.8 ps > 80 (u_kring.mem[0][3]$_DFFE_PP_ -> g_wpay.u_write_payload); TT hold related pair skew 91.6 ps > 80 (u_response_payload -> u_skid_kr.g_slice[3].h[31]$_DFFE_PP_); FF setup related pair skew 89.9 ps > 80 (u_kring.mem[0][3]$_DFFE_PP_ -> g_wpay.u_write_payload); FF hold related pair skew 84.9 ps > 80 (u_response_payload -> u_skid_kr.g_slice[3].h[31]$_DFFE_PP_)",
+     "face_guard: FAIL {'unregistered': 3, 'shared': 287, 'feedthrough': 1}"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "FAIL",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "FAIL",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -42.86,
+    "hold_ff": -25.64
    }
   ],
   "host": "intel1",
@@ -1425,6 +1496,30 @@
      "fanout": "WARN",
      "unconstrained": "PASS",
      "clock": "PASS",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": -20.82,
+    "hold_ff": 2.38
+   },
+   {
+    "path": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_cfc804fdbfd4/signoff_pairskew",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "setup_tt: FAIL WNS -20.82 ps, 58 endpoints",
+     "drv: FAIL TT slew 246.0 cap 0.0, FF slew 226.0 cap 0.0",
+     "clock: FAIL TT hold related pair skew 82.0 ps > 80 (u_response_payload -> u_skid_kr.g_slice[3].t[19]$_DFFE_PP_)",
+     "face_guard: FAIL {'unregistered': 3, 'shared': 287, 'feedthrough': 1}"
+    ],
+    "checks": {
+     "setup_tt": "FAIL",
+     "hold_ff": "PASS",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "FAIL",
      "sdc_lint": "PASS",
      "face_guard": "FAIL",
      "drc": "PASS",

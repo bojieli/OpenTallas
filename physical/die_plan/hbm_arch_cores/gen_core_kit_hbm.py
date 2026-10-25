@@ -377,6 +377,12 @@ def main():
     # band (sfu lane14 4_cts FF: 1467 endpoints < 0, 37822 < 30) at ~20 iterations/min -> 57 + 16 non-convergent runs.
     ap.add_argument("--hold-margin", type=float, default=0.0, help="HOLD_SLACK_MARGIN ps at the flow corner (extra over the SDC 25 ps hold uncertainty)")
     ap.add_argument("--tag", default="", help="kit dir suffix (variants)")
+    ap.add_argument("--macro-placement", default=None,
+                    help="HBM-CORES3 10-25: plan family macro placement JSON (e.g. B2n_inputs/exp_lane.json): "
+                         "macro_placement[k] = {macro, origin_um, orient} for macro instance k (fixed, place_macro -exact); "
+                         "--macro-inst-fmt gives the instance path of k")
+    ap.add_argument("--macro-inst-fmt", default=None,
+                    help="instance path of macro k, python format with {k}, e.g. 'u_core.u_bank.u_data.g_read\\[{k}\\].u_m'")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
@@ -421,6 +427,13 @@ def main():
     # the ORFS default 4096-bit inference guard rejects it before mapping.
     if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)", module):
         rec["synth_memory_max_bits"] = max(256 * 61, rec.get("synth_memory_max_bits", 0))
+    if a.macro_placement:
+        if not a.macro_inst_fmt:
+            raise SystemExit("--macro-placement needs --macro-inst-fmt")
+        mp = json.load(open(a.macro_placement))["macro_placement"]
+        rec["macro_placement"] = [dict(inst=a.macro_inst_fmt.format(k=m["k"]), xy_um=m["origin_um"],
+                                       orient=m.get("orient", "R0"), macro=m["macro"]) for m in mp]
+        rec["macro_placement_src"] = dict(file=a.macro_placement, sha256=sha(a.macro_placement))
     canon = None
     if v.get("canonical_type"):
         ct = json.load(open(HARDEN / "canonical_ports_split.json"))["types"][v["canonical_type"]]
