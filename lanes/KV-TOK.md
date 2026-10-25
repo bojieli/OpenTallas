@@ -1,8 +1,8 @@
 # KV-TOK (epyc2)
 ## PARKED 18:56 PDT 2026-10-24
 - Branch claude/kv-tok-1024 @5a351c94dd (pushed). main has efd14deb5c (vehicle + sub-benches + root causes).
-- Live jobs: none of mine on epyc2 (old O0 sims killed per COORD; bo1tok runs stopped). Forks B (claude/kv-tok-b-1024)
-  and C (claude/kv-tok-c-1024) told to park + push; see fork lines below once reported.
+- Live jobs: none of mine on epyc2 (old O0 sims killed per COORD; bo1tok runs stopped). Forks B (claude/kv-tok-b-1024, ~/wt/kv-tok-b)
+  and C (claude/kv-tok-c-1024, ~/wt/kv-tok-c) PARKED @b1131f6fa8 = base: no RTL written yet, no jobs; plans recorded.
 - Done: A tool physical/die_plan/qwen_kvsys/bind/kv_kvpc_hbm_reset.py (96 kvpc rst_n -> i_host_hbm_rst_n_q[0]; not yet
   in a build). m2 mutant plusarg +MUT_RL24=<part> in the PHY bench.
 - Findings this step: B is bigger than "seal before boot": the calendar only reserves static columns while a layer runs
@@ -92,3 +92,9 @@ CODEX progress: BO1opt-in source mergedmaina2757edd53, variantdefault0; sixrealb
   in qkd_ctrl_pc_host_static_core ELASTIC f_raw; prove with lockstep miter (window disabled == original), pcpart
   +KVPC_RST_HBM shows WR+RD + soo=1, mutant (window off) FAILs. Exact staged modules: extra__...static_kv_20261014/
   qkd_ctrl_pc_nc.sv (u_ctrl.u_sched.u_ctl) to be confirmed.
+- C2 fork (claude/kv-tok-c-1024 @b1131f6fa8, worktree ~/wt/kv-tok-c) PARKED before any change: no live jobs. Findings so far:
+  hub_Wi PHY face = u_host .phy_rx_flit({i_serdes_E_rx_flit_q[520:0], i_serdes_W_rx_flit_q[521:0]}) (core clk lanes),
+  .phy_rx_v(d4 of W.rx_v & E.rx_v, ot_dp_dly D=4 -- C1 skew), .phy_tx_* -> u_bout_o_host_fdi (core clk), adapter ck_phy
+  = clk_clk_phy; u_host already has ck_phy_rx_w=clk_clk_phy/ck_phy_rx_r=clk (qkd_host_phy_cdc5 sits AFTER the adapter).
+  Next: kv_host_fdi_cdc.py inserting async FIFOs (rx clk->clk_clk_phy before .phy_rx_*, tx clk_clk_phy->clk after
+  .phy_tx_*; valid+data through one delay), fix kvs_link_phy_models.sv model-level CDC, sub-bench + mutant.
