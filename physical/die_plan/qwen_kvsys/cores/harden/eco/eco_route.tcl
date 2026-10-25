@@ -22,7 +22,19 @@ proc kvc_drv {} {
 # repair on placement parasitics: repair_design on the incremental GRT source of a routed DB dies with RSZ-0074
 # ("failed to build tree from global routes", head e3 10-24); a split can also speed far loads, so FF hold is re-judged by signoff.py (not assumed safe).
 set drv_last [expr {[info exists ::env(OT_DRV_LAST)] && $::env(OT_DRV_LAST) == 1}]
-if {!$drv_last} { kvc_drv }
+# OT_DRV_PLACE=1 (KV-CORES-PAR 10-24, head e3): DRV-first like m8 (the e1/e5/e7 SIGNED order) but the fanout / slew repair
+# runs on placement parasitics (no RSZ-0074 tree build from the routed DB's GRT), then the new buffers are legalized and
+# globally routed (end/start incremental) and setup / hold repair run on fresh GRT parasitics.
+set drv_place [expr {[info exists ::env(OT_DRV_PLACE)] && $::env(OT_DRV_PLACE) == 1}]
+if {$drv_place && !$drv_last} {
+  puts "KVCORES_ECO drv-place: repair_design on placement parasitics, then incremental GRT + GRT parasitics"
+  estimate_parasitics -placement
+  kvc_drv
+  detailed_placement
+  global_route -end_incremental
+  global_route -start_incremental
+  estimate_parasitics -global_routing
+} elseif {!$drv_last} { kvc_drv }
 if {$::env(OT_SETUP_MARGIN) ne ""} {
   puts "KVCORES_ECO repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN)"
   repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN) -skip_last_gasp
