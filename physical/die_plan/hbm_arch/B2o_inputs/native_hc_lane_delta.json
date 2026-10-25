@@ -1,0 +1,96 @@
+{
+ "source": "Native W128 HC binding 591bcf802; actual_kinds.json capacity census, corrected lane-kind fallback",
+ "status": "REQUIRED physical contract: apply together with exact native 16-group HC core views, then reroute, price and review; W64 kit contracts do not qualify native B2",
+ "widen": [
+  {
+   "lanes": [
+    "L14"
+   ],
+   "width": [
+    4116
+   ],
+   "src": "NW_b000",
+   "dst": "NW_b001"
+  },
+  {
+   "lanes": [
+    "L19"
+   ],
+   "width": [
+    4097
+   ],
+   "src": "NW_b000",
+   "dst": "NW_hub"
+  },
+  {
+   "lanes": [
+    "L15"
+   ],
+   "width": [
+    4116
+   ],
+   "src": "NW_b001",
+   "dst": "NW_b002"
+  },
+  {
+   "lanes": [
+    "L10"
+   ],
+   "width": [
+    4383
+   ],
+   "src": "NW_b002",
+   "dst": "NW_b003"
+  },
+  {
+   "lanes": [
+    "L16"
+   ],
+   "width": [
+    4116
+   ],
+   "src": "NW_b003",
+   "dst": "NW_b013"
+  },
+  {
+   "lanes": [
+    "L20"
+   ],
+   "width": [
+    4096
+   ],
+   "src": "NW_b010",
+   "dst": "NW_b000"
+  },
+  {
+   "lanes": [
+    "L11"
+   ],
+   "width": [
+    4383
+   ],
+   "src": "NW_b011",
+   "dst": "NW_b010"
+  },
+  {
+   "lanes": [
+    "L17"
+   ],
+   "width": [
+    4116
+   ],
+   "src": "NW_b012",
+   "dst": "NW_b011"
+  },
+  {
+   "lanes": [
+    "L18"
+   ],
+   "width": [
+    4116
+   ],
+   "src": "NW_b013",
+   "dst": "NW_b012"
+  }
+ ]
+}
