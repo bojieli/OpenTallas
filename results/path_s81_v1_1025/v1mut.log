@@ -1,0 +1,1545 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/d/v1mut.ys' --
+
+1. Executing Verilog-2005 frontend: /d/v1eq.sv
+Parsing SystemVerilog input from `/d/v1eq.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dsrom_su_hcpost_lane'.
+Generating RTLIL representation for module `\gold'.
+Generating RTLIL representation for module `\gate'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /d/pr_old.sv
+Parsing SystemVerilog input from `/d/pr_old.sv' to AST representation.
+Generating RTLIL representation for module `\pr_old'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /d/pr_mut.sv
+Parsing SystemVerilog input from `/d/pr_mut.sv' to AST representation.
+Generating RTLIL representation for module `\pr_new'.
+Successfully finished Verilog frontend.
+
+4. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \ML = 7
+Parameter \AL = 6
+
+4.1. Executing AST frontend in derive mode using pre-parsed AST for module `\pr_new'.
+Parameter \ML = 7
+Parameter \AL = 6
+Generating RTLIL representation for module `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new'.
+Parameter \ML = 7
+Parameter \AL = 6
+
+4.2. Executing AST frontend in derive mode using pre-parsed AST for module `\pr_old'.
+Parameter \ML = 7
+Parameter \AL = 6
+Generating RTLIL representation for module `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old'.
+
+5. Executing PROC pass (convert processes to netlists).
+
+5.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 48 assignments to connections.
+
+5.4. Executing PROC_INIT pass (extract init attributes).
+
+5.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+Creating decoders for process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+Creating decoders for process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+Creating decoders for process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+
+5.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\rst_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$5' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\v_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$6' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\r0_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$7' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\r1_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$8' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\r2_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$9' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\r3_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$10' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\y_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$11' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\c0_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$12' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\c1_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$13' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\c2_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$14' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\c3_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$15' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.\p_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+  created $dff cell `$procdff$16' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\rst_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$17' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\v_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$18' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\r0_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$19' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\r1_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$20' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\r2_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$21' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\r3_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$22' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\y_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$23' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\c0_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$24' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\c1_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$25' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\c2_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$26' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\c3_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$27' with positive edge clock.
+Creating register for signal `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.\p_q' using process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+  created $dff cell `$procdff$28' with positive edge clock.
+Creating register for signal `\pr_new.\rst_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$29' with positive edge clock.
+Creating register for signal `\pr_new.\v_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$30' with positive edge clock.
+Creating register for signal `\pr_new.\r0_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$31' with positive edge clock.
+Creating register for signal `\pr_new.\r1_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$32' with positive edge clock.
+Creating register for signal `\pr_new.\r2_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$33' with positive edge clock.
+Creating register for signal `\pr_new.\r3_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$34' with positive edge clock.
+Creating register for signal `\pr_new.\y_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$35' with positive edge clock.
+Creating register for signal `\pr_new.\c0_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$36' with positive edge clock.
+Creating register for signal `\pr_new.\c1_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$37' with positive edge clock.
+Creating register for signal `\pr_new.\c2_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$38' with positive edge clock.
+Creating register for signal `\pr_new.\c3_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$39' with positive edge clock.
+Creating register for signal `\pr_new.\p_q' using process `\pr_new.$proc$/d/pr_mut.sv:31$2'.
+  created $dff cell `$procdff$40' with positive edge clock.
+Creating register for signal `\pr_old.\rst_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$41' with positive edge clock.
+Creating register for signal `\pr_old.\v_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$42' with positive edge clock.
+Creating register for signal `\pr_old.\r0_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$43' with positive edge clock.
+Creating register for signal `\pr_old.\r1_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$44' with positive edge clock.
+Creating register for signal `\pr_old.\r2_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$45' with positive edge clock.
+Creating register for signal `\pr_old.\r3_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$46' with positive edge clock.
+Creating register for signal `\pr_old.\y_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$47' with positive edge clock.
+Creating register for signal `\pr_old.\c0_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$48' with positive edge clock.
+Creating register for signal `\pr_old.\c1_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$49' with positive edge clock.
+Creating register for signal `\pr_old.\c2_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$50' with positive edge clock.
+Creating register for signal `\pr_old.\c3_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$51' with positive edge clock.
+Creating register for signal `\pr_old.\p_q' using process `\pr_old.$proc$/d/pr_old.sv:27$1'.
+  created $dff cell `$procdff$52' with positive edge clock.
+
+5.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.$proc$/d/pr_old.sv:27$4'.
+Removing empty process `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.$proc$/d/pr_mut.sv:31$3'.
+Removing empty process `pr_new.$proc$/d/pr_mut.sv:31$2'.
+Removing empty process `pr_old.$proc$/d/pr_old.sv:27$1'.
+Cleaned up 0 empty switches.
+
+5.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module $paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old.
+Optimizing module $paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new.
+Optimizing module pr_new.
+Optimizing module pr_old.
+Optimizing module gate.
+Optimizing module gold.
+
+6. Executing FLATTEN pass (flatten design).
+<suppressed ~2 debug messages>
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module $paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old..
+Finding unused cells or wires in module $paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new..
+Finding unused cells or wires in module \pr_new..
+Finding unused cells or wires in module \pr_old..
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Removed 0 unused cells and 72 unused wires.
+<suppressed ~6 debug messages>
+
+8. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: u.p_gold (\p_gold), u.p_gate (\p_gate) -> u.p
+Presumably equivalent wires: u.vo_gold (\u.vo_gold), u.vo_gate (\u.vo_gate) -> u.vo
+Presumably equivalent wires: u.o_gold (\u.o_core_gold [31:16]), u.o_gate (\u.o_core_gate [31:16]) -> u.o
+Presumably equivalent wires: u.fault_gold (\u.fault_gold), u.fault_gate (\u.fault_gate) -> u.fault
+Presumably equivalent wires: u.rst_q_gold (\u.rst_q_gold), u.rst_q_gate (\u.rst_q_gate) -> u.rst_q
+Presumably equivalent wires: u.v_q_gold (\u.v_q_gold), u.v_q_gate (\u.v_q_gate) -> u.v_q
+Presumably equivalent wires: u.r0_q_gold (\u.r0_q_gold), u.r0_q_gate (\u.r0_q_gate) -> u.r0_q
+Presumably equivalent wires: u.r1_q_gold (\u.r1_q_gold), u.r1_q_gate (\u.r1_q_gate) -> u.r1_q
+Presumably equivalent wires: u.r2_q_gold (\u.r2_q_gold), u.r2_q_gate (\u.r2_q_gate) -> u.r2_q
+Presumably equivalent wires: u.r3_q_gold (\u.r3_q_gold), u.r3_q_gate (\u.r3_q_gate) -> u.r3_q
+Presumably equivalent wires: u.y_q_gold (\u.y_q_gold), u.y_q_gate (\u.y_q_gate) -> u.y_q
+Presumably equivalent wires: u.c0_q_gold (\u.c0_q_gold), u.c0_q_gate (\u.c0_q_gate) -> u.c0_q
+Presumably equivalent wires: u.c1_q_gold (\u.c1_q_gold), u.c1_q_gate (\u.c1_q_gate) -> u.c1_q
+Presumably equivalent wires: u.c2_q_gold (\u.c2_q_gold), u.c2_q_gate (\u.c2_q_gate) -> u.c2_q
+Presumably equivalent wires: u.c3_q_gold (\u.c3_q_gold), u.c3_q_gate (\u.c3_q_gate) -> u.c3_q
+Presumably equivalent wires: u.p_q_gold (\u.p_q_gold), u.p_q_gate (\u.p_q_gate) -> u.p_q
+Presumably equivalent wires: u.c3_in_gold (\u.c3_q_gold), u.c3_in_gate (\u.c3_q_gate) -> u.c3_in
+Presumably equivalent wires: u.o_core_gold (\u.o_core_gold), u.o_core_gate (\u.o_core_gate) -> u.o_core
+Presumably equivalent wires: u.c3_gold (\c3_gold), u.c3_gate (\c3_gate) -> u.c3
+Presumably equivalent wires: u.c2_gold (\c2_gold), u.c2_gate (\c2_gate) -> u.c2
+Presumably equivalent wires: u.c1_gold (\c1_gold), u.c1_gate (\c1_gate) -> u.c1
+Presumably equivalent wires: u.c0_gold (\c0_gold), u.c0_gate (\c0_gate) -> u.c0
+Presumably equivalent wires: u.y_gold (\y_gold), u.y_gate (\y_gate) -> u.y
+Presumably equivalent wires: u.v_gold (\v_gold), u.v_gate (\v_gate) -> u.v
+Presumably equivalent wires: u.rst_n_gold (\rst_n_gold), u.rst_n_gate (\rst_n_gate) -> u.rst_n
+Presumably equivalent wires: u.clk_gold (\clk_gold), u.clk_gate (\clk_gate) -> u.clk
+Presumably equivalent wires: fault_gold (\u.fault_gold), fault_gate (\u.fault_gate) -> fault
+Presumably equivalent wires: o_gold (\u.o_core_gold [31:16]), o_gate (\u.o_core_gate [31:16]) -> o
+Presumably equivalent wires: vo_gold (\u.vo_gold), vo_gate (\u.vo_gate) -> vo
+Presumably equivalent wires: p_gold (\p_gold), p_gate (\p_gate) -> p
+Presumably equivalent wires: c3_gold (\c3_gold), c3_gate (\c3_gate) -> c3
+Presumably equivalent wires: c2_gold (\c2_gold), c2_gate (\c2_gate) -> c2
+Presumably equivalent wires: c1_gold (\c1_gold), c1_gate (\c1_gate) -> c1
+Presumably equivalent wires: c0_gold (\c0_gold), c0_gate (\c0_gate) -> c0
+Presumably equivalent wires: y_gold (\y_gold), y_gate (\y_gate) -> y
+Presumably equivalent wires: a3_gold (\a3_gold), a3_gate (\a3_gate) -> a3
+Presumably equivalent wires: a2_gold (\a2_gold), a2_gate (\a2_gate) -> a2
+Presumably equivalent wires: a1_gold (\a1_gold), a1_gate (\a1_gate) -> a1
+Presumably equivalent wires: a0_gold (\a0_gold), a0_gate (\a0_gate) -> a0
+Presumably equivalent wires: v_gold (\v_gold), v_gate (\v_gate) -> v
+Presumably equivalent wires: rst_n_gold (\rst_n_gold), rst_n_gate (\rst_n_gate) -> rst_n
+Presumably equivalent wires: clk_gold (\clk_gold), clk_gate (\clk_gate) -> clk
+Changing input p of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.p_q_gate -> \u.p_q
+Changing input c3 of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.c3_q_gate -> \u.c3_q
+Changing input c2 of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.c2_q_gate -> \u.c2_q
+Changing input c1 of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.c1_q_gate -> \u.c1_q
+Changing input c0 of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.c0_q_gate -> \u.c0_q
+Changing input y of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.y_q_gate -> \u.y_q
+Changing input r3 of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.r3_q_gate -> \u.r3_q
+Changing input r2 of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.r2_q_gate -> \u.r2_q
+Changing input r1 of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.r1_q_gate -> \u.r1_q
+Changing input r0 of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.r0_q_gate -> \u.r0_q
+Changing input v of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.v_q_gate -> \u.v_q
+Changing input rst_n of cell u.u_core_gate (ot_dsrom_su_hcpost_lane): \u.rst_q_gate -> \u.rst_q
+Changing input p of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.p_q_gold -> \u.p_q
+Changing input c3 of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.c3_q_gold -> \u.c3_q
+Changing input c2 of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.c2_q_gold -> \u.c2_q
+Changing input c1 of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.c1_q_gold -> \u.c1_q
+Changing input c0 of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.c0_q_gold -> \u.c0_q
+Changing input y of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.y_q_gold -> \u.y_q
+Changing input r3 of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.r3_q_gold -> \u.r3_q
+Changing input r2 of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.r2_q_gold -> \u.r2_q
+Changing input r1 of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.r1_q_gold -> \u.r1_q
+Changing input r0 of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.r0_q_gold -> \u.r0_q
+Changing input v of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.v_q_gold -> \u.v_q
+Changing input rst_n of cell u.u_core_gold (ot_dsrom_su_hcpost_lane): \u.rst_q_gold -> \u.rst_q
+Presumably equivalent cells: u_gold u_gate ($scopeinfo) -> u
+Presumably equivalent cells: u.u_core_gold u.u_core_gate (ot_dsrom_su_hcpost_lane) -> u.u_core
+
+9. Executing HIERARCHY pass (managing design hierarchy).
+
+9.1. Analyzing design hierarchy..
+Top module:  \eq
+
+9.2. Analyzing design hierarchy..
+Top module:  \eq
+Removing unused module `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_old'.
+Removing unused module `$paramod$e6bd616c1744eb842e106acded7ff350e2006b4c\pr_new'.
+Removing unused module `\pr_new'.
+Removing unused module `\pr_old'.
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 6 unused modules.
+
+10. Executing EQUIV_SIMPLE pass.
+Found 617 unproven $equiv cells (29 groups) in eq:
+ Grouping SAT models for \o:
+  Trying to prove $equiv for \o [0]:ezsat
+ success!
+  Trying to prove $equiv for \o [1]:ezsat
+ success!
+  Trying to prove $equiv for \o [2]:ezsat
+ success!
+  Trying to prove $equiv for \o [3]:ezsat
+ success!
+  Trying to prove $equiv for \o [4]:ezsat
+ success!
+  Trying to prove $equiv for \o [5]:ezsat
+ success!
+  Trying to prove $equiv for \o [6]:ezsat
+ success!
+  Trying to prove $equiv for \o [7]:ezsat
+ success!
+  Trying to prove $equiv for \o [8]:ezsat
+ success!
+  Trying to prove $equiv for \o [9]:ezsat
+ success!
+  Trying to prove $equiv for \o [10]:ezsat
+ success!
+  Trying to prove $equiv for \o [11]:ezsat
+ success!
+  Trying to prove $equiv for \o [12]:ezsat
+ success!
+  Trying to prove $equiv for \o [13]:ezsat
+ success!
+  Trying to prove $equiv for \o [14]:ezsat
+ success!
+  Trying to prove $equiv for \o [15]:ezsat
+ success!
+  Trying to prove $equiv for \vo:ezsat
+ success!
+  Trying to prove $equiv for \fault:ezsat
+ success!
+ Grouping SAT models for \u.o_core:
+  Trying to prove $equiv for \u.o_core [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.o_core [31]:ezsat
+ success!
+ Grouping SAT models for \u.c3_in:
+  Trying to prove $equiv for \u.c3_in [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_in [31]:ezsat
+ success!
+ Grouping SAT models for \u.p_q:
+  Trying to prove $equiv for \u.p_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.p_q [31]:ezsat
+ success!
+ Grouping SAT models for \u.c3_q:
+  Trying to prove $equiv for \u.c3_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3_q [31]:ezsat
+ success!
+ Grouping SAT models for \u.c2_q:
+  Trying to prove $equiv for \u.c2_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2_q [31]:ezsat
+ success!
+ Grouping SAT models for \u.c1_q:
+  Trying to prove $equiv for \u.c1_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1_q [31]:ezsat
+ success!
+ Grouping SAT models for \u.c0_q:
+  Trying to prove $equiv for \u.c0_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0_q [31]:ezsat
+ success!
+ Grouping SAT models for \u.y_q:
+  Trying to prove $equiv for \u.y_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.y_q [31]:ezsat
+ success!
+ Grouping SAT models for \u.r3_q:
+  Trying to prove $equiv for \u.r3_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.r3_q [31]:ezsat
+ success!
+ Grouping SAT models for \u.r2_q:
+  Trying to prove $equiv for \u.r2_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.r2_q [31]:ezsat
+ success!
+ Grouping SAT models for \u.r1_q:
+  Trying to prove $equiv for \u.r1_q [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.r1_q [31]:ezsat
+ success!
+ Grouping SAT models for \u.r0_q:
+  Trying to prove $equiv for \u.r0_q [0]:ezsat
+ezsat
+ failed.
+  Trying to prove $equiv for \u.r0_q [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.r0_q [31]:ezsat
+ success!
+  Trying to prove $equiv for \u.v_q:ezsat
+ success!
+  Trying to prove $equiv for \u.rst_q:ezsat
+ success!
+  Trying to prove $equiv for \u.fault:ezsat
+ success!
+ Grouping SAT models for \u.o:
+  Trying to prove $equiv for \u.o [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.o [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.vo:ezsat
+ success!
+ Grouping SAT models for \u.p:
+  Trying to prove $equiv for \u.p [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.p [31]:ezsat
+ success!
+ Grouping SAT models for \u.c3:
+  Trying to prove $equiv for \u.c3 [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.c3 [31]:ezsat
+ success!
+ Grouping SAT models for \u.c2:
+  Trying to prove $equiv for \u.c2 [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.c2 [31]:ezsat
+ success!
+ Grouping SAT models for \u.c1:
+  Trying to prove $equiv for \u.c1 [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.c1 [31]:ezsat
+ success!
+ Grouping SAT models for \u.c0:
+  Trying to prove $equiv for \u.c0 [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.c0 [31]:ezsat
+ success!
+ Grouping SAT models for \u.y:
+  Trying to prove $equiv for \u.y [0]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [1]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [2]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [3]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [4]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [5]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [6]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [7]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [8]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [9]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [10]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [11]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [12]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [13]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [14]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [15]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [16]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [17]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [18]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [19]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [20]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [21]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [22]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [23]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [24]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [25]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [26]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [27]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [28]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [29]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [30]:ezsat
+ success!
+  Trying to prove $equiv for \u.y [31]:ezsat
+ success!
+  Trying to prove $equiv for \u.v:ezsat
+ success!
+  Trying to prove $equiv for \u.rst_n:ezsat
+ success!
+  Trying to prove $equiv for \u.clk:ezsat
+ success!
+Proved 616 previously unproven $equiv cells.
+
+11. Executing EQUIV_INDUCT pass.
+Found 1 unproven $equiv cells in module eq:
+ERROR: No SAT model available for cell u.u_core (ot_dsrom_su_hcpost_lane).
