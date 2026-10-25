@@ -30,3 +30,31 @@ Branch `claude/hbm-cores-w128-1025`.
   - Each has two mutants: valid bit unreset, and output data bit flipped.
   - Results are in `drst_fix/drst_check.json` when collected.
 - **Views and kits** (`physical/die_plan/hbm_arch_cores/w128/`): pin tables were derived top-down from the B2o Rh bank column and q_hub slot (see `mk_w128_views.py` docstring and `geom/`). Kits use `gen_core_kit_hbm.py` with the face shell on: +1 in / +1 out cycle on every crossing.
+
+### HBM-W128 CTS review + native bind note (2026-10-25 05:09 PDT)
+
+Place+CTS (GOAL=cts, review image only, no route):
+
+| core | cells (placed) | fill of free | bins>0.8 | pin->reg p90/max um | OT_HOLD_GATE (post-CTS, pre-repair) |
+|---|---|---|---|---|---|
+| ot_hbm_hc_bank128_pair_core@ba77076d4cc8 (x120) | 122,020 (synth 152,716) | 0.49 | 0 | 6.8 / 11.0 | **FAIL** wns -116.46 ps, 1827 reg2reg ep; ports -235.7 |
+| ot_hbm_hc_bank128_pair_first_core@0c39789d46b1 (x8) | synth 139,823 | 0.32 | 0 | 7.3 / 9.7 | PASS wns -63.35, 1070 ep |
+| ot_hbm_hc_subtree32_core@3abde8dae72d (x4) | synth 135,546 | 0.28 | 0 | 8.1 / 11.9 | PASS wns -14.57, 314 ep |
+
+pair_core hold FAIL: CTS skew report shows a N-face write_addr face flop at 519.8 ps
+source latency vs SRAM macro clk 288.5 ps (231 ps skew). Structural fix before route:
+macro-clock latency balance against the 3-face (W/E/N) face-flop ring (pair_skew / macro
+insertion), not hold-buffer padding. Needs a pair_core re-kit; first_core passes with -63.
+
+DRST check: results drst_fix/drst_check.json (gate PASS; MUT_NORST/MUT_DATA caught;
+SAT tempinduct inconclusive, killed).
+
+TOK-HBM native-bind note (pin/face cycles; native NQ4/NQ2 root views NOT changed):
+- every hardened pair adds the face shell: +1 in, +1 out cycle per crossing.
+- sum chain: +2 cycles per bank hop UNLESS the native bank sets the sum-bus CPI/CPO
+  pin registers to 0 (shell flops take their place) while keeping descriptor CPI/CPO;
+  then net added = 0 per hop. Recommended.
+- write path (write_addr/data/we): +1 (shell in-flop, no matching native register to drop).
+- qhub: 4 x subtree32 (2x2 in the old 734.4^2 W64 slot + 103.68 soft centre row);
+  +2 cycles on the reduction (shell in+out) unless the qhub data pin register is dropped.
+- bank context: sum hop 129.6 um (380.16 bank) / 302.4 um (552.96 bank), both < 405 reach.

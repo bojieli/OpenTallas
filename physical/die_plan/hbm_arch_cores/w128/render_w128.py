@@ -106,6 +106,7 @@ def main(out):
     ax.add_patch(Rectangle((m, m + S), Q - 2 * m, Q - 2 * (m + S), fc="0.8", ec="k"))
     ax.text(m + 5, Q / 2, "upper 3 adders + qhub control (soft, row channel 103.68 um)", fontsize=7)
     ax.set_title(f"q_hub u_hc_Q slot {Q}x{Q}: 4 x subtree32 {S}x{S}, results faces toward the centre row", fontsize=8)
+    ax.set_xlim(-10, Q + 10); ax.set_ylim(-10, Q + 10)
     ax.set_aspect("equal"); fig.tight_layout(); fig.savefig(out / "context_qhub.png", dpi=100); plt.close(fig)
     (out / "summary.json").write_text(json.dumps(dict(views=summary, bank_context=chk, column_height_um=round(tot, 2)), indent=1) + "\n")
     print(chk, tot)

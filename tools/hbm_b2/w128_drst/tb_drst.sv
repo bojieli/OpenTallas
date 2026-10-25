@@ -5,7 +5,9 @@
 //  (2) HC lane leaf ot_hdc_v41x_hcp_lanes G 8: gold = pre-fix source (multiplier DRST 1) vs gate = fixed source
 //      (.DRST(ADRST) = 0): lf identical every cycle, y identical whenever the leaf's sum is valid (u_add valid + SOR).
 // Random operands incl. zero/subnormal/inf/NaN classes, random valid, a mid-run reset pulse.  MUT_* defines inject the
-// mutants that must be caught.
+// mutants that must be caught (MUT_NORST: no reset delivered to the gate multiplier; MUT_DATA: output data bit
+// flipped).  MUT_VALID (one mid-pipeline valid bit unreset) is EXPECTED benign: reset is held >= 2 cycles with the clock
+// running (decision 2), so its reset neighbours flush it; it is reported, not counted as a required catch.
 module tb;
     reg clk = 0, rst_n = 0; always #1 clk = ~clk;
     reg v; reg [31:0] a, b;
@@ -18,7 +20,12 @@ module tb;
 `else
     ot_hdc_fp32_mul_lat
 `endif
-        #(.LAT(8), .DRST(0)) u_t (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(yt), .err(et), .valid_out(vt));
+        #(.LAT(8), .DRST(0)) u_t (.clk(clk),
+`ifdef MUT_NORST
+        .rst_n(1'b1),      // mutant: reset never delivered to the gate multiplier (valid bits included)
+`else
+        .rst_n(rst_n),
+`endif .valid_in(v), .a(a), .b(b), .y(yt), .err(et), .valid_out(vt));
     // leaf
     reg fst, gov; reg [7:0] lv, ss; reg [255:0] w, s; reg [127:0] x;
     wire [255:0] lyg, lyt; wire lfg, lft;

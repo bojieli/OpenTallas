@@ -1,0 +1,10 @@
+{
+  "what": "4-state iverilog random check of hcp_lanes leaf + ot_hdc_fp32_mul_lat after .DRST(ADRST) fix; gold = pre-fix source (591bcf802), compares valid-masked outputs",
+  "cycles": 3000, "mul_valid_compares": 2012, "leaf_valid_compares": 1964,
+  "gate": {"fails": 0, "verdict": "PASS"},
+  "MUT_NORST": {"fails": 9, "verdict": "CAUGHT", "mutant": "gate multiplier rst_n tied 1'b1 (valid bits unreset)"},
+  "MUT_DATA": {"fails": 803, "verdict": "CAUGHT", "mutant": "one product data bit flipped"},
+  "MUT_VALID": {"fails": 0, "verdict": "BENIGN", "note": "one mid-pipeline valid bit unreset; reset held 3 clocked cycles flushes it from reset neighbours -> not observable, expected"},
+  "sat_tempinduct": {"verdict": "INCONCLUSIVE", "note": "yosys sat -tempinduct on mul miter: base cases proven to depth 8, induction step 8 did not finish in 41 min (1.3M vars); killed PID 3054352 on epyc3"},
+  "host_dir": "epyc3:/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/rf/drst_sim_3k"
+}
