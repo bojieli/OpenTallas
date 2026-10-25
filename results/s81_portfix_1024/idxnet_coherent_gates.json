@@ -1,0 +1,14 @@
+{
+ "scope": "Canonical PORTFIX source composed with IDXNET endpoints and real reserve copy-B PHY columns",
+ "endpoint_sources": ["2d75979df", "10fc8bc35", "da1a0d679"],
+ "source_merges": ["boot-configured qf, no external uid", "qfs root-only 2-beat qc and one sticky fault", "six-frame rt420 capture parents", "no unused TP-end mu_rt", "HOST+AB+TP on s7N", "AB+TP_RX on s0S", "internal vmux/TX fault codes folded into sticky fault"],
+ "iqf": {"verdict": "PASS", "cases": 7, "positive": 2, "negative_controls": 5},
+ "endpoint_calendars": {"verdict": "PASS", "cases": 4, "seeds": [1,5], "late_ring_slots": ["R3","T3"]},
+ "s0S_ab_tpr": {"verdict": "PASS", "MU_A_beats": 280, "MU_B_beats": 240, "latency_user_values_same_cycles": 120, "return_cut_beats": 240, "return_landed_beats": 160, "wrong_copy_mutant": "caught", "TP_query_scoreboard": "PASS", "removed_return_tag_port": "P has no mu_rt consumer; all payloads/cycles, A/B receiver tags and fault checks retained"},
+ "added_data_cycles": 0,
+ "status_cycles": "qfs qf-fault fold is registered +1 status-only edge; data/serializer timing unchanged",
+ "new_plan_lane_cycles": {"qc":59,"ql":60,"tpn_out":25,"tpn_in":25,"tps_out":50,"tp_step2_forward":22},
+ "physical_signoff": "NOT RUN",
+ "full_TP4_global_rank_numeric_gate": "OPEN, compiler/TX ordering work owned by IDXNET/TOK-DS",
+ "combined_bind_first_attempt": {"verdict":"FAIL","unbound":9,"tied":0,"undriven":0,"multiply_bound":0,"errors":13,"diagnosis":"nine PORTFIX fault feeder lanes and retired s5Nx06 missing in regenerated plan; three SerDes IO name type splits"}
+}

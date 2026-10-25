@@ -1,0 +1,15 @@
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-s81-idxnet-bind/tree
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-idxnet-bind/tree
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-s81-idxnet-bind/tree
+ot-run: localhost      admits     7 GB (avail 328, reserve 0, fresh 254, peak 3.1, headroom 0, waiters 5/80 GB) load 127/256 running 36 disk 1071 GB 
+ot-run: STAGE: the staged scripts name other lane(s) /srv/opentallas-scratch/claude/stw-s81c-cap30, /srv/opentallas-scratch2/claude/codex-s81-f2b-bind, /srv/opentallas-scratch2/claude/codex-s81-portfix, /srv/opentallas-scratch2/claude/s81-portbind; not copied (--stage says the inputs are complete)
+ot-run: SPILL: copying /srv/opentallas-scratch2/claude/codex-s81-idxnet-bind (0.2 GB) localhost -> intel2 (no host with --dir admits 12 GB now)
+ot-run: SPILL: copied 3145 changed entries in 2 s; running on intel2; written files go back to localhost after the run
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2453114-1792923022 after 0 s
+net_s1: PASS lep_idxnet seed 1: tp D0<->D1 97/96, D2->D3 97, Q root->D5 31 words, relay->D6 24, D4 ql 0, D4.ca 72 (tm 3 edges + tree), F1-F4 faults raised
+net_s5: PASS lep_idxnet seed 5: tp D0<->D1 97/96, D2->D3 97, Q root->D5 31 words, relay->D6 24, D4 ql 0, D4.ca 72 (tm 3 edges + tree), F1-F4 faults raised
+net_r3: PASS lep_idxnet seed 1: tp D0<->D1 97/96, D2->D3 97, Q root->D5 31 words, relay->D6 24, D4 ql 0, D4.ca 72 (tm 3 edges + tree), F1-F4 faults raised
+net_t3: PASS lep_idxnet seed 1: tp D0<->D1 97/96, D2->D3 97, Q root->D5 31 words, relay->D6 24, D4 ql 0, D4.ca 72 (tm 3 edges + tree), F1-F4 faults raised
+LEP_IDXNET_GATE PASS
+ot-run: RAN on intel2 (unit oth-ubuntu-2453114-1792923022): exit 0
+ot-run: SPILL: outputs copied back intel2 -> localhost; RAN on intel2: exit 0

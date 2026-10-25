@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "scope": "TP endpoint, query serializer, cut-through query relay, tm merge; functional only",
+  "base_cases": [
+    "seed1",
+    "seed5",
+    "RSLOT3",
+    "TSLOT3"
+  ],
+  "mutants_caught": [
+    "IDXDMX",
+    "QBEAT",
+    "QRL",
+    "TPMRG"
+  ],
+  "iqf_gate": "7/7 PASS (2 bases, 5 expected negative controls)",
+  "h4_mu_regression": "PASS",
+  "nominal_counts": {
+    "tp_pairs": [
+      96,
+      96,
+      96
+    ],
+    "query_words": [
+      28,
+      24,
+      0
+    ],
+    "ca_beats": 72,
+    "data_mismatches": 0,
+    "stray_beats": 0,
+    "tm_latency_mismatches": 0
+  },
+  "latency_edges": {
+    "qfs_qs_to_qc_beat0": 4,
+    "qfs_qs_to_qc_beat1": 5,
+    "lep_tm_to_ca": 3,
+    "lep_query_release_to_ql": 2
+  },
+  "hardening": "NOT SIGNED; qfs raw shared-valid inputs1795/1797 and inherited lep production face failures remain; no P&R launched",
+  "runs": "intel2:/srv/opentallas-scratch2/claude/codex-s81-idxnet/{base,mut,regr}; intel1 same/qfs; copied back epyc1"
+}

@@ -1,0 +1,173 @@
+{
+ "lanes": [
+  {
+   "lane": "tp__bk_sel__s_7N_LP",
+   "src": {
+    "part": "bk_sel",
+    "bus": "tp_o1"
+   },
+   "dst": {
+    "part": "s_7N_LP",
+    "bus": "tp_i0"
+   },
+   "width": 276,
+   "cycles": 25,
+   "rtl_src": "u_bk_sel.tpn_o",
+   "rtl_dst": "u_s_7N.tp_i",
+   "wire": "idxn_tp__bk_sel__s_7N_LP",
+   "old_connections": [
+    null,
+    null
+   ]
+  },
+  {
+   "lane": "tp__s_7N_LP__bk_sel",
+   "src": {
+    "part": "s_7N_LP",
+    "bus": "tp_o0"
+   },
+   "dst": {
+    "part": "bk_sel",
+    "bus": "tp_i0"
+   },
+   "width": 276,
+   "cycles": 25,
+   "rtl_src": "u_s_7N.tp_o",
+   "rtl_dst": "u_bk_sel.tpn_i",
+   "wire": "idxn_tp__s_7N_LP__bk_sel",
+   "old_connections": [
+    null,
+    null
+   ]
+  },
+  {
+   "lane": "tp__bk_sel__s_7S_LP",
+   "src": {
+    "part": "bk_sel",
+    "bus": "tp_o0"
+   },
+   "dst": {
+    "part": "s_7S_LP",
+    "bus": "tp_i0"
+   },
+   "width": 276,
+   "cycles": 50,
+   "rtl_src": "u_bk_sel.tps_o",
+   "rtl_dst": "u_s_7S.tp_i",
+   "wire": "idxn_tp__bk_sel__s_7S_LP",
+   "old_connections": [
+    null,
+    null
+   ]
+  },
+  {
+   "lane": "tp__s_0S_LP__s_0N_LP",
+   "src": {
+    "part": "s_0S_LP",
+    "bus": "tp_o0"
+   },
+   "dst": {
+    "part": "s_0N_LP",
+    "bus": "tp_i0"
+   },
+   "width": 276,
+   "cycles": 22,
+   "rtl_src": "u_s_0S.tp_o",
+   "rtl_dst": "u_s_0N.tm",
+   "wire": "idxn_tp__s_0S_LP__s_0N_LP",
+   "old_connections": [
+    null,
+    null
+   ]
+  },
+  {
+   "lane": "qc__iqf__s_0N_LP",
+   "src": {
+    "part": "iqf",
+    "bus": "qc_o0"
+   },
+   "dst": {
+    "part": "s_0N_LP",
+    "bus": "qc_i0"
+   },
+   "width": 258,
+   "cycles": 59,
+   "rtl_src": "u_iqf.qc",
+   "rtl_dst": "u_s_0N.qc",
+   "wire": "idxn_qc__iqf__s_0N_LP",
+   "old_connections": [
+    null,
+    null
+   ]
+  },
+  {
+   "lane": "ql__s_0N_LP__iqf",
+   "src": {
+    "part": "s_0N_LP",
+    "bus": "ql_o0"
+   },
+   "dst": {
+    "part": "iqf",
+    "bus": "ql_i0"
+   },
+   "width": 513,
+   "cycles": 60,
+   "rtl_src": "u_s_0N.ql",
+   "rtl_dst": "u_iqf.ql",
+   "wire": "idxn_ql__s_0N_LP__iqf",
+   "old_connections": [
+    null,
+    "iqf_ql"
+   ]
+  }
+ ],
+ "reserve_phys": [
+  {
+   "instance": "u_lk_EN2",
+   "module": "ot_pdie_serdes_col",
+   "part": "lk_EN2",
+   "parent": "u_s_7N",
+   "tx_port": "tx2",
+   "rx_port": "rx2",
+   "clock_source": "ck_b_lk_EN0",
+   "reset_source": "rsleaf_rs_62_20_1_ck_b_lk_EN0"
+  },
+  {
+   "instance": "u_lk_EN3",
+   "module": "ot_pdie_serdes_col",
+   "part": "lk_EN3",
+   "parent": "u_s_7N",
+   "tx_port": "tx3",
+   "rx_port": "rx3",
+   "clock_source": "ck_b_lk_EN1",
+   "reset_source": "rsleaf_rs_62_30_3_ck_b_lk_EN1"
+  },
+  {
+   "instance": "u_lk_WS2",
+   "module": "ot_pdie_serdes_col",
+   "part": "lk_WS2",
+   "parent": "u_s_0S",
+   "tx_port": "tx2",
+   "rx_port": "rx2",
+   "clock_source": "ck_b_lk_WS0",
+   "reset_source": "rsleaf_rs_19_0_1_ck_b_lk_WS0"
+  },
+  {
+   "instance": "u_lk_WS3",
+   "module": "ot_pdie_serdes_col",
+   "part": "lk_WS3",
+   "parent": "u_s_0S",
+   "tx_port": "tx3",
+   "rx_port": "rx3",
+   "clock_source": "ck_b_lk_WS1",
+   "reset_source": "rsleaf_rs_21_0_ck_b_lk_WS1"
+  }
+ ],
+ "removed_ports": [
+  "iqf_ql",
+  "iqf_qc0",
+  "iqf_qc1"
+ ],
+ "errors": [],
+ "added_adapter_cycles": 0
+}

@@ -1,0 +1,12 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-idxnet-bind/tree_r2
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-s81-idxnet-bind/tree_r2
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-idxnet-bind/tree_r2
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-s81-idxnet-bind/tree_r2
+ot-run: localhost      admits   179 GB (avail 406, reserve 0, fresh 160, peak 2.4, headroom 0, waiters 0/0 GB) load 83/256 running 28 disk 967 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-3679318-1792923632 after 0 s
+PASS lep_mu: 6 users on the static calendar, copies A/B by the slot bit (user 0 on A), 280 + 240 beats bit-exact with tags, 2 landed + replayed per copy, latency user cycle- and bit-identical to the single-user run (120 beats), F1/F2/F3 faulted; return to the A/B master over pairs A and B: 240 cut-through and 160 landed beats exact
+FAIL lep_mu: recv A 280/280 B 0/240 mismatches 80 identity 1 main faults 0110011 F1 1 F2 1 F3 1 return P 240/240 L 160/160
+PASS lep_idxnet seed 1: tp D0<->D1 97/96, D2->D3 97, Q root->D5 31 words, relay->D6 24, D4 ql 0, D4.ca 72 (tm 3 edges + tree), F1-F4 faults raised
+LEP_AB_TPR_GATE PASS
+ot-run: RAN on localhost (unit oth-ubuntu-3679318-1792923632): exit 0
