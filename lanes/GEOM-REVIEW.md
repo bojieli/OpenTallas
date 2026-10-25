@@ -50,3 +50,6 @@ Open findings per lane:
 - HBM-ARCH: B2l PASS-COND (RTL relay binding + token re-run; clock root driver off core u_tkm_SW_tile19; root crossing band + q_sm channels as blockages; halos). Earlier bankq0/gq_land/gq_issue FAIL stand.
 - QC-A0 / KVG3-CORES: batch-1 PASS-COND conditions stand (A0 clock contract/equivalence; KV cores straps-as-constants).
 Checklist now includes "reset distribution matches the owner rule" (TILE_BRIEF.md); margins INFO only.
+
+## RESUMED 2026-10-24 19:28 PDT (rtx-pro coordinator; lane agent)
+2026-10-24 19:28 PDT GEOM-REVIEW: resumed. Worktree epyc1:/srv/opentallas-scratch/claude/wt/geom-review (claude/geom-review-1024, ff to main d13ff7c783). Running: S81 g3k5 frame reviews (7 kits; layout_review + propagated STA TT/FF in docker grgeom_* on epyc1). Watching this file for GEOM REQ lines.
