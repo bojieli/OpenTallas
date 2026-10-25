@@ -1541,7 +1541,10 @@ def main(argv=None):
     T = plan["partition_types"]
     OLD_WH.update({tn: tuple(t["outline_um"]) for tn, t in base["partition_types"].items()})
     soft_with = [tn for tn, t in T.items() if not t.get("hard")]
-    place_fail = place_contents(plan, out, [tn for tn in soft_with if tn in changed or T[tn].get("hard_cores")], log, seed=seed)
+    place_types = [tn for tn in soft_with if tn in changed or T[tn].get("hard_cores")]
+    if a.native_hc_ring:
+        place_types = [tn for tn in place_types if tn not in native_hc_ring.TOP + native_hc_ring.BOTTOM]
+    place_fail = place_contents(plan, out, place_types, log, seed=seed)
     if a.native_hc_ring:
         native_hc_ring.apply(plan, out, INP, log)
     ist_fail = internal_stations(plan, out, soft_with, log)

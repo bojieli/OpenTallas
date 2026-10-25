@@ -92,6 +92,29 @@ def apply(plan, out, inputs, log):
                 horizontal_channels_um=[17.28,34.56,34.56,34.56,17.28],
                 central_channel_um=round(xsites[1]-xsites[0]-PAIR_WH[0]-2*HALO,4)))
             xx += ww
+    # Kept core clock terminals are interfaces, not invented soft tap sites.
+    import b2o
+    import schema as S
+    P = S.Plan(plan)
+    for row in manifest["bank_rows"]:
+        tn = row["type"]
+        t = T[tn]
+        t["clock"]["core_taps"] = "early"
+        for c in t["hard_cores"]:
+            pins = json.loads((out / c["pins_file"]).read_text())
+            if c.get("orient", "R0") != "R0":
+                offset = b2o.flip_track_offset(P, c, pins, [n for n,p in P.parts.items() if p["type"]==tn])
+                if offset is None:
+                    raise ValueError(f"{tn} {c['inst']}: mirrored native pins have no legal track offset")
+                c["track_offset_um"] = offset
+            pin = next(q for q in pins if q["name"]=="clk")
+            px,py = pin["x"],pin["y"]
+            if c.get("orient")=="MY":
+                px=c["outline_um"][0]-px
+            ox,oy=c["origin_um"]; dx,dy=c["track_offset_um"]
+            t["clock"]["taps"].append(dict(name=c["inst"]+".clk",kind="core",
+                xy=[round(ox+px+dx,4),round(oy+py+dy,4)],insertion_ps=250,
+                budget_owner=c["module"],note="250ps common clock budget; native physical insertion measurement required"))
     (out / "native_hc_ring.json").write_text(json.dumps(manifest,indent=1)+"\n")
     log.append(f"native W128 HC ring: 2 x 4 direct-neighbour banks in unchanged {total_w:g}x2419.2 rectangle; each bank 2 x 4 exact pair cuts; binder adoption required")
     return manifest
