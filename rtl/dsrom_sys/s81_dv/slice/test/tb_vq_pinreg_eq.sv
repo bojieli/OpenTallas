@@ -47,7 +47,7 @@ module tb_vq_pinreg_eq;
             gap = $urandom % 6; repeat (gap) begin tick; idle; end
             i = $urandom % 2;    // stream y or u for this vector
             for (j = 0; j < 8; j = j + 1) begin
-                if (i) begin y_v = 1; y_i = j; for (gap = 0; gap < 8; gap = gap + 1) y[32 * gap +: 32] = rf32(0); end
+                if (i) begin y_v = 1; y_i = j; for (gap = 0; gap < 8; gap = gap + 1) y[32 * gap +: 32] = rf32(0) & 32'hFFFF0000; end
                 else begin u_v = 1; u_i = j; for (gap = 0; gap < 8; gap = gap + 1) u[32 * gap +: 32] = rf32(0); end
                 tick; y_v = 0; u_v = 0; idle;
                 gap = $urandom % 3; repeat (gap) begin tick; idle; end
