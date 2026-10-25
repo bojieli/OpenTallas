@@ -1344,6 +1344,25 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     (u_tv.line[4] == u_k5.g_r.v == valid_out) is dropped while its upstream index-line constants are still being
     refined and needs adding rounds after them; 10 left it free -> false NOT EQUIVALENT (gunit_l4 895 points,
     EQUIVALENT at 24 rounds, 738 s)."""
+    def add_twins():
+        """structural twins (see the call site): gold-only flops whose next-state literal is a matched flop's."""
+        n_add = 0
+        twins = {}
+        for c in L.matched:
+            if c.startswith("ff:") and L.dlit.get(("gold", c), 0) > 1:
+                twins.setdefault(L.dlit[("gold", c)] >> 1, []).append(c)
+        for k in L.gonly:
+            if not k.startswith("ff:") or ("gold", k) in L.hyp:
+                continue
+            dk = L.dlit.get(("gold", k), 0)
+            for c in (sorted(twins.get(dk >> 1, [])) if dk > 1 else []):
+                inv = (dk ^ L.dlit[("gold", c)]) & 1
+                if ("gold", c) not in L.hyp:
+                    L.hyp[("gold", k)] = ("eq", "gold", c, inv)
+                    n_add += 1
+                    break
+        return n_add
+
     relayout(L, log)
     renamed(L, log)
     replica_proposals(L, log)
@@ -1406,20 +1425,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 # test, which skips constant-looking bits: elemB ot_v41_fadd SPLIT9 u_c8 r[24] (the round carry,
                 # almost never 1 in random simulation) == g_cy_copy.cyq[k] (kept copies of the same r8[24]); left
                 # free, it made man_q[23] of 23 adders differ (PATH-S81/BLEC 10-25)
-                twins = {}
-                for c in L.matched:
-                    if c.startswith("ff:") and L.dlit.get(("gold", c), 0) > 1:
-                        twins.setdefault(L.dlit[("gold", c)] >> 1, []).append(c)
-                for k in L.gonly:
-                    if not k.startswith("ff:") or ("gold", k) in L.hyp:
-                        continue
-                    dk = L.dlit.get(("gold", k), 0)
-                    for c in (sorted(twins.get(dk >> 1, [])) if dk > 1 else []):
-                        inv = (dk ^ L.dlit[("gold", c)]) & 1
-                        if ("gold", c) not in L.hyp and tried[("gold", k, c, inv)] < 2:
-                            L.hyp[("gold", k)] = ("eq", "gold", c, inv)
-                            new += 1
-                            break
+                new += add_twins()
                 # a cohort representative (partnered: other gold flops' "eq" partner) pairs too: synthesis may
                 # have merged the whole cohort into a third, name-matched register (kv3_pv_pair: every lane's
                 # u_prod.v3 == the slice's fc[2]; the rep left free made all 32 lane fault registers differ)
@@ -1571,6 +1577,14 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # State relations rejected before aliases/copies settled can become
             # inductive later; retry while candidates are still being added.
             fsm_proposals(L, log)
+        if not adding:
+            # exact twins dropped with an upstream relation come back once it holds again (their obligation is
+            # the same literal on both sides, so they never fail on their own): elemB g_ch[1] valid chain ==
+            # g_ch[0] (80 register levels) was dropped in a refinement round and stayed free (cerr[11..15])
+            for _ in range(256):
+                L.build(with_compare=False, with_hyp=False)
+                if not add_twins():
+                    break
         if not L.hyp:
             return
         m, kind = L.build(with_compare=False, with_hyp=True)
