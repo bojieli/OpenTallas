@@ -198,10 +198,15 @@ module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7, RESET_PIN=0)(
  end endgenerate
  wire jexp=jrun&&(jage==J_LAT||jage==J_LAT+1||jage==J_LAT+2||jage==J_LAT+3||jage==2*J_LAT+1||jage==2*J_LAT+3||jage==J_OUT);
  wire bad=(|sf_r)||(jv!={16{jexp}})||(jexp&&(|jerr))||(go_r&&jrun);
+ // Port registers drive only their pins (face_guard): the hold/sticky feedback lives in separate kept copies, so the
+ // output flops y[*]/fault have no internal load. Zero cycle change: y(t+1)=load?jy:y_hold(t) with y_hold(t)==y(t).
+ (* keep = "true", dont_touch = "true" *) reg[511:0] y_hold;
+ (* keep = "true", dont_touch = "true" *) reg fault_hold;
  always @(posedge clk or negedge local_rst_n)begin
-  if(!local_rst_n)begin jrun<=0;jage<=0;y_valid<=0;fault<=0;end
+  if(!local_rst_n)begin jrun<=0;jage<=0;y_valid<=0;fault<=0;fault_hold<=0;end
   else begin
-   if(bad)fault<=1;
+   if(bad)fault_hold<=1;
+   fault<=fault_hold|bad;                           // port copy: same value/edge as the sticky flag, drives only its pin
    y_valid<=jrun&&jage==J_OUT;
    if(go_r)begin jrun<=1;jage<=0;end
    else if(jrun)begin jage<=jage+1'b1;if(jage==J_OUT)jrun<=0;end
@@ -211,7 +216,8 @@ module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7, RESET_PIN=0)(
   if(jrun&&jage==J_LAT)xr<=jy;                      // L5_0
   if(jrun&&jage==J_LAT+2)xr<=jy;                    // L5_2
   if(jrun&&jage==2*J_LAT+1)yr<=jy;                  // L6_0
-  if(jrun&&jage==J_OUT)y<=jy;
+  if(jrun&&jage==J_OUT)y_hold<=jy;
+  y<=(jrun&&jage==J_OUT)?jy:y_hold;                // port copy: same value/edge as the held result, drives only its pin
  end
 endmodule
 
