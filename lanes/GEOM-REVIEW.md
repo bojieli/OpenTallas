@@ -729,3 +729,4 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
   (2) Copy zh/ctl decode results per consumer group (<=64 loads, registered) as in the A verdict.
   (3) Zone taps + F1 IO basis (holds -34..-40 are output ports ap[*] and zone-internal pairs, as before).
   This applies to all four B mirrors (ES/EN/WN/WS). Do not route more B mirrors until the post-synth fanout gate passes. Owner KV-CORES (astk).
+2026-10-25 06:44 PDT GEOM-REVIEW-4: CLAIM [AUTOPILOT structural.tsv b7b3b87a8d8f + bf431215b25b + deb403d04c70] kv3_astk EN/WN/WS variant B
