@@ -478,7 +478,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
            "export POST_CTS_TCL = /work/tap_balance.tcl",
            f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
-           f"export OT_TAP_WINDOW_PS = {float(P.clock['insertion_tol_ps']):g}",
+           # decision 5 (d) (owner 2026-10-24): every local tree balanced to the common latency within a 20 ps window
+           # (clock.local_window_ps; insertion_tol_ps stays the kit SDC seam-hold budget), padding step <= 10 ps
+           f"export OT_TAP_WINDOW_PS = {float(P.clock.get('local_window_ps', 20.0)):g}",
+           f"export OT_TAP_TOL_PS = {float(P.clock.get('local_tol_ps', 10.0)):g}",
            f"export OT_TAP_PITCH_UM = {S.tap_pitch(P, tn):g}",
            # CP2: hard-core internal clock latency (core_latency.txt: inst pin ps tap) for tap_balance.tcl's effective
            # arrival, and the early core taps (core_taps.txt) clock_taps.tcl hangs the core clock pins on

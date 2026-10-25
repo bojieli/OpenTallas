@@ -153,8 +153,11 @@ ERROR only under `--completeness`, counts in `summary.xdie_counts`):
 - `ft_budget` (e): per type, over-the-top ft bits (E-W slots on M8, N-S on M9, turning slots on both) + non-ft M8 / M9
   face pins <= usable M8 / M9 tracks across the type x `type.ft_budget[L]` (default `layer_budget.cut_avail[L]`).
 
-R4 (owner clock rule, COORD 10-23 19:55): `OT_TAP_CHECK` (tree insertion) and `OT_CLOCK_TAPS` (sinks per tap) only
-WARN. The hard clock checks are face-flop spread <= 80 ps (TT+FF, RC) and seam skew <= 80 ps to the common latency.
+R4 (owner clock rule, COORD 10-23 19:55; gate SUPERSEDED by owner decision 5, 2026-10-24): `OT_TAP_CHECK` (tree
+insertion) and `OT_CLOCK_TAPS` (sinks per tap) only WARN. The clock gate is the RELATED launch/capture flop-pair skew
+with CPPR <= 80 ps at TT and FF (seam and intra-partition pairs) plus propagated-clock STA closing TT setup / FF hold
+(60/25 ps); face-flop spread is an INFO column.  Local tap trees: balanced to the common latency within
+`clock.local_window_ps` (20) by tap_balance.tcl (step `clock.local_tol_ps`, 10).
 Tap method (CP1 r8 RULING, COORD 10-23 21:26): every partition gets a GRID of clock taps at `budgets.tap_pitch_um`
 (default 400 um, or type `clock.tap_pitch_um`), every sink on its nearest tap, trees balanced to the common latency.
 `clock.tap_mode` `grid+sinks` (alias `sinks`) only ADDS sink-anchored taps (taps.py) for face-register clusters after
@@ -283,6 +286,30 @@ The runner picks a scratch2 host with `ot-run --pick`, runs there via `ot-run`, 
 `DIE-CI LATEST:` line of ~/coord/HANDOFF.md current.
 
 Optional FT bit sites: a slot may declare `bit_sites_um` as internal stages j=1..stations-1, each containing width+1 cell lower-left x/y coordinates (payload bits then epoch), and `bit_site_cell_um` as the allocated width/height envelope. The physical generator emits exact sites; the hook requires real row/site alignment, row orientation, core bounds and master dimensions. Slots without this declaration keep their existing placement. Validate actual macro/cell overlap and paired-bit reach in the placed ODB before routing; coordinates alone do not establish those gates.
+
+## Die clock (`die_clock.py`, lane CLOCK, owner decision 5 2026-10-24)
+
+    die_clock.py run PLAN --out DIR [--leaf-um 1000] [--rep-um 450] [--pad sta|level] [--core-early off|pad]
+    die_clock.py render DIR --plan PLAN            # tree, keep-outs, tap arrivals, red = hops > 400 um (4W NDR)
+
+The die-level clock from the plan's spine root to EVERY partition clock tap (schema.tap_grid + early core taps), on
+M8/M9 with a 2W2S NDR (4W on hops > 400 um), BUFx24 only:
+- trunk root -> die centre; binary H-tree bisection (one axis and one leg layer per level).  The top 4 levels may move
+  a split +-25 % onto a partition edge when that cuts less related-pair weight (seam launch/capture taps by bits,
+  neighbouring taps of a partition): seam neighbours stay on one branch.  Nodes slide along their incoming leg to the
+  least-blocked crossing for their outgoing legs (die channels between hard cores).
+- one cut count per level (escalated until every legalised segment <= 1.15 rep_um), no buffer on a hard core / PHY
+  macro / outside the die, pruned branches end in a dummy first stage, every leaf drives the same number of tap
+  drivers (dummies), one equal-stage last-mile chain per tap: EVERY root -> tap path has the same cells and fan-outs.
+- `--pad sta` (default): wires keep their geometry and an STA loop (OpenSTA on the exact ladder RC, mean of TT/FF)
+  adds wire pads (serpentine) on the faster branch at every node and on each tap's chain, spread over the leg's
+  segments.  `--pad level`: every segment of a level / chain index padded to the longest (exact by construction, but
+  2-5x the wire on macro-dense dies).
+- outputs: ctree.v (module die_ctree: root -> t_<inst>__<port>), ctree.spef, tree.json, place.json, pads.json,
+  clock_report.json (insertion, tap skew, slew, related pair skew per seam / intra-partition tap pair, CPPR from the
+  lowest common node, OCV 3/5 % on the uncommon path as INFO) and die_sta.py spine files spine_<C>.json
+  (`die_sta.py run --spine-branch spine_{c}.json`, or the netlist itself with `--spine-tree DIR`).
+- `meta.taps_on_keepout` lists plan taps sitting on a PHY / hard core (a plan defect for the die lane).
 
 ## Die STA (`die_sta.py`, G4 seam timing; lane DIE-STA 10-24)
 
