@@ -150,7 +150,8 @@ int main(int argc, char** argv) {
         for (int w = 0; w < 7; w++) r.f_cnt[w] = 0;
         bool go = false;
         x.is_v = 0; for (int w = 0; w < 5; w++) x.is_d[w] = 0;
-        for (int w = 0; w < 35; w++) { x.ri_w[w] = RIW.count(i) ? RIW[i][w] : 0; x.ri_e[w] = RIE.count(i) ? RIE[i][w] : 0; x.ci_b[w] = 0; }
+        for (int w = 0; w < 35; w++) { x.ri_w[w] = RIW.count(i) ? RIW[i][w] : 0; x.ri_e[w] = RIE.count(i) ? RIE[i][w] : 0; }
+        for (unsigned w = 0; w < sizeof(x.ci_b) / sizeof(x.ci_b[0]); ++w) x.ci_b[w] = 0;
         for (int w = 0; w < 9; w++) x.vi[w] = VIN.count(i) ? VIN[i][w] : 0;
         for (int w = 0; w < 44; w++) x.xf[w] = XFD.count(i) ? XFD[i][w] : 0;
         x.xf_v = XFV.count(i) ? XFV[i] : 0; x.xf_s = XFS.count(i) ? XFS[i] : 0;

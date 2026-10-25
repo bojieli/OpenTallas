@@ -37,6 +37,8 @@ def rtlc_ports(src):
     """
     lines = []
     for line in src.splitlines(keepends=True):
+        if re.search(r"\bot_s81sl_xg(?:t)?(?:_xo)?\s+u_xg\b", line):
+            line = line.replace(".ci_b(ci_b)", ".ci_b(ci_b[1075:0])")
         if re.search(r"\bot_s81sl_xrt[13]\s+u_xr\b", line):
             for pin, expr in (("dl_e", "dl_e[1075:1]"), ("dl_w", "dl_w[1075:1]"),
                               ("dl_vb", "dl_vb[275:1]"), ("ci_b", "ci_b[1075:0]"),
