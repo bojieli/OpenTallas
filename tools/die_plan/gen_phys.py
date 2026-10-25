@@ -155,14 +155,20 @@ def core_tap_rows(P, tn):
     return out
 
 
+def edge_clock_pins(P, tn):
+    """[(port, x, y, period_mult)]: the type's PHY-edge clocks (schema clock.edge_clocks), snapped like taps."""
+    return [(e["port"],) + _snap_tap(P, *e["tap_um"]) + (int(e.get("period_mult", 1)),)
+            for e in P.types[tn].get("clock", {}).get("edge_clocks", [])]
+
+
 def tap_pins(P, tn):
-    """[(port, x, y)]: every clock tap (+ early core taps) + the reset tap."""
+    """[(port, x, y)]: every clock tap (+ early core taps) + the reset tap (+ PHY-edge clock pins)."""
     import reset_tree as RT
     if RT.wavefront(P) and not P.types[tn].get("hard"):     # OWNER DECISION 13: the wavefront reset IN site
         rs = tuple(RT.in_pin(P, tn))
     else:
         rs = tuple(tap_points(P, tn)[1])
-    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + rs]
+    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + rs] + [e[:3] for e in edge_clock_pins(P, tn)]
 
 
 def reset_out_pins(P, tn):
@@ -308,6 +314,9 @@ def sdc(P, tn, pins):
            f"# clock taps (R4 grid, one port per tap, local trees): {' '.join(cks)}\n"
            f"create_clock -name clk -period {per:.4f} [get_ports {{{' '.join(cks)}}}]\n"
            f"# neighbour boundary flops run on the budgeted insertion ({P.clock['insertion_ps']:g} ps): virtual IO clock\n"
+           + "".join(f"# PHY-edge clock (plan clock.edge_clocks): synchronous with clk, period {m} x T\n"
+                     f"create_clock -name {n} -period {m * per:.4f} [get_ports {n}]\n"
+                     for n, _x, _y, m in edge_clock_pins(P, tn)) +
            f"create_clock -name vclk -period {per:.4f}\n"
            f"set_clock_latency -source {lat:.4f} [get_clocks vclk]\n"
            f"set_clock_uncertainty {t_lib(UNC_SETUP_PS):.4f} -setup [all_clocks]\n"

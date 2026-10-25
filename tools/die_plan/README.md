@@ -34,10 +34,13 @@ python3 -m pytest -q tools/die_plan/
     the die edge.
   - `window_um` = [lo, hi] along the face in die coordinates: y for E/W faces, x for N/S faces.
   - `layers` holds 1 or 2 layers, which must run in the right direction: H (M4/M6) for E/W faces, V (M5/M7) for N/S.
-    Partition pins stay at or below `layer_budget.partition_signal_max`; the G0 checker enforces that limit.
+    Partition pins stay at or below `layer_budget.partition_signal_max` (M7); the G0 checker enforces that limit, and
+    a pin on M8/M9 is always an ERROR (`m89_signals`, see R3 below).
   - `pin_positions(port)` computes the exact pins. Bit i goes on `layers[i % n]`, and the bits are spread evenly over
     the window on whole tracks. Both partitions use the same function, so their pins coincide by construction.
-  - Every port is registered on both sides: a boundary flop at the source pin and one at the destination pin.
+  - **R2** (ruling 9.10, 2026-10-24): every PARTITION port is registered on both sides, a boundary flop at the source
+    pin and one at the destination pin. Tiles inside one partition may connect directly (no pin register) when that
+    connection is timed in the partition's own sign-off.
 - **Bus**: a declared partition interface (`partition_types.*.buses`, dir in/out, width, and the `leaf` inst.port it
   binds to). Each bus of every instance is bound by exactly one port. An unbound bus is an error, because tie-offs are
   not allowed. A fan-out is several explicit out buses.
@@ -68,10 +71,24 @@ python3 -m pytest -q tools/die_plan/
   Legacy `release: "counted"`: one async-assert / sync-deassert synchroniser per partition (per tap for a tap grid);
   G0 warns that it does not meet the rule. Data and ft flops have no reset (`data_reset` is const false), and each
   station carries one epoch bit (`epoch_bit` is const true).
+- **R3 layers and reach** (METHODOLOGY 5.1, rulings 9.3 / 9.4, 2026-10-24; supersedes the 10-22 M9-for-signals record
+  and the COORD 10-23 750-um station spacing):
+  - ALL signal routing -- partition pins, ft slots and die-top nets -- is on <= M7. M8/M9 carry only the die clock
+    spine, the die reset and PG (`layer_budget.die_use` = clock_spine / reset / pg). There is no over-the-top ft: an
+    ft bit crosses a partition on its own M4-M7 ft tracks (`ft_track_frac`).
+  - The one-cycle signal hop is the 405-um M4-M7 figure (`reach.py`: measured 452.5, owner local plan 405).
+    `die.reach_um` is capped at 405 (G0 WARN above it); the M8/M9 rows of the reach table (1001 / 1013 um) are clock /
+    reset relay references only.
+  - ft stations at most `budgets.ft_station_max_um` apart, default and ceiling 405 um (a plan value above 405 is an
+    ERROR); repeaters every <= 450 um inside a hop.
+  - G0 ERROR `m89_signals`: `die_use` `ft_reserved`, M8/M9 in `ft_route_layers`, a lane's `route_layers`, a port /
+    bus / spare slot / ft slot / signal channel layer, a type's `face_layers`, an M8/M9 `ft_budget` entry, or
+    `partition_signal_max` above M7.
 - **Budgets**, with these defaults:
   - `face_pins_per_um` 6 on `face_pin_layers` 2, also measured over any `face_window_um` 10 um window;
   - `pin_track_max` 0.6;
   - `cut_ratio_max` 0.6, swept every `cut_step_um` 250 um;
+  - `ft_station_max_um` 405 (R3; a ceiling);
   - `pin_reg_p90_um` 30 (the G3 gate).
 
 ## die_plan.json fields
@@ -79,11 +96,11 @@ python3 -m pytest -q tools/die_plan/
 | key | content |
 |---|---|
 | `schema` | `"opentallas.die_plan.v1"` |
-| `die` | `name`, `label`, `tech`, `outline_um` [W,H], `channels[]` {rect_um, reason} (die-level gaps; anything else uncovered is a G0 warning), `period_ps`, `reach_um` (S81 1500, KV 1200, QC 1000, HBM 1000), `rep_um` (450), `grid_um`, `rows`, `layers[]` (name, dir H/V, pitch_um, offset_um; ASAP7 default), `layer_budget` (`partition_signal_max` M7, `die_layers` [M8,M9], `die_use`, `cut_avail` {layer: fraction of tracks the die/ft traffic may use}), `pg` (`partition_pg_max`, `grid[]` layer/width/pitch/offset/nets, continuous across abutment) |
+| `die` | `name`, `label`, `tech`, `outline_um` [W,H], `channels[]` {rect_um, reason} (die-level gaps; anything else uncovered is a G0 warning), `period_ps`, `reach_um` (405: the M4-M7 signal hop; larger values are capped and WARNed), `rep_um` (450), `grid_um`, `rows`, `layers[]` (name, dir H/V, pitch_um, offset_um; ASAP7 default), `layer_budget` (`partition_signal_max` M7, `die_layers` [M8,M9], `die_use` [clock_spine, reset, pg], `cut_avail` (legacy, ignored: M8/M9 carry no signals), `ft_route_layers` (<= M7)), `pg` (`partition_pg_max`, `grid[]` layer/width/pitch/offset/nets, continuous across abutment) |
 | `partition_types` | `{type: {module, outline_um, hard, kit, buses[], ft_slots[], clock{tap_um, layer, insertion_ps, insertion_tol_ps}, reset{tap_um, sync_stages}, contents[]{inst, module, status reuse/rework/new, kit, geom_pass, origin_um, outline_um}, channels[]{rect_um, reason}, ft_track_frac}}`. A replicated type is listed once. |
 | `partitions` | `[{name, type, origin_um, orient}]` |
 | `ports` | `[{id, src{part,bus}, dst{part,bus}, width, kind data/ctl/clock/reset, face, layers, window_um, order lsb_low/lsb_high}]` |
-| `lanes` | `[{id, ports[], fixed_cycles, reach_um (override, e.g. half-cycle), param}]` |
+| `lanes` | `[{id, ports[], fixed_cycles, reach_um (override, e.g. half-cycle; can only lower 405), route_layers (<= M7), param}]` |
 | `clock` | `source`, `insertion_ps`, `insertion_tol_ps`, `neighbour_skew_ps`, `face_xing`, `spine{layers, root_um, topology}` |
 | `reset` | `source`, `sync_stages`, `data_reset` (false), `epoch_bit` (true), `release` ("pipelined" = owner reset rule; "counted" legacy), `relay_um` (405), `part_depth` (K), `regions[]{name, parts, root_um}` |
 | `latency` | `{lanes: {lane: {cycles, stations, faces, fixed, param}}}` (generated) |
@@ -112,12 +129,12 @@ The checks are listed in the `check.py` docstring:
 - geometry and grid;
 - abutment (faces coincide, pins on track in both frames, no shared tracks, identical pin tables across a replicated
   type);
-- layers <= M7;
+- layers <= M7, and no signal on M8/M9 (`m89_signals`, R3);
 - face density (<= 6 pins/um over any 10-um window, <= 2 layers, pin/track <= 0.6);
 - cut sweep every 250 um, as full line and as per-partition segment. Capacity counts the partition ft layers M4-M7
-  times `ft_track_frac` (default 0.25), plus the die layers times `cut_avail`. The M8/M9-only ratio is also reported, in
-  the research-sweep form;
-- hops <= reach;
+  times `ft_track_frac` (default 0.25); the die layers add no signal capacity (R3). The M8/M9-only ratio is still
+  reported, in the research-sweep form, as information;
+- hops <= reach (405 um, R3) and ft stations <= `ft_station_max_um` (405) apart;
 - latency table complete and equal;
 - a clock tap and a reset synchronizer per partition type;
 - leaf bindings;
@@ -150,17 +167,19 @@ ERROR only under `--completeness`, counts in `summary.xdie_counts`):
   them (footprint = the PHY content's outline, host = the link PHY nearest the host logic: CONFIRM). check.py reads
   `PLANDIR/die_io.json` when the plan has no `die.io`.
 - `cut_lines` (b): bits per cut at every partition face line (abutted port bits + ft routes crossing it) against the
-  partition pin layers x `pin_track_max` + die layers x `cut_avail`. The 250-um sweep (`cuts`) never lands on a face,
+  partition pin layers (M4-M7) x `pin_track_max` (no M8/M9 signal tracks, R3). The 250-um sweep (`cuts`) never lands on a face,
   so it never counted abutted neighbour links (most lanes on S81 / KV / HBM).
 - `reach` (c): one per-layer measured reach table for all dies (`reach.py`, source results/arch/die_reach_m89_1022.json:
-  M4-M7 452.5 measured -> 405 owner local plan, M8 1001.2, M9 1012.8, calibrated min over the 6 release relays). A
-  hop routes on `lane.route_layers`, else `layer_budget.ft_route_layers`, else M8/M9 when `die_use` has `ft_reserved`;
-  ERROR when hop > `budgets.reach_margin` (0.9) x the min reach of those layers. `die.reach_um` only WARNs.
+  M4-M7 452.5 measured -> 405 owner local plan; M8 1001.2 / M9 1012.8 are clock / reset references, never a signal
+  reach). A hop routes on `lane.route_layers`, else `layer_budget.ft_route_layers`, else M4-M7, always restricted to
+  M4-M7 (R3; `ft_reserved` no longer routes hops over the top); ERROR when hop > `budgets.reach_margin` (0.9) x the min
+  reach of those layers (364.5 um). `die.reach_um` only WARNs.
 - `face_tracks` (d): per partition face, every 10-um window: pins / usable (PG-free) tracks of the face's allowed pin
-  layers (type `face_layers` incl. an M8 / M9 third layer, else M4..`partition_signal_max` in the face direction)
+  layers (type `face_layers`, else M4..`partition_signal_max` in the face direction; an M8/M9 face layer adds no track)
   <= `pin_track_max` (0.6), all layers together and per layer.
-- `ft_budget` (e): per type, over-the-top ft bits (E-W slots on M8, N-S on M9, turning slots on both) + non-ft M8 / M9
-  face pins <= usable M8 / M9 tracks across the type x `type.ft_budget[L]` (default `layer_budget.cut_avail[L]`).
+- `ft_budget` (e): per type, ft bits through the partition on its own layers (E-W slots on M4/M6, N-S on M5/M7,
+  turning slots on both) <= usable tracks across the type x `type.ft_budget[L]` (default the type's `ft_track_frac`,
+  0.25). No over-the-top M8/M9 ft (R3).
 
 R4 (owner clock rule, COORD 10-23 19:55; gate SUPERSEDED by owner decision 5, 2026-10-24): `OT_TAP_CHECK` (tree
 insertion) and `OT_CLOCK_TAPS` (sinks per tap) only WARN. The clock gate is the RELATED launch/capture flop-pair skew
@@ -324,6 +343,13 @@ The runner picks a scratch2 host with `ot-run --pick`, runs there via `ot-run`, 
 `DIE-CI LATEST:` line of ~/coord/HANDOFF.md current.
 
 Optional FT bit sites: a slot may declare `bit_sites_um` as internal stages j=1..stations-1, each containing width+1 cell lower-left x/y coordinates (payload bits then epoch), and `bit_site_cell_um` as the allocated width/height envelope. The physical generator emits exact sites; the hook requires real row/site alignment, row orientation, core bounds and master dimensions. Slots without this declaration keep their existing placement. Validate actual macro/cell overlap and paired-bit reach in the placed ODB before routing; coordinates alone do not establish those gates.
+
+## Sign-off scope (ruling 9.13, 2026-10-24)
+
+Only die-plan kits are signable: kits generated from a die plan (`gen.py phys` / `gen_phys.py`), with the die-plan SDC
+vocabulary (`sdc_lint.json`) and the IO virtual-clock overlay that `signoff.py` applies. Legacy `physical/ref_tile`
+kits cannot be SIGNED (no `sdc_lint` vocabulary, no IO vclk overlay); they are re-kitted in die-plan form (G3) before
+sign-off, never signed as they are.
 
 ## Die clock (`die_clock.py`, lane CLOCK, owner decision 5 2026-10-24)
 

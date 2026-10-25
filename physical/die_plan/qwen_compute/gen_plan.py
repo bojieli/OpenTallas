@@ -47,8 +47,10 @@ _LAYERS = {L["name"]: L for L in _S.ASAP7_LAYERS}
 
 G = 8.64                             # die lattice: PLAN-TOOL G0 needs a multiple of every M2-M9 pitch (2.16 is not a multiple of 0.064)
 G8 = 8.64
-REACH = 1000.0
-ST_LEN = 750.0                       # one station per <= 750 um of slot route (GEOM-REVIEW4 10-23: a 1-station slot
+REACH = 405.0                         # METHODOLOGY 9.3/9.4 + OWNER DECISION 12 (10-24): die hops / ft stations <= 405 um, M2-M7
+REACH_OLD = 1000.0
+ST_LEN = float(__import__('os').environ.get('QC_FT_REACH', 405.0))  # OWNER DECISION 12 (10-24): ft on <= M7, stations every <= 405 um
+ST_LEN_OLD = 750.0                       # one station per <= 750 um of slot route (GEOM-REVIEW4 10-23: a 1-station slot
                                      # hop must stay within the measured M5-M7 repeated reach 600-750 um)
 DENS = 4.2                           # pins / um per port window (budget 6 incl. track rounding)
 GAP = 0.96
@@ -61,6 +63,7 @@ CLW, CLH = sum(CW), sum(RH)          # 2471.04 x 5227.2
 SRH = 1080.0                         # slice row height (864 overflowed the slice faces at 4.7 pins/um)
 SLH = 4 * SRH                        # 3456
 NCOL = 12
+RESET_ENTRY_FACE = {"phy_serdes": "E", "phy_serdes_b": "E", "phy_ucie_kv": "E"}   # hard PHY reset entries face the coll column
 WS_W = 1563.84                       # west strip = serdes PHY depth
 SUB_W = 777.6                        # west-strip edge column (UCIe PHYs + glue)
 COLL_W = WS_W - SUB_W                # 786.24
@@ -105,6 +108,12 @@ class Plan:
         tp = tap or [snap(w / 2, G8), snap(h / 2, G8)]
         t["clock"] = {"tap_um": tp, "layer": "M9", "insertion_ps": 250, "insertion_tol_ps": 40}
         t["reset"] = {"tap_um": tp, "sync_stages": 2}
+        if name in RESET_ENTRY_FACE:
+            # OWNER DECISION 13 wavefront (RESET 10-24): a hard partition is a leaf whose reset tap = its registered
+            # entry; put it on the face toward its soft neighbour so the parent rst_o hop stays <= 405 um
+            f = RESET_ENTRY_FACE[name]
+            t["reset"]["tap_um"] = {"E": [snap(w - 10.0, G8), snap(h / 2, G8)], "W": [snap(10.0, G8), snap(h / 2, G8)],
+                                    "N": [snap(w / 2, G8), snap(h - 10.0, G8)], "S": [snap(w / 2, G8), snap(10.0, G8)]}[f]
         self.types[name] = t
         if cells is not None:
             self.cells[name] = cells
@@ -840,7 +849,8 @@ COLL_FACE_CELLS = 116000
 COLL_FIDX = {"p": 0, "r": 1, "s0": 2, "s1": 3, "s2": 4}
 COLL_FW = {"p": 546, "r": 514, "s0": 546, "s1": 546, "s2": 546}     # face record width W (RTL localparam)
 # face core -> (segment, origin in the segment frame)
-COLL_CORES = {"s1": ("coll_s", (8.64, 8.64)), "s2": ("coll_s", (267.84, 406.08)),
+# QC 10-24 (dec. 12, 405-um internal reach): s1 core 2.16 um up so its N-face rec windows are <= 405 um from it
+COLL_CORES = {"s1": ("coll_s", (8.64, 10.8)), "s2": ("coll_s", (267.84, 406.08)),
               # QC-P6-G0C: R moves down beside P (the UCIe PHY left coll_core): both share-frame cores sit on the
               # coll_core | coll_ucie seam (W face y 0-812), R3-INTERNAL <= 750 um without stations
               "p": ("coll_core", (8.64, 8.64)), "r": ("coll_core", (8.64, 406.08)),
@@ -1545,6 +1555,8 @@ def materialize(P):
             ka = (P.parts[part]["type"], role)
             ca, cb = port_pt(P, pa), port_pt(P, pb)
             L = abs(ca[0] - cb[0]) + abs(ca[1] - cb[1])
+            # OWNER 12: route / stations <= ST_LEN (check.py R3 convention); ft_regs then checks the ROUTED hops around
+            # hard cores and adds stations where a detour exceeds it
             k = max(1, math.ceil(L / ST_LEN))
             slot_req[ka]["stations"] = max(slot_req[ka].get("stations", 1), k)
     # pins on the TYPE: every out bus / slot out window in its type frame (from ANY instance, inverse transform);
@@ -1666,6 +1678,27 @@ def stagger_coll_ft_stations(P, tap_keep=40.0, site_sep=24.0, step=8.64):
             s0 = (round(min(max(a[0], 1.0), W - 1.0), 3), round(min(max(a[1], 1.0), H - 1.0), 3))
             s["regs_um"] = [list(s0), list(best[1])]
 
+# OWNER DEC. 16 + FP32 audit (COORD 10-25): PHY-edge clocks the bound coll / glue partitions take as bound-only ports
+# (bind kit-rtl), declared so the kit SDC clocks them (create_clock, synchronous with clk) instead of leaving them
+# unconstrained: clk_coll / clk_serdes = the collective core clock (die period), clk_d2d = the forwarded d2d clock
+# (mesochronous, die period), clk_coll_blk = qfd_ckdiv6's /6 block clock (5000 ps).
+EDGE_CLOCKS = {"coll_n": [("clk_coll", 1, "collective core clock"), ("clk_serdes", 1, "SerDes PHY parallel clock (die period)")],
+               "coll_s": [("clk_coll", 1, "collective core clock"), ("clk_serdes", 1, "SerDes PHY parallel clock (die period)")],
+               "coll_ucie": [("clk_coll", 1, "collective core clock"), ("clk_coll_blk", 6, "qfd_ckdiv6 /6 block clock")],
+               "glue": [("clk_d2d", 1, "forwarded d2d clock (mesochronous)")]}
+
+
+def edge_clocks(P):
+    """interior pins one lattice step apart, E of the type's clock tap (never on a tap: GRT-0080)."""
+    for tn, lst in EDGE_CLOCKS.items():
+        t = P.types.get(tn)
+        if t is None:
+            continue
+        x0, y0 = t["clock"]["tap_um"]
+        t["clock"]["edge_clocks"] = [{"port": n, "tap_um": [round(x0 + 2 * G8 * (k + 1), 4), round(y0 + G8, 4)],
+                                      "period_mult": m, "source": src} for k, (n, m, src) in enumerate(lst)]
+
+
 def ft_fracs(P):
     """sparse soft partitions give more of their M4-M7 tracks to feedthroughs (G0 cut model default 0.25)."""
     for tn, t in P.types.items():
@@ -1675,8 +1708,11 @@ def ft_fracs(P):
         cells = P.cells.get(tn) or 0
         fill = cells * CELL_UM2 / UTIL / (w * h)
         if fill < 0.25:
-            t["ft_track_frac"] = 0.4
-            t["note"] = (t.get("note", "") + f"; est. std-cell fill {fill:.2f} at util {UTIL}: 40% of M4-M7 to ft").lstrip("; ")
+            # METHODOLOGY 9.3 (10-24): M8/M9 carry no signals any more, so the cut capacity is the partitions' own
+            # M4-M7 share; very sparse types (est. fill < 0.10) give half of it to feedthroughs
+            fr = 0.5 if fill < 0.10 else 0.4
+            t["ft_track_frac"] = fr
+            t["note"] = (t.get("note", "") + f"; est. std-cell fill {fill:.2f} at util {UTIL}: {fr:.0%} of M4-M7 to ft").lstrip("; ")
 
 
 def bind_leaves(P):
@@ -2325,6 +2361,7 @@ def main():
     merged = merge_types(P)
     bind_leaves(P)
     ft_fracs(P)
+    edge_clocks(P)
     chans = [{"rect_um": [0.0, 4648.32, SUB_W, 7603.2],
               "reason": "west-strip edge column below coll_ucie: the strip width is set by the serdes PHY depth "
                         "(1563.84 um); coll (786.24 wide) is taller than the edge-column content. PHY bump/decap/ESD "
@@ -2352,7 +2389,7 @@ def main():
                 "tech": "asap7", "outline_um": [round(W, 4), round(H, 4)], "period_ps": 833, "reach_um": REACH,
                 "rep_um": 450.0, "grid_um": G,
                 "layer_budget": {"partition_signal_max": "M7", "die_layers": ["M8", "M9"],
-                                 "die_use": ["clock_spine", "pg", "ft_reserved", "reset"],
+                                 "die_use": ["clock_spine", "pg", "reset"],
                                  "cut_avail": {"M8": 0.6, "M9": 0.6}},
                 "channels": chans,
                 "pg": {"partition_pg_max": "M7", "grid": [
@@ -2368,9 +2405,10 @@ def main():
                   "spine": {"layers": ["M8", "M9"], "root_um": [round(W / 2, 2), round(y_sl + SLH / 2, 2)],
                             "topology": "htree"}},
         "reset": {"source": {"part": "glue", "bus": "rstseq_rom"}, "sync_stages": 2, "data_reset": False,
-                  "epoch_bit": True, "release": "counted"},
+                  "epoch_bit": True, "release": "wavefront", "relay_um": REACH, "hop_um": REACH},
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
-                    "cut_ratio_max": 0.6, "cut_step_um": 250},
+                    "cut_ratio_max": 0.6, "cut_step_um": 250, "ft_station_max_um": ST_LEN,
+                    "reach_margin": 1.0},   # COORD 22:35: hops/stations <= 405 um exactly, no 0.9 margin
     }
     # QC-P6-A0 10-23: A0 v6 core clock drops per CB quad (inputs/a0_core_taps.json; no file -> no change)
     a0_taps = __import__("a0_core_taps").declare(P, Path(__file__).parent / "inputs" / "a0_core_taps.json", plan["clock"])

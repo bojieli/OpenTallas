@@ -68,7 +68,7 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
 
 ## Workflow habits (owner, 2026-10-03)
 
-- **Merge finished work at once.** When an agent finishes, its work is merged into main and pushed straight away. Use `~/OpenTallas` as the central merge point. Don't wait for another agent to merge it. When a merge conflicts, resolve each conflict by hand; never use `-X ours` or `-X theirs` (coordinator ruling 9.1, 2026-10-24).
+- **Merge finished work at once.** When an agent finishes, its work is merged into main and pushed straight away. Use `~/OpenTallas` as the central merge point. Don't wait for another agent to merge it. Never merge with `-X ours` or `-X theirs` (coordinator ruling 9.1, 2026-10-24): either one silently drops the other side's hunks (a 10-24 `-X ours` merge dropped the DIE-CI README section). On a conflict: `git merge --abort`, merge main into your branch, resolve every conflict there by hand (hunk by hunk, keeping both sides' intent), re-run the touched gates, then merge again with a plain merge and check HEAD == origin/main after the push.
 - **Delete the worktree after the merge.** After merging, remove the finished worktree and its local scratch.
 - **Delete inactive worktrees and scratch.** A worktree is inactive when no live process uses it and it has been untouched for a day. Before removing one, keep its unique state as a `refs/preserve/*` ref plus a patch of any uncommitted changes. Write bulk run outputs to the large compute host, not the local disk.
 - **Bound concurrency by headroom, not by job count.** Keep the fleet saturated with independent work, and launch a large job only through the host's admission guard.

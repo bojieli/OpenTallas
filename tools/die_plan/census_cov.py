@@ -161,9 +161,11 @@ def coverage(P, plan_dir, R):
     for lid, ln in P.lanes.items():
         a = P.ports[ln["ports"][0]]
         b = P.ports[ln["ports"][-1]]
-        planned[(origin(lid), b["dst"]["part"])] += int(a["width"])
+        # a multi-beat lane (DEC12) carries word_bits per word over `beats` beats of its port width
+        wb = int(ln.get("word_bits", a["width"])) if ln.get("beats") else int(a["width"])
+        planned[(origin(lid), b["dst"]["part"])] += wb
         if lid in parent:                                # the fork partition also receives the word
-            planned[(a["src"]["part"], b["dst"]["part"])] += int(a["width"])
+            planned[(a["src"]["part"], b["dst"]["part"])] += wb
     out = dict(declared=True, sources=[])
     for k, src in enumerate(spec):
         rows = load_rows(Path(plan_dir) / src["rows"])
