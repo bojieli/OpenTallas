@@ -5,6 +5,7 @@
 # 6_final.spef + 1_2_yosys.v (+ 1_synth.v / clock_period / mem.json / ot_*.txt) and objects/, a 4_cts.sdc = the kit SDC +
 # set_propagated_clock, the POST_GLOBAL_ROUTE hook eco_route.tcl, TC/BC libs, and SO_DIR's tools/die_plan
 # signoff.py / face_guard.py / sdc_lint.py (the branch's sign-off with the hard-core latency contract).
+# env OT_DRV_LAST=1: hold/setup repair before the fanout/slew repair (eco_route.tcl; avoids RSZ-0074)
 # VARIANT: b<N> FF-only (CORNER=BC), max_fanout 24, slew margin 20, hold margin N ps, setup may break at FF (TT gated)
 #          m<N> MCMM tc+bc, max_fanout 24, slew margin 20, setup margin 10, hold margin N ps, allow setup
 set -euo pipefail
@@ -44,6 +45,7 @@ case ${V:0:1} in
   m) printf "OT_MAX_FANOUT=24\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=10\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=TC CORNERS=\"tc bc\"'\n" ;;
   *) echo "mk_eco: unknown variant $V"; exit 2 ;;
 esac > $OUT/variant.env
+[ -n "${OT_DRV_LAST:-}" ] && echo "OT_DRV_LAST=$OT_DRV_LAST" >> $OUT/variant.env
 printf '{"variant": "%s", "source_kit": "%s:%s", "source_route": "%s/5_2_route.odb", "signoff_tools": "%s"}\n' \
   $V "$(hostname)" $KIT $RS "$SO" > $OUT/ECO.json
 echo "eco ready $OUT ($(du -sh $OUT | cut -f1))"

@@ -11,11 +11,18 @@
 # No RTL / cycle / clock-tree / SDC change; the verdict is tools/die_plan/signoff.py TT setup / FF hold on the re-routed DB.
 read_spef $::env(RESULTS_DIR)/6_final.spef
 global_route -start_incremental
-if {$::env(OT_MAX_FANOUT) > 0} {
-  set_max_fanout $::env(OT_MAX_FANOUT) [current_design]
+proc kvc_drv {} {
+  if {$::env(OT_MAX_FANOUT) > 0} {
+    set_max_fanout $::env(OT_MAX_FANOUT) [current_design]
+  }
+  puts "KVCORES_ECO repair_design slew_margin $::env(OT_SLEW_MARGIN) max_fanout $::env(OT_MAX_FANOUT)"
+  repair_design -slew_margin $::env(OT_SLEW_MARGIN) -cap_margin $::env(OT_SLEW_MARGIN)
 }
-puts "KVCORES_ECO repair_design slew_margin $::env(OT_SLEW_MARGIN) max_fanout $::env(OT_MAX_FANOUT)"
-repair_design -slew_margin $::env(OT_SLEW_MARGIN) -cap_margin $::env(OT_SLEW_MARGIN)
+# OT_DRV_LAST=1: hold/setup repair first on the routed SPEF + GRT source (ELEM-QK recipe order), then the fanout / slew
+# repair on placement parasitics: repair_design on the incremental GRT source of a routed DB dies with RSZ-0074
+# ("failed to build tree from global routes", head e3 10-24); a split can also speed far loads, so FF hold is re-judged by signoff.py (not assumed safe).
+set drv_last [expr {[info exists ::env(OT_DRV_LAST)] && $::env(OT_DRV_LAST) == 1}]
+if {!$drv_last} { kvc_drv }
 if {$::env(OT_SETUP_MARGIN) ne ""} {
   puts "KVCORES_ECO repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN)"
   repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN) -skip_last_gasp
@@ -24,6 +31,10 @@ set args [list -hold -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::
 if {$::env(OT_HOLD_ALLOW_SETUP) == 1} { lappend args -allow_setup_violations }
 puts "KVCORES_ECO repair_timing $args"
 repair_timing {*}$args
+if {$drv_last} {
+  estimate_parasitics -placement
+  kvc_drv
+}
 detailed_placement
 global_route -end_incremental
 estimate_parasitics -global_routing
