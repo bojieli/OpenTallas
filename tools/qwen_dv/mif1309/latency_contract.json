@@ -13,7 +13,7 @@
   "added_su_parent_control_bits_per_slice": 1,
   "added_state_bits_per_slice": 1129,
   "added_state_bits_total": 13548,
-  "physical_owner": "96 actual qfd_dv_lane_h_safe2 hard heads plus12 SU-parent fetch relays; changed head views must be regenerated",
+  "physical_owner": "96 qfd_dv_lane_h_safe2 head contents currently flattened in SU_l0/l1, plus12 SU-parent fetch relays; changed parent partitions need fresh physical signoff",
   "extra_head_ring_shape": {
     "width": 133,
     "depth": 17,

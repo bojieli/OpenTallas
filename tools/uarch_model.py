@@ -17498,7 +17498,7 @@ def qwen_sram_if_mif_model(lanes=8, slices=12, su_commands=0):
                 added_su_parent_control_bits_per_slice=1,
                 added_state_bits_per_slice=lanes*(8+133)+1,
                 added_state_bits_total=slices*(lanes*(8+133)+1),
-                physical_owner="96 actual qfd_dv_lane_h_safe2 hard heads plus12 SU-parent fetch relays; changed head views must be regenerated",
+                physical_owner="96 qfd_dv_lane_h_safe2 head contents currently flattened in SU_l0/l1, plus12 SU-parent fetch relays; changed parent partitions need fresh physical signoff",
                 extra_head_ring_shape=dict(width=133,depth=17,slot_bits=2128,
                                            prior_depth=16,added_slot_bits=133),
                 SRAM_MIF_state_bits="already in the independently measured leaf MIF1 variants; not recounted here",
