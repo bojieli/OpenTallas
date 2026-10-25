@@ -195,9 +195,14 @@ def push_off(p, boxes, box_out, step=2.16):
                             best = (dd, r)
                     else:
                         nxt.append(r)
-        if best is not None:
-            return best[1]
+        # A free projection from this layer may be much farther than a point
+        # reached through another overlapping box. Keep exploring blocked
+        # projections before choosing the nearest legal candidate.
         front = nxt
+        if not front:
+            break
+    if best is not None:
+        return best[1]
     # fully tiled blockages (no channel between abutting cores): nearest free point of an 8.64 um scan
     best = None
     st = 8.64
