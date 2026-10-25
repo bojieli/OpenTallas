@@ -372,7 +372,10 @@ def main():
     ap.add_argument("--sigmax", default="auto", help="auto = M5 or the highest plan pin layer (B2r2 pins use M6/M7 on 64 tables)")
     ap.add_argument("--recipe-key", default=None)
     ap.add_argument("--wrapper", default=None, help="hand-checked wrapper SV defining the plan module")
-    ap.add_argument("--hold-margin", type=float, default=30.0, help="HOLD_SLACK_MARGIN ps at the flow corner")
+    # HBM-CORES 10-24: default 30 -> 0.  The gate (TT setup / FF hold, 60/25 ps uncertainty in the SDC) is unchanged;
+    # the extra 30 ps flow margin made ORFS GRT hold repair chase every flop->flop shift-register path in the 0..30 ps
+    # band (sfu lane14 4_cts FF: 1467 endpoints < 0, 37822 < 30) at ~20 iterations/min -> 57 + 16 non-convergent runs.
+    ap.add_argument("--hold-margin", type=float, default=0.0, help="HOLD_SLACK_MARGIN ps at the flow corner (extra over the SDC 25 ps hold uncertainty)")
     ap.add_argument("--tag", default="", help="kit dir suffix (variants)")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
