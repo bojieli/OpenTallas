@@ -126,34 +126,46 @@ def plan(g, fanout=4, leaf_fanout=8, max_hop_um=400):
     return p
 
 
-# Delay model fitted on the E5 CTS01 trunk probe (BUFx24, NDR 4w2s, setRC_rcx TT; 21 buffers, 148 edges):
-#   buffer   = 35.2 + 0.108 * input_leg_um            (input slew from the driving leg; resid <= 6 ps)
-#   wire leg = 0.191 * leg_um + 0.0094 * net_wire_um  (resid <= 12 ps)
-# Every leg therefore costs ~0.30 ps/um to the arrival at the next cell output.
-BAL_LEG = 0.191 + 0.108
-BAL_NET = 0.0094
+# Delay model fitted on the E5 CTS01 + CTS02 trunk probes (BUFx24, NDR 4w2s, setRC_rcx TT, placement RC;
+# 369 legs, 115 buffers; rms 3.2 / 3.0 ps).  Long legs are super-linear (RC), so the planner avoids them.
+#   leg    = 0.0821 L + 5.15e-4 L^2 + 0.01149 W + 9.55e-5 L W     (L leg um, W driver net wire um)
+#   buffer = 22.11 + 0.1577 L_in + 0.01136 W_out + 0.395 fanout
+def leg_ps(L, W):
+    return 0.0821*L + 5.153e-4*L*L + 0.01149*W + 9.549e-5*L*W
+
+
+def buf_ps(L_in, W_out, fan):
+    return 22.11 + 0.1577*L_in + 0.01136*W_out + 0.3954*fan
 
 
 def _leg(a, b, dbu):
     return (abs(a[0]-b[0]) + abs(a[1]-b[1])) / dbu
 
 
+def _arr(legs, kids):
+    W = sum(legs)
+    out = []
+    for l, k in zip(legs, kids):
+        b = 0.0 if k[3] is None else buf_ps(l, k[3], k[4])
+        out.append((leg_ps(l, W) + b + k[1], leg_ps(l, W) + b + k[2]))
+    return out
+
+
 def balance_xy(kids, dbu, step_um=2.0, pad_um=0.0):
     """Driver point that equalises child arrivals (DME-lite, Manhattan).
 
-    kids = [(xy, lo_ps, hi_ps)] where lo/hi are the child's own subtree arrival range from its input.
-    Minimises (max_i hi_i+leg_i) - (min_i lo_i+leg_i), then that max (insertion), on a grid over the
-    children's bounding box.  A short leg is lengthened by moving the driver, never by padding."""
+    kids = [(xy, lo_ps, hi_ps, child_net_wire_um|None, child_fanout)] where lo/hi are the child's own
+    subtree arrival range measured from the child's output (None = a tap input, no buffer).  Minimises
+    (max hi) - (min lo), then the max (insertion), on a grid over the children's bounding box.  A short
+    leg is lengthened by moving the driver, never by padding."""
     xs = [int(k[0][0]) for k in kids]; ys = [int(k[0][1]) for k in kids]
     st = max(1, int(step_um * dbu))
-    best = None
     pad = int(pad_um * dbu)
+    best = None
     for x in range(min(xs) - pad, max(xs) + pad + 1, st):
         for y in range(min(ys) - pad, max(ys) + pad + 1, st):
-            legs = [_leg((x, y), k[0], dbu) for k in kids]
-            tw = BAL_NET * sum(legs)
-            hi = max(BAL_LEG*l + k[2] for l, k in zip(legs, kids)) + tw
-            lo = min(BAL_LEG*l + k[1] for l, k in zip(legs, kids)) + tw
+            r = _arr([_leg((x, y), k[0], dbu) for k in kids], kids)
+            hi = max(b for a, b in r); lo = min(a for a, b in r)
             v = (round(hi - lo, 1), hi, x, y)
             if best is None or v < best: best = v
     return [best[2], best[3]]
@@ -204,17 +216,15 @@ def plan_balanced(g, fanout=4, leaf_fanout=4, max_hop_um=400, step_um=2.0, geo=T
     # 2. placement bottom-up; ranges are arrivals at the children's OUTPUTS seen from this node's output
     def place(node):
         if node['taps'] is not None:
-            kids=[(t['xy'],0.0,0.0) for t in node['taps']]
+            kids=[(t['xy'],0.0,0.0,None,0) for t in node['taps']]
         else:
             for k in node['kids']: place(k)
-            kids=[(k['xy']['xy'],k['lo'],k['hi']) for k in node['kids']]
+            kids=[(k['xy']['xy'],k['lo'],k['hi'],k['W'],k['fan']) for k in node['kids']]
         node['xy']=sites.legal(balance_xy(kids,u,step_um,pad_um))
-        xy=node['xy']['xy']
-        legs=[_leg(xy,k[0],u) for k in kids]
-        tw=BAL_NET*sum(legs)
-        # 35.2 = buffer intrinsic of THIS node is common to its subtree; add it at the parent level
-        node['lo']=min(BAL_LEG*l+k[1] for l,k in zip(legs,kids))+tw+35.2
-        node['hi']=max(BAL_LEG*l+k[2] for l,k in zip(legs,kids))+tw+35.2
+        legs=[_leg(node['xy']['xy'],k[0],u) for k in kids]
+        r=_arr(legs,kids)
+        node['W']=sum(legs);node['fan']=len(kids)
+        node['lo']=min(a for a,b in r);node['hi']=max(b for a,b in r)
     place(tree)
     lead=dict(name='ot_dtsh_0',parent=None,depth=1,**sites.legal(g['root']))
     nodes.append(lead)
@@ -246,15 +256,17 @@ def plan_balanced(g, fanout=4, leaf_fanout=4, max_hop_um=400, step_um=2.0, geo=T
 def model_arrivals(p):
     """Modelled arrival (ps, from the lead output) at every tap INPUT for any plan, same fitted model."""
     u=p['dbu'];xy={n['name']:n['xy'] for n in p['nodes']}|{t['name']:t['xy'] for t in p['taps']}
-    ch={};par={}
-    for a,b in p['edges']: ch.setdefault(a,[]).append(b);par[b]=a
+    ch={}
+    for a,b in p['edges']: ch.setdefault(a,[]).append(b)
     root=next(n['name'] for n in p['nodes'] if n['parent'] is None)
     out={}
     def walk(n,t):
-        tw=BAL_NET*sum(_leg(xy[n],xy[c],u) for c in ch.get(n,[]))
-        for c in ch.get(n,[]):
-            l=_leg(xy[n],xy[c],u);at=t+0.191*l+tw
-            if c in ch: walk(c,at+35.2+0.108*l)
+        legs=[_leg(xy[n],xy[c],u) for c in ch.get(n,[])];W=sum(legs)
+        for l,c in zip(legs,ch.get(n,[])):
+            at=t+leg_ps(l,W)
+            if c in ch:
+                cw=sum(_leg(xy[c],xy[g],u) for g in ch[c])
+                walk(c,at+buf_ps(l,cw,len(ch[c])))
             else: out[c]=at
     walk(root,0.0)
     return out
