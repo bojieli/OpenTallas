@@ -33,15 +33,18 @@ def legal(a,b,obs):
 def chain(targets,a,b,budget,radius,minimum,obs):
     first,last=_extent(a,targets),_extent(b,targets)
     parents=np.full(len(targets),-2,dtype=int)
-    starts=np.flatnonzero(first+radius<=budget)
+    am,bm=a.mean(axis=0),b.mean(axis=0)
+    axis_start=(np.abs(targets-am).min(axis=1)<1e-4)
+    axis_end=(np.abs(targets-bm).min(axis=1)<1e-4)
+    starts=np.flatnonzero((first+radius<=budget)&axis_start)
     queue=deque(map(int,starts));parents[starts]=-1;end=None
     while queue:
         v=queue.popleft()
-        if last[v]+radius<=budget:end=v;break
+        if last[v]+radius<=budget and axis_end[v]:end=v;break
         dist=np.abs(targets-targets[v]).sum(axis=1)
         near=np.flatnonzero((dist<=budget-2*radius)&(parents==-2))
         for n in near[np.argsort(last[near])]:
-            if legal(targets[v],targets[n],obs):parents[n]=v;queue.append(int(n))
+            if np.abs(targets[v]-targets[n]).min()<1e-4 and legal(targets[v],targets[n],obs):parents[n]=v;queue.append(int(n))
     if end is None:raise ValueError('no reach-bounded chain along declared channels')
     ids=[]
     while end>=0:ids.append(end);end=parents[end]
@@ -52,7 +55,7 @@ def chain(targets,a,b,budget,radius,minimum,obs):
         u,v=ids[j:j+2];mid=(targets[u]+targets[v])/2
         near=np.flatnonzero((np.abs(targets-targets[u]).sum(axis=1)<=budget-2*radius)&
                             (np.abs(targets-targets[v]).sum(axis=1)<=budget-2*radius))
-        choices=[int(n) for n in near if legal(targets[u],targets[n],obs) and legal(targets[n],targets[v],obs)]
+        choices=[int(n) for n in near if np.abs(targets[u]-targets[n]).min()<1e-4 and np.abs(targets[n]-targets[v]).min()<1e-4 and legal(targets[u],targets[n],obs) and legal(targets[n],targets[v],obs)]
         if not choices:raise ValueError('cannot preserve existing cycle count in channel')
         best=min(choices,key=lambda n:float(np.abs(targets[n]-mid).sum()))
         ids.insert(j+1,best)
@@ -69,6 +72,36 @@ def targets_on_path(points,obs):
             n=max(1,math.ceil(C.plen([u,v])/8.64))
             out.extend((u[0]+(v[0]-u[0])*i/n,u[1]+(v[1]-u[1])*i/n) for i in range(n+1))
     return np.unique(np.round(np.array(out),6),axis=0)
+
+
+def corridor(a,b,obs,W,H):
+    lo,hi=0.,W
+    bottom,top=0.,H
+    if C.plen([a,b])<1e-4:return lo,bottom,hi,top
+    if abs(a[0]-b[0])<1e-4:
+        x=(a[0]+b[0])/2
+        for x0,y0,x1,y1 in obs:
+            if max(min(a[1],b[1]),y0)<min(max(a[1],b[1]),y1):
+                if x1<=x+1e-4:lo=max(lo,x1)
+                elif x0>=x-1e-4:hi=min(hi,x0)
+    elif abs(a[1]-b[1])<1e-4:
+        y=(a[1]+b[1])/2
+        for x0,y0,x1,y1 in obs:
+            if max(min(a[0],b[0]),x0)<min(max(a[0],b[0]),x1):
+                if y1<=y+1e-4:bottom=max(bottom,y1)
+                elif y0>=y-1e-4:top=min(top,y0)
+    else:raise ValueError('unregistered channel bend')
+    return lo,bottom,hi,top
+
+def allocate_cohort(allocator,target,previous,following,n,radius,obs,W,H):
+    a=corridor(previous,target,obs,W,H);b=corridor(target,following,obs,W,H)
+    x0,y0,x1,y1=max(a[0],b[0]),max(a[1],b[1]),min(a[2],b[2]),min(a[3],b[3])
+    walls=[(0.,0.,x0,H),(x1,0.,W,H),(0.,0.,W,y0),(0.,y1,W,H)]
+    local=RowAllocator(allocator.bounds,blocked=obs+walls,cell_size=(1.404,.27),column_pitch=2.16,row_pitch=.27,origin=(4.32,4.32))
+    local.used=set(allocator.used)
+    p,stats=local.allocate(target,n,max_radius_um=radius)
+    allocator.used=set(local.used)
+    return p,stats
 
 
 def main():
@@ -89,8 +122,10 @@ def main():
                 allocator.used=set(used);free=targets[[i not in denied for i in range(len(targets))]]
                 original=[i for i in range(len(targets)) if i not in denied]
                 ids=chain(free,a,b,budget,radius,k,obs);points=[];stats=[]
-                for i in ids:
-                    try:p,st=allocator.allocate(free[i],n,max_radius_um=radius)
+                for j,i in enumerate(ids):
+                    previous=free[ids[j-1]] if j else a.mean(axis=0)
+                    following=free[ids[j+1]] if j+1<len(ids) else b.mean(axis=0)
+                    try:p,st=allocate_cohort(allocator,free[i],previous,following,n,radius,obs,W,H)
                     except ValueError:denied.add(original[i]);break
                     points.append(p);stats.append(st)
                 else:break
