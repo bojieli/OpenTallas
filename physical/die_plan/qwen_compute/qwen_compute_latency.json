@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "qwen_compute",
- "plan_digest": "780d912d723020da",
+ "plan_digest": "befcb4e34b5fefc3",
  "period_ps": 833,
  "lanes": {
   "c_E0_bf_00__a22": {
@@ -16135,25 +16135,6 @@
    },
    "width": 1
   },
-  "native59__fltn": {
-   "cycles": 2,
-   "stations": 0,
-   "boundary": 2,
-   "faces": 1,
-   "fixed": 0,
-   "natural": 2,
-   "pad": 0,
-   "param": "LAT_NATIVE59__FLTN",
-   "src": {
-    "part": "native59",
-    "bus": "flt_o"
-   },
-   "dst": {
-    "part": "glue",
-    "bus": "n59_flt_i"
-   },
-   "width": 1
-  },
   "native59__head_descriptor_generation_head_descriptor_generation": {
    "cycles": 2,
    "stations": 0,
@@ -16361,7 +16342,7 @@
     "part": "sl_E0_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E0_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -16380,7 +16361,7 @@
     "part": "sl_E0_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E0_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -16399,7 +16380,7 @@
     "part": "sl_E0_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E0_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -16418,7 +16399,7 @@
     "part": "sl_E0_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_E0_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -18451,7 +18432,7 @@
     "part": "sl_E1_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E1_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -18470,7 +18451,7 @@
     "part": "sl_E1_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E1_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -18489,7 +18470,7 @@
     "part": "sl_E1_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E1_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -18508,7 +18489,7 @@
     "part": "sl_E1_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_E1_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -20560,7 +20541,7 @@
     "part": "sl_E2_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E2_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -20579,7 +20560,7 @@
     "part": "sl_E2_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E2_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -20598,7 +20579,7 @@
     "part": "sl_E2_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E2_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -20617,7 +20598,7 @@
     "part": "sl_E2_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_E2_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -22650,7 +22631,7 @@
     "part": "sl_E3_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E3_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -22669,7 +22650,7 @@
     "part": "sl_E3_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E3_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -22688,7 +22669,7 @@
     "part": "sl_E3_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E3_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -22707,7 +22688,7 @@
     "part": "sl_E3_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_E3_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -24759,7 +24740,7 @@
     "part": "sl_E4_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E4_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -24778,7 +24759,7 @@
     "part": "sl_E4_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E4_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -24797,7 +24778,7 @@
     "part": "sl_E4_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E4_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -24816,7 +24797,7 @@
     "part": "sl_E4_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_E4_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -26849,7 +26830,7 @@
     "part": "sl_E5_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E5_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -26868,7 +26849,7 @@
     "part": "sl_E5_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E5_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -26887,7 +26868,7 @@
     "part": "sl_E5_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_E5_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -26906,7 +26887,7 @@
     "part": "sl_E5_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_E5_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -28749,7 +28730,7 @@
     "part": "sl_W0_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W0_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -28768,7 +28749,7 @@
     "part": "sl_W0_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W0_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -28787,7 +28768,7 @@
     "part": "sl_W0_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W0_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -28806,7 +28787,7 @@
     "part": "sl_W0_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_W0_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -30839,7 +30820,7 @@
     "part": "sl_W1_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W1_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -30858,7 +30839,7 @@
     "part": "sl_W1_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W1_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -30877,7 +30858,7 @@
     "part": "sl_W1_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W1_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -30896,7 +30877,7 @@
     "part": "sl_W1_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_W1_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -32948,7 +32929,7 @@
     "part": "sl_W2_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W2_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -32967,7 +32948,7 @@
     "part": "sl_W2_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W2_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -32986,7 +32967,7 @@
     "part": "sl_W2_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W2_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -33005,7 +32986,7 @@
     "part": "sl_W2_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_W2_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -35038,7 +35019,7 @@
     "part": "sl_W3_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W3_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -35057,7 +35038,7 @@
     "part": "sl_W3_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W3_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -35076,7 +35057,7 @@
     "part": "sl_W3_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W3_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -35095,7 +35076,7 @@
     "part": "sl_W3_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_W3_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -37147,7 +37128,7 @@
     "part": "sl_W4_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W4_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -37166,7 +37147,7 @@
     "part": "sl_W4_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W4_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -37185,7 +37166,7 @@
     "part": "sl_W4_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W4_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -37204,7 +37185,7 @@
     "part": "sl_W4_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_W4_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
@@ -39237,7 +39218,7 @@
     "part": "sl_W5_hc0",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W5_ctl__b_hw_ctl_hc1": {
    "cycles": 2,
@@ -39256,7 +39237,7 @@
     "part": "sl_W5_hc1",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W5_ctl__b_hw_ctl_hc2": {
    "cycles": 2,
@@ -39275,7 +39256,7 @@
     "part": "sl_W5_hc2",
     "bus": "b_hw_i"
    },
-   "width": 1591
+   "width": 1573
   },
   "sl_W5_ctl__b_hw_ctl_hc3": {
    "cycles": 5,
@@ -39294,7 +39275,7 @@
     "part": "sl_W5_hc3",
     "bus": "b_hw_i"
    },
-   "width": 1592
+   "width": 1574
   },
   "sl_W5_ctl__b_tw_data_ctl_st_a": {
    "cycles": 2,
