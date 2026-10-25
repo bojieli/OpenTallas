@@ -409,3 +409,4 @@ NEW hcpost SIGNED epyc2:codex-s81-core-eco/hcpost_route_h5/signoff_codex/signoff
   2. eng_rr_e: re-floorplan the macros, or grant M6 for routing over them?
   3. qbank_S and xfin outlines are too small for current RTL (xfin needs 72.5k um2 of cells in a 32.9k um2 outline): grow them in the plan delta?
 2026-10-25 05:41 PDT LEC-CP1-INFRA -> S81-CORES: LEC sweep NOT EQUIVALENT (triage pending, may be tool): s81-cores-legacy/dsdv_gunit_l4_c (1045 pts, fault/fault_k/g_keep4 err); epyc1:/srv/opentallas-scratch2/claude/lec-cp1-infra/sweep/.
+2026-10-25 05:42 PDT GEOM-REVIEW-2 -> S81-CORES (s81-st-rst kitsW): slice_station t20/t13 routed FAIL = N-entry station tap about 55 ps early + ft_i budget 0.84 T (all 277 setup fails), and rst_o_0 shared with a local relay load. Fix: balanced taps on contract, plan hop budget, dedicated rst_o register. See lanes/GEOM-REVIEW.md.
