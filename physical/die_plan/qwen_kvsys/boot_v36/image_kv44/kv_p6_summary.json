@@ -1,0 +1,669 @@
+{
+ "status": "COMPILED_NOT_QUALIFIED",
+ "profile": {
+  "start_relays": 32,
+  "att": 5,
+  "rx": 34,
+  "writer": 0,
+  "kvn": 34,
+  "groups": 44,
+  "qk_age": 34,
+  "qk_row_latency": 14,
+  "v_rl": 64,
+  "d_rl": 45,
+  "d_qk": 0,
+  "f_dly": 1
+ },
+ "link": {
+  "cmd_event": 656,
+  "run_event": 654,
+  "start_qk": 659,
+  "result_first_slot": 2372,
+  "token_cycles": 290059,
+  "token_period": 293376,
+  "token_period_unpadded": 293256
+ },
+ "leads": {
+  "k": 189,
+  "v": 24,
+  "kgo_event": 268,
+  "vgo_minus_kgo": 1022,
+  "e_k": 120,
+  "e_v": 952,
+  "start_lead": -31
+ },
+ "writer": {
+  "slots": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "stop": 12
+ },
+ "writer_die": {
+  "kvn_relays": 34,
+  "kvn_buses": {
+   "d2d_kv.skw->kvs_ctl.d2d__skw": 34,
+   "d2d_kv.srx->kvs_ctl.d2d__srx": 34,
+   "d2d_kv.kvn_word_generation->kvs_ctl.d2d__kvn_word_generation": 34,
+   "d2d_kv.kvn_word_identity->kvs_ctl.d2d__kvn_word_identity": 34
+  },
+  "land_chain": 1,
+  "per_stack": {
+   "WS": {
+    "down": 10,
+    "pc31_wes": 14,
+    "pc0_ctrl_es": 47
+   },
+   "WN": {
+    "down": 11,
+    "pc31_wes": 15,
+    "pc0_ctrl_es": 48
+   },
+   "ES": {
+    "down": 10,
+    "pc31_wes": 14,
+    "pc0_ctrl_es": 47
+   },
+   "EN": {
+    "down": 11,
+    "pc31_wes": 15,
+    "pc0_ctrl_es": 48
+   }
+  },
+  "worst_ctrl_es_age": 48,
+  "rule": "writer word at PC p of stack s reaches its controller es kvjc3.writer_ages(down + LAND chain) edges after it leaves the writer; KVN words reach the writer kvn_relays edges after the d2d end",
+  "writer_start_kvn_age": {
+   "ages_table": 34,
+   "compiled": 34
+  }
+ },
+ "emb_fill": {
+  "result_at_kv_host": 21,
+  "root_start": 53,
+  "down": [
+   10,
+   11,
+   10,
+   11
+  ],
+  "ret": [
+   8,
+   8,
+   13,
+   15
+  ],
+  "root_join_skew": 1,
+  "last_word_rel": 353,
+  "pipe_join": 1,
+  "last_word": 407,
+  "header_slot": 1538,
+  "row_tx_slot": 1566,
+  "margin": 1158,
+  "embed_window": 1627,
+  "embed_window_needed": 1627,
+  "token_period": 293376,
+  "token_period_needed": 293376,
+  "die_relays": "/srv/opentallas-scratch2/claude/kv-tok/img44/prep/relay_stages_bound.json",
+  "status": "PASS",
+  "rule": "last join word r + emb_calendar(down, return).last_word + PIPE_JOIN, + 1 (row_tx write) <= header slot + emb_tx_slot relays; r = RESULT at the KV d2d + svc relays to the fan root"
+ },
+ "ownership": [
+  3,
+  284638,
+  290059
+ ],
+ "attention": {
+  "compiled_rx_cmd": 2,
+  "compiled_tx_first": 1719,
+  "compiled_end": 1966,
+  "service_end": 1745,
+  "start_qk_run_age": 5
+ },
+ "attention_control": {
+  "go": "layer_programme stage_start of stage 1",
+  "go_token_cycle": 1,
+  "latency": 10,
+  "first_issue_token_cycle": 2241,
+  "margin": 2230,
+  "relays": "go and issue both cross lprg -> attention tile (5 edges): margin unchanged"
+ },
+ "stage1_roots": {
+  "ctrl_go": 1862,
+  "kgo": 1862,
+  "vgo": 2884,
+  "attention_issue": 2241,
+  "attention_run": 2245,
+  "writer_start": 2283,
+  "link_start": 3,
+  "expected_quiet": 4215,
+  "stage_end": 9639
+ },
+ "token_core_cycles": 290059,
+ "phase_outside": 0,
+ "groups": {
+  "WS_0": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WS_1": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WS_2": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WS_3": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WS_4": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WS_5": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WS_6": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WS_7": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WN_0": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WN_1": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WN_2": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WN_3": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WN_4": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WN_5": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WN_6": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "WN_7": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "ES_0": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "ES_1": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "ES_2": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "ES_3": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "ES_4": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "ES_5": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "ES_6": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "ES_7": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "EN_0": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "EN_1": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "EN_2": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "EN_3": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "EN_4": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "EN_5": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "EN_6": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  },
+  "EN_7": {
+   "H0_front": 191,
+   "H0_landing": 194,
+   "XU": 626,
+   "K": {
+    "P0": 8,
+    "GAP": 2,
+    "n": 256
+   },
+   "V": {
+    "P0": 8,
+    "GAP": 3,
+    "n": 256
+   }
+  }
+ },
+ "es_cfg": {
+  "relay": [
+   10,
+   11,
+   10,
+   11
+  ],
+  "return_relay": [
+   8,
+   8,
+   13,
+   15
+  ]
+ },
+ "link_cfg_check": {
+  "image": "/srv/opentallas-scratch2/claude/kv-tok/img44/img_bnd/d2d_cal_image.svh",
+  "mu": true,
+  "die_stages": "2,2,2,3,2,2/34,34,32,32,32,31,31",
+  "words": 66,
+  "equal": true,
+  "txdp_k_image": 50529347,
+  "txdp_k_die_codec": 50529347,
+  "kv_codec": 2,
+  "txdp_k_agree": true
+ },
+ "images": {
+  "1": 327,
+  "2": 181,
+  "3": 4,
+  "4": 192,
+  "5": 192,
+  "6": 1024,
+  "7": 1024,
+  "8": 1024,
+  "9": 1024,
+  "11": 66,
+  "12": 1024,
+  "13": 8,
+  "0": 1032
+ },
+ "link_image": "/srv/opentallas-scratch2/claude/kv-tok/img44/img_bnd/d2d_cal_image.svh",
+ "mu_images": "skipped (--no-mu)"
+}

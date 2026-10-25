@@ -1,0 +1,1 @@
+DQ_TABLE=bind/kv44/tables/vport_dq_pads_kv44.json LINK_IMAGE=results/rtl/qwen_rom_pair_candidate_1024/d2d_cal_image.svh LINK_EMB_WIN=1627 LINK_ROPE=1 LINK_HEAD_PREP=12 bash physical/die_plan/qwen_kvsys/boot_v36/kv_boot_image.sh bind/bound_kv44 OUT bind/kv44/tables/kv_pv_entry_pads_kv44.json   # bind = claude/kv-bind-1024r@1de24d72a, tool @6f0ecb76d
