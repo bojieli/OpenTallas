@@ -1,0 +1,816 @@
+{
+ "types": {
+  "q_b000": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.304,
+   "link_bits": 25450,
+   "link_bits_gt1mm": 0.092,
+   "core_link_bits": 7792,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 10574.5,
+   "stations": 14,
+   "station_cycles_bitw": 0.185
+  },
+  "q_b001": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.28,
+   "link_bits": 24424,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 10864,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 6668.3,
+   "stations": 13,
+   "station_cycles_bitw": 0.004
+  },
+  "q_b002": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.171,
+   "link_bits": 23634,
+   "link_bits_gt1mm": 0.035,
+   "core_link_bits": 4720,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 9646.1,
+   "stations": 68,
+   "station_cycles_bitw": 0.24
+  },
+  "q_b003": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.276,
+   "link_bits": 22073,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 10864,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 6285.1,
+   "stations": 1,
+   "station_cycles_bitw": 0.186
+  },
+  "q_b010": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.28,
+   "link_bits": 22015,
+   "link_bits_gt1mm": 0.279,
+   "core_link_bits": 10864,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 10452.3,
+   "stations": 19,
+   "station_cycles_bitw": 0.679
+  },
+  "q_b011": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.171,
+   "link_bits": 23634,
+   "link_bits_gt1mm": 0.134,
+   "core_link_bits": 4720,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 12529.8,
+   "stations": 71,
+   "station_cycles_bitw": 0.728
+  },
+  "q_b012": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.28,
+   "link_bits": 24424,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 10864,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 7462.7,
+   "stations": 1,
+   "station_cycles_bitw": 0.168
+  },
+  "q_b013": {
+   "cores": 3,
+   "soft": 0,
+   "fill": 0.276,
+   "link_bits": 19995,
+   "link_bits_gt1mm": 0.208,
+   "core_link_bits": 10864,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 10258.7,
+   "stations": 14,
+   "station_cycles_bitw": 0.624
+  },
+  "q_b100": {
+   "cores": 16,
+   "soft": 0,
+   "fill": 0.307,
+   "link_bits": 291840,
+   "link_bits_gt1mm": 0.008,
+   "core_link_bits": 291840,
+   "core_link_gt1mm": 0.008,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 109343.3,
+   "stations": 194,
+   "station_cycles_bitw": 0.073
+  },
+  "q_b101": {
+   "cores": 17,
+   "soft": 0,
+   "fill": 0.327,
+   "link_bits": 330752,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 330752,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 124872.5,
+   "stations": 299,
+   "station_cycles_bitw": 0.064
+  },
+  "q_b102": {
+   "cores": 16,
+   "soft": 0,
+   "fill": 0.307,
+   "link_bits": 291840,
+   "link_bits_gt1mm": 0.085,
+   "core_link_bits": 291840,
+   "core_link_gt1mm": 0.085,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 141532.6,
+   "stations": 572,
+   "station_cycles_bitw": 0.23
+  },
+  "q_b103": {
+   "cores": 17,
+   "soft": 0,
+   "fill": 0.327,
+   "link_bits": 255362,
+   "link_bits_gt1mm": 0.001,
+   "core_link_bits": 255362,
+   "core_link_gt1mm": 0.001,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 96749.0,
+   "stations": 201,
+   "station_cycles_bitw": 0.077
+  },
+  "q_b110": {
+   "cores": 4,
+   "soft": 0,
+   "fill": 0.156,
+   "link_bits": 1416,
+   "link_bits_gt1mm": 0.421,
+   "core_link_bits": 48,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 1226.8,
+   "stations": 45,
+   "station_cycles_bitw": 1.306
+  },
+  "q_b111": {
+   "cores": 5,
+   "soft": 0,
+   "fill": 0.196,
+   "link_bits": 1448,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 1448,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 341.3,
+   "stations": 8,
+   "station_cycles_bitw": 0.006
+  },
+  "q_b112": {
+   "cores": 5,
+   "soft": 0,
+   "fill": 0.195,
+   "link_bits": 992,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 992,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 160.2,
+   "stations": 8,
+   "station_cycles_bitw": 0.008
+  },
+  "q_b113": {
+   "cores": 5,
+   "soft": 0,
+   "fill": 0.394,
+   "link_bits": 16680,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 3336,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 3073.6,
+   "stations": 0,
+   "station_cycles_bitw": 0.0
+  },
+  "q_hub": {
+   "cores": 76,
+   "soft": 47,
+   "fill": 0.534,
+   "link_bits": 800010,
+   "link_bits_gt1mm": 0.717,
+   "core_link_bits": 265392,
+   "core_link_gt1mm": 0.496,
+   "core_link_gt2mm": 0.246,
+   "link_bit_mm": 1845186.6,
+   "stations": 4190,
+   "station_cycles_bitw": 3.675
+  },
+  "NW_io": {
+   "cores": 3,
+   "soft": 1,
+   "fill": 0.276,
+   "link_bits": 12132,
+   "link_bits_gt1mm": 0.415,
+   "core_link_bits": 2052,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 8514.7,
+   "stations": 64,
+   "station_cycles_bitw": 1.104
+  },
+  "q_mcb": {
+   "cores": 0,
+   "soft": 2,
+   "fill": 0.0,
+   "link_bits": 1,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 0,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 0.0,
+   "stations": 0,
+   "station_cycles_bitw": 0.0
+  },
+  "q_sm0": {
+   "cores": 32,
+   "soft": 0
+  },
+  "q_sm1": {
+   "cores": 32,
+   "soft": 0
+  },
+  "q_sm2": {
+   "cores": 32,
+   "soft": 0
+  },
+  "q_sm3": {
+   "cores": 32,
+   "soft": 0
+  },
+  "q_spb0": {
+   "cores": 2,
+   "soft": 0,
+   "fill": 0.191,
+   "link_bits": 2078,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 2052,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 65.6,
+   "stations": 2,
+   "station_cycles_bitw": 0.021
+  },
+  "q_spb2": {
+   "cores": 2,
+   "soft": 2,
+   "fill": 0.034,
+   "link_bits": 2938,
+   "link_bits_gt1mm": 0.118,
+   "core_link_bits": 0,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 1094.8,
+   "stations": 4,
+   "station_cycles_bitw": 0.39
+  },
+  "q_spt0": {
+   "cores": 2,
+   "soft": 2,
+   "fill": 0.034,
+   "link_bits": 2938,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 0,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 757.0,
+   "stations": 2,
+   "station_cycles_bitw": 0.118
+  },
+  "q_su00": {
+   "cores": 12,
+   "soft": 5,
+   "fill": 0.451,
+   "link_bits": 5244,
+   "link_bits_gt1mm": 0.285,
+   "core_link_bits": 2880,
+   "core_link_gt1mm": 0.219,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 4019.1,
+   "stations": 223,
+   "station_cycles_bitw": 0.74
+  },
+  "q_su01": {
+   "cores": 11,
+   "soft": 0,
+   "fill": 0.444,
+   "link_bits": 4416,
+   "link_bits_gt1mm": 0.281,
+   "core_link_bits": 2880,
+   "core_link_gt1mm": 0.242,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 3068.9,
+   "stations": 196,
+   "station_cycles_bitw": 0.763
+  },
+  "q_su10": {
+   "cores": 12,
+   "soft": 0,
+   "fill": 0.484,
+   "link_bits": 4653,
+   "link_bits_gt1mm": 0.349,
+   "core_link_bits": 2880,
+   "core_link_gt1mm": 0.153,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 3765.6,
+   "stations": 205,
+   "station_cycles_bitw": 0.991
+  },
+  "q_su11": {
+   "cores": 11,
+   "soft": 5,
+   "fill": 0.416,
+   "link_bits": 4928,
+   "link_bits_gt1mm": 0.313,
+   "core_link_bits": 2880,
+   "core_link_gt1mm": 0.292,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 3939.2,
+   "stations": 212,
+   "station_cycles_bitw": 0.853
+  },
+  "q_su20": {
+   "cores": 5,
+   "soft": 5,
+   "fill": 0.449,
+   "link_bits": 3324,
+   "link_bits_gt1mm": 0.543,
+   "core_link_bits": 960,
+   "core_link_gt1mm": 0.083,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 2854.4,
+   "stations": 39,
+   "station_cycles_bitw": 1.311
+  },
+  "q_su21": {
+   "cores": 4,
+   "soft": 0,
+   "fill": 0.441,
+   "link_bits": 2496,
+   "link_bits_gt1mm": 0.692,
+   "core_link_bits": 960,
+   "core_link_gt1mm": 0.333,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 3681.7,
+   "stations": 45,
+   "station_cycles_bitw": 2.689
+  },
+  "q_su30": {
+   "cores": 5,
+   "soft": 0,
+   "fill": 0.481,
+   "link_bits": 2733,
+   "link_bits_gt1mm": 0.621,
+   "core_link_bits": 960,
+   "core_link_gt1mm": 0.333,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 3644.2,
+   "stations": 52,
+   "station_cycles_bitw": 2.04
+  },
+  "q_su31": {
+   "cores": 4,
+   "soft": 5,
+   "fill": 0.413,
+   "link_bits": 3008,
+   "link_bits_gt1mm": 0.298,
+   "core_link_bits": 960,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 2008.2,
+   "stations": 17,
+   "station_cycles_bitw": 0.928
+  },
+  "root": {
+   "cores": 46,
+   "soft": 11,
+   "fill": 0.436,
+   "link_bits": 97636,
+   "link_bits_gt1mm": 0.62,
+   "core_link_bits": 26310,
+   "core_link_gt1mm": 0.028,
+   "core_link_gt2mm": 0.016,
+   "link_bit_mm": 166037.0,
+   "stations": 1010,
+   "station_cycles_bitw": 2.646
+  },
+  "vsN0": {
+   "cores": 2,
+   "soft": 0,
+   "fill": 0.251,
+   "link_bits": 2078,
+   "link_bits_gt1mm": 0.0,
+   "core_link_bits": 2052,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 65.6,
+   "stations": 2,
+   "station_cycles_bitw": 0.021
+  },
+  "NE_io": {
+   "cores": 2,
+   "soft": 0,
+   "fill": 0.132,
+   "link_bits": 7092,
+   "link_bits_gt1mm": 0.711,
+   "core_link_bits": 2052,
+   "core_link_gt1mm": 0.0,
+   "core_link_gt2mm": 0.0,
+   "link_bit_mm": 6726.1,
+   "stations": 64,
+   "station_cycles_bitw": 1.537
+  }
+ },
+ "pins_files": 308,
+ "soft": [
+  "q_hub.u_cxrc_Q_q",
+  "q_hub.u_cxrc_Q_s",
+  "q_hub.u_cxij_Q_s",
+  "q_hub.u_vmfc_Q",
+  "q_hub.u_hb_quant_Q__quant_Q0_lg",
+  "q_hub.u_hb_quant_Q__quant_Q1_lg",
+  "q_hub.u_hb_quant_Q__quant_Q2_lg",
+  "q_hub.u_hb_quant_Q__quant_Q3_lg",
+  "q_hub.u_hb_idx__nwsh",
+  "q_hub.u_hcollrs_Q",
+  "q_hub.u_hb_quant_Q__program_leaf",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_ctl",
+  "q_hub.u_hcollb_Q",
+  "q_hub.u_hcollks_Q_p0",
+  "q_hub.u_hcollks_Q_p1",
+  "q_hub.u_hcollks_Q_p2",
+  "q_hub.u_hcollks_Q_p3",
+  "q_hub.u_epcal_Q",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_0__rslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_1__rslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_2__rslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_3__rslice",
+  "q_hub.u_hleaf_Q",
+  "q_hub.u_vmm_Q0",
+  "q_hub.u_vmm_Q1",
+  "q_hub.u_vmm_Q2",
+  "q_hub.u_vmm_Q3",
+  "q_hub.u_vmm_Q4",
+  "q_hub.u_vmm_Q5",
+  "q_hub.u_vmm_Q6",
+  "q_hub.u_vmm_Q7",
+  "q_hub.u_col_sfu_Q",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_0__wslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_1__wslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_2__wslice",
+  "q_hub.u_hb_quant_Q__quant_Q_xp_slice_3__wslice",
+  "q_hub.u_hcollks_Q",
+  "q_hub.u_stl_Q",
+  "q_hub.u_cic_Q",
+  "q_hub.u_hb_quant_Q__hbfd_qdq_split_and",
+  "q_hub.u_hb_quant_Q__hbfd_qdq_split_or",
+  "q_hub.u_fcx_Q",
+  "q_hub.u_obs_Q",
+  "q_hub.u_fr_Q",
+  "q_hub.u_fs_Q",
+  "q_hub.u_wbc_Q",
+  "q_hub.u_subr_Q",
+  "NW_io.u_host_N",
+  "q_mcb.u_refcfg_Q",
+  "q_mcb.u_sfault_Q",
+  "q_spb2.u_cp_svg_Q2",
+  "q_spb2.u_cp_svg_Q3",
+  "q_spt0.u_cp_svg_Q0",
+  "q_spt0.u_cp_svg_Q1",
+  "q_su00.u_cxdl_Q0_q",
+  "q_su00.u_cxdl_Q0_s",
+  "q_su00.u_hc_Q0",
+  "q_su00.u_sfu_Q0",
+  "q_su00.u_fl_Q0",
+  "q_su11.u_cxdl_Q1_q",
+  "q_su11.u_cxdl_Q1_s",
+  "q_su11.u_hc_Q1",
+  "q_su11.u_sfu_Q1",
+  "q_su11.u_fl_Q1",
+  "q_su20.u_cxdl_Q2_q",
+  "q_su20.u_cxdl_Q2_s",
+  "q_su20.u_hc_Q2",
+  "q_su20.u_sfu_Q2",
+  "q_su20.u_fl_Q2",
+  "q_su31.u_cxdl_Q3_q",
+  "q_su31.u_cxdl_Q3_s",
+  "q_su31.u_hc_Q3",
+  "q_su31.u_sfu_Q3",
+  "q_su31.u_fl_Q3",
+  "root.u_hb_idx__xqr",
+  "root.u_hb_idx__xq_N",
+  "root.u_hb_idx__xq_S",
+  "root.u_su_prog",
+  "root.u_col_su",
+  "root.u_str_C",
+  "root.u_host_cp_ingress",
+  "root.u_hb_router_ids",
+  "root.u_obs_C",
+  "root.u_host_status",
+  "root.u_vm_status4"
+ ],
+ "unfit": [],
+ "spill": {
+  "q_b000.u_hcb_Q0_lanes0_2": 6,
+  "q_b000.u_hcb_Q0_lanes3_5": 4,
+  "q_b000.u_hcb_Q0_lanes6_7_bank": 2,
+  "q_b001.u_hcb_Q1_lanes0_2": 9,
+  "q_b001.u_hcb_Q1_lanes3_5": 7,
+  "q_b001.u_hcb_Q1_lanes6_7_bank": 3,
+  "q_b002.u_hcb_Q2_lanes3_5": 2,
+  "q_b003.u_hcb_Q3_lanes0_2": 9,
+  "q_b003.u_hcb_Q3_lanes3_5": 7,
+  "q_b003.u_hcb_Q3_lanes6_7_bank": 5,
+  "q_b010.u_hcb_Q7_lanes0_2": 9,
+  "q_b010.u_hcb_Q7_lanes3_5": 7,
+  "q_b010.u_hcb_Q7_lanes6_7_bank": 3,
+  "q_b011.u_hcb_Q6_lanes3_5": 4,
+  "q_b012.u_hcb_Q5_lanes0_2": 9,
+  "q_b012.u_hcb_Q5_lanes3_5": 7,
+  "q_b012.u_hcb_Q5_lanes6_7_bank": 3,
+  "q_b013.u_hcb_Q4_lanes0_2": 9,
+  "q_b013.u_hcb_Q4_lanes3_5": 7,
+  "q_b013.u_hcb_Q4_lanes6_7_bank": 10,
+  "q_b100.u_hb_idx__s_Q_r0c1_k2h0": 1,
+  "q_b100.u_hb_idx__s_Q_r0c1_k2h1": 1,
+  "q_b101.u_hb_idx__s_Q_r0c2_k3h1": 1,
+  "q_b101.u_hb_idx__s_Q_r0c3_k0h0": 1,
+  "q_b103.u_hb_idx__s_Q_r1c3_k2h1": 1,
+  "q_b103.u_hb_idx__s_Q_r1c3_k3h0": 1,
+  "q_b113.u_sfucore_Q_opstore_a": 1,
+  "q_b113.u_sfucore_Q_ctl": 9,
+  "q_hub.u_hc_Q": 4,
+  "q_hub.u_svg_Q0": 1,
+  "q_hub.u_svg_Q2": 2,
+  "q_hub.u_hb_coll_Q_body": 13,
+  "q_hub.u_cij_Q": 2,
+  "q_hub.u_hb_vms_Q": 3,
+  "q_hub.u_cxij_Q_q": 2,
+  "q_hub.u_xl_Q_ctl": 19,
+  "q_hub.u_xq_Q_p1_eg": 1,
+  "q_hub.u_vmb_Q0": 4,
+  "q_hub.u_vmb_Q1": 6,
+  "q_hub.u_vmb_Q2": 4,
+  "q_hub.u_vmb_Q5": 6,
+  "q_hub.u_vmb_Q6": 2,
+  "q_hub.u_vmb_Q7": 2,
+  "q_hub.u_xq_Q_p0_bd": 2,
+  "q_hub.u_xq_Q_p1_bd": 1,
+  "q_hub.u_sfus_Q": 6,
+  "q_hub.u_hb_quant_Q__u_dec": 2,
+  "q_hub.u_hb_dbk_Q": 5,
+  "q_hub.u_hcollgi_Q": 17,
+  "q_hub.u_hcollgl_Q": 4,
+  "q_hub.u_hb_idx__q_Q": 5,
+  "q_hub.u_ctl_Q_p01": 1,
+  "q_hub.u_ctl_Q_p06": 1,
+  "q_hub.u_ctl_Q_p12": 1,
+  "q_hub.u_ctl_Q_p13": 1,
+  "q_hub.u_ctl_Q_p14": 1,
+  "q_hub.u_ctl_Q_p15": 1,
+  "q_hub.u_vmks_Q0": 16,
+  "q_hub.u_vmks_Q1": 16,
+  "q_hub.u_vmks_Q2": 7,
+  "q_hub.u_vmks_Q3": 4,
+  "q_hub.u_hb_idx__op_Q": 1,
+  "q_hub.u_vmdel_Q3": 6,
+  "root.u_hc_eng_tail0_rest": 2,
+  "root.u_hc_eng_tail1_sk_steady": 2,
+  "root.u_hb_idx__ctl": 3
+ },
+ "conn_ports": 4605,
+ "blind_ports": 6533,
+ "cores": 436,
+ "grown": {
+  "q_b000.u_hcb_Q0_lanes6_7_bank": [
+   362.88,
+   362.88,
+   552.96,
+   591.84,
+   10377
+  ],
+  "q_b001.u_hcb_Q1_lanes6_7_bank": [
+   362.88,
+   362.88,
+   531.36,
+   548.64,
+   9864
+  ],
+  "q_b003.u_hcb_Q3_lanes6_7_bank": [
+   362.88,
+   362.88,
+   531.36,
+   548.64,
+   9864
+  ],
+  "q_b010.u_hcb_Q7_lanes6_7_bank": [
+   362.88,
+   362.88,
+   531.36,
+   548.64,
+   9835
+  ],
+  "q_b012.u_hcb_Q5_lanes6_7_bank": [
+   362.88,
+   362.88,
+   531.36,
+   548.64,
+   9864
+  ],
+  "q_b013.u_hcb_Q4_lanes6_7_bank": [
+   362.88,
+   362.88,
+   531.36,
+   548.64,
+   9864
+  ],
+  "q_b113.u_sfucore_Q_ctl": [
+   388.8,
+   345.6,
+   669.6,
+   626.4,
+   11819
+  ],
+  "q_hub.u_hb_coll_Q_body": [
+   233.28,
+   233.28,
+   483.84,
+   712.8,
+   10894
+  ],
+  "q_hub.u_hb_vms_Q": [
+   403.272,
+   403.92,
+   869.832,
+   1334.88,
+   20160
+  ],
+  "q_hub.u_vmks_Q0": [
+   146.88,
+   146.88,
+   354.24,
+   453.6,
+   7343
+  ],
+  "q_hub.u_vmks_Q1": [
+   146.88,
+   146.88,
+   354.24,
+   453.6,
+   7343
+  ],
+  "q_hub.u_vmks_Q2": [
+   146.88,
+   146.88,
+   354.24,
+   453.6,
+   7343
+  ],
+  "q_hub.u_vmks_Q3": [
+   146.88,
+   146.88,
+   354.24,
+   453.6,
+   7343
+  ]
+ },
+ "bands": {
+  "q_b000": [
+   34.56,
+   17.28
+  ],
+  "q_b001": [
+   34.56,
+   17.28
+  ],
+  "q_b002": [
+   34.56,
+   17.28
+  ],
+  "q_b003": [
+   34.56,
+   17.28
+  ],
+  "q_b010": [
+   34.56,
+   17.28
+  ],
+  "q_b011": [
+   34.56,
+   17.28
+  ],
+  "q_b012": [
+   34.56,
+   17.28
+  ],
+  "q_b013": [
+   34.56,
+   17.28
+  ],
+  "q_b100": [
+   34.56,
+   17.28
+  ],
+  "q_b101": [
+   34.56,
+   17.28
+  ],
+  "q_b102": [
+   34.56,
+   17.28
+  ],
+  "q_b103": [
+   34.56,
+   17.28
+  ],
+  "q_b110": [
+   34.56,
+   17.28
+  ],
+  "q_b111": [
+   34.56,
+   17.28
+  ],
+  "q_b112": [
+   17.28,
+   17.28
+  ],
+  "q_b113": [
+   34.56,
+   17.28
+  ],
+  "q_hub": [
+   34.56,
+   17.28
+  ],
+  "NW_io": [
+   34.56,
+   17.28
+  ],
+  "q_spb0": [
+   34.56,
+   17.28
+  ],
+  "q_spb2": [
+   34.56,
+   17.28
+  ],
+  "q_spt0": [
+   34.56,
+   17.28
+  ],
+  "q_su00": [
+   34.56,
+   17.28
+  ],
+  "q_su11": [
+   34.56,
+   17.28
+  ],
+  "q_su20": [
+   34.56,
+   17.28
+  ],
+  "q_su31": [
+   34.56,
+   17.28
+  ],
+  "root": [
+   17.28,
+   17.28
+  ],
+  "vsN0": [
+   34.56,
+   17.28
+  ],
+  "NE_io": [
+   34.56,
+   17.28
+  ]
+ }
+}
