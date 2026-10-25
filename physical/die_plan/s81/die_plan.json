@@ -88,16 +88,32 @@
      ],
      "bumps": {
       "rect_um": [
-       5875.2,
+       5938.84,
        103.68,
-       8760.96,
+       8697.32,
        585.548
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.33 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      5938.84,
+      103.68,
+      8697.32,
+      585.548
+     ],
+     "core_strip_um": [
+      [
+       5875.2,
+       649.188,
+       8760.96,
+       1330.56
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_WS1",
@@ -138,16 +154,32 @@
      ],
      "bumps": {
       "rect_um": [
-       2989.44,
+       3053.08,
        103.68,
-       5875.2,
+       5811.56,
        585.548
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.33 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      3053.08,
+      103.68,
+      5811.56,
+      585.548
+     ],
+     "core_strip_um": [
+      [
+       2989.44,
+       649.188,
+       5875.2,
+       1330.56
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_WN0",
@@ -188,7 +220,7 @@
      ],
      "bumps": {
       "rect_um": [
-       5875.2,
+       5938.84,
        23930.356,
        8547.32,
        24641.28
@@ -197,7 +229,29 @@
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.85 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      5938.84,
+      23930.356,
+      8547.32,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       5875.2,
+       23414.4,
+       8760.96,
+       23866.716
+      ],
+      [
+       8610.96,
+       23866.716,
+       8760.96,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_WN1",
@@ -210,7 +264,7 @@
      ],
      "rect_um": [
       2989.44,
-      23642.844,
+      23653.16,
       5725.2,
       24641.28
      ],
@@ -238,8 +292,8 @@
      ],
      "bumps": {
       "rect_um": [
-       2989.44,
-       23706.484,
+       3053.08,
+       23716.8,
        5661.56,
        24641.28
       ],
@@ -247,7 +301,29 @@
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 2.41 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate",
+     "phy_macro_um": [
+      3053.08,
+      23716.8,
+      5661.56,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       2989.44,
+       23414.4,
+       5875.2,
+       23653.16
+      ],
+      [
+       5725.2,
+       23653.16,
+       5875.2,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_WN2",
@@ -260,7 +336,7 @@
      ],
      "rect_um": [
       103.68,
-      23414.4,
+      23653.16,
       2839.44,
       24641.28
      ],
@@ -288,8 +364,8 @@
      ],
      "bumps": {
       "rect_um": [
-       103.68,
-       23414.4,
+       167.32,
+       23716.8,
        2775.8,
        24641.28
       ],
@@ -298,22 +374,44 @@
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites",
       "exclude_um": [
        [
-        103.68,
+        167.32,
         24144.96,
         600.0,
         24641.28
        ]
       ]
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap",
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap; S81.IR SPLIT (coordinator 10-25): PHY macro 2.41 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate",
      "esd_um": [
       [
-       103.68,
+       167.32,
        24144.96,
        600.0,
        24641.28
       ]
-     ]
+     ],
+     "phy_macro_um": [
+      167.32,
+      23716.8,
+      2775.8,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       103.68,
+       23414.4,
+       2989.44,
+       23653.16
+      ],
+      [
+       2839.44,
+       23653.16,
+       2989.44,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_WN3",
@@ -355,15 +453,31 @@
      "bumps": {
       "rect_um": [
        9728.692,
-       23414.4,
-       11646.72,
+       23478.04,
+       11583.08,
        24641.28
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 2.16 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      9728.692,
+      23478.04,
+      11583.08,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       8760.96,
+       23414.4,
+       9665.052,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_ES0",
@@ -428,7 +542,7 @@
       26225.52,
       103.68,
       28961.28,
-      1330.56
+      1091.8
      ],
      "grid": [
       {
@@ -456,14 +570,36 @@
       "rect_um": [
        26289.16,
        103.68,
-       28961.28,
-       1330.56
+       28897.64,
+       1028.16
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 2.41 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate",
+     "phy_macro_um": [
+      26289.16,
+      103.68,
+      28897.64,
+      1028.16
+     ],
+     "core_strip_um": [
+      [
+       26075.52,
+       1091.8,
+       28961.28,
+       1330.56
+      ],
+      [
+       26075.52,
+       103.68,
+       26225.52,
+       1091.8
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_EN0",
@@ -504,16 +640,32 @@
      ],
      "bumps": {
       "rect_um": [
-       23189.76,
+       23253.4,
        24159.412,
-       26075.52,
+       26011.88,
        24641.28
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.33 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      23253.4,
+      24159.412,
+      26011.88,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       23189.76,
+       23414.4,
+       26075.52,
+       24095.772
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_EN1",
@@ -554,16 +706,32 @@
      ],
      "bumps": {
       "rect_um": [
-       26075.52,
+       26139.16,
        24159.412,
-       28961.28,
+       28897.64,
        24641.28
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.33 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      26139.16,
+      24159.412,
+      28897.64,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       26075.52,
+       23414.4,
+       28961.28,
+       24095.772
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_WS2",
@@ -578,7 +746,7 @@
       103.68,
       103.68,
       2839.44,
-      1330.56
+      1091.8
      ],
      "grid": [
       {
@@ -604,32 +772,54 @@
      ],
      "bumps": {
       "rect_um": [
-       103.68,
+       167.32,
        103.68,
        2775.8,
-       1330.56
+       1028.16
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites",
       "exclude_um": [
        [
-        103.68,
+        167.32,
         103.68,
         600.0,
         600.0
        ]
       ]
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap",
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap; S81.IR SPLIT (coordinator 10-25): PHY macro 2.41 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate",
      "esd_um": [
       [
-       103.68,
+       167.32,
        103.68,
        600.0,
        600.0
       ]
-     ]
+     ],
+     "phy_macro_um": [
+      167.32,
+      103.68,
+      2775.8,
+      1028.16
+     ],
+     "core_strip_um": [
+      [
+       103.68,
+       1091.8,
+       2989.44,
+       1330.56
+      ],
+      [
+       2839.44,
+       103.68,
+       2989.44,
+       1091.8
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_WS3",
@@ -720,8 +910,8 @@
      ],
      "bumps": {
       "rect_um": [
-       20304.0,
-       23414.4,
+       20367.64,
+       23478.04,
        22035.596,
        24641.28
       ],
@@ -729,7 +919,23 @@
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.94 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      20367.64,
+      23478.04,
+      22035.596,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       22099.236,
+       23414.4,
+       23189.76,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     },
     {
      "name": "phy_lk_EN3",
@@ -742,7 +948,7 @@
      ],
      "rect_um": [
       29111.28,
-      23414.4,
+      23653.16,
       31847.04,
       24641.28
      ],
@@ -771,8 +977,8 @@
      "bumps": {
       "rect_um": [
        29174.92,
-       23414.4,
-       31847.04,
+       23716.8,
+       31783.4,
        24641.28
       ],
       "pitch_um": 45.0,
@@ -782,20 +988,42 @@
        [
         31350.72,
         24144.96,
-        31847.04,
+        31783.4,
         24641.28
        ]
       ]
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap",
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap; S81.IR SPLIT (coordinator 10-25): PHY macro 2.41 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate",
      "esd_um": [
       [
        31350.72,
        24144.96,
-       31847.04,
+       31783.4,
        24641.28
       ]
-     ]
+     ],
+     "phy_macro_um": [
+      29174.92,
+      23716.8,
+      31783.4,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       28961.28,
+       23414.4,
+       31847.04,
+       23653.16
+      ],
+      [
+       28961.28,
+       23653.16,
+       29111.28,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
     }
    ]
   },
@@ -862,16 +1090,16 @@
     "iface": "serdes",
     "part": "lk_WS0",
     "rect_um": [
-     5875.2,
+     5938.84,
      103.68,
-     8760.96,
+     8697.32,
      585.548
     ],
-    "sites": 57,
+    "sites": 54,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (6 blocked strip / ft rects, 63.64-um guard)"
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (6 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2758 x 482 um = 1.33 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
    },
    {
     "name": "io_lk_WS1_u_phy",
@@ -879,16 +1107,16 @@
     "iface": "serdes",
     "part": "lk_WS1",
     "rect_um": [
-     2989.44,
+     3053.08,
      103.68,
-     5875.2,
+     5811.56,
      585.548
     ],
-    "sites": 57,
+    "sites": 54,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (4 blocked strip / ft rects, 63.64-um guard)"
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (4 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2758 x 482 um = 1.33 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
    },
    {
     "name": "io_lk_WN0_u_phy",
@@ -896,7 +1124,7 @@
     "iface": "serdes",
     "part": "lk_WN0",
     "rect_um": [
-     5875.2,
+     5938.84,
      23930.356,
      8547.32,
      24641.28
@@ -905,7 +1133,7 @@
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 2672 x 711 um beside the strip (6 blocked strip / ft rects, 63.64-um guard)"
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 711 um beside the strip (6 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2608 x 711 um = 1.85 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
    },
    {
     "name": "io_lk_WN1_u_phy",
@@ -913,8 +1141,8 @@
     "iface": "serdes",
     "part": "lk_WN1",
     "rect_um": [
-     2989.44,
-     23706.484,
+     3053.08,
+     23716.8,
      5661.56,
      24641.28
     ],
@@ -922,7 +1150,7 @@
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 2672 x 935 um beside the strip (4 blocked strip / ft rects, 63.64-um guard)"
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 935 um beside the strip (4 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2608 x 924 um = 2.41 mm2"
    },
    {
     "name": "io_lk_WN2_u_phy",
@@ -930,19 +1158,19 @@
     "iface": "serdes",
     "part": "lk_WN2",
     "rect_um": [
-     103.68,
-     23414.4,
+     167.32,
+     23716.8,
      2775.8,
      24641.28
     ],
-    "sites": 127,
+    "sites": 93,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 127 sites; in-band host (no host link on this die), declared route: lk_WN2 -> [coll__lk_WN2__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost",
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 127 sites; in-band host (no host link on this die), declared route: lk_WN2 -> [coll__lk_WN2__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost; S81.IR split (10-25): window = PHY macro 2608 x 924 um = 2.41 mm2",
     "bump_exclude_um": [
      [
-      103.68,
+      167.32,
       24144.96,
       600.0,
       24641.28
@@ -958,15 +1186,15 @@
     "part": "lk_WN3",
     "rect_um": [
      9728.692,
-     23414.4,
-     11646.72,
+     23478.04,
+     11583.08,
      24641.28
     ],
-    "sites": 96,
+    "sites": 84,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 1918 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); in-band host (no host link on this die), declared route: lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost",
+    "note": "die_io.py plan: u_phy; PHY zone 1918 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); in-band host (no host link on this die), declared route: lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost; S81.IR split (10-25): window = PHY macro 1854 x 1163 um = 2.16 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)",
     "host": "in_band",
     "host_route": "lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost"
    },
@@ -995,14 +1223,14 @@
     "rect_um": [
      26289.16,
      103.68,
-     28961.28,
-     1330.56
+     28897.64,
+     1028.16
     ],
-    "sites": 136,
+    "sites": 102,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2608 x 924 um = 2.41 mm2"
    },
    {
     "name": "io_lk_EN0_u_phy",
@@ -1010,16 +1238,16 @@
     "iface": "serdes",
     "part": "lk_EN0",
     "rect_um": [
-     23189.76,
+     23253.4,
      24159.412,
-     26075.52,
+     26011.88,
      24641.28
     ],
-    "sites": 57,
+    "sites": 54,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (6 blocked strip / ft rects, 63.64-um guard)"
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (6 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2758 x 482 um = 1.33 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
    },
    {
     "name": "io_lk_EN1_u_phy",
@@ -1027,16 +1255,16 @@
     "iface": "serdes",
     "part": "lk_EN1",
     "rect_um": [
-     26075.52,
+     26139.16,
      24159.412,
-     28961.28,
+     28897.64,
      24641.28
     ],
-    "sites": 57,
+    "sites": 54,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (4 blocked strip / ft rects, 63.64-um guard)"
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (4 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2758 x 482 um = 1.33 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
    },
    {
     "name": "io_lk_WS2_u_phy",
@@ -1044,19 +1272,19 @@
     "iface": "serdes",
     "part": "lk_WS2",
     "rect_um": [
-     103.68,
+     167.32,
      103.68,
      2775.8,
-     1330.56
+     1028.16
     ],
-    "sites": 127,
+    "sites": 93,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 127 sites",
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 127 sites; S81.IR split (10-25): window = PHY macro 2608 x 924 um = 2.41 mm2",
     "bump_exclude_um": [
      [
-      103.68,
+      167.32,
       103.68,
       600.0,
       600.0
@@ -1086,16 +1314,16 @@
     "iface": "serdes",
     "part": "lk_EN2",
     "rect_um": [
-     20304.0,
-     23414.4,
+     20367.64,
+     23478.04,
      22035.596,
      24641.28
     ],
-    "sites": 88,
+    "sites": 77,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 1732 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard)"
+    "note": "die_io.py plan: u_phy; PHY zone 1732 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 1668 x 1163 um = 1.94 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
    },
    {
     "name": "io_lk_EN3_u_phy",
@@ -1104,20 +1332,20 @@
     "part": "lk_EN3",
     "rect_um": [
      29174.92,
-     23414.4,
-     31847.04,
+     23716.8,
+     31783.4,
      24641.28
     ],
-    "sites": 130,
+    "sites": 96,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 130 sites",
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 130 sites; S81.IR split (10-25): window = PHY macro 2608 x 924 um = 2.41 mm2",
     "bump_exclude_um": [
      [
       31350.72,
       24144.96,
-      31847.04,
+      31783.4,
       24641.28
      ]
     ]
@@ -1319,24 +1547,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r0",
-     "module": "col_h10_l4_lp_r0",
-     "params": {
-      "LK": "{4{3'd2}}"
-     },
-     "note": "region r0 of the landed frame col_h10 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "rst_n": "rst_n",
-      "x_i0": "bus:x_i0",
-      "ret_o0": "bus:ret_o0",
-      "xo_o0": "bus:xo_o0",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_o0": "bus:frame_int_o0"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r0","module":"col_h10_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:x_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -1622,19 +1833,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r1",
-     "module": "col_h10_l4_lp_r1",
-     "note": "region r1 of the landed frame col_h10 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_i1": "bus:frame_int_i1",
-      "frame_int_o0": "bus:frame_int_o0",
-      "frame_int_o1": "bus:frame_int_o1"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r1","module":"col_h10_l4_lp_r1","note":"region r1 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_i1":"bus:frame_int_i1","frame_int_o0":"bus:frame_int_o0","frame_int_o1":"bus:frame_int_o1"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -1856,17 +2055,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r2",
-     "module": "col_h10_l4_lp_r2",
-     "note": "region r2 of the landed frame col_h10 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_o0": "bus:frame_int_o0"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r2","module":"col_h10_l4_lp_r2","note":"region r2 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -2132,24 +2321,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r0",
-     "module": "col_h9_l4_lp_r0",
-     "params": {
-      "LK": "{4{3'd2}}"
-     },
-     "note": "region r0 of the landed frame col_h9 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "rst_n": "rst_n",
-      "x_i0": "bus:xo_i0",
-      "ret_o0": "bus:ret_o0",
-      "xo_o0": "bus:xo_o0",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_o0": "bus:frame_int_o0"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r0","module":"col_h9_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -2402,19 +2574,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r1",
-     "module": "col_h9_l4_lp_r1",
-     "note": "region r1 of the landed frame col_h9 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_i1": "bus:frame_int_i1",
-      "frame_int_o0": "bus:frame_int_o0",
-      "frame_int_o1": "bus:frame_int_o1"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r1","module":"col_h9_l4_lp_r1","note":"region r1 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_i1":"bus:frame_int_i1","frame_int_o0":"bus:frame_int_o0","frame_int_o1":"bus:frame_int_o1"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -2632,17 +2792,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r2",
-     "module": "col_h9_l4_lp_r2",
-     "note": "region r2 of the landed frame col_h9 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_o0": "bus:frame_int_o0"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r2","module":"col_h9_l4_lp_r2","note":"region r2 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -2891,23 +3041,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r0",
-     "module": "col_h9_l4_lp_r0_nx",
-     "params": {
-      "LK": "{4{3'd2}}"
-     },
-     "note": "region r0 of the landed frame col_h9 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "rst_n": "rst_n",
-      "x_i0": "bus:xo_i0",
-      "ret_o0": "bus:ret_o0",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_o0": "bus:frame_int_o0"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r0","module":"col_h9_l4_lp_r0_nx","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -3179,24 +3313,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r0",
-     "module": "col_h10_l4_lp_r0",
-     "params": {
-      "LK": "{4{3'd2}}"
-     },
-     "note": "region r0 of the landed frame col_h10 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "rst_n": "rst_n",
-      "x_i0": "bus:x_i0",
-      "ret_o0": "bus:ret_o0",
-      "xo_o0": "bus:xo_o0",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_o0": "bus:frame_int_o0"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r0","module":"col_h10_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h10 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:x_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -3478,24 +3595,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r0",
-     "module": "col_h9_l4_lp_r0",
-     "params": {
-      "LK": "{4{3'd2}}"
-     },
-     "note": "region r0 of the landed frame col_h9 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "rst_n": "rst_n",
-      "x_i0": "bus:xo_i0",
-      "ret_o0": "bus:ret_o0",
-      "xo_o0": "bus:xo_o0",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_o0": "bus:frame_int_o0"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r0","module":"col_h9_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -3748,23 +3848,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r0",
-     "module": "col_h9_l4_lp_r0_nx",
-     "params": {
-      "LK": "{4{3'd2}}"
-     },
-     "note": "region r0 of the landed frame col_h9 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "rst_n": "rst_n",
-      "x_i0": "bus:xo_i0",
-      "ret_o0": "bus:ret_o0",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_o0": "bus:frame_int_o0"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r0","module":"col_h9_l4_lp_r0_nx","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:xo_i0","ret_o0":"bus:ret_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -4040,24 +4124,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r0",
-     "module": "col_h9_l4_lp_r0",
-     "params": {
-      "LK": "{4{3'd2}}"
-     },
-     "note": "region r0 of the landed frame col_h9 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "rst_n": "rst_n",
-      "x_i0": "bus:x_i0",
-      "ret_o0": "bus:ret_o0",
-      "xo_o0": "bus:xo_o0",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_o0": "bus:frame_int_o0"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r0","module":"col_h9_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:x_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -4329,24 +4396,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_r0",
-     "module": "col_h9_l4_lp_r0",
-     "params": {
-      "LK": "{4{3'd2}}"
-     },
-     "note": "region r0 of the landed frame col_h9 (ROM image per instance)",
-     "bind": {
-      "clk": "clk",
-      "rst_n": "rst_n",
-      "x_i0": "bus:x_i0",
-      "ret_o0": "bus:ret_o0",
-      "xo_o0": "bus:xo_o0",
-      "frame_int_i0": "bus:frame_int_i0",
-      "frame_int_o0": "bus:frame_int_o0"
-     },
-     "status": "new"
-    }
+    {"inst":"u_r0","module":"col_h9_l4_lp_r0","params":{"LK":"{4{3'd2}}"},"note":"region r0 of the landed frame col_h9 (ROM image per instance)","bind":{"clk":"clk","rst_n":"rst_n","x_i0":"bus:x_i0","ret_o0":"bus:ret_o0","xo_o0":"bus:xo_o0","frame_int_i0":"bus:frame_int_i0","frame_int_o0":"bus:frame_int_o0"},"status":"new"}
    ],
    "sources": [
     "rtl/common/landed_parent/ot_pl_land.sv",
@@ -4503,12 +4553,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868]}
    ],
    "note": "serdes partition; 2 instance(s) (MX,MY)"
   },
@@ -4568,12 +4613,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2758.48 x 481.868 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,745.012],"outline_um":[2758.48,481.868]}
    ],
    "note": "serdes partition; 2 instance(s) (MX,MY)"
   },
@@ -4635,12 +4675,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 710.924 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,515.956],"outline_um":[2608.48,710.924]}
    ],
    "note": "serdes partition; 1 instance(s) (R0)"
   },
@@ -4700,12 +4735,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48]}
    ],
    "note": "serdes partition; 1 instance(s) (R0)"
   },
@@ -4762,12 +4792,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48]}
    ],
    "note": "serdes partition; 1 instance(s) (R0)"
   },
@@ -4831,12 +4856,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1854.39 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[967.732,63.64],"outline_um":[1854.388,1163.24]}
    ],
    "note": "serdes partition; 1 instance(s) (R0)"
   },
@@ -4896,12 +4916,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"}
    ],
    "note": "serdes partition; 1 instance(s) (MY)"
   },
@@ -4958,12 +4973,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,0.0],"outline_um":[2608.48,924.48]}
    ],
    "note": "serdes partition; 1 instance(s) (MY)"
   },
@@ -5020,12 +5030,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 2608.48 x 924.48 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[63.64,302.4],"outline_um":[2608.48,924.48]}
    ],
    "note": "serdes partition; 2 instance(s) (MX,MY)"
   },
@@ -5089,12 +5094,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 1442.88 x 2453.76 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 1442.88 x 2453.76 slot; a strip beside it holds the boundary flops and ft stations"}
    ],
    "note": "serdes partition; 1 instance(s) (MX)"
   },
@@ -5158,12 +5158,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy",
-     "module": "ot_pdie_serdes",
-     "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations"
-    }
+    {"inst":"u_phy","module":"ot_pdie_serdes","status":"rework","note":"SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 1667.96 x 1163.24 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)","origin_um":[1154.164,63.64],"outline_um":[1667.956,1163.24]}
    ],
    "note": "serdes partition; 1 instance(s) (MY)"
   },
@@ -5444,12 +5439,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_phy_hbm",
-     "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
-     "status": "reuse",
-     "note": "hard HBM3E PHY 8500 x 1177 in a 6-cell S-edge slot (bump field at the die edge)"
-    }
+    {"inst":"u_phy_hbm","module":"ot_hbm3e_phy_v41x_aw30_e8p5","status":"reuse","note":"hard HBM3E PHY 8500 x 1177 in a 6-cell S-edge slot (bump field at the die edge)"}
    ],
    "note": "phy partition; 1 instance(s) (R0)"
   },
@@ -5541,11 +5531,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_iqf",
-     "module": "dsdv_idx_qfs",
-     "status": "rework"
-    }
+    {"inst":"u_iqf","module":"dsdv_idx_qfs","status":"rework"}
    ],
    "note": "unit partition; 1 instance(s) (R0)"
   },
@@ -5926,16 +5912,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_seqhost",
-     "module": "dsdv_seq_host_mux",
-     "status": "rework",
-     "params": {
-      "TAP_K": "8'h00",
-      "SINK_K": "8'h00",
-      "SELECT_HBE": "1'b0"
-     }
-    }
+    {"inst":"u_seqhost","module":"dsdv_seq_host_mux","status":"rework","params":{"TAP_K":"8'h00","SINK_K":"8'h00","SELECT_HBE":"1'b0"}}
    ],
    "note": "unit partition; 1 instance(s) (R0)"
   },
@@ -6188,38 +6165,12 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    },
-    {
-     "inst": "u_ctrl_a",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_ctrl_b",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_a",
-     "module": "dsdv_eng_tap_w",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_b",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_irg",
-     "module": "dsdv_idx_rg3",
-     "status": "rework",
-     "note": "irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
+    {"inst":"u_ctrl_a","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_ctrl_b","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_etap_a","module":"dsdv_eng_tap_w","status":"reuse"},
+    {"inst":"u_etap_b","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_irg","module":"dsdv_idx_rg3","status":"rework","note":"irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -6489,12 +6440,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -6865,38 +6811,12 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    },
-    {
-     "inst": "u_ctrl_a",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_ctrl_b",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_a",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_b",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_irg",
-     "module": "dsdv_idx_rg3",
-     "status": "rework",
-     "note": "irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
+    {"inst":"u_ctrl_a","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_ctrl_b","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_etap_a","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_etap_b","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_irg","module":"dsdv_idx_rg3","status":"rework","note":"irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -7203,12 +7123,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -7611,38 +7526,12 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    },
-    {
-     "inst": "u_ctrl_a",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_ctrl_b",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_a",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_b",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_irg",
-     "module": "dsdv_idx_rg3",
-     "status": "rework",
-     "note": "irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
+    {"inst":"u_ctrl_a","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_ctrl_b","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_etap_a","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_etap_b","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_irg","module":"dsdv_idx_rg3","status":"rework","note":"irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -8045,12 +7934,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_pvso_entry",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_pvso_entry","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -8453,38 +8337,12 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    },
-    {
-     "inst": "u_ctrl_a",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_ctrl_b",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_a",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_b",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_irg",
-     "module": "dsdv_idx_rg3",
-     "status": "rework",
-     "note": "irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
+    {"inst":"u_ctrl_a","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_ctrl_b","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_etap_a","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_etap_b","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_irg","module":"dsdv_idx_rg3","status":"rework","note":"irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -8794,12 +8652,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -9186,38 +9039,12 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    },
-    {
-     "inst": "u_ctrl_a",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_ctrl_b",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_a",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_b",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_irg",
-     "module": "dsdv_idx_rg3",
-     "status": "rework",
-     "note": "irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
+    {"inst":"u_ctrl_a","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_ctrl_b","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_etap_a","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_etap_b","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_irg","module":"dsdv_idx_rg3","status":"rework","note":"irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -9511,12 +9338,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -9935,38 +9757,12 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    },
-    {
-     "inst": "u_ctrl_a",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_ctrl_b",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_a",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_b",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_irg",
-     "module": "dsdv_idx_rg3",
-     "status": "rework",
-     "note": "irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
+    {"inst":"u_ctrl_a","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_ctrl_b","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_etap_a","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_etap_b","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_irg","module":"dsdv_idx_rg3","status":"rework","note":"irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -10353,12 +10149,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_pvso_entry",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_pvso_entry","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -10734,38 +10525,12 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    },
-    {
-     "inst": "u_ctrl_a",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_ctrl_b",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_a",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_b",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_irg",
-     "module": "dsdv_idx_rg3",
-     "status": "rework",
-     "note": "irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
+    {"inst":"u_ctrl_a","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_ctrl_b","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_etap_a","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_etap_b","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_irg","module":"dsdv_idx_rg3","status":"rework","note":"irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -11045,12 +10810,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -11427,38 +11187,12 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    },
-    {
-     "inst": "u_ctrl_a",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_ctrl_b",
-     "module": "dsfd_ctrl_rg3_native32",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_a",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_etap_b",
-     "module": "dsdv_eng_tap",
-     "status": "reuse"
-    },
-    {
-     "inst": "u_irg",
-     "module": "dsdv_idx_rg3",
-     "status": "rework",
-     "note": "irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"},
+    {"inst":"u_ctrl_a","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_ctrl_b","module":"dsfd_ctrl_rg3_native32","status":"reuse"},
+    {"inst":"u_etap_a","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_etap_b","module":"dsdv_eng_tap","status":"reuse"},
+    {"inst":"u_irg","module":"dsdv_idx_rg3","status":"rework","note":"irg_k flattened into svc_2k as a planned hard core (57.5-79.9k cells, 45 SRAM); the bottom-up rg3 sub-tiles (br/bs01/bs23/bx/bxm/bxmh) are superseded"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -11744,12 +11478,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_rsv",
-     "module": "dsdv_svc_rs",
-     "status": "rework",
-     "note": "whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"
-    }
+    {"inst":"u_rsv","module":"dsdv_svc_rs","status":"rework","note":"whole svc (attention engine + sx + SE/SM + P.V + HBM request/landing); not bit-sliceable"}
    ],
    "hard_cores": [
     {"inst":"u_rsv.u_att.u_eng.g_t[0].g_ts.u_t.u_hc.g_h[0].u_c","module":"ot_s81c_attn_hcore","lef":"physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef","origin_um":[34.56,34.56],"outline_um":[157.68,259.2],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81c_attn_hcore.json"},
@@ -12248,12 +11977,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lp",
-     "module": "dsdv_slice_lepw_mus.LP",
-     "status": "rework",
-     "note": "lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"
-    }
+    {"inst":"u_lp","module":"dsdv_slice_lepw_mus.LP","status":"rework","note":"lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
@@ -12430,12 +12154,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[216.0,829.44],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -14614,12 +14333,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[336.96,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -17464,12 +17178,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_lepw_mus.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_lepw_mus.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -17549,12 +17258,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[172.8,77.76],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -20255,12 +19959,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[1183.68,43.2],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -22217,12 +21916,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[864.0,51.84],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -26084,12 +25778,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lp",
-     "module": "dsdv_slice_lepw_mu.LP",
-     "status": "rework",
-     "note": "lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"
-    }
+    {"inst":"u_lp","module":"dsdv_slice_lepw_mu.LP","status":"rework","note":"lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
@@ -26277,12 +25966,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[898.56,820.8],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -30187,12 +29871,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[829.44,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -32791,12 +32470,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_lepw_mu.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_lepw_mu.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -32880,12 +32554,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[414.72,51.84],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -36642,12 +36311,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[336.96,34.56],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -39099,12 +38763,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[60.48,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -40891,12 +40550,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[864.0,820.8],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -44571,12 +44225,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[898.56,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -47424,12 +47073,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[43.2,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -49687,12 +49331,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_c1x.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -49769,12 +49408,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[216.0,43.2],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -52112,12 +51746,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -55719,12 +55348,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[1105.92,829.44],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -58591,12 +58215,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[172.8,794.88],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -61507,12 +61126,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_c1x.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -61588,12 +61202,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[43.2,34.56],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -63637,12 +63246,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[898.56,95.04],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -66496,12 +66100,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -70156,12 +69755,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[103.68,820.8],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -72213,12 +71807,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[336.96,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -75047,12 +74636,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_c1x.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -75127,12 +74711,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[181.44,51.84],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -77728,12 +77307,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[302.4,51.84],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -79652,12 +79226,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -83083,12 +82652,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[864.0,820.8],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -86575,12 +86139,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[34.56,829.44],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -88923,12 +88482,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_c1x.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -89005,12 +88559,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,51.84],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -92803,12 +92352,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[941.76,69.12],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -95547,12 +95091,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -99154,12 +98693,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[60.48,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -101042,12 +100576,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[336.96,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -103863,12 +103392,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_iq.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_iq.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -103944,12 +103468,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[406.08,34.56],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -107331,12 +106850,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[34.56,77.76],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -109004,12 +108518,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -112415,12 +111924,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_kv_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_kv_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
@@ -112488,12 +111992,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_kv_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_kv_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
@@ -112875,12 +112374,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_kv512.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_kv512.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -112952,12 +112446,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_kv_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_kv_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
@@ -113021,12 +112510,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_kv_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_kv_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
@@ -113088,12 +112572,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_kv_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_kv_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "note": "slice partition; 1 instance(s) (R0)"
   },
@@ -113191,12 +112670,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[864.0,820.8],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -116861,12 +116335,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[829.44,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -119040,12 +118509,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[172.8,794.88],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -121989,12 +121453,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_c3x.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_c3x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -122066,12 +121525,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[112.32,77.76],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -123716,12 +123170,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -127317,12 +126766,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[1105.92,829.44],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -130188,12 +129632,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[172.8,794.88],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -133105,12 +132544,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_c1x.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -133180,12 +132614,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[250.56,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -135399,12 +134828,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[829.44,34.56],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -137600,12 +137024,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[69.12,829.44],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -139364,12 +138783,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[406.08,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -143132,12 +142546,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_c1x.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -143211,12 +142620,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[250.56,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -145430,12 +144834,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[829.44,34.56],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -147563,12 +146962,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -151139,12 +150533,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,812.16],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -154713,12 +154102,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[829.44,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -157227,12 +156611,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_c1x.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -157308,12 +156687,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[406.08,34.56],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -160721,12 +160095,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[1105.92,829.44],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -163600,12 +162969,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[224.64,786.24],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -166268,12 +165632,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[406.08,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -169971,12 +169330,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_c1x.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -170054,12 +169408,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[336.96,69.12],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -172441,12 +171790,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -175883,12 +175227,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[86.4,820.8],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -177940,12 +177279,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[362.88,786.24],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -181711,12 +181045,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_c1x.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_c1x.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -181795,12 +181124,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[181.44,51.84],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -184396,12 +183720,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[302.4,51.84],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -186320,12 +185639,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -189826,12 +189140,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[224.64,786.24],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -192495,12 +191804,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[406.08,838.08],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -196278,12 +195582,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_lepe_nh_mus.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_lepe_nh_mus.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,34.56],"outline_um":[336.96,414.72],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -196363,12 +195662,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[336.96,69.12],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -198794,12 +198088,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[60.48,77.76],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -200677,12 +199966,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[881.28,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -204402,12 +203686,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lp",
-     "module": "dsdv_slice_lepe_nh_mus.LP",
-     "status": "rework",
-     "note": "lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"
-    }
+    {"inst":"u_lp","module":"dsdv_slice_lepe_nh_mus.LP","status":"rework","note":"lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"}
    ],
    "note": "slice partition; 1 instance(s) (MY)"
   },
@@ -204537,12 +203816,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m.lef","origin_um":[898.56,820.8],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m.json"},
@@ -208301,12 +207575,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[34.56,829.44],"outline_um":[172.8,345.6],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -210623,12 +209892,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_c",
-     "module": "dsdv_slice_lepe_mu.C",
-     "status": "rework",
-     "note": "slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"
-    }
+    {"inst":"u_c","module":"dsdv_slice_lepe_mu.C","status":"rework","note":"slice hub band C: xgt_xo + xrt + xfin + eg + capc5r + the slice landing (k8c kit band y 3412.8-4579.2); every external slice lane ends here"}
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json"},
@@ -210712,12 +209976,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[414.72,51.84],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -214474,12 +213733,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[336.96,34.56],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -216931,12 +216185,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lf",
-     "module": "ot_s81sl_leaf",
-     "status": "rework",
-     "note": "one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"
-    }
+    {"inst":"u_lf","module":"ot_s81sl_leaf","status":"rework","note":"one landed leaf band (vp 16 hcpl, vn, ve, vsw, vq, vs, rxsf, rxsb); leaf index k arrives in-band on dn (+3 b) from C (no strap)"}
    ],
    "hard_cores": [
     {"inst":"u_lf.u_ve.u_m","module":"ot_s81sl_ve_m","lef":"physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_xm.lef","origin_um":[60.48,60.48],"outline_um":[172.8,345.6],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_ve_m_xm.json","note":"view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_m.json (cores/leaf/xmirror.py)"},
@@ -218927,12 +218176,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_lp",
-     "module": "dsdv_slice_lepe_mu.LP",
-     "status": "rework",
-     "note": "lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"
-    }
+    {"inst":"u_lp","module":"dsdv_slice_lepe_mu.LP","status":"rework","note":"lep core region K + coll lanes (u_ln*) + MU land (ML): SerDes rx/tx end here"}
    ],
    "note": "slice partition; 1 instance(s) (MY)"
   },
@@ -219155,15 +218399,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_gunit",
-     "module": "dsdv_gunit",
-     "status": "rework",
-     "params": {
-      "SID": "4'd3"
-     },
-     "note": "re-aspected 950x1469 -> 2-cell row slot"
-    }
+    {"inst":"u_gunit","module":"dsdv_gunit","status":"rework","params":{"SID":"4'd3"},"note":"re-aspected 950x1469 -> 2-cell row slot"}
    ],
    "hard_cores": [
     {"inst":"u_gunit.u_l5","module":"dsdv_gunit_l5","lef":"physical/ref_tile/dsdv_gunit_l5/views/dsdv_gunit_l5/dsdv_gunit_l5.lef","origin_um":[34.56,34.56],"outline_um":[345.6,302.4],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_gunit_l5.json"},
@@ -219376,20 +218612,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_bk_sel",
-     "module": "dsdv_bk_sel_vmtx",
-     "status": "rework",
-     "params": {
-      "TAP_K": "8'h11",
-      "SINK_K": "8'h10",
-      "IK": "3'd4",
-      "EK": "3'd5",
-      "UID": "8'h5B",
-      "EG_N": "1'b0"
-     },
-     "note": "re-aspected 907x4536 -> 3-cell row slot"
-    }
+    {"inst":"u_bk_sel","module":"dsdv_bk_sel_vmtx","status":"rework","params":{"TAP_K":"8'h11","SINK_K":"8'h10","IK":"3'd4","EK":"3'd5","UID":"8'h5B","EG_N":"1'b0"},"note":"re-aspected 907x4536 -> 3-cell row slot"}
    ],
    "hard_cores": [
     {"inst":"u_bk_sel.u_sel.g_q[0].u_q","module":"dsdv_bksel_q","lef":"physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q/dsdv_bksel_q.lef","origin_um":[34.56,34.56],"outline_um":[648.0,648.0],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_bksel_q.json"},
@@ -219538,11 +218761,7 @@
     "sync_stages": 2
    },
    "contents": [
-    {
-     "inst": "u_eng",
-     "module": "dsdv_eng_rr",
-     "status": "rework"
-    }
+    {"inst":"u_eng","module":"dsdv_eng_rr","status":"rework"}
    ],
    "hard_cores": [
     {"inst":"u_eng.u_e","module":"dsdv_eng_rr_e","lef":"physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_e.lef","origin_um":[855.36,717.12],"outline_um":[345.6,466.56],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_eng_rr_e.json"},
