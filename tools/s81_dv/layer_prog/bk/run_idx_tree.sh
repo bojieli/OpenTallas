@@ -43,9 +43,13 @@ TXS=${TXS:-0}; XINIT=${XINIT:-0}
 DIEM=${DIEM:-0}; DF=""; [ "$DIEM" = 1 ] && DF="-DTREE_DIEM"
 # MU.S81.CAL (DIE4 10-22): LPX=<n> builds the reference dsdv_idx_tx with LPX n (TOPK TX x booking = 2; RTL 100457dd6+)
 LPX=${LPX:-}; [ -n "$LPX" ] && DF="$DF -DTX_LPX=$LPX"
+# S81/IDXNET (10-25): TP=1 (with DIEM=1) builds the TREE_TP mode (DST / LOOP of dsdv_bk_sel_vmtx); EXTRA = plusargs per
+# run (+TPD=<die mask> +LPD=<die>); TAG names the run's log / verdict files
+TP=${TP:-0}; [ "$TP" = 1 ] && DF="$DF -DTREE_TP"; EXTRA=${EXTRA:-}; TAG=${TAG:-}
+MUTDEF=${MUTDEF:-}; DF="$DF $MUTDEF"; MS=$(echo "$MUTDEF" | tr -dc "A-Za-z0-9_")   # e.g. MUTDEF="-DIDX_MUT=1"
 XF=""; RF=""
 [ "$XINIT" = 1 ] && { XF="-DOT_MEM_NO_INIT --x-initial unique --x-assign unique"; RF="+verilator+rand+reset+2 +verilator+seed+${SEED:-7}"; }
-B="$OUT/build_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}${LPX:+_l$LPX}"
+B="$OUT/build_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}${LPX:+_l$LPX}_t${TP}${MS:+_$MS}"
 mkdir -p "$B"
 ( sha256sum $SRC tools/s81_dv/layer_prog/lower_bk.py; $VL --version ) > "$B/sources.sha256"
 if [ ! -x "$B/obj/Vtb_idx_tree" ]; then
@@ -58,8 +62,8 @@ if [ ! -x "$B/obj/Vtb_idx_tree" ]; then
 fi
 rc=0
 for D in "$@"; do
-  /usr/bin/time -v -o "$D/run_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}.time" "$B/obj/Vtb_idx_tree" +STIM=$D/stim.txt $(cat "$D/args.txt") $RF > "$D/run_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}.log" 2>&1
-  python3 tools/s81_dv/layer_prog/lower_bk.py tree-rd-check --run "$D/run_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}.log" --dir "$D" | tee "$D/verdict_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}.txt" || rc=1
-  cp "$D/check_result.json" "$D/check_result_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}.json"
+  /usr/bin/time -v -o "$D/run_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}${TAG}.time" "$B/obj/Vtb_idx_tree" +STIM=$D/stim.txt $(cat "$D/args.txt") $EXTRA $RF > "$D/run_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}${TAG}.log" 2>&1
+  python3 tools/s81_dv/layer_prog/lower_bk.py tree-rd-check --run "$D/run_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}${TAG}.log" --dir "$D" | tee "$D/verdict_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}${TAG}.txt" || rc=1
+  cp "$D/check_result.json" "$D/check_result_m${TXM}_s${TXS}_x${XINIT}_d${DIEM}${TAG}.json"
 done
 exit $rc

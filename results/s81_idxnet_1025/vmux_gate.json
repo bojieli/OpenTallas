@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS_COMPONENTS_ONLY",
+  "vmux6": {
+    "cases": 2048,
+    "bit_mismatches": 0,
+    "fault_mismatches": 0,
+    "wrong_input_mutant_mismatches": 622,
+    "lost_loop_valid_mutant_mismatches": 282,
+    "latency": "2edges unchanged"
+  },
+  "loop_metadata": {
+    "cases": 2048,
+    "bit_mismatches": 0,
+    "wrong_lane_mutant_mismatches": 1536,
+    "wrong_global_rank_qslot_mutant_mismatches": 192,
+    "latency": "combinational, existing loop register+VMUX remains3edges",
+    "rule": "rewrite physical V lane3 only; preserve rank-aware TX HDR qslot"
+  },
+  "h23": "SELE/SEL_MUT and original SEL_IDS encoder/output merge preserved",
+  "tx_control_bits": {
+    "dst": "p101:100",
+    "loop": "p102"
+  },
+  "legacy_fixture": "canonical addressed-drain sink: exactly3 forwarded drain expectations removed, all other bits/edges preserved; historical run checks0mismatches",
+  "legacy_big_tree": "NOT_COMPLETED: own dense 6-die comparison retired03:30, unitintel1oth-ubuntu-3185395-1792921603 exit143, artifacts retained; chosen rank-awareI13 needs different actual vehicle",
+  "full_tp4": "BLOCKED: old TX dense encoder has wrong qslot order and no indexed13. Actual measured ascendingD128 st000c vs interleaved st100d. Rank-awareI13/helper+cache and actual2source vehicle under construction on codex/s81-idxenc-1025; do not claim G5",
+  "physical": "NOT SIGNED; no new route"
+}
