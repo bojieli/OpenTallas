@@ -1362,12 +1362,37 @@ def drop_unloaded_lanes(P, path):
     if ids(keep) != kept_ids:
         raise SystemExit("drop_unloaded_lanes: dropping would rename surviving lanes: "
                          + str([(a, b) for a, b in zip(kept_ids, ids(keep)) if a != b][:5]))
+    pairs = collections.defaultdict(list)
     for lk, i in zip(P.links, before):
         if i in want:
+            pairs[(lk["path"][0], lk["path"][-1])].append(i)
             for x, y in zip(lk["path"], lk["path"][1:]):
                 P.load[tuple(sorted((x, y)))] -= lk["width"]
     P.links = keep
+    P.unloaded_pairs = dict(pairs)
     return dict(dropped=sorted(set(before) & want), absent=sorted(want - set(before)))
+
+
+def unloaded_census_filter(P, rows, parts, tag):
+    """census reconciliation for the dropped unloaded lanes (QC 10-25): a census row is removed only when BOTH
+    (a) every plan lane between its two partitions was dropped by drop_unloaded_lanes, and (b) the fixed-source bind
+    (inputs/bind_carried_pairs.json, bind_latency.json buses[]) has 0 bound crossing bits between those partitions.
+    The template census rows ([1] slice record x 12, [2] io_collective) assume the base slice/collective RTL; the bound
+    slice variants (qfd_dv_s8_ce_e5 / _l9h ...) and the single shared-fault source do not carry those bits.  Any other
+    row stays and still fails the census if unplanned.  Returns (kept rows, removed records with evidence)."""
+    ev = json.loads((Path(__file__).parent / "inputs" / "bind_carried_pairs.json").read_text())
+    carried = {(s_, d_) for s_, d_, _w in ev["pairs"]}
+    up = getattr(P, "unloaded_pairs", {})
+    planned = {(lk["path"][0], lk["path"][-1]) for lk in P.links}
+    kept, removed = [], []
+    for r in rows:
+        pr = (parts.get(r["src"]), parts.get(r["dst"]))
+        if pr in up and pr not in carried and pr not in planned:
+            removed.append(dict(r, census=tag, pair=list(pr), dropped_lanes=up[pr],
+                                evidence="bind_carried_pairs.json: 0 bound bits " + ev["source"]["bind_latency.json_sha256"][:12]))
+        else:
+            kept.append(r)
+    return kept, removed
 
 
 # ====================================================================== ports / slots / windows
@@ -2339,9 +2364,10 @@ def write_census(P, geo, census, record, outdir, su_directed):
         for row in su_directed["internal"]:
             rows1.append(dict(src=f"{nm}/{row['src']}", src_bus=row["net"],
                               dst=f"{nm}/{row['dst']}", dst_bus=row["net"], kind="data", bits=row["bits"]))
+    rows1, unl1 = unloaded_census_filter(P, rows1, parts1, 1)
     _tsv(cdir / "slice_rows.tsv.gz", rows1)
     json.dump({"note": "QC-FIX slice-region census map (gen_plan.py write_census [1])", "parts": parts1,
-               "groups": groups1}, open(cdir / "slice_map.json", "w"), indent=1)
+               "groups": groups1, "unloaded_removed": unl1}, open(cdir / "slice_map.json", "w"), indent=1)
     # [2] io_collective internals
     rows2 = []
     for f, (seg, _) in COLL_CORES.items():
@@ -2369,10 +2395,11 @@ def write_census(P, geo, census, record, outdir, su_directed):
     parts2.update({"u_collective": "coll_core", "u_shared": COLL_UCIE[0], "io_ucie": COLL_UCIE[0], "io_serdes": "io_serdes",
                    "io_serdes_1": "io_serdes_1", "io_serdes_2": "io_serdes_2", "sys_face": "glue",
                    "dvs_W5": "slice_W5"})
+    rows2, unl2 = unloaded_census_filter(P, rows2, parts2, 2)
     _tsv(cdir / "coll_rows.tsv.gz", rows2)
     json.dump({"note": "QC-FIX io_collective internal census map (gen_plan.py write_census [2]; widths from "
                        "rtl/physical/ot_qfd_collective_static_io.sv: record W+3/W+1, PW = W+51, slots 1+1)",
-               "parts": parts2, "groups": {"slice_W5": groups["slice_W5"]}},
+               "parts": parts2, "groups": {"slice_W5": groups["slice_W5"]}, "unloaded_removed": unl2},
               open(cdir / "coll_map.json", "w"), indent=1)
     # [3] CB16 cluster internals (R7, 10-23): the as-built reduction tree CB_TREE (traced from qfd_c_b16_dv_fabric)
     # per cluster (the bc relay chain u_dn<c>_rly* is BINDER2-clean and not re-traced here); parts = the tile cell's CB unit, so the 4-quad cl_* groups of [0] are
