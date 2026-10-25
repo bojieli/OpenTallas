@@ -1,0 +1,1627 @@
+{
+ "hd_ctl": {
+  "die": "s81_head",
+  "type": "hd_ctl",
+  "instance": "ctl",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 6423,
+  "flops": 9524,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 38111449,
+    "demand": 1587257,
+    "usage_pct": 4.16,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 42652179,
+    "demand": 771767,
+    "usage_pct": 1.81,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 31991850,
+    "demand": 213237,
+    "usage_pct": 0.67,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 31989672,
+    "demand": 155345,
+    "usage_pct": 0.49,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 155878,
+    "usage_pct": 0.72,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 153717,
+    "usage_pct": 0.71,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 1748556.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 203.66,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 10535,
+   "ff_hold_wns": 132.49,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 10535
+  },
+  "repair_buffers": 8241,
+  "drv": {
+   "violators": 1201
+  },
+  "displacement_um": {
+   "st": {
+    "max": 3.4,
+    "p90": 1.5,
+    "over50": 0
+   },
+   "bf": {
+    "max": 1.9,
+    "p90": 1.2,
+    "over50": 0
+   }
+  },
+  "peak_gb": 11.36,
+  "wall": "1:52.89",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 350.5,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_ctl.png"
+ },
+ "hd_host": {
+  "die": "s81_head",
+  "type": "hd_host",
+  "instance": "host",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 3130,
+  "flops": 3537,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 38116160,
+    "demand": 278453,
+    "usage_pct": 0.73,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 42652179,
+    "demand": 117130,
+    "usage_pct": 0.27,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 31991850,
+    "demand": 36036,
+    "usage_pct": 0.11,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 31989672,
+    "demand": 44692,
+    "usage_pct": 0.14,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 14503,
+    "usage_pct": 0.07,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 42850,
+    "usage_pct": 0.2,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 309434.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 251.95,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 3780,
+   "ff_hold_wns": 132.49,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 3780
+  },
+  "repair_buffers": 1265,
+  "drv": {
+   "violators": 260
+  },
+  "displacement_um": {
+   "st": {
+    "max": 2.7,
+    "p90": 1.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 1.9,
+    "p90": 1.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 11.02,
+  "wall": "0:50.40",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 4,
+   "max_hop_um": 342.1,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_host.png"
+ },
+ "hd_lep0N": {
+  "die": "s81_head",
+  "type": "hd_lep0N",
+  "instance": "lep0N",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 6403,
+  "flops": 6420,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 38113887,
+    "demand": 21560,
+    "usage_pct": 0.06,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 42652179,
+    "demand": 1700,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 31991850,
+    "demand": 16955,
+    "usage_pct": 0.05,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 31989672,
+    "demand": 4477,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 6120,
+    "usage_pct": 0.03,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 3733,
+    "usage_pct": 0.02,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 38451.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 546.56,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 6403,
+   "ff_hold_wns": 132.5,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 6403
+  },
+  "repair_buffers": 17,
+  "drv": {
+   "violators": 0
+  },
+  "displacement_um": {
+   "bf": {
+    "max": 1.6,
+    "p90": 1.2,
+    "over50": 0
+   }
+  },
+  "peak_gb": 11.04,
+  "wall": "1:04.20",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 0,
+   "max_hop_um": 0.0,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_lep0N.png"
+ },
+ "hd_mesh": {
+  "die": "s81_head",
+  "type": "hd_mesh",
+  "instance": "mesh7N",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 2186,
+  "flops": 2203,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 38117587,
+    "demand": 2553,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 42652179,
+    "demand": 447,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 31991850,
+    "demand": 5495,
+    "usage_pct": 0.02,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 31989672,
+    "demand": 4086,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 2800,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 3736,
+    "usage_pct": 0.02,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 13438.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 546.56,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 2186,
+   "ff_hold_wns": 132.5,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 2186
+  },
+  "repair_buffers": 17,
+  "drv": {
+   "violators": 0
+  },
+  "displacement_um": {
+   "bf": {
+    "max": 1.4,
+    "p90": 0.8,
+    "over50": 0
+   }
+  },
+  "peak_gb": 10.95,
+  "wall": "0:40.85",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 3,
+  "ft_hops": {
+   "slots": 0,
+   "max_hop_um": 0.0,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_mesh.png"
+ },
+ "hd_serdes": {
+  "die": "s81_head",
+  "type": "hd_serdes",
+  "instance": "lk_WN2",
+  "outline_um": [
+   2885.76,
+   1226.88
+  ],
+  "pins": 1028,
+  "flops": 1061,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 76252829,
+    "demand": 504,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 85304358,
+    "demand": 396,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 63996345,
+    "demand": 530,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 63977193,
+    "demand": 4031,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 43575210,
+    "demand": 137,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 43559901,
+    "demand": 4020,
+    "usage_pct": 0.01,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 6765.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 546.33,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 1028,
+   "ff_hold_wns": 132.5,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 1028
+  },
+  "repair_buffers": 33,
+  "drv": {
+   "violators": 0
+  },
+  "displacement_um": {
+   "bf": {
+    "max": 1.4,
+    "p90": 1.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 22.95,
+  "wall": "1:16.76",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 12,
+  "ft_hops": {
+   "slots": 0,
+   "max_hop_um": 0.0,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_serdes.png"
+ },
+ "hd_spn": {
+  "die": "s81_head",
+  "type": "hd_spn",
+  "instance": "sp0",
+  "outline_um": [
+   1382.4,
+   2073.6
+  ],
+  "pins": 6156,
+  "flops": 9437,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 61721778,
+    "demand": 20663,
+    "usage_pct": 0.03,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 69076728,
+    "demand": 2579732,
+    "usage_pct": 3.73,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 51805728,
+    "demand": 8938,
+    "usage_pct": 0.02,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 51805728,
+    "demand": 255374,
+    "usage_pct": 0.49,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 35274048,
+    "demand": 4189,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 35272836,
+    "demand": 149102,
+    "usage_pct": 0.42,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 1738847.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 233.37,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 10226,
+   "ff_hold_wns": 132.49,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 10226
+  },
+  "repair_buffers": 8165,
+  "drv": {
+   "violators": 814
+  },
+  "displacement_um": {
+   "st": {
+    "max": 3.0,
+    "p90": 1.5,
+    "over50": 0
+   },
+   "bf": {
+    "max": 1.9,
+    "p90": 1.3,
+    "over50": 0
+   }
+  },
+  "peak_gb": 18.28,
+  "wall": "1:14.91",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 5,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 346.2,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_spn.png"
+ },
+ "hd_spn_end": {
+  "die": "s81_head",
+  "type": "hd_spn_end",
+  "instance": "sp5",
+  "outline_um": [
+   1382.4,
+   2073.6
+  ],
+  "pins": 5024,
+  "flops": 8305,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 61722731,
+    "demand": 20106,
+    "usage_pct": 0.03,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 69076728,
+    "demand": 2579020,
+    "usage_pct": 3.73,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 51805728,
+    "demand": 8345,
+    "usage_pct": 0.02,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 51805728,
+    "demand": 250631,
+    "usage_pct": 0.48,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 35274048,
+    "demand": 4106,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 35272836,
+    "demand": 144762,
+    "usage_pct": 0.41,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 1731044.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 233.37,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 9094,
+   "ff_hold_wns": 132.5,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 9094
+  },
+  "repair_buffers": 8165,
+  "drv": {
+   "violators": 814
+  },
+  "displacement_um": {
+   "st": {
+    "max": 3.0,
+    "p90": 1.5,
+    "over50": 0
+   },
+   "bf": {
+    "max": 1.9,
+    "p90": 1.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 18.25,
+  "wall": "1:05.39",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 346.2,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_spn_end.png"
+ },
+ "hd_st_k5": {
+  "die": "s81_head",
+  "type": "hd_st_k5",
+  "instance": "sst5",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 2316,
+  "flops": 4714,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 38115186,
+    "demand": 2109680,
+    "usage_pct": 5.54,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 42652179,
+    "demand": 438044,
+    "usage_pct": 1.03,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 31991850,
+    "demand": 129355,
+    "usage_pct": 0.4,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 31989672,
+    "demand": 158170,
+    "usage_pct": 0.49,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 17999,
+    "usage_pct": 0.08,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 11081,
+    "usage_pct": 0.05,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 1643047.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 186.44,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 5855,
+   "ff_hold_wns": 133.56,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 5855
+  },
+  "repair_buffers": 6835,
+  "drv": {
+   "violators": 1185
+  },
+  "displacement_um": {
+   "st": {
+    "max": 2.0,
+    "p90": 0.8,
+    "over50": 0
+   }
+  },
+  "peak_gb": 11.3,
+  "wall": "0:52.42",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 4,
+   "max_hop_um": 361.1,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_st_k5.png"
+ },
+ "hd_st_m": {
+  "die": "s81_head",
+  "type": "hd_st_m",
+  "instance": "nst7",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 260,
+  "flops": 602,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 38119001,
+    "demand": 291014,
+    "usage_pct": 0.76,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 42652179,
+    "demand": 2464,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 31991850,
+    "demand": 23673,
+    "usage_pct": 0.07,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 31989672,
+    "demand": 60,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 14116,
+    "usage_pct": 0.06,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 190130.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 190.55,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 715,
+   "ff_hold_wns": 133.58,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 715
+  },
+  "repair_buffers": 667,
+  "drv": {
+   "violators": 130
+  },
+  "displacement_um": {
+   "st": {
+    "max": 0.5,
+    "p90": 0.3,
+    "over50": 0
+   }
+  },
+  "peak_gb": 10.95,
+  "wall": "0:39.61",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 3,
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 361.1,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_st_m.png"
+ },
+ "hd_st_n3": {
+  "die": "s81_head",
+  "type": "hd_st_n3",
+  "instance": "nst3",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 4112,
+  "flops": 9271,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 38111257,
+    "demand": 4011413,
+    "usage_pct": 10.53,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 42652179,
+    "demand": 440155,
+    "usage_pct": 1.03,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 31991850,
+    "demand": 367912,
+    "usage_pct": 1.15,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 31989672,
+    "demand": 120005,
+    "usage_pct": 0.38,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 147391,
+    "usage_pct": 0.68,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 119226,
+    "usage_pct": 0.55,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 2986397.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 186.23,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 11310,
+   "ff_hold_wns": 133.56,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 11310
+  },
+  "repair_buffers": 11666,
+  "drv": {
+   "violators": 2238
+  },
+  "displacement_um": {
+   "st": {
+    "max": 1.9,
+    "p90": 0.4,
+    "over50": 0
+   }
+  },
+  "peak_gb": 11.58,
+  "wall": "1:23.92",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 4,
+   "max_hop_um": 361.1,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_st_n3.png"
+ },
+ "hd_st_n4": {
+  "die": "s81_head",
+  "type": "hd_st_n4",
+  "instance": "nst4",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 4112,
+  "flops": 8241,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 38112663,
+    "demand": 4415651,
+    "usage_pct": 11.59,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 42652179,
+    "demand": 6927,
+    "usage_pct": 0.02,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 31991850,
+    "demand": 520059,
+    "usage_pct": 1.63,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 31989672,
+    "demand": 293,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 261856,
+    "usage_pct": 1.2,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 2984850.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 186.23,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 10280,
+   "ff_hold_wns": 133.58,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 10280
+  },
+  "repair_buffers": 12353,
+  "drv": {
+   "violators": 2464
+  },
+  "displacement_um": {
+   "st": {
+    "max": 0.5,
+    "p90": 0.3,
+    "over50": 0
+   }
+  },
+  "peak_gb": 11.58,
+  "wall": "0:59.93",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 4,
+   "max_hop_um": 361.1,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_st_n4.png"
+ },
+ "hd_st_str": {
+  "die": "s81_head",
+  "type": "hd_st_str",
+  "instance": "nst2",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 2056,
+  "flops": 4129,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 38116093,
+    "demand": 2202457,
+    "usage_pct": 5.78,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 42652179,
+    "demand": 3479,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 31991850,
+    "demand": 269206,
+    "usage_pct": 0.84,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 31989672,
+    "demand": 150,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 127135,
+    "usage_pct": 0.58,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 1492466.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 186.23,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 5140,
+   "ff_hold_wns": 133.58,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 5140
+  },
+  "repair_buffers": 6185,
+  "drv": {
+   "violators": 1226
+  },
+  "displacement_um": {
+   "st": {
+    "max": 0.5,
+    "p90": 0.3,
+    "over50": 0
+   }
+  },
+  "peak_gb": 11.24,
+  "wall": "0:42.42",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 4,
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 361.1,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_st_str.png"
+ },
+ "hd_st_turn": {
+  "die": "s81_head",
+  "type": "hd_st_turn",
+  "instance": "nst1",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 2056,
+  "flops": 6700,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 38113366,
+    "demand": 1843980,
+    "usage_pct": 4.84,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 42652179,
+    "demand": 1350238,
+    "usage_pct": 3.17,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 31991850,
+    "demand": 88985,
+    "usage_pct": 0.28,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 31989672,
+    "demand": 132794,
+    "usage_pct": 0.42,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 619,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 132150,
+    "usage_pct": 0.61,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 2037120.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 221.0,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 7711,
+   "ff_hold_wns": 133.56,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 7711
+  },
+  "repair_buffers": 8976,
+  "drv": {
+   "violators": 982
+  },
+  "displacement_um": {
+   "st": {
+    "max": 1.9,
+    "p90": 0.6,
+    "over50": 0
+   }
+  },
+  "peak_gb": 11.37,
+  "wall": "1:13.87",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 4,
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 341.9,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_st_turn.png"
+ },
+ "hd_turn_a": {
+  "die": "s81_head",
+  "type": "hd_turn_a",
+  "instance": "turnW0a",
+  "outline_um": [
+   172.8,
+   1036.8
+  ],
+  "pins": 1132,
+  "flops": 2268,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 3843443,
+    "demand": 83495,
+    "usage_pct": 2.17,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 4315375,
+    "demand": 668905,
+    "usage_pct": 15.5,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 3227172,
+    "demand": 3055,
+    "usage_pct": 0.09,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 3236077,
+    "demand": 169608,
+    "usage_pct": 5.24,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 2197352,
+    "demand": 2016,
+    "usage_pct": 0.09,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 2204021,
+    "demand": 5714,
+    "usage_pct": 0.26,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 536997.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 309.42,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 2830,
+   "ff_hold_wns": 91.51,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 2830
+  },
+  "repair_buffers": 1884,
+  "drv": {
+   "violators": 543
+  },
+  "displacement_um": {
+   "st": {
+    "max": 1.7,
+    "p90": 0.4,
+    "over50": 0
+   }
+  },
+  "peak_gb": 1.77,
+  "wall": "0:18.60",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 12,
+  "ft_hops": {
+   "slots": 1,
+   "max_hop_um": 294.0,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_turn_a.png"
+ },
+ "hd_turn_b": {
+  "die": "s81_head",
+  "type": "hd_turn_b",
+  "instance": "turnW0b",
+  "outline_um": [
+   172.8,
+   1036.8
+  ],
+  "pins": 1132,
+  "flops": 570,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M7",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 3844860,
+    "demand": 2034,
+    "usage_pct": 0.05,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 4315375,
+    "demand": 90578,
+    "usage_pct": 2.1,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 3227172,
+    "demand": 42687,
+    "usage_pct": 1.32,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 3236077,
+    "demand": 92298,
+    "usage_pct": 2.85,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 2197352,
+    "demand": 42334,
+    "usage_pct": 1.93,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 2204021,
+    "demand": 1932,
+    "usage_pct": 0.09,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 156285.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 248.62,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 1132,
+   "ff_hold_wns": 132.5,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 1132
+  },
+  "repair_buffers": 57,
+  "drv": {
+   "violators": 513
+  },
+  "displacement_um": {
+   "st": {
+    "max": 2.2,
+    "p90": 1.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 1.7,
+  "wall": "0:15.81",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 12,
+  "ft_hops": {
+   "slots": 1,
+   "max_hop_um": 336.5,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/head/hd_turn_b.png"
+ }
+}

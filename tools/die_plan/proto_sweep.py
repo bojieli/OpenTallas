@@ -22,6 +22,7 @@ import json
 import math
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -98,7 +99,10 @@ def gen_one(P, tn, out, adjust):
         "source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl",
         "set_dont_use {*x1p*_ASAP7* *SL* *LVT* ICGx*}",
         "estimate_parasitics -placement",
-        "repair_design",
+        # repeaters at the owner spacing (450 um) also on pin nets; plan IO load 2 fF; 320 ps slew limit
+        "set_load 2 [all_outputs]",
+        "set_max_transition 320 [current_design]",
+        "repair_design -max_wire_length 450",
         "detailed_placement -max_displacement {400 400}",
         "puts \"OT_REPAIR_S [expr {[clock seconds]-$ot_t0}]\"",
         # the ideal skeleton clock is not routed (the real clock tree is the partition's own logic: capacity adjust)
@@ -125,7 +129,6 @@ def gen_one(P, tn, out, adjust):
         "puts $ot_f \"[$i getName]\\t[[$i getMaster] getName]\\t[expr {[$bb xMin]/double($ot_dbu)}]\\t"
         "[expr {[$bb yMin]/double($ot_dbu)}]\" }",
         "close $ot_f",
-        "write_db /work/probe.odb",
     ]
     tcl = tcl[:k] + post + tcl[k:]
     # bounded GRT effort: a prototype needs WHERE the overflow is, not 30 maze rounds (pilot: 20+ min per round)
@@ -175,8 +178,12 @@ def parse_dir(d):
     r["exit"] = (d / "probe.exit").read_text().strip() if (d / "probe.exit").exists() else "NOT RUN"
     sta = {}
     for key, fn in (("tt_setup", "tt_setup_end.rpt"), ("ff_hold", "ff_hold_end.rpt")):
+        sl = None
         if (d / fn).exists():
             sl = end_slacks((d / fn).read_text(errors="replace"))
+        elif (d / (fn + ".slk")).exists():       # slack column only (fleet-side extract, keeps the copy-back small)
+            sl = [float(x) for x in (d / (fn + ".slk")).read_text().split()]
+        if sl is not None:
             sta[key + "_wns"] = round(min(sl), 2) if sl else None
             sta[key + "_tns"] = round(sum(x for x in sl if x < 0), 1)
             sta[key + "_viol"] = sum(1 for x in sl if x < 0)
@@ -200,6 +207,14 @@ def parse_dir(d):
                               (d / "grt_congestion.rpt").read_text(errors="replace")):
             hot.append([float(mm.group(i)) for i in range(1, 5)] + [mm.group(5)])
     r["hot_gcells"] = len(hot)
+    if hot:
+        txt = (d / "grt_congestion.rpt").read_text(errors="replace")
+        slots = Counter(m.group(1) for m in re.finditer(r"net:n[qd]_st_(.+?)_\d+_\d+\b", txt))
+        slots.update(m.group(1) + " (pin regs)" for m in re.finditer(r"net:n[qd]_bf_(.+?)_\d+\b", txt))
+        r["hot_slots"] = slots.most_common(5)
+        xs = [(x0 + x1) / 2 for x0, _, x1, _, _ in hot]
+        ys = [(y0 + y1) / 2 for _, y0, _, y1, _ in hot]
+        r["hot_bbox_um"] = [round(min(xs)), round(min(ys)), round(max(xs)), round(max(ys))]
     # legalisation displacement of the planned register sites (station / pin flops pushed out of cores = macro issue)
     if (d / "insts.tsv").exists() and (d / "probe.tcl").exists():
         plan = {m.group(1): (float(m.group(2)), float(m.group(3))) for m in
@@ -219,7 +234,7 @@ def parse_dir(d):
 
 def classify(r, hot):
     """CLEAN: GRT 0 overflow, no unreachable pins, skeleton setup / hold within fixable range.
-    HOTSPOT: local GRT overflow (hot gcells cover < 5 % of the outline) or fixable timing (WNS > -150 ps).
+    HOTSPOT: local GRT overflow (< 2000, hot bbox < 10 % of the outline), sites moved 50-100 um, or fixable timing (WNS >= -100 ps).
     STRUCTURAL: wide overflow, pin access failure, or skeleton timing a re-pin / station change must fix."""
     if r.get("exit") != "EXIT 0" or not r.get("done"):
         return dict(cls="NOT RUN", why=f"exit {r.get('exit')}")
@@ -234,20 +249,29 @@ def classify(r, hot):
     tt = sta.get("tt_setup_wns")
     ff = sta.get("ff_hold_wns")
     cls = "CLEAN"
+    # GRT gcells here are ~0.6 um, so the gcell-area share is always tiny: judge locality by the bbox of the hot
+    # gcells (HOTSPOT = overflow < 2000 inside a bbox < 10 % of the outline; else a channel / plan problem)
+    if hot:
+        bx0, by0 = min(x[0] for x in hot), min(x[1] for x in hot)
+        bx1, by1 = max(x[2] for x in hot), max(x[3] for x in hot)
+        frac = (bx1 - bx0) * (by1 - by0) / area if area else 0
     if ov:
-        cls = "HOTSPOT" if frac < 0.05 else "STRUCTURAL"
-        why.append(f"GRT overflow {ov} ({len(hot)} gcells, {100 * frac:.1f}% of outline)")
+        cls = "HOTSPOT" if (frac < 0.10 and ov < 2000) else "STRUCTURAL"
+        why.append(f"GRT overflow {ov} ({len(hot)} gcells, hot bbox {100 * frac:.1f}% of outline)")
     if noap:
         cls = "STRUCTURAL"
         why.append(f"{noap} pins without access")
     for k, lab in (("st", "ft station"), ("bf", "pin register")):
         dd = (r.get("displacement_um") or {}).get(k)
         if dd and dd["over50"]:
-            cls = "STRUCTURAL"
+            if dd["max"] > 100:
+                cls = "STRUCTURAL"
+            elif cls == "CLEAN":
+                cls = "HOTSPOT"
             why.append(f"{dd['over50']} {lab} sites legalised > 50 um away (max {dd['max']} um: planned site "
                        f"inside a core / blockage)")
     if tt is not None and tt < 0:
-        if tt < -150:
+        if tt < -100:
             cls = "STRUCTURAL"
         elif cls == "CLEAN":
             cls = "HOTSPOT"

@@ -1,0 +1,5646 @@
+{
+ "NE_io": {
+  "die": "hbm_arch_B2m",
+  "type": "NE_io",
+  "instance": "NE_io",
+  "outline_um": [
+   950.4,
+   4147.2
+  ],
+  "pins": 2531,
+  "flops": 2565,
+  "leaf_blockages": 2,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 73601646,
+    "demand": 3374,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 82423651,
+    "demand": 2310,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 61772520,
+    "demand": 7304,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 61817224,
+    "demand": 4880,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 48487264,
+    "demand": 2162,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 48517580,
+    "demand": 4033,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 37879842,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 37904814,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 17302.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 545.03,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 2531,
+   "ff_hold_wns": 132.5,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 2531
+  },
+  "repair_buffers": 34,
+  "drv": {
+   "violators": 0
+  },
+  "displacement_um": {
+   "bf": {
+    "max": 4.6,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "peak_gb": 31.55,
+  "wall": "1:36.36",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 0,
+   "max_hop_um": 0.0,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/NE_io.png"
+ },
+ "NW_io": {
+  "die": "hbm_arch_B2m",
+  "type": "NW_io",
+  "instance": "NW_io",
+  "outline_um": [
+   950.4,
+   4147.2
+  ],
+  "pins": 2531,
+  "flops": 2565,
+  "leaf_blockages": 3,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 70119151,
+    "demand": 8569,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 78527951,
+    "demand": 1853,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 58850230,
+    "demand": 2889,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 58895611,
+    "demand": 5124,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 48487264,
+    "demand": 437,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 48517580,
+    "demand": 4213,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 37879842,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 37904814,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 16219.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 544.64,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 2531,
+   "ff_hold_wns": 132.5,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 2531
+  },
+  "repair_buffers": 34,
+  "drv": {
+   "violators": 0
+  },
+  "displacement_um": {
+   "bf": {
+    "max": 4.7,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "peak_gb": 31.56,
+  "wall": "1:31.85",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 0,
+   "max_hop_um": 0.0,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/NW_io.png"
+ },
+ "q_b000": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b000",
+  "instance": "NW_b000",
+  "outline_um": [
+   708.48,
+   2073.6
+  ],
+  "pins": 18779,
+  "flops": 12674,
+  "leaf_blockages": 3,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 395502,
+  "hot_gcells": 20000,
+  "hot_slots": [],
+  "hot_bbox_um": [
+   0,
+   74,
+   707,
+   528
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 21970310,
+    "demand": 1708242,
+    "usage_pct": 7.78,
+    "overflow": 54463
+   },
+   "M3": {
+    "resource": 24629208,
+    "demand": 977228,
+    "usage_pct": 3.97,
+    "overflow": 32650
+   },
+   "M4": {
+    "resource": 18446474,
+    "demand": 2302861,
+    "usage_pct": 12.48,
+    "overflow": 49810
+   },
+   "M5": {
+    "resource": 18472081,
+    "demand": 713877,
+    "usage_pct": 3.86,
+    "overflow": 21518
+   },
+   "M6": {
+    "resource": 18059032,
+    "demand": 2551686,
+    "usage_pct": 14.13,
+    "overflow": 123981
+   },
+   "M7": {
+    "resource": 18078192,
+    "demand": 859595,
+    "usage_pct": 4.75,
+    "overflow": 31315
+   },
+   "M8": {
+    "resource": 14108929,
+    "demand": 1309071,
+    "usage_pct": 9.28,
+    "overflow": 64813
+   },
+   "M9": {
+    "resource": 14125860,
+    "demand": 326023,
+    "usage_pct": 2.31,
+    "overflow": 16952
+   }
+  },
+  "wirelength_um": 6283709.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -1012.7,
+   "tt_setup_tns": -286892.7,
+   "tt_setup_viol": 2992,
+   "tt_setup_endpoints": 18779,
+   "ff_hold_wns": 132.46,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 18779
+  },
+  "repair_buffers": 18367,
+  "drv": {
+   "violators": 7731
+  },
+  "displacement_um": {
+   "st": {
+    "max": 46.1,
+    "p90": 39.5,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.8,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
+  "peak_gb": 12.42,
+  "wall": "34:30.33",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "6 ft slots with a station hop > 405 um (decision 12; worst L4x3 864, L4x11 863, L80x4 736 um); GRT overflow 395502 (20000 gcells, hot bbox 21.9% of outline); skeleton TT setup WNS -1012.7 ps (2992 endpoints)",
+   "hot_frac": 0.219
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 864.0,
+   "over_reach": {
+    "L4x3": 864.0,
+    "L4x11": 863.0,
+    "L80x4": 736.2,
+    "L64x1": 725.7,
+    "L124x4": 723.7,
+    "L133x2": 723.3
+   },
+   "over_reach_bits": 6118,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b000.png"
+ },
+ "q_b001": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b001",
+  "instance": "NW_b001",
+  "outline_um": [
+   708.48,
+   2073.6
+  ],
+  "pins": 16716,
+  "flops": 10799,
+  "leaf_blockages": 3,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 494793,
+  "hot_gcells": 20000,
+  "hot_slots": [],
+  "hot_bbox_um": [
+   0,
+   77,
+   707,
+   551
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 22743019,
+    "demand": 2394237,
+    "usage_pct": 10.53,
+    "overflow": 63729
+   },
+   "M3": {
+    "resource": 25485219,
+    "demand": 1251816,
+    "usage_pct": 4.91,
+    "overflow": 39847
+   },
+   "M4": {
+    "resource": 19093014,
+    "demand": 1879353,
+    "usage_pct": 9.84,
+    "overflow": 46827
+   },
+   "M5": {
+    "resource": 19115368,
+    "demand": 594142,
+    "usage_pct": 3.11,
+    "overflow": 24963
+   },
+   "M6": {
+    "resource": 18059032,
+    "demand": 2471410,
+    "usage_pct": 13.69,
+    "overflow": 199148
+   },
+   "M7": {
+    "resource": 18078192,
+    "demand": 556529,
+    "usage_pct": 3.08,
+    "overflow": 28982
+   },
+   "M8": {
+    "resource": 14108929,
+    "demand": 1073788,
+    "usage_pct": 7.61,
+    "overflow": 79151
+   },
+   "M9": {
+    "resource": 14125860,
+    "demand": 229783,
+    "usage_pct": 1.63,
+    "overflow": 12146
+   }
+  },
+  "wirelength_um": 6253940.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -419.68,
+   "tt_setup_tns": -328061.5,
+   "tt_setup_viol": 3541,
+   "tt_setup_endpoints": 16906,
+   "ff_hold_wns": 132.44,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 16906
+  },
+  "repair_buffers": 18395,
+  "drv": {
+   "violators": 7301
+  },
+  "displacement_um": {
+   "st": {
+    "max": 46.1,
+    "p90": 39.4,
+    "over50": 0
+   },
+   "bf": {
+    "max": 1.5,
+    "p90": 1.3,
+    "over50": 0
+   }
+  },
+  "peak_gb": 12.38,
+  "wall": "31:09.21",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "7 ft slots with a station hop > 405 um (decision 12; worst L4x4 864, L4x10 863, L124x3 737 um); GRT overflow 494793 (20000 gcells, hot bbox 22.8% of outline); skeleton TT setup WNS -419.7 ps (3541 endpoints)",
+   "hot_frac": 0.2283
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 7,
+   "max_hop_um": 864.0,
+   "over_reach": {
+    "L4x4": 864.0,
+    "L4x10": 863.0,
+    "L124x3": 737.2,
+    "L64x2": 720.9,
+    "L148x2": 694.6,
+    "L133x1": 688.0,
+    "L80x3": 641.9
+   },
+   "over_reach_bits": 6120,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b001.png"
+ },
+ "q_b002": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b002",
+  "instance": "NW_b002",
+  "outline_um": [
+   708.48,
+   2073.6
+  ],
+  "pins": 17830,
+  "flops": 22997,
+  "leaf_blockages": 3,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 83248,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L4x9",
+    27375
+   ],
+   [
+    "L4x5",
+    21059
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   117,
+   707,
+   528
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 26174497,
+    "demand": 2690238,
+    "usage_pct": 10.28,
+    "overflow": 22812
+   },
+   "M3": {
+    "resource": 29346247,
+    "demand": 1402392,
+    "usage_pct": 4.78,
+    "overflow": 12064
+   },
+   "M4": {
+    "resource": 21981094,
+    "demand": 2603237,
+    "usage_pct": 11.84,
+    "overflow": 15259
+   },
+   "M5": {
+    "resource": 22008594,
+    "demand": 1019993,
+    "usage_pct": 4.63,
+    "overflow": 6187
+   },
+   "M6": {
+    "resource": 18059032,
+    "demand": 1668507,
+    "usage_pct": 9.24,
+    "overflow": 10723
+   },
+   "M7": {
+    "resource": 18078192,
+    "demand": 631081,
+    "usage_pct": 3.49,
+    "overflow": 4169
+   },
+   "M8": {
+    "resource": 14108929,
+    "demand": 980410,
+    "usage_pct": 6.95,
+    "overflow": 9493
+   },
+   "M9": {
+    "resource": 14125860,
+    "demand": 336321,
+    "usage_pct": 2.38,
+    "overflow": 2541
+   }
+  },
+  "wirelength_um": 6644546.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -93.58,
+   "tt_setup_tns": -4808.9,
+   "tt_setup_viol": 114,
+   "tt_setup_endpoints": 29098,
+   "ff_hold_wns": 98.66,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 29098
+  },
+  "repair_buffers": 23990,
+  "drv": {
+   "violators": 2424
+  },
+  "displacement_um": {
+   "st": {
+    "max": 45.6,
+    "p90": 37.7,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.7,
+    "p90": 1.3,
+    "over50": 0
+   }
+  },
+  "peak_gb": 12.6,
+  "wall": "31:00.67",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "3 ft slots with a station hop > 405 um (decision 12; worst L64x3 766, L80x2 715, L124x2 706 um); GRT overflow 83248 (20000 gcells, hot bbox 19.8% of outline); skeleton TT setup WNS -93.6 ps (114 endpoints)",
+   "hot_frac": 0.1982
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 5,
+   "max_hop_um": 766.0,
+   "over_reach": {
+    "L64x3": 766.0,
+    "L80x2": 714.9,
+    "L124x2": 705.8
+   },
+   "over_reach_bits": 480,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b002.png"
+ },
+ "q_b003": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b003",
+  "instance": "NW_b003",
+  "outline_um": [
+   717.12,
+   2073.6
+  ],
+  "pins": 17292,
+  "flops": 23477,
+  "leaf_blockages": 3,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 123845,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L4x8",
+    26891
+   ],
+   [
+    "L4x6",
+    25146
+   ],
+   [
+    "L73x4",
+    10688
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   115,
+   717,
+   529
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 23140299,
+    "demand": 2856639,
+    "usage_pct": 12.34,
+    "overflow": 30793
+   },
+   "M3": {
+    "resource": 25927632,
+    "demand": 2142842,
+    "usage_pct": 8.26,
+    "overflow": 21444
+   },
+   "M4": {
+    "resource": 19435269,
+    "demand": 2751101,
+    "usage_pct": 14.16,
+    "overflow": 20570
+   },
+   "M5": {
+    "resource": 19442274,
+    "demand": 1411955,
+    "usage_pct": 7.26,
+    "overflow": 10951
+   },
+   "M6": {
+    "resource": 18291864,
+    "demand": 1762439,
+    "usage_pct": 9.64,
+    "overflow": 16775
+   },
+   "M7": {
+    "resource": 18299988,
+    "demand": 810846,
+    "usage_pct": 4.43,
+    "overflow": 7219
+   },
+   "M8": {
+    "resource": 14290833,
+    "demand": 981056,
+    "usage_pct": 6.86,
+    "overflow": 12555
+   },
+   "M9": {
+    "resource": 14296752,
+    "demand": 381324,
+    "usage_pct": 2.67,
+    "overflow": 3538
+   }
+  },
+  "wirelength_um": 7670193.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -115.21,
+   "tt_setup_tns": -2560.5,
+   "tt_setup_viol": 72,
+   "tt_setup_endpoints": 29847,
+   "ff_hold_wns": 94.73,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 29847
+  },
+  "repair_buffers": 27460,
+  "drv": {
+   "violators": 3225
+  },
+  "displacement_um": {
+   "st": {
+    "max": 45.4,
+    "p90": 36.9,
+    "over50": 0
+   },
+   "bf": {
+    "max": 20.4,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "peak_gb": 12.9,
+  "wall": "32:03.21",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "5 ft slots with a station hop > 405 um (decision 12; worst L64x4 762, L124x1 741, L80x1 725 um); GRT overflow 123845 (20000 gcells, hot bbox 20.0% of outline); skeleton TT setup WNS -115.2 ps (72 endpoints)",
+   "hot_frac": 0.1998
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 7,
+   "max_hop_um": 761.9,
+   "over_reach": {
+    "L64x4": 761.9,
+    "L124x1": 741.1,
+    "L80x1": 724.9,
+    "L146x1": 688.3,
+    "L73x4": 688.3
+   },
+   "over_reach_bits": 749,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b003.png"
+ },
+ "q_b010": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b010",
+  "instance": "NW_b010",
+  "outline_um": [
+   708.48,
+   2073.6
+  ],
+  "pins": 17193,
+  "flops": 17206,
+  "leaf_blockages": 3,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 718495,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L12x4",
+    4113
+   ],
+   [
+    "L13x4",
+    2969
+   ],
+   [
+    "L22x8",
+    320
+   ]
+  ],
+  "hot_bbox_um": [
+   108,
+   370,
+   707,
+   1030
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 22737009,
+    "demand": 1436996,
+    "usage_pct": 6.32,
+    "overflow": 84950
+   },
+   "M3": {
+    "resource": 25488201,
+    "demand": 2005722,
+    "usage_pct": 7.87,
+    "overflow": 60328
+   },
+   "M4": {
+    "resource": 19092082,
+    "demand": 1475439,
+    "usage_pct": 7.73,
+    "overflow": 81840
+   },
+   "M5": {
+    "resource": 19117149,
+    "demand": 1506982,
+    "usage_pct": 7.88,
+    "overflow": 50458
+   },
+   "M6": {
+    "resource": 18059032,
+    "demand": 3252496,
+    "usage_pct": 18.01,
+    "overflow": 227004
+   },
+   "M7": {
+    "resource": 18078192,
+    "demand": 2214927,
+    "usage_pct": 12.25,
+    "overflow": 58926
+   },
+   "M8": {
+    "resource": 14108929,
+    "demand": 2208467,
+    "usage_pct": 15.65,
+    "overflow": 128707
+   },
+   "M9": {
+    "resource": 14125860,
+    "demand": 880151,
+    "usage_pct": 6.23,
+    "overflow": 26282
+   }
+  },
+  "wirelength_um": 8838944.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -193.27,
+   "tt_setup_tns": -13853.4,
+   "tt_setup_viol": 261,
+   "tt_setup_endpoints": 23556,
+   "ff_hold_wns": 132.45,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 23556
+  },
+  "repair_buffers": 27400,
+  "drv": {
+   "violators": 8424
+  },
+  "displacement_um": {
+   "st": {
+    "max": 42.9,
+    "p90": 32.4,
+    "over50": 0
+   },
+   "bf": {
+    "max": 4.7,
+    "p90": 1.7,
+    "over50": 0
+   }
+  },
+  "peak_gb": 12.96,
+  "wall": "1:00:18",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "6 ft slots with a station hop > 405 um (decision 12; worst L116x3 717, L119x3 714, L103x3 695 um); GRT overflow 718495 (20000 gcells, hot bbox 27.0% of outline); skeleton TT setup WNS -193.3 ps (261 endpoints)",
+   "hot_frac": 0.2696
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 716.8,
+   "over_reach": {
+    "L116x3": 716.8,
+    "L119x3": 714.0,
+    "L103x3": 694.8,
+    "L12x4": 693.9,
+    "L13x4": 661.9,
+    "L22x8": 626.4
+   },
+   "over_reach_bits": 6363,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b010.png"
+ },
+ "q_b011": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b011",
+  "instance": "NW_b011",
+  "outline_um": [
+   708.48,
+   2073.6
+  ],
+  "pins": 18262,
+  "flops": 18355,
+  "leaf_blockages": 3,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 5797,
+  "hot_gcells": 3200,
+  "hot_slots": [
+   [
+    "L13x3",
+    6435
+   ],
+   [
+    "L12x3",
+    4937
+   ]
+  ],
+  "hot_bbox_um": [
+   2,
+   93,
+   707,
+   994
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 26178108,
+    "demand": 2703218,
+    "usage_pct": 10.33,
+    "overflow": 2413
+   },
+   "M3": {
+    "resource": 29348622,
+    "demand": 2200300,
+    "usage_pct": 7.5,
+    "overflow": 192
+   },
+   "M4": {
+    "resource": 21980791,
+    "demand": 2417188,
+    "usage_pct": 11.0,
+    "overflow": 1282
+   },
+   "M5": {
+    "resource": 22010376,
+    "demand": 1327204,
+    "usage_pct": 6.03,
+    "overflow": 93
+   },
+   "M6": {
+    "resource": 18059032,
+    "demand": 2180725,
+    "usage_pct": 12.08,
+    "overflow": 958
+   },
+   "M7": {
+    "resource": 18078192,
+    "demand": 715385,
+    "usage_pct": 3.96,
+    "overflow": 40
+   },
+   "M8": {
+    "resource": 14108929,
+    "demand": 854159,
+    "usage_pct": 6.05,
+    "overflow": 761
+   },
+   "M9": {
+    "resource": 14125860,
+    "demand": 173496,
+    "usage_pct": 1.23,
+    "overflow": 58
+   }
+  },
+  "wirelength_um": 7281901.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -221.77,
+   "tt_setup_tns": -24930.4,
+   "tt_setup_viol": 420,
+   "tt_setup_endpoints": 24672,
+   "ff_hold_wns": 132.44,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 24672
+  },
+  "repair_buffers": 26859,
+  "drv": {
+   "violators": 4469
+  },
+  "displacement_um": {
+   "st": {
+    "max": 41.5,
+    "p90": 33.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 4.6,
+    "p90": 1.3,
+    "over50": 0
+   }
+  },
+  "peak_gb": 12.71,
+  "wall": "37:52.86",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "5 ft slots with a station hop > 405 um (decision 12; worst L22x7 863, L13x3 725, L119x4 708 um); GRT overflow 5797 (3200 gcells, hot bbox 43.3% of outline); skeleton TT setup WNS -221.8 ps (420 endpoints)",
+   "hot_frac": 0.4331
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 5,
+   "max_hop_um": 863.3,
+   "over_reach": {
+    "L22x7": 863.3,
+    "L13x3": 725.0,
+    "L119x4": 708.5,
+    "L148x1": 688.3,
+    "L12x3": 551.5
+   },
+   "over_reach_bits": 6330,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b011.png"
+ },
+ "q_b012": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b012",
+  "instance": "NW_b012",
+  "outline_um": [
+   708.48,
+   2073.6
+  ],
+  "pins": 17153,
+  "flops": 10848,
+  "leaf_blockages": 3,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 32050,
+  "hot_gcells": 10972,
+  "hot_slots": [],
+  "hot_bbox_um": [
+   225,
+   72,
+   707,
+   1062
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 22742961,
+    "demand": 1890657,
+    "usage_pct": 8.31,
+    "overflow": 7399
+   },
+   "M3": {
+    "resource": 25485219,
+    "demand": 877590,
+    "usage_pct": 3.44,
+    "overflow": 2943
+   },
+   "M4": {
+    "resource": 19093014,
+    "demand": 1984201,
+    "usage_pct": 10.39,
+    "overflow": 4659
+   },
+   "M5": {
+    "resource": 19114405,
+    "demand": 623666,
+    "usage_pct": 3.26,
+    "overflow": 2629
+   },
+   "M6": {
+    "resource": 18059032,
+    "demand": 2854158,
+    "usage_pct": 15.8,
+    "overflow": 5301
+   },
+   "M7": {
+    "resource": 18078192,
+    "demand": 636273,
+    "usage_pct": 3.52,
+    "overflow": 3171
+   },
+   "M8": {
+    "resource": 14108929,
+    "demand": 1346969,
+    "usage_pct": 9.55,
+    "overflow": 4366
+   },
+   "M9": {
+    "resource": 14125860,
+    "demand": 208043,
+    "usage_pct": 1.47,
+    "overflow": 1582
+   }
+  },
+  "wirelength_um": 6047452.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -703.52,
+   "tt_setup_tns": -247333.1,
+   "tt_setup_viol": 2307,
+   "tt_setup_endpoints": 17163,
+   "ff_hold_wns": 97.48,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 17163
+  },
+  "repair_buffers": 18997,
+  "drv": {
+   "violators": 6657
+  },
+  "displacement_um": {
+   "st": {
+    "max": 40.8,
+    "p90": 34.3,
+    "over50": 0
+   },
+   "bf": {
+    "max": 1.6,
+    "p90": 1.2,
+    "over50": 0
+   }
+  },
+  "peak_gb": 12.35,
+  "wall": "38:57.87",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "4 ft slots with a station hop > 405 um (decision 12; worst L13x2 825, L12x2 824, L22x6 820 um); GRT overflow 32050 (10972 gcells, hot bbox 32.6% of outline); skeleton TT setup WNS -703.5 ps (2307 endpoints)",
+   "hot_frac": 0.3256
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 4,
+   "max_hop_um": 824.9,
+   "over_reach": {
+    "L13x2": 824.9,
+    "L12x2": 824.3,
+    "L22x6": 820.1,
+    "L119x5": 749.9
+   },
+   "over_reach_bits": 6328,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b012.png"
+ },
+ "q_b013": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b013",
+  "instance": "NW_b013",
+  "outline_um": [
+   717.12,
+   2073.6
+  ],
+  "pins": 17135,
+  "flops": 17148,
+  "leaf_blockages": 3,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 759679,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L12x1",
+    999
+   ],
+   [
+    "L13x1",
+    522
+   ],
+   [
+    "L22x5",
+    132
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   0,
+   716,
+   880
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 23144528,
+    "demand": 1612837,
+    "usage_pct": 6.97,
+    "overflow": 69034
+   },
+   "M3": {
+    "resource": 25922097,
+    "demand": 1642276,
+    "usage_pct": 6.34,
+    "overflow": 46680
+   },
+   "M4": {
+    "resource": 19434034,
+    "demand": 1628097,
+    "usage_pct": 8.38,
+    "overflow": 75168
+   },
+   "M5": {
+    "resource": 19438578,
+    "demand": 1311772,
+    "usage_pct": 6.75,
+    "overflow": 44226
+   },
+   "M6": {
+    "resource": 18291864,
+    "demand": 3287737,
+    "usage_pct": 17.97,
+    "overflow": 304705
+   },
+   "M7": {
+    "resource": 18299988,
+    "demand": 1922550,
+    "usage_pct": 10.51,
+    "overflow": 58528
+   },
+   "M8": {
+    "resource": 14290833,
+    "demand": 1899450,
+    "usage_pct": 13.29,
+    "overflow": 132428
+   },
+   "M9": {
+    "resource": 14296752,
+    "demand": 718747,
+    "usage_pct": 5.03,
+    "overflow": 28910
+   }
+  },
+  "wirelength_um": 8250060.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -813.51,
+   "tt_setup_tns": -305081.0,
+   "tt_setup_viol": 1543,
+   "tt_setup_endpoints": 23453,
+   "ff_hold_wns": 132.49,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 23453
+  },
+  "repair_buffers": 22206,
+  "drv": {
+   "violators": 9449
+  },
+  "displacement_um": {
+   "st": {
+    "max": 41.9,
+    "p90": 32.4,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.8,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "peak_gb": 13.06,
+  "wall": "1:01:55",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "3 ft slots with a station hop > 405 um (decision 12; worst L13x1 714, L12x1 712, L22x5 587 um); GRT overflow 759679 (20000 gcells, hot bbox 42.4% of outline); skeleton TT setup WNS -813.5 ps (1543 endpoints)",
+   "hot_frac": 0.4237
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 3,
+   "max_hop_um": 714.5,
+   "over_reach": {
+    "L13x1": 714.5,
+    "L12x1": 711.5,
+    "L22x5": 587.1
+   },
+   "over_reach_bits": 6318,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b013.png"
+ },
+ "q_b100": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b100",
+  "instance": "NW_b100",
+  "outline_um": [
+   708.48,
+   2073.6
+  ],
+  "pins": 16308,
+  "flops": 10687,
+  "leaf_blockages": 16,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 393417,
+  "hot_gcells": 20000,
+  "hot_slots": [],
+  "hot_bbox_um": [
+   0,
+   78,
+   707,
+   581
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 21873286,
+    "demand": 835832,
+    "usage_pct": 3.82,
+    "overflow": 39318
+   },
+   "M3": {
+    "resource": 24512149,
+    "demand": 679769,
+    "usage_pct": 2.77,
+    "overflow": 31182
+   },
+   "M4": {
+    "resource": 18362758,
+    "demand": 1017767,
+    "usage_pct": 5.54,
+    "overflow": 67461
+   },
+   "M5": {
+    "resource": 18380702,
+    "demand": 616427,
+    "usage_pct": 3.35,
+    "overflow": 20430
+   },
+   "M6": {
+    "resource": 18059032,
+    "demand": 3442771,
+    "usage_pct": 19.06,
+    "overflow": 141990
+   },
+   "M7": {
+    "resource": 18078192,
+    "demand": 843809,
+    "usage_pct": 4.67,
+    "overflow": 22920
+   },
+   "M8": {
+    "resource": 14108929,
+    "demand": 1939459,
+    "usage_pct": 13.75,
+    "overflow": 60675
+   },
+   "M9": {
+    "resource": 14125860,
+    "demand": 302073,
+    "usage_pct": 2.14,
+    "overflow": 9441
+   }
+  },
+  "wirelength_um": 5677729.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -274.07,
+   "tt_setup_tns": -58217.7,
+   "tt_setup_viol": 1090,
+   "tt_setup_endpoints": 16314,
+   "ff_hold_wns": 132.46,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 16314
+  },
+  "repair_buffers": 16957,
+  "drv": {
+   "violators": 4931
+  },
+  "displacement_um": {
+   "st": {
+    "max": 46.1,
+    "p90": 39.9,
+    "over50": 0
+   },
+   "bf": {
+    "max": 4.0,
+    "p90": 1.8,
+    "over50": 0
+   }
+  },
+  "peak_gb": 12.39,
+  "wall": "43:17.37",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "4 ft slots with a station hop > 405 um (decision 12; worst L4x1 864, L4x13 863, L133x4 748 um); GRT overflow 393417 (20000 gcells, hot bbox 24.2% of outline); skeleton TT setup WNS -274.1 ps (1090 endpoints)",
+   "hot_frac": 0.2421
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 4,
+   "max_hop_um": 864.0,
+   "over_reach": {
+    "L4x1": 864.0,
+    "L4x13": 863.0,
+    "L133x4": 747.6,
+    "L142x2": 746.3
+   },
+   "over_reach_bits": 5640,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b100.png"
+ },
+ "q_b101": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b101",
+  "instance": "NW_b101",
+  "outline_um": [
+   708.48,
+   2073.6
+  ],
+  "pins": 15860,
+  "flops": 12289,
+  "leaf_blockages": 17,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 1504136,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L19x1",
+    21084
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   80,
+   708,
+   2073
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 21261935,
+    "demand": 1935486,
+    "usage_pct": 9.1,
+    "overflow": 130963
+   },
+   "M3": {
+    "resource": 23831014,
+    "demand": 2828402,
+    "usage_pct": 11.87,
+    "overflow": 457234
+   },
+   "M4": {
+    "resource": 17851082,
+    "demand": 2009235,
+    "usage_pct": 11.26,
+    "overflow": 148183
+   },
+   "M5": {
+    "resource": 17869919,
+    "demand": 2098126,
+    "usage_pct": 11.74,
+    "overflow": 245543
+   },
+   "M6": {
+    "resource": 18059032,
+    "demand": 4094688,
+    "usage_pct": 22.67,
+    "overflow": 182141
+   },
+   "M7": {
+    "resource": 18078192,
+    "demand": 1778476,
+    "usage_pct": 9.84,
+    "overflow": 172316
+   },
+   "M8": {
+    "resource": 14108929,
+    "demand": 2354520,
+    "usage_pct": 16.69,
+    "overflow": 87581
+   },
+   "M9": {
+    "resource": 14125860,
+    "demand": 947570,
+    "usage_pct": 6.71,
+    "overflow": 80175
+   }
+  },
+  "wirelength_um": 10616351.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -257.78,
+   "tt_setup_tns": -75493.9,
+   "tt_setup_viol": 1424,
+   "tt_setup_endpoints": 19966,
+   "ff_hold_wns": 132.46,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 19966
+  },
+  "repair_buffers": 34100,
+  "drv": {
+   "violators": 8999
+  },
+  "displacement_um": {
+   "st": {
+    "max": 46.2,
+    "p90": 38.8,
+    "over50": 0
+   },
+   "bf": {
+    "max": 6.3,
+    "p90": 3.2,
+    "over50": 0
+   }
+  },
+  "peak_gb": 13.6,
+  "wall": "55:03.98",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "5 ft slots with a station hop > 405 um (decision 12; worst L4x2 864, L4x12 863, L142x1 740 um); GRT overflow 1504136 (20000 gcells, hot bbox 96.2% of outline); skeleton TT setup WNS -257.8 ps (1424 endpoints)",
+   "hot_frac": 0.9618
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 5,
+   "max_hop_um": 864.0,
+   "over_reach": {
+    "L4x2": 864.0,
+    "L4x12": 863.0,
+    "L142x1": 740.3,
+    "L133x3": 739.4,
+    "L19x1": 705.5
+   },
+   "over_reach_bits": 7690,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b101.png"
+ },
+ "q_b102": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b102",
+  "instance": "NW_b102",
+  "outline_um": [
+   708.48,
+   2073.6
+  ],
+  "pins": 16892,
+  "flops": 14760,
+  "leaf_blockages": 16,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 1365332,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L13x6",
+    8776
+   ],
+   [
+    "L22x10",
+    1164
+   ],
+   [
+    "L19x3",
+    982
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   32,
+   704,
+   937
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 21869652,
+    "demand": 1880581,
+    "usage_pct": 8.6,
+    "overflow": 173491
+   },
+   "M3": {
+    "resource": 24512149,
+    "demand": 1877828,
+    "usage_pct": 7.66,
+    "overflow": 53951
+   },
+   "M4": {
+    "resource": 18362758,
+    "demand": 2069631,
+    "usage_pct": 11.27,
+    "overflow": 201506
+   },
+   "M5": {
+    "resource": 18380702,
+    "demand": 1571729,
+    "usage_pct": 8.55,
+    "overflow": 68878
+   },
+   "M6": {
+    "resource": 18059032,
+    "demand": 4321222,
+    "usage_pct": 23.93,
+    "overflow": 497300
+   },
+   "M7": {
+    "resource": 18078192,
+    "demand": 1851733,
+    "usage_pct": 10.24,
+    "overflow": 67920
+   },
+   "M8": {
+    "resource": 14108929,
+    "demand": 2698066,
+    "usage_pct": 19.12,
+    "overflow": 274107
+   },
+   "M9": {
+    "resource": 14125860,
+    "demand": 826515,
+    "usage_pct": 5.85,
+    "overflow": 28179
+   }
+  },
+  "wirelength_um": 10098271.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -316.19,
+   "tt_setup_tns": -53381.6,
+   "tt_setup_viol": 818,
+   "tt_setup_endpoints": 23193,
+   "ff_hold_wns": 37.8,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 23193
+  },
+  "repair_buffers": 29002,
+  "drv": {
+   "violators": 8665
+  },
+  "displacement_um": {
+   "st": {
+    "max": 40.7,
+    "p90": 32.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 13.4,
+  "wall": "55:51.90",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "9 ft slots with a station hop > 405 um (decision 12; worst L12x6 824, L119x1 745, L116x1 744 um); GRT overflow 1365332 (20000 gcells, hot bbox 43.4% of outline); skeleton TT setup WNS -316.2 ps (818 endpoints)",
+   "hot_frac": 0.4341
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 9,
+   "max_hop_um": 824.3,
+   "over_reach": {
+    "L12x6": 824.3,
+    "L119x1": 745.2,
+    "L116x1": 743.7,
+    "L103x1": 740.7,
+    "L121x2": 738.8,
+    "L19x3": 738.8,
+    "L22x10": 719.1,
+    "L98x1": 694.7,
+    "L13x6": 673.1
+   },
+   "over_reach_bits": 8446,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b102.png"
+ },
+ "q_b103": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b103",
+  "instance": "NW_b103",
+  "outline_um": [
+   708.48,
+   2073.6
+  ],
+  "pins": 16826,
+  "flops": 10520,
+  "leaf_blockages": 17,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 1417303,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L22x9",
+    884
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   0,
+   702,
+   777
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 21262859,
+    "demand": 1403185,
+    "usage_pct": 6.6,
+    "overflow": 125553
+   },
+   "M3": {
+    "resource": 23831014,
+    "demand": 1477673,
+    "usage_pct": 6.2,
+    "overflow": 136321
+   },
+   "M4": {
+    "resource": 17851082,
+    "demand": 1447664,
+    "usage_pct": 8.11,
+    "overflow": 165764
+   },
+   "M5": {
+    "resource": 17870192,
+    "demand": 1325533,
+    "usage_pct": 7.42,
+    "overflow": 167505
+   },
+   "M6": {
+    "resource": 18059032,
+    "demand": 3741297,
+    "usage_pct": 20.72,
+    "overflow": 361971
+   },
+   "M7": {
+    "resource": 18078192,
+    "demand": 2158960,
+    "usage_pct": 11.94,
+    "overflow": 183348
+   },
+   "M8": {
+    "resource": 14108929,
+    "demand": 2526892,
+    "usage_pct": 17.91,
+    "overflow": 207229
+   },
+   "M9": {
+    "resource": 14125860,
+    "demand": 1159372,
+    "usage_pct": 8.21,
+    "overflow": 69612
+   }
+  },
+  "wirelength_um": 8995523.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -315.15,
+   "tt_setup_tns": -55580.5,
+   "tt_setup_viol": 1054,
+   "tt_setup_endpoints": 18920,
+   "ff_hold_wns": 125.7,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 18920
+  },
+  "repair_buffers": 26593,
+  "drv": {
+   "violators": 8453
+  },
+  "displacement_um": {
+   "st": {
+    "max": 41.3,
+    "p90": 32.9,
+    "over50": 0
+   }
+  },
+  "peak_gb": 13.1,
+  "wall": "58:57.60",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "7 ft slots with a station hop > 405 um (decision 12; worst L19x2 836, L13x5 825, L12x5 824 um); GRT overflow 1417303 (20000 gcells, hot bbox 37.2% of outline); skeleton TT setup WNS -315.1 ps (1054 endpoints)",
+   "hot_frac": 0.3716
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 7,
+   "max_hop_um": 836.3,
+   "over_reach": {
+    "L19x2": 836.3,
+    "L13x5": 824.9,
+    "L12x5": 824.3,
+    "L119x2": 742.2,
+    "L116x2": 739.9,
+    "L22x9": 738.7,
+    "L103x2": 737.9
+   },
+   "over_reach_bits": 8413,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b103.png"
+ },
+ "q_b110": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b110",
+  "instance": "NW_b110",
+  "outline_um": [
+   1658.88,
+   2073.6
+  ],
+  "pins": 16118,
+  "flops": 25993,
+  "leaf_blockages": 4,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 2258948,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L38x1",
+    15201
+   ],
+   [
+    "L33x1",
+    5593
+   ],
+   [
+    "L52x2",
+    2813
+   ],
+   [
+    "L59x2",
+    635
+   ],
+   [
+    "L69x2",
+    583
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   0,
+   1659,
+   993
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 62480848,
+    "demand": 4768884,
+    "usage_pct": 7.63,
+    "overflow": 307900
+   },
+   "M3": {
+    "resource": 69930692,
+    "demand": 4279257,
+    "usage_pct": 6.12,
+    "overflow": 133207
+   },
+   "M4": {
+    "resource": 52451966,
+    "demand": 3678214,
+    "usage_pct": 7.01,
+    "overflow": 278464
+   },
+   "M5": {
+    "resource": 52447109,
+    "demand": 2555291,
+    "usage_pct": 4.87,
+    "overflow": 252254
+   },
+   "M6": {
+    "resource": 42331768,
+    "demand": 3891070,
+    "usage_pct": 9.19,
+    "overflow": 570630
+   },
+   "M7": {
+    "resource": 42330312,
+    "demand": 3058949,
+    "usage_pct": 7.23,
+    "overflow": 274101
+   },
+   "M8": {
+    "resource": 33072421,
+    "demand": 2362534,
+    "usage_pct": 7.14,
+    "overflow": 350244
+   },
+   "M9": {
+    "resource": 33069420,
+    "demand": 1421091,
+    "usage_pct": 4.3,
+    "overflow": 92148
+   }
+  },
+  "wirelength_um": 15340840.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -257.5,
+   "tt_setup_tns": -27013.0,
+   "tt_setup_viol": 643,
+   "tt_setup_endpoints": 31088,
+   "ff_hold_wns": 2.76,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 31088
+  },
+  "repair_buffers": 59343,
+  "drv": {
+   "violators": 9101
+  },
+  "displacement_um": {
+   "st": {
+    "max": 36.8,
+    "p90": 26.8,
+    "over50": 0
+   },
+   "bf": {
+    "max": 26.8,
+    "p90": 3.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 26.72,
+  "wall": "1:02:04",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "17 ft slots with a station hop > 405 um (decision 12; worst L52x2 793, L33x1 775, L69x2 752 um); GRT overflow 2258948 (20000 gcells, hot bbox 47.9% of outline); skeleton TT setup WNS -257.5 ps (643 endpoints)",
+   "hot_frac": 0.4791
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 17,
+   "max_hop_um": 793.1,
+   "over_reach": {
+    "L52x2": 793.1,
+    "L33x1": 775.4,
+    "L69x2": 752.1,
+    "L51x1": 749.6,
+    "L59x2": 744.3,
+    "L101x1": 734.4,
+    "L102x1": 734.4,
+    "L104x1": 734.4,
+    "L112x1": 734.4,
+    "L99x1": 734.4,
+    "L122x2": 730.5,
+    "L126x2": 730.5,
+    "L134x3": 730.5,
+    "L136x2": 730.5,
+    "L97x1": 713.9,
+    "L110x1": 710.8,
+    "L38x1": 707.2
+   },
+   "over_reach_bits": 5126,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b110.png"
+ },
+ "q_b111": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b111",
+  "instance": "NW_b111",
+  "outline_um": [
+   1650.24,
+   2073.6
+  ],
+  "pins": 7487,
+  "flops": 10749,
+  "leaf_blockages": 5,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 2122237,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L38x2",
+    19002
+   ],
+   [
+    "L59x1",
+    10472
+   ],
+   [
+    "L52x1",
+    8521
+   ],
+   [
+    "L51x2",
+    7998
+   ],
+   [
+    "L101x2",
+    183
+   ]
+  ],
+  "hot_bbox_um": [
+   134,
+   0,
+   1219,
+   68
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 59217033,
+    "demand": 2973255,
+    "usage_pct": 5.02,
+    "overflow": 679757
+   },
+   "M3": {
+    "resource": 66263180,
+    "demand": 1477193,
+    "usage_pct": 2.23,
+    "overflow": 41611
+   },
+   "M4": {
+    "resource": 49699374,
+    "demand": 2262131,
+    "usage_pct": 4.55,
+    "overflow": 372843
+   },
+   "M5": {
+    "resource": 49694657,
+    "demand": 641964,
+    "usage_pct": 1.29,
+    "overflow": 30245
+   },
+   "M6": {
+    "resource": 42113488,
+    "demand": 2078762,
+    "usage_pct": 4.94,
+    "overflow": 639067
+   },
+   "M7": {
+    "resource": 42108516,
+    "demand": 486164,
+    "usage_pct": 1.15,
+    "overflow": 24080
+   },
+   "M8": {
+    "resource": 32901886,
+    "demand": 1131956,
+    "usage_pct": 3.44,
+    "overflow": 319331
+   },
+   "M9": {
+    "resource": 32898528,
+    "demand": 198816,
+    "usage_pct": 0.6,
+    "overflow": 15303
+   }
+  },
+  "wirelength_um": 6807156.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -257.84,
+   "tt_setup_tns": -14785.2,
+   "tt_setup_viol": 389,
+   "tt_setup_endpoints": 13869,
+   "ff_hold_wns": 79.93,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 13869
+  },
+  "repair_buffers": 22992,
+  "drv": {
+   "violators": 5322
+  },
+  "displacement_um": {
+   "st": {
+    "max": 42.7,
+    "p90": 31.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.8,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "peak_gb": 24.89,
+  "wall": "18:14.58",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "10 ft slots with a station hop > 405 um (decision 12; worst L52x1 762, L102x2 710, L101x2 704 um); GRT overflow 2122237 (20000 gcells, hot bbox 2.2% of outline); skeleton TT setup WNS -257.8 ps (389 endpoints)",
+   "hot_frac": 0.0217
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 10,
+   "max_hop_um": 762.2,
+   "over_reach": {
+    "L52x1": 762.2,
+    "L102x2": 710.2,
+    "L101x2": 703.5,
+    "L104x2": 703.5,
+    "L126x1": 703.5,
+    "L134x2": 703.5,
+    "L136x1": 703.5,
+    "L38x2": 703.5,
+    "L51x2": 703.5,
+    "L59x1": 703.5
+   },
+   "over_reach_bits": 3151,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b111.png"
+ },
+ "q_b112": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b112",
+  "instance": "NW_b112",
+  "outline_um": [
+   1658.88,
+   2073.6
+  ],
+  "pins": 16181,
+  "flops": 32059,
+  "leaf_blockages": 5,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": null,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {},
+  "wirelength_um": null,
+  "pin_access_no_ap": {},
+  "sta": null,
+  "repair_buffers": null,
+  "drv": null,
+  "displacement_um": null,
+  "peak_gb": null,
+  "wall": null,
+  "exit": "NOT RUN",
+  "classify": {
+   "cls": "NOT RUN",
+   "why": "9 ft slots with a station hop > 405 um (decision 12; worst L55x2 786, L36x1 744, L67x2 740 um); exit NOT RUN"
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 9,
+   "max_hop_um": 786.0,
+   "over_reach": {
+    "L55x2": 786.0,
+    "L36x1": 744.3,
+    "L67x2": 740.2,
+    "L31x1": 731.1,
+    "L29x1": 706.2,
+    "L110x2": 700.6,
+    "L97x2": 700.6,
+    "L37x1": 698.9,
+    "L43x1": 693.3
+   },
+   "over_reach_bits": 7498,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  }
+ },
+ "q_b113": {
+  "die": "hbm_arch_B2m",
+  "type": "q_b113",
+  "instance": "NW_b113",
+  "outline_um": [
+   1650.24,
+   2073.6
+  ],
+  "pins": 4927,
+  "flops": 11875,
+  "leaf_blockages": 5,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 130885,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L36x2",
+    46531
+   ],
+   [
+    "L55x1",
+    6900
+   ],
+   [
+    "L102x3",
+    287
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   0,
+   1198,
+   2035
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 44641346,
+    "demand": 2259672,
+    "usage_pct": 5.06,
+    "overflow": 22741
+   },
+   "M3": {
+    "resource": 49955505,
+    "demand": 2733785,
+    "usage_pct": 5.47,
+    "overflow": 14786
+   },
+   "M4": {
+    "resource": 37467118,
+    "demand": 2112207,
+    "usage_pct": 5.64,
+    "overflow": 14212
+   },
+   "M5": {
+    "resource": 37463076,
+    "demand": 1909415,
+    "usage_pct": 5.1,
+    "overflow": 25058
+   },
+   "M6": {
+    "resource": 42113488,
+    "demand": 1467351,
+    "usage_pct": 3.48,
+    "overflow": 9287
+   },
+   "M7": {
+    "resource": 42108516,
+    "demand": 2546304,
+    "usage_pct": 6.05,
+    "overflow": 28972
+   },
+   "M8": {
+    "resource": 32901886,
+    "demand": 843710,
+    "usage_pct": 2.56,
+    "overflow": 5902
+   },
+   "M9": {
+    "resource": 32898528,
+    "demand": 684666,
+    "usage_pct": 2.08,
+    "overflow": 9927
+   }
+  },
+  "wirelength_um": 8460306.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -1735.04,
+   "tt_setup_tns": -469627.3,
+   "tt_setup_viol": 1283,
+   "tt_setup_endpoints": 13715,
+   "ff_hold_wns": 132.46,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 13715
+  },
+  "repair_buffers": 32238,
+  "drv": {
+   "violators": 5465
+  },
+  "displacement_um": {
+   "st": {
+    "max": 35.4,
+    "p90": 26.8,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.7,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "peak_gb": 24.86,
+  "wall": "28:23.67",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "4 ft slots with a station hop > 405 um (decision 12; worst L36x2 853, L55x1 748, L102x3 728 um); GRT overflow 130885 (20000 gcells, hot bbox 71.3% of outline); skeleton TT setup WNS -1735.0 ps (1283 endpoints)",
+   "hot_frac": 0.713
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 4,
+   "max_hop_um": 853.4,
+   "over_reach": {
+    "L36x2": 853.4,
+    "L55x1": 748.2,
+    "L102x3": 727.8,
+    "L134x1": 693.6
+   },
+   "over_reach_bits": 1871,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_b113.png"
+ },
+ "q_hub": {
+  "die": "hbm_arch_B2m",
+  "type": "q_hub",
+  "instance": "NW_hub",
+  "outline_um": [
+   4838.4,
+   4147.2
+  ],
+  "pins": 81115,
+  "flops": 84349,
+  "leaf_blockages": 123,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 200752892,
+    "demand": 2075428,
+    "usage_pct": 1.03,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 224652358,
+    "demand": 726268,
+    "usage_pct": 0.32,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 168525600,
+    "demand": 1584490,
+    "usage_pct": 0.94,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 168474942,
+    "demand": 307608,
+    "usage_pct": 0.18,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 247005648,
+    "demand": 653907,
+    "usage_pct": 0.26,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 246981396,
+    "demand": 162976,
+    "usage_pct": 0.07,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 192968919,
+    "demand": 119983,
+    "usage_pct": 0.06,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 192957398,
+    "demand": 63701,
+    "usage_pct": 0.03,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 3395674.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 68.97,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 84720,
+   "ff_hold_wns": 132.46,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 84720
+  },
+  "repair_buffers": 13899,
+  "drv": {
+   "violators": 515
+  },
+  "displacement_um": {
+   "st": {
+    "max": 22.6,
+    "p90": 18.4,
+    "over50": 0
+   },
+   "bf": {
+    "max": 20.5,
+    "p90": 2.3,
+    "over50": 0
+   }
+  },
+  "peak_gb": 136.05,
+  "wall": "48:17.67",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "1 ft slots with a station hop > 405 um (decision 12; worst L56x2 728 um); GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 1,
+   "max_hop_um": 728.1,
+   "over_reach": {
+    "L56x2": 728.1
+   },
+   "over_reach_bits": 515,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_hub.png"
+ },
+ "q_mca": {
+  "die": "hbm_arch_B2m",
+  "type": "q_mca",
+  "instance": "NW_mca",
+  "outline_um": [
+   4898.88,
+   2073.6
+  ],
+  "pins": 0,
+  "flops": 79,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 218829338,
+    "demand": 23,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 244790064,
+    "demand": 26,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 183649596,
+    "demand": 86,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 183592548,
+    "demand": 14,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 125045336,
+    "demand": 37,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 125002044,
+    "demand": 21,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 97693817,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 97655688,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 207.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": null,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 0,
+   "ff_hold_wns": null,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 0
+  },
+  "repair_buffers": 79,
+  "drv": {
+   "violators": 0
+  },
+  "displacement_um": {},
+  "peak_gb": 72.78,
+  "wall": "3:33.30",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 0,
+   "max_hop_um": 0.0,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_mca.png"
+ },
+ "q_mcb": {
+  "die": "hbm_arch_B2m",
+  "type": "q_mcb",
+  "instance": "NW_mcb",
+  "outline_um": [
+   4898.88,
+   2073.6
+  ],
+  "pins": 14508,
+  "flops": 37525,
+  "leaf_blockages": 2,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 218725257,
+    "demand": 41340281,
+    "usage_pct": 18.9,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 244709116,
+    "demand": 4897386,
+    "usage_pct": 2.0,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 183588896,
+    "demand": 2712752,
+    "usage_pct": 1.48,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 183531803,
+    "demand": 1693130,
+    "usage_pct": 0.92,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 125045336,
+    "demand": 222499,
+    "usage_pct": 0.18,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 125002044,
+    "demand": 709363,
+    "usage_pct": 0.57,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 97693817,
+    "demand": 36894,
+    "usage_pct": 0.04,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 97655688,
+    "demand": 132459,
+    "usage_pct": 0.14,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 29676219.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -208.62,
+   "tt_setup_tns": -688451.2,
+   "tt_setup_viol": 5275,
+   "tt_setup_endpoints": 44409,
+   "ff_hold_wns": 132.43,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 44409
+  },
+  "repair_buffers": 140572,
+  "drv": {
+   "violators": 6763
+  },
+  "displacement_um": {
+   "st": {
+    "max": 7.0,
+    "p90": 2.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 4.9,
+    "p90": 2.2,
+    "over50": 0
+   }
+  },
+  "peak_gb": 77.63,
+  "wall": "23:36.28",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "3 ft slots with a station hop > 405 um (decision 12; worst L9x5 864, L8x5 835, L21x1 740 um); skeleton TT setup WNS -208.6 ps (5275 endpoints)",
+   "hot_frac": 0.0
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 3,
+   "max_hop_um": 863.5,
+   "over_reach": {
+    "L9x5": 863.5,
+    "L8x5": 834.8,
+    "L21x1": 739.8
+   },
+   "over_reach_bits": 6963,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_mcb.png"
+ },
+ "q_spb0": {
+  "die": "hbm_arch_B2m",
+  "type": "q_spb0",
+  "instance": "NW_spb0",
+  "outline_um": [
+   1814.4,
+   1503.36
+  ],
+  "pins": 15,
+  "flops": 36,
+  "leaf_blockages": 2,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 47506377,
+    "demand": 21,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 53146597,
+    "demand": 15,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 39868269,
+    "demand": 59,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 39857607,
+    "demand": 70,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 33570100,
+    "demand": 22,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 33564188,
+    "demand": 54,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 26226044,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 26222928,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 180.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 544.33,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 15,
+   "ff_hold_wns": 182.2,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 15
+  },
+  "repair_buffers": 21,
+  "drv": {
+   "violators": 0
+  },
+  "displacement_um": {
+   "bf": {
+    "max": 2.7,
+    "p90": 2.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 18.47,
+  "wall": "1:01.25",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 0,
+   "max_hop_um": 0.0,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_spb0.png"
+ },
+ "q_spb1": {
+  "die": "hbm_arch_B2m",
+  "type": "q_spb1",
+  "instance": "NW_spb1",
+  "outline_um": [
+   1814.4,
+   1503.36
+  ],
+  "pins": 30,
+  "flops": 51,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 58749242,
+    "demand": 127,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 65728660,
+    "demand": 29987,
+    "usage_pct": 0.05,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 49305090,
+    "demand": 77,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 49295836,
+    "demand": 3287,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 33570100,
+    "demand": 33,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 33564188,
+    "demand": 3173,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 26226044,
+    "demand": 18,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 26222928,
+    "demand": 3123,
+    "usage_pct": 0.01,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 22882.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 25.55,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 45,
+   "ff_hold_wns": 132.47,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 45
+  },
+  "repair_buffers": 126,
+  "drv": {
+   "violators": 10
+  },
+  "displacement_um": {
+   "st": {
+    "max": 4.0,
+    "p90": 3.2,
+    "over50": 0
+   }
+  },
+  "peak_gb": 18.47,
+  "wall": "0:57.87",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "2 ft slots with a station hop > 405 um (decision 12; worst L117x1 754, L138x1 752 um); GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 753.8,
+   "over_reach": {
+    "L117x1": 753.8,
+    "L138x1": 751.7
+   },
+   "over_reach_bits": 15,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_spb1.png"
+ },
+ "q_spb2": {
+  "die": "hbm_arch_B2m",
+  "type": "q_spb2",
+  "instance": "NW_spb2",
+  "outline_um": [
+   1814.4,
+   1503.36
+  ],
+  "pins": 6070,
+  "flops": 13174,
+  "leaf_blockages": 4,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 816,
+  "hot_gcells": 582,
+  "hot_slots": [
+   [
+    "L35x2",
+    4539
+   ]
+  ],
+  "hot_bbox_um": [
+   66,
+   135,
+   1798,
+   1502
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 56719593,
+    "demand": 2519089,
+    "usage_pct": 4.44,
+    "overflow": 276
+   },
+   "M3": {
+    "resource": 63463715,
+    "demand": 2514366,
+    "usage_pct": 3.96,
+    "overflow": 63
+   },
+   "M4": {
+    "resource": 47609663,
+    "demand": 2206423,
+    "usage_pct": 4.63,
+    "overflow": 144
+   },
+   "M5": {
+    "resource": 47597106,
+    "demand": 1605636,
+    "usage_pct": 3.37,
+    "overflow": 54
+   },
+   "M6": {
+    "resource": 33570100,
+    "demand": 1209326,
+    "usage_pct": 3.6,
+    "overflow": 133
+   },
+   "M7": {
+    "resource": 33564188,
+    "demand": 789161,
+    "usage_pct": 2.35,
+    "overflow": 28
+   },
+   "M8": {
+    "resource": 26226044,
+    "demand": 387583,
+    "usage_pct": 1.48,
+    "overflow": 91
+   },
+   "M9": {
+    "resource": 26222928,
+    "demand": 217259,
+    "usage_pct": 0.83,
+    "overflow": 27
+   }
+  },
+  "wirelength_um": 6627033.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 2.86,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 15086,
+   "ff_hold_wns": 132.45,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 15086
+  },
+  "repair_buffers": 27965,
+  "drv": {
+   "violators": 685
+  },
+  "displacement_um": {
+   "st": {
+    "max": 33.5,
+    "p90": 23.9,
+    "over50": 0
+   },
+   "bf": {
+    "max": 6.8,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "peak_gb": 19.84,
+  "wall": "17:12.52",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "6 ft slots with a station hop > 405 um (decision 12; worst L138x2 748, L117x2 747, L123x1 747 um); GRT overflow 816 (582 gcells, hot bbox 86.9% of outline)",
+   "hot_frac": 0.869
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 747.6,
+   "over_reach": {
+    "L138x2": 747.6,
+    "L117x2": 747.4,
+    "L123x1": 747.1,
+    "L70x1": 747.1,
+    "L100x2": 722.7,
+    "L35x2": 616.5
+   },
+   "over_reach_bits": 1933,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_spb2.png"
+ },
+ "q_spt0": {
+  "die": "hbm_arch_B2m",
+  "type": "q_spt0",
+  "instance": "NW_spt0",
+  "outline_um": [
+   1814.4,
+   1503.36
+  ],
+  "pins": 17294,
+  "flops": 32987,
+  "leaf_blockages": 4,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 356393,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L9x2",
+    41845
+   ],
+   [
+    "L8x2",
+    39461
+   ],
+   [
+    "L21x4",
+    15771
+   ],
+   [
+    "L66x2",
+    667
+   ],
+   [
+    "L79x2",
+    557
+   ]
+  ],
+  "hot_bbox_um": [
+   104,
+   0,
+   726,
+   1503
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 56703895,
+    "demand": 2943937,
+    "usage_pct": 5.19,
+    "overflow": 55130
+   },
+   "M3": {
+    "resource": 63463715,
+    "demand": 8645299,
+    "usage_pct": 13.62,
+    "overflow": 86628
+   },
+   "M4": {
+    "resource": 47609482,
+    "demand": 2395440,
+    "usage_pct": 5.03,
+    "overflow": 40118
+   },
+   "M5": {
+    "resource": 47597106,
+    "demand": 6191956,
+    "usage_pct": 13.01,
+    "overflow": 55550
+   },
+   "M6": {
+    "resource": 33570100,
+    "demand": 1451921,
+    "usage_pct": 4.33,
+    "overflow": 30526
+   },
+   "M7": {
+    "resource": 33564188,
+    "demand": 3727674,
+    "usage_pct": 11.11,
+    "overflow": 36999
+   },
+   "M8": {
+    "resource": 26226044,
+    "demand": 949892,
+    "usage_pct": 3.62,
+    "overflow": 23213
+   },
+   "M9": {
+    "resource": 26222928,
+    "demand": 1877863,
+    "usage_pct": 7.16,
+    "overflow": 28229
+   }
+  },
+  "wirelength_um": 16479821.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -144.8,
+   "tt_setup_tns": -4115.8,
+   "tt_setup_viol": 97,
+   "tt_setup_endpoints": 40511,
+   "ff_hold_wns": 132.43,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 40511
+  },
+  "repair_buffers": 51216,
+  "drv": {
+   "violators": 8057
+  },
+  "displacement_um": {
+   "st": {
+    "max": 38.1,
+    "p90": 28.4,
+    "over50": 0
+   },
+   "bf": {
+    "max": 6.0,
+    "p90": 2.2,
+    "over50": 0
+   }
+  },
+  "peak_gb": 21.73,
+  "wall": "1:12:02",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "6 ft slots with a station hop > 405 um (decision 12; worst L66x2 747, L79x2 747, L82x3 747 um); GRT overflow 356393 (20000 gcells, hot bbox 34.3% of outline); skeleton TT setup WNS -144.8 ps (97 endpoints)",
+   "hot_frac": 0.3434
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 747.4,
+   "over_reach": {
+    "L66x2": 747.4,
+    "L79x2": 747.4,
+    "L82x3": 747.4,
+    "L21x4": 501.1,
+    "L8x2": 501.1,
+    "L9x2": 501.1
+   },
+   "over_reach_bits": 7545,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_spt0.png"
+ },
+ "q_spt1": {
+  "die": "hbm_arch_B2m",
+  "type": "q_spt1",
+  "instance": "NW_spt1",
+  "outline_um": [
+   1814.4,
+   1503.36
+  ],
+  "pins": 15090,
+  "flops": 15111,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 58735454,
+    "demand": 53857,
+    "usage_pct": 0.09,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 65728660,
+    "demand": 15479226,
+    "usage_pct": 23.55,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 49305090,
+    "demand": 5803,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 49295836,
+    "demand": 1663917,
+    "usage_pct": 3.38,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 33570100,
+    "demand": 4974,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 33564188,
+    "demand": 1656853,
+    "usage_pct": 4.94,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 26226044,
+    "demand": 3872,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 26222928,
+    "demand": 1106451,
+    "usage_pct": 4.22,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 11465819.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -56.75,
+   "tt_setup_tns": -36662.9,
+   "tt_setup_viol": 692,
+   "tt_setup_endpoints": 22635,
+   "ff_hold_wns": 132.42,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 22635
+  },
+  "repair_buffers": 52836,
+  "drv": {
+   "violators": 5808
+  },
+  "displacement_um": {
+   "st": {
+    "max": 7.1,
+    "p90": 4.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 20.35,
+  "wall": "8:41.86",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "6 ft slots with a station hop > 405 um (decision 12; worst L8x3 754, L21x3 752, L66x3 752 um); skeleton TT setup WNS -56.8 ps (692 endpoints)",
+   "hot_frac": 0.0
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 753.8,
+   "over_reach": {
+    "L8x3": 753.8,
+    "L21x3": 751.6,
+    "L66x3": 751.6,
+    "L79x3": 751.6,
+    "L82x2": 751.6,
+    "L9x3": 751.6
+   },
+   "over_reach_bits": 7545,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_spt1.png"
+ },
+ "q_spt2": {
+  "die": "hbm_arch_B2m",
+  "type": "q_spt2",
+  "instance": "NW_spt2",
+  "outline_um": [
+   1814.4,
+   1503.36
+  ],
+  "pins": 15090,
+  "flops": 15111,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 58735503,
+    "demand": 62936,
+    "usage_pct": 0.11,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 65728660,
+    "demand": 15715230,
+    "usage_pct": 23.91,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 49305090,
+    "demand": 6848,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 49295836,
+    "demand": 1606982,
+    "usage_pct": 3.26,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 33570100,
+    "demand": 5373,
+    "usage_pct": 0.02,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 33564188,
+    "demand": 1570666,
+    "usage_pct": 4.68,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 26226044,
+    "demand": 4018,
+    "usage_pct": 0.02,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 26222928,
+    "demand": 1013019,
+    "usage_pct": 3.86,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 11471631.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -73.56,
+   "tt_setup_tns": -57659.3,
+   "tt_setup_viol": 1067,
+   "tt_setup_endpoints": 22635,
+   "ff_hold_wns": 132.42,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 22635
+  },
+  "repair_buffers": 52836,
+  "drv": {
+   "violators": 5957
+  },
+  "displacement_um": {
+   "st": {
+    "max": 7.1,
+    "p90": 4.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 20.36,
+  "wall": "8:41.32",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "6 ft slots with a station hop > 405 um (decision 12; worst L82x1 768, L79x4 765, L66x4 760 um); skeleton TT setup WNS -73.6 ps (1067 endpoints)",
+   "hot_frac": 0.0
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 768.5,
+   "over_reach": {
+    "L82x1": 768.5,
+    "L79x4": 764.6,
+    "L66x4": 759.5,
+    "L8x4": 753.8,
+    "L21x2": 751.6,
+    "L9x4": 751.6
+   },
+   "over_reach_bits": 7545,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_spt2.png"
+ },
+ "q_spu0": {
+  "die": "hbm_arch_B2m",
+  "type": "q_spu0",
+  "instance": "NW_spu0",
+  "outline_um": [
+   2505.6,
+   1555.2
+  ],
+  "pins": 30132,
+  "flops": 38269,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 83889493,
+    "demand": 24820455,
+    "usage_pct": 29.59,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 93901518,
+    "demand": 21481167,
+    "usage_pct": 22.88,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 70431426,
+    "demand": 1810612,
+    "usage_pct": 2.57,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 70424775,
+    "demand": 2973932,
+    "usage_pct": 4.22,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 47956116,
+    "demand": 186264,
+    "usage_pct": 0.39,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 47951568,
+    "demand": 906330,
+    "usage_pct": 1.89,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 37467638,
+    "demand": 110051,
+    "usage_pct": 0.29,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 37460799,
+    "demand": 316390,
+    "usage_pct": 0.84,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 30205188.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -194.11,
+   "tt_setup_tns": -1103046.0,
+   "tt_setup_viol": 11405,
+   "tt_setup_endpoints": 53306,
+   "ff_hold_wns": 132.43,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 53306
+  },
+  "repair_buffers": 130543,
+  "drv": {
+   "violators": 13468
+  },
+  "displacement_um": {
+   "st": {
+    "max": 9.2,
+    "p90": 2.2,
+    "over50": 0
+   }
+  },
+  "peak_gb": 31.84,
+  "wall": "27:13.88",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "20 ft slots with a station hop > 405 um (decision 12; worst L9x1 878, L31x3 838, L147x2 837 um); skeleton TT setup WNS -194.1 ps (11405 endpoints)",
+   "hot_frac": 0.0
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 20,
+   "max_hop_um": 878.1,
+   "over_reach": {
+    "L9x1": 878.1,
+    "L31x3": 837.6,
+    "L147x2": 837.0,
+    "L128x2": 836.8,
+    "L37x3": 835.4,
+    "L43x3": 835.4,
+    "L46x2": 835.4,
+    "L48x3": 835.4,
+    "L53x3": 835.4,
+    "L88x1": 826.1,
+    "L84x1": 826.0,
+    "L82x4": 825.9,
+    "L79x1": 821.6,
+    "L66x1": 816.5,
+    "L21x5": 809.1,
+    "L41x1": 809.0,
+    "L50x1": 809.0,
+    "L111x1": 762.9,
+    "L8x1": 633.8,
+    "L140x1": 625.9
+   },
+   "over_reach_bits": 15066,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_spu0.png"
+ },
+ "q_spu1": {
+  "die": "hbm_arch_B2m",
+  "type": "q_spu1",
+  "instance": "NW_spu1",
+  "outline_um": [
+   2505.6,
+   1555.2
+  ],
+  "pins": 18664,
+  "flops": 31516,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 83894258,
+    "demand": 15234448,
+    "usage_pct": 18.16,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 93901518,
+    "demand": 17808766,
+    "usage_pct": 18.97,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 70431426,
+    "demand": 3816364,
+    "usage_pct": 5.42,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 70424775,
+    "demand": 1720537,
+    "usage_pct": 2.44,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 47956116,
+    "demand": 237500,
+    "usage_pct": 0.5,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 47951568,
+    "demand": 685792,
+    "usage_pct": 1.43,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 37467638,
+    "demand": 81134,
+    "usage_pct": 0.22,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 37460799,
+    "demand": 40626,
+    "usage_pct": 0.11,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 22765859.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -172.59,
+   "tt_setup_tns": -198536.4,
+   "tt_setup_viol": 3843,
+   "tt_setup_endpoints": 40819,
+   "ff_hold_wns": 132.43,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 40819
+  },
+  "repair_buffers": 102872,
+  "drv": {
+   "violators": 8568
+  },
+  "displacement_um": {
+   "st": {
+    "max": 8.7,
+    "p90": 2.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 30.69,
+  "wall": "18:33.53",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "32 ft slots with a station hop > 405 um (decision 12; worst L62x3 866, L49x1 835, L63x1 830 um); skeleton TT setup WNS -172.6 ps (3843 endpoints)",
+   "hot_frac": 0.0
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 32,
+   "max_hop_um": 865.7,
+   "over_reach": {
+    "L62x3": 865.7,
+    "L49x1": 835.1,
+    "L63x1": 829.6,
+    "L42x1": 803.3,
+    "L65x1": 797.1,
+    "L40x1": 788.3,
+    "L39x1": 758.2,
+    "L139x1": 754.0,
+    "L138x3": 753.7,
+    "L117x3": 753.6,
+    "L149x2": 753.6,
+    "L148x5": 753.5,
+    "L73x1": 753.4,
+    "L125x3": 752.8,
+    "L130x2": 752.7,
+    "L106x3": 750.9,
+    "L74x1": 727.3,
+    "L89x1": 695.5,
+    "L123x2": 691.3,
+    "L90x1": 688.8,
+    "L100x1": 688.2,
+    "L44x2": 687.3,
+    "L60x2": 687.3,
+    "L61x2": 686.6,
+    "L96x1": 682.7,
+    "L87x1": 678.9,
+    "L83x1": 678.8,
+    "L105x1": 678.7,
+    "L113x1": 674.8,
+    "L115x1": 672.5,
+    "L70x2": 650.1,
+    "L35x1": 633.8
+   },
+   "over_reach_bits": 9332,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_spu1.png"
+ },
+ "q_su00": {
+  "die": "hbm_arch_B2m",
+  "type": "q_su00",
+  "instance": "NW_su00",
+  "outline_um": [
+   2885.76,
+   1555.2
+  ],
+  "pins": 5554,
+  "flops": 8696,
+  "leaf_blockages": 17,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 3403,
+  "hot_gcells": 2533,
+  "hot_slots": [
+   [
+    "L53x5",
+    211
+   ],
+   [
+    "L48x1",
+    60
+   ]
+  ],
+  "hot_bbox_um": [
+   294,
+   0,
+   2554,
+   48
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 41395969,
+    "demand": 1903986,
+    "usage_pct": 4.6,
+    "overflow": 898
+   },
+   "M3": {
+    "resource": 46280952,
+    "demand": 486268,
+    "usage_pct": 1.05,
+    "overflow": 39
+   },
+   "M4": {
+    "resource": 34739187,
+    "demand": 1623745,
+    "usage_pct": 4.67,
+    "overflow": 616
+   },
+   "M5": {
+    "resource": 34702976,
+    "demand": 274233,
+    "usage_pct": 0.79,
+    "overflow": 59
+   },
+   "M6": {
+    "resource": 55235754,
+    "demand": 1575565,
+    "usage_pct": 2.85,
+    "overflow": 829
+   },
+   "M7": {
+    "resource": 55224477,
+    "demand": 282381,
+    "usage_pct": 0.51,
+    "overflow": 220
+   },
+   "M8": {
+    "resource": 43155147,
+    "demand": 1015507,
+    "usage_pct": 2.35,
+    "overflow": 575
+   },
+   "M9": {
+    "resource": 43146594,
+    "demand": 39143,
+    "usage_pct": 0.09,
+    "overflow": 167
+   }
+  },
+  "wirelength_um": 4216703.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -245.32,
+   "tt_setup_tns": -11779.3,
+   "tt_setup_viol": 165,
+   "tt_setup_endpoints": 9911,
+   "ff_hold_wns": 132.49,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 9911
+  },
+  "repair_buffers": 17905,
+  "drv": {
+   "violators": 1463
+  },
+  "displacement_um": {
+   "st": {
+    "max": 23.6,
+    "p90": 18.5,
+    "over50": 0
+   },
+   "bf": {
+    "max": 20.5,
+    "p90": 2.5,
+    "over50": 0
+   }
+  },
+  "peak_gb": 32.24,
+  "wall": "20:43.83",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "2 ft slots with a station hop > 405 um (decision 12; worst L48x1 774, L53x5 724 um); GRT overflow 3403 (2533 gcells, hot bbox 2.4% of outline); skeleton TT setup WNS -245.3 ps (165 endpoints)",
+   "hot_frac": 0.0241
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 773.9,
+   "over_reach": {
+    "L48x1": 773.9,
+    "L53x5": 723.6
+   },
+   "over_reach_bits": 1248,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_su00.png"
+ },
+ "q_su01": {
+  "die": "hbm_arch_B2m",
+  "type": "q_su01",
+  "instance": "NW_su01",
+  "outline_um": [
+   2540.16,
+   1555.2
+  ],
+  "pins": 23100,
+  "flops": 44077,
+  "leaf_blockages": 11,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": null,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {},
+  "wirelength_um": null,
+  "pin_access_no_ap": {},
+  "sta": null,
+  "repair_buffers": null,
+  "drv": null,
+  "displacement_um": null,
+  "peak_gb": null,
+  "wall": null,
+  "exit": "NOT RUN",
+  "classify": {
+   "cls": "NOT RUN",
+   "why": "13 ft slots with a station hop > 405 um (decision 12; worst L37x2 824, L29x2 780, L28x1 743 um); exit NOT RUN"
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 13,
+   "max_hop_um": 824.4,
+   "over_reach": {
+    "L37x2": 824.4,
+    "L29x2": 780.5,
+    "L28x1": 743.0,
+    "L67x1": 725.7,
+    "L120x1": 717.8,
+    "L97x3": 711.8,
+    "L128x3": 708.5,
+    "L147x1": 708.5,
+    "L31x2": 708.5,
+    "L43x2": 708.5,
+    "L46x1": 708.5,
+    "L48x2": 708.5,
+    "L53x4": 708.5
+   },
+   "over_reach_bits": 9182,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  }
+ },
+ "q_su10": {
+  "die": "hbm_arch_B2m",
+  "type": "q_su10",
+  "instance": "NW_su10",
+  "outline_um": [
+   2540.16,
+   1555.2
+  ],
+  "pins": 21942,
+  "flops": 37586,
+  "leaf_blockages": 12,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": null,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {},
+  "wirelength_um": null,
+  "pin_access_no_ap": {},
+  "sta": null,
+  "repair_buffers": null,
+  "drv": null,
+  "displacement_um": null,
+  "peak_gb": null,
+  "wall": null,
+  "exit": "NOT RUN",
+  "classify": {
+   "cls": "NOT RUN",
+   "why": "16 ft slots with a station hop > 405 um (decision 12; worst L37x4 862, L30x1 819, L31x4 780 um); exit NOT RUN"
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 16,
+   "max_hop_um": 861.8,
+   "over_reach": {
+    "L37x4": 861.8,
+    "L30x1": 818.6,
+    "L31x4": 780.5,
+    "L46x3": 748.6,
+    "L43x4": 734.4,
+    "L56x1": 734.4,
+    "L48x4": 734.1,
+    "L135x1": 725.8,
+    "L57x1": 725.8,
+    "L68x1": 725.8,
+    "L121x1": 723.8,
+    "L98x2": 717.1,
+    "L128x1": 708.5,
+    "L140x2": 708.5,
+    "L147x3": 708.5,
+    "L53x2": 702.7
+   },
+   "over_reach_bits": 8603,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  }
+ },
+ "q_su11": {
+  "die": "hbm_arch_B2m",
+  "type": "q_su11",
+  "instance": "NW_su11",
+  "outline_um": [
+   2885.76,
+   1555.2
+  ],
+  "pins": 7126,
+  "flops": 10912,
+  "leaf_blockages": 16,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 43288,
+  "hot_gcells": 10058,
+  "hot_slots": [
+   [
+    "L48x5",
+    268
+   ],
+   [
+    "L53x1",
+    3
+   ]
+  ],
+  "hot_bbox_um": [
+   258,
+   0,
+   1576,
+   293
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 45752454,
+    "demand": 3076605,
+    "usage_pct": 6.72,
+    "overflow": 14299
+   },
+   "M3": {
+    "resource": 51154137,
+    "demand": 1194654,
+    "usage_pct": 2.34,
+    "overflow": 7
+   },
+   "M4": {
+    "resource": 38401812,
+    "demand": 2537374,
+    "usage_pct": 6.61,
+    "overflow": 10842
+   },
+   "M5": {
+    "resource": 38359378,
+    "demand": 446645,
+    "usage_pct": 1.16,
+    "overflow": 10
+   },
+   "M6": {
+    "resource": 55235754,
+    "demand": 1425439,
+    "usage_pct": 2.58,
+    "overflow": 12138
+   },
+   "M7": {
+    "resource": 55224477,
+    "demand": 342963,
+    "usage_pct": 0.62,
+    "overflow": 31
+   },
+   "M8": {
+    "resource": 43155147,
+    "demand": 469069,
+    "usage_pct": 1.09,
+    "overflow": 5943
+   },
+   "M9": {
+    "resource": 43146594,
+    "demand": 29871,
+    "usage_pct": 0.07,
+    "overflow": 18
+   }
+  },
+  "wirelength_um": 5514988.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -131.36,
+   "tt_setup_tns": -3467.4,
+   "tt_setup_viol": 87,
+   "tt_setup_endpoints": 12912,
+   "ff_hold_wns": 132.44,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 12912
+  },
+  "repair_buffers": 24012,
+  "drv": {
+   "violators": 1929
+  },
+  "displacement_um": {
+   "st": {
+    "max": 31.5,
+    "p90": 19.8,
+    "over50": 0
+   },
+   "bf": {
+    "max": 4.6,
+    "p90": 1.2,
+    "over50": 0
+   }
+  },
+  "peak_gb": 32.56,
+  "wall": "20:57.11",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "4 ft slots with a station hop > 405 um (decision 12; worst L140x3 748, L53x1 734, L48x5 719 um); GRT overflow 43288 (10058 gcells, hot bbox 8.6% of outline); skeleton TT setup WNS -131.4 ps (87 endpoints)",
+   "hot_frac": 0.0862
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 4,
+   "max_hop_um": 748.1,
+   "over_reach": {
+    "L140x3": 748.1,
+    "L53x1": 734.4,
+    "L48x5": 719.3,
+    "L43x5": 648.5
+   },
+   "over_reach_bits": 2033,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_su11.png"
+ },
+ "q_su20": {
+  "die": "hbm_arch_B2m",
+  "type": "q_su20",
+  "instance": "NW_su20",
+  "outline_um": [
+   2885.76,
+   1555.2
+  ],
+  "pins": 3118,
+  "flops": 3296,
+  "leaf_blockages": 10,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 41678898,
+    "demand": 126679,
+    "usage_pct": 0.3,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 46629802,
+    "demand": 58926,
+    "usage_pct": 0.13,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 34982915,
+    "demand": 22746,
+    "usage_pct": 0.07,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 34969548,
+    "demand": 30997,
+    "usage_pct": 0.09,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 55235754,
+    "demand": 474,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 55224477,
+    "demand": 16256,
+    "usage_pct": 0.03,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 43155147,
+    "demand": 12,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 43146594,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 151273.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -48.38,
+   "tt_setup_tns": -48.4,
+   "tt_setup_viol": 1,
+   "tt_setup_endpoints": 3292,
+   "ff_hold_wns": 90.22,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 3292
+  },
+  "repair_buffers": 692,
+  "drv": {
+   "violators": 19
+  },
+  "displacement_um": {
+   "st": {
+    "max": 5.6,
+    "p90": 4.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 3.0,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "peak_gb": 31.44,
+  "wall": "2:03.60",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "2 ft slots with a station hop > 405 um (decision 12; worst L125x1 725, L106x5 719 um); skeleton TT setup WNS -48.4 ps (1 endpoints)",
+   "hot_frac": 0.0
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 724.9,
+   "over_reach": {
+    "L125x1": 724.9,
+    "L106x5": 719.3
+   },
+   "over_reach_bits": 29,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_su20.png"
+ },
+ "q_su21": {
+  "die": "hbm_arch_B2m",
+  "type": "q_su21",
+  "instance": "NW_su21",
+  "outline_um": [
+   2540.16,
+   1555.2
+  ],
+  "pins": 14240,
+  "flops": 29068,
+  "leaf_blockages": 4,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 494060,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L32x1",
+    37565
+   ],
+   [
+    "L33x2",
+    22305
+   ],
+   [
+    "L60x3",
+    5558
+   ],
+   [
+    "L44x1",
+    2047
+   ],
+   [
+    "L125x2",
+    180
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   0,
+   2020,
+   1543
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 37500808,
+    "demand": 4480421,
+    "usage_pct": 11.95,
+    "overflow": 54023
+   },
+   "M3": {
+    "resource": 41987989,
+    "demand": 5941139,
+    "usage_pct": 14.15,
+    "overflow": 89985
+   },
+   "M4": {
+    "resource": 31493247,
+    "demand": 3807172,
+    "usage_pct": 12.09,
+    "overflow": 44380
+   },
+   "M5": {
+    "resource": 31487037,
+    "demand": 3938601,
+    "usage_pct": 12.51,
+    "overflow": 62675
+   },
+   "M6": {
+    "resource": 48621870,
+    "demand": 3735432,
+    "usage_pct": 7.68,
+    "overflow": 116159
+   },
+   "M7": {
+    "resource": 48611502,
+    "demand": 3345535,
+    "usage_pct": 6.88,
+    "overflow": 45194
+   },
+   "M8": {
+    "resource": 37987785,
+    "demand": 2047121,
+    "usage_pct": 5.39,
+    "overflow": 61093
+   },
+   "M9": {
+    "resource": 37978929,
+    "demand": 1114320,
+    "usage_pct": 2.93,
+    "overflow": 20551
+   }
+  },
+  "wirelength_um": 16603150.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -710.12,
+   "tt_setup_tns": -45105.7,
+   "tt_setup_viol": 552,
+   "tt_setup_endpoints": 33791,
+   "ff_hold_wns": 132.44,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 33791
+  },
+  "repair_buffers": 60926,
+  "drv": {
+   "violators": 8811
+  },
+  "displacement_um": {
+   "st": {
+    "max": 38.8,
+    "p90": 24.9,
+    "over50": 0
+   },
+   "bf": {
+    "max": 3.7,
+    "p90": 2.7,
+    "over50": 0
+   }
+  },
+  "peak_gb": 30.69,
+  "wall": "53:40.24",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "12 ft slots with a station hop > 405 um (decision 12; worst L44x1 768, L99x2 738, L122x1 735 um); GRT overflow 494060 (20000 gcells, hot bbox 78.9% of outline); skeleton TT setup WNS -710.1 ps (552 endpoints)",
+   "hot_frac": 0.7893
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 12,
+   "max_hop_um": 767.7,
+   "over_reach": {
+    "L44x1": 767.7,
+    "L99x2": 738.2,
+    "L122x1": 735.4,
+    "L130x3": 734.4,
+    "L60x3": 734.4,
+    "L149x1": 713.7,
+    "L125x2": 711.3,
+    "L148x6": 707.7,
+    "L69x1": 705.8,
+    "L106x4": 703.2,
+    "L32x1": 683.7,
+    "L33x2": 662.8
+   },
+   "over_reach_bits": 4752,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_su21.png"
+ },
+ "q_su30": {
+  "die": "hbm_arch_B2m",
+  "type": "q_su30",
+  "instance": "NW_su30",
+  "outline_um": [
+   2540.16,
+   1555.2
+  ],
+  "pins": 19170,
+  "flops": 41331,
+  "leaf_blockages": 5,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": null,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {},
+  "wirelength_um": null,
+  "pin_access_no_ap": {},
+  "sta": null,
+  "repair_buffers": null,
+  "drv": null,
+  "displacement_um": null,
+  "peak_gb": null,
+  "wall": null,
+  "exit": "NOT RUN",
+  "classify": {
+   "cls": "NOT RUN",
+   "why": "31 ft slots with a station hop > 405 um (decision 12; worst L42x2 781, L73x2 762, L115x2 743 um); exit NOT RUN"
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 31,
+   "max_hop_um": 780.9,
+   "over_reach": {
+    "L42x2": 780.9,
+    "L73x2": 761.9,
+    "L115x2": 743.4,
+    "L106x2": 743.1,
+    "L96x6": 743.1,
+    "L117x4": 741.1,
+    "L114x6": 739.8,
+    "L125x4": 739.3,
+    "L138x4": 732.7,
+    "L130x1": 731.7,
+    "L65x2": 730.9,
+    "L139x2": 730.7,
+    "L131x1": 730.4,
+    "L132x2": 728.8,
+    "L44x3": 728.3,
+    "L60x1": 728.3,
+    "L148x4": 725.8,
+    "L149x3": 725.8,
+    "L139x6": 723.4,
+    "L140x6": 722.3,
+    "L146x3": 721.3,
+    "L105x2": 716.9,
+    "L39x2": 716.9,
+    "L74x2": 716.9,
+    "L89x2": 716.9,
+    "L90x2": 716.9,
+    "L96x2": 716.9,
+    "L63x2": 697.4,
+    "L61x1": 690.4,
+    "L62x2": 690.4,
+    "L34x1": 662.8
+   },
+   "over_reach_bits": 7217,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  }
+ },
+ "q_su31": {
+  "die": "hbm_arch_B2m",
+  "type": "q_su31",
+  "instance": "NW_su31",
+  "outline_um": [
+   2885.76,
+   1555.2
+  ],
+  "pins": 8143,
+  "flops": 15470,
+  "leaf_blockages": 9,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 484148,
+  "hot_gcells": 13440,
+  "hot_slots": [
+   [
+    "L42x3",
+    46569
+   ],
+   [
+    "L63x3",
+    6915
+   ],
+   [
+    "L73x3",
+    4957
+   ],
+   [
+    "L65x3",
+    1403
+   ],
+   [
+    "L115x3",
+    85
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   3,
+   1470,
+   1534
+  ],
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 46024035,
+    "demand": 3727987,
+    "usage_pct": 8.1,
+    "overflow": 943
+   },
+   "M3": {
+    "resource": 51479626,
+    "demand": 2171540,
+    "usage_pct": 4.22,
+    "overflow": 108820
+   },
+   "M4": {
+    "resource": 38636334,
+    "demand": 3054970,
+    "usage_pct": 7.91,
+    "overflow": 1151
+   },
+   "M5": {
+    "resource": 38604366,
+    "demand": 1334522,
+    "usage_pct": 3.46,
+    "overflow": 148801
+   },
+   "M6": {
+    "resource": 55235754,
+    "demand": 2028716,
+    "usage_pct": 3.67,
+    "overflow": 1930
+   },
+   "M7": {
+    "resource": 55224477,
+    "demand": 1210522,
+    "usage_pct": 2.19,
+    "overflow": 168719
+   },
+   "M8": {
+    "resource": 43155147,
+    "demand": 894032,
+    "usage_pct": 2.07,
+    "overflow": 1187
+   },
+   "M9": {
+    "resource": 43146594,
+    "demand": 513020,
+    "usage_pct": 1.19,
+    "overflow": 52597
+   }
+  },
+  "wirelength_um": 8713150.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -190.22,
+   "tt_setup_tns": -14318.0,
+   "tt_setup_viol": 304,
+   "tt_setup_endpoints": 17979,
+   "ff_hold_wns": 50.26,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 17979
+  },
+  "repair_buffers": 35922,
+  "drv": {
+   "violators": 4771
+  },
+  "displacement_um": {
+   "st": {
+    "max": 30.8,
+    "p90": 19.0,
+    "over50": 0
+   },
+   "bf": {
+    "max": 27.0,
+    "p90": 7.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 33.17,
+  "wall": "21:29.88",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "22 ft slots with a station hop > 405 um (decision 12; worst L73x3 763, L65x3 758, L148x3 750 um); GRT overflow 484148 (13440 gcells, hot bbox 50.2% of outline); skeleton TT setup WNS -190.2 ps (304 endpoints)",
+   "hot_frac": 0.5019
+  },
+  "instances": 2,
+  "ft_hops": {
+   "slots": 22,
+   "max_hop_um": 763.0,
+   "over_reach": {
+    "L73x3": 763.0,
+    "L65x3": 757.8,
+    "L148x3": 749.6,
+    "L62x1": 748.7,
+    "L96x5": 746.7,
+    "L106x1": 740.9,
+    "L114x5": 740.9,
+    "L139x5": 740.9,
+    "L140x5": 740.9,
+    "L115x3": 719.3,
+    "L117x5": 719.3,
+    "L125x5": 719.3,
+    "L132x1": 719.3,
+    "L138x5": 719.3,
+    "L139x3": 719.3,
+    "L146x2": 719.3,
+    "L42x3": 719.3,
+    "L63x3": 719.3,
+    "L74x3": 719.3,
+    "L89x3": 719.3,
+    "L96x3": 719.3,
+    "L90x3": 547.9
+   },
+   "over_reach_bits": 2542,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/q_su31.png"
+ },
+ "root": {
+  "die": "hbm_arch_B2m",
+  "type": "root",
+  "instance": "root",
+  "outline_um": [
+   1382.4,
+   7257.6
+  ],
+  "pins": 34429,
+  "flops": 70687,
+  "leaf_blockages": 57,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": null,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {},
+  "wirelength_um": null,
+  "pin_access_no_ap": {},
+  "sta": null,
+  "repair_buffers": null,
+  "drv": null,
+  "displacement_um": null,
+  "peak_gb": null,
+  "wall": null,
+  "exit": "NOT RUN",
+  "classify": {
+   "cls": "NOT RUN",
+   "why": "14 ft slots with a station hop > 405 um (decision 12; worst L63x4 757, L114mx4 750, L114x4 750 um); exit NOT RUN"
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 14,
+   "max_hop_um": 756.9,
+   "over_reach": {
+    "L63x4": 756.9,
+    "L114mx4": 749.9,
+    "L114x4": 749.9,
+    "L140mx4": 749.9,
+    "L140x4": 749.9,
+    "L63mx4": 749.9,
+    "L96x4": 745.1,
+    "L96mx4": 741.6,
+    "L139mx4": 686.9,
+    "L139x4": 686.9,
+    "L22mx4": 633.9,
+    "L22x4": 578.3,
+    "L4mx7": 567.7,
+    "L4x7": 567.7
+   },
+   "over_reach_bits": 10498,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  }
+ },
+ "vsN0": {
+  "die": "hbm_arch_B2m",
+  "type": "vsN0",
+  "instance": "vsN0",
+  "outline_um": [
+   1382.4,
+   1503.36
+  ],
+  "pins": 15,
+  "flops": 32,
+  "leaf_blockages": 2,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 33511423,
+    "demand": 20,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 37496665,
+    "demand": 14,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 28123059,
+    "demand": 51,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 28119499,
+    "demand": 70,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 25573200,
+    "demand": 21,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 25571836,
+    "demand": 53,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 19978608,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 19978244,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 169.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 544.33,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 15,
+   "ff_hold_wns": 182.2,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 15
+  },
+  "repair_buffers": 17,
+  "drv": {
+   "violators": 0
+  },
+  "displacement_um": {
+   "bf": {
+    "max": 2.7,
+    "p90": 2.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 14.03,
+  "wall": "0:34.74",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 0,
+   "max_hop_um": 0.0,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/vsN0.png"
+ },
+ "vsN1": {
+  "die": "hbm_arch_B2m",
+  "type": "vsN1",
+  "instance": "vsN1",
+  "outline_um": [
+   1382.4,
+   1503.36
+  ],
+  "pins": 30,
+  "flops": 47,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 44754288,
+    "demand": 126,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 50078728,
+    "demand": 29986,
+    "usage_pct": 0.06,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 37559880,
+    "demand": 71,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 37557728,
+    "demand": 3287,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 25573200,
+    "demand": 32,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 25571836,
+    "demand": 3172,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 19978608,
+    "demand": 18,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 19978244,
+    "demand": 3123,
+    "usage_pct": 0.02,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 22872.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 25.55,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 45,
+   "ff_hold_wns": 132.47,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 45
+  },
+  "repair_buffers": 122,
+  "drv": {
+   "violators": 10
+  },
+  "displacement_um": {
+   "st": {
+    "max": 4.0,
+    "p90": 3.2,
+    "over50": 0
+   }
+  },
+  "peak_gb": 14.03,
+  "wall": "0:34.54",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "2 ft slots with a station hop > 405 um (decision 12; worst L118x1 754, L141x1 752 um); GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 753.8,
+   "over_reach": {
+    "L118x1": 753.8,
+    "L141x1": 751.7
+   },
+   "over_reach_bits": 15,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/vsN1.png"
+ },
+ "vsN2": {
+  "die": "hbm_arch_B2m",
+  "type": "vsN2",
+  "instance": "vsN2",
+  "outline_um": [
+   1382.4,
+   1503.36
+  ],
+  "pins": 30,
+  "flops": 47,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 44754289,
+    "demand": 132,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 50078728,
+    "demand": 29984,
+    "usage_pct": 0.06,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 37559880,
+    "demand": 66,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 37557728,
+    "demand": 4528,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 25573200,
+    "demand": 41,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 25571836,
+    "demand": 5031,
+    "usage_pct": 0.02,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 19978608,
+    "demand": 13,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 19978244,
+    "demand": 24,
+    "usage_pct": 0.0,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 22880.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": 25.17,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 45,
+   "ff_hold_wns": 132.46,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 45
+  },
+  "repair_buffers": 122,
+  "drv": {
+   "violators": 15
+  },
+  "displacement_um": {
+   "st": {
+    "max": 4.0,
+    "p90": 3.5,
+    "over50": 0
+   }
+  },
+  "peak_gb": 14.03,
+  "wall": "0:35.50",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "2 ft slots with a station hop > 405 um (decision 12; worst L118x2 754, L141x2 752 um); GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 753.8,
+   "over_reach": {
+    "L118x2": 753.8,
+    "L141x2": 751.7
+   },
+   "over_reach_bits": 15,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/vsN2.png"
+ },
+ "vsN4": {
+  "die": "hbm_arch_B2m",
+  "type": "vsN4",
+  "instance": "vsN4",
+  "outline_um": [
+   1382.4,
+   1503.36
+  ],
+  "pins": 9612,
+  "flops": 9629,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 44745645,
+    "demand": 34303,
+    "usage_pct": 0.08,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 50078728,
+    "demand": 10363932,
+    "usage_pct": 20.7,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 37559880,
+    "demand": 3821,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 37557728,
+    "demand": 1079741,
+    "usage_pct": 2.87,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 25573200,
+    "demand": 3051,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 25571836,
+    "demand": 1010964,
+    "usage_pct": 3.95,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 19978608,
+    "demand": 2475,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 19978244,
+    "demand": 228947,
+    "usage_pct": 1.15,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 7305704.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -56.76,
+   "tt_setup_tns": -67987.1,
+   "tt_setup_viol": 1286,
+   "tt_setup_endpoints": 14418,
+   "ff_hold_wns": 132.42,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 14418
+  },
+  "repair_buffers": 33659,
+  "drv": {
+   "violators": 4461
+  },
+  "displacement_um": {
+   "st": {
+    "max": 6.9,
+    "p90": 4.3,
+    "over50": 0
+   }
+  },
+  "peak_gb": 15.23,
+  "wall": "3:25.27",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "6 ft slots with a station hop > 405 um (decision 12; worst L22x3 754, L114mx3 752, L114x3 752 um); skeleton TT setup WNS -56.8 ps (1286 endpoints)",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 753.8,
+   "over_reach": {
+    "L22x3": 753.8,
+    "L114mx3": 751.6,
+    "L114x3": 751.6,
+    "L22mx3": 751.6,
+    "L63mx5": 751.6,
+    "L63x5": 751.6
+   },
+   "over_reach_bits": 4806,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/vsN4.png"
+ },
+ "vsN5": {
+  "die": "hbm_arch_B2m",
+  "type": "vsN5",
+  "instance": "vsN5",
+  "outline_um": [
+   1382.4,
+   1503.36
+  ],
+  "pins": 9612,
+  "flops": 9629,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 44745645,
+    "demand": 34303,
+    "usage_pct": 0.08,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 50078728,
+    "demand": 10363932,
+    "usage_pct": 20.7,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 37559880,
+    "demand": 3821,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 37557728,
+    "demand": 1079741,
+    "usage_pct": 2.87,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 25573200,
+    "demand": 3051,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 25571836,
+    "demand": 1010964,
+    "usage_pct": 3.95,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 19978608,
+    "demand": 2475,
+    "usage_pct": 0.01,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 19978244,
+    "demand": 228947,
+    "usage_pct": 1.15,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 7305704.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -56.76,
+   "tt_setup_tns": -67987.1,
+   "tt_setup_viol": 1286,
+   "tt_setup_endpoints": 14418,
+   "ff_hold_wns": 132.42,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 14418
+  },
+  "repair_buffers": 33659,
+  "drv": {
+   "violators": 4461
+  },
+  "displacement_um": {
+   "st": {
+    "max": 6.9,
+    "p90": 4.3,
+    "over50": 0
+   }
+  },
+  "peak_gb": 15.22,
+  "wall": "3:27.49",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "6 ft slots with a station hop > 405 um (decision 12; worst L22x2 754, L114mx2 752, L114x2 752 um); skeleton TT setup WNS -56.8 ps (1286 endpoints)",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 753.8,
+   "over_reach": {
+    "L22x2": 753.8,
+    "L114mx2": 751.6,
+    "L114x2": 751.6,
+    "L22mx2": 751.6,
+    "L63mx6": 751.6,
+    "L63x6": 751.6
+   },
+   "over_reach_bits": 4806,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/vsN5.png"
+ },
+ "vsN6": {
+  "die": "hbm_arch_B2m",
+  "type": "vsN6",
+  "instance": "vsN6",
+  "outline_um": [
+   1382.4,
+   1503.36
+  ],
+  "pins": 9612,
+  "flops": 10337,
+  "leaf_blockages": 0,
+  "core_blockages": null,
+  "route_layers": "M2-M9",
+  "adjust": 0.5,
+  "total_overflow": 0,
+  "hot_gcells": 0,
+  "hot_slots": null,
+  "hot_bbox_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 44745468,
+    "demand": 978995,
+    "usage_pct": 2.19,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 50078728,
+    "demand": 10466443,
+    "usage_pct": 20.9,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 37559880,
+    "demand": 123691,
+    "usage_pct": 0.33,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 37557728,
+    "demand": 1232517,
+    "usage_pct": 3.28,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 25573200,
+    "demand": 71376,
+    "usage_pct": 0.28,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 25571836,
+    "demand": 809065,
+    "usage_pct": 3.16,
+    "overflow": 0
+   },
+   "M8": {
+    "resource": 19978608,
+    "demand": 54207,
+    "usage_pct": 0.27,
+    "overflow": 0
+   },
+   "M9": {
+    "resource": 19978244,
+    "demand": 161431,
+    "usage_pct": 0.81,
+    "overflow": 0
+   }
+  },
+  "wirelength_um": 8000699.0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "sta": {
+   "tt_setup_wns": -207.52,
+   "tt_setup_tns": -187905.6,
+   "tt_setup_viol": 2365,
+   "tt_setup_endpoints": 15126,
+   "ff_hold_wns": 132.43,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 15126
+  },
+  "repair_buffers": 34367,
+  "drv": {
+   "violators": 4313
+  },
+  "displacement_um": {
+   "st": {
+    "max": 5.3,
+    "p90": 2.1,
+    "over50": 0
+   }
+  },
+  "peak_gb": 15.35,
+  "wall": "3:01.34",
+  "exit": "EXIT 0",
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "6 ft slots with a station hop > 405 um (decision 12; worst L22mx1 872, L22x1 812, L114mx1 596 um); skeleton TT setup WNS -207.5 ps (2365 endpoints)",
+   "hot_frac": 0.0
+  },
+  "instances": 1,
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 872.0,
+   "over_reach": {
+    "L22mx1": 872.0,
+    "L22x1": 812.2,
+    "L114mx1": 595.5,
+    "L114x1": 595.2,
+    "L63mx7": 594.8,
+    "L63x7": 588.3
+   },
+   "over_reach_bits": 4806,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "render": "results/proto_1024/hbm_b2m/vsN6.png"
+ }
+}
