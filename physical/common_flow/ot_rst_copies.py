@@ -139,9 +139,45 @@ def analyse(nl, max_loads, rx, top=None):
         fams.append((wn, bits))
     out = []
     canon = leaf_canon(nl, cells, drv)
+    # QC-A0R 2026-10-25: position of every family bit, so a family whose loads are exactly the D inputs of an
+    # equally wide next-level family is paired copy k -> copy k (see chain_groups); every other family is unchanged.
+    fpos = {}
     for wn, bits in fams:
-        out.append(split_family(wn, bits, cells, drv, loads, max_loads, m, canon))
+        for k, b in enumerate(bits):
+            fpos.setdefault(b, (wn, k, len(bits)))
+    for wn, bits in fams:
+        out.append(split_family(wn, bits, cells, drv, loads, max_loads, m, canon, fpos))
     return tname, out
+
+
+def chain_groups(wn, bits, movable, fixed, cells, fpos):
+    """DISTRIBUTED RESET CHAINS (QC-A0R 2026-10-25, opt-in by structure only).  When every load of family F is the
+    1-bit D input of a flop whose Q is bit j of ANOTHER proven family G with the same copy count, and the positions j
+    are all distinct, load j goes to copy j: the synthesized netlist then holds index-consistent chains (level-L copy
+    k fed by level-(L-1) copy k), which is what the reviewed physical reset paths place and check.  The default
+    name-sorted cut gave copy k the load of copy k+1 (rotated families), so a dead final copy removed a different
+    index at every level and the stage check found no same-index parent.  Function unchanged: the copies of F are
+    proven identical registers either way; only which identical copy feeds which load changes.  Returns None
+    (default cut) when the structure does not match exactly."""
+    n = len(bits)
+    if any(fixed) or not movable or len(movable) > n:
+        return None
+    groups = [[] for _ in range(n)]
+    for it in movable:
+        cn, pn, L, _, _ = it
+        c = cells[cn]
+        dirs = c.get("port_directions") or {}
+        outs = [p for p, d in dirs.items() if d == "output"]
+        if L != 1 or pn != "D" or not FLOP_RE.match(c["type"]) or len(outs) != 1:
+            return None
+        q = c["connections"][outs[0]]
+        if len(q) != 1 or q[0] not in fpos:
+            return None
+        gwn, j, gn = fpos[q[0]]
+        if gwn == wn or gn != n or groups[j]:
+            return None
+        groups[j].append(it)
+    return groups
 
 
 LEAF_DEPTH = 4
@@ -345,7 +381,7 @@ def bit_signature(cells, d, canon=None):
     return tuple(sig)
 
 
-def split_family(wn, bits, cells, drv, loads, max_loads, m, canon=None):
+def split_family(wn, bits, cells, drv, loads, max_loads, m, canon=None, fpos=None):
     rec = {"family": wn, "copies": len(bits), "status": "", "groups": [], "total": 0, "fixed": 0, "moves": 0, "cmds": [],
            "leaf_equiv": False}
     sigs, raw = [], []
@@ -384,14 +420,20 @@ def split_family(wn, bits, cells, drv, loads, max_loads, m, canon=None):
     rec["total"], rec["fixed"] = total, sum(fixed)
     n = len(bits)
     tgt = max(1, math.ceil(total / n))
-    groups = [[] for _ in range(n)]
-    gw = list(fixed)
-    g = 0
-    for it in movable:
-        while g < n - 1 and gw[g] > 0 and gw[g] + it[3] > tgt:
-            g += 1
-        groups[g].append(it)
-        gw[g] += it[3]
+    chained = chain_groups(wn, bits, movable, fixed, cells, fpos) if fpos else None
+    rec["chain"] = chained is not None
+    if chained is not None:
+        groups = chained
+        gw = [sum(x[3] for x in gr) for gr in groups]
+    else:
+        groups = [[] for _ in range(n)]
+        gw = list(fixed)
+        g = 0
+        for it in movable:
+            while g < n - 1 and gw[g] > 0 and gw[g] + it[3] > tgt:
+                g += 1
+            groups[g].append(it)
+            gw[g] += it[3]
     rec["groups"] = gw
     # a name for every copy bit (the -set source): a netname without brackets / unsafe characters
     bitname = {}
