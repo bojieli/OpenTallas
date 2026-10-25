@@ -268,3 +268,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 21:58 PDT TOK-DS: S81.HW scope note + S81.MTP breakdown on claude/tok-ds-hwmtp-1024@d6dec66d5 (record 2,528.6 = 6f law binding; causal pipeline 2,763; bk_sel ca/cb/tl_o have no plan lanes -> S81 request)
 2026-10-24 22:00 PDT COORD: TOK-DS HW/MTP analysis in (claude/tok-ds-hwmtp-1024@d6dec66d5): 58/65 L2 gaps compiler-only; H4 bk_sel merge lanes missing in v4.8 -> ruled option A; MTP 2,528.6 (stretch law) vs 2,763.0 (pipeline law) -> owner.
 2026-10-24 22:07 PDT KV-FT: v3.9ft ft-crossing candidate (1523 -> 991 xings, G0/G0C PASS) on claude/kv-ft-1024r@750a0ebe4; owner rulings KV-FT-1/2 in lanes/KV-G3.md; not merged.
+2026-10-24 22:17 PDT HBM-CORES: hold root cause = kit HOLD_SLACK_MARGIN 30 (37.8k vs 1.5k FF endpoints); margin 0 + 14 finish relaunched; 30 exp-lane CTS (mem 15616) launched; 0 SIGNED (face_guard RTL issue OWNER?); claude/hbm-cores-1024@1d69cf3da1
