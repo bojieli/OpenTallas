@@ -1,0 +1,35 @@
+{
+ "type": "kv3_sys_c",
+ "entries": [
+  {
+   "conn": "bus:o_host_link_rst_n",
+   "planned": 8,
+   "bound_pads": 0,
+   "inserted": 8,
+   "stations": [
+    "u_ist_o_host_link_rst_n_0",
+    "u_ist_o_host_link_rst_n_1",
+    "u_ist_o_host_link_rst_n_2",
+    "u_ist_o_host_link_rst_n_3",
+    "u_ist_o_host_link_rst_n_4",
+    "u_ist_o_host_link_rst_n_5",
+    "u_ist_o_host_link_rst_n_6",
+    "u_ist_o_host_link_rst_n_7"
+   ]
+  },
+  {
+   "conn": "bus:o_serdes_E_tx_up",
+   "planned": 5,
+   "bound_pads": 0,
+   "inserted": 5,
+   "stations": [
+    "u_ist_o_serdes_E_tx_up_0",
+    "u_ist_o_serdes_E_tx_up_1",
+    "u_ist_o_serdes_E_tx_up_2",
+    "u_ist_o_serdes_E_tx_up_3",
+    "u_ist_o_serdes_E_tx_up_4"
+   ]
+  }
+ ],
+ "pricing": "source stations replace equal receiver padding; total lane cycles unchanged"
+}
