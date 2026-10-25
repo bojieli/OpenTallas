@@ -1,9 +1,13 @@
+"""KV-FT 10-24: do same-outline partition swaps (origins only) lower the ft crossings?  BFS crossing model on the
+abutment graph.  usage (from the repo root): python3 physical/die_plan/qwen_kvsys/ft_swap_search_v39.py PLAN.json FT_LANES.json
+(FT_LANES.json = ft_audit_v39.py --out DIR -> DIR/ft_lanes.json).  Result on v3.8x: no swap lowers crossings."""
 import sys,json,collections,itertools
 import numpy as np
 from scipy.sparse.csgraph import shortest_path
-sys.path.insert(0,'tools/die_plan')
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'tools', 'die_plan'))
 import schema
-p=json.load(open('physical/die_plan/qwen_kvsys/die_plan.json'))
+p=json.load(open(sys.argv[1]))
 P=schema.Plan(p)
 names=list(P.parts); idx={n:i for i,n in enumerate(names)}
 rect={n:P.rect(n) for n in names}
@@ -18,7 +22,7 @@ def adj(slots):
             elif (abs(a[3]-b[1])<E or abs(b[3]-a[1])<E) and min(a[2],b[2])-max(a[0],b[0])>1: A[i,j]=A[j,i]=1
     return A
 A=adj(slots); D=shortest_path(A,unweighted=True)
-rows=json.load(open('/home/ubuntu/scratch/kv-ft/base/audit/ft_lanes.json'))
+rows=json.load(open(sys.argv[2]))
 L=[(idx[r['src']],idx[r['dst']],r['w'],r['nx']) for r in rows if r['src'] in idx and r['dst'] in idx]
 src=np.array([l[0] for l in L]); dst=np.array([l[1] for l in L]); w=np.array([l[2] for l in L]); nx=np.array([l[3] for l in L])
 def cost(D,pos):
