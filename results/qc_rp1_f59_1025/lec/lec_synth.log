@@ -1,0 +1,6 @@
+ot-run: localhost      admits    25 GB (avail 325, reserve 0, fresh 235.4, peak 0.6, headroom 0, waiters 0/0 GB) load 49/256 running 23 disk 1365 GB 
+ot-run: -> localhost (will queue: admits 25 GB < 16 GB)
+ot-heavy: admitted on tender-ray as oth-ubuntu-2187065-1792953405 after 0 s
+LEC EQUIVALENT: qfd_dv_s8_crh_rp1 cp=4322 proved=4322 differs=0 undecided=0 4322 compare points proved; 3972 key points matched by name, 100 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs) (8.4 s)
+LEC EQUIVALENT: qfd_dv_s8_crh_rp1 4322 compare points proved; 3972 key points matched by name, 100 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs) (8.4 s)
+ot-run: RAN on localhost (unit oth-ubuntu-2187065-1792953405): exit 0

@@ -1,0 +1,14 @@
+KEEP g_rs1.u_rs               want  25 flops got 25 OK
+KEEP g_rs1.u_c1w              want   1 flops got 1 OK
+KEEP u_c1                     want   1 flops got 1 OK
+KEEP g_crb[0].g_r.u_rce       want   1 flops got 1 OK
+KEEP g_crb[0].g_r.u_ra        want  10 flops got 10 OK
+KEEP g_crb[0].g_r.u_we        want   1 flops got 1 OK
+KEEP g_crb[0].g_r.u_wa        want  10 flops got 10 OK
+KEEP g_crb[0].g_r.u_wd        want 256 flops got 256 OK
+KEEP g_crb[1].g_r.u_rce       want   1 flops got 1 OK
+KEEP g_crb[1].g_r.u_ra        want  10 flops got 10 OK
+KEEP g_crb[1].g_r.u_we        want   1 flops got 1 OK
+KEEP g_crb[1].g_r.u_wa        want  10 flops got 10 OK
+KEEP g_crb[1].g_r.u_wd        want 256 flops got 256 OK
+KEEP_CHECK qfd_dv_s8_crh_rp1 PASS copies 13/13 (kept kff instances in netlist: 49)
