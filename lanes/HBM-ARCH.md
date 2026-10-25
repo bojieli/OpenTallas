@@ -462,6 +462,13 @@ All ot-run units (containers hbmcore-<kit>_*), branch claude/hbm-cores-1024 @9e9
 ## HBM-FACE (sub-agent of lane HBM) 2026-10-25 00:54 PDT
 - 2026-10-25 00:54 PDT HBM-FACE: started; branch claude/hbm-face-1024 from claude/hbm-cores-1024@6d0262ad50, worktree epyc1:/srv/opentallas-scratch2/claude/wt/hbm-face. Building face_shell.py (per-core face-register shell, unread-input drop list, latency table) + benches.
 2026-10-25 01:00 PDT COORD (PROTO sweep3 finding, applies to every re-plan): over a hard core only M6/M7 are free for feedthroughs (cores own M1-M5, M8/M9 = clock/reset/PG per dec. 12) -> ft bundles over core fields overflow (10k..3M). Re-plans must route ft in channels BETWEEN cores, or budget ft over cores against M6/M7 tracks only, and put stations in channels (never inside core outlines). Check your re-plan against this before READY; PROTO re-sweeps every merged re-plan and only CLEAN types get kits.
+- 2026-10-25 03:09 PDT HBM-FACE: claude/hbm-face-1024@c701a2f43c pushed. It merges hbm-cores-1024@f5bf82c176, so face_guard FAIL = FAIL_PREFLOOR STOP is in run_kit_hbm.sh, and the shell is default-on in gen_core_kit_hbm.py (--face-shell on|off, --face-shell-drop on|off).
+  - CENSUS over 280 B2n views: 266 face_guard PASS, 0 FAIL, 2 NOT RUN, 12 NO KIT. Before (B2l, same modules): 216 FAIL / 15 PASS.
+    - NOT RUN: idx_selector and topk_link ran out of memory in yosys MEMORY_MAP (16.7 GB at the 16 GB cap; 50 GB at 48 GB). Relaunched at 128 GB on intel2.
+    - NO KIT (pre-existing generator failures): MAP_AMBIGUOUS hc_root tail0/1_rest, coll_q2 body, sfu split3 ctl, tkm root; NO_RECIPE hnx_rp3lp3h_n/s; PORT_MISMATCH svc_vmdel_lane_n x5.
+  - Latency: +1 in / +1 out on every shelled core; reset is not delayed. Table: results/arch/hbm_arch_1024/core_face_shell_latency.json.
+  - Drops: 4369 unread input bits across 74 modules (results/arch/hbm_arch_1024/core_face_shell_drops.json). This is a PLAN CHANGE for the B2n/B2o pins.
+  - Benches: 8/8 PASS against Z.core.Z (results/arch/hbm_arch_1024/face_shell_bench/) with 0 mismatches over 30k cycles, and the output mutants caught on all 8. svc_pc is low-activity: 45/615 output bits toggle, 2 of 4 in_bypass mutants caught.
 
 ## HBM-CORES3 KIT-CENSUS (2026-10-25 01:01 PDT, claude/hbm-cores-1024@f00af2ec65 gates, later commits on top)
 - (1) PREFLIGHT, done and pushed (f00af2ec65). run_kit_hbm.sh now STOPs before floorplan (rc 3, marker /work/FAIL_PREFLOOR) on any of:
