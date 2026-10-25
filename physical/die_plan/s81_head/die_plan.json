@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die (253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). PDN (OWNER 10-24 decision 7): the 12 hd_serdes windows (lk_*) get a separate PHY supply domain (VDDPHY/VSSPHY) and dedicated PHY power/ground bump rows over each SerDes window; the core VDD/VSS M8/M9 grid (die.pg) does not feed the PHY. TODO (TRIAL/PDN lane): model the PHY domain + its bump rows in the head abstract PSM / IR run (die.pg schema has no supply-domain field yet).",
+ "note": "S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die (253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). PDN (OWNER 10-24 decision 7): die.pg.supplies VDD_PHY = separate PHY supply + dedicated bump rows over the 12 hd_serdes windows; the core VDD/VSS M8/M9 grid does not feed the PHY. TODO (TRIAL/PDN): head PSM / IR with the VDD_PHY domain.",
  "die": {
   "name": "s81_head",
   "label": "DeepSeek ROM S81 release head die (LM head / argmax / MTP / host)",
@@ -51,6 +51,37 @@
       "VDD",
       "VSS"
      ]
+    }
+   ],
+   "supplies": [
+    {
+     "name": "VDD_PHY",
+     "nets": [
+      "VDD_PHY",
+      "VSS"
+     ],
+     "parts": [
+      "lk_EN0",
+      "lk_EN1",
+      "lk_ES0",
+      "lk_ES1",
+      "lk_HOST0",
+      "lk_HOST1",
+      "lk_WN0",
+      "lk_WN1",
+      "lk_WN2",
+      "lk_WN3",
+      "lk_WS0",
+      "lk_WS1"
+     ],
+     "bumps": {
+      "rows": 2,
+      "pitch_um": 150.0,
+      "over": "io_window",
+      "note": "dedicated VDD_PHY/VSS bump rows over every SerDes PHY window"
+     },
+     "basis": "TRIAL-S81 10-24 head IR over SerDes windows",
+     "note": "VDD_PHY feeds the u_phy PHY macro of each listed partition (its io window); the partition strip with boundary flops and ft stations stays on core VDD"
     }
    ]
   },
@@ -1388,7 +1419,7 @@
      "note": "same PHY model, slot and bump field as the layer die's serdes partitions"
     }
    ],
-   "note": "SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops; PDN (OWNER 10-24 decision 7, IR over SerDes windows): separate PHY supply (VDDPHY/VSSPHY, not the core VDD/VSS M8/M9 grid) fed by dedicated bump rows over the SerDes window",
+   "note": "SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops; PHY on the separate VDD_PHY supply (die.pg.supplies, OWNER 10-24 decision 7) with dedicated bump rows over its window",
    "buses": [
     {
      "name": "coll_i0",

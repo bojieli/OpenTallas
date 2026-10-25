@@ -334,9 +334,8 @@ for tn, end in (("hd_spn", False), ("hd_spn_end", True)):
 T("hd_serdes", "ot_s81hd_serdes", (SW, SH), 0,
   contents=[dict(inst="u_phy", module="ot_pdie_serdes", status="reuse",
                  note="same PHY model, slot and bump field as the layer die's serdes partitions")],
-  note="SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops; PDN (OWNER 10-24 "
-       "decision 7, IR over SerDes windows): separate PHY supply (VDDPHY/VSSPHY, not the core VDD/VSS M8/M9 grid) "
-       "fed by dedicated bump rows over the SerDes window")
+  note="SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops; PHY on the separate "
+       "VDD_PHY supply (die.pg.supplies, OWNER 10-24 decision 7) with dedicated bump rows over its window")
 BUS("hd_serdes", "coll_i0", "in", 512, "u_phy.tx")
 BUS("hd_serdes", "coll_o0", "out", 514, "u_phy.rx")
 
@@ -644,17 +643,25 @@ plan = dict(
          "s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die "
          "(253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die "
          "s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). "
-         "PDN (OWNER 10-24 decision 7): the 12 hd_serdes windows (lk_*) get a separate PHY supply domain "
-         "(VDDPHY/VSSPHY) and dedicated PHY power/ground bump rows over each SerDes window; the core VDD/VSS M8/M9 "
-         "grid (die.pg) does not feed the PHY. TODO (TRIAL/PDN lane): model the PHY domain + its bump rows in the "
-         "head abstract PSM / IR run (die.pg schema has no supply-domain field yet).",
+         "PDN (OWNER 10-24 decision 7): die.pg.supplies VDD_PHY = separate PHY supply + dedicated bump rows "
+         "over the 12 hd_serdes windows; the core VDD/VSS M8/M9 grid does not feed the PHY. TODO (TRIAL/PDN): "
+         "head PSM / IR with the VDD_PHY domain.",
     die=dict(name="s81_head", label="DeepSeek ROM S81 release head die (LM head / argmax / MTP / host)", tech="asap7",
              outline_um=[W, H], period_ps=833, reach_um=1500.0, rep_um=450.0, grid_um=G,
              layer_budget=dict(partition_signal_max="M7", die_layers=["M8", "M9"],
                                die_use=["clock_spine", "pg", "ft_reserved"], cut_avail={"M8": 0.6, "M9": 0.6}),
              pg=dict(partition_pg_max="M7",
                      grid=[dict(layer="M8", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"]),
-                           dict(layer="M9", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"])]),
+                           dict(layer="M9", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"])],
+                     # OWNER DECISION 7 (2026-10-24): IR over the SerDes windows -> separate PHY supply + dedicated bump
+                     # rows over every SerDes window (same form as the S81 layer-die generator)
+                     supplies=[dict(name="VDD_PHY", nets=["VDD_PHY", "VSS"],
+                                    parts=sorted(p["name"] for p in parts if p["type"] == "hd_serdes"),
+                                    bumps=dict(rows=2, pitch_um=150.0, over="io_window",
+                                               note="dedicated VDD_PHY/VSS bump rows over every SerDes PHY window"),
+                                    basis="TRIAL-S81 10-24 head IR over SerDes windows",
+                                    note="VDD_PHY feeds the u_phy PHY macro of each listed partition (its io window); "
+                                         "the partition strip with boundary flops and ft stations stays on core VDD")]),
              channels=channels),
     partition_types=types, partitions=parts, ports=ports, lanes=lanes,
     clock=dict(source=dict(part="@die", bus="clk"), insertion_ps=250, common_latency_ps=250, insertion_tol_ps=40,
