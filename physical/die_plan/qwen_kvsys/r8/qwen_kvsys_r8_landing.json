@@ -11,15 +11,15 @@
 "stage_cycles": 0.5,
 "over_margin": "keep"
 },
-"bus_groups_digest": "897c7f1ed2395ec2",
+"bus_groups_digest": "91b9ac3b43213b1b",
 "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules",
 "summary": {
 "members": 5537,
-"classes": 3810,
+"classes": 3842,
 "replica_links": 9,
-"padded_members": 213,
-"padded_bits": 7629,
-"pad_flops": 23365,
+"padded_members": 193,
+"padded_bits": 4385,
+"pad_flops": 13673,
 "max_pad": 10,
 "max_depth_before": 56,
 "max_depth_after": 61,
@@ -995,8 +995,8 @@
 "source": "astk_EN__u_strip_u_strip_g_ep_0__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L57"
 },
 {
@@ -1185,8 +1185,8 @@
 "source": "astk_EN__u_strip_u_strip_g_ep_2__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L61"
 },
 {
@@ -1375,8 +1375,8 @@
 "source": "astk_EN__u_strip_u_strip_g_ep_4__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L65"
 },
 {
@@ -2591,8 +2591,8 @@
 "source": "astk_ES__u_strip_u_strip_g_ep_0__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L141"
 },
 {
@@ -2781,8 +2781,8 @@
 "source": "astk_ES__u_strip_u_strip_g_ep_2__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L145"
 },
 {
@@ -2971,8 +2971,8 @@
 "source": "astk_ES__u_strip_u_strip_g_ep_4__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L149"
 },
 {
@@ -4206,8 +4206,8 @@
 "source": "astk_WN__u_strip_u_strip_g_ep_0__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L225"
 },
 {
@@ -4396,8 +4396,8 @@
 "source": "astk_WN__u_strip_u_strip_g_ep_2__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L229"
 },
 {
@@ -4586,8 +4586,8 @@
 "source": "astk_WN__u_strip_u_strip_g_ep_4__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L233"
 },
 {
@@ -5802,8 +5802,8 @@
 "source": "astk_WS__u_strip_u_strip_g_ep_0__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L309"
 },
 {
@@ -5992,8 +5992,8 @@
 "source": "astk_WS__u_strip_u_strip_g_ep_2__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L313"
 },
 {
@@ -6182,8 +6182,8 @@
 "source": "astk_WS__u_strip_u_strip_g_ep_4__u_ep.xo",
 "asbuilt": 3,
 "bound": 2,
-"pad": 3,
-"landed": 5,
+"pad": 0,
+"landed": 2,
 "lane": "L317"
 },
 {
@@ -7436,8 +7436,8 @@
 "source": "kvs_hroot_EN.o_c2",
 "asbuilt": 21,
 "bound": 10,
-"pad": 2,
-"landed": 12,
+"pad": 0,
+"landed": 10,
 "lane": "L1529"
 },
 {
@@ -7664,8 +7664,8 @@
 "source": "kvs_hroot_EN.o_c3",
 "asbuilt": 14,
 "bound": 8,
-"pad": 2,
-"landed": 10,
+"pad": 0,
+"landed": 8,
 "lane": "L1528"
 },
 {
@@ -9260,8 +9260,8 @@
 "source": "kvs_hroot_ES.o_c2",
 "asbuilt": 17,
 "bound": 10,
-"pad": 2,
-"landed": 12,
+"pad": 0,
+"landed": 10,
 "lane": "L1549"
 },
 {
@@ -9488,8 +9488,8 @@
 "source": "kvs_hroot_ES.o_c3",
 "asbuilt": 10,
 "bound": 8,
-"pad": 2,
-"landed": 10,
+"pad": 0,
+"landed": 8,
 "lane": "L1548"
 },
 {
@@ -11084,8 +11084,8 @@
 "source": "kvs_hroot_WN.o_c2",
 "asbuilt": 19,
 "bound": 10,
-"pad": 2,
-"landed": 12,
+"pad": 0,
+"landed": 10,
 "lane": "L1569"
 },
 {
@@ -11312,8 +11312,8 @@
 "source": "kvs_hroot_WN.o_c3",
 "asbuilt": 12,
 "bound": 8,
-"pad": 2,
-"landed": 10,
+"pad": 0,
+"landed": 8,
 "lane": "L1568"
 },
 {
@@ -12908,8 +12908,8 @@
 "source": "kvs_hroot_WS.o_c2",
 "asbuilt": 17,
 "bound": 10,
-"pad": 2,
-"landed": 12,
+"pad": 0,
+"landed": 10,
 "lane": "L1589"
 },
 {
@@ -13136,8 +13136,8 @@
 "source": "kvs_hroot_WS.o_c3",
 "asbuilt": 9,
 "bound": 8,
-"pad": 2,
-"landed": 10,
+"pad": 0,
+"landed": 8,
 "lane": "L1588"
 },
 {
