@@ -347,7 +347,7 @@ def cmd_submit(a):
     dies = a.die or list(specs)
     src = Path(a.src).resolve()
     sha = git_head(src)
-    stamp = time.strftime("%m%d_%H%M")
+    stamp = time.strftime("%m%d_%H%M%S") + f"_{time.time_ns() % 1000000:06d}"
     for die in dies:
         c = specs[die]
         run = Path(a.root) / f"{die}_{sha[:9]}_{stamp}"
@@ -373,9 +373,26 @@ def cmd_submit(a):
         if a.dry:
             print("  DRY", cmd)
             continue
-        subprocess.Popen(["bash", "-c", f"nohup {cmd} &"], stdin=subprocess.DEVNULL,
-                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
-        time.sleep(1)
+        # nohup/new-session does not leave the trigger's systemd cgroup: oneshot exit kills those clients.
+        # A separate user service owns each ot-run client until its job has finished.
+        unit = "flow-canary-" + die.replace("_", "-") + "-" + sha[:9] + "-" + stamp.replace("_", "-")
+        r = subprocess.run(["systemd-run", "--user", "--unit", unit, "--collect", "--property=Type=exec",
+                            "--property=KillMode=process", "--", "bash", "-lc", cmd],
+                           capture_output=True, text=True)
+        mp = run / "canary_meta.json"
+        meta = jload(mp) or {}
+        meta["client_unit"] = unit
+        if r.returncode:
+            meta["submission_error"] = r.stderr.strip()
+            result = dict(schema="opentallas.flow_canary.v1", die=die, item=c["item"], src=sha,
+                          run=str(run), kit=kit, verdict="FAIL", failing=["launch"],
+                          stages={"launch": st(False, r.stderr.strip())}, generated=time.strftime("%Y-%m-%dT%H:%M:%S%z"))
+            (run / "canary.json").write_text(json.dumps(result, indent=1) + "\n")
+            mp.write_text(json.dumps(meta, indent=1) + "\n")
+            print(f"CANARY {die} NOT RUN: transient client service failed: {r.stderr.strip()}")
+            return r.returncode
+        mp.write_text(json.dumps(meta, indent=1) + "\n")
+        print(f"CANARY {die} client service {unit}")
     return 0
 
 
