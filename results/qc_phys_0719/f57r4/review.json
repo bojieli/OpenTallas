@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.geom-review.v1",
+ "verdict": "PASS-COND",
+ "image": "results/qc_phys_0719/f57r4/f57r4_posthold.png",
+ "findings": [
+  "Viewed actual posthold GRT placement: data-interface registers remain close to SRAM W/E pins; macros and channels unchanged; max10um-bin cell area ratio0.582",
+  "Input hold-delay buffers fit in South/W/E channels without macro overlaps; legal check_placement passed",
+  "TTsetup217.22ps and FFhold6.55ps/0 endpoints; allfour exhaustive pair censuses pass80ps and verify0; actual postroute RCX/percorner F1 binding remains final gate",
+  "No RTL or added data cycles; resume completed GRT checkpoint rather than rerunning hold repair"
+ ],
+ "scope": "detailed-route continuation only",
+ "source_gate": "29bcd09c8149c635ff7c85e71e3b2d0e3565c797"
+}
