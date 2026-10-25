@@ -1,7 +1,8 @@
 #!/bin/bash
 # ELEM-HBM (gen_core_kit_hbm.py): run one HBM B2r2 core kit through ORFS in docker:
-#   sdc_lint (CP1-R10, fail-closed, vs the image liberty) -> synth -> face_guard (verdict recorded, flow continues for
-#   timing evidence) -> GOAL (finish) -> generate_abstract -> pin audit -> corners_hbm.tcl at SS / FF / TT
+#   sdc_lint (CP1-R10, fail-closed, vs the image liberty) -> SELRANGE (selrange_gate.py: FAIL stops, NOT RUN warns) -> synth -> face_guard (verdict recorded, flow continues for
+#   timing evidence) -> LEC (lec.py 10-24: NOT EQUIVALENT stops the kit, UNPROVEN recorded in lec/lec.json) ->
+#   GOAL (finish) -> generate_abstract -> pin audit -> corners_hbm.tcl at SS / FF / TT
 #   (STA, face-flop CK spread, ETM).  Outputs chowned back to the caller.
 #   run_kit_hbm.sh KITDIR [GOAL=finish] [MEM_GB=32] [CPUS=16]     (heavy: call through ot-run --mem MEM_GB)
 #   GOAL=post: no flow steps; pin audit + corners + signoff on the run's existing routed ODB (HBM-ELEM 10-24: the
@@ -16,9 +17,12 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
   rc=0; if [ $GOAL != post ]; then python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -2 /work/sdc_lint.log; \
+  if [ \$rc = 0 ] && [ -f /work/selrange_gate.py ]; then python3 -I /work/selrange_gate.py /work --out /work/selrange.json > /work/selrange.log 2>&1; src=\$?; tail -3 /work/selrange.log; if [ \$src = 1 ]; then echo 'SELRANGE FAIL: the kit stops (selrange.json)'; rc=1; elif [ \$src != 0 ]; then echo \"SELRANGE NOT RUN (frontend cannot elaborate; see selrange.log)\"; fi; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_synth.v /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | head -1); \
   if [ \$rc = 0 ] && [ -n \"\$N\" ]; then python3 -I /work/face_guard_core.py \$N /work > /work/face_guard.log 2>&1; echo \"face_guard rc \$?\"; fi; \
+  if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -n \"\$N\" ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
+    if [ \$lr = 1 ]; then echo 'LEC NOT EQUIVALENT: the kit stops (lec/lec.json)'; rc=1; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = finish ]; then \$M generate_abstract; rc=\$?; fi; fi; \
   R=\$(ls -d /work/run/results/asap7/*/base | head -1); \

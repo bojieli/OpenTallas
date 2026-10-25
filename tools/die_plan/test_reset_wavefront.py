@@ -283,3 +283,83 @@ puts CORE_RESET_EQ_PASS
     out = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
     assert out.returncode == 0 and not out.stderr, out.stderr
     assert out.stdout.strip() == "CORE_RESET_EQ_PASS"
+
+
+def test_start_broadcast_release_matches_offsets():
+    """OWNER DECISION 13c: START rides the wavefront.  Simulate the generated tiny die with rst_n released at cycle 0
+    and the die start pin raised at cycle S: every consumer tap rst_n_t<i> of partition p releases at S + release[p]
+    (held before), every rst_o at release[p] (raw reset, not gated); pins / ports / die wiring consistent."""
+    import gen_phys
+    import gen_rtl
+    raw = wave(TINY, start="broadcast")
+    P = schema.Plan(raw)
+    W = RT.wf_plan(P)
+    assert W["start"]["mode"] == "broadcast"
+    for tn in W["types"]:
+        names = [n for n, _x, _y in gen_phys.tap_pins(P, tn) + gen_phys.reset_out_pins(P, tn)]
+        assert "start_i" in names and len(names) == len(set(names))
+        xy = [(round(x, 3), round(y, 3)) for _n, x, y in gen_phys.tap_pins(P, tn) + gen_phys.reset_out_pins(P, tn)]
+        assert len(xy) == len(set(xy)), xy                       # never two pins on one spot
+        nr = len(RT.out_pins(P, tn))
+        assert len(RT.start_out_pins(P, tn)) == nr
+        T = RT.for_type(P, tn)
+        tcl = RT.tcl_text(T)
+        assert "u_run_" in tcl and ("u_srl_" in tcl or not T["relays"])
+    if not shutil.which("iverilog"):
+        return
+    root = HERE.parent.parent
+    S = 7
+    nets, want = [], []
+    for part, p in P.parts.items():
+        T = RT.for_type(P, p["type"])
+        nck = T["n_clock_taps"]
+        for i in range(nck):
+            nets.append(f"u_top.{gen_rtl.sv_id(part)}.rst_n_t{i}")
+            want.append(S + W["parts"][part]["release"])
+        for k in range(len(T["outs"])):
+            nets.append(f"u_top.{gen_rtl.sv_id(part)}.rst_o_{k}")
+            want.append(W["parts"][part]["release"])
+            nets.append(f"u_top.{gen_rtl.sv_id(part)}.start_o_{k}")
+            want.append(S + W["parts"][part]["release"])
+    mx = W["max_release"] + S
+    with tempfile.TemporaryDirectory() as d:
+        files = [str(f) for f in gen_rtl.write_rtl(copy.deepcopy(raw), d, rtl_root=str(root))]
+        top = (Path(d) / "tiny_top.sv").read_text()
+        assert "input  wire start" in top and ".start_i(start)" in top
+        tb = Path(d) / "tb.sv"
+        chk = "\n".join(f"        if ({n} === 1'b1 && rel[{k}] < 0) rel[{k}] = cyc + 1;" for k, n in enumerate(nets))
+        tb.write_text(f"""`timescale 1ns/1ps
+module tb;
+    reg clk = 0, rst_n = 0, start = 0;
+    always #0.5 clk = ~clk;
+    reg [31:0] din = 0;
+    wire [31:0] dout;
+    tiny_top u_top (.clk(clk), .rst_n(rst_n), .start(start), .din(din), .dout(dout));
+    integer cyc = -{mx + 20}, k;
+    integer rel [0:{len(nets) - 1}];
+    initial for (k = 0; k < {len(nets)}; k = k + 1) rel[k] = -1;
+    always @(posedge clk) begin
+        #0.1;
+{chk}
+        if (cyc == -1) rst_n = 1;
+        if (cyc == {S - 1}) start = 1;
+        cyc = cyc + 1;
+    end
+    initial begin
+        repeat ({2 * mx + 40}) @(posedge clk);
+        for (k = 0; k < {len(nets)}; k = k + 1) $display("REL %0d %0d", k, rel[k]);
+        $finish;
+    end
+endmodule
+""")
+        exe = str(Path(d) / "a.out")
+        src = files + [str(HERE / "examples" / "tiny_leaves.sv")]
+        subprocess.run(["iverilog", "-g2012", "-o", exe, str(tb)] + src, check=True)
+        out = subprocess.run(["vvp", "-n", exe], capture_output=True, text=True).stdout
+        rel = [int(x) for x in re.findall(r"REL \d+ (-?\d+)", out)]
+        assert rel == want, (list(zip(nets, rel, want)), out[-1500:])
+        if shutil.which("verilator"):
+            r = subprocess.run(["verilator", "--lint-only", "-Wall", "-Wno-DECLFILENAME", "-Wno-UNUSED",
+                                "-Wno-PINCONNECTEMPTY", "--top-module", "tiny_top"] + src,
+                               capture_output=True, text=True)
+            assert r.returncode == 0, r.stderr

@@ -1,0 +1,58 @@
+{
+  "verdict": "PASS",
+  "scope": "preCTS local-port network latency, explicitly cleared with matching -clock qualifier before propagated-clock timing",
+  "vehicle": "intel1 CP1 reach405R r1 routed6_final.odb+6_final.spef (owned copy r1_m8)",
+  "slack_ps": {
+    "tt": {
+      "max_before": 181.7343505173596,
+      "max_after": 181.7343505173596,
+      "min_before": 11.190964866211619,
+      "min_after": 11.190964866211619
+    },
+    "ff": {
+      "max_before": 327.2216954927113,
+      "max_after": 327.2216954927113,
+      "min_before": 8.391953832069225,
+      "min_after": 8.391953832069225
+    }
+  },
+  "prior_failed_trials_retained": [
+    {
+      "id": "port_estimate_left_in_propagated_timing",
+      "verdict": "FAIL",
+      "tt_max_min": [
+        202.48403035245678,
+        4.024752769377621
+      ],
+      "ff_max_min": [
+        346.2732892048591,
+        -14.956674847333492
+      ],
+      "diagnosis": "pin-specific network estimates remain effective despite set_propagated_clock; must not put them into golden SDC"
+    },
+    {
+      "id": "port_clear_missing_clock_qualifier",
+      "verdict": "FAIL",
+      "diagnosis": "unset_clock_latency without -clock clk does not remove an estimate set with -clock clk"
+    },
+    {
+      "id": "object_estimate_without_reprop",
+      "verdict": "FAIL",
+      "diagnosis": "set_clock_latency changes clock propagated state; clock-object estimate becomes invariant only after set_propagated_clock"
+    }
+  ],
+  "placement_result": {
+    "original_floorplan_setup_ps": -232.054,
+    "original_false_endpoints": 1454,
+    "original_zero_change_iteration": 780,
+    "estimated_floorplan_setup_violations": 0,
+    "estimated_repair_s": 0.81
+  },
+  "cycles_added": 0,
+  "golden_sdc_change": false,
+  "logs": [
+    "~/coord/codex-cp1-clock-qualified-clear-tt.log",
+    "~/coord/codex-cp1-clock-qualified-clear-ff.log",
+    "intel2:/srv/opentallas-scratch2/claude/codex-cp1-wavefront-v2/kits/col_h10_r0_p1__t1/run_place.log"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.tokds.comp_receipt.v1",
+ "bench": "dsdv_idx_tx_i13 rank-aware indexed13 TX helper (S81-PORTS)",
+ "stage": "attn.gather: runtime-index selected-row read + V-beat transmit per job (K=512 selected rows per rank, C=1024 candidates); command edge -> JOB_DONE",
+ "op": "attn.gather",
+ "cycles": 612,
+ "replaces": "logic",
+ "verdict": "PASS",
+ "mutant": "CAUGHT",
+ "mutants": {"miss (absent candidate)": "CAUGHT (st 0089)", "duplicate id": "CAUGHT (st 00a9)", "wrong tag": "CAUGHT (st 0089)", "same-bank two-job overlap": "CAUGHT (st 0089)"},
+ "rtl": "codex/s81-idxenc-1025@0221f2570 (dsdv_idx_tx_i13.sv + dsdv_idx_l20s.sv + dsdv_idx_tree.sv)",
+ "evidence": "claude/s81-i13-1025@2d87810da2 results/s81_i13_1025/ (r3 D=128 flops, sram D=1024 ASAP7 macro model, multi two-job overlap); intel2:/srv/opentallas-scratch2/claude/codex-s81-i13/summary_r3.json; ot-run unit oth-ubuntu-3119183-1792927549",
+ "measured": {"issue_to_done": 612, "first_lookup": 27, "first_output": 45, "output_span": 567, "two_job": "job B exchange overlaps job A transmit on the other tag bank, 612 each, no extra cycles"},
+ "slot_mapping": "TOK-DS call: I13 is the runtime-index row read the DAG prices as attn.gather (old measured 607.5 cyc/instance, same shape: K=512 rows per rank). S81-PORTS did not name the node; if S81 places it as a NEW serial node instead, see README bracket.",
+ "open": "synth fit (yosys SRAM_MACRO=1 D=8192) and P&R not run; two-source selector + wrong-qslot/order controls open"
+}

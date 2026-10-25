@@ -786,6 +786,13 @@
         "type": "number",
         "minimum": 0
        },
+       "insertion_ff_ps": {
+        "type": "number",
+        "exclusiveMinimum": 0
+       },
+       "insertion_basis": {
+        "type": "string"
+       },
        "tap_pitch_um": {
         "type": "number",
         "exclusiveMinimum": 0
@@ -1632,6 +1639,10 @@
      "type": "number",
      "exclusiveMinimum": 0
     },
+    "insertion_ff_ps": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
     "common_latency_ps": {
      "type": "number",
      "exclusiveMinimum": 0
@@ -1773,6 +1784,12 @@
     "root_part": {
      "type": "string",
      "minLength": 1
+    },
+    "start": {
+     "enum": [
+      "none",
+      "broadcast"
+     ]
     },
     "part_depth": {
      "type": "integer",
