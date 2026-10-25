@@ -56,16 +56,15 @@ python3 -m pytest -q tools/die_plan/
   boundary flops is `clock.insertion_ps` +/- `insertion_tol_ps` (250 +/- 40), and neighbour skew is <= 80 ps.
   `face_xing` = `budgeted` means abutted faces are timed as ordinary synchronous hops under that budget.
   `forwarded_landing` means a forwarded clock plus a landing at every abutted face.
-- **Reset** (OWNER RESET RULE 2026-10-24, `reset.release: "pipelined"`, tool `reset_tree.py`): exactly ONE root 2-flop
-  synchroniser per die REGION (`reset.regions`, default one region = the die, root at the die `rst_n` pin); its async
-  input is the only reset false path. From it the synchronised reset travels as a SYNCHRONOUS signal through relay flops
-  (`ot_dp_rrelay`) every <= `reset.relay_um` (405) um with EQUAL depth to every clock tap, so every block releases on the
-  same known cycle. A partition takes `arst_n` as a synchronous input: a pin register `u_rst_in` at the reset tap, then
-  an equal-depth relay tree `u_rrl_<k>` of exactly `reset.part_depth` (K, plan-wide; default the deepest type's own
-  depth) stages to every tap (`rst_n_t<i>`); local flops use their nearest tap's `rst_n_t<i>` with normal timed
-  recovery/removal. Every tap of a region releases `sync_stages + E + 1 + K` clocks after the die reset (E = the die
-  relay tree depth, `reset_tree.py die`). Assertion is synchronous too (hold the die reset >= that many clocks at boot).
-  No recovery waivers. Die-level relays need hosting inside partitions (open; `reset_tree.py die` reports it).
+- **Reset** (OWNER RESET RULE 2026-10-24 + OWNER DECISION 13, `reset.release: "wavefront"`, tool `reset_tree.py`):
+  ONE root 2-flop synchroniser per DIE (in the partition at the die `rst_n` pin; its async input is the only reset false
+  path), then a NEIGHBOUR WAVEFRONT: every partition registers its incoming reset (`arst_n` -> `u_rst_in`, a synchronous
+  pin register at the type's IN pin) and re-drives registered `rst_o_<k>` outs to its neighbours; inside, an equal-depth
+  relay tree (`ot_dp_rrelay u_rrl_<k>`, hops <= `reset.relay_um` 405 um) reaches every clock tap and every `rst_o`.
+  Pins are uniform per type; the die top only wires `rst_o_<k>` -> neighbour `arst_n` (<= `reset.hop_um`). Release
+  cycles differ per partition and are PUBLISHED (`reset_tree.py offsets`); the schedule starts with an explicit start
+  broadcast after reset; only control state is reset. No recovery waivers. (`"pipelined"` = the superseded equal-depth
+  die tree, G0 WARN.)
   Legacy `release: "counted"`: one async-assert / sync-deassert synchroniser per partition (per tap for a tap grid);
   G0 warns that it does not meet the rule. Data and ft flops have no reset (`data_reset` is const false), and each
   station carries one epoch bit (`epoch_bit` is const true).
@@ -193,30 +192,34 @@ This writes `latency.lanes` back into the plan (with `--inplace`), `<die>_lat_pk
 named by `lane.param` or `LAT_<ID>`) and `<die>_latency.json` (the compiler's input, which carries the plan digest).
 A die-IO lane counts 1 cycle: the boundary flop of its partition end.
 
-## Pipelined reset (`reset_tree.py`, lane RESET, OWNER RESET RULE 2026-10-24)
+## Reset wavefront (`reset_tree.py`, lane RESET, OWNER RESET RULE 2026-10-24 + DECISION 13)
 
-One tool for every die (replaces the per-tap `u_rsync_t<i>` synchronisers, KV-G3's per-partition tree and S81's
-per-tap `ot_dp_rpipe` chains).
+One tool for every die (replaces the per-tap `u_rsync_t<i>` synchronisers, KV-G3's per-partition tree, S81's
+`ot_dp_rpipe` chains and the superseded equal-depth `pipelined` die tree).
 
 ```
+python3 tools/die_plan/reset_tree.py offsets PLAN.json [--out J]   # per-partition release cycles (compiler, benches)
 python3 tools/die_plan/reset_tree.py all  PLAN.json        # G0 rule check (also run by check.py: summary.reset)
-python3 tools/die_plan/reset_tree.py type PLAN.json TYPE   # one type: entry, depth K, relays, release clocks
-python3 tools/die_plan/reset_tree.py die  PLAN.json [--out J]   # regions: die depth E, release clocks, hosting
-python3 tools/die_plan/kit_rsync.py PLAN.json TYPE KIT_RTL_DIR [--release pipelined]   # bound kit -> tree
+python3 tools/die_plan/reset_tree.py type PLAN.json TYPE   # one type: entry, depth K, relays, outs, release after pin
+python3 tools/die_plan/reset_tree.py render PLAN.json TYPE [--png F]   # review picture of the type's tree
+python3 tools/die_plan/kit_rsync.py PLAN.json TYPE KIT_RTL_DIR [--release wavefront]   # bound kit -> tree + rst_o
 ```
+(any form takes `--release wavefront` to price a plan that has not switched yet)
 
-- Switch a plan: `"reset": {..., "release": "pipelined"}` (optional `relay_um`, `part_depth`, `regions`). G0 then
-  checks every type's tree (hops <= relay_um, equal depth K) and the die region trees; `counted` plans get one WARN.
-- Generated kits (`gen.py rtl` + `gen.py phys`): the wrapper gets `u_rst_in` + `u_rrl_<k>`; `gen.py phys` writes
-  `reset_tree.tcl` (FIRM sites, sourced by `face_flops.tcl` before `reset_taps.tcl`; it prints `OT_RESET_TREE ... placed
-  max hop ... PASS|FAIL`). The die top holds the region root synchroniser(s) and the die relay tree (functional model).
-- Bound kits (`bind.py kit-rtl`): run `kit_rsync.py` before `gen.py phys --kit-rtl`; it replaces `u_rst_sync` (or old
-  per-tap / tree lines) and writes `reset_tree.tcl` next to the kit RTL. `--release pipelined` lets a kit trial use the
-  rule before its plan lane switches the plan.
-- Relays are planned at `relay_um - 25` um (legalisation slack) and never inside hard cores / macro leaves (+4.32 um);
-  a tap over a fully tiled macro array gets its relay at the nearest free site (`tap_offset_um`).
-- Boot price: `release_clocks` (die: `sync_stages + E + 1 + K`) in `reset_tree.py die`; boot benches hold the die reset
-  at least that many clocks (assertion is synchronous) and count the release that many clocks after deassert.
+- Switch a plan: `"reset": {..., "release": "wavefront"}` (optional `relay_um`, `hop_um`, `in_sites {type: [x, y]}`,
+  `root_part`; hard types `partition_types[T].reset.depth` / `tap_um`). G0 checks every type's tree (hops <= relay_um,
+  equal depth inside the type) and that every partition's IN pin has a parent `rst_o` within `hop_um` (errors list the
+  long hops: move the IN pin -- hard types: `reset.tap_um` on the face toward a soft neighbour).
+- Generated kits (`gen.py rtl` + `gen.py phys`): the wrapper gets `u_rst_in` (or `u_rst_root` in the root's type),
+  `u_rrl_<k>` and `assign rst_o_<k> = ...`; `io.tcl` / mock LEF place `arst_n` at the IN site and `rst_o_<k>` (OUTPUT)
+  at their face sites; `reset_tree.tcl` places every relay FIRM and prints `OT_RESET_TREE ... PASS|FAIL`; sdc_lint
+  budgets `rst_o_<k>` like a data output. The die top wires parent `rst_o_<k>` -> child `arst_n`.
+- Bound kits (`bind.py kit-rtl`): run `kit_rsync.py` before `gen.py phys --kit-rtl`; it replaces `u_rst_sync` (or
+  old per-tap / tree lines), adds `output wire rst_o_<k>` to the bound module and the port-only wrapper (+ the
+  `.rst_o_<k>(rst_o_<k>)` connection) and writes `reset_tree.tcl`.
+- Release: root partition `sync_stages + K_root`, child `release(parent) + entry + K` (entry 1, or `sync_stages` in the
+  root's type); simulated in `test_reset_wavefront.py`. Boot benches hold the die reset >= `max_release` clocks.
+- `face_keep.tcl` keeps the reset relays through ORFS eliminate_dead_logic (a tap with no RTL load still gets its relay).
 
 ## G2 probes (`g2.py`, redefined by COORD on 10-23)
 
