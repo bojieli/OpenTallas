@@ -1,0 +1,8 @@
+{"schema": "opentallas.kv_g3.grt_gate.v1", "kit": "epyc2:/srv/opentallas-scratch2/claude/kv/g5/vK/kv3_hub_Ei", "type": "kv3_hub_Ei",
+ "variant": "vK = vJ plan + reset_tree (root sync at arst_n, 281 relays, D=7) + ft bit sites --stagger 0.25 --bin-cap 0.3 --keepout taps + OT_TAP_MAX_SINKS 1200",
+ "grt": {"total_overflow": 0, "max_h": 0, "max_v": 0, "usage_pct": 7.56, "wirelength_um": 13907801, "layers": "M2-M7"},
+ "hotspot_window_560_600x800_840": {"cells_3_place": 1036, "cells_vJ_4_cts": 1561, "grt_overflow": 0},
+ "cts_placement_rc": {"pair_skew_TT": 68.0, "pair_skew_FF": 62.2, "limit": 80, "TT_wns": -21.77, "TT_whs": -83.63, "FF_wns": -64.16, "FF_whs": -25.55, "reset_root_recovery_slack_ps": 485.71, "tap_mean_insertion_ps": "239-272", "trees_over_290": ["clk_t62 292", "clk_t9 291"]},
+ "place": {"ff_ff_max_um": 428.7, "ff_ff_p90_um": 380.5, "reset_relay_hop_max_um": 405.8, "pin_ff_p90_um": 8.3, "max_bin_density": 0.235},
+ "verdict": "GRT GATE PASS (0 overflow); NOT ROUTED; NOT SIGNED; delta GEOM re-review requested",
+ "at": "2026-10-24T21:11:15-07:00"}
