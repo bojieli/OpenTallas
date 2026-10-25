@@ -7,3 +7,4 @@ Branch claude/die-proto-1025 (worktree epyc1:/srv/opentallas-scratch2/claude/wt/
 2026-10-25 06:32 PDT DIE-PROTO: started. Tools: die_trial.py kit/grt (abstracts, ft crossings + reset, M4-M7 signals,
   M8/M9 clock/PG obs) + die_sta.py/die_ci.py ILM with signed views. Signed partition types on current plans (release cache):
   S81 slice_station t12/t17/t20/t21, KV kv3_head_eighth e1/e3/e5/e7 (plan match to verify); QC/head none (cores only).
+2026-10-25 06:35 PDT DIE-PROTO: branch claude/die-proto-1025 pushed (=main 6a6fc12dd). 4 sub-agents launched: S81; s81_head+qwen_kvsys; qwen_compute; HBM (B2n on main G0C check first, B2o if it passes). Each: die_trial kit + die GRT (M4-M7) via ot-run, hop check vs 405, die_sta ILM with contract stand-ins + matching signed views, renders viewed. Fleet data epyc1:/srv/opentallas-scratch2/claude/die-proto/<die>/.
