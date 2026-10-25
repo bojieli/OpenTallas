@@ -236,3 +236,12 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   bind_eq_cb16 + claude/reset-1024 reset rule -> branch claude/qc-g3-1024; route only after GEOM-REVIEW PASS.
   S8-SU-PROG-ALIGN: TOK-QK's fix sub-agent (claude/tok-qk-s8a-1024) is on the RTL retime; QC reviews the design fix (prefer re-timing the
   PROG read so the word meets su8's accept edge over adding +3 start cycles if the cmd is known early) and owns merge/re-close.
+- 2026-10-24 21:33 PDT QC: APPROVED-IF met -> READY claude/qc-cap-1024r@2f67b44ad1 (merged main a11334b988; pytest: only main's own 3 failures; test_cp2
+  fixed (tap_balance kept the literal default clk regex); G0 PASS / G0C 56/56).
+- 2026-10-24 21:33 PDT QC: S8-SU-PROG-ALIGN design review of claude/tok-qk-s8a-1024@dd2d80455 (start relayed 3 edges behind the PROG read): ACCEPT as the
+  closure fix (su8 / vm8q untouched, +3 edges per SU op priced in calibrated SU ages). Zero-cost alternative for later: compiler issues a
+  PROG prefetch 3 edges before the SU start (split su_cmd into fetch + start) -- needs producer RTL + compiler, not now.
+  Re-close: when it lands on main, QC re-elaborates the as-built + rebinds (pipe.sh, ~1.5 h) so su_c kits/bound tops carry it.
+- 2026-10-24 21:33 PDT QC: OWNER DECISION 12 (ft <= M7, stations <= 405 um) invalidates the plan's 750-um ft station budget: QC re-plan next
+  (budgets.ft_station_max_um 405 -> ft_regs/lane_eq add stations -> probe rebind -> R8/CB16 -> final bind). Decision 13 (reset wavefront):
+  kits adopt the RESET lane's tool mode when ready.
