@@ -62,7 +62,11 @@ def main():
             sinks=[m["name"]], load_ff=9.3458,
             desired_xy=[float(m["x1"])+7, float(m["cky"])],
             load_source="ot_rom_4096x274_m8_tt.lib pin(clk) capacitance=9.3458fF"))
-        banks.append(dict(bank=bank, macro_box=[float(m[k]) for k in ("x0","y0","x1","y1")],
+        banks.append(dict(bank=bank, common_root_name=f"ot_hrom{bank}_root",
+            shallow_trunk_target=f"ot_hrom{bank}_root/A",
+            triton_local_cts=False,
+            local_cts_exclusion="All explicit ROM subtree root/branch/leaf output nets; synthesize only ordinary density-tap outputs",
+            macro_box=[float(m[k]) for k in ("x0","y0","x1","y1")],
             root_desired_xy=[cx,base_y],
             side_roots={"left":[float(m["x0"])-7,base_y],"right":[float(m["x1"])+7,base_y]},
             sink_counts=dict(capture=256,address=12,CE=1,macro=1), leaves=leaves))

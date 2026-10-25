@@ -26,6 +26,10 @@
   "banks": [
     {
       "bank": 0,
+      "common_root_name": "ot_hrom0_root",
+      "shallow_trunk_target": "ot_hrom0_root/A",
+      "triton_local_cts": false,
+      "local_cts_exclusion": "All explicit ROM subtree root/branch/leaf output nets; synthesize only ordinary density-tap outputs",
       "macro_box": [
         77.76,
         103.68,
@@ -846,6 +850,10 @@
     },
     {
       "bank": 1,
+      "common_root_name": "ot_hrom1_root",
+      "shallow_trunk_target": "ot_hrom1_root/A",
+      "triton_local_cts": false,
+      "local_cts_exclusion": "All explicit ROM subtree root/branch/leaf output nets; synthesize only ordinary density-tap outputs",
       "macro_box": [
         77.76,
         190.08,
