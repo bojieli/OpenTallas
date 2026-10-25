@@ -332,6 +332,9 @@ def main():
                          "0 cycles, COORD ruling 5); needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
+    ap.add_argument("--astk-rep-split", action="store_true",
+                    help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
+                         "<= 64 loads each; kept regs were merged back: B ES rc[0] 2048 loads) + ctl z_k copies kept the same way (0 cycles)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
     ap.add_argument("--am-g-drop", action="store_true",
                     help="COORD ruling 2 (10-25): drop the constant LMAX head-group bit g (am[1]) from qkd_ahub am0..3 and the "
@@ -421,9 +424,11 @@ def main():
         if not mod.startswith("kv3_astk_"):
             raise SystemExit("--astk-timing-regs only applies to kv3_astk_* cores")
         from astk_timing_regs import apply_kit
-        apply_kit(kd / "rtl")
+        apply_kit(kd / "rtl", split=a.astk_rep_split)
         (kd / "astk_timing_delta.json").write_text(json.dumps(dict(added_cycles=0, zn_read_replicas=8, zn_added_ff_per_z=40,
-            ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL"), indent=1) + "\n")
+            ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL",
+            rep_split=(dict(zn_replicas=16, slice_bits=8, max_select_loads=64, kept="keep_hierarchy qkd_astk_rep5/rep4",
+                            miter="kv-cores-1025r/astk/G/tb") if a.astk_rep_split else None)), indent=1) + "\n")
     if a.ectlk_face_ports:
         if mod != "qkd_ectlk":
             raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
