@@ -52,6 +52,26 @@ def tie_k(ports):
     return int("".join(bits), 2)
 
 
+PAD_N = {}        # l12p pad instance -> N stages (die.v header #(.W, .N) or hier-wrap module localparam N)
+PAD_MOD_N = {}    # hier-wrap pad module (hbfd_pad_hw<k>) -> N
+
+
+def load_pads(die_v):
+    """fill PAD_N / PAD_MOD_N for die_v: hbfd_pad equal-age pads (L12) are N registered stages each."""
+    PAD_N.clear(); PAD_MOD_N.clear()
+    die_v = Path(die_v)
+    for line in die_v.open():
+        m = re.match(r"\s*hbfd_pad\s*#\((.*?)\)\s+(\w+)\s*\(", line)
+        if m:
+            n = re.search(r"\.N\((\d+)\)", m[1])
+            if n:
+                PAD_N[m[2]] = int(n[1])
+    for hw in (die_v.parent / "hier_wraps.sv", die_v.parent / "slice" / "hier_wraps.sv"):
+        if hw.exists():
+            for m in re.finditer(r"module (hbfd_pad_hw\d+)\s*#\([^)]*?N\s*=\s*(\d+)", hw.read_text()):
+                PAD_MOD_N[m[1]] = int(m[2])
+
+
 def lane_latency(inst, hops):
     """d4g_bank_latency.Graph.lane_latency with K from the die.v ties: relay 1 edge; half-cycle lane stages N then a
     landing: ceil(N/2) + 1 + E, E = (K - ceil(N/2)) mod 8 or 8."""
@@ -60,6 +80,12 @@ def lane_latency(inst, hops):
         m, ports = inst[h]
         if m.startswith("hbfd_rly"):
             lat += 1
+        elif m.startswith("hbfd_pad"):
+            n = PAD_N.get(h, PAD_MOD_N.get(m))
+            if n is None:
+                notes.append(f"{h}: pad N unknown ({m})")
+            else:
+                lat += n
         elif re.match(r"^hbfd_lh0?_", m):
             half += 1
         elif re.match(r"^hbfd_(land0?|lnd)_", m):
@@ -132,6 +158,7 @@ def downstream_profile(die_v):
 
 def profile(die_v, leaf_lat=2):
     names = {f"pgp_{q}" for q in QS} | {f"hc_{q}" for q in QS} | {f"hleaf_{q}" for q in QS} | {"hc_eng"}
+    load_pads(die_v)
     inst = CT.parse_instances(die_v, names)
     su = {}
     for q in QS:
