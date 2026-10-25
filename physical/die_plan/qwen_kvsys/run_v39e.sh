@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # KV-PLAN3 10-25: plan v3.9 -> v3.9e = v3.9d (geom_v39d.py pv column +259.2 / hub_Wi E-W channel / ectlk quarters,
 # chan_windows.py channel-mouth pins, core_reface.py) + g3/post_v39e.py (ECTLK quarter real pins with the approved pin
-# drop, am g drop, pv_join die-track snap, kvs_ctl re-outline, reset.start broadcast).
+# drop, am g drop, pv_join die-track snap, kvs_ctl re-outline, reset.start broadcast) + g3/ft_channel_regs.py (channel
+# station sites for ft slots whose default jog crosses a hard-core row).
 #   phase gen:      ... -> G0/G0C (face findings above 6/um expected until the per-type G2 budgets are applied)
 #   phase budget:   g3/face_budget.py with the per-type G2 table (hard cores obstructing) -> G0/G0C again
 #   usage: run_v39e.sh gen V39_DIE_PLAN.json OUTDIR ECTLK_SV [ECTLK_LIVE.json]
@@ -27,6 +28,7 @@ python3 "$D/g3/post_v39e.py" "$O/die_plan_geom.json" --cores "$O/cores" --ectlk-
 cp "$D/core_conns.json" "$O/"
 python3 "$D/g3/chan_windows.py" "$O/die_plan_geom.json" --report "$O/chan_windows.json" > "$O/die_plan.json"
 python3 "$D/g3/core_reface.py" "$O/die_plan.json" --types kv3_hub_Wi
+python3 "$D/g3/ft_channel_regs.py" "$O/die_plan.json" --report "$O/ft_channel_regs.json"
 cp -r "$D/census" "$D/cells_evidence.json" "$D"/l1_cores_v3*.json "$O/"
 python3 "$T/gen.py" latency "$O/die_plan.json" --inplace --out "$O/lat"
 mkdir -p "$O/r8" && cp "$D"/r8/*.py "$O/r8/"
