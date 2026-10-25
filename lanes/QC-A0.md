@@ -203,3 +203,7 @@ CODEX progress: Capacity56 candidate nowregenerated25/25constantsPASS,433915padf
   equalises PHY bundles (lanes between one PHY partition and one partition): cbf_q0{0,1}_s2 rx_flit_serdes_rx + rx_v 4 -> 5
   (+1,196 station flops, serdes_2 RX +2 cycles, priced by coll_regen). Pipeline running epyc1 pid 2969446 (pipe.sh: regen -> probe bind
   -> R8 groups/table -> G0 -> CB16 pads -> final bind -> verify; logs /srv/opentallas-scratch2/claude/qc/logs/pipe*.log).
+- 2026-10-24 21:00 PDT QC: A0 v8 (F1) kits built: claude/qc-a0v8-1024@39e12308a8 (same outline/pins/RTL body/cycles; hub co-location of ring writers +
+  readers incl. 1,024 flattened g_tx9.tc[] flops; E heads mirrored MY so faces look into the 35-um channel; +4 hub taps (load-less
+  ports OT_A0_CK_TAPS42/41), a0_core_taps.json -> v8). Cut ratios head columns 1.41-1.65 -> 0.16-0.49. Self-review PASS-COND; GEOM-REVIEW
+  independent review REQUESTED (lanes/GEOM-REVIEW.md). Plan regen with v8 taps after review.
