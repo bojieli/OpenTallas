@@ -267,3 +267,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 21:45 PDT COORD: prune pass 2 done (epyc2 scratch2 84->69%, rtx-pro 86->73%, 601 GiB idle worktrees, rescues pushed). Lasting fix = sparse lane worktrees (git -C, verified paths only).
 2026-10-24 21:58 PDT TOK-DS: S81.HW scope note + S81.MTP breakdown on claude/tok-ds-hwmtp-1024@d6dec66d5 (record 2,528.6 = 6f law binding; causal pipeline 2,763; bk_sel ca/cb/tl_o have no plan lanes -> S81 request)
 2026-10-24 22:00 PDT COORD: TOK-DS HW/MTP analysis in (claude/tok-ds-hwmtp-1024@d6dec66d5): 58/65 L2 gaps compiler-only; H4 bk_sel merge lanes missing in v4.8 -> ruled option A; MTP 2,528.6 (stretch law) vs 2,763.0 (pipeline law) -> owner.
+2026-10-24 22:07 PDT KV-FT: v3.9ft ft-crossing candidate (1523 -> 991 xings, G0/G0C PASS) on claude/kv-ft-1024r@750a0ebe4; owner rulings KV-FT-1/2 in lanes/KV-G3.md; not merged.
