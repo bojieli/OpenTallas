@@ -324,6 +324,9 @@ SCHEMA = {
                             "type": "object", "required": ["name", "xy"], "additionalProperties": False,
                             "properties": {"name": _name, "xy": _xy, "kind": {"enum": ["core", "glue", "leaf"]},
                                            "orient": {"enum": list(ORIENTS)}, "insertion_ps": _pos,
+                                           # CORELAT 10-25: the core's FF insertion (SIGNED FF pin-register mean,
+                                           # or the FF budget); absent -> FF_TT_INSERTION_RATIO x insertion_ps
+                                           "insertion_ff_ps": _pos,
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
                                            "from_root_um": _nonneg, "note": {"type": "string"}}}}}},
                     # hard cores built on PLATFORM tracks (macros inside): a per-core placement offset puts their
@@ -1007,9 +1010,39 @@ def core_taps(P, tn):
     return out
 
 
-def core_tap_early_ps(P, tp):
-    """how early the spine delivers a core tap: max(0, insertion_ps - the die common latency)."""
-    return max(0.0, float(tp.get("insertion_ps", 0.0)) - float(P.clock["insertion_ps"]))
+# = gen_phys.FF_TT_INSERTION_RATIO (routed RCX FF/TT pin-register mean ratio); used only when a plan gives no FF value
+FF_TT_INSERTION_RATIO = 0.81
+
+
+def _corner(corner):
+    c = str(corner).upper()
+    if c not in ("TT", "FF"):
+        raise ValueError(f"corner {corner!r}: sign-off is TT setup / FF hold only")
+    return c
+
+
+def common_latency_ps(P, corner="TT"):
+    """the die common (pin-register) latency at a corner: TT clock.insertion_ps; FF clock.insertion_ff_ps, absent ->
+    FF_TT_INSERTION_RATIO x TT (250 -> 202.5)."""
+    tt = float(P.clock["insertion_ps"])
+    if _corner(corner) == "TT":
+        return tt
+    return float(P.clock.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
+
+
+def core_tap_insertion_ps(tp, corner="TT"):
+    """a core tap's declared core insertion at a corner: TT insertion_ps; FF insertion_ff_ps, absent ->
+    FF_TT_INSERTION_RATIO x TT."""
+    tt = float(tp.get("insertion_ps", 0.0))
+    if _corner(corner) == "TT":
+        return tt
+    return float(tp.get("insertion_ff_ps", round(FF_TT_INSERTION_RATIO * tt, 3)))
+
+
+def core_tap_early_ps(P, tp, corner="TT"):
+    """how early the spine delivers a core tap at a corner: max(0, core insertion - the die common latency), both
+    at that corner (CORELAT 10-25: FF = insertion_ff_ps - clock.insertion_ff_ps, never the TT number)."""
+    return max(0.0, core_tap_insertion_ps(tp, corner) - common_latency_ps(P, corner))
 
 
 def _grid_taps(P, tn):
