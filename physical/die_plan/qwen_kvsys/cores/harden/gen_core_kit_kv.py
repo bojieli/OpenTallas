@@ -326,6 +326,7 @@ def main():
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
     ap.add_argument("--kvspc-face-ports", action="store_true", help="kvs_pc / kvs_pc_h_head_p boundary recut: one clock (hck + HBM data clocks := ck), dead-pin drop (land_er[258:1]; head ki[30:21]/[14:1]) as an in-memory plan delta until KV-PLAN3 lands it, ki/ko split (+1 hclk per kc station), fi landing (+1 fault edge), po / land_es private port flops (0 cycles); miter results/kvspc_face_1025")
+    ap.add_argument("--kvspc-private-ports", action="store_true", help="with --kvspc-face-ports: private output ports (kvspc_private_ports.py, PATH-KV-PC 10-25): return actual_* port flops with internal hold copy + actual_valid kept (0 cycles), o_grp[296:289] status pin flops (+1 fault/drain observation edge; o_grp[294] no longer a pc__fo feedthrough), o_prev private launch (+1 edge per o_prev hop, non-head), pi[0] single capture, pc/cfg_stack single landing (chain station reads the landed copy), head upo kept pin flops (0 cycles)")
     ap.add_argument("--stock-flow", action="store_true",
                     help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=0.6)
@@ -426,6 +427,16 @@ def main():
             clock_period_ps=833, added_cycles=0, pin_geometry="unchanged plan pins"), indent=1) + "\n")
     if a.kvspc_face_ports:
         KVSPC.apply_kit(kd / "rtl", mod)
+        if a.kvspc_private_ports:
+            import kvspc_private_ports as KVPP
+            for f in KVPP.apply_kit(kd / "rtl", mod):
+                srcs.append(f"/work/rtl/{f}")
+            (kd / "kvspc_private_delta.json").write_text(json.dumps(dict(
+                transform="kvspc_private_ports.py", cycles=dict(
+                    o_prev="n/a (head)" if mod.endswith("_h_head_p") else "+1 edge per o_prev chain hop (private launch flop)",
+                    o_grp_289_296="+1 edge (fault / drain observation flags: cal_fault_hbm, completion_fault, drain_fault_core, drain_fault_hbm, er[260], fo copy, front_fault_go_hbm, front_fault_overflow_hbm)",
+                    other=0), straps="pc__pc / pc__cfg_stack: one landing register per bit; strap_* rename = plan delta (STRAP_RENAME off)",
+                miter="results/kvspc_private_1025"), indent=1) + "\n")
         hd = mod.endswith("_h_head_p")
         (kd / "kvspc_face_delta.json").write_text(json.dumps(dict(
             plan_dropped_pins=KVSPC.dropped_pins(hd), plan_delta="IN-MEMORY until KV-PLAN3 lands it",
