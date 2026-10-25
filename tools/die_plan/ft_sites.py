@@ -64,7 +64,31 @@ def _path(free,first,last,budget,radius,min_stages,boxes=(),first_point=None,las
     while end>=0:
         solution.append(int(end));end=int(parent[end])
     solution.reverse()
-    if len(solution)+1<min_stages:raise ValueError('old excess stages need explicit preservation')
+    # A shorter legal corridor must retain the old statically priced register depth.
+    # Insert distinct legal target sites along existing visible edges; never
+    # change an endpoint, remove a stage or borrow reach from a different leg.
+    while len(solution)+1<min_stages:
+        chosen=None
+        vertices=[np.asarray(first_point) if first_point is not None else free[solution[0]],
+                  *[free[i] for i in solution],
+                  np.asarray(last_point) if last_point is not None else free[solution[-1]]]
+        edges=sorted(range(len(solution)+1),key=lambda j:-float(np.abs(vertices[j+1]-vertices[j]).sum()))
+        for edge in edges:
+            left,right=vertices[edge],vertices[edge+1]
+            left_dist=np.abs(free-left).sum(axis=1);right_dist=np.abs(free-right).sum(axis=1)
+            ok=(start_ok.copy() if edge==0 else left_dist<=budget-2*radius)
+            ok &= (end_ok if edge==len(solution) else right_dist<=budget-2*radius)
+            ok[solution]=False
+            if boxes:
+                if edge>0:ok &= _visible(left,free,boxes)
+                if edge<len(solution):ok &= _visible(free,right,boxes)
+            candidates=np.flatnonzero(ok)
+            if not len(candidates):continue
+            midpoint=(left+right)/2
+            rank=np.abs(free[candidates]-midpoint).sum(axis=1)
+            chosen=(edge,int(candidates[np.argmin(rank)]));break
+        if chosen is None:raise ValueError('no distinct legal corridor targets preserve existing stage depth')
+        solution.insert(*chosen)
     return solution
 
 
