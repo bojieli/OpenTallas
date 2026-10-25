@@ -182,7 +182,7 @@ KVS_CTL_SIDE = 371.52   # 43 x 8.64: ~61 % of the 475.2^2 outline (GEOM-REVIEW-2
 
 
 def kvs_ctl_reoutline(raw, cores, rep):
-    """qkd_kvs_ctl 475.2^2 -> 371.52^2, same centre in kv3_hub_C; pins keep face, layer and order (scaled along the
+    """qkd_kvs_ctl 475.2^2 -> 371.52^2, centred in x on kv3_hub_C (same y centre); pins keep face, layer and order (scaled along the
     face, die symmetric tracks).  GEOM-REVIEW-2 05:45 FAIL (S half ~70 % empty, fan tree 150-250 um to each face)."""
     fn = Path(cores) / "kvs_ctl_pins.json"
     d = json.loads(fn.read_text())
@@ -208,11 +208,14 @@ def kvs_ctl_reoutline(raw, cores, rep):
     for tn, t in raw["partition_types"].items():
         for c in t.get("hard_cores", []) or []:
             if c.get("module") == "qkd_kvs_ctl":
-                dx = (c["outline_um"][0] - S) / 2
+                # x: centred on the type (the four o_hroot_{WN,WS,EN,ES} 1118-b fans leave by the W and E faces of
+                # hub_C: the 10-19 E-side spot made the W pair cross ~1400 um of hub_C); y: same centre as before
+                tw = t["outline_um"][0]
+                x0 = round(round((tw / 2 - S / 2) / 8.64) * 8.64, 4)
                 dy = (c["outline_um"][1] - S) / 2
-                c["origin_um"] = [round(c["origin_um"][0] + dx, 4), round(c["origin_um"][1] + dy, 4)]
+                c["origin_um"] = [x0, round(c["origin_um"][1] + dy, 4)]
                 c["outline_um"] = [S, S]
-                c["note"] = (c.get("note", "") + " | KV-PLAN3 v3.9e: re-outlined 475.2^2 -> 371.52^2, same centre "
+                c["note"] = (c.get("note", "") + " | KV-PLAN3 v3.9e: re-outlined 475.2^2 -> 371.52^2, x-centred on the type "
                              "(GEOM-REVIEW-2 05:45 FAIL: S half ~70 % empty)").strip(" |")
                 n += 1
     rep["kvs_ctl_reoutline"] = dict(instances=n, outline=[S, S], pins=len(d["pins"]), area_frac=round(S * S / W0 / H0, 3))
