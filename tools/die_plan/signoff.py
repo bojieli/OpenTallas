@@ -208,6 +208,64 @@ def _clock_family_tcl():
     return ""
 
 
+
+# Opt-in corner-specific core clock reference.  Preserve the golden-SDC timing
+# above and change the ONE shared virtual clock, hence both input and output
+# budgets coherently.  Never change clock period, uncertainty, or IO delays.
+FF_VCLK_TCL = r"""
+@CLOCK_FAMILY@
+set so_ff_regs {}
+foreach p [all_registers -clock_pins] { dict set so_ff_regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }
+set so_ff_data {}
+set so_ff_async {}
+foreach p [all_registers -async_pins] { dict set so_ff_async [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $so_ff_async $n]} { dict set so_ff_data $n 1 }
+}
+set so_ff_bnd {}
+if {[llength $so_din]} {
+  foreach p [get_fanout -from $so_din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    if {![dict exists $so_ff_data $n]} continue
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $so_ff_regs $i]} { dict set so_ff_bnd $i 1 }
+  }
+}
+if {[llength [all_outputs]]} {
+  foreach p [get_fanin -to [all_outputs] -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $so_ff_regs $i]} { dict set so_ff_bnd $i 1 }
+  }
+}
+set so_ff_sum 0.0
+set so_ff_n 0
+set so_ff_bad 0
+set so_ff_clocks {}
+if {[llength [info commands ot_cf_refresh]]} { catch {ot_cf_refresh} }
+dict for {i unused} $so_ff_bnd {
+  set p [dict get $so_ff_regs $i]
+  set cl [get_property $p clocks]
+  set a ""
+  if {[llength $cl] == 1} {
+    dict set so_ff_clocks [get_full_name [lindex $cl 0]] 1
+    if {[llength [info commands ot_cf_wire]]} { catch {set a [ot_cf_wire $p [lindex $cl 0]]} }
+    if {$a eq ""} { catch {set a [get_property $p arrival_max_rise]} }
+  }
+  if {![string is double -strict $a] || [regexp -nocase {inf|nan} $a]} { incr so_ff_bad; continue }
+  set so_ff_sum [expr {$so_ff_sum + $a}]
+  incr so_ff_n
+}
+if {[llength $so_vclk] == 1 && $so_ff_n > 0 && $so_ff_bad == 0 && [dict size $so_ff_clocks] == 1} {
+  set so_ff_mean [expr {$so_ff_sum / $so_ff_n}]
+  set_clock_latency -source $so_ff_mean [lindex $so_vclk 0]
+  so FF_VCLK applied mode pin_flop_mean clock [get_full_name [lindex $so_vclk 0]] latency_ps [format %.6f $so_ff_mean] samples $so_ff_n missing $so_ff_bad clocks [dict size $so_ff_clocks]
+} else {
+  set so_reference_ok 0
+  so FF_VCLK unavailable mode pin_flop_mean vclks [llength $so_vclk] samples $so_ff_n missing $so_ff_bad
+}
+"""
+
 SESSION_TCL = r"""
 proc so {k args} { puts "SO $k [join $args { }]" }
 proc so_ps {t} { if {$t eq "" || [regexp -nocase {inf|nan} $t]} { return "nan" }; return [format %.2f [sta::time_sta_ui $t]] }
@@ -250,7 +308,9 @@ puts "SO_PATH_BEGIN SDC_MAX"
 report_checks -path_delay max -format full_clock_expanded -digits 2 -fields {slew cap fanout}
 puts "SO_PATH_END"
 # ---- standard boundary-hold overlay (4b7b2b3e64 kit standard) ----
-if {[llength $so_vclk] == 1} {
+set so_reference_ok 1
+@FF_VCLK@
+if {[llength $so_vclk] == 1 && $so_reference_ok} {
   if {[llength $so_din]} { set_input_delay -min [expr {-@INS_TOL@}] -clock [lindex $so_vclk 0] $so_din }
   if {[llength [all_outputs]]} { set_output_delay -min 0 -clock [lindex $so_vclk 0] [all_outputs] }
   so OVERLAY applied [get_full_name [lindex $so_vclk 0]] in_min -@INS_TOL@ out_min 0
@@ -351,13 +411,16 @@ exit
 """
 
 
-def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb"):
+def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
+                ff_vclk="sdc"):
     if spef:
         par, src = "read_spef /base/6_final.spef", "spef"
     else:
         par, src = (f"source {PLAT}/setRC.tcl\nextract_parasitics -ext_model_file {PLAT}/rcx_patterns.rules\n"
                     "write_spef /out/rcx.spef\nread_spef /out/rcx.spef"), "rcx"
-    t = SESSION_TCL
+    if ff_vclk not in ("sdc", "pin-flop-mean"):
+        raise ValueError("unsupported FF virtual-clock reference")
+    t = SESSION_TCL.replace("@FF_VCLK@", FF_VCLK_TCL if corner == "ff" and ff_vclk == "pin-flop-mean" else "")
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@FANOUT_MAX@", str(int(fanout_max))),
@@ -449,7 +512,8 @@ def corner_result(parsed):
                parasitics=kv.get("PARASITICS"), clocks=(kv.get("CLOCKS") or "").split(),
                vclks=(kv.get("VCLKS") or "").split(), periods=kv.get("PERIOD", {}),
                clock_ports=(kv.get("CLOCK_PORTS") or "").split(), inputs=(kv.get("INPUTS") or "").split(),
-               outputs=(kv.get("OUTPUTS") or "").split(), overlay=kv.get("OVERLAY"))
+               outputs=(kv.get("OUTPUTS") or "").split(), overlay=kv.get("OVERLAY"),
+               ff_vclk_reference=kv.get("FF_VCLK"))
     for tag in ("SDC", "STD"):
         for k in ("WNS_MAX", "WNS_MIN", "TNS_MAX", "TNS_MIN", "NVIOL_MAX", "NVIOL_MIN"):
             out[f"{tag.lower()}_{k.lower()}"] = _f(kv.get(f"{tag}_{k}"))
@@ -496,7 +560,7 @@ def pair_skew_result(kv):
                 tsv="pair_skew.tsv")
 
 
-def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False):
+def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc"):
     od = Path(out) / corner
     od.mkdir(parents=True, exist_ok=True)
     mlibs, mmiss = macro_libs(disc["kit"], corner)
@@ -507,7 +571,7 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False):
     for i, lp in enumerate(mlibs):
         mounts.append((f"ml{i}", str(Path(lp).parent)))
         ml_ctr.append(f"/ml{i}/{Path(lp).name}")
-    (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name))
+    (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name, ff_vclk=ff_vclk))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
@@ -660,11 +724,14 @@ def evaluate(rec, insertion_target=None):
         v = "PASS" if w >= 0 else "FAIL"
         # STD_* is printed even when the overlay could not be applied. In that
         # case it is only another raw-SDC measurement, not boundary-hold proof.
-        if not ov.startswith("applied "):
+        reference = C["ff"].get("ff_vclk_reference")
+        requested = rec.get("policy", {}).get("ff_vclk", "sdc")
+        reference_ok = (requested == "sdc" or (reference or "").startswith("applied mode pin_flop_mean "))
+        if not ov.startswith("applied ") or not reference_ok:
             v = "NOT RUN"
         put("hold_ff", v, wns_ps=w, tns_ps=C["ff"].get("std_tns_min"), violators=C["ff"].get("std_nviol_min"),
-            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov,
-            reason=None if v != "NOT RUN" else "standard boundary-hold overlay was not applied")
+            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov, ff_vclk_reference=reference,
+            reason=None if v != "NOT RUN" else "standard boundary-hold overlay was not applied or requested FF clock reference was unavailable")
     else:
         put("hold_ff", "NOT RUN")
     if ok_corner("ss"):
@@ -812,6 +879,7 @@ def cmd_run(a):
                policy=dict(period_ps=PERIOD_PS, uncertainty_setup_ps=UNC_SETUP_PS, uncertainty_hold_ps=UNC_HOLD_PS,
                            spread_max_ps=SPREAD_MAX_PS, spread_corners=list(SPREAD_CORNERS),
                            insertion_tol_ps=INSERTION_TOL_PS, fanout_max=FANOUT_MAX,
+                           ff_vclk=a.ff_vclk, ff_vclk_contract=a.ff_vclk_contract,
                            hold_overlay="set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
                            derate="none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); "
                                   "ocv5_* = flat late 1.05 / early 0.95, information only",
@@ -821,7 +889,7 @@ def cmd_run(a):
                                        "(owner 2026-10-24, AGENTS.md c7ce2ed69a)"),
                tool_commit=_git_head())
     with cf.ThreadPoolExecutor(len(corners)) as ex:
-        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry) for c in corners}
+        futs = {c: ex.submit(run_corner, c, disc, out, a.image, a.docker, a.dry, a.ff_vclk) for c in corners}
         rec["corners"] = {c: f.result() for c, f in futs.items()}
     if a.dry:
         print(json.dumps(rec["corners"], indent=1))
@@ -872,11 +940,16 @@ def main(argv=None):
     r.add_argument("--image", default=IMAGE)
     r.add_argument("--docker", default=os.environ.get("SIGNOFF_DOCKER", "sudo docker"))
     r.add_argument("--insertion-target", type=float)
+    r.add_argument("--ff-vclk", choices=("sdc", "pin-flop-mean"), default="sdc",
+                   help="opt-in measured FF boundary clock reference; shifts shared IO virtual clock only")
+    r.add_argument("--ff-vclk-contract", help="source-pinned measured core clock contract authorizing the FF reference")
     r.add_argument("--dry", action="store_true")
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)
     a = ap.parse_args(argv)
+    if a.cmd == "run" and a.ff_vclk != "sdc" and not (a.ff_vclk_contract or "").strip():
+        ap.error("--ff-vclk pin-flop-mean requires --ff-vclk-contract (measured core clock contract)")
     return cmd_run(a) if a.cmd == "run" else cmd_verdict(a)
 
 
