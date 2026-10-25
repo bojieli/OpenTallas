@@ -1300,6 +1300,18 @@ def place_contents(plan, out, types, log, seed=None):
     return fails
 
 
+def is_clock_reset_port(name):
+    """Physical clock/reset interfaces never become R3 data-pipeline edges.
+
+    Match actual interface names, including canonical cut prefixes. Payloads
+    such as clock_domain_id/reset_epoch and clock enables remain data/control.
+    """
+    name = CB.base(name)
+    clock = re.search(r"(?:^|_)(?:clk|clock|ck)(?:$|[0-9]+$|_(?:lane|bank|insert|macro|core|serial|fast|slow|stream|i|o|in|out)(?:_|$))", name)
+    reset = re.search(r"(?:^|_)(?:rst|reset|rstn|resetn|rstb|arst|srst)(?:$|_(?:n|p|i|o|in|out|lane|bank|core)(?:_|$))", name)
+    return bool(clock or reset)
+
+
 def internal_stations(plan, out, types, log):
     """R3-INTERNAL (cores_b2 rule, HOP = b2n.HOP): every core port whose partner (partition bus window or core) is
     over HOP away gets a relay chain on macro-free corridors; bus legs start at the face window."""
@@ -1344,6 +1356,11 @@ def internal_stations(plan, out, types, log):
                 byp[CB.base(p["name"])].append((geo[k][0] + rx, geo[k][1] + ry))
                 fcs[CB.base(p["name"])].append(oface(o, CK._core_face("R0", p["x"], p["y"], cw, ch)))
             for port, tg in cc[k].items():
+                # Input aliases between split cores do not constitute a
+                # data driver. Clock comes from the die spine/core taps;
+                # delivered reset comes from the published wavefront.
+                if is_clock_reset_port(port):
+                    continue
                 if port not in byp:
                     continue
                 pp = byp[port]
