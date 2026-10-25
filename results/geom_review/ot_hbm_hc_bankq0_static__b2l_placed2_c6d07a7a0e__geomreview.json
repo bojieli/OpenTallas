@@ -1,0 +1,15 @@
+{
+ "element": "ot_hbm_hc_bankq0_static",
+ "kit": "claude/elem-hbm-1024@c6d07a7a0e B2l hard cores: ot_hbm_hc_bankq0_static__lanes0_2@3201a56cbe8d, ot_hbm_hc_bankq0_static__lanes3_5@6c5ad9844cef",
+ "stage": "placed2 (previous placement, same outline/pins/macros)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent second review)",
+ "at": "2026-10-24T19:56:00-07:00",
+ "reasons": "[2026-10-24 19:56] Looked at every placed.png (rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm2/M_ot_hbm_hc_bankq0_static.png montage). Pin-limited strips; logic pulled to the pin faces leaving a large empty SW region (lanes0_2) / NW triangle (lanes3_5) at 28% fill. Not a routing risk; next plan revision should shrink the outline (slot-derived) - INFO. Agree with author PASS-COND.",
+ "fixes": "Relaunch OK under the core clock contract (owner 5e, tap target = measured I, results/core_insertion_b2l.json). Conditions: GRT 0 overflow, DRC 0, TT setup/FF hold >= 0 at 60/25, pin-flop insertion within I +-40 ps, pictures of CTS/route before merge.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm2/M_ot_hbm_hc_bankq0_static.png"
+ ],
+ "owner_lane": "HBM",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

@@ -1,0 +1,10 @@
+{
+ "verdict": "PARENT_CONSTANTS_CONFIRMED; pin orientation FAIL remains",
+ "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+ "findings": [
+  "bankq0 is chain-start specialization: parent instantiates bankq_core first=1 and sum_in=2048d0. The three lane children therefore legitimately receive first=1 and 256d0 partial sums.",
+  "bankq0 top s_i[2048:0] is a separate chain-exit relay sr[0]<=s_i -> s_o, preserved in lanes6_7_bank remainder. It is not the child accumulation input.",
+  "The 768 zero bits in lanes0_2 wrapper are inherited constant semantics, not missing die data pins. No RTL or cycle change made.",
+  "Geometry verdict remains FAIL until bankq partner-facing pins are revised; no route approved."
+ ]
+}

@@ -1,0 +1,16 @@
+{
+ "element": "ot_hgi_coll_gq_land",
+ "view": "ot_hgi_coll_gq_land@c9df5f7e46f9",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hgi_coll_gq_land_c9df5f7e46f9, B2r2 pins c9df5f7e46f9, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "FAIL",
+ "hash": "33c66e2256e1a44f",
+ "reasons": "placed-stage (TT kit 33c66e2256e1a44f, placement reused): cells 41867, flops 4550, macros 0, fill of free 0.096, buf/inv 0.172, bins>0.8 0 (max bin 0.5), face flops 3878 with pin->reg p50/p90/max 6.6/9.0/20.0 um. CTS-only probe (tap_balance, CTS repair skipped): mean insertion 328 ps, longest tree 384 ps vs plan 250 +- 40.",
+ "fixes": "Clock insertion beyond the 250+-40 core contract: needs an early core tap in the plan (HBM-ARCH, OWNER? core clock contract) or a smaller/re-floorplanned core; not routed.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/kits_b2l/ot_hgi_coll_gq_land_c9df5f7e46f9/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:10:09-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

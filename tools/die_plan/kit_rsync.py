@@ -1,26 +1,28 @@
 #!/usr/bin/env python3
-"""KV-G3 10-24: bring a BOUND G3 kit (bind.py kit-rtl output) to the gen_rtl kit conventions the physical hooks expect.
+"""Bring a BOUND G3 kit (bind.py kit-rtl output) to the OWNER RESET RULE (BRIEFING decision 2, 2026-10-24) and the gen_rtl
+kit conventions the physical hooks expect.  Shared reset structure: tools/die_plan/reset_tree.py (one tool, all dies).
 
-Why: gen.py phys --kit-rtl kits carry the bound partition module, which has ONE ot_reset_sync (u_rst_sync) for the
-whole partition and bind_cells.sv's plain ot_dp_st.  Two physical hooks assume the gen_rtl cells instead:
-  * reset_taps.tcl (KV-P5) re-points every FIRM placed flop to the LOCAL synchroniser of its nearest clock tap
-    (u_rsync_t<i> -> rst_n_t<i>).  With a single u_rst_sync it prints 'single tap or no per-tap synchronisers: nothing
-    to do', so every epoch flop's reset release is a tap-to-tap recovery path across the whole partition
-    (KV hub_Ei G3 vA-vE 4_cts: u_rst_sync -> u_ft_*_o_0.eq recovery TT -162.7 ps, 15 buffer stages from the centre).
-  * face_guard.py (CP1-R10) needs every planned face register to survive Yosys as its own flop: gen_rtl puts
-    (* keep_hierarchy, keep *) on ot_dp_st / ot_dp_ste / ot_dp_ep; bind_cells.sv has no keep attributes.
 What it does (kit-local copies only; the bind output is never touched):
-  1. <bound>.sv: u_rst_sync is replaced by one ot_dp_rsync_s<N> u_rsync_t<i> per plan clock tap (Plan tap_grid incl.
-     sink taps, same N = ASYNC_STAGES), rst_n = rst_n_t0 for the leaves; every boundary flop / ft station / pad
-     (u_bin_*, u_bout_*, u_ft_*) whose .rst_n(rst_n) is re-pointed round-robin over the taps so every synchroniser is
-     loaded (Yosys drops unloaded ones); reset_taps.tcl then re-points each FIRM flop to its NEAREST tap after placement
-     (the round-robin is only the RTL starting point, as in gen_rtl without pin geometry).  An ot_dp_st whose ea is a
-     reset net becomes ot_dp_ste (its epoch flop in a kept ot_dp_ep), as gen_rtl emits.
-  2. kit_cells.sv: gen_rtl's ot_dp_st / ot_dp_ep / ot_dp_ste / ot_dp_rsync_s2 / _s3 (with the keep attributes);
+  1. <bound>.sv: the reset source -- bind.py's ot_reset_sync u_rst_sync, the per-tap u_rsync_t<i> of an older
+     kit_rsync kit, or an earlier reset_tree conversion -- is replaced by reset_tree.rtl_lines(): the entry stage at the
+     arst_n pin (pipelined plan: u_rst_in, a synchronous pin register -- arst_n comes from the die reset tree; other
+     plans: u_rst_root, one root synchroniser for the partition = interim region-per-partition), then the equal-depth
+     synchronous relay tree u_rrl_<k> (hops <= reset.relay_um) to every plan clock tap -> rst_n_t<i>.  rst_n (the
+     leaves) = the tap nearest the outline centre.  Every boundary flop / ft station / pad (u_bin_*, u_bout_*, u_ft_*)
+     whose .rst_n(rst_n) takes the tap nearest its pins (gen_rtl rule); reset_taps.tcl re-points each FIRM flop to its
+     nearest tap after placement.  An ot_dp_st whose ea is a reset net becomes ot_dp_ste (its epoch flop in a kept
+     ot_dp_ep), as gen_rtl emits.
+  2. kit_cells.sv: gen_rtl's ot_dp_st / ot_dp_ep / ot_dp_ste / ot_dp_rsync_s2 / _s3 / ot_dp_rrelay (keep attributes);
      bind_cells_kit.sv: bind_cells.sv without its ot_dp_st.  kit_rtl.f is rewritten to use both.
-Cycle behaviour: identical reset assertion (async, arst_n); release after the same N clocks on every tap's copy
-(identical synchronisers on one clock).  Data paths unchanged.
-usage: kit_rsync.py PLAN.json TYPE KIT_RTL_DIR      (after bind.py kit-rtl, before gen.py phys --kit-rtl)"""
+  3. reset_tree.tcl next to the kit RTL: FIRM sites of the entry stage and every relay + the placed-hop check (gen_phys
+     copies it into the kit; face_flops.tcl sources it before reset_taps.tcl).
+Cycle behaviour: reset assertion and release are synchronous at every tap, on the same cycle (kit_rtl.json
+kit_rsync.reset_tree.release_clocks after the arst_n pin).  Data paths unchanged.
+Wavefront plans (OWNER DECISION 13, reset.release "wavefront"): the tree also reaches the type's registered reset outs
+(reset_tree.out_pins): `output wire rst_o_<k>` is added after `input wire arst_n,` in the bound module and in the
+port-only wrapper (kit_rtl.json files[0]), and `.rst_o_<k>(rst_o_<k>)` after the wrapper's `.arst_n(arst_n),`.
+usage: kit_rsync.py PLAN.json TYPE KIT_RTL_DIR [--release wavefront|pipelined]
+       (after bind.py kit-rtl, before gen.py phys --kit-rtl; --release treats the plan as switched)"""
 import json
 import re
 import sys
@@ -29,9 +31,39 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import gen_rtl  # noqa: E402
+import reset_tree  # noqa: E402
 import schema as S  # noqa: E402
 
 FIRM = re.compile(r"^\s*ot_dp_st\s+#\(\.W\(\d+\)\)\s+(u_(?:bin|bout|ft)_\w+)\s*\(")
+TAPSYNC = re.compile(r"^\s*(?:wire rst_n_t\d+;|ot_dp_rsync_s(\d)\s+u_rsync_t\d+\s*\(.*\);.*|assign rst_n = rst_n_t\d+;)\s*$")
+# an earlier reset_tree conversion (re-running kit_rsync re-plans the tree)
+TREE = re.compile(r"^\s*(?://\s*OWNER RESET RULE 10-24 \(tools/die_plan/reset_tree\.py\).*|wire rst_root_n;|wire rst_rl_\d+;|"
+                  r"ot_dp_rsync_s(\d)\s+u_rst_root\s*\(.*|ot_dp_rrelay\s+u_(?:rst_in|rrl_\d+)\s*\(.*|"
+                  r"assign rst_o_\d+ = rst_n_t\d+;.*)\s*$")
+# reset wavefront outs (OWNER DECISION 13): port declarations / wrapper connections of an earlier conversion
+ROUT = re.compile(r"^\s*(?:output\s+wire\s+rst_o_\d+\s*,.*|\.rst_o_\d+\(rst_o_\d+\)\s*,.*)$")
+ARST_DECL = re.compile(r"^(\s*)input\s+wire\s+arst_n\s*,")
+ARST_CONN = re.compile(r"^(\s*)\.arst_n\(arst_n\)\s*,")
+
+
+def add_reset_outs(lines, outs, conn=False):
+    """insert the wavefront rst_o port declarations after `input wire arst_n,` (and, conn=True, the
+    .rst_o_k(rst_o_k) connections after `.arst_n(arst_n),`); earlier ones are dropped first (idempotent)."""
+    out, nd, nc = [], 0, 0
+    for ln in lines:
+        if ROUT.match(ln):
+            continue
+        out.append(ln)
+        m = ARST_DECL.match(ln)
+        if m:
+            out += [f"{m.group(1)}output wire {n},  // registered reset OUT (wavefront) at ({x:.1f}, {y:.1f}) um\n"
+                    for n, x, y in outs]
+            nd += 1
+        m = ARST_CONN.match(ln) if conn else None
+        if m:
+            out += [f"{m.group(1)}.{n}({n}),\n" for n, _, _ in outs]
+            nc += 1
+    return out, nd, nc
 RSYNC = re.compile(r"^(\s*)ot_reset_sync\s+#\(\.ASYNC_STAGES\((\d+)\)\)\s+u_rst_sync\s*\(\.clk\(clk\),\s*"
                    r"\.async_rst_n\(arst_n\),\s*\.sync_rst_n\(rst_n\)\);\s*$")
 
@@ -41,7 +73,7 @@ def cells_text():
     src = gen_rtl.CELLS
     out = ["`timescale 1ns/1ps", "`default_nettype none",
            "// GENERATED by tools/die_plan/kit_rsync.py from tools/die_plan/gen_rtl.py CELLS.  Do not edit."]
-    for m in ("ot_dp_st", "ot_dp_ep", "ot_dp_ste", "ot_dp_rsync_s2", "ot_dp_rsync_s3"):
+    for m in ("ot_dp_st", "ot_dp_ep", "ot_dp_ste", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_rrelay"):
         mm = re.search(rf"((?:\(\*[^\n]*\*\)\n)?module {m}\b.*?\nendmodule\n)", src, re.S)
         if not mm:
             raise SystemExit(f"kit_rsync: gen_rtl.CELLS has no module {m}")
@@ -56,33 +88,88 @@ def strip_module(txt, name):
     return new
 
 
+def _nearest_rsel(P, tn, taps):
+    """bound FIRM instance name -> rst_n_t<i> of the tap nearest its pins (gen_rtl rsel), else None."""
+    import gen_phys
+    cen = {}
+    try:
+        for bn, _b, _l, x, y, _f in gen_phys.type_pins(P, tn):
+            a = cen.setdefault(gen_rtl.sv_id(bn), [0.0, 0.0, 0])
+            a[0] += x
+            a[1] += y
+            a[2] += 1
+    except Exception:
+        return lambda name: None
+    cen = {k: (v[0] / v[2], v[1] / v[2]) for k, v in cen.items()}
+    slots = {gen_rtl.sv_id(s["name"]): int(s.get("stations", 1)) for s in P.types[tn].get("ft_slots", [])}
+
+    def near(x, y):
+        return f"rst_n_t{min(range(len(taps)), key=lambda k: abs(taps[k][1] - x) + abs(taps[k][2] - y))}"
+
+    def rsel(name):
+        m = re.fullmatch(r"u_(?:bin|bout)_(\w+?)(?:_pad\d+)?", name)
+        if m and m.group(1) in cen:
+            return near(*cen[m.group(1)])
+        m = re.fullmatch(r"u_ft_(\w+)_s(\d+)", name)
+        if m and m.group(1) + "_i" in cen and m.group(1) + "_o" in cen:
+            a, b = cen[m.group(1) + "_i"], cen[m.group(1) + "_o"]
+            f = int(m.group(2)) / max(1, slots.get(m.group(1), 1))
+            return near(a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f)
+        return None
+    return rsel
+
+
 def main(argv):
+    rel = None
+    if "--release" in argv:
+        i = argv.index("--release")
+        rel = argv[i + 1]
+        argv = argv[:i] + argv[i + 2:]
     if len(argv) != 3:
         raise SystemExit(__doc__)
     plan, tn, kd = argv[0], argv[1], Path(argv[2]).resolve()
-    P = S.Plan(json.load(open(plan)))
+    raw = json.load(open(plan))
+    if rel:
+        raw.setdefault("reset", {})["release"] = rel
+    P = S.Plan(raw, plan)
     taps = S.tap_grid(P, tn)
     man = json.loads((kd / "kit_rtl.json").read_text())
     files = [Path(x) for x in man["files"]]
     bfile = next(f for f in files if f.stem == man["bound_module"])
-    cfile = next(f for f in files if f.name == "bind_cells.sv")
+    cfile = next((f for f in files if f.name == "bind_cells.sv"), None)
     lines = bfile.read_text().splitlines(keepends=True)
-    out, ns, nfirm, nste, rr = [], None, 0, 0, 0
+    tree = reset_tree.for_type(P, tn)
+    rsel = _nearest_rsel(P, tn, taps)
+    leaf = reset_tree.leaf_tap(P, tn)
+    out, ns, nfirm, nnear, nste, rr, conv, placed = [], None, 0, 0, 0, 0, None, False
     for ln in lines:
         m = RSYNC.match(ln)
-        if m:
-            ind, ns = m.group(1), int(m.group(2))
-            if ns not in (2, 3):
-                raise SystemExit(f"kit_rsync: {tn}: ASYNC_STAGES {ns} (per-tap synchronisers exist for 2 or 3)")
-            for i in range(len(taps)):
-                out.append(f"{ind}wire rst_n_t{i};\n{ind}ot_dp_rsync_s{ns} u_rsync_t{i} (.clk(clk), "
-                           f".async_rst_n(arst_n), .sync_rst_n(rst_n_t{i}));  // kit_rsync: tap {taps[i][0]}\n")
-            out.append(f"{ind}assign rst_n = rst_n_t0;\n")
+        t = TAPSYNC.match(ln) if m is None else None
+        tr = TREE.match(ln) if m is None and t is None else None
+        if m or t or tr:
+            # the old reset source -> entry stage + equal-depth relay tree (once, where the first old line was)
+            if m:
+                conv, ns = "u_rst_sync", int(m.group(2))
+            elif t is not None:
+                conv = conv or "per-tap"
+                ns = int(t.group(1)) if t.group(1) else ns
+            else:
+                conv = conv or "reset_tree"
+                ns = int(tr.group(1)) if tr.group(1) else ns
+            if not placed:
+                ind = re.match(r"^(\s*)", ln).group(1)
+                out += [x + "\n" for x in reset_tree.rtl_lines(tree, ind)]
+                out.append(f"{ind}assign rst_n = rst_n_t{leaf};\n")
+                placed = True
             continue
         m = FIRM.match(ln)
-        if m and ns is not None and len(taps) > 1 and ".rst_n(rst_n)" in ln:
-            r = f"rst_n_t{rr % len(taps)}"
-            rr += 1
+        if m and placed and ".rst_n(rst_n)" in ln:
+            r = rsel(m.group(1))
+            if r is None:
+                r = f"rst_n_t{rr % len(taps)}"
+                rr += 1
+            else:
+                nnear += 1
             nfirm += 1
             ln = ln.replace(".rst_n(rst_n)", f".rst_n({r})")
             if re.search(r"\.ea\(rst_n(_t\d+)?\)", ln):
@@ -93,13 +180,29 @@ def main(argv):
             ln = re.sub(r"^(\s*)ot_dp_st\b", r"\1ot_dp_ste", ln)
             nste += 1
         out.append(ln)
-    if ns is None:
-        raise SystemExit(f"kit_rsync: {tn}: no ot_reset_sync u_rst_sync (clk, arst_n -> rst_n) in {bfile.name}")
+    if not placed:
+        raise SystemExit(f"kit_rsync: {tn}: no ot_reset_sync u_rst_sync (clk, arst_n -> rst_n), no per-tap "
+                         f"u_rsync_t<i> and no reset_tree lines in {bfile.name}")
     # rst_n was declared as a wire driven by u_rst_sync: keep the declaration, it is now driven by the assign
+    routs = reset_tree.out_pins(P, tn)
+    if routs or any(ROUT.match(x) for x in out):
+        out, nd, _ = add_reset_outs(out, routs)
+        if routs and nd != 1:
+            raise SystemExit(f"kit_rsync: {tn}: {bfile.name}: expected one 'input wire arst_n,' header line, found {nd}")
     nb = kd / bfile.name
     nb.write_text("".join(out))
+    wfile = files[0] if files and files[0] != bfile and files[0].stem == P.types[tn]["module"] else None
+    if wfile is not None and (routs or any(ROUT.match(x) for x in wfile.read_text().splitlines(keepends=True))):
+        wl, nd, nc = add_reset_outs(wfile.read_text().splitlines(keepends=True), routs, conn=True)
+        if routs and (nd != 1 or nc != 1):
+            raise SystemExit(f"kit_rsync: {tn}: wrapper {wfile.name}: expected one 'input wire arst_n,' and one "
+                             f"'.arst_n(arst_n),' (found {nd} / {nc})")
+        nw = kd / wfile.name
+        nw.write_text("".join(wl))
+        files[0] = nw
     (kd / "kit_cells.sv").write_text(cells_text())
-    (kd / "bind_cells_kit.sv").write_text(strip_module(cfile.read_text(), "ot_dp_st"))
+    if cfile is not None:
+        (kd / "bind_cells_kit.sv").write_text(strip_module(cfile.read_text(), "ot_dp_st"))
     nf = []
     for f in files:
         if f == bfile:
@@ -108,10 +211,14 @@ def main(argv):
             nf += [kd / "kit_cells.sv", kd / "bind_cells_kit.sv"]
         else:
             nf.append(f)
+    if kd / "kit_cells.sv" not in nf:
+        raise SystemExit(f"kit_rsync: {tn}: kit has neither bind_cells.sv nor kit_cells.sv in its file list")
     (kd / "kit_rtl.f").write_text("\n".join(str(x) for x in nf) + "\n")
     man["files"] = [str(x) for x in nf]
-    man["kit_rsync"] = dict(taps=len(taps), sync_stages=ns, firm_repointed=nfirm, ste=nste,
-                            note="per-tap local reset synchronisers + gen_rtl keep cells (tools/die_plan/kit_rsync.py)")
+    (kd / "reset_tree.tcl").write_text(reset_tree.tcl_text(tree))
+    man["kit_rsync"] = dict(taps=len(taps), firm_repointed=nfirm, firm_nearest=nnear, ste=nste, converted_from=conv,
+                            bound_sync_stages=ns, leaf_tap=leaf, reset_tree=reset_tree.summary(tree),
+                            reset_outs=[n for n, _, _ in routs])
     (kd / "kit_rtl.json").write_text(json.dumps(man, indent=1))
     print(json.dumps(dict(type=tn, kit=str(kd), **man["kit_rsync"])))
     return 0

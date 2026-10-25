@@ -86,6 +86,9 @@ def io_tcl(P, tn, pins):
     for name, x, y in tap_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: die spine tap")
+    for name, x, y in reset_out_pins(P, tn):
+        lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
+                     f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: reset wavefront out")
     return "\n".join(lines) + "\n"
 
 
@@ -154,7 +157,18 @@ def core_tap_rows(P, tn):
 
 def tap_pins(P, tn):
     """[(port, x, y)]: every clock tap (+ early core taps) + the reset tap."""
-    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + tuple(tap_points(P, tn)[1])]
+    import reset_tree as RT
+    if RT.wavefront(P) and not P.types[tn].get("hard"):     # OWNER DECISION 13: the wavefront reset IN site
+        rs = tuple(RT.in_pin(P, tn))
+    else:
+        rs = tuple(tap_points(P, tn)[1])
+    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + rs]
+
+
+def reset_out_pins(P, tn):
+    """[(port, x, y)] interior registered reset OUT pins of a wavefront plan type (reset_tree.out_pins)."""
+    import reset_tree as RT
+    return RT.out_pins(P, tn)
 
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
@@ -352,7 +366,7 @@ def core_latency_files(P, tn, kd, root=None):
 
 
 def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
-                   skip_ir=False):
+                   skip_ir=False, max_wire_um=None):
     t = P.types[tn]
     w, h = t["outline_um"]
     macros = type_macros(P, tn)
@@ -520,6 +534,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # stays NOT RUN for the kit (dedicated TRIAL IR remains required).  Not a timing / sign-off input.
         cfg += ["# kit IR analysis skipped (gen.py phys --skip-kit-ir): IR NOT RUN here; dedicated TRIAL IR remains required",
                 "export PWR_NETS_VOLTAGES =", "export GND_NETS_VOLTAGES ="]
+    if max_wire_um is not None:
+        # opt-in gen.py phys --max-wire-um UM (ELEM-S81 station405 10-24): the post-GRT repair_design also gets
+        # -max_wire_length UM (grt_maxwire.tcl overrides ORFS repair_design_helper; same SLEW/CAP margins): routed
+        # station kits kept 2-27 max-slew pins on ~150 um single-driver M2/M3 segments the GRT estimate passed.
+        cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_maxwire.tcl", f"export OT_MAXWIRE_UM = {max_wire_um:g}"]
+        shutil.copyfile(Path(__file__).with_name("grt_maxwire.tcl"), kd / "grt_maxwire.tcl")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
@@ -530,6 +550,15 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
     if ist:
         shutil.copyfile(ist[0], kd / "istations.tcl")
+    # OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): FIRM sites of the reset entry stage + synchronous relay
+    # tree.  kit_rsync writes reset_tree.tcl next to bound kit RTL; a gen_rtl kit of a pipelined plan gets it from the
+    # plan (the same tree gen_rtl emitted).
+    rtt = [Path(f).parent / "reset_tree.tcl" for f in rtl_files[:1] if (Path(f).parent / "reset_tree.tcl").is_file()]
+    import reset_tree as RT
+    if rtt:
+        shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
+    elif RT.delivered(P):
+        (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
@@ -621,7 +650,7 @@ exit $rc
 
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None, hold_ff_margin=None,
-               margins=None, skip_ir=False):
+               margins=None, skip_ir=False, max_wire_um=None):
     """margins (slew_pct, cap_pct): opt-in repair_design SLEW_MARGIN / CAP_MARGIN (None: not exported)."""
     """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
@@ -655,7 +684,7 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
         kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
-                                   skip_ir))
+                                   skip_ir, max_wire_um))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
@@ -1006,6 +1035,8 @@ def mock_lef(P, tn):
     for name, x, y in tap_pins(P, tn):
         L += pin(name, "INPUT", "SIGNAL" if name == "arst_n" else "CLOCK",
                  [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
+    for name, x, y in reset_out_pins(P, tn):
+        L += pin(name, "OUTPUT", "SIGNAL", [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
     # PG: the kit's M5 / M6 / M7 stripes (gen_phys.PDN; VSS one width + spacing after VDD)
     for net, j in (("VDD", 0), ("VSS", 1)):
         rects = []

@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_hc_bankq_ft_static__lanes6_7_bank",
+ "view": "ot_hbm_hc_bankq_ft_static__lanes6_7_bank@26496f98b6d5",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_hc_bankq_ft_static__lanes6_7_bank_26496f98b6d5, B2r2 pins 26496f98b6d5, plan e1c50d83cff2)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "6efebfe9179942ac",
+ "reasons": "plan-stage (B2l, GEOM-REVIEW die PASS-COND e1c50d83cff2): 362.88x362.88 um, 4812 pins, faces E:1996,N:1180,S:821,W:815; worst 0.211 pins/track per layer (<=0.6 OK), pins on lattice. Context q_b002/u_hcb_Q2_lanes6_7_bank: 80/83 buses with partners; 0 of 4809 connected bits leave a face pointing away from the nearest partner; 866 bits > 365 um to the nearest partner (plan stations). Macros: ['ot_sram_1r1w_1024x256_m2_r2c2', 'ot_sram_1r1w_128x256_m1_r2c2']. Fill/density/face-flop distance/clock judged at the placed stage.",
+ "fixes": "Place only; route + signoff after the placed-stage review.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_hc_bankq_ft_static__lanes6_7_bank_26496f98b6d5/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_hc_bankq_ft_static__lanes6_7_bank_26496f98b6d5/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T13:16:11-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}
