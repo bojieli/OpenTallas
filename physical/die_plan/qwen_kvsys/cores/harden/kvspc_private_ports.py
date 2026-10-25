@@ -7,12 +7,16 @@ kvspc_face_ports.py; gen_core_kit_kv.py --kvspc-private-ports).  Closes the rema
      state comes from an internal copy act_i (port <= (rs_a && slot) ? new : act_i), the internal copy keeps the hold
      loop.  0 cycles.
   P2 o_grp[288] actual_valid was merged by opt_merge into its internal twin slot_d (both <= slot): both kept.  0 cycles.
-  P3 o_grp[296:289] (cal / completion / drain / er[260] / fo / front fault + go flags: sticky observation flags that
+  P3 o_grp[296:295],[293:289] (cal / completion / drain / er[260] / front fault + go flags: sticky observation flags that
      also feed local logic): one wrapper output pin flop each (ot_kvpc_pin_dff, keep_hierarchy).  +1 edge on these
      fault / drain observations only (as the 4c6e fi landing); o_grp[294] is no longer a feedthrough of pc__fo.
+  P3b o_grp[294] (was a feedthrough of pc__fo): the scheduler keeps the sticky fault as an internal fo_i and drives
+     two private port flops with the identical next state, fo (pc__fo) and fo_g (o_grp[294], plumbed to the leaf).
+     0 cycles.
   P4 o_prev[779:0] (non-head; chain dout = input capture c, also decoded locally): private outgoing launch flop per bit
      (codex/kv-pc-0719 forward_launch), +1 edge per o_prev chain hop; local decode unchanged.
-  P5 pc__pi[0]: the two identical rv_q captures (sched / port, same hclk / h_rn / pi[0]) merge (codex forward).
+  P5 pc__pi[0]: the scheduler's rv_q capture is the port child's rv_q (same hclk, same hrst -> hr_q, same pi[0]: the
+     two flops were identical but not merged because each child keeps its own reset flop).  0 cycles.
   P6 ID straps (OWNER option B): pc__pc[4:0] -> strap_pc, pc__cfg_stack[1:0] -> strap_stack; one landing register
      per strap bit (the existing pc_sr / st_sr); the chain station reads the landed copy (+1 settle edge after a strap
      change; straps are constant on the die).
@@ -33,7 +37,7 @@ endmodule
 endmodule
 '''
 
-STATUS_BITS = list(range(289, 297))       # P3
+STATUS_BITS = [289, 290, 291, 292, 293, 295, 296]       # P3 (294 = fo_g, P3b)
 # P6 port rename to strap_* (OWNER option B) is a plan delta (KV plan owner); off until the plan declares the straps:
 # the single landing register already makes pc__pc / pc__cfg_stack face_guard-clean registered inputs.
 STRAP_RENAME = False
@@ -90,10 +94,70 @@ def forward_launch(text, mut=0):
     return _sub1(text, old, new)
 
 
-def pi_capture_merge(text):
-    """P5 (codex forward): identical rv_q captures share one pin flop"""
-    text = _sub1(text, '    (* keep *) reg         rv_q,rawslot_q;', '    reg rv_q; (* keep *) reg rawslot_q;   // PATH-KV-PC P5: shares the pi[0] capture')
-    return _sub1(text, '    (* keep *) reg rv_q, col_v_q, col_we_q, col_sr_q;', '    reg rv_q; (* keep *) reg col_v_q, col_we_q, col_sr_q;   // PATH-KV-PC P5')
+def sched_ports(text, mut=0):
+    """P3b fo / fo_g private port flops + P5 single pi[0] capture (qkd_ctrl_pc_nc.sv)"""
+    i, j = _module(text, "qkd_ctrl_pc_sched_nc")
+    s = text[i:j]
+    s = _sub1(s, "    output reg          fo,\n", "    (* keep *) output reg fo,\n    (* keep *) output reg fo_g,\n")
+    old = "        if (!h_rn) fo <= 1'b0;\n        else fo <= fo | "
+    k = s.index(old)
+    e = s.index(";", k + len(old))
+    rest = s[k + len(old):e]          # the fault terms
+    s = s[:k] + ("        if (!h_rn) begin fo_i <= 1'b0; fo <= 1'b0; fo_g <= 1'b0; end\n"
+                 "        else begin fo_i <= fo_n; fo <= fo_n; fo_g <= " + ("~fo_n" if mut == 13 else "fo_n") + "; end") + s[e + 1:]
+    s = _sub1(s, "    // ---- sticky fault chain, S -> N",
+              "    // PATH-KV-PC 10-25 (P3b): internal sticky fo_i; fo (pc__fo) and fo_g (o_grp[294]) are private port flops of\n"
+              "    // the identical next state (0 cycles)\n    (* keep *) reg fo_i;\n    wire fo_n = fo_i | " + rest + ";\n"
+              "    // ---- sticky fault chain, S -> N")
+    n = s.count("&&!fo&&")
+    assert n == 2, n
+    s = s.replace("&&!fo&&", "&&!fo_i&&")
+    assert not re.search(r"(?<![\w.])fo(?![\w\[])\s*(\||&|\)|;)", s.split("wire fo_n")[1].split("\n", 1)[1]), "fo still read"
+    # P5
+    s = _sub1(s, '    (* keep *) reg         rv_q,rawslot_q;', '    reg rv_q; (* keep *) reg rawslot_q;')
+    s = _sub1(s, "    always @(posedge hclk or negedge h_rn) if (!h_rn) rv_q <= 1'b0; else rv_q <= pi_v;",
+              "    always @(*) rv_q = pi_v;   // PATH-KV-PC 10-25 (P5): pi_v = the port child's rv_q (pi[0] lands once)")
+    text = text[:i] + s + text[j:]
+    i, j = _module(text, "qkd_ctrl_pc_port_child_nc")
+    c = text[i:j]
+    c = _sub1(c, "    output wire         fault\n);", "    output wire         fault,\n    output wire         rv_o   // PATH-KV-PC P5\n);\n    assign rv_o = rv_q;")
+    text = text[:i] + c + text[j:]
+    i, j = _module(text, "qkd_ctrl_pc_host_static_nc")
+    h = text[i:j]
+    h = _sub1(h, "    output wire         fo,\n", "    output wire         fo,\n    output wire         fo_g,\n")
+    h = _sub1(h, ".pi_v(pi[0]), .ki(ki), .ko(ko), .fi(fi), .fo(fo),", ".pi_v(p_rv), .ki(ki), .ko(ko), .fi(fi), .fo(fo), .fo_g(fo_g),")
+    h = _sub1(h, "    wire         p_col_v,", "    wire         p_rv;   // PATH-KV-PC P5: the one pi[0] capture\n    wire         p_col_v,")
+    h = _sub1(h, ".em_d(p_em_d), .fault(p_fault));", ".em_d(p_em_d), .fault(p_fault), .rv_o(p_rv));")
+    return text[:i] + h + text[j:]
+
+
+def fo_g_plumb(rtl):
+    """P3b: fo_g from the scheduler up to the leaf o_grp[294]"""
+    p = rtl / "qkd_static_kv_pc_path_nc.sv"
+    t = p.read_text()
+    t = _sub1(t, "    output wire fo,\n", "    output wire fo,\n    output wire fo_g,\n")
+    t = _sub1(t, "        .fo(fo),\n", "        .fo(fo),\n        .fo_g(fo_g),\n")
+    p.write_text(t)
+    for f, n in (("qkd_static_kv_pc_path_fan_nc_b.sv", 2), ("qkd_static_kv_pc_path_fan_nc_b_head_p.sv", 1)):
+        p = rtl / f
+        t = p.read_text()
+        assert t.count("    output wire fo,\n") == n and t.count("        .fo(fo),\n") == n, f
+        t = t.replace("    output wire fo,\n", "    output wire fo,\n    output wire fo_g,\n")
+        t = t.replace("        .fo(fo),\n", "        .fo(fo),\n        .fo_g(fo_g),\n")
+        p.write_text(t)
+    done = 0
+    for p in sorted(rtl.glob("*leaf.sv")):
+        t = p.read_text()
+        a, b, c = t.count("w_pc__fo, w_pc__er[260:260]"), t.count(".fo(w_pc__fo)"), t.count("    wire [0:0] w_pc__fo;\n")
+        if not a:
+            continue
+        assert a == b == c, (p, a, b, c)
+        t = t.replace("w_pc__fo, w_pc__er[260:260]", "w_pc__fo_g, w_pc__er[260:260]")
+        t = t.replace(".fo(w_pc__fo)", ".fo(w_pc__fo), .fo_g(w_pc__fo_g)")
+        t = t.replace("    wire [0:0] w_pc__fo;\n", "    wire [0:0] w_pc__fo;\n    wire [0:0] w_pc__fo_g;   // PATH-KV-PC P3b\n")
+        p.write_text(t)
+        done += a
+    assert done >= 1
 
 
 def strap_landing(text, head):
@@ -128,8 +192,7 @@ def wrapper(text, mod, mut=0):
     s = text[i:j]
     for k in STATUS_BITS:
         old = f"    assign o_grp[{k}] = n0[{k}];\n"
-        d = f"~n0[{k}]" if (mut == 13 and k == 294) else f"n0[{k}]"
-        s = _sub1(s, old, f"    (* keep *) ot_kvpc_pin_dff u_ogrp_{k} (.ck(ck[0]), .d({d}), .q(o_grp[{k}]));   // PATH-KV-PC P3 (+1 edge)\n")
+        s = _sub1(s, old, f"    (* keep *) ot_kvpc_pin_dff u_ogrp_{k} (.ck(ck[0]), .d(n0[{k}]), .q(o_grp[{k}]));   // PATH-KV-PC P3 (+1 edge)\n")
     if STRAP_RENAME:
         ids = [("pc__cfg_stack", "strap_stack", 2)] + ([] if head else [("pc__pc", "strap_pc", 5)])
         for old, new, w in ids:
@@ -143,7 +206,8 @@ def apply_kit(rtl_dir, mod, mut=0):
     head = mod.endswith("_h_head_p")
     (d / "ot_kvpc_pin_ff.sv").write_text(FFS)
     p = d / "qkd_static_kv_pc_path_nc.sv"; p.write_text(return_slots(p.read_text(), mut))
-    p = d / "qkd_ctrl_pc_nc.sv"; p.write_text(pi_capture_merge(p.read_text()))
+    p = d / "qkd_ctrl_pc_nc.sv"; p.write_text(sched_ports(p.read_text(), mut))
+    fo_g_plumb(d)
     p = d / ("qkd_static_kv_pc_path_fan_nc_b_head_p.sv" if head else "qkd_static_kv_pc_path_fan_nc_b.sv")
     p.write_text(strap_landing(p.read_text(), head))
     if head:

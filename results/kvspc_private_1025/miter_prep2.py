@@ -1,5 +1,5 @@
 """PATH-KV-PC 10-25 miter prep: 4c6e890d93 recut kit core (<mod>_o, kvspc_face_ports applied) vs + kvspc_private_ports.
-Expected deltas checked exactly: o_prev (+1 edge, non-head), o_grp[296:289] (+1 edge); everything else 0 edges.
+Expected deltas checked exactly: o_prev (+1 edge, non-head), o_grp[296:295],[293:289] (+1 edge); everything else 0 edges.
 python3 miter_prep2.py A_KIT_DIR MOD OUT_DIR MUT HARDEN_DIR PC CFG_STACK"""
 import re, sys, shutil
 from pathlib import Path
@@ -46,7 +46,7 @@ L.append(f"  {mod}_o u_o (" + ", ".join(co + [f".{n}({n}_o)" for n, h, l in outs
 L.append(f"  {mod} u_n (" + ", ".join(co + [f".{n}({n}_n)" for n, h, l in outs]) + ");")
 # reference: o_prev and o_grp[296:289] one edge later
 L.append("  reg [304:0] grp_d = 0; always @(posedge clk) grp_d <= o_grp_o;")
-L.append("  wire [304:0] grp_ref = {o_grp_o[304:297], grp_d[296:289], o_grp_o[288:0]};")
+L.append("  wire [304:0] grp_ref = {o_grp_o[304:297], grp_d[296:295], o_grp_o[294], grp_d[293:289], o_grp_o[288:0]};")
 hasprev = any(n == "o_prev" for n, _, _ in outs)
 if hasprev:
     L.append("  reg [779:0] prev_d = 0; always @(posedge clk) prev_d <= o_prev_o;")
