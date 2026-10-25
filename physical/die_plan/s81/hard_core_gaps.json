@@ -16,7 +16,7 @@
    "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 1
+   "ft_stations_added": 4
   },
   "svc_hi_dsdv_svc_rs__t1": {
    "key": "svc",
@@ -2393,10 +2393,10 @@
   },
   "bk_sel__t2": {
    "key": "bk_sel",
-   "cells": 808579,
+   "cells": 811179,
    "hard_cells": 769888,
-   "residual_soft_cells": 38691,
-   "basis": "dsdv_bk_sel_vmtx parts (whole pa_lp 1,243,436)",
+   "residual_soft_cells": 41291,
+   "basis": "dsdv_bk_sel_vmtx parts (whole pa_lp 1,243,436); S81/IDXNET 10-25 +2,600 est: dsdv_idx_vmux6 2 more inputs + tl/tpn/tps/loop regs 4 x 276",
    "gaps": [
     {
      "inst": "u_bk_sel.u_vm",
