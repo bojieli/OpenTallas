@@ -174,3 +174,18 @@ def test_shared_leaf_alias_maps_to_nonzero_missing_terminal(tmp_path):
     assert p.returncode==0,p.stderr
     assert 'LEAF 1 sinks, max hop 100.000 um' in p.stdout
     assert 'FINAL n1' in p.stdout
+
+
+def test_reset_tap_sourced_inside_proc(tmp_path):
+    """ORFS sources PRE_CTS / PRE_GLOBAL_PLACE hooks inside a proc (cts.tcl): rt_tapnet's global table must resolve."""
+    if not shutil.which('tclsh'):
+        pytest.skip('tclsh unavailable')
+    mock = ['namespace eval ord {}', 'proc ord::get_db_block {} {return blk}',
+            'proc ord::get_db_tech {} {return tech}', 'proc tech {method} {return 1000}',
+            'proc blk {method args} {switch $method {getNets {return {n0 n1}} getBTerms {return {}} findNet {return NULL}}}',
+            'proc n0 {method} {return rst_n_t0}', 'proc n1 {method} {return rst_n_t20}']
+    script = '\n'.join(mock) + (f'\nproc orfs_hook {{}} {{ source {{{HOOK}}}; puts "RES [rt_tapnet blk 0] [rt_tapnet blk 20]" }}'
+                                '\norfs_hook\n')
+    p = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+    assert not p.stderr, p.stderr
+    assert 'RES n0 n1' in p.stdout
