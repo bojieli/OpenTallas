@@ -7,3 +7,5 @@ The smallest exact scoreboard compares every transmitted beat and every reconstr
 One fold hop adds one cycle. The composed exchange root moves from 51 to 54 cycles; maximum leaf launch offset moves from 15 to 17. Generated role/slot ROMs price those changes. The compiler must space gather words at least two cycles apart on each fold direction. TOK-DS duty confirmation and binding adoption remain open.
 
 Logs are inherited completed jobs, collected without rerunning them. `summary.json` names the source base and run directory. The original jobs and source worktree were left untouched.
+
+A bounded Yosys lockstep miter also proves the smallest 5-bit transport against an identity pipeline for all legal input data and valid patterns over 14 cycles, with a swapped-beat mutant rejected. It ran through ot-run on intel2; formal sources and SAT logs are in `formal/`. This is mechanism exactness evidence.

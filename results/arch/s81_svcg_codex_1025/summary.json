@@ -51,7 +51,16 @@
       "errors": 0,
       "status": "RUNNING remaining variants on original job"
     },
-    "generated_files_check": "PASS"
+    "generated_files_check": "PASS",
+    "bounded_lockstep_miter": {
+      "verdict": "PASS",
+      "word_bits": 5,
+      "cycles": 14,
+      "reference": "exact identity delayed by 3 cycles, at most one word/2cycles",
+      "swapped_beat_mutant": "CAUGHT",
+      "host": "intel2",
+      "job": "initial proof oth-ubuntu-3766215-1792921301; followup proof and mutant logs retained"
+    }
   },
   "latency": {
     "fold_hop_added_cycles": 1,
