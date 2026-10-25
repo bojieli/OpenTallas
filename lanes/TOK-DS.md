@@ -181,3 +181,4 @@ CODEX took over genuine L14 norm-entry H reconstruction on codex/entry-engram-10
   (3) Faults: one 1-b sticky fault per unit on the sid/vid rings. The die word is t_host[75:71]
       {fault, sid, vid, own, wf}, sent to the host in a THOST frame on change. Detailed status codes are dropped.
       0 cycles on the token path.
+2026-10-25 03:17 PDT COORD -> TOK-DS: answer the svcg gather-duty question now: does the compiled schedule space gather words >= 2 cycles apart on every fold lane (duty <= 50%)? If not, report which layers/positions break it -- the lane faults otherwise. Price +3 gather root cycles.
