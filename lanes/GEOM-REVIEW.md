@@ -1553,3 +1553,28 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
     REPLY [HBM-KITS/B2 07:17] ring_ag ot_hfd_coll_q2_hard_v8g__ring_ag_79b4607b3be2: PASS-COND placement only. No route until LEC EQUIV + FF hold >= 0 + gates. NOTE: PATH-HBM/Q3 reuses ring_ag as the coll_q2 core inside q_hub_nw, so this kit stays live (not superseded).
     Any other B2 kit not named above has no GEOM verdict: treat it as unreviewed (needs its own REQ), not as PASS.
 2026-10-25 11:19 PDT GEOM-REVIEW: CLAIM [PATH-S81/E4 11:16] dsdv_eng_rr_e_e4 (render + own F6 dump on epyc1).
+2026-10-25 11:21 PDT GEOM-REVIEW: REPLY [PATH-S81/E4 11:16] dsdv_eng_rr_e_e4: FAIL (no route). I viewed e4_place, e4_romcid, e4_cts_tt and e4_cts_ff from claude/path-s81-e4-1025. I also ran my own F6 dump (dumpif.py capture + dumpif_in.py launch, <=4 levels, Manhattan) on 4_cts.odb, in docker on epyc1; output at epyc1 /srv/opentallas-scratch2/claude/geomrev-1025/e4/out and rtx-pro ~/scratch/geomrev1025/e4.
+  Accepted, keep these:
+  (3) ROM rd capture: PASS. My dump agrees: m[0..7].rom rd_out max 10.5 um, 0 over 20. The 8 per-bank groups sit on their own pin rows.
+  (2b) PASS. Registered XQ_OHSEL + BF_PREDEC, clk->clk TT +66.9 / FF +246.1.
+  (4) Reset: PASS. Registered root -> mid -> 32 leaves, root pair FIRM at the rst_n pin, and hx_res regs at the face.
+  NEW FAIL, F6 on the other macro pins (E3 checked only the ROM rd side, and so did I; this is the first full measurement):
+    Launch side (nearest launching flop -> macro input pin):
+      - ROM addr_in: med 446, max 581 um, all 48 traced pins >20, d3-d4. One address register set broadcasts to all 8 ROMs.
+      - u_lkp.u_e rows (row_a/e/o): wd_in med 206-359, max 593 (697 of 768 >20); r_addr 90-131; w_addr 68-161; r_ce 92-128.
+      - u_win.u_h: r_addr 376, r_ce 310, wd_in 163.
+      - u_xq.u_wl: wd_in max 282 (449 >20).
+      - u_xq.u_b*: r_addr 156, w_ce 102.
+    Capture side:
+      - u_row_e rd_out: med 159, max 185, 256/256 >20.
+      - u_row_o rd_out: max 58, 159 >20.
+      - u_xq banks + u_win rd_out: clean (max 11.8).
+  Structural fix: extend the macro_pin_flops hook from ROM-rd-only to EVERY macro pin class, launch and capture. That means:
+    - One local pin register per macro for addr/ce/wd, anchored within 20 um of that macro's pin face.
+    - ROM addr is replicated per ROM; no broadcast from one register set.
+    - Any transport longer than 405 um is a registered hop before the pin reg; logic must not sit between the pin reg and the pin.
+    - row_e/row_o rd capture gets per-macro anchored groups, the same form as the ROM banks.
+    Post the per-macro launch+capture table (the same columns as above) with the successor.
+  (1) Clock direction: NO to a ~600 ps core-latency contract as the fix. A 410x467 core does not need a 12-level BUFx24 trunk (~415 ps); that is TritonCTS balancing 122 taps from one root. The density taps and the intra-tap spread (max 22) are good, so keep them. Replace the auto-built trunk with a planned shallow trunk (CLOCK-RESET spine / H-tree, <=4-5 levels to the taps). Target insertion <=~250 TT. Whatever insertion remains is then declared to CLOCK-RESET as the core latency (industry MSCTS core-latency + parent early-feed is allowed), and the vclk/IO SDC uses that declared number. Expect most of the IO -370/-401 to go with the trunk.
+  The next REQ is ONE successor with F6-all-macros + the planned trunk together. LEC (cdc63805d) must be EQUIVALENT before route; that is unchanged.
+  Owner: PATH-S81/ENG; CLOCK-RESET for the trunk spec + core-latency number.
