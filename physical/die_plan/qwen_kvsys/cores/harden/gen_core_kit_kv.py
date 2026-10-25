@@ -75,6 +75,17 @@ add_pdn_connect -grid {macro} -layers {M5 M6}
 """
 
 
+def kit_id_straps(hc, cj):
+    """declared ID straps of this core (OWNER 10-25 option B): plan hard_cores[] straps / parent_id_straps (strict,
+    parent_id_straps.py) + core.json report.straps kind == id_strap.  Every one must be a strap_* INPUT of the core."""
+    from parent_id_straps import validate_parent_id_straps
+    import straps as STR
+    names = list(validate_parent_id_straps(hc)) + STR.core_json_straps(cj)
+    names = list(dict.fromkeys(names))
+    inputs = {b for b, d in cj["port_decl"].items() if d[0] == "input"}
+    return STR.checked(names, inputs)
+
+
 def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
@@ -156,7 +167,7 @@ def make_tracks():
             "make_tracks M4 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048\n" + M123_TRACKS)
 
 
-def sdc(per, ins, tol, clks, rsts, tid):
+def sdc(per, ins, tol, clks, rsts, tid, straps=()):
     """core SDC in the sdc_lint vocabulary (CP1-R10): one real clock 'clk' on the core clock pin(s), one virtual IO clock
     at the plan common latency, 60/25 ps uncertainty split once per seam, explicit max AND min delays on every port
     (min input = -insertion_tol: seam-hold padding as the partition kits; min output 0)."""
@@ -184,6 +195,10 @@ def sdc(per, ins, tol, clks, rsts, tid):
     if rsts:
         s += (f"# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)\n"
               f"set_input_delay -max {0.5 * per:.4f} -clock vclk [get_ports {{{' '.join(rsts)}}}]\n")
+    if straps:
+        # OWNER 10-25 option B rule 2: declared ID straps are quasi-static parent constants -> the one allowed exception
+        s += ("# ID straps (OWNER 10-25 option B): tied at the parent, quasi-static\n"
+              f"set_false_path -from [get_ports {{{' '.join(straps)}}}]\n")
     return s + (f"set_load {IO_LOAD_FF:g} [all_outputs]\n"
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -535,18 +550,24 @@ def main():
     per = float(plan["die"]["period_ps"])
     ins = float(plan["clock"].get("common_latency_ps", plan["clock"]["insertion_ps"]))
     tol = float(plan["clock"]["insertion_tol_ps"])
-    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid))
-    # CP1-R10 fail-closed SDC gate (tools/die_plan/sdc_lint.py): context = the core's ports
     import sys
     sys.path.insert(0, str(a.tool))
     import sdc_lint
+    straps = kit_id_straps(hc, cj)
+    if straps:
+        import straps as STR
+        STR.write_kit(kd, straps, source=f"plan hard_cores[{cj['inst']}] straps/parent_id_straps + core.json id_strap")
+    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid, straps))
+    # CP1-R10 fail-closed SDC gate (tools/die_plan/sdc_lint.py): context = the core's ports (+ declared ID straps, written
+    # AFTER strap handling so face_guard / signoff / lint_kit_files read the same list)
     ins_ports = [b for b, d in cj["port_decl"].items() if d[0] == "input" and b not in clks]
     outs = [b for b, d in cj["port_decl"].items() if d[0] == "output"]
     lctx = dict(period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, clock_ports=clks, inputs=ins_ports, outputs=outs,
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
-                io_floor_ps={p: IO_BUDGET * per for p in ins_ports + outs}, port_latency_ps={})
+                io_floor_ps={p: IO_BUDGET * per for p in ins_ports + outs}, port_latency_ps={}, straps=straps)
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     shutil.copyfile(Path(a.tool) / "sdc_lint.py", kd / "sdc_lint.py")
+    shutil.copyfile(Path(a.tool) / "straps.py", kd / "straps.py")
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise SystemExit(f"{tid}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
