@@ -1,0 +1,151 @@
+{
+ "schema": "opentallas.hbm_b2.native_bind_rtl.v1",
+ "rule": "HBM-BIND 2026-10-24 (OWNER: B2l accepted, bind natively; host in-band). Per item: module, params, bench, mutants caught, verdict. Wiring / param-only items are in b2_bind_wiring.json (applied by tools/hbm_b2/b2_top.py; port-bind report b2_top/pb_w.log).",
+ "source_branch": "claude/hbm-bind-1024r",
+ "source_sha_at_write": "7fb6e3fb8747916dc2711f3a3df264f6f67f7c56",
+ "rtl_items": [
+  {
+   "id": "R-HOST",
+   "item": "in-band host (OWNER 10-24)",
+   "module": "hfd_ep_static_vc2 + hfd_ep_host_vc",
+   "file": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static_vc2.sv",
+   "params": "IDLE_K 204, HQ 4 (host queue), HMIN 10 (host lane spacing); slot S 614 = {vc,frame,v}",
+   "latency": "COLL tx +1 edge (3 edges pin->SerDes); RX unchanged",
+   "bench": "run_hfd_ep_static_vc2_bench.sh (2 real ot_pdie_serdes, 300 ppm, bit errors, both VCs both ways)",
+   "result": "MUT0 PASS 768/768 COLL + 48/48 host each way",
+   "mutants": "9/9 FAIL (1-4 gearbox/pingpong, 5 vc bit dropped, 6 merge ignores take, 7 RX ignores vc, 8 queue pointer, 9 spacing)",
+   "default_bitexact": "n/a (new master; hfd_ep_static untouched, its bench PASS 768/768 on the same file list)",
+   "verdict": "PASS",
+   "by": "HBM-BIND"
+  },
+  {
+   "id": "R-VM",
+   "item": "VM 2-stop ring",
+   "module": "ot_vms_rstop_static/ot_vms_hub_static NSTOP, hfd_hgi_vms_ring2_glue.sv (nw2_t NC2, NE2)",
+   "bench": "run_vms_ring2_static.sh",
+   "result": "default eq 440,000 checks 0 err; 2-stop 7 cfgs x 311,974 checks; existing 4-stop benches PASS",
+   "mutants": "default 3/3 FAIL, 2-stop 7/7 FAIL",
+   "verdict": "PASS",
+   "by": "sub-agent VM 19cfa3d9c"
+  },
+  {
+   "id": "R-SU-TREE",
+   "item": "su_stree 2-leg",
+   "module": "ot_hbm_su_stree_root2, leaf NLEG",
+   "bench": "run_stree_nq.sh",
+   "result": "NLEG4 285,840/0, NLEG2 71,460/0; lockstep PASS",
+   "mutants": "1-4 FAIL both widths",
+   "verdict": "PASS",
+   "by": "sub-agent SU e580f3946"
+  },
+  {
+   "id": "R-SU-PROG",
+   "item": "su_prog PARTS(2)",
+   "module": "ot_hbm_su_programme_root_h5 PARTS",
+   "bench": "run_pgroot_nq.sh",
+   "result": "PARTS4 569,189/0, PARTS2 419,266/0",
+   "mutants": "1-4 FAIL",
+   "verdict": "PASS",
+   "by": "sub-agent SU"
+  },
+  {
+   "id": "R-SU-CORE",
+   "item": "SU core 2-writer RF port (found by SU sub-agent)",
+   "module": "ot_hbm_su_static_qcore_r13_w2",
+   "bench": "run_qcore_w2.sh (Verilator, die params)",
+   "result": "20,000 edges 0 errors vs as-built core bound to writers 2/3",
+   "mutants": "MUTW1 FAIL (2,947 errors)",
+   "verdict": "PASS",
+   "by": "HBM-BIND"
+  },
+  {
+   "id": "R-HC",
+   "item": "hc_root 2-half TPRE 7",
+   "module": "ot_hbm_hc_root_static NQ",
+   "bench": "run_hc_root_nq.sh",
+   "result": "NQ4 20,448/0; NQ2 40,944/0 (half sums from fp32 add LAT7); eng4 ring golden PASS",
+   "mutants": "FAIL",
+   "verdict": "RTL PASS, NOT BOUND (OWNER?: hc_NW/hc_NE are 64-lane quarter hubs; 128-lane halves do not exist)",
+   "by": "sub-agent SU cc8b2b937"
+  },
+  {
+   "id": "R-IDX",
+   "item": "IDX 2-list + rootctl/argmax SID strap",
+   "module": "see claude/hbm-bind-1024r-idx (30dd1fd05, 2353af4c8)",
+   "verdict": "NOT MERGED here (sub-agent still running; Codex integrated IDX on codex/hbm-bind-idx-r2-1024)",
+   "by": "sub-agent IDX"
+  },
+  {
+   "id": "R-VMST",
+   "item": "vm_status4 NQ 2",
+   "module": "ot_vms_status4_static NQ",
+   "bench": "run_vms_status_nq.sh",
+   "result": "NQ2 PASS 19,999/0; mutant FAIL (NQ4 mutant needs a ref without the define: gate fixed)",
+   "verdict": "PASS",
+   "by": "existing"
+  },
+  {
+   "id": "TP-384",
+   "item": "TP-384 field widths",
+   "verdict": "ANALYSED, OWNER? option (a) widen 8-bit rank/group fields to 9 b vs (b) 2x192",
+   "by": "HBM-BIND"
+  }
+ ],
+ "wiring_items": [
+  {
+   "id": "W-RING",
+   "kind": "wiring",
+   "status": "done"
+  },
+  {
+   "id": "W-OBS",
+   "kind": "wiring",
+   "status": "done"
+  },
+  {
+   "id": "W-HLEAF",
+   "kind": "param+wiring",
+   "status": "done"
+  },
+  {
+   "id": "W-CFG",
+   "kind": "wiring",
+   "status": "done"
+  },
+  {
+   "id": "W-EP",
+   "kind": "param+wiring",
+   "status": "done (plan change owed)"
+  },
+  {
+   "id": "W-RID",
+   "kind": "wiring",
+   "status": "done"
+  },
+  {
+   "id": "P-VMST",
+   "kind": "param",
+   "status": "done"
+  },
+  {
+   "id": "R-VM",
+   "kind": "rtl+wiring",
+   "status": "done (sub-agent VM 19cfa3d9c)"
+  },
+  {
+   "id": "R-SU",
+   "kind": "rtl+wiring",
+   "status": "done (sub-agent SU cc8b2b937; qcore w2 here)"
+  },
+  {
+   "id": "W-FLT",
+   "kind": "param+wiring",
+   "status": "done"
+  },
+  {
+   "id": "W-HOST",
+   "kind": "rtl+wiring",
+   "status": "rtl+bench (see b2_native_bind_rtl.json)"
+  }
+ ]
+}
