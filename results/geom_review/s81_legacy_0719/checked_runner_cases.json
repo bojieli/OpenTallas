@@ -1,0 +1,37 @@
+[
+ {
+  "name": "missing_bundle",
+  "expected": 4,
+  "actual": 4
+ },
+ {
+  "name": "no_record",
+  "expected": 5,
+  "actual": 5
+ },
+ {
+  "name": "not_signed",
+  "expected": 6,
+  "actual": 6
+ },
+ {
+  "name": "pin_fail",
+  "expected": 6,
+  "actual": 6
+ },
+ {
+  "name": "old_record",
+  "expected": 4,
+  "actual": 4
+ },
+ {
+  "name": "flow_failure",
+  "expected": 7,
+  "actual": 7
+ },
+ {
+  "name": "signed",
+  "expected": 0,
+  "actual": 0
+ }
+]
