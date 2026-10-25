@@ -374,6 +374,7 @@ def main():
     ap.add_argument("--wrapper", default=None, help="hand-checked wrapper SV defining the plan module")
     ap.add_argument("--hold-margin", type=float, default=30.0, help="HOLD_SLACK_MARGIN ps at the flow corner")
     ap.add_argument("--tag", default="", help="kit dir suffix (variants)")
+    ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
     a = ap.parse_args()
@@ -635,7 +636,8 @@ def main():
            "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) " + " ".join(fflibs),
            "export ADDITIONAL_LIBS =",
            "override export LIB_FILES = $(TC_LIB_FILES)",
-           *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()]]
+           *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()],
+           *[f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]]
     if lefs:
         cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}",
                 # HBM-ELEM 10-24: the ASAP7 SRAM macros are abstracts (LEF + lib, no GDS in the repo): 6_1_merge failed
@@ -696,7 +698,7 @@ def main():
               canonical_type=v.get("canonical_type"), wrapper=wrap_rep, outline_um=[w, h],
               plan=str(plan_path), plan_sha256=sha(plan_path), pins_file=v["pins_file"], pins_sha256=v["pins_sha256"],
               pins=len(pins), clocks=clks, resets=rsts, period_ps=per, common_latency_ps=ins, corner=a.corner,
-              plan_common_latency_ps=common, core_clock_contract=contract,
+              plan_common_latency_ps=common, core_clock_contract=contract, orfs_var_overrides=a.orfs_var,
               sdc_lint="PASS (gen)", macros=rec.get("macros", []), kit_hash=kit_hash(kd))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=len(rsts), design=design, top=top,
