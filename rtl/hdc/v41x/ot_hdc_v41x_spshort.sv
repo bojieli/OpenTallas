@@ -293,7 +293,13 @@ endmodule
 // 2 rnd <= 2^24 is a subnormal or the code of 2^-125 or below).  Faults as
 // ot_hdc_qmul (an overflow of the doubled value is the second multiply's).
 // ---------------------------------------------------------------------------
-module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1, parameter integer CUT = 1) (
+// FTZ 1 (S81-CORES2/RV 2026-10-25, dsfd_su_t_rxsf hard core only): a result below the normal range is flushed to +0
+// instead of being encoded as a subnormal, so the stage-3 subnormal right shift (s2_sh barrel shifter, s2_mr/s2_ms
+// round/sticky masks) and the code == 0 test leave the netlist.  Only for a consumer that cannot observe a subnormal
+// result: ot_hdc_v41x_exp_s's t feeds n = rint(t) alone, and every |t| < 0.5 (te < 126) gives n = 0 and no fault, so
+// t = +0 and t = any subnormal (or the rounded-up 2^-126) are indistinguishable at exp_s's outputs (lockstep bench
+// tools/s81_slice/rxsf_ftz_eq.sh).  FTZ 0 (default) is the unchanged unit.
+module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1, parameter integer CUT = 1, parameter integer FTZ = 0) (
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -392,9 +398,15 @@ module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1, parameter integer CUT 
     wire [23:0] s_main = sub_shifted[23:0];
     wire s_rb = |(s2_prod & s2_mr);
     wire s_st = |(s2_prod & s2_ms);
-    wire [23:0] main = is_sub ? s_main : n_main;
-    wire rb = is_sub ? s_rb : n_rb;
-    wire st = is_sub ? s_st : n_st;
+    wire use_sub = is_sub && (FTZ == 0);           // FTZ: the subnormal branch is never encoded (flushed below)
+`ifdef OT_RXSF_MUT_FTZ
+    wire ftz_hit = FTZ != 0 && (is_sub || fl < 12'sd0);   // negative control: also flushes 2^-126 <= |t| < 1 (observable)
+`else
+    wire ftz_hit = is_sub;
+`endif
+    wire [23:0] main = use_sub ? s_main : n_main;
+    wire rb = use_sub ? s_rb : n_rb;
+    wire st = use_sub ? s_st : n_st;
     wire [23:0] rnd;
     wire rnd_c;
     ot_hdc_inc_k #(.W(24)) u_rnd (.a(main), .inc(rb && (st || main[0])), .y(rnd), .co(rnd_c));
@@ -412,6 +424,7 @@ module ot_hdc_fp32_mul_x2 #(parameter integer DOUBLE = 1, parameter integer CUT 
         else begin
             if (s2_byp) begin y <= 32'd0; fault <= s2_v && s2_nf; end
             else if (over) begin y <= 32'd0; fault <= s2_v; end
+            else if (FTZ != 0) begin y <= ftz_hit ? 32'd0 : code; fault <= 1'b0; end   // normal: field >= 1, code != 0
             else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; fault <= 1'b0; end
         end
     end
@@ -537,7 +550,7 @@ endmodule
 // p_pre / n_pre are the last Horner result and n at depth T_P, for a consumer
 // that folds the exponent step into its own first stage (ot_hdc_v41x_spdiv).
 // ---------------------------------------------------------------------------
-module ot_hdc_v41x_exp_s #(parameter integer PCUT = 1) (
+module ot_hdc_v41x_exp_s #(parameter integer PCUT = 1, parameter integer TFTZ = 0) (   // TFTZ: m_t FTZ (see mul_x2)
     input  wire        clk,
     input  wire        rst_n,
     input  wire        v,
@@ -713,7 +726,7 @@ module ot_hdc_v41x_exp_s #(parameter integer PCUT = 1) (
     end
     wire [31:0] t;
     wire        t_f;
-    ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT)) m_t (.clk(clk), .rst_n(rst_n), .v(v), .a(x), .b(K_LOG2E), .y(t), .fault(t_f));
+    ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT), .FTZ(TFTZ)) m_t (.clk(clk), .rst_n(rst_n), .v(v), .a(x), .b(K_LOG2E), .y(t), .fault(t_f));
 
     // depth 2: |xc| * 2^43 (valid when n != 0, which needs |xc| >= 2^-2)
     wire [7:0]  xe = xc[30:23];

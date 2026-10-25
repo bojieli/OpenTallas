@@ -1,0 +1,58 @@
+AGE T5 i=0 row=0 pin=64 commit=74 age=10
+AGE T5 i=1 row=1 pin=66 commit=76 age=10
+AGE T5 i=2 row=2 pin=68 commit=78 age=10
+AGE T5 i=3 row=3 pin=70 commit=80 age=10
+AGE T5 i=4 row=4 pin=72 commit=82 age=10
+AGE T5 i=5 row=5 pin=74 commit=84 age=10
+AGE T5 i=6 row=6 pin=76 commit=86 age=10
+AGE T5 i=7 row=7 pin=78 commit=88 age=10
+AGE T5 i=8 row=8 pin=80 commit=90 age=10
+AGE T5 i=9 row=9 pin=82 commit=92 age=10
+AGE T5 i=10 row=10 pin=84 commit=94 age=10
+AGE T5 i=11 row=11 pin=86 commit=96 age=10
+AGE T5 i=12 row=12 pin=88 commit=98 age=10
+AGE T5 i=13 row=13 pin=90 commit=100 age=10
+AGE T5 i=14 row=14 pin=92 commit=102 age=10
+AGE T5 i=15 row=15 pin=94 commit=104 age=10
+AGE T5 i=16 row=16 pin=96 commit=106 age=10
+AGE T5 i=17 row=17 pin=98 commit=108 age=10
+AGE T5 i=18 row=18 pin=100 commit=110 age=10
+AGE T5 i=19 row=19 pin=102 commit=112 age=10
+AGE T5 i=20 row=20 pin=104 commit=114 age=10
+AGE T5 i=21 row=21 pin=106 commit=116 age=10
+AGE T5 i=22 row=22 pin=108 commit=118 age=10
+AGE T5 i=23 row=23 pin=110 commit=120 age=10
+AGE T5 i=24 row=24 pin=112 commit=122 age=10
+AGE T5 i=25 row=25 pin=114 commit=124 age=10
+AGE T5 i=26 row=26 pin=116 commit=126 age=10
+AGE T5 i=27 row=27 pin=118 commit=128 age=10
+AGE T5 i=28 row=28 pin=120 commit=130 age=10
+AGE T5 i=29 row=29 pin=122 commit=132 age=10
+AGE T5 i=30 row=30 pin=124 commit=134 age=10
+AGE T5 i=31 row=31 pin=126 commit=136 age=10
+AGE T5 i=32 row=64 pin=128 commit=138 age=10
+AGE T5 i=33 row=65 pin=130 commit=140 age=10
+AGE T5 i=34 row=66 pin=132 commit=142 age=10
+AGE T5 i=35 row=67 pin=134 commit=144 age=10
+AGE T5 i=36 row=68 pin=136 commit=146 age=10
+AGE T5 i=37 row=69 pin=138 commit=148 age=10
+AGE T5 i=38 row=70 pin=140 commit=150 age=10
+AGE T5 i=39 row=71 pin=142 commit=152 age=10
+AGE T5 i=40 row=72 pin=144 commit=154 age=10
+AGE T5 i=41 row=73 pin=146 commit=156 age=10
+AGE T5 i=42 row=74 pin=148 commit=158 age=10
+AGE T5 i=43 row=75 pin=150 commit=160 age=10
+AGE T5 i=44 row=76 pin=152 commit=162 age=10
+AGE T5 i=45 row=77 pin=154 commit=164 age=10
+AGE T5 i=46 row=78 pin=156 commit=166 age=10
+AGE T5 i=47 row=79 pin=158 commit=168 age=10
+AGE T5 i=48 row=1008 pin=160 commit=170 age=10
+AGE HLOAD pin=202 last_hw=231 age=29
+AGE GAIN pin=263 last_wl=284 age=21
+AGE RDOUT pin=324 lo=338 age=14
+ENTRY_VP port=1 sid=5 leaf=0 nw=49 mut=0 bad=0 max_t5=10
+ENTRY_VP PASS
+- /srv/opentallas-scratch2/claude/tok-ds/stw-s81d-tok/layers/src31dsk/tools/s81_dv/entry_vp_1025/tb_entry_vp.sv:167: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 385ns; walltime 0.205 s; speed 1.878 us/s
+- Verilator: cpu 0.205 s on 1 threads; allocated 15 MB

@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Capacity measurement resume only; no die/kit closure claim",
+  "images": [
+    "/srv/opentallas-scratch/claude/codex-part-cap-collect/floorplan.png",
+    "/srv/opentallas-scratch/claude/codex-part-cap-collect/density.png"
+  ],
+  "findings": [
+    "Viewed existing 3_place images: macro-free square 673.92um, density near 0.5 throughout; no sliver or macro-wall risk. Input pins confined to south edge, clock west, output east.",
+    "Dataflow internals and PDN continuity not resolved in this simplified render; this is a capacity vehicle, not a release die.",
+    "Existing completed CTS retained; resume only corrects missing source include before GRT. No geometric or timing constraints changed.",
+    "Root failure: sparse source omitted physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl. No routing-capacity failure occurred.",
+    "Re-inspected both images: uniform ~0.5 density with low-density border, clock at W, inputs S, outputs E. Existing PDN stripes continuous. Source-only resume preserves geometry."
+  ],
+  "clock_target_ps": 833,
+  "timing": "TT setup / FF hold, existing measured vehicle only",
+  "reviewed_again": "2026-10-25 02:40 PDT"
+}

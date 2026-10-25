@@ -65,6 +65,14 @@ add_pdn_connect -grid {top} -layers {M2 M5}
 PDN_MACRO = """define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
 add_pdn_connect -grid {macro} -layers {M4 M5}
 """
+# hard children (signed core views) bring their own M5 PG stripes (5.4 pitch, not on the core 4.32 lattice): M5 cannot
+# reach M5, so the macro-composed core adds the partition M6 straps (gen_phys.py recipe: 0.288 / 4.32 / 1.968) over the
+# whole core and every child connects M5 -> M6 (ahub r3 PDN-0233 with the M4-M5 macro grid: no shapes on the children)
+PDN_HARD_CHILDREN = """add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}
+add_pdn_connect -grid {top} -layers {M5 M6}
+define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
+add_pdn_connect -grid {macro} -layers {M5 M6}
+"""
 
 
 def sha(path):
@@ -180,6 +188,51 @@ def sdc(per, ins, tol, clks, rsts, tid):
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
 
+# KV-CORES 10-25 (COORD ruling 2; Codex 98c25c4a8 / dfd4acde9): even head_eighth boundary repair. The 10-24 kit leaf
+# snapshot predates the PORT_REGS parameters, so these three leaves come from this repo (defaults PORT_REGS=0 = the
+# snapshot logic; subtiles only adds the unconnected kv_q observation port used by ktree_lk PORT_REGS=1).
+HEAD_PORT_REGS_LEAVES = {
+    "ot_qkh_head_native_r4.sv": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+    "ot_qkh_ktree_lk.sv": "rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv",
+    "ot_qkh_subtiles.sv": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+}
+
+
+def head_port_regs(text, mod, kd):
+    """frontq: per-port launch flops + separate fault-pin flop (face_guard f_t2->f_t3 feedthrough / shared fault pin,
+    +124 FF, 0 cycles); e0 ktree_lk: kpv_in[15:1] / gf_in land on face flops (+31 FF, lane-fault path +1 edge, approved)."""
+    fq = re.compile(r"(ot_qkh_head_frontq_native #\()(?![^)]*PORT_REGS)")
+    text, nf = fq.subn(r"\1.PORT_REGS(1), ", text)
+    if nf < 1:
+        raise SystemExit(f"{mod}: --head-port-regs found no ot_qkh_head_frontq_native instance")
+    kt = re.compile(r"(ot_qkh_ktree_lk #\()(?![^)]*PORT_REGS)")
+    text, nk = kt.subn(r"\1.PORT_REGS(1), ", text)
+    if (nk > 0) != (mod == "kv3_head_eighth_e0"):
+        raise SystemExit(f"{mod}: ktree_lk instances {nk}; ruling 2 covers exactly the e0 K-tree")
+    (kd / "head_port_regs_delta.json").write_text(json.dumps(dict(
+        frontq_port_regs=nf, ktree_lk_port_regs=nk, extra_flops_estimate=124 + 31 * nk, frontq_cycles=0,
+        ktree_fault_edges=1 if nk else 0, leaves_from_repo=sorted(HEAD_PORT_REGS_LEAVES),
+        source="COORD ruling 2 (KVG3-CORES 10-24) + Codex 98c25c4a8/dfd4acde9: e2 raw+ODB face_guard 1344/1344 PASS",
+        note="parent bind must price the +1 K-tree fault edge (e0 only); data / schedule cycles unchanged"), indent=1) + "\n")
+    return text
+
+
+def head_lane_ltcopy(text, mod, kd):
+    """COORD ruling 5 (10-25): ot_qkh_lane8 LT_COPY=1 -- per-lane copy of the last decision-word flop (u_ltd line[39]
+    lal / lsel broadcast to 8 lanes x 32 bits = e6 TT -12 ps); 0 cycles, +9x8+3-12 = +63 FF per lane8; the shared leaf
+    default (LT_COPY=0) stays bit-identical for the signed odd heads."""
+    rx = re.compile(r"(ot_qkh_lane8 #\()(?![^)]*LT_COPY)")
+    text, n = rx.subn(r"\1.LT_COPY(1), ", text)
+    if n < 1:
+        raise SystemExit(f"{mod}: --head-lane-ltcopy found no parameterised ot_qkh_lane8 instance")
+    (kd / "head_lane_ltcopy_delta.json").write_text(json.dumps(dict(
+        lane8_lt_copy=n, extra_flops_estimate=63 * n, added_cycles=0,
+        source="COORD ruling 5 (KV-CORES RULINGS 2026-10-25 05:28): structural fix of the e6 216 TT -12 ps "
+               "u_l8.u_ltd line[39] broadcast; rtl/hdc/nearhbm/ot_qkh_subtiles.sv LT_COPY",
+        note="default LT_COPY=0 = unchanged leaf (odd heads e1/e3/e5/e7 signed)"), indent=1) + "\n")
+    return text
+
+
 def preserve_head_relays(path):
     """Retain existing physical command-relay FFs, including unused command fields; no logic/cycle change."""
     if Path(path).name != "ot_qwen_nearhbm_head_hs.sv":
@@ -271,10 +324,33 @@ def main():
     ap.add_argument("--hard-children", help="JSON {children: {master: view_dir}, blocks: [{inst, master, x, y, orient}]}: "
                     "macro-composed core (owner 10-11 top-down hierarchy): children are signed hard views, blackboxed in "
                     "synthesis and placed FIRM at the planned sites (MACRO_PLACEMENT_TCL)")
+    ap.add_argument("--head-port-regs", action="store_true",
+                    help="even head_eighth cores (e0/e2/e4/e6): frontq PORT_REGS=1 + fault-pin flop (+124FF, 0 cycles), e0 also "
+                         "ktree_lk PORT_REGS=1 (+31FF, +1 parent fault edge, COORD ruling 2); leaves from this repo")
+    ap.add_argument("--head-lane-ltcopy", action="store_true",
+                    help="even head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
+                         "0 cycles, COORD ruling 5); needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
+    ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
+    ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
+    ap.add_argument("--astk-rep-split", action="store_true",
+                    help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
+                         "<= 64 loads each; kept regs were merged back: B ES rc[0] 2048 loads) + ctl z_k copies kept the same way (0 cycles)")
+    ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
+    ap.add_argument("--am-g-drop", action="store_true",
+                    help="COORD ruling 2 (10-25): drop the constant LMAX head-group bit g (am[1]) from qkd_ahub am0..3 and the "
+                         "ASTK am input (+ its qo[537] copy); ASTK ctl AM_G_PIN=0/G_CONST=0; plan pins renamed compactly "
+                         "(old b -> b-1 above the dropped bit) in memory until the KV-PLAN3 delta lands (am_g_drop.py)")
+    ap.add_argument("--stock-flow", action="store_true",
+                    help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
     cj = json.load(open(a.core_json))
+    if a.am_g_drop:
+        import am_g_drop
+        if cj["module"].startswith("kv3_astk_") and not a.astk_face_ports:
+            raise SystemExit("--am-g-drop on ASTK needs --astk-face-ports (repo qkd_astk_static_leaves.sv carries AM_G_PIN)")
+        am_g_drop.core_json(cj)
     if a.ectlk_three_taps:
         if cj["module"] != "qkd_ectlk":
             raise SystemExit("--ectlk-three-taps only applies to qkd_ectlk")
@@ -288,6 +364,12 @@ def main():
     mod = cj["module"]
     if a.astk_face_ports and not mod.startswith("kv3_astk_"):
         raise SystemExit("--astk-face-ports only applies to kv3_astk_* cores")
+    if a.head_lane_ltcopy and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
+        raise SystemExit("--head-lane-ltcopy only applies to the even head_eighth cores (e0/e2/e4/e6)")
+    if a.head_lane_ltcopy and not a.head_port_regs:
+        raise SystemExit("--head-lane-ltcopy needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
+    if a.head_port_regs and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
+        raise SystemExit("--head-port-regs only applies to the even head_eighth cores (e0/e2/e4/e6)")
     hc = next(h for h in plan["partition_types"][cj["type"]]["hard_cores"] if h["inst"] == cj["inst"])
     w, h = hc["outline_um"]
     tid = f"{mod}__{w:g}x{h:g}"
@@ -310,6 +392,8 @@ def main():
             f = str(REPO / "rtl/qwen_sys/split_20261014" / Path(f).name)
         if a.astk_face_ports and Path(f).name == "qkd_astk_ctl_s_p.sv":
             f = str(REPO / "rtl/qwen_sys/kv_plan_leaves_1023/qkd_astk_ctl_s_p.sv")
+        if a.head_port_regs and Path(f).name in HEAD_PORT_REGS_LEAVES:
+            f = str(REPO / HEAD_PORT_REGS_LEAVES[Path(f).name])
         dst = kd / "rtl" / Path(f).name
         if dst.exists():
             if dst.read_bytes() != Path(f).read_bytes():
@@ -319,6 +403,12 @@ def main():
         if a.astk_face_ports and dst.stem == mod:
             from astk_face_ports import transform
             dst.write_text(transform(dst.read_text()))
+        if a.head_port_regs and dst.stem == mod:
+            dst.write_text(head_port_regs(dst.read_text(), mod, kd))
+        if a.head_lane_ltcopy and dst.stem == mod:
+            dst.write_text(head_lane_ltcopy(dst.read_text(), mod, kd))
+        if a.am_g_drop and dst.stem == mod:
+            dst.write_text(am_g_drop.transform(dst.read_text(), mod))
         if a.ectlk_three_taps and dst.stem == mod:
             text = dst.read_text()
             old = ".ck({ck[0], ck[0], ck[0]})"
@@ -330,6 +420,24 @@ def main():
         # from the liberty, the models are not synthesisable input
         if not f.endswith((".svh", ".vh")) and not re.match(r"asap7sc7p5t_.*\.v$", dst.name):
             srcs.append(f"/work/rtl/{dst.name}")
+    if a.astk_timing_regs:
+        if not mod.startswith("kv3_astk_"):
+            raise SystemExit("--astk-timing-regs only applies to kv3_astk_* cores")
+        from astk_timing_regs import apply_kit
+        apply_kit(kd / "rtl", split=a.astk_rep_split)
+        (kd / "astk_timing_delta.json").write_text(json.dumps(dict(added_cycles=0, zn_read_replicas=8, zn_added_ff_per_z=40,
+            ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL",
+            rep_split=(dict(zn_replicas=16, slice_bits=8, max_select_loads=64, kept="keep_hierarchy qkd_astk_rep5/rep4",
+                            miter="kv-cores-1025r/astk/G/tb") if a.astk_rep_split else None)), indent=1) + "\n")
+    if a.ectlk_face_ports:
+        if mod != "qkd_ectlk":
+            raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
+        from ectlk_face_ports import apply_kit as ectlk_apply
+        ectlk_apply(kd / "rtl")
+        (kd / "ectlk_face_delta.json").write_text(json.dumps(dict(added_schedule_cycles=0,
+            private_port_flops="sc_valid 1 + sc_data 128 + lmax 256 + lmax_any 2 + fault 1 (ectl_part); req 38 + fault 1 (k_issuer)",
+            cfg_strap="one landing flop on ck[0] feeds 3 leaves (+1 settle edge after a strap change)",
+            miter="results/ectlk_preflight_1025"), indent=1) + "\n")
     if a.ectlk_three_taps:
         (kd / "ectlk_clock_delta.json").write_text(json.dumps(dict(
             source_ports=["ck[0]", "ck[1]", "ck[2]"], related_clock="one die clock, all edges co-timed",
@@ -341,7 +449,7 @@ def main():
     # memory macros (black boxes in kit_rtl.f) reached by the core's members
     kj = json.load(open(Path(a.kit_rtl) / cj["type"] / "kit_rtl.json"))
     hier = reached_modules([kd / "rtl" / Path(f).name for f in files], mod)
-    lefs, libs, macros = [], [], []
+    lefs, libs, macros, libs_ff = [], [], [], []
     for m, v in (kj.get("hard_macros") or {}).items():
         if re.search(rf"\b{re.escape(m)}\b", hier):
             macros.append(m)
@@ -352,6 +460,8 @@ def main():
                 shutil.copyfile(lib, kd / "macros" / Path(lib).name)
             tt = [l for l in v["libs"] if re.search(r"_(tt|TT|typ)", Path(l).name)] or v["libs"][:1]
             libs.append(f"/work/macros/{Path(tt[0]).name}")
+            ffl = [l for l in v["libs"] if re.search(r"_(ff|FF|fast)", Path(l).name)]
+            libs_ff.append(f"/work/macros/{Path(ffl[0]).name}" if ffl else None)
     hard_children = None
     if a.hard_children:
         hard_children = json.load(open(a.hard_children))
@@ -367,6 +477,7 @@ def main():
             macros.append(m)
             lefs.append(f"/work/macros/{m}.lef")
             libs.append(f"/work/macros/{m}_tt.lib")
+            libs_ff.append(f"/work/macros/{m}_ff.lib")   # MCMM bc corner needs the child FF view (STA-1112 without it)
         mp = ["# GENERATED (gen_core_kit_kv.py --hard-children): FIRM sites of the hard children (plan proposal)",
               "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]"]
         for b in hard_children["blocks"]:
@@ -385,6 +496,14 @@ def main():
         (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
     # pins: plan pins file + added / gap / strap pins
     pins = json.load(open(plandir / hc["pins_file"]))["pins"]
+    if a.am_g_drop:
+        pins, g_dropped = am_g_drop.plan_pins(pins, mod)
+        (kd / "am_g_delta.json").write_text(json.dumps(dict(
+            ruling="COORD ruling 2 (10-25), KV-TOK 05:36 g == 0 for every scheduled op", added_cycles=0, added_flops=0,
+            ports={p: f"[{ {1: 35, 537: 571}[d] }:0] -> [{ {1: 34, 537: 570}[d] }:0], old bit {d} dropped, old b -> b-1 above it"
+                   for p, d in am_g_drop.drops_for(mod).items()},
+            plan_pins=("renamed in memory (KV-PLAN3 delta pending): dropped " + ", ".join(g_dropped)) if g_dropped
+            else "plan already carries the delta"), indent=1) + "\n")
     have = {p["name"] for p in pins}
     names = []
     for n, c in cj["pin_class"].items():
@@ -432,13 +551,17 @@ def main():
     if lerr:
         raise SystemExit(f"{tid}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     shutil.copyfile(Path(a.tool) / "face_guard.py", kd / "face_guard.py")
+    # COORD ruling 4 (10-25): the platform adder map honours DONT_USE for every kit (HAxp5 -> generic logic; run_kit_kv.sh
+    # generates /work/adder_map_dontuse.v from the image platform map before synth and FAILs a netlist with a DONT_USE cell)
+    shutil.copyfile(Path(a.tool) / "adder_map_dontuse.py", kd / "adder_map_dontuse.py")
     shutil.copyfile(Path(a.tool) / "selrange_gate.py", kd / "selrange_gate.py")
     shutil.copyfile(Path(a.tool) / "lec.py", kd / "lec.py")       # LEC 10-24: RTL vs netlist after synth (run_kit_kv.sh)
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
     shutil.copyfile(Path(a.tool) / "signoff.py", kd / "signoff.py")
+    shutil.copyfile(Path(a.tool) / "pair_skew.tcl", kd / "pair_skew.tcl")   # signoff.py reads it beside itself (crashed without it 10-25)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     write_core_contract(kd, cj, clks, rsts)
-    (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
+    (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if hard_children else PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)
     for name in ("ot_keep_regs.tcl", "ot_pin_regs.tcl"):
@@ -459,6 +582,21 @@ def main():
                     "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(tool / "face_flops_release.tcl", kd / "face_flops_release.tcl")
+    # KV 10-25 structural flow basis (owner rule 10-25 c; FLOW 9f716b354 defaults for new kits, now also for KV hard cores):
+    # every KV even-head / ASTK route missed FF hold by 13..40 ps after TC-only repair on the stock setRC wire model,
+    # while sign-off is FF on routed RCX: (F2) placement / CTS / GRT estimates on the RCX-calibrated ASAP7 RC
+    # (setRC_rcx_asap7.tcl; stock put clock sinks 11-57 ps above RCX), (MCMM) repair over TC + BC so hold is repaired
+    # at the sign-off hold corner (macro-free cores; macro cores need per-corner macro libs), (F4) zero-logic register
+    # pairs re-hung onto one clock leaf after CTS (leaf_affinity.tcl; e6 worst FF = s1_exp -> g_hs.u_hc split leaves).
+    flow_basis = not a.stock_flow
+    if flow_basis:
+        shutil.copyfile(tool / "setRC_rcx_asap7.tcl", kd / "setRC_rcx.tcl")
+        shutil.copyfile(tool / "leaf_affinity.tcl", kd / "leaf_affinity.tcl")
+        # design-rule fit (PV-PC fd4_mc in-flow recipe, now the core default): fanout cap 24 for every repair_design
+        # (ASTK B: 134 nets > 64, max 162 -> ~1100 routed slew pins) + 20 % slew / cap margin for the routed RC
+        (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 24 for every repair_design (in-flow, not in the golden SDC)\n"
+                                           "set_max_fanout 24 [current_design]\nputs \"KVCORES max_fanout 24\"\n")
+    mcmm = flow_basis and (not lefs or all(libs_ff))
     for f in ("pin_audit_core.py", "corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
@@ -493,7 +631,16 @@ def main():
            *(["export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
               "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl"] if rec.get("face_flops", True) else []),
            "export CORNER = TC",
-           *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()]]
+           "export ADDER_MAP_FILE = /work/adder_map_dontuse.v",
+           *(["export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl",
+              "export POST_CTS_TCL = /work/leaf_affinity.tcl"] if flow_basis else []),
+           *(["export PRE_RESIZE_TCL = /work/max_fanout.tcl", "export PRE_CTS_TCL = /work/max_fanout.tcl",
+              "export PRE_GLOBAL_ROUTE_TCL = /work/max_fanout.tcl", "export SLEW_MARGIN = 20", "export CAP_MARGIN = 20"]
+             if flow_basis else []),
+           *(["export CORNERS = tc bc", "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) " + " ".join(libs),
+              "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) " + " ".join(l for l in libs_ff if l)] if mcmm else []),
+           *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
+           *[f"export {kv.split('=', 1)[0].strip()} = {kv.split('=', 1)[1].strip()}" for kv in a.orfs_var]]
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     if lefs:
@@ -507,7 +654,9 @@ def main():
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
               core_json_sha256=sha(a.core_json), pins=len(allp), plan_pins=len(pins), added_pins=len(added),
               clocks=clks, clock_nets=cj["report"].get("clock_nets"), resets=rsts, recipe=rec, sdc_lint="PASS (gen)", period_ps=per, insertion_budget_ps=ins, macros=macros,
-              signal_max=rec.get("sigmax", a.sigmax), kit_hash=kit_hash(kd))
+              signal_max=rec.get("sigmax", a.sigmax),
+              flow_basis=("stock" if a.stock_flow else "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20" + (" + mcmm tc/bc" if mcmm else " (no FF macro lib: TC only)")),
+              kit_hash=kit_hash(kd))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),
                           macros=macros, kit_hash=fz["kit_hash"])))

@@ -3,6 +3,7 @@
 import importlib
 import json
 import os
+import re
 import sys
 import tempfile
 import time
@@ -618,6 +619,106 @@ class TestOwnership(TickBase):
             O.build = orig
         g = (Path(self.tmp.name) / "LOOP-GAPS.txt").read_text()
         self.assertIn("OWNERSHIP unavailable", g)
+
+
+class TestDistinctDesigns(unittest.TestCase):
+    """OWNERS items are distinct designs: cores by RTL master + outline + pin table, types by RTL + outline + pins"""
+    @staticmethod
+    def pins(*xy):
+        return json.dumps([{"name": f"p{i}", "layer": "M5", "x": x, "y": y} for i, (x, y) in enumerate(xy)])
+
+    def hbm(self):
+        hc = lambda m, pf: {"inst": "u", "module": m, "outline_um": [10.0, 20.0], "pins_file": pf}
+        plan = {"partition_types": {
+            "q_a": {"module": "pa", "hard_cores": [hc("piece__r0", "cores/r0.json"), hc("piece__r1", "cores/r1.json"),
+                                                   hc("pc_ctrl", "cores/pc_x.json")]},
+            "q_b": {"module": "pb", "hard_cores": [hc("piece__r2", "cores/r2.json"), hc("pc_ctrl", "cores/pc_y.json"),
+                                                   hc("pc_ctrl", "cores/pc_x2.json")]}},
+            "partitions": [{"type": "q_a"}, {"type": "q_a"}, {"type": "q_b"}]}
+        same, other = self.pins((0, 1), (2, 3)), self.pins((0, 1), (2, 4))
+        pins = {"cores/r0.json": same, "cores/r1.json": same, "cores/r2.json": same,
+                "cores/pc_x.json": same, "cores/pc_x2.json": same + " ", "cores/pc_y.json": other}
+        canonical = {"types": {"hcol_h0": {"top": "ot_hidx_score_hcol", "type_ids": {
+            f"piece__r{i}__10x20": {} for i in range(3)}}}}
+        return plan, pins, canonical
+
+    def test_core_replicas_and_multi_table_modules(self):
+        import ownership as O
+        plan, pins, canonical = self.hbm()
+        items = O.plan_items("hbm", plan, pins, O.canonical_masters(canonical))
+        cores = {it["item"]: it for it in items if it["kind"] == "core"}
+        piece = cores["piece__r0"]                         # 3 piece modules, one master + table: ONE design
+        self.assertEqual(piece["members"], ["piece__r0", "piece__r1", "piece__r2"])
+        self.assertEqual(piece["replicas"], 5)            # placed: r0 in q_a x2 + r1 in q_a x2 + r2 in q_b x1
+        pc = sorted(k for k in cores if k.startswith("pc_ctrl"))
+        self.assertEqual(len(pc), 2)                       # 2 pin tables (pc_x2 = pc_x content) -> 2 designs
+        self.assertTrue(all(re.fullmatch(r"pc_ctrl_[0-9a-f]{12}", k) for k in pc))
+        self.assertEqual(sorted(cores[k]["replicas"] for k in pc), [1, 3])
+
+    def test_one_signoff_clears_every_replica_but_not_other_tables(self):
+        import ownership as O
+        plan, pins, canonical = self.hbm()
+        sha_y = O.pin_sig(pins["cores/pc_y.json"])[0]
+        cache = {"plans": {"hbm_arch/B2n": {"signed_types": {}, "signed_cores": {
+                     "piece__r1": ["host:/k/piece__r1/signoff.json"],
+                     "pc_ctrl": [f"host:/kits/pc_ctrl_{sha_y}/signoff.json"]}}},
+                 "signed_records": [{"name": "kl_pc_ctrl_c", "top": "pc_ctrl", "path": "/k/unknown/signoff.json"}]}
+        rows, _, head = O.build(dict(plans={"hbm": plan}, core_pins={"hbm": pins}, canonical=canonical, cache=cache),
+                                now=time.time())
+        st = {r["item"]: r for r in rows if r["die"] == "hbm"}
+        self.assertEqual(st["piece__r0"]["state"], "SIGNED")          # r1 signed -> r0 / r2 replicas cleared
+        self.assertEqual(st["piece__r0"]["replicas"], 5)
+        self.assertIn("3: piece__r0 piece__r1 piece__r2", st["piece__r0"]["members"])
+        self.assertEqual(st[f"pc_ctrl_{sha_y}"]["state"], "SIGNED")   # the table named by the kit dir sha
+        other = [k for k in st if k.startswith("pc_ctrl") and k != f"pc_ctrl_{sha_y}"]
+        self.assertEqual([st[k]["state"] for k in other], ["NEEDS-KIT"])   # module-level record: table unknown
+        self.assertTrue(any("types 2 cores 3" in h for h in head))
+
+    def test_job_of_one_table_routes_only_that_design(self):
+        import ownership as O
+        plan, pins, canonical = self.hbm()
+        sha_y = O.pin_sig(pins["cores/pc_y.json"])[0]
+        jobs = [{"id": "j1", "status": "RUNNING", "die": "hbm", "type": "pc_ctrl", "lane": "HBM-KITS",
+                 "kit": f"epyc2:/srv/x/pc_ctrl_{sha_y}", "updated": time.time()}]
+        rows, _, _ = O.build(dict(plans={"hbm": plan}, core_pins={"hbm": pins}, canonical=canonical, jobs=jobs))
+        st = {r["item"]: r["state"] for r in rows if r["die"] == "hbm"}
+        self.assertEqual(st[f"pc_ctrl_{sha_y}"], "ROUTING")
+        self.assertEqual(sorted(v for k, v in st.items() if k.startswith("pc_ctrl")), ["NEEDS-KIT", "ROUTING"])
+
+    def test_types_merge_on_identical_rtl_outline_pins_only(self):
+        import ownership as O
+        bus = lambda face: {"name": "a", "dir": "in", "width": 8, "kind": "data", "face": face, "window_um": [0, 5]}
+        t = lambda mod, face="N", w=100.0: {"module": mod, "outline_um": [w, 50.0], "buses": [bus(face)],
+                                             "contents": [{"inst": "u", "module": "core_x", "origin_um": [1, 1]}]}
+        plan = {"partition_types": {"a1": t("m_a1"), "a2": t("m_a2"), "a3": t("m_a3"), "b": t("m_b", face="S"),
+                                    "c": t("m_c", w=90.0)},
+                "partitions": [{"type": "a1"}, {"type": "a2"}, {"type": "a2"}, {"type": "a3"}, {"type": "b"}]}
+        paths = O.bound_rtl_paths("kv", plan)
+        self.assertEqual(sorted(paths), ["a1", "a2", "a3"])
+        self.assertEqual(paths["a1"][0], "physical/die_plan/kv/bind/bound_r8/rtl/m_a1.sv")
+        rtl = lambda mod, pad: f"// gen\nmodule {mod} (input a);\n  dly #({pad}) u();\nendmodule\n"
+        items = O.plan_items("kv", plan, bound={"a1": rtl("m_a1", 2), "a2": rtl("m_a2", 2), "a3": rtl("m_a3", 7)})
+        ty = {it["item"]: it for it in items if it["kind"] == "type"}
+        self.assertEqual(sorted(ty), ["a2", "a3", "b", "c"])   # a1+a2 one design (rep = most instances)
+        self.assertEqual((ty["a2"]["members"], ty["a2"]["replicas"]), (["a1", "a2"], 3))
+        items = O.plan_items("kv", plan)                          # bound RTL unreadable: nothing merges
+        self.assertEqual(len([it for it in items if it["kind"] == "type"]), 5)
+        M = O.Matcher(O.plan_items("kv", plan, bound={"a1": rtl("m_a1", 2), "a2": rtl("m_a2", 2)}))
+        self.assertEqual(M.text("gen/kv/part_a1"), {("kv", "a2")})   # a lane line naming a1 counts for the design
+
+    def test_netlist_key_matches_dedup(self):
+        import ownership as O
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "die_plan"))
+        try:
+            import dedup
+        except ImportError:
+            self.skipTest("tools/die_plan not present")
+        t = {"outline_um": [10, 20], "hard": True, "reset": {"sync_stages": 2}, "sources": ["b", "a"],
+             "buses": [{"name": "x", "dir": "in", "width": 3, "face": "N", "note": "n"}],
+             "ft_slots": [{"name": "s", "width": 4, "stations": 1, "in_face": "W", "regs_um": [1]}],
+             "contents": [{"inst": "u", "module": "m", "params": {"P": 1}, "origin_um": [0, 0]}],
+             "hard_cores": [{"inst": "h", "module": "c", "origin_um": [1, 1]}]}
+        self.assertEqual(O.netlist_key(t), dedup.netlist_key(t))
 
 
 class TestChainSafety(Base):

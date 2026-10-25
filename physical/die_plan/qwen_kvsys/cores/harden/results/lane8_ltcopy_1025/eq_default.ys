@@ -1,0 +1,20 @@
+# default (LT_COPY=0) new leaf vs origin/main leaf: equivalence after flatten (equiv_make / equiv_simple / equiv_induct)
+read_verilog -sv -DSYNTHESIS src/ot_qkh_lane8_ref.sv src/ot_qkh_lane8_new.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_rst_relay.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_delay.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_qwen_nearhbm_prod.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_fp32_add_lat_nr.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_prefix.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_fastfp.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_fp32_mul_lat.sv
+hierarchy -check -top ot_qkh_lane8_ref
+setattr -mod -unset keep_hierarchy *; setattr -unset keep_hierarchy */*; proc; flatten; opt_clean; async2sync; opt -fast
+rename ot_qkh_lane8_ref gold
+tee -o /srv/opentallas-scratch2/claude/kv-cores-1025r/ltcopy_proof/stat_gold.txt stat
+design -stash gold
+read_verilog -sv -DSYNTHESIS src/ot_qkh_lane8_ref.sv src/ot_qkh_lane8_new.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_rst_relay.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_delay.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_qwen_nearhbm_prod.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_fp32_add_lat_nr.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_prefix.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_fastfp.sv /srv/opentallas-scratch2/claude/kv-cores-1025r/heads/h5m8/e6/kv3_head_eighth_e6__216x216/rtl/ot_hdc_fp32_mul_lat.sv
+hierarchy -check -top ot_qkh_lane8
+setattr -mod -unset keep_hierarchy *; setattr -unset keep_hierarchy */*; proc; flatten; opt_clean; async2sync; opt -fast
+rename ot_qkh_lane8 gate
+tee -o /srv/opentallas-scratch2/claude/kv-cores-1025r/ltcopy_proof/stat_gate.txt stat
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate eq
+hierarchy -top eq
+equiv_simple -seq 2
+equiv_induct -seq 2
+tee -o /srv/opentallas-scratch2/claude/kv-cores-1025r/ltcopy_proof/equiv_status.txt equiv_status -assert

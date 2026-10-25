@@ -215,6 +215,25 @@ def test_replica_candidates_keep_input_identity_and_prove_both_sides(tmp_path, m
         assert want_result in set(_sim_prove(m).values())
 
 
+def test_gold_only_replica_representative_still_pairs_with_matched_flop(tmp_path, monkeypatch):
+    """kv3_astk / kv3_pv_pair 10-25: synthesis merged the valid flop of four adder replicas g_add[0..3] into a matched
+    tag-line flop.  The replica cohort g_add[1] == g_add[0] is gold-only on both ends; its representative g_add[0]
+    must still be paired with the matched tag flop, else it stays a free input and every cone it feeds 'differs'."""
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    names = lambda ks: {i: [(f'u_dut.{k}$_DFF_P_.lecq', 0)] for i, k in enumerate(ks)}
+    g = tmp_path / 'gold.aig'
+    g.write_bytes(b'aig 5 1 4 0 0\n2\n2\n2\n6\n')          # tag, g_add[0].v, g_add[1].v <= d0; o <= g_add[0].v
+    t = tmp_path / 'gate.aig'
+    t.write_bytes(b'aig 3 1 2 0 0\n2\n4\n')                # tag <= d0; o <= tag
+    gm = {'input': {0: [('d0', 0)]}, 'latch': names(['tag', 'g_add[0].v', 'g_add[1].v', 'o']), 'output': {}}
+    tm = {'input': {0: [('d0', 0)]}, 'latch': names(['tag', 'o']), 'output': {}}
+    L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+    lec.correspond(L, tmp_path, 100, [])
+    assert L.hyp.get(('gold', 'ff:u_dut.g_add[0].v'), (None,))[0] == 'eq'
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {'proved'}
+
+
 def test_parallel_cones_preserve_each_status(tmp_path, monkeypatch):
     import re
     from types import SimpleNamespace
