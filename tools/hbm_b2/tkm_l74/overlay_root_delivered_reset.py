@@ -37,7 +37,7 @@ def overlay(src):
 
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument("source",type=Path);ap.add_argument("output",type=Path)
+    ap=argparse.ArgumentParser();ap.add_argument("source",type=Path);ap.add_argument("output",type=Path);ap.add_argument("--face-dir",type=Path)
     args=ap.parse_args();src=args.source.read_text();out=overlay(src)
     args.output.parent.mkdir(parents=True,exist_ok=True);args.output.write_text(out)
     report={"status":"SOURCE_ONLY_BLOCKED_LEC_NEW_ROOT_KIT", "source":str(args.source),
@@ -46,6 +46,21 @@ def main():
         "changed_flops":{"ordinary_reset_pipeline":3,"private_buffer_controls_sync_reset":5},
         "unchanged":"all SRAM/data/address/root-main logic and root face shell",
         "required_gates":["constrained delivered-reset cold/warm actual root equivalence", "new selected root kit and physical signed views", "root-main timed reset recovery contract"]}
+    if args.face_dir:
+        emitted=[]
+        for suffix in ("__wrap.sv", "__fshell.sv"):
+            oldname="ot_hgi_coll_tkm_m_tp192__root"
+            original=args.face_dir / (oldname+suffix)
+            shell=original.read_text()
+            if shell.count("module "+oldname) != 1:
+                raise ValueError("root face module identity mismatch")
+            changed=shell.replace(oldname,oldname+"__delivered_reset")
+            changed=changed.replace("ot_hgi_coll_tkm_tp192_root_core", "ot_hgi_coll_tkm_tp192_root_core__delivered_reset")
+            target=args.output.parent/(oldname+"__delivered_reset"+suffix)
+            target.write_text(changed)
+            emitted.append({"file":target.name,"sha256":hashlib.sha256(changed.encode()).hexdigest(),"source_sha256":hashlib.sha256(shell.encode()).hexdigest(),"change":"module/child identity only; clocks/reset face pass-through unchanged"})
+        report["face_sources"]=emitted
+        report["physical_status"]="NO_NEW_KIT_NO_PHYSICAL_CREDIT"
     args.output.with_suffix(".reset_contract.json").write_text(json.dumps(report,indent=2)+"\n")
     print(json.dumps(report))
 
