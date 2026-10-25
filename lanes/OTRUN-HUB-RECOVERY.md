@@ -26,7 +26,7 @@ move with it -- epyc3 is Zen 3, so NO_AVX512 must contain "localhost" on an epyc
 - epyc1 cron `15 2 * * *` `~/bin/otrun-hub-backup.sh` -> `epyc1:/srv/opentallas-scratch2/hub-backup/` (other disk):
   `files/<absolute path>` for everything in the table above, `meta/` = crontab, user units/timers, docker digests, ssh key
   file NAMES, mdstat/df, coord HEAD, `last-run.txt`. Log `~/.local/state/otrun-hub-backup.log`.
-- rtx-pro cron `45 2 * * *` `~/bin/otrun-hub-archive.sh` pulls that to `~/.cache/otrun-hub-mirror/` and pushes it to
+- rtx-pro cron `45 2 * * *` `~/bin/otrun-hub-archive.sh` (copy: `lanes/otrun-hub-archive.sh`; epyc1 script copy: `lanes/otrun-hub-backup.sh`) pulls that to `~/.cache/otrun-hub-mirror/` and pushes it to
   `155.103.253.53:/archive/otrun-hub/` (epyc1 has no archive key). Log `~/.cache/otrun-hub-archive.log`.
 - Restore source, in order: epyc1 scratch2 (if the box lives) > rtx-pro `~/.cache/otrun-hub-mirror` > archive. The
   ot-run tools are also byte-identical on every worker's `/usr/local/bin`; ot-run itself exists ONLY in these backups
@@ -72,8 +72,14 @@ move with it -- epyc3 is Zen 3, so NO_AVX512 must contain "localhost" on an epyc
    live run dir (`systemctl --user list-units 'oth-*'` on each worker). Lane worktrees that lived on epyc1
    (`~/wt/<lane>`, `/srv/opentallas-scratch/claude/wt/<lane>`) are gone: re-create from the pushed branches on epyc3
    (sparse checkouts; `/srv/opentallas-scratch2/claude/wt/<lane>`).
-8. Automation that lived on epyc1 (die-ci-commit/nightly, release-task-watch timers; see lanes/INFRA2.md) must be
-   re-installed on the new hub from `files/home/ubuntu/.config/systemd/user/` and `systemctl --user enable --now`.
+8. Hub automation (re-enabled on epyc1 2026-10-24 by INFRA2): user timers die-ci-commit (hourly), die-ci-nightly (02:30),
+   release-task-watch (:02/:32) + their `*.d/infra2-*.conf` drop-ins and `~/bin/hub-git-sync.sh` (copies:
+   `lanes/hub-git-sync.sh`, backup `files/home/ubuntu/...`). On the new hub: `git clone` coord/state to `~/coord` (read
+   mirror) and keep a clean `~/OpenTallas` on main (die_ci_cron.sh hard-codes both), copy `~/.local/state/die-ci/` and
+   `/srv/opentallas-scratch/claude/die-ci/results` if reachable (previous-run deltas), install the units + drop-ins,
+   `systemctl --user daemon-reload && systemctl --user enable --now die-ci-commit.timer die-ci-nightly.timer
+   release-task-watch.timer`, and repoint the rtx-pro cron line that copies `TASKS_STALE.json`/`TASK_WATCH_SUMMARY.txt`
+   (`epyc1:coord/...` -> `<newhub>:coord/...`). die_ci_cron.sh's run-host list (intel1 intel2 epyc2) is in the script.
 
 ## Known gaps / blockers
 - Job-launch worktrees and run dirs on epyc1's root are NOT backed up (multi-TB); only pushed branches survive.
