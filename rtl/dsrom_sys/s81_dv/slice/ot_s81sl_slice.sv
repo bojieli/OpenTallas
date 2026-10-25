@@ -117,7 +117,7 @@ module ot_s81sl_leaf #(
     // Frozen hard child: its Liberty/blackbox has no parameters.
     ot_s81sl_vs u_vs (
 `endif
-        .clk(clk), .rst_n(rst_n), .s_v(s_v && !kv_cmd), .s_d({s_d[159:64], s_d[62], s_d[60:0]}).s_d({s_d[159:64], s_d[62], s_d[60:0]}),
+        .clk(clk), .rst_n(rst_n), .s_v(s_v && !kv_cmd), .s_d({s_d[159:64], s_d[62], s_d[60:0]}),
         .x_rv(vs_xrv), .x_ra(vs_xra), .x_qv(x_qv && !kvbusy), .x_qd(x_qd), .x_wv(vs_xwv), .x_wa(vs_xwa), .x_wm(vs_xwm), .x_wd(vs_xwd),
         .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .sw_v(swv), .sw_d(swd), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),

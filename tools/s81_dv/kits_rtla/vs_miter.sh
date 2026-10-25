@@ -1,6 +1,6 @@
 #!/bin/bash
 # S81-KITS-RTLA 10-24: ot_s81sl_vs old (OLD_REF, default HEAD~0 of the edit = the pre-fix commit) vs fixed (working tree)
-# lockstep miter + one mutant (u's state copy not updated on QB -> the u pin goes stale on the next hold).
+# lockstep miter + one mutant (x_wd's state copy not updated on the default (MOE) op -> the x_wd pin goes stale on the next QB hold).
 #   vs_miter.sh <work dir> <old ref> [cycles]   (cwd = repo root)   prints VS_MITERS PASS when base PASS + mutant FAIL
 set -u
 W=$(realpath -m ${1:?work}); REF=${2:?old ref}; N=${3:-40000}; mkdir -p $W
@@ -16,8 +16,8 @@ for v in base mut; do
   if [ $v = mut ]; then
     python3 - $VS $O/mut.sv <<'PY'
 import sys; f, out = sys.argv[1:]; t = open(f).read()
-o = "u_s <= (MUT == 5) ? {xq_c[127:0], xq_c[255:128]} : xq_c;"; assert t.count(o) == 1
-open(out, "w").write(t.replace(o, "u_s <= u_s;"))
+o = "x_wd_s <= xo_d;"; assert t.count(o) == 1
+open(out, "w").write(t.replace(o, "x_wd_s <= x_wd_s;"))
 PY
     NV=$O/mut.sv
   fi
