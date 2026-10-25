@@ -122,6 +122,12 @@ if LINK_R16:
 LINK_ROPE_OVL = os.environ.get('OT_KV_ROPE_OVL', '0') == '1'
 if LINK_ROPE_OVL:
     LINK_IMAGE = LINK_IMAGE.replace('.svh', '_rope.svh')
+# TOK-QK 10-25 (opt-in, default unset = unchanged): OT_KV_HEAD_PREP_EDGES=<N> = the pair image was compiled with
+# d2d_cal_image_production.sh D2D_HEAD_PREPARE_EDGES=<N> (recurring C->K HEAD_PREP kind-12 slot, RoPE only; the
+# qwen_rom_pair_candidate_1024 image the kv44 dcal tile carries uses 12), so the link-calendar rebuild for target 11 adds it.
+LINK_HEAD_PREP = os.environ.get('OT_KV_HEAD_PREP_EDGES', '')
+if LINK_HEAD_PREP and not LINK_HEAD_PREP.isdigit():
+    raise SystemExit(f'OT_KV_HEAD_PREP_EDGES={LINK_HEAD_PREP!r}: an integer edge count expected')
 # KV-P6-BOOT 10-23 (opt-in, default unset = unchanged): OT_KV_LINK_IMAGE=<path> binds a CANDIDATE pair image compiled by
 # d2d_cal_image_production.sh with the bound KV seam stages (D2D_K_STAGES); link_image_check stays fail-closed on it.
 # A candidate image is a PAIR change: the compute die sequencer must bind the same image before a release.
@@ -162,7 +168,8 @@ LINK_DIE_STAGES = image_die_stages()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
-             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else []) + (['--rope'] if LINK_ROPE_OVL else [])
+             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else []) + (['--rope'] if LINK_ROPE_OVL else []) \
+    + (['--head-prepare-edges', LINK_HEAD_PREP] if LINK_HEAD_PREP else [])
 #            + --token-path (decompressed in link_calendar)
 T_MAX = 8192
 CORE_U, HBM_U = 625, 768
