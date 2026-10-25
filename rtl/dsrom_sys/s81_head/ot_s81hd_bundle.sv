@@ -32,6 +32,10 @@ module ot_s81hd_bundle #(
     parameter integer IOREG = 0,           // ot_dsrom_head_elem IOREG (pin-registered elements)
     parameter integer SAFE = 1,            // ot_s81hd_elem SAFE (registered argmax compare; required)
     parameter integer A_INPUT_STAGES = 0,  // opt-in aligned A transport; model prices every added cycle
+    // MERGE_HOP (S81-HEAD 10-24 hd_tile preview review: c1 -144 / res -288 ps at placement, the four A results meet
+    // from cores 350-700 um apart): 1 = a hop register before each compare level (pk_q -> pk_h -> c1 -> c1_h -> res),
+    // so a stage does EITHER the ~350-um hop OR the 81-b pick.  +2 cycles on the result; 0 = unchanged.
+    parameter integer MERGE_HOP = 0,
     // CV (S81-HEAD 10-24): 1 = the elements are the CLOSED views (physical/dsrom_fh_safe/closed/elem{A,B}) as the hard
     // macros ot_s81hd_elemA_cv (u_eA0..3) / ot_s81hd_elemB_cv (u_eB) in the labelled block g_cv (no generate index in
     // their paths); they are the closed parameter point (CUT 0x1ff, SPLIT9 1, IOREG 1, SAFE 1), checked below.
@@ -123,7 +127,8 @@ module ot_s81hd_bundle #(
     end endgenerate
     generate if (CV) begin : g_cv
         // closed-view parameter point (ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1): refuse anything else
-        if (CUT != 9'h1ff || SPLIT9 != 1 || IOREG != 1 || SAFE != 1 || A_INPUT_STAGES != 0) begin : g_bad
+        // A_INPUT_STAGES is tile-side transport (all 307 A input bits + go/bv at equal depth): allowed with the views
+        if (CUT != 9'h1ff || SPLIT9 != 1 || IOREG != 1 || SAFE != 1) begin : g_bad
             ot_s81hd_cv_params_differ_from_the_closed_views u_refuse ();   // elaboration error by design
         end
         wire [3:0] ov, lv;
@@ -157,21 +162,42 @@ module ot_s81hd_bundle #(
     // HD-TILE 10-21: the elements clear `done` IOREG (+1) edges after a_go, so with IOREG = 1 the original
     // `&a_done && !a_go[0]` re-raised res_v for one cycle with the PREVIOUS position's result after every later go
     // (measured: 2nd position fired 20 cycles after go).  The block window covers a_go + 3 cycles.
-    reg [3:0]  gsh;
+    // MERGE_HOP: the block window grows with the two hop stages (the stale done of the previous position travels them)
+    localparam integer GW = 4 + 2 * MERGE_HOP;
+    reg [GW-1:0] gsh;
     wire       gblk = a_go[0] | (|gsh);
+    reg [3:0]  pk_done_h;
+    reg        c1_vh;
+    wire [3:0] pk_done_m = MERGE_HOP ? pk_done_h : pk_done;
+    wire       c1_v_m = MERGE_HOP ? c1_vh : c1_v;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin c1_v <= 1'b0; res_v <= 1'b0; gsh <= 4'd0; pk_done <= 4'd0; end
+        if (!rst_n) begin c1_v <= 1'b0; res_v <= 1'b0; gsh <= {GW{1'b0}}; pk_done <= 4'd0; pk_done_h <= 4'd0; c1_vh <= 1'b0; end
         else begin
-            gsh <= {gsh[2:0], a_go[0]};
+            gsh <= {gsh[GW-2:0], a_go[0]};
             pk_done <= a_done;
-            c1_v <= &pk_done && !gblk;
-            res_v <= c1_v && !gblk;
+            pk_done_h <= pk_done;
+            c1_v <= &pk_done_m && !gblk;
+            c1_vh <= c1_v;
+            res_v <= c1_v_m && !gblk;
         end
+    reg [80:0] pk_h [0:3];
+    reg [80:0] c1_h [0:1];
     always @(posedge clk) begin
-        for (int pq = 0; pq < 4; pq++) pk_q[pq] <= {a_key[pq], a_row[pq], a_bits[pq]};
-        c1[0] <= pick(pk_q[0], pk_q[1]);
-        c1[1] <= pick(pk_q[2], pk_q[3]);
-        {res_row, res_bits} <= pick(c1[0], c1[1]);
+        for (int pq = 0; pq < 4; pq++) begin
+            pk_q[pq] <= {a_key[pq], a_row[pq], a_bits[pq]};
+            pk_h[pq] <= pk_q[pq];
+        end
+        c1_h[0] <= c1[0];
+        c1_h[1] <= c1[1];
+        if (MERGE_HOP) begin
+            c1[0] <= pick(pk_h[0], pk_h[1]);
+            c1[1] <= pick(pk_h[2], pk_h[3]);
+            {res_row, res_bits} <= pick(c1_h[0], c1_h[1]);
+        end else begin
+            c1[0] <= pick(pk_q[0], pk_q[1]);
+            c1[1] <= pick(pk_q[2], pk_q[3]);
+            {res_row, res_bits} <= pick(c1[0], c1[1]);
+        end
     end
     assign fault = b_fault | (|a_fault);
 endmodule

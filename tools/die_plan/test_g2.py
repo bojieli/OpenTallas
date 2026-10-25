@@ -73,7 +73,7 @@ def test_assembly_die_flow():
         kd = gen_phys.write_assembly(PAIR, d, str(Path(d) / "views"))
         kd = Path(d) / "die"
         tcl = (kd / "die_flow.tcl").read_text()
-        assert "place_macro -macro_name pfb -location {1434.24 0} -orientation R0 -exact" in tcl and "detailed_route" in tcl
+        assert "findInst {pfb}]" in tcl and "setLocation [expr {round(1434.24 * $_d)}] [expr {round(0 * $_d)}]" in tcl and "detailed_route" in tcl
         v = (kd / "die_top_struct.v").read_text()
         assert "endmodule :" not in v and "w_x" in v
         assert (kd / "seams.json").is_file() and (kd / "abut_audit.py").is_file() and (kd / "run_die.sh").is_file()
@@ -177,7 +177,7 @@ def test_kit_overrides_platform_tracks():
         assert (kd / "face_flops.tcl").is_file() and (kd / "face_flops_release.tcl").is_file()
         # COORD 10-23: tap trees balanced to the plan insertion after CTS
         assert "export POST_CTS_TCL = /work/tap_balance.tcl" in cfg and "export OT_TAP_TARGET_PS = 250" in cfg
-        assert "export OT_TAP_WINDOW_PS = 40" in cfg and "export CORNER = TC" in cfg
+        assert "export OT_TAP_WINDOW_PS = 20" in cfg and "export OT_TAP_TOL_PS = 10" in cfg and "export CORNER = TC" in cfg
         assert (kd / "tap_balance.tcl").is_file()
 
 

@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die (253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST).",
+ "note": "S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die (253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). PDN (OWNER 10-24 decision 7): die.pg.domains = one VDDPHY supply + dedicated bump rows per SerDes window (12); the core VDD/VSS M8/M9 grid does not feed the PHY. TODO (TRIAL/PDN): head PSM / IR with the VDDPHY domains. Reset (decision 2): reset.release pipelined (tools/die_plan/reset_tree.py).",
  "die": {
   "name": "s81_head",
   "label": "DeepSeek ROM S81 release head die (LM head / argmax / MTP / host)",
@@ -51,6 +51,608 @@
       "VDD",
       "VSS"
      ]
+    }
+   ],
+   "domains": [
+    {
+     "name": "phy_lk_WN2",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WN2_u_phy"
+     ],
+     "rect_um": [
+      40.04,
+      16162.28,
+      3053.08,
+      17516.44
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       103.68,
+       16225.92,
+       2989.44,
+       17452.8
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_WN1",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WN1_u_phy"
+     ],
+     "rect_um": [
+      2925.8,
+      16162.28,
+      5938.84,
+      17516.44
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       2989.44,
+       16225.92,
+       5875.2,
+       17452.8
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_WN0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WN0_u_phy"
+     ],
+     "rect_um": [
+      5811.56,
+      16162.28,
+      8824.6,
+      17516.44
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       5875.2,
+       16225.92,
+       8760.96,
+       17452.8
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_WN3",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WN3_u_phy"
+     ],
+     "rect_um": [
+      8697.32,
+      16162.28,
+      11710.36,
+      17516.44
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       8760.96,
+       16225.92,
+       11646.72,
+       17452.8
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_EN0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_EN0_u_phy"
+     ],
+     "rect_um": [
+      11583.08,
+      16162.28,
+      14596.12,
+      17516.44
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       11646.72,
+       16225.92,
+       14532.48,
+       17452.8
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_EN1",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_EN1_u_phy"
+     ],
+     "rect_um": [
+      14468.84,
+      16162.28,
+      17481.88,
+      17516.44
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       14532.48,
+       16225.92,
+       17418.24,
+       17452.8
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_WS1",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WS1_u_phy"
+     ],
+     "rect_um": [
+      40.04,
+      40.04,
+      3053.08,
+      1394.2
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       103.68,
+       103.68,
+       2989.44,
+       1330.56
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_WS0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WS0_u_phy"
+     ],
+     "rect_um": [
+      2925.8,
+      40.04,
+      5938.84,
+      1394.2
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       2989.44,
+       103.68,
+       5875.2,
+       1330.56
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_HOST0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_HOST0_u_phy"
+     ],
+     "rect_um": [
+      5811.56,
+      40.04,
+      8824.6,
+      1394.2
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       5875.2,
+       103.68,
+       8760.96,
+       1330.56
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_HOST1",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_HOST1_u_phy"
+     ],
+     "rect_um": [
+      8697.32,
+      40.04,
+      11710.36,
+      1394.2
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       8760.96,
+       103.68,
+       11646.72,
+       1330.56
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_ES0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_ES0_u_phy"
+     ],
+     "rect_um": [
+      11583.08,
+      40.04,
+      14596.12,
+      1394.2
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       11646.72,
+       103.68,
+       14532.48,
+       1330.56
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_lk_ES1",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_ES1_u_phy"
+     ],
+     "rect_um": [
+      14468.84,
+      40.04,
+      17481.88,
+      1394.2
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       14532.48,
+       103.68,
+       17418.24,
+       1330.56
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
     }
    ]
   },
@@ -126,6 +728,214 @@
      16225.919999999998
     ],
     "reason": "reserve frame: no ft crosses it (draft fan-out lanes would land here if the owner restores them; corner bump / ESD keep-out of the corner SerDes)"
+   }
+  ],
+  "io": [
+   {
+    "name": "io_lk_WN2_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WN2",
+    "rect_um": [
+     103.68,
+     16225.92,
+     2989.44,
+     17452.8
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy"
+   },
+   {
+    "name": "io_lk_WN1_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WN1",
+    "rect_um": [
+     2989.44,
+     16225.92,
+     5875.2,
+     17452.8
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy"
+   },
+   {
+    "name": "io_lk_WN0_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WN0",
+    "rect_um": [
+     5875.2,
+     16225.92,
+     8760.96,
+     17452.8
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy"
+   },
+   {
+    "name": "io_lk_WN3_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WN3",
+    "rect_um": [
+     8760.96,
+     16225.92,
+     11646.72,
+     17452.8
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy"
+   },
+   {
+    "name": "io_lk_EN0_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_EN0",
+    "rect_um": [
+     11646.72,
+     16225.92,
+     14532.48,
+     17452.8
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy"
+   },
+   {
+    "name": "io_lk_EN1_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_EN1",
+    "rect_um": [
+     14532.48,
+     16225.92,
+     17418.24,
+     17452.8
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy"
+   },
+   {
+    "name": "io_lk_WS1_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WS1",
+    "rect_um": [
+     103.68,
+     103.68,
+     2989.44,
+     1330.56
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy"
+   },
+   {
+    "name": "io_lk_WS0_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WS0",
+    "rect_um": [
+     2989.44,
+     103.68,
+     5875.2,
+     1330.56
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy"
+   },
+   {
+    "name": "io_lk_HOST0_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_HOST0",
+    "rect_um": [
+     5875.2,
+     103.68,
+     8760.96,
+     1330.56
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; host link (rack connections_s81.csv cls host: lk_HOST0+lk_HOST1 <-> host NIC, S81.HOST)",
+    "host": true
+   },
+   {
+    "name": "io_lk_HOST1_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_HOST1",
+    "rect_um": [
+     8760.96,
+     103.68,
+     11646.72,
+     1330.56
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; host link (rack connections_s81.csv cls host: lk_HOST0+lk_HOST1 <-> host NIC, S81.HOST)",
+    "host": true
+   },
+   {
+    "name": "io_lk_ES0_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_ES0",
+    "rect_um": [
+     11646.72,
+     103.68,
+     14532.48,
+     1330.56
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy"
+   },
+   {
+    "name": "io_lk_ES1_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_ES1",
+    "rect_um": [
+     14532.48,
+     103.68,
+     17418.24,
+     1330.56
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy"
    }
   ]
  },
@@ -215,7 +1025,10 @@
      "kit": "physical/ref_tile/s81hd_tile_m",
      "cells": 50000,
      "params": {
-      "CV": "1"
+      "CV": "1",
+      "A_INPUT_STAGES": "1",
+      "MERGE_HOP": "1",
+      "CMP_STAGES": "2"
      },
      "bind": {
       "ck": "clk",
@@ -1388,7 +2201,7 @@
      "note": "same PHY model, slot and bump field as the layer die's serdes partitions"
     }
    ],
-   "note": "SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops",
+   "note": "SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops; PHY on the separate VDDPHY domain (die.pg.domains, OWNER 10-24 decision 7) with dedicated bump rows over its window",
    "buses": [
     {
      "name": "coll_i0",
@@ -16686,7 +17499,7 @@
   "sync_stages": 2,
   "data_reset": false,
   "epoch_bit": true,
-  "release": "counted"
+  "release": "pipelined"
  },
  "census": {
   "none": "top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the bottom-up H10 die chain used a different block split and FAILED STA); census follows the first bind (G3)"

@@ -13,9 +13,9 @@ module tb_s81sl_ve_mixmiter #(parameter integer MUT = 0, GAP = 0, LM = 5, LA = 4
     reg rst_n = 0;
     reg r_v = 0; reg [1:0] r_c = 0; reg [127:0] r_h = 0, r_k = 0, r_w = 0;
     reg a_v = 0; reg [1:0] a_c = 0; reg [255:0] a_h = 0, a_val = 0; reg [31:0] a_g = 0;
-    wire p_v, o_v, fault; wire [1:0] p_c, o_c; wire [31:0] p_hh, p_kk, p_dd; wire [255:0] o_y;
+    wire p_v, o_v, fault; wire [1:0] p_c, o_c; wire [31:0] p_hh, p_kk, p_dd; wire [127:0] o_yp; wire [255:0] o_y = {o_yp[127:112], 16'd0, o_yp[111:96], 16'd0, o_yp[95:80], 16'd0, o_yp[79:64], 16'd0, o_yp[63:48], 16'd0, o_yp[47:32], 16'd0, o_yp[31:16], 16'd0, o_yp[15:0], 16'd0};
     ot_s81sl_ve #(.LM(LM), .LA(LA), .MUT(MUT)) dut (clk, rst_n, r_v, r_c, r_h, r_k, r_w, p_v, p_c, p_hh, p_kk, p_dd,
-                                               a_v, a_c, a_h, a_val, a_g, o_v, o_c, o_y, fault);
+                                               a_v, a_c, a_h, a_val, a_g, o_v, o_c, o_yp, fault);
     wire n_pv, n_ov, n_fault; wire [1:0] n_pc, n_oc; wire [31:0] n_hh, n_kk, n_dd; wire [255:0] n_y;
     mixref_ot_s81sl_ve #(.LM(LM), .LA(LA), .MUT(0)) ref_r3 (clk, rst_n, r_v, r_c, r_h, r_k, r_w, n_pv, n_pc, n_hh, n_kk, n_dd,
                                                a_v, a_c, a_h, a_val, a_g, n_ov, n_oc, n_y, n_fault);

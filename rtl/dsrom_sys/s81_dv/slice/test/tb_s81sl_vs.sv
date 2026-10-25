@@ -24,7 +24,7 @@ module tb_s81sl_vs #(parameter integer MUT = 0, parameter integer BEAT = 37);
     wire s_v; wire [159:0] s_d; wire x_rv, x_qv, x_wv; wire [9:0] x_ra, x_wa; wire [7:0] x_wm; wire [255:0] x_qd, x_wd;
     wire u_v, um_v, um_q, um_b; wire [2:0] u_i; wire [255:0] u; wire [7:0] um_i;
     wire swv, swvi, swfi; wire [255:0] swd; wire [31:0] sww, swl; wire [63:0] swri;
-    wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rari, rfu, rfu2, rfmx;
+    wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rfmx; wire [30:0] rfu, rfu2, rari;
     ot_s81sl_vp u_p (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(2'b00), .cw_a(24'd0), .cw_d(64'd0), .lo_v(lo_v), .lo_d(lo_d),
         .s_v(s_v), .s_d(s_d), .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
@@ -40,7 +40,7 @@ module tb_s81sl_vs #(parameter integer MUT = 0, parameter integer BEAT = 37);
     dsfd_su_t_rxsb u_rb (.ck(clk), .rst(rst_n), .i_v(rfv), .i_u(rfu), .i_u2(rfu2), .i_mx(rfmx), .i_f(rff), .o_v(ravi), .o_r(rari), .o_f(rafi));
     localparam [3:0] SID = BEAT / 5; localparam [2:0] KL = BEAT % 5;
     wire xf_v, xf_s; wire [275:0] xf;
-    ot_s81sl_vq u_q (.clk(clk), .rst_n(rst_n), .y_v(1'b0), .y_i(3'd0), .y(256'd0), .u_v(u_v), .u_i(u_i), .u(u),
+    ot_s81sl_vq u_q (.clk(clk), .rst_n(rst_n), .y_v(1'b0), .y_i(3'd0), .y(128'd0), .u_v(u_v), .u_i(u_i), .u(u),
         .sid(SID), .k(KL), .m_v(1'b0), .m_q(1'b0), .m_b(1'b0), .m_i(8'd0), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(fq));
 

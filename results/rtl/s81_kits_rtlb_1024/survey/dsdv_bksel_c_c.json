@@ -1,0 +1,46 @@
+{
+ "kit": "/srv/opentallas-scratch/claude/elem-s81-cores/r2/dsdv_bksel_c_c",
+ "top": "dsdv_bksel_c",
+ "netlist": "/srv/opentallas-scratch/claude/elem-s81-cores/r2/dsdv_bksel_c_c/run/results/asap7/kl_dsdv_bksel_c_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 5658,
+ "ok": 5292,
+ "fail_counts": {
+  "feedthrough": 165,
+  "shared": 201
+ },
+ "groups": [
+  {
+   "bus": "t_c_n",
+   "dir": "output",
+   "cls": "feedthrough",
+   "sub": "",
+   "n": 55,
+   "bits": "[66..119,131]"
+  },
+  {
+   "bus": "t_c_n",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "fanout",
+   "n": 55,
+   "bits": "[0..53,65]"
+  },
+  {
+   "bus": "t_c_s",
+   "dir": "output",
+   "cls": "feedthrough",
+   "sub": "",
+   "n": 110,
+   "bits": "[0..53,65..119,131]"
+  },
+  {
+   "bus": "vd",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "nonflop",
+   "n": 146,
+   "bits": "[357..501,513]"
+  }
+ ]
+}

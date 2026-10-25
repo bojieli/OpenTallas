@@ -44,6 +44,11 @@ ROM = dict(macro="ot_rom_4096x274_m8", words=4096, bits=274, per_bundle=10, area
 BUNDLE_GO_TO_RESULT = 8_359 + 54 + 3        # IOREG 1 / SAFE 1 (tile README, SAFE point 8) at CUT 0x17b; +54 at the CLOSED
                                          # element views' CUT 0x1ff / SPLIT9 1 (S81-HEAD 10-24: mini array 8,375 -> 8,429)
                                          # +3: rebuilt elemB + elemA output register stages (ot_s81hd_oreg) + bundle pk_q stage (mini array 8,432, 10-24)
+# hd_tile pipelining (S81-HEAD 10-24 hd_tile preview review FAIL: merge c1/res/sel_q -144/-288/-422 ps, x skew-line
+# tail -> A x pins 600-700 um): ot_s81hd_tile A_INPUT_STAGES 1 + MERGE_HOP 1 (+3 on the own result) and CMP_STAGES 2
+# (+2 a tile on the chain best); measured on the mini array (2 tiles): 8,430 -> 8,437 (tools/s81_head/hd_tile_bench.sh)
+TILE_PIPE = dict(A_INPUT_STAGES=1, MERGE_HOP=1, CMP_STAGES=2)
+BUNDLE_GO_TO_RESULT += TILE_PIPE["A_INPUT_STAGES"] + 2 * TILE_PIPE["MERGE_HOP"]
 X_BEATS = D_MODEL * 16 // 512            # 160 beats of 512 b on the stage circuit (XB in)
 ELEM_VIEW = dict(A=dict(job="dshead-elemA-ss-f11f3cc47", um=317.672, ss_ps=133.67, ff_ps=10.81,
                         cells=None, cells_basis="ASSUMED: elemB cells x area ratio (no elemA count committed)"),
@@ -129,7 +134,7 @@ def latency(fp):
     x_fill = L * (2 + level_st) + node_st + 2 * chain // 2           # down the spine, into the farthest chain head
     ret = 2 * chain // 2 + (2 + 4) + L * (2 + level_st) + node_st          # out row + turn + back row, up the spine
     rows = dict(xb_ingress=X_BEATS + 2, x_fill_and_return=x_fill + ret, bundle=BUNDLE_GO_TO_RESULT,
-                spine_merge_fire=2 * L, rank_merge=HOP_D["tp_mesh"] + 49 + 51 + 10,
+                tile_merge_pipe=TILE_PIPE["CMP_STAGES"] * chain, spine_merge_fire=2 * L, rank_merge=HOP_D["tp_mesh"] + 49 + 51 + 10,
                 mtp_seq_token_former=6, out_hop_issue=4)   # rank_merge: actual-bit reach repair: M0S_TX49/RX51; return turn4FT+2face stages
     tot = sum(rows.values())
     return dict(rows=rows, total=tot, calendar_head_window=CAL["head_window"],

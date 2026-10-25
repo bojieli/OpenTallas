@@ -1,0 +1,9 @@
+{
+ "element": "s81_head_elemA_rebuild",
+ "kit": "tools/s81_head/hd_elemA_rebuild.py --elem A --early-ps 160 --post-grt-hold-ps 45 @claude/s81-head-1024r (kit epyc1 /srv/opentallas-scratch/claude/s81-head/elem_rb/elemA_rb_c9)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "c3e5c9debc5103e23f264cc6e42396ee5196cdac0d075dd9010f020da38aa5fd",
+ "reasons": "[2026-10-24 20:55 PDT S81-HEAD] [pre-relaunch review, SELF] c9 = c8 kit byte-identical (diff -r: RTL, SDC, pins, floorplan, macro_place, early tap 160) + one POST_GLOBAL_ROUTE hook (post_grt_drv.tcl: repair_design slew margin 40, repair_timing -hold -hold_margin 45 -max_buffer_percent 100 on GRT RC). Evidence c8 routed (intel2 .../elemA_rb/elemA_rb_c8, signoff.py): NOT SIGNED only on FF hold -14.24 ps / 118 endpoints, all u_oreg output face flops -> output ports (FF pin-register clock 151 ps vs fixed 250-ps vclk, out_min 0; GRT repair had closed them at margin 15, routed SPEF lost ~30 ps). TT setup +104.68 (rst_n relay recovery now met), DRV 0, DRC 0, antenna 0, spread TT/FF 46.0/46.45, pin-register mean TT 246.6, face_guard/sdc_lint PASS. Picture of the routed c8: results/geom_review/s81_head_img/elemA_rb_c8_final.png: 2 ROMs centred upper half, logic fills the S half and E/W channels, E face flops dense (red bins at the E edge mid-height, 0.77 pins/um), N band above rom1 empty (3 N pins), S pin-register strip at the S edge 15-20 um below the logic blob; no geometry change in c9.",
+ "fixes": "Condition: FF hold >= 0 at 6_final with the hook, TT setup stays > 0 (+104 margin), no new DRV; lib max_clock_tree_path (c8 441 ps) vs kit early 160: the tile's core-latency contract uses the kit early (see S81-HEAD lane note), not lib max - 250 = 191.",
+ "reviewer": "S81-HEAD (Claude) self review; GEOM-REVIEW second review requested"
+}

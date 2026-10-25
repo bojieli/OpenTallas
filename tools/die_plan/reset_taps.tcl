@@ -8,6 +8,9 @@
 #       synchroniser net of ANOTHER tap (rst_n_t<k> or its inverted copy) is re-pointed to the same-polarity net of the
 #       synchroniser of its NEAREST tap -- the same nearest-tap rule clock_taps.tcl applies to its clock pin.
 # Leaf flops (not FIRM) keep their RTL synchroniser (rst_n = rst_n_t0).
+# OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): rst_n_t<i> is the last synchronous relay at tap i (equal depth
+# to every tap) instead of a per-tap synchroniser; (1) then finds no u_rsync_t<i> (reset_tree.tcl places the entry
+# stage and the relays); (2) re-points FIRM flops the same way and leaves u_rst_root / u_rst_in / u_rrl_<k> alone.
 set rt_blk [ord::get_db_block]
 set rt_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set rt_taps {}
@@ -97,6 +100,7 @@ if {[llength $rt_taps] < 2 || $rt_have < 2} {
   foreach ins [$rt_blk getInsts] {
     if {[$ins getPlacementStatus] ne "FIRM" || ![string match "*DFF*" [[$ins getMaster] getName]]} continue
     if {[regexp {(^|[/.])u_rsync_t[0-9]+[/.]} [$ins getName]]} continue
+    if {[regexp {(^|[/.])(u_rst_root|u_rst_in|u_rrl_[0-9]+)[/.]} [$ins getName]]} continue
     lassign [$ins getLocation] x y
     set best ""; set bd 0
     foreach tp $rt_taps {

@@ -354,6 +354,191 @@
          }
         }
        }
+      },
+      "supplies": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "name",
+         "nets",
+         "parts",
+         "bumps"
+        ],
+        "additionalProperties": false,
+        "properties": {
+         "name": {
+          "type": "string",
+          "minLength": 1
+         },
+         "nets": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "minLength": 1
+          },
+          "minItems": 1
+         },
+         "parts": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "minLength": 1
+          },
+          "minItems": 1
+         },
+         "bumps": {
+          "type": "object",
+          "required": [
+           "rows",
+           "pitch_um"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "rows": {
+            "type": "integer",
+            "minimum": 1
+           },
+           "pitch_um": {
+            "type": "number",
+            "exclusiveMinimum": 0
+           },
+           "over": {
+            "enum": [
+             "io_window",
+             "partition"
+            ]
+           },
+           "note": {
+            "type": "string"
+           }
+          }
+         },
+         "basis": {
+          "type": "string"
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "domains": {
+       "type": "array",
+       "items": {
+        "type": "object",
+        "required": [
+         "name",
+         "nets",
+         "io",
+         "rect_um",
+         "grid",
+         "bumps"
+        ],
+        "additionalProperties": false,
+        "properties": {
+         "name": {
+          "type": "string",
+          "minLength": 1
+         },
+         "nets": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "minLength": 1
+          },
+          "minItems": 2
+         },
+         "io": {
+          "type": "array",
+          "items": {
+           "type": "string",
+           "minLength": 1
+          },
+          "minItems": 1
+         },
+         "rect_um": {
+          "type": "array",
+          "items": {
+           "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+         },
+         "grid": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+           "type": "object",
+           "required": [
+            "layer",
+            "width_um",
+            "pitch_um",
+            "offset_um"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "layer": {
+             "type": "string",
+             "pattern": "^M[1-9]$"
+            },
+            "width_um": {
+             "type": "number",
+             "exclusiveMinimum": 0
+            },
+            "pitch_um": {
+             "type": "number",
+             "exclusiveMinimum": 0
+            },
+            "offset_um": {
+             "type": "number",
+             "minimum": 0
+            },
+            "nets": {
+             "type": "array",
+             "items": {
+              "type": "string",
+              "minLength": 1
+             }
+            }
+           }
+          }
+         },
+         "bumps": {
+          "type": "object",
+          "required": [
+           "rect_um",
+           "pitch_um"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "rect_um": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4
+           },
+           "pitch_um": {
+            "type": "number",
+            "exclusiveMinimum": 0
+           },
+           "use": {
+            "enum": [
+             "power_ground"
+            ]
+           },
+           "note": {
+            "type": "string"
+           }
+          }
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       }
       }
      }
     }
@@ -612,7 +797,8 @@
         "enum": [
          "grid",
          "grid+sinks",
-         "sinks"
+         "sinks",
+         "density"
         ]
        },
        "tap_radius_um": {
@@ -622,6 +808,35 @@
        "tap_max_sinks": {
         "type": "integer",
         "minimum": 1
+       },
+       "tap_target_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "tap_min_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "sink_sites_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 3,
+         "items": {
+          "type": "number"
+         }
+        }
+       },
+       "sink_bins_file": {
+        "type": "string"
+       },
+       "tap_balance_rc": {
+        "enum": [
+         "placement",
+         "grt_report",
+         "grt"
+        ]
        },
        "core_taps": {
         "enum": [
@@ -799,6 +1014,10 @@
        "sync_stages": {
         "type": "integer",
         "minimum": 2
+       },
+       "depth": {
+        "type": "integer",
+        "minimum": 1
        }
       }
      },
@@ -1487,8 +1706,71 @@
     },
     "release": {
      "enum": [
-      "counted"
+      "counted",
+      "pipelined",
+      "wavefront"
      ]
+    },
+    "relay_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "hop_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "in_sites": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+     }
+    },
+    "root_part": {
+     "type": "string",
+     "minLength": 1
+    },
+    "part_depth": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "regions": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "required": [
+       "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+       "name": {
+        "type": "string",
+        "minLength": 1
+       },
+       "parts": {
+        "type": "array",
+        "items": {
+         "type": "string",
+         "minLength": 1
+        }
+       },
+       "root_um": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     }
     }
    }
   },

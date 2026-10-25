@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "reviewer": "Claude (S81/ST405 sub-agent, author review)",
+ "date": "2026-10-24",
+ "scope": "S81 v4.8 slice_station B kits that routed NOT SIGNED: t1 t2 t11 t13 t24 t30 t31 t34 (signoff.py records in results/elem_s81_station405/B_1024/)",
+ "images": "epyc1:/srv/opentallas-scratch/claude/elem-s81-st405/review_fail_1024/t{1,2,11,24,31,34}_final_{placement,clocks}.png (ORFS 6_report renders of the routed 6_final.odb)",
+ "findings": {
+  "datapath": "Unchanged from the pre-route PASS-COND (elem_s81_station405B_review_1024.json): per-bit station lines straight/diagonal along the slot paths, sparse interior (~1 % utilisation), no macros. Routed: DRC 0, antenna 0, pin audit PASS, face_guard/sdc_lint PASS on all eight.",
+  "drv_class": "t11 (4), t34 (2), t1 (5), t31 (27) max-slew pins. Probe of t31 6_final.odb + SPEF (TT): every violator is a single-driver net >= 125 um (125-150 um bin: 18 viol, max 380.1 ps; >= 150 um: 9 viol, max 386.6 ps), driven by a 3_4 placement BUFx3 at the station-0 flop QN, load an INVx1 ~150 um away next to the station-1 wire buffer, routed on M2/M3. Nets < 125 um peak at 278.6 ps (13 % margin), < 100 um at 251.5 ps. Remedy: post-GRT repair_design -max_wire_length 100 (kit grt_maxwire.tcl, opt-in gen.py phys --max-wire-um 100; kit diff vs B = 2 config lines + the hook).",
+  "clock_class": "t2/t24/t31 TT in2reg setup -5..-8 ps at station-0 flops on EARLY taps; t1/t34 related-pair skew with CPPR TT 83.3 / 85.7 > 80 (worst pairs s0->s1 on different taps, CPPR 0 because each tap is its own clock port). Pictures: taps sit on the fixed 400-um grid in empty area while the sinks are thin station lines; tap trees run 200-300 um trunks with unequal branches (t2 clk_t13: CTS insertion 208-287 inside one tap, routed ~171 at the worst sink vs vclk 250). tap_balance.tcl pads only tap MEANS at CTS placement RC. This is owner decision 5 (b)-(d) work (taps by sink density at the sink lines, sink->tap by distance+load, every local tree balanced <= 20 ps on GRT/routed RC) -> CLOCK lane request; no station re-route can fix it before that tool exists.",
+  "reset_class": "t13 (-67.37) / t30 (-81.43) TT = arst_n -> per-tap async rsync recovery; every station kit (incl. the 6 SIGNED) still uses per-tap async synchronisers -> does NOT match owner decision 2. Re-kit all 34 types with the RESET lane tool."
+ },
+ "verdict": "FAIL",
+ "conditions": "Failing tiles not re-routed until: (1) RESET tool landed (all types), (2) CLOCK tap-tree balancing on routed RC (t1 t2 t24 t31 t34 class), (3) --max-wire-um 100 in the re-kit (t1 t11 t31 t34 class). Requested exception: t11 warm DRV-only re-route from its own 4_cts.odb with the max-wire hook (geometry, placement and CTS identical; TT +12.94 / FF +9.90 / spread 64.3 already pass) as hook validation, pending GEOM-REVIEW second review."
+}

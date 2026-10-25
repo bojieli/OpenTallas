@@ -1,0 +1,62 @@
+{
+ "kit": "/srv/opentallas-scratch/claude/elem-s81-cores/r5/dsdv_gunit_l1_c",
+ "top": "dsdv_gunit_l1",
+ "netlist": "/srv/opentallas-scratch/claude/elem-s81-cores/r5/dsdv_gunit_l1_c/run/results/asap7/kl_dsdv_gunit_l1_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 4131,
+ "ok": 3698,
+ "fail_counts": {
+  "dropped": 80,
+  "shared": 353
+ },
+ "groups": [
+  {
+   "bus": "cw_a",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 2,
+   "bits": "[6..7]"
+  },
+  {
+   "bus": "dl_a",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 39,
+   "bits": "[0,4..39,50..51]"
+  },
+  {
+   "bus": "dl_b",
+   "dir": "input",
+   "cls": "dropped",
+   "sub": "",
+   "n": 39,
+   "bits": "[0,4..39,50..51]"
+  },
+  {
+   "bus": "fault",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "hold",
+   "n": 1,
+   "bits": ""
+  },
+  {
+   "bus": "rw_scale",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "hold",
+   "n": 32,
+   "bits": "[0..31]"
+  },
+  {
+   "bus": "rw_x",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "nonflop",
+   "n": 320,
+   "bits": "[192..511]"
+  }
+ ]
+}
