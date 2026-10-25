@@ -294,3 +294,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-25 00:00 PDT COORD: dec. 16 condition met -> 0.9 GHz domain retired (16a); FP32 f12_l4 standard; KV/HBM conversions + QC SDC gap posted; AGENTS.md clock bullet rewrite assigned.
 2026-10-25 00:04 PDT ROOT-MERGE: batch 9 merged main 41a70faeb -> f33ebe7cb (fp32-lat4 evidence)
 2026-10-25 00:08 PDT ROOT-MERGE: batch 10 merged main f33ebe7cb -> 79e366c16 (AGENTS.md clock rules)
+2026-10-25 00:19 PDT S81/DEC12: DEC12 batched re-plan READY claude/s81-dec12-1024r@d206dfb226 (s81 + s81_head G0/G0C 0E).
