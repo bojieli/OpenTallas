@@ -25,11 +25,16 @@ rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2
 cp $HERE/eco_route.tcl $OUT/
 cp $HERE/../run_kit_kv.sh $HERE/../corners.tcl $HERE/../pin_audit_core.py $OUT/
 cp $SO/tools/die_plan/signoff.py $SO/tools/die_plan/face_guard.py $SO/tools/die_plan/sdc_lint.py $OUT/
+# macro (SRAM) liberty per corner: the CORNERS=... route reads only <CORNER>_LIB_FILES, so the kit's ADDITIONAL_LIBS
+# (<macro>_tt.lib) must be added per corner (_tt -> TC, _ff -> BC; refuse if the _ff file is missing)
+ML_TT=$(sed -n 's/^export ADDITIONAL_LIBS = //p' $OUT/config.mk)
+ML_FF=$(echo "$ML_TT" | sed 's/_tt\.lib/_ff.lib/g')
+for f in $ML_FF; do test -f "$OUT/${f#/work/}" || { echo "mk_eco: missing FF macro lib $f"; exit 2; }; done
 cat >> $OUT/config.mk <<CFG
 # KV-CORES warm post-route ECO (physical/die_plan/qwen_kvsys/cores/harden/eco, variant $V)
 export POST_GLOBAL_ROUTE_TCL = /work/eco_route.tcl
-export TC_LIB_FILES = \$(TC_NLDM_LIB_FILES)
-export BC_LIB_FILES = \$(BC_NLDM_LIB_FILES)
+export TC_LIB_FILES = \$(TC_NLDM_LIB_FILES) $ML_TT
+export BC_LIB_FILES = \$(BC_NLDM_LIB_FILES) $ML_FF
 override export PWR_NETS_VOLTAGES =
 override export GND_NETS_VOLTAGES =
 CFG
