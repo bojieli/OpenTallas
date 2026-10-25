@@ -1,0 +1,537 @@
+{
+ "schema": "opentallas.hbm_prog_transport.v1",
+ "die_v": "/srv/opentallas-scratch/claude/tokg-1023/r18h5_landdirect/die.v",
+ "leaf_latency_edges": 2,
+ "su_cfg": {
+  "SW": {
+   "edges": {
+    "cfg_we": 29,
+    "cfg_bank": 29,
+    "cfg_row": 55,
+    "cfg_data": 55,
+    "start": 55,
+    "length": 55
+   },
+   "skew": 26,
+   "we_minus_row": -26,
+   "start_edges": 55
+  },
+  "SE": {
+   "edges": {
+    "cfg_we": 16,
+    "cfg_bank": 16,
+    "cfg_row": 55,
+    "cfg_data": 55,
+    "start": 55,
+    "length": 55
+   },
+   "skew": 39,
+   "we_minus_row": -39,
+   "start_edges": 55
+  },
+  "NW": {
+   "edges": {
+    "cfg_we": 29,
+    "cfg_bank": 29,
+    "cfg_row": 55,
+    "cfg_data": 55,
+    "start": 55,
+    "length": 55
+   },
+   "skew": 26,
+   "we_minus_row": -26,
+   "start_edges": 55
+  },
+  "NE": {
+   "edges": {
+    "cfg_we": 20,
+    "cfg_bank": 20,
+    "cfg_row": 55,
+    "cfg_data": 55,
+    "start": 55,
+    "length": 55
+   },
+   "skew": 35,
+   "we_minus_row": -35,
+   "start_edges": 55
+  }
+ },
+ "hc_launch_edges": {
+  "hc_SW": 74,
+  "hc_SE": 80,
+  "hc_NW": 82,
+  "hc_NE": 90,
+  "hc_eng": 79
+ },
+ "hc_launch_skew": 16,
+ "hc_cfg_edges": {
+  "hc_SW": 48,
+  "hc_SE": 78,
+  "hc_NW": 65,
+  "hc_NE": 80,
+  "hc_eng": 67
+ },
+ "hc_quarter_to_root_edges": [
+  9,
+  10,
+  8,
+  9
+ ],
+ "hc_root_to_quarter_edges": {
+  "hc_SW": {
+   "d_v": 9,
+   "i_v": 9
+  },
+  "hc_SE": {
+   "d_v": 8,
+   "i_v": 8
+  },
+  "hc_NW": {
+   "d_v": 10,
+   "i_v": 10
+  },
+  "hc_NE": {
+   "d_v": 9,
+   "i_v": 9
+  },
+  "hc_eng": {}
+ },
+ "scope": "source-functional lane timing (K/N model, K from die.v landing ties)",
+ "lanes": {
+  "su": {
+   "SW": {
+    "cfg_we": {
+     "latency_edges": 29,
+     "wrappers": 55,
+     "root": "{su_prog__r_we[0], su_prog__r_bank[15:0]}",
+     "notes": []
+    },
+    "cfg_bank": {
+     "latency_edges": 29,
+     "wrappers": 55,
+     "root": "{su_prog__r_we[0], su_prog__r_bank[15:0]}",
+     "notes": []
+    },
+    "cfg_row": {
+     "latency_edges": 55,
+     "wrappers": 93,
+     "root": "{su_prog__r_start[0], su_prog__r_row[6:0]}",
+     "notes": []
+    },
+    "cfg_data": {
+     "latency_edges": 55,
+     "wrappers": 93,
+     "root": "{su_prog__r_len[15:0], su_prog__r_data[255:136]}",
+     "notes": []
+    },
+    "start": {
+     "latency_edges": 55,
+     "wrappers": 93,
+     "root": "{su_prog__r_start[0], su_prog__r_row[6:0]}",
+     "notes": []
+    },
+    "length": {
+     "latency_edges": 55,
+     "wrappers": 93,
+     "root": "{su_prog__r_len[15:0], su_prog__r_data[255:136]}",
+     "notes": []
+    }
+   },
+   "SE": {
+    "cfg_we": {
+     "latency_edges": 16,
+     "wrappers": 28,
+     "root": "{su_prog__r_we[1], su_prog__r_bank[31:16]}",
+     "notes": []
+    },
+    "cfg_bank": {
+     "latency_edges": 16,
+     "wrappers": 28,
+     "root": "{su_prog__r_we[1], su_prog__r_bank[31:16]}",
+     "notes": []
+    },
+    "cfg_row": {
+     "latency_edges": 55,
+     "wrappers": 67,
+     "root": "{su_prog__r_start[0], su_prog__r_row[6:0]}",
+     "notes": []
+    },
+    "cfg_data": {
+     "latency_edges": 55,
+     "wrappers": 67,
+     "root": "{su_prog__r_len[15:0], su_prog__r_data[255:136]}",
+     "notes": []
+    },
+    "start": {
+     "latency_edges": 55,
+     "wrappers": 67,
+     "root": "{su_prog__r_start[0], su_prog__r_row[6:0]}",
+     "notes": []
+    },
+    "length": {
+     "latency_edges": 55,
+     "wrappers": 67,
+     "root": "{su_prog__r_len[15:0], su_prog__r_data[255:136]}",
+     "notes": []
+    }
+   },
+   "NW": {
+    "cfg_we": {
+     "latency_edges": 29,
+     "wrappers": 55,
+     "root": "{su_prog__r_we[2], su_prog__r_bank[47:32]}",
+     "notes": []
+    },
+    "cfg_bank": {
+     "latency_edges": 29,
+     "wrappers": 55,
+     "root": "{su_prog__r_we[2], su_prog__r_bank[47:32]}",
+     "notes": []
+    },
+    "cfg_row": {
+     "latency_edges": 55,
+     "wrappers": 107,
+     "root": "{su_prog__r_start[0], su_prog__r_row[6:0]}",
+     "notes": []
+    },
+    "cfg_data": {
+     "latency_edges": 55,
+     "wrappers": 107,
+     "root": "{su_prog__r_len[15:0], su_prog__r_data[255:136]}",
+     "notes": []
+    },
+    "start": {
+     "latency_edges": 55,
+     "wrappers": 107,
+     "root": "{su_prog__r_start[0], su_prog__r_row[6:0]}",
+     "notes": []
+    },
+    "length": {
+     "latency_edges": 55,
+     "wrappers": 107,
+     "root": "{su_prog__r_len[15:0], su_prog__r_data[255:136]}",
+     "notes": []
+    }
+   },
+   "NE": {
+    "cfg_we": {
+     "latency_edges": 20,
+     "wrappers": 20,
+     "root": "{su_prog__r_we[3], su_prog__r_bank[63:48]}",
+     "notes": []
+    },
+    "cfg_bank": {
+     "latency_edges": 20,
+     "wrappers": 20,
+     "root": "{su_prog__r_we[3], su_prog__r_bank[63:48]}",
+     "notes": []
+    },
+    "cfg_row": {
+     "latency_edges": 55,
+     "wrappers": 64,
+     "root": "{su_prog__r_start[0], su_prog__r_row[6:0]}",
+     "notes": []
+    },
+    "cfg_data": {
+     "latency_edges": 55,
+     "wrappers": 64,
+     "root": "{su_prog__r_len[15:0], su_prog__r_data[255:136]}",
+     "notes": []
+    },
+    "start": {
+     "latency_edges": 55,
+     "wrappers": 64,
+     "root": "{su_prog__r_start[0], su_prog__r_row[6:0]}",
+     "notes": []
+    },
+    "length": {
+     "latency_edges": 55,
+     "wrappers": 64,
+     "root": "{su_prog__r_len[15:0], su_prog__r_data[255:136]}",
+     "notes": []
+    }
+   }
+  },
+  "hc": {
+   "hc_SW": {
+    "launch_v": {
+     "latency_edges": 74,
+     "wrappers": 38,
+     "root": "hleaf_SW__a_launch_v[0]",
+     "notes": [],
+     "leaf": "hleaf_SW",
+     "leaf_in": {
+      "latency_edges": 48,
+      "wrappers": 73,
+      "root": "host_cp_ingress__launch_v[0]",
+      "notes": []
+     }
+    },
+    "cfg_v": {
+     "latency_edges": 48,
+     "wrappers": 31,
+     "root": "{hleaf_SW__a_desc_v[0], hleaf_SW__a_cfg_v[0], hleaf_SW__a_cfg_target[7:4]}",
+     "notes": [],
+     "leaf": "hleaf_SW",
+     "leaf_in": {
+      "latency_edges": 29,
+      "wrappers": 54,
+      "root": "{host_cp_ingress__desc_v[0], host_cp_ingress__cfg_v[0], host_cp_ingress__cfg_target[7:0]}",
+      "notes": []
+     }
+    },
+    "cfg_addr": {
+     "latency_edges": 48,
+     "wrappers": 31,
+     "root": "{hleaf_SW__a_cfg_data[123:0], hleaf_SW__a_cfg_addr[11:0]}",
+     "notes": [],
+     "leaf": "hleaf_SW",
+     "leaf_in": {
+      "latency_edges": 29,
+      "wrappers": 54,
+      "root": "{host_cp_ingress__desc_base[3:0], host_cp_ingress__cfg_data[255:124]}",
+      "notes": []
+     }
+    },
+    "d_v": {
+     "latency_edges": 9,
+     "wrappers": 14,
+     "root": "{hc_eng__result_v[0], hc_eng__qi_word[9:0], hc_eng__qi_w[4:0], hc_eng__qi_v[0], hc_eng__qi_slot[1:0], hc_eng__qi_lo[4:0], hc_eng__qi_kind[0], hc_eng__qi_cnt[11:",
+     "notes": []
+    },
+    "i_v": {
+     "latency_edges": 9,
+     "wrappers": 14,
+     "root": "{hc_eng__result_v[0], hc_eng__qi_word[9:0], hc_eng__qi_w[4:0], hc_eng__qi_v[0], hc_eng__qi_slot[1:0], hc_eng__qi_lo[4:0], hc_eng__qi_kind[0], hc_eng__qi_cnt[11:",
+     "notes": []
+    }
+   },
+   "hc_SE": {
+    "launch_v": {
+     "latency_edges": 80,
+     "wrappers": 30,
+     "root": "hleaf_SE__b_launch_v[0]",
+     "notes": [],
+     "leaf": "hleaf_SE",
+     "leaf_in": {
+      "latency_edges": 48,
+      "wrappers": 91,
+      "root": "host_cp_ingress__launch_v[0]",
+      "notes": []
+     }
+    },
+    "cfg_v": {
+     "latency_edges": 78,
+     "wrappers": 30,
+     "root": "{hleaf_SE__b_desc_v[0], hleaf_SE__b_cfg_v[0], hleaf_SE__b_cfg_target[7:0], hleaf_SE__b_cfg_data[255:0], hleaf_SE__b_cfg_addr[11:0]}",
+     "notes": [],
+     "leaf": "hleaf_SE",
+     "leaf_in": {
+      "latency_edges": 46,
+      "wrappers": 89,
+      "root": "{host_cp_ingress__desc_v[0], host_cp_ingress__cfg_v[0], host_cp_ingress__cfg_target[7:0]}",
+      "notes": []
+     }
+    },
+    "cfg_addr": {
+     "latency_edges": 78,
+     "wrappers": 30,
+     "root": "{hleaf_SE__b_desc_v[0], hleaf_SE__b_cfg_v[0], hleaf_SE__b_cfg_target[7:0], hleaf_SE__b_cfg_data[255:0], hleaf_SE__b_cfg_addr[11:0]}",
+     "notes": [],
+     "leaf": "hleaf_SE",
+     "leaf_in": {
+      "latency_edges": 46,
+      "wrappers": 89,
+      "root": "{host_cp_ingress__desc_v[0], host_cp_ingress__cfg_v[0], host_cp_ingress__cfg_target[7:0]}",
+      "notes": []
+     }
+    },
+    "d_v": {
+     "latency_edges": 8,
+     "wrappers": 12,
+     "root": "{hc_eng__result_v[1], hc_eng__qi_word[19:10], hc_eng__qi_w[9:5], hc_eng__qi_v[1], hc_eng__qi_slot[3:2], hc_eng__qi_lo[9:5], hc_eng__qi_kind[1], hc_eng__qi_cnt[2",
+     "notes": []
+    },
+    "i_v": {
+     "latency_edges": 8,
+     "wrappers": 12,
+     "root": "{hc_eng__result_v[1], hc_eng__qi_word[19:10], hc_eng__qi_w[9:5], hc_eng__qi_v[1], hc_eng__qi_slot[3:2], hc_eng__qi_lo[9:5], hc_eng__qi_kind[1], hc_eng__qi_cnt[2",
+     "notes": []
+    }
+   },
+   "hc_NW": {
+    "launch_v": {
+     "latency_edges": 82,
+     "wrappers": 32,
+     "root": "hleaf_NW__b_launch_v[0]",
+     "notes": [],
+     "leaf": "hleaf_NW",
+     "leaf_in": {
+      "latency_edges": 48,
+      "wrappers": 75,
+      "root": "host_cp_ingress__launch_v[0]",
+      "notes": []
+     }
+    },
+    "cfg_v": {
+     "latency_edges": 65,
+     "wrappers": 32,
+     "root": "{hleaf_NW__b_cfg_v[0], hleaf_NW__b_cfg_target[7:0], hleaf_NW__b_cfg_data[255:0], hleaf_NW__b_cfg_addr[11:0]}",
+     "notes": [],
+     "leaf": "hleaf_NW",
+     "leaf_in": {
+      "latency_edges": 31,
+      "wrappers": 58,
+      "root": "{host_cp_ingress__desc_v[0], host_cp_ingress__cfg_v[0], host_cp_ingress__cfg_target[7:0]}",
+      "notes": []
+     }
+    },
+    "cfg_addr": {
+     "latency_edges": 65,
+     "wrappers": 32,
+     "root": "{hleaf_NW__b_cfg_v[0], hleaf_NW__b_cfg_target[7:0], hleaf_NW__b_cfg_data[255:0], hleaf_NW__b_cfg_addr[11:0]}",
+     "notes": [],
+     "leaf": "hleaf_NW",
+     "leaf_in": {
+      "latency_edges": 31,
+      "wrappers": 58,
+      "root": "{host_cp_ingress__desc_v[0], host_cp_ingress__cfg_v[0], host_cp_ingress__cfg_target[7:0]}",
+      "notes": []
+     }
+    },
+    "d_v": {
+     "latency_edges": 10,
+     "wrappers": 17,
+     "root": "{hc_eng__result_v[2], hc_eng__qi_word[29:20], hc_eng__qi_w[14:10], hc_eng__qi_v[2], hc_eng__qi_slot[5:4], hc_eng__qi_lo[14:10], hc_eng__qi_kind[2], hc_eng__qi_c",
+     "notes": []
+    },
+    "i_v": {
+     "latency_edges": 10,
+     "wrappers": 17,
+     "root": "{hc_eng__result_v[2], hc_eng__qi_word[29:20], hc_eng__qi_w[14:10], hc_eng__qi_v[2], hc_eng__qi_slot[5:4], hc_eng__qi_lo[14:10], hc_eng__qi_kind[2], hc_eng__qi_c",
+     "notes": []
+    }
+   },
+   "hc_NE": {
+    "launch_v": {
+     "latency_edges": 90,
+     "wrappers": 40,
+     "root": "hleaf_NE__b_launch_v[0]",
+     "notes": [],
+     "leaf": "hleaf_NE",
+     "leaf_in": {
+      "latency_edges": 48,
+      "wrappers": 93,
+      "root": "host_cp_ingress__launch_v[0]",
+      "notes": []
+     }
+    },
+    "cfg_v": {
+     "latency_edges": 80,
+     "wrappers": 30,
+     "root": "{hleaf_NE__b_desc_v[0], hleaf_NE__b_cfg_v[0], hleaf_NE__b_cfg_target[7:0]}",
+     "notes": [],
+     "leaf": "hleaf_NE",
+     "leaf_in": {
+      "latency_edges": 48,
+      "wrappers": 93,
+      "root": "{host_cp_ingress__desc_v[0], host_cp_ingress__cfg_v[0], host_cp_ingress__cfg_target[7:0]}",
+      "notes": []
+     }
+    },
+    "cfg_addr": {
+     "latency_edges": 80,
+     "wrappers": 30,
+     "root": "{hleaf_NE__b_cfg_data[255:0], hleaf_NE__b_cfg_addr[11:0]}",
+     "notes": [],
+     "leaf": "hleaf_NE",
+     "leaf_in": {
+      "latency_edges": 48,
+      "wrappers": 93,
+      "root": "{host_cp_ingress__desc_base[3:0], host_cp_ingress__cfg_data[255:124]}",
+      "notes": []
+     }
+    },
+    "d_v": {
+     "latency_edges": 9,
+     "wrappers": 15,
+     "root": "{hc_eng__result_v[3], hc_eng__qi_word[39:30], hc_eng__qi_w[19:15], hc_eng__qi_v[3], hc_eng__qi_slot[7:6], hc_eng__qi_lo[19:15], hc_eng__qi_kind[3], hc_eng__qi_c",
+     "notes": []
+    },
+    "i_v": {
+     "latency_edges": 9,
+     "wrappers": 15,
+     "root": "{hc_eng__result_v[3], hc_eng__qi_word[39:30], hc_eng__qi_w[19:15], hc_eng__qi_v[3], hc_eng__qi_slot[7:6], hc_eng__qi_lo[19:15], hc_eng__qi_kind[3], hc_eng__qi_c",
+     "notes": []
+    }
+   },
+   "hc_eng": {
+    "launch_v": {
+     "latency_edges": 79,
+     "wrappers": 44,
+     "root": "hleaf_SE__a_launch_v[0]",
+     "notes": [],
+     "leaf": "hleaf_SE",
+     "leaf_in": {
+      "latency_edges": 48,
+      "wrappers": 91,
+      "root": "host_cp_ingress__launch_v[0]",
+      "notes": []
+     }
+    },
+    "cfg_v": {
+     "latency_edges": 67,
+     "wrappers": 34,
+     "root": "{hleaf_SE__a_cfg_v[0], hleaf_SE__a_cfg_target[7:0]}",
+     "notes": [],
+     "leaf": "hleaf_SE",
+     "leaf_in": {
+      "latency_edges": 46,
+      "wrappers": 89,
+      "root": "{host_cp_ingress__desc_v[0], host_cp_ingress__cfg_v[0], host_cp_ingress__cfg_target[7:0]}",
+      "notes": []
+     }
+    },
+    "cfg_addr": {
+     "latency_edges": 67,
+     "wrappers": 34,
+     "root": "{hleaf_SE__a_cfg_data[123:0], hleaf_SE__a_cfg_addr[11:0]}",
+     "notes": [],
+     "leaf": "hleaf_SE",
+     "leaf_in": {
+      "latency_edges": 46,
+      "wrappers": 88,
+      "root": "{host_cp_ingress__desc_base[3:0], host_cp_ingress__cfg_data[255:124]}",
+      "notes": []
+     }
+    }
+   }
+  },
+  "hc_eng_qps_v": [
+   {
+    "latency_edges": 9,
+    "wrappers": 15,
+    "root": "{hc_NE__ps_v[0], hc_NE__ps_f[0], hc_NE__ps[31:0], hc_NE__gathered_mix_v[0], hc_NE__gathered_mix_row[4:0], hc_NE__gathere",
+    "notes": []
+   },
+   {
+    "latency_edges": 10,
+    "wrappers": 17,
+    "root": "{hc_NW__ps_v[0], hc_NW__ps_f[0], hc_NW__ps[31:0], hc_NW__gathered_mix_v[0], hc_NW__gathered_mix_row[4:0], hc_NW__gathere",
+    "notes": []
+   },
+   {
+    "latency_edges": 8,
+    "wrappers": 12,
+    "root": "{hc_SE__ps_v[0], hc_SE__ps_f[0], hc_SE__ps[31:0], hc_SE__gathered_mix_v[0], hc_SE__gathered_mix_row[4:0], hc_SE__gathere",
+    "notes": []
+   },
+   {
+    "latency_edges": 9,
+    "wrappers": 14,
+    "root": "{hc_SW__ps_v[0], hc_SW__ps_f[0], hc_SW__ps[31:0], hc_SW__gathered_mix_v[0], hc_SW__gathered_mix_row[4:0], hc_SW__gathere",
+    "notes": []
+   }
+  ]
+ }
+}

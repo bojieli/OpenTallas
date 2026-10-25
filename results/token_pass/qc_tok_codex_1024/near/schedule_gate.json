@@ -1,0 +1,218 @@
+{
+ "verdict": "PASS",
+ "scope": "nominal numeric exactness and static consumer-edge mutant sensitivity; not physical signoff or generated-die token pass",
+ "nominal_numeric_pass": true,
+ "mutant_numeric_verdict": "PASS",
+ "mutant_caught": true,
+ "mutant_detection": "fixed consumer edges differ",
+ "differences": [
+  {
+   "side": "near",
+   "op": "qkv",
+   "signal": "cw_go",
+   "nominal_edges": [
+    185
+   ],
+   "mutant_edges": [
+    186
+   ]
+  },
+  {
+   "side": "near",
+   "op": "qkv",
+   "signal": "rs_edges",
+   "nominal_edges": [
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388,
+    389
+   ],
+   "mutant_edges": [
+    383,
+    384,
+    385,
+    386,
+    387,
+    388,
+    389,
+    390
+   ]
+  },
+  {
+   "side": "near",
+   "op": "o",
+   "signal": "cw_go",
+   "nominal_edges": [
+    1730
+   ],
+   "mutant_edges": [
+    1731
+   ]
+  },
+  {
+   "side": "near",
+   "op": "o",
+   "signal": "rs_edges",
+   "nominal_edges": [
+    1879,
+    1880,
+    1881,
+    1882,
+    1883,
+    1884,
+    1885,
+    1886,
+    1895,
+    1896,
+    1897,
+    1898,
+    1899,
+    1900,
+    1901,
+    1902,
+    1911,
+    1912,
+    1913,
+    1914,
+    1915,
+    1916,
+    1917,
+    1918
+   ],
+   "mutant_edges": [
+    1880,
+    1881,
+    1882,
+    1883,
+    1884,
+    1885,
+    1886,
+    1887,
+    1896,
+    1897,
+    1898,
+    1899,
+    1900,
+    1901,
+    1902,
+    1903,
+    1912,
+    1913,
+    1914,
+    1915,
+    1916,
+    1917,
+    1918,
+    1919
+   ]
+  },
+  {
+   "side": "near",
+   "op": "gu",
+   "signal": "cw_go",
+   "nominal_edges": [
+    3385
+   ],
+   "mutant_edges": [
+    3386
+   ]
+  },
+  {
+   "side": "near",
+   "op": "gu",
+   "signal": "rs_edges",
+   "nominal_edges": [
+    3774,
+    3775,
+    3776,
+    3777,
+    3778,
+    3779,
+    3780,
+    3781
+   ],
+   "mutant_edges": [
+    3775,
+    3776,
+    3777,
+    3778,
+    3779,
+    3780,
+    3781,
+    3782
+   ]
+  },
+  {
+   "side": "near",
+   "op": "down",
+   "signal": "cw_go",
+   "nominal_edges": [
+    4946
+   ],
+   "mutant_edges": [
+    4947
+   ]
+  },
+  {
+   "side": "near",
+   "op": "down",
+   "signal": "rs_edges",
+   "nominal_edges": [
+    5127,
+    5128,
+    5129,
+    5130,
+    5131,
+    5132,
+    5133,
+    5134,
+    5175,
+    5176,
+    5177,
+    5178,
+    5179,
+    5180,
+    5181,
+    5182,
+    5223,
+    5224,
+    5225,
+    5226,
+    5227,
+    5228,
+    5229,
+    5230
+   ],
+   "mutant_edges": [
+    5128,
+    5129,
+    5130,
+    5131,
+    5132,
+    5133,
+    5134,
+    5135,
+    5176,
+    5177,
+    5178,
+    5179,
+    5180,
+    5181,
+    5182,
+    5183,
+    5224,
+    5225,
+    5226,
+    5227,
+    5228,
+    5229,
+    5230,
+    5231
+   ]
+  }
+ ]
+}

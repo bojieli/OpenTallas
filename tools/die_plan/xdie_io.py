@@ -5,6 +5,7 @@ two dies, so its two endpoint windows must also agree.  For every circuit of a r
 (results/arch/release_rack_1021/connections_<system>.csv) whose ends are dies with a die plan:
 
   missing   each endpoint macro (a_macros / b_macros, '+'-joined lk_<name>) has a die.io window on part lk_<name>
+            (or a window whose `rack_macro` is lk_<name>)
             in the die_io of that end's die role (ERROR);
   iface     both ends' windows have the same iface (serdes / ucie) (ERROR);
   lanes     the circuit's lanes_per_dir <= the end's macros x lanes a macro (window signals = 4 x lanes + 2) (ERROR);
@@ -108,7 +109,11 @@ def check(conn_rows, roles):
 def load_io(path):
     io = json.loads(Path(path).read_text())
     io = io.get("io", io) if isinstance(io, dict) else io
-    return {w["part"]: w for w in io if w.get("part")}
+    # a window is found by its partition (S81: part lk_<name>) or by an explicit rack macro name (`rack_macro`, the
+    # one place a die whose PHY partitions are not named after the rack macros maps them, e.g. HBM B2l)
+    out = {w["part"]: w for w in io if w.get("part") and not w.get("rack_macro")}
+    out.update({w["rack_macro"]: w for w in io if w.get("rack_macro")})
+    return out
 
 
 def main(argv=None):

@@ -1,0 +1,42 @@
+{
+ "stage": "head",
+ "grade": "RTL-functional (die-selected leaf, source assembly)",
+ "src_commit": "8a5d1f3dab",
+ "verdict": "PASS",
+ "verdict_scope": "die-selected head leaf ot_qfd_tt_ctlm_static_hr_safe32_native32_1r (STAGE_ME 1, SEGCAL 1; RTL h16za/native32_1r_param.v) through the native32 vehicle in qfd_tt_ctlm_dv: img0/imgh PASS, bmut3 caught, LM-head span = compiled; src_landed not run (the abandoned generic LP is not the die parent)",
+ "findings": [],
+ "golden": "compiled ctlm deployment images results/rtl/qlb_c4b_1018/lmh_cal/codex_r1 img0/imgh (ctlm_image.py --lm-head): every slice command word, LOCAL start, head fixed issue/END (pc,unit), ROM go, native go, XPF arm word and command_stage on its compiled edge (img0 123 checks, imgh 131 incl. the LM-head stage 37); ROM words decoded in the slice layout; src_landed = landed cluster qfd_tt_ctlm_dv_lpf_lp cycle-lockstep vs qfd_tt_ctlm_dv. NOT compared: LM-head logits/argmax vs the TP4 gold head -- this bench carries no datapath (the stg stage STG lm runs the LM-head matvec/AMAX/gather bit-exact)",
+ "runs": {
+  "h16y_img0": "PASS 123/123",
+  "h16y_imgh": "PASS 131/131",
+  "h16y_bmut3": "FAIL 129/131",
+  "src_landed": "NOT_RUN"
+ },
+ "cycles": {
+  "lm_head_stage_start_to_END_issue": 3135,
+  "lm_head_compiled_END_edge": 3135,
+  "lm_head_head_stop_cycle_compiled": 3127,
+  "lm_head_priced_ctlm_plan": 3101,
+  "lm_head_stage_start_to_ROM_go": 209,
+  "lm_head_ROM_go_to_END_issue": 2926,
+  "lm_head_compiled_ROM_go_edge": 209
+ },
+ "mutants": {
+  "h16y_bmut3 (LM-head segment-G first row one cycle late)": "FAIL as required"
+ },
+ "stand_ins": [
+  "slices / ROM tiles / native unit not simulated: their status (su_busy, su_prog, stn_busy, native_idle) answers at the compiled image status cycles (tt_ctlm_prog_bench status_events)",
+  "kv_ok / kv_write_drained driven as levels (the T calendar LEVEL)",
+  "the LM-head span is the head control span (issue -> END on its fixed calendar); the matvec compute duration inside it is the compiled wait, not a simulated ROM-tile run"
+ ],
+ "notes": [
+  "measured END edge 3135 vs compiled 3135; vs priced plan 3101 (+34)"
+ ],
+ "die_netlist_hook": "--die-netlist DIR: DIR/head_leaf.v (GEN carve of u_hr, $HEAD_NET_MODULE) replaces the h16y RTL via the qfd_tt_head_static_h16y native vehicle",
+ "logs": [
+  "head/runs/h16y_bmut3.out",
+  "head/runs/h16y_img0.out",
+  "head/runs/h16y_imgh.out",
+  "head/runs/summary.txt"
+ ]
+}

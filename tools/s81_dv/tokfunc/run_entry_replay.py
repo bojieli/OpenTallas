@@ -35,7 +35,7 @@ FACES = {  # cut output face -> (receiving slice, its line input port): the line
 }
 
 
-def line_check(src, die_v, cut, prog, run):
+def line_check(src, die_v, cut, prog, run, bk_drain_sink=None):
     """Bit-exact CTL line stream leaving the cut on both line faces vs the host programme's templates.
 
     The 72-frame die abuts the slice line (0-station plan links), so dv_cut_replay encodes no output checks for it;
@@ -46,6 +46,7 @@ def line_check(src, die_v, cut, prog, run):
     die = R.DieBuild(die_v)
     S = json.loads((prog / 'schedule.json').read_text())
     T = {t['i']: t for t in json.loads((prog / 'prog/ctl_templates.json').read_text())['templates']}
+    R.bk_drain_sink_filter(S, T, bk_drain_sink)   # candidate BK_DRAIN_SINK build: addressed drains never reach the line
     tb = json.loads((cut / 'tb_ports.json').read_text())
     sp = json.loads((cut / 'slice_ports.json').read_text())['ports']
     # only S-tier beats reach the cut's S line faces (TOKd-S81 10-23: jobs 17/22 carry 51 S + 51 N beats; the N-tier
@@ -124,6 +125,8 @@ def main():
     p.add_argument('--ks', type=int, default=None, help='landed f_ks edge for every job (dv_cut_replay gen --ks)')
     p.add_argument('--par', type=int, default=1, help='jobs + mutants run concurrently (each sim is single-threaded; '
                    'S81-P10 10-24: a slow cut binary makes the serial loop hours long)')
+    p.add_argument('--bk-drain-sink', default=None, help='UID[,UID] hex: cut built with BK_DRAIN_SINK=1 (candidate); '
+                   'passed to dv_cut_replay gen and the line check')
     p.add_argument('--ks-probe', action='store_true',
                    help='measure the issuer start phase first: replay the first job with KS = default + 0..3 and take the '
                         'one u_seqhost accepts (t_host sq busy, no fault); every job then uses that --ks')
@@ -140,7 +143,7 @@ def main():
                die_v=str(a.die_v), die_v_sha256=hashlib.sha256(a.die_v.read_bytes()).hexdigest(),
                kit=str(a.kit), obj=str(a.obj), idle_run=str(a.idle_run), ks_user=a.ks_user,
                fixture_meta_sha256=hashlib.sha256(a.fixture_meta.read_bytes()).hexdigest(),
-               full_stage=False, full_token=False, global_clock_route_phase_qualified=False,
+               bk_drain_sink=a.bk_drain_sink, profile='CANDIDATE BK_DRAIN_SINK=1 (not canonical)' if a.bk_drain_sink else 'canonical', full_stage=False, full_token=False, global_clock_route_phase_qualified=False,
                verdict='RUNNING', jobs=[], mutants=[])
 
     def save():
@@ -162,6 +165,8 @@ def main():
             gen += ['--mutant', mutant]
         if ks is not None:
             gen += ['--ks', ks]
+        if a.bk_drain_sink:
+            gen += ['--bk-drain-sink', a.bk_drain_sink]
         row['gen_rc'] = sh(gen, d / 'gen.log', src)
         if row['gen_rc']:
             row.update(verdict='FAIL', reason='generator refused: ' + (d / 'gen.log').read_text()[-400:])
@@ -202,7 +207,7 @@ def main():
         row['bench'] = dict(zip(('cycles', 'in_events', 'out_checks', 'mismatches', 'fault_cycles', 'first_fault'),
                                 map(int, m.groups()))) if m else None
         row['inputs_all_applied'] = 'left unapplied' not in log
-        row['line'] = line_check(src, a.die_v, a.cut, a.progs / f'replay_job{job}', d / 'run') \
+        row['line'] = line_check(src, a.die_v, a.cut, a.progs / f'replay_job{job}', d / 'run', a.bk_drain_sink) \
             if (d / 'run' / 'trace.txt').exists() else None
         ok = bool(row['bench']) and row['bench']['fault_cycles'] == 0 and row['inputs_all_applied'] \
             and row['line'] is not None and all(f['verdict'] == 'PASS' for f in row['line'].values()) \

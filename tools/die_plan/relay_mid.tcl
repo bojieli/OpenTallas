@@ -75,6 +75,12 @@ proc rm_drv {net depth} {
   }
   return {}
 }
+# a 2-input gate on the way to the sink (the seam writer's chunk clear: q = rq ? i : 0, ot_pl_seam_w_pl) is part of the
+# data path, not an endpoint (S81 g3k3 review 10-24: h10_r2 u_y_rt_24b_0..sk -> u_lpl_8_w -> S face flop was left to GPL,
+# 4 stages bunched at the source, last hop 894 um); only on the load side, where the gated input is the traced one
+proc rm_isgate {inst} {
+  return [regexp {^(AND2|NAND2|OR2|NOR2)x} [[$inst getMaster] getName]]
+}
 proc rm_loads {net depth} {
   set r {}
   if {$net eq "NULL" || $net eq "" || [$net getSigType] ne "SIGNAL"} { return $r }
@@ -84,7 +90,7 @@ proc rm_loads {net depth} {
     set inst [$it getInst]
     # flop async set/reset / clock pins are not data sinks (a relay's reset-pin register drives its own RESETNs)
     if {[string match "*DFF*" [[$inst getMaster] getName]] && [[$it getMTerm] getName] ne "D"} continue
-    if {$depth < 4 && ![[$inst getMaster] isBlock] && [rm_isbuf $inst]} {
+    if {$depth < 4 && ![[$inst getMaster] isBlock] && ([rm_isbuf $inst] || [rm_isgate $inst])} {
       foreach o [rm_sig $inst OUTPUT] { set r [concat $r [rm_loads [$o getNet] [expr {$depth + 1}]]] }
       continue
     }

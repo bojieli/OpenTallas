@@ -273,7 +273,8 @@ Per die: `<die>.json` + `<die>.md` (gate status, counts, worst seam slack, delta
 Margins (`die_ci_margins.json`, derivations inside) are added ON TOP of the AGENTS.md policy and reported next to the
 policy slack: crosstalk per seam (|MCF-1| x R_eff x Cc over 2 x pin_reg_p90; OpenSTA has no SI), IR drop (PDNSim when a
 die PDN database exists, else 5 % VDD stated -> late cell derate via the alpha-power law), flat OCV
-(`set_timing_derate`). `check_margins` refuses any value that would relax the policy.
+(`set_timing_derate`). `check_margins` refuses any value that would relax the policy. Until the owner rules on the margin values, the die STA gate is
+the policy slack (TT setup / FF hold, 60/25 ps); the margined slack is an INFO column.
 
 Schedule (localhost systemd user timers, `systemd/`): `die-ci-commit.timer` hourly runs `die_ci_cron.sh commit` when main
 moved with changes under tools/die_plan or physical/die_plan; `die-ci-nightly.timer` 02:30 Pacific runs the full set.
@@ -282,3 +283,51 @@ The runner picks a scratch2 host with `ot-run --pick`, runs there via `ot-run`, 
 `DIE-CI LATEST:` line of ~/coord/HANDOFF.md current.
 
 Optional FT bit sites: a slot may declare `bit_sites_um` as internal stages j=1..stations-1, each containing width+1 cell lower-left x/y coordinates (payload bits then epoch), and `bit_site_cell_um` as the allocated width/height envelope. The physical generator emits exact sites; the hook requires real row/site alignment, row orientation, core bounds and master dimensions. Slots without this declaration keep their existing placement. Validate actual macro/cell overlap and paired-bit reach in the placed ODB before routing; coordinates alone do not establish those gates.
+
+## Die STA (`die_sta.py`, G4 seam timing; lane DIE-STA 10-24)
+
+```
+python3 tools/die_plan/die_sta.py extract --odb KIT/run/results/asap7/*/base/5_route.odb --out PARTS/<type>   # RCX
+python3 tools/die_plan/die_sta.py top  --plan PLAN.json --out DIE/die_top.v [--views VIEWS]   # = die_top_struct.v
+python3 tools/die_plan/die_sta.py run  --top DIE/die_top.v --parts PARTS --out OUT [--mode ilm|flat|etm]
+        [--corner TT --corner FF] [--spine-branch DIE/spine_branch.json] [--die-spef DIE/6_final.spef] [--threads N]
+python3 tools/die_plan/die_sta.py compare OUT_FLAT/die_sta.json OUT_ILM/die_sta.json --tol 2
+python3 tools/die_plan/die_sta.py replica --netlist P/6_final.v --spef P/6_final.spef --n N --out DIR   # capacity
+```
+
+`PARTS/<x>/6_final.v|.spef` per partition (found by the module name in the netlist; `6_final.sdc` names the clock
+ports).  Seams are found from the die top (every internal net from a partition output to another partition's input)
+and reported per `src->dst/bus`: worst slack, path count, violating endpoints, TNS, launch/capture clock arrival.
+Constraints follow AGENTS.md (owner 2026-10-24): one clock on die `clk`, propagated through each partition's own routed
+tree, 60 ps setup / 25 ps hold uncertainty; signoff = setup at TT, hold at FF (the default `--corner TT --corner FF`),
+plus the R4 face-flop spread: clock arrival spread over every register launching into / capturing from a seam,
+<= 80 ps per partition at TT and FF (`FFSPREAD`).  SS may be run for information and never gates.
+`verdict.status` is PASS only when TT setup and FF hold ran, every seam slack is >= 0 and every spread <= 80 ps;
+otherwise FAIL or NOT RUN.
+Die spine: ideal by default (taps at the plan's common latency), `--spine-branch` (CP2 H-tree branch offsets as
+source latency on every tap pin), or the routed die SPEF.  All current plans (s81, qwen_compute, qwen_kvsys, hbm)
+have no channel ports, so every seam wire is a zero-length abutment; channel seams need the routed die SPEF.
+
+Modes:
+- **ilm** (default, continuous die check): each partition is replaced by its interface logic model, extracted from
+  the routed netlist: fan-out of every non-clock input to the first register, fan-in of every output back to the
+  launching registers, the clock network of those registers, and every other cell on a kept net as a side load (that
+  pin only), so kept nets keep their exact RC and pin load; the SPEF is filtered to the kept nets.  Corner independent
+  (one abstract per type, cached in `OUT/ilm/<module>`).  Internal reg-to-reg paths are not timed (that is the kit's
+  own signoff).
+- **flat** (signoff): routed netlists + per-instance `read_spef -path`, stitched under the die top.
+- **etm**: OpenSTA `write_timing_model` per type and corner.  NOT a verdict: OpenSTA be771a0 writes clock->output arcs
+  from the max arrival only (`MakeTimingModel::min_max_`), so ETM hold is optimistic.  KV pair e5e6: ETM vs flat
+  -82 ps setup / +73 ps hold.
+
+Validation (KV pair e5e6, routed kv3_io_cor_v1 | kv3_io_ft_v1, 4 seam groups, TT / FF / SS): ilm == flat to
+0.000 ps on every seam slack and face-flop spread, ilm 2x faster than flat.  (That pair: TT setup +93.7 ps, FF hold
++231.0 ps, spread TT 24.8 / FF 20.1 ps: PASS.)
+
+Flat capacity (OpenSTA be771a0, `replica` of routed kv3_io_cor_v1, 16 threads; results/die_sta/capacity/SUMMARY.json):
+linear from N=8 to N=512 (73.4M instances, 172.8 GB, 5817 s; ~2.4 KB per instance).  Split: 2.4 KB per logic cell,
+0.9 KB per tapcell (no timing: strip), 3.9 KB per net of parasitics (1.1 KB with `--reduce` = read_spef -reduce, seam
+slacks unchanged to 0.000 ps on KV e5e6).  The serial SPEF reader dominates time (~7 MB/s; -reduce halves it again).
+Full die (400 x 400k logic cells): ~970 GB with full parasitics = NOT feasible on a 1 TB host; ~540 GB with
+`--reduce` = feasible, ~19 h per corner (one process per corner, TT and FF on two hosts).  The continuous G4 check is
+`ilm` (seam-exact); flat `--reduce` is the signoff run.
