@@ -1,0 +1,9 @@
+{"element":"qfd_dv_s8_crh_rp1","view":"f56a 4_1_cts (F5 taps + F6 anchors), placement RC, TT/FF libs, kit SDC vclk 330",
+ "f5_taps_tt_ps":{"SE":338.9,"E0":332.5,"E1":341.6,"SW":335.2,"W0":[333.4,341.3,353.5],"W1":[326.6,331.4,336.0]},
+ "all_register_clock_tt":[326.6,353.5],"all_register_clock_ff":[263.9,288.5],
+ "macro_clk_minus_interface_mean_ps":{"g_crb[0]":5.5,"g_crb[1]":-1.7},
+ "f6_dist_um_mean_max":{"wd_in":[7,11],"w_addr_in (u_twca cloned per bank)":[7,9],"rd_out capture":[9,24],"r_addr (pcr pin regs, F4)":[78,91],"w_ce (through gate logic, not anchored)":[120,215]},
+ "ff_hold_pre_repair":{"wns":-24.6,"ep":922,"q pin-reg->out (IO, F1 I binding + in-flow repair)":[256,-24.6],"u_twcd->SRAM wd_in":[240,-17.1],"u_twca->SRAM w_addr":[9,-9.0]},
+ "clock_drivers_in_macro":0,
+ "grt_stage_cal_rc":{"taps_after_balance":[327.1,338.8],"macro_clk_minus_if":{"g_crb[0]":0.2,"g_crb[1]":5.1}},
+ "next":"f56a route phase (GRT hold repair margin 5 on calibrated RC, ff_gate.sh: DRT only if FF hold(GRT cal) >= 0); f56b = same + SRAM leaf on root, 15 ps early (structural wd_in hold margin)"}

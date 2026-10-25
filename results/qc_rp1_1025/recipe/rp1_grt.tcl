@@ -1,7 +1,7 @@
-# QC-RP1 10-25 POST_GLOBAL_ROUTE (SKIP_INCREMENTAL_REPAIR=1): F2 RC calibration, F5 tap/macro-leaf re-balance on the
+# QC-RP1 10-25 POST_GLOBAL_ROUTE (SKIP_INCREMENTAL_REPAIR=1): (F2 RC calibration is in grt_pre.tcl) F5 tap/macro-leaf re-balance on the
 # calibrated GRT RC, data DRV repair, and -- route phase only (OT_GRT_HOLD=1, SDC vclk latency = the core's measured I)
 # in-flow hold repair at HOLD_SLACK_MARGIN (0..5 ps).  Clock nets are never touched by repair_design / repair_timing.
-source /work/rc_cal.tcl
+puts "OT_RC_CAL applied in PRE_GLOBAL_ROUTE (grt_pre.tcl)"
 set ::env(OT_CTAP_EST) grt
 set ::env(OT_CTAP_TAG) ctpgrt
 source /work/core_taps_post.tcl

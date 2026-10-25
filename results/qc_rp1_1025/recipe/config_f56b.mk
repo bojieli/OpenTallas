@@ -36,7 +36,7 @@ export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/macros/ot_sram_1r1w_1024x256_m2
 export SLEW_MARGIN = 20
 export CAP_MARGIN = 20
 export PRE_RESIZE_TCL = /work/drv.tcl
-export PRE_GLOBAL_ROUTE_TCL = /work/drv.tcl
+export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl
 export POST_GLOBAL_ROUTE_TCL = /work/rp1_grt.tcl
 export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5
 export OT_TAP_TARGET_PS = 250
@@ -54,5 +54,8 @@ export MACRO_ROWS_HALO_Y = 4.32
 export SKIP_INCREMENTAL_REPAIR = 1
 # QC-RP1 10-25: F5 regional taps (core_taps.tcl), F6 macro-interface anchors (mif_anchor.tcl), F2 rc_cal (GRT stage)
 export OT_CTAP_WIN = 20
-# variant b: south band up to the bank-0 SRAM bottom edge (SW/SE taps own the whole south strip)
-export OT_CTAP_SY = 86
+export OT_CTAP_SY = 60
+# variant b (QC-RP1 10-25): SRAM clk leaf hangs on the core clock root and targets its interface launch mean - 15 ps
+# (structural useful skew: +15 ps hold on every zero-logic reg->SRAM input path; SRAM read side has >150 ps setup slack)
+export OT_CTAP_MACRO_ROOT = 1
+export OT_CTAP_MACRO_EARLY = 15

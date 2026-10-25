@@ -52,6 +52,9 @@ dict for {r rows} $ct_sinks {
   dict set ct_taps $r $net
   puts [format "OT_CTAP tap %s sinks %d at %.1f %.1f" $r $n [expr {$sx / $n / double($ct_dbu)}] [expr {$sy / $n / double($ct_dbu)}]]
 }
+# OT_CTAP_MACRO_ROOT=1: the macro leaf hangs on the core clock root (its own tap) instead of under its region tap, so
+# core_taps_post.tcl can place its latency independently (OT_CTAP_MACRO_EARLY useful skew vs its interface regs)
+set ct_mroot [ct_env OT_CTAP_MACRO_ROOT 0]
 # each macro clock pin: own short leaf from its region tap, placed just outside the macro halo at the pin
 foreach row $ct_macro {
   lassign $row it r x y
@@ -61,7 +64,7 @@ foreach row $ct_macro {
   set buf [odb::dbInst_create $ct_blk $ct_lmaster "ot_cleaf_[regsub -all {[^A-Za-z0-9]} [$m getName] _]"]
   foreach t [$buf getITerms] {
     set mt [$t getMTerm]; if {[$mt getSigType] in {POWER GROUND}} continue
-    if {[$mt getIoType] eq "INPUT"} { $t connect [dict get $ct_taps $r] } elseif {[$mt getIoType] eq "OUTPUT"} { $t connect $net }
+    if {[$mt getIoType] eq "INPUT"} { $t connect [expr {$ct_mroot ? $ct_root : [dict get $ct_taps $r]}] } elseif {[$mt getIoType] eq "OUTPUT"} { $t connect $net }
   }
   set gap [expr {round(6.0 * $ct_dbu)}]
   set lx [expr {abs($x - [$mb xMin]) < abs([$mb xMax] - $x) ? [$mb xMin] - $gap - [$ct_lmaster getWidth] : [$mb xMax] + $gap}]

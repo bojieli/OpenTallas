@@ -119,6 +119,9 @@ for {set cp_it 0} {$cp_it < [cp_env OT_CTAP_ITERS 3]} {incr cp_it} {
   if {$cp_ronly || ![llength $todo]} break
   cp_apply $todo
 }
+# OT_CTAP_MACRO_EARLY (ps, default 0): the SRAM clock pin targets (interface launch mean - EARLY): useful skew that gives
+# every zero-logic register -> SRAM input path structural hold margin (the SRAM read side has > 150 ps setup slack)
+set cp_early [cp_env OT_CTAP_MACRO_EARLY 0.0]
 # (2) each macro clock pin latency-matched to the mean launch arrival of its interface registers (own leaf only)
 for {set cp_it 0} {!$cp_ronly && $cp_it < 2} {incr cp_it} {
   cp_est
@@ -126,13 +129,17 @@ for {set cp_it 0} {!$cp_ronly && $cp_it < 2} {incr cp_it} {
   foreach row [cp_macros m$cp_it] {
     lassign $row m a mean
     set leaf [$cp_blk findInst "ot_cleaf_[regsub -all {[^A-Za-z0-9]} [$m getName] _]"]
-    set k [expr {int(round(($mean - $a) / $cp_step))}]
-    if {$leaf ne "NULL" && $mean - $a > $cp_win / 2.0 && $k >= 1} { lappend todo [list [cp_in $leaf] $k "m$cp_it macro:[$m getName]:[format %.1f [expr {$mean-$a}]]"] }
-    if {$a - $mean > $cp_win} { puts "OT_CTAP_WARN macro [$m getName] clock pin LATE by [format %.1f [expr {$a-$mean}]] ps vs its interface regs" }
+    set tgt [expr {$mean - $cp_early}]
+    set k [expr {int(round(($tgt - $a) / $cp_step))}]
+    if {$leaf ne "NULL" && $tgt - $a > $cp_step / 2.0 && $k >= 1} { lappend todo [list [cp_in $leaf] $k "m$cp_it macro:[$m getName]:[format %.1f [expr {$tgt-$a}]]"] }
+    if {$a - $tgt > $cp_win / 2.0} { puts "OT_CTAP_WARN macro [$m getName] clock pin LATE by [format %.1f [expr {$a-$mean}]] ps vs its interface regs" }
   }
   if {![llength $todo]} break
   cp_apply $todo
 }
+# GRT mode: after incremental-GRT netlist edits, reset the estimator through placement RC before the GRT estimate
+# (else the following repair_design inside global_route -start_incremental fails EST-0104 inconsistent parasitics state)
+if {$cp_grt} { estimate_parasitics -placement }
 cp_est
 cp_taps final
 cp_macros final

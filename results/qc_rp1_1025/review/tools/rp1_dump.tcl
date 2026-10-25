@@ -5,6 +5,7 @@ read_liberty /work/macros/ot_sram_1r1w_1024x256_m2_r2c2_$c.lib
 read_db $::env(ODB)
 read_sdc /work/constraint.sdc
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+set_propagated_clock [all_clocks]
 estimate_parasitics -placement
 set cts [expr {[llength [get_cells -quiet clkbuf*]] > 0 || [llength [get_cells -quiet *cqb*]] > 0}]
 if {$cts} { set_propagated_clock [all_clocks] }
