@@ -1,0 +1,37 @@
+{
+ "kit": "/srv/opentallas-scratch/claude/elem-s81-cores/r2/ot_s81sl_eg_c",
+ "top": "ot_s81sl_eg",
+ "netlist": "/srv/opentallas-scratch/claude/elem-s81-cores/r2/ot_s81sl_eg_c/run/results/asap7/kl_ot_s81sl_eg_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 199,
+ "ok": 164,
+ "fail_counts": {
+  "shared": 35
+ },
+ "groups": [
+  {
+   "bus": "fault",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "hold",
+   "n": 1,
+   "bits": ""
+  },
+  {
+   "bus": "g",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "hold",
+   "n": 32,
+   "bits": "[0..31]"
+  },
+  {
+   "bus": "g_c",
+   "dir": "output",
+   "cls": "shared",
+   "sub": "hold",
+   "n": 2,
+   "bits": "[0..1]"
+  }
+ ]
+}

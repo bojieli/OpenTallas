@@ -797,7 +797,8 @@
         "enum": [
          "grid",
          "grid+sinks",
-         "sinks"
+         "sinks",
+         "density"
         ]
        },
        "tap_radius_um": {
@@ -807,6 +808,35 @@
        "tap_max_sinks": {
         "type": "integer",
         "minimum": 1
+       },
+       "tap_target_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "tap_min_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "sink_sites_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 3,
+         "items": {
+          "type": "number"
+         }
+        }
+       },
+       "sink_bins_file": {
+        "type": "string"
+       },
+       "tap_balance_rc": {
+        "enum": [
+         "placement",
+         "grt_report",
+         "grt"
+        ]
        },
        "core_taps": {
         "enum": [
@@ -984,6 +1014,10 @@
        "sync_stages": {
         "type": "integer",
         "minimum": 2
+       },
+       "depth": {
+        "type": "integer",
+        "minimum": 1
        }
       }
      },
@@ -1673,12 +1707,32 @@
     "release": {
      "enum": [
       "counted",
-      "pipelined"
+      "pipelined",
+      "wavefront"
      ]
     },
     "relay_um": {
      "type": "number",
      "exclusiveMinimum": 0
+    },
+    "hop_um": {
+     "type": "number",
+     "exclusiveMinimum": 0
+    },
+    "in_sites": {
+     "type": "object",
+     "additionalProperties": {
+      "type": "array",
+      "items": {
+       "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2
+     }
+    },
+    "root_part": {
+     "type": "string",
+     "minLength": 1
     },
     "part_depth": {
      "type": "integer",

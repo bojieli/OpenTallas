@@ -32,6 +32,7 @@ module ot_dsrom_su_hcpost_lane_pr #(
     wire [31:0] c3_in = (MUTANT == 1) ? c3 : c3_q;
     wire [31:0] o_core;
     assign o = o_core[31:16];
-    ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u_core (.clk(clk), .rst_n(rst_q), .v(v_q), .r0(r0_q), .r1(r1_q),
+    // S81-KITS-RTLA 10-24: FDUP 1 = the fault pin flop is an output-only copy (0 cycles; face_guard pin rule)
+    ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL), .FDUP(1)) u_core (.clk(clk), .rst_n(rst_q), .v(v_q), .r0(r0_q), .r1(r1_q),
         .r2(r2_q), .r3(r3_q), .y(y_q), .c0(c0_q), .c1(c1_q), .c2(c2_q), .c3(c3_in), .p(p_q), .vo(vo), .o(o_core), .fault(fault));
 endmodule

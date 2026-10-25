@@ -52,11 +52,20 @@ module dsdv_gunit_l3 #(
         end
     endfunction
     reg e2, e3; reg [191:0] wq;
+    // S81-KITS-RTLB 10-24 (owner: register every pin, in RTL): fault leaves a pin-only flop loaded with the
+    // kept sticky state's next value (fault == flt_s every cycle, 0 cycles); before, the sticky flop fed its own D.
+    (* keep *) reg flt_s;
+    wire flt_n = flt_s | f_rw;
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin e2 <= 1'b0; e3 <= 1'b0; w_v <= 1'b0; fault <= 1'b0; end
+        if (!rs_o) begin e2 <= 1'b0; e3 <= 1'b0; w_v <= 1'b0; fault <= 1'b0; flt_s <= 1'b0; end
         else begin
             e2 <= o_v; e3 <= e2; w_v <= e2 || e3;
-            if (f_rw) fault <= 1'b1;
+            flt_s <= flt_n;
+`ifdef OT_RTLB_PINFLOP_MUT
+            fault <= flt_s;                                // mutant: pin flop one edge late (current state, not next)
+`else
+            fault <= flt_n;
+`endif
         end
     always @(posedge clk) begin
         if (o_v) wq <= o_d[191:0];

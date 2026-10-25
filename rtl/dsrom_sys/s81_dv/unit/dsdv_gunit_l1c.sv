@@ -101,14 +101,25 @@ module dsdv_gunit_l1c #(
     endgenerate
     wire allk = &{xq[XW*5+XW-1], xq[XW*4+XW-1], xq[XW*3+XW-1], xq[XW*2+XW-1], xq[XW*1+XW-1], xq[XW-1]};
     // ---------------------------------------------------------------- gather request / reply
+    // S81-KITS-RTLB 10-24 (owner: register every pin, in RTL): (1) fault leaves a pin-only flop loaded with
+    // the kept sticky state's next value (fault == flt_s every cycle); (2) the fault check reads its own kept twin xv_k of
+    // the order sort's fo (= xnv one edge later, same reset), so synthesis no longer folds fo into the g_go pin flop
+    // (g_go fed the fault logic: face_guard 'shared').  0 cycles.
+    (* keep *) reg flt_s; (* keep *) reg xv_k;
+    wire flt_n = flt_s | (|ft) | (xv_k && !allk);
     always @(posedge clk or negedge rq[1])
-        if (!rq[1]) begin i_v <= 1'b0; g_go <= 1'b0; g_hit <= 24'd0; s_v <= 1'b0; fault <= 1'b0; end
+        if (!rq[1]) begin i_v <= 1'b0; g_go <= 1'b0; g_hit <= 24'd0; s_v <= 1'b0; fault <= 1'b0; flt_s <= 1'b0; xv_k <= 1'b0; end
         else begin
-            i_v <= xnv; g_go <= xnv;
+            i_v <= xnv; g_go <= xnv; xv_k <= xnv;
             for (i = 0; i < 4; i = i + 1)
                 for (j = 0; j < K; j = j + 1) g_hit[6 * i + j] <= xnv && idn[9 * j + 4 +: 2] == i[1:0];
             s_v <= fg[0];
-            if (|ft || (xv && !allk)) fault <= 1'b1;
+            flt_s <= flt_n;
+`ifdef OT_RTLB_PINFLOP_MUT
+            fault <= |ft;                                  // mutant: pin flop not sticky, check dropped
+`else
+            fault <= flt_n;
+`endif
         end
     always @(posedge clk) begin
         i_ids <= idn;

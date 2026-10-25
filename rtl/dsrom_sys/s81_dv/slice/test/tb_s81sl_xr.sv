@@ -18,6 +18,10 @@
 // Then 13 illegal programs (14 on C3: BIND mu4 10-19 adds a dir-B send config with pairs > 2), each from reset, must raise
 // the sticky fault.  Band port B (C3) is 513 b = {pk[511:0], valid}: legal B configs carry at most 2 pairs.
 // Prints XRB ... err=<n> and PASS / FAIL.  Mutants (RTL): +define+OT_S81SL_XR_MUT_{HOPS,ROW,PORDER,NOCOL,XHOLD} must FAIL.
+// OT_XR_LAND_TB (S81-KITS-RTLB 10-24, xrt FACE_LAND = 1): the lo / p leaf inputs land in a pin register first (+1 edge),
+// so the compiler issues every lo beat and partial set ONE cycle earlier (drive uses program cycle m + 1 for lo / p, the
+// cycle-0 entries go out in one pre-cycle); the expected model is unchanged.  Illegal cases 4 and 12 issue their lo beat
+// one cycle earlier for the same reason.
 module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, parameter integer NC = 6000);
     localparam integer W = 1104, V = 276, BW = 513, NS = NC + 16;
     reg clk = 1'b0;
@@ -261,7 +265,13 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
     task automatic drive(input integer m);
         begin
             dl_ev = i_ev[m]; dl_e = i_e[m]; dl_wv = i_wv[m]; dl_w = i_w[m]; dl_vv = i_vv[m]; dl_vb = i_vb[m]; bi = i_b[m];
+`ifdef OT_XR_LAND_TB
+            if (m + 1 < NS) begin lo_v = i_lov[m + 1]; lo_d = i_lod[m + 1]; p_v = i_pv[m + 1]; p_d = i_pd[m + 1]; end
+            else begin lo_v = 0; p_v = 0; end
+            x_rbv = i_rbv[m]; x_rbd = i_rbd[m];
+`else
             lo_v = i_lov[m]; lo_d = i_lod[m]; p_v = i_pv[m]; p_d = i_pd[m]; x_rbv = i_rbv[m]; x_rbd = i_rbd[m];
+`endif
         end
     endtask
     task automatic idle();
@@ -316,7 +326,12 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
                          dl_e = rd_beat(4, mine_mask(), 2, 8, 0, t[1023:0]); end
                 3: begin dl_ev = 1; dl_e = rd_beat(4, mine_mask(), 1, 0, 3, t[1023:0]); @(negedge clk);
                          dl_e = ctl_beat(mine_mask(), 5, 5'b00010, 0); end
+`ifdef OT_XR_LAND_TB
+                4: begin b14 = 0; b14[3:0] = 4'b0001; dl_ev = 1; dl_e = ctl_beat(mine_mask(), 5'd4, 5'd0, b14); @(negedge clk);
+                         idle(); lo_v = 5'b00001; @(negedge clk); idle(); @(negedge clk); dl_vv = 1; dl_vb = ctl_beat(other_mask(), 0, 0, 0); end
+`else
                 4: begin cfg_send(0); lo_v = 5'b00001; @(negedge clk); idle(); dl_vv = 1; dl_vb = ctl_beat(other_mask(), 0, 0, 0); end
+`endif
                 5: begin p_v = 5'b11111; @(negedge clk); p_v = 0; @(negedge clk); p_v = 5'b11111; end
                 6: begin p_v = 5'b00111; end
                 7: begin cfg_send(0); lo_v = 5'b00011; end
@@ -325,7 +340,12 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
                 9: begin dl_ev = 1; dl_e = rd_beat(4, mine_mask(), 6, 0, 0, t[1023:0]); end
                 10: begin dl_ev = 1; dl_e = ctl_beat(mine_mask(), 7, 0, 0); end
                 11: begin cfg_send(1); dl_ev = 1; dl_e = 0; dl_e[3:1] = 5; dl_wv = 1; dl_w = 0; dl_w[3:1] = 5; end
+`ifdef OT_XR_LAND_TB
+                12: begin b14 = 0; b14[3:0] = 4'b0001; dl_ev = 1; dl_e = ctl_beat(mine_mask(), 5'd4, 5'd0, b14); @(negedge clk);
+                          idle(); lo_v = 5'b00100; @(negedge clk); idle(); dl_ev = 1; dl_e = ctl_beat(mine_mask(), 4, 0, 0); end
+`else
                 12: begin cfg_send(0); dl_ev = 1; dl_e = ctl_beat(mine_mask(), 4, 0, 0); lo_v = 5'b00100; end
+`endif
                 14: begin b14 = 0; b14[3:0] = 4'b1000; b14[42:41] = 2'd2; dl_ev = 1; dl_e = ctl_beat(mine_mask(), 5'd4, 5'd0, b14); end
                 default: begin cfg_send(1); dl_ev = 1; dl_e = 0; dl_e[3:1] = 5; dl_vv = 1; dl_vb = ctl_beat(other_mask(), 0, 0, 0); end
             endcase
@@ -339,6 +359,9 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
         sid = ru(16);
         gen();
         do_reset();
+`ifdef OT_XR_LAND_TB
+        idle(); lo_v = i_lov[0]; lo_d = i_lod[0]; p_v = i_pv[0]; p_d = i_pd[0]; @(negedge clk);   // lo / p of cycle 0, one early
+`endif
         for (n = 0; n < NS; n = n + 1) begin
             drive(n); @(negedge clk); check(n);
         end

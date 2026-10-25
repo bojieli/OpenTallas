@@ -38,6 +38,13 @@ a = once(a, cr, [cr] + HX_PORTS)
 a = once(a, "    ot_s81_engram_hash_n32 u_hash (.clk(clk_seed), .clk_columns(clk_hash), .in_w(win_n), .out_res(hres));",
          ["    assign hx_w = win_n;                      // CORE-S81-ENG: hash in hard cores (was u_hash)",
           "    assign hres = hx_res;"])
+# S81-KITS-RTLA 10-24: slang (SYNTH_HDL_FRONTEND=slang) rejects emit_done used by the FSM before its declaration;
+# the hx variant declares emit_done_r / emit_done ahead of the FSM (source order only, same logic)
+a = once(a, "    reg       emit_done_r;", [])
+a = once(a, "    wire      emit_done = emit_done_r;", [])
+wn = "    reg [4*ENG_ID_W-1:0] win_n;"
+a = once(a, wn, ["    reg       emit_done_r;                   // declared before the FSM (slang source order)",
+                 "    wire      emit_done = emit_done_r;", wn])
 b = body(wr, "dsfd_engram_lkp_ra640")
 b[0] = b[0].replace("module dsfd_engram_lkp_ra640 ", "module dsfd_engram_lkp_ra640_hx ")
 cr2 = "    input  wire [1:0]            cfg_rank,"
