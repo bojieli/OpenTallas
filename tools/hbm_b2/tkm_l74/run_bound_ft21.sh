@@ -21,10 +21,19 @@ case "${ROOT_VARIANT:-cb21}" in
  *) echo "bad ROOT_VARIANT";exit 2;;
 esac
 if [ "${STATIC_IDS:-1}" = 0 ];then defs+=(+define+TKM_LEGACY_TIMED_ID_VIEW);fi
+rootshell="$f/ot_hgi_coll_tkm_m_tp192__root__fshell.sv"
+rootwrap="$f/ot_hgi_coll_tkm_m_tp192__root__wrap.sv"
+if [ "${DELIVERED_ROOT:-0}" = 1 ];then
+ rcore="$o/root_delivered/ot_hgi_coll_tkm_tp192_root_core__delivered_reset.sv"
+ python3 tools/hbm_b2/tkm_l74/overlay_root_delivered_reset.py "$f/cb21/ot_hgi_coll_tkm_tp192_root_core.sv" "$rcore" --face-dir "$f" > "$o/root_reset_overlay.log"
+ rootshell="$o/root_delivered/ot_hgi_coll_tkm_m_tp192__root__delivered_reset__fshell.sv"
+ rootwrap="$o/root_delivered/ot_hgi_coll_tkm_m_tp192__root__delivered_reset__wrap.sv"
+ defs+=(+define+TKM_DELIVERED_ROOT_VIEW)
+fi
 tsh=$f;[ "${ROOT_VARIANT:-cb21}" = ft21 ] && tsh=$f/ft
 src=("$c/tkm/tkm_tp192_e86_hier.vlt" tools/hbm_b2/tkm_l74/tb_hbm_tkm_bound_ft21.sv rtl/hbm_accel/die_glue/b2/ot_hbm_tkm_path_ft21.sv rtl/hbm_accel/die_glue/b2/ot_hbm_tkm_return.sv rtl/hbm_accel/generic/transport/ot_hbm_static_2beat.sv
  "$c/tkm/ot_hgi_coll_tkm_static.sv" "$c/tkm/ot_hgi_coll_tkm.sv" "$c/tkm/ot_hgi_coll_tkm_buffer.sv" "$c/tkm/ot_hgi_coll_tkm_conv_skew.sv"
- "$f/ot_hbm_face_reg.sv" "$f/ot_hgi_coll_tkm_m_tp192__root__fshell.sv" "$f/ot_hgi_coll_tkm_m_tp192__root__wrap.sv" "$rcore"
+ "$f/ot_hbm_face_reg.sv" "$rootshell" "$rootwrap" "$rcore"
  "$tsh/ot_hgi_coll_tkm_tp192_tile_core__idpin__fshell.sv" "$tsh/ot_hgi_coll_tkm_tp192_tile_core__idpin__wrap.sv"
  "$f/terminal/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__fshell.sv" "$f/terminal/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__wrap.sv"
  rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv

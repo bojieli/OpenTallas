@@ -20,6 +20,11 @@
 // the r5 path: forward5 + split2 + face258 + return2 =267 edges vs direct core.
 // Native parent must publish release offsets and hold both boot starts until
 // delivered reset is complete. No reset synchronizer or runtime stall here.
+`ifdef TKM_DELIVERED_ROOT_VIEW
+`define OT_HBM_TKM_ROOT ot_hgi_coll_tkm_m_tp192__root__delivered_reset
+`else
+`define OT_HBM_TKM_ROOT ot_hgi_coll_tkm_m_tp192__root
+`endif
 module ot_hbm_tkm_path_ft21 #(
  parameter integer LINK_STAGES=2,RETURN_CTL_STAGES=2,RETURN_DATA_STAGES=2,BEAT_WIDTH=2341,
  parameter integer HOP=2,CTL_BCAST_STAGES=21,CLR_HOP=3
@@ -77,14 +82,14 @@ module ot_hbm_tkm_path_ft21 #(
  `OT_HBM_TKM_LEAF tile(.tile_clk(tile_clk[t]),.tile_clr((t==0)?root_clr:clr_lane[t-1]),.tile_clr_o(clr_lane[t]),
   .tile_conv((t==31)?bc_conv:conv_lane[t+1]),.tile_conv_o(conv_lane[t]),
 .tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_in(up[t+1]),.`OT_HBM_TKM_ID_PORT(tid),.tile_ovf_v(dv[t+1]),.tile_ovf_b(down[t+1]),.tile_up_out(up[t]));
- // strap delivery: the shell's tid face flop must hold this instance's ID (tile_tid is functionally unread by the core:
- // face_shell.json unread_kept, so a wrong ID is caught here, at the face, not by the golden words)
+ // Static IDs pass directly to the actual canonical core. The bench checks
+ // that binding; the golden numerical outputs do not consume the ID.
  end else begin:terminal
  `OT_HBM_TKM_TERMINAL tile(.tile_clk(tile_clk[t]),.tile_clr((t==0)?root_clr:clr_lane[t-1]),.tile_clr_o(clr_lane[t]),
   .tile_conv((t==31)?bc_conv:conv_lane[t+1]),.tile_conv_o(conv_lane[t]),
 .tile_ins_v(dv[t]),.tile_ins_b(down[t]),.`OT_HBM_TKM_ID_PORT(tid),.tile_up_out(up[t]));
- // strap delivery: the shell's tid face flop must hold this instance's ID (tile_tid is functionally unread by the core:
- // face_shell.json unread_kept, so a wrong ID is caught here, at the face, not by the golden words)
+ // Static IDs pass directly to the actual canonical core. The bench checks
+ // that binding; the golden numerical outputs do not consume the ID.
  end
  end
  wire[2179:0]rx_flit=rx_word[171+:2180];wire[2115:0]compact_flit;
@@ -2204,12 +2209,13 @@ module ot_hbm_tkm_path_ft21 #(
  assign compact_flit[2113]=rx_flit[2169];
  assign compact_flit[2114]=rx_flit[2170];
  assign compact_flit[2115]=rx_flit[2179];
- ot_hgi_coll_tkm_m_tp192__root actual_root(.clk(clk),.buffer_clk(buffer_clk),.rst_n(root_rst_n),.start(root_start),.arg_mode(rx_word[19+:1]),.cfg_n(rx_word[50+:12]),.cfg_k(rx_word[37+:13]),.cfg_g(rx_word[20+:8]),.cfg_gbase(rx_word[28+:8]),.cfg_pf(rx_word[115+:16]),.cfg_nout(rx_word[62+:13]),.cfg_obase(rx_word[75+:40]),.cfg_rbase(rx_word[131+:40]),.cfg_has_r(rx_word[36+:1]),.del_slot(rx_word[2351+:4]),.del_valid(rx_word[2355+:4]),.del_flit(compact_flit),.x_u_u_g_tiles_0_e86_u_tile_up_out(up[0]),.x_u_u_g_tiles_0_e86_u_tile_ins_b(root_entry),.x_u_u_g_tiles_0_e86_u_tile_ins_v(root_ev),.x_u_u_g_tiles_0_e86_u_tile_clr(root_clr),.x_u_u_g_tiles_0_e86_u_tile_conv(root_conv),.w_v(n_wv),.w_addr(n_wa),.w_mask(n_wm),.w_data(n_wd),.busy(n_busy),.done(n_done),.fault(n_fault),.stat_cycles(cycles));
+ `OT_HBM_TKM_ROOT actual_root(.clk(clk),.buffer_clk(buffer_clk),.rst_n(root_rst_n),.start(root_start),.arg_mode(rx_word[19+:1]),.cfg_n(rx_word[50+:12]),.cfg_k(rx_word[37+:13]),.cfg_g(rx_word[20+:8]),.cfg_gbase(rx_word[28+:8]),.cfg_pf(rx_word[115+:16]),.cfg_nout(rx_word[62+:13]),.cfg_obase(rx_word[75+:40]),.cfg_rbase(rx_word[131+:40]),.cfg_has_r(rx_word[36+:1]),.del_slot(rx_word[2351+:4]),.del_valid(rx_word[2355+:4]),.del_flit(compact_flit),.x_u_u_g_tiles_0_e86_u_tile_up_out(up[0]),.x_u_u_g_tiles_0_e86_u_tile_ins_b(root_entry),.x_u_u_g_tiles_0_e86_u_tile_ins_v(root_ev),.x_u_u_g_tiles_0_e86_u_tile_clr(root_clr),.x_u_u_g_tiles_0_e86_u_tile_conv(root_conv),.w_v(n_wv),.w_addr(n_wa),.w_mask(n_wm),.w_data(n_wd),.busy(n_busy),.done(n_done),.fault(n_fault),.stat_cycles(cycles));
  ot_hbm_tkm_return #(.CTL_STAGES(RETURN_CTL_STAGES),.DATA_STAGES(RETURN_DATA_STAGES)) returned(
  .clk(clk),.rst_n(root_rst_n),.in_v(n_wv),.in_busy(n_busy),.in_done(n_done),.in_fault(n_fault),
  .in_addr(n_wa),.in_mask(n_wm),.in_data(n_wd),.out_v(wv),.out_busy(busy),.out_done(done),.out_fault(fault),
  .out_addr(wa),.out_mask(wm),.out_data(wd));
 endmodule
+`undef OT_HBM_TKM_ROOT
 `undef OT_HBM_TKM_LEAF
 `undef OT_HBM_TKM_TERMINAL
 `undef OT_HBM_TKM_ID_PORT
