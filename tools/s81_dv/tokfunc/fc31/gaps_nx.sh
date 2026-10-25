@@ -6,7 +6,7 @@
 #           the first entry target-5 write (H row 0, leaf 0: BF16 exponent MSB of HC copy 0 element 1) -> new sim; the
 #           NX flit check must FAIL (input corruption reaches the arithmetic output)
 #   MUT_EX  expect-shift:NX:1     -- same trace, every NX check one cycle late -> must FAIL (the cycle is checked)
-# Usage: [NORM_MODE=smoke|all] [FC31_DATA_CUTS=dir] [CUT=cut_0S] gaps_nx.sh <worktree> <out dir> LAYER [STEPS]   STEPS default "compile base mut_in mut_ex"
+# Usage: [NORM_MODE=smoke|all] [MUT_IN=corrupt:<lane>:<bit>] [FC31_DATA_CUTS=dir] [CUT=cut_0S] gaps_nx.sh <worktree> <out dir> LAYER [STEPS]   STEPS default "compile base mut_in mut_ex"
 set -u
 T=$(realpath $1); O=$(realpath -m $2); Y=$3; STEPS=${4:-compile base mut_in mut_ex}
 S=/srv/opentallas-scratch/claude; W=$S/tok-ds/fc31
@@ -45,6 +45,6 @@ replay() {  # name mutant(or '') sim(0/1) [trace-of]
   echo "GAPS $Y $1 t0 $T0: $(grep -h '^DV_SLICE ' $RUN/run.log) | $(tail -1 $R/check.log)"
 }
 [[ " $STEPS " == *" base "* ]] && replay base "" 1
-[[ " $STEPS " == *" mut_in "* ]] && replay mut_in corrupt:xrW_0S_l0:91 1
+[[ " $STEPS " == *" mut_in "* ]] && replay mut_in ${MUT_IN:-corrupt:xrW_0S_l0:91} 1
 [[ " $STEPS " == *" mut_ex "* ]] && replay mut_ex expect-shift:NX:1 0 base
 echo GAPS_DONE
