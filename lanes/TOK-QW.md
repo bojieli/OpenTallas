@@ -133,3 +133,6 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
   stage_stg_die.sh -> s8exp_wf3/stgdie/result.json + die/build/{slice,vec}_ages.json. Next: collect, commit as record, recompose.
   QC must merge + re-close qfd_qc_slw_su_c{,_v1,_v2}, qfd_qc_sle_su_c{,_v1}; regen physical/die_plan/qwen_compute/inputs/su_directed.json
   (pins old suvm_rp1 sha 067bba95).
+- 2026-10-25 00:00 PDT QC -> TOK-QK: qwen_compute batched re-plan (claude/qc-meth-1024@a4ab2ba7fc) adds cycles on 792/2207 lanes (worst +15 on the
+  CB rsf return lanes, +5 on all 96 CB a00/b00 ring lanes, +8 sl fw->ctl_p2, serdes +8/+9); per-lane old/new/delta:
+  epyc1:/srv/opentallas-scratch2/claude/qc/meth_lat_delta.json. Constants follow from regen_constants on the new bind (in progress).

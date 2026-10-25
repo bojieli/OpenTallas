@@ -293,3 +293,10 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   signoff tt,ff + FF hold ECO), s8x_btab/s8x_prog/s8x_vmr (kits rebuilt from plan hard_cores; same closed geometry -> route), su_lane_e/w
   (new -> kit + GEOM-REVIEW first); A0 nk/nl = A0 variants sub-agent. Every SOFT QC type changes in the batched re-plan (decision-13
   wavefront reset in/out pins on all soft types + 405-um stations), so no soft-type sign-off before it lands.
+- 2026-10-25 00:00 PDT QC: batched re-plan claude/qc-meth-1024@a4ab2ba7fc (dec. 12 + 13/17 + METH 9.3/9.4 + A0 v8 taps): G0 PASS 0 err, G0C 56/56.
+  Added cycles vs capacity plan: 792/2207 lanes change (+1:261 +2:213 +3:36 +4:94 +5:108 +6:21 +7:18 +8:15 +9:2 +11:12 +15:12);
+  biggest: c_*_bf/tf_*__rsf +15/+11 (12 each), coll_s serdes tx +9, io_serdes_2 tx_up/rx +8, sl_*_fw__x_fw_ctl_p2 +8, sl fw->st_a +7,
+  c_*_bn__rsn +7, CB a00/b00 ring lanes +5 (96 lanes). Per-lane delta: epyc1:/srv/opentallas-scratch2/claude/qc/meth_lat_delta.json
+  (committed with the rebind). Changed types: ALL 53 soft types (wavefront reset pins + stations); hard cores unchanged.
+  SIGNED changed: none. In flight: none on soft types (A0 v8 place variants + hard-core sign-off are on unchanged hard cores).
+  Rebind pipeline running (epyc1 pid 1275049: probe bind -> R8 -> G0C -> CB16 -> final bind -> verify); READY after it.
