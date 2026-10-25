@@ -55,3 +55,25 @@ SELECTED (KITS-SPARE owns from now): S81 cores ot_s81sl_xrt3 (only in dsdv_slice
 - OWNER?: (1) IO-HOLD-2 input-min contract (option A: sender output-min + parent CPPR pair check); (2) dsdv_bksel_q children option (d); (3) large-core latency publish vs split (bksel_c, gunit_l5); (4) ot_s81sl_xrt3 outline.
 2026-10-25 10:26 PDT KITS-SPARE-2: started (fresh). (a) drafting batched S81 plan delta per COORD 10:23 rulings (2)(4)(5): core latency published for dsdv_bksel_c (bk_sel__t2) + dsdv_gunit_l5 (gunit__t1) as early core taps, xrt3 outline, slice_station t23/t46 band taps; branch claude/plan-delta-s81-cl-1025 (main 55b7f92771), wt epyc1:/srv/opentallas-scratch2/claude/wt/kits-spare2-delta. Sub-lanes: HB (hist_bank master kit, ruling 3), W1 (broad NEEDS-KIT triage+kits, all dies, most-replicated first).
 2026-10-25 10:30 PDT KITS-SPARE-2/HB: hist_bank (COORD 10:23 item 3): the 16 hard children of dsdv_bksel_q (hk2l u_s.u_hc.g_bank[0..7] x 2 hists) all bind ONE view = ot_s81ph_native_sel_hist_bank BANK 0 (parent applies constant digit/group inversions under OT_HARD_CHILDREN) -> ONE kit. Generator: gen_core_kit_legacy.py recipe child_of + child-view LEF contract (64.8x54, 359 pins, plan type bk_sel__t2), spec bd6f52e8c (RTL unchanged since), modern flow (RCX, vclk TT 250/FF 202.5). Branch claude/kits-spare2-hb-1025@d9e3412b9a (tests 3/3). Kit epyc1:/srv/opentallas-scratch2/claude/kits-spare2/hb/ot_s81ph_native_sel_hist_bank_hb; place+CTS ot-run oth-ubuntu-3242346-1792949404 (epyc1, 10 GB).
+2026-10-25 10:35 PDT KITS-SPARE-2/W1: TRIAGE (OWNERS.tsv tick 10:22, main 2c31876f3d) NEEDS-KIT, most replicated first:
+| item | die | repl | verdict |
+| ot_rom_4096x72_m8 / ot_sram_1r1w_512x128_m4_r2c2 | s81 | 7644/150 | BLOCKED: macros, no P&R kit (ROM lib/addr fan-out = col generator item) |
+| dsfd_qbank_S, rom_elem_q_qxpq_w10, sstn_base566, bf_col, bf_front_roots, cfifo_crs4, xfin, capc5r, xrt1 | s81 | 864..15 | BLOCKED: PATH-S81 cores (c1x_C t8/t9, col_h10) + S81-CORES3 blockers (qbank_S DPL 118% outline, cfifo OWNER?(c), capc5r children, xrt1 outline) |
+| ot_s81sl_vn_b_6331bbd79eef | s81 | 42 | BLOCKED-MERGE: GEOM-REVIEW-3 07:16 successor needs SRAM-side stage RTL (codex/s81-sw-0719@3bf7d67d1c HW_STAGE, +521 FF, 0 public cycles, qualified) -> READY/merge first, then f6c + centroid taps clipped at u_h1 halo |
+| col_h9_*/col_h10_* | s81 | 60..6 | BLOCKED: PATH-S81 col family + col 12->8 deferred + ROM-lib generator defect |
+| leaf/c1x_C/kv_leaf/serdes/iqf/stations content types | s81 | 3..1 | BLOCKED: X1 strict-bind kit RTL on the 171-type plan (S81R 10:20); bk_sel/gunit/c3x/stations in KITS-SPARE-2 delta |
+| hd_* | s81_head | 12..1 | BLOCKED: parent RTL absent / H1 path |
+| hnx_rp3lp3h_n/_s | hbm | 128/128 | BLOCKED: PATH-HBM-SM P11 (GEOM REQ 10:23) |
+| ot_hbm_idx_score_quarter_static__* (r0c1_k2h1@ed62 x12, r0c0_k0h0 x10, ...) | hbm | 12..2 | BLOCKED: LEC NOT EQUIVALENT on both masters (batch1 H0 r0c0_k1h0 427 differs incl cf[*] + synth-removed regs; H1 4 differs) -> TOK-LEC triage open; a kit only reproduces FAIL_PREFLOOR |
+| ot_hbm_hc_bankq*_static* | hbm | 6..2 | BLOCKED: GEOM-REVIEW-2 05:01 structural (g_rv F4 grouping, face-band tree level), 6_7_bank NO_RECIPE |
+| q_hub cores: svc_vmdel_lane_n, xload_cl2_*, pc_ctrl_leaf_cfg_h9b, coll_q2_*, gq_*, sfustore, wb_kport, dma_back, programme_store | hbm | 8..2 | BLOCKED: q_hub = HBM path hub (hb_coll) + pending q_hub_nw delta; most NO_RECIPE/MULTI_TABLE |
+| pgslice lane_exp* / lanes0_3 / lanes_plain* | hbm | 4..2 | BLOCKED: EXP ALAT4 shell (Codex) / lanes4 template+straps deferred in HBM delta |
+| **pgslice_lg__pretree@0132854c0b0e** | hbm | 6 | KIT |
+| **pgslice_lg__side_rest@1bbe3488b9c4** | hbm | 4 | KIT |
+| **pgslice_lg__side_softplus@7c274b52e5df** | hbm | 4 | KIT |
+| sfu_core_split3 lane0..15/ctl/opstore | hbm | 2 each | KIT-LATER (16 pin tables, low replicas) |
+| qkd_hr_* (phy_adp x8 + 14) | qwen_kvsys | 8..1 | BLOCKED: KV-CORES plan delta (host clocks -> die clock), no views |
+| ot_qwen_tp8_pv_join_t | qwen_kvsys | 64 | BLOCKED: netlist fix (face_guard shared 513) |
+| kv3_* types | qwen_kvsys | 28..1 | BLOCKED: path / KV-PLAN3F v3.9f / obst deltas |
+| qwen_compute types+cores | qwen_compute | 48..1 | BLOCKED: path / PATH-QC-PLAN2-3 regen / CB tile_id strap delta |
+Main has NO B2n HBM core views (canary uses B2l): built views_b2n.json from main's B2n plan (views_b2r2.py) on claude/kits-spare2-w1-1025@c72da44ca1. HBM canary 863d618928 FAIL = vclk_basis (no clock_binding.json) + post-CTS insertion gate LATE TT 304.9/FF 266.4 (default core-insertion basis) -> kits use the PATH-HBM recipe (--core-insertion none --clock-taps density --face-shell-drop off). 3 PGS kits generated (face shell 1136/106/66 flops, 0 dropped) and launched to CTS: ot-run oth-ubuntu-720731 (pretree, intel2), oth-ubuntu-608494 (side_rest, epyc3), oth-ubuntu-82681 (side_softplus, epyc2); runs <host>:/srv/opentallas-scratch2/claude/kits-spare2/w1/runs/<kit>.
