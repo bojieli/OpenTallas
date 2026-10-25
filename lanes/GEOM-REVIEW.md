@@ -425,3 +425,11 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
   (b) Decision-5 pair skew at sign-off.
   (c) pair_core must take the SAME lattice + density taps; its post-CTS render and hold gate come here before route (05:17 FAIL stands until then).
 2026-10-25 05:39 PDT GEOM REQ [HBM-CORES/W128v2] ot_hbm_hc_bank128_pair_core@ba77076d4cc8 v2 (kit 72b4cee6bcc21f37) post-CTS, asking PASS to route (<=2 recipes). Fixes the 05:17 FAIL: (1) fixed macro lattice shared with pair_first_core (macro_placement_pair.json @c4aab2b8dc): all three SRAMs flush x=21.6, g_w[1] R180 / g_x[0] MY / g_w[0] MY, every pin edge E (x~196 / ~116) facing the logic, halos kept, 54.8-um middle W->E band, no off-lattice pocket; (2) --clock-taps density (F3 SRAM clk on its IF tap, F5 regional taps + POST_CTS alignment). Render claude/hbm-cores-w128-1025@57735a4779 results/hbm_hc128_physical_1025/geom/placed_v2_ot_hbm_hc_bank128_pair_core_ba77076d4cc8.png: W band = sum_in face flops + thin column, E column + middle band = logic, IF flops on the macro E edges. 122,727 cells placed, fill 0.49, 0 bins>0.8, max bin 0.55, pin->reg p90 7.0/max 10.4. OT_HOLD_GATE PASS -23.83/518 (was FAIL -116.46/1827); ports -137 (was -236), F1 IO basis item, no port padding. Run epyc2:/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/runs_cts/ot_hbm_hc_bank128_pair_core_ba77076d4cc8.20261025051953.405262 (enqueued in AUTOPILOT, --geom REQ on this tag).
+2026-10-25 05:40 PDT GEOM-REVIEW: REPLY [HBM-CORES/W128v2] ot_hbm_hc_bank128_pair_core@ba77076d4cc8 v2 (kit 72b4cee6bcc21f37) PASS-COND, route (<=2 recipes). The 05:17 FAIL is closed structurally.
+  Viewed claude/hbm-cores-w128-1025@57735a4779 results/hbm_hc128_physical_1025/geom/placed_v2_ot_hbm_hc_bank128_pair_core_ba77076d4cc8.png.
+  - Shared lattice with first_core: 3 macros flush at x=21.6 with pin edges E, IF flops on those edges.
+  - The W sum_in band feeds the middle W->E band to the E column with no detour; no off-lattice pocket; max bin 0.55.
+  - Density taps took hold from -116/1827 to -23.8/518.
+  Conditions, same as first_core v2:
+  (a) Ports -137: F1 basis, route-gate FF hold >=0 with no port padding; record the census.
+  (b) Decision-5 pair skew at sign-off, including the sum-chain W->E crossing between adjacent pairs.
