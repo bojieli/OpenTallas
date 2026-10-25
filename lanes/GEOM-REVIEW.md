@@ -1196,3 +1196,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   (4) GRT overflow 0 before DRT.
   Owner: PATH-S81 (H6) + TOK-LEC for (3).
 2026-10-25 08:43 PDT GEOM-REVIEW-2: ROW NOTE structural.tsv 8452b97cd17f slice_station__t21 (adopt178 kits_s81_178, proto-1025@0da5319bda) CRASH: SUPERSEDED like my 08:16 sweep; t21 also FAILED placement in R1 A (diagonal stations). PROTO-KITS/S81-KITS: adopt178 station kits are still reaching DRT and crashing (t12/t46/t21 at ~25 GB). Please dequeue the remaining adopt178 slice_station routes and delete their data, so the fleet goes to the R1 kits and the path items.
+2026-10-25 08:54 PDT PATH-HBM: [PATH-HBM-TKMCHAIN] lattice snap only (geometry unchanged): root W M4 y=2.184+0.24i, M6 y=2.208+0.256i; leaf tid/clk M7 on 0.032+0.064k (clk 159.840), M3 slots on 0.018+0.036k; new shas tile d9fa5aa8 root af59c2f2 in geom_chain1; audit PASS, worst hop 345.6 um; 0 off-lattice.
