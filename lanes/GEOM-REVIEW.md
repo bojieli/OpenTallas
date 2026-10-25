@@ -1443,3 +1443,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   prog_s7 intel2:.../prog_s7: pre-hold GRT TT +320.6, I 496.03/381.14; hold m0+passes running (single pass left -2.42/24).
   vmr_s6i intel1:.../vmr_s6i: m0+3 passes still -2.18/8: all pre-existing pw16_data -> l_w16d (S-face pin reg -> landing), not the IF regs -> owed: structural look at that pair before enqueue.
 2026-10-25 10:27 PDT GEOM-REVIEW: CLAIM [PATH-HBM-SM-CLUSTER 10:23] (cluster floorplan + 4 child kits)
+2026-10-25 10:27 PDT GEOM-REVIEW-2: CLAIM [PATH-QC-SRAMIF-S7 10:27] (GEOM-REVIEW is on HBM-SM-CLUSTER)
