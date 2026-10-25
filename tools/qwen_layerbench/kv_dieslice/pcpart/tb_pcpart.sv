@@ -38,7 +38,9 @@ module tb_pcpart;
     wire [7:0] ev = {s_es, m_hq, m_es, po0[28], her[259], her[0], her[260], m_f};
     always @(posedge clk) begin
         st_q <= st; ev_q <= ev;
-        if (st != st_q) $display("PCB cyc %0d boot_pc state %0d (own %b merge_rs %b)", cyc, st, m_own, m_rs);
+        if (st != st_q) $display("PCB cyc %0d boot_pc state %0d (own %b merge_rs %b) done %b ok %b cause %0d", cyc, st, m_own, m_rs,
+                                 dut.u_hsl0.u_slice.u_boot.u_boot.u_test.done, dut.u_hsl0.u_slice.u_boot.u_boot.u_test.ok,
+                                 dut.u_hsl0.u_slice.u_boot.u_boot.u_test.cause);
         if (ev != ev_q && ev != 0) $display("PCB cyc %0d slice_es %b merge_hq %b merge_es %b po0_col %b her_credit %b her_rd %b her_fault %b merge_fault %b",
                                             cyc, ev[7], ev[6], ev[5], ev[4], ev[3], ev[2], ev[1], ev[0]);
     end
@@ -52,6 +54,19 @@ module tb_pcpart;
     always @(posedge hck) begin n_rsc <= n_rsc + c_rsc; n_rwc <= n_rwc + c_rwc; n_rrd <= n_rrd + c_rrd; n_go <= n_go + c_go; end
     final $display("PCB CAL controller_es %0d reserved_static_col %0d reserved_write_col %0d reserved_rd %0d cal_go %0d cal_seal %b",
                    n_ces, n_rsc, n_rwc, n_rrd, n_go, c_seal);
+`ifndef PCB_ORIG
+    // KV-TOK B: controller boot window (qkd_ctrl_pc_sched_nc boot_win / col_boot), PC 0 path; HBM-clock PHY columns
+    wire b_win = dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.boot_win, b_col = dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.col_boot;
+    integer n_bcol = 0;
+    always @(posedge hck) if (b_col) begin n_bcol <= n_bcol + 1; $display("PCB cyc %0d boot column (no reservation) we %b", cyc,
+                                                  dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.col_we); end
+    final $display("PCB BOOTWIN boot_win %b boot_columns %0d", b_win, n_bcol);
+`endif
+    always @(posedge hck) if (po0[28]) $display("PCB cyc %0d PHY col pc0 we %b bank %0d col %0d", cyc, po0[29], po0[34:30], po0[39:35]);
+    final $display("PCB FAULTS pc0 fo %b f_raw %b obs %b ctl %b f_cmd %b f_early %b",
+                   dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.fo, dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.f_raw,
+                   dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.native_observer_fault, dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.ctl_fault,
+                   dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.f_cmd, dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.f_early);
     reg [32:0] sd_q = 0;
     always @(posedge clk) begin sd_q <= sdo; if (sdo != sd_q) $display("PCB cyc %0d sdo %b soo %b sfo %b", cyc, sdo[3:0], soo[3:0], sfo[3:0]); end
     integer maxc = 25000;
