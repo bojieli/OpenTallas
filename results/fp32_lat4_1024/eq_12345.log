@@ -1,0 +1,16 @@
+FP32_LAT4_EQ cycles=20005216 directed_pairs=5184 random=20000000 seed=12345
+  add_lat4         mismatches=0
+  add_lat4i        mismatches=0
+  add_lat5         mismatches=0
+  add_f12_l4       mismatches=0
+  add_f12_l5       mismatches=0
+  add_f12_l5x      mismatches=0
+  add_f12_l5s      mismatches=0
+  s81_ve_fadd_l4   mismatches=0
+  mul_f12_l5       mismatches=0
+  mul_f12_l6       mismatches=0
+  mul_lat4         mismatches=0
+  mul_lat5         mismatches=0
+  s81_ve_fmul_l5   mismatches=0
+  add_lat6         mismatches=0
+FP32_LAT4_EQ PASS

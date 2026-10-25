@@ -8,9 +8,10 @@ module tb_s81sl_ve #(parameter integer MUT = 0, GAP = 1, LM = 5, LA = 4);
     reg rst_n = 0;
     reg r_v = 0; reg [1:0] r_c = 0; reg [127:0] r_h = 0, r_k = 0, r_w = 0;
     reg a_v = 0; reg [1:0] a_c = 0; reg [255:0] a_h = 0, a_val = 0; reg [31:0] a_g = 0;
+    wire [63:0] r_hp = {r_h[127:112], r_h[95:80], r_h[63:48], r_h[31:16]}; wire [127:0] a_hp = {a_h[255:240], a_h[223:208], a_h[191:176], a_h[159:144], a_h[127:112], a_h[95:80], a_h[63:48], a_h[31:16]};   // packed BF16 h for ot_s81sl_ve (OWNER DECISION 8)
     wire p_v, o_v, fault; wire [1:0] p_c, o_c; wire [31:0] p_hh, p_kk, p_dd; wire [127:0] o_yp; wire [255:0] o_y = {o_yp[127:112], 16'd0, o_yp[111:96], 16'd0, o_yp[95:80], 16'd0, o_yp[79:64], 16'd0, o_yp[63:48], 16'd0, o_yp[47:32], 16'd0, o_yp[31:16], 16'd0, o_yp[15:0], 16'd0};
-    ot_s81sl_ve #(.LM(LM), .LA(LA), .MUT(MUT)) dut (clk, rst_n, r_v, r_c, r_h, r_k, r_w, p_v, p_c, p_hh, p_kk, p_dd,
-                                               a_v, a_c, a_h, a_val, a_g, o_v, o_c, o_yp, fault);
+    ot_s81sl_ve #(.LM(LM), .LA(LA), .MUT(MUT)) dut (clk, rst_n, r_v, r_c, r_hp, r_k, r_w, p_v, p_c, p_hh, p_kk, p_dd,
+                                               a_v, a_c, a_hp, a_val, a_g, o_v, o_c, o_yp, fault);
     reg [31:0] hm [0:255], km [0:255], wm [0:255], vm [0:63], gm [0:3], pm [0:11], ym [0:255];
     string dir;
     integer i, c, e, cyc = 0, bad = 0, np = 0, no = 0, t_r0 = -1, t_p_last = -1, t_a0 = -1, t_o_last = -1;

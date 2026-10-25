@@ -1,0 +1,16 @@
+{
+ "element": "slice_station x24 (t6 t8 t9 t10 t11 t13 t14 t18 t22-t31 t35-t40) wavefront reset",
+ "kit": "claude/s81-kits-geom-1024r@109f3a6fe (kits = gen.py phys on claude/s81-dec12-1024r@d206dfb226 + RESET 6c3989757)",
+ "stage": "3_place",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-25T00:43:00-07:00",
+ "reasons": "[2026-10-25 00:43] Looked at all 24 placed images (montages rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/st_wf/M0.png, M1.png). The reset wavefront relays form a regular grid hung off the reset pin, with placed hops 363-381 um (decision 13), and the 16 blue clock taps sit on a 4x4 grid. The ft chains are straight and evenly stationed on the slot lines. The N->W/W->S turning slots on t8/t11/t18/t23/t31/t37 are placed as diagonal station chains: parallel, with no crossings seen, and Manhattan length is unchanged, but each diagonal step costs dx+dy of wire. Max bin <=0.17, so the outline is ~85% empty by plan, as expected for a station type. The t13/t24/t30/t31 kits that I and the author failed in the ST405 t11 round are now clean (max-wire 100).",
+ "fixes": "Route OK. Conditions: (1) per-hop Manhattan <=405 um on the diagonal ft chains, checked from the placed ODB, not the straight-line distance; (2) clock decision 5 at sign-off: related-pair skew <=80 ps TT+FF with CPPR, taps balanced; the 16-tap grid over an empty outline is fine if pair skew holds, else prune taps toward the station rows; (3) usual TT/FF 60/25, GRT/DRC 0.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/st_wf/M0.png",
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/st_wf/M1.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "BRIEFING decisions 5/12/13; OWNER 2026-10-24 08:05 review before route"
+}

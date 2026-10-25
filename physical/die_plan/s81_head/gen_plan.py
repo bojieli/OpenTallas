@@ -289,7 +289,7 @@ HD_SRC = ["rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot
           "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv"]
 T("hd_tile", "ot_s81hd_tile_p", (TW, TH), MD["tile"]["cells"],
   contents=[dict(inst="u_core", module="ot_s81hd_tile", status="rework", kit="physical/ref_tile/s81hd_tile_m",
-                 cells=TILE_GLUE, params={"CV": "1", "A_INPUT_STAGES": "1", "MERGE_HOP": "1", "CMP_STAGES": "2"},
+                 cells=TILE_GLUE, params={"CV": "1", "A_INPUT_STAGES": "1", "MERGE_HOP": "1", "CMP_STAGES": "3"},
                  bind={"ck": "clk", "rst_n": "rst_n", "row0": "net:row0", "ten": "net:ten"},
                  note="tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; elements = the 5 closed "
                       "views (CV 1, CUT 0x1ff / SPLIT9 1)"),
@@ -440,7 +440,7 @@ for rp in range(RP):
         P(f"tW{rp}b{j}", "hd_tile", X_SP - (j + 1) * TW, yb, "R0")         # back: W -> E
 
 # =================================================================================================== seeds
-TWIN = (SLOT_E * 2 + G, SLOT_E * 2 + G + 300.0)          # tile chain window (type frame y), upper third of the tile
+TWIN = (SLOT_E + G, SLOT_E + G + 300.0)   # tile chain window (type frame y): 10-24 lowered from the upper third (700..1000) to 354..654 = the A centre row channel + top A row (hd_tile preview review: x_q -> A x pins 600-700 um)
 seed("hd_tile", "o", "E", TWIN[0], hi=TWIN[1])
 seed("hd_tile", "i", "W", TWIN[0], hi=TWIN[1])
 seed("hd_turn_a", "t_i", "W", TWIN[0], hi=TWIN[1])
@@ -645,11 +645,12 @@ plan = dict(
          "s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). "
          "PDN (OWNER 10-24 decision 7): die.pg.domains = one VDDPHY supply + dedicated bump rows per SerDes "
          "window (12); the core VDD/VSS M8/M9 grid does not feed the PHY. TODO (TRIAL/PDN): head PSM / IR with the "
-         "VDDPHY domains. Reset (decision 2): reset.release pipelined (tools/die_plan/reset_tree.py).",
+         "VDDPHY domains. Reset (decision 13): reset.release wavefront (tools/die_plan/reset_tree.py).",
     die=dict(name="s81_head", label="DeepSeek ROM S81 release head die (LM head / argmax / MTP / host)", tech="asap7",
-             outline_um=[W, H], period_ps=833, reach_um=1500.0, rep_um=450.0, grid_um=G,
+             outline_um=[W, H], period_ps=833, reach_um=405.0, rep_um=450.0, grid_um=G,   # DEC12: 405-um M4-M7 hop
              layer_budget=dict(partition_signal_max="M7", die_layers=["M8", "M9"],
-                               die_use=["clock_spine", "pg", "ft_reserved"], cut_avail={"M8": 0.6, "M9": 0.6}),
+                               # DEC12 (ruling 9.3): M8/M9 = clock spine, reset, PG only (no ft_reserved)
+                               die_use=["clock_spine", "pg"]),
              pg=dict(partition_pg_max="M7",
                      grid=[dict(layer="M8", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"]),
                            dict(layer="M9", width_um=0.48, pitch_um=8.64, offset_um=4.32, nets=["VDD", "VSS"])],
@@ -661,8 +662,9 @@ plan = dict(
     clock=dict(source=dict(part="@die", bus="clk"), insertion_ps=250, common_latency_ps=250, insertion_tol_ps=40,
                neighbour_skew_ps=80, face_xing="budgeted",
                spine=dict(layers=["M8", "M9"], root_um=[lat(W / 2), lat(H / 2)], topology="htree")),
+    # DEC12 batch: OWNER DECISION 13 neighbour wavefront (one root sync per die + registered rst_o relays; reset_tree.py)
     reset=dict(source=dict(part="@die", bus="rst_n"), sync_stages=2, data_reset=False, epoch_bit=True,
-               release="pipelined"),   # OWNER RESET RULE 10-24 (decision 2): one root sync per region + relays (reset_tree.py)
+               release="wavefront"),
     census={"none": "top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the "
                     "bottom-up H10 die chain used a different block split and FAILED STA); census follows the first "
                     "bind (G3)"},

@@ -30,7 +30,9 @@ module tb_dsdv_seq_host_mu;
     wire [3:0] t_mf; wire [4*34-1:0] mu_c; wire [4*11-1:0] mu_rc; reg [31:0] mu_rt_7n = 0, mu_rt_0n = 0;
 `ifndef PLAIN
     if (1) begin : g_mux
-        dsdv_seq_host_mux dut (.ck(ck), .rst_n(rst_n), .tap_k(8'h00), .sink_k(8'h00), .vi_s(vi_s), .vo_s(vo_s),
+        // S81/H23 (10-24): SELR 0 keeps this bench's host-path latencies (the SEL relay, SELR 1 = the die default, adds
+        // one edge on s_hw_*; it is benched by tb_dsdv_selchain / run_selchain.sh)
+        dsdv_seq_host_mux #(.SELR(0)) dut (.ck(ck), .rst_n(rst_n), .tap_k(8'h00), .sink_k(8'h00), .vi_s(vi_s), .vo_s(vo_s),
             .vi_n(vi_n), .vo_n(vo_n), .f_host(f_host), .t_host(t_host), .f_lf(4'b0101), .f_ks(f_ks), .t_kd(t_kd),
             .t_mf(t_mf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w),
             .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d),

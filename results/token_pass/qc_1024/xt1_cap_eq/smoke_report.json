@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.die_plan.bind_smoke.v1",
+ "die": "qwen_compute",
+ "plan": "claude/qc-cap-1024r @806bcb4058",
+ "bound": "epyc1:/srv/opentallas-scratch2/claude/qc/bind_eq_cb16",
+ "bound_recipe": "physical/die_plan/qwen_compute/bind/asbuilt_capacity_eq_cb16.json (sha256 7b45c2cf9b4b2a1e = bind dir recipe.json)",
+ "bound_top_sha256": "3f91e83260b37e5985432cffafab932cac2e0dd0026c354a9533d6415b8e6ffd",
+ "constants": "constants_cap_eq.json (regen_constants.py --die qwen_compute --bound bind_eq_cb16; 22/22 OK; sha256 fb39f9e1367c752c)",
+ "lead": {"value": 16, "rule": "8 + XT1_FILL_LEAD_OFFSET (8) read from the constants by bind_smoke.xt1_lead; hr leg +12, sw +2, xt +2 on all 12 slices"},
+ "vehicle": {"tool": "tools/die_plan/bind_smoke.py --clusters both --jobs 24 --build-jobs 32 --no-report", "src_rev": "2ece7f9a79 (bind base elem-qk)",
+             "closure_files": 109, "unresolved_modules": [], "inputs": "QC-TOK xt1 inputs (gold_near 5fe75d3d, gold_far 6a120aba, masks; real TP8 L0 die0 ROM, stand-in x)"},
+ "run": {"host": "epyc3", "dir": "epyc3:/srv/opentallas-scratch2/claude/qc-tok-capeq/xt1_both", "otrun_exit": 0,
+         "build_s": 2604, "sim_s": 755, "peak_build_gb": 75.8},
+ "runs": {"nominal": "RESULT XT1N PASS mode=nominal near=64/64 far=64/64",
+          "mutant_hr_plus1": "RESULT XT1N PASS mode=nominal near=64/64 far=64/64 (numerically exact, shifted one edge)"},
+ "schedule_gate": {"verdict": "PASS", "mutant_caught": true, "detection": "fixed consumer edges differ (16/16 cw_go + rs_edges, near and far, all 4 ops, +1)"},
+ "verdict": "PASS",
+ "scope": "RTL-functional carve smoke on the bound top; not a generated-die token pass or physical signoff"
+}

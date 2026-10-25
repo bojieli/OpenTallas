@@ -1,0 +1,17 @@
+{
+ "subject": "S81 die plan claude/s81-xdie3-1024r@1f82e8785f (rebased on DEC12 d206dfb226; geometry identical to plan2): reserve-pair GEOM conditions 1 and 3, corner ESD/bump reuse",
+ "author": "S81/XDIE",
+ "date": "2026-10-24",
+ "renders": {"after": ["sw_corner.png", "ne_corner.png"], "before (s81-1024r@1e44e77664)": ["sw_corner_before.png", "ne_corner_before.png"]},
+ "checks": {"G0": "PASS 0 errors, 177 types / 400 partitions (DEC12 check.py, 405 exact)", "G0C": "PASS 0 errors, 177/177 types clean"},
+ "cond1_phy_fit_and_ft_channel": {
+  "before": "FAIL: VDDPHY domain = whole partition (covered the core-VDD ft band); lk_WS0/WS1 ft band on the die-edge side -> free PHY zone ~850 um off-shore",
+  "fix": "die_io PHY zone = largest shoreline rect free of bus strip, ft bands and L-route legs (+63.64 guard); pg domain = zone + guard clipped to the partition; W S-edge lk_* SerDes orient MX",
+  "after": {"lk_WS0": "2886x482 um zone at S edge, 57 sites", "lk_WS1": "2886x482, 57 sites", "lk_EN0": "2886x482 at N edge, 57 sites", "lk_EN1": "2886x482, 57 sites", "lk_EN2": "1918x1227 (ft column outside VDDPHY)", "lk_WS2/lk_EN3": "~2802x1227 minus 600-um corner square"},
+  "verdict_author": "PASS with the ot_pdie_serdes model (250x2250, 0.563 mm2, re-aspected to 482 um height); FAIL with an assumed published-size 6x112G PHY ~2.4 mm2 (needs ~830 um depth over the full width -> overlaps ft bands)"
+ },
+ "cond3_ws3_reaspect": {"zone": "530x2370 um east column (guard 63.64), 42 sites", "verdict_author": "PASS: model PHY fits R0 natively; escape concern: 530-um shoreline -> 26 SerDes signals need ~9 C4 rows deep at 150 um"},
+ "corner_esd": "600-um corner stress square as bump_exclude_um on lk_WS2 / lk_EN3 / lk_WN2 windows (sites 136 -> ~127); VDDPHY bumps.exclude_um + esd_um (rail clamp + decap in the depopulated corner); SE keep-out channel (20,0) kept",
+ "open": ["lk_ES0/ES1 PHY zone off-shore (pre-existing E-side S-edge MY slot, 396 um from the edge): R180 would rename in-flight s_7S station kits ST405 t23-t28 -> steward decision", "clock taps of 2x1 lk_* partitions sit in the ft band", "real PHY size unknown (OWNER?)"],
+ "type_renames_no_kits": {"lk_WS0": "t7->t9", "lk_WS1": "t8->t10", "lk_WS2": "t11->t14", "note": "WS0-2 now share the N-edge serdes types; all other names kept"}
+}

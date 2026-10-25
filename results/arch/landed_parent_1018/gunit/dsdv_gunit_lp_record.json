@@ -78,7 +78,7 @@
    "src_nodes": [
     "u_l2"
    ],
-   "width": 276,
+   "width": 204,
    "readers": [
     "u_l0.hp_a"
    ],
@@ -112,7 +112,7 @@
    "src_nodes": [
     "u_l2"
    ],
-   "width": 276,
+   "width": 204,
    "readers": [
     "u_l0.hp_b"
    ],
@@ -146,7 +146,7 @@
    "src_nodes": [
     "u_l2"
    ],
-   "width": 10,
+   "width": 8,
    "readers": [
     "u_l0.cw_a"
    ],
@@ -231,7 +231,7 @@
    "src_nodes": [
     "u_l0"
    ],
-   "width": 276,
+   "width": 170,
    "readers": [
     "u_l2.hct_b"
    ],
@@ -275,7 +275,7 @@
   },
   "regional_reset_copies": {
    "hc": {
-    "loads": 84,
+    "loads": 74,
     "copies": [
      {
       "net": "lpr_hc_c0",
@@ -283,16 +283,16 @@
      },
      {
       "net": "lpr_hc_c1",
-      "loads": 29
+      "loads": 32
      },
      {
       "net": "lpr_hc_c2",
-      "loads": 23
+      "loads": 10
      }
     ]
    },
    "rt": {
-    "loads": 86,
+    "loads": 76,
     "copies": [
      {
       "net": "lpr_rt_c0",
@@ -300,11 +300,11 @@
      },
      {
       "net": "lpr_rt_c1",
-      "loads": 31
+      "loads": 32
      },
      {
       "net": "lpr_rt_c2",
-      "loads": 23
+      "loads": 12
      }
     ]
    }
@@ -313,7 +313,7 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 9913,
+  "landing": 8443,
   "pads": 0,
   "reset": 11
  },
@@ -387,7 +387,7 @@
     "readers": [
      "u_l0.hp_a"
     ],
-    "width": 276,
+    "width": 204,
     "added_edges": 3
    },
    {
@@ -407,7 +407,7 @@
     "readers": [
      "u_l0.hp_b"
     ],
-    "width": 276,
+    "width": 204,
     "added_edges": 3
    },
    {
@@ -427,7 +427,7 @@
     "readers": [
      "u_l0.cw_a"
     ],
-    "width": 10,
+    "width": 8,
     "added_edges": 3
    },
    {
@@ -477,7 +477,7 @@
     "readers": [
      "u_l2.hct_b"
     ],
-    "width": 276,
+    "width": 170,
     "added_edges": 3
    },
    {

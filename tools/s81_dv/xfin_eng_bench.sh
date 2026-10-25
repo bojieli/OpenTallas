@@ -7,7 +7,7 @@
 set -u; O=$1; M=${2:-base}; ORD=${3:-0}; GAP=${4:-0}; SEED=${5:-1}; RAW=${6:-}; mkdir -p $O/run
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
 python3 tools/s81_dv/xfin_eng_golden.py $O/run --seed $SEED > $O/gold.log 2>&1 || { echo "BENCH_SETUP_FAILED gold"; tail -3 $O/gold.log; exit 4; }
-DEF=""; [ "$M" = mutetag ] && DEF="+define+OT_S81DV_MUT_ETAG"; [ "$M" = muteassoc ] && DEF="+define+OT_S81DV_MUT_EASSOC"
+DEF=""; [ "$M" = mutetag ] && DEF="+define+OT_S81DV_MUT_ETAG"; [ "$M" = muteassoc ] && DEF="+define+OT_S81DV_MUT_EASSOC"; [ "$M" = rtlcxfin ] && DEF="+define+OT_RTLC_MUT_XFIN"
 srcs="$(cat physical/hbm_norm_split_20261008/sources.f | tr '\n' ' ') rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv rtl/dsrom_sys/s81_dv/test/tb_s81dv_xfin16e.sv"
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GORD=$ORD -GGAP=$GAP --top-module tb_s81dv_xfin16e -Mdir $O/obj $srcs \
   --build-jobs ${J:-4} --output-split 5000 --output-split-cfuncs 500 -MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 || { echo "BUILD_FAILED"; tail -n 8 $O/build.log; exit 3; }

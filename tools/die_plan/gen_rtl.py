@@ -84,14 +84,22 @@ endmodule
 // per-tap copies have identical inputs and would otherwise be merged back into one (Yosys opt_merge).
 (* keep_hierarchy *)
 module ot_dp_rsync_s2 (input wire clk, input wire async_rst_n, output wire sync_rst_n);
+    // Intentional reset CDC shift register; only this async_reg declaration
+    // mixes asynchronous assertion with synchronous release/feedback.
+    /* verilator lint_off SYNCASYNCNET */
     (* async_reg = "true" *) reg [1:0] p;
+    /* verilator lint_on SYNCASYNCNET */
     always @(posedge clk or negedge async_rst_n)
         if (!async_rst_n) p <= 2'b0; else p <= {p[0], 1'b1};
     assign sync_rst_n = p[1];
 endmodule
 (* keep_hierarchy *)
 module ot_dp_rsync_s3 (input wire clk, input wire async_rst_n, output wire sync_rst_n);
+    // Intentional reset CDC shift register; only this async_reg declaration
+    // mixes asynchronous assertion with synchronous release/feedback.
+    /* verilator lint_off SYNCASYNCNET */
     (* async_reg = "true" *) reg [2:0] p;
+    /* verilator lint_on SYNCASYNCNET */
     always @(posedge clk or negedge async_rst_n)
         if (!async_rst_n) p <= 3'b0; else p <= {p[1:0], 1'b1};
     assign sync_rst_n = p[2];

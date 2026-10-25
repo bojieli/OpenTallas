@@ -1,0 +1,279 @@
+{
+ "checked": 72,
+ "slots": 65,
+ "stations_in_cores": 181,
+ "long_hops": 157,
+ "unfixed": [],
+ "added_stations": [
+  {
+   "slot": "cbf_q00_s2.rx_flit_serdes_rx",
+   "stations_from": 6,
+   "stations_to": 7,
+   "routed_hops": [
+    311,
+    320,
+    328,
+    328,
+    337,
+    346,
+    354
+   ]
+  },
+  {
+   "slot": "cbf_q00_s2.serdes_tx_tx_flit",
+   "stations_from": 7,
+   "stations_to": 9,
+   "routed_hops": [
+    302,
+    311,
+    320,
+    328,
+    337,
+    346,
+    346,
+    354,
+    346
+   ]
+  },
+  {
+   "slot": "cbf_q00_s2.serdes_tx_valid_tx_v",
+   "stations_from": 7,
+   "stations_to": 9,
+   "routed_hops": [
+    302,
+    311,
+    320,
+    328,
+    337,
+    346,
+    354,
+    354,
+    354
+   ]
+  },
+  {
+   "slot": "cbf_q00_s2.tx_up_serdes_up",
+   "stations_from": 7,
+   "stations_to": 10,
+   "routed_hops": [
+    372,
+    363,
+    354,
+    354,
+    346,
+    337,
+    337,
+    346,
+    346,
+    354
+   ]
+  },
+  {
+   "slot": "cbf_q01.a00",
+   "stations_from": 6,
+   "stations_to": 7,
+   "routed_hops": [
+    328,
+    337,
+    346,
+    354,
+    363,
+    372,
+    372
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.a00",
+   "stations_from": 6,
+   "stations_to": 7,
+   "routed_hops": [
+    328,
+    337,
+    346,
+    354,
+    363,
+    372,
+    372
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.rx_v_serdes_rx_valid",
+   "stations_from": 7,
+   "stations_to": 8,
+   "routed_hops": [
+    320,
+    328,
+    337,
+    346,
+    346,
+    354,
+    363,
+    372
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.serdes_tx_tx_flit",
+   "stations_from": 7,
+   "stations_to": 10,
+   "routed_hops": [
+    354,
+    363,
+    363,
+    363,
+    354,
+    346,
+    337,
+    328,
+    320,
+    320
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.serdes_tx_valid_tx_v",
+   "stations_from": 7,
+   "stations_to": 10,
+   "routed_hops": [
+    363,
+    363,
+    363,
+    354,
+    346,
+    346,
+    337,
+    328,
+    328,
+    328
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.tx_up_serdes_up",
+   "stations_from": 7,
+   "stations_to": 8,
+   "routed_hops": [
+    320,
+    328,
+    328,
+    337,
+    346,
+    354,
+    363,
+    372
+   ]
+  },
+  {
+   "slot": "cbn_q00.rsf",
+   "stations_from": 7,
+   "stations_to": 8,
+   "routed_hops": [
+    328,
+    337,
+    346,
+    346,
+    354,
+    363,
+    372,
+    380
+   ]
+  },
+  {
+   "slot": "cbn_q01.a00",
+   "stations_from": 6,
+   "stations_to": 7,
+   "routed_hops": [
+    328,
+    337,
+    346,
+    354,
+    363,
+    372,
+    372
+   ]
+  },
+  {
+   "slot": "cbn_q01.rsf",
+   "stations_from": 7,
+   "stations_to": 8,
+   "routed_hops": [
+    328,
+    337,
+    346,
+    354,
+    354,
+    363,
+    372,
+    380
+   ]
+  },
+  {
+   "slot": "sle_su_c.x_su_l1_ctl",
+   "stations_from": 5,
+   "stations_to": 6,
+   "routed_hops": [
+    311,
+    320,
+    328,
+    337,
+    346,
+    354
+   ]
+  },
+  {
+   "slot": "sle_su_c.x_su_l1_sc",
+   "stations_from": 5,
+   "stations_to": 6,
+   "routed_hops": [
+    294,
+    320,
+    328,
+    363,
+    363,
+    372
+   ]
+  },
+  {
+   "slot": "sle_su_l1.x_st_b_fe",
+   "stations_from": 2,
+   "stations_to": 3,
+   "routed_hops": [
+    268,
+    268,
+    268
+   ]
+  },
+  {
+   "slot": "slw_su_c.x_su_l1_ctl",
+   "stations_from": 5,
+   "stations_to": 6,
+   "routed_hops": [
+    302,
+    311,
+    311,
+    320,
+    328,
+    337
+   ]
+  },
+  {
+   "slot": "slw_su_l1.x_fw_sc",
+   "stations_from": 3,
+   "stations_to": 4,
+   "routed_hops": [
+    363,
+    372,
+    380,
+    380
+   ]
+  },
+  {
+   "slot": "slw_su_l1.x_fw_st_a",
+   "stations_from": 3,
+   "stations_to": 4,
+   "routed_hops": [
+    363,
+    372,
+    380,
+    380
+   ]
+  }
+ ]
+}
