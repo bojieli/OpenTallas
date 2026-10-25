@@ -27,6 +27,9 @@ def main():
     ap.add_argument("--view", required=True)
     ap.add_argument("--pins", required=True)
     ap.add_argument("--out-views", required=True)
+    ap.add_argument("--port-change", action="store_true",
+                    help="the RTL port list changed with this table (new ports, e.g. tile_clr_o / tile_conv_o): the name "
+                         "set may differ; the generator's port-bind gate checks pins against the RTL")
     a = ap.parse_args()
     V = json.load(open(a.views))
     v = next((x for x in V["view_list"] if x["view"] == a.view), None)
@@ -55,7 +58,7 @@ def main():
     on, nn = {p["name"] for p in old}, [p["name"] for p in new]
     if len(set(nn)) != len(nn):
         raise SystemExit("duplicate pin names in the new table")
-    if set(nn) != on:
+    if set(nn) != on and not a.port_change:
         raise SystemExit(f"pin name set differs: missing {sorted(on - set(nn))[:5]} extra {sorted(set(nn) - on)[:5]}")
     out = Path(a.out_views).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -65,6 +68,7 @@ def main():
                                                                                   sha256=sha(a.pins)))
     W = dict(V, plan=str(plan), view_list=[nv], views=1)
     out.write_text(json.dumps(W, indent=1) + "\n")
+    print(json.dumps(dict(added=sorted(set(nn) - on), removed=sorted(on - set(nn)))))
     moved = sum(1 for p, o in zip(sorted(new, key=lambda p: p["name"]), sorted(old, key=lambda p: p["name"]))
                 if (p["layer"], p["x"], p["y"]) != (o["layer"], o["x"], o["y"]))
     print(json.dumps(dict(view=a.view, pins=len(new), moved=moved, pins_file=str(pf), views=str(out))))
