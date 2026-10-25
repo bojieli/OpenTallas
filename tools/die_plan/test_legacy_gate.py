@@ -21,11 +21,11 @@ def kit(tmp_path):
     return tmp_path
 
 
-@pytest.mark.parametrize('verdict,code,expected', [('EQUIVALENT',0,0),('UNPROVEN',0,5),('NEQ',1,5),('EQUIVALENT',3,5)])
+@pytest.mark.parametrize('verdict,code,expected', [('EQUIVALENT',0,0),('UNPROVEN',0,5),('NEQ',1,5),('EQUIVALENT',3,5),('malformed',0,5)])
 def test_lec_requires_new_equivalent_receipt(tmp_path, verdict, code, expected):
     k = kit(tmp_path)
     def execute(args, **kwargs):
-        (k/'lec/lec.json').write_text(json.dumps(dict(verdict=verdict)))
+        (k/'lec/lec.json').write_text(json.dumps([] if verdict=='malformed' else dict(verdict=verdict)))
         return SimpleNamespace(returncode=code)
     assert gate.run(k, 'lec', k/'netlist.v', execute) == expected
 
