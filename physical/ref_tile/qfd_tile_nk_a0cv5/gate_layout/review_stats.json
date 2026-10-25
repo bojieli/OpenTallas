@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.ref_tile.layout_review.v1",
+ "top": "qfd_tile_nk_a0c",
+ "placed": false,
+ "outline_um": [
+  457.92,
+  1157.76
+ ],
+ "aspect": 2.528,
+ "die_area_um2": 530161.5,
+ "macros": 19,
+ "macro_area_pct": 60.92,
+ "std_cells": 0,
+ "std_area_um2": 0,
+ "std_fill_of_free": null,
+ "ff": 0,
+ "buf_inv": 0,
+ "buf_share": null,
+ "pins_per_face": {
+  "area": 24,
+  "W": 2056,
+  "E": 527
+ },
+ "pins_per_um": {
+  "E": 0.455,
+  "W": 1.776
+ },
+ "pin_peak_per_um_10um": {
+  "W": 5.3,
+  "E": 5.3
+ },
+ "pin_layers": {
+  "M7": 24,
+  "M4": 2583
+ },
+ "pins_registered": 2343,
+ "pins_to_macro": 0,
+ "pins_unregistered": 263,
+ "pin_to_reg_median_um": 929.7,
+ "pin_to_reg_p90_um": 1087.66,
+ "pin_to_reg_max_um": 1127.14,
+ "empty_area": null,
+ "density_bin_um": 14.472,
+ "macro_obs": {
+  "ot_qwen_tile_romleaf": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "RVTN",
+   "RVTP"
+  ],
+  "ot_qwen_tile_node": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "RVTN",
+   "RVTP"
+  ],
+  "ot_qwen_tile_lsl_fp1": [
+   "M1",
+   "M2",
+   "M3",
+   "M4",
+   "M5",
+   "M6",
+   "RVTN",
+   "RVTP"
+  ]
+ },
+ "macros_pins_facing_away": [
+  "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[0\\].u_leaf",
+  "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node",
+  "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[3\\].g_hd.u_lh",
+  "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[6\\].g_hd.u_lh",
+  "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[7\\].g_hd.u_lh"
+ ],
+ "clock_roots": 0,
+ "flags": [
+  "pin->register p90 1088 um",
+  "5 macros' pins face away from their logic"
+ ],
+ "png": "/home/ubuntu/wt/qc-a0v4-1023/physical/ref_tile/qfd_tile_nk_a0cv5/gate_layout/review.png",
+ "kind": "parent",
+ "geom_review": {
+  "verdict": "FAIL",
+  "hash": "dea54717b042ffc5b8948417bad8e91eb50be287a6e453c0115f83a10cc3ed97",
+  "kit": "physical/ref_tile/qfd_tile_nk_a0cv5@f192e7ae8",
+  "element": "qfd_tile_nk_a0c",
+  "src": "/home/ubuntu/claude-takeover-20261007/geom_review/verdicts/qfd_tile_nk_a0c__qfd_tile_nk_a0cv5__dea54717b042.json"
+ },
+ "verdict_items": [
+  [
+   "INFO",
+   "layout_review",
+   "floorplan-only dump: review picture written, fill / pin-register not judged",
+   ""
+  ]
+ ]
+}
