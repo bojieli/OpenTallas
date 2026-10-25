@@ -1,0 +1,164 @@
+{
+ "scope": "Prospective M5/FT cd932 plan-lane model only; 222 internal CS contracts held; current bound token NOTRUN",
+ "source_commit": "cd93218aee",
+ "plans": {
+  "baseline": {
+   "digest": "9eddd1b8946d39b2",
+   "plan_sha256": "ee5e40fa6c15e103a45892344ffc2cd75ca62ef8ccd47ee94edbcae815526b71",
+   "lane_count": 873
+  },
+  "new": {
+   "digest": "a95d7eeb9f2e8966",
+   "plan_sha256": "630b6b6ce684c3e0719f0b507f3f8c48430e70ba8f3121819fa11f8b2212d226",
+   "lane_count": 873
+  }
+ },
+ "workloads": {
+  "ar": {
+   "dag_added_cycles": 435.0,
+   "map_added_cycles": 435.0,
+   "old_tok_s": 784.0,
+   "new_tok_s": 783.8,
+   "old_calendar_diff": 0.0,
+   "new_calendar_diff": 0.0
+  },
+  "mtp": {
+   "dag_added_cycles": 445.0,
+   "map_added_cycles": 485.0,
+   "old_tok_s": 2746.4,
+   "new_tok_s": 2745.7,
+   "old_calendar_diff": 5480.0,
+   "new_calendar_diff": 5480.0
+  }
+ },
+ "lane_changes": {
+  "dn_s_2N_L3": {
+   "before": 9,
+   "after": 10
+  },
+  "dn_s_2S_L3": {
+   "before": 7,
+   "after": 8
+  },
+  "dn_s_3N_L3": {
+   "before": 6,
+   "after": 7
+  },
+  "dn_s_3N_L4": {
+   "before": 10,
+   "after": 12
+  },
+  "dn_s_5N_L3": {
+   "before": 7,
+   "after": 10
+  },
+  "dn_s_6N_L3": {
+   "before": 7,
+   "after": 8
+  },
+  "dn_s_6S_L3": {
+   "before": 8,
+   "after": 9
+  },
+  "flt__gunit__s_3N_C": {
+   "before": 18,
+   "after": 19
+  },
+  "rt_E4_in_0": {
+   "before": 25,
+   "after": 26
+  },
+  "rt_E4_in_1": {
+   "before": 30,
+   "after": 31
+  },
+  "rt_E4_in_2": {
+   "before": 35,
+   "after": 36
+  },
+  "rt_W4_in_0": {
+   "before": 23,
+   "after": 24
+  },
+  "rt_W4_in_1": {
+   "before": 29,
+   "after": 30
+  },
+  "rt_W4_in_2": {
+   "before": 34,
+   "after": 35
+  },
+  "unit__seqhost__s_0N_C": {
+   "before": 62,
+   "after": 63
+  },
+  "up_s_3N_L3": {
+   "before": 6,
+   "after": 7
+  },
+  "up_s_3N_L4": {
+   "before": 10,
+   "after": 12
+  },
+  "up_s_5N_L3": {
+   "before": 7,
+   "after": 9
+  },
+  "up_s_6S_L3": {
+   "before": 7,
+   "after": 8
+  },
+  "x_E2_in": {
+   "before": 18,
+   "after": 20
+  },
+  "x_E2_out": {
+   "before": 46,
+   "after": 51
+  },
+  "x_E4_in": {
+   "before": 26,
+   "after": 29
+  },
+  "x_E4_out": {
+   "before": 41,
+   "after": 43
+  },
+  "x_W2_in": {
+   "before": 18,
+   "after": 19
+  },
+  "x_W2_out": {
+   "before": 47,
+   "after": 53
+  },
+  "x_W4_in": {
+   "before": 28,
+   "after": 31
+  },
+  "x_W4_out": {
+   "before": 43,
+   "after": 45
+  },
+  "xtier__eng__s_6N_C": {
+   "before": 69,
+   "after": 70
+  }
+ },
+ "mapped_term_changes": {
+  "field_round": {
+   "before": 138,
+   "after": 139,
+   "lanes": [
+    "x_W2_out",
+    "xo_W2_out_a",
+    "xo_W2_out_b",
+    "fi_W2_p6_r0r1",
+    "fi_W2_p6_r1r0",
+    "fi_W2_p6_r1r2",
+    "fi_W2_p6_r2r1",
+    "rt_W2_out_2"
+   ]
+  }
+ }
+}
