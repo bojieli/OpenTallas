@@ -1,0 +1,55 @@
+OT_MSCTS_TRUNK SW path 29.0 um = 7 stages x 4.14 um, tap at (72.0, 14.0)
+OT_MSCTS_TRUNK SEa path 38.0 um = 7 stages x 5.43 um, tap at (125.0, 12.0)
+OT_MSCTS_TRUNK SEb path 110.0 um = 7 stages x 15.71 um, tap at (195.0, 14.0)
+OT_MSCTS_TRUNK W0 path 172.0 um = 7 stages x 24.57 um, tap at (25.0, 110.0)
+OT_MSCTS_TRUNK W1 path 252.0 um = 7 stages x 36.00 um, tap at (20.0, 185.0)
+OT_MSCTS_TRUNK E path 283.0 um = 7 stages x 40.43 um, tap at (232.0, 150.0)
+OT_MSCTS_BUILD sinks SW 1264
+OT_MSCTS_BUILD sinks SEb 779
+OT_MSCTS_BUILD sinks W1 979
+OT_MSCTS_BUILD sinks W0 588
+OT_MSCTS_BUILD sinks SEa 431
+OT_MSCTS_BUILD sinks E 267
+OT_MSCTS_BUILD sinks SEb_nearest 6
+OT_MSCTS_TAP cts TT SW n 1264 mean 341.5 min 330.7 max 347.5 | RCX-corrected mean 336.4
+OT_MSCTS_TAP cts TT SEa n 431 mean 344.6 min 343.0 max 346.3 | RCX-corrected mean 341.6
+OT_MSCTS_TAP cts TT SEb n 779 mean 331.5 min 324.5 max 336.9 | RCX-corrected mean 328.5
+OT_MSCTS_TAP cts TT W0 n 588 mean 350.3 min 342.4 max 365.2 | RCX-corrected mean 334.4
+OT_MSCTS_TAP cts TT W1 n 979 mean 328.3 min 323.7 max 335.1 | RCX-corrected mean 334.7
+OT_MSCTS_TAP cts TT E n 267 mean 352.0 min 349.4 max 358.0 | RCX-corrected mean 329.1
+OT_MSCTS_WINDOW cts TT tap-mean window 13.0 ps (limit 20) PASS (RCX-corrected)
+OT_MSCTS_TAP cts FF SW n 1264 mean 251.0 min 242.9 max 256.0 | RCX-corrected mean 247.4
+OT_MSCTS_TAP cts FF SEa n 431 mean 254.1 min 252.8 max 255.7 | RCX-corrected mean 252.5
+OT_MSCTS_TAP cts FF SEb n 779 mean 245.0 min 238.9 max 249.4 | RCX-corrected mean 243.4
+OT_MSCTS_TAP cts FF W0 n 588 mean 260.5 min 253.1 max 273.3 | RCX-corrected mean 249.6
+OT_MSCTS_TAP cts FF W1 n 979 mean 244.3 min 240.5 max 250.0 | RCX-corrected mean 251.7
+OT_MSCTS_TAP cts FF E n 267 mean 263.4 min 261.2 max 268.6 | RCX-corrected mean 247.8
+OT_MSCTS_WINDOW cts FF tap-mean window 9.1 ps (limit 20) PASS (RCX-corrected)
+OT_MSCTS_TAP grt TT E n 267 mean 368.0 min 364.8 max 372.1 | RCX-corrected mean 345.1
+OT_MSCTS_TAP grt TT SEa n 431 mean 354.8 min 352.9 max 357.0 | RCX-corrected mean 351.8
+OT_MSCTS_TAP grt TT SEb n 779 mean 347.1 min 338.7 max 355.2 | RCX-corrected mean 344.1
+OT_MSCTS_TAP grt TT SW n 1264 mean 356.2 min 341.3 max 363.3 | RCX-corrected mean 351.1
+OT_MSCTS_TAP grt TT W0 n 588 mean 364.0 min 356.8 max 376.0 | RCX-corrected mean 348.1
+OT_MSCTS_TAP grt TT W1 n 979 mean 343.3 min 338.3 max 350.6 | RCX-corrected mean 349.7
+OT_MSCTS_WINDOW grt TT tap-mean window 7.7 ps (limit 20) PASS (RCX-corrected)
+OT_MSCTS_TAP grt FF E n 267 mean 275.6 min 272.9 max 279.2 | RCX-corrected mean 260.0
+OT_MSCTS_TAP grt FF SEa n 431 mean 262.4 min 260.7 max 264.3 | RCX-corrected mean 260.8
+OT_MSCTS_TAP grt FF SEb n 779 mean 257.6 min 250.3 max 264.9 | RCX-corrected mean 256.0
+OT_MSCTS_TAP grt FF SW n 1264 mean 263.2 min 251.3 max 269.5 | RCX-corrected mean 259.6
+OT_MSCTS_TAP grt FF W0 n 588 mean 271.1 min 265.0 max 281.6 | RCX-corrected mean 260.2
+OT_MSCTS_TAP grt FF W1 n 979 mean 255.8 min 251.7 max 262.2 | RCX-corrected mean 263.2
+OT_MSCTS_WINDOW grt FF tap-mean window 7.3 ps (limit 20) PASS (RCX-corrected)
+OT_MSCTS_TAP grt TT E n 267 mean 368.0 min 364.8 max 372.1 | RCX-corrected mean 345.1
+OT_MSCTS_TAP grt TT SEa n 431 mean 354.8 min 352.9 max 357.0 | RCX-corrected mean 351.8
+OT_MSCTS_TAP grt TT SEb n 779 mean 347.1 min 338.7 max 355.2 | RCX-corrected mean 344.1
+OT_MSCTS_TAP grt TT SW n 1264 mean 356.2 min 341.3 max 363.3 | RCX-corrected mean 351.1
+OT_MSCTS_TAP grt TT W0 n 588 mean 364.0 min 356.8 max 376.0 | RCX-corrected mean 348.1
+OT_MSCTS_TAP grt TT W1 n 979 mean 343.3 min 338.3 max 350.6 | RCX-corrected mean 349.7
+OT_MSCTS_WINDOW grt TT tap-mean window 7.7 ps (limit 20) PASS (RCX-corrected)
+OT_MSCTS_TAP grt FF E n 267 mean 275.6 min 272.9 max 279.2 | RCX-corrected mean 260.0
+OT_MSCTS_TAP grt FF SEa n 431 mean 262.4 min 260.7 max 264.3 | RCX-corrected mean 260.8
+OT_MSCTS_TAP grt FF SEb n 779 mean 257.6 min 250.3 max 264.9 | RCX-corrected mean 256.0
+OT_MSCTS_TAP grt FF SW n 1264 mean 263.2 min 251.3 max 269.5 | RCX-corrected mean 259.6
+OT_MSCTS_TAP grt FF W0 n 588 mean 271.1 min 265.0 max 281.6 | RCX-corrected mean 260.2
+OT_MSCTS_TAP grt FF W1 n 979 mean 255.8 min 251.7 max 262.2 | RCX-corrected mean 263.2
+OT_MSCTS_WINDOW grt FF tap-mean window 7.3 ps (limit 20) PASS (RCX-corrected)
