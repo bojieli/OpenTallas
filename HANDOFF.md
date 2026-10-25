@@ -366,3 +366,16 @@ CODEX: 2026-10-25 02:50 PDT QC-CORES south-band placement fix d54df8949 reviewed
 
 2026-10-25 02:52 PDT CODEX: KV even-head frontq boundary fixed @98c25c4a8: real e2 raw+ODB1344/1344PASS, miter6000PASS/mutant5996FAIL; +1FF0cycles on approved PORT_REGS; native dec17 re-kit then route.
 2026-10-25 02:52 PDT CODEX: QC fixed-SU bind0errors, verify live; native59 duplicate fault + HC CID dead18bit boundary fixes in regeneration codex/qc-boundaries-1025@16220f781; signed SU8 archive standalone READY.
+
+2026-10-25 02:54 PDT CODEX: raw bind wavefront READY codex/bind-wavefront-1025@1ae560926, reset-target dependency3a63; raw RTL miter+mutant PASS, boot offsets published.
+CODEX: 2026-10-25 02:54 PDT generic gen_phys fail-closed preflight + true-FF postCTS structural stop READY d5a0c71db (50 tests, physical port3204/3204 and FF+8.58/0 smoke PASS); CP1 wavefront pair placement-only launched intel2.
+2026-10-25 02:59 PDT CODEX: PORTFIX63284482d pushed: C3 RTLC miswiring/PVSO missing ports/XG448constant input bits fixed with lockstep+mutants,0cycles; all3missingEngrammutants caught; remaining bind gaps mapped toF2B/XDIE.
+2026-10-25 02:56 PDT CODEX: S81 final DEC12+LEAFPLAN2+framecorridors READY codex/s81-dec12-1025@81f23d224; G0C176/1760E,112lane depths net-173cyc,19leaf over-core FAILheld.
+2026-10-25 03:05 PDT CODEX: S81 PORTFIX fresh full audit tied1378->0; remaining svc folds/iqf/reserve/frame dead outputs all mapped to active owners; no closed-bind claim.
+2026-10-25 02:59 PDT CODEX: L14 genuine Engram entry-H producer READY82d63dab7: rows/wkv/gates/H/hc_pre all bitexact, inputmutantcaught; unblocks L14 norm-source mismatch without expected-output injection.
+2026-10-25 02:59 PDT CODEX: TOK-HBM oneclockSU lane exactPASS3968checks+3mutants; freshB2o tokenmodel1190.3AR/2024.6MTP/849.0Qwen incl oneclock+W128HC net+4, L74/FACEcompiler deltas remain open; SU31 corrected-clockfullreplay building.
+2026-10-25 03:00 PDT CODEX: QC meth xt1 both64/64 +timingmutant PASS (801fdc3fd); s8 CROM+3edge alignment miter PASS/negativecaught (c1c42f554); compiler westL9/STNfix QKV+OD PASS, GU/mutants pending.
+CODEX: 2026-10-25 03:00 PDT A0 reset reach source ready codex/a0-reset-1025@2d7473352: NK/NL4stage planned352/372um vs736–788,+2boot/+0data; reviewed+RTL miter/mutantPASS, selected NK own-kit generation live before place-only.
+2026-10-25 03:03 PDT CODEX: PORTFIX corrects24missingframeforward paths alreadypriced2cycles inplan; mappingmiter+mutantPASS, no hardcore changes; SVCG integrating.
+2026-10-25 03:03 PDT CODEX: F2Bfreshbind unbound11719->4 (0tied/0undriven);4preexistingcapacitybits diagnosed +2emptyreserve endpointsowned; compilerIDXNET/H23encoders9cd5639ea exact74beatcosimPASS+mutantcaught.
+2026-10-25 03:03 PDT CODEX: HBM native bind aaa27232c passes logical delta/967clockports; router pairedlaunch/ep-root-relay exactness+mutants PASS, source-derived start39/39; reset overlay+L74 schedule+physical HC remain active.
