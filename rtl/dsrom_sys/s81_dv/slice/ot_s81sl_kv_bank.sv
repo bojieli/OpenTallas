@@ -248,11 +248,11 @@ module ot_s81sl_kv_bank #(
                 mv[b] = kq_v[b] | cnr_v[b] | cwr_v[b] | ((b < 4) ? ikr_vv[12 + b] : 1'b0);
                 mc[b] = (kq_v[b] + cnr_v[b] + cwr_v[b] + ((b < 4) ? ikr_vv[12 + b] : 1'b0)) > 1;
                 ma[14*b+:14] = ({14{kq_v[b]}} & kq_a[14*b+:14]) | ({14{cnr_v[b]}} & cnr_a[14*b+:14]) |
-                               ({14{cwr_v[b]}} & cwr_a[14*b+:14]) | ((b < 4 && ikr_vv[12 + b]) ? ikr_a[14*b+:14] : 14'd0);
+                               ({14{cwr_v[b]}} & cwr_a[14*b+:14]) | ((b < 4 && ikr_vv[12 + b]) ? ikr_a[14*b+:14] : 14'd0); // selrange-ok: ikr_vv[12+b] and ikr_a[14*b+:14] used only for constant-unrolled b<4; b>=4 selects zero; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3, probe p1
                 mm[16*b+:16] = ({16{kq_v[b]}} & kq_m[16*b+:16]) | {16{cnr_v[b]}} |
-                               ({16{cwr_v[b]}} & cwr_m[16*b+:16]) | ((b < 4 && ikr_vv[12 + b]) ? ikr_m[16*b+:16] : 16'd0);
+                               ({16{cwr_v[b]}} & cwr_m[16*b+:16]) | ((b < 4 && ikr_vv[12 + b]) ? ikr_m[16*b+:16] : 16'd0); // selrange-ok: ikr_vv[12+b] and ikr_m[16*b+:16] used only for constant-unrolled b<4; b>=4 selects zero; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3, probe p1
                 md[512*b+:512] = ({512{kq_v[b]}} & kq_d[512*b+:512]) | ({512{cnr_v[b]}} & cnr_d[512*b+:512]) |
-                                 ({512{cwr_v[b]}} & cwr_d[512*b+:512]) | ((b < 4 && ikr_vv[12 + b]) ? ikr_d[512*b+:512] : 512'd0);
+                                 ({512{cwr_v[b]}} & cwr_d[512*b+:512]) | ((b < 4 && ikr_vv[12 + b]) ? ikr_d[512*b+:512] : 512'd0); // selrange-ok: ikr_vv[12+b] and ikr_d[512*b+:512] used only for constant-unrolled b<4; b>=4 selects zero; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3, probe p1
             end
         end
         always @(posedge sk or negedge rst[0]) if (!rst[0]) col <= 1'b0; else col <= col | (|mc) | (|cx_f) | ik_f;

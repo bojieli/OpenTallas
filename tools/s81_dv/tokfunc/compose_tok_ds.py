@@ -52,8 +52,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / 'results/token_pass/tokds_compose_1024'
 PLAN = ROOT / 'physical/die_plan/s81/die_plan.json'
-LAT = ROOT / 'physical/die_plan/s81/lat/s81_latency.json'
+LAT = LAT_OF_RECORD = ROOT / 'physical/die_plan/s81/lat/s81_latency.json'
 LAT_R8 = ROOT / 'physical/die_plan/s81/r8/s81_latency.json'
+PLAN_VERSIONS = {'b4ac6d49d5198cd0': 'v4.8 (847f8568f, sha ea36999b, G0 PASS; G2 PASS 3be3c7df1)',
+                 '87f0256809a93f1e': 'v4.8 + 26-slot frame FT405 per-bit-site plan (90fd169e9) + leaf/svc/eng hard cores '
+                                     '(e94d9bb32, G0 PASS + G0C PASS 174/174)'}
 HOPLAT = ROOT / 'results/arch/release_rack_1021/hop_latency.json'
 LADDER = ROOT / 'results/token_pass/tokfunc3_s81_1021/ladder.json'
 MAP241 = ROOT / 'results/arch/s81_map72_1021/r2_241/stage_map_f72r224gpq_241.json'
@@ -83,7 +86,8 @@ ELEM = C.OUT / 'elements'
 
 
 def rel(p):
-    return str(Path(p).resolve().relative_to(ROOT))
+    p = Path(p).resolve()
+    return str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p)
 
 
 def sha(p):
@@ -104,14 +108,27 @@ def lane_table():
     return lat, dig
 
 
-def lanes(pattern):
+def lanes(pattern, base=False):
+    """{lane: cycles}; base=True: without the R8 landing pad (gen.py latency --fold-r8: cycles = base + r8_pad)"""
     lat, _ = lane_table()
     rx = re.compile(pattern)
-    return {k: v['cycles'] for k, v in lat['lanes'].items() if rx.fullmatch(k)}
+    return {k: v['cycles'] - (v.get('r8_pad', 0) if base else 0) for k, v in lat['lanes'].items() if rx.fullmatch(k)}
 
 
 def lane_terms():
-    """the plan-v4.8 lane quantities used by the mapping, each with the lanes that define it"""
+    """the plan lane quantities used by the mapping, each with the lanes that define it; with an R8-folded table each
+    term also carries its value without the R8 landing pads (`base_cycles`) and the pad lanes it picked up"""
+    L = _lane_terms(lambda p: lanes(p))
+    B = _lane_terms(lambda p: lanes(p, base=True))
+    lat, _ = lane_table()
+    for k, v in L.items():
+        v['base_cycles'] = B[k]['cycles']
+        v['r8_pad_cycles'] = v['cycles'] - B[k]['cycles']
+        v['r8_pad_lanes'] = {l: lat['lanes'][l]['r8_pad'] for l in v['lanes'] if lat['lanes'][l].get('r8_pad')}
+    return L
+
+
+def _lane_terms(lanes):
     L = {}
     xr = lanes(r'xring__s_\d[NS]_C__s_\d[NS]_C')
     L['ring_link'] = dict(cycles=max(xr.values()), lanes=sorted(xr), rule='max xring lane (slice hub C -> neighbour hub C)')
@@ -836,6 +853,9 @@ def build(layer_path=None, comp_dir=None, attn='G4'):
     recs = calendar(cal_in, attn=attn)
     lat, dig = lane_table()
     r8 = json.loads(LAT_R8.read_text())
+    r8f = lat.get('r8', {})
+    padded = {k: dict(r8_pad=v['r8_pad'], base=v['base'], cycles=v['cycles'], r8_pad_min=v.get('r8_pad_min'))
+              for k, v in sorted(lat['lanes'].items()) if v.get('r8_pad')}
     one = {wl: summarize(res[wl]) for wl in res}
     for wl in res:   # consistency: the calendar's composer T after its node override == this tool's T
         ov = recs['ar']['composition']['release241']['node_override'][wl]
@@ -847,10 +867,14 @@ def build(layer_path=None, comp_dir=None, attn='G4'):
     head = git('rev-parse', 'HEAD').strip()
     compose_1u = dict(
         schema=SCHEMA, lane='TOK-DS/COMPOSE', design='ds_rom (DeepSeek-V4.1) on the S81 array', head=head,
-        die_plan=dict(plan=rel(PLAN), version='v4.8 (847f8568f, sha ea36999b, G0 PASS; G2 PASS 3be3c7df1)',
+        die_plan=dict(plan=rel(PLAN), version=PLAN_VERSIONS.get(dig, f'plan of record at this HEAD (digest {dig})'),
                       latency_table=rel(LAT), latency_table_sha256=sha(LAT), plan_digest_in_table=lat['plan_digest'],
                       plan_digest_of_plan=dig, table_of_record=lat['plan_digest'] == dig, period_ps=lat['period_ps'],
                       lanes=len(lat['lanes']),
+                      r8_fold=dict(folded=bool(r8f.get('fold', {}).get('folded')), fold=r8f.get('fold'),
+                                   summary=r8f.get('summary'), landing=r8f.get('landing'),
+                                   bus_groups_digest=r8f.get('bus_groups_digest'), landed=r8f.get('landed'),
+                                   rebase=r8f.get('rebase'), padded_lanes=padded),
                       r8_variant=dict(table=rel(LAT_R8), plan_digest=r8['plan_digest'], lanes=len(r8['lanes']),
                                       verdict='NOT of record: BINDER4-S81 as-built bind on plan v4.6 (474d1c07a) + R8 '
                                               'landing pads on v4.7b bus groups; 13 shared lanes 1..2 cycles longer, '
@@ -940,7 +964,7 @@ def write_readme(c1, cal, out):
     qa, qm = cal['qualified']['ar'], cal['qualified']['mtp']
     sa, sm = cal['single_user_on_map']['ar'], cal['single_user_on_map']['mtp']
     L = []
-    L.append('# TOK-DS/COMPOSE: DeepSeek S81 token latency on die plan v4.8 (2026-10-24)\n')
+    L.append('# TOK-DS/COMPOSE: DeepSeek S81 token latency on the S81 die plan of record (2026-10-24)\n')
     L.append('Analytical composition (AGENTS.md rule: simulate the minimum component, compose system timing). '
              'Tool: `tools/s81_dv/tokfunc/compose_tok_ds.py` (`--selftest`, `--check`). Clock 1.2 GHz (833 ps).\n')
     L.append('**Verdict: NOT MEASURED ON THE CURRENT DIE.** No stage was measured on the v4.8 die, which has not been '
@@ -952,9 +976,49 @@ def write_readme(c1, cal, out):
     d = c1['die_plan']
     L.append(f'- `{d["latency_table"]}`: plan_digest `{d["plan_digest_in_table"]}` = digest of `die_plan.json` '
              f'(`{d["plan_digest_of_plan"]}`), {d["lanes"]} lanes, {d["period_ps"]} ps. **This table is of record.**')
+    L.append(f'- Plan: {d["version"]}.')
+    f = d.get('r8_fold') or {}
+    if f.get('folded'):
+        fo, su = f['fold'], f['summary']
+        L.append(f'- R8 landing pads PRICED in the table (`gen.py latency --fold-r8`, `physical/die_plan/s81/lat/run_lat_r8.sh`): '
+                 f'per lane `cycles` = `base` + `r8_pad` (largest R8 landing pad of the lane\'s members). Bus groups '
+                 f'`{f["bus_groups_digest"]}` (BINDER4 b3r8 as-built bind, plan v4.7b; bound depths rebased by lane onto this '
+                 f'plan: {f["rebase"]["moved"]} of {f["rebase"]["members"]} members moved), landed rule {f["landed"]}. '
+                 f'{su["pad_flops"]:,} pad flops, {su["padded_members"]} padded members, {su["landed_bundles"]} landed '
+                 f'bundles ({su["landed_over_margin"]} over the margin, kept per-lane). {fo["lanes_padded"]} lanes padded, '
+                 f'max {fo["max_pad"]}, mean {fo["mean_pad"]} cycles, sum {fo["sum_pad"]}; bind paths outside the plan '
+                 f'lanes: {fo["not_plan_lanes"]}.')
+        L.append('')
+        L.append('| lane | base | R8 pad | cycles | min member pad |')
+        L.append('|---|---:|---:|---:|---:|')
+        for k, v in sorted(f['padded_lanes'].items(), key=lambda x: (-x[1]['r8_pad'], x[0])):
+            L.append(f'| {k} | {v["base"]} | {v["r8_pad"]} | {v["cycles"]} | {v["r8_pad_min"]} |')
+        L.append('')
+        L.append('Lane terms the composition uses (the pads they picked up):\n')
+        L.append('| term | cycles | without R8 pads | R8 pad | padded lanes in the term |')
+        L.append('|---|---:|---:|---:|---|')
+        for k, v in sorted(c1['lane_terms'].items()):
+            L.append(f'| {k} | {v["cycles"]} | {v["base_cycles"]} | {v["r8_pad_cycles"]} | '
+                     f'{", ".join(f"{a} +{b}" for a, b in v["r8_pad_lanes"].items()) or "-"} |')
+        L.append('')
+    else:
+        L.append('- The R8 landed-bundle pads are NOT folded into this table (no `r8.fold` block).')
     L.append(f'- `{d["r8_variant"]["table"]}`: digest `{d["r8_variant"]["plan_digest"]}`, {d["r8_variant"]["lanes"]} '
-             f'lanes. {d["r8_variant"]["verdict"]}. The v4.8 R8 landed-bundle pads (76,485 pad flops, r8eq_v48_checks.json) '
-             'have not been folded into a latency table (lanes `pad` 0, `groups` []). See OWNER? in the lane file.\n')
+             f'lanes. {d["r8_variant"]["verdict"]}.\n')
+    for name, cmp_ in c1.get('compare', {}).items():
+        if name == 'table':
+            continue
+        L.append(f'### Delta vs {name} (`{cmp_["dir"]}`)\n')
+        L.append('| quantity | then | now | delta |')
+        L.append('|---|---:|---:|---:|')
+        for q, (o, n) in cmp_['rows'].items():
+            L.append(f'| {q} | {o:,} | {n:,} | {round(n - o, 1):+,} |' if isinstance(o, (int, float)) and isinstance(n, (int, float))
+                     else f'| {q} | {o} | {n} | - |')
+        L.append('')
+        for wl, dd in cmp_['critical_stage_delta'].items():
+            top = sorted(dd.items(), key=lambda x: (-abs(x[1]), x[0]))[:12]
+            L.append(f'Critical-stage table delta ({wl.upper()}, top-40 stages, cycles): '
+                     + (', '.join(f'{k} {v:+,}' for k, v in top) or 'none') + '\n')
     L.append('## Single user\n')
     L.append('| workload | DAG composition cycles | tok/s (DAG) | on the 241-stage map: cycles | tok/s (map) | '
              'measured-current | measured-old | priced (incl. plan lanes) | PHY |')
@@ -1049,8 +1113,44 @@ def write_readme(c1, cal, out):
              '`receipt`. A rstop receipt can instead carry `leg_rstop_edges` (edges a ring stop).')
     L.append('- Command: `python3 tools/s81_dv/tokfunc/compose_tok_ds.py --layer-cycles <F.json> --components '
              'results/token_pass/tokds_comp_1024 --out results/token_pass/tokds_compose_1024`.\n')
+    cmd = (f'python3 tools/s81_dv/tokfunc/compose_tok_ds.py --out {rel(out)}'
+           + (f' --lat {c1["die_plan"]["latency_table"]}' if Path(c1['die_plan']['latency_table']) != Path(rel(LAT_OF_RECORD)) else '')
+           + ''.join(f" --compare '{n}={v['dir']}'" for n, v in c1.get('compare', {}).items()))
+    L.append(f'- This run: `{cmd}` (`--check` with the same arguments re-derives both JSON files).\n')
     L.append('Files: `compose_1u.json` (all tables, lane map, unmapped list, regrade receipts) and `calendar_mu.json`.')
     (out / 'README.md').write_text('\n'.join(L) + '\n')
+
+
+def headline(c1, cal):
+    a, m = c1['workloads']['ar'], c1['workloads']['mtp']
+    sa, sm = cal['single_user_on_map']['ar'], cal['single_user_on_map']['mtp']
+    qa, qm = cal['qualified']['ar'], cal['qualified']['mtp']
+    r = {'1u AR, 241-stage map: cycles/token': round(sa['T']), '1u AR, 241-stage map: tok/s': sa['tok_s'],
+         '1u AR, DAG: cycles/token': round(a['T_cycles']), '1u AR, DAG: tok/s': a['tok_s'],
+         '1u MTP, 241-stage map: cycles/step': round(sm['T_step']), '1u MTP, 241-stage map: tok/s': sm['tok_s'],
+         '1u MTP, DAG: cycles/step': round(m['T_cycles']), '1u MTP, DAG: tok/s': m['tok_s'],
+         'MU AR: users': qa['users'], 'MU AR: aggregate tok/s': qa['aggregate_tok_s'], 'MU AR: period cycles': qa['period'],
+         'MU MTP: users': qm['users'], 'MU MTP: aggregate tok/s': qm['aggregate_tok_s'],
+         'MU MTP: period cycles': qm['period']}
+    for k, v in sorted(c1['lane_terms'].items()):
+        r[f'lane term {k}'] = v['cycles']
+    return r
+
+
+def compare(d, c1, cal):
+    """deltas vs an earlier compose output directory (same headline quantities)"""
+    o1 = json.loads((d / 'compose_1u.json').read_text())
+    oc = json.loads((d / 'calendar_mu.json').read_text())
+    old, new = headline(o1, oc), headline(c1, cal)
+    rows = {k: (old.get(k), new.get(k)) for k in new}
+    ops = {}
+    for wl in ('ar', 'mtp'):
+        so = {r['op']: r['cycles'] for r in o1['workloads'][wl]['critical_stage_table']}
+        sn = {r['op']: r['cycles'] for r in c1['workloads'][wl]['critical_stage_table']}
+        ops[wl] = {k: round(sn.get(k, 0) - so.get(k, 0), 1) for k in sorted(set(so) | set(sn))
+                   if sn.get(k, 0) != so.get(k, 0)}
+    return dict(dir=rel(d), plan_digest=o1['die_plan']['plan_digest_in_table'], rows=rows,
+                critical_stage_delta=ops)
 
 
 def dumps(x):
@@ -1129,10 +1229,19 @@ def main(argv=None):
     ap.add_argument('--out', default=str(OUT))
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--selftest', action='store_true')
+    ap.add_argument('--lat', help='latency table to price (default: the table of record, physical/die_plan/s81/lat)')
+    ap.add_argument('--compare', action='append', default=[], metavar='NAME=DIR',
+                    help='earlier compose outputs (compose_1u.json + calendar_mu.json) to tabulate deltas against')
     a = ap.parse_args(argv)
+    if a.lat:
+        global LAT
+        LAT = Path(a.lat).resolve()
+        lane_table.cache_clear()
     if a.selftest:
         return 0 if selftest() else 1
     c1, cal = build(a.layer_cycles, a.components, a.attn)
+    if a.compare:
+        c1['compare'] = {n: compare(Path(d), c1, cal) for n, d in (x.split('=', 1) for x in a.compare)}
     out = Path(a.out)
     files = {'compose_1u.json': dumps(c1), 'calendar_mu.json': dumps(cal)}
     if a.check:

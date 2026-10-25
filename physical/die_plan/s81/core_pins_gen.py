@@ -108,6 +108,8 @@ def main():
             print('keep', f)
             continue
         j, size = table(mod, lef)
+        import drop_const_pins            # OWNER DECISION 8: constant pins are not plan pins
+        drop_const_pins.drop(j)
         json.dump(j, open(f, 'w'), indent=0)
         print('wrote %s: %d pins, size %s' % (f, len(j['pins']), size))
 

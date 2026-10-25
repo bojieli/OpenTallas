@@ -1,0 +1,17 @@
+{
+ "element": "hbm_plan",
+ "kit": "physical/die_plan/hbm_arch/B2m (branch claude/hbm-1024r; derived from B2l by b2m.py)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "c51823b625f73d88bac54b0b6b869c6659eb2439d7e4c64511a3613566368f47",
+ "reasons": "[author self-review, HBM lane; independent GEOM-REVIEW requested] Looked at B2m/die_plan.png (G1 render) and B2m/clock_htree.png. G0 PASS, G0C 49/49 0 errors 330 warnings (B2l 335: the 5 extra are the new pg_domain WARN on B2l). Datapath geometry, lanes, stations, faces = B2l (unchanged; GEOM-REVIEW batch-2 B2l PASS-COND stands). Changes seen: (1) host UCIe gone from NW_io, host marker on the NW_io SerDes (in-band route NW_io->[L48]->root); 259x1555 um of NW_io now empty (compaction = follow-up). (2) clock: symmetric binary H-tree from the die centre, 12 levels, 64x64 leaf cells, 1829 tap drivers, 518 moved off PHY_N/io/hard cores (max 380.16 um), root driver in the root gap at [13988.16, 9175.68] (off core u_tkm_SW_tile19, B2l condition 2 met), tap<-driver max 468.9 um (8 taps > 400 um: last-mile repeater), 128 SM-half early core taps beside each core clock pin in the q_sm channels/edges, PHY_N clock pin moved to its S face. Model insertion 2286.1 ps @100 ps/mm. (3) 5 SerDes PHY supply domains (VDDPHY, 1.92/8.64 M8/M9 straps, dedicated bump rows). UPDATE: 562 early core taps (434 measured by HBM-ELEM, I>250; 128 SM halves at 250); G0C 49/49 0 err re-run. Largest early amounts: q_hub u_sfup_Q 900 ps (programme_store_r10, I=1150: core must be reshaped, HBM-ELEM request), hcb lanes6_7_bank 556, SerDes 377, ep 327: early > ~300 ps means a tap high in the tree; redesign those cores rather than tap.",
+ "fixes": "(a) OCV (INFO, decision 3): top H-tree cuts run through the root/vsN column (x=W/2) and the hub rows (y=H/2): 27 partitions have taps diverging in the top 2 levels; 45 seams and 45 partitions exceed 80 ps at a 5% derate. A partition-aware zero-skew alternative (clock_zst_info.json) splits fewer partitions but needs 224 mm padding and is worse on seams (89). Structural remedy if the owner wants OCV closed: an M8/M9 mesh at the tap-driver level (CPPR point). (b) SerDes IR still FAIL with the separate supply (62-75 mV vs 35; was 195-232): the assumed 12.1 W/mm2 macro is 5-7x denser than published 112G SerDes; grow the macro outline (results/die_trial_1024/hbm_b2/ir/b2m/README.md). (c) reset per decision 2 waits for lane RESET's die-level planner; (d) early-tap insertion values wait for HBM-ELEM measurements (all 250 = not early now); (e) native bind RTL (HBM-BIND) before any G3.",
+ "images": [
+  "physical/die_plan/hbm_arch/B2m/die_plan.png",
+  "physical/die_plan/hbm_arch/B2m/clock_htree.png",
+  "physical/die_plan/hbm_arch/B2m/clock_zst_info.png"
+ ],
+ "owner_lane": "HBM",
+ "reviewer": "HBM (author)",
+ "at": "2026-10-24T19:57:27-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

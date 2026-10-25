@@ -28,8 +28,10 @@ module dsdv_gunit_l1c #(
     input  wire          clk,
     input  wire          rst_n,
     // W face (fronts q = 0..3, packed by q)
-    input  wire [3:0]    f_v, input wire [3:0] f_f, input wire [3:0] f_l, input wire [3:0] f_g,
-    input  wire [4*246-1:0] f_d, input wire [3:0] f_flt,
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant / unused pins): the collector reads f_v / f_f / f_l / f_g of front 0 only (fronts 1..3 leave
+    // those outputs open: one shared L1f master) and no f_d bit 205 of any front (L1f o_d is packed, 245 bits per front)
+    input  wire [0:0]    f_v, input wire [0:0] f_f, input wire [0:0] f_l, input wire [0:0] f_g,
+    input  wire [4*245-1:0] f_d, input wire [3:0] f_flt,
     output reg           g_go, output reg [23:0] g_hit, output reg [41:0] g_a,
     // stack L1
     output reg           i_v, output reg [53:0] i_ids,
@@ -43,8 +45,15 @@ module dsdv_gunit_l1c #(
     // ---------------------------------------------------------------- input flops
     reg [3:0] fv, ff, fl, fg, ft; reg [4*246-1:0] fd;
     always @(posedge clk or negedge rq[0])
-        if (!rq[0]) begin fv <= 4'd0; fg <= 4'd0; ft <= 4'd0; end else begin fv <= f_v; fg <= f_g; ft <= f_flt; end
-    always @(posedge clk) begin ff <= f_f; fl <= f_l; fd <= f_d; end
+        if (!rq[0]) begin fv <= 4'd0; fg <= 4'd0; ft <= 4'd0; end else begin fv <= {3'd0, f_v}; fg <= {3'd0, f_g}; ft <= f_flt; end
+    always @(posedge clk) begin
+        ff <= {3'd0, f_f}; fl <= {3'd0, f_l};
+`ifdef OT_RTLC_MUT_L1C   // RTLC bench mutant: front words unpacked from the wrong 245-bit slot (fronts rotated)
+        for (i = 0; i < 4; i = i + 1) fd[246 * i +: 246] <= {f_d[245 * ((i + 1) % 4) + 205 +: 40], 1'b0, f_d[245 * ((i + 1) % 4) +: 205]};
+`else
+        for (i = 0; i < 4; i = i + 1) fd[246 * i +: 246] <= {f_d[245 * i + 205 +: 40], 1'b0, f_d[245 * i +: 205]};
+`endif
+    end
     // records: front record {v, key[32], ~{b[3], k[4]}, ninf} -> {v, key, ~b, ~q, ~k, ninf}; slots 6, 7 empty
     reg [4*LW-1:0] L;
     always @(*) begin
@@ -101,14 +110,25 @@ module dsdv_gunit_l1c #(
     endgenerate
     wire allk = &{xq[XW*5+XW-1], xq[XW*4+XW-1], xq[XW*3+XW-1], xq[XW*2+XW-1], xq[XW*1+XW-1], xq[XW-1]};
     // ---------------------------------------------------------------- gather request / reply
+    // S81-KITS-RTLB 10-24 (owner: register every pin, in RTL): (1) fault leaves a pin-only flop loaded with
+    // the kept sticky state's next value (fault == flt_s every cycle); (2) the fault check reads its own kept twin xv_k of
+    // the order sort's fo (= xnv one edge later, same reset), so synthesis no longer folds fo into the g_go pin flop
+    // (g_go fed the fault logic: face_guard 'shared').  0 cycles.
+    (* keep *) reg flt_s; (* keep *) reg xv_k;
+    wire flt_n = flt_s | (|ft) | (xv_k && !allk);
     always @(posedge clk or negedge rq[1])
-        if (!rq[1]) begin i_v <= 1'b0; g_go <= 1'b0; g_hit <= 24'd0; s_v <= 1'b0; fault <= 1'b0; end
+        if (!rq[1]) begin i_v <= 1'b0; g_go <= 1'b0; g_hit <= 24'd0; s_v <= 1'b0; fault <= 1'b0; flt_s <= 1'b0; xv_k <= 1'b0; end
         else begin
-            i_v <= xnv; g_go <= xnv;
+            i_v <= xnv; g_go <= xnv; xv_k <= xnv;
             for (i = 0; i < 4; i = i + 1)
                 for (j = 0; j < K; j = j + 1) g_hit[6 * i + j] <= xnv && idn[9 * j + 4 +: 2] == i[1:0];
             s_v <= fg[0];
-            if (|ft || (xv && !allk)) fault <= 1'b1;
+            flt_s <= flt_n;
+`ifdef OT_RTLB_PINFLOP_MUT
+            fault <= |ft;                                  // mutant: pin flop not sticky, check dropped
+`else
+            fault <= flt_n;
+`endif
         end
     always @(posedge clk) begin
         i_ids <= idn;

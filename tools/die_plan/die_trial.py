@@ -451,7 +451,7 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     t.append("puts \"OT_T placed [expr {[clock seconds]-$t0}]\"")
     t.append("source /work/grt/obs.tcl")
     t.append("puts \"OT_T obs [expr {[clock seconds]-$t0}]\"")
-    t.append("set_routing_layers -signal M4-M9")
+    t.append("set_routing_layers -signal M4-M7")          # ruling 9.3: signals <= M7; M8/M9 = clock/reset/PG
     for L, a in adjust:
         t.append(f"set_global_routing_layer_adjustment {L} {a:g}")
     t += ["global_route -congestion_iterations 50 -allow_congestion -verbose "

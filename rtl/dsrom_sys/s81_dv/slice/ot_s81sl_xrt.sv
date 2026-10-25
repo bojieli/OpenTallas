@@ -71,14 +71,22 @@
 //    Same edges as the 241f7b963 cut (component receipt: CTL pin -> c_v 5, lo -> V out 5, V in -> sw 6, local CI -> sw 3).
 //    Faults: two RD sources in one cycle (E / W / B / V / local), the pair / local config checks above.
 // ---------------------------------------------------------------------------------------------------------------------
+`ifdef OT_S81SL_XRT_NO_DSK
+`define OT_S81SL_XRT_PDSK_DEF 15'd0
+`else
+`define OT_S81SL_XRT_PDSK_DEF 15'o01234   // leaf 0..4 depth 4, 3, 2, 1, 0 (TOK-DS NORM-DESKEW 10-25)
+`endif
 `ifdef OT_S81SL_XR_FOREG
 `define OT_S81SL_XR_FOREG_DEF 1
 `else
 `define OT_S81SL_XR_FOREG_DEF 0
 `endif
 module ot_s81sl_xrt #(
+    parameter [14:0] PDSK = 15'd0,
     parameter integer HB = 0,
     parameter integer FOREG = 0,          // XR6 fallback: dedicated fault output flop (+1 more fault-visibility cycle)
+    parameter integer FACE_LAND = 1,      // S81-KITS-RTLB 10-24: lo / p / e leaf interface landing stage (+1 cycle, below);
+                                          // S81-KITS-RTLC 10-24: default ON everywhere (slice / die / benches)
     parameter integer W  = 1104,
     parameter integer V  = 276,
     parameter integer BW = 513           // band port B word (BIND mu4 10-19): {pk[511:0], valid}, point-to-point to the entry q
@@ -87,20 +95,24 @@ module ot_s81sl_xrt #(
     input  wire            rst_n,
     input  wire [3:0]      sid,
     // ring stop (control plane side)
-    input  wire            dl_ev, input wire [W-1:0] dl_e,
-    input  wire            dl_wv, input wire [W-1:0] dl_w,
-    input  wire            dl_vv, input wire [V-1:0] dl_vb,
-    output reg  [2:0]      ci_dir,
-    output wire [W-1:0]    ci_b,
+    // OWNER DECISION 8 (S81-KITS-RTLC 10-24): no constant / unused pins.  dl_e / dl_w [0] and [W-28 .. W-1], dl_vb[0] are
+    // read by nothing (the ring valid is dl_*v; the top 28 ring bits are always 0: ci_b[W-28 .. W-1] were TIELO); ci_b
+    // keeps [W-29:0]; the C3 band input bi is packed: bi[6:0] = B word [6:0], bi[7 +: W-65] = B word [37 .. W-29] (B word
+    // [7..36] = ring header fields B does not use, [W-28 ..] unused).  The parent zero-fills / unpacks (plain logic).
+    input  wire            dl_ev, input wire [W-29:1] dl_e,
+    input  wire            dl_wv, input wire [W-29:1] dl_w,
+    input  wire            dl_vv, input wire [V-1:1] dl_vb,
+    (* keep *) output reg  [2:0] ci_dir,   // RTLC: kept -- its loop-back twin ci_dirk has the same D
+    output wire [W-29:0]   ci_b,
     // band port (C3 only; HB = 0 leaves it out of the netlist -- see the C1 wrapper)
-    input  wire [W-1:0]    bi,
+    input  wire [W-59:0]   bi,
     output wire [BW-1:0]   bo,
     // beat leaves
     output reg  [4:0]      c_v,
     (* keep *) output reg [159:0] c_d,       // XR3 (10-18): one copy; the slice glue fans it to the 5 leaves
     output reg  [4:0]      sw_v,
     output reg  [5*10-1:0] sw_a,
-    output reg  [5*8-1:0]  sw_m,
+    (* keep *) output reg [5*8-1:0] sw_m,   // RTLC 10-24: sw_m[8k+4..7] have equal D (!rwr): kept, one flop per pin
     output reg  [5*256-1:0] sw_d,
     input  wire [4:0]      lo_v,
     input  wire [5*256-1:0] lo_d,
@@ -120,11 +132,12 @@ module ot_s81sl_xrt #(
     output reg  [31:0]     g_d,
     // xfin
     output reg             x_go,
-    output wire            x_mode,
+    output reg             x_mode,        // RTLC 10-24: the pin flop itself (was a kept alias wire of x_mode_q); no keep on the
+                                          // port (a kept port wire gets a dangling alias buffer); its twin x_mode_m is kept
     output wire [31:0]     x_eps,
     output wire [31:0]     x_scale,
     output reg             x_sv,
-    output reg  [7:0]      x_si,
+    output reg  [6:0]      x_si,              // RTLC 10-24: x_si[7] was constant 0 (max index (2*4+3)*5+4 = 59)
     output reg  [31:0]     x_s,
     input  wire            x_rbv,
     input  wire [31:0]     x_rbd,
@@ -133,7 +146,8 @@ module ot_s81sl_xrt #(
     (* keep *) output reg [159:0] is_d,
     output reg             cfg_v,
     (* keep *) output reg [159:0] cfg_d,
-    output reg             fault
+    output reg             fault          // RTLC 10-24: pin-only flop (FOREG 0: loaded with the kept fs_k's next value; no keep
+                                          // on the port wire, see x_mode)
 );
     localparam [2:0] K_CTL = 3'd0, K_RD = 3'd4, K_SC = 3'd5, K_CL = 3'd6;
     // XR7: 8 relay regions, each <= 32 reset loads (r0 input valids, r1/r2 stage-1 control, r3 unpacker, r4 send, r5 outputs,
@@ -147,29 +161,109 @@ module ot_s81sl_xrt #(
     wire [NSP-1:0] sp;
     ot_rst_relay #(.REGIONS(NSP), .SYNC_STAGES(2), .TREE_STAGES(1)) u_sp (.clk(clk), .rst_n_in(rst_n), .rst_n(sp));
     integer k, i;
+    // ---------------------------------------------------------------- face landing (S81-KITS-RTLB 10-24)
+    // Owner rule (register every pin, in RTL; no implemented-netlist face registers): with FACE_LAND = 1 every bit of the
+    // beat-leaf interface lo_v / lo_d / p_v / p_d and of the Engram interface e_v / e_c / e_d lands in exactly ONE pin
+    // register before anything else.  Before, each valid bit loaded its master input flop AND its kept copies (lov_c,
+    // evd_c, pvd_c, ev2_c, ev3_c: 5..17 flops per pin, face_guard 'shared').  The kept copies now copy the landing flop,
+    // so their fan-out limits are unchanged.  Pure delay (reset-free, like the data pin flops; every consumer below resets
+    // or is recomputed from reset state): the module = the FACE_LAND = 0 module with these 7 inputs one edge later, i.e.
+    // +1 cycle on lo -> send (ci / bo / local copy), p -> xfin partials (x_sv / x_si / x_s) and e -> ENG collection, and
+    // on the faults they raise.  CTL / RD / V / SC / rstd / eg paths unchanged.  Bench: tools/s81_slice/xrt_land_eq.sh
+    // (FACE_LAND = 1 vs the FACE_LAND = 0 module fed the 7 inputs one edge later, every output every cycle) and
+    // xrt_bench.sh with XR_LAND = 1 (the compiler issues lo / p one cycle earlier).
+    wire [4:0] lo_v_i, p_v_i, e_v_i; wire [5*256-1:0] lo_d_i; wire [5*32-1:0] p_d_i; wire [5*2-1:0] e_c_i;
+    wire [5*96-1:0] e_d_i;
+    generate if (FACE_LAND != 0) begin : g_land
+        reg [4:0] lov_l, pv_l, ev_l; reg [5*256-1:0] lod_l; reg [5*32-1:0] pd_l; reg [5*2-1:0] ec_l; reg [5*96-1:0] ed_l;
+        always @(posedge clk) begin
+`ifdef OT_S81SL_XRT_MUT_LAND_PV
+            pv_l <= 5'd0;                                  // mutant: p_v landing stuck (partials never collected)
+`else
+            pv_l <= p_v;
+`endif
+            lov_l <= lo_v; ev_l <= e_v; lod_l <= lo_d; pd_l <= p_d; ec_l <= e_c; ed_l <= e_d;
+        end
+`ifdef OT_S81SL_XRT_MUT_LAND_EVPIN
+        assign e_v_i = e_v;                                // mutant: e_v not landed (pre-fix timing on the ENG path)
+`else
+        assign e_v_i = ev_l;
+`endif
+        assign lo_v_i = lov_l; assign p_v_i = pv_l; assign lo_d_i = lod_l; assign p_d_i = pd_l;
+        assign e_c_i = ec_l; assign e_d_i = ed_l;
+    end else begin : g_pin
+        assign lo_v_i = lo_v; assign p_v_i = p_v; assign e_v_i = e_v; assign lo_d_i = lo_d; assign p_d_i = p_d;
+        assign e_c_i = e_c; assign e_d_i = e_d;
+    end endgenerate
+    // ---------------------------------------------------------------- norm partial deskew (TOK-DS NORM-DESKEW 10-25)
+    // COORD ruling 2026-10-25 01:34 (staggered norm partials): the compiler issues the 5 per-leaf norm commands
+    // (NORMR k, each with its own a1 = the leaf's XQ / XB beat index) on 5 consecutive CTL edges (one CTL a cycle), so the
+    // beat partials p_v[k] arrive at fixed offsets k = 0..4 edges after leaf 0's.  Static per-leaf deskew registers
+    // delay leaf k by PDSK[3k +: 3] edges so that all 5 partials meet on ONE edge before the collector below, whose
+    // fault check stays strict ((|pv) && pv != 5'b11111 is still a fault).  The masters ot_s81sl_xrt1 / xrt3 take
+    // PDSK = {0, 1, 2, 3, 4} (leaf 4 .. leaf 0) = max offset 4 - offset k, so a set aligns on leaf 4's arrival edge:
+    // +4 cycles from the first NORMR (0 from the last).  PDSK = 0 is the previous module exactly (wires).  Pure delay
+    // lines: valids reset in their own relay region (10 loads), data reset-free.  Mutant OT_S81SL_XRT_MUT_DSK: leaf 2
+    // one edge too deep (a wrong-depth deskew must raise the fault).  Bench: tools/s81_slice/xrt_bench.sh XR_DSK=1.
+    wire [4:0] p_v_s; wire [5*32-1:0] p_d_s;
+    // The valid relay exists only when some leaf has a deskew stage (its flops are keep: an unloaded relay would stay in
+    // the PDSK = 0 netlist).
+    wire rs_d;
+`ifdef OT_S81SL_XRT_MUT_DSK
+    localparam integer DSK_ANY = 1;
+`else
+    localparam integer DSK_ANY = (PDSK != 15'd0) ? 1 : 0;
+`endif
+    generate if (DSK_ANY != 0) begin : g_rd
+        ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rd (.clk(clk), .rst_n_in(rst_n), .rst_n(rs_d));
+    end else begin : g_nrd
+        assign rs_d = 1'b1;
+    end endgenerate
+    genvar dk;
+    generate for (dk = 0; dk < 5; dk = dk + 1) begin : g_dsk
+`ifdef OT_S81SL_XRT_MUT_DSK
+        localparam integer DD = {29'd0, PDSK[3 * dk +: 3]} + ((dk == 2) ? 1 : 0);   // mutant: leaf 2 one edge too deep
+`else
+        localparam integer DD = {29'd0, PDSK[3 * dk +: 3]};
+`endif
+        if (DD == 0) begin : g_d0
+            assign p_v_s[dk] = p_v_i[dk]; assign p_d_s[32 * dk +: 32] = p_d_i[32 * dk +: 32];
+        end else begin : g_dn
+            reg [DD-1:0] sv; reg [32*DD-1:0] sd; integer q;
+            always @(posedge clk or negedge rs_d)
+                if (!rs_d) sv <= {DD{1'b0}};
+                else begin sv[0] <= p_v_i[dk]; for (q = 1; q < DD; q = q + 1) sv[q] <= sv[q - 1]; end
+            always @(posedge clk) begin
+                sd[31:0] <= p_d_i[32 * dk +: 32];
+                for (q = 1; q < DD; q = q + 1) sd[32 * q +: 32] <= sd[32 * (q - 1) +: 32];
+            end
+            assign p_v_s[dk] = sv[DD-1]; assign p_d_s[32 * dk +: 32] = sd[32 * (DD - 1) +: 32];
+        end
+    end endgenerate
     // ---------------------------------------------------------------- input flops
     reg ev, wv, vv; reg [W-1:0] eb, wb, bb; reg [V-1:0] vb; reg [4:0] lov, pv; reg [5*256-1:0] lod; reg [5*32-1:0] pd;
     reg rbv; reg [31:0] rbd; reg [3:0] sid_c;
     reg [4:0] ev_c; reg [5*2-1:0] ec_c; reg [5*96-1:0] ed_c; reg egv_c; reg [1:0] egc_c; reg [31:0] egd_c;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin ev_c <= 5'd0; egv_c <= 1'b0; end
-        else begin ev_c <= e_v; egv_c <= eg_v; end
-    always @(posedge clk) begin ec_c <= e_c; ed_c <= e_d; egc_c <= eg_c; egd_c <= eg_d; end
+        else begin ev_c <= e_v_i; egv_c <= eg_v; end
+    always @(posedge clk) begin ec_c <= e_c_i; ed_c <= e_d_i; egc_c <= eg_c; egd_c <= eg_d; end
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin ev <= 1'b0; wv <= 1'b0; vv <= 1'b0; lov <= 5'd0; pv <= 5'd0; rbv <= 1'b0; end
-        else begin ev <= dl_ev; wv <= dl_wv; vv <= dl_vv; lov <= lo_v; pv <= p_v; rbv <= x_rbv; end
+        else begin ev <= dl_ev; wv <= dl_wv; vv <= dl_vv; lov <= lo_v_i; pv <= p_v_s; rbv <= x_rbv; end
     // XR5 (S81-SAFE-FIX 10-19, checklist item 3): kept copies of the lo_v input flop for each leaf's lo_d gate (lov[k]
     // drove 256 AND gates); same D, same edge -> function and cycles unchanged.  XR7: one per 16 bits (was 32: 37 pins),
     // reset-free (data gate only).  evd_c / pvd_c: kept copies of the e_v / p_v input flops, one per 8 bits of the eqd /
     // pq capture enables (ev_c / pv drove 197 / 66 pins); the masters keep only the control decode.
     (* keep *) reg [5*16-1:0] lov_c; (* keep *) reg [5*12-1:0] evd_c; (* keep *) reg [5*4-1:0] pvd_c;
     always @(posedge clk) begin
-        for (k = 0; k < 80; k = k + 1) lov_c[k] <= lo_v[k / 16];
-        for (k = 0; k < 60; k = k + 1) evd_c[k] <= e_v[k / 12];
-        for (k = 0; k < 20; k = k + 1) pvd_c[k] <= p_v[k / 4];
+        for (k = 0; k < 80; k = k + 1) lov_c[k] <= lo_v_i[k / 16];
+        for (k = 0; k < 60; k = k + 1) evd_c[k] <= e_v_i[k / 12];
+        for (k = 0; k < 20; k = k + 1) pvd_c[k] <= p_v_s[k / 4];
     end
     always @(posedge clk) begin
-        eb <= dl_e; wb <= dl_w; vb <= dl_vb; bb <= (HB != 0) ? bi : {W{1'b0}}; lod <= lo_d; pd <= p_d; rbd <= x_rbd;
+        eb <= {28'd0, dl_e, 1'b0}; wb <= {28'd0, dl_w, 1'b0}; vb <= {dl_vb, 1'b0};
+        bb <= (HB != 0) ? {28'd0, bi[W-59:7], 30'd0, bi[6:0]} : {W{1'b0}}; lod <= lo_d_i; pd <= p_d_s; rbd <= x_rbd;
         sid_c <= sid;
     end
     wire bv = (HB != 0) && bb[0];
@@ -238,15 +332,19 @@ module ot_s81sl_xrt #(
     wire [4:0] tgt0 = cp[20:16], lmask0 = cp[25:21];
     wire re = e_rd && mine_e, rw_ = w_rd && mine_w;
     // RG-FFN transport (241f7b963): typed V row-pair word (partner only) and the in-XR registered ci loop-back (local copy)
-    reg ci_v; reg [W-2:0] ci_r; reg s_local;
+    (* keep *) reg ci_v; (* keep *) reg [W-30:0] ci_r; reg s_local;   // RTLC: pin registers kept apart from their twins
+    // S81-KITS-RTLC 10-24 (owner: register every pin, in RTL; face_guard 'shared fanout' on ci_b / ci_dir): the ci pin
+    // registers drive ONLY the pins.  The RG-FFN local-copy loop-back reads KEPT twins with the same D on the same edge
+    // (ci_vk / ci_dirk / ci_rk: only the bits it reads, ci_r[2:0] and [W-30:36]); 0 cycles, function unchanged.
+    (* keep *) reg ci_vk; (* keep *) reg [2:0] ci_dirk; (* keep *) reg [2:0] ci_rkl; (* keep *) reg [W-30:36] ci_rkh;
 `ifdef OT_S81SL_XR_PDC
     wire v_rd = pq_vrd;
 `else
     wire v_rd = vv && vb[3:1] == K_RD;
 `endif
-    wire local_rd = ci_v && s_local && ci_dir == 3'd0 && ci_r[2:0] == K_RD;
+    wire local_rd = ci_vk && s_local && ci_dirk == 3'd0 && ci_rkl == K_RD;
     wire rdv0 = re || rw_ || b_rd || v_rd || local_rd;
-    wire [W-1:0] rdb0 = local_rd ? {ci_r, ci_v} : re ? eb : rw_ ? wb : bb;
+    wire [W-1:0] rdb0 = local_rd ? {{28{1'b0}}, ci_rkh, {33{1'b0}}, ci_rkl, ci_vk} : re ? eb : rw_ ? wb : bb;
 `ifdef OT_S81SL_XR_PDC
     wire [2:0] rl0 = pq_vrdm ? vb[6:4] : rdb0[37 +: 3];
 `else
@@ -318,7 +416,7 @@ module ot_s81sl_xrt #(
         // local copy: the ci loop-back word rides the B raw word (bb2 is only the RD-from-B source; a B RD and a local
         // RD in one cycle are the two-RD fault).  C1 (HB = 0) has no B port: bb2 is the local word only.
         for (k = 0; k < 1024; k = k + 1)
-            bb2[k] <= lcl_c[k / LCG] ? ci_r[51 + k] : (HB != 0) ? bb[52 + k] : 1'b0;
+            bb2[k] <= lcl_c[k / LCG] ? ci_rkh[51 + k] : (HB != 0) ? bb[52 + k] : 1'b0;
 `ifdef OT_S81SL_XR_PDC
         lmask <= lmask0; rnp <= pq_vrdr ? 2'd0 : rdb0[50 +: 2]; rrow <= pq_vrdr ? vb[16:7] : rdb0[40 +: 10];
 `else
@@ -345,7 +443,7 @@ module ot_s81sl_xrt #(
     reg [1023:0] rdat; reg [159:0] body; reg [V-2:0] cix;
     always @(*) begin
         for (k = 0; k < 1024; k = k + 1)
-            rdat[k] = (k < 256 && rsv_c[k / 8]) ? vb2[16 + k] : rse_c[k / 8] ? eb2[51 + k] : rsw_c[k / 8] ? wb2[51 + k] : bb2[k];
+            rdat[k] = (k < 256 && rsv_c[k / 8]) ? vb2[16 + k] : rse_c[k / 8] ? eb2[51 + k] : rsw_c[k / 8] ? wb2[51 + k] : bb2[k]; // selrange-ok: rsv_c[k/8] and vb2[16+k] are selected only for constant-unrolled k<256; guard false for k>=256; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3, probe p1
         for (k = 0; k < 160; k = k + 1)
             body[k] = bse_c[k / 8] ? eb2[46 + k] : bsw_c[k / 8] ? wb2[46 + k] : vb2[46 + k];
         for (k = 0; k < V - 1; k = k + 1)
@@ -477,25 +575,33 @@ module ot_s81sl_xrt #(
     wire [W-1:0] so_b = {{(W - 1045){1'b0}}, so_hi, so_lo, 1'b0, so_idx, sid_t, 5'd0, 3'd2, 1'b1};
     // V-from-G-unit CTL re-injection on the tier line (both sides, hops 0 = line default), SC relay to V
     wire sc_rel = s_scv && (esc || wsc);
+    wire [2:0] ci_dir_nx = vct ? 3'b011 : pair_v ? 3'b100 : (pk_go && !pair_mode) ? (s_local ? 3'b000 : s_dir[2:0]) :
+                           sc_rel ? 3'b100 : so_go ? ((so_rt == 2'd1) ? 3'b011 : 3'b100) : 3'b000;
+    wire ci_v_nx = vct || pair_v || (pk_go && !pair_mode && ((|s_dir[2:0]) || s_local)) || sc_rel || so_go;
     always @(posedge clk or negedge rs_s)
-        if (!rs_s) begin ci_dir <= 3'd0; ci_v <= 1'b0; end
+        if (!rs_s) begin ci_dir <= 3'd0; ci_v <= 1'b0; ci_dirk <= 3'd0; ci_vk <= 1'b0; end
         else begin
-            ci_dir <= vct ? 3'b011 : pair_v ? 3'b100 : (pk_go && !pair_mode) ? (s_local ? 3'b000 : s_dir[2:0]) :
-                      sc_rel ? 3'b100 : so_go ? ((so_rt == 2'd1) ? 3'b011 : 3'b100) : 3'b000;
-            ci_v <= vct || pair_v || (pk_go && !pair_mode && ((|s_dir[2:0]) || s_local)) || sc_rel || so_go;
+            ci_dir <= ci_dir_nx; ci_v <= ci_v_nx;
+`ifdef OT_S81SL_XRT_MUT_CITWIN
+            ci_dirk <= ci_dir_nx; ci_vk <= 1'b0;             // mutant: the loop-back twin of ci_v never sets (local copy lost)
+`else
+            ci_dirk <= ci_dir_nx; ci_vk <= ci_v_nx;
+`endif
         end
     // local copy: lcl_c = local_rd's next state (the ci word is a local RD loop-back on the next edge), per 30 bits of bb2
     wire s_local_nx = tg[4] ? body[44] : s_local;
     wire lcl_nx = !vct && !pair_v && pk_go && !pair_mode && s_local && s_kind == K_RD && s_local_nx;
     always @(posedge clk) for (k = 0; k < NLC; k = k + 1) lcl_c[k] <= lcl_nx && sp[(k / 30 + 1) % NSP];
-    assign ci_b = {ci_r, ci_v};
+    assign ci_b = {ci_r, ci_v};      // ci_r[W-29 ..] are always 0 (no constant pins: OWNER DECISION 8)
     // S81-SMWIRE x XR7 (ROOT4 merge 10-19): the SO beat select is a KEPT registered copy per 16 bits, like cis_c; its D is
     // so_go's next state with the same priority as before the merge (send first; no SO beat beside a CTL re-injection /
     // SC relay), so ci_r is unchanged: (pk_go && !vct) ? snd : (so_go && !vct && !sc_rel) ? so_b : cix.
     wire [W-2:0] cixw = {{(W - V){1'b0}}, cix};
-    always @(posedge clk) for (i = 0; i < W - 1; i = i + 1)
-        ci_r[i] <= (i < V - 1 && pvs_c[i / 16]) ? pair_word[i + 1] : cis_c[i / 16] ? snd[i + 1] : sos_c[i / 16] ? so_b[i + 1] :
-                   cixw[i];
+    reg [W-2:0] ci_r_nx;
+    always @(*) for (i = 0; i < W - 1; i = i + 1)
+        ci_r_nx[i] = (i < V - 1 && pvs_c[i / 16]) ? pair_word[i + 1] : cis_c[i / 16] ? snd[i + 1] : sos_c[i / 16] ? so_b[i + 1] : // selrange-ok: pvs_c[i/16] and pair_word[i+1] are selected only for constant-unrolled i<V-1; guard false at larger i; RTL-SELRANGE triage ~/coord/lanes/RTL-SELRANGE.md section3, probe p1
+                     cixw[i];
+    always @(posedge clk) begin ci_r <= ci_r_nx[W-30:0]; ci_rkl <= ci_r_nx[2:0]; ci_rkh <= ci_r_nx[W-30:36]; end
     generate if (HB != 0) begin : g_bo
         reg [BW-1:0] bo_r;
         // XR7: only the valid bit bo_r[0] is reset; the payload is cleared every idle edge (0 one clock into reset).
@@ -579,18 +685,22 @@ module ot_s81sl_xrt #(
     // (ot_of_fbonly) skipped them and they placed in the core.  Now the KEPT masters x_*_m hold the value and the pins leave
     // DEDICATED KEPT output copies x_*_q with the master's next state as D (tg ? body : master): their Q drives only the
     // pin, so they are anchored at the S face.  x_*_q == x_*_m every cycle -> same function, 0 cycles.
-    (* keep *) reg [31:0] x_eps_m, x_scale_m, x_eps_q, x_scale_q; (* keep *) reg x_mode_m, x_mode_q;
-    assign x_eps = x_eps_q; assign x_scale = x_scale_q; assign x_mode = x_mode_q;
+    // RTLC 10-24: the x_mode output copy is the port register itself (a kept alias wire x_mode_q got a buffer off the pin
+    // net in the raw netlist: face_guard 'shared fanout'); same D as before.  Its master holds the COMPLEMENT (x_mode_mn):
+    // with a true-polarity master the two flops had one D and synthesis folded them back (the pin flop fed its own hold
+    // mux).  x_mode == ~x_mode_mn every cycle -> same function, 0 cycles.
+    (* keep *) reg [31:0] x_eps_m, x_scale_m, x_eps_q, x_scale_q; (* keep *) reg x_mode_mn;
+    assign x_eps = x_eps_q; assign x_scale = x_scale_q;
     always @(posedge clk or negedge rs_o)
-        if (!rs_o) begin c_v <= 5'd0; x_go <= 1'b0; is_v <= 1'b0; cfg_v <= 1'b0; x_mode_m <= 1'b0; x_mode_q <= 1'b0; end
+        if (!rs_o) begin c_v <= 5'd0; x_go <= 1'b0; is_v <= 1'b0; cfg_v <= 1'b0; x_mode_mn <= 1'b1; x_mode <= 1'b0; end
         else begin
             c_v <= tg[0] ? lmask : 5'd0;
             x_go <= tg[1];
-            x_mode_m <= tg[1] ? bx_l[32] : x_mode_m;
+            x_mode_mn <= tg[1] ? !bx_l[32] : x_mode_mn;
 `ifdef OT_S81SL_XR_MUT_XHOLD
-            x_mode_q <= tg[1] ? bx_l[32] : 1'b0;                    // mutant: output copy does not hold
+            x_mode <= tg[1] ? bx_l[32] : 1'b0;                      // mutant: output copy does not hold
 `else
-            x_mode_q <= tg[1] ? bx_l[32] : x_mode_m;
+            x_mode <= tg[1] ? bx_l[32] : !x_mode_mn;
 `endif
             is_v <= tg[2];
             cfg_v <= tg[3];
@@ -622,7 +732,7 @@ module ot_s81sl_xrt #(
     // RG-FFN: |ev_c (ENG start) drove 43 pins: eoh / eoh1 restart and erx take their own kept copies of the e_v input flop
     // (D = e_v AND a split leaf: 0 in reset, e_v after release, like the reset master ev_c)
     (* keep *) reg [4:0] ev2_c, ev3_c;
-    always @(posedge clk) begin ev2_c <= e_v & {5{sp[0]}}; ev3_c <= e_v & {5{sp[1]}}; end reg [31:0] xs_e, xs_p;
+    always @(posedge clk) begin ev2_c <= e_v_i & {5{sp[0]}}; ev3_c <= e_v_i & {5{sp[1]}}; end reg [31:0] xs_e, xs_p;
     always @(*) begin
         xs_e = 32'd0; xs_p = 32'd0;
         for (k = 0; k < 15; k = k + 1) begin
@@ -676,11 +786,12 @@ module ot_s81sl_xrt #(
             if (|ev3_c) erx <= 7'h7f;                           // RG-FFN: erx[4] x_si, erx[5] / erx[6] x_s[15:8] / [31:24]
             else if (erun && et == 4'd14) erx <= 7'd0;
         end
+    wire [7:0] xsi_e = ({6'd0, ekd} * 8'd4 + {6'd0, ecp}) * 8'd5 + {5'd0, el};   // <= 79 (ekd <= 3): bit 7 is 0
     always @(posedge clk) begin
         for (k = 0; k < 20; k = k + 1) if (pvd_c[k]) pq[k / 4][8 * (k % 4) +: 8] <= pd[8 * k +: 8];
         for (k = 0; k < 60; k = k + 1) if (evd_c[k]) eqd[k / 12][8 * (k % 12) +: 8] <= ed_c[8 * k +: 8];
         if (|ev_c) ecp <= ec_c[1:0];
-        x_si <= erx[4] ? ({6'd0, ekd} * 8'd4 + {6'd0, ecp}) * 8'd5 + {5'd0, el} : {5'd0, pi};
+        x_si <= erx[4] ? xsi_e[6:0] : {4'd0, pi};
         x_s[7:0]   <= erx[0] ? xs_e[7:0]   : xs_p[7:0];
         x_s[15:8]  <= erx[5] ? xs_e[15:8]  : xs_p[15:8];
         x_s[23:16] <= erx[1] ? xs_e[23:16] : xs_p[23:16];
@@ -726,51 +837,66 @@ module ot_s81sl_xrt #(
             if (!rs_f) begin fcore <= 1'b0; fault <= 1'b0; end
             else begin fcore <= fcore | fa | fb | fc; fault <= fcore; end
     end else begin : g_fdirect
+        // RTLC 10-24 (owner: register every pin; face_guard 'shared hold'): the sticky state lives in the KEPT fs_k; the
+        // pin flop fault is loaded with fs_k's next value every edge (fault == fs_k every cycle, 0 cycles).  fs_kn holds the
+        // complement (a true-polarity twin has the pin flop's D and was folded back into it).
+        (* keep *) reg fs_kn;
         always @(posedge clk or negedge rs_f)
-            if (!rs_f) fault <= 1'b0;
-            else fault <= fault | fa | fb | fc;
+            if (!rs_f) begin fs_kn <= 1'b1; fault <= 1'b0; end
+            else begin
+                fs_kn <= fs_kn & !(fa | fb | fc);
+`ifdef OT_S81SL_XRT_MUT_FPIN
+                fault <= !fs_kn;                                // mutant: pin flop one edge late (current state)
+`else
+                fault <= !fs_kn | fa | fb | fc;
+`endif
+            end
         always @(*) fcore = 1'b0;
     end endgenerate
 endmodule
 
 // C1 (14 slices): ring E/W + V.  C3 (s_1S, s_6S): + band port B (attention q / P.V).  Hardened masters, no parameters.
-module ot_s81sl_xrt1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF) (
+// S81-KITS-RTLC 10-24 (OWNER DECISION 8): ring ports narrowed to the bits that are read / not constant (dl_e / dl_w
+// [1075:1], dl_vb [275:1], ci_b [1075:0], x_si [6:0], C3 bi packed {B[1075:37], B[6:0]}); FACE_LAND = 1 by default.
+module ot_s81sl_xrt1 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, parameter integer FACE_LAND = 1,
+    parameter [14:0] PDSK = `OT_S81SL_XRT_PDSK_DEF) (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
-    input  wire dl_ev, input wire [1103:0] dl_e, input wire dl_wv, input wire [1103:0] dl_w,
-    input  wire dl_vv, input wire [275:0] dl_vb, output wire [2:0] ci_dir, output wire [1103:0] ci_b,
+    input  wire dl_ev, input wire [1075:1] dl_e, input wire dl_wv, input wire [1075:1] dl_w,
+    input  wire dl_vv, input wire [275:1] dl_vb, output wire [2:0] ci_dir, output wire [1075:0] ci_b,
     output wire [4:0] c_v, output wire [159:0] c_d, output wire [4:0] sw_v, output wire [49:0] sw_a, output wire [39:0] sw_m,
     output wire [1279:0] sw_d, input wire [4:0] lo_v, input wire [1279:0] lo_d, input wire [4:0] p_v, input wire [159:0] p_d,
     output wire rb_v, output wire [31:0] rb_d,
     input  wire [4:0] e_v, input wire [9:0] e_c, input wire [479:0] e_d, input wire eg_v, input wire [1:0] eg_c,
     input  wire [31:0] eg_d, output wire g_v, output wire [1:0] g_c, output wire [31:0] g_d,
     output wire x_go, output wire x_mode, output wire [31:0] x_eps, output wire [31:0] x_scale, output wire x_sv,
-    output wire [7:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
+    output wire [6:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
     wire [512:0] bo_unused;
-    ot_s81sl_xrt #(.HB(0), .FOREG(FOREG)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
-        .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi({1104{1'b0}}), .bo(bo_unused), .c_v(c_v), .c_d(c_d),
+    ot_s81sl_xrt #(.HB(0), .FOREG(FOREG), .PDSK(PDSK), .FACE_LAND(FACE_LAND)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
+        .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi({1046{1'b0}}), .bo(bo_unused), .c_v(c_v), .c_d(c_d),
         .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
         .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c),
         .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
         .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
 endmodule
 
-module ot_s81sl_xrt3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF) (
+module ot_s81sl_xrt3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF, parameter integer FACE_LAND = 1,
+    parameter [14:0] PDSK = `OT_S81SL_XRT_PDSK_DEF) (
     input  wire clk, input wire rst_n, input wire [3:0] sid,
-    input  wire dl_ev, input wire [1103:0] dl_e, input wire dl_wv, input wire [1103:0] dl_w,
-    input  wire dl_vv, input wire [275:0] dl_vb, output wire [2:0] ci_dir, output wire [1103:0] ci_b,
-    input  wire [1103:0] bi, output wire [512:0] bo,
+    input  wire dl_ev, input wire [1075:1] dl_e, input wire dl_wv, input wire [1075:1] dl_w,
+    input  wire dl_vv, input wire [275:1] dl_vb, output wire [2:0] ci_dir, output wire [1075:0] ci_b,
+    input  wire [1045:0] bi, output wire [512:0] bo,     // bi packed: {B word [1075:37], B word [6:0]} (RTLC 10-24)
     output wire [4:0] c_v, output wire [159:0] c_d, output wire [4:0] sw_v, output wire [49:0] sw_a, output wire [39:0] sw_m,
     output wire [1279:0] sw_d, input wire [4:0] lo_v, input wire [1279:0] lo_d, input wire [4:0] p_v, input wire [159:0] p_d,
     output wire rb_v, output wire [31:0] rb_d,
     input  wire [4:0] e_v, input wire [9:0] e_c, input wire [479:0] e_d, input wire eg_v, input wire [1:0] eg_c,
     input  wire [31:0] eg_d, output wire g_v, output wire [1:0] g_c, output wire [31:0] g_d,
     output wire x_go, output wire x_mode, output wire [31:0] x_eps, output wire [31:0] x_scale, output wire x_sv,
-    output wire [7:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
+    output wire [6:0] x_si, output wire [31:0] x_s, input wire x_rbv, input wire [31:0] x_rbd,
     output wire is_v, output wire [159:0] is_d, output wire cfg_v, output wire [159:0] cfg_d, output wire fault
 );
-    ot_s81sl_xrt #(.HB(1), .FOREG(FOREG)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
+    ot_s81sl_xrt #(.HB(1), .FOREG(FOREG), .PDSK(PDSK), .FACE_LAND(FACE_LAND)) u (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
         .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo), .c_v(c_v), .c_d(c_d),
         .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d), .lo_v(lo_v), .lo_d(lo_d), .p_v(p_v), .p_d(p_d), .rb_v(rb_v),
         .rb_d(rb_d), .e_v(e_v), .e_c(e_c), .e_d(e_d), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(g_v), .g_c(g_c),

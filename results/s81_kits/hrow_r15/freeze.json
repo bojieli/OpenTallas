@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "dsdv_svc_sx_hrow_c",
+ "module": "dsdv_svc_sx_hrow",
+ "outline_um": [
+  138.24,
+  164.16
+ ],
+ "ref_tile": "physical/ref_tile/dsdv_svc_sx_hrow",
+ "spec_sha256": "3923e891162205a1489e13b6e875cec1cfe09e06d54d19227323362c000a62d2",
+ "pins_file": "inputs/core_pins/dsdv_svc_sx_hrow_c.json",
+ "pins_sha256": "847661f7e218a8ddedeefcba194d4b10c337fb470afb39476fd275c1a854caa0",
+ "pins": 3851,
+ "pins_snapped_to_lef_edge": 0,
+ "clocks": [
+  "ck"
+ ],
+ "resets": [
+  "rst"
+ ],
+ "recipe_sha256": "16ba609ad1b61f1278f92f152a3a0fdded6ef3488e873b8aada5ab9879513262",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)"
+ ],
+ "repo_rev": "6be7b45a41",
+ "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
+ "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
+ "macros": [],
+ "rtl_patch": {
+  "file": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv",
+  "why": "COORD ruling 10-24 (no waiver for the self-loop fault flop): kit-local duplicate sticky flop. fault_q (internal, keep) holds the sticky state; the port flop fault <= fault_q | chk (= its own next state), so its Q drives only the port. 0 added cycles; ports unchanged.",
+  "sha256": "dff89396a4603f5c446dbcfc982f3ac205472e9a2cda2193b808c7cb59bbed94"
+ },
+ "kit_hash": "a80946f3fc29e6a0",
+ "rtl_override": {
+  "lane": "S81-KITS-HROW r15 2026-10-24",
+  "file": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv",
+  "branch": "claude/s81-kits-hrow-1024r",
+  "rtl_rev": "a02800eb2",
+  "why": "registered replicated one-hot mux selects (role static decode moved before the register); recipe rtl_patch re-applied on top",
+  "kit_rtl_sha256": "52cbfc6856ad0a1e7798394e83a5a9897c2e05ad1bf8ab0e599266dbf58994f2",
+  "copied_from": "/srv/opentallas-scratch/claude/s81-cores-kits/c2/dsdv_svc_sx_hrow_c (r14)",
+  "attempt1": "2026-10-24 19:59 PDT FAIL fail-closed at face_guard (sid_q folded into a yosys ROM); data deleted; fixed in a02800eb2"
+ }
+}

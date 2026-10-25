@@ -88,11 +88,22 @@ module ot_s81sl_eg #(parameter integer D = 5120, LM = 5, LA = 4, MUT = 0) (
     wire [31:0] gy; wire [1:0] gf;
     ot_s81_engram_gate #(.LM(LM), .LA(LA)) u_g (clk, rst_n, dv_q, dot_q, g_o, gy, gf, clk);
     // ---------------------------------------------------------------- output pin flops + sticky fault
+    // S81-KITS-RTLB 10-24 (owner: register every pin, in RTL): fault / g / g_c leave pin-only flops loaded
+    // with the next value of kept state registers (sticky fault flt_s; gate hold g_s / gc_s), so no pin flop feeds its
+    // own D any more (face_guard 'shared').  Pin flop == state register every cycle: 0 cycles.
+    (* keep *) reg flt_s; (* keep *) reg [31:0] g_s; (* keep *) reg [1:0] gc_s;
+    wire flt_n = flt_s | ring_f | (|nf) | (|mf) | (|gf);
     always @(posedge clk or negedge rn)
-        if (!rn) begin g_v <= 1'b0; fault <= 1'b0; end
+        if (!rn) begin g_v <= 1'b0; fault <= 1'b0; flt_s <= 1'b0; end
         else begin
-            g_v <= g_o;
-            if (ring_f || (|nf) || (|mf) || (|gf)) fault <= 1'b1;
+            g_v <= g_o; flt_s <= flt_n; fault <= flt_n;
         end
-    always @(posedge clk) if (g_o) begin g <= gy; g_c <= c_o; end
+    always @(posedge clk) begin
+        if (g_o) begin g_s <= gy; gc_s <= c_o; end
+`ifdef OT_RTLB_PINFLOP_MUT
+        g <= gy; g_c <= c_o;                               // mutant: pin flops do not hold between gates
+`else
+        g <= g_o ? gy : g_s; g_c <= g_o ? c_o : gc_s;
+`endif
+    end
 endmodule

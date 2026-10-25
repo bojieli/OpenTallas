@@ -38,17 +38,29 @@ SRC_REV = "f11f3cc47940002283d1dfcd2de63b6bcfb57f20"
 # (c3 used the lane RTL ot_s81hd_elem + the sim wrapper: face_guard 'shared' on l_d / best_row / go / done.)
 SRCS = ["rtl/v41rom/ot_dsrom_head_elem.sv", "rtl/v41rom/ot_v41_fadd.sv", "rtl/common/ot_prefix.sv",
         "rtl/v41rom/ot_v41_bmul2.sv", "rtl/v41rom/ot_dsrom_bmul3.sv"]
-WRAP = "rtl/dsrom_sys/s81_head/ot_s81hd_elemA_rb.sv"
 OREG = "rtl/dsrom_sys/s81_head/ot_s81hd_oreg.sv"
-TOP = "ot_s81hd_elemA_cv"
 ROM = "ot_rom_4096x274_m8"
-OLD_LEF = "physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem.lef"
-S = 317.672
-CLK_RECT = (293.484, 317.480, 293.676, 317.672)
 INFRA = ["run_kit.sh", "face_guard_core.py", "face_guard.py", "face_flops.tcl", "face_flops_release.tcl",
          "ot_keep_regs.tcl", "pin_audit.py", "corners.tcl", "sdc_lint.py", "signoff.py", "clock_family.tcl",
          "pdn.tcl", "make_tracks.tcl", "drv.tcl"]
-PARAMS = "LV 8 PAD 0 JOIN 1 ROWS 32 IOREG 1 SAFE 1 CUT 511 SPLIT9 1"
+# --elem B (10-24): the same rebuild for the closed elemB view (dshead-elemB-ss-a318fdf47; the five RTL files are
+# byte-identical at a318fdf47 and f11f3cc47).  Its view is a legacy SS closure (no signoff.py record), so the tile
+# needs it rebuilt under the current flow too; clk (W edge M4 stub 0..0.084 x 257.568..257.592) gets the same 0.192
+# square.  ROMs: centred in x (77.76), rom0 y 103.68, rom1 y 190.08 (23.4-um gap, 20-um top margin under the N o_d pins).
+ELEMS = dict(
+    A=dict(WRAP="rtl/dsrom_sys/s81_head/ot_s81hd_elemA_rb.sv", TOP="ot_s81hd_elemA_cv",
+           OLD_LEF="physical/dsrom_fh_safe/closed/elemA/ot_dsrom_head_elem.lef", S=317.672,
+           CLK_RECT=(293.484, 317.480, 293.676, 317.672), OLD_CLK=[293.568, 317.588, 293.592, 317.672],
+           PARAMS="LV 8 PAD 0 JOIN 1 ROWS 32 IOREG 1 SAFE 1 CUT 511 SPLIT9 1", NPINS=458, NICK="hd_elemA_rb",
+           ROMS="u_m.u_rom0 95.04 146.88 R0 u_m.u_rom1 95.04 233.28 R0"),
+    B=dict(WRAP="rtl/dsrom_sys/s81_head/ot_s81hd_elemB_rb.sv", TOP="ot_s81hd_elemB_cv",
+           OLD_LEF="physical/dsrom_fh_safe/closed/elemB/ot_dsrom_head_elem.lef", S=277.652,
+           # B c6 (10-24 21:10): the 0.192 M4 square under the abstract full-cover M4 OBS has NO DRT access point in
+           # the tile (pin_access DRT-0073 on u_eB/clk, tile_prev1); every standard 0.084 x 0.024 M4 W-edge pin of the
+           # same view is accessible (pin_access PA_OK with only clk set to that size) -> clk = the standard pin
+           CLK_RECT=(0.0, 257.568, 0.084, 257.592), OLD_CLK=[0.0, 257.568, 0.084, 257.592],
+           PARAMS="LV 6 PAD 2 JOIN 0 ROWS 128 IOREG 1 SAFE 1 CUT 511 SPLIT9 1", NPINS=None, NICK="hd_elemB_rb",
+           ROMS="u_m.u_rom0 77.76 103.68 R0 u_m.u_rom1 77.76 190.08 R0"))
 
 
 def lef_pins(text):
@@ -69,11 +81,29 @@ def main():
     ap.add_argument("--infra", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--density", type=float, default=0.50)
+    # c7: CP2 early core tap.  The element's own tree is ~450 ps TT (c6 CTS: 156 ps pin -> root over the 317-um core,
+    # then 10 BUFx24 levels to 28.7k flops), so against the 250-ps vclk every input pin register saw -214 ps hold
+    # (16.5k endpoints, 21.5k hold buffers, 'unable to repair').  The tile delivers this core's clk EARLY (gen_phys
+    # core_taps: source latency -early on the tap port), so the kit models exactly that: clk source latency -EARLY,
+    # sdc_lint port_latency_ps {clk: -EARLY}; pin-register arrival = tree - EARLY ~ 250 (signoff +-40).
+    # c8: 160 (c7 at 200: TT pin-register mean 214 = network ~414; FF 138 -> output hold -43 vs the fixed 250 vclk)
+    ap.add_argument("--early-ps", type=float, default=160.0)
+    ap.add_argument("--elem", choices=["A", "B"], default="A")
+    # c9 / B c5 (10-24 20:50): c8 (A, early 160) and B c4 (early 120) routed with only FF output hold left (A -14.24 /
+    # 118, B -9.87 / 104: output face flops at ~150-170 ps FF vs the fixed 250-ps vclk) + B slew 6 (BUFx3 -> w_r/t_r D
+    # over 140-185 um).  The GRT repair closed hold at margin 15 on GRT RC and the routed SPEF lost ~25-30 ps.  Opt-in
+    # POST_GLOBAL_ROUTE hook (as the signed vq_lfp kit's post_grt_drv.tcl): repair_design at a larger slew margin, then
+    # hold repair at this margin on GRT RC with no buffer cap.  Default off = unchanged kits.
+    ap.add_argument("--post-grt-hold-ps", type=float, default=None)
+    ap.add_argument("--post-grt-slew-pct", type=float, default=40.0)
     a = ap.parse_args()
+    globals().update(ELEMS[a.elem])
     K, old = Path(a.out), Path(a.infra)
     K.mkdir(parents=True, exist_ok=False)
     for n in INFRA:
         shutil.copy2(old / n, K / n)
+    for n in ("face_keep.tcl", "face_keep_release.tcl"):     # CP1-R10 main 0ce45ab03c hooks
+        shutil.copy2(R / "tools/die_plan" / n, K / n)
     (K / "rtl").mkdir()
     (K / "macros").mkdir()
     for s in SRCS:
@@ -99,7 +129,7 @@ def main():
                          face=face))
         if base != "clk":
             (ins if d == "INPUT" else outs).add(base)
-    assert len(pins) == 458, len(pins)
+    assert NPINS is None or len(pins) == NPINS, len(pins)
     (K / "io.tcl").write_text("# GENERATED by tools/s81_head/hd_elemA_rebuild.py: closed-view pin rects, clk enlarged\n"
                               + "\n".join(io) + "\n")
     (K / "pins.json").write_text(json.dumps(pins) + "\n")
@@ -123,16 +153,18 @@ set_input_delay -min -40.0000 -clock vclk $non_clk_in
 set_output_delay -min 0.0000 -clock vclk [all_outputs]
 set_load 2 [all_outputs]
 set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in
+# CP2 early core tap: the parent delivers clk {a.early_ps:g} ps early (core tree ~{a.early_ps + 250:g} ps -> pin registers ~250)
+set_clock_latency -source -clock clk {-a.early_ps:.4f} [get_ports {{clk}}]
 """
     (K / "constraint.sdc").write_text(sdc)
     io_floor = {p: 166.6 for p in sorted(ins) + sorted(outs)}
     (K / "sdc_lint.json").write_text(json.dumps(dict(
         period_ps=833.0, insertion_ps=250.0, insertion_tol_ps=40.0, clock_ports=["clk"], inputs=sorted(ins),
         outputs=sorted(outs), unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, io_floor_ps=io_floor,
-        port_latency_ps={}), indent=1) + "\n")
+        port_latency_ps={"clk": -a.early_ps}), indent=1) + "\n")
     vfiles = " ".join("/work/rtl/" + p.name for p in sorted((K / "rtl").iterdir()))
     cfg = f"""# GENERATED by tools/s81_head/hd_elemA_rebuild.py (closed elemA source rebuild, enlarged clk terminal).
-export DESIGN_NICKNAME = hd_elemA_rb
+export DESIGN_NICKNAME = {NICK}
 export DESIGN_NAME = {TOP}
 export PLATFORM = asap7
 export VERILOG_FILES = {vfiles}
@@ -173,6 +205,8 @@ export MACRO_PLACE_HALO = 4.32 4.32
 export MACRO_ROWS_HALO_X = 4.32
 export MACRO_ROWS_HALO_Y = 4.32
 export SYNTH_HDL_FRONTEND = slang
+export PRE_SYNTH_TCL = /work/face_keep.tcl
+export POST_SYNTH_TCL = /work/face_keep_release.tcl
 """
     # c6: fixed ROM sites (the c5 auto placement stacked both ROMs against the W core edge: W-side rd_out / ctl pins
     # in the 4.32 halo with no room for their capture flops - REJECTED at the floorplan review).  Both R0 (ctl + 130 rd
@@ -182,16 +216,25 @@ export SYNTH_HDL_FRONTEND = slang
     (K / "macro_place.tcl").write_text("""# GENERATED by tools/s81_head/hd_elemA_rebuild.py: fixed ROM sites (core frame um)
 set b [ord::get_db_block]
 set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
-foreach {name x y orient} {u_m.u_rom0 95.04 146.88 R0 u_m.u_rom1 95.04 233.28 R0} {
+foreach {name x y orient} {%s} {
   set i [$b findInst $name]
   if {$i eq "NULL" || $i eq ""} { error "hd_elemA_rebuild macro_place: no instance $name" }
   $i setOrient $orient
   $i setLocation [expr {round($x * $dbu)}] [expr {round($y * $dbu)}]
   $i setPlacementStatus FIRM
-  puts "HD_ELEMA place: $name at $x $y $orient"
+  puts "HD_ELEM place: $name at $x $y $orient"
 }
-""")
+""" % ROMS)
     cfg += "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl\n"
+    if a.post_grt_hold_ps is not None:
+        (K / "post_grt_drv.tcl").write_text(
+            "# GENERATED by hd_elemA_rebuild.py --post-grt-hold-ps: post-GRT DRV + hold repair (GRT RC, all corners)\n"
+            "global_route -start_incremental\n"
+            f"repair_design -slew_margin {a.post_grt_slew_pct:g} -cap_margin 20\n"
+            f"repair_timing -hold -hold_margin {a.post_grt_hold_ps:g} -max_buffer_percent 100\n"
+            "detailed_placement\ncheck_placement -verbose\nglobal_route -end_incremental\n"
+            "estimate_parasitics -global_routing\n")
+        cfg += "export POST_GLOBAL_ROUTE_TCL = /work/post_grt_drv.tcl\n"
     (K / "config.mk").write_text(cfg)
     (K / "core.json").write_text(json.dumps({"boundary_role": {"clk": "clk", "rst_n": "reset"}}) + "\n")
     (K / "boundary_guard_context.json").write_text(json.dumps(dict(
@@ -199,8 +242,8 @@ foreach {name x y orient} {u_m.u_rom0 95.04 146.88 R0 u_m.u_rom1 95.04 233.28 R0
         unused_clock_ports=[], reset_ports=["rst_n"], data_pin_exemptions=[]), indent=1) + "\n")
     (K / "rebuild.json").write_text(json.dumps(dict(
         schema="opentallas.s81_head.elem_rebuild.v1", closed_source_rev=SRC_REV, top=TOP, wrapper=[WRAP, OREG], sources=SRCS, params=PARAMS, rom="asap7_memory_macros_v2/" + ROM,
-        pins=len(pins), old_clock_rect=[293.568, 317.588, 293.592, 317.672], new_clock_rect=list(CLK_RECT),
-        infra=str(old), scope="rebuild of the LOST closed elemA physical source; no RTL or cycle change"), indent=1) + "\n")
+        pins=len(pins), elem=a.elem, old_clock_rect=OLD_CLK, new_clock_rect=list(CLK_RECT),
+        infra=str(old), early_core_tap_ps=a.early_ps, post_grt_hold_ps=a.post_grt_hold_ps, post_grt_slew_pct=(a.post_grt_slew_pct if a.post_grt_hold_ps is not None else None), scope="rebuild of the LOST closed elemA physical source; no RTL or cycle change"), indent=1) + "\n")
     print(K, len(pins), len(ins), len(outs))
 
 

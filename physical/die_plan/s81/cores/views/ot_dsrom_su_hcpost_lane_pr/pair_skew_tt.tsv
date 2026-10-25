@@ -1,0 +1,235 @@
+H	corner	TT
+H	regs	6622
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	6622
+H	pairs	98929
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	98929
+H	max_worst	25.4
+H	max_bounded	0
+H	max_signed	-25.4
+H	max_launch	c2_q[23]$_DFF_P_
+H	max_capture	u_core.g_u_m27.u.u.u_k0.g_r.r[73]$_DFF_P_
+H	max_crpr	2.51
+H	max_p99_raw	20.84
+H	max_searched	12
+H	max_nopath	0
+H	max_verify	0.000
+P	max	c2_q[23]$_DFF_P_	u_core.g_u_m27.u.u.u_k0.g_r.r[73]$_DFF_P_	-25.40	2.51	27.92
+P	max	c2_q[30]$_DFF_P_	u_core.g_u_m27.u.u.u_k0.g_r.r[73]$_DFF_P_	-24.80	2.51	27.32
+P	max	c2_q[29]$_DFF_P_	u_core.g_u_m27.u.u.u_k0.g_r.r[73]$_DFF_P_	-24.80	2.51	27.31
+P	max	c2_q[26]$_DFF_P_	u_core.g_u_m27.u.u.u_k0.g_r.r[73]$_DFF_P_	-24.42	2.51	26.94
+P	max	u_core.g_u_m37.u.u.u_k0.g_r.r[36]$_DFF_P_	u_core.g_u_m37.u.u.u_k1.g_r.r[34]$_DFF_P_	-23.62	2.51	26.13
+P	max	u_core.g_u_m37.u.u.u_k0.g_r.r[28]$_DFF_P_	u_core.g_u_m37.u.u.u_k1.g_r.r[34]$_DFF_P_	-23.49	2.51	26.01
+P	max	u_core.g_u_m37.u.u.u_k0.g_r.r[36]$_DFF_P_	u_core.g_u_m37.u.u.u_k1.g_r.r[35]$_DFF_P_	-23.48	2.51	25.99
+P	max	u_core.g_u_m37.u.u.u_k0.g_r.r[28]$_DFF_P_	u_core.g_u_m37.u.u.u_k1.g_r.r[35]$_DFF_P_	-23.35	2.51	25.87
+P	max	c2_q[27]$_DFF_P_	u_core.g_u_m27.u.u.u_k0.g_r.r[73]$_DFF_P_	-23.20	2.51	25.72
+P	max	u_core.g_u_m37.u.u.u_k0.g_r.r[32]$_DFF_P_	u_core.g_u_m37.u.u.u_k1.g_r.r[34]$_DFF_P_	-23.09	2.51	25.61
+P	max	c2_q[24]$_DFF_P_	u_core.g_u_m27.u.u.u_k0.g_r.r[73]$_DFF_P_	-23.07	2.51	25.58
+P	max	u_core.g_u_m37.u.u.u_k0.g_r.r[32]$_DFF_P_	u_core.g_u_m37.u.u.u_k1.g_r.r[35]$_DFF_P_	-22.95	2.51	25.47
+H	min_n	98929
+H	min_worst	23.4
+H	min_bounded	0
+H	min_signed	23.4
+H	min_launch	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[54]$_DFF_P_
+H	min_capture	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[73]$_DFF_P_
+H	min_crpr	2.51
+H	min_p99_raw	21.67
+H	min_searched	193
+H	min_nopath	0
+H	min_verify	0.000
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[54]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[73]$_DFF_P_	23.40	2.51	25.92
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[54]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[25]$_DFF_P_	23.39	2.51	25.91
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[54]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[74]$_DFF_P_	23.39	2.51	25.90
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[54]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	23.16	2.51	25.68
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[54]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	23.09	2.51	25.60
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[54]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	23.07	2.51	25.58
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[54]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	23.00	2.51	25.51
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[54]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	22.90	2.51	25.41
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[16]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[5]$_DFF_P_	22.49	2.51	25.01
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[16]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[9]$_DFF_P_	22.49	2.51	25.01
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[16]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[11]$_DFF_P_	22.47	2.51	24.99
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[16]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[10]$_DFF_P_	22.43	2.51	24.95
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[16]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[7]$_DFF_P_	22.39	2.51	24.90
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[16]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[8]$_DFF_P_	22.37	2.51	24.88
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[127]$_DFF_P_	22.28	2.51	24.79
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[15]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[3]$_DFF_P_	22.25	2.51	24.77
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[117]$_DFF_P_	22.23	2.51	24.74
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[103]$_DFF_P_	22.22	2.51	24.73
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[17]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[5]$_DFF_P_	22.20	2.51	24.71
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[17]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[9]$_DFF_P_	22.20	2.51	24.71
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[17]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[11]$_DFF_P_	22.18	2.51	24.69
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[105]$_DFF_P_	22.16	2.51	24.67
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[17]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[10]$_DFF_P_	22.14	2.51	24.65
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[106]$_DFF_P_	22.10	2.51	24.62
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[17]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[7]$_DFF_P_	22.10	2.51	24.61
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[16]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[6]$_DFF_P_	22.08	2.51	24.59
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[17]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[8]$_DFF_P_	22.07	2.51	24.59
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[16]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[4]$_DFF_P_	22.06	2.51	24.58
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[66]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	22.05	2.51	24.57
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[15]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[5]$_DFF_P_	22.05	2.51	24.56
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[15]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[9]$_DFF_P_	22.05	2.51	24.56
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[104]$_DFF_P_	22.04	2.51	24.56
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[15]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[11]$_DFF_P_	22.03	2.51	24.54
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[1]$_DFF_P_	22.00	2.51	24.52
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[65]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	22.00	2.51	24.51
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[2]$_DFF_P_	21.99	2.51	24.51
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[66]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[140]$_DFF_P_	21.99	2.51	24.51
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[15]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[10]$_DFF_P_	21.99	2.51	24.50
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[66]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.98	2.51	24.50
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[73]$_DFF_P_	21.96	2.51	24.48
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[66]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	21.96	2.51	24.48
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[25]$_DFF_P_	21.95	2.51	24.47
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[74]$_DFF_P_	21.95	2.51	24.46
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[15]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[7]$_DFF_P_	21.95	2.51	24.46
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[65]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[140]$_DFF_P_	21.93	2.51	24.45
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[65]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.92	2.51	24.44
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[15]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[8]$_DFF_P_	21.92	2.51	24.44
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[25]$_DFF_P_	21.91	2.51	24.42
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[65]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	21.90	2.51	24.42
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[74]$_DFF_P_	21.90	2.51	24.42
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[66]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.89	2.51	24.40
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[3]$_DFF_P_	21.89	2.51	24.40
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[62]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	21.88	2.51	24.40
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[107]$_DFF_P_	21.87	2.51	24.39
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[69]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	21.87	2.51	24.38
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[65]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.83	2.51	24.35
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[62]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[140]$_DFF_P_	21.82	2.51	24.34
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[62]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.81	2.51	24.33
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[69]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[140]$_DFF_P_	21.81	2.51	24.32
+P	min	u_core.g_u_a36.u.u.u_k0.g_r.r[118]$_DFF_P_	u_core.g_u_a36.u.u.u_k1.g_r.r[26]$_DFF_P_	19.69	4.63	24.32
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[69]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.80	2.51	24.31
+P	min	u_core.g_u_a36.u.u.u_k0.g_r.r[118]$_DFF_P_	u_core.g_u_a36.u.u.u_k1.g_r.r[51]$_DFF_P_	19.68	4.63	24.31
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[66]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	21.79	2.51	24.31
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[62]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	21.79	2.51	24.31
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[118]$_DFF_P_	21.79	2.51	24.31
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[71]$_SDFF_PN1_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	21.78	2.51	24.30
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[17]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[6]$_DFF_P_	21.78	2.51	24.30
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[69]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	21.78	2.51	24.29
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[108]$_DFF_P_	21.77	2.51	24.28
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[67]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	21.75	2.51	24.26
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[65]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	21.73	2.51	24.25
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	21.72	2.51	24.23
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[62]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.72	2.51	24.23
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[71]$_SDFF_PN1_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[140]$_DFF_P_	21.72	2.51	24.23
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[71]$_SDFF_PN1_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.71	2.51	24.22
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[69]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.70	2.51	24.22
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[71]$_SDFF_PN1_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	21.69	2.51	24.20
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[23]$_SDFF_PN1_	u_core.g_u_m37.u.u.u_k3.g_r.r[9]$_DFF_P_	21.69	2.51	24.20
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[67]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[140]$_DFF_P_	21.68	2.51	24.20
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[5]$_DFF_P_	21.68	2.51	24.20
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[9]$_DFF_P_	21.68	2.51	24.20
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	21.68	2.51	24.19
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[67]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.67	2.51	24.19
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[23]$_SDFF_PN1_	u_core.g_u_m37.u.u.u_k3.g_r.r[11]$_DFF_P_	21.67	2.51	24.19
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[11]$_DFF_P_	21.66	2.51	24.18
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[119]$_DFF_P_	21.66	2.51	24.17
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[140]$_DFF_P_	21.66	2.51	24.17
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[67]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	21.65	2.51	24.17
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.65	2.51	24.16
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[15]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[6]$_DFF_P_	21.63	2.51	24.15
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[23]$_SDFF_PN1_	u_core.g_u_m37.u.u.u_k3.g_r.r[10]$_DFF_P_	21.63	2.51	24.14
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	21.63	2.51	24.14
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[62]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	21.62	2.51	24.14
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[10]$_DFF_P_	21.62	2.51	24.14
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[71]$_SDFF_PN1_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.62	2.51	24.13
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[15]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[4]$_DFF_P_	21.62	2.51	24.13
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[140]$_DFF_P_	21.61	2.51	24.13
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[69]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	21.61	2.51	24.12
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.60	2.51	24.12
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[19]$_SDFF_PP0_	u_core.g_u_m37.u.u.u_k3.g_r.r[9]$_DFF_P_	21.58	2.51	24.10
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[67]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.58	2.51	24.10
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	21.58	2.51	24.10
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[7]$_DFF_P_	21.58	2.51	24.09
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[66]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[43]$_DFF_P_	21.57	2.51	24.08
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[19]$_SDFF_PP0_	u_core.g_u_m37.u.u.u_k3.g_r.r[11]$_DFF_P_	21.57	2.51	24.08
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[23]$_SDFF_PN1_	u_core.g_u_m37.u.u.u_k3.g_r.r[8]$_DFF_P_	21.56	2.51	24.08
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[8]$_DFF_P_	21.55	2.51	24.07
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.55	2.51	24.07
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[19]$_SDFF_PP0_	u_core.g_u_m37.u.u.u_k3.g_r.r[10]$_DFF_P_	21.52	2.51	24.04
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[71]$_SDFF_PN1_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	21.52	2.51	24.04
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[55]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[73]$_DFF_P_	21.52	2.51	24.03
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[66]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[92]$_DFF_P_	21.51	2.51	24.03
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.51	2.51	24.02
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[55]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[25]$_DFF_P_	21.51	2.51	24.02
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[65]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[43]$_DFF_P_	21.51	2.51	24.02
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[55]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[74]$_DFF_P_	21.50	2.51	24.02
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[14]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[2]$_DFF_P_	21.49	2.51	24.00
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[67]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	21.49	2.51	24.00
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[113]$_DFF_P_	21.48	2.51	24.00
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[19]$_SDFF_PP0_	u_core.g_u_m37.u.u.u_k3.g_r.r[7]$_DFF_P_	21.48	2.51	24.00
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[53]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[73]$_DFF_P_	21.48	2.51	24.00
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[53]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[25]$_DFF_P_	21.47	2.51	23.99
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[53]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[74]$_DFF_P_	21.47	2.51	23.98
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	21.46	2.51	23.97
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[19]$_SDFF_PP0_	u_core.g_u_m37.u.u.u_k3.g_r.r[8]$_DFF_P_	21.46	2.51	23.97
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[65]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[92]$_DFF_P_	21.46	2.51	23.97
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[109]$_DFF_P_	21.45	2.51	23.97
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[63]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	21.44	2.51	23.95
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[125]$_DFF_P_	21.42	2.51	23.93
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	21.41	2.51	23.93
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[62]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[43]$_DFF_P_	21.40	2.51	23.91
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[14]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[3]$_DFF_P_	21.38	2.51	23.90
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[7]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[127]$_DFF_P_	21.38	2.51	23.90
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[69]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[43]$_DFF_P_	21.38	2.51	23.90
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[66]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[44]$_DFF_P_	21.38	2.51	23.89
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[63]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[140]$_DFF_P_	21.37	2.51	23.89
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[63]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.36	2.51	23.88
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[62]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[92]$_DFF_P_	21.34	2.51	23.86
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[63]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	21.34	2.51	23.86
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[1]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[120]$_DFF_P_	21.34	2.51	23.86
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[69]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[92]$_DFF_P_	21.33	2.51	23.84
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[65]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[44]$_DFF_P_	21.32	2.51	23.84
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[71]$_SDFF_PN1_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[43]$_DFF_P_	21.29	2.51	23.81
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[55]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[42]$_DFF_P_	21.28	2.51	23.79
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[63]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.27	2.51	23.79
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[6]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[127]$_DFF_P_	21.27	2.51	23.78
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[6]$_DFF_P_	21.26	2.51	23.78
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[67]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[43]$_DFF_P_	21.26	2.51	23.77
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[13]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[4]$_DFF_P_	21.25	2.51	23.77
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[71]$_SDFF_PN1_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[92]$_DFF_P_	21.24	2.51	23.76
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[9]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[127]$_DFF_P_	21.24	2.51	23.75
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[43]$_DFF_P_	21.23	2.51	23.75
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[55]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[140]$_DFF_P_	21.21	2.51	23.73
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[62]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[44]$_DFF_P_	21.21	2.51	23.73
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[67]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[92]$_DFF_P_	21.21	2.51	23.72
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[55]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.20	2.51	23.72
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[69]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[44]$_DFF_P_	21.20	2.51	23.71
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[43]$_DFF_P_	21.19	2.51	23.70
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[55]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[139]$_DFF_P_	21.18	2.51	23.70
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[12]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[0]$_DFF_P_	21.18	2.51	23.70
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[92]$_DFF_P_	21.18	2.51	23.69
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[14]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[5]$_DFF_P_	21.18	2.51	23.69
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[14]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[9]$_DFF_P_	21.18	2.51	23.69
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[63]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	21.17	2.51	23.69
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[53]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[138]$_DFF_P_	21.17	2.51	23.68
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[14]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[11]$_DFF_P_	21.16	2.51	23.67
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[10]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[127]$_DFF_P_	21.15	2.51	23.66
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[92]$_DFF_P_	21.13	2.51	23.65
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[14]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[10]$_DFF_P_	21.12	2.51	23.63
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[55]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.11	2.51	23.63
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[71]$_SDFF_PN1_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[44]$_DFF_P_	21.11	2.51	23.62
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[11]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[127]$_DFF_P_	21.08	2.51	23.60
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[14]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[7]$_DFF_P_	21.08	2.51	23.59
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[53]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[90]$_DFF_P_	21.07	2.51	23.59
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[67]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[44]$_DFF_P_	21.07	2.51	23.59
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[14]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[8]$_DFF_P_	21.05	2.51	23.57
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[12]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[1]$_DFF_P_	21.05	2.51	23.56
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[58]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[44]$_DFF_P_	21.05	2.51	23.56
+P	min	u_core.g_u_a36.u.u.u_k0.g_r.r[4]$_DFF_P_	u_core.g_u_a36.u.u.u_k1.g_r.r[26]$_DFF_P_	18.93	4.63	23.55
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[12]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[2]$_DFF_P_	21.04	2.51	23.55
+P	min	u_core.g_u_a16.u.u.u_k3.g_r.r[105]$_DFF_P_	u_core.g_u_a16.u.u.u_k5.g_r.r[6]$_DFF_P_	21.02	2.51	23.54
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[55]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[91]$_DFF_P_	21.01	2.51	23.53
+P	min	u_core.g_u_m27.u.u.u_k3.g_r.r[8]$_DFF_P_	u_core.g_u_m27.u.u.u_k5.g_r.r[127]$_DFF_P_	21.01	2.51	23.53
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[61]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[44]$_DFF_P_	21.00	2.51	23.52
+P	min	u_core.g_u_a16.u.u.u_k3.g_r.r[105]$_DFF_P_	u_core.g_u_a16.u.u.u_k5.g_r.r[5]$_DFF_P_	21.00	2.51	23.51
+P	min	u_core.g_u_a36.u.u.u_k0.g_r.r[10]$_DFF_P_	u_core.g_u_a36.u.u.u_k1.g_r.r[26]$_DFF_P_	18.87	4.63	23.49
+P	min	u_core.g_u_a16.u.u.u_k3.g_r.r[105]$_DFF_P_	u_core.g_u_a16.u.u.u_k5.g_r.r[4]$_DFF_P_	20.98	2.51	23.49
+P	min	u_core.g_u_a36.u.u.u_k0.g_r.r[9]$_DFF_P_	u_core.g_u_a36.u.u.u_k1.g_r.r[26]$_DFF_P_	18.85	4.63	23.48
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[63]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[43]$_DFF_P_	20.95	2.51	23.46
+P	min	u_core.g_u_m37.u.u.u_k1.g_r.r[12]$_DFF_P_	u_core.g_u_m37.u.u.u_k3.g_r.r[3]$_DFF_P_	20.93	2.51	23.45
+P	min	u_core.g_u_a36.u.u.u_k0.g_r.r[1]$_DFF_P_	u_core.g_u_a36.u.u.u_k1.g_r.r[26]$_DFF_P_	18.81	4.63	23.43
+P	min	u_core.g_u_a16.u.u.u_k3.g_r.r[105]$_DFF_P_	u_core.g_u_a16.u.u.u_k5.g_r.r[1]$_DFF_P_	20.92	2.51	23.43
+P	min	u_core.g_u_m4r.u_m4.u.u_k1.g_r.r[63]$_DFF_P_	u_core.g_u_m4r.u_m4.u.u_k3.g_r.r[92]$_DFF_P_	20.89	2.51	23.41

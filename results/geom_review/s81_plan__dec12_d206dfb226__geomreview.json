@@ -1,0 +1,17 @@
+{
+ "element": "s81 die plan DEC12 re-plan",
+ "kit": "claude/s81-dec12-1024r@d206dfb226 physical/die_plan/s81/die_plan.json",
+ "stage": "die plan",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-25T00:21:00-07:00",
+ "reasons": "[2026-10-25 00:21] Looked at die_plan_g0.png. I also rendered main vs DEC12 hard-core placement myself for leaf t1/t6/t30/t58, c1x_C_t2 and kv512_C_t1 (rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/dec12/*.png), and checked all 180 types by script: no hard core overlaps or leaves its outline; the only <8.64-um core gaps (26, at 6.17) are in the unchanged col_* frames. Lane routes are identical, with more stations (<=397 um). The R3 core moves pull leaf lanes and cores toward the vn/ve hubs, which shortens reach. c1x_C_t2 moves its whole cap/xr/eg/xf cluster from the S edge to the N edge like kv512, leaving the S 2/3 of the slot to the ft bands. The svc fold now runs at 4.77-5.00 pins/um after moving the gather to the 2-beat attnh lane, under the 5.5 target, and the M9 pins are gone. The leaf lanes are still an irregular cloud (my r9 FAIL on the lane arrangement stands for leaf kits); the R3 moves do not make it worse.",
+ "fixes": "OK to merge and re-kit the changed types. Conditions: (1) 128 ot_s81c_attn_hcore rst pins (8 per svc) are 405-640 um from the nearest tap where the wavefront ends: add an in-partition reset relay (decision 13) before the svc kits; (2) leaf kits wait for the regular lane array of the r9 re-plan (or carry the r9 FAIL); (3) the 2-beat attnh gather rate (1 word per 2 cycles per direction) must be in the compiler schedule and the token pass; (4) fresh PROTO skeleton CLEAN for the changed types before route.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/dec12/die_g0.png",
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/dec12/leaf_t1_t6_t30.png",
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/dec12/c1x_t2_kv512_leaf_t58.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "BRIEFING decisions 12/13/17; OWNER 2026-10-24 08:05 review before route"
+}

@@ -1,0 +1,75 @@
+# COORD-REVIEW-QUEUE (ROOT-MERGE, 2026-10-24)
+
+Lane ROOT-MERGE checked each branch in the TOPDOWN-PLAN "Merge queue" and every claude/codex *-1022/*-1023 branch tip
+dated after the 10-23 05:08 PDT owner reset. Test merges were made in ~/wt/root-merge (detached), then main was
+fast-forwarded under ~/coord/merge.lock. Message format follows BRIEFING (`-X ours`, 0 deletions in every merge).
+
+Gate on main after each batch: `python3 -m pytest -q tools/die_plan/` + `check.py` G0 on the 4 plans.
+NOTE: localhost has no system pytest/matplotlib, and the ubuntu shell is not in the docker group yet. I used a venv
+(scratchpad rm/venv, --system-site-packages + pytest + matplotlib) and ran the tests under `sg docker -c` (the bind
+tests need docker yosys). Without docker, 23 bind tests fail on the environment, not on the code.
+
+| main before | pytest tools/die_plan | G0 s81 | G0 qwen_compute | G0 qwen_kvsys | G0 hbm |
+|---|---|---|---|---|---|
+| 3e05af806b (start) | 118 pass | PASS 0 err/1082 w | PASS 0/88 | PASS 0/1811 | PASS 0/516 |
+| edcd4f42f8 (batch A) | 118 pass | PASS 0/1082 | PASS 0/88 | PASS 0/1811 (v3.8s) | PASS 0/516 |
+| df641549db (batch B) | 126 pass | PASS 0/1105 (v4.8, 174 types) | PASS 0/88 | PASS 0/1811 | PASS 0/516 |
+
+## Queue decisions
+
+| branch | tip | decision | merge commit on main | reason |
+|---|---|---|---|---|
+| claude/kv-p8-hub-1023 | 1f988a72f | MERGE | 7353065934 | KV plan v3.8s FIRM astk stations. G0 PASS (0 err; 1811 warnings with main's check.py, the branch claimed 1813). G0C hub_Eo/Wo clean. Evidence files g0_summary_v38s / lat_delta_v38s / renders are in the branch. With GEOM-REVIEW8 it clears the KV-P7 condition. |
+| claude/geom-review8-1023 | 0e0f022b2 | MERGE | d59e42f105 | 14 new verdict records and 6 amended ones. kv3_hub_Ei 383b07 goes FAIL (21:07) -> PASS-COND (23:23) under the quoted COORD 23:22 OWNER DECISION CLOCK. The reviewer re-amended in place, as GR8 did at 21:07. The measured FAIL numbers (TT 342 / FF 288 spread) stay in the reasons text, and the old record is in git at 96c29cfeb. Flag for the coordinator: confirm that owner decision. |
+| claude/kv-p7-1023 | c92b01b02 | RECORD-MERGE | deeb5fbeb7 | Boot image on kv41: non-PV constants valid. PV NOT FINAL (no W request-lane pads; RL/FIA offsets). Includes kv-p6-boot. KV-TOK continues from here. |
+| codex/hbm-token-0936-1023 | 1c729e419 | RECORD-MERGE (missed by the plan) | edcd4f42f8 | FAIL evidence: HBM token rec2 collective transport mismatch. New dir only, nothing claimed as qualified. |
+| claude/s81-p9-1023 | 359e63c39 | MERGE | c3ef3b9039 | Plan v4.8: G0 PASS on main, G2 PASS 31 probes (r8eq), LANDED BUNDLES R8 rule plus tests, LPR_ROOT N2 seam bench PASS. The plan file equals the branch's. 7 tools/die_plan files auto-merged without conflict. |
+| claude/s81-p9-r8eq-1023 | 3be3c7df1 | MERGE (contained) | via c3ef3b9039 | Ancestor of s81-p9. |
+| claude/s81-p9-fc-lpr-1023 | 7dd91ac7a | MERGE (contained) | via c3ef3b9039 | Ancestor of s81-p9. |
+| claude/s81-p9-tool-1023 | 9db54b73d | MERGE (contained) | via c3ef3b9039 | Ancestor of s81-p9 / core-s81*. |
+| claude/s81-p9-tool2-1023 | 4944e4a82 | MERGE (contained) | via c3ef3b9039 | Ancestor of s81-p9. |
+| claude/s81-p9-face-1023 | 6f31c59af | MERGE | aed20626e9 | Opt-in face masks (default unchanged). Benches bit exact, lint 0. s81_dv bind tests pass. |
+| claude/s81-p9-fc-1023 | 9e40c62fa | MERGE | b55d98264a | fc30 status fault fix: calendar 72 frames 0 fail, probe tt/ff PASS, mutants caught. Adds new tools and evidence only. |
+| claude/s81-p9-cf-1023 | 61744766b | RECORD-MERGE, NOT CLOSED | 57e8f36bc2 | crs4p gate 3 FAIL textbook.reset_landing; gate_result.json is committed. |
+| claude/core-s81-1023 | cdc5721f0 | RECORD-MERGE | 0ff2bb82e4 | ve r5 closed view, split miters PASS. GEOM-REVIEW8 FAILED the 1442.88-um leaf placement, so the decision is open for S81. The gen_plan_v4 NONFRAME_HC change is in main, but die_plan.json (v4.8) was not regenerated with it. |
+| claude/core-s81-eng-1023 | e684da414 | MERGE | 3960358938 | 3 hard cores, lockstep PASS, mutants caught, GR8 PASS. |
+| claude/core-s81-svc-1023 | 748770e1b | RECORD-MERGE, NOT CLOSED | ce59a1cd4b | TT setup WNS -25.29 ps (88 endpoints). DRC 0 / GRT 0 / hold 0. TT only, no SS/FF sign-off. Opt-in define. |
+| claude/tokj-s81-split-1023 | 563949239 | MERGE | 58d519afe0 | Build-script change. The old path is kept behind OT_DV_BINARY=1. |
+| claude/cp2-tool-1023 | e825c9c69 | MERGE | df641549db | CP2 tool work plus test_cp2.py. die_plan pytest 126 pass, G0 4/4 unchanged. |
+| claude/kv-p7-hubtool-1023 | d2cc287a7 | NO-OP (content already in main) | - | Its tree equals 3773fcc91, which is in main, so a merge would add no content. |
+| claude/qc-p6-a0v6-1023 | 21cf43d19 | HOLD (carried by QC-A0) | - | See QC section below. Regenerating main's QC plan with the a0v6 gen_plan hook gives G0 FAIL. |
+| claude/qc-p6-ftc-1023 | 3a1e9ffa2 | HOLD | - | Pre-ruling (19:17) coll_ftc on tap_mode 'sinks' only. Main's QC plan was later rebuilt by qc-p6-r8/qc-p6-g0c (22:59), and CP1 r8 RULING 21:26 makes grid taps the default (sinks only as additions). A textual merge would mix two generations of a generated die_plan.json. Its tools/die_plan part (kv-p6-tap) is already in main. The GR8 PASS record for coll_ftc g3h is merged. The QC lane must port the coll_ftc tap and station change onto main's gen_plan.py and regenerate. |
+| claude/hbm-arch-1023, tokj-kvslice-1023, kv-p7-v38-1023, core-hbm-1023 | - | NOT TOUCHED | - | WIP / stopped, per the plan. |
+
+## Post-05:08 branches the plan's queue did not list
+
+| branch | tip | decision | reason |
+|---|---|---|---|
+| codex/hbm-token-0936-1023 | 1c729e419 | RECORD-MERGE | See above. |
+| codex/plan-g2-path-0858, geom-hbm-source-0944, hbm-plan-sourcepin-0944, qc-taps-0931, kv-forwarding-0911 (-1023) | 44ee3adc9, 0737df774, 06f7a3330, 1c1a1622e, 7585b6a87 | NO-OP | Every commit is patch-equivalent in main (git cherry). |
+| claude/kv-p6-boot-1023 | - | contained | Inside kv-p7 (merged). |
+| claude/kv-p6-v37-1023 / kv-p6-pv-1023 | 0ec5c902d | HOLD (superseded) | First-proof PV pad table. KV-P7 states the table was withdrawn (PV_CHECK FAIL 14 on kv39). The plan's "kv-p6-* leave" applies. |
+| claude/qc-a0-1023, qc-a0v2..v5-1023 | - | contained | Inside qc-p6-a0v6. |
+| claude/kv-p3b-ftst-1023 | 1f38e5d02 | HOLD | 10:50 gen_phys PROPOSAL for PLAN-TOOL2, never adopted. Later station tooling in main supersedes it. |
+| claude/plan-s81v4-1023, plan-s81v3-1023 | 8f948effa | HOLD (superseded) | S81 plan v4 early; main has v4.8. |
+| claude/plan-hbmv2-1023, plan-hbm-1023 | a624978f3 | HOLD (superseded) | HBM v2; main has the P7 fallback; HBM-ARCH owns the redesign. |
+| claude/kv-p3-1023 | 87f498afe | HOLD (superseded) | 0 unique patches; kv-p3b/kv-p3-rtl merged. |
+
+## Unpushed lanes recovered from old scratch
+Skipped: coordinator cancelled the request (old scratch wiped by owner order 07:03 PDT) before the list was made.
+
+## QC section (ROOT-MERGE resumed 2026-10-24 07:20 PDT after the coordinator restart)
+- The killed agent left ~/wt/root-merge mid-merge of qc-p6-a0v6. Its die_plan.json was rewritten at 07:03:22, the minute it was killed, so that run may not have finished. I re-ran `physical/die_plan/qwen_compute/run.sh` cleanly in two trees:
+  - origin/main 8a5d1f3dab alone: die_plan.json comes out byte-identical to the committed file. G0 PASS, 0 errors, 88 warnings, G0C 52/56.
+  - main merged with a0v6 (gen_plan.py +3 lines that call a0_core_taps.declare): G0 FAIL, 404 errors, all check=clock, "clock tap ... outside the outline". By type: sle_su_c 82, slw_su_c 82, and 60 each for sle_su_l0, sle_su_l1, slw_su_l0, slw_su_l1. Report: ~/coord/evidence/root-merge/qc-a0v6-on-main_g0_report.json
+- Decision: HOLD. I aborted the merge (`git merge --abort`); ~/wt/root-merge is clean at df641549db. a0v6 declares its taps against the pre-g0c QC plan (19:28). Main's plan was rebuilt later (qc-p6-g0c 22:59, SU split into hard cores, grid taps by default).
+- The kits and tools (physical/ref_tile/qfd_tile_n*_a0c*, tools/qwen_romleaf/*) are new files only and conflict with nothing. They travel with lane QC-A0 (claude/qc-a0-1024, merge a34546df17), which owns the A0 re-kit.
+- WARNING for QC-A0: a34546df17 took the a0v6 gen_plan.py hook and the plan_notes a0_core_taps hunk, but kept main's die_plan.json without regenerating it. The committed plan therefore does not match its generator, and regenerating it gives G0 FAIL as shown above. Before asking to merge: fix the a0_core_taps declaration for the current plan geometry, or drop the hook, then run run.sh and get G0 PASS.
+- Merge requests: lanes append `MERGE REQUEST: <branch> @sha <claim>` below. ROOT-MERGE checks this queue every ~10 min.
+
+## Merge requests
+
+- 07:58 PDT: no merge requests in 30 min of polling. ROOT-MERGE stopped; relaunch the lane to review new requests.
+
+## CODEX notes
+- CODEX root integrated shared fixes d311adaf53,44c10ec34d,34a5e602dc,acfb8a36e7,8232aca585; plain merge and HEAD==origin/main checks passed. Remaining plan/core work owned by grouped agents; no queue item orphaned.

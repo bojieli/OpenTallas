@@ -1,0 +1,528 @@
+{
+ "schema": "elem-hbm recipes2 v1",
+ "by": "ELEM-HBM/RECIPES2 (Claude) 2026-10-24",
+ "plan": "physical/die_plan/hbm_arch/B2l/die_plan.json",
+ "asbuilt": "physical/die_plan/hbm/bind/inputs/die_r18h5.v.gz (GEN die of source d34578d6f; bundle file list = bind/asbuilt.json prefer)",
+ "bankq_lanes6_7_bank": {
+  "summary": "4 remainder cores (bankq, ft, term, bankq0) = the as-built master minus the 6 member lane leaves; port check vs B2l EXACT, formal equivalence of (core + 2 CORE-HBM lanes3 pieces) vs the master PASS for all 4, mutant controls caught (bankq, bankq0)",
+  "assumptions": [
+   "plan net identity across pieces: B2l bus x_u_c_u_b_u_st_g_lg_g_grp_<g>_u_lg_<p>[i] of this piece is the same partition net as lanes pieces g_lg_g_grp_<g>_u_lg_<p>[i] (bit i <-> bit i, the binder convention); compressed master-port bus = used master bits in index order (rest_wrap.py convention)",
+   "lane leaf: ot_hdc_v41x_hcp_lanes (HEAD rtl/hdc/v41x, used by the lanes3 core) and ot_hdc_v41x_hcp_lanes__d4g_* (scoped @d34578d6f) closures are text-identical modulo comments/whitespace/suffix (9 modules compared); the leaves are boxes in the equivalence",
+   "term: d_xa[9:7] are plan pins the remainder never reads (the as-built descriptor taps register them, nothing uses them): kept as registered sinks (recipe retain_unused_input_bits), no logic"
+  ],
+  "modules": {
+   "ot_hbm_hc_bankq_static__lanes6_7_bank": {
+    "master": "ot_hbm_hc_bankq_static #(CPI=1 CPO=1)",
+    "asbuilt": "hcb_* positions 1,3,4,5 (16 inst)",
+    "master_source": "rtl/hbm_accel/die_glue/scoped_d4g/hcb.sv @d34578d6f (bundle file of the as-built die, asbuilt.json prefer list)",
+    "core": "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_l67b_core.sv",
+    "core_sha256": "1c4f94b00b6c44fac37ae08f283d130b5ca2f2143fb5dae92b92adfd6e854dd0",
+    "port_check": {
+     "verdict": "PASS",
+     "retain_unused_input_bits": {},
+     "cut_bits": [
+      3894,
+      5970
+     ],
+     "plan_pins": 9864,
+     "bus_diffs": [],
+     "unread_master_bits": 0,
+     "leaf_ties": {
+      "fst=0": 6
+     }
+    },
+    "equivalence": {
+     "equiv_cells": 30010,
+     "proven": 30010,
+     "unproven": 0,
+     "rc": 0,
+     "verdict": "PASS",
+     "what": "yosys equiv_make/equiv_simple -seq 4/equiv_induct -seq 4: gold = master (scoped file, die params; proc, memory_map, flatten, splitnets, async2sync); gate = cmp_top = this core + 2 x ot_hbm_hc_bankq_lanes3_core (CORE-HBM pieces lanes0_2 = g_grp 0..2, lanes3_5 = 3..5) wired from the master member-pin nets (split_l67/comp.py) + the master port-to-port wires; the 8 lane leaves and 12 SRAM macros everted on both sides (their inputs compared, outputs shared by cell name); every master output and every leaf/SRAM input proven equal",
+     "command": "split_l67/ext.sh hcb ot_hbm_hc_bankq_static \"CPI=1 CPO=1\" 1; rest67.py --ext ext/hcb --top ot_hbm_hc_bankq_static --plan <B2l pins> --core ot_hbm_hc_bankq_l67b_core --out core; comp.py core/ot_hbm_hc_bankq_l67b_core.map.json ot_hbm_hc_bankq_l67b_core lanes3_ports.json eq_final/hcb/cmp.sv; eq.sh hcb ot_hbm_hc_bankq_static \"CPI=1 CPO=1\" ot_hbm_hc_bankq_l67b_core eq_final/hcb/cmp.sv eq_final/hcb"
+    },
+    "mutant_control": {
+     "equiv_cells": 30010,
+     "proven": 30009,
+     "unproven": 1,
+     "rc": 1,
+     "verdict": "FAIL",
+     "mutant": "invert remainder->lanes3_5 net x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_w_i[77] in cmp_top (comp.py --mutant)",
+     "expect": "FAIL (unproven > 0)",
+     "caught": true
+    },
+    "views": [
+     "ot_hbm_hc_bankq_static__lanes6_7_bank@345a3ba2271a",
+     "ot_hbm_hc_bankq_static__lanes6_7_bank@4766a3ee91ef",
+     "ot_hbm_hc_bankq_static__lanes6_7_bank@4be7d9f11ffa",
+     "ot_hbm_hc_bankq_static__lanes6_7_bank@9ac6b0c89af5"
+    ],
+    "kits": {
+     "ot_hbm_hc_bankq_static__lanes6_7_bank@345a3ba2271a": "1ced1f8caa97f094",
+     "ot_hbm_hc_bankq_static__lanes6_7_bank@4766a3ee91ef": "7158449e18ddb08f",
+     "ot_hbm_hc_bankq_static__lanes6_7_bank@4be7d9f11ffa": "e6e9955cdba72600",
+     "ot_hbm_hc_bankq_static__lanes6_7_bank@9ac6b0c89af5": "016ecb7adfd53ae6"
+    }
+   },
+   "ot_hbm_hc_bankq_ft_static__lanes6_7_bank": {
+    "master": "ot_hbm_hc_bankq_ft_static",
+    "asbuilt": "hcb_*2/6 (8 inst)",
+    "master_source": "rtl/hbm_accel/die_glue/scoped_d4g/hcbft.sv @d34578d6f (bundle file of the as-built die, asbuilt.json prefer list)",
+    "core": "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_ft_l67b_core.sv",
+    "core_sha256": "e35cfc0ef0a8892aa6aca42e2b00c729c630a39a34ace7d0278b0336250a8d5f",
+    "port_check": {
+     "verdict": "PASS",
+     "retain_unused_input_bits": {},
+     "cut_bits": [
+      1368,
+      3444
+     ],
+     "plan_pins": 4812,
+     "bus_diffs": [],
+     "unread_master_bits": 1536,
+     "leaf_ties": {
+      "fst=0": 6
+     }
+    },
+    "equivalence": {
+     "equiv_cells": 24870,
+     "proven": 24870,
+     "unproven": 0,
+     "rc": 0,
+     "verdict": "PASS",
+     "what": "yosys equiv_make/equiv_simple -seq 4/equiv_induct -seq 4: gold = master (scoped file, die params; proc, memory_map, flatten, splitnets, async2sync); gate = cmp_top = this core + 2 x ot_hbm_hc_bankq_lanes3_core (CORE-HBM pieces lanes0_2 = g_grp 0..2, lanes3_5 = 3..5) wired from the master member-pin nets (split_l67/comp.py) + the master port-to-port wires; the 8 lane leaves and 12 SRAM macros everted on both sides (their inputs compared, outputs shared by cell name); every master output and every leaf/SRAM input proven equal",
+     "command": "split_l67/ext.sh hcbft ot_hbm_hc_bankq_ft_static \"\" 1; rest67.py --ext ext/hcbft --top ot_hbm_hc_bankq_ft_static --plan <B2l pins> --core ot_hbm_hc_bankq_ft_l67b_core --out core; comp.py core/ot_hbm_hc_bankq_ft_l67b_core.map.json ot_hbm_hc_bankq_ft_l67b_core lanes3_ports.json eq_final/hcbft/cmp.sv; eq.sh hcbft ot_hbm_hc_bankq_ft_static \"\" ot_hbm_hc_bankq_ft_l67b_core eq_final/hcbft/cmp.sv eq_final/hcbft"
+    },
+    "mutant_control": "NOT RUN for this variant (same tooling; run on bankq + bankq0)",
+    "views": [
+     "ot_hbm_hc_bankq_ft_static__lanes6_7_bank@26496f98b6d5",
+     "ot_hbm_hc_bankq_ft_static__lanes6_7_bank@56966ec8a129"
+    ],
+    "kits": {
+     "ot_hbm_hc_bankq_ft_static__lanes6_7_bank@26496f98b6d5": "07d74e5f875757b4",
+     "ot_hbm_hc_bankq_ft_static__lanes6_7_bank@56966ec8a129": "2e6dad07b7750465"
+    }
+   },
+   "ot_hbm_hc_bankq_term_static__lanes6_7_bank": {
+    "master": "ot_hbm_hc_bankq_term_static #(CPI=1 CPO=1)",
+    "asbuilt": "hcb_*7 (4 inst)",
+    "master_source": "rtl/hbm_accel/die_glue/scoped_d4g/hcbt.sv @d34578d6f (bundle file of the as-built die, asbuilt.json prefer list)",
+    "core": "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq_term_l67b_core.sv",
+    "core_sha256": "43474205102a4673a2bf43048f3d0c86dad40a9b3c6b0297592e86f857180ce3",
+    "port_check": {
+     "verdict": "PASS",
+     "retain_unused_input_bits": {
+      "d_xa": [
+       7,
+       8,
+       9
+      ]
+     },
+     "cut_bits": [
+      3894,
+      5941
+     ],
+     "plan_pins": 9835,
+     "bus_diffs": [],
+     "unread_master_bits": 3,
+     "leaf_ties": {
+      "fst=0": 6
+     }
+    },
+    "equivalence": {
+     "equiv_cells": 29733,
+     "proven": 29733,
+     "unproven": 0,
+     "rc": 0,
+     "verdict": "PASS",
+     "what": "yosys equiv_make/equiv_simple -seq 4/equiv_induct -seq 4: gold = master (scoped file, die params; proc, memory_map, flatten, splitnets, async2sync); gate = cmp_top = this core + 2 x ot_hbm_hc_bankq_lanes3_core (CORE-HBM pieces lanes0_2 = g_grp 0..2, lanes3_5 = 3..5) wired from the master member-pin nets (split_l67/comp.py) + the master port-to-port wires; the 8 lane leaves and 12 SRAM macros everted on both sides (their inputs compared, outputs shared by cell name); every master output and every leaf/SRAM input proven equal",
+     "command": "split_l67/ext.sh hcbt ot_hbm_hc_bankq_term_static \"CPI=1 CPO=1\" 1; rest67.py --ext ext/hcbt --top ot_hbm_hc_bankq_term_static --plan <B2l pins> --core ot_hbm_hc_bankq_term_l67b_core --out core; comp.py core/ot_hbm_hc_bankq_term_l67b_core.map.json ot_hbm_hc_bankq_term_l67b_core lanes3_ports.json eq_final/hcbt/cmp.sv; eq.sh hcbt ot_hbm_hc_bankq_term_static \"CPI=1 CPO=1\" ot_hbm_hc_bankq_term_l67b_core eq_final/hcbt/cmp.sv eq_final/hcbt"
+    },
+    "mutant_control": "NOT RUN for this variant (same tooling; run on bankq + bankq0)",
+    "views": [
+     "ot_hbm_hc_bankq_term_static__lanes6_7_bank@7570266ac160"
+    ],
+    "kits": {
+     "ot_hbm_hc_bankq_term_static__lanes6_7_bank@7570266ac160": "7357de8ae017087a"
+    }
+   },
+   "ot_hbm_hc_bankq0_static__lanes6_7_bank": {
+    "master": "ot_hbm_hc_bankq0_static #(DRLY=2 CPO=1)",
+    "asbuilt": "hcb_*0 (4 inst)",
+    "master_source": "rtl/hbm_accel/die_glue/scoped_d4g/hcb0.sv @d34578d6f (bundle file of the as-built die, asbuilt.json prefer list)",
+    "core": "rtl/hbm_accel/cores_split/ot_hbm_hc_bankq_static/ot_hbm_hc_bankq0_l67b_core.sv",
+    "core_sha256": "616f04f416a0d7f5c8c4e74a8ec7d5849549150a2148193d9392d4d4b0f0c029",
+    "port_check": {
+     "verdict": "PASS",
+     "retain_unused_input_bits": {},
+     "cut_bits": [
+      3894,
+      6483
+     ],
+     "plan_pins": 10377,
+     "bus_diffs": [],
+     "unread_master_bits": 0,
+     "leaf_ties": {
+      "fst=1": 6,
+      "s_i=0": 1536
+     }
+    },
+    "equivalence": {
+     "equiv_cells": 34079,
+     "proven": 34079,
+     "unproven": 0,
+     "rc": 0,
+     "verdict": "PASS",
+     "what": "yosys equiv_make/equiv_simple -seq 4/equiv_induct -seq 4: gold = master (scoped file, die params; proc, memory_map, flatten, splitnets, async2sync); gate = cmp_top = this core + 2 x ot_hbm_hc_bankq_lanes3_core (CORE-HBM pieces lanes0_2 = g_grp 0..2, lanes3_5 = 3..5) wired from the master member-pin nets (split_l67/comp.py) + the master port-to-port wires; the 8 lane leaves and 12 SRAM macros everted on both sides (their inputs compared, outputs shared by cell name); every master output and every leaf/SRAM input proven equal",
+     "command": "split_l67/ext.sh hcb0 ot_hbm_hc_bankq0_static \"DRLY=2 CPO=1\" 1; rest67.py --ext ext/hcb0 --top ot_hbm_hc_bankq0_static --plan <B2l pins> --core ot_hbm_hc_bankq0_l67b_core --out core; comp.py core/ot_hbm_hc_bankq0_l67b_core.map.json ot_hbm_hc_bankq0_l67b_core lanes3_ports.json eq_final/hcb0/cmp.sv; eq.sh hcb0 ot_hbm_hc_bankq0_static \"DRLY=2 CPO=1\" ot_hbm_hc_bankq0_l67b_core eq_final/hcb0/cmp.sv eq_final/hcb0"
+    },
+    "mutant_control": {
+     "equiv_cells": 34079,
+     "proven": 34078,
+     "unproven": 1,
+     "rc": 1,
+     "verdict": "FAIL",
+     "mutant": "invert remainder->lanes3_5 net x_u_c_u_b_u_st_g_lg_g_grp_4_u_lg_w_i[77] in cmp_top (comp.py --mutant)",
+     "expect": "FAIL (unproven > 0)",
+     "caught": true
+    },
+    "views": [
+     "ot_hbm_hc_bankq0_static__lanes6_7_bank@1ce7110970e0"
+    ],
+    "kits": {
+     "ot_hbm_hc_bankq0_static__lanes6_7_bank@1ce7110970e0": "b2ff2b941c2ca1ba"
+    }
+   }
+  }
+ },
+ "vmdel": {
+  "module": "ot_hbm_svc_vmdel_lane_n",
+  "views": 5,
+  "verdict": "BLOCKED (plan pins wrong vs as-built; not fixable in a recipe without changing the function)",
+  "finding": "B2l pins = ot_hbm_svc_vmdel_lane_n elaborated at the DEFAULT NPC 4 (physical/die_plan/hbm/cores/ports/p4_ports.json and pins_plan/inputs/rtl_ports.json: fill_v_i 4, fill_bank_i 4, fill_slot_i 24, fill_epoch_i 64, fill_data_i 1024; 1489 pins). The die as built is NPC 2: all 32 die_r18h5.v instances are #(.NPC(2)) and take 2 x 256-b fill feeds; the closed ref tile physical/ref_tile/hv18_vmdel_lane2 (kit.env PARAMS NPC=2, 2 SRAMs, gate PASS) is the hardened view; the B2l plan core_conns itself feeds each vmdel from 2 vmks cores (u_vmks_Q0, u_vmks_Q2). NPC 2 elaborates to 929 pins (fill 2/2/12/32/512). The source of the file at d34578d6f and at HEAD are identical (one revision, 6bb7c6870a).",
+  "options": [
+   "HBM-ARCH re-pins the 5 vmdel tables at NPC 2 (929 pins) -> recipe as is (NPC 2) generates",
+   "an NPC 4 kit matches the pins but is a different function (4 PC slots, 2048-sector blocks, other aperture rule): REFUSED, not the die"
+  ],
+  "evidence_commands": [
+   "yosys hierarchy -top ot_hbm_svc_vmdel_lane_n -chparam NPC {2,4}; portlist vs B2l pins: NPC 2 diff on the 5 fill buses, NPC 4 diff none",
+   "zcat die_r18h5.v.gz | grep 'ot_hbm_svc_vmdel_lane_n #' (32 x NPC 2)"
+  ]
+ },
+ "spot_check_recipes_b2": {
+  "summary": "14 modules / 25 views: all PASS",
+  "modules": {
+   "ot_hbm_idx_query_static": {
+    "verdict": "PASS",
+    "asbuilt_inst": "hb_idx__q_NW",
+    "asbuilt_params": {},
+    "recipe_params": {},
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hbm_idx_query_static@57472ecfc79f": "kit present, rtl == source commit"
+    },
+    "note": "RECIPES2 added synth_memory_max_bits 7168 = the largest measured yosys table (core.quant.g_xrf.u_x.mem 7x1024; weights 32x16 = 512 b); ORFS had failed with the default 4096 limit"
+   },
+   "ot_hbm_idx_vm_query_static_n12": {
+    "verdict": "PASS",
+    "asbuilt_inst": "hb_idx__op_NW",
+    "asbuilt_params": {
+     "VM_RT_EXTRA": "173"
+    },
+    "recipe_params": {
+     "VM_RT_EXTRA": 173
+    },
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hbm_idx_vm_query_static_n12@2cc6e51647e9": "kit present, rtl == source commit"
+    },
+    "note": "B2l replicates the NW q_hub template (hb_idx__op_NW, VM_RT_EXTRA 173) to both q_hub placements; the as-built NE/SE/SW instances use 171. VM_RT_EXTRA is a round-trip latency setting: the B2l geometry/compiler (HBM-ARCH) owns the value; the recipe = as-built template function."
+   },
+   "ot_hbm_idx_rootctl_static_am": {
+    "verdict": "PASS",
+    "asbuilt_inst": "hb_idx__ctl",
+    "asbuilt_params": {
+     "VM_RT": "75",
+     "CR_RT": "36",
+     "SEL_LAT": "40",
+     "RSTL": "1",
+     "FAN32": "1"
+    },
+    "recipe_params": {
+     "VM_RT": 75,
+     "CR_RT": 36,
+     "SEL_LAT": 40,
+     "RSTL": 1,
+     "FAN32": 1
+    },
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hbm_idx_rootctl_static_am@50d7ca74d09d": "kit present, rtl == source commit"
+    }
+   },
+   "ot_hbm_xp_aq_tree13_fmt": {
+    "verdict": "PASS",
+    "asbuilt_inst": "xl_NW_aqhi",
+    "asbuilt_params": {
+     "FP4": "0",
+     "MUT": "0"
+    },
+    "recipe_params": {
+     "FP4": 0,
+     "MUT": 0
+    },
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hbm_xp_aq_tree13_fmt@55d250ae9185": "kit present, rtl == source commit",
+     "ot_hbm_xp_aq_tree13_fmt@a7982cec9a7d": "kit present, rtl == source commit"
+    },
+    "note": "OpenSTA STA-0171 at 1_synth (yosys writes the signed top port e as \"output signed\"): the generator now renames the RTL top in the kit to <top>__core behind a plain-wire pass-through wrapper (bit-identical)"
+   },
+   "ot_hgi_qw_dec": {
+    "verdict": "PASS",
+    "asbuilt_inst": "hb_quant_NW__u_dec",
+    "asbuilt_params": {},
+    "recipe_params": {},
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hgi_qw_dec@3ea301eff4ef": "kit present, rtl == source commit"
+    }
+   },
+   "ot_hgi_sm_xload_cl2_ctlx": {
+    "verdict": "PASS",
+    "asbuilt_inst": "xl_NW_ctl",
+    "asbuilt_params": {
+     "PMAX": "8",
+     "RD_LAT": "{8'd46, 8'd44, 8'd66, 8'd62, 8'd30, 8'd28, 8'd44, 8'd42}",
+     "NR": "32",
+     "LEAD": "8"
+    },
+    "recipe_params": {
+     "PMAX": 8,
+     "RD_LAT": "64'h2e2c423e1e1c2c2a",
+     "NR": 32,
+     "LEAD": 8
+    },
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params (RD_LAT concat {46,44,66,62,30,28,44,42} == 64'h2e2c423e1e1c2c2a)",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hgi_sm_xload_cl2_ctlx@d28d9e54d299": "kit present, rtl == source commit"
+    }
+   },
+   "ot_hgi_sm_xload_cl2_bfqg": {
+    "verdict": "PASS",
+    "asbuilt_inst": "xq_NW_p0_bfq0",
+    "asbuilt_params": {},
+    "recipe_params": {},
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618": "kit present, rtl == source commit",
+     "ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2": "kit present, rtl == source commit",
+     "ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d": "kit present, rtl == source commit",
+     "ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7": "kit present, rtl == source commit"
+    }
+   },
+   "ot_hbm_sm_vm_wr_q_t_lanes4": {
+    "verdict": "PASS",
+    "asbuilt_inst": "smw_NW",
+    "asbuilt_params": {
+     "DEPTH": "4"
+    },
+    "recipe_params": {
+     "DEPTH": 4
+    },
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hbm_sm_vm_wr_q_t_lanes4@c732439590f8": "kit present, rtl == source commit"
+    }
+   },
+   "ot_hbm_su_programme_pslice_c5": {
+    "verdict": "PASS",
+    "asbuilt_inst": "pgp_NW",
+    "asbuilt_params": {
+     "SB": "2470"
+    },
+    "recipe_params": {
+     "SB": 2470
+    },
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hbm_su_programme_pslice_c5@235c14e8a0eb": "kit present, rtl == source commit"
+    }
+   },
+   "ot_hbm_su_static_qcore_r13": {
+    "verdict": "PASS",
+    "asbuilt_inst": "sucore_NW",
+    "asbuilt_params": {
+     "MUT": "0",
+     "COLLPORT": "1",
+     "RF_LOCAL": "1",
+     "PRETREE": "1",
+     "ROW_EN": "2",
+     "WDEC": "1"
+    },
+    "recipe_params": {
+     "MUT": 0,
+     "COLLPORT": 1,
+     "RF_LOCAL": 1,
+     "PRETREE": 1,
+     "ROW_EN": 2,
+     "WDEC": 1
+    },
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hbm_su_static_qcore_r13@30cedff7c089": "kit present, rtl == source commit"
+    }
+   },
+   "ot_hbm_su_static_cxport_ij_q": {
+    "verdict": "PASS",
+    "asbuilt_inst": "cxij_NW_q",
+    "asbuilt_params": {
+     "SD": "0",
+     "SAFE_GATHER": "1"
+    },
+    "recipe_params": {
+     "SD": 0,
+     "SAFE_GATHER": 1
+    },
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "ot_hbm_su_static_cxport_ij_q@cbed03b3f6ce": "kit present, rtl == source commit"
+    }
+   },
+   "hfd_hgi_vm_calendar_f20": {
+    "verdict": "PASS",
+    "asbuilt_inst": "calendar_NW",
+    "asbuilt_params": {},
+    "recipe_params": {},
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "hfd_hgi_vm_calendar_f20@dd5b84a9fbfa": "kit present, rtl == source commit"
+    }
+   },
+   "hfd_hgi_vms_glue_nw_t": {
+    "verdict": "PASS",
+    "asbuilt_inst": "hb_vms_NW",
+    "asbuilt_params": {},
+    "recipe_params": {},
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "hfd_hgi_vms_glue_nw_t@fbfbb0339aaa": "kit present, rtl == source commit"
+    }
+   },
+   "hfd_vms_bank_native_q0_faces": {
+    "verdict": "PASS",
+    "asbuilt_inst": "vmb_NW0",
+    "asbuilt_params": {},
+    "recipe_params": {},
+    "checks": [
+     "die_r18h5.v instance module == recipe top; recipe params == instance params",
+     "every B2l plan instance of the module notes an as-built instance with the same params",
+     "every recipe file is a file of the as-built bundle (asbuilt.json prefer list, 273 files) and every module the files define resolves to the same bundle file (no scoped_d4g / duplicate definition)",
+     "files read at source_commit d34578d6f (read_at_commit); kit rtl byte-identical to git show d34578d6f:<file>; kit VERILOG_TOP_PARAMS = recipe params",
+     "SRAM macros used by the RTL == kit macros; v2 macro .v model == bundle v1 model except the header comment (v2 = track-aligned LEF)",
+     "kit generated (ports == plan pins)"
+    ],
+    "views": {
+     "hfd_vms_bank_native_q0_faces@08b030c8c5fa": "kit present, rtl == source commit",
+     "hfd_vms_bank_native_q0_faces@1dc19a048d64": "kit present, rtl == source commit",
+     "hfd_vms_bank_native_q0_faces@48eaaf6eb467": "kit present, rtl == source commit",
+     "hfd_vms_bank_native_q0_faces@60b03fdc5b14": "kit present, rtl == source commit",
+     "hfd_vms_bank_native_q0_faces@70f7f3b9c4b9": "kit present, rtl == source commit",
+     "hfd_vms_bank_native_q0_faces@9119a4edb587": "kit present, rtl == source commit",
+     "hfd_vms_bank_native_q0_faces@cdf7edf6aef9": "kit present, rtl == source commit",
+     "hfd_vms_bank_native_q0_faces@f98a45862fe1": "kit present, rtl == source commit"
+    }
+   }
+  }
+ }
+}

@@ -62,7 +62,8 @@ module dsdv_sh_ft #(parameter integer V = 276) (
 endmodule
 
 // ---------------------------------------------------------------- L0: link leaf
-module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parameter integer RL = 1) (
+module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parameter integer RL = 1,
+                    parameter integer SELR = 0) (
     input  wire          ck,              // ONE CTS root for the whole leaf (S81-SHLK2 10-18; ingest clk_h = clk_i = ck)
     input  wire          rst_n,
     // unit pins
@@ -111,11 +112,18 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
     // flop could sit at only ONE of the two faces 136 um apart: io_flop_at_pins put both rows at N (y 131-134), so vo_s
     // carried 136 um of output wire (native launch 254.9 > 220, vo_s[251]) and vi_s 136 um of input wire (capture 188.2).
     // MUT 9: the landing stage dropped (RL 0 behaviour under an RL 1 bench: rung latency one edge short).
+    // S81/H23 (10-24, SELR 1 = the die master dsdv_seq_host_mux): a SEL relay beat (dsdv_bk_selids, northbound from
+    // bk_sel: CTL kind 0, src 4'hB, [20:13] = 8'hA5 -- a real CTL beat carries 0 there) is SUNK here (its rung slot leaves
+    // north empty) and relayed to both svc entries as a host-write word of class 3 (dsdv_sh_selr below).
+    wire [V-1:0] v_land;                     // the landed northbound beat (the stage that feeds rn_o)
+    wire         v_sel = (SELR != 0) && v_land[0] && v_land[3:1] == 3'd0 && v_land[12:9] == 4'hB && v_land[20:13] == 8'hA5;
     generate if (RL != 0 && MUT != 9) begin : g_rl
         reg [V-1:0] vi_q, rs_q;
-        always @(posedge ck) begin vi_q <= vi_s; rn_o <= vi_q; rs_q <= rs_i; vo_s <= rs_q; end
+        always @(posedge ck) begin vi_q <= vi_s; rn_o <= v_sel ? {V{1'b0}} : vi_q; rs_q <= rs_i; vo_s <= rs_q; end
+        assign v_land = vi_q;
     end else begin : g_r1
-        always @(posedge ck) begin rn_o <= vi_s; vo_s <= rs_i; end
+        always @(posedge ck) begin rn_o <= v_sel ? {V{1'b0}} : vi_s; vo_s <= rs_i; end
+        assign v_land = vi_s;
     end endgenerate
     // ---- pin flops
     reg [514:0] fi; reg [52:0] ks_q; reg [1:0] jdw_q, jde_q, rg_q, rgw_l, rge_l; reg [3:0] lf_q; reg [53:0] kd_q; reg [32:0] j_q;
@@ -223,9 +231,17 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
         .h_d(hd), .h_crn(crn), .t_v(t_v), .t_d(t_d), .t_cr(tcr_l), .clk_i(ck), .ck(ck), .o_v(ov), .o_we(owe), .o_addr(oa),
         .o_d(od), .o_cr(ocr), .i_rv(1'b0), .i_rd(256'd0), .host_ack_n(ack), .fault(hf));
     // two host-write stacks = the two svc halves (dsdv_sh_sd = dsfd_host_sd fork, HALF 1: route by the PC owner half; markers to both; MUT 6 = HALF 2)
+    wire [291:0] sd_w, sd_e; wire sf_sd, sr_f;
     dsdv_sh_sd #(.NS(2), .KVS(2'b11), .ENG(-1), .STATIC(1), .HALF((MUT == 6) ? 2 : 1)) u_sd (.ck(ck), .rst_n(rn), .o_v(ov),
-        .o_we(owe), .o_addr(oa), .o_d(od), .o_cr(ocr), .hw({s_hw_e, s_hw_w}), .hc({s_hc_e, s_hc_w}), .host_ack_n(ack),
-        .fault(sf));
+        .o_we(owe), .o_addr(oa), .o_d(od), .o_cr(ocr), .hw({sd_e, sd_w}), .hc({s_hc_e, s_hc_w}), .host_ack_n(ack),
+        .fault(sf_sd));
+    generate if (SELR != 0) begin : g_selr
+        dsdv_sh_selr #(.V(V)) u_selr (.ck(ck), .rn(rn), .v_sel(v_sel), .v(v_land), .sd_w(sd_w), .sd_e(sd_e),
+            .hw_w(s_hw_w), .hw_e(s_hw_e), .fault(sr_f));
+    end else begin : g_nosel
+        assign s_hw_w = sd_w; assign s_hw_e = sd_e; assign sr_f = 1'b0;
+    end endgenerate
+    assign sf = sf_sd | sr_f;
     always @(posedge ck or negedge rn) if (!rn) tcr_l <= 1'b0; else tcr_l <= t_v;
     // ---- status: regional controller fold (dsfd_ctrl_ctr st merge), svc fault, lane faults
     reg rg_up, rg_drop, rg_f, svc_f, lf_f;
@@ -240,6 +256,47 @@ module dsdv_sh_lk #(parameter integer V = 276, parameter integer MUT = 0, parame
         end
     wire [3:0] wf = {rg_f, rg_drop, svc_f, vf_q};
     always @(posedge ck) t_host <= rn ? {1'b1, hf | sf | lf_f | sq_q[5] | (|wf), wf, sq_q, t_v, t_d} : 77'd0;
+endmodule
+
+// ---------------------------------------------------------------- S81/H23: SEL relay (L0, SELR 1)
+// attn.gather SEL_IDS producer, seqhost leg (COORD H3 2026-10-24).  bk_sel's encoder (dsdv_bk_selids) streams each
+// index word of the final top-k as 2 relay V beats north on the rung (xtier__bk_sel__seqhost); L0 sinks them from the
+// rung and puts each on BOTH svc halves' host-write ports (s_hw_w -> entry rsv_05 over unit__seqhost__svc_5, s_hw_e ->
+// rsv_11 over unit__seqhost__svc_11) as a class-3 word {cls 3, we 0, addr = {12'b0, mask 4, part, s_first 10, s_cnt 5},
+// d = the beat's 8 ids, each zero-extended to 32 b, v} (dsfd_host_sd never emits class 3: KV 0, RoPE 1, Engram 2).
+// The svc entry (dsdv_svc_selq) turns the 2 words into one SEL_IDS q frame.  Static: the compiler puts the relay beats
+// in slots where the host decoder writes nothing to that half; a relay word and a host word in one cycle = sticky
+// fault (folded into t_host's fault bit; never arbitrated).  Cost: the merge register makes s_hw_* one edge later for
+// host words too (f_host -> s_hw +1 edge; the host-write credit loop +1; elastic host boundary).  Latency of a relay
+// beat: rung pin vi_s -> landing (+1) -> relay word (+2) -> s_hw pin (+3).  Reset: valid / fault flops only.
+// V relay beat (dsdv_bk_selids): [0] 1, [3:1] 0, [8:4] 0, [12:9] 4'hB, [20:13] 8'hA5, [21 +: 168] 8 x 21-b ids,
+// [189] part (0: ranks s_first + 0..7, 1: + 8..15), [199:190] s_first, [204:200] s_cnt (1..16), [208:205] mask.
+module dsdv_sh_selr #(parameter integer V = 276) (
+    input  wire         ck, rn,
+    input  wire         v_sel,
+    input  wire [V-1:0] v,
+    input  wire [291:0] sd_w, sd_e,
+    output wire [291:0] hw_w, hw_e,
+    output reg          fault
+);
+    reg rv; reg [290:0] rw;
+    always @(posedge ck or negedge rn) if (!rn) rv <= 1'b0; else rv <= v_sel;
+    always @(posedge ck) begin : g_rw
+        integer e;
+        rw[290:289] <= 2'b11; rw[288] <= 1'b0; rw[287:256] <= {12'd0, v[208:189]};
+        for (e = 0; e < 8; e = e + 1) rw[32 * e +: 32] <= {11'd0, v[21 + 21 * e +: 21]};
+    end
+    reg hv_w, hv_e; reg [290:0] hd_w, hd_e;                                  // valid (reset) / data (no reset) flops
+    always @(posedge ck or negedge rn)
+        if (!rn) begin hv_w <= 1'b0; hv_e <= 1'b0; fault <= 1'b0; end
+        else begin
+            hv_w <= rv | sd_w[0]; hv_e <= rv | sd_e[0];
+            if (rv && (sd_w[0] || sd_e[0])) fault <= 1'b1;            // relay word on a host-write slot
+        end
+    always @(posedge ck) begin
+        hd_w <= rv ? rw : sd_w[291:1]; hd_e <= rv ? rw : sd_e[291:1];
+    end
+    assign hw_w = {hd_w, hv_w}; assign hw_e = {hd_e, hv_e};
 endmodule
 
 // ---------------------------------------------------------------- L1: sequencer
@@ -436,7 +493,8 @@ module dsdv_sh_vc #(parameter integer V = 276, parameter integer MUT = 0) (
 endmodule
 
 // ---------------------------------------------------------------- the unit
-module dsdv_seq_host #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0, parameter integer RL = 1) (
+module dsdv_seq_host #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0, parameter integer RL = 1,
+                       parameter integer SELR = 0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [7:0]    tap_k, sink_k,   // vstop straps (captured pins); seqhost: 0 / 0
@@ -452,7 +510,7 @@ module dsdv_seq_host #(parameter integer V = 276, parameter integer STAGE = 0, p
     wire [V-1:0] n01, s10, n12, s21, n23, s32, n34, s43;
     wire [35:0] pw01; wire [8:0] pl01; wire [193:0] tw01, tw12; wire [52:0] ks01; wire [53:0] kd10; wire [32:0] j10;
     wire [1:0] jd01; wire [5:0] sq10; wire vf10, vf21; wire [84:0] cn12, cs12, cg12; wire [26:0] dn21; wire [266:0] cf01, cf12;
-    dsdv_sh_lk #(.V(V), .MUT(MUT), .RL(RL)) u_l0 (.ck(ck), .rst_n(rst_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd),
+    dsdv_sh_lk #(.V(V), .MUT(MUT), .RL(RL), .SELR(SELR)) u_l0 (.ck(ck), .rst_n(rst_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd),
         .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w),
         .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .vi_s(vi_s), .vo_s(vo_s),
         .rn_o(n01), .rs_i(s10), .pw_o(pw01), .pl_o(pl01), .tw_o(tw01), .cf_o(cf01), .ks_o(ks01), .kd_i(kd10), .j_i(j10), .jd_o(jd01),

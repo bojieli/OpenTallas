@@ -32,7 +32,16 @@ module ot_s81hd_tile #(
     parameter integer IOREG = 1,             // ot_s81hd_elem pin-registered inputs
     parameter [8:0] CUT = 9'b1_1111_1111,      // 10-24: closed element views (was 0x17b)
     parameter integer SPLIT9 = 1,              // 10-24: closed element views (was 0)
-    parameter integer CV = 0                   // 10-24: 1 = elements are the closed-view macros (ot_s81hd_bundle CV)
+    parameter integer CV = 0,                  // 10-24: 1 = elements are the closed-view macros (ot_s81hd_bundle CV)
+    // 10-24 hd_tile preview review (S81-HEAD): opt-in pipelining, every added cycle priced in the die model.
+    //   A_INPUT_STAGES: per-A-core copies of {go, bv, row, xsa, bd} (bundle; the x skew-line tail -> A x pins hop)
+    //   MERGE_HOP:      bundle hop registers before each compare level (+2 on the own result)
+    //   CMP_STAGES:     chain merge compare pipeline: 1 = own_better registered, 2 = operand hop registers + compare,
+    //                   3 = hop + registered 16-b half compares (gt / eq a half, row lt) + combine;
+    //                   the capture / fire state waits the same number of cycles (+CMP_STAGES a tile on the chain)
+    parameter integer A_INPUT_STAGES = 0,
+    parameter integer MERGE_HOP = 0,
+    parameter integer CMP_STAGES = 0
 ) (
     input  wire         ck,
     input  wire         rst_n,
@@ -82,7 +91,8 @@ module ot_s81hd_tile #(
     wire [3:0]   nc_hv;
     wire [127:0] nc_hd;
     wire [67:0]  nc_hr;
-    ot_s81hd_bundle #(.INSTANCE(INSTANCE), .IOREG(IOREG), .SAFE(1), .CUT(CUT), .SPLIT9(SPLIT9), .CV(CV)) u_b (
+    ot_s81hd_bundle #(.INSTANCE(INSTANCE), .IOREG(IOREG), .SAFE(1), .CUT(CUT), .SPLIT9(SPLIT9), .CV(CV),
+                     .A_INPUT_STAGES(A_INPUT_STAGES), .MERGE_HOP(MERGE_HOP)) u_b (
         .clk(ck), .rst_n(rst_n),
 `ifdef OT_S81HD_MUT_TEN_IGNORED
         .go(go_q),
@@ -107,7 +117,18 @@ module ot_s81hd_tile #(
     // own result: the rising edge of the bundle's res_v (a level until the bundle's next go) after this position's go
     reg res_v_d, ch_have, own_have, fired, sel_v, o_rv;
     wire res_rise = res_v & ~res_v_d;
-    wire ready = ch_have & (own_have | ~b_en) & ~fired & ~go_q;
+    // CMP_STAGES: the have flags reach `ready` CMP_STAGES cycles late (each copy cleared by go_q), so the compare
+    // pipeline below has seen stable operands for that long when the tile fires
+    reg [2:0] chh_d, owh_d;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin chh_d <= 3'd0; owh_d <= 3'd0; end
+        else begin
+            chh_d <= {chh_d[1:0] & {2{~go_q}}, ch_have & ~go_q};
+            owh_d <= {owh_d[1:0] & {2{~go_q}}, own_have & ~go_q};
+        end
+    wire chh = CMP_STAGES == 0 ? ch_have : chh_d[CMP_STAGES-1];
+    wire owh = CMP_STAGES == 0 ? own_have : owh_d[CMP_STAGES-1];
+    wire ready = chh & (owh | ~b_en) & ~fired & ~go_q;
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin res_v_d <= 1'b0; ch_have <= 1'b0; own_have <= 1'b0; fired <= 1'b0; sel_v <= 1'b0; o_rv <= 1'b0; end
         else begin
@@ -127,16 +148,38 @@ module ot_s81hd_tile #(
             okey = c[31] ? ~c : (c | 32'h8000_0000);
         end
     endfunction
-    wire [31:0] k_own = okey(res_bits), k_ch = okey(ch_bits);
+    // CMP_STAGES 2: operand hop registers (bundle result / chain hold may sit ~350 um from the compare)
+    reg [16:0] rr_h, cr_h;
+    reg [31:0] rb_h, cb_h;
+    always @(posedge ck) begin rr_h <= res_row; rb_h <= res_bits; cr_h <= ch_row; cb_h <= ch_bits; end
+    wire [16:0] c_rr = CMP_STAGES >= 2 ? rr_h : res_row, c_cr = CMP_STAGES >= 2 ? cr_h : ch_row;
+    wire [31:0] c_rb = CMP_STAGES >= 2 ? rb_h : res_bits, c_cb = CMP_STAGES >= 2 ? cb_h : ch_bits;
+    wire [31:0] k_own = okey(c_rb), k_ch = okey(c_cb);
 `ifdef OT_S81HD_MUT_TIE_FLIP
-    wire own_better = b_en && (k_own > k_ch || (k_own == k_ch && res_row > ch_row));   // MUTANT: highest id on ties
+    wire row_lt = c_rr > c_cr;                                                        // MUTANT: highest id on ties
 `else
-    wire own_better = b_en && (k_own > k_ch || (k_own == k_ch && res_row < ch_row));
+    wire row_lt = c_rr < c_cr;
 `endif
-    (* keep *) reg [2:0] sel_q;              // kept copies: [0] row, [1] bits[15:0], [2] bits[31:16]
+    // CMP_STAGES 3 (tile_prev2: the one-cycle 49-b compare after the hop was 22 levels, -38 ps at placement): the
+    // two 16-b key halves and the row compare are registered, then combined
+    reg kh_gt, kh_eq, kl_gt, kl_eq, rl_q;
+    always @(posedge ck) begin
+        kh_gt <= k_own[31:16] > k_ch[31:16]; kh_eq <= k_own[31:16] == k_ch[31:16];
+        kl_gt <= k_own[15:0] > k_ch[15:0];   kl_eq <= k_own[15:0] == k_ch[15:0];
+        rl_q  <= row_lt;
+    end
+    wire own_better = CMP_STAGES >= 3 ? b_en && (kh_gt || (kh_eq && (kl_gt || (kl_eq && rl_q))))
+                                      : b_en && (k_own > k_ch || (k_own == k_ch && row_lt));
+    reg        better_q;                     // CMP_STAGES >= 1: the registered compare
+    always @(posedge ck) better_q <= own_better;
+    wire       better_m = CMP_STAGES >= 1 ? better_q : own_better;
+    // select copies: [0] row, [1] bits[15:0], [2] bits[31:16]; kept cells (a (* keep *) reg was merged into one flop)
+    wire [2:0] sel_q;
+    ot_s81hd_kreg #(.W(1)) u_sel0 (.clk(ck), .d(better_m), .q(sel_q[0]));
+    ot_s81hd_kreg #(.W(1)) u_sel1 (.clk(ck), .d(better_m), .q(sel_q[1]));
+    ot_s81hd_kreg #(.W(1)) u_sel2 (.clk(ck), .d(better_m), .q(sel_q[2]));
     reg        bflt_q;
     always @(posedge ck) begin
-        sel_q  <= {3{own_better}};
 `ifdef OT_S81HD_MUT_FLT_DROP
         bflt_q <= 1'b0;                      // MUTANT: bundle fault dropped
 `else

@@ -40,6 +40,18 @@
 //               r_j = payload index), [29:14] head mask (operand rows only)
 //   14 SOT      (S81-SMWIRE 10-19, len 2) the SO target config of the job: parsed by dsdv_svc_sot beside this share
 //               (tools/s81_dv/sm_target/dsdv_sm_wire.sv); a legal frame type here, no state in the attention share
+//   15 IK_ROW   (S81/H23 10-24, attn.idx.newkey, len 1) append ONE index-key row to the HBM index-key region that the
+//               paired reader dsdv_idx_rg3 scans / gathers.  Header: [29:0] KB = the region base (PC-local sector, the
+//               rg3 job header's KB of that layer / user), [63:32] the key's 4 UE8M0 scales, [479:459] pos p (key
+//               position), [458:449] user (provenance only, not in the address).  Payload word = the 128 E2M1 codes.
+//               Layout = rg3's (tb_dsdv_idx_rg3 preload, dsdv_idx_rg3 walker / gather issue): j = p >> 4, i = p[3:0],
+//               region rg = i ^ j[3:0] ^ j[7:4] ^ j[11:8] ^ j[15:12] (= the svc slice sid owning the two PCs), PC
+//               p[8], n = p >> 9, c = p[7:4], a = KB + 34 n: codes[255:0] at a + 2c, codes[511:256] at a + 2c + 1,
+//               scales at sector a + 32 + c[3], bytes 4 c[2:0] .. 4 c[2:0] + 3 (strobe 4 bytes).  Exactly ONE slice
+//               (sid == rg) pushes the 3 writes (code lo / code hi on the payload beat, scales one edge later, all on
+//               PC p[8]) into the OWN_ROW write FIFOs; every other slice drops the frame.  Writes before reads per PC
+//               (the issue order below); the compiler keeps the writes out of the controller's rg3 reader slots and
+//               before the next scan / gather of that layer (static schedule, no new pins).
 //
 // Static schedule (owner rule; no credit / ready on the on-die production path): from GO + gd the engine share runs a
 // fixed program: job at cycle 0, q heads at 1 .. 16, row beats c at 1 + c (4 rows a beat, the job's row order: window
@@ -67,7 +79,8 @@
 // one job's 8 beats and only the static checks remain: fault 15 = pvq overflow (a 9th beat before the drain popped),
 // fault 19 = underflow (the drain slot finds no beat).
 // MUT (bench negative controls): 1 = window scale byte of the neighbouring slot, 2 = ROWS half of the other tile of
-// the pair, 3 = q chunk of the neighbouring tile.
+// the pair, 3 = q chunk of the neighbouring tile, 4 = IK_ROW region hash without the j[15:12] term (wrong owner slice
+// for p >= 2^16), 5 = IK_ROW scale bytes of the neighbouring key c ^ 1.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_att #(
     parameter integer MUT = 0,
@@ -226,14 +239,40 @@ module dsdv_svc_att #(
     wire hw_sec = hw_d[288] && hw_d[290:289] < 2'd2 && !hw_mark;
     wire [4:0] hw_pc = pcmap(hw_d[285:256]);
     wire hw_mine = hw_v && hw_sec && hw_pc[4:1] == sid;
+    // IK_ROW (type 15): owner decode + region base at the header (registered), 3 writes from the payload beat
+    function automatic [3:0] ik_rg(input [20:0] p);                       // rg3 key region of position p
+        ik_rg = p[3:0] ^ p[7:4] ^ p[11:8] ^ p[15:12] ^ ((MUT == 4) ? 4'd0 : 4'(p[19:16]));
+    endfunction
+    wire        ik_hdr = hdr_mine && h_type == 4'd15;
+    reg  [29:0] ik_base;                                                   // KB + 34 n (n = p >> 9)
+    reg  [3:0]  ik_c;                                                      // key word c = p[7:4]
+    reg         ik_pc, ik_own;
+    reg  [31:0] ik_sc;
+    always @(posedge clk) if (ik_hdr) begin
+        ik_base <= q_d[29:0] + 30'({q_d[479:468], 5'd0}) + 30'({q_d[479:468], 1'b0});
+        ik_c <= q_d[466:463]; ik_pc <= q_d[467]; ik_sc <= q_d[63:32];
+    end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) ik_own <= 1'b0;
+        else if (ik_hdr) ik_own <= ik_rg(q_d[479:459]) == sid;
+    wire        ik_pay = pay_mine && f_type == 4'd15 && f_idx == 12'd0 && ik_own;
+    reg         ik_scl;                                                    // scale write: the edge after the payload
+    always @(posedge clk or negedge rst_n) if (!rst_n) ik_scl <= 1'b0; else ik_scl <= ik_pay;
+    wire [2:0]  ik_by = (MUT == 5) ? ik_c[2:0] ^ 3'd1 : ik_c[2:0];
     always @(posedge clk or negedge rst_n)
         if (!rst_n) wpush <= 0;
-        else wpush <= {hw_mine, ow_blk, ow_blk};
+        else wpush <= {hw_mine, ow_blk | ik_pay | ik_scl, ow_blk | ik_pay};
     always @(posedge clk) begin
-        wpush_d[0] <= wr_req(ow_ring + 30'(ow_slot[6:1]), 32'hffffffff, q_d[255:0], 17'h1fffe);
-        wpush_pc[0] <= ow_slot[0];
-        wpush_d[1] <= wr_req(ow_ring + 30'd64 + 30'(ow_slot[6]), 32'd1 << ow_by, 256'(q_d[263:256]) << (8 * ow_by), 17'h1fffe);
-        wpush_pc[1] <= ow_slot[5];
+        // class 0: OWN_ROW codes | IK_ROW codes[255:0]; class 1: OWN_ROW scale | IK_ROW codes[511:256], then its scales
+        // (an IK payload beat and its scale edge can never meet an OWN_ROW push: one q word a cycle, a following frame's
+        // first payload beat is >= 2 edges after this payload beat)
+        wpush_d[0] <= ik_pay ? wr_req(ik_base + 30'({ik_c, 1'b0}), 32'hffffffff, q_d[255:0], 17'h1fffe)
+                             : wr_req(ow_ring + 30'(ow_slot[6:1]), 32'hffffffff, q_d[255:0], 17'h1fffe);
+        wpush_pc[0] <= ik_pay ? ik_pc : ow_slot[0];
+        wpush_d[1] <= ik_pay ? wr_req(ik_base + 30'({ik_c, 1'b1}), 32'hffffffff, q_d[511:256], 17'h1fffe)
+                    : ik_scl ? wr_req(ik_base + 30'd32 + 30'(ik_c[3]), 32'hf << (4 * ik_by), 256'(ik_sc) << (32 * ik_by), 17'h1fffe)
+                    : wr_req(ow_ring + 30'd64 + 30'(ow_slot[6]), 32'd1 << ow_by, 256'(q_d[263:256]) << (8 * ow_by), 17'h1fffe);
+        wpush_pc[1] <= (ik_pay || ik_scl) ? ik_pc : ow_slot[5];
         wpush_d[2] <= wr_req(hw_d[285:256], 32'hffffffff, hw_d[255:0], 17'h1ffff);
         wpush_pc[2] <= hw_pc[0];
     end
@@ -593,9 +632,10 @@ module dsdv_svc_att #(
                 sm_rp <= !f_hdr[13]; sm_rj <= 3'(f_idx); sm_rd <= q_d;
             end
             // ---- other frame checks
-            if (hdr_mine && !(h_type inside {4'd1, 4'd2, 4'd3, 4'd5, 4'd6, 4'd7, 4'd9, 4'd12, 4'd13, 4'd14})) fc[16] <= 1'b1;
+            if (hdr_mine && !(h_type inside {4'd1, 4'd2, 4'd3, 4'd5, 4'd6, 4'd7, 4'd9, 4'd12, 4'd13, 4'd14, 4'd15})) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd1 && h_len != 12'd128) fc[16] <= 1'b1;
             if (hdr_mine && h_type == 4'd3 && h_len != 12'd16) fc[16] <= 1'b1;
+            if (hdr_mine && h_type == 4'd15 && h_len != 12'd1) fc[16] <= 1'b1;            // IK_ROW: exactly 1 payload word
             if (hdr_mine && (h_type inside {4'd1, 4'd5, 4'd6, 4'd7}) && !job_open) fc[17] <= 1'b1;
             if (sc_v && !job_active) fc[18] <= 1'b1;
         end

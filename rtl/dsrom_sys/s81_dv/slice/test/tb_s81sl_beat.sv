@@ -48,7 +48,7 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
     reg rst_n = 1'b0, c_v = 1'b0, sw_v = 1'b0, rb_v = 1'b0;
     reg [159:0] c_d = 0; reg [9:0] sw_a = 0; reg [255:0] sw_d = 0; reg [7:0] sw_m = 0; reg [31:0] rb_d = 0;
     wire lo_v, hw_v, hr_v, hq_v, n_go, wl_v, fp, fn, fq, p_v, y_v, hw_hf, hr_hf, m_v, m_q, m_b; wire [7:0] m_i;
-    wire [255:0] lo_d, hw_d, hq_d, wl_d, y; wire [2:0] hw_j, hr_j, wl_i, y_i; wire [127:0] n_pre; wire [31:0] p_d;
+    wire [255:0] lo_d, hw_d, hq_d, wl_d; wire [127:0] y; wire [2:0] hw_j, hr_j, wl_i, y_i; wire [127:0] n_pre; wire [31:0] p_d;
     // the leaf's x beats arrive as 4 x 276-b fragments: re-assemble them (as the ring stop does)
     wire xf_v, xf_s; wire [275:0] xf; reg [1103:0] xo = 0; reg [1:0] frn = 0; reg xo_v = 0;
     always @(posedge clk) begin
@@ -66,7 +66,12 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
         .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
         .s_v(), .s_d(), .x_rv(1'b0), .x_ra(10'd0), .x_qv(), .x_qd(), .x_wv(1'b0), .x_wa(10'd0), .x_wm(8'd0), .x_wd(256'd0),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(fp));
-    ot_s81sl_vn u_n (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
+`ifdef OT_S81SL_VN_UNSPLIT
+    ot_s81sl_vn u_n (
+`else
+    ot_s81sl_vn_sp u_n (   // S81/RTLSPLIT: the leaf's vn (vn_a + vn_b)
+`endif
+        .clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d), .p_v(p_v), .p_d(p_d),
         .y_v(y_v), .y_i(y_i), .y(y), .fault(fn));
@@ -135,8 +140,9 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
         if (y_v) begin
             ny = ny + 1; if (t_y0 < 0) begin t_y0 = cyc; lat_y[blk] = cyc - t_rb; end
             for (i = 0; i < 8; i = i + 1)
-                if (y[32 * i +: 32] !== ey[64 * blk + 8 * y_i + i]) begin
-                    if (err < 12) $display("Y MISMATCH blk %0d j %0d lane %0d got %h want %h", blk, y_i, i, y[32 * i +: 32], ey[64 * blk + 8 * y_i + i]);
+                // OWNER DECISION 8: vn's y is packed BF16 (lane i at [16 i +: 16]); the golden word's low half must be 0
+                if ({y[16 * i +: 16], 16'd0} !== ey[64 * blk + 8 * y_i + i]) begin
+                    if (err < 12) $display("Y MISMATCH blk %0d j %0d lane %0d got %h want %h", blk, y_i, i, {y[16 * i +: 16], 16'd0}, ey[64 * blk + 8 * y_i + i]);
                     err = err + 1;
                 end
         end

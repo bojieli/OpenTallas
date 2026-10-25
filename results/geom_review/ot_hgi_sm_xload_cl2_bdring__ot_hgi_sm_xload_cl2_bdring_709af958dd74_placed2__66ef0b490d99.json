@@ -1,0 +1,16 @@
+{
+ "element": "ot_hgi_sm_xload_cl2_bdring",
+ "view": "ot_hgi_sm_xload_cl2_bdring@709af958dd74",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hgi_sm_xload_cl2_bdring_709af958dd74, B2r2 pins 709af958dd74, plan 24990bd5dd78)",
+ "stage": "placed2",
+ "verdict": "PASS-COND",
+ "hash": "66ef0b490d99fa17",
+ "reasons": "PASS-COND: 86x302 um tall strip, 2689 pins (N/S/E/W), 42% fill uniform, no hot bins; previous GRT ended with congestion -> kit fix ROUTING_LAYER_ADJUSTMENT 0.10 (default 0.25). previous placement (same outline/pins/macros) None um, None cells, None flops, None macros, fill None of free, bins>0.8 None (max None), pin->reg p90 None um; CTS I mean 272 / max 287 ps. CONDITIONS: GRT 0 overflow, DRC 0, signoff TT setup / FF hold >= 0 at 60/25 with the pin-flop insertion within I +- 40; plan must deliver the early core tap (results/core_insertion_b2l.json).",
+ "fixes": "relaunch with the core clock contract (vclk / tap target = measured I, owner 5e) + hold_cap iteration cap 4000 + GRT congestion fix ROUTING_LAYER_ADJUSTMENT=0.10",
+ "pictures": [
+  "epyc1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_sm_xload_cl2_bdring_709af958dd74/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T20:05:41-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

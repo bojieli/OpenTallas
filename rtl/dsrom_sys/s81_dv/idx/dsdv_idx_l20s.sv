@@ -855,15 +855,98 @@ module dsdv_idx_tx_n32 #(
 endmodule
 
 // ===================================================================================================================
+// S81/H23 (2026-10-24, COORD H3, attn.gather): dsdv_bk_selids, the on-die SEL_IDS ENCODER of the final top-k (bk_sel
+// leg).  Taps u_sel.vo_s exactly as the tree transmitter does (same block, same clock): the IDX words of the selector's
+// egress (kind EK, part 0 + part 1, 512-b word {type 3 [511:508], tag [507:500], lv [335:320], 16 x 20-b ascending
+// positions [319:0]}) whose tag is the armed job's OT.  JOB = CTL beat on vo_s (kind 0, p[7:0] == UID, p[10:8] == 3):
+// [40:31] K (ranks of the selection, 1..512), [68:61] OT, [72:69] mask (SEL_IDS header mask; bit 0 = the svc
+// attention share).  Each index word -> 2 relay beats north on vo_n (the rung to seqhost, xtier__bk_sel__seqhost),
+// back to back, 2 edges after its part 1 is at u_sel.vo_s:
+//   [0] 1, [3:1] 0 (CTL kind), [8:4] 0, [12:9] 4'hB, [20:13] 8'hA5 (relay marker: a real CTL beat has 0 there),
+//   [21 + 21 e +: 21] id of rank s_first + 8 part + e (the position, zero-extended; 0 past s_cnt), [189] part,
+//   [199:190] s_first (ranks before this word in the job), [204:200] s_cnt = popcount(lv) (lv must be a prefix),
+//   [208:205] mask, [275:209] 0.
+// (svc_att SEL_IDS ids ARE the compressed positions: toksim_gath_vectors.py sel.hex = attn.idx.topk_final.)
+// The job ends when K ranks are sent.  No buffer SRAM: a word's 2 beats leave before the next word's part 1 can land
+// (the egress is >= 2 beats a word), so the IDX buffer of the tx is not needed and the closed tx core is unchanged.
+// Sticky faults (st[0]): lv not a prefix, ranks past K, a job CTL while a job is open.  Reset: control / valid flops.
+// MUT (bench only): 1 = s_first not advanced (every word ranks from 0), 2 = id of lane e + 1.
+// ===================================================================================================================
+module dsdv_bk_selids #(
+    parameter integer V   = 276,
+    parameter integer EK  = 5,
+    parameter integer UID = 8'h5C,
+    parameter integer MUT = 0
+) (
+    input  wire          ck,
+    input  wire          rst,       // active low
+    input  wire [V-1:0]  vo,        // tap: u_sel.vo_s
+    output reg  [V-1:0]  o,         // relay beat (0 = idle)
+    output reg           fault
+);
+    reg [V-1:0] vr;
+    always @(posedge ck or negedge rst) if (!rst) vr[0] <= 1'b0; else vr[0] <= vo[0];
+    always @(posedge ck) vr[V-1:1] <= vo[V-1:1];
+    wire [185:0] cp = vr[21 +: 186];
+    wire jctl = vr[0] && vr[3:1] == 3'd0 && cp[7:0] == 8'(UID) && cp[10:8] == 3'd3;
+    wire eg = vr[0] && vr[3:1] == 3'(EK);
+    reg armed, e_h; reg [9:0] k_n, rk; reg [7:0] ot; reg [3:0] msk; reg [255:0] lo;
+    wire [511:0] w = {vr[275:20], lo};
+    wire wv = armed && eg && vr[6] && e_h && w[511:508] == 4'd3 && w[507:500] == ot;
+    wire [15:0] lv = w[335:320];
+    reg [4:0] cnt;
+    always @* begin cnt = 5'd0; for (int i = 0; i < 16; i++) cnt = cnt + 5'(lv[i]); end
+    wire pre = ((lv + 16'd1) & lv) == 16'd0;
+    always @(posedge ck) if (eg && !vr[6]) lo <= vr[275:20];
+    reg w1v; reg [V-1:0] b1;
+    function automatic [V-1:0] beat(input [511:0] ww, input h, input [9:0] sf, input [4:0] sc, input [3:0] m);
+        reg [V-1:0] b; integer e, l;
+        b = '0; b[0] = 1'b1; b[12:9] = 4'hB; b[20:13] = 8'hA5;
+        for (e = 0; e < 8; e = e + 1) begin
+            l = 8 * h + e + ((MUT == 2) ? 1 : 0);
+            if (8 * h + e < sc) b[21 + 21 * e +: 21] = (l < 16) ? {1'b0, ww[20 * l +: 20]} : 21'd0;
+        end
+        b[189] = h; b[199:190] = sf; b[204:200] = sc; b[208:205] = m;
+        beat = b;
+    endfunction
+    always @(posedge ck or negedge rst)
+        if (!rst) begin armed <= 1'b0; e_h <= 1'b0; rk <= 10'd0; fault <= 1'b0; w1v <= 1'b0; o[0] <= 1'b0; end
+        else begin
+            if (eg && !vr[6]) e_h <= 1'b1; else if (eg && vr[6]) e_h <= 1'b0;
+            if (jctl) begin
+                if (armed) fault <= 1'b1;                                       // a job while one is open
+                armed <= cp[40:31] != 10'd0; rk <= 10'd0;
+            end else if (wv) begin
+                if (!pre || 11'(rk) + 11'(cnt) > 11'(k_n)) fault <= 1'b1;
+                rk <= (MUT == 1) ? rk : rk + 10'(cnt);
+                if (11'(rk) + 11'(cnt) >= 11'(k_n)) armed <= 1'b0;
+            end
+            o[0] <= (wv && cnt != 5'd0) | w1v; w1v <= wv && cnt != 5'd0;   // an empty word (lv 0) sends nothing
+        end
+    always @(posedge ck) begin
+        if (jctl) begin k_n <= cp[40:31]; ot <= cp[68:61]; msk <= cp[72:69]; end
+        if (wv) b1 <= beat(w, 1'b1, rk, cnt, msk);
+        o[V-1:1] <= (wv && cnt != 5'd0) ? beat(w, 1'b0, rk, cnt, msk) >> 1 : w1v ? b1 >> 1 : {(V-1){1'b0}};
+    end
+endmodule
+
+// ===================================================================================================================
 // dsdv_bk_sel_vmtx: the 72-frame die bk_sel master for the L20 split (= dsdv_bk_sel_vm + the tree transmitter).
 // Ports = dsdv_bk_sel_vm + tl_o (tree lane to the parent die: die port <inst>_tl_o, the parent's ca / cb) + tx_st
 // (die status port).  The TX ingress / egress kinds are the selector's straps of the die (ik 4, ek 5).
+// S81/H23 (10-24, COORD H3): + dsdv_bk_selids (SEL_IDS encoder of the final top-k) on the same vo_s tap; its relay
+// beats join u_sel.vo_n in ONE output register (vo_n leaves a flop: the northbound rung bk_sel -> seqhost is one edge
+// longer for every beat, priced in the rung schedule); a relay beat in a cycle where u_sel.vo_n is not idle (all-zero)
+// is a sticky fault (static schedule, never arbitrated).  fault = u_sel.fault | the encoder / merge faults (registered).
+// SELE 0 = the pre-H23 master (no encoder, vo_n / fault straight from u_sel).
 // ===================================================================================================================
 module dsdv_bk_sel_vmtx #(
     parameter integer V      = 276,
     parameter integer MUT    = 0,
     parameter integer TX_MUT = 0,
-    parameter bit     TX_SRAM = 1
+    parameter bit     TX_SRAM = 1,
+    parameter integer SELE = 1,
+    parameter integer SEL_MUT = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -887,8 +970,25 @@ module dsdv_bk_sel_vmtx #(
 );
     wire [V-1:0] vi_m;
     dsdv_idx_vmux #(.V(V)) u_vm (.ck(clk), .rst(rst_n), .i_r(vi_s), .i_s(vi_idx), .i_a(ca), .i_b(cb), .o(vi_m), .fault(vm_fault));
+    wire [V-1:0] sel_vo_n; wire sel_f;
     dsdv_bk_sel #(.V(V), .MUT(MUT)) u_sel (.clk(clk), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek),
-        .uid(uid), .eg_n(eg_n), .vi_s(vi_m), .vo_n(vo_n), .vi_n(vi_n), .vo_s(vo_s), .fault(fault));
+        .uid(uid), .eg_n(eg_n), .vi_s(vi_m), .vo_n(sel_vo_n), .vi_n(vi_n), .vo_s(vo_s), .fault(sel_f));
     dsdv_idx_tx_n32 #(.V(V), .IK(4), .EK(5), .UID(8'h5C), .SRAM_MACRO(TX_SRAM), .MUT(TX_MUT)) u_tx (
         .ck(clk), .rst(rst_n), .vi(vi_m), .vo(vo_s), .lo(tl_o), .st(tx_st));
+    generate if (SELE != 0) begin : g_sel
+        wire [V-1:0] eo; wire ef;
+        dsdv_bk_selids #(.V(V), .EK(5), .UID(8'h5C), .MUT(SEL_MUT)) u_ids (.ck(clk), .rst(rst_n), .vo(vo_s), .o(eo), .fault(ef));
+        reg [V-1:0] vn; reg mf, fq;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin vn[0] <= 1'b0; mf <= 1'b0; fq <= 1'b0; end
+            else begin
+                vn[0] <= sel_vo_n[0] | eo[0];
+                if (eo[0] && sel_vo_n != {V{1'b0}}) mf <= 1'b1;               // relay beat on a busy rung slot
+                fq <= sel_f | ef | mf;
+            end
+        always @(posedge clk) vn[V-1:1] <= sel_vo_n[V-1:1] | eo[V-1:1];
+        assign vo_n = vn; assign fault = fq;
+    end else begin : g_nosel
+        assign vo_n = sel_vo_n; assign fault = sel_f;
+    end endgenerate
 endmodule

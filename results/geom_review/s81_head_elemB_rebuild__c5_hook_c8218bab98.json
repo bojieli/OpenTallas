@@ -1,0 +1,15 @@
+{
+ "element": "s81 head elemB c5 (c4 kit)",
+ "kit": "claude/s81-head-1024r@c8218bab98",
+ "stage": "routed 6_final (relaunch with post-GRT hook)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T20:45:00-07:00",
+ "reasons": "[2026-10-24 20:45] Kit byte-identical to the routed run + one POST_GLOBAL_ROUTE hook (repair_design slew margin 40, repair_timing -hold margin 45, max_buffer_percent 100); no geometry change, so this is a relaunch review of the routed picture. Looked at elemB_rb_c4_final.png: ROMs centred, logic in W/E channels and the S band, mid channel populated, few hot bins; flagged BUF/INV 40%. c4 misses FF hold -9.9/104 (u_oreg->outputs, FF clock 170 vs 250 vclk) + 1 internal -2.9 and slew 6 on w_r/t_r D nets driven over 140-185 um by BUFx3 placement buffers at x~208 to flops at x 22-72 - a geometry issue (capture flops far from the ROM rd pins).",
+ "fixes": "Relaunch OK as a hook trial. Conditions: FF hold >= 0, slew 0, TT > 0 at 6_final; BUF/INV must not rise above ~43%. If w_r/t_r slew still misses, apply the author's structural fix (place the w_r/t_r capture flops by the ROM rd pins / split the fan-out) - do not raise margins again.",
+ "images": [
+  "results/geom_review/s81_head_img/elemB_rb_c4_final.png"
+ ],
+ "owner_lane": "S81",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

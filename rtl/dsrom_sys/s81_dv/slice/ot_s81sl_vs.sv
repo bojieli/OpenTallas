@@ -68,24 +68,25 @@ module ot_s81sl_vs #(
     input  wire          rst_n,
     // command (from vp)
     input  wire          s_v,
-    input  wire [159:0]  s_d,
+    input  wire [157:0]  s_d,       // OWNER DECISION 8: imm[31] / imm[29] (old s_d[63] / [61]) are not command
+                                     // fields: dropped; new s_d[60:0] = old [60:0], [61] = old [62], [157:62] = old [159:64]
     // vp leaf-store extension port: row-pair read (data on x_qv / x_qd a fixed number of edges later) and write
     output reg           x_rv,
     output reg  [9:0]    x_ra,
     input  wire          x_qv,
     input  wire [255:0]  x_qd,
     output reg           x_wv,
-    output reg  [9:0]    x_wa,
-    output reg  [7:0]    x_wm,
-    output reg  [255:0]  x_wd,
+    (* keep *) output reg [9:0]    x_wa,
+    (* keep *) output reg [7:0]    x_wm,
+    (* keep *) output reg [255:0]  x_wd,
     // vq second input: 8-lane sub-beats + gather mode
     output reg           u_v,
-    output reg  [2:0]    u_i,
-    output reg  [255:0]  u,
+    (* keep *) output reg [2:0]    u_i,
+    (* keep *) output reg [255:0]  u,
     output reg           um_v,
-    output reg           um_q,
-    output reg           um_b,
-    output reg  [7:0]    um_i,
+    (* keep *) output reg um_q,
+    (* keep *) output reg um_b,
+    (* keep *) output reg [7:0]    um_i,
     // SW lane sub-leaf (ot_s81sl_vsw): a group {u3..u0, g3..g0} with its weight / limit; 4 BF16 results back
     output reg           sw_v,
     output reg  [255:0]  sw_d,
@@ -98,12 +99,12 @@ module ot_s81sl_vs #(
     output reg           ra_v,
     output reg  [31:0]   ra_x,
     input  wire          ra_vi,
-    input  wire [31:0]   ra_ri,
+    input  wire [30:0]   ra_ri,       // RA lane result: sqrt >= 0, its sign bit is not a pin (OWNER DECISION 8)
     input  wire          ra_fi,
     // ve sub-leaf (Engram mix of this beat): reduce quads / add beats out, beat partials / results / fault back
     output reg           ve_rv,
     output reg  [1:0]    ve_rc,
-    output reg  [127:0]  ve_rh,
+    output wire [63:0]   ve_rh,           // packed BF16 h (OWNER DECISION 8): new [16k+j] = old [32k+16+j]
     output reg  [127:0]  ve_rk,
     output reg  [127:0]  ve_rw,
     input  wire          ve_pv,
@@ -113,12 +114,12 @@ module ot_s81sl_vs #(
     input  wire [31:0]   ve_pdd,
     output reg           ve_av,
     output reg  [1:0]    ve_ac,
-    output reg  [255:0]  ve_ah,
+    output wire [127:0]  ve_ah,           // packed BF16 h (OWNER DECISION 8): new [16k+j] = old [32k+16+j]
     output reg  [255:0]  ve_aval,
     output reg  [31:0]   ve_ag,
     input  wire          ve_ov,
     input  wire [1:0]    ve_oc,
-    input  wire [255:0]  ve_oy,
+    input  wire [127:0]  ve_oy,           // packed BF16 from ve (OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA):): unpacked at the input flop
     input  wire          ve_fi,
     // Engram beat partials to the slice centre ({dd, kk, hh}) and gates from it
     output reg           e_v,
@@ -127,8 +128,17 @@ module ot_s81sl_vs #(
     input  wire          g_v,
     input  wire [1:0]    g_c,
     input  wire [31:0]   g_d,
-    output reg           fault
+    (* keep *) output reg fault
 );
+    // S81-KITS-RTLA 10-24 (OWNER DECISION 8 + pin registers): the command word with its two undefined imm bits as 0;
+    // ve h buses packed BF16 (their low halves are 16'd0: hw32 / hw8 / hw4); the hold pin registers below never
+    // load themselves: each takes its kept state copy (*_s) unless written, so it has no load but its pin (0-cycle dup)
+    wire [159:0] s_dw = {s_d[157:62], 1'b0, s_d[61], 1'b0, s_d[60:0]};
+    reg [127:0] ve_rh_w; reg [255:0] ve_ah_w;
+    assign ve_rh = {ve_rh_w[127:112], ve_rh_w[95:80], ve_rh_w[63:48], ve_rh_w[31:16]};
+    assign ve_ah = {ve_ah_w[255:240], ve_ah_w[223:208], ve_ah_w[191:176], ve_ah_w[159:144], ve_ah_w[127:112], ve_ah_w[95:80], ve_ah_w[63:48], ve_ah_w[31:16]};
+    (* keep *) reg [9:0] x_wa_s; (* keep *) reg [7:0] x_wm_s; (* keep *) reg [255:0] x_wd_s; (* keep *) reg [255:0] u_s;
+    (* keep *) reg [2:0] u_i_s; (* keep *) reg um_q_s, um_b_s; (* keep *) reg [7:0] um_i_s; (* keep *) reg fault_s;
     localparam [3:0] OP_SW = 4'd8, OP_QB = 4'd9, OP_RA = 4'd10, OP_RB = 4'd11, OP_QR = 4'd12, OP_MOE = 4'd13, OP_ENG = 4'd14;
 `ifdef OT_S81SL_VS_SRAM
 `ifdef OT_S81SL_VS_FP_N32
@@ -164,13 +174,13 @@ module ot_s81sl_vs #(
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin sv_c <= 1'b0; xqv_c <= 1'b0; rav_c <= 1'b0; raf_c <= 1'b0; swv_c <= 1'b0; swf_c <= 1'b0; end
         else begin sv_c <= s_v; xqv_c <= x_qv; rav_c <= ra_vi; raf_c <= ra_fi; swv_c <= sw_vi; swf_c <= sw_fi; end
-    always @(posedge clk) begin sd_c <= s_d; xq_c <= x_qd; rar_c <= ra_ri; swr_c <= sw_ri; end
+    always @(posedge clk) begin sd_c <= s_dw; xq_c <= x_qd; rar_c <= {1'b0, ra_ri}; swr_c <= sw_ri; end
     `S81_VS_CONTROL_KEEP reg vpv_c, vov_c, vef_c, gv_c; reg [1:0] vpc_c, voc_c, gc_c; reg [95:0] vpd_c; reg [255:0] voy_c; reg [31:0] gd_c;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin vpv_c <= 1'b0; vov_c <= 1'b0; vef_c <= 1'b0; gv_c <= 1'b0; end
         else begin vpv_c <= ve_pv; vov_c <= ve_ov; vef_c <= ve_fi; gv_c <= g_v; end
     always @(posedge clk) begin
-        vpc_c <= ve_pc; vpd_c <= {ve_pdd, ve_pkk, ve_phh}; voc_c <= ve_oc; voy_c <= ve_oy; gc_c <= g_c; gd_c <= g_d;
+        vpc_c <= ve_pc; vpd_c <= {ve_pdd, ve_pkk, ve_phh}; voc_c <= ve_oc; voy_c <= {ve_oy[127:112], 16'd0, ve_oy[111:96], 16'd0, ve_oy[95:80], 16'd0, ve_oy[79:64], 16'd0, ve_oy[63:48], 16'd0, ve_oy[47:32], 16'd0, ve_oy[31:16], 16'd0, ve_oy[15:0], 16'd0}; gc_c <= g_c; gd_c <= g_d;
     end
 
     // ---------------------------------------------------------------- command register and checks
@@ -206,16 +216,16 @@ module ot_s81sl_vs #(
     wire busy_after=rs_c && (acc_cmd || (busy && !done));
     wire [3:0] gmask_after=!rs_eng?4'd0:(acc_cmd && c_op==OP_ENG && !c_ph)?4'd0:gv_c?(gmask | (4'b1<<gc_c)):gmask;
     wire [127:0] cmd_accept;
-    wire [6:0] incoming_op={s_d[3:0]==OP_ENG,s_d[3:0]==OP_MOE,s_d[3:0]==OP_QR,s_d[3:0]==OP_RB,s_d[3:0]==OP_RA,s_d[3:0]==OP_QB,s_d[3:0]==OP_SW};
-    wire [1:0] stream_bad={(({5'd0,s_d[56:54]}+s_d[31:24]) > 8'd8),
-                         (s_d[24] || ({5'd0,s_d[56:54]}+{1'b0,s_d[31:25]}) > 8'd8)};
+    wire [6:0] incoming_op={s_dw[3:0]==OP_ENG,s_dw[3:0]==OP_MOE,s_dw[3:0]==OP_QR,s_dw[3:0]==OP_RB,s_dw[3:0]==OP_RA,s_dw[3:0]==OP_QB,s_dw[3:0]==OP_SW};
+    wire [1:0] stream_bad={(({5'd0,s_dw[56:54]}+s_dw[31:24]) > 8'd8),
+                         (s_dw[24] || ({5'd0,s_dw[56:54]}+{1'b0,s_dw[31:25]}) > 8'd8)};
     genvar acr;
     generate for(acr=0;acr<4;acr=acr+1) begin:g_accept_region
-      ot_s81sl_vs_accept32 u_accept(.clk(clk),.rst_n(rsv[30+acr]),.packet(s_d),.incoming_op(incoming_op),.stream_bad(stream_bad),.sv(s_v),.busy_after(busy_after),.gmask_after(gmask_after),.q(cmd_accept[32*acr+:32]));
+      ot_s81sl_vs_accept32 u_accept(.clk(clk),.rst_n(rsv[30+acr]),.packet(s_dw),.incoming_op(incoming_op),.stream_bad(stream_bad),.sv(s_v),.busy_after(busy_after),.gmask_after(gmask_after),.q(cmd_accept[32*acr+:32]));
     end endgenerate
     (* keep="true" *) reg [3:0] regional_packet_op[0:19];
     integer cpr;
-    always @(posedge clk) for(cpr=0;cpr<20;cpr=cpr+1) regional_packet_op[cpr]<=s_d[3:0];
+    always @(posedge clk) for(cpr=0;cpr<20;cpr=cpr+1) regional_packet_op[cpr]<=s_dw[3:0];
 `ifndef SYNTHESIS
     always @(posedge clk) if(rs_c && cmd_accept!=={128{acc_cmd}}) $fatal(1,"VS predicted command acceptance differs from original control");
 `endif
@@ -246,7 +256,7 @@ module ot_s81sl_vs #(
       wire [7:0] wi;
       if(wb0<4) assign w0[8*wb0+:8]=wi;
       else assign w1[8*(wb0-4)+:8]=wi;
-      ot_s81sl_vs_weight8 #(.BYTE(wb0%4),.SECOND(wb0>=4),.MUT(MUT)) u_byte(.clk(clk),.accept({cmd_accept[98+wb0],cmd_accept[90+wb0]}),.sel(s_d[60:58]),.imm(wb0<4?c_imm[64+8*(wb0%4)+:8]:c_imm[96+8*(wb0%4)+:8]),.arr(region_arr[18]),.op(region_op_c[18][27:24]),.wr(wr),.ka(region_ka_c[18][23:16]),.row(xq_c),.w(wi));
+      ot_s81sl_vs_weight8 #(.BYTE(wb0%4),.SECOND(wb0>=4),.MUT(MUT)) u_byte(.clk(clk),.accept({cmd_accept[98+wb0],cmd_accept[90+wb0]}),.sel(s_dw[60:58]),.imm(wb0<4?c_imm[64+8*(wb0%4)+:8]:c_imm[96+8*(wb0%4)+:8]),.arr(region_arr[18]),.op(region_op_c[18][27:24]),.wr(wr),.ka(region_ka_c[18][23:16]),.row(xq_c),.w(wi));
     end endgenerate
 `else
     always @(posedge clk)
@@ -279,7 +289,7 @@ module ot_s81sl_vs #(
       if(!rs_r) rs<=0;else if(cmd_accept[107]) rs<=0;else if(rrun) rs<=rs+1'b1;
     // the last-step count decodes its own kept opcode copy (same edge as sd_c): bounded c_op fanout
     (* keep="true" *) reg [3:0] rn_op;
-    always @(posedge clk) rn_op <= s_d[3:0];
+    always @(posedge clk) rn_op <= s_dw[3:0];
     wire [8:0] rn_nr = (rn_op == OP_RA) ? {4'd0, c_n[7:3]} + {8'd0, |c_n[2:0]} : {1'b0, c_n};
     wire rn_wr = rn_op == OP_SW && c_imm[25];
     always @(posedge clk or negedge rs_r)
@@ -682,7 +692,7 @@ module ot_s81sl_vs #(
       wire [1:0] copy_sel0=hpend_data[16+gr]?prev_copy0:local_er0[5:4],copy_sel1=hpend_data[16+gr]?prev_copy1:local_er1[5:4];
       always @(posedge clk) begin
         prev_copy0<=local_er0[5:4];prev_copy1<=local_er1[5:4];
-        ve_rh[32*gr+:32]<={hw8(hrow,copy_sel1,gr,1),hw8(hrow,copy_sel0,gr,0),16'd0};
+        ve_rh_w[32*gr+:32]<={hw8(hrow,copy_sel1,gr,1),hw8(hrow,copy_sel0,gr,0),16'd0};
       end
     end endgenerate
     // gate select from regional ka copies (region 16/17 byte 2 = ka), one copy per two gate bytes: no 32-load ka decode
@@ -742,7 +752,7 @@ for (rq = 0; rq < 4; rq = rq + 1) ep_q[rq] <= eng_r && ka >= 8'd16 && er[0];
 `endif
         ve_rc <= eq[5:4];
 `ifndef OT_S81SL_VS_SRAM
-        for (i = 0; i < 4; i = i + 1) ve_rh[32 * i +: 32] <= hw32(hrow, eq[5:4], i[1:0]);
+        for (i = 0; i < 4; i = i + 1) ve_rh_w[32 * i +: 32] <= hw32(hrow, eq[5:4], i[1:0]);
 `endif
 `ifdef OT_S81SL_VS_SRAM
         for(i=0;i<32;i=i+1) if(k_capture[i]) kst[8*i+:8] <= xq_c[8*i+:8];
@@ -771,10 +781,10 @@ for (rq = 0; rq < 4; rq = rq + 1) eqp_q[rq] <= {ka_q[rq][3:1], 1'b1};
         ve_ac <= ka[4:3];
         for (i = 0; i < 4; i = i + 1) begin
 `ifdef OT_S81SL_VS_SRAM
-            ve_ah[32*i+:32] <= {hw4(hra,region_ka_c[8+i][28:27],i[1:0],3),hw4(hra,region_ka_c[8+i][20:19],i[1:0],2),hw4(hra,region_ka_c[8+i][12:11],i[1:0],1),hw4(hra,region_ka_c[8+i][4:3],i[1:0],0),16'd0};
-            ve_ah[32*(i+4)+:32] <= {hw4(hrb,region_ka_c[12+i][28:27],i[1:0],3),hw4(hrb,region_ka_c[12+i][20:19],i[1:0],2),hw4(hrb,region_ka_c[12+i][12:11],i[1:0],1),hw4(hrb,region_ka_c[12+i][4:3],i[1:0],0),16'd0};
+            ve_ah_w[32*i+:32] <= {hw4(hra,region_ka_c[8+i][28:27],i[1:0],3),hw4(hra,region_ka_c[8+i][20:19],i[1:0],2),hw4(hra,region_ka_c[8+i][12:11],i[1:0],1),hw4(hra,region_ka_c[8+i][4:3],i[1:0],0),16'd0};
+            ve_ah_w[32*(i+4)+:32] <= {hw4(hrb,region_ka_c[12+i][28:27],i[1:0],3),hw4(hrb,region_ka_c[12+i][20:19],i[1:0],2),hw4(hrb,region_ka_c[12+i][12:11],i[1:0],1),hw4(hrb,region_ka_c[12+i][4:3],i[1:0],0),16'd0};
 `else
-            ve_ah[32 * i +: 32] <= hw32(hra, ka[4:3], i[1:0]); ve_ah[32 * (i + 4) +: 32] <= hw32(hrb, ka[4:3], i[1:0]);
+            ve_ah_w[32 * i +: 32] <= hw32(hra, ka[4:3], i[1:0]); ve_ah_w[32 * (i + 4) +: 32] <= hw32(hrb, ka[4:3], i[1:0]);
 `endif
         end
         ve_aval <= xq_c;
@@ -901,25 +911,26 @@ if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
 
 `else
     always @(posedge clk) begin
-        if (`S81_VS_ACC(116)) begin um_q <= c_imm[12]; um_b <= c_imm[13]; um_i <= c_imm[21:14]; end
+        x_wa <= x_wa_s; x_wm <= x_wm_s; x_wd <= x_wd_s; u <= u_s; u_i <= u_i_s; um_q <= um_q_s; um_b <= um_b_s; um_i <= um_i_s;   // default: the state copy (no pin self-loop)
+        if (`S81_VS_ACC(116)) begin begin um_q <= c_imm[12]; um_q_s <= c_imm[12]; end begin um_b <= c_imm[13]; um_b_s <= c_imm[13]; end begin um_i <= c_imm[21:14]; um_i_s <= c_imm[21:14]; end end
         if (swv_c) sw_prev <= sw_w32;
         case (op)
             OP_SW: begin
-                x_wa <= ob + {2'd0, k_out[7:0]}; x_wm <= 8'h0F; x_wd <= {128'd0, sw_w32};
-                u <= {sw_w32, sw_prev}; u_i <= j0 + k_out[3:1];
+                begin x_wa <= ob + {2'd0, k_out[7:0]}; x_wa_s <= ob + {2'd0, k_out[7:0]}; end begin x_wm <= 8'h0F; x_wm_s <= 8'h0F; end begin x_wd <= {128'd0, sw_w32}; x_wd_s <= {128'd0, sw_w32}; end
+                begin u <= {sw_w32, sw_prev}; u_s <= {sw_w32, sw_prev}; end begin u_i <= j0 + k_out[3:1]; u_i_s <= j0 + k_out[3:1]; end
             end
             OP_QB: begin
-                u <= (MUT == 5) ? {xq_c[127:0], xq_c[255:128]} : xq_c; u_i <= j0 + k_out[2:0];
+                begin u <= (MUT == 5) ? {xq_c[127:0], xq_c[255:128]} : xq_c; u_s <= (MUT == 5) ? {xq_c[127:0], xq_c[255:128]} : xq_c; end begin u_i <= j0 + k_out[2:0]; u_i_s <= j0 + k_out[2:0]; end
             end
             OP_RA: begin
-                x_wa <= ob + {4'd0, k_ra[7:2]} + ((MUT == 6) ? 10'd1 : 10'd0);
-                x_wm <= (k_ra[1:0] == 2'd3) ? 8'h0F : (k_ra[1:0] == 2'd2) ? 8'h07 : (k_ra[1:0] == 2'd1) ? 8'h03 : 8'h01;
-                x_wd <= {128'd0, rar_c, rad};
-                for (i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) x_wd[32 * i +: 32] <= rar_c;
+                begin x_wa <= ob + {4'd0, k_ra[7:2]} + ((MUT == 6) ? 10'd1 : 10'd0); x_wa_s <= ob + {4'd0, k_ra[7:2]} + ((MUT == 6) ? 10'd1 : 10'd0); end
+                begin x_wm <= (k_ra[1:0] == 2'd3) ? 8'h0F : (k_ra[1:0] == 2'd2) ? 8'h07 : (k_ra[1:0] == 2'd1) ? 8'h03 : 8'h01; x_wm_s <= (k_ra[1:0] == 2'd3) ? 8'h0F : (k_ra[1:0] == 2'd2) ? 8'h07 : (k_ra[1:0] == 2'd1) ? 8'h03 : 8'h01; end
+                begin x_wd <= {128'd0, rar_c, rad}; x_wd_s <= {128'd0, rar_c, rad}; end
+                for (i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) begin x_wd[32 * i +: 32] <= rar_c; x_wd_s[32 * i +: 32] <= rar_c; end
             end
-            OP_RB, OP_QR: begin x_wa <= ob + {2'd0, k_out[7:0]}; x_wm <= 8'h0F; x_wd <= {128'd0, xo_d[127:0]}; end
-            OP_ENG: begin x_wa <= a1 + {4'd0, fl_e[4:0], 1'b0}; x_wm <= 8'hFF; x_wd <= xwsel; end
-            default: begin x_wa <= ob + {1'b0, k_out[7:0], 1'b0}; x_wm <= 8'hFF; x_wd <= xo_d; end   // MOE
+            OP_RB, OP_QR: begin begin x_wa <= ob + {2'd0, k_out[7:0]}; x_wa_s <= ob + {2'd0, k_out[7:0]}; end begin x_wm <= 8'h0F; x_wm_s <= 8'h0F; end begin x_wd <= {128'd0, xo_d[127:0]}; x_wd_s <= {128'd0, xo_d[127:0]}; end end
+            OP_ENG: begin begin x_wa <= a1 + {4'd0, fl_e[4:0], 1'b0}; x_wa_s <= a1 + {4'd0, fl_e[4:0], 1'b0}; end begin x_wm <= 8'hFF; x_wm_s <= 8'hFF; end begin x_wd <= xwsel; x_wd_s <= xwsel; end end
+            default: begin begin x_wa <= ob + {1'b0, k_out[7:0], 1'b0}; x_wa_s <= ob + {1'b0, k_out[7:0], 1'b0}; end begin x_wm <= 8'hFF; x_wm_s <= 8'hFF; end begin x_wd <= xo_d; x_wd_s <= xo_d; end end   // MOE
         endcase
     end
 
@@ -928,13 +939,13 @@ if (fl_on) for (rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1;
     // ---------------------------------------------------------------- faults (sticky)
     reg f_cmd, f_unit;
     always @(posedge clk or negedge rs_fault)
-        if (!rs_fault) begin fault <= 1'b0; f_cmd <= 1'b0; f_unit <= 1'b0; end
+        if (!rs_fault) begin fault <= 1'b0; fault_s <= 1'b0; f_cmd <= 1'b0; f_unit <= 1'b0; end
         else begin
             f_cmd <= (sv_c && (busy || c_bad)) || (xqv_c && !busy) || (swv_c && op != OP_SW) || (rav_c && op != OP_RA) ||
                      (vpv_c && !(busy && op == OP_ENG && !ph)) || (vov_c && !(busy && op == OP_ENG && ph)) ||
                      (vov_c && voc_c != ko_e[4:3]) || (gv_c && gmask[gc_c]);
             f_unit <= (|mf) | (|af) | raf_c | swf_c | vef_c;
-            fault <= fault | f_cmd | f_unit;
+            fault_s <= fault_s | f_cmd | f_unit; fault <= fault_s | f_cmd | f_unit;
         end
 `undef S81_VS_ACC
 `undef S81_VS_CONTROL_KEEP
