@@ -623,6 +623,9 @@ def stations_on(p0, p1, step=REACH - 20):
     return out
 
 
+# planned leaf regions of the spine node (x = the N-face x_i / b_o window centres, y = 190 um below the N face)
+SPN_LEAF = {k: (round((geo[("hd_spn", b)][1][0] + geo[("hd_spn", b)][1][1]) / 2, 3), round(2 * TH - 190.0, 3))
+            for k, b in (("spo", "x_i"), ("spr", "b_o"))}
 # spine node internal register-to-register paths (spo forward / spr merge sit at the N-face centre of the node)
 for tn in ("hd_spn", "hd_spn_end"):
     ist = []
@@ -631,9 +634,21 @@ for tn in ("hd_spn", "hd_spn_end"):
         conns += [("x_i", "x_o"), ("b_i", "b_o")]
     for a, b in conns:
         p0, p1 = face_pt(tn, a), face_pt(tn, b)
+        # HEAD-SPINE2 10-25: the station COUNT stays the face-to-face L (cycles unchanged); the leaf end is the planned
+        # spo / spr region (leaf_um, under the N-face x_i / b_o windows) and kit_istations spreads each bit on its own
+        # L from the leaf to its face pin (segment at the pin row / column), so the E/W bands run straight at the
+        # window rows instead of the N-edge detour and no first / last leg spans the 300-um pin window.
+        lf = SPN_LEAF["spo" if a == "x_i" else "spr"]
         ist.append(dict(conn=f"bus:{b if a in ('x_i',) else a}", from_um=list(p0), to_um=list(p1),
-                        regs_um=stations_on(p0, p1), bits=566, note=f"{a} -> {b} (spo / spr registers at the ends)"))
+                        regs_um=stations_on(p0, p1), bits=566, leaf_um=list(lf), bit_route="per_bit",
+                        note=f"{a} -> {b} (spo / spr registers at the ends)"))
     types[tn]["internal_stations"] = ist
+    types[tn]["reset"]["leaf_um"] = [round((SPN_LEAF["spo"][0] + SPN_LEAF["spr"][0]) / 2, 3), SPN_LEAF["spo"][1]]
+    # density taps (OWNER decision 5): the per-bit station columns / rows + the spo / spr leaf flops (inventory of the
+    # placed Codex kit: 1492 non-station logic flops) instead of the grid that left 8 W taps with 2-8 sinks and t22 3.9k
+    types[tn]["clock"].update(tap_mode="density",
+                              sink_sites_um=[[SPN_LEAF["spo"][0], SPN_LEAF["spo"][1], 746],
+                                             [SPN_LEAF["spr"][0], SPN_LEAF["spr"][1], 746]])
 for (t, s_), d in slot_def.items():
     gi, go = geo[(t, s_ + "_i")], geo[(t, s_ + "_o")]
     e = dict(name=s_, in_face=gi[0], out_face=go[0], width=d["width"], stations=stations(t, s_),

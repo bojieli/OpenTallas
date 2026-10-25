@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/s81-head-phy-1025/physical/die_plan/s81_head/die_plan.json",
+ "plan": "/srv/opentallas-scratch2/claude/wt/s81-head-spine2-1025/physical/die_plan/s81_head/die_plan.json",
  "verdict": "PASS",
  "mode": "G0C",
  "errors": 0,
@@ -74,10 +74,10 @@
    "by_type": {}
   },
   "geometry": {
-   "partition_area_mm2": 293.31141672960155,
+   "partition_area_mm2": 293.3114167295999,
    "channel_area_mm2": 14.31182131200001,
-   "uncovered_mm2": 0.0,
-   "fill": 0.9534761372284137,
+   "uncovered_mm2": 8.568167686462402e-14,
+   "fill": 0.9534761372284083,
    "planned_channels": []
   },
   "worst_faces": [

@@ -93,6 +93,34 @@ def planned_sinks(P, tn):
                 out.append((xy[0], xy[1], f"ft_s{j}"))
         else:
             out.append(_inset(x, y, face, w, h) + ("face",))
+    out += per_bit_station_sites(t, pins)
+    return out
+
+
+def per_bit_station_sites(t, pins):
+    """[(x, y, 'ist')] sites of the internal stations with bit_route "per_bit" (HEAD-SPINE2 10-25), exactly as
+    kit_istations.is_bits places them: bit b of station k (k = 0 next to the face for an in bus, next to the leaf for an
+    out bus) at L_b * (k + 1) / (n + 1) along its own L leaf_um <-> pin b, the segment at the pin perpendicular to the
+    face.  Entries without bit_route are not FIRM per bit and stay out (other plans unchanged)."""
+    buses = {b["name"]: b for b in t.get("buses", [])}
+    at = {}
+    for name, bit, _ln, x, y, face in pins:
+        at.setdefault(name, {})[bit] = (x, y, face)
+    out = []
+    for e in t.get("internal_stations", []):
+        if e.get("bit_route") != "per_bit" or not e.get("conn", "").startswith("bus:"):
+            continue
+        bus = e["conn"][4:]
+        lx, ly = e["leaf_um"]
+        n = len(e["regs_um"])
+        d_in = buses[bus]["dir"] == "in"
+        for bit, (px, py, face) in sorted(at.get(bus, {}).items()):
+            cx, cy = (lx, py) if face in ("E", "W") else (px, ly)
+            pts = [(px, py), (cx, cy), (lx, ly)] if d_in else [(lx, ly), (cx, cy), (px, py)]
+            L = abs(px - cx) + abs(py - cy) + abs(cx - lx) + abs(cy - ly)
+            for k in range(n):
+                xy = _point_at(pts, L * (k + 1) / (n + 1))
+                out.append((xy[0], xy[1], "ist"))
     return out
 
 

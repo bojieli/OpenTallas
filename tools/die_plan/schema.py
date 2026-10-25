@@ -298,6 +298,8 @@ SCHEMA = {
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
+                        # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
+                        "leaf_um": _xy,
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
                         "depth": {"type": "integer", "minimum": 1}}},
                     "contents": {"type": "array", "items": {
@@ -327,7 +329,9 @@ SCHEMA = {
                         "properties": {"conn": {"type": "string"},    # "bus:<bus>" | "<leaf inst>.<port>" | "<a>|<b>"
                                        "from_um": _xy, "to_um": _xy, "regs_um": {"type": "array", "items": _xy},
                                        "bits": {"type": "integer", "minimum": 1}, "launch": {"type": "string"},
-                                       "capture": {"type": "string"}, "note": {"type": "string"}}}},
+                                       "capture": {"type": "string"}, "note": {"type": "string"},
+                                       # per-bit station sites (kit_istations): bit b on its own L leaf_um <-> pin b
+                                       "leaf_um": _xy, "bit_route": {"enum": ["per_bit"]}}}},
                     "channels": {"type": "array", "items": {
                         "type": "object", "required": ["rect_um", "reason"], "additionalProperties": False,
                         "properties": {"rect_um": _rect, "reason": {"type": "string", "minLength": 3}}}},

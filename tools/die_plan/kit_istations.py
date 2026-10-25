@@ -46,6 +46,40 @@ proc is_place {pat x y tag} {
   }
   if {!$hit} { lappend is_miss $pat }
 }
+# HEAD-SPINE2 10-25 per-bit station sites (plan internal_stations[].bit_route = "per_bit"): bit b of station k sits on
+# ITS OWN L route between the planned leaf point (leaf_um) and its face pin <bus>[b] (epoch flop eq -> pin [W]); the
+# segment next to the pin runs perpendicular to the face at the pin row / column, so a station is a column (E/W) or
+# row (N/S) parallel to the pin window and every hop of bit b is L_b / (n+1) (the ft_bit_sites rule for ft slots).
+proc is_bits {inst bus face W lx ly k n dir tag} {
+  global ff_blk ff_dbu is_n is_miss is_fh
+  set hit 0
+  foreach i [$ff_blk getInsts] {
+    set nm [$i getName]
+    if {![string match "*${inst}/*" $nm]} continue
+    if {![string match "*DFF*" [[$i getMaster] getName]]} continue
+    if {[regexp {/q\\\\?\\[([0-9]+)\\\\?\\]} $nm -> b]} {
+    } elseif {[regexp {/eq\\$} $nm]} { set b $W } else { lappend is_miss $nm; continue }
+    set bt [$ff_blk findBTerm "${bus}\\[$b\\]"]
+    if {$bt eq "NULL"} { lappend is_miss "$nm:nopin"; continue }
+    set bb [$bt getBBox]
+    set px [expr {([$bb xMin] + [$bb xMax]) / 2.0 / $ff_dbu}]; set py [expr {([$bb yMin] + [$bb yMax]) / 2.0 / $ff_dbu}]
+    if {$face in {E W}} { set cx $lx; set cy $py } else { set cx $px; set cy $ly }
+    set L [expr {abs($px - $cx) + abs($py - $cy) + abs($cx - $lx) + abs($cy - $ly)}]
+    set d [expr {$L * ($k + 1) / double($n + 1)}]
+    if {$dir eq "in"} { set pts [list $px $py $cx $cy $lx $ly] } else { set pts [list $lx $ly $cx $cy $px $py] }
+    set x [lindex $pts end-1]; set y [lindex $pts end]
+    foreach {ax ay bx by} [list {*}[lrange $pts 0 3] {*}[lrange $pts 2 5]] {
+      set s [expr {abs($bx - $ax) + abs($by - $ay)}]
+      if {$d <= $s} { set f [expr {$s == 0 ? 0.0 : $d / $s}]; set x [expr {$ax + $f * ($bx - $ax)}]; set y [expr {$ay + $f * ($by - $ay)}]; break }
+      set d [expr {$d - $s}]
+    }
+    set got [ff_put_near $i [expr {round($x * $ff_dbu)}] [expr {round($y * $ff_dbu)}]]
+    if {$got eq ""} { lappend is_miss $nm; continue }
+    puts $is_fh "$nm\t$tag\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t-"
+    incr is_n; incr hit
+  }
+  if {!$hit} { lappend is_miss $inst }
+}
 """
 
 
@@ -130,8 +164,15 @@ def main(argv):
                 txt = txt[:m.start()] + line + txt[m.end():]
                 txt = re.sub(r"(\n\s*endmodule\b)", "\n" + "\n".join(decl + body) + r"\1", txt, count=1)
             # out bus: the stations run from the leaf toward the face, regs_um is ordered from_um -> to_um
-        for (x, y), nm in zip(regs, names):
-            tcl.append(f"is_place {{*{nm}[./]*}} {x} {y} ist:{bus}")
+        if e.get("bit_route") == "per_bit":
+            if "leaf_um" not in e or "face" not in b:
+                raise SystemExit(f"kit_istations: {tn} {bus}: bit_route per_bit needs leaf_um and a bus face")
+            lx, ly = e["leaf_um"]
+            for k, nm in enumerate(names):
+                tcl.append(f"is_bits {nm} {n} {b['face']} {W} {lx} {ly} {k} {len(names)} {b['dir']} ist:{bus}")
+        else:
+            for (x, y), nm in zip(regs, names):
+                tcl.append(f"is_place {{*{nm}[./]*}} {x} {y} ist:{bus}")
         rep.append(dict(conn=conn, planned=len(regs), bound_pads=have, inserted=need, stations=names))
     # plan cells with a FIRM site (no hard view): their flops at the site
     for c in t.get("contents", []):
