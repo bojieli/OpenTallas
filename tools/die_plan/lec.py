@@ -29,6 +29,9 @@ equivalence of every next-state / output function) plus register correspondence.
         set / reset by async2sync) and every black-box input pin, each one output of one AIG miter; proved by ABC
         (&fraig sweeping + &sat per output, per-cone &cec for leftovers; every compare point is its own cone, so the
         check is partitioned by construction and scales to 400k-cell kits).
+Kept registers (fail-closed): every register bit the RTL declares kept ((* keep *) or a flop in a keep_hierarchy
+        cell: pin flops, placement replicas) must be a flop of its own name in the netlist; one merged into its twin
+        (opt_merge) passes correspondence, so it is counted here: KEEP FAIL (exit 1, the kit stops like NOT EQUIVALENT).
 Verdict (DIR/lec.json; DIR defaults to KITDIR/lec):
   EQUIVALENT      every compare point proved (unmatched registers, if any, were free inputs: unobservable);
   NOT EQUIVALENT  >= 1 compare point differs and its cone sees only matched / proved key points and RTL registers the
@@ -207,13 +210,17 @@ SEQ_TAIL = [
 def gold_script(env, kit, frontend, lib_bbs, stubs, wrap, lecff, out):
     s = read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=False)
     s += [f"read_verilog -overwrite {stubs}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
+          # declared kept registers (the kept-register check): (* keep *) wires and every wire of a keep_hierarchy
+          # module (pin / replica flop cells), marked before the hierarchy attributes are dropped
+          "setattr -set lec_keep 1 w:* a:keep %i", "setattr -set lec_keep 1 A:keep_hierarchy",
           "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc",
           # constant folding / width reduction that keeps don't-care semantics (-keepdc), per module before
           # flatten, and peepopt (shiftmul / shiftadd: a dynamic part-select full[276 * f + b] becomes a mux of the
           # constant-stride slices instead of a 32-stage x-filled barrel shifter): without them eng_rr_e's 552
           # strided selects expand to 31M cells (77 GB) in techmap; with them 263k cells, 1.2 GB
           "opt_expr -keepdc", "opt_clean", "wreduce -keepdc", "peepopt", "opt_clean", "wreduce -keepdc", "opt_clean",
-          "flatten -noscopeinfo", "opt_clean", "memory -nomap", "memory_map", "opt_expr -keepdc", "opt_clean",
+          "flatten -noscopeinfo", "opt_clean", f"select -write {out}.keep w:* a:lec_keep %i",
+          "memory -nomap", "memory_map", "opt_expr -keepdc", "opt_clean",
           "techmap", "opt_clean"]
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
 
@@ -486,15 +493,16 @@ class Aig:
                 stack += (self.ands[2 * k] >> 1, self.ands[2 * k + 1] >> 1)
         return ins
 
-    def simulate(self, words, seed=1):
-        """bit-parallel random simulation (python ints of `words` x 64 bits) -> value list per variable."""
+    def simulate(self, words, seed=1, flip=()):
+        """bit-parallel random simulation (python ints of `words` x 64 bits) -> value list per variable.
+        `flip`: input variables whose random values are complemented (the same patterns otherwise)."""
         import random
         rnd = random.Random(seed)
         W = 64 * words
         mask = (1 << W) - 1
         val = [0] * (self.ni + len(self.ands) // 2 + 1)
         for v in range(1, self.ni + 1):
-            val[v] = rnd.getrandbits(W)
+            val[v] = rnd.getrandbits(W) ^ (mask if v in flip else 0)
         a = self.ands
         base = self.ni + 1
         for k in range(len(a) // 2):
@@ -998,6 +1006,115 @@ def replica_proposals(L, log):
     log.append(f"replica proposal: {n} generated-register relations (gold input support modulo copy indices)")
 
 
+def kept_registers(L, keep_file):
+    """Kept-register check (fail-closed, PATH-KV-PC3 10-25): every RTL register bit the design declares kept --
+    a (* keep *) register or a flop inside a keep_hierarchy cell (pin flops, placement replicas) -- must be a flop of
+    its own in the netlist.  A kept copy that synthesis merged into its twin (opt_merge) is proved equivalent by
+    register correspondence, so LEC alone would pass it: here it fails.  Run after correspond(): a gold register
+    paired 1:1 with a gate-only flop (a rename) is present; one proved constant (a dead pin bit, a constant ID strap
+    through its landing flops) is reported, not failed (no flop to keep); one merged into another register or left
+    unpaired is missing.  -> (declared keys, missing keys, constant keys)."""
+    keepw = set()
+    for line in Path(keep_file).read_text().splitlines():
+        n = line.strip().split("/", 1)[-1].replace("\\", "").replace(" ", "")
+        if n.startswith("u_dut."):
+            keepw.add(GENBLK.sub("", n))
+    alias = dict(a.split("->", 1) for a in L.aliased)
+    inv_alias = {v: k for k, v in alias.items()}
+    declared = []
+    for k in L.gp:
+        if not k.startswith("ff:"):
+            continue
+        o = inv_alias.get(k, k)[3:]
+        m = IDX.match(o)
+        if o in keepw or (m and m.group(1) in keepw):
+            declared.append(k)
+    gate, relaid = set(L.tp), collections.Counter()
+    for k in L.tp:
+        if "#t" in k:
+            relaid[k.split("#t", 1)[0]] += 1
+    gold_rel = collections.Counter()
+    for k in declared:
+        m = IDX.match(k)
+        if m and m.group(1) in relaid:
+            gold_rel[m.group(1)] += 1
+    renamed = {h[2] for (sd, c), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[2] in L.gp}
+    missing, const = [], []
+    for k in sorted(declared):
+        if k in gate or k in renamed:
+            continue
+        m = IDX.match(k)
+        if m and m.group(1) in relaid and relaid[m.group(1)] >= gold_rel[m.group(1)]:
+            continue                 # an array the two frontends lay out differently: counted per array
+        h = L.hyp.get(("gold", k))
+        if h and h[0] == "const":
+            const.append(k)
+            continue
+        missing.append(k)
+    return sorted(declared), missing, const
+
+
+def care_pairs(L, words, seed, tried, keys, cap=256):
+    """Self-holding RTL registers that synthesis merged into an equal register (`kv_d <= r_d; c1 <= r_d` under one
+    enable, `wes[287:286] <= {sv, sv}`): D(k) depends on k itself, which no partner shares, so neither the plain nor
+    the equal-size-group cofactor signatures ever pair k.  Pair on the care set instead: the patterns where D(k) is
+    the same when every unpaired RTL-only register value is complemented (the hold term drops out) must equal the
+    partner's D
+    there (either polarity), with >= 24 cared patterns (of 2048+) and both values present.  Partners: matched registers
+    (a merge: k == partner) and unpaired gate-only registers (a rename).  Candidate discovery only: every pair is
+    proved by the same simultaneous induction as the others (a wrong one fails and is dropped)."""
+    pop = lambda x: bin(x).count("1")
+    m, kind = L.build(with_compare=False, with_hyp=False)
+    flip = {v for v, kd in kind.items() if kd[0] == "gold_only"}
+    words = max(words, 32)                  # rare enables (a 5-bit address tap: 1/32) still leave >= 24 cared
+    v0, mask = m.simulate(words, seed=seed)
+    v1, _ = m.simulate(words, seed=seed, flip=flip)
+    cof = [lambda side, k, vv=vv: lit_val(vv, mask, L.dlit[(side, k)]) for vv in (v0, v1)]
+    groups = {}
+    for k in keys:
+        a, b = cof[0]("gold", k), cof[1]("gold", k)
+        care = mask & ~(a ^ b)
+        v = a & care
+        if pop(care) < 24 or v in (0, care):
+            continue
+        groups.setdefault(care, []).append((k, v))
+    if not groups:
+        return 0
+    pv = []
+    for side, keys_ in (("gold", L.matched), ("gate", L.tonly)):
+        for c in keys_:
+            if c.startswith("ff:") and (side == "gold" or ("gate", c) not in L.hyp):
+                a, b = cof[0](side, c), cof[1](side, c)
+                pv.append((side, c, mask & ~(a ^ b), a))
+    new, taken = 0, set()
+    for care, ks in sorted(groups.items(), key=lambda g: (-len(g[1]), g[1][0][0]))[:cap]:
+        idx = {}
+        for side, c, pc, a in pv:
+            if pc & care == care:
+                idx.setdefault(a & care, []).append((side, c))
+        for k, v in ks:
+            hit = None
+            for inv, t in ((0, v), (1, v ^ care)):
+                cs = {c: side for side, c in idx.get(t, []) if (side, c) not in taken}
+                for c in closest(k, list(cs)):
+                    key = ("gold", k, c, inv) if cs[c] == "gold" else ("gate", c, k, inv)
+                    if tried[key] < 2:
+                        hit = (cs[c], c, inv)
+                        break
+                if hit:
+                    break
+            if not hit:
+                continue
+            side, c, inv = hit
+            if side == "gold":
+                L.hyp[("gold", k)] = ("eq", "gold", c, inv)
+            else:
+                L.hyp[("gate", c)] = ("eq", "gold", k, inv)
+                taken.add(("gate", c))
+            new += 1
+    return new
+
+
 def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
     duplicates, or the two frontends named a register differently, e.g. a register that drives an output port):
@@ -1128,6 +1245,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                             if tried[("gate", c, k, 0)] < 2:
                                 L.hyp[("gate", c)] = ("eq", "gold", k, 0)
                                 new += 1
+                    new += care_pairs(L, words, 77 * rnd + it + 3, tried, [k for k in ug if ("gold", k) not in L.hyp])
                 # Duplicate feedback copies can choose different representatives in each frontend.
                 # Group on gold signatures even before individual gold/gate D functions agree;
                 # the hypothesis miter below proves the equality on BOTH sides simultaneously.
@@ -1324,13 +1442,28 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             else:
                 soft.append(e)
         rec["x_dont_care_points"] = lst([k for k in L.xpoints if k in status])
+        kf = Path(str(out / "gold") + ".keep")
+        if kf.is_file():
+            kdecl, kmiss, kconst = kept_registers(L, kf)
+            rec["kept_registers"] = dict(declared=len(kdecl), in_netlist=len(kdecl) - len(kmiss) - len(kconst),
+                                         constant_proved=lst(kconst), missing=lst(kmiss))
+        else:
+            kmiss = None
+            rec["kept_registers"] = "not checked (no gold.keep: AIGs reused from an older lec.py)"
         np_ = sum(1 for v in status.values() if v == "proved")
         rec["counts"] = dict(compare_points=len(status), proved=np_,
                              differs=sum(1 for v in status.values() if v == "differs"),
                              undecided=sum(1 for v in status.values() if v == "undecided"))
         rec["failing"] = hard[:500]
         rec["unproven_points"] = soft[:500]
-        if hard:
+        if kmiss:
+            rec["verdict"] = "KEEP FAIL"
+            rec["reason"] = (f"{len(kmiss)} of {len(kdecl)} declared kept register bits are not flops of their own "
+                             f"name in the netlist (merged / folded / renamed by synthesis; first: "
+                             + ", ".join(kmiss[:6]) + ")")
+            if hard:
+                rec["reason"] += f"; also {len(hard)} compare points differ"
+        elif hard:
             rec["verdict"] = "NOT EQUIVALENT"
             rec["reason"] = f"{len(hard)} compare points differ (first: " + \
                 ", ".join(e["point"] for e in hard[:8]) + ")"
@@ -1422,7 +1555,7 @@ def main(argv=None):
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "
           f"({r['t_total_s']} s)")
-    return {"EQUIVALENT": 0, "NOT EQUIVALENT": 1, "UNPROVEN": 2}.get(r["verdict"], 3)
+    return {"EQUIVALENT": 0, "NOT EQUIVALENT": 1, "KEEP FAIL": 1, "UNPROVEN": 2}.get(r["verdict"], 3)
 
 
 if __name__ == "__main__":
