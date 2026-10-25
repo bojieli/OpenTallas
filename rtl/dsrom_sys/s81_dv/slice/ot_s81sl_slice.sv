@@ -130,15 +130,15 @@ module ot_s81sl_leaf #(
         .q({y_i, y}), .qv(y_v));
     ot_s81sl_cst #(.W(2 + 8), .V(1), .D(CS_VNI_D + CS_Y_D)) u_cst_m (.clk(clk), .rst_n(rst_n), .d({m_q_p, m_b_p, m_i_p}),
         .dv(m_v_p), .q({m_q, m_b, m_i}), .qv(m_v));
-`ifndef OT_S81SL_CST_MUT_UMV
+`ifndef OT_S81SL_CST_MUT_UV
     ot_s81sl_cst #(.W(3 + 256 + 2 + 8), .V(2), .D(CS_U_D)) u_cst_u (.clk(clk), .rst_n(rst_n),
         .d({u_i_s, u_s, um_q_s, um_b_s, um_i_s}), .dv({u_v_s, um_v_s}), .q({u_i, u, um_q, um_b, um_i}), .qv({u_v, um_v}));
 `else
-    // bench mutant: um_v one station deeper than the rest of its interface (um_q / um_b / um_i, u_*)
-    wire um_v_m;
+    // bench mutant: u_v one station deeper than the rest of its interface (u_i / u, um_*)
+    wire u_v_m;
     ot_s81sl_cst #(.W(3 + 256 + 2 + 8), .V(2), .D(CS_U_D)) u_cst_u (.clk(clk), .rst_n(rst_n),
-        .d({u_i_s, u_s, um_q_s, um_b_s, um_i_s}), .dv({u_v_s, um_v_s}), .q({u_i, u, um_q, um_b, um_i}), .qv({u_v, um_v_m}));
-    ot_s81sl_cst #(.W(1), .V(1), .D(1)) u_cst_mut (.clk(clk), .rst_n(rst_n), .d(1'b0), .dv(um_v_m), .q(), .qv(um_v));
+        .d({u_i_s, u_s, um_q_s, um_b_s, um_i_s}), .dv({u_v_s, um_v_s}), .q({u_i, u, um_q, um_b, um_i}), .qv({u_v_m, um_v}));
+    ot_s81sl_cst #(.W(1), .V(1), .D(1)) u_cst_mut (.clk(clk), .rst_n(rst_n), .d(1'b0), .dv(u_v_m), .q(), .qv(u_v));
 `endif
     ot_s81sl_cst #(.W(256 + 32 + 32), .V(1), .D(CS_SW_D)) u_cst_sw (.clk(clk), .rst_n(rst_n), .d({swd_s, sww_s, swl_s}),
         .dv(swv_s), .q({swd, sww, swl}), .qv(swv));
