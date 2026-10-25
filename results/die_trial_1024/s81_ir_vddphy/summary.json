@@ -1,0 +1,1030 @@
+{
+ "schema": "opentallas.s81_ir_vddphy.summary.v1",
+ "date": "2026-10-25",
+ "gate_mv_per_rail": 35.0,
+ "voltage_v": 0.7,
+ "method": "tools/die_trial/s81_ir_domains.py (PDNSim window, TRIAL-S81 method: 0.15 W/mm2 core, C4 150 um lattice, M8/M9 0.48/8.64; region voltage domains VDDPHY/VSSPHY 1.92/8.64 + 45-um rows)",
+ "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-ir",
+ "image": "openroad/orfs:asap7lock sha256:16470cea1d34",
+ "cases": {
+  "head_A_base": {
+   "plan": "plan_head_59a2f733.json",
+   "mode": "base",
+   "window_um": [
+    0.0,
+    0.0,
+    11836.8,
+    2851.2
+   ],
+   "phy_box": null,
+   "nets": null,
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 305.93,
+     "core": 305.93
+    },
+    "VSS": {
+     "all": 305.86,
+     "core": 305.86
+    }
+   },
+   "core_load_w": 4.57,
+   "phy_load_w": 0,
+   "phy_w_per_window": null,
+   "phy_w_per_mm2": null,
+   "uncovered_core_area_mm2": 0.0,
+   "bumps": {
+    "core": 710,
+    "domain": 0,
+    "by_net": {
+     "VDD": 355,
+     "VSS": 355,
+     "VDDPHY": 0,
+     "VSSPHY": 0
+    }
+   },
+   "tiles": {
+    "core": 16149,
+    "phy": 0
+   },
+   "io_in_window": [
+    "io_lk_WS1_u_phy",
+    "io_lk_WS0_u_phy",
+    "io_lk_HOST0_u_phy",
+    "io_lk_HOST1_u_phy",
+    "io_lk_ES0_u_phy"
+   ]
+  },
+  "head_A_dom": {
+   "plan": "plan_head_59a2f733.json",
+   "mode": "domains",
+   "window_um": [
+    0.0,
+    0.0,
+    11836.8,
+    2851.2
+   ],
+   "phy_box": null,
+   "nets": null,
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 28.39,
+     "core": 28.39,
+     "core_near_domain": 28.19,
+     "core_far": 24.72
+    },
+    "VDDPHY": {
+     "all": 9.76,
+     "phy": 9.76,
+     "per_domain_mv": {
+      "phy_lk_WS1": 9.76,
+      "phy_lk_WS0": 8.22,
+      "phy_lk_HOST0": 8.22,
+      "phy_lk_HOST1": 8.1
+     }
+    },
+    "VSS": {
+     "all": 30.91,
+     "core": 30.91,
+     "core_near_domain": 28.27,
+     "core_far": 30.91
+    },
+    "VSSPHY": {
+     "all": 8.98,
+     "phy": 8.98,
+     "per_domain_mv": {
+      "phy_lk_WS1": 8.79,
+      "phy_lk_WS0": 8.98,
+      "phy_lk_HOST0": 8.92,
+      "phy_lk_HOST1": 8.97
+     }
+    }
+   },
+   "core_load_w": 2.3125,
+   "phy_load_w": 17.7597,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.2337,
+   "uncovered_core_area_mm2": 1.5796,
+   "bumps": {
+    "core": 710,
+    "domain": 6992,
+    "by_net": {
+     "VDD": 355,
+     "VSS": 355,
+     "VDDPHY": 3496,
+     "VSSPHY": 3496
+    }
+   },
+   "tiles": {
+    "core": 8221,
+    "phy": 7504
+   },
+   "io_in_window": [
+    "io_lk_WS1_u_phy",
+    "io_lk_WS0_u_phy",
+    "io_lk_HOST0_u_phy",
+    "io_lk_HOST1_u_phy",
+    "io_lk_ES0_u_phy"
+   ]
+  },
+  "head_A_split": {
+   "plan": "plan_head_59a2f733_split.json",
+   "mode": "domains",
+   "window_um": [
+    0.0,
+    0.0,
+    11836.8,
+    2851.2
+   ],
+   "phy_box": null,
+   "nets": null,
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 31.63,
+     "core": 31.63,
+     "core_near_domain": 31.63,
+     "core_far": 29.12
+    },
+    "VDDPHY": {
+     "all": 14.54,
+     "phy": 14.54,
+     "per_domain_mv": {
+      "phy_lk_WS1": 14.54,
+      "phy_lk_WS0": 12.91,
+      "phy_lk_HOST0": 11.74,
+      "phy_lk_HOST1": 12.83
+     }
+    },
+    "VSS": {
+     "all": 33.91,
+     "core": 33.91,
+     "core_near_domain": 33.91,
+     "core_far": 29.39
+    },
+    "VSSPHY": {
+     "all": 12.91,
+     "phy": 12.91,
+     "per_domain_mv": {
+      "phy_lk_WS1": 12.91,
+      "phy_lk_WS0": 11.22,
+      "phy_lk_HOST0": 10.91,
+      "phy_lk_HOST1": 11.29
+     }
+    }
+   },
+   "core_load_w": 2.9222,
+   "phy_load_w": 17.6722,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.8146,
+   "uncovered_core_area_mm2": 1.9932,
+   "bumps": {
+    "core": 868,
+    "domain": 4725,
+    "by_net": {
+     "VDD": 434,
+     "VSS": 434,
+     "VDDPHY": 2275,
+     "VSSPHY": 2450
+    }
+   },
+   "tiles": {
+    "core": 10332,
+    "phy": 5180
+   },
+   "io_in_window": [
+    "io_lk_WS1_u_phy",
+    "io_lk_WS0_u_phy",
+    "io_lk_HOST0_u_phy",
+    "io_lk_HOST1_u_phy",
+    "io_lk_ES0_u_phy"
+   ]
+  },
+  "head_A_split2": {
+   "plan": "plan_head_59a2f733_split.json",
+   "mode": "domains",
+   "window_um": [
+    0.0,
+    0.0,
+    11836.8,
+    2851.2
+   ],
+   "phy_box": null,
+   "nets": [
+    "VDD",
+    "VSS"
+   ],
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 28.99,
+     "core": 28.99,
+     "core_near_domain": 26.13,
+     "core_far": 28.99
+    },
+    "VSS": {
+     "all": 29.92,
+     "core": 29.92,
+     "core_near_domain": 26.89,
+     "core_far": 29.18
+    }
+   },
+   "core_load_w": 2.9222,
+   "phy_load_w": 17.6722,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.8146,
+   "uncovered_core_area_mm2": 1.9932,
+   "bumps": {
+    "core": 947,
+    "core_relocated_to_domain_edges": 232,
+    "domain": 4725,
+    "by_net": {
+     "VDD": 474,
+     "VSS": 473,
+     "VDDPHY": 2275,
+     "VSSPHY": 2450
+    }
+   },
+   "tiles": {
+    "core": 10332,
+    "phy": 5180
+   },
+   "io_in_window": [
+    "io_lk_WS1_u_phy",
+    "io_lk_WS0_u_phy",
+    "io_lk_HOST0_u_phy",
+    "io_lk_HOST1_u_phy",
+    "io_lk_ES0_u_phy"
+   ]
+  },
+  "s81_A_base": {
+   "plan": "plan_s81_1e44e776.json",
+   "mode": "base",
+   "window_um": [
+    0.0,
+    0.0,
+    10368.0,
+    2851.2
+   ],
+   "phy_box": null,
+   "nets": null,
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 335.18,
+     "core": 335.18
+    },
+    "VSS": {
+     "all": 338.09,
+     "core": 338.09
+    }
+   },
+   "core_load_w": 4.2302,
+   "phy_load_w": 0,
+   "phy_w_per_window": null,
+   "phy_w_per_mm2": null,
+   "uncovered_core_area_mm2": 0.0,
+   "bumps": {
+    "core": 666,
+    "domain": 0,
+    "by_net": {
+     "VDD": 333,
+     "VSS": 333,
+     "VDDPHY": 0,
+     "VSSPHY": 0
+    }
+   },
+   "tiles": {
+    "core": 15232,
+    "phy": 0
+   },
+   "io_in_window": [
+    "io_lk_WS0_u_phy",
+    "io_lk_WS1_u_phy",
+    "io_lk_WS2_u_phy",
+    "io_lk_WS3_u_phy"
+   ]
+  },
+  "s81_A_dom": {
+   "plan": "plan_s81_1e44e776.json",
+   "mode": "domains",
+   "window_um": [
+    0.0,
+    0.0,
+    10368.0,
+    2851.2
+   ],
+   "phy_box": null,
+   "nets": null,
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "FAIL",
+    "VSSPHY": "FAIL"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "FAIL",
+    "VSSPHY": "FAIL"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 30.94,
+     "core": 30.94,
+     "core_near_domain": 30.94,
+     "core_far": 24.93
+    },
+    "VSS": {
+     "all": 40.88,
+     "core": 40.88,
+     "core_near_domain": 40.88,
+     "core_far": 31.24
+    }
+   },
+   "core_load_w": 1.9738,
+   "phy_load_w": 17.472,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.2337,
+   "uncovered_core_area_mm2": 1.6141,
+   "bumps": {
+    "core": 609,
+    "domain": 6901,
+    "by_net": {
+     "VDD": 305,
+     "VSS": 304,
+     "VDDPHY": 3420,
+     "VSSPHY": 3481
+    }
+   },
+   "tiles": {
+    "core": 6800,
+    "phy": 7392
+   },
+   "io_in_window": [
+    "io_lk_WS0_u_phy",
+    "io_lk_WS1_u_phy",
+    "io_lk_WS2_u_phy",
+    "io_lk_WS3_u_phy"
+   ]
+  },
+  "s81_A_dom_b0": {
+   "plan": "plan_s81_1e44e776.json",
+   "mode": "domains",
+   "window_um": [
+    0.0,
+    0.0,
+    10368.0,
+    2851.2
+   ],
+   "phy_box": 0,
+   "nets": [
+    "VDDPHY",
+    "VSSPHY"
+   ],
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "rails_worst_mv": {
+    "VDDPHY": {
+     "all": 9.7,
+     "phy": 9.7,
+     "per_domain_mv": {
+      "phy_lk_WS0": 8.23,
+      "phy_lk_WS1": 8.22,
+      "phy_lk_WS2": 9.7
+     }
+    },
+    "VSSPHY": {
+     "all": 8.98,
+     "phy": 8.98,
+     "per_domain_mv": {
+      "phy_lk_WS0": 8.92,
+      "phy_lk_WS1": 8.98,
+      "phy_lk_WS2": 8.37
+     }
+    }
+   },
+   "core_load_w": 1.9738,
+   "phy_load_w": 13.0077,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.2337,
+   "uncovered_core_area_mm2": 1.6141,
+   "bumps": {
+    "core": 609,
+    "domain": 6901,
+    "by_net": {
+     "VDD": 305,
+     "VSS": 304,
+     "VDDPHY": 2584,
+     "VSSPHY": 2584
+    }
+   },
+   "tiles": {
+    "core": 6800,
+    "phy": 5516
+   },
+   "io_in_window": [
+    "io_lk_WS0_u_phy",
+    "io_lk_WS1_u_phy",
+    "io_lk_WS2_u_phy",
+    "io_lk_WS3_u_phy"
+   ]
+  },
+  "s81_A_dom_b1": {
+   "plan": "plan_s81_1e44e776.json",
+   "mode": "domains",
+   "window_um": [
+    0.0,
+    0.0,
+    10368.0,
+    2851.2
+   ],
+   "phy_box": 1,
+   "nets": [
+    "VDDPHY",
+    "VSSPHY"
+   ],
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "rails_worst_mv": {
+    "VDDPHY": {
+     "all": 19.21,
+     "phy": 19.21,
+     "per_domain_mv": {
+      "phy_lk_WS0": 19.21,
+      "phy_lk_WS3": 14.37
+     }
+    },
+    "VSSPHY": {
+     "all": 13.94,
+     "phy": 13.94,
+     "per_domain_mv": {
+      "phy_lk_WS0": 13.94,
+      "phy_lk_WS3": 8.71
+     }
+    }
+   },
+   "core_load_w": 1.9738,
+   "phy_load_w": 4.4643,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.2337,
+   "uncovered_core_area_mm2": 1.6141,
+   "bumps": {
+    "core": 609,
+    "domain": 6901,
+    "by_net": {
+     "VDD": 305,
+     "VSS": 304,
+     "VDDPHY": 836,
+     "VSSPHY": 897
+    }
+   },
+   "tiles": {
+    "core": 6800,
+    "phy": 1876
+   },
+   "io_in_window": [
+    "io_lk_WS0_u_phy",
+    "io_lk_WS1_u_phy",
+    "io_lk_WS2_u_phy",
+    "io_lk_WS3_u_phy"
+   ]
+  },
+  "s81_A_split2": {
+   "plan": "plan_s81_1e44e776_split.json",
+   "mode": "domains",
+   "window_um": [
+    0.0,
+    0.0,
+    10368.0,
+    2851.2
+   ],
+   "phy_box": null,
+   "nets": [
+    "VDD",
+    "VSS"
+   ],
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 28.81,
+     "core": 28.81,
+     "core_near_domain": 27.41,
+     "core_far": 28.49
+    },
+    "VSS": {
+     "all": 30.13,
+     "core": 30.13,
+     "core_near_domain": 29.74,
+     "core_far": 29.0
+    }
+   },
+   "core_load_w": 2.6042,
+   "phy_load_w": 17.472,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.8146,
+   "uncovered_core_area_mm2": 1.8519,
+   "bumps": {
+    "core": 836,
+    "core_relocated_to_domain_edges": 28,
+    "domain": 4679,
+    "by_net": {
+     "VDD": 418,
+     "VSS": 418,
+     "VDDPHY": 2250,
+     "VSSPHY": 2429
+    }
+   },
+   "tiles": {
+    "core": 9208,
+    "phy": 5100
+   },
+   "io_in_window": [
+    "io_lk_WS0_u_phy",
+    "io_lk_WS1_u_phy",
+    "io_lk_WS2_u_phy",
+    "io_lk_WS3_u_phy"
+   ]
+  },
+  "s81_A_split_b0": {
+   "plan": "plan_s81_1e44e776_split.json",
+   "mode": "domains",
+   "window_um": [
+    0.0,
+    0.0,
+    10368.0,
+    2851.2
+   ],
+   "phy_box": 0,
+   "nets": [
+    "VDDPHY",
+    "VSSPHY"
+   ],
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "rails_worst_mv": {
+    "VDDPHY": {
+     "all": 14.54,
+     "phy": 14.54,
+     "per_domain_mv": {
+      "phy_lk_WS0": 11.74,
+      "phy_lk_WS1": 12.92,
+      "phy_lk_WS2": 14.54
+     }
+    },
+    "VSSPHY": {
+     "all": 12.91,
+     "phy": 12.91,
+     "per_domain_mv": {
+      "phy_lk_WS0": 10.91,
+      "phy_lk_WS1": 11.21,
+      "phy_lk_WS2": 12.91
+     }
+    }
+   },
+   "core_load_w": 2.6042,
+   "phy_load_w": 13.104,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.8146,
+   "uncovered_core_area_mm2": 1.8519,
+   "bumps": {
+    "core": 820,
+    "domain": 4679,
+    "by_net": {
+     "VDD": 410,
+     "VSS": 410,
+     "VDDPHY": 1690,
+     "VSSPHY": 1820
+    }
+   },
+   "tiles": {
+    "core": 9208,
+    "phy": 3840
+   },
+   "io_in_window": [
+    "io_lk_WS0_u_phy",
+    "io_lk_WS1_u_phy",
+    "io_lk_WS2_u_phy",
+    "io_lk_WS3_u_phy"
+   ]
+  },
+  "s81_A_split_b1": {
+   "plan": "plan_s81_1e44e776_split.json",
+   "mode": "domains",
+   "window_um": [
+    0.0,
+    0.0,
+    10368.0,
+    2851.2
+   ],
+   "phy_box": 1,
+   "nets": [
+    "VDDPHY",
+    "VSSPHY"
+   ],
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "rails_worst_mv": {
+    "VDDPHY": {
+     "all": 14.83,
+     "phy": 14.83,
+     "per_domain_mv": {
+      "phy_lk_WS3": 14.83
+     }
+    },
+    "VSSPHY": {
+     "all": 11.47,
+     "phy": 11.47,
+     "per_domain_mv": {
+      "phy_lk_WS3": 11.47
+     }
+    }
+   },
+   "core_load_w": 2.6042,
+   "phy_load_w": 4.368,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.8146,
+   "uncovered_core_area_mm2": 1.8519,
+   "bumps": {
+    "core": 820,
+    "domain": 4679,
+    "by_net": {
+     "VDD": 410,
+     "VSS": 410,
+     "VDDPHY": 560,
+     "VSSPHY": 609
+    }
+   },
+   "tiles": {
+    "core": 9208,
+    "phy": 1260
+   },
+   "io_in_window": [
+    "io_lk_WS0_u_phy",
+    "io_lk_WS1_u_phy",
+    "io_lk_WS2_u_phy",
+    "io_lk_WS3_u_phy"
+   ]
+  },
+  "s81_B_base": {
+   "plan": "plan_s81_1e44e776.json",
+   "mode": "base",
+   "window_um": [
+    20131.2,
+    21893.76,
+    31950.72,
+    24744.96
+   ],
+   "phy_box": null,
+   "nets": null,
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 830.64,
+     "core": 830.64
+    },
+    "VSS": {
+     "all": 834.44,
+     "core": 834.44
+    }
+   },
+   "core_load_w": 4.8284,
+   "phy_load_w": 0,
+   "phy_w_per_window": null,
+   "phy_w_per_mm2": null,
+   "uncovered_core_area_mm2": 0.0,
+   "bumps": {
+    "core": 866,
+    "domain": 0,
+    "by_net": {
+     "VDD": 433,
+     "VSS": 433,
+     "VDDPHY": 0,
+     "VSSPHY": 0
+    }
+   },
+   "tiles": {
+    "core": 17344,
+    "phy": 0
+   },
+   "io_in_window": [
+    "io_lk_EN0_u_phy",
+    "io_lk_EN1_u_phy",
+    "io_lk_EN2_u_phy",
+    "io_lk_EN3_u_phy"
+   ]
+  },
+  "s81_B_dom": {
+   "plan": "plan_s81_1e44e776.json",
+   "mode": "domains",
+   "window_um": [
+    20131.2,
+    21893.76,
+    31950.72,
+    24744.96
+   ],
+   "phy_box": null,
+   "nets": null,
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 30.21,
+     "core": 30.21,
+     "core_near_domain": 30.21,
+     "core_far": 25.52
+    },
+    "VDDPHY": {
+     "all": 9.82,
+     "phy": 9.82,
+     "per_domain_mv": {
+      "phy_lk_EN0": 7.11,
+      "phy_lk_EN1": 7.27,
+      "phy_lk_EN2": 7.21,
+      "phy_lk_EN3": 9.82
+     }
+    },
+    "VSS": {
+     "all": 34.95,
+     "core": 34.95,
+     "core_near_domain": 34.95,
+     "core_far": 26.21
+    },
+    "VSSPHY": {
+     "all": 8.77,
+     "phy": 8.77,
+     "per_domain_mv": {
+      "phy_lk_EN0": 7.24,
+      "phy_lk_EN1": 7.35,
+      "phy_lk_EN2": 8.77,
+      "phy_lk_EN3": 6.89
+     }
+    }
+   },
+   "core_load_w": 2.5816,
+   "phy_load_w": 17.472,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.2337,
+   "uncovered_core_area_mm2": 1.6416,
+   "bumps": {
+    "core": 789,
+    "domain": 7059,
+    "by_net": {
+     "VDD": 394,
+     "VSS": 395,
+     "VDDPHY": 3439,
+     "VSSPHY": 3620
+    }
+   },
+   "tiles": {
+    "core": 9199,
+    "phy": 7392
+   },
+   "io_in_window": [
+    "io_lk_EN0_u_phy",
+    "io_lk_EN1_u_phy",
+    "io_lk_EN2_u_phy",
+    "io_lk_EN3_u_phy"
+   ]
+  },
+  "s81_B_split": {
+   "plan": "plan_s81_1e44e776_split.json",
+   "mode": "domains",
+   "window_um": [
+    20131.2,
+    21893.76,
+    31950.72,
+    24744.96
+   ],
+   "phy_box": null,
+   "nets": null,
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 27.51,
+     "core": 27.51,
+     "core_near_domain": 27.3,
+     "core_far": 25.4
+    },
+    "VDDPHY": {
+     "all": 14.92,
+     "phy": 14.92,
+     "per_domain_mv": {
+      "phy_lk_EN0": 10.42,
+      "phy_lk_EN1": 11.19,
+      "phy_lk_EN2": 12.1,
+      "phy_lk_EN3": 14.92
+     }
+    },
+    "VSS": {
+     "all": 29.6,
+     "core": 29.6,
+     "core_near_domain": 28.86,
+     "core_far": 29.42
+    },
+    "VSSPHY": {
+     "all": 13.28,
+     "phy": 13.28,
+     "per_domain_mv": {
+      "phy_lk_EN0": 10.92,
+      "phy_lk_EN1": 11.08,
+      "phy_lk_EN2": 13.28,
+      "phy_lk_EN3": 11.47
+     }
+    }
+   },
+   "core_load_w": 3.2073,
+   "phy_load_w": 17.472,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.8146,
+   "uncovered_core_area_mm2": 1.9135,
+   "bumps": {
+    "core": 1020,
+    "domain": 4844,
+    "by_net": {
+     "VDD": 510,
+     "VSS": 510,
+     "VDDPHY": 2422,
+     "VSSPHY": 2422
+    }
+   },
+   "tiles": {
+    "core": 11340,
+    "phy": 5120
+   },
+   "io_in_window": [
+    "io_lk_EN0_u_phy",
+    "io_lk_EN1_u_phy",
+    "io_lk_EN2_u_phy",
+    "io_lk_EN3_u_phy"
+   ]
+  },
+  "s81_B_split2": {
+   "plan": "plan_s81_1e44e776_split.json",
+   "mode": "domains",
+   "window_um": [
+    20131.2,
+    21893.76,
+    31950.72,
+    24744.96
+   ],
+   "phy_box": null,
+   "nets": [
+    "VDD",
+    "VSS"
+   ],
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "rails_worst_mv": {
+    "VDD": {
+     "all": 27.51,
+     "core": 27.51,
+     "core_near_domain": 27.3,
+     "core_far": 25.4
+    },
+    "VSS": {
+     "all": 29.6,
+     "core": 29.6,
+     "core_near_domain": 28.86,
+     "core_far": 29.42
+    }
+   },
+   "core_load_w": 3.2073,
+   "phy_load_w": 17.472,
+   "phy_w_per_window": 4.368,
+   "phy_w_per_mm2": 1.8146,
+   "uncovered_core_area_mm2": 1.9135,
+   "bumps": {
+    "core": 1026,
+    "core_relocated_to_domain_edges": 28,
+    "domain": 4844,
+    "by_net": {
+     "VDD": 513,
+     "VSS": 513,
+     "VDDPHY": 2422,
+     "VSSPHY": 2422
+    }
+   },
+   "tiles": {
+    "core": 11340,
+    "phy": 5120
+   },
+   "io_in_window": [
+    "io_lk_EN0_u_phy",
+    "io_lk_EN1_u_phy",
+    "io_lk_EN2_u_phy",
+    "io_lk_EN3_u_phy"
+   ]
+  }
+ }
+}
