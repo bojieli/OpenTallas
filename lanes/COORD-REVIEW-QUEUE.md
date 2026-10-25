@@ -513,3 +513,6 @@ READY [KITS-SPARE/S81C 08:34 PDT] claude/kits-spare-1025@9a3446e686 (base main 0
 - s81-portfix flt/kit -> PATH-S81 decides;
 - qc/a0v8place (46 GB) -> PATH-QC decides;
 - geom-review/tiles (28 GB) -> delete renders older than 24 h (keep PNGs cited in GEOM-REVIEW.md in the last 24 h).
+[COORD 08:37 PDT] URGENT batch -> main 00b759e372 (from 0372e55a45; 0 deletions; gate_rule_guard PASS; test_reset_taps + flow_canary 32/32 PASS on epyc1):
+[COORD 08:37 PDT] APPROVED+MERGED claude/reset-taps-scope-1025@66346540c (global rt_named_nets; fixes cece3ea38 CTS crash on every gen_phys kit). Hub ff'd; canaries RE-TRIGGERED 08:37 on 00b759e37 (5 client services running).
+[COORD 08:37 PDT] APPROVED+MERGED claude/flow-canary-hbmgen-1025@1f564083c (HBM canary gen -E -s).
