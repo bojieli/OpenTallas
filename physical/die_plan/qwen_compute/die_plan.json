@@ -43299,7 +43299,7 @@
      "in_face": "W",
      "out_face": "S",
      "width": 597,
-     "stations": 4,
+     "stations": 5,
      "out_window_um": [
       184.336,
       287.648
@@ -43323,6 +43323,10 @@
       ],
       [
        73.44,
+       898.56
+      ],
+      [
+       73.44,
        548.64
       ]
      ]
@@ -43332,7 +43336,7 @@
      "in_face": "W",
      "out_face": "S",
      "width": 1,
-     "stations": 4,
+     "stations": 5,
      "out_window_um": [
       288.608,
       288.992
@@ -43349,6 +43353,10 @@
       [
        21.6,
        1818.72
+      ],
+      [
+       47.52,
+       1499.04
       ],
       [
        73.44,
@@ -46086,7 +46094,7 @@
      "in_face": "N",
      "out_face": "W",
      "width": 597,
-     "stations": 4,
+     "stations": 5,
      "out_window_um": [
       449.632,
       574.56
@@ -46101,16 +46109,20 @@
        2608.28
       ],
       [
-       73.44,
-       2181.6
+       21.6,
+       2371.68
       ],
       [
-       73.44,
-       1594.08
+       12.96,
+       1931.04
       ],
       [
-       73.44,
-       1015.2
+       12.96,
+       1473.12
+      ],
+      [
+       12.96,
+       1006.56
       ]
      ]
     },
@@ -46119,7 +46131,7 @@
      "in_face": "N",
      "out_face": "W",
      "width": 1,
-     "stations": 4,
+     "stations": 5,
      "out_window_um": [
       448.272,
       448.672
@@ -46134,16 +46146,20 @@
        2608.28
       ],
       [
-       64.8,
-       2207.52
+       21.6,
+       2397.6
       ],
       [
-       64.8,
-       1585.44
+       21.6,
+       1913.76
       ],
       [
-       64.8,
-       980.64
+       12.96,
+       1429.92
+      ],
+      [
+       12.96,
+       937.44
       ]
      ]
     },
@@ -128650,22 +128666,22 @@
     "param": "LAT_IO_SERDES_1__TX_UP_SERDES_UP"
    },
    "io_serdes_2__rx_flit_serdes_rx": {
-    "cycles": 10,
-    "stations": 8,
+    "cycles": 12,
+    "stations": 10,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 10,
+    "natural": 12,
     "pad": 0,
     "param": "LAT_IO_SERDES_2__RX_FLIT_SERDES_RX"
    },
    "io_serdes_2__rx_v_serdes_rx_valid": {
-    "cycles": 10,
-    "stations": 8,
+    "cycles": 12,
+    "stations": 10,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 10,
+    "natural": 12,
     "pad": 0,
     "param": "LAT_IO_SERDES_2__RX_V_SERDES_RX_VALID"
    },

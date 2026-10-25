@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "qwen_compute",
- "plan_digest": "d09f1e39316717bb",
+ "plan_digest": "f37098f7c928f214",
  "period_ps": 833,
  "lanes": {
   "c_E0_bf_00__a22": {
@@ -15908,12 +15908,12 @@
    "width": 1
   },
   "io_serdes_2__rx_flit_serdes_rx": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_IO_SERDES_2__RX_FLIT_SERDES_RX",
    "src": {
@@ -15927,12 +15927,12 @@
    "width": 597
   },
   "io_serdes_2__rx_v_serdes_rx_valid": {
-   "cycles": 10,
-   "stations": 8,
+   "cycles": 12,
+   "stations": 10,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 10,
+   "natural": 12,
    "pad": 0,
    "param": "LAT_IO_SERDES_2__RX_V_SERDES_RX_VALID",
    "src": {

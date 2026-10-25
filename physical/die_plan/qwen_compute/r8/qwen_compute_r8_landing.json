@@ -11,15 +11,15 @@
 "stage_cycles": 0.5,
 "over_margin": "keep"
 },
-"bus_groups_digest": "f23550b066045561",
+"bus_groups_digest": "a3de366145fb6178",
 "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules",
 "summary": {
 "members": 7898,
 "classes": 1263,
 "replica_links": 597,
 "padded_members": 2583,
-"padded_bits": 127923,
-"pad_flops": 424864,
+"padded_bits": 127327,
+"pad_flops": 424267,
 "max_pad": 8,
 "max_depth_before": 18,
 "max_depth_after": 18,
@@ -148130,9 +148130,9 @@
 ],
 "source": "io_serdes_2.rx_flit",
 "asbuilt": 9,
-"bound": 10,
-"pad": 1,
-"landed": 11,
+"bound": 12,
+"pad": 0,
+"landed": 12,
 "lane": "io_serdes_2__rx_flit_serdes_rx"
 },
 {
@@ -148149,9 +148149,9 @@
 ],
 "source": "io_serdes_2.rx_v",
 "asbuilt": 10,
-"bound": 10,
-"pad": 2,
-"landed": 12,
+"bound": 12,
+"pad": 1,
+"landed": 13,
 "lane": "io_serdes_2__rx_v_serdes_rx_valid"
 },
 {
@@ -148169,8 +148169,8 @@
 "source": "io_serdes_2.tx_up",
 "asbuilt": 10,
 "bound": 12,
-"pad": 0,
-"landed": 12,
+"pad": 1,
+"landed": 13,
 "lane": "io_serdes_2__tx_up_serdes_up"
 },
 {

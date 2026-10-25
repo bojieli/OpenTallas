@@ -4188,8 +4188,8 @@
    "io_serdes_1__rx_flit_serdes_rx": 2,
    "io_serdes_1__rx_v_serdes_rx_valid": 2,
    "io_serdes_1__tx_up_serdes_up": 2,
-   "io_serdes_2__rx_flit_serdes_rx": 10,
-   "io_serdes_2__rx_v_serdes_rx_valid": 10,
+   "io_serdes_2__rx_flit_serdes_rx": 12,
+   "io_serdes_2__rx_v_serdes_rx_valid": 12,
    "io_serdes_2__tx_up_serdes_up": 12,
    "glue__ctx_x_ctx_x": 4,
    "glue__dh_user_dh_user": 4,
@@ -8502,7 +8502,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "physical/die_plan/qwen_compute/die_plan.png"
+  "png": "/srv/opentallas-scratch/claude/wt/qc-1024r/physical/die_plan/qwen_compute/die_plan.png"
  },
  "findings": [
   {

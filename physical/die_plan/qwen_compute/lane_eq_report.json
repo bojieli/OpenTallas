@@ -51,6 +51,54 @@
     "sl_W4_fw__x_fw_ctl_p1",
     "sl_W5_fw__x_fw_ctl_p1"
    ]
+  },
+  {
+   "slot": "cbf_q01_s2.rx_flit_serdes_rx",
+   "stations_from": 4,
+   "stations_to": 5,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_flit_serdes_rx"
+   ]
+  },
+  {
+   "slot": "cbf_q00_s2.rx_flit_serdes_rx",
+   "stations_from": 4,
+   "stations_to": 5,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_flit_serdes_rx"
+   ]
+  },
+  {
+   "slot": "cbf_q01_s2.rx_v_serdes_rx_valid",
+   "stations_from": 4,
+   "stations_to": 5,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_v_serdes_rx_valid"
+   ]
+  },
+  {
+   "slot": "cbf_q00_s2.rx_v_serdes_rx_valid",
+   "stations_from": 4,
+   "stations_to": 5,
+   "family": [
+    "phy_bundle",
+    "io_serdes_2->coll_s"
+   ],
+   "lanes": [
+    "io_serdes_2__rx_v_serdes_rx_valid"
+   ]
   }
  ],
  "unfixed": [],

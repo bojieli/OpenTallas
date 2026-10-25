@@ -21,19 +21,24 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[2] / "tools" / "die_plan"))
 import schema  # noqa: E402
 
-SKIP_DST_PREFIX = ("cb",)      # CB16 legs: aligned by the CB16 landing pads (owner decision 1, 10-24)
+SKIP_DST_PREFIX = ("cb",)
+PHY_PREFIX = "phy_"           # PHY partitions (serdes / UCIe): their per-link lanes form one landing bundle      # CB16 legs: aligned by the CB16 landing pads (owner decision 1, 10-24)
 
 
 def _families(P):
+    """(1) lanes into one hardened type + bus; (2) PHY bundles: the lanes between one PHY partition and one partition
+    (rx data / rx valid / up status land in the PHY face leaf on ONE cycle: bind coll_regen requires one depth per leg)."""
     fam = collections.defaultdict(list)
     for lid, ln in P.lanes.items():
-        b = P.ports[ln["ports"][-1]]
+        a, b = P.ports[ln["ports"][0]], P.ports[ln["ports"][-1]]
         if b["dst"]["part"] == schema.DIE_PART:
             continue
         tn = P.parts[b["dst"]["part"]]["type"]
-        if tn.startswith(SKIP_DST_PREFIX):
-            continue
-        fam[(tn, b["dst"]["bus"])].append(lid)
+        if not tn.startswith(SKIP_DST_PREFIX):
+            fam[(tn, b["dst"]["bus"])].append(lid)
+        sp = a["src"]["part"]
+        if sp != schema.DIE_PART and (P.parts[sp]["type"].startswith(PHY_PREFIX) or tn.startswith(PHY_PREFIX)):
+            fam[("phy_bundle", f"{sp}->{b['dst']['part']}")].append(lid)
     return fam
 
 
@@ -52,7 +57,7 @@ def equalise(raw, log=print):
         for key, lids in _families(P).items():
             m = max(nat[l] for l in lids)
             for l in lids:
-                if nat[l] < m:
+                if nat[l] < m and m - nat[l] > deficit.get(l, (0, None))[0]:
                     deficit[l] = (m - nat[l], key)
         if not deficit:
             break
