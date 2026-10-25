@@ -112,6 +112,37 @@ def tiles_of(rtl: Path, module: str):
     return out
 
 
+def qc_reset_contract(top: Path, keep):
+    """Carve external reset prefixes by their published age; real kept reset links remain live."""
+    resets = {i['name']: dict(i['conns']).get('arst_n', 'rst_n') for i in keep}
+    meta = top.parent.parent / 'bind_reset.json'
+    if not meta.exists():
+        if any(n != 'rst_n' for n in resets.values()):
+            raise SystemExit('carve: nonlocal reset without bind_reset.json (refuse idle-zero reset)')
+        return dict(release='legacy', calendar_start_delay=0, boundary_prefixes={})
+    w = json.loads(meta.read_text())
+    if w.get('release') != 'wavefront' or w.get('unreachable') or w.get('long_hops'):
+        raise SystemExit('carve: invalid wavefront reset metadata')
+    parts = w['parts']; kept = set(resets); prefixes = {}
+    latest = max([int(w['max_release'])] + [int(v) for q in parts.values()
+                 for v in q.get('core_release', {}).values()])
+    for name, net in resets.items():
+        if name not in parts:
+            raise SystemExit(f'carve: missing reset release for {name}')
+        q = parts[name]
+        if net == 'rst_n' or q.get('parent') in kept:
+            continue
+        age = int(q['release']) - int(q['entry_stages']) - int(q['depth_K'])
+        if age < 0 or (net in prefixes and prefixes[net] != age):
+            raise SystemExit(f'carve: inconsistent reset boundary age {net} -> {name}: {age}')
+        prefixes[net] = age
+    return dict(release='wavefront', metadata_sha256=sha256(meta), root=w['root'],
+                latest_partition_release=int(w['max_release']), latest_published_core_pin_release=latest,
+                calendar_start_delay=latest+1, boundary_prefixes=prefixes,
+                scope='Published reset pin ages at omitted-carrier boundaries; kept partition reset RTL is real. '
+                      'Calendar begins after pin release; whole-die start remains the existing forwarded epoch.')
+
+
 def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
     seed = re.compile(r'^(sl_W5_\w+|c_W5_tn_\d\d' + (r'|c_W5_tf_\d\d' if clusters == 'both' else '') + r')$')
     out.mkdir(parents=True, exist_ok=True)
@@ -122,6 +153,7 @@ def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
     missing = required - {i["name"] for i in keep}
     if missing:
         raise SystemExit(f"carve: missing required current-plan partitions {sorted(missing)}")
+    reset_contract = qc_reset_contract(top, keep)
     drv, rd = {}, {}
     for i in keep:
         pd = ports_of(rtl, i['module'])
@@ -142,13 +174,25 @@ def qc_carve(top: Path, rtl: Path, out: Path, clusters: str):
          '    input wire [1087:0] swi, output wire [515:0] cw_n0, output wire [515:0] cw_n1, output wire [515:0] cw_n2,',
          '    output wire [515:0] cw_n3, output wire [513:0] rs, output wire [513:0] rs_o, output wire [513:0] rsc,',
          '    output wire [513:0] rsoc);']
+    L.append(f'    localparam integer CALENDAR_START_DELAY = {reset_contract["calendar_start_delay"]};')
     L += [f'    wire {c} = ck;' for c in clocks]
     L.append("    reg ep = 1'b0;  // epoch bit of the bench-driven lane ends (the driver boundary flop loads ea = rst_n)")
     L.append('    always @(posedge ck) ep <= rst_n;')
     L += [wires[n]['decl'] for n in used]
-    rep = dict(seeds=[i['name'] for i in keep], clusters=clusters, clocks=clocks, event_lanes={}, zero_lanes=[])
+    rep = dict(seeds=[i['name'] for i in keep], clusters=clusters, clocks=clocks, event_lanes={}, zero_lanes=[], reset=reset_contract)
     for n in ext:
         w, lane = wires[n]['width'], wires[n]['lane']
+        if n in reset_contract['boundary_prefixes']:
+            age = reset_contract['boundary_prefixes'][n]
+            if age:
+                L += [f"    reg [{age-1}:0] prefix_{n} = {age}'d0;",
+                      f"    always @(posedge ck) prefix_{n} <= {{prefix_{n}, rst_n}};",
+                      f"    assign {n} = prefix_{n}[{age-1}];  // omitted reset carrier prefix, {age} edges"]
+            else:
+                L.append(f'    assign {n} = rst_n;  // root reset boundary')
+            continue
+        if n.startswith('rstw_'):
+            raise SystemExit(f'carve: reset net {n} missing a published boundary age')
         if lane in EVENT:
             sig, dw = EVENT[lane]
             if w != dw + 1:
@@ -219,7 +263,7 @@ module tb_xt1b (input wire ck);
         .cw_n2(cw_n2), .cw_n3(cw_n3), .rs(rs), .rs_o(rs_o), .rsc(rsc), .rsoc(rsoc));
 `define OT_ROM_BIND_TOP tb_xt1b.u_d
 `include "rom_bind_xt1b.vh"
-    integer fd, lg, cyc, ncyc, ec, ep, r, pre = 0, nrst;
+    integer fd, lg, cyc, ncyc, ec, ep, r, pre = 0, nrst, boot_wait = 0;
     reg [1087:0] ev;
     reg have, hdf, stf, rsf, rof;
     reg [1023:0] evf, lgf;
@@ -246,7 +290,9 @@ module tb_xt1b (input wire ck);
     end
     always @(negedge ck) begin
         if (pre < nrst) begin pre = pre + 1; if (pre == nrst) rst_n = 1'b1; end
+        else if (boot_wait < u_d.CALENDAR_START_DELAY) boot_wait = boot_wait + 1;
         else begin
+            if (cyc == 0) $fdisplay(lg, "%0d BOOT_START %0d", cyc, boot_wait);
             if (hr0[452]) $fdisplay(lg, "%0d HRGO", cyc);
             if (hr0[1])   $fdisplay(lg, "%0d HRXPF", cyc);
             if (|cwgo)    $fdisplay(lg, "%0d CWGO %h", cyc, cwgo);
