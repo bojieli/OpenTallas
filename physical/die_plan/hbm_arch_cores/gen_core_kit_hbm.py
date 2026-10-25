@@ -707,7 +707,7 @@ def main():
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "signoff.py", "pair_skew.tcl",
-              "lec.py", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl"):
+              "lec.py", "selrange_gate.py", "vclk_corner.tcl", "postcts_gate.tcl", "straps.py"):
         shutil.copyfile(TOOL / f, kd / f)
     (kd / "core_grt_pre.tcl").write_text("source /work/vclk_corner.tcl\nsource /work/hold_cap.tcl\n")
     (kd / "core_grt_post.tcl").write_text("if {[info exists ::env(OT_VCLK_CORNER)] && $::env(OT_VCLK_CORNER) eq \"ff\"} { ot_vclk_bind tt }\n")

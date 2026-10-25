@@ -1,0 +1,36 @@
+{
+  "scope": "selected common and terminal TKM option-B static ID conversion only",
+  "kits": {
+    "common": "7a2f916258f75f1c",
+    "terminal": "e1065c3944d31770"
+  },
+  "source": "epyc1:/srv/opentallas-scratch2/claude/codex-hbm-physical-1309",
+  "proof": {
+    "id5": {
+      "proven": 161710,
+      "unproven": 0
+    },
+    "id17": {
+      "proven": 161710,
+      "unproven": 0
+    },
+    "terminal31": {
+      "proven": 159960,
+      "unproven": 0
+    },
+    "wrong_id17": {
+      "proven": 161709,
+      "unproven": 1,
+      "expected_reject": true,
+      "point": "u_dut.u_bin_tile_tid.q_gold[0] vs raw_id_gate[0]"
+    }
+  },
+  "method": "Actual engine and actual old/new wrappers, sequential equivalence after one legacy ID warmup edge; mutant changes actual canonical tile_tid binding. No numerical mutant claim; IDs do not affect numerical outputs.",
+  "cycles": {
+    "data_delta": 0,
+    "input_face": 1,
+    "output_face": 1
+  },
+  "physical": "Six identical physical pin coordinates renamed strap_tile_tid, six ID faceFF removed; all data/control FF retained. No new P&R/STA or SIGNED claim. Parent plan/module/straps binding and new post-synth guard still required.",
+  "failures": "First formal attempts failed hierarchy-check on unrelated SRAM modules; scoped compare_root fixes it. Earlier candidate metadata stale; authoritative V3 metadata corrected, RTL identical to proven V1."
+}
