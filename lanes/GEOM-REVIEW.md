@@ -638,3 +638,4 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
     So (B) is the F1 IO basis (bind I per corner from the tool/RCX number at the port) plus the unbalanced small taps. It is not a placement defect, and no port/hold buffers.
   The station placement itself is fine (rows on the lattice, hops <=380 um). No re-place is needed; re-CTS on the fixed tool only.
   Owner lane: PROTO-KITS with CLOCK-RESET. Same recommendation as GEOM-REVIEW-4: stop CTS on the remaining adopt178 queue rows until the tool fix lands, then re-kit the wave once. Post one post-CTS render (t42 m0 is a good test: 5 rows, 16 taps, 36 split stations) before re-routing the wave.
+2026-10-25 06:25 PDT GEOM-REVIEW-4: addendum WN fc016ab64d81: viewed its paths.png + path files: setup = u_ctl.cal_r[16] (~130,10) -> ap[21] at the SW corner (~20,5), routed along the S face; worst hold = input aq[254] -> aq_q[254] (input side of the IO basis, F1). Confirms the shared verdict.
