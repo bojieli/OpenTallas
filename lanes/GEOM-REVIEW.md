@@ -591,3 +591,4 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
     The hold result 'met +15' through 14.9k IO-basis buffers does not count.
   xfin GPL 255.67%: noted for the S81-PLAN2 delta (no geometry to review).
   Owner lane: S81-CORES3/LB (successor kits get their own REQ). xrt3 outline -> S81-PLAN2.
+2026-10-25 06:21 PDT GEOM-REVIEW-3: CLAIM [AUTOPILOT structural.tsv 773d6e878a4a + 8139467e6087 kv3_astk_EN/ES] + [AUTOPILOT structural.tsv 06:02 slice_station t18/t42/t50 (5ca16baf1b8d 9e16b3b20e25 e268c66e2f3c)]
