@@ -340,3 +340,16 @@ READY [PATH-S81 2026-10-25 15:16 PDT] claude/path-s81-x2-1025rb@27000aab69 (on m
   (MAN) main manifest gap: physical/die_plan/s81/bind/asbuilt_b178_coll.json has no internal_primitive_constants -> 7.35M tied (primitive-internal constants counted). FIX LINE: add '"internal_primitive_constants": true, "glue_source_names": true' (as Codex man_both.json) to asbuilt_b178_coll.json in the S81 batched delta; expect 660,011. OWNER: PATH-S81/TOK-DS bind manifest; COORD approves.
 PARKED (PATH-S81/TIES) 2026-10-25 15:45 PDT: census done (660,079 -> 660,011 after straps); branch claude/path-s81-ties-1025 READY (6d9b141def straps, 07d7ef2007 pvso sid regex, 4cdc5e3500 bind.py TIED_TOTAL + bind_tied.json PROPOSAL, do not merge without COORD). Remaining ties need owner work: F1 frame dead x lanes 501,868 (frame/plan generators+PROTO), S1 svc faces 126,029 (S81 svc), V1 hcpost 81,920 (S81-CORES), F2 stripped NB param 54,432 (frame_vg_kit+S81-CORES, RISK lane 1 lost), F3 frame resets 7,752 + R1 1 (CLOCK-RESET), X1 xrt lo 5,840, V2 SRAM repair 5,120 (KITS-SPARE), S2 3,176, V3 1,152, E1 4, M1 4; K1 kv_conflict EMIT; MAN manifest flags. Note: I force-pushed my own new branch once after rebase (rule breach, own branch only).
 2026-10-25 16:13 PDT PATH-S81: KV rq0_bb (flat whole leaf u_s_3N leaf0 KV1 CNIK1 CP1 HARD_RQ0, 64G) still in yosys OPT_DFF since 15:05 at 27.7 GB, single thread -> far beyond 400k as a flat leaf, and the flat number counts the leaf's own hard cores (vs/vq/vp/vn/ve/eg/cap) anyway. SPLIT PLAN (KV part of the leaf only): ot_s81sl_kv_leaf = u_bank (ot_s81sl_kv_bank CNIK1 HARD_RQ0) + u_pool (ot_s81sl_cmp_pool) + 1 ot_sram_1r1w2c_32x64 -> harden u_bank and u_pool as separate cores (HARD_RQ=1 reuses the CLOSED D512 reduce/quant masters inside u_bank if u_bank alone is > 400k). Sizing synths launched (same rtl/defines): epyc1 path-s81-kv/rq0_kvbank (unit oth-ubuntu-2972518) and rq0_kvpool (queued on memory), --mem 32. rq0_bb left running for the full-leaf reference.
+2026-10-25 16:15 PDT PATH-S81: TIE CLASS OWNERS + STATUS (COORD 16:2x approved census; order F2 -> X1 -> V1 -> F1 -> S1/S2; PATH-S81 drives):
+  | class | bits | owner | status |
+  | straps (svc_sx/gunit_l2 sid) | 68 | PATH-S81/TIES | DONE, ROOT-MERGE-9 merging claude/path-s81-ties-1025 (+TIED_TOTAL, + manifest internal_primitive_constants/glue_source_names via S81 delta) |
+  | F2 stripped hard-child params | 54,432 | PATH-S81/F2 (sub-lane, live) | IN PROGRESS; kit builders told to HOLD (S81-CORES/KITS-SPARE/PROTO-KITS) |
+  | X1 xrt lo padding | 5,840 | PATH-S81/XRT3 (sub-lane, live) | told to fix widths before the xrt3 kit |
+  | V1 hcpost BF16->FP32 ports | 81,920 | PATH-S81 next (S81-CORES core) | QUEUED after F2 |
+  | F1 frame dead x lanes | 501,868 | PATH-S81 next (frame/plan generator + PROTO) | QUEUED |
+  | S1/S2 svc faces / job+pvso | 126,029 + 3,176 | PATH-S81 next (S81 svc) | QUEUED |
+  | V2 SRAM repair pins | 5,120 | KITS-SPARE | handed off (no-repair view) |
+  | V3 delay/lane padding | 1,152 | PATH-S81 (with S1/S2) | QUEUED |
+  | M1 lep ml_f | 4 | PATH-S81 (with S1/S2) | QUEUED |
+  | F3/R1/E1 reset+const | 7,752+1+4 | CLOCK (fresh lane) | REQ posted lanes/CLOCK.md |
+  | K1 kv_conflict $aldff EMIT | - | PATH-S81 (S81 slice RTL) | QUEUED |
