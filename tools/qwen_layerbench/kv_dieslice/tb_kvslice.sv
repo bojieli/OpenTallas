@@ -93,12 +93,41 @@ module tb_kvslice;
         if (hc_rx_v) rx_words <= rx_words + 1;
     end
     // credit-based host sender (IBUF 4 of the host CDC write face)
+    // TOK-QK/E 10-25: boot replay window.  The die's program loader (qkd_host_program_loader_target) replays an
+    // authorised image on fixed consecutive ck_program_loader (= core) edges: REPLAY_P pw + REPLAY_W 1 + REPLAY_D dw +
+    // READY 1, and a BEGIN that lands before READY is a protocol fault (sticky boot_image_fault; the unit bench
+    // rtl/test/qwen_static_kv/tb_host_program_target.sv waits n+d+20 for the same reason).  The host -> die path is
+    // credit flow controlled end to end (latency not cycle-fixed: the die adapter's 512-word link receive buffer drains at
+    // the die's rate), so a gap counted from the AUTH send is shortened by the queue in front of it (measured: a 288-host-
+    // cycle gap arrived as 251 core cycles, BEGIN at REPLAY_P index ~250).  The host program service therefore, after each
+    // class-8 AUTH frame: (1) waits until its own link has drained -- the host CDC holds no word (all IBUF credits back),
+    // the board adapter's die-face buffer is empty and it holds every link credit (tx_cred = RXD: the die adapter's receive
+    // buffer is empty; host-side state only); (2) stays idle for the replay window of the image it just authorised (pw/dw
+    // from that image's BEGIN), core -> host cycles, plus +BOOT_SLACK core cycles (default 32: the die skid / HOST CDC /
+    // program_rx words behind the receive buffer, the READY edge, the ready lane to hub_C).
+    // +BOOT_GAP=0 = the old back-to-back stream (negative control: the second BEGIN lands during REPLAY_P -> boot fault).
+    `define KVS_HOST_ADP u_host.u_adapter.g_slice[0].u_slice.u_body
+    localparam integer HOST_RXD = 512;     // qfd_link_adp128: ot_qfd_link_adapter RXD
+    integer boot_gap_en = 1, boot_slack = 32, hold = 0, n_gaps = 0; reg drain_wait = 0; reg [10:0] img_pw = 0; reg [3:0] img_dw = 0;
+    initial begin void'($value$plusargs("BOOT_GAP=%d", boot_gap_en)); void'($value$plusargs("BOOT_SLACK=%d", boot_slack)); end
+    wire host_link_drained = (`KVS_HOST_ADP.ib_n == 0) && (int'(`KVS_HOST_ADP.tx_cred) == HOST_RXD) && !`KVS_HOST_ADP.ci_v;
     always @(posedge ck_host) if (host_up) begin
         automatic integer c = credits + (hc_tx_cr ? 1 : 0);
         hc_tx_v <= 1'b0;
-        if (sent < nfr && c > 0) begin
+        if (drain_wait) begin
+            if (credits == 4 && !hc_tx_v && host_link_drained) begin
+                drain_wait <= 1'b0;
+                // core cycles (T 0.833334 ns) -> host cycles (T 1.0 ns), rounded up: ceil(n * 5 / 6)
+                hold <= ((int'(img_pw) + int'(img_dw) + 2 + boot_slack) * 5 + 5) / 6;
+            end
+        end else if (hold > 0) hold <= hold - 1;
+        else if (sent < nfr && c > 0) begin
             hc_tx_v <= 1'b1; hc_tx_d <= frames[sent] ^ ((sent == mut_frame) ? (528'd1 << 19) : 528'd0);
             sent <= sent + 1; c = c - 1;
+            if (frames[sent][527:524] == 4'd8 && frames[sent][7:0] == 8'd1) begin img_pw <= frames[sent][34:24]; img_dw <= frames[sent][38:35]; end
+            if (boot_gap_en != 0 && frames[sent][527:524] == 4'd8 && frames[sent][7:0] == 8'd4 && sent + 1 < nfr) begin
+                drain_wait <= 1'b1; n_gaps <= n_gaps + 1;
+            end
         end
         credits <= c;
     end
@@ -235,7 +264,7 @@ module tb_kvslice;
             while ($fscanf(fd, "%d %h\n", t, d) == 2) begin exp_t[n_exp] = 4'(t); exp_d[n_exp] = d; n_exp = n_exp + 1; end
             $fclose(fd);
         end
-        $display("KVSLICE_CFG phase %s frames %0d expect %0d mut_frame %0d top %m", phase, nfr, n_exp, mut_frame);
+        $display("KVSLICE_CFG phase %s frames %0d expect %0d mut_frame %0d boot_gap %0d boot_slack %0d top %m", phase, nfr, n_exp, mut_frame, boot_gap_en, boot_slack);
         repeat (20) @(posedge ck_ref); por_n = 1;
         repeat (4) @(posedge ck_ref); rst_n = 1;
         // board link up only once the die's link end can receive: its HOST is out of reset (host_rst_n at the hub) and
