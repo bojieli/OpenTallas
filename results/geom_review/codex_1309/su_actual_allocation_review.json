@@ -1,0 +1,15 @@
+{
+  "source": "f1bb23c679",
+  "verdict": "PASS-COND ONE isolatedOpenDBapply+postDPL placement-only; NO GRT/STA/DRT",
+  "moved": 1466,
+  "true_new_buffers": 10410,
+  "initial_tap_buffers": 10,
+  "preserved_west": 107,
+  "max_dx_um": 0.027,
+  "conditions": [
+    "Actualmasterbbox/roworient/overlaps/xbound/hops afterDPL",
+    "Originalfailedlayoutpreserved",
+    "No production/defaultadapteractivation"
+  ],
+  "timestamp": "2026-10-25 14:03 PDT"
+}

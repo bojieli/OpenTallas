@@ -1,0 +1,28 @@
+{
+  "source": "cd93218aee",
+  "plan_sha256": "630b6b6ce684c3e0719f0b507f3f8c48430e70ba8f3121819fa11f8b2212d226",
+  "verdict": "PASS targeted actualgeometry/capacity ONLY",
+  "t55": {
+    "actual_station_cells": 16815,
+    "slots": 10,
+    "max_um": 339.39
+  },
+  "station41": {
+    "actual_station_cells": 34949,
+    "slots": 19,
+    "max_um": 401.49
+  },
+  "both": {
+    "drift_um": 0,
+    "core_hits": 0,
+    "overflow": 0,
+    "capacity_valid": true,
+    "actual_sites": true
+  },
+  "conditions": [
+    "No clock/timing/hardening/broad route token",
+    "Sink-based clocktap175radius/currentCTS TTFF gates before hardening",
+    "t58pending"
+  ],
+  "timestamp": "2026-10-25 14:03 PDT"
+}

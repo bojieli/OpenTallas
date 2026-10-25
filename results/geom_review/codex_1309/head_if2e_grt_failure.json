@@ -1,0 +1,28 @@
+{
+  "source": "72a679bb78",
+  "verdict": "FAIL NO DRT",
+  "TT_pin_mean": 285.48,
+  "FF_pin_mean": 213.43,
+  "TT_bound": 250,
+  "FF_bound": 170,
+  "macro0_TT": 233.1,
+  "cap0_TT": 297.93,
+  "addr0_TT": 308.43,
+  "macro0_FF": 161.19,
+  "cap0_FF": 224.66,
+  "addr0_FF": 233.68,
+  "TT_pair_max_min": [
+    84.39,
+    87.21
+  ],
+  "FF_pair_max_min": [
+    79.41,
+    82.62
+  ],
+  "FF_hold": -129.27,
+  "F6_interfaces": 538,
+  "F6_over20": 0,
+  "diagnosis": "PlacementRC optimistic; actual64..75ps macro0IFsplit persists; F4partialbenefit only",
+  "next": "Explicitlocalmacro/IFsubtree+shortchainunits+boundarymatch, no padding/flagvariant",
+  "timestamp": "2026-10-25 14:03 PDT"
+}

@@ -1,0 +1,20 @@
+{
+  "source": "c6adf8233b",
+  "plan_sha256": "cf70a42b5d1fa7950579eb471967ad2fde63452842f596b5fc785a88d14be7fc",
+  "odb_sha256": "a9f3e4d54bbad490b668288b179b6c21c66c8ebaabf1c77e9234acc0a7c3baf9",
+  "verdict": "PASS-COND ONE CTS-only",
+  "data_hops": 11261,
+  "data_max_um": 385.236,
+  "epoch_registers": 76,
+  "epoch_hops": 54,
+  "epoch_max_um": 382.266,
+  "over405": 0,
+  "ft_registers": 9041,
+  "other_DFF": 123,
+  "conditions": [
+    "Actualclockmembership all9164FF and per-usedtapTTFF insertion/load/pairs",
+    "No GRT/DRT/defaultcanaryPASS",
+    "Preserve data/domain/reset"
+  ],
+  "timestamp": "2026-10-25 14:03 PDT"
+}
