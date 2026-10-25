@@ -32,7 +32,7 @@ def script(kit, mount='/work'):
     defines = ['-DSYNTHESIS'] + [v if v.startswith('-D') else '-D'+v for v in cfg.get('VERILOG_DEFINES', [])]
     includes = ['-I'+v for v in cfg.get('VERILOG_INCLUDE_DIRS', []) + cfg.get('SYNTH_INCLUDE_DIRS', [])]
     return '\n'.join(libs + ['verilog_defines ' + ' '.join(dict.fromkeys(defines))] +
-                     ['read_verilog -sv -noautowire ' + ' '.join(includes + [s]) for s in sources] +
+                     ['read_verilog -sv -defer -noautowire ' + ' '.join(includes + [s]) for s in sources] +
                      [f'hierarchy -check -top {top[0]}', 'proc', 'check -assert']) + '\n'
 
 
