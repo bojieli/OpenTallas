@@ -136,6 +136,16 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
                     except ValueError:blocked_targets.add(int(ids[index]));break
                     points.append(p);stats.append(st)
                 else:
+                    # A legal target-centre route can still cut a corner after
+                    # row allocation spreads the cells. Backtrack that target,
+                    # not the immutable failed verdict or the route constraint.
+                    chain=[a,*points,b]
+                    if avoid_core_routes:
+                        bad=[j for j,(p,q) in enumerate(zip(chain,chain[1:]))
+                             if not l_route_clear(p,q,boxes).all()]
+                        if bad:
+                            blocked_targets.add(int(ids[path[min(bad[0],len(path)-1)]]))
+                            continue
                     done=True;break
             if not done:raise ValueError(f'{tn}/{name}: no row-legal allocation after100 target alternatives')
             chain=[a,*points,b];hops=[float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(chain,chain[1:])]
