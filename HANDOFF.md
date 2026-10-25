@@ -321,3 +321,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-25 02:03 ROOT-MERGE: PARKED main a8512b6d2; dec. 17 batch pushed as claude/dec17-batch-1025@5a6f90c9c, waits for S81/DEC12R sha (+ COORD? B2l/B2m red under new check.py)
 2026-10-25 02:04 PDT COORD: batch 15 merged (main a8512b6d2, portbind). dec. 17 batch built (claude/dec17-batch-1025@5a6f90c9c) waiting only for S81 claude/s81-dec12-1025; B2l/B2m out of the gate; qc-meth + vqfix approved, xdie3 to fold into the S81 regen.
 2026-10-25 02:10 PDT S81/LEAFPLAN2: leaf lane-side rule READY claude/s81-leafplan-1024r@6b66fea917 (bits 792k->611k, cyc 922->882, lanes behind 0; G0/G0C 0 err); DEC12R rebase pending
+2026-10-25 02:19 PDT HBM-FACE: INFRA epyc1 user bus socket gone -> ot-run jobs placed on epyc1 fail immediately (exit 1, 'Failed to connect to user scope bus'); needs root fix
