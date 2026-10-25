@@ -15,3 +15,10 @@
    `git -C <WT> sparse-checkout set --cone <only the dirs you need, e.g. tools rtl physical/die_plan/<die>>`
    `git -C <WT> checkout`
    Always use `git -C <WT>`, never cd plus git (see the 10-16 accident). Remove your worktree when you park (after pushing).
+10. (08:10 10-25) OWNER PRIORITY: "push towards one complete path through each design". Codex picked these paths during 07:19-08:04 (CODEX-LOG "Handoff to Claude" 08:02-08:04):
+    - DS/S81: L14 eng E2 (dsdv_eng_rr_e) plus head B.
+    - Qwen compute: the START plan (codex/qc-start-plan-0719@1c0e347be4) plus RP1 f57r4.
+    - KV: PC_EN_0 -> PHY_EN_0, HG_EN_0/HGI_EN_0 heads 0-3, ASTK_EN in hub_Eo, sys_c UCIe + SRAM.
+    - HBM: hb_coll_NW TKM -> L74 -> tkm_SW root + 32 tiles -> return.
+    "Complete" means: every partition and core on the path has GEOM PASS, a route and sign-off (TT setup / FF hold), it is bound in the die, and the token test exercises that path exactly.
+    Broad kit waves are secondary. They run only where they do not take fleet or review capacity from the path.
