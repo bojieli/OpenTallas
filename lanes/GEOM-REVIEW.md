@@ -457,3 +457,37 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
 2026-10-25 05:44 PDT GEOM-REVIEW-3: CLAIM [S81-CORES/SPLIT 05:23] + [S81-CORES/LEGACY b2 05:26]
 2026-10-25 05:45 PDT GEOM-REVIEW-2: POST-ROUTE kv-cores-1025r/reuse qkd_kvs_ctl (intel1, 10-19 route re-signed with the current tool: FF -30.86/4017, pair skew 114.5/102, slew 2). Re-dumped and viewed (rtx-pro:~/scratch/geomrev2/out/kvs_ctl/review.png). FAIL. cause: (1) all hold fails are o_hroot_{ES,EN,WN,WS}/o_attn pin reg -> port (6 um), with an FF pin-reg mean of 158 against vclk 250 (IO basis). (2) Face bands are not balanced: E face mid (y 200-250) is the earliest region (FF ~125 / TT ~220), W face bottom (y 40-100) the latest (FF ~230 / TT ~320), so pin-reg spread is 109/122 and u_fanr.h -> o_hroot_ES pair skew is 114. (3) 475x475 outline with the logic in one central blob and the S half about 70% empty; the fan tree reaches each face over 150-250 um. Required structural fix: re-kit (do not reuse the 10-19 view) with the outline re-derived top-down (about 60% of the area, faces next to the fan tree), F5 face-band taps balanced to <=20 ps on the per-corner contract (F1), and u_fanr.h leaf and o_hroot capture on the same tap (F4).
 2026-10-25 05:45 PDT GEOM-REVIEW-2: POST-ROUTE kv-cores-1025r/reuse ot_qwen_tp8_pv_join_t (r4 base, r5, r6): timing PASS (r6 TT +57.4 / FF +19.6), NOT SIGNED only on face_guard shared 513: every y[0..511] output register Q also drives one internal load. Not geometric; netlist fix: a dedicated y output register (duplicate the register, keep_hierarchy) so the port net has no other load, then re-sign. No GEOM rebuild needed for placement.
+2026-10-25 05:47 PDT GEOM-REVIEW-3: REPLY [S81-CORES/SPLIT 05:23] @47b96069b7 results/geom_review/s81_cores_split_1025/ (looked at all 5: vn_{a,b}_routed_clock.png, vn_a_t42/vn_b_t42/vsw_t22_postcts_clock.png; read the 6 ot_rt logs + routed_clock_arrival_cts_grt_rcx.txt). The routed causes are confirmed in the pictures: one TritonCTS tree from the W pin, leaves running diagonally over the SRAM, W 400-480 vs E 350-370, and owner item (c) present (GRT-RCX +12..+57, non-uniform). The F5 tap tree + F3 macro skew group is the right structural fix.
+  ot_s81sl_vn_a t42: PASS-COND -> route (proof; binding only after the conditions). Regs 336-376, taps 354-367, u_h0 vs its 652 IF regs +12, the W-face fan and the macro sit inside the tap structure.
+    Conditions:
+    (a) F1 per-corner I bind and F2 RCX-calibrated RC, the same shared-flow defaults PASSed in [FLOW 04:59] (05:00). Sign-off FAILs if routed I leaves the bound by more than +-40. GRT hold repair only on the calibrated RC, FF only.
+    (b) Route gate: after the bind, the pre-repair FF input-face hold (now -169/1381) must collapse. If GRT still adds >2k hold buffers (now 6606), stop and return with a render; no route on hold chains.
+    (c) The trunk at y~82 crosses u_h0 (x 74-168). It is OK only on layers above the SRAM OBS: the GRT probe must show that the clk trunk sits on M5+ over the macro, otherwise route it around the macro.
+    Structural note (second variant allowed, max 2): OT_RT_BAL pads the W taps by ~85 ps (h3_0..3 276/277/301/293 -> 364-367) to meet the E taps (359). The E taps carry 4.3-4.4k sinks each, the W taps 1.9-2.5k. Regions cut to equal sink count (or 16 taps on the dense E half only) would land every tap at ~280-300 without the 21 pad cells. That is ~60-80 ps less I, inside 250+-40, and removes most of the IO hold debt at the source instead of binding around it. Run t42 with load-balanced regions as variant 2.
+  ot_s81sl_vn_b t42: clock structure PASS (taps 353-369, u_h1 +14); kit FAIL-F6, agree with the author. Do not route; re-place first:
+    - u_h1 IF regs within 20 um of the macro pin face.
+    - pre_c next to u_g.
+    - Same load imbalance as vn_a (tap 6 = 5589 sinks vs W 2.1-2.8k, W padded +90). Split tap 6: the 372-ps red blocks at x175-215/y65-85 and x310-350/y70-85 lie on the y~86 trunk row in that heavy group.
+    Then re-CTS with load-balanced regions and post the render.
+  ot_s81sl_vsw t22: FAIL-F6, plus its own tap window is 21 > 20. Do not route. The N band (x105-165, y160-220, 380-399 ps) hangs on one long-leaf fan from ~(147,180). Fix:
+    - re-register v_q near its consumers (RTL);
+    - re-place the IF regs of both SRAMs within 20 um;
+    - give the N band its own tap.
+    Also check the macro group: u_lb lists 146 IF regs but OT_RT_MACRO matched only 80.
+  vn_a_t82 / vn_b_t82 / vsw_t44: not route. Min 277/299/321 means the macro tap is not matched (v1 hook), and the 16-tap variants pad to 373-402, so I gets worse. t42/t22 supersede them: delete their run data.
+2026-10-25 05:47 PDT GEOM-REVIEW-3: REPLY [S81-CORES/LEGACY b2 05:26] @8513a912ee results/geom_review/s81_cores_legacy_1025/ (looked at all 4: dsdv_gunit_l4_c + ot_s81sl_xrt1_c .place.png/.cts.png; read both geomreq.json).
+  Cross-cutting first: both kits show tool CTS insertion far above the probe. gunit 277 vs probe 167-179, xrt1 387 vs probe 227-243, a gap of 105-150 ps. The hold-buffer counts (15.5k = 1.28/flop; 31.6k = 1.33/flop) say the tool number is the real I against vclk 250 / input min -40. So the probe misses the root/trunk part. Fix the probe (measure from the clk port, as RCX) before any I is bound from it; the spread values (12/16) are still valid as INFO.
+  dsdv_gunit_l4_c: PASS-COND -> route.
+    What passes:
+    - Pin-reg bands sit along both long faces (pin->reg p90 12 um).
+    - The clock is one region with spread 12.
+    - There are no macros.
+    - The 345.6x64.8 long-thin outline is the plan slot (legacy SIGNED shape); accepted.
+    Conditions:
+    (a) Bind I per corner to the corrected measured pin-reg I (FLOW F1/F2, as in [FLOW 04:59]). If GRT still adds >3k hold buffers, stop and return; do not route a 1.3-per-flop hold-chain design.
+    (b) Density is 90 bins >0.8 (max 1.02) already at 3_place, in the S/N pin bands. The GRT probe must show overflow 0 in the 20-um bands behind the M5 faces.
+    (c) cw_d[157] at 57 um, plus 4 cw_d at 20-21 um: pin-reg region constraint in the kit (placement, not ECO). The rebuild should carry it; it does not block this route.
+  ot_s81sl_xrt1_c: FAIL-F5, agree with the author. Rebuild with regional taps, adding two items the author did not list.
+    (1) Clock entry: the clk pin sits on the E face (311,197), but the logic mass is the W block (x5-70, y125-290, next to the 1280-bit sw_d W face) plus the centre-E cluster (x160-220, y160-330). Take the spine from the E pin as proposed, with taps W block / centre / E band balanced <=20 ps, land 250+-40 (TT and FF bound per corner). Load-balance the taps; do not pad them.
+    (2) Fill: about 60% of the 311x395 outline is empty. The centre and the whole x70-300 / y30-130 quadrant have no cells. The outline is pin-perimeter-set at 6.0/um, while the W/E cap is 10.42 and the N/S cap 24.3, so the slot is ~2-3x the cell area. The empty centre lengthens every W<->E (sw_d/dl_e) and N<->S path and the clock spine (owner no-empty-area rule).
+    Not a blocker for this CTS rebuild (the kit follows the plan slot). File a S81 plan delta in COORD-REVIEW-QUEUE: shrink xrt1 with pins at <=9/um, or make it 2-layer per face. Post the render before route. Pin->reg 17 um max: PASS.
