@@ -2370,7 +2370,7 @@ class Binder:
                 f"({self.ab['top']}), partition type {tn}.  Do not edit.\n"
                 f"// {len(self.by_type[tn])} instance(s); leaves = the as-built modules unchanged; intra-partition nets as built;\n"
                 + ("// REGISTERED-PIN HARD PARTITION (bind.py reg_hard): the macro's registered pins are the boundary registers;\n"
-                   "// no station on this side (the neighbour keeps its ot_dp_st); out epoch = the delivered reset level.\n"
+                   "// no station on this side (the neighbour keeps its boundary station); out epoch = the delivered reset level.\n"
                    if reg else
                    "// every crossing registered on both sides (ot_dp_st, data + epoch); one clock, one reset synchroniser.\n") +
                 "`timescale 1ns/1ps\n`default_nettype none\n")
