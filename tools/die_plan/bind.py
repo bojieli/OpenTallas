@@ -1821,7 +1821,7 @@ class Binder:
             import reset_tree as RT
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
-            for name in ("ot_dp_rrelay", "ot_dp_rsync_s2", "ot_dp_rsync_s3"):
+            for name in ("ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3"):
                 m = re.search(r"module " + name + r"\b.*?\nendmodule", gen_rtl.CELLS, re.S)
                 cells += "\n(* keep_hierarchy *)\n" + m.group(0) + "\n"
             W = RT.wf_plan(P)
@@ -2852,7 +2852,7 @@ def cmd_kit_rtl(a):
         rep.get("extra_lib", []) + bindf_prefer(out, base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
-                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer)
     if cl_missing:
         raise BindError(f"kit-rtl {tn}: leaf modules without a source {sorted(cl_missing)[:10]}")
