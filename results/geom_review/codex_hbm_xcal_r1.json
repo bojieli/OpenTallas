@@ -1,0 +1,13 @@
+{
+ "verdict": "PASS-CONDITIONAL: place only",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_svc_sm_xcal_rel_t_67febd1e272e/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_svc_sm_xcal_rel_t_ee948cee789d/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_svc_sm_xcal_rel_t_4ade53b08bfd/plan.png"
+ ],
+ "findings": [
+  "Viewed all three: pins span N/W or E/W and stay below2.5/um. Pin shape remains unchanged.",
+  "Four SRAM macros occupy83% of core; 4.32um halos preclude tiling. Candidate2.16um halos preserve4.32um channels and exceed2.0um PDN macro halo.",
+  "Placed review required; no routing approved."
+ ]
+}

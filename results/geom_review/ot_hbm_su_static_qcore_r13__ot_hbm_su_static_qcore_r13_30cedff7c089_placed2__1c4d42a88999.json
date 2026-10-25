@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_su_static_qcore_r13",
+ "view": "ot_hbm_su_static_qcore_r13@30cedff7c089",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_su_static_qcore_r13_30cedff7c089, B2r2 pins 30cedff7c089, plan 24990bd5dd78)",
+ "stage": "placed2",
+ "verdict": "PASS-COND",
+ "hash": "1c4d42a8899974a0",
+ "reasons": "PASS-COND: 302x281 um, 2 SRAMs stacked SW with halo, logic one blob centre-E, empty NW/NE corners (27% fill), pins W+S, face flops p90 7.3 um; no hot bins. previous placement (same outline/pins/macros) [302.4, 280.8] um, 141772 cells, 22996 flops, 2 macros, fill 0.268 of free, bins>0.8 0 (max 0.5), pin->reg p90 7.3 um; CTS I mean 434 / max 528 ps. CONDITIONS: GRT 0 overflow, DRC 0, signoff TT setup / FF hold >= 0 at 60/25 with the pin-flop insertion within I +- 40; plan must deliver the early core tap (results/core_insertion_b2l.json).",
+ "fixes": "relaunch with the core clock contract (vclk / tap target = measured I, owner 5e) + hold_cap iteration cap 4000",
+ "pictures": [
+  "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_su_static_qcore_r13_30cedff7c089/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T19:53:53-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

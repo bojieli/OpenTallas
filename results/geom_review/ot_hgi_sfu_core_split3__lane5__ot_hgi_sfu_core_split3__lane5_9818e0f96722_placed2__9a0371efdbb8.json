@@ -1,0 +1,16 @@
+{
+ "element": "ot_hgi_sfu_core_split3__lane5",
+ "view": "ot_hgi_sfu_core_split3__lane5@9818e0f96722",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hgi_sfu_core_split3__lane5_9818e0f96722, B2r2 pins 9818e0f96722, plan 24990bd5dd78)",
+ "stage": "placed2",
+ "verdict": "PASS-COND",
+ "hash": "9a0371efdbb8c684",
+ "reasons": "PASS-COND: 389x346 um, 1468 pins all four faces, face flops in a thin ring (p90 7 um), datapath blocks dense but no bin > 0.8, ~25% fill; no macros. The long CTS tree (I ~445-510 ps over 49k flops) is the core latency the contract compensates (early tap I-250). previous placement (same outline/pins/macros) [388.8, 345.6] um, 248735 cells, 49515 flops, 0 macros, fill 0.256 of free, bins>0.8 0 (max 0.53), pin->reg p90 7.0 um; CTS I mean 504 / max 557 ps. CONDITIONS: GRT 0 overflow, DRC 0, signoff TT setup / FF hold >= 0 at 60/25 with the pin-flop insertion within I +- 40; plan must deliver the early core tap (results/core_insertion_b2l.json).",
+ "fixes": "relaunch with the core clock contract (vclk / tap target = measured I, owner 5e) + hold_cap iteration cap 4000",
+ "pictures": [
+  "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hgi_sfu_core_split3__lane5_9818e0f96722/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T19:53:53-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}
