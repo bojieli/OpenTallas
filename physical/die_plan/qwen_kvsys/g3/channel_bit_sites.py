@@ -116,8 +116,10 @@ def main():
             name=slot['name'];n=slot['width']+1;k=slot['stations']
             a=np.array([pins[(name+'_i',i)] for i in range(n)]);b=np.array([pins[(name+'_o',i)] for i in range(n)])
             centre=[tuple(v) for v in slot.get('regs_um',[])]+[tuple(b.mean(axis=0))]
+            if centre:centre[0]=tuple(a.mean(axis=0))
             if len(centre)<2:raise ValueError(f'{tn}/{name}: channel centroids required')
             targets=targets_on_path(centre,obs);radius=40.;budget=403.;used=set(allocator.used);denied=set()
+            print(f'ALLOCATE {tn}/{name} bits{n} targets{len(targets)}',flush=True)
             while True:
                 allocator.used=set(used);free=targets[[i not in denied for i in range(len(targets))]]
                 original=[i for i in range(len(targets)) if i not in denied]
@@ -131,10 +133,10 @@ def main():
                 else:break
             seq=[a,*points,b];worst=max(float(np.abs(v-u).sum(axis=1).max()) for u,v in zip(seq,seq[1:]))
             crossed=sum(not legal(u,v,obs) for aa,bb in zip(seq,seq[1:]) for u,v in zip(aa,bb))
-            if worst>budget+1e-6 or crossed:raise ValueError(f'{tn}/{name}: actual hop{worst:g},core-crossing bits{crossed}')
+            if worst>budget+1e-6 or crossed:raise ValueError(f'{tn}/{name}: actual hop{worst:g},keepout-crossing bits{crossed}')
             slot['stations']=len(points)+1;slot['regs_um']=[a.mean(axis=0).round(6).tolist()]+[free[i].round(6).tolist() for i in ids]
             slot['bit_site_cell_um']=[1.404,.27];slot['bit_sites_um']=[(p-np.array([.702,.135])).round(6).tolist() for p in points]
-            row=dict(type=tn,slot=name,stations=[k,slot['stations']],actual_max_hop_um=round(worst,6),core_crossing_bits=crossed)
+            row=dict(type=tn,slot=name,stations=[k,slot['stations']],actual_max_hop_um=round(worst,6),keepout_crossing_bits=crossed)
             ledger.append(row);print(json.dumps(row),flush=True)
     out=Path(args.out);out.mkdir(parents=True,exist_ok=True)
     (out/'die_plan.json').write_text(json.dumps(raw,indent=1)+'\n');(out/'sites_ledger.json').write_text(json.dumps(ledger,indent=1)+'\n')
