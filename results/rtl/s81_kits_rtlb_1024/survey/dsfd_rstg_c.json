@@ -1,0 +1,29 @@
+{
+ "kit": "/srv/opentallas-scratch/claude/elem-s81-cores/r4/dsfd_rstg_c",
+ "top": "dsfd_rstg",
+ "netlist": "/srv/opentallas-scratch/claude/elem-s81-cores/r4/dsfd_rstg_c/run/results/asap7/kl_dsfd_rstg_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 132,
+ "ok": 0,
+ "fail_counts": {
+  "merged": 132
+ },
+ "groups": [
+  {
+   "bus": "i",
+   "dir": "input",
+   "cls": "merged",
+   "sub": "['o']",
+   "n": 66,
+   "bits": "[0..65]"
+  },
+  {
+   "bus": "o",
+   "dir": "output",
+   "cls": "merged",
+   "sub": "['i']",
+   "n": 66,
+   "bits": "[0..65]"
+  }
+ ]
+}
