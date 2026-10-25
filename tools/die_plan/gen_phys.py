@@ -682,7 +682,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS FF structural hold gate (or NOT RUN)' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
-  HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk); \
+  HM=\$(sed -n 's/^export OT_HOLD_FF_MARGIN = //p' /work/config.mk | tail -1); \
   if [ \$rc = 0 ] && [ -n \"\$HM\" ] && [ $GOAL = route ]; then \$M grt CORNER=BC CORNERS=bc HOLD_SLACK_MARGIN=\$HM; rc=\$?; fi; \
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = route ]; then \$M do-finish; rc=\$?; fi; \

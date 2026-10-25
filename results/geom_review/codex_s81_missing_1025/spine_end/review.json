@@ -1,0 +1,9 @@
+{
+  "verdict": "PASS-COND placement only",
+  "image": "/srv/opentallas-scratch/claude/codex-s81-missing/spine_end_phys_review.png",
+  "findings": [
+    "Viewed end-spine actual relay map before P&R. Same short registered macrofree paths as normal spine; local spo.o -> spr.i loop stays at the north logic band and introduces no external long wire.",
+    "Production-width3000-cycle delay lockstep PASS; wrong BW depth mutant CAUGHT40 mismatches. Existing mini bench establishes bottom-loop wiring; no tie-off.",
+    "Clock grid spans relay field, cap1500 sinks/tap, standard continuous PDN. After placement inspect density/clock/stations before route."
+  ]
+}
