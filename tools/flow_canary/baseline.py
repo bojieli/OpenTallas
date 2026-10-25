@@ -256,6 +256,7 @@ def write(root, rec, force=False):
     p = store_path(root, rec["die"], rec["item"])
     p.parent.mkdir(parents=True, exist_ok=True)
     fd, tmp = tempfile.mkstemp(dir=str(p.parent), prefix=".tmp_")
+    os.fchmod(fd, 0o644)
     with os.fdopen(fd, "w") as f:
         f.write(json.dumps(rec, indent=1) + "\n")
     try:
