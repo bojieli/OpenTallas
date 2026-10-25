@@ -362,6 +362,7 @@ def main():
     if lerr:
         raise SystemExit(f"{tid}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
     shutil.copyfile(Path(a.tool) / "face_guard.py", kd / "face_guard.py")
+    shutil.copyfile(Path(a.tool) / "selrange_gate.py", kd / "selrange_gate.py")
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
     shutil.copyfile(Path(a.tool) / "signoff.py", kd / "signoff.py")
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
@@ -387,7 +388,7 @@ def main():
                     "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(tool / "face_flops_release.tcl", kd / "face_flops_release.tcl")
-    for f in ("pin_audit_core.py", "corners.tcl", "run_kit_kv.sh"):
+    for f in ("pin_audit_core.py", "corners.tcl", "run_kit_kv.sh", "core_preflight.py"):
         shutil.copyfile(HERE / f, kd / f)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
     m = CORE_MARGIN_UM
