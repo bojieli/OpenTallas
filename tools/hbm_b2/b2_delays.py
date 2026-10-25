@@ -77,10 +77,12 @@ def main():
     lat = plan['latency']['lanes']
     # ---- lanes: (src part, dst part, kind) -> [(id, cycles, width)]
     lanes = collections.defaultdict(list)
+    lane_kinds = {}
     for ln in plan['lanes']:
         ps = {p['id']: p for p in plan['ports']}
         p0, p1 = ps[ln['ports'][0]], ps[ln['ports'][-1]]
         lanes[(p0['src']['part'], p1['dst']['part'], p0['kind'])].append((ln['id'], lat[ln['id']]['cycles'], p0['width']))
+        lane_kinds[ln['id']] = p0['kind']
     # ---- instance -> candidate partitions
     parts = {}
     for n in die.insts:
@@ -121,6 +123,7 @@ def main():
     inst = {n: dict(master=i['master'], params=parse_params(i['params']), ports=sorted(i['conns'])) for n, i in die.insts.items()}
     edges, unmapped, nolane = [], set(), collections.Counter()
     traffic = collections.defaultdict(set)       # (A, B, kind) -> {(src inst, port, bit)}
+    traffic_spans = collections.defaultdict(set)  # coarse RTL instances spanning physical cuts
     conn_lane = {}                               # (src inst, src port, sink inst, sink port) -> cycles
     nrly = 0
     for ki, i in die.insts.items():
@@ -146,9 +149,17 @@ def main():
                             nolane[(parts[si][0], parts[ki][0], kd)] += w
                             cyc = 0
                         else:
-                            cyc, A, B, _ = L
+                            cyc, A, B, ids = L
                             if cyc:
-                                traffic[(A, B, kd)].update((si, sp, b) for b in range(s[2], s[3] + 1))
+                                # lane() may select the other kind when the census class has no lane.
+                                # Charge its actual capacity instead of inventing a zero-width bundle.
+                                selected_kinds = {lane_kinds[x] for x in ids}
+                                assert len(selected_kinds) == 1, (A, B, ids, selected_kinds)
+                                actual_kind = next(iter(selected_kinds))
+                                traffic[(A, B, actual_kind)].update((si, sp, b) for b in range(s[2], s[3] + 1))
+                                for endpoint in (si, ki):
+                                    if len(parts[endpoint]) > 1:
+                                        traffic_spans[(A, B, actual_kind)].add(endpoint)
                         conn_lane[(si, sp, ki, kp)] = cyc
                         src = [si, sp, s[2], s[3] + 1]
                         for _ in range(cyc):
@@ -224,18 +235,22 @@ def main():
     for (A, B, kd), bits in sorted(traffic.items()):
         ls = lanes.get((A, B, kd), [])
         have = sum(x[2] for x in ls)
+        spans = sorted(traffic_spans[(A, B, kd)])
         cap.append(dict(src=A, dst=B, kind=kd, need=len(bits), lanes=[x[0] for x in ls], width=have,
-                        status='OK' if len(bits) <= have else 'OVER'))
+                        status='OK' if len(bits) <= have else 'SPANS_PARTITIONS' if spans else 'OVER',
+                        coarse_instances=spans, source_ports=sorted({f'{i}.{p}' for i,p,_ in bits}),
+                        note='Concrete per-cut pin binding is required: the full RTL bus was assigned to one candidate cut' if spans else ''))
     out = dict(schema='opentallas.hbm_b2.delays.v1', plan_source=plan.get('source', a.plan), plan_sha=plan.get('plan_sha'),
                plan_note=plan.get('note', '')[:200],
                rule=__doc__.split('\n\n')[0], bank_latency=summ,
                params={k: v for k, v in sorted(params.items())}, derivations=der,
                score_chain=dict(edges=sc, formula='lane(score -> xq_N) + 2 (xq node) + lane(xq_N -> selector)'),
                lane_capacity=cap, capacity_over=[c for c in cap if c['status'] == 'OVER'],
+               capacity_unproven=[c for c in cap if c['status'] == 'SPANS_PARTITIONS'],
                unmapped_instances=sorted(unmapped), no_lane={f'{k[0]}->{k[1]} {k[2]}': v for k, v in nolane.items()})
     Path(a.out).write_text(json.dumps(out, indent=1))
     print(f'B2_DELAYS params={sum(len(v) for v in params.values())} bank_latency={summ} '
-          f'capacity_over={len(out["capacity_over"])} unmapped={len(unmapped)} no_lane={len(nolane)}')
+          f'capacity_over={len(out["capacity_over"])} capacity_unproven={len(out["capacity_unproven"])} unmapped={len(unmapped)} no_lane={len(nolane)}')
 
 
 if __name__ == '__main__':

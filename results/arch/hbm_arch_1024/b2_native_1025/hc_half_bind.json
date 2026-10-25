@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS",
+  "branch": "codex/hbm-native-1025",
+  "source_sha": "591bcf802",
+  "host": "epyc2",
+  "run": "/srv/opentallas-scratch2/claude/codex-hbm-native/hc_half",
+  "unit": "oth-ubuntu-3673721-1792921224",
+  "exit": 0,
+  "b2_top_cut_undriven": 0,
+  "port_bind": {
+    "width_mismatch": 0,
+    "base_width_mismatch": 4,
+    "unparsed_connections": 0,
+    "base_unparsed_connections": 8,
+    "new_fail_lines": 0,
+    "hc_fail_lines": 0
+  },
+  "limitation": "Logical binding only; W128 physical HC views and area are being regenerated. Existing W64 cores do not represent native halves."
+}
