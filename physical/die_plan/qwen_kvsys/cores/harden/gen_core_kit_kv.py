@@ -305,6 +305,7 @@ def main():
                          "ktree_lk PORT_REGS=1 (+31FF, +1 parent fault edge, COORD ruling 2); leaves from this repo")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
+    ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
@@ -377,6 +378,15 @@ def main():
         apply_kit(kd / "rtl")
         (kd / "astk_timing_delta.json").write_text(json.dumps(dict(added_cycles=0, zn_read_replicas=8, zn_added_ff_per_z=40,
             ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL"), indent=1) + "\n")
+    if a.ectlk_face_ports:
+        if mod != "qkd_ectlk":
+            raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
+        from ectlk_face_ports import apply_kit as ectlk_apply
+        ectlk_apply(kd / "rtl")
+        (kd / "ectlk_face_delta.json").write_text(json.dumps(dict(added_schedule_cycles=0,
+            private_port_flops="sc_valid 1 + sc_data 128 + lmax 256 + lmax_any 2 + fault 1 (ectl_part); req 38 + fault 1 (k_issuer)",
+            cfg_strap="one landing flop on ck[0] feeds 3 leaves (+1 settle edge after a strap change)",
+            miter="results/ectlk_preflight_1025"), indent=1) + "\n")
     if a.ectlk_three_taps:
         (kd / "ectlk_clock_delta.json").write_text(json.dumps(dict(
             source_ports=["ck[0]", "ck[1]", "ck[2]"], related_clock="one die clock, all edges co-timed",
