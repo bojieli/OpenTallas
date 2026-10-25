@@ -1195,3 +1195,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   (3) LEC NOT EQUIVALENT, 178 points (cerr/err[1]/exo_q FP-add family): the route may run in parallel, but this kit does NOT bind until TOK-LEC shows EQUIV, or shows it is a reference-side parse artefact proven with a miter. If it is a real netlist difference, the route is discarded.
   (4) GRT overflow 0 before DRT.
   Owner: PATH-S81 (H6) + TOK-LEC for (3).
+2026-10-25 08:43 PDT GEOM-REVIEW-2: ROW NOTE structural.tsv 8452b97cd17f slice_station__t21 (adopt178 kits_s81_178, proto-1025@0da5319bda) CRASH: SUPERSEDED like my 08:16 sweep; t21 also FAILED placement in R1 A (diagonal stations). PROTO-KITS/S81-KITS: adopt178 station kits are still reaching DRT and crashing (t12/t46/t21 at ~25 GB). Please dequeue the remaining adopt178 slice_station routes and delete their data, so the fleet goes to the R1 kits and the path items.
