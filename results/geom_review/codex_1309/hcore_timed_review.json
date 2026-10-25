@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-10-25 13:32 PDT",
+  "kit": "epyc1:/srv/opentallas-scratch2/claude/codex-hcore-1309/kit_timed",
+  "scope": "Inherited pin floorplan and proposed private synchronous reset entry/relay; fresh source hash pending owner materialization",
+  "image": "physical/die_plan/s81/cores/svc/renders/hcore_plan.png",
+  "verdict": "PASS-COND one fresh placement-only successor after source miter/mutant and LEC",
+  "findings": [
+    "157.68x259.2 outline; N580/3.68 per um W590/2.28 per um E42/.16 per um; no macro wall in pin plan",
+    "Proposed reset entry81.85,8 to relay81.85,129.6:121.6um; relay to core corners~203um Manhattan",
+    "No old kit_swr CTS verdict exists; no old qualified token transfers"
+  ],
+  "conditions": [
+    "Encode legal reset entry/relay sites and render actual placement/reset sinks before CTS",
+    "Private synchronous reset adds2 cycles; preserve pricing and fresh source proof",
+    "No CTS/GRT/DRT/signoff token"
+  ]
+}
