@@ -681,24 +681,14 @@ import copy  # noqa: E402
 _io = json.loads((HERE / "die_io.json").read_text()) if (HERE / "die_io.json").exists() else []
 if _io:
     plan["die"]["io"] = _io
-    _PHY_GRID = [dict(layer="M8", width_um=1.92, pitch_um=8.64, offset_um=4.32, nets=["VDDPHY", "VSS"]),
-                 dict(layer="M9", width_um=1.92, pitch_um=8.64, offset_um=4.32, nets=["VDDPHY", "VSS"])]
-    _doms = []
-    for w in _io:
-        if w.get("iface") != "serdes":
-            continue
-        x0, y0, x1, y1 = w["rect_um"]
-        g = 63.64
-        _doms.append(dict(name=f"phy_{w['part']}", nets=["VDDPHY", "VSS"], io=[w["name"]],
-                          rect_um=[round(max(0.0, x0 - g), 4), round(max(0.0, y0 - g), 4), round(min(W, x1 + g), 4),
-                                   round(min(H, y1 + g), 4)],
-                          grid=copy.deepcopy(_PHY_GRID),
-                          bumps=dict(rect_um=[x0, y0, x1, y1], pitch_um=45.0, use="power_ground",
-                                     note="dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal "
-                                          "bumps inside except the window's own 26 SerDes sites"),
-                          note="OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes "
-                               "window; core VDD grid unchanged around it"))
-    plan["die"]["pg"]["domains"] = _doms
+    # S81.IR ruling (coordinator 10-25 03:08): pg_domains --split on the head too (PHY macro 2.4 mm2 at the die edge,
+    # domain = macro + 63.64-um guard inside the serdes partition, no overlap; core strip + core C4 for the boundary
+    # flops; u_phy slot = the macro).  Was: domain = whole window + guard into the neighbours (S81.IR S1 / S2 FAIL).
+    sys.path.insert(0, str(ROOT / "physical" / "die_plan" / "s81"))
+    import pg_domains as _PG  # noqa: E402
+    import delta_ir_1025 as _IR  # noqa: E402
+    plan["die"]["pg"]["domains"] = _PG.domains(_io, W, H, _PG.part_rects(plan))
+    _IR.apply(plan)
 from early_core_taps import add as add_early_core_taps
 add_early_core_taps(types["hd_tile"], root=ROOT)
 # core-latency contract for the REBUILT views (10-24, S81-HEAD): the element was signed with clk source latency -early

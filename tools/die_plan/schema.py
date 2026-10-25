@@ -197,6 +197,13 @@ SCHEMA = {
                                                      "exclude_um": {"type": "array", "items": _rect, "minItems": 1}}},
                             # S81-XDIE 10-24: the domain's VDDPHY rail-clamp ESD + decap sites (no bumps over them)
                             "esd_um": {"type": "array", "items": _rect, "minItems": 1},
+                            # S81.IR split (coordinator 10-25): the PHY macro footprint (die frame) on the die-edge side,
+                            # the core strip(s) of the partition outside the domain, the core C4 rule at the domain's
+                            # core-facing edges and the macro area target (die_io.check_pg_domains)
+                            "phy_macro_um": _rect,
+                            "core_strip_um": {"type": "array", "items": _rect},
+                            "core_edge_bumps": {"enum": ["relocate", "drop"]},
+                            "phy_area_target_mm2": _pos,
                             "note": {"type": "string"}}}}}},
             }},
         "partition_types": {
