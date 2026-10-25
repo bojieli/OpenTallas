@@ -60,9 +60,12 @@ def compile_norm(die, entry, eps_bits, first_issue=20):
         raise ValueError('require exact 80-leaf entry residency')
     prog = D.Prog(die)
     commands = []
-    # The two real command engines may each issue one row per edge. Round-robin
-    # slice order leaves eight edges between commands to the same slice/leaf
-    # group. No result or completion signal affects these immutable dates.
+    # The two real command engines may each issue one row per edge. A slice's
+    # 5 NORMRs go on 5 CONSECUTIVE edges (leaf k at slice base + k): the xrt
+    # masters' per-leaf norm deskew (PDSK, TOK-DS NORM-DESKEW 10-25) aligns
+    # partials staggered by exactly k edges; any other leaf spacing (the former
+    # 8-edge round-robin) is a sticky collector fault.  No result or completion
+    # signal affects these immutable dates.
     for tier, engine in [('N', D.ENG['VN']), ('S', D.ENG['VS'])]:
         slices = sorted((s for s in die.slices() if s.endswith(tier)),
                         key=lambda s: die.slices()[s]['sid'])
@@ -75,7 +78,7 @@ def compile_norm(die, entry, eps_bits, first_issue=20):
                     raise ValueError('entry delayed-pre/global beat contract differs')
                 payload = D.ctl_payload(1 << sid, 0, 1 << leaf,
                     D.vp_cmd(D.VP['NORMR'], a0=r['normr_a0'], a1=r['global_beat'], n=1))
-                issue = first_issue + 8*leaf + col
+                issue = first_issue + 5*col + leaf
                 t = prog.template(f'entry.NORMR.{sl}.k{leaf}', payload)
                 prog.vrow(engine, issue, t, what=f'entry NORMR {sl} leaf{leaf} q-only')
                 commands.append(dict(kind='NORMR', slice=sl, sid=sid, leaf=leaf,

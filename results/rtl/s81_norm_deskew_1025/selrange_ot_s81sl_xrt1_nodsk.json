@@ -1,0 +1,48 @@
+{
+ "schema": "opentallas.selrange_gate.v1",
+ "verdict": "FAIL",
+ "top": "ot_s81sl_xrt1",
+ "frontend": "read_verilog",
+ "files": 2,
+ "unwaived": 4,
+ "waived": 0,
+ "hits": [
+  {
+   "file": "/kits/ot_s81sl_xrt1_nodsk/rtl/ot_s81sl_xrt.sv",
+   "line": 434,
+   "signal": "rsv_c",
+   "msg": "Range select out of bounds on signal `\\rsv_c': Setting result bit to undef.",
+   "count": 769,
+   "source": "rdat[k] = (k < 256 && rsv_c[k / 8]) ? vb2[16 + k] : rse_c[k / 8] ? eb2[51 + k] : rsw_c[k / 8] ? wb2[51 + k] : bb2[k];",
+   "waived": false
+  },
+  {
+   "file": "/kits/ot_s81sl_xrt1_nodsk/rtl/ot_s81sl_xrt.sv",
+   "line": 434,
+   "signal": "vb2",
+   "msg": "Range select out of bounds on signal `\\vb2': Setting result bit to undef.",
+   "count": 766,
+   "source": "rdat[k] = (k < 256 && rsv_c[k / 8]) ? vb2[16 + k] : rse_c[k / 8] ? eb2[51 + k] : rsw_c[k / 8] ? wb2[51 + k] : bb2[k];",
+   "waived": false
+  },
+  {
+   "file": "/kits/ot_s81sl_xrt1_nodsk/rtl/ot_s81sl_xrt.sv",
+   "line": 583,
+   "signal": "pair_word",
+   "msg": "Range select out of bounds on signal `\\pair_word': Setting result bit to undef.",
+   "count": 829,
+   "source": "ci_r[i] <= (i < V - 1 && pvs_c[i / 16]) ? pair_word[i + 1] : cis_c[i / 16] ? snd[i + 1] : sos_c[i / 16] ? so_b[i + 1] :",
+   "waived": false
+  },
+  {
+   "file": "/kits/ot_s81sl_xrt1_nodsk/rtl/ot_s81sl_xrt.sv",
+   "line": 583,
+   "signal": "pvs_c",
+   "msg": "Range select out of bounds on signal `\\pvs_c': Setting result bit to undef.",
+   "count": 816,
+   "source": "ci_r[i] <= (i < V - 1 && pvs_c[i / 16]) ? pair_word[i + 1] : cis_c[i / 16] ? snd[i + 1] : sos_c[i / 16] ? so_b[i + 1] :",
+   "waived": false
+  }
+ ],
+ "errors": []
+}
