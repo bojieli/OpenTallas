@@ -1,0 +1,17 @@
+{
+ "element": "qfd_dv_s5_su8_rst3_c",
+ "kit": "epyc1:/srv/opentallas-scratch2/claude/qc-cores/kits/qfd_dv_s5_su8_rst3_c (gen physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py, claude/qc-cores-1024)",
+ "verdict": "PASS",
+ "hash": "d3daf64b52f70005",
+ "reasons": "[2026-10-24T23:46:57-07:00] [QC-CORES author self-review, kit floorplan render] SAME CLOSED GEOMETRY re-kit: outline, pin table (closed view LEF physical/ref_tile/qfd_dv_s5_su8/views/qfd_dv_s5_su8_rst3/qfd_dv_s5_su8_rst3.lef) and macro sites (closed spec) are those of the CLOSED record; no new geometry. 172.8x129.6, no macros, 1547 pins: si 457 on W (y 33-110), pd1 768 on N (x 50-170), gb/gv 247 on E, su_* status + ck/rst_n on S x~45. Peak 10.5 pins/um on E/W vs cap 10.42 (at cap, as the closed view). Data flows W(in) -> N/E(out) consistent with the su_c slot. Checks: outline == plan hard_cores outline_um; all pins on kit tracks; sdc_lint PASS at generation. RTL = closed source blob-identical + decision-13 reset kit patch (async 2-flop sync -> synchronous 2-stage relay, same depth). [2026-10-24T23:54:47-07:00] kit d3daf64b52f70005: CTS dont_touch lift/restore on POST_SYNTH capture flops (ODB-0370 fix) and/or RTL face patch; geometry unchanged.",
+ "fixes": "Route + signoff.py tt,ff; hold under 25 ps margin -> FF-only post-route hold ECO (recipe b). Plan follow-up (QC): replace the provisional 'io' pins_file of this hard core with the closed LEF port table.",
+ "images": [
+  "results/geom_review/qc_cores_1024/img/qfd_dv_s5_su8_rst3_c.png"
+ ],
+ "stage": "floorplan (kit)",
+ "owner_lane": "QC",
+ "reviewer": "QC-CORES (author)",
+ "at": "2026-10-24T23:46:57-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route; same closed geometry -> route allowed",
+ "hash_method": "kit_hash (gen_core_kit_qc.py)"
+}
