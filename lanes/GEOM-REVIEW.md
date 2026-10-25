@@ -1293,3 +1293,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
    (b) Make the centre jogs Manhattan the same way: every diagonal sheet becomes an H run + V run with the stations on the knee lattice. The hub is empty, so this costs no area. Separate the two crossing station chains at the X, so that no station site is shared by two bundles within ~20 um.
    (c) Manhattan hop audit <=405 after (a)/(b), plus a re-render. The kit may be generated from this plan now; its 3_place render then goes to GEOM REQ, and (a)-(c) are checked there.
   Also seen in proto_geom_f7ch.json (not asked): kv3_hub_Wi FAILS (st_in_core 5425, over_reach 230 bits, max_hop 405.29). If hub_Wi is on the KV path, it needs the same channel-site treatment before its kit. Owner PATH-KV; told in lanes/PATH-KV.md.
+2026-10-25 09:39 PDT GEOM-REVIEW-2: CLAIM [PATH-KV-PC 09:1x] (unclaimed 30 min) + [KITS-SPARE/LB ve] (off-path, successor of my 04:38 PASS-COND)
