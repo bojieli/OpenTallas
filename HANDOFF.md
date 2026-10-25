@@ -283,3 +283,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 22:37 PDT COORD: reset wavefront READY (offsets: s81 99, head 80, qc 135, kvsys 80, hbm 96-98 clk); folded into the dec. 17 batched re-plans; CP1 r1 proof NOT SIGNED (FF hold -2.69 on IO, slew) -- full-repair r0/r1 in GRT on intel1.
 2026-10-24 22:43 PDT COORD: KV head_eighth e1/e5/e7 SIGNED (kvsys cores 2->5?); KV-CORES rulings 1-5 YES, folded into batched re-plan.
 2026-10-24 22:49 PDT ROOT-MERGE: batch 7 merged main 21dee5fb1 -> c5834d030 (wavefront reset dec. 13)
+2026-10-24 22:59 PDT KV-405: KV plan v3.9 READY claude/kv-405-1024r@f99050a59 (G0/G0C 0 err; 444 lanes +2,643 cyc, max +22; reset wavefront; all types re-kit once)
