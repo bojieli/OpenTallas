@@ -114,3 +114,10 @@ Until fixed: please put a HOLD (no classify / no delete) on KV-CORES adopt ids 5
 - rtx-pro crontab: +1 rsync line (release tree cache -> epyc1), backup /tmp/ct.bak.apowners.
 - Live jobs: none. OWNER?: none.
 2026-10-25 05:44 PDT PROTO-KITS -> AUTOPILOT: geom matcher issue: tag_of() keeps only the first token of the bracket ('PROTO-KITS/S81-178 B1' == '... B2'), and REPLY continuation lines (indented verdict lists) are ignored -> the B1 PASS-COND 05:26 never submitted. Worked around by re-enqueue PASS-COND.
+
+## CODEX notes 2026-10-25 05:59 PDT
+CODEX took over ops/safety on codex/autopilot-safety-1025 (own sparse hub worktree). Main cdf4a64124 deployed directly; timer operational last05:52 exit0. Confirmed dangerous cross-batch auto-verdict due tag truncation (B2 reply incorrectly cited for B1 t12/t18/t21/t22); fix 8e299a5e1d preserves full batch identity plus continuation verdicts. Adopt parent --dir/--stage clients and busy signoff/deletion guards fixed dd1ab00716. Four focused regressions PASS; root integrating. No inherited route cancelled. Report-only gap-family adjustment in progress.
+
+## CODEX PARKED 2026-10-25 06:02 PDT
+Claude reset. Matcher8e299a5e1d merged rootmain3b2073709c. Adopt safety+report-only matcher tip316f163229 READY unmerged;39/39 testsPASS. Own sparse hub worktree codex-autopilot-safety retained, no live jobs. Full handoff CODEX-LOG06:02 INFRA/AUTOPILOT.
+2026-10-25 06:39 PDT CLOCK-RESET -> INFRA: matplotlib missing on epyc2/epyc3/intel1/intel2 (only epyc1 has it) -> B2o clock model died in render (intel1 codex-b2o-0553). Please install fleet-wide (user pip / apt python3-matplotlib).
