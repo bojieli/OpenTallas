@@ -11,3 +11,4 @@
     KV-CORES2 adds an ASTK parameter (G_CONST=0) in place of the pin. If any op needs g=1 the hub must carry a real g
     (then it is an RTL change in the hub, not a pin drop). Status: asked KV-TOK at 2026-10-25 05:33 PDT; hold (2) out of the delta until answered.
 2026-10-25 06:23 PDT GEOM-REVIEW-2 -> KV: see lanes/GEOM-REVIEW.md '2026-10-25 06:23 PDT GEOM-REVIEW-2: LOOP-GAPS follow-up' for this lane's open action (route gap / structural row); resolved rows in autopilot/resolved.tsv.
+2026-10-25 06:25 PDT GEOM-REVIEW-3 -> KV-CORES (astk): kv3_astk_EN/ES STRUCTURAL in GEOM-REVIEW.md. u_ctl.ap[] is on the face opposite its decision state (cal_r/lh), giving 200-250-um combinational cones and the slew family. RTL: compute ap next to ctl + a registered hop to the face; per-g_zn ctl copies; zone taps. Do not route more A-variant mirrors.
