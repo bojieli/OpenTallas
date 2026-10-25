@@ -213,7 +213,8 @@ module ot_s81sl_xrt #(
     localparam integer NSP = 6;
     wire [NSP-1:0] sp;
     ot_rst_relay #(.REGIONS(NSP), .SYNC_STAGES(2), .TREE_STAGES(1)) u_sp (.clk(clk), .rst_n_in(rst_n), .rst_n(sp));
-    integer k, i;
+    integer k, i;   // comb processes only: every clocked process loops on its own local k / i (p_lv*, p_tg, p_rwe, p_bor;
+    //                  yosys read_verilog makes a shared integer a multi-driven register -> rtl_lint check -assert)
     // ---------------------------------------------------------------- face landing (S81-KITS-RTLB 10-24)
     // Owner rule (register every pin, in RTL; no implemented-netlist face registers): with FACE_LAND = 1 every bit of the
     // beat-leaf interface lo_v / lo_d / p_v / p_d and of the Engram interface e_v / e_c / e_d lands in exactly ONE pin
@@ -282,11 +283,13 @@ module ot_s81sl_xrt #(
         if (DD == 0) begin : g_d0
             assign p_v_s[dk] = p_v_i[dk]; assign p_d_s[32 * dk +: 32] = p_d_i[32 * dk +: 32];
         end else begin : g_dn
-            reg [DD-1:0] sv; reg [32*DD-1:0] sd; integer q;
+            // one loop variable per process (a shared module-scope integer is a multi-driven reg to yosys read_verilog)
+            reg [DD-1:0] sv; reg [32*DD-1:0] sd;
             always @(posedge clk or negedge rs_d)
                 if (!rs_d) sv <= {DD{1'b0}};
-                else begin sv[0] <= p_v_i[dk]; for (q = 1; q < DD; q = q + 1) sv[q] <= sv[q - 1]; end
-            always @(posedge clk) begin
+                else begin : p_sv integer q; sv[0] <= p_v_i[dk]; for (q = 1; q < DD; q = q + 1) sv[q] <= sv[q - 1]; end
+            always @(posedge clk) begin : p_sd
+                integer q;
                 sd[31:0] <= p_d_i[32 * dk +: 32];
                 for (q = 1; q < DD; q = q + 1) sd[32 * q +: 32] <= sd[32 * (q - 1) +: 32];
             end
@@ -313,11 +316,11 @@ module ot_s81sl_xrt #(
     // reset-free (data gate only).  evd_c / pvd_c: kept copies of the e_v / p_v input flops, one per 8 bits of the eqd /
     // pq capture enables (ev_c / pv drove 197 / 66 pins); the masters keep only the control decode.
     (* keep *) reg [5*16-1:0] lov_c; (* keep *) reg [5*12-1:0] evd_c; (* keep *) reg [5*4-1:0] pvd_c;
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv318 integer k; begin
         for (k = 0; k < 80; k = k + 1) lov_c[k] <= lo_v_i[k / 16];
         for (k = 0; k < 60; k = k + 1) evd_c[k] <= e_v_i[k / 12];
         for (k = 0; k < 20; k = k + 1) pvd_c[k] <= p_v_s[k / 4];
-    end
+    end end
     always @(posedge clk) begin
         eb <= {28'd0, dl_e, 1'b0}; wb <= {28'd0, dl_w, 1'b0}; vb <= {dl_vb, 1'b0};
         bb <= (HB != 0) ? {28'd0, bi[W-59:7], 30'd0, bi[6:0]} : {W{1'b0}}; lod <= lo_d_i; pd <= p_d_s; rbd <= qrel_d;
@@ -433,7 +436,8 @@ module ot_s81sl_xrt #(
     (* keep *) reg [31:0] rsv_c; (* keep *) reg [NLC-1:0] lcl_c;
     always @(posedge clk or negedge rs_c1)
         if (!rs_c1) begin cvld <= 1'b0; vct <= 1'b0; esc <= 1'b0; wsc <= 1'b0; rdv <= 1'b0; f1 <= 1'b0; tg <= 6'd0; end
-        else begin
+        else begin : p_tg
+            integer k;                                  // process-local loop variable (yosys: no shared-integer register)
             cvld <= ce || cw || cv; vct <= v_ctl; esc <= e_sc; wsc <= w_sc; rdv <= rdv0;
             for (k = 0; k < 6; k = k + 1) tg[k] <= (ce || cw || cv) && tgt0 == k;
             // input-only faults: two CTLs / two RDs / two lo beats in a cycle, an RD to leaf > 4, a CTL target > 5
@@ -442,14 +446,15 @@ module ot_s81sl_xrt #(
         end
     always @(posedge clk or negedge rs_c2)
         if (!rs_c2) begin rwe <= 5'd0; rwr <= 5'd0; lov1 <= 5'd0; end
-        else begin
+        else begin : p_rwe
+            integer k;                                  // process-local loop variable
             lov1 <= lov;
             for (k = 0; k < 5; k = k + 1) begin
                 rwe[k] <= rdv0 && rl0 == k;
                 rwr[k] <= (ce || cw || cv) && tgt0 == 5'd5 && lmask0[k];
             end
         end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv456 integer k; begin
         // RG-FFN: each copy group's D is (next state AND sp[j]); copies k of one decode in sub-groups of 30 take distinct
         // leaves, so every node feeds <= 30 copies (sp is 1 after reset release: same value as the master next state)
         for (k = 0; k < 640; k = k + 1) rwe_c[k] <= rdv0 && rl0 == k / 128 && sp[((k % 128) / 30 + k / 128) % NSP];
@@ -480,18 +485,18 @@ module ot_s81sl_xrt #(
         lmask <= lmask0; rnp <= v_rd ? 2'd0 : rdb0[50 +: 2]; rrow <= v_rd ? vb[16:7] : rdb0[40 +: 10];
 `endif
         lo_sel <= lo_sel0;
-    end
+    end end
     // XRT3R (STW-S81c-COLLA3 10-22, xrt3p/xrt3q NEEDS_RTL TT -40.1/-32.3: bsw_c/bse_c -> body mux -> 4 repeaters ->
     // x_eps / x_scale / x_mode at the S face; one body bit fed c_d (W), is_d / cfg_d (N), sw_* and x_* (S)): the S-face
     // consumers get their OWN stage-1 raw-word copies (ebx/wbx/vbx = eb2/wb2/vb2 bits 46+{0..32, 64..95}, KEPT, same D)
     // and their own one-hot select copies (bsex_c/bswx_c = bse_c/bsw_c, same D), so the 3:1 select sits beside the
     // x flops and the long hop is the zero-logic pin-flop -> copy wire.  bodyx == body on those bits every cycle.
     (* keep *) reg [32:0] ebx_l, wbx_l, vbx_l; (* keep *) reg [31:0] ebx_h, wbx_h, vbx_h; (* keep *) reg [8:0] bsex_c, bswx_c;
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv494 integer k; begin
         ebx_l <= eb[47 +: 33]; wbx_l <= wb[47 +: 33]; vbx_l <= vb[47 +: 33];
         ebx_h <= eb[111 +: 32]; wbx_h <= wb[111 +: 32]; vbx_h <= vb[111 +: 32];
         for (k = 0; k < 9; k = k + 1) begin bsex_c[k] <= ce && sp[2]; bswx_c[k] <= !ce && cw && sp[3]; end
-    end
+    end end
     reg [32:0] bx_l; reg [31:0] bx_h;
     always @(*) begin
         for (k = 0; k < 33; k = k + 1) bx_l[k] = bsex_c[k / 8] ? ebx_l[k] : bswx_c[k / 8] ? wbx_l[k] : vbx_l[k];
@@ -535,11 +540,11 @@ module ot_s81sl_xrt #(
     wire [V-1:0] pair_word = {3'd0, lo_sel, pair_row, s_leaf, K_RD, 1'b1};
     localparam integer NPV = (V - 1 + 15) / 16;
     (* keep *) reg [NPV-1:0] pvs_c;
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv542 integer k; begin
         for (k = 0; k < 128; k = k + 1) pkw_c[k] <= (|lov) && pn_nx == k / 32 && sp[((k % 32) / 30 + k / 32) % NSP];
         for (k = 0; k < NCI; k = k + 1) cis_c[k] <= pk_go_nx && !v_ctl && !pair_mode_nx && sp[(k / 30 + 3) % NSP];
         for (k = 0; k < NPV; k = k + 1) pvs_c[k] <= pair_v_nx && !v_ctl && sp[5];
-    end
+    end end
     // S81-SMWIRE x XR7: sos_c[g] = so_go && !vct && !sc_rel && !pk_go (the SO beat owns ci_r), registered from next state;
     // reset-free (so_n is reset, so so_go_nx is 0 one clock into reset).
     // C1 (HB = 0) has no B port, so no SO beat: no sos_c flops there (the C1 netlist keeps its closed XR7 structure).
@@ -549,9 +554,9 @@ module ot_s81sl_xrt #(
     generate if (HB != 0) begin : g_sos
         (* keep *) reg [NCI-1:0] sos_r;
         always @(posedge clk)
-            for (k = 0; k < NCI; k = k + 1)
+            begin : p_lv556 integer k; for (k = 0; k < NCI; k = k + 1)
                 sos_r[k] <= so_go_nx && !v_ctl && !sc_rel_nx && !(pk_go_nx && !pair_mode_nx) && !pair_v_nx &&
-                            sp[(k / 30 + 0) % NSP];
+                            sp[(k / 30 + 0) % NSP]; end
         assign sos_c = sos_r;
     end else begin : g_nosos
         assign sos_c = {NCI{1'b0}};
@@ -576,7 +581,7 @@ module ot_s81sl_xrt #(
         if (tg4_c[5]) s_np <= body[42:41];
     end
     always @(posedge clk)                                        // fixed-index pair writes (decoded pn, kept copies)
-        for (k = 0; k < 128; k = k + 1) if (pkw_c[k]) pk[8 * k +: 8] <= lo_sel[8 * (k % 32) +: 8];
+        begin : p_lv583 integer k; for (k = 0; k < 128; k = k + 1) if (pkw_c[k]) pk[8 * k +: 8] <= lo_sel[8 * (k % 32) +: 8]; end
     always @(*) begin
         snd = {W{1'b0}};
         snd[0] = 1'b1; snd[3:1] = s_kind; snd[8:4] = s_hops; snd[12:9] = sid_t; snd[20:13] = 8'd0;
@@ -608,7 +613,7 @@ module ot_s81sl_xrt #(
     generate if (HB != 0) begin : g_soc
         reg [511:0] so_w, so_lo_r, so_hi_r;
         (* keep *) reg [63:0] sol_c; (* keep *) reg [63:0] soh_c;
-        always @(posedge clk) begin
+        always @(posedge clk) begin : p_lv615 integer k, i; begin
             so_w <= bb[52 +: 512];
 `ifdef OT_S81SL_XR_MUT_SOEN
             for (k = 0; k < 64; k = k + 1) begin
@@ -623,7 +628,7 @@ module ot_s81sl_xrt #(
                 if (sol_c[i / 8]) so_lo_r[i] <= so_w[i];
                 if (soh_c[i / 8]) so_hi_r[i] <= so_w[i];
             end
-        end
+        end end
         assign so_lo = so_lo_r; assign so_hi = so_hi_r;
     end else begin : g_nosoc
         assign so_lo = 512'd0; assign so_hi = 512'd0;
@@ -648,7 +653,7 @@ module ot_s81sl_xrt #(
     // local copy: lcl_c = local_rd's next state (the ci word is a local RD loop-back on the next edge), per 30 bits of bb2
     wire s_local_nx = tg[4] ? body[44] : s_local;
     wire lcl_nx = !vct && !pair_v && pk_go && !pair_mode && s_local && s_kind == K_RD && s_local_nx;
-    always @(posedge clk) for (k = 0; k < NLC; k = k + 1) lcl_c[k] <= lcl_nx && sp[(k / 30 + 1) % NSP];
+    always @(posedge clk) begin : p_lv655 integer k; for (k = 0; k < NLC; k = k + 1) lcl_c[k] <= lcl_nx && sp[(k / 30 + 1) % NSP]; end
     assign ci_b = {ci_r, ci_v};      // ci_r[W-29 ..] are always 0 (no constant pins: OWNER DECISION 8)
     // S81-SMWIRE x XR7 (ROOT4 merge 10-19): the SO beat select is a KEPT registered copy per 16 bits, like cis_c; its D is
     // so_go's next state with the same priority as before the merge (send first; no SO beat beside a CTL re-injection /
@@ -667,8 +672,8 @@ module ot_s81sl_xrt #(
         // RG-FFN: the payload clear select (512 loads) is a kept registered copy per 30 bits (pk_go's next state; s_dir
         // cannot change on a pk_go edge)
         (* keep *) reg [(BW - 1 + 29) / 30 - 1:0] bog_c;
-        always @(posedge clk) for (k = 0; k < (BW - 1 + 29) / 30; k = k + 1) bog_c[k] <= pk_go_nx && s_dir[3] && sp[4];
-        always @(posedge clk) for (i = 1; i < BW; i = i + 1) bo_r[i] <= bog_c[(i - 1) / 30] ? pk[i - 1] : 1'b0;
+        always @(posedge clk) begin : p_lv674 integer k; for (k = 0; k < (BW - 1 + 29) / 30; k = k + 1) bog_c[k] <= pk_go_nx && s_dir[3] && sp[4]; end
+        always @(posedge clk) begin : p_bor integer i; for (i = 1; i < BW; i = i + 1) bo_r[i] <= bog_c[(i - 1) / 30] ? pk[i - 1] : 1'b0; end
         assign bo = bo_r;
     end else begin : g_nobo
         assign bo = {BW{1'b0}};                     // C1: no band port (the C1 wrapper does not expose it)
@@ -688,9 +693,9 @@ module ot_s81sl_xrt #(
             if (rwe[k]) un_nx[k] = 2'd0;
         end
     always @(posedge clk)                                        // RG-FFN: <= 30 copies per node (sp split)
-        for (k = 0; k < 160; k = k + 1) un_c[2 * k +: 2] <= un_nx[k / 32] & {2{sp[((k % 32) / 30 + 2 * (k / 32)) % NSP]}};
+        begin : p_lv695 integer k; for (k = 0; k < 160; k = k + 1) un_c[2 * k +: 2] <= un_nx[k / 32] & {2{sp[((k % 32) / 30 + 2 * (k / 32)) % NSP]}}; end
     always @(posedge clk or negedge rs_r)
-        if (!rs_r) begin ub <= 5'd0; sw_v <= 5'd0; ucol <= 1'b0; for (k = 0; k < 5; k = k + 1) un[k] <= 2'd0; end
+        begin : p_lv697 integer k; if (!rs_r) begin ub <= 5'd0; sw_v <= 5'd0; ucol <= 1'b0; for (k = 0; k < 5; k = k + 1) un[k] <= 2'd0; end
         else begin
             ucol <= 1'b0;
             for (k = 0; k < 5; k = k + 1) begin
@@ -711,10 +716,10 @@ module ot_s81sl_xrt #(
                     if (ub[k]) ucol <= 1'b1;
                 end
             end
-        end
+        end end
     wire [255:0] rwb = {128'd0, body[141:14]};
     always @(posedge clk)
-        for (k = 0; k < 5; k = k + 1) begin
+        begin : p_lv721 integer k, i; for (k = 0; k < 5; k = k + 1) begin
             if (rwe[k]) begin ul[k] <= rnp; ur[k] <= rrow; end
             for (i = 0; i < 128; i = i + 1) if (rwe_c[128 * k + i]) ud[k][8 * i +: 8] <= rdat[8 * i +: 8];
             for (i = 0; i < 32; i = i + 1)
@@ -730,7 +735,7 @@ module ot_s81sl_xrt #(
 `endif
                 sw_m[8 * k +: 8] <= 8'hff;
             end
-        end
+        end end
 
     // ---------------------------------------------------------------- command fan-out, xfin, streamer, capture
     // c_d / is_d / cfg_d are (* keep *) port registers: one flop per pin (synthesis otherwise folds the equal-D copies into
@@ -762,7 +767,7 @@ module ot_s81sl_xrt #(
             is_v <= tg[2];
             cfg_v <= tg[3];
         end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv769 integer k; begin
         c_d <= body;
         for (k = 0; k < 4; k = k + 1) begin
             x_eps_m[8 * k +: 8] <= tg1_c[k] ? bx_l[8 * k +: 8] : x_eps_m[8 * k +: 8];
@@ -776,7 +781,7 @@ module ot_s81sl_xrt #(
 `endif
         end
         is_d <= body; cfg_d <= body;
-    end
+    end end
     // partial collector: the 5 partials arrive on one edge; xfin takes them in leaf order 0..4 (input timing unchanged)
     reg [31:0] pq [0:4]; reg [2:0] pi; reg prun;
     // ENG collector: 5 triples of one copy -> 15 words (t = 5 kind + leaf)
@@ -844,7 +849,7 @@ module ot_s81sl_xrt #(
             else if (erun && et == 4'd14) erx <= 7'd0;
         end
     wire [7:0] xsi_e = ({6'd0, ekd} * 8'd4 + {6'd0, ecp}) * 8'd5 + {5'd0, el};   // <= 79 (ekd <= 3): bit 7 is 0
-    always @(posedge clk) begin
+    always @(posedge clk) begin : p_lv851 integer k; begin
         for (k = 0; k < 20; k = k + 1) if (pvd_c[k]) pq[k / 4][8 * (k % 4) +: 8] <= pd[8 * k +: 8];
         for (k = 0; k < 60; k = k + 1) if (evd_c[k]) eqd[k / 12][8 * (k % 12) +: 8] <= ed_c[8 * k +: 8];
         if (|ev_c) ecp <= ec_c[1:0];
@@ -855,7 +860,7 @@ module ot_s81sl_xrt #(
         x_s[31:24] <= erx[6] ? xs_e[31:24] : xs_p[31:24];
         rb_d <= rbd;
         g_c <= egc_c; g_d <= egd_c;
-    end
+    end end
     // ---------------------------------------------------------------- faults
     // B-wide (BIND mu4): a dir-B send config with pairs > 2 (body[42]) on C3 -- the 513-b B word carries 2 pairs only.
 `ifdef OT_S81SL_XR_MUT_BWIDE
