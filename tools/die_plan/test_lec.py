@@ -524,3 +524,39 @@ def test_rare_event_non_duplicate_still_differs(tmp_path, monkeypatch):
     lec.correspond(L, tmp_path, 100, [])
     m, _ = L.build(with_compare=True, with_hyp=True)
     assert _exact_prove(m)['ff:u_dut.o'] == 'differs'
+
+
+def _held_const(tmp_path, sets):
+    """elemB 10-25 (PATH-S81/BLEC): JOIN=0 best_* / done are reset-only registers (k <= rst ? k : 0) behind a kept
+    output register q <= rst ? k : 0; synthesis tied q's input to 0.  k pairs with q (same next state), so gold
+    q' = rst ? q : 0 stays free unless q == 0 is tried on both sides because the gate's next state is constant.
+    sets: k can also be set (k <= rst & (k | d)): q is a real difference."""
+    names = lambda ks: {i: [(f'u_dut.{k}$_DFF_P_.lecq', 0)] for i, k in enumerate(ks)}
+    g = tmp_path / 'gold.aig'
+    if sets:                                              # r=2 d=4 k=6 q=8; 10 = !k&!d, 12 = r&(k|d), 14 = r&k
+        g.write_bytes(_aig_bytes(2, [12, 14], [(7, 5), (11, 2), (6, 2)]))
+    else:                                                 # 10 = r & k
+        g.write_bytes(_aig_bytes(2, [10, 10], [(6, 2)]))
+    t = tmp_path / 'gate.aig'
+    t.write_bytes(_aig_bytes(2, [0], []))                 # q <= 0
+    ins = {0: [('rst_n', 0)], 1: [('d', 0)]}
+    gm = {'input': ins, 'latch': names(['u_m.best_row', 'u_oreg.q']), 'output': {}}
+    tm = {'input': ins, 'latch': names(['u_oreg.q']), 'output': {}}
+    return lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+
+
+def test_reset_only_register_behind_tied_output_register_is_proved(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, 'prove', _exact_prove)
+    L = _held_const(tmp_path, False)
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    res = _exact_prove(m)
+    assert set(res.values()) == {'proved'}, res
+
+
+def test_settable_register_behind_tied_output_register_differs(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, 'prove', _exact_prove)
+    L = _held_const(tmp_path, True)
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert _exact_prove(m)['ff:u_dut.u_oreg.q'] == 'differs'

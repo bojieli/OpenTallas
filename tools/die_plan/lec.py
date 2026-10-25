@@ -1540,6 +1540,13 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 a, b = lit_val(val, mask, L.dlit[("gold", k)]), lit_val(val, mask, L.dlit[("gate", k)])
                 if a == b and a in (0, mask):
                     L.hyp[("both", k)] = ("const", 1 if a else 0)
+                elif L.dlit[("gate", k)] in (0, 1):
+                    # synthesis tied this register's next state to a constant (opt_dff found its source constant):
+                    # try that constant on both sides even when the gold next state does not simulate constant yet.
+                    # elemB 10-25: u_oreg.q[1..82] <= u_m.best_* / done, reset-only (self-holding) registers of the
+                    # JOIN=0 element; the gold-only best_* pair with q (same next state), so gold q' = rst ? q : 0
+                    # looks free while the gate's is 0 -- only q == 0 (both) closes the loop (82 points differed)
+                    L.hyp[("both", k)] = ("const", L.dlit[("gate", k)])
             for it in range(sim_iters):
                 m, kind = L.build(with_compare=False, with_hyp=False)
                 val, mask = m.simulate(words, seed=1000 + it)
