@@ -76,7 +76,6 @@ def repair_l126_boundary(plan):
     if before[0] != [4.32,1555.2] or slot.get('bit_sites_um'):
         raise ValueError('unexpected L126x2 source or per-bit sites: replan explicitly')
     slot['regs_um'][0]=[4.32,1296.0]
-    slot['note']=slot.get('note','')+' | joint R1: rebalance boundary hop without adding a pipeline stage'
     P=S.Plan(plan)
     result={}
     for lid in ('L126','L126m'):
