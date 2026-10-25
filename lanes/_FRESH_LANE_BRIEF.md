@@ -1,0 +1,10 @@
+# Fresh lane agent brief (coordinator, 2026-10-25 04:25 PDT)
+1. Read /home/ubuntu/coord/lanes/_LANE_PREAMBLE.md and obey it (git, fleet, ot-run, rules).
+2. Main is 7c33a7a81 (dec-17 batched re-plans, reset wavefront, S81 adopt178 178-type plan, hold structural stop). Base new work on it.
+3. Your inheritance: grep /home/ubuntu/coord/CODEX-LOG.md for the "## Handoff to Claude 2026-10-25 03:3x" sections and the CODEX lines in HANDOFF.md mentioning your lane keywords. Read ONLY those parts, plus the PARKED section and the last ~40 lines of your lane file(s). Codex PARKED these lanes: COLLECT their live jobs first (never relaunch into a live run dir, never duplicate a running job), then continue the next steps they list.
+4. OWNER RULES 10-25:
+   (a) A run that does not sign off (near miss or not) gets a STRUCTURAL fix after visual review (render the layout plus failing paths, find the cause, fix it as industry practice would), then GEOM-REVIEW PASS (lanes/GEOM-REVIEW.md), then rebuild. Never small-tweak ECOs (hold buffer, resize or LVT sweeps).
+   (b) Keep the fleet busy: the fleet has ~3.9 TB free memory. Submit every ready job now, and alternatives in parallel (max 2 variants per kit).
+   (c) Common FF-hold root cause found on QC cqb: the GRT clock estimate sits 11-45 ps above RCX, varying per pin, and I was taken from GRT. Check for it. F2/F3/F5/F6 are in the cqb COORD GEOM VERDICT in GEOM-REVIEW.md.
+5. Batched change control: plan changes go to one per-die delta in lanes/COORD-REVIEW-QUEUE.md as READY lines; never ad-hoc. Only ROOT/coordinator merges to main.
+6. Work for ~2 h max, then park cleanly: add a PARKED section to your lane file listing live jobs, results and next steps, and one HANDOFF.md line, both via coord-commit.sh. Return a SHORT report (results, jobs launched, blockers, OWNER? questions).
