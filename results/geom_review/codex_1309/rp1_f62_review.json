@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-10-25 13:53 PDT",
+  "source": "codex/qc-sramif-1309@d965a9aada",
+  "verdict": "PASS-COND ONE CTS/GRT structural diagnostic only; noDRT",
+  "image": "rp1_f62_review.png",
+  "findings": [
+    "Eightcomplete25FFfamilies:3address+3snapshot+3offset+16decode",
+    "Same macrofreeW0strip/sites;radius<=30um;0RTL/data/cycles",
+    "Priorf61\u22124.08/1upstreamaddressfailurepreserved"
+  ],
+  "conditions": [
+    "Fresh actualdrivermaxcap/slew/load and oneclock guard",
+    "Use parent/subbranches ifelectricalfails; no waiver",
+    "Preserve macroF6/tapcontract",
+    "Actualtree/familymembership/TTFFpairs/finalFFgate before corrective route"
+  ]
+}
