@@ -1,0 +1,26 @@
+# S81/HEAD2 2026-10-25 00:57 PDT hd_tile A_SKEW_LINES 2 / BD_HOPS 2 / MERGE_HOP 2 bench (hd_tile_bench.sh, Verilator 5.050 via ot-run): 8,441 -> 8,445
+BENCH_PASS s81hd_mini SCEN=ALL MUT=none CUT=511 SPLIT9=1 CV=1 AIS=1 MH=1 CS=3 ASL=0 BDH=0 (4/4)
+BENCH_FAIL s81hd_mini SCEN=ALL MUT=FLT_DROP CUT=511 SPLIT9=1 CV=1 AIS=1 MH=2 CS=3 ASL=2 BDH=2 (3/4)
+BENCH_FAIL s81hd_mini SCEN=ALL MUT=GO_DROP CUT=511 SPLIT9=1 CV=1 AIS=1 MH=2 CS=3 ASL=2 BDH=2 (1/4)
+BENCH_FAIL s81hd_mini SCEN=ALL MUT=SKEW_LANE CUT=511 SPLIT9=1 CV=1 AIS=1 MH=2 CS=3 ASL=2 BDH=2 (1/4)
+BENCH_FAIL s81hd_mini SCEN=ALL MUT=TEN_IGNORED CUT=511 SPLIT9=1 CV=1 AIS=1 MH=2 CS=3 ASL=2 BDH=2 (3/4)
+BENCH_FAIL s81hd_mini SCEN=ALL MUT=TIE_FLIP CUT=511 SPLIT9=1 CV=1 AIS=1 MH=2 CS=3 ASL=2 BDH=2 (3/4)
+BENCH_PASS s81hd_mini SCEN=ALL MUT=none CUT=511 SPLIT9=1 CV=0 AIS=1 MH=2 CS=3 ASL=2 BDH=2 (4/4)
+BENCH_PASS s81hd_mini SCEN=ALL MUT=none CUT=511 SPLIT9=1 CV=1 AIS=1 MH=2 CS=3 ASL=2 BDH=2 (4/4)
+# mutant failures:
+      1 A: TB_FAIL 1 mismatches
+      1 A: TB_FAIL 2 mismatches
+      2 A: TB_FAIL bits 41683966 != 4173a558
+      1 A: TB_FAIL results 0 != positions 2
+      1 B: TB_FAIL 1 mismatches
+      1 B: TB_FAIL 2 mismatches
+      1 B: TB_FAIL bits 40d4499f != 40cdce35
+      1 B: TB_FAIL bits 4173a558 != 40cdce35
+      1 B: TB_FAIL row 21946 != 22141
+      3 C: TB_FAIL 1 mismatches
+      1 C: TB_FAIL bits 41683966 != 4173a558
+      1 C: TB_FAIL results 0 != positions 1
+      1 C: TB_FAIL row 21946 != 21818
+      2 D: TB_FAIL 1 mismatches
+      1 D: TB_FAIL flt 0 != 1
+      1 D: TB_FAIL results 0 != positions 1

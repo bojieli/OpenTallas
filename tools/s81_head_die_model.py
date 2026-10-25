@@ -50,7 +50,9 @@ BUNDLE_GO_TO_RESULT = 8_359 + 54 + 3        # IOREG 1 / SAFE 1 (tile README, SAF
 # S81/HEAD2 10-24 (COORD ruling on hd_tile prev5 FAIL: x/bd transport): A_SKEW_LINES 1 = per-A-core skew lines (0 cycles,
 # same per-bit depth) + BD_HOPS 2 on each core's own B-root line (+2 on the own result: the B last root is the late one at
 # the A join); mini array 8,441 -> 8,443 (hd_tile_asl_bench_1024.txt)
-TILE_PIPE = dict(A_INPUT_STAGES=1, MERGE_HOP=1, CMP_STAGES=3, A_SKEW_LINES=1, BD_HOPS=2)
+# S81/HEAD2 10-25 previews prev6..prev10: per-core lines measured worse (channel scatter); per-column-pair lines
+# (A_SKEW_LINES 2, 0 cycles) + MERGE_HOP 2 (registered compare before each 81-b select, +2): mini array 8,445
+TILE_PIPE = dict(A_INPUT_STAGES=1, MERGE_HOP=2, CMP_STAGES=3, A_SKEW_LINES=2, BD_HOPS=2)
 BUNDLE_GO_TO_RESULT += TILE_PIPE["A_INPUT_STAGES"] + 2 * TILE_PIPE["MERGE_HOP"] + TILE_PIPE["BD_HOPS"]
 X_BEATS = D_MODEL * 16 // 512            # 160 beats of 512 b on the stage circuit (XB in)
 ELEM_VIEW = dict(A=dict(job="dshead-elemA-ss-f11f3cc47", um=317.672, ss_ps=133.67, ff_ps=10.81,

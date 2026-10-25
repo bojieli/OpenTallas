@@ -40,7 +40,8 @@ module ot_s81hd_tile #(
     //                   3 = hop + registered 16-b half compares (gt / eq a half, row lt) + combine;
     //                   the capture / fire state waits the same number of cycles (+CMP_STAGES a tile on the chain)
     parameter integer A_INPUT_STAGES = 0,
-    //   A_SKEW_LINES / BD_HOPS (S81/HEAD2 10-24): per-A-core transport lines (bundle: own copy -> own skew lines; own
+    //   A_SKEW_LINES / BD_HOPS (S81/HEAD2 10-24): A transport lines from the raw input i (1 = per core: own copy -> own
+    //   skew lines; 2 = per column pair + per-core tail copy); own
     //   B-root line with BD_HOPS extra hops); 0 cycles on x / go, BD_HOPS only on a late B root (bench-measured)
     parameter integer A_SKEW_LINES = 0,
     parameter integer BD_HOPS = 0,
@@ -81,6 +82,27 @@ module ot_s81hd_tile #(
         else begin goo_q <= go_q; xvo_q <= xv_q; end
 `endif
     always @(posedge ck) xo_q <= x_q;
+    // A_SKEW_LINES (S81/HEAD2 10-24/25, tile_prev7: Yosys merged xo_q with the bundle u_x first stage (same D) and the
+    // pair line pulled them to the W face, x_q -> u_bout_o 650 um): the x pass-through is its own fixed-to-fixed chain
+    // of kept relay stages (generate blocks u_y_xq / u_y_xo: the kit's relay_mid places them on the W pin -> E pin
+    // line at 1/3, 2/3); the bundle takes its x from the raw i (own kept copies), so these stages have no other load.
+    wire [511:0] xo_x;
+    generate if (A_SKEW_LINES != 0) begin : g_xp
+        // 32 lane-slice chains (16 b): each slice's stations sit on its own pin line (tile_prev8: two 512-flop
+        // clusters stacked in the 38-um A channel, legalisation spread them, -205 ps over a 14-um hop)
+        genvar xl;
+        for (xl = 0; xl < 32; xl = xl + 1) begin : g_l
+            wire [15:0] xq_r;
+            if (1) begin : u_y_xq
+                ot_s81hd_kreg #(.W(16)) u_c (.clk(ck), .d(i[16*xl +: 16]), .q(xq_r));
+            end
+            if (1) begin : u_y_xo
+                ot_s81hd_kreg #(.W(16)) u_c (.clk(ck), .d(xq_r), .q(xo_x[16*xl +: 16]));
+            end
+        end
+    end else begin : g_xq
+        assign xo_x = xo_q;
+    end endgenerate
 
     // ---------------- bundle -----------------------------------------------------------------------------------------
     wire        b_go = go_q & ten_q;
@@ -104,7 +126,7 @@ module ot_s81hd_tile #(
 `else
         .go(b_go),
 `endif
-        .row0(row0_q), .xa(x_q[255:0]), .xb(x_q[511:256]),
+        .row0(row0_q), .xa(x_q[255:0]), .xb(x_q[511:256]), .xa_raw(i[255:0]), .xb_raw(i[511:256]),
         .res_v(res_v), .res_row(res_row), .res_bits(res_bits), .fault(b_fault),
         .head_v(nc_hv), .head_d(nc_hd), .head_row(nc_hr));
 
@@ -201,5 +223,5 @@ module ot_s81hd_tile #(
         o_flt          <= ch_flt | bflt_q;
     end
 
-    assign o = {o_flt, o_bits, o_row, o_rv, xvo_q, goo_q, xo_q};
+    assign o = {o_flt, o_bits, o_row, o_rv, xvo_q, goo_q, xo_x};
 endmodule
