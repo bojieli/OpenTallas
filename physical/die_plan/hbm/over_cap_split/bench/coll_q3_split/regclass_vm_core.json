@@ -1,0 +1,342 @@
+{
+ "top": "ot_hfd_coll_q3_vm_core",
+ "params": "",
+ "files": [
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v6.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static_pr.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots_capture_pin_v2.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hdc/ot_hdc_fastfp.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hdc/ot_hdc_prefix.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_issuer_m256v8.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_hard_v8x_s.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_vm_core.sv"
+ ],
+ "ports": {
+  "vmasm_clk": {
+   "direction": "input",
+   "width": 16,
+   "classes": {
+    "ff-ctl:CLK": 16
+   }
+  },
+  "vmasm_sel": {
+   "direction": "input",
+   "width": 24,
+   "classes": {
+    "reg": 24
+   }
+  },
+  "vmasm_rd_il": {
+   "direction": "input",
+   "width": 2048,
+   "classes": {
+    "reg": 2048
+   }
+  },
+  "writer_clk_rgx_data0": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_rgx_data1": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_rgx_data2": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_rgx_data3": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_rgx_ctrl": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_tkw": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_meta": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_body": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_bank0": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_bank1": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_bank2": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_bank3": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_bank4": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_bank5": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_bank6": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_clk_bank7": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:CLK": 1
+   }
+  },
+  "writer_rst_n": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "ff-ctl:ARST": 1
+   }
+  },
+  "writer_sid": {
+   "direction": "input",
+   "width": 2,
+   "classes": {
+    "reg": 2
+   }
+  },
+  "writer_rgx_v": {
+   "direction": "input",
+   "width": 4,
+   "classes": {
+    "reg": 4
+   }
+  },
+  "writer_rgx_addr": {
+   "direction": "input",
+   "width": 160,
+   "classes": {
+    "reg": 160
+   }
+  },
+  "writer_rgx_data0": {
+   "direction": "input",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "writer_rgx_data1": {
+   "direction": "input",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "writer_rgx_data2": {
+   "direction": "input",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "writer_rgx_data3": {
+   "direction": "input",
+   "width": 512,
+   "classes": {
+    "reg": 512
+   }
+  },
+  "writer_rgx_vm": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "writer_tkw_v": {
+   "direction": "input",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  },
+  "writer_tkw_d": {
+   "direction": "input",
+   "width": 568,
+   "classes": {
+    "reg": 568
+   }
+  },
+  "writer_ingress_slot": {
+   "direction": "input",
+   "width": 5,
+   "classes": {
+    "reg": 5
+   }
+  },
+  "writer_slot_valid": {
+   "direction": "input",
+   "width": 8,
+   "classes": {
+    "reg": 8
+   }
+  },
+  "writer_slot_owner": {
+   "direction": "input",
+   "width": 32,
+   "classes": {
+    "reg": 32
+   }
+  },
+  "vmasm_as_il": {
+   "direction": "output",
+   "width": 2048,
+   "classes": {
+    "reg": 2048
+   }
+  },
+  "writer_kq0": {
+   "direction": "output",
+   "width": 281,
+   "classes": {
+    "reg": 281
+   }
+  },
+  "writer_kq1": {
+   "direction": "output",
+   "width": 281,
+   "classes": {
+    "reg": 281
+   }
+  },
+  "writer_kq2": {
+   "direction": "output",
+   "width": 281,
+   "classes": {
+    "reg": 281
+   }
+  },
+  "writer_kq3": {
+   "direction": "output",
+   "width": 281,
+   "classes": {
+    "reg": 281
+   }
+  },
+  "writer_kq4": {
+   "direction": "output",
+   "width": 281,
+   "classes": {
+    "reg": 281
+   }
+  },
+  "writer_kq5": {
+   "direction": "output",
+   "width": 281,
+   "classes": {
+    "reg": 281
+   }
+  },
+  "writer_kq6": {
+   "direction": "output",
+   "width": 281,
+   "classes": {
+    "reg": 281
+   }
+  },
+  "writer_kq7": {
+   "direction": "output",
+   "width": 281,
+   "classes": {
+    "reg": 281
+   }
+  },
+  "writer_fault": {
+   "direction": "output",
+   "width": 1,
+   "classes": {
+    "reg": 1
+   }
+  }
+ }
+}
