@@ -1147,21 +1147,25 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                 if not new:
                     break
             # constants for the gold-only flops left: fixpoint in simulation, starting from 0
-            partners = {h[2] for h in L.hyp.values() if h[0] == "eq"}
+            # A cohort representative (the partner of other flops' "eq" hypotheses, e.g. a replica_proposals rep of
+            # a constant-looking register vector: s1_small[27] / s1_err[1] of every lane of an FP-add array) is a
+            # constant candidate too: the members are then bound to the constant through it.  Excluding reps left
+            # the rep a free input, so a non-reset flop whose D is constant 0 (synthesis removed it, opt_dff) made
+            # every downstream point differ: false NOT EQUIVALENT on kv3_astk_EN / kv3_pv_pair / dsdv_gunit_l4
+            # (LEC 10-25 triage).  The induction proof below still decides; a wrong constant only fails.
             # (a constant that failed while its neighbours were wrong is retried once its next state has become
             # a structural constant under the hypotheses now in place)
             for side, keys in (("gold", L.gonly), ("gate", L.tonly)):    # gate-only flops: constant candidates too
                 for k in keys:
-                    if k.startswith("ff:") and (side, k) not in L.hyp and k not in partners and \
+                    if k.startswith("ff:") and (side, k) not in L.hyp and \
                             (tried[(side, k, "c")] < 2 or L.dlit.get((side, k), 2) in (0, 1)):
                         L.hyp[(side, k)] = ("const", L.dlit.get((side, k)) if L.dlit.get((side, k)) in (0, 1) else 0)
             # matched flops whose next state simulates constant on both sides (synthesis may have merged such a
             # flop into another constant one, so the gate's copy is a different, free register)
             m, kind = L.build(with_compare=False, with_hyp=False)
             val, mask = m.simulate(words, seed=999)
-            reps = {h[2] for (sd, k), h in L.hyp.items() if sd == "both" and h[0] == "eq"}
-            for k in L.matched:
-                if not k.startswith("ff:") or ("both", k) in L.hyp or k in reps or tried[("both", k, "c")] >= 2:
+            for k in L.matched:          # cohort representatives included (see above)
+                if not k.startswith("ff:") or ("both", k) in L.hyp or tried[("both", k, "c")] >= 2:
                     continue
                 a, b = lit_val(val, mask, L.dlit[("gold", k)]), lit_val(val, mask, L.dlit[("gate", k)])
                 if a == b and a in (0, mask):
