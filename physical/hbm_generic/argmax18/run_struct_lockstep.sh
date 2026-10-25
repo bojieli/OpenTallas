@@ -17,15 +17,20 @@ pids=()
 for cfg in "7 1 1" "7 1 2" "7 1 3" "7 1 8" "7 0 4" "4 1 5" "2 1 6" "2 0 7"; do set -- $cfg
   ( ls_run ls_f$1_a$2_s$3 $A/rtl/ot_hgi_argmax18_value_m.sv $1 $2 $3 ) & pids+=($!); done
 for p in "${pids[@]}"; do wait $p || fail=1; done
-# mutants (must FAIL): M1 ring pointer reset one slot late; M2 key-group bvalid replica drops the row-restart clear;
-# M3 bits-group fin replica fires on every valid beat
-cp $A/rtl/ot_hgi_argmax18_value_m.sv "$out/m1.sv"; sed -i "s/q <= {{(N-1){1'b0}}, 1'b1}; else/q <= {{(N-2){1'b0}}, 2'b10}; else/" "$out/m1.sv"
+# mutants (must FAIL). Equivalent mutants dropped 10-25 (they cannot change any output): the ring pointer PHASE
+# (reset slot) is unobservable because each group writes and reads the same slot, and an extra fin pulse to the
+# level-0 capture is overwritten before level 1 reads it. The mutants below are the real bug classes of the change:
+# M1 ring pointer period N-1 (skips the last slot: wrong delay); M2 key-group bvalid replica drops the row-restart clear;
+# M3 bits-group fin replica one cycle late (fed from the master fin, not its next state); M4 idx/bits-group bvalid
+# replica one cycle late (fed from the master bvalid).
+cp $A/rtl/ot_hgi_argmax18_value_m.sv "$out/m1.sv"; sed -i "s/else q <= {q\[N-2:0\], q\[N-1\]};/else q <= q[N-2] ? {{(N-1){1'b0}}, 1'b1} : {q[N-2:0], q[N-1]};/" "$out/m1.sv"
 cp $A/rtl/ot_hgi_argmax18_value_m.sv "$out/m2.sv"; sed -i "s/u_bvk (.clk(clk), .rst_n(rst_n), .d(bvalid_d\[gr\])/u_bvk (.clk(clk), .rst_n(rst_n), .d(bvalid_d[gr] | bvalid[gr])/" "$out/m2.sv"
-cp $A/rtl/ot_hgi_argmax18_value_m.sv "$out/m3.sv"; sed -i "s/u_fb  (.clk(clk), .rst_n(rst_n), .d(fin_d)/u_fb  (.clk(clk), .rst_n(rst_n), .d(e_v)/" "$out/m3.sv"
+cp $A/rtl/ot_hgi_argmax18_value_m.sv "$out/m3.sv"; sed -i "s/u_fb  (.clk(clk), .rst_n(rst_n), .d(fin_d)/u_fb  (.clk(clk), .rst_n(rst_n), .d(fin)/" "$out/m3.sv"
+cp $A/rtl/ot_hgi_argmax18_value_m.sv "$out/m4.sv"; sed -i "s/u_bvi (.clk(clk), .rst_n(rst_n), .d(bvalid_d\[gr\])/u_bvi (.clk(clk), .rst_n(rst_n), .d(bvalid[gr])/" "$out/m4.sv"
 mut() { cmp -s "$out/$1.sv" $A/rtl/ot_hgi_argmax18_value_m.sv && { echo "$1 NOT APPLIED"; return 1; }
   if ls_run mut_$1 "$out/$1.sv" 7 1 11; then echo "$1 MUTANT SURVIVED"; return 1; fi
   grep -q "LOCKSTEP .*mismatches=[1-9]" "$out/mut_$1.log" && echo "$1 mutant caught" || { echo "$1 mutant not run"; return 1; }; }
-mp=(); for m in m1 m2 m3; do ( mut $m ) & mp+=($!); done
+mp=(); for m in m1 m2 m3 m4; do ( mut $m ) & mp+=($!); done
 for p in "${mp[@]}"; do wait $p || fail=1; done
 # existing functional bench (golden rows + DS lockstep) with the wrapper defaulting to STRUCT=1
 mkdir -p "$out/b18"; cp $A/rtl/ot_hgi_argmax18_m.sv "$out/b18/wrapper.sv"; sed -i 's/parameter integer STRUCT=0/parameter integer STRUCT=1/' "$out/b18/wrapper.sv"
