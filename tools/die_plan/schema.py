@@ -782,7 +782,7 @@ def tap_pitch(P, tn):
 def sink_tap_mode(t):
     """True when the type adds sink-anchored taps to its grid (clock.tap_mode "grid+sinks", or the KV-P6 alias
     "sinks", which since the CP1 r8 RULING no longer replaces the grid)."""
-    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks")
+    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks", "density")
 
 
 def tap_grid(P, tn):
@@ -794,6 +794,9 @@ def tap_grid(P, tn):
     only ADDS sink-anchored taps (taps.py) for face-register clusters after the grid taps, numbered on from the grid;
     a sink tap within taps.SEP_UM of a grid tap is dropped (same spine drop)."""
     t = P.types[tn]
+    if t.get("clock", {}).get("tap_mode") == "density":
+        import taps
+        return [(n, x, y) for n, x, y, _, _ in taps.density_taps(P, tn)]
     out = _grid_taps(P, tn)
     if sink_tap_mode(t):
         import taps
@@ -864,7 +867,7 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM):
         if any(abs(px - a) < clear and abs(py - b) < clear for a, b in taken):
             return False
         return not any(x0 < px < x1 and y0 < py < y1 for x0, y0, x1, y1 in boxes)
-    if not boxes or free(x, y):
+    if free(x, y):
         return x, y
     for r in range(1, int(max(w, h) / TAP_STEP_UM) + 1):
         d = r * TAP_STEP_UM

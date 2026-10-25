@@ -122,8 +122,55 @@ def _kmedians(pts, k, iters=25):
     return cen, groups
 
 
+def density_taps(P, tn):
+    """Decision 5: prune the grid to capacity/radius bounded sink clusters.
+
+    Median bisection also splits coincident sinks, so a single dense bank cannot
+    silently overflow the cap as k-medians with coincident seeds can. Legalising
+    each centroid keeps tap buffers out of hard cores and off other tap pins.
+    Optional sink_sites_um adds planned internal flop sites absent from faces.
+    """
+    import schema
+    t = P.types[tn]
+    ck = t.get("clock", {})
+    cap = int(ck.get("tap_max_sinks", 1500))
+    radius = float(ck.get("tap_radius_um", 200.0))
+    if cap <= 0 or radius <= 0:
+        raise ValueError("density clock taps require positive cap and radius")
+    pts = [(x, y) for x, y, _ in planned_sinks(P, tn)]
+    pts.extend((float(p[0]), float(p[1])) for p in ck.get("sink_sites_um", []))
+    if not pts:
+        raise ValueError(f"type {tn}: density taps require planned sinks")
+    pending, leaves = [pts], []
+    while pending:
+        group = pending.pop()
+        x, y = _median([p[0] for p in group]), _median([p[1] for p in group])
+        r = max(abs(a-x) + abs(b-y) for a, b in group)
+        if len(group) <= cap and (r <= radius or len(group) == 1):
+            leaves.append((x, y, group))
+            continue
+        axis = max(range(2), key=lambda i: max(p[i] for p in group)-min(p[i] for p in group))
+        group = sorted(group, key=lambda p: (p[axis], p[1-axis]))
+        mid = len(group)//2
+        pending.extend((group[:mid], group[mid:]))
+    taken, out = [], []
+    w, h = t["outline_um"]
+    for x, y, group in sorted(leaves, key=lambda a: (a[1], a[0])):
+        x, y = schema.tap_clear(t, min(max(x, TAP_MARGIN_UM), w-TAP_MARGIN_UM),
+                                 min(max(y, TAP_MARGIN_UM), h-TAP_MARGIN_UM), taken)
+        taken.append((x, y))
+        r = max(abs(a-x) + abs(b-y) for a, b in group)
+        out.append((x, y, len(group), round(r, 3)))
+    root = ck.get("tap_um", [w/2, h/2])
+    first = min(range(len(out)), key=lambda i: abs(out[i][0]-root[0])+abs(out[i][1]-root[1]))
+    out = [out[first]] + [p for i, p in enumerate(out) if i != first]
+    return [("clk" if i == 0 else f"clk_t{i}", x, y, n, r) for i, (x,y,n,r) in enumerate(out)]
+
+
 def sink_taps(P, tn):
     """[(port, x, y, n_sinks, radius_um)] sink-anchored taps of type tn (cached per plan object and type)."""
+    if P.types[tn].get("clock", {}).get("tap_mode") == "density":
+        return density_taps(P, tn)
     key = (id(P), tn)
     if key in _CACHE:
         return _CACHE[key]
@@ -171,6 +218,6 @@ def report(P, tn):
     """kit / G0 summary of the sink-anchored taps."""
     taps = sink_taps(P, tn)
     ck = P.types[tn].get("clock", {})
-    return dict(mode="sinks", radius_um=float(ck.get("tap_radius_um", 250.0)),
+    return dict(mode=ck.get("tap_mode", "sinks"), radius_um=float(ck.get("tap_radius_um", 250.0)),
                 max_sinks=int(ck.get("tap_max_sinks", 1500)), n=len(taps), empty=sum(1 for t in taps if t[3] == 0),
                 taps=[dict(name=n, xy=[x, y], planned_sinks=s, radius_um=r) for n, x, y, s, r in taps])
