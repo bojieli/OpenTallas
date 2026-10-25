@@ -1,0 +1,161 @@
+[
+  {
+    "path": "intel1:/srv/opentallas-scratch2/claude/reset/cp1_reach405P/kits/col_h10_r1__t1/signoff/signoff.json",
+    "generated": "2026-10-24T21:33:37-07:00",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+      "hold_ff: FAIL WNS -2.69 ps, 76 endpoints",
+      "drv: FAIL TT slew 151.0 cap 0.0, FF slew 89.0 cap 0.0"
+    ],
+    "checks": {
+      "setup_tt": {
+        "verdict": "PASS",
+        "wns_ps": 215.0,
+        "tns_ps": 0.0,
+        "violators": 0.0
+      },
+      "hold_ff": {
+        "verdict": "FAIL",
+        "wns_ps": -2.69,
+        "tns_ps": -82.65,
+        "violators": 76.0,
+        "sdc_wns_ps": -2.69,
+        "overlay": "applied vclk in_min -40 out_min 0"
+      },
+      "drv": {
+        "verdict": "FAIL",
+        "by_corner": {
+          "tt": {
+            "slew": 151.0,
+            "cap": 0.0
+          },
+          "ff": {
+            "slew": 89.0,
+            "cap": 0.0
+          }
+        },
+        "failing": {
+          "tt": {
+            "slew": 151.0,
+            "cap": 0.0
+          },
+          "ff": {
+            "slew": 89.0,
+            "cap": 0.0
+          }
+        }
+      },
+      "drc": {
+        "verdict": "PASS",
+        "count": 0,
+        "source": "5_2_route.json"
+      }
+    }
+  },
+  {
+    "path": "intel1:/srv/opentallas-scratch2/claude/reset/cp1_reach405P/kits/col_h10_r0_p1__t1/signoff/signoff.json",
+    "generated": "2026-10-24T23:52:42-07:00",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+      "setup_tt: FAIL WNS -21.19 ps, 1237 endpoints",
+      "hold_ff: FAIL WNS -21.09 ps, 485 endpoints",
+      "drv: FAIL TT slew 1127.0 cap 0.0, FF slew 801.0 cap 0.0"
+    ],
+    "checks": {
+      "setup_tt": {
+        "verdict": "FAIL",
+        "wns_ps": -21.19,
+        "tns_ps": -11745.14,
+        "violators": 1237.0
+      },
+      "hold_ff": {
+        "verdict": "FAIL",
+        "wns_ps": -21.09,
+        "tns_ps": -4125.87,
+        "violators": 485.0,
+        "sdc_wns_ps": -21.09,
+        "overlay": "applied vclk in_min -40 out_min 0"
+      },
+      "drv": {
+        "verdict": "FAIL",
+        "by_corner": {
+          "tt": {
+            "slew": 1127.0,
+            "cap": 0.0
+          },
+          "ff": {
+            "slew": 801.0,
+            "cap": 0.0
+          }
+        },
+        "failing": {
+          "tt": {
+            "slew": 1127.0,
+            "cap": 0.0
+          },
+          "ff": {
+            "slew": 801.0,
+            "cap": 0.0
+          }
+        }
+      },
+      "drc": {
+        "verdict": "PASS",
+        "count": 0,
+        "source": "5_2_route.json"
+      }
+    }
+  },
+  {
+    "path": "intel1:/srv/opentallas-scratch2/claude/reset/cp1_reach405R/kits/col_h10_r1__t1/signoff/signoff.json",
+    "generated": "2026-10-25T00:12:00-07:00",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+      "drv: FAIL TT slew 146.0 cap 0.0, FF slew 82.0 cap 0.0"
+    ],
+    "checks": {
+      "setup_tt": {
+        "verdict": "PASS",
+        "wns_ps": 181.73,
+        "tns_ps": 0.0,
+        "violators": 0.0
+      },
+      "hold_ff": {
+        "verdict": "PASS",
+        "wns_ps": 8.39,
+        "tns_ps": 0.0,
+        "violators": 0.0,
+        "sdc_wns_ps": 8.39,
+        "overlay": "applied vclk in_min -40 out_min 0"
+      },
+      "drv": {
+        "verdict": "FAIL",
+        "by_corner": {
+          "tt": {
+            "slew": 146.0,
+            "cap": 0.0
+          },
+          "ff": {
+            "slew": 82.0,
+            "cap": 0.0
+          }
+        },
+        "failing": {
+          "tt": {
+            "slew": 146.0,
+            "cap": 0.0
+          },
+          "ff": {
+            "slew": 82.0,
+            "cap": 0.0
+          }
+        }
+      },
+      "drc": {
+        "verdict": "PASS",
+        "count": 0,
+        "source": "5_2_route.json"
+      }
+    }
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "Post-route data-buffer ECOs of reach405P r0 and reach405R r1 proof tiles; no plan/RTL/clock changes",
+  "pictures": [
+    "results/reset_1024/cp1_review/R_pair.png",
+    "results/reset_1024/cp1_review/r0_reset_tree.png"
+  ],
+  "findings": [
+    "Abutting CP1 faces align; wide frame buses leave nearest matching face. Reach-aware proof leaf replaces former cross-face XOR. No macros or macro channels in proof vehicle.",
+    "Grid clocks and reset relays are regularly spaced; reset measured max hop369.4um and all176 retained. Existing routed DRC0.",
+    "Residual r1 output-face D-pin slew400..436ps against320ps limit is a buffer/slew ECO target; TT+181.73 FF+8.39 positive. Keep face flops and clock tree fixed, split/resize data nets and re-route; recheck TT/FF.",
+    "This equal-depth pipelined proof vehicle does not qualify as wavefront release die; no release-type adoption.",
+    "r0 proof floorplan is the upper partition shown; explicit reach-aware leaf/station placements have replaced rejected distant XOR paths. Its remaining TT setup -21.19ps/FF hold-21.09ps and DRV need measured MCMM repair, with no allowance for setup violations. Existing DRC0. Original R-r0 repair continues untouched."
+  ]
+}
