@@ -1,6 +1,6 @@
 {
 "schema": "opentallas.die_plan.v1",
-"note": "HBM-ARCH concept (B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels); gen_arch.py; quad-tile array, beachfront PHYs, seam fabric, root tile; r2 cores_b2.py: hard cores = measured split pieces / d4g cores / SM halves, plan-track pins | B2m derived by physical/die_plan/hbm_arch/b2m.py: host in-band: dropped u_host_N (10333 cells) + io_NW_io_u_host_N; io_NW_io_u_lk_N0 host in_band route NW_io -> [L48] -> root; pg domains: 5 SerDes PHY supplies (phy_NW_io_u_lk_N0, phy_NW_spb0_u_lk_S0, phy_vsN0_u_lk_S1, phy_NE_io_u_lk_N2, phy_NE_spb0_u_lk_S0); core taps: 562 early core taps (434 from measured insertion > 250 ps, the rest SM halves at 250); clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4885, \"drivers\": 1874, \"cells\": [64, 64], \"taps\": 3322, \"drivers_moved\": 554, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 178, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1429.6, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 45, \"intra_over_80ps_at_5pct\": 45}; clock INFO alternative (zero-skew, not adopted): {\"method\": \"partition-aware zero-skew tree (guillotine bisection + linear-delay merge)\", \"taps\": 3322, \"early_taps\": 861, \"nodes\": 6643, \"depth\": 14, \"root_um\": [13754.88, 7078.317], \"insertion_wire_um\": 25254.2, \"insertion_ps_model\": 2525.4, \"wire_mm\": 2220.8, \"snake_mm\": 638.5, \"seams_over_80ps_5pct_ocv\": 118} | B2n derived by physical/die_plan/hbm_arch/b2n.py: decision 12: 460 ports drop M8/M9 (2 pin layers), reach / ft_station_max 405; boundary q_su10 +216 / q_spu0 -216 um (hub<->su10 N face carries 2998+1719+1615+514+514+268 b = 1363 um at 5.6 pins/um on M7/M5 vs 1166 um of hub overlap; spu0 (soft, no cores) gives 216 um (its hub face needs 1087 of 2290 um)); boundary q_su30 +216 / q_spu1 -216 um (hub<->su30 S face: same traffic as su10 (mirror in y); spu1 soft); re-windowed 918 ports (918 grown to <= 5.6 pins/um on 2 layers); 0 infeasible face groups; mirror: 14 second-instance port windows set from the first instance (type frame); re-windowed 19 ports (6 grown to <= 5.6 pins/um on 2 layers); 8 infeasible face groups; mirror pin tables: 13 port pairs nudged to one table, 0 unresolved; ft slot stations 1167 -> 2602; internal stations 22349 -> 60263 (+0 new links over 405 um); 0 unroutable; clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4889, \"drivers\": 1870, \"cells\": [64, 64], \"taps\": 3306, \"drivers_moved\": 556, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 170, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1430.2, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 49, \"intra_over_80ps_at_5pct\": 45}; latency: 204/298 lanes +cycles (max +47, sum +2665)",
+"note": "HBM-ARCH concept (B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels); gen_arch.py; quad-tile array, beachfront PHYs, seam fabric, root tile; r2 cores_b2.py: hard cores = measured split pieces / d4g cores / SM halves, plan-track pins | B2m derived by physical/die_plan/hbm_arch/b2m.py: host in-band: dropped u_host_N (10333 cells) + io_NW_io_u_host_N; io_NW_io_u_lk_N0 host in_band route NW_io -> [L48] -> root; pg domains: 5 SerDes PHY supplies (phy_NW_io_u_lk_N0, phy_NW_spb0_u_lk_S0, phy_vsN0_u_lk_S1, phy_NE_io_u_lk_N2, phy_NE_spb0_u_lk_S0); core taps: 562 early core taps (434 from measured insertion > 250 ps, the rest SM halves at 250); clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4885, \"drivers\": 1874, \"cells\": [64, 64], \"taps\": 3322, \"drivers_moved\": 554, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 178, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1429.6, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 45, \"intra_over_80ps_at_5pct\": 45}; clock INFO alternative (zero-skew, not adopted): {\"method\": \"partition-aware zero-skew tree (guillotine bisection + linear-delay merge)\", \"taps\": 3322, \"early_taps\": 861, \"nodes\": 6643, \"depth\": 14, \"root_um\": [13754.88, 7078.317], \"insertion_wire_um\": 25254.2, \"insertion_ps_model\": 2525.4, \"wire_mm\": 2220.8, \"snake_mm\": 638.5, \"seams_over_80ps_5pct_ocv\": 118} | B2n derived by physical/die_plan/hbm_arch/b2n.py: decision 12: 460 ports drop M8/M9 (2 pin layers), reach / ft_station_max 405; boundary q_su10 +216 / q_spu0 -216 um (hub<->su10 N face carries 2998+1719+1615+514+514+268 b = 1363 um at 5.6 pins/um on M7/M5 vs 1166 um of hub overlap; spu0 (soft, no cores) gives 216 um (its hub face needs 1087 of 2290 um)); boundary q_su30 +216 / q_spu1 -216 um (hub<->su30 S face: same traffic as su10 (mirror in y); spu1 soft); re-windowed 918 ports (918 grown to <= 5.6 pins/um on 2 layers); 0 infeasible face groups; mirror: 14 second-instance port windows set from the first instance (type frame); re-windowed 19 ports (6 grown to <= 5.6 pins/um on 2 layers); 8 infeasible face groups; mirror pin tables: 13 port pairs nudged to one table, 0 unresolved; ft slot stations 1167 -> 2602; internal stations 22349 -> 60263 (+0 new links over 405 um); 0 unroutable; clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4889, \"drivers\": 1870, \"cells\": [64, 64], \"taps\": 3306, \"drivers_moved\": 556, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 170, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1430.2, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 49, \"intra_over_80ps_at_5pct\": 45}; reset: release = wavefront (decision 13); hard reset pins moved to a face: q_sm0 [2885.76, 2255.04] -> [2885.76, 4505.76] (72 um to a soft rst_o site); q_sm1 [2885.76, 2255.04] -> [2799.36, 4.32] (99 um to a soft rst_o site); q_sm2 [2885.76, 2255.04] -> [2790.72, 4505.76] (98 um to a soft rst_o site); q_sm3 [2885.76, 2255.04] -> [2799.36, 4505.76] (99 um to a soft rst_o site); latency: 204/298 lanes +cycles (max +47, sum +2665)",
 "die": {
 "name": "hbm_arch_B2n",
 "label": "B2n = B2m + decision 12 (ft <= M7, 405-um stations); B2m = B2l (accepted 10-24, ~22% DS-AR loss vs d4g) + in-band host, balanced binary H-tree, SerDes PHY supplies",
@@ -290758,7 +290758,7 @@
 "reset": {
 "tap_um": [
 2885.76,
-2255.04
+4505.76
 ],
 "sync_stages": 2
 },
@@ -291868,8 +291868,8 @@
 },
 "reset": {
 "tap_um": [
-2885.76,
-2255.04
+2799.36,
+4.32
 ],
 "sync_stages": 2
 },
@@ -292979,8 +292979,8 @@
 },
 "reset": {
 "tap_um": [
-2885.76,
-2255.04
+2790.72,
+4505.76
 ],
 "sync_stages": 2
 },
@@ -294090,8 +294090,8 @@
 },
 "reset": {
 "tap_um": [
-2885.76,
-2255.04
+2799.36,
+4505.76
 ],
 "sync_stages": 2
 },
@@ -418706,7 +418706,7 @@
 "sync_stages": 2,
 "data_reset": false,
 "epoch_bit": true,
-"release": "counted"
+"release": "wavefront"
 },
 "budgets": {
 "face_pins_per_um": 6,

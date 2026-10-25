@@ -15,7 +15,8 @@
               cores (cores_b2.RelayRouter / free_point: macro-free relay channels); internal_stations[] (R3-INTERNAL)
               re-derived the same way, plus new entries for every core link now over the 405-um limit.
   5. latency  plan latency table recomputed from the new stations (schema.Plan.lane_latency).
-Reset stays as in B2m until lane RESET lands the neighbour-wavefront mode (decision 13); the clock H-tree (M8/M9) is
+Reset = decision 13 neighbour wavefront (reset_tree.py release=wavefront; hard reset pins on a face toward a soft
+neighbour); the clock H-tree (M8/M9) is
 re-derived on the moved partition rects (b2m.clock: same symmetric binary H-tree on M8/M9).
 """
 import argparse
@@ -274,6 +275,43 @@ def fix_mirror_pins(plan, pairs, log):
     log.append(f"mirror pin tables: {fixed} port pairs nudged to one table, {bad} unresolved")
 
 
+def reset_wavefront(plan, log):
+    """OWNER DECISION 13: whole-die root + neighbour wavefront (reset_tree.py release=wavefront, lane RESET).  Hard
+    types (prebuilt: q_sm*, PHY_N) take their reset pin on the face toward a soft neighbour's rst_o site: the face
+    point within MARGIN of a site for every instance, nearest the face midpoint (their own reset fan-out stays inside the
+    hard view, reset.depth)."""
+    import reset_tree as RT
+    plan["reset"]["release"] = "wavefront"
+    P = S.Plan(plan)
+    hard = {n for n in P.parts if P.types[P.parts[n]["type"]].get("hard")}
+    sites = [P.to_die(q, s_["xy"]) for q in P.parts if q not in hard for s_ in RT.face_sites(P, P.parts[q]["type"])]
+    hp = RT.hop_um(P) - RT.MARGIN_UM
+    moved = []
+    for tn in sorted({P.parts[n]["type"] for n in hard}):
+        insts = [n for n in hard if P.parts[n]["type"] == tn]
+        t = plan["partition_types"][tn]
+
+        def dist(c):
+            return max(min(abs(x - X) + abs(y - Y) for x, y in sites) for X, Y in (P.to_die(n, c) for n in insts))
+        cur = tuple(t["reset"]["tap_um"])
+        if dist(cur) <= hp:
+            continue
+        w, h = t["outline_um"]
+        st = 8.64
+        cands = [(k * st, y) for k in range(int(w // st) + 1) for y in (4.32, h - 4.32)] + \
+                [(x, k * st) for k in range(int(h // st) + 1) for x in (4.32, w - 4.32)]
+        ok = [c for c in cands if dist(c) <= 100.0] or [min(cands, key=dist)]
+
+        def mid_off(c):
+            if c[1] in (4.32, h - 4.32):
+                return abs(c[0] - w / 2)
+            return abs(c[1] - h / 2)
+        c = min(ok, key=lambda c_: (mid_off(c_), dist(c_)))
+        t["reset"]["tap_um"] = [round(c[0], 3), round(c[1], 3)]
+        moved.append(f"{tn} {list(cur)} -> {t['reset']['tap_um']} ({dist(c):.0f} um to a soft rst_o site)")
+    log.append("reset: release = wavefront (decision 13); hard reset pins moved to a face: " + "; ".join(moved))
+
+
 def _type_routes(P):
     """{(type, slot): type-frame route polyline} from the first lane crossing of each slot."""
     out = {}
@@ -490,6 +528,7 @@ def main(argv=None):
     fails = restation(plan, log)
     import b2m as B2M   # noqa: E402  (H-tree + tap assignment re-derived: su10/su30 / spu0/spu1 rects moved)
     B2M.clock(plan, out, log)
+    reset_wavefront(plan, log)
     P = S.Plan(plan)
     plan["latency"]["lanes"] = {lid: P.lane_latency(lid) for lid in P.lanes}
     c0 = json.loads((src / "die_plan.json").read_text())["latency"]["lanes"]
