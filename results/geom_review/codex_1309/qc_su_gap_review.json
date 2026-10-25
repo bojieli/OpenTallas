@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-10-25 13:55 PDT",
+  "source": "34f5c2fdaa",
+  "type": "slw_su_l1",
+  "verdict": "PASS-COND ONE post-repair/pre-DPL capture ONLY; noGRT or activeproductionadapter",
+  "findings": [
+    "Five realYgaps clear4preservedM1\u2013M6OBS coreboxes, intendedM7x retained",
+    "Kernel x unsnapped; masterbbox/actualroworigin/orient/site occupancy remain adapterobligations",
+    "5300syntheticprojectionchecks are notactual10420BUFproof"
+  ],
+  "conditions": [
+    "Capture insertedBUF/INV IDs trueintendedLL/masterbbox beforeDPL",
+    "Actualfree row/site and fixedFF/pin/FT/logic occupancy",
+    "Projectedwholecellrender and smallbound onxdisplacement beforeactiveadapter",
+    "No sidefallback/M7OBSwaiver; sameadapterproto+production;0cycles"
+  ],
+  "proposal_summary": {
+    "status": "INACTIVE_GEOMETRY_PROPOSAL",
+    "type": "slw_su_l1",
+    "legal_y_bands_um": [
+      [
+        4.32,
+        32.56
+      ],
+      [
+        304.4,
+        352.24
+      ],
+      [
+        624.0799999999999,
+        723.76
+      ],
+      [
+        995.5999999999999,
+        1043.44
+      ],
+      [
+        1315.28,
+        1334.88
+      ]
+    ],
+    "projection_checks": 5300,
+    "M7_obstacle_negative": "REJECTED",
+    "max_test_y_displacement_um": 136.19,
+    "cycles_added": 0,
+    "unproven": [
+      "repair_design pre-DPL intended coordinates available",
+      "gap occupancy and local x displacement legalizer",
+      "actual TT setup/FF hold/DRV and GRT capacity"
+    ],
+    "integration": "same post-repair/pre-DPL adapter must be used by proto_sweep.py and grt_maxwire.tcl; currently not activated"
+  }
+}
