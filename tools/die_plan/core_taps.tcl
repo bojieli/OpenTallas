@@ -27,7 +27,7 @@ proc ct_region {x y} {
   set h [expr {$x < $ct_sx ? "W" : "E"}]
   return "$h[expr {$y < $ct_my ? 0 : 1}]"
 }
-set ct_sinks {}; set ct_macro {}
+set ct_sinks {}; set ct_macro {}; set ::ct_leaf_region_by_leaf {}
 foreach it [$ct_root getITerms] {
   if {[[$it getMTerm] getIoType] ne "INPUT"} continue
   set i [$it getInst]
@@ -55,6 +55,9 @@ dict for {r rows} $ct_sinks {
 # OT_CTAP_MACRO_ROOT=1: the macro leaf hangs on the core clock root (its own tap) instead of under its region tap, so
 # core_taps_post.tcl can place its latency independently (OT_CTAP_MACRO_EARLY useful skew vs its interface regs)
 set ct_mroot [ct_env OT_CTAP_MACRO_ROOT 0]
+# OT_CTAP_MACRO_TAPOUT=1 (QC-PHYS f57): macro leaf on its region tap OUTPUT net, connected post-CTS (see below)
+set ct_mtapout [ct_env OT_CTAP_MACRO_TAPOUT 0]
+if {$ct_mtapout && $ct_mroot} { error "OT_CTAP_MACRO_TAPOUT and OT_CTAP_MACRO_ROOT are exclusive" }
 # each macro clock pin: own short leaf from its region tap, placed just outside the macro halo at the pin
 foreach row $ct_macro {
   lassign $row it r x y
@@ -64,14 +67,24 @@ foreach row $ct_macro {
   set buf [odb::dbInst_create $ct_blk $ct_lmaster "ot_cleaf_[regsub -all {[^A-Za-z0-9]} [$m getName] _]"]
   foreach t [$buf getITerms] {
     set mt [$t getMTerm]; if {[$mt getSigType] in {POWER GROUND}} continue
-    if {[$mt getIoType] eq "INPUT"} { $t connect [expr {$ct_mroot ? $ct_root : [dict get $ct_taps $r]}] } elseif {[$mt getIoType] eq "OUTPUT"} { $t connect $net }
+    if {[$mt getIoType] eq "INPUT"} {
+      if {$ct_mtapout} {
+        # QC-PHYS f57 macro skew group: the leaf input waits on an undriven placeholder net during CTS (so CTS neither
+        # balances it inside the tap tree nor builds an independent root branch); cts_post.tcl (ct_tapout_connect)
+        # re-hangs it on the OUTPUT net of its region tap = the same trunk as its interface registers, one stage after
+        # the tap instead of the tap tree depth -> a designed early macro clock (common trunk, no own branch).
+        set ph [odb::dbNet_create $ct_blk "ot_cleaf_[regsub -all {[^A-Za-z0-9]} [$m getName] _]_ph"]; $ph setSigType CLOCK
+        $t connect $ph
+      } else { $t connect [expr {$ct_mroot ? $ct_root : [dict get $ct_taps $r]}] }
+    } elseif {[$mt getIoType] eq "OUTPUT"} { $t connect $net }
   }
   set gap [expr {round(6.0 * $ct_dbu)}]
   set lx [expr {abs($x - [$mb xMin]) < abs([$mb xMax] - $x) ? [$mb xMin] - $gap - [$ct_lmaster getWidth] : [$mb xMax] + $gap}]
   $buf setLocation $lx $y; $buf setPlacementStatus PLACED
   $it disconnect; $it connect $net
   dict set ::ct_leaf [$m getName] [list [$buf getName] $r]
-  puts [format "OT_CTAP macro leaf %s region %s at %.1f %.1f" [$m getName] $r [expr {$lx / double($ct_dbu)}] [expr {$y / double($ct_dbu)}]]
+  dict set ::ct_leaf_region_by_leaf [$buf getName] $r
+  puts [format "OT_CTAP macro leaf %s region %s[expr {$ct_mtapout ? " (tap output, post-CTS)" : ""}] at %.1f %.1f" [$m getName] $r [expr {$lx / double($ct_dbu)}] [expr {$y / double($ct_dbu)}]]
 }
 detailed_placement
 }

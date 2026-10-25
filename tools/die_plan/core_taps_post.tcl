@@ -12,6 +12,15 @@ set cp_grt [expr {[cp_env OT_CTAP_EST place] eq "grt"}]
 set cp_ronly [cp_env OT_CTAP_REPORT_ONLY 0]
 set cp_tag [cp_env OT_CTAP_TAG ctp]
 set cp_master [[ord::get_db] findMaster [cp_env OT_CTAP_DELAY_CELL BUFx4_ASAP7_75t_R]]
+# QC-PHYS f57 pass-2 (CQB2 OT_MSCTS_CORR mechanism): OT_CTAP_CORR = Tcl file with the measured RCX - estimate offsets of
+# the previous routed pass (same estimator / RC table), applied to the GRT-mode balance only:
+#   set ot_ctap_corr     { TAP {tt_ps ff_ps} ... }        ;# tap-mean register clock arrival
+#   set ot_ctap_corr_mac { INST_GLOB {tt_ps ff_ps} ... }  ;# macro clock pin
+set ot_ctap_corr {}; set ot_ctap_corr_mac {}
+set cp_corr_on [expr {$cp_grt && [cp_env OT_CTAP_CORR ""] ne ""}]
+if {$cp_corr_on} { source [cp_env OT_CTAP_CORR ""]; puts "OT_CTAP_CORR [cp_env OT_CTAP_CORR {}] taps $ot_ctap_corr macros $ot_ctap_corr_mac" }
+proc cp_ctap {r} { global cp_corr_on ot_ctap_corr; if {$cp_corr_on && [dict exists $ot_ctap_corr $r]} { return [lindex [dict get $ot_ctap_corr $r] 0] }; return 0.0 }
+proc cp_cmac {n} { global cp_corr_on ot_ctap_corr_mac; if {$cp_corr_on} { foreach {g v} $ot_ctap_corr_mac { if {[string match $g [string map {\\ {}} $n]]} { return [lindex $v 0] } } }; return 0.0 }
 proc cp_est {} { global cp_grt; set_propagated_clock [all_clocks]; if {$cp_grt} { estimate_parasitics -global_routing } else { estimate_parasitics -placement } }
 proc cp_arr {it} {
   set p [get_pins -quiet [string map {\\ \\\\} "[[$it getInst] getName]/[[$it getMTerm] getName]"]]
@@ -81,18 +90,36 @@ proc cp_taps {it} {
     if {![regexp {^ot_ctap_([A-Z0-9]+)$} [$i getName] -> r]} continue
     set its {}; cp_regs [[cp_out $i] getNet] its
     lassign [cp_stats $its] n mean lo hi
+    set k [cp_ctap $r]; set mean [expr {$mean + $k}]; set lo [expr {$lo + $k}]; set hi [expr {$hi + $k}]
     dict set taps $r [list $i $n $mean $lo $hi]
-    puts [format "OT_CTAP_M it%s tap %s n %d mean %.1f min %.1f max %.1f" $it $r $n $mean $lo $hi]
+    puts [format "OT_CTAP_M it%s tap %s n %d mean %.1f min %.1f max %.1f%s" $it $r $n $mean $lo $hi [expr {$k != 0.0 ? [format " (RCX-corrected %+.1f)" $k] : ""}]]
   }
   return $taps
 }
+# region tap of a register clock iterm (walk the clock net drivers up to an ot_ctap_* instance)
+proc cp_regtap {it} {
+  set net [$it getNet]
+  for {set d 0} {$d < 30 && $net ne "NULL"} {incr d} {
+    set drv ""; foreach x [$net getITerms] { if {[[$x getMTerm] getIoType] eq "OUTPUT"} { set drv [$x getInst] } }
+    if {$drv eq ""} { return "" }
+    if {[regexp {^ot_ctap_([A-Z0-9]+)$} [$drv getName] -> r]} { return $r }
+    set net [[cp_in $drv] getNet]
+  }
+  return ""
+}
 proc cp_macros {it} {
-  global cp_blk
+  global cp_blk cp_corr_on
   set out {}
   foreach m [$cp_blk getInsts] {
     if {![[$m getMaster] isBlock]} continue
     set ck ""; foreach t [$m getITerms] { if {[[$t getMTerm] getName] eq "clk"} { set ck $t } }
     set a [cp_arr $ck]; lassign [cp_stats [cp_ifregs $m]] n mean lo hi
+    if {$cp_corr_on} {
+      # interface regs corrected by the tap that clocks each (cp_regmap), the macro pin by its own table entry
+      set a [expr {$a + [cp_cmac [$m getName]]}]
+      set sc 0.0; set nc 0; foreach t [cp_ifregs $m] { set aa [cp_arr $t]; if {$aa eq ""} continue; incr nc; set sc [expr {$sc + $aa + [cp_ctap [cp_regtap $t]]}] }
+      if {$nc} { set mean [expr {$sc / $nc}] }
+    }
     puts [format "OT_CTAP_M it%s macro %s clk %.1f ifregs n %d mean %.1f min %.1f max %.1f (clk - mean %.1f)" $it [$m getName] $a $n $mean $lo $hi [expr {$a-$mean}]]
     lappend out [list $m $a $mean]
   }
