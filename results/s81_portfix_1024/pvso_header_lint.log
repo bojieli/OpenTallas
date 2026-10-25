@@ -1,0 +1,103 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'ck'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'rst'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'sid'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'j'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'jd'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'fault'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'st_rg'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'dn_i'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'dn_o'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'up_i'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'up_o'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'ri'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'ro'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'gi_v'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'gi_d'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'go_v'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'go_d'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'si_v'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'si_d'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'so_v'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'so_d'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'rq'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'rk'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'wd'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'rv'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'r_data'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'r_tag'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'r_beat'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'hs'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'pv_v'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'pv_d'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'pv_x'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'local_pv_landed'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-portfix/pvso_header.sv:27:50: Cell has missing pin: 'peer_pv'
+   27 | module tb; wire [8:0] hc; dsdv_svc_rs_pvso_entry dut(.hw(292'd0),.hc(hc),.q(513'd0)); endmodule
+      |                                                  ^~~

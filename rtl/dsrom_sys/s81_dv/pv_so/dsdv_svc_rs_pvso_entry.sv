@@ -4,7 +4,8 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
                            parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
                            parameter logic [39:0] FM = {40{1'b1}}) (   // S81-P9-FACE face mask -> dsdv_svc_rs_c
     input  wire ck, rst, input wire [3:0] sid,
-    input  wire [32:0] j, output wire [1:0] jd, input wire [512:0] q,   // the die's 513-b q lane {d 512, v} input wire [291:0] hw, output wire [8:0] hc,
+    input  wire [32:0] j, output wire [1:0] jd, input wire [512:0] q,   // the die's 513-b q lane {d 512, v}
+    input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,

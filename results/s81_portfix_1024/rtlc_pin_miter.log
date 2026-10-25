@@ -1,0 +1,25 @@
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-s81-portfix
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-portfix
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-s81-portfix
+ot-run: localhost      admits   -18 GB (avail 374, reserve 0, fresh 323.7, peak 4.3, headroom 0, waiters 0/0 GB) load 82/256 running 40 disk 1177 GB 
+ot-run: STAGE: the staged scripts name other lane(s) /srv/opentallas-scratch/claude/stw-s81c-cap30, /srv/opentallas-scratch2/claude/s81-portbind, /srv/opentallas-scratch2/claude/s81-portfix, /srv/opentallas-scratch2/claude/wt; not copied (--stage says the inputs are complete)
+ot-run: SPILL: copying /srv/opentallas-scratch2/claude/codex-s81-portfix (1.9 GB) localhost -> epyc3 (no host with --dir admits 4 GB now)
+ot-run: SPILL: copied 471 changed entries in 1 s; running on epyc3; written files go back to localhost after the run
+ot-heavy: admitted on eternal-dove as oth-ubuntu-2050531-1792921653 after 0 s
+RTLC_PIN_MITER MUT=0 edges=2208 errors=0
+- rtlc_pin_miter.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.030 s; speed 147.580 us/s
+- Verilator: cpu 0.030 s on 1 threads; allocated 7 MB
+RTLC_PIN_MITER MUT=1 edges=2208 errors=2180
+- rtlc_pin_miter.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.028 s; speed 155.118 us/s
+- Verilator: cpu 0.028 s on 1 threads; allocated 7 MB
+RTLC_PIN_MITER MUT=2 edges=2208 errors=2173
+- rtlc_pin_miter.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.028 s; speed 155.740 us/s
+- Verilator: cpu 0.028 s on 1 threads; allocated 7 MB
+ot-run: RAN on epyc3 (unit oth-ubuntu-2050531-1792921653): exit 0
+ot-run: SPILL: outputs copied back epyc3 -> localhost; RAN on epyc3: exit 0

@@ -29,8 +29,27 @@ def rep(s, a, b, n=1):
     return s.replace(a, b)
 
 
+def rtlc_ports(src):
+    """Apply the current hard-core pin contract to historical extra parents.
+
+    A width-only connection silently drops the wrong bits for the nonzero-low
+    XRT ports and for the packed C3 B input. Keep already updated parents intact.
+    """
+    lines = []
+    for line in src.splitlines(keepends=True):
+        if re.search(r"\bot_s81sl_xrt[13]\s+u_xr\b", line):
+            for pin, expr in (("dl_e", "dl_e[1075:1]"), ("dl_w", "dl_w[1075:1]"),
+                              ("dl_vb", "dl_vb[275:1]"), ("ci_b", "ci_b[1075:0]"),
+                              ("x_si", "x_si[6:0]"), ("bi", "{bi[1075:37], bi[6:0]}")):
+                line = line.replace(f".{pin}({pin})", f".{pin}({expr})")
+        elif re.search(r"\bot_s81dv_xfin\s+u_xf\b", line):
+            line = line.replace(".s_i(x_si)", ".s_i(x_si[6:0])")
+        lines.append(line)
+    return "".join(lines)
+
+
 def variant(src, v, top="ot_s81sl_slice_c1x_k8_cap5r_lp", base=BASE):
-    s = src
+    s = rtlc_ports(src)
     s = rep(s, f"module {top} #(", f"module {top}_{v} #(")
     if ".xw_v(xw_v), " in s:                                   # D-XWV: the xg masters have no xw_v output
         s = rep(s, ".xw_v(xw_v), ", "")
