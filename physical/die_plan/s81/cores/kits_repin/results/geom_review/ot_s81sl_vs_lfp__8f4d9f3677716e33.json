@@ -1,0 +1,14 @@
+{
+ "element": "ot_s81sl_vs_lfp",
+ "kit": "physical/die_plan/s81/cores/kits_repin/kits/ot_s81sl_vs_lfp@r3",
+ "hash": "8f4d9f3677716e33",
+ "verdict": "PASS-COND",
+ "pictures": [
+  "ot_s81sl_vs_lfp_r3_fp.png"
+ ],
+ "reasons": "172.8 x 172.8, 2859 pins. N carries 1589 pins (all ve ports + s/e/g leaf-bus + fault) at 9.7-10 pins/um: within the M3+M5 pin-shape capacity (24.3/um) but the densest face of the three; its ~1589 face flops need a ~3-um flop band (DFFHQNx1 1.08 um wide) along N plus the escape wires: the congestion to watch. W 814 (x_* store ext + u/um, 5/um), E 387 (sw_*), S 69 (ra_* + clk/rst). Long flop-to-flop runs by RTL: x_qd (W, y 5..58) -> ve_aval (N, x 138..165) and sw_d (E): ~280 um / 170 um in one cycle (ve_aval and sw_d are both <= xq_c). Clock pin at the SW corner (x 5.5, plan contract): insertion risk vs 300 ps. PDN stripes core-only: no clash. Synthesis (r2) folded ve_aval into sw_d (identical D): r3 adds the closed kit's ot_keep_regs (OT_KEEP_PIN_REGS=1) and pin_reg_split.tcl so every output pin has its own launch flop for face anchoring.",
+ "fixes": "r3 running (launched before the order). Conditions: GRT overflow 0 / DRC 0 on the N face; CTS <= 300 ps; face_guard is a recorded FAIL (RTL: 128 unused ve_oy + 2 s_d input bits, internally read output registers) independent of geometry.",
+ "reviewer": "S81-CORES kits_repin (author)",
+ "at": "2026-10-24T08:10:40-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (author self-review; GEOM-REVIEW second review pending)"
+}

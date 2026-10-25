@@ -1,0 +1,93 @@
+{
+ "kit": "ot_dsrom_su_hcpost_lane_pr_c",
+ "kit_hash": "f9758bc2393b18f7",
+ "outline_um": [
+  114.48,
+  114.48
+ ],
+ "pins": 357,
+ "faces": {
+  "N": {
+   "pins": 160,
+   "max_per_um": 2.0,
+   "mean_per_um": 1.4,
+   "layers": {
+    "M3": 80,
+    "M5": 80
+   },
+   "span": [
+    6.81,
+    107.68
+   ],
+   "groups": [
+    "c0",
+    "c1",
+    "c2",
+    "c3",
+    "p"
+   ]
+  },
+  "S": {
+   "pins": 2,
+   "max_per_um": 0.5,
+   "mean_per_um": 0.02,
+   "layers": {
+    "M3": 1,
+    "M5": 1
+   },
+   "span": [
+    29.13,
+    85.36
+   ],
+   "groups": [
+    "clk",
+    "rst_n"
+   ]
+  },
+  "W": {
+   "pins": 161,
+   "max_per_um": 2.0,
+   "mean_per_um": 1.41,
+   "layers": {
+    "M4": 161
+   },
+   "span": [
+    7.84,
+    107.68
+   ],
+   "groups": [
+    "r0",
+    "r1",
+    "r2",
+    "r3",
+    "v",
+    "y"
+   ]
+  },
+  "E": {
+   "pins": 34,
+   "max_per_um": 0.5,
+   "mean_per_um": 0.3,
+   "layers": {
+    "M4": 34
+   },
+   "span": [
+    8.94,
+    105.52
+   ],
+   "groups": [
+    "fault",
+    "o",
+    "vo"
+   ]
+  }
+ },
+ "macros": [],
+ "clock_pin": {
+  "name": "clk",
+  "x": 29.133,
+  "y": 0.019,
+  "face": "S",
+  "layer": "M3"
+ }
+}

@@ -1,0 +1,11 @@
+{
+ "kit": "dsfd_su_t_rxsf_c",
+ "kit_hash": "1d0918b602f9ff0b",
+ "date": "2026-10-24T13:05-07:00",
+ "reviewer": "claude kits_repin (Read the PNG)",
+ "verdict": "PASS-COND",
+ "png": "results/geom_review/dsfd_su_t_rxsf_c_fp.png",
+ "notes": "140.4^2 no macros, util 0.6 (closed); pins in tight clusters at the E/W face capacity (10-10.5/um on 2-um bins: i_x, o_u/o_u2/o_mx) exactly as the closed view (routed); clk E among i_x. COND: local pin-access density at cap.",
+ "pins_snapped_to_closed_lef_edge": 0,
+ "flow": "canonical: face_keep + face_guard on 1_synth.odb, clock balance to 250 before first repair, hold budget 100%, post-GRT slew 40 + FF hold, MCMM tc/bc, signoff.py final"
+}

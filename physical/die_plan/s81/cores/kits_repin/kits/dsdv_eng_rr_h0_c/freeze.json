@@ -1,0 +1,35 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "dsdv_eng_rr_h0_c",
+ "module": "dsdv_eng_rr_h0",
+ "outline_um": [
+  164.16,
+  267.84
+ ],
+ "ref_tile": "physical/die_plan/s81/cores/eng",
+ "spec_sha256": "83189218dc6de20692adaf40ce87eeb0bbdcecb6aab4ad133c1f3bf9a15db466",
+ "pins_file": "inputs/core_pins/dsdv_eng_rr_h0.json",
+ "pins_sha256": "e51fe116c4c20dbd67abfc53dd6898952417c807f7053ae364ff4328c4caa27f",
+ "pins": 645,
+ "pins_snapped_to_lef_edge": 645,
+ "clocks": [
+  "ck"
+ ],
+ "resets": [],
+ "recipe_sha256": "df08eba8770466d1fc0bea2a59deca99f3d25f67aa86408972a20fef00250cb6",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)"
+ ],
+ "repo_rev": "6be7b45a41",
+ "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
+ "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
+ "macros": [],
+ "rtl_patch": null,
+ "kit_hash": "0bc5179cb5f5fa93"
+}

@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "dsdv_eng_rr_e_c",
+ "module": "dsdv_eng_rr_e",
+ "outline_um": [
+  345.6,
+  466.56
+ ],
+ "ref_tile": "physical/die_plan/s81/cores/eng",
+ "spec_sha256": "781d3f247f22b8aa098470b9ed76e7644db4e58618508c4bbff8f9d2deb0da63",
+ "pins_file": "inputs/core_pins/dsdv_eng_rr_e.json",
+ "pins_sha256": "6b27b21ca5eabc4adad32926df87aeed6717f2a3304d547738095b476b4f1dbd",
+ "pins": 2698,
+ "pins_snapped_to_lef_edge": 2698,
+ "clocks": [
+  "ck"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "b25ba605d2b5eb2a8b316fb4a683e5517a0bb8c578f651852811fe369382e2d0",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)"
+ ],
+ "repo_rev": "6be7b45a41",
+ "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
+ "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
+ "macros": [
+  "ot_rom_4096x72_m8 17.28 103.68 R0 {*u_win?u_map?m?0??rom}",
+  "ot_rom_4096x72_m8 17.28 166.608 R0 {*u_win?u_map?m?1??rom}",
+  "ot_rom_4096x72_m8 17.28 229.536 R0 {*u_win?u_map?m?2??rom}",
+  "ot_rom_4096x72_m8 17.28 292.464 R0 {*u_win?u_map?m?3??rom}",
+  "ot_rom_4096x72_m8 86.4 103.68 R0 {*u_win?u_map?m?4??rom}",
+  "ot_rom_4096x72_m8 86.4 166.608 R0 {*u_win?u_map?m?5??rom}",
+  "ot_rom_4096x72_m8 86.4 229.536 R0 {*u_win?u_map?m?6??rom}",
+  "ot_rom_4096x72_m8 86.4 292.464 R0 {*u_win?u_map?m?7??rom}",
+  "ot_sram_1r1w_64x512_m1_r2c2 151.2 43.2 R0 {*u_xq?u_wl}",
+  "ot_sram_1r1w_64x512_m1_r2c2 151.2 120.96 R0 {*u_xq?u_b0}",
+  "ot_sram_1r1w_64x512_m1_r2c2 151.2 198.72 R0 {*u_xq?u_b1}",
+  "ot_sram_1r1w_512x128_m4_r2c2 151.2 276.48 R0 {*u_win?u_h}",
+  "ot_sram_1r1w_128x256_m1_r2c2 151.2 306.192 R0 {*u_lkp?u_e?u_row_e}",
+  "ot_sram_1r1w_128x256_m1_r2c2 151.2 347.28 R0 {*u_lkp?u_e?u_row_o}",
+  "ot_sram_1r1w_128x256_m1_r2c2 151.2 388.368 R0 {*u_lkp?u_e?u_row_a}"
+ ],
+ "rtl_patch": null,
+ "kit_hash": "63514695ead5d578"
+}

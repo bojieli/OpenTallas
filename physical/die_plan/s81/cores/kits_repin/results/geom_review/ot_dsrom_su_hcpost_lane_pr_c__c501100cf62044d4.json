@@ -1,0 +1,11 @@
+{
+ "kit": "ot_dsrom_su_hcpost_lane_pr_c",
+ "kit_hash": "c501100cf62044d4",
+ "date": "2026-10-24T13:05-07:00",
+ "reviewer": "claude kits_repin (Read the PNG)",
+ "verdict": "PASS",
+ "png": "results/geom_review/ot_dsrom_su_hcpost_lane_pr_c_fp.png",
+ "notes": "114.48^2, no macros; W r0..r3/y/v 161 pins, N c0..c3/p 160, E o/vo/fault 34 sparse, clk S at x29, rst_n S. Max 2/um (caps 10.4 E/W, 24.3 N/S). Data flow W/N in -> E out; open core.",
+ "pins_snapped_to_closed_lef_edge": 190,
+ "flow": "canonical: face_keep + face_guard on 1_synth.odb, clock balance to 250 before first repair, hold budget 100%, post-GRT slew 40 + FF hold, MCMM tc/bc, signoff.py final"
+}

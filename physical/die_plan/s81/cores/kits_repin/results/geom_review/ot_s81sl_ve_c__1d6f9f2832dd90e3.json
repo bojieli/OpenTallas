@@ -1,0 +1,11 @@
+{
+ "kit": "ot_s81sl_ve_c",
+ "kit_hash": "1d6f9f2832dd90e3",
+ "date": "2026-10-24T13:05-07:00",
+ "reviewer": "claude kits_repin (Read the PNG)",
+ "verdict": "PASS",
+ "png": "results/geom_review/ot_s81sl_ve_c_fp.png",
+ "notes": "345.6^2 no macros, 460k-cell closed view; W r_*/p_* 486 pins at 2/um, E a_*/o_* 806 at 3/um, N none, S clk x86.9/fault/rst_n. Data W->E; open core.",
+ "pins_snapped_to_closed_lef_edge": 13,
+ "flow": "canonical: face_keep + face_guard on 1_synth.odb, clock balance to 250 before first repair, hold budget 100%, post-GRT slew 40 + FF hold, MCMM tc/bc, signoff.py final"
+}
