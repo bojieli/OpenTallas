@@ -1,0 +1,6 @@
+OT_TAP_BALANCE it0 target 314: clk=303(295-315,25502)
+OT_TAP_BALANCE done: 0 delay cells; tap mean insertion 303..303 ps (spread 0, target 314); empty taps 0 
+OT_TAP_CHECK OK every tap tree <= 354 ps
+Error: cts.tcl, 87 can't read "la_d": no such variable
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/kr_ot_s81sl_ve_m_k/base/4_1_cts.odb] Error 2

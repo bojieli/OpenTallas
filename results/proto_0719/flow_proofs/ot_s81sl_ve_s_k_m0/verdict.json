@@ -1,0 +1,38 @@
+{
+ "id": "40a107b688fb",
+ "status": "DONE-CRASH",
+ "finished": 1792933935.0314944,
+ "history": [
+  [
+   "2026-10-25 05:22:17 PDT",
+   "WAIT-GEOM",
+   "REQ"
+  ],
+  [
+   "2026-10-25 05:32:09 PDT",
+   "RUNNING",
+   "attempt 1"
+  ],
+  [
+   "2026-10-25 06:12:15 PDT",
+   "CRASH",
+   "flow-error: exit 2"
+  ],
+  [
+   "2026-10-25 06:12:16 PDT",
+   "DONE-CRASH",
+   "exit 2"
+  ]
+ ],
+ "host": "epyc1",
+ "ran_on": "localhost",
+ "kit": "epyc1:/srv/opentallas-scratch2/claude/flow/rebuild/ot_s81sl_ve_s_k_m0",
+ "src": "claude/flow-hold-basis-1025@e07bd4c87",
+ "reasons": "exit 2",
+ "verdict": "FAIL",
+ "stage": "cts",
+ "cause": "POST_CTS leaf_affinity la_d procedure/global scope mismatch",
+ "grt": "NOT RUN",
+ "signoff": "NOT RUN",
+ "next": "Check source/design compatibility; generate isolated successor with global-scope helper fix8234352a5 and coherent current helpers, never in-place old rerun"
+}

@@ -1,0 +1,7 @@
+OT_TAP_BALANCE it0 target 264: ck=242(230-268,18533)
+OT_TAP_BALANCE it1 target 264: ck=278(266-305,18533)
+OT_TAP_BALANCE done: 1 delay cells; tap mean insertion 278..278 ps (spread 0, target 264); empty taps 0 
+OT_TAP_CHECK WARN trees over 304 ps: ck=305; re-pitch taps to <= 656 um (partition clock.tap_pitch_um)
+Error: cts.tcl, 87 can't read "la_d": no such variable
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/kr_dsdv_eng_rr_h0_c/base/4_1_cts.odb] Error 2
