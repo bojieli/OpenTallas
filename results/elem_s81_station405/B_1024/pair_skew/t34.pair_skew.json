@@ -1,0 +1,120 @@
+{
+ "summaries": [
+  {
+   "corner": "TT",
+   "scope": "kit",
+   "signoff": {
+    "wns_ps": 2.55,
+    "tns_ps": 0.0,
+    "whs_ps": -20.04,
+    "ths_ps": -11175.93
+   },
+   "classes": {
+    "intra": {
+     "setup": {
+      "n": 1028,
+      "worst_abs_ps": 85.66,
+      "worst_signed_ps": -85.66,
+      "p99_abs_ps": 83.25,
+      "worst_launch": "u_ft_ft0_s0/q[467]$_DFF_P_",
+      "worst_capture": "u_ft_ft0_s1/q[467]$_DFF_P_"
+     },
+     "hold": {
+      "n": 1028,
+      "worst_abs_ps": 65.28,
+      "worst_signed_ps": -65.28,
+      "p99_abs_ps": 62.85,
+      "worst_launch": "u_ft_ft0_s0/q[467]$_DFF_P_",
+      "worst_capture": "u_ft_ft0_s1/q[467]$_DFF_P_"
+     },
+     "all": {
+      "n": 2056,
+      "worst_abs_ps": 85.66,
+      "worst_signed_ps": -85.66,
+      "p99_abs_ps": 81.81,
+      "worst_launch": "u_ft_ft0_s0/q[467]$_DFF_P_",
+      "worst_capture": "u_ft_ft0_s1/q[467]$_DFF_P_"
+     }
+    }
+   },
+   "seams": {},
+   "verify": {},
+   "spread_all": {
+    "n": 3086,
+    "min_ps": 185.14,
+    "max_ps": 273.77,
+    "spread_ps": 88.63,
+    "p1_ps": 187.45,
+    "p99_ps": 272.63,
+    "p1_p99_ps": 85.18
+   },
+   "spread_face": null
+  },
+  {
+   "corner": "FF",
+   "scope": "kit",
+   "signoff": {
+    "wns_ps": -23.58,
+    "tns_ps": -12143.51,
+    "whs_ps": 10.22,
+    "ths_ps": 0.0
+   },
+   "classes": {
+    "intra": {
+     "setup": {
+      "n": 1028,
+      "worst_abs_ps": 67.83,
+      "worst_signed_ps": -67.83,
+      "p99_abs_ps": 65.39,
+      "worst_launch": "u_ft_ft0_s0/q[467]$_DFF_P_",
+      "worst_capture": "u_ft_ft0_s1/q[467]$_DFF_P_"
+     },
+     "hold": {
+      "n": 1028,
+      "worst_abs_ps": 50.38,
+      "worst_signed_ps": -50.38,
+      "p99_abs_ps": 47.88,
+      "worst_launch": "u_ft_ft0_s0/q[467]$_DFF_P_",
+      "worst_capture": "u_ft_ft0_s1/q[467]$_DFF_P_"
+     },
+     "all": {
+      "n": 2056,
+      "worst_abs_ps": 67.83,
+      "worst_signed_ps": -67.83,
+      "p99_abs_ps": 63.91,
+      "worst_launch": "u_ft_ft0_s0/q[467]$_DFF_P_",
+      "worst_capture": "u_ft_ft0_s1/q[467]$_DFF_P_"
+     }
+    }
+   },
+   "seams": {},
+   "verify": {},
+   "spread_all": {
+    "n": 3086,
+    "min_ps": 150.28,
+    "max_ps": 221.99,
+    "spread_ps": 71.71,
+    "p1_ps": 152.65,
+    "p99_ps": 220.82,
+    "p1_p99_ps": 68.17
+   },
+   "spread_face": null
+  }
+ ],
+ "gate": {
+  "verdict": "FAIL",
+  "limit_ps": 80.0,
+  "worst_abs_ps": {
+   "TT_intra": 85.66,
+   "FF_intra": 67.83
+  },
+  "fails": [
+   "TT intra pair skew -85.7 ps (u_ft_ft0_s0/q[467]$_DFF_P_ -> u_ft_ft0_s1/q[467]$_DFF_P_) > 80"
+  ],
+  "notes": []
+ },
+ "files": [
+  "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t34/pairskew/ps_TT.tsv",
+  "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t34/pairskew/ps_FF.tsv"
+ ]
+}

@@ -127,6 +127,9 @@ def main(argv=None):
     a3.add_argument("--cap-margin", type=float, default=None, metavar="PCT", help="export CAP_MARGIN (e.g. 20)")
     a3.add_argument("--skip-kit-ir", action="store_true",
                     help="clear PWR/GND_NETS_VOLTAGES: skip ORFS 6_report per-kit PDNSim IR (IR NOT RUN; TRIAL IR required)")
+    a3.add_argument("--max-wire-um", type=float, default=None, metavar="UM",
+                    help="post-GRT repair_design -max_wire_length UM (kit grt_maxwire.tcl as PRE_GLOBAL_ROUTE_TCL; "
+                         "repeater pitch so routed M2/M3 segments keep max slew; default off)")
     a3.add_argument("--kit-rtl", action="append", default=[], metavar="TYPE=FILELIST",
                     help="G3: the type's kit RTL = this filelist (bind.py kit-rtl: bound partition inside the plan "
                          "wrapper) instead of the generated plan wrapper + type sources; repeatable")
@@ -150,7 +153,7 @@ def main(argv=None):
                 kits = gen_phys.write_phys(S.load(a.plan), a.out, a.rtl_root,
                                            a.types.split(",") if a.types else None, a.util, a.proof,
                                            dict(x.split("=", 1) for x in a.kit_rtl), a.hold_ff_margin,
-                                           (a.slew_margin, a.cap_margin), a.skip_kit_ir)
+                                           (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um)
             else:
                 kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views)]
         except gen_rtl.GenError as e:

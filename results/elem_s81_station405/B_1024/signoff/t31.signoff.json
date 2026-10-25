@@ -1,0 +1,415 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "dp_slice_station__t31",
+ "generated": "2026-10-24T19:00:43-07:00",
+ "host": "key-cardinal",
+ "inputs": {
+  "base": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/results/asap7/dp_slice_station__t31/base",
+  "orfs": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run",
+  "design": "dp_slice_station__t31",
+  "kit": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31",
+  "odb": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/results/asap7/dp_slice_station__t31/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/results/asap7/dp_slice_station__t31/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/constraint.sdc",
+  "sdc_source": "kit",
+  "synth": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/results/asap7/dp_slice_station__t31/base/1_2_yosys.v",
+  "final_v": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/results/asap7/dp_slice_station__t31/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/logs/asap7/dp_slice_station__t31/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/logs/asap7/dp_slice_station__t31/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/logs/asap7/dp_slice_station__t31/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/reports/asap7/dp_slice_station__t31/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/sdc_lint.json",
+  "record": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:asap7lock), one process per corner",
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "s81p_slice_station__t31",
+   "cells": 5766874.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk",
+    "clk_t1",
+    "clk_t10",
+    "clk_t11",
+    "clk_t12",
+    "clk_t13",
+    "clk_t14",
+    "clk_t15",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "clk_t6",
+    "clk_t7",
+    "clk_t8",
+    "clk_t9"
+   ],
+   "inputs": [
+    "arst_n",
+    "ft0_i",
+    "ft1_i",
+    "ft2_i",
+    "ft3_i",
+    "ft4_i",
+    "ft5_i",
+    "ft6_i",
+    "ft7_i"
+   ],
+   "outputs": [
+    "ft0_o",
+    "ft1_o",
+    "ft2_o",
+    "ft3_o",
+    "ft4_o",
+    "ft5_o",
+    "ft6_o",
+    "ft7_o"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": -5.27,
+   "sdc_wns_min": -17.36,
+   "sdc_tns_max": -54.46,
+   "sdc_tns_min": -9545.27,
+   "sdc_nviol_max": 40.0,
+   "sdc_nviol_min": 1480.0,
+   "std_wns_max": -5.27,
+   "std_wns_min": -17.36,
+   "std_tns_max": -54.46,
+   "std_tns_min": -9545.27,
+   "std_nviol_max": 40.0,
+   "std_nviol_min": 1480.0,
+   "slew_viol": 27.0,
+   "cap_viol": 0.0,
+   "fanout_max": 31.0,
+   "fanout_worst_net": "clknet_leaf_14_clk_t5",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 6560,
+    "min": 187.25,
+    "mean": 227.48,
+    "max": 260.98,
+    "spread": 73.73
+   },
+   "insertion_pinflops": {
+    "n": 5272,
+    "min": 187.25,
+    "mean": 228.81,
+    "max": 260.98,
+    "spread": 73.73
+   },
+   "ocv5_wns_max": -20.05,
+   "ocv5_wns_min": -31.05,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  },
+  "ff": {
+   "done": true,
+   "design": "s81p_slice_station__t31",
+   "cells": 5766874.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk",
+    "clk_t1",
+    "clk_t10",
+    "clk_t11",
+    "clk_t12",
+    "clk_t13",
+    "clk_t14",
+    "clk_t15",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "clk_t6",
+    "clk_t7",
+    "clk_t8",
+    "clk_t9"
+   ],
+   "inputs": [
+    "arst_n",
+    "ft0_i",
+    "ft1_i",
+    "ft2_i",
+    "ft3_i",
+    "ft4_i",
+    "ft5_i",
+    "ft6_i",
+    "ft7_i"
+   ],
+   "outputs": [
+    "ft0_o",
+    "ft1_o",
+    "ft2_o",
+    "ft3_o",
+    "ft4_o",
+    "ft5_o",
+    "ft6_o",
+    "ft7_o"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": -23.21,
+   "sdc_wns_min": 9.97,
+   "sdc_tns_max": -18593.05,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 2350.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": -23.21,
+   "std_wns_min": 9.97,
+   "std_tns_max": -18593.05,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 2350.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 22.0,
+   "cap_viol": 0.0,
+   "fanout_max": 31.0,
+   "fanout_worst_net": "clknet_leaf_14_clk_t5",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 6560,
+    "min": 151.36,
+    "mean": 182.03,
+    "max": 212.84,
+    "spread": 61.48
+   },
+   "insertion_pinflops": {
+    "n": 5272,
+    "min": 151.36,
+    "mean": 183.98,
+    "max": 212.84,
+    "spread": 61.48
+   },
+   "ocv5_wns_max": -34.91,
+   "ocv5_wns_min": 6.04,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  }
+ },
+ "sdc_lint": {
+  "verdict": "PASS",
+  "mode": "kit sdc_lint.json",
+  "errors": [],
+  "n_errors": 0,
+  "sdc": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/constraint.sdc",
+  "sdc_source": "kit"
+ },
+ "face_guard": {
+  "verdict": "PASS",
+  "top": "s81p_slice_station__t31",
+  "checked": 5272,
+  "ok": 5272,
+  "fail_counts": {},
+  "fails": {},
+  "netlist": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/results/asap7/dp_slice_station__t31/base/1_2_yosys.v",
+  "pins": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/pins.json",
+  "boundary_context": null,
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "FAIL",
+   "wns_ps": -5.27,
+   "tns_ps": -54.46,
+   "violators": 40.0
+  },
+  "hold_ff": {
+   "verdict": "PASS",
+   "wns_ps": 9.97,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": 9.97,
+   "overlay": "applied vclk in_min -40 out_min 0"
+  },
+  "drv": {
+   "verdict": "FAIL",
+   "by_corner": {
+    "tt": {
+     "slew": 27.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 22.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {
+    "tt": {
+     "slew": 27.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 22.0,
+     "cap": 0.0
+    }
+   }
+  },
+  "fanout": {
+   "verdict": "PASS",
+   "limit": 64,
+   "violators": {
+    "tt": 0.0,
+    "ff": 0.0
+   },
+   "max_fanout": 31.0,
+   "worst_net": "clknet_leaf_14_clk_t5"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "PASS",
+   "spread_max_ps": 80.0,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 5272,
+      "min": 187.25,
+      "mean": 228.81,
+      "max": 260.98,
+      "spread": 73.73
+     },
+     "all": {
+      "n": 6560,
+      "min": 187.25,
+      "mean": 227.48,
+      "max": 260.98,
+      "spread": 73.73
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 5272,
+      "min": 151.36,
+      "mean": 183.98,
+      "max": 212.84,
+      "spread": 61.48
+     },
+     "all": {
+      "n": 6560,
+      "min": 151.36,
+      "mean": 182.03,
+      "max": 212.84,
+      "spread": 61.48
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "problems": [],
+   "insertion_target_ps": 250.0
+  },
+  "sdc_lint": {
+   "verdict": "PASS",
+   "mode": "kit sdc_lint.json",
+   "errors": [],
+   "n_errors": 0,
+   "sdc": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "PASS",
+   "top": "s81p_slice_station__t31",
+   "checked": 5272,
+   "ok": 5272,
+   "fail_counts": {},
+   "fails": {},
+   "netlist": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/run/results/asap7/dp_slice_station__t31/base/1_2_yosys.v",
+   "pins": "/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/pins.json",
+   "boundary_context": null,
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  }
+ },
+ "reasons": [
+  "setup_tt: FAIL WNS -5.27 ps, 40 endpoints",
+  "drv: FAIL TT slew 27.0 cap 0.0, FF slew 22.0 cap 0.0"
+ ],
+ "verdict": "NOT SIGNED"
+}

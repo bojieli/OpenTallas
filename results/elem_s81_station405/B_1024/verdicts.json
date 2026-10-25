@@ -1,0 +1,831 @@
+{
+ "schema": "opentallas.elem_s81.station405B.verdicts.v1",
+ "date": "2026-10-24",
+ "variant": "B: plan clock.ft_hop_in_share 0.16, FF-only hold repair margin 5, SLEW 50/CAP 20, --skip-kit-ir",
+ "notes": [
+  "IR NOT RUN in every record (TRIAL IR required); DIE-STA seam STA on real views pending for all",
+  "signoff.py (main) still gates max-min pin-flop spread <= 80; owner decision 5 makes it INFO and gates related-pair skew with CPPR <= 80 (measured for t1/t34 in pair_skew/)",
+  "ALL station kits (SIGNED ones too) carry per-tap async reset synchronisers -> not conforming to owner decision 2; re-kit with the RESET lane tool required before die use"
+ ],
+ "tiles": [
+  {
+   "type": "slice_station__t1",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T18:55:09-07:00",
+   "tt_setup_wns_ps": 4.44,
+   "ff_hold_wns_ps": 10.5,
+   "drv": {
+    "tt": {
+     "slew": 5.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 1.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 4112,
+      "min": 179.01,
+      "mean": 235.02,
+      "max": 278.81,
+      "spread": 99.8
+     },
+     "all": {
+      "n": 7206,
+      "min": 178.73,
+      "mean": 232.34,
+      "max": 278.81,
+      "spread": 100.08
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 4112,
+      "min": 142.12,
+      "mean": 187.31,
+      "max": 232.5,
+      "spread": 90.38
+     },
+     "all": {
+      "n": 7206,
+      "min": 142.12,
+      "mean": 185.39,
+      "max": 232.5,
+      "spread": 90.38
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "drv: FAIL TT slew 5.0 cap 0.0, FF slew 1.0 cap 0.0",
+    "clock: FAIL TT pin-flop spread 99.8 ps > 80; FF pin-flop spread 90.4 ps > 80"
+   ],
+   "cause": "DRV 5 slew (t11 class) + CLOCK: related-pair skew CPPR TT 83.3 > 80 (cross-tap insertion mismatch); TT/FF timing met",
+   "record": "epyc3:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t2",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T19:22:31-07:00",
+   "tt_setup_wns_ps": -8.09,
+   "ff_hold_wns_ps": 10.04,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 4112,
+      "min": 176.69,
+      "mean": 241.99,
+      "max": 265.97,
+      "spread": 89.28
+     },
+     "all": {
+      "n": 8238,
+      "min": 176.69,
+      "mean": 243.53,
+      "max": 266.4,
+      "spread": 89.71
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 4112,
+      "min": 143.22,
+      "mean": 193.15,
+      "max": 213.88,
+      "spread": 70.66
+     },
+     "all": {
+      "n": 8238,
+      "min": 143.22,
+      "mean": 194.4,
+      "max": 214.67,
+      "spread": 71.45
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -8.09 ps, 186 endpoints",
+    "clock: FAIL TT pin-flop spread 89.3 ps > 80"
+   ],
+   "cause": "CLOCK: TT in2reg setup -8.09 at station-0 eq flop on an early tap (clk_t13 routed insertion ~171 vs vclk 250: tap tree internal skew 208-287 at CTS); spread 89.3",
+   "record": "epyc3:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t2/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t11",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T18:17:47-07:00",
+   "tt_setup_wns_ps": 12.94,
+   "ff_hold_wns_ps": 9.9,
+   "drv": {
+    "tt": {
+     "slew": 4.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 4.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 5272,
+      "min": 200.16,
+      "mean": 233.73,
+      "max": 264.43,
+      "spread": 64.27
+     },
+     "all": {
+      "n": 6560,
+      "min": 172.6,
+      "mean": 228.18,
+      "max": 264.43,
+      "spread": 91.83
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 5272,
+      "min": 161.05,
+      "mean": 185.93,
+      "max": 214.58,
+      "spread": 53.53
+     },
+     "all": {
+      "n": 6560,
+      "min": 138.79,
+      "mean": 181.42,
+      "max": 214.58,
+      "spread": 75.79
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "drv: FAIL TT slew 4.0 cap 0.0, FF slew 4.0 cap 0.0"
+   ],
+   "cause": "DRV: 4 max-slew pins, ~150 um single-driver BUFx3 -> INVx1 M2/M3 segments (fix: gen.py phys --max-wire-um 100)",
+   "record": "epyc3:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t11/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t12",
+   "verdict": "SIGNED",
+   "generated": "2026-10-24T14:45:51-07:00",
+   "tt_setup_wns_ps": 18.24,
+   "ff_hold_wns_ps": 8.62,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 1374,
+      "min": 215.65,
+      "mean": 234.86,
+      "max": 260.9,
+      "spread": 45.25
+     },
+     "all": {
+      "n": 2764,
+      "min": 215.65,
+      "mean": 233.27,
+      "max": 265.38,
+      "spread": 49.73
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1374,
+      "min": 167.64,
+      "mean": 186.01,
+      "max": 208.7,
+      "spread": 41.06
+     },
+     "all": {
+      "n": 2764,
+      "min": 167.64,
+      "mean": 184.66,
+      "max": 210.87,
+      "spread": 43.23
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [],
+   "cause": "",
+   "record": "epyc1:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t12/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t13",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T14:46:09-07:00",
+   "tt_setup_wns_ps": -67.37,
+   "ff_hold_wns_ps": 10.22,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 2216,
+      "min": 172.78,
+      "mean": 218.35,
+      "max": 236.89,
+      "spread": 64.11
+     },
+     "all": {
+      "n": 4440,
+      "min": 168.4,
+      "mean": 221.61,
+      "max": 239.45,
+      "spread": 71.05
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 2216,
+      "min": 140.74,
+      "mean": 177.88,
+      "max": 190.91,
+      "spread": 50.17
+     },
+     "all": {
+      "n": 4440,
+      "min": 136.6,
+      "mean": 179.48,
+      "max": 193.86,
+      "spread": 57.26
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -67.37 ps, 54 endpoints"
+   ],
+   "cause": "RESET: arst_n -> per-tap async rsync recovery (owner decision 2 removes it); re-kit with RESET lane tool",
+   "record": "epyc1:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t13/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t15",
+   "verdict": "SIGNED",
+   "generated": "2026-10-24T14:45:51-07:00",
+   "tt_setup_wns_ps": 13.4,
+   "ff_hold_wns_ps": 7.74,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 554,
+      "min": 178.91,
+      "mean": 226.7,
+      "max": 252.45,
+      "spread": 73.54
+     },
+     "all": {
+      "n": 1116,
+      "min": 178.91,
+      "mean": 228.04,
+      "max": 257.22,
+      "spread": 78.31
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 554,
+      "min": 143.77,
+      "mean": 180.91,
+      "max": 202.51,
+      "spread": 58.74
+     },
+     "all": {
+      "n": 1116,
+      "min": 143.77,
+      "mean": 181.23,
+      "max": 205.45,
+      "spread": 61.68
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [],
+   "cause": "",
+   "record": "epyc1:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t15/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t16",
+   "verdict": "SIGNED",
+   "generated": "2026-10-24T14:48:36-07:00",
+   "tt_setup_wns_ps": 13.02,
+   "ff_hold_wns_ps": 10.23,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 2198,
+      "min": 218.89,
+      "mean": 235.69,
+      "max": 256.76,
+      "spread": 37.87
+     },
+     "all": {
+      "n": 4404,
+      "min": 218.89,
+      "mean": 232.61,
+      "max": 256.76,
+      "spread": 37.87
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 2198,
+      "min": 172.65,
+      "mean": 187.68,
+      "max": 205.96,
+      "spread": 33.31
+     },
+     "all": {
+      "n": 4404,
+      "min": 172.65,
+      "mean": 185.6,
+      "max": 205.96,
+      "spread": 33.31
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [],
+   "cause": "",
+   "record": "epyc1:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t16/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t17",
+   "verdict": "SIGNED",
+   "generated": "2026-10-24T14:45:55-07:00",
+   "tt_setup_wns_ps": 10.29,
+   "ff_hold_wns_ps": 10.38,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 1108,
+      "min": 216.03,
+      "mean": 230.81,
+      "max": 252.39,
+      "spread": 36.36
+     },
+     "all": {
+      "n": 2224,
+      "min": 216.03,
+      "mean": 232.17,
+      "max": 254.45,
+      "spread": 38.42
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1108,
+      "min": 169.49,
+      "mean": 183.03,
+      "max": 202.87,
+      "spread": 33.38
+     },
+     "all": {
+      "n": 2224,
+      "min": 169.49,
+      "mean": 184.41,
+      "max": 202.87,
+      "spread": 33.38
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [],
+   "cause": "",
+   "record": "epyc1:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t17/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t20",
+   "verdict": "SIGNED",
+   "generated": "2026-10-24T14:48:42-07:00",
+   "tt_setup_wns_ps": 12.05,
+   "ff_hold_wns_ps": 9.97,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 2216,
+      "min": 220.53,
+      "mean": 233.47,
+      "max": 261.17,
+      "spread": 40.64
+     },
+     "all": {
+      "n": 4440,
+      "min": 218.82,
+      "mean": 230.57,
+      "max": 261.17,
+      "spread": 42.35
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 2216,
+      "min": 175.25,
+      "mean": 186.62,
+      "max": 209.09,
+      "spread": 33.84
+     },
+     "all": {
+      "n": 4440,
+      "min": 174.12,
+      "mean": 184.49,
+      "max": 209.09,
+      "spread": 34.97
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [],
+   "cause": "",
+   "record": "epyc1:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t20/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t21",
+   "verdict": "SIGNED",
+   "generated": "2026-10-24T14:46:05-07:00",
+   "tt_setup_wns_ps": 9.82,
+   "ff_hold_wns_ps": 10.14,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 1662,
+      "min": 199.63,
+      "mean": 222.6,
+      "max": 264.85,
+      "spread": 65.22
+     },
+     "all": {
+      "n": 3332,
+      "min": 199.05,
+      "mean": 216.26,
+      "max": 264.85,
+      "spread": 65.8
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1662,
+      "min": 160.3,
+      "mean": 178.71,
+      "max": 210.7,
+      "spread": 50.4
+     },
+     "all": {
+      "n": 3332,
+      "min": 159.68,
+      "mean": 174.02,
+      "max": 210.7,
+      "spread": 51.02
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [],
+   "cause": "",
+   "record": "epyc1:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t21/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t24",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T19:06:28-07:00",
+   "tt_setup_wns_ps": -7.71,
+   "ff_hold_wns_ps": 10.19,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 4112,
+      "min": 176.7,
+      "mean": 244.23,
+      "max": 267.91,
+      "spread": 91.21
+     },
+     "all": {
+      "n": 8238,
+      "min": 176.7,
+      "mean": 246.53,
+      "max": 270.93,
+      "spread": 94.23
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 4112,
+      "min": 143.27,
+      "mean": 195.06,
+      "max": 214.91,
+      "spread": 71.64
+     },
+     "all": {
+      "n": 8238,
+      "min": 143.27,
+      "mean": 196.83,
+      "max": 217.92,
+      "spread": 74.65
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -7.71 ps, 228 endpoints",
+    "clock: FAIL TT pin-flop spread 91.2 ps > 80"
+   ],
+   "cause": "CLOCK: TT in2reg setup -7.71 (same class as t2); spread 91.2",
+   "record": "epyc3:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t24/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t30",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T15:26:32-07:00",
+   "tt_setup_wns_ps": -81.43,
+   "ff_hold_wns_ps": 9.86,
+   "drv": {
+    "tt": {
+     "slew": 0.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 1564,
+      "min": 213.15,
+      "mean": 223.98,
+      "max": 255.05,
+      "spread": 41.9
+     },
+     "all": {
+      "n": 3136,
+      "min": 212.73,
+      "mean": 223.32,
+      "max": 255.05,
+      "spread": 42.32
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1564,
+      "min": 167.38,
+      "mean": 177.39,
+      "max": 205.28,
+      "spread": 37.9
+     },
+     "all": {
+      "n": 3136,
+      "min": 166.9,
+      "mean": 176.78,
+      "max": 205.28,
+      "spread": 38.38
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -81.43 ps, 2 endpoints"
+   ],
+   "cause": "RESET: arst_n -> u_rsync_t13 recovery (same class as t13)",
+   "record": "intel1:/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t30/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t31",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T19:00:43-07:00",
+   "tt_setup_wns_ps": -5.27,
+   "ff_hold_wns_ps": 9.97,
+   "drv": {
+    "tt": {
+     "slew": 27.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 22.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 5272,
+      "min": 187.25,
+      "mean": 228.81,
+      "max": 260.98,
+      "spread": 73.73
+     },
+     "all": {
+      "n": 6560,
+      "min": 187.25,
+      "mean": 227.48,
+      "max": 260.98,
+      "spread": 73.73
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 5272,
+      "min": 151.36,
+      "mean": 183.98,
+      "max": 212.84,
+      "spread": 61.48
+     },
+     "all": {
+      "n": 6560,
+      "min": 151.36,
+      "mean": 182.03,
+      "max": 212.84,
+      "spread": 61.48
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -5.27 ps, 40 endpoints",
+    "drv: FAIL TT slew 27.0 cap 0.0, FF slew 22.0 cap 0.0"
+   ],
+   "cause": "DRV 27 slew (t11 class, all on >=125 um segments) + CLOCK: TT in2reg setup -5.27 (early tap)",
+   "record": "intel1:/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t31/signoff/signoff.json"
+  },
+  {
+   "type": "slice_station__t34",
+   "verdict": "NOT SIGNED",
+   "generated": "2026-10-24T18:23:35-07:00",
+   "tt_setup_wns_ps": 2.55,
+   "ff_hold_wns_ps": 10.22,
+   "drv": {
+    "tt": {
+     "slew": 2.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 0.0,
+     "cap": 0.0
+    }
+   },
+   "drc": 0,
+   "spread_info": {
+    "tt": {
+     "pinflops": {
+      "n": 3082,
+      "min": 185.14,
+      "mean": 236.79,
+      "max": 273.77,
+      "spread": 88.63
+     },
+     "all": {
+      "n": 3086,
+      "min": 185.14,
+      "mean": 236.81,
+      "max": 273.77,
+      "spread": 88.63
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 3082,
+      "min": 150.28,
+      "mean": 189.72,
+      "max": 221.99,
+      "spread": 71.71
+     },
+     "all": {
+      "n": 3086,
+      "min": 150.28,
+      "mean": 189.74,
+      "max": 221.99,
+      "spread": 71.71
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "reasons": [
+    "drv: FAIL TT slew 2.0 cap 0.0",
+    "clock: FAIL TT pin-flop spread 88.6 ps > 80"
+   ],
+   "cause": "DRV 2 slew (same class as t11) + CLOCK: related-pair skew CPPR TT 85.7 > 80 (s0->s1 cross-tap, routed tap insertion mismatch)",
+   "record": "intel1:/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t34/signoff/signoff.json"
+  }
+ ]
+}
