@@ -1,0 +1,19 @@
+{
+  "timestamp": "2026-10-25 13:46 PDT",
+  "kit": "codex-kv-cores-1309/astk_z3",
+  "odb_sha256": "2a9efe1374fc28c24369448e4524dea1333984f0425c3626c39d07f9edffa219",
+  "source": "codex/kv-astk2-1309 followup freeze pending",
+  "verdict": "PASS-COND ONE CTS-only after frozen source/currentLEC gates",
+  "findings": [
+    "Independently viewed actual detailed placement+zone/density overlay",
+    "4contiguouszones ~5235/5308/5298/5287FF;rest4042 includesfaceFF/ctl",
+    "Actual replica receiptPASS160wdec8zh68zk240readaddr, sameODBhash",
+    "Remaininggroups[] after DPL; no macro wall/newoutline"
+  ],
+  "conditions": [
+    "Exact frozen source hash beforeCTS",
+    "Actual CTS/tapcolors and TTFFpergroupinsertion/load",
+    "Intra-zoneadder and ctl/readselectcrosszone pairskew/FFcensus beforeGRT",
+    "No GRT/DRT/finalG2 token"
+  ]
+}
