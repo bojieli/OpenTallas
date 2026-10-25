@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm_b2.native_bind_rtl.v1",
  "rule": "HBM-BIND 2026-10-24 (OWNER: B2l accepted, bind natively; host in-band). Per item: module, params, bench, mutants caught, verdict. Wiring / param-only items are in b2_bind_wiring.json (applied by tools/hbm_b2/b2_top.py; port-bind report b2_top/pb_w.log).",
  "source_branch": "claude/hbm-bind-1024r",
- "source_sha_at_write": "688b7752a07a9408c5ad3f978dd6697f0ae4ed29",
+ "source_sha_at_write": "7994e6a60b5894533c8ad92437bc6788a816a170",
  "rtl_items": [
   {
    "id": "R-HOST",
@@ -160,7 +160,32 @@
   {
    "id": "D-DELAY",
    "kind": "param",
-   "status": "done (63 params from b2_delays.json)"
+   "status": "done (62 params from b2_delays.json)"
   }
- ]
+ ],
+ "gate": {
+  "when": "2026-10-24 22:56 PDT",
+  "source_sha": "7994e6a60",
+  "plan_sha": "160c8579c",
+  "plan_source": "physical/die_plan/hbm_arch/B2n on claude/hbm-b2n-1024@160c8579c (METH-ALIGN base). Its lanes/ports/latency/census sections are hash-identical to claude/hbm-1024r@b590f6e2f, from which results/arch/hbm_arch_1024/b2_delay_inputs/B2n_lanes.json was extracted",
+  "run": "ssh epyc1 ot-run --mem 160 --threads 48 --hosts epyc2 -- bash tools/hbm_b2/gate_b2_bind.sh (unit oth-ubuntu-66412-1792906215, measured peak ~50 GB)",
+  "lines": {
+   "1 hfd_ep_static_vc2": "PASS",
+   "2 VM ring2": "PASS",
+   "3 vm_status4 NQ": "PASS",
+   "4a SU stree NLEG": "PASS",
+   "4b SU programme PARTS": "PASS",
+   "4c SU core 2-writer": "PASS",
+   "6a IDX rootctl SID/NQ/NL": "PASS",
+   "6b IDX selector NL": "PASS",
+   "6c IDX top-k link NL": "PASS",
+   "6d ARGMAX SID": "PASS",
+   "6e ARGMAX wide ACK (CNTW)": "PASS",
+   "6f ARGMAX r2 functional (default)": "PASS",
+   "5a wiring delta + delays reproduce from the plan lane table": "PASS",
+   "5b b2_top no CUT_UNRESOLVED": "FAIL: only 16 hc_eng cuts (gathered_mix_*, qps*, q_fault)",
+   "5c port-bind beyond r18h5 baseline": "FAIL: only ot_hbm_hc_root_static (width 66vs128 etc., tgt tied); params_not_in_rtl 0"
+  },
+  "verdict": "B2_BIND_GATE FAIL on HC root only. HC is the single open bind item (HBM-HC agent: exact128 halves, codex/hbm-bind-hc-r2-1024); everything else passes"
+ }
 }
