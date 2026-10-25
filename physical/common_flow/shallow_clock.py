@@ -288,8 +288,6 @@ def ellipse_pick(sites,B,C,R,prev,core,rmax,u,rays=20):
                 else: hi=mid
             cands.append(at(hi))
         if not cands: cands.append(M)
-    # add the in-between points of the direct path (short legs, R ~ |B-C|)
-    cands+= [[B[0]+(C[0]-B[0])*t,B[1]+(C[1]-B[1])*t] for t in (0.35,0.5,0.65)]
     best=None
     for q in cands:
         s=sites.legal(q,reserve=False)['xy']
