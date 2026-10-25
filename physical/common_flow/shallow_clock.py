@@ -486,9 +486,17 @@ def main():
     ap.add_argument('--closed-loop',action='store_true',help='structured spine of private buffered legs (re-targeted by --cl-step)')
     ap.add_argument('--cl-step',metavar='MEAS',help='measured arrivals TSV; updates --out plan in place and writes --apply moves')
     ap.add_argument('--target-ps',type=float,default=20.0)
+    ap.add_argument('--new-phase',metavar='TAG',help='start a new measured phase (other metric): clear best + leg histories')
     ap.add_argument('--restore-best',action='store_true',help='write --apply moves back to the best measured iteration')
     a=ap.parse_args();g=load_geometry(a.geometry)
     env=__import__('os').environ
+    if a.new_phase:
+        p=json.loads(Path(a.out).read_text())
+        p.pop('best',None);p['phase']=a.new_phase
+        for L in p['legs']: L['hist']=[]
+        p['iters'].append(dict(phase=a.new_phase))
+        Path(a.out).write_text(json.dumps(p,indent=1)+'\n')
+        print(json.dumps(dict(phase=a.new_phase)));return
     if a.restore_best:
         p=json.loads(Path(a.out).read_text())
         b=p['best'];pos={nm:(ll,o) for nm,ll,o in b['nodes']}

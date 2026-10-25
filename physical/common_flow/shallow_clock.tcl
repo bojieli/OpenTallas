@@ -289,6 +289,10 @@ proc ::ot_dtsh::cts {args} {
     rsz::repair_net_cmd [sta::db_net_to_sta $net] $max_wire 0 0
   }
   bind_new_pg
+  if {[info exists ::env(OT_DTSH_CL_SINK)] && $::env(OT_DTSH_CL_SINK) eq "1"} {
+    variable cl_args
+    closed_loop {*}$cl_args measure_sinks _sink
+  }
   audit
   puts "OT_DTSH CTS PASS: selected [llength $nets] existing density-tap output nets; no planned-trunk insertion before POST_CTS"
   return $result
@@ -348,17 +352,64 @@ proc ::ot_dtsh::measure {path} {
   }
   close $fh
 }
-proc ::ot_dtsh::closed_loop {dir geom plan} {
+# Phase 2 (OT_DTSH_CL_SINK=1): after the local tap trees exist, re-balance the
+# trunk on each tap's MEAN SINK arrival (trunk + its local tree), the MSCTS
+# practice of annotating tap-tree latency onto the top-level tree.
+proc ::ot_dtsh::tap_sinks {net {depth 0}} {
+  variable nodes; variable taps
+  set out {}
+  if {$depth > 40} { error "OT_DTSH local clock tree deeper than 40 levels at [$net getName]" }
+  foreach it [$net getITerms] {
+    if {![$it isInputSignal]} continue
+    set inst [$it getInst]; set m [$inst getMaster]; set nm [$inst getName]
+    if {[dict exists $nodes $nm] || [dict exists $taps $nm]} continue
+    if {![$m isBlock] && [regexp {^(BUF|INV|CKINV|CKBUF|HB)} [$m getName]]} {
+      foreach o [$inst getITerms] {
+        if {[$o isOutputSignal] && [$o getNet] ne "NULL" && [$o getNet] ne ""} { lappend out {*}[tap_sinks [$o getNet] [expr {$depth+1}]] }
+      }
+      continue
+    }
+    lappend out "$nm/[[$it getMTerm] getName]"
+  }
+  return $out
+}
+proc ::ot_dtsh::measure_sinks {path} {
+  variable nodes; variable taps; variable blk
+  variable sink_pins
+  if {![info exists sink_pins]} {
+    set sink_pins [dict create]
+    dict for {name info} $taps {
+      set net [$blk findNet [dict get $info output]]
+      set pins {}
+      foreach pn [tap_sinks $net] { set p [get_pins -quiet $pn]; if {$p ne ""} { lappend pins $p } }
+      if {![llength $pins]} { error "OT_DTSH tap $name has no measurable sinks" }
+      dict set sink_pins $name $pins
+    }
+  }
+  set fh [open $path w]
+  dict for {name pins} $sink_pins {
+    set a 0.0; set b 0.0
+    foreach p $pins { set a [expr {$a + [get_property $p arrival_max_rise]}]; set b [expr {$b + [get_property $p arrival_min_rise]}] }
+    puts $fh "T $name [expr {$a / [llength $pins]}] [expr {$b / [llength $pins]}]"
+  }
+  dict for {name info} $nodes {
+    set p [get_pins -quiet "$name/[[[dict get $info input] getMTerm] getName]"]
+    puts $fh "B $name [get_property $p arrival_max_rise] [get_property $p arrival_min_rise]"
+  }
+  close $fh
+}
+proc ::ot_dtsh::closed_loop {dir geom plan {meas_proc measure} {tag ""}} {
   set iters [expr {[info exists ::env(OT_DTSH_CL_ITERS)] ? $::env(OT_DTSH_CL_ITERS) : 12}]
   set target [expr {[info exists ::env(OT_DTSH_CL_TARGET_PS)] ? $::env(OT_DTSH_CL_TARGET_PS) : 12}]
   set py [list python3 /work/shallow_clock.py $geom --out $plan]
   set_propagated_clock [all_clocks]
+  if {$tag ne ""} { puts "OT_DTSH CL [exec {*}$py --new-phase $tag]" }
   set last ""; set done 0
   for {set i 1} {$i <= $iters} {incr i} {
     estimate_parasitics -placement
-    set meas [file join $dir ot_dtsh_meas_$i.tsv]
-    measure $meas
-    set moves [file join $dir ot_dtsh_moves_$i.tcl]
+    set meas [file join $dir ot_dtsh_meas${tag}_$i.tsv]
+    $meas_proc $meas
+    set moves [file join $dir ot_dtsh_moves${tag}_$i.tcl]
     file delete -force $moves
     set last [exec {*}$py --cl-step $meas --apply $moves --target-ps $target]
     puts "OT_DTSH CL $last"
@@ -367,13 +418,13 @@ proc ::ot_dtsh::closed_loop {dir geom plan} {
   }
   if {!$done} {
     # keep the best measured iteration, then record the final state
-    set moves [file join $dir ot_dtsh_moves_best.tcl]
+    set moves [file join $dir ot_dtsh_moves${tag}_best.tcl]
     file delete -force $moves
     puts "OT_DTSH CL [exec {*}$py --restore-best --apply $moves]"
     if {[file exists $moves]} { uplevel #0 [list source $moves] }
     estimate_parasitics -placement
-    set meas [file join $dir ot_dtsh_meas_final.tsv]
-    measure $meas
+    set meas [file join $dir ot_dtsh_meas${tag}_final.tsv]
+    $meas_proc $meas
     set last [exec {*}$py --cl-step $meas --target-ps 1e9]
   }
   unset_propagated_clock [all_clocks]
@@ -413,7 +464,7 @@ proc ::ot_dtsh::setup {block tap_list root_net cell} {
   # row orientations and complete tap coverage as each operation is applied.
   uplevel #0 [list source $apply]
   if {![dict size $nodes]} { error "OT_DTSH planner emitted no physical trunk nodes" }
-  if {$cl} { closed_loop $dir $geom $plan }
+  if {$cl} { variable cl_args [list $dir $geom $plan]; closed_loop $dir $geom $plan }
   trunk_ndr
   freeze
   audit
