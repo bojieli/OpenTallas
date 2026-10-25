@@ -36,6 +36,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import coll_transport as CT  # noqa: E402
 import prog_transport as PT  # noqa: E402
+import su_bank_clock as SBC  # noqa: E402
 
 SCHEMA = "opentallas.hbm_transport_gate.v1"
 QS = PT.QS
@@ -51,7 +52,25 @@ def params(die_v, names):
         m = rx.match(line)
         if m and m[3] in names:
             out[m[3]] = {k: int(v) for k, v in re.findall(r"\.(\w+)\((-?\d+)\)", m[2])}
+    # Hierarchical Verilator wrappers retain numeric parameter defaults in
+    # hier_wraps.sv and remove the #(...) from die instance headers.
+    wrappers = {}
+    for hw in (Path(die_v).parent / "hier_wraps.sv", Path(die_v).parent / "slice" / "hier_wraps.sv"):
+        if hw.exists():
+            for line in hw.read_text().splitlines():
+                m = re.match(r"module (\w+)\s*#\((.*)", line)
+                if m:
+                    wrappers[m[1]] = {k: int(v) for k, v in re.findall(
+                        r"(?:localparam|parameter)(?:\s+integer)?\s+(\w+)\s*=\s*(-?\d+)\b", m[2])}
+    for name, (master, _) in CT.parse_instances(die_v, names).items():
+        if name in names and master in wrappers:
+            out[name] = {**wrappers[master], **out.get(name, {})}
     return out
+
+
+def bit_lane_from(inst, name, port, bit, src):
+    hops, root = SBC.trace_bit(inst, name, port, bit)
+    return PT.lane_latency(inst, hops)[0] if src in root else None
 
 
 def elems(inst, name, port):
@@ -79,6 +98,10 @@ def gate(die_v):
     inst = CT.parse_instances(die_v, names)
     par = params(die_v, names)
     res = []
+    clock = SBC.audit(die_v)
+    if clock["paths"]:
+        res.append(rule("SU_BANK_CLOCK", clock["verdict"] == "PASS", paths=clock["paths"],
+                        wrong_clock_relays=sorted(clock["repair_relays"])))
     # ---- HC
     if "hc_eng" in inst:
         down = {q: PT.lane(inst, f"hc_{q}", "d_v")["latency_edges"] for q in QS if f"hc_{q}" in inst}
@@ -124,10 +147,10 @@ def gate(die_v):
                 if v not in inst:
                     continue
                 pin = PIN.get(inst[v][0], 0)
-                rq = lane_from(inst, v, "rq0", f"{s}__lg_rq")
-                rr = lane_from(inst, s, "lg_rr", f"{v}__rr0")
-                wq = lane_from(inst, v, "wq0", f"{s}__lg_wq")
-                wd = lane_from(inst, s, "lg_w_done", f"{v}__wq_done0")
+                rq = bit_lane_from(inst, v, "rq0", 16, f"{s}__lg_rq")
+                rr = bit_lane_from(inst, s, "lg_rr", (b % 2) * 257 + 256, f"{v}__rr0")
+                wq = bit_lane_from(inst, v, "wq0", 280, f"{s}__lg_wq")
+                wd = bit_lane_from(inst, s, "lg_w_done", b % 2, f"{v}__wq_done0")
                 slot = lane_from(inst, v, "rslot", f"calendar_{q}__")
                 rows[b] = dict(rq=rq, rr=rr, wq=wq, wd=wd, slot=slot,
                                rt_rd=None if None in (rq, rr) else BANK_RD + pin + rq + rr,
