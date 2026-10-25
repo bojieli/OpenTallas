@@ -5,5 +5,7 @@
  "kv3_head_eighth_*": {"sigmax": "M7",
                 "source": "v3.8x 216 um slot (KVG3-CORES 10-24): the 285.12 e0 run failed GRT 5555 overflow at M5 max (vertical M3/M5 at the 1332-pin N face; usage 18%) and the 216 face is 1.32x denser; M6/M7 inside the core are within the plan core layer budget (Codex pvpair_m7 precedent, GRT 0 overflow)"},
  "kv3_pv_pair*": {"util": 0.45, "sigmax": "M7",
-                "source": "Codex 10-24 pvpair_m7: M5 GRT 1692 / density 0.45 2548 overflow, M7 0 overflow 14.72% usage (same RTL / pins / outline)"}
+                "source": "Codex 10-24 pvpair_m7: M5 GRT 1692 / density 0.45 2548 overflow, M7 0 overflow 14.72% usage (same RTL / pins / outline)"},
+ "qkd_kvs_pc*": {"sigmax": "M7",
+                "source": "KV-CORES/PV-PC 10-25: 10-24 kvs_pc / pc_h_head_p M5 runs GRT overflow 10284 / 4324 (4396 / 3278 pins, N/S M5 + W M4 faces); M7 inside the core as kv3_pv_pair (M7 GRT 0) and head_eighth"}
 }
