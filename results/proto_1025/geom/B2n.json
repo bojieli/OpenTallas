@@ -1,0 +1,2145 @@
+{
+ "plan": "physical/die_plan/hbm_arch/B2n/die_plan.json",
+ "types": {
+  "NE_io": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "NW_io": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "q_b000": {
+   "slots": 6,
+   "max_hop_um": 589.856,
+   "over_reach_bits": 2499,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L4x3",
+     "max_hop_um": 589.856,
+     "over_reach_bits": 1715,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       401.76,
+       283.68
+      ],
+      [
+       708.48,
+       0.544
+      ]
+     ]
+    },
+    {
+     "slot": "L4x11",
+     "max_hop_um": 545.088,
+     "over_reach_bits": 784,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       82.08,
+       967.68
+      ],
+      [
+       0.0,
+       504.672
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b001": {
+   "slots": 7,
+   "max_hop_um": 549.0,
+   "over_reach_bits": 1555,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L4x4",
+     "max_hop_um": 506.912,
+     "over_reach_bits": 749,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 2816,
+     "worst_segment": [
+      [
+       488.16,
+       217.44
+      ],
+      [
+       708.48,
+       504.032
+      ]
+     ]
+    },
+    {
+     "slot": "L4x10",
+     "max_hop_um": 549.0,
+     "over_reach_bits": 806,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 2815,
+     "worst_segment": [
+      [
+       4.32,
+       463.2
+      ],
+      [
+       0.0,
+       1007.88
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b002": {
+   "slots": 5,
+   "max_hop_um": 571.56,
+   "over_reach_bits": 1487,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L4x5",
+     "max_hop_um": 504.032,
+     "over_reach_bits": 555,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 2816,
+     "worst_segment": [
+      [
+       704.16,
+       4.32
+      ],
+      [
+       708.48,
+       504.032
+      ]
+     ]
+    },
+    {
+     "slot": "L4x9",
+     "max_hop_um": 571.56,
+     "over_reach_bits": 932,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 2815,
+     "worst_segment": [
+      [
+       216.0,
+       652.32
+      ],
+      [
+       0.0,
+       1007.88
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b003": {
+   "slots": 7,
+   "max_hop_um": 541.32,
+   "over_reach_bits": 1319,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L4x6",
+     "max_hop_um": 504.032,
+     "over_reach_bits": 555,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 2816,
+     "worst_segment": [
+      [
+       712.8,
+       4.32
+      ],
+      [
+       717.12,
+       504.032
+      ]
+     ]
+    },
+    {
+     "slot": "L4x8",
+     "max_hop_um": 541.32,
+     "over_reach_bits": 764,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 2815,
+     "worst_segment": [
+      [
+       203.04,
+       669.6
+      ],
+      [
+       0.0,
+       1007.88
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b010": {
+   "slots": 6,
+   "max_hop_um": 592.736,
+   "over_reach_bits": 2259,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L12x4",
+     "max_hop_um": 592.736,
+     "over_reach_bits": 1052,
+     "st_in_core": 0,
+     "stations": 5,
+     "worst_bit": 3142,
+     "worst_segment": [
+      [
+       4.32,
+       922.08
+      ],
+      [
+       0.0,
+       1510.496
+      ]
+     ]
+    },
+    {
+     "slot": "L13x4",
+     "max_hop_um": 562.272,
+     "over_reach_bits": 880,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       4.32,
+       2069.28
+      ],
+      [
+       0.0,
+       1511.328
+      ]
+     ]
+    },
+    {
+     "slot": "L22x8",
+     "max_hop_um": 463.328,
+     "over_reach_bits": 327,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       241.92,
+       587.52
+      ],
+      [
+       0.0,
+       366.112
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b011": {
+   "slots": 5,
+   "max_hop_um": 562.272,
+   "over_reach_bits": 1830,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L12x3",
+     "max_hop_um": 478.016,
+     "over_reach_bits": 410,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 3142,
+     "worst_segment": [
+      [
+       4.32,
+       1036.8
+      ],
+      [
+       0.0,
+       1510.496
+      ]
+     ]
+    },
+    {
+     "slot": "L13x3",
+     "max_hop_um": 562.272,
+     "over_reach_bits": 880,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       4.32,
+       2069.28
+      ],
+      [
+       0.0,
+       1511.328
+      ]
+     ]
+    },
+    {
+     "slot": "L22x7",
+     "max_hop_um": 501.528,
+     "over_reach_bits": 540,
+     "st_in_core": 0,
+     "stations": 5,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       4.32,
+       1036.8
+      ],
+      [
+       0.0,
+       539.592
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b012": {
+   "slots": 4,
+   "max_hop_um": 562.976,
+   "over_reach_bits": 2001,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L12x2",
+     "max_hop_um": 562.976,
+     "over_reach_bits": 1075,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 3142,
+     "worst_segment": [
+      [
+       220.32,
+       1167.84
+      ],
+      [
+       0.0,
+       1510.496
+      ]
+     ]
+    },
+    {
+     "slot": "L13x2",
+     "max_hop_um": 562.272,
+     "over_reach_bits": 880,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       4.32,
+       2069.28
+      ],
+      [
+       0.0,
+       1511.328
+      ]
+     ]
+    },
+    {
+     "slot": "L22x6",
+     "max_hop_um": 413.152,
+     "over_reach_bits": 46,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 2048,
+     "worst_segment": [
+      [
+       4.32,
+       463.2
+      ],
+      [
+       0.0,
+       872.032
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b013": {
+   "slots": 3,
+   "max_hop_um": 592.736,
+   "over_reach_bits": 1932,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L12x1",
+     "max_hop_um": 592.736,
+     "over_reach_bits": 1052,
+     "st_in_core": 0,
+     "stations": 5,
+     "worst_bit": 3142,
+     "worst_segment": [
+      [
+       4.32,
+       922.08
+      ],
+      [
+       0.0,
+       1510.496
+      ]
+     ]
+    },
+    {
+     "slot": "L13x1",
+     "max_hop_um": 562.272,
+     "over_reach_bits": 880,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       4.32,
+       2069.28
+      ],
+      [
+       0.0,
+       1511.328
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b100": {
+   "slots": 4,
+   "max_hop_um": 521.312,
+   "over_reach_bits": 1887,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L4x1",
+     "max_hop_um": 521.312,
+     "over_reach_bits": 1012,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 2816,
+     "worst_segment": [
+      [
+       464.832,
+       226.368
+      ],
+      [
+       708.48,
+       504.032
+      ]
+     ]
+    },
+    {
+     "slot": "L4x13",
+     "max_hop_um": 514.968,
+     "over_reach_bits": 875,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 2815,
+     "worst_segment": [
+      [
+       231.552,
+       724.464
+      ],
+      [
+       0.0,
+       1007.88
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b101": {
+   "slots": 5,
+   "max_hop_um": 521.312,
+   "over_reach_bits": 2277,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L4x2",
+     "max_hop_um": 521.312,
+     "over_reach_bits": 1012,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 2816,
+     "worst_segment": [
+      [
+       464.832,
+       226.368
+      ],
+      [
+       708.48,
+       504.032
+      ]
+     ]
+    },
+    {
+     "slot": "L4x12",
+     "max_hop_um": 514.968,
+     "over_reach_bits": 875,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 2815,
+     "worst_segment": [
+      [
+       231.552,
+       724.464
+      ],
+      [
+       0.0,
+       1007.88
+      ]
+     ]
+    },
+    {
+     "slot": "L19x1",
+     "max_hop_um": 474.528,
+     "over_reach_bits": 390,
+     "st_in_core": 0,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       470.88,
+       2069.28
+      ],
+      [
+       0.672,
+       2073.6
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b102": {
+   "slots": 9,
+   "max_hop_um": 592.736,
+   "over_reach_bits": 2693,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L12x6",
+     "max_hop_um": 592.736,
+     "over_reach_bits": 1052,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 3142,
+     "worst_segment": [
+      [
+       4.32,
+       922.08
+      ],
+      [
+       0.0,
+       1510.496
+      ]
+     ]
+    },
+    {
+     "slot": "L13x6",
+     "max_hop_um": 562.272,
+     "over_reach_bits": 880,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       4.32,
+       2069.28
+      ],
+      [
+       0.0,
+       1511.328
+      ]
+     ]
+    },
+    {
+     "slot": "L19x3",
+     "max_hop_um": 540.96,
+     "over_reach_bits": 761,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 2048,
+     "worst_segment": [
+      [
+       231.552,
+       226.368
+      ],
+      [
+       0.0,
+       535.776
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b103": {
+   "slots": 7,
+   "max_hop_um": 620.144,
+   "over_reach_bits": 3464,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L12x5",
+     "max_hop_um": 620.144,
+     "over_reach_bits": 1204,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 3142,
+     "worst_segment": [
+      [
+       231.552,
+       1121.904
+      ],
+      [
+       0.0,
+       1510.496
+      ]
+     ]
+    },
+    {
+     "slot": "L13x5",
+     "max_hop_um": 562.272,
+     "over_reach_bits": 880,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       4.32,
+       2069.28
+      ],
+      [
+       0.0,
+       1511.328
+      ]
+     ]
+    },
+    {
+     "slot": "L19x2",
+     "max_hop_um": 527.928,
+     "over_reach_bits": 688,
+     "st_in_core": 0,
+     "stations": 2,
+     "worst_bit": 2049,
+     "worst_segment": [
+      [
+       4.32,
+       30.24
+      ],
+      [
+       0.0,
+       553.848
+      ]
+     ]
+    },
+    {
+     "slot": "L22x9",
+     "max_hop_um": 528.48,
+     "over_reach_bits": 692,
+     "st_in_core": 0,
+     "stations": 3,
+     "worst_bit": 2048,
+     "worst_segment": [
+      [
+       231.552,
+       623.808
+      ],
+      [
+       0.0,
+       920.736
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b110": {
+   "slots": 17,
+   "max_hop_um": 474.053,
+   "over_reach_bits": 560,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L33x1",
+     "max_hop_um": 430.094,
+     "over_reach_bits": 142,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       711.566,
+       4.32
+      ],
+      [
+       285.792,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "L38x1",
+     "max_hop_um": 474.053,
+     "over_reach_bits": 386,
+     "st_in_core": 0,
+     "stations": 9,
+     "worst_bit": 1328,
+     "worst_segment": [
+      [
+       240.069,
+       4.32
+      ],
+      [
+       0.0,
+       238.304
+      ]
+     ]
+    },
+    {
+     "slot": "L52x2",
+     "max_hop_um": 410.656,
+     "over_reach_bits": 32,
+     "st_in_core": 0,
+     "stations": 11,
+     "worst_bit": 612,
+     "worst_segment": [
+      [
+       1654.56,
+       1151.52
+      ],
+      [
+       1658.88,
+       1557.856
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b111": {
+   "slots": 10,
+   "max_hop_um": 359.739,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "q_b112": {
+   "slots": 9,
+   "max_hop_um": 494.181,
+   "over_reach_bits": 1227,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L29x1",
+     "max_hop_um": 430.094,
+     "over_reach_bits": 142,
+     "st_in_core": 0,
+     "stations": 10,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       711.566,
+       2069.28
+      ],
+      [
+       285.792,
+       2073.6
+      ]
+     ]
+    },
+    {
+     "slot": "L31x1",
+     "max_hop_um": 494.181,
+     "over_reach_bits": 500,
+     "st_in_core": 0,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1065.189,
+       2069.28
+      ],
+      [
+       575.328,
+       2073.6
+      ]
+     ]
+    },
+    {
+     "slot": "L36x1",
+     "max_hop_um": 474.093,
+     "over_reach_bits": 387,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 1329,
+     "worst_segment": [
+      [
+       240.069,
+       4.32
+      ],
+      [
+       0.0,
+       238.344
+      ]
+     ]
+    },
+    {
+     "slot": "L37x1",
+     "max_hop_um": 440.369,
+     "over_reach_bits": 198,
+     "st_in_core": 0,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1300.937,
+       2069.28
+      ],
+      [
+       864.888,
+       2073.6
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_b113": {
+   "slots": 4,
+   "max_hop_um": 476.997,
+   "over_reach_bits": 404,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L36x2",
+     "max_hop_um": 476.997,
+     "over_reach_bits": 404,
+     "st_in_core": 0,
+     "stations": 10,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       473.349,
+       2069.28
+      ],
+      [
+       0.672,
+       2073.6
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_hub": {
+   "slots": 1,
+   "max_hop_um": 354.734,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "q_mca": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "q_mcb": {
+   "slots": 3,
+   "max_hop_um": 558.858,
+   "over_reach_bits": 1589,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L8x5",
+     "max_hop_um": 558.858,
+     "over_reach_bits": 862,
+     "st_in_core": 0,
+     "stations": 12,
+     "worst_bit": 2456,
+     "worst_segment": [
+      [
+       4775.286,
+       4.32
+      ],
+      [
+       4898.88,
+       439.584
+      ]
+     ]
+    },
+    {
+     "slot": "L9x5",
+     "max_hop_um": 535.128,
+     "over_reach_bits": 727,
+     "st_in_core": 0,
+     "stations": 12,
+     "worst_bit": 2455,
+     "worst_segment": [
+      [
+       4894.56,
+       348.48
+      ],
+      [
+       4898.88,
+       879.288
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_spb0": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "q_spb1": {
+   "slots": 4,
+   "max_hop_um": 361.031,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "q_spb2": {
+   "slots": 8,
+   "max_hop_um": 468.01,
+   "over_reach_bits": 351,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L35x2",
+     "max_hop_um": 468.01,
+     "over_reach_bits": 351,
+     "st_in_core": 0,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1810.08,
+       464.234
+      ],
+      [
+       1814.4,
+       0.544
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_spt0": {
+   "slots": 6,
+   "max_hop_um": 554.754,
+   "over_reach_bits": 2035,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L8x2",
+     "max_hop_um": 554.754,
+     "over_reach_bits": 839,
+     "st_in_core": 0,
+     "stations": 6,
+     "worst_bit": 2456,
+     "worst_segment": [
+      [
+       4.32,
+       1384.062
+      ],
+      [
+       439.776,
+       1503.36
+      ]
+     ]
+    },
+    {
+     "slot": "L9x2",
+     "max_hop_um": 540.804,
+     "over_reach_bits": 760,
+     "st_in_core": 0,
+     "stations": 9,
+     "worst_bit": 2455,
+     "worst_segment": [
+      [
+       342.9,
+       1499.04
+      ],
+      [
+       879.384,
+       1503.36
+      ]
+     ]
+    },
+    {
+     "slot": "L21x4",
+     "max_hop_um": 482.808,
+     "over_reach_bits": 436,
+     "st_in_core": 0,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1358.64,
+       4.32
+      ],
+      [
+       880.152,
+       0.0
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_spt1": {
+   "slots": 6,
+   "max_hop_um": 554.754,
+   "over_reach_bits": 2035,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L8x3",
+     "max_hop_um": 554.754,
+     "over_reach_bits": 839,
+     "st_in_core": 0,
+     "stations": 6,
+     "worst_bit": 2456,
+     "worst_segment": [
+      [
+       4.32,
+       1384.062
+      ],
+      [
+       439.776,
+       1503.36
+      ]
+     ]
+    },
+    {
+     "slot": "L9x3",
+     "max_hop_um": 540.804,
+     "over_reach_bits": 760,
+     "st_in_core": 0,
+     "stations": 9,
+     "worst_bit": 2455,
+     "worst_segment": [
+      [
+       342.9,
+       1499.04
+      ],
+      [
+       879.384,
+       1503.36
+      ]
+     ]
+    },
+    {
+     "slot": "L21x3",
+     "max_hop_um": 482.808,
+     "over_reach_bits": 436,
+     "st_in_core": 0,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1358.64,
+       4.32
+      ],
+      [
+       880.152,
+       0.0
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_spt2": {
+   "slots": 6,
+   "max_hop_um": 554.754,
+   "over_reach_bits": 2035,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L8x4",
+     "max_hop_um": 554.754,
+     "over_reach_bits": 839,
+     "st_in_core": 0,
+     "stations": 6,
+     "worst_bit": 2456,
+     "worst_segment": [
+      [
+       4.32,
+       1384.062
+      ],
+      [
+       439.776,
+       1503.36
+      ]
+     ]
+    },
+    {
+     "slot": "L9x4",
+     "max_hop_um": 540.804,
+     "over_reach_bits": 760,
+     "st_in_core": 0,
+     "stations": 9,
+     "worst_bit": 2455,
+     "worst_segment": [
+      [
+       342.9,
+       1499.04
+      ],
+      [
+       879.384,
+       1503.36
+      ]
+     ]
+    },
+    {
+     "slot": "L21x2",
+     "max_hop_um": 482.808,
+     "over_reach_bits": 436,
+     "st_in_core": 0,
+     "stations": 9,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1358.64,
+       4.32
+      ],
+      [
+       880.152,
+       0.0
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_spu0": {
+   "slots": 23,
+   "max_hop_um": 557.28,
+   "over_reach_bits": 2221,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L8x1",
+     "max_hop_um": 557.28,
+     "over_reach_bits": 851,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 2456,
+     "worst_segment": [
+      [
+       232.416,
+       1550.88
+      ],
+      [
+       785.376,
+       1555.2
+      ]
+     ]
+    },
+    {
+     "slot": "L9x1",
+     "max_hop_um": 540.696,
+     "over_reach_bits": 760,
+     "st_in_core": 0,
+     "stations": 10,
+     "worst_bit": 2455,
+     "worst_segment": [
+      [
+       688.608,
+       1550.88
+      ],
+      [
+       1224.984,
+       1555.2
+      ]
+     ]
+    },
+    {
+     "slot": "L21x5",
+     "max_hop_um": 497.064,
+     "over_reach_bits": 515,
+     "st_in_core": 0,
+     "stations": 11,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1372.896,
+       4.32
+      ],
+      [
+       880.152,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "L37x3",
+     "max_hop_um": 408.914,
+     "over_reach_bits": 22,
+     "st_in_core": 0,
+     "stations": 10,
+     "worst_bit": 1329,
+     "worst_segment": [
+      [
+       2285.28,
+       123.286
+      ],
+      [
+       2289.6,
+       527.88
+      ]
+     ]
+    },
+    {
+     "slot": "L48x3",
+     "max_hop_um": 409.254,
+     "over_reach_bits": 23,
+     "st_in_core": 0,
+     "stations": 11,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       2285.28,
+       1193.982
+      ],
+      [
+       2289.6,
+       789.048
+      ]
+     ]
+    },
+    {
+     "slot": "L53x3",
+     "max_hop_um": 413.836,
+     "over_reach_bits": 50,
+     "st_in_core": 0,
+     "stations": 10,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       4.32,
+       1312.948
+      ],
+      [
+       0.0,
+       903.432
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_spu1": {
+   "slots": 34,
+   "max_hop_um": 410.912,
+   "over_reach_bits": 47,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L35x1",
+     "max_hop_um": 406.872,
+     "over_reach_bits": 12,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 1615,
+     "worst_segment": [
+      [
+       232.416,
+       4.32
+      ],
+      [
+       634.968,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "L61x2",
+     "max_hop_um": 405.192,
+     "over_reach_bits": 1,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1372.896,
+       1550.88
+      ],
+      [
+       972.024,
+       1555.2
+      ]
+     ]
+    },
+    {
+     "slot": "L151x3",
+     "max_hop_um": 410.912,
+     "over_reach_bits": 34,
+     "st_in_core": 0,
+     "stations": 11,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1600.992,
+       1550.88
+      ],
+      [
+       1194.4,
+       1555.2
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_su00": {
+   "slots": 2,
+   "max_hop_um": 359.64,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "q_su01": {
+   "slots": 13,
+   "max_hop_um": 463.883,
+   "over_reach_bits": 372,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L28x1",
+     "max_hop_um": 408.334,
+     "over_reach_bits": 20,
+     "st_in_core": 0,
+     "stations": 12,
+     "worst_bit": 1615,
+     "worst_segment": [
+      [
+       4.32,
+       1431.914
+      ],
+      [
+       289.368,
+       1555.2
+      ]
+     ]
+    },
+    {
+     "slot": "L29x2",
+     "max_hop_um": 463.883,
+     "over_reach_bits": 330,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 1615,
+     "worst_segment": [
+      [
+       119.389,
+       1550.88
+      ],
+      [
+       578.952,
+       1555.2
+      ]
+     ]
+    },
+    {
+     "slot": "L37x2",
+     "max_hop_um": 408.914,
+     "over_reach_bits": 22,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 1329,
+     "worst_segment": [
+      [
+       2535.84,
+       123.286
+      ],
+      [
+       2540.16,
+       527.88
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_su10": {
+   "slots": 19,
+   "max_hop_um": 479.784,
+   "over_reach_bits": 947,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L30x1",
+     "max_hop_um": 479.784,
+     "over_reach_bits": 418,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       453.6,
+       1330.56
+      ],
+      [
+       198.456,
+       1555.2
+      ]
+     ]
+    },
+    {
+     "slot": "L31x4",
+     "max_hop_um": 418.364,
+     "over_reach_bits": 76,
+     "st_in_core": 0,
+     "stations": 6,
+     "worst_bit": 1614,
+     "worst_segment": [
+      [
+       362.692,
+       1550.88
+      ],
+      [
+       776.736,
+       1555.2
+      ]
+     ]
+    },
+    {
+     "slot": "L37x4",
+     "max_hop_um": 477.219,
+     "over_reach_bits": 403,
+     "st_in_core": 0,
+     "stations": 10,
+     "worst_bit": 1328,
+     "worst_segment": [
+      [
+       2512.925,
+       4.32
+      ],
+      [
+       2756.16,
+       238.304
+      ]
+     ]
+    },
+    {
+     "slot": "L53x2",
+     "max_hop_um": 413.836,
+     "over_reach_bits": 50,
+     "st_in_core": 0,
+     "stations": 12,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       4.32,
+       1312.948
+      ],
+      [
+       0.0,
+       903.432
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_su11": {
+   "slots": 7,
+   "max_hop_um": 412.608,
+   "over_reach_bits": 44,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L43x5",
+     "max_hop_um": 412.608,
+     "over_reach_bits": 44,
+     "st_in_core": 0,
+     "stations": 4,
+     "worst_bit": 780,
+     "worst_segment": [
+      [
+       483.84,
+       4.32
+      ],
+      [
+       892.128,
+       0.0
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_su20": {
+   "slots": 2,
+   "max_hop_um": 359.64,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "q_su21": {
+   "slots": 12,
+   "max_hop_um": 463.883,
+   "over_reach_bits": 330,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L33x2",
+     "max_hop_um": 463.883,
+     "over_reach_bits": 330,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 1615,
+     "worst_segment": [
+      [
+       119.389,
+       4.32
+      ],
+      [
+       578.952,
+       0.0
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_su30": {
+   "slots": 31,
+   "max_hop_um": 489.357,
+   "over_reach_bits": 875,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L34x1",
+     "max_hop_um": 489.357,
+     "over_reach_bits": 472,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       663.429,
+       38.88
+      ],
+      [
+       212.952,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "L39x2",
+     "max_hop_um": 477.219,
+     "over_reach_bits": 403,
+     "st_in_core": 0,
+     "stations": 9,
+     "worst_bit": 1328,
+     "worst_segment": [
+      [
+       2512.925,
+       4.32
+      ],
+      [
+       2756.16,
+       238.304
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "q_su31": {
+   "slots": 22,
+   "max_hop_um": 401.808,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "root": {
+   "slots": 16,
+   "max_hop_um": 542.878,
+   "over_reach_bits": 1793,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L4x7",
+     "max_hop_um": 532.68,
+     "over_reach_bits": 715,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 2815,
+     "worst_segment": [
+      [
+       1326.24,
+       2086.56
+      ],
+      [
+       1382.4,
+       2563.08
+      ]
+     ]
+    },
+    {
+     "slot": "L4mx7",
+     "max_hop_um": 542.878,
+     "over_reach_bits": 770,
+     "st_in_core": 0,
+     "stations": 7,
+     "worst_bit": 2815,
+     "worst_segment": [
+      [
+       4.32,
+       2024.522
+      ],
+      [
+       0.0,
+       2563.08
+      ]
+     ]
+    },
+    {
+     "slot": "L22x4",
+     "max_hop_um": 432.373,
+     "over_reach_bits": 154,
+     "st_in_core": 0,
+     "stations": 9,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       4.32,
+       4638.901
+      ],
+      [
+       0.0,
+       4210.848
+      ]
+     ]
+    },
+    {
+     "slot": "L22mx4",
+     "max_hop_um": 432.373,
+     "over_reach_bits": 154,
+     "st_in_core": 0,
+     "stations": 11,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1378.08,
+       4638.901
+      ],
+      [
+       1382.4,
+       4210.848
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "vsN0": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "vsN1": {
+   "slots": 4,
+   "max_hop_um": 361.031,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "vsN2": {
+   "slots": 4,
+   "max_hop_um": 361.031,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": [],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "PASS"
+  },
+  "vsN4": {
+   "slots": 6,
+   "max_hop_um": 504.648,
+   "over_reach_bits": 558,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L22mx3",
+     "max_hop_um": 504.648,
+     "over_reach_bits": 558,
+     "st_in_core": 0,
+     "stations": 8,
+     "worst_bit": 2047,
+     "worst_segment": [
+      [
+       233.28,
+       4.32
+      ],
+      [
+       733.608,
+       0.0
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "vsN5": {
+   "slots": 6,
+   "max_hop_um": 504.648,
+   "over_reach_bits": 558,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L22mx2",
+     "max_hop_um": 504.648,
+     "over_reach_bits": 558,
+     "st_in_core": 0,
+     "stations": 8,
+     "worst_bit": 2047,
+     "worst_segment": [
+      [
+       233.28,
+       4.32
+      ],
+      [
+       733.608,
+       0.0
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  },
+  "vsN6": {
+   "slots": 6,
+   "max_hop_um": 504.648,
+   "over_reach_bits": 558,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "L22mx1",
+     "max_hop_um": 504.648,
+     "over_reach_bits": 558,
+     "st_in_core": 0,
+     "stations": 8,
+     "worst_bit": 2047,
+     "worst_segment": [
+      [
+       233.28,
+       4.32
+      ],
+      [
+       733.608,
+       0.0
+      ]
+     ]
+    }
+   ],
+   "footprints": {
+    "scope": "explicit internal stage envelopes only; station0 pin packing not modeled",
+    "cells": 0,
+    "core_intersections": 0,
+    "overlaps": 0,
+    "outside_outline": 0,
+    "examples": []
+   },
+   "verdict": "FAIL"
+  }
+ },
+ "elapsed_s": 14.5
+}
