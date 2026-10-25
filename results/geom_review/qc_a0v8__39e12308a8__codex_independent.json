@@ -1,0 +1,29 @@
+{
+  "element": "QC A0 v8 NK/NL",
+  "source": "claude/qc-a0v8-1024@39e12308a8",
+  "reviewer": "CODEX GEOM independent",
+  "at": "2026-10-24T21:08:27.242288-07:00",
+  "stage": "pre-placement floorplan",
+  "verdict": "PASS-CONDITIONAL",
+  "scope": "PLACE ONLY; CTS/GRT/route need placed delta review",
+  "images": [
+    "results/geom_review/a0v8/qfd_tile_nk_a0cv8_floorplan.png",
+    "results/geom_review/a0v8/qfd_tile_nk_a0cv8_lslzone.png",
+    "results/geom_review/a0v8/qfd_tile_nk_a0cv8_cuts.png",
+    "results/geom_review/a0v8/qfd_tile_nl_a0cv8_floorplan.png",
+    "results/geom_review/a0v8/qfd_tile_nl_a0cv8_lslzone.png",
+    "results/geom_review/a0v8/qfd_tile_nl_a0cv8_cuts.png"
+  ],
+  "findings": [
+    "Looked at all six PNGs. East LSL column pins now face west into the common channel; writer/reader banks occupy individual head boxes in the former empty centre slot, removing the prior cross-column wide-bus traffic. Macro rows retain visible horizontal and vertical channels, with no new slivers or walls.",
+    "Cuts plotted from synthesized connectivity improve materially: W NK 1.41->0.35 and NL 1.65->0.49, E 1.58->0.16/0.17. Middle vertical cut stays near 0.59 against 0.6 budget; hub horizontal row0 0.70/0.67 uniform vs0.36/0.31 point remains the placement risk.",
+    "Hub additions and moved taps visually occupy free central logic space; 1500 sink cap is estimated, not measured. ck/ck_t1/ck_t2 remain unused and need pruning at plan integration.",
+    "No PDN change shown. Existing PDN continuity condition remains; layout pictures alone do not qualify it. Reader->rung1 max507um and result reader517/522um exceed the405um plan rule on a minority of bits. These are held for placed timing and structural relay correction before route."
+  ],
+  "conditions": [
+    "PLACE allowed to measure actual bank cluster footprint, density and cell-to-cell distances. Keep per-head sequential fill <=0.35 and inspect horizontal hub cuts; do not route a broad spread bank.",
+    "Before CTS/GRT/route: provide placed image/density + actual reader/rung1 distances and timing budget. Reposition within head/face boxes or add real priced relay stages for paths outside their833ps budget; do not waive405um on the strength of unrelated600-750um measurements.",
+    "Regenerate plan with v8 tap pin table; prune unused drops, retain core latency contract. Measure tap loads <=1500 and related-pair CPPR skew<=80ps at TT/FF, local GRT/routed latency window<=20ps.",
+    "Kit vs bound RTL exactness and reset distribution per owner decision2 remain adoption gates; this preplacement review gives no signoff credit."
+  ]
+}
