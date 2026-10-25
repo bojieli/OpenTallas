@@ -508,3 +508,6 @@ CODEX: 2026-10-25 05:59 PDT all-lane takeover active; exact geometry verdict tag
 2026-10-25 06:01 PDT CODEX: S81 subgroup parked on Claude reset; I13 rewrite36364ebdb3 functional native554cycles collected, physical gate not launched; child handoffs follow, inherited jobs preserved.
 2026-10-25 06:02 PDT CODEX: S81 legacy parked on RESET; xfin FAIL255.670%util; L4 raw mismatch mx_y only invalid, valid0/864+1178 transactions; XRT3 CTS geometry reviewed spread7.10ps/pinmax19.79um, F2/I successor owed; bksel_c/eg read-only probe unit2612601 continues.
 CODEX: 2026-10-25 06:05 PDT HBM-plan parked on Claude reset; collected B2o clock legalizer FAIL, sourcefix61d6+d5fd7testsPASS, isolated modelintel1codex-b2o-0553 live/detailed CODEX-LOG.
+2026-10-25 06:01 PDT CODEX: TOK-HBM parked on Claude reset; corrected-clock SU31 BUILD_PASS/replay LIVE epyc2; side LAT4 temporal miter724bd168c compiling epyc1 unit2623004, source-list migration WIP NOT READY, full handoff CODEX-LOG.
+
+2026-10-25 06:08 PDT CODEX: GEOM queue parked on Claude reset; codex/geom-0555-1025@d26526746 results only. QCf56c and S81t6/t27 conditional placement reviews, RVrxsf structural hold; late PROTO channel failures collected. Detailed CODEX-LOG handoff.
