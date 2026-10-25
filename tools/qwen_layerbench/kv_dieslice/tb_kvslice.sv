@@ -210,6 +210,7 @@ module tb_kvslice;
     // DIAGNOSTIC ONLY (+DIAG_KVPC_RST_HBM): the 32 kvpc reset spines (bound to HOST die_rst_n) follow hbm_rst_n instead.
     // The kvpc holds qkd_static_kv_pc_es_merge_b (the slice's boot-window controller face hes/her), so with die_rst_n held
     // until every slice reports boot_done the cold-boot scratch check cannot reach the controller; this tests that claim.
+`ifndef KV_NATIVE_TOP   // kv43 crossing-net names (diagnostic only); the native f5 top names its spines differently
     initial if ($test$plusargs("DIAG_KVPC_RST_HBM")) begin
             $display("DIAG kvpc reset spines forced to hbm_rst_n (32 spines)");
             force dut.x_hub_Wi_rs_host_die_rst_n_65_pc_EN_0 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
@@ -245,8 +246,11 @@ module tb_kvslice;
             force dut.x_hub_Wi_rs_host_die_rst_n_92_pc_WS_6 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
             force dut.x_hub_Wi_rs_host_die_rst_n_96_pc_WS_7 = dut.x_hub_Wi_o_host_hbm_rst_n_hub_C[0];
     end
+`endif
     // partition input record (+REC_hub_Wi=<file>, partrec/gen_partrec.py) for the flat replay sub-bench
+`ifndef KV_NATIVE_TOP
 `include "partrec_hub_Wi.svh"
+`endif
 `include "kvtok2_obs.svh"
     // heartbeat (+HB=<core cycles>, default 20000): progress line + stdout flush (the log is a redirected file)
     integer hb = 20000;
