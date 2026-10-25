@@ -223,3 +223,4 @@ CODEX: Qwen fullboth xt1 nominal128/128 exact + actual-edge mutant caught (f205e
 2026-10-24 20:17 PDT RESET: unified pipelined reset READY (claude/reset-1024@d1152532c); G0 PASS all dies; boot +56..88 clk per die; CP1 pipelined r0/r1 kits running
 2026-10-24 20:20 PDT HBM-ELEM: B2l core collection done (13 routed NOT SIGNED, 76 FAIL w/ evidence), core_insertion_b2l.json + contract generator (claude/elem-hbm-1024 0e65b11fce), 26 contract relaunches + 91 SPLIT2 CTS probes live; parked @
 2026-10-24 20:27 PDT ROOT-MERGE: batch 1 merged main d13ff7c78 -> a567becd8 (7 branches, 0 deletions, pytest 256 pass, G0 0 err all plans; QC G0 fixed)
+2026-10-24 20:32 PDT ROOT-MERGE: batch 2 merged main a567becd8 -> 850892f60 (reset-1024 unified pipelined reset + elem-hbm core clock contract; pytest 264, G0 0 err all plans, 0 deletions)
