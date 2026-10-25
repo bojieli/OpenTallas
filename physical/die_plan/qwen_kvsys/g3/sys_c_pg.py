@@ -92,6 +92,7 @@ def macro_place_tcl():
                   f'if {{[llength $matched] != 1}} {{error {{SYS_C macro missing/ambiguous: {name}}}}}',
                   'set i [lindex $matched 0]', f'$i setLocation [expr {{round({x:g}*$dbu)}}] [expr {{round({y:g}*$dbu)}}]',
                   '$i setOrient R0', '$i setPlacementStatus FIRM']
+    lines.append('cut_rows -halo_width_x 2 -halo_width_y 2')
     return '\n'.join(lines)+'\n'
 
 
