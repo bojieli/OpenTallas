@@ -224,3 +224,4 @@ CODEX: Qwen fullboth xt1 nominal128/128 exact + actual-edge mutant caught (f205e
 2026-10-24 20:20 PDT HBM-ELEM: B2l core collection done (13 routed NOT SIGNED, 76 FAIL w/ evidence), core_insertion_b2l.json + contract generator (claude/elem-hbm-1024 0e65b11fce), 26 contract relaunches + 91 SPLIT2 CTS probes live; parked @
 2026-10-24 20:27 PDT ROOT-MERGE: batch 1 merged main d13ff7c78 -> a567becd8 (7 branches, 0 deletions, pytest 256 pass, G0 0 err all plans; QC G0 fixed)
 2026-10-24 20:32 PDT ROOT-MERGE: batch 2 merged main a567becd8 -> 850892f60 (reset-1024 unified pipelined reset + elem-hbm core clock contract; pytest 264, G0 0 err all plans, 0 deletions)
+2026-10-24 20:33 PDT INFRA2: ot-run hub backup nightly (epyc1 scratch2 + archive), epyc3 standby recipe dry-run PASS (lanes/OTRUN-HUB-RECOVERY.md); die-ci + release-task-watch timers re-enabled on epyc1 with coord/main sync.
