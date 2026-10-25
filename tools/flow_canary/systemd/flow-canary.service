@@ -1,0 +1,7 @@
+[Unit]
+Description=OpenTallas flow canary trigger (FLOW-CANARY): run die canaries when main changes flow tools
+
+[Service]
+Type=oneshot
+Environment=OT_CANARY_SRC=/srv/opentallas-scratch2/claude/wt/flow-canary
+ExecStart=/usr/bin/python3 -I ${OT_CANARY_SRC}/tools/flow_canary/trigger.py --src ${OT_CANARY_SRC}
