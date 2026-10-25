@@ -67,7 +67,7 @@ OCV = (0.03, 0.05)                      # INFO derates on the uncommon clock pat
 # ASAP7 setRC.tcl (kohm / fF per um); clock NDR 2W2S: R / 2, C x 1.1 (die_trial.py, hbm_arch clock_htree.py)
 LAYER_RC = {"M8": (8.44765e-3, 1.03962e-1), "M9": (8.89556e-3, 9.28446e-2)}
 NDR_R, NDR_C = 0.5, 1.1
-WIDE_UM = 520.0                         # longer segments use the 4W NDR
+WIDE_UM = 400.0                         # longer segments use the 4W NDR
 VIA_KOHM = {"M8": 0.0172 * 3 + 0.0118 * 2 + 0.0082 * 2, "M9": 0.0172 * 3 + 0.0118 * 2 + 0.0082 * 2 + 0.0063}
 LADDER_UM = 50.0                        # pi-section length of the RC ladder
 STUB_UM = 4.32                          # leaf buffer -> clustered tap driver stub
