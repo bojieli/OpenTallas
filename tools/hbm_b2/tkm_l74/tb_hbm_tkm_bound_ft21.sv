@@ -64,7 +64,7 @@ module tb_hbm_tkm_bound_ft21;
  end
  wire[BEAT_WIDTH-1:0]observed_beat;wire[32:0]observed_side;
  ot_hbm_tkm_path_ft21 #(.LINK_STAGES(LINK_STAGES),.RETURN_CTL_STAGES(RETURN_CTL_STAGES),.RETURN_DATA_STAGES(RETURN_DATA_STAGES),.BEAT_WIDTH(BEAT_WIDTH)) bound(
- .clk(clk),.buffer_clk(clk),.tile_clk({32{clk}}),.nw_rst_n(rst_n),.root_rst_n(rst_n),.tx_boot_start(boot_start),.rx_boot_start(boot_start),.strap_tile_ids(parent_ids),
+ .nw_clk(clk),.clk(clk),.buffer_clk(clk),.tile_clk({32{clk}}),.nw_rst_n(rst_n),.root_rst_n(rst_n),.tx_boot_start(boot_start),.rx_boot_start(boot_start),.strap_tile_ids(parent_ids),
  .tx_word(tx_word),.tx_side(33'd0),.rx_word(rx_word),.rx_side(rx_side),.beat(observed_beat),.side_beat(observed_side),.tx_fault(tf),.rx_fault(rf),.slot0(slot0),
  .wv(wv),.busy(busy),.done(done),.fault(fault),.wa(wa),.wm(wm),.wd(wd),.cycles(cycles));
  integer tiderr=0;

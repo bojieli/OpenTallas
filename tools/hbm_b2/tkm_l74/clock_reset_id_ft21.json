@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.hbm.selected_tkm.clock_reset_id.v1",
+  "module": "ot_hbm_tkm_path_ft21",
+  "adoption": "BLOCKED_LEGACY_BUFFER_SYNC_AND_TIMED_ID_VIEWS",
+  "clock_domain": {
+    "source": "parent_owned_core_clock",
+    "period_ps": 833,
+    "domains": 1,
+    "generated_clocks": 0,
+    "new_cdc": false,
+    "aliases_are_same_source": true,
+    "physical_insertion_compensation": "required_actual_signed_views_not_assumed"
+  },
+  "clock_ports": [
+    {
+      "port": "nw_clk",
+      "role": "actual NW producer / L74 TX tap"
+    },
+    {
+      "port": "clk",
+      "role": "shared SW root logic, L74 channel/RX, return/control transport"
+    },
+    {
+      "port": "buffer_clk",
+      "role": "actual root SRAM pair and private buffer controls"
+    },
+    {
+      "port": "tile_clk[31:0]",
+      "role": "one explicit tap per 31 common and one terminal core"
+    }
+  ],
+  "reset_ports": [
+    {
+      "port": "nw_rst_n",
+      "input_contract": "timed delivered reset after unique die global synchronizer",
+      "selected_consumer": "L74 TX synchronous control",
+      "local_extra_depth": 0
+    },
+    {
+      "port": "root_rst_n",
+      "input_contract": "timed delivered reset after unique die global synchronizer",
+      "selected_consumer": "root face pass-through and RX synchronous control",
+      "face_depth": 0,
+      "root_main_reset": "legacy asynchronous reset sensitivity; actual timed recovery/physical conversion gate remains open",
+      "private_buffer_selected_view": {
+        "depth": 3,
+        "implementation": "legacy 2 async-reset synchronizer FF +1 async-reset relay",
+        "adoption": "BLOCKED_REQUIRES_FLAT_ROOT_OVERLAY_LEC_NEW_KIT"
+      },
+      "private_buffer_optin_source": {
+        "parameter": "DELIVERED_RESET=1",
+        "depth": 3,
+        "implementation": "3 ordinary synchronous data pipeline FF; synchronous control reset",
+        "hold_low_edges_min": 3,
+        "transaction_data_cycles_delta": 0,
+        "gate": "actual two SRAM cold/warm 73edges 4reads + wrong-address and wrong-depth mutants"
+      }
+    }
+  ],
+  "leaf_reset": {
+    "ports": [],
+    "initialization": "operation CLR through actual face+core chain",
+    "per_hop_edges": 3,
+    "terminal_clr_o": "present in selected kit, unused terminal output requires physical record/drop decision"
+  },
+  "boot_contract": {
+    "tx_boot_start": "separate from per-operation start; wait for parent delivered reset and local cohorts complete",
+    "rx_boot_start": "separate from per-operation start; wait for root private buffer release depth3 and parent supplied start calendar",
+    "unknown_powerup": "ordinary local reset FF require >=3 sampled low edges, no initial value assumed"
+  },
+  "id_contract": {
+    "parent_port": "strap_tile_ids[191:0]",
+    "literal_per_instance": "6-bit IDs0..31",
+    "selected_child_api": "legacy tile_tid face FF (6 per tile), NOT current ownerB compatible",
+    "new_views": "physical worker common06403880004b2ba0 terminal00d0a882f6fa76cf, pending minimum miter and binding mutant",
+    "target_api": "strap_tile_tid direct noFF plus typed straps.json and SDC falsepath",
+    "strict_alias_required": true,
+    "other_constants_allowed": false
+  },
+  "path_fieldmap": "tools/hbm_b2/tkm_l74/model_ft21.json"
+}
