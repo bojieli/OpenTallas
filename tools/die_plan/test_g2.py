@@ -562,3 +562,65 @@ def test_die_sta_reports_face_flop_spread():
     P = schema.Plan(PAIR)
     t = gen_phys.sta_die_tcl(P)
     assert "FFSPREAD" in t and "u_(bin|bout)_" in t and t.index("FFSPREAD") < t.index("close $fh")
+
+
+def test_part_probe_wavefront_outputs_have_registered_drivers():
+    """The IO script's scalar rst_o pins must exist in the probe netlist."""
+    import copy
+    import re
+    import gen_phys
+    import reset_tree as RT
+    raw = copy.deepcopy(PAIR)
+    raw.setdefault('reset', {})['release'] = 'wavefront'
+    P = schema.Plan(raw)
+    checked = 0
+    for tn in P.types:
+        outs = gen_phys.reset_out_pins(P, tn)
+        if not outs:
+            continue
+        tree = RT.for_type(P, tn)
+        with tempfile.TemporaryDirectory() as d:
+            out = g2.part_probe(P, tn, d)
+            v = (out / 'probe.v').read_text()
+            tcl = (out / 'probe.tcl').read_text()
+            assert v.count('pr_reset_entry_0 (') == 1
+            for j, (nm, _, _) in enumerate(outs):
+                assert f'output {nm}' in v
+                signal = f'pr_reset_rst_n_t{tree["n_clock_taps"] + j}'
+                assert f'assign {nm} = {signal};' in v
+                assert f'.QN({signal})' in v
+            for rl in tree['relays']:
+                assert f'pr_reset_{rl["name"]}' in tcl
+            assert tree['max_hop_um'] <= RT.relay_um(P)
+            checked += len(outs)
+    assert checked
+
+
+def test_part_probe_uses_explicit_internal_bit_sites():
+    import copy
+    raw=copy.deepcopy(PAIR)
+    slot=raw['partition_types']['fa']['ft_slots'][0]
+    slot['bit_site_cell_um']=[1.4,.28]
+    slot['bit_sites_um']=[[[100+j*100+b*.02,20+j] for b in range(slot['width']+1)] for j in range(slot['stations']-1)]
+    # Deliberately inconsistent old centroid table must not override per-bit LLs.
+    slot['regs_um']=[[777,777]]*slot['stations']
+    with tempfile.TemporaryDirectory() as d:
+        out=g2.part_probe(schema.Plan(raw),'fa',d)
+        text=(out/'probe.tcl').read_text()
+        assert 'st_fz_7_1 -location {100.840 20.140}' in text
+        assert 'st_fz_7_2 -location {200.840 21.140}' in text
+        assert '777.000 777.000' not in text
+        # Payload and epoch bit both use their own allocated cell envelope.
+        assert 'st_fz_64_1 -location {101.980 20.140}' in text
+
+
+def test_part_probe_rejects_incomplete_bit_site_stage():
+    import copy
+    import pytest
+    raw=copy.deepcopy(PAIR)
+    slot=raw['partition_types']['fa']['ft_slots'][0]
+    slot['bit_site_cell_um']=[1.4,.28]
+    slot['bit_sites_um']=[[[100,20]]]*(slot['stations']-1)
+    with tempfile.TemporaryDirectory() as d:
+        with pytest.raises(ValueError,match='width\\+1'):
+            g2.part_probe(schema.Plan(raw),'fa',d)
