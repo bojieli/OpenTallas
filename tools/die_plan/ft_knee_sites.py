@@ -46,9 +46,28 @@ def targets(polyline, depth, pitch=403.):
     return out
 
 
-def _allocate_candidate(allocator, a, b, in_face, out_face, depth, reach, radius, end_anchor):
+def targets_arclength(polyline, depth, pitch=403.):
+    """Stations at uniform arclength along the whole Manhattan spine (no forced bank at the knee).
+    A short first/last leg otherwise costs a whole bank at its knee (slice_station t23: +1 cycle on 3 slots)."""
+    segs = list(zip(polyline, polyline[1:]))
+    lens = [float(np.abs(b-a).sum()) for a, b in segs]
+    total = sum(lens)
+    n = max(depth, math.ceil(total/pitch))
+    out = [polyline[0]]
+    for k in range(1, n):
+        s = total*k/n
+        for (a, b), l in zip(segs, lens):
+            if s <= l+1e-9:
+                out.append(a+(b-a)*(s/l if l else 0.))
+                break
+            s -= l
+    out.append(polyline[-1])
+    return out
+
+
+def _allocate_candidate(allocator, a, b, in_face, out_face, depth, reach, radius, end_anchor, tfun=targets):
     common_spine = spine(a.mean(axis=0), end_anchor, in_face, out_face)
-    path = targets(common_spine, depth)
+    path = tfun(common_spine, depth)
     bits = [spine(x,y,in_face,out_face) for x,y in zip(a,b)]
     if len(common_spine)==2:bits=[[x,y] for x,y in zip(a,b)]
     def requested(target):
@@ -99,10 +118,10 @@ def allocate_bank_chain(allocator, a, b, in_face, out_face, depth, reach=405., r
                 p[axis]=min(max(edge+offset,allocator.bounds[axis]+4.32),allocator.bounds[axis+2]-4.32)
                 anchors.append(p)
     used=set(allocator.used);candidates=[]
-    for anchor in anchors:
+    for anchor,tfun in [(an,tf) for tf in (targets,targets_arclength) for an in anchors]:
         allocator.used=set(used)
         try:
-            result=_allocate_candidate(allocator,a,b,in_face,out_face,depth,reach,radius,anchor)
+            result=_allocate_candidate(allocator,a,b,in_face,out_face,depth,reach,radius,anchor,tfun)
         except ValueError:
             continue
         candidates.append((result,set(allocator.used)))

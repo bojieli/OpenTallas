@@ -15,7 +15,7 @@
 (5) slice_station t23/t46: clock taps follow the station band -- tap_mode 'density' (taps at the sink sites: ft
     station banks + face pin registers, none empty, no grid), and the ft banks get fixed Manhattan knee sites
     (tools/die_plan/ft_knee_sites.py, merged a9417c88c2) so every bank is a compact row and a tap sits on it.
-    t46: 0 added cycles.  t23: ft1/ft2/ft3 +1 station each (ledger) -> lane latency recomputed by schema.
+    t46: 0 added cycles.  t23: 0 added cycles (arclength station targets, ft_knee_sites).
 Idempotent.  usage: delta_kitsspare2_1025.py LEDGER.json"""
 import json
 import math
@@ -40,9 +40,9 @@ CORE_LAT = {
 XRT3 = "ot_s81sl_xrt3"
 XRT3_OLD = [570.24, 395.28]
 XRT3_NEW = [207.36, 164.16]
-# t23 (s_7S_x10) carries ONLY the 4 coll__lk_ES0/ES1 <-> s_7S_LP lanes, which the coll-lanes decision (A) removes
-# (PATH-S81 part of this batched delta) -> t23 is re-planned there, not here.
-STATION_TYPES = ("slice_station__t46",)
+# t23: coll-lanes option A is on HOLD (PATH-S81 10:42: the C hop is a bind-map artifact, lanes stay) -> t23 is
+# re-planned here; ft_knee_sites arclength candidates keep all 4 slots at their old depth (0 added cycles).
+STATION_TYPES = ("slice_station__t23", "slice_station__t46")
 TRACK = {"M3": (0.009, 0.036), "M4": (0.024, 0.048), "M5": (0.024, 0.048), "M6": (0.032, 0.064)}
 FACE_LAYERS = {"N": ("M3", "M5"), "S": ("M3", "M5"), "E": ("M4", "M6"), "W": ("M4", "M6")}
 MARGIN = 6.48
@@ -182,6 +182,7 @@ def stations(raw, rep):
     todo = [tn for tn in STATION_TYPES if not all("bit_sites_um" in s for s in raw["partition_types"][tn]["ft_slots"])]
     if todo:
         rep["knee"] = K.place(raw, todo)
+        assert all(r["added_cycles"] == 0 for r in rep["knee"]), [(r["type"], r["slot"], r["added_cycles"]) for r in rep["knee"]]
     for tn in STATION_TYPES:
         ck = raw["partition_types"][tn].setdefault("clock", {})
         ck["tap_mode"] = "density"
