@@ -458,3 +458,6 @@ All ot-run units (containers hbmcore-<kit>_*), branch claude/hbm-cores-1024 @9e9
   - +1/+1 cycle per crossing, published in core_face_shell_latency.json for the bind/schedule;
   - equivalence benches with mutants; face_guard before/after counts.
   Face_guard-failing cores are relaunched only on the shells.
+
+## HBM-FACE (sub-agent of lane HBM) 2026-10-25 00:54 PDT
+- 2026-10-25 00:54 PDT HBM-FACE: started; branch claude/hbm-face-1024 from claude/hbm-cores-1024@6d0262ad50, worktree epyc1:/srv/opentallas-scratch2/claude/wt/hbm-face. Building face_shell.py (per-core face-register shell, unread-input drop list, latency table) + benches.
