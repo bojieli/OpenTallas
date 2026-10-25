@@ -797,7 +797,8 @@
         "enum": [
          "grid",
          "grid+sinks",
-         "sinks"
+         "sinks",
+         "density"
         ]
        },
        "tap_radius_um": {
@@ -807,6 +808,35 @@
        "tap_max_sinks": {
         "type": "integer",
         "minimum": 1
+       },
+       "tap_target_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "tap_min_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "sink_sites_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 3,
+         "items": {
+          "type": "number"
+         }
+        }
+       },
+       "sink_bins_file": {
+        "type": "string"
+       },
+       "tap_balance_rc": {
+        "enum": [
+         "placement",
+         "grt_report",
+         "grt"
+        ]
        },
        "core_taps": {
         "enum": [
