@@ -495,3 +495,16 @@ CODEX: 2026-10-25 03:54 PDT immediate handback on user reset; read-only takeover
 2026-10-25 05:59 PDT CODEX: FLOW scope crash fixed codex/flow-fix-1025r@09ac1d1bd9;14tests PASS, READY root merge; inherited proof jobs preserved.
 
 CODEX: 2026-10-25 05:59 PDT all-lane takeover active; exact geometry verdict tag bug fixed/pushed main3b2073709c (B1/B2 separation, continuation lists; two focused tests PASS); all lane groups collecting/fixing existing failures, inventories lanes/CODEX.md.
+2026-10-25 06:02 PDT CODEX: CLOCK opt-in currentmain PHY PG clock corridors READY bfadc17bb (17 focused tests PASS), full B2o build awaits HBM generator hard-PHY CK census fix61d6ccd52; six inherited hold-budget STA runs retained.
+2026-10-25 06:01 PDT CODEX: QC physical parked on CLAUDE RESET; collected RP1 f56c NOT SIGNED TT+226.91/FF−13.22ps200ep, slew22/17, DRC0, pair53.42/50.09; diagnosed routed-I/trunk bias + SRAM branch hold; inherited CQB/S8BP live, NK r4 place finished unanalysed. No new jobs/source changes.
+2026-10-25 05:59 PDT CODEX: QC token handback: inherited wavefront128/128+schedule mutant, MAT112/112, SFU6336checks+mutant, CROM representatives PASS collected. No source/merge; redundant own calibration stopped, truncated stdout correction recorded CODEX-LOG; explicit START still open.
+
+2026-10-25 06:01 PDT CODEX: Qwen takeover parked on Claude reset; regen3 FAIL19 stale census (72/72types), inherited SUROW live, NK r4 read-only analysis EXIT0; own codex/qwen-push-1025 clean/no source edits. Children parking; CODEX-LOG handoff.
+2026-10-25 06:00 PDT CODEX: HBM takeover parked on Claude reset; B2o PHYclock tap failure diagnosed and targeted fix61d6ccd52 READY6checks; successor model job live; SU31 BUILD_PASS/simlive; physical F1/F2 flow-hook and route-gate gaps diagnosed, child handoffs preserve all runs. Native tree37ffcba375 clean, no source edits/main merge.
+
+2026-10-25 06:03 PDT CODEX: PART-CAP/binder178 parked on Claude reset; report5e9020b422 pushed, two retained jobs live, binder checkout only/no edits; handoff CODEX-LOG.
+2026-10-25 06:01 PDT CODEX: FLOW/GEOM safely parked on Claude reset;scopefix09ac1d1bd9 READY14tests;no parentheavyjobs;GEOM child parking.
+2026-10-25 06:00 PDT CODEX: S81-HEAD parked on Claude reset; s3 live FF hold stall diagnosed incorrect early/late vclk form; ca95e0e78 pushed WIP separate FF mode fix, no heavy launch/main merge. Spine2 actual placed FAIL max551um; endpoint missing RTL/SerDes status mapping open. Full CODEX-LOG handoff.
+2026-10-25 06:01 PDT CODEX: S81 subgroup parked on Claude reset; I13 rewrite36364ebdb3 functional native554cycles collected, physical gate not launched; child handoffs follow, inherited jobs preserved.
+2026-10-25 06:02 PDT CODEX: S81 legacy parked on RESET; xfin FAIL255.670%util; L4 raw mismatch mx_y only invalid, valid0/864+1178 transactions; XRT3 CTS geometry reviewed spread7.10ps/pinmax19.79um, F2/I successor owed; bksel_c/eg read-only probe unit2612601 continues.
+CODEX: 2026-10-25 06:05 PDT HBM-plan parked on Claude reset; collected B2o clock legalizer FAIL, sourcefix61d6+d5fd7testsPASS, isolated modelintel1codex-b2o-0553 live/detailed CODEX-LOG.
