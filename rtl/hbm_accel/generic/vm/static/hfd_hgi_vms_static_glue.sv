@@ -9,6 +9,8 @@ module ot_vms_slice_static_glue #(
     parameter integer WB=$clog2(WG+5),
     parameter integer RMUT=0,
     parameter integer NATIVE_SHAPE=0,
+    parameter integer NSTOP=4, // ring stops: 4 = four-quadrant ring (default, unchanged); 2 = two-stop ring {sid,sid^1} (B2)
+    parameter integer HMUT=0,  // hub bench mutant (ot_vms_hub_static MUT)
     parameter integer BANK_PIN_IN=0 // the die-level banks carry literal input pin flops: ring-stop COMMIT_DELAY 5 + this
 )(
     input wire clk_hub,
@@ -60,7 +62,7 @@ module ot_vms_slice_static_glue #(
     wire [265:0] ri0,ri1;
     wire [2:0] wk01,wk10;
     wire ack01,ack10;
-    ot_vms_hub_static #(.NC(NC),.CW(CW)) u_hub(
+    ot_vms_hub_static #(.NC(NC),.CW(CW),.NSTOP(NSTOP),.MUT(HMUT)) u_hub(
         .clk(clk_hub),.rst_n(rst_n),.sid(sid),.cq(hcq),.cr(hcr),
         .client_seq(client_seq),.response_enable(response_enable),.response_seq(response_seq),
         .bank_enable(bank_enable),.bank_client(bank_client),
@@ -70,13 +72,13 @@ module ot_vms_slice_static_glue #(
     // H-NETLIST 2200: the 8 banks are die-level instances (vmb_<Q>b); their nets are the bk_* ports
     assign bk_xq=xq0; assign bk_xq2=xq1; assign xd0=bk_xq_done; assign xd1=bk_xq2_done;
     assign eg=bk_eg; assign bk_pq=pq; assign pr=bk_pr;
-    ot_vms_rstop_static #(.COMMIT_DELAY(5+BANK_PIN_IN),.MUT(RMUT)) u_cw(
+    ot_vms_rstop_static #(.COMMIT_DELAY(5+BANK_PIN_IN),.NSTOP(NSTOP),.MUT(RMUT)) u_cw(
         .clk(clk_ring[0]),.rst_n(rst_n),.sid(sid),.dir(1'b0),
         .tx_enable(ring_tx_enable[0]),.tx_source(ring_tx_source[0+:3]),
         .l_in(cw_in),.l_out(cw_out),.pi(pi0),.eg(eg),.xq(xq0),.xq_done(xd0),
         .rce(rce0),.ri(ri0),.wko(wk01),.wki(wk10),.cco(cco0),
         .ack_o(ack01),.ack_i(ack10),.mirror_busy(mirror_busy[0]),.fault(ring_fault[0]));
-    ot_vms_rstop_static #(.COMMIT_DELAY(5+BANK_PIN_IN),.MUT(RMUT)) u_ccw(
+    ot_vms_rstop_static #(.COMMIT_DELAY(5+BANK_PIN_IN),.NSTOP(NSTOP),.MUT(RMUT)) u_ccw(
         .clk(clk_ring[1]),.rst_n(rst_n),.sid(sid),.dir(1'b1),
         .tx_enable(ring_tx_enable[1]),.tx_source(ring_tx_source[3+:3]),
         .l_in(ccw_in),.l_out(ccw_out),.pi(pi1),.eg(eg),.xq(xq1),.xq_done(xd1),

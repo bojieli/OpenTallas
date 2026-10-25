@@ -17,11 +17,18 @@
 // acknowledgements must precede the compiler response calendar. Missing ones
 // fault at that edge; they never delay or replay cr. Replay never rebroadcasts.
 // status sticky {range/address fault, byte-mask fault, schedule/identity fault}.
+// NSTOP (HBM-BIND 2026-10-24): 4 = four-stop ring, bit-exact the original. 2 = two-stop ring of the adjacent pair
+// {sid, sid^1} (B2 die: NW + NE). Each hub then reaches its single peer over ONE direction (cw if the peer is the next
+// physical stop, else ccw: NE cw, NW ccw), which is the direction the four-stop map already uses for that peer:
+// unicast routing is unchanged; a native mirror write issues local + that one direction (mask = peer) and waits for
+// TWO acknowledgements (not four); a unicast to a quadrant outside {sid, peer} is a range/address fault.
 module ot_vms_hub_static #(
     parameter integer NC=4,
     parameter integer PHYSICAL_RING=1,
     parameter integer CW=(NC<1)?1:$clog2(NC+1),
-    parameter integer MUT=0 // 1 wrong bank; 2 wrong tag; 3 ignores select; 4 waits for missing ack
+    parameter integer NSTOP=4,
+    parameter integer MUT=0 // 1 wrong bank; 2 wrong tag; 3 ignores select; 4 waits for missing ack;
+                            // 5 NSTOP 2 mirror waits for four acks; 6 NSTOP 2 mirror needs both directions
 )(
     input wire clk, rst_n,
     input wire [1:0] sid,
@@ -88,8 +95,11 @@ module ot_vms_hub_static #(
     wire [1:0] next_sid=(PHYSICAL_RING!=0)?{nr[1],nr[1]^nr[0]}:me+2'd1;
     wire [1:0] opposite_sid=(PHYSICAL_RING!=0)?{orank[1],orank[1]^orank[0]}:me+2'd2;
     wire [1:0] previous_sid=(PHYSICAL_RING!=0)?{pvr[1],pvr[1]^pvr[0]}:me+2'd3;
-    wire [3:0] cw_dest=(4'b1<<next_sid)|(4'b1<<opposite_sid);
-    wire [3:0] ccw_dest=4'b1<<previous_sid;
+    wire [1:0] peer_sid=me^2'b01;
+    wire [3:0] cw_dest=(NSTOP==2)?((next_sid==peer_sid)?(4'b1<<peer_sid):4'b0):(4'b1<<next_sid)|(4'b1<<opposite_sid);
+    wire [3:0] ccw_dest=(NSTOP==2)?((previous_sid==peer_sid)?(4'b1<<peer_sid):4'b0):4'b1<<previous_sid;
+    localparam [2:0] MIRROR_ACKS=(NSTOP==2&&MUT!=5)?3'd2:3'd4;
+    localparam integer MIRROR_BOTH=((NSTOP!=2)||(MUT==6))?1:0;
     function automatic [2:0] bank_of(input [337:0] q);
         bank_of=(MUT==1)?q[312:310]:q[311:309];
     endfunction
@@ -100,10 +110,11 @@ module ot_vms_hub_static #(
         local_needed=(c==NC)||q[324]||(q[323:322]==me);
     endfunction
     function automatic cw_needed(input [337:0] q,input integer c);
-        cw_needed=(c!=NC)&&((q[324]&&q[336])||(!q[324]&&((4'b1<<q[323:322])&cw_dest)!=0));
+        cw_needed=(c!=NC)&&((q[324]&&q[336]&&(MIRROR_BOTH!=0||cw_dest!=0))||(!q[324]&&((4'b1<<q[323:322])&cw_dest)!=0));
     endfunction
     function automatic ccw_needed(input [337:0] q,input integer c);
-        ccw_needed=(c!=NC)&&((q[324]&&q[336])||(!q[324]&&q[323:322]==previous_sid));
+        ccw_needed=(c!=NC)&&((q[324]&&q[336]&&(MIRROR_BOTH!=0||ccw_dest!=0))||(!q[324]&&
+            ((NSTOP==2)?(((4'b1<<q[323:322])&ccw_dest)!=0):(q[323:322]==previous_sid))));
     endfunction
     // Every pin payload is captured; only validity/control flops reset.
     always @(posedge clk) begin
@@ -171,6 +182,7 @@ module ot_vms_hub_static #(
             if(active[c][k]) fault[0]=1;
             if(issued_local[c]!=local_needed(q,c)||issued_cw[c]!=cw_needed(q,c)||issued_ccw[c]!=ccw_needed(q,c)) fault[0]=1;
             if(q[335:325]!=0||q[308:304]!=0||(q[324]&&q[323:322]!=0)||(c==NC&&!q[324]&&q[323:322]!=me)) fault[2]=1;
+            if(NSTOP==2&&!q[324]&&q[323:322]!=me&&q[323:322]!=peer_sid) fault[2]=1;
             for(integer w=0;w<8;w=w+1) if(q[336]&&q[16+4*w+:4]!={4{wm[w]}}) fault[1]=1;
         end
         for(c=0;c<N;c=c+1) for(k=0;k<4;k=k+1) begin arrivals[c][k]=0; returned_data[c][k]=0; end
@@ -226,7 +238,7 @@ module ot_vms_hub_static #(
                 if(qvalid[c]) begin
                     active[c][sq[c*2+:2]]<=1;
                     seen[c][sq[c*2+:2]]<=0;
-                    expected[c][sq[c*2+:2]]<=(qr[c*338+324]&&qr[c*338+336]&&c!=NC)?3'd4:3'd1;
+                    expected[c][sq[c*2+:2]]<=(qr[c*338+324]&&qr[c*338+336]&&c!=NC)?MIRROR_ACKS:3'd1;
                     writes[c][sq[c*2+:2]]<=qr[c*338+336];
                 end
             end
