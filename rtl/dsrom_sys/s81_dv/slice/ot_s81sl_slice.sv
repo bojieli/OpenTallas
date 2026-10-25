@@ -59,8 +59,8 @@ module ot_s81sl_leaf #(
     parameter integer CS_SWR_D = 0,  // vsw -> vs: sw_vi / sw_ri / sw_fi                               (u_cst_swr)
     parameter integer CS_RA_D = 0,   // vs -> rxsf: ra_v / ra_x                                        (u_cst_ra)
     parameter integer CS_RAR_D = 0,  // rxsb -> vs: ra_vi / ra_ri / ra_fi                              (u_cst_rar)
-    parameter integer CS_VE_D = 0,   // vs -> ve: ve_r*, ve_p*, ve_a*                                  (u_cst_ve)
-    parameter integer CS_VER_D = 0,  // ve -> vs: ve_o*, ve_fi                                         (u_cst_ver)
+    parameter integer CS_VE_D = 0,   // vs -> ve: ve_r* (reduce stream), ve_a* (add beats)            (u_cst_ve)
+    parameter integer CS_VER_D = 0,  // ve -> vs: ve_p* (beat partials), ve_o*, ve_fi                  (u_cst_ver)
     parameter integer CS_PVS_D = 0,  // vp -> vs (and the KV bank): s_v / s_d, x_qv / x_qd            (u_cst_pvs)
     parameter integer CS_VSP_D = 0   // vs (KV) -> vp: x_rv / x_ra, x_wv / x_wa / x_wm / x_wd          (u_cst_vsp)
 ) (
@@ -117,11 +117,11 @@ module ot_s81sl_leaf #(
     wire u_v_s, um_v_s, um_q_s, um_b_s; wire [2:0] u_i_s; wire [255:0] u_s; wire [7:0] um_i_s;
     wire swv_s, swvi_w, swfi_w; wire [255:0] swd_s; wire [31:0] sww_s, swl_s; wire [63:0] swri_w;
     wire rav_s, ravi_r, rafi_r; wire [31:0] rax_s; wire [30:0] rari_r;
-    wire vr_v_s, vp_v_s, va_v_s, vo_v_e, vef_e; wire [1:0] vr_c_s, vp_c_s, va_c_s, vo_c_e; wire [63:0] vr_h_s;
-    wire [127:0] vr_k_s, vr_w_s, va_h_s, vo_y_e; wire [31:0] vp_hh_s, vp_kk_s, vp_dd_s, va_g_s; wire [255:0] va_val_s;
+    wire vr_v_s, vp_v_e, va_v_s, vo_v_e, vef_e; wire [1:0] vr_c_s, vp_c_e, va_c_s, vo_c_e; wire [63:0] vr_h_s;
+    wire [127:0] vr_k_s, vr_w_s, va_h_s, vo_y_e; wire [31:0] vp_hh_e, vp_kk_e, vp_dd_e, va_g_s; wire [255:0] va_val_s;
     wire s_v_p, x_qv_p; wire [159:0] s_d_p; wire [255:0] x_qd_p;
     wire x_rv_x, x_wv_x; wire [9:0] x_ra_x, x_wa_x; wire [7:0] x_wm_x; wire [255:0] x_wd_x;
-    ot_s81sl_cst #(.W(3 + 256 + 3 + 1 + 128 + 3 + 256), .V(4), .D(CS_VNI_D)) u_cst_vni (.clk(clk), .rst_n(rst_n),
+    ot_s81sl_cst #(.W(3 + 1 + 256 + 3 + 1 + 128 + 3 + 256), .V(4), .D(CS_VNI_D)) u_cst_vni (.clk(clk), .rst_n(rst_n),
         .d({hw_j, hw_hf, hw_d, hr_j, hr_hf, n_pre, wl_i, wl_d}), .dv({hw_v, hr_v, n_go, wl_v}),
         .q({hw_j_n, hw_hf_n, hw_d_n, hr_j_n, hr_hf_n, n_pre_n, wl_i_n, wl_d_n}), .qv({hw_v_n, hr_v_n, n_go_n, wl_v_n}));
     ot_s81sl_cst #(.W(256), .V(1), .D(CS_VNO_D)) u_cst_vno (.clk(clk), .rst_n(rst_n), .d(hq_d_n), .dv(hq_v_n),
@@ -147,12 +147,12 @@ module ot_s81sl_leaf #(
     ot_s81sl_cst #(.W(32), .V(1), .D(CS_RA_D)) u_cst_ra (.clk(clk), .rst_n(rst_n), .d(rax_s), .dv(rav_s), .q(rax), .qv(rav));
     ot_s81sl_cst #(.W(31), .V(2), .D(CS_RAR_D)) u_cst_rar (.clk(clk), .rst_n(rst_n), .d(rari_r), .dv({ravi_r, rafi_r}),
         .q(rari), .qv({ravi, rafi}));
-    ot_s81sl_cst #(.W(2 + 64 + 128 + 128 + 2 + 96 + 2 + 128 + 256 + 32), .V(3), .D(CS_VE_D)) u_cst_ve (.clk(clk),
-        .rst_n(rst_n), .d({vr_c_s, vr_h_s, vr_k_s, vr_w_s, vp_c_s, vp_hh_s, vp_kk_s, vp_dd_s, va_c_s, va_h_s, va_val_s, va_g_s}),
-        .dv({vr_v_s, vp_v_s, va_v_s}),
-        .q({vr_c, vr_h, vr_k, vr_w, vp_c, vp_hh, vp_kk, vp_dd, va_c, va_h, va_val, va_g}), .qv({vr_v, vp_v, va_v}));
-    ot_s81sl_cst #(.W(2 + 128), .V(2), .D(CS_VER_D)) u_cst_ver (.clk(clk), .rst_n(rst_n), .d({vo_c_e, vo_y_e}),
-        .dv({vo_v_e, vef_e}), .q({vo_c, vo_y}), .qv({vo_v, vef}));
+    ot_s81sl_cst #(.W(2 + 64 + 128 + 128 + 2 + 128 + 256 + 32), .V(2), .D(CS_VE_D)) u_cst_ve (.clk(clk),
+        .rst_n(rst_n), .d({vr_c_s, vr_h_s, vr_k_s, vr_w_s, va_c_s, va_h_s, va_val_s, va_g_s}), .dv({vr_v_s, va_v_s}),
+        .q({vr_c, vr_h, vr_k, vr_w, va_c, va_h, va_val, va_g}), .qv({vr_v, va_v}));
+    ot_s81sl_cst #(.W(2 + 96 + 2 + 128), .V(3), .D(CS_VER_D)) u_cst_ver (.clk(clk), .rst_n(rst_n),
+        .d({vp_c_e, vp_hh_e, vp_kk_e, vp_dd_e, vo_c_e, vo_y_e}), .dv({vp_v_e, vo_v_e, vef_e}),
+        .q({vp_c, vp_hh, vp_kk, vp_dd, vo_c, vo_y}), .qv({vp_v, vo_v, vef}));
     ot_s81sl_cst #(.W(160 + 256), .V(2), .D(CS_PVS_D)) u_cst_pvs (.clk(clk), .rst_n(rst_n), .d({s_d_p, x_qd_p}),
         .dv({s_v_p, x_qv_p}), .q({s_d, x_qd}), .qv({s_v, x_qv}));
     ot_s81sl_cst #(.W(10 + 10 + 8 + 256), .V(2), .D(CS_VSP_D)) u_cst_vsp (.clk(clk), .rst_n(rst_n),
@@ -200,13 +200,13 @@ module ot_s81sl_leaf #(
         .sw_v(swv_s), .sw_d(swd_s), .sw_w(sww_s), .sw_lim(swl_s), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
         .ra_v(rav_s), .ra_x(rax_s), .ra_vi(ravi), .ra_ri(rari), .ra_fi(rafi),
         .ve_rv(vr_v_s), .ve_rc(vr_c_s), .ve_rh(vr_h_s), .ve_rk(vr_k_s), .ve_rw(vr_w_s),
-        .ve_pv(vp_v_s), .ve_pc(vp_c_s), .ve_phh(vp_hh_s), .ve_pkk(vp_kk_s), .ve_pdd(vp_dd_s),
+        .ve_pv(vp_v), .ve_pc(vp_c), .ve_phh(vp_hh), .ve_pkk(vp_kk), .ve_pdd(vp_dd),
         .ve_av(va_v_s), .ve_ac(va_c_s), .ve_ah(va_h_s), .ve_aval(va_val_s), .ve_ag(va_g_s),
         .ve_ov(vo_v), .ve_oc(vo_c), .ve_oy(vo_y), .ve_fi(vef),
         .e_v(e_v), .e_c(e_c), .e_d(e_d), .g_v(g_v), .g_c(g_c), .g_d(g_d), .fault(f_vs));
     ot_s81sl_ve_sp u_ve (   // S81/RTLSPLIT: ve = u_m (ot_s81sl_ve_m) + u_s (ot_s81sl_ve_s), reduce stream +2 edges
    .clk(clk), .rst_n(rst_n), .r_v(vr_v), .r_c(vr_c), .r_h(vr_h), .r_k(vr_k), .r_w(vr_w),
-        .p_v(vp_v), .p_c(vp_c), .p_hh(vp_hh), .p_kk(vp_kk), .p_dd(vp_dd),
+        .p_v(vp_v_e), .p_c(vp_c_e), .p_hh(vp_hh_e), .p_kk(vp_kk_e), .p_dd(vp_dd_e),
         .a_v(va_v), .a_c(va_c), .a_h(va_h), .a_val(va_val), .a_g(va_g),
         .o_v(vo_v_e), .o_c(vo_c_e), .o_y(vo_y_e), .fault(vef_e));
     ot_s81sl_vsw u_vsw (.clk(clk), .rst_n(rst_n), .i_v(swv), .i_d(swd), .i_w(sww), .i_lim(swl),
