@@ -953,3 +953,5 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
   (5) ot_hfd_coll_q2_hard_v8g__ring_ag_79b4607b3be2 (intel1): LEC ERROR (same KeyError tool gap), hold PASS -27.39/461. 233x233, 136k cells, fill 34%, max bin 0.53, evenly spread, pins W/E/N dense, S sparse.
   (6) ot_hgi_coll_inj_idx_join_rg_9d0cc3a3c5ab (epyc1): LEC ERROR (tool gap), hold PASS -41.83/620 (largest). 212x315, 73k cells, fill 15%: logic packed in the E half, W half empty, W-face flops reach logic through one diagonal chain (y 160->300, ~150 um); ask: acceptable or W pins should move E (plan pin delta).
   Ask: verdict per kit; PASS rows route via autopilot (enqueued with this tag, --goal finish).
+2026-10-25 07:18 PDT GEOM-REVIEW-2: CLAIM [HBM-KITS/B2 07:17]
+2026-10-25 07:18 PDT GEOM-REVIEW-4: CLAIM [HBM-KITS/B2 07:17]
