@@ -75,13 +75,13 @@ def repair_l126_boundary(plan):
     before=copy.deepcopy(slot['regs_um'])
     if before[0] != [4.32,1555.2] or slot.get('bit_sites_um'):
         raise ValueError('unexpected L126x2 source or per-bit sites: replan explicitly')
-    slot['regs_um'][0]=[4.32,1296.0]
+    slot['regs_um'][0]=[4.32,1300.32]
     P=S.Plan(plan)
     result={}
     for lid in ('L126','L126m'):
         _,regs,_=C.lane_geometry(P,lid)
         hops=[abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(regs,regs[1:])]
-        if max(hops)>405+1e-6:raise ValueError(f'{lid} still exceeds405um')
+        if max(hops)>0.9*405+1e-6:raise ValueError(f'{lid} still exceeds405um')
         result[lid]={'max_hop_um':round(max(hops),3),'cycles':P.lane_latency(lid)['cycles']}
     return dict(type='q_b003',slot='L126x2',before=before,after=slot['regs_um'],lanes=result,cycle_delta=0)
 
