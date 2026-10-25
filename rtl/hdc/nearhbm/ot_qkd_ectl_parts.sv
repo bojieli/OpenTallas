@@ -414,6 +414,10 @@ module ot_qkd_ectl_part #(
     wire row_slot = return_slots[ROW_RETURN_LAT-1];
     wire ring_fault;
     // ---- row and e FIFOs ---------------------------------------------------------------------------------------------
+    // c_started / c_fin (K-pass state, below) are declared HERE, before g_static_rows reads them: used before their
+    // declaration they were implicit 1-bit nets, which yosys-slang (the synthesis frontend) leaves undriven, so the
+    // synthesised static row ring never saw read_slot (LEC lint 10-25: -Wimplicit-net at this read_slot line).
+    reg             c_started, c_fin;
     wire [RWD-1:0]  row;
     wire            row_ne;
     reg             er_pend;
@@ -446,7 +450,7 @@ module ot_qkd_ectl_part #(
     end endgenerate
 
     // ---- consumption: K pass -----------------------------------------------------------------------------------------
-    reg        c_vph, c_g, c_fin;
+    reg        c_vph, c_g;
     reg [11:0] c_idx;
     reg [4:0]  c_gam;
     reg [3:0]  c_k;
@@ -455,7 +459,6 @@ module ot_qkd_ectl_part #(
     reg [7:0]  arm;                                     // ... and its final value has reached the loop output
     reg [7:0]  pend_g;
     reg [3:0]  pend_gam [0:7];
-    reg        c_started;
     wire [11:0] c_pidx = kord ? {c_idx[11], c_idx[9:6], c_idx[10], c_idx[5:0]} : c_idx;
     wire       c_klim = kord ? (c_idx < 12'd2048) : (c_idx < n_s);
     wire       k_issue = c_started && !c_vph && !c_fin && c_klim && (c_pidx < n_s) && (STATIC_QK ? (schedule_age >= QK_ISSUE_AGE-1) : (row_ne && q_ready));
