@@ -1,8 +1,32 @@
 {
  "rounds": [
   {
-   "checked": 91,
+   "checked": 102,
    "added": [
+    {
+     "type": "slw_st_a_v2",
+     "slot": "cws3",
+     "stations": [
+      4,
+      5
+     ],
+     "worst_paired_bit_um": 322.88,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "slw_st_a_v2",
+     "slot": "x_fw_ctl_p1",
+     "stations": [
+      2,
+      3
+     ],
+     "worst_paired_bit_um": 276.6507,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
     {
      "type": "slw_hc0",
      "slot": "rsn",
@@ -16,25 +40,25 @@
      "removed_centroid_sites": false
     },
     {
-     "type": "slw_ctl",
-     "slot": "cws2",
+     "type": "slw_st_a_v1",
+     "slot": "cws3",
      "stations": [
       4,
       5
      ],
-     "worst_paired_bit_um": 322.5344,
+     "worst_paired_bit_um": 322.88,
      "budget_um": 403.0,
      "mode": "per-bit-zroute",
      "removed_centroid_sites": false
     },
     {
-     "type": "slw_ctl",
-     "slot": "x_hc1_st_a",
+     "type": "slw_st_a_v1",
+     "slot": "x_fw_ctl_p1",
      "stations": [
-      3,
-      4
+      2,
+      3
      ],
-     "worst_paired_bit_um": 316.176,
+     "worst_paired_bit_um": 276.6507,
      "budget_um": 403.0,
      "mode": "per-bit-zroute",
      "removed_centroid_sites": false
@@ -59,6 +83,54 @@
       5
      ],
      "worst_paired_bit_um": 336.4736,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v1",
+     "slot": "cws3",
+     "stations": [
+      4,
+      5
+     ],
+     "worst_paired_bit_um": 322.88,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v1",
+     "slot": "x_fw_ctl_p2",
+     "stations": [
+      2,
+      3
+     ],
+     "worst_paired_bit_um": 276.6507,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v2",
+     "slot": "cws3",
+     "stations": [
+      4,
+      5
+     ],
+     "worst_paired_bit_um": 322.88,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v2",
+     "slot": "x_fw_ctl_p2",
+     "stations": [
+      2,
+      3
+     ],
+     "worst_paired_bit_um": 276.6507,
      "budget_um": 403.0,
      "mode": "per-bit-zroute",
      "removed_centroid_sites": false
@@ -232,7 +304,7 @@
       4,
       5
      ],
-     "worst_paired_bit_um": 372.597,
+     "worst_paired_bit_um": 371.205,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
@@ -394,7 +466,7 @@
       4,
       5
      ],
-     "worst_paired_bit_um": 372.597,
+     "worst_paired_bit_um": 371.205,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
@@ -413,6 +485,42 @@
       7
      ],
      "worst_paired_bit_um": 369.783,
+     "budget_um": 403.0,
+     "cell_size_um": [
+      1.404,
+      0.27
+     ],
+     "max_radius_um": 40.0,
+     "core_free_routes": true,
+     "bit_ordered": false,
+     "mode": "row-legal-per-bit"
+    },
+    {
+     "type": "sle_su_c",
+     "slot": "x_st_b_fe",
+     "stations": [
+      4,
+      5
+     ],
+     "worst_paired_bit_um": 360.129,
+     "budget_um": 403.0,
+     "cell_size_um": [
+      1.404,
+      0.27
+     ],
+     "max_radius_um": 40.0,
+     "core_free_routes": true,
+     "bit_ordered": false,
+     "mode": "row-legal-per-bit"
+    },
+    {
+     "type": "sle_su_c",
+     "slot": "x_su_l0_stm",
+     "stations": [
+      3,
+      4
+     ],
+     "worst_paired_bit_um": 365.609,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
@@ -570,6 +678,54 @@
    ],
    "slots": [
     {
+     "type": "slw_st_a_v2",
+     "slot": "cws3",
+     "stations": [
+      4,
+      5
+     ],
+     "worst_paired_bit_um": 322.88,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "slw_st_a_v2",
+     "slot": "b_hw_ctl_hc3",
+     "stations": [
+      4,
+      4
+     ],
+     "worst_paired_bit_um": 334.88,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "slw_st_a_v2",
+     "slot": "x_fw_ctl_p1",
+     "stations": [
+      2,
+      3
+     ],
+     "worst_paired_bit_um": 276.6507,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "slw_st_a_v2",
+     "slot": "x_fw_ctl_p2",
+     "stations": [
+      4,
+      4
+     ],
+     "worst_paired_bit_um": 364.736,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
      "type": "slw_hc0",
      "slot": "rsn",
      "stations": [
@@ -606,61 +762,49 @@
      "removed_centroid_sites": false
     },
     {
-     "type": "slw_ctl",
-     "slot": "cws1",
-     "stations": [
-      4,
-      4
-     ],
-     "worst_paired_bit_um": 357.488,
-     "budget_um": 403.0,
-     "mode": "per-bit-zroute",
-     "removed_centroid_sites": false
-    },
-    {
-     "type": "slw_ctl",
-     "slot": "cws2",
+     "type": "slw_st_a_v1",
+     "slot": "cws3",
      "stations": [
       4,
       5
      ],
-     "worst_paired_bit_um": 322.5344,
+     "worst_paired_bit_um": 322.88,
      "budget_um": 403.0,
      "mode": "per-bit-zroute",
      "removed_centroid_sites": false
     },
     {
-     "type": "slw_ctl",
-     "slot": "x_hc1_st_a",
-     "stations": [
-      3,
-      4
-     ],
-     "worst_paired_bit_um": 316.176,
-     "budget_um": 403.0,
-     "mode": "per-bit-zroute",
-     "removed_centroid_sites": false
-    },
-    {
-     "type": "slw_ctl",
-     "slot": "x_st_b_st_a",
+     "type": "slw_st_a_v1",
+     "slot": "b_hw_ctl_hc3",
      "stations": [
       4,
       4
      ],
-     "worst_paired_bit_um": 376.32,
+     "worst_paired_bit_um": 334.88,
      "budget_um": 403.0,
      "mode": "per-bit-zroute",
      "removed_centroid_sites": false
     },
     {
-     "type": "slw_ctl",
-     "slot": "x_st_a_st_b",
+     "type": "slw_st_a_v1",
+     "slot": "x_fw_ctl_p1",
+     "stations": [
+      2,
+      3
+     ],
+     "worst_paired_bit_um": 276.6507,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "slw_st_a_v1",
+     "slot": "x_fw_ctl_p2",
      "stations": [
       4,
       4
      ],
-     "worst_paired_bit_um": 348.016,
+     "worst_paired_bit_um": 364.736,
      "budget_um": 403.0,
      "mode": "per-bit-zroute",
      "removed_centroid_sites": false
@@ -721,6 +865,102 @@
       2
      ],
      "worst_paired_bit_um": 221.92,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v1",
+     "slot": "cws3",
+     "stations": [
+      4,
+      5
+     ],
+     "worst_paired_bit_um": 322.88,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v1",
+     "slot": "b_hw_ctl_hc3",
+     "stations": [
+      4,
+      4
+     ],
+     "worst_paired_bit_um": 334.88,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v1",
+     "slot": "x_fw_ctl_p2",
+     "stations": [
+      2,
+      3
+     ],
+     "worst_paired_bit_um": 276.6507,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v1",
+     "slot": "x_su_l0_ctl",
+     "stations": [
+      4,
+      4
+     ],
+     "worst_paired_bit_um": 394.14,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v2",
+     "slot": "cws3",
+     "stations": [
+      4,
+      5
+     ],
+     "worst_paired_bit_um": 322.88,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v2",
+     "slot": "b_hw_ctl_hc3",
+     "stations": [
+      4,
+      4
+     ],
+     "worst_paired_bit_um": 334.88,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v2",
+     "slot": "x_fw_ctl_p2",
+     "stations": [
+      2,
+      3
+     ],
+     "worst_paired_bit_um": 276.6507,
+     "budget_um": 403.0,
+     "mode": "per-bit-zroute",
+     "removed_centroid_sites": false
+    },
+    {
+     "type": "sle_st_a_v2",
+     "slot": "x_su_l0_ctl",
+     "stations": [
+      4,
+      4
+     ],
+     "worst_paired_bit_um": 382.74,
      "budget_um": 403.0,
      "mode": "per-bit-zroute",
      "removed_centroid_sites": false
@@ -1254,7 +1494,7 @@
       4,
       5
      ],
-     "worst_paired_bit_um": 372.597,
+     "worst_paired_bit_um": 371.205,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
@@ -1272,7 +1512,7 @@
       4,
       4
      ],
-     "worst_paired_bit_um": 371.565,
+     "worst_paired_bit_um": 374.935,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
@@ -1287,18 +1527,16 @@
      "type": "slw_su_c",
      "slot": "x_su_l0_ctl",
      "stations": [
-      4,
-      4
+      1,
+      1
      ],
-     "worst_paired_bit_um": 360.957,
+     "worst_paired_bit_um": 321.216,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
       0.27
      ],
      "max_radius_um": 40.0,
-     "core_free_routes": true,
-     "bit_ordered": false,
      "mode": "row-legal-per-bit"
     },
     {
@@ -1323,10 +1561,10 @@
      "type": "slw_su_c",
      "slot": "x_su_l0_stm",
      "stations": [
-      5,
-      5
+      4,
+      4
      ],
-     "worst_paired_bit_um": 365.409,
+     "worst_paired_bit_um": 364.449,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
@@ -1359,18 +1597,16 @@
      "type": "slw_su_c",
      "slot": "x_su_l0_sc",
      "stations": [
-      2,
-      2
+      1,
+      1
      ],
-     "worst_paired_bit_um": 360.507,
+     "worst_paired_bit_um": 298.272,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
       0.27
      ],
      "max_radius_um": 40.0,
-     "core_free_routes": true,
-     "bit_ordered": false,
      "mode": "row-legal-per-bit"
     },
     {
@@ -1560,7 +1796,7 @@
       4,
       5
      ],
-     "worst_paired_bit_um": 372.597,
+     "worst_paired_bit_um": 371.205,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
@@ -1578,7 +1814,7 @@
       4,
       4
      ],
-     "worst_paired_bit_um": 371.565,
+     "worst_paired_bit_um": 374.935,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
@@ -1612,9 +1848,9 @@
      "slot": "x_st_b_fe",
      "stations": [
       4,
-      4
+      5
      ],
-     "worst_paired_bit_um": 368.297,
+     "worst_paired_bit_um": 360.129,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
@@ -1629,10 +1865,10 @@
      "type": "sle_su_c",
      "slot": "x_su_l0_stm",
      "stations": [
-      5,
-      5
+      3,
+      4
      ],
-     "worst_paired_bit_um": 367.761,
+     "worst_paired_bit_um": 365.609,
      "budget_um": 403.0,
      "cell_size_um": [
       1.404,
@@ -2403,14 +2639,14 @@
   {
    "lane": "sl_W5_hc2__cws2",
    "before": 14,
-   "after": 16,
-   "added": 2
+   "after": 15,
+   "added": 1
   },
   {
    "lane": "sl_W5_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_W5_bn_00__rsn",
@@ -2451,14 +2687,14 @@
   {
    "lane": "sl_W4_hc2__cws2",
    "before": 14,
-   "after": 16,
-   "added": 2
+   "after": 15,
+   "added": 1
   },
   {
    "lane": "sl_W4_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_W4_bn_00__rsn",
@@ -2499,14 +2735,14 @@
   {
    "lane": "sl_W3_hc2__cws2",
    "before": 14,
-   "after": 16,
-   "added": 2
+   "after": 15,
+   "added": 1
   },
   {
    "lane": "sl_W3_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_W3_bn_00__rsn",
@@ -2547,14 +2783,14 @@
   {
    "lane": "sl_W2_hc2__cws2",
    "before": 14,
-   "after": 16,
-   "added": 2
+   "after": 15,
+   "added": 1
   },
   {
    "lane": "sl_W2_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_W2_bn_00__rsn",
@@ -2595,14 +2831,14 @@
   {
    "lane": "sl_W1_hc2__cws2",
    "before": 14,
-   "after": 16,
-   "added": 2
+   "after": 15,
+   "added": 1
   },
   {
    "lane": "sl_W1_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_W1_bn_00__rsn",
@@ -2643,14 +2879,14 @@
   {
    "lane": "sl_W0_hc2__cws2",
    "before": 14,
-   "after": 16,
-   "added": 2
+   "after": 15,
+   "added": 1
   },
   {
    "lane": "sl_W0_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_W0_bn_00__rsn",
@@ -2697,8 +2933,8 @@
   {
    "lane": "sl_E0_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_E0_bn_00__rsn",
@@ -2745,8 +2981,8 @@
   {
    "lane": "sl_E1_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_E1_bn_00__rsn",
@@ -2793,8 +3029,8 @@
   {
    "lane": "sl_E2_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_E2_bn_00__rsn",
@@ -2841,8 +3077,8 @@
   {
    "lane": "sl_E3_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_E3_bn_00__rsn",
@@ -2889,8 +3125,8 @@
   {
    "lane": "sl_E4_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_E4_bn_00__rsn",
@@ -2937,8 +3173,8 @@
   {
    "lane": "sl_E5_hc3__cws3",
    "before": 14,
-   "after": 15,
-   "added": 1
+   "after": 16,
+   "added": 2
   },
   {
    "lane": "c_E5_bn_00__rsn",
@@ -2953,9 +3189,9 @@
    "added": 3
   },
   {
-   "lane": "sl_W5_hc1__x_hc1_st_a",
-   "before": 5,
-   "after": 6,
+   "lane": "sl_W5_fw__x_fw_ctl_p1",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -2972,14 +3208,14 @@
   },
   {
    "lane": "sl_W4_st_b__x_st_b_fe",
-   "before": 9,
-   "after": 10,
+   "before": 8,
+   "after": 9,
    "added": 1
   },
   {
-   "lane": "sl_W4_hc1__x_hc1_st_a",
-   "before": 5,
-   "after": 6,
+   "lane": "sl_W4_fw__x_fw_ctl_p1",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -2995,9 +3231,9 @@
    "added": 1
   },
   {
-   "lane": "sl_W3_hc1__x_hc1_st_a",
-   "before": 5,
-   "after": 6,
+   "lane": "sl_W3_fw__x_fw_ctl_p1",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -3014,14 +3250,14 @@
   },
   {
    "lane": "sl_W2_st_b__x_st_b_fe",
-   "before": 9,
-   "after": 10,
+   "before": 8,
+   "after": 9,
    "added": 1
   },
   {
-   "lane": "sl_W2_hc1__x_hc1_st_a",
-   "before": 5,
-   "after": 6,
+   "lane": "sl_W2_fw__x_fw_ctl_p1",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -3037,9 +3273,9 @@
    "added": 1
   },
   {
-   "lane": "sl_W1_hc1__x_hc1_st_a",
-   "before": 5,
-   "after": 6,
+   "lane": "sl_W1_fw__x_fw_ctl_p1",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -3056,14 +3292,14 @@
   },
   {
    "lane": "sl_W0_st_b__x_st_b_fe",
-   "before": 9,
-   "after": 10,
+   "before": 8,
+   "after": 9,
    "added": 1
   },
   {
-   "lane": "sl_W0_hc1__x_hc1_st_a",
-   "before": 5,
-   "after": 6,
+   "lane": "sl_W0_fw__x_fw_ctl_p1",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -3081,7 +3317,13 @@
   {
    "lane": "sl_E0_st_b__x_st_b_fe",
    "before": 19,
-   "after": 20,
+   "after": 21,
+   "added": 2
+  },
+  {
+   "lane": "sl_E0_fw__x_fw_ctl_p2",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -3097,6 +3339,12 @@
    "added": 1
   },
   {
+   "lane": "sl_E0_su_l0__x_su_l0_stm",
+   "before": 5,
+   "after": 6,
+   "added": 1
+  },
+  {
    "lane": "sl_E0_su_l1__x_su_l1_stm",
    "before": 5,
    "after": 6,
@@ -3105,7 +3353,13 @@
   {
    "lane": "sl_E1_st_b__x_st_b_fe",
    "before": 19,
-   "after": 20,
+   "after": 21,
+   "added": 2
+  },
+  {
+   "lane": "sl_E1_fw__x_fw_ctl_p2",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -3121,6 +3375,12 @@
    "added": 1
   },
   {
+   "lane": "sl_E1_su_l0__x_su_l0_stm",
+   "before": 5,
+   "after": 6,
+   "added": 1
+  },
+  {
    "lane": "sl_E1_su_l1__x_su_l1_stm",
    "before": 5,
    "after": 6,
@@ -3129,7 +3389,13 @@
   {
    "lane": "sl_E2_st_b__x_st_b_fe",
    "before": 19,
-   "after": 20,
+   "after": 21,
+   "added": 2
+  },
+  {
+   "lane": "sl_E2_fw__x_fw_ctl_p2",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -3145,6 +3411,12 @@
    "added": 1
   },
   {
+   "lane": "sl_E2_su_l0__x_su_l0_stm",
+   "before": 5,
+   "after": 6,
+   "added": 1
+  },
+  {
    "lane": "sl_E2_su_l1__x_su_l1_stm",
    "before": 5,
    "after": 6,
@@ -3153,7 +3425,13 @@
   {
    "lane": "sl_E3_st_b__x_st_b_fe",
    "before": 19,
-   "after": 20,
+   "after": 21,
+   "added": 2
+  },
+  {
+   "lane": "sl_E3_fw__x_fw_ctl_p2",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -3169,6 +3447,12 @@
    "added": 1
   },
   {
+   "lane": "sl_E3_su_l0__x_su_l0_stm",
+   "before": 5,
+   "after": 6,
+   "added": 1
+  },
+  {
    "lane": "sl_E3_su_l1__x_su_l1_stm",
    "before": 5,
    "after": 6,
@@ -3177,7 +3461,13 @@
   {
    "lane": "sl_E4_st_b__x_st_b_fe",
    "before": 19,
-   "after": 20,
+   "after": 21,
+   "added": 2
+  },
+  {
+   "lane": "sl_E4_fw__x_fw_ctl_p2",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -3193,6 +3483,12 @@
    "added": 1
   },
   {
+   "lane": "sl_E4_su_l0__x_su_l0_stm",
+   "before": 5,
+   "after": 6,
+   "added": 1
+  },
+  {
    "lane": "sl_E4_su_l1__x_su_l1_stm",
    "before": 5,
    "after": 6,
@@ -3201,7 +3497,13 @@
   {
    "lane": "sl_E5_st_b__x_st_b_fe",
    "before": 19,
-   "after": 20,
+   "after": 21,
+   "added": 2
+  },
+  {
+   "lane": "sl_E5_fw__x_fw_ctl_p2",
+   "before": 12,
+   "after": 13,
    "added": 1
   },
   {
@@ -3214,6 +3516,12 @@
    "lane": "sl_E5_su_l1__x_su_l1_sc",
    "before": 8,
    "after": 9,
+   "added": 1
+  },
+  {
+   "lane": "sl_E5_su_l0__x_su_l0_stm",
+   "before": 5,
+   "after": 6,
    "added": 1
   },
   {

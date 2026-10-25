@@ -1,0 +1,425 @@
+{
+ "slw_stm_v3": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 17663948,
+    "demand": 3155249,
+    "usage_pct": 17.86,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 19793640,
+    "demand": 2902944,
+    "usage_pct": 14.67,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 14838225,
+    "demand": 1786599,
+    "usage_pct": 12.04,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 14846404,
+    "demand": 187763,
+    "usage_pct": 1.26,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 10102850,
+    "demand": 509915,
+    "usage_pct": 5.05,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 10108140,
+    "demand": 37875,
+    "usage_pct": 0.37,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 0,
+  "wirelength_um": 4955175.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "slw_stm_v3",
+  "instance": "sl_W5_stm",
+  "outline_um": [
+   613.44,
+   1339.2
+  ],
+  "pins": 17667,
+  "flops": 21406,
+  "leaf_blockages": 0,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 11,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 176.81,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 26745,
+   "ff_hold_wns": 132.5,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 26745
+  },
+  "repair_buffers": 18166,
+  "drv": {
+   "violators": 5760
+  },
+  "peak_gb": 6.63,
+  "wall": "3:17.18",
+  "hot_gcells": 0,
+  "displacement_um": {
+   "st": {
+    "max": 5.4,
+    "p90": 2.0,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.7,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 12,
+   "max_hop_um": 364.7,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "classify": {
+   "cls": "CLEAN",
+   "why": "GRT 0 overflow, skeleton timing met",
+   "hot_frac": 0.0
+  }
+ },
+ "slw_su_c": {
+  "layers": {},
+  "total_overflow": null,
+  "wirelength_um": null,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {},
+  "pin_access_done": false,
+  "reach": {},
+  "done": false,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "slw_su_c",
+  "instance": "sl_W5_su_c",
+  "outline_um": [
+   1226.88,
+   1339.2
+  ],
+  "pins": 13621,
+  "flops": 22647,
+  "leaf_blockages": 8,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 18,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "NOT RUN",
+  "repair_buffers": null,
+  "peak_gb": null,
+  "wall": null,
+  "hot_gcells": 0,
+  "ft_hops": {
+   "slots": 10,
+   "max_hop_um": 374.8,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "classify": {
+   "cls": "NOT RUN",
+   "why": "exit NOT RUN"
+  }
+ },
+ "slw_su_l0": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 8338913,
+    "demand": 361926,
+    "usage_pct": 4.34,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 9357052,
+    "demand": 2367165,
+    "usage_pct": 25.3,
+    "overflow": 2820
+   },
+   "M4": {
+    "resource": 7003782,
+    "demand": 131724,
+    "usage_pct": 1.88,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 7016496,
+    "demand": 1115052,
+    "usage_pct": 15.89,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 4769988,
+    "demand": 45015,
+    "usage_pct": 0.94,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 4778688,
+    "demand": 80162,
+    "usage_pct": 1.68,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 2820,
+  "wirelength_um": 2369486.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "slw_su_l0",
+  "instance": "sl_W5_su_l0",
+  "outline_um": [
+   622.08,
+   1339.2
+  ],
+  "pins": 6258,
+  "flops": 10989,
+  "leaf_blockages": 4,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 11,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 179.59,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 12530,
+   "ff_hold_wns": -2.07,
+   "ff_hold_tns": -19.5,
+   "ff_hold_viol": 16,
+   "ff_hold_endpoints": 12530
+  },
+  "repair_buffers": 11159,
+  "drv": {
+   "violators": 1139
+  },
+  "peak_gb": 6.17,
+  "wall": "2:41.75",
+  "hot_gcells": 2820,
+  "hot_slots": [],
+  "hot_bbox_um": [
+   467,
+   34,
+   475,
+   993
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 4.5,
+    "p90": 0.5,
+    "over50": 0
+   },
+   "bf": {
+    "max": 4.3,
+    "p90": 1.2,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 3,
+   "max_hop_um": 376.1,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 2820 (2820 gcells, hot bbox 0.9% of outline); skeleton FF hold WNS -2.1 ps (16 endpoints)",
+   "hot_frac": 0.0092
+  }
+ },
+ "slw_su_l1": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 8354140,
+    "demand": 357692,
+    "usage_pct": 4.28,
+    "overflow": 4231
+   },
+   "M3": {
+    "resource": 9357052,
+    "demand": 717069,
+    "usage_pct": 7.66,
+    "overflow": 1906
+   },
+   "M4": {
+    "resource": 7014828,
+    "demand": 408347,
+    "usage_pct": 5.82,
+    "overflow": 1887
+   },
+   "M5": {
+    "resource": 7018376,
+    "demand": 484544,
+    "usage_pct": 6.9,
+    "overflow": 819
+   },
+   "M6": {
+    "resource": 4777507,
+    "demand": 238516,
+    "usage_pct": 4.99,
+    "overflow": 879
+   },
+   "M7": {
+    "resource": 4780568,
+    "demand": 264709,
+    "usage_pct": 5.54,
+    "overflow": 277
+   }
+  },
+  "total_overflow": 9999,
+  "wirelength_um": 1446561.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "slw_su_l1",
+  "instance": "sl_W5_su_l1",
+  "outline_um": [
+   622.08,
+   1339.2
+  ],
+  "pins": 6197,
+  "flops": 7836,
+  "leaf_blockages": 4,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 11,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 122.98,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 9377,
+   "ff_hold_wns": -1.88,
+   "ff_hold_tns": -15.7,
+   "ff_hold_viol": 16,
+   "ff_hold_endpoints": 9377
+  },
+  "repair_buffers": 4713,
+  "drv": {
+   "violators": 1549
+  },
+  "peak_gb": 5.94,
+  "wall": "3:59.09",
+  "hot_gcells": 9064,
+  "hot_slots": [
+   [
+    "rsn",
+    6701
+   ],
+   [
+    "cws0",
+    3313
+   ],
+   [
+    "rsf",
+    677
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   0,
+   433,
+   1314
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 4.6,
+    "p90": 1.7,
+    "over50": 0
+   },
+   "bf": {
+    "max": 1.6,
+    "p90": 1.3,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 3,
+   "max_hop_um": 391.8,
+   "over_reach": {},
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 9999 (9064 gcells, hot bbox 68.4% of outline); skeleton FF hold WNS -1.9 ps (16 endpoints)",
+   "hot_frac": 0.6841
+  }
+ }
+}

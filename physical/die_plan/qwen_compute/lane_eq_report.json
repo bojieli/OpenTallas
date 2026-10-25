@@ -1,5 +1,5 @@
 {
- "families_unequal": 2,
+ "families_unequal": 3,
  "added": [
   {
    "slot": "cbf_q01_s2.rx_flit_serdes_rx",
@@ -14,7 +14,7 @@
    ]
   },
   {
-   "slot": "sle_stm_v3.l9_eo_l9_wi",
+   "slot": "sle_fw_v3.l9_eo_l9_wi",
    "stations_from": 2,
    "stations_to": 3,
    "family": [
@@ -23,6 +23,18 @@
    ],
    "lanes": [
     "sl_E5_fe__l9_eo_l9_wi"
+   ]
+  },
+  {
+   "slot": "sle_fe_v3.x_fw_ctl_p2",
+   "stations_from": 3,
+   "stations_to": 4,
+   "family": [
+    "sle_ctl",
+    "x_fw_p2_i"
+   ],
+   "lanes": [
+    "sl_E5_fw__x_fw_ctl_p2"
    ]
   },
   {
