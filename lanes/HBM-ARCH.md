@@ -228,3 +228,11 @@ Many 'within' kits still have a longest tree 300-580 ps (SRAM / far sinks); pin-
       merges without a second merge level -> +1 collective/merge, priced). Recommend (a). I proceed with the die-internal
       2-quadrant RTL (independent of TP) and leave the TP field widening until the call.
   OWNER?: approve HGI-1 field widening for TP-384 (option a) or pick (b).
+- 2026-10-24 19:50 PDT HBM-BIND: B2 die-top generator + wiring delta pushed claude/hbm-bind-1024r@687b7bbb6 (tools/hbm_b2/b2_top.py,
+  make_wiring.py; results/arch/hbm_arch_1024/b2_bind_wiring.json, b2_top/). r18h5 NW+NE+die level = 345 leaves, transport collapsed.
+  Wiring/param items DONE in delta: COLL ring A+B 2-stop, obs chain C->NE->NW (obs_C N 93), hleaf_NW NT19/NF31 + hleaf_NE NT21/NF31
+  (leaf2), host_status NT43 NF75 NA2 TGTS re-derived (ids unique), col_su/col_idx/hc_eng cfg <- hleaf_NE a, c_busy/done <- pgp_NW,
+  EP: hb_coll_NW q3 NLINK3 (N0,S0,S1)+TKM->tkm_SW, hb_coll_NE q2 NLINK2 (N2,S3), epcal_NW W57/NE W38, router_ids <- cp_svg_NW0, vm_status4 NQ2.
+  die_port_bind on die_b2.v: only remaining FAILs = sub-agent RTL items (VM ring glue, IDX/argmax, SU stree/prog, HC root) + as-built baseline
+  (smh_fc children no RTL, PHY bb, strap INPUT_TIED -- same as r18h5). In-band host (drop host_N) not yet in delta.
+  PLAN CHANGE owed (not touching B2l): hubs are not mirrored -- NW hub = q3 NLINK3 + TKM face to tkm_SW (root), NE hub = q2 NLINK2.
