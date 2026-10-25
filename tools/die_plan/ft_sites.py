@@ -162,7 +162,24 @@ def _path_strict(free,first,last,budget,radius,min_stages,blocked=(),first_ok=No
 
 
 
-def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40.,avoid_core_routes=True):
+def bit_ordered(a,points,b):
+    """Bit-ordered stations (QC-PLAN 10-25, PROTO sle_su_l0): RowAllocator returns a stage's sites nearest-first, so
+    bit k landed on an arbitrary cell of the cluster and the bundle's legs crossed each other (local GRT overflow at
+    every station cluster). Re-assign each stage's sites to bits by rank along the axis across the hop's travel
+    direction, matched to the previous stage's bit order, so a bus stays a parallel ribbon (industry bit-sliced
+    placement). Only the bit -> site map changes; the site set, stage count and endpoints stay."""
+    out=[];prev=np.asarray(a,float)
+    for k,pts in enumerate(points):
+        pts=np.asarray(pts,float);nxt=np.asarray(points[k+1] if k+1<len(points) else b,float)
+        d=np.abs(nxt.mean(axis=0)-prev.mean(axis=0)) if k+1<len(points) else np.abs(pts.mean(axis=0)-prev.mean(axis=0))
+        cross=0 if d[1]>=d[0] else 1             # vertical travel -> order across x; horizontal -> across y
+        rp=np.lexsort((prev[:,1-cross],prev[:,cross]));rs=np.lexsort((pts[:,1-cross],pts[:,cross]))
+        new=np.empty_like(pts);new[rp]=pts[rs]
+        out.append(new);prev=new
+    return out
+
+
+def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40.,avoid_core_routes=True,bit_order=False):
     """Strict actual-bit mode (QC 906dca298): EVERY bit leg keeps an L route outside all core halos,
     row-allocation corner cuts are backtracked, and a short direct leg keeps station0 only."""
     model=S.Plan(raw);selected=set(types) if types else set(model.types);ledger=[];explicit={}
@@ -222,6 +239,12 @@ def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radi
                             continue
                     done=True;break
             if not done:raise ValueError(f'{tn}/{name}: no row-legal allocation after100 target alternatives')
+            ordered=False
+            if bit_order and points:
+                cand=bit_ordered(a,points,b);cc=[a,*cand,b]
+                ch=[float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(cc,cc[1:])]
+                if max(ch)<=budget+1e-6 and (not avoid_core_routes or all(l_route_clear(p,q,boxes).all() for p,q in zip(cc,cc[1:]))):
+                    points=cand;ordered=True
             chain=[a,*points,b];hops=[float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(chain,chain[1:])]
             if max(hops)>budget+1e-6:raise ValueError(f'{tn}/{name}: actual paired-bit hop {max(hops)} >{budget}')
             if avoid_core_routes and any(not l_route_clear(p,q,boxes).all() for p,q in zip(chain,chain[1:])):
@@ -234,17 +257,18 @@ def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radi
                 explicit[tn].append(dict(slot=name,stage=stage,sites_um=p.round(5).tolist(),stats=stats[stage-1]))
             ledger.append(dict(type=tn,slot=name,stations=[old,slot['stations']],worst_paired_bit_um=round(max(hops),4),
                                budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um,
-                               core_free_routes=avoid_core_routes))
+                               core_free_routes=avoid_core_routes,bit_ordered=ordered))
     return ledger,explicit
 
 
 
 
-def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40.,avoid_core_routes=False):
+def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40.,avoid_core_routes=False,bit_order=False):
     """Default (S81 adopt178 exact sites): centroid-visible core-free corridors.
     avoid_core_routes=True selects the strict per-bit mode (_place_strict) used by QC bit_stations."""
     if avoid_core_routes:
-        return _place_strict(raw,allocator_cls,types=types,reach_um=reach_um,margin=margin,max_radius_um=max_radius_um)
+        return _place_strict(raw,allocator_cls,types=types,reach_um=reach_um,margin=margin,max_radius_um=max_radius_um,
+                             bit_order=bit_order)
     model=S.Plan(raw);selected=set(types) if types else set(model.types);ledger=[];explicit={}
     for tn,ty in model.types.items():
         if tn not in selected or not ty.get('hard_cores') or not ty.get('ft_slots'):continue
