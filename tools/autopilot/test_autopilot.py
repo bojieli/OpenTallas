@@ -53,6 +53,17 @@ class TestQueue(Base):
         self.assertEqual((r["host"], r["mem_gb"], r["cells"], r["goal"], r["threads"]),
                          ("epyc2", 24, 120000, "auto", 8))
 
+    def test_cts_requires_explicit_runner_and_preserves_goal(self):
+        (j,) = self.ap.parse_queue("\t".join(ROW + ["cts"])).values()
+        self.assertIn("explicit CTS-only runner", j["error"])
+        (j,) = self.ap.parse_queue("\t".join(ROW + ["cts", "/srv/opentallas-scratch2/claude/run_cts_only.sh"])).values()
+        self.assertEqual(j["error"], "")
+        seen = []
+        self.ap.launch_unit = lambda unit, logfile, argv: seen.append(argv) or True
+        self.ap.submit({}, j)
+        pos = seen[0].index("--")
+        self.assertEqual(seen[0][pos + 4], "cts")
+
     def test_cell_cap_and_mem_and_paths(self):
         bad = {6: "500000", 5: "lots"}
         r = list(self.ap.parse_queue("\t".join(ROW[:7] + ["500000"] + ROW[8:])).values())[0]

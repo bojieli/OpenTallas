@@ -16,5 +16,9 @@ if [ "${PRELOAD:-1}" = 1 ]; then
   PL="+HBM_PRELOAD=$O/$N/preload.txt"
 fi
 /usr/bin/time -f "%e s %M KB" -o time $B +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$(cat $I/epoch.txt) \
-  +FAR=1 +VEC=$V +CTX=$CTX +POST=$POST +HBM_LOG=${HBM_LOG:-16} $PL "$@" > sim.log 2>&1; echo $? > exit
+  +FAR=1 +VEC=$V +CTX=$CTX +POST=$POST +HBM_LOG=${HBM_LOG:-16} $PL "$@" > sim.log 2>&1
+sim_rc=$?
+printf "%s\n" "$sim_rc" > exit
 echo "$N exit=$(cat exit) $(cat time) | $(grep -m1 '^KVSLICE_BOOT' sim.log | cut -c1-60) | $(grep -m1 '^FAR_SUMMARY' sim.log)"
+# Keep the simulator result; callers classify expected negative controls explicitly.
+exit "$sim_rc"

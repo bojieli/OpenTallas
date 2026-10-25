@@ -74,6 +74,25 @@ def parse_grt(text):
     m = re.findall(r"OT_REACH (\S+) max ([\d.]+) p90 ([\d.]+) n (\d+)", text)
     res["reach"] = {k: dict(max_um=float(a), p90_um=float(b), taps=int(n)) for k, a, b, n in m}
     res["done"] = "OT_DONE" in text
+    # GRT-0114 is emitted as a WARNING even when reduction underflows uint16
+    # capacity (e.g. cap0 -> reducedCap65480). The subsequent zero-overflow
+    # table is invalid and must not qualify through an older done/overflow-only
+    # consumer. Preserve what the tool printed separately for diagnosis.
+    invalid = []
+    for ln in text.splitlines():
+        pair = re.search(r"cap,\s*reducedCap:\s*(-?\d+)\s*,\s*(-?\d+)", ln)
+        impossible = pair and (int(pair[1]) < 0 or int(pair[2]) < 0 or int(pair[2]) > int(pair[1]))
+        if "GRT-0114" in ln or impossible:
+            invalid.append(ln.strip())
+    res["capacity_valid"] = not invalid
+    if invalid:
+        res["capacity_errors"] = invalid[:5]
+        res["errors"] = sorted(set(res["errors"]) | {"GRT-CAPACITY-UNDERFLOW"} |
+                               ({"GRT-0114"} if "GRT-0114" in text else set()))
+        res["tool_done"] = res["done"]
+        res["reported_total_overflow"] = res["total_overflow"]
+        res["total_overflow"] = None
+        res["done"] = False    # not a valid completed physical routing proof
     return res
 
 
@@ -254,6 +273,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
     buses = {b["name"]: b for b in t.get("buses", [])}
     slots = {s["name"]: s for s in t.get("ft_slots", [])}
     ports, cells, nets, place = [], [], [], []
+    explicit_anchors = {}
 
     def inset(x, y, f):
         return {"E": (x - FLOP_INSET_UM, y), "W": (x + FLOP_INSET_UM, y), "N": (x, y - FLOP_INSET_UM),
@@ -354,8 +374,10 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
                     # Same convention as face_flops.tcl: explicit internal
                     # stages start at1; metadata stores allocation-envelope LL.
                     xy = s["bit_sites_um"][j - 1][bit]
-                    cw, ch = s["bit_site_cell_um"]
-                    site = (xy[0] + cw / 2, xy[1] + ch / 2)
+                    # Metadata and OpenROAD place_inst both use cell lower-left.
+                    # Do not shift an envelope centre into the physical LL.
+                    site = tuple(xy)
+                    explicit_anchors[c] = list(site)
                 elif s.get("bit_sites_um"):
                     site = a  # station0 remains registered beside its input pin
                 else:
@@ -385,14 +407,63 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
     tcl += ["detailed_placement -max_displacement {400 400}",
             "check_placement -verbose"]
     tcl.append(grt_tail(f"M2-{top}", [(L, adjust) for L in lrange("M2", top)]))
-    tcl += ["if {[catch {pin_access} e]} { puts \"OT_PA_ERROR $e\" }", "puts OT_DONE"]
+    # Keep centroid clouds movable for legalization. Never present the planned
+    # targets as a physical proof: dump final actual bounding boxes and gate
+    # them after DPL/GRT. Explicit packed anchors must also remain at their sites.
+    tcl += ["set ot_f [open /work/insts.tsv w]",
+            "set ot_dbu [[ord::get_db_block] getDbUnitsPerMicron]",
+            "foreach i [[ord::get_db_block] getInsts] { set bb [$i getBBox]; "
+            'puts $ot_f "[$i getName]\\t[[$i getMaster] getName]\\t[expr {[$bb xMin]/double($ot_dbu)}]\\t'
+            '[expr {[$bb yMin]/double($ot_dbu)}]\\t[expr {[$bb xMax]/double($ot_dbu)}]\\t'
+            '[expr {[$bb yMax]/double($ot_dbu)}]" }',
+            "close $ot_f",
+            "if {[catch {pin_access} e]} { puts \"OT_PA_ERROR $e\" }", "puts OT_DONE"]
     (out / "probe.tcl").write_text("\n".join(tcl) + "\n")
     (out / "run.sh").write_text(run_sh(mem, 8, "g2part"))
     os.chmod(out / "run.sh", 0o755)
     meta = dict(kind="g2-partition", die=P.name, type=tn, instance=inst, outline_um=[w, h], pins=len(pins),
                 flops=len(place), leaf_blockages=nobs, adjust=adjust, route_layers=f"M2-{top}")
     (out / "probe.json").write_text(json.dumps(meta, indent=1) + "\n")
+    (out / "station_sites.json").write_text(json.dumps(explicit_anchors, indent=1) + "\n")
     return out
+
+
+def attach_actual_geometry(d, res):
+    """Qualify a partition result against final actual cells, never targets."""
+    if res.get('kind') != 'g2-partition':
+        return res
+    from proto_geometry import hop_stats
+    d = Path(d)
+    geometry = hop_stats(d)
+    if (d/'station_sites.json').exists():
+        anchors = json.loads((d/'station_sites.json').read_text())
+        actual = {}
+        if (d/'insts.tsv').exists():
+            for ln in (d/'insts.tsv').read_text().splitlines():
+                q = ln.split('\t')
+                if len(q)>=4 and q[0] in anchors:
+                    actual[q[0]] = (float(q[2]),float(q[3]))
+        missing = set(anchors)-set(actual)
+        drift = max((abs(actual[n][0]-xy[0])+abs(actual[n][1]-xy[1]) for n,xy in anchors.items() if n in actual), default=0.)
+        geometry['explicit_anchor_drift_um'] = round(drift,6)
+        if missing or drift>0.001:
+            geometry.setdefault('errors',[]).append(f'explicit packed station anchors moved or missing: {len(missing)} missing, max LL drift {drift:.6g}um')
+    bad = (geometry.get('actual_sites') is not True or geometry.get('errors') or
+           geometry.get('over_reach') or geometry.get('st_in_core'))
+    res['ft_hops'] = geometry
+    res['geometry_verdict'] = 'FAIL' if bad else 'PASS'
+    if bad:
+        res.setdefault('errors',[]).append('G2-ACTUAL-STATION-GEOMETRY')
+    return res
+
+
+def probe_passes(r):
+    if not (r.get('done') and r.get('total_overflow')==0 and not r.get('errors') and
+            not any(r.get('pin_access_no_ap',{}).values())):
+        return False
+    # Old cached partition reports without actual geometry are not proof.
+    return r.get('kind') != 'g2-partition' or (r.get('geometry_verdict')=='PASS' and
+            (r.get('ft_hops') or {}).get('actual_sites') is True)
 
 
 def run_probe(d):
@@ -400,6 +471,7 @@ def run_probe(d):
     res = parse_grt((Path(d) / "grt.log").read_text(errors="replace")) if (Path(d) / "grt.log").exists() else {}
     res["exit"] = r.stdout.strip().splitlines()[-1] if r.stdout.strip() else "NO_EXIT"
     res.update(json.loads((Path(d) / "probe.json").read_text()))
+    attach_actual_geometry(d, res)
     (Path(d) / "grt.json").write_text(json.dumps(res, indent=1) + "\n")
     return res
 
@@ -422,7 +494,11 @@ def main(argv=None):
     s.add_argument("log")
     a = ap.parse_args(argv)
     if a.cmd == "parse":
-        print(json.dumps(parse_grt(Path(a.log).read_text(errors="replace")), indent=1))
+        log = Path(a.log); res = parse_grt(log.read_text(errors="replace"))
+        if (log.parent/'probe.json').exists():
+            res.update(json.loads((log.parent/'probe.json').read_text()))
+            attach_actual_geometry(log.parent,res)
+        print(json.dumps(res, indent=1))
         return 0
     raw = S.load(a.plan)
     errs = S.validate(raw)
@@ -456,8 +532,7 @@ def main(argv=None):
         for d in sorted(out.iterdir()):          # keep earlier probes of this DIR (die / part runs done separately)
             if d.is_dir() and d.name not in rep["probes"] and (d / "grt.json").exists():
                 rep["probes"][d.name] = json.loads((d / "grt.json").read_text())
-        ok = all(r.get("done") and r.get("total_overflow") == 0 and not any(r.get("pin_access_no_ap", {}).values())
-                 for r in rep["probes"].values())
+        ok = bool(rep["probes"]) and all(probe_passes(r) for r in rep["probes"].values())
         rep["verdict"] = "PASS" if ok else "FAIL"
         (out / "g2_report.json").write_text(json.dumps(rep, indent=1) + "\n")
         print(f"G2 {rep['verdict']}: {out / 'g2_report.json'}")

@@ -97,7 +97,8 @@ module ot_s81sl_vp #(
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_c = rsv[0], rs_s = rsv[1], rs_p = rsv[2], rs_o = rsv[3];
-    integer i, k;
+    // PATH-S81 (10-25): loop / temp integers are block-local (one module-scope i, k was written by four always blocks:
+    // a multiply-driven variable for slang -> 12,800 MULTI_DRIVEN bits in the v10 strict bind, 160 a leaf)
 
     // ---------------------------------------------------------------- input pin flops
     reg cv_c, swv_c, hqv_c, xrv_c, xwv_c; reg [1:0] cwv_c; reg [9:0] xra_c, xwa_c; reg [7:0] xwm_c; reg [255:0] xwd_c;
@@ -160,7 +161,8 @@ module ot_s81sl_vp #(
     reg [1:0] wv; reg [8:0] wa [0:1]; reg [127:0] wd [0:1]; reg [127:0] wm [0:1]; reg wcol;
     reg hs_v; reg [9:0] hs_a; reg [255:0] hs_d;    // HSTORE write-back (registered from hq)
     reg [2:0] nw [0:1];
-    always @(*) begin
+    always @(*) begin : b_wr
+        integer i, k;
         wv = 2'b00; wcol = 1'b0;
         for (k = 0; k < 2; k = k + 1) begin wa[k] = 9'd0; wd[k] = 128'd0; wm[k] = 128'd0; nw[k] = 3'd0; end
         if (swv_c) begin
@@ -222,7 +224,7 @@ module ot_s81sl_vp #(
     reg [31:0] yv [0:3];
     always @(posedge clk)
         if (dv && dop == OP_POST && dsi < 8'd5)
-            for (i = 0; i < 4; i = i + 1) begin
+            for (int i = 0; i < 4; i = i + 1) begin
 `ifndef OT_S81SL_VP_MUT_POSTLAST
                 // step 0 = post row -> cf[16 + k]; steps 1..4 = comb row j = step - 1 -> cf[4 j + k]
                 if (dsi == 8'd0) cf[16 + i] <= q1r[32 * i +: 32]; else cf[4 * (dsi - 8'd1) + i] <= q1r[32 * i +: 32];
@@ -300,7 +302,8 @@ module ot_s81sl_vp #(
     end endgenerate
     // the h half row of POST step s (requested with the y read: hq arrives aligned with ydv[2])
     always @(posedge clk or negedge rs_p) if (!rs_p) lane_v <= 1'b0; else lane_v <= ydv[YA];
-    always @(posedge clk) begin
+    always @(posedge clk) begin : b_lr
+        integer i, k;
         for (k = 0; k < 4; k = k + 1)
             for (i = 0; i < 4; i = i + 1) begin
                 lr[4 * k + i][0] <= {hqd_c[(4 * 0 + i) * 16 +: 16], 16'd0};
@@ -357,7 +360,8 @@ module ot_s81sl_vp #(
             s_v <= cv_c && op[3];
             x_qv <= xr2;
         end
-    always @(posedge clk) begin
+    always @(posedge clk) begin : b_hw
+        integer i, k;
         if (wvl) begin
             hw_j <= widx[3:1]; hw_hf <= widx[0];
             for (k = 0; k < 4; k = k + 1) for (i = 0; i < 4; i = i + 1)

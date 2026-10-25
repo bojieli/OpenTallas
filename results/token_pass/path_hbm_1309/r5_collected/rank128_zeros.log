@@ -1,0 +1,7 @@
+TKM_L74 PASS words=2 cycles=886 pinned_cycles=628 lockstep_edges=928 lockstep_writes=2 pipe=1
+TKM_L74_AGE forward5 split2 face258(root_io2 settle2x41 xl2x87 cb2x21) return2 data_pad0 total267
+- tools/hbm_b2/tkm_l74/tb_hbm_tkm_l74_shell.sv:2281: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 782ns; walltime 91.195 s; speed 8.578 ns/s
+- Verilator: cpu 91.191 s on 65 threads; allocated 76739 MB
+rc=0
