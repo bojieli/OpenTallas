@@ -1,7 +1,7 @@
 # Isolated FF hold repair. Run in a NEW OpenROAD process, never in the legacy
 # two-scene OT_HOLD_MM session. TT setup is checked separately after this step.
 # Required env: PLIBS (FF only), ODB, SDC, RCFILE, OUT_DIR.
-# Optional: FF_SDC, OT_REPAIR_MODE (placement|global_routing), OT_HOLD_FF_MARGIN (0..5).
+# Optional: FF_SDC, OT_REPAIR_MODE (placement; GRT requires a routed incremental wrapper), OT_HOLD_FF_MARGIN (0..5).
 foreach key {PLIBS ODB SDC RCFILE OUT_DIR} {
   if {![info exists ::env($key)] || $::env($key) eq ""} { error "repair_ff: $key missing" }
 }
@@ -19,7 +19,9 @@ if {![string is double -strict $ff_margin] || $ff_margin < 0 || $ff_margin > 5} 
   error "repair_ff: hold margin must be 0..5 ps"
 }
 set ff_mode [expr {[info exists ::env(OT_REPAIR_MODE)] ? $::env(OT_REPAIR_MODE) : "placement"}]
-if {$ff_mode ni {placement global_routing}} { error "repair_ff: unknown parasitic basis $ff_mode" }
+if {$ff_mode ne "placement"} {
+  error "repair_ff: only placement repair is qualified; GRT requires incremental routing of inserted cells before its final FF check"
+}
 foreach lib $::env(PLIBS) { read_liberty $lib }
 read_db $::env(ODB)
 read_sdc $::env(SDC)

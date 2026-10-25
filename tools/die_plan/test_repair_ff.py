@@ -7,7 +7,7 @@ import pytest
 HERE = Path(__file__).resolve().parent
 
 
-def run(tmp_path, before=(-57, 1027), after=(0, 0), library='cells_FF.lib'):
+def run(tmp_path, before=(-57, 1027), after=(0, 0), library='cells_FF.lib', mode='placement'):
     if not shutil.which('tclsh'):
         pytest.skip('tclsh unavailable')
     for name in (library, 'input.odb', 'input.sdc', 'ff.sdc', 'rc.tcl'):
@@ -34,7 +34,7 @@ namespace eval sta {
 set repaired 0
 '''
     values = dict(PLIBS=tmp_path / library, ODB=tmp_path/'input.odb', SDC=tmp_path/'input.sdc',
-                  FF_SDC=tmp_path/'ff.sdc', RCFILE=tmp_path/'rc.tcl', OUT_DIR=tmp_path/'out')
+                  FF_SDC=tmp_path/'ff.sdc', RCFILE=tmp_path/'rc.tcl', OUT_DIR=tmp_path/'out', OT_REPAIR_MODE=mode)
     script += '\n'.join(f'set ::env({k}) {{{v}}}' for k,v in values.items())+'\n'
     script += f'set before_w {before[0]}; set before_n {before[1]}; set after_w {after[0]}; set after_n {after[1]}\n'
     script += f'if {{[catch {{source {{{HERE / "repair_ff.tcl"}}}}} msg]}} {{puts stderr $msg; exit 1}}\nputs $calls\n'
@@ -63,3 +63,9 @@ def test_residual_failure_keeps_checkpoint(tmp_path):
     r = run(tmp_path, after=(-1, 2))
     assert r.returncode == 1 and 'checkpoint retained' in r.stderr
     assert (tmp_path/'out/repair_ff.odb').exists()
+
+
+def test_global_route_repair_requires_qualified_incremental_wrapper(tmp_path):
+    r = run(tmp_path, mode='global_routing')
+    assert r.returncode == 1 and 'incremental routing' in r.stderr
+    assert not (tmp_path/'out/repair_ff.odb').exists()
