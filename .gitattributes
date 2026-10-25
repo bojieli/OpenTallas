@@ -1,0 +1,6 @@
+# Append-only coordination logs: concurrent appends merge by union (keeps both sides' lines).
+HANDOFF.md merge=union
+CODEX-LOG.md merge=union
+lanes/*.md merge=union
+autopilot/queue.tsv merge=union
+autopilot/resolved.tsv merge=union
