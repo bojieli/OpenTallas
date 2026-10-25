@@ -109,3 +109,14 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
 - 2026-10-24 19:29 PDT TOK-QK: s8exp tree on intel2 had 581 symlinks into intel1 paths -> replaced by real files from main 8a5d1f3dab
   (git show). Relaunched calibrates (binary reused) + stage_stg_die.sh chained: s8cal3.sh, ot-run unit oth-ubuntu-1531267-1792895121
   on intel2 (client epyc1 ~/wt/tok-qw-logs/s8cal3.otrun.log). Next: collect stgdie/result.json, commit, recompose.
+- 2026-10-24 20:49 PDT TOK-QK: stg_die on the BOUND s8 row = FAIL 0/259 run (259 unknown incl. rope_late mutant) -- RTL DEFECT S8-SU-PROG-ALIGN
+  (owner lane QC): qfd_dv_s8_suvm_rp1 starts the closed SU (qfd_dv_s5_su8_rst3) and requests the program word on the same edge;
+  SU latches the word 5 edges after the command but it arrives 8 edges after (vm8q_rp1 -> qfd_dv_s8x_prog) -> SU latches zero rows,
+  stays busy forever, no fault -> no PSUM ever leaves; all 12 slices of bound_r8 (qfd_qc_sl{w,e}_su_c* u_u_suvm). Bench matches
+  the bound contract (no bench changes). What-if (+3 edge SU start, NOT of record) on 2-slice vehicle: 3 rows, psums tags 1/13/25
+  bit-exact; ssq_psum_out [171,187,203] (+88 vs slice2 SU_LT0, +67 vs SU_LT1; indicative). Evidence claude/tok-qw-1024 @81640ddb6c
+  results/rtl/tokqw_1024/stages/stg_die/. Compose price stays HELD (source slice2 527/527 remains compose input).
+  Live (diagnostic, not of record): intel2 ot-heavy oth-ubuntu-977696-1792899729 12-slice what-if (start delay +3) -> s8exp_wf3/stgdie.
+## REQUEST from TOK-QK to lane QC
+- QC-R4 (S8-SU-PROG-ALIGN): retime inside qfd_dv_s8_suvm_rp1 (SU start +3 edges or program-read path -3) and re-close the leaf;
+  then I rebuild the s8exp vehicle and run stg_die of record.
