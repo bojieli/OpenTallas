@@ -237,3 +237,4 @@ qwen_kvsys	kv3_astk_ES__190.08x181.44	epyc1:/srv/opentallas-scratch2/claude/kv-c
 qwen_kvsys	kv3_astk_WN__190.08x181.44	epyc1:/srv/opentallas-scratch2/claude/kv-cores-1025r/astk/F/kv3_astk_WN__190.08x181.44	claude/kv-r3-1025@4b679188fd	REQ	KV-R3 f25/F 06:20	32	120000	KV	route		8
 qwen_kvsys	kv3_astk_WS__190.08x181.44	epyc1:/srv/opentallas-scratch2/claude/kv-cores-1025r/astk/F/kv3_astk_WS__190.08x181.44	claude/kv-r3-1025@4b679188fd	REQ	KV-R3 f25/F 06:20	32	120000	KV	route		8
 cp1	col_h10_r0_p1__t1	intel2:/srv/opentallas-scratch2/claude/clock-reset/cp1/wf1025/kits/col_h10_r0_p1__t1	claude/cp1-wf-1025@71005ce16	REQ	CLOCK-RESET/cp1-W 06:33	64	60000	CLOCK-RESET	finish		8
+cp1	col_h10_r1__t1	intel2:/srv/opentallas-scratch2/claude/clock-reset/cp1/wf1025/kits/col_h10_r1__t1	claude/cp1-wf-1025@71005ce16	REQ	CLOCK-RESET/cp1-W 06:33	64	60000	CLOCK-RESET	finish		8
