@@ -175,8 +175,8 @@ def make_tracks_tcl(P):
     for n in ("M9", "M8", "M7", "M6", "M5", "M4"):
         L = P.layers.get(n)
         if L:
-            lines.append(f"make_tracks {n} -x_offset {L['offset_um']:g} -x_pitch {L['pitch_um']:g} "
-                         f"-y_offset {L['offset_um']:g} -y_pitch {L['pitch_um']:g}")
+            lines.append(f"make_tracks {n} -x_offset {_um(L['offset_um'])} -x_pitch {_um(L['pitch_um'])} "
+                         f"-y_offset {_um(L['offset_um'])} -y_pitch {_um(L['pitch_um'])}")
     return "\n".join(lines) + "\n" + M123_TRACKS
 
 
@@ -234,6 +234,21 @@ def hold_in_min_ps(P):
 
 # COORD 10-23 16:58 SDC PROXY ruling: a seam counts clock uncertainty ONCE.  The kit SDC splits it half/half between
 # the sender (clk -> vclk: out ports) and the receiver (vclk -> clk: in ports); clk -> clk keeps the full value.
+def _um(v):
+    """exact um text for TCL: %g keeps 6 significant digits, so a 14048.64-um origin printed 14048.6 and place_macro
+    -exact refused it (TRIAL-HBM 10-24: 23/88 B2 partitions).  4 decimals = 0.1 nm, below every ASAP7 grid."""
+    t = f"{float(v):.4f}".rstrip("0").rstrip(".")
+    return t if t not in ("", "-0") else "0"
+
+
+def _place_exact(name, x, y, orient):
+    """place an instance at its plan origin in integer DBU (odb setLocation = bbox lower-left after setOrient):
+    place_macro's um->dbu conversion truncates (6065.28 um -> 6065279 dbu) and refuses the off-site origin."""
+    return (f"set _i [[ord::get_db_block] findInst {{{name}}}]; set _d [[ord::get_db_block] getDbUnitsPerMicron]; "
+            f"$_i setPlacementStatus NONE; $_i setOrient {orient}; $_i setLocation [expr {{round({_um(x)} * $_d)}}] [expr {{round({_um(y)} * $_d)}}]; "
+            f"$_i setPlacementStatus FIRM")
+
+
 UNC_SPLIT = 0.5
 HOLD_OUT_MIN_PS = 0.0   # min output delay of every partition output vs vclk (sdc_lint: must be <= 0)
 
@@ -336,7 +351,8 @@ def core_latency_files(P, tn, kd, root=None):
     return dict(rows=rows, taps=taps)
 
 
-def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None):
+def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
+                   skip_ir=False, max_wire_um=None):
     t = P.types[tn]
     w, h = t["outline_um"]
     macros = type_macros(P, tn)
@@ -428,8 +444,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export VERILOG_FILES = " + " ".join(srcs),
            "export VERILOG_DEFINES = -DSYNTHESIS",
            "export SDC_FILE = /work/constraint.sdc",
-           f"export DIE_AREA = 0 0 {w:g} {h:g}",
-           f"export CORE_AREA = {m:g} {m:g} {w - m:g} {h - m:g}",
+           f"export DIE_AREA = 0 0 {_um(w)} {_um(h)}",
+           f"export CORE_AREA = {_um(m)} {_um(m)} {_um(w - m)} {_um(h - m)}",
            "export IO_CONSTRAINTS = /work/io.tcl",
            "export PDN_TCL = /work/pdn.tcl",
            # override: platforms/asap7/config.mk (read AFTER the design config) sets MAKE_TRACKS with a plain
@@ -498,6 +514,18 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+    if skip_ir:
+        # opt-in gen.py phys --skip-kit-ir (CODEX-LOG 10-24 root practice): ORFS 6_report's per-kit PDNSim (PSM) IR
+        # analysis is skipped (station405: it pushed 6_report past 36 GB, exit 247); PG geometry is unchanged and IR
+        # stays NOT RUN for the kit (dedicated TRIAL IR remains required).  Not a timing / sign-off input.
+        cfg += ["# kit IR analysis skipped (gen.py phys --skip-kit-ir): IR NOT RUN here; dedicated TRIAL IR remains required",
+                "export PWR_NETS_VOLTAGES =", "export GND_NETS_VOLTAGES ="]
+    if max_wire_um is not None:
+        # opt-in gen.py phys --max-wire-um UM (ELEM-S81 station405 10-24): the post-GRT repair_design also gets
+        # -max_wire_length UM (grt_maxwire.tcl overrides ORFS repair_design_helper; same SLEW/CAP margins): routed
+        # station kits kept 2-27 max-slew pins on ~150 um single-driver M2/M3 segments the GRT estimate passed.
+        cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_maxwire.tcl", f"export OT_MAXWIRE_UM = {max_wire_um:g}"]
+        shutil.copyfile(Path(__file__).with_name("grt_maxwire.tcl"), kd / "grt_maxwire.tcl")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
@@ -508,12 +536,21 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     ist = [Path(f).parent / "istations.tcl" for f in rtl_files[:1] if (Path(f).parent / "istations.tcl").is_file()]
     if ist:
         shutil.copyfile(ist[0], kd / "istations.tcl")
+    # OWNER RESET RULE 10-24 (tools/die_plan/reset_tree.py): FIRM sites of the reset entry stage + synchronous relay
+    # tree.  kit_rsync writes reset_tree.tcl next to bound kit RTL; a gen_rtl kit of a pipelined plan gets it from the
+    # plan (the same tree gen_rtl emitted).
+    rtt = [Path(f).parent / "reset_tree.tcl" for f in rtl_files[:1] if (Path(f).parent / "reset_tree.tcl").is_file()]
+    import reset_tree as RT
+    if rtt:
+        shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
+    elif RT.pipelined(P):
+        (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
     # R3: ft station table for face_flops.tcl: slot, stations, in face (route leg order), optional regs_um sites
     ft = ["# slot stations in_face out_face [x y ...]  (GENERATED; type frame um)"]
     for s_ in t.get("ft_slots", []):
-        regs = " ".join(f"{x:g} {y:g}" for x, y in s_.get("regs_um", []))
+        regs = " ".join(f"{_um(x)} {_um(y)}" for x, y in s_.get("regs_um", []))
         ft.append(f"{s_['name']} {int(s_.get('stations', 1))} {s_.get('in_face', 'W')} {s_.get('out_face', 'E')} "
                   f"{regs}".rstrip())
     (kd / "ft_stations.txt").write_text("\n".join(ft) + "\n")
@@ -599,7 +636,7 @@ exit $rc
 
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None, hold_ff_margin=None,
-               margins=None):
+               margins=None, skip_ir=False, max_wire_um=None):
     """margins (slew_pct, cap_pct): opt-in repair_design SLEW_MARGIN / CAP_MARGIN (None: not exported)."""
     """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
@@ -632,7 +669,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             mine = fl
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
-        kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins))
+        kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
+                                   skip_ir, max_wire_um))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
@@ -643,7 +681,7 @@ def macro_place_tcl(P):
     lines = ["# GENERATED by tools/die_plan/gen.py assembly: partitions at their exact plan origin / orient (abutted)."]
     for n, p in sorted(P.parts.items()):
         x, y = p["origin_um"]
-        lines.append(f"place_macro -macro_name {n} -location {{{x:g} {y:g}}} -orientation {p.get('orient', 'R0')}")
+        lines.append(_place_exact(n, x, y, p.get('orient', 'R0')))
     return "\n".join(lines) + "\n"
 
 
@@ -657,8 +695,8 @@ def die_pdn_tcl(P):
              "set_voltage_domain -name {CORE} -power {VDD} -ground {VSS}",
              "define_pdn_grid -name {top} -voltage_domains {CORE}"]
     for s in g:
-        lines.append(f"add_pdn_stripe -grid {{top}} -layer {{{s['layer']}}} -width {{{s['width_um']:g}}} "
-                     f"-pitch {{{s['pitch_um']:g}}} -offset {{{s['offset_um']:g}}}")
+        lines.append(f"add_pdn_stripe -grid {{top}} -layer {{{s['layer']}}} -width {{{_um(s['width_um'])}}} "
+                     f"-pitch {{{_um(s['pitch_um'])}}} -offset {{{_um(s['offset_um'])}}}")
     ls = [s["layer"] for s in g]
     for a, b in zip(ls, ls[1:]):
         lines.append(f"add_pdn_connect -grid {{top}} -layers {{{a} {b}}}")
@@ -734,8 +772,8 @@ def write_assembly(raw, out, views, rtl_root=None):
            "export PLATFORM = asap7",
            f"export VERILOG_FILES = /work/rtl/{gen_rtl.sv_id(P.name)}_top.sv",
            "export SDC_FILE = /work/constraint.sdc",
-           f"export DIE_AREA = 0 0 {P.W:g} {P.H:g}",
-           f"export CORE_AREA = 0 0 {P.W:g} {P.H:g}",
+           f"export DIE_AREA = 0 0 {_um(P.W)} {_um(P.H)}",
+           f"export CORE_AREA = 0 0 {_um(P.W)} {_um(P.H)}",
            "export ADDITIONAL_LEFS = " + " ".join(lefs),
            "export ADDITIONAL_LIBS = " + " ".join(libs),
            "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl",
@@ -902,7 +940,7 @@ def die_flow_tcl(P, lefs, libs):
     t += ["foreach f [glob $PL/lib/NLDM/*RVT_TT_nldm*.lib*] { read_liberty $f }"]
     t += [f"if {{[file exists /work/{x}]}} {{ read_liberty /work/{x} }}" for x in libs]
     t += ["read_verilog /work/die_top_struct.v", f"link_design {top}",
-          f"initialize_floorplan -die_area {{0 0 {P.W:g} {P.H:g}}} -core_area {{0 0 {P.W:g} {P.H:g}}} "
+          f"initialize_floorplan -die_area {{0 0 {_um(P.W)} {_um(P.H)}}} -core_area {{0 0 {_um(P.W)} {_um(P.H)}}} "
           "-site asap7sc7p5t",
           "source /work/make_tracks.tcl",
           "source /work/io.tcl"]
@@ -911,8 +949,7 @@ def die_flow_tcl(P, lefs, libs):
         t.append(f"place_pin -pin_name {name} -layer {L} -location {{{x:.4f} {y:.4f}}} -pin_size {sz}")
     for n, p in sorted(P.parts.items()):
         x, y = p["origin_um"]
-        t.append(f"place_macro -macro_name {gen_rtl.sv_id(n)} -location {{{x:g} {y:g}}} -orientation "
-                 f"{p.get('orient', 'R0')} -exact")
+        t.append(_place_exact(gen_rtl.sv_id(n), x, y, p.get('orient', 'R0')))
     t += ["set t0 [clock seconds]",
           "source /work/pdn.tcl", "pdngen",
           "foreach n {VDD VSS} { if {[catch {check_power_grid -net $n -error_file /work/pg_$n.rpt} e]} "

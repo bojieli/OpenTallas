@@ -1,0 +1,15 @@
+{
+ "element": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "kit": "claude/elem-hbm-1024@c6d07a7a0e B2l hard cores: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@31be7c8a3d52, ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@3b586cbb332d, ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@3ffaa44bcbd4, ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@9467d1b02397, ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@95777efcb2fa, ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@a4d8b0938055",
+ "stage": "placed2 (previous placement, same outline/pins/macros)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent second review)",
+ "at": "2026-10-24T19:56:00-07:00",
+ "reasons": "[2026-10-24 19:56] Looked at every placed.png (rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm2/M_ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.png montage). 6 variants: two 128x256 SRAMs at different W/centre positions, logic in the H/C remainder ~45% uniform, pin faces W+S/N with flop strips; macro channels >= 4 um. Agree with author PASS-COND.",
+ "fixes": "Relaunch OK under the core clock contract (owner 5e, tap target = measured I, results/core_insertion_b2l.json). Conditions: GRT 0 overflow, DRC 0, TT setup/FF hold >= 0 at 60/25, pin-flop insertion within I +-40 ps, pictures of CTS/route before merge.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/hbm2/M_ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.png"
+ ],
+ "owner_lane": "HBM",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

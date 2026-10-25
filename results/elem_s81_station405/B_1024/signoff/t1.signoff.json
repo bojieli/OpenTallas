@@ -1,0 +1,402 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "dp_slice_station__t1",
+ "generated": "2026-10-24T18:55:09-07:00",
+ "host": "eternal-dove",
+ "inputs": {
+  "base": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/results/asap7/dp_slice_station__t1/base",
+  "orfs": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run",
+  "design": "dp_slice_station__t1",
+  "kit": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1",
+  "odb": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/results/asap7/dp_slice_station__t1/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/results/asap7/dp_slice_station__t1/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/constraint.sdc",
+  "sdc_source": "kit",
+  "synth": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/results/asap7/dp_slice_station__t1/base/1_2_yosys.v",
+  "final_v": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/results/asap7/dp_slice_station__t1/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/logs/asap7/dp_slice_station__t1/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/logs/asap7/dp_slice_station__t1/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/logs/asap7/dp_slice_station__t1/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/reports/asap7/dp_slice_station__t1/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/sdc_lint.json",
+  "record": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:asap7lock), one process per corner",
+  "libs": "ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "s81p_slice_station__t1",
+   "cells": 5773654.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk",
+    "clk_t1",
+    "clk_t10",
+    "clk_t11",
+    "clk_t12",
+    "clk_t13",
+    "clk_t14",
+    "clk_t15",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "clk_t6",
+    "clk_t7",
+    "clk_t8",
+    "clk_t9"
+   ],
+   "inputs": [
+    "arst_n",
+    "ft0_i",
+    "ft1_i",
+    "ft2_i",
+    "ft3_i"
+   ],
+   "outputs": [
+    "ft0_o",
+    "ft1_o",
+    "ft2_o",
+    "ft3_o"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": 4.44,
+   "sdc_wns_min": -29.52,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": -16218.66,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 1666.0,
+   "std_wns_max": 4.44,
+   "std_wns_min": -29.52,
+   "std_tns_max": 0.0,
+   "std_tns_min": -16218.66,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 1666.0,
+   "slew_viol": 5.0,
+   "cap_viol": 0.0,
+   "fanout_max": 41.0,
+   "fanout_worst_net": "clknet_leaf_0_clk_t9",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 7206,
+    "min": 178.73,
+    "mean": 232.34,
+    "max": 278.81,
+    "spread": 100.08
+   },
+   "insertion_pinflops": {
+    "n": 4112,
+    "min": 179.01,
+    "mean": 235.02,
+    "max": 278.81,
+    "spread": 99.8
+   },
+   "ocv5_wns_max": -33.01,
+   "ocv5_wns_min": -41.93,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  },
+  "ff": {
+   "done": true,
+   "design": "s81p_slice_station__t1",
+   "cells": 5773654.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk",
+    "clk_t1",
+    "clk_t10",
+    "clk_t11",
+    "clk_t12",
+    "clk_t13",
+    "clk_t14",
+    "clk_t15",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "clk_t6",
+    "clk_t7",
+    "clk_t8",
+    "clk_t9"
+   ],
+   "inputs": [
+    "arst_n",
+    "ft0_i",
+    "ft1_i",
+    "ft2_i",
+    "ft3_i"
+   ],
+   "outputs": [
+    "ft0_o",
+    "ft1_o",
+    "ft2_o",
+    "ft3_o"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "sdc_wns_max": -17.74,
+   "sdc_wns_min": 10.5,
+   "sdc_tns_max": -9167.35,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 1622.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": -17.74,
+   "std_wns_min": 10.5,
+   "std_tns_max": -9167.35,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 1622.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 1.0,
+   "cap_viol": 0.0,
+   "fanout_max": 41.0,
+   "fanout_worst_net": "clknet_leaf_0_clk_t9",
+   "fanout_viol": 0.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "insertion_all": {
+    "n": 7206,
+    "min": 142.12,
+    "mean": 185.39,
+    "max": 232.5,
+    "spread": 90.38
+   },
+   "insertion_pinflops": {
+    "n": 4112,
+    "min": 142.12,
+    "mean": 187.31,
+    "max": 232.5,
+    "spread": 90.38
+   },
+   "ocv5_wns_max": -30.92,
+   "ocv5_wns_min": 0.67,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": []
+  }
+ },
+ "sdc_lint": {
+  "verdict": "PASS",
+  "mode": "kit sdc_lint.json",
+  "errors": [],
+  "n_errors": 0,
+  "sdc": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/constraint.sdc",
+  "sdc_source": "kit"
+ },
+ "face_guard": {
+  "verdict": "PASS",
+  "top": "s81p_slice_station__t1",
+  "checked": 4112,
+  "ok": 4112,
+  "fail_counts": {},
+  "fails": {},
+  "netlist": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/results/asap7/dp_slice_station__t1/base/1_2_yosys.v",
+  "pins": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/pins.json",
+  "boundary_context": null,
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "PASS",
+   "wns_ps": 4.44,
+   "tns_ps": 0.0,
+   "violators": 0.0
+  },
+  "hold_ff": {
+   "verdict": "PASS",
+   "wns_ps": 10.5,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": 10.5,
+   "overlay": "applied vclk in_min -40 out_min 0"
+  },
+  "drv": {
+   "verdict": "FAIL",
+   "by_corner": {
+    "tt": {
+     "slew": 5.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 1.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {
+    "tt": {
+     "slew": 5.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 1.0,
+     "cap": 0.0
+    }
+   }
+  },
+  "fanout": {
+   "verdict": "PASS",
+   "limit": 64,
+   "violators": {
+    "tt": 0.0,
+    "ff": 0.0
+   },
+   "max_fanout": 41.0,
+   "worst_net": "clknet_leaf_0_clk_t9"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "FAIL",
+   "spread_max_ps": 80.0,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 4112,
+      "min": 179.01,
+      "mean": 235.02,
+      "max": 278.81,
+      "spread": 99.8
+     },
+     "all": {
+      "n": 7206,
+      "min": 178.73,
+      "mean": 232.34,
+      "max": 278.81,
+      "spread": 100.08
+     },
+     "ck_errors": 0.0
+    },
+    "ff": {
+     "pinflops": {
+      "n": 4112,
+      "min": 142.12,
+      "mean": 187.31,
+      "max": 232.5,
+      "spread": 90.38
+     },
+     "all": {
+      "n": 7206,
+      "min": 142.12,
+      "mean": 185.39,
+      "max": 232.5,
+      "spread": 90.38
+     },
+     "ck_errors": 0.0
+    }
+   },
+   "problems": [
+    "TT pin-flop spread 99.8 ps > 80",
+    "FF pin-flop spread 90.4 ps > 80"
+   ],
+   "insertion_target_ps": 250.0
+  },
+  "sdc_lint": {
+   "verdict": "PASS",
+   "mode": "kit sdc_lint.json",
+   "errors": [],
+   "n_errors": 0,
+   "sdc": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "PASS",
+   "top": "s81p_slice_station__t1",
+   "checked": 4112,
+   "ok": 4112,
+   "fail_counts": {},
+   "fails": {},
+   "netlist": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/run/results/asap7/dp_slice_station__t1/base/1_2_yosys.v",
+   "pins": "/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t1/pins.json",
+   "boundary_context": null,
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  }
+ },
+ "reasons": [
+  "drv: FAIL TT slew 5.0 cap 0.0, FF slew 1.0 cap 0.0",
+  "clock: FAIL TT pin-flop spread 99.8 ps > 80; FF pin-flop spread 90.4 ps > 80"
+ ],
+ "verdict": "NOT SIGNED"
+}

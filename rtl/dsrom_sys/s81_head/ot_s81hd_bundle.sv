@@ -149,21 +149,28 @@ module ot_s81hd_bundle #(
     endfunction
     reg [80:0] c1 [0:1];
     reg        c1_v;
+    // S81-HEAD 10-24 (GEOM-REVIEW tile batch 2: u_eA0/best_key -> c1 was a 14-level path across the tile, TT -627 ps):
+    // the four A results are registered at the tile side first (pk_q, next to each element's E face), the level-1
+    // compare starts from local flops.  +1 cycle on the result; the go block window grows by one (gsh 4).
+    reg [80:0] pk_q [0:3];
+    reg [3:0]  pk_done;
     // HD-TILE 10-21: the elements clear `done` IOREG (+1) edges after a_go, so with IOREG = 1 the original
     // `&a_done && !a_go[0]` re-raised res_v for one cycle with the PREVIOUS position's result after every later go
     // (measured: 2nd position fired 20 cycles after go).  The block window covers a_go + 3 cycles.
-    reg [2:0]  gsh;
+    reg [3:0]  gsh;
     wire       gblk = a_go[0] | (|gsh);
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin c1_v <= 1'b0; res_v <= 1'b0; gsh <= 3'd0; end
+        if (!rst_n) begin c1_v <= 1'b0; res_v <= 1'b0; gsh <= 4'd0; pk_done <= 4'd0; end
         else begin
-            gsh <= {gsh[1:0], a_go[0]};
-            c1_v <= &a_done && !gblk;
+            gsh <= {gsh[2:0], a_go[0]};
+            pk_done <= a_done;
+            c1_v <= &pk_done && !gblk;
             res_v <= c1_v && !gblk;
         end
     always @(posedge clk) begin
-        c1[0] <= pick({a_key[0], a_row[0], a_bits[0]}, {a_key[1], a_row[1], a_bits[1]});
-        c1[1] <= pick({a_key[2], a_row[2], a_bits[2]}, {a_key[3], a_row[3], a_bits[3]});
+        for (int pq = 0; pq < 4; pq++) pk_q[pq] <= {a_key[pq], a_row[pq], a_bits[pq]};
+        c1[0] <= pick(pk_q[0], pk_q[1]);
+        c1[1] <= pick(pk_q[2], pk_q[3]);
         {res_row, res_bits} <= pick(c1[0], c1[1]);
     end
     assign fault = b_fault | (|a_fault);

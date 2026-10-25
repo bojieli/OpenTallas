@@ -534,7 +534,8 @@ def gate_latency(repo, plan, rep):
         except Exception:
             continue
         L = j.get("lanes", {})
-        mism = [lid for lid in tab if lid not in L or L[lid].get("cycles") != tab[lid]["cycles"]]
+        # gen.py latency --fold-r8: cycles = base + r8_pad (R8 landing pads priced); the plan part must still match
+        mism = [lid for lid in tab if lid not in L or L[lid].get("cycles", 0) - L[lid].get("r8_pad", 0) != tab[lid]["cycles"]]
         files.append(dict(file=os.path.relpath(f, repo), plan_digest=j.get("plan_digest"), digest_match=j.get("plan_digest") == dig,
                           lanes=len(L), mismatched_lanes=len(mism), extra_lanes=len(set(L) - set(tab)),
                           example=mism[:3]))
