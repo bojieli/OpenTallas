@@ -61,7 +61,23 @@ module tb_pcpart;
     always @(posedge hck) if (b_col) begin n_bcol <= n_bcol + 1; $display("PCB cyc %0d boot column (no reservation) we %b", cyc,
                                                   dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.col_we); end
     final $display("PCB BOOTWIN boot_win %b boot_columns %0d", b_win, n_bcol);
+    // every PC of the partition (u_kvpc0 head + u_kvpc1..3): controller static words in, boot columns, faults
+`define PCB_PC(i, P) \
+    integer n_cv``i = 0, n_bc``i = 0; \
+    always @(posedge hck) begin if (P.u_ctrl.u_sched.c_v) n_cv``i <= n_cv``i + 1; if (P.u_ctrl.u_sched.col_boot) n_bc``i <= n_bc``i + 1; end \
+    final $display("PCB PC%0d c_v %0d boot_columns %0d boot_win %b hgo %b fo %b f_raw %b obs %b ctl %b f_cmd %b f_early %b f_ecdc %b", i, n_cv``i, n_bc``i, \
+        P.u_ctrl.u_sched.boot_win, P.u_ctrl.u_sched.hgo, P.u_ctrl.u_sched.fo, P.u_ctrl.u_sched.f_raw, P.u_ctrl.u_sched.native_observer_fault, \
+        P.u_ctrl.u_sched.ctl_fault, P.u_ctrl.u_sched.f_cmd, P.u_ctrl.u_sched.f_early, P.u_ctrl.u_sched.f_ecdc);
+    `PCB_PC(0, dut.u_kvpc0.u_pc.u_pce.u_path)
+    `PCB_PC(1, dut.u_kvpc1.u_pc.u_pce.u_path)
+    `PCB_PC(2, dut.u_kvpc2.u_pc.u_pce.u_path)
+    `PCB_PC(3, dut.u_kvpc3.u_pc.u_pce.u_path)
 `endif
+    wire [2:0] st1 = dut.u_hsl1.u_slice.u_boot.u_boot.u_test.state, st3 = dut.u_hsl3.u_slice.u_boot.u_boot.u_test.state;
+    reg [2:0] st1_q = 7, st3_q = 7;
+    always @(posedge clk) begin st1_q <= st1; st3_q <= st3;
+        if (st1 != st1_q) $display("PCB cyc %0d slice1 boot_pc state %0d", cyc, st1);
+        if (st3 != st3_q) $display("PCB cyc %0d slice3 boot_pc state %0d", cyc, st3); end
     always @(posedge hck) if (po0[28]) $display("PCB cyc %0d PHY col pc0 we %b bank %0d col %0d", cyc, po0[29], po0[34:30], po0[39:35]);
     final $display("PCB FAULTS pc0 fo %b f_raw %b obs %b ctl %b f_cmd %b f_early %b",
                    dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.fo, dut.u_kvpc0.u_pc.u_pce.u_path.u_ctrl.u_sched.f_raw,
