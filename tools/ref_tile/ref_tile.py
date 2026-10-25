@@ -538,12 +538,19 @@ def reset_landing_plan(s: dict) -> dict | None:
         if ck != SOURCE_NATIVE_RESET_LANDINGS[native["id"]]["clock"]:
             raise SpecError("spec: source-native reset effective landing clock differs from reviewed source")
         plan["source_native"] = native
+    distributed = rl.get("distributed_chain", False)
+    if type(distributed) is not bool:
+        raise SpecError("spec: reset_landing.distributed_chain must be a boolean")
+    if distributed:
+        if st < 3 or not rl.get("copies") or not rl.get("first_copies"):
+            raise SpecError("spec: distributed_chain requires >=3 stages, first_copies and copies")
+        plan["distributed_chain"] = True
     fc = rl.get("first_copies")
     if fc is not None:
         if (not isinstance(fc, dict) or not fc or any(p not in resets for p in fc)
                 or any(not isinstance(n, int) or isinstance(n, bool) or not 1 <= n <= 32 for n in fc.values())):
             raise SpecError('spec: reset_landing.first_copies must map declared resets to integers 1..32')
-        if st != 2:
+        if st != 2 and not distributed:
             raise SpecError('spec: balanced first_copies requires exactly two landing stages')
         if not native and (not reset_relay_split_plan(s) or reset_relay_split_plan(s)['max_loads'] > 32):
             raise SpecError('spec: balanced first_copies requires reset_relay_split.max_loads <=32')
@@ -609,6 +616,8 @@ def reset_landing_vars(s: dict) -> list:
     if not plan or not plan["enable"] or plan.get("source_native"):
         return []
     out = ["--orfs-var OT_RST_LAND=1", f"--orfs-var OT_RST_LAND_STAGES={plan['stages']}"]
+    if plan.get("distributed_chain"):
+        out.append("--orfs-var OT_RST_LAND_DISTRIBUTED=1")
     pp = pin_regs_plan(s)
     if not pp or not pp.get("enable"):
         # landing only: the wrapper still needs the literal clock / reset roles (data ports pass straight through)
