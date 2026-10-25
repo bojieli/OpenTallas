@@ -352,3 +352,4 @@ PARKED. Ownbranch codex/qc-sramif-1309@d965a9aada clean, no merges/pushes. RP1f6
 - vmr_s6kc 6f61cf5ff8c9: the 15:22 tick HELD it ("corrective canary is INFO vs baseline; enqueue as a normal row") -> re-enqueued without --canary-fix.
 - vmr_s6h a670475c7977: the 15:22 tick classified COORD's stop as infra-oom (exit 137) and RESUBMITTED attempt 2 -> I stopped unit ap-a670475c7977-a2 + container codex-qccqb-s6h-rt6-969048 (exact names) and commented its 3 queue rows out ("# WITHDRAWN"). Data deletion follows once the tick marks it WITHDRAWN.
 - Signed off now: 3 of 29 (C1 su8_rst3, C2 rp1 f62, C4 prog_s8b).
+2026-10-25 15:31 PDT PATH-QC-A0N59: status at park: native59 WIF kit PLACED (3_place done), CTS running (unit oth-ubuntu-1555290-1792964534); baseline kit still in global placement (unit oth-ubuntu-1941822-1792965067). Next lane: collect both per the PARKED list above.
