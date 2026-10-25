@@ -145,10 +145,13 @@ PIECES = {
     'coll_q3_edge': dict(
         master='ot_hfd_coll_q3_hard_v8x_s', dir='ot_hfd_coll_q3_hard_v8x', top='ot_hfd_coll_q3_edge_core',
         pieces=lambda n, m: {f'{m}__edge': (sorted(g.find_paths(n, m, r'coll_link_e$')) + g.find_paths(n, m, r'coll_argmax_m_tp192$'), [])},
-        rtl={'u_link0': ('ot_hgi_coll_link_e', ''), 'u_link1': ('ot_hgi_coll_link_e', ''),
-             'u_link2': ('ot_hgi_coll_link_e', ''), 'u_arg': ('ot_hgi_coll_argmax_m_tp192', '')}, straps=[],
+        # 10-25: members = pin-registered twins (ot_hgi_coll_edge_pr.sv, same ports; every cut input bit lands on a
+        # flop: link epoch select after the pin flops (0 edges), argmax = pin-captured fold only (ARG publish +1 edge))
+        rtl={'u_link0': ('ot_hgi_coll_link_e_pr', ''), 'u_link1': ('ot_hgi_coll_link_e_pr', ''),
+             'u_link2': ('ot_hgi_coll_link_e_pr', ''), 'u_arg': ('ot_hgi_coll_argmax_m_tp192_pr', '')}, straps=[],
         src='rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_hard_v8x_s.sv #(NLINK 3, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) '
-            'u_body.g_link[0..2].u_link (ot_hgi_coll_link_e, ck = clk_link[5k+4:5k]) + u_body.g_q3.t192.u_arg (clk_arg)'),
+            'u_body.g_link[0..2].u_link (ot_hgi_coll_link_e_pr, ck = clk_link[5k+4:5k]) + u_body.g_q3.t192.u_arg '
+            '(ot_hgi_coll_argmax_m_tp192_pr, clk_arg)'),
     'coll_q3_vm': dict(
         master='ot_hfd_coll_q3_hard_v8x_s', dir='ot_hfd_coll_q3_hard_v8x', top='ot_hfd_coll_q3_vm_core',
         pieces=lambda n, m: {f'{m}__vm': (g.find_paths(n, m, r'coll_vmasm_sliced_v7$') + g.find_paths(n, m, r'coll_static_vmwrite_roots_v6_physical$'), [])},
