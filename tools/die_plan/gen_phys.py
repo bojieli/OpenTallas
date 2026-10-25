@@ -697,7 +697,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                 sibling = f.with_name(f"{match[1]}_{corner}{match[3]}")
                                 if sibling.is_file() and sibling != f:
                                     shutil.copyfile(sibling, kd / "macros" / sibling.name)
-            mplace.append(f"place_macro -macro_name {{{inst}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
+            # ODB keeps an escaped Verilog name's array brackets as \[ \] (a plan inst like g_writer[0].u_mem is not found
+            # otherwise: native59 MPL-0020, PATH-QC-A0N59 10-25); escape the bare ones
+            inst_db = re.sub(r"(?<!\\)([\[\]])", r"\\\1", inst)
+            mplace.append(f"place_macro -macro_name {{{inst_db}}} -location {{{x:.4f} {y:.4f}}} -orientation {o} -exact")
     srcs = []
     for f in rtl_files:
         dst = kd / "rtl" / Path(f).name
