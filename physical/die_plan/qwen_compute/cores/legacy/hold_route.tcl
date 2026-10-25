@@ -1,9 +1,11 @@
+# (QC-CORES copy of tools/elem_qk/hold_eco/hold_route.tcl @ claude/elem-qk-1024; + optional OT_HOLD_DRV=1 post-route slew repair)
 # ELEM-QK 10-24 warm hold ECO on a COMPLETED route (POST_GLOBAL_ROUTE_TCL hook).  4_cts.odb is the original
 # 5_2_route.odb (pre-filler); 6_final.spef in RESULTS_DIR is that route's extraction.  Variant knobs (env):
 #   OT_HOLD_MARGIN (ps), OT_HOLD_ALLOW_SETUP (1 = FF-only run may break FF setup; final TT setup is still gated),
 #   OT_HOLD_MAXBUF (max_buffer_percent).  No RTL / cycle / clock / SDC change; final verdict = signoff.py TT/FF.
 read_spef $::env(RESULTS_DIR)/6_final.spef
 global_route -start_incremental
+if {[info exists ::env(OT_HOLD_DRV)] && $::env(OT_HOLD_DRV) == 1} { puts "QCCORES_HOLD repair_design -slew_margin 40 -cap_margin 20"; repair_design -slew_margin 40 -cap_margin 20 }
 set args [list -hold -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)]
 if {$::env(OT_HOLD_ALLOW_SETUP) == 1} { lappend args -allow_setup_violations }
 puts "ELEMQK_HOLD repair_timing $args"

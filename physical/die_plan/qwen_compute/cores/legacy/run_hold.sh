@@ -10,7 +10,7 @@ DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
 NAME=elemqk-hold-$(basename $(dirname $D))-$(basename $D)-$$
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_HOLD_MARGIN=$OT_HOLD_MARGIN -e OT_HOLD_ALLOW_SETUP=$OT_HOLD_ALLOW_SETUP \
-  -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+  -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e OT_HOLD_DRV=${OT_HOLD_DRV:-0} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
   \$M do-route $ROUTE_CORNERS SKIP_INCREMENTAL_REPAIR=1; rc=\$?; \
   if [ \$rc = 0 ]; then \$M do-finish; rc=\$?; fi; \
