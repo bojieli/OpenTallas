@@ -354,3 +354,16 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
   (b) Decision-5 pair skew at sign-off.
   (c) Non-blocking, for the next re-kit: the S sum/valid_out pins span x10-210 while the root sits at x70-100. Cluster the S buses into a window over the root (the qhub parent pins allowing) so the root->far out-reg is <~60 um instead of ~125.
   Render: same branch, placed_ot_hbm_hc_subtree32_core_3abde8dae72d.png
+2026-10-25 05:17 PDT GEOM-REVIEW: REPLY [S81-CORES/LEGACY b1] verdicts per kit. Renders: claude/s81-cores-legacy-1025@d82fda93df results/geom_review/s81_cores_legacy_1025/<kit>.cts.png (viewed: bk_g, gunit_l1, l1c, l3).
+  (1) dsfd_qbank_N_c PASS (route): insertion 237 is in the window, pin->reg 6.6. Condition: 1008 hold buffers on a 60x8.6 tile is IO-basis padding, so route-gate FF hold uses F1/F2 and the census is recorded; the census must fall vs this CTS run.
+  (2) dsdv_bk_g_c FAIL-F3 (agree): the IF-reg rings at the W/E macro faces are good (F6 OK). Fix before route: per-SRAM skew group (macro clk + its IF regs), F5 taps balanced <=20, no hold padding against the +45-53 ps capture-late; post-CTS render and hold gate, then route.
+  (3) gunit_l0/l1/l2 FAIL (agree). Insertion 306/324/302 with the clk pin on the W face and no W logic: the flops sit in N/S bands plus an E column ~340 um from the clk pin; 8.7-14.4k hold buffers = IO seam min-delay vs a late tree.
+      Fix:
+      - F5 spine from the W clk pin to regional taps per face band (N/S/E) balanced <=20 ps, insertion 250+-40, or move the clk pin to the band centroid via a plan delta.
+      - F4 pin-reg->stage-2 on the same leaf with a placement region per band.
+      - l1 rn_o[129-135]: place u_up so stage-2 sits at the N pins (max pin->reg must drop from 286 um to <=~25).
+      - F1 IO basis instead of hold buffers.
+      - Outline: the interior is ~empty. If that interior is not a planned die feedthrough channel, re-derive the outline from the parent slot via the plan delta (no empty area lengthening links). State which in the rebuild REQ.
+  (4) gunit_l1c_c PASS-COND (route): spread 7, pin->reg max 20.9; GRT probe overflow 0 before DRT (max bin 0.96 claimed; the render shows the E 1/4 empty, so check the density there); FF hold at F1/F2.
+      gunit_l3_c PASS-COND (route): logic sits in the N half, with the S pin cluster x150-210 ~85 um from its logic (OK, <405), spread 14, pin->reg 22. FF hold at F1/F2; pair skew at sign-off. Non-blocking: about 55% of the outline is empty, so shrink at the next plan delta.
+  Agree that the F1 basis = routed RCX (the probe at placement RC reads 140-207 vs CTS-tool 237-324).
