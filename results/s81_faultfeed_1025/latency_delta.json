@@ -1,0 +1,299 @@
+{
+ "base": "main 7c33a7a81",
+ "changed_lanes": 18,
+ "net_cycles": 10,
+ "max_lane_main": 82,
+ "max_lane_faultfeed": 82,
+ "changed": {
+  "attn__s_3S_C__svc_5": {
+   "main": 21,
+   "faultfeed": 20,
+   "width": [
+    513,
+    513
+   ]
+  },
+  "attn__svc_5__s_3S_C": {
+   "main": 23,
+   "faultfeed": 22,
+   "width": [
+    562,
+    562
+   ]
+  },
+  "ctrl__s_0N_C__seqhost": {
+   "main": 60,
+   "faultfeed": 58,
+   "width": [
+    571,
+    571
+   ]
+  },
+  "dn_s_0S_L4": {
+   "main": 13,
+   "faultfeed": 15,
+   "width": [
+    597,
+    597
+   ]
+  },
+  "dn_s_7S_L3": {
+   "main": 8,
+   "faultfeed": 7,
+   "width": [
+    597,
+    597
+   ]
+  },
+  "dn_s_7S_L4": {
+   "main": 13,
+   "faultfeed": 15,
+   "width": [
+    597,
+    597
+   ]
+  },
+  "sid_s_7N_C__seqhost": {
+   "main": 62,
+   "faultfeed": 65,
+   "width": [
+    5,
+    1
+   ]
+  },
+  "unit__seqhost__svc_5": {
+   "main": 7,
+   "faultfeed": 6,
+   "width": [
+    325,
+    325
+   ]
+  },
+  "unit__svc_5__seqhost": {
+   "main": 7,
+   "faultfeed": 6,
+   "width": [
+    13,
+    13
+   ]
+  },
+  "up_s_0S_L3": {
+   "main": 7,
+   "faultfeed": 8,
+   "width": [
+    668,
+    668
+   ]
+  },
+  "up_s_7S_L3": {
+   "main": 8,
+   "faultfeed": 7,
+   "width": [
+    668,
+    668
+   ]
+  },
+  "up_s_7S_L4": {
+   "main": 13,
+   "faultfeed": 14,
+   "width": [
+    668,
+    668
+   ]
+  },
+  "vid_seqhost__svc_0": {
+   "main": 27,
+   "faultfeed": 30,
+   "width": [
+    4,
+    1
+   ]
+  },
+  "vid_svc_1__seqhost": {
+   "main": 14,
+   "faultfeed": 18,
+   "width": [
+    4,
+    1
+   ]
+  },
+  "x_W3_in": {
+   "main": 24,
+   "faultfeed": 23,
+   "width": [
+    1104,
+    1104
+   ]
+  },
+  "xtier__s_0S_C__s_0N_C": {
+   "main": 26,
+   "faultfeed": 27,
+   "width": [
+    276,
+    276
+   ]
+  },
+  "xtier__s_7N_C__s_7S_C": {
+   "main": 26,
+   "faultfeed": 27,
+   "width": [
+    276,
+    276
+   ]
+  },
+  "xtier__s_7S_C__s_7N_C": {
+   "main": 26,
+   "faultfeed": 27,
+   "width": [
+    276,
+    276
+   ]
+  }
+ },
+ "new_lanes": {
+  "flt__bk_sel__gunit": {
+   "cycles": 2,
+   "width": 1,
+   "src": {
+    "part": "bk_sel",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "gunit",
+    "bus": "flt_i0"
+   }
+  },
+  "flt__eng__svc_14": {
+   "cycles": 2,
+   "width": 1,
+   "src": {
+    "part": "eng",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "svc_14",
+    "bus": "flt_i0"
+   }
+  },
+  "flt__gunit__s_3N_C": {
+   "cycles": 18,
+   "width": 1,
+   "src": {
+    "part": "gunit",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "s_3N_C",
+    "bus": "flt_i0"
+   }
+  },
+  "flt__iqf__svc_0": {
+   "cycles": 2,
+   "width": 1,
+   "src": {
+    "part": "iqf",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "svc_0",
+    "bus": "flt_i0"
+   }
+  },
+  "flt__phy_hbm__svc_8": {
+   "cycles": 2,
+   "width": 1,
+   "src": {
+    "part": "phy_hbm",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "svc_8",
+    "bus": "flt_i0"
+   }
+  },
+  "flt__s_0N_LP__s_0N_C": {
+   "cycles": 2,
+   "width": 1,
+   "src": {
+    "part": "s_0N_LP",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "s_0N_C",
+    "bus": "flt_i0"
+   }
+  },
+  "flt__s_0S_LP__s_0S_C": {
+   "cycles": 2,
+   "width": 1,
+   "src": {
+    "part": "s_0S_LP",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "s_0S_C",
+    "bus": "flt_i0"
+   }
+  },
+  "flt__s_7N_LP__s_7N_C": {
+   "cycles": 2,
+   "width": 1,
+   "src": {
+    "part": "s_7N_LP",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "s_7N_C",
+    "bus": "flt_i0"
+   }
+  },
+  "flt__s_7S_LP__s_7S_C": {
+   "cycles": 2,
+   "width": 1,
+   "src": {
+    "part": "s_7S_LP",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "s_7S_C",
+    "bus": "flt_i0"
+   }
+  }
+ },
+ "width_changed": [
+  "sid_s_0N_C__s_1N_C",
+  "sid_s_0S_C__s_0N_C",
+  "sid_s_1N_C__s_2N_C",
+  "sid_s_1S_C__s_0S_C",
+  "sid_s_2N_C__s_3N_C",
+  "sid_s_2S_C__s_1S_C",
+  "sid_s_3N_C__s_4N_C",
+  "sid_s_3S_C__s_2S_C",
+  "sid_s_4N_C__s_5N_C",
+  "sid_s_4S_C__s_3S_C",
+  "sid_s_5N_C__s_6N_C",
+  "sid_s_5S_C__s_4S_C",
+  "sid_s_6N_C__s_7N_C",
+  "sid_s_6S_C__s_5S_C",
+  "sid_s_7N_C__seqhost",
+  "sid_s_7S_C__s_6S_C",
+  "sid_seqhost__s_7S_C",
+  "vid_seqhost__svc_0",
+  "vid_svc_0__svc_2",
+  "vid_svc_10__svc_12",
+  "vid_svc_11__svc_9",
+  "vid_svc_12__svc_14",
+  "vid_svc_13__svc_11",
+  "vid_svc_14__svc_15",
+  "vid_svc_15__svc_13",
+  "vid_svc_1__seqhost",
+  "vid_svc_2__svc_4",
+  "vid_svc_3__svc_1",
+  "vid_svc_4__svc_6",
+  "vid_svc_5__svc_3",
+  "vid_svc_6__svc_8",
+  "vid_svc_7__svc_5",
+  "vid_svc_8__svc_10",
+  "vid_svc_9__svc_7"
+ ]
+}

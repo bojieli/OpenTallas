@@ -1,0 +1,37 @@
+{
+ "register_cells": [
+  {
+   "name": "$auto$ff.cc:337:slice$16876",
+   "type": "$dffe",
+   "bits": 32
+  },
+  {
+   "name": "$auto$ff.cc:337:slice$16881",
+   "type": "$dffe",
+   "bits": 4
+  },
+  {
+   "name": "$auto$ff.cc:337:slice$16886",
+   "type": "$sdff",
+   "bits": 1
+  },
+  {
+   "name": "$auto$ff.cc:337:slice$16887",
+   "type": "$sdff",
+   "bits": 1
+  },
+  {
+   "name": "$auto$ff.cc:337:slice$16888",
+   "type": "$sdff",
+   "bits": 1
+  },
+  {
+   "name": "$auto$ff.cc:337:slice$16889",
+   "type": "$sdff",
+   "bits": 8
+  }
+ ],
+ "total_state_bits": 47,
+ "mapped_area": "NOT RUN",
+ "clock": "833ps unchanged; physicalclosure required beforeadoption"
+}

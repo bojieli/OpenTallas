@@ -132,7 +132,8 @@ def test_density_kit_config_and_defaults_unchanged():
         gen_phys.write_type_kit(P, "fa", d, [])
         cfg = (Path(d) / "fa" / "config.mk").read_text()
         assert "OT_TAP_MAX_SINKS = 40" in cfg and "OT_TAP_REASSIGN_UM = 150" in cfg
-        assert "POST_GLOBAL_ROUTE_TCL = /work/tap_balance_grt.tcl" in cfg and "OT_TAP_GRT_MODE = grt_report" in cfg
+        # FLOW 10-25: POST_GLOBAL_ROUTE is the grt_post.tcl chain, which sources tap_balance_grt.tcl on OT_TAP_GRT_MODE
+        assert "POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl" in cfg and "OT_TAP_GRT_MODE = grt_report" in cfg
         assert (Path(d) / "fa" / "tap_balance_grt.tcl").is_file()
         bud = json.loads((Path(d) / "fa" / "budget.json").read_text())["clock"]
         assert bud["tap_mode"] == "density" and bud["grid_taps"] == 0
@@ -141,7 +142,7 @@ def test_density_kit_config_and_defaults_unchanged():
         gen_phys.write_type_kit(P0, "fa", d, [])
         cfg = (Path(d) / "fa" / "config.mk").read_text()
         assert "OT_TAP_MAX_SINKS = 3000" in cfg
-        assert "OT_TAP_REASSIGN_UM" not in cfg and "POST_GLOBAL_ROUTE_TCL" not in cfg and "OT_TAP_GRT" not in cfg
+        assert "OT_TAP_REASSIGN_UM" not in cfg and "OT_TAP_GRT" not in cfg
         assert not (Path(d) / "fa" / "tap_balance_grt.tcl").exists()
 
 

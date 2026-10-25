@@ -33,10 +33,26 @@ endmodule
 // The only old er_die glue gate becomes a registered physical leaf.
 // The stack fault output is delayed by exactly one edge; no production issue
 // or result is rescheduled by this diagnostic fault path.
-module qkd_astk_fault_join(input wire ck,rst_n,input wire a,b,output reg q);
+// PORT_REGS lands the external fault b before its merge. The local fault a
+// keeps its original edge; b detection gains exactly one cycle (+2 flops: unreset data + reset validity).
+module qkd_astk_fault_join #(parameter integer PORT_REGS=0)(input wire ck,rst_n,input wire a,b,output reg q);
+    wire b_landed;
+    generate if (PORT_REGS != 0) begin : g_fault_land
+        reg bq, b_valid;
+        always @(posedge ck) bq<=b;
+        always @(posedge ck or negedge rst_n)
+            if (!rst_n) b_valid<=1'b0; else b_valid<=1'b1;
+`ifdef KVG3_ASTK_FMUT
+        assign b_landed=b;
+`else
+        assign b_landed=b_valid & bq;
+`endif
+    end else begin : g_fault_direct
+        assign b_landed=b;
+    end endgenerate
     always @(posedge ck or negedge rst_n)
         if(!rst_n) q<=1'b0;
-        else q<=a|b;
+        else q<=a|b_landed;
 endmodule
 
 // No-reset chain variant. The owner-chain token validity resets locally; relay

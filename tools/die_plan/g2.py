@@ -213,7 +213,7 @@ def worst_types(P, summ, n):
     return [(tn, score[tn], dens[tn]) for tn in cands[:n]]
 
 
-def probe_blockages(t):
+def probe_blockages(t, top="M7"):
     """Leaf obstructions of a partition probe.  A content leaf that the plan splits into planned hard cores
     (hard_cores[].inst == leaf inst or '<leaf inst>_*', e.g. an over-cap bankq leaf -> 3 cores) is represented by
     those cores, not by the whole leaf outline: the space between the cores is glue / routing area of the partition.
@@ -229,6 +229,12 @@ def probe_blockages(t):
             out += [dict(h, obs_max=c.get("obs_max", h.get("obs_max", "M5"))) for h in sub]
         else:
             out.append(c)
+    # KV-PLAN 10-25: a planned hard core that no content leaf names (e.g. KV head_eighth cores built from several
+    # leaves) is still a hard obstruction of the partition; it used to be silently dropped (0 blockages -> optimistic
+    # G2).  Its routing obstruction reaches the partition signal ceiling unless the core declares obs_max.
+    for h in cores:
+        if h["inst"] not in covered:
+            out.append(dict(h, obs_max=h.get("obs_max", top)))
     return out
 
 
@@ -287,8 +293,27 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
             cells.append(f"  {FLOP} {c} (.D({src}), .QN({q}));")
             nets.append(q)
             place.append((c, *rl["xy"]))
-        for j, (nm, _, _) in enumerate(reset_outs):
+        souts = [o for o in reset_outs if o[0].startswith("start_o_")]
+        routs = [o for o in reset_outs if not o[0].startswith("start_o_")]
+        for j, (nm, _, _) in enumerate(routs):
             cells.append(f"  assign {nm} = pr_reset_rst_n_t{tree['n_clock_taps'] + j};")
+        if souts:                                   # decision 13c START: run relays mirror the reset relays
+            prev = "start_i"
+            for j in range(RT.entry_stages(tree)):
+                c, q = f"pr_run_entry_{j}", f"pr_run_entry_q_{j}"
+                cells.append(f"  {FLOP} {c} (.D({prev}), .QN({q}));")
+                nets.append(q)
+                place.append((c, *tree["start_in"]))
+                prev = q
+            rename = {"rst_root_n": prev}
+            for rl in tree["relays"]:
+                c, q = "pr_run_" + rl["name"], "pr_run_" + rl["q"]
+                src = rename.get(rl["d"], "pr_run_" + rl["d"])
+                cells.append(f"  {FLOP} {c} (.D({src}), .QN({q}));")
+                nets.append(q)
+                place.append((c, *rl["xy"]))
+            for j, (nm, _, _) in enumerate(souts):
+                cells.append(f"  assign {nm} = pr_run_rst_n_t{tree['n_clock_taps'] + j};")
     # functional buses: one boundary flop per pin bit beside its pin
     for bus, lst in sorted(by_bus.items()):
         if bus in buses:
@@ -346,7 +371,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
            f"initialize_floorplan -die_area {{0 0 {w:g} {h:g}}} -core_area {{{m:g} {m:g} {w - m:g} {h - m:g}}} "
            "-site asap7sc7p5t", "source /work/make_tracks.tcl", "source /work/io.tcl"]
     nobs = 0
-    for c in probe_blockages(t):
+    for c in probe_blockages(t, top):
         x0, y0 = c["origin_um"]
         x1, y1 = x0 + c["outline_um"][0], y0 + c["outline_um"][1]
         tcl.append(f"create_blockage -region {{{x0:g} {y0:g} {x1:g} {y1:g}}}")
@@ -404,7 +429,8 @@ def main(argv=None):
     if errs:
         print("plan invalid (schema):\n  " + "\n  ".join(errs[:20]))
         return 1
-    P = S.Plan(raw)
+    # plan-relative declarations (core pins_file for the reset wavefront) resolve against the plan's directory
+    P = S.Plan(raw, Path(a.plan).resolve())
     out = Path(a.out)
     dirs = []
     if a.cmd in ("die", "all"):

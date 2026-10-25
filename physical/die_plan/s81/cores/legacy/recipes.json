@@ -1,5 +1,5 @@
 {
- "_doc": "ELEM-S81 canonical legacy core recipes for gen_core_kit_legacy.py. Key = plan hard-core module (or plan_module). ref_tile from results/signoff_1024/inventory.json (bksel_q: the hk2l kit whose views closed; l5: the n32 kit at 1766568f01 = main's binding). Defaults: util = spec route.pd, CTS args of VQ r12, hold margin 15, fanout 24. 10-25 (S81-CORES/LEGACY): qbank_N/S + sstn_base566 ft1_pairs dropped: main RTL (dc23a738f / e7390b932) lands every station input in its own pin register (2 flops per bit, +1 cycle), so no one-station pair exists and canonical face_guard needs none.",
+ "_doc": "ELEM-S81 canonical legacy core recipes for gen_core_kit_legacy.py. Key = plan hard-core module (or plan_module). ref_tile from results/signoff_1024/inventory.json (bksel_q: the hk2l kit whose views closed; l5: the n32 kit at 1766568f01 = main's binding). Defaults: util = spec route.pd, CTS args of VQ r12, hold margin 15, fanout 24. 10-25 (S81-CORES/LEGACY): qbank_N/S + sstn_base566 ft1_pairs dropped: main RTL (dc23a738f / e7390b932) lands every station input in its own pin register (2 flops per bit, +1 cycle), so no one-station pair exists and canonical face_guard needs none. dsfd_rstg / ot_s81_sstn_payload536: relay2 (0c1b14693) 2-flop stations, suffix r2, no ft1_pairs.",
  "dsdv_gunit_l0": {
   "ref_tile": "physical/ref_tile/dsdv_gunit_l0"
  },
@@ -70,12 +70,8 @@
  },
  "dsfd_rstg": {
   "ref_tile": "physical/ref_tile/s81net_rstg",
-  "ft1_pairs": [
-   [
-    "i",
-    "o"
-   ]
-  ]
+  "suffix": "r2",
+  "note": "CLOCK-RESET/relay2 10-25: main RTL is the 2-flop station (S81-KITS-RTLC dc23a738f, +1 edge priced in gen_plan_v4 FRAME_BAND_STATION_EDGES); no one-station pair (rejected 10-24 20:42), canonical face_guard"
  },
  "dsfd_cfifo_crs4": {
   "ref_tile": "physical/ref_tile/s81coll_cfifo_crs4"
@@ -100,12 +96,8 @@
  },
  "ot_s81_sstn_payload536": {
   "ref_tile": "physical/ref_tile/s81_sstn_payload536",
-  "ft1_pairs": [
-   [
-    "i",
-    "o"
-   ]
-  ]
+  "suffix": "r2",
+  "note": "CLOCK-RESET/relay2 10-25: main RTL is the 2-flop station (S81-KITS-RTLC dc23a738f, +1 edge priced in gen_plan_v4 FRAME_BAND_STATION_EDGES); no one-station pair (rejected 10-24 20:42), canonical face_guard"
  },
  "dsdv_gunit_l5_n32": {
   "plan_module": "dsdv_gunit_l5",

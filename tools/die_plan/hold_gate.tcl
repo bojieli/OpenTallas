@@ -4,7 +4,16 @@ foreach l $::env(PLIBS) { read_liberty $l }
 read_db $::env(ODB)
 read_sdc $::env(SDC)
 set_propagated_clock [all_clocks]
-source $::env(PLATFORM_DIR)/setRC.tcl
+# FLOW 10-25: the FF gate times the IO paths against the FF-bound vclk (ruling 9.7 / 5e) on the kit's RC basis
+if {[info exists ::env(OT_VCLK_FF)] && $::env(OT_VCLK_FF) ne ""} {
+  source [file join [file dirname [file normalize [info script]]] vclk_corner.tcl]
+  ot_vclk_bind ff
+}
+if {[info exists ::env(LAYER_PARASITICS_FILE)] && $::env(LAYER_PARASITICS_FILE) ne ""} {
+  source $::env(LAYER_PARASITICS_FILE)
+} else {
+  source $::env(PLATFORM_DIR)/setRC.tcl
+}
 estimate_parasitics -placement
 # Match signoff.py's fixed boundary contract; uncertainty is already in the SDC.
 set vclks {}; set clock_ports {}
