@@ -1,0 +1,159 @@
+{
+ "schema": "opentallas.kv.core_fp_proposal.v1",
+ "core": "qkd_ahub",
+ "status": "PROPOSAL (no P&R before GEOM PASS)",
+ "summary": {
+  "outline_um": [
+   604.8000000000001,
+   440.64000000000004
+  ],
+  "area_um2": 266499,
+  "macro_area_um2": 138102,
+  "macro_fraction": 0.518,
+  "glue_std_area_um2_est": 3300,
+  "glue_util_est_over_free": 0.026,
+  "old": {
+   "outline_um": [
+    734.4,
+    540.0
+   ],
+   "area_um2": 396576,
+   "flat_cells": 406723,
+   "util": 0.119
+  }
+ },
+ "blocks": [
+  {
+   "inst": "g_zh[0].u_zh",
+   "master": "ot_nhb_zh",
+   "x": 25.92,
+   "y": 69.12,
+   "w": 151.2,
+   "h": 151.2,
+   "orient": "MX"
+  },
+  {
+   "inst": "g_zh[1].u_zh",
+   "master": "ot_nhb_zh",
+   "x": 198.72000000000003,
+   "y": 69.12,
+   "w": 151.2,
+   "h": 151.2,
+   "orient": "MX"
+  },
+  {
+   "inst": "g_zh[2].u_zh",
+   "master": "ot_nhb_zh",
+   "x": 25.92,
+   "y": 263.52000000000004,
+   "w": 151.2,
+   "h": 151.2,
+   "orient": "R0"
+  },
+  {
+   "inst": "g_zh[3].u_zh",
+   "master": "ot_nhb_zh",
+   "x": 198.72000000000003,
+   "y": 263.52000000000004,
+   "w": 151.2,
+   "h": 151.2,
+   "orient": "R0"
+  },
+  {
+   "inst": "u_recip",
+   "master": "ot_qkh_recip_leaf",
+   "x": 371.52000000000004,
+   "y": 133.92000000000002,
+   "w": 216.0,
+   "h": 216.0,
+   "orient": "R0"
+  }
+ ],
+ "regions": [
+  {
+   "name": "S glue band: ap/am/hs pin flops, u_io, zh[0..1] root landing (u_ro)",
+   "x": 0,
+   "y": 0,
+   "w": 604.8000000000001,
+   "h": 60.480000000000004
+  },
+  {
+   "name": "A/B channel: u_core_la + u_ri write relays (4 x 268 b) -> zh inputs, rc_x relay",
+   "x": 0,
+   "y": 220.32,
+   "w": 362.88,
+   "h": 43.200000000000045
+  },
+  {
+   "name": "E column: fr export flops u_rw (145 b) at the E pins",
+   "x": 587.5200000000001,
+   "y": 60.480000000000004,
+   "w": 17.28,
+   "h": 380.16
+  }
+ ],
+ "clock_taps": [
+  {
+   "name": "tap->g_zh[0].u_zh/clk",
+   "x": 24.92,
+   "y": 71.92
+  },
+  {
+   "name": "tap->g_zh[1].u_zh/clk",
+   "x": 197.72000000000003,
+   "y": 71.92
+  },
+  {
+   "name": "tap->g_zh[2].u_zh/clk",
+   "x": 24.92,
+   "y": 411.9200000000001
+  },
+  {
+   "name": "tap->g_zh[3].u_zh/clk",
+   "x": 197.72000000000003,
+   "y": 411.9200000000001
+  },
+  {
+   "name": "tap->u_recip/clk",
+   "x": 370.52000000000004,
+   "y": 247.82000000000002
+  },
+  {
+   "name": "glue tap grid (S band + channel)",
+   "x": 302.40000000000003,
+   "y": 30.240000000000002
+  }
+ ],
+ "pins": {
+  "S": {
+   "groups": [
+    "am0..3 (144)",
+    "ap0..3 (172)",
+    "hf",
+    "hs_* (166)"
+   ],
+   "count": 482
+  },
+  "E": {
+   "groups": [
+    "ck (S-E corner)",
+    "fr_epoch",
+    "fr_rz (128)",
+    "fr_valid",
+    "rst_n"
+   ],
+   "count": 147
+  }
+ },
+ "reuse_views": {
+  "ot_nhb_zh": "physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh",
+  "ot_qkh_recip_leaf": "physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf"
+ },
+ "prior_closed_composition": "physical/ref_tile/qkd_ahub_sdw (qkd_ahub_static_dw 734.4 x 540, same children)",
+ "open_items": [
+  "re-sign ot_nhb_zh_m5 + qkh_recip_ref views with current signoff.py (NOT RUN)",
+  "kit generator: SYNTH_HIERARCHICAL + blackbox children + MACRO_PLACEMENT_TCL from blocks[]",
+  "KV-P: shrink hub_C slot ahub to this outline (S-E corner fixed) + core_pins_v37p re-pin",
+  "clock: per-child tap delay balance to one 20-ps window; publish core latency"
+ ]
+}

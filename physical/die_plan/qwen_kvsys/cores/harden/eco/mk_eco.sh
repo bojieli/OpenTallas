@@ -5,6 +5,7 @@
 # 6_final.spef + 1_2_yosys.v (+ 1_synth.v / clock_period / mem.json / ot_*.txt) and objects/, a 4_cts.sdc = the kit SDC +
 # set_propagated_clock, the POST_GLOBAL_ROUTE hook eco_route.tcl, TC/BC libs, and SO_DIR's tools/die_plan
 # signoff.py / face_guard.py / sdc_lint.py (the branch's sign-off with the hard-core latency contract).
+# env OT_PAD_MASTERS='FAx1_ASAP7_75t_R:1': placement padding before the ECO legalization (DRT pin access)
 # env OT_DRV_LAST=1: hold/setup repair before the fanout/slew repair (eco_route.tcl; avoids RSZ-0074)
 # VARIANT: b<N> FF-only (CORNER=BC), max_fanout 24, slew margin 20, hold margin N ps, setup may break at FF (TT gated)
 #          m<N> MCMM tc+bc, max_fanout 24, slew margin 20, setup margin 10, hold margin N ps, allow setup
@@ -46,6 +47,8 @@ case ${V:0:1} in
   *) echo "mk_eco: unknown variant $V"; exit 2 ;;
 esac > $OUT/variant.env
 [ -n "${OT_DRV_LAST:-}" ] && echo "OT_DRV_LAST=$OT_DRV_LAST" >> $OUT/variant.env
+[ -n "${OT_RETIME_LAST:-}" ] && echo "OT_RETIME_LAST=$OT_RETIME_LAST" >> $OUT/variant.env
+[ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env
 printf '{"variant": "%s", "source_kit": "%s:%s", "source_route": "%s/5_2_route.odb", "signoff_tools": "%s"}\n' \
   $V "$(hostname)" $KIT $RS "$SO" > $OUT/ECO.json
 echo "eco ready $OUT ($(du -sh $OUT | cut -f1))"

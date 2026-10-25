@@ -12,7 +12,7 @@ NAME=kvcores-eco-$(basename $(dirname $D) | cut -c1-40)-$(basename $D)-$$
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$D":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_MAX_FANOUT=$OT_MAX_FANOUT -e OT_SLEW_MARGIN=$OT_SLEW_MARGIN \
   -e OT_SETUP_MARGIN=$OT_SETUP_MARGIN -e OT_HOLD_MARGIN=$OT_HOLD_MARGIN -e OT_HOLD_ALLOW_SETUP=$OT_HOLD_ALLOW_SETUP \
-  -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e OT_DRV_LAST=${OT_DRV_LAST:-0} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
+  -e OT_HOLD_MAXBUF=$OT_HOLD_MAXBUF -e OT_DRV_LAST=${OT_DRV_LAST:-0} -e "OT_PAD_MASTERS=${OT_PAD_MASTERS:-}" -e OT_RETIME_LAST=${OT_RETIME_LAST:-0} -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
   \$M do-route $ROUTE_CORNERS SKIP_INCREMENTAL_REPAIR=1; rc=\$?; \
   if [ \$rc = 0 ]; then \$M do-finish; rc=\$?; fi; \

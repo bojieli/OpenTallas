@@ -34,6 +34,22 @@ repair_timing {*}$args
 if {$drv_last} {
   estimate_parasitics -placement
   kvc_drv
+  # OT_RETIME_LAST=1: the DRV-last split/resize cost e3 ~70 ps TT setup (m8_dl -67.3 vs m8 +24 on e5/e7): repair setup
+  # again after the DRV pass (same margin), then hold again without setup violations allowed
+  if {[info exists ::env(OT_RETIME_LAST)] && $::env(OT_RETIME_LAST) == 1 && $::env(OT_SETUP_MARGIN) ne ""} {
+    puts "KVCORES_ECO retime-last: repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN); hold -hold_margin $::env(OT_HOLD_MARGIN)"
+    repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN) -skip_last_gasp
+    repair_timing -hold -hold_margin $::env(OT_HOLD_MARGIN) -max_buffer_percent $::env(OT_HOLD_MAXBUF)
+  }
+}
+# OT_PAD_MASTERS "MASTER:SITES ...": placement padding (left = right = SITES) for masters whose pins lose DRT access when the
+# ECO legalizer abuts new buffers to them (e6: DRT-1231 on FAx1 CON at 96.768,146.61 after the m8/b8 hold-buffer fill)
+if {[info exists ::env(OT_PAD_MASTERS)] && $::env(OT_PAD_MASTERS) ne ""} {
+  foreach mp $::env(OT_PAD_MASTERS) {
+    lassign [split $mp :] m n
+    puts "KVCORES_ECO set_placement_padding -masters $m -left $n -right $n"
+    set_placement_padding -masters [get_lib_cells $m] -left $n -right $n
+  }
 }
 detailed_placement
 global_route -end_incremental
