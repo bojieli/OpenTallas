@@ -2,11 +2,19 @@
 # Instances are found by master (flattened names differ by stage / frontend).
 set b [ord::get_db_block]
 set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
-foreach {master x y orient} {ot_sram_1r1w_128x256_m1_r2c2 38.988 4.32 R0} {
+set kr_used {}
+foreach {master x y orient pat} {ot_sram_1r1w_128x256_m1_r2c2 38.988 4.32 R0 {}} {
   set hit {}
-  foreach i [$b getInsts] { if {[[$i getMaster] getName] eq $master} { lappend hit $i } }
-  if {[llength $hit] != 1} { error "kits_repin macro_place: [llength $hit] instances of $master (want 1)" }
-  set i [lindex $hit 0]
+  foreach i [$b getInsts] {
+    if {[[$i getMaster] getName] ne $master} continue
+    set n [string map {\ {}} [$i getName]]
+    if {[lsearch -exact $kr_used $n] >= 0} continue
+    if {$pat ne "" && $n ne $pat && ![string match $pat $n]} continue
+    lappend hit [list $n $i]
+  }
+  if {![llength $hit]} { error "kits_repin macro_place: no unplaced instance of $master matching '$pat'" }
+  set hit [lsort -dictionary -index 0 $hit]
+  set i [lindex $hit 0 1]; lappend kr_used [lindex $hit 0 0]
   $i setOrient $orient
   $i setLocation [expr {round($x * $dbu)}] [expr {round($y * $dbu)}]
   $i setPlacementStatus FIRM

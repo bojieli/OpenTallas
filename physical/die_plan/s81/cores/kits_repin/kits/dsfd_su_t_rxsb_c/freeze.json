@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "dsfd_su_t_rxsb_c",
+ "module": "dsfd_su_t_rxsb",
+ "outline_um": [
+  140.4,
+  140.4
+ ],
+ "ref_tile": "physical/ref_tile/s81su_rxsb_ref",
+ "spec_sha256": "abd62d20ea2c62bb8168f821866b07677ae1818f04a88997cd204b673fc5c0a3",
+ "pins_file": "inputs/core_pins/dsfd_su_t_rxsb.json",
+ "pins_sha256": "9db00db034f1b53dd4a8b3c1de02882c3ad54c69f0aff8d635659781e1475a3b",
+ "pins": 134,
+ "pins_snapped_to_lef_edge": 0,
+ "clocks": [
+  "ck"
+ ],
+ "resets": [
+  "rst"
+ ],
+ "recipe_sha256": "58188efc62d9a06b0f4c42c62600bf8917d767a88df7903ece5e6ee460e2b0eb",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)"
+ ],
+ "repo_rev": "64cd9415f3",
+ "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
+ "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
+ "macros": [],
+ "rtl_patch": null,
+ "kit_hash": "9762fe44892e1dc8"
+}

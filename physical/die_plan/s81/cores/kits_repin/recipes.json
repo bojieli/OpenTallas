@@ -121,5 +121,141 @@
   "clock_balance": true,
   "clock_balance_note": "r2/r10 signoff: TT pin-flop insertion 199.7 < 250-40 (clock FAIL) and FF output hold -46.6 (vclk 250 fixed); r6 needed 9826 hold buffers. Lift the tree to 250 before the first repair.",
   "max_buffer_percent": 100
+ },
+ "ot_dsrom_su_hcpost_lane_pr": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81sl_hcpl",
+  "outline_um": [
+   114.48,
+   114.48
+  ],
+  "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+  "closed_cells": 50540,
+  "util": 0.52,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang"
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "clock_balance": true,
+  "max_buffer_percent": 100
+ },
+ "ot_s81sl_vn": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81sl_vn",
+  "outline_um": [
+   356.4,
+   356.4
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_vn.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+  "closed_cells": 375145,
+  "util": 0.52,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang"
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "macro_sites_from": "physical/ref_tile/s81sl_vn/place.tcl",
+  "macro_rows_halo": 4.32,
+  "clock_balance": true,
+  "max_buffer_percent": 100
+ },
+ "ot_s81sl_vsw": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81sl_vsw",
+  "outline_um": [
+   224.64,
+   224.64
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_vsw.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+  "closed_cells": 120703,
+  "util": 0.52,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang"
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "macro_sites_from": "physical/ref_tile/s81sl_vsw/place.tcl",
+  "macro_rows_halo": 4.32,
+  "clock_balance": true,
+  "max_buffer_percent": 100
+ },
+ "dsfd_su_t_rxsf": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81su_rxsf_ref",
+  "outline_um": [
+   140.4,
+   140.4
+  ],
+  "pins_file": "inputs/core_pins/dsfd_su_t_rxsf.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+  "closed_cells": 82916,
+  "util": 0.6,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang"
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "clock_balance": true,
+  "max_buffer_percent": 100
+ },
+ "dsfd_su_t_rxsb": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81su_rxsb_ref",
+  "outline_um": [
+   140.4,
+   140.4
+  ],
+  "pins_file": "inputs/core_pins/dsfd_su_t_rxsb.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+  "closed_cells": 99597,
+  "util": 0.6,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang"
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "clock_balance": true,
+  "max_buffer_percent": 100
+ },
+ "ot_s81sl_ve": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81sl_ve",
+  "outline_um": [
+   345.6,
+   345.6
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_ve.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/s81_die_views/closed_import/ot_s81sl_ve/ot_s81sl_ve.lef",
+  "closed_cells": 460279,
+  "util": 0.52,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang"
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "clock_balance": true,
+  "max_buffer_percent": 100
  }
 }

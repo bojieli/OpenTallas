@@ -1,0 +1,72 @@
+{
+ "kit": "dsfd_su_t_rxsf_c",
+ "kit_hash": "78188a6e0dfc060d",
+ "outline_um": [
+  140.4,
+  140.4
+ ],
+ "pins": 133,
+ "faces": {
+  "N": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  },
+  "S": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  },
+  "W": {
+   "pins": 98,
+   "max_per_um": 10.5,
+   "mean_per_um": 0.7,
+   "layers": {
+    "M4": 98
+   },
+   "span": [
+    24.35,
+    124.28
+   ],
+   "groups": [
+    "o_f",
+    "o_mx",
+    "o_u",
+    "o_u2",
+    "o_v"
+   ]
+  },
+  "E": {
+   "pins": 35,
+   "max_per_um": 10.0,
+   "mean_per_um": 0.25,
+   "layers": {
+    "M4": 35
+   },
+   "span": [
+    92.89,
+    100.09
+   ],
+   "groups": [
+    "ck",
+    "i_v",
+    "i_x",
+    "rst"
+   ]
+  }
+ },
+ "macros": [],
+ "clock_pin": {
+  "name": "ck",
+  "x": 140.358,
+  "y": 92.892,
+  "face": "E",
+  "layer": "M4"
+ }
+}

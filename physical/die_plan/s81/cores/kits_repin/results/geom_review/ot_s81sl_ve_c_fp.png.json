@@ -1,0 +1,91 @@
+{
+ "kit": "ot_s81sl_ve_c",
+ "kit_hash": "f0e26f78bd18a61b",
+ "outline_um": [
+  345.6,
+  345.6
+ ],
+ "pins": 1295,
+ "faces": {
+  "N": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  },
+  "S": {
+   "pins": 3,
+   "max_per_um": 0.5,
+   "mean_per_um": 0.01,
+   "layers": {
+    "M3": 2,
+    "M5": 1
+   },
+   "span": [
+    86.91,
+    258.68
+   ],
+   "groups": [
+    "clk",
+    "fault",
+    "rst_n"
+   ]
+  },
+  "W": {
+   "pins": 486,
+   "max_per_um": 2.0,
+   "mean_per_um": 1.41,
+   "layers": {
+    "M4": 486
+   },
+   "span": [
+    7.64,
+    287.0
+   ],
+   "groups": [
+    "p_c",
+    "p_dd",
+    "p_hh",
+    "p_kk",
+    "p_v",
+    "r_c",
+    "r_h",
+    "r_k",
+    "r_v",
+    "r_w"
+   ]
+  },
+  "E": {
+   "pins": 806,
+   "max_per_um": 3.0,
+   "mean_per_um": 2.33,
+   "layers": {
+    "M4": 806
+   },
+   "span": [
+    7.55,
+    287.1
+   ],
+   "groups": [
+    "a_c",
+    "a_g",
+    "a_h",
+    "a_v",
+    "a_val",
+    "o_c",
+    "o_v",
+    "o_y"
+   ]
+  }
+ },
+ "macros": [],
+ "clock_pin": {
+  "name": "clk",
+  "x": 86.913,
+  "y": 0.019,
+  "face": "S",
+  "layer": "M3"
+ }
+}

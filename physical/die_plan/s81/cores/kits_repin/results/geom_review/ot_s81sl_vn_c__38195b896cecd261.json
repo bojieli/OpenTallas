@@ -1,0 +1,11 @@
+{
+ "kit": "ot_s81sl_vn_c",
+ "kit_hash": "38195b896cecd261",
+ "date": "2026-10-24T13:05-07:00",
+ "reviewer": "claude kits_repin (Read the PNG)",
+ "verdict": "PASS-COND",
+ "png": "results/geom_review/ot_s81sl_vn_c_fp.png",
+ "notes": "356.4^2, 4 SRAM 128x256 at the closed kit's sites (2x2 block centre, halo 4.32, >=70 um from W pin wall, >=70 um from E); W 912 pins at 3/um full height, E y[256] bottom 75 um at 4.5/um, N p_*/z_d 66 sparse; clk S x89.6. COND: E y bus (256 b in 75 um) is dense next to the E-bottom corner; same as closed view (routed).",
+ "pins_snapped_to_closed_lef_edge": 75,
+ "flow": "canonical: face_keep + face_guard on 1_synth.odb, clock balance to 250 before first repair, hold budget 100%, post-GRT slew 40 + FF hold, MCMM tc/bc, signoff.py final"
+}

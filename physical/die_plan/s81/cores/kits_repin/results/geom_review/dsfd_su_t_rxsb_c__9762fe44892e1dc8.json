@@ -1,0 +1,11 @@
+{
+ "kit": "dsfd_su_t_rxsb_c",
+ "kit_hash": "9762fe44892e1dc8",
+ "date": "2026-10-24T13:05-07:00",
+ "reviewer": "claude kits_repin (Read the PNG)",
+ "verdict": "PASS-COND",
+ "png": "results/geom_review/dsfd_su_t_rxsb_c_fp.png",
+ "notes": "140.4^2 no macros, util 0.6 (closed); E i_u/i_mx/i_u2 clusters 10.5/um, W o_r 8.5/um, as the closed view (routed); clk E at y125 next to i_u. COND: local pin-access density at cap.",
+ "pins_snapped_to_closed_lef_edge": 0,
+ "flow": "canonical: face_keep + face_guard on 1_synth.odb, clock balance to 250 before first repair, hold budget 100%, post-GRT slew 40 + FF hold, MCMM tc/bc, signoff.py final"
+}

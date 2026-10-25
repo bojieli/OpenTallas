@@ -40,7 +40,7 @@ def main():
     halo = float(halo.group(1)) if halo else 2.0
     macros = []
     for mline in fz.get("macros", []):
-        master, x, y, o = mline.split()
+        master, x, y = mline.split()[:3]
         lef = (K / "macros" / f"{master}.lef").read_text()
         sz = re.search(r"SIZE ([\d.]+) BY ([\d.]+)", lef)
         macros.append((master, float(x), float(y), float(sz.group(1)), float(sz.group(2))))

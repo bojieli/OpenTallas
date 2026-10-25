@@ -1,0 +1,11 @@
+{
+ "kit": "ot_s81sl_vsw_c",
+ "kit_hash": "5f3913681416b84d",
+ "date": "2026-10-24T13:05-07:00",
+ "reviewer": "claude kits_repin (Read the PNG)",
+ "verdict": "PASS",
+ "png": "results/geom_review/ot_s81sl_vsw_c_fp.png",
+ "notes": "224.64^2, 2 SRAM abutted N-S on the pin-free E side (closed kit 'at', halo 4.32); N i_* 321 pins at 2/um, S o_* 68 + clk x56.5 + rst_n; W/E pin-free. Lane logic W of the macros, open channels to N/S faces.",
+ "pins_snapped_to_closed_lef_edge": 362,
+ "flow": "canonical: face_keep + face_guard on 1_synth.odb, clock balance to 250 before first repair, hold budget 100%, post-GRT slew 40 + FF hold, MCMM tc/bc, signoff.py final"
+}
