@@ -119,22 +119,43 @@ module qkd_ctrl_pc_sched_nc #(
     always @(posedge hclk or negedge h_rn)if(!h_rn)rawslot_q<=0;else rawslot_q<=expected_raw_valid;
     always @(posedge hclk or negedge h_rn) if (!h_rn) rv_q <= 1'b0; else rv_q <= pi_v;
 
-    // ---- raw PHY return check: exact slot (historical) or elastic window (0az) ---------------------------------------
+    // ---- KV-TOK B 2026-10-24: controller BOOT WINDOW ------------------------------------------------------------------
+    // Maintenance mode before mission mode (as a memory controller's init / BIST phase). From the scheduler's reset until
+    // the HBM calendar first takes ownership of this PC (static_cmd_owner: set by the first compiled layer go, never
+    // cleared) the static queue head's column issues as soon as it is JEDEC-legal, without a calendar reservation. This
+    // is what the destructive cold-boot scratch check (qkd_hbm_boot_pc: WR, RD, WR, RD of one reserved sector, issued
+    // while the die is held in reset) needs: the calendar image that would reserve its columns is in the boot image,
+    // which loads only after the die leaves reset, which the HOST does only after every slice's check passed.
+    // The window closes on the first ownership edge and never reopens, so the compiled static schedule is unchanged:
+    // every later column needs its reservation exactly as before (lockstep vs the original controller,
+    // tools/qwen_kv_die/kv_boot_window_gate.sh). Ownership needs an idle controller (f_cmd), so no boot column is in
+    // flight when it closes. A boot column carries the observations a reserved one gets from the calendar: the write
+    // observer's expected static column (expected_sr) and, for a boot read, the elastic raw-return nominal slot RAW =
+    // PHYSICAL_CMD_EDGES 4 + HBM_RL 23 edges after its virtual reservation (qkd_static_kv_return_calendar), i.e. BRAW
+    // edges after u_ctl's col_boot register (reservation R -> sched srslot_q R+1 -> u_ctl srslot_q R+2 -> col R+3).
+    localparam integer BRAW = 4 + 23 + 1 - 3;
+    reg boot_win;
+    reg [BRAW-1:0] boot_raw;
+    wire col_boot;
     localparam integer TQA = $clog2(TQD);
     reg [6:0] raw_out;               // nominal raw returns not yet received (<= TQD outstanding tags)
     reg [8:0] raw_age;
     reg f_raw;
+    // KV-TOK B: the nominal raw slot is the calendar's (rawslot_q) or, in the boot window, a boot static read's own
+    // nominal slot (boot_raw, the same RAW edges after its virtual reservation; see BOOT WINDOW below). The two are
+    // exclusive (the window closes before the calendar can reserve); with the window closed boot_raw is 0.
+    wire raw_nom = rawslot_q | boot_raw[BRAW-1];
     always @(posedge hclk or negedge h_rn)
         if (!h_rn) begin raw_out <= 6'd0; raw_age <= 9'd0; f_raw <= 1'b0; end
         else if (ELASTIC != 0) begin
-            raw_out <= raw_out + {6'd0, rawslot_q} - {6'd0, rv_q};
-            if (rv_q && raw_out == 7'd0 && !rawslot_q) f_raw <= 1'b1;           // earlier than nominal / unsolicited
-            if (raw_out == 7'(TQD) && rawslot_q && !rv_q) f_raw <= 1'b1;        // outstanding count overflow
+            raw_out <= raw_out + {6'd0, raw_nom} - {6'd0, rv_q};
+            if (rv_q && raw_out == 7'd0 && !raw_nom) f_raw <= 1'b1;             // earlier than nominal / unsolicited
+            if (raw_out == 7'(TQD) && raw_nom && !rv_q) f_raw <= 1'b1;          // outstanding count overflow
             if (rv_q || raw_out == 7'd0) raw_age <= 9'd0;
             else if (raw_age == 9'(RAW_WD - 1)) f_raw <= 1'b1;                  // PHY late beyond watchdog
             else raw_age <= raw_age + 9'd1;
         end
-    wire raw_bad = (ELASTIC == 0) ? (rv_q != rawslot_q) : f_raw;
+    wire raw_bad = (ELASTIC == 0) ? (rv_q != raw_nom) : f_raw;
 
     // ---- command arbiter ---------------------------------------------------------------------------------------------
     wire [346:0] col_context;
@@ -152,6 +173,7 @@ module qkd_ctrl_pc_sched_nc #(
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin static_owner_q<=0;static_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;end
       else begin static_owner_q<=static_cmd_owner;static_v_q<=static_cmd[0];rdslot_q<=reserved_rd;srslot_q<=reserved_static_col;wrslot_q<=reserved_write_col;end
+    always @(posedge hclk or negedge h_rn) if (!h_rn) boot_win <= 1'b1; else if (static_owner_q) boot_win <= 1'b0;
     wire        cmd_v  = static_owner_q ? static_v_q : tc_v;
     wire [31:0] cmd    = static_owner_q ? static_d_q : tc_d;
     always @(posedge hclk or negedge hgo)
@@ -174,7 +196,7 @@ module qkd_ctrl_pc_sched_nc #(
     wire [4:0]  row_bank, col_bank, col_col;
     wire [18:0] row_row;
     ot_qkd_static_ctrl_pc_emb #(.STATIC_REFRESH(STATIC_REFRESH),.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
-        .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q), .cmd_credit(cmd_credit),
+        .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q),.boot_window(boot_win),.col_boot(col_boot), .cmd_credit(cmd_credit),
         .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
         .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
         .s_context({c_context,c_d[274:256],c_d[284:280],c_d[279:275],c_d[255:0]}),.col_context(col_context),.s_v(c_v), .s_we(c_d[285]), .s_bank(c_d[284:280]), .s_col(c_d[279:275]), .s_row(c_d[274:256]),
@@ -249,9 +271,14 @@ module qkd_ctrl_pc_sched_nc #(
     // Dedicated raw PHY pin stage: all command and write-data bits move
     // together, preserving JEDEC spacings and CWL alignment. Physical static
     // completion and KV write retirement move with the actual launched column.
-    reg [3:0] expected_sr_pipe;
-    assign expected_sr=expected_sr_pipe[3];
-    always @(posedge hclk or negedge h_rn)if(!h_rn)expected_sr_pipe<=0;else expected_sr_pipe<={expected_sr_pipe[2:0],reserved_static_col};
+    // KV-TOK B: expected_sr is ONE flop: the reservation 4 edges late (was expected_sr_pipe[3]) or a boot column one
+    // edge late (aligned with physical_col_sr <= col_sr); boot_raw delays a boot READ column to its nominal raw slot.
+    reg [2:0] expected_sr_pipe;
+    reg expected_sr_q;
+    assign expected_sr=expected_sr_q;
+    always @(posedge hclk or negedge h_rn)if(!h_rn)begin expected_sr_pipe<=0;expected_sr_q<=0;boot_raw<=0;end
+      else begin expected_sr_pipe<={expected_sr_pipe[1:0],reserved_static_col};expected_sr_q<=expected_sr_pipe[2]|col_boot;
+        boot_raw<={boot_raw[BRAW-2:0],col_boot&&!col_we};end
     always @(posedge hclk)physical_context<=col_context;
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin po<=0;physical_col_sr<=0;end
@@ -274,7 +301,7 @@ module qkd_ctrl_pc_sched_nc #(
     // all legal traffic; an unsolicited zero-debt landing still raises drain_fault_hbm and drops idle_hbm one edge later.
     // e_l_v now loads only its pin flop.
     wire hbm_drain_activity=obs_commit_valid||rd_kv||tc_v||cmd_v||static_v_q||c_v||s_cr||
-      row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||kv_v||em_v||l_v||native_commit_valid;
+      row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||(|boot_raw)||kv_v||em_v||l_v||native_commit_valid;
     reg hbm_debt_zero_q;reg [1:0] hbm_quiet_q;
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin hbm_debt_zero_q<=0;hbm_quiet_q<=0;end
@@ -297,7 +324,7 @@ module qkd_ctrl_pc_sched_nc #(
         else idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0&&
           !tc_v&&!cmd_v&&!static_v_q&&!c_v&&!s_cr&&
           dv==0&&!row_v&&!col_v&&!po[0]&&!po[28]&&
-          !rv_q&&!rawslot_q&&!kv_v&&!em_v&&!l_v&&!e_l_v&&!native_commit_valid&&!obs_commit_valid&&
+          !rv_q&&!rawslot_q&&!(|boot_raw)&&!kv_v&&!em_v&&!l_v&&!e_l_v&&!native_commit_valid&&!obs_commit_valid&&
           !drain_fault_hbm&&!fo&&!f_ecdc;
       end
 endmodule
