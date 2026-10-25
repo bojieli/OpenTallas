@@ -46,15 +46,16 @@ wire  g_su_fault,d_su_fault;
 wire [15:0] g_su_prog,d_su_prog;
 wire [15:0] g_su_rows,d_su_rows;
 wire  g_vm_fault,d_vm_fault;
+reg [7:0] late_l_retire=0,late_l_last=0;reg late_rd_v=0;always @(posedge ck)begin late_l_retire<=l_retire;late_l_last<=l_last;late_rd_v<=rd_v;end
 qfd_dv_s8_suvm_rp1 #(.MIF(0)) g(.ck(ck),.rst_n(rst_n),.su_cmd(su_cmd),.gb(g_gb),.gv(g_gv),.lv1(g_lv1),.pd1(g_pd1),.va_re(va_re),.vb_re(vb_re),.vc_re(vc_re),.cr_re(cr_re),.vm_we(vm_we),.kv_we(kv_we),.l_retire(l_retire),.l_last(l_last),.l_fault(l_fault),.l_wrom_re(l_wrom_re),.va_addr(va_addr),.vb_addr(vb_addr),.vc_addr(vc_addr),.cr_addr(cr_addr),.vm_waddr(vm_waddr),.l_wrom_addr(l_wrom_addr),.vm_wdata(vm_wdata),.va_q(g_va_q),.vb_q(g_vb_q),.vc_q(g_vc_q),.cr_q(g_cr_q),.rd_v(rd_v),.red_busy(red_busy),.red_fault(red_fault),.w16_we(w16_we),.w16_addr(w16_addr),.w16_data(w16_data),.w1_we(w1_we),.w1_addr(w1_addr),.w1_data(w1_data),.tw_we(tw_we),.tw_kind(tw_kind),.tw_addr(tw_addr),.tw_data(tw_data),.su_nr(g_su_nr),.su_idle(g_su_idle),.su_fault(g_su_fault),.su_prog(g_su_prog),.su_rows(g_su_rows),.vm_fault(g_vm_fault));
-qfd_dv_s8_suvm_rp1 #(.MIF(1)) d(.ck(ck),.rst_n(rst_n),.su_cmd(su_cmd),.gb(d_gb),.gv(d_gv),.lv1(d_lv1),.pd1(d_pd1),.va_re(va_re),.vb_re(vb_re),.vc_re(vc_re),.cr_re(cr_re),.vm_we(vm_we),.kv_we(kv_we),.l_retire(l_retire),.l_last(l_last),.l_fault(l_fault),.l_wrom_re(l_wrom_re),.va_addr(va_addr),.vb_addr(vb_addr),.vc_addr(vc_addr),.cr_addr(cr_addr),.vm_waddr(vm_waddr),.l_wrom_addr(l_wrom_addr),.vm_wdata(vm_wdata),.va_q(d_va_q),.vb_q(d_vb_q),.vc_q(d_vc_q),.cr_q(d_cr_q),.rd_v(rd_v),.red_busy(red_busy),.red_fault(red_fault),.w16_we(w16_we),.w16_addr(w16_addr),.w16_data(w16_data),.w1_we(w1_we),.w1_addr(w1_addr),.w1_data(w1_data),.tw_we(tw_we),.tw_kind(tw_kind),.tw_addr(tw_addr),.tw_data(tw_data),.su_nr(d_su_nr),.su_idle(d_su_idle),.su_fault(d_su_fault),.su_prog(d_su_prog),.su_rows(d_su_rows),.vm_fault(d_vm_fault));
+qfd_dv_s8_suvm_rp1 #(.MIF(1)) d(.ck(ck),.rst_n(rst_n),.su_cmd(su_cmd),.gb(d_gb),.gv(d_gv),.lv1(d_lv1),.pd1(d_pd1),.va_re(va_re),.vb_re(vb_re),.vc_re(vc_re),.cr_re(cr_re),.vm_we(vm_we),.kv_we(kv_we),.l_retire(late_l_retire),.l_last(late_l_last),.l_fault(l_fault),.l_wrom_re(l_wrom_re),.va_addr(va_addr),.vb_addr(vb_addr),.vc_addr(vc_addr),.cr_addr(cr_addr),.vm_waddr(vm_waddr),.l_wrom_addr(l_wrom_addr),.vm_wdata(vm_wdata),.va_q(d_va_q),.vb_q(d_vb_q),.vc_q(d_vc_q),.cr_q(d_cr_q),.rd_v(late_rd_v),.red_busy(red_busy),.red_fault(red_fault),.w16_we(w16_we),.w16_addr(w16_addr),.w16_data(w16_data),.w1_we(w1_we),.w1_addr(w1_addr),.w1_data(w1_data),.tw_we(tw_we),.tw_kind(tw_kind),.tw_addr(tw_addr),.tw_data(tw_data),.su_nr(d_su_nr),.su_idle(d_su_idle),.su_fault(d_su_fault),.su_prog(d_su_prog),.su_rows(d_su_rows),.vm_fault(d_vm_fault));
 wire [1313:0] ga={g_gb,g_gv,g_lv1,g_pd1,g_su_nr,g_su_idle,g_su_fault,g_su_prog,g_su_rows};
 wire [1313:0] da={d_gb,d_gv,d_lv1,d_pd1,d_su_nr,d_su_idle,d_su_fault,d_su_prog,d_su_rows};
 reg [1313:0] prev=0;always @(posedge ck)prev<=ga;
 initial begin
-l_retire=255;l_last=255;rd_v=1;tw_kind=3;
+tw_kind=3;
 for(cyc=0;cyc<1400;cyc=cyc+1)begin
-@(negedge ck);rst_n=(cyc>15);tw_we=(cyc>=32&&cyc<48);tw_addr=(cyc-32)*4;
+@(negedge ck);rst_n=(cyc>15);tw_we=(cyc>=32&&cyc<48);tw_addr=(cyc-32);l_retire=(cyc>112&&cyc%128>=112)?255:0;l_last=l_retire;rd_v=(l_retire!=0);
 tw_data=0;tw_data[18:1]=1;tw_data[36:19]=8;tw_data[512+18:513]=2;tw_data[512+36:512+19]=16;
 su_cmd=0;if(cyc>=96&&cyc%128==96)su_cmd={1'b1,9'(2*((cyc/128)%8))};
 @(posedge ck);#1;
