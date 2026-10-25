@@ -144,7 +144,8 @@ def main():
             tog.append(f"o_{p}")
         else:
             tog.append(f"i_{p}")
-    L.append(f"  wire [99999:0] tg = {{{', '.join(tog)}}}; reg [99999:0] tg_q = 0;")
+    L.append(f"  wire [99999:0] tg = {{{', '.join(tog)}}}; reg [99999:0] tg_q = 0;" if tog else
+             "  wire [99999:0] tg = 0; reg [99999:0] tg_q = 0;")
     L.append("  integer n, mis = 0, dzc = 0, edges = 0, tgc = 0;")
     L.append("  always @(negedge ck) if (rn) begin edges = edges + 1;")
     L.append("    if (vo !== vn) begin mis = mis + 1; if (mis < 6) $display(\"MISMATCH edge=%0d\", edges); end")
@@ -165,7 +166,7 @@ def main():
                 L.append(f"      i_{p}[{int(bb)}] = ($urandom % {int(bn)} == 0);")
     L.append("    end")
     L.append(f"    $display(\"CORE MITER {mod} %s mismatches=%0d dropped_bit_nonzero=%0d edges=%0d dropped_port_changes=%0d\","
-             " (mis == 0 && dzc == 0 && tgc > 100) ? \"PASS\" : \"FAIL\", mis, dzc, edges, tgc);")
+             f" (mis == 0 && dzc == 0 && {'tgc > 100' if tog else 'edges > 100'}) ? \"PASS\" : \"FAIL\", mis, dzc, edges, tgc);")
     L.append("    $finish;")
     L.append("  end")
     L.append("endmodule")

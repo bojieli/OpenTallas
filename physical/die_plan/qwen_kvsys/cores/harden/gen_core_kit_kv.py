@@ -450,8 +450,8 @@ def main():
         from astk_write_decode import apply_kit as wdec_apply
         wdec_apply(kd / "rtl")
         (kd / "astk_wdec_delta.json").write_text(json.dumps(dict(added_cycles=0,
-            zn=dict(lo_r_per_zone=8, cause="tq/zq -> 15-b cb<T compare -> 128-load sd row write enable (TT -61.24, 197 EP)",
-                    fix="lo_r[j] = ({S,sgam(L,j),000} < T[8:0]) registered from next state (zc, tc[9:1]); pb = 5-b compare + 8:1"),
+            zn=dict(lo_r_per_zone=8, kt_ke_r_per_zone=32, cause="tq/zq -> 15-b cb<T compare -> 128-load sd row write enable (TT -61.24, 197 EP)",
+                    fix="lo_r[j] = ({S,sgam(L,j),000} < T[8:0]) registered from next state (zc, tc[9:1]); pb = kt_r[k] | ke_r[k] & lo_r[slot] (16:1, 16:1, 8:1 selects)"),
             ctl=dict(zh_replicas=4, zk_r_copies=17, cause="zh -> z_s 4:1 select over z_hd -> ap (30 EP)"),
             miter="core_miter old r3 corner kits vs master, --bias aq start rare; mutants lo_r / zh replica / ES swap"),
             indent=1) + "\n")

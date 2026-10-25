@@ -8,9 +8,10 @@ Failing-path classification of the master kv3_astk__190.08x181.44 CTS probe (Cod
   * ctl (30 EP, 322 paths): zh[1:0] -> 4:1 select of z_s over z_hd (128 loads + 2nd broadcast) -> ap[42:1]; 7 paths
         from the 5 g_zk zk_r copies (32-b x 16-entry zf_m read each).
 Fix (industry practice: next-state precompute registers + register duplication per consumer slice, 0 added cycles):
-  * zn  : pb = ({0,k} < T[13:9]) | ({0,k} == T[13:9] & lo_r[slot[3:1]]) where lo_r[j] = ({S, sgam(L, j), 000} < T[8:0])
-          is registered from the NEXT state of zc_q / tq (zc, tc[9:1]; neither has a reset), so lo_r equals the
-          combinational term on every edge.  The 15-b compare leaves the cycle; a 5-b compare + 8:1 select remains.
+  * zn  : pb = kt_r[k] | (ke_r[k] & lo_r[slot[3:1]]) where lo_r[j] = ({S, sgam(L, j), 000} < T[8:0]),
+          kt_r[i] = ({0,i} < T[13:9]), ke_r[i] = ({0,i} == T[13:9]) are registered from the NEXT state of zc_q / tq
+          (zc, tc; neither has a reset), so they equal the combinational terms on every edge.  The 15-b compare and
+          T (tq) leave the write cycle: pb = two 16:1 + one 8:1 selects by the zq k/slot fields (40 regs/zone).
           tc is internal (ctl tc face copies) in every zn incl. the chain head, so no logic is added on a core pin.
   * ctl : zh gets 4 kept same-edge replicas (keep_hierarchy counter module, identical next state:
           start ? 0 : (!l_pend && z_emit) ? +1 : hold, async reset rn_q), one per 8-b slice of z_s; the zk_r copies go
@@ -57,7 +58,17 @@ def zn(text, name, mut=False):
         "        lo_n[j_] = {zc_n[1:0], sg_n, 3'b000} < tc[9:1];\n"
         "    end\n"
         f"    always @(posedge ck) lo_r <= lo_n{xor};\n"
-        "    wire        pb = (({1'b0, k} < T[13:9]) || ({1'b0, k} == T[13:9] && lo_r[slot[3:1]])) && (`KVD_AKMUT != 3);\n")
+        "    // kt_r[i] = ({0,i} < T[13:9]), ke_r[i] = ({0,i} == T[13:9]), registered from tc[14:10]: T leaves the write cycle\n"
+        "    reg  [15:0] kt_n, ke_n, kt_r, ke_r;\n"
+        "    reg  [4:0]  ki_;\n"
+        "    integer     i_;\n"
+        "    always @* for (i_ = 0; i_ < 16; i_ = i_ + 1) begin\n"
+        "        ki_ = i_;\n"
+        "        kt_n[i_] = ki_ < tc[14:10];\n"
+        "        ke_n[i_] = ki_ == tc[14:10];\n"
+        "    end\n"
+        "    always @(posedge ck) begin kt_r <= kt_n; ke_r <= ke_n; end\n"
+        "    wire        pb = (kt_r[k] || (ke_r[k] && lo_r[slot[3:1]])) && (`KVD_AKMUT != 3);\n")
     s = s.replace(old, new)
     return text[:i] + s + text[j:]
 
