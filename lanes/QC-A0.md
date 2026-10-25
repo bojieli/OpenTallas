@@ -220,3 +220,8 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   re-close the partitions holding u_u_suvm; tell TOK-QK (lanes/TOK-QW.md) if QC prefers to own the RTL change itself.
 - Also pending for the capacity rebind: QC-R1 (F1 u_d2d_rom TXDP 32'h0a010308), QC-R2 (F7 ovl_rope pair dc11eabc33), QC-R3 (F5 p192
   macro) -- details lanes/KV-TOK.md "REQUESTS from TOK-QK to lane QC". Send me the bind dir when it lands (xt1 both re-run).
+- 2026-10-24 21:15 PDT QC: CAPACITY PLAN READY (again): claude/qc-cap-1024r@806bcb4058 (plan sha d5114a62f9a26612). Final bind with R8 + re-derived CB16 pads:
+  0 errors, verify PASS 2,723,870 matched / 0 mismatched / lint 0 (epyc1:/srv/opentallas-scratch2/claude/qc/bind_eq_cb16; recipe
+  bind/asbuilt_capacity_eq_cb16.json). R8 pads 424,267 + CB16 789,504. Sub-agent running xt1 both lead-from-constants + mutant + schedule
+  gate on this bind (branch claude/qc-tok-cap-eq-1024). ELEM-QK G3 re-kits of QC types can now use bind_eq_cb16 kit-rtl (blocked
+  on reset-rule tooling from the RESET lane + COORD ft-layer decision for ft kits).
