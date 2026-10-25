@@ -53,7 +53,8 @@
         "implementation": "3 ordinary synchronous data pipeline FF; synchronous control reset",
         "hold_low_edges_min": 3,
         "transaction_data_cycles_delta": 0,
-        "gate": "actual two SRAM cold/warm 73edges 4reads + wrong-address and wrong-depth mutants"
+        "gate": "actual two SRAM cold/warm 73edges 4reads + wrong-address and wrong-depth mutants",
+        "flat_control_cut_gate": "Exact source SHA30726e62; eight changed flops compared with optin buffer source for2000edges/27warm reset epochs PASS; local control cone only, not full-root LEC"
       }
     }
   ],
