@@ -13,6 +13,9 @@ python3 "$D/gen_plan.py" --variant "$V" --census "$I/qc_census.json.gz" --slice-
   --slice-fp-e "$I/fp_e.json" --slice-record "$I/s8_lp_record.json" --su-split "$I/slice_grid.json" \
   --slice-face-map "$I/slice2_face_map.json" --out "$O/die_plan.json"
 python3 "$D/apply_start_broadcast.py" "$O/die_plan.json"
+# PLAN-DELTA/QC 10-25: approved TYPE-REDUCE items on non-PATH types (sle_hc3 -> slw_hc3, E su_lane -> W tables, frozen
+# wavefront reset.in_sites); see results/plan_delta_1025/qc/README.md
+[ "$V" = B ] && python3 "$R/results/plan_delta_1025/qc/delta_qc.py" "$O/die_plan.json"
 python3 "$T/gen.py" latency "$O/die_plan.json" --inplace --out "$O"
 # PLAN-TOOL5 die IO windows (die_io.json sidecar, read by check.py): host link = ucie_kv (d2d_rom <-> KV/system die,
 # which carries the host SerDes); S0-S2 SerDes = collective links; coll UCIe on the W edge in coll_ucie
