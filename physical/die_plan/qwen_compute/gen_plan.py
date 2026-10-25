@@ -2568,6 +2568,7 @@ def declare_a0_hard_cores(P):
 # su_l partition keeps a 190.08-um macro-free V channel on its bus face side (ft stations + face pin registers) and a
 # 17.28-um strip on the far side.  Rows (SRH 1339.2): 34.56 | core | 51.84 | core | 103.68 (glue tap gap, partition
 # centre) | core | 51.84 | core | 25.92.  QC_SU_LANE_CORE=535.68x207.36 with QC_SRH=1080 restores the old geometry.
+SU_LANE_OBS_MAX = __import__("os").environ.get("QC_SU_LANE_OBS_MAX", "M6")   # PATH-QC-PLAN-D3: M7 = over-core transit
 SU_LANE_CORE = tuple(float(v) for v in __import__("os").environ.get("QC_SU_LANE_CORE", "414.72x267.84").split("x"))
 
 
@@ -2677,8 +2678,11 @@ def declare_su_hard_cores(P, outdir, su_directed):
                                          "frame": "core R0, origin (0,0)", "source": "QC-P6-G0C top-down plan pins",
                                          "pins": pins}, indent=0) + "\n")
                 lv = [x for x in t["contents"] if re.match(rf"^u_(exp|rsq|head|rcp|lrly){lane}$", x["inst"])]
+                # PATH-QC-PLAN-D3 10-25: the lane core routes M1-M6 (obs_max M6, its pins are M4/M5); M7 over it is
+                # the partition's straight N<->S transit layer (su_l1 rsn M7-only over u_lane4..7, stations in the gap
+                # rows).  Without it the G2 probe obstructed M1-M7 (core named by no content leaf -> partition ceiling).
                 hcs.append(dict(inst=inst, module=f"qfd_qc_su_lane_{side}", origin_um=[SU_LANE_X[reg], y],
-                                outline_um=[cw, ch], orient="R0", track_offset_um=[0.0, 0.0],
+                                outline_um=[cw, ch], orient="R0", track_offset_um=[0.0, 0.0], obs_max=SU_LANE_OBS_MAX,
                                 pins_file=str(f.relative_to(outdir)),
                                 note=f"SU lane-group {lane} hard core = {', '.join(x['inst'] for x in lv)} "
                                      f"(closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. "

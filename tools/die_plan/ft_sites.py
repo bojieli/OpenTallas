@@ -207,6 +207,42 @@ def m7_band(a,b,pad=M7_BAND_PAD):
     return (min(a[:,0].min(),b[:,0].min())-pad,max(a[:,0].max(),b[:,0].max())+pad)
 
 
+def ribbon_allocate(al,target_y,px,boxes,max_rows=200):
+    """PATH-QC-PLAN-D3 (G2 slw_su_l1 ov 8,795 M6-H with blob clusters): an M7 over-core station is a RIBBON under its
+    bus: bit k (by pin x) takes the k-th free legal site in (column, row) order of a row band at target_y across the
+    bus x span, so every bit's site sits within ~a column pitch of its own pin x and its legs are straight V on M7
+    (the blob allocator shifted bits up to ~50 um in x, and GRT put those H jogs over the cores: M2/M4/M6 obstructed).
+    The band grows row by row (alternately up / down) inside the gap row (no row may enter a core + halo box)."""
+    px=np.asarray(px,float);n=len(px);order=np.argsort(px,kind='stable')
+    lo=max(al.ix0,math.floor((px.min()-al.ox-al.cw/2)/al.cp));hi=min(al.ix1,math.ceil((px.max()-al.ox-al.cw/2)/al.cp))
+    ix=np.arange(lo,hi+1);xs=al.ox+ix*al.cp+al.cw/2
+    r0=min(max(al.iy0,int(round((target_y-al.oy-al.ch/2)/al.rp))),al.iy1)
+    rows=[];step=0;picked=[]
+    while len(picked)<n:
+        cand=[r0+step] if step==0 else [r0+step,r0-step]
+        step+=1
+        if step>max_rows:raise ValueError(f'ribbon: only {len(picked)} sites for {n} at y {target_y:.2f}')
+        for iy in cand:
+            if not al.iy0<=iy<=al.iy1:continue
+            y=al.oy+iy*al.rp+al.ch/2
+            ok=np.ones(len(ix),bool)
+            for a,b,c,d in boxes:
+                if b-1e-8<y+al.ch/2 and y-al.ch/2<d+1e-8:ok &= ~((xs-al.cw/2<c)&(xs+al.cw/2>a))
+            ids=(iy-al.iy0)*al.nx+(ix-al.ix0)
+            if al.used:ok &= np.fromiter((int(k) not in al.used for k in ids),bool,count=len(ids))
+            rows.append(iy);picked += [(int(i),int(iy)) for i,good in zip(ix,ok) if good]
+    picked.sort()                                                 # (column, row) order = x-monotone ribbon
+    # keep the n sites nearest the band centre row while preserving column-major order
+    rank=sorted(range(len(picked)),key=lambda k:(abs(picked[k][1]-r0),picked[k]))[:n]
+    chosen=sorted(picked[k] for k in rank)
+    sites=np.empty((n,2))
+    for k,(i,iy) in zip(order,chosen):
+        sites[k]=(al.ox+i*al.cp+al.cw/2,al.oy+iy*al.rp+al.ch/2)
+    al.used.update((iy-al.iy0)*al.nx+i-al.ix0 for i,iy in chosen)
+    return sites,dict(count=n,ribbon_rows=len(set(r for _,r in chosen)),span_um=[float(np.ptp(sites[:,0])+al.cw),
+                                                                               float(np.ptp(sites[:,1])+al.ch)])
+
+
 def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40.,avoid_core_routes=True,bit_order=False):
     """Strict actual-bit mode (QC 906dca298): EVERY bit leg keeps an L route outside all core halos,
     row-allocation corner cuts are backtracked, and a short direct leg keeps station0 only."""
@@ -257,7 +293,9 @@ def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radi
                            last_ok=last_ok[ids] if last_ok is not None else None)
                 points=[];stats=[]
                 for index in path:
-                    try:p,st=allocator.allocate(free[index],width,max_radius_um=max_radius_um)
+                    try:
+                        if over:p,st=ribbon_allocate(allocator,free[index][1],(a[:,0]+b[:,0])/2,boxes)
+                        else:p,st=allocator.allocate(free[index],width,max_radius_um=max_radius_um)
                     except ValueError:blocked_targets.add(int(ids[index]));break
                     points.append(p);stats.append(st)
                 else:
@@ -280,7 +318,7 @@ def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radi
                     done=True;break
             if not done:raise ValueError(f'{tn}/{name}: no row-legal allocation after100 target alternatives')
             ordered=False
-            if bit_order and points:
+            if bit_order and points and not over:
                 cand=bit_ordered(a,points,b);cc=[a,*cand,b]
                 ch=[float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(cc,cc[1:])]
                 if max(ch)<=budget+1e-6 and (not rboxes or all(l_route_clear(p,q,rboxes).all() for p,q in zip(cc,cc[1:]))):
