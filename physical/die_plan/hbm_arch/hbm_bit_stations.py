@@ -18,7 +18,7 @@ import bit_stations as shared
 def repair(plan, log=print, only_types=None):
     before = S.Plan(json.loads(json.dumps(plan)))
     old = {lid: before.lane_latency(lid)['cycles'] for lid in before.lanes}
-    report = shared.repair(plan, log=log, only_types=only_types)
+    report = shared.repair(plan, log=log, only_types=only_types, avoid_core_routes=True)
     report['unfixed'] = [r for r in shared.geometry_failures(plan) if only_types is None or r['type'] in only_types]
     after = S.Plan(plan)
     report['lane_cycles'] = [dict(lane=lid, before=old[lid], after=after.lane_latency(lid)['cycles'],
