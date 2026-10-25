@@ -1,46 +1,46 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/srv/opentallas-scratch2/claude/s81-plan3/int/g0c/die_plan.json",
+ "plan": "/srv/opentallas-scratch2/claude/wt/kits-spare3-st/physical/die_plan/s81/die_plan.json",
  "verdict": "PASS",
  "mode": "G0C",
  "errors": 0,
- "warnings": 1287,
+ "warnings": 1273,
  "summary": {
   "die": "s81",
   "partitions": 398,
   "types": {
-   "types": 177,
+   "types": 171,
    "partitions": 398,
-   "singleton_types": 151,
+   "singleton_types": 140,
    "max_instances": 60,
-   "near_duplicate_groups": 10,
-   "near_duplicate_types": 22,
-   "mergeable_saving": 12
+   "near_duplicate_groups": 6,
+   "near_duplicate_types": 12,
+   "mergeable_saving": 6
   },
-  "ports": 2302,
-  "lanes": 869,
-  "bits": 1105393,
+  "ports": 2306,
+  "lanes": 873,
+  "bits": 1105401,
   "taps_cores": {
-   "taps": 74,
-   "hard_cores": 4094,
-   "core_pins": 3290767,
+   "taps": 76,
+   "hard_cores": 3986,
+   "core_pins": 3235641,
    "core_pins_off_track": 0,
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/srv/opentallas-scratch2/claude/s81-plan3/int/g0c/cells_est.json"
+    "/srv/opentallas-scratch2/claude/wt/kits-spare3-st/physical/die_plan/s81/cells_est.json"
    ],
    "no_cells": []
   },
   "core_faces": {
-   "groups": 14389,
+   "groups": 13713,
    "groups_away": 0,
-   "pins": 954572,
-   "pins_away": 14753,
+   "pins": 924846,
+   "pins_away": 14291,
    "types_away": 0,
-   "cores": 4094,
-   "cores_unchecked": 3283,
-   "groups_side": 676
+   "cores": 3986,
+   "cores_unchecked": 3211,
+   "groups_side": 648
   },
   "complete": {
    "cells": 0,
@@ -53,8 +53,8 @@
    "internal_station": 0
   },
   "g0c": {
-   "types": 177,
-   "clean": 177,
+   "types": 171,
+   "clean": 171,
    "die_level": {},
    "g3_eligible": [
     "bk_sel__t2",
@@ -137,8 +137,6 @@
     "ot_s81sl_leaf__t45",
     "ot_s81sl_leaf__t46",
     "ot_s81sl_leaf__t47",
-    "ot_s81sl_leaf__t48",
-    "ot_s81sl_leaf__t49",
     "ot_s81sl_leaf__t5",
     "ot_s81sl_leaf__t50",
     "ot_s81sl_leaf__t51",
@@ -154,8 +152,6 @@
     "ot_s81sl_leaf__t60",
     "ot_s81sl_leaf__t61",
     "ot_s81sl_leaf__t62",
-    "ot_s81sl_leaf__t63",
-    "ot_s81sl_leaf__t64",
     "ot_s81sl_leaf__t65",
     "ot_s81sl_leaf__t66",
     "ot_s81sl_leaf__t67",
@@ -181,8 +177,6 @@
     "serdes__t2",
     "serdes__t3",
     "serdes__t4",
-    "serdes__t5",
-    "serdes__t6",
     "slice_station__t12",
     "slice_station__t14",
     "slice_station__t17",
@@ -242,7 +236,8 @@
    "channel_area_mm2": 18.794380492800016,
    "uncovered_mm2": 0.0,
    "fill": 0.9762282798190784,
-   "planned_channels": []
+   "planned_channels": [],
+   "station_macro_intersections": 0
   },
   "worst_faces": [
    {
@@ -342,13 +337,13 @@
     "reach_um": 405.0
    },
    {
-    "lane": "cb__s_0N_LP__bk_sel",
-    "hop_um": 374.2,
+    "lane": "coll__s_7S_LP__lk_ES1",
+    "hop_um": 380.1,
     "reach_um": 405.0
    },
    {
-    "lane": "unit__seqhost__s_7N_LP",
-    "hop_um": 372.6,
+    "lane": "cb__s_0N_LP__bk_sel",
+    "hop_um": 374.2,
     "reach_um": 405.0
    }
   ],
@@ -3465,7 +3460,11 @@
    "flt__s_0N_LP__s_0N_C": 2,
    "flt__s_0S_LP__s_0S_C": 2,
    "flt__s_7N_LP__s_7N_C": 2,
-   "flt__s_7S_LP__s_7S_C": 2
+   "flt__s_7S_LP__s_7S_C": 2,
+   "lpc__s_0N_C__s_0N_LP": 2,
+   "lpc__s_0S_C__s_0S_LP": 2,
+   "lpc__s_7N_C__s_7N_LP": 2,
+   "lpc__s_7S_C__s_7S_LP": 2
   },
   "r8": {
    "checked": false
@@ -3476,13 +3475,13 @@
    "root": "s_4S_L3",
    "hop_um": 405.0,
    "relay_um": 405.0,
-   "max_release": 100,
+   "max_release": 101,
    "max_die_hop_um": 378.0,
    "unreachable": []
   },
   "seams": {
    "nets": {
-    "abutted": 1107695,
+    "abutted": 1107707,
     "channel": 0
    },
    "pairs": {
@@ -4627,7 +4626,7 @@
      "channel": 0
     },
     "s_0S_C|s_0S_LP": {
-     "abutted": 2214,
+     "abutted": 2217,
      "channel": 0
     },
     "s_0N_C|s_0N_L0": {
@@ -4639,7 +4638,7 @@
      "channel": 0
     },
     "s_0N_C|s_0N_LP": {
-     "abutted": 2214,
+     "abutted": 2217,
      "channel": 0
     },
     "s_1S_C|s_1S_L0": {
@@ -4823,7 +4822,7 @@
      "channel": 0
     },
     "s_7S_C|s_7S_LP": {
-     "abutted": 2214,
+     "abutted": 2217,
      "channel": 0
     },
     "s_7N_C|s_7N_L0": {
@@ -4835,7 +4834,7 @@
      "channel": 0
     },
     "s_7N_C|s_7N_LP": {
-     "abutted": 2214,
+     "abutted": 2217,
      "channel": 0
     },
     "s_3S_L2|seqhost": {
@@ -5470,8 +5469,8 @@
     },
     {
      "at_um": 10203.84,
-     "bits": 21973,
-     "abutted_bits": 21973,
+     "bits": 21979,
+     "abutted_bits": 21979,
      "route_bits": 0,
      "tracks": 541296,
      "ratio": 0.0406
@@ -5534,8 +5533,8 @@
     },
     {
      "at_um": 21746.88,
-     "bits": 21903,
-     "abutted_bits": 21903,
+     "bits": 21909,
+     "abutted_bits": 21909,
      "route_bits": 0,
      "tracks": 541296,
      "ratio": 0.0405
@@ -5932,16 +5931,16 @@
      "frac": 0.945
     },
     {
+     "lane": "coll__s_7S_LP__lk_ES1",
+     "hop_um": 380.1,
+     "reach_um": 405.0,
+     "frac": 0.939
+    },
+    {
      "lane": "cb__s_0N_LP__bk_sel",
      "hop_um": 374.2,
      "reach_um": 405.0,
      "frac": 0.924
-    },
-    {
-     "lane": "unit__seqhost__s_7N_LP",
-     "hop_um": 372.6,
-     "reach_um": 405.0,
-     "frac": 0.92
     }
    ]
   },
@@ -6276,7 +6275,7 @@
      }
     }
    ],
-   "total_types": 177
+   "total_types": 171
   },
   "xdie_counts": {
    "hard_cores": 0,
@@ -6363,12 +6362,12 @@
   {
    "level": "WARN",
    "check": "types",
-   "msg": "near-duplicate types ['serdes__t1', 'serdes__t16', 'serdes__t5'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   "msg": "near-duplicate types ['serdes__t1', 'serdes__t16'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
   },
   {
    "level": "WARN",
    "check": "types",
-   "msg": "near-duplicate types ['serdes__t14', 'serdes__t2', 'serdes__t6'] (3): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+   "msg": "near-duplicate types ['serdes__t14', 'serdes__t2'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
   },
   {
    "level": "WARN",
@@ -6384,26 +6383,6 @@
    "level": "WARN",
    "check": "types",
    "msg": "near-duplicate types ['ot_s81sl_leaf__t10', 'ot_s81sl_leaf__t74'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
-  },
-  {
-   "level": "WARN",
-   "check": "types",
-   "msg": "near-duplicate types ['ot_s81sl_leaf__t24', 'ot_s81sl_leaf__t63'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
-  },
-  {
-   "level": "WARN",
-   "check": "types",
-   "msg": "near-duplicate types ['ot_s81sl_leaf__t25', 'ot_s81sl_leaf__t64'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
-  },
-  {
-   "level": "WARN",
-   "check": "types",
-   "msg": "near-duplicate types ['ot_s81sl_leaf__t40', 'ot_s81sl_leaf__t49'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
-  },
-  {
-   "level": "WARN",
-   "check": "types",
-   "msg": "near-duplicate types ['ot_s81sl_leaf__t44', 'ot_s81sl_leaf__t48'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
   },
   {
    "level": "WARN",
@@ -7224,18 +7203,6 @@
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t48: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
-   "type": "ot_s81sl_leaf__t48"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t49: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
-   "type": "ot_s81sl_leaf__t49"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
    "msg": "type ot_s81sl_leaf__t50: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
    "type": "ot_s81sl_leaf__t50"
   },
@@ -7316,18 +7283,6 @@
    "check": "core_faces",
    "msg": "type ot_s81sl_leaf__t62: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
    "type": "ot_s81sl_leaf__t62"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t63: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
-   "type": "ot_s81sl_leaf__t63"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t64: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
-   "type": "ot_s81sl_leaf__t64"
   },
   {
    "level": "WARN",
@@ -8173,42 +8128,6 @@
    "check": "schema",
    "msg": "type serdes__t4: bus coll_o0 has no leaf binding",
    "type": "serdes__t4"
-  },
-  {
-   "level": "WARN",
-   "check": "clock",
-   "msg": "type serdes__t5: farthest boundary point 2056 um from the tap (> 2 hops)",
-   "type": "serdes__t5"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type serdes__t5: bus coll_i0 has no leaf binding",
-   "type": "serdes__t5"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type serdes__t5: bus coll_o0 has no leaf binding",
-   "type": "serdes__t5"
-  },
-  {
-   "level": "WARN",
-   "check": "clock",
-   "msg": "type serdes__t6: farthest boundary point 2056 um from the tap (> 2 hops)",
-   "type": "serdes__t6"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type serdes__t6: bus coll_i0 has no leaf binding",
-   "type": "serdes__t6"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type serdes__t6: bus coll_o0 has no leaf binding",
-   "type": "serdes__t6"
   },
   {
    "level": "WARN",
@@ -10013,6 +9932,12 @@
   {
    "level": "WARN",
    "check": "schema",
+   "msg": "type dsdv_slice_lepw_mus_LP__t2: bus lpc_i0 has no leaf binding",
+   "type": "dsdv_slice_lepw_mus_LP__t2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
    "msg": "type ot_s81sl_leaf__t1: bus leafdn_i0 has no leaf binding",
    "type": "ot_s81sl_leaf__t1"
   },
@@ -10205,6 +10130,12 @@
   {
    "level": "WARN",
    "check": "schema",
+   "msg": "type dsdv_slice_lepw_mus_C__t1: bus lpc_o0 has no leaf binding",
+   "type": "dsdv_slice_lepw_mus_C__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
    "msg": "type ot_s81sl_leaf__t3: bus leafdn_i0 has no leaf binding",
    "type": "ot_s81sl_leaf__t3"
   },
@@ -10356,6 +10287,12 @@
    "level": "WARN",
    "check": "schema",
    "msg": "type dsdv_slice_lepw_mu_LP__t2: bus ctrl_o0 has no leaf binding",
+   "type": "dsdv_slice_lepw_mu_LP__t2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type dsdv_slice_lepw_mu_LP__t2: bus lpc_i0 has no leaf binding",
    "type": "dsdv_slice_lepw_mu_LP__t2"
   },
   {
@@ -10560,6 +10497,12 @@
    "level": "WARN",
    "check": "schema",
    "msg": "type dsdv_slice_lepw_mu_C__t1: bus lepf_o0 has no leaf binding",
+   "type": "dsdv_slice_lepw_mu_C__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type dsdv_slice_lepw_mu_C__t1: bus lpc_o0 has no leaf binding",
    "type": "dsdv_slice_lepw_mu_C__t1"
   },
   {
@@ -12401,30 +12344,6 @@
   {
    "level": "WARN",
    "check": "schema",
-   "msg": "type ot_s81sl_leaf__t48: bus leafdn_i0 has no leaf binding",
-   "type": "ot_s81sl_leaf__t48"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type ot_s81sl_leaf__t48: bus leafup_o0 has no leaf binding",
-   "type": "ot_s81sl_leaf__t48"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type ot_s81sl_leaf__t49: bus leafdn_i0 has no leaf binding",
-   "type": "ot_s81sl_leaf__t49"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type ot_s81sl_leaf__t49: bus leafup_o0 has no leaf binding",
-   "type": "ot_s81sl_leaf__t49"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
    "msg": "type ot_s81sl_leaf__t50: bus leafdn_i0 has no leaf binding",
    "type": "ot_s81sl_leaf__t50"
   },
@@ -12977,30 +12896,6 @@
   {
    "level": "WARN",
    "check": "schema",
-   "msg": "type ot_s81sl_leaf__t63: bus leafdn_i0 has no leaf binding",
-   "type": "ot_s81sl_leaf__t63"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type ot_s81sl_leaf__t63: bus leafup_o0 has no leaf binding",
-   "type": "ot_s81sl_leaf__t63"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type ot_s81sl_leaf__t64: bus leafdn_i0 has no leaf binding",
-   "type": "ot_s81sl_leaf__t64"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
-   "msg": "type ot_s81sl_leaf__t64: bus leafup_o0 has no leaf binding",
-   "type": "ot_s81sl_leaf__t64"
-  },
-  {
-   "level": "WARN",
-   "check": "schema",
    "msg": "type ot_s81sl_leaf__t65: bus leafdn_i0 has no leaf binding",
    "type": "ot_s81sl_leaf__t65"
   },
@@ -13193,6 +13088,12 @@
   {
    "level": "WARN",
    "check": "schema",
+   "msg": "type dsdv_slice_lepe_nh_mus_C__t1: bus lpc_o0 has no leaf binding",
+   "type": "dsdv_slice_lepe_nh_mus_C__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
    "msg": "type ot_s81sl_leaf__t67: bus leafdn_i0 has no leaf binding",
    "type": "ot_s81sl_leaf__t67"
   },
@@ -13284,6 +13185,12 @@
    "level": "WARN",
    "check": "schema",
    "msg": "type dsdv_slice_lepe_nh_mus_LP__t1: bus coll_o1 has no leaf binding",
+   "type": "dsdv_slice_lepe_nh_mus_LP__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type dsdv_slice_lepe_nh_mus_LP__t1: bus lpc_i0 has no leaf binding",
    "type": "dsdv_slice_lepe_nh_mus_LP__t1"
   },
   {
@@ -13481,6 +13388,12 @@
   {
    "level": "WARN",
    "check": "schema",
+   "msg": "type dsdv_slice_lepe_mu_C__t1: bus lpc_o0 has no leaf binding",
+   "type": "dsdv_slice_lepe_mu_C__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
    "msg": "type ot_s81sl_leaf__t72: bus leafdn_i0 has no leaf binding",
    "type": "ot_s81sl_leaf__t72"
   },
@@ -13608,6 +13521,12 @@
    "level": "WARN",
    "check": "schema",
    "msg": "type dsdv_slice_lepe_mu_LP__t2: bus unit_o0 has no leaf binding",
+   "type": "dsdv_slice_lepe_mu_LP__t2"
+  },
+  {
+   "level": "WARN",
+   "check": "schema",
+   "msg": "type dsdv_slice_lepe_mu_LP__t2: bus lpc_i0 has no leaf binding",
    "type": "dsdv_slice_lepe_mu_LP__t2"
   },
   {
