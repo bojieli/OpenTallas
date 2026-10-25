@@ -32,6 +32,9 @@ if {[info exists ::env(OT_HOLD_OUT_MIN)] && $::env(OT_HOLD_OUT_MIN) ne ""} { set
 if {$hg_out > 0} { error "hold gate: min output delay $hg_out > 0 waives the sender hold check" }
 puts "OT_HOLD_GATE contract in_min $hg_in out_min $hg_out"
 if {[llength $din]} { set_input_delay -min $hg_in -clock [lindex $vclks 0] $din }
+# IO-HOLD option A (opt-in, gen_phys.io_hold_tcl): partition-driven inputs carry their sender's guaranteed output-min
+set ioh [file join [file dirname [file normalize [info script]]] io_hold.tcl]
+if {[file exists $ioh]} { source $ioh; ot_io_hold_apply [lindex $vclks 0] }
 if {[llength [all_outputs]]} { set_output_delay -min $hg_out -clock [lindex $vclks 0] [all_outputs] }
 # A separate FF-only process: do not impersonate the shared multi-mode context.
 # Owner thresholds match orfs_hold_mm.tcl, applied to actual negative endpoints.

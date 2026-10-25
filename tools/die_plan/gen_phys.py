@@ -307,6 +307,112 @@ def hold_out_min_ps(P):
     return seam_hold(P)["out_min_ps"]
 
 
+# IO-HOLD option A (COORD ruling 2026-10-25 10:23, KITS-SPARE PROPOSAL IO-HOLD-2; opt-in: plan clock.io_hold =
+# "sender_min" or env OT_IO_HOLD=sender_min at generation).  The flat receiver min input delay (-insertion_tol, or
+# the seam_hold receiver share) assumes the neighbour's face flop may change its output at vclk - 40 ps with no
+# clk->q.  Every partition output is a pin register whose own sign-off proves it changes no earlier than
+#     vclk + (1 - UNC_SPLIT) x UNC_HOLD_PS - out_min        (its output hold check, kit frame)
+# (12.5 ps with the legacy out_min 0; measured payload536 / cfg7bfp registered outputs land 53-65 ps after the bound,
+# so the guarantee is far from tight).  Option A: each partition input's min input delay = that guarantee of the
+# partition that drives it (per port, from the plan's port list; a sender type's signed view may publish a larger
+# measured guarantee as types[].clock.out_hold_guarantee_ps).  Ports driven from the die edge (@die), through a
+# planned die channel, or with any instance of the type undriven keep the fallback (seam_hold / legacy) contract.
+# What the kits then no longer cover -- the related tap pair skew between sender and receiver and the 12.5-ps
+# receiver uncertainty half the sender guarantee already used -- is checked ONCE at the parent: a related-pair FF
+# hold check with CPPR on the assembled real views (io_hold_parent.py over die_sta.py).  A kit signed off under A
+# counts only once that parent check covers its input seams (COORD 10:23).
+IO_HOLD_MODES = ("legacy", "sender_min")
+
+
+def io_hold_mode(P):
+    """'legacy' (flat in_min on every input, default) or 'sender_min' (option A): plan clock.io_hold > env OT_IO_HOLD."""
+    import os
+    v = P.clock.get("io_hold")
+    if v is None:
+        v = os.environ.get("OT_IO_HOLD") or "legacy"
+    if v not in IO_HOLD_MODES:
+        raise ValueError(f"clock.io_hold / OT_IO_HOLD: '{v}' not in {IO_HOLD_MODES}")
+    return v
+
+
+def sender_out_guarantee_ps(P, snd_type):
+    """(ps after vclk, basis): the earliest a registered output of partition type snd_type changes, as its own
+    signed-off output hold check guarantees: the signed view's published types[].clock.out_hold_guarantee_ps,
+    else the plan contract (1 - UNC_SPLIT) x UNC_HOLD_PS - hold_out_min_ps."""
+    ck = P.types.get(snd_type, {}).get("clock", {}) or {}
+    if ck.get("out_hold_guarantee_ps") is not None:
+        return float(ck["out_hold_guarantee_ps"]), f"signed view {snd_type}"
+    return (1 - UNC_SPLIT) * UNC_HOLD_PS - hold_out_min_ps(P), "plan contract"
+
+
+def input_hold_min(P, tn):
+    """IO-HOLD option A: {sv input port: dict(in_min_ps, basis, senders)} for every bus / ft-slot input of type tn
+    whose min input delay differs from the fallback hold_in_min_ps(P).  Empty in legacy mode.  One value per port
+    (the type is hardened once): the minimum over every instance's driver."""
+    if io_hold_mode(P) != "sender_min":
+        return {}
+    import gen_rtl
+    insts = sorted(n for n, p in P.parts.items() if p["type"] == tn)
+    if not insts:
+        return {}
+    drv = {}                                   # (inst, bus) -> [port records]
+    for pid, pr in P.ports.items():
+        if pr["dst"]["part"] in insts:
+            drv.setdefault((pr["dst"]["part"], pr["dst"]["bus"]), []).append((pid, pr))
+    t = P.types[tn]
+    in_buses = [b["name"] for b in t.get("buses", []) if b["dir"] == "in"]
+    in_buses += [s["name"] + "_i" for s in t.get("ft_slots", [])]
+    out = {}
+    for bus in in_buses:
+        vals, why = [], None
+        for inst in insts:
+            prs = drv.get((inst, bus))
+            if not prs:
+                why = f"{inst}.{bus} undriven"
+                break
+            for pid, pr in prs:
+                s = pr["src"]["part"]
+                if s == DIE_PART or s not in P.parts:
+                    why = f"{pid} from the die edge"
+                elif P.channel_of(pid) is not None:
+                    why = f"{pid} through a die channel"
+                if why:
+                    break
+                g, basis = sender_out_guarantee_ps(P, P.parts[s]["type"])
+                vals.append((g, basis, P.parts[s]["type"]))
+            if why:
+                break
+        if why or not vals:
+            continue
+        g = min(v[0] for v in vals)
+        out[gen_rtl.sv_id(bus)] = dict(in_min_ps=round(g, 4), basis=sorted({v[1] for v in vals if v[0] == g})[0],
+                                       senders=sorted({v[2] for v in vals}))
+    return out
+
+
+def io_hold_tcl(P, tn):
+    """kit io_hold.tcl (sender_min kits only): proc ot_io_hold_apply {vclk} re-applies the per-port min input delays
+    of input_hold_min after a tool overlay set the fallback on every input (hold_gate.tcl, signoff.py)."""
+    m = input_hold_min(P, tn)
+    if not m:
+        return None
+    lines = [f"# GENERATED by tools/die_plan/gen.py phys: IO-HOLD option A per-port min input delays of {tn} "
+             f"(plan {P.name}); fallback {hold_in_min_ps(P):g} ps on every other input",
+             "proc ot_io_hold_apply {vclk} {"]
+    for v, ports in _group_in_min(m):
+        lines.append(f"  set_input_delay -min {t_lib(v):.4f} -clock $vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]")
+    lines += [f"  puts \"OT_IO_HOLD sender_min ports {len(m)} fallback {hold_in_min_ps(P):g}\"", "}"]
+    return "\n".join(lines) + "\n"
+
+
+def _group_in_min(m):
+    """[(in_min_ps, [ports])] sorted, one SDC command per distinct value."""
+    g = {}
+    for p, d in m.items():
+        g.setdefault(d["in_min_ps"], []).append(p)
+    return sorted((v, sorted(ps)) for v, ps in g.items())
+
+
 # FLOW 10-25 (METHODOLOGY ruling 9.7, BRIEFING decision 5e; NEARMISS-STRUCT: 4 of 7 near misses = output pin register
 # -> port FF hold against a vclk fixed at 250 ps while the routed FF pin-register mean was 190-220 ps).  The IO virtual
 # clock stands for the neighbour's face flop, whose insertion tracks the corner: TT setup is timed against the TT
@@ -454,6 +560,11 @@ def sdc(P, tn, pins):
     # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
     # no clk-to-q / wire credit: min input delay hold_in_min_ps (-tol) on every input
     out += (f"set_input_delay -min {t_lib(hold_in_min_ps(P)):.4f} -clock vclk $non_clk_in\n")
+    # IO-HOLD option A (opt-in clock.io_hold sender_min): partition-driven inputs take their sender's guaranteed
+    # output-min instead; the related tap pair skew is checked at the parent (io_hold_parent.py)
+    for v, ports in _group_in_min(input_hold_min(P, tn)):
+        out += (f"# IO-HOLD A: sender guaranteed output-min (+{v:g} ps after vclk)\n"
+                f"set_input_delay -min {t_lib(v):.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ports)}}}]\n")
     # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
@@ -621,6 +732,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "pdn.tcl").write_text(pdn)
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
+    ioh = io_hold_tcl(P, tn)            # IO-HOLD option A: per-port min input delays for the hold_gate / sign-off overlays
+    if ioh:
+        (kd / "io_hold.tcl").write_text(ioh)
     (kd / "prects_estimate.tcl").write_text(clock_phase_tcl(P, tn))
     import reset_tree as RT
     leaf_check = ""

@@ -671,3 +671,72 @@ def test_kit_inline_includes(tmp_path):
         raise AssertionError("missing include must raise")
     except bind.BindError:
         pass
+
+
+def test_bump_ports(tmp_path):
+    """B2 (PATH-QC-B12 10-25): a hard core's declared line side (contents[].bump_ports) is absent from the as-built die
+    and becomes die-top ports <partition>_<pin>, wired straight to the hard core's pins through partition ports
+    bump_<leaf>_<pin> (no register, no constant); bind_verify proves the line-side input is driven by its die port.
+    The same plan without the declaration binds byte-identically except for those lines."""
+    src = tmp_path / "src"
+    src.mkdir()
+    for f in ("leaves.sv", "par.sv"):
+        shutil.copy(EX / f, src / f)
+    (src / "phy.sv").write_text(
+        "module lf_phy (input wire clk, input wire [7:0] i, output reg [7:0] o,\n"
+        "               output wire [7:0] link, input wire [7:0] far);\n"
+        "    assign link = i;\n    always @(posedge clk) o <= far;\nendmodule\n")
+    die = (EX / "die.v").read_text().replace("  lf_sink snk", "  wire [7:0] po;\n  lf_phy phy (.clk(ck), .i(y1), .o(po));\n"
+                                              "  lf_sink snk")
+    (src / "die.v").write_text(die)
+
+    def plan(declare):
+        p = json.loads((EX / "die_plan.json").read_text())
+        a = p["asbuilt"]
+        a["base"] = str(src)
+        a["files"] = a["files"] + ["phy.sv"]
+        a["map"]["parts"]["phy"] = "S"
+        c = dict(inst="phy", module="lf_phy", status="reuse")
+        if declare:
+            c["bump_ports"] = [dict(pin="link", dir="output", width=8), dict(pin="far", dir="input", width=8)]
+        p["partition_types"]["ts"]["contents"] = [c]
+        f = tmp_path / f"die_plan_{int(declare)}.json"
+        f.write_text(json.dumps(p))
+        return f
+
+    o0, o1 = tmp_path / "o0", tmp_path / "o1"
+    assert run(plan(False), o0, "elab", "bind") == 0, report(o0)["errors"][:5]
+    assert run(plan(True), o1, "elab", "bind", "verify") == 0, (report(o1)["errors"][:5], verify(o1).get("mismatches", [])[:3])
+    r, v = report(o1), verify(o1)
+    assert r["n_errors"] == 0 and r["proof"]["unbound"] == 0 and r["proof"]["tied"] == 0
+    assert v["verdict"] == "PASS", (v["counts"], v["mismatches"][:3])
+    assert {(b["die_port"], b["dir"], b["width"], b["leaf"], b["pin"]) for b in r["bump_ports"]} == {
+        ("S_link", "output", 8, "S.u_phy", "link"), ("S_far", "input", 8, "S.u_phy", "far")}
+    top = (o1 / "rtl" / "tiny_bound_top.sv").read_text() if (o1 / "rtl" / "tiny_bound_top.sv").exists() else \
+        next((o1 / "rtl").glob("*_bound_top.sv")).read_text()
+    assert "output wire [7:0] S_link;" in top and "input  wire [7:0] S_far;" in top
+    assert ".bump_phy_link(S_link)" in top and ".bump_phy_far(S_far)" in top
+    ts = (o1 / "rtl" / "bt_ts.sv").read_text()
+    assert "output wire [7:0] bump_phy_link" in ts and "input  wire [7:0] bump_phy_far" in ts
+    assert re.search(r"lf_phy u_phy \([^;]*\.link\(bump_phy_link\)", ts, re.S)
+    assert re.search(r"lf_phy u_phy \([^;]*\.far\(bump_phy_far\)", ts, re.S)
+    sinks = json.loads((o1 / "bind_sinks.json").read_text())
+    assert all(sinks[f"phy.far[{i}]"] == ["top", "S_far"] for i in range(8))
+    # without the declaration: no die port, and every generated file equals the declared bind minus the bump lines
+    assert "bump_ports" not in report(o0)
+    for f0 in sorted((o0 / "rtl").glob("*.sv")):
+        a = f0.read_text()
+        b = (o1 / "rtl" / f0.name).read_text()
+        assert "bump_" not in a and "S_link" not in a and "S_far" not in a
+        def strip(t):
+            t = re.sub(r", S_(?:link|far)\b", "", t)
+            return [ln.rstrip(",") for ln in t.splitlines() if not re.search(r"bump_phy_|S_(?:link|far)\b", ln)]
+        assert strip(a) == strip(b), f0.name
+
+    # a declared bump pin that the as-built netlist already connects is refused (it is not the line side)
+    p = json.loads(plan(True).read_text())
+    p["partition_types"]["ts"]["contents"][0]["bump_ports"] = [dict(pin="i", dir="input", width=8)]
+    f = tmp_path / "die_plan_bad.json"
+    f.write_text(json.dumps(p))
+    run(f, tmp_path / "o2", "elab", "bind")
+    assert any("as-built pin" in e for e in report(tmp_path / "o2")["errors"])
