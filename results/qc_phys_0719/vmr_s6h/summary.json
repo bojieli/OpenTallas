@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.qc-physical-progress.v1",
+ "verdict": "GRT PASS, NOT SIGNED",
+ "stage": "FF-corner hold repair and pre-route insertion gates",
+ "source": "claude/qc-cqb3-1025 prehold checkpoint, own successor codex/qc-physical-0719",
+ "run": "intel1:/srv/opentallas-scratch2/claude/codex-qc-physical-0719/vmr_s6h",
+ "failure_diagnosis": "Original hold repair stopped at 30% buffer cap (6058 cells), despite sufficient placement area; the required per-corner frame exposes real input hold delay, not a clock relaxation.",
+ "change": "Complete the same mandated FF hold repair with max_buffer_percent100. The 833ps clock, uncertainties60/25ps, insertion386.48/296.50ps and repair margin15ps are unchanged.",
+ "hold_buffers": 8645,
+ "buffer_census": {
+  "input": 4054,
+  "internal": 4591,
+  "output": 0
+ },
+ "grt_calibrated_ff_hold_ps": 3.12,
+ "post_gate_main_rcx_basis": {
+  "tt_setup_ps": 194.8,
+  "ff_hold_ps": 2.88,
+  "tt_insertion_ps": 391.59,
+  "ff_insertion_ps": 301.29,
+  "tt_insertion_deviation_ps": 5.11,
+  "ff_insertion_deviation_ps": 4.79,
+  "verdict": "PASS"
+ },
+ "added_data_cycles": 0,
+ "next": "Checkpoint retained. No route launched; owner focused the representative RP1 Qwen path."
+}
