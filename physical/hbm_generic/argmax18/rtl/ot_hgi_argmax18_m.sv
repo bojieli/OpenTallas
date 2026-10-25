@@ -2,7 +2,8 @@
 // HGI-1 LOCAL endpoint. Configuration is captured on the first accepted row beat.
 // Generic mode is opt-in. DS-default keeps the qualified IW17 arithmetic verbatim.
 module ot_hgi_argmax18_m #(
- parameter integer LP=8, FLAT=7, FAST=1, GENERIC18=0, RANK_W=7
+ parameter integer LP=8, FLAT=7, FAST=1, GENERIC18=0, RANK_W=7,
+ parameter integer STRUCT=0   // value leaf physical structure (ot_hgi_argmax18_value_m STRUCT; outputs identical)
 )(
  input wire clk, rst_n, in_v, in_last, in_bias_en,
  input wire [LP-1:0] in_mask,
@@ -22,7 +23,7 @@ module ot_hgi_argmax18_m #(
  wire [OFFSET_W-1:0] end_offset;
  wire core_range_fault;
  generate if(GENERIC18) begin:g_value_leaf
- ot_hgi_argmax18_value_m #(.LP(LP),.IW(IW),.FLAT(FLAT),.FAST(FAST),.OFFSET_W(OFFSET_W)) u_native(
+ ot_hgi_argmax18_value_m #(.LP(LP),.IW(IW),.FLAT(FLAT),.FAST(FAST),.OFFSET_W(OFFSET_W),.STRUCT(STRUCT)) u_native(
  .clk(clk),.rst_n(rst_n),.in_v(in_v),.in_last(in_last),.in_bias_en(in_bias_en),
  .in_mask(in_mask),.in_vals(in_vals),.in_bias(in_bias),
  .out_v(out_v),.out_idx(local_idx),.out_nan(out_nan),.fault(fault),.out_value(out_value),.global_offset(end_offset),.out_range_fault(core_range_fault));

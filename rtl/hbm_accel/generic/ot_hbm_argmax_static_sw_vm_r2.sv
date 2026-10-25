@@ -21,6 +21,9 @@
 // the port is driven by a dedicated (* keep *) export flop busy_x that receives the SAME next state with the SAME reset
 // on every edge (busy_x(t) == busy_i(t) for all t): 0 cycles, bit-identical at the pin (lockstep bench
 // tb_argmax_r2_busy_export vs the closed e4dc0b651 RTL; mutant OT_ARGMAX_BUSY_EXPORT_MUT drops one clear and is rejected).
+// STRUCT (CLOCK-RESET/argmax 10-25): engine value leaf built with STRUCT=1 (ring delay line, kept fin/bvalid replicas):
+// physical structure only after the routed argmax_r2 FF-hold / slew review; every pin bit-identical on every cycle
+// (lockstep bench physical/hbm_generic/argmax18/bench/tb_argmax18_struct_lockstep.sv vs STRUCT=0).
 module ot_hbm_argmax_static_sw_vm_r2 #(
     parameter integer TP = 192,
     parameter integer RANK_W = (TP<=1?1:$clog2(TP)),
@@ -125,7 +128,7 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
         end
     end
     wire o_v, o_nan, o_f, o_rf; wire [17:0] o_idx; wire [31:0] o_val;
-    ot_hgi_argmax18_m #(.LP(8), .GENERIC18(1), .RANK_W(RANK_W)) u_e (.clk(clk), .rst_n(rst_eng), .in_v(e_v), .in_last(e_last),
+    ot_hgi_argmax18_m #(.LP(8), .GENERIC18(1), .RANK_W(RANK_W), .STRUCT(1)) u_e (.clk(clk), .rst_n(rst_eng), .in_v(e_v), .in_last(e_last),
         .in_bias_en(e_be), .in_mask(e_m), .in_vals(e_vals), .in_bias(e_bias), .cfg_rank(RANK_W'(die_id_q)), .cfg_imm_a(imm_q),
         .out_v(o_v), .out_idx(o_idx), .out_nan(o_nan), .fault(o_f), .out_range_fault(o_rf), .out_value(o_val));
     // ---------------------------------------------------------------- result and writes
