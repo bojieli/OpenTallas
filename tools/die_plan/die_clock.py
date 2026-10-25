@@ -952,7 +952,7 @@ def cmd_run(a):
             best = (max(sk.values()), it, dict(pads))
         if it == a.iters or max(sk.values()) <= a.stop_ps:
             break
-        pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads, take_back=a.take_back)
+        pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads, take_back=getattr(a, "take_back", False))
     if best[1] != hist[-1]["iter"]:                 # keep the best iteration (the loop may oscillate)
         pads = best[2]
         st = emit(pads)
