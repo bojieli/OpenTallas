@@ -1,0 +1,81 @@
+{
+  "cases": {
+    "dense": {
+      "beats": 88,
+      "expected": 88,
+      "mismatches": 0,
+      "status": "0008",
+      "fault": false,
+      "command_edge": 811,
+      "first_lookup": 838,
+      "first_return": 841,
+      "first_output": 856,
+      "last_output": 1422,
+      "done_edge": 1423,
+      "issue_to_done": 612,
+      "output_span": 567
+    },
+    "cam": {
+      "beats": 88,
+      "expected": 88,
+      "mismatches": 0,
+      "status": "0008",
+      "fault": false,
+      "command_edge": 811,
+      "first_lookup": 838,
+      "first_return": 841,
+      "first_output": 856,
+      "last_output": 1422,
+      "done_edge": 1423,
+      "issue_to_done": 612,
+      "output_span": 567
+    },
+    "miss": {
+      "beats": 88,
+      "expected": 88,
+      "mismatches": 1,
+      "status": "0089",
+      "fault": true,
+      "command_edge": 811,
+      "first_lookup": 838,
+      "first_return": 841,
+      "first_output": 856,
+      "last_output": 1422,
+      "done_edge": 1423,
+      "issue_to_done": 612,
+      "output_span": 567
+    },
+    "duplicate": {
+      "beats": 88,
+      "expected": 88,
+      "mismatches": 0,
+      "status": "00a9",
+      "fault": true,
+      "command_edge": 811,
+      "first_lookup": 838,
+      "first_return": 841,
+      "first_output": 856,
+      "last_output": 1422,
+      "done_edge": 1423,
+      "issue_to_done": 612,
+      "output_span": 567
+    },
+    "wrongtag": {
+      "beats": 88,
+      "expected": 88,
+      "mismatches": 80,
+      "status": "0089",
+      "fault": true,
+      "command_edge": 811,
+      "first_lookup": 838,
+      "first_return": 841,
+      "first_output": 856,
+      "last_output": 1422,
+      "done_edge": 1423,
+      "issue_to_done": 612,
+      "output_span": 567
+    }
+  },
+  "bad": [],
+  "verdict": "PASS"
+}
