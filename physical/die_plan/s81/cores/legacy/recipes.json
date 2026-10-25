@@ -126,6 +126,14 @@
    "results/arch/s81_topk5_1020/gold_hist256.sv"
   ],
   "suffix": "hb",
-  "why": "KITS-SPARE-2/HB 10-25 (COORD 10:23 item 3): the 16 hard hist_bank children of dsdv_bksel_q (hk2l u_s.u_hc.g_bank*) all bind ONE view (BANK 0 master; the parent applies the constant digit / group inversions, hq_parts OT_HARD_CHILDREN), so one kit; contract = that closed view LEF (64.8 x 54, 360 signal pins); RTL unchanged since the closure source bd6f52e8c; gold_hist256.sv is the bench golden only."
+  "why": "KITS-SPARE-2/HB 10-25 (COORD 10:23 item 3): the 16 hard hist_bank children of dsdv_bksel_q (hk2l u_s.u_hc.g_bank*) all bind ONE view (BANK 0 master; the parent applies the constant digit / group inversions, hq_parts OT_HARD_CHILDREN), so one kit; contract = that closed view LEF (64.8 x 54, 360 signal pins); RTL unchanged since the closure source bd6f52e8c; gold_hist256.sv is the bench golden only. face_guard RAW FAIL 'shared' on clr (17 kept capture flops) / gsel[3:0] (16 kept copies each) -> OT_HB_PINCOPY: one pin per kept capture flop (clr[16:0], gsel[63:0]), parent hq_parts multicasts its per-bank copy (0 cycles); extra pins on free face tracks beside the old pin (pin_expand).",
+  "defines": [
+   "OT_HB_PINCOPY"
+  ],
+  "pin_expand": {
+   "clr": 17,
+   "gsel": 64
+  },
+  "rtl_dirs": true
  }
 }
