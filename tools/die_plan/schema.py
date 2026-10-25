@@ -164,7 +164,24 @@ SCHEMA = {
                         "type": "object", "required": ["layer", "width_um", "pitch_um", "offset_um"],
                         "additionalProperties": False,
                         "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos, "offset_um": _nonneg,
-                                       "nets": {"type": "array", "items": _name}}}}}},
+                                       "nets": {"type": "array", "items": _name}}}},
+                    # OWNER DECISION 7 (2026-10-24, IR over SerDes windows): a separate PHY supply per window with its own
+                    # dense die-layer straps and dedicated power/ground bump rows over the macro (die_io.check_pg_domains)
+                    "domains": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "nets", "io", "rect_um", "grid", "bumps"],
+                        "additionalProperties": False,
+                        "properties": {
+                            "name": _name, "nets": {"type": "array", "items": _name, "minItems": 2},
+                            "io": {"type": "array", "items": _name, "minItems": 1}, "rect_um": _rect,
+                            "grid": {"type": "array", "minItems": 1, "items": {
+                                "type": "object", "required": ["layer", "width_um", "pitch_um", "offset_um"],
+                                "additionalProperties": False,
+                                "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos,
+                                               "offset_um": _nonneg, "nets": {"type": "array", "items": _name}}}},
+                            "bumps": {"type": "object", "required": ["rect_um", "pitch_um"], "additionalProperties": False,
+                                      "properties": {"rect_um": _rect, "pitch_um": _pos,
+                                                     "use": {"enum": ["power_ground"]}, "note": {"type": "string"}}},
+                            "note": {"type": "string"}}}}}},
             }},
         "partition_types": {
             "type": "object", "minProperties": 1,
