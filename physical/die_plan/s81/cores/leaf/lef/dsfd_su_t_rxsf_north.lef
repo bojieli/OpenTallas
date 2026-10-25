@@ -14,7 +14,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  140.316 92.88 140.4 92.904 ;
+        RECT 0.000000 70.176000 0.084000 70.200000 ;
     END
   END ck
   PIN i_v
@@ -286,7 +286,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 121.296 0.084 121.32 ;
+        RECT 0.000000 135.360000 0.084000 135.384000 ;
     END
   END o_f
   PIN o_mx[0]
@@ -294,7 +294,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 121.392 0.084 121.416 ;
+        RECT 0.000000 91.968000 0.084000 91.992000 ;
     END
   END o_mx[0]
   PIN o_mx[10]
@@ -302,7 +302,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 122.352 0.084 122.376 ;
+        RECT 0.000000 105.504000 0.084000 105.528000 ;
     END
   END o_mx[10]
   PIN o_mx[11]
@@ -310,7 +310,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 122.448 0.084 122.472 ;
+        RECT 0.000000 106.848000 0.084000 106.872000 ;
     END
   END o_mx[11]
   PIN o_mx[12]
@@ -318,7 +318,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 122.544 0.084 122.568 ;
+        RECT 0.000000 108.192000 0.084000 108.216000 ;
     END
   END o_mx[12]
   PIN o_mx[13]
@@ -326,7 +326,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 122.64 0.084 122.664 ;
+        RECT 0.000000 109.536000 0.084000 109.560000 ;
     END
   END o_mx[13]
   PIN o_mx[14]
@@ -334,7 +334,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 122.736 0.084 122.76 ;
+        RECT 0.000000 110.976000 0.084000 111.000000 ;
     END
   END o_mx[14]
   PIN o_mx[15]
@@ -342,7 +342,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 122.832 0.084 122.856 ;
+        RECT 0.000000 112.320000 0.084000 112.344000 ;
     END
   END o_mx[15]
   PIN o_mx[16]
@@ -350,7 +350,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 122.928 0.084 122.952 ;
+        RECT 0.000000 113.664000 0.084000 113.688000 ;
     END
   END o_mx[16]
   PIN o_mx[17]
@@ -358,7 +358,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.024 0.084 123.048 ;
+        RECT 0.000000 115.008000 0.084000 115.032000 ;
     END
   END o_mx[17]
   PIN o_mx[18]
@@ -366,7 +366,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.12 0.084 123.144 ;
+        RECT 0.000000 116.352000 0.084000 116.376000 ;
     END
   END o_mx[18]
   PIN o_mx[19]
@@ -374,7 +374,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.216 0.084 123.24 ;
+        RECT 0.000000 117.696000 0.084000 117.720000 ;
     END
   END o_mx[19]
   PIN o_mx[1]
@@ -382,7 +382,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 121.488 0.084 121.512 ;
+        RECT 0.000000 93.312000 0.084000 93.336000 ;
     END
   END o_mx[1]
   PIN o_mx[20]
@@ -390,7 +390,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.312 0.084 123.336 ;
+        RECT 0.000000 119.136000 0.084000 119.160000 ;
     END
   END o_mx[20]
   PIN o_mx[21]
@@ -398,7 +398,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.408 0.084 123.432 ;
+        RECT 0.000000 120.480000 0.084000 120.504000 ;
     END
   END o_mx[21]
   PIN o_mx[22]
@@ -406,7 +406,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.504 0.084 123.528 ;
+        RECT 0.000000 121.824000 0.084000 121.848000 ;
     END
   END o_mx[22]
   PIN o_mx[23]
@@ -414,7 +414,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.6 0.084 123.624 ;
+        RECT 0.000000 123.168000 0.084000 123.192000 ;
     END
   END o_mx[23]
   PIN o_mx[24]
@@ -422,7 +422,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.696 0.084 123.72 ;
+        RECT 0.000000 124.512000 0.084000 124.536000 ;
     END
   END o_mx[24]
   PIN o_mx[25]
@@ -430,7 +430,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.792 0.084 123.816 ;
+        RECT 0.000000 125.856000 0.084000 125.880000 ;
     END
   END o_mx[25]
   PIN o_mx[26]
@@ -438,7 +438,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.888 0.084 123.912 ;
+        RECT 0.000000 127.200000 0.084000 127.224000 ;
     END
   END o_mx[26]
   PIN o_mx[27]
@@ -446,7 +446,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 123.984 0.084 124.008 ;
+        RECT 0.000000 128.640000 0.084000 128.664000 ;
     END
   END o_mx[27]
   PIN o_mx[28]
@@ -454,7 +454,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 124.08 0.084 124.104 ;
+        RECT 0.000000 129.984000 0.084000 130.008000 ;
     END
   END o_mx[28]
   PIN o_mx[29]
@@ -462,7 +462,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 124.176 0.084 124.2 ;
+        RECT 0.000000 131.328000 0.084000 131.352000 ;
     END
   END o_mx[29]
   PIN o_mx[2]
@@ -470,7 +470,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 121.584 0.084 121.608 ;
+        RECT 0.000000 94.656000 0.084000 94.680000 ;
     END
   END o_mx[2]
   PIN o_mx[30]
@@ -478,7 +478,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 124.272 0.084 124.296 ;
+        RECT 0.000000 132.672000 0.084000 132.696000 ;
     END
   END o_mx[30]
   PIN o_mx[31]
@@ -486,7 +486,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 25.296 0.084 25.32 ;
+        RECT 0.000000 134.016000 0.084000 134.040000 ;
     END
   END o_mx[31]
   PIN o_mx[3]
@@ -494,7 +494,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 121.68 0.084 121.704 ;
+        RECT 0.000000 96.000000 0.084000 96.024000 ;
     END
   END o_mx[3]
   PIN o_mx[4]
@@ -502,7 +502,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 121.776 0.084 121.8 ;
+        RECT 0.000000 97.344000 0.084000 97.368000 ;
     END
   END o_mx[4]
   PIN o_mx[5]
@@ -510,7 +510,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 121.872 0.084 121.896 ;
+        RECT 0.000000 98.688000 0.084000 98.712000 ;
     END
   END o_mx[5]
   PIN o_mx[6]
@@ -518,7 +518,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 121.968 0.084 121.992 ;
+        RECT 0.000000 100.032000 0.084000 100.056000 ;
     END
   END o_mx[6]
   PIN o_mx[7]
@@ -526,7 +526,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 122.064 0.084 122.088 ;
+        RECT 0.000000 101.472000 0.084000 101.496000 ;
     END
   END o_mx[7]
   PIN o_mx[8]
@@ -534,7 +534,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 122.16 0.084 122.184 ;
+        RECT 0.000000 102.816000 0.084000 102.840000 ;
     END
   END o_mx[8]
   PIN o_mx[9]
@@ -542,7 +542,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 122.256 0.084 122.28 ;
+        RECT 0.000000 104.160000 0.084000 104.184000 ;
     END
   END o_mx[9]
   PIN o_u2[0]
@@ -550,7 +550,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 25.392 0.084 25.416 ;
+        RECT 0.000000 6.336000 0.084000 6.360000 ;
     END
   END o_u2[0]
   PIN o_u2[10]
@@ -558,7 +558,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 26.352 0.084 26.376 ;
+        RECT 0.000000 19.968000 0.084000 19.992000 ;
     END
   END o_u2[10]
   PIN o_u2[11]
@@ -566,7 +566,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 26.448 0.084 26.472 ;
+        RECT 0.000000 21.312000 0.084000 21.336000 ;
     END
   END o_u2[11]
   PIN o_u2[12]
@@ -574,7 +574,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 26.544 0.084 26.568 ;
+        RECT 0.000000 22.656000 0.084000 22.680000 ;
     END
   END o_u2[12]
   PIN o_u2[13]
@@ -582,7 +582,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 26.64 0.084 26.664 ;
+        RECT 0.000000 24.000000 0.084000 24.024000 ;
     END
   END o_u2[13]
   PIN o_u2[14]
@@ -590,7 +590,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 26.736 0.084 26.76 ;
+        RECT 0.000000 25.344000 0.084000 25.368000 ;
     END
   END o_u2[14]
   PIN o_u2[15]
@@ -598,7 +598,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 26.832 0.084 26.856 ;
+        RECT 0.000000 26.688000 0.084000 26.712000 ;
     END
   END o_u2[15]
   PIN o_u2[16]
@@ -606,7 +606,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 26.928 0.084 26.952 ;
+        RECT 0.000000 28.032000 0.084000 28.056000 ;
     END
   END o_u2[16]
   PIN o_u2[17]
@@ -614,7 +614,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.024 0.084 27.048 ;
+        RECT 0.000000 29.472000 0.084000 29.496000 ;
     END
   END o_u2[17]
   PIN o_u2[18]
@@ -622,7 +622,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.12 0.084 27.144 ;
+        RECT 0.000000 30.816000 0.084000 30.840000 ;
     END
   END o_u2[18]
   PIN o_u2[19]
@@ -630,7 +630,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.216 0.084 27.24 ;
+        RECT 0.000000 32.160000 0.084000 32.184000 ;
     END
   END o_u2[19]
   PIN o_u2[1]
@@ -638,7 +638,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 25.488 0.084 25.512 ;
+        RECT 0.000000 7.680000 0.084000 7.704000 ;
     END
   END o_u2[1]
   PIN o_u2[20]
@@ -646,7 +646,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.312 0.084 27.336 ;
+        RECT 0.000000 33.504000 0.084000 33.528000 ;
     END
   END o_u2[20]
   PIN o_u2[21]
@@ -654,7 +654,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.408 0.084 27.432 ;
+        RECT 0.000000 34.848000 0.084000 34.872000 ;
     END
   END o_u2[21]
   PIN o_u2[22]
@@ -662,7 +662,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.504 0.084 27.528 ;
+        RECT 0.000000 36.192000 0.084000 36.216000 ;
     END
   END o_u2[22]
   PIN o_u2[23]
@@ -670,7 +670,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.6 0.084 27.624 ;
+        RECT 0.000000 37.632000 0.084000 37.656000 ;
     END
   END o_u2[23]
   PIN o_u2[24]
@@ -678,7 +678,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.696 0.084 27.72 ;
+        RECT 0.000000 38.976000 0.084000 39.000000 ;
     END
   END o_u2[24]
   PIN o_u2[25]
@@ -686,7 +686,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.792 0.084 27.816 ;
+        RECT 0.000000 40.320000 0.084000 40.344000 ;
     END
   END o_u2[25]
   PIN o_u2[26]
@@ -694,7 +694,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.888 0.084 27.912 ;
+        RECT 0.000000 41.664000 0.084000 41.688000 ;
     END
   END o_u2[26]
   PIN o_u2[27]
@@ -702,7 +702,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 27.984 0.084 28.008 ;
+        RECT 0.000000 43.008000 0.084000 43.032000 ;
     END
   END o_u2[27]
   PIN o_u2[28]
@@ -710,7 +710,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 28.08 0.084 28.104 ;
+        RECT 0.000000 44.352000 0.084000 44.376000 ;
     END
   END o_u2[28]
   PIN o_u2[29]
@@ -718,7 +718,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 28.176 0.084 28.2 ;
+        RECT 0.000000 45.696000 0.084000 45.720000 ;
     END
   END o_u2[29]
   PIN o_u2[2]
@@ -726,7 +726,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 25.584 0.084 25.608 ;
+        RECT 0.000000 9.024000 0.084000 9.048000 ;
     END
   END o_u2[2]
   PIN o_u2[30]
@@ -734,7 +734,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 28.272 0.084 28.296 ;
+        RECT 0.000000 47.136000 0.084000 47.160000 ;
     END
   END o_u2[30]
 
@@ -743,7 +743,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 25.68 0.084 25.704 ;
+        RECT 0.000000 10.464000 0.084000 10.488000 ;
     END
   END o_u2[3]
   PIN o_u2[4]
@@ -751,7 +751,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 25.776 0.084 25.8 ;
+        RECT 0.000000 11.808000 0.084000 11.832000 ;
     END
   END o_u2[4]
   PIN o_u2[5]
@@ -759,7 +759,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 25.872 0.084 25.896 ;
+        RECT 0.000000 13.152000 0.084000 13.176000 ;
     END
   END o_u2[5]
   PIN o_u2[6]
@@ -767,7 +767,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 25.968 0.084 25.992 ;
+        RECT 0.000000 14.496000 0.084000 14.520000 ;
     END
   END o_u2[6]
   PIN o_u2[7]
@@ -775,7 +775,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 26.064 0.084 26.088 ;
+        RECT 0.000000 15.840000 0.084000 15.864000 ;
     END
   END o_u2[7]
   PIN o_u2[8]
@@ -783,7 +783,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 26.16 0.084 26.184 ;
+        RECT 0.000000 17.184000 0.084000 17.208000 ;
     END
   END o_u2[8]
   PIN o_u2[9]
@@ -791,7 +791,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 26.256 0.084 26.28 ;
+        RECT 0.000000 18.528000 0.084000 18.552000 ;
     END
   END o_u2[9]
   PIN o_u[0]
@@ -799,7 +799,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 31.536 0.084 31.56 ;
+        RECT 0.000000 48.480000 0.084000 48.504000 ;
     END
   END o_u[0]
   PIN o_u[10]
@@ -807,7 +807,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.496 0.084 32.52 ;
+        RECT 0.000000 62.016000 0.084000 62.040000 ;
     END
   END o_u[10]
   PIN o_u[11]
@@ -815,7 +815,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.592 0.084 32.616 ;
+        RECT 0.000000 63.360000 0.084000 63.384000 ;
     END
   END o_u[11]
   PIN o_u[12]
@@ -823,7 +823,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.688 0.084 32.712 ;
+        RECT 0.000000 64.800000 0.084000 64.824000 ;
     END
   END o_u[12]
   PIN o_u[13]
@@ -831,7 +831,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.784 0.084 32.808 ;
+        RECT 0.000000 66.144000 0.084000 66.168000 ;
     END
   END o_u[13]
   PIN o_u[14]
@@ -839,7 +839,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.88 0.084 32.904 ;
+        RECT 0.000000 67.488000 0.084000 67.512000 ;
     END
   END o_u[14]
   PIN o_u[15]
@@ -847,7 +847,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.976 0.084 33 ;
+        RECT 0.000000 68.832000 0.084000 68.856000 ;
     END
   END o_u[15]
   PIN o_u[16]
@@ -855,7 +855,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 33.072 0.084 33.096 ;
+        RECT 0.000000 71.520000 0.084000 71.544000 ;
     END
   END o_u[16]
   PIN o_u[17]
@@ -863,7 +863,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 33.168 0.084 33.192 ;
+        RECT 0.000000 72.864000 0.084000 72.888000 ;
     END
   END o_u[17]
   PIN o_u[18]
@@ -871,7 +871,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 33.264 0.084 33.288 ;
+        RECT 0.000000 74.304000 0.084000 74.328000 ;
     END
   END o_u[18]
   PIN o_u[19]
@@ -879,7 +879,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 33.36 0.084 33.384 ;
+        RECT 0.000000 75.648000 0.084000 75.672000 ;
     END
   END o_u[19]
   PIN o_u[1]
@@ -887,7 +887,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 31.632 0.084 31.656 ;
+        RECT 0.000000 49.824000 0.084000 49.848000 ;
     END
   END o_u[1]
   PIN o_u[20]
@@ -895,7 +895,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 33.456 0.084 33.48 ;
+        RECT 0.000000 76.992000 0.084000 77.016000 ;
     END
   END o_u[20]
   PIN o_u[21]
@@ -903,7 +903,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 33.552 0.084 33.576 ;
+        RECT 0.000000 78.336000 0.084000 78.360000 ;
     END
   END o_u[21]
   PIN o_u[22]
@@ -911,7 +911,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 33.648 0.084 33.672 ;
+        RECT 0.000000 79.680000 0.084000 79.704000 ;
     END
   END o_u[22]
   PIN o_u[23]
@@ -919,7 +919,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 33.744 0.084 33.768 ;
+        RECT 0.000000 81.024000 0.084000 81.048000 ;
     END
   END o_u[23]
   PIN o_u[24]
@@ -927,7 +927,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 33.84 0.084 33.864 ;
+        RECT 0.000000 82.368000 0.084000 82.392000 ;
     END
   END o_u[24]
   PIN o_u[25]
@@ -935,7 +935,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 33.936 0.084 33.96 ;
+        RECT 0.000000 83.808000 0.084000 83.832000 ;
     END
   END o_u[25]
   PIN o_u[26]
@@ -943,7 +943,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 34.032 0.084 34.056 ;
+        RECT 0.000000 85.152000 0.084000 85.176000 ;
     END
   END o_u[26]
   PIN o_u[27]
@@ -951,7 +951,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 34.128 0.084 34.152 ;
+        RECT 0.000000 86.496000 0.084000 86.520000 ;
     END
   END o_u[27]
   PIN o_u[28]
@@ -959,7 +959,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 34.224 0.084 34.248 ;
+        RECT 0.000000 87.840000 0.084000 87.864000 ;
     END
   END o_u[28]
   PIN o_u[29]
@@ -967,7 +967,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 34.32 0.084 34.344 ;
+        RECT 0.000000 89.184000 0.084000 89.208000 ;
     END
   END o_u[29]
   PIN o_u[2]
@@ -975,7 +975,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 31.728 0.084 31.752 ;
+        RECT 0.000000 51.168000 0.084000 51.192000 ;
     END
   END o_u[2]
   PIN o_u[30]
@@ -983,7 +983,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 34.416 0.084 34.44 ;
+        RECT 0.000000 90.528000 0.084000 90.552000 ;
     END
   END o_u[30]
 
@@ -992,7 +992,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 31.824 0.084 31.848 ;
+        RECT 0.000000 52.512000 0.084000 52.536000 ;
     END
   END o_u[3]
   PIN o_u[4]
@@ -1000,7 +1000,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 31.92 0.084 31.944 ;
+        RECT 0.000000 53.856000 0.084000 53.880000 ;
     END
   END o_u[4]
   PIN o_u[5]
@@ -1008,7 +1008,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.016 0.084 32.04 ;
+        RECT 0.000000 55.200000 0.084000 55.224000 ;
     END
   END o_u[5]
   PIN o_u[6]
@@ -1016,7 +1016,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.112 0.084 32.136 ;
+        RECT 0.000000 56.640000 0.084000 56.664000 ;
     END
   END o_u[6]
   PIN o_u[7]
@@ -1024,7 +1024,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.208 0.084 32.232 ;
+        RECT 0.000000 57.984000 0.084000 58.008000 ;
     END
   END o_u[7]
   PIN o_u[8]
@@ -1032,7 +1032,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.304 0.084 32.328 ;
+        RECT 0.000000 59.328000 0.084000 59.352000 ;
     END
   END o_u[8]
   PIN o_u[9]
@@ -1040,7 +1040,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 32.4 0.084 32.424 ;
+        RECT 0.000000 60.672000 0.084000 60.696000 ;
     END
   END o_u[9]
   PIN o_v
@@ -1048,7 +1048,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  0 24.432 0.084 24.456 ;
+        RECT 0.000000 4.992000 0.084000 5.016000 ;
     END
   END o_v
   PIN rst
@@ -1056,7 +1056,7 @@ MACRO dsfd_su_t_rxsf
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT  140.316 100.08 140.4 100.104 ;
+        RECT 140.316000 134.112000 140.400000 134.136000 ;
     END
   END rst
   PIN VDD

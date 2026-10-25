@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS-COND",
+  "picture": "results/geom_review/s81_rxsf_north_0719/pins_w.png",
+  "supersedes": "bc1fbf3d6 planned C-based pin contract; retains E clock and is NOT ROUTE APPROVED",
+  "findings": [
+    "Corrected seed = exact accepted rxsf_w kit131pins, epyc2 scratch2/claude/s81-cores3-rt/kits/dsfd_su_t_rxsf_w/pins.json.",
+    "Only33 i_v/i_x inputs move E/M4->N/M3;98remainingpinsincluding Wclock(.042,70.188)and spreadWoutputs preserved exactly.",
+    "M3Npins x63.297+.216*index,y140.358: .108 coreXoffset gives planM3tracks.",
+    "OutputsWface adjacentrxsbE;Ninputsfacevsabove (MX mirrorsNtoS). Matching native core closure and postCTSreview required before route/adoption."
+  ],
+  "rtl_cycles_added": 0,
+  "pins": 131,
+  "moved_inputs": 33,
+  "canonical_hash": "5ebae9850ae8",
+  "xm_hash": "ce0b944c4085"
+}
