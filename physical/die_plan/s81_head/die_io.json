@@ -6,15 +6,15 @@
   "part": "lk_WN2",
   "rect_um": [
    103.68,
-   16225.92,
+   16439.56,
    2989.44,
    17452.8
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_WN1_u_phy",
@@ -23,15 +23,15 @@
   "part": "lk_WN1",
   "rect_um": [
    2989.44,
-   16225.92,
+   16439.56,
    5875.2,
    17452.8
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_WN0_u_phy",
@@ -40,15 +40,15 @@
   "part": "lk_WN0",
   "rect_um": [
    5875.2,
-   16225.92,
+   16439.56,
    8760.96,
    17452.8
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_WN3_u_phy",
@@ -57,15 +57,15 @@
   "part": "lk_WN3",
   "rect_um": [
    8760.96,
-   16225.92,
+   16439.56,
    11646.72,
    17452.8
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_EN0_u_phy",
@@ -74,15 +74,15 @@
   "part": "lk_EN0",
   "rect_um": [
    11646.72,
-   16225.92,
+   16439.56,
    14532.48,
    17452.8
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_EN1_u_phy",
@@ -91,15 +91,15 @@
   "part": "lk_EN1",
   "rect_um": [
    14532.48,
-   16225.92,
+   16439.56,
    17418.24,
    17452.8
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_WS1_u_phy",
@@ -110,13 +110,13 @@
    103.68,
    103.68,
    2989.44,
-   1330.56
+   1116.92
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_WS0_u_phy",
@@ -127,13 +127,13 @@
    2989.44,
    103.68,
    5875.2,
-   1330.56
+   1116.92
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_HOST0_u_phy",
@@ -144,13 +144,13 @@
    5875.2,
    103.68,
    8760.96,
-   1330.56
+   1116.92
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy; host link (rack connections_s81.csv cls host: lk_HOST0+lk_HOST1 <-> host NIC, S81.HOST)",
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)",
   "host": true
  },
  {
@@ -162,13 +162,13 @@
    8760.96,
    103.68,
    11646.72,
-   1330.56
+   1116.92
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy; host link (rack connections_s81.csv cls host: lk_HOST0+lk_HOST1 <-> host NIC, S81.HOST)",
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)",
   "host": true
  },
  {
@@ -180,13 +180,13 @@
    11646.72,
    103.68,
    14532.48,
-   1330.56
+   1116.92
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_ES1_u_phy",
@@ -197,12 +197,12 @@
    14532.48,
    103.68,
    17418.24,
-   1330.56
+   1116.92
   ],
-  "sites": 152,
+  "sites": 114,
   "pitch_um": 150.0,
   "signals": 26,
-  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy"
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area 562680 um2 from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; rect is a reserved PHY/PG zone, not the measured physical body",
+  "note": "die_io.py plan: u_phy; PHY zone 2886 x 1013 um beside the strip (2 blocked strip / ft rects, 63.64-um guard)"
  }
 ]

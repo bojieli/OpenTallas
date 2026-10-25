@@ -1,0 +1,75 @@
+{
+ "kit": "dsdv_gunit_l5f_c",
+ "kit_hash": "876620040b36dd4e",
+ "outline_um": [
+  151.2,
+  151.2
+ ],
+ "pins": 136,
+ "faces": {
+  "N": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  },
+  "S": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  },
+  "W": {
+   "pins": 136,
+   "max_per_um": 5.5,
+   "mean_per_um": 0.9,
+   "layers": {
+    "M4": 136
+   },
+   "span": [
+    42.97,
+    99.61
+   ],
+   "groups": [
+    "clk",
+    "rst_n",
+    "xd_b",
+    "xd_v",
+    "xe_v",
+    "xe_x",
+    "yd_f",
+    "yd_v",
+    "yd_y",
+    "ye_f",
+    "ye_v",
+    "ye_y"
+   ]
+  },
+  "E": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  }
+ },
+ "macros": [],
+ "placed": {
+  "cells": 78142,
+  "flops": 10648,
+  "bins5_over_0p8": 0,
+  "max_bin": 0.64
+ },
+ "clock_pin": {
+  "name": "clk",
+  "x": 0.042,
+  "y": 49.116,
+  "face": "W",
+  "layer": "M4"
+ }
+}

@@ -14,8 +14,10 @@ re-assembles and injects them on ITS line both ways (V_ASM edges later).  A line
 age + LINE_STOP edges.  ot_s81sl_rstop allows ONE source per line side per cycle (forward, NX, own, assembled,
 control) and never own + assembled in one cycle: every second source is a sticky fault.  `allgather()` lists them.
 
-CALIBRATION constants (Q_AFTER_ROOT, C_IN, V_ASM) are measured on the reclocked deskewed cut runs (cut_0S / 0N / 7:
-the visible slices' own and assembled beats); LINE_STOP = 2 is the rstop header's stated latency.
+Q_AFTER_ROOT was measured on the fully reclocked pre-deskew r4all cuts 0S/0N/7:
+model roots 548/549/549 -> own XQ output-register edges 693/694/694. Deskew
+changes partial arrival, upstream of the root; its full-cut recheck is pending.
+LINE_STOP = 2 is the rstop header's stated latency.
 """
 from collections import defaultdict
 
@@ -29,9 +31,43 @@ TRAIN = [4 * k for k in range(5)] + [20 + 4 * k for k in range(5)]    # XQ k, XB
 KIND = [1] * 5 + [2] * 5
 # calibration (re-measured on the deskewed cuts; see the TOK-DS lane log)
 C_IN = 2               # landed NX pin -> xstop deliver (dl) edge; own: dl = own out edge - (NX_FWD - 2 - C_IN)
-Q_AFTER_ROOT = None    # root write-back edge -> first own XQ beat on the line outputs
+Q_AFTER_ROOT = 145     # root write-back edge -> first own XQ beat on the line outputs
 V_ASM = None           # own beat on the line outputs -> the column partner's assembled beat on its line outputs
 #                        ({inst: edges} or one value; rstop: 2 + the V lane age, the 4-fragment train being 4 edges a beat)
+
+
+def v_paths(die, bridge_cycles):
+    """Walk the full V rung, including transparent host/BK stops.
+
+    bridge_cycles must be supplied from the selected RTL contracts. A source
+    vo lane that lands at seqhost or BK is not the column partner's input.
+    """
+    import norm_nx as N
+    slices = die.slices()
+    result = {}
+    for origin in slices:
+        at, port, total, path, visited = origin, 'vo', 0, [], set()
+        while True:
+            if (at, port) in visited:
+                raise ValueError('cyclic V route from ' + origin)
+            visited.add((at, port))
+            lane, dst, input_port, age = N._lane0(die, at, port)
+            path.append(dict(lane=lane, src=at + '.' + port, dst=dst + '.' + input_port, cycles=age))
+            total += age
+            if dst in slices:
+                if slices[dst]['sid'] != slices[origin]['sid'] ^ 1:
+                    raise ValueError('V route ends at a different column: ' + origin + ' -> ' + dst)
+                result[origin] = dict(peer=dst, wire_and_bridge_cycles=total,
+                                      assembled_after_own_line=total + 2, path=path)
+                break
+            if dst not in bridge_cycles or input_port not in ('vi_s', 'vi_n'):
+                raise ValueError('unmodeled V bridge: ' + dst + '.' + input_port)
+            delay = bridge_cycles[dst]
+            output_port = 'vo_n' if input_port == 'vi_s' else 'vo_s'
+            path.append(dict(bridge=dst, src=input_port, dst=output_port, cycles=delay))
+            total += delay
+            at, port = dst, output_port
+    return result
 
 
 def isadd(n):

@@ -1,0 +1,14 @@
+{
+ "element": "s81_plan_hard_cores_leaf_svc_eng",
+ "kit": "claude/s81-cores-1024 (gen_plan_v4 NONFRAME_HC leaf/svc/eng + cores/leaf/alt_place.json); plan regen ~/scratch/s81-cores/regen15",
+ "verdict": "PASS-COND (svc, eng, 61 leaf types) / FAIL (13 leaf types: bus window -> core reach > 750 um; internal core-core bundles 405-470 um > 405-um kit reach)",
+ "hash": "2ab05a2722ec",
+ "images": [
+  "results/geom_review/s81_cores_1024/ot_s81sl_leaf__t1.png",
+  "results/geom_review/s81_cores_1024/ot_s81sl_leaf__t40.png",
+  "results/geom_review/s81_cores_1024/ot_s81sl_leaf__t54.png",
+  "results/geom_review/s81_cores_1024/svc_hi_dsdv_svc_rs__t1.png",
+  "results/geom_review/s81_cores_1024/eng__t1.png"
+ ],
+ "reasons": "[2026-10-24 13:30 PDT] [S81-CORES self-review, owner 08:05 order] Rendered (bundles.py: cores, every declared core_conns bundle pin-group centroid -> partner, ft station sites) and read leaf t1/t40/t54, svc_hi_rs t1, eng t1. G0 PASS, G0C 174/174 (0 errors, die_io). LEAF: vp flattened to 16 hcpl + 2 SRAM; per-type arrangement of the 25 macros chosen by the generator from 149 candidates. Rules: core-face cos >= -0.1; every hcpl lane within 300 um (box) / 450 um (vn hq/hw pin centroid) of vn; legal 13.8-um gaps. Data flow: lanes cluster on vn's W face; SRAMs between vn and vs; ve over vs; rx under vs; vsw E. Findings: (1) 13/74 types have window->core box > 750 um (t54 1116, t28/t11/t36 ~1090, t30 949 ...). Cause: the windows sweep x 6..1429 and no core can be x-mirrored (M3/M5 pin grids have no common shift). (2) At the 405-um M4-M7 kit reach, ~12 core-core bundles in t1 are 405-472 um centroid-to-centroid (vn wl_d -> SRAM, vs x_wd -> SRAM, ve -> vs, vsw -> vs, rx -> vs). (3) bus pin centroid -> window up to 870 um even in reach-clean types (vq k/sid/m few bits, vn n_pre/n_go). (4) ft: +58 leaf stations on 55 slots vs the no-core baseline. SVC: 64 attn hcores (GR8 grid) + 8 hrow 138.24x164.16 in the centre band (r0b0 at the edge). At 405 reach, N-S slots straight through a core column (window 110 um wide vs a 157.68-um core, 15-um gaps) need +1: 29 slots. Channels 15-17 um between hcores carry the 80k residual soft cells + ft. ENG: E/H0/H1 per GR8 placement; buses N within 475 um box; +2 on ft0. Conditions/next: (a) OWNER: FIRM internal stations vs 750 plan rule for >405 internal bundles; (b) the 13 reach-FAIL leaf types need x-mirrored vs/vq/vn pin variants or relays (priced cycles); (c) S81 to accept the station/latency delta (top latency 118439 -> 118442) before merge."
+}

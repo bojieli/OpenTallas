@@ -1,0 +1,15 @@
+{
+ "element": "PROTO skeleton sweep3 (HBM B2m 44, KV 44, QC 51, S81 127 types)",
+ "kit": "claude/proto-1024r@260719247 results/proto_1024/<die>/<type>.png + lanes/PROTO.md RESULTS (plans origin/main a11334b98)",
+ "stage": "plan skeleton (pins + stations + hard-core blockages, GRT + STA)",
+ "verdict": "CONFIRM plan-level FAIL for every listed type, graded by cause",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-25T00:12:00-07:00",
+ "reasons": "[2026-10-25 00:12] Read the method in PROTO.md and spot-checked 6 renders (q_b110, q_hub, kv3_hgi, sle_su_c, ot_s81sl_leaf__t8, dsdv_slice_c1x_C__t1; montage rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/proto/spotcheck_6.png). The method is sound for what it claims: a skeleton CLEAN is necessary, not sufficient. (H) hop > 405 um is a direct breach of decision 12 (applies to all release plans, decision 17). Note that some H types are otherwise clean (q_hub TT +69 / ov 0; dsdv_slice_c1x_C__t1 TT +83 / ov 0), so for them the fix is only the tool-generated stations of the DEC12 batch. (C) stations default onto hard cores: seen in sle_su_c/leaf t8, with stations piled at core edges. (O) overflow 1e3-2e6 with only M6/M7 over the cores: seen in q_b110 (stations and buffers jammed around 5 macros in the SE corner, the rest of the slot empty), kv3_hgi (bundles squeezed between the 4x4 core grid) and leaf t8. These need more than stations.",
+ "fixes": "All listed types: no new P&R until the DEC12 batch re-plan lands (decision 17) and a fresh skeleton is CLEAN. By cause: (H only, TT>=0, ov 0) -> DEC12 stations fix them, no redesign; (C) -> the DEC12 station generator must place sites in channels and never inside hard cores (S81 LEAFPLAN internal_stations pattern), so this is a tool check; (O) -> structural: re-place communicating cores as neighbours and open real channels (width sized to the bundle bits at M6/M7 track capacity with cut <=0.55-0.60), or route the bundle around the core cluster; stations alone will not fix these. Their extreme TT (-400..-1735 ps) is detour from congestion, not a separate problem. HBM q_b*/q_su* and KV hgi*/pv* are the worst and need a floorplan pass, not just the batch. Correction to my earlier replies tonight: wherever I wrote reset relay at equal depth, read decision 13 (neighbour wavefront: registered reset in/out per partition, relays <=405 um, deterministic published release offsets).",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/proto/spotcheck_6.png"
+ ],
+ "owner_lane": "PROTO / S81 / QC / KV / HBM",
+ "rule": "BRIEFING decisions 12, 13, 17; OWNER 2026-10-24 08:05 review before route"
+}

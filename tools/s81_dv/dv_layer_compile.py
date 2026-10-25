@@ -35,6 +35,7 @@ import json
 import math
 import os
 import re
+import struct
 import subprocess
 import sys
 from pathlib import Path
@@ -654,10 +655,17 @@ def ctl_path(die, sl):
                 'ot_s81_land E + 1 + half-cycle stations + bk_sel 3 + V inject 6 + rstop 2/stop; G8 cut_3S_ctl L0 replay measured)')
 
 
-def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which='attn'):
+def norm_eps_bits():
+    """The released checkpoint's RMSNorm epsilon, encoded as binary32."""
+    config = json.loads((ROOT / 'compiler/models/deepseek-v4.1-flash/inference_config.json').read_text())
+    return struct.unpack('<I', struct.pack('<f', config['norm_eps']))[0]
+
+
+def lower_norm_smoke(die, prog, sl, t0, eps=None, r_h=0, r_gain=64, which='attn'):
     """slice-local hc_pre + RMSNorm + act-quant on ONE slice (the beat bench's proven sequence, issued through the
     seq_host calendar as CTL beats): HLOAD (5 leaves) -> GAIN -> NORMR per leaf (a0 = G-unit row R, a1 = global beat 5 sid + k, n = 3:
     q + BF16 family) -> xfin go (eps).  The partial / rstd / XQ edges follow from the unit latencies."""
+    eps = norm_eps_bits() if eps is None else eps
     s = die.slices()[sl]
     sid, smask = s['sid'], 1 << s['sid']
     eng = ENG['VN'] if sl.endswith('N') else ENG['VS']
@@ -713,9 +721,10 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     prog.events.append(dict(cycle=t + 5 + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL', tag=f'{which}.XFIN_GO',
                             payload=f'template {tx}'))
     # derived internal / outgoing edges (plan values the bench checks at the slice boundary where they are visible)
-    # NORM-DESKEW (10-25): xrt delays leaf k by 4 - k edges, the 5 partials meet on leaf 4's edge; the collector then
-    # serialises them, so the last partial reaches xfin XR_DESKEW edges after the old staggered (faulting) collection
-    last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector'] + XR_DESKEW
+    # NORM-DESKEW: four edges after leaf0, already present in go[-1]. The
+    # previous faulting serializer restarted at each leaf, so adding another
+    # four edges after the last command would double count that delay.
+    last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector']
     rstd = last_partial + XFIN['last_partial_to_rstd']
     xq = rstd + XFIN['rstd_to_xq_ring']
     gap16 = ('the norm is lowered on ONE slice (smoke); the xfin NX snake (rstop K_NX) and the XQ all-gather are '
@@ -769,7 +778,12 @@ def row_ctl_events(die, prog):
             # canonical BK addressed-drain sink (COORD ruling 2026-10-24 18:55; ot_dsdv_vstop BK_DRAIN_SINK=1): the
             # u_bk_sel rung stop between u_seqhost and u_s_4S consumes a kind-0 CTL beat addressed to its uid with op 1,
             # so the beat never reaches a slice (no vi / line arrival); record the consumption only.
-            prog.events.append(dict(cycle=r['issue'], inst=BK_SEL_INST, port='vi_n', dir='internal', kind='BKDRAIN',
+            # ctl_at = the edge the beat lands at u_bk_sel.vi_n (seqhost V command register -> vo_s + rung land + tvS_seqhost
+            # age): dv_cut_replay lists it as an internal event (not partial); its effect -- no slice / line CTL arrival --
+            # is what the line checks assert (their expected beats exclude it).
+            lk = die.links.get('tvS_seqhost', {})
+            ctl_at = r['issue'] + SEQ['v_cmd_to_vo'] + SEQ['vo_s_land'] + lk['age_edges'] if 'age_edges' in lk else None
+            prog.events.append(dict(cycle=r['issue'], inst=BK_SEL_INST, port='vi_n', dir='internal', kind='BKDRAIN', ctl_at=ctl_at,
                                     tag=f"{prog.tnames[ti]}", payload=f'template {ti}', from_row=r['issue'],
                                     note='consumed at the BK stop (addressed drain sink); no slice CTL arrival'))
             continue
@@ -1149,7 +1163,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '
                     'edge the producer\'s output register takes it; boundary offdie = beyond the die\'s elastic link '
                     'layer (no fixed-cycle cut word); dir internal = inside one instance, carried_by its CTL template',
-        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links), indent=1) + '\n')
+        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links,
+        all_links=die.links if entry_norm == 'all' else None), indent=1) + '\n')
     ul = die.unlanded()
     die_gaps = [dict(module='results/arch/s81_dv_1016/bind9/die.v (S81 die GEN, lead S81-DIE6/7)',
                      port=', '.join(sorted(x['link'] for x in ul)),

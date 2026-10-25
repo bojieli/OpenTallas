@@ -1,0 +1,15 @@
+{
+ "element": "qkd_ahub",
+ "kit": "claude/kv-cores-1024r ahub_fp_proposal.py -> rtx-pro:/srv/opentallas-scratch/claude/kv-cores/geom/qkd_ahub_fp_proposal.{png,json} (sha256_12 83d462f8dd48)",
+ "stage": "floorplan proposal (plan only)",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-24T21:44:00-07:00",
+ "reasons": "[2026-10-24 21:44] Looked at the proposal picture and json. Right structural fix for my 19:44 FAIL: hard children (4 x ot_nhb_zh 151.2^2 MX/R0 mirrored so all 268-b inputs meet one central A/B channel, recip 216^2 on the E side next to the fr export column) instead of a flat 407k-cell blob; outline 734x540 -> 605x441, macros 52%, halos 21-22 um between children, S/E faces unchanged. Data flow reads cleanly: S pins -> S band -> channel -> zh inputs; recip in at its NW corner from the channel end, out at its SE corner into the E column. Issues: (a) clock pin ck sits at the S-E corner, so the zh[2] tap at (25,412) is ~990 um Manhattan and zh[0]/zh[3] taps ~620-750 um from the root: balancing to 20 ps works, but core insertion grows by a ~1 mm trunk; (b) zh[2]/zh[3] outputs are on their N faces (y~415) and return ~250-350 um to the S band/E column through the 22-um column gaps or over the M5 children on M6/M7; no route or relay is drawn for them; (c) rst_n arrives on the E face and has 5 children + glue to feed; (d) empty pockets under recip (x 371-587, y 60-134) and above it (y 350-440) ~35k um2; glue util 2.6% of free; width is set by the macros, not by S pins (482 pins / 605 um = 0.8/um).",
+ "fixes": "OK to build the hierarchical kit (SYNTH_HIERARCHICAL + blackbox children + MACRO_PLACEMENT from blocks[]) and run placement + CTS. Conditions before route: (1) move ck to the middle of the S face (x~300, next to the glue tap) or feed it centre-first from the die tap so the longest root->tap distance is <=~550 um; publish the measured core latency (decision 5e) and the 6-tap balance on GRT RC; (2) give zh[2]/zh[3] N-face outputs an explicit path: a registered relay in the channel or a planned M6/M7 over-macro route, each hop <=405 um, shown in the placement picture; (3) rst_n: one relay stage at the channel feeding each child at equal depth (decision 2), no per-child async synchroniser; (4) re-sign the ot_nhb_zh_m5 and qkh_recip_ref views with the current signoff.py before binding; (5) INFO: fill the empty pockets by moving recip down to y~60 (abutting the S band) and use the freed N strip to shrink the height, if the KV-P hub_C slot allows. Placement + CTS pictures come back here for review before route.",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/ahub2/qkd_ahub_fp_proposal.png"
+ ],
+ "owner_lane": "KV",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

@@ -3,7 +3,7 @@
   "sources": {
     "rtl/qwen_dv/s5/s8/qfd_dv_s8_flat.sv": "519209293cea4584f70e3785ba50bc3838cbb9b0577bb89391ddbb3570a16281",
     "rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv": "c5b8e806b6fa0bca679cfd553035a5be066a2bb7b9acc930230d8fc9b6b37036",
-    "rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv": "067bba95d84c1cc401596d19e1be92228eb6503fd59c2968f3ef90ad70109bfa",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_suvm_rp1.sv": "7731866d7f8c436a1e5901aee10006beb12b566f92c1a1100545fb8214c67475",
     "rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv": "825eaf6a1a50517ba0796e9d8903654d4a97b7e4cb0442b28ba2f46fdcb77e64"
   },
   "selected": [
@@ -788,7 +788,8 @@
     "core_boundary": "u_suvm gb/gv/lv1/pd1 are group-stage publications; VM answers retain actual VM read age",
     "lane_input": "lrly control244/gv/pd1/lv1/answers delay1 then IREG1; gb low256 bypass inbound delay then IREG1",
     "lane_output": "lrly head output OREG1; five read requests addRD-1=1, other outputs addRD=2",
-    "plan": "every new inter-partition lane uses normal source/destination boundary flops and stations; regenerate schedule from produced latency; no original cycle claim"
+    "plan": "every new inter-partition lane uses normal source/destination boundary flops and stations; regenerate schedule from produced latency; no original cycle claim",
+    "su_program_start": "S8-SU-PROG-ALIGN: SU start delayed 3 die-clock edges after program request; program and SU accept meet at command+8. Compiler must use recalibrated bound-row SU ages; predecessor slice ages do not apply."
   },
   "source_rows": [
     {

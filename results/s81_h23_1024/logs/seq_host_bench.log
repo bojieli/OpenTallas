@@ -1,0 +1,22 @@
+SEQHOST seed=1 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1617 frag N/S=167/184 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+SEQHOST seed=2 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1507 frag N/S=173/160 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+SEQHOST seed=3 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1553 frag N/S=182/175 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+SEQHOST seed=4 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1531 frag N/S=198/178 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+PAIR SEQHOST seed=1 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1606 frag N/S=167/178 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+PAIR SEQHOST seed=2 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1519 frag N/S=173/167 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+PAIR SEQHOST seed=3 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1555 frag N/S=180/165 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+PAIR SEQHOST seed=4 MUT=0 collide=0 jobs=6 rows=50 cmds N/S/G/J=72/72/72/72 cw=96 kit=6 hw=20 host_cpl=5 arrivals=1540 frag N/S=194/189 mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+SEQHOST COLLIDE at 2205 -> PASS (fault raised)
+SEQHOST STDROP -> PASS (fault raised)
+mutant 1 detected: mism n/s/j/k/hw/tc/cw=60/48/0/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+mutant 2 detected: mism n/s/j/k/hw/tc/cw=0/0/72/0/0/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+mutant 3 detected: mism n/s/j/k/hw/tc/cw=1834/1781/0/0/0/0/0 unit_st=10001000000 g_fault=0/0 busy=0/0
+mutant 4 detected: mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=10000110000 g_fault=0/0 busy=0/0
+mutant 5 detected: mism n/s/j/k/hw/tc/cw=0/0/0/0/0/0/0 unit_st=10000101100 g_fault=0/0 busy=0/0
+mutant 6 detected: mism n/s/j/k/hw/tc/cw=0/0/0/0/8/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+mutant 7 detected: mism n/s/j/k/hw/tc/cw=0/0/0/0/36/2300/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+mutant 8 detected: mism n/s/j/k/hw/tc/cw=0/0/0/0/15/0/0 unit_st=00000000000 g_fault=0/0 busy=0/0
+mutant 9 detected: mism n/s/j/k/hw/tc/cw=1732/1891/0/0/0/0/0 unit_st=10001000000 g_fault=0/0 busy=0/0
+mutant 10 detected: 
+lint FAIL (see /srv/opentallas-scratch2/claude/s81-h23/j_shreg/runs/sh/lint.log): %Warning-PINMISSING: /srv/opentallas-scratch2/claude/s81-h23/j_shreg/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv:487:28: Instance has missing pin: 'bk_uid'
+SEQHOST_GATE FAIL

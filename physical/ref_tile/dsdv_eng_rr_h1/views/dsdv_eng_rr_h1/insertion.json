@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsdv_eng_rr_h1_c/run/results/asap7/kr_dsdv_eng_rr_h1_c/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "ck",
+ "parasitics": "spef",
+ "raw_source": true,
+ "source": "signoff.py checks.clock.by_corner (dsdv_eng_rr_h1_c signoff_cur/signoff.json, SIGNED, main tool 794550c82)",
+ "tt": {
+  "boundary": {
+   "n": 644,
+   "min": 248.76,
+   "mean": 263.18,
+   "max": 269.32,
+   "spread": 20.56
+  },
+  "all": {
+   "n": 18548,
+   "min": 222.82,
+   "mean": 245.99,
+   "max": 276.79,
+   "spread": 53.97
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0,
+  "pair_skew_worst_abs_ps": {
+   "max": 37.75,
+   "min": 42.24
+  }
+ },
+ "ff": {
+  "boundary": {
+   "n": 644,
+   "min": 204.12,
+   "mean": 211.69,
+   "max": 216.52,
+   "spread": 12.4
+  },
+  "all": {
+   "n": 18548,
+   "min": 180.42,
+   "mean": 201.14,
+   "max": 223.84,
+   "spread": 43.42
+  },
+  "errors": [],
+  "macros": null,
+  "macro_libs": 0,
+  "pair_skew_worst_abs_ps": {
+   "max": 34.45,
+   "min": 37.93
+  }
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_TT_MEAN": 263,
+  "CK_TT_ALL_MEAN": 246,
+  "CK_TT_MIN": 249,
+  "CK_TT_ALL_MIN": 223,
+  "CK_TT_MAX": 269,
+  "CK_TT_ALL_MAX": 277,
+  "CK_FF_MEAN": 212,
+  "CK_FF_ALL_MEAN": 201,
+  "CK_FF_MIN": 204,
+  "CK_FF_ALL_MIN": 180,
+  "CK_FF_MAX": 217,
+  "CK_FF_ALL_MAX": 224,
+  "CK_ROUTE_REF": "TT"
+ },
+ "lib_clock_pin": "ck",
+ "clock_mapping_basis": "constraint.sdc create_clock -name clk [get_ports ck]"
+}

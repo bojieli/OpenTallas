@@ -20,23 +20,75 @@ def _extent(points, xy):
     return np.maximum.reduce([abs(a-u.min()),abs(a-u.max()),abs(b-v.min()),abs(b-v.max())])
 
 
-def _path(free,first,last,budget,radius,min_stages):
+def _visible(source, targets, boxes):
+    """True when at least one Manhattan L between each point pair avoids cores.
+
+    Legal station endpoints alone are insufficient: the connecting wire can cut
+    across a core whose only free M6/M7 tracks cannot carry the wide bundle.
+    Preserve both L orders so narrow channels remain usable without moving a
+    core or increasing the reach budget.
+    """
+    source=np.asarray(source);targets=np.asarray(targets)
+    x0,y0=source[...,0],source[...,1];x1,y1=targets[...,0],targets[...,1]
+    xl,xh=np.minimum(x0,x1),np.maximum(x0,x1)
+    yl,yh=np.minimum(y0,y1),np.maximum(y0,y1)
+    xy=np.ones(np.broadcast_shapes(np.shape(x0),np.shape(x1)),dtype=bool)
+    yx=xy.copy()
+    for a,b,c,d in boxes:
+        h0=(b<y0)&(y0<d)&(xl<c)&(xh>a)
+        h1=(b<y1)&(y1<d)&(xl<c)&(xh>a)
+        v0=(a<x0)&(x0<c)&(yl<d)&(yh>b)
+        v1=(a<x1)&(x1<c)&(yl<d)&(yh>b)
+        xy &= ~(h0|v1);yx &= ~(v0|h1)
+    return xy|yx
+
+
+def _path(free,first,last,budget,radius,min_stages,boxes=(),first_point=None,last_point=None):
     parent=np.full(len(free),-2,dtype=np.int64)
-    starts=np.flatnonzero(first+radius<=budget)
+    start_ok=first+radius<=budget
+    if boxes and first_point is not None:start_ok &= _visible(first_point,free,boxes)
+    end_ok=last+radius<=budget
+    if boxes and last_point is not None:end_ok &= _visible(free,last_point,boxes)
+    starts=np.flatnonzero(start_ok)
     queue=deque(map(int,starts));parent[starts]=-1;end=None
     while queue:
         current=queue.popleft()
-        if last[current]+radius<=budget:
+        if end_ok[current]:
             end=current;break
         distance=np.abs(free-free[current]).sum(axis=1)
         near=np.flatnonzero((distance<=budget-2*radius)&(parent==-2))
+        if boxes and len(near):near=near[_visible(free[current],free[near],boxes)]
         near=near[np.argsort(last[near])];parent[near]=current;queue.extend(map(int,near))
     if end is None:raise ValueError('no reach-bounded station-target chain')
     solution=[]
     while end>=0:
         solution.append(int(end));end=int(parent[end])
     solution.reverse()
-    if len(solution)+1<min_stages:raise ValueError('old excess stages need explicit preservation')
+    # A shorter legal corridor must retain the old statically priced register depth.
+    # Insert distinct legal target sites along existing visible edges; never
+    # change an endpoint, remove a stage or borrow reach from a different leg.
+    while len(solution)+1<min_stages:
+        chosen=None
+        vertices=[np.asarray(first_point) if first_point is not None else free[solution[0]],
+                  *[free[i] for i in solution],
+                  np.asarray(last_point) if last_point is not None else free[solution[-1]]]
+        edges=sorted(range(len(solution)+1),key=lambda j:-float(np.abs(vertices[j+1]-vertices[j]).sum()))
+        for edge in edges:
+            left,right=vertices[edge],vertices[edge+1]
+            left_dist=np.abs(free-left).sum(axis=1);right_dist=np.abs(free-right).sum(axis=1)
+            ok=(start_ok.copy() if edge==0 else left_dist<=budget-2*radius)
+            ok &= (end_ok if edge==len(solution) else right_dist<=budget-2*radius)
+            ok[solution]=False
+            if boxes:
+                if edge>0:ok &= _visible(left,free,boxes)
+                if edge<len(solution):ok &= _visible(free,right,boxes)
+            candidates=np.flatnonzero(ok)
+            if not len(candidates):continue
+            midpoint=(left+right)/2
+            rank=np.abs(free[candidates]-midpoint).sum(axis=1)
+            chosen=(edge,int(candidates[np.argmin(rank)]));break
+        if chosen is None:raise ValueError('no distinct legal corridor targets preserve existing stage depth')
+        solution.insert(*chosen)
     return solution
 
 
@@ -65,7 +117,8 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
                 allocator.used=set(base_used)
                 free=targets[[i not in blocked_targets for i in range(len(targets))]]
                 ids=np.array([i for i in range(len(targets)) if i not in blocked_targets])
-                path=_path(free,_extent(a,free),_extent(b,free),budget,max_radius_um,slot['stations'])
+                path=_path(free,_extent(a,free),_extent(b,free),budget,max_radius_um,slot['stations'],
+                           boxes=boxes,first_point=a.mean(axis=0),last_point=b.mean(axis=0))
                 points=[];stats=[]
                 for index in path:
                     try:p,st=allocator.allocate(free[index],width,max_radius_um=max_radius_um)
@@ -87,6 +140,43 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
     return ledger,explicit
 
 
+
+def reuse(raw, previous, types=None):
+    """Reuse exact sites only when the complete type and slot geometry matches.
+
+    Committed generated plans are a placement seed, like the core placement
+    candidates. A changed outline/core/pin/clock/reset/internal-station contract
+    invalidates the seed. Old depths may be retained but never reduced below
+    the newly generated minimum. Unmatched types must run the allocator.
+    """
+    import copy
+    selected=set(types) if types is not None else set(raw['partition_types'])
+    policy=lambda p: (tuple(p.get('die',{}).get(k) for k in ('period_ps','reach_um','grid_um')),
+                      p.get('budgets',{}).get('ft_station_max_um'))
+    if policy(raw)!=policy(previous):return []
+    reused=[]
+    derived={'stations','regs_um','bit_sites_um','bit_site_cell_um'}
+    for name,ty in raw['partition_types'].items():
+        old=previous.get('partition_types',{}).get(name)
+        if name not in selected or not old or not ty.get('ft_slots'):continue
+        if {k:v for k,v in ty.items() if k!='ft_slots'}!={k:v for k,v in old.items() if k!='ft_slots'}:continue
+        slots=ty['ft_slots'];prior=old.get('ft_slots',[])
+        if len(slots)!=len(prior):continue
+        valid=True
+        for slot,seed in zip(slots,prior):
+            if {k:v for k,v in slot.items() if k not in derived}!={k:v for k,v in seed.items() if k not in derived}:
+                valid=False;break
+            sites=seed.get('bit_sites_um');cell=seed.get('bit_site_cell_um')
+            if sites is None or not cell or seed['stations']<slot['stations'] or len(sites)!=seed['stations']-1:
+                valid=False;break
+            if any(len(stage)!=seed['width']+1 for stage in sites):valid=False;break
+        if not valid:continue
+        for slot,seed in zip(slots,prior):
+            for key in derived:slot[key]=copy.deepcopy(seed[key])
+        reused.append(name)
+    return reused
+
+
 def main():
     import argparse
     import json
@@ -95,12 +185,18 @@ def main():
     ap=argparse.ArgumentParser(description='Refresh exact per-bit FT sites in an existing plan, preserving all other fields.')
     ap.add_argument('plan');ap.add_argument('--out',required=True);ap.add_argument('--ledger',required=True)
     ap.add_argument('--types',help='comma-separated type names; default all frame col_ types')
+    ap.add_argument('--all-core-types',action='store_true',help='select every type with hard cores and FT slots')
+    ap.add_argument('--reuse',help='previous generated plan with exact sites; reuse only identical complete type contracts')
     a=ap.parse_args();raw=json.loads(Path(a.plan).read_text())
-    selected=a.types.split(',') if a.types else [n for n in raw['partition_types'] if n.startswith('col_')]
-    ledger,_=place(raw,RowAllocator,types=selected)
+    if a.types and a.all_core_types:ap.error('--types and --all-core-types are mutually exclusive')
+    selected=([n for n,t in raw['partition_types'].items() if t.get('hard_cores') and t.get('ft_slots')]
+              if a.all_core_types else a.types.split(',') if a.types else [n for n in raw['partition_types'] if n.startswith('col_')])
+    reused=reuse(raw,json.loads(Path(a.reuse).read_text()),types=selected) if a.reuse else []
+    ledger,_=place(raw,RowAllocator,types=[n for n in selected if n not in reused])
     Path(a.out).write_text(json.dumps(raw,indent=0)+'\n')
     Path(a.ledger).write_text(json.dumps(ledger,indent=1)+'\n')
-    print(f'Placed {len(ledger)} FT slots; max actual paired-bit hop {max(v["worst_paired_bit_um"] for v in ledger):.2f} um')
+    worst=max((v['worst_paired_bit_um'] for v in ledger),default=0.)
+    print(f'Reused {len(reused)} unchanged exact types; placed {len(ledger)} FT slots; max new actual paired-bit hop {worst:.2f} um')
 
 if __name__=='__main__':
     main()

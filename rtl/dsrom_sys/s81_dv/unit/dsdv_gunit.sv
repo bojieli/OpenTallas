@@ -46,28 +46,31 @@ module dsdv_gunit #(
   `define DSDV_GU_MUT
   `define DSDV_GU_L5
 `endif
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8): leaf seams carry no constant / unread bits -- CTL rows packed to 170 bits
+    // (h5_b, h4_b, h0_b, r_b, w_b), hp_a / hp_b [243:40], dl_a / dl_b packed 237, c45_a / c21_a packed 8, rw_x [191:0],
+    // L1f o_d 245 per front; L1c reads f_v / f_f / f_l / f_g of front 0 only (fronts 1..3 leave them open).
     // rung segments: d_* southbound (from N), u_* northbound (from S)
     wire [275:0] d54, u45, d40, u04, d02, u20, d21, u12, d13, u31;
     // L5 <-> L4
     wire l_launch, l_tset, l_tw, l_mv; wire [4:0] l_mi; wire [31:0] l_my; wire [9:0] l_trow; wire [4:0] l_tlm; wire [15:0] l_tsm;
-    wire c45_v; wire [9:0] c45_a; wire [255:0] c45_d; wire [3:0] s45; wire h5_v; wire [275:0] h5_b; wire f5;
+    wire c45_v; wire [7:0] c45_a; wire [255:0] c45_d; wire [3:0] s45; wire h5_v; wire [169:0] h5_b; wire f5;
     // L4 <-> L0
     wire g_v, j_v, j_set, j_w; wire [3:0] g_i; wire [4:0] g_acc, j_lm; wire [319:0] g_d; wire [9:0] j_row; wire [15:0] j_sm;
-    wire c04_v; wire [9:0] c04_a; wire [255:0] c04_d; wire [3:0] s04; wire h4_v; wire [275:0] h4_b; wire mix_go, launch_s, f4;
+    wire c04_v; wire [7:0] c04_a; wire [255:0] c04_d; wire [3:0] s04; wire h4_v; wire [169:0] h4_b; wire mix_go, launch_s, f4;
     // L0 <-> L2
-    wire hp_av, hp_bv; wire [275:0] hp_a, hp_b; wire c20_v; wire [9:0] c20_a; wire [255:0] c20_d; wire [3:0] s20;
-    wire h0_v; wire [275:0] h0_b; wire f0;
+    wire hp_av, hp_bv; wire [243:40] hp_a, hp_b; wire c20_v; wire [7:0] c20_a; wire [255:0] c20_d; wire [3:0] s20;
+    wire h0_v; wire [169:0] h0_b; wire f0;
     // L2 <-> L1
-    wire dl_av, dl_bv; wire [275:0] dl_a, dl_b; wire c21_v; wire [9:0] c21_a; wire [255:0] c21_d; wire [3:0] s21;
-    wire r_v; wire [275:0] r_b; wire f1;
+    wire dl_av, dl_bv; wire [236:0] dl_a, dl_b; wire c21_v; wire [7:0] c21_a; wire [255:0] c21_d; wire [3:0] s21;
+    wire r_v; wire [169:0] r_b; wire f1;
     // L1 <-> L3
     // side leaves
     wire xe_v, ye_v, ye_f, xd_v, yd_v, yd_f; wire [31:0] xe_x, ye_y, xd_b, yd_y;
     wire ss_v, r4_v, r4_f; wire [31:0] ss, eps_c, r4_y;
     wire wr_av, wr_bv, wr_b, go_a, go_b, r0_v, r0_f; wire [4:0] wr_agh, wr_bgh, go_acc, r0_acc; wire [191:0] wr_ad, wr_bd;
     wire [3:0] r0_i; wire [319:0] r0_d;
-    wire rw_st, rw_v, rw_l; wire [511:0] rw_x; wire [31:0] rw_scale; wire [9:0] rw_row; wire [4:0] rw_lm;
-    wire [15:0] rw_sm; wire [3:0] s13; wire w_v; wire [275:0] w_b; wire f3;
+    wire rw_st, rw_v, rw_l; wire [191:0] rw_x; wire [31:0] rw_scale; wire [9:0] rw_row; wire [4:0] rw_lm;
+    wire [15:0] rw_sm; wire [3:0] s13; wire w_v; wire [169:0] w_b; wire f3;
 
     dsdv_gunit_l5 `DSDV_GU_L5 u_l5 (.clk(clk), .rst_n(rst_n), .rs_i(u45), .rs_o(d54), .launch(l_launch), .mx_v(l_mv), .mx_i(l_mi), .mx_y(l_my),
         .t_set(l_tset), .t_w(l_tw), .t_row(l_trow), .t_lm(l_tlm), .t_sm(l_tsm), .cw_v(c45_v), .cw_a(c45_a), .cw_d(c45_d),
@@ -98,12 +101,12 @@ module dsdv_gunit #(
     dsdv_gunit_l2 `DSDV_GU_MUT u_l2 (.clk(clk), .rst_n(rst_n), .rn_i(d02), .rn_o(u20), .hp_av(hp_av), .hp_a(hp_a), .hp_bv(hp_bv),
         .hp_b(hp_b), .cwn_v(c20_v), .cwn_a(c20_a), .cwn_d(c20_d), .sidn(s20), .hct_v(h0_v), .hct_b(h0_b), .hf(f0),
         .rs_i(u12), .rs_o(d21), .dl_av(dl_av), .dl_a(dl_a), .dl_bv(dl_bv), .dl_b(dl_b), .cws_v(c21_v), .cws_a(c21_a),
-        .cws_d(c21_d), .sids(s21), .rct_v(r_v), .rct_b(r_b), .rf(f1), .sid(sid), .cw_v(cw_v), .cw_a(cw_a),
+        .cws_d(c21_d), .sids(s21), .rct_v(r_v), .rct_b(r_b), .rf(f1), .sid(sid), .cw_v(cw_v), .cw_a({cw_a[9:8], cw_a[5:0]}),
         .cw_d(cw_d), .fault(fault));
     // L1 <-> the router select leaves (S81U-GUNIT-L1): four fronts L1f0..3 + the collector L1c, E of L1
     wire [5:0] sa_r, sb_r; wire [223:0] sa_d, sb_d; wire [55:0] f_we; wire c_go, c_fw, c_l, f_re; wire [2:0] c_bn;
     wire [19:0] c_lvn; wire [3:0] f_ra, bw_a; wire [7:0] bw_e; wire [255:0] bw_d;
-    wire [3:0] fo_v, fo_f, fo_l, fo_g, fo_flt; wire [4*246-1:0] fo_d; wire g_go; wire [23:0] g_hit; wire [41:0] g_a;
+    wire [3:0] fo_v, fo_f, fo_l, fo_g, fo_flt; wire [4*245-1:0] fo_d; wire g_go; wire [23:0] g_hit; wire [41:0] g_a;
     wire i_v, gs_v, f1c; wire [53:0] i_ids; wire [191:0] gs_d;
     dsdv_gunit_l1 `DSDV_GU_MUT u_l1 (.clk(clk), .rst_n(rst_n), .rn_i(d21), .rn_o(u12), .dl_av(dl_av), .dl_a(dl_a),
         .dl_bv(dl_bv), .dl_b(dl_b), .cw_v(c21_v), .cw_a(c21_a), .cw_d(c21_d), .sid_i(s21), .ct_v(r_v), .ct_b(r_b),
@@ -119,10 +122,10 @@ module dsdv_gunit #(
                 .we(f_we[14 * gq +: 14]), .c_go(c_go), .c_fw(c_fw), .c_l(c_l), .c_bn(c_bn), .c_lvn(c_lvn[5 * gq +: 5]),
                 .re(f_re), .ra(f_ra), .bw_e(bw_e[2 * gq +: 2]), .bw_a(bw_a), .bw_d(bw_d),
                 .g_go(g_go), .g_hit(g_hit[6 * gq +: 6]), .g_a(g_a),
-                .o_v(fo_v[gq]), .o_f(fo_f[gq]), .o_l(fo_l[gq]), .o_g(fo_g[gq]), .o_d(fo_d[246 * gq +: 246]), .o_flt(fo_flt[gq]));
+                .o_v(fo_v[gq]), .o_f(fo_f[gq]), .o_l(fo_l[gq]), .o_g(fo_g[gq]), .o_d(fo_d[245 * gq +: 245]), .o_flt(fo_flt[gq]));
         end
     endgenerate
-    dsdv_gunit_l1c `DSDV_GU_MUT u_l1c (.clk(clk), .rst_n(rst_n), .f_v(fo_v), .f_f(fo_f), .f_l(fo_l), .f_g(fo_g),
+    dsdv_gunit_l1c `DSDV_GU_MUT u_l1c (.clk(clk), .rst_n(rst_n), .f_v(fo_v[0]), .f_f(fo_f[0]), .f_l(fo_l[0]), .f_g(fo_g[0]),
         .f_d(fo_d), .f_flt(fo_flt), .g_go(g_go), .g_hit(g_hit), .g_a(g_a), .i_v(i_v), .i_ids(i_ids), .s_v(gs_v),
         .s_d(gs_d), .fault(f1c));
     dsdv_gunit_l3 `DSDV_GU_MUT u_l3 (.clk(clk), .rst_n(rst_n), .rn_i(d13), .rn_o(u31), .rw_st(rw_st), .rw_v(rw_v),

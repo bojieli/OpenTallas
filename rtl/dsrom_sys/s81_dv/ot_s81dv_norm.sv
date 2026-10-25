@@ -487,7 +487,11 @@ module ot_s81dv_xfin #(
     parameter integer NS  = 16,
     parameter integer NVL = 5,
     parameter integer LM  = 5,
-    parameter integer LA  = 6
+    parameter integer LA  = 6,
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant pins): the S81 hardened master (defaults) takes s_i[6:0] -- its
+    // producer xrt's x_si[7] is constant 0 (max index 59) and was dropped; s_i[7] is 0 inside.  ot_s81dv_norm (and DV
+    // benches whose s_i may carry 8 bits) pass SIW = 8.
+    parameter integer SIW = 7
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -496,7 +500,7 @@ module ot_s81dv_xfin #(
     input  wire [3:0]         sid,          // slice id STRAP (captured; one hardened master serves all 16 slices)
     input  wire [31:0]        eps,
     input  wire               s_v,          // group beat partials (NORM: s_i = leaf; ENG: s_i = v * NVL + leaf)
-    input  wire [7:0]         s_i,
+    input  wire [SIW-1:0]     s_i,
     input  wire [31:0]        s,
     input  wire               wi_v, input wire [3:0] wi_h, input wire [7:0] wi_b, input wire [NVL*32-1:0] wi_d,
     input  wire               ei_v, input wire [3:0] ei_h, input wire [7:0] ei_b, input wire [NVL*32-1:0] ei_d,
@@ -507,7 +511,7 @@ module ot_s81dv_xfin #(
     output reg                e_v,          // ENG: one copy's three csum totals (one copy a cycle, lowest copy first)
     output reg  [1:0]         e_c,
     output reg  [31:0]        e_hh, e_kk, e_dd,
-    output wire               fault
+    output reg                fault         // RTLC 10-24: pin flop = the kept sticky flt next state (0 edges)
 );
     // ENG mode (RTL-BUILD-S81 10-18, the in-slice Engram mix; S81U-MIX verdict build_plan "xfin ENG mode"):
     //   12 vectors a go, v = kind * 4 + copy (kind 0 hh, 1 kk, 2 dd), each NVL beat partials (s_i = v * NVL + leaf, any
@@ -526,7 +530,8 @@ module ot_s81dv_xfin #(
     always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rstn = rs[1];
     reg go_c; reg mode_c; reg [31:0] eps_c; reg sv_c; reg [7:0] si_c; reg [31:0] s_c;
-    always @(posedge clk) begin go_c <= go; mode_c <= mode; eps_c <= eps; si_c <= s_i; s_c <= s; end
+    wire [7:0] s_i8 = s_i;                         // zero-extended (SIW = 7: s_i[7] = 0)
+    always @(posedge clk) begin go_c <= go; mode_c <= mode; eps_c <= eps; si_c <= s_i8; s_c <= s; end
     always @(posedge clk or negedge rstn) if (!rstn) sv_c <= 1'b0; else sv_c <= s_v;
     reg md;                                        // mode of the current go
     always @(posedge clk or negedge rstn) if (!rstn) md <= 1'b0; else if (go_c) md <= mode_c;
@@ -629,15 +634,27 @@ module ot_s81dv_xfin #(
         else begin epd <= eall & ~eoh; e_v <= |eall; end
     always @(posedge clk) begin
         for (d2 = 0; d2 < 4; d2 = d2 + 1) if (cr_v[d2]) begin ehh[d2] <= chh[d2]; ekk[d2] <= ckk[d2]; edd[d2] <= cdd[d2]; end
+        // S81-KITS-RTLC 10-24 (raw face_guard: no output pin flop reads itself): the ENG result registers are ZERO when no
+        // copy is emitted (were: hold), so e_* change only where e_v = 0 (the collection reads them under e_v).
+        e_c <= 2'd0; e_hh <= 32'd0; e_kk <= 32'd0; e_dd <= 32'd0;
+`ifdef OT_RTLC_MUT_XFIN   // RTLC bench mutant: e_kk carries e_hh
+        for (d2 = 0; d2 < 4; d2 = d2 + 1) if (eoh[d2]) begin
+            e_c <= d2; e_hh <= cr_v[d2] ? chh[d2] : ehh[d2]; e_kk <= cr_v[d2] ? chh[d2] : ehh[d2];
+            e_dd <= cr_v[d2] ? cdd[d2] : edd[d2];
+        end
+`else
         for (d2 = 0; d2 < 4; d2 = d2 + 1) if (eoh[d2]) begin
             e_c <= d2; e_hh <= cr_v[d2] ? chh[d2] : ehh[d2]; e_kk <= cr_v[d2] ? ckk[d2] : ekk[d2];
             e_dd <= cr_v[d2] ? cdd[d2] : edd[d2];
         end
+`endif
     end
-    reg flt;
+    (* keep = "true" *) reg flt;                        // sticky state (kept); the fault pin flop loads its next value
+    wire flt_set = xf || rf || eflt || (|tbad) || (|cf);
     always @(posedge clk or negedge rstn)
-        if (!rstn) flt <= 1'b0; else if (go_c) flt <= 1'b0; else if (xf || rf || eflt || (|tbad) || (|cf)) flt <= 1'b1;
-    assign fault = flt;
+        if (!rstn) begin flt <= 1'b0; fault <= 1'b0; end
+        else if (go_c) begin flt <= 1'b0; fault <= 1'b0; end
+        else begin flt <= flt | flt_set; fault <= flt | flt_set; end
 endmodule
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -678,7 +695,7 @@ module ot_s81dv_norm_slice #(
     ot_hbm_norm_grp #(.G(64), .D(64 * NVL), .N(64), .LM(LM), .LA(LA)) u_g (.clk(clk), .rst_n(rstn), .go(go), .in_v(in_v),
         .in_x(in_x), .pre(pre), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d),
         .s_v(s_v), .s_i(s_i), .s(s), .y_v(y_v), .y_i(y_i), .y(y), .gf(gf));
-    ot_s81dv_xfin #(.NS(NS), .NVL(NVL), .LM(LM), .LA(LA)) u_xf (.clk(clk), .rst_n(rstn), .go(go), .mode(1'b0), .sid(SID[3:0]), .eps(eps),
+    ot_s81dv_xfin #(.NS(NS), .NVL(NVL), .LM(LM), .LA(LA), .SIW(8)) u_xf (.clk(clk), .rst_n(rstn), .go(go), .mode(1'b0), .sid(SID[3:0]), .eps(eps),
         .s_v(s_v), .s_i(s_i), .s(s), .wi_v(wi_v), .wi_h(wi_h), .wi_b(wi_b), .wi_d(wi_d), .ei_v(ei_v), .ei_h(ei_h),
         .ei_b(ei_b), .ei_d(ei_d), .eo_v(eo_v), .eo_h(eo_h), .eo_b(eo_b), .eo_d(eo_d), .wo_v(wo_v), .wo_h(wo_h),
         .wo_b(wo_b), .wo_d(wo_d), .rb_v(rb_v), .rb_d(rb_d), .e_v(), .e_c(), .e_hh(), .e_kk(), .e_dd(), .fault(xff));

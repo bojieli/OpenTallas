@@ -41,7 +41,14 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     wire [3:0] plv, plr, piv, pir; wire [4*553-1:0] pld, pid; wire [11:0] pf; wire [3:0] prxv;
     wire [4*512-1:0] ptx, prx; wire [7:0] pst; wire [4*513-1:0] ppa; wire [3:0] pta;
     // MU-S81/KIT: die P = the hardened copy A/B master ot_s81sl_lep_mu_ab (kit s81sl_lepmu; = lep_mu HOST_EN 0 AB_EN 1)
+    // S81-XDIE 10-24: +define+TB_P_HAB = die P is the host-plane copy-A/B top ot_s81sl_lep_mu_hab (s_7N with the reserve pair B;
+    // host plane idle: t_host / t_kd constant 0 here, exercised in tb_s81sl_lep_hab): every check below must hold unchanged.
+`ifdef TB_P_HAB
+    ot_s81sl_lep_mu_hab #(.SRAM(1), .NB(NB), .RX_SRAM(P_RX_SRAM), .IN_PIPE(P_IN_PIPE), .NATIVE32(P_NATIVE32)) lp (.clk(clk), .rst_n(rst_n), .ro(p_ro), .ri(p_ri),
+        .l0_st(pst[1:0]), .l1_st(pst[3:2]), .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+`else
     ot_s81sl_lep_mu_ab #(.SRAM(1), .NB(NB), .RX_SRAM(P_RX_SRAM), .IN_PIPE(P_IN_PIPE), .NATIVE32(P_NATIVE32)) lp (.clk(clk), .rst_n(rst_n), .ro(p_ro), .ri(p_ri),
+`endif
         .lo0_v(plv[0]), .lo0_r(plr[0]), .lo0_d(pld[0 +: 553]), .lo1_v(plv[1]), .lo1_r(plr[1]), .lo1_d(pld[553 +: 553]),
         .li0_v(piv[0]), .li0_r(pir[0]), .li0_d(pid[0 +: 553]), .li1_v(piv[1]), .li1_r(pir[1]), .li1_d(pid[553 +: 553]),
         .rxv(prxv[1:0]), .sl_f(1'b0), .l0_f(pf[2:0]), .l1_f(pf[5:3]),

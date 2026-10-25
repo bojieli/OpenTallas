@@ -1,0 +1,12 @@
+QREL mismatch cycle396 sid2 valid0/1 data98b4113a/98b4218c
+QREL mismatch cycle397 sid2 valid1/0 data98b4218c/00000000
+QREL mismatch cycle400 sid2 valid0/1 data98b4218c/98b42198
+QREL mismatch cycle401 sid2 valid1/0 data98b42198/00000000
+QREL mismatch cycle404 sid2 valid0/1 data98b42198/98b42184
+QREL legal sid16 words48 received48 cycles2644 err6
+QREL final err6
+FAIL QREL
+- tb_s81sl_rstd_release.sv:53: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.013 s; speed 230.666 us/s
+- Verilator: cpu 0.012 s on 1 threads; allocated 7 MB

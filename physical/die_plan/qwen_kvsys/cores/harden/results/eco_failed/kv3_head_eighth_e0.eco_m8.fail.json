@@ -1,0 +1,8 @@
+{
+ "module": "kv3_head_eighth_e0",
+ "variant": "eco m8 (MCMM tc+bc, max_fanout 24, slew margin 20, setup margin 10, hold margin 8)",
+ "run": "intel2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e0/m8",
+ "verdict": "STALLED (stopped by KV lead on COORD stall order 2026-10-25 ~00:46 PDT): GRT hold repair runaway -- 13739 FF hold endpoints, iteration 0 WNS -4.90 / TNS -619.7 ps, no progress for ~1.5 h (e2 m8 needed 3746 s for 10337 endpoints); exit 137; signoff NOT RUN",
+ "note": "e0 also FAILs face_guard (PORT_REGS, COORD 22:43 ruling 1) -> relaunch only after the PORT_REGS re-kit on plan v3.9. Run data deleted.",
+ "recorded": "2026-10-25 00:47 PDT KV-COLLECT"
+}

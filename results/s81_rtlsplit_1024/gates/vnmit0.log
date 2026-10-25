@@ -1,0 +1,3 @@
+GATE vnmit0 PASS rc=0 MITER_ACT go 824 hw 4235 wl 3495 rb 1664 | p_v 380 y_v 10919 hq_v 3891 fault-edges 20072 MITER PASS vn split cycles 40000 mismatches 0 PASS vn spmiter 
+MITER_ACT go 824 hw 4235 wl 3495 rb 1664 | p_v 380 y_v 10919 hq_v 3891 fault-edges 20072
+MITER PASS vn split cycles 40000 mismatches 0

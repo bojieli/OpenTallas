@@ -1,0 +1,19 @@
+{
+ "review": "S81/KITS author review of a canonical legacy core, stage-1 place (owner order 10-24 08:05)",
+ "when_pdt": "2026-10-24 19:37",
+ "kit": "epyc1:/srv/opentallas-scratch/claude/elem-s81-cores/r2/dsfd_node_LLd_c",
+ "generator": "claude/elem-s81-cores-1024 @dc52d4a06f gen_core_kit_legacy.py",
+ "image": "results/geom_review/s81_kits_1024r/img/dsfd_node_LLd_c.png",
+ "reset": "rst_n timed synchronous input (owner decision 2 local form), no false path",
+ "outline_um": [
+  43.2,
+  77.76
+ ],
+ "placed": "8,273 cells, 1,971 flops, max bin 0.67, 0 bins > 0.8",
+ "findings": [
+  "inputs a[63] / b[63] on the E face full height (2/um), output o[66] cluster on S x 6-13 (10.5/um vs cap 24.3) + f on S: data flows E -> S-W corner, <= ~45 um",
+  "clk/rst_n on E centre; density even; no slivers",
+  "face_guard PASS with the hook a no-op (0 split, 0 capture)"
+ ],
+ "verdict": "PASS (route)"
+}

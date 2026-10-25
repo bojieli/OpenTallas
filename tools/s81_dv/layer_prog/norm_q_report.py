@@ -15,12 +15,33 @@ import norm_nx as N               # noqa: E402
 import norm_q as Q                # noqa: E402
 
 
-Q_NOMINAL = 115      # root write-back -> first own XQ beat (the smoke model's 667 - 552; re-measured on the runs)
+Q_NOMINAL = Q.Q_AFTER_ROOT  # measured on fully reclocked cut_0S/0N/7, see norm_q
 
 
 def main(prog, tree, out=None):
     S = json.loads((Path(prog) / 'schedule.json').read_text())
-    die = C.Die(tree)
+    if tree == '-':
+        # The compiled programme already contains the exact die-build link
+        # endpoints/ages. Reuse those rather than parsing the full RTL again.
+        class CompiledDie:
+            links = S.get('all_links') or S['links']
+
+            def slices(self):
+                out = {}
+                for event in S['events']:
+                    if event.get('kind') != 'NX' or not event.get('words'):
+                        continue
+                    sid = (int(event['words'][0][1], 16) >> 9) & 15
+                    if event['inst'] in out and out[event['inst']]['sid'] != sid:
+                        raise ValueError('compiled NX headers disagree on slice SID')
+                    out[event['inst']] = dict(sid=sid)
+                if sorted(v['sid'] for v in out.values()) != list(range(16)):
+                    raise ValueError('compiled NX programme lacks one of 16 source SIDs')
+                return out
+
+        die = CompiledDie()
+    else:
+        die = C.Die(tree)
     sl = die.slices()
     by_sid = {v['sid']: k for k, v in sl.items()}
     words = []
@@ -53,11 +74,15 @@ def main(prog, tree, out=None):
             if (side == 'e' and col < 7) or (side == 'w' and col > 0):
                 age[(inst, side)] = N._lane0(die, inst, port)[3]
         vage[inst] = N._lane0(die, inst, 'vo')[3]
+    # fc31 selected contracts: BK_COL is a vstop (2), BK_SEL adds its
+    # face relay (3), seqhost's RL1 rung is 6+RL (7), both directions.
+    bridges = dict(u_bk_col=2, u_bk_sel=3, u_seqhost=7, u_gunit=12, u_eng=2)
+    vpaths = Q.v_paths(die, bridges)
     Q.V_ASM = None
     qn = {inst: root[inst] + Q_NOMINAL for inst in root}
     res = {}
     for va in ['per_slice']:
-        Q.V_ASM = {i: 2 + v for i, v in vage.items()}
+        Q.V_ASM = {i: p['assembled_after_own_line'] for i, p in vpaths.items()}
         occ, cl, coa = Q.allgather(qn, dict(pos=pos, age=age, partner={i: by_ct[(c, 1 - t)] for i, (c, t) in pos.items()}))
         load = defaultdict(int)
         span = defaultdict(lambda: [1 << 30, -1])
@@ -71,6 +96,7 @@ def main(prog, tree, out=None):
                        worst_window_edges=span[worst][1] - span[worst][0] + 1,
                        first_collision=min(cl, key=lambda k: k[2]) if cl else None)
     doc.update(line_age={f'{i}.{s}': a for (i, s), a in sorted(age.items())}, v_age=vage, allgather=res,
+               v_assembly_age=Q.V_ASM, v_paths=vpaths, v_paths_complete=True, v_bridge_cycles=bridges,
                q_nominal_after_root=Q_NOMINAL)
     txt = json.dumps(doc, indent=1, default=str)
     if out:

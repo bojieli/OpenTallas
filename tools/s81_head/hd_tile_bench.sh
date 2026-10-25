@@ -28,15 +28,19 @@ SRCS="rtl/common/ot_prefix.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_bmul2.
  rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv rtl/dsrom_sys/s81_head/test/tb_s81hd_mini.sv"
 D=""; [ "$M" != none ] && D="+define+OT_S81HD_MUT_$M"
 CV=${CV:-0}   # 10-24: CV=1 = elements as the closed-view macro models (ot_s81hd_bundle CV)
-OBJ=$O/obj_${M}_${CUT}_${S9}_cv$CV
+# 10-24: AIS / MH / CS env = tile A_INPUT_STAGES / MERGE_HOP / CMP_STAGES (default 0 = unchanged)
+AIS=${AIS:-0}; MH=${MH:-0}; CS=${CS:-0}
+OBJ=$O/obj_${M}_${CUT}_${S9}_cv${CV}_a${AIS}m${MH}c${CS}
 if [ ! -x $OBJ/Vtb_s81hd_mini ]; then
-  $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -GCUT=$CUT -GSPLIT9=$S9 -GCV=$CV -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
+  $V --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style $D --top-module tb_s81hd_mini -GCUT=$CUT -GSPLIT9=$S9 -GCV=$CV -GAIS=$AIS -GMH=$MH -GCS=$CS -Mdir $OBJ $SRCS --build-jobs ${J:-8} \
     -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build_$M.log 2>&1 || { grep -m10 %Error $O/build_$M.log; echo "BUILD_FAILED $M"; exit 3; }
 fi
 link() {   # link DIR T SRC: tile T's ROM instances -> image prefix SRC
   for e in a0 a1 a2 a3 b; do for k in 0 1; do ln -sf $IMG/$3${e}_$k.viamap.hex $1/$2${e}_$k.viamap.hex; done; done
 }
-EXP_CYC_A=${EXP_CYC_A:-$([ $CUT = 379 ] && [ $S9 = 0 ] && echo 8375 || { [ $CV = 1 ] && echo 8430 || echo 8429; })}  # CV 1: +1 = the rebuilt elemA output register stage (ot_s81hd_oreg, 10-24)
+EXP_CYC_A=${EXP_CYC_A:-$([ $CUT = 379 ] && [ $S9 = 0 ] && echo 8375 || { [ $CV = 1 ] && echo 8432 || echo 8430; })}
+# 10-24 pipelining: + AIS (A input stages) + 2 MH (bundle merge hops) + CS per tile on the 2-tile chain
+EXP_CYC_A=${EXP_CYC_X:-$((EXP_CYC_A + AIS + 2*MH + 2*CS))}  # +1 bundle pk_q stage (10-24 GEOM-REVIEW); CV 1: +2 more = the rebuilt elemB then elemA output register stages (ot_s81hd_oreg)
   # 8,429 at 0x1ff / SPLIT9 1 (10-24)   # measured go (spo input) -> spr output, 2-tile chain: bundle 8,357 (IOREG 1, SAFE 1: +2) + spo 1 + pin 1 + fire 2 x 2 + spr 5 + chain hop
 run() {    # run NAME T0SRC T1SRC args...
   local N=$1 a=$2 b=$3; shift 3; local W=$O/scen_${N}_$M; mkdir -p $W
@@ -56,5 +60,5 @@ for s in $( [ "$SC" = ALL ] && echo "A B C D" || echo $SC ); do
   *) echo "unknown scenario $s"; exit 2 ;;
   esac
 done
-[ $ok = $n ] && { echo "BENCH_PASS s81hd_mini SCEN=$SC MUT=$M CUT=$CUT SPLIT9=$S9 CV=$CV ($ok/$n)"; exit 0; }
-echo "BENCH_FAIL s81hd_mini SCEN=$SC MUT=$M CUT=$CUT SPLIT9=$S9 CV=$CV ($ok/$n)"; exit 1
+[ $ok = $n ] && { echo "BENCH_PASS s81hd_mini SCEN=$SC MUT=$M CUT=$CUT SPLIT9=$S9 CV=$CV AIS=$AIS MH=$MH CS=$CS ($ok/$n)"; exit 0; }
+echo "BENCH_FAIL s81hd_mini SCEN=$SC MUT=$M CUT=$CUT SPLIT9=$S9 CV=$CV AIS=$AIS MH=$MH CS=$CS ($ok/$n)"; exit 1

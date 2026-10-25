@@ -524,37 +524,12 @@ def stale_check(S, die, manifest):
 
 
 # ================================================================================================= gen
-def bk_drain_sink_filter(S, T, spec):
-    """--bk-drain-sink UID[,UID] (TOK-DS 10-24, opt-in candidate dsdv_bk_g/ot_dsdv_vstop BK_DRAIN_SINK=1, Codex 51ae2e4cef):
-    the BK rung stop consumes a CTL beat whose payload is a drain command addressed to its uid (payload186 [7:0] = BK uid,
-    [10:8] = op 1; on the beat [28:21] / [31:29]), so the beat never reaches the column-4 slice and is never re-injected on
-    the tier line.  The compiler still schedules it as a slice CTL beat (vi + both line directions); drop exactly those
-    events (and so their derived line copies) for the listed uids and record them.  Only valid on a build with the sink ON;
-    default (no option) keeps the legacy transparent-forwarding model."""
-    if not spec:
-        return None
-    uids = {int(x, 16) for x in str(spec).split(',')}
-    drop, keep = [], []
-    for e in S['events']:
-        t = None
-        if e.get('kind') == 'CTL' and str(e.get('payload', '')).startswith('template '):
-            t = T.get(int(str(e['payload']).split()[1]))
-        p = int(t['payload186'], 16) if t and t.get('payload186') else None
-        if p is not None and (p >> 8) & 7 == 1 and (p & 0xff) in uids:
-            drop.append(dict(tag=e['tag'], inst=e['inst'], port=e['port'], cycle=e['cycle'], payload186=t['payload186']))
-        else:
-            keep.append(e)
-    S['events'] = keep
-    return dict(uids=sorted(hex(u) for u in uids), consumed_events=drop, n=len(drop))
-
-
 def gen(a):
     die = DieBuild(a.die_v)
     prog = Path(a.prog)
     S = json.loads((prog / 'schedule.json').read_text())
     T = {t['i']: t for t in json.loads((prog / 'prog/ctl_templates.json').read_text())['templates']}
     man = json.loads((prog / 'manifest.json').read_text()) if (prog / 'manifest.json').exists() else {}
-    bk_sunk = bk_drain_sink_filter(S, T, a.bk_drain_sink)
     cut = Cut(a.cut)
     st = stale_check(S, die, man)
     out = Path(a.out)
@@ -780,7 +755,6 @@ def gen(a):
                if (prog / 'manifest.json').exists() else None, cut=cut.dir, layer=S.get('layer'), t0=a.t0,
                timing_contract=S.get('timing_contract'),
                mutant=a.mutant or None, lane_age=a.lane_age, equalize=a.equalize, host_boot=host, verdict_kind=kind, stale=st,
-               bk_drain_sink=bk_sunk,
                traces=traces, boundary=bnd, in_words=rec_in, out_checks=rec_out, internal_words=internal,
                unencoded=unenc_here, unencoded_total=len(unenc), partial=bool(unenc_here),
                offdie=offdie_here, internal_events=internal_here, by_kind={k: dict(v) for k, v in sorted(by_kind.items())},
@@ -1056,6 +1030,21 @@ def value_at(changes, c):
     return v
 
 
+def framing_trace_end(run, ncyc):
+    """Exclusive observed end; older TBs raced trace close at the last negedge."""
+    path = Path(run) / 'trace.txt'
+    ends = [int(line.split()[1]) for line in path.read_text().splitlines()
+            if line.startswith('TRACE_END ')]
+    if ends:
+        if ends != [ncyc - 1]:
+            raise ValueError('trace completion edge differs from requested run: ' + str(ends))
+        return ncyc, False
+    # Legacy initial $finish and trace monitor share the final negedge. Only
+    # edges through NCYC-2 are guaranteed observed. Any recorded final word is
+    # still checked explicitly below; only an absent final change is unknown.
+    return ncyc - 1, True
+
+
 def check(a):
     rp = json.loads((Path(a.replay) / 'replay.json').read_text())
     xrt_proof = check_run_source(rp.get('timing_contract'), a.run,
@@ -1089,9 +1078,13 @@ def check(a):
             import link_frames as LF
             assert int(fr['base'], 16) == LF.BASE and fr['mp'] == LF.MP and fr['idle_p'] == LF.IDLE_P, fr
             fw = [(c, v) for c, v in ch if c not in exp]
-            up, fmiss, fextra = LF.check(fw, fr['g0'], b['age'], rp['ncyc'])
+            fend, legacy_tail = framing_trace_end(a.run, rp['ncyc'])
+            up, fmiss, fextra = LF.check(fw, fr['g0'], b['age'], fend)
+            if legacy_tail:
+                fextra += [c for c, v in fw if c >= fend and
+                           (c != fend or v != LF.beat(c - b['age'] - fr['g0']))]
             miss, extra, strict = miss + fmiss, fextra, True
-            exp = dict(exp, **{('framing', i): None for i in range(len(LF.changes(fr['g0'], b['age'], up or 0, rp['ncyc'])))})
+            exp.update({('framing', i): None for i in range(len(LF.changes(fr['g0'], b['age'], up or 0, fend)))})
         n_bad = len(miss) + (len(extra) if strict else 0)
         bad += n_bad
         res.append(dict(port=b['port'], lane=b['lane'], expected=len(exp), missed=sorted(miss)[:20],
@@ -1184,8 +1177,6 @@ def main(argv=None):
     g.add_argument('--t0', type=int, default=100)
     g.add_argument('--trace', action='append', default=[], help='PRODUCER_REPLAY_DIR=RUN_DIR (compose: trace-fed lanes)')
     g.add_argument('--mutant', default='')
-    g.add_argument('--bk-drain-sink', default=None, help='UID[,UID] hex: build has BK_DRAIN_SINK=1; addressed BK drain CTL '
-                   'beats are consumed at the BK stop (no slice/line events). Candidate profile only')
     g.add_argument('--lane-age', action='store_true')
     g.add_argument('--allow-stale', action='store_true')
     g.add_argument('--equalize', action='append', default=[], help='LANE_PREFIX: drive each lane of the bundle at its '

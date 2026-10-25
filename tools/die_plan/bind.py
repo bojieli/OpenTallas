@@ -1801,12 +1801,35 @@ class Binder:
             self.tparams[tn] = params
 
     # ------------------------------------------------------------------------------------------ RTL emission
+    def wavefront_plan(self):
+        if self.plan.get("reset", {}).get("release") != "wavefront":
+            return None
+        if not hasattr(self, "_wavefront_plan"):
+            import schema
+            self._wavefront_plan = schema.Plan(self.plan, self.plan_dir / "die_plan.json")
+        return self._wavefront_plan
+
     def emit(self, out):
         out = Path(out) / "rtl"            # generated RTL only; rewritten from scratch on every bind
         if out.exists():
             shutil.rmtree(out)
         out.mkdir(parents=True)
-        (out / "bind_cells.sv").write_text(CELLS)
+        cells = CELLS
+        P = self.wavefront_plan()
+        if P is not None:
+            import gen_rtl
+            import reset_tree as RT
+            # Use the same control-only reset cells as physical kits, not another
+            # synchronizer implementation. Datapath registers remain reset-less.
+            for name in ("ot_dp_rrelay", "ot_dp_rsync_s2", "ot_dp_rsync_s3"):
+                m = re.search(r"module " + name + r"\b.*?\nendmodule", gen_rtl.CELLS, re.S)
+                cells += "\n(* keep_hierarchy *)\n" + m.group(0) + "\n"
+            W = RT.wf_plan(P)
+            missing = set(W["parts"]) - set(self.members)
+            if missing:
+                raise BindError(f"wavefront reset carriers lack bound partitions: {sorted(missing)[:10]}")
+            (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
+        (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
         self.pnames = {}
         self.io_used = {}
@@ -1871,8 +1894,45 @@ class Binder:
         for d in doms:
             ports.append(f"    input  wire {self.cport(p, d)}")
         decl, body = [], []
-        body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
-                    f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
+        P = self.wavefront_plan()
+        rtree = None
+        if P is not None:
+            import reset_tree as RT
+            ptn = t.get("split_of", tn)
+            if P.types[ptn].get("hard"):
+                # Native hard-partition reset depth is already in wf_plan.
+                body.append("    wire rst_n = arst_n;  // delivered reset to the native hard partition")
+            else:
+                rtree = RT.for_type(P, ptn)
+                ports += [f"    output wire {n}   // registered reset to neighbour" for n, _x, _y in RT.out_pins(P, ptn)]
+                if RT.start_broadcast(P):              # OWNER DECISION 13c: START broadcast beside the reset
+                    ports.append("    input  wire start_i   // START in (wavefront broadcast)")
+                    ports += [f"    output wire {n}   // registered START to neighbour"
+                              for n, _x, _y in RT.start_out_pins(P, ptn)]
+                body += RT.rtl_lines(rtree)
+                body.append(f"    wire rst_n = rst_n_t{RT.leaf_tap(P, ptn)};")
+        else:
+            body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
+                        f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
+        core_reset = {}
+        if rtree is not None:
+            for target in rtree.get("core_resets", []):
+                pin = target["pin"]
+                candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
+                              target["inst"] in {self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
+                if not candidates:
+                    # Plan-local matrix names commonly compact coordinate
+                    # separators (u_t00 versus RTL u_t_0_0). Accept only a unique
+                    # punctuation-only alias; never select a different replica.
+                    key = target["inst"].replace("_", "")
+                    candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
+                                  self.rel_of(ci).replace("_", "") == key]
+                if not candidates:
+                    modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
+                    candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and F.cells[ci].module in modules]
+                if len(candidates) != 1:
+                    raise BindError(f"wavefront core reset {tn}/{target['inst']}.{pin}: expected one bound leaf, found {len(candidates)}")
+                core_reset[(candidates[0], pin)] = f"rst_n_t{target['tap']}"
         need_rst = False
         obus = sorted(self.out_bus[p], key=lambda L: L["oname"])
         ibus = sorted(self.in_bus[p], key=lambda L: L["iname"])
@@ -2005,8 +2065,11 @@ class Binder:
             if k == "clk":
                 return self.cport(p, d[1])
             if k == "rst":
+                reset = core_reset.get((ci, pn), "rst_n")
                 if d[1] == "low":
-                    return "rst_n"
+                    return reset
+                if reset != "rst_n":
+                    return f"~({reset})"
                 need_rst = True
                 return "rst"
             if k == "strap":
@@ -2094,9 +2157,25 @@ class Binder:
         die = sv_id(self.plan["die"]["name"])
         doms = sorted({d for p in self.members for d in self.clk_dom[p]} | {self.ab.get("default_clock", "core")})
         ports = ["    input  wire rst_n"] + [f"    input  wire clk_{sv_id(d)}" for d in doms]
+        P = self.wavefront_plan()
+        if P is not None:
+            import reset_tree as RT
+            if RT.start_broadcast(P):
+                ports.insert(1, "    input  wire start")
         io = sorted({n for tn in self.by_type for n in self.io_used.get(tn, [])})
         ports += [f"    input  wire [{len(self.F.top_ports[n][1]) - 1}:0] {sv_id(n)}" for n in io]
         wires, insts = [], []
+        reset_in, reset_out = {}, {}
+        P = self.wavefront_plan()
+        start_in = {}
+        if P is not None:
+            import reset_tree as RT
+            wires, reset_in, reset_out = RT.wf_die_rtl(P)
+            if RT.start_broadcast(P):
+                sl, start_in, sout = RT.wf_die_start(P)
+                wires += sl
+                for q, d in sout.items():
+                    reset_out.setdefault(q, {}).update(d)
         conn = defaultdict(list)            # part -> [(port, wire)]
         for L in self.links:
             hops = L.get("hops") or [(L["src"], L["oname"], L["dst"], L["iname"])]
@@ -2124,7 +2203,10 @@ class Binder:
                 else:
                     ov.append(f".{nm}({self.tvals[tn][p].get(k)})")
             dd = self.default_domain(p)
-            cs = [f"        .clk(clk_{sv_id(dd)})", "        .arst_n(rst_n)"]
+            cs = [f"        .clk(clk_{sv_id(dd)})", f"        .arst_n({reset_in.get(p, 'rst_n')})"]
+            if p in start_in:
+                cs.append(f"        .start_i({start_in[p]})")
+            cs += [f"        .{port}({net})" for port, net in sorted(reset_out.get(p, {}).items())]
             for d in sorted(self.clk_dom[p] - {dd}, key=lambda d: self.cport(p, d)):
                 cs.append(f"        .{self.cport(p, d)}(clk_{sv_id(d)})")
             for n in self.io_used.get(tn, []):
@@ -2402,7 +2484,9 @@ def cmd_bind(a):
     (out / "bind_latency.json").write_text(json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
                                                            note="per crossing bus: as-built stages (relays / landings "
                                                                 "removed) vs bound stages (2 boundary flops)",
-                                                           buses=lat, landing_pads=B.land_pads), indent=1))
+                                                           buses=lat, landing_pads=B.land_pads,
+                                                           **({"reset": json.loads((out / "bind_reset.json").read_text())}
+                                                              if B.wavefront_plan() is not None else {})), indent=1))
     pr = rep["proof"]
     print(json.dumps(dict(partitions=rep["partitions"], types=len(rep["types"]), crossings=rep["crossings"],
                           crossing_bits=rep["crossing_bits"], errors=rep["n_errors"], **pr)))
@@ -2573,6 +2657,22 @@ def kit_inline_imports(fl, kd):
     return out, rec
 
 
+def bindf_prefer(out, base):
+    """QC-A0 10-24: the RTL files the bind itself listed (OUT/bind.f, relative to the source tree) win every module-name
+    ambiguity in the kit closure.  A later tree that adds a second definition of a bound module (the A0 snapshot dirs
+    rtl/physical/a0_rc1[45]_selected_2000/ sort before rtl/physical/qfd_tile_*) must not silently swap the bound
+    module for another RTL in the G3 kit."""
+    f = Path(out) / "bind.f"
+    if not f.is_file():
+        return []
+    res = []
+    for ln in f.read_text().split():
+        p = Path(ln) if Path(ln).is_absolute() else Path(base) / ln
+        if p.is_file():
+            res.append(str(p))
+    return res
+
+
 def kit_dedupe(tn, fl):
     """one file per basename (gen_phys flattens rtl/): identical copies are dropped, different contents are an error."""
     out, by = [], {}
@@ -2667,6 +2767,50 @@ def cmd_kit_rtl(a):
                 body.append(f"    assign {n}[{Wd - 1}:{bwd}] = {Wd - bwd}'d0;  // spare plan bits (bound carries {bwd})")
                 spare.append(dict(port=n, bits=Wd - bwd))
             conns.append(f".{n}({w})")
+    # QC-A0 10-24 (CP1-R10 face_guard: coll_ftc kit FAILed dropped 8 / shared 8 = the spare bits of narrow ft slots: unread
+    # input bits + constant output bits): the spare bits of an ft slot whose _i and _o are BOTH narrow / unbound by the
+    # same bits ride the slot's own station chain (stations x ot_dp_st, keep) from S_i to S_o, so every plan pin bit is
+    # registered at its face like a bound bit.  Spare bits of other buses keep the rule above (listed in spare_out_bits).
+    spare_in = {}
+    for d, n, W, Wd, ep in plan:
+        if d != "input":
+            continue
+        if n not in bmap:
+            spare_in[n] = (0, W)                         # whole bus (data + epoch) unread
+        else:
+            bwd = bmap[n][1] - 1 if ep else bmap[n][1]
+            if bwd < Wd:
+                spare_in[n] = (bwd, Wd)
+    spare_pass = []
+    for sl in t.get("ft_slots", []):
+        ni, no = gen_rtl.sv_id(sl["name"] + "_i"), gen_rtl.sv_id(sl["name"] + "_o")
+        k = max(1, int(sl.get("stations", 1)))
+        so = next((x for x in spare if x["port"] == no), None)
+        if ni not in spare_in or so is None:
+            continue
+        lo, hi = spare_in[ni]
+        if hi - lo != so["bits"]:
+            continue
+        wd = hi - lo
+        if no in bmap:
+            old_a = f"    assign {no}[{hi - 1}:{lo}] = {wd}'d0;  // spare plan bits (bound carries {lo})"
+        else:
+            old_a = f"    assign {no} = {hi}'d0;  // plan bus with no bound bit (spare lane)"
+        if old_a not in body:
+            continue
+        i = body.index(old_a)
+        chain = [f"    // spare ft bits {sl['name']} [{hi - 1}:{lo}]: {k} station(s) S_i -> S_o (registered at both faces)"]
+        prev = f"{ni}[{hi - 1}:{lo}]"
+        for j in range(k):
+            q = f"{no}[{hi - 1}:{lo}]" if j == k - 1 else f"sp_{no}_s{j}"
+            if j < k - 1:
+                chain.append(f"    wire [{wd - 1}:0] {q};")
+            chain.append(f"    ot_dp_st #(.W({wd})) u_ft_spare_{no}_s{j} (.clk(clk), .rst_n(1'b1), .d({prev}), .ea(1'b0), "
+                         f".q({q}), .eq());")
+            prev = q
+        body[i:i + 1] = chain
+        spare.remove(so)
+        spare_pass.append(dict(slot=sl["name"], bits=wd, stations=k))
     extra = []
     for d, w, n in bports:
         if n in seen:
@@ -2705,10 +2849,10 @@ def cmd_kit_rtl(a):
     base = plan_base(a.plan, raw)
     idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []), base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
-        rep.get("extra_lib", [])
+        rep.get("extra_lib", []) + bindf_prefer(out, base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
-                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync"})
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer)
     if cl_missing:
         raise BindError(f"kit-rtl {tn}: leaf modules without a source {sorted(cl_missing)[:10]}")
@@ -2726,7 +2870,7 @@ def cmd_kit_rtl(a):
     bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
     (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
-               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, narrow_buses=narrow,
+               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, narrow_buses=narrow,
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined,
                hard_macros=dict(sorted(macros.items())),

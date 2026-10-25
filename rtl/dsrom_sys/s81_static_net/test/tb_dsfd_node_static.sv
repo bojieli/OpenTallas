@@ -1,7 +1,9 @@
 `timescale 1ns/1ps
 // tb_dsfd_node_static: production master bench of a generated return node dsfd_node_<a><b>[f] (die ports, leaf / node
 // packing, registered fault chain) against tools/s81/static_return_calendar.py.  Every edge: o == expected (66-b
-// {e, data, tag, v}); end: fo == FAULT; for an 'f' master a final fi pulse must reach fo one edge later.
+// {e, data, tag, v}); end: fo == FAULT; for an 'f' master a final fi pulse must reach fo exactly two edges later
+// (S81-KITS-RTLB 10-24: fi lands in its own pin register fil, then fr <= flt | fil: +1 cycle on the fault chain;
+// fo must still be 0 after the first edge, so the old unregistered fi -> fr form is rejected).
 // Compile with -DDUT=<master> -DHAS_FI=<0|1>; +DIR +T +FAULT.
 module tb_dsfd_node_static;
     reg clk = 0, rst_n = 0; always #0.5 clk = ~clk;
@@ -41,7 +43,12 @@ module tb_dsfd_node_static;
         @(posedge clk); #0.1;
         if (fo !== xf[0]) begin bad = bad + 1; $display("NODE_STATIC fo %b want %0d", fo, xf); end
 `ifdef HAS_FI
-        if (xf == 0) begin fi = 1; @(posedge clk); #0.1 fi = 0; if (fo !== 1'b1) begin bad = bad + 1; $display("NODE_STATIC fi did not reach fo"); end end
+        if (xf == 0) begin
+            fi = 1; @(posedge clk); #0.1 fi = 0;
+            if (fo !== 1'b0) begin bad = bad + 1; $display("NODE_STATIC fi reached fo after 1 edge (fi pin register missing)"); end
+            @(posedge clk); #0.1;
+            if (fo !== 1'b1) begin bad = bad + 1; $display("NODE_STATIC fi did not reach fo after 2 edges"); end
+        end
 `endif
         if (bad) begin $display("NODE_STATIC FAIL %0d", bad); $fatal(1); end
         $display("NODE_STATIC PASS %0d edges %0d words exact, fo %0d", T, words, xf);

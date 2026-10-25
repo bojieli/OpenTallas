@@ -45,10 +45,13 @@ ROOT = Path(__file__).resolve().parents[3]
 
 NX_AFTER_LAST_NORMR_NODSK = 138   # measured on the RECLOCKED cut_0S (zero-data L0 run, gaps/zero_reclock); 136 was the frozen-clock bench
 # TOK-DS NORM-DESKEW 10-25 (COORD ruling 01:34): ot_s81sl_xrt aligns the 5 leaf partials on leaf 4's arrival edge with
-# static per-leaf deskew registers (depth 4 - k), so the xfin collection starts 4 edges later than the staggered
-# (faulting) collection the 138 was measured on: the flit leaves 4 edges later.  RE-MEASURED on the deskewed cuts.
+# static per-leaf deskew registers (depth 4 - k). The old faulting serializer
+# restarted on every partial, so its final pass also began on leaf 4's edge.
+# Deskew adds four edges from the first command, already covered by the five
+# consecutive command dates; it adds none after the last command. Full-cut
+# confirmation is pending the inherited builds (the old 138 was measured).
 XR_DESKEW = 4
-NX_AFTER_LAST_NORMR = NX_AFTER_LAST_NORMR_NODSK + XR_DESKEW
+NX_AFTER_LAST_NORMR = NX_AFTER_LAST_NORMR_NODSK
 # the plan offsets of the deskew registers: NORMR k reaches the slice exactly k edges after NORMR 0 (one CTL a cycle)
 NORMR_OFFSET = (0, 1, 2, 3, 4)
 G_SHIFT_MAX = 6           # per-slice shift of the aligned k4 edge (NX words of one stop stay > 6 edges apart)
@@ -71,7 +74,7 @@ def _arr(fixtures, rel):
     return np.fromfile(Path(fixtures) / rel, dtype=np.dtype(spec['dtype'])).reshape(spec['shape'])
 
 
-def partials(fixtures, which='attn'):
+def partials(fixtures, which='attn', h_override=None):
     """the 80 per-beat partial sums of squares (FP32 bit patterns) of the layer's <which> norm input, from io/h_in +
     io/pre_in through the reference model; asserts the model reproduces the fixture's hc_pre and norm.sumsq"""
     fixtures = Path(fixtures)
@@ -85,7 +88,7 @@ def partials(fixtures, which='attn'):
     V.set_arith('chunk8')
     try:
         F = np.float32
-        h = _arr(fixtures, 'io/h_in.bin').astype(F)
+        h = _arr(fixtures, 'io/h_in.bin').astype(F) if h_override is None else np.asarray(h_override, F)
         pre = _arr(fixtures, 'io/pre_in.bin').astype(F)
         x = V.to_bf16(V.seqsum([V.mul(pre[j], h[j]) for j in range(4)]))
         ref = _arr(fixtures, f'ops/{which}.hc_pre.bin').astype(F)
@@ -341,7 +344,7 @@ def emit_all(die, prog, smoke, fixtures, D):
         P['attn.XFIN_GO'] = take(t, win[4] + rel['attn.XFIN_GO'], +1)
         plan[sl] = P
     # templates / calendar rows / events (same payloads as lower_norm_smoke)
-    eps = 0x358637BD
+    eps = D.norm_eps_bits()
     GU_ROWS = dict(D.family_lowerings())['gu'].GU_ROWS
     r_pre = GU_ROWS['ffn']
     n_cmd = 0
