@@ -1145,7 +1145,9 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
         pipe['hold'], pipe['lead'] = MTP_HOLD, lead
         model['mtp_pipeline'] = pipe
         T_mtp_old = T_mtp
-        model['T_mtp_step'] = T_mtp = max(T_mtp_old, pipe['step_end'] + (T_ar - (chain1[0] + hop_head + head_ar)))
+        # Owner decision15: the checker-qualified causal pipeline is the law
+        # of record; the former6f stretch law remains a sensitivity below.
+        model['T_mtp_step'] = T_mtp = pipe['step_end'] + (T_ar - (chain1[0] + hop_head + head_ar))
         pipe['T_mtp_law_6f'] = round(T_mtp_old, 1)
         pipe['ar_tail_beyond_head'] = round(T_ar - (chain1[0] + hop_head + head_ar), 1)
         pipe['ar_chain_integer_check'] = dict(timeline=round(chain + embed, 1), positions1=chain1[0])
