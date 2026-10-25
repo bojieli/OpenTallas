@@ -6,7 +6,7 @@
 // MUT 0 pass; 1 weight word, 2 query word, 3 query index (data mutants of tb_vm_query_static);
 // 4 vm_rr relay removed (n+11), 5 extra vm_rr relay (n+13), 6 the n+10 master on the n+12 path, 7 vm_rq relay removed.
 module tb_vm_query_n12;
- parameter integer MUT=0;
+ parameter integer MUT=0, PERIOD=1;
  localparam integer RQ_RLY=(MUT==7)?0:1, RR_RLY=(MUT==4)?0:(MUT==5)?2:1;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,weight_slot=0,query_slot=0;reg[6:0]query_index=0;
@@ -48,9 +48,16 @@ module tb_vm_query_n12;
  reg[1023:0]x[0:127];reg[559:0]gold[0:31];reg[255:0]data;
  integer blocks=0,checked=0,errors=0,reads=0,commits=0;
  integer cycle=0,start=-1,firstblock=-1,lastblock=-1,firstquant=-1;
+ integer req_phase=-1,rr_phase=-1,phase_errors=0;
  always @(posedge clk)cycle<=cycle+1;
  always @(negedge clk)begin
   for(integer b=0;b<8;b=b+1)begin if(bank_rq_q[b*17+16])reads++;if(wr[b*281+280])commits++;end
+  if(PERIOD==2 && rst_n)begin
+   for(integer b=0;b<8;b=b+1)begin
+    if(vm_rq[b*17+16]===1'b1)begin if(req_phase<0)req_phase=cycle%2;else if(req_phase!=cycle%2)phase_errors++;end
+    if(vm_rr[b*257+256]===1'b1)begin if(rr_phase<0)rr_phase=cycle%2;else if(rr_phase!=cycle%2)phase_errors++;end
+   end
+  end
   if(rst_n&&block_v===1'b1)begin
    blocks++;if(firstblock<0)firstblock=cycle;lastblock=cycle;
    if(block_data!==x[{block_head,block_number}]||head_weight!==16'h3f00+16'(block_head))errors++;
@@ -80,11 +87,17 @@ module tb_vm_query_n12;
   end
   @(negedge clk);wr=0;repeat(8)@(negedge clk);
   weight_slot=1;start=cycle;@(negedge clk);weight_slot=0;repeat(16)@(negedge clk);
-  for(integer q=0;q<128;q=q+1)begin query_slot=1;query_index=7'((MUT==3&&q==63)?62:q);@(negedge clk);end
+  if(PERIOD==2&&MUT!=8)@(negedge clk);
+  for(integer q=0;q<128;q=q+1)begin
+   query_slot=1;query_index=7'((MUT==3&&q==63)?62:q);@(negedge clk);
+   if(PERIOD==2)begin query_slot=0;@(negedge clk);end
+  end
   query_slot=0;repeat(40)@(negedge clk);
   for(integer h=0;h<32;h=h+1)begin emit_v=1;emit_head=5'(h);@(negedge clk);end
   emit_v=0;repeat(4)@(negedge clk);
   $display("IDX_VM_QUERY_N12 MUT%0d rq_rly%0d rr_rly%0d commits%0d reads%0d blocks%0d quant%0d errors%0d fault%0d firstblock%0d lastblock%0d firstquant%0d",MUT,RQ_RLY,RR_RLY,commits,reads,blocks,checked,errors,(operand_fault===1'b1)||query_fault||(|status),firstblock-start,lastblock-start,firstquant-start);
+  $display("L74_IDX_PERIOD period=%0d req_phase=%0d rr_phase=%0d phase_errors=%0d",PERIOD,req_phase,rr_phase,phase_errors);
+  if(phase_errors || (PERIOD==2&&req_phase!=rr_phase))$fatal(1,"L74 request/response parity mismatch");
   if(errors||(operand_fault!==1'b0)||query_fault||(|status)||blocks!=128||checked!=32||reads!=514||commits!=514)$fatal(1,"n+12 operand reader query/weight/quant/latency mismatch");
   $finish;
  end

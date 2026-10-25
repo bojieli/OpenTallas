@@ -1,0 +1,25 @@
+{
+ "baseline_byte_identical": true,
+ "cases": [
+  {
+   "phase": 0,
+   "requests": 129,
+   "query_indices": "0..127 exact",
+   "length": 1526,
+   "baseline_length": 1397,
+   "added_cycles": 129,
+   "max_same_phase_gap": 18,
+   "odd_request_mutant": "CAUGHT"
+  },
+  {
+   "phase": 1,
+   "requests": 129,
+   "query_indices": "0..127 exact",
+   "length": 1527,
+   "baseline_length": 1397,
+   "added_cycles": 130,
+   "max_same_phase_gap": 18,
+   "odd_request_mutant": "CAUGHT"
+  }
+ ]
+}
