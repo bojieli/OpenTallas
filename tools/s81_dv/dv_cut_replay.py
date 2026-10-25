@@ -54,7 +54,7 @@ edge k; cycles are layer cycles + --t0.
 
   dv_cut_replay.py ages    --die-v die.v.gz [--prog DIR] [--out ages.json]
   dv_cut_replay.py gen     --die-v die.v.gz --prog DIR --cut CUTDIR --out DIR [--t0 100] [--trace PDIR=RUN ...]
-                           [--mutant shift:<link>:<n> | corrupt:<link>[:<bit>] | shift-kind:<KIND>:<n> |
+                           [--mutant shift:<link>:<n> | corrupt:<link>[:<bit>[:<sid>]] | shift-kind:<KIND>:<n> |
                             expect-shift:<KIND>:<n>] [--lane-age] [--allow-stale]
   dv_cut_replay.py check   --replay DIR --run RUN [--out check.json]      (trace vs every encoded word, no extras)
   dv_cut_replay.py compose --cut NAME=REPLAY_DIR:RUN_DIR ... --out compose.json   (cross-cut lane consistency)
@@ -582,7 +582,11 @@ def gen(a):
     rec_in, rec_out, internal, outside = [], [], 0, 0
     pgap, gap_lanes = set(), set()
     if mut and mut['kind'] == 'corrupt':
-        firsts = [w['cycle_land'] for w in words if w['inst'] in cut.insts and
+        # optional 4th field: only words of a payload186 CTL beat whose slice mask holds that sid (a line broadcast
+        # carries every slice's entry writes past the cut; the first one may be for a slice outside it)
+        sel = (lambda w: True) if mut.get('sid') is None else \
+            (lambda w: (int(w['event'].get('payload186') or '0', 16) >> mut['sid']) & 1 == 1)
+        firsts = [w['cycle_land'] for w in words if w['inst'] in cut.insts and sel(w) and
                   any(die.by_out.get(n) == mut['link'] for n, _ in w['bits'])]
         if not firsts:
             raise SystemExit(f'mutant {a.mutant}: no scheduled word enters the cut on {mut["link"]}')
@@ -992,11 +996,12 @@ def parse_mutant(s):
     f = s.split(':')
     if f[0] == 'shift' and len(f) == 3:
         return dict(kind='shift', link=f[1], n=int(f[2]))
-    if f[0] == 'corrupt' and len(f) in (2, 3):
-        return dict(kind='corrupt', link=f[1], bit=int(f[2]) if len(f) == 3 else None)
+    if f[0] == 'corrupt' and len(f) in (2, 3, 4):
+        return dict(kind='corrupt', link=f[1], bit=int(f[2]) if len(f) >= 3 else None,
+                    sid=int(f[3]) if len(f) == 4 else None)
     if f[0] in ('shift-kind', 'expect-shift') and len(f) == 3:
         return dict(kind=f[0], ev=f[1], n=int(f[2]))
-    raise SystemExit(f'bad --mutant {s!r}: shift:<link>:<n> | corrupt:<link>[:<bit>] | shift-kind:<KIND>:<n> | '
+    raise SystemExit(f'bad --mutant {s!r}: shift:<link>:<n> | corrupt:<link>[:<bit>[:<sid>]] | shift-kind:<KIND>:<n> | '
                      f'expect-shift:<KIND>:<n>')
 
 
