@@ -12,10 +12,15 @@
      [
       "    (* async_reg = \"true\" *) reg rs0, rs1;\n    always @(posedge ck or negedge rst_n)\n        if (!rst_n) begin rs0<=1'b0;rs1<=1'b0;end",
       "    reg rs0, rs1;   // QC-CORES kit patch (OWNER DECISION 13): synchronous 2-stage relay on the registered rst_n input\n    always @(posedge ck)\n        if (!rst_n) begin rs0<=1'b0;rs1<=1'b0;end"
+     ],
+     [
+      "        qfd_dv_su8_kff #(.W(4*AW), .ID(670 + gc)) u_pin (.ck(ck), .d(xs_raw), .q(xs_pin));",
+      "        assign xs_pin = {c_si[109:86], c_si[182:159], c_si[255:232], c_si[341:318]};   // QC-CORES kit patch: was 8 per-lane pin replicas of si (face_guard shared 96: ONE pin register per input bit); c_si = the u_input_pins register of the same edge, 0 cycles, bit-exact"
      ]
     ]
    }
-  ]
+  ],
+  "_why_face": "r1 post-synth face_guard FAIL shared 96: si stride bits loaded by u_input_pins + 8 per-lane u_pin replicas -> lanes read c_si (same edge)."
  },
  "qfd_dv_s8_crh_rp1": {
   "ref_tile": "physical/ref_tile/qfd_dv_s8_crh_rp1",
