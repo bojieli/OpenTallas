@@ -1,0 +1,236 @@
+{
+ "source": "claude/kv-core-rtl-hr-1025@591ac8caed",
+ "cores": [
+  {
+   "module": "qkd_hr_cdc_ch",
+   "old": [
+    "u_done__rclk",
+    "u_done__wclk",
+    "u_ing__rclk",
+    "u_ing__wclk"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 1208,
+   "pins_after": 1205,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 482
+  },
+  {
+   "module": "qkd_hr_cdc_ci",
+   "old": [
+    "u_ox__rclk",
+    "u_ox__wclk",
+    "u_rx__rclk",
+    "u_rx__wclk"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 1106,
+   "pins_after": 1103,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_cdc_hi",
+   "old": [
+    "u_cx__rclk",
+    "u_cx__wclk",
+    "u_hx__rclk",
+    "u_hx__wclk"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 1177,
+   "pins_after": 1174,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_cdc_pc",
+   "old": [
+    "u_rx__rclk",
+    "u_rx__wclk",
+    "u_tx__rclk",
+    "u_tx__wclk"
+   ],
+   "clocks": [
+    "ck",
+    "ck_phy"
+   ],
+   "pins_before": 2168,
+   "pins_after": 2166,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 18
+  },
+  {
+   "module": "qkd_hr_core_guard",
+   "old": [
+    "u_guard__ck_guard",
+    "u_native__ck"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 1176,
+   "pins_after": 1175,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_core_order",
+   "old": [
+    "u_chain__ck_map",
+    "u_chain__ck_order",
+    "u_chain__ck_sum",
+    "u_dispatch__ck",
+    "u_dispatch__ck_order"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 2286,
+   "pins_after": 2282,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_core_peer",
+   "old": [
+    "u_coordinator__ck_codec",
+    "u_coordinator__ck_lifecycle",
+    "u_coordinator__ck_post",
+    "u_peer__ck",
+    "u_peer_codec__ck",
+    "u_root_mux__ck"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 3849,
+   "pins_after": 3844,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_core_prompt",
+   "old": [
+    "u_control__ck_csr",
+    "u_control__ck_ctl",
+    "u_control__ck_host",
+    "u_control__ck_prompt",
+    "u_control__ck_rst",
+    "u_program__ck",
+    "u_program_rx__ck",
+    "u_records__ck"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 5131,
+   "pins_after": 5124,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_core_queue",
+   "old": [
+    "u_bootbarrier__ck",
+    "u_marker_consumer__ck",
+    "u_queue__ck"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 1472,
+   "pins_after": 1470,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_core_tx",
+   "old": [
+    "u_axi__ck",
+    "u_ctrl__ck",
+    "u_tx__ck"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 3772,
+   "pins_after": 3770,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_host_qm",
+   "old": [
+    "clk_h"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 10,
+   "pins_after": 10,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_ingest_eng",
+   "old": [
+    "clk",
+    "clk_bank",
+    "clk_out"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 1399,
+   "pins_after": 1396,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 1
+  },
+  {
+   "module": "qkd_hr_phy_adp",
+   "old": [
+    "ck"
+   ],
+   "clocks": [
+    "ck_phy"
+   ],
+   "pins_before": 560,
+   "pins_after": 560,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_phy_pad",
+   "old": [
+    "clk"
+   ],
+   "clocks": [
+    "ck_phy"
+   ],
+   "pins_before": 1577,
+   "pins_after": 1577,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  },
+  {
+   "module": "qkd_hr_core_rx",
+   "old": [
+    "ck"
+   ],
+   "clocks": [
+    "ck"
+   ],
+   "pins_before": 2137,
+   "pins_after": 2137,
+   "data_pins_unchanged": true,
+   "constant_input_bits_unreviewed": 0
+  }
+ ]
+}

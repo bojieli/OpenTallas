@@ -1,0 +1,155 @@
+{
+ "type": "kv3_hub_Wi",
+ "plan": "claude/path-kv-1025@8a79a4b458 physical/die_plan/qwen_kvsys/die_plan.json",
+ "convention": "PROTO: in pin inset 1 um -> station cell centre (site lower-left + cell/2) -> out pin, Manhattan, reach 405",
+ "envelope_1.404x0.27": {
+  "bits": 3652,
+  "max_bit_hop_um": 404.997,
+  "over_bits": 0,
+  "over": [],
+  "in_core": 0,
+  "worst": {
+   "slot": "ft4",
+   "bit": 206,
+   "hop_um": 404.99699999999996,
+   "hops": [
+    403.229,
+    403.92,
+    404.19,
+    404.892,
+    404.244,
+    403.704,
+    404.997
+   ]
+  }
+ },
+ "DFFHQNx1_1.08x0.27": {
+  "bits": 3652,
+  "max_bit_hop_um": 405.149,
+  "over_bits": 21,
+  "over": [
+   [
+    "ft4",
+    0,
+    405.083
+   ],
+   [
+    "ft4",
+    2,
+    405.065
+   ],
+   [
+    "ft4",
+    6,
+    405.017
+   ],
+   [
+    "ft4",
+    8,
+    405.107
+   ],
+   [
+    "ft4",
+    10,
+    405.029
+   ],
+   [
+    "ft4",
+    16,
+    405.071
+   ],
+   [
+    "ft4",
+    31,
+    405.135
+   ],
+   [
+    "ft4",
+    33,
+    405.047
+   ],
+   [
+    "ft4",
+    34,
+    405.149
+   ],
+   [
+    "ft4",
+    35,
+    405.121
+   ],
+   [
+    "ft4",
+    37,
+    405.087
+   ],
+   [
+    "ft4",
+    56,
+    405.017
+   ],
+   [
+    "ft4",
+    77,
+    405.019
+   ],
+   [
+    "ft4",
+    85,
+    405.109
+   ],
+   [
+    "ft4",
+    106,
+    405.071
+   ],
+   [
+    "ft4",
+    131,
+    405.003
+   ],
+   [
+    "ft4",
+    133,
+    405.077
+   ],
+   [
+    "ft4",
+    141,
+    405.005
+   ],
+   [
+    "ft4",
+    179,
+    405.025
+   ],
+   [
+    "ft4",
+    181,
+    405.099
+   ],
+   [
+    "ft4",
+    218,
+    405.047
+   ]
+  ],
+  "in_core": 0,
+  "worst": {
+   "slot": "ft4",
+   "bit": 34,
+   "hop_um": 405.1490000000001,
+   "hops": [
+    405.149,
+    404.73,
+    404.892,
+    404.73,
+    404.298,
+    403.704,
+    403.065
+   ]
+  }
+ },
+ "regen_same_plan": "ft_bit_sites_chan.run on this plan (epyc1 10:5x, 5m32s): 16001 sites, max_bit_hop 406.0 > 405 (committed sites 404.997 are not reproduced by the tool; main() now fails closed on the audit)",
+ "slot_span_slack_um": "ft4 E->W 256 b 7 st: 7x405 - max pin span 2832.0 = 3.0 um over 7 hops; ft15/17/22/23/26/27 1 b 7 st 5.9-7.6; ft2 6.8; ft24 17.1"
+}
