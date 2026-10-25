@@ -10,6 +10,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 1
@@ -23,9 +26,12 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 9
+   "ft_stations_added": 10
   },
   "svc_lo_dsdv_svc_rs__t1": {
    "key": "svc",
@@ -36,6 +42,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -49,6 +58,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -62,6 +74,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -75,6 +90,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -88,6 +106,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -101,6 +122,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -114,6 +138,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -127,6 +154,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -140,6 +170,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -153,6 +186,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -166,6 +202,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 4
@@ -179,6 +218,9 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 3
@@ -192,9 +234,12 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 3
+   "ft_stations_added": 6
   },
   "svc_hi_dsdv_svc_rs__t6": {
    "key": "svc",
@@ -205,9 +250,12 @@
    "gaps": [],
    "cores": 72,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 11
+   "ft_stations_added": 17
   },
   "ot_s81sl_leaf__t1": {
    "key": "leaf",
@@ -216,12 +264,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 289.5,
+   "faces_away": 0,
+   "internal_station_cycles": 12,
+   "internal_station_bits": 9809,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 0
+   "ft_stations_added": 4,
+   "alt_place": 112,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t2": {
    "key": "leaf",
@@ -230,12 +289,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 32.4,
+   "faces_away": 0,
+   "internal_station_cycles": 18,
+   "internal_station_bits": 13444,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 3,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_lepw_mus_C__t1": {
    "key": "C:xrt1",
@@ -254,6 +324,9 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -265,12 +338,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 183.4,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 5971,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 93
+   "ft_stations_added": 2,
+   "alt_place": 32,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t4": {
    "key": "leaf",
@@ -279,12 +363,21 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 200.4,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8425,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 12
+   "alt_place": 68,
+   "views": {
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t5": {
    "key": "leaf",
@@ -293,12 +386,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 40.7,
+   "cores": 27,
+   "bus_reach_excess_um": 177.9,
+   "faces_away": 0,
+   "internal_station_cycles": 22,
+   "internal_station_bits": 14243,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 25
+   "ft_stations_added": 1,
+   "alt_place": 11,
+   "views": {}
   },
   "ot_s81sl_leaf__t6": {
    "key": "leaf",
@@ -307,12 +404,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 33.3,
+   "cores": 27,
+   "bus_reach_excess_um": 203.6,
+   "faces_away": 0,
+   "internal_station_cycles": 21,
+   "internal_station_bits": 13987,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 5,
-   "alt_place": 104
+   "alt_place": 11,
+   "views": {}
   },
   "ot_s81sl_leaf__t7": {
    "key": "leaf",
@@ -321,12 +422,21 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 234.8,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8425,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 4
+   "ft_stations_added": 1,
+   "alt_place": 68,
+   "views": {
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_lepw_mu_C__t1": {
    "key": "C:xrt1",
@@ -345,6 +455,9 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -356,12 +469,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 52.7,
+   "cores": 27,
+   "bus_reach_excess_um": 639.6,
+   "faces_away": 0,
+   "internal_station_cycles": 16,
+   "internal_station_bits": 14644,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 4,
-   "alt_place": 8
+   "ft_stations_added": 2,
+   "alt_place": 103,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t9": {
    "key": "leaf",
@@ -370,12 +494,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 23.8,
+   "faces_away": 0,
+   "internal_station_cycles": 19,
+   "internal_station_bits": 13667,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 22
+   "ft_stations_added": 1,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t10": {
    "key": "leaf",
@@ -384,12 +519,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 289.6,
+   "faces_away": 0,
+   "internal_station_cycles": 10,
+   "internal_station_bits": 10631,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 0
+   "alt_place": 79,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t11": {
    "key": "leaf",
@@ -398,12 +544,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 339.2,
+   "cores": 27,
+   "bus_reach_excess_um": 639.7,
+   "faces_away": 0,
+   "internal_station_cycles": 21,
+   "internal_station_bits": 13844,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 1,
-   "alt_place": 104
+   "alt_place": 11,
+   "views": {}
   },
   "ot_s81sl_leaf__t12": {
    "key": "leaf",
@@ -412,12 +562,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 536.1,
+   "faces_away": 0,
+   "internal_station_cycles": 16,
+   "internal_station_bits": 6536,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 4,
-   "alt_place": 94
+   "ft_stations_added": 5,
+   "alt_place": 107,
+   "views": {}
   },
   "ot_s81sl_leaf__t13": {
    "key": "leaf",
@@ -426,12 +580,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 317.0,
+   "faces_away": 0,
+   "internal_station_cycles": 11,
+   "internal_station_bits": 9336,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 13
+   "ft_stations_added": 1,
+   "alt_place": 99,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_c1x_C__t1": {
    "key": "C:xrt1",
@@ -450,6 +615,9 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -461,12 +629,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 267.0,
+   "faces_away": 0,
+   "internal_station_cycles": 13,
+   "internal_station_bits": 8043,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 1,
-   "alt_place": 88
+   "ft_stations_added": 4,
+   "alt_place": 130,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t15": {
    "key": "leaf",
@@ -475,12 +654,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 76.6,
+   "cores": 27,
+   "bus_reach_excess_um": 223.6,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 13920,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 54,
+   "views": {}
   },
   "ot_s81sl_leaf__t16": {
    "key": "leaf",
@@ -489,12 +672,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 587.5,
+   "faces_away": 0,
+   "internal_station_cycles": 13,
+   "internal_station_bits": 8701,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 16
+   "ft_stations_added": 1,
+   "alt_place": 41,
+   "views": {}
   },
   "ot_s81sl_leaf__t17": {
    "key": "leaf",
@@ -503,12 +690,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 204.3,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 6004,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 3
+   "ft_stations_added": 3,
+   "alt_place": 32,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_c1x_C__t10": {
    "key": "C:xrt1",
@@ -527,8 +725,11 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
-   "corner": "WS",
+   "corner": "WN",
    "ft_stations_added": 0
   },
   "ot_s81sl_leaf__t75": {
@@ -538,12 +739,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 299.8,
+   "faces_away": 0,
+   "internal_station_cycles": 11,
+   "internal_station_bits": 9341,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 45
+   "ft_stations_added": 2,
+   "alt_place": 99,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t53": {
    "key": "leaf",
@@ -552,12 +764,19 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 491.2,
+   "faces_away": 0,
+   "internal_station_cycles": 12,
+   "internal_station_bits": 9968,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 20,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm"
+   }
   },
   "ot_s81sl_leaf__t54": {
    "key": "leaf",
@@ -566,12 +785,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 365.8,
+   "cores": 27,
+   "bus_reach_excess_um": 588.1,
+   "faces_away": 0,
+   "internal_station_cycles": 15,
+   "internal_station_bits": 13923,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 54,
+   "views": {}
   },
   "ot_s81sl_leaf__t21": {
    "key": "leaf",
@@ -580,12 +803,21 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 409.5,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8392,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 21
+   "ft_stations_added": 4,
+   "alt_place": 68,
+   "views": {
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t22": {
    "key": "leaf",
@@ -594,12 +826,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 32.4,
+   "faces_away": 0,
+   "internal_station_cycles": 18,
+   "internal_station_bits": 13444,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 2,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_c1x_C__t3": {
    "key": "C:xrt1",
@@ -618,6 +861,9 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -629,12 +875,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 235.4,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 7547,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 17
+   "ft_stations_added": 1,
+   "alt_place": 2,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t24": {
    "key": "leaf",
@@ -643,12 +900,21 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 307.2,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8392,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 19
+   "alt_place": 68,
+   "views": {
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t25": {
    "key": "leaf",
@@ -657,12 +923,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 110.4,
+   "faces_away": 0,
+   "internal_station_cycles": 21,
+   "internal_station_bits": 14207,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 11,
+   "views": {}
   },
   "ot_s81sl_leaf__t26": {
    "key": "leaf",
@@ -671,12 +941,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 119.0,
+   "faces_away": 0,
+   "internal_station_cycles": 20,
+   "internal_station_bits": 13951,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 1,
-   "alt_place": 25
+   "ft_stations_added": 0,
+   "alt_place": 11,
+   "views": {}
   },
   "ot_s81sl_leaf__t27": {
    "key": "leaf",
@@ -685,12 +959,21 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 341.5,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8425,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 4
+   "ft_stations_added": 1,
+   "alt_place": 68,
+   "views": {
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_c1x_C__t4": {
    "key": "C:xrt1",
@@ -709,8 +992,11 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
-   "corner": "WS",
+   "corner": "WN",
    "ft_stations_added": 0
   },
   "ot_s81sl_leaf__t28": {
@@ -720,12 +1006,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 342.9,
+   "cores": 27,
+   "bus_reach_excess_um": 445.4,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 13753,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 14,
-   "alt_place": 25
+   "ft_stations_added": 5,
+   "alt_place": 54,
+   "views": {}
   },
   "ot_s81sl_leaf__t29": {
    "key": "leaf",
@@ -734,12 +1024,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 447.6,
+   "faces_away": 0,
+   "internal_station_cycles": 16,
+   "internal_station_bits": 10470,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 11
+   "alt_place": 53,
+   "views": {}
   },
   "ot_s81sl_leaf__t30": {
    "key": "leaf",
@@ -748,12 +1042,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 198.9,
+   "cores": 27,
+   "bus_reach_excess_um": 405.2,
+   "faces_away": 0,
+   "internal_station_cycles": 15,
+   "internal_station_bits": 13923,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 54,
+   "views": {}
   },
   "ot_s81sl_leaf__t31": {
    "key": "leaf",
@@ -762,12 +1060,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 287.0,
+   "faces_away": 0,
+   "internal_station_cycles": 12,
+   "internal_station_bits": 9809,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 0
+   "ft_stations_added": 1,
+   "alt_place": 112,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t32": {
    "key": "leaf",
@@ -776,12 +1085,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 32.4,
+   "faces_away": 0,
+   "internal_station_cycles": 18,
+   "internal_station_bits": 13444,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 2,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_iq_C__t1": {
    "key": "C:xrt1",
@@ -800,9 +1120,12 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0
+   "ft_stations_added": 4
   },
   "ot_s81sl_leaf__t33": {
    "key": "leaf",
@@ -811,12 +1134,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 293.6,
+   "faces_away": 0,
+   "internal_station_cycles": 21,
+   "internal_station_bits": 13932,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 3,
-   "alt_place": 33
+   "ft_stations_added": 5,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t34": {
    "key": "leaf",
@@ -825,12 +1159,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 472.6,
+   "faces_away": 0,
+   "internal_station_cycles": 8,
+   "internal_station_bits": 5092,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 0
+   "alt_place": 34,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t35": {
    "key": "leaf",
@@ -839,12 +1184,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 586.3,
+   "faces_away": 0,
+   "internal_station_cycles": 15,
+   "internal_station_bits": 14053,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 35,
+   "views": {}
   },
   "dsdv_slice_kv512_C__t1": {
    "key": "C:xrt1",
@@ -863,9 +1212,12 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0
+   "ft_stations_added": 1
   },
   "ot_s81sl_leaf__t36": {
    "key": "leaf",
@@ -874,12 +1226,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 339.2,
+   "cores": 27,
+   "bus_reach_excess_um": 639.7,
+   "faces_away": 0,
+   "internal_station_cycles": 21,
+   "internal_station_bits": 13844,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 6,
-   "alt_place": 104
+   "ft_stations_added": 2,
+   "alt_place": 11,
+   "views": {}
   },
   "ot_s81sl_leaf__t37": {
    "key": "leaf",
@@ -888,12 +1244,21 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 237.3,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8425,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 4
+   "ft_stations_added": 2,
+   "alt_place": 68,
+   "views": {
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t38": {
    "key": "leaf",
@@ -902,12 +1267,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 204.9,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 6004,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 2,
+   "alt_place": 32,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_c3x_C__t1": {
    "key": "C:xrt3",
@@ -926,6 +1302,9 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -937,12 +1316,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 267.0,
+   "faces_away": 0,
+   "internal_station_cycles": 13,
+   "internal_station_bits": 8043,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 113
+   "ft_stations_added": 3,
+   "alt_place": 130,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t40": {
    "key": "leaf",
@@ -951,12 +1341,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 76.6,
+   "cores": 27,
+   "bus_reach_excess_um": 223.6,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 13920,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 54,
+   "views": {}
   },
   "ot_s81sl_leaf__t41": {
    "key": "leaf",
@@ -965,12 +1359,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 587.5,
+   "faces_away": 0,
+   "internal_station_cycles": 13,
+   "internal_station_bits": 8701,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0,
-   "alt_place": 15
+   "alt_place": 41,
+   "views": {}
   },
   "ot_s81sl_leaf__t42": {
    "key": "leaf",
@@ -979,12 +1377,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 204.3,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 6004,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 2,
+   "alt_place": 32,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_c1x_C__t5": {
    "key": "C:xrt1",
@@ -1003,9 +1412,12 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0
+   "ft_stations_added": 1
   },
   "ot_s81sl_leaf__t43": {
    "key": "leaf",
@@ -1014,12 +1426,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 146.5,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 6004,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 17
+   "alt_place": 32,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t44": {
    "key": "leaf",
@@ -1028,12 +1451,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 620.2,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 10718,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 12
+   "alt_place": 118,
+   "views": {}
   },
   "ot_s81sl_leaf__t45": {
    "key": "leaf",
@@ -1042,12 +1469,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 296.0,
+   "faces_away": 0,
+   "internal_station_cycles": 12,
+   "internal_station_bits": 9809,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 1,
-   "alt_place": 101
+   "ft_stations_added": 3,
+   "alt_place": 112,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t46": {
    "key": "leaf",
@@ -1056,12 +1494,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 154.5,
+   "faces_away": 0,
+   "internal_station_cycles": 20,
+   "internal_station_bits": 13676,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 46
+   "ft_stations_added": 3,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_c1x_C__t6": {
    "key": "C:xrt1",
@@ -1080,6 +1529,9 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0
@@ -1091,12 +1543,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 146.5,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 6004,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 17
+   "ft_stations_added": 1,
+   "alt_place": 32,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t48": {
    "key": "leaf",
@@ -1105,12 +1568,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 620.2,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 10718,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 12
+   "alt_place": 118,
+   "views": {}
   },
   "ot_s81sl_leaf__t49": {
    "key": "leaf",
@@ -1119,12 +1586,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 76.6,
+   "cores": 27,
+   "bus_reach_excess_um": 223.6,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 13920,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 54,
+   "views": {}
   },
   "ot_s81sl_leaf__t50": {
    "key": "leaf",
@@ -1133,12 +1604,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 59.3,
+   "cores": 27,
+   "bus_reach_excess_um": 256.8,
+   "faces_away": 0,
+   "internal_station_cycles": 21,
+   "internal_station_bits": 13954,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 1,
-   "alt_place": 104
+   "ft_stations_added": 0,
+   "alt_place": 11,
+   "views": {}
   },
   "ot_s81sl_leaf__t51": {
    "key": "leaf",
@@ -1147,12 +1622,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 481.0,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8863,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0,
-   "alt_place": 4
+   "alt_place": 41,
+   "views": {}
   },
   "dsdv_slice_c1x_C__t7": {
    "key": "C:xrt1",
@@ -1171,6 +1650,9 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1182,12 +1664,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 291.8,
+   "faces_away": 0,
+   "internal_station_cycles": 21,
+   "internal_station_bits": 13932,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 6,
-   "alt_place": 8
+   "ft_stations_added": 8,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t55": {
    "key": "leaf",
@@ -1196,12 +1689,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 582.9,
+   "faces_away": 0,
+   "internal_station_cycles": 13,
+   "internal_station_bits": 8701,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 55
+   "ft_stations_added": 5,
+   "alt_place": 41,
+   "views": {}
   },
   "ot_s81sl_leaf__t56": {
    "key": "leaf",
@@ -1210,12 +1707,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 290.2,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8046,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 0
+   "ft_stations_added": 1,
+   "alt_place": 130,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t57": {
    "key": "leaf",
@@ -1224,12 +1732,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 86.5,
+   "faces_away": 0,
+   "internal_station_cycles": 18,
+   "internal_station_bits": 13379,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 22
+   "ft_stations_added": 4,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_c1x_C__t8": {
    "key": "C:xrt1",
@@ -1248,9 +1767,12 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0
+   "ft_stations_added": 5
   },
   "ot_s81sl_leaf__t58": {
    "key": "leaf",
@@ -1259,12 +1781,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 284.7,
+   "faces_away": 0,
+   "internal_station_cycles": 13,
+   "internal_station_bits": 7418,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 2,
-   "alt_place": 58
+   "ft_stations_added": 1,
+   "alt_place": 2,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t59": {
    "key": "leaf",
@@ -1273,12 +1806,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 583.7,
+   "faces_away": 0,
+   "internal_station_cycles": 15,
+   "internal_station_bits": 14053,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 35,
+   "views": {}
   },
   "ot_s81sl_leaf__t60": {
    "key": "leaf",
@@ -1287,12 +1824,21 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 415.5,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8392,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 4
+   "ft_stations_added": 2,
+   "alt_place": 68,
+   "views": {
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t61": {
    "key": "leaf",
@@ -1301,12 +1847,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
+   "cores": 27,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 18,
+   "internal_station_bits": 13443,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 4,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_c1x_C__t9": {
    "key": "C:xrt1",
@@ -1325,9 +1882,12 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0
+   "ft_stations_added": 3
   },
   "ot_s81sl_leaf__t62": {
    "key": "leaf",
@@ -1336,12 +1896,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 235.4,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 7547,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 17
+   "ft_stations_added": 2,
+   "alt_place": 2,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t63": {
    "key": "leaf",
@@ -1350,12 +1921,21 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 307.2,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8392,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 19
+   "alt_place": 68,
+   "views": {
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t64": {
    "key": "leaf",
@@ -1364,12 +1944,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 110.4,
+   "faces_away": 0,
+   "internal_station_cycles": 21,
+   "internal_station_bits": 14207,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 11,
+   "views": {}
   },
   "ot_s81sl_leaf__t65": {
    "key": "leaf",
@@ -1378,12 +1962,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 307.5,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8056,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 1
+   "ft_stations_added": 1,
+   "alt_place": 130,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t66": {
    "key": "leaf",
@@ -1392,12 +1987,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 95.0,
+   "faces_away": 0,
+   "internal_station_cycles": 18,
+   "internal_station_bits": 13379,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 22
+   "ft_stations_added": 3,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_lepe_nh_mus_C__t1": {
    "key": "C:xrt1",
@@ -1416,6 +2022,9 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1427,12 +2036,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 272.8,
+   "faces_away": 0,
+   "internal_station_cycles": 13,
+   "internal_station_bits": 7418,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 17
+   "ft_stations_added": 2,
+   "alt_place": 2,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t68": {
    "key": "leaf",
@@ -1441,12 +2061,21 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 364.0,
+   "faces_away": 0,
+   "internal_station_cycles": 13,
+   "internal_station_bits": 8263,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 19
+   "alt_place": 68,
+   "views": {
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t69": {
    "key": "leaf",
@@ -1455,12 +2084,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 93.1,
+   "faces_away": 0,
+   "internal_station_cycles": 20,
+   "internal_station_bits": 14014,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 25
+   "alt_place": 11,
+   "views": {}
   },
   "ot_s81sl_leaf__t70": {
    "key": "leaf",
@@ -1469,12 +2102,16 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 101.7,
+   "faces_away": 0,
+   "internal_station_cycles": 20,
+   "internal_station_bits": 13951,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 4,
-   "alt_place": 35
+   "alt_place": 11,
+   "views": {}
   },
   "ot_s81sl_leaf__t71": {
    "key": "leaf",
@@ -1483,12 +2120,21 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 398.4,
+   "faces_away": 0,
+   "internal_station_cycles": 14,
+   "internal_station_bits": 8392,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 4
+   "ft_stations_added": 2,
+   "alt_place": 68,
+   "views": {
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "dsdv_slice_lepe_mu_C__t1": {
    "key": "C:xrt1",
@@ -1507,6 +2153,9 @@
    ],
    "cores": 4,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0
@@ -1518,12 +2167,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 52.7,
+   "cores": 27,
+   "bus_reach_excess_um": 639.6,
+   "faces_away": 0,
+   "internal_station_cycles": 16,
+   "internal_station_bits": 14644,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 4,
-   "alt_place": 8
+   "ft_stations_added": 2,
+   "alt_place": 103,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t73": {
    "key": "leaf",
@@ -1532,12 +2192,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 23.8,
+   "faces_away": 0,
+   "internal_station_cycles": 19,
+   "internal_station_bits": 13667,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 22
+   "ft_stations_added": 1,
+   "alt_place": 86,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "ot_s81sl_leaf__t74": {
    "key": "leaf",
@@ -1546,12 +2217,23 @@
    "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "cores": 27,
+   "bus_reach_excess_um": 289.6,
+   "faces_away": 0,
+   "internal_station_cycles": 10,
+   "internal_station_bits": 10631,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 0
+   "alt_place": 79,
+   "views": {
+    "u_lf.u_ve.u_m": "xm",
+    "u_lf.u_ve.u_s": "xm",
+    "u_lf.u_vn.u_b": "xm",
+    "u_lf.u_vs": "xm",
+    "u_lf.u_vn.u_a": "xm",
+    "u_lf.u_vq": "xm"
+   }
   },
   "gunit__t1": {
    "key": "gunit",
@@ -1591,6 +2273,9 @@
    ],
    "cores": 10,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1612,6 +2297,9 @@
    ],
    "cores": 7,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 0,
+   "internal_station_bits": 0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1625,9 +2313,14 @@
    "gaps": [],
    "cores": 3,
    "bus_reach_excess_um": 0.0,
+   "faces_away": 0,
+   "internal_station_cycles": 3,
+   "internal_station_bits": 567,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 2
+   "ft_stations_added": 4,
+   "alt_place": 2,
+   "views": {}
   }
  }
 }
