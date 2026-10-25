@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "lane": "S81-HEAD / HEAD-ELEM2",
+ "date": "2026-10-25",
+ "refs": "GEOM REQ [S81-HEAD/HEAD-ELEM 04:48] -> GEOM-REVIEW 04:49 PASS-COND + GEOM-REVIEW-2 04:50 PASS-COND (all three conditions, one rebuild)",
+ "cond1_elemB_rom_MY": "both ROMs MY at the same sites (77.76/103.68, 77.76/190.08), --rom-orient MY; post_cts_gate_s2.tcl (OT_GATE_TRW=1 for B) measures u_m.t_r[i] -> u_m.w_r[i] Manhattan after CTS and STOPS before GRT if median > 20 um or any > 100 um; MAX_WIRE_LENGTH 100 guard only",
+ "cond2_shared_F2": {
+  "tool": "tools/die_plan/rc_fit.tcl = HBM-CORES claude/hbm-cores-1025@4b722d3388 (GEOM-REVIEW 04:37 accepted) + optional OT_GRT_ARGS (default empty = identical behaviour). The flow's GRT is -resistance_aware -congestion_iterations 30 (ORFS 5_1_grt.log); without it the estimate was +87 (B) / +132 (A) ps instead of the flow's +36 / +68.",
+  "inputs": "re-GRT of each pre-ECO routed 5_1_grt.odb (B c8 epyc3, A c11 intel1), FF, signoff/ff golden.sdc, RCX per-sink CLK max arrival (HEAD-ELEM probes ck_rcx_FF.tsv), docker --memory 24g",
+  "elemB_c8": "1:1 mean +36.43 p95 41.45; 1:0.6 mean -3.06 mean_abs 3.40 p95 7.69 max 16.52 (FIT); 1:0.5 -13.19; uniform 0.7/0.665/0.6 -22.8/-28.9/-40.0 (R matters: C-only)",
+  "elemA_c11": "1:1 +68.13 p95 72.38 (est hold +9.81/0 vs RCX -13.3/103); 1:0.6 +15.20 p95 19.01; 1:0.5 +1.97 mean_abs 2.73 p95 5.81 max 11.62 (FIT; est hold -14.02/147 = now sees the RCX output holds); 0.7 -5.91; 0.665 -13.85",
+  "files": "rc_fit/setRC_r1_c0.6.tcl, rc_fit/setRC_r1_c0.5.tcl (rc_fit.tcl output, byte-identical for A and B), rc_fit/rc_fit_elem{A_c11,B_c8}_FF.tsv",
+  "kit_hook": "export LAYER_PARASITICS_FILE = /work/setRC_fit.tcl: orfs:asap7lock load.tcl sources LAYER_PARASITICS_FILE instead of platform setRC.tcl in every stage that loads the design (place/resize/CTS/GRT/all repairs). NOTE for every lane: SET_RC_TCL is not read by this image's scripts (only platform config.mk sets it), so a kit SET_RC_TCL is inert. The private --hold-rc-cal wrap is removed."
+ },
+ "cond3_ff_vclk": "decision 9.7/5e in-flow form (for CLOCK to confirm): set_clock_latency -source -max 250 [get_clocks vclk] (setup analysis, the core-latency contract) + set_clock_latency -source -min <FF pin-reg I> [get_clocks vclk] (OpenSTA min = hold analysis only, launch and capture). FF I = HEAD-ELEM RCX face-flop median: elemB 170 (169.73), elemA 155 (155.4). Every in-flow hold repair (CTS, post-GRT) and signoff.py (ff_vclk sdc) then see the FF reference; no output-port hold padding against 250. sdc_lint.py extended: -min latency only on the virtual clock, 0 < min <= setup latency; -early/-late rejected. Known artefact: OpenROAD has one SDC for both corners, so TT hold (not a sign-off check) also sees 155/170 -> input-pin-register hold padding sized at TT (~+60 ps over FF need) on x[]/inputs; TT setup unaffected.",
+ "cond4_route_gate": "post_cts_gate_s2.tcl: (a) unchanged structural stop before repair (FF WNS < -100 or > 2000); (b) ORFS CTS repair; (c) route gate on the fitted placement RC: FF (bc) hold WNS >= 0, related-pair skew (worst path per endpoint, CPPR credited, uncertainty zeroed then restored) <= 80 at tc and bc, elemB t_r->w_r; FAIL -> /work/FAIL_POSTCTS + route_gate.json + 4_1_cts_gate.odb and the run stops before GRT (autopilot: STRUCTURAL post-cts-hold). Sign-off: main signoff.py + pair_skew.tcl (decision-5 pair gate).",
+ "kits": {
+  "elemB_rb_s2_c60": "epyc1:/srv/opentallas-scratch2/claude/s81-head-elem/kits/elemB_rb_s2_c60 (fit 1:0.6)",
+  "elemB_rb_s2_c50": "epyc1:/srv/opentallas-scratch2/claude/s81-head-elem/kits/elemB_rb_s2_c50 (1:0.5, neighbour)",
+  "elemA_rb_s2_c50": "epyc1:/srv/opentallas-scratch2/claude/s81-head-elem/kits/elemA_rb_s2_c50 (fit 1:0.5)",
+  "elemA_rb_s2_c60": "epyc1:/srv/opentallas-scratch2/claude/s81-head-elem/kits/elemA_rb_s2_c60 (1:0.6, neighbour)"
+ },
+ "unchanged": "RTL, cycles, pins/LEF, ROM sites, early core tap (A 160 / B 120), post-GRT hold margin 15, no ECO / LVT / resize / margin bump"
+}

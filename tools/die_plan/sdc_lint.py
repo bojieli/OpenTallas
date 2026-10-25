@@ -8,6 +8,10 @@ liberty files before synthesis):
              library = a 0.833-ps clock) and every create_clock period x unit = the plan period.
   clocks     every clock referenced (-clock X, get_clocks X) is created; every clock tap port is a create_clock source;
              only tap ports are clock sources; one virtual IO clock whose source latency = the plan insertion.
+             Optional hold-analysis IO reference (decision 9.7/5e, FF vclk = measured FF pin-register insertion,
+             S81-HEAD 10-25): `set_clock_latency -source -min L [get_clocks vclk]` next to the setup value
+             (`-max` or both) = the plan insertion; L must satisfy 0 < L <= insertion and sits only on the virtual clock.
+             OpenSTA applies -min to hold (min) analysis only, -max to setup.  -early/-late are rejected.
   ports      every non-clock input has a max AND a min input delay, every output a max AND a min output delay
              (set_*_delay with neither -max nor -min sets both); no delay on a clock port.
   hold       hold uncertainty on every clock; min input delay <= -insertion_tol (seam-hold padding, CP1 r9);
@@ -199,7 +203,8 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         err.append(f"units: liberty time_unit {liberty_unit_ps:g} ps but the SDC is written in {u:g} ps units")
     ctx = Ctx(inputs, outputs, clock_ports)
     clk_src = {}                      # port -> clock
-    latency = {}                      # clock -> source latency (ps)
+    latency = {}                      # clock -> source latency (ps), setup (max) analysis
+    lat_min = {}                      # clock -> hold-analysis (-min) source latency (ps), 9.7/5e FF IO reference
     port_lat = {}                     # clock port -> source latency (ps) (CP2 early core taps)
     unc = {}                          # (kind, from, to) -> ps ; from/to None = global
     idly = {p: {} for p in ctx.allp}  # port -> {"max": (clk, ps), "min": ...}
@@ -267,12 +272,20 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 k, cl = _eval_obj(ctx, w[-1])
                 if len(v) != 1:
                     raise SdcLintError(f"set_clock_latency: {cmd}")
+                if "-early" in w or "-late" in w:
+                    err.append(f"clocks: -early/-late source latency is not in the kit vocabulary: {cmd}")
+                    continue
                 if k == "ports":         # CP2 early core tap: -source -clock clk <-early> [get_ports tap]
+                    if "-min" in w or "-max" in w:
+                        err.append(f"clocks: -min/-max on a core tap port latency: {cmd}")
                     for x in cl:
                         port_lat[x] = _num(v[0], "latency") * u
                     continue
                 for x in cl:
-                    latency[x] = _num(v[0], "latency") * u
+                    if "-min" in w and "-max" not in w:
+                        lat_min[x] = _num(v[0], "latency") * u
+                    else:
+                        latency[x] = _num(v[0], "latency") * u
                 continue
             if c == "set_clock_uncertainty":
                 kind = "setup" if "-setup" in w else "hold" if "-hold" in w else "both"
@@ -361,6 +374,11 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     for p_ in want:
         if p_ not in port_lat:
             err.append(f"clocks: plan early core tap {p_} has no source latency")
+    for n, v in lat_min.items():
+        if n not in virt:
+            err.append(f"clocks: -min source latency on real clock {n} (only the virtual IO clock)")
+        elif not (0.0 < v <= latency.get(n, insertion_ps) + EPS):
+            err.append(f"clocks: virtual clock {n} hold (-min) latency {v:g} ps outside (0, setup latency]")
     for n in latency:
         if n not in virt:
             err.append(f"clocks: source latency on real clock {n} (only the virtual IO clock carries the budget)")
