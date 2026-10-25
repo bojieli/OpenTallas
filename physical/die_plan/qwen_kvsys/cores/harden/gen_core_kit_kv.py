@@ -180,6 +180,35 @@ def sdc(per, ins, tol, clks, rsts, tid):
                 "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
 
+# KV-CORES 10-25 (COORD ruling 2; Codex 98c25c4a8 / dfd4acde9): even head_eighth boundary repair. The 10-24 kit leaf
+# snapshot predates the PORT_REGS parameters, so these three leaves come from this repo (defaults PORT_REGS=0 = the
+# snapshot logic; subtiles only adds the unconnected kv_q observation port used by ktree_lk PORT_REGS=1).
+HEAD_PORT_REGS_LEAVES = {
+    "ot_qkh_head_native_r4.sv": "rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4.sv",
+    "ot_qkh_ktree_lk.sv": "rtl/hdc/nearhbm/ot_qkh_ktree_lk.sv",
+    "ot_qkh_subtiles.sv": "rtl/hdc/nearhbm/ot_qkh_subtiles.sv",
+}
+
+
+def head_port_regs(text, mod, kd):
+    """frontq: per-port launch flops + separate fault-pin flop (face_guard f_t2->f_t3 feedthrough / shared fault pin,
+    +124 FF, 0 cycles); e0 ktree_lk: kpv_in[15:1] / gf_in land on face flops (+31 FF, lane-fault path +1 edge, approved)."""
+    fq = re.compile(r"(ot_qkh_head_frontq_native #\()(?![^)]*PORT_REGS)")
+    text, nf = fq.subn(r"\1.PORT_REGS(1), ", text)
+    if nf < 1:
+        raise SystemExit(f"{mod}: --head-port-regs found no ot_qkh_head_frontq_native instance")
+    kt = re.compile(r"(ot_qkh_ktree_lk #\()(?![^)]*PORT_REGS)")
+    text, nk = kt.subn(r"\1.PORT_REGS(1), ", text)
+    if (nk > 0) != (mod == "kv3_head_eighth_e0"):
+        raise SystemExit(f"{mod}: ktree_lk instances {nk}; ruling 2 covers exactly the e0 K-tree")
+    (kd / "head_port_regs_delta.json").write_text(json.dumps(dict(
+        frontq_port_regs=nf, ktree_lk_port_regs=nk, extra_flops_estimate=124 + 31 * nk, frontq_cycles=0,
+        ktree_fault_edges=1 if nk else 0, leaves_from_repo=sorted(HEAD_PORT_REGS_LEAVES),
+        source="COORD ruling 2 (KVG3-CORES 10-24) + Codex 98c25c4a8/dfd4acde9: e2 raw+ODB face_guard 1344/1344 PASS",
+        note="parent bind must price the +1 K-tree fault edge (e0 only); data / schedule cycles unchanged"), indent=1) + "\n")
+    return text
+
+
 def preserve_head_relays(path):
     """Retain existing physical command-relay FFs, including unused command fields; no logic/cycle change."""
     if Path(path).name != "ot_qwen_nearhbm_head_hs.sv":
@@ -271,6 +300,12 @@ def main():
     ap.add_argument("--hard-children", help="JSON {children: {master: view_dir}, blocks: [{inst, master, x, y, orient}]}: "
                     "macro-composed core (owner 10-11 top-down hierarchy): children are signed hard views, blackboxed in "
                     "synthesis and placed FIRM at the planned sites (MACRO_PLACEMENT_TCL)")
+    ap.add_argument("--head-port-regs", action="store_true",
+                    help="even head_eighth cores (e0/e2/e4/e6): frontq PORT_REGS=1 + fault-pin flop (+124FF, 0 cycles), e0 also "
+                         "ktree_lk PORT_REGS=1 (+31FF, +1 parent fault edge, COORD ruling 2); leaves from this repo")
+    ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
+    ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
+    ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
@@ -288,6 +323,8 @@ def main():
     mod = cj["module"]
     if a.astk_face_ports and not mod.startswith("kv3_astk_"):
         raise SystemExit("--astk-face-ports only applies to kv3_astk_* cores")
+    if a.head_port_regs and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
+        raise SystemExit("--head-port-regs only applies to the even head_eighth cores (e0/e2/e4/e6)")
     hc = next(h for h in plan["partition_types"][cj["type"]]["hard_cores"] if h["inst"] == cj["inst"])
     w, h = hc["outline_um"]
     tid = f"{mod}__{w:g}x{h:g}"
@@ -310,6 +347,8 @@ def main():
             f = str(REPO / "rtl/qwen_sys/split_20261014" / Path(f).name)
         if a.astk_face_ports and Path(f).name == "qkd_astk_ctl_s_p.sv":
             f = str(REPO / "rtl/qwen_sys/kv_plan_leaves_1023/qkd_astk_ctl_s_p.sv")
+        if a.head_port_regs and Path(f).name in HEAD_PORT_REGS_LEAVES:
+            f = str(REPO / HEAD_PORT_REGS_LEAVES[Path(f).name])
         dst = kd / "rtl" / Path(f).name
         if dst.exists():
             if dst.read_bytes() != Path(f).read_bytes():
@@ -319,6 +358,8 @@ def main():
         if a.astk_face_ports and dst.stem == mod:
             from astk_face_ports import transform
             dst.write_text(transform(dst.read_text()))
+        if a.head_port_regs and dst.stem == mod:
+            dst.write_text(head_port_regs(dst.read_text(), mod, kd))
         if a.ectlk_three_taps and dst.stem == mod:
             text = dst.read_text()
             old = ".ck({ck[0], ck[0], ck[0]})"
@@ -330,6 +371,22 @@ def main():
         # from the liberty, the models are not synthesisable input
         if not f.endswith((".svh", ".vh")) and not re.match(r"asap7sc7p5t_.*\.v$", dst.name):
             srcs.append(f"/work/rtl/{dst.name}")
+    if a.astk_timing_regs:
+        if not mod.startswith("kv3_astk_"):
+            raise SystemExit("--astk-timing-regs only applies to kv3_astk_* cores")
+        from astk_timing_regs import apply_kit
+        apply_kit(kd / "rtl")
+        (kd / "astk_timing_delta.json").write_text(json.dumps(dict(added_cycles=0, zn_read_replicas=8, zn_added_ff_per_z=40,
+            ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL"), indent=1) + "\n")
+    if a.ectlk_face_ports:
+        if mod != "qkd_ectlk":
+            raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
+        from ectlk_face_ports import apply_kit as ectlk_apply
+        ectlk_apply(kd / "rtl")
+        (kd / "ectlk_face_delta.json").write_text(json.dumps(dict(added_schedule_cycles=0,
+            private_port_flops="sc_valid 1 + sc_data 128 + lmax 256 + lmax_any 2 + fault 1 (ectl_part); req 38 + fault 1 (k_issuer)",
+            cfg_strap="one landing flop on ck[0] feeds 3 leaves (+1 settle edge after a strap change)",
+            miter="results/ectlk_preflight_1025"), indent=1) + "\n")
     if a.ectlk_three_taps:
         (kd / "ectlk_clock_delta.json").write_text(json.dumps(dict(
             source_ports=["ck[0]", "ck[1]", "ck[2]"], related_clock="one die clock, all edges co-timed",
@@ -436,6 +493,7 @@ def main():
     shutil.copyfile(Path(a.tool) / "lec.py", kd / "lec.py")       # LEC 10-24: RTL vs netlist after synth (run_kit_kv.sh)
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
     shutil.copyfile(Path(a.tool) / "signoff.py", kd / "signoff.py")
+    shutil.copyfile(Path(a.tool) / "pair_skew.tcl", kd / "pair_skew.tcl")   # signoff.py reads it beside itself (crashed without it 10-25)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     write_core_contract(kd, cj, clks, rsts)
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
@@ -493,7 +551,8 @@ def main():
            *(["export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
               "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl"] if rec.get("face_flops", True) else []),
            "export CORNER = TC",
-           *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()]]
+           *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
+           *[f"export {kv.split('=', 1)[0].strip()} = {kv.split('=', 1)[1].strip()}" for kv in a.orfs_var]]
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     if lefs:
