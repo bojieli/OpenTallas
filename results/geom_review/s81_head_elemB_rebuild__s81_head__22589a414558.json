@@ -1,0 +1,9 @@
+{
+ "element": "s81_head_elemB_rebuild",
+ "kit": "tools/s81_head/hd_elemA_rebuild.py --elem B --early-ps 120 --post-grt-hold-ps 45 @claude/s81-head-1024r (kit epyc1 /srv/opentallas-scratch/claude/s81-head/elem_rb/elemB_rb_c6)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "22589a4145587813bcd5c78bc2b0d503d449a30ef47f59ade46e14da9af57d93",
+ "reasons": "[2026-10-24 21:20 PDT S81-HEAD] [pre-route review, SELF] B c6 = B c5 kit (GEOM-REVIEW PASS-COND 20:46) with ONE change: clk pin = the standard W-edge M4 pin 0..0.084 x 257.568..257.592 (io.tcl + pins.json, diff -r) instead of the 0.192 square. Evidence: hd_tile preview (epyc2 /srv/opentallas-scratch2/claude/s81-head/tile_prev1, views_rb from unsigned c8/c4, 3_place) DRT pin_access: ERROR DRT-0073 No access point for u_core.u_b.g_cvb.u_eB/clk -- the 0.192 M4 square sits fully under the abstract's full-cover M4 OBS (generate_abstract bloat); with only that pin rewritten to 0.084 x 0.024 in a LEF copy, pin_access on the same placed tile = PA_OK for all 5 cores (2,290 core pins) + std cells. elemA's 0.192 M5 square (N edge) passed. 128 other W-edge M4 pins of the same size are accessible. Geometry otherwise identical to c4 (picture results/geom_review/s81_head_img/elemB_rb_c4_final.png).",
+ "fixes": "Same conditions as c5 (FF hold >= 0, slew 0, TT > 0, DRC 0); plus tile pin_access PA_OK with the c6 LEF before any hd_tile route. B c5 (0.192 clk) keeps running only as hold-hook evidence, its view is not installed.",
+ "reviewer": "S81-HEAD (Claude) self review; GEOM-REVIEW second review requested"
+}

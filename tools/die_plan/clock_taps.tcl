@@ -2,11 +2,14 @@
 # The type has one clock port per die-spine tap (clk, clk_t1, ...; pitch <= 600 um, schema.tap_grid).  The RTL
 # clocks every flop from 'clk'; here every sink on the clk net moves to the net of its NEAREST tap port, so CTS builds
 # one local tree per tap (radius <= ~300 um) instead of one tree from one interior tap (CP1: 1176 ps, 29-32 levels).
+# QC-A0 10-24: the tap port family is OT_TAP_PORT (default clk: plan partitions clk / clk_t<i>; the A0 hard cores
+# ck / ck_t<i>), so hard-core kits use this tool unchanged instead of private copies.
+set ct_port [expr {[info exists ::env(OT_TAP_PORT)] ? $::env(OT_TAP_PORT) : "clk"}]
 set ct_blk [ord::get_db_block]
 set ct_taps {}
 foreach bt [$ct_blk getBTerms] {
   set n [$bt getName]
-  if {![regexp {^clk(_t[0-9]+)?$} $n]} continue
+  if {![regexp "^${ct_port}(_t\[0-9\]+)?\$" $n]} continue
   set bb [$bt getBBox]
   set net [$bt getNet]
   if {$net eq "NULL" || $net eq ""} {
@@ -21,7 +24,7 @@ foreach bt [$ct_blk getBTerms] {
 # tap port's own net BEFORE the nearest-tap split, so the core hangs on the tap the spine delivers early (its internal
 # clock latency exceeds the common latency).  Ports clk_c<k> are not grid taps: no flop is ever moved onto them.
 if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
-  set ct_root [[$ct_blk findBTerm clk] getNet]
+  set ct_root [[$ct_blk findBTerm $ct_port] getNet]
   set fh [open $::env(OT_CORE_TAPS)]; set ct_cl [split [read $fh] "\n"]; close $fh
   foreach l $ct_cl {
     if {[string match "#*" $l] || [llength $l] < 3} continue
@@ -54,7 +57,7 @@ if {[info exists ::env(OT_CORE_TAPS)] && [file exists $::env(OT_CORE_TAPS)]} {
 if {[llength $ct_taps] < 2} {
   puts "OT_CLOCK_TAPS single tap: nothing to split"
 } else {
-  set root [[$ct_blk findBTerm clk] getNet]
+  set root [[$ct_blk findBTerm $ct_port] getNet]
   set cnt {}
   set moved 0
   foreach it [$root getITerms] {
@@ -74,7 +77,7 @@ if {[llength $ct_taps] < 2} {
       incr moved
     }
   }
-  puts "OT_CLOCK_TAPS [llength $ct_taps] taps, $moved sinks moved off clk: [lsort -stride 2 -index 0 $cnt]"
+  puts "OT_CLOCK_TAPS [llength $ct_taps] taps, $moved sinks moved off $ct_port: [lsort -stride 2 -index 0 $cnt]"
 }
 # COORD 10-23: size taps by SINK COUNT.  No tap keeps more than OT_TAP_MAX_SINKS (~3k): the sinks of an over-full
 # tap that cost the least extra distance move to their next-nearest tap with room (capacity-constrained nearest
@@ -85,6 +88,8 @@ set ct_cap [expr {[info exists ::env(OT_TAP_MAX_SINKS)] ? $::env(OT_TAP_MAX_SINK
 # tap gave 465-ps trees); a dense region beyond that needs a finer tap pitch, not longer trees
 set ct_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ct_maxx [expr {0.5 * ([info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0) * $ct_dbu}]
+# density taps (decision 5, gen.py phys OT_TAP_REASSIGN_UM = clock.tap_radius_um): no pitch; the cluster radius bounds it
+if {[info exists ::env(OT_TAP_REASSIGN_UM)]} { set ct_maxx [expr {$::env(OT_TAP_REASSIGN_UM) * $ct_dbu}] }
 if {[llength $ct_taps] >= 2} {
   set ct_by {}
   foreach tp $ct_taps {

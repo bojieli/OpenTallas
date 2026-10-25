@@ -768,3 +768,24 @@ def test_lane_clock_cdc_refused_or_synchronised(tmp_path):
     assert run(_plan_d(tmp_path, sync, s_on_hbm=True), out2, "elab", "bind") == 0
     r2 = report(out2)
     assert r2["n_errors"] == 0 and r2["lane_domains"]["sync_port_bits"] == 8, r2["errors"][:5]
+
+
+def test_kit_rtl_spare_ft_bits_ride_stations(tmp_path):
+    """QC-A0 10-24 (face_guard on coll_ftc): spare bits of an ft slot narrow on BOTH sides go through the slot's station
+    chain (ot_dp_st x stations) instead of an unread input + a constant output"""
+    plan = EX / "die_plan_lanes.json"
+    out = tmp_path / "o"
+    assert run(plan, out, "elab", "bind") == 0
+    P = json.loads(plan.read_text())
+    sl = P["partition_types"]["tf"]["ft_slots"][0]
+    sl["width"] += 2
+    sl["stations"] = 2
+    wide = tmp_path / "wide.json"
+    wide.write_text(json.dumps(P))
+    kd = tmp_path / "kit"
+    assert bind.main(["kit-rtl", str(wide), "--out", str(out), "--type", "tf", "--kit", str(kd)]) == 0
+    man = json.loads((kd / "kit_rtl.json").read_text())
+    n = sl["name"]
+    assert man["spare_ft_passthrough"] == [dict(slot=n, bits=2, stations=2)] and man["spare_out_bits"] == [], man
+    w = (kd / f"{P['partition_types']['tf']['module']}.sv").read_text()
+    assert f"u_ft_spare_{n}_o_s0" in w and f"u_ft_spare_{n}_o_s1" in w and "'d0;  // spare plan bits" not in w

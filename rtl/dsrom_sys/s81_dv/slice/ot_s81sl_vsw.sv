@@ -18,7 +18,7 @@ module ot_s81sl_vsw #(
     input  wire [31:0]   i_w,
     input  wire [31:0]   i_lim,
     output reg           o_v,
-    output reg  [63:0]   o_d,
+    (* keep *) output reg  [63:0]   o_d,
     output reg           o_f
 );
     wire [1:0] rsv;
@@ -62,5 +62,10 @@ module ot_s81sl_vsw #(
             fs <= fs | lf | ovr | tbad;
             o_f <= fs;
         end
-    always @(posedge clk) if (vo && ta == 2'd3) o_d <= {ab[31:16], ds};
+    // S81-KITS-RTLA 10-24 (face_guard: register on every pin, owner rule): o_d was a hold flop (o_d <= ld ? x : o_d),
+    // its Q fed its own D mux.  The hold state lives in od_h; o_d is a separate output-only copy loaded with the SAME
+    // next-state value every edge (0 cycles, bit / cycle identical).  Both kept so opt_merge cannot fold them.
+    (* keep *) reg [63:0] od_h;
+    wire [63:0] od_n = (vo && ta == 2'd3) ? {ab[31:16], ds} : od_h;
+    always @(posedge clk) begin od_h <= od_n; o_d <= od_n; end
 endmodule

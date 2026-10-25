@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_hc_bankq_static__lanes0_2",
+ "view": "ot_hbm_hc_bankq_static__lanes0_2@e6588042a5d1",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_hc_bankq_static__lanes0_2_e6588042a5d1, B2r2 pins e6588042a5d1, plan 24990bd5dd78)",
+ "stage": "placed2",
+ "verdict": "PASS-COND",
+ "hash": "bdc74db25d424308",
+ "reasons": "PASS-COND: 173x346 um, 2719 pins on W/N, uniform density <= 0.57, face flops p90 8.3-8.7 um, no slivers; I ~360 ps uniform tree. previous placement (same outline/pins/macros) [172.8, 345.6] um, 183708 cells, 33357 flops, 0 macros, fill 0.418 of free, bins>0.8 0 (max 0.56), pin->reg p90 8.3 um; CTS I mean 361 / max 372 ps. CONDITIONS: GRT 0 overflow, DRC 0, signoff TT setup / FF hold >= 0 at 60/25 with the pin-flop insertion within I +- 40; plan must deliver the early core tap (results/core_insertion_b2l.json).",
+ "fixes": "relaunch with the core clock contract (vclk / tap target = measured I, owner 5e) + hold_cap iteration cap 4000",
+ "pictures": [
+  "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_hc_bankq_static__lanes0_2_e6588042a5d1/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T19:53:53-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

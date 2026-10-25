@@ -11,6 +11,7 @@
 // G3 (LEAD-S81-G3 10-21): u_sl = ot_s81sl_slice_c1x_k8_cap5r_lp (capc5r + fixed-depth CAP reset forests, one release edge).
 // S81-LINK5B G7 (lead 10-21): u_lep #(.RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) = the lepmu t5c/t5d kit params (claude/s81-link5-lepmu-1021
 // @64ad9ca55 ot_s81sl_slice_lep.sv); IN_PIPE adds +1 cycle on ro and mu_c.
+// S81/H4 10-24: u_lep = ot_s81sl_lep_mu_ab_idx (+ tree frames tl / ca / cb, IDX_EN 1); every other cycle unchanged.
 // S81-LINK5 (owner 10-21 06:00, 5th lane pair): s_0N copy-A/B end = ot_s81sl_slice_lepw_mu_72 with u_lep ->
 // ot_s81sl_lep_mu_ab (AB_EN 1, HOST_EN 0; kit s81sl_lepmu) and pair B lanes u_ln2 / u_ln3 (same dsfd_coll_lane_w_safe8_ntf
 // as u_ln0 / u_ln1, HF-3 CH_BOARD 700, strap ch_b) on new die ports tx2 / tx3 / rx2 / rx3 (die SerDes link_0_4 / link_0_5).
@@ -63,7 +64,12 @@ module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
     input wire ck_K, ck_ML,
     input wire ck_N0, ck_N1, ck_N2, ck_N3,
     input wire ck_L0, ck_L1, ck_L3, ck_L4,
-    input wire ck_CAP_RT, ck_CAP_CW, ck_CAP_CE, ck_CAP_RN, ck_CAP_RS
+    input wire ck_CAP_RT, ck_CAP_CW, ck_CAP_CE, ck_CAP_RN, ck_CAP_RS,
+    // S81/H4 10-24 (COORD H4 option A): the bk_sel index rank-tree lanes end at this lep (region K, pin flops in u_lep):
+    // tl <- bk_sel tl_o (plan lane tl__bk_sel__s_0N_LP), ca / cb -> bk_sel ca / cb (ca__ / cb__s_0N_LP__bk_sel)
+    input wire [275:0] tl,
+    output wire [275:0] ca,
+    output wire [275:0] cb
 );
     wire  fault__o;   // out_regs: flat driver of fault
     wire [1103:0] lro, lri, lri_ep, lro_ep; wire sf;
@@ -152,8 +158,8 @@ module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
         .k_lo_v(l3v), .k_lo_d(l3d), .k_lo_r(l3r), .k_li_v(i3v), .k_li_d(i3d), .k_li_r(i3r), .k_rxv(n3rxk), .k_flt(f3), .k_st(n3stk),
         .n_lo_v(n3lv), .n_lo_d(n3ld), .n_lo_r(n3lr), .n_li_v(n3iv), .n_li_d(n3id), .n_li_r(n3ir), .n_rxv(n3rxv), .n_flt(n3f), .n_st(rx3[513:512]));   // K <-> N3, +3 each way
     dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln3 (.ck(ck_N3), .rs(lpr_c_u_ln3), .chb(ch_b), .rx(lrx3), .tx(tx3), .lo_v(n3lv), .lo_r(n3lr), .lo_d(n3ld), .li_v(n3iv), .li_r(n3ir), .li_d(n3id), .flt(n3f));   // region N3, t = 0
-    ot_s81sl_lep_mu_ab #(.CRED(12), .DR(12), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro_ep), .ri(lri_ep), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf),
-        .lo2_v(l2v), .lo2_r(l2r), .lo2_d(l2d), .lo3_v(l3v), .lo3_r(l3r), .lo3_d(l3d), .li2_v(i2v), .li2_r(i2r), .li2_d(i2d), .li3_v(i3v), .li3_r(i3r), .li3_d(i3d), .rxvb(rxvb), .l2_f(f2), .l3_f(f3), .fault(fault__o));   // region K, t = 0
+    ot_s81sl_lep_mu_ab_idx #(.CRED(12), .DR(12), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro_ep), .ri(lri_ep), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf),
+        .lo2_v(l2v), .lo2_r(l2r), .lo2_d(l2d), .lo3_v(l3v), .lo3_r(l3r), .lo3_d(l3d), .li2_v(i2v), .li2_r(i2r), .li2_d(i2d), .li3_v(i3v), .li3_r(i3r), .li3_d(i3d), .rxvb(rxvb), .l2_f(f2), .l3_f(f3), .fault(fault__o), .tl(tl), .ca(ca), .cb(cb));   // region K, t = 0 (S81/H4: + tree ports)
     // Production HBC receiver remains inside the existing K region; only the
     // real host/KS outputs and booked sequencer status cross the die boundary.
     // The unused external-return arm of RETURN_LOCAL=1 reads actual local_ro;

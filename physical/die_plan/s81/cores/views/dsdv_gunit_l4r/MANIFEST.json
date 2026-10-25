@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.s81.native_core_view.v1",
+ "module": "dsdv_gunit_l4r",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsdv_gunit_l4r_c (gen_core_kit_legacy.py, claude/elem-s81-cores-1024 @a460187405 balance hooks; RTL claude/s81-kits-1024r-nodes @896eccfb49; round r6)",
+ "routed_db": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsdv_gunit_l4r_c/run/results/asap7/kl_dsdv_gunit_l4r_c/base/6_final.odb",
+ "verdict": "SIGNED",
+ "pins": 101,
+ "flow_change": "POST_CTS clock-insertion balance to the 250 ps budget (tap_balance.tcl, clk[0]) + SKIP_CTS_REPAIR_TIMING + PRE_CTS hold_budget.tcl; NO post-synth netlist hook, no pair lines; boundary registers in RTL (claude/s81-kits-1024r-nodes @896eccfb49)",
+ "geom_review": "author PASS results/geom_review/s81_kits_1024r/dsdv_gunit_l4r_c.json; GEOM-REVIEW PASS 2026-10-24 21:30 (claude/geom-review-1024@5ce9f91957) (PASS-COND)",
+ "files": {
+  "config.mk": "8d92bceee0e591745b4c6695f8dfe2a342d80e022c883c56fa9f565812911e7e",
+  "constraint.sdc": "8b6aa404d75f0285a8b57b1ecabbd7ff4642f04383c5a321c80671b97bdd9dce",
+  "cts_post.tcl": "5d8e6f0b282278ffecda5b983b2370b66c8c0266441cfb4d973da785184a9c69",
+  "hold_budget.tcl": "e0905790acfc92fab0a2bdb4face91cc1e2818f2adc80aa185e93f50ae48bc4f",
+  "tap_balance.tcl": "df8747491d8f0d8e7ec85989669e44a1423fd104f397ff7aec0d27aa3fb10259",
+  "face_guard.json": "e9c594ae2b4299e8c9d9bdbd7c7cf8590255a5b325d4d26eaf8f942f7072ec1d",
+  "freeze.json": "b3f3a9f9660e1c9c5d2c116dc28ed1a2318ddf2c1837c8dbc147cac017fb668d",
+  "pin_audit.json": "e364d07004fb280f251ba1896fa78acded0d073b7937c6ad0a32bb9ccd008b51",
+  "pins.json": "ea918644b5e6a27b7e807eb258be5da2508026eb264b3be5f467765cc7c76132",
+  "signoff.json": "8322163919364fcb45c3fa53cd3d2667589f124ad87ecdb987c1b2542bb08a55",
+  "dsdv_gunit_l4r.lef": "8a2b2fa9ab2b5a9e5e992e6ffe83d2deda560f3c8091cde8f2bb7ec5eeb74b49",
+  "dsdv_gunit_l4r_tt.lib": "8ef2e26c467a3d773ce13950700882d2adbdeff04a16ab8c55e6e3dccdd84526",
+  "dsdv_gunit_l4r_ff.lib": "4650a530b439d0a7d7dc48b4f91bbd1e5d4b2f7b01f1623ffd41cd4a682f533f"
+ }
+}

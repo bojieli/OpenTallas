@@ -73,7 +73,7 @@ def test_assembly_die_flow():
         kd = gen_phys.write_assembly(PAIR, d, str(Path(d) / "views"))
         kd = Path(d) / "die"
         tcl = (kd / "die_flow.tcl").read_text()
-        assert "place_macro -macro_name pfb -location {1434.24 0} -orientation R0 -exact" in tcl and "detailed_route" in tcl
+        assert "findInst {pfb}]" in tcl and "setLocation [expr {round(1434.24 * $_d)}] [expr {round(0 * $_d)}]" in tcl and "detailed_route" in tcl
         v = (kd / "die_top_struct.v").read_text()
         assert "endmodule :" not in v and "w_x" in v
         assert (kd / "seams.json").is_file() and (kd / "abut_audit.py").is_file() and (kd / "run_die.sh").is_file()
@@ -177,7 +177,7 @@ def test_kit_overrides_platform_tracks():
         assert (kd / "face_flops.tcl").is_file() and (kd / "face_flops_release.tcl").is_file()
         # COORD 10-23: tap trees balanced to the plan insertion after CTS
         assert "export POST_CTS_TCL = /work/tap_balance.tcl" in cfg and "export OT_TAP_TARGET_PS = 250" in cfg
-        assert "export OT_TAP_WINDOW_PS = 40" in cfg and "export CORNER = TC" in cfg
+        assert "export OT_TAP_WINDOW_PS = 20" in cfg and "export OT_TAP_TOL_PS = 10" in cfg and "export CORNER = TC" in cfg
         assert (kd / "tap_balance.tcl").is_file()
 
 
@@ -511,6 +511,27 @@ def test_empty_grid_taps_dropped_at_assembly():
         assert f".{grid[3]}(clk)" in top and ".clk(clk)" in top
         dr = json.loads((Path(kd) / "clock_taps.json").read_text())["dropped"]
         assert dr == {"fa": sorted(grid[1:3])}                  # fb: all empty -> nothing dropped
+
+
+def test_tap_port_family_env():
+    """QC-A0 10-24: clock_taps.tcl / tap_balance.tcl match the tap port family OT_TAP_PORT (default clk; A0 hard cores
+    ck / ck_t<i>) and tap_balance measures on clock OT_TAP_CLOCK, so hard-core kits source the tools unchanged.  The
+    port regexp is checked in tclsh on the real script text (default clk family unchanged)."""
+    import re
+    import shutil
+    import subprocess
+    ct = (HERE / "clock_taps.tcl").read_text()
+    tb = (HERE / "tap_balance.tcl").read_text()
+    assert "OT_TAP_PORT" in ct and "findBTerm $ct_port" in ct and "findBTerm clk" not in ct
+    assert "OT_TAP_PORT" in tb and "OT_TAP_CLOCK" in tb and "get_clocks clk]" not in tb
+    pat = re.search(r'regexp ("\^\$\{ct_port\}[^"]*")', ct).group(1)
+    if not shutil.which("tclsh"):
+        return
+    for port, names, want in (("clk", ["clk", "clk_t3", "ck", "clk_x", "ck_t1"], [1, 1, 0, 0, 0]),
+                              ("ck", ["ck", "ck_t37", "clk", "ck_tx", "ck_t"], [1, 1, 0, 0, 0])):
+        prog = f"set ct_port {port}\n" + "".join(f"puts [regexp {pat} {n}]\n" for n in names)
+        r = subprocess.run(["tclsh"], input=prog, capture_output=True, text=True)
+        assert [int(x) for x in r.stdout.split()] == want, (port, r.stdout, r.stderr)
 
 
 def test_pair_drops_hard_cores():

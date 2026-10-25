@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.hbm.core_freeze.v1",
+ "type": "ot_hbm_static_cfg_collar_idx256r__108x108",
+ "module": "ot_hbm_static_cfg_collar_idx256r",
+ "top": "ot_hbm_static_cfg_collar_idx256r",
+ "outline_um": [
+  108.0,
+  108.0
+ ],
+ "plan_commit": "3a7e22238",
+ "plan_sha256": "1098c8ccc2a33b84eca5ff82b2db3aab3be8dbfd1f76bdae4654024a84c101fc",
+ "pins_file": "cores/pins/ot_hbm_static_cfg_collar_idx256r.json",
+ "pins_sha256": "fece7412fdff95b76f756e8df8d3db68d75214a5c8ee2f2c130833a84cb992af",
+ "pins": 1559,
+ "clocks": [
+  "clk",
+  "clk_in"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "a87598a38ad658d1dc5dda27f16e6d7e3902101bab354eaa11eeb1eb59c7b140",
+ "tool": "/home/ubuntu/wt/plan-tool-1023/tools/die_plan@c1bae2221",
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "signal_max": "M5",
+ "macros": [],
+ "kit_hash": "ad3d71eeee9dca6d"
+}

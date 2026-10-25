@@ -510,7 +510,7 @@
    "ft_stations_added": 0,
    "alt_place": 3
   },
-  "dsdv_slice_c1x_C__t2": {
+  "dsdv_slice_c1x_C__t10": {
    "key": "C:xrt1",
    "cells": 723371,
    "hard_cells": 488443,
@@ -531,21 +531,7 @@
    "corner": "WS",
    "ft_stations_added": 0
   },
-  "ot_s81sl_leaf__t18": {
-   "key": "leaf",
-   "cells": 2162983,
-   "hard_cells": 2111927,
-   "residual_soft_cells": 51056,
-   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
-   "emitted": true,
-   "corner": "WN",
-   "ft_stations_added": 1,
-   "alt_place": 132
-  },
-  "ot_s81sl_leaf__t19": {
+  "ot_s81sl_leaf__t75": {
    "key": "leaf",
    "cells": 2162983,
    "hard_cells": 2111927,
@@ -557,9 +543,9 @@
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 0
+   "alt_place": 45
   },
-  "ot_s81sl_leaf__t20": {
+  "ot_s81sl_leaf__t53": {
    "key": "leaf",
    "cells": 2162983,
    "hard_cells": 2111927,
@@ -568,6 +554,20 @@
    "gaps": [],
    "cores": 25,
    "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
+  },
+  "ot_s81sl_leaf__t54": {
+   "key": "leaf",
+   "cells": 2162983,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
+   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 365.8,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -1189,34 +1189,6 @@
    "ft_stations_added": 6,
    "alt_place": 8
   },
-  "ot_s81sl_leaf__t53": {
-   "key": "leaf",
-   "cells": 2162983,
-   "hard_cells": 2111927,
-   "residual_soft_cells": 51056,
-   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 0.0,
-   "emitted": true,
-   "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 25
-  },
-  "ot_s81sl_leaf__t54": {
-   "key": "leaf",
-   "cells": 2162983,
-   "hard_cells": 2111927,
-   "residual_soft_cells": 51056,
-   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 365.8,
-   "emitted": true,
-   "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 25
-  },
   "ot_s81sl_leaf__t55": {
    "key": "leaf",
    "cells": 2162983,
@@ -1623,7 +1595,7 @@
    "corner": "WS",
    "ft_stations_added": 0
   },
-  "bk_sel__t1": {
+  "bk_sel__t2": {
    "key": "bk_sel",
    "cells": 808579,
    "hard_cells": 769888,

@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.s81.native_core_view.v1",
+ "module": "dsfd_node_NNfd",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfd_c (gen_core_kit_legacy.py, claude/elem-s81-cores-1024 @a460187405 balance hooks; RTL claude/s81-kits-1024r-nodes @896eccfb49; round r6)",
+ "routed_db": "/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_NNfd_c/run/results/asap7/kl_dsfd_node_NNfd_c/base/6_final.odb",
+ "verdict": "SIGNED",
+ "pins": 202,
+ "flow_change": "POST_CTS clock-insertion balance to the 250 ps budget (tap_balance.tcl, clk[0]) + SKIP_CTS_REPAIR_TIMING + PRE_CTS hold_budget.tcl; NO post-synth netlist hook, no pair lines; boundary registers in RTL (claude/s81-kits-1024r-nodes @896eccfb49)",
+ "geom_review": "author PASS results/geom_review/s81_kits_1024r/dsfd_node_NNfd_c.json; GEOM-REVIEW PASS 2026-10-24 21:30 (claude/geom-review-1024@5ce9f91957) (PASS)",
+ "files": {
+  "config.mk": "12003f232a383be43c322dc431752423146b92a80687092113b22685fbd5fe90",
+  "constraint.sdc": "1709893fc9d18b2c276f47002da37c98f21b9b6af63216deaed60a8b63cc5892",
+  "cts_post.tcl": "5d8e6f0b282278ffecda5b983b2370b66c8c0266441cfb4d973da785184a9c69",
+  "hold_budget.tcl": "e0905790acfc92fab0a2bdb4face91cc1e2818f2adc80aa185e93f50ae48bc4f",
+  "tap_balance.tcl": "df8747491d8f0d8e7ec85989669e44a1423fd104f397ff7aec0d27aa3fb10259",
+  "face_guard.json": "f3311af1469b689d9735786b8641bebe1ff4d4fe2547fb1689f0af9f6c7d6d5f",
+  "freeze.json": "ad3b77b8f05978ac043726d3080f2fd320d03ec585dd68291e8a2641ca94e4a0",
+  "pin_audit.json": "5e0ddb2ffee184a167d1213862e0eb658d857e547e6bcecbf19d88a4a65608e5",
+  "pins.json": "a3e219a8dd349d19efde04119fa22d279355d1d77e0e9c1ce2d0419cb7149323",
+  "signoff.json": "d374aee91e66da5e91e5417249e4d34f09bd0033fe5fe600548a448651d63217",
+  "dsfd_node_NNfd.lef": "246b093de77af1f34576efe41150e7d5ea44007d48a08a801ff0aff0bdd0ddec",
+  "dsfd_node_NNfd_tt.lib": "30bb5a4bcf220f8ba1a69813f58961da07a1b96b146de890f2f8b312161966ee",
+  "dsfd_node_NNfd_ff.lib": "542453f6dfd191d46ad7e04cff0021b444eb8ab38a8f2ec900a1ea0ce18ec719"
+ }
+}
