@@ -31,8 +31,16 @@ def publish(coord, line, message, attempts=8, path="autopilot/queue.tsv"):
             else:prior_text=prior.stdout
             if any(l.startswith(('<<<<<<< ','=======','>>>>>>> ')) for l in prior_text.splitlines()):
                 raise RuntimeError('remote queue has unresolved merge markers; no row published')
-            old_lines=set(prior_text.splitlines())
-            additions=[row for row in line.splitlines() if row not in old_lines]
+            prior_lines=prior_text.splitlines()
+            packet=line.splitlines()
+            if path.endswith(".md"):
+                # Markdown continuation lines belong to their request/reply packet.
+                identical=any(prior_lines[i:i+len(packet)] == packet
+                              for i in range(len(prior_lines)-len(packet)+1))
+                additions=[] if identical else packet
+            else:
+                old_lines=set(prior_lines)
+                additions=[row for row in packet if row not in old_lines]
             if not additions:return base
             env={'GIT_INDEX_FILE':str(Path(tmp)/'index')}
             git('read-tree',base,env=env)

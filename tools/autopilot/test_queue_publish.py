@@ -52,6 +52,16 @@ class Publication(unittest.TestCase):
   self.assertEqual(a,b)
   self.assertIn(text,self.g('one','show',a+':lanes/GEOM-REVIEW.md'))
   self.assertIn('original',self.g('one','show',a+':autopilot/queue.tsv'))
+ def test_distinct_geom_packets_keep_shared_continuation(self):
+  first="GEOM REQ first source\n  shared exact physical condition"
+  second="GEOM REPLY second source PASS-COND\n  shared exact physical condition"
+  a=Q.publish(self.r/"one",first,"first packet",path="lanes/GEOM-REVIEW.md")
+  b=Q.publish(self.r/"one",second,"second packet",path="lanes/GEOM-REVIEW.md")
+  text=self.g("one","show",b+":lanes/GEOM-REVIEW.md")
+  self.assertIn(first+"\n"+second,text)
+  self.assertEqual(text.count("  shared exact physical condition"),2)
+  self.assertNotEqual(a,b)
+  self.assertEqual(b,Q.publish(self.r/"one",second,"repeat packet",path="lanes/GEOM-REVIEW.md"))
  def test_repeated_exact_row_is_idempotent(self):
   a=Q.publish(self.r/'one','same row','first');b=Q.publish(self.r/'one','same row','repeat')
   self.assertEqual(a,b)
