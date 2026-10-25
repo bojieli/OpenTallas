@@ -462,3 +462,4 @@ CODEX: 2026-10-25 03:54 PDT immediate handback on user reset; read-only takeover
 2026-10-25 04:28 PDT S81-PLAN: started batched S81 delta (IR split, leaf template re-plan, core-pair station RTL; norm deskew already on main).
 2026-10-25 04:29 PDT OWNER: the design->review->route->review loop must never sit idle; kits never wait for GEOM. Actions: GEOM-REVIEW (pre-route) + GEOM-REVIEW-2 (post-route) lanes live; autopilot adds LOOP-GAPS.txt + auto-route within one tick of GEOM PASS; coordinator gap cron at :13/:33/:53.
 2026-10-25 04:31 PDT TOK-DS: adopt178 repriced: AR 784.9 / MTP 2,749.4 tok/s (-0.3 %, <5 % no flag), calendars PASS; READY claude/tok-ds-adopt178-1025@bbbf9df80; ledger row proposed
+2026-10-25 04:32 PDT TOK-DS: svcg fold-gather duty = FAIL by construction (engine score beats 1/cycle vs F2B <=1/2 contract); options A/B/C in lanes/TOK-DS.md, S81 to pick
