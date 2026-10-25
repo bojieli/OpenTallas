@@ -287,3 +287,9 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   on E face; (b) G0 cut sl_W3_sc @y12250 0.66 > 0.6 (M8/M9 capacity gone under 9.3) -> very sparse types (est. fill < 0.10: sc, hc,
   fe, fw, coll_ft*) give 50% of M4-M7 to ft (was 40%); (c) budgets.reach_margin 1.0 (COORD: 405 exactly). Pass 3 running (epyc1 pid
   4189678, log qc/logs/regen_meth3.log). S8-SU candidates: TOK-QK's S8A sub-agent owns them; xt1 re-run follows the re-plan rebind.
+- 2026-10-24 23:37 PDT QC: COORD hourly push: (1) re-posted READY claude/qc-cap-1024r@4d916c8958 (main 41a70faeb merged; test_cp2 PASS; only epyc1-env
+  Verilator 5.050 lint fails that main shares; G0C 56/56). (2) re-plan pass 3 running (regen_meth3). (3) LAUNCHED in parallel:
+  sign-off of the QC hard cores (sub-agent, branch claude/qc-cores-1024): su8_rst3, s8_crh_rp1, s8x_crh (kits in repo -> re-route +
+  signoff tt,ff + FF hold ECO), s8x_btab/s8x_prog/s8x_vmr (kits rebuilt from plan hard_cores; same closed geometry -> route), su_lane_e/w
+  (new -> kit + GEOM-REVIEW first); A0 nk/nl = A0 variants sub-agent. Every SOFT QC type changes in the batched re-plan (decision-13
+  wavefront reset in/out pins on all soft types + 405-um stations), so no soft-type sign-off before it lands.
