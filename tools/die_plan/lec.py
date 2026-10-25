@@ -1357,7 +1357,13 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     register_alias_proposals(L, log)
     fsm_proposals(L, log)
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
-    for rnd in range(rounds + 40):
+    # refine-only rounds drop at least one hypothesis each, so they always end; past rounds + 40 they go on
+    # while the time budget lasts (s81 hd_tile: false copies along 60-stage skew delay lines peel one stage
+    # per round -- stopping at 64 rounds freed every unmatched flop and left 83 points differing)
+    t_ref, budget = time.time(), float(os.environ.get("OT_LEC_REFINE_S", "3600"))
+    for rnd in range(rounds + 1000):
+        if rnd >= rounds + 40 and time.time() - t_ref > budget:
+            break
         adding = rnd < rounds           # then refine only: drop what fails until the set is inductive
         before = dict(L.hyp)
         if adding:
@@ -1636,7 +1642,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
-            tried[(side, k, "c") if h[0] == "const" else (side, k, str(h[2]), str(h[3]))] += 1
+            # (keyed as the candidate loops check it: an "eq" partner by name, its inversion as an int)
+            tried[(side, k, "c") if h[0] == "const" else
+                  (side, k, h[2], h[3]) if h[0] == "eq" else (side, k, str(h[2]), str(h[3]))] += 1
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
