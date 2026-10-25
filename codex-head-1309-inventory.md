@@ -1,0 +1,8 @@
+# HEAD1309 2026-10-25 13:25 PDT
+- Owned actualhub worktree epyc1:/srv/opentallas-scratch2/claude/wt/codex-head1309, branch codex/head1309 from pausedclaude/path-s81-elemb-1025@c76d600340 + currentmain. No inherited elemB_if2e job exists; pausedsource only mergedmain.
+- H6elemB_if2d autopilot7d55594cf774 terminalNOTSIGNED: routeDRC0/antenna0/pins458/458, TTsetup+92.58, FFhold-44.01/1200. RCX confirmsrom0clock62-78ps aheadIF, shift-chainstagepairskew95ps; F1pinmeans277/207vs250/170. GeomFAIL12:03 prohibitsbind/repairFFpad. Source/dataRTLpreserved. Structuralclockrebuild ownedHEAD: macro/registertreebalancedlevels + guarded zero-logic leafaffinity CTSONLYpilot pendingGEOMclockplan; actualGRTbasis gates beforeanyDRT.
+- H7elemA oldc11SIGNOFFhistory only; currentLECman_q family25NEQ handedTOK_LEC (sameB24family). H5tileLEC56266/56266EQ after78rounds is toolproofonly, realnativeviewsstillmissing; cannotrouteoldbadLEFtile.
+- H1SerDes514vsrx512 mapping defect + actualPMApadplumbing remainopen; ot_s81hd_serdes_link correctpack{st,rx} exists. H2lep binderclosure parentS81/TOK stillowed.
+- H3spines physicalgeometry source5df/73b revieweddiagonalsFAIL; ownsame-depthkneeWIP464724fb56 notphysicaladopted. H4FTstraightm/str/n4 placementaccepted, fiveotherheadtypesheldforfixedkneeclocksource. KeeponeactualB+headreturntransportpathpriority, no broadwave.
+- H8ctl/host/mesh releaseRTL absent, historicalH10/H11oracle incompatible currentone-spine/64mesh/276host/H4/no-draftcontract. ExistingOWNER?553recordrequires279wires/2beats vs276 andcalendar/H4authority remainsplainCODEXLOG; no newcodec invented.
+- DieGRT headoverflow0 actualplans; treeclockdiagnosticstillFAIL pairs213.65/177.04 andFF-154.6, CLOCKownsrootclock. No newdieSTA launched.
