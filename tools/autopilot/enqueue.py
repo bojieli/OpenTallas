@@ -16,7 +16,7 @@ mode submit (default): the autopilot launches the kit through ot-run once it car
 mode adopt: the lane already launched the run by hand; the autopilot only watches it (hub ot-run client + containers +
   logs), then classifies, archives SIGNED / renders + records failures, and deletes failed data.
 --mem is the honest ot-run admission (peak of a comparable run + margin); --cells the expected std cells (<= 400000).
-Commit = ~/coord/bin/coord-commit.sh (serialised push).
+Publication uses a temporary git index and a queue-only remote commit; the shared coord checkout/index is untouched.
 """
 import argparse
 import os
@@ -51,27 +51,21 @@ def main(argv=None):
     if r["geom"].upper() not in AP.GEOM_OK and r["mode"] != "adopt":
         print(f"enqueue: NOTE geom '{r['geom']}' is not PASS: the row waits for a GEOM-REVIEW verdict of tag "
               f"'{AP.geom_tag(r['geom_ref'])}' naming {r['type']} (or a PASS row appended later)")
-    q = COORD / "autopilot" / "queue.tsv"
-    q.parent.mkdir(parents=True, exist_ok=True)
-    if q.exists() and any(l.startswith(("<<<<<<< ", "=======", ">>>>>>> ")) for l in q.read_text().splitlines()):
-        sys.exit("enqueue: REFUSED: queue has unresolved merge markers; resolve preserving both sides first")
-    new = not q.exists()
-    with open(q, "a") as f:
-        if new:
-            f.write("# AUTOPILOT queue (tools/autopilot/autopilot.py): " + "\t".join(AP.QCOLS) + "\n")
-        f.write(line + "\n")
-    print(f"enqueue: id {r['id']} -> {q}")
     if not a.no_commit:
-        subprocess.run([str(COORD / "bin" / "coord-commit.sh"), f"AUTOPILOT enqueue {a.die}/{a.type} {r['id']}",
-                        "autopilot/queue.tsv"], check=True)
-        fetched = subprocess.run(["git", "-C", str(COORD), "fetch", "-q", "origin", "coord/state"])
-        published = subprocess.run(["git", "-C", str(COORD), "show", "origin/coord/state:autopilot/queue.tsv"],
-                                   capture_output=True, text=True)
-        if fetched.returncode or published.returncode or line not in published.stdout.splitlines():
-            sys.exit("enqueue: NOT SUBMITTED: queue row is local only; coord/state publication could not be verified")
-        print("enqueue: PUBLISHED to origin/coord/state; hub tick fetches this exact row")
+        from queue_publish import publish
+        try:
+            sha = publish(COORD, line, f"AUTOPILOT enqueue {a.die}/{a.type} {r['id']}")
+        except RuntimeError as e:
+            sys.exit(f"enqueue: NOT SUBMITTED: {e}")
+        print(f"enqueue: id {r['id']} PUBLISHED coord/state@{sha[:12]}; hub tick fetches the exact row")
     else:
-        print("enqueue: DRAFT ONLY (--no-commit): row is local; hub will not see it until coord/state is committed and pushed",
+        q = COORD / "autopilot" / "queue.tsv"
+        q.parent.mkdir(parents=True, exist_ok=True)
+        if q.exists() and any(l.startswith(("<<<<<<< ", "=======", ">>>>>>> ")) for l in q.read_text().splitlines()):
+            sys.exit("enqueue: REFUSED: local draft queue has unresolved merge markers")
+        with open(q, "a") as f:
+            f.write(line + "\n")
+        print(f"enqueue: id {r['id']} DRAFT ONLY (--no-commit): {q}; publish coord/state before the hub can see it",
               file=sys.stderr)
     return 0
 
