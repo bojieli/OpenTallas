@@ -181,3 +181,25 @@ CODEX 2026-10-24 11:24 PDT: tap160c7 correctTTCTS +FFonlyholdGRT failed pinacces
   - elemB c2 routed: NOT SIGNED. TT -3.26 (2), FF hold -36.78 (149 outputs), TT slew 5, TT insertion 199.5 (< 210).
   - Relaunched: elemA c8 (early 160 + reset relay) and elemB c4 (early 120 + reset relay), both full route on intel2 scratch2 .../s81-head/elemA_rb/.
   - Margins: INFO only, per decision 3.
+
+## PARKED 2026-10-24 19:04 PDT (Claude, S81-HEAD)
+- Branch claude/s81-head-1024@6333cd8efb, pushed. main 9b1a4d16e0 has everything gated; the only unmerged commit is 6333cd8efb (gen_plan picks cores/views_rb once the rebuilt views land; G0 PASS, no geometry change).
+- Live jobs (running, mine), both on intel2 docker:
+  - elemA c8: /srv/opentallas-scratch2/claude/s81-head/elemA_rb/elemA_rb_c8, container krepin-elemA_rb_c8-1355604. Full route plus signoff.py; early tap 160 + reset relay. Local log /tmp/s81h_elemA_rb_c8_route.log.
+  - elemB c4: .../elemA_rb/elemB_rb_c4, container krepin-elemB_rb_c4-1362968. Early tap 120 + reset relay. Local log /tmp/s81h_elemB_rb_c4_route.log.
+  - When they finish, read <kit>/signoff.log and signoff/signoff.json.
+- Head PSM c2 (Codex, adopted, container dtrial-psm-1648419): still running IR. No result yet.
+- Results:
+  - elemA c7: routed, NOT SIGNED. TT -71.32 (rst_n recovery only; clk group +160). FF hold -43.21 (150 output face flops; early tap 200 too big at FF). TT pin-register insertion 214. DRC/ant 0, pin audit 458/458.
+  - elemB c2: routed, NOT SIGNED. TT -3.26, FF -36.78, TT slew 5, TT insertion 199.5.
+  - Tile bench CV=1 ALL PASS at 8,432. 6 mutants caught. Die model 9,117.
+- Failures kept (records): elemA c1 (sdc_lint multicycle), c2–c4 (face_guard), c5 (auto ROM placement rejected), c6 (IO hold, cancelled); elemB c1 (face_guard dropped), c3 (cancelled).
+- Next steps:
+  1. If c8/c4 are SIGNED, copy <kit>/views (LEF + TT/FF lib) to physical/die_plan/s81_head/cores/views_rb/ot_s81hd_elem{A,B}_cv/.
+     - Check the lib max_clock_tree_path: early_core_taps.py takes the early tap as lib rise - 250, and it must equal the kit early (160 / 120).
+  2. Regenerate the die plan and the hd_tile kit (main gen.py, face_keep). Do the visual review, then route the tile.
+  3. If NOT SIGNED: retune the early tap (TT pin-register mean target ~250; FF output hold) and/or fix the slew.
+- OWNER?:
+  - Each rebuilt element adds a +1 output register stage (face guard), and the tile adds a pk_q stage, for +3 cycles a position in total. Each element also adds +1 reset cycle.
+  - The ROM-read 2-cycle multicycle of the closed build was dropped; the read path is timed single-cycle and passes.
+- Local ot-run clients: pid 2349614 (elemA c8), pid 2382002 (elemB c4).

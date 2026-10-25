@@ -66,3 +66,31 @@ Open: OWNER? CB16 alignment strategy (about 0.79M flops as pads); <150k needs pl
   it: base recipe /srv/opentallas-scratch/claude/codex-qwen/qcp_capacity_final_canonical/recipe.json) and re-run xt1 both.
 - A0 +1 cycle (owner): priced in the compiler/R8 tables (kit t_out = bound +7, spec +6): needs your compiler/R8 table
   change; receipts results/rtl/qwen_a0_shifted_1024 (on claude/qc-a0-1024).
+
+## PARKED 2026-10-24 19:04 PDT
+- Branches: claude/qc-tok-1024 @0deeb41c0d (clean, all merged to main: 7d75427c59, 4c571021f4). claude/qc-cap-1024 @72ece79138
+  (= codex/qc-capacity-1024 tip, no own commits yet; worktree localhost:/srv/opentallas-scratch/claude/wt/qc-cap).
+- Live job (mine, localhost, not fleet): capacity plan regeneration (reproducibility check before any plan edit) =
+  run.sh in wt/qc-cap, gen_plan.py pid 3184125, log /tmp/qct/capregen.log. It edits the plan files in the worktree in place:
+  diff them against 72ece79138 (an empty diff means reproducible). No fleet jobs running.
+- Results: link tp8 3/3 + 9/9 mutants, xdie 9/9 + 13/13, ovl4u 2/2 + 8/8 PASS. xt1 bound_r8 + CB16 + lead 14: both 64/64 + 64/64.
+  Capacity (430,195 pads): both16 FAIL 0/64 + 0/64 (CB16 skew). Capacity + CB16 pads (1,219,699): both 64/64 + 64/64, schedule
+  gate PASS, verify PASS (results/token_pass/qc_tok_1024/xt1/capacity_cb16_both16, recipe bind/asbuilt_capacity_cb16.json).
+- OWNER RULING 18:4x (capacity plan ACCEPTED + CB16 rebind; name the canonical bus groups). Findings so far:
+  * The capacity R8 table (r8/qwen_compute_r8_landing.json on codex/qc-capacity-1024) has bus_groups_digest 5b3a39e809083115.
+    That digest matches localhost:/srv/opentallas-scratch/claude/codex-qwen/qcp_capacity_probe/bus_groups.json, so it is
+    the canonical bus groups file. Commit it as physical/die_plan/qwen_compute/r8/bus_groups.json together with the capacity plan
+    and table (the committed r8/bus_groups.json is c56f7e7a; main's table expects e56a2f6f, which matches no file found).
+  * With those groups, G0 on the capacity plan still has ONE error, an R8 type problem: sle_ctl (12 instances, E and W)
+    needs different pads on lane sl_*_fw__x_fw_ctl_p1 (u_rp.chd_q[536:1037] + cmd_q[0:33]). E hops 9 (pad 3) vs W hops 6 (pad 6).
+    The routes differ: E fw->su_l1->su_c->sc->ctl, W fw->stm->sc->ctl. The committed g0_report PASS predates the R8 groups check.
+  * Proposed fix, cheap and in line with the ruling (equal hop counts, no RTL or compiler change): +3 stations on the W path (slw_stm
+    x_fw_ctl_p1 slot 2->5, or slw_stm +2 / slw_sc +1; both are W-only types). This costs about 1,608 station flops per W slice and
+    saves the same in pads, keeps 56 types, and leaves landed unchanged (12). Best done generically in gen_plan (equalise lane
+    stations across same-type sinks) after the reproducibility check.
+- Next: (1) check the regen diff; (2) add the equalisation pass to gen_plan on claude/qc-cap-1024, regen, G0 with the probe groups;
+  (3) bind (probe) -> new bus groups -> gen.py latency --groups -> commit groups + table (one digest); (4) rebind with the table +
+  CB16 (cb16_pads.py), verify, xt1 both lead 16 (+ schedule gate); (5) QC-A0 rebases ft_regs (ab490d1fbb) on top and merges.
+  Coordinate with QC-A0 (the plan owner); QC-A0's merge is blocked on the digest until then.
+- OWNER?: <150k pads is an optimisation target (ruling), CB16 pads are kept. Equal-hop CB16 alignment in the plan is parked
+  (the CB16 legs are internal CB quad stations, so it is not cheap without a gen_plan CB re-plan).
