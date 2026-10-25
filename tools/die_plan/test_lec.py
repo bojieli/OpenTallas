@@ -594,3 +594,20 @@ def test_structural_twin_closure_rare_carry_and_valid_pipe(tmp_path):
         m, _ = L.build(with_compare=True, with_hyp=True)
         status = _sim_prove(m)
         assert ('differs' in status.values()) == mutant
+
+
+def test_kept_register_renamed_inside_its_instance_passes(tmp_path):
+    """identical-D kept copies (per-port relays g_ft[k].u_rsc) renamed r -> q by synthesis inside their own
+    keep_hierarchy instance are present (counted per instance); a copy merged into its twin still FAILS."""
+    keep = tmp_path / "gold.keep"
+    keep.write_text("lec_top/u_dut.a.u_r.r\n" "lec_top/u_dut.b.u_r.r\n")
+    gold_l = ["a.u_r.r[0]", "a.u_r.r[1]", "b.u_r.r[0]", "b.u_r.r[1]"]
+    nx = lambda m, l: {n: l["d"] for n in l if n != "d"}
+    g, gm = _seq(tmp_path, "g", ["d"], gold_l, nx)
+    for gate_l, want in ((["a.u_r.q[0]", "a.u_r.q[1]", "b.u_r.q[0]", "b.u_r.q[1]"], []),
+                         (["a.u_r.q[0]", "a.u_r.q[1]"], ["ff:u_dut.b.u_r.r[0]", "ff:u_dut.b.u_r.r[1]"]),
+                         (["a.u_r.q[0]", "a.u_r.q[1]", "b.u_r.q[0]"], ["ff:u_dut.b.u_r.r[0]", "ff:u_dut.b.u_r.r[1]"])):
+        t, tm = _seq(tmp_path, "t", ["d"], gate_l, nx)
+        L = lec.Lec(g, gm, t, tm)
+        declared, missing, const = lec.kept_registers(L, keep)
+        assert len(declared) == 4 and missing == want and not const, (gate_l, missing)

@@ -1416,10 +1416,20 @@ def kept_registers(L, keep_file):
         if m and m.group(1) in relaid:
             gold_rel[m.group(1)] += 1
     renamed = {h[2] for (sd, c), h in L.hyp.items() if sd == "gate" and h[0] == "eq" and h[2] in L.gp}
+    # Copies with identical D (per-port relay copies g_ft[k].u_rsc) land in ONE correspondence class, so a flop that
+    # synthesis only renamed inside its own kept instance (r[i] -> q[i]) is never paired 1:1 by name.  Count per kept
+    # instance instead: the instance keeps its copies when the gate has at least as many flops under exactly that
+    # instance path as the gold declares there.  A copy merged into its twin leaves its instance with no flops: FAIL.
+    inst = lambda k: k.rsplit(".", 1)[0] if "." in k[3:] else None
+    gate_inst = collections.Counter(inst(k) for k in L.tp if k.startswith("ff:") and inst(k))
+    gold_inst = collections.Counter(inst(k) for k in declared if inst(k))
     missing, const = [], []
     for k in sorted(declared):
         if k in gate or k in renamed:
             continue
+        i = inst(k)
+        if i and i != "ff:u_dut" and gate_inst[i] >= gold_inst[i]:
+            continue                 # renamed inside its own kept instance (counted per instance)
         m = IDX.match(k)
         if m and m.group(1) in relaid and relaid[m.group(1)] >= gold_rel[m.group(1)]:
             continue                 # an array the two frontends lay out differently: counted per array
