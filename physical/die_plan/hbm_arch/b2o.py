@@ -1428,6 +1428,10 @@ def main(argv=None):
     FP = json.loads(Path(a.floorplan).read_text())
     log = []
     native_core_pins(plan, out, log)
+    cmap_path = out / "census_map.json"
+    cmap = json.loads(cmap_path.read_text())
+    cmap["parts"]["b2_ep1_root"] = "root"  # native L153/L154 registered endpoint pass-through
+    cmap_path.write_text(json.dumps(cmap, indent=1) + "\n")
     plan["die"]["name"] = "hbm_arch_B2o"
     plan["die"]["label"] = plan["die"]["label"].replace("B2n = ", "B2o = B2n re-floorplanned (compact SU rows, hub "
                                                         "spine abutting root); B2n = ", 1)
