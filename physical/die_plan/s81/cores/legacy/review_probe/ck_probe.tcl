@@ -43,7 +43,7 @@ foreach port [get_ports *] {
   set best 1e9
   set front [list [$bt getNet]]
   set seen {}
-  for {set dep 0} {$dep < 10 && [llength $front]} {incr dep} {
+  for {set dep 0} {$dep < 40 && [llength $front]} {incr dep} {
     set nxt {}
     foreach net $front {
       if {$net eq "NULL" || [dict exists $seen [$net getName]]} continue
