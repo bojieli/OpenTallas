@@ -1,0 +1,92 @@
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+   534816 5.58E+04 ot_hbm_hc_qcen_static
+     1578  152.055 $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat
+      142   23.897   $paramod$21438b7cca4d59b96014f57b6fe086457d2609f0\ot_hdc_w11_cut
+      216   36.304   $paramod$3e73f3ba6cbacea9180736454b094687d5a618a6\ot_hdc_w11_cut
+      240   40.328   $paramod$a2ce3b367a852d2807d1af4c47657e46e5eafaf3\ot_hdc_w11_cut
+      204   34.292   $paramod$bdef29db2ffa5014df77602d1586a75de62e4840\ot_hdc_w11_cut
+       73    6.284   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000001000
+      304    25.18   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011000
+      375   30.822   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011100
+      415   34.686   $paramod\ot_hdc_ksadd_k\W=s32'00000000000000000000000000011111
+       61    4.461   ot_hdc_lzc32
+        6    1.268 $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000001001
+
+        +----------Count including submodules.
+        |        +-Area including submodules.
+        |        | 
+   296207        - wires
+   972386        - wire bits
+    35121        - public wires
+   695743        - public wire bits
+     8418        - ports
+   181492        - port bits
+        -        - memories
+        -        - memory bits
+        -        - processes
+   534816 5.58E+04 cells
+     3308  289.384   A2O1A1Ixp33_ASAP7_75t_R
+     1784  234.096   A2O1A1O1Ixp25_ASAP7_75t_R
+    27566 2.41E+03   AND2x2_ASAP7_75t_R
+     4320  377.914   AND3x1_ASAP7_75t_R
+      908    92.67   AND4x1_ASAP7_75t_R
+      128    14.93   AND5x1_ASAP7_75t_R
+    29726  2600.43   AO21x1_ASAP7_75t_R
+     2414  351.961   AO221x1_ASAP7_75t_R
+     3431  450.216   AO22x1_ASAP7_75t_R
+      889  103.693   AO32x1_ASAP7_75t_R
+     2422  211.877   AOI211xp5_ASAP7_75t_R
+    20484 1.49E+03   AOI21xp33_ASAP7_75t_R
+     3813  389.155   AOI221xp5_ASAP7_75t_R
+        1    0.146   AOI222xp33_ASAP7_75t_R
+      516    45.14   AOI22xp33_ASAP7_75t_R
+      254   25.923   AOI311xp33_ASAP7_75t_R
+      765   66.922   AOI31xp33_ASAP7_75t_R
+      635   64.808   AOI32xp33_ASAP7_75t_R
+      127   14.813   AOI33xp33_ASAP7_75t_R
+     1062  402.583   DFFASRHQNx1_ASAP7_75t_R
+    76300 2.22E+04   DFFHQNx1_ASAP7_75t_R
+     3429  199.979   HB1xp67_ASAP7_75t_R
+   149928 6.56E+03   INVx1_ASAP7_75t_R
+    12828 1.31E+03   MAJIxp5_ASAP7_75t_R
+     3937  516.613   MAJx2_ASAP7_75t_R
+    35196 2.05E+03   NAND2xp33_ASAP7_75t_R
+     2292  167.087   NAND3xp33_ASAP7_75t_R
+     1275  111.537   NAND4xp25_ASAP7_75t_R
+     1162  118.594   NAND5xp2_ASAP7_75t_R
+    35722 2.08E+03   NOR2xp33_ASAP7_75t_R
+     3565  259.889   NOR3xp33_ASAP7_75t_R
+    11943 1.04E+03   NOR4xp25_ASAP7_75t_R
+     1146  116.961   NOR5xp2_ASAP7_75t_R
+     4076  356.568   O2A1O1Ixp33_ASAP7_75t_R
+      382   44.556   OA211x2_ASAP7_75t_R
+     2545  259.743   OA21x2_ASAP7_75t_R
+     4574  400.134   OAI211xp5_ASAP7_75t_R
+    27074 1.97E+03   OAI21xp33_ASAP7_75t_R
+     2035  207.692   OAI221xp5_ASAP7_75t_R
+        1    0.146   OAI222xp33_ASAP7_75t_R
+      515   45.052   OAI22xp33_ASAP7_75t_R
+     1397  142.578   OAI311xp33_ASAP7_75t_R
+     5213  456.033   OAI31xp33_ASAP7_75t_R
+      891   90.935   OAI32xp33_ASAP7_75t_R
+     2165  189.394   OR2x2_ASAP7_75t_R
+     1530  133.844   OR3x1_ASAP7_75t_R
+     1780  181.667   OR4x1_ASAP7_75t_R
+      508   59.253   OR5x1_ASAP7_75t_R
+    28331 3.72E+03   XNOR2xp5_ASAP7_75t_R
+     8523 1.12E+03   XOR2xp5_ASAP7_75t_R
+      128 5.56E+04 submodules
+      127 5.56E+04   $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat
+        1    1.268   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000001001
+
+   Chip area for top module '\ot_hbm_hc_qcen_static': 55806.218460
+     of which used for sequential elements: 22651.662960 (40.59%)
+
+Warnings: 4 unique messages, 8 total
+End of script. Logfile hash: 7b29a875bb, time: 14.56s, user: 7.37s, system: 0.18s, MEM: 92.43 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 49% 2x abc (7 sec), 13% 2x stat (2 sec), ...

@@ -1,0 +1,56 @@
+{
+ "source": "591bcf802",
+ "tool": "Yosys0.68+ABC",
+ "corner": "ASAP7RVT TT",
+ "parameters": {
+  "K": 20480,
+  "DRLY": 2,
+  "CHX": 11,
+  "TLA": 7
+ },
+ "method": "Technology-mapped hierarchical synthesis. Repeated identical adders mapped once, count expanded in hierarchy statistics. Flat checks remain running and are not required to use this compositional model.",
+ "qcen_w64": {
+  "width": 64,
+  "tree_levels": 6,
+  "adders": 63,
+  "logic_cells": 265773,
+  "logic_area_um2": 27763.84836,
+  "reset_flops": 607,
+  "plain_flops": 37958
+ },
+ "qcen_w128": {
+  "width": 128,
+  "tree_levels": 7,
+  "adders": 127,
+  "logic_cells": 534816,
+  "logic_area_um2": 55806.21846,
+  "reset_flops": 1062,
+  "plain_flops": 76300
+ },
+ "unchanged_qclient": {
+  "logic_cells": 37820,
+  "logic_area_um2": 5523.23934,
+  "reset_flops": 3750,
+  "plain_flops": 7254,
+  "macros": {
+   "ot_sram_1r1w_1024x256_m2_r2c2": 1
+  }
+ },
+ "qhub_w64": {
+  "logic_cells": 303593,
+  "logic_area_um2": 33287.087700000004
+ },
+ "qhub_w128": {
+  "logic_cells": 572636,
+  "logic_area_um2": 61329.4578
+ },
+ "cell_cap": 400000,
+ "verdict": "BLOCKED monolithic W128 qhub exceeds400k cells; split exact tree into smaller cores before P&R.",
+ "latency": "One extra7-cycle half-tree level minus removed3-cycle root reduction level gives net+4 HC_MIX/PRE, excludingPOST (nativeHC/TOK-HBM verified). No cycles added by sizing.",
+ "jobs": {
+  "qcen64": "intel1:oth-ubuntu-1201207-1792922258",
+  "qcen128": "intel1:oth-ubuntu-1203386-1792922260",
+  "qclient": "intel1:oth-ubuntu-1169755-1792922092"
+ },
+ "macro_note": "All logic areas exclude programme SRAM and physical clock/hold/face-shell overhead. No timing sign-off claim."
+}

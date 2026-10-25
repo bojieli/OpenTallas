@@ -1,0 +1,82 @@
+=== ot_hbm_hc_q_static ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    30228        - wires
+    47074        - wire bits
+      165        - public wires
+    16876        - public wire bits
+       33        - ports
+     7658        - port bits
+    37820 5.52E+03 cells
+        6        -   $scopeinfo
+      379   33.155   A2O1A1Ixp33_ASAP7_75t_R
+       20    2.624   A2O1A1O1Ixp25_ASAP7_75t_R
+       77    6.736   AND2x2_ASAP7_75t_R
+       23    2.012   AND3x1_ASAP7_75t_R
+       32    3.266   AND4x1_ASAP7_75t_R
+        4    0.467   AND5x1_ASAP7_75t_R
+        1    0.233   AO211x2_ASAP7_75t_R
+      167   14.609   AO21x1_ASAP7_75t_R
+       29    4.228   AO221x1_ASAP7_75t_R
+        4    0.525   AO22x1_ASAP7_75t_R
+        1    0.233   AO31x2_ASAP7_75t_R
+       31    3.616   AO32x1_ASAP7_75t_R
+       80    6.998   AOI211xp5_ASAP7_75t_R
+     1897  138.291   AOI21xp33_ASAP7_75t_R
+      159   16.228   AOI221xp5_ASAP7_75t_R
+        1    0.146   AOI222xp33_ASAP7_75t_R
+      191   16.709   AOI22xp33_ASAP7_75t_R
+       14    1.429   AOI311xp33_ASAP7_75t_R
+       27    2.362   AOI31xp33_ASAP7_75t_R
+        1    0.117   AOI321xp33_ASAP7_75t_R
+      281   28.679   AOI32xp33_ASAP7_75t_R
+     3750  1421.55   DFFASRHQNx1_ASAP7_75t_R
+     7254 2.12E+03   DFFHQNx1_ASAP7_75t_R
+     6315  276.218   INVx1_ASAP7_75t_R
+       51    5.205   MAJIxp5_ASAP7_75t_R
+       22    2.887   MAJx2_ASAP7_75t_R
+     1075   62.694   NAND2xp33_ASAP7_75t_R
+      579   42.209   NAND3xp33_ASAP7_75t_R
+      158   13.822   NAND4xp25_ASAP7_75t_R
+       59    6.022   NAND5xp2_ASAP7_75t_R
+     1957  114.132   NOR2xp33_ASAP7_75t_R
+     1439  104.903   NOR3xp33_ASAP7_75t_R
+       77    6.736   NOR4xp25_ASAP7_75t_R
+       21    2.143   NOR5xp2_ASAP7_75t_R
+      365    31.93   O2A1O1Ixp33_ASAP7_75t_R
+       13    1.516   OA211x2_ASAP7_75t_R
+       58    5.919   OA21x2_ASAP7_75t_R
+        1    0.233   OA221x2_ASAP7_75t_R
+        1    0.175   OA222x2_ASAP7_75t_R
+        8    1.166   OA22x2_ASAP7_75t_R
+      273   39.803   OA33x2_ASAP7_75t_R
+       99    8.661   OAI211xp5_ASAP7_75t_R
+     2577  187.863   OAI21xp33_ASAP7_75t_R
+     1203  122.778   OAI221xp5_ASAP7_75t_R
+      207   30.181   OAI222xp33_ASAP7_75t_R
+     3690  322.801   OAI22xp33_ASAP7_75t_R
+      375   38.273   OAI311xp33_ASAP7_75t_R
+      119    10.41   OAI31xp33_ASAP7_75t_R
+        9     1.05   OAI321xp33_ASAP7_75t_R
+     1181  120.533   OAI32xp33_ASAP7_75t_R
+        1    0.117   OAI33xp33_ASAP7_75t_R
+      221   19.333   OR2x2_ASAP7_75t_R
+      857    74.97   OR3x1_ASAP7_75t_R
+       12    1.225   OR4x1_ASAP7_75t_R
+       21    2.449   OR5x1_ASAP7_75t_R
+      222   29.131   XNOR2xp5_ASAP7_75t_R
+      124   16.271   XOR2xp5_ASAP7_75t_R
+        1        -   ot_sram_1r1w_1024x256_m2_r2c2
+
+   Area for cell type $scopeinfo is unknown!
+   Area for cell type \ot_sram_1r1w_1024x256_m2_r2c2 is unknown!
+
+   Chip area for module '\ot_hbm_hc_q_static': 5523.239340
+     of which used for sequential elements: 3536.816400 (64.04%)
+
+Warnings: 3 unique messages, 5 total
+End of script. Logfile hash: ac18d51485, time: 70.19s, user: 57.97s, system: 1.71s, MEM: 1086.61 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+Time spent: 26% 2x abc (20 sec), 24% 75x opt_expr (18 sec), ...
