@@ -22,3 +22,4 @@
     - HBM: hb_coll_NW TKM -> L74 -> tkm_SW root + 32 tiles -> return.
     "Complete" means: every partition and core on the path has GEOM PASS, a route and sign-off (TT setup / FF hold), it is bound in the die, and the token test exercises that path exactly.
     Broad kit waves are secondary. They run only where they do not take fleet or review capacity from the path.
+11. (owner-approved 10-25) A path counts as "complete" only when the die level is included: die GRT with the path's real views, die STA (TT/FF) over the path, the clock tree from the die root to the path flops, reset/START, at least one die-to-die or long-reach link, and the token test on exactly those views. Each path must also go through its die's most replicated type(s), chosen by replica count, not only the easiest items.
