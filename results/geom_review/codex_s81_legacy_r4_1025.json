@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS-COND",
+  "pictures": [
+    "results/s81_legacy_codex_1025/rstg_review.png",
+    "results/s81_legacy_codex_1025/payload_review.png"
+  ],
+  "findings": [
+    "Viewed actual placed reset-group core: 66 flops, 38.88x34.56um, peak5um bin0.69, N/S66-bit windows aligned and21pins/um below24.3 capacity; all signal paths far below405um. Clock/reset enter midW. No macros or slivers.",
+    "Viewed payload536 core: 536flops, 86.4x25.92um, peakbin0.53, fullwidth aligned N/S536-bit buses at7pins/um, single evenly distributed flop band; no macro wall.",
+    "Small core clock must be balanced to common250ps before repair; new CTS balance hook applies existing canonical recipe. Retain 833ps60/25 uncertainty; final propagated TT/FF and pair gate decide.",
+    "Two recipe variants m0/m5 only, same RTL and pins; explicit FF postCTS stop gate and BC-corner GRT before TT route."
+  ]
+}
