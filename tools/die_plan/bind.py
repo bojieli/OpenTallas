@@ -502,7 +502,12 @@ class Binder:
         # Key by both original Yosys type and RTL master so a substituted variant cannot
         # accidentally acquire parameters declared only on the predecessor master.
         self.param_defaults = {}
+        self.lift_interfaces = {}
         for c in self.F.cells:
+            if c.module in self.ab.get('reset_lifts', {}):
+                master = yjs['modules'].get(c.ytype, {})
+                self.lift_interfaces[(c.ytype, c.module)] = dict(ports=master.get('ports', {}),
+                    parameters=master.get('parameter_default_values', {}))
             key = (c.ytype, c.module)
             if key not in self.param_defaults:
                 self.param_defaults[key] = {k: E._pval(v)[0] for k, v in
@@ -1959,8 +1964,16 @@ class Binder:
             body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
                         f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
         core_reset = {}
+        lifted, lifted_targets = {}, set()
+        if self.ab.get('reset_lifts'):
+            if rtree is None:
+                raise BindError('reset lifts require a planned wavefront reset tree')
+            from bind_reset_lift import connections
+            lifted, lifted_targets = connections(self, tn, p, rtree, BindError)
         if rtree is not None:
             for target in rtree.get("core_resets", []):
+                if (target['inst'], target['pin']) in lifted_targets:
+                    continue
                 pin = target["pin"]
                 candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
                               target["inst"] in {self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
@@ -2148,6 +2161,8 @@ class Binder:
             r = self.rel_of(ci)
             conns = []
             for pn, bits in sorted(c.ports.items()):
+                if ci in lifted and pn == lifted[ci]['port']:
+                    continue  # the explicit planned reset vector is connected below
                 dd = G.dirs[ci].get(pn)
                 if dd == "output":
                     conns.append((pn, drv_w[(ci, pn)]))
@@ -2157,8 +2172,14 @@ class Binder:
             if G.kind[ci] == "glue":
                 insts.append(_glue(c, dict(conns), r))
                 continue
+            if ci in lifted:
+                conns.append((lifted[ci]['port'], lifted[ci]['expression']))
             ps = []
+            if ci in lifted:
+                ps.append(f".{lifted[ci]['enable']}(1)")
             for k, v in sorted(c.params.items()):
+                if ci in lifted and k == lifted[ci]['enable']:
+                    continue
                 if ("param", r, k) in pnames:
                     ps.append(f".{k}({pnames[('param', r, k)][0]})")
                 else:
