@@ -1,0 +1,12 @@
+{
+  "source_branch": "parent physical source2385baf52b",
+  "source_path": "epyc1:/srv/opentallas-scratch2/claude/codex-qc-physical-0719/f57r4/rtl",
+  "source_sha256": {
+    "qfd_dv_s5_vm8x.sv": "c603b1bc311eb7c72be2e5fd6dfa297b980c8068785d36d2f41b9b5fe4e0214c",
+    "qfd_dv_s8_crh_rp1.sv": "cbcdbf1e3393428458b2cabd91694c9703140d6cb846e92f64a483597406efa5"
+  },
+  "mechanism": "actual qfd_dv_s8x_kff W1 ID3400 u_c1(pcr_addr[3]) -> g_cbk16 W1 ID3500+gk",
+  "actual_region1_mask": "0xABBF",
+  "cycles_added": 0,
+  "scope": "scalar control pipeline only; no SRAM/arithmetic model"
+}
