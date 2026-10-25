@@ -162,7 +162,9 @@ def test_run_kit_runs_lec_after_face_guard_and_fails_closed():
     import gen_phys
     s = gen_phys.RUN_KIT
     assert s.index("face_guard_odb.json") < s.index("/work/lec.py") < s.index("\\$M $GOAL")
-    assert "if [ \\$lr = 1 ]; then" in s and "rc=1" in s.split("/work/lec.py", 1)[1].split("fi; fi;")[0]
+    seg = s.split("/work/lec.py", 1)[1].split("fi; fi;")[0]
+    assert "if [ \\$lr = 1 ]; then" in seg and "FAIL_PREFLOOR LEC NOT EQUIVALENT" in seg and "rc=5" in seg
+    assert s.index("/work/lec.py") < s.index("\\$M cts")      # NOT EQUIVALENT stops before floorplan/CTS
 
 
 def test_correspondence_proves_feedback_copies_together(tmp_path, monkeypatch):
