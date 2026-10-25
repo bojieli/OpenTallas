@@ -81,3 +81,22 @@ The token pass for this path = L14 (L0 skips Engram) on the strict-bound die net
 3. Checks: strict cut replay (as cuts 0S/0N/7) on a NEW cut "eng+s6S" built from the bound netlist, real cycles per hop reported, input-corrupt + wrong-cycle mutants caught; compare to the priced calendar (AR 785.1 / MTP 2,750.2 basis) and record the delta from items X2/X3.
 4. Blocked until X1 emits RTL (v10b running) and X2 is proven. Owner of the run: TOK-DS lane (PATH-S81 supplies the bound netlist + this spec).
 2026-10-25 08:11 PDT FLOW-INFRA/DIE-PROTO -> PATH-S81: s81 die-top GRT (plan 7f0e38c8 = main 394765394, signals M4-M7 @0.75 adj) still LIVE epyc1 dtrial-grt-3950895 (iter 2/50 at 07:47) -> no overflow yet; plan hops 0 over 405; die clock 627/539 ps FAIL (CLOCK); sta_ideal TT live. claude/die-proto-1025@bd51e6310 results/die_proto_1025/SUMMARY.md
+
+## Scope additions (owner-approved 10-25, via coordinator) -- 2026-10-25 08:12 PDT PATH-S81
+(1) Die level is part of "complete". New path items D1-D6:
+| # | item | state | evidence / blocker |
+|---|------|-------|--------------------|
+| D1 | die GRT with the path's real signed-off views (stand-ins elsewhere) | OPEN | die-top GRT on main plan (stand-ins everywhere) LIVE epyc1 dtrial-grt-3950895 (DIE-PROTO, iter 2/50 at 07:47); path views not yet signed off |
+| D2 | die STA TT setup / FF hold over the path | OPEN | DIE-PROTO sta_ideal TT live (ideal clock); real-view STA needs D1 + signed views |
+| D3 | clock tree die root -> path flops (regional taps, related-pair skew + CPPR) | FAIL | S81 die clock 627/539 ps FAIL (CLOCK lane, DIE-PROTO 08:11); t22 density taps a11549 49 taps model only |
+| D4 | reset + START broadcast to the path | OPEN | X1 nested core-reset emission (v10b); START broadcast e84452a8fd not on S81 bind (TOK-DS 05:41) |
+| D5 | die-to-die link layer die -> head B | NEEDS-KIT | layer x_E*_out SerDes frame -> head hd_serdes (plan maps coll_o0[513:0] onto rx[511:0]: plan defect; PMA pad binding) = items 30 + H1 |
+| D6 | token test on exactly those bound views | OPEN | = X4 spec above |
+(2) Representative coverage: chosen type **col_h9_r1__t1** (s81 type replica count 60 in OWNERS.tsv, tied with col_h9_r2__t1 at 60; next is 12).
+Why: (a) the highest-replica partition type on the layer die; (b) it sits ON this path: frame fE2 carries x_E2_in/rt_E2_in into s_6S_C (path slice), and fE2_p2_b1/p3_b1/p5_b1/p6_b1 are col_h9_r1__t1;
+(c) it has a known structural failure to close (Codex g2o30 col_h9_r1: TT -247.61 on reset pr_reset_u_rrl_73->74, ~359 um planned hop forced ~700 um detour across an M7-closed core because the prototype G2 routes reset on M2-M7 instead of the reserved M8/M9);
+(d) TYPE-REDUCE folds the col family 12 -> 8, so the post-fold col_h9_r1 form is what gets copied 60x. col_h9_r2 is its sibling (same count) and becomes the second representative only if the fold merges them.
+Collective-bus stretch (item C2): frame_int lanes fi_E2_p2_r0r1 (1167 b, 4 cyc) col_h9_r0_p2 -> col_h9_r1 and fi_E2_p2_r1r2 (1167 b, 4 cyc) col_h9_r1 -> col_h9_r2, plus xo_E2_in_a/b (1104 b) along frame fE2 to fE2_p1_b0 (x_E2 path entry).
+| C1 | col_h9_r1__t1 (post-fold form) | NEEDS-KIT | ask PLAN-DELTA to land this one type first in the S81 delta; reset-on-M8/M9 G2 fix (CLOCK owns) before kit |
+| C2 | collective-bus stretch fi_E2_p2 r0r1/r1r2 + xo_E2_in_a/b | OPEN | needs C1 + col_h9_r0_p2/col_h9_r2 views (stand-ins OK for die GRT) |
+**Progress 08:12: 2 of 51 items signed off** (43 + D1-D6 + C1-C2).
