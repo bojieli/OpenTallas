@@ -926,6 +926,15 @@ def cmd_run(a):
         # (ROOT-MERGE2 10-25: no FLOW per-corner insertion binding inside a hard-core contract kit either.)
         if a.insertion_target is not None:
             raise SystemExit("signoff: --insertion-target conflicts with the kit's hard-core latency contract")
+        # FLOW-FIX 10-25 (COORD per-corner insertion add-on): a core kit generated with tools/die_plan/core_flow.py
+        # (clock_binding.json + sdc_lint insertion_ff_ps) times its IO against the per-corner bound I like a plan kit:
+        # each corner rebinds the vclk to its routed pin-register mean and the clock check bounds that mean.
+        cb = Path(disc["kit"]) / "clock_binding.json" if disc.get("kit") else None
+        if cb and cb.is_file() and disc.get("sdc_lint_ctx") and "core generators" in json.loads(cb.read_text()).get("rule", ""):
+            lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text())
+            if lctx.get("insertion_ff_ps") is not None:
+                bound = dict(tt=float(lctx["insertion_ps"]), ff=float(lctx["insertion_ff_ps"]),
+                             tol=float(lctx.get("insertion_tol_ps", INSERTION_TOL_PS)), source=str(cb))
     elif disc.get("sdc_lint_ctx"):                                  # die-plan kit: the bound (plan) insertion
         lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text())
         if a.insertion_target is None:

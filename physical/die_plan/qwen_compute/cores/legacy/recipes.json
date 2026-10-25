@@ -1,0 +1,137 @@
+{
+ "_doc": "QC hard-core recipes for gen_core_kit_qc.py (claude/qc-cores-1024). Closed views: physical/ref_tile/<kit>/views (closed geometry = LEF pin contract; plan pins files are QC-P6 provisional 'io' tables). spec from the closed record's source commit when the ref_tile spec is not in the tree. RTL = closed source (blob-identical at the closed commit) + the decision-13 reset patch.",
+ "qfd_dv_s5_su8_rst3": {
+  "ref_tile": "physical/ref_tile/qfd_dv_s5_su8",
+  "plan_type": "slw_su_c",
+  "lef_contract": "physical/ref_tile/qfd_dv_s5_su8/views/qfd_dv_s5_su8_rst3/qfd_dv_s5_su8_rst3.lef",
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "edits": [
+     [
+      "    (* async_reg = \"true\" *) reg rs0, rs1;\n    always @(posedge ck or negedge rst_n)\n        if (!rst_n) begin rs0<=1'b0;rs1<=1'b0;end",
+      "    reg rs0, rs1;   // QC-CORES kit patch (OWNER DECISION 13): synchronous 2-stage relay on the registered rst_n input\n    always @(posedge ck)\n        if (!rst_n) begin rs0<=1'b0;rs1<=1'b0;end"
+     ],
+     [
+      "        qfd_dv_su8_kff #(.W(4*AW), .ID(670 + gc)) u_pin (.ck(ck), .d(xs_raw), .q(xs_pin));",
+      "        assign xs_pin = {c_si[109:86], c_si[182:159], c_si[255:232], c_si[341:318]};   // QC-CORES kit patch: was 8 per-lane pin replicas of si (face_guard shared 96: ONE pin register per input bit); c_si = the u_input_pins register of the same edge, 0 cycles, bit-exact"
+     ]
+    ]
+   }
+  ],
+  "_why_face": "r1 post-synth face_guard FAIL shared 96: si stride bits loaded by u_input_pins + 8 per-lane u_pin replicas -> lanes read c_si (same edge)."
+ },
+ "qfd_dv_s8_crh_rp1": {
+  "ref_tile": "physical/ref_tile/qfd_dv_s8_crh_rp1",
+  "plan_type": "slw_su_c",
+  "lef_contract": "physical/ref_tile/qfd_dv_s8_crh_rp1/views/qfd_dv_s8_crh_rp1/qfd_dv_s8_crh_rp1.lef",
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "edits": [
+     [
+      "always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end",
+      "always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth"
+     ]
+    ]
+   },
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "edits": [
+     [
+      "always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end",
+      "always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth",
+      4
+     ]
+    ]
+   }
+  ]
+ },
+ "qfd_dv_s8x_crh": {
+  "ref_tile": "physical/ref_tile/qfd_dv_s5_crh",
+  "plan_type": "sle_su_c",
+  "lef_contract": "physical/ref_tile/qfd_dv_s5_crh/views/qfd_dv_s8x_crh/qfd_dv_s8x_crh.lef",
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "edits": [
+     [
+      "always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end",
+      "always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth",
+      4
+     ]
+    ]
+   }
+  ]
+ },
+ "qfd_dv_s8x_btab": {
+  "ref_tile": "physical/ref_tile/qfd_dv_s5_btab",
+  "spec_git": "86288faea:physical/ref_tile/qfd_dv_s5_btab/spec.json",
+  "plan_type": "slw_su_c",
+  "lef_contract": "physical/ref_tile/qfd_dv_s5_btab/views/qfd_dv_s8x_btab/qfd_dv_s8x_btab.lef",
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "edits": [
+     [
+      "always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end",
+      "always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth",
+      4
+     ]
+    ]
+   }
+  ]
+ },
+ "qfd_dv_s8x_prog": {
+  "ref_tile": "physical/ref_tile/qfd_dv_s5_prog",
+  "spec_git": "86288faea:physical/ref_tile/qfd_dv_s5_prog/spec.json",
+  "plan_type": "slw_su_c",
+  "lef_contract": "physical/ref_tile/qfd_dv_s5_prog/views/qfd_dv_s8x_prog/qfd_dv_s8x_prog.lef",
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "edits": [
+     [
+      "always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end",
+      "always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth",
+      4
+     ]
+    ]
+   }
+  ]
+ },
+ "qfd_dv_s8x_vmr": {
+  "ref_tile": "physical/ref_tile/qfd_dv_s5_vmr",
+  "spec_git": "49845c6cf:physical/ref_tile/qfd_dv_s5_vmr/spec.json",
+  "plan_type": "slw_su_c",
+  "lef_contract": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr/qfd_dv_s8x_vmr.lef",
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "edits": [
+     [
+      "always @(posedge ck or negedge rst_n) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end",
+      "always @(posedge ck) if (!rst_n) begin rl0 <= 1'b0; rl1 <= 1'b0; end else begin rl0 <= 1'b1; rl1 <= rl0; end   // QC-CORES kit patch (OWNER DECISION 13): rst_n = synchronous registered input; 2-stage synchronous relay, same release depth",
+      4
+     ],
+     [
+      "    wire [9:0] pwin [0:5];",
+      "    reg [7:0] pvm_we1; always @(posedge ck) pvm_we1 <= vm_we;   // QC-CORES kit patch (face_guard: ONE pin register per input bit)\n    wire [9:0] pwin [0:5];"
+     ],
+     [
+      "        qfd_dv_s8x_kff #(.W(10), .ID(8000 + gk)) u (.ck(ck), .d({vm_we, vm_waddr[23:22]}), .q(pwin[gk]));",
+      "        assign pwin[gk] = {pvm_we1, pvm_waddr[23:22]};   // QC-CORES kit patch: was 6 kff replicas loading the same pins (face_guard shared 10); same cycle, bit-exact"
+     ]
+    ]
+   }
+  ],
+  "_why_face": "face_guard post-synth FAIL shared 10 (vm_we[7:0], vm_waddr[23:22] loaded by 6 kff replica pin registers + pvm_waddr): replicas replaced by one pin register each (0 cycles, bit-exact register merge)."
+ }
+}

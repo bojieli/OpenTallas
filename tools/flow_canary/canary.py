@@ -38,8 +38,14 @@ CLOCK_ONLY_SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_n|rst_i|start_i)$"
 TCL_ERR_RE = re.compile(r"can't read \"[^\"]+\": no such variable|invalid command name \"|"
                         r"Error: [^\n]*\.tcl, \d+|couldn't open \"[^\"]+\"|can't find package|"
                         r"ERROR \[?[A-Z]{3}-\d+")
-STAGES = ("lint", "sdc_lint", "selrange", "synth", "lec", "face_guard", "face_cover", "reg_fanout", "rc_file", "cts",
-          "grt_gate", "route", "rcx", "signoff", "tcl_errors")
+STAGES = ("lint", "sdc_lint", "selrange", "synth", "lec", "face_guard", "face_cover", "reg_fanout", "rc_file", "vclk_basis",
+          "cts", "grt_gate", "route", "rcx", "signoff", "tcl_errors")
+# vclk_basis (COORD 10-25, main 9f716b354, METHODOLOGY 9.7 / BRIEFING 5e): the IO virtual clock must be the kit's
+# per-corner pin-register insertion binding, never the old fixed plan latency.
+VCLK_SDC_TOL_PS = 0.5          # constraint.sdc vclk source latency vs config.mk OT_VCLK_TT (and OT_VCLK_* vs binding)
+PLAN_FIXED_LATENCY_PS = 250.0  # the pre-binding plan common latency every kit SDC carried
+VCLK_LAT_RE = re.compile(r"^\s*set_clock_latency\s+-source\s+(?:-(?:early|late|max|min|rise|fall)\s+)*"
+                         r"(-?[0-9.]+(?:[eE][-+]?[0-9]+)?)\s+\[get_clocks\s+\{?vclk\}?\]", re.M)
 
 
 def load_spec(path=SPEC):
@@ -181,6 +187,74 @@ def face_cover(netlist, pins_json, top=None, die_plan_dir=None):
               fails={k: v[:5] for k, v in r["fails"].items()})
 
 
+def vclk_basis(kit, so):
+    """IO virtual-clock basis = per-corner insertion binding (gen_phys keys).  FAIL when config.mk lacks
+    OT_VCLK_TT / OT_VCLK_FF, clock_binding.json {insertion_ps: {tt, ff}, insertion_tol_ps} is missing, OT_VCLK_* differ
+    from the binding, the constraint.sdc vclk source latency != OT_VCLK_TT (VCLK_SDC_TOL_PS), the SDC carries the old
+    fixed 250 ps plan latency with no binding, or (sign-off) the record did not rebind each corner to its routed
+    pin-register mean or that mean is more than insertion_tol_ps from the bound value.  No sign-off record = NOT RUN.
+    Units: config.mk / SDC are liberty time units (ASAP7: ps, gen_phys.t_lib), binding + signoff.json are ps."""
+    kit = Path(kit)
+    bad, info = [], {}
+    vt, vf = cfg_val(kit, "OT_VCLK_TT"), cfg_val(kit, "OT_VCLK_FF")
+    info["ot_vclk"] = dict(tt=vt, ff=vf)
+    for k, v in (("OT_VCLK_TT", vt), ("OT_VCLK_FF", vf)):
+        if v is None:
+            bad.append(f"config.mk sets no {k}")
+    try:
+        vt = float(vt) if vt is not None else None
+        vf = float(vf) if vf is not None else None
+    except ValueError:
+        bad.append(f"config.mk OT_VCLK_TT/FF not numeric: {vt} / {vf}")
+        vt = vf = None
+    cb = jload(kit / "clock_binding.json")
+    ins = (cb or {}).get("insertion_ps") or {}
+    tol = (cb or {}).get("insertion_tol_ps")
+    bt, bf = ins.get("tt"), ins.get("ff")
+    info["binding"] = dict(tt=bt, ff=bf, tol=tol) if cb else None
+    if cb is None:
+        bad.append("no clock_binding.json")
+    elif bt is None or bf is None or tol is None:
+        bad.append(f"clock_binding.json incomplete: insertion_ps {ins} insertion_tol_ps {tol}")
+    for k, v, b in (("OT_VCLK_TT", vt, bt), ("OT_VCLK_FF", vf, bf)):
+        if v is not None and b is not None and abs(v - float(b)) > VCLK_SDC_TOL_PS:
+            bad.append(f"{k} {v:g} != clock_binding {b:g}")
+    lats = [float(x) for x in VCLK_LAT_RE.findall(read(kit / "constraint.sdc"))]
+    info["sdc_vclk_latency"] = lats
+    if not lats:
+        bad.append("constraint.sdc sets no vclk source latency")
+    elif cb is None and any(abs(x - PLAN_FIXED_LATENCY_PS) <= VCLK_SDC_TOL_PS for x in lats):
+        bad.append(f"constraint.sdc vclk latency = old fixed {PLAN_FIXED_LATENCY_PS:g} ps plan latency, no binding")
+    if vt is not None and any(abs(x - vt) > VCLK_SDC_TOL_PS for x in lats):
+        bad.append(f"constraint.sdc vclk latency {lats} != OT_VCLK_TT {vt:g} (tol {VCLK_SDC_TOL_PS:g})")
+    if bad:
+        return st(False, "; ".join(bad), **info)
+    if not so:
+        return st(None, f"pre-route basis OK (TT {vt:g} / FF {vf:g}, tol {tol:g}); no signoff.json: routed per-corner "
+                        f"pin-register mean not checked", **info)
+    pol = so.get("policy") or {}
+    if pol.get("ff_vclk") != "rebind":
+        bad.append(f"sign-off IO vclk mode {pol.get('ff_vclk')!r}, not 'rebind' (IO timed against the fixed SDC vclk)")
+    ib = pol.get("insertion_bound") or {}
+    routed = {}
+    for c, b in (("tt", bt), ("ff", bf)):
+        if ib.get(c) is not None and abs(float(ib[c]) - float(b)) > VCLK_SDC_TOL_PS:
+            bad.append(f"sign-off bound {c.upper()} {ib[c]} != clock_binding {b:g}")
+        cr = (so.get("corners") or {}).get(c) or {}
+        ref = cr.get("ff_vclk_reference") or ""
+        if pol.get("ff_vclk") == "rebind" and not ref.startswith("applied mode pin_flop_mean "):
+            bad.append(f"{c.upper()} vclk rebind not applied ({ref or 'no reference'})")
+        mean = (cr.get("insertion_pinflops") or {}).get("mean")
+        routed[c] = mean
+        if mean is None:
+            bad.append(f"{c.upper()} routed pin-register mean not measured")
+        elif abs(float(mean) - float(b)) > float(tol):
+            bad.append(f"{c.upper()} routed pin-register mean {float(mean):.1f} ps vs bound {float(b):g} > tol {float(tol):g}")
+    info["routed_mean"] = routed
+    return st(not bad, "; ".join(bad) or f"bound TT {bt:g} / FF {bf:g} +- {tol:g}; SDC {lats}; routed mean "
+              f"TT {routed['tt']:.1f} / FF {routed['ff']:.1f}", **info)
+
+
 def check_run(run, spec=None, die_plan_dir=None):
     run = Path(run)
     meta = jload(run / "canary_meta.json") or {}
@@ -275,6 +349,7 @@ def check_run(run, spec=None, die_plan_dir=None):
     so = jload(sop[-1]) if sop else None
     res["signoff"] = chk_signoff(so, spec.get("golden"), float(spec.get("wns_tol_ps", 15)))
     res["signoff"]["path"] = sop[-1] if sop else None
+    res["vclk_basis"] = vclk_basis(kit, so)
     par = (res["signoff"].get("parasitics") or {})
     res["rcx"] = st(None, "no signoff corners") if not par else st(all(v == "spef" for v in par.values()), str(par))
     errs = []
@@ -335,6 +410,7 @@ def cmd_submit(a):
         run.mkdir(parents=True, exist_ok=True)
         kv = dict(src=str(src), gen=str(run / "gen"), run=str(run), item=c["item"], top=c["top"], image=a.image,
                   mem=c["mem_gb"], cpus=c.get("threads", 8))
+        kv.update({k: fmt(v, **kv) for k, v in c.get("vars", {}).items()})   # e.g. kv_core {inputs}
         kit = fmt(c["kit"], **kv)
         kv["kit"] = kit
         (run / "canary.py").write_text((HERE / "canary.py").read_text())
