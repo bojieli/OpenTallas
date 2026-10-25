@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS-COND",
+  "pictures": [
+    "vmr.png",
+    "rp1.png"
+  ],
+  "findings": [
+    "Two SRAMs separated by open horizontal channel, broad south logic area and narrow but continuous east/west logic bands.",
+    "W/S face pin density10.5/um at W capacity10.42; preserve pin sites.",
+    "Root clock entry on south edge; existing single CTS tree crosses macro side channels; related internal-register skew requires local branch balance.",
+    "Read-only extracted STA approved. New clock ECO must keep buffers outside macro outlines and recheck DRC."
+  ]
+}
