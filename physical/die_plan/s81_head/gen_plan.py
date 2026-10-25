@@ -251,10 +251,13 @@ def core(inst, view, cells, x, y, um, orient="R0"):
     def sh(mirrored):
         return round((0.036 - um) % 0.048, 4) if mirrored else 0.012
     track = [sh(orient in ("MY", "R180")), sh(orient in ("MX", "R180"))]
+    # 10-24: the rebuilt element views (tools/s81_head/hd_elemA_rebuild.py, SIGNED kits) live in cores/views_rb and
+    # replace the legacy closed views once present (same pins; 0.192 clk terminal; +1 output stage, reset relay)
+    vd = "views_rb" if (ROOT / f"physical/die_plan/s81_head/cores/views_rb/{cv}/{cv}.lef").exists() else "views"
     return dict(inst=inst, module=cv, origin_um=[lat(x), lat(y)], outline_um=[um, um], orient=orient,
                 track_offset_um=track, pins_file=f"cores/{view}_pins.json",
-                lef=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}.lef",
-                lib=f"physical/die_plan/s81_head/cores/views/{cv}/{cv}_tt.lib",
+                lef=f"physical/die_plan/s81_head/cores/{vd}/{cv}/{cv}.lef",
+                lib=f"physical/die_plan/s81_head/cores/{vd}/{cv}/{cv}_tt.lib",
                 note=f"{cells} cells ({v['cells_basis']}); CLOSED SS view {v['job']} (SS +{v['ss_ps']} / FF "
                      f"+{v['ff_ps']} ps; ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1), renamed {cv} "
                      "(tools/s81_head/hd_cv_views.py, names only). 10-24: the tile is rebased on this parameter point "
