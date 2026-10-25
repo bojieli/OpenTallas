@@ -409,3 +409,11 @@ READY [S81-CORES3/RT 2026-10-25 06:56 PDT] claude/s81-cores3-rt-1025@1e47604d8 (
 [COORD 06:59 PDT] APPROVED+MERGED claude/cp1-wf-1025@71005ce16 -> main 3f5421ff9 (proof vehicle only).
 [COORD 06:59 PDT] APPROVED+MERGED claude/tok-ds-cut7-1025@e59e9c1552 -> main 1c0b234e2 (results only).
 [COORD 06:59 PDT] APPROVED+MERGED claude/s81-cores3-1025@4fa1b2229 -> main ee18156d0 (aq_n32 declaration order; residual eng LEC NEQ -> LEC lane).
+[COORD 2026-10-25 07:01 PDT] OWNER DECISION (strap question): option B. ID straps (tile/lane/head IDs such as HBM tile_tid, map_lane_j, lane_lane_id and KV head_eighth BSEL/HID, astk variant IDs) become INPUT PINS of ONE hardened design, tied to constants at the parent.
+Allowed for ID straps ONLY: every other input stays driven, the no-tie-off rule is unchanged, and R7 is amended for IDs alone.
+Implementation rules:
+(1) Strap ports are declared in the plan core/type entry as "straps": [...], named strap_*. The port-bind / tie-off audit accepts ties only on declared straps.
+(2) Inside the block they are quasi-static: no pin register needed; the kit SDC sets set_false_path -from [strap ports]; the hardened block must work for ALL values (no case analysis).
+(3) At the die, the parent ties them with TIEHI/TIELO cells next to the pin.
+(4) LEC/lockstep: each master vs every original constant variant under the matching strap values. Token tests use at least two different IDs per master.
+Owners: HBM lane (HBM cores 226 -> ~71), KV lane (head_eighth 8 -> 3, astk 4 -> 1), FLOW-FIX (audit whitelist + SDC + METHODOLOGY R7 amendment), owners-distinct (one item per master).
