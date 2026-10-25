@@ -8,8 +8,8 @@ module tb;
     localparam integer PM = 0;
 `endif
     reg ck = 0; reg [7:0] code = 0, scale = 0, sc_q = 0;
-    wire [19:0] pd; wire [7:0] lo, hi, lo_r, hi_r;
-    ot_s81eng_rr_bfpre #(.MUT(PM)) u_p (.ck(ck), .code(code), .q(pd));
+    wire [18:0] pd; wire [7:0] lo, hi, lo_r, hi_r;
+    ot_s81eng_rr_bfpre #(.MUT(PM)) u_p (.ck(ck), .code(code), .scale_lo(scale[4:0]), .q(pd));
     ot_s81eng_rr_bfpost_byte #(.LO(0)) u_l (.pd(pd), .scale(sc_q), .q(lo));
     ot_s81eng_rr_bfpost_byte #(.LO(8)) u_h (.pd(pd), .scale(sc_q), .q(hi));
     reg [7:0] code_q = 0;
