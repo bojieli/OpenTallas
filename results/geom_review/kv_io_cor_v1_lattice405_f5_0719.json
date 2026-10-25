@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "type": "kv3_io_cor_v1",
+ "plan": "KV v3.9f f5",
+ "image": "results/geom_review/kv_io_cor_v1_lattice405_f5_0719.png",
+ "verdict": "PASS-COND",
+ "scope": "explicit planned FT station geometry only; no P&R/STA route token",
+ "findings": [
+  "Viewed actual f5 per-bit station plot. Straight horizontal/vertical register bands replace diagonal free chains; paired bands enclose each bend without macro walls (core-free type).",
+  "All3053 payload/epoch bits independently audited:16039 distinct nonoverlapping legal cell sites,maxhop402.570um,laststation->output19.709um. Target405exact,noarbitraryguardband.",
+  "Adds5832FF,+1..3cycles on25slots(sum34catalogslotcycles). First405trialft23 failed407.337um; adaptiveallocation addedone stageonlyonfailingtravelleg. ft16 likewise413.865->oneadditionalfirstlegstage. Parentregenlatency/R8/nativeRTL required. Earlier360trial preserved ashistory.",
+  "Clock and reset are not represented in this planned-sites plot. Current true-sink reset tracing plus band-following taps, successor placed render/G2 and CTS FF gate are required before route."
+ ]
+}
