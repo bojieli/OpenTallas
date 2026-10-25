@@ -1305,6 +1305,38 @@ def fault_links(P, variant, geo):
            src_leaf="d2d_rom.phy_rst_n", dst_leaf="core.rst_n")
 
 
+def drop_unloaded_lanes(P, path):
+    """COORD 10-25 03:45 ruling (2): the plan carries the as-built loads only.  Lanes the fixed-source bind found with
+    no as-built crossing bit (inputs/unloaded_lanes.json: 253 template fault-OR hops on CB/slice partitions whose
+    as-built cells have no fault source there, 17 slice x_* template forwards, the duplicate shared-fault lane) are
+    removed before materialize, so they take no ports, pins, stations or tracks.  As-built fault reducers keep their
+    carried lanes; nothing is tied off (bind proof unbound/tied 0 is re-checked after the rebind)."""
+    if not Path(path).exists():
+        return dict(dropped=[], absent=[])
+    want = set(json.loads(Path(path).read_text())["lanes"])
+
+    def ids(links):
+        n = collections.Counter()
+        out = []
+        for lk in links:
+            base = f"{lk['path'][0]}__{lk['role']}"
+            n[base] += 1
+            out.append(base if n[base] == 1 else f"{base}_{n[base]}")
+        return out
+    before = ids(P.links)
+    keep = [lk for lk, i in zip(P.links, before) if i not in want]
+    kept_ids = [i for i in before if i not in want]
+    if ids(keep) != kept_ids:
+        raise SystemExit("drop_unloaded_lanes: dropping would rename surviving lanes: "
+                         + str([(a, b) for a, b in zip(kept_ids, ids(keep)) if a != b][:5]))
+    for lk, i in zip(P.links, before):
+        if i in want:
+            for x, y in zip(lk["path"], lk["path"][1:]):
+                P.load[tuple(sorted((x, y)))] -= lk["width"]
+    P.links = keep
+    return dict(dropped=sorted(set(before) & want), absent=sorted(want - set(before)))
+
+
 # ====================================================================== ports / slots / windows
 def to_type_geom(P, part, die_face, win, order):
     p = P.parts[part]
@@ -2364,6 +2396,8 @@ def main():
     treq_links(P, geo, census, fp_pins, face_map)
     P.coll_rows = coll_internal_links(P)
     fault_links(P, a.variant, geo)
+    unl = drop_unloaded_lanes(P, Path(__file__).parent / "inputs" / "unloaded_lanes.json")
+    print(f"unloaded lanes: dropped {len(unl['dropped'])}, absent {unl['absent']}")
     cov = coverage(P, census)
     ports, lanes = materialize(P)
     merged = merge_types(P)
@@ -2456,7 +2490,8 @@ def main():
                       + (1 if P.types[tn].get("hard") else 0))
              for tn in sorted(P.types)}
     notes = {"variant": a.variant, "partitions": len(P.parts), "types": len(P.types), "types_merged": merged,
-             "ports": len(ports), "lanes": len(lanes),
+             "ports": len(ports), "lanes": len(lanes), "unloaded_lanes_dropped": len(unl["dropped"]),
+             "unloaded_lanes_absent": unl["absent"],
              "die_um": [round(W, 2), round(H, 2)], "die_mm2": round(W * H / 1e6, 1),
              "content_status_per_instance": dict(st),
              "max_cells_type": max(((v["cells"] or 0, k) for k, v in cells.items())),
