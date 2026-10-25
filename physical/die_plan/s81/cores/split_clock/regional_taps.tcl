@@ -43,6 +43,37 @@ proc rt_buf {tag x y in} {
   $inst setPlacementStatus PLACED
   return $out
 }
+# ---- small-tap fold (pure: testable without OpenDB) and empty-branch pruning
+# cnt: region -> register count; tapnet: region -> {x y net ...}; returns region -> target region for every region with
+# 0 < count < min, target = nearest (Manhattan, node centre) region whose count >= min (none qualifies: no merge).
+proc rt_fold_plan {cnt tapnet min} {
+  set out {}
+  dict for {r c} $cnt {
+    if {$c >= $min || $c <= 0} continue
+    lassign [dict get $tapnet $r] x y
+    set best ""; set bd 1e18
+    dict for {t c2} $cnt {
+      if {$t == $r || $c2 < $min} continue
+      lassign [dict get $tapnet $t] tx ty
+      set d [expr {abs($tx-$x)+abs($ty-$y)}]
+      if {$d < $bd} { set bd $d; set best $t }
+    }
+    if {$best ne ""} { dict set out $r $best }
+  }
+  return $out
+}
+proc rt_loads {n} { set l {}; foreach t [$n getITerms] { if {[[$t getMTerm] getIoType] eq "INPUT"} { lappend l $t } }; return $l }
+# delete the ot_rt_ buffer driving load-less net n and its net, then walk up while the input net is left load-less
+proc rt_prune {n} {
+  global rt_blk
+  while {$n ne "NULL" && ![llength [rt_loads $n]]} {
+    set drv ""; foreach t [$n getITerms] { if {[[$t getMTerm] getIoType] eq "OUTPUT"} { set drv [$t getInst] } }
+    if {$drv eq "" || ![string match ot_rt_* [$drv getName]]} break
+    set up "NULL"; foreach t [$drv getITerms] { if {[[$t getMTerm] getIoType] eq "INPUT"} { set up [$t getNet] } }
+    odb::dbInst_destroy $drv; odb::dbNet_destroy $n
+    set n $up
+  }
+}
 # repeated straight (L) run from (x0,y0) on net n to (x1,y1): returns the net at the end
 proc rt_run {tag x0 y0 x1 y1 n} {
   global rt_rep
@@ -169,14 +200,34 @@ foreach mit $macs {
   dict set mtap [$m getName] $tn
   puts "OT_RT macro tap [$m getName] at ([format %.1f $bx],[format %.1f $my]) from region $r node ([format %.1f $nx],[format %.1f $ny])"
 }
-set cnt {}
+# region membership first, then small regions (< OT_RT_MIN_SINKS registers, default 50; GEOM-REVIEW-3 06:59 vsw f6s h3_6
+# served 1 sink) are folded into the nearest region tap that has enough registers; their empty leaf buffers are removed.
+set rt_min [expr {[info exists ::env(OT_RT_MIN_SINKS)] ? $::env(OT_RT_MIN_SINKS) : 50}]
+set cnt {}; set rmem {}
 foreach it $regs {
   set i [$it getInst]; set nm [$i getName]
-  if {[dict exists $ingrp $nm]} { set tn [dict get $mtap [dict get $ingrp $nm]] } else {
-    lassign [rt_ctr $i] x y; set r [rt_region $x $y]; set tn [lindex [dict get $tapnet $r] 2]; dict incr cnt $r }
-  $it disconnect; $it connect $tn
+  if {[dict exists $ingrp $nm]} continue
+  lassign [rt_ctr $i] x y; set r [rt_region $x $y]; dict incr cnt $r; dict lappend rmem $r $it
 }
-puts "OT_RT tap loads: $cnt; macro groups [dict size $mtap]"
+set rt_fold [rt_fold_plan $cnt $tapnet $rt_min]
+dict for {r t} $rt_fold {
+  puts "OT_RT MERGE region $r ([dict get $cnt $r] regs < $rt_min) -> tap of region $t"
+  dict set rmem $t [concat [dict get $rmem $t] [dict get $rmem $r]]; dict incr cnt $t [dict get $cnt $r]; dict unset rmem $r; dict unset cnt $r
+}
+foreach it $regs {
+  set nm [[$it getInst] getName]
+  if {[dict exists $ingrp $nm]} { $it disconnect; $it connect [dict get $mtap [dict get $ingrp $nm]] }
+}
+dict for {r its} $rmem { set tn [lindex [dict get $tapnet $r] 2]; foreach it $its { $it disconnect; $it connect $tn } }
+# drop leaf taps left without any load (merged away, or a region with no register at all); prune the dangling run above
+dict for {k nd} $tapnet {
+  set n [lindex $nd 2]
+  if {[llength [rt_loads $n]]} continue
+  dict unset tapnet $k
+  rt_prune $n
+  puts "OT_RT drop empty tap of region $k"
+}
+puts "OT_RT tap loads: $cnt; macro groups [dict size $mtap]; merged [dict size $rt_fold] small regions (min $rt_min)"
 # TritonCTS builds local trees ONLY on the tap nets (the spine is fixed, balanced by construction): -clk_nets
 set tl {}; set ti {}
 dict for {k nd} $tapnet { set n [lindex $nd 2]; lappend tl [$n getName]; lappend ti [[[$n getFirstOutput] getInst] getName] }

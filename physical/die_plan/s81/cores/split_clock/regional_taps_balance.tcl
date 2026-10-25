@@ -4,7 +4,12 @@
 uplevel #0 {
 set rb_blk [ord::get_db_block]
 set rb_win [expr {[info exists ::env(OT_RT_WIN_PS)] ? $::env(OT_RT_WIN_PS) : 20.0}]
-set rb_dm [[ord::get_db] findMaster BUFx4_ASAP7_75t_R]
+# pad unit: the smallest buffer (GEOM-REVIEW-3 06:59 vsw f6s: BUFx4 padded in ~22 ps quanta, window ended 20.7 vs 20).
+# The per-cell delay is MEASURED after every pass (mean shift / cells added) and the target is re-taken every pass.
+set rb_dm [[ord::get_db] findMaster [expr {[info exists ::env(OT_RT_PAD_CELL)] ? $::env(OT_RT_PAD_CELL) : "BUFx2_ASAP7_75t_R"}]]
+if {$rb_dm eq "NULL"} { error "OT_RT_BAL: pad cell not found" }
+set rb_step [expr {[info exists ::env(OT_RT_PAD_PS)] ? $::env(OT_RT_PAD_PS) : 10.0}]
+set rb_tol [expr {[info exists ::env(OT_RT_TOL_PS)] ? $::env(OT_RT_TOL_PS) : $rb_win / 4.0}]
 proc rb_sinks {net} {
   set out {}; set todo [list $net]; set seen {}
   while {[llength $todo]} {
@@ -20,11 +25,35 @@ proc rb_sinks {net} {
   }
   return $out
 }
+# pure planner (testable without OpenDB/STA): means = tap -> mean arrival; target = the CURRENT latest mean; a tap gets
+# round(d / step) cells when its gap d exceeds max(tol, step/2) (one more cell would overshoot by more than it closes).
+proc rb_plan {means step tol} {
+  set hi -1e18; dict for {t v} $means { set hi [expr {max($hi,$v)}] }
+  set out {}
+  dict for {t v} $means {
+    set d [expr {$hi - $v}]
+    if {$d <= max($tol, $step / 2.0)} continue
+    dict set out $t [expr {max(1, int(round($d / $step)))}]
+  }
+  return $out
+}
+# measured pad delay per cell from the last pass (taps that got cells: mean shift / cells); keeps the old step when
+# nothing usable was measured.  shift is relative to the untouched taps' mean shift (re-placement moves everyone).
+proc rb_learn {before after added step} {
+  set s0 0.0; set k0 0
+  dict for {t v} $after { if {![dict exists $added $t] && [dict exists $before $t]} { set s0 [expr {$s0 + $v - [dict get $before $t]}]; incr k0 } }
+  set base [expr {$k0 ? $s0 / $k0 : 0.0}]
+  set s 0.0; set n 0
+  dict for {t c} $added { if {[dict exists $after $t] && [dict exists $before $t]} {
+      set s [expr {$s + [dict get $after $t] - [dict get $before $t] - $base}]; incr n $c } }
+  if {$n == 0 || $s <= 0} { return $step }
+  return [expr {max(2.0, $s / $n)}]
+}
 proc rb_taps {} {
   global rb_blk
   set t {}
   set fh [open /work/ot_rt_taps.txt]; set names [split [string trim [read $fh]] "\n"]; close $fh
-  foreach n $names { set i [$rb_blk findInst $n]
+  foreach n $names { set i [$rb_blk findInst $n]; if {$i eq "NULL"} continue
     foreach x [$i getITerms] { if {[[$x getMTerm] getIoType] eq "OUTPUT"} { dict set t $n [$x getNet] } } }
   return $t
 }
@@ -44,18 +73,16 @@ proc rb_measure {} {
   }
   return $r
 }
-set rb_added 0
-for {set it 0} {$it < 4} {incr it} {
+set rb_added 0; set rb_prev {}; set rb_last {}
+for {set it 0} {$it < 8} {incr it} {
   set m [rb_measure]
-  if {$it == 0} { set hi 0.0; dict for {t v} $m { set hi [expr {max($hi,[lindex $v 0])}] } }
-  set line "OT_RT_BAL it$it:"; dict for {t v} $m { append line " $t=[format %.0f [lindex $v 0]]([format %.0f [lindex $v 1]]-[format %.0f [lindex $v 2]],[lindex $v 3])" }
+  set means {}; dict for {t v} $m { dict set means $t [lindex $v 0] }
+  if {[dict size $rb_last]} { set rb_step [rb_learn $rb_prev $means $rb_last $rb_step] }
+  set line "OT_RT_BAL it$it (step [format %.1f $rb_step] ps):"; dict for {t v} $m { append line " $t=[format %.1f [lindex $v 0]]([format %.0f [lindex $v 1]]-[format %.0f [lindex $v 2]],[lindex $v 3])" }
   puts $line
-  set todo 0
-  dict for {t v} $m {
-    set d [expr {$hi - [lindex $v 0]}]
-    if {$d <= $rb_win / 2.0} continue
-    set todo 1
-    set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
+  set plan [rb_plan $means $rb_step $rb_tol]
+  if {![dict size $plan]} break
+  dict for {t nb} $plan {
     set ti [$rb_blk findInst $t]
     set inp ""; foreach x [$ti getITerms] { if {[[$x getMTerm] getIoType] eq "INPUT" && [$x getNet] ne "NULL"} { set inp $x } }
     set src [$inp getNet]; set b [$ti getBBox]
@@ -70,7 +97,7 @@ for {set it 0} {$it < 4} {incr it} {
     }
     $inp disconnect; $inp connect $prev
   }
-  if {!$todo} break
+  set rb_prev $means; set rb_last $plan
   detailed_placement
 }
 
@@ -92,9 +119,9 @@ for {set mi 0} {$mi < 3} {incr mi} {
     foreach x $mp { lassign $x it a
       set d [expr {$g - $a}]
       puts "OT_RT_MACRO pass$mi [[$it getInst] getName] clk [format %.0f $a] vs interface regs mean [format %.0f $g] ($k regs): [format %+.0f [expr {-$d}]] ps"
-      if {$d <= 8.0} continue
+      if {$d <= max(8.0, $::rb_step / 2.0)} continue
       set todo 1
-      set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
+      set nb [expr {max(1, int(round($d / $::rb_step)))}]
       set src [$it getNet]; set bb [$it getBBox]
       set prev $src
       for {set j 0} {$j < $nb} {incr j} {
@@ -113,7 +140,7 @@ for {set mi 0} {$mi < 3} {incr mi} {
 }
 set m [rb_measure]
 set lo 1e9; set hi 0; dict for {t v} $m { set lo [expr {min($lo,[lindex $v 0])}]; set hi [expr {max($hi,[lindex $v 0])}] }
-puts "OT_RT_BAL done: $rb_added pad cells; tap means [format %.0f $lo]..[format %.0f $hi] ps (window [format %.0f [expr {$hi-$lo}]] vs $rb_win)"
+puts "OT_RT_BAL done: $rb_added pad cells; tap means [format %.1f $lo]..[format %.1f $hi] ps (window [format %.1f [expr {$hi-$lo}]] vs $rb_win, pad step [format %.1f $rb_step] ps): [expr {$hi-$lo <= $rb_win ? "PASS" : "FAIL"}]"
 # pin-flop / all insertion and the FF-hold estimate before any repair (render + GEOM input)
 set arr {}; foreach p [all_registers -clock_pins] { if {![catch {set a [get_property $p arrival_max_rise]}] && $a ne ""} { lappend arr $a } }
 set arr [lsort -real $arr]
