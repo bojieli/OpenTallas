@@ -462,15 +462,17 @@ def _cc(**kw):
 CORE_CONNS = {
     "leaf": {
         # S81/LEAFPLAN 10-24 split: vn_a / vn_b both on the lane h ports (each answers its half), the store gains,
-        # the dn bus (n_go / n_pre / rb); vn_a's chain partial c -> vn_b; p from vn_b; y lanes 0..3 / 4..7 -> vq.
+        # the dn bus (rb only; n_go / n_pre are internal vp -> vn); vn_a's chain partial c -> vn_b; p from vn_b; y lanes 0..3 / 4..7 -> vq.
         # ve_m: r / a / o with vs, products m -> ve_s; ve_s: p -> vs; both faults -> vs
         **{_LF + "u_vn.u_" + h_: dict(_cc(**{"hw_v,hw_j,hw_hf,hw_d,hq_v,hq_d,hr_v,hr_j,hr_hf": _HC}), **_cc(**{
-            "wl_v,wl_i,wl_d": _ST, "n_go,n_pre": _ST + [_DN], "rb_v,rb_d": [_DN], "y": ["core:u_lf.u_vq"],
+            "wl_v,wl_i,wl_d": _ST, "n_go,n_pre": _ST, "rb_v,rb_d": [_DN], "y": ["core:u_lf.u_vq"],
             "c_v,c_s": ["core:u_lf.u_vn.u_" + ("b" if h_ == "a" else "a")]}),
             **(_cc(**{"p_v,p_d": [_UP], "y_v,y_i": ["core:u_lf.u_vq"]}) if h_ == "b" else {})) for h_ in "ab"},
+        # m_* comes from vp soft sequencing via u_cst_m, not leafdn. k/sid are parent ID straps.
+        # These have no direct hard-core/boundary target; retain their actual RTL contracts.
         _LF + "u_vq": _cc(**{"y_v,y_i,y": ["core:u_lf.u_vn.u_a", "core:u_lf.u_vn.u_b"],
                              "u_v,u_i,u,um_v,um_q,um_b,um_i": ["core:u_lf.u_vs"],
-                             "xf_v,xf_s,xf,fault": [_UP], "k,sid,m_v,m_q,m_b,m_i": [_DN]}),
+                             "xf_v,xf_s,xf,fault": [_UP]}),
         _LF + "u_vs": _cc(**{"s_v,s_d,g_v,g_c,g_d": [_DN], "e_v,e_c,e_d,fault": [_UP],
                              "x_rv,x_ra,x_qv,x_qd,x_wv,x_wa,x_wm,x_wd": _ST,
                              "u_v,u_i,u,um_v,um_q,um_b,um_i": ["core:u_lf.u_vq"],
