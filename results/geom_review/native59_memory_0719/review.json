@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "physical memory-view placement only; no route authorization",
+  "image": "native59_memory_views0719.png",
+  "macros": 8,
+  "macro_area_um2": 101966.68800000001,
+  "added_cycles": 0,
+  "findings": [
+    "Two mirrored SRAM columns face all 512-bit read ports toward central 282.6um mux/clock corridor; write/control pins face external lane-local registers",
+    "33.86um row channels and80um external channels preserve access; >10.8um macro halos, centerclock clear",
+    "Actual preflight synthesized memory names/count8match; existing SRAM LEF/TT+FF timing unchanged",
+    "Conditions: freshbound kit must retain exact macro names, place local readmux and writer registers near banks, check actualbit/pin density and clock ETM, PDN continuous acrossrow/central channels",
+    "No new hardware; views reveal existing101966um2memory ratherthancreating new storage"
+  ],
+  "source": "native59 preflight Yosys1_2_yosys.v; model existing8writer32x512 banks"
+}
