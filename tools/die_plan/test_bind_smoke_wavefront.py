@@ -55,3 +55,43 @@ def test_unreachable_wavefront_is_rejected(tmp_path):
     top = fixture(tmp_path, dict(a=part('omitted', 13)), unreachable=['a'])
     with pytest.raises(SystemExit, match='invalid wavefront reset metadata'):
         S.qc_reset_contract(top, [instance('a', 'rstw_omitted')])
+
+
+# OWNER DECISION 13c (reset.start = "broadcast"): START rides the reset wavefront beside arst_n / rst_o_<k>.
+START = dict(mode='broadcast', die_pin='start', sync_stages=2, types={})
+
+
+def sinstance(name, reset, start):
+    return dict(name=name, conns=[('arst_n', reset), ('start_i', start)])
+
+
+def test_start_boundary_age_equals_reset_carrier_age(tmp_path):
+    top = fixture(tmp_path, dict(a=part('omitted', 13), b=part('a', 17)), start=START)
+    c = S.qc_reset_contract(top, [sinstance('a', 'rstw_omitted', 'stw_omitted'), sinstance('b', 'rstw_a', 'stw_a')])
+    assert c['boundary_prefixes'] == {'rstw_omitted': 9}
+    assert c['start']['boundary_prefixes'] == {'stw_omitted': 9}
+    assert c['calendar_start_delay'] == 41
+
+
+def test_start_pins_without_start_metadata_refused(tmp_path):
+    top = fixture(tmp_path, dict(a=part('omitted', 13)))
+    with pytest.raises(SystemExit, match='start_i pins without a bind_reset.json start block'):
+        S.qc_reset_contract(top, [sinstance('a', 'rstw_omitted', 'stw_omitted')])
+
+
+def test_start_metadata_with_partition_missing_start_refused(tmp_path):
+    top = fixture(tmp_path, dict(a=part('omitted', 13), b=part('a', 17)), start=START)
+    with pytest.raises(SystemExit, match='kept partitions without start_i'):
+        S.qc_reset_contract(top, [sinstance('a', 'rstw_omitted', 'stw_omitted'), instance('b', 'rstw_a')])
+
+
+def test_start_carrier_not_beside_reset_refused(tmp_path):
+    top = fixture(tmp_path, dict(a=part('omitted', 13)), start=START)
+    with pytest.raises(SystemExit, match='is not beside its reset carrier'):
+        S.qc_reset_contract(top, [sinstance('a', 'rstw_omitted', 'stw_other')])
+
+
+def test_start_without_bind_reset_metadata_refused(tmp_path):
+    top = tmp_path / 'rtl' / 'top.sv'
+    with pytest.raises(SystemExit, match='refuse idle-zero reset'):
+        S.qc_reset_contract(top, [sinstance('a', 'rst_n', 'start')])
