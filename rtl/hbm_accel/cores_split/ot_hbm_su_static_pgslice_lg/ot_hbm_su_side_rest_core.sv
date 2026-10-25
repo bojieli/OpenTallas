@@ -6,7 +6,7 @@
 //   side_softplus core: clk = clk_side[4:2], v = sp_v, x = the lane side_x (shared with this core's x),
 //   r -> sp_r, fault -> sp_fault.
 `timescale 1ns/1ps
-module ot_hbm_su_side_rest_core #(parameter integer MUT=0) (
+module ot_hbm_su_side_rest_core #(parameter integer MUT=0, parameter integer MLAT=4, ALAT=4) (
     input wire [2:0] clk_r,            // {clk_side[5], clk_side[1], clk_side[0]}
     input  wire        rst_n,
     input  wire        v,
@@ -21,7 +21,6 @@ module ot_hbm_su_side_rest_core #(parameter integer MUT=0) (
     input  wire        sp_fault
 );
     wire [5:0] clk = {clk_r[2], 3'b000, clk_r[1], clk_r[0]};   // clk[4:2] belong to side_softplus
-    localparam integer MLAT=3, ALAT=3;
     wire [2:0] output_fn=fn_out ^ (MUT==1 ? 3'd1:3'd0);
     localparam [2:0] SFU_RSQRT = 2, SFU_SQRT = 3, SFU_SPSQRT = 6, SFU_EGATE = 7;
     localparam integer D_EXP = 7 * MLAT + 8 * ALAT + 4;

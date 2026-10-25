@@ -78,7 +78,7 @@ DS_LAYER = 0
 def depths(mlat=3, alat=3):
     d_exp = 7 * mlat + 8 * alat + 4
     d_sig = d_exp + alat + 19
-    return dict(arith=ARITH + 5 * (mlat - 3), div_extra=19 - mlat,
+    return dict(arith=ARITH + 4 * (mlat - 3) + (alat - 3), div_extra=19 - mlat,
                 s={0: 0, 1: d_exp, 2: 1 + 9 * mlat + 3 * alat, 3: 31, 4: d_sig, 5: d_sig,
                    6: d_exp + 11 * mlat + 10 * alat + 50, 7: 1 + 31 + 1 + d_sig})
 
@@ -640,6 +640,7 @@ def main():
     ap.add_argument('--ds-program', default=str(ROOT / 'results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json'))
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--vehicle', help='write the RTL vehicle images with this path stem')
+    ap.add_argument('--alat', type=int, choices=[3,4], default=3, help='native oneclock ALAT4 f12; paired side profile')
     ap.add_argument('--mlat', type=int, choices=[3, 4], default=3, help='lane multiplier latency build (3 baseline, 4 = LAT4)')
     ap.add_argument('--map', type=Path, help='write the per-quarter address map hand-off (h_vm allocator + producers)')
     ap.add_argument('--ds-layer', type=int, default=0, help='DeepSeek program layer (0 T128 window; 3 T640 sparse)')
@@ -652,14 +653,15 @@ def main():
     if a.profile == 'mr1_r4':
         VM_RD, VM_WR, RED_DEP, RF_RELAY = 12, 10, 10, a.rf_relay
     BALANCED_TAIL, DS_LAYER = a.balanced_tail, a.ds_layer
-    DEPTHS.update(depths(a.mlat))
+    assert a.alat<=a.mlat, 'ALAT must not exceed MLAT'
+    DEPTHS.update(depths(a.mlat,a.alat))
     trace = canonical_trace(a.design, a.ds_program)
     res = compile_design(a.vectors, trace)
     report = dict(schema='opentallas.hbm.su_f2_spread.v1', tool='tools/hbm_static/su_f2_spread.py',
                   design=a.design, qualification=False, ds_layer=a.ds_layer, balanced_tail=a.balanced_tail,
                   kind='compiler placement + static transport calendar; transport re-executed on RTL by the vehicle',
                   constants=dict(VM_RD=VM_RD, VM_WR=VM_WR, LS_WR=LS_WR, LS_RD=LS_RD, ARITH=DEPTHS['arith'], RED_DEP=RED_DEP, RF_EXPORT=RF_EXPORT, RF_RELAY=RF_RELAY, PROFILE=a.profile,
-                                 MLAT=a.mlat, ALAT=3, DIV_EXTRA=DEPTHS['div_extra'], S_DEPTH=DEPTHS['s'],
+                                 MLAT=a.mlat, ALAT=a.alat, DIV_EXTRA=DEPTHS['div_extra'], S_DEPTH=DEPTHS['s'],
                                  SFU_LANES_PER_QUARTER=SFU_LANES_PER_Q, SCALAR_SIDE_LANES=1),
                   inputs={p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(a.vectors.iterdir())
                           if p.name in ('su_rec.mem', 'su_prod.json')},

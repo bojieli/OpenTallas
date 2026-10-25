@@ -12,7 +12,7 @@
 // SMUT (bench mutants, 0 = design): 1 = an extra register on y_sp (a +1-edge side result WITHOUT the fn_out
 //   re-alignment: must FAIL the lock-step), 2 = fault pin register removed (pinned comb crossing: must FAIL the
 //   +1-edge fault relation check).
-module ot_hbm_su_static_side_s #(parameter integer MUT=0, parameter integer SMUT=0) (
+module ot_hbm_su_static_side_s #(parameter integer MUT=0, parameter integer SMUT=0, parameter integer MLAT=3, ALAT=3) (
     input wire [5:0] clk,
     input  wire        rst_n,
     input  wire        v,
@@ -22,7 +22,6 @@ module ot_hbm_su_static_side_s #(parameter integer MUT=0, parameter integer SMUT
     output wire [31:0] y,
     output wire        fault
 );
-    localparam integer MLAT=3, ALAT=3;
     wire [2:0] output_fn=fn_out ^ (MUT==1 ? 3'd1:3'd0);
     localparam [2:0] SFU_RSQRT = 2, SFU_SQRT = 3, SFU_SPSQRT = 6, SFU_EGATE = 7;
     localparam integer D_EXP = 7 * MLAT + 8 * ALAT + 4;

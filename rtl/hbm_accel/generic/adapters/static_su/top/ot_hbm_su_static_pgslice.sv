@@ -177,7 +177,7 @@ module ot_hbm_su_static_pgslice #(
   end
  end
  if(QID==0&&G==0)begin:g_side_pipe
-  ot_hbm_su_static_side u_side(.clk(clk_side),.rst_n(rst_n),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
+  ot_hbm_su_static_side #(.MLAT(MLAT),.ALAT(ALAT)) u_side(.clk(clk_side),.rst_n(rst_n),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
    .y(side_y),.fault(side_fault));
  end else begin:g_no_side
   // no FULL lane in this slice: the side result input of its SFU/LIGHT lanes is not used by the lane
