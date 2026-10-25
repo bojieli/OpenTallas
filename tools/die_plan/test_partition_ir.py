@@ -52,7 +52,7 @@ proc orfs_write_sdc {path} {set fp [open $path w];close $fp;puts SDC}
 '''
 
 
-def run_tcl(tmp_path, scripts, *, defer=False, sidecar=False, fail=False):
+def run_tcl(tmp_path, scripts, *, defer=False, sidecar=False, fail=False, hook=False):
     results = tmp_path / 'results'
     results.mkdir(exist_ok=True)
     (scripts / 'deleteRoutingObstructions.tcl').write_text('')
@@ -68,6 +68,8 @@ def run_tcl(tmp_path, scripts, *, defer=False, sidecar=False, fail=False):
                OT_PARTITION_IR_STATUS=str(tmp_path / 'sidecar.status'))
     if fail:
         env['TEST_IR_FAIL'] = '1'
+    if hook:
+        env['PRE_FINAL_REPORT_TCL'] = '/custom/unknown_pdnsim_state.tcl'
     return subprocess.run(['tclsh', str(command)], cwd=tmp_path, env=env,
                           text=True, capture_output=True)
 
@@ -125,6 +127,11 @@ def test_sidecar_missing_spef_cannot_complete(tmp_path):
     scripts = stage(tmp_path)
     run = run_tcl(tmp_path, scripts, sidecar=True)
     assert run.returncode != 0 and 'requires final RCX SPEF' in run.stderr
+
+
+def test_arbitrary_solver_hook_cannot_be_silently_lost(tmp_path):
+    run = run_tcl(tmp_path, stage(tmp_path), defer=True, hook=True)
+    assert run.returncode != 0 and 'cannot capture arbitrary PRE_FINAL_REPORT_TCL' in run.stderr
 
 
 def test_unknown_image_anchor_fails_before_any_mutation(tmp_path):

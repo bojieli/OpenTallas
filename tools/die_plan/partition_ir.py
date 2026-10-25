@@ -29,6 +29,11 @@ proc ot_ir_env_true {key} {
   expr {[info exists ::env($key)] && $::env($key) eq "1"}
 }
 proc ot_ir_capture {} {
+  # Arbitrary hook commands can configure solver state outside the database/env.
+  # Do not silently replay a different source/bump contract in a fresh process.
+  if {[env_var_exists_and_non_empty PRE_FINAL_REPORT_TCL]} {
+    error "partition IR deferral cannot capture arbitrary PRE_FINAL_REPORT_TCL solver state"
+  }
   set path $::env(RESULTS_DIR)/partition_ir_contract.tcl
   set fp [open $path w]
   puts $fp {foreach key [array names ::env PDNSIM_*] {unset ::env($key)}}
