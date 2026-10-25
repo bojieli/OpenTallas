@@ -11,6 +11,15 @@ set ::env(OT_IO_HOLD_SKEW) 50
 set ::env(OT_REF_GLOB) {*}
 set ::env(OT_IO_INTER) {none_*}
 set ::env(OT_IO_SKEW_INTER) 150
+# ---- sdc_extra tools/qwen_romleaf/a0core/a0_ck_taps.sdc
+# QC-P5 10-23 A0 v4: the core clock enters at 20 interior tap ports of the SAME die clock (ck + ck_t1..ck_t19,
+# OT_A0_CK_TAPS).  Appended after the kit SDC: core_clk is redefined (same name, same period; uncertainty and IO delays
+# stay on the clock object, checked in OpenSTA) with every tap port as a source; the taps were IO data inputs when
+# all_inputs -no_clocks ran, so their input delay / transition are removed.
+set ot_a0_taps [get_ports {ck_t*}]
+unset_input_delay $ot_a0_taps
+set_input_transition 0 $ot_a0_taps
+create_clock -name core_clk -period [get_property [get_clocks core_clk] period] [get_ports {ck ck_t*}]
 # Die-context boundary (post-CTS only; OpenROAD 26Q3 crashes on -reference_pin, so it is applied numerically):
 # L = propagated clock arrival at a boundary register of this block (OT_REF_GLOB, default *go_q*), measured here.
 #   input  max = 166.667 + L_max + skew      min = L_min - hold_skew
@@ -214,14 +223,5 @@ if {[info exists ::env(OT_IO_INTER)] && $::env(OT_IO_INTER) ne ""} {
   puts "OT_IO_INTER [llength $ot_ii] inputs [llength $ot_io] outputs at $ot_ski ps"
 }
 if {[llength [get_ports -quiet tile_id*]]} { set_false_path -from [get_ports tile_id*] }
-# ---- sdc_extra tools/qwen_romleaf/a0core/a0_ck_taps.sdc
-# QC-P5 10-23 A0 v4: the core clock enters at 20 interior tap ports of the SAME die clock (ck + ck_t1..ck_t19,
-# OT_A0_CK_TAPS).  Appended after the kit SDC: core_clk is redefined (same name, same period; uncertainty and IO delays
-# stay on the clock object, checked in OpenSTA) with every tap port as a source; the taps were IO data inputs when
-# all_inputs -no_clocks ran, so their input delay / transition are removed.
-set ot_a0_taps [get_ports {ck_t*}]
-unset_input_delay $ot_a0_taps
-set_input_transition 0 $ot_a0_taps
-create_clock -name core_clk -period [get_property [get_clocks core_clk] period] [get_ports {ck ck_t*}]
 
 set_propagated_clock [all_clocks]

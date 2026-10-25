@@ -16,7 +16,7 @@
  },
  "cores": [
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[0\\].u_leaf}",
    "cell": "ot_qwen_tile_romleaf",
    "tap": "ck_t7",
    "pin": [
@@ -27,7 +27,7 @@
    "mean_tt_ps": 206.9
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_single.g_col\\[0\\].u_leaf}",
    "cell": "ot_qwen_tile_romleaf",
    "tap": "ck_t9",
    "pin": [
@@ -38,7 +38,7 @@
    "mean_tt_ps": 206.9
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_single.g_col\\[0\\].u_leaf}",
    "cell": "ot_qwen_tile_romleaf",
    "tap": "ck_t12",
    "pin": [
@@ -49,7 +49,7 @@
    "mean_tt_ps": 206.9
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_single.g_col\\[0\\].u_leaf}",
    "cell": "ot_qwen_tile_romleaf",
    "tap": "ck_t20",
    "pin": [
@@ -60,7 +60,7 @@
    "mean_tt_ps": 206.9
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_single.g_col\\[0\\].u_leaf}",
    "cell": "ot_qwen_tile_romleaf",
    "tap": "ck_t15",
    "pin": [
@@ -71,7 +71,7 @@
    "mean_tt_ps": 206.9
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[0\\].g_single.g_col\\[1\\].u_leaf}",
    "cell": "ot_qwen_tile_romleaf",
    "tap": "ck_t8",
    "pin": [
@@ -82,7 +82,7 @@
    "mean_tt_ps": 206.9
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[1\\].g_single.g_col\\[1\\].u_leaf}",
    "cell": "ot_qwen_tile_romleaf",
    "tap": "ck_t8",
    "pin": [
@@ -93,7 +93,7 @@
    "mean_tt_ps": 206.9
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[2\\].g_single.g_col\\[1\\].u_leaf}",
    "cell": "ot_qwen_tile_romleaf",
    "tap": "ck_t13",
    "pin": [
@@ -104,7 +104,7 @@
    "mean_tt_ps": 206.9
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[3\\].g_single.g_col\\[1\\].u_leaf}",
    "cell": "ot_qwen_tile_romleaf",
    "tap": "ck_t19",
    "pin": [
@@ -115,7 +115,7 @@
    "mean_tt_ps": 206.9
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\\[4\\].g_single.g_col\\[1\\].u_leaf}",
    "cell": "ot_qwen_tile_romleaf",
    "tap": "ck_t14",
    "pin": [
@@ -126,7 +126,7 @@
    "mean_tt_ps": 206.9
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[0\\].g_hd.u_lh}",
    "cell": "ot_qwen_tile_lsl_fp1",
    "tap": "ck_t30",
    "pin": [
@@ -137,7 +137,7 @@
    "mean_tt_ps": 165.7
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[1\\].g_hd.u_lh}",
    "cell": "ot_qwen_tile_lsl_fp1",
    "tap": "ck_t32",
    "pin": [
@@ -148,7 +148,7 @@
    "mean_tt_ps": 165.7
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[2\\].g_hd.u_lh}",
    "cell": "ot_qwen_tile_lsl_fp1",
    "tap": "ck_t6",
    "pin": [
@@ -159,7 +159,7 @@
    "mean_tt_ps": 165.7
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[4\\].g_hd.u_lh}",
    "cell": "ot_qwen_tile_lsl_fp1",
    "tap": "ck_t31",
    "pin": [
@@ -170,7 +170,7 @@
    "mean_tt_ps": 165.7
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[5\\].g_hd.u_lh}",
    "cell": "ot_qwen_tile_lsl_fp1",
    "tap": "ck_t37",
    "pin": [
@@ -181,7 +181,7 @@
    "mean_tt_ps": 165.7
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[3\\].g_hd.u_lh}",
    "cell": "ot_qwen_tile_lsl_fp1",
    "tap": "ck_t24",
    "pin": [
@@ -192,7 +192,7 @@
    "mean_tt_ps": 165.7
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[6\\].g_hd.u_lh}",
    "cell": "ot_qwen_tile_lsl_fp1",
    "tap": "ck_t31",
    "pin": [
@@ -203,7 +203,7 @@
    "mean_tt_ps": 165.7
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[7\\].g_hd.u_lh}",
    "cell": "ot_qwen_tile_lsl_fp1",
    "tap": "ck_t37",
    "pin": [
@@ -214,7 +214,7 @@
    "mean_tt_ps": 165.7
   },
   {
-   "inst": "u_ot_pr_core.u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node",
+   "inst": "{u_ot_pr_core.u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node}",
    "cell": "ot_qwen_tile_node",
    "tap": "ck_t2",
    "pin": [

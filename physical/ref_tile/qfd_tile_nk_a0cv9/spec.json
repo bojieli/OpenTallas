@@ -480,10 +480,10 @@
   "8_reset": "Four registered landing stages on macro-free <=352.064um paths, +2 boot cycles/+0 data cycles; distributed same-level equivalent copies; physical placement proof pending."
  },
  "clock": "cts",
- "sdc_extra": [
-  "tools/qwen_romleaf/a0core/a0_ck_taps.sdc"
- ],
  "pin_hook_after_flops": [
   "tools/qwen_romleaf/a0core/a0_reset_taps6.tcl"
+ ],
+ "sdc_clock_extra": [
+  "tools/qwen_romleaf/a0core/a0_ck_taps.sdc"
  ]
 }

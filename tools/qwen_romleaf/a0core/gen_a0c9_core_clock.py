@@ -69,7 +69,8 @@ def main():
             x, y = ox + px, oy + (h - py)
         else:
             raise SystemExit(f"orient {o} unsupported")
-        inst = PREFIX + c["inst"]
+        # ODB names keep the hierarchy-bracket escapes; braced so the Tcl list parse (lassign/lindex) keeps them
+        inst = "{" + PREFIX + c["inst"].replace("[", "\\[").replace("]", "\\]") + "}"
         if cell == "ot_qwen_tile_node":
             node = (inst, x, y)
             rows.append((inst, cell, NODE_TAP, x, y, 0.0))
