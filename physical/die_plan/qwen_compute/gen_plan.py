@@ -60,8 +60,15 @@ CW = [622.08, 613.44, 613.44, 622.08]
 RH = [1313.28, 1296.0, 1296.0, 1321.92]
 A0W, A0H = 457.92, 1157.76
 CLW, CLH = sum(CW), sum(RH)          # 2471.04 x 5227.2
-SRH = 1080.0                         # slice row height (864 overflowed the slice faces at 4.7 pins/um)
-SLH = 4 * SRH                        # 3456
+# QC-SUROW 10-25: slice rows 1080 -> 1339.2 (155 x 8.64).  The SU row (su_l1 | su_c | su_l0) is
+# crossed by every N-S cluster lane of its columns (cws*, rsf/rsn turning W->N: 1,544 bits through each su_l) and the
+# lane cores filled 86% of the su_l width (macro-free V strip 69 + 17 um), so the slice negotiation with SU transit priced
+# physically (QC_NEG_CORE_FT) was infeasible (su_l V 1.104 from the pre-routed lanes alone; ctl|stm 1.085, fw|stm 1.09).
+# Taller rows + narrower/taller lane cores (SU_LANE_CORE) give each su_l a 190-um macro-free V channel: negotiation
+# feasible with the S-half rs words on the SU row (SU_ROW_RS); E slices (extra fixed fe->fw lane) need 1339.2, 1296
+# leaves E ctl|stm at 1.075.  Die height +4 x 259.2 = +1036.8 um (+32.4 mm2, 787.5 -> 819.9 mm2).
+SRH = float(__import__("os").environ.get("QC_SRH", "1339.2"))   # slice row height (was 1080; 864 overflowed at 4.7 pins/um)
+SLH = 4 * SRH
 NCOL = 12
 RESET_ENTRY_FACE = {"phy_serdes": "E", "phy_serdes_b": "E", "phy_ucie_kv": "E"}   # hard PHY reset entries face the coll column
 WS_W = 1563.84                       # west strip = serdes PHY depth
@@ -194,7 +201,7 @@ NEG_L9_RESERVE = int(__import__("os").environ.get("QC_NEG_L9_RESERVE", "514"))
 NEG_SPLIT = int(__import__("os").environ.get("QC_NEG_SPLIT", "800"))
 NEG_FT_FILL = float(__import__("os").environ.get("QC_NEG_FT_FILL", "1.0"))     # V (M9)
 NEG_FT_FILL_H = float(__import__("os").environ.get("QC_NEG_FT_FILL_H", "1.0"))  # H (M8)
-NEG_CORE_FT = __import__("os").environ.get("QC_NEG_CORE_FT", "0") == "1"   # price SU-core partitions by macro-free ft length
+NEG_CORE_FT = __import__("os").environ.get("QC_NEG_CORE_FT", "1") == "1"   # price SU-core partitions by macro-free ft length
 NEG_CORE_OVER = float(__import__("os").environ.get("QC_NEG_CORE_OVER", "0.3333"))  # share of cored length usable (M6/M7 of M2-M7)
 PIN_MAX = 5.8                          # pins/um the laid window may reach at its worst 10-um span (G0 budget 6)
 FACE_MAX = 6.0                         # QC-P2: per-window pins/um by the tool rule (G0 = 6/um + 2 pins/layer allowance)
@@ -815,7 +822,15 @@ def slice_cluster_links(P, variant, geo):
             rs_dst = "hc1" if fs == "n" else "st_a"
             entry = "hc0" if fs == "n" else [reg for reg, cc in slice_cells(side).items()
                                              if (0, 0) in (cc if isinstance(cc, list) else [cc])][0]
-            inner = route(P, sl(geo, k, entry), sl(geo, k, rs_dst), geo, k, 2 * RSW)
+            if fs == "s" and SU_ROW_RS:
+                # QC-SUROW 10-25: the S-half rsn/rsf words (2 x 514) run along the SU row to st_a (su_l1 -> su_c -> su_l0
+                # -> fe -> st_a) in every slice.  route() sent them up column 0 in W1/W2 (fw/st_b/ctl), which together
+                # with the slice flows over-filled ctl|stm and st_b V once SU transit is priced physically; the SU row has
+                # H room with the taller rows (su H ft <= 0.45).  8 of 12 slices already used this path.
+                inner = [sl(geo, k, r) for r in ("su_l1", "su_c", "su_l0", "fe", "st_a")]
+                assert inner[0] == sl(geo, k, entry), (inner, entry)
+            else:
+                inner = route(P, sl(geo, k, entry), sl(geo, k, rs_dst), geo, k, 2 * RSW)
             P.link("rsn", [cb_part(variant, near, 0, 0)] + inner, f"y_o{sfx(0, 0)}", f"rs_{fs}0", RSW,
                    src_leaf=f"u_t{sfx(0, 0)}.n_y", dst_leaf=f"u_f{'n' if fs == 'n' else 'rs'}.rs_{fs}_lo")
             P.link("rsf", [cb_part(variant, far, 0, 0)] + [cb_part(variant, near, 0, r) for r in (3, 2, 1, 0)] +
@@ -837,22 +852,26 @@ def slice_cluster_links(P, variant, geo):
 #   coll_f5    feedthrough (S0 spoke)        coll_n  S0 face core (S0 PHY above)
 # The face <-> core records (tx W+3 / rx W+1, rtl/physical/ot_qfd_collective_static_io.sv: the as-built RU/RS2 paid
 # relay rows) become plan lanes with stations.
+# QC-SUROW 10-25: the slice rows grew (SRH); the W5 fw row (slice row 1) starts WS_DY higher, so coll_f4 / f5 / coll_n,
+# native59 / tt_ctlm and the top serdes PHY move up by WS_DY and the coll_f3 / glue segments below them grow by WS_DY
+# (coll_f4 keeps its 734.4-um seam with W5 fw).
+WS_DY = round(SRH - 1080.0, 2)
 COLL_SEGS = [  # (partition, type, y0, h)
     ("coll_s", "coll_s", 4648.32, 803.52),
     ("coll_f0", "coll_ft", 5451.84, 993.6), ("coll_f1", "coll_ft", 6445.44, 993.6),
     ("coll_f2", "coll_ft", 7439.04, 993.6),
     ("coll_core", "coll_core", 8432.64, 1589.76),
-    ("coll_f3", "coll_ftm", 10022.4, 1209.6),
-    ("coll_f4", "coll_ftc", 11232.0, 1036.8),
-    ("coll_f5", "coll_ftn", 12268.8, 691.2),
-    ("coll_n", "coll_n", 12960.0, 786.24),
+    ("coll_f3", "coll_ftm", 10022.4, 1209.6 + WS_DY),
+    ("coll_f4", "coll_ftc", 11232.0 + WS_DY, 1036.8),
+    ("coll_f5", "coll_ftn", 12268.8 + WS_DY, 691.2),
+    ("coll_n", "coll_n", 12960.0 + WS_DY, 786.24),
 ]
 COLL_PARTS = [c[0] for c in COLL_SEGS]
 WS = {  # name: (type, module, (w, h), (x, y), orient, hard)
     "io_serdes_2": ("phy_serdes_b", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 0.0), "R0", True),
     "io_serdes_1": ("phy_serdes", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 2324.16), "R0", True),
     **{n: (tn, f"qfd_qc_{tn}_part", (COLL_W, h), (SUB_W, y0), "R0", False) for n, tn, y0, h in COLL_SEGS},
-    "io_serdes": ("phy_serdes", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 13746.24), "MX", True),
+    "io_serdes": ("phy_serdes", "ot_qfd_serdes_112g_x12_phy_s597", (WS_W, 2324.16), (0.0, 13746.24 + WS_DY), "MX", True),
     "ucie_kv": ("phy_ucie_kv", "ot_qkvd_ucie_x64_phy", (SUB_W, 777.6), (0.0, 9244.8), "R0", True),
     # QC-P6-G0C 10-23 (PLAN-TOOL5 die IO: a die PHY sits on the beachfront, <= 200 um from the edge): the coll UCIe PHY
     # leaves coll_core (778 um behind the edge column) for its own edge-column partition directly W of coll_core,
@@ -861,9 +880,9 @@ WS = {  # name: (type, module, (w, h), (x, y), orient, hard)
     # PHY at the bottom (die y 7603-8381), share/gearbox glue band above it covers the whole coll_core seam (die y
     # 8432-9245), so no share-frame pin sits beside the full-width PHY (G2 v1 1209.6-tall: 59.9k overflow M7/M5)
     "coll_ucie": ("coll_ucie", "qfd_qc_coll_ucie_part", (SUB_W, 1641.6), (0.0, 7603.2), "R0", False),
-    "glue": ("glue", "qfd_qc_wglue", (SUB_W, 1209.6), (0.0, 10022.4), "R0", False),
-    "native59": ("native59", "qfd_native59_dv_headprep_obs1", (SUB_W, 518.4), (0.0, 11232.0), "R0", False),
-    "tt_ctlm": ("tt_ctlm", "qfd_tt_ctlm_dv_hp13_rp", (SUB_W, 518.4), (0.0, 11750.4), "R0", False),
+    "glue": ("glue", "qfd_qc_wglue", (SUB_W, 1209.6 + WS_DY), (0.0, 10022.4), "R0", False),
+    "native59": ("native59", "qfd_native59_dv_headprep_obs1", (SUB_W, 518.4), (0.0, 11232.0 + WS_DY), "R0", False),
+    "tt_ctlm": ("tt_ctlm", "qfd_tt_ctlm_dv_hp13_rp", (SUB_W, 518.4), (0.0, 11750.4 + WS_DY), "R0", False),
 }
 COLL_FACE_WH = (518.4, 388.8)
 COLL_FACE_CELLS = 116000
@@ -1963,9 +1982,25 @@ def declare_a0_hard_cores(P):
 # glue).  Core boxes are on the 8.64 lattice with outlines that are lattice multiples, pins on the SYMMETRIC M4 (E/W
 # faces) / M5 (N/S faces) plan tracks (offset = pitch/2), so every R0/MX/MY instance frame is on track with
 # track_offset [0, 0].  Glue taps (clock_taps) stay in the channels between cores.
-SU_LANE_CORE = (535.68, 207.36)                 # 62 x 8.64 by 24 x 8.64 = 111,078 um2 (lane leaf kits 89.6-96.1k um2)
-SU_LANE_Y = (25.92, 285.12, 578.88, 838.08)      # 4 cores; gap 492.48-578.88 holds the partition glue tap (y 535.68)
-SU_LANE_X = {"su_l0": 69.12, "su_l1": 17.28}     # 69.12-um glue channel on the bus face side (su_l0 W, su_l1 E)
+# QC-SUROW 10-25: lane cores 414.72 x 267.84 (48 x 31 lattice = 111,081 um2, same area as the old 535.68 x 207.36) so the
+# su_l partition keeps a 190.08-um macro-free V channel on its bus face side (ft stations + face pin registers) and a
+# 17.28-um strip on the far side.  Rows (SRH 1339.2): 34.56 | core | 51.84 | core | 103.68 (glue tap gap, partition
+# centre) | core | 51.84 | core | 25.92.  QC_SU_LANE_CORE=535.68x207.36 with QC_SRH=1080 restores the old geometry.
+SU_LANE_CORE = tuple(float(v) for v in __import__("os").environ.get("QC_SU_LANE_CORE", "414.72x267.84").split("x"))
+
+
+def _su_lane_y(srh, ch):
+    """4 stacked lane cores; free height split like the 1080 plan (edges 3/26, inner gaps 5/26, centre tap gap 10/26)."""
+    gaps = srh - 4 * ch
+    e = round(gaps * 3 / 26 / 8.64) * 8.64
+    tap = round(gaps * 10 / 26 / 8.64) * 8.64
+    inner = round((gaps - 2 * e - tap) / 2 / 8.64) * 8.64
+    return tuple(round(v, 2) for v in (e, e + ch + inner, e + 2 * ch + inner + tap, e + 3 * ch + 2 * inner + tap))
+
+
+SU_ROW_RS = __import__("os").environ.get("QC_SU_ROW_RS", "1") == "1"   # S-half rs words along the SU row
+SU_LANE_Y = ((25.92, 285.12, 578.88, 838.08) if (SRH, SU_LANE_CORE) == (1080.0, (535.68, 207.36)) else _su_lane_y(SRH, SU_LANE_CORE[1]))
+SU_LANE_X = {"su_l0": round(622.08 - 17.28 - SU_LANE_CORE[0], 2), "su_l1": 17.28}   # channel on the bus face side (su_l0 W, su_l1 E)
 # su_c: two leaf columns per half, centre channel x 561.6-665.28 keeps both glue taps (x 613.44) and the cws2 slot;
 # the top band y 734-1080 is the glue (u_suvm / u_red rework + u_pstn) under the N-face ctl/sc windows.
 SU_C_CORES = {"u_suvm_u_vm8q_u_va": (25.92, 51.84), "u_suvm_u_vm8q_u_vb": (302.4, 51.84),
@@ -2422,7 +2457,7 @@ def main():
               "reason": "west-strip edge column below coll_ucie: the strip width is set by the serdes PHY depth "
                         "(1563.84 um); coll (786.24 wide) is taller than the edge-column content. PHY bump/decap/ESD "
                         "field, no logic"},
-             {"rect_um": [0.0, 12268.8, SUB_W, 13746.24],
+             {"rect_um": [0.0, 12268.8 + WS_DY, SUB_W, 13746.24 + WS_DY],
               "reason": "west-strip edge column above tt_ctlm: same strip-depth reason; decap"},
              {"rect_um": [0.0, 16070.4, WS_W, H],
               "reason": f"west strip above serdes S3: IO content (16.07 mm tall) is shorter than the compute "
