@@ -51,6 +51,55 @@ def mem_gb(P, tn):
     return int(min(256, max(10, math.ceil(4 + 8 * a))))     # pilot: 0.67 mm2 4.7 GB, 1.47 mm2 10.6, 1.95 mm2 12.3
 
 
+def gap_bands(t, clearance=2.0):
+    """y bands (lo, hi) of the partition outside every over-routable hard core (cores declaring obs_max below the
+    partition top layer: M7 ribbons cross them, so their repeaters belong in the inter-core gap rows)."""
+    m = g2.gen_phys.CORE_MARGIN_UM
+    h = t["outline_um"][1]
+    boxes = sorted((c["origin_um"][1], c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores", [])
+                   if "origin_um" in c and "outline_um" in c)
+    bands, lo = [], m
+    for a, b in boxes:
+        if a - clearance > lo:
+            bands.append((lo, a - clearance))
+        lo = max(lo, b + clearance)
+    if lo < h - m:
+        bands.append((lo, h - m))
+    return bands
+
+
+def gap_repair_tcl(t, top):
+    """repair_design, then (STRICT M7-ribbon types) gap-row repeater legalisation, then detailed placement.
+
+    Industry practice for feedthroughs routed over a hard macro on the layers above its OBS: the repeaters of those
+    nets sit in the channel rows between the macros (repeater islands), at the ribbon's x.  repair_design drops a
+    buffer on the Steiner point, i.e. inside the macro footprint; plain DPL then shoves it sideways to the nearest
+    free row (a 17-um side strip), which piles hundreds of repeaters into the strip and turns every ribbon into an
+    E-W jog (QC slw_su_l1 G2 overflow 8,787).  Here every NEW buffer/inverter whose origin lies inside an over-routable
+    core is moved, before DPL, to the nearest gap-band row at the same x; DPL then only resolves overlaps inside the
+    band.  Fail-closed check after DPL: OT_GAP_FAIL counts moved repeaters that did not end in a gap band within 4 um
+    of their ribbon x.  Same procs are meant for the partition kit flow (tools/die_plan/gap_repeaters.tcl)."""
+    cores = [c for c in t.get("hard_cores", []) if "origin_um" in c and "outline_um" in c
+             and c.get("obs_max") and int(c["obs_max"][1:]) < int(top[1:])]
+    if not cores:
+        return ["repair_design -max_wire_length 450", "detailed_placement -max_displacement {400 400}"]
+    bands = gap_bands(t)
+    boxes = [(c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
+              c["origin_um"][1] + c["outline_um"][1]) for c in cores]
+    m = g2.gen_phys.CORE_MARGIN_UM
+    return [
+        "set ot_gap_bands {" + " ".join(f"{{{a:.3f} {b:.3f}}}" for a, b in bands) + "}",
+        "set ot_gap_cores {" + " ".join("{" + " ".join(f"{v:.3f}" for v in bx) + "}" for bx in boxes) + "}",
+        f"set ot_gap_m {m:g}",
+        "source /work/gap_repeaters.tcl",
+        "ot_gap_before_repair",
+        "repair_design -max_wire_length 450",
+        "ot_gap_move_to_rows",
+        "detailed_placement -max_displacement {400 400}",
+        "ot_gap_check_after_dpl 4.0",
+    ]
+
+
 def gen_one(P, tn, out, adjust):
     d = g2.part_probe(P, tn, out, adjust=adjust, mem=32)
     v = (d / "probe.v").read_text()
@@ -103,8 +152,7 @@ def gen_one(P, tn, out, adjust):
         # repeaters at the owner spacing (450 um) also on pin nets; plan IO load 2 fF; 320 ps slew limit
         "set_load 2 [all_outputs]",
         "set_max_transition 320 [current_design]",
-        "repair_design -max_wire_length 450",
-        "detailed_placement -max_displacement {400 400}",
+        *gap_repair_tcl(t, P.type_top_layer(tn)),
         "puts \"OT_REPAIR_S [expr {[clock seconds]-$ot_t0}]\"",
         # the ideal skeleton clock is not routed (the real clock tree is the partition's own logic: capacity adjust)
         "set ot_ck [[ord::get_db_block] findNet ot_clk]; $ot_ck setSpecial; $ot_ck setSigType CLOCK",
@@ -136,6 +184,7 @@ def gen_one(P, tn, out, adjust):
     # bounded GRT effort: a prototype needs WHERE the overflow is, not 30 maze rounds (pilot: 20+ min per round)
     tcl = [ln.replace("-congestion_iterations 30", "-congestion_iterations 3") for ln in tcl]
     (d / "probe.tcl").write_text("\n".join(tcl) + "\n")
+    (d / "gap_repeaters.tcl").write_text((Path(__file__).resolve().parent / "gap_repeaters.tcl").read_text())
     mem = mem_gb(P, tn)
     (d / "run.sh").write_text(f"""#!/bin/bash
 # PROTO skeleton prototype (g2 partition probe + repair_design + GRT-RC STA TT/FF); run via ot-run --mem {mem}
@@ -180,6 +229,13 @@ def parse_dir(d):
     r = g2.parse_grt(log)
     r.update(meta)
     r["exit"] = (d / "probe.exit").read_text().strip() if (d / "probe.exit").exists() else "NOT RUN"
+    gm = re.search(r"OT_GAP moved (\d+) of (\d+)", log)
+    if gm:
+        gp = re.search(r"OT_GAP_PASS (\d+) repeaters in gap rows, max \|dx\| ([0-9.]+)", log)
+        gf = re.search(r"OT_GAP_FAIL (\d+)", log)
+        r["gap_repeaters"] = dict(moved=int(gm.group(1)), new=int(gm.group(2)), passed=bool(gp) and not gf,
+                                  fail=int(gf.group(1)) if gf else (0 if gp else None),
+                                  max_dx_um=float(gp.group(2)) if gp else None)
     sta = {}
     for key, fn in (("tt_setup", "tt_setup_end.rpt"), ("ff_hold", "ff_hold_end.rpt")):
         sl = None
@@ -295,6 +351,12 @@ def classify(r, hot):
         cls = "STRUCTURAL"
         legs = ", ".join(f"{k} {v:g}" for k, v in list(geometry["over_reach"].items())[:3])
         why.append(f"{len(geometry['over_reach'])} ft slots exceed 405 um at actual pin-bit coordinates ({legs} um)")
+    gap = r.get("gap_repeaters")
+    if gap is not None and not gap.get("passed"):
+        cls = "STRUCTURAL"
+        why.append(f"gap-row repeater check failed ({gap.get('fail')} of {gap.get('moved')} moved repeaters off the gap rows)")
+    elif gap is not None:
+        why.append(f"{gap['moved']} over-core repeaters in gap rows (max dx {gap['max_dx_um']} um)")
     if geometry.get("st_in_core"):
         cls = "STRUCTURAL"
         why.append(f"{geometry['st_in_core']} planned ft station sites inside hard cores")
