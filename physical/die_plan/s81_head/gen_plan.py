@@ -289,7 +289,7 @@ HD_SRC = ["rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot
           "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv"]
 T("hd_tile", "ot_s81hd_tile_p", (TW, TH), MD["tile"]["cells"],
   contents=[dict(inst="u_core", module="ot_s81hd_tile", status="rework", kit="physical/ref_tile/s81hd_tile_m",
-                 cells=TILE_GLUE, params={"CV": "1", "A_INPUT_STAGES": "1", "MERGE_HOP": "1", "CMP_STAGES": "2"},
+                 cells=TILE_GLUE, params={"CV": "1", "A_INPUT_STAGES": "1", "MERGE_HOP": "1", "CMP_STAGES": "3"},
                  bind={"ck": "clk", "rst_n": "rst_n", "row0": "net:row0", "ten": "net:ten"},
                  note="tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; elements = the 5 closed "
                       "views (CV 1, CUT 0x1ff / SPLIT9 1)"),
@@ -440,7 +440,7 @@ for rp in range(RP):
         P(f"tW{rp}b{j}", "hd_tile", X_SP - (j + 1) * TW, yb, "R0")         # back: W -> E
 
 # =================================================================================================== seeds
-TWIN = (SLOT_E * 2 + G, SLOT_E * 2 + G + 300.0)          # tile chain window (type frame y), upper third of the tile
+TWIN = (SLOT_E + G, SLOT_E + G + 300.0)   # tile chain window (type frame y): 10-24 lowered from the upper third (700..1000) to 354..654 = the A centre row channel + top A row (hd_tile preview review: x_q -> A x pins 600-700 um)
 seed("hd_tile", "o", "E", TWIN[0], hi=TWIN[1])
 seed("hd_tile", "i", "W", TWIN[0], hi=TWIN[1])
 seed("hd_turn_a", "t_i", "W", TWIN[0], hi=TWIN[1])

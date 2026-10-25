@@ -187,16 +187,16 @@
       "xb_ingress": 162,
       "x_fill_and_return": 156,
       "bundle": 8419,
-      "tile_merge_pipe": 44,
+      "tile_merge_pipe": 66,
       "spine_merge_fire": 12,
       "rank_merge": 361,
       "mtp_seq_token_former": 6,
       "out_hop_issue": 4
     },
-    "total": 9164,
+    "total": 9186,
     "calendar_head_window": 10357,
-    "vs_calendar": -1193,
-    "ar_share": 0.00728,
+    "vs_calendar": -1171,
+    "ar_share": 0.00729,
     "note": "x fill / return counts 2 edges a tile (registered faces) + the spine stations at 364.5 um"
   },
   "throughput": {
