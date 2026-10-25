@@ -114,9 +114,9 @@ module ot_s81_engram_lookup_ra512 #(
     localparam integer ATOMS = 9;
     localparam [31:0] POLY = 32'h04C11DB7;
     assign hq_len = ATOMS[3:0];
-    initial begin
-        if (RETURN_AGE < 32 || RETURN_AGE > 65000 || CPR != 6 || PIPE != 1)
-            $fatal(1,"static lookup requires explicit service age32..65000, six columns, PIPE1");
+    // elaboration-time parameter check in generate scope (every frontend, incl. read_verilog -sv, evaluates it)
+    if (RETURN_AGE < 32 || RETURN_AGE > 65000 || CPR != 6 || PIPE != 1) begin : g_bad_params
+        $fatal(1,"static lookup requires explicit service age32..65000, six columns, PIPE1");
     end
 
     // ---- column constants -----------------------------------------------------------

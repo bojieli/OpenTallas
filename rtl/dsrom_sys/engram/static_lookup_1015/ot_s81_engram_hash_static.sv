@@ -123,7 +123,7 @@ module ot_s81_engram_hash_static (
     genvar rl, rs, rx;
     generate
         if (ENG_COLS != (ENG_N - 1) * 8 || ENG_HEADS != 8) begin : g_bad_geometry
-            initial $fatal(1, "ot_s81_engram_hash_static: one column clock per (layer, order) needs 8 heads");
+            $fatal(1, "ot_s81_engram_hash_static: one column clock per (layer, order) needs 8 heads");
         end
         for (rl = 0; rl < ENG_LAYERS; rl = rl + 1) begin : g_roll_l
             assign roll_all[64*(rl*ENG_N) +: 64] = 64'd0;
