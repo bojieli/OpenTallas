@@ -1,0 +1,568 @@
+{
+ "pvg0_p0": {
+  "module": "kv3_pv_pair",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1652,
+   "S": 0,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pvg0_p1"
+   ],
+   "S": null,
+   "E": [
+    103.68,
+    "pvg1_p0"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pvg0_p1": {
+  "module": "kv3_pv_pair",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1652,
+   "S": 0,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pv__u_g0_j"
+   ],
+   "S": [
+    103.68,
+    "pvg0_p0"
+   ],
+   "E": [
+    103.68,
+    "pvg1_p1"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pvg0_p2": {
+  "module": "kv3_pv_pair",
+  "orient": "MX",
+  "pins_by_face": {
+   "N": 0,
+   "S": 1652,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pvg0_p3"
+   ],
+   "S": [
+    25.92,
+    "pv__u_g0_j"
+   ],
+   "E": [
+    103.68,
+    "pvg1_p2"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 1652,
+  "detour_pins": {
+   "S->pv__u_g0_j": 2
+  }
+ },
+ "pvg0_p3": {
+  "module": "kv3_pv_pair",
+  "orient": "MX",
+  "pins_by_face": {
+   "N": 0,
+   "S": 1652,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    216.0,
+    "edge"
+   ],
+   "S": [
+    103.68,
+    "pvg0_p2"
+   ],
+   "E": [
+    103.68,
+    "pvg1_p3"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pv__u_g0_j": {
+  "module": "ot_qwen_tp8_pv_join_t",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1024,
+   "S": 1024,
+   "E": 1538,
+   "W": 1035
+  },
+  "nearest_on_face": {
+   "N": [
+    25.92,
+    "pvg0_p2"
+   ],
+   "S": [
+    103.68,
+    "pvg0_p1"
+   ],
+   "E": [
+    311.04,
+    "pv__u_g1_j"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 1024,
+  "detour_pins": {}
+ },
+ "pvg1_p0": {
+  "module": "kv3_pv_pair",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1652,
+   "S": 0,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pvg1_p1"
+   ],
+   "S": null,
+   "E": [
+    103.68,
+    "pvg2_p0"
+   ],
+   "W": [
+    103.68,
+    "pvg0_p0"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pvg1_p1": {
+  "module": "kv3_pv_pair",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1652,
+   "S": 0,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pv__u_g1_j"
+   ],
+   "S": [
+    103.68,
+    "pvg1_p0"
+   ],
+   "E": [
+    103.68,
+    "pvg2_p1"
+   ],
+   "W": [
+    103.68,
+    "pvg0_p1"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pvg1_p2": {
+  "module": "kv3_pv_pair",
+  "orient": "MX",
+  "pins_by_face": {
+   "N": 0,
+   "S": 1652,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pvg1_p3"
+   ],
+   "S": [
+    25.92,
+    "pv__u_g1_j"
+   ],
+   "E": [
+    103.68,
+    "pvg2_p2"
+   ],
+   "W": [
+    103.68,
+    "pvg0_p2"
+   ]
+  },
+  "pins_on_blocked_faces": 1652,
+  "detour_pins": {
+   "S->pv__u_g1_j": 2
+  }
+ },
+ "pvg1_p3": {
+  "module": "kv3_pv_pair",
+  "orient": "MX",
+  "pins_by_face": {
+   "N": 0,
+   "S": 1652,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    216.0,
+    "edge"
+   ],
+   "S": [
+    103.68,
+    "pvg1_p2"
+   ],
+   "E": [
+    103.68,
+    "pvg2_p3"
+   ],
+   "W": [
+    103.68,
+    "pvg0_p3"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pv__u_g1_j": {
+  "module": "ot_qwen_tp8_pv_join_t",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1024,
+   "S": 1024,
+   "E": 1538,
+   "W": 1035
+  },
+  "nearest_on_face": {
+   "N": [
+    25.92,
+    "pvg1_p2"
+   ],
+   "S": [
+    103.68,
+    "pvg1_p1"
+   ],
+   "E": [
+    311.04,
+    "pv__u_g2_j"
+   ],
+   "W": [
+    311.04,
+    "pv__u_g0_j"
+   ]
+  },
+  "pins_on_blocked_faces": 1024,
+  "detour_pins": {}
+ },
+ "pvg2_p0": {
+  "module": "kv3_pv_pair",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1652,
+   "S": 0,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pvg2_p1"
+   ],
+   "S": null,
+   "E": [
+    103.68,
+    "pvg3_p0"
+   ],
+   "W": [
+    103.68,
+    "pvg1_p0"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pvg2_p1": {
+  "module": "kv3_pv_pair",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1652,
+   "S": 0,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pv__u_g2_j"
+   ],
+   "S": [
+    103.68,
+    "pvg2_p0"
+   ],
+   "E": [
+    103.68,
+    "pvg3_p1"
+   ],
+   "W": [
+    103.68,
+    "pvg1_p1"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pvg2_p2": {
+  "module": "kv3_pv_pair",
+  "orient": "MX",
+  "pins_by_face": {
+   "N": 0,
+   "S": 1652,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pvg2_p3"
+   ],
+   "S": [
+    25.92,
+    "pv__u_g2_j"
+   ],
+   "E": [
+    103.68,
+    "pvg3_p2"
+   ],
+   "W": [
+    103.68,
+    "pvg1_p2"
+   ]
+  },
+  "pins_on_blocked_faces": 1652,
+  "detour_pins": {
+   "S->pv__u_g2_j": 2
+  }
+ },
+ "pvg2_p3": {
+  "module": "kv3_pv_pair",
+  "orient": "MX",
+  "pins_by_face": {
+   "N": 0,
+   "S": 1652,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    216.0,
+    "edge"
+   ],
+   "S": [
+    103.68,
+    "pvg2_p2"
+   ],
+   "E": [
+    103.68,
+    "pvg3_p3"
+   ],
+   "W": [
+    103.68,
+    "pvg1_p3"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pv__u_g2_j": {
+  "module": "ot_qwen_tp8_pv_join_t",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1024,
+   "S": 1024,
+   "E": 1538,
+   "W": 1035
+  },
+  "nearest_on_face": {
+   "N": [
+    25.92,
+    "pvg2_p2"
+   ],
+   "S": [
+    103.68,
+    "pvg2_p1"
+   ],
+   "E": [
+    311.04,
+    "pv__u_g3_j"
+   ],
+   "W": [
+    311.04,
+    "pv__u_g1_j"
+   ]
+  },
+  "pins_on_blocked_faces": 1024,
+  "detour_pins": {}
+ },
+ "pvg3_p0": {
+  "module": "kv3_pv_pair",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1652,
+   "S": 0,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pvg3_p1"
+   ],
+   "S": null,
+   "E": null,
+   "W": [
+    103.68,
+    "pvg2_p0"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pvg3_p1": {
+  "module": "kv3_pv_pair",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1652,
+   "S": 0,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pv__u_g3_j"
+   ],
+   "S": [
+    103.68,
+    "pvg3_p0"
+   ],
+   "E": null,
+   "W": [
+    103.68,
+    "pvg2_p1"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pvg3_p2": {
+  "module": "kv3_pv_pair",
+  "orient": "MX",
+  "pins_by_face": {
+   "N": 0,
+   "S": 1652,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "pvg3_p3"
+   ],
+   "S": [
+    25.92,
+    "pv__u_g3_j"
+   ],
+   "E": null,
+   "W": [
+    103.68,
+    "pvg2_p2"
+   ]
+  },
+  "pins_on_blocked_faces": 1652,
+  "detour_pins": {
+   "S->pv__u_g3_j": 2
+  }
+ },
+ "pvg3_p3": {
+  "module": "kv3_pv_pair",
+  "orient": "MX",
+  "pins_by_face": {
+   "N": 0,
+   "S": 1652,
+   "E": 0,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    216.0,
+    "edge"
+   ],
+   "S": [
+    103.68,
+    "pvg3_p2"
+   ],
+   "E": null,
+   "W": [
+    103.68,
+    "pvg2_p3"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "pv__u_g3_j": {
+  "module": "ot_qwen_tp8_pv_join_t",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1024,
+   "S": 1024,
+   "E": 1538,
+   "W": 1035
+  },
+  "nearest_on_face": {
+   "N": [
+    25.92,
+    "pvg3_p2"
+   ],
+   "S": [
+    103.68,
+    "pvg3_p1"
+   ],
+   "E": null,
+   "W": [
+    311.04,
+    "pv__u_g2_j"
+   ]
+  },
+  "pins_on_blocked_faces": 1024,
+  "detour_pins": {}
+ }
+}

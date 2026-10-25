@@ -1,0 +1,104 @@
+{
+ "kvpc0": {
+  "module": "qkd_kvs_pc_h_head_p",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1063,
+   "S": 552,
+   "E": 1663,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "kvpc3"
+   ],
+   "S": null,
+   "E": [
+    69.12,
+    "kvpc1"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "kvpc1": {
+  "module": "qkd_kvs_pc",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1108,
+   "S": 1840,
+   "E": 0,
+   "W": 1448
+  },
+  "nearest_on_face": {
+   "N": [
+    103.68,
+    "kvpc2"
+   ],
+   "S": null,
+   "E": null,
+   "W": [
+    69.12,
+    "kvpc0"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "kvpc2": {
+  "module": "qkd_kvs_pc",
+  "orient": "R0",
+  "pins_by_face": {
+   "N": 1108,
+   "S": 1840,
+   "E": 0,
+   "W": 1448
+  },
+  "nearest_on_face": {
+   "N": [
+    17.28,
+    "edge"
+   ],
+   "S": [
+    103.68,
+    "kvpc1"
+   ],
+   "E": null,
+   "W": [
+    69.12,
+    "kvpc3"
+   ]
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ },
+ "kvpc3": {
+  "module": "qkd_kvs_pc",
+  "orient": "MY",
+  "pins_by_face": {
+   "N": 1108,
+   "S": 1840,
+   "E": 1448,
+   "W": 0
+  },
+  "nearest_on_face": {
+   "N": [
+    17.28,
+    "edge"
+   ],
+   "S": [
+    103.68,
+    "kvpc0"
+   ],
+   "E": [
+    69.12,
+    "kvpc2"
+   ],
+   "W": null
+  },
+  "pins_on_blocked_faces": 0,
+  "detour_pins": {}
+ }
+}
