@@ -1,6 +1,6 @@
 # Bound S8 matrix schedule repair, 2026-10-25
 
-QKV and OD scheduling repairs qualified on the production-K layer-0 cuts; one-round LM merge qualified. GU full readback remains in flight. Source parent: claude/tok-qk-s8a-1024@8b3d9f511.
+QKV and OD scheduling repairs qualified on the production-K layer-0 cuts; one-round LM merge qualified. GU production-K32 layer-0 cut qualified. Source parent: claude/tok-qk-s8a-1024@8b3d9f511.
 
 The bound west-row L9 pair heads W5/W3/W1 have no neighbour input.
 The old slice2 ownership table tried to finish their L9 reductions there,
@@ -22,7 +22,7 @@ move 14 edges earlier. Final composition must account for any preceding-op confl
 Tests reuse the compiled fixed-RTL 12-slice FACE3 binary on intel2.
 Run root: /srv/opentallas-scratch2/claude/codex-s8-mat-1025.
 Production K: QKV 8, GU 32, o 2, down 6.
-OD positive PASS 515/515 with strict status clean, both framed 256-word AR messages, zero collisions, span1555. QKV PASS769/769,48/48 VM writes, zero missing, span445 and strict status clean. Drop-last-K negative control FAIL1/769 (768 value mismatches plus busy status), as required. GU remains in flight.
+OD positive PASS 515/515 with strict status clean, both framed 256-word AR messages, zero collisions, span1555. QKV PASS769/769,48/48 VM writes, zero missing, span445 and strict status clean. Drop-last-K negative control FAIL1/769 (768 value mismatches plus busy status), as required. GU PASS3073/3073,192/192 VM writes, zero missing, span437 and strict status clean.
 
 Failed diagnostic: od_v3, pre-arm17, zero extra guard: value/edge/framing
 checks 515/515 exact, but strict station status FAIL. Preserved separately.
@@ -35,7 +35,11 @@ actual receivers and emits root0 only if it has a candidate. Bound root0
 is a sender, so all6 candidates arrive remotely, with root AMNB6 unchanged.
 Clearing nonparticipant senders would leave their MU state open forever,
 faulting the next token clear. The source scalar core counts local and
-remote candidates uniformly. One-round, six-receiver LM probe and AMNB5
-negative control are running; the full25-round head has not been rerun.
+remote candidates uniformly. One-round six-receiver LM probe PASS26/26 with
+strict status clean (all12 die/gather tokens plus ARX/XC). AMNB5 negative
+FAIL13/26 with root fault and wrong die token187 vs662. The full25-round
+head has not been rerun.
 
 To reproduce the minimum LM probe, copy lm_minimum.py to the run root beside tree/, then run with DV2_S8DIE=1 and argument lm_min or lm_min_mut; each work dir reuses the fixed-RTL obj_n12 binary.
+
+GU lead17 diagnostic finished3073/3073 value checks exact,192/192 writes, but strict station status FAIL. Lead20 successor PASS3073/3073 with strict status clean.
