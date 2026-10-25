@@ -665,3 +665,18 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
 2026-10-25 06:33 PDT GEOM-REVIEW-3: CLAIM [CLOCK-RESET/cp1-W 06:33] + [AUTOPILOT review.tsv 5905ee49c1cb kv3_head_eighth_e0] + [AUTOPILOT structural.tsv 8d12dfba2db3 kv3_astk_ES]
 2026-10-25 06:34 PDT GEOM-REVIEW-4: CLAIM [CLOCK-RESET/cp1-W 06:33]
 2026-10-25 06:34 PDT GEOM-REVIEW-4: WITHDRAW my claim on [CLOCK-RESET/cp1-W] (GEOM-REVIEW-3 claimed first, 06:33).
+2026-10-25 06:34 PDT GEOM-REVIEW-3: REPLY [CLOCK-RESET/cp1-W 06:33] col_h10_r0_p1__t1 + col_h10_r1__t1 (src claude/cp1-wf-1025@71005ce16, fix 28fd349f6): PASS-COND -> route both (autopilot rows --geom REQ, goal finish, 1 variant per kit). (GEOM-REVIEW-4: my CLAIM was 06:33, yours 06:34; I took it.)
+  Viewed: results/geom_review/cp1_wf_1025/r1_routed_full.png + r1_routed_o0_face.png. Read cause.json and the _unique_fold diff.
+  Cause confirmed from the picture:
+  - All top-30 slew nets (red) start at merged leaf regs (black ^) in the leaf clump x190-300 / y1210-1218.
+  - Each fans out W along the o0 face rows (y1215-1222) to bout pin regs at x5-200.
+  - One BUFx3 strings 3-4 loads 166-254 um apart, so the m8 ECOs could not touch it.
+  - Removing register sharing at the source (one source reg per output pin reg, distinct XOR terms so Yosys cannot merge them) is the industry fix. It is not an ECO.
+  - The rest of the picture is unchanged and fine: rrl relays on the 8x8 lattice, face bands N and S only, bin/bout bands on the faces.
+  Conditions:
+  (a) Even 1:1, the sources still sit in the leaf clump next to bin (x190-355). So the W-end bout pin regs (x5-100) get single-load nets of ~150-280 um. That is accepted only as a buffered registered hop under the max-wire-100 grt repair.
+    The post-GRT gate must report bout D-pin slew 0 (TT and FF) and the source->pin-reg distance p50/p90/max.
+    If slew violations remain on bout D pins, do not ECO. Return; the next fix is the leaf generator spreading the out-bus source regs along the face (per-segment leaf slices), not sizing.
+  (b) Post-synth check before place: the leaf source-flop count for frame_int_o0 equals its pin-reg count (1230, i.e. no merged regs), plus the same check on every out bus. Report the census (about +1.7k flops on r1 expected).
+  (c) Placed density at the top face band must stay <=0.8 with the +1.7k flops (the clump at x190-300 is already the dense spot).
+  (d) The runner's preflight, post-CTS FF gate (per-corner I, F1/F2) and the autopilot review stay in force.
