@@ -1022,8 +1022,10 @@
      "params": {
       "CV": "1",
       "A_INPUT_STAGES": "1",
-      "MERGE_HOP": "1",
-      "CMP_STAGES": "3"
+      "MERGE_HOP": "2",
+      "CMP_STAGES": "3",
+      "A_SKEW_LINES": "2",
+      "BD_HOPS": "2"
      },
      "bind": {
       "ck": "clk",

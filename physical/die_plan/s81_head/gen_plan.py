@@ -289,7 +289,8 @@ HD_SRC = ["rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_fadd.sv", "rtl/v41rom/ot
           "rtl/dsrom_sys/s81_head/ot_s81hd_strap.sv"]
 T("hd_tile", "ot_s81hd_tile_p", (TW, TH), MD["tile"]["cells"],
   contents=[dict(inst="u_core", module="ot_s81hd_tile", status="rework", kit="physical/ref_tile/s81hd_tile_m",
-                 cells=TILE_GLUE, params={"CV": "1", "A_INPUT_STAGES": "1", "MERGE_HOP": "1", "CMP_STAGES": "3"},
+                 cells=TILE_GLUE, params={"CV": "1", "A_INPUT_STAGES": "1", "MERGE_HOP": "2", "CMP_STAGES": "3",
+                         "A_SKEW_LINES": "2", "BD_HOPS": "2"},
                  bind={"ck": "clk", "rst_n": "rst_n", "row0": "net:row0", "ten": "net:ten"},
                  note="tile glue: bundle BST / skew lines, 2-stage x pass, chain-best merge; elements = the 5 closed "
                       "views (CV 1, CUT 0x1ff / SPLIT9 1)"),
