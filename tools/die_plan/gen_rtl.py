@@ -116,11 +116,9 @@ module ot_dp_rrelay (input wire clk, input wire d, output reg q);
 endmodule
 // ot_dp_rgate: the consumer-tap reset relay of a START-broadcast plan (OWNER DECISION 13c): one flop of
 // (reset AND run).  Releases with the same depth as ot_dp_rrelay, measured from the later of reset and START.
-(* keep_hierarchy *)
-module ot_dp_rgate (input wire clk, input wire d, input wire run, output wire q);
-    (* keep *) reg r;
-    always @(posedge clk) r <= d & run;
-    assign q = r;
+(* keep_hierarchy, keep *)
+module ot_dp_rgate (input wire clk, input wire d, input wire run, output reg q);
+    always @(posedge clk) q <= d & run;
 endmodule
 `default_nettype wire
 """
