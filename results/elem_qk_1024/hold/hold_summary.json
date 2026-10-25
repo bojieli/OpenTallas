@@ -1,0 +1,463 @@
+[
+ {
+  "head": "e1",
+  "variant": "a",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e1/a",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 14.22,
+  "ff_hold_ps": -3.23,
+  "ff_hold_viol": 37.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e1",
+  "variant": "b",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e1/b",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=3 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 14.3,
+  "ff_hold_ps": -1.42,
+  "ff_hold_viol": 5.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e1",
+  "variant": "c",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e1/c",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=0 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=TC CORNERS=tc\\ bc'",
+  "tt_setup_ps": 14.2,
+  "ff_hold_ps": -3.81,
+  "ff_hold_viol": 32.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e2",
+  "variant": "a",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e2/a",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 28.33,
+  "ff_hold_ps": -3.85,
+  "ff_hold_viol": 19.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e2",
+  "variant": "b",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e2/b",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=3 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 27.1,
+  "ff_hold_ps": 0.09,
+  "ff_hold_viol": 0.0,
+  "fails": {
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e2",
+  "variant": "c",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e2/c",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=0 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=TC CORNERS=tc\\ bc'",
+  "tt_setup_ps": 28.33,
+  "ff_hold_ps": -3.85,
+  "ff_hold_viol": 40.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e3",
+  "variant": "a",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e3/a",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 5.85,
+  "ff_hold_ps": -0.81,
+  "ff_hold_viol": 14.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e3",
+  "variant": "b",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e3/b",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=3 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 4.59,
+  "ff_hold_ps": -0.16,
+  "ff_hold_viol": 1.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e3",
+  "variant": "c",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e3/c",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=0 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=TC CORNERS=tc\\ bc'",
+  "tt_setup_ps": 5.87,
+  "ff_hold_ps": -2.33,
+  "ff_hold_viol": 19.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e4",
+  "variant": "a",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e4/a",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 16.19,
+  "ff_hold_ps": -1.81,
+  "ff_hold_viol": 17.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e4",
+  "variant": "b",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e4/b",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=3 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 13.55,
+  "ff_hold_ps": -0.95,
+  "ff_hold_viol": 2.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e4",
+  "variant": "c",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e4/c",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=0 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=TC CORNERS=tc\\ bc'",
+  "tt_setup_ps": 13.62,
+  "ff_hold_ps": -3.4,
+  "ff_hold_viol": 57.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e5",
+  "variant": "a",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e5/a",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 14.33,
+  "ff_hold_ps": -1.15,
+  "ff_hold_viol": 22.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e5",
+  "variant": "b",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e5/b",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=3 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 13.98,
+  "ff_hold_ps": -1.61,
+  "ff_hold_viol": 4.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e5",
+  "variant": "c",
+  "host": "localhost",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e5/c",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=0 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=TC CORNERS=tc\\ bc'",
+  "tt_setup_ps": 14.29,
+  "ff_hold_ps": -1.19,
+  "ff_hold_viol": 23.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e6",
+  "variant": "a",
+  "host": "epyc3",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e6/a",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 11.36,
+  "ff_hold_ps": -2.15,
+  "ff_hold_viol": 32.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e6",
+  "variant": "b",
+  "host": "epyc3",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e6/b",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=3 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 15.59,
+  "ff_hold_ps": -1.4,
+  "ff_hold_viol": 3.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e6",
+  "variant": "c",
+  "host": "epyc3",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e6/c",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=0 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=TC CORNERS=tc\\ bc'",
+  "tt_setup_ps": 10.8,
+  "ff_hold_ps": -3.46,
+  "ff_hold_viol": 34.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e7",
+  "variant": "a",
+  "host": "epyc3",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e7/a",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 15.92,
+  "ff_hold_ps": -1.78,
+  "ff_hold_viol": 18.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e7",
+  "variant": "b",
+  "host": "epyc3",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e7/b",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=3 OT_HOLD_ALLOW_SETUP=1 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=BC CORNERS=bc'",
+  "tt_setup_ps": 17.13,
+  "ff_hold_ps": -0.56,
+  "ff_hold_viol": 3.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ },
+ {
+  "head": "e7",
+  "variant": "c",
+  "host": "epyc3",
+  "dir": "/srv/opentallas-scratch/claude/elem-qk/hold/e7/c",
+  "rc": [
+   "route_finish_rc=0",
+   "signoff_rc=1"
+  ],
+  "verdict": "NOT SIGNED",
+  "recipe": "OT_HOLD_MARGIN=0 OT_HOLD_ALLOW_SETUP=0 OT_HOLD_MAXBUF=40 ROUTE_CORNERS='CORNER=TC CORNERS=tc\\ bc'",
+  "tt_setup_ps": 15.89,
+  "ff_hold_ps": -1.94,
+  "ff_hold_viol": 24.0,
+  "fails": {
+   "hold_ff": "FAIL",
+   "drv": "FAIL",
+   "fanout": "WARN",
+   "clock": "FAIL",
+   "face_guard": "FAIL"
+  }
+ }
+]
