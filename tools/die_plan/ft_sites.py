@@ -179,6 +179,76 @@ def bit_ordered(a,points,b):
     return out
 
 
+# PATH-QC-PLAN-D3 10-25 (G2 slw_su_l1 STRUCTURAL ov 2191, slw_su_c ov 1): a slot whose plan layers are M7 ONLY with
+# opposite N/S faces is a straight transit the plan routes OVER the hard cores on M7 (gen_plan _lay_free_spans: the SU
+# face has no macro-free span left for it; core OBS stops below M7).  Strict mode demanded a core-free L for every leg,
+# so its stations could only sit in the 17-um W edge strip (x 4-15), with every leg running down that strip (M3 hot).
+# Its stations go in the macro-free GAP ROWS under the M7 ribbon instead: targets are restricted to the ribbon's x band
+# (window span, M7_BAND_PAD), legs are straight V within that band over the cores (no core-free L demanded), and
+# station cells stay outside every core + halo (allocator blocked boxes, unchanged).  All other slots stay strict.
+M7_BAND_PAD=0.0    # targets under the ribbon itself (window span)
+M7_PLAN_RADIUS=12.0   # planning radius of a 517-cell station cluster (~10 um measured); actual hops re-verified
+
+
+def m7_gap_rows(targets,boxes,blo,bhi):
+    """targets in the ribbon band whose y lies in a GAP ROW: outside the y span of every core (+halo) under the band."""
+    ok=(targets[:,0]>=blo)&(targets[:,0]<=bhi)
+    for x0,y0,x1,y1 in boxes:
+        if x1>blo and x0<bhi:
+            ok &= ~((targets[:,1]>y0)&(targets[:,1]<y1))
+    return targets[ok]
+
+
+def m7_over_core(slot, type_name='', ty=None):
+    # This exception belongs only to Qwen's explicitly M6-capped SU core floorplan.
+    # A slot's M7 layer alone cannot authorize transit through another die's M7 core wall.
+    cores=(ty or {}).get('hard_cores', [])
+    return (type_name.startswith(('slw_su_', 'sle_su_')) and bool(cores)
+            and all(c.get('obs_max', 'M7') in ('M1','M2','M3','M4','M5','M6') for c in cores)
+            and list(slot.get('layers') or [])==['M7']
+            and {slot.get('in_face'),slot.get('out_face')}=={'N','S'})
+
+
+def m7_band(a,b,pad=M7_BAND_PAD):
+    return (min(a[:,0].min(),b[:,0].min())-pad,max(a[:,0].max(),b[:,0].max())+pad)
+
+
+def ribbon_allocate(al,target_y,px,boxes,max_rows=200):
+    """PATH-QC-PLAN-D3 (G2 slw_su_l1 ov 8,795 M6-H with blob clusters): an M7 over-core station is a RIBBON under its
+    bus: bit k (by pin x) takes the k-th free legal site in (column, row) order of a row band at target_y across the
+    bus x span, so every bit's site sits within ~a column pitch of its own pin x and its legs are straight V on M7
+    (the blob allocator shifted bits up to ~50 um in x, and GRT put those H jogs over the cores: M2/M4/M6 obstructed).
+    The band grows row by row (alternately up / down) inside the gap row (no row may enter a core + halo box)."""
+    px=np.asarray(px,float);n=len(px);order=np.argsort(px,kind='stable')
+    lo=max(al.ix0,math.floor((px.min()-al.ox-al.cw/2)/al.cp));hi=min(al.ix1,math.ceil((px.max()-al.ox-al.cw/2)/al.cp))
+    ix=np.arange(lo,hi+1);xs=al.ox+ix*al.cp+al.cw/2
+    r0=min(max(al.iy0,int(round((target_y-al.oy-al.ch/2)/al.rp))),al.iy1)
+    rows=[];step=0;picked=[]
+    while len(picked)<n:
+        cand=[r0+step] if step==0 else [r0+step,r0-step]
+        step+=1
+        if step>max_rows:raise ValueError(f'ribbon: only {len(picked)} sites for {n} at y {target_y:.2f}')
+        for iy in cand:
+            if not al.iy0<=iy<=al.iy1:continue
+            y=al.oy+iy*al.rp+al.ch/2
+            ok=np.ones(len(ix),bool)
+            for a,b,c,d in boxes:
+                if b-1e-8<y+al.ch/2 and y-al.ch/2<d+1e-8:ok &= ~((xs-al.cw/2<c)&(xs+al.cw/2>a))
+            ids=(iy-al.iy0)*al.nx+(ix-al.ix0)
+            if al.used:ok &= np.fromiter((int(k) not in al.used for k in ids),bool,count=len(ids))
+            rows.append(iy);picked += [(int(i),int(iy)) for i,good in zip(ix,ok) if good]
+    picked.sort()                                                 # (column, row) order = x-monotone ribbon
+    # keep the n sites nearest the band centre row while preserving column-major order
+    rank=sorted(range(len(picked)),key=lambda k:(abs(picked[k][1]-r0),picked[k]))[:n]
+    chosen=sorted(picked[k] for k in rank)
+    sites=np.empty((n,2))
+    for k,(i,iy) in zip(order,chosen):
+        sites[k]=(al.ox+i*al.cp+al.cw/2,al.oy+iy*al.rp+al.ch/2)
+    al.used.update((iy-al.iy0)*al.nx+i-al.ix0 for i,iy in chosen)
+    return sites,dict(count=n,ribbon_rows=len(set(r for _,r in chosen)),span_um=[float(np.ptp(sites[:,0])+al.cw),
+                                                                               float(np.ptp(sites[:,1])+al.ch)])
+
+
 def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40.,avoid_core_routes=True,bit_order=False):
     """Strict actual-bit mode (QC 906dca298): EVERY bit leg keeps an L route outside all core halos,
     row-allocation corner cuts are backtracked, and a short direct leg keeps station0 only."""
@@ -201,7 +271,13 @@ def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radi
             b=np.array([pins[(name+'_o',i)] for i in range(width)])
             budget=reach_um*margin-2.0 # reserve actual D/Q pin offsets from cell centres
             direct=float(np.abs(b-a).sum(axis=1).max())
-            if slot['stations']==1 and direct<=budget and (not avoid_core_routes or l_route_clear(a,b,boxes).all()):
+            over=avoid_core_routes and model.name=='qwen_compute' and m7_over_core(slot,tn,ty)
+            rboxes=() if over or not avoid_core_routes else boxes   # leg-route constraint
+            if over:
+                blo,bhi=m7_band(a,b);tset=m7_gap_rows(targets,boxes,blo,bhi)
+            else:
+                tset=targets
+            if slot['stations']==1 and direct<=budget and (not rboxes or l_route_clear(a,b,rboxes).all()):
                 # Station0 is already the input-face register. Do not add a
                 # gratuitous internal pipeline stage to a short direct leg.
                 for key in ('regs_um','bit_sites_um','bit_site_cell_um'):
@@ -210,19 +286,22 @@ def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radi
                                    budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um))
                 continue
             blocked_targets=set();base_used=set(allocator.used);done=False
-            first_ok=_all_routes_clear(a,targets,boxes) if avoid_core_routes else None
-            last_ok=_all_routes_clear(b,targets,boxes) if avoid_core_routes else None
+            first_ok=_all_routes_clear(a,tset,rboxes) if rboxes else None
+            last_ok=_all_routes_clear(b,tset,rboxes) if rboxes else None
             for attempt in range(100):
                 allocator.used=set(base_used)
-                free=targets[[i not in blocked_targets for i in range(len(targets))]]
-                ids=np.array([i for i in range(len(targets)) if i not in blocked_targets])
-                path=_path_strict(free,_extent(a,free),_extent(b,free),budget,max_radius_um,slot['stations'],
-                           blocked=boxes if avoid_core_routes else (),
+                free=tset[[i not in blocked_targets for i in range(len(tset))]]
+                ids=np.array([i for i in range(len(tset)) if i not in blocked_targets])
+                path=_path_strict(free,_extent(a,free),_extent(b,free),budget,
+                           M7_PLAN_RADIUS if over else max_radius_um,slot['stations'],
+                           blocked=rboxes,
                            first_ok=first_ok[ids] if first_ok is not None else None,
                            last_ok=last_ok[ids] if last_ok is not None else None)
                 points=[];stats=[]
                 for index in path:
-                    try:p,st=allocator.allocate(free[index],width,max_radius_um=max_radius_um)
+                    try:
+                        if over:p,st=ribbon_allocate(allocator,free[index][1],(a[:,0]+b[:,0])/2,boxes)
+                        else:p,st=allocator.allocate(free[index],width,max_radius_um=max_radius_um)
                     except ValueError:blocked_targets.add(int(ids[index]));break
                     points.append(p);stats.append(st)
                 else:
@@ -230,24 +309,32 @@ def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radi
                     # row allocation spreads the cells. Backtrack that target,
                     # not the immutable failed verdict or the route constraint.
                     chain=[a,*points,b]
-                    if avoid_core_routes:
+                    if over:
+                        # planned with the smaller cluster radius: back off the target of the worst over-reach leg
+                        hl=[float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(chain,chain[1:])]
+                        if max(hl)>budget+1e-6:
+                            blocked_targets.add(int(ids[path[min(int(np.argmax(hl)),len(path)-1)]]))
+                            continue
+                    if rboxes:
                         bad=[j for j,(p,q) in enumerate(zip(chain,chain[1:]))
-                             if not l_route_clear(p,q,boxes).all()]
+                             if not l_route_clear(p,q,rboxes).all()]
                         if bad:
                             blocked_targets.add(int(ids[path[min(bad[0],len(path)-1)]]))
                             continue
                     done=True;break
             if not done:raise ValueError(f'{tn}/{name}: no row-legal allocation after100 target alternatives')
             ordered=False
-            if bit_order and points:
+            if bit_order and points and not over:
                 cand=bit_ordered(a,points,b);cc=[a,*cand,b]
                 ch=[float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(cc,cc[1:])]
-                if max(ch)<=budget+1e-6 and (not avoid_core_routes or all(l_route_clear(p,q,boxes).all() for p,q in zip(cc,cc[1:]))):
+                if max(ch)<=budget+1e-6 and (not rboxes or all(l_route_clear(p,q,rboxes).all() for p,q in zip(cc,cc[1:]))):
                     points=cand;ordered=True
             chain=[a,*points,b];hops=[float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(chain,chain[1:])]
             if max(hops)>budget+1e-6:raise ValueError(f'{tn}/{name}: actual paired-bit hop {max(hops)} >{budget}')
-            if avoid_core_routes and any(not l_route_clear(p,q,boxes).all() for p,q in zip(chain,chain[1:])):
+            if rboxes and any(not l_route_clear(p,q,rboxes).all() for p,q in zip(chain,chain[1:])):
                 raise ValueError(f'{tn}/{name}: allocated bit leg leaves the macro-free channels')
+            if over and any(((p[:,0]<blo-max_radius_um)|(p[:,0]>bhi+max_radius_um)).any() for p in points):
+                raise ValueError(f'{tn}/{name}: M7 over-core station left the ribbon band')
             old=slot['stations'];slot['stations']=len(points)+1
             slot['regs_um']=[a.mean(axis=0).round(4).tolist()]+[free[index].round(4).tolist() for index in path]
             slot['bit_site_cell_um']=[1.404,.27]
@@ -256,7 +343,8 @@ def _place_strict(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radi
                 explicit[tn].append(dict(slot=name,stage=stage,sites_um=p.round(5).tolist(),stats=stats[stage-1]))
             ledger.append(dict(type=tn,slot=name,stations=[old,slot['stations']],worst_paired_bit_um=round(max(hops),4),
                                budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um,
-                               core_free_routes=avoid_core_routes,bit_ordered=ordered))
+                               core_free_routes=bool(rboxes),m7_over_core_band=([round(blo,4),round(bhi,4)] if over else None),
+                               bit_ordered=ordered))
     return ledger,explicit
 
 

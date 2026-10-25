@@ -173,12 +173,37 @@ def load_path(name):
 # HBM die: the S2 schedule of the exact per-die program
 def op_match(name, op):
     """UNIT.OP of a record against --op: the exact name, or an fnmatch pattern (e.g. COLL.* for a latency every
-    record of a unit pays, such as the hard_v5 COLL quadrant's +3 issue edges)"""
+    record of a unit pays, such as the hard_v5 COLL quadrant's +3 issue edges); 'A|B' = either alternative"""
+    if "|" in op:
+        return any(op_match(name, o) for o in op.split("|"))
     return name == op or (any(ch in op for ch in "*?[") and fnmatch.fnmatchcase(name, op))
 
 
-def hbm_schedule(model):
-    """-> (schedule_with(op or None, factor) -> token cycles, records per op)"""
+def parse_fmt(specs):
+    """--op-fmt [OP:]OPERAND=FMT[/FMT...] -> [(op scope or None, operand, {fmts})]; None when no spec"""
+    out = []
+    for x in specs or ():
+        scope, _, kv = x.rpartition(":")
+        k, v = kv.split("=", 1)
+        out.append((scope or None, k, set(v.split("/"))))
+    return out or None
+
+
+def fmt_match(r, fmt):
+    """--op-fmt operand filter: every term whose op scope matches the record (no scope = every record) needs the record's
+    operand descriptor in one of the term's formats (e.g. SM.MATVEC:B=BF16/INT8 = the SM matvecs that run on the BF16
+    tc columns -- BF16 weights, and INT8 fmt3 through the BF16 lanes -- not the FP8 / FP4 block-dot ones)"""
+    if not fmt:
+        return True
+    if isinstance(fmt, dict):
+        fmt = [(None, k, {v}) for k, v in fmt.items()]
+    name = f"{r.unit}.{r.op}"
+    desc = getattr(r, "desc", None) or {}
+    return all(getattr(desc.get(k), "fmt", None) in vals for sc, k, vals in fmt if sc is None or op_match(name, sc))
+
+
+def hbm_schedule(model, fmt=None):
+    """-> (schedule_with(op or None, factor) -> token cycles, records per op); fmt: --op-fmt operand filter on the op"""
     sys.path.insert(0, str(TOOLS))
     from hgi_sim import timing as T
     if model == "ds":
@@ -197,12 +222,18 @@ def hbm_schedule(model):
         cfg = json.loads((ROOT / "compiler/models/qwen3-8b/config.json").read_text())
         recs = QC.program(QC.Geometry(cfg, 8192), QC.qwen_params(cfg), cfg["num_hidden_layers"])
         cf, pos = T.cost, 8191
-    count = collections.Counter(f"{r.unit}.{r.op}" for r in recs)
+    count = collections.Counter(f"{r.unit}.{r.op}" for r in recs if fmt_match(r, fmt))
 
-    def run(op=None, f=1.0, delta=0.0):
+    def run(op=None, f=1.0, delta=0.0, extra=()):
+        """extra: further (op, fmt, fixed cycles) terms applied in the same schedule (a combined row of several fixed
+        latencies, e.g. results/token_pass/toksched_1025/hbm_price.py)"""
         def g(r, dyn, L):
             c = cf(r, dyn, L)
-            return (c[0] * f + delta if op is not None and op_match(f"{r.unit}.{r.op}", op) else c[0]), c[1], c[2]
+            name = f"{r.unit}.{r.op}"
+            hit = op is not None and op_match(name, op) and fmt_match(r, fmt)
+            x = c[0] * f + delta if hit else c[0]
+            x += sum(d for o, fm, d in extra if op_match(name, o) and fmt_match(r, fm))
+            return x, c[1], c[2]
         return T.schedule(recs, pos, "S2", cost_fn=g)["total_cycles"]
     return run, count
 
@@ -227,7 +258,7 @@ def hbm_loss(run, count, op, ratio, base=None, delta=None):
 
 # ---------------------------------------------------------------------------------------------------------------
 def compute(design, *, match=None, op=None, price=None, measured=None, ratio=None, scale=False,
-            words_per_token=None, critical=True, workloads=None, node_delta=None, op_delta=None):
+            words_per_token=None, critical=True, workloads=None, node_delta=None, op_delta=None, op_fmt=None):
     """-> {workload: composition result} for one unit of one design"""
     spec = DESIGNS[design]
     out = {}
@@ -245,8 +276,9 @@ def compute(design, *, match=None, op=None, price=None, measured=None, ratio=Non
                 if len(spec["workloads"]) == 1 or workloads:
                     raise
         else:
-            run, count = hbm_schedule(name)
-            r = hbm_loss(run, count, op, ratio if ratio is not None else measured / price, delta=op_delta)
+            run, count = hbm_schedule(name, op_fmt)
+            r = hbm_loss(run, count, op, ratio if ratio is not None else (measured / price if op_delta is None else None),
+                         delta=op_delta)      # --op-delta: a fixed latency, --price may be 0 (unpriced transport)
             if r:
                 out[wl] = r
     if not out:
@@ -493,6 +525,9 @@ def main(argv=None):
         p.add_argument("--node-delta", type=float, help="ROM: cycles added to every matched node")
         p.add_argument("--op-delta", type=float, help="HBM: cycles added to every record of --op (a fixed latency per "
                                                       "record; --price / --measured then describe the unit itself)")
+        p.add_argument("--op-fmt", action="append", default=[], metavar="[OP:]OPERAND=FMT[/FMT]",
+                       help="HBM: only records of --op whose operand descriptor has one of these formats (e.g. B=BF16; "
+                            "SM.MATVEC:B=BF16/INT8 filters only the SM.MATVEC records of an 'SM.MATVEC|ATT.*' --op)")
         p.add_argument("--group", help="rows that measure the same composition op share a group")
         p.add_argument("--words-per-token", type=float, help="rate class: price / measured are words a cycle")
         p.add_argument("--off-critical", action="store_true")
@@ -524,7 +559,8 @@ def main(argv=None):
             rate = a.words_per_token is not None
             per = compute(a.design, match=a.match, op=a.op, price=a.price, measured=a.measured, scale=a.scale,
                           words_per_token=a.words_per_token, critical=not a.off_critical, workloads=a.workload,
-                          node_delta=a.node_delta, op_delta=a.op_delta)
+                          node_delta=a.node_delta, op_delta=a.op_delta,
+                          op_fmt=parse_fmt(a.op_fmt))
             row = make_row(a.design, a.unit, a.price, a.measured, per, a.evidence, a.grade, a.note, rate,
                            unit_of_measure="words/cycle" if rate else "cycles", group=a.group)
             if a.cmd == "propose":

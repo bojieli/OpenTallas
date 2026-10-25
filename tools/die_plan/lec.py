@@ -32,6 +32,9 @@ equivalence of every next-state / output function) plus register correspondence.
 Kept registers (fail-closed): every register bit the RTL declares kept ((* keep *) or a flop in a keep_hierarchy
         cell: pin flops, placement replicas) must be a flop of its own name in the netlist; one merged into its twin
         (opt_merge) passes correspondence, so it is counted here: KEEP FAIL (exit 1, the kit stops like NOT EQUIVALENT).
+Hints (KIT/lec_hints.json or --hints; PATH-KV-PC4 10-25): untrusted register correspondences ('user match') for twins
+        the signature search cannot find (rare-event bits, frontend array layouts); every hint is proved by the same
+        induction and dropped if it fails, never a waiver (apply_hints).
 Verdict (DIR/lec.json; DIR defaults to KITDIR/lec):
   EQUIVALENT      every compare point proved (unmatched registers, if any, were free inputs: unobservable);
   NOT EQUIVALENT  >= 1 compare point differs and its cone sees only matched / proved key points and RTL registers the
@@ -994,22 +997,28 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
         st[m.onames[i]] = "differs" if lit_val(val, mask, m.outs[i]) else "undecided"
     left = [i for i in left if st[m.onames[i]] == "undecided"]
     pending = left[:single_cap]
-    if pending:
+    # one cone at a time: naive SAT (x10 the sweep's conflicts), then what it leaves UNDECIDED (a solver limit, not a
+    # difference) by SAT sweeping inside the cone (&cec -m without -n, x100 / x1000): wide XOR trees (ECC encoders)
+    # that naive SAT cannot finish collapse there (PATH-KV-PC4 10-25: 77 kvs_pc ECC / write-queue cones undecided at
+    # 1M naive conflicts, each proved by &cec -m in ~1 s).  Only what no pass answers stays undecided.
+    for opt, factor in (("-n -m", 10), ("-m", 100), ("-m", 1000)):
+        if not pending:
+            break
         from concurrent.futures import ThreadPoolExecutor
         jobs = max(1, PROVE_JOBS)
         size = len(pending) if jobs == 1 else max(1, (len(pending) + jobs * 4 - 1) // (jobs * 4))
         batches = [pending[i:i+size] for i in range(0, len(pending), size)]
-        def one_batch(ids):
-            script = [f"&r {swept}; &cone -O {i}; &cec -n -m -C {conflicts * 10}" for i in ids]
+        def one_batch(ids, factor=factor, opt=opt):
+            script = [f"&r {swept}; &cone -O {i}; &cec {opt} -C {conflicts * factor}" for i in ids]
             # one command per line in a script file (abc -f): a long batch passed as one -c argument exceeds the
             # kernel per-argument limit (MAX_ARG_STRLEN 128 KiB; OSError E2BIG on the 48k-output kvs_pc miters)
-            sf = work / f"{tag}_cones_{ids[0]}_{ids[-1]}.abc"
+            sf = work / f"{tag}_cones_{ids[0]}_{ids[-1]}_x{factor}{opt.replace(' ', '')}.abc"
             sf.write_text("\n".join(script) + "\n")
             r = subprocess.run([abc, "-f", str(sf)], capture_output=True, text=True)
             return ids, r.stdout + r.stderr
         with ThreadPoolExecutor(max_workers=jobs) as ex:
             for ids, t in ex.map(one_batch, batches):
-                log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]}\n{t}")
+                log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]} (&cec {opt} conflicts x{factor})\n{t}")
                 # Naive SAT reports one aggregate line for a nontrivial cone; trivial
                 # cones use the CEC sentence. Keep UNDECIDED in sequence: dropping it
                 # would shift a later proof onto the wrong output.
@@ -1025,6 +1034,7 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
                                    "differs" if (u, sat, undec) == (0, 1, 0) else "undecided")
                 for i, status in zip(ids, res):
                     st[m.onames[i]] = status
+        pending = [i for i in pending if st[m.onames[i]] == "undecided"]
     unknown = [i for i, n in enumerate(m.onames) if st[n] == "undecided"]
     if unknown:
         st.update(xor_sat(m, unknown, log))
@@ -1248,7 +1258,15 @@ def anchored(L):
     constant, else the whole cohort stays a free input and every cone it feeds 'differs' (kv3_astk / kv3_pv_pair
     adders, 2026-10-25)."""
     ms = set(L.matched)
-    return {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and (sd != "gold" or h[2] in ms)}
+    return {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and h[1] != "gate" and (sd != "gold" or h[2] in ms)}
+
+
+def bound_keys(L):
+    """registers that are not free for new pairing: those with a hypothesis, and the partners of cross-side / matched
+    relations.  A gate-only REPRESENTATIVE of a gate-side replica cohort (g_ft[1..3].u_rsd.q#t[135] == g_ft[0]'s) is
+    still free: it needs a gold partner or a constant of its own, else the whole cohort stays a free input (KV head
+    e0/e2/e6: the constant-0 relay bit qb_send[5] that gold drops, kept by gate keep -> 4..39 points UNPROVEN)."""
+    return {k for (sd, k) in L.hyp} | {h[2] for h in L.hyp.values() if h[0] == "eq" and h[1] != "gate"}
 def register_alias_proposals(L, log):
     """Propose register aliases across frontends, including a cut's output q
     versus its internal g_r.r register. Every relation is proved/refined."""
@@ -1366,6 +1384,123 @@ def fsm_proposals(L, log, words=2, max_bits=4):
         L.cons.append(("gold", list(gk), [[(c >> b) & 1 for b in range(n)] for c in sorted(pi)]))
         log.append(f"fsm: {base} recoded one-hot: " + ", ".join(f"{c}->{tk[j]}" for c, j in sorted(pi.items())))
     return n_new
+
+
+def seq_traces(L, log, words=4, warm=2, cycles=48, seed=2718):
+    """sequential random simulation of gold and gate from the all-zero register state (every keyed register at
+    logical 0 on both sides, as LEC compares from equal states) with the SAME random values on every matched primary
+    input / black-box output each cycle -> per register key (side, key): (trace hash, complemented-trace hash) or
+    None when constant.  Register correspondence candidates independent of names and of the current hypotheses:
+    a re-laid / cross-instance-named gate flop (hcore g_ske skew lines: yosys kept ANOTHER instance's name on a
+    merged delay-line flop; HBM tkm leaf: slang X[w][flat] vs read_verilog SX[p][b]) has the trace of its RTL
+    register.  Candidates only: every pair is proved by the inductive correspondence like any other."""
+    import random
+    W = 64 * words
+    mask = (1 << W) - 1
+    rnd = random.Random(seed)
+    shared = sorted(k for k in L.matched if not k.startswith("ff:"))
+    out = {}
+    sides = (("gold", L.gold, L.gp), ("gate", L.gate, L.tp))
+    states = []
+    for side, d, P in sides:
+        st = [0] * d["L"]
+        I = d["I"]
+        for k, lit in P.items():
+            if k.startswith("ff:") and lit >> 1 > I:
+                st[(lit >> 1) - I - 1] = mask if lit & 1 else 0
+        states.append(st)
+    acc = {}
+    for cyc in range(warm + cycles):
+        sv = {k: rnd.getrandbits(W) for k in shared}
+        for si, (side, d, P) in enumerate(sides):
+            I, NL, a = d["I"], d["L"], d["ands"]
+            r2 = random.Random(seed * 7919 + cyc * 2 + si)
+            val = [0] * (1 + I + NL + d["A"])
+            for v in range(1, I + 1):
+                val[v] = r2.getrandbits(W)
+            st = states[si]
+            for i in range(NL):
+                val[I + 1 + i] = st[i]
+            for k in shared:
+                lit = P.get(k)
+                if lit is not None:
+                    val[lit >> 1] = sv[k] ^ (mask if lit & 1 else 0)
+            base = I + NL + 1
+            for j in range(d["A"]):
+                r0, r1 = a[2 * j], a[2 * j + 1]
+                val[base + j] = (val[r0 >> 1] ^ (mask if r0 & 1 else 0)) & (val[r1 >> 1] ^ (mask if r1 & 1 else 0))
+            if cyc >= warm:
+                for k, lit in P.items():
+                    if k.startswith("ff:"):
+                        v = val[lit >> 1] ^ (mask if lit & 1 else 0)
+                        h = acc.get((side, k))
+                        acc[(side, k)] = (hash((h[0], v)), hash((h[1], v ^ mask)), h[2] and v == 0,
+                                          h[3] and v == mask) if h else (hash(v), hash(v ^ mask), v == 0, v == mask)
+            states[si] = [val[l >> 1] ^ (mask if l & 1 else 0) for l in d["latches"]]
+    for key, (hp, hn, c0, c1) in acc.items():
+        out[key] = None if (c0 or c1) else (hp, hn)
+    log.append(f"sequential traces: {len(out)} registers, {sum(v is None for v in out.values())} constant, "
+               f"{warm}+{cycles} cycles x {W} lanes")
+    return out
+
+
+def trace_proposals(L, T, tried, log):
+    """pair still-unpaired registers whose sequential traces (seq_traces) are equal, either polarity: gold-only with
+    gate-only, gold-only with a matched register, gold-only with an earlier gold-only of the same trace (synthesis
+    merged both into one gate flop), gate-only with a matched / gold-only register.  At most 2 tries per pair,
+    nearest name first; the inductive proof decides.  -> number of hypotheses added."""
+    partnered = anchored(L)
+    bound = bound_keys(L)
+    canon = lambda t: (min(t), int(t[0] > t[1]))          # (canonical hash, polarity of this register)
+    pool_t, pool_m = collections.defaultdict(list), collections.defaultdict(list)
+    for k in L.tonly:
+        t = T.get(("gate", k))
+        if t and k.startswith("ff:") and ("gate", k) not in L.hyp and k not in bound:
+            c, p = canon(t)
+            pool_t[c].append((k, p))
+    for k in L.matched:
+        t = T.get(("gold", k))
+        if t and k.startswith("ff:") and T.get(("gate", k)) == t:
+            c, p = canon(t)
+            pool_m[c].append((k, p))
+    rep = {}                       # canonical trace -> (gold key whose value carries it, its polarity)
+    n = 0
+    for k in L.gonly:
+        t = T.get(("gold", k))
+        if not t or not k.startswith("ff:") or ("gold", k) in L.hyp or k in partnered:
+            continue
+        c, p = canon(t)
+        hit = None
+        for g, q in sorted(pool_t.get(c, []), key=lambda e: name_dist(k, e[0])):
+            if tried[("tr", "gate", g, k)] < 2:
+                hit = ("gate", g, ("eq", "gold", k, p ^ q))
+                pool_t[c].remove((g, q))
+                rep.setdefault(c, (k, p))
+                break
+        if not hit:
+            for g, q in sorted(pool_m.get(c, []), key=lambda e: name_dist(k, e[0])):
+                if tried[("tr", "gold", k, g)] < 2:
+                    hit = ("gold", k, ("eq", "gold", g, p ^ q))
+                    rep.setdefault(c, (g, q))
+                    break
+        if not hit and c in rep and rep[c][0] != k and tried[("tr", "gold", k, rep[c][0])] < 2:
+            hit = ("gold", k, ("eq", "gold", rep[c][0], p ^ rep[c][1]))
+        if not hit:
+            rep.setdefault(c, (k, p))
+            continue
+        tried[("tr",) + hit[:2] + (hit[2][2],)] += 1
+        L.hyp[hit[:2]] = hit[2]
+        n += 1
+    for c, ks in pool_t.items():
+        for g, q in ks:
+            tgt = rep.get(c) or next(iter(pool_m.get(c, [])), None)
+            if tgt and tried[("tr", "gate", g, tgt[0])] < 2:
+                tried[("tr", "gate", g, tgt[0])] += 1
+                L.hyp[("gate", g)] = ("eq", "gold", tgt[0], q ^ tgt[1])
+                n += 1
+    if n:
+        log.append(f"trace proposals: {n} register relations from equal sequential traces")
+    return n
 
 
 def drop_failed(L, bad):
@@ -1585,6 +1720,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     replica_proposals(L, log)
     register_alias_proposals(L, log)
     fsm_proposals(L, log)
+    traces = None                      # sequential traces (seq_traces), computed on first need
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
     # refine-only rounds drop at least one hypothesis each, so they always end; past rounds + 40 they go on
     # while the time budget lasts (s81 hd_tile: false copies along 60-stage skew delay lines peel one stage
@@ -1600,7 +1736,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 m, kind = L.build(with_compare=False, with_hyp=False)
                 val, mask = m.simulate(words, seed=7 * rnd + it + 1)
                 sv = lambda side, k: lit_val(val, mask, L.dlit[(side, k)])
-                bound = {k for (sd, k), h in L.hyp.items()} | {h[2] for h in L.hyp.values() if h[0] == "eq"}
+                bound = bound_keys(L)
                 gbound = {k for (sd, k), h in L.hyp.items()} | anchored(L)
                 tsig = {}
                 for k in L.tonly:
@@ -1692,6 +1828,12 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                             L.hyp[("gate", k)] = ("eq", "gold", c, inv)
                             new += 1
                             break
+                # registers no next-state signature places (re-laid / cross-instance-named delay-line flops, slang
+                # vs read_verilog array layouts): pair them by their sequential traces from the zero state
+                if not new:
+                    if traces is None:
+                        traces = seq_traces(L, log)
+                    new += trace_proposals(L, traces, tried, log)
                 # self-holding registers (load-enable) depend on their own state, which differs by side: pair the
                 # unpaired ones by the signature of D with every unpaired register held at 0, and at 1
                 if not new:
@@ -1915,6 +2057,80 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     log.append("correspondence: refinement did not converge; all unmatched flops free")
 
 
+def apply_hints(L, hints, work, conflicts, log, rounds=40):
+    """Untrusted correspondence hints (the commercial 'user match' / 'add mapped points'; PATH-KV-PC4 10-25):
+    [[side, key, ['eq', oside, okey, inv] | ['const', c]], ...] for registers the signature search cannot pair
+    (rare-event twins such as an opcode bit that only a refresh sets, which random simulation never excites;
+    unpacked arrays whose layout differs between the two frontends).  A hint is never a waiver: hints override the
+    discovered hypothesis of the same register, then the whole set is proved by the same simultaneous induction as
+    every other hypothesis and every failing one is dropped until the set is inductive (a wrong hint only leaves its
+    register free; the compare points then fail or stay unproved).  Unnamed latches (no public wire on the Q net)
+    become side-only keys ff:__<side>_anon_<var> paired by a unique simulation signature, proved the same way.
+    -> dict(given, applied, skipped, anon, dropped, kept)."""
+    rec = dict(given=len(hints), applied=0, skipped=[], anon=0, dropped=[], kept=0)
+    keys = lambda sd: L.gp if sd in ("gold", "both") else L.tp
+    for e in hints:
+        try:
+            sd, k, h = e[0], e[1], tuple(e[2])
+            ok = (sd in ("gold", "gate", "both") and k.startswith("ff:") and "__" not in k and k in keys(sd)
+                  and (sd != "both" or k in L.matched) and
+                  ((h[0] == "const" and h[1] in (0, 1)) or
+                   (h[0] == "eq" and h[1] in ("gold", "gate") and h[3] in (0, 1) and "__" not in h[2]
+                    and h[2] in keys(h[1]))))
+        except (IndexError, TypeError, AttributeError):
+            ok = False
+        if not ok:
+            rec["skipped"].append(e)
+            continue
+        if h[0] == "eq" and k in L.matched and h[1] == "gold" and h[2] in L.gonly:
+            sd, k, h = "gold", h[2], ("eq", "gold", k, h[3])     # a gold-only twin points at the matched register
+        L.hyp[(sd, k)] = h
+        rec["applied"] += 1
+    anon = []
+    for side in ("gold", "gate"):
+        points, compare, only = (L.gp, L.gc, L.gonly) if side == "gold" else (L.tp, L.tc, L.tonly)
+        for lit, nxt in (L.ganon if side == "gold" else L.tanon):
+            k = f"ff:__{side}_anon_{lit >> 1}"
+            points[k], compare[k] = lit, nxt
+            only.append(k)
+            anon.append((side, k))
+    L.ganon, L.tanon = [], []
+    if anon:
+        m, _ = L.build(with_compare=False, with_hyp=False)
+        val, mask = m.simulate(32, seed=20261025)
+        sv = lambda sd, k: lit_val(val, mask, L.dlit[(sd, k)])
+        sigs = collections.defaultdict(set)
+        for sd, ks in (("gold", L.gp), ("gate", L.tp)):
+            for c in ks:
+                if c.startswith("ff:") and (sd, c) not in L.hyp and "__" not in c:
+                    s = sv(sd, c)
+                    sigs[s].add((sd if c not in L.matched else "gold", c, 0))
+                    sigs[s ^ mask].add((sd if c not in L.matched else "gold", c, 1))
+        for side, k in anon:
+            s = sv(side, k)
+            hits = sigs.get(s, set())
+            if s not in (0, mask) and len(hits) == 1:
+                osd, c, inv = next(iter(hits))
+                L.hyp[(side, k)] = ("eq", osd, c, inv)
+                rec["anon"] += 1
+    for rnd in range(rounds):
+        m, _ = L.build(with_compare=False, with_hyp=True)
+        st = prove(m, work, conflicts, log, tag=f"hint{rnd}")
+        bad = [n for n, s in st.items() if s != "proved"]
+        log.append(f"hint refinement round {rnd}: {len(st)} hypotheses, {len(bad)} failed {bad[:6]}")
+        if not bad:
+            rec["kept"] = len(L.hyp)
+            return rec
+        for n in bad:
+            _, side, k = n.split(":", 2)
+            if L.hyp.pop(("both" if side == "bothg" else side, k), None) is not None:
+                rec["dropped"].append(k)
+    L.hyp.clear()
+    rec["kept"] = 0
+    log.append("hint refinement did not converge; all unmatched flops free")
+    return rec
+
+
 # ---------------------------------------------------------------------------------------------- driver
 def run_yosys(script, path, log):
     Path(path).write_text(script)
@@ -1928,7 +2144,7 @@ def run_yosys(script, path, log):
     return r
 
 
-def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False):
+def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_map=None, reuse=False, hints=None):
     kit = str(Path(kit).resolve())
     out = Path(out or Path(kit) / "lec")
     out.mkdir(parents=True, exist_ok=True)
@@ -1994,6 +2210,15 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         L = Lec(read_aig(out / "gold.aig"), read_map(out / "gold.map"),
                 read_aig(out / "gate.aig"), read_map(out / "gate.map"), port_map)
         correspond(L, out, conflicts, log)
+        hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
+        if hf.is_file():
+            import hashlib
+            rec["hints"] = dict(file=str(hf), sha256=hashlib.sha256(hf.read_bytes()).hexdigest())
+            rec["hints"].update(apply_hints(L, json.loads(hf.read_text()), out, conflicts, log))
+            rec["hints"]["skipped"] = len(rec["hints"]["skipped"])
+            rec["hints"]["dropped"] = dict(n=len(rec["hints"]["dropped"]), first=rec["hints"]["dropped"][:40])
+        elif hints:
+            raise LecError(f"hints file {hints} not found")
         (out / "hyp.json").write_text(json.dumps([[sd, k, list(h)] for (sd, k), h in sorted(L.hyp.items())]) + "\n")
         m, kind = L.build(with_compare=True, with_hyp=True)
         rec["t_corr_s"] = round(time.time() - t1, 1)
@@ -2119,6 +2344,9 @@ def via_docker(args, image, mem):
         inner += ["--reuse"]
     if args.gold_frontend:
         inner += ["--gold-frontend", args.gold_frontend]
+    if args.hints:
+        shutil.copyfile(args.hints, Path(out) / "hints.json")
+        inner += ["--hints", "/lecout/hints.json"]
     if args.port_map:
         shutil.copyfile(args.port_map, Path(out) / "port_map.json")
         inner += ["--port-map", "/lecout/port_map.json"]
@@ -2136,6 +2364,8 @@ def main(argv=None):
     ap.add_argument("--gold-frontend", choices=("verilog", "slang"),
                     help="default: the frontend synthesis did NOT use")
     ap.add_argument("--port-map", help="JSON {gate port bit: gold port bit} (renamed packed buses)")
+    ap.add_argument("--hints", help="untrusted correspondence hints JSON, each proved by induction (default: "
+                    "KIT/lec_hints.json when present)")
     ap.add_argument("--conflicts", type=int, default=1000)
     ap.add_argument("--reuse", action="store_true", help="reuse OUT/gold|gate.aig from an earlier run (debug)")
     ap.add_argument("--image", default=None, help="run inside this docker image (default when not in the ORFS image)")
@@ -2151,7 +2381,7 @@ def main(argv=None):
                   f"({r.get('t_total_s')} s)")
         return rc
     pm = json.loads(Path(a.port_map).read_text()) if a.port_map else None
-    r = check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse)
+    r = check(a.kit, a.netlist, a.out, a.gold_frontend, a.conflicts, pm, a.reuse, a.hints)
     c = r.get("counts", {})
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "

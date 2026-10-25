@@ -17476,3 +17476,16 @@ def qwen_release_programme_store_candidate_model():
     """Finite SU/MU programme storage; physical/native gates remain mandatory."""
     from uarch_model_qwen_programme_store import model
     return model()
+
+
+def qwen_station_ctl_width_1309_model():
+    """Exact post-specialization width repair; boundary FF price, no new stages."""
+    return dict(schema='opentallas.qwen-station-ctl-width.v1', replicas=12,
+                bits_per_lane_before=267, bits_per_lane_after=268,
+                additional_boundary_FF_bits=24, additional_feedthrough_FF_bits=0,
+                data_cycles_added=0, token_cycles_added=0,
+                existing_plan_cycles=2, bound_stages=2,
+                source_cell_body_um2_per_FF=.37908,
+                additional_cell_body_um2=24*.37908,
+                area_scope='ASAP7 unified-model FF body estimate; clock/reset/buffer overhead and final route remain measured gates',
+                receipt='physical/die_plan/qwen_compute/inputs/st_a_ctl_width_1309.json')

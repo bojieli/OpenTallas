@@ -38,6 +38,13 @@ def geometry_failures(raw, check_channels=False):
         def inset(p):
             x, y, face = p
             return {'W': (x+1, y), 'E': (x-1, y), 'S': (x, y+1), 'N': (x, y-1)}[face]
+        band = {}
+        for slot in ty['ft_slots']:
+            if ft_sites.m7_over_core(slot,tn,ty):
+                import numpy as np
+                xa = [pins[(slot['name']+s_, i)][0] for s_ in ('_i', '_o') for i in range(slot['width']+1)
+                      if (slot['name']+s_, i) in pins]
+                band[slot['name']] = (min(xa)-ft_sites.M7_BAND_PAD, max(xa)+ft_sites.M7_BAND_PAD)
         for slot in ty['ft_slots']:
             name = slot['name']; k = int(slot.get('stations', 1)); worst = 0.; inside = 0; crossing = 0
             if 'bit_sites_um' in slot and len(slot['bit_sites_um']) != k-1:
@@ -61,7 +68,11 @@ def geometry_failures(raw, check_channels=False):
                     points.append(point)
                 points.append(pb)
                 worst = max(worst, *(abs(p[0]-q[0])+abs(p[1]-q[1]) for p,q in zip(points, points[1:])))
-                if check_channels and channel_boxes:
+                if check_channels and channel_boxes and ft_sites.m7_over_core(slot,tn,ty):
+                    # PATH-QC-PLAN-D3: M7 over-core straight transit: legs stay inside the ribbon band (V over cores)
+                    blo, bhi = band[name]
+                    crossing += sum(not (blo-40.0 <= p[0] <= bhi+40.0) for p in points)
+                elif check_channels and channel_boxes:
                     crossing += sum(not ft_sites.l_route_clear(p,[q],channel_boxes)[0] for p,q in zip(points,points[1:]))
             if worst > limit+1e-6 or inside or crossing:
                 failures.append(dict(type=tn, slot=name, worst_um=round(worst,4), stations_in_core=inside,
