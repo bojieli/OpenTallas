@@ -173,20 +173,6 @@ SCHEMA = {
                         "additionalProperties": False,
                         "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos, "offset_um": _nonneg,
                                        "nets": {"type": "array", "items": _name}}}},
-                    # OWNER DECISION 7 (2026-10-24): separate supplies (e.g. the SerDes PHY supply) with their own
-                    # dedicated bump rows over the partitions they feed (the PHY / SerDes windows), isolated from the
-                    # core VDD grid; check.py check_pg_supplies validates parts and warns on SerDes windows left on core VDD
-                    "supplies": {"type": "array", "items": {
-                        "type": "object", "required": ["name", "nets", "parts", "bumps"], "additionalProperties": False,
-                        "properties": {"name": _name, "nets": {"type": "array", "items": _name, "minItems": 1},
-                                       "parts": {"type": "array", "items": _name, "minItems": 1},
-                                       "bumps": {"type": "object", "required": ["rows", "pitch_um"],
-                                                 "additionalProperties": False,
-                                                 "properties": {"rows": {"type": "integer", "minimum": 1},
-                                                                "pitch_um": _pos,
-                                                                "over": {"enum": ["io_window", "partition"]},
-                                                                "note": {"type": "string"}}},
-                                       "basis": {"type": "string"}, "note": {"type": "string"}}}},
                     # OWNER DECISION 7 (2026-10-24, IR over SerDes windows): a separate PHY supply per window with its own
                     # dense die-layer straps and dedicated power/ground bump rows over the macro (die_io.check_pg_domains)
                     "domains": {"type": "array", "items": {
@@ -251,8 +237,19 @@ SCHEMA = {
                         # grid PLUS sink-anchored taps (taps.py k-medians of face registers + ft stations) ADDED
                         # for face-register clusters; sink taps never replace the grid (CP1 r8: interior logic
                         # 4.5-5.7k sinks piled on one tap, spread 133 ps)
-                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks"]}, "tap_radius_um": _pos,
+                        # "density" (OWNER decision 5, 10-24; opt-in): NO grid -- taps placed by sink density
+                        # (taps.density_taps: <= tap_target_sinks per tap within tap_radius_um, none on a hard
+                        # core); sinks = face / ft registers + sink_sites_um + sink_bins_file (internal inventory)
+                        "tap_mode": {"enum": ["grid", "grid+sinks", "sinks", "density"]}, "tap_radius_um": _pos,
                         "tap_max_sinks": {"type": "integer", "minimum": 1},
+                        "tap_target_sinks": {"type": "integer", "minimum": 1},
+                        "tap_min_sinks": {"type": "integer", "minimum": 1},
+                        "sink_sites_um": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
+                                                                     "items": {"type": "number"}}},
+                        "sink_bins_file": {"type": "string"},
+                        # density kits: tap trees re-balanced on GRT RC after global route ("grt", POST_GLOBAL_ROUTE
+                        # tap_balance.tcl) or measured only ("grt_report", default for density); "placement" = off
+                        "tap_balance_rc": {"enum": ["placement", "grt_report", "grt"]},
                         # CP2: "early" turns the kind 'core' taps[] into kit clock ports clk_c<k> (core_taps()): the
                         # core's clock pins hang on their own tap, which the spine delivers (insertion_ps - common
                         # latency) early, so the core's internal flops see the common latency.  Absent: taps[] are
@@ -284,7 +281,9 @@ SCHEMA = {
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
-                        "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2}}},
+                        "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
+                        # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
+                        "depth": {"type": "integer", "minimum": 1}}},
                     "contents": {"type": "array", "items": {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
@@ -390,7 +389,13 @@ SCHEMA = {
             # synchroniser per die region, then synchronous relay flops every <= relay_um (405) with equal depth to every
             # clock tap; partitions take arst_n as a SYNCHRONOUS input (pin register + equal-depth tree, part_depth K).
             # "counted" = legacy per-tap asynchronous synchronisers (does not meet the rule; G0 warns).
-            "release": {"enum": ["counted", "pipelined"]}, "relay_um": _pos,
+            # OWNER DECISION 13 (2026-10-24, supersedes equal depth): "wavefront" = ONE root synchroniser per die, then
+            # every partition registers its incoming reset (arst_n) and re-drives registered rst_o_<k> outs to its
+            # neighbours; per-partition release cycles published by reset_tree.py offsets.  hop_um = die hop reach
+            # (parent rst_o relay -> child u_rst_in, default relay_um); in_sites {type: [x, y]} overrides the solver's
+            # IN pin; root_part names the root partition (default: the one at the die rst_n pin).
+            "release": {"enum": ["counted", "pipelined", "wavefront"]}, "relay_um": _pos, "hop_um": _pos,
+            "in_sites": {"type": "object", "additionalProperties": _xy}, "root_part": _name,
             "part_depth": {"type": "integer", "minimum": 1},
             "regions": {"type": "array", "items": {
                 "type": "object", "required": ["name"], "additionalProperties": False,
@@ -834,7 +839,7 @@ def tap_pitch(P, tn):
 def sink_tap_mode(t):
     """True when the type adds sink-anchored taps to its grid (clock.tap_mode "grid+sinks", or the KV-P6 alias
     "sinks", which since the CP1 r8 RULING no longer replaces the grid)."""
-    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks")
+    return t.get("clock", {}).get("tap_mode") in ("grid+sinks", "sinks", "density")
 
 
 def tap_grid(P, tn):
@@ -846,6 +851,9 @@ def tap_grid(P, tn):
     only ADDS sink-anchored taps (taps.py) for face-register clusters after the grid taps, numbered on from the grid;
     a sink tap within taps.SEP_UM of a grid tap is dropped (same spine drop)."""
     t = P.types[tn]
+    if t.get("clock", {}).get("tap_mode") == "density":
+        import taps
+        return [(n, x, y) for n, x, y, _, _ in taps.density_taps(P, tn)]
     out = _grid_taps(P, tn)
     if sink_tap_mode(t):
         import taps

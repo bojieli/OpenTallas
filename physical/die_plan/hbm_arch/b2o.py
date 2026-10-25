@@ -1008,6 +1008,8 @@ def place_contents(plan, out, types, log):
     rows, fails = [], []
     chosen = {}
     for tn in sorted(types):
+        if os.environ.get("B2O_PROGRESS"):
+            print(f"place_contents {tn}", flush=True)
         t = T[tn]
         if t.get("hard"):
             continue
@@ -1037,6 +1039,7 @@ def place_contents(plan, out, types, log):
                 pos = {k: (math.floor((W - old[k][0] - w) / LAT + 1e-9) * LAT, old[k][1]) for k, w, h in items}
             else:
                 pos = {k: (old[k][0], old[k][1]) for k, w, h in items}
+            move_digital_io(items, pos, t)
             assert all(0 <= pos[k][0] and pos[k][0] + w <= W + 1e-6 and pos[k][1] + h <= H + 1e-6 for k, w, h in items), tn
         else:
             bt = CK._bus_targets(P, tn)
@@ -1230,6 +1233,8 @@ def internal_stations(plan, out, types, log):
     n_e = n_r = 0
     fails = []
     for tn in sorted(types):
+        if os.environ.get("B2O_PROGRESS"):
+            print(f"place_contents {tn}", flush=True)
         t = T[tn]
         if t.get("hard") or not t.get("hard_cores"):
             continue
@@ -1349,6 +1354,59 @@ def fix_cross_hops(plan, log, lim=0.9 * 405.0):
     return added
 
 
+# ------------------------------------------------------------------------------------------------ PHY keepouts
+def phy_keepouts(plan, log):
+    """All replicated instances share the union of their type-frame PHY-window reservations."""
+    P = S.Plan(plan)
+    unions = defaultdict(set)
+    boxes = [io["rect_um"] for io in plan["die"].get("io", [])]
+    boxes += [d["rect_um"] for d in plan["die"].get("pg", {}).get("domains", [])]
+    for pn, part in P.parts.items():
+        x0, y0, x1, y1 = P.rect(pn)
+        for a, b, c, d in boxes:
+            a, b, c, d = max(a, x0), max(b, y0), min(c, x1), min(d, y1)
+            if a >= c or b >= d:
+                continue
+            corners = [P.to_type(pn, (x, y)) for x in (a, c) for y in (b, d)]
+            box = (min(x for x, y in corners), min(y for x, y in corners),
+                   max(x for x, y in corners), max(y for x, y in corners))
+            unions[part["type"]].add(tuple(round(v, 4) for v in box))
+    for tn, boxes in unions.items():
+        plan["partition_types"][tn].setdefault("clock", {})["keepouts_um"] = [list(b) for b in sorted(boxes)]
+    log.append(f"clock keepouts: PHY-window union in {len(unions)} uniform partition types")
+
+
+def move_digital_io(items, pos, t):
+    """Keep real PHY macros fixed; place digital endpoint cores outside their analog reservations."""
+    W, H = t["outline_um"]
+    ko = t.get("clock", {}).get("keepouts_um", [])
+    dims = {k: (w, h) for k, w, h in items}
+    analog = {h["inst"] for h in t.get("hard_cores", []) if "pdie_serdes" in h.get("module", "")}
+    done = {k: pos[k] for k in analog}
+    def overlap(a, b):
+        return a[0] < b[2] - 1e-6 and b[0] < a[2] - 1e-6 and a[1] < b[3] - 1e-6 and b[1] < a[3] - 1e-6
+    for k, w, h in sorted(items, key=lambda q: (q[0] not in analog, q[0])):
+        if k in analog:
+            continue
+        ox, oy = pos[k]
+        blocks = list(ko) + [(x - LAT, y - LAT, x + dims[j][0] + LAT, y + dims[j][1] + LAT)
+                             for j, (x, y) in done.items()]
+        def legal(x, y):
+            return LAT <= x and x + w <= W - LAT + 1e-6 and LAT <= y and y + h <= H - LAT + 1e-6 and \
+                not any(overlap((x, y, x + w, y + h), b) for b in blocks)
+        if not legal(ox, oy):
+            cands = [(i * LAT, j * LAT) for i in range(1, int((W - w) / LAT))
+                     for j in range(1, int((H - h) / LAT)) if legal(i * LAT, j * LAT)]
+            if not cands:
+                raise ValueError(f"digital endpoint {t['module']}.{k} cannot fit outside PHY keepout")
+            pos[k] = min(cands, key=lambda q: (abs(q[0] - ox) + abs(q[1] - oy), q))
+        done[k] = pos[k]
+
+
+# ------------------------------------------------------------------------------------------------ native core shapes
+from native_core_shapes import native_core_pins
+
+
 # ------------------------------------------------------------------------------------------------ main
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -1369,6 +1427,7 @@ def main(argv=None):
     base = json.loads((src / "die_plan.json").read_text())
     FP = json.loads(Path(a.floorplan).read_text())
     log = []
+    native_core_pins(plan, out, log)
     plan["die"]["name"] = "hbm_arch_B2o"
     plan["die"]["label"] = plan["die"]["label"].replace("B2n = ", "B2o = B2n re-floorplanned (compact SU rows, hub "
                                                         "spine abutting root); B2n = ", 1)
@@ -1378,8 +1437,11 @@ def main(argv=None):
     if cache and Path(cache).exists():
         plan, log, widths, changed, we, wt, worst = pickle.loads(Path(cache).read_bytes())
     else:
+        if os.environ.get("B2O_PROGRESS"): print("layout", flush=True)
         rect, newH, dy, widths = layout(plan, FP, log)
         changed = apply_rects(plan, rect, newH, dy, log)
+        phy_keepouts(plan, log)
+        if os.environ.get("B2O_PROGRESS"): print("reroute", flush=True)
         routes, we, wt = reroute(plan, log)
         lane_delta(plan, log)
         B.rewindow(plan, log)

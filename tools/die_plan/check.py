@@ -675,6 +675,9 @@ def check_reset(P, R):
         R.warn("reset", w)
     if info is None:
         return dict(release=P.reset.get("release", "counted"))
+    if info.get("release") == "wavefront":     # OWNER DECISION 13: per-partition release offsets (reset_tree.py offsets)
+        return {k: info[k] for k in ("release", "sync_stages", "root", "hop_um", "relay_um", "max_release",
+                                     "max_die_hop_um", "unreachable")}
     return dict(release=info["release"], part_depth_K=info["part_depth_K"], relay_um=info["relay_um"],
                 regions=[{k: v for k, v in r.items() if k not in ("nonuniform_types", "busiest_hosts")}
                          for r in info["regions"]])
@@ -1178,30 +1181,6 @@ def check_die_io(P, R):
     return dict(windows=len(io), ports=len(die_ports), placed=len(seen))
 
 
-def check_pg_supplies(P, R):
-    """OWNER DECISION 7 (2026-10-24): IR over the SerDes windows -> a separate PHY supply with dedicated bump rows over
-    the windows.  die.pg.supplies[]: every listed partition exists and sits in one supply only; a die with SerDes
-    io windows whose partition is in no separate supply gets a WARN (still on the core VDD grid)."""
-    sup = P.die.get("pg", {}).get("supplies", [])
-    owner, names = {}, set()
-    for s_ in sup:
-        if s_["name"] in names:
-            R.err("pg_supply", f"supply {s_['name']} declared twice")
-        names.add(s_["name"])
-        for pn in s_["parts"]:
-            if pn not in P.parts:
-                R.err("pg_supply", f"supply {s_['name']}: unknown partition {pn}")
-            elif pn in owner:
-                R.err("pg_supply", f"partition {pn} in two supplies ({owner[pn]}, {s_['name']})")
-            owner.setdefault(pn, s_["name"])
-    serdes = sorted({w["part"] for w in P.die.get("io") or [] if w.get("iface") == "serdes"})
-    bare = [pn for pn in serdes if pn not in owner]
-    if bare:
-        R.warn("pg_supply", f"{len(bare)} SerDes io partitions on the core VDD grid (no separate PHY supply + bump "
-               f"rows, OWNER DECISION 7): {', '.join(bare[:8])}{' ...' if len(bare) > 8 else ''}")
-    return dict(supplies=len(sup), parts=len(owner), serdes=len(serdes), serdes_unsupplied=len(bare))
-
-
 def check_seams(P, R):
     """Seam-net invariant (COORD 10-23, OpenROAD abutment semantics): every inter-partition port bit is ONE 2-pin net,
     boundary flop to boundary flop -- one out bus (src boundary flop or ft station) to one in bus (dst boundary flop or
@@ -1341,7 +1320,6 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["reset"] = check_reset(P, R)
     summ["seams"] = check_seams(P, R)
     summ["die_io"] = check_die_io(P, R)
-    summ["pg_supplies"] = check_pg_supplies(P, R)
     # PLAN-TOOL5 cross-die G0C rules (COORD DIE-PLAN VISUAL REVIEW 10-23 (a)-(e))
     import die_io
     import xdie
