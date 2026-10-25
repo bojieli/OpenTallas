@@ -18,6 +18,9 @@ def run(*cmd, cwd=None):
 
 def age(path, hours):
     t = time.time() - hours * 3600
+    for lg in Path(path).glob("logs/HEAD"):  # a worktree admin dir: back-date the reflog entries too
+        import re
+        lg.write_text(re.sub(r"> \d{9,} ", "> %d " % int(t), lg.read_text()))
     for d, dirs, files in os.walk(path):
         for n in dirs + files:
             os.utime(os.path.join(d, n), (t, t), follow_symlinks=False)
@@ -179,6 +182,16 @@ class Reaper(unittest.TestCase):
         txt = next((self.t / "rescue").glob("*.patch")).read_text()
         self.assertIn("deleted file", txt)
         self.assertNotIn("x = 1", txt)
+
+    def test_reflog_rewrite_by_gc_does_not_count_but_new_entry_does(self):
+        p = self.wt("gc", "b15")
+        admin = self.repo / ".git" / "worktrees" / "gc"
+        os.utime(admin / "logs" / "HEAD")  # what `reflog expire --all` does to every worktree
+        self.assertIsNone(R.recently_modified(str(p), str(admin), 2))
+        with (admin / "logs" / "HEAD").open("a") as f:
+            f.write("%s %s t <t@t> %d -0700\tcommit: x\n" % ("0" * 40, "1" * 40, int(time.time())))
+        os.utime(admin / "logs" / "HEAD", (time.time() - 9000, time.time() - 9000))
+        self.assertIn("reflog", R.recently_modified(str(p), str(admin), 2))
 
     def test_main_worktree_and_hub_protected(self):
         self.assertTrue(R.protected(str(self.repo), "", str(self.repo / ".git"), ()))

@@ -9,7 +9,8 @@ Runs per host from a systemd --user timer (every 30 min).  A worktree is removed
      `sudo -n` for other users' processes when allowed), no docker container mounts it or a specific (non-generic) ancestor of it, no systemd --user unit
      (ot-heavy oth-* scopes name their command) and no ot-run spill_pending record names it;
   3. idle: no file or directory in the tree modified in the last --idle-h hours (find -mmin, bounded by a timeout:
-     a timeout counts as busy), and the worktree's git admin files (HEAD, index, logs/HEAD) are as old;
+     a timeout counts as busy), and the worktree's git admin HEAD/index mtimes and its last reflog entry are as old
+     (not the logs/HEAD mtime: auto gc rewrites every reflog);
   4. clean: `git status --porcelain` is empty, ignoring __pycache__ / *.pyc (then `worktree remove --force`), and
      at most --ignored-max-mb (100 MB) of gitignored non-cache data (build/, runs/ ... may hold lane results);
   5. pushed: `git branch -r --contains HEAD` is non-empty.
@@ -203,15 +204,36 @@ def protected(wt, admin, common, extra=()):
     return None
 
 
+def last_reflog_time(path):
+    """unix time of the last reflog entry (None if absent/unparsable)"""
+    try:
+        with open(path, "rb") as f:
+            f.seek(0, 2)
+            f.seek(max(0, f.tell() - 8192))
+            lines = [l for l in f.read().decode(errors="replace").splitlines() if l.strip()]
+    except OSError:
+        return None
+    for l in reversed(lines):
+        m = re.search(r"> (\d{9,}) [+-]\d{4}", l.split("\t")[0])
+        if m:
+            return int(m.group(1))
+    return None
+
+
 def recently_modified(wt, admin, hours, timeout=900):
     """None if idle, else a reason string (a timeout counts as busy)."""
     cutoff = time.time() - hours * 3600
-    for f in ("HEAD", "index", "logs/HEAD"):
+    for f in ("HEAD", "index"):
         try:
             if os.stat(os.path.join(admin, f)).st_mtime > cutoff:
                 return f"git admin {f} modified < {hours} h"
         except OSError:
             pass
+    # logs/HEAD: use the time of its LAST ENTRY, not its mtime -- auto gc's `reflog expire --all` rewrites every
+    # worktree's logs/HEAD of the shared repo at once (epyc1 10-25 08:08), which would make every tree look busy
+    t = last_reflog_time(os.path.join(admin, "logs/HEAD"))
+    if t is not None and t > cutoff:
+        return f"git reflog entry < {hours} h"
     r = sh(["find", wt, "-xdev", "-mmin", f"-{int(hours * 60)}", "-print", "-quit"], timeout=timeout)
     if r.returncode == 124:
         return "find timeout (counted busy)"
