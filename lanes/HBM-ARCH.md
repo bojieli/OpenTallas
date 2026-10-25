@@ -355,3 +355,6 @@ CODEX took over IDX collection/integration on codex/hbm-bind-idx-r2-1024@8d607ca
 - 30 memory-guard FAILs (pgslice exp lanes) pushed to route + signoff;
 - bankq_ft routes after GEOM PASS;
 - in-flight finish runs carried to signoff.
+
+## HBM-PLAN
+- 2026-10-24 23:19 PDT HBM-PLAN: claude/hbm-b2n-1024@cfe11dc98 lane delta (b2n.py step lane_delta, input B2n_inputs/lane_delta.json from b2_delays.json 7994e6a60): G0C 49/49 PASS 0 err (worst seg cut 0.593). +1-bit rows = real RTL reset bits (bridge_rst_n, hcb fa/fb_rst_n_o, rstb_e, pc_rst_n), widened; L12/L13 -> 3143+3143 (=6286 max NW/NE); ring L4 2816 + new L150 560 (N path); new spb0<->hub L151/L152 615/632 (+m), vsN0<->root L153/L154 615/632 (ep_S1 relayed through root inside root<->NW_hub bundles), spt0->root L155 9 (+m). SHORT: hub->root L74 only 1491 (NW need 3749, NE 2709): hub perimeter + su10/su30 cuts full -> partition change needed. Ring bundle latency 49 -> 67 (L150).
