@@ -172,3 +172,11 @@ def test_leaf_affinity_tcl_is_report_only_capable_and_bounded():
     t = (HERE / "leaf_affinity.tcl").read_text()
     for k in ("OT_LEAF_AFF_UM", "OT_LEAF_AFF_MAX_GROUP", "OT_LEAF_AFF_REPORT_ONLY", "getSigType", "OT_LEAF_AFF pairs"):
         assert k in t, k
+
+
+def test_leaf_affinity_state_is_global_when_sourced_from_a_proc():
+    # ORFS cts.tcl sources POST_CTS_TCL inside a proc; la_d / la_ck / la_par are read by procs via `global`.
+    t = (HERE / "leaf_affinity.tcl").read_text()
+    first_set = t.index("set la_um")
+    decl = t.index("global la_ck la_d la_par")
+    assert decl < first_set

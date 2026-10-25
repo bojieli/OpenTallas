@@ -10,6 +10,9 @@
 # Env: OT_LEAF_AFF_UM (default 30), OT_LEAF_AFF_MAX_GROUP (default 24), OT_LEAF_AFF_SLACK (default 4),
 #      OT_LEAF_AFF_DEPTH (buffer / inverter hops followed, default 4), OT_LEAF_AFF_REPORT_ONLY=1 (count, no change).
 # Prints OT_LEAF_AFF ... summary lines (pairs, cross-leaf before / after, groups moved / skipped by reason).
+# ORFS cts.tcl sources POST_CTS_TCL from inside a proc: the state the procs read with `global` must be global,
+# not locals of the sourcing proc (CLOCK-RESET 10-25: argmax_struct kits died at cts.tcl:87 'can't read la_d').
+global la_ck la_d la_par
 proc la_env {k d} { expr {[info exists ::env($k)] && $::env($k) ne "" ? $::env($k) : $d} }
 set la_um [la_env OT_LEAF_AFF_UM 30.0]
 set la_maxg [la_env OT_LEAF_AFF_MAX_GROUP 24]
