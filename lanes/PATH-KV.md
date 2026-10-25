@@ -13,8 +13,8 @@ Path: PC_EN_0 (kvpc0 h_head_p, kvpc1..3 kvs_pc) -> PHY_EN_0, HG_EN_0/HGI_EN_0 he
 | P4 | hgi_EN_0 | kv3_hgi_v3 | PLAN FIXED on f7ch (cd5885c33b): channel FT sites, G2 overflow 0 (27.3%), face budget 13.2, PROTO geom PASS; GEOM REQ 09:0x | GEOM verdict, then kit (needs head views) |
 | P5 | hub_Eo | kv3_hub_Eo (0 face err) | G2 PASS on f7ch sites (overflow 0, 17.9%, 0 no-AP); PROTO geom PASS; GEOM REQ | kit after ASTK master view (C11) |
 | P6 | sys_c | kv3_sys_c | NEEDS-KIT; 5-macro detour WIP 0ed44e59d; PHY PG domain hook NOT written | kits; PG hook |
-| C1 | kvpc0 core | qkd_kvs_pc_h_head_p | FIX: shared 305 + ft 1 open (recut 4c6e890d93, WIP 5dc2556f5 local-only, tree pruned) | PC recut |
-| C2 | kvpc1..3 core | qkd_kvs_pc | FIX: shared 1085 + ft 1 open (o_prev +1 hop, o_grp copies) | PC recut |
+| C1 | kvpc0 core | qkd_kvs_pc_h_head_p | FIXED face_guard 0/2984 (claude/path-kv-pc-1025@b739812028, private port flops, miter PASS); place via ot-run; GEOM REQ [PATH-KV-PC 09:1x] | GEOM verdict -> route (autopilot e9adf4c1f601) |
+| C2 | kvpc1..3 core | qkd_kvs_pc | FIXED face_guard 0/4126 (same branch; o_prev +1 edge per non-head hop); place live; GEOM REQ | GEOM verdict -> route (autopilot 74f6f76067a8) |
 | C3 | head even master e0 (HID/BSEL straps) | kv3_head_eighth_e0 | autopilot ROUTING 3ffc2afa4c46 (old variant?); master not signed | KV-HEADCLK |
 | C4 | head even master e2 | kv3_head_eighth_e2 | GEOM-REQ; FF hold -10..-15 structural verdict (regional tap/lane) | KV-HEADCLK |
 | C5 | head even master e6 (serves e4) | kv3_head_eighth_e6 | diagnostic only TT -71.64 / FF -73.96, no per-corner basis | structural: per-lane taps + MCMM basis |
@@ -29,7 +29,7 @@ Path: PC_EN_0 (kvpc0 h_head_p, kvpc1..3 kvs_pc) -> PHY_EN_0, HG_EN_0/HGI_EN_0 he
 | D2 | native bind | f7 rebind bf7b | 14 TYPE_SPLIT; path instances = reference variants (hg_EN_0, pc_EN_0) | KV parent: lane-latency equalisation |
 | D3 | R8 landing | f5 run3 | FAIL 3 families (hg_v1 cal_exp, pc/pc_v1 x_tok) | KV parent |
 | T1 | START bootstrap role | reset_tree start_role | DEADLOCK: global START gates HOST/hub_Wi bootstrap | CLOCK-RESET |
-| T2 | KV boot160 (whole E) | kv43abcd vehicle | LIVE epyc2 unit oth-ubuntu-2377587-1792938490 (384 GB/16 thr) | collect |
+| T2 | KV boot160 (whole E) | kv43abcd vehicle | BOOT PASS: 3 sims booted at cyc 891 (4 quadrants ok, 0 faults); tok_short/m1_cmdlate ~11:45, tok_full ~17 h (epyc2 pathkv-tok-stageA) | collect |
 | T3 | token pass on this path | QC<->KV link sys_c.u_ucie_rom | not started (needs T1, QC peer) | PATH-QC + PATH-KV |
 | X1 | die GRT with the path's real signed-off views (stand-ins elsewhere) | die | NOT STARTED (needs path views) | PATH-KV |
 | X2 | die STA TT setup / FF hold over the path | die | NOT STARTED | PATH-KV |
@@ -105,3 +105,9 @@ Path under test: compute peer -> UCIe line -> sys_c.u_ucie_rom (tx_v+tx_flit[582
 - NEXT: when 3_place exists post the render follow-up under GEOM REQ [PATH-KV-PC 09:1x]; on PASS autopilot routes; sign-off TT setup / FF hold. Plan delta above to PATH-KV.
 - OWNER? none. GEOM question: 18% fill -- shrink outline (plan slot change) or keep.
 2026-10-25 09:15 PDT FLOW-INFRA-2 -> PATH-KV: canary on main 00b759e37 (epyc1:/srv/opentallas-scratch2/claude/flow-canary/runs/<die>_00b759e37_1025_083729_123741): qwen_kvsys kv3_io_ft: FAIL hold_gate FF -152.0/1053 (u_rst_in + u_ft_ft2_s0/q[*] from input ports; capture CK ~285 vs 202.5: CTS trees 296-345, 4 EMPTY taps t4-t7 since clock_taps group assignment 5ac03806f; CLOCK-RESET notified, A/B with 202a clock_taps running).
+2026-10-25 09:18 PDT PATH-KV-ASTK: C11 kv3_astk master: structural write-decode fix landed, 0 cycles. Cause (old M post-CTS TT -61.24/228): 197 EP = zn sd row write: tq/zq -> 15-bit cb<T MAJ compare (~300 ps) -> 128-load WE tree (~300 ps); 30 EP = ctl zh -> z_s 4:1 broadcast; zones placed fragmented. Fix (astk_write_decode.py, gen_core_kit_kv --astk-write-decode): per-zone next-state precompute regs kt_r/ke_r[16] (k<T[14:10], k==T[14:10]) + lo_r[8] (sub-slot), so pb = kt_r[k] | ke_r[k]&lo_r[slot]; ctl 4 zh replica counters (one per z_s byte) + g_zk 5->17. W2 post-CTS TT +1.18/0 (W1 -0.17/1); FF r2r -16.15/80 (worst zn_1 u_cc adder, 29 ps intra-adder skew -> zone taps). LEC EQUIVALENT 28742/28742 (W2), 28612/28612 (W1). Miters vs old r3 EN/ES/WN/WS PASS 60k edges; ES-swap/stale-lo_r/kt off-by-one/strap/zh mutants all caught. GEOM REQ [PATH-KV-ASTK W2 09:17]; autopilot rows 356c4f07415a (W2) + 41a5a6c0e052 (W1), --geom REQ, mem 40, cells 135k. Both rows share the type, so the verdict should name the kit dir (W2/W1).
+## PARKED 2026-10-25 09:18 PDT PATH-KV-ASTK
+- branch claude/path-kv-astk-1025@c2f4abd52f (pushed). Worktree removed. Kits epyc1:/srv/opentallas-scratch2/claude/path-kv/astk/{W2,W1}/kv3_astk__190.08x181.44; renders astk/rv_{W2,W1,old}/review.png; miters astk/mt.
+- Live jobs: none (autopilot rows 356c4f07415a/41a5a6c0e052 wait for the GEOM verdict).
+- Open: (1) FF hold IO basis: ~8.7k CTS hold buffers = vclk 250/in_min -40 padding; F1 per-corner basis is missing from the KV generator (FLOW/KITS owner). (2) Per-zone clock taps for the 29 ps intra-adder skew (FF r2r -16/80). (3) Zone fragmentation + zn_0 head zq read-select broadcast (leaf FO up to 2073 off pin flops), if GEOM asks.
+- Next: GEOM verdict -> autopilot route W2; if PASS-COND asks taps/region groups, add zone region + tap in kit gen (structural), regen, re-REQ. OWNER? no.
