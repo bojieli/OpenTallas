@@ -71,7 +71,11 @@ def main(argv=None):
         state.update(last_sha=new, checked=time.strftime("%F %T %Z"))
     else:
         busy = live_dies(a.root)
-        dies = [c["die"] for c in spec["canaries"] if c["die"] not in busy]
+        if busy:      # the live canaries build from this worktree: never check it out under them; retry next tick
+            print(f"FLOW_CANARY_TRIGGER main {new[:9]}: flow tools changed {hits[:8]}; WAIT, canaries still running "
+                  f"{sorted(busy)}")
+            return 0
+        dies = [c["die"] for c in spec["canaries"]]
         print(f"FLOW_CANARY_TRIGGER main {new[:9]}: flow tools changed {hits[:8]}; submit {dies} (still running: "
               f"{sorted(busy)})")
         if a.dry:

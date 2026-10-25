@@ -145,3 +145,7 @@ def test_submit_dry(tmp_path):
     assert "gen.py phys physical/die_plan/s81/die_plan.json" in job and "canary.py lint" in job and "canary.py check" in job
     assert (run / "canary.py").is_file() and (run / "reg_fanout_gate.py").is_file()
     assert T.live_dies(tmp_path / "runs") == {"s81"}
+    # a live canary blocks the trigger (no checkout under it)
+    import subprocess
+    subprocess.run(["git", "init", "-q", str(tmp_path / "src")], check=True)
+    assert T.main(["--src", str(tmp_path / "src"), "--root", str(tmp_path / "runs"), "--state", str(tmp_path / "st.json")]) == 2  # no origin: fetch fails, NOT RUN
