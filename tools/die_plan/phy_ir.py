@@ -138,7 +138,7 @@ def make(plan, domain, out, density):
     tf=out/'psm'/'psm.tcl'
     ts=tf.read_text().replace('puts \"OT_PG_CHECK_FAIL $n $e\"', 'error \"OT_PG_CHECK_FAIL $n $e\"').replace('puts \"OT_PSM_FAIL $e\"', 'error \"OT_PSM_FAIL $e\"')
     tf.write_text(ts)
-    (out/'run_psm.sh').write_text(D.run_sh('psm',64,8,'/usr/bin/time -v openroad -no_init -threads 8 -exit /work/psm/psm.tcl > /work/psm/psm.log 2>&1'))
+    (out/'run_psm.sh').write_text(D.run_sh('psm',64,8,'/usr/bin/time -v openroad -no_init -threads 8 -exit /work/psm/psm.tcl > /work/psm/psm.log 2>&1 && grep -q ^OT_DONE /work/psm/psm.log'))
     (out/'run_psm.sh').chmod(0o755)
     m.update(plan=str(Path(plan).resolve()),plan_sha256=hashlib.sha256(Path(plan).read_bytes()).hexdigest(),domain=domain,domain_rect_um=pg['rect_um'],
              supply=power,ground=ground,bumps=len(bumps),bumps_vdd=sum(n==power for n,x,y in bumps),

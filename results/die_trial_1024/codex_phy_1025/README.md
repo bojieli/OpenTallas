@@ -12,6 +12,6 @@ All pass separate VDDPHY and VSS connectivity checks and complete the actual PDN
 
 These are standalone window results at explicit uniform0.15W/mm² and nominal0.7V, not whole-die IR signoff. Actual selected PHY power, package signal/PG bump mapping and coupled core-ground loading are still inputs to the final measurement. The old235/270mV figures used different windows and a shared grid; they are not a like-for-like quantitative comparison.
 
-Reproduce: `python3 tools/die_plan/phy_ir.py PLAN --domain NAME --density .15 --out DIR`, view `domain_review.png`, then `ot-run --mem64 --threads8 --dir DIR -- bash DIR/run_psm.sh` (insert spaces after flag names). Collect with `python3 tools/die_plan/phy_ir.py --report DIR`.
+Reproduce: `python3 tools/die_plan/phy_ir.py PLAN --domain NAME --density .15 --out DIR`, view `domain_review.png`, then `ot-run --mem 64 --threads 8 --dir DIR -- bash DIR/run_psm.sh`. Collect with `python3 tools/die_plan/phy_ir.py --report DIR`.
 
 Sources: S81 xdie3@69f1ce1a87 and head3@612e029779; each metadata file includes the exact source-plan SHA256. New source is self-contained against the main die_trial helpers and does not require the unmerged trial WIP.
