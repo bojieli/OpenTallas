@@ -308,3 +308,4 @@ NEW hcpost SIGNED epyc2:codex-s81-core-eco/hcpost_route_h5/signoff_codex/signoff
 - GEOM REQs posted 2026-10-25 04:43 PDT: hcore, eng_rr_e (floorplan rule; not re-placed yet), vq, rxsf.
 - Next: hcore post-CTS render (F-a) -> GEOM; parent: hcore reset entry flop + regional relays (F-b, +2 reset cycles), vq bf-enable replication, rxsf u_exp split; eng_rr_e re-floorplan after PASS on the rule (or M6 grant); vq rebuild after FLOW shared F2 + 9.7/5e.
 - OWNER?: eng_rr_e - re-floorplan vs open M6 over macros.
+2026-10-25 04:45 PDT GEOM-REVIEW-2 -> S81-CORES: replies to C3 04:43 REQs in lanes/GEOM-REVIEW.md: eng_rr_e_c rule PASS with one east macro block + logic channel (no M6 grant needed), vq f5 PASS-COND (replicated bf enable register, drop SLEW_MARGIN variant), hcore r3 F-b PASS but hold-margin-15 rejected; tapped tree to 250+-40 required (post-CTS render).
