@@ -756,12 +756,21 @@ def build(ab):
     serdes = {}
     sd = {"WS0": ("W", 0, 4), "WS1": ("W", 0, 2), "WN0": ("W", 19, 4), "WN1": ("W", 19, 2), "WN2": ("W", 19, 0),
           "WN3": ("C", 19, 6), "ES0": ("E", 0, 4), "ES1": ("E", 0, 2), "EN0": ("E", 19, 4), "EN1": ("E", 19, 2)}
-    for nm, (side, row, cw) in sd.items():
+    # S81-XDIE 10-24 (RELEASE_RACK 2.1, S81-HEAD xdie_io GAP 1): the copy-A/B reserve 6th pair on EVERY layer die (one
+    # logic design; wired on the 64 pre/post-group dies only): E column B = EN2/EN3 (s_7N pair B: copyb_in tx on
+    # pre-group dies) at the N row, W column B = WS2/WS3 (s_0S pair B: copyb_out rx on post-group dies) at the S row.
+    # Free slots: the NW/SE corner cells (were bump/ESD keep-out channels) + the top s_7N station cells (s_7N 8 -> 7
+    # rows, like every other N half) + WS3 re-aspected to a 1 x 2 cell column on the S edge in place of the two
+    # bottom s_0S station cells (s_0S rows 0-11 -> 2-11).  nc, nr default 2, 1.
+    sd.update({"WS2": ("W", 0, 0), "WS3": ("W", 0, 6, 1, 2), "EN2": ("E", 19, 6), "EN3": ("E", 19, 0)})
+    for nm, spec in sd.items():
+        side, row, cw = spec[:3]
+        nc, nr = (spec[3:] + (2, 1))[:2] if len(spec) > 3 else (2, 1)
         col = cw if side != "E" else mir(cw) - 1
         orient = "MY" if side == "E" else "R0"
-        serdes[nm] = add(Part("lk_" + nm, "serdes", col, row, nc=2, orient=orient,
+        serdes[nm] = add(Part("lk_" + nm, "serdes", col, row, nc=nc, nr=nr, orient=orient,
                               contents=[C("u_phy", "ot_pdie_serdes", "rework",
-                                          note="SerDes PHY model re-aspected into a 2885.76 x 1226.88 slot; a strip "
+                                          note="SerDes PHY model re-aspected into a %.2f x %.2f slot; a strip " % (nc * PX, nr * PY) +
                                                "beside it holds the boundary flops and ft stations")],
                               ckey="serdes"))
     # ---- centre: cols 6..15 ----
@@ -822,8 +831,9 @@ def build(ab):
                 r0, nrow = 6, 6          # (10,5) = seqhost, beside the svc band
             if hn in ("s_0S", "s_7S"):
                 r0, nrow = 0, 12
-            if hn == "s_7N":
-                nrow = 8
+            if hn == "s_0S":
+                r0, nrow = 2, 10         # S81-XDIE: (6,0)-(6,1) = lk_WS3
+            # S81-XDIE: s_7N no longer takes the top row (14-15,19) = lk_EN2 (was nrow 8)
             m = blk[hn]["master"]
             lep = ncol == 2
             # inner (centre-side) column carries the normal slice; the outer column of a lep holds LP + stations
@@ -887,8 +897,11 @@ def build(ab):
                               C=next(q for q in segs.values() if q.role == "C"),
                               LP=next((q for q in segs.values() if q.role == "LP"), None),
                               leaves=[q for q in segs.values() if q.role.startswith("L") and q.role != "LP"])
-    # units row 19: WN3 (6-7) | bk_col 8 | gunit 9-10 | bk_sel 11-13 | s_7N top (14-15)
-    add(Part("bk_col", "unit", 8, 19, contents=[C("u_bk_col", "dsfd_bk_collector")], ckey="bk_col"))
+    # units row 19: WN3 (6-7) | (8 free: bk_col retired, S81/H4) | gunit 9-10 | bk_sel 11-13 | s_7N top (14-15)
+    # S81/H4 10-24 (TOK-DS H3 + COORD 22:00): bk_col (dsfd_bk_collector / dsdv_bk_col, the column-1 V-rung row collector)
+    # has no consumer in v4.8: no compiler job emits bk_col frames (dv_layer_compile attn.gather GAP: "nothing produces
+    # bk_col frames"), the gather is the svc-local SEL_IDS fetch + ROWS frames (dsdv_svc_att types 7 / 6).  The partition
+    # is dropped; its 4 rung lanes become the plain column-1 rung s_1S_C <-> s_1N_C (as columns 2 / 5: RETIRED_RUNG).
     add(Part("gunit", "unit", 9, 19, nc=2, contents=[C("u_gunit", "dsdv_gunit", "rework", params={"SID": "4'd3"},
                                                        note="re-aspected 950x1469 -> 2-cell row slot")],
              ckey="gunit"))
@@ -901,7 +914,12 @@ def build(ab):
     chans = [dict(rect_um=[X0 + c * PX, X0 + r * PY, X0 + (c + 2) * PX, X0 + (r + 1) * PY],
                   reason="die-corner end of the SerDes PHY row: bump/ESD keep-out of the corner PHY (no logic routes "
                          "here; both neighbours are PHY or seal ring)")
-             for c, r in ((0, 0), (20, 0), (20, 19))]
+             for c, r in ((20, 0),)]          # S81-XDIE: (0,0) = lk_WS2, (20,19) = lk_EN3
+    # S81/H4 10-24: the cell bk_col held (retired, see above) carries no logic: top-edge cell between lk_WN3 and gunit, on
+    # no lane path (every lane of this corner runs on row 18 / the slice columns); left free for die PG / decap
+    chans.append(dict(rect_um=[X0 + 8 * PX, X0 + 19 * PY, X0 + 9 * PX, X0 + 20 * PY],
+                      reason="free cell of the retired bk_col (S81/H4: no consumer in v4.8); top edge between lk_WN3 and "
+                             "gunit, no lane routes here"))
     return parts, frames, serdes, slices, chans, svcg
 
 
@@ -1049,6 +1067,7 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
         seen[key] = b
         cc = blkcls.get((r["src"][2:], r["dst"][2:]))
         c = cc.most_common(1)[0][0] if cc else ("hbmrd" if r["src"] == "u_phy_hbm" else r["kind"])
+        c = r.get("cls") or c                         # S81/H4: a retired rung unit's rows stay V-rung (xtier) lanes
         agg.setdefault((ps, pd, c), 0)
         agg[(ps, pd, c)] += add_b
     if unmapped:
@@ -1062,6 +1081,33 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
         ps, pd, c = e["src"], e["dst"], e["cls"]
         assert ps in P and pd in P, e
         L("%s__%s__%s" % (c, ps, pd), ps, "%s_%s_o" % (c, pd), pd, "%s_%s_i" % (c, ps), e["bits"], cls=c, role=c)
+    # ---- S81-XDIE 10-24: copy-A/B reserve pair (RELEASE_RACK 2.1): every layer die carries EN2/EN3 (s_7N pair B) and
+    #      WS2/WS3 (s_0S pair B); one logic design, wired on the 64 pre/post-group dies.  Same circuit as pair A: per
+    #      SerDes a 512-b tx lane LP -> lk (coll) and a 514-b rx lane lk -> LP (coll), ending at the lep LP partition.
+    #      RTL owed: the s_7N / s_0S lep cores expose pair-B coll ports (the s_0N lep already has 4 = pairs A + B). ----
+    if not v47:
+        for half, names in (("s_7N", ("EN2", "EN3")), ("s_0S", ("WS2", "WS3"))):
+            lp = slices[half]["LP"].name
+            for nm in names:
+                lk = "lk_" + nm
+                L("coll__%s__%s" % (lp, lk), lp, "coll_%s_o" % lk, lk, "coll_%s_i" % lp, 512, cls="coll", role="coll")
+                L("coll__%s__%s" % (lk, lp), lk, "coll_%s_o" % lp, lp, "coll_%s_i" % lk, 514, cls="coll", role="coll")
+    # ---- S81/H4 10-24 (COORD H4 ruling = option A): the index RANK TREE lanes of the bk_sel master dsdv_bk_sel_vmtx.
+    #      tl_o (its dsdv_idx_tx tree transmitter, the lane to the parent die) and ca / cb (the two landed child lanes into
+    #      dsdv_idx_vmux) end at the s_0N lep (LP), which owns the STAGE circuits: the tree (lower_bk shard_tree) spans the
+    #      k = 3 / 6 adjacent stages of one rank, i.e. stage NEXT = pair A (WN0/1) and stage PREV = pair B (WN2/3); the
+    #      TP4 peer circuits (s_0S / s_7S / s_7N pair A) join ranks of the SAME stage and carry no tree edge.  The lep
+    #      sends a tl beat as an IDX link frame (lane field 2 -> pair A, 3 -> pair B) and demuxes received IDX frames:
+    #      pair B (from PREV) -> ca, pair A (from NEXT) -> cb (ot_s81sl_lep_mu_ab_idx).  276 b each, registered, ft <= M7.
+    if not v47:
+        # path: only slice STATION cells (row 18 x06/x16 of s_4N..s_0N, then s_0N's outer column x05..x03): no leaf, hub
+        # or unit type gains a slot; the LP is entered on its N face (the coll lane face)
+        lp = slices["s_0N"]["LP"].name
+        lpc = (slices["s_0N"]["LP"].c0, slices["s_0N"]["LP"].r0)
+        up = [(P["bk_sel"].c0, P["bk_sel"].r0), (P["bk_sel"].c0, 18), (lpc[0], 18), lpc]
+        L("tl__bk_sel__%s" % lp, "bk_sel", "tl_o", lp, "tl_i", 276, cls="tl", role="tree", path=("cells", up))
+        L("ca__%s__bk_sel" % lp, lp, "ca_o", "bk_sel", "ca_i", 276, cls="ca", role="tree", path=("cells", up[::-1]))
+        L("cb__%s__bk_sel" % lp, lp, "cb_o", "bk_sel", "cb_i", 276, cls="cb", role="tree", path=("cells", up[::-1]))
     # ---- ID rings (no tie-offs): slice sid + fault OR, svc sid; counted (sid_o = sid_i + 1), rooted at seqhost ----
     order_s = [slices["s_%dS" % k]["C"].name for k in range(7, -1, -1)] + \
               [slices["s_%dN" % k]["C"].name for k in range(8)]
@@ -1149,8 +1195,6 @@ def cells_core_plan(p):
                     "MISSING kv512 leaf; SU KV leaves kve/kvp/kvq/kvr/kvt summed"
             return LEAF_CORES, 15000, "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)"
         return [], 5000, "station-only partition (ft flops)"
-    if p.name == "bk_col":
-        return [], 4 * 15770 + 73514 + 2 * 25144, UNIT_CORES["bk_col"][1]
     if p.name == "seqhost":
         # v4: the MU history window (dsdv_mu_hwin_capture_1019, 69,671 cells + SRAM columns) is a planned hard core
         # (GEOM-REVIEW: SUPERSEDED dsdv_mu_hwin_capture_1019 by seqhost core hwin); the other children flattened
@@ -1162,8 +1206,28 @@ def cells_core_plan(p):
     return [], 0, "MISSING"
 
 
+# S81/H4 10-24: retired V-rung units {inst: {its rung output bus: the slice that feeds the opposite rung input}}.  The
+# as-built census still carries them; their rung rows collapse onto the direct slice <-> slice rung (the unit was a
+# fixed-latency transparent stop, ot_dsdv_vstop), every other row of the unit (reset) is dropped with it.
+RETIRED_RUNG = {"u_bk_col": {"vo_n": "u_s_1S", "vo_s": "u_s_1N"}}
+
+
+def retire_rung(rows):
+    out = []
+    for r in rows:
+        if r["dst"] in RETIRED_RUNG:
+            continue
+        if r["src"] in RETIRED_RUNG:
+            rr = dict(r, src=RETIRED_RUNG[r["src"]][r["src_bus"]], src_bus="vo", cls="xtier")
+            out.append(rr)
+            continue
+        out.append(r)
+    return out
+
+
 def census_collapse(rows):
     """landing cells (ld_*) re-attributed to their single source (reset fan-in excluded)."""
+    rows = retire_rung(rows)
     into = collections.defaultdict(set)
     for r in rows:
         if r["dst"].startswith("ld_") and r["kind"] != "reset":
@@ -1270,7 +1334,14 @@ def route(grid, lanes, slices):
     for lk in order:
         s, d = lk["src"][0], lk["dst"][0]
         w = lk["width"] + 1
-        if lk.get("path") and lk["path"][0] == "xrow":
+        if lk.get("path") and lk["path"][0] == "cells":
+            # S81/H4: an explicit corner path (cell polyline); every cell between the end partitions must be ft-able
+            seq = poly_cells(list(lk["path"][1]))
+            assert grid.owner[seq[0]] == s and grid.owner[seq[-1]] == d, (lk["id"], seq[0], seq[-1])
+            for c_ in seq[1:-1]:
+                q_ = P[grid.owner[c_]]
+                assert q_.ft_ok and q_.kind not in ("frame", "serdes"), (lk["id"], c_, q_.name)
+        elif lk.get("path") and lk["path"][0] == "xrow":
             _, side, xr = lk["path"]
             # fixed: from the slice segment straight to the array on the x row (turn at the segment if the x row is
             # below the half), then through the frame b0 bands
@@ -1370,12 +1441,20 @@ def route_v48(grid, lanes47, lanes):
             res[lk["id"]] = res47[lk["id"]]
         else:
             todo.append(lk)
-    res.update(route(grid, todo, {}))
+    # S81-XDIE 10-24: the copy-A/B reserve pair lanes route LAST, on top of every v4.8 load, so no existing lane moves
+    rsv = [l for l in todo if RESERVE_RE.search(l["id"])]
+    tree = [l for l in todo if l["role"] == "tree"]
+    res.update(route(grid, [l for l in todo if l not in rsv and l not in tree], {}))
+    res.update(route(grid, rsv, {}))
+    # S81/H4 10-24: the bk_sel tree lanes (fixed station path) are applied after every other lane: no lane moves
+    res.update(route(grid, tree, {}))
     ROUTE_V48.update(kept=len(res) - len(todo), rerouted=sorted(l["id"] for l in todo))
     return res
 
 
 ROUTE_V48 = {}
+TYPE_NAMES_OUT = {}
+RESERVE_RE = re.compile(r"lk_(WS[23]|EN[23])\b")
 
 
 def bends(cells):
@@ -1466,7 +1545,15 @@ def census_map(plan, lanes, fmap, out):
                       "reason": "die clock/reset ports"}]}
     json.dump(cm, open(out / "census_map.json", "w"), indent=0)
     (out / "census").mkdir(exist_ok=True)
-    shutil.copy(CENSUS_SRC[0], out / "census" / "s81_lanes.tsv")
+    # S81/H4 10-24: the plan's census = the as-built census with the retired rung units (RETIRED_RUNG: bk_col) collapsed
+    # onto the direct slice <-> slice rung, exactly as the lanes were derived (the as-built source stays inputs/)
+    with open(CENSUS_SRC[0]) as f_:
+        rd_ = csv.DictReader(f_, delimiter="\t")
+        hdr_, rows_ = rd_.fieldnames, retire_rung(list(rd_))
+    with open(out / "census" / "s81_lanes.tsv", "w", newline="") as f_:
+        wr_ = csv.DictWriter(f_, fieldnames=hdr_, delimiter="\t", extrasaction="ignore", lineterminator="\n")
+        wr_.writeheader()
+        wr_.writerows(rows_)
 
 
 CENSUS_SRC = []
@@ -1578,7 +1665,9 @@ def emit(parts, lanes, routes, chans, fmap, out):
     # v4.8: the runs of the lanes v4.8 adds / re-ends (route_v48 rerouted) are placed after every v4.7 run, so the
     # v4.7 windows (and with them the ft station spacing and lane cycles) stay where v4.7 put them
     new48 = set(ROUTE_V48.get("rerouted", ()))
-    runs.sort(key=lambda r: (r["lane"] in new48, -len(r["ports"]), -r["width"], r["role"], r["lane"], r["line"]))
+    # S81-XDIE: the copy-A/B reserve lanes' runs go after every other run (no existing window moves for them)
+    runs.sort(key=lambda r: (r["lane"] in new48, bool(RESERVE_RE.search(r["lane"])), -len(r["ports"]), -r["width"],
+                             r["role"], r["lane"], r["line"]))
     single = []
     for r in runs:
         keys = [pkey[p] for p in r["ports"]]
@@ -1747,12 +1836,41 @@ def emit(parts, lanes, routes, chans, fmap, out):
     types = collections.OrderedDict()
     for p in parts:
         types.setdefault(sigs[p.name][0], []).append(p.name)
+    # S81 10-24 (stable type names): a type whose signature (key) is unchanged keeps the name it has in the reference
+    # name table (S81_TYPE_NAMES, default physical/die_plan/s81/type_names.json: {sig sha1: type name}, written next to
+    # every generated plan); new / changed signatures get the next free number of their base.  Without a reference the
+    # names are the plain first-seen count (as before).  So a plan change that adds or alters a few types does not
+    # renumber every other type (kits, SIGNED views and lane records stay keyed to the same names).
+    import hashlib
+    sig = {key: hashlib.sha1(repr(key).encode()).hexdigest() for key in types}
+    ref_f = Path(os.environ.get("S81_TYPE_NAMES", Path(__file__).resolve().parent / "type_names.json"))
+    ref = json.loads(ref_f.read_text()).get("names", {}) if ref_f.is_file() else {}
     tname = {}
     cnt = collections.Counter()
-    for key in types:
-        base = re.sub(r"[^A-Za-z0-9_]", "_", key[0])
-        cnt[base] += 1
-        tname[key] = "%s__t%d" % (base, cnt[base])
+    if not ref:
+        for key in types:
+            base = re.sub(r"[^A-Za-z0-9_]", "_", key[0])
+            cnt[base] += 1
+            tname[key] = "%s__t%d" % (base, cnt[base])
+    else:
+        used = set()
+        for key in types:
+            nm = ref.get(sig[key])
+            if nm and nm not in used:
+                tname[key] = nm
+                used.add(nm)
+        top = collections.Counter()
+        for nm in list(ref.values()) + list(used):
+            b_, n_ = nm.rsplit("__t", 1)
+            top[b_] = max(top[b_], int(n_))
+        for key in types:
+            if key in tname:
+                continue
+            base = re.sub(r"[^A-Za-z0-9_]", "_", key[0])
+            top[base] += 1
+            tname[key] = "%s__t%d" % (base, top[base])
+    TYPE_NAMES_OUT.update(names={sig[k]: tname[k] for k in types}, ref=ref_f.name if ref else None,
+                          kept=sum(1 for k in types if ref.get(sig[k]) == tname[k]), types=len(types))
     out_types, busname, ptype = {}, {}, {}
 
     def fsort(e):
@@ -1866,7 +1984,10 @@ def emit(parts, lanes, routes, chans, fmap, out):
                                  "die_use": ["clock_spine", "pg", "ft_reserved"], "cut_avail": {"M8": 0.6, "M9": 0.6}},
                 "pg": {"partition_pg_max": "M7", "grid": [
                     {"layer": "M8", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]},
-                    {"layer": "M9", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]}]},
+                    {"layer": "M9", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]}],
+                    # OWNER DECISION 7 (2026-10-24): die.pg.domains (one VDDPHY supply + dedicated bump rows per
+                    # SerDes window) are added from the die_io.py windows by pg_domains.py (run_v4.sh)
+                    },
                 "channels": chans + [
                     {"rect_um": [0, 0, round(DIE_W, 4), X0], "reason": "seal ring"},
                     {"rect_um": [0, round(DIE_H - X0, 4), round(DIE_W, 4), round(DIE_H, 4)], "reason": "seal ring"},
@@ -1908,6 +2029,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
+    json.dump(TYPE_NAMES_OUT, open(out / "type_names.json", "w"), indent=0, sort_keys=True)
     if CORE_CONNS_OUT:
         json.dump(CORE_CONNS_OUT, open(out / "core_conns.json", "w"), indent=0, sort_keys=True)
     json.dump(dict(note="S81-P9-HC: non-frame types over %d cells: hard cores emitted / residual soft cells / gaps (children "

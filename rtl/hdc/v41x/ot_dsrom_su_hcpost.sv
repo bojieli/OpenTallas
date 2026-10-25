@@ -25,8 +25,10 @@
 module ot_dsrom_su_hcpost_lane #(
     parameter integer ML = 5,           // multiplier latency: 5 (ot_hdc_fp32_mul_f12_l5), 6 (_l6, input-side cut) or 7 (_l7,
                                         // + rounding-increment cut; CLAUDE HBM-ABSTRACTS hub margin, 2026-10-06)
-    parameter integer AL = 4            // adder latency: 4 (ot_hdc_fp32_add_f12_l4), 5 (_l5x, decode cut) or 6 (_l6x,
+    parameter integer AL = 4,           // adder latency: 4 (ot_hdc_fp32_add_f12_l4), 5 (_l5x, decode cut) or 6 (_l6x,
                                         // + compare/align cut; CLAUDE HBM-ABSTRACTS hub margin, 2026-10-06)
+    parameter integer FDUP = 0          // 1 (S81-KITS-RTLA 10-24, hard-core pin rule): sticky state in fault_s, the
+                                        // fault output flop an output-only copy of the same next value (0 cycles)
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -117,13 +119,22 @@ module ot_dsrom_su_hcpost_lane #(
     ot_hdc_inc_k #(.W(16)) u_rnd (.a(a4[31:16]), .inc(a4[15] & (a4[16] | (|a4[14:0]))), .y(hi), .co());
     // a multiply error is held to the add that consumes it (the faults are a sticky status, not data)
     reg [3*AL:0] fm;
+    wire fault_x = fm[0] | (va1 && ea1 != 2'd0) | (va2 && ea2 != 2'd0) | (va3 && ea3 != 2'd0) | (va4 && ea4 != 2'd0);
+    wire fault_h;                           // the sticky state the next fault ORs into
+    generate if (FDUP != 0) begin : g_fdup
+        // FDUP 1: the sticky state in its own kept-hierarchy flop (a plain duplicate in this module is folded back into
+        // the fault flop by opt_merge -- measured: identical D, the kit synth re-made the self-loop); the fault pin flop
+        // then has no load but the port.
+        ot_dsrom_su_hcpost_sticky u_fs (.clk(clk), .rst_n(rst_n), .x(fault_x), .q(fault_h));
+    end else begin : g_fself
+        assign fault_h = fault;             // FDUP 0: unchanged (fault holds itself)
+    end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin vo <= 1'b0; fault <= 1'b0; fm <= 0; end
         else begin
             vo <= va4;
             fm <= {fm[3*AL-1:0], vm && ((e0 | e1 | e2 | e3 | e4a) != 2'd0)};
-            fault <= fault | fm[0] | (va1 && ea1 != 2'd0) | (va2 && ea2 != 2'd0) | (va3 && ea3 != 2'd0) |
-                     (va4 && ea4 != 2'd0);
+            fault <= fault_h | fault_x;
         end
     end
     always @(posedge clk) o <= {hi, 16'd0};
@@ -243,4 +254,9 @@ module ot_dsrom_su_hcpost #(
     end endgenerate
     assign out_v = g_v[0];
     assign fault = |g_f;
+endmodule
+// S81-KITS-RTLA 10-24: sticky fault state of ot_dsrom_su_hcpost_lane FDUP 1 (q <= q | x, async reset), kept as its own
+// hierarchy so synthesis cannot merge it with the lane's fault output flop (same next value by construction).
+(* keep_hierarchy = "yes" *) module ot_dsrom_su_hcpost_sticky (input wire clk, input wire rst_n, input wire x, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= q | x;
 endmodule

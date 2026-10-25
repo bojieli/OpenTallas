@@ -154,6 +154,9 @@ def main():
                  "%gx%g, faces %s" % (src["lef"], W, H, {f: len(g) for f, g in spec["faces"].items()}
                                        if "faces" in spec else "kept"),
                  pinhash=hashlib.sha256(json.dumps(pins, sort_keys=True).encode()).hexdigest()[:12], pins=pins)
+        sys.path.insert(0, D)
+        import drop_const_pins            # OWNER DECISION 8: constant pins are not plan pins
+        drop_const_pins.drop(j, lp)
         jp = os.path.join(D, "inputs/core_pins/%s%s.json" % (mod, sfx))
         json.dump(j, open(jp, "w"), indent=0)
         print("wrote", jp, lp, len(pins))

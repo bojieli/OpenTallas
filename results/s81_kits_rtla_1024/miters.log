@@ -1,0 +1,76 @@
+ot_s81sl_vsw_c base: MITER PASS top ot_s81sl_vsw cycles 40000 mismatches 0
+    MITER_ACT o_v w 1 cycles_nonzero 2617 changes 5234
+    MITER_ACT o_d w 64 cycles_nonzero 31904 changes 2477
+    MITER_ACT o_f w 1 cycles_nonzero 34956 changes 75
+ot_s81sl_vsw_c mut: MITER FAIL top ot_s81sl_vsw cycles 40000 mismatches 29902
+    MITER_ACT o_v w 1 cycles_nonzero 2617 changes 5234
+    MITER_ACT o_d w 64 cycles_nonzero 2002 changes 4004
+    MITER_ACT o_f w 1 cycles_nonzero 34956 changes 75
+ot_s81sl_vn_c base: MITER PASS top ot_s81sl_vn cycles 40000 mismatches 0
+    MITER_ACT hq_v w 1 cycles_nonzero 687 changes 1112
+    MITER_ACT hq_d w 256 cycles_nonzero 39675 changes 31332
+    MITER_ACT p_v w 1 cycles_nonzero 39 changes 78
+    MITER_ACT p_d w 32 cycles_nonzero 39471 changes 18732
+    MITER_ACT y_v w 1 cycles_nonzero 31189 changes 1287
+    MITER_ACT y_i w 3 cycles_nonzero 20645 changes 27729
+    MITER_ACT y w 128 cycles_nonzero 36200 changes 30235
+    MITER_ACT fault w 1 cycles_nonzero 35825 changes 1331
+ot_s81sl_vn_c mut: MITER FAIL top ot_s81sl_vn cycles 40000 mismatches 9465
+    MITER_ACT hq_v w 1 cycles_nonzero 687 changes 1112
+    MITER_ACT hq_d w 256 cycles_nonzero 39675 changes 31332
+    MITER_ACT p_v w 1 cycles_nonzero 39 changes 78
+    MITER_ACT p_d w 32 cycles_nonzero 39471 changes 18732
+    MITER_ACT y_v w 1 cycles_nonzero 31189 changes 1287
+    MITER_ACT y_i w 3 cycles_nonzero 20645 changes 27729
+    MITER_ACT y w 128 cycles_nonzero 36200 changes 30235
+    MITER_ACT fault w 1 cycles_nonzero 26360 changes 12315
+ot_s81sl_ve_c base: MITER PASS top ot_s81sl_ve cycles 40000 mismatches 0
+    MITER_ACT p_v w 1 cycles_nonzero 545 changes 1090
+    MITER_ACT p_c w 2 cycles_nonzero 24039 changes 573
+    MITER_ACT p_hh w 32 cycles_nonzero 39119 changes 18200
+    MITER_ACT p_kk w 32 cycles_nonzero 39148 changes 18253
+    MITER_ACT p_dd w 32 cycles_nonzero 39507 changes 17437
+    MITER_ACT o_v w 1 cycles_nonzero 9604 changes 12658
+    MITER_ACT o_c w 2 cycles_nonzero 30014 changes 29944
+    MITER_ACT o_y w 128 cycles_nonzero 40038 changes 40002
+    MITER_ACT fault w 1 cycles_nonzero 36371 changes 76
+ot_s81sl_ve_c mut: MITER PASS top ot_s81sl_ve cycles 40000 mismatches 0
+    MITER_ACT p_v w 1 cycles_nonzero 545 changes 1090
+    MITER_ACT p_c w 2 cycles_nonzero 24039 changes 573
+    MITER_ACT p_hh w 32 cycles_nonzero 39119 changes 18200
+    MITER_ACT p_kk w 32 cycles_nonzero 39148 changes 18253
+    MITER_ACT p_dd w 32 cycles_nonzero 39507 changes 17437
+    MITER_ACT o_v w 1 cycles_nonzero 9604 changes 12658
+    MITER_ACT o_c w 2 cycles_nonzero 30014 changes 29944
+    MITER_ACT o_y w 128 cycles_nonzero 40038 changes 40002
+    MITER_ACT fault w 1 cycles_nonzero 36371 changes 76
+ot_dsrom_su_hcpost_lane_pr_c base: MITER PASS top ot_dsrom_su_hcpost_lane_pr cycles 40000 mismatches 0
+    MITER_ACT vo w 1 cycles_nonzero 8568 changes 11550
+    MITER_ACT o w 16 cycles_nonzero 39807 changes 39917
+    MITER_ACT fault w 1 cycles_nonzero 35626 changes 75
+ot_dsrom_su_hcpost_lane_pr_c mut: MITER FAIL top ot_dsrom_su_hcpost_lane_pr cycles 40000 mismatches 31087
+    MITER_ACT vo w 1 cycles_nonzero 8568 changes 11550
+    MITER_ACT o w 16 cycles_nonzero 39807 changes 39917
+    MITER_ACT fault w 1 cycles_nonzero 4539 changes 7544
+MITERS FAIL
+ot_s81sl_ve_c base: MITER PASS top ot_s81sl_ve cycles 40000 mismatches 0
+    MITER_ACT p_v w 1 cycles_nonzero 545 changes 1090
+    MITER_ACT p_c w 2 cycles_nonzero 24039 changes 573
+    MITER_ACT p_hh w 32 cycles_nonzero 39119 changes 18200
+    MITER_ACT p_kk w 32 cycles_nonzero 39148 changes 18253
+    MITER_ACT p_dd w 32 cycles_nonzero 39507 changes 17437
+    MITER_ACT o_v w 1 cycles_nonzero 9604 changes 12658
+    MITER_ACT o_c w 2 cycles_nonzero 30014 changes 29944
+    MITER_ACT o_y w 128 cycles_nonzero 40038 changes 40002
+    MITER_ACT fault w 1 cycles_nonzero 36371 changes 76
+ot_s81sl_ve_c mut: MITER FAIL top ot_s81sl_ve cycles 40000 mismatches 38
+    MITER_ACT p_v w 1 cycles_nonzero 545 changes 1090
+    MITER_ACT p_c w 2 cycles_nonzero 24039 changes 573
+    MITER_ACT p_hh w 32 cycles_nonzero 39119 changes 18200
+    MITER_ACT p_kk w 32 cycles_nonzero 39148 changes 18253
+    MITER_ACT p_dd w 32 cycles_nonzero 39507 changes 17437
+    MITER_ACT o_v w 1 cycles_nonzero 9604 changes 12658
+    MITER_ACT o_c w 2 cycles_nonzero 30014 changes 29944
+    MITER_ACT o_y w 128 cycles_nonzero 40038 changes 40002
+    MITER_ACT fault w 1 cycles_nonzero 36333 changes 76
+MITERS PASS
