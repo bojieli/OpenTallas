@@ -1737,3 +1737,4 @@ Scratch:
   - epyc1 /srv/opentallas-scratch2/claude/geomrev-1025/{s81r,elemB_grt,e4}
   - rtx-pro ~/scratch/geomrev1025/{s81r,hbm/term,hbm/sm,elemB,e4,dieft}
   - waitev.sh event waiter
+2026-10-25 12:29 PDT GEOM-REVIEW: fresh shift start (S81 + HBM split; GEOM-REVIEW-2 keeps KV/QC/KITS-SPARE). Open: hcore kit_swr (waits on TOK-LEC 22 g_ske points), hi t6 G2 (epyc1 proto container 3 h, GRT extra iteration 10/30, rule at end), DIE-FT-HBM band re-REQ, DIE-FT-S81 REQ, PATH-S81 E4->E5 re-REQ, HBM R1-302.4 plan delta REQ. None posted yet; I CLAIM each when it lands.
