@@ -1,0 +1,77 @@
+H	corner	TT_GRT
+H	regs	3446
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	5690
+H	pairs	5357
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	5357
+H	max_worst	45.27
+H	max_bounded	0
+H	max_signed	-45.27
+H	max_launch	s1b_bank[0]$_DFF_P_
+H	max_capture	g_bsel[8].u/q[3]$_DFF_P_
+H	max_crpr	0.22
+H	max_p99_raw	44.64
+H	max_searched	46
+H	max_nopath	0
+H	max_verify	0.000
+P	max	u_twpd/q[386]$_DFF_P_	g_btb[1].u_m	-39.09	16.14	55.24
+P	max	u_twpd/q[389]$_DFF_P_	g_btb[1].u_m	-39.03	16.14	55.17
+P	max	u_twpd/q[379]$_DFF_P_	g_btb[1].u_m	-38.70	16.14	54.84
+P	max	u_twpd/q[388]$_DFF_P_	g_btb[1].u_m	-38.69	16.15	54.84
+P	max	u_twpd/q[391]$_DFF_P_	g_btb[1].u_m	-38.47	16.14	54.62
+P	max	u_twpd/q[384]$_DFF_P_	g_btb[1].u_m	-38.45	16.14	54.60
+P	max	u_twpd/q[387]$_DFF_P_	g_btb[1].u_m	-38.32	16.14	54.47
+P	max	u_twpd/q[382]$_DFF_P_	g_btb[1].u_m	-38.30	16.14	54.44
+P	max	u_twpd/q[390]$_DFF_P_	g_btb[1].u_m	-37.88	16.14	54.02
+P	max	u_twpd/q[385]$_DFF_P_	g_btb[1].u_m	-37.75	16.14	53.89
+P	max	u_twpd/q[378]$_DFF_P_	g_btb[1].u_m	-37.53	16.14	53.67
+P	max	u_twpd/q[377]$_DFF_P_	g_btb[1].u_m	-37.07	16.15	53.22
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[7].u/q[1]$_DFF_P_	-32.94	17.37	50.30
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[7].u/q[1]$_DFF_P_	-32.91	17.37	50.28
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[7].u/q[0]$_DFF_P_	-32.77	17.37	50.14
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[9].u/q[1]$_DFF_P_	-32.77	17.37	50.14
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[7].u/q[0]$_DFF_P_	-32.75	17.37	50.11
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[9].u/q[1]$_DFF_P_	-32.75	17.37	50.11
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[0].u/q[0]$_DFF_P_	-32.67	17.37	50.03
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[0].u/q[1]$_DFF_P_	-32.64	17.37	50.01
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[0].u/q[0]$_DFF_P_	-32.64	17.37	50.00
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[0].u/q[1]$_DFF_P_	-32.62	17.37	49.98
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[9].u/q[0]$_DFF_P_	-31.84	17.37	49.20
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[9].u/q[0]$_DFF_P_	-31.81	17.37	49.18
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[2].u/q[0]$_DFF_P_	-31.78	17.37	49.15
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[2].u/q[1]$_DFF_P_	-31.78	17.37	49.14
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[2].u/q[0]$_DFF_P_	-31.76	17.37	49.12
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[2].u/q[1]$_DFF_P_	-31.75	17.37	49.12
+P	max	u_twpd/q[335]$_DFF_P_	g_btb[1].u_m	-31.73	16.14	47.88
+P	max	u_twpd/q[340]$_DFF_P_	g_btb[1].u_m	-31.72	16.15	47.87
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[3].u/q[0]$_DFF_P_	-29.50	17.37	46.87
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[3].u/q[1]$_DFF_P_	-29.50	17.37	46.86
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[3].u/q[0]$_DFF_P_	-29.47	17.37	46.84
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[3].u/q[1]$_DFF_P_	-29.47	17.37	46.84
+P	max	u_twpd/q[374]$_DFF_P_	g_btb[1].u_m	-30.45	16.14	46.59
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[1].u/q[0]$_DFF_P_	-29.00	17.37	46.36
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[1].u/q[1]$_DFF_P_	-29.00	17.37	46.36
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[1].u/q[0]$_DFF_P_	-28.97	17.37	46.34
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[1].u/q[1]$_DFF_P_	-28.97	17.37	46.33
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[4].u/q[1]$_DFF_P_	-28.53	17.37	45.90
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[4].u/q[1]$_DFF_P_	-28.51	17.37	45.87
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[4].u/q[0]$_DFF_P_	-28.47	17.37	45.83
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[4].u/q[0]$_DFF_P_	-28.44	17.37	45.81
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[8].u/q[3]$_DFF_P_	-45.27	0.22	45.49
+P	max	s1b_bank[1]$_DFF_P_	g_bsel[8].u/q[3]$_DFF_P_	-45.25	0.22	45.47
+P	max	s1b_bank[0]$_DFF_P_	g_bsel[9].u/q[2]$_DFF_P_	-45.06	0.22	45.28
+H	min_n	5357
+H	min_worst	51.69
+H	min_bounded	0
+H	min_signed	51.69
+H	min_launch	ptw_data[819]$_DFF_P_
+H	min_capture	u_twpd/q[819]$_DFF_P_
+H	min_crpr	0.22
+H	min_p99_raw	45.57
+H	min_searched	1
+H	min_nopath	0
+H	min_verify	0.000
+P	min	ptw_data[819]$_DFF_P_	u_twpd/q[819]$_DFF_P_	51.69	0.22	51.91

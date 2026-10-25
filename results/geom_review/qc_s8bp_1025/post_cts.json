@@ -1,0 +1,9 @@
+{"lane": "QC-S8BP", "date": "2026-10-25", "tool": "tools/struct_cts.tcl (OT_EST=grt), from Codex south4 3_place.odb, clock buffers only, +0 cycles, RTL/pins/data netlist unchanged",
+ "structure": "ck (south) -> root BUFx12f -> per-tap repeated feed (45 um) in south/west/east channels -> 6 regional taps (SW, SE, Wlo, Whi, Elo, Ehi) at region centroids -> local CTS per tap (-delay_buffer_derate 0, no root delaybuf chain); each SRAM clk on its own BUFx8 leaf 7 um W of its clk pin from its row's W tap; tap + SRAM-leaf balance by BUFx2 at tap input on GRT RC",
+ "qfd_dv_s8x_btab_t2": {"tap_mean_TT_GRT": [433.4, 445.9], "sram_clk_TT": [428.7, 450.1], "flops_TT": [419.6, 464.4], "I_TT_GRT": 438.4, "I_FF_GRT": 339.8,
+   "pair_TT_setup": 45.27, "pair_TT_hold": 51.69, "pair_FF_setup": 39.18, "pair_FF_hold": 57.67, "hold_fail_only": "1061 port->pin-reg at SDC vclk 250 (I not yet bound)", "setup_viol": 0},
+ "qfd_dv_s8x_prog_t2": {"tap_mean_TT_GRT": [490.2, 503.5], "sram_clk_TT": [491.3, 506.8], "flops_TT": [471.9, 524.8], "I_TT_GRT": 492.5, "I_FF_GRT": 384.0,
+   "pair_TT_setup": 57.54, "pair_TT_hold": 68.79, "pair_FF_setup": 38.93, "pair_FF_hold": 71.43, "hold_fail_only": "935 port->pin-reg at SDC vclk 250 (I not yet bound)", "setup_viol": 0},
+ "placement_variant_t1_btab": {"est": "placement", "pair_TT": [53.13, 70.61], "pair_FF": [41.8, 76.86], "I_TT_GRT": 390.8, "note": "superseded by GRT-balanced t2"},
+ "route_binding": "I_sdc = I_TT_GRT - 28 ps (cqb mean GRT-RCX clock offset) -> btab 410.4, prog 464.5; F1 STA-only rebind to routed RCX mean if needed",
+ "open": ["F6 macro-interface reg distance not yet measured (needs data-net dump)", "I 438/493 above the 240-411 family: feed chain to the far E-hi tap sets the pad target; faster feed (BUFx16f/24, 60 um) would cut ~60-100 ps"]}

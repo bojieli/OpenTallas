@@ -1,0 +1,43 @@
+H	corner	TT_GRT
+H	regs	3295
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	5547
+H	pairs	4266
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	4266
+H	max_worst	57.54
+H	max_bounded	0
+H	max_signed	-57.54
+H	max_launch	pcap[186]$_DFF_P_
+H	max_capture	p_q[186]$_DFF_P_
+H	max_crpr	0.22
+H	max_p99_raw	54.34
+H	max_searched	11
+H	max_nopath	0
+H	max_verify	0.000
+P	max	ptw_d0[328]$_DFF_P_	u_twd0/q[328]$_DFF_P_	-42.57	18.18	60.75
+P	max	pcap[186]$_DFF_P_	p_q[186]$_DFF_P_	-57.54	0.22	57.76
+P	max	g_psel[22].u/q$_DFF_P_	p_q[183]$_DFF_P_	-57.49	0.22	57.71
+P	max	pcap[177]$_DFF_P_	p_q[177]$_DFF_P_	-57.47	0.22	57.70
+P	max	pcap[214]$_DFF_P_	p_q[214]$_DFF_P_	-57.46	0.22	57.69
+P	max	g_psel[22].u/q$_DFF_P_	p_q[178]$_DFF_P_	-57.43	0.22	57.65
+P	max	pcap[185]$_DFF_P_	p_q[185]$_DFF_P_	-57.39	0.22	57.62
+P	max	pcap[210]$_DFF_P_	p_q[210]$_DFF_P_	-57.35	0.22	57.58
+P	max	pcap[180]$_DFF_P_	p_q[180]$_DFF_P_	-57.34	0.22	57.57
+P	max	g_psel[22].u/q$_DFF_P_	p_q[180]$_DFF_P_	-57.32	0.22	57.55
+P	max	g_psel[22].u/q$_DFF_P_	p_q[177]$_DFF_P_	-57.32	0.22	57.54
+H	min_n	4266
+H	min_worst	68.79
+H	min_bounded	0
+H	min_signed	68.79
+H	min_launch	ptw_d1[393]$_DFF_P_
+H	min_capture	u_twd1/q[393]$_DFF_P_
+H	min_crpr	0.22
+H	min_p99_raw	56.59
+H	min_searched	2
+H	min_nopath	0
+H	min_verify	0.000
+P	min	ptw_d1[393]$_DFF_P_	u_twd1/q[393]$_DFF_P_	68.79	0.22	69.01
+P	min	ptw_d1[392]$_DFF_P_	u_twd1/q[392]$_DFF_P_	68.66	0.22	68.89
