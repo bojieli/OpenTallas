@@ -761,7 +761,11 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
         batches = [pending[i:i+size] for i in range(0, len(pending), size)]
         def one_batch(ids):
             script = [f"&r {swept}; &cone -O {i}; &cec -n -m -C {conflicts * 10}" for i in ids]
-            r = subprocess.run([abc, "-c", "; ".join(script)], capture_output=True, text=True)
+            # one command per line in a script file (abc -f): a long batch passed as one -c argument exceeds the
+            # kernel per-argument limit (MAX_ARG_STRLEN 128 KiB; OSError E2BIG on the 48k-output kvs_pc miters)
+            sf = work / f"{tag}_cones_{ids[0]}_{ids[-1]}.abc"
+            sf.write_text("\n".join(script) + "\n")
+            r = subprocess.run([abc, "-f", str(sf)], capture_output=True, text=True)
             return ids, r.stdout + r.stderr
         with ThreadPoolExecutor(max_workers=jobs) as ex:
             for ids, t in ex.map(one_batch, batches):
