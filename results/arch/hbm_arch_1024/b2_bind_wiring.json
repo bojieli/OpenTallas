@@ -1,0 +1,3945 @@
+{
+ "schema": "opentallas.hbm_b2.bind_wiring.v1",
+ "rule": "HBM-BIND 10-24: machine-readable B2 (8-SM, NW+NE) native-bind delta over the r18h5 as-built die (tools/hbm_b2/b2_top.py applies it; tools/hbm_b2/make_wiring.py writes it).",
+ "keep": {
+  "quadrants": [
+   "NW",
+   "NE"
+  ],
+  "instances": [
+   "tkm_SW"
+  ],
+  "drop_instances": [
+   "host_N",
+   "hb_idx__xq_S",
+   "hb_idx__xqr"
+  ]
+ },
+ "strap_ports": [
+  ".*\\.(tgt|qid|sid|bid|bank_id|pc_id|id_sm|id_stack|sm_hbm|sm_stream|stk|attn_column|attn_rowbase|xs_a1|xs_a2|xs_g1|xs_g2|first_ord|quad|lbase|slot|half|rl_cfg|wc_cfg|tile_id)"
+ ],
+ "items": [
+  {
+   "id": "W-RING",
+   "kind": "wiring",
+   "status": "done",
+   "what": "COLL ring A hb_coll_{NW,NE}.pr_* and ring B hcollb_{NW,NE}.cw/ccw closed as 2-stop rings: NW.cw_o->NE.cw_i (new), NE.cw_o->NW.cw_i (as built), NE.ccw_o->NW.ccw_i (new), NW.ccw_o->NE.ccw_i (as built); qid straps 2/3 unchanged; ring programme addresses qid 2/3 only"
+  },
+  {
+   "id": "W-OBS",
+   "kind": "wiring",
+   "status": "done",
+   "what": "observation ring ingress->obs_C->obs_NE->obs_NW->ingress (LID 0/3/4 kept; LID 1/2 absent: host reads of SW/SE words return d=0 unmatched)"
+  },
+  {
+   "id": "W-HLEAF",
+   "kind": "param+wiring",
+   "status": "done",
+   "what": "hleaf_NW NT/NF (19, 31), hleaf_NE NT/NF (21, 31) (ot_hbm_host_cfg_leaf2); host_status NT 43 NF 75 NH 6 NA 2, TGTS re-derived per slot",
+   "moved": {
+    "hleaf_NE": [
+     "t_ready:col_su.ready[0]",
+     "t_ready:col_idx.ready[0]",
+     "t_ready:hc_eng.configured[0]",
+     "t_ready:hc_eng.configured[0]",
+     "t_active:col_su.active[0]",
+     "t_active:col_idx.active[0]",
+     "t_active:hc_eng.program_active[0]",
+     "t_active:hc_eng.program_active[0]",
+     "t_fault:col_su.fault[0]",
+     "t_fault:col_idx.fault[0]",
+     "t_fault:ep_S3.fault[0]",
+     "t_fault:hc_eng.fault[0]"
+    ],
+    "hleaf_NW": [
+     "t_fault:ep_S0.fault[0]",
+     "t_fault:ep_S1.fault[0]"
+    ]
+   },
+   "host_fault_map": "hleaf s_fault bit order = rebuild t_fault order (host software map changes)"
+  },
+  {
+   "id": "W-CFG",
+   "kind": "wiring",
+   "status": "done",
+   "what": "col_su / col_idx / hc_eng cfg/desc/launch <- hleaf_NE copy a (as-built hleaf_SE a); c_busy {valid,busy} / c_done <- pgp_NW (SU programme part 0 of the 2-part root; as-built pgp_SW)"
+  },
+  {
+   "id": "W-EP",
+   "kind": "param+wiring",
+   "status": "done (plan change owed)",
+   "what": "hb_coll_NW -> ot_hfd_coll_q3_hard_v8x NLINK 3 (lanes N0,S0,S1) + TKM interface to tkm_SW + ARGMAX engine (as-built SW q3 role); hb_coll_NE q2 NLINK 2 (N2,S3); epcal_NW W 57, epcal_NE W 38 (19-bit endpoint field k at [19k+18:19k]); ep faults to hleaf_NW (S0,S1) / hleaf_NE (S3)",
+   "plan": "B2l q_hub type carries u_hb_coll_Q = q2_hard_v8g for BOTH hubs (mirrored); the 5 SerDes need q3 NLINK 3 on one hub and q2 NLINK 2 on the other -> NW_hub / NE_hub become two types (or one superset type), and tkm_SW (root) must face the q3 hub. VM_RT 81 kept from the as-built NW/NE engines: re-derive from the B2 plan VM round trip."
+  },
+  {
+   "id": "W-RID",
+   "kind": "wiring",
+   "status": "done",
+   "what": "hb_router_ids run_v/run_layer <- cp_svg_NW0 (as-built cp_svg_SW0, same master and run_arg slice)"
+  },
+  {
+   "id": "P-VMST",
+   "kind": "param",
+   "status": "done",
+   "what": "vm_status4 NQ 2 {hb_vms_NE, hb_vms_NW} (bench rtl/hbm_accel/generic/vm/static/run_vms_status_nq.sh)"
+  },
+  {
+   "id": "R-VM",
+   "kind": "rtl+wiring",
+   "status": "done (sub-agent VM 19cfa3d9c)",
+   "what": "hb_vms_NW -> hfd_hgi_vms_glue_nw2_t (NC 2: cq {idx_ctl.cq, argmax.cq}, cr[273:0] argmax / [547:274] idx_ctl; calendar_NW fields at the SW NC 2 widths, ring controls = ccw halves), hb_vms_NE -> hfd_hgi_vms_static_NE2_glue (ring controls = cw halves); ring links as built (NW.ccw_out->NE.ccw_in, NE.cw_out->NW.cw_in); replay_source removed",
+   "plan": "NW and NE hubs become different VM masters (NW2 NC 2 vs NE2); VM_RT / CR_RT and the die cr padding of argmax (6) / idx (8) must be re-derived for the B2 NW path; one dead bank port (xq or xq2, 8 x 276 b constant inside the glue) per hub until a one-port bank variant exists"
+  },
+  {
+   "id": "R-SU",
+   "kind": "rtl+wiring",
+   "status": "done (sub-agent SU cc8b2b937; qcore w2 here)",
+   "what": "str_C -> ot_hbm_su_stree_root2 (up0/dn0 = NW leg, up1/dn1 = NE leg; dn 82 b = {NE head, NW head}); stl_NW/NE -> ot_hbm_su_stree_leaf NLEG 2 (writer 0 NW, 1 NE); sucore_NW/NE -> ot_hbm_su_static_qcore_r13_w2 (2-writer port bound to core writers 2/3 = as built; writers 0/1 removed inside the master); su_prog -> root_h5 PARTS 2 (part 0 pgp_NW banks 0..319, part 1 pgp_NE 320..639; r_we/r_bank remapped, p_fault {NE, NW})",
+   "plan": "sucore_NW/NE become a new hard master (w2 wrapper: writer 0/1 logic pruned -> re-close the SU core tile); compiler lower_root5(parts=2) exists, --root5 CLI lacks a parts option"
+  },
+  {
+   "id": "W-FLT",
+   "kind": "param+wiring",
+   "status": "done",
+   "what": "fr_NW N 15 / fr_NE N 15 take every hb_coll retry lane (SYNC_MASK bits re-positioned); tkm_SW.stat_cycles observed by obs_C (N 125; as built by obs_SW)"
+  },
+  {
+   "id": "W-HOST",
+   "kind": "rtl+wiring",
+   "status": "rtl+bench (see b2_native_bind_rtl.json)",
+   "what": "host_N (ot_pdie_ucie_col) dropped; ep_N0 -> hfd_ep_static_vc2 (slot {vc,frame,v} 614 b, COLL VC0 calendar priority +1 TX edge, host VC1 4-deep elastic queue on free take slots, RX vc demux); host_ep -> hfd_ep_host_vc (pingpong + pin regs on the ep_N0 host face; host_cp_rxs unchanged). The N0 peer (switch / neighbour) must run the vc2 lane format.",
+   "plan": "B2l/B2m: io_NW_io_u_host_N window removed; u_host_ep stays (smaller: no gearbox); ep_N0<->host_ep 612+612+5 b frame faces inside NW_io; root keeps u_host_cp_ingress"
+  },
+  {
+   "id": "R-IDX",
+   "kind": "rtl+wiring",
+   "status": "done (straps 8d607ca2e; delays from b2_delays.json)",
+   "what": "hb_idx__ctl SID 3 / NQ 2 / NL 1: shares vmb_NE*.rq4/rr4 (vm_rq / vm_rr) with op_NE (index_rq / index_rr; op_NE no longer drives the banks), tree_ev {xq_N.y[593] NE, xq_N.y[296] NW}, qfault {qctl_NE, qctl_NW}, selected_v 1 b; hb_idx__selector NL 1 in_line = xq_N.y without the two list valid bits ({NE 296, NW 296} = as-built list 1); hb_idx__link NL 1; hb_argmax SID 3; hb_idx__xq_S and hb_idx__xqr dropped; cq / cr via hb_vms_NW (R-VM) -> NE sector over the two-stop ring; hb_idx__nwsh / op_NW (NW share2) kept",
+   "plan": "root<->NE_hub carries the root share (vm_rq 136 + index_rr 2056 b out, vm_rr 2056 + index_rq 136 b in): see b2_delays.json lane capacity; score chain is one xq node (2 edges) shorter (compiler --score-chain); delay params from b2_delays.json"
+  },
+  {
+   "id": "D-DELAY",
+   "kind": "param",
+   "status": "done (62 params from b2_delays.json)",
+   "what": "every VM bank client / share round-trip param (d4g bank-latency rules), SEL_LAT and the root hub echo (CR_RT / ACK) re-derived from the plan lane latency table; regenerate with tools/hbm_b2/b2_delays.py when the plan changes"
+  }
+ ],
+ "remaster": {
+  "hleaf_NW": {
+   "master": "ot_hbm_host_cfg_leaf2",
+   "params": ".NT(19), .NF(31)"
+  },
+  "hleaf_NE": {
+   "master": "ot_hbm_host_cfg_leaf2",
+   "params": ".NT(21), .NF(31)"
+  },
+  "host_status": {
+   "master": "ot_hbm_status_join_fa",
+   "params": ".NT(43), .NF(75), .NH(6), .TGTS(344'ha5a47870816b67d7d6d5d4876f63575655543b77377fd3d2d1d0a2866e6a6662535251503a763630b3b2a3), .NA(2), .FCLR(125), .RRELAY(1), .GUARD(12)"
+  },
+  "obs_C": {
+   "master": "ot_hbm_obs_leaf",
+   "params": ".N(125), .LID(0), .SYNC_MASK(512'h0)"
+  },
+  "hb_coll_NW": {
+   "master": "ot_hfd_coll_q3_hard_v8x",
+   "params": ".NLINK(3), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(3)"
+  },
+  "hb_coll_NE": {
+   "master": "ot_hfd_coll_q2_hard_v8g",
+   "params": ".NLINK(2), .TP(192), .AR_ITER(1), .ROWS(256), .VM_RT(3)"
+  },
+  "epcal_NW": {
+   "master": "hfd_hgi_vm_calendar_f20_role",
+   "params": ".W(57)"
+  },
+  "epcal_NE": {
+   "master": "hfd_hgi_vm_calendar_f20_role",
+   "params": ".W(38)"
+  },
+  "vm_status4": {
+   "master": "ot_vms_status4_static",
+   "params": ".NQ(2)"
+  },
+  "hb_vms_NW": {
+   "master": "hfd_hgi_vms_glue_nw2_t",
+   "params": ""
+  },
+  "hb_vms_NE": {
+   "master": "hfd_hgi_vms_static_NE2_glue",
+   "params": ""
+  },
+  "str_C": {
+   "master": "ot_hbm_su_stree_root2",
+   "params": ".MUT(0)"
+  },
+  "stl_NW": {
+   "master": "ot_hbm_su_stree_leaf",
+   "params": ".MUT(0), .NLEG(2)"
+  },
+  "sucore_NW": {
+   "master": "ot_hbm_su_static_qcore_r13_w2",
+   "params": ".MUT(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .ROW_EN(2), .WDEC(1)"
+  },
+  "stl_NE": {
+   "master": "ot_hbm_su_stree_leaf",
+   "params": ".MUT(0), .NLEG(2)"
+  },
+  "sucore_NE": {
+   "master": "ot_hbm_su_static_qcore_r13_w2",
+   "params": ".MUT(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .ROW_EN(2), .WDEC(1)"
+  },
+  "su_prog": {
+   "master": "ot_hbm_su_programme_root_h5",
+   "params": ".PARTS(2)"
+  },
+  "fr_NW": {
+   "master": "ot_hbm_fault_leaf",
+   "params": ".N(15), .SYNC_MASK(64'h140)"
+  },
+  "fr_NE": {
+   "master": "ot_hbm_fault_leaf",
+   "params": ".N(15), .SYNC_MASK(64'ha0)"
+  },
+  "ep_N0": {
+   "master": "hfd_ep_static_vc2",
+   "params": ".IDLE_K(204), .HQ(4)"
+  },
+  "host_ep": {
+   "master": "hfd_ep_host_vc",
+   "params": ""
+  },
+  "hb_idx__ctl": {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "params": ".VM_RT(56), .CR_RT(170), .SEL_LAT(4), .RSTL(1), .FAN32(1), .SID(2'd3), .NQ(2), .NL(1)"
+  },
+  "hb_idx__selector": {
+   "master": "ot_hbm_idx_selector_static_sel",
+   "params": ".NL(1)"
+  },
+  "hb_idx__link": {
+   "master": "ot_hbm_idx_topk_link_static",
+   "params": ".NL(1)"
+  },
+  "hb_argmax": {
+   "master": "ot_hbm_argmax_static_sw_vm_r2",
+   "params": ".TP(192), .VMX(61), .ACK(183), .SID(2'd3)"
+  },
+  "hb_idx__nwsh": {
+   "master": "ot_hbm_idx_vm_share2_static_r",
+   "params": ".BANK_RT(7)"
+  },
+  "hb_idx__op_NE": {
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "params": ".VM_RT_EXTRA(113)"
+  },
+  "hb_idx__op_NW": {
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "params": ".VM_RT_EXTRA(5)"
+  },
+  "hc_NE0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(37)"
+  },
+  "hc_NE1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(25)"
+  },
+  "hc_NE2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(28)"
+  },
+  "hc_NE3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(24)"
+  },
+  "hc_NW0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(37)"
+  },
+  "hc_NW1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(25)"
+  },
+  "hc_NW2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(28)"
+  },
+  "hc_NW3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "params": ".READ_RETURN(23), .WRITE_RETURN(24)"
+  },
+  "hcollgi_NE": {
+   "master": "ot_hgi_coll_gq_issue",
+   "params": ".VM_RT(3)"
+  },
+  "hcollgi_NW": {
+   "master": "ot_hgi_coll_gq_issue",
+   "params": ".VM_RT(3)"
+  },
+  "hcollrs_NE": {
+   "master": "ot_hbm_idx_vm_share2_static_r",
+   "params": ".BANK_RT(7)"
+  },
+  "hcollrs_NW": {
+   "master": "ot_hbm_idx_vm_share2_static_r",
+   "params": ".BANK_RT(7)"
+  },
+  "sfu_NE0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(33)"
+  },
+  "sfu_NE1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(21)"
+  },
+  "sfu_NE2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(24)"
+  },
+  "sfu_NE3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(20)"
+  },
+  "sfu_NW0": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(33)"
+  },
+  "sfu_NW1": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(21)"
+  },
+  "sfu_NW2": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(24)"
+  },
+  "sfu_NW3": {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "params": ".READ_RETURN(19), .WRITE_RETURN(20)"
+  },
+  "su_NE0": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(3), .G(0), .READ_RETURN(15), .WRITE_RETURN(29), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NE1": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(3), .G(1), .READ_RETURN(15), .WRITE_RETURN(17), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NE2": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(3), .G(2), .READ_RETURN(15), .WRITE_RETURN(20), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NE3": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(3), .G(3), .READ_RETURN(15), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NW0": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(2), .G(0), .READ_RETURN(15), .WRITE_RETURN(29), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NW1": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(2), .G(1), .READ_RETURN(15), .WRITE_RETURN(17), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NW2": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(2), .G(2), .READ_RETURN(15), .WRITE_RETURN(20), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  },
+  "su_NW3": {
+   "master": "ot_hbm_su_static_pgslice_lg",
+   "params": ".QID(2), .G(3), .READ_RETURN(15), .WRITE_RETURN(16), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1)"
+  }
+ },
+ "rebuild": {
+  "hb_coll_NE": {
+   "pr_cw_i": [
+    [
+     "hb_coll_NW",
+     "pr_cw_o",
+     0,
+     279
+    ]
+   ],
+   "phy_up": [
+    [
+     "ep_N2",
+     "phy_up",
+     0,
+     0
+    ],
+    [
+     "ep_S3",
+     "phy_up",
+     0,
+     0
+    ]
+   ],
+   "rx_pin_v": [
+    [
+     "ep_N2",
+     "rx_pin_v",
+     0,
+     0
+    ],
+    [
+     "ep_S3",
+     "rx_pin_v",
+     0,
+     0
+    ]
+   ],
+   "rx_pin_flit": [
+    [
+     "ep_N2",
+     "rx_pin_flit",
+     0,
+     611
+    ],
+    [
+     "ep_S3",
+     "rx_pin_flit",
+     0,
+     611
+    ]
+   ],
+   "clk_link": [
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ]
+   ],
+   "clk_qslots": [
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ]
+   ]
+  },
+  "hb_coll_NW": {
+   "pr_ccw_i": [
+    [
+     "hb_coll_NE",
+     "pr_ccw_o",
+     0,
+     279
+    ]
+   ],
+   "phy_up": [
+    [
+     "ep_N0",
+     "phy_up",
+     0,
+     0
+    ],
+    [
+     "ep_S0",
+     "phy_up",
+     0,
+     0
+    ],
+    [
+     "ep_S1",
+     "phy_up",
+     0,
+     0
+    ]
+   ],
+   "rx_pin_v": [
+    [
+     "ep_N0",
+     "rx_pin_v",
+     0,
+     0
+    ],
+    [
+     "ep_S0",
+     "rx_pin_v",
+     0,
+     0
+    ],
+    [
+     "ep_S1",
+     "rx_pin_v",
+     0,
+     0
+    ]
+   ],
+   "rx_pin_flit": [
+    [
+     "ep_N0",
+     "rx_pin_flit",
+     0,
+     611
+    ],
+    [
+     "ep_S0",
+     "rx_pin_flit",
+     0,
+     611
+    ],
+    [
+     "ep_S1",
+     "rx_pin_flit",
+     0,
+     611
+    ]
+   ],
+   "clk_link": [
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ]
+   ],
+   "clk_arg": [
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ]
+   ],
+   "clk_qslots": [
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ]
+   ],
+   "tkx_w_v": [
+    [
+     "tkm_SW",
+     "w_v",
+     0,
+     0
+    ]
+   ],
+   "tkx_w_addr": [
+    [
+     "tkm_SW",
+     "w_addr",
+     0,
+     39
+    ]
+   ],
+   "tkx_w_mask": [
+    [
+     "tkm_SW",
+     "w_mask",
+     0,
+     15
+    ]
+   ],
+   "tkx_w_data": [
+    [
+     "tkm_SW",
+     "w_data",
+     0,
+     511
+    ]
+   ],
+   "tkx_busy": [
+    [
+     "tkm_SW",
+     "busy",
+     0,
+     0
+    ]
+   ],
+   "tkx_done": [
+    [
+     "tkm_SW",
+     "done",
+     0,
+     0
+    ]
+   ],
+   "tkx_fault": [
+    [
+     "tkm_SW",
+     "fault",
+     0,
+     0
+    ]
+   ]
+  },
+  "hcollb_NE": {
+   "cw_i": [
+    [
+     "hcollb_NW",
+     "cw_o",
+     0,
+     279
+    ]
+   ]
+  },
+  "hcollb_NW": {
+   "ccw_i": [
+    [
+     "hcollb_NE",
+     "ccw_o",
+     0,
+     279
+    ]
+   ]
+  },
+  "obs_NE": {
+   "q_v": [
+    [
+     "obs_C",
+     "r_v",
+     0,
+     0
+    ]
+   ],
+   "q_idx": [
+    [
+     "obs_C",
+     "r_idx",
+     0,
+     7
+    ]
+   ],
+   "q_d": [
+    [
+     "obs_C",
+     "r_d",
+     0,
+     31
+    ]
+   ]
+  },
+  "hleaf_NW": {
+   "t_ready": [
+    [
+     "hb_quant_NW__program_leaf",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "hb_coll_NW",
+     "program_configured",
+     0,
+     0
+    ],
+    [
+     "col_sfu_NW",
+     "ready",
+     0,
+     0
+    ],
+    [
+     "vmfc_NW",
+     "tgt_configured",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW0",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW1",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW2",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW3",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "calendar_NW",
+     "tgt_configured",
+     0,
+     0
+    ],
+    [
+     "xl_NW_ctl",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "hb_dbk_NW",
+     "cp_configured",
+     0,
+     0
+    ],
+    [
+     "hc_NW",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "epcal_NW",
+     "tgt_configured",
+     0,
+     0
+    ],
+    [
+     "smw_NW",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "xc_NW0",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "xc_NW1",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "xc_NW2",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "xc_NW3",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "refcfg_NW",
+     "ready",
+     0,
+     0
+    ]
+   ],
+   "t_active": [
+    [
+     "hb_quant_NW__program_leaf",
+     "active",
+     0,
+     0
+    ],
+    [
+     "hb_coll_NW",
+     "hgi_busy",
+     0,
+     0
+    ],
+    [
+     "col_sfu_NW",
+     "active",
+     0,
+     0
+    ],
+    [
+     "vmfc_NW",
+     "active",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW0",
+     "active",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW1",
+     "active",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW2",
+     "active",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW3",
+     "active",
+     0,
+     0
+    ],
+    [
+     "calendar_NW",
+     "active",
+     0,
+     0
+    ],
+    [
+     "xl_NW_ctl",
+     "active",
+     0,
+     0
+    ],
+    [
+     "hb_dbk_NW",
+     "cp_active",
+     0,
+     0
+    ],
+    [
+     "hc_NW",
+     "program_active",
+     0,
+     0
+    ],
+    [
+     "epcal_NW",
+     "active",
+     0,
+     0
+    ],
+    [
+     "smw_NW",
+     "active",
+     0,
+     0
+    ],
+    [
+     "xc_NW0",
+     "active",
+     0,
+     0
+    ],
+    [
+     "xc_NW1",
+     "active",
+     0,
+     0
+    ],
+    [
+     "xc_NW2",
+     "active",
+     0,
+     0
+    ],
+    [
+     "xc_NW3",
+     "active",
+     0,
+     0
+    ],
+    [
+     "refcfg_NW",
+     "active",
+     0,
+     0
+    ]
+   ],
+   "t_fault": [
+    [
+     "hb_quant_NW__hbfd_qdq_split_or",
+     "Y",
+     0,
+     0
+    ],
+    [
+     "hb_coll_NW",
+     "program_fault",
+     0,
+     0
+    ],
+    [
+     "hb_coll_NW",
+     "hgi_fault",
+     0,
+     0
+    ],
+    [
+     "hb_coll_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "col_sfu_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "vmfc_NW",
+     "tgt_fault",
+     0,
+     0
+    ],
+    [
+     "vmfc_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW0",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW1",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW2",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW3",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "calendar_NW",
+     "tgt_fault",
+     0,
+     0
+    ],
+    [
+     "calendar_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "xl_NW_ctl",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_dbk_NW",
+     "cp_fault",
+     0,
+     0
+    ],
+    [
+     "hc_NW",
+     "hcq_fault",
+     0,
+     0
+    ],
+    [
+     "epcal_NW",
+     "tgt_fault",
+     0,
+     0
+    ],
+    [
+     "epcal_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "ep_N0",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "smw_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "xc_NW0",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "xc_NW1",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "xc_NW2",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "xc_NW3",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "wbk_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "fcx_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "sfus_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "sfup_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "refcfg_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "ep_S0",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "ep_S1",
+     "fault",
+     0,
+     0
+    ]
+   ]
+  },
+  "hleaf_NE": {
+   "t_ready": [
+    [
+     "hb_coll_NE",
+     "program_configured",
+     0,
+     0
+    ],
+    [
+     "col_sfu_NE",
+     "ready",
+     0,
+     0
+    ],
+    [
+     "vmfc_NE",
+     "tgt_configured",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW4",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW5",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW6",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW7",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "calendar_NE",
+     "tgt_configured",
+     0,
+     0
+    ],
+    [
+     "hc_NE",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "epcal_NE",
+     "tgt_configured",
+     0,
+     0
+    ],
+    [
+     "xc_NW4",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "xc_NW5",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "xc_NW6",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "xc_NW7",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "xl_NE_ctl",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "hb_dbk_NE",
+     "cp_configured",
+     0,
+     0
+    ],
+    [
+     "refcfg_NE",
+     "ready",
+     0,
+     0
+    ],
+    [
+     "col_su",
+     "ready",
+     0,
+     0
+    ],
+    [
+     "col_idx",
+     "ready",
+     0,
+     0
+    ],
+    [
+     "hc_eng",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "hc_eng",
+     "configured",
+     0,
+     0
+    ]
+   ],
+   "t_active": [
+    [
+     "hb_coll_NE",
+     "hgi_busy",
+     0,
+     0
+    ],
+    [
+     "col_sfu_NE",
+     "active",
+     0,
+     0
+    ],
+    [
+     "vmfc_NE",
+     "active",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW4",
+     "active",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW5",
+     "active",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW6",
+     "active",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW7",
+     "active",
+     0,
+     0
+    ],
+    [
+     "calendar_NE",
+     "active",
+     0,
+     0
+    ],
+    [
+     "hc_NE",
+     "program_active",
+     0,
+     0
+    ],
+    [
+     "epcal_NE",
+     "active",
+     0,
+     0
+    ],
+    [
+     "xc_NW4",
+     "active",
+     0,
+     0
+    ],
+    [
+     "xc_NW5",
+     "active",
+     0,
+     0
+    ],
+    [
+     "xc_NW6",
+     "active",
+     0,
+     0
+    ],
+    [
+     "xc_NW7",
+     "active",
+     0,
+     0
+    ],
+    [
+     "xl_NE_ctl",
+     "active",
+     0,
+     0
+    ],
+    [
+     "hb_dbk_NE",
+     "cp_active",
+     0,
+     0
+    ],
+    [
+     "refcfg_NE",
+     "active",
+     0,
+     0
+    ],
+    [
+     "col_su",
+     "active",
+     0,
+     0
+    ],
+    [
+     "col_idx",
+     "active",
+     0,
+     0
+    ],
+    [
+     "hc_eng",
+     "program_active",
+     0,
+     0
+    ],
+    [
+     "hc_eng",
+     "program_active",
+     0,
+     0
+    ]
+   ],
+   "t_fault": [
+    [
+     "hb_coll_NE",
+     "program_fault",
+     0,
+     0
+    ],
+    [
+     "hb_coll_NE",
+     "hgi_fault",
+     0,
+     0
+    ],
+    [
+     "hb_coll_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "col_sfu_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "vmfc_NE",
+     "tgt_fault",
+     0,
+     0
+    ],
+    [
+     "vmfc_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW4",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW5",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW6",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cp_svg_NW7",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "calendar_NE",
+     "tgt_fault",
+     0,
+     0
+    ],
+    [
+     "calendar_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hc_NE",
+     "hcq_fault",
+     0,
+     0
+    ],
+    [
+     "epcal_NE",
+     "tgt_fault",
+     0,
+     0
+    ],
+    [
+     "epcal_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "ep_N2",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "xc_NW4",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "xc_NW5",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "xc_NW6",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "xc_NW7",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "fcx_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "sfus_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "sfup_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "xl_NE_ctl",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_dbk_NE",
+     "cp_fault",
+     0,
+     0
+    ],
+    [
+     "refcfg_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "wbk_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "col_su",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "col_idx",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "ep_S3",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hc_eng",
+     "fault",
+     0,
+     0
+    ]
+   ]
+  },
+  "obs_C": {
+   "obs": [
+    [
+     "ep_N0",
+     "fault_cause",
+     0,
+     10
+    ],
+    [
+     "ep_N0",
+     "rx_block_ready",
+     0,
+     1
+    ],
+    [
+     "ep_N2",
+     "fault_cause",
+     0,
+     10
+    ],
+    [
+     "ep_N2",
+     "rx_block_ready",
+     0,
+     1
+    ],
+    [
+     "ep_S0",
+     "fault_cause",
+     0,
+     10
+    ],
+    [
+     "ep_S0",
+     "rx_block_ready",
+     0,
+     1
+    ],
+    [
+     "ep_S1",
+     "fault_cause",
+     0,
+     10
+    ],
+    [
+     "ep_S1",
+     "rx_block_ready",
+     0,
+     1
+    ],
+    [
+     "ep_S3",
+     "fault_cause",
+     0,
+     10
+    ],
+    [
+     "ep_S3",
+     "rx_block_ready",
+     0,
+     1
+    ],
+    [
+     "hb_argmax",
+     "cq_seq",
+     0,
+     1
+    ],
+    [
+     "hb_argmax",
+     "done",
+     0,
+     0
+    ],
+    [
+     "hb_idx__ctl",
+     "topk_done",
+     0,
+     0
+    ],
+    [
+     "hb_idx__link",
+     "selected_count",
+     0,
+     9
+    ],
+    [
+     "hc_eng",
+     "program_done",
+     0,
+     0
+    ],
+    [
+     "host_ep",
+     "fault_cause",
+     0,
+     10
+    ],
+    [
+     "host_status",
+     "a_cause",
+     0,
+     1
+    ],
+    [
+     "tkm_SW",
+     "stat_cycles",
+     0,
+     31
+    ]
+   ]
+  },
+  "host_status": {
+   "t_ready": [
+    [
+     "smw_NE",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "hcollgi_NW",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "hcollgi_NE",
+     "configured",
+     0,
+     0
+    ],
+    [
+     "hleaf_NW",
+     "s_ready",
+     0,
+     18
+    ],
+    [
+     "hleaf_NE",
+     "s_ready",
+     0,
+     20
+    ]
+   ],
+   "t_active": [
+    [
+     "smw_NE",
+     "active",
+     0,
+     0
+    ],
+    [
+     "hcollgi_NW",
+     "active",
+     0,
+     0
+    ],
+    [
+     "hcollgi_NE",
+     "active",
+     0,
+     0
+    ],
+    [
+     "hleaf_NW",
+     "s_active",
+     0,
+     18
+    ],
+    [
+     "hleaf_NE",
+     "s_active",
+     0,
+     20
+    ]
+   ],
+   "t_fault": [
+    [
+     "smw_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hcollgi_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hcollgi_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hcollgi_NW",
+     "tgt_fault",
+     0,
+     0
+    ],
+    [
+     "hcollgi_NE",
+     "tgt_fault",
+     0,
+     0
+    ],
+    [
+     "hcollgl_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hcollrs_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hcollks_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hcollb_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hcollgl_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hcollrs_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hcollks_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hcollb_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hleaf_NW",
+     "s_fault",
+     0,
+     30
+    ],
+    [
+     "hleaf_NE",
+     "s_fault",
+     0,
+     30
+    ]
+   ],
+   "h_fault": [
+    [
+     "host_cp_ingress",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "host_cp_rxs",
+     "protocol_fault",
+     0,
+     0
+    ],
+    [
+     "host_cp_rxs",
+     "land_fault",
+     0,
+     0
+    ],
+    [
+     "host_ep",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "host_cp_rxs",
+     "link_fault",
+     0,
+     0
+    ],
+    [
+     "host_cp_rxs",
+     "seq_fault",
+     0,
+     0
+    ]
+   ],
+   "a_fault": [
+    [
+     "fr_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "fr_NW",
+     "fault",
+     0,
+     0
+    ]
+   ]
+  },
+  "col_su": {
+   "cfg_v": [
+    [
+     "hleaf_NE",
+     "a_cfg_v",
+     0,
+     0
+    ]
+   ],
+   "cfg_target": [
+    [
+     "hleaf_NE",
+     "a_cfg_target",
+     0,
+     7
+    ]
+   ],
+   "cfg_addr": [
+    [
+     "hleaf_NE",
+     "a_cfg_addr",
+     0,
+     11
+    ]
+   ],
+   "cfg_data": [
+    [
+     "hleaf_NE",
+     "a_cfg_data",
+     0,
+     255
+    ]
+   ],
+   "desc_v": [
+    [
+     "hleaf_NE",
+     "a_desc_v",
+     0,
+     0
+    ]
+   ],
+   "launch_v": [
+    [
+     "hleaf_NE",
+     "a_launch_v",
+     0,
+     0
+    ]
+   ],
+   "c_busy": [
+    [
+     "pgp_NW",
+     "busy",
+     0,
+     0
+    ],
+    [
+     "pgp_NW",
+     "valid",
+     0,
+     0
+    ]
+   ],
+   "c_done": [
+    [
+     "pgp_NW",
+     "done",
+     0,
+     0
+    ]
+   ]
+  },
+  "col_idx": {
+   "cfg_v": [
+    [
+     "hleaf_NE",
+     "a_cfg_v",
+     0,
+     0
+    ]
+   ],
+   "cfg_target": [
+    [
+     "hleaf_NE",
+     "a_cfg_target",
+     0,
+     7
+    ]
+   ],
+   "cfg_addr": [
+    [
+     "hleaf_NE",
+     "a_cfg_addr",
+     0,
+     11
+    ]
+   ],
+   "cfg_data": [
+    [
+     "hleaf_NE",
+     "a_cfg_data",
+     0,
+     255
+    ]
+   ],
+   "desc_v": [
+    [
+     "hleaf_NE",
+     "a_desc_v",
+     0,
+     0
+    ]
+   ],
+   "launch_v": [
+    [
+     "hleaf_NE",
+     "a_launch_v",
+     0,
+     0
+    ]
+   ]
+  },
+  "hc_eng": {
+   "cfg_v": [
+    [
+     "hleaf_NE",
+     "a_cfg_v",
+     0,
+     0
+    ]
+   ],
+   "cfg_target": [
+    [
+     "hleaf_NE",
+     "a_cfg_target",
+     0,
+     7
+    ]
+   ],
+   "cfg_addr": [
+    [
+     "hleaf_NE",
+     "a_cfg_addr",
+     0,
+     11
+    ]
+   ],
+   "cfg_data": [
+    [
+     "hleaf_NE",
+     "a_cfg_data",
+     0,
+     255
+    ]
+   ],
+   "desc_v": [
+    [
+     "hleaf_NE",
+     "a_desc_v",
+     0,
+     0
+    ]
+   ],
+   "desc_base": [
+    [
+     "hleaf_NE",
+     "a_desc_base",
+     0,
+     11
+    ]
+   ],
+   "desc_limit": [
+    [
+     "hleaf_NE",
+     "a_desc_limit",
+     0,
+     12
+    ]
+   ],
+   "desc_loops": [
+    [
+     "hleaf_NE",
+     "a_desc_loops",
+     0,
+     15
+    ]
+   ],
+   "launch_v": [
+    [
+     "hleaf_NE",
+     "a_launch_v",
+     0,
+     0
+    ]
+   ]
+  },
+  "ep_N0": {
+   "tx_v": [
+    [
+     "hb_coll_NW",
+     "tx_pin_v",
+     0,
+     0
+    ]
+   ],
+   "tx_frame": [
+    [
+     "hb_coll_NW",
+     "tx_pin_flit",
+     0,
+     611
+    ]
+   ],
+   "rx_arm_v": [
+    [
+     "epcal_NW",
+     "payload",
+     0,
+     0
+    ]
+   ],
+   "rx_arm_bank": [
+    [
+     "epcal_NW",
+     "payload",
+     1,
+     1
+    ]
+   ],
+   "rx_block_words": [
+    [
+     "epcal_NW",
+     "payload",
+     2,
+     8
+    ]
+   ],
+   "rx_release_v": [
+    [
+     "epcal_NW",
+     "payload",
+     9,
+     9
+    ]
+   ],
+   "rx_release_bank": [
+    [
+     "epcal_NW",
+     "payload",
+     10,
+     10
+    ]
+   ],
+   "rx_slot_v": [
+    [
+     "epcal_NW",
+     "payload",
+     11,
+     11
+    ]
+   ],
+   "rx_slot_bank": [
+    [
+     "epcal_NW",
+     "payload",
+     12,
+     12
+    ]
+   ],
+   "rx_slot_index": [
+    [
+     "epcal_NW",
+     "payload",
+     13,
+     18
+    ]
+   ],
+   "h_tx_v": [
+    [
+     "host_ep",
+     "vc_tx_v",
+     0,
+     0
+    ]
+   ],
+   "h_tx_frame": [
+    [
+     "host_ep",
+     "vc_tx_frame",
+     0,
+     611
+    ]
+   ]
+  },
+  "ep_S0": {
+   "tx_v": [
+    [
+     "hb_coll_NW",
+     "tx_pin_v",
+     1,
+     1
+    ]
+   ],
+   "tx_frame": [
+    [
+     "hb_coll_NW",
+     "tx_pin_flit",
+     612,
+     1223
+    ]
+   ],
+   "rx_arm_v": [
+    [
+     "epcal_NW",
+     "payload",
+     19,
+     19
+    ]
+   ],
+   "rx_arm_bank": [
+    [
+     "epcal_NW",
+     "payload",
+     20,
+     20
+    ]
+   ],
+   "rx_block_words": [
+    [
+     "epcal_NW",
+     "payload",
+     21,
+     27
+    ]
+   ],
+   "rx_release_v": [
+    [
+     "epcal_NW",
+     "payload",
+     28,
+     28
+    ]
+   ],
+   "rx_release_bank": [
+    [
+     "epcal_NW",
+     "payload",
+     29,
+     29
+    ]
+   ],
+   "rx_slot_v": [
+    [
+     "epcal_NW",
+     "payload",
+     30,
+     30
+    ]
+   ],
+   "rx_slot_bank": [
+    [
+     "epcal_NW",
+     "payload",
+     31,
+     31
+    ]
+   ],
+   "rx_slot_index": [
+    [
+     "epcal_NW",
+     "payload",
+     32,
+     37
+    ]
+   ]
+  },
+  "ep_S1": {
+   "tx_v": [
+    [
+     "hb_coll_NW",
+     "tx_pin_v",
+     2,
+     2
+    ]
+   ],
+   "tx_frame": [
+    [
+     "hb_coll_NW",
+     "tx_pin_flit",
+     1224,
+     1835
+    ]
+   ],
+   "rx_arm_v": [
+    [
+     "epcal_NW",
+     "payload",
+     38,
+     38
+    ]
+   ],
+   "rx_arm_bank": [
+    [
+     "epcal_NW",
+     "payload",
+     39,
+     39
+    ]
+   ],
+   "rx_block_words": [
+    [
+     "epcal_NW",
+     "payload",
+     40,
+     46
+    ]
+   ],
+   "rx_release_v": [
+    [
+     "epcal_NW",
+     "payload",
+     47,
+     47
+    ]
+   ],
+   "rx_release_bank": [
+    [
+     "epcal_NW",
+     "payload",
+     48,
+     48
+    ]
+   ],
+   "rx_slot_v": [
+    [
+     "epcal_NW",
+     "payload",
+     49,
+     49
+    ]
+   ],
+   "rx_slot_bank": [
+    [
+     "epcal_NW",
+     "payload",
+     50,
+     50
+    ]
+   ],
+   "rx_slot_index": [
+    [
+     "epcal_NW",
+     "payload",
+     51,
+     56
+    ]
+   ]
+  },
+  "ep_N2": {
+   "tx_v": [
+    [
+     "hb_coll_NE",
+     "tx_pin_v",
+     0,
+     0
+    ]
+   ],
+   "tx_frame": [
+    [
+     "hb_coll_NE",
+     "tx_pin_flit",
+     0,
+     611
+    ]
+   ],
+   "rx_arm_v": [
+    [
+     "epcal_NE",
+     "payload",
+     0,
+     0
+    ]
+   ],
+   "rx_arm_bank": [
+    [
+     "epcal_NE",
+     "payload",
+     1,
+     1
+    ]
+   ],
+   "rx_block_words": [
+    [
+     "epcal_NE",
+     "payload",
+     2,
+     8
+    ]
+   ],
+   "rx_release_v": [
+    [
+     "epcal_NE",
+     "payload",
+     9,
+     9
+    ]
+   ],
+   "rx_release_bank": [
+    [
+     "epcal_NE",
+     "payload",
+     10,
+     10
+    ]
+   ],
+   "rx_slot_v": [
+    [
+     "epcal_NE",
+     "payload",
+     11,
+     11
+    ]
+   ],
+   "rx_slot_bank": [
+    [
+     "epcal_NE",
+     "payload",
+     12,
+     12
+    ]
+   ],
+   "rx_slot_index": [
+    [
+     "epcal_NE",
+     "payload",
+     13,
+     18
+    ]
+   ]
+  },
+  "ep_S3": {
+   "tx_v": [
+    [
+     "hb_coll_NE",
+     "tx_pin_v",
+     1,
+     1
+    ]
+   ],
+   "tx_frame": [
+    [
+     "hb_coll_NE",
+     "tx_pin_flit",
+     612,
+     1223
+    ]
+   ],
+   "rx_arm_v": [
+    [
+     "epcal_NE",
+     "payload",
+     19,
+     19
+    ]
+   ],
+   "rx_arm_bank": [
+    [
+     "epcal_NE",
+     "payload",
+     20,
+     20
+    ]
+   ],
+   "rx_block_words": [
+    [
+     "epcal_NE",
+     "payload",
+     21,
+     27
+    ]
+   ],
+   "rx_release_v": [
+    [
+     "epcal_NE",
+     "payload",
+     28,
+     28
+    ]
+   ],
+   "rx_release_bank": [
+    [
+     "epcal_NE",
+     "payload",
+     29,
+     29
+    ]
+   ],
+   "rx_slot_v": [
+    [
+     "epcal_NE",
+     "payload",
+     30,
+     30
+    ]
+   ],
+   "rx_slot_bank": [
+    [
+     "epcal_NE",
+     "payload",
+     31,
+     31
+    ]
+   ],
+   "rx_slot_index": [
+    [
+     "epcal_NE",
+     "payload",
+     32,
+     37
+    ]
+   ]
+  },
+  "tkm_SW": {
+   "start": [
+    [
+     "hb_coll_NW",
+     "tkx_start",
+     0,
+     0
+    ]
+   ],
+   "arg_mode": [
+    [
+     "hb_coll_NW",
+     "tkx_arg_mode",
+     0,
+     0
+    ]
+   ],
+   "cfg_n": [
+    [
+     "hb_coll_NW",
+     "tkx_cfg_n",
+     0,
+     11
+    ]
+   ],
+   "cfg_k": [
+    [
+     "hb_coll_NW",
+     "tkx_cfg_k",
+     0,
+     12
+    ]
+   ],
+   "cfg_nout": [
+    [
+     "hb_coll_NW",
+     "tkx_cfg_nout",
+     0,
+     12
+    ]
+   ],
+   "cfg_g": [
+    [
+     "hb_coll_NW",
+     "tkx_cfg_g",
+     0,
+     7
+    ]
+   ],
+   "cfg_gbase": [
+    [
+     "hb_coll_NW",
+     "tkx_cfg_gbase",
+     0,
+     7
+    ]
+   ],
+   "cfg_pf": [
+    [
+     "hb_coll_NW",
+     "tkx_cfg_pf",
+     0,
+     15
+    ]
+   ],
+   "cfg_obase": [
+    [
+     "hb_coll_NW",
+     "tkx_cfg_obase",
+     0,
+     39
+    ]
+   ],
+   "cfg_rbase": [
+    [
+     "hb_coll_NW",
+     "tkx_cfg_rbase",
+     0,
+     39
+    ]
+   ],
+   "cfg_has_r": [
+    [
+     "hb_coll_NW",
+     "tkx_cfg_has_r",
+     0,
+     0
+    ]
+   ],
+   "del_slot": [
+    [
+     "hb_coll_NW",
+     "tkx_del_slot",
+     0,
+     3
+    ]
+   ],
+   "del_valid": [
+    [
+     "hb_coll_NW",
+     "tkx_del_valid",
+     0,
+     3
+    ]
+   ],
+   "del_flit": [
+    [
+     "hb_coll_NW",
+     "tkx_del_flit",
+     0,
+     2179
+    ]
+   ]
+  },
+  "hb_router_ids": {
+   "run_v": [
+    [
+     "cp_svg_NW0",
+     "run_v",
+     0,
+     0
+    ]
+   ],
+   "run_layer": [
+    [
+     "cp_svg_NW0",
+     "run_arg",
+     0,
+     7
+    ]
+   ]
+  },
+  "vm_status4": {
+   "quadrant_status": [
+    [
+     "hb_vms_NW",
+     "vmstat",
+     0,
+     15
+    ],
+    [
+     "hb_vms_NW",
+     "vmstat",
+     16,
+     18
+    ],
+    [
+     "hb_vms_NE",
+     "vmstat",
+     0,
+     18
+    ]
+   ]
+  },
+  "hb_vms_NW": {
+   "cq": [
+    [
+     "hb_argmax",
+     "cq",
+     0,
+     337
+    ],
+    [
+     "hb_idx__ctl",
+     "cq",
+     0,
+     337
+    ]
+   ],
+   "client_seq": [
+    [
+     "calendar_NW",
+     "client_seq",
+     0,
+     5
+    ]
+   ],
+   "response_enable": [
+    [
+     "calendar_NW",
+     "response_enable",
+     0,
+     2
+    ]
+   ],
+   "response_seq": [
+    [
+     "calendar_NW",
+     "response_seq",
+     0,
+     5
+    ]
+   ],
+   "bank_enable": [
+    [
+     "calendar_NW",
+     "bank_enable",
+     0,
+     7
+    ]
+   ],
+   "bank_client": [
+    [
+     "calendar_NW",
+     "bank_client",
+     0,
+     15
+    ]
+   ],
+   "hub_ring_enable": [
+    [
+     "calendar_NW",
+     "hub_ring_enable",
+     1,
+     1
+    ]
+   ],
+   "hub_ring_client": [
+    [
+     "calendar_NW",
+     "hub_ring_client",
+     2,
+     3
+    ]
+   ],
+   "ring_tx_enable": [
+    [
+     "calendar_NW",
+     "ring_tx_enable",
+     1,
+     1
+    ]
+   ],
+   "ring_tx_source": [
+    [
+     "calendar_NW",
+     "ring_tx_source",
+     3,
+     5
+    ]
+   ],
+   "replay_enable": [
+    [
+     "calendar_NW",
+     "replay_enable",
+     0,
+     0
+    ]
+   ],
+   "cw_in": [
+    [
+     "hb_vms_NE",
+     "cw_out",
+     0,
+     2223
+    ]
+   ]
+  },
+  "hb_vms_NE": {
+   "client_seq": [
+    [
+     "calendar_NE",
+     "client_seq",
+     0,
+     1
+    ]
+   ],
+   "response_enable": [
+    [
+     "calendar_NE",
+     "response_enable",
+     0,
+     0
+    ]
+   ],
+   "response_seq": [
+    [
+     "calendar_NE",
+     "response_seq",
+     0,
+     1
+    ]
+   ],
+   "bank_enable": [
+    [
+     "calendar_NE",
+     "bank_enable",
+     0,
+     7
+    ]
+   ],
+   "bank_client": [
+    [
+     "calendar_NE",
+     "bank_client",
+     0,
+     7
+    ]
+   ],
+   "hub_ring_enable": [
+    [
+     "calendar_NE",
+     "hub_ring_enable",
+     0,
+     0
+    ]
+   ],
+   "hub_ring_client": [
+    [
+     "calendar_NE",
+     "hub_ring_client",
+     0,
+     0
+    ]
+   ],
+   "ring_tx_enable": [
+    [
+     "calendar_NE",
+     "ring_tx_enable",
+     0,
+     0
+    ]
+   ],
+   "ring_tx_source": [
+    [
+     "calendar_NE",
+     "ring_tx_source",
+     0,
+     2
+    ]
+   ],
+   "replay_enable": [
+    [
+     "calendar_NE",
+     "replay_enable",
+     0,
+     0
+    ]
+   ],
+   "ccw_in": [
+    [
+     "hb_vms_NW",
+     "ccw_out",
+     0,
+     2223
+    ]
+   ]
+  },
+  "hb_argmax": {
+   "cr": [
+    [
+     "hb_vms_NW",
+     "cr",
+     0,
+     273
+    ]
+   ]
+  },
+  "hb_idx__ctl": {
+   "cr": [
+    [
+     "hb_vms_NW",
+     "cr",
+     274,
+     547
+    ]
+   ],
+   "index_rq": [
+    [
+     "hb_idx__op_NE",
+     "vm_rq",
+     0,
+     135
+    ]
+   ],
+   "vm_rr": [
+    [
+     "vmb_NE0",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE1",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE2",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE3",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE4",
+     "rr4",
+     0,
+     107
+    ],
+    [
+     "vmb_NE4",
+     "rr4",
+     108,
+     256
+    ],
+    [
+     "vmb_NE5",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE6",
+     "rr4",
+     0,
+     256
+    ],
+    [
+     "vmb_NE7",
+     "rr4",
+     0,
+     256
+    ]
+   ],
+   "tree_ev": [
+    [
+     "hb_idx__xq_N",
+     "y",
+     296,
+     296
+    ],
+    [
+     "hb_idx__xq_N",
+     "y",
+     593,
+     593
+    ]
+   ],
+   "qfault": [
+    [
+     "hb_idx__qctl_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_idx__qctl_NE",
+     "fault",
+     0,
+     0
+    ]
+   ],
+   "selected_v": [
+    [
+     "hb_idx__selector",
+     "selected_v",
+     0,
+     0
+    ]
+   ]
+  },
+  "str_C": {
+   "up0_i": [
+    [
+     "stl_NW",
+     "up_o",
+     0,
+     40
+    ]
+   ],
+   "up1_i": [
+    [
+     "stl_NE",
+     "up_o",
+     0,
+     40
+    ]
+   ]
+  },
+  "stl_NW": {
+   "dn_i": [
+    [
+     "str_C",
+     "dn0_o",
+     0,
+     81
+    ]
+   ]
+  },
+  "sucore_NW": {
+   "rf_wv": [
+    [
+     "stl_NW",
+     "rf_wv",
+     0,
+     1
+    ]
+   ],
+   "rf_wa": [
+    [
+     "stl_NW",
+     "rf_wa",
+     0,
+     15
+    ]
+   ],
+   "rf_wd": [
+    [
+     "stl_NW",
+     "rf_wd",
+     0,
+     63
+    ]
+   ]
+  },
+  "stl_NE": {
+   "dn_i": [
+    [
+     "str_C",
+     "dn1_o",
+     0,
+     81
+    ]
+   ]
+  },
+  "sucore_NE": {
+   "rf_wv": [
+    [
+     "stl_NE",
+     "rf_wv",
+     0,
+     1
+    ]
+   ],
+   "rf_wa": [
+    [
+     "stl_NE",
+     "rf_wa",
+     0,
+     15
+    ]
+   ],
+   "rf_wd": [
+    [
+     "stl_NE",
+     "rf_wd",
+     0,
+     63
+    ]
+   ]
+  },
+  "su_prog": {
+   "p_fault": [
+    [
+     "pgp_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "pgp_NE",
+     "fault",
+     0,
+     0
+    ]
+   ]
+  },
+  "fr_NW": {
+   "in": [
+    [
+     "hb_vms_NW",
+     "ring_fault",
+     0,
+     2
+    ],
+    [
+     "hb_coll_NW",
+     "retry_requested",
+     0,
+     2
+    ],
+    [
+     "subr_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_dbk_NW",
+     "mv_fault",
+     0,
+     0
+    ],
+    [
+     "sucore_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "fl_NW3",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "fs_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cij_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_vms_NW",
+     "vmstat",
+     16,
+     18
+    ]
+   ]
+  },
+  "fr_NE": {
+   "in": [
+    [
+     "hb_vms_NE",
+     "ring_fault",
+     0,
+     2
+    ],
+    [
+     "hb_coll_NE",
+     "retry_requested",
+     0,
+     1
+    ],
+    [
+     "subr_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_argmax",
+     "nan_flag",
+     0,
+     0
+    ],
+    [
+     "sucore_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "fl_NE3",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_dbk_NE",
+     "mv_fault",
+     0,
+     0
+    ],
+    [
+     "fs_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "cij_NE",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "hb_vms_NE",
+     "vmstat",
+     16,
+     18
+    ]
+   ]
+  },
+  "host_ep": {
+   "vc_rx_v": [
+    [
+     "ep_N0",
+     "h_rx_v",
+     0,
+     0
+    ]
+   ],
+   "vc_rx_frame": [
+    [
+     "ep_N0",
+     "h_rx_frame",
+     0,
+     611
+    ]
+   ],
+   "vc_up": [
+    [
+     "ep_N0",
+     "h_up",
+     0,
+     0
+    ]
+   ],
+   "vc_cause": [
+    [
+     "ep_N0",
+     "h_cause",
+     0,
+     2
+    ]
+   ]
+  },
+  "hb_idx__op_NE": {
+   "vm_rr": [
+    [
+     "hb_idx__ctl",
+     "index_rr",
+     0,
+     2055
+    ]
+   ]
+  },
+  "vmb_NE0": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     0,
+     16
+    ]
+   ]
+  },
+  "vmb_NE1": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     17,
+     33
+    ]
+   ]
+  },
+  "vmb_NE2": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     34,
+     50
+    ]
+   ]
+  },
+  "vmb_NE3": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     51,
+     67
+    ]
+   ]
+  },
+  "vmb_NE4": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     68,
+     84
+    ]
+   ]
+  },
+  "vmb_NE5": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     85,
+     101
+    ]
+   ]
+  },
+  "vmb_NE6": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     102,
+     118
+    ]
+   ]
+  },
+  "vmb_NE7": {
+   "rq4": [
+    [
+     "hb_idx__ctl",
+     "vm_rq",
+     119,
+     135
+    ]
+   ]
+  },
+  "hb_idx__selector": {
+   "in_line": [
+    [
+     "hb_idx__xq_N",
+     "y",
+     0,
+     295
+    ],
+    [
+     "hb_idx__xq_N",
+     "y",
+     297,
+     592
+    ]
+   ],
+   "clk_q": [
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ]
+   ],
+   "clk_mem": [
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ],
+    [
+     "hb_ckgen",
+     "pll_stream",
+     0,
+     0
+    ]
+   ]
+  },
+  "hb_idx__link": {
+   "selected_line": [
+    [
+     "hb_idx__selector",
+     "selected_line",
+     0,
+     591
+    ]
+   ]
+  }
+ },
+ "port_map": {},
+ "out_width": {
+  "hleaf_NW": {
+   "s_ready": 19,
+   "s_active": 19,
+   "s_fault": 31
+  },
+  "hleaf_NE": {
+   "s_ready": 21,
+   "s_active": 21,
+   "s_fault": 31
+  },
+  "host_status": {
+   "a_cause": 2
+  },
+  "hb_coll_NW": {
+   "tx_pin_v": 3,
+   "tx_pin_flit": 1836,
+   "retry_requested": 3,
+   "tkx_start": 1,
+   "tkx_arg_mode": 1,
+   "tkx_cfg_n": 12,
+   "tkx_cfg_k": 13,
+   "tkx_cfg_nout": 13,
+   "tkx_cfg_g": 8,
+   "tkx_cfg_gbase": 8,
+   "tkx_cfg_pf": 16,
+   "tkx_cfg_obase": 40,
+   "tkx_cfg_rbase": 40,
+   "tkx_cfg_has_r": 1,
+   "tkx_del_slot": 4,
+   "tkx_del_valid": 4,
+   "tkx_del_flit": 2180
+  },
+  "hb_coll_NE": {
+   "tx_pin_v": 2,
+   "tx_pin_flit": 1224,
+   "retry_requested": 2
+  },
+  "epcal_NW": {
+   "payload": 57
+  },
+  "epcal_NE": {
+   "payload": 38
+  },
+  "hb_vms_NW": {
+   "cr": 548
+  },
+  "str_C": {
+   "dn0_o": 82,
+   "dn1_o": 82
+  },
+  "stl_NW": {
+   "rf_wv": 2,
+   "rf_wa": 16,
+   "rf_wd": 64
+  },
+  "stl_NE": {
+   "rf_wv": 2,
+   "rf_wa": 16,
+   "rf_wd": 64
+  },
+  "su_prog": {
+   "r_we": 2,
+   "r_bank": 32
+  },
+  "ep_N0": {
+   "h_rx_v": 1,
+   "h_rx_frame": 612,
+   "h_up": 1,
+   "h_cause": 3
+  },
+  "host_ep": {
+   "vc_tx_v": 1,
+   "vc_tx_frame": 612
+  },
+  "hb_idx__selector": {
+   "selected_v": 1,
+   "selected_line": 592
+  }
+ },
+ "add_ports": {
+  "hb_coll_NW": {
+   "clk_arg": "in",
+   "tkx_w_v": "in",
+   "tkx_w_addr": "in",
+   "tkx_w_mask": "in",
+   "tkx_w_data": "in",
+   "tkx_busy": "in",
+   "tkx_done": "in",
+   "tkx_fault": "in",
+   "tkx_start": "out",
+   "tkx_arg_mode": "out",
+   "tkx_cfg_n": "out",
+   "tkx_cfg_k": "out",
+   "tkx_cfg_nout": "out",
+   "tkx_cfg_g": "out",
+   "tkx_cfg_gbase": "out",
+   "tkx_cfg_pf": "out",
+   "tkx_cfg_obase": "out",
+   "tkx_cfg_rbase": "out",
+   "tkx_cfg_has_r": "out",
+   "tkx_del_slot": "out",
+   "tkx_del_valid": "out",
+   "tkx_del_flit": "out"
+  },
+  "hb_vms_NW": {
+   "cq": "in",
+   "cr": "out"
+  },
+  "ep_N0": {
+   "h_tx_v": "in",
+   "h_tx_frame": "in",
+   "h_rx_v": "out",
+   "h_rx_frame": "out",
+   "h_up": "out",
+   "h_cause": "out"
+  },
+  "host_ep": {
+   "vc_tx_v": "out",
+   "vc_tx_frame": "out",
+   "vc_rx_v": "in",
+   "vc_rx_frame": "in",
+   "vc_up": "in",
+   "vc_cause": "in"
+  }
+ },
+ "drop_ports": {
+  "hb_vms_NW": [
+   "cw_out",
+   "ccw_in",
+   "replay_source"
+  ],
+  "hb_vms_NE": [
+   "ccw_out",
+   "cw_in",
+   "replay_source"
+  ],
+  "str_C": [
+   "up2_i",
+   "up3_i",
+   "dn2_o",
+   "dn3_o"
+  ],
+  "host_ep": [
+   "sd_tx",
+   "sd_rx",
+   "sd_st"
+  ]
+ },
+ "out_remap": {
+  "su_prog": {
+   "r_we": [
+    [
+     2,
+     2,
+     0
+    ],
+    [
+     3,
+     3,
+     1
+    ]
+   ],
+   "r_bank": [
+    [
+     32,
+     47,
+     0
+    ],
+    [
+     48,
+     63,
+     16
+    ]
+   ]
+  }
+ }
+}

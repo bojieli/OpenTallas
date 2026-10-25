@@ -1,0 +1,78 @@
+{
+ "verdict": "PASS",
+ "arrival": 39,
+ "paths": [
+  {
+   "target": "cp_svg_NW0",
+   "leaf": "hleaf_NW",
+   "anchor": "host_cp_ingress.launch_v",
+   "legs": [
+    {
+     "cycles": 2,
+     "lanes": [
+      "L62"
+     ]
+    },
+    {
+     "cycles": 2,
+     "rtl": "ot_hbm_host_cfg_leaf CFG_LAT"
+    },
+    {
+     "cycles": 7,
+     "lanes": [
+      "L84"
+     ]
+    },
+    {
+     "cycles": 2,
+     "rtl": "ot_static_run_target launch_v->run_v"
+    },
+    {
+     "cycles": 26,
+     "lanes": [
+      "L155"
+     ]
+    }
+   ],
+   "arrival": 39,
+   "required_root_deskew": 0
+  },
+  {
+   "target": "cp_svg_NW4",
+   "leaf": "hleaf_NE",
+   "anchor": "host_cp_ingress.launch_v",
+   "legs": [
+    {
+     "cycles": 2,
+     "lanes": [
+      "L62m"
+     ]
+    },
+    {
+     "cycles": 2,
+     "rtl": "ot_hbm_host_cfg_leaf CFG_LAT"
+    },
+    {
+     "cycles": 7,
+     "lanes": [
+      "L84m"
+     ]
+    },
+    {
+     "cycles": 2,
+     "rtl": "ot_static_run_target launch_v->run_v"
+    },
+    {
+     "cycles": 26,
+     "lanes": [
+      "L155m"
+     ]
+    }
+   ],
+   "arrival": 39,
+   "required_root_deskew": 0
+  }
+ ],
+ "reset_gate": "NOT EVALUATED; wait max_release and descriptor installation before launch",
+ "compiler_rule": "One ingress launch broadcasts to all armed ot_static_run_target instances. Both half run identities must arrive together; same-layer pair coalesces into one cohort."
+}

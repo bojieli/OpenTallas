@@ -1,0 +1,31 @@
+{
+  "verdict": "PASS beyond retained r18h5 baseline",
+  "host": "intel2",
+  "unit": "oth-ubuntu-2091073-1792922182",
+  "run": "/srv/opentallas-scratch2/claude/codex-hbm-native-rtlsmoke/native_bind_r3",
+  "exit": 0,
+  "underlying_port_bind": "FAIL: retained input straps, PHY behavioral model and four old SM-front child models",
+  "summary": {
+    "instances": 341,
+    "width_mismatch": 0,
+    "unparsed_connections": 0,
+    "input_unconnected": 0,
+    "unbound_masters": 0,
+    "params_not_in_rtl": 0,
+    "unresolved_children": 4
+  },
+  "clock_ports": 967,
+  "clock_gate": "PASS; wrong-clock mutant caught",
+  "retired": [
+    "subr_NW",
+    "subr_NE"
+  ],
+  "source_override": "rtl/hdc/ot_hdc_fastfp_lat_c12.sv (LAT4 f12_l4)",
+  "remaining": [
+    "physical W128 HC views",
+    "per-cut SU concrete binding",
+    "wavefront/reset composition",
+    "L74 schedule-aware multi-beat",
+    "whole token pass"
+  ]
+}

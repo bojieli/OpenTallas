@@ -1,0 +1,42 @@
+{
+  "router": {
+    "verdict": "PASS",
+    "host": "epyc3 (ot-run spill; outputs copied to intel2)",
+    "unit": "oth-ubuntu-2172367-1792922335",
+    "run": "/srv/opentallas-scratch2/claude/codex-hbm-native-rtlsmoke/router2_pair",
+    "positive": "four alternating-source launches + four simultaneous paired launches through real TOPK collector and issuer",
+    "mutants": [
+      "drop source1 caught",
+      "wrong source1 layer caught",
+      "source1 one edge late caught (cohort2 vs1)"
+    ],
+    "added_cycles": 0
+  },
+  "ep_root_relay": {
+    "verdict": "PASS",
+    "host": "intel2",
+    "unit": "oth-ubuntu-2875538-1792921725",
+    "run": "/srv/opentallas-scratch2/claude/codex-hbm-native-rtlsmoke/eprelay_r2",
+    "cycles": 300,
+    "bits_compared": 374100,
+    "mutants": [
+      "RX bit flip caught",
+      "TX wrong depth caught"
+    ],
+    "owned_plan_stages": {
+      "rx": 1,
+      "tx": 1
+    },
+    "state_bits": 1247,
+    "limitation": "Placement and <=405um stage reach are separate physical gates; owned stages must be counted once in path budget"
+  },
+  "su_lane": {
+    "verdict": "PASS",
+    "source": "codex/hbm-token-1025@d2af28485",
+    "shape": "kind0 actual lane ALAT4_f12/MLAT4/LEAF1/PINREG1, six SRAMs",
+    "outputs": 1984,
+    "golden_sram_checks": 3968,
+    "mutants_caught": 3,
+    "scope": "Minimum arithmetic lane, not nonlinear SFU or die"
+  }
+}

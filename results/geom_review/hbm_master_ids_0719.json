@@ -1,0 +1,20 @@
+{
+ "verdict":"PASS-COND",
+ "scope":"Three reusable master pin templates only; no parent route approval",
+ "image":"results/geom_review/hbm_master_ids_0719.png",
+ "source_plan":"claude/hbm-b2o-1025r@fcd78fa50f",
+ "findings":[
+  "16 SFU lanes share one unchanged 388.8x345.6 outline and canonical pin template; four timed ID pins form a compact N-face M7 group.",
+  "31 regular TKM tiles share one unchanged 319.68x345.6 outline and canonical pin template; six timed ID pins form a compact N-face M7 group.",
+  "Terminal TKM tile retains its smaller functional interface and inherited internal data specialization. No non-ID constant is introduced on the reusable parent boundary.",
+  "All 48 emitted parent adapters passed 51072 exact port/binding checks; wrong-ID mutant caught. Canonical numerical RTL is unchanged; added data cycles zero.",
+  "Pin plans retain existing edge distribution. ID groups occupy x8.032..10.912um at0.576um M7 spacing, outside corners; original M5 data pin coordinates unchanged."
+ ],
+ "conditions":[
+  "Apply aliases/core_conns/capture endpoint names in the single B2o plan batch, then rebuild actual internal routes and run G0/G0C/actual-bit geometry.",
+  "Parent binder must consume the strict parent_id_straps contract; only declared input IDs may be constant-driven. All ID pins keep normal timing.",
+  "Master core re-kits must use the current corrected HBM flow and face shell; placement, clock, macro/PDN access and final signoff remain separate gates."
+ ],
+ "evidence_unit":"epyc1 oth-ubuntu-2651046-1792938960 EXIT0",
+ "evidence_dir":"epyc1:/srv/opentallas-scratch2/claude/codex-hbm-ids-0719/plan3"
+}

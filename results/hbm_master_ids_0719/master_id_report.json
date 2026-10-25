@@ -1,0 +1,43 @@
+{
+ "families": [
+  {
+   "family": "sfu_lane",
+   "module": "ot_hgi_sfu_split3_lane_core__idpin",
+   "replicas": 16,
+   "old_pin_templates": 11,
+   "new_pin_templates": 1,
+   "id_input_bits": 4,
+   "pins": 1472,
+   "inherited_data_specialization": false,
+   "added_data_cycles": 0,
+   "id_latency": "existing face shell input stage; boot-static ID"
+  },
+  {
+   "family": "tkm_tile",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__idpin",
+   "replicas": 31,
+   "old_pin_templates": 3,
+   "new_pin_templates": 1,
+   "id_input_bits": 6,
+   "pins": 1387,
+   "inherited_data_specialization": false,
+   "added_data_cycles": 0,
+   "id_latency": "existing face shell input stage; boot-static ID"
+  },
+  {
+   "family": "tkm_tile",
+   "module": "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin",
+   "replicas": 1,
+   "old_pin_templates": 1,
+   "new_pin_templates": 1,
+   "id_input_bits": 6,
+   "pins": 698,
+   "inherited_data_specialization": true,
+   "added_data_cycles": 0,
+   "id_latency": "existing face shell input stage; boot-static ID"
+  }
+ ],
+ "distinct_before": 48,
+ "distinct_after": 3,
+ "limitation": "Parent binder must consume parent_id_straps; geometry must pass after plan placement/routing rebuild"
+}

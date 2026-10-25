@@ -1,0 +1,38 @@
+FAIL child ot_hbm_accel_smh_fc_b (no RTL) instantiated in ot_smh_static_front
+FAIL child ot_hbm_accel_smh_fc_t (no RTL) instantiated in ot_smh_static_front
+FAIL child ot_hbm_accel_smh_fc_xl (no RTL) instantiated in ot_smh_static_front
+FAIL child ot_hbm_accel_smh_fc_xr (no RTL) instantiated in ot_smh_static_front
+FAIL hfd_hgi_vm_calendar_f20            x2      INPUT_TIED tied=tgt
+FAIL hfd_hgi_vm_calendar_f20_role       x4      INPUT_TIED tied=tgt
+FAIL hfd_vms_bank_native_q0_faces       x16     INPUT_TIED tied=bid,sid
+FAIL ot_hbm3e_phy_rc_e8p5               x1      STUB 
+FAIL ot_hbm_hc_qhub_static              x2      INPUT_TIED tied=tgt
+FAIL ot_hbm_hc_root_static              x1      WIDTH_MISMATCH/INPUT_TIED/UNPARSED width=gathered_mix_data:66vs128,gathered_mix_pos:8vs12,gathered_mix_row:12vs20,qps:66vs128 tied=tgt
+FAIL ot_hbm_idx_qctl_static             x2      INPUT_TIED tied=slot
+FAIL ot_hbm_idx_rootctl_static_am       x1      WIDTH_MISMATCH/UNPARSED width=index_rq:1vs136,vm_rr:8vs2056
+FAIL ot_hbm_idx_score_quarter_static    x2      INPUT_TIED tied=first_ord,half
+FAIL ot_hbm_idx_selector_static_sel     x1      INPUT_TIED tied=in_line
+FAIL ot_hbm_idx_vm_query_static_n12     x2      INPUT_TIED tied=sid
+FAIL ot_hbm_idx_xq_node_static          x3      WIDTH_MISMATCH/UNPARSED width=a:25vs297,b:25vs297
+FAIL ot_hbm_pc_refresh_cfg              x2      INPUT_TIED tied=tgt
+FAIL ot_hbm_sm_vm_wr_q_t_lanes4         x2      INPUT_TIED tied=lbase,quad,tgt
+FAIL ot_hbm_static_cfg_collar           x3      INPUT_TIED tied=tgt
+FAIL ot_hbm_static_cfg_collar_idx256r   x1      INPUT_TIED tied=tgt
+FAIL ot_hbm_su_static_sfustore_hw       x2      INPUT_TIED tied=qid
+FAIL ot_hbm_svc_pc_ctrl_leaf_cfg_h9b    x32     INPUT_TIED tied=pc_id
+FAIL ot_hbm_svc_sm_group_rel_id         x8      INPUT_TIED tied=id_sm,id_stack
+FAIL ot_hbm_svc_sm_xcal_rel_t           x8      INPUT_TIED tied=tgt
+FAIL ot_hbm_svc_vm_kshare_splitstrap    x8      INPUT_TIED tied=sm_hbm,sm_stream
+FAIL ot_hbm_svc_vmdel_lane_n            x16     INPUT_TIED tied=bank_id
+FAIL ot_hbm_svc_wb_kport_q              x2      INPUT_TIED tied=quad,stk
+FAIL ot_hfd_coll_q2_hard_v8g            x1      INPUT_TIED tied=qid
+FAIL ot_hfd_coll_q3_hard_v8x            x1      INPUT_TIED tied=qid
+FAIL ot_hgi_coll_gq_issue               x2      INPUT_TIED tied=qid,tgt
+FAIL ot_hgi_coll_gq_land                x2      INPUT_TIED tied=qid
+FAIL ot_hgi_coll_ring_b_stop            x2      INPUT_TIED tied=qid
+FAIL ot_hgi_dma_back_static_vp4_banks_cp x2      INPUT_TIED tied=stk,tgt
+FAIL ot_hgi_qdq_lg_port_group_r2        x4      INPUT_TIED tied=wq_i
+FAIL ot_hgi_qdq_transport_ctl_r4        x1      INPUT_TIED tied=rl_cfg,wc_cfg
+FAIL ot_hgi_sm_xload_cl2_ctlx           x2      INPUT_TIED tied=tgt
+FAIL ot_static_run_target               x8      INPUT_TIED tied=tgt
+DIE_PORT_BIND FAIL masters=93 instances=344 unbound_masters=0 stub_masters=1 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=8 input_unconnected=0 input_tied=40 unparsed_connections=13 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=35201 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0 spare_out_bits=0 unresolved_children=4 ambiguous_children=0 variant_children=6

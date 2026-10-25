@@ -40,16 +40,44 @@
 // tile: TOPK RT_EXTRA 1+VM_RT, share owner tap own[7+VM_RT]; INDEX / ARGMAX responses leave VM_RT edges later (operand
 // reader VM_RT_EXTRA 4+VM_RT, argmax r2 VMX 5+VM_RT). CR_RT = fixed extra hub echo edges: TOPK ACK 13+CR_RT. Die master
 // for the faces banks with no relay on those lanes: ot_hbm_idx_rootctl_static_am_pin (VM_RT 1, CR_RT 1). Default 0 = r3.
+// RSTL (L2H-IDX g2d 2026-10-19, COORD 18:25 review of g2c: rst_c[1] / rst_c[2] each drove ~1,600-1,750 async clears):
+// 1 = NO in-RTL relay: rst_n is the hard tile's LANDED reset (kit reset_landing: 2 registered stages at the W face with a
+// balanced kept copy family, first stage F copies -> last stage N copies, physical/common_flow/ot_pin_regs.tcl +
+// ot_rst_copies.tcl reset_relay_split max_loads 32), and every reset flop of the three regions hangs off rst_n directly,
+// so the flow re-points them over the N regional copies (<= 32 loads each, cut by hierarchical name = by region). Release
+// is the landing's 2 edges after the die reset (was landing 2 + relay 3): transaction-level, no client counts from reset
+// (same rule as before); the TOPK engine runs RSPLIT 1 (its non-reset sequencer registers out of the reset block, so the
+// reset copies drive only asynchronous clears). 0 (default) = the ot_rst_relay 3-region form, bit-identical to r3 / g2c / am_pin.
+// FAN32 (HBM-IDX6 2026-10-20; mandatory native32 census of g2d/g2df FAILED 296 drivers > 32 loads, max 2,057 -- TOPK
+// capture/rotate selects, sequencer enables, lane controls, calendar word select, share ARGMAX gating, topk go/busy):
+// 1 = the structural FAN32 forms, same function and same edges at every port (bench tb_idx_rootctl_am_f32_eq: FAN32 0
+// vs 1 lockstep, every output every edge): TOPK engine ot_hbm_idx_topk_static_f32 (needs RSTL 1: RSPLIT form) fed by
+// NGO kept copies of the go pin register (same D topk_go, same reset), calendar ot_hbm_idx_calendar_static_f32
+// (one-hot word select; start as two kept pin-register copies), share F32 (ARGMAX data masked per 32-bit word by kept
+// valid copies in the leaves). Kept copies are ot_hbm_idx_kreg instances (keep_hierarchy). 0 (default) = as built.
+// QUADRANT STRAPS (HBM-BIND B2 2026-10-24, lane hbm-bind-idx; owner-accepted B2l 8-SM die = NW + NE of r18h5):
+//   SID (default 0 = the as-built SW root): the quadrant id this root serves = the quadrant whose VM read group 4 it
+//     shares (vm_rq / vm_rr / index face) and whose hub takes cq / cr. It is the TOPK engine's sector strap (a / o / r
+//     legality, read / write sector checks); it was the literal localparam SID = 0. B2: 3 (NE).
+//   NQ (default 4): quadrant score lists at the tree root = width of tree_ev and qfault (bit 0 = the list the
+//     selector's op 2 must see valid). B2: 2 ({NE, NW}: tree_ev[0] / qfault[0] = NW).
+//   NL (default 4): selector lists = width of selected_v (checked against {NL{ingest_v}}). B2: 1 (ot_hbm_idx_selector_
+//     static_sel NL 1: one 16-lane list {NE 8 lanes, NW 8 lanes}).
+//   No latency change: every pin register, SEL_LAT, VM_RT, CR_RT edge is the same; only check widths and the strap.
+//   B2MUT (bench only): 1 = tree_ev agree check off; 2 = only qfault[0] reaches fault (lists 1..NQ-1 dropped);
+//     3 = selected_v / ingest_v check off; 4 = TOPK sector strap forced to 0 (the as-built SW strap).
+//   Defaults (SID 0, NQ 4, NL 4, B2MUT 0) are bit-identical to the as-built r18h5 master (bench run_idx_rootctl_nq.sh).
 module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter integer SEL_LAT = 4,
- parameter integer VM_RT = 0, parameter integer CR_RT = 0)(
+ parameter integer VM_RT = 0, parameter integer CR_RT = 0, parameter integer RSTL = 0, parameter integer FAN32 = 0,
+ parameter [1:0] SID = 2'd0, parameter integer NQ = 4, parameter integer NL = 4, parameter integer B2MUT = 0)(
  input wire clk,input wire rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,
  output reg[3:0]sel_op,output reg[1:0]sel_pass,output reg[7:0]sel_addr,
  output reg link_flush,link_emit,output reg[3:0]link_group,output reg link_clear,
- input wire[3:0]selected_v,output reg ingest_v,
- input wire[3:0]tree_ev,                 // ev of the 4 quadrant lists at the tree root (quadrant 0 = list 0)
- input wire[3:0]qfault,input wire sf,lf,
+ input wire[NL-1:0]selected_v,output reg ingest_v,
+ input wire[NQ-1:0]tree_ev,              // ev of the NQ quadrant lists at the tree root (list 0 = tree_ev[0])
+ input wire[NQ-1:0]qfault,input wire sf,lf,
  output reg done,output reg fault,
  // TOPK
  input wire topk_go,input wire[3:0]topk_k,input wire topk_order,input wire[19:0]topk_n,topk_m,
@@ -57,22 +85,34 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
  input wire topk_has_r,input wire[17:0]topk_r_base,topk_r_str,
  output reg[337:0]cq,output reg[1:0]cq_seq,input wire[273:0]cr,
  output reg topk_busy,topk_done,topk_fault,
- // VM read group 4 share (index face = quadrant 0's operand reader)
+ // VM read group 4 share of quadrant SID (index face = quadrant SID's operand reader)
  input wire[135:0]index_rq,output wire[2055:0]index_rr,
  input wire[135:0]argmax_rq,output wire[263:0]argmax_m,
  output wire[135:0]vm_rq,input wire[2055:0]vm_rr,
  output reg share_fault
 );
- localparam [1:0] SID = 2'd0;
+ localparam [1:0] TSID = (B2MUT == 4) ? 2'd0 : SID;   // TOPK sector strap
  wire [2:0] rst_c;
- ot_rst_relay #(.REGIONS(3),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_c));
+ generate if (RSTL != 0) begin : g_rstl
+  assign rst_c = {3{rst_n}};                 // landed + regionally copied by the kit (see RSTL above)
+ end else begin : g_relay
+  ot_rst_relay #(.REGIONS(3),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(rst_c));
+ end endgenerate
  (* keep *) reg pw_r,st_r;(* keep *) reg[7:0]pa_r;(* keep *) reg[255:0]pd_r;(* keep *) reg[11:0]ln_r;
- (* keep *) reg[3:0]qf_r;
+ (* keep *) reg[NQ-1:0]qf_r;
  always @(posedge clk)begin pw_r<=program_we;pa_r<=program_addr;pd_r<=program_data;st_r<=start;ln_r<=length;qf_r<=qfault;end
  wire issue_v,calendar_fault,done_u;wire[31:0]ins;
- ot_hbm_idx_calendar_static calendar(.clk(clk),.clk_mem(clk),.rst_n(rst_c[0]),
- .program_we(pw_r),.program_addr(pa_r),.program_data(pd_r),.start(st_r),.length(ln_r),
- .issue_v(issue_v),.instruction(ins),.done(done_u),.fault(calendar_fault));
+ generate if (FAN32 != 0) begin : g_cal32
+  wire st_l;   // kept copy of the start pin register (the calendar's limit load)
+  ot_hbm_idx_kreg #(.W(1)) u_st_l(.clk(clk),.rst_n(rst_c[0]),.d(start),.q(st_l));
+  ot_hbm_idx_calendar_static_f32 calendar(.clk(clk),.clk_mem(clk),.rst_n(rst_c[0]),
+  .program_we(pw_r),.program_addr(pa_r),.program_data(pd_r),.start(st_r),.start_l(st_l),.length(ln_r),
+  .issue_v(issue_v),.instruction(ins),.done(done_u),.fault(calendar_fault));
+ end else begin : g_cal
+  ot_hbm_idx_calendar_static calendar(.clk(clk),.clk_mem(clk),.rst_n(rst_c[0]),
+  .program_we(pw_r),.program_addr(pa_r),.program_data(pd_r),.start(st_r),.length(ln_r),
+  .issue_v(issue_v),.instruction(ins),.done(done_u),.fault(calendar_fault));
+ end endgenerate
  always @(posedge clk or negedge rst_c[0])
   if(!rst_c[0])begin sel_op<=0;link_flush<=0;link_emit<=0;link_clear<=0;done<=0;end
   else begin
@@ -88,15 +128,15 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
   else begin
    so_d[0]<=sel_op;for(integer d=1;d<SL-1;d=d+1)so_d[d]<=so_d[d-1];
    ingest_v<=so_d[SL-2]==4'd6;
-   if(selected_v!={4{ingest_v}})ingest_fault<=1;
+   if(((B2MUT == 3) ? 1'b0 : (selected_v != {NL{ingest_v}})))ingest_fault<=1;
   end
  reg parent_calendar_fault,agree_fault;
  always @(posedge clk or negedge rst_c[0])begin
   if(!rst_c[0])begin parent_calendar_fault<=0;agree_fault<=0;fault<=0;end
   else begin
    if(sel_op==2&&tree_ev[0]!=1'b1)parent_calendar_fault<=1;
-   if(tree_ev!={4{tree_ev[0]}})agree_fault<=1;
-   fault<=calendar_fault|(|qf_r)|sf|lf|parent_calendar_fault|agree_fault|ingest_fault;   // fault pin register (+1)
+   if(((B2MUT == 1) ? 1'b0 : (tree_ev != {NQ{tree_ev[0]}})))agree_fault<=1;
+   fault<=calendar_fault|((B2MUT == 2) ? qf_r[0] : (|qf_r))|sf|lf|parent_calendar_fault|agree_fault|ingest_fault;   // fault pin register (+1)
   end
  end
  // TOPK command pin registers (+1 on the TOPK timeline; no reset: data pin flops, go is reset)
@@ -109,10 +149,23 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
   tk_rb_r<=topk_r_base;tk_rs_r<=topk_r_str;
  end
  wire[135:0]topk_rq;wire[2055:0]topk_rr;wire[337:0]tk_cq;wire[1:0]tk_cqs;wire tk_busy,tk_done,tk_fault;
- ot_hbm_idx_topk_static #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(SID),.go(tk_go_r),
-  .k(tk_k_r),.order(tk_ord_r),.n(tk_n_r),.m(tk_m_r),.a_mirror(tk_am_r),.a_base(tk_ab_r),.a_str(tk_as_r),.o_mirror(tk_om_r),
-  .o_base(tk_ob_r),.o_str(tk_os_r),.has_r(tk_hr_r),.r_base(tk_rb_r),.r_str(tk_rs_r),
-  .vm_rq(topk_rq),.vm_rr(topk_rr),.cq(tk_cq),.cq_seq(tk_cqs),.cr(cr),.busy(tk_busy),.done(tk_done),.fault(tk_fault));
+ generate if (FAN32 != 0) begin : g_tk32
+  localparam integer NGO = 12;
+  wire [NGO-1:0] go_c;   // kept copies of the go pin register tk_go_r (same D, same reset)
+  for (genvar c = 0; c < NGO; c = c + 1) begin : g_go
+   ot_hbm_idx_kreg #(.W(1)) u(.clk(clk),.rst_n(rst_c[1]),.d(topk_go),.q(go_c[c]));   // reset-free: settles in reset
+  end
+  ot_hbm_idx_topk_static_f32 #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT),.NGO(NGO)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(TSID),
+   .go(tk_go_r),.go_c(go_c),
+   .k(tk_k_r),.order(tk_ord_r),.n(tk_n_r),.m(tk_m_r),.a_mirror(tk_am_r),.a_base(tk_ab_r),.a_str(tk_as_r),.o_mirror(tk_om_r),
+   .o_base(tk_ob_r),.o_str(tk_os_r),.has_r(tk_hr_r),.r_base(tk_rb_r),.r_str(tk_rs_r),
+   .vm_rq(topk_rq),.vm_rr(topk_rr),.cq(tk_cq),.cq_seq(tk_cqs),.cr(cr),.busy(tk_busy),.done(tk_done),.fault(tk_fault));
+ end else begin : g_tk
+  ot_hbm_idx_topk_static #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT),.RSPLIT((RSTL != 0) ? 1 : 0)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(TSID),.go(tk_go_r),
+   .k(tk_k_r),.order(tk_ord_r),.n(tk_n_r),.m(tk_m_r),.a_mirror(tk_am_r),.a_base(tk_ab_r),.a_str(tk_as_r),.o_mirror(tk_om_r),
+   .o_base(tk_ob_r),.o_str(tk_os_r),.has_r(tk_hr_r),.r_base(tk_rb_r),.r_str(tk_rs_r),
+   .vm_rq(topk_rq),.vm_rr(topk_rr),.cq(tk_cq),.cq_seq(tk_cqs),.cr(cr),.busy(tk_busy),.done(tk_done),.fault(tk_fault));
+ end endgenerate
  // TOPK output pin registers (+1): the hub sees cq one edge later, so the engine's cr check runs at ACK 13
  always @(posedge clk or negedge rst_c[1])
   if(!rst_c[1])begin cq[337]<=0;topk_busy<=0;topk_done<=0;topk_fault<=0;end
@@ -122,7 +175,7 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
  (* keep *) reg[135:0]irq_r,arq_r;
  always @(posedge clk)begin irq_r<=index_rq;arq_r<=argmax_rq;end
  wire share_f;
- ot_hbm_idx_vm_share_static_amr #(.MUT((AMMUT == 7) ? 1 : 0),.AMMUT((AMMUT >= 1 && AMMUT <= 4) ? AMMUT : 0),.VM_RT(VM_RT)) share(.clk(clk),
+ ot_hbm_idx_vm_share_static_amr #(.MUT((AMMUT == 7) ? 1 : 0),.AMMUT((AMMUT >= 1 && AMMUT <= 4) ? AMMUT : 0),.VM_RT(VM_RT),.F32(FAN32)) share(.clk(clk),
   .rst_n(rst_c[2]),.index_rq(irq_r),.topk_rq(topk_rq),.argmax_rq(arq_r),.vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(index_rr),
   .topk_rr(topk_rr),.argmax_m(argmax_m),.fault(share_f));
  always @(posedge clk or negedge rst_c[2]) if(!rst_c[2]) share_fault<=0; else share_fault<=share_f;
