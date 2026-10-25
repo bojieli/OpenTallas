@@ -1,8 +1,8 @@
 {
 "module": "dsfd_su_t_rxsf",
 "lef": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
-"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef (largest non-M1 rect centre, CORE-KS rule)",
-"pinhash": "5f569fa68313",
+"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 2 constant pins dropped (inputs/const_pins_dropped.json)",
+"pinhash": "5911013f82a2",
 "pins": [
 {
 "name": "ck",
@@ -551,12 +551,6 @@
 "y": 28.284
 },
 {
-"name": "o_u2[31]",
-"layer": "M4",
-"x": 0.042,
-"y": 31.452
-},
-{
 "name": "o_u2[3]",
 "layer": "M4",
 "x": 0.042,
@@ -741,12 +735,6 @@
 "layer": "M4",
 "x": 0.042,
 "y": 34.428
-},
-{
-"name": "o_u[31]",
-"layer": "M4",
-"x": 0.042,
-"y": 24.348
 },
 {
 "name": "o_u[3]",

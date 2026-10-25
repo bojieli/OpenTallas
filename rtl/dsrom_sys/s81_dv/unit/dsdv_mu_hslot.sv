@@ -205,7 +205,8 @@ endmodule
 // NSLOT 1 (default): dsdv_seq_host exactly (t_ku / t_mf tied 0, f_mc unused).  NSLOT > 1: t_kd's 32 spare zero bits
 // carry {user, pos, 0} of the returning start; t_mf goes to the die status fold beside t_host.
 module dsdv_seq_host_mu #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0,
-                          parameter integer NSLOT = 1, parameter integer MU_MUT = 0) (
+                          parameter integer NSLOT = 1, parameter integer MU_MUT = 0,
+                          parameter integer SELR = 0) (            // S81/H23: SEL relay in L0 (dsdv_sh_selr)
     input  wire          ck,
     input  wire          rst_n,
     input  wire [7:0]    tap_k, sink_k,
@@ -220,7 +221,7 @@ module dsdv_seq_host_mu #(parameter integer V = 276, parameter integer STAGE = 0
     output wire          cw_v, output wire [9:0] cw_a, output wire [255:0] cw_d
 );
     wire [53:0] kd;
-    dsdv_seq_host #(.V(V), .STAGE(STAGE), .MUT(MUT)) u_u (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k),
+    dsdv_seq_host #(.V(V), .STAGE(STAGE), .MUT(MUT), .SELR(SELR)) u_u (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k),
         .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks),
         .t_kd(kd), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w),
         .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d));

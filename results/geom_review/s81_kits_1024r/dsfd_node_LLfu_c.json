@@ -1,0 +1,19 @@
+{
+ "review": "S81/KITS author review, stage-1 place (r6, RTL boundary regs, no netlist hooks)",
+ "when_pdt": "2026-10-24 21:05",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/legacy/r6/dsfd_node_LLfu_c",
+ "image": "results/geom_review/s81_kits_1024r/img/dsfd_node_LLfu_c.png",
+ "reset": "rst_n timed synchronous input, recovery checked",
+ "clock": "insertion balanced to the 250 ps budget (tap_balance POST_CTS)",
+ "outline_um": [
+  43.2,
+  77.76
+ ],
+ "placed": "8,254 cells, 1,972 flops, max bin 0.58, 0 > 0.8",
+ "findings": [
+  "same floorplan class as the SIGNED dsfd_node_LLd: data buses on N/S (10.5/um vs cap 24.3) / E (2/um), clk + rst_n on E centre, flops <= ~45 um from any pin, even density, no slivers",
+  "a/b E full height, o[66] N x 6-13 (mirror of LLfd)",
+  "raw face_guard PASS with NO post-synth hook and no pair lines (RTL fi input register, +1 cycle on the fault chain, claude/s81-kits-1024r-nodes @896eccfb49)"
+ ],
+ "verdict": "PASS (route)"
+}

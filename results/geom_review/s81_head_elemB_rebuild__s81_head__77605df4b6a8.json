@@ -1,0 +1,9 @@
+{
+ "element": "s81_head_elemB_rebuild",
+ "kit": "tools/s81_head/hd_elemA_rebuild.py --elem B --early-ps 120 --post-grt-hold-ps 45 @claude/s81-head-1024r (kit epyc1 /srv/opentallas-scratch/claude/s81-head/elem_rb/elemB_rb_c5)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "77605df4b6a8886ce1f59093818e238a2f7a1f01b012e81b5cfdf49e96537f25",
+ "reasons": "[2026-10-24 20:55 PDT S81-HEAD] [pre-relaunch review, SELF] c5 = c4 kit byte-identical (early tap 120) + the same POST_GLOBAL_ROUTE hook (slew margin 40, hold margin 45, no buffer cap). Evidence c4 routed (intel2 .../elemA_rb/elemB_rb_c4): NOT SIGNED on FF hold -9.87 / 104 (u_oreg -> outputs, FF pin-register clock 170 ps vs 250 vclk; plus one internal x_q -> x_t -2.87 across two leaf branches) and DRV slew TT 6 / FF 5: u_m.w_r[182/248/199/201/184] and t_r[159] D pins (414-444 ps vs 320) each driven by a BUFx3 placement buffer at x ~208 over 140-185 um to flops at x 22-72. TT setup +108.34, DRC/ant 0, spread 54.5/51.8, pin-register mean TT 257.6. Picture: results/geom_review/s81_head_img/elemB_rb_c4_final.png: ROMs centred, logic in W/E channels + S band, 23-um mid channel populated, N band above rom1 sparse; no geometry change in c5.",
+ "fixes": "Condition: FF hold >= 0 and slew 0 at 6_final; if the w_r/t_r long nets still miss, place those capture flops by the ROM rd pins (RTL/floorplan), not a bigger margin.",
+ "reviewer": "S81-HEAD (Claude) self review; GEOM-REVIEW second review requested"
+}

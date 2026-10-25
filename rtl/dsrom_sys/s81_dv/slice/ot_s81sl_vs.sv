@@ -118,7 +118,7 @@ module ot_s81sl_vs #(
     output reg  [31:0]   ve_ag,
     input  wire          ve_ov,
     input  wire [1:0]    ve_oc,
-    input  wire [255:0]  ve_oy,
+    input  wire [127:0]  ve_oy,           // packed BF16 from ve (OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA):): unpacked at the input flop
     input  wire          ve_fi,
     // Engram beat partials to the slice centre ({dd, kk, hh}) and gates from it
     output reg           e_v,
@@ -170,7 +170,7 @@ module ot_s81sl_vs #(
         if (!rs_c) begin vpv_c <= 1'b0; vov_c <= 1'b0; vef_c <= 1'b0; gv_c <= 1'b0; end
         else begin vpv_c <= ve_pv; vov_c <= ve_ov; vef_c <= ve_fi; gv_c <= g_v; end
     always @(posedge clk) begin
-        vpc_c <= ve_pc; vpd_c <= {ve_pdd, ve_pkk, ve_phh}; voc_c <= ve_oc; voy_c <= ve_oy; gc_c <= g_c; gd_c <= g_d;
+        vpc_c <= ve_pc; vpd_c <= {ve_pdd, ve_pkk, ve_phh}; voc_c <= ve_oc; voy_c <= {ve_oy[127:112], 16'd0, ve_oy[111:96], 16'd0, ve_oy[95:80], 16'd0, ve_oy[79:64], 16'd0, ve_oy[63:48], 16'd0, ve_oy[47:32], 16'd0, ve_oy[31:16], 16'd0, ve_oy[15:0], 16'd0}; gc_c <= g_c; gd_c <= g_d;
     end
 
     // ---------------------------------------------------------------- command register and checks

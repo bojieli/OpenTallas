@@ -355,74 +355,6 @@
         }
        }
       },
-      "supplies": {
-       "type": "array",
-       "items": {
-        "type": "object",
-        "required": [
-         "name",
-         "nets",
-         "parts",
-         "bumps"
-        ],
-        "additionalProperties": false,
-        "properties": {
-         "name": {
-          "type": "string",
-          "minLength": 1
-         },
-         "nets": {
-          "type": "array",
-          "items": {
-           "type": "string",
-           "minLength": 1
-          },
-          "minItems": 1
-         },
-         "parts": {
-          "type": "array",
-          "items": {
-           "type": "string",
-           "minLength": 1
-          },
-          "minItems": 1
-         },
-         "bumps": {
-          "type": "object",
-          "required": [
-           "rows",
-           "pitch_um"
-          ],
-          "additionalProperties": false,
-          "properties": {
-           "rows": {
-            "type": "integer",
-            "minimum": 1
-           },
-           "pitch_um": {
-            "type": "number",
-            "exclusiveMinimum": 0
-           },
-           "over": {
-            "enum": [
-             "io_window",
-             "partition"
-            ]
-           },
-           "note": {
-            "type": "string"
-           }
-          }
-         },
-         "basis": {
-          "type": "string"
-         },
-         "note": {
-          "type": "string"
-         }
-        }
-       }
-      },
       "domains": {
        "type": "array",
        "items": {
@@ -797,7 +729,8 @@
         "enum": [
          "grid",
          "grid+sinks",
-         "sinks"
+         "sinks",
+         "density"
         ]
        },
        "tap_radius_um": {
@@ -842,6 +775,35 @@
        "tap_max_sinks": {
         "type": "integer",
         "minimum": 1
+       },
+       "tap_target_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "tap_min_sinks": {
+        "type": "integer",
+        "minimum": 1
+       },
+       "sink_sites_um": {
+        "type": "array",
+        "items": {
+         "type": "array",
+         "minItems": 2,
+         "maxItems": 3,
+         "items": {
+          "type": "number"
+         }
+        }
+       },
+       "sink_bins_file": {
+        "type": "string"
+       },
+       "tap_balance_rc": {
+        "enum": [
+         "placement",
+         "grt_report",
+         "grt"
+        ]
        },
        "core_taps": {
         "enum": [

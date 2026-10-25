@@ -169,6 +169,8 @@ module ot_s81_engram_lookup_ra640_hx #(
     // win_acc until the next window, so the window register win_n carries ids every cycle (only the 4th feed's result
     // is captured, at hdone).  win_n is the core -> seed hop: ck negedge -> hash w on ck_seed posedge.
     wire hfeed = (st == S_FEED);
+    reg       emit_done_r;                   // declared before the FSM (slang source order)
+    wire      emit_done = emit_done_r;
     reg [4*ENG_ID_W-1:0] win_n;
     always @(negedge clk) win_n <= ids;
     wire [QW*ENG_LAYERS*ENG_COLS-1:0] hres;
@@ -379,8 +381,6 @@ module ot_s81_engram_lookup_ra640_hx #(
     // E0 issues beat (ej, ek); E1 registers the three atoms; E2 shifts into the FIFO; E3 updates the CRC.
     reg [2:0] ej;
     reg [3:0] ek;                            // 0..7 beats, 8 = row finished
-    reg       emit_done_r;
-    wire      emit_done = emit_done_r;
 
     reg       e1_v, e2_v, e0q_v, e0r_v;
     wire      e1_vn = e0r_v;                // PIPE 1 (st6): E1 captures the read two cycles after E0q

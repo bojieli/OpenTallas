@@ -1,5 +1,6 @@
 #!/bin/bash
 # xrt_bench.sh <outdir> [base|hops|row|porder|nocol|bwide|xhold] [SEED] [HB 0|1] [NC] [raw]  (cwd = repo root)
+# env XR_LAND=1: FACE_LAND = 1 DUT + OT_XR_LAND_TB tb; extra mode landpv (+define+OT_S81SL_XRT_MUT_LAND_PV) must FAIL.
 # STW-S81-COLLA-XRT 10-21: the existing XR control-plane bench (tb_s81sl_xr.sv, xr_bench.sh flow) against the FFN result
 # transport masters ot_s81sl_xrt1 / ot_s81sl_xrt3 -- the RG-FFN ub_xr.sh recipe (results/rtl/s81_rtlgap_ffn_1021/scripts):
 # tb copy with the module names substituted + the transport legal-program constraint (random send configs keep
@@ -15,9 +16,14 @@ grep -q "ot_s81sl_xrt[13] u (" $O/tb_s81sl_xrt.sv && grep -q "body\[44\] = 1'b0"
   && grep -q "i_vb\[n\]\[3:1\] = 3'd5" $O/tb_s81sl_xrt.sv || { echo "CONSTRAINT_NOT_APPLIED"; exit 4; }
 DEF=""; case $M in hops) DEF="+define+OT_S81SL_XR_MUT_HOPS";; row) DEF="+define+OT_S81SL_XR_MUT_ROW";;
   porder) DEF="+define+OT_S81SL_XR_MUT_PORDER";; nocol) DEF="+define+OT_S81SL_XR_MUT_NOCOL";;
-  bwide) DEF="+define+OT_S81SL_XR_MUT_BWIDE";; xhold) DEF="+define+OT_S81SL_XR_MUT_XHOLD";; base) ;; *) echo "BAD_MODE $M"; exit 2;; esac
+  bwide) DEF="+define+OT_S81SL_XR_MUT_BWIDE";; xhold) DEF="+define+OT_S81SL_XR_MUT_XHOLD";; landpv) DEF="+define+OT_S81SL_XRT_MUT_LAND_PV";; base) ;; *) echo "BAD_MODE $M"; exit 2;; esac
 [ "${XR_FOREG:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_FOREG"
 [ "${XR_PDC:-0}" = 1 ] && DEF="$DEF +define+OT_S81SL_XR_PDC"   # STW-S81c-COLLA 10-22: pin predecode (XR8)
+# S81-KITS-RTLB 10-24: XR_LAND=1 -> the DUT with FACE_LAND = 1 (lo / p / e leaf-interface landing, +1 cycle) and the tb in
+# OT_XR_LAND_TB mode (the compiler issues lo / p one cycle earlier; expected outputs unchanged)
+if [ "${XR_LAND:-0}" = 1 ]; then DEF="$DEF +define+OT_XR_LAND_TB"
+  sed -i -e 's/ot_s81sl_xrt3 u (/ot_s81sl_xrt3 #(.FACE_LAND(1)) u (/' -e 's/ot_s81sl_xrt1 u (/ot_s81sl_xrt1 #(.FACE_LAND(1)) u (/' $O/tb_s81sl_xrt.sv
+  grep -q "FACE_LAND(1)) u (" $O/tb_s81sl_xrt.sv || { echo "LAND_NOT_APPLIED"; exit 4; }; fi
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GHB=$H -GSEED=$S -GNC=$N --top-module tb_s81sl_xr \
   -Mdir $O/obj rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv $O/tb_s81sl_xrt.sv --build-jobs ${J:-4} \
   -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0" > $O/build.log 2>&1 || { echo "BUILD_FAILED"; tail -n 8 $O/build.log; exit 3; }
