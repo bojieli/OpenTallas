@@ -67,6 +67,8 @@ def core_taps(raw, rep):
         x0, y0 = c["origin_um"]
         dx, dy = c.get("track_offset_um", [0.0, 0.0])
         clock = t.setdefault("clock", {})
+        if any(tp.get("name") == inst and tp.get("insertion_ps") == ps for tp in clock.get("taps", [])):
+            continue                                      # already applied (idempotent re-run)
         others = [tp for tp in clock.get("taps", []) if tp.get("name") != inst]
         xy = S.tap_clear(t, x0 + dx + px, y0 + dy + py, [tp["xy"] for tp in others], clear=4.32)
         tap = dict(name=inst, kind="core", xy=[round(xy[0], 4), round(xy[1], 4)], insertion_ps=ps,

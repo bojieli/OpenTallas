@@ -24,5 +24,17 @@
   "errors": 0,
   "warnings": 1265
  },
- "test_ft_knee_sites": "PASS3"
+ "test_ft_knee_sites": "PASS3",
+ "g0_combined_main183f0b": {
+  "verdict": "PASS",
+  "errors": 0,
+  "warnings": 1273
+ },
+ "g0c_combined_main183f0b": {
+  "verdict": "PASS",
+  "errors": 0,
+  "warnings": 1273
+ },
+ "test_bind_glue_follow": "4 passed",
+ "bind_proof": "physical/die_plan/s81/coll_1025_bind_proof.json (PATH-S81/COLL: strict bind 14,469 -> 0 unbound, lanes 873 planned / 873 carrying / 0 unused)"
 }

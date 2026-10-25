@@ -31,3 +31,11 @@ Renders BEFORE|AFTER in img/ (viewed). Note: the BEFORE xrt3 pins in the c3x pan
   to a half bank-width off the bits when the knee anchor moves to a window edge; G0 measures hops between regs_um and
   flagged 414-442 um on the t23 coll lanes). The candidate reach test also covers the centroid chain. G0 PASS 0E 1265W,
   G0C PASS 0E 1265W on the merged branch (main baseline 0E 1265W). t46 keeps its 660e7287e4 sites (passes either way).
+
+## Combined batch 11:3x PDT (COORD: ONE event)
+- Merged main 183f0b03b9 and PATH-S81/COLL claude/path-s81-coll-1025@177137898f (bind.py asbuilt.glue_follows_sinks
+  opt-in + 4 lpc C->LP 2-b control lanes, delta_coll_1025.py; bind proof coll_1025_bind_proof.json: strict bind 14,469
+  -> 0 unbound). The S81 bind manifest is now in-repo: physical/die_plan/s81/bind/asbuilt_b178_coll.json
+  ("glue_follows_sinks": true; = PATH-S81/COLL manifest_coll.json, TOK-DS bind178 base).
+- Both delta scripts re-applied on the merged plan: no change (delta_kitsspare2_1025.py made idempotent for core taps).
+- G0 PASS 0E 1273W, G0C PASS 0E 1273W (+8 W from the coll lanes); test_ft_knee_sites PASS3; test_bind_glue_follow 4 passed.
