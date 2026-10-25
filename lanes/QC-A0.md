@@ -245,3 +245,13 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
 - 2026-10-24 21:33 PDT QC: OWNER DECISION 12 (ft <= M7, stations <= 405 um) invalidates the plan's 750-um ft station budget: QC re-plan next
   (budgets.ft_station_max_um 405 -> ft_regs/lane_eq add stations -> probe rebind -> R8/CB16 -> final bind). Decision 13 (reset wavefront):
   kits adopt the RESET lane's tool mode when ready.
+- 2026-10-24 21:58 PDT QC: first-signoff kit attempt (claude/qc-g3-1024@b41694c94b = cap plan + claude/reset-1024 tip): NO kit ready for GEOM-REVIEW.
+  sle_hc3 kit (epyc1:/srv/opentallas-scratch2/claude/qc/g3/kits/sle_hc3): sdc_lint PASS, face_guard FAIL 2620/2640 (b_hw_i plan 1592 vs
+  as-built 1574 -> 18 dead bits; flt_o[1:0] no as-built driver -> tied 0), synth 255k cells (not 15k), S->N 516-bit path has no internal
+  station (>=540 um hop > 405), pins crowded in W 45% of S/N faces; self-review FAIL (results/geom_review/sle_hc3__qc_g3_1024__1f8f02693185.json).
+  coll_n/coll_s not kittable: extra clocks clk_coll/clk_serdes without plan clocks + unhardened qfd_coll_static_face core (~116k, SRAM).
+  -> plan fixes queued for the decision-12 re-plan: b_hw_i width = as-built, drop/bind sle_hc3 flt_o lane, internal station on cw_n3,
+  spread S/N windows; reset re-kit on the decision-13 wavefront mode; remove leaf 2-flop sync in qfd_dv_s5_xhead3 (12x ot_rst_relay).
+- 2026-10-24 21:58 PDT QC: decision-12 re-plan on claude/qc-ft405-1024 (epyc1 wt /srv/opentallas-scratch2/claude/wt/qc-ft405): ST_LEN 750->405,
+  budgets.ft_station_max_um 405, M8/M9 ft_reserved dropped. Pass 1: 194 R3 station errors (station count off by one vs check.py's
+  route/stations convention) -> pass 2 running (epyc1 pid 408360, log qc/logs/regen_ft405b.log).
