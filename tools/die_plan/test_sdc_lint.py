@@ -156,3 +156,24 @@ def test_opaque_clock_port_filter_rejected():
     txt, ctx = _kit(TINY)
     bad = txt.replace("[all_inputs -no_clocks]", "[lsearch -inline -all -not -regexp [all_inputs] {^(clk.*)$}]")
     assert any("port objects" in e for e in _errs(bad, ctx))
+
+
+def test_ft_hop_in_share_plan_field():
+    """COORD RULING 10-24 12:37 (S81): clock.ft_hop_in_share re-splits the ft seam (receiver share at the face): the kit
+    SDC and the lint floors follow it together; the default stays gen_phys.FT_HOP_IN_SHARE (0.08); a kit made with the
+    old split fails the lint of a 0.16 plan (input delay over the 0.84 T floor is fine, output 0.08 T under 0.16 T is not)."""
+    import copy
+    P0 = schema.Plan(PAIR)
+    tn = next(t for t in P0.types if P0.types[t].get("ft_slots") and any(p["type"] == t for p in P0.parts.values()))
+    assert gen_phys.ft_hop_in_share(P0) == gen_phys.FT_HOP_IN_SHARE
+    raw = copy.deepcopy(PAIR)
+    raw["clock"]["ft_hop_in_share"] = 0.16
+    assert schema.validate(raw) == [] if hasattr(schema, "validate") else True
+    P = schema.Plan(raw)
+    per = float(P.die["period_ps"])
+    txt = gen_phys.sdc(P, tn, gen_phys.type_pins(P, tn))
+    assert f"set_input_delay -max {gen_phys.t_lib(0.84 * per):.4f}" in txt
+    assert f"set_output_delay -max {gen_phys.t_lib(0.16 * per):.4f}" in txt
+    assert _errs(txt, sdc_lint.kit_context(P, tn)) == []
+    old = gen_phys.sdc(P0, tn, gen_phys.type_pins(P0, tn))
+    assert _errs(old, sdc_lint.kit_context(P, tn))

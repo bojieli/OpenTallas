@@ -1,0 +1,423 @@
+{
+ "partition_types_with_real_view": [],
+ "note": "partition types: none of the 49 hbm_arch_* modules has a LEF anywhere in the repo -> all die-top views are gen.py mockview plan abstracts. Module lists below = B2r2 hard_cores / contents whose module name has a LEF in the repo (provenance/raw copies dropped); a hard core with a name-matching LEF is NOT proof its pins match the B2r2 core pin table (e.g. CORE-HBM: pdie_serdes view LEF does not match the plan pins).",
+ "hard_cores_total": 436,
+ "hard_core_modules": 210,
+ "hard_core_modules_with_lef": [
+  "hfd_ep_static",
+  "hfd_hgi_vm_calendar_f20",
+  "hfd_vms_bank_native_q0_faces",
+  "ot_hbm_argmax_static_sw_vm_r2",
+  "ot_hbm_host_cp_rxs",
+  "ot_hbm_idx_qctl_static",
+  "ot_hbm_idx_query_static",
+  "ot_hbm_idx_rootctl_static_am",
+  "ot_hbm_idx_vm_query_static_n12",
+  "ot_hbm_sm_vm_wr_q_t_lanes4",
+  "ot_hbm_static_cfg_collar_idx256r",
+  "ot_hbm_su_static_cxport_ij_q",
+  "ot_hbm_su_static_qcore_r13",
+  "ot_hbm_su_static_sfustore_hw",
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+  "ot_hbm_svc_vmdel_lane_n",
+  "ot_hbm_xp_aq_tree13_fmt",
+  "ot_hgi_coll_gq_land",
+  "ot_hgi_coll_inj_idx_join_rg",
+  "ot_hgi_qw_dec",
+  "ot_hgi_sm_xload_cl2_bdring",
+  "ot_hgi_sm_xload_cl2_bfqg",
+  "ot_hgi_sm_xload_cl2_ctlx",
+  "ot_hgi_sm_xload_xq_pegress",
+  "ot_pdie_serdes"
+ ],
+ "hard_core_instances_with_lef": 71,
+ "content_modules_with_lef": [
+  "hfd_vms_wq2_merge",
+  "ot_hbm3e_phy_rc_e8p5",
+  "ot_hbm_fault_leaf_n8_s0",
+  "ot_hbm_host_cfg_leaf_nw",
+  "ot_hbm_pc_refresh_cfg",
+  "ot_hbm_status_join_fa",
+  "ot_hbm_su_bridge_release_s",
+  "ot_hbm_su_programme_root_h5",
+  "ot_hbm_su_static_cxport_dl_q",
+  "ot_hbm_su_static_cxport_rc_q",
+  "ot_hbm_su_static_cxport_rc_s",
+  "ot_hbm_su_stree_leaf",
+  "ot_hbm_su_stree_root",
+  "ot_hbm_svc_stack_fault",
+  "ot_hbm_svc_wbw_copy",
+  "ot_hgi_coll_inj_copy",
+  "ot_hgi_coll_kq_share2_leaf",
+  "ot_hgi_coll_ring_b_stop",
+  "ot_hgi_qdq_lg_port_group_r2",
+  "ot_hgi_qdq_nw_program_leaf",
+  "ot_hgi_qdq_transport_ctl_r4",
+  "ot_hgi_qdq_transport_rslice",
+  "ot_hgi_qdq_transport_wslice",
+  "ot_hgi_sfu_lg_pair_tap_leaf",
+  "ot_hgi_sfu_lg_pair_tap_leaf_term",
+  "ot_pdie_ucie_col",
+  "ot_static_run_target",
+  "ot_vms_status4_static"
+ ],
+ "lef_paths": {
+  "hfd_ep_static": [
+   "physical/ref_tile/hep_static_ref_1015/views/hfd_ep_static/hfd_ep_static.lef"
+  ],
+  "hfd_hgi_vm_calendar_f20": [
+   "physical/ref_tile/hv16_vm_cal_f20_ww/views/hfd_hgi_vm_calendar_f20/hfd_hgi_vm_calendar_f20.lef"
+  ],
+  "hfd_vms_bank_native_q0_faces": [
+   "physical/ref_tile/vm_native_q0_faces_g313c/views/hfd_vms_bank_native_q0_faces/hfd_vms_bank_native_q0_faces.lef"
+  ],
+  "hfd_vms_wq2_merge": [
+   "physical/ref_tile/hfd_vms_wq2_merge/views/hfd_vms_wq2_merge/hfd_vms_wq2_merge.lef"
+  ],
+  "ot_hbm3e_phy_rc_e8p5": [
+   "physical/asap7_memory_macros/ot_hbm3e_phy_rc_e8p5/ot_hbm3e_phy_rc_e8p5.lef"
+  ],
+  "ot_hbm_argmax_static_sw_vm_r2": [
+   "physical/ref_tile/hbm_argmax_swvm_r2_1017/views/ot_hbm_argmax_static_sw_vm_r2/ot_hbm_argmax_static_sw_vm_r2.lef",
+   "physical/ref_tile/hbm_argmax_swvm_r2_g2c_1019/views/ot_hbm_argmax_static_sw_vm_r2/ot_hbm_argmax_static_sw_vm_r2.lef"
+  ],
+  "ot_hbm_fault_leaf_n8_s0": [
+   "physical/ref_tile/hdie_fault_leaf_w_n8_s0/views/ot_hbm_fault_leaf_n8_s0/ot_hbm_fault_leaf_n8_s0.lef"
+  ],
+  "ot_hbm_host_cfg_leaf_nw": [
+   "physical/ref_tile/hdie_host_cfg_leaf_nw_r1/views/ot_hbm_host_cfg_leaf_nw/ot_hbm_host_cfg_leaf_nw.lef"
+  ],
+  "ot_hbm_host_cp_rxs": [
+   "physical/ref_tile/hdie_host_cprxs_r1/views/ot_hbm_host_cp_rxs/ot_hbm_host_cp_rxs.lef"
+  ],
+  "ot_hbm_idx_qctl_static": [
+   "physical/ref_tile/hidx_qctl_d4g/views/ot_hbm_idx_qctl_static/ot_hbm_idx_qctl_static.lef"
+  ],
+  "ot_hbm_idx_query_static": [
+   "physical/ref_tile/hidx_q_r4/views/ot_hbm_idx_query_static/ot_hbm_idx_query_static.lef"
+  ],
+  "ot_hbm_idx_rootctl_static_am": [
+   "physical/ref_tile/hidx_rootctl_am_1018/views/ot_hbm_idx_rootctl_static_am/ot_hbm_idx_rootctl_static_am.lef",
+   "physical/ref_tile/hidx_rootctl_am_g2e_1020/views/ot_hbm_idx_rootctl_static_am/ot_hbm_idx_rootctl_static_am.lef"
+  ],
+  "ot_hbm_idx_vm_query_static_n12": [
+   "physical/ref_tile/hidx_op_n12_1018/views/ot_hbm_idx_vm_query_static_n12/ot_hbm_idx_vm_query_static_n12.lef",
+   "physical/ref_tile/hidx_op_n12_g2c_1019/views/ot_hbm_idx_vm_query_static_n12/ot_hbm_idx_vm_query_static_n12.lef"
+  ],
+  "ot_hbm_pc_refresh_cfg": [
+   "physical/ref_tile/hbm_refcfg_q_1018/views/ot_hbm_pc_refresh_cfg/ot_hbm_pc_refresh_cfg.lef",
+   "physical/ref_tile/hbm_refcfg_q_1022/views/ot_hbm_pc_refresh_cfg/ot_hbm_pc_refresh_cfg.lef"
+  ],
+  "ot_hbm_sm_vm_wr_q_t_lanes4": [
+   "physical/ref_tile/hsm_smvm_wrq_t4_r1/views/ot_hbm_sm_vm_wr_q_t_lanes4/ot_hbm_sm_vm_wr_q_t_lanes4.lef"
+  ],
+  "ot_hbm_static_cfg_collar_idx256r": [
+   "physical/ref_tile/hdie_col_idx256r_a/views/ot_hbm_static_cfg_collar_idx256r/ot_hbm_static_cfg_collar_idx256r.lef",
+   "physical/ref_tile/hdie_col_idx256r_b/views/ot_hbm_static_cfg_collar_idx256r/ot_hbm_static_cfg_collar_idx256r.lef"
+  ],
+  "ot_hbm_status_join_fa": [
+   "physical/ref_tile/hdie_host_status_fa_r3/views/ot_hbm_status_join_fa/ot_hbm_status_join_fa.lef",
+   "physical/ref_tile/hdie_host_status_fa_r4/views/ot_hbm_status_join_fa/ot_hbm_status_join_fa.lef"
+  ],
+  "ot_hbm_su_bridge_release_s": [
+   "physical/ref_tile/hbm_su_bridge_release_1018/views/ot_hbm_su_bridge_release_s/ot_hbm_su_bridge_release_s.lef"
+  ],
+  "ot_hbm_su_programme_root_h5": [
+   "physical/ref_tile/hbm_su_pgroot_r5/views/ot_hbm_su_programme_root_h5/ot_hbm_su_programme_root_h5.lef"
+  ],
+  "ot_hbm_su_static_cxport_dl_q": [
+   "physical/ref_tile/hbm_su_cx_dlq_1018/views/ot_hbm_su_static_cxport_dl_q/ot_hbm_su_static_cxport_dl_q.lef"
+  ],
+  "ot_hbm_su_static_cxport_ij_q": [
+   "physical/ref_tile/hbm_su_cx_ijq_1019t/views/ot_hbm_su_static_cxport_ij_q/ot_hbm_su_static_cxport_ij_q.lef"
+  ],
+  "ot_hbm_su_static_cxport_rc_q": [
+   "physical/ref_tile/hbm_su_cx_rcq_1018/views/ot_hbm_su_static_cxport_rc_q/ot_hbm_su_static_cxport_rc_q.lef"
+  ],
+  "ot_hbm_su_static_cxport_rc_s": [
+   "physical/ref_tile/hbm_su_cx_rcs_1018/views/ot_hbm_su_static_cxport_rc_s/ot_hbm_su_static_cxport_rc_s.lef"
+  ],
+  "ot_hbm_su_static_qcore_r13": [
+   "physical/ref_tile/hbm_su_qcore_r19b_1022/views/ot_hbm_su_static_qcore_r13/ot_hbm_su_static_qcore_r13.lef"
+  ],
+  "ot_hbm_su_static_sfustore_hw": [
+   "physical/ref_tile/hbm_su_sfustore_hw_1018/views/ot_hbm_su_static_sfustore_hw/ot_hbm_su_static_sfustore_hw.lef"
+  ],
+  "ot_hbm_su_stree_leaf": [
+   "physical/ref_tile/hbm_su_stree_leaf_1017/views/ot_hbm_su_stree_leaf/ot_hbm_su_stree_leaf.lef"
+  ],
+  "ot_hbm_su_stree_root": [
+   "physical/ref_tile/hbm_su_stree_root_1017/views/ot_hbm_su_stree_root/ot_hbm_su_stree_root.lef"
+  ],
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": [
+   "physical/ref_tile/hdie_pc_ctrl_cfg_h9c/views/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.lef",
+   "physical/ref_tile/hdie_pc_ctrl_cfg_h9b/views/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.lef"
+  ],
+  "ot_hbm_svc_stack_fault": [
+   "physical/ref_tile/hdie_svc_stack_fault/views/ot_hbm_svc_stack_fault/ot_hbm_svc_stack_fault.lef"
+  ],
+  "ot_hbm_svc_vmdel_lane_n": [
+   "physical/ref_tile/hv18_vmdel_lane2/views/ot_hbm_svc_vmdel_lane_n/ot_hbm_svc_vmdel_lane_n.lef"
+  ],
+  "ot_hbm_svc_wbw_copy": [
+   "physical/ref_tile/hdie_svc_wbw_copy/views/ot_hbm_svc_wbw_copy/ot_hbm_svc_wbw_copy.lef"
+  ],
+  "ot_hbm_xp_aq_tree13_fmt": [
+   "physical/ref_tile/hxp_aq13_fmt/views/ot_hbm_xp_aq_tree13_fmt/ot_hbm_xp_aq_tree13_fmt.lef"
+  ],
+  "ot_hgi_coll_gq_land": [
+   "physical/ref_tile/hcoll_gq_land_1018/views/ot_hgi_coll_gq_land/ot_hgi_coll_gq_land.lef"
+  ],
+  "ot_hgi_coll_inj_copy": [
+   "physical/ref_tile/hcoll_injcopy/views/ot_hgi_coll_inj_copy/ot_hgi_coll_inj_copy.lef"
+  ],
+  "ot_hgi_coll_inj_idx_join_rg": [
+   "physical/ref_tile/hcoll_inj_idx_join_rg_1017/views/ot_hgi_coll_inj_idx_join_rg/ot_hgi_coll_inj_idx_join_rg.lef"
+  ],
+  "ot_hgi_coll_kq_share2_leaf": [
+   "physical/ref_tile/hcoll_kqs_leaf_1018/views/ot_hgi_coll_kq_share2_leaf/ot_hgi_coll_kq_share2_leaf.lef"
+  ],
+  "ot_hgi_coll_ring_b_stop": [
+   "physical/ref_tile/hcoll_ring_b_stop_1018/views/ot_hgi_coll_ring_b_stop/ot_hgi_coll_ring_b_stop.lef"
+  ],
+  "ot_hgi_qdq_lg_port_group_r2": [
+   "physical/ref_tile/hgi_qdq_lg_r2/views/ot_hgi_qdq_lg_port_group_r2/ot_hgi_qdq_lg_port_group_r2.lef"
+  ],
+  "ot_hgi_qdq_nw_program_leaf": [
+   "physical/ref_tile/hgi_qdq_program_nw48_r1/views/ot_hgi_qdq_nw_program_leaf/ot_hgi_qdq_nw_program_leaf.lef"
+  ],
+  "ot_hgi_qdq_transport_ctl_r4": [
+   "physical/ref_tile/hgi_qdq_tsplit_ctl_r4s/views/ot_hgi_qdq_transport_ctl_r4/ot_hgi_qdq_transport_ctl_r4.lef"
+  ],
+  "ot_hgi_qdq_transport_rslice": [
+   "physical/ref_tile/hgi_qdq_tsplit_rslice/views/ot_hgi_qdq_transport_rslice/ot_hgi_qdq_transport_rslice.lef",
+   "physical/ref_tile/hgi_qdq_tsplit_rslice_r2/views/ot_hgi_qdq_transport_rslice/ot_hgi_qdq_transport_rslice.lef"
+  ],
+  "ot_hgi_qdq_transport_wslice": [
+   "physical/ref_tile/hgi_qdq_tsplit_wslice/views/ot_hgi_qdq_transport_wslice/ot_hgi_qdq_transport_wslice.lef"
+  ],
+  "ot_hgi_qw_dec": [
+   "physical/hgi_quant_wide_views/2b1df5142_dec_s260/ot_hgi_qw_dec/ot_hgi_qw_dec.lef",
+   "physical/hbm_export_revisions_1013/hgi_qw_dec_s260-ac62227e1-tc-cl/ot_hgi_qw_dec/ot_hgi_qw_dec.lef",
+   "physical/hbm_export_revisions_1013/hgi_qw_dec_s260-2b1df5142-tc-cl/ot_hgi_qw_dec/ot_hgi_qw_dec.lef",
+   "physical/hgi_quant_wide_views/ac62227e1_dec_s260/ot_hgi_qw_dec/ot_hgi_qw_dec.lef"
+  ],
+  "ot_hgi_sfu_lg_pair_tap_leaf": [
+   "physical/ref_tile/hbm_sfu_lg_pair_tap_leaf_rt24_1019/views/ot_hgi_sfu_lg_pair_tap_leaf.attempt2/ot_hgi_sfu_lg_pair_tap_leaf.lef",
+   "physical/ref_tile/hbm_sfu_lg_pair_tap_leaf_rt24_1019/views/ot_hgi_sfu_lg_pair_tap_leaf.attempt4/ot_hgi_sfu_lg_pair_tap_leaf.lef",
+   "physical/ref_tile/hbm_sfu_lg_pair_tap_leaf_rt24_1019/views/ot_hgi_sfu_lg_pair_tap_leaf.attempt1/ot_hgi_sfu_lg_pair_tap_leaf.lef",
+   "physical/ref_tile/hbm_sfu_lg_pair_tap_leaf_rt24_1019/views/ot_hgi_sfu_lg_pair_tap_leaf/ot_hgi_sfu_lg_pair_tap_leaf.lef",
+   "physical/ref_tile/hbm_sfu_lg_pair_tap_leaf_rt24_1019/views/ot_hgi_sfu_lg_pair_tap_leaf.attempt3/ot_hgi_sfu_lg_pair_tap_leaf.lef",
+   "physical/ref_tile/hbm_sfu_lg_pair_tap_leaf_1017/views/ot_hgi_sfu_lg_pair_tap_leaf/ot_hgi_sfu_lg_pair_tap_leaf.lef"
+  ],
+  "ot_hgi_sfu_lg_pair_tap_leaf_term": [
+   "physical/ref_tile/hbm_hc_lg_pair_tap_leaf_term_1017/views/ot_hgi_sfu_lg_pair_tap_leaf_term/ot_hgi_sfu_lg_pair_tap_leaf_term.lef",
+   "physical/ref_tile/hbm_hc_lg_pair_tap_leaf_term_rt32_1019/views/ot_hgi_sfu_lg_pair_tap_leaf_term/ot_hgi_sfu_lg_pair_tap_leaf_term.lef"
+  ],
+  "ot_hgi_sm_xload_cl2_bdring": [
+   "physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring/ot_hgi_sm_xload_cl2_bdring.lef"
+  ],
+  "ot_hgi_sm_xload_cl2_bfqg": [
+   "physical/ref_tile/hgi_sm_xl2_bfqg/views/ot_hgi_sm_xload_cl2_bfqg/ot_hgi_sm_xload_cl2_bfqg.lef"
+  ],
+  "ot_hgi_sm_xload_cl2_ctlx": [
+   "physical/ref_tile/hgi_sm_xl2_ctlx_bl/views/ot_hgi_sm_xload_cl2_ctlx/ot_hgi_sm_xload_cl2_ctlx.lef",
+   "physical/ref_tile/hgi_sm_xl2_ctlx/views/ot_hgi_sm_xload_cl2_ctlx/ot_hgi_sm_xload_cl2_ctlx.lef"
+  ],
+  "ot_hgi_sm_xload_xq_pegress": [
+   "physical/ref_tile/hgi_sm_xq_pegress/views/ot_hgi_sm_xload_xq_pegress/ot_hgi_sm_xload_xq_pegress.lef"
+  ],
+  "ot_pdie_serdes": [
+   "physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.lef",
+   "physical/asap7_v41x_pdie_macros/ot_pdie_serdes/ot_pdie_serdes.lef"
+  ],
+  "ot_pdie_ucie_col": [
+   "physical/ref_tile/hbm_pdie_ucie_colk/views/ot_pdie_ucie_col/ot_pdie_ucie_col.lef",
+   "physical/ref_tile/hbm_pdie_ucie_colh/views/ot_pdie_ucie_col/ot_pdie_ucie_col.lef",
+   "physical/ref_tile/hbm_pdie_ucie_colm/views/ot_pdie_ucie_col/ot_pdie_ucie_col.lef"
+  ],
+  "ot_static_run_target": [
+   "physical/ref_tile/hdie_cp_svg_rel_pb_1019/views/ot_static_run_target/ot_static_run_target.lef"
+  ],
+  "ot_vms_status4_static": [
+   "physical/ref_tile/hv15_vm_status4_margin1/views/ot_vms_status4_static/ot_vms_status4_static.lef"
+  ]
+ },
+ "used_in_types": {
+  "hfd_ep_static": [
+   "NE_io",
+   "NW_io",
+   "q_spb0",
+   "vsN0"
+  ],
+  "hfd_hgi_vm_calendar_f20": [
+   "q_hub"
+  ],
+  "hfd_vms_bank_native_q0_faces": [
+   "q_hub"
+  ],
+  "hfd_vms_wq2_merge": [
+   "q_hub"
+  ],
+  "ot_hbm3e_phy_rc_e8p5": [
+   "PHY_N"
+  ],
+  "ot_hbm_argmax_static_sw_vm_r2": [
+   "root"
+  ],
+  "ot_hbm_fault_leaf_n8_s0": [
+   "q_hub"
+  ],
+  "ot_hbm_host_cfg_leaf_nw": [
+   "q_hub"
+  ],
+  "ot_hbm_host_cp_rxs": [
+   "root"
+  ],
+  "ot_hbm_idx_qctl_static": [
+   "q_hub"
+  ],
+  "ot_hbm_idx_query_static": [
+   "q_hub"
+  ],
+  "ot_hbm_idx_rootctl_static_am": [
+   "root"
+  ],
+  "ot_hbm_idx_vm_query_static_n12": [
+   "q_hub"
+  ],
+  "ot_hbm_pc_refresh_cfg": [
+   "q_mcb"
+  ],
+  "ot_hbm_sm_vm_wr_q_t_lanes4": [
+   "q_hub"
+  ],
+  "ot_hbm_static_cfg_collar_idx256r": [
+   "root"
+  ],
+  "ot_hbm_status_join_fa": [
+   "root"
+  ],
+  "ot_hbm_su_bridge_release_s": [
+   "q_hub"
+  ],
+  "ot_hbm_su_programme_root_h5": [
+   "root"
+  ],
+  "ot_hbm_su_static_cxport_dl_q": [
+   "q_su00",
+   "q_su11",
+   "q_su20",
+   "q_su31"
+  ],
+  "ot_hbm_su_static_cxport_ij_q": [
+   "q_hub"
+  ],
+  "ot_hbm_su_static_cxport_rc_q": [
+   "q_hub"
+  ],
+  "ot_hbm_su_static_cxport_rc_s": [
+   "q_hub"
+  ],
+  "ot_hbm_su_static_qcore_r13": [
+   "q_hub"
+  ],
+  "ot_hbm_su_static_sfustore_hw": [
+   "q_hub"
+  ],
+  "ot_hbm_su_stree_leaf": [
+   "q_hub"
+  ],
+  "ot_hbm_su_stree_root": [
+   "root"
+  ],
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": [
+   "q_hub"
+  ],
+  "ot_hbm_svc_stack_fault": [
+   "q_mcb"
+  ],
+  "ot_hbm_svc_vmdel_lane_n": [
+   "q_hub"
+  ],
+  "ot_hbm_svc_wbw_copy": [
+   "q_hub"
+  ],
+  "ot_hbm_xp_aq_tree13_fmt": [
+   "q_hub"
+  ],
+  "ot_hgi_coll_gq_land": [
+   "q_hub"
+  ],
+  "ot_hgi_coll_inj_copy": [
+   "q_hub"
+  ],
+  "ot_hgi_coll_inj_idx_join_rg": [
+   "q_hub"
+  ],
+  "ot_hgi_coll_kq_share2_leaf": [
+   "q_hub"
+  ],
+  "ot_hgi_coll_ring_b_stop": [
+   "q_hub"
+  ],
+  "ot_hgi_qdq_lg_port_group_r2": [
+   "q_hub"
+  ],
+  "ot_hgi_qdq_nw_program_leaf": [
+   "q_hub"
+  ],
+  "ot_hgi_qdq_transport_ctl_r4": [
+   "q_hub"
+  ],
+  "ot_hgi_qdq_transport_rslice": [
+   "q_hub"
+  ],
+  "ot_hgi_qdq_transport_wslice": [
+   "q_hub"
+  ],
+  "ot_hgi_qw_dec": [
+   "q_hub"
+  ],
+  "ot_hgi_sfu_lg_pair_tap_leaf": [
+   "q_su00",
+   "q_su11",
+   "q_su20",
+   "q_su31"
+  ],
+  "ot_hgi_sfu_lg_pair_tap_leaf_term": [
+   "q_su00",
+   "q_su11",
+   "q_su20",
+   "q_su31"
+  ],
+  "ot_hgi_sm_xload_cl2_bdring": [
+   "q_hub"
+  ],
+  "ot_hgi_sm_xload_cl2_bfqg": [
+   "q_hub"
+  ],
+  "ot_hgi_sm_xload_cl2_ctlx": [
+   "q_hub"
+  ],
+  "ot_hgi_sm_xload_xq_pegress": [
+   "q_hub"
+  ],
+  "ot_pdie_serdes": [
+   "NE_io",
+   "NW_io",
+   "q_spb0",
+   "vsN0"
+  ],
+  "ot_pdie_ucie_col": [
+   "NW_io"
+  ],
+  "ot_static_run_target": [
+   "q_spb2",
+   "q_spt0"
+  ],
+  "ot_vms_status4_static": [
+   "root"
+  ]
+ }
+}

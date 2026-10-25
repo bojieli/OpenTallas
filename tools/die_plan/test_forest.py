@@ -24,14 +24,15 @@ def _netlist():
     f = "u_f"
     v = ["module t(input wire clk, input wire clk2, input wire a, output wire y);"]
     w = ["src_q", "pre_last"] + [f"p{i}" for i in range(NPRE)] + [f"bq{b}" for b in range(NBR)] + \
-        [f"bo{b}" for b in range(NBR)] + [f"lq{n}" for n in range(NLEAF)] + [f"lo{n}" for n in range(NLEAF)] + \
+        [f"bo{b}" for b in range(NBR)] + [f"po{i}" for i in range(NPRE)] + [f"lq{n}" for n in range(NLEAF)] + [f"lo{n}" for n in range(NLEAF)] + \
         ["gp0", "gb0", "gb1", "gl0", "gl1"]
     v += [f"  wire {x};" for x in w]
     v.append(f"  {FF} src (.CLK(clk), .D(a), .QN(src_q));")
     d = "src_q"
     for i in range(NPRE):
         v.append(f"  {FF} \\{f}.g_prefix[{i}].u_ff/value_reg  (.CLK(clk), .D({d}), .QN(p{i}));")
-        d = f"p{i}"
+        v.append(f"  {INV} \\{f}.g_prefix[{i}].u_ff/inv  (.A(p{i}), .Y(po{i}));")
+        d = f"po{i}"
     for b in range(NBR):
         v.append(f"  {FF2 if b == 1 else FF} \\{f}.g_branch[{b}].u_ff/value_reg  (.CLK(clk), .D({d}), .QN(bq{b}));")
         v.append(f"  {INV} \\{f}.g_branch[{b}].u_ff/inv  (.A(bq{b}), .Y(bo{b}));")
@@ -79,6 +80,8 @@ foreach i [$blk getInsts] {
   } elseif {[regexp {^u_f.g_leaf\[([0-9]+)\]} $n -> k]} {
     $i setLocation [expr {int((700 + ($k % 7) * 9) * $u)}] [expr {int((550 + ($k % 5) * 10.8) * $u)}]
     $i setPlacementStatus PLACED
+  } elseif {[regexp {^u_f.g_prefix\[[0-9]+\].u_ff/inv$} $n]} {
+    $i setLocation [expr {100 * $u}] [expr {1150 * $u}]; $i setPlacementStatus PLACED
   } elseif {$n eq "src" || [string match "u_c.*" $n]} {
     $i setLocation [expr {100 * $u}] [expr {600 * $u}]; $i setPlacementStatus PLACED
   } else {
@@ -95,6 +98,13 @@ foreach i [$blk getInsts] {
   set sn [string map {\\ {}} [$s getName]]
   if {![string match u_f.* $n]} continue
   puts "CHK leaf $k src $sn par $par d [expr {[fr_md [fr_ctr $s] [fr_ctr $i]] / double($u)}] ld [expr {[fr_md [fr_ctr [$blk findInst ld$k]] [fr_ctr $i]] / double($u)}]"
+}
+foreach i [$blk getInsts] {
+  set n [string map {\\ {}} [$i getName]]
+  if {[regexp {^u_f.g_prefix\[([0-9]+)\].u_ff/inv$} $n -> k]} {
+    set f [lindex [fr_src [[fr_in1 $i] getNet]] 0]
+    puts "CHK pinv $k d [expr {[fr_md [fr_ctr $f] [fr_ctr $i]] / double($u)}]"
+  }
 }
 foreach i [$blk getInsts] {
   set n [string map {\\ {}} [$i getName]]
@@ -152,3 +162,6 @@ def test_forest_recluster():
         m = re.search(r"branch->leaf max (\d+) -> (\d+) um, prefix/hub->branch max (\d+) -> (\d+) um, "
                       r"leaf->load max (\d+) -> (\d+) um", out)
         assert m and int(m.group(2)) <= 750 and int(m.group(4)) <= 750 and int(m.group(5)) > 750 >= int(m.group(6)), out[-3000:]
+        # S81 g3k3 review 10-24: a moved prefix / hub flop takes its output inverter along (was left at GPL's spot)
+        pinv = [float(x) for x in re.findall(r"CHK pinv \d+ d ([0-9.]+)", out)]
+        assert len(pinv) == NPRE and max(pinv) <= 5.0, (pinv, out[-2000:])

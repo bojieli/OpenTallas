@@ -1,0 +1,18 @@
+{
+ "reviewer": "GEOM-REVIEW",
+ "rule": "OWNER 2026-10-24 08:05 review before route",
+ "element": "col_h10_r0_p1__t1 (CP1 coreless proof pair, hard cores omitted)",
+ "kit": "localhost:/srv/opentallas-scratch/claude/codex-cp1/reach405/kits/col_h10_r0_p1__t1 (pair_plan.json; leaves.sv proof leaves)",
+ "verdict": "FAIL",
+ "hash": "cabdfded28dda0801034ec1f2219214824233a9a57f1bdb75e08c122ee732f7f",
+ "stage": "5_1_grt (DRT live: opt iteration 1, 29159 violations after iteration 0)",
+ "owner_lane": "CP1-R10",
+ "at": "2026-10-24T12:55:00-07:00",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/cp1_r0/review.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/cp1_r0/stations.png",
+  "/srv/opentallas-scratch/claude/codex-cp1/reach405/full_taps.png"
+ ],
+ "reasons": "[2026-10-24 12:55] [GEOM-REVIEW tile GR-B2] I dumped 5_1_grt.odb and rendered review.png and stations.png (per-bit ft chain). Partition 1442.88x1226.88 um, 86926 cells, 13470 FF. FT SLOTS ARE GOOD: ft0 (1104b E->W, y 993-1209) and ft1-5 (70b W->E, y 7-96) each have 4 stations as columns at x~5/360/720/1080 (ft0 starts at x 1436). Per-bit hops: in-leg max 8.5 um, inner max 363.6 um, out leg max 365.8 um, all within 405 (the yellow wedges in review.png, top-left and bottom-right, are these out legs, unregistered by design). THE PROOF LEAF IS NOT: the x lane u_bin_x_i0 (E face x 1436, y 752-968) feeds proof-leaf q, which the placer pulls toward the W side where xo_o0 and its bout sit. bin_x_i0->leaf.q hops are p50 1240 / max 1356 um (1085/1089 bits > 405). leaf.ret_o0 sits at (490,704) and bout_ret_o0 at the E face (1435,107): 70 bits at 1546-1553 um, which is the diagonal string of repeaters across the lower half in review.png. leaf.frame_int_o0->bout is max 1367 um. CTS-stage setup WS -1042 ps, consistent with those 1.2-1.5 mm unregistered legs. The leaf blob covers y 830-1040 over the full width. 29 of 57 taps are empty (cores omitted). GRT: 3.08% usage, 0 overflow. DRT iteration 0 left 29159 violations (still running). Seam with col_h10_r1__t1: N-face windows frame_int_o0 (1265 pins, x 6-276) and frame_int_i0 (268 pins, x 282-340) match r1 bit for bit (|dx| 0, same layers). hash = sha256 over '<relpath> <git blob id>' of the kit dir excluding run/ signoff/ views/ gate_layout/ record/ *.log (29 files).",
+ "fixes": "1. Same as col_h10_r1__t1: the proof leaf's two unplaced register levels on 1.2-1.5 mm lanes (x_i0 E->W through the leaf, ret_o0 to the E face) make this run's timing meaningless. FIRM-place the leaf registers as stations at <= 405 um along each lane (x lane: 4 stations like ft0; ret_o0: stations from (490,704) to the E face), or place the stand-in at the real core pins, and drop the cross-bit XOR scramble. 2. Let DRT finish only for DRC/pin-access information. Do not sign this run. 3. The ft-slot station geometry (4 at about 360 um) and the seam windows are approved as built."
+}

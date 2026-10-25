@@ -1,0 +1,101 @@
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=711 first_pub=667 last_pub=714 vm_reqs=48 | d1 first_vm=13 first_wr=25 last_rx=711 first_pub=667 last_pub=714 vm_reqs=48
+XDIE3_E d0 701 d1 701 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=682 first_pub=638 last_pub=685 vm_reqs=48 | d1 first_vm=13 first_wr=25 last_rx=676 first_pub=632 last_pub=679 vm_reqs=48
+XDIE3_E d0 672 d1 666 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=610 first_pub=566 last_pub=613 vm_reqs=48 | d1 first_vm=13 first_wr=25 last_rx=604 first_pub=560 last_pub=607 vm_reqs=48
+XDIE3_E d0 600 d1 594 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+CASE ds_ag48 PASS XDIE3_E d0 600 d1 594 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=836 first_pub=582 last_pub=839 vm_reqs=144 | d1 first_vm=13 first_wr=25 last_rx=836 first_pub=582 last_pub=839 vm_reqs=144
+XDIE3_E d0 826 d1 826 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=770 first_pub=566 last_pub=773 vm_reqs=144 | d1 first_vm=13 first_wr=25 last_rx=764 first_pub=560 last_pub=767 vm_reqs=144
+XDIE3_E d0 760 d1 754 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=770 first_pub=566 last_pub=773 vm_reqs=144 | d1 first_vm=13 first_wr=25 last_rx=764 first_pub=560 last_pub=767 vm_reqs=144
+XDIE3_E d0 760 d1 754 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+CASE ds_ag144 PASS XDIE3_E d0 760 d1 754 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=758 first_pub=682 last_pub=776 vm_reqs=96 | d1 first_vm=13 first_wr=25 last_rx=758 first_pub=682 last_pub=776 vm_reqs=96
+XDIE3_E d0 763 d1 763 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=729 first_pub=653 last_pub=747 vm_reqs=96 | d1 first_vm=13 first_wr=25 last_rx=723 first_pub=647 last_pub=741 vm_reqs=96
+XDIE3_E d0 734 d1 728 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=657 first_pub=581 last_pub=675 vm_reqs=96 | d1 first_vm=13 first_wr=25 last_rx=651 first_pub=575 last_pub=669 vm_reqs=96
+XDIE3_E d0 662 d1 656 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=48/48 ok=48/48 rx=48/48 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+CASE ds_rs48 PASS XDIE3_E d0 662 d1 656 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=889 first_pub=597 last_pub=907 vm_reqs=288 | d1 first_vm=13 first_wr=25 last_rx=889 first_pub=597 last_pub=907 vm_reqs=288
+XDIE3_E d0 894 d1 894 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=857 first_pub=573 last_pub=875 vm_reqs=288 | d1 first_vm=13 first_wr=25 last_rx=867 first_pub=583 last_pub=885 vm_reqs=288
+XDIE3_E d0 862 d1 872 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=857 first_pub=573 last_pub=875 vm_reqs=288 | d1 first_vm=13 first_wr=25 last_rx=867 first_pub=583 last_pub=885 vm_reqs=288
+XDIE3_E d0 862 d1 872 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=333 pub=144/144 ok=144/144 rx=144/144 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+CASE ds_rs144 PASS XDIE3_E d0 862 d1 872 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=429 first_pub=369 last_pub=432 vm_reqs=64 | d1 first_vm=13 first_wr=25 last_rx=429 first_pub=369 last_pub=432 vm_reqs=64
+XDIE3_E d0 419 d1 419 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=64/64 ok=64/64 rx=64/64 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=389 first_pub=329 last_pub=392 vm_reqs=64 | d1 first_vm=13 first_wr=25 last_rx=383 first_pub=323 last_pub=386 vm_reqs=64
+XDIE3_E d0 379 d1 373 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=64/64 ok=64/64 rx=64/64 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=317 first_pub=257 last_pub=320 vm_reqs=64 | d1 first_vm=13 first_wr=25 last_rx=311 first_pub=251 last_pub=314 vm_reqs=64
+XDIE3_E d0 307 d1 301 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=64/64 ok=64/64 rx=64/64 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+CASE qw_ag64 PASS XDIE3_E d0 307 d1 301 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=333 first_pub=305 last_pub=336 vm_reqs=32 | d1 first_vm=13 first_wr=25 last_rx=333 first_pub=305 last_pub=336 vm_reqs=32
+XDIE3_E d0 323 d1 323 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=32/32 ok=32/32 rx=32/32 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=317 first_pub=289 last_pub=320 vm_reqs=32 | d1 first_vm=13 first_wr=25 last_rx=311 first_pub=283 last_pub=314 vm_reqs=32
+XDIE3_E d0 307 d1 301 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=32/32 ok=32/32 rx=32/32 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=245 first_pub=217 last_pub=248 vm_reqs=32 | d1 first_vm=13 first_wr=25 last_rx=239 first_pub=211 last_pub=242 vm_reqs=32
+XDIE3_E d0 235 d1 229 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=32/32 ok=32/32 rx=32/32 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+CASE qw_ag32 PASS XDIE3_E d0 235 d1 229 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=285 first_pub=273 last_pub=288 vm_reqs=16 | d1 first_vm=13 first_wr=25 last_rx=285 first_pub=273 last_pub=288 vm_reqs=16
+XDIE3_E d0 275 d1 275 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=16/16 ok=16/16 rx=16/16 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=281 first_pub=269 last_pub=284 vm_reqs=16 | d1 first_vm=13 first_wr=25 last_rx=275 first_pub=263 last_pub=278 vm_reqs=16
+XDIE3_E d0 271 d1 265 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=16/16 ok=16/16 rx=16/16 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=209 first_pub=197 last_pub=212 vm_reqs=16 | d1 first_vm=13 first_wr=25 last_rx=203 first_pub=191 last_pub=206 vm_reqs=16
+XDIE3_E d0 199 d1 193 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=16/16 ok=16/16 rx=16/16 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+CASE qw_ag16 PASS XDIE3_E d0 199 d1 193 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=492 first_pub=384 last_pub=510 vm_reqs=128 | d1 first_vm=13 first_wr=25 last_rx=492 first_pub=384 last_pub=510 vm_reqs=128
+XDIE3_E d0 497 d1 497 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=64/64 ok=64/64 rx=64/64 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=452 first_pub=344 last_pub=470 vm_reqs=128 | d1 first_vm=13 first_wr=25 last_rx=446 first_pub=338 last_pub=464 vm_reqs=128
+XDIE3_E d0 457 d1 451 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=64/64 ok=64/64 rx=64/64 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=380 first_pub=272 last_pub=398 vm_reqs=128 | d1 first_vm=13 first_wr=25 last_rx=374 first_pub=266 last_pub=392 vm_reqs=128
+XDIE3_E d0 385 d1 379 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=64/64 ok=64/64 rx=64/64 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+CASE qw_rs64 PASS XDIE3_E d0 385 d1 379 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=364 first_pub=320 last_pub=382 vm_reqs=64 | d1 first_vm=13 first_wr=25 last_rx=364 first_pub=320 last_pub=382 vm_reqs=64
+XDIE3_E d0 369 d1 369 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=32/32 ok=32/32 rx=32/32 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=348 first_pub=304 last_pub=366 vm_reqs=64 | d1 first_vm=13 first_wr=25 last_rx=342 first_pub=298 last_pub=360 vm_reqs=64
+XDIE3_E d0 353 d1 347 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=32/32 ok=32/32 rx=32/32 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=276 first_pub=232 last_pub=294 vm_reqs=64 | d1 first_vm=13 first_wr=25 last_rx=270 first_pub=226 last_pub=288 vm_reqs=64
+XDIE3_E d0 281 d1 275 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=32/32 ok=32/32 rx=32/32 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+CASE qw_rs32 PASS XDIE3_E d0 281 d1 275 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=300 first_pub=288 last_pub=318 vm_reqs=32 | d1 first_vm=13 first_wr=25 last_rx=300 first_pub=288 last_pub=318 vm_reqs=32
+XDIE3_E d0 305 d1 305 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=16/16 ok=16/16 rx=16/16 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=296 first_pub=284 last_pub=314 vm_reqs=32 | d1 first_vm=13 first_wr=25 last_rx=290 first_pub=278 last_pub=308 vm_reqs=32
+XDIE3_E d0 301 d1 295 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=16/16 ok=16/16 rx=16/16 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+XDIE3_STEP d0 first_vm=13 first_wr=25 last_rx=224 first_pub=212 last_pub=242 vm_reqs=32 | d1 first_vm=13 first_wr=25 last_rx=218 first_pub=206 last_pub=236 vm_reqs=32
+XDIE3_E d0 229 d1 223 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+XDIE2 SWD=4 pub=16/16 ok=16/16 rx=16/16 faults=0/0 sched_fail=0/0 rx_bad=0/0 done=11/11 PASS
+CASE qw_rs16 PASS XDIE3_E d0 229 d1 223 cycles (first VM request -> last delivery, 1.2 GHz) adr_bad=0/0
+TOKFUNC_XDIE_DONE main_rows256 rc=0

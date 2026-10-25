@@ -86,7 +86,7 @@ def ir(a):
     W, H = 25.19424, 18.3168
     cases = [load_case(d, a.net) for d in a.case]
     vmax = a.vmax or max(max(p[2] for p in pts) for _, pts in cases)
-    fig, ax = plt.subplots(figsize=(10, 7.6), dpi=110)
+    fig, ax = plt.subplots(figsize=tuple(a.figsize), dpi=110)
     cmap = plt.get_cmap("inferno")
     norm = matplotlib.colors.Normalize(vmin=0, vmax=vmax)
     for k, (m, pts) in enumerate(cases):
@@ -114,7 +114,7 @@ def ir(a):
     outlines(ax, pm)
     fig.colorbar(plt.cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax, fraction=0.03,
                  label=f"{a.net} {'drop' if a.net == 'VDD' else 'rise'} (mV)")
-    ax.set_xlim(0, W); ax.set_ylim(0, H); ax.set_aspect("equal")
+    ax.set_xlim(*(a.xlim or (0, W))); ax.set_ylim(*(a.ylim or (0, H))); ax.set_aspect("equal")
     ax.set_xlabel("x (mm)"); ax.set_ylabel("y (mm)")
     ax.set_title(a.title or f"B2r2 {a.net} IR (PDNSim, estimated power); x = worst node per case; cyan = exact-grid windows", fontsize=8)
     fig.tight_layout(); fig.savefig(a.out, dpi=110)
@@ -128,6 +128,9 @@ if __name__ == "__main__":
     p.add_argument("--net", default="VDD")
     p.add_argument("--vmax", type=float)
     p.add_argument("--title")
+    p.add_argument("--xlim", type=float, nargs=2)
+    p.add_argument("--ylim", type=float, nargs=2)
+    p.add_argument("--figsize", type=float, nargs=2, default=[10, 7.6])
     p.add_argument("--out", required=True)
     a = p.parse_args()
     (power if a.mode == "power" else ir)(a)

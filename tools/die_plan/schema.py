@@ -143,7 +143,10 @@ SCHEMA = {
                                    "iface": {"enum": ["serdes", "ucie", "hbm_phy", "host", "refclk", "other"]},
                                    "signals": {"type": "integer", "minimum": 1}, "host": {"enum": [True, False, "in_band"]},
                                    "host_route": {"type": "string"},
-                                   "basis": {"type": "string"}, "note": {"type": "string"}}}},
+                                   "basis": {"type": "string"}, "note": {"type": "string"},
+                                   # rack table macro name (lk_<name>) of this window when its partition is not
+                                   # named after it (xdie_io.py; HBM B2l, HBM-ARCH 10-24)
+                                   "rack_macro": {"type": "string"}}}},
                 "channels": {"type": "array", "items": {   # die-level gaps between partitions, each with its reason
                     # either a plain reserved gap (rect_um), or a PLANNED CHANNEL between two partitions (between +
                     # width_um + layers + ports): those ports are routed at die level across the gap, boundary flops
@@ -327,6 +330,9 @@ SCHEMA = {
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.
             "common_latency_ps": _pos,
+            # ft seam budget split (COORD RULING 2026-10-24 12:37, S81): receiver share of T at the ft face (input delay
+            # max (1 - share) T on ft_i, output delay max share T on ft_o); default gen_phys.FT_HOP_IN_SHARE (0.08)
+            "ft_hop_in_share": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 0.5},
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,

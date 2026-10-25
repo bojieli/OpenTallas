@@ -1,0 +1,20 @@
+{
+ "reviewer": "GEOM-REVIEW",
+ "rule": "OWNER 2026-10-24 08:05 review before route",
+ "element": "col_h10_r1__t1 (CP1 coreless proof pair, hard cores omitted)",
+ "kit": "localhost:/srv/opentallas-scratch/claude/codex-cp1/reach405/kits/col_h10_r1__t1 (pair_plan.json; leaves.sv proof leaves)",
+ "verdict": "FAIL",
+ "hash": "76b0ac8e2ce047b422ad9cbbfa53b33930e2752f135a7ed3824242bb6ed51e56",
+ "stage": "6_final (signed-off run: NOT SIGNED)",
+ "owner_lane": "CP1-R10",
+ "at": "2026-10-24T12:55:00-07:00",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/cp1_r1/review.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/cp1_r1/leaf_hops.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/cp1_r1/final_worst_path.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/cp1_r1/final_all.png",
+  "/srv/opentallas-scratch/claude/codex-cp1/reach405/full_taps.png"
+ ],
+ "reasons": "[2026-10-24 12:55] [GEOM-REVIEW tile GR-B2] I dumped 6_final.odb and rendered review.png and leaf_hops.png (per-bit bin->proof-leaf->bout register positions), and looked at the ORFS final_worst_path / final_all images and Codex full_taps.png. Partition 1442.88x1226.88 um with no ft slots. The type has a S-face window frame_int_i1 (1264b, x 6-276) and a N-face window frame_int_o0 (1230b, x 6-273): a vertical 1227 um crossing that goes through the proof leaf (q <= cat; o0 <= q[i]^q[j], two register levels, nothing FIRM-placed). WHERE THE -241.76 ps IS: the worst TT path is u_bin_frame_int_i1/q[703] at (158,5) on the S face to u_leaf.q[703] at (163,1196) at the N face. It is a straight 1191 um vertical wire with 13 BUFx6f/12f repeaters (about 1000 ps of wire delay; final_worst_path.png shows the red vertical line). It is a LONG WIRE, not clock: launch insertion 237.9 ps, capture 233.7 ps, TT spread 32.7 ps, all trees <= 290 ps. The placer split the leaf registers bimodally (u_leaf.q y p5/p50/p95 310/522/1197). bin->leaf.q hops are p50 519 / max 1262 um: 977 bits > 405, 373 > 700. leaf.o0->bout is max 1220 um, 962 bits > 405. Even ideally spaced, 3 register hops over 1227 um are 409 um each, above the 405 reach, so this path cannot meet reach405 as built. All logic sits in the x 5-277 column under the windows (4.7 pins/um) and 80% of the tile is empty. DRV slew 1234 (TT) is on the same u_bin_frame_int_i1/u_bout_frame_int_o0 repeater chains (slews 500-560 ps vs 320). Routing is clean: GRT 1.32% usage, 0 overflow, DRC 0, antenna 0. SEAM: r1 type-S face pins against r0 type-N face pins (both MX, meeting at die y=1226.88). frame_int_i1 to r0.frame_int_o0 are 1265/1265 bits, max |dx| 0.000 um, same layers. frame_int_o1 to r0.frame_int_i0 are 268/268 bits, |dx| 0, same layers. The abutting faces align exactly. 42 of 56 taps are empty, which is expected with the cores omitted. hash = sha256 over '<relpath> <git blob id>' of the kit dir excluding run/ signoff/ views/ gate_layout/ record/ *.log (30 files).",
+ "fixes": "1. The 232 TT endpoints come from the proof-leaf test vehicle, not from the S81 frame: the proof leaf puts 2 unplaced register levels on a 1227 um crossing. Do not use this run as timing evidence for the pair, and do not 'fix' it with buffering. 2. For a valid coreless proof, FIRM-place the leaf registers as stations (u_leaf.q at about 1/3 and u_leaf.frame_int_o0 at about 2/3 of the S->N path, bit-ordered under the windows), or better, put the stand-in registers where the real hard core's pins are. Add a third station if a hop exceeds 405 um (3 hops x 409 um does not fit reach405). Remove the XOR scramble of distant bits (q[i]^q[i-859]) that forces cross-column wiring. 3. Seam/face geometry is OK: keep the windows and layers unchanged. 4. After the fix, rerun to 6_final and expect TT >= 0 and slew violations ~0 from the same flow."
+}

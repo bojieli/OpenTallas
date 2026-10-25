@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.die_plan.bind_gate.v1",
+ "die": "qwen_kvsys",
+ "bound": "/srv/opentallas-scratch/kv-tok/kv42_bind",
+ "bound_sha": "a02bdc4519fa9f51",
+ "time": "2026-10-24 07:36:34 PDT",
+ "regen": {
+  "verdict": "PASS",
+  "counts": {
+   "OK": 17,
+   "WARN": 3
+  },
+  "json": "/srv/opentallas-scratch/kv-tok/kv42_bind/regen/constants.json",
+  "sv": "/srv/opentallas-scratch/kv-tok/kv42_bind/regen/qwen_kvsys_sched_pkg.sv",
+  "sha": "78d2b463cb7c3548",
+  "seconds": 4.3,
+  "problems": {}
+ },
+ "smoke": {
+  "command": "/usr/bin/python3 /home/ubuntu/wt/kv-tok/tools/die_plan/bind_smoke.py --die qwen_kvsys --bound /srv/opentallas-scratch/kv-tok/kv42_bind --constants /srv/opentallas-scratch/kv-tok/kv42_bind/regen/constants.json --work /srv/opentallas-scratch/kv-tok/kv42_bind/smoke/work --submit",
+  "verdict": "SKIPPED"
+ },
+ "verdict": "INCOMPLETE",
+ "recipes": {
+  "kv_boot_image": "S=<scratch>/boot BG=/srv/opentallas-scratch/kv-tok/kv42_bind/bus_groups.json.gz KST=34,34,32,32,32,31,31 bash physical/die_plan/qwen_kvsys/boot_v36/run.sh   # KV-P6-BOOT generator (claude/kv-p6-boot-1023)",
+  "xdie_pair_image": "D2D_DIE_STAGES=2,2,2,3,2,2/34,34,32,32,32,31,31 D2D_MU=1 D2D_EMB_WINDOW=595 D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 bash tools/qwen_split/d2d_cal_image_production.sh <out>   # both dies bind its TXDP"
+ }
+}

@@ -1,0 +1,3 @@
+bnd_asbound_c_txdp expect=BUILD_FAIL got=BUILD_FAIL -> OK
+    %Error-MODMISSING: rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv:315:9: Cannot find file containing module: 'D2D_TXDP_NOT_COMPILED___05Fset_TXDP_from_the_compiler'
+      315 |         D2D_TXDP_NOT_COMPILED__set_TXDP_from_the_compiler u_txdp_uncompiled ();
