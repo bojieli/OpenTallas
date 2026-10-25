@@ -65,7 +65,6 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 
 ## INFRA · fleet and coordination
 - [ ] INFRA.SIGNOFF 138 old modules need re-signoff (DBs lost) · S81 / QC / KV / HBM · RUNNING
-- [ ] INFRA.WATCH Liveness watcher marks QC/KV/HBM tasks STALE (evidence lookup misses the 1024r lane files) · COORD · TODO
 - [ ] INFRA.DISK epyc2 scratch 87%, rtx-pro 83% (full 43 GB worktrees) · COORD · RUNNING · prune pass 2
 
 ## WAITS · who
