@@ -1,4 +1,12 @@
-MITER FAIL mismatches=16828 ap_valid=2138 lmax_msgs=400 z_msgs=1646 zn_valid=17647
 CTL MISMATCH n=35 ap 00000000404 21c730af809
 ZN MISMATCH n=40
 ZN MISMATCH n=47
+ZN MISMATCH n=102
+ZN MISMATCH n=111
+ZN MISMATCH n=120
+ZN MISMATCH n=127
+MITER FAIL mismatches=16762 ap_valid=2138 lmax_msgs=400 z_msgs=1646 zn_valid=17647
+- ../tb.sv:33: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 600us; walltime 2.807 s; speed 213.478 us/s
+- Verilator: cpu 2.811 s on 1 threads; alloced 2041 MB
