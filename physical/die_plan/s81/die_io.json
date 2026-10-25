@@ -212,16 +212,16 @@
   "iface": "serdes",
   "part": "lk_WS3",
   "rect_um": [
-   9673.78,
+   9841.012,
    103.68,
    10203.84,
    2343.8
   ],
-  "sites": 42,
+  "sites": 28,
   "pitch_um": 150.0,
   "signals": 26,
   "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy; PHY zone 530 x 2240 um beside the strip (14 blocked strip / ft rects, 63.64-um guard)"
+  "note": "die_io.py plan: u_phy; PHY zone 363 x 2240 um beside the strip (14 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_EN2_u_phy",
@@ -231,14 +231,14 @@
   "rect_um": [
    20304.0,
    23414.4,
-   22222.028,
+   22035.596,
    24641.28
   ],
-  "sites": 96,
+  "sites": 88,
   "pitch_um": 150.0,
   "signals": 26,
   "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-  "note": "die_io.py plan: u_phy; PHY zone 1918 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard)"
+  "note": "die_io.py plan: u_phy; PHY zone 1732 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard)"
  },
  {
   "name": "io_lk_EN3_u_phy",

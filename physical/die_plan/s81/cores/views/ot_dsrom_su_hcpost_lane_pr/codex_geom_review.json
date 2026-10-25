@@ -1,0 +1,10 @@
+{
+  "verdict": "PASS-COND",
+  "picture": "origin/claude/s81-kits-c3-1024r:physical/die_plan/s81/cores/kits_repin/results/geom_review/ot_dsrom_su_hcpost_lane_pr_c_fp.png",
+  "findings": [
+    "Viewed before ECO: compact macro-free core, matching abutting face pins and sparse open crossing. Current pin narrowing removes unused/constant bits; no new density.",
+    "Only extracted FF hold endpoints repaired, no RTL/clock/pin/cycle change; margin5ps. Parent failure and DRC0 preserved.",
+    "Use actual SPEF for hold ECO, then re-route/re-extract and uniform final signoff; parent failure untouched."
+  ],
+  "source": "/srv/opentallas-scratch2/claude/codex-s81-hcpost/hcpost_ff_m5"
+}
