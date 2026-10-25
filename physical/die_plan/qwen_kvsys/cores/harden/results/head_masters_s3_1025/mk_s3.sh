@@ -18,6 +18,7 @@ cases="0:0:0:00:1 2:2:2:01:1 4:4:6:10:0 6:6:6:11:0"
 for c in $cases; do IFS=: read nm o m b h <<<"$c"
   python3 $H/head_master_miter.py $M/old$o $D/s3_$m $D/c$nm --port-map $M/portmap$o.json --strap "strap_bsel=2'b$b" > $D/c$nm.gen.log 2>&1 || { echo gen fail c$nm; cat $D/c$nm.gen.log; }
 done
+python3 $H/head_master_miter.py $M/old4 $D/s3_6 $D/c4 --port-map $M/portmap4.json --new-mod kv3_head_eighth_e6 --strap "strap_bsel=2'b10" > $D/c4.gen.log 2>&1
 # negative: e6 master with wrong BSEL (2 instead of 3)
 python3 $H/head_master_miter.py $M/old6 $D/s3_6 $D/mut6 --port-map $M/portmap6.json --strap "strap_bsel=2'b10" > $D/mut6.gen.log 2>&1
 export PATH=/home/ubuntu/.local/opentallas-tools/bin:$PATH

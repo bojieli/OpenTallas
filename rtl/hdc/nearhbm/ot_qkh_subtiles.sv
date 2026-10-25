@@ -17,7 +17,7 @@ module ot_qkh_lane8 #(
     parameter integer LT_COPY = 0,
     // PATH-KV-HEAD 10-25 (head6ff TT -71.6: u_l8 g3g / e3 S3 pin flops broadcast to 8 lanes x (16-bit a mux + valid) through
     // a 3-level BUFx2 fanout tree, ~240 ps): S3_COPY = 1 gives every lane its own S3 pin-flop copy of {c_in[3:2], c_in[0],
-    // e_in, q_valid_in, q_beat_in, hid, bsel} (31 FF / lane, same D as the shared S3 flops, same edges, 0 added cycles) and
+    // e_in, q_valid_in, q_beat_in} (27 FF / lane; the hid / bsel straps stay one shared register, same D as the shared S3 flops, same edges, 0 added cycles) and
     // its own q0/q1 16-bit slice write enables, so each copy drives one lane (~17-34 loads).  The shared c3[3:1] still feeds
     // u_ctl.  S3_COPY = 0 (default) is the unchanged RTL (odd heads e1/e3/e5/e7 signed).
     parameter integer S3_COPY = 0
@@ -111,15 +111,15 @@ module ot_qkh_lane8 #(
             (* keep *) reg [15:0] el3;
             reg [15:0] ql0, ql1;
             (* keep *) reg [5:0]  qbl;
-            (* keep *) reg [1:0]  hdl, bsl;
+            // hid / bsel are quasi-static ID straps (OWNER option B): the lanes share the one hid3 / bs3 register
             always @(posedge clk or negedge rc)
                 if (!rc) begin ck3 <= 1'b0; cv3 <= 1'b0; qvl <= 1'b0; end
                 else begin ck3 <= c_in[3]; cv3 <= c_in[2]; qvl <= q_valid_in; end
             always @(posedge clk) begin
-                cg3 <= c_in[0]; el3 <= e_in; qbl <= q_beat_in; hdl <= hid; bsl <= bsel;
+                cg3 <= c_in[0]; el3 <= e_in; qbl <= q_beat_in;
             end
-            wire lw0 = qvl && (qbl == {2'b00, hdl, bsl});
-            wire lw1 = qvl && (qbl == {2'b01, hdl, bsl});
+            wire lw0 = qvl && (qbl == {2'b00, hid3, bs3});
+            wire lw1 = qvl && (qbl == {2'b01, hid3, bs3});
             always @(posedge clk) begin
                 if (lw0) ql0 <= qd3[d * 16 +: 16];
                 if (lw1) ql1 <= qd3[d * 16 +: 16];
