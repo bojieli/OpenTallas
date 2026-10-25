@@ -17,6 +17,9 @@ Gaps:
                              after 30 min
   (6) HOST-IDLE              a fleet host admitting > 100 GB at load < 60 % of its cores while the autopilot queue has
                              nothing waiting
+  (7) UNOWNED-ITEM           (ownership.py) a release-plan partition type / hard core, not SIGNED, with no live job and
+                             no lane activity for > 60 min, grouped per die + owner lane; the OWNERSHIP summary
+                             ('#' lines) heads the file and the full table is autopilot/OWNERS.tsv
 """
 import re
 import time
@@ -233,9 +236,9 @@ def gaps_hosts(status_text, queue_waiting, now):
     return out
 
 
-def render(gaps, now):
+def render(gaps, now, head=()):
     lines = [f"# LOOP-GAPS -- autopilot tick {time.strftime('%Y-%m-%d %H:%M %Z', time.localtime(now))} "
-             f"(read-only; oldest first; age = since the event)"]
+             f"(read-only; oldest first; age = since the event)"] + list(head)
     for t, msg in sorted(gaps, key=lambda g: g[0]):
         age = max(0, now - t) / 60
         lines.append(f"{age / 60:6.1f} h  {msg}" if age >= 120 else f"{age:6.0f} m  {msg}")
