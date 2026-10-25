@@ -681,7 +681,9 @@ def run_face_guard(disc, clock_ports=()):
     except Exception as e:
         return dict(verdict="FAIL", reason=f"invalid boundary control context: {e}", fail_counts={"context": 1})
     skip = sorted(set(clock_ports) | set(typed_controls) | {"arst_n", "rst_n"})
-    skip_re = r"^(clk(_t[0-9]+|_c[0-9]+)?|" + "|".join(re.escape(x) for x in skip) + r")$"
+    # Keep the guard's canonical clock/reset contract (including registered wavefront rst_o_<k>
+    # controls). Supplying the native-clock override must not turn reset-tree fanout into a data-face failure.
+    skip_re = r"(?:" + face_guard.SKIP_RE + r")|^(?:" + "|".join(re.escape(x) for x in skip) + r")$"
     if pins is not None:                      # the clock / reset pins are not face registers
         pins = [x for x in pins if not re.match(skip_re, str(x.get("bus")))]
     ft_file = Path(disc["kit"]) / "ft_stations.txt" if disc.get("kit") else (
