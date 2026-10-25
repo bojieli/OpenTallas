@@ -46,7 +46,7 @@ def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, sl
              "SO_PATH_END",
              "SO_CK 1 250.0 clk", f"SO_CK 1 {250.0 + sp} clk", "SO_CK 0 260.0 clk", "SO CK_ERRORS 0",
              "SO OCV5_WNS_MAX -3", "SO OCV5_WNS_MIN -1",
-             "SO PAIR_COUNTS regs 3 data_pins 3 pairs 2 inter_clock 0",
+             "SO PAIR_COUNTS regs 3 no_clock_arrival 0 data_pins 3 pairs 2 inter_clock 0", "SO PAIR_METHOD tag",
              f"SO PAIR_max n 2 worst {pair_setup} bounded 0 signed {-pair_setup} launch a capture b crpr 4.0 p99_raw 31 "
              "searched 1 nopath 0 verify 0.010",
              f"SO PAIR_min n 2 worst {pair_hold} bounded 0 signed {pair_hold} launch a capture b crpr 4.0 p99_raw 26 "
@@ -324,3 +324,12 @@ def test_summary_line_shows_pair_skew_and_spread_info():
     rec = record()
     del rec["corners"]["tt"]["pair_skew"]
     assert "pair skew TT/FF nan/30.0" in signoff.summary_line(signoff.evaluate(rec))
+
+
+def test_pair_skew_registers_without_clock_arrival_block():
+    rec = record()
+    assert rec["corners"]["tt"]["pair_skew"]["method"] == "tag"
+    rec["corners"]["ff"]["pair_skew"]["counts"]["no_clock_arrival"] = 2
+    rec = signoff.evaluate(rec)
+    assert rec["checks"]["clock"]["verdict"] == "FAIL"
+    assert any("FF: 2 registers without a unique propagated clock arrival" in p for p in rec["checks"]["clock"]["problems"])

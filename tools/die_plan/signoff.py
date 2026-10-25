@@ -296,11 +296,12 @@ ot_ps_zero_unc
 set so_t0 [clock seconds]
 set so_pm [ot_ps_measure @PAIR_CREDIT_MAX@]
 ot_ps_write $so_pm /out/pair_skew.tsv @C@
-so PAIR_COUNTS regs [dict get $so_pm regs] data_pins [dict get $so_pm data_pins] pairs [dict get $so_pm pairs] inter_clock [dict get $so_pm inter_clock]
+so PAIR_COUNTS regs [dict get $so_pm regs] no_clock_arrival [dict get $so_pm no_clock_arrival] data_pins [dict get $so_pm data_pins] pairs [dict get $so_pm pairs] inter_clock [dict get $so_pm inter_clock]
 foreach dly {max min} {
   set m [dict get $so_pm $dly]
   so PAIR_$dly {*}[concat {*}[lmap k {n worst bounded signed launch capture crpr p99_raw searched nopath verify} {list $k [dict get $m $k]}]]
 }
+so PAIR_METHOD [dict get $so_pm method]
 so PAIR_SECONDS [expr {[clock seconds] - $so_t0}]
 unset so_pm
 so PAIR_DONE 1
@@ -489,7 +490,7 @@ def pair_skew_result(kv):
                            p99_raw_ps=_f(d.get("p99_raw")), searched=_f(d.get("searched")),
                            nopath=_f(d.get("nopath")), verify_ps=_f(d.get("verify")))
     cnt = {k: _f(v) for k, v in _kvlist(kv.get("PAIR_COUNTS")).items()}
-    return dict(done=kv.get("PAIR_DONE") == "1", checks=checks, counts=cnt, seconds=_f(kv.get("PAIR_SECONDS")),
+    return dict(done=kv.get("PAIR_DONE") == "1", checks=checks, counts=cnt, method=kv.get("PAIR_METHOD"), seconds=_f(kv.get("PAIR_SECONDS")),
                 measurement="every same-clock register pair with a timing fan-in relation (exhaustive); worst "
                             "damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
                 tsv="pair_skew.tsv")
@@ -704,6 +705,10 @@ def evaluate(rec, insertion_target=None):
             if not ps.get("done") or any(k not in checks for k in ("max", "min")):
                 why.append(f"{c.upper()}: related pair skew NOT RUN")
             else:
+                na = (ps.get("counts") or {}).get("no_clock_arrival") or 0
+                if na > 0:
+                    why.append(f"{c.upper()}: {int(na)} registers without a unique propagated clock arrival are "
+                               f"missing from the related pair skew")
                 for k, value in checks.items():
                     n, worst = value.get("n"), value.get("worst_abs_ps")
                     side = "setup" if k == "max" else "hold"

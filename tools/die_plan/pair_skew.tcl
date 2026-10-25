@@ -49,23 +49,49 @@ proc ot_ps_zero_unc {} {
 
 proc ot_ps_inst {pinname} { return [regsub {/[^/]+$} $pinname {}] }
 
-proc ot_ps_rise {pin which} {
-  # rise arrival at a register clock pin (ps, from the clock's time origin), NO T/2 fold: the 10-24 routed smoke on
-  # qkd_ctrl_kc (insertion around T/2) showed the tap_balance-style fold (a >= T/2 -> a - T/2) corrupts every pair that
-  # straddles T/2 (raw 341 ps vs path 8 ps).  A genuinely inverted clock leaf would differ from its path-end skew by
-  # T/2 here; the per-pair cross-check (verify_ps) then fails the measurement closed instead of hiding it.
+proc ot_ps_ckarr {pin clk which} {
+  # propagated CLOCK arrival (ps, latency from the launching clock edge) of a register clock pin, min or max, from the
+  # pin's "(clock prop)" path tags of that clock only.  get_property arrival_*_rise is NOT used by default: it is the
+  # max/min over every tag on the pin, so a data arrival riding the clock net (10-24 routed smoke, qkd_ctrl_kc: an
+  # input delay on the hclk port gave CK arrival_max_rise 391 ps vs a 48 ps clock arrival) corrupts it.  NO T/2 fold.
+  # -> value, or "" if the pin has no unique clock arrival; falls back to arrival_*_rise when the tag API is missing
+  # (::ot_ps_method records which; the per-pair path cross-check then guards the fallback).
+  set cn [get_full_name $clk]
+  if {$::ot_ps_method eq "tag"} {
+    set vals {}
+    if {![catch {
+      set wf {}
+      foreach t [$clk waveform] { lappend wf [expr {$t * 1e12}] }
+      foreach v [$pin vertices] {
+        if {$v eq "NULL"} continue
+        set it [$v path_iterator rise $which]
+        while {[$it has_next]} {
+          set pa [$it next]; set tag [$pa tag]; set e [lindex $tag 4]
+          if {[lindex $tag 3] ne $cn || $e ni {^ v} || [string first "(clock prop)" $tag] < 0} continue
+          set x [expr {[$pa arrival] * 1e12 - [lindex $wf [expr {$e eq "^" ? 0 : 1}]]}]
+          if {[lsearch -real $vals $x] < 0} { lappend vals $x }
+        }
+        $it finish
+      }
+    } err]} {
+      if {[llength $vals] == 1} { return [lindex $vals 0] }
+      return ""
+    }
+    set ::ot_ps_method "property"
+    puts "OT_PS_WARN clock-tag arrival API unavailable ($err); falling back to arrival_${which}_rise"
+  }
   if {[catch {set a [get_property $pin arrival_${which}_rise]}] || $a eq "" || [string match *INF* $a]} { return "" }
   return $a
 }
 
 proc ot_ps_regs {} {
-  # inst -> {ckpin clock late early} for every register clock pin with exactly one clock and a rise arrival
-  set R {}
+  # inst -> {ckpin clock late early} for every register clock pin with exactly one clock and a unique clock arrival
+  set R {}; set ::ot_ps_noarr 0
   foreach p [all_registers -clock_pins] {
     set cl [get_property $p clocks]
     if {[llength $cl] != 1} continue
-    set a [ot_ps_rise $p max]; set b [ot_ps_rise $p min]
-    if {$a eq "" || $b eq ""} continue
+    set a [ot_ps_ckarr $p [lindex $cl 0] max]; set b [ot_ps_ckarr $p [lindex $cl 0] min]
+    if {$a eq "" || $b eq ""} { incr ::ot_ps_noarr; continue }
     dict set R [ot_ps_inst [get_full_name $p]] [list [get_full_name $p] [get_full_name [lindex $cl 0]] $a $b]
   }
   return $R
@@ -138,9 +164,13 @@ proc ot_ps_p99 {v} {
 proc ot_ps_measure {{credit_max 5000}} {
   # -> dict: pairs inter_clock data_pins ; per check (max|min): n worst bounded signed launch capture crpr p99_raw
   #    searched nopath verify rows ({launch capture skew crpr raw})
+  set ::ot_ps_method tag
+  # complete timing update BEFORE any arrival / path-tag query (sta_die.tcl: arrival-first segfaults be771a0)
+  sta::worst_slack_cmd max; sta::worst_slack_cmd min
   set ::ot_ps_R [ot_ps_regs]
   lassign [ot_ps_related $::ot_ps_R] P np nx nd
-  set out [dict create pairs $np inter_clock $nx data_pins $nd regs [dict size $::ot_ps_R]]
+  set out [dict create pairs $np inter_clock $nx data_pins $nd regs [dict size $::ot_ps_R] no_clock_arrival \
+             $::ot_ps_noarr method $::ot_ps_method]
   foreach dly {max min} {
     set idx [expr {$dly eq "max" ? 3 : 4}]
     set raw {}
@@ -176,7 +206,7 @@ proc ot_ps_measure {{credit_max 5000}} {
 proc ot_ps_write {M fn corner} {
   set fh [open $fn w]
   puts $fh "H\tcorner\t$corner"
-  foreach k {regs data_pins pairs inter_clock} { puts $fh "H\t$k\t[dict get $M $k]" }
+  foreach k {regs no_clock_arrival method data_pins pairs inter_clock} { puts $fh "H\t$k\t[dict get $M $k]" }
   puts $fh "H\tcrpr\t[sta::crpr_enabled] [sta::crpr_mode]"
   foreach dly {max min} {
     set m [dict get $M $dly]
