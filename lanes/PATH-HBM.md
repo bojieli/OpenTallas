@@ -1,0 +1,21 @@
+# Lane PATH-HBM -- one complete HBM path (owner priority 10-25 08:10)
+
+Path: hb_coll_NW TKM static II8 -> native NW L74 two-beat -> shared root tkm_SW (TP192/KMAX2048) canonical root + 32 common
+tiles -> return L12 (CTL) / L13 (DATA) -> hb_coll_NW tkx_w*.  "Complete" = every partition/core on the path GEOM PASS +
+routed + signed off (TT setup / FF hold) + bound in the die + token test exercising exactly this path.
+
+## Items (2026-10-25 08:09 PDT)  state legend: OPEN / WIP / PASS(gate) / SIGNED
+| # | item | state |
+|---|------|-------|
+| P1 | NW_hub (q_hub) TKM ingress source cores (u_hb_coll_Q_body/reduce/ring_ag etc. driving tkx_*) | OPEN: owner core(s) to be named, sign-off state unknown |
+| P2 | L74 NW_hub->root direct 2341 b, 2 cycles (plan_direct3 ecfb97d718) | PASS(cut 0.5968) analytic only; no G0/G0C on full plan, not on main |
+| P3 | L12 CTL / L13 DATA root->NW_hub direct 2 cycles each | PASS(cut) analytic only, same plan |
+| P4 | TKM root core u_tkm_SW_root (319.68x345.6, 3575 pins) | kit d944a428 synth+bench PASS; pins must change (P6); no P&R |
+| P5 | common TKM tile core (x32, tile_tid ID pin, owner decision B) | gen PASS 3387725, synth DONE, LEC UNPROVEN 689 pts (ovf_b/up_out); pins must change (P6); no P&R |
+| P6 | root<->tile0 + tile<->tile chain seam geometry | FAIL: up_out max 511 um, 75 b >405; and the 32 tiles are scattered (tile0 y518 -> tile1 y4735) |
+| P7 | tile_clk / clr / conv distribution (32 tiles, die-spine taps, static equal-latency broadcast) | OPEN |
+| P8 | root partition (soft glue + stations) and NW_hub partition route/sign-off for path nets | OPEN |
+| P9 | die bind of the path (plan on main, raw bind, port-bind 0 errors) | OPEN |
+| P10 | token: TKM path test with face_shell wrappers instantiated, >=2 tile IDs, L74/L12/L13 final cycles | WIP: r3 baseline (no shells) live intel1 unit 2167534 |
+
+Signed off: 0 of 10.
