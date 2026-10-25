@@ -26,9 +26,10 @@ VERIFY_RULES = {
         {"module": "ot_dp_st", "map": {"q": "d", "eq": "ea"}, "drop_in": ["clk", "rst_n"], "stages": 1},
         {"module": "ot_dp_dly", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1, "stages_param": "D"},
         {"module": "ot_dp_rsync", "map": {"q": "a"}, "drop_in": ["clk"], "stages": 2, "stages_param": "S"},
+        {"module": "ot_dp_rrelay", "map": {"q": "d"}, "drop_in": ["clk"], "stages": 1},
     ],
     "reducers": [{"module": "ot_dp_or", "out": "y"}, {"module": "ot_dp_and", "out": "y", "op": "and"}],
-    "sources": [{"module": "ot_reset_sync", "kind": "reset", "outputs": {"sync_rst_n": "low"},
+    "sources": [{"module": "ot_reset_sync|ot_dp_rsync_s[23]", "kind": "reset", "outputs": {"sync_rst_n": "low"},
                  "drop_in": ["clk", "async_rst_n"]}],
 }
 
@@ -77,7 +78,7 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
         t = Path(f).read_text(errors="replace")
         mods = re.findall(r"^module\s+(\w+)", t, re.M)
         leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) -
-                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync"})
+                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
         cl, _ = E.closure(leafm, idx, prefer)
         for m in mods:
             byfile[m] = [f] + cells + [str(rs)] + cl
@@ -147,6 +148,8 @@ def cmd_verify(a):
         if k == "top":
             if s[1] in clk_top:
                 return ["clk", clk_top[s[1]]]
+            if raw.get("reset", {}).get("release") == "wavefront" and s[1] == "rst_n":
+                return ["rst", "low"]  # native hard-partition delivered reset; timing checked by offsets
             return ["top", s[1]]
         if k == "reset":
             return ["rst", s[1]]
