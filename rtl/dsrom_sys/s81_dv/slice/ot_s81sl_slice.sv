@@ -80,7 +80,7 @@ module ot_s81sl_leaf #(
     wire s_v; wire [159:0] s_d; wire x_rv, x_qv, x_wv; wire [9:0] x_ra, x_wa; wire [7:0] x_wm; wire [255:0] x_qd, x_wd;
     wire u_v, um_v, um_q, um_b; wire [2:0] u_i; wire [255:0] u; wire [7:0] um_i;
     wire swv, swvi, swfi; wire [255:0] swd; wire [31:0] sww, swl; wire [63:0] swri;
-    wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rari, rfu, rfu2, rfmx;
+    wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rfu, rfu2, rfmx; wire [30:0] rari;
     wire f_vp, f_vn, f_vq, f_vs;
     wire vs_xrv,vs_xwv;wire [9:0]vs_xra,vs_xwa;wire[7:0]vs_xwm;wire[255:0]vs_xwd;
     wire kvbusy,kvdone,kvfault,kv_xrv,kv_xwv;wire[9:0]kv_xra,kv_xwa;wire[7:0]kv_xwm;wire[255:0]kv_xwd;
