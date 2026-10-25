@@ -4,7 +4,7 @@
  "watch": ["tools/die_plan/gen_phys.py", "tools/die_plan/gen.py", "tools/die_plan/gen_rtl.py", "tools/die_plan/*.tcl",
            "tools/die_plan/face_guard.py", "tools/die_plan/signoff.py", "tools/die_plan/lec.py",
            "tools/die_plan/selrange_gate.py", "tools/die_plan/sdc_lint.py", "tools/die_plan/port_bind_gate.py",
-           "tools/die_plan/reg_fanout_gate.py", "tools/die_plan/reset_tree.py", "tools/die_plan/setRC_rcx_asap7.tcl",
+           "tools/die_plan/reg_fanout_gate.py", "tools/die_plan/rtl_lint.py", "tools/die_plan/reset_tree.py", "tools/die_plan/setRC_rcx_asap7.tcl",
            "tools/die_plan/schema.py", "tools/die_plan/taps.py", "tools/die_plan/pin_audit.py",
            "physical/common_flow/*", "physical/die_plan/hbm_arch_cores/*", "physical/die_plan/qwen_kvsys/cores/harden/*",
            "tools/flow_canary/*"],

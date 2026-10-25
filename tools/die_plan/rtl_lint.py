@@ -32,7 +32,11 @@ def script(kit, mount='/work'):
     defines = ['-DSYNTHESIS'] + [v if v.startswith('-D') else '-D'+v for v in cfg.get('VERILOG_DEFINES', [])]
     includes = ['-I'+v for v in cfg.get('VERILOG_INCLUDE_DIRS', []) + cfg.get('SYNTH_INCLUDE_DIRS', [])]
     return '\n'.join(libs + ['verilog_defines ' + ' '.join(dict.fromkeys(defines))] +
-                     ['read_verilog -sv -noautowire ' + ' '.join(includes + [s]) for s in sources] +
+                     # -defer as ORFS synth: modules elaborate once, with the parameters they are instantiated
+                     # with (FLOW-CANARY 10-25: without it 'initial if(P<1) $fatal' guards fired on the default
+                     # parameters -- qkd_static_k_issuer RESPONSE_LAT=0 -- and failed every KV head kit's lint);
+                     # -noautowire still rejects implicit nets under -defer (checked on the orfs:asap7lock yosys).
+                     ['read_verilog -defer -sv -noautowire ' + ' '.join(includes + [s]) for s in sources] +
                      [f'hierarchy -check -top {top[0]}', 'proc', 'check -assert']) + '\n'
 
 
@@ -45,7 +49,7 @@ def run(kit, yosys='yosys'):
         log = result.stdout
         (kit / 'rtl_lint.log').write_text(log)
         record = dict(verdict='PASS' if result.returncode == 0 else 'FAIL', rc=result.returncode,
-                      errors=re.findall(r'^ERROR:.*$', log, re.M), command=[yosys, '-q', '-s', str(ys)])
+                      errors=re.findall(r'^.*\bERROR:.*$', log, re.M), command=[yosys, '-q', '-s', str(ys)])
     except (OSError, ValueError) as error:
         record = dict(verdict='NOT RUN', rc=2, errors=[str(error)])
     out.write_text(json.dumps(record, indent=1) + '\n')
