@@ -366,6 +366,21 @@ RC_CAL_FILE, RC_CAL_KIT = "setRC_rcx_asap7.tcl", "setRC_rcx.tcl"
 # FLOW 10-25: default FF-only GRT hold repair margin (run_kit.sh grt CORNERS=bc with the FF-bound vclk); = the
 # kit HOLD_SLACK_MARGIN (owner 00:46: repair only 0..5 ps above the SDC).  gen.py phys --hold-mcmm = old MCMM GRT.
 HOLD_FF_MARGIN_DEFAULT = 5.0
+# FLOW-INFRA-2 10-25: GRT-RC tap pre-pass (tapbal_grt.tcl) between CTS and the FF GRT step.  Opt-in until the flow
+# canaries pass with it (plan clock.tap_grt_pre, or OT_GEN_TAP_GRT_PRE=1 at generation for A/B kits); then default on.
+TAP_GRT_PRE_DEFAULT = False
+
+
+def _tap_grt_pre(P, t):
+    """True when the kit runs the GRT-RC tap pre-pass (type clock.tap_grt_pre > plan clock.tap_grt_pre > env > default)."""
+    import os
+    v = t.get("clock", {}).get("tap_grt_pre", P.clock.get("tap_grt_pre"))
+    if v is None:
+        e = os.environ.get("OT_GEN_TAP_GRT_PRE")
+        v = TAP_GRT_PRE_DEFAULT if e is None else e not in ("", "0")
+    return bool(v)
+
+
 HOLD_OUT_MIN_PS = 0.0   # min output delay of every partition output vs vclk (sdc_lint: must be <= 0)
 
 
@@ -738,10 +753,14 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # FLOW 10-25: GRT hooks (grt_pre.tcl: FF vclk binding for the FF-only GRT step + optional max-wire repeaters;
     # grt_post.tcl: density GRT-RC tap pass + vclk back to the SDC value before 5_1_grt.sdc is written)
     cfg += ["export PRE_GLOBAL_ROUTE_TCL = /work/grt_pre.tcl", "export POST_GLOBAL_ROUTE_TCL = /work/grt_post.tcl"]
+    if _tap_grt_pre(P, t):
+        # FLOW-INFRA-2 10-25: tap trees re-balanced on GRT RC before the FF GRT hold repair (tapbal_grt.tcl)
+        # + pin-register leaf pad (pinreg_pad.tcl): the gate quantity, not the whole-tree mean
+        cfg += ["export OT_TAP_GRT_PRE = 1", "export OT_PINREG_PAD = 1"]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
-              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl"):
+              "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl", "pinreg_pad.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
         if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
             hook = kd / f
@@ -872,6 +891,8 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=5; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
   if [ \$rc = 0 ] && { [ $GOAL = cts ] || [ $GOAL = route ] || [ $GOAL = finish ]; }; then \
     \$M cts SKIP_CTS_REPAIR_TIMING=1; rc=\$?; \
+    if [ \$rc = 0 ] && grep -q '^export OT_TAP_GRT_PRE = 1' /work/config.mk; then \$M run RUN_SCRIPT=/work/tapbal_grt.tcl RUN_LOG_NAME_STEM=4_2_tapbal_grt CORNER=TC CORNERS=tc; rc=\$?; \
+      if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS GRT-RC tap pre-pass (tapbal_grt.tcl)' | tee -a /work/FAIL_POSTCTS; rc=6; fi; fi; \
     if [ \$rc = 0 ]; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
         OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \

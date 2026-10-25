@@ -221,3 +221,13 @@ def test_check_run_has_vclk_basis(tmp_path):
     (k / "signoff").mkdir()
     (k / "signoff" / "signoff.json").write_text(json.dumps(dict(_so(), verdict="NOT SIGNED", checks={})))
     assert C.check_run(tmp_path)["stages"]["vclk_basis"]["verdict"] == "PASS"
+
+
+def test_hold_gate_verdict_is_not_a_tcl_crash():
+    import canary
+    log = ("OT_HOLD_GATE FAIL FF wns_ps -152.02 endpoints 1053 (true negative slack)\n"
+           "Error: hold_gate.tcl, 40 structural FF hold failure: revise plan/RTL/boundary before repair\n")
+    m = list(canary.TCL_ERR_RE.finditer(log))
+    assert m and all(canary.GATE_ERR_RE.search(log[x.start():].split("\n", 1)[0]) for x in m)
+    crash = "Error: cts.tcl, 6 can't read \"rt_named_nets\": no such variable\n"
+    assert not canary.GATE_ERR_RE.search(crash)

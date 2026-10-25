@@ -38,6 +38,7 @@ CLOCK_ONLY_SKIP_RE = r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_n|rst_i|start_i)$"
 TCL_ERR_RE = re.compile(r"can't read \"[^\"]+\": no such variable|invalid command name \"|"
                         r"Error: [^\n]*\.tcl, \d+|couldn't open \"[^\"]+\"|can't find package|"
                         r"ERROR \[?[A-Z]{3}-\d+")
+GATE_ERR_RE = re.compile(r"Error: hold_gate\.tcl, \d+ structural FF hold failure")
 STAGES = ("lint", "sdc_lint", "selrange", "synth", "lec", "face_guard", "face_cover", "reg_fanout", "rc_file", "vclk_basis",
           "cts", "grt_gate", "route", "rcx", "signoff", "tcl_errors")
 # vclk_basis (COORD 10-25, main 9f716b354, METHODOLOGY 9.7 / BRIEFING 5e): the IO virtual clock must be the kit's
@@ -388,7 +389,8 @@ def check_run(run, spec=None, die_plan_dir=None):
     if spec.get("grt_gate", True) is False:
         res["grt_gate"] = st(True, "not part of this flow (spec grt_gate false)")
     else:
-        res["grt_gate"] = st(None, "no OT_POSTCTS_GATE lines") if not gl else st(
+        hg = [l for l in read(kit / "hold_gate.log").splitlines() if l.startswith("OT_HOLD_GATE")]
+        res["grt_gate"] = st(None, "no OT_POSTCTS_GATE lines" + (f" (stopped before: {hg[-1]})" if hg else "")) if not gl else st(
             len(gl) >= 2 and not any("FAIL" in l for l in gl), " | ".join(gl)[:300])
     rt = first(f"{base}/6_final.odb") or first(f"{base}/5_route.odb") if base else None
     res["route"] = st(bool(rt) or None, Path(rt).name if rt else "no routed odb")
@@ -402,6 +404,10 @@ def check_run(run, spec=None, die_plan_dir=None):
     errs = []
     for l in step_logs + [str(kit / f) for f in ("hold_gate.log", "synth_odb_v.log")] + sorted(glob.glob(f"{kit}/run_*.log")):
         for m in TCL_ERR_RE.finditer(read(l)):
+            # a gate's deliberate 'error' (hold_gate.tcl structural FAIL) is a verdict, reported by grt_gate, not a crash
+            line = read(l)[m.start():].split("\n", 1)[0]
+            if GATE_ERR_RE.search(line):
+                continue
             errs.append(f"{Path(l).name}: {m.group(0)[:120]}")
     res["tcl_errors"] = st(not errs, "; ".join(errs[:6]) or "none", n=len(errs))
     failing = [k for k in req if res.get(k, {}).get("verdict") != "PASS"]
