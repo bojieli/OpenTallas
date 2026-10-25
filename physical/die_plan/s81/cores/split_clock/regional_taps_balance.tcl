@@ -45,30 +45,88 @@ proc rb_measure {} {
   return $r
 }
 set rb_added 0
-for {set it 0} {$it < 4} {incr it} {
+# CLOCK-RESET 10-25 (GEOM-REVIEW-3 06:59 vsw f6s: 22 ps BUFx4 quantum + target frozen at it0 -> h3_7 never padded,
+# window 20.7): the target is RE-TAKEN every iteration = the max mean of the taps not yet padded (the naturally latest
+# taps; all taps once every tap is padded).  Coarse unit = one pad stage (OT_RT_PAD_LADDER middle, BUFx4, ~20 ps) in
+# front of the tap; fine unit = the drive of the LAST pad on the ladder BUFx6f..BUFx2 (a few ps per step, no extra
+# stage; the tap buffer itself is never resized: its input cap changes the upstream delay the other way).  A tap that
+# overshoots steps back (stronger last pad, else drops it).  A tap whose error changed sign is held at window/2.
+# Converges to |mean - target| <= OT_RT_TOL_PS (window/4) or stops after OT_RT_BAL_IT (10) iterations.
+set rb_tol [expr {[info exists ::env(OT_RT_TOL_PS)] ? $::env(OT_RT_TOL_PS) : $rb_win / 4.0}]
+set rb_nit [expr {[info exists ::env(OT_RT_BAL_IT)] ? $::env(OT_RT_BAL_IT) : 10}]
+set rb_ladder [expr {[info exists ::env(OT_RT_PAD_LADDER)] ? $::env(OT_RT_PAD_LADDER) : \
+  "BUFx6f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx4_ASAP7_75t_R BUFx3_ASAP7_75t_R BUFx2_ASAP7_75t_R"}]
+set rb_lad {}; foreach n $rb_ladder { set mm [[ord::get_db] findMaster $n]; if {$mm ne "NULL" && $mm ne ""} { lappend rb_lad $mm } }
+set rb_mid [expr {[llength $rb_lad] / 2}]
+set rb_pads {}
+set rb_sign {}
+set rb_unit 20.0
+proc rb_tapin {ti} { foreach x [$ti getITerms] { if {[[$x getMTerm] getIoType] eq "INPUT" && [$x getNet] ne "NULL"} { return $x } }; return "" }
+proc rb_np {t} { global rb_pads; return [expr {[dict exists $rb_pads $t] ? [llength [dict get $rb_pads $t]] : 0}] }
+proc rb_add_pad {t it k} {
+  global rb_blk rb_lad rb_pads rb_added
+  set mm [lindex $rb_lad $k]
+  set ti [$rb_blk findInst $t]; set inp [rb_tapin $ti]; set b [$ti getBBox]
+  set j [rb_np $t]
+  set di [odb::dbInst_create $rb_blk $mm "${t}_pad${it}_$j"]
+  set nx [odb::dbNet_create $rb_blk "${t}_pad${it}_${j}_n"]; $nx setSigType CLOCK
+  set src [$inp getNet]
+  foreach x [$di getITerms] { set mt [$x getMTerm]; if {[$mt getSigType] in {POWER GROUND}} continue
+    if {[$mt getIoType] eq "INPUT"} { $x connect $src } elseif {[$mt getIoType] eq "OUTPUT"} { $x connect $nx } }
+  $di setLocation [expr {[$b xMin] - ($j+1)*2*[[lindex $rb_lad 0] getWidth]}] [$b yMin]; $di setPlacementStatus PLACED
+  $inp disconnect; $inp connect $nx
+  dict lappend rb_pads $t [list $di $nx $k]; incr rb_added
+}
+proc rb_drop_pad {t} {
+  # the last pad sits directly in front of the tap: reconnect the tap to the pad's input net, delete the pad
+  global rb_blk rb_pads rb_added
+  set l [dict get $rb_pads $t]; lassign [lindex $l end] di nx k
+  set ti [$rb_blk findInst $t]; set inp [rb_tapin $ti]
+  set src ""; foreach x [$di getITerms] { if {[[$x getMTerm] getIoType] eq "INPUT"} { set src [$x getNet] } }
+  $inp disconnect; $inp connect $src
+  odb::dbInst_destroy $di; odb::dbNet_destroy $nx
+  dict set rb_pads $t [lrange $l 0 end-1]; incr rb_added -1
+}
+proc rb_resize_last {t dir} {
+  # dir +1 = slower (weaker last pad), -1 = faster; returns 1 when changed
+  global rb_pads rb_lad
+  if {![rb_np $t]} { return 0 }
+  set l [dict get $rb_pads $t]; lassign [lindex $l end] di nx k
+  set k2 [expr {$k + $dir}]
+  if {$k2 < 0 || $k2 >= [llength $rb_lad]} { return 0 }
+  $di swapMaster [lindex $rb_lad $k2]
+  dict set rb_pads $t [lreplace $l end end [list $di $nx $k2]]
+  return 1
+}
+for {set it 0} {$it < $rb_nit} {incr it} {
   set m [rb_measure]
-  if {$it == 0} { set hi 0.0; dict for {t v} $m { set hi [expr {max($hi,[lindex $v 0])}] } }
-  set line "OT_RT_BAL it$it:"; dict for {t v} $m { append line " $t=[format %.0f [lindex $v 0]]([format %.0f [lindex $v 1]]-[format %.0f [lindex $v 2]],[lindex $v 3])" }
+  set hi -1.0; dict for {t v} $m { if {![rb_np $t]} { set hi [expr {max($hi,[lindex $v 0])}] } }
+  if {$hi < 0} { dict for {t v} $m { set hi [expr {max($hi,[lindex $v 0])}] } }
+  set lo 1e9; set mx 0.0; dict for {t v} $m { set lo [expr {min($lo,[lindex $v 0])}]; set mx [expr {max($mx,[lindex $v 0])}] }
+  set line "OT_RT_BAL it$it target [format %.1f $hi] window [format %.1f [expr {$mx-$lo}]]:"
+  dict for {t v} $m { append line " $t=[format %.0f [lindex $v 0]]([format %.0f [lindex $v 1]]-[format %.0f [lindex $v 2]],[lindex $v 3])/[rb_np $t]" }
   puts $line
   set todo 0
   dict for {t v} $m {
     set d [expr {$hi - [lindex $v 0]}]
-    if {$d <= $rb_win / 2.0} continue
-    set todo 1
-    set nb [expr {max(1, int(round($d / 18.0 * 0.75)))}]
-    set ti [$rb_blk findInst $t]
-    set inp ""; foreach x [$ti getITerms] { if {[[$x getMTerm] getIoType] eq "INPUT" && [$x getNet] ne "NULL"} { set inp $x } }
-    set src [$inp getNet]; set b [$ti getBBox]
-    set prev $src
-    for {set j 0} {$j < $nb} {incr j} {
-      set di [odb::dbInst_create $rb_blk $rb_dm "${t}_pad${it}_$j"]
-      set nx [odb::dbNet_create $rb_blk "${t}_pad${it}_${j}_n"]; $nx setSigType CLOCK
-      foreach x [$di getITerms] { set mt [$x getMTerm]; if {[$mt getSigType] in {POWER GROUND}} continue
-        if {[$mt getIoType] eq "INPUT"} { $x connect $prev } elseif {[$mt getIoType] eq "OUTPUT"} { $x connect $nx } }
-      $di setLocation [expr {[$b xMin] - ($j+1)*2*[$rb_dm getWidth]}] [$b yMin]; $di setPlacementStatus PLACED
-      set prev $nx; incr rb_added
+    set sg [expr {$d > 0 ? 1 : -1}]
+    set tl $rb_tol
+    if {[dict exists $rb_sign $t] && [dict get $rb_sign $t] != $sg} { set tl [expr {$rb_win / 2.0}] }
+    if {abs($d) <= $tl} continue
+    dict set rb_sign $t $sg
+    if {$d > 0} {
+      if {$d > $rb_unit - $rb_tol} {
+        # coarse: floor pad stages at the middle drive (never overshoot by a whole stage); residual trimmed next pass
+        set nb [expr {max(1, int(floor(($d + $rb_tol) / $rb_unit)))}]
+        for {set j 0} {$j < $nb} {incr j} { rb_add_pad $t $it $rb_mid }
+      } elseif {![rb_resize_last $t 1]} {
+        rb_add_pad $t $it 0
+      }
+      set todo 1
+    } elseif {[rb_np $t]} {
+      if {![rb_resize_last $t -1]} { rb_drop_pad $t }
+      set todo 1
     }
-    $inp disconnect; $inp connect $prev
   }
   if {!$todo} break
   detailed_placement

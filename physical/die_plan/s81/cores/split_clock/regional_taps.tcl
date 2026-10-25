@@ -177,6 +177,43 @@ foreach it $regs {
   $it disconnect; $it connect $tn
 }
 puts "OT_RT tap loads: $cnt; macro groups [dict size $mtap]"
+# CLOCK-RESET 10-25 (GEOM-REVIEW-3 06:59 vsw f6s condition (c): h3_6 served 1 sink): a region tap under
+# OT_RT_MIN_SINKS (50) registers is folded -- its registers move to the nearest kept region tap, its tap buffer and any
+# spine buffer left without load are deleted (no near-empty / zero-active tap; same rule as clock_taps.tcl OT_TAP_MIN_SINKS).
+set rt_min [expr {[info exists ::env(OT_RT_MIN_SINKS)] ? $::env(OT_RT_MIN_SINKS) : 50}]
+proc rt_cnt {k} { global cnt; return [expr {[dict exists $cnt $k] ? [dict get $cnt $k] : 0}] }
+set rt_folded 0
+dict for {k nd} $tapnet {
+  if {[rt_cnt $k] >= $rt_min} continue
+  lassign $nd x y n
+  set best ""; set bd 1e18
+  dict for {k2 nd2} $tapnet {
+    if {$k2 == $k || [rt_cnt $k2] < $rt_min} continue
+    lassign $nd2 x2 y2; set dd [expr {abs($x2-$x)+abs($y2-$y)}]
+    if {$dd < $bd} { set bd $dd; set best $k2 }
+  }
+  if {$best eq ""} continue
+  set n2 [lindex [dict get $tapnet $best] 2]
+  set mv 0
+  foreach it [$n getITerms] { if {[[$it getMTerm] getIoType] eq "INPUT"} { $it disconnect; $it connect $n2; incr mv } }
+  puts "OT_RT fold region $k ([rt_cnt $k] registers, $mv sinks) -> region $best tap ([format %.1f $bd] um)"
+  dict incr cnt $best [rt_cnt $k]; dict unset cnt $k
+  dict unset tapnet $k; incr rt_folded
+}
+# delete spine buffers left without any load (the folded tap buffers, then any arm repeater feeding only them)
+for {set pass 0} {$pass < 20} {incr pass} {
+  set gone 0
+  foreach i [$rt_blk getInsts] {
+    if {![string match ot_rt_* [$i getName]]} continue
+    set o [rt_out $i]
+    if {$o eq "NULL"} continue
+    set ld 0; foreach t [$o getITerms] { if {[[$t getMTerm] getIoType] eq "INPUT"} { incr ld } }
+    if {$ld || [llength [$o getBTerms]]} continue
+    odb::dbInst_destroy $i; odb::dbNet_destroy $o; incr gone
+  }
+  if {!$gone} break
+}
+if {$rt_folded} { puts "OT_RT folded $rt_folded region tap(s) under $rt_min registers; tap loads now: $cnt" }
 # TritonCTS builds local trees ONLY on the tap nets (the spine is fixed, balanced by construction): -clk_nets
 set tl {}; set ti {}
 dict for {k nd} $tapnet { set n [lindex $nd 2]; lappend tl [$n getName]; lappend ti [[[$n getFirstOutput] getInst] getName] }
