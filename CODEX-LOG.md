@@ -409,3 +409,20 @@ All lanes assigned across eight groups; all inherit result collection, failure d
 
 OWNER?
 None newly required; earlier questions are checked against BRIEFING decisions before escalation.
+
+2026-10-25 02:38 PDT INFRA: epyc1 bus recovered without restarting manager/scopes; all5 hosts admit again. Runtime dbus Type=exec until safe manager restart; snapshot/backup in scratch2/claude/codex-infra.
+
+OWNER?
+2026-10-25 02:40 PDT PART-CAP: N44 inherited CTS jobs have 200k+ hold buffers with frozen -226.8/-534.6ps WNS, violating structural stop rule. CODEX-ROLE forbids killing jobs we did not start. May the exact inherited N44 capacity containers be cancelled after preserving their logs/checkpoints? We have left them running and advanced an independently copied N27 TT checkpoint instead.
+
+2026-10-25 02:42 PDT CODEX: epyc3 standby refreshed from current epyc1 v14 (includes --stage), retargeted localhost<->epyc1 and NO_AVX512; choose selftest29 PASS, status all5 PASS. Standby only, no cutover/no jobs. Prior standby retained .pre-codex-20261025. Fresh STALLS shows127 jobs (before recovery89), QC qfd_dv_s8x_btab_adj10 idle1h43 delegated to QC owner; epyc1 inherited prune finished02:40 scratch264%/1.2TB free.
+
+OWNER? TRIAL-S81 PHY IR: selected PHY power (or per-window power/energy per bit), operating supply voltage and actual signal/PG bump map are not in the current plans. Standalone window measurement proceeds at explicit0.15W/mm2 / nominal0.7V, with45um dedicated PG rows from the accepted plans; final PHY IR requires those inputs.
+
+2026-10-25 02:46 PDT CODEX: epyc2 NEW admissions HELD by root order for measured scratch depletion103GB->83GB/2min after fleet fill; live jobs untouched. All lane leaders notified use --stage/other4. Remove only this held_hosts line once safe measured growth headroom returns.
+2026-10-25 02:50 PDT RESET: codex/reset-targets-1025@b26d0ce3c ready (source3a63d13f8), core-pin local relay targets+wiring,9 focused tests PASS; S81 max boot101 unchanged,32 offsets shift,10 svc K+1. No new physical jobs. A0 old2stage reset geometry repair underway separately codex/a0-reset-1025.
+
+2026-10-25 02:50 PDT GEOM/PROTO: independent S81 split4 core-route and LEAFPLAN2/DEC12R PHY plan reviews ready fda531177; G2 wavefront fix source-only e69ede66b; FF vclk opt-in32e1c492c,32 testsPASS, actual193.284ps/457 samples yields FF-8.13 vsraw-14.34 (53 real residual endpoints, TT2slew). QC3 sentinel GRT diagnostics live epyc1 sle_su_l0/coll_ftc units2237711/2237715 and intel2 cbn_q01 unit2602323 (all suffix1792921579). Collected old B2m q_b112/q_su01 STRUCTURAL overflow2.77M/9.17M, TT-701/-676ps.
+
+OWNER?
+2026-10-25 02:50 PDT S81 XDIE real PHY footprint: current free shoreline zones2886x482um fit declared0.563mm2 model; assumed2.4mm2 6x112G PHY overlaps feedthrough bands. Please provide actual PHY dimensions/shape (or authorize a chosen model). Plan merge is conditional on current model only; wider-footprint FT-in-core-row alternative can proceed without selecting it.

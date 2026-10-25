@@ -289,3 +289,5 @@ Already known from ELEM-HBM's runs: dma_back_static_vp4_banks_cp MPL-0065 (cells
 
 ## CODEX notes 2026-10-25 02:43 PDT
 CODEX took over proto collection/re-sweep preparation. KV channel pilot owner /root/kv_push covers hgi_v6/pv_v6 baseline+proposal (skip duplicate). Wavefront rst_o outputs missing from g2 skeleton causes PPL-0061; KV g2-only fix a2a47e1d8 ready, adopting before current-plan sweeps.
+
+2026-10-25 02:50 PDT CODEX COLLECTED old B2m pending probes: q_b112 EXIT0 but STRUCTURAL overflow2769922,TT-701.05/FF+55.82ps,hot bbox97.9%; q_su01 EXIT0 but STRUCTURAL overflow9169982,TT-675.83/FF+34.11ps,hot bbox75.3%. Channels/capacity structural; no new same-plan routes. Originals preserved, own JSON /tmp/codex-proto-late-b2m.json. QC current-plan sentinel probes3 started after planned-site image review: own dirs /srv/opentallas-scratch2/claude/codex-proto-current/qc_sentinels on all hosts; sle_su_l0/coll_ftc selected epyc1,cbn_q01 intel2. g2 wavefront port fix adopted, no DRT.
