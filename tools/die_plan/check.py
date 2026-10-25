@@ -11,12 +11,19 @@ Checks (each finding is ERROR or WARN; G0 PASS = no ERROR):
               face + layer do not overlap; ft slot buses sit on the slot's in/out face; every instance of a
               replicated type yields the IDENTICAL pin table (bus, bit, layer, type-frame face and coordinate)
   layers      port and ft layers <= die.layer_budget.partition_signal_max
+  m89_signals METHODOLOGY 5.1 / ruling 9.3 (B#12 2026-10-24): no signal on M8/M9 -- they carry only the die clock
+              spine, die reset and PG.  ERROR for die_use ft_reserved, ft_route_layers / lane route_layers / port /
+              bus / spare-slot / face_layers / ft slot / channel layers on M8/M9, type ft_budget on M8/M9, and
+              partition_signal_max above M7
   faces       per partition face: pins / um <= face_pins_per_um averaged over every face_window_um window (all
               layers together, at most face_pin_layers layers per port); per port + layer pins / tracks <= pin_track_max
   cuts        cut sweep every cut_step_um, vertical and horizontal lines: the bits of every lane route crossing the
-              line against the tracks (partition ft layers M4-M7 x ft_track_frac + die layers x cut_avail); full
-              line and per partition segment <= cut_ratio_max; M8/M9-only ratio reported (research sweep form)
-  hops        every register-to-register hop of every lane <= reach (lane.reach_um or die.reach_um)
+              line against the tracks (partition ft layers M4-M7 x ft_track_frac); full line and per partition
+              segment <= cut_ratio_max (the die layers M8/M9 add no signal capacity, ruling 9.3; the M8/M9-only
+              ratio is still reported as research info)
+  hops        every register-to-register hop of every lane <= reach (lane.reach_um, else die.reach_um; both capped
+              at the 405-um M4-M7 signal reach, ruling 9.3); ft stations <= ft_station_max_um (default 405, R3,
+              ruling 9.4) apart; a plan budget above 405 is an ERROR
   types       type count, instances per type, near-duplicate types (same outline + interface, other offsets: merge
               them; replicated types should declare type-frame pin windows)
   latency     the latency table lists every lane and equals Plan.lane_latency() (only source for RTL + compiler)
@@ -41,6 +48,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+import reach as RT  # noqa: E402
 import schema as S  # noqa: E402
 from schema import DIE_PART, OPP  # noqa: E402
 
@@ -179,8 +187,8 @@ def check_abutment(P, R):
     for pid, pr in P.ports.items():
         f = pr["face"]
         # per-face layer sets (COORD 10-23): a type may list face_layers[type face]; then every pin layer on that
-        # face must be in the set, and a layer above partition_signal_max (M8 on S81 svc fold / rail faces) is
-        # allowed only when EVERY partition end lists it for its face
+        # face must be in the set, and a layer above partition_signal_max is allowed only when EVERY partition end
+        # lists it for its face (still <= M7: an M8/M9 face layer is an m89_signals ERROR, ruling 9.3)
         pend = []
         if pr["src"]["part"] != DIE_PART:
             pend.append((pr["src"]["part"], f))
@@ -415,10 +423,75 @@ def lane_geometry(P, lid):
     return pts, regs, xs
 
 
+def station_max(P, R=None):
+    """R3 (ruling 9.4): ft stations at most ft_station_max_um apart, a ceiling of 405 um (SIGNAL_REACH_UM)."""
+    v = float(P.budgets.get("ft_station_max_um", S.SIGNAL_REACH_UM))
+    if R is not None and v > S.SIGNAL_REACH_UM + EPS:
+        R.err("stations", f"budgets.ft_station_max_um {v:g} > {S.SIGNAL_REACH_UM:g} um (R3, ruling 9.4: stations every "
+              f"<= {S.SIGNAL_REACH_UM:g} um); judged at {S.SIGNAL_REACH_UM:g}")
+    return min(v, S.SIGNAL_REACH_UM)
+
+
+def check_m89_signals(P, R, max_msgs=40):
+    """ruling 9.3: signals (partition pins, ft, die-top nets) only on <= M7; M8/M9 = die clock spine / reset / PG."""
+    res = set(S.RESERVED_DIE_LAYERS)
+    smax = lnum(S.SIGNAL_LAYER_MAX)
+    cnt = defaultdict(int)
+    n = [0]
+
+    def bad(what, msg, **kw):
+        cnt[what] += 1
+        n[0] += 1
+        if n[0] <= max_msgs:
+            R.err("m89_signals", msg + " (ruling 9.3: M8/M9 carry only the die clock spine, reset and PG)", **kw)
+
+    lb = P.layer_budget
+    if lnum(lb["partition_signal_max"]) > smax:
+        bad("partition_signal_max", f"layer_budget.partition_signal_max {lb['partition_signal_max']} above "
+            f"{S.SIGNAL_LAYER_MAX}")
+    if "ft_reserved" in lb.get("die_use", []):
+        bad("ft_reserved", "layer_budget.die_use lists ft_reserved (over-the-top ft on M8/M9)")
+    if res & set(lb.get("ft_route_layers", [])):
+        bad("ft_route_layers", f"layer_budget.ft_route_layers {lb['ft_route_layers']} include M8/M9")
+    for lid, ln in P.lanes.items():
+        if res & set(ln.get("route_layers", [])):
+            bad("lane_route_layers", f"lane {lid}: route_layers {ln['route_layers']} include M8/M9", lane=lid)
+    for tn, t in P.types.items():
+        for f, ls in t.get("face_layers", {}).items():
+            if res & set(ls):
+                bad("face_layers", f"type {tn}: face_layers[{f}] {ls} include M8/M9", type=tn)
+        for b in t.get("buses", []):
+            if res & set(b.get("layers", [])):
+                bad("bus_layers", f"type {tn} bus {b['name']}: layers {b['layers']} include M8/M9", type=tn)
+        for sl in t.get("ft_slots", []):
+            if res & ({sl.get("layer")} | set(sl.get("layers", []))):
+                bad("ft_slot_layers", f"type {tn} ft slot {sl['name']}: on M8/M9", type=tn)
+        for sp in t.get("spare_slots", []):
+            if res & set(sp.get("layers", [])):
+                bad("spare_slot_layers", f"type {tn} spare slot {sp['name']}: layers {sp['layers']} include M8/M9",
+                    type=tn)
+        fb = {k: v for k, v in t.get("ft_budget", {}).items() if k in res and v > 0}
+        if fb:
+            bad("ft_budget", f"type {tn}: ft_budget {fb} reserves M8/M9 tracks for ft", type=tn)
+    for pid, pr in P.ports.items():
+        if res & set(pr.get("layers", [])):
+            bad("port_layers", f"port {pid}: pin layers {pr['layers']} include M8/M9", port=pid)
+    for ch in P.die.get("channels", []):
+        if "ports" in ch and res & set(ch.get("layers", [])):
+            bad("channel_layers", f"channel {ch.get('name', '?')}: signal layers {ch['layers']} include M8/M9")
+    if n[0] > max_msgs:
+        R.err("m89_signals", f"... {n[0] - max_msgs} more signal uses of M8/M9 (counts in summary.m89_signals)")
+    dr = P.die_reach_um
+    if dr > S.SIGNAL_REACH_UM + EPS:
+        R.warn("hops", f"die.reach_um {dr:g} > the {S.SIGNAL_REACH_UM:g}-um M4-M7 signal reach (ruling 9.3); hops "
+               f"are judged at {S.SIGNAL_REACH_UM:g}")
+    return dict(total=n[0], by=dict(cnt))
+
+
 def check_hops(P, R, geo):
     worst = []
     for lid, (pts, regs, xs) in geo.items():
-        reach = float(P.lanes[lid].get("reach_um", P.reach))
+        reach = min(float(P.lanes[lid].get("reach_um", P.reach)), P.reach)
         hops = [abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(regs, regs[1:])]
         h = max(hops) if hops else 0.0
         worst.append((h / reach, lid, h, reach))
@@ -426,8 +499,8 @@ def check_hops(P, R, geo):
             i = hops.index(h)
             R.err("hops", f"lane {lid}: hop {i} is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
                   "partition's slot or shorten it)", lane=lid)
-    # COORD 10-23 R3: ft stations at most budgets.ft_station_max_um (750) apart inside every crossed partition
-    smax = float(P.budgets.get("ft_station_max_um", 750.0))
+    # R3 (ruling 9.4): ft stations at most budgets.ft_station_max_um (<= 405) apart inside every crossed partition
+    smax = station_max(P, R)
     seen = set()
     for lid, (pts, regs, xs) in geo.items():
         for x in xs:
@@ -466,7 +539,7 @@ def check_cuts(P, R, geo):
     for orient, D, along in (("vertical", P.W, P.H), ("horizontal", P.H, P.W)):
         wire_dir = "H" if orient == "vertical" else "V"     # wires crossing a vertical line run horizontally
         dl = [n for n in die_l if P.layers[n]["dir"] == wire_dir]
-        die_den = sum(avail.get(n, 0.0) / P.layers[n]["pitch_um"] for n in dl)
+        die_den = 0.0           # ruling 9.3: M8/M9 carry no signals, cut_avail adds no capacity
         die_den_raw = sum(1.0 / P.layers[n]["pitch_um"] for n in dl)
         n = int(D // step)
         for k in range(1, n + 1):
@@ -572,7 +645,8 @@ def check_clock_reset(P, R):
             if ck.get("layer") and ck["layer"] not in die_l:
                 R.err("clock", f"type {tn}: clock tap layer {ck['layer']} is not a die layer {sorted(die_l)}", type=tn)
             far = max(abs(x - a) + abs(y - b) for a in (0, w) for b in (0, h))
-            if far > 2 * P.reach:
+            ck_reach = min(RT.TABLE[n]["measured_um"] for n in S.RESERVED_DIE_LAYERS)   # clock wire: M8/M9 relay reach
+            if far > 2 * ck_reach:
                 R.warn("clock", f"type {tn}: farthest boundary point {far:.0f} um from the tap (> 2 hops)", type=tn)
         insts = {c["inst"] for c in t.get("contents", [])}
         for b in t.get("buses", []):
@@ -961,7 +1035,7 @@ def check_completeness(P, R, no_cells=(), max_msgs=5):
                        box, core <-> core net) has internal_stations[] whose hops are all <= the limit (R3-INTERNAL)
     Die: clock.common_latency_ps (R4 owner rule)."""
     miss = {f: 0 for f in COMPLETE_FIELDS}
-    smax = float(P.budgets.get("ft_station_max_um", 750.0))
+    smax = station_max(P)
     n_msg = defaultdict(int)
 
     def bad(field, tn, msg):
@@ -1237,6 +1311,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     fp = check_abutment(P, R)
     summ["worst_faces"] = check_faces(P, R, fp)
     geo = {lid: lane_geometry(P, lid) for lid in P.lanes}
+    summ["m89_signals"] = check_m89_signals(P, R)
     summ["worst_hops"] = check_hops(P, R, geo)
     summ["cuts"] = check_cuts(P, R, geo)
     summ["latency"] = check_latency(P, R)

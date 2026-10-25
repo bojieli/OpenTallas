@@ -5,17 +5,17 @@
               crosses only its face line, so the sweep never counted abutted traffic: on S81 / KV / HBM most lane
               bits are 1-port neighbour lanes (S81 553 of 820 lanes, KV 1970 of 2416, HBM 3632 of 5483). A face line
               counts the abutted port bits on it plus the ft routes strictly crossing it. Capacity at a face line:
-              the partition pin layers in the wire direction (<= partition_signal_max) x pin_track_max plus the die
-              layers x cut_avail. ERROR when bits / tracks > cut_ratio_max.
+              the signal pin layers in the wire direction (M4..M7) x pin_track_max; the die layers M8/M9 carry no
+              signals (ruling 9.3), so cut_avail adds nothing. ERROR when bits / tracks > cut_ratio_max.
   reach       (c) every register-to-register hop <= budgets.reach_margin (0.9) x the per-layer measured reach of the
               layers the hop routes on (reach.py, one table for all dies; die.reach_um is no longer used here).
   face_tracks (d) per partition face, sliding face_window_um window: pins / usable tracks (PG-band-free) of the
-              ALLOWED pin layers of that face (type face_layers incl. the M8 / M9 third layer, else the partition
-              pin layers M4..partition_signal_max in the face direction) <= pin_track_max (0.6); also per layer.
+              ALLOWED signal pin layers of that face (type face_layers <= M7, else the partition pin layers
+              M4..M7 in the face direction) <= pin_track_max (0.6); also per layer.
               One pin per layer of quantisation allowance.
-  ft_budget   (e) per partition type: over-the-top die ft bits (ft slots: E-W bits on M8, N-S bits on M9, a turning
-              slot on both) + the type's non-ft M8 / M9 face pins vs its reserved M8 / M9 tracks (usable tracks
-              across the type x type.ft_budget[L], default die.layer_budget.cut_avail[L]).
+  ft_budget   (e) per partition type: ft bits THROUGH the partition on its own signal layers (ruling 9.3: no
+              over-the-top M8/M9 ft): E-W slot bits on M4/M6, N-S slot bits on M5/M7, a turning slot on both, vs the
+              usable tracks across the type x type.ft_budget[L] (default the type's ft_track_frac, 0.25).
 All four are G0C checks: ERROR under check.py --completeness, WARN '[G0C]' in plain G0.
 """
 import bisect
@@ -61,7 +61,7 @@ def _tracks(P):
 
 
 def pin_layers(P, wire_dir):
-    smax = int(P.layer_budget["partition_signal_max"][1:])
+    smax = min(int(P.layer_budget["partition_signal_max"][1:]), int(S.SIGNAL_LAYER_MAX[1:]))
     return [ln for ln, L in P.layers.items() if L["dir"] == wire_dir and 4 <= int(ln[1:]) <= smax]
 
 
@@ -69,8 +69,7 @@ def pin_layers(P, wire_dir):
 def check_cut_lines(P, R, geo, max_msgs=20):
     B = P.budgets
     lim = B["cut_ratio_max"]
-    avail = P.layer_budget.get("cut_avail", {})
-    die_l = [n for n in P.layer_budget["die_layers"] if n in P.layers]
+    # ruling 9.3: the die layers carry no signals, so they add no face-line capacity (cut_avail ignored)
     # ft / die route segments
     sx0, sy0, sx1, sy1, sw = [], [], [], [], []
     for lid, (pts, _, _) in geo.items():
@@ -96,8 +95,7 @@ def check_cut_lines(P, R, geo, max_msgs=20):
     for orient, D, along in (("vertical", P.W, P.H), ("horizontal", P.H, P.W)):
         wd = "H" if orient == "vertical" else "V"
         pden = sum(B["pin_track_max"] / P.layers[n]["pitch_um"] for n in pin_layers(P, wd))
-        dden = sum(avail.get(n, 0.0) / P.layers[n]["pitch_um"] for n in die_l if P.layers[n]["dir"] == wd)
-        cap = along * (pden + dden)
+        cap = along * pden
         lines = sorted({round(c, 3) for n in P.parts for c in ((P.rect(n)[0], P.rect(n)[2]) if orient == "vertical"
                                                                  else (P.rect(n)[1], P.rect(n)[3]))
                         if EPS < c < D - EPS})
@@ -126,7 +124,7 @@ def check_cut_lines(P, R, geo, max_msgs=20):
     out["worst"] = dict(ratio=round(worst[0], 4), at=worst[1])
     out["lines"] = len(out["vertical"]) + len(out["horizontal"])
     out["model"] = "face line: abutted port bits + ft/die routes strictly crossing; tracks = partition pin layers x " \
-                   "pin_track_max + die layers x cut_avail"
+                   "pin_track_max (M4-M7; M8/M9 carry no signals, ruling 9.3)"
     return out
 
 
@@ -184,8 +182,9 @@ def face_allowed_layers(P, part, df):
     wd = "H" if df in "EW" else "V"
     fl = P.ptype(part).get("face_layers", {}).get(P.type_face(part, df))
     base = pin_layers(P, wd)
-    if fl:
-        return sorted(set(base) | {ln for ln in fl if ln in P.layers and P.layers[ln]["dir"] == wd})
+    if fl:      # an M8/M9 face layer adds no signal track (ruling 9.3; check.py m89_signals ERRORs it)
+        return sorted(set(base) | {ln for ln in fl if ln in P.layers and P.layers[ln]["dir"] == wd
+                                   and ln not in S.RESERVED_DIE_LAYERS})
     return base
 
 
@@ -240,26 +239,11 @@ def check_face_tracks(P, R, face_pins, max_msgs=100):
 
 # ------------------------------------------------------------------------------------------------- (e)
 def check_ft_budget(P, R, face_pins):
-    avail = P.layer_budget.get("cut_avail", {})
-    die_l = [n for n in P.layer_budget["die_layers"] if n in P.layers]
-    hl = [n for n in die_l if P.layers[n]["dir"] == "H"]
-    vl = [n for n in die_l if P.layers[n]["dir"] == "V"]
+    """ruling 9.3: ft bits cross a partition on its own signal layers (H slots on the H layers M4/M6, V slots on M5/M7)
+    inside the ft share of the tracks (type.ft_budget[L], default type.ft_track_frac / 0.25).  face_pins is unused
+    (kept for the call signature): signal pins on M8/M9 are check.py m89_signals ERRORs."""
     T = _tracks(P)
-    # non-ft pins on die layers, per type (one instance)
-    pins_die = defaultdict(lambda: defaultdict(int))
-    inst_of = {}
-    for (part, df), pins in face_pins.items():
-        tn = P.parts[part]["type"]
-        if inst_of.setdefault(tn, part) != part:
-            continue
-        for c, ln, pid in pins:
-            if ln not in die_l:
-                continue
-            pr = P.ports[pid]
-            end = pr["src"] if pr["src"]["part"] == part else pr["dst"]
-            if P.buses(part).get(end["bus"], {}).get("slot"):
-                continue
-            pins_die[tn][ln] += 1
+    hl, vl = pin_layers(P, "H"), pin_layers(P, "V")
     rows, nerr = [], 0
     for tn, t in P.types.items():
         w, h = t["outline_um"]
@@ -271,17 +255,17 @@ def check_ft_budget(P, R, face_pins):
             if fs & {"N", "S"}:
                 vb += s["width"]
         fb = t.get("ft_budget", {})
+        frac = t.get("ft_track_frac", 0.25)
         rec = dict(type=tn, instances=sum(1 for p in P.parts.values() if p["type"] == tn))
         for dirn, layers, bits, ext in (("H", hl, hb, h), ("V", vl, vb, w)):
-            used = bits + sum(pins_die[tn].get(n, 0) for n in layers)
-            res = sum(T[n].count(0.0, ext) * fb.get(n, avail.get(n, 0.0)) for n in layers)
-            rec[dirn] = dict(layers=layers, ft_bits=bits, die_layer_pins=used - bits, used=used,
-                             reserved=int(res), ratio=round(used / res, 4) if res else (math.inf if used else 0.0))
-            if used > res + EPS:
+            res = sum(T[n].count(0.0, ext) * fb.get(n, frac) for n in layers)
+            rec[dirn] = dict(layers=layers, ft_bits=bits, reserved=int(res),
+                             ratio=round(bits / res, 4) if res else (math.inf if bits else 0.0))
+            if bits > res + EPS:
                 nerr += 1
-                R.err("ft_budget", f"type {tn}: {used} over-the-top {'/'.join(layers)} tracks needed ({bits} ft bits + "
-                      f"{used - bits} {'/'.join(layers)} face pins) > {int(res)} reserved ({ext:.0f} um x "
-                      f"{'/'.join(f'{fb.get(n, avail.get(n, 0.0)):g}' for n in layers)} of the usable tracks)", type=tn)
+                R.err("ft_budget", f"type {tn}: {bits} ft bits through it on {'/'.join(layers)} > {int(res)} ft tracks "
+                      f"({ext:.0f} um x {'/'.join(f'{fb.get(n, frac):g}' for n in layers)} of the usable tracks; "
+                      "ruling 9.3: no over-the-top M8/M9 ft)", type=tn)
         rows.append(rec)
     rows.sort(key=lambda r: -max(r["H"]["ratio"], r["V"]["ratio"]))
     return dict(over=nerr, worst=rows[:10], total_types=len(rows))
