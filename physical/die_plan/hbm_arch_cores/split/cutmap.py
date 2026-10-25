@@ -56,7 +56,7 @@ def cell_path(name, cell, scopes):
         return '/'.join(hd.split(' '))
     if not name.startswith('$flatten\\'):
         return name                                  # cell of the top itself
-    rest = name[len('$flatten\\'):]
+    rest = name[len('$flatten\\'):].replace('.\\', '.')   # nested flatten levels: '$flatten\\a.\\b.$x'
     best = ''
     for s in scopes:
         if rest.startswith(s + '.') and len(s) > len(best):

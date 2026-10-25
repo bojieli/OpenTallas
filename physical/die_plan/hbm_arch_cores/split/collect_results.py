@@ -27,7 +27,7 @@ def main():
     old = json.load(open(OUT)) if os.path.exists(OUT) else {}
     hist = old.get('history', [])
     mods = {}
-    for f in sorted(glob.glob(os.path.join(a.work, '*', 'reports', '*.json'))):
+    for f in sorted(f for f in glob.glob(os.path.join(a.work, '*', 'reports', '*.json')) if 'superseded' not in f):
         r = json.load(open(f))
         m = r['module']
         mi, mu = r.get('miter') or {}, r.get('mutant') or {}

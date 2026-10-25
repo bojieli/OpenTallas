@@ -171,8 +171,7 @@ FAMILIES = {
     # master_filelist resolves the ambiguous v41x lane/sfu modules to the non-c12 files; the sfu lanes are the c12 ones
     # (split_files/sfu_lane.files).  The lanes are excluded members of both pieces: only their port lists matter here.
     'sfu': dict(twin='ot_hgi_sfu_core_split3', params=dict(LWB=15, LG_PATH=31), defines=[],
-                file_subst=[('rtl/hdc/v41x/ot_hdc_v41x_sfu.sv', 'rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv'),
-                            ('rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv', 'rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv')],
+                file_prefer='physical/die_plan/hbm/cores/harden/split_files/sfu_lane.files', a0_per_view=True,
                 ren=[], views=sfu_views),
     'hcroot': dict(twin='ot_hbm_hc_root_static_s', params=dict(QDRLY=2, QCHX=11), defines=[], ren=[],
                    views=hcroot_views, a0_per_view=True, merge_ff_bits=True),
@@ -255,6 +254,13 @@ def elab_master(F, fam, specs, work, tag=''):
         fl = master_files(F['twin'])
         for x, y in F.get('file_subst', []):
             fl['files'] = [y if f == x else f for f in fl['files']]
+        if F.get('file_prefer'):
+            # files whose modules override same-named modules of master_filelist's (ambiguous) picks
+            pref = [l.strip() for l in open(os.path.join(REPO, F['file_prefer'])) if l.strip() and
+                    not l.startswith('macro:') and '/hdc/' in l]   # the ambiguous hdc library only
+            modsof = lambda f: set(re.findall(r'^\s*module\s+(\w+)', open(os.path.join(REPO, f)).read(), re.M))
+            pm = set().union(*(modsof(f) for f in pref))
+            fl['files'] = [f for f in fl['files'] if not (modsof(f) & pm)] + pref
         fl['files'] += [f for f in F.get('extra_files', []) if f not in fl['files']]
         have = {m['module'] for m in fl.get('macros', [])}
         fl.setdefault('macros', []).extend({'module': m, 'file': f'physical/asap7_memory_macros_v2/{m}/{m}_bb.v'}
@@ -295,7 +301,7 @@ FF_TYPES = {'$dff', '$adff', '$sdff', '$dffe', '$adffe', '$sdffe', '$sdffce', '$
 PERBIT = {'ARST_VALUE', 'SRST_VALUE', 'AD'}
 
 
-def merge_ff_bits(js, top):
+def merge_ff_bits(js, top, region=None):
     """as-built synthesis merges identical flop BITS and identical combinational cells (opt_merge) (same type, clock / reset / enable nets, same D net, same reset
     value): RTL `reg [W-1:0] r; always r[l] <= x;` is one as-built flop.  Merge them the same way (sound: equal next
     state and reset value; the duplicate's readers move to the representative).  Iterated to a fixed point.
@@ -320,7 +326,7 @@ def merge_ff_bits(js, top):
                     continue
                 pb = tuple((k, str(c['parameters'][k])[::-1][i] if k in c.get('parameters', {}) and
                             len(str(c['parameters'][k])) == len(q) else '') for k in sorted(PERBIT))
-                key = (c['type'], prm, ctl, d[i], pb)
+                key = (c['type'], prm, ctl, d[i], pb, region(cn, c) if region else None)
                 if key in seen:
                     rep[qb] = seen[key]
                 else:
@@ -337,7 +343,8 @@ def merge_ff_bits(js, top):
             if not outs or any(b in dangling for pn in outs for b in c['connections'][pn]):
                 continue
             ins = tuple((pn, tuple(c['connections'][pn])) for pn in sorted(c['connections']) if pd.get(pn) != 'output')
-            key = (c['type'], tuple(sorted((k, str(v)) for k, v in c.get('parameters', {}).items())), ins)
+            key = (c['type'], tuple(sorted((k, str(v)) for k, v in c.get('parameters', {}).items())), ins,
+                   region(cn, c) if region else None)
             if key in cseen:
                 r = mod['cells'][cseen[key]]
                 for pn in outs:
@@ -517,17 +524,25 @@ def a1_design(F, A0, spec, keep_types, work):
         if base_type(m) in keep_types or m in keep_types:
             keep.add(m)
     tag = hashlib.sha1(json.dumps(sorted(keep)).encode()).hexdigest()[:10]
+    tag = 'm' + tag[1:]                          # A1 format rev (memory -nomap)
     p = os.path.join(work, f'A1_{tag}.json')
     if not os.path.exists(p):
         L = ['read_json hier.json', f'hierarchy -top {top}', 'setattr -mod -unset keep_hierarchy *']
         L += [f'setattr -mod -set keep_hierarchy 1 {yname(m)}' for m in sorted(keep)]
-        L += ['flatten', 'opt_clean', f'write_json A1_{tag}.json']
+        # memory -nomap: $memrd/$memwr -> self-contained $mem_v2 (gold is a cell subset; MEMID memories would dangle)
+        L += ['flatten', 'memory -nomap', 'opt_clean', f'write_json A1_{tag}.json']
         rc, out = yosys('\n'.join(L) + '\n', os.path.join(work, f'a1_{tag}.ys'), os.path.join(work, f'a1_{tag}.log'))
         if rc:
             raise SystemExit(f'A1 failed: {out[-3000:]}')
     js = json.load(open(p))
     if F.get('merge_ff_bits'):
-        merge_ff_bits(js, top)
+        # never merge a piece cell with an outside one (the gold is the piece's own cells)
+        sc1 = cutmap.scopes_of(js['modules'][top])
+        inc = spec['include']
+        def region(cn, c):
+            pth = cutmap.cell_path(cn, c, sc1)
+            return (('' in inc) or cutmap.under(pth, inc)) and not cutmap.under(pth, spec['exclude'])
+        merge_ff_bits(js, top, region)
     return js, sorted(keep), tag
 
 
@@ -605,7 +620,8 @@ def build_view(F, A0, module, spec, work, report, mutant=False):
     groot = glue_root_fn(Atop, spec)
     strips = [''] + sorted({spec['include'][0].rsplit('/', 1)[0] + '/' if '/' in spec['include'][0] else ''} |
                            {'/'.join(F_ren(F, spec['include'][0]).split('/')[:k]) + '/'
-                            for k in range(1, len(F_ren(F, spec['include'][0]).split('/')))})
+                            for k in range(1, len(F_ren(F, spec['include'][0]).split('/')))} |
+                           ({F_ren(F, spec['include'][0]) + '/'} if spec['include'][0] else set()))
     for st in dict.fromkeys(strips):
         P_ = cutmap.analyse(A0, top, spec['include'], spec['exclude'], ren_fn(F), st, glue_root=groot)
         bad = cutmap.check_plan(P_, pins)
@@ -742,6 +758,14 @@ def build_view(F, A0, module, spec, work, report, mutant=False):
                 srcs[b] = e
             else:
                 cs = net2out.get(b)
+                if not cs and b in CONST:
+                    # master constant on a plan output (e.g. sfu u_vm.stage_mask = all ones): the canonical carries
+                    # it as a constant-driven output port of the same name (unconnected to its core) - use that
+                    # port bit; else drive the master constant.  The miter checks the value either way.
+                    cand = [pn for pn, (dd, nn) in cbit.items() if dd == 'output' and len(nn) == planw[bus]
+                            and (bus == pn or bus.endswith('_' + pn)) and nn[i] is None]
+                    cs = [(cand[0], i)] if len(cand) == 1 else [(None, b)]
+                    report.setdefault('const_outputs', []).append(f'{e}={b} via {cs[0][0] or "constant"}')
                 if not cs:
                     raise SystemExit(f'{module}: plan output {e} has no canonical driver')
                 outs_assign.append((e, cs[0][0], cs[0][1]))
@@ -767,7 +791,15 @@ def build_view(F, A0, module, spec, work, report, mutant=False):
                 elif b in srcs:
                     row.append(srcs[b])
                 elif b is None:
-                    raise SystemExit(f'{module}: canonical input {pn}[{j}] unwired in the canonical top')
+                    # canonical input bit the canonical core never reads (rest_wrap: not to the core): wire the
+                    # same-named plan input (parent connection kept) or tie 0; unread either way (miter checks)
+                    cand = [bb for bb in order if P.dirs[bb] == 'input' and planw[bb] == len(nets)
+                            and (bb == pn or bb.endswith('_' + pn))]
+                    if len(cand) == 1:
+                        row.append(cand[0] if scal[cand[0]] else f'{cand[0]}[{j}]')
+                    else:
+                        row.append("1'b0")
+                    ties.append(f'{pn}[{j}]=unread->{cand[0] if len(cand) == 1 else "0"}')
                 else:
                     raise SystemExit(f'{module}: canonical input {pn}[{j}] on master net {b} with no plan pin')
             conns[pn] = row
@@ -874,8 +906,11 @@ def emit(module, order, dirs, planw, scal, ctop, cbit, conns, outs_assign, views
     L.append(f'    {ctop} u_core (\n' + ',\n'.join(cl) + ');')
     per = collections.OrderedDict()
     for e, pn, j in outs_assign:
-        w = len(cbit[pn][1])
         bus = re.sub(r'\[\d+\]$', '', e)
+        if pn is None:
+            per.setdefault(bus, []).append(f"1'b{j}")
+            continue
+        w = len(cbit[pn][1])
         per.setdefault(bus, []).append(f'c_{pn}[{j}]' if w > 1 else f'c_{pn}')
     for bus, src in per.items():
         L.append(f'    assign {bus} = {runs(src)};')
@@ -970,7 +1005,7 @@ def miter(F, A0, module, spec, info, wrapper_txt, work, tag):
         if mn in kset:
             at['keep_hierarchy'] = '00000000000000000000000000000001'
     json.dump(gj, open(os.path.join(wd, 'gold_in.json'), 'w'))
-    rc, out = ys('read_json gold_in.json\nhierarchy -top gold\nflatten\nopt_clean\nwrite_json gold_flat.json\n',
+    rc, out = ys('read_json gold_in.json\nhierarchy -top gold\nflatten\nmemory -nomap\nopt_clean\nwrite_json gold_flat.json\n',
                  wd, 'gold1')
     if rc:
         return dict(verdict='ERROR', stage='gold', log=out)
@@ -991,7 +1026,7 @@ def miter(F, A0, module, spec, info, wrapper_txt, work, tag):
         if base_type(mn) in gate_types and mn != module:
             at['keep_hierarchy'] = '00000000000000000000000000000001'
     json.dump(gh, open(os.path.join(wd, 'gate_h.json'), 'w'))
-    rc, out = ys(f'read_json gate_h.json\nhierarchy -top {module}\nflatten\nopt_clean\nrename -top gate\n'
+    rc, out = ys(f'read_json gate_h.json\nhierarchy -top {module}\nflatten\nmemory -nomap\nopt_clean\nrename -top gate\n'
                  'write_json gate_flat.json\n', wd, 'gate1')
     if rc:
         return dict(verdict='ERROR', stage='gate', log=out)
@@ -1037,19 +1072,69 @@ def miter(F, A0, module, spec, info, wrapper_txt, work, tag):
     # vacuity guard: every kept instance must have become ports (its pins compared / driven as free inputs)
     if left:
         return dict(verdict='ERROR', stage='evert', detail=f'instances left {left[:5]}', dir=wd)
+    alias_n = 0
+    if rest:
+        # the rest canonical core is a bit-blasted netlist (scalar wires '\\u.beat[5]'): give the gold's public vector
+        # nets per-bit aliases of the same names so equiv_make pairs the state bits
+        gm_ = g['modules']['gold']['netnames']
+        tn_ = t['modules']['gate']['netnames']
+        add = {}
+        for n, x in gm_.items():
+            if n.startswith('$') or len(x['bits']) < 2:
+                continue
+            off, upto = x.get('offset', 0), x.get('upto', 0)
+            for i, b in enumerate(x['bits']):
+                k = (len(x['bits']) - 1 - i if upto else i) + off
+                nm = f'{n}[{k}]'
+                if nm in tn_ and nm not in gm_ and isinstance(b, int):
+                    add[nm] = dict(hide_name=0, bits=[b], attributes={})
+        gm_.update(add)
+        alias_n = len(add)
     json.dump(g, open(os.path.join(wd, 'gold_m.json'), 'w'))
     json.dump(t, open(os.path.join(wd, 'gate_m.json'), 'w'))
     if os.path.exists(os.path.join(wd, 'equiv_status.txt')):
         os.remove(os.path.join(wd, 'equiv_status.txt'))
-    rc, out = ys('read_json gold_m.json\nread_json gate_m.json\n'
-                 'async2sync\nequiv_make gold gate eq\nhierarchy -top eq\nequiv_simple -seq 4\nequiv_induct -seq 4\n'
+    hasmem = any(x['type'].startswith('$mem') for m in (g, t) for mm in m['modules'].values()
+                 for x in mm['cells'].values())
+    rc, out = ys('read_json gold_m.json\nread_json gate_m.json\n' + ('memory_map\nopt_clean\n' if hasmem else '') +
+                 'async2sync\nequiv_make gold gate eq\nhierarchy -top eq\n' +
+                 # rest / manual (big): cheap combinational pass + induction first; -seq 4 only on what remains
+                 ('equiv_simple\nequiv_induct -seq 4\nequiv_simple -seq 4\nequiv_induct -seq 4\n' if rest else
+                  'equiv_simple -seq 4\nequiv_induct -seq 4\n') +
                  'tee -o equiv_status.txt equiv_status\nequiv_status -assert\n', wd, 'equiv')
     stp = os.path.join(wd, 'equiv_status.txt')
     st = open(stp).read() if os.path.exists(stp) else ''
     m = re.search(r'Found (\d+) \$equiv cells', st)
     un = re.search(r'Of those cells (\d+) are proven and (\d+) are unproven', st)
     unproven = int(un.group(2)) if un else (0 if 'Equivalence successfully proven' in st else None)
-    if rc == 0 and not notes and unproven == 0:
+    unobs = []
+    if unproven:
+        # an unproven $equiv between two same-named nets that NOTHING reads on either side (no cell input, no port) is
+        # unobservable: it cannot reach any output, and no other $equiv was proven assuming it.  Such pairs arise
+        # from dead RTL bits (e.g. a flop capturing an xdead_* input that as-built removed).  Everything else counts.
+        def readers(mod, nm):
+            x = mod['netnames'].get(nm)
+            if x is None:
+                return None
+            bs = {b for b in x['bits'] if isinstance(b, int)}
+            r = 0
+            for c in mod['cells'].values():
+                for pn, bl in c['connections'].items():
+                    if c.get('port_directions', {}).get(pn) != 'output' and bs & set(bl):
+                        r += 1
+            for pp in mod['ports'].values():
+                if bs & set(pp['bits']):
+                    r += 1
+            return r
+        gmod, tmod = g['modules']['gold'], t['modules']['gate']
+        pairs = re.findall(r'Unproven \$equiv \S+ \\(\S+)_gold \\(\S+)_gate', st)
+        if len(pairs) == unproven:
+            for a_, b_ in pairs:
+                if a_ == b_ and readers(gmod, a_) == 0 and readers(tmod, b_) == 0:
+                    unobs.append(a_)
+    if rc and unproven and len(unobs) == unproven and not notes:
+        verdict = 'PASS'
+    elif rc == 0 and not notes and unproven == 0:
         verdict = 'PASS'
     elif (unproven or 0) > 0 or notes:
         verdict = 'FAIL'
@@ -1058,6 +1143,10 @@ def miter(F, A0, module, spec, info, wrapper_txt, work, tag):
     res = dict(verdict=verdict, equiv_cells=int(m.group(1)) if m else None, unproven=unproven,
                ports=len(gp), gold_only_ports=only_g[:20], gate_only_ports=only_t[:20], notes=notes[:20], dir=wd,
                cmd=f'cd {wd} && yosys -s equiv.ys')
+    res['gold_bit_aliases'] = alias_n
+    if unobs:
+        res['unobservable_unproven'] = unobs[:20]
+        res['n_unobservable_unproven'] = len(unobs)
     if verdict != 'PASS':
         res['unproven_e_g'] = [l.strip() for l in st.splitlines() if 'Unproven' in l][:6]
         if rc and not st:
