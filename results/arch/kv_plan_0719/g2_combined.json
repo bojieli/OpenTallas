@@ -1,0 +1,424 @@
+{
+ "schema": "opentallas.kv_g2_type_table.v1",
+ "rule": "COORD KV RULING 2026-10-25 05:07 (a)",
+ "use_max_pct": 60.0,
+ "types": {
+  "kv3_hgi_v1": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.24,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 3813,
+   "leaf_blockages": 16,
+   "wirelength_um": 2353384.0,
+   "probe": "g2_v39d/kv3_hgi_v1/part_kv3_hgi_v1"
+  },
+  "kv3_hgi_v2": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 10.28,
+   "source": "g2_e2/kv3_hgi_v2/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 16
+  },
+  "kv3_hgi_v4": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 22.25,
+   "source": "g2_e2/kv3_hgi_v4/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 16
+  },
+  "kv3_hroot": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 2.61,
+   "source": "g2_e2/kv3_hroot/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 0
+  },
+  "kv3_io_cor": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.5,
+   "source": "g2_e2/kv3_io_cor/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 0
+  },
+  "kv3_io_cor_v1": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 13.84,
+   "source": "g2_e2/kv3_io_cor_v1/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 0
+  },
+  "kv3_pc_v1": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.17,
+   "source": "g2_e2/kv3_pc_v1/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 4,
+   "alias_of": "kv3_pc_v1",
+   "carry_rule": "geometry, outline, hard cores and pin table identical to kv3_pc_v1 (checked per instance): kv3_pc_v1, kv3_pc_v2 G2 carries over unchanged"
+  },
+  "kv3_pc_v2": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.16,
+   "source": "g2_e2/kv3_pc_v2/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 4
+  },
+  "kv3_pc_v3": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.17,
+   "source": "g2_e2/kv3_pc_v3/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 4
+  },
+  "kv3_pv": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.11,
+   "source": "g2_e2/kv3_pv/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_pv_v1": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.16,
+   "source": "g2_e2/kv3_pv_v1/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20,
+   "alias_of": "kv3_pv_v1",
+   "carry_rule": "geometry, outline, hard cores and pin table identical to kv3_pv_v1 (checked per instance): kv3_pv_v1, kv3_pv_v9 G2 carries over unchanged"
+  },
+  "kv3_pv_v11": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.44,
+   "source": "g2_e2/kv3_pv_v11/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_pv_v7": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.66,
+   "source": "g2_e2/kv3_pv_v7/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_pv_v5": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.44,
+   "source": "g2_e2/kv3_pv_v5/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20,
+   "alias_of": "kv3_pv_v5",
+   "carry_rule": "geometry, outline, hard cores and pin table identical to kv3_pv_v5 (checked per instance): kv3_pv_v5, kv3_pv_v11 G2 carries over unchanged"
+  },
+  "kv3_hg_v1_r1": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.51,
+   "source": "g2_e2/kv3_hg_v1_r1/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_pv_v6": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 10.43,
+   "source": "g2_e2/kv3_pv_v6/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_hg": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 7.97,
+   "source": "g2_e2/kv3_hg/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_pv_v4": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 9.56,
+   "source": "g2_e2/kv3_pv_v4/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_pv_v12": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 4.34,
+   "source": "g2_e2/kv3_pv_v12/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_hg_v1_r3": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.52,
+   "source": "g2_e2/kv3_hg_v1_r3/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_pc": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.13,
+   "source": "g2_e2/kv3_pc/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 4
+  },
+  "kv3_hg_v1_r5": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.52,
+   "source": "g2_e2/kv3_hg_v1_r5/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_hg_v1_r4": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.52,
+   "source": "g2_e2/kv3_hg_v1_r4/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_pv_v8": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.29,
+   "source": "g2_e2/kv3_pv_v8/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_hgi_v5": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 20.23,
+   "source": "g2_e2/kv3_hgi_v5/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 16
+  },
+  "kv3_pv_v10": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.28,
+   "source": "g2_e2/kv3_pv_v10/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_hgi_v7": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 28.55,
+   "source": "g2_e2/kv3_hgi_v7/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 16
+  },
+  "kv3_hg_v2": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 9.17,
+   "source": "g2_e2/kv3_hg_v2/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_pv_v9": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.16,
+   "source": "g2_e2/kv3_pv_v9/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_hub_C": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 10.02,
+   "source": "g2_e2/kv3_hub_C/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 2
+  },
+  "kv3_pv_v3": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.28,
+   "source": "g2_e2/kv3_pv_v3/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20,
+   "alias_of": "kv3_pv_v3",
+   "carry_rule": "geometry, outline, hard cores and pin table identical to kv3_pv_v3 (checked per instance): kv3_pv_v3, kv3_pv_v10 G2 carries over unchanged"
+  },
+  "kv3_hg_v1_r2": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.52,
+   "source": "g2_e2/kv3_hg_v1_r2/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_pv_v2": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 9.59,
+   "source": "g2_e2/kv3_pv_v2/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_hg_v3": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 9.08,
+   "source": "g2_f5/kv3_hg_v3/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20
+  },
+  "kv3_hg_v1": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.51,
+   "source": "g2_e2/kv3_hg_v1_r1/g2_report.json",
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "leaf_blockages": 20,
+   "alias_of": "kv3_hg_v1_r1",
+   "carry_rule": "geometry, outline, hard cores and pin table identical to kv3_hg_v1_r1 (checked per instance): kv3_hg_v1_r1, kv3_hg_v1_r2, kv3_hg_v1_r3, kv3_hg_v1_r4, kv3_hg_v1_r5, kv3_hg_v2 G2 carries over unchanged"
+  }
+ },
+ "summary": {
+  "pass": [
+   "kv3_hgi_v1",
+   "kv3_hgi_v2",
+   "kv3_hgi_v4",
+   "kv3_hroot",
+   "kv3_io_cor",
+   "kv3_io_cor_v1",
+   "kv3_pc_v1",
+   "kv3_pc_v2",
+   "kv3_pc_v3",
+   "kv3_pv",
+   "kv3_pv_v1",
+   "kv3_pv_v11",
+   "kv3_pv_v7"
+  ],
+  "fail": []
+ },
+ "baseline": "v3.9e e2 face windows; type reduction only aliases identical windows"
+}

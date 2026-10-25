@@ -84,6 +84,28 @@ def test_face_density():
     assert any("/um > 6" in x for x in e)
 
 
+def test_face_density_type_budget():
+    """COORD KV RULING 10-25 (a): a type may declare a G2-proven face budget above the die's 6 pins/um, hard cap 16."""
+    def crowd(p):
+        for x in ("x0", "x1", "x2"):
+            port(p, x).update(window_um=[400.0, 410.0])
+
+    def typed(v, ref=True):
+        def m(p):
+            crowd(p)
+            for t in p["partition_types"].values():
+                t["face_pins_per_um"] = v
+                if ref:
+                    t["face_budget_g2"] = "g2 probe record"
+        return m
+    base = [x for x in errs(crowd, "faces") if "pins in the" in x]
+    assert base and all("/um > 6" in x for x in base)
+    assert [x for x in errs(typed(16.0), "faces") if "pins in the" in x] == []
+    assert any("without face_budget_g2" in x for x in errs(typed(16.0, ref=False), "faces"))
+    assert any("/um > 5.5" in x for x in errs(typed(5.5), "faces"))   # the type value is the limit
+    assert any("face_pins_per_um" in x for x in errs(typed(20.0)))     # schema: above the hard cap
+
+
 def test_layer_budget():
     assert any("above partition_signal_max" in x for x in errs(lambda p: port(p, "c0").update(layers=["M8"])))
 
@@ -722,3 +744,34 @@ def test_run_keeps_plan_path_for_plan_relative_files(tmp_path, monkeypatch):
     check.run(json.loads((HERE / "examples" / "tiny_plan.json").read_text()), plan_dir=tmp_path)
     P = seen[-1]  # schema.validate builds its own path-free structural Plan first
     assert P.path is not None and Path(P.path).parent == tmp_path
+
+
+def test_hard_core_straps():
+    """owner option B 10-25: hard_cores[].straps = strap_* ID ports tied per core instance (TIEHI/TIELO next to the
+    pin).  Main's strict ID straps (64adaad4d3): only strap_corner/hid/bsel, width 2, value 0..3 / 2'bNN in the schema;
+    check.py adds core-pin presence and one strap port set per master module."""
+    pins = [dict(name="a[0]", layer="M4", xy=[1.0, 0.012]), dict(name="strap_hid[0]", layer="M4", xy=[2.0, 0.012]),
+            dict(name="strap_hid[1]", layer="M4", xy=[3.0, 0.012])]
+
+    def core(*entries):
+        def m(p):
+            p["partition_types"]["src"]["hard_cores"] = [dict(
+                inst=f"u_core{i}", module="m_master", origin_um=[8.64 + 25.92 * i, 8.64], outline_um=[21.6, 21.6],
+                track_offset_um=[0.012, 0.012], pins=pins, straps=st) for i, st in enumerate(entries)]
+        return m
+
+    def sch(mut):
+        p = copy.deepcopy(EX)
+        mut(p)
+        return schema.validate(p)
+    ok = [dict(port="strap_hid", width=2, value="2'b10")]
+    assert schema.validate(json.loads(json.dumps(EX))) == []
+    assert errs(core(ok, [dict(port="strap_hid", width=2, value=1)]), "hard_cores") == []
+    assert any("4 > 3" in m for m in sch(core([dict(port="strap_hid", width=2, value=4)])))
+    assert any("does not match" in m for m in sch(core([dict(port="strap_hid", width=2, value="3'b010")])))
+    assert any("not in the core pins" in m for m in errs(core([dict(port="strap_bsel", width=2, value=0)]), "hard_cores"))
+    assert any("different strap ports" in m for m in errs(core(ok, []), "hard_cores"))
+    assert any("strap_q" in m for m in sch(core([dict(port="strap_q", width=2, value=0)])))     # not an ID strap
+    bad = copy.deepcopy(EX)
+    core([dict(port="hid", width=2, value=0)])(bad)
+    assert schema.validate(bad)

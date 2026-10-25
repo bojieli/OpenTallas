@@ -1,0 +1,207 @@
+{
+ "schema": "opentallas.kv_g2_type_table.v1",
+ "rule": "COORD KV RULING 2026-10-25 05:07 (a)",
+ "use_max_pct": 60.0,
+ "types": {
+  "kv3_hgi_v1": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.24,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 3813,
+   "leaf_blockages": 16,
+   "wirelength_um": 2353384.0,
+   "probe": "g2_v39d/kv3_hgi_v1/part_kv3_hgi_v1"
+  },
+  "kv3_hgi_v2": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 10.23,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 4327,
+   "leaf_blockages": 16,
+   "wirelength_um": 2694818.0,
+   "probe": "g2_v39d/kv3_hgi_v2/part_kv3_hgi_v2"
+  },
+  "kv3_hgi_v4": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 22.23,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 8865,
+   "leaf_blockages": 16,
+   "wirelength_um": 6361674.0,
+   "probe": "g2_v39d/kv3_hgi_v4/part_kv3_hgi_v4"
+  },
+  "kv3_hroot": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 2.61,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 4313,
+   "leaf_blockages": 0,
+   "wirelength_um": 764245.0,
+   "probe": "g2_v39d/kv3_hroot/part_kv3_hroot"
+  },
+  "kv3_io_cor": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.5,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 6972,
+   "leaf_blockages": 0,
+   "wirelength_um": 3004646.0,
+   "probe": "g2_v39d/kv3_io_cor/part_kv3_io_cor"
+  },
+  "kv3_io_cor_v1": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 13.84,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 6106,
+   "leaf_blockages": 0,
+   "wirelength_um": 4055206.0,
+   "probe": "g2_v39d/kv3_io_cor_v1/part_kv3_io_cor_v1"
+  },
+  "kv3_pc_v1": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.13,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 8935,
+   "leaf_blockages": 4,
+   "wirelength_um": 80639.0,
+   "probe": "g2_v39d/kv3_pc_v1/part_kv3_pc_v1"
+  },
+  "kv3_pc_v2": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.12,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 8935,
+   "leaf_blockages": 4,
+   "wirelength_um": 78738.0,
+   "probe": "g2_v39d/kv3_pc_v2/part_kv3_pc_v2"
+  },
+  "kv3_pc_v3": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.13,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 8901,
+   "leaf_blockages": 4,
+   "wirelength_um": 80265.0,
+   "probe": "g2_v39d/kv3_pc_v3/part_kv3_pc_v3"
+  },
+  "kv3_pv": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 8.11,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 11231,
+   "leaf_blockages": 20,
+   "wirelength_um": 3380426.0,
+   "probe": "g2_v39d/kv3_pv/part_kv3_pv"
+  },
+  "kv3_pv_v1": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.16,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 11929,
+   "leaf_blockages": 20,
+   "wirelength_um": 112358.0,
+   "probe": "g2_v39d/kv3_pv_v1/part_kv3_pv_v1"
+  },
+  "kv3_pv_v11": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.44,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 15532,
+   "leaf_blockages": 20,
+   "wirelength_um": 344415.0,
+   "probe": "g2_v39d/kv3_pv_v11/part_kv3_pv_v11"
+  },
+  "kv3_pv_v7": {
+   "pass": true,
+   "overflow": 0,
+   "max_layer_usage_pct": 0.62,
+   "no_ap": {
+    "stdCellPin": 0,
+    "macro": 0
+   },
+   "errors": [],
+   "pins": 11186,
+   "leaf_blockages": 20,
+   "wirelength_um": 441406.0,
+   "probe": "g2_v39d/kv3_pv_v7/part_kv3_pv_v7"
+  }
+ },
+ "summary": {
+  "pass": [
+   "kv3_hgi_v1",
+   "kv3_hgi_v2",
+   "kv3_hgi_v4",
+   "kv3_hroot",
+   "kv3_io_cor",
+   "kv3_io_cor_v1",
+   "kv3_pc_v1",
+   "kv3_pc_v2",
+   "kv3_pc_v3",
+   "kv3_pv",
+   "kv3_pv_v1",
+   "kv3_pv_v11",
+   "kv3_pv_v7"
+  ],
+  "fail": []
+ }
+}
