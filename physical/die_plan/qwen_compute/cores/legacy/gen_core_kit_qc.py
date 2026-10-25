@@ -583,6 +583,9 @@ def main():
             "# QC-CORES r3: dont_touch stays lifted after CTS (r2 restored it: the post-GRT hold repair then stalled on the\n"
             "# capture flops' D pins, crh FF hold -64.6 ps / 130 ep); no later step removes flops, signoff face_guard re-checks\n"
             "if {[info exists ::ot_fc_dt]} { puts \"OT_FCAP: dont_touch left lifted on [llength $::ot_fc_dt] flops (hold repair)\" }\n"
+            "# QC-CORES r4: OT_CTS_REPAIR_WL (um) re-buffers long CTS branch wires (crh_rp1: clkbuf_4_9_0 placed 110-130 um from\n"
+            "# its 6 leaves, input slew 267 ps, branch +154 ps -> ptw_d->u_twcd pair skew 100-114 ps)\n"
+            "if {[info exists ::env(OT_CTS_REPAIR_WL)]} { estimate_parasitics -placement; repair_clock_nets -max_wire_length $::env(OT_CTS_REPAIR_WL); detailed_placement; estimate_parasitics -placement }\n"
             "source /work/tap_balance.tcl\nestimate_parasitics -placement\nrepair_timing_helper\n"
             "detailed_placement\ncheck_placement -verbose\nestimate_parasitics -placement\n")
         (kd / "hold_budget.tcl").write_text(
