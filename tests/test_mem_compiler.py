@@ -126,3 +126,23 @@ def test_behavioural_models_lint_clean():
         for extra in ([], ["+define+OT_MEM_FAULTS"]):
             proc = subprocess.run(["verilator", "--lint-only", "-Wall", *extra, str(v)], capture_output=True, text=True)
             assert proc.returncode == 0, (name, proc.stderr[:2000])
+
+
+def test_rom_blackbox_accepts_personalisation_parameters(tmp_path):
+    """The physical blackbox must accept the same instance overrides as the model."""
+    yosys = shutil.which("yosys")
+    if not yosys:
+        pytest.skip("yosys not installed")
+    rom_gen.compile_macro(rom_gen.RomSpec("test_rom", 16, 8, 8), tmp_path)
+    bb = tmp_path / "test_rom/test_rom_bb.v"
+    top = tmp_path / "top.sv"
+    top.write_text('module top(input clk, input ce, input [3:0] a, output [7:0] y); '
+                   'test_rom #(.INSTANCE("calendar_m0"), .VIAMAP("calendar.hex")) '
+                   'u_rom(.clk(clk), .ce_in(ce), .addr_in(a), .rd_out(y)); endmodule\n')
+    out = tmp_path / "netlist.json"
+    subprocess.run([yosys, "-Q", "-T", "-p",
+                    f"read_slang {bb} {top} --top top; hierarchy -check -top top; write_json {out}"],
+                   check=True, capture_output=True, text=True)
+    cells = json.loads(out.read_text())["modules"]["top"]["cells"]
+    assert len(cells) == 1
+    assert next(iter(cells.values()))["type"] == "test_rom"
