@@ -2,6 +2,12 @@
 // QW-S5-LP 10-21: = qfd_dv_s5_suvm_su8p2 (Codex 5949f90af) with the VM8 group P3 qfd_dv_s5_vm8q (claude/qw-slice2w3-1021 a2e2190cf, same ports;
 // VM reads/writes +1, reset release +2 vs P2; p_q (SU8 si) timing unchanged). UNCLOSED composition: u_vm8q = hard child (vm8q view
 // once it closes), u_su8 = CLOSED qfd_dv_s5_su8_rst3 422d006e2.
+// S8-SU-PROG-ALIGN 10-24 (TOK-QK/S8A, owner QC): su8_rst3 consumes its program word si at start+5 (pin kff, start_d1/d2
+// alignment, c_si capture), but the vm8q_rp1 PROG read answers at su_cmd+8 (u_rpg 1 + s8x_prog pp/SRAM/pcap/p_q 4 + u_rapg 1
+// + u_opg 1 + su8 pin 1). With start = su_cmd[9] the SU latched the stale word (nout 0 / nin 0) and hung busy forever (no
+// fault). Fix: the SU start is relayed 3 edges (wf_st) behind the PROG read request so the closed su8 accepts the word on
+// the edge it lands; su8_rst3 and vm8q_rp1 are untouched. Price: SU command latency +3 edges (su_cmd -> SU start -> every
+// SU output), carried by the compiler's calibrated SU ages (ssq_psum_out etc.); no other timing changes.
 module qfd_dv_s8_suvm_rp1 #(parameter integer HARD = 1, parameter integer MUT = 0) (
     input  wire           ck,
     input  wire           rst_n,
@@ -60,9 +66,11 @@ module qfd_dv_s8_suvm_rp1 #(parameter integer HARD = 1, parameter integer MUT = 
         .w1_we(w1_we),.w1_addr(w1_addr),.w1_data(w1_data),
         .tw_we(tw_we),.tw_kind(tw_kind),.tw_addr(tw_addr),.tw_data(tw_data),
         .f_va(f_va),.f_vb(f_vb),.f_vc(f_vc),.f_crl(f_crl),.f_crh(f_crh),.f_bt(f_bt));
-    // CLOSED 422d006e2 child, exact MUT0 interface. Start and program request
-    // use the SAME landed su_cmd source; no retiming of one independently.
-    qfd_dv_s5_su8_rst3 u_su8(.ck(ck),.rst_n(rst_n),.start(su_cmd[9]),.si(si),
+    // CLOSED 422d006e2 child, exact MUT0 interface. Start and program request come from the SAME landed su_cmd
+    // edge; the start is relayed 3 edges (word-fetch start wf_st, reset like the su_cmd source) so it meets the PROG word
+    // (S8-SU-PROG-ALIGN): su8 accept edge == p_q landing edge.
+    reg [2:0] wf_st; always @(posedge ck or negedge rst_n) if (!rst_n) wf_st <= 0; else wf_st <= {wf_st, su_cmd[9]};
+    qfd_dv_s5_su8_rst3 u_su8(.ck(ck),.rst_n(rst_n),.start(wf_st[2]),.si(si),
         .l_retire(l_retire[0]),.l_last(l_last[0]),.l_fault(l_fault),.kv_we(kv_we),
         .rd_v(rd_v),.red_busy(red_busy),.red_fault(red_fault),.lvm_we(lvm_we),
         .gb(su_gb),.gv(gv),.lv1(lv1),.pd1(pd1),.su_nr(su_nr),.su_idle(su_idle),

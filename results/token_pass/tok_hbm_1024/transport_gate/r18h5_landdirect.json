@@ -1,0 +1,981 @@
+{
+ "schema": "opentallas.hbm_transport_gate.v1",
+ "die_v": "/srv/opentallas-scratch/claude/tokg-1023/r18h5_landdirect/die.v",
+ "verdict": "FAIL",
+ "failing": [
+  "HC_XRD",
+  "HC_XRU",
+  "HC_LAUNCH",
+  "SU_CFG_SW",
+  "SU_CMD_SW",
+  "SU_BANK_SW",
+  "SU_CAL_SW",
+  "SU_CFG_SE",
+  "SU_CMD_SE",
+  "SU_BANK_SE",
+  "SU_CAL_SE",
+  "SU_CFG_NW",
+  "SU_CMD_NW",
+  "SU_BANK_NW",
+  "SU_CAL_NW",
+  "SU_CFG_NE",
+  "SU_CMD_NE",
+  "SU_BANK_NE",
+  "SU_CAL_NE"
+ ],
+ "rules": [
+  {
+   "rule": "HC_XRD",
+   "status": "FAIL",
+   "legs": {
+    "SW": 9,
+    "SE": 8,
+    "NW": 10,
+    "NE": 9
+   },
+   "bound_XRD": 0,
+   "fix": {
+    "pad": {
+     "SW": 1,
+     "SE": 2,
+     "NW": 0,
+     "NE": 1
+    },
+    "XRD": 10
+   }
+  },
+  {
+   "rule": "HC_XRU",
+   "status": "FAIL",
+   "legs": [
+    9,
+    10,
+    8,
+    9
+   ],
+   "bound_XRU": 0,
+   "fix": {
+    "pad": [
+     1,
+     0,
+     2,
+     1
+    ],
+    "XRU": 10,
+    "RAW0": 185
+   }
+  },
+  {
+   "rule": "HC_LAUNCH",
+   "status": "FAIL",
+   "legs": {
+    "hc_SW": 74,
+    "hc_SE": 80,
+    "hc_NW": 82,
+    "hc_NE": 90,
+    "hc_eng": 79
+   },
+   "fix": {
+    "pad": {
+     "hc_SW": 16,
+     "hc_SE": 10,
+     "hc_NW": 8,
+     "hc_NE": 0,
+     "hc_eng": 11
+    }
+   }
+  },
+  {
+   "rule": "SU_CFG_SW",
+   "status": "FAIL",
+   "legs": {
+    "cfg_we": 29,
+    "cfg_bank": 29,
+    "cfg_row": 55,
+    "cfg_data": 55,
+    "start": 55,
+    "length": 55
+   },
+   "fix": {
+    "pad": {
+     "cfg_we": 26,
+     "cfg_bank": 26,
+     "cfg_row": 0,
+     "cfg_data": 0,
+     "start": 0,
+     "length": 0
+    }
+   }
+  },
+  {
+   "rule": "SU_CMD_SW",
+   "status": "FAIL",
+   "legs": {
+    "su_SW0.control": [
+     19
+    ],
+    "su_SW0.vmr_cmd": [
+     14
+    ],
+    "su_SW0.vmw_cmd": [
+     14
+    ],
+    "su_SW0.tree_cmd": [
+     14
+    ],
+    "su_SW1.control": [
+     19
+    ],
+    "su_SW1.vmr_cmd": [
+     9
+    ],
+    "su_SW1.vmw_cmd": [
+     9
+    ],
+    "su_SW1.tree_cmd": [
+     9
+    ],
+    "su_SW2.control": [
+     19
+    ],
+    "su_SW2.vmr_cmd": [
+     13
+    ],
+    "su_SW2.vmw_cmd": [
+     13
+    ],
+    "su_SW2.tree_cmd": [
+     13
+    ],
+    "su_SW3.control": [
+     19
+    ],
+    "su_SW3.vmr_cmd": [
+     7
+    ],
+    "su_SW3.vmw_cmd": [
+     7
+    ],
+    "su_SW3.tree_cmd": [
+     7
+    ]
+   },
+   "fix": {
+    "target": 19
+   }
+  },
+  {
+   "rule": "SU_BANK_SW",
+   "status": "FAIL",
+   "slices": {
+    "su_SW0": {
+     "banks": {
+      "0": {
+       "rq": 5,
+       "rr": 6,
+       "wq": 5,
+       "wd": 6,
+       "slot": 24,
+       "rt_rd": 18,
+       "rt_wr": 15
+      },
+      "1": {
+       "rq": 7,
+       "rr": 4,
+       "wq": null,
+       "wd": 6,
+       "slot": 24,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [
+      19
+     ],
+     "ok": true
+    },
+    "su_SW1": {
+     "banks": {
+      "2": {
+       "rq": 6,
+       "rr": 5,
+       "wq": null,
+       "wd": 7,
+       "slot": 28,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "3": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 7,
+       "slot": 30,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    },
+    "su_SW2": {
+     "banks": {
+      "4": {
+       "rq": 6,
+       "rr": 5,
+       "wq": null,
+       "wd": 6,
+       "slot": 25,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "5": {
+       "rq": 7,
+       "rr": 4,
+       "wq": null,
+       "wd": 6,
+       "slot": 26,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    },
+    "su_SW3": {
+     "banks": {
+      "6": {
+       "rq": 6,
+       "rr": 5,
+       "wq": null,
+       "wd": 7,
+       "slot": 31,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "7": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 7,
+       "slot": 33,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    }
+   }
+  },
+  {
+   "rule": "SU_CAL_SW",
+   "status": "FAIL",
+   "rel": {
+    "0": -1,
+    "1": -3,
+    "2": 6,
+    "3": 6,
+    "4": -1,
+    "5": -1,
+    "6": 3,
+    "7": 3
+   },
+   "lg_read": {
+    "0": 20,
+    "1": 16,
+    "2": 20,
+    "3": 22
+   }
+  },
+  {
+   "rule": "SU_CFG_SE",
+   "status": "FAIL",
+   "legs": {
+    "cfg_we": 16,
+    "cfg_bank": 16,
+    "cfg_row": 55,
+    "cfg_data": 55,
+    "start": 55,
+    "length": 55
+   },
+   "fix": {
+    "pad": {
+     "cfg_we": 39,
+     "cfg_bank": 39,
+     "cfg_row": 0,
+     "cfg_data": 0,
+     "start": 0,
+     "length": 0
+    }
+   }
+  },
+  {
+   "rule": "SU_CMD_SE",
+   "status": "FAIL",
+   "legs": {
+    "su_SE0.control": [
+     15
+    ],
+    "su_SE0.vmr_cmd": [
+     27
+    ],
+    "su_SE0.vmw_cmd": [
+     27,
+     28
+    ],
+    "su_SE0.tree_cmd": [
+     27
+    ],
+    "su_SE1.control": [
+     15
+    ],
+    "su_SE1.vmr_cmd": [
+     10
+    ],
+    "su_SE1.vmw_cmd": [
+     10
+    ],
+    "su_SE1.tree_cmd": [
+     10
+    ],
+    "su_SE2.control": [
+     15
+    ],
+    "su_SE2.vmr_cmd": [
+     4
+    ],
+    "su_SE2.vmw_cmd": [
+     4
+    ],
+    "su_SE2.tree_cmd": [
+     4
+    ],
+    "su_SE3.control": [
+     15
+    ],
+    "su_SE3.vmr_cmd": [
+     6
+    ],
+    "su_SE3.vmw_cmd": [
+     6
+    ],
+    "su_SE3.tree_cmd": [
+     6
+    ]
+   },
+   "fix": {
+    "target": 28
+   }
+  },
+  {
+   "rule": "SU_BANK_SE",
+   "status": "FAIL",
+   "slices": {
+    "su_SE0": {
+     "banks": {
+      "0": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 9,
+       "slot": 22,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "1": {
+       "rq": 9,
+       "rr": 2,
+       "wq": null,
+       "wd": 8,
+       "slot": 23,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    },
+    "su_SE1": {
+     "banks": {
+      "2": {
+       "rq": 7,
+       "rr": 4,
+       "wq": null,
+       "wd": 8,
+       "slot": 28,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "3": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 8,
+       "slot": 29,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    },
+    "su_SE2": {
+     "banks": {
+      "4": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 8,
+       "slot": 27,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "5": {
+       "rq": 9,
+       "rr": 2,
+       "wq": null,
+       "wd": 9,
+       "slot": 28,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    },
+    "su_SE3": {
+     "banks": {
+      "6": {
+       "rq": 7,
+       "rr": 4,
+       "wq": null,
+       "wd": 7,
+       "slot": 38,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "7": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 8,
+       "slot": 39,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    }
+   }
+  },
+  {
+   "rule": "SU_CAL_SE",
+   "status": "FAIL",
+   "rel": {
+    "0": -4,
+    "1": -4,
+    "2": 4,
+    "3": 4,
+    "4": -4,
+    "5": -4,
+    "6": 3,
+    "7": 3
+   },
+   "lg_read": {
+    "0": 18,
+    "1": 17,
+    "2": 23,
+    "3": 28
+   }
+  },
+  {
+   "rule": "SU_CFG_NW",
+   "status": "FAIL",
+   "legs": {
+    "cfg_we": 29,
+    "cfg_bank": 29,
+    "cfg_row": 55,
+    "cfg_data": 55,
+    "start": 55,
+    "length": 55
+   },
+   "fix": {
+    "pad": {
+     "cfg_we": 26,
+     "cfg_bank": 26,
+     "cfg_row": 0,
+     "cfg_data": 0,
+     "start": 0,
+     "length": 0
+    }
+   }
+  },
+  {
+   "rule": "SU_CMD_NW",
+   "status": "FAIL",
+   "legs": {
+    "su_NW0.control": [
+     27
+    ],
+    "su_NW0.vmr_cmd": [
+     54
+    ],
+    "su_NW0.vmw_cmd": [
+     54
+    ],
+    "su_NW0.tree_cmd": [
+     54
+    ],
+    "su_NW1.control": [
+     27
+    ],
+    "su_NW1.vmr_cmd": [
+     17
+    ],
+    "su_NW1.vmw_cmd": [
+     17
+    ],
+    "su_NW1.tree_cmd": [
+     17
+    ],
+    "su_NW2.control": [
+     27
+    ],
+    "su_NW2.vmr_cmd": [
+     6
+    ],
+    "su_NW2.vmw_cmd": [
+     6
+    ],
+    "su_NW2.tree_cmd": [
+     6
+    ],
+    "su_NW3.control": [
+     27
+    ],
+    "su_NW3.vmr_cmd": [
+     4
+    ],
+    "su_NW3.vmw_cmd": [
+     4
+    ],
+    "su_NW3.tree_cmd": [
+     4
+    ]
+   },
+   "fix": {
+    "target": 54
+   }
+  },
+  {
+   "rule": "SU_BANK_NW",
+   "status": "FAIL",
+   "slices": {
+    "su_NW0": {
+     "banks": {
+      "0": {
+       "rq": 6,
+       "rr": 5,
+       "wq": null,
+       "wd": 6,
+       "slot": 25,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "1": {
+       "rq": 5,
+       "rr": 6,
+       "wq": 5,
+       "wd": 6,
+       "slot": 25,
+       "rt_rd": 18,
+       "rt_wr": 15
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [
+      19
+     ],
+     "ok": true
+    },
+    "su_NW1": {
+     "banks": {
+      "2": {
+       "rq": 7,
+       "rr": 4,
+       "wq": null,
+       "wd": 7,
+       "slot": 29,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "3": {
+       "rq": 6,
+       "rr": 5,
+       "wq": null,
+       "wd": 7,
+       "slot": 31,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    },
+    "su_NW2": {
+     "banks": {
+      "4": {
+       "rq": 6,
+       "rr": 5,
+       "wq": null,
+       "wd": 6,
+       "slot": 25,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "5": {
+       "rq": 5,
+       "rr": 6,
+       "wq": 5,
+       "wd": 6,
+       "slot": 26,
+       "rt_rd": 18,
+       "rt_wr": 15
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [
+      19
+     ],
+     "ok": true
+    },
+    "su_NW3": {
+     "banks": {
+      "6": {
+       "rq": 7,
+       "rr": 4,
+       "wq": null,
+       "wd": 7,
+       "slot": 31,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "7": {
+       "rq": 6,
+       "rr": 5,
+       "wq": null,
+       "wd": 7,
+       "slot": 32,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    }
+   }
+  },
+  {
+   "rule": "SU_CAL_NW",
+   "status": "FAIL",
+   "rel": {
+    "0": -2,
+    "1": -1,
+    "2": 5,
+    "3": 8,
+    "4": -1,
+    "5": 1,
+    "6": 3,
+    "7": 5
+   },
+   "lg_read": {
+    "0": 21,
+    "1": 17,
+    "2": 20,
+    "3": 21
+   }
+  },
+  {
+   "rule": "SU_CFG_NE",
+   "status": "FAIL",
+   "legs": {
+    "cfg_we": 20,
+    "cfg_bank": 20,
+    "cfg_row": 55,
+    "cfg_data": 55,
+    "start": 55,
+    "length": 55
+   },
+   "fix": {
+    "pad": {
+     "cfg_we": 35,
+     "cfg_bank": 35,
+     "cfg_row": 0,
+     "cfg_data": 0,
+     "start": 0,
+     "length": 0
+    }
+   }
+  },
+  {
+   "rule": "SU_CMD_NE",
+   "status": "FAIL",
+   "legs": {
+    "su_NE0.control": [
+     28
+    ],
+    "su_NE0.vmr_cmd": [
+     18
+    ],
+    "su_NE0.vmw_cmd": [
+     18
+    ],
+    "su_NE0.tree_cmd": [
+     18
+    ],
+    "su_NE1.control": [
+     28
+    ],
+    "su_NE1.vmr_cmd": [
+     15
+    ],
+    "su_NE1.vmw_cmd": [
+     15
+    ],
+    "su_NE1.tree_cmd": [
+     15
+    ],
+    "su_NE2.control": [
+     28
+    ],
+    "su_NE2.vmr_cmd": [
+     20
+    ],
+    "su_NE2.vmw_cmd": [
+     20
+    ],
+    "su_NE2.tree_cmd": [
+     20
+    ],
+    "su_NE3.control": [
+     28
+    ],
+    "su_NE3.vmr_cmd": [
+     21
+    ],
+    "su_NE3.vmw_cmd": [
+     21
+    ],
+    "su_NE3.tree_cmd": [
+     21
+    ]
+   },
+   "fix": {
+    "target": 28
+   }
+  },
+  {
+   "rule": "SU_BANK_NE",
+   "status": "FAIL",
+   "slices": {
+    "su_NE0": {
+     "banks": {
+      "0": {
+       "rq": 9,
+       "rr": 2,
+       "wq": null,
+       "wd": 9,
+       "slot": 22,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "1": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 8,
+       "slot": 22,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    },
+    "su_NE1": {
+     "banks": {
+      "2": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 8,
+       "slot": 26,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "3": {
+       "rq": 7,
+       "rr": 4,
+       "wq": null,
+       "wd": 7,
+       "slot": 27,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    },
+    "su_NE2": {
+     "banks": {
+      "4": {
+       "rq": 9,
+       "rr": 2,
+       "wq": null,
+       "wd": 9,
+       "slot": 26,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "5": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 8,
+       "slot": 27,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    },
+    "su_NE3": {
+     "banks": {
+      "6": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 7,
+       "slot": 36,
+       "rt_rd": 18,
+       "rt_wr": null
+      },
+      "7": {
+       "rq": 8,
+       "rr": 3,
+       "wq": null,
+       "wd": 8,
+       "slot": 37,
+       "rt_rd": 18,
+       "rt_wr": null
+      }
+     },
+     "READ_RETURN": 22,
+     "WRITE_RETURN": 19,
+     "need_READ_RETURN": [
+      22
+     ],
+     "need_WRITE_RETURN": [],
+     "ok": false
+    }
+   }
+  },
+  {
+   "rule": "SU_CAL_NE",
+   "status": "FAIL",
+   "rel": {
+    "0": -5,
+    "1": -4,
+    "2": 1,
+    "3": 3,
+    "4": -6,
+    "5": -4,
+    "6": 0,
+    "7": 1
+   },
+   "lg_read": {
+    "0": 18,
+    "1": 17,
+    "2": 23,
+    "3": 28
+   }
+  }
+ ],
+ "scope": "source-functional lane timing (K/N model, K from die.v landing ties); bind rules only"
+}

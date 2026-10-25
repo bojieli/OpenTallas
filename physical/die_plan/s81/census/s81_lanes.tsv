@@ -150,9 +150,8 @@ u_rsv_07	rq	u_ctrl_07	rq	data	682	1	15	3	5111.4	5020.5	1.018	VH
 u_s_4N	vo	u_seqhost	vi_n	data	276	1	38	8	12956.4	12351.6	1.049	HV	u_s_4S
 u_ctrl_03	rd	u_rsv_03	r_data	data	512	1	20	4	6600.1	6562.5	1.006	HV	
 u_ctrl_15	rd	u_rsv_15	r_data	data	512	1	19	4	6587.0	6549.5	1.006	HV	
-u_bk_col	vo_n	u_s_1N	vi	data	276	1	36	8	12339.4	12129.0	1.017	HV	
+u_s_1S	vo	u_s_1N	vi	data	276	1	36	8	12339.4	12129.0	1.017	HV	
 u_rsv_11	rq	u_ctrl_11	rq	data	682	1	15	3	4948.7	4882.7	1.014	HV	
-u_s_1N	vo	u_bk_col	vi_n	data	276	1	37	8	12529.4	12026.3	1.042	VH	
 u_eng	vo_n	u_s_6N	vi	data	276	1	33	7	11435.8	11349.4	1.008	HV	
 u_s_6N	vo	u_eng	vi_n	data	276	1	33	7	11381.8	11295.4	1.008	VH	
 u_ctrl_09	rd	u_rsv_09	r_data	data	512	1	18	3	5887.5	5719.4	1.029	HV	
@@ -360,13 +359,12 @@ u_rsv_15	ro	ld_pr_15_13	i	data	514	1	0	1	2343.8	2343.8	1.0	HV
 u_irg_00	qo	u_irg_01	qi	data	513	2	8	1	2505.6	2332.8	1.074	HV	
 u_irg_06	qo	u_irg_07	qi	data	513	2	8	1	2601.3	2332.8	1.115	HV	
 u_f_6R10	ret	u_s_6N	rt	data	70	1	45	11	17075.7	17075.7	1.0	VH	u_f_5R01,u_f_5L01,u_lk_EN1,u_s_7S
-u_bk_col	vo_s	u_s_1S	vi	data	276	1	14	2	4416.5	4330.1	1.02	HV	
+u_s_1N	vo	u_s_1S	vi	data	276	1	14	2	4416.5	4330.1	1.02	HV	
 u_f_5R12	ret	u_s_5N	rt	data	70	1	52	11	18080.4	17032.3	1.062	VH	u_f_5R01,u_f_5L01,u_lk_EN1,u_s_7S,u_s_6N
 u_etap_07	pco	u_etap_08	pci	data	268	1	14	2	4911.7	4439.9	1.106	HV	
 u_f_3L13	ret	u_s_3N	rt	data	70	1	37	11	16831.2	16831.2	1.0	VH	u_s_0S,u_s_1N,u_s_2N
 ld_dn_05_07	o	u_rsv_07	dn_i	data	805	1	0	0	1453.7	1453.7	1.0	HV	
 ld_dn_13_15	o	u_rsv_15	dn_i	data	805	1	0	0	1453.7	1453.7	1.0	HV	
-u_s_1S	vo	u_bk_col	vi_s	data	276	1	13	2	4565.6	4232.4	1.079	HV	
 u_f_2R03	ret	u_s_2S	rt	data	70	1	54	11	19028.4	16545.1	1.15	HV	u_f_3L10,u_s_0S,u_s_1N,u_s_2N
 u_f_0L12	ret	u_s_0N	rt	data	70	1	43	10	16497.1	16468.2	1.002	HV	u_f_0R13,u_f_2L02,u_f_2R03,u_f_3L10
 u_s_3S	ro_e	u_s_4S	ri_w	data	1104	4	4	0	1116.4	1040.2	1.073	HV	
@@ -770,7 +768,6 @@ u_lk_WN0	st	u_s_0N	rx0	ctl	2	1	42	9	14369.5	14329.8	1.003	HV	u_lk_WN2,u_rsv_01
 u_lk_WS1	st	u_s_0S	rx1	ctl	2	1	41	9	14356.2	14316.5	1.003	VH	
 u_ctrl_01	k_len	u_phy_hbm	k_len	ctl	8	1	0	2	3541.1	3541.1	1.0	HV	
 PORT	rst_n	u_eng	rst_n	reset	1	1	90	18	31478.4	28297.4	1.112	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
-PORT	rst_n	u_bk_col	rst_n	reset	1	1	90	18	31417.1	28158.9	1.116	VH	u_phy_hbm,u_ctrl_07,u_rsv_06,u_rsv_07
 u_phy_hbm	kr_beat	u_ctrl_01	kr_beat	ctl	8	1	0	2	3503.7	3503.7	1.0	HV	
 PORT	rst_n	u_f_4R01	rst_n	reset	1	1	88	18	29675.6	28018.7	1.059	HV	u_irg_06,u_irg_07,u_rsv_14,u_rsv_15
 PORT	rst_n	u_f_4R13	rst_n	reset	1	1	83	18	28614.2	27498.7	1.041	HV	

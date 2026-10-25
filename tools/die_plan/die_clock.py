@@ -60,7 +60,7 @@ import schema as S  # noqa: E402
 BUF = "BUFx24_ASAP7_75t_R"
 BUF_CIN_FF = 2.35                       # BUFx24 A pin (TT lib)
 TAP_LOAD_FF = 3.0                       # partition tap port load (the partition's first tap buffer, ASSUMED)
-PERIOD_PS = 833.333
+PERIOD_PS = 833.000
 GATE_PS = 80.0                          # decision 5: related pair skew <= 80 ps (TT, FF)
 TARGET_PS = 20.0                        # design window
 OCV = (0.03, 0.05)                      # INFO derates on the uncommon clock path

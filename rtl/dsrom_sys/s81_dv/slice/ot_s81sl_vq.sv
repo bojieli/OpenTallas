@@ -102,16 +102,33 @@ module ot_s81sl_vq #(
             // cycle t + 11 is wp(t + 11) - 11 = wp(t) (registered read: rd_out in cycle t + 12; rows 11 apart, never
             // the row being written); the control rides a 12-deep flop line, so xr loads blk's update of cycle t at
             // the end of cycle t + 12.
-            reg  [3:0] wp;
-            always @(posedge clk or negedge rs_q) if (!rs_q) wp <= 4'd0; else wp <= wp + 4'd1;
-`ifdef OT_VQ_MUT_XPTR
-            wire [3:0] rp = wp - 4'd10;     // mutant: one cycle short (the bench must catch it)
+            // S81-VQFIX (2026-10-25): the macro's write port and both addresses land in flops AT the macro (kit route
+            // ot_s81sl_vq_lfp NOT SIGNED TT -55.87: yv_c -> sd_ mux -> wd_in was 2 x ~120 ps wires + 384 ps slew at the
+            // macro pin).  Event t is written one edge later, at the end of cycle t + 1 (wd_m = sd_(t), wa_m = wp(t)),
+            // and the read address is registered too (ra_m in cycle c = wp(c - 1) - 10 = wp(c) - 11): the row read in
+            // cycle t + 11 is still wp(t), written 10 cycles before and 6 cycles before it is overwritten (t + 17), and
+            // never the row being written (wa_m = wp - 1, ra_m = wp - 11).  rd_out, ce and xr are unchanged: 0 cycles.
+            reg  [3:0] wp, wa_m, ra_m;
+            reg  [255:0] wd_m;
+            always @(posedge clk or negedge rs_q)
+                if (!rs_q) begin wp <= 4'd0; wa_m <= 4'd15; ra_m <= 4'd5; end
+                else begin
+                    wp <= wp + 4'd1;
+`ifdef OT_VQ_MUT_WREG
+                    wa_m <= wp + 4'd1;      // mutant: write address not aligned with the registered data (must FAIL)
 `else
-            wire [3:0] rp = wp - 4'd11;
+                    wa_m <= wp;
 `endif
+`ifdef OT_VQ_MUT_XPTR
+                    ra_m <= wp - 4'd9;      // mutant: one cycle short (the bench must catch it)
+`else
+                    ra_m <= wp - 4'd10;
+`endif
+                end
+            always @(posedge clk) wd_m <= sd_;
             wire [255:0] rd;
-            ot_sram_1r1w_128x256_m1_r2c2 u_xm (.clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0, rp}), .rd_out(rd),
-                .w_ce_in(1'b1), .w_addr_in({3'd0, wp}), .wd_in(sd_), .w_mask_in({256{1'b1}}),
+            ot_sram_1r1w_128x256_m1_r2c2 u_xm (.clk(clk), .r_ce_in(1'b1), .r_addr_in({3'd0, ra_m}), .rd_out(rd),
+                .w_ce_in(1'b1), .w_addr_in({3'd0, wa_m}), .wd_in(wd_m), .w_mask_in({256{1'b1}}),
                 .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
             wire [2:0] ce;
             ot_hdc_delay #(.W(3), .D(12), .RESET(1)) u_xc (.clk(clk), .rst_n(rs_q), .d({sv_, si_[1:0]}), .q(ce));

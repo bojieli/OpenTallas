@@ -1,0 +1,18 @@
+tt RCX wns/nviol ['-71.0595196637412', '1256'] ck mean 357.7
+  est_0.5_1_tt.tsv       ck err mean -8.8 min -30.4 max +12.8 sd 9.7 | hold err(est-rcx, rcx<30) mean +8.2 min -12.6 max +32.5 n2046 | wns ['-60.04999299605394', '1252']
+  est_0.6_0.9_tt.tsv     ck err mean -7.3 min -27.3 max +12.6 sd 9.1 | hold err(est-rcx, rcx<30) mean +6.5 min -12.8 max +29.1 n2046 | wns ['-60.603383664889584', '1252']
+  est_0.6_1_tt.tsv       ck err mean -2.1 min -21.8 max +18.8 sd 9.0 | hold err(est-rcx, rcx<30) mean +4.0 min -11.1 max +27.2 n2046 | wns ['-65.57779345775059', '1252']
+  est_0.7_0.95_tt.tsv    ck err mean +1.9 min -16.2 max +21.8 sd 8.3 | hold err(est-rcx, rcx<30) mean +1.2 min -14.7 max +25.9 n2046 | wns ['-68.47192284990783', '1252']
+  est_0.8_0.9_tt.tsv     ck err mean +5.6 min -10.8 max +24.6 sd 7.6 | hold err(est-rcx, rcx<30) mean -1.5 min -18.4 max +25.4 n2046 | wns ['-71.1064820978705', '1252']
+  est_0.8_1_tt.tsv       ck err mean +11.4 min -4.7 max +31.8 sd 7.5 | hold err(est-rcx, rcx<30) mean -4.4 min -24.1 max +33.4 n2046 | wns ['-76.63986143028818', '1252']
+  est_1_0.9_tt.tsv       ck err mean +18.8 min +4.8 max +37.3 sd 6.3 | hold err(est-rcx, rcx<30) mean -9.7 min -31.0 max +32.3 n2046 | wns ['-81.58626584724112', '1252']
+  est_1_1_tt.tsv         ck err mean +25.3 min +11.6 max +45.2 sd 6.3 | hold err(est-rcx, rcx<30) mean -13.0 min -37.2 max +40.7 n2046 | wns ['-87.92053231724796', '1252']
+ff RCX wns/nviol ['-12.705475611305713', '107'] ck mean 285.0
+  est_0.5_1_ff.tsv       ck err mean -13.3 min -33.2 max +5.7 sd 9.1 | hold err(est-rcx, rcx<30) mean +8.8 min -15.9 max +34.2 n2430 | wns ['-2.075117863618642', '11']
+  est_0.6_0.9_ff.tsv     ck err mean -10.8 min -28.8 max +6.6 sd 8.4 | hold err(est-rcx, rcx<30) mean +6.9 min -17.1 max +29.8 n2430 | wns ['-3.015726569415177', '16']
+  est_0.6_1_ff.tsv       ck err mean -6.6 min -24.6 max +11.4 sd 8.2 | hold err(est-rcx, rcx<30) mean +5.8 min -13.5 max +25.7 n2430 | wns ['-1.0037803961501282', '3']
+  est_0.7_0.95_ff.tsv    ck err mean -2.1 min -18.2 max +14.9 sd 7.5 | hold err(est-rcx, rcx<30) mean +3.4 min -13.8 max +19.4 n2430 | wns ['-1.2745360373624743', '4']
+  est_0.8_0.9_ff.tsv     ck err mean +2.1 min -12.3 max +18.3 sd 6.8 | hold err(est-rcx, rcx<30) mean +1.1 min -14.0 max +18.0 n2430 | wns ['-1.5439038997884937', '5']
+  est_0.8_1_ff.tsv       ck err mean +6.9 min -7.4 max +24.1 sd 6.7 | hold err(est-rcx, rcx<30) mean -0.3 min -16.3 max +24.0 n2430 | wns ['0.010630385503262799', '0']
+  est_1_0.9_ff.tsv       ck err mean +15.2 min +3.0 max +30.8 sd 5.6 | hold err(est-rcx, rcx<30) mean -4.9 min -23.9 max +25.0 n2430 | wns ['-3.058719956215579', '157']
+  est_1_1_ff.tsv         ck err mean +20.6 min +8.5 max +37.3 sd 5.5 | hold err(est-rcx, rcx<30) mean -6.5 min -28.9 max +31.8 n2430 | wns ['-8.386430472499645', '557']

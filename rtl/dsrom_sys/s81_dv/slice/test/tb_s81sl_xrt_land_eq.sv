@@ -5,6 +5,11 @@
 // LAND = 1 (undelayed when LAND = 0).  Every other input is shared.  Random stimulus (beats of every kind with the own
 // slice mask half the time, sparse leaf / partial / Engram valids, warm resets every RP cycles); EVERY output bit is
 // compared every cycle after the first reset release.  Prints LANDEQ ... and PASS / FAIL.
+// S81-KITS-RTLC 10-24: the DUT has the narrowed ring / band ports (OWNER DECISION 8: dl_e / dl_w [1075:1], dl_vb [275:1],
+// ci_b [1075:0], x_si [6:0], C3 bi packed {B[1075:37], B[6:0]}); the bench drives the REF's full ports with the same
+// words and checks the dropped output bits of the REF are 0 (ci_b[1103:1076], x_si[7]: the DUT side is tied 0 here).
+// So this also proves the RTLC 0-cycle changes (ci loop-back twins, kept sw_m, x_mode pin register, FOREG 0 fault pin
+// flop) and the port narrowing are function-preserving against origin/main.
 module tb_s81sl_xrt_land_eq #(parameter integer HB = 0, parameter integer LAND = 1, parameter integer SEED = 1,
                               parameter integer NC = 20000, parameter integer RP = 997,
                               parameter integer SPARSE = 0);   // SPARSE = 1: rare full-set valids, few faults
@@ -26,25 +31,30 @@ module tb_s81sl_xrt_land_eq #(parameter integer HB = 0, parameter integer LAND =
     localparam integer OW = 3 + W + 513 + 5 + 160 + 5 + 50 + 40 + 1280 + 1 + 32 + 1 + 2 + 32 + 1 + 1 + 32 + 32 + 1 + 8 + 32
                             + 1 + 160 + 1 + 160 + 1;
     wire [OW-1:0] od, orf;
-    `define XRT_PORTS(P, LV, LD, PV, PD, EV, EC, ED) \
-        .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w), .dl_vv(dl_vv), \
-        .dl_vb(dl_vb), .ci_dir(P[OW-1 -: 3]), .ci_b(P[OW-4 -: W]), .c_v(P[OW-4-W-513 -: 5]), \
+    `define XRT_PORTS(P, LV, LD, PV, PD, EV, EC, ED, DE, DW, DV, CB, XS) \
+        .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(DE), .dl_wv(dl_wv), .dl_w(DW), .dl_vv(dl_vv), \
+        .dl_vb(DV), .ci_dir(P[OW-1 -: 3]), .ci_b(CB), .c_v(P[OW-4-W-513 -: 5]), \
         .c_d(P[OW-9-W-513 -: 160]), .sw_v(P[OW-169-W-513 -: 5]), .sw_a(P[OW-174-W-513 -: 50]), .sw_m(P[OW-224-W-513 -: 40]), \
         .sw_d(P[OW-264-W-513 -: 1280]), .lo_v(LV), .lo_d(LD), .p_v(PV), .p_d(PD), .rb_v(P[OW-1544-W-513]), \
         .rb_d(P[OW-1545-W-513 -: 32]), .e_v(EV), .e_c(EC), .e_d(ED), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), \
         .g_v(P[OW-1577-W-513]), .g_c(P[OW-1578-W-513 -: 2]), .g_d(P[OW-1580-W-513 -: 32]), .x_go(P[OW-1612-W-513]), \
         .x_mode(P[OW-1613-W-513]), .x_eps(P[OW-1614-W-513 -: 32]), .x_scale(P[OW-1646-W-513 -: 32]), \
-        .x_sv(P[OW-1678-W-513]), .x_si(P[OW-1679-W-513 -: 8]), .x_s(P[OW-1687-W-513 -: 32]), .x_rbv(x_rbv), .x_rbd(x_rbd), \
+        .x_sv(P[OW-1678-W-513]), .x_si(XS), .x_s(P[OW-1687-W-513 -: 32]), .x_rbv(x_rbv), .x_rbd(x_rbd), \
         .is_v(P[OW-1719-W-513]), .is_d(P[OW-1720-W-513 -: 160]), .cfg_v(P[OW-1880-W-513]), .cfg_d(P[OW-1881-W-513 -: 160]), \
         .fault(P[0])
     generate if (HB != 0) begin : g3
-        ot_s81sl_xrt3 #(.FACE_LAND(LAND)) dut (`XRT_PORTS(od, lo_v, lo_d, p_v, p_d, e_v, e_c, e_d), .bi(bi), .bo(od[OW-4-W -: 513]));
-        ref_s81sl_xrt3 rf (`XRT_PORTS(orf, f_lo_v, f_lo_d, f_p_v, f_p_d, f_e_v, f_e_c, f_e_d), .bi(bi), .bo(orf[OW-4-W -: 513]));
+        ot_s81sl_xrt3 #(.FACE_LAND(LAND)) dut (`XRT_PORTS(od, lo_v, lo_d, p_v, p_d, e_v, e_c, e_d, dl_e[1075:1], dl_w[1075:1],
+            dl_vb[275:1], od[OW-4-28 -: W-28], od[OW-1680-W-513 -: 7]), .bi({bi[1075:37], bi[6:0]}), .bo(od[OW-4-W -: 513]));
+        ref_s81sl_xrt3 rf (`XRT_PORTS(orf, f_lo_v, f_lo_d, f_p_v, f_p_d, f_e_v, f_e_c, f_e_d, dl_e, dl_w, dl_vb,
+            orf[OW-4 -: W], orf[OW-1679-W-513 -: 8]), .bi(bi), .bo(orf[OW-4-W -: 513]));
     end else begin : g1
-        ot_s81sl_xrt1 #(.FACE_LAND(LAND)) dut (`XRT_PORTS(od, lo_v, lo_d, p_v, p_d, e_v, e_c, e_d));
-        ref_s81sl_xrt1 rf (`XRT_PORTS(orf, f_lo_v, f_lo_d, f_p_v, f_p_d, f_e_v, f_e_c, f_e_d));
+        ot_s81sl_xrt1 #(.FACE_LAND(LAND)) dut (`XRT_PORTS(od, lo_v, lo_d, p_v, p_d, e_v, e_c, e_d, dl_e[1075:1], dl_w[1075:1],
+            dl_vb[275:1], od[OW-4-28 -: W-28], od[OW-1680-W-513 -: 7]));
+        ref_s81sl_xrt1 rf (`XRT_PORTS(orf, f_lo_v, f_lo_d, f_p_v, f_p_d, f_e_v, f_e_c, f_e_d, dl_e, dl_w, dl_vb,
+            orf[OW-4 -: W], orf[OW-1679-W-513 -: 8]));
         assign od[OW-4-W -: 513] = 513'd0; assign orf[OW-4-W -: 513] = 513'd0;
     end endgenerate
+    assign od[OW-4 -: 28] = 28'd0; assign od[OW-1679-W-513] = 1'b0;   // dropped constant pins (ci_b[1103:1076], x_si[7])
     reg [63:0] rs;
     function automatic [31:0] r32(); rs = rs ^ (rs << 13); rs = rs ^ (rs >> 7); rs = rs ^ (rs << 17); r32 = rs[31:0]; endfunction
     function automatic [1279:0] rw(); integer q; for (q = 0; q < 40; q = q + 1) rw[32 * q +: 32] = r32(); endfunction

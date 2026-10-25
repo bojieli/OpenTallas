@@ -7410,8 +7410,8 @@
   "max_core": 0
  },
  "s_0S_LP": {
-  "cells": 192356,
-  "glue": 192356,
+  "cells": 365489,
+  "glue": 365489,
   "cores": [],
   "n_cores": 0,
   "basis": "lep core + coll lanes + MU land measured (flattened, < cap)",
@@ -11206,8 +11206,8 @@
   "max_core": 0
  },
  "s_7N_LP": {
-  "cells": 207657,
-  "glue": 207657,
+  "cells": 380790,
+  "glue": 380790,
   "cores": [],
   "n_cores": 0,
   "basis": "lep core + coll lanes + MU land measured (flattened, < cap)",
@@ -11243,14 +11243,6 @@
   "cores": [],
   "n_cores": 0,
   "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
- "bk_col": {
-  "cells": 186882,
-  "glue": 186882,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "bk_col FLATTENED: Yosys (PLAN-S81v4-SYN 10-23, ORFS asap7lock RVT) dsdv_bkcol_l 15,770 x4 (2 SRAM each) + dsdv_bkcol_m 73,514 + bk_g 2 x 25,144 measured = 186,882 cells, 8 SRAM macros",
   "max_core": 0
  },
  "gunit": {

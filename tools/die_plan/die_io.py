@@ -38,6 +38,15 @@ nearest (port-graph hops) to the host logic (host_rt / seq_host / host_cp / sys_
 guess) and records the ingress lane route to the host logic in host_route (declared lane chain, checked; else the
 shortest functional lane path).  G0C re-checks a declared host_route against the plan's lanes.
 
+Die-corner windows (S81-XDIE 10-24): `plan --corner-keepout-um C` gives every PHY window that overlaps a C x C square
+at a die-outline corner a `bump_exclude_um` rect (= that overlap): no bumps there (package corner stress zone: C4 / micro-
+bump depopulation at the die corners), and `sites` counts only the pitch sites whose centre lies outside the exclusions.
+So a PHY may take a die-corner slot (the S81 reserve pair lk_WS2 / lk_EN3, like lk_WN2) without a whole keep-out cell.
+G0C: an exclusion must lie inside its window, and `sites` must not exceed the sites left outside the exclusions.
+pg_domains (S81) copy the exclusions into the VDDPHY domain's bumps.exclude_um and use them as the domain's rail-clamp
+ESD / decap area (esd_um); check_pg_domains: exclude_um / esd_um inside the bump / domain rect, and a window's
+exclusions present in its domain's bumps.exclude_um.
+
 The plan's die.io wins; without it check.py reads PLANDIR/die_io.json (written by `plan --out`), so the windows
 survive the die generators' regeneration of die_plan.json.
 
@@ -108,6 +117,111 @@ def io_instances(P):
 
 def edge_dist(P, r):
     return min(r[0], r[1], P.W - r[2], P.H - r[3])
+
+
+def corner_excl(W, H, r, c):
+    """S81-XDIE: overlaps of window r with the c x c squares at the four die-outline corners (bump depopulation)."""
+    out = []
+    if not c:
+        return out
+    for q in ((0.0, 0.0, c, c), (W - c, 0.0, W, c), (0.0, H - c, c, H), (W - c, H - c, W, H)):
+        x0, y0, x1, y1 = max(r[0], q[0]), max(r[1], q[1]), min(r[2], q[2]), min(r[3], q[3])
+        if x1 > x0 + EPS and y1 > y0 + EPS:
+            out.append([round(x0, 4), round(y0, 4), round(x1, 4), round(y1, 4)])
+    return out
+
+
+PHY_STRIP_UM = 150.0      # boundary-flop strip depth behind a SerDes partition's bus face window (phy_zone)
+
+
+def phy_zone(P, pn, guard, edge_max=EDGE_MAX_UM, strip=PHY_STRIP_UM):
+    """S81-XDIE 10-24 (GEOM condition: PHY fit beside the partition strip): the PHY footprint of a serdes partition whose
+    content has no origin / outline = the largest free rectangle of its rect that touches the shoreline (edge distance
+    <= edge_max) after blocking, each grown by `guard` (the VDDPHY ring): every bus face window's boundary-flop strip
+    (`strip` deep behind the window), every straight ft slot's band (E-W: full width at the window's y, N-S: full
+    height at its x) and every L-route ft slot's two legs (from its N/S window down / up to its E/W window's y, and from
+    the E/W face across to the N/S window's x).  So the strip, its ft stations and their core-VDD straps stay outside
+    the PHY / VDDPHY area.  If no free rectangle touches the shoreline the largest free one is returned (G0C then
+    reports the window off-shore).  Returns (rect, note)."""
+    r = P.rect(pn)
+    t = P.ptype(pn)
+    w, h = t["outline_um"]
+
+    def seg(face, a0, a1):
+        """die rect of a face window: degenerate across the face (x0 == x1 for E/W)."""
+        if face in "EW":
+            x = 0.0 if face == "W" else w
+            (xa, ya), (xb, yb) = P.to_die(pn, (x, a0)), P.to_die(pn, (x, a1))
+        else:
+            y = 0.0 if face == "S" else h
+            (xa, ya), (xb, yb) = P.to_die(pn, (a0, y)), P.to_die(pn, (a1, y))
+        return min(xa, xb), min(ya, yb), max(xa, xb), max(ya, yb)
+
+    def grow(b):
+        return (b[0] - guard, b[1] - guard, b[2] + guard, b[3] + guard)
+    blk = []
+    for b in t.get("buses", []):
+        x0, y0, x1, y1 = seg(b["face"], *b["window_um"])
+        if b["face"] in "EW":
+            blk.append(grow((x0 - strip, y0, x1 + strip, y1)))
+        else:
+            blk.append(grow((x0, y0 - strip, x1, y1 + strip)))
+    for f in t.get("ft_slots", []):
+        A, B = seg(f["in_face"], *f["in_window_um"]), seg(f["out_face"], *f["out_window_um"])
+        ew = [z for z, fc in ((A, f["in_face"]), (B, f["out_face"])) if fc in "EW"]
+        ns = [z for z, fc in ((A, f["in_face"]), (B, f["out_face"])) if fc in "NS"]
+        if len(ew) == 2:
+            blk.append(grow((r[0], min(z[1] for z in ew), r[2], max(z[3] for z in ew))))
+        elif len(ns) == 2:
+            blk.append(grow((min(z[0] for z in ns), r[1], max(z[2] for z in ns), r[3])))
+        else:                                        # L route: vertical leg at the N/S window's x, horizontal leg at the E/W y
+            e, n = ew[0], ns[0]
+            blk.append(grow((n[0], min(n[1], e[1]), n[2], max(n[3], e[3]))))
+            blk.append(grow((min(e[0], n[0]), e[1], max(e[2], n[2]), e[3])))
+    xs = sorted({r[0], r[2]} | {min(max(v, r[0]), r[2]) for b in blk for v in (b[0], b[2])})
+    ys = sorted({r[1], r[3]} | {min(max(v, r[1]), r[3]) for b in blk for v in (b[1], b[3])})
+    free = [[not any(b[0] < xs[i + 1] - EPS and b[2] > xs[i] + EPS and b[1] < ys[j + 1] - EPS and b[3] > ys[j] + EPS
+                     for b in blk) for j in range(len(ys) - 1)] for i in range(len(xs) - 1)]
+    best = bshore = None
+    for i0 in range(len(xs) - 1):
+        for j0 in range(len(ys) - 1):
+            if not free[i0][j0]:
+                continue
+            jmax = len(ys) - 1
+            for i1 in range(i0, len(xs) - 1):
+                j = j0
+                while j < jmax and free[i1][j]:
+                    j += 1
+                jmax = min(jmax, j)
+                if jmax <= j0:
+                    break
+                c = (xs[i0], ys[j0], xs[i1 + 1], ys[jmax])
+                a = (c[2] - c[0]) * (c[3] - c[1])
+                if best is None or a > best[0]:
+                    best = (a, c)
+                if edge_dist(P, c) <= edge_max + EPS and (bshore is None or a > bshore[0]):
+                    bshore = (a, c)
+    pick = bshore or best
+    if pick is None:
+        return tuple(r), "no free PHY area beside the strip (whole partition kept)"
+    c = pick[1]
+    return c, ("PHY zone %.0f x %.0f um beside the strip (%d blocked strip / ft rects, %g-um guard)%s"
+               % (c[2] - c[0], c[3] - c[1], len(blk), guard, "" if bshore else "; NO shoreline area: PHY OFF-SHORE"))
+
+
+def count_sites(r, pitch, excl=()):
+    """pitch sites of window r (floor(w/p) x floor(h/p), the grid from the window's lower-left corner) whose centre lies
+    outside every exclusion rect."""
+    nx, ny = int(math.floor((r[2] - r[0]) / pitch + EPS)), int(math.floor((r[3] - r[1]) / pitch + EPS))
+    if not excl:
+        return max(1, nx * ny)
+    n = 0
+    for i in range(nx):
+        for j in range(ny):
+            cx, cy = r[0] + (i + 0.5) * pitch, r[1] + (j + 0.5) * pitch
+            if not any(e[0] <= cx <= e[2] and e[1] <= cy <= e[3] for e in excl):
+                n += 1
+    return max(1, n)
 
 
 def host_parts(P):
@@ -213,9 +327,11 @@ def nearest_io(P, starts, io_parts):
     return None, None
 
 
-def plan(P, in_band=None):
+def plan(P, in_band=None, corner_um=0.0, phy_zone_guard=None):
     """proposed die.io list from the catalog (one window per IO-class content instance).  in_band: partitions whose
-    link windows carry the host traffic in-band (host: "in_band"; replaces the BFS host guess)."""
+    link windows carry the host traffic in-band (host: "in_band"; replaces the BFS host guess).  corner_um: die-corner
+    bump depopulation square (bump_exclude_um on the windows that overlap it).  phy_zone_guard: serdes windows of a
+    partition without a placed PHY footprint shrink to phy_zone() (the strip stays core VDD)."""
     io = []
     names = set()
     inst = io_instances(P)
@@ -224,11 +340,28 @@ def plan(P, in_band=None):
         while nm in names:
             nm += "_"
         names.add(nm)
+        zn = None
+        if phy_zone_guard is not None and cls == "serdes" and tuple(r) == tuple(P.rect(pn)):
+            z, zn = phy_zone(P, pn, phy_zone_guard)
+            if edge_dist(P, z) <= float(P.budgets.get("io_edge_max_um", EDGE_MAX_UM)) + EPS:
+                r = z
+            else:      # keep the whole slot as the window (pre-zone form) and say so: the strip sits on the die-edge side
+                zn = ("PHY ZONE OFF-SHORE: free area %s is %.0f um from the die edge (the partition's ft / bus strip is "
+                      "on the die-edge side; orient fix owed) -> window = whole slot" % ([round(v, 2) for v in z],
+                                                                                         edge_dist(P, z)))
+                print(f"die_io plan: WARNING {pn}: {zn}", file=sys.stderr)
         w, h = r[2] - r[0], r[3] - r[1]
-        sites = max(1, int(math.floor(w / pitch)) * int(math.floor(h / pitch)))
+        ex = corner_excl(P.W, P.H, r, corner_um)
+        sites = count_sites(r, pitch, ex) if ex else max(1, int(math.floor(w / pitch)) * int(math.floor(h / pitch)))
         io.append(dict(name=nm, kind="phy_macro", iface=cls, part=pn, rect_um=[round(v, 4) for v in r],
                        sites=sites, pitch_um=pitch, signals=sig,
                        basis=basis + f"; shoreline {edge_dist(P, r):.0f} um", note=f"die_io.py plan: {ci}"))
+        if zn:
+            io[-1]["note"] += "; " + zn
+        if ex:
+            io[-1]["bump_exclude_um"] = ex
+            io[-1]["note"] += (f"; die-corner window: no bumps in the {corner_um:g}-um corner stress square "
+                               f"(bump_exclude_um), {count_sites(r, pitch)} -> {sites} sites")
     hp = host_parts(P)
     if in_band:
         in_band = dict(x if isinstance(x, tuple) else (x, None) for x in in_band)    # part -> declared lanes | None
@@ -290,6 +423,16 @@ def check(P, R, edge_max=None):
             summ["off_shore"] += 1
             R.err("die_io_plan", f"io window {w['name']} ({w['iface']}): {d:.0f} um from the die edge > io_edge_max_um "
                   f"{edge_max:g} (the bump field / PHY must sit on the shoreline)", type=tn, part=w.get("part"))
+        ex = w.get("bump_exclude_um") or []
+        for e in ex:
+            if not (e[0] >= r[0] - EPS and e[1] >= r[1] - EPS and e[2] <= r[2] + EPS and e[3] <= r[3] + EPS):
+                R.err("die_io_plan", f"io window {w['name']}: bump_exclude_um {e} outside the window {r}", type=tn,
+                      part=w.get("part"))
+        if ex and w.get("pitch_um"):
+            left = count_sites(r, w["pitch_um"], ex)
+            if w["sites"] > left:
+                R.err("die_io_plan", f"io window {w['name']}: sites {w['sites']} > {left} pitch sites outside "
+                      f"bump_exclude_um", type=tn, part=w.get("part"))
         sig = w.get("signals")
         if sig is not None and sig > w["sites"]:
             summ["over_sites"] += 1
@@ -333,6 +476,11 @@ def main(argv=None):
     ap.add_argument("--in-band-host", help="comma-separated PART[=LANE+LANE...]: partitions whose link windows carry "
                     "the host traffic in-band (the die has no host link): host: \"in_band\" instead of the BFS host "
                     "guess; the optional lane chain declares the on-die ingress route to the host logic (checked)")
+    ap.add_argument("--corner-keepout-um", type=float, default=0.0,
+                    help="die-corner bump depopulation square (S81-XDIE): windows overlapping it get bump_exclude_um")
+    ap.add_argument("--phy-zone-guard-um", type=float, default=None,
+                    help="S81-XDIE: shrink each serdes window (no placed PHY footprint) to the free cell beside its "
+                         "partition strip, this guard from the face-window bands (phy_zone)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan_json)
     P = S.Plan(raw)
@@ -341,7 +489,7 @@ def main(argv=None):
         if x:
             pn, _, lanes = x.partition("=")
             ib.append((pn, [l for l in lanes.split("+") if l] or None))
-    io = plan(P, in_band=ib)
+    io = plan(P, in_band=ib, corner_um=a.corner_keepout_um, phy_zone_guard=a.phy_zone_guard_um)
     keep = [w for w in (raw["die"].get("io") or []) if not w.get("iface")]
     new = keep + io
     if a.out:
@@ -388,6 +536,18 @@ def check_pg_domains(P, R):
                 R.err("pg_domain", f"pg domain {d['name']}: bump rows {b} not over io window {n}")
         if not inside(d["bumps"]["rect_um"], r):
             R.err("pg_domain", f"pg domain {d['name']}: bump rect outside the domain rect")
+        bx = d["bumps"].get("exclude_um") or []
+        for e in bx:
+            if not inside(e, d["bumps"]["rect_um"]):
+                R.err("pg_domain", f"pg domain {d['name']}: bumps.exclude_um {e} outside the bump rect")
+        for e in d.get("esd_um") or []:
+            if not inside(e, r):
+                R.err("pg_domain", f"pg domain {d['name']}: esd_um {e} outside the domain rect")
+        for n in d["io"]:
+            for e in (io.get(n) or {}).get("bump_exclude_um") or []:
+                if not any(inside(e, x) for x in bx):
+                    R.err("pg_domain", f"pg domain {d['name']}: io window {n} bump_exclude_um {e} not in the domain's "
+                          f"bumps.exclude_um (power bumps in the die-corner stress zone)")
         for g in d["grid"]:
             if die_layers and g["layer"] not in die_layers:
                 R.err("pg_domain", f"pg domain {d['name']}: strap layer {g['layer']} not a die layer {sorted(die_layers)}")

@@ -28,8 +28,10 @@ module dsdv_gunit_l1c #(
     input  wire          clk,
     input  wire          rst_n,
     // W face (fronts q = 0..3, packed by q)
-    input  wire [3:0]    f_v, input wire [3:0] f_f, input wire [3:0] f_l, input wire [3:0] f_g,
-    input  wire [4*246-1:0] f_d, input wire [3:0] f_flt,
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant / unused pins): the collector reads f_v / f_f / f_l / f_g of front 0 only (fronts 1..3 leave
+    // those outputs open: one shared L1f master) and no f_d bit 205 of any front (L1f o_d is packed, 245 bits per front)
+    input  wire [0:0]    f_v, input wire [0:0] f_f, input wire [0:0] f_l, input wire [0:0] f_g,
+    input  wire [4*245-1:0] f_d, input wire [3:0] f_flt,
     output reg           g_go, output reg [23:0] g_hit, output reg [41:0] g_a,
     // stack L1
     output reg           i_v, output reg [53:0] i_ids,
@@ -43,8 +45,15 @@ module dsdv_gunit_l1c #(
     // ---------------------------------------------------------------- input flops
     reg [3:0] fv, ff, fl, fg, ft; reg [4*246-1:0] fd;
     always @(posedge clk or negedge rq[0])
-        if (!rq[0]) begin fv <= 4'd0; fg <= 4'd0; ft <= 4'd0; end else begin fv <= f_v; fg <= f_g; ft <= f_flt; end
-    always @(posedge clk) begin ff <= f_f; fl <= f_l; fd <= f_d; end
+        if (!rq[0]) begin fv <= 4'd0; fg <= 4'd0; ft <= 4'd0; end else begin fv <= {3'd0, f_v}; fg <= {3'd0, f_g}; ft <= f_flt; end
+    always @(posedge clk) begin
+        ff <= {3'd0, f_f}; fl <= {3'd0, f_l};
+`ifdef OT_RTLC_MUT_L1C   // RTLC bench mutant: front words unpacked from the wrong 245-bit slot (fronts rotated)
+        for (i = 0; i < 4; i = i + 1) fd[246 * i +: 246] <= {f_d[245 * ((i + 1) % 4) + 205 +: 40], 1'b0, f_d[245 * ((i + 1) % 4) +: 205]};
+`else
+        for (i = 0; i < 4; i = i + 1) fd[246 * i +: 246] <= {f_d[245 * i + 205 +: 40], 1'b0, f_d[245 * i +: 205]};
+`endif
+    end
     // records: front record {v, key[32], ~{b[3], k[4]}, ninf} -> {v, key, ~b, ~q, ~k, ninf}; slots 6, 7 empty
     reg [4*LW-1:0] L;
     always @(*) begin

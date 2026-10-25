@@ -1,0 +1,34 @@
+{
+  "schema": "opentallas.geom_review_request.v1",
+  "element": "qfd_dv_s8x_vmr (QC hard core, plan type slw_su_c), kit kq_qfd_dv_s8x_vmr_rw60",
+  "author": "QC-CQB (Claude lane), 2026-10-25",
+  "author_verdict": "FAIL (routed view) -> structural fix proposed; no re-run before GEOM PASS",
+  "inputs": {
+    "routed_db": "intel1:/srv/opentallas-scratch2/claude/codex-qc-cores/vmr_cqb/run/results/asap7/kq_qfd_dv_s8x_vmr_rw60/base/6_final.{odb,spef} (original, untouched)",
+    "successor_copy": "intel1:/srv/opentallas-scratch2/claude/qc-cqb/vmr_i360 (rebound SDC/sdc_lint/CORE_LATENCY; geom/ dumps)",
+    "render": "results/geom_review/qc_cqb_1025/vmr_cqb_routed_review.png",
+    "tools": "results/geom_review/qc_cqb_1025/tools/{geom_dump.tcl,ck_est.tcl,an.py,render.py}"
+  },
+  "geometry": {
+    "outline_um": [259.2, 276.48], "macros": "2 x ot_sram_1r1w_1024x256 (174.7x70.5) stacked at x43.2..217.9, y86.4..156.9 / 181.4..251.9",
+    "pins": "1507 data pins on S face (y=0, x50..210) and W face (x=0, y140..195); clk/rst_n W",
+    "pin_registers": "1509, all at their face (green); face_guard 1507/1507",
+    "sram_pin_split": "SRAM LEF: clk + rd_out + wd_in[0..~185] on the LEFT edge (clk at y+0.77), the remaining wd_in on the RIGHT edge (wd_in[255] at x+174.7): the right-edge write-data registers (g_mw[0].u_d, x200..218 y40..80) sit 175 um from the macro clk pin"
+  },
+  "findings": {
+    "I_gap": "SDC reference 411.8055 was measured by pin_i.tcl on a FRESH congestion GRT (adjust 0.3, macro extension 2) of 5_1_grt with estimate_parasitics -global_routing; the flow's own guide-based estimate gives TT pin-reg mean 383.40, routed RCX 359.64 (FF est 306.45 / RCX 287.20). Wrong basis: GRT-estimated RC, not the signed (routed RCX) view required by METHODOLOGY 9.7.",
+    "rc_non_uniform": "estimate minus RCX clock arrival per sink: TT +11.6..+45.2 ps (mean 25.3), FF +8.5..+37.3: smallest on the W-face column (~13), largest on the SE corner (35-45). Clock skew therefore moves after route.",
+    "ff_hold_107_after_rebind (162 before)": {
+      "macro_wd_in_63": "all g_bank[0].u_m/wd_in right-edge bits <- g_mw[0].u_d/q regs (SE cluster). Capture (macro clk, separate 7-delaybuf branch from the W trunk) 282.9 ps vs launch leaves 262-265 ps: +18-20 ps capture-late on a 58 ps clk->Q+INV path. Estimated skew on the same pairs 1.4 ps -> RCX 12.2 ps mean: the GRT-stage hold repair (+1.05 ps on GRT RC) was invalidated by the RC basis.",
+      "pinreg_to_stage2_44": "zero-logic shifts pw16_data->l_w16d (S face), pvm_wdata->l_sud, pa_addr->s1_off (W face), 3-26 um apart, launch/capture on different leaves (capture +2..+26 ps)."
+    },
+    "drv": "15 TT / 9 FF slew > 320 ps: place2005-2008/2036/2038/2050 long nets with weak drivers (structural: same RC basis + long SE<->W spans)"
+  },
+  "proposed_structural_fix": [
+    "F1 basis (9.7): vclk source latency, sdc_lint insertion_ps and CORE_LATENCY bound to the routed RCX TT pin-register mean 359.64 (FF 287.20, early tap 109.64); flow rule: route -> RCX -> measure I -> rebind -> signoff; I is never taken from a GRT estimate. Applied in the successor copy (STA-only check: clock contract PASS, FF -12.71/107, TT +169.72).",
+    "F2 RC correlation: fit set_wire_rc clock/signal scale (M2-M5) on this routed DB so per-sink estimate-RCX clock arrival error <= +-3 ps (now +11.6..+45.2); use the fitted RC for CTS, clock_leaf_balance and the GRT-stage hold/DRV repair.",
+    "F3 macro-interface clock structure: per SRAM one skew group = macro clk pin + its wd_in/w_mask/addr launch registers + rd_out capture registers, one sub-tree rooted at a buffer at the macro's left-bottom clk pin; the right-edge write-data register cluster is tapped from that sub-tree root (not from a separate SE leaf), balanced <= 10 ps to the macro clk pin.",
+    "F4 pin-register successor pairs: CTS sink clustering keeps each zero-logic pin-reg -> stage-2 pair on the same leaf (S-face w16/vm_wdata, W-face pa_addr); residual hold repaired at CTS/GRT stage on the correlated RC with margin 10.",
+    "Re-run: from 3_place.odb (placement/pins/RTL unchanged) re-CTS with F2-F4, GRT, route, RCX, F1 rebind, signoff. Not an ECO."
+  ]
+}

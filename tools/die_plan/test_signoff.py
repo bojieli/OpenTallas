@@ -333,3 +333,44 @@ def test_pair_skew_registers_without_clock_arrival_block():
     rec = signoff.evaluate(rec)
     assert rec["checks"]["clock"]["verdict"] == "FAIL"
     assert any("FF: 2 registers without a unique propagated clock arrival" in p for p in rec["checks"]["clock"]["problems"])
+
+
+def test_ff_vclk_optin_keeps_raw_and_shared_io_contract():
+    default = signoff.session_tcl('ff', [], True)
+    enabled = signoff.session_tcl('ff', [], True, ff_vclk='pin-flop-mean')
+    tt = signoff.session_tcl('tt', [], True, ff_vclk='pin-flop-mean')
+    assert 'so FF_VCLK applied' not in default
+    assert 'so FF_VCLK applied' not in tt
+    assert enabled.index('so_timing SDC') < enabled.index('so FF_VCLK applied') < enabled.index('so_timing STD')
+    assert 'set_clock_latency -source $so_ff_mean [lindex $so_vclk 0]' in enabled
+    assert 'set_input_delay -min [expr {-40}]' in enabled
+    assert 'set_output_delay -min 0' in enabled
+    assert 'set_clock_uncertainty' not in signoff.FF_VCLK_TCL
+    assert 'set_input_delay' not in signoff.FF_VCLK_TCL
+    assert 'set_output_delay' not in signoff.FF_VCLK_TCL
+    assert '$so_ff_bad == 0' in enabled
+    assert 'set so_reference_ok 0' in enabled
+
+
+def test_ff_vclk_missing_measurement_blocks_optimistic_mutant():
+    # A checker mutant could retain a positive STD slack after dropping the
+    # measurement.  It must remain NOT RUN even with every other gate clean.
+    for reference in (None, 'unavailable mode pin_flop_mean samples 0 missing 1'):
+        rec = record()
+        rec['policy'] = {'ff_vclk': 'pin-flop-mean'}
+        rec['corners']['ff']['ff_vclk_reference'] = reference
+        signoff.evaluate(rec)
+        assert rec['checks']['hold_ff']['verdict'] == 'NOT RUN'
+        assert rec['verdict'] == 'NOT SIGNED'
+    rec = record()
+    rec['policy'] = {'ff_vclk': 'pin-flop-mean'}
+    rec['corners']['ff']['ff_vclk_reference'] = 'applied mode pin_flop_mean clock vclk latency_ps 193.28 samples 457 missing 0'
+    signoff.evaluate(rec)
+    assert rec['checks']['hold_ff']['verdict'] == 'PASS'
+
+
+def test_ff_vclk_cli_requires_measured_contract():
+    import pytest
+    with pytest.raises(SystemExit) as e:
+        signoff.main(['run', '--base', '/unused', '--out', '/unused', '--ff-vclk', 'pin-flop-mean'])
+    assert e.value.code == 2
