@@ -11,7 +11,7 @@
 "stage_cycles": 0.5,
 "over_margin": "keep"
 },
-"bus_groups_digest": "840b8e7d9100bf98",
+"bus_groups_digest": "7744607ac5320dee",
 "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules",
 "summary": {
 "members": 5537,
@@ -93999,9 +93999,9 @@
 ],
 "source": "host.phy_tx_flit",
 "asbuilt": 4,
-"bound": 50,
+"bound": 56,
 "pad": 0,
-"landed": 50,
+"landed": 56,
 "lane": "L664"
 },
 {
@@ -94018,9 +94018,9 @@
 ],
 "source": "host.phy_tx_v",
 "asbuilt": 4,
-"bound": 50,
+"bound": 56,
 "pad": 0,
-"landed": 50,
+"landed": 56,
 "lane": "L664"
 },
 {

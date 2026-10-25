@@ -583,16 +583,16 @@
   "iface": "ucie",
   "part": "sys_c",
   "rect_um": [
-   4458.24,
-   26006.4,
-   6618.24,
-   27043.2
+   5149.44,
+   26023.68,
+   5927.04,
+   26801.28
   ],
-  "sites": 966,
+  "sites": 289,
   "pitch_um": 45.0,
   "signals": 144,
   "basis": "UCIe-A x64 module: 2 x (64 data + valid + track + 2 clk) + 2 x 4 redundant = 144, 45-um bumps (ASSUMED); shoreline 0 um",
-  "note": "die_io.py plan: ucie_rom; host link (BFS 10 port hop(s) from hub_Wi): CONFIRM",
+  "note": "die_io.py plan: ucie_rom; host link (BFS 10 port hop(s) from hub_Wi): CONFIRM | actual native macro abstract footprint; dedicatedVDDPHY domain",
   "host": true
  }
 ]

@@ -1,0 +1,25 @@
+{
+ "source": "0ed44e59d SYS_C detour; ea318a54bb model M6 PG profile",
+ "base": "3832299dfb v3.9r",
+ "changes": [
+  {
+   "lane": "L664",
+   "added_cycles": 6,
+   "reasons": {
+    "slot:ft1": 6
+   },
+   "old_fixed_cycles": 2,
+   "action": "Recompute latency via canonical emission; do not add blindly to fixed_cycles"
+  },
+  {
+   "lane": "L747",
+   "added_cycles": 3,
+   "reasons": {
+    "bus:o_host_link_rst_n": 3
+   },
+   "old_fixed_cycles": 5,
+   "action": "Recompute latency via canonical emission; do not add blindly to fixed_cycles"
+  }
+ ],
+ "unmodified": "ports/lanes/partitions unchanged; only SYS_C type and die.pg domain touched; latency/R8 native rebind mandatory"
+}
