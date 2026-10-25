@@ -928,6 +928,66 @@
           },
           "orient": {
            "type": "string"
+          },
+          "leg_repeaters": {
+           "type": "array",
+           "items": {
+            "type": "object",
+            "required": [
+             "name",
+             "tap",
+             "k",
+             "xy"
+            ],
+            "additionalProperties": false,
+            "properties": {
+             "name": {
+              "type": "string",
+              "minLength": 1
+             },
+             "tap": {
+              "type": "string",
+              "minLength": 1
+             },
+             "k": {
+              "type": "integer",
+              "minimum": 1
+             },
+             "xy": {
+              "type": "array",
+              "items": {
+               "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+             },
+             "cell": {
+              "type": "string"
+             },
+             "cell_ll_um": {
+              "type": "array",
+              "items": {
+               "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+             },
+             "cell_wh_um": {
+              "type": "array",
+              "items": {
+               "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+             },
+             "orient": {
+              "type": "string"
+             }
+            }
+           }
+          },
+          "leg_slew_probe": {
+           "type": "object"
           }
          }
         }

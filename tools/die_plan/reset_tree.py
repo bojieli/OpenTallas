@@ -920,7 +920,20 @@ def out_pins(P, tn):
     if not wavefront(P) or P.types[tn].get("hard"):
         return []
     sites = face_sites(P, tn)
-    return [(f"rst_o_{k}",) + tuple(sites[j]["xy"]) for k, j in enumerate(wf_solve(P)["outs"].get(tn, []))]
+    outs = [(f"rst_o_{k}",) + tuple(sites[j]["xy"]) for k, j in enumerate(wf_solve(P)["outs"].get(tn, []))]
+    # PATH-HBM 10-25 (root G2 probe GRT-0080 'at least 2 pins in position', arst_n == rst_o_2 in type root): an OUT
+    # site the solver shares with the IN pin (same face site, in from and out to the same side) moves to a snapped
+    # site beside it (START_DX_UM steps, like start_i/start_o), so every interior reset pin has its own position.
+    rin = tuple(in_pin(P, tn))
+    taken = [rin] + [(x, y) for _, x, y in outs] + [(x, y) for _, x, y in _taps(P, tn)]
+    fixed = []
+    for n, x, y in outs:
+        if abs(x - rin[0]) < 1.0 and abs(y - rin[1]) < 1.0:
+            q = _beside(P, tn, (x, y), taken)
+            taken.append(q)
+            x, y = q
+        fixed.append((n, x, y))
+    return fixed
 
 
 START_DX_UM = 2.16      # start_i / start_o_<k> sit this far (then snapped) beside arst_n / rst_o_<k>

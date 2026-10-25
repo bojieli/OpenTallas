@@ -754,6 +754,37 @@ def check_clock_branch_buffers(P, R):
                     R.err("clock", f"type {tn}: branch buffer {b['name']} leg to {d} {leg:.1f} um > reach {reach:g}",
                           type=tn)
                     bad = True
+            # GEOM-REVIEW 15:24 (2): leg repeaters (slew) are SYMMETRIC -- the same count on every leg of a buffer --
+            # std cells off every hard core and the station halo; every segment buffer -> rep -> ... -> tap <= reach
+            reps = b.get("leg_repeaters")
+            if reps is not None:
+                cnt = {d: [r for r in reps if r.get("tap") == d] for d in b["drives"]}
+                if len({len(v) for v in cnt.values()}) != 1 or any(r.get("tap") not in cnt for r in reps):
+                    R.err("clock", f"type {tn}: branch buffer {b['name']} leg repeaters not symmetric "
+                                   f"{ {d: len(v) for d, v in cnt.items()} }", type=tn)
+                    bad = True
+                for d, rl in cnt.items():
+                    tp = taps.get(d)
+                    pts = [q] + [r["xy"] for r in sorted(rl, key=lambda r: r["k"])] + ([tp["xy"]] if tp else [])
+                    for a_, b_ in zip(pts, pts[1:]):
+                        if abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]) > reach + EPS:
+                            R.err("clock", f"type {tn}: {b['name']} leg {d} segment {a_}->{b_} > reach {reach:g}",
+                                  type=tn)
+                            bad = True
+                    for r in rl:
+                        ll, (cw, ch_) = r["cell_ll_um"], r.get("cell_wh_um", (1.404, 0.27))
+                        hit = next((n for n, x0, y0, x1, y1 in boxes if ll[0] < x1 - EPS and ll[0] + cw > x0 + EPS
+                                    and ll[1] < y1 - EPS and ll[1] + ch_ > y0 + EPS), None)
+                        if hit:
+                            R.err("clock", f"type {tn}: leg repeater {r['name']} cell at {ll} overlaps hard core {hit}",
+                                  type=tn)
+                            bad = True
+                        near = _buf_near_station(t, r["xy"])
+                        if near:
+                            R.err("clock", f"type {tn}: leg repeater {r['name']} within {CLOCK_BUF_HALO_UM} um halo of "
+                                           f"{near}", type=tn)
+                            bad = True
+                        out["leg_repeaters"] = out.get("leg_repeaters", 0) + 1
         if bad:
             out["types"].append(tn)
     return out
