@@ -65,6 +65,8 @@ def main():
     ap.add_argument("--cycles", type=int, default=40000)
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--param", action="append", default=[])
+    ap.add_argument("--oldin", action="append", default=[],
+                    help="NAME=EXPR: a narrowed input; the old design's port gets EXPR of the new-width stimulus")
     ap.add_argument("--pack", action="append", default=[],
                     help="output bus packed in the fix (OWNER DECISION 8): new[16k+j] == old[32k+16+j], 8 lanes")
     a = ap.parse_args()
@@ -80,7 +82,9 @@ def main():
     Pn = ports(Path(a.new).read_text(), a.top)
     Po = ports(txt, a.top + "_old")
     assert [(d, n) for d, _, _, n in Pn] == [(d, n) for d, _, _, n in Po], ("port lists differ", Pn, Po)
-    assert [p for p in Pn if p[0] == "input"] == [p for p in Po if p[0] == "input"], "input ranges differ"
+    OI = dict(x.split("=", 1) for x in a.oldin)
+    assert [p for p in Pn if p[0] == "input" and p[3] not in OI] == [p for p in Po if p[0] == "input" and p[3] not in OI], \
+        "input ranges differ"
     O = {n: (m, l) for d, m, l, n in Po}
     # (dir, width, name) for the stimulus; outputs carry old / new ranges for the compare (narrowed / packed buses)
     P = [(d, m - l + 1, n) for d, m, l, n in Pn]
@@ -95,7 +99,7 @@ def main():
         om, ol = O[n]
         nm, nl = NR[n]
         if n in a.pack:
-            return "{" + ", ".join("%s_a[%d:%d]" % (n, 32 * k + 31, 32 * k + 16) for k in range(7, -1, -1)) + "}"
+            return "{" + ", ".join("%s_a[%d:%d]" % (n, 32 * k + 31, 32 * k + 16) for k in range((NR[n][0] - NR[n][1] + 1) // 16 - 1, -1, -1)) + "}"
         if (om, ol) == (nm, nl):
             return "%s_a" % n
         assert ol <= nl <= nm <= om, (n, O[n], NR[n])
@@ -106,7 +110,7 @@ def main():
         om, ol = O[n]
         nm, nl = NR[n]
         if n in a.pack:
-            return "(%s_a & {8{32'h0000ffff}})" % n
+            return "(%s_a & {%d{32'h0000ffff}})" % (n, (NR[n][0] - NR[n][1] + 1) // 16)
         if (om, ol) == (nm, nl):
             return None
         parts = (["%s_a[%d:%d]" % (n, om, nm + 1)] if om > nm else []) + (["%s_a[%d:%d]" % (n, nl - 1, ol)] if nl > ol else [])
@@ -121,7 +125,7 @@ def main():
         L.append("    wire [%d:%d] %s_a; wire [%d:%d] %s_b; integer act_%s = 0, chg_%s = 0;"
                  % (O[n][0], O[n][1], n, NR[n][0], NR[n][1], n, n, n))
     conn = lambda sfx: ", ".join([".%s(%s)" % (clk, clk)] + ([".rst_n(rst_n)"] if has_rst else []) +
-                                 [".%s(%s)" % (n, n) for d, w, n in ins] + [".%s(%s_%s)" % (n, n, sfx) for d, w, n in outs])
+                                 [".%s(%s)" % (n, OI[n] if sfx == "a" and n in OI else n) for d, w, n in ins] + [".%s(%s_%s)" % (n, n, sfx) for d, w, n in outs])
     L.append("    %s_old%s u_old (%s);" % (a.top, par, conn("a")))
     L.append("    %s%s u_new (%s);" % (a.top, par, conn("b")))
     L.append("    function [31:0] rnd32; input integer dummy; begin rnd32 = $random(s); end endfunction")

@@ -30,7 +30,7 @@ wire mv,mq,mb;wire[7:0]mi;
         .s_v(s_v), .s_d(s_d), .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
         .hw_v(), .hw_j(), .hw_hf(), .hw_d(), .hr_v(), .hr_j(), .hr_hf(), .hq_v(1'b0), .hq_d(256'd0),
         .n_go(), .n_pre(), .m_v(mv), .m_q(mq), .m_b(mb), .m_i(mi), .wl_v(), .wl_i(), .wl_d(), .fault(fp));
-    ot_s81sl_vs #(.MUT(0)) u_s (.clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
+    ot_s81sl_vs #(.MUT(0)) u_s (.clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d({s_d[159:64], s_d[62], s_d[60:0]}),
         .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
         .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .sw_v(swv_), .sw_d(swd_), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),

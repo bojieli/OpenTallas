@@ -73,8 +73,8 @@ module ot_s81sl_leaf #(
     input  wire [31:0]   g_d,
     output wire          fault
 );
-    wire vr_v, vp_v, va_v, vo_v, vef; wire [1:0] vr_c, vp_c, va_c, vo_c; wire [127:0] vr_h, vr_k, vr_w;
-    wire [31:0] vp_hh, vp_kk, vp_dd, va_g; wire [255:0] va_h, va_val; wire [127:0] vo_y;
+    wire vr_v, vp_v, va_v, vo_v, vef; wire [1:0] vr_c, vp_c, va_c, vo_c; wire [63:0] vr_h; wire [127:0] vr_k, vr_w;
+    wire [31:0] vp_hh, vp_kk, vp_dd, va_g; wire [127:0] va_h; wire [255:0] va_val; wire [127:0] vo_y;
     wire hw_v, hw_hf, hr_v, hr_hf, hq_v, n_go, m_v, m_q, m_b, wl_v, y_v;
     wire [2:0] hw_j, hr_j, wl_i, y_i; wire [255:0] hw_d, hq_d, wl_d; wire [127:0] y; wire [127:0] n_pre; wire [7:0] m_i;
     wire s_v; wire [159:0] s_d; wire x_rv, x_qv, x_wv; wire [9:0] x_ra, x_wa; wire [7:0] x_wm; wire [255:0] x_qd, x_wd;
@@ -117,7 +117,7 @@ module ot_s81sl_leaf #(
     // Frozen hard child: its Liberty/blackbox has no parameters.
     ot_s81sl_vs u_vs (
 `endif
-        .clk(clk), .rst_n(rst_n), .s_v(s_v && !kv_cmd), .s_d(s_d),
+        .clk(clk), .rst_n(rst_n), .s_v(s_v && !kv_cmd), .s_d({s_d[159:64], s_d[62], s_d[60:0]}).s_d({s_d[159:64], s_d[62], s_d[60:0]}),
         .x_rv(vs_xrv), .x_ra(vs_xra), .x_qv(x_qv && !kvbusy), .x_qd(x_qd), .x_wv(vs_xwv), .x_wa(vs_xwa), .x_wm(vs_xwm), .x_wd(vs_xwd),
         .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .sw_v(swv), .sw_d(swd), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
