@@ -468,3 +468,4 @@ CODEX: 2026-10-25 03:54 PDT immediate handback on user reset; read-only takeover
 2026-10-25 04:39 PDT TOK-DS: quant col4V calendar unblocked: adopt178 LUT 0 collisions, +118 cyc/attn16 norm, RTL proof QUALIFIED; READY claude/tok-ds-quant-1025@2ba8ecca5
 2026-10-25 04:41 PDT QC-S8BP: btab/prog structured regional-tap re-CTS pair <=72 ps (was 178-347), route+signoff live intel1/intel2 s8bp/{btab,prog}_t2; claude/qc-s8bp-1025@3097fbfc0
 2026-10-25 04:49 PDT AUTOPILOT: hub autopilot LIVE on epyc1 (systemd --user autopilot.timer, 10 min): lanes enqueue kits (tools/autopilot/enqueue.py -> autopilot/queue.tsv) instead of hand-launching; outputs ~/coord/autopilot/{signed,review,structural}.tsv + LOOP-GAPS.txt; READY claude/autopilot-1025@af3f62215
+2026-10-25 04:50 PDT CLOCK-RESET/relay2: S81 rstg + payload536 SIGNED on 2-flop RTL (main RTLC), canonical face_guard PASS; READY claude/s81-relay2-1025@9ab1a3ac9d
