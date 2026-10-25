@@ -345,3 +345,14 @@ NEW hcpost SIGNED epyc2:codex-s81-core-eco/hcpost_route_h5/signoff_codex/signoff
 | bksel_q, capc5r, cfifo_crs4 | recipe exists, no current kit | S81-CORES2/NC (unless LEGACY claims) | legacy generator stage-1 + GEOM REQ |
 | vs | old views; raw boundary FAIL 738 bits | S81-CORES2/NC | face-clean RTL/kit |
 | bf_front_roots, bf_col, elem_q, idx_tx_n32 | ref_tile views exist, no current signoff | S81-CORES2/NC | current signoff.py on views, or re-kit |
+
+## PARKED 2026-10-25 05:24 PDT (S81-CORES/SPLIT)
+- Branch claude/s81-cores-split-1025@58011cfe4c (pushed; not READY yet): recipe physical/die_plan/s81/cores/split_clock/ (regional_taps.tcl PRE_CTS, regional_taps_balance.tcl POST_CTS, setup_variant.sh, cts_only.sh, route_from_cts.sh, probes ckprobe.tcl/render.py/ana.py); record + renders results/geom_review/s81_cores_split_1025/.
+- Scope per COORD 04:37: vn_a, vn_b, vsw (ve_m/ve_s dropped; no jobs were run for them, only read-only probes on their routed odbs).
+- Findings: single 25-30k-sink tree from the W clk pin (85 ps root run + 9 stages), W-half leaves over the SRAM (W 400-480 vs E 350-370 RCX), SRAM clk on a 1-sink tree (derate 0.5) = 141 ps macro pair; W-face hold chains = vclk 250 vs real I 426; GRT-est - RCX clock +12..+57 ps non-uniform (owner item c present on all 4 split cores).
+- Post-CTS (CTS-only from copied 3_place, flow placement RC TT): vn_a_t42 taps 354-367, all regs 336-376 (was 344-452), u_h0 vs IF regs +12 (was -136), hold bufs 6606 (was 12677); vn_b_t42 353-369/336-375/+14, 7393; vsw_t22 365-385/349-399/+9,-4, 7185 (was 5891). I stays ~360 (vs 250+-40).
+- GEOM REQ [S81-CORES/SPLIT] posted 2026-10-25 05:24 PDT. Author: vn_a_t42 PASS-COND (route after per-corner I bind 9.7/5e); vn_b_t42 + vsw_t22 FAIL pending F6 re-place (IF regs within 20 um) / vsw v_q re-register (RTL).
+- AUTOPILOT id 38286eb7249e: vn_a_t42 (epyc2:/srv/opentallas-scratch2/claude/s81-cores-split/vn_a_t42, runner route_from_cts.sh) waits for the GEOM verdict. No live jobs. Post-CTS dirs epyc2:/srv/opentallas-scratch2/claude/s81-cores-split/{vn_a_t42,vn_b_t42,vsw_t22}; t82/t44 variants deleted (superseded).
+- Rule slip: 4 vn CTS launches used ot-run --hosts epyc2 once (epyc1 full); the copies on epyc1 were then removed and later launches used --dir only.
+- Next: (1) FLOW's per-corner I bind + F2 into the kit SDC/flow, then route vn_a_t42; (2) vn_b/vsw: re-place with SRAM interface-register regions (F6, rotate/mirror SRAM toward its logic) + this clock recipe; vsw v_q re-register (RTL owner); (3) insertion toward 250: fewer stages (bigger leaf clusters / stronger taps) or the parent early tap (decision 5e).
+- OWNER?: S81 split-core insertion: accept I ~360 TT bound per corner with a parent early tap (5e), or require 250+-40 inside the core?
