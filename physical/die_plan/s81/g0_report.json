@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/srv/opentallas-scratch2/claude/s81-ports-regen/out_ff/gen/die_plan.json",
+ "plan": "/srv/opentallas-scratch2/claude/s81-plan3/svc2/g0c_o/die_plan.json",
  "verdict": "PASS",
  "mode": "G0C",
  "errors": 0,
- "warnings": 1280,
+ "warnings": 1287,
  "summary": {
   "die": "s81",
   "partitions": 398,
@@ -19,7 +19,7 @@
   },
   "ports": 2302,
   "lanes": 869,
-  "bits": 1093678,
+  "bits": 1105393,
   "taps_cores": {
    "taps": 74,
    "hard_cores": 4094,
@@ -28,7 +28,7 @@
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/srv/opentallas-scratch2/claude/s81-ports-regen/out_ff/gen/cells_est.json"
+    "/srv/opentallas-scratch2/claude/s81-plan3/svc2/g0c_o/cells_est.json"
    ],
    "no_cells": []
   },
@@ -248,12 +248,42 @@
    {
     "part": "svc_15",
     "face": "S",
-    "pins_per_um": 5.6
+    "pins_per_um": 8.9
    },
    {
     "part": "svc_14",
     "face": "N",
-    "pins_per_um": 5.6
+    "pins_per_um": 8.9
+   },
+   {
+    "part": "svc_7",
+    "face": "S",
+    "pins_per_um": 8.3
+   },
+   {
+    "part": "svc_6",
+    "face": "N",
+    "pins_per_um": 8.3
+   },
+   {
+    "part": "svc_5",
+    "face": "S",
+    "pins_per_um": 8.3
+   },
+   {
+    "part": "svc_4",
+    "face": "N",
+    "pins_per_um": 8.3
+   },
+   {
+    "part": "svc_3",
+    "face": "S",
+    "pins_per_um": 8.3
+   },
+   {
+    "part": "svc_2",
+    "face": "N",
+    "pins_per_um": 8.3
    },
    {
     "part": "svc_15",
@@ -262,36 +292,6 @@
    },
    {
     "part": "s_7S_x05",
-    "face": "S",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_x05",
-    "face": "N",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_L2",
-    "face": "S",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_L2",
-    "face": "N",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_L0",
-    "face": "S",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_L0",
-    "face": "N",
-    "pins_per_um": 5.5
-   },
-   {
-    "part": "s_7S_C",
     "face": "S",
     "pins_per_um": 5.5
    }
@@ -3482,7 +3482,7 @@
   },
   "seams": {
    "nets": {
-    "abutted": 1095980,
+    "abutted": 1107695,
     "channel": 0
    },
    "pairs": {
@@ -4855,7 +4855,7 @@
      "channel": 0
     },
     "svc_0|svc_1": {
-     "abutted": 5246,
+     "abutted": 6311,
      "channel": 0
     },
     "iqf|svc_0": {
@@ -5103,23 +5103,23 @@
      "channel": 0
     },
     "svc_2|svc_3": {
-     "abutted": 6876,
+     "abutted": 9006,
      "channel": 0
     },
     "svc_6|svc_7": {
-     "abutted": 6876,
+     "abutted": 9006,
      "channel": 0
     },
     "svc_8|svc_9": {
-     "abutted": 4730,
+     "abutted": 5795,
      "channel": 0
     },
     "svc_14|svc_15": {
-     "abutted": 7209,
+     "abutted": 9339,
      "channel": 0
     },
     "svc_4|svc_5": {
-     "abutted": 6876,
+     "abutted": 9006,
      "channel": 0
     },
     "svc_10|svc_8": {
@@ -5143,7 +5143,7 @@
      "channel": 0
     },
     "svc_10|svc_11": {
-     "abutted": 4730,
+     "abutted": 5795,
      "channel": 0
     },
     "svc_5|svc_7": {
@@ -5624,11 +5624,11 @@
     },
     {
      "at_um": 3784.32,
-     "bits": 70748,
-     "abutted_bits": 70748,
+     "bits": 82463,
+     "abutted_bits": 82463,
      "route_bits": 0,
      "tracks": 698922,
-     "ratio": 0.1012
+     "ratio": 0.118
     },
     {
      "at_um": 5011.2,
@@ -5811,17 +5811,17 @@
    ],
    "top_horizontal": [
     {
+     "at_um": 3784.32,
+     "bits": 82463,
+     "abutted_bits": 82463,
+     "route_bits": 0,
+     "tracks": 698922,
+     "ratio": 0.118
+    },
+    {
      "at_um": 18506.88,
      "bits": 70761,
      "abutted_bits": 70761,
-     "route_bits": 0,
-     "tracks": 698922,
-     "ratio": 0.1012
-    },
-    {
-     "at_um": 3784.32,
-     "bits": 70748,
-     "abutted_bits": 70748,
      "route_bits": 0,
      "tracks": 698922,
      "ratio": 0.1012
@@ -5852,8 +5852,8 @@
     }
    ],
    "worst": {
-    "ratio": 0.1012,
-    "at": "horizontal@18506.9"
+    "ratio": 0.118,
+    "at": "horizontal@3784.32"
    },
    "lines": 44,
    "model": "face line: abutted port bits + ft/die routes strictly crossing; tracks = partition pin layers x pin_track_max (M4-M7; M8/M9 carry no signals, ruling 9.3)"
@@ -6009,6 +6009,28 @@
      ]
     },
     {
+     "part": "svc_15",
+     "face": "S",
+     "ratio": 0.22,
+     "on": "M7",
+     "allowed": [
+      "M3",
+      "M5",
+      "M7"
+     ]
+    },
+    {
+     "part": "svc_14",
+     "face": "N",
+     "ratio": 0.22,
+     "on": "M7",
+     "allowed": [
+      "M3",
+      "M5",
+      "M7"
+     ]
+    },
+    {
      "part": "s_0N_C",
      "face": "E",
      "ratio": 0.214,
@@ -6021,26 +6043,6 @@
     {
      "part": "s_1N_C",
      "face": "W",
-     "ratio": 0.214,
-     "on": "M6",
-     "allowed": [
-      "M4",
-      "M6"
-     ]
-    },
-    {
-     "part": "svc_14",
-     "face": "W",
-     "ratio": 0.214,
-     "on": "M6",
-     "allowed": [
-      "M4",
-      "M6"
-     ]
-    },
-    {
-     "part": "svc_12",
-     "face": "E",
      "ratio": 0.214,
      "on": "M6",
      "allowed": [
@@ -13781,6 +13783,41 @@
    "check": "schema",
    "msg": "type eng__t1: bus unit_o0 has no leaf binding",
    "type": "eng__t1"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_WS0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_WS1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_WN0: PHY macro 1.85 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_WN3: PHY macro 2.16 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_EN0: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_EN1: PHY macro 1.33 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
+  },
+  {
+   "level": "WARN",
+   "check": "pg_domain",
+   "msg": "pg domain phy_lk_EN2: PHY macro 1.94 mm2 < target 2.4 mm2 (PHY_SHORT: the partition's ft / bus strips leave too little shoreline area; re-lay the type's windows)"
   },
   {
    "level": "WARN",
