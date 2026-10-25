@@ -621,6 +621,8 @@ endmodule
 //   rco / pci the chain ends at the EAST tap (ctrl_15): request chain out, response chain in
 //   vi_s / vo_s, vi_n / vo_n   the column's V rung: S-tier slice side / N-tier slice side (pass-through + XQ trains)
 //   st        {xq, head, lookup (fault | st_bad), window} sticky -> die status fold
+// (dsdv_eng_rr_c keeps the cfg_* / st ports; the die master dsdv_eng_rr below drives cfg_* from dsdv_eng_cfg and folds
+// st into its 1-bit fault, S81/PORTFIX-CFG 10-25.)
 // The closed element keeps its 17 clock pins; in the cluster they are branches of ck (its CTS roots, 0 cycles).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_eng_rr_c #(
@@ -719,12 +721,97 @@ module dsdv_eng_rr_c #(
         else st <= st | {xf, hf | (o_v && o_slot != hr_slot) | (st_v && st_slot != hr_slot), lf | (st_v & st_bad), wf};
 endmodule
 
-module dsdv_eng_rr (
-    input wire ck, input wire rst_n, input wire cfg_en, input wire cfg_layer, input wire [1:0] cfg_rank,
+// ---------------------------------------------------------------------------------------------------------------------
+// dsdv_eng_cfg (S81/PORTFIX-CFG 10-25, S81 DECISION 3 + 4): the die-position configuration register of the Engram unit
+// and its 1-bit sticky fault.  Soft logic of the die-level eng partition (NOT inside the hard core dsdv_eng_rr_e, whose
+// cfg_en / cfg_layer / cfg_rank / st pins stay: the core's cfg pins are driven by this register, its st by this fold).
+//   config   {en, layer, rank} differs per die in the array (one mask), so it is neither a parameter nor a die input:
+//            the host writes it at boot with a CTL "cfg" op on the column-6 V rung (results/s81_portfix_1024/
+//            cfg_formats.md).  The op is a single V beat, kind 0 (CTL), TAPPED NOT SUNK: the rung pass-through lives in
+//            the hard core (2 edges, unchanged), the decoder only snoops the two rung inputs (its own pin-side capture
+//            flops, a branch of each vi pin), so the beat also travels on to the far slice (slice mask 0: no slice acts).
+//            CFG beat (p = beat[21 +: 186], the CTL payload of ot_s81sl_xr / dsdv_seq_host):
+//              beat[0] 1, [3:1] kind 0, [8:4] hops x, [12:9] src x, [20:13] x
+//              p[15:0] slice mask = 0 (REQUIRED)   p[16] en   p[17] layer   p[19:18] rank   p[20] op CFG = 1
+//              p[28:21] dst unit uid = UID (8'hE6, the die's one Engram unit)   p[185:29] don't care
+//            Continuation fragments of XQ / XB trains (kinds 1 / 2: header + 3 raw fragments) are skipped (vstop rule).
+//   reset    control state: en / layer / rank / configured = 0 (en = 0: the unit issues no window, as a non-home die).
+//   fault    sticky, = OR of the core's four sticky st conditions {xq, head, lookup, window} (the detailed codes are
+//            dropped), plus two configuration checks: an f_ks start before any cfg write (an unconfigured die would
+//            silently skip Engram), and cfg beats on both rung inputs in one cycle (compiler error; vi_s wins).
+// Edges: vi pin -> capture 1 -> decode/register 2 -> core cfg pin (the core captures it once more): cfg reaches the
+// window former 3 edges after its vi pin edge.  The token path (rung pass-through, f_ks -> windows -> XQ trains) is
+// unchanged: 0 added cycles.  fault = st one edge later (status only).
+// MUT (bench negative controls): 1 rank bits swapped, 2 decode on kind only (mask / op / uid ignored), 3 no continuation
+// tracking, 4 st[2] (lookup) dropped from the fault fold, 5 en reset to 1.
+// ---------------------------------------------------------------------------------------------------------------------
+module dsdv_eng_cfg #(
+    parameter [7:0]  UID = 8'hE6,
+    parameter integer MUT = 0
+) (
+    input  wire          ck,
+    input  wire          rst_n,
+    input  wire [275:0]  vi_s,          // rung inputs (branches of the unit's vi pins; bits [49:0] are read)
+    input  wire [275:0]  vi_n,
+    input  wire          ks_v,          // f_ks[52] (branch of the f_ks pin)
+    input  wire [3:0]    st,            // the core's sticky status
+    output reg           cfg_en,
+    output reg           cfg_layer,
+    output reg  [1:0]    cfg_rank,
+    output reg           fault
+);
+    localparam [2:0] K_CTL = 3'd0, K_XQ = 3'd1, K_XB = 3'd2;
+    wire [0:0] rl;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl));
+    // pin-side capture (valid / ks reset-gated; the decoded fields are plain flops)
+    reg        sv, nv, kv;
+    reg [49:1] sd, nd;
+    always @(posedge ck or negedge rl[0])
+        if (!rl[0]) begin sv <= 1'b0; nv <= 1'b0; kv <= 1'b0; end
+        else begin sv <= vi_s[0]; nv <= vi_n[0]; kv <= ks_v; end
+    always @(posedge ck) begin sd <= vi_s[49:1]; nd <= vi_n[49:1]; end
+    // header / continuation tracking per direction (XQ / XB = header + 3 raw fragments)
+    reg  [1:0] fs, fn;
+    wire       hs = sv && (fs == 2'd0 || MUT == 3), hn = nv && (fn == 2'd0 || MUT == 3);
+    wire       xs = sd[3:1] == K_XQ || sd[3:1] == K_XB, xn = nd[3:1] == K_XQ || nd[3:1] == K_XB;
+    wire       ms = hs && sd[3:1] == K_CTL && (MUT == 2 || (sd[36:21] == 16'd0 && sd[41] && sd[49:42] == UID));
+    wire       mn = hn && nd[3:1] == K_CTL && (MUT == 2 || (nd[36:21] == 16'd0 && nd[41] && nd[49:42] == UID));
+    wire [3:0] f  = ms ? sd[40:37] : nd[40:37];                  // {rank 2, layer, en}
+    reg        done;                                             // configured since reset
+    always @(posedge ck or negedge rl[0])
+        if (!rl[0]) begin
+            fs <= 2'd0; fn <= 2'd0; done <= 1'b0; fault <= 1'b0;
+            cfg_en <= (MUT == 5); cfg_layer <= 1'b0; cfg_rank <= 2'd0;
+        end else begin
+            fs <= (fs != 2'd0) ? fs - 2'd1 : (hs && xs) ? 2'd3 : 2'd0;
+            fn <= (fn != 2'd0) ? fn - 2'd1 : (hn && xn) ? 2'd3 : 2'd0;
+            if (ms || mn) begin
+                cfg_en <= f[0]; cfg_layer <= f[1];
+                cfg_rank <= (MUT == 1) ? {f[2], f[3]} : f[3:2];
+                done <= 1'b1;
+            end
+            fault <= fault | st[3] | st[1] | st[0] | (st[2] && MUT != 4) | (ms && mn) | (kv && !done);
+        end
+endmodule
+
+// dsdv_eng_rr: the die master.  Ports (S81/PORTFIX-CFG 10-25): cfg_en / cfg_layer / cfg_rank inputs removed (boot-time
+// CTL cfg op on the rung, dsdv_eng_cfg), st[3:0] replaced by the 1-bit sticky fault.  Parameters keep their defaults in
+// the die (die.v passes none); they exist for the benches.
+module dsdv_eng_rr #(
+    parameter integer RETURN_AGE = 640,
+    parameter [29:0] PCBASE = 30'd0,
+    parameter integer XQ_MUT = 0,
+    parameter integer CFG_MUT = 0
+) (
+    input wire ck, input wire rst_n,
     input wire [52:0] f_ks, output wire [42:0] rco, input wire [267:0] pci,
     input wire [275:0] vi_s, output wire [275:0] vo_s, input wire [275:0] vi_n, output wire [275:0] vo_n,
-    output wire [3:0] st
+    output wire fault
 );
-    dsdv_eng_rr_c u_c (.ck(ck), .rst_n(rst_n), .cfg_en(cfg_en), .cfg_layer(cfg_layer), .cfg_rank(cfg_rank), .f_ks(f_ks),
-        .rco(rco), .pci(pci), .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .st(st));
+    wire en, ly; wire [1:0] rk; wire [3:0] st;
+    dsdv_eng_cfg #(.MUT(CFG_MUT)) u_cfg (.ck(ck), .rst_n(rst_n), .vi_s(vi_s), .vi_n(vi_n), .ks_v(f_ks[52]), .st(st),
+        .cfg_en(en), .cfg_layer(ly), .cfg_rank(rk), .fault(fault));
+    dsdv_eng_rr_c #(.RETURN_AGE(RETURN_AGE), .PCBASE(PCBASE), .XQ_MUT(XQ_MUT)) u_c (.ck(ck), .rst_n(rst_n), .cfg_en(en),
+        .cfg_layer(ly), .cfg_rank(rk), .f_ks(f_ks), .rco(rco), .pci(pci), .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n),
+        .st(st));
 endmodule

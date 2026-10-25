@@ -111,7 +111,9 @@ module dsdv_eng_rr_h1 (input wire ck, input wire [67:0] in_w, output wire [575:0
     ot_s81_engram_hash_n32_l1 u_hash (.clk(ck), .clk_columns({3{ck}}), .in_w(w_q), .out_res(out_res));
 endmodule
 
-// Thin wrapper: the dsdv_eng_rr ports, the three cores abutted.  SPLIT_MUT (bench negative controls only):
+// Thin wrapper: the dsdv_eng_rr ports, the three cores abutted.  S81/PORTFIX-CFG 10-25: same die ports as the new
+// dsdv_eng_rr (cfg_* inputs removed, st -> 1-bit fault): the soft dsdv_eng_cfg (dsdv_eng_rr.sv) drives core E's
+// unchanged cfg_en / cfg_layer / cfg_rank pins and folds its unchanged st pins into fault.  SPLIT_MUT (bench negative controls only):
 //   1 = crossing bit hx_res[864] inverted (residue of column 36 = the (layer 1, rank 2) candidate the bench selects);
 //   2 = the two layer halves swapped at E (H0 <-> H1 wiring error).
 // Note (bench 10-23): ONE extra register stage on the H -> E hop is NOT observable -- the hash result of a window is
@@ -120,14 +122,18 @@ module dsdv_eng_rr_split #(
     parameter integer RETURN_AGE = 640,
     parameter [29:0] PCBASE = 30'd0,
     parameter integer XQ_MUT = 0,
-    parameter integer SPLIT_MUT = 0
+    parameter integer SPLIT_MUT = 0,
+    parameter integer CFG_MUT = 0
 ) (
-    input wire ck, input wire rst_n, input wire cfg_en, input wire cfg_layer, input wire [1:0] cfg_rank,
+    input wire ck, input wire rst_n,
     input wire [52:0] f_ks, output wire [42:0] rco, input wire [267:0] pci,
     input wire [275:0] vi_s, output wire [275:0] vo_s, input wire [275:0] vi_n, output wire [275:0] vo_n,
-    output wire [3:0] st
+    output wire fault
 );
     wire [67:0] hx_w; wire [1151:0] res, res_m; wire [38:0] rco_e;
+    wire cfg_en, cfg_layer; wire [1:0] cfg_rank; wire [3:0] st;
+    dsdv_eng_cfg #(.MUT(CFG_MUT)) u_cfg (.ck(ck), .rst_n(rst_n), .vi_s(vi_s), .vi_n(vi_n), .ks_v(f_ks[52]), .st(st),
+        .cfg_en(cfg_en), .cfg_layer(cfg_layer), .cfg_rank(cfg_rank), .fault(fault));
     // the dropped core pins (OWNER DECISION 8): rco sector bits [29:26] (old rco[35:32]) are PCBASE[29:26] (the atom
     // sector offset is 26 b, so with PCBASE[25:0] == 0 nothing carries into them); pci own [4:1] is not read by the core
     assign rco = {rco_e[38:32], PCBASE[29:26], rco_e[31:0]};
