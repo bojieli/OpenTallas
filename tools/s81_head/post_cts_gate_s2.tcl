@@ -1,6 +1,6 @@
 # post_cts_gate_s2.tcl -- S81-HEAD head element rebuild s2 (HEAD-ELEM2 2026-10-25), POST_CTS_TCL with
 # SKIP_CTS_REPAIR_TIMING=1.  GEOM-REVIEW 04:49/04:50 PASS-COND [S81-HEAD/HEAD-ELEM 04:48] condition (4): route only if
-# the RCX-calibrated FF hold estimate is >= 0 and related-pair skew <= 80 ps at TT and FF; (1) elemB: t_r -> w_r
+# the RCX-calibrated FF hold estimate is >= 0 (pair skew <= 80: recorded here, gated at sign-off); (1) elemB: t_r -> w_r
 # Manhattan median <= 20 um and none > 100 um.  The parasitic basis is the kit's LAYER_PARASITICS_FILE (rc_fit.tcl fitted setRC).
 #  step 1 (S81/HEAD3 COORD 00:46 structural stop, unchanged): FF hold WNS < -100 or > 2000 endpoints before repair.
 #  step 2: unchanged ORFS CTS repair (repair_timing_helper at HOLD_SLACK_MARGIN) + legalise.
@@ -88,7 +88,7 @@ set blk [ord::get_db_block]; set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 array set ot_t {}; array set ot_w {}
 foreach i [$blk getInsts] {
   set nm [$i getName]
-  if {[regexp {^u_m\.([tw])_r\[(\d+)\]} $nm -> k b]} { lassign [$i getLocation] x y; set ot_${k}($b) [list [expr {double($x)/$dbu}] [expr {double($y)/$dbu}]] }
+  if {[regexp {^u_m\.([tw])_r\\?\[(\d+)\\?\]} $nm -> k b]} { lassign [$i getLocation] x y; set ot_${k}($b) [list [expr {double($x)/$dbu}] [expr {double($y)/$dbu}]] }
 }
 foreach b [array names ot_w] { if {[info exists ot_t($b)]} { lassign $ot_t($b) x1 y1; lassign $ot_w($b) x2 y2; lappend ot_trw [expr {abs($x1-$x2)+abs($y1-$y2)}] } }
 set ot_trw [lsort -real $ot_trw]; set ot_tn [llength $ot_trw]
@@ -98,7 +98,11 @@ set ot_t100 0; foreach v $ot_trw { if {$v > 100.0} { incr ot_t100 } }
 set ot_trw_gate [expr {[info exists ::env(OT_GATE_TRW)] && $::env(OT_GATE_TRW)}]
 set why {}
 if {$ot_hw2 < 0.0} { lappend why "FF hold estimate after CTS repair [format %.2f $ot_hw2] ps < 0 ($ot_hn2 endpoints)" }
-if {$ot_pw > 80.0} { lappend why "related-pair skew [format %.2f $ot_pw] ps > 80" }
+# pair skew is INFORMATION here: the worst-path-per-endpoint clk_skew on the CTS-stage placement estimate read 177 ps
+# on the c8 4_cts.odb for a pair whose routed RCX CK arrivals differ by 34 ps (gate test 10-25), so it cannot stop a
+# run; the decision-5 gate (exhaustive pairs, CPPR, routed RCX, TT+FF <= 80) is main signoff.py + pair_skew.tcl.
+if {[info exists ::env(OT_GATE_PAIR)] && $::env(OT_GATE_PAIR) && $ot_pw > 80.0} { lappend why "related-pair skew [format %.2f $ot_pw] ps > 80" }
+if {$ot_trw_gate && $ot_tn == 0} { lappend why "t_r->w_r gate: no u_m.t_r/w_r register pairs found" }
 if {$ot_trw_gate && ($ot_tmed > 20.0 || $ot_t100 > 0)} { lappend why "t_r->w_r median [format %.1f $ot_tmed] um / $ot_t100 > 100 um" }
 set fh [open /work/route_gate.json w]
 puts $fh [format "{\"basis\": \"LAYER_PARASITICS_FILE %s, placement parasitics after CTS repair\", \"ff_hold_wns_ps\": %.2f, \"ff_hold_viol\": %d, \"pair_skew_worst_ps\": %.2f, \"pair\": {%s}, \"t_r_w_r_um\": {\"n\": %d, \"median\": %.2f, \"max\": %.2f, \"over_100\": %d, \"gated\": %d}, \"verdict\": \"%s\", \"why\": \"%s\"}" \
