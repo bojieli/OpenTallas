@@ -1,0 +1,2150 @@
+{
+ "kv3_hgi_v3": {
+  "type": "kv3_hgi_v3",
+  "channels": {
+   "x": [
+    [
+     239.28,
+     330.96
+    ],
+    [
+     558.96,
+     650.64
+    ],
+    [
+     878.64,
+     970.32
+    ],
+    [
+     1198.3200000000002,
+     1258.72
+    ]
+   ],
+   "y": [
+    [
+     239.28,
+     330.96
+    ],
+    [
+     558.96,
+     650.64
+    ],
+    [
+     878.64,
+     970.32
+    ],
+    [
+     1198.3200000000002,
+     1500.64
+    ]
+   ]
+  },
+  "slots": {
+   "ft27": {
+    "width": 1056,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 603.8,
+    "channel": 1,
+    "stagger_um": 0.08484389782403022,
+    "max_disp_um": 28.22,
+    "max_bit_hop_um": 380.7
+   },
+   "ft4": {
+    "width": 908,
+    "faces": "EW",
+    "stations": 6,
+    "jog_um": 922.2719999999999,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 10.09,
+    "max_bit_hop_um": 353.9
+   },
+   "ft3": {
+    "width": 652,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 290.624,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 9.56,
+    "max_bit_hop_um": 326.1
+   },
+   "ft6": {
+    "width": 548,
+    "faces": "NS",
+    "stations": 4,
+    "jog_um": 904.992,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 7.18,
+    "max_bit_hop_um": 389.4
+   },
+   "ft21": {
+    "width": 548,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 615.312,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 7.24,
+    "max_bit_hop_um": 315.9
+   },
+   "ft23": {
+    "width": 522,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 304.384,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 7.16,
+    "max_bit_hop_um": 312.2
+   },
+   "ft28": {
+    "width": 522,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 1223.4240000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 31.59,
+    "max_bit_hop_um": 336.7
+   },
+   "ft2": {
+    "width": 396,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 1217.3760000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 9.75,
+    "max_bit_hop_um": 393.9
+   },
+   "ft24": {
+    "width": 174,
+    "faces": "SN",
+    "stations": 4,
+    "jog_um": 567.36,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 6.9,
+    "max_bit_hop_um": 387.1
+   },
+   "ft1": {
+    "width": 140,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 316.048,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.54,
+    "max_bit_hop_um": 273.9
+   },
+   "ft12": {
+    "width": 61,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 953.64,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 6.1,
+    "max_bit_hop_um": 314.0
+   },
+   "ft20": {
+    "width": 59,
+    "faces": "SN",
+    "stations": 4,
+    "jog_um": 264.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.83,
+    "max_bit_hop_um": 389.3
+   },
+   "ft9": {
+    "width": 32,
+    "faces": "NS",
+    "stations": 6,
+    "jog_um": 1263.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 4.0,
+    "max_bit_hop_um": 364.2
+   },
+   "ft5": {
+    "width": 15,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 244.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.33,
+    "max_bit_hop_um": 381.2
+   },
+   "ft22": {
+    "width": 12,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 244.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.49,
+    "max_bit_hop_um": 349.5
+   },
+   "ft8": {
+    "width": 6,
+    "faces": "NS",
+    "stations": 6,
+    "jog_um": 1283.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.09,
+    "max_bit_hop_um": 402.1
+   },
+   "ft16": {
+    "width": 5,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 1303.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.0,
+    "max_bit_hop_um": 401.3
+   },
+   "ft17": {
+    "width": 4,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 1323.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.4,
+    "max_bit_hop_um": 401.1
+   },
+   "ft19": {
+    "width": 2,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 1343.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.22,
+    "max_bit_hop_um": 400.5
+   },
+   "ft0": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 1253.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.85,
+    "max_bit_hop_um": 273.7
+   },
+   "ft7": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 6,
+    "jog_um": 1363.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.55,
+    "max_bit_hop_um": 402.6
+   },
+   "ft10": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1383.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.3,
+    "max_bit_hop_um": 353.9
+   },
+   "ft11": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1403.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.22,
+    "max_bit_hop_um": 355.7
+   },
+   "ft13": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1423.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.67,
+    "max_bit_hop_um": 352.4
+   },
+   "ft14": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1443.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.04,
+    "max_bit_hop_um": 353.6
+   },
+   "ft15": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1463.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.73,
+    "max_bit_hop_um": 352.3
+   },
+   "ft18": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 1483.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.03,
+    "max_bit_hop_um": 401.6
+   },
+   "ft25": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 573.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.14,
+    "max_bit_hop_um": 400.3
+   },
+   "ft26": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 324.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.26,
+    "max_bit_hop_um": 348.3
+   }
+  },
+  "max_bit_hop_um": 402.6,
+  "sites": 25102
+ },
+ "kv3_hgi": {
+  "type": "kv3_hgi",
+  "channels": {
+   "x": [
+    [
+     239.28,
+     330.96
+    ],
+    [
+     558.96,
+     650.64
+    ],
+    [
+     878.64,
+     970.32
+    ],
+    [
+     1198.3200000000002,
+     1258.72
+    ]
+   ],
+   "y": [
+    [
+     239.28,
+     330.96
+    ],
+    [
+     558.96,
+     650.64
+    ],
+    [
+     878.64,
+     970.32
+    ],
+    [
+     1198.3200000000002,
+     1500.64
+    ]
+   ]
+  },
+  "slots": {
+   "ft6": {
+    "width": 1056,
+    "faces": "WE",
+    "stations": 6,
+    "jog_um": 603.8,
+    "channel": 1,
+    "stagger_um": 0.08484389782403022,
+    "max_disp_um": 3.86,
+    "max_bit_hop_um": 399.5
+   },
+   "ft4": {
+    "width": 908,
+    "faces": "EW",
+    "stations": 6,
+    "jog_um": 922.2719999999999,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 10.03,
+    "max_bit_hop_um": 371.8
+   },
+   "ft3": {
+    "width": 652,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 290.624,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 9.48,
+    "max_bit_hop_um": 328.9
+   },
+   "ft2": {
+    "width": 396,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 1217.3760000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 9.63,
+    "max_bit_hop_um": 398.9
+   },
+   "ft1": {
+    "width": 140,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 316.048,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 8.44,
+    "max_bit_hop_um": 343.7
+   },
+   "ft5": {
+    "width": 15,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 244.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.32,
+    "max_bit_hop_um": 329.9
+   },
+   "ft0": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 1253.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.85,
+    "max_bit_hop_um": 385.2
+   }
+  },
+  "max_bit_hop_um": 399.5,
+  "sites": 14650
+ },
+ "kv3_hgi_v6": {
+  "type": "kv3_hgi_v6",
+  "channels": {
+   "x": [
+    [
+     239.28,
+     330.96
+    ],
+    [
+     558.96,
+     650.64
+    ],
+    [
+     878.64,
+     970.32
+    ],
+    [
+     1198.3200000000002,
+     1258.72
+    ]
+   ],
+   "y": [
+    [
+     239.28,
+     330.96
+    ],
+    [
+     558.96,
+     650.64
+    ],
+    [
+     878.64,
+     970.32
+    ],
+    [
+     1198.3200000000002,
+     1500.64
+    ]
+   ]
+  },
+  "slots": {
+   "ft29": {
+    "width": 1056,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 603.8,
+    "channel": 1,
+    "stagger_um": 0.08484389782403022,
+    "max_disp_um": 28.22,
+    "max_bit_hop_um": 380.7
+   },
+   "ft8": {
+    "width": 1044,
+    "faces": "NS",
+    "stations": 4,
+    "jog_um": 603.8,
+    "channel": 1,
+    "stagger_um": 0.08581818181818177,
+    "max_disp_um": 12.69,
+    "max_bit_hop_um": 394.7
+   },
+   "ft4": {
+    "width": 908,
+    "faces": "EW",
+    "stations": 6,
+    "jog_um": 922.2719999999999,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 10.09,
+    "max_bit_hop_um": 353.9
+   },
+   "ft3": {
+    "width": 652,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 290.624,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 9.56,
+    "max_bit_hop_um": 326.1
+   },
+   "ft21": {
+    "width": 552,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 615.504,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 10.84,
+    "max_bit_hop_um": 314.9
+   },
+   "ft13": {
+    "width": 549,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 905.04,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 10.93,
+    "max_bit_hop_um": 315.0
+   },
+   "ft15": {
+    "width": 548,
+    "faces": "NS",
+    "stations": 4,
+    "jog_um": 904.992,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 10.87,
+    "max_bit_hop_um": 391.0
+   },
+   "ft27": {
+    "width": 523,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 624.1120000000001,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 13.87,
+    "max_bit_hop_um": 318.3
+   },
+   "ft2": {
+    "width": 396,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 1217.3760000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 9.75,
+    "max_bit_hop_um": 393.9
+   },
+   "ft22": {
+    "width": 174,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 637.36,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 10.72,
+    "max_bit_hop_um": 314.8
+   },
+   "ft1": {
+    "width": 140,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 316.048,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.54,
+    "max_bit_hop_um": 273.9
+   },
+   "ft20": {
+    "width": 32,
+    "faces": "SN",
+    "stations": 4,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.83,
+    "max_bit_hop_um": 386.0
+   },
+   "ft14": {
+    "width": 16,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.03,
+    "max_bit_hop_um": 309.1
+   },
+   "ft5": {
+    "width": 15,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 244.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.33,
+    "max_bit_hop_um": 381.2
+   },
+   "ft24": {
+    "width": 6,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 4.85,
+    "max_bit_hop_um": 308.9
+   },
+   "ft23": {
+    "width": 3,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 10.98,
+    "max_bit_hop_um": 315.1
+   },
+   "ft11": {
+    "width": 2,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.69,
+    "max_bit_hop_um": 306.8
+   },
+   "ft19": {
+    "width": 2,
+    "faces": "SN",
+    "stations": 4,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.41,
+    "max_bit_hop_um": 383.6
+   },
+   "ft0": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 1253.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.85,
+    "max_bit_hop_um": 273.7
+   },
+   "ft6": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.5,
+    "max_bit_hop_um": 306.6
+   },
+   "ft7": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.6,
+    "max_bit_hop_um": 306.7
+   },
+   "ft9": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 4,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.56,
+    "max_bit_hop_um": 380.7
+   },
+   "ft10": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 9.62,
+    "max_bit_hop_um": 313.7
+   },
+   "ft12": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.09,
+    "max_bit_hop_um": 306.2
+   },
+   "ft16": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 4,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.79,
+    "max_bit_hop_um": 380.9
+   },
+   "ft17": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 4,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.15,
+    "max_bit_hop_um": 381.3
+   },
+   "ft18": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 4,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.78,
+    "max_bit_hop_um": 382.9
+   },
+   "ft26": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.18,
+    "max_bit_hop_um": 305.2
+   },
+   "ft28": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 643.96,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.78,
+    "max_bit_hop_um": 305.9
+   }
+  },
+  "max_bit_hop_um": 394.7,
+  "sites": 28001
+ },
+ "kv3_hgi_v8": {
+  "type": "kv3_hgi_v8",
+  "channels": {
+   "x": [
+    [
+     239.28,
+     330.96
+    ],
+    [
+     558.96,
+     650.64
+    ],
+    [
+     878.64,
+     970.32
+    ],
+    [
+     1198.3200000000002,
+     1258.72
+    ]
+   ],
+   "y": [
+    [
+     239.28,
+     330.96
+    ],
+    [
+     558.96,
+     650.64
+    ],
+    [
+     878.64,
+     970.32
+    ],
+    [
+     1198.3200000000002,
+     1500.64
+    ]
+   ]
+  },
+  "slots": {
+   "ft26": {
+    "width": 1056,
+    "faces": "WE",
+    "stations": 6,
+    "jog_um": 603.8,
+    "channel": 1,
+    "stagger_um": 0.08484389782403022,
+    "max_disp_um": 23.71,
+    "max_bit_hop_um": 379.6
+   },
+   "ft4": {
+    "width": 1044,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1248.4800000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 12.11,
+    "max_bit_hop_um": 382.5
+   },
+   "ft17": {
+    "width": 552,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 615.504,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 11.55,
+    "max_bit_hop_um": 382.3
+   },
+   "ft9": {
+    "width": 549,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 905.04,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 10.93,
+    "max_bit_hop_um": 317.0
+   },
+   "ft11": {
+    "width": 548,
+    "faces": "NS",
+    "stations": 4,
+    "jog_um": 295.632,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 10.9,
+    "max_bit_hop_um": 392.9
+   },
+   "ft23": {
+    "width": 523,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 1333.4720000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 11.44,
+    "max_bit_hop_um": 317.0
+   },
+   "ft27": {
+    "width": 522,
+    "faces": "EN",
+    "stations": 5,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 11.04,
+    "max_bit_hop_um": 394.7
+   },
+   "ft25": {
+    "width": 256,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 890.976,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.84,
+    "max_bit_hop_um": 337.7
+   },
+   "ft18": {
+    "width": 174,
+    "faces": "SN",
+    "stations": 7,
+    "jog_um": 567.36,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 20.67,
+    "max_bit_hop_um": 374.7
+   },
+   "ft16": {
+    "width": 32,
+    "faces": "SN",
+    "stations": 4,
+    "jog_um": 953.64,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.99,
+    "max_bit_hop_um": 386.7
+   },
+   "ft10": {
+    "width": 16,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 254.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 4.58,
+    "max_bit_hop_um": 368.3
+   },
+   "ft1": {
+    "width": 15,
+    "faces": "EW",
+    "stations": 6,
+    "jog_um": 923.64,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.19,
+    "max_bit_hop_um": 396.1
+   },
+   "ft20": {
+    "width": 6,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 1373.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.02,
+    "max_bit_hop_um": 364.7
+   },
+   "ft19": {
+    "width": 3,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 1393.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.79,
+    "max_bit_hop_um": 370.7
+   },
+   "ft7": {
+    "width": 2,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1413.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.63,
+    "max_bit_hop_um": 309.5
+   },
+   "ft15": {
+    "width": 2,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 1433.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.51,
+    "max_bit_hop_um": 368.8
+   },
+   "ft0": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 943.64,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.61,
+    "max_bit_hop_um": 373.5
+   },
+   "ft2": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1453.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.57,
+    "max_bit_hop_um": 374.2
+   },
+   "ft3": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 6,
+    "jog_um": 1473.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.01,
+    "max_bit_hop_um": 365.3
+   },
+   "ft5": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 7,
+    "jog_um": 1493.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.07,
+    "max_bit_hop_um": 357.0
+   },
+   "ft6": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 7,
+    "jog_um": 883.64,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 12.3,
+    "max_bit_hop_um": 361.9
+   },
+   "ft8": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 7,
+    "jog_um": 903.64,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 15.14,
+    "max_bit_hop_um": 366.0
+   },
+   "ft12": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 7,
+    "jog_um": 923.64,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 17.92,
+    "max_bit_hop_um": 370.1
+   },
+   "ft13": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 324.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.6,
+    "max_bit_hop_um": 369.7
+   },
+   "ft14": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 304.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.92,
+    "max_bit_hop_um": 370.8
+   },
+   "ft22": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 7,
+    "jog_um": 284.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 20.98,
+    "max_bit_hop_um": 374.3
+   },
+   "ft24": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 7,
+    "jog_um": 1313.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.26,
+    "max_bit_hop_um": 356.2
+   }
+  },
+  "max_bit_hop_um": 396.1,
+  "sites": 22223
+ },
+ "kv3_hub_Eo": {
+  "type": "kv3_hub_Eo",
+  "channels": {
+   "x": [
+    [
+     20.0,
+     1030.8
+    ],
+    [
+     1232.8799999999999,
+     1258.72
+    ]
+   ],
+   "y": [
+    [
+     213.36,
+     1462.8
+    ]
+   ]
+  },
+  "slots": {
+   "ft30": {
+    "width": 1118,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 643.712,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 9.92,
+    "max_bit_hop_um": 265.7
+   },
+   "ft31": {
+    "width": 1118,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 533.712,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.38,
+    "max_bit_hop_um": 336.0
+   },
+   "ft10": {
+    "width": 299,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 714.4,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.75,
+    "max_bit_hop_um": 350.7
+   },
+   "ft15": {
+    "width": 299,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 744.4,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.89,
+    "max_bit_hop_um": 308.3
+   },
+   "ft28": {
+    "width": 291,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 774.016,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 7.24,
+    "max_bit_hop_um": 327.9
+   },
+   "ft29": {
+    "width": 291,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 804.016,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 8.29,
+    "max_bit_hop_um": 344.6
+   },
+   "ft9": {
+    "width": 144,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 466.96,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.73,
+    "max_bit_hop_um": 350.6
+   },
+   "ft16": {
+    "width": 144,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 826.96,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.59,
+    "max_bit_hop_um": 285.4
+   },
+   "ft8": {
+    "width": 40,
+    "faces": "ES",
+    "stations": 3,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.87,
+    "max_bit_hop_um": 301.1
+   },
+   "ft17": {
+    "width": 40,
+    "faces": "EN",
+    "stations": 3,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.28,
+    "max_bit_hop_um": 301.3
+   },
+   "ft1": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 445.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.29,
+    "max_bit_hop_um": 358.3
+   },
+   "ft2": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 845.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.34,
+    "max_bit_hop_um": 356.1
+   },
+   "ft4": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 425.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.21,
+    "max_bit_hop_um": 358.3
+   },
+   "ft5": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 865.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.95,
+    "max_bit_hop_um": 356.0
+   },
+   "ft6": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 405.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.37,
+    "max_bit_hop_um": 356.0
+   },
+   "ft7": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 885.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.02,
+    "max_bit_hop_um": 356.9
+   },
+   "ft18": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 385.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.3,
+    "max_bit_hop_um": 297.9
+   },
+   "ft19": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 905.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 4.45,
+    "max_bit_hop_um": 305.2
+   },
+   "ft20": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 365.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.23,
+    "max_bit_hop_um": 306.5
+   },
+   "ft21": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 925.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 4.91,
+    "max_bit_hop_um": 315.1
+   },
+   "ft23": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 345.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.41,
+    "max_bit_hop_um": 319.1
+   },
+   "ft24": {
+    "width": 32,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 945.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.28,
+    "max_bit_hop_um": 324.3
+   },
+   "ft11": {
+    "width": 23,
+    "faces": "ES",
+    "stations": 3,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.17,
+    "max_bit_hop_um": 338.7
+   },
+   "ft14": {
+    "width": 23,
+    "faces": "EN",
+    "stations": 3,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.17,
+    "max_bit_hop_um": 338.7
+   },
+   "ft0": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 325.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.82,
+    "max_bit_hop_um": 325.1
+   },
+   "ft3": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 965.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.82,
+    "max_bit_hop_um": 355.3
+   },
+   "ft12": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 305.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.78,
+    "max_bit_hop_um": 383.1
+   },
+   "ft13": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 985.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.83,
+    "max_bit_hop_um": 373.5
+   },
+   "ft22": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 285.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.11,
+    "max_bit_hop_um": 311.5
+   },
+   "ft25": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 8,
+    "jog_um": 1005.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.9,
+    "max_bit_hop_um": 310.7
+   },
+   "ft26": {
+    "width": 1,
+    "faces": "NW",
+    "stations": 7,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.93,
+    "max_bit_hop_um": 363.2
+   },
+   "ft27": {
+    "width": 1,
+    "faces": "SW",
+    "stations": 4,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.82,
+    "max_bit_hop_um": 329.9
+   }
+  },
+  "max_bit_hop_um": 383.1,
+  "sites": 19492
+ },
+ "kv3_hub_Wo": {
+  "type": "kv3_hub_Wo",
+  "channels": {
+   "x": [
+    [
+     20.0,
+     45.84
+    ],
+    [
+     247.92000000000002,
+     1258.72
+    ]
+   ],
+   "y": [
+    [
+     213.36,
+     1462.8
+    ]
+   ]
+  },
+  "slots": {
+   "ft2": {
+    "width": 1118,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 641.6320000000001,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 9.19,
+    "max_bit_hop_um": 271.2
+   },
+   "ft3": {
+    "width": 1118,
+    "faces": "EW",
+    "stations": 5,
+    "jog_um": 521.6320000000001,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.56,
+    "max_bit_hop_um": 313.8
+   },
+   "ft16": {
+    "width": 299,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 722.3199999999999,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.35,
+    "max_bit_hop_um": 353.8
+   },
+   "ft21": {
+    "width": 299,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 762.3199999999999,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 4.98,
+    "max_bit_hop_um": 396.1
+   },
+   "ft0": {
+    "width": 291,
+    "faces": "EW",
+    "stations": 4,
+    "jog_um": 801.936,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.67,
+    "max_bit_hop_um": 338.2
+   },
+   "ft1": {
+    "width": 291,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 441.93600000000004,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.89,
+    "max_bit_hop_um": 340.2
+   },
+   "ft15": {
+    "width": 144,
+    "faces": "WE",
+    "stations": 6,
+    "jog_um": 834.88,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 29.55,
+    "max_bit_hop_um": 400.2
+   },
+   "ft22": {
+    "width": 144,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 864.88,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.48,
+    "max_bit_hop_um": 289.1
+   },
+   "ft14": {
+    "width": 40,
+    "faces": "WS",
+    "stations": 3,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.1,
+    "max_bit_hop_um": 301.2
+   },
+   "ft23": {
+    "width": 40,
+    "faces": "WN",
+    "stations": 3,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.28,
+    "max_bit_hop_um": 301.9
+   },
+   "ft7": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 412.92,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.24,
+    "max_bit_hop_um": 334.8
+   },
+   "ft8": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 392.92,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.52,
+    "max_bit_hop_um": 332.3
+   },
+   "ft10": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 892.9200000000001,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.3,
+    "max_bit_hop_um": 327.3
+   },
+   "ft11": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 372.92,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.35,
+    "max_bit_hop_um": 323.7
+   },
+   "ft12": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 912.9200000000001,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.49,
+    "max_bit_hop_um": 326.2
+   },
+   "ft13": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 352.92,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.36,
+    "max_bit_hop_um": 328.4
+   },
+   "ft24": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 932.9200000000001,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.41,
+    "max_bit_hop_um": 309.1
+   },
+   "ft25": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 332.92,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.34,
+    "max_bit_hop_um": 311.5
+   },
+   "ft26": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 952.9200000000001,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.48,
+    "max_bit_hop_um": 315.0
+   },
+   "ft27": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 312.92,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.09,
+    "max_bit_hop_um": 317.5
+   },
+   "ft29": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 972.9200000000001,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.57,
+    "max_bit_hop_um": 323.8
+   },
+   "ft30": {
+    "width": 32,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 292.92,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.5,
+    "max_bit_hop_um": 323.6
+   },
+   "ft17": {
+    "width": 23,
+    "faces": "WS",
+    "stations": 3,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.22,
+    "max_bit_hop_um": 339.5
+   },
+   "ft20": {
+    "width": 23,
+    "faces": "WN",
+    "stations": 3,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.85,
+    "max_bit_hop_um": 338.7
+   },
+   "ft4": {
+    "width": 1,
+    "faces": "NE",
+    "stations": 7,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.52,
+    "max_bit_hop_um": 277.2
+   },
+   "ft5": {
+    "width": 1,
+    "faces": "SE",
+    "stations": 6,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 11.17,
+    "max_bit_hop_um": 394.3
+   },
+   "ft6": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 6,
+    "jog_um": 992.9200000000001,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.0,
+    "max_bit_hop_um": 372.7
+   },
+   "ft9": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 272.92,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.12,
+    "max_bit_hop_um": 330.6
+   },
+   "ft18": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 1012.9200000000001,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.19,
+    "max_bit_hop_um": 329.6
+   },
+   "ft19": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 4,
+    "jog_um": 252.92000000000002,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.87,
+    "max_bit_hop_um": 403.7
+   },
+   "ft28": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 7,
+    "jog_um": 1032.92,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.94,
+    "max_bit_hop_um": 311.5
+   },
+   "ft31": {
+    "width": 1,
+    "faces": "WE",
+    "stations": 8,
+    "jog_um": 1052.92,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.73,
+    "max_bit_hop_um": 192.8
+   }
+  },
+  "max_bit_hop_um": 403.7,
+  "sites": 19643
+ },
+ "kv3_hgi_v5": {
+  "type": "kv3_hgi_v5",
+  "channels": {
+   "x": [
+    [
+     239.28,
+     330.96
+    ],
+    [
+     558.96,
+     650.64
+    ],
+    [
+     878.64,
+     970.32
+    ],
+    [
+     1198.3200000000002,
+     1258.72
+    ]
+   ],
+   "y": [
+    [
+     239.28,
+     330.96
+    ],
+    [
+     558.96,
+     650.64
+    ],
+    [
+     878.64,
+     970.32
+    ],
+    [
+     1198.3200000000002,
+     1500.64
+    ]
+   ]
+  },
+  "slots": {
+   "ft24": {
+    "width": 1056,
+    "faces": "WE",
+    "stations": 6,
+    "jog_um": 603.8,
+    "channel": 1,
+    "stagger_um": 0.08484389782403022,
+    "max_disp_um": 23.71,
+    "max_bit_hop_um": 379.6
+   },
+   "ft2": {
+    "width": 548,
+    "faces": "NS",
+    "stations": 4,
+    "jog_um": 904.992,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 6.91,
+    "max_bit_hop_um": 394.2
+   },
+   "ft17": {
+    "width": 548,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 615.312,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 7.1,
+    "max_bit_hop_um": 313.1
+   },
+   "ft19": {
+    "width": 522,
+    "faces": "SN",
+    "stations": 5,
+    "jog_um": 304.384,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 6.47,
+    "max_bit_hop_um": 315.4
+   },
+   "ft25": {
+    "width": 522,
+    "faces": "SE",
+    "stations": 6,
+    "jog_um": null,
+    "channel": null,
+    "stagger_um": 0.096,
+    "max_disp_um": 27.14,
+    "max_bit_hop_um": 81.4
+   },
+   "ft23": {
+    "width": 256,
+    "faces": "WE",
+    "stations": 5,
+    "jog_um": 890.976,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 3.84,
+    "max_bit_hop_um": 339.1
+   },
+   "ft20": {
+    "width": 174,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 567.36,
+    "channel": 1,
+    "stagger_um": 0.096,
+    "max_disp_um": 6.85,
+    "max_bit_hop_um": 358.5
+   },
+   "ft8": {
+    "width": 61,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 953.64,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 19.13,
+    "max_bit_hop_um": 384.5
+   },
+   "ft16": {
+    "width": 59,
+    "faces": "SN",
+    "stations": 7,
+    "jog_um": 1203.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.86,
+    "max_bit_hop_um": 361.9
+   },
+   "ft5": {
+    "width": 32,
+    "faces": "NS",
+    "stations": 7,
+    "jog_um": 1223.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 5.83,
+    "max_bit_hop_um": 356.0
+   },
+   "ft1": {
+    "width": 15,
+    "faces": "EW",
+    "stations": 6,
+    "jog_um": 923.64,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.19,
+    "max_bit_hop_um": 396.1
+   },
+   "ft18": {
+    "width": 12,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 1243.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.16,
+    "max_bit_hop_um": 404.0
+   },
+   "ft4": {
+    "width": 6,
+    "faces": "NS",
+    "stations": 7,
+    "jog_um": 264.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.23,
+    "max_bit_hop_um": 350.4
+   },
+   "ft12": {
+    "width": 5,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 1263.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.15,
+    "max_bit_hop_um": 348.0
+   },
+   "ft13": {
+    "width": 4,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 244.28,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.12,
+    "max_bit_hop_um": 347.8
+   },
+   "ft15": {
+    "width": 2,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 1283.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.88,
+    "max_bit_hop_um": 399.4
+   },
+   "ft0": {
+    "width": 1,
+    "faces": "EW",
+    "stations": 7,
+    "jog_um": 943.64,
+    "channel": 2,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.61,
+    "max_bit_hop_um": 373.5
+   },
+   "ft3": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 7,
+    "jog_um": 1303.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.78,
+    "max_bit_hop_um": 349.8
+   },
+   "ft6": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1323.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.45,
+    "max_bit_hop_um": 366.3
+   },
+   "ft7": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1343.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.57,
+    "max_bit_hop_um": 367.6
+   },
+   "ft9": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1363.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.18,
+    "max_bit_hop_um": 367.6
+   },
+   "ft10": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1383.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.94,
+    "max_bit_hop_um": 366.9
+   },
+   "ft11": {
+    "width": 1,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 1403.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 1.91,
+    "max_bit_hop_um": 367.6
+   },
+   "ft14": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 6,
+    "jog_um": 1423.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 12.14,
+    "max_bit_hop_um": 357.7
+   },
+   "ft21": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 7,
+    "jog_um": 1443.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 2.22,
+    "max_bit_hop_um": 395.2
+   },
+   "ft22": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 7,
+    "jog_um": 1463.3200000000002,
+    "channel": 3,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.95,
+    "max_bit_hop_um": 349.6
+   }
+  },
+  "max_bit_hop_um": 404.0,
+  "sites": 16899
+ },
+ "kv3_pc_v3": {
+  "type": "kv3_pc_v3",
+  "channels": {
+   "x": [
+    [
+     20.0,
+     80.4
+    ],
+    [
+     489.84000000000003,
+     546.96
+    ],
+    [
+     956.4000000000001,
+     1016.8
+    ]
+   ],
+   "y": [
+    [
+     20.0,
+     667.92
+    ],
+    [
+     1042.8,
+     1134.48
+    ]
+   ]
+  },
+  "slots": {
+   "ft0": {
+    "width": 2,
+    "faces": "NS",
+    "stations": 5,
+    "jog_um": 655.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 0.89,
+    "max_bit_hop_um": 309.4
+   },
+   "ft1": {
+    "width": 1,
+    "faces": "SN",
+    "stations": 7,
+    "jog_um": 635.0,
+    "channel": 0,
+    "stagger_um": 0.096,
+    "max_disp_um": 14.05,
+    "max_bit_hop_um": 376.4
+   }
+  },
+  "max_bit_hop_um": 376.4,
+  "sites": 24
+ }
+}
