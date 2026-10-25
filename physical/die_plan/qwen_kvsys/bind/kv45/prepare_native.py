@@ -5,8 +5,10 @@ Preserves the measured C2 FIFO/join/pacer architecture. No post-bind RTL edits.
 The final schedule and wavefront binder are separate inputs; this is not a gate.
 """
 import gzip
+import copy
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -99,6 +101,24 @@ endmodule
 """
 (out / "serdes_c45.sv").write_text(phy)
 
+# r2c was a mapped fanout-copy of this r2 wrapper (plan_leaf_variants.py).
+# Reconstruct its intended RTL rather than keep old phase/calendar logic baked
+# into gate primitives. Keep all four-hop relays and the uniform 29-edge fan age.
+wrap = (tree / "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_r2.sv").read_text()
+wrap = once(wrap, "module qkd_kvs_grp_r2 (", "module qkd_kvs_grp_r2c (")
+wrap = once(wrap, "module qkd_kvs_grp_h_r2 (", "module qkd_kvs_grp_h_r2c (")
+(out / "group_r2c_native.sv").write_text(wrap)
+for tile in (tree / "rtl/qwen_sys/static_kv_die_20261017").glob("qkd_kvs_tiles*.sv"):
+    text = tile.read_text()
+    text = re.sub(r"(qkd_kv_landing_cal|qkd_static_kv_phase_launch) #\((?!\.SAME_CLOCK)",
+                  r"\1 #(.SAME_CLOCK(1), ", text)
+    text = re.sub(r"(qkd_static_kv_pc_path(?:_fan)?_nc(?:_b)?) #\((?!\.CORE_CLOCK)",
+                  r"\1 #(.CORE_CLOCK(1), ", text)
+    tile.write_text(text)
+# Chain-head/position-strap variants must inherit CORE_CLOCK/SAME_CLOCK too;
+# retaining the old generated clone would silently keep the old timing mode.
+subprocess.run([sys.executable, str(tree / "tools/qwen_kv_die/plan_leaf_variants.py")], cwd=tree, check=True)
+
 source = base / "inputs/kv_bound_rtl6/die_bound.v.gz"
 net = gzip.open(source, "rt").read()
 hs = re.search(r"(?m)^  \w+(?: #\([^;]*?\))? host \([^;]+\);", net)
@@ -132,17 +152,38 @@ a["netlist"] = [str(dest.relative_to(tree))]
 a["split_bus_join"] = ["ot_qfd_serdes_112g_x12_phy_s2_c45"]
 a["dissolve"] += ["ot_qfd_serdes_112g_x12_phy_c45", "ot_qfd_serdes_112g_x12_phy_s2_c45"]
 a["transport"].append(dict(module="qkd_rlys_kv45_valid4", map={"b": "a"}, drop_in=["ck"], stages=4))
+a["reducers"].append(dict(module=r"\$and", inst=r"serdes_host\.u_sub\.\$and\$serdes_c45\.sv:.*",
+                          out="Y", op="and", stages=0))
 a["substitute"].pop("ot_qfd_serdes_112g_x12_phy", None)
 a["substitute_inst"] = [r for r in a.get("substitute_inst", []) if r["inst"] != "host"]
 for r in a["sources"]:
     for pin in list(r.get("outputs", {})):
-        if pin.startswith("pll_hbm_") or pin in ("pll_host", "pll_ingest"):
+        if pin.startswith("pll_hbm_") or pin in ("pll_host", "pll_ingest", "pll_fwd"):
             r["outputs"][pin] = "core"
-new = [str((out / x).relative_to(tree)) for x in ("serdes_c45.sv", "qkd_host_root_admission_obsx_bo1_c45.sv")]
+a["native_forwarded_clock"] = "pll_fwd is the same PLL1.2GHz source at pad-only qkd_ckbump; actual forwarded pin and physical phase/latency metadata remain in the clock plan; clk_phy stays separate."
+new = [str((out / x).relative_to(tree)) for x in ("serdes_c45.sv", "qkd_host_root_admission_obsx_bo1_c45.sv", "group_r2c_native.sv")]
 new += ["rtl/physical/" + x for x in ("ot_fdi_phy_cdc.sv", "ot_fdi_join2.sv", "ot_fdi_tx_pace.sv")]
 a["files"] += new
+a["prefer"] = [p for p in a["prefer"] if not p.endswith(("/qkd_kvs_grp_r2c.sv", "/qkd_kvs_grp_h_r2c.sv"))]
 a["prefer"] += new
 a["port_domains"] = [dict(module="ot_qfd_serdes_112g_x6_phy_c45", default="clk", sync=["rst_n"])]
+# Rewire and plan-port names are keyed by the leaf's actual RTL module. Carry
+# every existing BO1 alias across the native variant instead of losing chain
+# identities (chf0/cha0/etc.) when the master name changes.
+names = json.loads((base / "kv44/port_map_kv44.json").read_text())
+host_map = next(v for v in names["masters"].values()
+                if v.get("module") == "qkd_host_root_admission_obsx_bo1")
+host_map = copy.deepcopy(host_map)
+host_map["module"] = "qkd_host_root_admission_obsx_bo1_c45"
+fdi = host_map["bundles"]["fdi"]
+fdi["rtl_ports"] = [p for p in fdi["rtl_ports"] if p != "phy_rx_v"] + ["phy_rx_v_w", "phy_rx_v_e"]
+fdi["die_bits"] += 1
+fdi["rtl_bits"] += 1
+names["masters"]["qkd_host_rt__kv45_c2"] = host_map
+namefile = str((out / "port_map_kv45.json").relative_to(tree))
+(out / "port_map_kv45.json").write_text(json.dumps(names, indent=1) + "\n")
+a["port_names"] = namefile
+a["rewires"]["port_map"] = namefile
 a["land_align"] = False
 for k in ("land_r8", "land_r8_extra", "param_regen"):
     a.pop(k, None)
