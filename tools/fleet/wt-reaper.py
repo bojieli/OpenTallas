@@ -216,7 +216,8 @@ def dirt(wt):
 
 def pushed(wt):
     r = git(wt, "branch", "-r", "--contains", "HEAD", timeout=300)
-    return r.returncode == 0 and bool(r.stdout.strip()), r.stdout.split()[:1]
+    br = [b for b in r.stdout.split() if b.startswith("origin/")] if r.returncode == 0 else []
+    return bool(br), br[:1]
 
 
 def rescue_patch(wt, name, rescue_dir, host):
@@ -368,6 +369,7 @@ def main(argv=None):
                            ["time", "host", "path", "branch", "head", "patch", "bytes", "note"])
             except Exception as e:  # report, never die on one tree
                 reason += f"; rescue FAILED {e!r}"[:200]
+        reason = " ".join(reason.split())
         append_tsv(last, [now(), host, mode, verdict, wt, branch, head, reason], hdr_run)
         print("\t".join([verdict, wt, branch, head, reason]), flush=True)
     for repo in sorted(commons):

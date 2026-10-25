@@ -128,6 +128,19 @@ class Reaper(unittest.TestCase):
         r = subprocess.run(["git", "-C", str(self.repo), "apply", "--check", str(patches[0])], capture_output=True)
         self.assertEqual(r.returncode, 0, r.stderr)
 
+    def test_head_only_in_non_origin_remote_is_kept(self):
+        other = self.t / "other.git"
+        run("git", "init", "-q", "--bare", str(other))
+        run("git", "-C", str(self.repo), "remote", "add", "gaps", str(other))
+        p = self.wt("side", "b11", pushed=False)
+        run("git", "-C", str(p), "push", "-q", "gaps", "b11")
+        run("git", "-C", str(self.repo), "fetch", "-q", "gaps")
+        age(p, 5)
+        age(self.repo / ".git" / "worktrees" / "side", 5)
+        v = self.reap("--apply")
+        self.assertEqual(v["side"][0], "KEEP")
+        self.assertTrue(p.exists())
+
     def test_main_worktree_and_hub_protected(self):
         self.assertTrue(R.protected(str(self.repo), "", str(self.repo / ".git"), ()))
         self.assertTrue(R.protected("/x/closed_archive/wt", "/nonexistent", "/r/.git", ()))
