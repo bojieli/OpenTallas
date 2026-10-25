@@ -5,8 +5,8 @@ read_db $::env(ODB)
 read_sdc /work/constraint.sdc
 set_clock_latency -source $::env(VC) [get_clocks vclk]
 source /work/setRC_rcx.tcl
-estimate_parasitics -placement
 set_propagated_clock [get_clocks clk]
+estimate_parasitics -placement
 set ins_nr {}
 foreach p [all_inputs] { set n [get_full_name $p]; if {$n ne "rst_n" && $n ne "clk"} { lappend ins_nr $p } }
 set regs {}

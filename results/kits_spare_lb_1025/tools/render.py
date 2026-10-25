@@ -53,7 +53,7 @@ for ax, C, c in ((axs[1], CT, "TT"), (axs[2], CF, "FF")):
     xs = [v[0] for v in C.values()]; ys = [v[1] for v in C.values()]; cs = [v[2] for v in C.values()]
     sc = ax.scatter(xs, ys, c=cs, s=0.3, cmap="viridis"); plt.colorbar(sc, ax=ax, label=f"{c} CK arrival ps")
     s = stats[f"ck_{c.lower()}"]
-    ax.set_title(f"{c} CK: all {s['all']['min']}-{s['all']['max']} | pin-reg mean {s['pin_regs']['mean']} | core mean {s['core']['mean']}"
+    ax.set_title(f"{c} CK: all {s['all']['min']}-{s['all']['max']}\npin-reg mean {s['pin_regs']['mean']} | core mean {s['core']['mean']}"
                  + (f" | bound {btt if c == 'TT' else bff}" if btt else ""), fontsize=8)
 for ax in axs:
     ax.add_patch(plt.Rectangle((0, 0), W, H, fill=False, lw=1))
@@ -62,6 +62,6 @@ for ax in axs:
         if nm in pins: ax.plot(*pins[nm], "r*" if nm == "clk" else "c*", ms=12)
     for n, _ in rst: ax.plot(CT[n][0], CT[n][1], "co", ms=5, mfc="none")
     ax.set_xlim(-3, W + 3); ax.set_ylim(-3, H + 3); ax.set_aspect("equal")
-axs[0].set_title(f"{title} density max {stats['max_bin']} | pin->reg p90 {stats['pin_reg_um']['p90']:.1f} max {stats['pin_reg_um']['max']:.1f} (>20: {len(far)} x) | rst sync o, clk*/rst*", fontsize=8)
+axs[0].set_title(f"{title} density max {stats['max_bin']}\npin->reg p90 {stats['pin_reg_um']['p90']:.1f} max {stats['pin_reg_um']['max']:.1f} (>20: {len(far)} x) | rst sync o, clk*/rst*", fontsize=8)
 fig.savefig(out, bbox_inches="tight"); json.dump(stats, open(oj, "w"), indent=1)
 print(json.dumps(stats)[:3000])
