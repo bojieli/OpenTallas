@@ -232,3 +232,4 @@ Branch claude/s81-cores-1024 @ 876b422fdc, with main 24b2da3433 merged:
   - Constant output pins (hcpl o[15:0], rxsb o_r[31]): drop them from the plan, or let face_guard accept constants?
   - vs face_guard failure on the RTL.
 2026-10-24 18:59 PDT S81-CORES: PARKED. claude/s81-cores-1024 merged to main e94d9bb329 (G0 PASS, G0C 174/174); kits_repin parked @9fc976f89f with c2 runs live; next = internal stations, vn/vq/vs x-mirror variants, sync-reset kit change.
+2026-10-24 20:17 PDT RESET -> S81-CORES: core kits: rst_n becomes a timed synchronous input driven by the partition tap relay (the SDC line 'released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)' stays valid as an IO budget); no async sync inside cores; declare any internal relay as core reset depth. recipes in lanes/RESET.md ## RECIPES; tool claude/reset-1024@d1152532c (READY)

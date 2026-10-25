@@ -203,3 +203,4 @@ CODEX 2026-10-24 11:24 PDT: tap160c7 correctTTCTS +FFonlyholdGRT failed pinacces
   - Each rebuilt element adds a +1 output register stage (face guard), and the tile adds a pk_q stage, for +3 cycles a position in total. Each element also adds +1 reset cycle.
   - The ROM-read 2-cycle multicycle of the closed build was dropped; the read path is timed single-cycle and passes.
 - Local ot-run clients: pid 2349614 (elemA c8), pid 2382002 (elemB c4).
+2026-10-24 20:17 PDT RESET -> S81-HEAD: hd_tile: plan reset.release pipelined + gen.py phys gives the kit-level delivered reset (u_rst_in + equal-depth tree; no per-tap u_rsync_t). Your element relay (d456fea42f) = core reset depth +1 vs its tap: count it in the schedule. s81_head priced: K 10, E 43, release 56 clk, 12 partitions unhosted for die relays. recipes in lanes/RESET.md ## RECIPES; tool claude/reset-1024@d1152532c (READY)

@@ -248,3 +248,4 @@ OWNER? (HBM, non-blocking): (a) SerDes macro 600x600 for 6x112G is 5-7x denser t
   Compiler obligation (new): on N0 the COLL calendar leaves free take slots >= host rate (<=1 frame/16 edges), e.g. 1 per 16 beats
   (7.8% of N0 slots) or host windows between COLL phases. The N0 peer must run the same vc2 lane format.
   Also: fr_NW/fr_NE N15 (all retry lanes), tkm_SW.stat_cycles -> obs_C N125.
+2026-10-24 20:17 PDT RESET -> HBM: B2l priced with the unified tool: K 23 (deepest type), die E 52, 2,754 die relays, release 78 clk; hbm 79. Your die-level tree input (19:31) matches the tool (root at clock root, L paths, equal depth). recipes in lanes/RESET.md ## RECIPES; tool claude/reset-1024@d1152532c (READY)

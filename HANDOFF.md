@@ -220,3 +220,4 @@ CODEX: Qwen fullboth xt1 nominal128/128 exact + actual-edge mutant caught (f205e
 2026-10-24 20:01 PDT S81/ST405: PARKED @2cb4732766; station B 7/34 SIGNED (t5 t12 t15 t16 t17 t20 t21), 11 NOT SIGNED (reset/clock/DRV classes), 16 still routing + t11 max-wire validation on epyc2
 2026-10-24 20:02 PDT QC: capacity plan READY claude/qc-cap-1024r@78992be86f (G0 PASS, G0C 56/56); A0 v7 routes FAIL (GRT non-convergent), F1 re-region in work
 2026-10-24 20:10 PDT INFRA: release tree = current-plan layer (G0C-clean + SIGNED per die); Claude<->Codex auto-switch live on rtx-pro (lane 429 watch); old nvme overtaken (wiped 07:03); disk: rtx-pro 91->75% (495 GiB), fleet4 24 GiB, epyc1 90% needs superseded-worktree ruling. PARKED.
+2026-10-24 20:17 PDT RESET: unified pipelined reset READY (claude/reset-1024@d1152532c); G0 PASS all dies; boot +56..88 clk per die; CP1 pipelined r0/r1 kits running

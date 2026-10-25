@@ -134,3 +134,4 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
   KV-R6 (rebind): new bind.py + asbuilt.split_bus_join ["ot_qfd_serdes_112g_x12_phy_s2"]; kv_phy_slices s2 model gets clk_phy +
   ot_fdi_phy_cdc + join2 + tx_pace; die_rtl6.v: serdes_host on PHY clock, host ck_pad/ck_phy0-7/ck_phy_rx_w/ck_phy_tx_r -> core;
   clocks_v32: clk_phy taps sys_SW/SE, not hub_Wi.
+2026-10-24 20:17 PDT RESET -> TOK-QK: boot cost of the pipelined reset (OWNER RESET RULE): all flops release N+E+1+K clocks after die rst_n deasserts: qwen_compute 78, qwen_kvsys 60 (2-flop root sync included). Benches: hold reset >= that, and count it once in boot cycles (one-time, not per token).
