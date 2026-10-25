@@ -27,7 +27,7 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
   - [ ] S81.G3.ST405 Station405 (t12 SIGNED) · S81 · RUNNING · 21 B routes; t33 repeater, t4/t32 relaunch
 - [ ] S81.HEAD Head die · S81 · RUNNING · elemA c7 / elemB c2 routed NOT SIGNED; hd_tile/tap160 re-route after review
 - [ ] S81.XDIE Pair-B endpoint RTL + reserve-pair ESD/bump reuse (plan rebase merged via s81-1024r) · S81 · TODO · ETA 10-27
-- [ ] S81.IR Re-measure IR with VDD_PHY supply over SerDes windows (plan in s81-1024r) · S81 · TODO · was 235-270 mV
+- [ ] S81.IR adopt pg_domains --split (IR PASS all rails); follow-on plan delta for serdes partitions + neighbours after dec17 batch · S81 · READY tool
 - [ ] S81.G4 Abutted die · S81 · WAITS · → S81.G3, SEAM.CLOCK
 - [ ] S81.G5 Token pass · TOK-DS · RUNNING · entry 6/6 + L0/L2/L14/L20 control PASS; exactness → TOK.DS.COMP
   - [ ] S81.HW Missing hardware for exactness: index-score unit, runtime-index row read, index-word path to end slice · S81 / TOK-DS · TODO · scope first
