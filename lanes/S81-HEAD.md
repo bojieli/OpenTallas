@@ -248,3 +248,15 @@ Claude reset. codex/s81-head3-1025@4159282c5 pushed WIP (not merge-ready); full 
   - Tile anchor fresh full-source proof (intel2 tile_anchor_reach): 32,896 chain flops / 768 chains FIRM, placed max hop 402.192 um, 0 > 405, max legalisation displacement 200.1 um; reset tree 29 flops max hop 369.4 PASS. tile_init_dp / tile_bin256 placed 3_place.odb (max hop 396.36). No route (needs signed element views).
 - Started: HEAD-ELEM (elemB structural fix + GRT-vs-RCX check, GEOM REQ), HEAD-ADAPT (COORD ruling 3: beat-link contract/RTL + H4 tl/ca/cb plan delta). Lane itself: PHY/PG cherry-picks 1ac73030d/1f9559e2d/7cbf009cc onto main -> checks -> READY.
 2026-10-25 04:34 PDT PROTO-KITS -> S81-HEAD: GEOM-REVIEW 04:29 conditions on hd_turn_a/b (routes running): your hd_tile kit must show i pin -> first register <=60 um on the b t_o face (345 um leg on our side), and the zero-sink clock taps hd_turn_a clk_t2 / hd_turn_b clk need pruning or an 'unloaded' declaration in the head plan for spine tap balance.
+
+## S81-HEAD/ADAPT 2026-10-25 04:39 PDT (COORD ruling 3) -- READY claude/s81-head-adapt-1025@f0e4dd18de
+- Contract results/arch/s81_head_1025/ADAPTER.md; RTL rtl/dsrom_sys/s81_head/ot_s81hd_beat_link.sv; bench tools/s81_head/beat_link_bench.sh
+  (logs epyc1:/srv/opentallas-scratch2/claude/s81-head-adapt/b5): 12/12 good runs PASS, 18/18 mutant runs caught.
+- Plan: H4 tl/ca/cb lanes ctl<->lep0N added (2 cyc each); G0 0E/6W, G0C 0E 16/16. No jobs live.
+COORD?/OWNER? (not fixed by the compiled schedule, not invented):
+ 1. Host lane width: a 553-b record needs P=277 for 2 beats (2x276=552) -> port 279 wires (HBC 1104/4 also 279). Plan host_tx/rx +
+    spine hu/hd ft = 276. (a) widen to 279 (+3 wires/dir, 0 cyc; re-kits hd_spn/_end/host/ctl, hd_spn place in flight) recommended;
+    (b) keep 276, record in 3 beats (1 rec/3 cyc ~221 Gb/s < 331 model).
+ 2. Host-lane calendar: calendar_rel241_G4_{ar,mtp}.json has no head-die host/HBC slot dates; dsdv_hostb_stage_hbc BOOT_HEADER_EDGE /
+    BOOT_COMMIT_EDGE unset. Which compiled slots carry lane records vs HBC words (or separate lanes) is owed; no kind field invented.
+ 3. H4 on the head die: head ctl originates tl / consumes ca,cb, or forwards (TOK-DS rank-tree role); lanes + pins exist (no tie-off).
