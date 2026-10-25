@@ -57,3 +57,8 @@ def test_convert_bare_standin(tmp_path):
 def test_convert_refuses_real_netlist():
     with pytest.raises(ValueError):
         T.standin_add_contract(BARE.replace("endmodule", "  BUFx2_ASAP7_75t_R b0 (.A(a[0]), .Y(y[0]));\nendmodule"), 40)
+
+
+def test_convert_flopless_standin():
+    t, n = T.standin_add_contract("module e (clk, arst_n);\n  input clk;\n  input arst_n;\nendmodule\n", 40)
+    assert n == 0 and "endmodule" in t

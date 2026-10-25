@@ -670,8 +670,9 @@ def standin_add_contract(text, tol_ps):
         if s and not re.match(r"(module|input|output|wire|endmodule|\)|//)", s) and not s.startswith(FLOP):
             raise ValueError(f"not a budget stand-in netlist line: {s[:120]}")
         out.append(ln)
-    i = next(j for j, ln in enumerate(out) if ln.strip().startswith(FLOP) or ln.strip().startswith(bh))
-    out[i:i] = wires
+    if wires:
+        i = next(j for j, ln in enumerate(out) if ln.strip().startswith(FLOP) or ln.strip().startswith(bh))
+        out[i:i] = wires
     return "\n".join(out) + "\n", n
 
 
