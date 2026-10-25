@@ -6,6 +6,7 @@ case $N in
   vs0)       bash tools/s81_slice/vs_bench.sh $O 0 > $O/out.log 2>&1; r=$?;;
   vs1)       bash tools/s81_slice/vs_bench.sh $O 1 > $O/out.log 2>&1; r=$?;;
   leaf0)     bash tools/s81_slice/leaf_bench.sh $O 0 > $O/out.log 2>&1; r=$?;;
+  leaf1)     bash tools/s81_slice/leaf_bench.sh $O 1 > $O/out.log 2>&1; r=$?;;
   ve0)       OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5 bash tools/s81_slice/ve_bench.sh $O 0 > $O/out.log 2>&1; r=$?;;
   ve1)       OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5 bash tools/s81_slice/ve_bench.sh $O 1 > $O/out.log 2>&1; r=$?; [ $r != 0 ] && grep -q REJECTED $O/out.log && r=0 || r=1;;
   vemiter0)  OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5 bash tools/s81_slice/ve_miter.sh $O 0 > $O/out.log 2>&1; r=$?;;
