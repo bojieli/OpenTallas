@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "qwen_compute",
- "plan_digest": "9b7068aac79a8618",
+ "plan_digest": "d09f1e39316717bb",
  "period_ps": 833,
  "lanes": {
   "c_E0_bf_00__a22": {
@@ -29531,12 +29531,12 @@
    "width": 536
   },
   "sl_W0_fw__x_fw_ctl_p1": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 9,
+   "stations": 7,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 6,
+   "natural": 9,
    "pad": 0,
    "param": "LAT_SL_W0_FW__X_FW_CTL_P1",
    "src": {
@@ -31640,12 +31640,12 @@
    "width": 536
   },
   "sl_W1_fw__x_fw_ctl_p1": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 9,
+   "stations": 7,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 6,
+   "natural": 9,
    "pad": 0,
    "param": "LAT_SL_W1_FW__X_FW_CTL_P1",
    "src": {
@@ -33730,12 +33730,12 @@
    "width": 536
   },
   "sl_W2_fw__x_fw_ctl_p1": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 9,
+   "stations": 7,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 6,
+   "natural": 9,
    "pad": 0,
    "param": "LAT_SL_W2_FW__X_FW_CTL_P1",
    "src": {
@@ -35839,12 +35839,12 @@
    "width": 536
   },
   "sl_W3_fw__x_fw_ctl_p1": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 9,
+   "stations": 7,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 6,
+   "natural": 9,
    "pad": 0,
    "param": "LAT_SL_W3_FW__X_FW_CTL_P1",
    "src": {
@@ -37929,12 +37929,12 @@
    "width": 536
   },
   "sl_W4_fw__x_fw_ctl_p1": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 9,
+   "stations": 7,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 6,
+   "natural": 9,
    "pad": 0,
    "param": "LAT_SL_W4_FW__X_FW_CTL_P1",
    "src": {
@@ -40095,12 +40095,12 @@
    "width": 536
   },
   "sl_W5_fw__x_fw_ctl_p1": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 9,
+   "stations": 7,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 6,
+   "natural": 9,
    "pad": 0,
    "param": "LAT_SL_W5_FW__X_FW_CTL_P1",
    "src": {

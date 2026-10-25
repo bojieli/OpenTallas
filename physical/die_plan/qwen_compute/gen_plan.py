@@ -2377,8 +2377,23 @@ def main():
     # QC-A0 10-24 (GEOM-REVIEW batch 1): ft stations of hard-core partitions get declared sites off the cores
     # (routed hop = shortest path around the cores).  Slots whose routed hops still exceed the limit with their planned
     # station count are listed in ft_regs_report.json (more stations = a bound-RTL / R8 change: COORD decision)
+    # QC 10-24 (owner-accepted capacity plan): every lane family into one hardened type gets ONE natural depth
+    # (lane_eq.py: short lanes padded with ft stations along their route, not with per-instance landing pads);
+    # ft_regs may add stations for routed hops, so equalise again until nothing moves
+    leq = __import__("lane_eq")
+    eqr = leq.equalise(plan)
     ftr = __import__("ft_regs").ft_regs_off_cores(plan)
+    for _ in range(3):
+        e2 = leq.equalise(plan)
+        eqr["added"] += e2["added"]
+        eqr["unfixed"], eqr["families_unequal_after"] = e2["unfixed"], e2["families_unequal_after"]
+        if not e2["added"]:
+            break
+        f2 = __import__("ft_regs").ft_regs_off_cores(plan)
+        ftr.setdefault("added_stations", []).extend(f2.get("added_stations", []))
+        ftr["unfixed"] = f2["unfixed"]
     (Path(a.out).parent / "ft_regs_report.json").write_text(json.dumps(ftr, indent=1) + "\n")
+    (Path(a.out).parent / "lane_eq_report.json").write_text(json.dumps(eqr, indent=1) + "\n")
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(plan, indent=1) + "\n")
     st = collections.Counter()

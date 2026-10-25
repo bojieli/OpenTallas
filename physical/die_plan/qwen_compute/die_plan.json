@@ -23698,7 +23698,7 @@
      "in_face": "W",
      "out_face": "E",
      "width": 536,
-     "stations": 2,
+     "stations": 4,
      "out_window_um": [
       579.68,
       672.576
@@ -24116,7 +24116,7 @@
      "in_face": "W",
      "out_face": "N",
      "width": 536,
-     "stations": 2,
+     "stations": 3,
      "out_window_um": [
       432.608,
       525.232
@@ -118090,12 +118090,12 @@
     "param": "LAT_SL_W5_FW__X_FW_CTL"
    },
    "sl_W5_fw__x_fw_ctl_p1": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 9,
+    "stations": 7,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 6,
+    "natural": 9,
     "pad": 0,
     "param": "LAT_SL_W5_FW__X_FW_CTL_P1"
    },
@@ -118770,12 +118770,12 @@
     "param": "LAT_SL_W4_FW__X_FW_CTL"
    },
    "sl_W4_fw__x_fw_ctl_p1": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 9,
+    "stations": 7,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 6,
+    "natural": 9,
     "pad": 0,
     "param": "LAT_SL_W4_FW__X_FW_CTL_P1"
    },
@@ -119450,12 +119450,12 @@
     "param": "LAT_SL_W3_FW__X_FW_CTL"
    },
    "sl_W3_fw__x_fw_ctl_p1": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 9,
+    "stations": 7,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 6,
+    "natural": 9,
     "pad": 0,
     "param": "LAT_SL_W3_FW__X_FW_CTL_P1"
    },
@@ -120130,12 +120130,12 @@
     "param": "LAT_SL_W2_FW__X_FW_CTL"
    },
    "sl_W2_fw__x_fw_ctl_p1": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 9,
+    "stations": 7,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 6,
+    "natural": 9,
     "pad": 0,
     "param": "LAT_SL_W2_FW__X_FW_CTL_P1"
    },
@@ -120810,12 +120810,12 @@
     "param": "LAT_SL_W1_FW__X_FW_CTL"
    },
    "sl_W1_fw__x_fw_ctl_p1": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 9,
+    "stations": 7,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 6,
+    "natural": 9,
     "pad": 0,
     "param": "LAT_SL_W1_FW__X_FW_CTL_P1"
    },
@@ -121490,12 +121490,12 @@
     "param": "LAT_SL_W0_FW__X_FW_CTL"
    },
    "sl_W0_fw__x_fw_ctl_p1": {
-    "cycles": 6,
-    "stations": 4,
+    "cycles": 9,
+    "stations": 7,
     "boundary": 2,
     "faces": 3,
     "fixed": 0,
-    "natural": 6,
+    "natural": 9,
     "pad": 0,
     "param": "LAT_SL_W0_FW__X_FW_CTL_P1"
    },

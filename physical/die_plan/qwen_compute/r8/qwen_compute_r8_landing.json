@@ -5,21 +5,29 @@
 "bus": "part",
 "exempt": [],
 "bus_groups_die": "qwen_compute",
-"bus_groups_digest": "5b3a39e809083115",
+"landed": {
+"rx": [],
+"window": 4,
+"stage_cycles": 0.5,
+"over_margin": "keep"
+},
+"bus_groups_digest": "f23550b066045561",
 "note": "R8 landing pads (tools/die_plan/r8.py): pad = cycles added at the sink landing (after the sink partition's in boundary flop, on the bits that leaf consumes) so every bus group and replica set lands at ONE added delay; landed = bound + pad is the depth the compiler schedules",
 "summary": {
 "members": 7898,
 "classes": 1263,
 "replica_links": 597,
 "padded_members": 2583,
-"padded_bits": 127327,
-"pad_flops": 433915,
+"padded_bits": 127923,
+"pad_flops": 424864,
 "max_pad": 8,
 "max_depth_before": 18,
 "max_depth_after": 18,
 "max_offset_before": 12,
 "max_offset_after": 12,
-"binder_landed_max": 18
+"binder_landed_max": 18,
+"landed_bundles": 0,
+"landed_over_margin": 0
 },
 "members": [
 {
@@ -86049,8 +86057,8 @@
 ],
 "source": "dvs_W0.u_core.u_sub.u_fdn.chd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W0_fw__x_fw_ctl_p1"
 },
@@ -86068,8 +86076,8 @@
 ],
 "source": "dvs_W0.u_core.u_sub.u_fdn.cmd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W0_fw__x_fw_ctl_p1"
 },
@@ -97183,8 +97191,8 @@
 ],
 "source": "dvs_W1.u_core.u_sub.u_fdn.chd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W1_fw__x_fw_ctl_p1"
 },
@@ -97202,8 +97210,8 @@
 ],
 "source": "dvs_W1.u_core.u_sub.u_fdn.cmd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W1_fw__x_fw_ctl_p1"
 },
@@ -108659,8 +108667,8 @@
 ],
 "source": "dvs_W2.u_core.u_sub.u_fdn.chd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W2_fw__x_fw_ctl_p1"
 },
@@ -108678,8 +108686,8 @@
 ],
 "source": "dvs_W2.u_core.u_sub.u_fdn.cmd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W2_fw__x_fw_ctl_p1"
 },
@@ -119793,8 +119801,8 @@
 ],
 "source": "dvs_W3.u_core.u_sub.u_fdn.chd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W3_fw__x_fw_ctl_p1"
 },
@@ -119812,8 +119820,8 @@
 ],
 "source": "dvs_W3.u_core.u_sub.u_fdn.cmd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W3_fw__x_fw_ctl_p1"
 },
@@ -131269,8 +131277,8 @@
 ],
 "source": "dvs_W4.u_core.u_sub.u_fdn.chd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W4_fw__x_fw_ctl_p1"
 },
@@ -131288,8 +131296,8 @@
 ],
 "source": "dvs_W4.u_core.u_sub.u_fdn.cmd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W4_fw__x_fw_ctl_p1"
 },
@@ -142346,8 +142354,8 @@
 ],
 "source": "dvs_W5.u_core.u_sub.u_fdn.chd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W5_fw__x_fw_ctl_p1"
 },
@@ -142365,8 +142373,8 @@
 ],
 "source": "dvs_W5.u_core.u_sub.u_fdn.cmd_q",
 "asbuilt": 0,
-"bound": 6,
-"pad": 6,
+"bound": 9,
+"pad": 3,
 "landed": 12,
 "lane": "sl_W5_fw__x_fw_ctl_p1"
 },
@@ -148123,8 +148131,8 @@
 "source": "io_serdes_2.rx_flit",
 "asbuilt": 9,
 "bound": 10,
-"pad": 0,
-"landed": 10,
+"pad": 1,
+"landed": 11,
 "lane": "io_serdes_2__rx_flit_serdes_rx"
 },
 {
@@ -148142,8 +148150,8 @@
 "source": "io_serdes_2.rx_v",
 "asbuilt": 10,
 "bound": 10,
-"pad": 1,
-"landed": 11,
+"pad": 2,
+"landed": 12,
 "lane": "io_serdes_2__rx_v_serdes_rx_valid"
 },
 {
@@ -148160,9 +148168,9 @@
 ],
 "source": "io_serdes_2.tx_up",
 "asbuilt": 10,
-"bound": 10,
-"pad": 1,
-"landed": 11,
+"bound": 12,
+"pad": 0,
+"landed": 12,
 "lane": "io_serdes_2__tx_up_serdes_up"
 },
 {
@@ -148863,9 +148871,9 @@
 ],
 "source": "io_collective.u_io.g_face[4].u_face.phy_tx",
 "asbuilt": 11,
-"bound": 10,
+"bound": 12,
 "pad": 0,
-"landed": 10,
+"landed": 12,
 "lane": "coll_s__serdes_tx_tx_flit_2"
 },
 {
@@ -148882,9 +148890,9 @@
 ],
 "source": "io_collective.u_io.g_face[4].u_face.phy_tx_valid",
 "asbuilt": 11,
-"bound": 10,
+"bound": 12,
 "pad": 0,
-"landed": 10,
+"landed": 12,
 "lane": "coll_s__serdes_tx_valid_tx_v_2"
 },
 {
