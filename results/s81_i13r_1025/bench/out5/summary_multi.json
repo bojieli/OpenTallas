@@ -1,0 +1,36 @@
+{
+ "cases": {
+  "multi": {
+   "beats": 174,
+   "expected": 174,
+   "mismatches": 0,
+   "status": "0008",
+   "fault": false,
+   "accepts": [
+    811,
+    1711
+   ],
+   "dones": [
+    1363,
+    2263
+   ]
+  },
+  "samebank": {
+   "beats": 174,
+   "expected": 174,
+   "mismatches": 81,
+   "status": "00a9",
+   "fault": true,
+   "accepts": [
+    811,
+    1711
+   ],
+   "dones": [
+    1363,
+    2261
+   ]
+  }
+ },
+ "bad": [],
+ "verdict": "PASS"
+}
