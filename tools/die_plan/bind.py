@@ -1863,7 +1863,7 @@ class Binder:
         """declared HARD-IP LINE SIDE (B2, PATH-QC-B12 10-25): a plan type's contents[] / hard_cores[] entry may list
         `bump_ports` [{pin, dir, width}] = pins of that hard core that leave the die (its bumps, e.g. a UCIe PHY's
         link_* / far_*).  The as-built die has no line side, so these pins are ABSENT from the as-built netlist; the
-        binder connects each one to a partition port bump_<leaf>__<pin> and to a die-top port <partition>__<pin> of the
+        binder connects each one to a partition port bump_<leaf>_<pin> and to a die-top port <partition>_<pin> (sv_id names) of the
         same direction (no register, no logic: the bump is the hard IP's own pin).  Data-driven, no names; a plan
         without the declaration binds byte-identically.  -> {part: [dict(ci, rel, pin, dir, width, pport, dport)]}"""
         if getattr(self, "_bumps", None) is not None:
