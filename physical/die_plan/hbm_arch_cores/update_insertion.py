@@ -9,8 +9,17 @@ from pathlib import Path
 H = Path(__file__).resolve().parent
 ap = argparse.ArgumentParser(); ap.add_argument("gather")
 ap.add_argument("--kits", default="/srv/opentallas-scratch/claude/elem-hbm/kits_b2l")
+ap.add_argument("--views", default=None, help="HBM-CORES3 10-25: views file (e.g. views_b2n.json) whose views missing "
+                "from the table are added as NOT MEASURED rows first (B2n re-placed cores)")
 a = ap.parse_args()
 T = H / "results" / "core_insertion_b2l.json"; d = json.load(open(T))
+if a.views:
+    have = {v["view"] for v in d["views"]}
+    for x in json.load(open(a.views))["view_list"]:
+        if x["view"] not in have:
+            d["views"].append(dict(view=x["view"], module=x["module"], family=x.get("family"), placed=x.get("placed"),
+                                   instances=x.get("instances"), outline_um=x["outline_um"], status="NOT MEASURED",
+                                   views_file=Path(a.views).name))
 com = d["common_latency_ps"]
 meas = {}
 for l in open(a.gather):
@@ -24,7 +33,8 @@ n = collections.Counter()
 for v in d["views"]:
     k = v["view"].replace("@", "_")
     if k not in meas: continue
-    fz = Path(a.kits) / k / "freeze.json"
+    fz = next((Path(kk) / k / "freeze.json" for kk in a.kits.split(",") if (Path(kk) / k / "freeze.json").is_file()),
+              Path(a.kits.split(",")[0]) / k / "freeze.json")   # HBM-CORES3: --kits DIR1,DIR2
     host, ports = meas[k]
     big = {p: x for p, x in ports.items() if x["sinks"] >= 2}
     if not big: n["no flop port"] += 1; continue
