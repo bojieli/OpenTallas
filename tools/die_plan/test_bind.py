@@ -608,3 +608,40 @@ def test_kit_rtl_spare_ft_bits_ride_stations(tmp_path):
     assert man["spare_ft_passthrough"] == [dict(slot=n, bits=2, stations=2)] and man["spare_out_bits"] == [], man
     w = (kd / f"{P['partition_types']['tf']['module']}.sv").read_text()
     assert f"u_ft_spare_{n}_o_s0" in w and f"u_ft_spare_{n}_o_s1" in w and "'d0;  // spare plan bits" not in w
+
+
+def test_kit_closure_needed_only_and_strip_dups(tmp_path):
+    """QC-KITS 10-25: a file picked for one module must not drag in its unrelated siblings' instantiations, and a
+    module defined in two kit files keeps the closure-picked definition only (sle_ctl ot_hdc_qadd)."""
+    import bind_elab as E
+    r = tmp_path / "rtl"
+    r.mkdir()
+    (r / "top_leaf.sv").write_text("module leaf_a (input wire a, output wire y);\n  helper u_h (.a(a), .y(y));\nendmodule\n"
+                                   "module sibling (input wire a, output wire y);\n  big_unused u_b (.a(a), .y(y));\nendmodule\n")
+    (r / "helper.sv").write_text("module helper (input wire a, output wire y);\n  assign y = a;\nendmodule\n"
+                                 "module qadd (input wire a, output wire y);\n  assign y = ~a;\nendmodule\n")
+    (r / "big.sv").write_text("module big_unused (input wire a, output wire y);\n  assign y = a;\nendmodule\n")
+    (r / "other.sv").write_text("module needs_qadd (input wire a, output wire y);\n  qadd u_q (.a(a), .y(y));\nendmodule\n"
+                                "module qadd (input wire a, output wire y);\n  assign y = a;\nendmodule\n")
+    idx = E.module_index([str(r)], [], str(tmp_path))
+    picks = {}
+    files, missing, macros = bind.kit_closure(["leaf_a"], idx, [], picks)
+    names = sorted(Path(f).name for f in files)
+    assert names == ["helper.sv", "top_leaf.sv"], names          # big.sv (sibling's child) not dragged in
+    assert not missing and not macros
+    # two needed files both define qadd: the picked definition stays, the other file gets a stripped copy
+    picks = {}
+    files, _, _ = bind.kit_closure(["leaf_a", "needs_qadd"], idx, [str(r / "other.sv")], picks)
+    assert Path(picks["qadd"]).name == "other.sv"
+    kd = tmp_path / "kit"
+    kd.mkdir()
+    out, rec = bind.kit_strip_dups([Path(f) for f in files], kd, picks)
+    defs = {}
+    for f in out:
+        for m in E.MOD_RE.finditer(E._strip(Path(f).read_text())):
+            defs.setdefault(m.group(1), []).append(Path(f))
+    assert all(len(v) == 1 for v in defs.values()), defs
+    assert defs["qadd"][0].name == "other.sv" and defs["qadd"][0].parent == r
+    assert defs["helper"][0].parent == kd / "dedup"                # helper.sv copy without qadd
+    assert list(rec.values())[0]["removed"] == ["qadd"]
+    assert (r / "helper.sv").read_text().count("module qadd") == 1  # original unchanged
