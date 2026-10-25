@@ -125,3 +125,12 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
 - QC-R2 (F7): compute sys_face qfd_d2d_cal_seq_ovl_rope images = results/rtl/qwen_rom_pair_candidate_1024/ovl_release_rope (same pair as KV-R4).
 - QC-R3 (F5): ot_sram_1r1w_64x137_m1_r2c2_p192 macro name (main b1e16de8f0) must elaborate in the bound glue.
 - When the capacity rebind lands: tell TOK-QK the bind dir; I re-run xt1 both (lead 16 + schedule gate + mutants) on it.
+- 2026-10-24 20:07 PDT TOK-QK: C1+C2 DONE on claude/kv-tok-c-1024 @db2126db9 (not merged). C2: one async FIFO per direction AT THE PHY (ot_fdi_phy_cdc,
+  gray+2-flop, in sys_SW/SE PHY halves); hub_Wi (adapter, pad, cdc5) all on core; TX paced 19/24 core cycles (0.950 GHz < 0.959,
+  -0.92% link TX rate, static, no backpressure); ot_fdi_join2 order-join replaces AND + D=4. C1 in bind.py (glue transport absorbed,
+  asbuilt.split_bus_join opt-in, r8 bus_join; tests 35/35 PASS). Proof: hub_Wi closed-loop 18/18 PASS raw_rx 7161/7161 in order
+  (8 phases x 2 skews + PHY 1.000/1.050 ns), mutants 6/6 FAIL; CDC FIFO unit 30/30 + mutants 9/9 FAIL. Latency RX ~5.6 core cyc,
+  TX ~4.7 PHY cyc, join +1-2. Vehicle: kv43/apply_C.sh.
+  KV-R6 (rebind): new bind.py + asbuilt.split_bus_join ["ot_qfd_serdes_112g_x12_phy_s2"]; kv_phy_slices s2 model gets clk_phy +
+  ot_fdi_phy_cdc + join2 + tx_pace; die_rtl6.v: serdes_host on PHY clock, host ck_pad/ck_phy0-7/ck_phy_rx_w/ck_phy_tx_r -> core;
+  clocks_v32: clk_phy taps sys_SW/SE, not hub_Wi.
