@@ -155,7 +155,7 @@ def test_bind_registered_hard_partition(tmp_path):
     assert th0.count("ot_dp_st #(") == 2 and "ot_reset_sync" in th0
     assert "ot_dp_st #(" not in th1 and "ot_reset_sync #(" not in th1 and "ot_dp_dly #(" not in th1
     assert "wire rst_n = arst_n;" in th1
-    assert re.search(r"assign \w+ = \{rst_n, w_\w+\};", th1), th1
+    assert re.search(r"assign \w+ = \{rst_n, w_\w+\[7:0\]\};", th1), th1
     assert re.search(r"assign (\w+)_q = \1\[7:0\];", th1), th1
     # the neighbours keep their stations: every other generated file is byte-identical
     for f0 in sorted((o0 / "rtl").glob("*.sv")):
