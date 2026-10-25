@@ -1,0 +1,10122 @@
+{
+ "source_ref": "b58fc0f167f456ea108fda04106eb442ab54b2d2",
+ "die": "s81",
+ "types": {
+  "bk_sel__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "col_h10_r0_p1__t1": {
+   "slots": 6,
+   "max_hop_um": 370.44,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "col_h10_r0_p4__t1": {
+   "slots": 2,
+   "max_hop_um": 356.147,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "col_h10_r1__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "col_h10_r2__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "col_h9_r0_p1__t1": {
+   "slots": 6,
+   "max_hop_um": 366.731,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "col_h9_r0_p2__t1": {
+   "slots": 5,
+   "max_hop_um": 366.731,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "col_h9_r0_p3__t1": {
+   "slots": 4,
+   "max_hop_um": 366.731,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "col_h9_r0_p4__t1": {
+   "slots": 2,
+   "max_hop_um": 356.147,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "col_h9_r0_p5__t1": {
+   "slots": 1,
+   "max_hop_um": 355.827,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "col_h9_r0_p6__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "col_h9_r1__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "col_h9_r2__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "dsdv_slice_c1x_C__t1": {
+   "slots": 1,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "dsdv_slice_c1x_C__t10": {
+   "slots": 1,
+   "max_hop_um": 385.444,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "dsdv_slice_c1x_C__t3": {
+   "slots": 1,
+   "max_hop_um": 363.1467,
+   "over_reach_bits": 0,
+   "st_in_core": 10,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 363.1467,
+     "over_reach_bits": 0,
+     "st_in_core": 10,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       6.216,
+       863.7333333333333
+      ],
+      [
+       6.216,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_c1x_C__t4": {
+   "slots": 1,
+   "max_hop_um": 372.0149,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "dsdv_slice_c1x_C__t5": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 418,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 141,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       307.22
+      ],
+      [
+       65.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       980.9040000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_c1x_C__t6": {
+   "slots": 3,
+   "max_hop_um": 414.7536,
+   "over_reach_bits": 114,
+   "st_in_core": 0,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 414.7536,
+     "over_reach_bits": 114,
+     "st_in_core": 0,
+     "stations": 5,
+     "worst_bit": 513,
+     "worst_segment": [
+      [
+       6.216,
+       414.75360000000023
+      ],
+      [
+       6.216,
+       0.0
+      ]
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_c1x_C__t7": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "dsdv_slice_c1x_C__t8": {
+   "slots": 6,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1526,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       127.072,
+       245.976
+      ],
+      [
+       127.072,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 141,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       919.6600000000001
+      ],
+      [
+       65.824,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 205.1467,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.32,
+       1021.7333333333335
+      ],
+      [
+       188.32,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 205.1467,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       248.416,
+       1021.7333333333335
+      ],
+      [
+       248.416,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_c1x_C__t9": {
+   "slots": 3,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 972,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       127.072,
+       245.976
+      ],
+      [
+       127.072,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 141,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       919.6600000000001
+      ],
+      [
+       65.824,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 205.1467,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.32,
+       1021.7333333333335
+      ],
+      [
+       188.32,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_c3x_C__t1": {
+   "slots": 2,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "dsdv_slice_iq_C__t1": {
+   "slots": 4,
+   "max_hop_um": 347.556,
+   "over_reach_bits": 0,
+   "st_in_core": 1240,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 205.1467,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       126.752,
+       205.14666666666665
+      ],
+      [
+       126.752,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 132,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 205.1467,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.0,
+       1021.7333333333335
+      ],
+      [
+       188.0,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_kv512_C__t1": {
+   "slots": 4,
+   "max_hop_um": 361.6752,
+   "over_reach_bits": 0,
+   "st_in_core": 409,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.504,
+       245.976
+      ],
+      [
+       65.504,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 132,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_lepe_mu_C__t1": {
+   "slots": 1,
+   "max_hop_um": 397.5888,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "dsdv_slice_lepe_nh_mus_C__t1": {
+   "slots": 2,
+   "max_hop_um": 352.0126,
+   "over_reach_bits": 0,
+   "st_in_core": 147,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 141,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       307.22
+      ],
+      [
+       65.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 352.0126,
+     "over_reach_bits": 0,
+     "st_in_core": 6,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1090.867428571429,
+       18.12
+      ],
+      [
+       1442.88,
+       18.12
+      ]
+     ]
+    }
+   ]
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "dsdv_slice_lepw_mu_C__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "dsdv_slice_lepw_mus_C__t1": {
+   "slots": 1,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "eng__t1": {
+   "slots": 2,
+   "max_hop_um": 352.6512,
+   "over_reach_bits": 0,
+   "st_in_core": 3640,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 230.7456,
+     "over_reach_bits": 0,
+     "st_in_core": 1683,
+     "stations": 10,
+     "worst_bit": 332,
+     "worst_segment": [
+      [
+       230.7456000000002,
+       230.624
+      ],
+      [
+       0.0,
+       230.624
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 352.6512,
+     "over_reach_bits": 0,
+     "st_in_core": 1957,
+     "stations": 5,
+     "worst_bit": 1032,
+     "worst_segment": [
+      [
+       1057.76,
+       874.2288000000001
+      ],
+      [
+       1057.76,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "gunit__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "iqf__t1": {
+   "slots": 2,
+   "max_hop_um": 380.312,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "ot_s81sl_kv_leaf__t1": {
+   "slots": 8,
+   "max_hop_um": 368.1,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "ot_s81sl_kv_leaf__t2": {
+   "slots": 10,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "ot_s81sl_kv_leaf__t3": {
+   "slots": 8,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "ot_s81sl_kv_leaf__t4": {
+   "slots": 6,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "ot_s81sl_kv_leaf__t5": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "ot_s81sl_leaf__t1": {
+   "slots": 20,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 6813,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 94,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1573,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 10,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       488.8
+      ],
+      [
+       0.0,
+       488.8
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 46,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       507.104
+      ],
+      [
+       0.0,
+       507.104
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1762,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       241.696,
+       307.22
+      ],
+      [
+       241.696,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1989,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       484.384,
+       245.976
+      ],
+      [
+       484.384,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 850,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1153.952,
+       307.22
+      ],
+      [
+       1153.952,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft13",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 33,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       525.536
+      ],
+      [
+       1442.88,
+       525.536
+      ]
+     ]
+    },
+    {
+     "slot": "ft14",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1153.7040000000002,
+       1129.184
+      ],
+      [
+       1442.88,
+       1129.184
+      ]
+     ]
+    },
+    {
+     "slot": "ft15",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1153.7040000000002,
+       1147.488
+      ],
+      [
+       1442.88,
+       1147.488
+      ]
+     ]
+    },
+    {
+     "slot": "ft16",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1165.728
+      ],
+      [
+       1442.88,
+       1165.728
+      ]
+     ]
+    },
+    {
+     "slot": "ft17",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 30,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1183.968
+      ],
+      [
+       1442.88,
+       1183.968
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t10": {
+   "slots": 8,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3215,
+   "failures": [
+    {
+     "slot": "ft6",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1726,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       241.696,
+       980.9040000000001
+      ],
+      [
+       241.696,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1489,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       484.384,
+       919.6600000000001
+      ],
+      [
+       484.384,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t11": {
+   "slots": 5,
+   "max_hop_um": 361.2773,
+   "over_reach_bits": 0,
+   "st_in_core": 1452,
+   "failures": [
+    {
+     "slot": "ft2",
+     "max_hop_um": 361.2773,
+     "over_reach_bits": 0,
+     "st_in_core": 266,
+     "stations": 3,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       979.608,
+       865.6026666666668
+      ],
+      [
+       979.608,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 1186,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1153.7040000000002,
+       482.208
+      ],
+      [
+       1442.88,
+       482.208
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t12": {
+   "slots": 14,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2359,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 210,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 46,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       488.8
+      ],
+      [
+       0.0,
+       488.8
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 46,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       507.104
+      ],
+      [
+       0.0,
+       507.104
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1038,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       152.672,
+       307.22
+      ],
+      [
+       152.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 853,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 133,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       979.616,
+       980.9040000000001
+      ],
+      [
+       979.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 33,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       525.536
+      ],
+      [
+       1442.88,
+       525.536
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t13": {
+   "slots": 5,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3438,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1106,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       152.672,
+       307.22
+      ],
+      [
+       152.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 907,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       980.9040000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1159,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       283.808,
+       919.6600000000001
+      ],
+      [
+       283.808,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 266,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       979.616,
+       919.6600000000001
+      ],
+      [
+       979.616,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t14": {
+   "slots": 13,
+   "max_hop_um": 377.976,
+   "over_reach_bits": 0,
+   "st_in_core": 6612,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 2446,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 202,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1249,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       307.22
+      ],
+      [
+       128.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 726,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       275.168,
+       980.9040000000001
+      ],
+      [
+       275.168,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 377.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1175,
+     "stations": 3,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       377.9760000000001,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 206,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       979.616,
+       919.6600000000001
+      ],
+      [
+       979.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 345.776,
+     "over_reach_bits": 0,
+     "st_in_core": 54,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       941.472,
+       345.77600000000007
+      ],
+      [
+       941.472,
+       0.0
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t15": {
+   "slots": 3,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1279,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 182,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 831,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 266,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       979.616,
+       919.6600000000001
+      ],
+      [
+       979.616,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t16": {
+   "slots": 11,
+   "max_hop_um": 381.152,
+   "over_reach_bits": 0,
+   "st_in_core": 2330,
+   "failures": [
+    {
+     "slot": "ft2",
+     "max_hop_um": 277.78,
+     "over_reach_bits": 0,
+     "st_in_core": 1893,
+     "stations": 4,
+     "worst_bit": 124,
+     "worst_segment": [
+      [
+       277.7799999999999,
+       459.552
+      ],
+      [
+       0.0,
+       459.552
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 168,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 133,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       979.616,
+       980.9040000000001
+      ],
+      [
+       979.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 254.392,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 3,
+     "worst_bit": 54,
+     "worst_segment": [
+      [
+       507.7840000000001,
+       1115.936
+      ],
+      [
+       651.232,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 65,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1183.968
+      ],
+      [
+       1442.88,
+       1183.968
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t17": {
+   "slots": 9,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 4832,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1564,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       368.416,
+       245.976
+      ],
+      [
+       368.416,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1214,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       516.32,
+       307.22
+      ],
+      [
+       516.32,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1575,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       370.016,
+       919.6600000000001
+      ],
+      [
+       370.016,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       664.032,
+       919.6600000000001
+      ],
+      [
+       664.032,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       682.272,
+       919.6600000000001
+      ],
+      [
+       682.272,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       700.512,
+       919.6600000000001
+      ],
+      [
+       700.512,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 266,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       979.616,
+       919.6600000000001
+      ],
+      [
+       979.616,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t2": {
+   "slots": 11,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 5016,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 603,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       241.696,
+       307.22
+      ],
+      [
+       241.696,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1096,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       484.384,
+       245.976
+      ],
+      [
+       484.384,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1026,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       744.8,
+       245.976
+      ],
+      [
+       744.8,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1500,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1153.952,
+       307.22
+      ],
+      [
+       1153.952,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       504.928,
+       919.6600000000001
+      ],
+      [
+       504.928,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 8,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       523.296,
+       919.6600000000001
+      ],
+      [
+       523.296,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 27,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       560.16,
+       919.6600000000001
+      ],
+      [
+       560.16,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       578.4,
+       919.6600000000001
+      ],
+      [
+       578.4,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       596.64,
+       919.6600000000001
+      ],
+      [
+       596.64,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 543,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       598.496,
+       919.6600000000001
+      ],
+      [
+       598.496,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t21": {
+   "slots": 11,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3750,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 54,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       507.104
+      ],
+      [
+       0.0,
+       507.104
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 328.9733,
+     "over_reach_bits": 0,
+     "st_in_core": 1294,
+     "stations": 3,
+     "worst_bit": 1072,
+     "worst_segment": [
+      [
+       13.472,
+       569.9333333333334
+      ],
+      [
+       0.0,
+       254.432
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 294.3088,
+     "over_reach_bits": 0,
+     "st_in_core": 2361,
+     "stations": 5,
+     "worst_bit": 1070,
+     "worst_segment": [
+      [
+       255.392,
+       52.64480000000003
+      ],
+      [
+       0.0,
+       13.728
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 41,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       525.536
+      ],
+      [
+       1442.88,
+       525.536
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t22": {
+   "slots": 10,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3085,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 603,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       241.696,
+       307.22
+      ],
+      [
+       241.696,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1096,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       484.384,
+       245.976
+      ],
+      [
+       484.384,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 374,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       635.552,
+       307.22
+      ],
+      [
+       635.552,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 461,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       488.672,
+       919.6600000000001
+      ],
+      [
+       488.672,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 54,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       782.688,
+       919.6600000000001
+      ],
+      [
+       782.688,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       798.688,
+       919.6600000000001
+      ],
+      [
+       798.688,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       819.36,
+       919.6600000000001
+      ],
+      [
+       819.36,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       837.6,
+       919.6600000000001
+      ],
+      [
+       837.6,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       855.84,
+       980.9040000000001
+      ],
+      [
+       855.84,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       872.608,
+       980.9040000000001
+      ],
+      [
+       872.608,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t23": {
+   "slots": 11,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 4357,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1105,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       307.22
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1104,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       189.92,
+       245.976
+      ],
+      [
+       189.92,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 802,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       467.36,
+       307.22
+      ],
+      [
+       467.36,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 20,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 305,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       919.6600000000001
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 640,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       336.416,
+       919.6600000000001
+      ],
+      [
+       336.416,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 104,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       613.856,
+       919.6600000000001
+      ],
+      [
+       613.856,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t24": {
+   "slots": 5,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3701,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 341,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       307.22
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1147,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       189.92,
+       307.22
+      ],
+      [
+       189.92,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 141,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       919.6600000000001
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1518,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       336.416,
+       980.9040000000001
+      ],
+      [
+       336.416,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t25": {
+   "slots": 3,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1551,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 831,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       307.22
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 182,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 538,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       919.6600000000001
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t26": {
+   "slots": 7,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1137,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       307.22
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 122,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 368,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       919.6600000000001
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 93,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1183.968
+      ],
+      [
+       1442.88,
+       1183.968
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t27": {
+   "slots": 5,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3932,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       245.976
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1436,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       336.416,
+       307.22
+      ],
+      [
+       336.416,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 282,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       919.6600000000001
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1106,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       189.92,
+       919.6600000000001
+      ],
+      [
+       189.92,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t28": {
+   "slots": 13,
+   "max_hop_um": 344.0987,
+   "over_reach_bits": 0,
+   "st_in_core": 13606,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 304.7733,
+     "over_reach_bits": 0,
+     "st_in_core": 1674,
+     "stations": 6,
+     "worst_bit": 22,
+     "worst_segment": [
+      [
+       670.112,
+       304.7733333333333
+      ],
+      [
+       670.112,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 281.9088,
+     "over_reach_bits": 0,
+     "st_in_core": 1087,
+     "stations": 5,
+     "worst_bit": 3,
+     "worst_segment": [
+      [
+       525.144,
+       281.9087999999999
+      ],
+      [
+       525.144,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 318.5136,
+     "over_reach_bits": 0,
+     "st_in_core": 1436,
+     "stations": 5,
+     "worst_bit": 556,
+     "worst_segment": [
+      [
+       608.416,
+       908.3664000000001
+      ],
+      [
+       608.416,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 254.8848,
+     "over_reach_bits": 0,
+     "st_in_core": 996,
+     "stations": 5,
+     "worst_bit": 26,
+     "worst_segment": [
+      [
+       219.488,
+       971.9952
+      ],
+      [
+       219.488,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 272.56,
+     "over_reach_bits": 0,
+     "st_in_core": 3935,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       272.55999999999983,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 270.864,
+     "over_reach_bits": 0,
+     "st_in_core": 3346,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       270.86400000000003,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 325.638,
+     "over_reach_bits": 0,
+     "st_in_core": 655,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       901.2420000000002
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 325.6587,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       820.768,
+       325.6586666666667
+      ],
+      [
+       820.768,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 331.4613,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       837.28,
+       331.4613333333334
+      ],
+      [
+       837.28,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 337.9893,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       858.208,
+       337.9893333333333
+      ],
+      [
+       858.208,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 344.0987,
+     "over_reach_bits": 0,
+     "st_in_core": 10,
+     "stations": 6,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       876.6,
+       344.0986666666664
+      ],
+      [
+       876.6,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 300.2137,
+     "over_reach_bits": 0,
+     "st_in_core": 112,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       894.264,
+       300.2137142857142
+      ],
+      [
+       894.264,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft12",
+     "max_hop_um": 305.1303,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 7,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       910.44,
+       305.1302857142855
+      ],
+      [
+       910.44,
+       0.0
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t29": {
+   "slots": 3,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2410,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 954,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       307.22
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1456,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       213.92,
+       919.6600000000001
+      ],
+      [
+       213.92,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t3": {
+   "slots": 16,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 8899,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 705,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 3319,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 968,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       147.104,
+       245.976
+      ],
+      [
+       147.104,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1695,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       424.544,
+       307.22
+      ],
+      [
+       424.544,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 908,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1153.952,
+       307.22
+      ],
+      [
+       1153.952,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1062,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       293.408,
+       919.6600000000001
+      ],
+      [
+       293.408,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 242,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       570.848,
+       919.6600000000001
+      ],
+      [
+       570.848,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t30": {
+   "slots": 1,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 182,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 182,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t31": {
+   "slots": 10,
+   "max_hop_um": 384.5893,
+   "over_reach_bits": 0,
+   "st_in_core": 2644,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 12,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       72.8,
+       307.22
+      ],
+      [
+       72.8,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       126.752,
+       245.976
+      ],
+      [
+       126.752,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 710,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       372.704,
+       307.22
+      ],
+      [
+       372.704,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 82,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       485.408,
+       307.22
+      ],
+      [
+       485.408,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 64,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 482,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.0,
+       919.6600000000001
+      ],
+      [
+       188.0,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 707,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       249.248,
+       919.6600000000001
+      ],
+      [
+       249.248,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 384.5893,
+     "over_reach_bits": 0,
+     "st_in_core": 33,
+     "stations": 3,
+     "worst_bit": 32,
+     "worst_segment": [
+      [
+       614.432,
+       384.58933333333334
+      ],
+      [
+       614.432,
+       0.0
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t32": {
+   "slots": 9,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3507,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       126.752,
+       307.22
+      ],
+      [
+       126.752,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 514,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       372.704,
+       245.976
+      ],
+      [
+       372.704,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 296,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       485.408,
+       307.22
+      ],
+      [
+       485.408,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1029,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       744.608,
+       245.976
+      ],
+      [
+       744.608,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.0,
+       919.6600000000001
+      ],
+      [
+       188.0,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 553,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       249.248,
+       919.6600000000001
+      ],
+      [
+       249.248,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 561,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       598.112,
+       919.6600000000001
+      ],
+      [
+       598.112,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t33": {
+   "slots": 12,
+   "max_hop_um": 324.978,
+   "over_reach_bits": 0,
+   "st_in_core": 5166,
+   "failures": [
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 60,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       249.248,
+       307.22
+      ],
+      [
+       249.248,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 936,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       526.688,
+       307.22
+      ],
+      [
+       526.688,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       395.744,
+       919.6600000000001
+      ],
+      [
+       395.744,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 764,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       673.184,
+       919.6600000000001
+      ],
+      [
+       673.184,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 322.9,
+     "over_reach_bits": 0,
+     "st_in_core": 1767,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       322.9,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 316.164,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1339.32,
+       316.16399999999976
+      ],
+      [
+       1339.32,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 320.63,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1356.832,
+       320.6300000000002
+      ],
+      [
+       1356.832,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 324.978,
+     "over_reach_bits": 0,
+     "st_in_core": 213,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       1373.352,
+       324.9780000000002
+      ],
+      [
+       1373.352,
+       0.0
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t34": {
+   "slots": 6,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3945,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.504,
+       245.976
+      ],
+      [
+       65.504,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       126.752,
+       307.22
+      ],
+      [
+       126.752,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1438,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       249.248,
+       307.22
+      ],
+      [
+       249.248,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 224,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 465,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.0,
+       919.6600000000001
+      ],
+      [
+       188.0,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 710,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       395.744,
+       919.6600000000001
+      ],
+      [
+       395.744,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t35": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2225,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 831,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.504,
+       307.22
+      ],
+      [
+       65.504,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 557,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       126.752,
+       307.22
+      ],
+      [
+       126.752,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 156,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 681,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.0,
+       919.6600000000001
+      ],
+      [
+       188.0,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t36": {
+   "slots": 10,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2091,
+   "failures": [
+    {
+     "slot": "ft3",
+     "max_hop_um": 288.4331,
+     "over_reach_bits": 0,
+     "st_in_core": 6,
+     "stations": 7,
+     "worst_bit": 5,
+     "worst_segment": [
+      [
+       409.704,
+       938.4468571428571
+      ],
+      [
+       409.704,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 308,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       493.088
+      ],
+      [
+       0.0,
+       493.088
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 92,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       532.768
+      ],
+      [
+       0.0,
+       532.768
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 349.3,
+     "over_reach_bits": 0,
+     "st_in_core": 631,
+     "stations": 4,
+     "worst_bit": 562,
+     "worst_segment": [
+      [
+       405.472,
+       877.5800000000002
+      ],
+      [
+       405.472,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 1054,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1153.7040000000002,
+       488.032
+      ],
+      [
+       1442.88,
+       488.032
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t37": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2962,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1040,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       152.672,
+       307.22
+      ],
+      [
+       152.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 986,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 926,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       283.808,
+       919.6600000000001
+      ],
+      [
+       283.808,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 10,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       421.088,
+       919.6600000000001
+      ],
+      [
+       421.088,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t38": {
+   "slots": 6,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 4434,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 880,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       152.672,
+       245.976
+      ],
+      [
+       152.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 826,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       571.808,
+       307.22
+      ],
+      [
+       571.808,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 996,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       283.808,
+       919.6600000000001
+      ],
+      [
+       283.808,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 12,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       421.088,
+       919.6600000000001
+      ],
+      [
+       421.088,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1720,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       425.504,
+       919.6600000000001
+      ],
+      [
+       425.504,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t39": {
+   "slots": 8,
+   "max_hop_um": 364.3253,
+   "over_reach_bits": 0,
+   "st_in_core": 3377,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1338,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       245.976
+      ],
+      [
+       128.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 248,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 728,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       275.168,
+       980.9040000000001
+      ],
+      [
+       275.168,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 326.432,
+     "over_reach_bits": 0,
+     "st_in_core": 850,
+     "stations": 2,
+     "worst_bit": 1104,
+     "worst_segment": [
+      [
+       326.43199999999996,
+       7.008
+      ],
+      [
+       0.0,
+       7.008
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 352.2187,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 6,
+     "worst_bit": 10,
+     "worst_segment": [
+      [
+       927.264,
+       352.21866666666676
+      ],
+      [
+       927.264,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 358.3413,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 6,
+     "worst_bit": 70,
+     "worst_segment": [
+      [
+       959.712,
+       358.34133333333375
+      ],
+      [
+       959.712,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 364.3253,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 6,
+     "worst_bit": 10,
+     "worst_segment": [
+      [
+       963.872,
+       364.32533333333356
+      ],
+      [
+       963.872,
+       0.0
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t4": {
+   "slots": 6,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3385,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 141,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 991,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       147.104,
+       307.22
+      ],
+      [
+       147.104,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 988,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1153.952,
+       245.976
+      ],
+      [
+       1153.952,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 6,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       129.056,
+       919.6600000000001
+      ],
+      [
+       129.056,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 982,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       293.408,
+       919.6600000000001
+      ],
+      [
+       293.408,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t40": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1013,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 182,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       307.22
+      ],
+      [
+       65.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 831,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t41": {
+   "slots": 6,
+   "max_hop_um": 361.76,
+   "over_reach_bits": 0,
+   "st_in_core": 2713,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 318.3792,
+     "over_reach_bits": 0,
+     "st_in_core": 2537,
+     "stations": 5,
+     "worst_bit": 1103,
+     "worst_segment": [
+      [
+       318.3792000000001,
+       6.36
+      ],
+      [
+       0.0,
+       6.36
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 168,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 361.76,
+     "over_reach_bits": 0,
+     "st_in_core": 8,
+     "stations": 2,
+     "worst_bit": 70,
+     "worst_segment": [
+      [
+       361.76000000000005,
+       1167.392
+      ],
+      [
+       664.032,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t42": {
+   "slots": 8,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 4566,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1564,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       245.976
+      ],
+      [
+       128.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1214,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       516.32,
+       307.22
+      ],
+      [
+       516.32,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1575,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       370.016,
+       919.6600000000001
+      ],
+      [
+       370.016,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       647.456,
+       919.6600000000001
+      ],
+      [
+       647.456,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       665.696,
+       919.6600000000001
+      ],
+      [
+       665.696,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       683.936,
+       919.6600000000001
+      ],
+      [
+       683.936,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t43": {
+   "slots": 6,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3398,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1249,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       307.22
+      ],
+      [
+       128.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 500,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       406.112,
+       307.22
+      ],
+      [
+       406.112,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 289,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 928,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       275.168,
+       980.9040000000001
+      ],
+      [
+       275.168,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 432,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       552.608,
+       919.6600000000001
+      ],
+      [
+       552.608,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t44": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2930,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 202,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       307.22
+      ],
+      [
+       65.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1180,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       307.22
+      ],
+      [
+       128.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 994,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       275.168,
+       919.6600000000001
+      ],
+      [
+       275.168,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t45": {
+   "slots": 9,
+   "max_hop_um": 336.9307,
+   "over_reach_bits": 0,
+   "st_in_core": 5021,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 356,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       117.152,
+       307.22
+      ],
+      [
+       117.152,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 268.1904,
+     "over_reach_bits": 0,
+     "st_in_core": 2381,
+     "stations": 5,
+     "worst_bit": 1103,
+     "worst_segment": [
+      [
+       268.1903999999999,
+       247.512
+      ],
+      [
+       0.0,
+       247.512
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 260.2571,
+     "over_reach_bits": 0,
+     "st_in_core": 2006,
+     "stations": 7,
+     "worst_bit": 1103,
+     "worst_segment": [
+      [
+       260.257142857143,
+       6.36
+      ],
+      [
+       0.0,
+       6.36
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 336.6053,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 3,
+     "worst_bit": 69,
+     "worst_segment": [
+      [
+       672.2106666666667,
+       1112.52
+      ],
+      [
+       894.456,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 335.992,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 3,
+     "worst_bit": 70,
+     "worst_segment": [
+      [
+       670.984,
+       1130.72
+      ],
+      [
+       910.816,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 336.9307,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 3,
+     "worst_bit": 70,
+     "worst_segment": [
+      [
+       672.8613333333334,
+       1149.152
+      ],
+      [
+       932.064,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 336.9307,
+     "over_reach_bits": 0,
+     "st_in_core": 65,
+     "stations": 3,
+     "worst_bit": 70,
+     "worst_segment": [
+      [
+       672.8613333333334,
+       1167.392
+      ],
+      [
+       950.304,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t46": {
+   "slots": 11,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 4288,
+   "failures": [
+    {
+     "slot": "ft2",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1804,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       360.224,
+       245.976
+      ],
+      [
+       360.224,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1108,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       747.872,
+       307.22
+      ],
+      [
+       747.872,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 693,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       601.568,
+       919.6600000000001
+      ],
+      [
+       601.568,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 87,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       879.008,
+       919.6600000000001
+      ],
+      [
+       879.008,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       897.248,
+       919.6600000000001
+      ],
+      [
+       897.248,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 99,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       915.488,
+       919.6600000000001
+      ],
+      [
+       915.488,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       933.728,
+       919.6600000000001
+      ],
+      [
+       933.728,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       951.968,
+       919.6600000000001
+      ],
+      [
+       951.968,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       970.4,
+       919.6600000000001
+      ],
+      [
+       970.4,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t47": {
+   "slots": 10,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 6139,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 2741,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1249,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       307.22
+      ],
+      [
+       128.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 500,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       406.112,
+       307.22
+      ],
+      [
+       406.112,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 289,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 928,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       275.168,
+       980.9040000000001
+      ],
+      [
+       275.168,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 432,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       552.608,
+       919.6600000000001
+      ],
+      [
+       552.608,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t48": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2930,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 202,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1180,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       307.22
+      ],
+      [
+       128.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 994,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       275.168,
+       919.6600000000001
+      ],
+      [
+       275.168,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t49": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1013,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 182,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 831,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t5": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 704,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 122,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 16,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1153.952,
+       307.22
+      ],
+      [
+       1153.952,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 12,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       129.056,
+       919.6600000000001
+      ],
+      [
+       129.056,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t50": {
+   "slots": 6,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1106,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 182,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 831,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 93,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1183.968
+      ],
+      [
+       1442.88,
+       1183.968
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t51": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2930,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 202,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 994,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       275.168,
+       307.22
+      ],
+      [
+       275.168,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1180,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       919.6600000000001
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t52": {
+   "slots": 12,
+   "max_hop_um": 349.9867,
+   "over_reach_bits": 0,
+   "st_in_core": 4106,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 319,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       283.808,
+       307.22
+      ],
+      [
+       283.808,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1196,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       430.112,
+       919.6600000000001
+      ],
+      [
+       430.112,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 349.9653,
+     "over_reach_bits": 0,
+     "st_in_core": 1017,
+     "stations": 3,
+     "worst_bit": 300,
+     "worst_segment": [
+      [
+       349.9653333333334,
+       421.984
+      ],
+      [
+       0.0,
+       421.984
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 349.9867,
+     "over_reach_bits": 0,
+     "st_in_core": 969,
+     "stations": 3,
+     "worst_bit": 1104,
+     "worst_segment": [
+      [
+       349.9866666666667,
+       7.008
+      ],
+      [
+       0.0,
+       7.008
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.022,
+     "over_reach_bits": 0,
+     "st_in_core": 192,
+     "stations": 8,
+     "worst_bit": 2,
+     "worst_segment": [
+      [
+       1321.312,
+       307.02199999999993
+      ],
+      [
+       1321.312,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 311.662,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 8,
+     "worst_bit": 38,
+     "worst_segment": [
+      [
+       1348.448,
+       311.66200000000003
+      ],
+      [
+       1348.448,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 316.23,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 8,
+     "worst_bit": 6,
+     "worst_segment": [
+      [
+       1359.072,
+       316.2299999999998
+      ],
+      [
+       1359.072,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 320.83,
+     "over_reach_bits": 0,
+     "st_in_core": 129,
+     "stations": 8,
+     "worst_bit": 10,
+     "worst_segment": [
+      [
+       1378.592,
+       320.8299999999997
+      ],
+      [
+       1378.592,
+       0.0
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t53": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2465,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1505,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 960,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       152.672,
+       919.6600000000001
+      ],
+      [
+       152.672,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t54": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "ot_s81sl_leaf__t55": {
+   "slots": 10,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2649,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 343.7451,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 7,
+     "worst_bit": 276,
+     "worst_segment": [
+      [
+       128.672,
+       883.1348571428573
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 280.9911,
+     "over_reach_bits": 0,
+     "st_in_core": 248,
+     "stations": 9,
+     "worst_bit": 272,
+     "worst_segment": [
+      [
+       1161.8888888888891,
+       79.392
+      ],
+      [
+       1442.88,
+       79.392
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 515,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       312.416,
+       307.22
+      ],
+      [
+       312.416,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 501,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       248.416,
+       919.6600000000001
+      ],
+      [
+       248.416,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 831,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       308.128,
+       919.6600000000001
+      ],
+      [
+       308.128,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t56": {
+   "slots": 16,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3869,
+   "failures": [
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       127.072,
+       307.22
+      ],
+      [
+       127.072,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       312.416,
+       245.976
+      ],
+      [
+       312.416,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1433,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       519.968,
+       307.22
+      ],
+      [
+       519.968,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 61,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       919.6600000000001
+      ],
+      [
+       65.824,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.32,
+       919.6600000000001
+      ],
+      [
+       188.32,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 385,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       248.416,
+       919.6600000000001
+      ],
+      [
+       248.416,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 395,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       308.128,
+       980.9040000000001
+      ],
+      [
+       308.128,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 691,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       373.664,
+       919.6600000000001
+      ],
+      [
+       373.664,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1129.184
+      ],
+      [
+       1442.88,
+       1129.184
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1147.488
+      ],
+      [
+       1442.88,
+       1147.488
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t57": {
+   "slots": 10,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3869,
+   "failures": [
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 909,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       519.968,
+       307.22
+      ],
+      [
+       519.968,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 998,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       797.408,
+       307.22
+      ],
+      [
+       797.408,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1142,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       373.664,
+       980.9040000000001
+      ],
+      [
+       373.664,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 820,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       651.104,
+       919.6600000000001
+      ],
+      [
+       651.104,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t58": {
+   "slots": 14,
+   "max_hop_um": 375.6853,
+   "over_reach_bits": 0,
+   "st_in_core": 5514,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1398,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 933,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       251.168,
+       307.22
+      ],
+      [
+       251.168,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 108,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       248.416,
+       919.6600000000001
+      ],
+      [
+       248.416,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 786,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       397.664,
+       980.9040000000001
+      ],
+      [
+       397.664,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 339.0853,
+     "over_reach_bits": 0,
+     "st_in_core": 2121,
+     "stations": 3,
+     "worst_bit": 702,
+     "worst_segment": [
+      [
+       339.0853333333333,
+       335.328
+      ],
+      [
+       0.0,
+       335.328
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 363.536,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 6,
+     "worst_bit": 12,
+     "worst_segment": [
+      [
+       1050.272,
+       363.53599999999983
+      ],
+      [
+       1050.272,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 369.52,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1065.632,
+       369.52000000000055
+      ],
+      [
+       1065.632,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 375.6853,
+     "over_reach_bits": 0,
+     "st_in_core": 26,
+     "stations": 6,
+     "worst_bit": 2,
+     "worst_segment": [
+      [
+       1084.832,
+       375.6853333333331
+      ],
+      [
+       1084.832,
+       0.0
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t59": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2247,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 831,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       127.072,
+       307.22
+      ],
+      [
+       127.072,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 182,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       919.6600000000001
+      ],
+      [
+       65.824,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 538,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.32,
+       919.6600000000001
+      ],
+      [
+       188.32,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 696,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       248.416,
+       919.6600000000001
+      ],
+      [
+       248.416,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t6": {
+   "slots": 12,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1333,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 90,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 121,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 12,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       129.056,
+       919.6600000000001
+      ],
+      [
+       129.056,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1129.184
+      ],
+      [
+       1442.88,
+       1129.184
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1147.488
+      ],
+      [
+       1442.88,
+       1147.488
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1165.728
+      ],
+      [
+       1442.88,
+       1165.728
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 130,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1183.968
+      ],
+      [
+       1442.88,
+       1183.968
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t60": {
+   "slots": 12,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 4049,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 14,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 461,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       127.072,
+       307.22
+      ],
+      [
+       127.072,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 294.616,
+     "over_reach_bits": 0,
+     "st_in_core": 2254,
+     "stations": 5,
+     "worst_bit": 1104,
+     "worst_segment": [
+      [
+       294.616,
+       247.52
+      ],
+      [
+       0.0,
+       247.52
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 141,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       919.6600000000001
+      ],
+      [
+       65.824,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.32,
+       980.9040000000001
+      ],
+      [
+       188.32,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       248.416,
+       919.6600000000001
+      ],
+      [
+       248.416,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1183.968
+      ],
+      [
+       1442.88,
+       1183.968
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t61": {
+   "slots": 10,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 4223,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 64,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       127.072,
+       307.22
+      ],
+      [
+       127.072,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1408,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       251.168,
+       245.976
+      ],
+      [
+       251.168,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1220,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       638.816,
+       307.22
+      ],
+      [
+       638.816,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 305,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.32,
+       919.6600000000001
+      ],
+      [
+       188.32,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       248.416,
+       919.6600000000001
+      ],
+      [
+       248.416,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 421,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       492.32,
+       919.6600000000001
+      ],
+      [
+       492.32,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 109,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       769.76,
+       919.6600000000001
+      ],
+      [
+       769.76,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       788.192,
+       919.6600000000001
+      ],
+      [
+       788.192,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       806.432,
+       919.6600000000001
+      ],
+      [
+       806.432,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t62": {
+   "slots": 15,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 5470,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1105,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 996,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 277,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       127.072,
+       307.22
+      ],
+      [
+       127.072,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1104,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       189.92,
+       245.976
+      ],
+      [
+       189.92,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 802,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       467.36,
+       307.22
+      ],
+      [
+       467.36,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 20,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       919.6600000000001
+      ],
+      [
+       65.824,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 305,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.32,
+       919.6600000000001
+      ],
+      [
+       188.32,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 640,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       336.416,
+       919.6600000000001
+      ],
+      [
+       336.416,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 104,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       613.856,
+       919.6600000000001
+      ],
+      [
+       613.856,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1129.184
+      ],
+      [
+       1442.88,
+       1129.184
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 46,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1147.488
+      ],
+      [
+       1442.88,
+       1147.488
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t63": {
+   "slots": 5,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3701,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 341,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       127.072,
+       307.22
+      ],
+      [
+       127.072,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1147,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       189.92,
+       307.22
+      ],
+      [
+       189.92,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 141,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       919.6600000000001
+      ],
+      [
+       65.824,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.32,
+       919.6600000000001
+      ],
+      [
+       188.32,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1518,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       336.416,
+       980.9040000000001
+      ],
+      [
+       336.416,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t64": {
+   "slots": 3,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1551,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 831,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       127.072,
+       307.22
+      ],
+      [
+       127.072,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 182,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       919.6600000000001
+      ],
+      [
+       65.824,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 538,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       188.32,
+       919.6600000000001
+      ],
+      [
+       188.32,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t65": {
+   "slots": 17,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3611,
+   "failures": [
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 61,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       307.22
+      ],
+      [
+       65.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1334,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       307.22
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1208,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       308.768,
+       245.976
+      ],
+      [
+       308.768,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 213,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       549.92,
+       919.6600000000001
+      ],
+      [
+       549.92,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 187,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       568.16,
+       919.6600000000001
+      ],
+      [
+       568.16,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       586.528,
+       919.6600000000001
+      ],
+      [
+       586.528,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       604.832,
+       919.6600000000001
+      ],
+      [
+       604.832,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 109,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       623.072,
+       919.6600000000001
+      ],
+      [
+       623.072,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       641.312,
+       919.6600000000001
+      ],
+      [
+       641.312,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1129.184
+      ],
+      [
+       1442.88,
+       1129.184
+      ]
+     ]
+    },
+    {
+     "slot": "ft12",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 2,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1147.488
+      ],
+      [
+       1442.88,
+       1147.488
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t66": {
+   "slots": 11,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3816,
+   "failures": [
+    {
+     "slot": "ft2",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1408,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       308.768,
+       245.976
+      ],
+      [
+       308.768,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 994,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       806.048,
+       307.22
+      ],
+      [
+       806.048,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       549.92,
+       919.6600000000001
+      ],
+      [
+       549.92,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 116,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       568.16,
+       919.6600000000001
+      ],
+      [
+       568.16,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 84,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       586.528,
+       919.6600000000001
+      ],
+      [
+       586.528,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       604.832,
+       919.6600000000001
+      ],
+      [
+       604.832,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       623.072,
+       919.6600000000001
+      ],
+      [
+       623.072,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       641.312,
+       919.6600000000001
+      ],
+      [
+       641.312,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft10",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 859,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       659.744,
+       919.6600000000001
+      ],
+      [
+       659.744,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t67": {
+   "slots": 16,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 8503,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1398,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 2932,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 649,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       208.16,
+       307.22
+      ],
+      [
+       208.16,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1388,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       485.6,
+       307.22
+      ],
+      [
+       485.6,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1040,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       354.656,
+       980.9040000000001
+      ],
+      [
+       354.656,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1096,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       632.096,
+       919.6600000000001
+      ],
+      [
+       632.096,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t68": {
+   "slots": 6,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 4001,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 161,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       307.22
+      ],
+      [
+       65.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       307.22
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 12,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       192.544,
+       307.22
+      ],
+      [
+       192.544,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1766,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       208.16,
+       245.976
+      ],
+      [
+       208.16,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       980.9040000000001
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 954,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       354.656,
+       919.6600000000001
+      ],
+      [
+       354.656,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t69": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1559,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 182,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       307.22
+      ],
+      [
+       65.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 831,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       307.22
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 8,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       192.544,
+       307.22
+      ],
+      [
+       192.544,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 538,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       919.6600000000001
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t7": {
+   "slots": 6,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3700,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 202,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1048,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       293.408,
+       307.22
+      ],
+      [
+       293.408,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 750,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1153.952,
+       307.22
+      ],
+      [
+       1153.952,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       919.6600000000001
+      ],
+      [
+       67.616,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 12,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       129.056,
+       919.6600000000001
+      ],
+      [
+       129.056,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1134,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       147.104,
+       919.6600000000001
+      ],
+      [
+       147.104,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t70": {
+   "slots": 12,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1661,
+   "failures": [
+    {
+     "slot": "ft1",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 90,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 121,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       307.22
+      ],
+      [
+       65.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       307.22
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 340,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       919.6600000000001
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1129.184
+      ],
+      [
+       1442.88,
+       1129.184
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1147.488
+      ],
+      [
+       1442.88,
+       1147.488
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1165.728
+      ],
+      [
+       1442.88,
+       1165.728
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 130,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       1183.968
+      ],
+      [
+       1442.88,
+       1183.968
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t71": {
+   "slots": 6,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 4217,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 282,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       307.22
+      ],
+      [
+       65.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       67.616,
+       245.976
+      ],
+      [
+       67.616,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 12,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       192.544,
+       307.22
+      ],
+      [
+       192.544,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1628,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       354.656,
+       245.976
+      ],
+      [
+       354.656,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       128.672,
+       919.6600000000001
+      ],
+      [
+       128.672,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1187,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       208.16,
+       919.6600000000001
+      ],
+      [
+       208.16,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t72": {
+   "slots": 20,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 9761,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 1770,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 1953,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       488.672,
+       245.976
+      ],
+      [
+       488.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       507.104,
+       307.22
+      ],
+      [
+       507.104,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 75,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       525.344,
+       307.22
+      ],
+      [
+       525.344,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       543.584,
+       307.22
+      ],
+      [
+       543.584,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       561.824,
+       307.22
+      ],
+      [
+       561.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 28,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       580.064,
+       307.22
+      ],
+      [
+       580.064,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 635,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       598.496,
+       307.22
+      ],
+      [
+       598.496,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1268,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       875.936,
+       245.976
+      ],
+      [
+       875.936,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1163,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       247.52,
+       919.6600000000001
+      ],
+      [
+       247.52,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft12",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1695,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       744.8,
+       980.9040000000001
+      ],
+      [
+       744.8,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft13",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 748,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1022.24,
+       980.9040000000001
+      ],
+      [
+       1022.24,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t73": {
+   "slots": 10,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2970,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       488.672,
+       307.22
+      ],
+      [
+       488.672,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 8,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       507.104,
+       307.22
+      ],
+      [
+       507.104,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 27,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       543.584,
+       307.22
+      ],
+      [
+       543.584,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       561.824,
+       307.22
+      ],
+      [
+       561.824,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       580.064,
+       307.22
+      ],
+      [
+       580.064,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 543,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       598.496,
+       307.22
+      ],
+      [
+       598.496,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 603,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       919.6600000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1096,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       247.52,
+       919.6600000000001
+      ],
+      [
+       247.52,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 480,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       744.8,
+       919.6600000000001
+      ],
+      [
+       744.8,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t74": {
+   "slots": 8,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 3215,
+   "failures": [
+    {
+     "slot": "ft6",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1726,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       980.9040000000001
+      ],
+      [
+       6.368,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1489,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       247.52,
+       919.6600000000001
+      ],
+      [
+       247.52,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t75": {
+   "slots": 12,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 8436,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 2683,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 2581,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 907,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       6.368,
+       307.22
+      ],
+      [
+       6.368,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1159,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       283.808,
+       307.22
+      ],
+      [
+       283.808,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1106,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       152.672,
+       919.6600000000001
+      ],
+      [
+       152.672,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t8": {
+   "slots": 20,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 9761,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 1770,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       245.92
+      ],
+      [
+       0.0,
+       245.92
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 289.176,
+     "over_reach_bits": 0,
+     "st_in_core": 1953,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       289.17599999999993,
+       487.072
+      ],
+      [
+       0.0,
+       487.072
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       504.928,
+       245.976
+      ],
+      [
+       504.928,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 142,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       523.296,
+       307.22
+      ],
+      [
+       523.296,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 75,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       539.488,
+       307.22
+      ],
+      [
+       539.488,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       560.16,
+       307.22
+      ],
+      [
+       560.16,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       578.4,
+       307.22
+      ],
+      [
+       578.4,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 28,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       596.64,
+       307.22
+      ],
+      [
+       596.64,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 635,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       598.496,
+       307.22
+      ],
+      [
+       598.496,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1268,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       875.936,
+       245.976
+      ],
+      [
+       875.936,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft11",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1163,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       484.384,
+       919.6600000000001
+      ],
+      [
+       484.384,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft12",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 1695,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       744.8,
+       980.9040000000001
+      ],
+      [
+       744.8,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft13",
+     "max_hop_um": 245.976,
+     "over_reach_bits": 0,
+     "st_in_core": 748,
+     "stations": 5,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1022.24,
+       980.9040000000001
+      ],
+      [
+       1022.24,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "ot_s81sl_leaf__t9": {
+   "slots": 10,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 2970,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       504.928,
+       307.22
+      ],
+      [
+       504.928,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 8,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       523.296,
+       307.22
+      ],
+      [
+       523.296,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 27,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       560.16,
+       307.22
+      ],
+      [
+       560.16,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       578.4,
+       307.22
+      ],
+      [
+       578.4,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 71,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       596.64,
+       307.22
+      ],
+      [
+       596.64,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 543,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       598.496,
+       307.22
+      ],
+      [
+       598.496,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 603,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       241.696,
+       919.6600000000001
+      ],
+      [
+       241.696,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1096,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       484.384,
+       919.6600000000001
+      ],
+      [
+       484.384,
+       1226.88
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 307.22,
+     "over_reach_bits": 0,
+     "st_in_core": 480,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       744.8,
+       919.6600000000001
+      ],
+      [
+       744.8,
+       1226.88
+      ]
+     ]
+    }
+   ]
+  },
+  "seqhost__t1": {
+   "slots": 3,
+   "max_hop_um": 341.8352,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "serdes__t1": {
+   "slots": 2,
+   "max_hop_um": 361.47,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "serdes__t12": {
+   "slots": 6,
+   "max_hop_um": 394.756,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "serdes__t13": {
+   "slots": 6,
+   "max_hop_um": 380.1307,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "serdes__t14": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "serdes__t15": {
+   "slots": 4,
+   "max_hop_um": 361.47,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "serdes__t16": {
+   "slots": 2,
+   "max_hop_um": 361.47,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "serdes__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "serdes__t3": {
+   "slots": 4,
+   "max_hop_um": 361.47,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "serdes__t4": {
+   "slots": 6,
+   "max_hop_um": 377.592,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "serdes__t5": {
+   "slots": 2,
+   "max_hop_um": 361.47,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "serdes__t6": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "slice_station__t12": {
+   "slots": 3,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t14": {
+   "slots": 9,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t17": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t18": {
+   "slots": 10,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t19": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "slice_station__t20": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t21": {
+   "slots": 3,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t22": {
+   "slots": 13,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t23": {
+   "slots": 4,
+   "max_hop_um": 391.284,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t24": {
+   "slots": 4,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t25": {
+   "slots": 12,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t26": {
+   "slots": 7,
+   "max_hop_um": 388.452,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t27": {
+   "slots": 15,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t28": {
+   "slots": 7,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t29": {
+   "slots": 10,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t30": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t31": {
+   "slots": 8,
+   "max_hop_um": 360.792,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t35": {
+   "slots": 8,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t36": {
+   "slots": 16,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t37": {
+   "slots": 19,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t38": {
+   "slots": 11,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t39": {
+   "slots": 16,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t40": {
+   "slots": 8,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t41": {
+   "slots": 19,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t42": {
+   "slots": 11,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t43": {
+   "slots": 19,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t44": {
+   "slots": 11,
+   "max_hop_um": 365.152,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t45": {
+   "slots": 3,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t46": {
+   "slots": 4,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t47": {
+   "slots": 7,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t48": {
+   "slots": 5,
+   "max_hop_um": 374.9872,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t6": {
+   "slots": 10,
+   "max_hop_um": 361.476,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t7": {
+   "slots": 2,
+   "max_hop_um": 307.22,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "slice_station__t8": {
+   "slots": 12,
+   "max_hop_um": 345.1493,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "svc_hi_dsdv_svc_pvso_entry__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "svc_hi_dsdv_svc_pvso_entry__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "svc_hi_dsdv_svc_rs__t1": {
+   "slots": 10,
+   "max_hop_um": 351.2514,
+   "over_reach_bits": 0,
+   "st_in_core": 16387,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 316.8286,
+     "over_reach_bits": 0,
+     "st_in_core": 4299,
+     "stations": 7,
+     "worst_bit": 1072,
+     "worst_segment": [
+      [
+       13.472,
+       557.7885714285712
+      ],
+      [
+       0.0,
+       254.432
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 300.2693,
+     "over_reach_bits": 0,
+     "st_in_core": 8195,
+     "stations": 9,
+     "worst_bit": 1070,
+     "worst_segment": [
+      [
+       255.392,
+       58.60533333333342
+      ],
+      [
+       0.0,
+       13.728
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.47,
+     "over_reach_bits": 0,
+     "st_in_core": 2524,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       598.496,
+       307.47000000000025
+      ],
+      [
+       598.496,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 305.6987,
+     "over_reach_bits": 0,
+     "st_in_core": 253,
+     "stations": 6,
+     "worst_bit": 9,
+     "worst_segment": [
+      [
+       503.544,
+       2148.061333333333
+      ],
+      [
+       503.544,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 305.7547,
+     "over_reach_bits": 0,
+     "st_in_core": 238,
+     "stations": 6,
+     "worst_bit": 2,
+     "worst_segment": [
+      [
+       523.232,
+       2148.0053333333335
+      ],
+      [
+       523.232,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 305.6587,
+     "over_reach_bits": 0,
+     "st_in_core": 189,
+     "stations": 6,
+     "worst_bit": 70,
+     "worst_segment": [
+      [
+       525.344,
+       2148.1013333333335
+      ],
+      [
+       525.344,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 305.7547,
+     "over_reach_bits": 0,
+     "st_in_core": 125,
+     "stations": 6,
+     "worst_bit": 48,
+     "worst_segment": [
+      [
+       549.152,
+       2148.0053333333335
+      ],
+      [
+       549.152,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 305.7547,
+     "over_reach_bits": 0,
+     "st_in_core": 280,
+     "stations": 6,
+     "worst_bit": 16,
+     "worst_segment": [
+      [
+       575.072,
+       2148.0053333333335
+      ],
+      [
+       575.072,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 305.7547,
+     "over_reach_bits": 0,
+     "st_in_core": 284,
+     "stations": 6,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       596.64,
+       2148.0053333333335
+      ],
+      [
+       596.64,
+       2453.76
+      ]
+     ]
+    }
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "svc_hi_dsdv_svc_rs__t3": {
+   "slots": 2,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1978,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 852,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       7.008
+      ],
+      [
+       0.0,
+       7.008
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1126,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       129.632
+      ],
+      [
+       1442.88,
+       129.632
+      ]
+     ]
+    }
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t4": {
+   "slots": 2,
+   "max_hop_um": 361.22,
+   "over_reach_bits": 0,
+   "st_in_core": 1978,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 1126,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       361.22,
+       129.632
+      ],
+      [
+       0.0,
+       129.632
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 361.22,
+     "over_reach_bits": 0,
+     "st_in_core": 852,
+     "stations": 4,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       1081.66,
+       7.008
+      ],
+      [
+       1442.88,
+       7.008
+      ]
+     ]
+    }
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t5": {
+   "slots": 4,
+   "max_hop_um": 351.2514,
+   "over_reach_bits": 0,
+   "st_in_core": 4399,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.47,
+     "over_reach_bits": 0,
+     "st_in_core": 1231,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       312.416,
+       307.47000000000025
+      ],
+      [
+       312.416,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 351.2514,
+     "over_reach_bits": 0,
+     "st_in_core": 846,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       2102.5085714285715
+      ],
+      [
+       65.824,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 307.47,
+     "over_reach_bits": 0,
+     "st_in_core": 937,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       248.416,
+       2146.29
+      ],
+      [
+       248.416,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 307.47,
+     "over_reach_bits": 0,
+     "st_in_core": 1385,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       308.128,
+       2146.29
+      ],
+      [
+       308.128,
+       2453.76
+      ]
+     ]
+    }
+   ]
+  },
+  "svc_hi_dsdv_svc_rs__t6": {
+   "slots": 10,
+   "max_hop_um": 318.6293,
+   "over_reach_bits": 0,
+   "st_in_core": 18092,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 295.4295,
+     "over_reach_bits": 0,
+     "st_in_core": 1566,
+     "stations": 13,
+     "worst_bit": 275,
+     "worst_segment": [
+      [
+       1382.04,
+       295.4295384615384
+      ],
+      [
+       1382.04,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 314.934,
+     "over_reach_bits": 0,
+     "st_in_core": 6354,
+     "stations": 8,
+     "worst_bit": 1104,
+     "worst_segment": [
+      [
+       307.232,
+       255.2220000000002
+      ],
+      [
+       0.0,
+       247.52
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 299.9456,
+     "over_reach_bits": 0,
+     "st_in_core": 8159,
+     "stations": 10,
+     "worst_bit": 1103,
+     "worst_segment": [
+      [
+       299.9456,
+       6.36
+      ],
+      [
+       0.0,
+       6.36
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 286.456,
+     "over_reach_bits": 0,
+     "st_in_core": 316,
+     "stations": 11,
+     "worst_bit": 48,
+     "worst_segment": [
+      [
+       1348.704,
+       286.45600000000024
+      ],
+      [
+       1348.704,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 273.2514,
+     "over_reach_bits": 0,
+     "st_in_core": 252,
+     "stations": 7,
+     "worst_bit": 69,
+     "worst_segment": [
+      [
+       566.52,
+       2180.5085714285715
+      ],
+      [
+       566.52,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft5",
+     "max_hop_um": 318.3707,
+     "over_reach_bits": 0,
+     "st_in_core": 238,
+     "stations": 6,
+     "worst_bit": 69,
+     "worst_segment": [
+      [
+       583.224,
+       2135.3893333333335
+      ],
+      [
+       583.224,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft6",
+     "max_hop_um": 318.0,
+     "over_reach_bits": 0,
+     "st_in_core": 284,
+     "stations": 6,
+     "worst_bit": 70,
+     "worst_segment": [
+      [
+       599.392,
+       2135.76
+      ],
+      [
+       599.392,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft7",
+     "max_hop_um": 318.6293,
+     "over_reach_bits": 0,
+     "st_in_core": 284,
+     "stations": 6,
+     "worst_bit": 70,
+     "worst_segment": [
+      [
+       621.408,
+       2135.130666666667
+      ],
+      [
+       621.408,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft8",
+     "max_hop_um": 318.6267,
+     "over_reach_bits": 0,
+     "st_in_core": 284,
+     "stations": 6,
+     "worst_bit": 69,
+     "worst_segment": [
+      [
+       639.672,
+       2135.133333333333
+      ],
+      [
+       639.672,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft9",
+     "max_hop_um": 273.0983,
+     "over_reach_bits": 0,
+     "st_in_core": 355,
+     "stations": 7,
+     "worst_bit": 70,
+     "worst_segment": [
+      [
+       656.8,
+       2180.6617142857144
+      ],
+      [
+       656.8,
+       2453.76
+      ]
+     ]
+    }
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "svc_lo_dsdv_svc_rs__t2": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "svc_lo_dsdv_svc_rs__t3": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "svc_lo_dsdv_svc_rs__t4": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "svc_lo_dsdv_svc_rs__t5": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "svc_lo_dsdv_svc_rs__t6": {
+   "slots": 4,
+   "max_hop_um": 335.1143,
+   "over_reach_bits": 0,
+   "st_in_core": 5143,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 308.112,
+     "over_reach_bits": 0,
+     "st_in_core": 1553,
+     "stations": 8,
+     "worst_bit": 275,
+     "worst_segment": [
+      [
+       308.11200000000014,
+       362.712
+      ],
+      [
+       0.0,
+       362.712
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 335.1143,
+     "over_reach_bits": 0,
+     "st_in_core": 767,
+     "stations": 7,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       65.824,
+       2118.6457142857143
+      ],
+      [
+       65.824,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 308.486,
+     "over_reach_bits": 0,
+     "st_in_core": 1146,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       248.416,
+       2145.2740000000003
+      ],
+      [
+       248.416,
+       2453.76
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 308.304,
+     "over_reach_bits": 0,
+     "st_in_core": 1677,
+     "stations": 8,
+     "worst_bit": 1,
+     "worst_segment": [
+      [
+       308.136,
+       2145.456
+      ],
+      [
+       308.136,
+       2453.76
+      ]
+     ]
+    }
+   ]
+  },
+  "svc_lo_dsdv_svc_rs__t7": {
+   "slots": 5,
+   "max_hop_um": 355.32,
+   "over_reach_bits": 0,
+   "st_in_core": 3982,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 355.32,
+     "over_reach_bits": 0,
+     "st_in_core": 554,
+     "stations": 3,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       800.288,
+       355.3200000000001
+      ],
+      [
+       800.288,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft1",
+     "max_hop_um": 349.8907,
+     "over_reach_bits": 0,
+     "st_in_core": 432,
+     "stations": 9,
+     "worst_bit": 48,
+     "worst_segment": [
+      [
+       660.448,
+       349.8906666666668
+      ],
+      [
+       660.448,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft2",
+     "max_hop_um": 295.4295,
+     "over_reach_bits": 0,
+     "st_in_core": 1566,
+     "stations": 13,
+     "worst_bit": 275,
+     "worst_segment": [
+      [
+       6.216,
+       295.4295384615384
+      ],
+      [
+       6.216,
+       0.0
+      ]
+     ]
+    },
+    {
+     "slot": "ft3",
+     "max_hop_um": 266.024,
+     "over_reach_bits": 0,
+     "st_in_core": 707,
+     "stations": 4,
+     "worst_bit": 275,
+     "worst_segment": [
+      [
+       1176.856,
+       297.192
+      ],
+      [
+       1442.88,
+       297.192
+      ]
+     ]
+    },
+    {
+     "slot": "ft4",
+     "max_hop_um": 265.736,
+     "over_reach_bits": 0,
+     "st_in_core": 723,
+     "stations": 4,
+     "worst_bit": 275,
+     "worst_segment": [
+      [
+       1177.144,
+       357.288
+      ],
+      [
+       1442.88,
+       357.288
+      ]
+     ]
+    }
+   ]
+  },
+  "svc_lo_dsdv_svc_rs_w__t1": {
+   "slots": 1,
+   "max_hop_um": 307.47,
+   "over_reach_bits": 0,
+   "st_in_core": 2524,
+   "failures": [
+    {
+     "slot": "ft0",
+     "max_hop_um": 307.47,
+     "over_reach_bits": 0,
+     "st_in_core": 2524,
+     "stations": 8,
+     "worst_bit": 0,
+     "worst_segment": [
+      [
+       598.496,
+       307.47000000000025
+      ],
+      [
+       598.496,
+       0.0
+      ]
+     ]
+    }
+   ]
+  }
+ },
+ "elapsed_s": 27.7
+}

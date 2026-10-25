@@ -1,0 +1,334 @@
+{
+ "source": "kv_channel_candidate.json",
+ "types": {
+  "kv3_hg": {
+   "slots": 3,
+   "max_hop_um": 319.68,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hg_v2": {
+   "slots": 4,
+   "max_hop_um": 380.16,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hg_v3": {
+   "slots": 4,
+   "max_hop_um": 380.16,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hgi": {
+   "slots": 7,
+   "max_hop_um": 401.572,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hgi_v1": {
+   "slots": 3,
+   "max_hop_um": 319.68,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hgi_v2": {
+   "slots": 4,
+   "max_hop_um": 401.716,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hgi_v3": {
+   "slots": 29,
+   "max_hop_um": 401.572,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hgi_v4": {
+   "slots": 25,
+   "max_hop_um": 395.64,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hgi_v5": {
+   "slots": 26,
+   "max_hop_um": 403.985,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hgi_v6": {
+   "slots": 29,
+   "max_hop_um": 404.616,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hgi_v7": {
+   "slots": 25,
+   "max_hop_um": 404.616,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hgi_v8": {
+   "slots": 27,
+   "max_hop_um": 404.616,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hroot": {
+   "slots": 14,
+   "max_hop_um": 397.0373,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hub_C": {
+   "slots": 30,
+   "max_hop_um": 398.592,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hub_Ei": {
+   "slots": 76,
+   "max_hop_um": 394.5227,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hub_Eo": {
+   "slots": 32,
+   "max_hop_um": 383.5248,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hub_Wi": {
+   "slots": 32,
+   "max_hop_um": 375.918,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hub_Wo": {
+   "slots": 32,
+   "max_hop_um": 383.5248,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_io_cor": {
+   "slots": 19,
+   "max_hop_um": 394.0613,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_io_cor_v1": {
+   "slots": 25,
+   "max_hop_um": 389.156,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_io_ft": {
+   "slots": 4,
+   "max_hop_um": 320.18,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_io_ft_v1": {
+   "slots": 4,
+   "max_hop_um": 320.18,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pc": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "kv3_pc_v1": {
+   "slots": 2,
+   "max_hop_um": 380.66,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pc_v2": {
+   "slots": 2,
+   "max_hop_um": 381.252,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pc_v3": {
+   "slots": 2,
+   "max_hop_um": 380.684,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv": {
+   "slots": 6,
+   "max_hop_um": 401.256,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v1": {
+   "slots": 9,
+   "max_hop_um": 380.16,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v2": {
+   "slots": 27,
+   "max_hop_um": 404.808,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v3": {
+   "slots": 25,
+   "max_hop_um": 404.384,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v4": {
+   "slots": 43,
+   "max_hop_um": 404.52,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v5": {
+   "slots": 41,
+   "max_hop_um": 404.398,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v6": {
+   "slots": 59,
+   "max_hop_um": 404.52,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v7": {
+   "slots": 57,
+   "max_hop_um": 404.42,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v8": {
+   "slots": 6,
+   "max_hop_um": 401.256,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v9": {
+   "slots": 9,
+   "max_hop_um": 380.16,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v10": {
+   "slots": 25,
+   "max_hop_um": 404.384,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v11": {
+   "slots": 41,
+   "max_hop_um": 404.398,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_pv_v12": {
+   "slots": 58,
+   "max_hop_um": 404.328,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_sys_SD": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "kv3_sys_SD_v1": {
+   "slots": 0,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "max_hop_um": 0,
+   "failures": []
+  },
+  "kv3_sys_c": {
+   "slots": 1,
+   "max_hop_um": 402.6992,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hg_v1_r1": {
+   "slots": 4,
+   "max_hop_um": 380.16,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hg_v1_r2": {
+   "slots": 4,
+   "max_hop_um": 380.16,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hg_v1_r3": {
+   "slots": 4,
+   "max_hop_um": 380.16,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hg_v1_r4": {
+   "slots": 4,
+   "max_hop_um": 380.16,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  },
+  "kv3_hg_v1_r5": {
+   "slots": 4,
+   "max_hop_um": 380.16,
+   "over_reach_bits": 0,
+   "st_in_core": 0,
+   "failures": []
+  }
+ }
+}

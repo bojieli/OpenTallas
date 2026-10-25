@@ -1,0 +1,52 @@
+{
+  "when": "2026-10-25T03:03:46.732600-07:00",
+  "source_ref": "b58fc0f167f456ea108fda04106eb442ab54b2d2",
+  "scope": "Planned per-bit station geometry across release plans; skeleton GRT3QC; NOT die signoff",
+  "baseline_summary": {
+    "qc": {
+      "soft_types": 53,
+      "failed_types": 15,
+      "max_hop_um": 483.816,
+      "in_core_sites": 544
+    },
+    "kv": {
+      "soft_types": 47,
+      "failed_types": 24,
+      "max_hop_um": 508.832,
+      "in_core_sites": 8545
+    },
+    "s81": {
+      "soft_types": 175,
+      "failed_types": 88,
+      "max_hop_um": 414.7536,
+      "in_core_sites": 332515
+    },
+    "head": {
+      "soft_types": 16,
+      "failed_types": 0,
+      "max_hop_um": 361.22,
+      "in_core_sites": 0
+    },
+    "hbm": {
+      "soft_types": 44,
+      "failed_types": 31,
+      "max_hop_um": 620.144,
+      "in_core_sites": 0
+    }
+  },
+  "candidate_inputs": {
+    "leaf_t75_corridor.json": {
+      "sha256": "d6259b969cfe67f41c89fbf040a02f974d71e6b83b12db44003db9aa4f556e3c",
+      "scope": "Correction candidate, not selected release plan"
+    },
+    "kv_channel_candidate.json": {
+      "sha256": "ad88fe25ad379a79ac325d8393e974a00c16a65915bed16b091a701162639656",
+      "scope": "Correction candidate, not selected release plan"
+    }
+  },
+  "candidate_results": {
+    "s81_t75": "PASS geometry1type, max367.195um,0in-core; S81ownerfanoutnext",
+    "kv_channel": "PASS geometry47softtypes, max404.808um,0in-core; physicalpacking/GRT still owed"
+  },
+  "correction": "Initial coll_ftc routing-only CLEAN statement superseded: exact pin-window tail483.7um violates405, STRUCTURAL. Collector now incorporates the previously separate report geometry check."
+}

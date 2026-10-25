@@ -1,0 +1,394 @@
+{
+ "cbn_q01": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 23926311,
+    "demand": 870051,
+    "usage_pct": 3.64,
+    "overflow": 66
+   },
+   "M3": {
+    "resource": 26826257,
+    "demand": 1867042,
+    "usage_pct": 6.96,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 20089302,
+    "demand": 719341,
+    "usage_pct": 3.58,
+    "overflow": 56
+   },
+   "M5": {
+    "resource": 20108390,
+    "demand": 1269341,
+    "usage_pct": 6.31,
+    "overflow": 2
+   },
+   "M6": {
+    "resource": 39793752,
+    "demand": 232656,
+    "usage_pct": 0.58,
+    "overflow": 42
+   },
+   "M7": {
+    "resource": 39808561,
+    "demand": 481437,
+    "usage_pct": 1.21,
+    "overflow": 2
+   }
+  },
+  "total_overflow": 168,
+  "wirelength_um": 3165784.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "cbn_q01",
+  "instance": "c_W5_bn_01",
+  "outline_um": [
+   1235.52,
+   2617.92
+  ],
+  "pins": 5162,
+  "flops": 10997,
+  "leaf_blockages": 4,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 30,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 20.94,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 11998,
+   "ff_hold_wns": -2.16,
+   "ff_hold_tns": -51.2,
+   "ff_hold_viol": 40,
+   "ff_hold_endpoints": 11998
+  },
+  "repair_buffers": 13533,
+  "drv": {
+   "violators": 1775
+  },
+  "peak_gb": 21.46,
+  "wall": "15:36.97",
+  "hot_gcells": 119,
+  "hot_slots": [],
+  "hot_bbox_um": [
+   68,
+   1125,
+   81,
+   1150
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 21.0,
+    "p90": 13.8,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.7,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 2,
+   "max_hop_um": 428.2,
+   "over_reach": {
+    "rsf": 428.2,
+    "a00": 416.4
+   },
+   "over_reach_bits": 1030,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 168 (119 gcells, hot bbox 0.0% of outline); skeleton FF hold WNS -2.2 ps (40 endpoints); 2 ft slots exceed 405 um at actual pin-bit coordinates (rsf 428.2, a00 416.4 um)",
+   "hot_frac": 0.0001
+  }
+ },
+ "coll_ftc": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 17534737,
+    "demand": 2941290,
+    "usage_pct": 16.77,
+    "overflow": 0
+   },
+   "M3": {
+    "resource": 19632685,
+    "demand": 2686198,
+    "usage_pct": 13.68,
+    "overflow": 0
+   },
+   "M4": {
+    "resource": 14725308,
+    "demand": 1417866,
+    "usage_pct": 9.63,
+    "overflow": 0
+   },
+   "M5": {
+    "resource": 14724968,
+    "demand": 627380,
+    "usage_pct": 4.26,
+    "overflow": 0
+   },
+   "M6": {
+    "resource": 10026328,
+    "demand": 458813,
+    "usage_pct": 4.58,
+    "overflow": 0
+   },
+   "M7": {
+    "resource": 10026206,
+    "demand": 214487,
+    "usage_pct": 2.14,
+    "overflow": 0
+   }
+  },
+  "total_overflow": 0,
+  "wirelength_um": 4806901.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "coll_ftc",
+  "instance": "coll_f4",
+  "outline_um": [
+   786.24,
+   1036.8
+  ],
+  "pins": 10216,
+  "flops": 13332,
+  "leaf_blockages": 0,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 11,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 76.27,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 18419,
+   "ff_hold_wns": -2.35,
+   "ff_hold_tns": -17.7,
+   "ff_hold_viol": 12,
+   "ff_hold_endpoints": 18419
+  },
+  "repair_buffers": 16584,
+  "drv": {
+   "violators": 5678
+  },
+  "peak_gb": 6.37,
+  "wall": "5:23.64",
+  "hot_gcells": 0,
+  "displacement_um": {
+   "st": {
+    "max": 28.5,
+    "p90": 13.2,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 27,
+   "max_hop_um": 483.7,
+   "over_reach": {
+    "tl_st_wi": 483.7
+   },
+   "over_reach_bits": 1089,
+   "st_in_core": 0,
+   "st_in_core_slots": {}
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "skeleton FF hold WNS -2.4 ps (12 endpoints); 1 ft slots exceed 405 um at actual pin-bit coordinates (tl_st_wi 483.7 um)",
+   "hot_frac": 0.0
+  }
+ },
+ "sle_su_l0": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 4871771,
+    "demand": 884345,
+    "usage_pct": 18.15,
+    "overflow": 546
+   },
+   "M3": {
+    "resource": 5464185,
+    "demand": 1762585,
+    "usage_pct": 32.26,
+    "overflow": 46387
+   },
+   "M4": {
+    "resource": 4092030,
+    "demand": 722560,
+    "usage_pct": 17.66,
+    "overflow": 1324
+   },
+   "M5": {
+    "resource": 4097884,
+    "demand": 1304367,
+    "usage_pct": 31.83,
+    "overflow": 44225
+   },
+   "M6": {
+    "resource": 8261110,
+    "demand": 598906,
+    "usage_pct": 7.25,
+    "overflow": 3801
+   },
+   "M7": {
+    "resource": 8264838,
+    "demand": 1303670,
+    "usage_pct": 15.77,
+    "overflow": 35436
+   }
+  },
+  "total_overflow": 131719,
+  "wirelength_um": 3870054.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "kind": "proto-skeleton",
+  "die": "qwen_compute",
+  "type": "sle_su_l0",
+  "instance": "sl_E0_su_l0",
+  "outline_um": [
+   622.08,
+   1080.0
+  ],
+  "pins": 8377,
+  "flops": 12063,
+  "leaf_blockages": 4,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 10,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 4,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": -67.84,
+   "tt_setup_tns": -67.8,
+   "tt_setup_viol": 1,
+   "tt_setup_endpoints": 14662,
+   "ff_hold_wns": -0.86,
+   "ff_hold_tns": -0.9,
+   "ff_hold_viol": 1,
+   "ff_hold_endpoints": 14662
+  },
+  "repair_buffers": 12260,
+  "drv": {
+   "violators": 5011
+  },
+  "peak_gb": 5.33,
+  "wall": "13:42.18",
+  "hot_gcells": 13947,
+  "hot_slots": [
+   [
+    "rsf",
+    5198
+   ],
+   [
+    "x_fw_ctl_p2",
+    1444
+   ],
+   [
+    "cws3",
+    1193
+   ],
+   [
+    "rsn",
+    784
+   ],
+   [
+    "x_fw_st_a",
+    547
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   222,
+   604,
+   1071
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 31.3,
+    "p90": 13.6,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.8,
+    "p90": 1.2,
+    "over50": 0
+   }
+  },
+  "ft_hops": {
+   "slots": 6,
+   "max_hop_um": 436.8,
+   "over_reach": {
+    "rsn": 436.8,
+    "rsf": 433.7,
+    "x_fw_st_a": 416.4
+   },
+   "over_reach_bits": 1295,
+   "st_in_core": 272,
+   "st_in_core_slots": {
+    "cws3": 272
+   }
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 131719 (13947 gcells, hot bbox 76.4% of outline); skeleton TT setup WNS -67.8 ps (1 endpoints); skeleton FF hold WNS -0.9 ps (1 endpoints); 3 ft slots exceed 405 um at actual pin-bit coordinates (rsn 436.8, rsf 433.7, x_fw_st_a 416.4 um); 272 planned ft station sites inside hard cores",
+   "hot_frac": 0.7643
+  }
+ }
+}

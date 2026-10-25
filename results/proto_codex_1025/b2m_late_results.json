@@ -1,0 +1,298 @@
+{
+ "q_b112": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 59582179,
+    "demand": 7804080,
+    "usage_pct": 13.1,
+    "overflow": 247972
+   },
+   "M3": {
+    "resource": 66692228,
+    "demand": 10742375,
+    "usage_pct": 16.11,
+    "overflow": 1252385
+   },
+   "M4": {
+    "resource": 50019954,
+    "demand": 6834391,
+    "usage_pct": 13.66,
+    "overflow": 193296
+   },
+   "M5": {
+    "resource": 50018261,
+    "demand": 6407272,
+    "usage_pct": 12.81,
+    "overflow": 423158
+   },
+   "M6": {
+    "resource": 42331768,
+    "demand": 4752020,
+    "usage_pct": 11.23,
+    "overflow": 140625
+   },
+   "M7": {
+    "resource": 42330312,
+    "demand": 3951367,
+    "usage_pct": 9.33,
+    "overflow": 279582
+   },
+   "M8": {
+    "resource": 33072421,
+    "demand": 2743717,
+    "usage_pct": 8.3,
+    "overflow": 87309
+   },
+   "M9": {
+    "resource": 33069420,
+    "demand": 2160201,
+    "usage_pct": 6.53,
+    "overflow": 145595
+   }
+  },
+  "total_overflow": 2769922,
+  "wirelength_um": 26513229.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "kind": "proto-skeleton",
+  "die": "hbm_arch_B2m",
+  "type": "q_b112",
+  "instance": "NW_b112",
+  "outline_um": [
+   1658.88,
+   2073.6
+  ],
+  "pins": 16181,
+  "flops": 32059,
+  "leaf_blockages": 5,
+  "adjust": 0.5,
+  "route_layers": "M2-M9",
+  "mem_gb": 32,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": -701.05,
+   "tt_setup_tns": -1427576.3,
+   "tt_setup_viol": 8707,
+   "tt_setup_endpoints": 39526,
+   "ff_hold_wns": 55.82,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 39526
+  },
+  "repair_buffers": 84416,
+  "drv": {
+   "violators": 34246
+  },
+  "peak_gb": 28.97,
+  "wall": "2:53:39",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L29x1",
+    26097
+   ],
+   [
+    "L31x1",
+    15724
+   ],
+   [
+    "L36x1",
+    11249
+   ],
+   [
+    "L43x1",
+    7581
+   ],
+   [
+    "L67x2",
+    2132
+   ]
+  ],
+  "hot_bbox_um": [
+   34,
+   0,
+   1659,
+   2072
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 46.1,
+    "p90": 29.4,
+    "over50": 0
+   },
+   "bf": {
+    "max": 24.3,
+    "p90": 9.3,
+    "over50": 0
+   }
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 2769922 (20000 gcells, hot bbox 97.9% of outline); skeleton TT setup WNS -701.0 ps (8707 endpoints)",
+   "hot_frac": 0.9789
+  }
+ },
+ "q_su01": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 37228922,
+    "demand": 7945758,
+    "usage_pct": 21.34,
+    "overflow": 1807540
+   },
+   "M3": {
+    "resource": 41637579,
+    "demand": 6503085,
+    "usage_pct": 15.62,
+    "overflow": 779070
+   },
+   "M4": {
+    "resource": 31266532,
+    "demand": 7207193,
+    "usage_pct": 23.05,
+    "overflow": 1112188
+   },
+   "M5": {
+    "resource": 31225335,
+    "demand": 3874408,
+    "usage_pct": 12.41,
+    "overflow": 464359
+   },
+   "M6": {
+    "resource": 48621870,
+    "demand": 11109371,
+    "usage_pct": 22.85,
+    "overflow": 3021158
+   },
+   "M7": {
+    "resource": 48611502,
+    "demand": 5730793,
+    "usage_pct": 11.79,
+    "overflow": 447323
+   },
+   "M8": {
+    "resource": 37987785,
+    "demand": 5769592,
+    "usage_pct": 15.19,
+    "overflow": 1359320
+   },
+   "M9": {
+    "resource": 37978929,
+    "demand": 2783528,
+    "usage_pct": 7.33,
+    "overflow": 179024
+   }
+  },
+  "total_overflow": 9169982,
+  "wirelength_um": 30980361.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "kind": "proto-skeleton",
+  "die": "hbm_arch_B2m",
+  "type": "q_su01",
+  "instance": "NW_su01",
+  "outline_um": [
+   2540.16,
+   1555.2
+  ],
+  "pins": 23100,
+  "flops": 44077,
+  "leaf_blockages": 11,
+  "adjust": 0.5,
+  "route_layers": "M2-M9",
+  "mem_gb": 36,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": -675.83,
+   "tt_setup_tns": -360475.4,
+   "tt_setup_viol": 2804,
+   "tt_setup_endpoints": 53230,
+   "ff_hold_wns": 34.11,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 53230
+  },
+  "repair_buffers": 109430,
+  "drv": {
+   "violators": 24641
+  },
+  "peak_gb": 34.85,
+  "wall": "2:48:56",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "L29x2",
+    14081
+   ],
+   [
+    "L28x1",
+    8312
+   ],
+   [
+    "L37x2",
+    6252
+   ],
+   [
+    "L48x2",
+    5212
+   ],
+   [
+    "L31x2",
+    3964
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   0,
+   2236,
+   1329
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 49.1,
+    "p90": 30.0,
+    "over50": 0
+   },
+   "bf": {
+    "max": 4.5,
+    "p90": 2.7,
+    "over50": 0
+   }
+  },
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 9169982 (20000 gcells, hot bbox 75.3% of outline); skeleton TT setup WNS -675.8 ps (2804 endpoints)",
+   "hot_frac": 0.7526
+  }
+ }
+}
