@@ -1,0 +1,41 @@
+{
+  "new_root": {
+    "kit": "/srv/opentallas-scratch2/claude/codex-hbm-physical-1309/root_delivered_v2",
+    "hash": "f048a183ea3b4bb6",
+    "module": "ot_hgi_coll_tkm_m_tp192__root__delivered_reset",
+    "canonical_sha256": "5cd6679d901745ced7b2b003841087ba65363b9f94344ee13c39564d540142dd",
+    "release_cycles": 3,
+    "data_cycle_delta": 0,
+    "synth": "v1 sameRTL synth+faceguard+portbindPASS, LECrunning; noP&R"
+  },
+  "static_common": {
+    "hash": "7a2f916258f75f1c",
+    "face_guard": "PASS1382/1382",
+    "port_bind": "PASS0missing0extra",
+    "LEC": "running"
+  },
+  "static_terminal": {
+    "hash": "e1065c3944d31770",
+    "face_guard": "PASS693/693",
+    "port_bind": "PASS0missing0extra",
+    "LEC": "running"
+  },
+  "root_physical_inputs": {
+    "del_flit": "bits0..2046W;2047..2115S atx220.920..317.352",
+    "cfg": "Sx2.328..219.624",
+    "start_del_slot_del_valid": "Nx298.968..303.672",
+    "clock_reset": "separate die clock/reset network",
+    "manifest": "/srv/opentallas-scratch2/claude/codex-hbm-physical-1309/root_delivered_rx_pin_manifest.json"
+  },
+  "root61_face_failures": {
+    "selected_tkm_root_and_leaves": 0,
+    "idx_ctl": 34,
+    "host_cp_rxs": 22,
+    "argmax": 2,
+    "eng_tail_fault": 1,
+    "idx_link": 1,
+    "col_idx": 1,
+    "status": "full-dieG0CremainsFAIL; no face waiver"
+  },
+  "clock": "CLOCK35tap shallow-trunk soleprototype pending timing/canary; no new P&R from these records"
+}

@@ -1,0 +1,24 @@
+{
+  "old_original": {
+    "max_ps": 416.5,
+    "min_ps": -40
+  },
+  "v1_superseded": {
+    "max_ps": 166.6,
+    "min_ps": -40
+  },
+  "v2_restored": {
+    "max_ps": 416.5,
+    "min_ps": -40
+  },
+  "setup_hold_uncertainty_ps": [
+    60,
+    25
+  ],
+  "cross_vclk_clk_setup_hold_ps": [
+    30,
+    12.5
+  ],
+  "source_guarantee": "No166.6ps parent driver proof available;416.5ps retained as instructed. Delivered reset remains timed, no false path.",
+  "RTL_byte_identity": "v1/v2 identical RTL; running v1 synth/LEC preserved, applies to same source only. No new launch."
+}

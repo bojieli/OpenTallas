@@ -1,0 +1,30 @@
+{
+  "source_sha": "a64589a097",
+  "basis": "ASAP7TT mapped synthesis only,833ps,60/25ps uncertainty; reset416.5max/-40min, no falsepath; no extra faceFF/noSIDE; not P&R/STA qualification",
+  "profiles": {
+    "tx": {
+      "nonmacro_cells": 11467,
+      "flipflops": 2344,
+      "cell_area_um2": 1437.47136,
+      "outline_um": [
+        302.4,
+        302.4
+      ],
+      "outline_fill_percent": 1.5719387755102046,
+      "artifacts": "/srv/opentallas-scratch2/claude/codex-hbm-physical-1309/tkx_counts/tx_tt_reset416",
+      "unit": "3372994-1792962471"
+    },
+    "rx": {
+      "nonmacro_cells": 13686,
+      "flipflops": 3518,
+      "cell_area_um2": 1857.492,
+      "outline_um": [
+        129.6,
+        345.6
+      ],
+      "outline_fill_percent": 4.147135416666666,
+      "artifacts": "/srv/opentallas-scratch2/claude/codex-hbm-physical-1309/tkx_counts/rx_tt_reset416",
+      "unit": "3372991-1792962470"
+    }
+  }
+}
