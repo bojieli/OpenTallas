@@ -455,7 +455,11 @@ def main():
         if canon[0].get("file") and canon[0]["file"] not in files:
             files = files + [canon[0]["file"]]
         top = canon[0]["top"]
-        params = {}
+        # HBM-FACE 10-25: keep the split recipe's parameters of the canonical top (build_split_tops.py writes them, e.g.
+        # score_hcol_h1 = ot_hidx_score_hcol #(HALF 1)).  They used to be dropped here, so every score_hcol_h1 view was
+        # elaborated and hardened as HALF 0 (default) - the wrong per-head delay depth / seed head - and its cs_in /
+        # cf_in looked unread.
+        params = dict(rec.get("params", {})) if rec.get("top") == top else {}
     commit = rec.get("source_commit", "HEAD")
     srcs, local = [], []
     for f in files:
@@ -508,7 +512,7 @@ def main():
             for k, n in (ti.get("tied_at_parent") or {}).items():
                 pn, val = k.split("=")
                 ties[pn] = val
-            txt, wrap_rep = build_wrapper(module, pb, top, {}, tports, cmap=ti["cut_pins"],
+            txt, wrap_rep = build_wrapper(module, pb, top, params, tports, cmap=ti["cut_pins"],
                                           straps=ti.get("straps") or {}, ties=ties)
         else:
             txt, wrap_rep = build_wrapper(module, pb, top, params, tports)

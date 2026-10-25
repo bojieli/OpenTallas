@@ -31,7 +31,9 @@ Usage (the kit generator calls apply(); the CLI is for analysis / tables / mutan
     face_shell.py analyze KITDIR                 -> unread / constant / duplicate report of the kit's core (no edit)
     face_shell.py latency OUT.json REPORT...     -> merge kit face_shell.json reports into the latency/drop table
 """
+import hashlib
 import json
+import os
 import re
 import subprocess
 import sys
@@ -66,6 +68,13 @@ def analyze(files, top, params=None, defines=(), incdir=None, libs=(), workdir=N
     workdir = Path(workdir)
     workdir.mkdir(parents=True, exist_ok=True)
     js = workdir / "face_shell_core.json"
+    # cache (views of one module share the RTL): key = yosys binary + every input file's bytes + top + params + libs
+    h = hashlib.sha256(f"v1 {YOSYS} {top} {sorted((params or {}).items())} {list(defines)}".encode())
+    for f in list(files) + list(libs):
+        h.update(str(Path(f).name).encode() + b"\0" + Path(f).read_bytes())
+    cache = Path(os.environ.get("FACE_SHELL_CACHE", Path.home() / ".cache" / "face_shell")) / (h.hexdigest()[:32] + ".json")
+    if cache.is_file():
+        return json.loads(cache.read_text())
     ch = " ".join(f"-chparam {k} {v}" for k, v in (params or {}).items())
     d = " ".join(f"-D{x}" for x in ["SYNTHESIS"] + list(defines))
     sv = [f for f in files if not str(f).endswith((".svh", ".vh"))]
@@ -132,6 +141,13 @@ def analyze(files, top, params=None, defines=(), incdir=None, libs=(), workdir=N
             rep["feedthrough"] += [f"{in_bit[b]}->{x}" for x in names]
     rep["port_dirs"] = {n: p["direction"] for n, p in ports.items()}
     rep["port_width"] = {n: len(p["bits"]) for n, p in ports.items()}
+    try:
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        tmp = cache.with_suffix(f".tmp{os.getpid()}")
+        tmp.write_text(json.dumps(rep))
+        os.replace(tmp, cache)
+    except OSError:
+        pass
     return rep
 
 
