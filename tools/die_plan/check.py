@@ -539,12 +539,23 @@ def check_latency(P, R):
         R.err("latency", "no latency table (generate it: python3 tools/die_plan/gen.py latency PLAN.json --inplace)")
         return {}
     for lid in P.lanes:
+        ln_ = P.lanes[lid]
+        if ln_.get("beats") or ln_.get("word_bits"):
+            # DEC12 multi-beat lane: both keys, and the port carries ceil(word / beats) + beat-index bits
+            bt, wb = int(ln_.get("beats", 0)), int(ln_.get("word_bits", 0))
+            w0 = int(P.ports[ln_["ports"][0]]["width"])
+            need = -(-wb // bt) + max(1, (bt - 1).bit_length()) if bt and wb else None
+            if need is None or w0 != need:
+                R.err("latency", f"lane {lid}: beats {bt} / word_bits {wb} need port width {need}, got {w0}", lane=lid)
         want = P.lane_latency(lid)
         got = tab.get(lid)
         if got is None:
             R.err("latency", f"lane {lid}: missing from the latency table", lane=lid)
         elif got["cycles"] != want["cycles"]:
             R.err("latency", f"lane {lid}: table says {got['cycles']} cycles, plan gives {want['cycles']}", lane=lid)
+        elif got.get("word_cycles") != want.get("word_cycles"):
+            R.err("latency", f"lane {lid}: table word_cycles {got.get('word_cycles')} != plan {want.get('word_cycles')}",
+                  lane=lid)
     # R8: one cycle per latency group (bus groups from BINDER2 + replicated consumers), checked on the TABLE (what the
     # binder / compiler read), and pads realisable per type
     for name, kind, lids in P.latency_groups():

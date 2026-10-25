@@ -341,6 +341,11 @@ SCHEMA = {
             "type": "object", "required": ["id", "ports"], "additionalProperties": False,
             "properties": {"id": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
                            "fixed_cycles": {"type": "integer", "minimum": 0},
+                           # DEC12 (S81 svc fold rung, 2026-10-24): a lane that carries a word of word_bits in `beats`
+                           # consecutive beats (endpoint RTL serialises; port width = ceil(word_bits / beats) + the
+                           # beat-index bits ceil(log2 beats), MSB).  cycles stay the lane's register stages (no bind
+                           # pads); latency adds word_cycles = cycles + beats - 1 (the last beat lands beats - 1 later)
+                           "beats": {"type": "integer", "minimum": 2}, "word_bits": {"type": "integer", "minimum": 1},
                            "reach_um": _pos, "param": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
                            "route_layers": {"type": "array", "items": _layer, "minItems": 1},
                            "note": {"type": "string"}}}},
@@ -402,6 +407,7 @@ SCHEMA = {
                                "faces": {"type": "integer"}, "fixed": {"type": "integer"},
                                "boundary": {"type": "integer"},
                                "natural": {"type": "integer"}, "pad": {"type": "integer", "minimum": 0},
+                               "beats": {"type": "integer", "minimum": 2}, "word_cycles": {"type": "integer"},
                                "param": {"type": "string"}}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
         "census": {"type": ["array", "object"]},
@@ -805,6 +811,8 @@ class Plan:
         pad = self.lane_pads()[lid]
         d["natural"], d["pad"] = d["cycles"], pad
         d["cycles"] += pad
+        if d.get("beats"):
+            d["word_cycles"] = d["cycles"] + d["beats"] - 1     # DEC12 2-beat lanes: the whole word's arrival
         return d
 
     def lane_natural(self, lid):
@@ -819,7 +827,10 @@ class Plan:
         fixed = int(ln.get("fixed_cycles", 0))
         a, b = self.ports[ln["ports"][0]], self.ports[ln["ports"][-1]]
         bnd = (a["src"]["part"] != DIE_PART) + (b["dst"]["part"] != DIE_PART)
-        return dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
+        d = dict(cycles=bnd + st + fixed, stations=st, boundary=bnd, faces=len(ln["ports"]), fixed=fixed)
+        if ln.get("beats"):
+            d["beats"] = int(ln["beats"])     # word_cycles (cycles + beats - 1) is added by lane_latency()
+        return d
 
 
 def tap_pitch(P, tn):
