@@ -28,7 +28,8 @@
   },
   "4_selt_c_keep": {
    "cycles": 0,
-   "evidence": "dsdv_bksel_c raw face_guard: merged quarter copies t_c_n/t_c_s gone; only the 146 vd TIELO remain"
+   "evidence": "dsdv_bksel_c raw face_guard: merged quarter copies t_c_n/t_c_s gone; only the 146 vd TIELO remain",
+   "lockstep": "not run: rtl_lockstep_eq on dsfd_selt_c did not elaborate (iverilog: tb clock name ck/clk mismatch in the preprocessed repo); equivalence is by construction (array -> per-generate reg, same D) and the bksel_c netlist shows the 4 quarter copies"
   },
   "extra_face_guard_fixes_0_cycles": "gunit L0/L1/L4 held pin regs -> kept twins; L2 hc_* kind-7 qualified (dl fold); cw_a packed 8 b along L2->L0->L4"
  },
@@ -128,6 +129,16 @@
    "checked": 9120,
    "ok": 9120,
    "fails": {}
+  },
+  "ot_s81dv_xfin": {
+   "verdict": "FAIL",
+   "checked": 903,
+   "ok": 804,
+   "fails": {
+    "shared": 99
+   },
+   "note": "s_i bits all pass; failures are the e_c / e_dd / e_hh / e_kk ENG-triple ports present in current ot_s81dv_norm.sv but absent from the r2 kit pins.json (100 extra ports, e_hh 32 + e_kk 16 hold loops, e_c 2): pre-existing kit/RTL skew, not RTLC"
   }
- }
+ },
+ "gunit_lp_lockstep": "dsdv_gunit_lp_bench.sh (verilator): AUDIT PASS, MUT0 LP_LOCKSTEP PASS, MUT1/2/4 FAIL (caught); landing flops 8,443"
 }
