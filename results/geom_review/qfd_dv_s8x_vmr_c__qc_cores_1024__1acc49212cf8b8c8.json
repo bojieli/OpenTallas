@@ -1,0 +1,17 @@
+{
+ "element": "qfd_dv_s8x_vmr_c",
+ "kit": "epyc1:/srv/opentallas-scratch2/claude/qc-cores/kits/qfd_dv_s8x_vmr_c (gen physical/die_plan/qwen_compute/cores/legacy/gen_core_kit_qc.py, claude/qc-cores-1024)",
+ "verdict": "PASS",
+ "hash": "1acc49212cf8b8c8",
+ "reasons": "[2026-10-24T23:46:57-07:00] [QC-CORES author self-review, kit floorplan render] SAME CLOSED GEOMETRY re-kit: outline, pin table (closed view LEF physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr/qfd_dv_s8x_vmr.lef) and macro sites (closed spec) are those of the CLOSED record; no new geometry. 259.2x276.48, 2 x 1024x256 SRAM, 1509 pins: vm/w1/w16 writes 1053 on S x 45-210, addr/re/q 456 on W y 142-196; ck/rst_n S x~93. Recorded spread 69/65 ps (INFO under decision 5). Checks: outline == plan hard_cores outline_um; all pins on kit tracks; sdc_lint PASS at generation. RTL = closed source blob-identical + decision-13 reset kit patch (async 2-flop sync -> synchronous 2-stage relay, same depth). r2 (kit 1acc49212cf8b8c8): r1 stopped at post-synth face_guard FAIL shared 10 (vm_we/vm_waddr[23:22] loaded by 6 kff replica pin registers) -> kit rtl_patch merges them into one pin register per bit (same cycle, bit-exact); geometry unchanged.",
+ "fixes": "Route + signoff.py tt,ff; hold under 25 ps margin -> FF-only post-route hold ECO (recipe b). Plan follow-up (QC): replace the provisional 'io' pins_file of this hard core with the closed LEF port table.",
+ "images": [
+  "results/geom_review/qc_cores_1024/img/qfd_dv_s8x_vmr_c.png"
+ ],
+ "stage": "floorplan (kit)",
+ "owner_lane": "QC",
+ "reviewer": "QC-CORES (author)",
+ "at": "2026-10-24T23:49:02-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route; same closed geometry -> route allowed",
+ "hash_method": "kit_hash (gen_core_kit_qc.py)"
+}
