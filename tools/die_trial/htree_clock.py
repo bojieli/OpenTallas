@@ -68,6 +68,20 @@ def plan_taps(P, cache=None):
         return [tuple(t) for t in json.load(open(cache))]
     out = []
     for n, p in sorted(P.parts.items()):
+        t = P.ptype(n)
+        if t.get("hard"):
+            # A hard macro's clock terminal is fixed by its physical view.  It
+            # may be inside a domain keepout: that forbids standard cells, not
+            # the macro's own terminal.  Never turn it into a legalized grid.
+            xy = t.get("clock", {}).get("tap_um")
+            if not isinstance(xy, (list, tuple)) or len(xy) != 2:
+                raise ValueError(f"hard type {p['type']} requires an explicit clock.tap_um")
+            x, y = map(float, xy)
+            w, h = map(float, t["outline_um"])
+            if not (math.isfinite(x) and math.isfinite(y) and 0 <= x <= w and 0 <= y <= h):
+                raise ValueError(f"hard type {p['type']} has an invalid clock.tap_um: {xy}")
+            out.append((n, "clk", *P.to_die(n, (x, y))))
+            continue
         ck, _ = gen_phys.tap_points(P, p["type"])
         out.append((n, "clk", *P.to_die(n, ck)))
         for tnm, tx, ty in gen_phys.clock_pins(P, p["type"])[1:]:
