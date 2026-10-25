@@ -522,12 +522,14 @@ def _check(v, s, path, errs):
 def validate_structure(obj):
     errs = []
     _check(obj, SCHEMA, "$", errs)
-    if not errs:
+    id_types = {tn: t for tn, t in obj.get("partition_types", {}).items()
+                if any(d.get("parent_id_straps") for d in t.get("contents", []) + t.get("hard_cores", []))} if not errs else {}
+    if id_types:
         try:
             from .parent_id_straps import type_parent_id_straps
         except ImportError:
             from parent_id_straps import type_parent_id_straps
-        for tn, t in obj.get("partition_types", {}).items():
+        for tn, t in id_types.items():
             try:
                 type_parent_id_straps(t)
             except ValueError as e:
