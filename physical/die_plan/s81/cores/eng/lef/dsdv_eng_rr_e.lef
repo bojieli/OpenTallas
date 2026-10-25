@@ -19309,7 +19309,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 74.592 0.192 74.616 ;
+        RECT 0.000 59.280 0.192 59.304 ;
     END
   END rco[25]
   PIN rco[26]
@@ -19317,7 +19317,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 75.984 0.192 76.008 ;
+        RECT 0.000 60.672 0.192 60.696 ;
     END
   END rco[26]
   PIN rco[27]
@@ -19325,7 +19325,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 77.376 0.192 77.400 ;
+        RECT 0.000 62.064 0.192 62.088 ;
     END
   END rco[27]
   PIN rco[28]
@@ -19333,7 +19333,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 78.768 0.192 78.792 ;
+        RECT 0.000 63.456 0.192 63.480 ;
     END
   END rco[28]
   PIN rco[29]
@@ -19341,7 +19341,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 80.160 0.192 80.184 ;
+        RECT 0.000 64.848 0.192 64.872 ;
     END
   END rco[29]
   PIN rco[30]
@@ -19349,7 +19349,7 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 81.552 0.192 81.576 ;
+        RECT 0.000 66.240 0.192 66.264 ;
     END
   END rco[30]
   PIN rco[31]
@@ -19357,9 +19357,97 @@ MACRO dsdv_eng_rr_e
     USE SIGNAL ;
     PORT
       LAYER M4 ;
-        RECT 0.000 82.944 0.192 82.968 ;
+        RECT 0.000 67.632 0.192 67.656 ;
     END
   END rco[31]
+  PIN rco[32]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 69.024 0.192 69.048 ;
+    END
+  END rco[32]
+  PIN rco[33]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 70.416 0.192 70.440 ;
+    END
+  END rco[33]
+  PIN rco[34]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 71.808 0.192 71.832 ;
+    END
+  END rco[34]
+  PIN rco[35]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 73.200 0.192 73.224 ;
+    END
+  END rco[35]
+  PIN rco[36]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 74.592 0.192 74.616 ;
+    END
+  END rco[36]
+  PIN rco[37]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 75.984 0.192 76.008 ;
+    END
+  END rco[37]
+  PIN rco[38]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 77.376 0.192 77.400 ;
+    END
+  END rco[38]
+  PIN rco[39]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 78.768 0.192 78.792 ;
+    END
+  END rco[39]
+  PIN rco[40]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 80.160 0.192 80.184 ;
+    END
+  END rco[40]
+  PIN rco[41]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 81.552 0.192 81.576 ;
+    END
+  END rco[41]
+  PIN rco[42]
+    DIRECTION OUTPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M4 ;
+        RECT 0.000 82.944 0.192 82.968 ;
+    END
+  END rco[42]
   PIN pci[0]
     DIRECTION INPUT ;
     USE SIGNAL ;

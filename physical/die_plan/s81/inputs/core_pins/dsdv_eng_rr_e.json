@@ -1,8 +1,8 @@
 {
 "module": "dsdv_eng_rr_e",
 "lef": "physical/die_plan/s81/cores/eng/lef/dsdv_eng_rr_e.lef",
-"pinhash": "614bd1b164ad",
-"source": "CORE-S81-ENG 10-23 planned pins (gen_eng_cores.py): M5 N/S, M4 E/W, core-frame tracks 0.012 + k 0.048 (die tracks under track_offset [0.108, 0.012]); OWNER DECISION 8 10-24: 285 constant pins dropped (inputs/const_pins_dropped.json)",
+"pinhash": "d2cdfc76cdf0",
+"source": "CORE-S81-ENG 10-23 planned pins (gen_eng_cores.py): M5 N/S, M4 E/W, core-frame tracks 0.012 + k 0.048 (die tracks under track_offset [0.108, 0.012]); OWNER DECISION 8 10-24: 267 constant pins dropped (inputs/const_pins_dropped.json)",
 "pins": [
 {
 "name": "hx_res[0]",
@@ -14480,40 +14480,106 @@
 "name": "rco[25]",
 "layer": "M4",
 "x": 0.096,
-"y": 74.604
+"y": 59.292
 },
 {
 "name": "rco[26]",
 "layer": "M4",
 "x": 0.096,
-"y": 75.996
+"y": 60.684
 },
 {
 "name": "rco[27]",
 "layer": "M4",
 "x": 0.096,
-"y": 77.388
+"y": 62.076
 },
 {
 "name": "rco[28]",
 "layer": "M4",
 "x": 0.096,
-"y": 78.78
+"y": 63.468
 },
 {
 "name": "rco[29]",
 "layer": "M4",
 "x": 0.096,
-"y": 80.172
+"y": 64.86
 },
 {
 "name": "rco[30]",
 "layer": "M4",
 "x": 0.096,
-"y": 81.564
+"y": 66.252
 },
 {
 "name": "rco[31]",
+"layer": "M4",
+"x": 0.096,
+"y": 67.644
+},
+{
+"name": "rco[32]",
+"layer": "M4",
+"x": 0.096,
+"y": 69.036
+},
+{
+"name": "rco[33]",
+"layer": "M4",
+"x": 0.096,
+"y": 70.428
+},
+{
+"name": "rco[34]",
+"layer": "M4",
+"x": 0.096,
+"y": 71.82
+},
+{
+"name": "rco[35]",
+"layer": "M4",
+"x": 0.096,
+"y": 73.212
+},
+{
+"name": "rco[36]",
+"layer": "M4",
+"x": 0.096,
+"y": 74.604
+},
+{
+"name": "rco[37]",
+"layer": "M4",
+"x": 0.096,
+"y": 75.996
+},
+{
+"name": "rco[38]",
+"layer": "M4",
+"x": 0.096,
+"y": 77.388
+},
+{
+"name": "rco[39]",
+"layer": "M4",
+"x": 0.096,
+"y": 78.78
+},
+{
+"name": "rco[40]",
+"layer": "M4",
+"x": 0.096,
+"y": 80.172
+},
+{
+"name": "rco[41]",
+"layer": "M4",
+"x": 0.096,
+"y": 81.564
+},
+{
+"name": "rco[42]",
 "layer": "M4",
 "x": 0.096,
 "y": 82.956
@@ -16103,5 +16169,5 @@
 "y": 456.012
 }
 ],
-"const_rename": 270
+"const_rename": 263
 }

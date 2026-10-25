@@ -399,16 +399,21 @@ module ot_s81eng_head_n32 #(
     // S81-ELEM2-ENGRR 10-21: rr -> row select -> 31-b atom add -> PCBASE add -> rco was zero-wire -84.4 ps (836 ps).
     // Three registered stages (+2 edges on the request chain only, priced): A row word/ai, B atom add, C PCBASE add.
     // Both adds are 8-bit-chunk carry-selects.
+    // S81-KITS-RTLA 10-24: operands zero-extended to 32 b inside the function.  The old form read a[31:24] / b[31:24]
+    // of the 31-b operands at k = 3 (out of bounds); Verilator computes it, but the ORFS Yosys slang frontend dropped
+    // the whole top chunk (csa31[30:24] undriven -> tied 0: rco[35:25] = request sector bits [29:19] were constant in
+    // every synthesised netlist; measured on a one-function probe).  Same values on every in-range bit.
     function automatic [30:0] csa31(input [30:0] a, input [30:0] b);
-        reg [8:0] z, o; reg c; integer k;
+        reg [31:0] ax, bx, r; reg [8:0] z, o; reg c; integer k;
         begin
-            c = 1'b0;
+            ax = {1'b0, a}; bx = {1'b0, b}; r = 32'd0; c = 1'b0;
             for (k = 0; k < 4; k = k + 1) begin
-                z = {1'b0, a[8*k +: 8]} + {1'b0, b[8*k +: 8]};
-                o = {1'b0, a[8*k +: 8]} + {1'b0, b[8*k +: 8]} + 9'd1;
-                if (k < 3) csa31[8*k +: 8] = c ? o[7:0] : z[7:0]; else csa31[30:24] = c ? o[6:0] : z[6:0];
+                z = {1'b0, ax[8*k +: 8]} + {1'b0, bx[8*k +: 8]};
+                o = {1'b0, ax[8*k +: 8]} + {1'b0, bx[8*k +: 8]} + 9'd1;
+                r[8*k +: 8] = c ? o[7:0] : z[7:0];
                 c = c ? o[8] : z[8];
             end
+            csa31 = r[30:0];
         end
     endfunction
     reg [33:0] rq_a; reg [3:0] ai_a, ai_b; reg [30:0] at_b; reg [2:0] tg_b;
