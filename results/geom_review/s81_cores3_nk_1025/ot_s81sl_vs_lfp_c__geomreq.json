@@ -1,0 +1,16 @@
+{
+ "tag": "S81-CORES3/NK vs",
+ "kit": "epyc3:/srv/opentallas-scratch2/claude/s81-cores3-nk/kits_r/ot_s81sl_vs_lfp",
+ "module": "ot_s81sl_vs", "plan_pins": "inputs/core_pins/ot_s81sl_vs_lfp.json (lfp = main RTL widths)",
+ "generator": "legacy gen_core_kit_legacy.py @2f1140b7df (recipe ot_s81sl_vs_lfp), main RTL",
+ "outline_um": [172.8, 172.8], "cells_placed": 124901, "flops": 15763, "macros": 0, "util_gpl_pct": 51.3,
+ "density": {"bins5_over_0p8": 47, "max_bin": 1.04, "note": "dense column = W-face pin registers (814 W pins); otherwise uniform"},
+ "pins": {"N": [1267, "8.0/um of 24.3"], "S": [68, 0.5], "W": [814, "5.0/um of 10.42"], "E": [387, 2.5]},
+ "face_guard": {"raw": "PASS 2534/2534", "post_synth": "PASS"},
+ "clock": {"pin": "clk S face (85.2, 0)", "tool_insertion_ps": "260 (244-274) after tap_balance, target 250+-40, one region",
+           "probe_spread_ps_TT_placementRC": 8.2, "probe_ck_ps": [174.1, 182.2], "probe_note": "probe misses root/trunk (GEOM-REVIEW-3 05:47): tool number is I"},
+ "pin_to_reg_um": {"p50": 8.1, "p90": 11.8, "max": 18.1, "over20": 0, "unreg": 0},
+ "hold": "CTS repair inserted 11824 hold buffers (5504 endpoints, 0.75/flop) = IO-basis padding (vclk 250 vs I 260, input min) -- the cross-cutting F1/F2 item",
+ "route_condition_proposed": "route only with the F1/F2 per-corner IO basis bound to the measured pin-reg I; if GRT still adds >3k hold buffers stop and return (same as gunit_l4 PASS-COND)",
+ "images": ["vs_lfp_c.place.png", "vs_lfp_c.cts.png", "vs_lfp_c.cts.json"]
+}
