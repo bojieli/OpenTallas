@@ -488,7 +488,7 @@ def transform_offchip(dag, comps, log, direct=True):
 VSW_LR_CYCLES = 1  # current ot_s81sl_vsw LR=1; one added output edge, owner 10-25 11:59
 
 
-def transform_current_profile(dag, comps, log, hcore_profile=None):
+def transform_current_profile(dag, comps, log, hcore_profile=None, eng_profile=None):
     # Included in both final composition and the calendar's pre-release input;
     # dv_mu_calendar_phys does not add this hardware pipeline edge itself.
     for n in dag['nodes']:
@@ -497,6 +497,9 @@ def transform_current_profile(dag, comps, log, hcore_profile=None):
             cl.append(comp(VSW_LR_CYCLES, PRICED, 'logic',
                            'vsw LR=1 input register: +1 output edge (owner 10-25 11:59)'))
             log['release']['vsw.LR1'] += VSW_LR_CYCLES * bool(n.get('critical'))
+        if eng_profile and op == 'eng.lead_flit':
+            cl.append(comp(eng_profile['entry_guard_cycles'], PRICED, 'logic', 'selected E5 entry capture: +1; RETURN_AGE unchanged'))
+            log['release']['eng.entry'] += eng_profile['entry_guard_cycles'] * bool(n.get('critical'))
         if hcore_profile and re.fullmatch(r'attn\.(?:scores|pv)(?:\.r\d+)?', op):
             g = hcore_profile['load_guard_cycles']
             cl.append(comp(g, PRICED, 'logic', 'qualified native hcore conservative load-readiness guard'))
@@ -684,7 +687,7 @@ def compose(wl, opts, layer_rx=None, receipts=None):
         transform_release(dag, comps, log, opts.get('attn', 'G4'))
     if receipts:
         transform_components(dag, comps, receipts, log)
-    transform_current_profile(dag, comps, log, opts.get("hcore_profile"))
+    transform_current_profile(dag, comps, log, opts.get("hcore_profile"), opts.get("eng_profile"))
     if layer_rx:
         transform_layers(dag, comps, extra, layer_rx, log)
     apply_hooks(dag, comps, hooks, ops)
@@ -868,12 +871,12 @@ def calendar(res, layer_rx_extra=None, attn='G4', hcore_profile=None):
 
 
 # ---------------------------------------------------------------------------------------------- build / outputs
-def build(layer_path=None, comp_dir=None, attn='G4', hcore_profile=None):
+def build(layer_path=None, comp_dir=None, attn='G4', hcore_profile=None, eng_profile=None):
     layer_rx, layer_rej = load_layer_cycles(layer_path)
     receipts, comp_rej = load_components(comp_dir)
-    res = {wl: compose(wl, dict(attn=attn, hcore_profile=hcore_profile), layer_rx, receipts) for wl in ('ar', 'mtp')}
+    res = {wl: compose(wl, dict(attn=attn, hcore_profile=hcore_profile, eng_profile=eng_profile), layer_rx, receipts) for wl in ('ar', 'mtp')}
     # calendar inputs: same transforms except off-chip direct + release node terms (the calendar applies them)
-    cal_in = {wl: compose(wl, dict(attn=attn, offchip=False, release=False, regrade=False, hcore_profile=hcore_profile), layer_rx, receipts)
+    cal_in = {wl: compose(wl, dict(attn=attn, offchip=False, release=False, regrade=False, hcore_profile=hcore_profile, eng_profile=eng_profile), layer_rx, receipts)
               for wl in ('ar', 'mtp')}
     recs = calendar(cal_in, attn=attn, hcore_profile=hcore_profile)
     lat, dig = lane_table()
@@ -1259,6 +1262,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--layer-cycles')
     ap.add_argument('--components')
+    ap.add_argument('--eng-profile-manifest', help='qualified selected E5 entry cohort; price one entry edge')
     ap.add_argument('--hcore-profile-manifest', help='qualified selected native hcore cohort; price query/P readiness guards')
     ap.add_argument('--attn', default='G4', choices=sorted(ATTN))
     ap.add_argument('--out', default=str(OUT))
@@ -1278,7 +1282,14 @@ def main(argv=None):
     if a.hcore_profile_manifest:
         H = load(ROOT / 'tools/s81_dv/layer_prog/hcore_schedule.py', 'hcore_schedule_price')
         hcore_profile = H.load_profile(a.hcore_profile_manifest)
-    c1, cal = build(a.layer_cycles, a.components, a.attn, hcore_profile=hcore_profile)
+    eng_profile = None
+    if a.eng_profile_manifest:
+        E = load(ROOT / 'tools/s81_dv/layer_prog/eng_schedule.py', 'eng_schedule_price')
+        eng_profile = E.load_profile(a.eng_profile_manifest)
+    c1, cal = build(a.layer_cycles, a.components, a.attn, hcore_profile=hcore_profile, eng_profile=eng_profile)
+    if eng_profile:
+        c1['inputs']['eng_profile'] = eng_profile
+        c1['inputs']['eng_boot_readiness_edges'] = eng_profile['reset_guard_cycles']
     if hcore_profile:
         c1['inputs']['hcore_profile'] = hcore_profile
         c1['inputs']['boot_readiness_extra_cycles'] = hcore_profile['reset_guard_cycles']

@@ -940,6 +940,18 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     else:
         out += ks_source_words(die, ksw, ks - a.t0, end - a.t0)
     eng = ks_engram_words(die, ksw, ks - a.t0)
+    if S.get('eng_profile'):
+        if a.ks is None:
+            raise ValueError('selected E5 entry needs explicit phase-qualified --ks')
+        from layer_prog.eng_schedule import validate_landed_start
+        if not eng:
+            raise ValueError('selected E5 entry profile requires actual seqhost-to-Eng f_ks binding')
+        # ks_engram_words has already included the actual forward lane age.
+        # Inputs retain physical dates: the new RTL delays its internal record,
+        # while the compiled DAG delays downstream programme input dates.
+        landed = eng[0]['cycle_land'] + a.t0
+        S['eng_entry_phase'] = validate_landed_start(S['eng_profile'], S.get('eng_readiness') or {}, landed)
+
     if eng and getattr(a, 'ks_payload', 'hold') != 'pulse':
         # u_eng.f_ks carries the held payload between starts: a value change is a new word only with start [52] set
         S.setdefault('port_valid', []).append(dict(inst='u_eng', ports=['f_ks'], bit=KS_START_BIT))
@@ -963,6 +975,7 @@ def host_boot_words(a, die, prog, S, words, cut=None):
             for c in range(c0, end)]
     return out, dict(boot_start=a.host_boot, seqhost_live=live, words=len(hs), last_word=a.host_boot + 5 * (len(hs) - 1), ks=ks,
                      start_phase=sp, ks_explicit=a.ks is not None,
+                     **(dict(eng_entry_phase=S['eng_entry_phase']) if S.get('eng_entry_phase') else {}),
                      ks_word=f'{ksw:x}', ks_provenance=provenance, t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}',
                      memh_sha256=hashlib.sha256((prog / 'prog/host_boot.memh').read_bytes()).hexdigest())
 

@@ -338,7 +338,7 @@ def memh(words, width):
 
 
 # ================================================================================================= op-level schedule
-def layer_schedule(tree, layer, workload='ar', hcore_profile=None):
+def layer_schedule(tree, layer, workload='ar', hcore_profile=None, eng_profile=None):
     """the priced p4l static schedule of one layer (dv_layer_price.py: dv_price dv_base deltas + p4l land plan,
     half-cycle), node start / end rebased to the layer's first start"""
     import dv_layer_price as lp
@@ -368,6 +368,10 @@ def layer_schedule(tree, layer, workload='ar', hcore_profile=None):
         for node in doc['nodes']:
             if re.fullmatch(r'attn\.(?:scores|pv)(?:\.r\d+)?', node.get('op', '')):
                 delta[node['id']] = delta.get(node['id'], 0.0) + hcore_profile['load_guard_cycles']
+    if eng_profile:
+        for node in doc['nodes']:
+            if node.get('op') == 'eng.lead_flit':
+                delta[node['id']] = delta.get(node['id'], 0.0) + eng_profile['entry_guard_cycles']
     _, end = ac.solve(doc['nodes'], doc['edges'], delta)
     by = {n['id']: n for n in doc['nodes']}
     if layer in LAYERS:
@@ -991,7 +995,7 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, hcore_profile_manifest=None, hcore_boot_witness=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False, hcore_profile_manifest=None, hcore_boot_witness=None, eng_profile_manifest=None, eng_boot_witness=None):
     if entry_norm and not fixtures:
         raise ValueError('--entry-norm-check needs --fixtures (the layer-entry inputs and the reference model checks)')
     if dense_stage is not None and mu_ctx:
@@ -1012,7 +1016,17 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         (out / 'prog/hcore_readiness.json').write_text(json.dumps(ready, indent=1) + '\n')
     elif hcore_boot_witness:
         raise ValueError('hcore reset/START witness requires its selected source profile')
-    sched = layer_schedule(tree, layer, wl, hcore_profile=hcore_profile)
+    eng_profile = None
+    eng_ready = None
+    if eng_profile_manifest:
+        from layer_prog.eng_schedule import load_profile as load_eng_profile, boot_witness as eng_boot
+        eng_profile = load_eng_profile(eng_profile_manifest)
+        if not eng_boot_witness:
+            raise ValueError('E5 entry profile requires a reset/START readiness witness')
+        eng_ready = eng_boot(eng_profile, eng_boot_witness)
+    elif eng_boot_witness:
+        raise ValueError('Eng reset/START witness requires its selected source profile')
+    sched = layer_schedule(tree, layer, wl, hcore_profile=hcore_profile, eng_profile=eng_profile)
     if dense_stage is not None:
         required = dict(OT_XS_DENSE_SPLIT2=dense_stage, OT_XS_APROJ_TOPO='1',
                         OT_XS_APROJ_ALIGN4='1', OT_XS_APROJ_RANK_TAGS='1', OT_XS_APROJ_CAP_PLAN='1')
@@ -1137,7 +1151,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
                                  svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid,
                                  entry_norm=entry_norm, hcore_profile_manifest=hcore_profile_manifest,
-                                 hcore_boot_witness=hcore_boot_witness)
+                                 hcore_boot_witness=hcore_boot_witness, eng_profile_manifest=eng_profile_manifest,
+                                 eng_boot_witness=eng_boot_witness)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1173,6 +1188,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     (out / 'schedule.json').write_text(json.dumps(dict(
         schema='opentallas.s81_dv.layer_schedule.v1', layer=layer, workload=wl, slice=sl,
         dense_stage=sched.get('dense_stage'),
+        **(dict(eng_profile=eng_profile, eng_readiness=eng_ready) if eng_profile else {}),
         timing_contract=die.timing_contract,
         composition='the layer = the slowest (critical) slice under the fixed schedule: every slice runs the same '
                     'calendar shifted by its CTL arrival; the layer span is max over slices and units of the last '
@@ -1255,6 +1271,8 @@ def main(argv=None):
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
     ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
+    ap.add_argument('--eng-profile-manifest', help='qualified selected E5 source; adds one entry-readiness edge')
+    ap.add_argument('--eng-boot-witness', help='reset pin release/START witness for three reset plus one entry edge')
     ap.add_argument('--hcore-profile-manifest', help='qualified selected native CTLA/RSTE cohort; adds query/P readiness guards')
     ap.add_argument('--hcore-boot-witness', help='bound core-pin release/START witness including +2 core readiness')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
@@ -1279,7 +1297,8 @@ def main(argv=None):
     tree = die_tree(a.die_ref, a.die_src)
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
                       svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check,
-                      hcore_profile_manifest=a.hcore_profile_manifest, hcore_boot_witness=a.hcore_boot_witness)
+                      hcore_profile_manifest=a.hcore_profile_manifest, hcore_boot_witness=a.hcore_boot_witness,
+                      eng_profile_manifest=a.eng_profile_manifest, eng_boot_witness=a.eng_boot_witness)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
