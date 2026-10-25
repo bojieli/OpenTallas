@@ -410,8 +410,11 @@ SCHEMA = {
                                "param": {"type": "string"}}}}}},
         # mandatory G0 census coverage (census_cov.py): [{rows, map, note}] or {"none": reason}
         "census": {"type": ["array", "object"]},
-        "budgets": {"type": "object", "additionalProperties": False, "properties": {
-            k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS}},
+        "budgets": {"type": "object", "additionalProperties": False, "properties": dict(
+            {k: ({"type": "integer", "minimum": 1} if k == "face_pin_layers" else _pos) for k in DEFAULT_BUDGETS},
+            # S81 10-24 (coordinator ruling (a)): R3 reach inside hardened types with declared core connectivity
+            # (core_conns.json); no default: unset = those types keep ft_station_max_um (check.py R3-INTERNAL)
+            core_internal_reach_um=_pos)},
     },
 }
 

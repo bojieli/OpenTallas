@@ -10246,6 +10246,30 @@
     "vd[512]": "vd[366]"
    },
    "why": "S81-KITS-RTLC 10-24 coordinator ruling (b) 'drop' (bk_col has no consumer in v4.8): the dsfd_selt_c vd word of the S81 bk_sel select control is {kind 4 (3/4/5/7), seg_tag 8, 145 x 0, ...}: vd[513] (kind msb) and vd[501:357] are constant 0 at the producer (raw face_guard: TIELO), and vd[0] (rst copy) has no reader in dsdv_bk_g; dsdv_bksel_c vd and dsdv_bk_g vd (VD_PK = 1) are packed to vd[366:0] = {vd[512:502], vd[356:1]} at both ends ('rename'); legacy plana / bk_col parents use dsdv_bk_g VD_PK = 0"
+  },
+  "ot_s81sl_vn_a": {
+   "pins": [
+    "c_s[31]"
+   ],
+   "why": "S81/RTLSPLIT 10-24: vn_a chain partial acc3 = a sum of 4 squares, sign bit constant 0 (raw yosys: TIELO); vn_b receives c_s[30:0]"
+  },
+  "ot_s81sl_vn_a_xm": {
+   "pins": [
+    "c_s[31]"
+   ],
+   "why": "S81/RTLSPLIT 10-24: vn_a chain partial acc3 = a sum of 4 squares, sign bit constant 0 (raw yosys: TIELO); vn_b receives c_s[30:0]"
+  },
+  "ot_s81sl_vn_b": {
+   "pins": [
+    "c_s[31]"
+   ],
+   "why": "S81/RTLSPLIT 10-24: vn_a chain partial acc3 = a sum of 4 squares, sign bit constant 0 (raw yosys: TIELO); vn_b receives c_s[30:0]"
+  },
+  "ot_s81sl_vn_b_xm": {
+   "pins": [
+    "c_s[31]"
+   ],
+   "why": "S81/RTLSPLIT 10-24: vn_a chain partial acc3 = a sum of 4 squares, sign bit constant 0 (raw yosys: TIELO); vn_b receives c_s[30:0]"
   }
  }
 }
