@@ -18,12 +18,14 @@ export OT_S81_SELECTED_SOURCE_ROOT=$S/stw-s81d-tok/layers/root30 OT_SVC_ALLQ=1
 export OT_XS_FRAME_SCHEDULE_DIR=$W/layers_fc31/frame_schedules
 export OT_S81_XRT_RUNTIME_PROOF=$S/codex-s81/entry_qualified_fc31/entry_replay.json
 DIE=$W/tree_fc31/results/arch/s81_dv_1016/bind9/die.v.gz; P=$O/prog_${Y}_su
-[ -x $C/out_$CUT/obj/sim ] || { echo "GAPS $Y NOT RUN: no $C/out_$CUT/obj/sim"; exit 3; }
 mkdir -p $O; cd $T
 if [[ " $STEPS " == *" compile "* ]]; then
   [ -e $P ] && { echo "GAPS $Y: $P exists (fresh dirs only)"; exit 3; }
   /usr/bin/time -v -o $O/cc_$Y.time python3 tools/s81_dv/dv_layer_compile.py --layer $Y --out $P --die-src $W/tree_fc31 \
     --fixtures $S/stw-s81d-tok/layers/fix/$Y --entry-norm-check > $O/cc_$Y.log 2> $O/cc_$Y.err || { echo "GAPS $Y compile FAIL"; tail -3 $O/cc_$Y.err; exit 1; }
+fi
+if [[ " $STEPS " == *" base "* || " $STEPS " == *" mut_in "* ]]; then
+  [ -x $C/out_$CUT/obj/sim ] || { echo "GAPS $Y NOT RUN: no $C/out_$CUT/obj/sim"; exit 3; }
 fi
 # t0: the entry beats are at negative layer cycles; the earliest line word must land at bench >= its lane age
 T0=$(python3 -c "import json; S=json.load(open('$P/schedule.json')); print(max(100, 100 - min(e['cycle'] for e in S['events'])))")
