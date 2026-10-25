@@ -14,7 +14,15 @@ the nearest free legal cell site (rows 0.27 um from the core origin, x pitch COL
 inside FACE_KEEP_UM of a face (the face-register bands) or a hard core / plan-cell site (+CLEAR).  Payload bits first,
 then the epoch bit (the bus's last pin) -- ft_bit_sites.py order.  Sites are cell LOWER-LEFT corners.
 Report: per slot max displacement from the ideal point and max per-bit hop (in pin -> s1 -> .. -> out pin).
-usage: ft_bit_sites_gen.py die_plan.json TYPE KIT/pins.json OUT_plan.json [--report R.json] [--png P.png]"""
+vK (GEOM-REVIEW vJ hotspot, 10-24): options to thin out local station density and the jog bands --
+  --stagger UM        per-bit jog stagger (default 0.096); a wider stagger spreads a wide slot's jog band (ft63:
+                      1119 bits x 0.25 = 280 um instead of 107 um) -> fewer vertical tracks per um; hops unchanged
+                      (rectilinear monotone route, length independent of the jog coordinate);
+  --bin-cap F         at most F of the legal sites of any BIN_UM x BIN_UM bin hold a station flop (default 1.0 = off);
+  --keepout TAPS.txt  lines "name x y": no station site within KEEPOUT_UM (--keepout-um, default 15) of a clock tap
+                      (room for the tap's CTS root buffers and the reset relays placed at the tap).
+usage: ft_bit_sites_gen.py die_plan.json TYPE KIT/pins.json OUT_plan.json [--report R.json] [--png P.png]
+       [--stagger UM] [--bin-cap F] [--keepout TAPS.txt [--keepout-um R]]"""
 import json
 import math
 import sys
@@ -29,6 +37,10 @@ ORIGIN = 4.32               # gen_phys CORE_MARGIN_UM (core lower-left; rows/sit
 FACE_KEEP_UM = 20.0
 CLEAR = 4.32
 STAGGER_UM = 0.096
+BIN_UM = 10.0
+BIN_CAP = 1.0
+KEEPOUT_UM = 15.0
+DEM_UM = 10.0
 
 
 def man(a, b):
@@ -59,12 +71,23 @@ class Sites:
         self.used = set()
         self.blocks = blocks
         self.W, self.H = W, H
+        self.bins = defaultdict(int)
+        # legal sites per bin (lattice), the cap counts station flops per bin
+        self.bin_max = max(1, int(BIN_CAP * (BIN_UM / COL_UM) * (BIN_UM / ROW)))
+        self.keep = []
+
+    def _bin(self, c, r):
+        return (int((self.x0 + c * COL_UM) // BIN_UM), int((self.y0 + r * ROW) // BIN_UM))
 
     def ok(self, c, r):
         if c < 0 or r < 0 or c > self.nx or r > self.ny or (c, r) in self.used:
             return False
         x, y = self.x0 + c * COL_UM, self.y0 + r * ROW
         if x < FACE_KEEP_UM or y < FACE_KEEP_UM or x + CELL[0] > self.W - FACE_KEEP_UM or y + CELL[1] > self.H - FACE_KEEP_UM:
+            return False
+        if BIN_CAP < 1.0 and self.bins[self._bin(c, r)] >= self.bin_max:
+            return False
+        if any(abs(x + CELL[0] / 2 - kx) < KEEPOUT_UM and abs(y + CELL[1] / 2 - ky) < KEEPOUT_UM for kx, ky in self.keep):
             return False
         return not any(a - CLEAR < x + CELL[0] and x < c2 + CLEAR and b - CLEAR < y + CELL[1] and y < d + CLEAR
                        for a, b, c2, d in self.blocks)
@@ -86,6 +109,7 @@ class Sites:
             for _, c, r in sorted(cand):
                 if self.ok(c, r):
                     self.used.add((c, r))
+                    self.bins[self._bin(c, r)] += 1
                     return (round(self.x0 + c * COL_UM, 4), round(self.y0 + r * ROW, 4))
         raise RuntimeError(f"no free site near {x:.1f},{y:.1f}")
 
@@ -128,7 +152,13 @@ class Jogs:
 
 
 def main():
+    global STAGGER_UM, BIN_CAP, KEEPOUT_UM
     pf, tn, pinsf, outf = sys.argv[1:5]
+    opt = lambda k, d: type(d)(sys.argv[sys.argv.index(k) + 1]) if k in sys.argv else d  # noqa: E731
+    STAGGER_UM = opt("--stagger", STAGGER_UM)
+    BIN_CAP = opt("--bin-cap", BIN_CAP)
+    KEEPOUT_UM = opt("--keepout-um", KEEPOUT_UM)
+    keep_f = opt("--keepout", "")
     rep_f = sys.argv[sys.argv.index("--report") + 1] if "--report" in sys.argv else None
     png = sys.argv[sys.argv.index("--png") + 1] if "--png" in sys.argv else None
     raw = json.load(open(pf))
@@ -142,12 +172,28 @@ def main():
         for x, y in e["regs_um"]:
             blocks.append((x - 3, y - 3, x + 3, y + 3))
     S = Sites(W, H, blocks)
+    if keep_f:
+        S.keep = [(float(a[1]), float(a[2])) for a in (ln.split() for ln in open(keep_f)) if len(a) >= 3]
     J = Jogs(W, H)
     pins = defaultdict(dict)
     for q in json.load(open(pinsf)):
         pins[q["bus"]][q["bit"]] = (q["x"], q["y"])
-    rep = dict(schema="opentallas.kv_g3.ft_bit_sites.v1", type=tn, cell_um=list(CELL), col_um=COL_UM, slots={})
+    rep = dict(schema="opentallas.kv_g3.ft_bit_sites.v1", type=tn, cell_um=list(CELL), col_um=COL_UM, slots={},
+               stagger_um=STAGGER_UM, bin_um=BIN_UM, bin_cap=BIN_CAP, keepout_um=KEEPOUT_UM if keep_f else None,
+               keepouts=len(S.keep))
     draw = []
+    dem = {"H": defaultdict(int), "V": defaultdict(int)}    # planned bit routes crossing each DEM_UM gcell
+
+    def raster(r):
+        for u, v in zip(r, r[1:]):
+            if abs(u[1] - v[1]) < 1e-6:      # horizontal
+                y = int(u[1] // DEM_UM)
+                for gx in range(int(min(u[0], v[0]) // DEM_UM), int(max(u[0], v[0]) // DEM_UM) + 1):
+                    dem["H"][(gx, y)] += 1
+            else:
+                x = int(u[0] // DEM_UM)
+                for gy in range(int(min(u[1], v[1]) // DEM_UM), int(max(u[1], v[1]) // DEM_UM) + 1):
+                    dem["V"][(x, gy)] += 1
     # widest slots first: they need straight tracks most
     for s in sorted(t["ft_slots"], key=lambda s: -s["width"]):
         k = int(s.get("stations", 1))
@@ -174,6 +220,7 @@ def main():
         disp = hop = 0.0
         for i in order:
             r = bit_routes(A[i], B[i], fin, fout, rank[i], n, sgn, jog)
+            raster(r)
             L = plen(r)
             pts = [A[i]]
             for j in range(1, k):
@@ -199,6 +246,21 @@ def main():
     rep["max_bit_hop_um"] = max((v["max_bit_hop_um"] for v in rep["slots"].values()), default=0)
     rep["max_disp_um"] = max((v["max_disp_um"] for v in rep["slots"].values()), default=0)
     rep["sites"] = len(S.used)
+    rep["max_bin_sites"] = max(S.bins.values(), default=0)
+    rep["bin_sites_cap"] = S.bin_max
+    # planned ft route demand (wires per DEM_UM gcell edge-on): the GRT hot-spot predictor for the ft bundles
+    for d in ("H", "V"):
+        top = sorted(dem[d].items(), key=lambda kv: -kv[1])[:5]
+        rep[f"route_demand_{d}"] = dict(gcell_um=DEM_UM, max=top[0][1] if top else 0,
+                                        top=[[k[0] * DEM_UM, k[1] * DEM_UM, v] for k, v in top])
+    win = opt("--window", "")
+    if win:
+        x0, y0, x1, y1 = (float(v) for v in win.split(","))
+        inw = lambda k: x0 <= k[0] * DEM_UM < x1 and y0 <= k[1] * DEM_UM < y1  # noqa: E731
+        rep["window"] = dict(box_um=[x0, y0, x1, y1],
+                             route_demand_max={d: max((v for k, v in dem[d].items() if inw(k)), default=0) for d in "HV"},
+                             station_sites=sum(1 for (c, r_) in S.used
+                                               if x0 <= S.x0 + c * COL_UM < x1 and y0 <= S.y0 + r_ * ROW < y1))
     Path(outf).write_text(json.dumps(raw, indent=1) + "\n")
     if rep_f:
         Path(rep_f).write_text(json.dumps(rep, indent=1) + "\n")
