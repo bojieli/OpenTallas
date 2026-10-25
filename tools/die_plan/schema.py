@@ -266,6 +266,9 @@ SCHEMA = {
                         # (insertion_ps = TT, insertion_ff_ps = FF) = the signed view's routed RCX pin-register mean,
                         # or the parent budget before the first sign-off; insertion_basis says which
                         "insertion_ff_ps": _pos, "insertion_basis": {"type": "string"},
+                        # IO-HOLD option A: the signed view's measured guarantee (ps after vclk, FF) that no
+                        # output changes earlier = contract guarantee + worst output-hold slack; absent = contract
+                        "out_hold_guarantee_ps": {"type": "number"},
                         "keepouts_um": {"type": "array", "items": _rect},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
@@ -442,6 +445,10 @@ SCHEMA = {
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
                           "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
+            # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
+            # input's min input delay is its driving partition's guaranteed output-min, the related tap pair skew is
+            # checked at the parent (io_hold_parent.py); "legacy" / absent = the flat contract above
+            "io_hold": {"enum": ["legacy", "sender_min"]},
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.

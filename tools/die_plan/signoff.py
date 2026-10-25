@@ -332,6 +332,7 @@ set so_reference_ok 1
 if {[llength $so_vclk] == 1 && $so_reference_ok} {
   if {[llength $so_din]} { set_input_delay -min @IN_MIN@ -clock [lindex $so_vclk 0] $so_din }
   if {[llength [all_outputs]]} { set_output_delay -min @OUT_MIN@ -clock [lindex $so_vclk 0] [all_outputs] }
+@IN_MIN_PORTS@
   so OVERLAY applied [get_full_name [lindex $so_vclk 0]] in_min @IN_MIN_LOG@ out_min @OUT_MIN@
 } else {
   so OVERLAY skipped vclks [llength $so_vclk]
@@ -431,9 +432,11 @@ exit
 
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
-                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None):
+                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None):
     """hold_in_min / hold_out_min: the kit's seam hold contract (sdc_lint.json hold_in_min_ps / hold_out_min_ps,
-    CLOCK-RESET IO-HOLD 10-25); None = legacy overlay (min input -ins_tol, min output 0)."""
+    CLOCK-RESET IO-HOLD 10-25); None = legacy overlay (min input -ins_tol, min output 0).  hold_in_min_ports
+    {input port: ps}: IO-HOLD option A per-port min input delays (sdc_lint.json hold_in_min_ports_ps) applied after
+    the uniform one; None / {} = no per-port lines (session byte-identical)."""
     hin = -float(ins_tol) if hold_in_min is None else float(hold_in_min)
     hout = 0.0 if hold_out_min is None else float(hold_out_min)
     if hout > 0:
@@ -458,12 +461,23 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@IN_MIN@", f"[expr {{-{ins_tol:g}}}]" if hold_in_min is None else f"{hin:g}"),
                  ("@IN_MIN_LOG@", f"{hin:g}"), ("@OUT_MIN@", f"{hout:g}"),
+                 ("@IN_MIN_PORTS@\n", "".join(
+                     f"  set_input_delay -min {v:g} -clock [lindex $so_vclk 0] [get_ports {{{' '.join(p + '[*]' for p in ps)}}}]\n"
+                     for v, ps in _group_ports(hold_in_min_ports))),
                  ("@FANOUT_MAX@", str(int(fanout_max))),
                  ("@CLOCK_FAMILY@", _clock_family_tcl()),
                  ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text()),
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
     return t
+
+
+def _group_ports(m):
+    """{port: ps} -> [(ps, [ports])] sorted (one overlay command per distinct value)."""
+    g = {}
+    for p, v in (m or {}).items():
+        g.setdefault(float(v), []).append(p)
+    return sorted((v, sorted(ps)) for v, ps in g.items())
 
 
 def parse_session(text):
@@ -610,7 +624,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name, ff_vclk=ff_vclk,
                                                 ff_bound_ps=disc.get("ff_bound_ps"),
                                                 hold_in_min=lctx.get("hold_in_min_ps"),
-                                                hold_out_min=lctx.get("hold_out_min_ps")))
+                                                hold_out_min=lctx.get("hold_out_min_ps"),
+                                                hold_in_min_ports=lctx.get("hold_in_min_ports_ps")))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")
