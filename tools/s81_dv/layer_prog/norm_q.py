@@ -14,8 +14,10 @@ re-assembles and injects them on ITS line both ways (V_ASM edges later).  A line
 age + LINE_STOP edges.  ot_s81sl_rstop allows ONE source per line side per cycle (forward, NX, own, assembled,
 control) and never own + assembled in one cycle: every second source is a sticky fault.  `allgather()` lists them.
 
-CALIBRATION constants (Q_AFTER_ROOT, C_IN, V_ASM) are measured on the reclocked deskewed cut runs (cut_0S / 0N / 7:
-the visible slices' own and assembled beats); LINE_STOP = 2 is the rstop header's stated latency.
+Q_AFTER_ROOT was measured on the fully reclocked pre-deskew r4all cuts 0S/0N/7:
+model roots 548/549/549 -> own XQ output-register edges 693/694/694. Deskew
+changes partial arrival, upstream of the root; its full-cut recheck is pending.
+LINE_STOP = 2 is the rstop header's stated latency.
 """
 from collections import defaultdict
 
@@ -29,7 +31,7 @@ TRAIN = [4 * k for k in range(5)] + [20 + 4 * k for k in range(5)]    # XQ k, XB
 KIND = [1] * 5 + [2] * 5
 # calibration (re-measured on the deskewed cuts; see the TOK-DS lane log)
 C_IN = 2               # landed NX pin -> xstop deliver (dl) edge; own: dl = own out edge - (NX_FWD - 2 - C_IN)
-Q_AFTER_ROOT = None    # root write-back edge -> first own XQ beat on the line outputs
+Q_AFTER_ROOT = 145     # root write-back edge -> first own XQ beat on the line outputs
 V_ASM = None           # own beat on the line outputs -> the column partner's assembled beat on its line outputs
 #                        ({inst: edges} or one value; rstop: 2 + the V lane age, the 4-fragment train being 4 edges a beat)
 

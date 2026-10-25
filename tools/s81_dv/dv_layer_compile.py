@@ -35,6 +35,7 @@ import json
 import math
 import os
 import re
+import struct
 import subprocess
 import sys
 from pathlib import Path
@@ -654,10 +655,17 @@ def ctl_path(die, sl):
                 'ot_s81_land E + 1 + half-cycle stations + bk_sel 3 + V inject 6 + rstop 2/stop; G8 cut_3S_ctl L0 replay measured)')
 
 
-def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which='attn'):
+def norm_eps_bits():
+    """The released checkpoint's RMSNorm epsilon, encoded as binary32."""
+    config = json.loads((ROOT / 'compiler/models/deepseek-v4.1-flash/inference_config.json').read_text())
+    return struct.unpack('<I', struct.pack('<f', config['norm_eps']))[0]
+
+
+def lower_norm_smoke(die, prog, sl, t0, eps=None, r_h=0, r_gain=64, which='attn'):
     """slice-local hc_pre + RMSNorm + act-quant on ONE slice (the beat bench's proven sequence, issued through the
     seq_host calendar as CTL beats): HLOAD (5 leaves) -> GAIN -> NORMR per leaf (a0 = G-unit row R, a1 = global beat 5 sid + k, n = 3:
     q + BF16 family) -> xfin go (eps).  The partial / rstd / XQ edges follow from the unit latencies."""
+    eps = norm_eps_bits() if eps is None else eps
     s = die.slices()[sl]
     sid, smask = s['sid'], 1 << s['sid']
     eng = ENG['VN'] if sl.endswith('N') else ENG['VS']

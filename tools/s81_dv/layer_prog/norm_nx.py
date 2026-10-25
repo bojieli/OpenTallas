@@ -341,7 +341,7 @@ def emit_all(die, prog, smoke, fixtures, D):
         P['attn.XFIN_GO'] = take(t, win[4] + rel['attn.XFIN_GO'], +1)
         plan[sl] = P
     # templates / calendar rows / events (same payloads as lower_norm_smoke)
-    eps = 0x358637BD
+    eps = D.norm_eps_bits()
     GU_ROWS = dict(D.family_lowerings())['gu'].GU_ROWS
     r_pre = GU_ROWS['ffn']
     n_cmd = 0

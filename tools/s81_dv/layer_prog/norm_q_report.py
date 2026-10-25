@@ -15,7 +15,7 @@ import norm_nx as N               # noqa: E402
 import norm_q as Q                # noqa: E402
 
 
-Q_NOMINAL = 115      # root write-back -> first own XQ beat (the smoke model's 667 - 552; re-measured on the runs)
+Q_NOMINAL = Q.Q_AFTER_ROOT  # measured on fully reclocked cut_0S/0N/7, see norm_q
 
 
 def main(prog, tree, out=None):
