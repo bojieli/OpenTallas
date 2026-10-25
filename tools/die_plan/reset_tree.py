@@ -37,9 +37,11 @@ released N + E + 1 + K clocks after rst_n deasserts.  HOSTING (OPEN): the die ha
 reports, per partition instance and type, the die relays falling in its outline.  The die top RTL instantiates them
 at die level (functional model; exact boot cycles for benches).
 
-usage: reset_tree.py type PLAN.json TYPE            -> the type's tree summary (entry, depth, relays, boot cycles)
+usage (any form takes --release pipelined to price a plan that has not switched yet):
+       reset_tree.py type PLAN.json TYPE            -> the type's tree summary (entry, depth, relays, boot cycles)
        reset_tree.py die  PLAN.json [--out J]       -> die regions: root, die depth E, hosting per partition, boot cycles
-       reset_tree.py all  PLAN.json                 -> every type (G0 rule check) + die summary"""
+       reset_tree.py all  PLAN.json                 -> every type (G0 rule check) + die summary
+       reset_tree.py render PLAN.json TYPE [--png F] [--release pipelined]   -> review picture of the type's tree"""
 import heapq
 import json
 import math
@@ -272,9 +274,10 @@ def _topo_taps(pts, root, reach, boxes, box_out):
     return nodes
 
 
-def _topo_grid(pts, root, reach, boxes, box_out, pitch=21.6):
+def _topo_grid(pts, root, reach, boxes, box_out, pitch=None):
     """shortest-hop tree over the taps + a grid of free relay sites (pitch um); ties: fewer hops, then less wire."""
     x0, y0, x1, y1 = box_out
+    pitch = pitch or max(21.6, reach / 4)
     while (x1 - x0) * (y1 - y0) / pitch ** 2 > 3000:
         pitch *= 1.5
     grid = []
@@ -284,6 +287,18 @@ def _topo_grid(pts, root, reach, boxes, box_out, pitch=21.6):
             q = (x0 + i * pitch, y0 + j * pitch)
             if _free(q, boxes, box_out):
                 grid.append(q)
+    # thin channels between abutting blockages / along the outline: sites ON every blockage edge (the blockages are
+    # grown by CLEAR_UM, so an edge point is CLEAR_UM off the core; two cores 2 x CLEAR_UM apart share that line)
+    eps = 0.0
+    for a, b, c, d in list(boxes) + [(x0 - 2 * eps, y0 - 2 * eps, x1 + 2 * eps, y1 + 2 * eps)]:
+        for t in range(int(max(c - a, d - b) / pitch) + 2):
+            for q in ((min(a + t * pitch, c), b - eps), (min(a + t * pitch, c), d + eps),
+                      (a - eps, min(b + t * pitch, d)), (c + eps, min(b + t * pitch, d))):
+                if box_out is not None and not (x0 <= q[0] <= x1 and y0 <= q[1] <= y1):
+                    q = (min(max(q[0], x0), x1), min(max(q[1], y0), y1))
+                if _free(q, boxes, box_out):
+                    grid.append(q)
+    grid = sorted(set(grid))
     allp = list(pts) + grid               # node index: taps first
     cell = reach
     buckets = {}
@@ -422,6 +437,29 @@ def verify(T):
 
 
 # ----------------------------------------------------------------------------------------------- per type
+_TAPS = {}
+
+
+def _taps(P, tn):
+    """schema.tap_grid memoised per Plan instance (tap_clear on a fully tiled core array costs ~40 s per call); the entry
+    holds P, so the id cannot be reused while cached."""
+    e = _TAPS.get((id(P), tn))
+    if e is None or e[0] is not P:
+        e = _TAPS[(id(P), tn)] = (P, _S_TAP_GRID(P, tn))
+    return list(e[1])
+
+
+_S_TAP_GRID = S.tap_grid
+
+
+def reset_pin(P, tn):
+    """gen_phys.tap_points(P, tn)[1] (the arst_n tap, type frame) with the memoised tap grid."""
+    import gen_phys
+    S.tap_grid = _taps
+    try:
+        return tuple(gen_phys.tap_points(P, tn)[1])
+    finally:
+        S.tap_grid = _S_TAP_GRID
 
 
 def _type_tree(P, tn, depth, reach):
@@ -434,12 +472,11 @@ def _type_tree(P, tn, depth, reach):
 
 
 def _type_tree0(P, tn, depth, reach):
-    import gen_phys
     cache = P.__dict__.setdefault("_reset_tree_cache", {})
     if ("topo", tn, reach) not in cache:
         t = P.types[tn]
         w, h = t["outline_um"]
-        cache[("topo", tn, reach)] = topology(S.tap_grid(P, tn), gen_phys.tap_points(P, tn)[1], reach=reach,
+        cache[("topo", tn, reach)] = topology(_taps(P, tn), reset_pin(P, tn), reach=reach,
                                               boxes=blockages(t), box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM,
                                                                            h - CLEAR_UM))
     return assign(cache[("topo", tn, reach)], depth)
@@ -491,9 +528,8 @@ def release_clocks(T):
 
 def part_reset_pin(P, n):
     """a partition's arst_n pin in the die frame (hard partitions: their reset tap, else their centre)."""
-    import gen_phys
     try:
-        return P.to_die(n, gen_phys.tap_points(P, P.parts[n]["type"])[1])
+        return P.to_die(n, reset_pin(P, P.parts[n]["type"]))
     except Exception:
         x0, y0, x1, y1 = P.rect(n)
         return ((x0 + x1) / 2, (y0 + y1) / 2)
@@ -607,7 +643,7 @@ def leaf_tap(P, tn):
     """the tap whose relay drives the leaf contents' rst_n: nearest the outline centre (halves the leaf reset reach
     vs tap 0 in the SW corner)."""
     w, h = P.types[tn]["outline_um"]
-    taps = S.tap_grid(P, tn)
+    taps = _taps(P, tn)
     return min(range(len(taps)), key=lambda i: (abs(taps[i][1] - w / 2) + abs(taps[i][2] - h / 2), i))
 
 
@@ -694,10 +730,58 @@ def check(P):
     return errs, warns, info
 
 
+def render(P, tn, png):
+    """review picture of a type's reset tree (review-before-route): outline, hard cores / macro leaves, clock taps, the
+    arst_n entry, relays coloured by depth, driver -> relay edges (straight lines; the wire takes an L)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
+    T = for_type(P, tn)
+    t = P.types[tn]
+    w, h = t["outline_um"]
+    fig, ax = plt.subplots(figsize=(8, 8 * h / max(w, 1e-9) if w else 8))
+    ax.add_patch(Rectangle((0, 0), w, h, fill=False, lw=1.5, ec="k"))
+    for a, b, c, d in blockages(t):
+        ax.add_patch(Rectangle((a, b), c - a, d - b, fc="#ddd", ec="#999", lw=0.5))
+    xy = {r["q"]: r["xy"] for r in T["relays"]}
+    xy["rst_root_n"] = T["root"]
+    cm = plt.get_cmap("viridis")
+    for r in T["relays"]:
+        (x0, y0), (x1, y1) = xy[r["d"]], r["xy"]
+        ax.plot([x0, x1], [y0, y1], "-", color="#c33" if RT_hop(x0, y0, x1, y1) > T["reach_um"] else "#888", lw=0.6)
+    for r in T["relays"]:
+        ax.plot(*r["xy"], "o", ms=3 if r["kind"] == "pad" else 5, color=cm(r["depth"] / max(1, T["depth"])))
+    for i, (_, x, y) in enumerate(_taps(P, tn)):
+        ax.plot(x, y, "+", color="b", ms=7)
+    ax.plot(*T["root"], "s", color="r", ms=9)
+    ax.set_title(f"{tn}: reset entry {T['entry']} (red square) -> depth {T['depth']} to {len(T['taps'])} taps (+), "
+                 f"{T['n_tree']} tree + {T['n_pad']} pad relays, max hop {T['max_hop_um']} um", fontsize=8)
+    ax.set_xlim(-0.02 * w, 1.02 * w)
+    ax.set_ylim(-0.02 * h, 1.02 * h)
+    ax.set_aspect("equal")
+    fig.savefig(png, dpi=130, bbox_inches="tight")
+    plt.close(fig)
+    return png
+
+
+def RT_hop(x0, y0, x1, y1):
+    return abs(x1 - x0) + abs(y1 - y0)
+
+
 def main(argv):
+    if len(argv) >= 3 and argv[0] == "render":
+        P = S.Plan(json.load(open(argv[1])), argv[1])
+        if "--release" in argv:
+            P.reset["release"] = argv[argv.index("--release") + 1]
+        out = argv[argv.index("--png") + 1] if "--png" in argv else f"reset_tree_{argv[2]}.png"
+        print(render(P, argv[2], out))
+        return 0
     if len(argv) < 2 or argv[0] not in ("type", "die", "all"):
         raise SystemExit(__doc__)
     P = S.Plan(json.load(open(argv[1])), argv[1])
+    if "--release" in argv:             # what-if: price a plan that has not switched yet
+        P.reset["release"] = argv[argv.index("--release") + 1]
     if argv[0] == "type":
         print(json.dumps(dict(type=argv[2], **summary(for_type(P, argv[2])))))
     elif argv[0] == "die":
