@@ -336,7 +336,8 @@ def core_latency_files(P, tn, kd, root=None):
     return dict(rows=rows, taps=taps)
 
 
-def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None):
+def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold_ff_margin=None, margins=None,
+                   skip_ir=False):
     t = P.types[tn]
     w, h = t["outline_um"]
     macros = type_macros(P, tn)
@@ -498,6 +499,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+    if skip_ir:
+        # opt-in gen.py phys --skip-kit-ir (CODEX-LOG 10-24 root practice): ORFS 6_report's per-kit PDNSim (PSM) IR
+        # analysis is skipped (station405: it pushed 6_report past 36 GB, exit 247); PG geometry is unchanged and IR
+        # stays NOT RUN for the kit (dedicated TRIAL IR remains required).  Not a timing / sign-off input.
+        cfg += ["# kit IR analysis skipped (gen.py phys --skip-kit-ir): IR NOT RUN here; dedicated TRIAL IR remains required",
+                "export PWR_NETS_VOLTAGES =", "export GND_NETS_VOLTAGES ="]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
@@ -599,7 +606,7 @@ exit $rc
 
 
 def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_rtl=None, hold_ff_margin=None,
-               margins=None):
+               margins=None, skip_ir=False):
     """margins (slew_pct, cap_pct): opt-in repair_design SLEW_MARGIN / CAP_MARGIN (None: not exported)."""
     """kit_rtl {type: filelist}: G3 kits take the bound partition RTL (bind.py kit-rtl: the bound module inside a
     port-only wrapper with the plan type's module name and exact pins) instead of the generated plan wrapper"""
@@ -632,7 +639,8 @@ def write_phys(raw, out, rtl_root=None, types=None, util=0.5, proof=False, kit_r
             mine = fl
         else:
             mine = [cells, rs, rtl_dir / f"{t['module']}.sv"] + [root / s for s in t.get("sources", [])]
-        kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins))
+        kits.append(write_type_kit(P, tn, out, [str(f) for f in mine], util, proof, root, hold_ff_margin, margins,
+                                   skip_ir))
     (out / "run_kit.sh").write_text(RUN_KIT)
     (out / "run_kit.sh").chmod(0o755)
     return kits
