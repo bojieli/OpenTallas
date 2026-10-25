@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.reg_fanout_gate.v1",
+ "top": "kv3_astk",
+ "max_loads": 64,
+ "registers": 24955,
+ "reg_nets": 24955,
+ "over": 0,
+ "verdict": "PASS",
+ "worst": [],
+ "hist": {
+  "1": 10559,
+  "2-8": 14314,
+  "0": 77,
+  "9-64": 5
+ },
+ "netlist": "/tmp/codex-kv-fanout0719/astkM.v"
+}

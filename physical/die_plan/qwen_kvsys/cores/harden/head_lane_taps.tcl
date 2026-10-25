@@ -34,7 +34,10 @@ foreach root [lsort -unique $lt_roots] {
   foreach it [$root getITerms] {
     if {![$it isInputSignal]} continue
     set inst [$it getInst]
-    if {![regexp {^(DFF|ASYNC|SDF|DHL|DLL|ICG)} [[$inst getMaster] getName]]} continue
+    # SRAM clock pins share the lane tap with their read-capture flops. Leaving
+    # macros on the root splits that related pair across CTS branches (PV failure).
+    set im [$inst getMaster]
+    if {![$im isBlock] && ![regexp {^(DFF|ASYNC|SDF|DHL|DLL|ICG)} [$im getName]]} continue
     set k [expr {[regexp $lt_re [$inst getName] -> kk] ? $kk : "rest"}]
     dict lappend groups $k $it
   }

@@ -1,0 +1,52 @@
+{
+  "status": "FUNCTIONAL_PASS_PHYSICAL_PENDING",
+  "source": "claude/kv-headclk-1025@a321bdc532",
+  "cycles_added": 0,
+  "matched_edges_per_case": 5993,
+  "nominal": {
+    "e0": {
+      "master": "e0",
+      "bsel": 0,
+      "hid": 1,
+      "mismatches": 0
+    },
+    "e2": {
+      "master": "e2",
+      "bsel": 1,
+      "hid": 1,
+      "mismatches": 0
+    },
+    "e4": {
+      "master": "e6",
+      "bsel": 2,
+      "hid": 0,
+      "mismatches": 0
+    },
+    "e6": {
+      "master": "e6",
+      "bsel": 3,
+      "hid": 0,
+      "mismatches": 0
+    }
+  },
+  "mutant": {
+    "wrong_bsel_e6": {
+      "expected": 3,
+      "supplied": 2,
+      "mismatches": 3649
+    }
+  },
+  "limits": [
+    "Only even4->3 masters proven; odd e1/e3/e5/e7 are not covered",
+    "Each master still needs source-vs-synth LEC and physical signoff",
+    "Token tests require at least two IDs per master",
+    "Regional clock probe uses inherited f26 TT flow; FF binding missing, no route approval"
+  ],
+  "astk_master": {
+    "source": "claude/kv-core-rtl-1025@2c1ca5c028",
+    "lec_proved": 28432,
+    "lec_differs": 0,
+    "synth_registers": 24955,
+    "register_data_fanout_over64": 0
+  }
+}
