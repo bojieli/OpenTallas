@@ -2238,6 +2238,10 @@ class Binder:
                         if kk[0] == "strap" and kk[1] == r and kk[2] == port:
                             v[kk[3]] = val if val in "01" else "0"
                     if nm in self.parent_id_ports.get(tn, {}):
+                        actual_bits = {kk[3]: val for kk, val in self.tvals[tn][p].items()
+                                       if kk[0] == "strap" and kk[1] == r and kk[2] == port}
+                        if set(actual_bits) != set(range(width)) or any(val not in "01" for val in actual_bits.values()):
+                            raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID bits")
                         expr = f"{width}'b{''.join(reversed(v))}"
                         parent_ids.append((nm, expr))
                         self.parent_id_values.setdefault(p, {})[nm] = dict(width=width,
