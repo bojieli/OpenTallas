@@ -260,6 +260,17 @@ OWNER? (HBM, non-blocking): (a) SerDes macro 600x600 for 6x112G is 5-7x denser t
   accumulation order = numerics decision). hc_eng left unbound until decided.
   PLAN notes (B2l, not edited): NW/NE hub types diverge (COLL q3 NLINK3+TKM vs q2 NLINK2; VM nw2 NC2 vs NE2); VM_RT/CR_RT +
   argmax(6)/idx(8) cr padding re-derive for the NW path; sucore tile re-close as w2.
+## PARKED 2026-10-24 21:23 PDT (HBM-BIND)
+- Branch claude/hbm-bind-1024r@4262b6b6e (pushed; merged VM 19cfa3d9c + SU cc8b2b937). Stopped at lane-owner request (Codex owns integration).
+- Done: in-band host RTL (vc2 endpoint, 9/9 mutants), qcore_r13_w2, B2 die-top generator + wiring delta (rings, obs, hleaf/host_status TGTS,
+  cfg, EP q3/q2+epcal, router_ids, vm_status4 NQ2, fault leaves, VM, SU), results b2_native_bind_rtl.json, gate tools/hbm_b2/gate_b2_bind.sh.
+- Live: IDX sub-agent (task aaa8e7e411e40378e, branch claude/hbm-bind-1024r-idx @2353af4c8) still running -- I could not stop it; its
+  output duplicates Codex codex/hbm-bind-idx-r2-1024. No fleet jobs of mine running. Scratch: epyc2 /srv/opentallas-scratch2/claude/hbm-bind/,
+  worktree epyc2 /srv/opentallas-scratch2/claude/wt/hbm-bind-gate (refs/hbm-bind/gate).
+- Not done: final ot-run gate (dry run direct only); IDX bind; HC bind.
+- OWNER?: (1) TP-384: widen HGI-1 8-bit rank/group fields to 9 b (option a) or 2x192 halves (b). (2) HC on B2: 128-lane half hubs (new
+  block) vs 128-lane run on 64-lane hubs (numerics change). (3) plan: NW/NE hubs diverge (COLL q3 NLINK3+TKM vs q2 NLINK2; VM nw2 vs NE2);
+  N0 link compiler obligation for host slots (~1 free take slot/16 beats).
 
 ## CODEX notes 2026-10-24 21:09 PDT
 CODEX took over: B2m pipelined-reset adoption and native-bind integration on codex/hbm-arch-r2-1024 (epyc1 scratch2 worktree); HBM core/token/trial/IDX/HC groups active. Native HC exact128 half candidate under construction (W128 banks + seven-level centre, no accumulation reorder), area delta to be planned. Existing jobs preserved.
