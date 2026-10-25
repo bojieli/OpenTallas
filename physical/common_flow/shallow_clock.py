@@ -142,16 +142,20 @@ def _leg(a, b, dbu):
     return (abs(a[0]-b[0]) + abs(a[1]-b[1])) / dbu
 
 
-def _arr(legs, kids):
-    W = sum(legs)
+def _arr(legs, kids, nrep=0):
+    """Arrival range at each child's output (or tap input).  With nrep repeaters every leg is cut into
+    nrep+1 equal segments; the driver net carries only the first segments, each repeater one segment."""
+    segs = [l / (nrep + 1) for l in legs]
+    W = sum(segs)
     out = []
-    for l, k in zip(legs, kids):
-        b = 0.0 if k[3] is None else buf_ps(l, k[3], k[4])
-        out.append((leg_ps(l, W) + b + k[1], leg_ps(l, W) + b + k[2]))
+    for s, k in zip(segs, kids):
+        t = leg_ps(s, W) + nrep * (buf_ps(s, s, 1) + leg_ps(s, s))
+        b = 0.0 if k[3] is None else buf_ps(s, k[3], k[4])
+        out.append((t + b + k[1], t + b + k[2]))
     return out
 
 
-def balance_xy(kids, dbu, step_um=2.0, pad_um=0.0):
+def balance_xy(kids, dbu, step_um=2.0, pad_um=0.0, nrep=0):
     """Driver point that equalises child arrivals (DME-lite, Manhattan).
 
     kids = [(xy, lo_ps, hi_ps, child_net_wire_um|None, child_fanout)] where lo/hi are the child's own
@@ -164,7 +168,7 @@ def balance_xy(kids, dbu, step_um=2.0, pad_um=0.0):
     best = None
     for x in range(min(xs) - pad, max(xs) + pad + 1, st):
         for y in range(min(ys) - pad, max(ys) + pad + 1, st):
-            r = _arr([_leg((x, y), k[0], dbu) for k in kids], kids)
+            r = _arr([_leg((x, y), k[0], dbu) for k in kids], kids, nrep)
             hi = max(b for a, b in r); lo = min(a for a, b in r)
             v = (round(hi - lo, 1), hi, x, y)
             if best is None or v < best: best = v
@@ -189,7 +193,7 @@ def split_geo(points, count, cap):
     return [gr for gr in bis(points, count) if gr]
 
 
-def plan_balanced(g, fanout=4, leaf_fanout=4, max_hop_um=400, step_um=2.0, geo=True, pad_um=0.0):
+def plan_balanced(g, fanout=4, leaf_fanout=4, max_hop_um=400, step_um=2.0, geo=True, pad_um=0.0, rep_um=0.0):
     """Wire-balanced variant of plan(): same partition and equal depth, but every driver is placed
     bottom-up at the point that equalises its children's modelled arrivals (leaf legs included), and
     the arrivals are re-evaluated after row legalisation.  Root stub (port -> lead -> top) is common."""
@@ -211,31 +215,61 @@ def plan_balanced(g, fanout=4, leaf_fanout=4, max_hop_um=400, step_um=2.0, geo=T
             node['taps']=pts
         return node
     tree=topo(g['taps'],level)
-    sites=FreeSites(g)
-    nodes=[];edges=[]
-    # 2. placement bottom-up; ranges are arrivals at the children's OUTPUTS seen from this node's output
-    def place(node):
+    # 2. placement bottom-up; ranges are arrivals at the children's OUTPUTS seen from this node's output.
+    # Pass 1 without repeaters; if rep_um>0, every tree level whose longest leg exceeds rep_um gets the
+    # same number of repeaters on ALL its legs (equal stage count, sharp slews), and pass 2 re-places.
+    def place(node,sites,R,lvl=0):
         if node['taps'] is not None:
             kids=[(t['xy'],0.0,0.0,None,0) for t in node['taps']]
         else:
-            for k in node['kids']: place(k)
+            for k in node['kids']: place(k,sites,R,lvl+1)
             kids=[(k['xy']['xy'],k['lo'],k['hi'],k['W'],k['fan']) for k in node['kids']]
-        node['xy']=sites.legal(balance_xy(kids,u,step_um,pad_um))
+        nr=R.get(lvl,0)
+        node['xy']=sites.legal(balance_xy(kids,u,step_um,pad_um,nr))
         legs=[_leg(node['xy']['xy'],k[0],u) for k in kids]
-        r=_arr(legs,kids)
-        node['W']=sum(legs);node['fan']=len(kids)
+        r=_arr(legs,kids,nr)
+        node['W']=sum(legs)/(nr+1);node['fan']=len(kids);node['lvl']=lvl;node['legmax']=max(legs)
         node['lo']=min(a for a,b in r);node['hi']=max(b for a,b in r)
-    place(tree)
+    R={}
+    place(tree,FreeSites(g),R)
+    if rep_um>0:
+        mx={}
+        def walk(n):
+            mx[n['lvl']]=max(mx.get(n['lvl'],0),n['legmax'])
+            for k in n['kids']: walk(k)
+        walk(tree)
+        R={l:max(0,math.ceil(m/rep_um)-1) for l,m in mx.items()}
+        place(tree,FreeSites(g),R)
+    sites=FreeSites(g)
+    nodes=[];edges=[]
+    def mark(n):
+        sites.legal(n['xy']['xy'])
+        for k in n['kids']: mark(k)
+    mark(tree)   # reserve the placed drivers before legalising repeaters
     lead=dict(name='ot_dtsh_0',parent=None,depth=1,**sites.legal(g['root']))
     nodes.append(lead)
+    def chain(parent,pxy,cxy,nr,depth):
+        """nr repeaters along the L-shaped leg (x first, then y), evenly spaced; returns (last driver, depth)."""
+        L=abs(cxy[0]-pxy[0])+abs(cxy[1]-pxy[1])
+        for k in range(1,nr+1):
+            d=L*k/(nr+1);dx=abs(cxy[0]-pxy[0])
+            if d<=dx: pt=[pxy[0]+math.copysign(d,cxy[0]-pxy[0]),pxy[1]]
+            else: pt=[cxy[0],pxy[1]+math.copysign(d-dx,cxy[1]-pxy[1])]
+            nm=f'ot_dtsh_{len(nodes)}'
+            nodes.append(dict(name=nm,parent=parent,depth=depth,**sites.legal(pt)))
+            edges.append([parent,nm]);parent=nm;depth+=1
+        return parent,depth
     def emit(node,parent,depth):
         nm=f'ot_dtsh_{len(nodes)}'
         nodes.append(dict(name=nm,parent=parent,depth=depth,**node['xy']))
         edges.append([parent,nm])
+        nr=R.get(node['lvl'],0)
         if node['taps'] is not None:
-            for t in node['taps']: edges.append([nm,t['name']])
+            for t in node['taps']:
+                last,_=chain(nm,node['xy']['xy'],t['xy'],nr,depth+1);edges.append([last,t['name']])
         else:
-            for k in node['kids']: emit(k,nm,depth+1)
+            for k in node['kids']:
+                last,dd=chain(nm,node['xy']['xy'],k['xy']['xy'],nr,depth+1);emit(k,last,dd)
     emit(tree,lead['name'],2)
     xy={n['name']:n['xy'] for n in nodes}|{t['name']:t['xy'] for t in g['taps']}
     max_hop=max(abs(xy[a][0]-xy[b][0])+abs(xy[a][1]-xy[b][1]) for a,b in edges)/u
@@ -245,9 +279,9 @@ def plan_balanced(g, fanout=4, leaf_fanout=4, max_hop_um=400, step_um=2.0, geo=T
     p=dict(nodes=nodes,edges=edges,taps=g['taps'],root=g['root'],root_name=g.get('root_name',''),
            dbu=u,core=g['core'],master=g['master'],width=g['width'],height=g['height'],
            obstacles=[c[1:5] for c in g['cells'] if c[5]],
-           summary=dict(mode='balanced',new_buffers=len(nodes),tap_buffers=len(g['taps']),trunk_levels=level+3,
+           summary=dict(mode='balanced',new_buffers=len(nodes),tap_buffers=len(g['taps']),trunk_levels=level+3+sum(R.values()),
                         max_hop_um=max_hop,port_stub_um=stub,fanout=fanout,leaf_fanout=leaf_fanout,
-                        model_tap_input_spread_ps=round(tree['hi']-tree['lo'],1),
+                        model_tap_input_spread_ps=round(tree['hi']-tree['lo'],1),repeaters_per_level=R,
                         added_cycles=0,added_area_um2=len(nodes)*g['width']*g['height']/u**2))
     validate(p)
     return p
@@ -327,7 +361,7 @@ def emit_apply(p,out):
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('geometry');ap.add_argument('--out',required=True);ap.add_argument('--image');ap.add_argument('--apply')
     a=ap.parse_args();import os;g=load_geometry(a.geometry)
-    if os.environ.get('OT_DTSH_BALANCE','0')=='1':p=plan_balanced(g,fanout=int(os.environ.get('OT_DTSH_FANOUT','3')),leaf_fanout=int(os.environ.get('OT_DTSH_LEAF_FANOUT','4')))
+    if os.environ.get('OT_DTSH_BALANCE','0')=='1':p=plan_balanced(g,fanout=int(os.environ.get('OT_DTSH_FANOUT','3')),leaf_fanout=int(os.environ.get('OT_DTSH_LEAF_FANOUT','4')),rep_um=float(os.environ.get('OT_DTSH_REP_UM','0')))
     else:p=plan(g)
     Path(a.out).write_text(json.dumps(p,indent=1)+'\n')
     if a.image:render(p,a.image)
