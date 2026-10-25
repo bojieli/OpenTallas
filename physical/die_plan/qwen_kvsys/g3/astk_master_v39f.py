@@ -5,14 +5,15 @@ The four corner cores kv3_astk_{EN,ES,WN,WS} (kv3_hub_Eo / kv3_hub_Wo) become in
 (kit kv3_astk__190.08x181.44, 1692 pins = corner pins + ck, rst_n, strap_corner[1:0]).  Each instance:
   module kv3_astk, pins_file cores/kv3_astk_pins.json (the master kit table in plan convention: a pin also in the
   kv3_astk_EN plan table keeps that plan coordinate, the master's own layout = EN; a pin new in the kit (ck, rst_n,
-  straps) keeps its kit coordinate), orient = the whole-instance orient (R0/MX/MY/R180) with the smallest mean pin
-  displacement vs the old corner table, straps [strap_corner, 2 b, value EN 2'b11 | ES 2'b10 | WN 2'b01 | WS 2'b00]
+  straps) keeps its kit coordinate), orient = the whole-instance orient (R0/MX/MY/R180) that keeps the most pins on the face
+  the old corner table chose (its partner side; ties: smaller mean displacement), straps [strap_corner, 2 b, value EN 2'b11 | ES 2'b10 | WN 2'b01 | WS 2'b00]
   (bit1 = E side, bit0 = N half; the hub ties TIEHI/TIELO next to the pin).
 Pins of the old corner tables missing from the master (am g drop qo[571]) are reported, not invented.
     astk_master_v39f.py PLAN_IN PLAN_OUT --kit-pins KIT/pins.json --cores DIR --report R.json
 """
 import argparse
 import json
+import re
 from pathlib import Path
 
 W, H = 190.08, 181.44
@@ -24,6 +25,11 @@ OR = {"R0": lambda x, y: (x, y), "MX": lambda x, y: (x, H - y), "MY": lambda x, 
 def load(f):
     j = json.loads(Path(f).read_text())
     return j, (j.get("pins", j) if isinstance(j, dict) else j)
+
+
+def face(x, y):
+    d = dict(W=x, E=W - x, S=y, N=H - y)
+    return min(d, key=d.get)
 
 
 def key(q):
@@ -69,11 +75,15 @@ def main():
             c = m.rsplit("_", 1)[1]
             _, old = load(cores / f"kv3_astk_{c}_pins.json")
             ok = {key(q): (q["x"], q["y"]) for q in old}
-            disp = {}
+            disp, fmatch = {}, {}
             for o, f in OR.items():
                 d = [abs(f(*mk[k])[0] - x) + abs(f(*mk[k])[1] - y) for k, (x, y) in ok.items() if k in mk]
                 disp[o] = sum(d) / max(1, len(d))
-            o = min(disp, key=lambda z: (disp[z], z != "R0"))
+                fmatch[o] = sum(face(*f(*mk[k])) == face(x, y) for k, (x, y) in ok.items() if k in mk)
+            # the orient that keeps the most pins on the face the corner table chose (partner side), then displacement
+            o = max(OR, key=lambda z: (fmatch[z], -disp[z], z == "R0"))
+            off_face = sorted({re.sub(r"\[\d+\]$", "", k) for k, (x, y) in ok.items()
+                               if k in mk and face(*OR[o](*mk[k])) != face(x, y)})
             missing = sorted(k for k in ok if k not in mk)
             hc.update(module="kv3_astk", pins_file="cores/kv3_astk_pins.json", orient=o,
                       straps=[dict(port="strap_corner", width=2, value=VAL[c],
@@ -82,6 +92,7 @@ def main():
                           ).lstrip(" |")
             rep["instances"].append(dict(type=tn, inst=hc["inst"], corner=c, orient=o,
                                          mean_disp_um={k: round(v, 1) for k, v in disp.items()},
+                                         face_match=fmatch, ports_off_face=off_face,
                                          pins_missing_in_master=missing,
                                          pins_moved=sum(1 for k in ok if k in mk and
                                                         OR[o](*mk[k]) != ok[k])))
@@ -89,7 +100,8 @@ def main():
     Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     for i in rep["instances"]:
         print(f"astk_master: {i['type']}.{i['inst']} {i['corner']} -> kv3_astk {i['orient']} mean disp "
-              f"{i['mean_disp_um'][i['orient']]} um, moved {i['pins_moved']}, missing {i['pins_missing_in_master']}")
+              f"{i['mean_disp_um'][i['orient']]} um, face match {i['face_match'][i['orient']]}, off-face ports "
+              f"{i['ports_off_face']}, missing {i['pins_missing_in_master']}")
 
 
 if __name__ == "__main__":
