@@ -2,3 +2,4 @@
 s81_head	hd_turn_a	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits/m5/hd_turn_a	claude/proto-1025@7b777a3ed9	PASS-COND	GEOM-REVIEW [PROTO-KITS 04:25] reply 04:29	24	24334	PROTO	route			adopt
 s81_head	hd_turn_b	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits/m5/hd_turn_b	claude/proto-1025@7b777a3ed9	PASS-COND	GEOM-REVIEW [PROTO-KITS 04:25] reply 04:29	24	23726	PROTO	route			adopt
 qwen_compute	coll_ftm	epyc1:/srv/opentallas-scratch2/claude/proto1025/kits_qwen_compute/m5/coll_ftm	claude/proto-1025@4f739fa4bf	PASS-COND	GEOM-REVIEW [PROTO-KITS 04:25] reply 04:35	32	108743	PROTO	route			adopt
+qwen_kvsys	kv3_astk_WN__190.08x181.44	epyc1:/srv/opentallas-scratch2/claude/kv-cores-1025r/astk/A/kv3_astk_WN__190.08x181.44	claude/kv-cores-astk-1025r@40aa5462a1	PASS-COND	results/geom_review/kv3_astk_WN__kvcores_751cb4170614304a.json	32	117000	KV-CORES	route			adopt
