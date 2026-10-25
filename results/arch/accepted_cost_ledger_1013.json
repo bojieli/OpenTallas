@@ -1372,6 +1372,45 @@
   },
   {
    "design": "s81",
+   "unit": "S81.ADOPT178_FT_SITES (main 7c33a7a81: 178-type plan, exact feedthrough sites; 238 lanes changed/new vs plan 81f23d224, +1,012 summed lane cycles; max lane 74->82; priced lane classes field_round 126->134, leaf_hub_rt 23->30, svc_to_hub 19->24, link_end 51->52)",
+   "group": "S81.ADOPT178_FT_SITES",
+   "measured": 4744.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.31,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "compose_tok_ds + dv_mu_calendar_phys REL241 single user on the 241-stage map; plan latency table of record cf2f96c02c280c82 vs 6a09283641da6fbf",
+     "base_cycles": 1524133.6,
+     "cycles": 1528877.6,
+     "added_cycles": 4744.0,
+     "tok_s_before": 787.3,
+     "tok_s_after": 784.9,
+     "e2e_loss_pct": 0.31
+    },
+    "mtp": {
+     "model": "same, MTP causal six-position pipeline law of record (owner decision 15), tau 4.159",
+     "base_cycles": 1809990.6,
+     "cycles": 1815229.6,
+     "added_cycles": 5239.0,
+     "tok_s_before": 2757.4,
+     "tok_s_after": 2749.4,
+     "vs_target_2763_pct": -0.492,
+     "e2e_loss_pct": 0.289
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/token_pass/tokds_adopt178_price_1025/compose_1u.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-25",
+   "status": "proposed",
+   "note": "Plan-level lane latency cost, analytic composition (MODEL), not a die run. Calendars AR50/MTP6 PASS 0 collisions (same-user checked; injected-shift 660/2748 and N+1 controls FAULT). Only the mapped lane classes are substituted into the DAG; new IDXNET/PORTFIX lanes (tp__*, ql/qc iqf) and control lanes (seqhost/ctrl/sid) are not on the priced token path. Serial upper bound if every changed lane were traversed once per layer stays < 5 %. seqhost lanes 47->62 move the quant col4 V path: the C8 QDELAYS LUT must be regenerated on this plan.",
+   "share_basis": "modelled"
+  },
+  {
+   "design": "s81",
    "unit": "S81.DV_LANDING_HALFCYCLE (p4l DV die: landed die-link crossings 1+E on every linked block input, forwarded half-cycle dsfd_dvrlyh relay hops, host plane hf/ht E28 once per token; added cycles a token, landing was unpriced)",
    "group": "S81.DV_LANDING_HALFCYCLE",
    "measured": 18275.5,
@@ -3143,11 +3182,11 @@
   },
   "s81": {
    "accepted_pct": 3.499,
-   "proposed_pct": 6.039,
-   "accepted_plus_proposed_pct": 9.538,
+   "proposed_pct": 6.349,
+   "accepted_plus_proposed_pct": 9.848,
    "limit_pct": 15.0,
    "accepted_rows": 3,
-   "proposed_rows": 8,
+   "proposed_rows": 9,
    "headroom_pct": 11.501,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,
