@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.hbm_arch.core_views.v1",
+ "plan": "w128/plan.json",
+ "view_list": [
+  {
+   "view": "ot_hbm_hc_bank128_pair_core@ba77076d4cc8",
+   "module": "ot_hbm_hc_bank128_pair_core",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "pins_file": "cores/ot_hbm_hc_bank128_pair_core__250.56x267.84.json",
+   "pins_sha256": "ba77076d4cc87e0470b8cedee67f0f11ddd1c8ef67483b85cf242cb3289c40b4",
+   "pins": 1605,
+   "family": "HC128",
+   "instances": [
+    "q_b0xx bank column rows (plain/feed/terminal banks)"
+   ],
+   "placed": 120,
+   "recipe_keys": [
+    "ot_hbm_hc_bank128_pair_core"
+   ],
+   "blockers": []
+  },
+  {
+   "view": "ot_hbm_hc_bank128_pair_first_core@0c39789d46b1",
+   "module": "ot_hbm_hc_bank128_pair_first_core",
+   "outline_um": [
+    250.56,
+    267.84
+   ],
+   "pins_file": "cores/ot_hbm_hc_bank128_pair_first_core__250.56x267.84.json",
+   "pins_sha256": "0c39789d46b16448b4d8dbef917c584f9bd2a7a113741090165bc7da30d66f22",
+   "pins": 1093,
+   "family": "HC128",
+   "instances": [
+    "first bank column rows"
+   ],
+   "placed": 8,
+   "recipe_keys": [
+    "ot_hbm_hc_bank128_pair_first_core"
+   ],
+   "blockers": []
+  },
+  {
+   "view": "ot_hbm_hc_subtree32_core@3abde8dae72d",
+   "module": "ot_hbm_hc_subtree32_core",
+   "outline_um": [
+    220.32,
+    220.32
+   ],
+   "pins_file": "cores/ot_hbm_hc_subtree32_core__220.32x220.32.json",
+   "pins_sha256": "3abde8dae72de74f2b46ea20d65a5532864b881ce0b58d39e08565428a1f4fc7",
+   "pins": 1091,
+   "family": "HC128",
+   "instances": [
+    "q_hub u_hc_Q 2x2 subtrees"
+   ],
+   "placed": 4,
+   "recipe_keys": [
+    "ot_hbm_hc_subtree32_core"
+   ],
+   "blockers": []
+  }
+ ]
+}

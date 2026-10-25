@@ -1,0 +1,3244 @@
+{
+ "schema": "opentallas.die_plan.v1",
+ "note": "HBM-W128 10-25 kit context only: B2o (codex/hbm-b2o-capacity-1025@96be80ec2) die/clock/layer keys; partitions, ports, lanes emptied (not a die plan)",
+ "die": {
+  "name": "hbm_arch_B2o",
+  "label": "B2o = B2n re-floorplanned (compact SU rows, hub spine abutting root); B2n = B2m + decision 12 (ft <= M7, 405-um stations); B2m = B2l (accepted 10-24, ~22% DS-AR loss vs d4g) + in-band host, balanced binary H-tree, SerDes PHY supplies",
+  "tech": "asap7",
+  "outline_um": [
+   28097.28,
+   16104.96
+  ],
+  "period_ps": 833,
+  "reach_um": 405.0,
+  "rep_um": 450.0,
+  "grid_um": 8.64,
+  "layer_budget": {
+   "partition_signal_max": "M7",
+   "die_layers": [
+    "M8",
+    "M9"
+   ],
+   "die_use": [
+    "clock_spine",
+    "pg",
+    "reset"
+   ],
+   "cut_avail": {
+    "M8": 0.6,
+    "M9": 0.6
+   }
+  },
+  "pg": {
+   "partition_pg_max": "M7",
+   "grid": [
+    {
+     "layer": "M8",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDD",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDD",
+      "VSS"
+     ]
+    }
+   ],
+   "domains": [
+    {
+     "name": "phy_NW_io_u_lk_N0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_NW_io_u_lk_N0"
+     ],
+     "rect_um": [
+      0.0,
+      6001.64,
+      698.248,
+      7178.92
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       0.0,
+       6065.28,
+       634.608,
+       7115.28
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (checkerboard on the 45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_NW_spb0_u_lk_S0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_NW_spb0_u_lk_S0"
+     ],
+     "rect_um": [
+      5742.44,
+      0.0,
+      6469.768,
+      1113.64
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       5806.08,
+       0.0,
+       6406.128,
+       1050.0
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (checkerboard on the 45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_vsN0_u_lk_S1",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_vsN0_u_lk_S1"
+     ],
+     "rect_um": [
+      13328.36,
+      0.0,
+      14055.688,
+      1113.64
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       13392.0,
+       0.0,
+       13992.048,
+       1050.0
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (checkerboard on the 45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_NE_io_u_lk_N2",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_NE_io_u_lk_N2"
+     ],
+     "rect_um": [
+      27399.032,
+      6001.64,
+      28097.28,
+      7178.92
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       27462.672,
+       6065.28,
+       28097.28,
+       7115.28
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (checkerboard on the 45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    },
+    {
+     "name": "phy_NE_spb0_u_lk_S0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_NE_spb0_u_lk_S0"
+     ],
+     "rect_um": [
+      21627.512,
+      0.0,
+      22354.84,
+      1113.64
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       21691.152,
+       0.0,
+       22291.2,
+       1050.0
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (checkerboard on the 45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+    }
+   ]
+  },
+  "io": [
+   {
+    "name": "io_NW_io_u_lk_N0",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "NW_io",
+    "rect_um": [
+     0.0,
+     6065.28,
+     634.608,
+     7115.28
+    ],
+    "sites": 28,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 35 um; allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+    "note": "die_io.py plan: u_lk_N0 HBM-ARCH 10-24: rack table (tools/release_rack_design.py HBM_PAIRS, connections_hbm-ds.csv) macro for this SerDes: WN quad peer d+2: W edge io (as-built lk_N0); OWNER 10-24: host traffic in-band over this die link (dedicated host UCIe u_host_N dropped); u_host_ep fed from the u_ep_N0 host VC; route NW_io -> [L48] -> root",
+    "rack_macro": "lk_NW0",
+    "host": "in_band",
+    "host_route": "NW_io -> [L48] -> root"
+   },
+   {
+    "name": "io_NW_spb0_u_lk_S0",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "NW_spb0",
+    "rect_um": [
+     5806.08,
+     0.0,
+     6406.128,
+     1050.0
+    ],
+    "sites": 28,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 35 um; allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+    "note": "die_io.py plan: u_lk_S0 HBM-ARCH 10-24: rack table (tools/release_rack_design.py HBM_PAIRS, connections_hbm-ds.csv) macro for this SerDes: WS quad peer d-1: S edge, W tile (as-built lk_S0)",
+    "rack_macro": "lk_SW0"
+   },
+   {
+    "name": "io_PHY_N_u_phy_Q",
+    "kind": "phy_macro",
+    "iface": "hbm_phy",
+    "part": "PHY_N",
+    "rect_um": [
+     9797.76,
+     14031.36,
+     18299.52,
+     16104.96
+    ],
+    "sites": 5698,
+    "pitch_um": 55.0,
+    "signals": 1900,
+    "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um; allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+    "note": "die_io.py plan: u_phy_Q"
+   },
+   {
+    "name": "io_vsN0_u_lk_S1",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "vsN0",
+    "rect_um": [
+     13392.0,
+     0.0,
+     13992.048,
+     1050.0
+    ],
+    "sites": 28,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 35 um; allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+    "note": "die_io.py plan: u_lk_S1; host link (BFS 3 port hop(s) from root): CONFIRM HBM-ARCH 10-24: rack table (tools/release_rack_design.py HBM_PAIRS, connections_hbm-ds.csv) macro for this SerDes: W5 ring previous quad: S edge seam (as-built lk_S1)",
+    "rack_macro": "lk_SW1"
+   },
+   {
+    "name": "io_NE_io_u_lk_N2",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "NE_io",
+    "rect_um": [
+     27462.672,
+     6065.28,
+     28097.28,
+     7115.28
+    ],
+    "sites": 28,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 0 um (B2o: MY image of io_NW_io_u_lk_N0); allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+    "note": "die_io.py plan: u_lk_N2 HBM-ARCH 10-24: rack table (tools/release_rack_design.py HBM_PAIRS, connections_hbm-ds.csv) macro for this SerDes: EN ring next quad: E edge io (as-built lk_N2)",
+    "rack_macro": "lk_NE0"
+   },
+   {
+    "name": "io_NE_spb0_u_lk_S0",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "NE_spb0",
+    "rect_um": [
+     21691.152,
+     0.0,
+     22291.2,
+     1050.0
+    ],
+    "sites": 28,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 35 um; allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+    "note": "die_io.py plan: u_lk_S0 HBM-ARCH 10-24: rack table (tools/release_rack_design.py HBM_PAIRS, connections_hbm-ds.csv) macro for this SerDes: ES quad peer d+1: S edge, E tile (as-built lk_S3)",
+    "rack_macro": "lk_SE0"
+   }
+  ]
+ },
+ "partition_types": {},
+ "partitions": [],
+ "ports": [],
+ "lanes": [],
+ "clock": {
+  "source": {
+   "part": "@die",
+   "bus": "clk"
+  },
+  "insertion_ps": 250,
+  "common_latency_ps": 250,
+  "insertion_tol_ps": 40,
+  "neighbour_skew_ps": 80,
+  "face_xing": "budgeted",
+  "spine": {
+   "layers": [
+    "M8",
+    "M9"
+   ],
+   "root_um": [
+    14048.64,
+    8052.48
+   ],
+   "topology": "htree"
+  }
+ },
+ "reset": {
+  "source": {
+   "part": "@die",
+   "bus": "rst_n"
+  },
+  "sync_stages": 2,
+  "data_reset": false,
+  "epoch_bit": true,
+  "release": "counted"
+ },
+ "budgets": {
+  "face_pins_per_um": 6,
+  "face_pin_layers": 2,
+  "face_window_um": 10,
+  "pin_track_max": 0.6,
+  "cut_ratio_max": 0.6,
+  "cut_step_um": 250,
+  "pin_reg_p90_um": 30,
+  "ft_station_max_um": 405.0
+ },
+ "latency": {
+  "lanes": {
+   "L0": {
+    "cycles": 12,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 12,
+    "pad": 0
+   },
+   "L0m": {
+    "cycles": 12,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 12,
+    "pad": 0
+   },
+   "L1": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L1m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L2": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L2m": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L3": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L3m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L4": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L4m": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L5": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   },
+   "L5m": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   },
+   "L6": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L6m": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L7": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L7m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L8": {
+    "cycles": 50,
+    "stations": 48,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 50,
+    "pad": 0
+   },
+   "L8m": {
+    "cycles": 50,
+    "stations": 48,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 50,
+    "pad": 0
+   },
+   "L9": {
+    "cycles": 35,
+    "stations": 33,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 35,
+    "pad": 0
+   },
+   "L9m": {
+    "cycles": 25,
+    "stations": 23,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 25,
+    "pad": 0
+   },
+   "L10": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L10m": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L11": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L11m": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L12": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   },
+   "L12m": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   },
+   "L13": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L13m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L14": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L14m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L15": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L15m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L16": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L16m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L17": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L17m": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L18": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L18m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L19": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L19m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L20": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L20m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L21": {
+    "cycles": 44,
+    "stations": 42,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 44,
+    "pad": 0
+   },
+   "L21m": {
+    "cycles": 44,
+    "stations": 42,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 44,
+    "pad": 0
+   },
+   "L22": {
+    "cycles": 36,
+    "stations": 34,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 36,
+    "pad": 0
+   },
+   "L22m": {
+    "cycles": 36,
+    "stations": 34,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 36,
+    "pad": 0
+   },
+   "L23": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L23m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L24": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L24m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L25": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L25m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L26": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L26m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L27": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L27m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L28": {
+    "cycles": 15,
+    "stations": 13,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 15,
+    "pad": 0
+   },
+   "L28m": {
+    "cycles": 15,
+    "stations": 13,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 15,
+    "pad": 0
+   },
+   "L29": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L29m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L30": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L30m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L31": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L31m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L32": {
+    "cycles": 9,
+    "stations": 7,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 9,
+    "pad": 0
+   },
+   "L32m": {
+    "cycles": 9,
+    "stations": 7,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 9,
+    "pad": 0
+   },
+   "L33": {
+    "cycles": 13,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 13,
+    "pad": 0
+   },
+   "L33m": {
+    "cycles": 13,
+    "stations": 11,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 13,
+    "pad": 0
+   },
+   "L34": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L34m": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L35": {
+    "cycles": 10,
+    "stations": 8,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 10,
+    "pad": 0
+   },
+   "L35m": {
+    "cycles": 10,
+    "stations": 8,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 10,
+    "pad": 0
+   },
+   "L36": {
+    "cycles": 9,
+    "stations": 7,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 9,
+    "pad": 0
+   },
+   "L36m": {
+    "cycles": 9,
+    "stations": 7,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 9,
+    "pad": 0
+   },
+   "L37": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L37m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L38": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L38m": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L39": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L39m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L40": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L40m": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L41": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L41m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L42": {
+    "cycles": 14,
+    "stations": 12,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 14,
+    "pad": 0
+   },
+   "L42m": {
+    "cycles": 14,
+    "stations": 12,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 14,
+    "pad": 0
+   },
+   "L43": {
+    "cycles": 10,
+    "stations": 8,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 10,
+    "pad": 0
+   },
+   "L43m": {
+    "cycles": 10,
+    "stations": 8,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 10,
+    "pad": 0
+   },
+   "L44": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L44m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L45": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L45m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L46": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L46m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L47": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L47m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L48": {
+    "cycles": 58,
+    "stations": 56,
+    "boundary": 2,
+    "faces": 12,
+    "fixed": 0,
+    "natural": 58,
+    "pad": 0
+   },
+   "L48m": {
+    "cycles": 58,
+    "stations": 56,
+    "boundary": 2,
+    "faces": 12,
+    "fixed": 0,
+    "natural": 58,
+    "pad": 0
+   },
+   "L49": {
+    "cycles": 12,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 12,
+    "pad": 0
+   },
+   "L49m": {
+    "cycles": 12,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 12,
+    "pad": 0
+   },
+   "L50": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L50m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L51": {
+    "cycles": 24,
+    "stations": 22,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 24,
+    "pad": 0
+   },
+   "L51m": {
+    "cycles": 24,
+    "stations": 22,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 24,
+    "pad": 0
+   },
+   "L52": {
+    "cycles": 25,
+    "stations": 23,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 25,
+    "pad": 0
+   },
+   "L52m": {
+    "cycles": 25,
+    "stations": 23,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 25,
+    "pad": 0
+   },
+   "L53": {
+    "cycles": 50,
+    "stations": 48,
+    "boundary": 2,
+    "faces": 12,
+    "fixed": 0,
+    "natural": 50,
+    "pad": 0
+   },
+   "L53m": {
+    "cycles": 50,
+    "stations": 48,
+    "boundary": 2,
+    "faces": 12,
+    "fixed": 0,
+    "natural": 50,
+    "pad": 0
+   },
+   "L54": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L54m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L55": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L55m": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L56": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L56m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L57": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L57m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L58": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L58m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L59": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L59m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L60": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L60m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L61": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L61m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L62": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L62m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L63": {
+    "cycles": 28,
+    "stations": 26,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 28,
+    "pad": 0
+   },
+   "L63m": {
+    "cycles": 30,
+    "stations": 28,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 30,
+    "pad": 0
+   },
+   "L64": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L64m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L65": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L65m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L66": {
+    "cycles": 30,
+    "stations": 28,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 30,
+    "pad": 0
+   },
+   "L66m": {
+    "cycles": 30,
+    "stations": 28,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 30,
+    "pad": 0
+   },
+   "L67": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L67m": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L68": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L68m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L69": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L69m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L70": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L70m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L71": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L71m": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L72": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L72m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L73": {
+    "cycles": 23,
+    "stations": 21,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "natural": 23,
+    "pad": 0
+   },
+   "L73m": {
+    "cycles": 23,
+    "stations": 21,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "natural": 23,
+    "pad": 0
+   },
+   "L74": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L74m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L75": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L75m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L76": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L76m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L77": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L77m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L78": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L78m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L79": {
+    "cycles": 34,
+    "stations": 32,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 34,
+    "pad": 0
+   },
+   "L79m": {
+    "cycles": 34,
+    "stations": 32,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 34,
+    "pad": 0
+   },
+   "L80": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L80m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L81": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L81m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L82": {
+    "cycles": 21,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 21,
+    "pad": 0
+   },
+   "L82m": {
+    "cycles": 21,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 21,
+    "pad": 0
+   },
+   "L83": {
+    "cycles": 12,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 12,
+    "pad": 0
+   },
+   "L83m": {
+    "cycles": 12,
+    "stations": 10,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 12,
+    "pad": 0
+   },
+   "L84": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L84m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L85": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L85m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L86": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L86m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L87": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L87m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L88": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L88m": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L89": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L89m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L90": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L90m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L91": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L91m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L92": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L92m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L93": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L93m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L94": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L94m": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L95": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L95m": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L96": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L96m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L97": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L97m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L98": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L98m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L99": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L99m": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L100": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L100m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L101": {
+    "cycles": 27,
+    "stations": 25,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 27,
+    "pad": 0
+   },
+   "L101m": {
+    "cycles": 27,
+    "stations": 25,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 27,
+    "pad": 0
+   },
+   "L102": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L102m": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L103": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L103m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L104": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L104m": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L105": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L105m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L106": {
+    "cycles": 46,
+    "stations": 44,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "natural": 46,
+    "pad": 0
+   },
+   "L106m": {
+    "cycles": 46,
+    "stations": 44,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "natural": 46,
+    "pad": 0
+   },
+   "L107": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L107m": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L108": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L108m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L109": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L109m": {
+    "cycles": 4,
+    "stations": 2,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 4,
+    "pad": 0
+   },
+   "L110": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L110m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L111": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L111m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L112": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L112m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L113": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L113m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L114": {
+    "cycles": 24,
+    "stations": 22,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 24,
+    "pad": 0
+   },
+   "L114m": {
+    "cycles": 24,
+    "stations": 22,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 24,
+    "pad": 0
+   },
+   "L115": {
+    "cycles": 15,
+    "stations": 13,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 15,
+    "pad": 0
+   },
+   "L115m": {
+    "cycles": 15,
+    "stations": 13,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 15,
+    "pad": 0
+   },
+   "L116": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   },
+   "L116m": {
+    "cycles": 11,
+    "stations": 9,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 11,
+    "pad": 0
+   },
+   "L117": {
+    "cycles": 38,
+    "stations": 36,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 38,
+    "pad": 0
+   },
+   "L117m": {
+    "cycles": 38,
+    "stations": 36,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 38,
+    "pad": 0
+   },
+   "L118": {
+    "cycles": 19,
+    "stations": 17,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 19,
+    "pad": 0
+   },
+   "L119": {
+    "cycles": 21,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "natural": 21,
+    "pad": 0
+   },
+   "L119m": {
+    "cycles": 21,
+    "stations": 19,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "natural": 21,
+    "pad": 0
+   },
+   "L120": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L120m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L121": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L121m": {
+    "cycles": 6,
+    "stations": 4,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 6,
+    "pad": 0
+   },
+   "L122": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L122m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L123": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L123m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L124": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L124m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L125": {
+    "cycles": 47,
+    "stations": 45,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "natural": 47,
+    "pad": 0
+   },
+   "L125m": {
+    "cycles": 47,
+    "stations": 45,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "natural": 47,
+    "pad": 0
+   },
+   "L126": {
+    "cycles": 27,
+    "stations": 25,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 27,
+    "pad": 0
+   },
+   "L126m": {
+    "cycles": 27,
+    "stations": 25,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 27,
+    "pad": 0
+   },
+   "L127": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L127m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L128": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L128m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L129": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L129m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L130": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L130m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L131": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L131m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L132": {
+    "cycles": 14,
+    "stations": 12,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 14,
+    "pad": 0
+   },
+   "L132m": {
+    "cycles": 14,
+    "stations": 12,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 14,
+    "pad": 0
+   },
+   "L133": {
+    "cycles": 10,
+    "stations": 8,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 10,
+    "pad": 0
+   },
+   "L133m": {
+    "cycles": 10,
+    "stations": 8,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 10,
+    "pad": 0
+   },
+   "L134": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L134m": {
+    "cycles": 8,
+    "stations": 6,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 8,
+    "pad": 0
+   },
+   "L135": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L135m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L136": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L136m": {
+    "cycles": 7,
+    "stations": 5,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 7,
+    "pad": 0
+   },
+   "L137": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L137m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L138": {
+    "cycles": 37,
+    "stations": 35,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 37,
+    "pad": 0
+   },
+   "L138m": {
+    "cycles": 37,
+    "stations": 35,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 37,
+    "pad": 0
+   },
+   "L139": {
+    "cycles": 36,
+    "stations": 34,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 36,
+    "pad": 0
+   },
+   "L139m": {
+    "cycles": 36,
+    "stations": 34,
+    "boundary": 2,
+    "faces": 9,
+    "fixed": 0,
+    "natural": 36,
+    "pad": 0
+   },
+   "L140": {
+    "cycles": 37,
+    "stations": 35,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 37,
+    "pad": 0
+   },
+   "L140m": {
+    "cycles": 37,
+    "stations": 35,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 37,
+    "pad": 0
+   },
+   "L141": {
+    "cycles": 19,
+    "stations": 17,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 19,
+    "pad": 0
+   },
+   "L142": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L142m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L143": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L143m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L144": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L144m": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0
+   },
+   "L145": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L145m": {
+    "cycles": 5,
+    "stations": 3,
+    "boundary": 2,
+    "faces": 2,
+    "fixed": 0,
+    "natural": 5,
+    "pad": 0
+   },
+   "L146": {
+    "cycles": 22,
+    "stations": 20,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "natural": 22,
+    "pad": 0
+   },
+   "L146m": {
+    "cycles": 22,
+    "stations": 20,
+    "boundary": 2,
+    "faces": 8,
+    "fixed": 0,
+    "natural": 22,
+    "pad": 0
+   },
+   "L147": {
+    "cycles": 25,
+    "stations": 23,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 25,
+    "pad": 0
+   },
+   "L147m": {
+    "cycles": 25,
+    "stations": 23,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 25,
+    "pad": 0
+   },
+   "L148": {
+    "cycles": 31,
+    "stations": 29,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 31,
+    "pad": 0
+   },
+   "L148m": {
+    "cycles": 31,
+    "stations": 29,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 31,
+    "pad": 0
+   },
+   "L149": {
+    "cycles": 31,
+    "stations": 29,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 31,
+    "pad": 0
+   },
+   "L149m": {
+    "cycles": 31,
+    "stations": 29,
+    "boundary": 2,
+    "faces": 6,
+    "fixed": 0,
+    "natural": 31,
+    "pad": 0
+   },
+   "L150": {
+    "cycles": 15,
+    "stations": 13,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 15,
+    "pad": 0
+   },
+   "L150m": {
+    "cycles": 15,
+    "stations": 13,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 15,
+    "pad": 0
+   },
+   "L151": {
+    "cycles": 17,
+    "stations": 15,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 17,
+    "pad": 0
+   },
+   "L151m": {
+    "cycles": 17,
+    "stations": 15,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 17,
+    "pad": 0
+   },
+   "L152": {
+    "cycles": 32,
+    "stations": 30,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 32,
+    "pad": 0
+   },
+   "L152m": {
+    "cycles": 32,
+    "stations": 30,
+    "boundary": 2,
+    "faces": 4,
+    "fixed": 0,
+    "natural": 32,
+    "pad": 0
+   },
+   "L153": {
+    "cycles": 19,
+    "stations": 17,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 19,
+    "pad": 0
+   },
+   "L154": {
+    "cycles": 18,
+    "stations": 16,
+    "boundary": 2,
+    "faces": 3,
+    "fixed": 0,
+    "natural": 18,
+    "pad": 0
+   },
+   "L155": {
+    "cycles": 26,
+    "stations": 24,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 26,
+    "pad": 0
+   },
+   "L155m": {
+    "cycles": 26,
+    "stations": 24,
+    "boundary": 2,
+    "faces": 5,
+    "fixed": 0,
+    "natural": 26,
+    "pad": 0
+   }
+  }
+ },
+ "census": {}
+}

@@ -621,6 +621,7 @@ module ot_hdc_v41x_hcp_stage #(
     // el1011-hbm-hcvm/hc round 3 (hc_tile-sys-048ca3d9e-b: rst relay -> u_add.y RESETN -310 ps, add y -> sum_out
     // pin -162 ps wire): SOR 1 registers sum_out at the seam (hop LA + 1 + SOR); LRST 1 gives every lane its own kept
     // reset flop (no rst_n net over 32 lanes' fp pipes); ADRST 0 builds the adders with data-bit reset off (valid only)
+    // and the multipliers too (.DRST(ADRST), HBM-W128 2026-10-25: data FFs unreset, valid bits only)
     parameter integer SOR = 0,
     parameter integer LRST = 0,
     parameter integer ADRST = 1,
@@ -719,7 +720,7 @@ module ot_hdc_v41x_hcp_stage #(
             gw <= lv_r[gl] ? (ss_r[gl] ? xw : w_in[32*gl +: 32]) : 32'd0;
         end
         wire [31:0] prod; wire [1:0] e0, e1; wire v0, v1;
-        ot_hdc_fp32_mul_lat #(.LAT(LM)) u_mul (.clk(clk), .rst_n(lrn), .valid_in(gov), .a(gw), .b(gx), .y(prod),
+        ot_hdc_fp32_mul_lat #(.LAT(LM), .DRST(ADRST)) u_mul (.clk(clk), .rst_n(lrn), .valid_in(gov), .a(gw), .b(gx), .y(prod),
                                     .err(e0), .valid_out(v0));
         ot_hdc_fp32_add_lat #(.LAT(LA), .DRST(ADRST)) u_add (.clk(clk), .rst_n(lrn), .valid_in(v0), .a(fst_q ? 32'd0 : sum_q[32*gl +: 32]),
                                     .b(prod), .y(y_l[32*gl +: 32]), .err(e1), .valid_out(v1));
@@ -805,7 +806,7 @@ module ot_hdc_v41x_hcp_lanes #(
             gw <= lv_r[gl] ? (ss_r[gl] ? xw : w_in[32*gl +: 32]) : 32'd0;
         end
         wire [31:0] prod; wire [1:0] e0, e1; wire v0, v1;
-        ot_hdc_fp32_mul_lat #(.LAT(LM)) u_mul (.clk(clk), .rst_n(lrn), .valid_in(gov), .a(gw), .b(gx), .y(prod),
+        ot_hdc_fp32_mul_lat #(.LAT(LM), .DRST(ADRST)) u_mul (.clk(clk), .rst_n(lrn), .valid_in(gov), .a(gw), .b(gx), .y(prod),
                                     .err(e0), .valid_out(v0));
         ot_hdc_fp32_add_lat #(.LAT(LA), .DRST(ADRST)) u_add (.clk(clk), .rst_n(lrn), .valid_in(v0),
                                     .a(fst_q ? 32'd0 : sum_q[32*gl +: 32]), .b(prod), .y(y_l[32*gl +: 32]), .err(e1),

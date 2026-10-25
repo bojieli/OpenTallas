@@ -586,5 +586,61 @@
   "util": 0.5,
   "source": "Same immutable flat half recipe as hbm_arch_cores/sm/gen_sm_kit.py; 12 actual 128x256 SRAMs; benchmarked SM4P source",
   "src_spec": "physical/hbm_next/sm4/hnx_rp3lp3h_s_spec.json@4d6f5439dcee43b97baffaa731aae826fdcb6a66"
+ },
+ "ot_hbm_hc_bank128_pair_core": {
+  "top": "ot_hbm_hc_bank128_pair_core",
+  "files": [
+   "rtl/hbm_accel/cores_w128/ot_hbm_hc_bank128_pair_core.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "HBM-W128 10-25: native W128 HC physical cut (results/hbm_hc128_physical_1025); HC lane leaf = rtl/hdc/v41x/ot_hdc_v41x_hcp.sv with multiplier .DRST(ADRST)"
+ },
+ "ot_hbm_hc_bank128_pair_first_core": {
+  "top": "ot_hbm_hc_bank128_pair_first_core",
+  "files": [
+   "rtl/hbm_accel/cores_w128/ot_hbm_hc_bank128_pair_first_core.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "HBM-W128 10-25: native W128 HC physical cut (results/hbm_hc128_physical_1025); HC lane leaf = rtl/hdc/v41x/ot_hdc_v41x_hcp.sv with multiplier .DRST(ADRST)"
+ },
+ "ot_hbm_hc_subtree32_core": {
+  "top": "ot_hbm_hc_subtree32_core",
+  "files": [
+   "rtl/hbm_accel/cores_w128/ot_hbm_hc_subtree32_core.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv"
+  ],
+  "defines": [],
+  "params": {},
+  "macros": [],
+  "source": "HBM-W128 10-25: native W128 HC physical cut (results/hbm_hc128_physical_1025); HC lane leaf = rtl/hdc/v41x/ot_hdc_v41x_hcp.sv with multiplier .DRST(ADRST)"
  }
 }
