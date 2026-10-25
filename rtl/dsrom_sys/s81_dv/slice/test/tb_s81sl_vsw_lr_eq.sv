@@ -5,6 +5,10 @@
 // negative control (no shift) must mismatch.  Edges where rst_n is low now or was low at the previous edge are not
 // compared: the async reset clears both designs on the same edge, so 'LR = 0 at t - 1' is the pre-reset value there.
 // +ncyc=N (default 40000) sets the stimulus length; the o_v floor scales with it.
+// o_d is compared on the edges where o_v (LR = 0, t - 1) is 1: o_d is the held copy of the last delivered group, read by
+// the consumer only on o_v.  A group whose 4th result lands on the reset-assert edge is delivered by LR = 0 and flushed
+// by LR = 1 (one stage later), so the HELD o_d differs after a reset until the next group (seed 7: 120 such edges);
+// those edges are counted as 'held-o_d diffs' (info), o_v / o_f are still compared on every edge.
 module tb_s81sl_vsw_lr_eq;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
@@ -13,7 +17,7 @@ module tb_s81sl_vsw_lr_eq;
     ot_s81sl_vsw #(.LR(0)) u_ref (.clk(clk), .rst_n(rst_n), .i_v(i_v), .i_d(i_d), .i_w(i_w), .i_lim(i_lim), .o_v(o_v0), .o_d(o_d0), .o_f(o_f0));
     ot_s81sl_vsw #(.LR(1)) u_new (.clk(clk), .rst_n(rst_n), .i_v(i_v), .i_d(i_d), .i_w(i_w), .i_lim(i_lim), .o_v(o_v1), .o_d(o_d1), .o_f(o_f1));
     reg o_v0d, o_f0d; reg [63:0] o_d0d; reg rst_d = 0;
-    integer cyc = 0, mis = 0, mis0 = 0, nov = 0, nf = 0, gap = 0, k;
+    integer cyc = 0, mis = 0, mis0 = 0, nov = 0, nf = 0, gap = 0, k, nhold = 0;
     integer seed = 12345, ncyc = 40000, nmask = 0;
     function [31:0] rfp(input integer dummy);
         reg [31:0] r; begin r = $random(seed); r[30:23] = 8'd112 + ($random(seed) & 8'd31); rfp = r; end
@@ -23,7 +27,8 @@ module tb_s81sl_vsw_lr_eq;
         cyc <= cyc + 1; rst_d <= rst_n;
         if (cyc > 3 && !(rst_n && rst_d)) nmask = nmask + 1;
         if (cyc > 3 && rst_n && rst_d) begin
-            if ({o_v1, o_f1, o_d1} !== {o_v0d, o_f0d, o_d0d}) begin
+            if (!o_v0d && o_d1 !== o_d0d) nhold = nhold + 1;
+            if ({o_v1, o_f1} !== {o_v0d, o_f0d} || (o_v0d && o_d1 !== o_d0d)) begin
                 mis = mis + 1;
                 if (mis < 6) $display("MISMATCH cyc %0d new v%b f%b d%h ref(t-1) v%b f%b d%h", cyc, o_v1, o_f1, o_d1, o_v0d, o_f0d, o_d0d);
             end
@@ -48,7 +53,7 @@ module tb_s81sl_vsw_lr_eq;
             gap = gap - 1;
         end
         repeat (300) @(negedge clk);
-        $display("VSW_LR_EQ cycles %0d o_v(ref) %0d o_f(ref) cycles %0d mismatches(shift 1) %0d negative-control mismatches(shift 0) %0d reset-masked edges %0d", cyc, nov, nf, mis, mis0, nmask);
+        $display("VSW_LR_EQ cycles %0d o_v(ref) %0d o_f(ref) cycles %0d mismatches(shift 1) %0d negative-control mismatches(shift 0) %0d reset-masked edges %0d held-o_d diffs (o_v=0, info) %0d", cyc, nov, nf, mis, mis0, nmask, nhold);
         if (mis == 0 && mis0 > 0 && nov > ncyc / 16 && nf > 0) $display("VSW_LR_EQ PASS"); else $display("VSW_LR_EQ FAIL");
         $finish;
     end
