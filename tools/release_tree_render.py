@@ -13,6 +13,8 @@ Run: python3 tools/release_tree_render.py [--summary] [--md PATH] [--elements UR
 Hourly: release-tree-render.timer (user). fleet-viz also re-renders on page load when the .md is newer than the .html.
 """
 import argparse, collections, datetime, html, json, os, pathlib, re, sys, tempfile, urllib.request
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import release_tree_plan as RTP   # current-plan element layer (INFRA 10-24): G0C-clean types + SIGNED types/hard cores
 
 BASE = pathlib.Path('/home/ubuntu/coord')
 CACHE = pathlib.Path.home() / '.local/state/fleet-viz/release_tree_elements_cache.json'
@@ -282,6 +284,35 @@ def elements_html(rows, design_sum, rev_md):
     return ''.join(out), c, tot
 
 
+def plan_cnt(rows):
+    """'G0C clean a/b · SIGNED types c/b · cores d/e' summed over the die's plans"""
+    if not rows or any(r.get('clean') is None for r in rows): return None
+    t = sum(r['types'] or 0 for r in rows); cl = sum(int(r['clean'] or 0) for r in rows)
+    st = sum(r['signed_types'] for r in rows); co = sum(r['cores'] for r in rows); sc = sum(r['signed_cores'] for r in rows)
+    return dict(types=t, clean=cl, signed_types=st, cores=co, signed_cores=sc)
+
+
+def plan_html(rows, cache):
+    if not rows:
+        return '<p class="warn" style="margin:6px 16px">plan layer: no data for this die yet</p>'
+    out = ['<details class="elems" open><summary><b>Current-plan elements (generated from origin/main die plans)</b></summary><div class="einner"><ul class="el">']
+    for r in rows:
+        if r.get('clean') is None:
+            out.append('<li><span class="chip me">NOT RUN</span> <b>%s</b> <span class="why">%s</span></li>' % (E(r['plan']), E(r.get('error') or 'G0C did not run')))
+            continue
+        bad = ', '.join('%s (%s)' % (k, ', '.join(v)) for k, v in sorted(r['bad'].items()))
+        out.append('<li><span class="chip %s">G0C %s</span> <b>%s</b> <span class="mono">G0C-clean types %s/%s · SIGNED types %d/%s · SIGNED hard cores %d/%d</span>%s%s%s</li>' % (
+            'ok' if r['verdict'] == 'PASS' else 'me', E(str(r['verdict'])), E(r['plan']), r['clean'], r['types'], r['signed_types'], r['types'],
+            r['signed_cores'], r['cores'],
+            ' <span class="why">not clean: %s%s</span>' % (E(bad), ('; die-level ' + E(json.dumps(r['die_level']))) if r['die_level'] else '') if bad or r['die_level'] else '',
+            ' <span class="mono muted">SIGNED: %s</span>' % E(', '.join(r['signed_list'])) if r['signed_list'] else '',
+            ' <span class="warn">stale since %s</span>' % E(datetime.datetime.fromtimestamp(r['stale']).strftime('%m-%d %H:%M')) if r.get('stale') else ''))
+    gen = (cache or {}).get('generated')
+    out.append('</ul><p class="mono muted" style="margin:0 0 8px">origin/main %s · refreshed %s · SIGNED = signoff.py record verdict SIGNED (TT setup / FF hold) found on origin/main or fleet scratch (%s)</p></div></details>' % (
+        E(str((cache or {}).get('origin_main'))), datetime.datetime.fromtimestamp(gen).strftime('%Y-%m-%d %H:%M') if gen else '?', E(', '.join((cache or {}).get('scanned') or []))))
+    return ''.join(out)
+
+
 CSS = r'''
 :root{--bg:#f6f7fa;--panel:#fff;--fg:#1b1f2a;--muted:#5d6577;--line:#d9dde6;--accent:#2f4fb5;--accent-soft:#e6ebfa;
 --ok:#1f7a4d;--ok-bg:#e3f3ea;--run:#1f5fa8;--run-bg:#e2edf9;--wait:#8a6a12;--wait-bg:#f7efd6;--me:#a33d2a;--me-bg:#f8e4df;--new:#6b3fa0;--new-bg:#efe6f8;
@@ -394,7 +425,7 @@ def task_banner():
                     ' open' if any(x['cls'] == 'DEAD' for x in rows) else '', len(rows), items) if rows else ''))
 
 
-def render(md_path, el, el_err, now):
+def render(md_path, el, el_err, now, plan=None):
     pre, secs = parse_md(md_path.read_text())
     arch = load_done(md_path)
     for s in secs: s['archived'] = arch.get(sec_key(s), 0)
@@ -407,9 +438,9 @@ def render(md_path, el, el_err, now):
          '<title>OpenTallas Release Tree</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">',
          '<style>%s</style></head><body><div class="wrap">' % CSS]
     H.append('<header><div class="eyebrow">OpenTallas · ASAP7 · 833 ps (1.2 GHz) · shared Claude + Codex hand-off</div><h1>Release dependency tree</h1>'
-             '<div class="src">Source: claude-takeover-20261007/RELEASE_TREE.md (edited %s) · rendered %s · element table %s</div>'
+             '<div class="src">Source: claude-takeover-20261007/RELEASE_TREE.md (edited %s) · rendered %s · plan layer %s</div>'
              '<p class="lede">Release needs two independent sets of gates: the four die gates for every die, and the token-pass gate for every design. '
-             'Each task appears once. Only open work is shown: finished tasks move to RELEASE_TREE_DONE.md (counted in "tasks done"). Each die also lists every element of its current revision, generated from the live element table. Counts retain saved element receipts; source, PG and constraint holds in this tree still block adoption.</p>%s</header>'
+             'Each task appears once. Only open work is shown: finished tasks move to RELEASE_TREE_DONE.md (counted in "tasks done"). Each die also shows its current-plan element layer: partition types that are G0C-clean (check.py --completeness on origin/main) and partition types / hard cores with a SIGNED signoff record (refreshed hourly).</p>%s</header>'
              % (md_t, now.strftime('%Y-%m-%d %H:%M PT'), gen_s, '<p class="warn">%s</p>' % E(el_err) if el_err else ''))
     H.append(task_banner())
     H.append(owner_banner())
@@ -421,14 +452,16 @@ def render(md_path, el, el_err, now):
     for key in DIE_ORDER:
         s = dies.get(key)
         if not s: continue
-        er = die_elements(el, key); c, tot = elem_counts(er); ecount[key] = (c, tot)
+        prow = RTP.die_counts(plan, key); pc = plan_cnt(prow); ecount[key] = pc
         cells = []
         for g, _ in GATES:
             it = gate_of(s, g)
             cells.append('<td>%s<small>%s</small></td>' % (chip(it['status']) if it else chip('TODO', 'MISSING'), inline(it['note']) if it else 'no %s line' % g))
-        rows.append('<tr><td class="die"><a href="#die-%s">%s</a><small>rev %s</small></td>%s<td class="num">%d/%d<small>%s</small></td><td>%s</td></tr>' % (
-            key, E(s['title']), E(s['rev']), ''.join(cells), c['done'], tot, 'not bindable %d · open %d' % (c['closed_nb'], tot - c['done'] - c['closed_nb']), E(s['est'])))
-    H.append('<section><h2>Die gates</h2><div class="panel tablebox"><table><thead><tr><th>Die</th>%s<th>Recorded closures</th><th>First die pass (est.)</th></tr></thead><tbody>%s</tbody></table></div></section>'
+        rows.append('<tr><td class="die"><a href="#die-%s">%s</a><small>rev %s</small></td>%s<td class="num">%s<small>%s</small></td><td>%s</td></tr>' % (
+            key, E(s['title']), E(s['rev']), ''.join(cells),
+            ('%d/%d' % (pc['clean'], pc['types'])) if pc else 'n/a',
+            ('G0C-clean types · SIGNED types %d/%d · SIGNED hard cores %d/%d' % (pc['signed_types'], pc['types'], pc['signed_cores'], pc['cores'])) if pc else 'plan layer missing', E(s['est'])))
+    H.append('<section><h2>Die gates</h2><div class="panel tablebox"><table><thead><tr><th>Die</th>%s<th>Current plan (G0C clean / SIGNED)</th><th>First die pass (est.)</th></tr></thead><tbody>%s</tbody></table></div></section>'
              % (''.join('<th>%s</th>' % E(t) for _, t in GATES), ''.join(rows)))
     tok = next((s for s in secs if s['kind'] == 'TOKEN'), None)
     if tok:
@@ -451,9 +484,10 @@ def render(md_path, el, el_err, now):
         gates = [gate_of(s, g) for g, _ in GATES]
         first = next((g for g in gates if g and g['status'] not in ('PASS', 'DONE')), None)
         head = chip('DONE', 'DIE GATES PASS') if not first else chip(first['status'], '%s %s' % (first['id'].split('.')[-1], first['status']))
-        ehtml, c, tot = elements_html(die_elements(el, key), designs.get(key), s['rev'])
-        H.append('<details class="die" open id="die-%s"><summary><h3>%s</h3><span class="mono muted">rev %s</span>%s<span class="cnt">tasks done %d/%d · elements closed %d/%d</span><span class="eta">est. %s</span></summary>'
-                 '<div class="tree"><ul>%s</ul></div>%s</details>' % (key, E(s['title']), E(s['rev']), head, s['archived'] + len(its) - nopen, s['archived'] + len(its), c['done'], tot, E(s['est']),
+        prow = RTP.die_counts(plan, key); pc = plan_cnt(prow); ehtml = plan_html(prow, plan)
+        ecnt = ('G0C-clean types %d/%d · SIGNED types %d/%d · SIGNED hard cores %d/%d' % (pc['clean'], pc['types'], pc['signed_types'], pc['types'], pc['signed_cores'], pc['cores'])) if pc else 'plan layer missing'
+        H.append('<details class="die" open id="die-%s"><summary><h3>%s</h3><span class="mono muted">rev %s</span>%s<span class="cnt">tasks done %d/%d · %s</span><span class="eta">est. %s</span></summary>'
+                 '<div class="tree"><ul>%s</ul></div>%s</details>' % (key, E(s['title']), E(s['rev']), head, s['archived'] + len(its) - nopen, s['archived'] + len(its), E(ecnt), E(s['est']),
                                                                      ''.join(li(i, gate=re.fullmatch(r'[A-Z0-9]+\.(BIND|GRT|STA|CLK)', i['id']) is not None) for i in s['items']), ehtml))
     for s in secs:
         if s['kind'] in ('TOKEN', 'INFRA') or s['kind'] not in ('DIE', 'WAITS', 'RULES'):
@@ -469,8 +503,8 @@ def render(md_path, el, el_err, now):
     r = next((s for s in secs if s['kind'] == 'RULES'), None)
     if r:
         H.append('<section><details class="panel rules"><summary><b>Edit rules (Claude and Codex)</b></summary>%s</details></section>' % ''.join('<p>%s</p>' % inline(t) for t in r['text']))
-    H.append('<footer>Generated by claude-takeover-20261007/tools/release_tree_render.py from RELEASE_TREE.md and fleet-viz /api/elements '
-             '(die revisions from results/fleet_viz/die_sources.json). Edit the .md, never this page. Element states: closed + die-bindable is crossed out; superseded elements are hidden.</footer></div></body></html>')
+    H.append('<footer>Generated by claude-takeover-20261007/tools/release_tree_render.py from RELEASE_TREE.md and tools/release_tree_plan.py '
+             '(G0C = tools/die_plan/check.py --completeness on the origin/main die plans; SIGNED = signoff.py records). Edit the .md, never this page.</footer></div></body></html>')
     return '\n'.join(H), secs, dies, ecount
 
 
@@ -481,9 +515,10 @@ def summary_text(secs, dies, ecount, el, now):
         if not s: continue
         g = ' | '.join('%s %s' % (gn, (gate_of(s, gn) or {}).get('status', '?')) for gn, _ in GATES)
         its = list(walk(s['items'])); nd = s.get('archived', 0) + sum(1 for i in its if i['checked'])
-        c, tot = ecount.get(key, (collections.Counter(), 0))
-        L.append('%-13s rev %-6s %s ; tasks %d/%d done ; elements closed %d/%d (not bindable %d, in flight %d, kit %d, not started %d, no live job %d)' % (
-            key, s['rev'], g, nd, s.get('archived', 0) + len(its), c['done'], tot, c['closed_nb'], c['flight'], c['kit'], c['notstarted'], c['stalled']))
+        pc = ecount.get(key)
+        L.append('%-13s rev %-6s %s ; tasks %d/%d done ; %s' % (
+            key, s['rev'], g, nd, s.get('archived', 0) + len(its),
+            ('G0C-clean types %d/%d, SIGNED types %d/%d, SIGNED hard cores %d/%d' % (pc['clean'], pc['types'], pc['signed_types'], pc['types'], pc['signed_cores'], pc['cores'])) if pc else 'plan layer missing'))
     tok = next((s for s in secs if s['kind'] == 'TOKEN'), None)
     if tok:
         its = list(walk(tok['items']))
@@ -522,10 +557,16 @@ def main(argv=None):
     ap.add_argument('--summary-out', default=str(BASE / 'RELEASE_TREE_SUMMARY.txt'))
     ap.add_argument('--elements', default='http://localhost:8765/api/elements')
     ap.add_argument('--summary', action='store_true', help='print the text summary')
+    ap.add_argument('--refresh-plan', action='store_true', help='refresh the plan layer now (default: when older than 50 min)')
     a = ap.parse_args(argv)
     now = datetime.datetime.now()
-    el, err = load_elements(a.elements)
-    page, secs, dies, ecount = render(pathlib.Path(a.md), el, err, now)
+    el = dict(generated_at=None, designs={}, rows=[])   # the 10-21 element table (fleet-viz /api/elements) is obsolete
+    try:
+        plan, err = RTP.load(a.refresh_plan)
+    except Exception as e:
+        plan, err = None, 'plan layer failed: %s' % e
+    if plan: el['generated_at'] = plan.get('generated')
+    page, secs, dies, ecount = render(pathlib.Path(a.md), el, err, now, plan)
     atomic_write(pathlib.Path(a.out), page)
     st = summary_text(secs, dies, ecount, el, now)
     atomic_write(pathlib.Path(a.summary_out), st)
