@@ -54,3 +54,9 @@ Checklist now includes "reset distribution matches the owner rule" (TILE_BRIEF.m
 ## RESUMED 2026-10-24 19:28 PDT (rtx-pro coordinator; lane agent)
 2026-10-24 19:28 PDT GEOM-REVIEW: resumed. Worktree epyc1:/srv/opentallas-scratch/claude/wt/geom-review (claude/geom-review-1024, ff to main d13ff7c783). Running: S81 g3k5 frame reviews (7 kits; layout_review + propagated STA TT/FF in docker grgeom_* on epyc1). Watching this file for GEOM REQ lines.
 2026-10-24 19:34 PDT GEOM REQ [KV 19:34] kv3_hub_Ei vK delta (reset + hotspot only; datapath carried as PASS from vJ second review c38439fd5a78): plan-level picture epyc1:~/scratch/kv-g3/plans/vK/bits.png (+ rtx-pro /tmp/kv/bits_s25c3_crop.png), sites report plans/vK/bits.json; reset tree = kit_rtl/g5/vK/kv3_hub_Ei/reset_tree.tcl (root at arst_n (91.4,101.8), relays at taps, D=7). Placement/CTS/GRT pictures will follow from epyc2:/srv/opentallas-scratch2/claude/kv/g5/vK/kv3_hub_Ei (running to GRT only; no DRT before your PASS).
+
+2026-10-24 19:37 PDT GEOM REQ [S81/KITS] 3 new S81 legacy hard cores, stage-1 placed, before route (branch claude/s81-kits-geom-1024r @a854c5530, records results/geom_review/s81_kits_1024r/<kit>.json + img/<kit>.png; placed ODB epyc1:/srv/opentallas-scratch/claude/elem-s81-cores/<rnd>/<kit>/run/results/asap7/*/base/3_place.odb):
+  - r2 dsdv_gunit_l5f_c (151.2x151.2, author PASS-COND: rst_n recovery risk over 150 um / 10.6k flops)
+  - r2 dsfd_node_LLd_c (43.2x77.76, author PASS)
+  - r4 ot_s81_cfg7_seq_c (17.28x51.84, author PASS-COND: W face 356 pins 7.5/um, W-edge GRT)
+  Please reply PASS/FAIL here; S81/KITS routes on PASS (same host epyc1).
