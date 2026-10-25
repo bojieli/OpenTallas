@@ -441,3 +441,29 @@ CODEX took over collection + measured-memory fix on codex/elem-hbm-push-1024, ep
     - Also measured: lanes_plain 589-628, pretree 595-599, tkm tiles 438-445, coll_q2 259/312.
   - xcal_rel_t: 83% utilization (33.9k um2 in 210x211 um) -> GRT-0116. PLAN REQUEST: ~250x250 um (+45% area) for <= 55%.
   - ROUTE REQUEST sent to GEOM-REVIEW: bankq_ft lanes0_2 x2 + lanes3_5@1d3df8. face_guard PASS, kits regenerated under the contract, waiting for PASS.
+
+## PARKED 2026-10-24 22:16 PDT (HBM-CORES)
+- Branch: claude/hbm-cores-1024 @1d69cf3da1 (pushed). Worktree: epyc1:/srv/opentallas-scratch2/claude/wt/hbm-cores. Not merged: 0 SIGNED.
+- Commits:
+  - ea66e18d2f: memory guard 15616.
+  - dd78a34eef: HOLD_SLACK_MARGIN 0.
+  - 146bce40d6: resume.sh without --hosts.
+  - 34f09bd789: verdicts.
+  - 8ddbfc18f3: insertion table (+189 rows).
+  - 1d69cf3da1: bankq_ft review records.
+- LIVE JOBS. All are ot-run units, containers hbmcore-<kit>_-<pid>, run dirs <host>:/srv/opentallas-scratch/claude/elem-hbm/runs/<kit>. Lists are in epyc1:/srv/opentallas-scratch/claude/elem-hbm/.
+  - (a) 14 finish runs restarted with margin 0 (hbmcores_restart14k.txt): sfu lanes 14/2/4/6 + bankq0 l0_2 + bankq x2 + qcore_r13 + vm_query on epyc1; lane15/lane5 + bankq0 l3_5 on intel1; lane9 + gq_issue on intel2. They re-run from synth because config.mk changed.
+    - vm_query is in GRT hold repair: 4806 endpoints at margin 0 (was 21017 at 30), WNS -62 -> -57 after 70 iterations, converging.
+  - (b) Other finish runs: svc_pc 95777e (RLA 0.10, GRT) and svc_pc 3b586c/3ffaa4/a4d8b0 (DRT) on epyc1/intel1. bdring 709af9 (epyc1) and 2f4ce4 (intel2): hold converged, GRT/route.
+  - (c) CTS probes (GOAL=cts): 30 pgslice exp lanes (hbmcores_mem30.txt, 2 done), exp7_059f relaunched, 7 pgslice lanes*.
+- NEXT:
+  - 1. When the runs finish, run collect.py in the worktree and commit results/b2l_verdicts.json.
+  - 2. After the CTS probes: run cts_gather.sh > hbmcores_cts_gather.txt, then update_insertion.py, then commit.
+  - 3. On GEOM PASS for bankq_ft x3: launch.sh kits_b2l/<k> 32 8 finish (kits are already regenerated). These are the best SIGN candidates (face_guard PASS).
+  - 4. SIGN is blocked for every other family by face_guard (OWNER? below).
+- OWNER? / requests:
+  - face_guard on hard-core pins: (a) wrapper pin registers (+1 cycle per crossing, HBM-ARCH schedule) or (b) plan drops unread/duplicate pins and the rule is INFO for IO-budget-timed core pins.
+  - signoff.py: spread still gates (decision 5), and the FF corner uses the TT vclk latency. Both are for SIGNOFF/CLOCK.
+  - Core-local reset synchronisers (ot_rst_relay) in 31 kits break decision 2.
+  - PLAN: grow svc_pc (~1.3x), xcal_rel_t (~1.45x), idx_score_quarter (~1.45x, earlier). In-core clock taps for pgslice lanes (I 870-940). Earlier list from 20:20 still open.
+  - lanes_plain12_15@871944: PDN-0179 (M2 VSS channel 4.6 um at y=396 between macros) -> macro halo/channel fix in the generator.
