@@ -34,6 +34,22 @@ NEW = {   # inst -> (x, y, orient)
 XMAX = 1131.84
 
 
+def check(t):
+    """fail-closed: every host core ends at x <= XMAX (the E FT channel x XMAX..W stays core-free over the full
+    height) and core pairs keep >= 17.28 um (2 x 8.64 grid) between them.  Returns the core boxes."""
+    bx = [(c["inst"], c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
+           c["origin_um"][1] + c["outline_um"][1]) for c in t["hard_cores"]]
+    for i, a in enumerate(bx):
+        if a[3] > XMAX + 1e-6:
+            raise ValueError(f"core {a[0]} reaches x {a[3]:.2f} > {XMAX} (inside the E FT channel)")
+        for b in bx[i + 1:]:
+            gx = max(b[1] - a[3], a[1] - b[3])
+            gy = max(b[2] - a[4], a[2] - b[4])
+            if max(gx, gy) < 17.28 - 1e-6:
+                raise ValueError(f"cores {a[0]} / {b[0]} gap {max(gx, gy):.2f} < 17.28 um")
+    return bx
+
+
 def main():
     src, dst = sys.argv[1:3]
     raw = json.loads(Path(src).read_text())
@@ -43,14 +59,7 @@ def main():
             x, y, o = NEW[c["inst"]]
             assert abs(x / G - round(x / G)) < 1e-9 and abs(y / G - round(y / G)) < 1e-9, c["inst"]
             c["origin_um"], c["orient"] = [x, y], o
-    bx = [(c["inst"], c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
-           c["origin_um"][1] + c["outline_um"][1]) for c in t["hard_cores"]]
-    for i, a in enumerate(bx):
-        assert a[3] <= XMAX + 1e-6, a
-        for b in bx[i + 1:]:
-            gx = max(b[1] - a[3], a[1] - b[3])
-            gy = max(b[2] - a[4], a[2] - b[4])
-            assert max(gx, gy) >= 17.28 - 1e-6, (a[0], b[0], gx, gy)
+    bx = check(t)
     t["note"] = t.get("note", "") + (" | PATH-KV-HUBWI 10-25: host cores re-placed (geom_hubwi_chan.py) -> full-height "
                                      "core-free E FT channel x 1131.84..1278.72 um")
     Path(dst).write_text(json.dumps(raw, indent=1) + "\n")

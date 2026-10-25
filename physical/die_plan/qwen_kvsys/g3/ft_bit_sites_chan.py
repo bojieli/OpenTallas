@@ -393,6 +393,48 @@ def run(raw, P, tn, png=None):
     return rep
 
 
+# ------------------------------------------------------------------------------ audit (PATH-KV-WIKIT 10-25)
+def chain_points(pins, slot, bit, sites, cell=None):
+    """register chain of one FT bit as the PROTO scan measures it: inset in pin -> station cell centres (site
+    lower-left + cell/2) -> out pin (the neighbour's station 0 sits there)"""
+    cw, ch = cell or F.CELL
+    A, B = pins[slot["name"] + "_i"][bit], pins[slot["name"] + "_o"][bit]
+    return [inset(A, slot.get("in_face", "W"))] + [(s[bit][0] + cw / 2, s[bit][1] + ch / 2) for s in sites] + [B]
+
+
+def audit(raw, P, tn, hop_um=405.0, sites_of=None):
+    """fail-closed audit of a type's FT bit sites: per bit max Manhattan hop of the register chain (<= hop_um) and no
+    station envelope inside a hard core.  sites_of(slot) -> stages (default: the plan's bit_sites_um), so the same
+    check reads placed station coordinates.  Returns dict(max_bit_hop_um, over=[...], in_core=[...], worst)."""
+    t = raw["partition_types"][tn]
+    cores = [(c["inst"], c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
+              c["origin_um"][1] + c["outline_um"][1]) for c in t.get("hard_cores") or []]
+    pins = defaultdict(dict)
+    for bus, bit, ln, x, y, f in gen_phys.type_pins(P, tn):
+        pins[bus][bit] = (x, y)
+    cw, ch = F.CELL
+    worst, over, in_core, n = None, [], [], 0
+    for s in t.get("ft_slots", []):
+        st = sites_of(s) if sites_of else s.get("bit_sites_um")
+        if not st:
+            continue
+        for bit in range(s["width"] + 1):
+            pts = chain_points(pins, s, bit, st)
+            hops = [F.man(u, v) for u, v in zip(pts, pts[1:])]
+            h = max(hops)
+            n += 1
+            if worst is None or h > worst["hop_um"]:
+                worst = dict(slot=s["name"], bit=bit, hop_um=h, hops=[round(q, 3) for q in hops])
+            if h > hop_um:
+                over.append((s["name"], bit, round(h, 3)))
+            for j, stage in enumerate(st, 1):
+                x, y = stage[bit]
+                for inst, a, b, c, d in cores:
+                    if a < x + cw and x < c and b < y + ch and y < d:
+                        in_core.append((s["name"], j, bit, inst))
+    return dict(bits=n, max_bit_hop_um=worst["hop_um"] if worst else 0.0, worst=worst, over=over, in_core=in_core)
+
+
 def main():
     pf, tns, outf = sys.argv[1:4]
     rep_f = sys.argv[sys.argv.index("--report") + 1] if "--report" in sys.argv else None
@@ -410,9 +452,20 @@ def main():
         print(tn, json.dumps({k: reps[tn][k] for k in ("sites", "max_bit_hop_um")}),
               {s: (v["faces"], v["width"], v["jog_um"] and round(v["jog_um"], 1)) for s, v in reps[tn]["slots"].items()
                if v["width"] > 100})
-    Path(outf).write_text(json.dumps(raw, indent=1) + "\n")
     if rep_f:
         Path(rep_f).write_text(json.dumps(reps, indent=1) + "\n")
+    # PATH-KV-WIKIT 10-25: fail closed -- take() falls back to the nearest legal site when no reach-feasible site
+    # exists, so a regenerated type can exceed 405 um silently; the independent audit decides before the plan is written
+    bad = {}
+    for tn in reps:
+        a = audit(raw, P, tn)
+        if a["over"] or a["in_core"]:
+            bad[tn] = dict(max_bit_hop_um=round(a["max_bit_hop_um"], 3), over_bits=len(a["over"]),
+                           in_core=len(a["in_core"]), worst=a["worst"])
+    if bad:
+        print("FAIL audit (plan NOT written):", json.dumps(bad))
+        sys.exit(1)
+    Path(outf).write_text(json.dumps(raw, indent=1) + "\n")
 
 
 if __name__ == "__main__":
