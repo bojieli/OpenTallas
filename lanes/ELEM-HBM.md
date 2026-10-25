@@ -386,3 +386,9 @@ Die-level review of B2r2 (results/geom_review/hbm_plan__hbm_b2r2__c1bc2d0f7ada.j
   - vmdel re-pin to NPC=2.
   - VM_RT_EXTRA 173 vs 171.
   - coll body pins were cut from the VM_RT=0 master, but the die binds VM_RT=81 (SPLIT2 finding).
+
+## HBM-ELEM (sub-agent of lane HBM) 2026-10-24 19:51 PDT
+- 2026-10-24 19:51 PDT HBM-ELEM: took over the parked ELEM-HBM jobs (epyc1 worktree ~/wt/elem-hbm, branch claude/elem-hbm-1024, merged origin/main -> 60311a3cd5).
+  COLLECT 89 routing kits: 13 routed -> signoff (corners step had a make-print parse bug that skipped signoff on every finished kit; fixed, run_kit_hbm.sh GOAL=post): 13/13 NOT SIGNED (all face_guard FAIL [OWNER? open]; argmax_r2 is the only one clean on TT setup/FF hold/DRV/DRC; others TT setup -14..-144, FF hold -7..-56, DRV slew). 8 GRT congestion FAIL (svc_pc_ctrl x5, bdring 2f4c, bfqg x2). 57 hold-repair non-convergent FAIL (56 idx_score_quarter + vm_query n12: WNS/TNS flat > 3000 iterations on one endpoint; killed). 8 contract-hold FAIL killed (faces x5, pegress x2, ctlx). 3 still in GRT (bdring 709a, bfqg 1b2f/a386). Record results/b2l_route_verdicts_1024.json @ca77d6ada3. Failed run data deleted (73 run/results).
+  CORE CLOCK CONTRACT: results/core_insertion_b2l.json @0e65b11fce (281 views: 136 MEASURED, I = max flop-port mean, early_tap = I-250: 130 > 0, 59 > 40 ps; all 16 sfu lanes measured; 130 not measured = 91 SPLIT2 never placed + 39 no CTS). Generator: vclk / tap target / signoff target = I (0e65b11fce), GDS_ALLOW_EMPTY for abstract SRAMs, hold repair iteration cap 4000.
+  GEOM placed2 records: 25 PASS-COND (relaunch under contract), 74 FAIL (18 low-fill pin/macro-limited outlines, 56 idx_score_quarter overfull 86%) -> plan requests to lane HBM.
