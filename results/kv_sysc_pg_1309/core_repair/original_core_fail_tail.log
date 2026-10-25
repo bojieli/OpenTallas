@@ -1,0 +1,9 @@
+[WARNING PSM-0038] Unconnected shape on net VDD at (4.320um, 544.041um) - (689.148um, 544.059um), layer: M1.
+[WARNING PSM-0038] message limit (1000) reached. This message will no longer print.
+[WARNING PSM-0039] Unconnected instance u_logic/VDD at location (100.135um, 500.270um).
+[WARNING PSM-0039] Unconnected instance u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[0\].u_store.g_p288.u_sram/VDD at location (625.116um, 51.120um).
+[WARNING PSM-0039] Unconnected instance u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[1\].u_store.g_p288.u_sram/VDD at location (625.116um, 137.520um).
+[WARNING PSM-0039] Unconnected instance u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[2\].u_store.g_p288.u_sram/VDD at location (625.116um, 223.920um).
+[WARNING PSM-0039] Unconnected instance u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[3\].u_store.g_p288.u_sram/VDD at location (625.116um, 310.320um).
+[ERROR PSM-0069] Check connectivity failed on VDD.
+Error: core_check.tcl, 2 PSM-0069
