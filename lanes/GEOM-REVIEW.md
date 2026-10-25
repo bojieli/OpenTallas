@@ -1701,3 +1701,11 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
     - die GRT it5 overflow + per-layer use inside the bands.
     - Static cut <=0.50 kept.
   Next REQ: one successor plan with (1)+(2)+(3) plus the station audit and the GRT it5 numbers. Owner: DIE-FT-HBM (PATH-HBM informed).
+2026-10-25 12:18 PDT GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] qfd_dv_s8x_vmr__s6j (kit dir intel1 path-qc-sramif/vmr_s6j): PASS-COND -> route (autopilot, 1 variant, run_s6.sh from the gated 5_1_grt).
+  Viewed vmr_s6j_render.png (all 4 panels) and read s6_grt_gate.txt, s6_hold_census.txt, s6j_taps.txt and vmr_s6j_post_fail_eps.tsv (claude/path-qc-progvmr-1025@0693fed9e).
+  The diagnosis is right and the fix is structural. The old s6i residual was one SE tap feeding 1210 sinks over two separate clusters (x 110-140 and 165-230), leaf CK 234-289. SEa/SEb now follow those clusters (panel 4: 54.6 -> 19.1 ps leaf span), and the pw16->l_w16d pairs are -10..+11 ps. My 10:30 'move the landing reg' guess was wrong; this tap split is the right fix. GRT FF tap-mean window 7.3 (RCX-corrected), S6_GRT_GATE +0.03/0 at margin 0, F6 <= 12.2 um.
+  Conditions:
+   (1) The fresh-session re-read is -1.40/29 EP: 20 port->pin-reg in the in class, and 5 g_wr[0].g_r.u_d (SEb) -> g_mw[0].u_d (E) at 31-39 um with CK 254 -> 265. Note the per-tap GRT->RCX corrections are large and uneven (E -15.6 FF / -22.9 TT, W0 -10.9, W1 +7.4); this is the coordinator's 4(c) effect, so the GRT reading is not a sign-off basis in either direction. Sign-off: routed RCX FF >= 0, related-pair skew with CPPR <= 80, and a routed FF census by class. If the SEb->E family is negative after route, the fix is to put g_mw[0].u_d's E-face 267-sink tap on the SEb trunk (or move g_wr/g_mw to one leaf group). That is a re-REQ, never padding.
+   (2) Before bind: the W-face pin regs at y ~150-170 read FF 280-285 at GRT (W0 max 281.6) against vclk_ff 267.90. Post the pin-reg insertion vs the plan bound per face, TT and FF, with dev <= 20 on RCX.
+   (3) Setup watch: pw16_data[256..259] -> l_w16d at 130-138 um (SEb -> SW). Report their routed TT setup slack.
+   (4) This supersedes the s6i kit: its rows can be withdrawn and its data deleted once s6j routes. Owner PATH-QC (sub-lane PATH-QC-PROGVMR).
