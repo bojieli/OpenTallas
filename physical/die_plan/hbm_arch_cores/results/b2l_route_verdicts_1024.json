@@ -1,0 +1,2112 @@
+{
+ "schema": "opentallas.hbm_arch.b2l_core_route_verdicts.v1",
+ "generated": "2026-10-24T19:41:50-07:00",
+ "by": "HBM-ELEM",
+ "rule": "sign-off TT setup / FF hold 60/25 ps (tools/die_plan/signoff.py, main @ merge 60311a3cd5); margins INFO; clock gate = related-pair skew with CPPR (decision 5), pin-flop spread INFO",
+ "counts": {
+  "routed: NOT SIGNED": 13,
+  "FAIL core clock contract (hold, superseded)": 8,
+  "routed: timing/DRV/DRC clean, face_guard FAIL only": 1,
+  "FAIL hold repair non-convergent (stuck)": 57,
+  "FAIL GRT congestion": 8,
+  "running": 3,
+  "placed FAIL core clock contract (not routed)": 26
+ },
+ "route_all": {
+  "hfd_hgi_vm_calendar_f20_dd5b84a9fbfa": {
+   "view": "hfd_hgi_vm_calendar_f20@dd5b84a9fbfa",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 241,
+   "insertion_max_ps": 298,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/hfd_hgi_vm_calendar_f20_dd5b84a9fbfa/signoff",
+   "setup_tt_wns_ps": -30.71,
+   "hold_ff_wns_ps": 8.26,
+   "checks": {
+    "setup_tt": "FAIL",
+    "hold_ff": "PASS",
+    "drv": "FAIL",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -30.71 ps, 83 endpoints",
+    "drv: FAIL TT slew 126.0 cap 0.0, FF slew 132.0 cap 0.0",
+    "face_guard: FAIL {'shared': 3}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "hfd_vms_bank_native_q0_faces_08b030c8c5fa": {
+   "view": "hfd_vms_bank_native_q0_faces@08b030c8c5fa",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 406,
+   "insertion_max_ps": 492,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "4089",
+    "iteration": "5220",
+    "buffers": "11183",
+    "wns_ps": "-114.747",
+    "tns_ps": "-118947.594",
+    "iter_300_rows_earlier": "2240",
+    "wns_300_rows_earlier": "-183.126",
+    "tns_300_rows_earlier": "-196187.641"
+   },
+   "cause": "GRT hold repair of the IO-reference gap: core insertion (max port mean 406 ps) >> IO vclk 250; thousands of input-hold endpoints at -100..-320 ps; superseded by the core clock contract (vclk = I) -> regenerate + relaunch"
+  },
+  "hfd_vms_bank_native_q0_faces_1dc19a048d64": {
+   "view": "hfd_vms_bank_native_q0_faces@1dc19a048d64",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 406,
+   "insertion_max_ps": 460,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "4339",
+    "iteration": "6630",
+    "buffers": "16182",
+    "wns_ps": "-108.648",
+    "tns_ps": "-83566.062",
+    "iter_300_rows_earlier": "3650",
+    "wns_300_rows_earlier": "-177.040",
+    "tns_300_rows_earlier": "-228428.172"
+   },
+   "cause": "GRT hold repair of the IO-reference gap: core insertion (max port mean 406 ps) >> IO vclk 250; thousands of input-hold endpoints at -100..-320 ps; superseded by the core clock contract (vclk = I) -> regenerate + relaunch"
+  },
+  "hfd_vms_bank_native_q0_faces_48eaaf6eb467": {
+   "view": "hfd_vms_bank_native_q0_faces@48eaaf6eb467",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 408,
+   "insertion_max_ps": 502,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "4048",
+    "iteration": "4850",
+    "buffers": "9717",
+    "wns_ps": "-180.196",
+    "tns_ps": "-236500.312",
+    "iter_300_rows_earlier": "1860",
+    "wns_300_rows_earlier": "-247.882",
+    "tns_300_rows_earlier": "-298559.125"
+   },
+   "cause": "GRT hold repair of the IO-reference gap: core insertion (max port mean 408 ps) >> IO vclk 250; thousands of input-hold endpoints at -100..-320 ps; superseded by the core clock contract (vclk = I) -> regenerate + relaunch"
+  },
+  "ot_hbm_argmax_static_sw_vm_r2_ff8fa2bb6d4c": {
+   "view": "ot_hbm_argmax_static_sw_vm_r2@ff8fa2bb6d4c",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 191,
+   "insertion_max_ps": 209,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_argmax_static_sw_vm_r2_ff8fa2bb6d4c/signoff",
+   "setup_tt_wns_ps": 25.76,
+   "hold_ff_wns_ps": 14.18,
+   "checks": {
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "drv": "PASS",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "face_guard: FAIL {'shared': 111, 'feedthrough': 360, 'dropped': 256, 'unregistered': 18}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "PASS",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_hc_root_static__hcp_sys1_eeab1883a31b": {
+   "view": "ot_hbm_hc_root_static__hcp_sys1@eeab1883a31b",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 251,
+   "insertion_max_ps": 259,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_hc_root_static__hcp_sys1_eeab1883a31b/signoff",
+   "setup_tt_wns_ps": -88.63,
+   "hold_ff_wns_ps": -7.93,
+   "checks": {
+    "setup_tt": "FAIL",
+    "hold_ff": "FAIL",
+    "drv": "FAIL",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -88.63 ps, 46 endpoints",
+    "hold_ff: FAIL WNS -7.93 ps, 33 endpoints",
+    "drv: FAIL TT slew 119.0 cap 0.0, FF slew 124.0 cap 0.0",
+    "face_guard: FAIL {'shared': 57, 'unregistered': 166}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_idx_query_static_57472ecfc79f": {
+   "view": "ot_hbm_idx_query_static@57472ecfc79f",
+   "host": "localhost",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 275,
+   "insertion_max_ps": 394,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_idx_query_static_57472ecfc79f/signoff",
+   "setup_tt_wns_ps": -143.86,
+   "hold_ff_wns_ps": -55.83,
+   "checks": {
+    "setup_tt": "FAIL",
+    "hold_ff": "FAIL",
+    "drv": "FAIL",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "FAIL",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -143.86 ps, 271 endpoints",
+    "hold_ff: FAIL WNS -55.83 ps, 343 endpoints",
+    "drv: FAIL TT slew 323.0 cap 0.0, FF slew 312.0 cap 0.0",
+    "clock: FAIL TT pin-flop spread 88.9 ps > 80; FF pin-flop spread 83.7 ps > 80",
+    "face_guard: FAIL {'dropped': 4, 'shared': 3}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_idx_score_quarter_static__tail0_9c94121ae264": {
+   "view": "ot_hbm_idx_score_quarter_static__tail0@9c94121ae264",
+   "host": "localhost",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 278,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_idx_score_quarter_static__tail0_9c94121ae264/signoff",
+   "setup_tt_wns_ps": 34.29,
+   "hold_ff_wns_ps": -6.71,
+   "checks": {
+    "setup_tt": "PASS",
+    "hold_ff": "FAIL",
+    "drv": "PASS",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "hold_ff: FAIL WNS -6.71 ps, 18 endpoints",
+    "face_guard: FAIL {'unregistered': 1, 'shared': 1}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_idx_score_quarter_static__tail1_fd8a24ead83a": {
+   "view": "ot_hbm_idx_score_quarter_static__tail1@fd8a24ead83a",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 284,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_idx_score_quarter_static__tail1_fd8a24ead83a/signoff",
+   "setup_tt_wns_ps": 35.45,
+   "hold_ff_wns_ps": -9.91,
+   "checks": {
+    "setup_tt": "PASS",
+    "hold_ff": "FAIL",
+    "drv": "PASS",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "hold_ff: FAIL WNS -9.91 ps, 44 endpoints",
+    "face_guard: FAIL {'unregistered': 1, 'shared': 1}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_idx_vm_query_static_n12_2cc6e51647e9": {
+   "view": "ot_hbm_idx_vm_query_static_n12@2cc6e51647e9",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 259,
+   "insertion_max_ps": 281,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "21099",
+    "iteration": "11350",
+    "buffers": "23875",
+    "wns_ps": "-33.917",
+    "tns_ps": "-40995.992",
+    "iter_300_rows_earlier": "8360",
+    "wns_300_rows_earlier": "-33.917",
+    "tns_300_rows_earlier": "-40995.992"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_sm_vm_wr_q_t_lanes4_c732439590f8": {
+   "view": "ot_hbm_sm_vm_wr_q_t_lanes4@c732439590f8",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 356,
+   "insertion_max_ps": 437,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_sm_vm_wr_q_t_lanes4_c732439590f8/signoff",
+   "setup_tt_wns_ps": -29.66,
+   "hold_ff_wns_ps": -8.74,
+   "checks": {
+    "setup_tt": "FAIL",
+    "hold_ff": "FAIL",
+    "drv": "FAIL",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "FAIL",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -29.66 ps, 40 endpoints",
+    "hold_ff: FAIL WNS -8.74 ps, 111 endpoints",
+    "drv: FAIL TT slew 306.0 cap 0.0, FF slew 275.0 cap 0.0",
+    "clock: FAIL TT pin-flop spread 116.8 ps > 80; FF pin-flop spread 96.9 ps > 80",
+    "face_guard: FAIL {'shared': 2153, 'unregistered': 12, 'feedthrough': 84}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_static_cfg_collar_idx256r_6ca949259674": {
+   "view": "ot_hbm_static_cfg_collar_idx256r@6ca949259674",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 182,
+   "insertion_max_ps": 192,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_static_cfg_collar_idx256r_6ca949259674/signoff",
+   "setup_tt_wns_ps": 33.38,
+   "hold_ff_wns_ps": 8.64,
+   "checks": {
+    "setup_tt": "PASS",
+    "hold_ff": "PASS",
+    "drv": "FAIL",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "drv: FAIL TT slew 1.0 cap 0.0, FF slew 1.0 cap 0.0",
+    "face_guard: FAIL {'shared': 1279}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_31be7c8a3d52": {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@31be7c8a3d52",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 273,
+   "insertion_max_ps": 315,
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "cause": "GRT congestion",
+   "evidence": "5_1_grt.log|[ERROR GRT-0116] Global routing finished with congestion. Check the co|"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_3b586cbb332d": {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@3b586cbb332d",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 263,
+   "insertion_max_ps": 326,
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "cause": "GRT congestion",
+   "evidence": "5_1_grt.log|[ERROR GRT-0116] Global routing finished with congestion. Check the co|"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_3f2f98babe4c": {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@3f2f98babe4c",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 282,
+   "insertion_max_ps": 362,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_3f2f98babe4c/signoff",
+   "setup_tt_wns_ps": -47.26,
+   "hold_ff_wns_ps": 10.91,
+   "checks": {
+    "setup_tt": "FAIL",
+    "hold_ff": "PASS",
+    "drv": "FAIL",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -47.26 ps, 58 endpoints",
+    "drv: FAIL TT slew 172.0 cap 3.0, FF slew 158.0 cap 3.0",
+    "face_guard: FAIL {'unregistered': 3, 'shared': 287, 'feedthrough': 1}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_3ffaa44bcbd4": {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@3ffaa44bcbd4",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 247,
+   "insertion_max_ps": 343,
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "cause": "GRT congestion",
+   "evidence": "5_1_grt.log|[ERROR GRT-0183] Net _03476_: the 3D maze router ran out of legal path|"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_684f400248e5": {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@684f400248e5",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 277,
+   "insertion_max_ps": 296,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_684f400248e5/signoff",
+   "setup_tt_wns_ps": -81.79,
+   "hold_ff_wns_ps": 9.53,
+   "checks": {
+    "setup_tt": "FAIL",
+    "hold_ff": "PASS",
+    "drv": "FAIL",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -81.79 ps, 77 endpoints",
+    "drv: FAIL TT slew 479.0 cap 0.0, FF slew 497.0 cap 0.0",
+    "face_guard: FAIL {'unregistered': 3, 'shared': 287, 'feedthrough': 1}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_9467d1b02397": {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@9467d1b02397",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 270,
+   "insertion_max_ps": 284,
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "cause": "GRT congestion",
+   "evidence": "5_1_grt.log|[ERROR GRT-0183] Net net5255: the 3D maze router ran out of legal path|"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_a4d8b0938055": {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@a4d8b0938055",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 280,
+   "insertion_max_ps": 348,
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "cause": "GRT congestion",
+   "evidence": "5_1_grt.log|[ERROR GRT-0116] Global routing finished with congestion. Check the co|"
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_cfc804fdbfd4": {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@cfc804fdbfd4",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 281,
+   "insertion_max_ps": 347,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "epyc3:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_cfc804fdbfd4/signoff",
+   "setup_tt_wns_ps": -20.82,
+   "hold_ff_wns_ps": 2.38,
+   "checks": {
+    "setup_tt": "FAIL",
+    "hold_ff": "PASS",
+    "drv": "FAIL",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -20.82 ps, 58 endpoints",
+    "drv: FAIL TT slew 246.0 cap 0.0, FF slew 226.0 cap 0.0",
+    "face_guard: FAIL {'unregistered': 3, 'shared': 287, 'feedthrough': 1}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_xp_aq_tree13_fmt_55d250ae9185": {
+   "view": "ot_hbm_xp_aq_tree13_fmt@55d250ae9185",
+   "host": "localhost",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 236,
+   "insertion_max_ps": 249,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_xp_aq_tree13_fmt_55d250ae9185/signoff",
+   "setup_tt_wns_ps": 18.74,
+   "hold_ff_wns_ps": -16.39,
+   "checks": {
+    "setup_tt": "PASS",
+    "hold_ff": "FAIL",
+    "drv": "PASS",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "hold_ff: FAIL WNS -16.39 ps, 555 endpoints",
+    "face_guard: FAIL {'shared': 32, 'feedthrough': 32}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hbm_xp_aq_tree13_fmt_a7982cec9a7d": {
+   "view": "ot_hbm_xp_aq_tree13_fmt@a7982cec9a7d",
+   "host": "localhost",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 236,
+   "insertion_max_ps": 244,
+   "state": "ROUTED + signoff",
+   "verdict": "NOT SIGNED",
+   "signoff": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_xp_aq_tree13_fmt_a7982cec9a7d/signoff",
+   "setup_tt_wns_ps": -14.36,
+   "hold_ff_wns_ps": -10.18,
+   "checks": {
+    "setup_tt": "FAIL",
+    "hold_ff": "FAIL",
+    "drv": "PASS",
+    "fanout": "WARN",
+    "unconstrained": "PASS",
+    "clock": "PASS",
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "drc": "PASS",
+    "antenna": "PASS"
+   },
+   "reasons": [
+    "setup_tt: FAIL WNS -14.36 ps, 3 endpoints",
+    "hold_ff: FAIL WNS -10.18 ps, 273 endpoints",
+    "face_guard: FAIL {'shared': 32, 'feedthrough': 32}"
+   ],
+   "verdict_ex_face_guard_ex_spread": "FAIL",
+   "note": "face_guard on hard-core pins: OWNER? (open since 10-24 08:0x); clock pin-flop spread is INFO under owner decision 5 (signoff.py on main still gates it): both listed, neither waived"
+  },
+  "ot_hgi_sm_xload_cl2_bdring_2f4ce4cfb609": {
+   "view": "ot_hgi_sm_xload_cl2_bdring@2f4ce4cfb609",
+   "host": "localhost",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 288,
+   "insertion_max_ps": 304,
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "cause": "GRT congestion",
+   "evidence": "5_1_grt.log|[ERROR GRT-0116] Global routing finished with congestion. Check the co|"
+  },
+  "ot_hgi_sm_xload_cl2_bdring_709af958dd74": {
+   "view": "ot_hgi_sm_xload_cl2_bdring@709af958dd74",
+   "host": "localhost",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 272,
+   "insertion_max_ps": 287,
+   "state": "RUNNING",
+   "verdict": "NOT RUN (in GRT)",
+   "evidence": "5_1_grt.tmp.log||"
+  },
+  "ot_hgi_sm_xload_cl2_bfqg_1b2fb119b618": {
+   "view": "ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 380,
+   "insertion_max_ps": 444,
+   "state": "RUNNING",
+   "verdict": "NOT RUN (in GRT)",
+   "evidence": "5_1_grt.tmp.log||"
+  },
+  "ot_hgi_sm_xload_cl2_bfqg_1d82ff40b7b2": {
+   "view": "ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 385,
+   "insertion_max_ps": 452,
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "cause": "GRT congestion",
+   "evidence": "5_1_grt.log|[ERROR GRT-0116] Global routing finished with congestion. Check the co|"
+  },
+  "ot_hgi_sm_xload_cl2_bfqg_a386c1ab9f9d": {
+   "view": "ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 359,
+   "insertion_max_ps": 444,
+   "state": "RUNNING",
+   "verdict": "NOT RUN (in GRT)",
+   "evidence": "5_1_grt.tmp.log||"
+  },
+  "ot_hgi_sm_xload_cl2_bfqg_c13e769a54d7": {
+   "view": "ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 356,
+   "insertion_max_ps": 443,
+   "state": "FAIL",
+   "verdict": "FAIL",
+   "cause": "GRT congestion",
+   "evidence": "5_1_grt.log|[ERROR GRT-0116] Global routing finished with congestion. Check the co|"
+  },
+  "ot_hgi_sm_xload_cl2_ctlx_d28d9e54d299": {
+   "view": "ot_hgi_sm_xload_cl2_ctlx@d28d9e54d299",
+   "host": "localhost",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 505,
+   "insertion_max_ps": 573,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc1",
+    "hold_endpoints": "5991",
+    "iteration": "380",
+    "buffers": "758",
+    "wns_ps": "-307.832",
+    "tns_ps": "-656176.500",
+    "iter_300_rows_earlier": "0",
+    "wns_300_rows_earlier": "66237",
+    "tns_300_rows_earlier": ""
+   },
+   "cause": "GRT hold repair of the IO-reference gap: core insertion (max port mean 505 ps) >> IO vclk 250; thousands of input-hold endpoints at -100..-320 ps; superseded by the core clock contract (vclk = I) -> regenerate + relaunch"
+  },
+  "ot_hgi_sm_xload_xq_pegress_7730b41f6dbc": {
+   "view": "ot_hgi_sm_xload_xq_pegress@7730b41f6dbc",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 377,
+   "insertion_max_ps": 527,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "3226",
+    "iteration": "2880",
+    "buffers": "5758",
+    "wns_ps": "-295.954",
+    "tns_ps": "-363759.688",
+    "iter_300_rows_earlier": "27000",
+    "wns_300_rows_earlier": "9344",
+    "tns_300_rows_earlier": ""
+   },
+   "cause": "GRT hold repair of the IO-reference gap: core insertion (max port mean 377 ps) >> IO vclk 250; thousands of input-hold endpoints at -100..-320 ps; superseded by the core clock contract (vclk = I) -> regenerate + relaunch"
+  },
+  "ot_hgi_sm_xload_xq_pegress_9839b19b37d6": {
+   "view": "ot_hgi_sm_xload_xq_pegress@9839b19b37d6",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 448,
+   "insertion_max_ps": 580,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "4013",
+    "iteration": "1570",
+    "buffers": "3140",
+    "wns_ps": "-323.118",
+    "tns_ps": "-433129.312",
+    "iter_300_rows_earlier": "0",
+    "wns_300_rows_earlier": "36214",
+    "tns_300_rows_earlier": ""
+   },
+   "cause": "GRT hold repair of the IO-reference gap: core insertion (max port mean 448 ps) >> IO vclk 250; thousands of input-hold endpoints at -100..-320 ps; superseded by the core clock contract (vclk = I) -> regenerate + relaunch"
+  },
+  "hfd_vms_bank_native_q0_faces_9119a4edb587": {
+   "view": "hfd_vms_bank_native_q0_faces@9119a4edb587",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 405,
+   "insertion_max_ps": 497,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "4637",
+    "iteration": "6240",
+    "buffers": "14306",
+    "wns_ps": "-182.718",
+    "tns_ps": "-171556.609",
+    "iter_300_rows_earlier": "3250",
+    "wns_300_rows_earlier": "-250.292",
+    "tns_300_rows_earlier": "-281086.094"
+   },
+   "cause": "GRT hold repair of the IO-reference gap: core insertion (max port mean 405 ps) >> IO vclk 250; thousands of input-hold endpoints at -100..-320 ps; superseded by the core clock contract (vclk = I) -> regenerate + relaunch"
+  },
+  "hfd_vms_bank_native_q0_faces_cdf7edf6aef9": {
+   "view": "hfd_vms_bank_native_q0_faces@cdf7edf6aef9",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 437,
+   "insertion_max_ps": 534,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "5560",
+    "iteration": "7500",
+    "buffers": "17195",
+    "wns_ps": "-149.831",
+    "tns_ps": "-74003.484",
+    "iter_300_rows_earlier": "4510",
+    "wns_300_rows_earlier": "-218.308",
+    "tns_300_rows_earlier": "-192223.891"
+   },
+   "cause": "GRT hold repair of the IO-reference gap: core insertion (max port mean 437 ps) >> IO vclk 250; thousands of input-hold endpoints at -100..-320 ps; superseded by the core clock contract (vclk = I) -> regenerate + relaunch"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k0h0_f49c4145dffe": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c0_k0h0@f49c4145dffe",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 286,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15694",
+    "iteration": "6020",
+    "buffers": "13085",
+    "wns_ps": "-36.299",
+    "tns_ps": "-1000.602",
+    "iter_300_rows_earlier": "3030",
+    "wns_300_rows_earlier": "-36.299",
+    "tns_300_rows_earlier": "-1000.602"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k0h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c0_k0h1@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 255,
+   "insertion_max_ps": 277,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15867",
+    "iteration": "5170",
+    "buffers": "11474",
+    "wns_ps": "-27.357",
+    "tns_ps": "-796.837",
+    "iter_300_rows_earlier": "2180",
+    "wns_300_rows_earlier": "-27.357",
+    "tns_300_rows_earlier": "-1577.935"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k1h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c0_k1h0@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 289,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15882",
+    "iteration": "5200",
+    "buffers": "11661",
+    "wns_ps": "-32.524",
+    "tns_ps": "-853.586",
+    "iter_300_rows_earlier": "2210",
+    "wns_300_rows_earlier": "-32.524",
+    "tns_300_rows_earlier": "-853.586"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k1h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c0_k1h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 279,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15907",
+    "iteration": "2660",
+    "buffers": "6565",
+    "wns_ps": "-25.249",
+    "tns_ps": "-805.189",
+    "iter_300_rows_earlier": "650",
+    "wns_300_rows_earlier": "",
+    "tns_300_rows_earlier": ""
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k2h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c0_k2h0@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 255,
+   "insertion_max_ps": 284,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "16021",
+    "iteration": "5660",
+    "buffers": "12244",
+    "wns_ps": "-26.712",
+    "tns_ps": "-826.903",
+    "iter_300_rows_earlier": "2670",
+    "wns_300_rows_earlier": "-26.712",
+    "tns_300_rows_earlier": "-826.903"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k2h1_f49c4145dffe": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c0_k2h1@f49c4145dffe",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 274,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15644",
+    "iteration": "5350",
+    "buffers": "11777",
+    "wns_ps": "-37.092",
+    "tns_ps": "-948.841",
+    "iter_300_rows_earlier": "2360",
+    "wns_300_rows_earlier": "-37.092",
+    "tns_300_rows_earlier": "-948.841"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k3h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c0_k3h0@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 258,
+   "insertion_max_ps": 284,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15921",
+    "iteration": "5740",
+    "buffers": "12474",
+    "wns_ps": "-31.547",
+    "tns_ps": "-897.417",
+    "iter_300_rows_earlier": "2750",
+    "wns_300_rows_earlier": "-31.547",
+    "tns_300_rows_earlier": "-897.417"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c0_k3h1_ba1b24330410": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c0_k3h1@ba1b24330410",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 276,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15690",
+    "iteration": "6160",
+    "buffers": "13544",
+    "wns_ps": "-36.099",
+    "tns_ps": "-802.198",
+    "iter_300_rows_earlier": "3170",
+    "wns_300_rows_earlier": "-36.099",
+    "tns_300_rows_earlier": "-802.198"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k0h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c1_k0h0@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 258,
+   "insertion_max_ps": 279,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15839",
+    "iteration": "2990",
+    "buffers": "7113",
+    "wns_ps": "-27.268",
+    "tns_ps": "-754.643",
+    "iter_300_rows_earlier": "0",
+    "wns_300_rows_earlier": "-71.639",
+    "tns_300_rows_earlier": "-93916.578"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k0h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c1_k0h1@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 283,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15946",
+    "iteration": "6330",
+    "buffers": "13712",
+    "wns_ps": "-27.109",
+    "tns_ps": "-897.525",
+    "iter_300_rows_earlier": "3340",
+    "wns_300_rows_earlier": "-27.109",
+    "tns_300_rows_earlier": "-897.525"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k1h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c1_k1h0@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 299,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15866",
+    "iteration": "5470",
+    "buffers": "12003",
+    "wns_ps": "-25.835",
+    "tns_ps": "-810.630",
+    "iter_300_rows_earlier": "2480",
+    "wns_300_rows_earlier": "-25.835",
+    "tns_300_rows_earlier": "-810.630"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k1h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c1_k1h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 282,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15865",
+    "iteration": "4000",
+    "buffers": "9079",
+    "wns_ps": "-31.339",
+    "tns_ps": "-919.432",
+    "iter_300_rows_earlier": "1010",
+    "wns_300_rows_earlier": "-46.929",
+    "tns_300_rows_earlier": "-36700.449"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k2h0_1fe4ffdd8f5c": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c1_k2h0@1fe4ffdd8f5c",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 274,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15620",
+    "iteration": "5000",
+    "buffers": "11091",
+    "wns_ps": "-34.250",
+    "tns_ps": "-879.512",
+    "iter_300_rows_earlier": "2010",
+    "wns_300_rows_earlier": "-34.250",
+    "tns_300_rows_earlier": "-3431.647"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k2h1_1fe4ffdd8f5c": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c1_k2h1@1fe4ffdd8f5c",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 282,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15695",
+    "iteration": "4140",
+    "buffers": "9252",
+    "wns_ps": "-36.246",
+    "tns_ps": "-954.317",
+    "iter_300_rows_earlier": "1150",
+    "wns_300_rows_earlier": "-45.098",
+    "tns_300_rows_earlier": "-32217.709"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k3h0_89ef38113ef5": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c1_k3h0@89ef38113ef5",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 287,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "16014",
+    "iteration": "3780",
+    "buffers": "8713",
+    "wns_ps": "-39.669",
+    "tns_ps": "-1067.427",
+    "iter_300_rows_earlier": "790",
+    "wns_300_rows_earlier": "-51.810",
+    "tns_300_rows_earlier": "-49956.586"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c1_k3h1_1fe4ffdd8f5c": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c1_k3h1@1fe4ffdd8f5c",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 276,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15676",
+    "iteration": "2960",
+    "buffers": "7142",
+    "wns_ps": "-39.032",
+    "tns_ps": "-949.097",
+    "iter_300_rows_earlier": "790",
+    "wns_300_rows_earlier": "",
+    "tns_300_rows_earlier": ""
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k0h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c2_k0h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 259,
+   "insertion_max_ps": 281,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15908",
+    "iteration": "3850",
+    "buffers": "8896",
+    "wns_ps": "-28.300",
+    "tns_ps": "-854.062",
+    "iter_300_rows_earlier": "860",
+    "wns_300_rows_earlier": "-48.387",
+    "tns_300_rows_earlier": "-40388.715"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k1h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c2_k1h0@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 282,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "16012",
+    "iteration": "2990",
+    "buffers": "6960",
+    "wns_ps": "-28.891",
+    "tns_ps": "-782.505",
+    "iter_300_rows_earlier": "0",
+    "wns_300_rows_earlier": "-74.363",
+    "tns_300_rows_earlier": "-93210.672"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k1h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c2_k1h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 283,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15946",
+    "iteration": "3840",
+    "buffers": "8736",
+    "wns_ps": "-27.109",
+    "tns_ps": "-897.525",
+    "iter_300_rows_earlier": "850",
+    "wns_300_rows_earlier": "-48.793",
+    "tns_300_rows_earlier": "-44980.160"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k2h0_f49c4145dffe": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c2_k2h0@f49c4145dffe",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 279,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15726",
+    "iteration": "6610",
+    "buffers": "14381",
+    "wns_ps": "-41.170",
+    "tns_ps": "-998.071",
+    "iter_300_rows_earlier": "3620",
+    "wns_300_rows_earlier": "-41.170",
+    "tns_300_rows_earlier": "-998.071"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k2h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c2_k2h1@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 289,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15860",
+    "iteration": "5810",
+    "buffers": "12719",
+    "wns_ps": "-31.793",
+    "tns_ps": "-813.987",
+    "iter_300_rows_earlier": "2820",
+    "wns_300_rows_earlier": "-31.793",
+    "tns_300_rows_earlier": "-813.987"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k3h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c2_k3h0@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 279,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15943",
+    "iteration": "5430",
+    "buffers": "11998",
+    "wns_ps": "-27.784",
+    "tns_ps": "-894.148",
+    "iter_300_rows_earlier": "2440",
+    "wns_300_rows_earlier": "-27.784",
+    "tns_300_rows_earlier": "-894.148"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c2_k3h1_ba1b24330410": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c2_k3h1@ba1b24330410",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 255,
+   "insertion_max_ps": 275,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15757",
+    "iteration": "5340",
+    "buffers": "11794",
+    "wns_ps": "-33.017",
+    "tns_ps": "-968.100",
+    "iter_300_rows_earlier": "2350",
+    "wns_300_rows_earlier": "-33.017",
+    "tns_300_rows_earlier": "-968.100"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k0h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c3_k0h0@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 255,
+   "insertion_max_ps": 277,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15867",
+    "iteration": "4190",
+    "buffers": "9515",
+    "wns_ps": "-27.357",
+    "tns_ps": "-796.837",
+    "iter_300_rows_earlier": "1200",
+    "wns_300_rows_earlier": "-45.257",
+    "tns_300_rows_earlier": "-26971.551"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k0h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c3_k0h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 283,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "16059",
+    "iteration": "2990",
+    "buffers": "7098",
+    "wns_ps": "-24.444",
+    "tns_ps": "-704.487",
+    "iter_300_rows_earlier": "0",
+    "wns_300_rows_earlier": "-71.618",
+    "tns_300_rows_earlier": "-93709.273"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k1h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c3_k1h0@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 258,
+   "insertion_max_ps": 290,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15911",
+    "iteration": "3870",
+    "buffers": "8809",
+    "wns_ps": "-28.026",
+    "tns_ps": "-850.026",
+    "iter_300_rows_earlier": "880",
+    "wns_300_rows_earlier": "-49.941",
+    "tns_300_rows_earlier": "-45308.777"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k1h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c3_k1h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 281,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15971",
+    "iteration": "3940",
+    "buffers": "8952",
+    "wns_ps": "-30.356",
+    "tns_ps": "-880.841",
+    "iter_300_rows_earlier": "950",
+    "wns_300_rows_earlier": "-47.758",
+    "tns_300_rows_earlier": "-37684.758"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k2h0_1fe4ffdd8f5c": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c3_k2h0@1fe4ffdd8f5c",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 255,
+   "insertion_max_ps": 273,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15583",
+    "iteration": "3260",
+    "buffers": "7619",
+    "wns_ps": "-38.031",
+    "tns_ps": "-913.094",
+    "iter_300_rows_earlier": "270",
+    "wns_300_rows_earlier": "-59.226",
+    "tns_300_rows_earlier": "-81429.828"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k3h0_89ef38113ef5": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c3_k3h0@89ef38113ef5",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 296,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15926",
+    "iteration": "4830",
+    "buffers": "10910",
+    "wns_ps": "-40.083",
+    "tns_ps": "-1143.427",
+    "iter_300_rows_earlier": "1840",
+    "wns_300_rows_earlier": "-40.083",
+    "tns_300_rows_earlier": "-6207.621"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r0c3_k3h1_a63ccfad37b9": {
+   "view": "ot_hbm_idx_score_quarter_static__r0c3_k3h1@a63ccfad37b9",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 285,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15607",
+    "iteration": "5730",
+    "buffers": "12942",
+    "wns_ps": "-45.910",
+    "tns_ps": "-1161.641",
+    "iter_300_rows_earlier": "2740",
+    "wns_300_rows_earlier": "-45.910",
+    "tns_300_rows_earlier": "-1161.641"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k0h0_a9d045104181": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c0_k0h0@a9d045104181",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 275,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15983",
+    "iteration": "5960",
+    "buffers": "13269",
+    "wns_ps": "-39.073",
+    "tns_ps": "-959.637",
+    "iter_300_rows_earlier": "2970",
+    "wns_300_rows_earlier": "-39.073",
+    "tns_300_rows_earlier": "-959.637"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k1h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c0_k1h0@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 277,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15989",
+    "iteration": "4850",
+    "buffers": "10789",
+    "wns_ps": "-33.794",
+    "tns_ps": "-915.424",
+    "iter_300_rows_earlier": "1860",
+    "wns_300_rows_earlier": "-33.794",
+    "tns_300_rows_earlier": "-5119.338"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k1h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c0_k1h1@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 255,
+   "insertion_max_ps": 271,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15890",
+    "iteration": "5400",
+    "buffers": "11899",
+    "wns_ps": "-29.451",
+    "tns_ps": "-841.037",
+    "iter_300_rows_earlier": "2410",
+    "wns_300_rows_earlier": "-29.451",
+    "tns_300_rows_earlier": "-841.037"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k2h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c0_k2h0@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 280,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15913",
+    "iteration": "5200",
+    "buffers": "11517",
+    "wns_ps": "-25.869",
+    "tns_ps": "-767.190",
+    "iter_300_rows_earlier": "2210",
+    "wns_300_rows_earlier": "-25.869",
+    "tns_300_rows_earlier": "-1304.852"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k2h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c0_k2h1@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 258,
+   "insertion_max_ps": 289,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15929",
+    "iteration": "5800",
+    "buffers": "12682",
+    "wns_ps": "-27.644",
+    "tns_ps": "-848.399",
+    "iter_300_rows_earlier": "2810",
+    "wns_300_rows_earlier": "-27.644",
+    "tns_300_rows_earlier": "-848.399"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k3h0_f49c4145dffe": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c0_k3h0@f49c4145dffe",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 274,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15644",
+    "iteration": "5950",
+    "buffers": "12976",
+    "wns_ps": "-37.092",
+    "tns_ps": "-948.841",
+    "iter_300_rows_earlier": "2960",
+    "wns_300_rows_earlier": "-37.092",
+    "tns_300_rows_earlier": "-948.841"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c0_k3h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c0_k3h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 275,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15850",
+    "iteration": "3330",
+    "buffers": "7630",
+    "wns_ps": "-20.826",
+    "tns_ps": "-676.811",
+    "iter_300_rows_earlier": "340",
+    "wns_300_rows_earlier": "-51.887",
+    "tns_300_rows_earlier": "-68144.070"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k0h0_ba1b24330410": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c1_k0h0@ba1b24330410",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 255,
+   "insertion_max_ps": 275,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15654",
+    "iteration": "3290",
+    "buffers": "7858",
+    "wns_ps": "-37.340",
+    "tns_ps": "-878.144",
+    "iter_300_rows_earlier": "300",
+    "wns_300_rows_earlier": "-62.612",
+    "tns_300_rows_earlier": "-67304.141"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k0h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c1_k0h1@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 274,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15915",
+    "iteration": "5070",
+    "buffers": "11293",
+    "wns_ps": "-30.040",
+    "tns_ps": "-784.187",
+    "iter_300_rows_earlier": "2080",
+    "wns_300_rows_earlier": "-30.040",
+    "tns_300_rows_earlier": "-1686.627"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k1h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c1_k1h0@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 280,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15846",
+    "iteration": "5550",
+    "buffers": "12145",
+    "wns_ps": "-27.171",
+    "tns_ps": "-778.065",
+    "iter_300_rows_earlier": "2560",
+    "wns_300_rows_earlier": "-27.171",
+    "tns_300_rows_earlier": "-778.065"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k1h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c1_k1h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 255,
+   "insertion_max_ps": 284,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "16021",
+    "iteration": "4250",
+    "buffers": "9425",
+    "wns_ps": "-26.712",
+    "tns_ps": "-826.903",
+    "iter_300_rows_earlier": "1260",
+    "wns_300_rows_earlier": "-43.065",
+    "tns_300_rows_earlier": "-24365.484"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k2h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c1_k2h0@1f7bba803ab7",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 258,
+   "insertion_max_ps": 279,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15979",
+    "iteration": "6550",
+    "buffers": "14250",
+    "wns_ps": "-28.377",
+    "tns_ps": "-918.400",
+    "iter_300_rows_earlier": "3560",
+    "wns_300_rows_earlier": "-28.377",
+    "tns_300_rows_earlier": "-918.400"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k2h1_1fe4ffdd8f5c": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c1_k2h1@1fe4ffdd8f5c",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 281,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15726",
+    "iteration": "3840",
+    "buffers": "8831",
+    "wns_ps": "-36.942",
+    "tns_ps": "-949.828",
+    "iter_300_rows_earlier": "850",
+    "wns_300_rows_earlier": "-50.443",
+    "tns_300_rows_earlier": "-46919.223"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k3h0_1fe4ffdd8f5c": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c1_k3h0@1fe4ffdd8f5c",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 281,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15714",
+    "iteration": "3100",
+    "buffers": "7246",
+    "wns_ps": "-38.766",
+    "tns_ps": "-964.549",
+    "iter_300_rows_earlier": "110",
+    "wns_300_rows_earlier": "-61.528",
+    "tns_300_rows_earlier": "-89908.891"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c1_k3h1_89ef38113ef5": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c1_k3h1@89ef38113ef5",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 291,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15886",
+    "iteration": "6150",
+    "buffers": "13544",
+    "wns_ps": "-41.605",
+    "tns_ps": "-1235.533",
+    "iter_300_rows_earlier": "3160",
+    "wns_300_rows_earlier": "-41.605",
+    "tns_300_rows_earlier": "-1239.242"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k0h1_f49c4145dffe": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c2_k0h1@f49c4145dffe",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 288,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15694",
+    "iteration": "3190",
+    "buffers": "7489",
+    "wns_ps": "-36.244",
+    "tns_ps": "-961.300",
+    "iter_300_rows_earlier": "200",
+    "wns_300_rows_earlier": "-60.553",
+    "tns_300_rows_earlier": "-83608.219"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k1h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c2_k1h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 258,
+   "insertion_max_ps": 279,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15978",
+    "iteration": "4410",
+    "buffers": "9937",
+    "wns_ps": "-30.971",
+    "tns_ps": "-763.079",
+    "iter_300_rows_earlier": "1420",
+    "wns_300_rows_earlier": "-40.596",
+    "tns_300_rows_earlier": "-15988.306"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k2h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c2_k2h0@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 259,
+   "insertion_max_ps": 278,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15898",
+    "iteration": "3380",
+    "buffers": "7880",
+    "wns_ps": "-32.085",
+    "tns_ps": "-802.127",
+    "iter_300_rows_earlier": "390",
+    "wns_300_rows_earlier": "-55.260",
+    "tns_300_rows_earlier": "-69597.664"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k2h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c2_k2h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 289,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15860",
+    "iteration": "3960",
+    "buffers": "9021",
+    "wns_ps": "-31.793",
+    "tns_ps": "-813.987",
+    "iter_300_rows_earlier": "970",
+    "wns_300_rows_earlier": "-48.244",
+    "tns_300_rows_earlier": "-38955.828"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k3h0_f49c4145dffe": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c2_k3h0@f49c4145dffe",
+   "host": "epyc3",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 256,
+   "insertion_max_ps": 274,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "epyc3",
+    "hold_endpoints": "15644",
+    "iteration": "5820",
+    "buffers": "12716",
+    "wns_ps": "-37.092",
+    "tns_ps": "-948.841",
+    "iter_300_rows_earlier": "2830",
+    "wns_300_rows_earlier": "-37.092",
+    "tns_300_rows_earlier": "-948.841"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c2_k3h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c2_k3h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 281,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15948",
+    "iteration": "2860",
+    "buffers": "6786",
+    "wns_ps": "-27.299",
+    "tns_ps": "-849.079",
+    "iter_300_rows_earlier": "1280",
+    "wns_300_rows_earlier": "",
+    "tns_300_rows_earlier": ""
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k0h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c3_k0h0@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 284,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15854",
+    "iteration": "4300",
+    "buffers": "9723",
+    "wns_ps": "-29.297",
+    "tns_ps": "-822.267",
+    "iter_300_rows_earlier": "1310",
+    "wns_300_rows_earlier": "-44.365",
+    "tns_300_rows_earlier": "-21665.623"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k0h1_ba1b24330410": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c3_k0h1@ba1b24330410",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 257,
+   "insertion_max_ps": 285,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15664",
+    "iteration": "3910",
+    "buffers": "8986",
+    "wns_ps": "-45.654",
+    "tns_ps": "-989.102",
+    "iter_300_rows_earlier": "920",
+    "wns_300_rows_earlier": "-49.629",
+    "tns_300_rows_earlier": "-31648.516"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k1h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c3_k1h0@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 255,
+   "insertion_max_ps": 284,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "16021",
+    "iteration": "4040",
+    "buffers": "9005",
+    "wns_ps": "-26.712",
+    "tns_ps": "-826.903",
+    "iter_300_rows_earlier": "1050",
+    "wns_300_rows_earlier": "-46.279",
+    "tns_300_rows_earlier": "-33372.258"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k1h1_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c3_k1h1@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 258,
+   "insertion_max_ps": 283,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15881",
+    "iteration": "2630",
+    "buffers": "6432",
+    "wns_ps": "-34.577",
+    "tns_ps": "-917.854",
+    "iter_300_rows_earlier": "730",
+    "wns_300_rows_earlier": "",
+    "tns_300_rows_earlier": ""
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  },
+  "ot_hbm_idx_score_quarter_static__r1c3_k2h0_1f7bba803ab7": {
+   "view": "ot_hbm_idx_score_quarter_static__r1c3_k2h0@1f7bba803ab7",
+   "host": "intel1",
+   "list": "route_all (CTS-probe mean <= 290)",
+   "insertion_mean_ps": 258,
+   "insertion_max_ps": 291,
+   "state": "FAIL (killed 2026-10-24 19:3x PDT by HBM-ELEM)",
+   "verdict": "FAIL",
+   "evidence": {
+    "host": "intel1",
+    "hold_endpoints": "15873",
+    "iteration": "4740",
+    "buffers": "10565",
+    "wns_ps": "-23.668",
+    "tns_ps": "-703.136",
+    "iter_300_rows_earlier": "1750",
+    "wns_300_rows_earlier": "-34.732",
+    "tns_300_rows_earlier": "-6943.134"
+   },
+   "cause": "GRT hold repair non-convergent: WNS/TNS flat over the last 300 table rows (one endpoint retried, 2 buffers per 10 iterations); run could never finish"
+  }
+ },
+ "placed_fail_contract": {
+  "hfd_ep_static_67dc73e05678": {
+   "view": "hfd_ep_static@67dc73e05678",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 489 / max 641 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 489,
+   "insertion_max_ps": 641
+  },
+  "hfd_ep_static_7d8cfe0c9f2c": {
+   "view": "hfd_ep_static@7d8cfe0c9f2c",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 577 / max 725 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 577,
+   "insertion_max_ps": 725
+  },
+  "ot_hbm_hc_bankq0_static__lanes0_2_3201a56cbe8d": {
+   "view": "ot_hbm_hc_bankq0_static__lanes0_2@3201a56cbe8d",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 356 / max 373 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 356,
+   "insertion_max_ps": 373
+  },
+  "ot_hbm_hc_bankq0_static__lanes3_5_6c5ad9844cef": {
+   "view": "ot_hbm_hc_bankq0_static__lanes3_5@6c5ad9844cef",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 354 / max 396 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 354,
+   "insertion_max_ps": 396
+  },
+  "ot_hbm_hc_bankq_static__lanes3_5_60b283a425e3": {
+   "view": "ot_hbm_hc_bankq_static__lanes3_5@60b283a425e3",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 360 / max 375 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 360,
+   "insertion_max_ps": 375
+  },
+  "ot_hbm_su_static_sfustore_hw_881e9a5e0761": {
+   "view": "ot_hbm_su_static_sfustore_hw@881e9a5e0761",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 550 / max 614 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 550,
+   "insertion_max_ps": 614
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_95777efcb2fa": {
+   "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@95777efcb2fa",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 295 / max 369 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 295,
+   "insertion_max_ps": 369
+  },
+  "ot_hbm_svc_sm_xcal_rel_t_2fe24f8b638c": {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@2fe24f8b638c",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 527 / max 693 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 527,
+   "insertion_max_ps": 693
+  },
+  "ot_hbm_svc_sm_xcal_rel_t_9ee64da70704": {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@9ee64da70704",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 519 / max 677 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 519,
+   "insertion_max_ps": 677
+  },
+  "ot_hbm_svc_sm_xcal_rel_t_afccc19766de": {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@afccc19766de",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 521 / max 685 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 521,
+   "insertion_max_ps": 685
+  },
+  "ot_hbm_svc_sm_xcal_rel_t_f9e949331096": {
+   "view": "ot_hbm_svc_sm_xcal_rel_t@f9e949331096",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 520 / max 678 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 520,
+   "insertion_max_ps": 678
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap_fcb962e88e4d": {
+   "view": "ot_hbm_svc_vm_kshare_splitstrap@fcb962e88e4d",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 456 / max 585 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 456,
+   "insertion_max_ps": 585
+  },
+  "ot_hgi_coll_gq_issue_620157ecc938": {
+   "view": "ot_hgi_coll_gq_issue@620157ecc938",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 343 / max 364 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 343,
+   "insertion_max_ps": 364
+  },
+  "ot_hgi_coll_gq_land_c9df5f7e46f9": {
+   "view": "ot_hgi_coll_gq_land@c9df5f7e46f9",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 328 / max 384 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 328,
+   "insertion_max_ps": 384
+  },
+  "ot_hgi_coll_inj_idx_join_rg_6849648aeb49": {
+   "view": "ot_hgi_coll_inj_idx_join_rg@6849648aeb49",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 388 / max 435 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 388,
+   "insertion_max_ps": 435
+  },
+  "ot_hgi_sfu_programme_store_r10_de93d4cbfe0e": {
+   "view": "ot_hgi_sfu_programme_store_r10@de93d4cbfe0e",
+   "list": "route_hold.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 1150 / max 1457 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 1150,
+   "insertion_max_ps": 1457
+  },
+  "ot_hbm_hc_bankq0_static__lanes6_7_bank_1ce7110970e0": {
+   "view": "ot_hbm_hc_bankq0_static__lanes6_7_bank@1ce7110970e0",
+   "list": "route_hold3.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 806 / max 983 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 806,
+   "insertion_max_ps": 983
+  },
+  "ot_hbm_hc_bankq_static__lanes0_2_e6588042a5d1": {
+   "view": "ot_hbm_hc_bankq_static__lanes0_2@e6588042a5d1",
+   "list": "route_hold3.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 361 / max 372 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 361,
+   "insertion_max_ps": 372
+  },
+  "ot_hbm_su_static_qcore_r13_30cedff7c089": {
+   "view": "ot_hbm_su_static_qcore_r13@30cedff7c089",
+   "list": "route_hold3.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 434 / max 528 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 434,
+   "insertion_max_ps": 528
+  },
+  "ot_hgi_sfu_core_split3__lane14_66f75664efb4": {
+   "view": "ot_hgi_sfu_core_split3__lane14@66f75664efb4",
+   "list": "route_hold3.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 474 / max 543 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 474,
+   "insertion_max_ps": 543
+  },
+  "ot_hgi_sfu_core_split3__lane15_ed3d202ade36": {
+   "view": "ot_hgi_sfu_core_split3__lane15@ed3d202ade36",
+   "list": "route_hold3.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 447 / max 526 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 447,
+   "insertion_max_ps": 526
+  },
+  "ot_hgi_sfu_core_split3__lane2_2ba0e7ec37ee": {
+   "view": "ot_hgi_sfu_core_split3__lane2@2ba0e7ec37ee",
+   "list": "route_hold3.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 455 / max 558 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 455,
+   "insertion_max_ps": 558
+  },
+  "ot_hgi_sfu_core_split3__lane4_ef3314d95b46": {
+   "view": "ot_hgi_sfu_core_split3__lane4@ef3314d95b46",
+   "list": "route_hold3.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 430 / max 499 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 430,
+   "insertion_max_ps": 499
+  },
+  "ot_hgi_sfu_core_split3__lane5_9818e0f96722": {
+   "view": "ot_hgi_sfu_core_split3__lane5@9818e0f96722",
+   "list": "route_hold3.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 468 / max 557 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 468,
+   "insertion_max_ps": 557
+  },
+  "ot_hgi_sfu_core_split3__lane6_c8a5f8831c4a": {
+   "view": "ot_hgi_sfu_core_split3__lane6@c8a5f8831c4a",
+   "list": "route_hold3.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 463 / max 538 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 463,
+   "insertion_max_ps": 538
+  },
+  "ot_hgi_sfu_core_split3__lane9_9617422dda57": {
+   "view": "ot_hgi_sfu_core_split3__lane9@9617422dda57",
+   "list": "route_hold3.txt",
+   "verdict": "FAIL (placed; not routed)",
+   "cause": "core clock contract: CTS insertion mean 429 / max 516 ps vs IO vclk 250 +- 40",
+   "insertion_mean_ps": 429,
+   "insertion_max_ps": 516
+  }
+ }
+}
