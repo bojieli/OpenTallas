@@ -69,10 +69,11 @@ def pg_groups(sel):
     return f
 
 
-PG_LANE = '#(.LN(7),.KIND(%d),.MLAT(4),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2))'
+PG_ALAT = 4 if os.environ.get('OT_HBM_ONECLOCK', '0') == '1' else 3
+PG_LANE = '#(.LN(7),.KIND(%d),.MLAT(4),.ALAT(' + str(PG_ALAT) + '),.LEAF(1),.FETCH_EXTRA_EDGES(2))'
 PG_BANK = ('ot_hbm_su_static_pinned_bank', '#(.READERS(6),.RB(9))')
 PG_SRC = ('rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: '
-          'ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + '
+          'ot_hbm_su_static_lane_pinreg; MLAT4 ALAT' + str(PG_ALAT) + ' LEAF1 FETCH_EXTRA_EDGES2; OT_HBM_ONECLOCK selects decision16a) + '
           'g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent')
 
 

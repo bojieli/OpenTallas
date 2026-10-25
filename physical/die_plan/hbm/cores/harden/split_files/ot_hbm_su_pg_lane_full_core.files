@@ -10,7 +10,9 @@ rtl/hdc/ot_hdc_fp32_mul_pipe.sv
 rtl/proto/ot_fp32_add_rne_pipe.sv
 rtl/hdc/ot_hdc_sfu.sv
 rtl/hdc/ot_hdc_fastfp.sv
-rtl/hdc/ot_hdc_fastfp_lat.sv
+rtl/hdc/ot_hdc_fastfp_lat_c12.sv
+rtl/hdc/ot_hdc_fp32_f12.sv
+rtl/hdc/v41x/ot_dsrom_su_add6.sv
 rtl/hdc/ot_hdc_fp32_mul_lat.sv
 rtl/hdc/ot_hdc_fp32_add_lat.sv
 rtl/hdc/ot_hdc_prefix.sv
