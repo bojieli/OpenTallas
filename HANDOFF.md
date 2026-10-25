@@ -387,3 +387,4 @@ CODEX: 2026-10-25 03:04 PDT RESET shared ot_rst_relay SYNC_INPUT opt-in ready da
 
 2026-10-25 03:06 PDT CODEX: collectedQC3prototypefailures; actual-bitgeometrydiagnosis drove S81/KV/HBM/QCcorrectives. S81t75 row-legalcandidate PASS367.195um0overlap; KVall47candidate PASS404.808um0core. Sourcehelper+records9b1c0ce3f; nofullphysicalsignoffclaimed.
 2026-10-25 03:07 PDT CODEX: B2o NPC2 physicalviews corrected e1dec7b2e G0C49/49 0E; packed/keepout-aware/wavefront replan LIVE intel1 codex-b2o-final; native HC capacity deltas and concrete owners assigned.
+2026-10-25 03:08 PDT QC: signed off + archived qfd_dv_s5_su8_rst3 (TT +93.04/FF +2.39) and qfd_dv_s8x_crh (ruling 9.7 I=290.93, TT +164.51/FF +3.87; Codex ECO) -> QC cores 2; 3 stalled congestion variants stopped, losers deleted
