@@ -1442,3 +1442,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   btab_s7 intel1:/srv/opentallas-scratch2/claude/path-qc-sramif/btab_s7: S6_GRT_GATE PASS FF -70.97/1627 -> +0.02/0, 4954 bufs (in 3078 / int 1876), bound I TT 457.28 FF 352.01 (main-basis dev 0.11/0.25), TT setup_est +301.1 post-hold (pre 364.9), GRT TT 364.90 ep 0 slew 0 cap 0. -> enqueued --geom REQ.
   prog_s7 intel2:.../prog_s7: pre-hold GRT TT +320.6, I 496.03/381.14; hold m0+passes running (single pass left -2.42/24).
   vmr_s6i intel1:.../vmr_s6i: m0+3 passes still -2.18/8: all pre-existing pw16_data -> l_w16d (S-face pin reg -> landing), not the IF regs -> owed: structural look at that pair before enqueue.
+2026-10-25 10:27 PDT GEOM-REVIEW: CLAIM [PATH-HBM-SM-CLUSTER 10:23] (cluster floorplan + 4 child kits)
