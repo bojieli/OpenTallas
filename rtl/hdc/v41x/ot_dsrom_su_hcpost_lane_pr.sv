@@ -17,7 +17,9 @@ module ot_dsrom_su_hcpost_lane_pr #(
     input  wire [31:0] r0, r1, r2, r3, y,
     input  wire [31:0] c0, c1, c2, c3, p,
     output wire        vo,
-    output wire [31:0] o,
+    // OWNER DECISION 8 (2026-10-24): the lane's o[15:0] is constant 0 (BF16 result {hi, 16'd0}); it is not a pin of
+    // this hard core (no constant output pins).  o keeps its [31:16] bit names (same pins as the closed view).
+    output wire [31:16] o,
     output wire        fault
 );
     reg        rst_q, v_q;
@@ -28,6 +30,8 @@ module ot_dsrom_su_hcpost_lane_pr #(
         c0_q <= c0; c1_q <= c1; c2_q <= c2; c3_q <= c3; p_q <= p;
     end
     wire [31:0] c3_in = (MUTANT == 1) ? c3 : c3_q;
+    wire [31:0] o_core;
+    assign o = o_core[31:16];
     ot_dsrom_su_hcpost_lane #(.ML(ML), .AL(AL)) u_core (.clk(clk), .rst_n(rst_q), .v(v_q), .r0(r0_q), .r1(r1_q),
-        .r2(r2_q), .r3(r3_q), .y(y_q), .c0(c0_q), .c1(c1_q), .c2(c2_q), .c3(c3_in), .p(p_q), .vo(vo), .o(o), .fault(fault));
+        .r2(r2_q), .r3(r3_q), .y(y_q), .c0(c0_q), .c1(c1_q), .c2(c2_q), .c3(c3_in), .p(p_q), .vo(vo), .o(o_core), .fault(fault));
 endmodule

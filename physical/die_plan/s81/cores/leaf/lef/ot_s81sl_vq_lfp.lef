@@ -12,7 +12,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 4.6080 129.5620 4.6260 129.6000 ;
+        RECT 85.8240 129.5620 85.8420 129.6000 ;
     END
   END clk
   PIN fault
@@ -20,7 +20,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 15.5520 129.5620 15.5700 129.6000 ;
+        RECT 14.4720 129.5620 14.4900 129.6000 ;
     END
   END fault
   PIN k[0]
@@ -28,7 +28,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 5.6880 129.5620 5.7060 129.6000 ;
+        RECT 4.6080 129.5620 4.6260 129.6000 ;
     END
   END k[0]
   PIN k[1]
@@ -36,7 +36,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 6.2400 129.5160 6.2640 129.6000 ;
+        RECT 5.0880 129.5160 5.1120 129.6000 ;
     END
   END k[1]
   PIN k[2]
@@ -44,7 +44,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 6.7680 129.5620 6.7860 129.6000 ;
+        RECT 5.6880 129.5620 5.7060 129.6000 ;
     END
   END k[2]
   PIN m_b
@@ -52,7 +52,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 10.6560 129.5160 10.6800 129.6000 ;
+        RECT 9.5040 129.5160 9.5280 129.6000 ;
     END
   END m_b
   PIN m_i[0]
@@ -60,7 +60,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 11.1600 129.5620 11.1780 129.6000 ;
+        RECT 10.0800 129.5620 10.0980 129.6000 ;
     END
   END m_i[0]
   PIN m_i[1]
@@ -68,7 +68,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 11.7120 129.5160 11.7360 129.6000 ;
+        RECT 10.6560 129.5160 10.6800 129.6000 ;
     END
   END m_i[1]
   PIN m_i[2]
@@ -76,7 +76,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 12.2400 129.5620 12.2580 129.6000 ;
+        RECT 11.1600 129.5620 11.1780 129.6000 ;
     END
   END m_i[2]
   PIN m_i[3]
@@ -84,7 +84,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 12.8640 129.5160 12.8880 129.6000 ;
+        RECT 11.7120 129.5160 11.7360 129.6000 ;
     END
   END m_i[3]
   PIN m_i[4]
@@ -92,7 +92,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 13.3920 129.5620 13.4100 129.6000 ;
+        RECT 12.2400 129.5620 12.2580 129.6000 ;
     END
   END m_i[4]
   PIN m_i[5]
@@ -100,7 +100,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 13.9200 129.5160 13.9440 129.6000 ;
+        RECT 12.8640 129.5160 12.8880 129.6000 ;
     END
   END m_i[5]
   PIN m_i[6]
@@ -108,7 +108,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 14.4720 129.5620 14.4900 129.6000 ;
+        RECT 13.3920 129.5620 13.4100 129.6000 ;
     END
   END m_i[6]
   PIN m_i[7]
@@ -116,7 +116,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 14.9760 129.5160 15.0000 129.6000 ;
+        RECT 13.9200 129.5160 13.9440 129.6000 ;
     END
   END m_i[7]
   PIN m_q
@@ -124,7 +124,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 10.0800 129.5620 10.0980 129.6000 ;
+        RECT 9.0000 129.5620 9.0180 129.6000 ;
     END
   END m_q
   PIN m_v
@@ -132,7 +132,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 9.5040 129.5160 9.5280 129.6000 ;
+        RECT 8.4480 129.5160 8.4720 129.6000 ;
     END
   END m_v
   PIN rst_n
@@ -140,7 +140,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 5.0880 129.5160 5.1120 129.6000 ;
+        RECT 86.4000 129.5160 86.4240 129.6000 ;
     END
   END rst_n
   PIN sid[0]
@@ -148,7 +148,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 7.2960 129.5160 7.3200 129.6000 ;
+        RECT 6.2400 129.5160 6.2640 129.6000 ;
     END
   END sid[0]
   PIN sid[1]
@@ -156,7 +156,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 7.8480 129.5620 7.8660 129.6000 ;
+        RECT 6.7680 129.5620 6.7860 129.6000 ;
     END
   END sid[1]
   PIN sid[2]
@@ -164,7 +164,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 8.4480 129.5160 8.4720 129.6000 ;
+        RECT 7.2960 129.5160 7.3200 129.6000 ;
     END
   END sid[2]
   PIN sid[3]
@@ -172,7 +172,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 9.0000 129.5620 9.0180 129.6000 ;
+        RECT 7.8480 129.5620 7.8660 129.6000 ;
     END
   END sid[3]
   PIN u[0]
@@ -2348,7 +2348,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 17.1840 129.5160 17.2080 129.6000 ;
+        RECT 16.1280 129.5160 16.1520 129.6000 ;
     END
   END xf[0]
   PIN xf[100]
@@ -2356,7 +2356,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 72.0960 129.5160 72.1200 129.6000 ;
+        RECT 71.0400 129.5160 71.0640 129.6000 ;
     END
   END xf[100]
   PIN xf[101]
@@ -2364,7 +2364,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 72.6480 129.5620 72.6660 129.6000 ;
+        RECT 71.5680 129.5620 71.5860 129.6000 ;
     END
   END xf[101]
   PIN xf[102]
@@ -2372,7 +2372,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 73.2480 129.5160 73.2720 129.6000 ;
+        RECT 72.0960 129.5160 72.1200 129.6000 ;
     END
   END xf[102]
   PIN xf[103]
@@ -2380,7 +2380,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 73.7280 129.5620 73.7460 129.6000 ;
+        RECT 72.6480 129.5620 72.6660 129.6000 ;
     END
   END xf[103]
   PIN xf[104]
@@ -2388,7 +2388,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 74.3040 129.5160 74.3280 129.6000 ;
+        RECT 73.2480 129.5160 73.2720 129.6000 ;
     END
   END xf[104]
   PIN xf[105]
@@ -2396,7 +2396,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 74.8800 129.5620 74.8980 129.6000 ;
+        RECT 73.7280 129.5620 73.7460 129.6000 ;
     END
   END xf[105]
   PIN xf[106]
@@ -2404,7 +2404,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 75.3600 129.5160 75.3840 129.6000 ;
+        RECT 74.3040 129.5160 74.3280 129.6000 ;
     END
   END xf[106]
   PIN xf[107]
@@ -2412,7 +2412,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 75.9600 129.5620 75.9780 129.6000 ;
+        RECT 74.8800 129.5620 74.8980 129.6000 ;
     END
   END xf[107]
   PIN xf[108]
@@ -2420,7 +2420,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 76.5120 129.5160 76.5360 129.6000 ;
+        RECT 75.3600 129.5160 75.3840 129.6000 ;
     END
   END xf[108]
   PIN xf[109]
@@ -2428,7 +2428,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 77.0400 129.5620 77.0580 129.6000 ;
+        RECT 75.9600 129.5620 75.9780 129.6000 ;
     END
   END xf[109]
   PIN xf[10]
@@ -2436,7 +2436,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 22.6560 129.5160 22.6800 129.6000 ;
+        RECT 21.6000 129.5160 21.6240 129.6000 ;
     END
   END xf[10]
   PIN xf[110]
@@ -2444,7 +2444,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 77.5680 129.5160 77.5920 129.6000 ;
+        RECT 76.5120 129.5160 76.5360 129.6000 ;
     END
   END xf[110]
   PIN xf[111]
@@ -2452,7 +2452,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 78.1200 129.5620 78.1380 129.6000 ;
+        RECT 77.0400 129.5620 77.0580 129.6000 ;
     END
   END xf[111]
   PIN xf[112]
@@ -2460,7 +2460,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 78.7200 129.5160 78.7440 129.6000 ;
+        RECT 77.5680 129.5160 77.5920 129.6000 ;
     END
   END xf[112]
   PIN xf[113]
@@ -2468,7 +2468,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 79.2720 129.5620 79.2900 129.6000 ;
+        RECT 78.1200 129.5620 78.1380 129.6000 ;
     END
   END xf[113]
   PIN xf[114]
@@ -2476,7 +2476,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 79.7760 129.5160 79.8000 129.6000 ;
+        RECT 78.7200 129.5160 78.7440 129.6000 ;
     END
   END xf[114]
   PIN xf[115]
@@ -2484,7 +2484,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 80.3520 129.5620 80.3700 129.6000 ;
+        RECT 79.2720 129.5620 79.2900 129.6000 ;
     END
   END xf[115]
   PIN xf[116]
@@ -2492,7 +2492,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 80.9280 129.5160 80.9520 129.6000 ;
+        RECT 79.7760 129.5160 79.8000 129.6000 ;
     END
   END xf[116]
   PIN xf[117]
@@ -2500,7 +2500,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 81.4320 129.5620 81.4500 129.6000 ;
+        RECT 80.3520 129.5620 80.3700 129.6000 ;
     END
   END xf[117]
   PIN xf[118]
@@ -2508,7 +2508,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 81.9840 129.5160 82.0080 129.6000 ;
+        RECT 80.9280 129.5160 80.9520 129.6000 ;
     END
   END xf[118]
   PIN xf[119]
@@ -2516,7 +2516,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 82.5120 129.5620 82.5300 129.6000 ;
+        RECT 81.4320 129.5620 81.4500 129.6000 ;
     END
   END xf[119]
   PIN xf[11]
@@ -2524,7 +2524,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 23.2560 129.5620 23.2740 129.6000 ;
+        RECT 22.1760 129.5620 22.1940 129.6000 ;
     END
   END xf[11]
   PIN xf[120]
@@ -2532,7 +2532,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 83.1360 129.5160 83.1600 129.6000 ;
+        RECT 81.9840 129.5160 82.0080 129.6000 ;
     END
   END xf[120]
   PIN xf[121]
@@ -2540,7 +2540,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 83.6640 129.5620 83.6820 129.6000 ;
+        RECT 82.5120 129.5620 82.5300 129.6000 ;
     END
   END xf[121]
   PIN xf[122]
@@ -2548,7 +2548,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 84.1920 129.5160 84.2160 129.6000 ;
+        RECT 83.1360 129.5160 83.1600 129.6000 ;
     END
   END xf[122]
   PIN xf[123]
@@ -2556,7 +2556,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 84.7440 129.5620 84.7620 129.6000 ;
+        RECT 83.6640 129.5620 83.6820 129.6000 ;
     END
   END xf[123]
   PIN xf[124]
@@ -2564,7 +2564,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 85.2480 129.5160 85.2720 129.6000 ;
+        RECT 84.1920 129.5160 84.2160 129.6000 ;
     END
   END xf[124]
   PIN xf[125]
@@ -2572,7 +2572,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 85.8240 129.5620 85.8420 129.6000 ;
+        RECT 84.7440 129.5620 84.7620 129.6000 ;
     END
   END xf[125]
   PIN xf[126]
@@ -2580,7 +2580,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 86.4000 129.5160 86.4240 129.6000 ;
+        RECT 85.2480 129.5160 85.2720 129.6000 ;
     END
   END xf[126]
   PIN xf[127]
@@ -2612,7 +2612,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 23.8080 129.5160 23.8320 129.6000 ;
+        RECT 22.6560 129.5160 22.6800 129.6000 ;
     END
   END xf[12]
   PIN xf[130]
@@ -2700,7 +2700,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 24.3360 129.5620 24.3540 129.6000 ;
+        RECT 23.2560 129.5620 23.2740 129.6000 ;
     END
   END xf[13]
   PIN xf[140]
@@ -2788,7 +2788,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 24.8640 129.5160 24.8880 129.6000 ;
+        RECT 23.8080 129.5160 23.8320 129.6000 ;
     END
   END xf[14]
   PIN xf[150]
@@ -2876,7 +2876,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 25.4160 129.5620 25.4340 129.6000 ;
+        RECT 24.3360 129.5620 24.3540 129.6000 ;
     END
   END xf[15]
   PIN xf[160]
@@ -2964,7 +2964,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 26.0160 129.5160 26.0400 129.6000 ;
+        RECT 24.8640 129.5160 24.8880 129.6000 ;
     END
   END xf[16]
   PIN xf[170]
@@ -3052,7 +3052,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 26.5680 129.5620 26.5860 129.6000 ;
+        RECT 25.4160 129.5620 25.4340 129.6000 ;
     END
   END xf[17]
   PIN xf[180]
@@ -3140,7 +3140,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 27.0720 129.5160 27.0960 129.6000 ;
+        RECT 26.0160 129.5160 26.0400 129.6000 ;
     END
   END xf[18]
   PIN xf[190]
@@ -3228,7 +3228,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 27.6480 129.5620 27.6660 129.6000 ;
+        RECT 26.5680 129.5620 26.5860 129.6000 ;
     END
   END xf[19]
   PIN xf[1]
@@ -3236,7 +3236,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 17.7840 129.5620 17.8020 129.6000 ;
+        RECT 16.6320 129.5620 16.6500 129.6000 ;
     END
   END xf[1]
   PIN xf[200]
@@ -3324,7 +3324,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 28.2240 129.5160 28.2480 129.6000 ;
+        RECT 27.0720 129.5160 27.0960 129.6000 ;
     END
   END xf[20]
   PIN xf[210]
@@ -3412,7 +3412,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 28.7280 129.5620 28.7460 129.6000 ;
+        RECT 27.6480 129.5620 27.6660 129.6000 ;
     END
   END xf[21]
   PIN xf[220]
@@ -3500,7 +3500,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 29.2800 129.5160 29.3040 129.6000 ;
+        RECT 28.2240 129.5160 28.2480 129.6000 ;
     END
   END xf[22]
   PIN xf[230]
@@ -3588,7 +3588,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 29.8080 129.5620 29.8260 129.6000 ;
+        RECT 28.7280 129.5620 28.7460 129.6000 ;
     END
   END xf[23]
   PIN xf[240]
@@ -3676,7 +3676,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 30.4320 129.5160 30.4560 129.6000 ;
+        RECT 29.2800 129.5160 29.3040 129.6000 ;
     END
   END xf[24]
   PIN xf[250]
@@ -3764,7 +3764,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 30.9600 129.5620 30.9780 129.6000 ;
+        RECT 29.8080 129.5620 29.8260 129.6000 ;
     END
   END xf[25]
   PIN xf[260]
@@ -3852,7 +3852,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 31.4880 129.5160 31.5120 129.6000 ;
+        RECT 30.4320 129.5160 30.4560 129.6000 ;
     END
   END xf[26]
   PIN xf[270]
@@ -3908,7 +3908,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 32.0400 129.5620 32.0580 129.6000 ;
+        RECT 30.9600 129.5620 30.9780 129.6000 ;
     END
   END xf[27]
   PIN xf[28]
@@ -3916,7 +3916,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 32.5440 129.5160 32.5680 129.6000 ;
+        RECT 31.4880 129.5160 31.5120 129.6000 ;
     END
   END xf[28]
   PIN xf[29]
@@ -3924,7 +3924,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 33.1200 129.5620 33.1380 129.6000 ;
+        RECT 32.0400 129.5620 32.0580 129.6000 ;
     END
   END xf[29]
   PIN xf[2]
@@ -3932,7 +3932,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 18.3360 129.5160 18.3600 129.6000 ;
+        RECT 17.1840 129.5160 17.2080 129.6000 ;
     END
   END xf[2]
   PIN xf[30]
@@ -3940,7 +3940,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 33.6960 129.5160 33.7200 129.6000 ;
+        RECT 32.5440 129.5160 32.5680 129.6000 ;
     END
   END xf[30]
   PIN xf[31]
@@ -3948,7 +3948,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 34.2000 129.5620 34.2180 129.6000 ;
+        RECT 33.1200 129.5620 33.1380 129.6000 ;
     END
   END xf[31]
   PIN xf[32]
@@ -3956,7 +3956,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 34.7520 129.5160 34.7760 129.6000 ;
+        RECT 33.6960 129.5160 33.7200 129.6000 ;
     END
   END xf[32]
   PIN xf[33]
@@ -3964,7 +3964,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 35.3520 129.5620 35.3700 129.6000 ;
+        RECT 34.2000 129.5620 34.2180 129.6000 ;
     END
   END xf[33]
   PIN xf[34]
@@ -3972,7 +3972,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 35.9040 129.5160 35.9280 129.6000 ;
+        RECT 34.7520 129.5160 34.7760 129.6000 ;
     END
   END xf[34]
   PIN xf[35]
@@ -3980,7 +3980,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 36.4320 129.5620 36.4500 129.6000 ;
+        RECT 35.3520 129.5620 35.3700 129.6000 ;
     END
   END xf[35]
   PIN xf[36]
@@ -3988,7 +3988,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 36.9600 129.5160 36.9840 129.6000 ;
+        RECT 35.9040 129.5160 35.9280 129.6000 ;
     END
   END xf[36]
   PIN xf[37]
@@ -3996,7 +3996,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 37.5120 129.5620 37.5300 129.6000 ;
+        RECT 36.4320 129.5620 36.4500 129.6000 ;
     END
   END xf[37]
   PIN xf[38]
@@ -4004,7 +4004,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 38.1120 129.5160 38.1360 129.6000 ;
+        RECT 36.9600 129.5160 36.9840 129.6000 ;
     END
   END xf[38]
   PIN xf[39]
@@ -4012,7 +4012,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 38.5920 129.5620 38.6100 129.6000 ;
+        RECT 37.5120 129.5620 37.5300 129.6000 ;
     END
   END xf[39]
   PIN xf[3]
@@ -4020,7 +4020,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 18.8640 129.5620 18.8820 129.6000 ;
+        RECT 17.7840 129.5620 17.8020 129.6000 ;
     END
   END xf[3]
   PIN xf[40]
@@ -4028,7 +4028,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 39.1680 129.5160 39.1920 129.6000 ;
+        RECT 38.1120 129.5160 38.1360 129.6000 ;
     END
   END xf[40]
   PIN xf[41]
@@ -4036,7 +4036,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 39.7440 129.5620 39.7620 129.6000 ;
+        RECT 38.5920 129.5620 38.6100 129.6000 ;
     END
   END xf[41]
   PIN xf[42]
@@ -4044,7 +4044,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 40.2240 129.5160 40.2480 129.6000 ;
+        RECT 39.1680 129.5160 39.1920 129.6000 ;
     END
   END xf[42]
   PIN xf[43]
@@ -4052,7 +4052,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 40.8240 129.5620 40.8420 129.6000 ;
+        RECT 39.7440 129.5620 39.7620 129.6000 ;
     END
   END xf[43]
   PIN xf[44]
@@ -4060,7 +4060,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 41.3760 129.5160 41.4000 129.6000 ;
+        RECT 40.2240 129.5160 40.2480 129.6000 ;
     END
   END xf[44]
   PIN xf[45]
@@ -4068,7 +4068,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 41.9040 129.5620 41.9220 129.6000 ;
+        RECT 40.8240 129.5620 40.8420 129.6000 ;
     END
   END xf[45]
   PIN xf[46]
@@ -4076,7 +4076,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 42.4320 129.5160 42.4560 129.6000 ;
+        RECT 41.3760 129.5160 41.4000 129.6000 ;
     END
   END xf[46]
   PIN xf[47]
@@ -4084,7 +4084,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 42.9840 129.5620 43.0020 129.6000 ;
+        RECT 41.9040 129.5620 41.9220 129.6000 ;
     END
   END xf[47]
   PIN xf[48]
@@ -4092,7 +4092,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 43.5840 129.5160 43.6080 129.6000 ;
+        RECT 42.4320 129.5160 42.4560 129.6000 ;
     END
   END xf[48]
   PIN xf[49]
@@ -4100,7 +4100,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 44.1360 129.5620 44.1540 129.6000 ;
+        RECT 42.9840 129.5620 43.0020 129.6000 ;
     END
   END xf[49]
   PIN xf[4]
@@ -4108,7 +4108,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 19.3920 129.5160 19.4160 129.6000 ;
+        RECT 18.3360 129.5160 18.3600 129.6000 ;
     END
   END xf[4]
   PIN xf[50]
@@ -4116,7 +4116,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 44.6400 129.5160 44.6640 129.6000 ;
+        RECT 43.5840 129.5160 43.6080 129.6000 ;
     END
   END xf[50]
   PIN xf[51]
@@ -4124,7 +4124,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 45.2160 129.5620 45.2340 129.6000 ;
+        RECT 44.1360 129.5620 44.1540 129.6000 ;
     END
   END xf[51]
   PIN xf[52]
@@ -4132,7 +4132,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 45.7920 129.5160 45.8160 129.6000 ;
+        RECT 44.6400 129.5160 44.6640 129.6000 ;
     END
   END xf[52]
   PIN xf[53]
@@ -4140,7 +4140,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 46.2960 129.5620 46.3140 129.6000 ;
+        RECT 45.2160 129.5620 45.2340 129.6000 ;
     END
   END xf[53]
   PIN xf[54]
@@ -4148,7 +4148,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 46.8480 129.5160 46.8720 129.6000 ;
+        RECT 45.7920 129.5160 45.8160 129.6000 ;
     END
   END xf[54]
   PIN xf[55]
@@ -4156,7 +4156,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 47.3760 129.5620 47.3940 129.6000 ;
+        RECT 46.2960 129.5620 46.3140 129.6000 ;
     END
   END xf[55]
   PIN xf[56]
@@ -4164,7 +4164,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 48.0000 129.5160 48.0240 129.6000 ;
+        RECT 46.8480 129.5160 46.8720 129.6000 ;
     END
   END xf[56]
   PIN xf[57]
@@ -4172,7 +4172,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 48.5280 129.5620 48.5460 129.6000 ;
+        RECT 47.3760 129.5620 47.3940 129.6000 ;
     END
   END xf[57]
   PIN xf[58]
@@ -4180,7 +4180,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 49.0560 129.5160 49.0800 129.6000 ;
+        RECT 48.0000 129.5160 48.0240 129.6000 ;
     END
   END xf[58]
   PIN xf[59]
@@ -4188,7 +4188,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 49.6080 129.5620 49.6260 129.6000 ;
+        RECT 48.5280 129.5620 48.5460 129.6000 ;
     END
   END xf[59]
   PIN xf[5]
@@ -4196,7 +4196,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 19.9440 129.5620 19.9620 129.6000 ;
+        RECT 18.8640 129.5620 18.8820 129.6000 ;
     END
   END xf[5]
   PIN xf[60]
@@ -4204,7 +4204,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 50.1120 129.5160 50.1360 129.6000 ;
+        RECT 49.0560 129.5160 49.0800 129.6000 ;
     END
   END xf[60]
   PIN xf[61]
@@ -4212,7 +4212,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 50.6880 129.5620 50.7060 129.6000 ;
+        RECT 49.6080 129.5620 49.6260 129.6000 ;
     END
   END xf[61]
   PIN xf[62]
@@ -4220,7 +4220,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 51.2640 129.5160 51.2880 129.6000 ;
+        RECT 50.1120 129.5160 50.1360 129.6000 ;
     END
   END xf[62]
   PIN xf[63]
@@ -4228,7 +4228,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 51.7680 129.5620 51.7860 129.6000 ;
+        RECT 50.6880 129.5620 50.7060 129.6000 ;
     END
   END xf[63]
   PIN xf[64]
@@ -4236,7 +4236,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 52.3200 129.5160 52.3440 129.6000 ;
+        RECT 51.2640 129.5160 51.2880 129.6000 ;
     END
   END xf[64]
   PIN xf[65]
@@ -4244,7 +4244,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 52.9200 129.5620 52.9380 129.6000 ;
+        RECT 51.7680 129.5620 51.7860 129.6000 ;
     END
   END xf[65]
   PIN xf[66]
@@ -4252,7 +4252,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 53.4720 129.5160 53.4960 129.6000 ;
+        RECT 52.3200 129.5160 52.3440 129.6000 ;
     END
   END xf[66]
   PIN xf[67]
@@ -4260,7 +4260,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 54.0000 129.5620 54.0180 129.6000 ;
+        RECT 52.9200 129.5620 52.9380 129.6000 ;
     END
   END xf[67]
   PIN xf[68]
@@ -4268,7 +4268,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 54.5280 129.5160 54.5520 129.6000 ;
+        RECT 53.4720 129.5160 53.4960 129.6000 ;
     END
   END xf[68]
   PIN xf[69]
@@ -4276,7 +4276,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 55.0800 129.5620 55.0980 129.6000 ;
+        RECT 54.0000 129.5620 54.0180 129.6000 ;
     END
   END xf[69]
   PIN xf[6]
@@ -4284,7 +4284,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 20.5440 129.5160 20.5680 129.6000 ;
+        RECT 19.3920 129.5160 19.4160 129.6000 ;
     END
   END xf[6]
   PIN xf[70]
@@ -4292,7 +4292,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 55.6800 129.5160 55.7040 129.6000 ;
+        RECT 54.5280 129.5160 54.5520 129.6000 ;
     END
   END xf[70]
   PIN xf[71]
@@ -4300,7 +4300,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 56.1600 129.5620 56.1780 129.6000 ;
+        RECT 55.0800 129.5620 55.0980 129.6000 ;
     END
   END xf[71]
   PIN xf[72]
@@ -4308,7 +4308,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 56.7360 129.5160 56.7600 129.6000 ;
+        RECT 55.6800 129.5160 55.7040 129.6000 ;
     END
   END xf[72]
   PIN xf[73]
@@ -4316,7 +4316,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 57.3120 129.5620 57.3300 129.6000 ;
+        RECT 56.1600 129.5620 56.1780 129.6000 ;
     END
   END xf[73]
   PIN xf[74]
@@ -4324,7 +4324,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 57.7920 129.5160 57.8160 129.6000 ;
+        RECT 56.7360 129.5160 56.7600 129.6000 ;
     END
   END xf[74]
   PIN xf[75]
@@ -4332,7 +4332,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 58.3920 129.5620 58.4100 129.6000 ;
+        RECT 57.3120 129.5620 57.3300 129.6000 ;
     END
   END xf[75]
   PIN xf[76]
@@ -4340,7 +4340,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 58.9440 129.5160 58.9680 129.6000 ;
+        RECT 57.7920 129.5160 57.8160 129.6000 ;
     END
   END xf[76]
   PIN xf[77]
@@ -4348,7 +4348,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 59.4720 129.5620 59.4900 129.6000 ;
+        RECT 58.3920 129.5620 58.4100 129.6000 ;
     END
   END xf[77]
   PIN xf[78]
@@ -4356,7 +4356,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 60.0000 129.5160 60.0240 129.6000 ;
+        RECT 58.9440 129.5160 58.9680 129.6000 ;
     END
   END xf[78]
   PIN xf[79]
@@ -4364,7 +4364,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 60.5520 129.5620 60.5700 129.6000 ;
+        RECT 59.4720 129.5620 59.4900 129.6000 ;
     END
   END xf[79]
   PIN xf[7]
@@ -4372,7 +4372,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 21.0240 129.5620 21.0420 129.6000 ;
+        RECT 19.9440 129.5620 19.9620 129.6000 ;
     END
   END xf[7]
   PIN xf[80]
@@ -4380,7 +4380,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 61.1520 129.5160 61.1760 129.6000 ;
+        RECT 60.0000 129.5160 60.0240 129.6000 ;
     END
   END xf[80]
   PIN xf[81]
@@ -4388,7 +4388,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 61.7040 129.5620 61.7220 129.6000 ;
+        RECT 60.5520 129.5620 60.5700 129.6000 ;
     END
   END xf[81]
   PIN xf[82]
@@ -4396,7 +4396,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 62.2080 129.5160 62.2320 129.6000 ;
+        RECT 61.1520 129.5160 61.1760 129.6000 ;
     END
   END xf[82]
   PIN xf[83]
@@ -4404,7 +4404,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 62.7840 129.5620 62.8020 129.6000 ;
+        RECT 61.7040 129.5620 61.7220 129.6000 ;
     END
   END xf[83]
   PIN xf[84]
@@ -4412,7 +4412,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 63.3600 129.5160 63.3840 129.6000 ;
+        RECT 62.2080 129.5160 62.2320 129.6000 ;
     END
   END xf[84]
   PIN xf[85]
@@ -4420,7 +4420,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 63.8640 129.5620 63.8820 129.6000 ;
+        RECT 62.7840 129.5620 62.8020 129.6000 ;
     END
   END xf[85]
   PIN xf[86]
@@ -4428,7 +4428,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 64.4160 129.5160 64.4400 129.6000 ;
+        RECT 63.3600 129.5160 63.3840 129.6000 ;
     END
   END xf[86]
   PIN xf[87]
@@ -4436,7 +4436,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 64.9440 129.5620 64.9620 129.6000 ;
+        RECT 63.8640 129.5620 63.8820 129.6000 ;
     END
   END xf[87]
   PIN xf[88]
@@ -4444,7 +4444,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 65.5680 129.5160 65.5920 129.6000 ;
+        RECT 64.4160 129.5160 64.4400 129.6000 ;
     END
   END xf[88]
   PIN xf[89]
@@ -4452,7 +4452,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 66.0960 129.5620 66.1140 129.6000 ;
+        RECT 64.9440 129.5620 64.9620 129.6000 ;
     END
   END xf[89]
   PIN xf[8]
@@ -4460,7 +4460,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 21.6000 129.5160 21.6240 129.6000 ;
+        RECT 20.5440 129.5160 20.5680 129.6000 ;
     END
   END xf[8]
   PIN xf[90]
@@ -4468,7 +4468,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 66.6240 129.5160 66.6480 129.6000 ;
+        RECT 65.5680 129.5160 65.5920 129.6000 ;
     END
   END xf[90]
   PIN xf[91]
@@ -4476,7 +4476,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 67.1760 129.5620 67.1940 129.6000 ;
+        RECT 66.0960 129.5620 66.1140 129.6000 ;
     END
   END xf[91]
   PIN xf[92]
@@ -4484,7 +4484,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 67.6800 129.5160 67.7040 129.6000 ;
+        RECT 66.6240 129.5160 66.6480 129.6000 ;
     END
   END xf[92]
   PIN xf[93]
@@ -4492,7 +4492,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 68.2560 129.5620 68.2740 129.6000 ;
+        RECT 67.1760 129.5620 67.1940 129.6000 ;
     END
   END xf[93]
   PIN xf[94]
@@ -4500,7 +4500,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 68.8320 129.5160 68.8560 129.6000 ;
+        RECT 67.6800 129.5160 67.7040 129.6000 ;
     END
   END xf[94]
   PIN xf[95]
@@ -4508,7 +4508,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 69.3360 129.5620 69.3540 129.6000 ;
+        RECT 68.2560 129.5620 68.2740 129.6000 ;
     END
   END xf[95]
   PIN xf[96]
@@ -4516,7 +4516,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 69.8880 129.5160 69.9120 129.6000 ;
+        RECT 68.8320 129.5160 68.8560 129.6000 ;
     END
   END xf[96]
   PIN xf[97]
@@ -4524,7 +4524,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 70.4880 129.5620 70.5060 129.6000 ;
+        RECT 69.3360 129.5620 69.3540 129.6000 ;
     END
   END xf[97]
   PIN xf[98]
@@ -4532,7 +4532,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 71.0400 129.5160 71.0640 129.6000 ;
+        RECT 69.8880 129.5160 69.9120 129.6000 ;
     END
   END xf[98]
   PIN xf[99]
@@ -4540,7 +4540,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 71.5680 129.5620 71.5860 129.6000 ;
+        RECT 70.4880 129.5620 70.5060 129.6000 ;
     END
   END xf[99]
   PIN xf[9]
@@ -4548,7 +4548,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 22.1760 129.5620 22.1940 129.6000 ;
+        RECT 21.0240 129.5620 21.0420 129.6000 ;
     END
   END xf[9]
   PIN xf_s
@@ -4556,7 +4556,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 16.6320 129.5620 16.6500 129.6000 ;
+        RECT 15.5520 129.5620 15.5700 129.6000 ;
     END
   END xf_s
   PIN xf_v
@@ -4564,7 +4564,7 @@ MACRO ot_s81sl_vq
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 16.1280 129.5160 16.1520 129.6000 ;
+        RECT 14.9760 129.5160 15.0000 129.6000 ;
     END
   END xf_v
   PIN y[0]
