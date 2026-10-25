@@ -133,13 +133,22 @@ module ot_hgi_argmax18_value_m #(
     // HBM-CORES 2026-10-25 (GEOM-REVIEW-2 argmax_r2): bvalid[k] gated every bk/bi/bv_bits enable of lane k through one
     // BUFx10 net (113 loads, FF slew 460 ps).  The source REGISTER is replicated per field group (bk / bi / bv_bits),
     // each copy <= 33 loads, kept so synthesis cannot merge them; identical next state -> cycle-exact, 0 cycles.
-    (* keep = 1 *) reg [LP-1:0] bvalid_i;
-    (* keep = 1 *) reg [LP-1:0] bvalid_b;
+    // 10-25 05:25: (* keep *) on the copies did not survive flat Yosys (argmax_s1 netlist: bvalid_i/_b merged back
+    // into bvalid).  The copies are keep_hierarchy ot_hgi_keep_dffe instances (same enable / next state as bvalid).
+    wire [LP-1:0] bvalid_i, bvalid_b;
+    wire [LP-1:0] bv_en, bv_d;
+    genvar gk;
+    generate for (gk = 0; gk < LP; gk = gk + 1) begin : g_bvrep
+        assign bv_en[gk] = e_v & (e_m[gk] | e_last);
+        assign bv_d[gk]  = e_m[gk] & ~e_last;
+        (* keep = 1, keep_hierarchy = 1 *) ot_hgi_keep_dffe u_bvalid_i (.clk(clk), .rst_n(rst_n), .en(bv_en[gk]), .d(bv_d[gk]), .q(bvalid_i[gk]));
+        (* keep = 1, keep_hierarchy = 1 *) ot_hgi_keep_dffe u_bvalid_b (.clk(clk), .rst_n(rst_n), .en(bv_en[gk]), .d(bv_d[gk]), .q(bvalid_b[gk]));
+    end endgenerate
     reg          fin;
     reg          nan_row, nan_acc;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            bvalid <= 0; bvalid_i <= 0; bvalid_b <= 0; fin <= 1'b0; nan_acc <= 1'b0; nan_row <= 1'b0;
+            bvalid <= 0; fin <= 1'b0; nan_acc <= 1'b0; nan_row <= 1'b0;
         end else begin
             fin <= e_v & e_last;
             if (e_v) begin
@@ -150,8 +159,8 @@ module ot_hgi_argmax18_value_m #(
                 end
                 // a new row starts on the beat after a last beat: lanes restart
                 for (k = 0; k < LP; k = k + 1)
-                    if (e_m[k]) begin bvalid[k] <= ~e_last; bvalid_i[k] <= ~e_last; bvalid_b[k] <= ~e_last; end
-                    else if (e_last) begin bvalid[k] <= 1'b0; bvalid_i[k] <= 1'b0; bvalid_b[k] <= 1'b0; end
+                    if (e_m[k]) bvalid[k] <= ~e_last;
+                    else if (e_last) bvalid[k] <= 1'b0;
                 nan_acc <= e_last ? 1'b0 : (nan_acc | (|e_nan));
                 nan_row <= nan_acc | (|e_nan);
             end
@@ -213,4 +222,9 @@ module ot_hgi_argmax18_value_m #(
             fresh <= e_last;
         end
     end
+endmodule
+
+// HBM-CORES 2026-10-25: a register copy flat synthesis cannot merge (keep_hierarchy), for fan-out replication.
+(* keep_hierarchy = 1 *) module ot_hgi_keep_dffe (input wire clk, input wire rst_n, input wire en, input wire d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else if (en) q <= d;
 endmodule
