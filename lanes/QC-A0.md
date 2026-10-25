@@ -398,3 +398,11 @@ HARD CORES (unchanged by the re-plan; kits from qc-cores generator): su8_rst3 SI
    Claude sub-agent), s8x_vmr (Codex leaf balance, GRT pair 45-61 ps), s8x_btab / s8x_prog (south pin-register band congestion: Codex
    south4 probes), qfd_qc_su_lane_e / _w (new: kit + GEOM first), A0 qfd_tile_nk_a0c / nl_a0c (v8c: NK k2rs selected, reset reach
    codex/a0-reset-1025; NL FAIL l3rs, l3rsp/l3rsvm live intel1).
+- 2026-10-25 03:12 PDT QC: sub-agents LAUNCHED (3): (a) rp1-clock: qfd_dv_s8_crh_rp1 with Codex clock_leaf_balance.tcl, 2 variants, prototype pair skew before route
+  (branch claude/qc-rp1-clock-1025, data epyc1 qc-cores); (b) meth2: per-bit ft reach + stations in channels, ONE combined regen on top of
+  codex/qc-boundaries-1025@16220f781 (S8 fix + native59 + HC width) -> claude/qc-meth2-1025, READY to extend qc-meth for dec. 17; (c) su_lane:
+  new hard cores qfd_qc_su_lane_e/w wrapper + kit + GEOM REQ + 2-variant prototype (claude/qc-sulane-1025).
+- 2026-10-25 03:12 PDT QC: A0 v8c GRT probes epyc3 qc/a0v8c_e3: STOPPED k1rs (not selected) + nl_l3rs (Codex review FAIL) by exact container, data deleted, logs in
+  logs_failed/; KEPT grt_nk_k2rs (selected NK recipe; container ot-qca0-grt-grt_nk_k2rs, extra iteration 13/30 at 03:00 = initial overflow > 0).
+  SU lockup (S8-SU-PROG-ALIGN): fix af1bbef0c (+3 SU start edges) adopted by Codex in codex/qc-bind-1025 / qc-boundaries-1025 (fixed-SU bind 0
+  errors); reaches main through meth2. su_c partitions re-close with the soft-type kits after the re-plan.
