@@ -440,7 +440,7 @@ for rp in range(RP):
         P(f"tW{rp}b{j}", "hd_tile", X_SP - (j + 1) * TW, yb, "R0")         # back: W -> E
 
 # =================================================================================================== seeds
-TWIN = (SLOT_E * 2 + G, SLOT_E * 2 + G + 300.0)          # tile chain window (type frame y), upper third of the tile
+TWIN = (SLOT_E + G, SLOT_E + G + 300.0)   # tile chain window (type frame y): 10-24 lowered from the upper third (700..1000) to 354..654 = the A centre row channel + top A row (hd_tile preview review: x_q -> A x pins 600-700 um)
 seed("hd_tile", "o", "E", TWIN[0], hi=TWIN[1])
 seed("hd_tile", "i", "W", TWIN[0], hi=TWIN[1])
 seed("hd_turn_a", "t_i", "W", TWIN[0], hi=TWIN[1])
