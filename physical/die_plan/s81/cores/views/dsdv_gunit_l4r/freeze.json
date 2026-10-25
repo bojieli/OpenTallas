@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "dsdv_gunit_l4r_c",
+ "module": "dsdv_gunit_l4r",
+ "plan_type": "gunit__t1",
+ "outline_um": [
+  129.6,
+  129.6
+ ],
+ "ref_tile": "physical/ref_tile/dsdv_gunit_l4r",
+ "spec": "physical/ref_tile/dsdv_gunit_l4r/spec.json",
+ "spec_sha256": "c2225879c912182f3b905bf5d98014bd63ed14ddb58e80c39a7e8018e33bba12",
+ "pins_file": "inputs/core_pins/dsdv_gunit_l4r.json",
+ "pins_sha256": "25c9b48ca7c24c0eb59c63dc8d42ac62b4261217100965ed37c291b07176c418",
+ "pins": 101,
+ "plan_lef": "physical/ref_tile/dsdv_gunit_l4r/views/dsdv_gunit_l4r/dsdv_gunit_l4r.lef",
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "c474e737fcd713a27a13152d3b745188af59eec99ac759faae4bffa807da449d",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "gates": [
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "c111758856",
+ "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
+ "face_guard_sha256": "ae518926e739eac911ca6f61addb6800a539691a7479e048ecfcb7a80812a055",
+ "signoff_sha256": "1f285296bd3756f7bf626e58917472be05fc090bd492e35a09f3e50e3a8229d6",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "39e10bd5ec031194"
+}
