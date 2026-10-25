@@ -1,0 +1,383 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+OT_RC_CAL layer RC scaled: R h0.8 v0.8, C h0.9 v0.9 (estimates only; RCX unaffected)
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       15
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   qfd_dv_s8x_vmr
+Die area:                 ( 0 0 ) ( 259200 276480 )
+Number of track patterns: 26
+Number of DEF vias:       0
+Number of components:     20191
+Number of terminals:      1511
+Number of snets:          2
+Number of nets:           16036
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 187.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 333862.
+[INFO DRT-0033] V1 shape region query size = 3959639.
+[INFO DRT-0033] M2 shape region query size = 47295.
+[INFO DRT-0033] V2 shape region query size = 98946.
+[INFO DRT-0033] M3 shape region query size = 98948.
+[INFO DRT-0033] V3 shape region query size = 65964.
+[INFO DRT-0033] M4 shape region query size = 83086.
+[INFO DRT-0033] V4 shape region query size = 95244.
+[INFO DRT-0033] M5 shape region query size = 48907.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1767 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 186 unique inst patterns.
+[INFO DRT-0084]   Complete 9951 groups.
+#scanned instances     = 20191
+#unique  instances     = 187
+#stdCellGenAp          = 4894
+#stdCellValidPlanarAp  = 24
+#stdCellValidViaAp     = 4195
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 44763
+#instTermValidViaApCnt = 0
+#macroGenAp            = 829
+#macroValidPlanarAp    = 829
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:08:59, elapsed time = 00:01:08, memory = 447.82 (MB), peak = 586.59 (MB)
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_MSCTS_CORR /work/mscts_corr.tcl taps  E {-22.9 -15.6} SE {-3.0 -1.6} SW {-5.1 -3.6} W0 {-15.9 -10.9} W1 {6.4 7.4}  macros  g_bank*1*.u_m {7.2 8.0} g_bank*0*.u_m {-15.9 -10.8} 
+OT_MSCTS_ASSIGN_CORR ff 42 arcs
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_MSCTS_TAP hold_ff TT E n 256 mean 301.8 min 299.1 max 303.9
+OT_MSCTS_TAP hold_ff TT SE n 957 mean 300.5 min 294.6 max 304.9
+OT_MSCTS_TAP hold_ff TT SW n 1066 mean 291.0 min 288.0 max 294.5
+OT_MSCTS_TAP hold_ff TT W0 n 489 mean 290.7 min 285.3 max 293.6
+OT_MSCTS_TAP hold_ff TT W1 n 943 mean 309.8 min 302.9 max 321.1
+OT_MSCTS_WINDOW hold_ff TT tap-mean window 19.1 ps (limit 20) PASS
+OT_MSCTS_MACRO hold_ff TT g_bank\[1\].u_m clk 287.7 interface regs n 543 mean 306.4 (299.1..311.9) diff -18.6
+OT_MSCTS_MACRO hold_ff TT g_bank\[0\].u_m clk 290.0 interface regs n 543 mean 293.5 (285.3..307.1) diff -3.5
+OT_MSCTS_TAP hold_ff FF E n 256 mean 295.5 min 293.2 max 297.6
+OT_MSCTS_TAP hold_ff FF SE n 957 mean 293.1 min 288.4 max 296.8
+OT_MSCTS_TAP hold_ff FF SW n 1066 mean 283.7 min 280.9 max 286.8
+OT_MSCTS_TAP hold_ff FF W0 n 489 mean 283.8 min 279.3 max 286.1
+OT_MSCTS_TAP hold_ff FF W1 n 943 mean 302.1 min 296.2 max 312.0
+OT_MSCTS_WINDOW hold_ff FF tap-mean window 18.4 ps (limit 20) PASS
+OT_MSCTS_MACRO hold_ff FF g_bank\[1\].u_m clk 285.3 interface regs n 543 mean 299.1 (293.2..303.7) diff -13.8
+OT_MSCTS_MACRO hold_ff FF g_bank\[0\].u_m clk 287.4 interface regs n 543 mean 286.7 (279.3..299.7) diff +0.6
+S5_HOLD_FF_BEFORE -59.03 ep 397 (vclk I 389.59, margin 15)
+[INFO RSZ-0046] Found 1434 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -59.035 | -11141.122 | q[90]
+       10 |       0 |      27 |            0 |    +0.0% | -58.218 | -10829.249 | q[73]
+       20 |       0 |      57 |            0 |    +0.0% | -57.692 | -10484.481 | q[167]
+       30 |       0 |      87 |            0 |    +0.0% | -57.404 | -10136.805 | q[67]
+       40 |       0 |     117 |            0 |    +0.0% | -57.025 | -9795.176 | q[131]
+       50 |       0 |     147 |            0 |    +0.0% | -56.542 | -9453.625 | q[86]
+       60 |       0 |     177 |            0 |    +0.0% | -56.149 | -9107.919 | q[94]
+       70 |       0 |     207 |            0 |    +0.1% | -55.642 | -8765.754 | q[133]
+       80 |       0 |     237 |            0 |    +0.1% | -53.750 | -8425.671 | q[92]
+       90 |       0 |     267 |            0 |    +0.1% | -39.365 | -8080.161 | q[195]
+      100 |       0 |     297 |            0 |    +0.1% | -38.507 | -7733.982 | q[220]
+      110 |       0 |     327 |            0 |    +0.1% | -37.997 | -7391.292 | q[207]
+      120 |       0 |     357 |            0 |    +0.1% | -37.316 | -7044.722 | q[250]
+      130 |       0 |     387 |            0 |    +0.1% | -36.904 | -6701.427 | q[254]
+      140 |       0 |     417 |            0 |    +0.1% | -36.375 | -6355.224 | q[248]
+      150 |       0 |     447 |            0 |    +0.1% | -35.665 | -6008.476 | q[53]
+      160 |       0 |     477 |            0 |    +0.1% | -35.003 | -5663.011 | q[56]
+      170 |       0 |     507 |            0 |    +0.1% | -34.453 | -5318.304 | q[12]
+      180 |       0 |     537 |            0 |    +0.1% | -34.183 | -4976.671 | q[177]
+      190 |       0 |     567 |            0 |    +0.2% | -33.841 | -4637.290 | q[30]
+      200 |       0 |     597 |            0 |    +0.2% | -33.227 | -4301.807 | q[31]
+      210 |       0 |     627 |            0 |    +0.2% | -32.802 | -3971.625 | q[191]
+      220 |       0 |     657 |            0 |    +0.2% | -32.321 | -3646.167 | q[114]
+      230 |       0 |     687 |            0 |    +0.2% | -32.043 | -3323.792 | q[239]
+      240 |       0 |     717 |            0 |    +0.2% | -31.500 | -3005.664 | q[101]
+      250 |       0 |     747 |            0 |    +0.2% | -30.925 | -2693.575 | q[179]
+      260 |       0 |     775 |            0 |    +0.2% | -24.845 | -2415.438 | q[71]
+      270 |       0 |     795 |            0 |    +0.2% | -24.845 | -2324.255 | q[71]
+      280 |       0 |     815 |            0 |    +0.2% | -24.845 | -2268.048 | q[71]
+      290 |       0 |     835 |            0 |    +0.2% | -24.845 | -2224.537 | q[71]
+      300 |       0 |     855 |            0 |    +0.2% | -24.845 | -2188.854 | q[71]
+      310 |       0 |     875 |            0 |    +0.2% | -24.845 | -2158.816 | q[71]
+      320 |       0 |     895 |            0 |    +0.2% | -24.845 | -2130.790 | q[71]
+      330 |       0 |     913 |            0 |    +0.2% | -24.845 | -2109.939 | q[71]
+      340 |       0 |     933 |            0 |    +0.3% | -24.845 | -2090.089 | q[71]
+      350 |       0 |     953 |            0 |    +0.3% | -24.845 | -2073.937 | q[71]
+      360 |       0 |     973 |            0 |    +0.3% | -24.845 | -2061.795 | q[71]
+      370 |       0 |     993 |            0 |    +0.3% | -24.845 | -2051.951 | q[71]
+      380 |       0 |    1013 |            0 |    +0.3% | -24.845 | -2044.898 | q[71]
+      390 |       0 |    1033 |            0 |    +0.3% | -24.845 | -2040.943 | q[71]
+      400 |       0 |    1053 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      410 |       0 |    1073 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      420 |       0 |    1093 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      430 |       0 |    1113 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      440 |       0 |    1133 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      450 |       0 |    1153 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      460 |       0 |    1173 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      470 |       0 |    1193 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      480 |       0 |    1213 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      490 |       0 |    1233 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      500 |       0 |    1253 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      510 |       0 |    1273 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      520 |       0 |    1293 |            0 |    +0.3% | -24.845 | -2040.123 | q[71]
+      530 |       0 |    1313 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      540 |       0 |    1333 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      550 |       0 |    1353 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      560 |       0 |    1373 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      570 |       0 |    1392 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      580 |       0 |    1409 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      590 |       0 |    1426 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      600 |       0 |    1441 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      610 |       0 |    1457 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      620 |       0 |    1471 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      630 |       0 |    1488 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      640 |       0 |    1503 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      650 |       0 |    1515 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      660 |       0 |    1527 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      670 |       0 |    1538 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      680 |       0 |    1549 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      690 |       0 |    1559 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      700 |       0 |    1569 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      710 |       0 |    1581 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      720 |       0 |    1591 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      730 |       0 |    1601 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      740 |       0 |    1611 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      750 |       0 |    1621 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      760 |       0 |    1631 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      770 |       0 |    1641 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      780 |       0 |    1651 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      790 |       0 |    1661 |            0 |    +0.4% | -24.845 | -2040.123 | q[71]
+      800 |       0 |    1671 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      810 |       0 |    1681 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      820 |       0 |    1691 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      830 |       0 |    1701 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      840 |       0 |    1711 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      850 |       0 |    1723 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      860 |       0 |    1733 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      870 |       0 |    1744 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      880 |       0 |    1754 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      890 |       0 |    1764 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      900 |       0 |    1774 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      910 |       0 |    1784 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      920 |       0 |    1794 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      930 |       0 |    1804 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      940 |       0 |    1814 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      950 |       0 |    1824 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      960 |       0 |    1834 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      970 |       0 |    1845 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      980 |       0 |    1855 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+      990 |       0 |    1866 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1000 |       0 |    1876 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1010 |       0 |    1886 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1020 |       0 |    1896 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1030 |       0 |    1906 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1040 |       0 |    1916 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1050 |       0 |    1926 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1060 |       0 |    1937 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1070 |       0 |    1947 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1080 |       0 |    1957 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1090 |       0 |    1967 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1100 |       0 |    1977 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1110 |       0 |    1987 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1120 |       0 |    1997 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1130 |       0 |    2007 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1140 |       0 |    2017 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1150 |       0 |    2027 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1160 |       0 |    2037 |            0 |    +0.5% | -24.845 | -2040.123 | q[71]
+     1170 |       0 |    2047 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1180 |       0 |    2057 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1190 |       0 |    2067 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1200 |       0 |    2077 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1210 |       0 |    2087 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1220 |       0 |    2097 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1230 |       0 |    2107 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1240 |       0 |    2117 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1250 |       0 |    2127 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1260 |       0 |    2137 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1270 |       0 |    2147 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1280 |       0 |    2157 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1290 |       0 |    2167 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1300 |       0 |    2177 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1310 |       0 |    2187 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1320 |       0 |    2197 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1330 |       0 |    2207 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1340 |       0 |    2217 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1350 |       0 |    2227 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1360 |       0 |    2237 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1370 |       0 |    2247 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1380 |       0 |    2257 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1390 |       0 |    2267 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1400 |       0 |    2277 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1410 |       0 |    2287 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1420 |       0 |    2297 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1430 |       0 |    2307 |            0 |    +0.6% | -24.845 | -2040.123 | q[71]
+     1440 |       0 |    2331 |            0 |    +0.6% | -24.132 | -1917.783 | q[70]
+     1450 |       0 |    2371 |            0 |    +0.6% | -23.723 | -1677.985 | q[139]
+     1460 |       0 |    2411 |            0 |    +0.7% | -23.242 | -1443.434 | q[137]
+     1470 |       0 |    2451 |            0 |    +0.7% | -22.774 | -1212.889 | q[84]
+     1480 |       0 |    2491 |            0 |    +0.7% | -22.395 | -986.745 | q[159]
+     1490 |       0 |    2531 |            0 |    +0.7% | -21.949 | -765.654 | q[145]
+     1500 |       0 |    2571 |            0 |    +0.7% | -21.489 | -547.817 | q[165]
+     1510 |       0 |    2609 |            0 |    +0.7% | -20.024 | -337.615 | q[133]
+     1520 |       0 |    2634 |            0 |    +0.7% |  -5.131 | -209.262 | q[198]
+     1530 |       0 |    2654 |            0 |    +0.7% |  -4.543 | -160.352 | q[231]
+     1540 |       0 |    2674 |            0 |    +0.7% |  -3.782 | -118.600 | q[244]
+     1550 |       0 |    2694 |            0 |    +0.7% |  -3.152 | -83.656 | q[203]
+     1560 |       0 |    2714 |            0 |    +0.7% |  -2.676 | -54.747 | q[225]
+     1570 |       0 |    2734 |            0 |    +0.7% |  -1.862 | -30.765 | q[253]
+     1580 |       0 |    2754 |            0 |    +0.7% |  -1.095 | -14.220 | q[194]
+     1590 |       0 |    2774 |            0 |    +0.7% |  -0.577 |  -4.903 | q[117]
+     1600 |       0 |    2794 |            0 |    +0.8% |  -0.167 |  -0.426 | q[47]
+     1610 |       0 |    2814 |            0 |    +0.8% |   0.242 |   0.000 | q[17]
+     1620 |       0 |    2834 |            0 |    +0.8% |   0.490 |   0.000 | q[56]
+     1630 |       0 |    2854 |            0 |    +0.8% |   0.820 |   0.000 | q[30]
+     1640 |       0 |    2874 |            0 |    +0.8% |   1.442 |   0.000 | q[115]
+     1650 |       0 |    2894 |            0 |    +0.8% |   1.896 |   0.000 | q[19]
+     1660 |       0 |    2913 |            0 |    +0.8% |   2.516 |   0.000 | q[103]
+     1670 |       0 |    2930 |            0 |    +0.8% |   2.972 |   0.000 | q[33]
+     1680 |       0 |    2945 |            0 |    +0.8% |   3.280 |   0.000 | q[96]
+     1690 |       0 |    2956 |            0 |    +0.8% |   5.109 |   0.000 | q[99]
+     1700 |       0 |    2966 |            0 |    +0.8% |  12.608 |   0.000 | l_sud[233]$_DFF_P_/D
+     1710 |       0 |    2976 |            0 |    +0.8% |  14.670 |   0.000 | g_bank[0].u_m/wd_in[8]
+    final |       0 |    2980 |            0 |    +0.8% |  15.004 |   0.000 | q[127]
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 2980 hold buffers.
+[INFO RSZ-0506] Runtime: 290.22s
+[INFO DPL-0006] Core area: 67109.99 um^2
+[INFO DPL-0007] Movable instances area: 2416.26 um^2
+[INFO DPL-0008] Fixed instances area within core: 24803.78 um^2
+[INFO DPL-0009] Utilization: 40.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 23169 cells
+[INFO DPL-0393]   height 262 row(s): 2 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |      15906 |      2610 |     11708
+        1 |      14384 |      1808 |      9216
+        2 |      11335 |      1619 |      8588
+        3 |       8928 |      1498 |      7056
+        4 |       7392 |      1319 |      5978
+        5 |       6194 |      1189 |      4975
+        6 |       5562 |      1065 |      4414
+        7 |       4671 |       963 |      3669
+        8 |       3967 |       851 |      3101
+        9 |       3531 |       746 |      2743
+       10 |       3095 |       679 |      2334
+       20 |        695 |       210 |       485
+       30 |        204 |        57 |       147
+       40 |        100 |        18 |        82
+       50 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 50.
+[INFO DPL-0500] Runtime: 8.56s
+Placement Analysis
+---------------------------------
+total displacement       6777.1 u
+average displacement        0.3 u
+max displacement           10.5 u
+original HPWL          216709.8 u
+legalized HPWL         222099.4 u
+delta HPWL                    2 %
+
+S5_HOLD_FF_AFTER 13.33 ep 0 hold buffers 2580
+S5_GATE PASS

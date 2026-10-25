@@ -299,6 +299,81 @@ proc ot_ms_macro_if {iname} {
   return $cks
 }
 
+# ---------------------------------------------------------------------------------------------------------------------
+# RCX CORRECTION (two-pass, OT_MSCTS_CORR): the GRT estimate of a long trunk is off by a per-path amount that no global RC
+# scale removes (qfd_dv_s8x_vmr_cqb s5 pass 1: E trunk RCX -22.9 ps TT vs estimate, W1 +6.4: the wire C of a 41 um stage
+# was 3.5 fF routed vs 6.8 estimated on the open east edge, 7.6 vs 6.3 in the congested west strip).  The trunk geometry
+# is fixed by the spec, so the routed-minus-estimate arrival per tap (and per macro leaf) measured on a pass-1 route is a
+# property of the structure: pass 2 balances est + correction (ot_ms_corr_*) and the FF hold step times the trunk at
+# est + correction (ot_ms_assign_corr, set_assigned_delay on the trunk arcs).  File format (Tcl):
+#   set ot_ms_corr     { TAP {tt_ps ff_ps} ... }          ;# RCX - estimate, tap-region mean arrival
+#   set ot_ms_corr_mac { INST_GLOB {tt_ps ff_ps} ... }    ;# RCX - estimate, macro clock pin
+proc ot_ms_corr_load {} {
+  if {[info exists ::ot_ms_corr_loaded]} return
+  set ::ot_ms_corr {}; set ::ot_ms_corr_mac {}
+  set f [ot_ms_env OT_MSCTS_CORR ""]
+  if {$f ne ""} { uplevel #0 [list source $f]; puts "OT_MSCTS_CORR $f taps $::ot_ms_corr macros $::ot_ms_corr_mac" }
+  set ::ot_ms_corr_loaded 1
+}
+proc ot_ms_ctap {tap c} {
+  ot_ms_corr_load
+  if {[dict exists $::ot_ms_corr $tap]} { return [lindex [dict get $::ot_ms_corr $tap] [expr {$c eq "ff"}]] }
+  return 0.0
+}
+proc ot_ms_cmac {iname c} {
+  ot_ms_corr_load
+  foreach {g v} $::ot_ms_corr_mac { if {[string match $g [ot_ms_key $iname]]} { return [lindex $v [expr {$c eq "ff"}]] } }
+  return 0.0
+}
+# corrected mean arrival of a pin list (each pin corrected by the tap that drives it; R = ot_ms_regions)
+proc ot_ms_cmean {pins which R c} {
+  set t {}; dict for {tap ps} $R { foreach p $ps { dict set t [ot_ms_key $p] $tap } }
+  set s 0.0; set n 0
+  foreach p $pins {
+    set a [ot_ms_arr $p $which]; if {$a eq ""} continue
+    set k [ot_ms_key $p]; if {[dict exists $t $k]} { set a [expr {$a + [ot_ms_ctap [dict get $t $k] $c]}] }
+    set s [expr {$s + $a}]; incr n
+  }
+  return [expr {$n ? $s / $n : 0.0}]
+}
+# FF/TT-only session: time the trunk at estimate + correction (spread evenly over the trunk stage + tap arcs of each
+# path; the macro remainder on the macro leaf arc).  Call after estimate_parasitics; c = tt | ff.
+proc ot_ms_assign_corr {c} {
+  if {![info exists ::ot_ms_tapnets]} { ot_ms_recover }
+  ot_ms_corr_load
+  if {![llength $::ot_ms_corr] && ![llength $::ot_ms_corr_mac]} return
+  if {![info exists ::ot_ms_macros]} { uplevel #0 [list source [ot_ms_env OT_MSCTS_SPEC ""]] }
+  set ::ot_ms_assigned 1; set ::ot_ms_corr_trunk {}
+  set blk [ord::get_db_block]
+  set arcs {}
+  dict for {tap v} $::ot_ms_corr {
+    set st {}
+    foreach i [$blk getInsts] { if {[regexp "^ot_ms_${tap}_s(\\d+)\$" [$i getName]]} { lappend st [$i getName] } }
+    lappend st ot_ms_${tap}_tap
+    set per [expr {[ot_ms_ctap $tap $c] / double([llength $st])}]
+    foreach n $st { lappend arcs $n $per }
+    dict set ::ot_ms_corr_trunk $tap [expr {$per * ([llength $st] - 1)}]
+  }
+  foreach ml $::ot_ms_macleaf {
+    lassign $ml iname tap leaf pfx
+    # tap of the leaf = the trunk the leaf hangs on (from the spec macro list)
+    set t ""; foreach m $::ot_ms_macros { if {[string match [lindex $m 0] [ot_ms_key $iname]]} { set t [lindex $m 1] } }
+    set tr [expr {$t ne "" && [dict exists $::ot_ms_corr_trunk $t] ? [dict get $::ot_ms_corr_trunk $t] : 0.0}]
+    lappend arcs $leaf [expr {[ot_ms_cmac $iname $c] - $tr}]
+  }
+  foreach {n d} $arcs {
+    set cell [get_cells $n]; set a ""; set y ""
+    foreach p [get_pins -of_objects $cell] { if {[get_property $p direction] eq "input"} { set a $p } elseif {[get_property $p direction] eq "output"} { set y $p } }
+    foreach rf {rise fall} {
+      set da [get_property $y arrival_max_$rf]; set db [get_property $a arrival_max_$rf]
+      set v [expr {$da - $db + $d}]
+      if {$v < 1.0} { set v 1.0 }
+      set_assigned_delay -cell -$rf -from $a -to $y $v
+    }
+  }
+  puts [format "OT_MSCTS_ASSIGN_CORR %s %d arcs" $c [expr {[llength $arcs] / 2}]]
+}
+
 # balance: pad the early taps (tap input) and the macro leaves (pad chain) to the common latency
 #   mode cts: placement RC (coarse); mode grt: GRT RC, global_route -start/-end_incremental around every edit
 proc ot_ms_balance {mode} {
@@ -320,13 +395,13 @@ proc ot_ms_balance {mode} {
     set R [ot_ms_regions]
     set T {}; set hi -1e9; set lo 1e9
     dict for {tap pins} $R {
-      set st [ot_ms_stats $pins max]; dict set T $tap $st
+      set st [ot_ms_stats $pins max]; lset st 0 [expr {[lindex $st 0] + [ot_ms_ctap $tap tt]}]; dict set T $tap $st
       set hi [expr {max($hi, [lindex $st 0])}]; set lo [expr {min($lo, [lindex $st 0])}]
     }
     set M {}
     foreach ml $::ot_ms_macleaf {
       lassign $ml iname tap leaf pfx
-      dict set M $leaf [list [ot_ms_arr [ot_ms_macro_ck $iname] max] [lindex [ot_ms_stats [dict get $ifs $iname] max] 0]]
+      dict set M $leaf [list [expr {[ot_ms_arr [ot_ms_macro_ck $iname] max] + [ot_ms_cmac $iname tt]}] [ot_ms_cmean [dict get $ifs $iname] max $R tt]]
     }
     # re-measure the pad step from the previous edits
     set obs {}
@@ -381,18 +456,22 @@ proc ot_ms_report {mode} {
   set R [ot_ms_regions]; set ok 1
   foreach w {max min} c {TT FF} {
     set hi -1e9; set lo 1e9
+    set cc [string tolower $c]; set corr [expr {[ot_ms_env OT_MSCTS_CORR ""] ne "" && ![info exists ::ot_ms_assigned]}]
     dict for {tap pins} $R {
       lassign [ot_ms_stats $pins $w] mean mn mx n
-      puts [format "OT_MSCTS_TAP %s %s %s n %d mean %.1f min %.1f max %.1f" $mode $c $tap $n $mean $mn $mx]
-      set hi [expr {max($hi, $mean)}]; set lo [expr {min($lo, $mean)}]
+      set k [expr {$corr ? [ot_ms_ctap $tap $cc] : 0.0}]
+      puts [format "OT_MSCTS_TAP %s %s %s n %d mean %.1f min %.1f max %.1f%s" $mode $c $tap $n $mean $mn $mx [expr {$corr ? [format " | RCX-corrected mean %.1f" [expr {$mean + $k}]] : ""}]]
+      set hi [expr {max($hi, $mean + $k)}]; set lo [expr {min($lo, $mean + $k)}]
     }
     set v [expr {$hi - $lo <= $win ? "PASS" : "FAIL"}]; if {$v ne "PASS"} { set ok 0 }
-    puts [format "OT_MSCTS_WINDOW %s %s tap-mean window %.1f ps (limit %s) %s" $mode $c [expr {$hi - $lo}] $win $v]
+    puts [format "OT_MSCTS_WINDOW %s %s tap-mean window %.1f ps (limit %s) %s%s" $mode $c [expr {$hi - $lo}] $win $v [expr {$corr ? " (RCX-corrected)" : ""}]]
     foreach ml $::ot_ms_macleaf {
       lassign $ml iname tap leaf pfx
-      set ma [ot_ms_arr [ot_ms_macro_ck $iname] $w]
-      lassign [ot_ms_stats [ot_ms_macro_if $iname] $w] im imn imx inn
-      puts [format "OT_MSCTS_MACRO %s %s %s clk %.1f interface regs n %d mean %.1f (%.1f..%.1f) diff %+.1f" $mode $c $iname $ma $inn $im $imn $imx [expr {$ma - $im}]]
+      set ma [expr {[ot_ms_arr [ot_ms_macro_ck $iname] $w] + ($corr ? [ot_ms_cmac $iname $cc] : 0.0)}]
+      set ifp [ot_ms_macro_if $iname]
+      lassign [ot_ms_stats $ifp $w] im imn imx inn
+      if {$corr} { set im [ot_ms_cmean $ifp $w $R $cc] }
+      puts [format "OT_MSCTS_MACRO %s %s %s clk %.1f interface regs n %d mean %.1f (%.1f..%.1f) diff %+.1f%s" $mode $c $iname $ma $inn $im $imn $imx [expr {$ma - $im}] [expr {$corr ? " (RCX-corrected)" : ""}]]
     }
   }
   return $ok
