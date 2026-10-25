@@ -1801,12 +1801,35 @@ class Binder:
             self.tparams[tn] = params
 
     # ------------------------------------------------------------------------------------------ RTL emission
+    def wavefront_plan(self):
+        if self.plan.get("reset", {}).get("release") != "wavefront":
+            return None
+        if not hasattr(self, "_wavefront_plan"):
+            import schema
+            self._wavefront_plan = schema.Plan(self.plan)
+        return self._wavefront_plan
+
     def emit(self, out):
         out = Path(out) / "rtl"            # generated RTL only; rewritten from scratch on every bind
         if out.exists():
             shutil.rmtree(out)
         out.mkdir(parents=True)
-        (out / "bind_cells.sv").write_text(CELLS)
+        cells = CELLS
+        P = self.wavefront_plan()
+        if P is not None:
+            import gen_rtl
+            import reset_tree as RT
+            # Use the same control-only reset cells as physical kits, not another
+            # synchronizer implementation. Datapath registers remain reset-less.
+            for name in ("ot_dp_rrelay", "ot_dp_rsync_s2", "ot_dp_rsync_s3"):
+                m = re.search(r"module " + name + r"\b.*?\nendmodule", gen_rtl.CELLS, re.S)
+                cells += "\n(* keep_hierarchy *)\n" + m.group(0) + "\n"
+            W = RT.wf_plan(P)
+            missing = set(W["parts"]) - set(self.members)
+            if missing:
+                raise BindError(f"wavefront reset carriers lack bound partitions: {sorted(missing)[:10]}")
+            (out.parent / "bind_reset.json").write_text(json.dumps(W, indent=1))
+        (out / "bind_cells.sv").write_text(cells)
         files = [out / "bind_cells.sv"]
         self.pnames = {}
         self.io_used = {}
@@ -1871,8 +1894,34 @@ class Binder:
         for d in doms:
             ports.append(f"    input  wire {self.cport(p, d)}")
         decl, body = [], []
-        body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
-                    f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
+        P = self.wavefront_plan()
+        rtree = None
+        if P is not None:
+            import reset_tree as RT
+            ptn = t.get("split_of", tn)
+            if P.types[ptn].get("hard"):
+                # Native hard-partition reset depth is already in wf_plan.
+                body.append("    wire rst_n = arst_n;  // delivered reset to the native hard partition")
+            else:
+                rtree = RT.for_type(P, ptn)
+                ports += [f"    output wire {n}   // registered reset to neighbour" for n, _x, _y in RT.out_pins(P, ptn)]
+                body += RT.rtl_lines(rtree)
+                body.append(f"    wire rst_n = rst_n_t{RT.leaf_tap(P, ptn)};")
+        else:
+            body.append(f"    wire rst_n;\n    ot_reset_sync #(.ASYNC_STAGES({int(t.get('reset', {}).get('sync_stages', 2))})) "
+                        f"u_rst_sync (.clk(clk), .async_rst_n(arst_n), .sync_rst_n(rst_n));")
+        core_reset = {}
+        if rtree is not None:
+            for target in rtree.get("core_resets", []):
+                pin = target["pin"]
+                candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
+                              target["inst"] in {self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
+                if not candidates:
+                    modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
+                    candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and F.cells[ci].module in modules]
+                if len(candidates) != 1:
+                    raise BindError(f"wavefront core reset {tn}/{target['inst']}.{pin}: expected one bound leaf, found {len(candidates)}")
+                core_reset[(candidates[0], pin)] = f"rst_n_t{target['tap']}"
         need_rst = False
         obus = sorted(self.out_bus[p], key=lambda L: L["oname"])
         ibus = sorted(self.in_bus[p], key=lambda L: L["iname"])
@@ -2005,8 +2054,11 @@ class Binder:
             if k == "clk":
                 return self.cport(p, d[1])
             if k == "rst":
+                reset = core_reset.get((ci, pn), "rst_n")
                 if d[1] == "low":
-                    return "rst_n"
+                    return reset
+                if reset != "rst_n":
+                    return f"~({reset})"
                 need_rst = True
                 return "rst"
             if k == "strap":
@@ -2097,6 +2149,11 @@ class Binder:
         io = sorted({n for tn in self.by_type for n in self.io_used.get(tn, [])})
         ports += [f"    input  wire [{len(self.F.top_ports[n][1]) - 1}:0] {sv_id(n)}" for n in io]
         wires, insts = [], []
+        reset_in, reset_out = {}, {}
+        P = self.wavefront_plan()
+        if P is not None:
+            import reset_tree as RT
+            wires, reset_in, reset_out = RT.wf_die_rtl(P)
         conn = defaultdict(list)            # part -> [(port, wire)]
         for L in self.links:
             hops = L.get("hops") or [(L["src"], L["oname"], L["dst"], L["iname"])]
@@ -2124,7 +2181,8 @@ class Binder:
                 else:
                     ov.append(f".{nm}({self.tvals[tn][p].get(k)})")
             dd = self.default_domain(p)
-            cs = [f"        .clk(clk_{sv_id(dd)})", "        .arst_n(rst_n)"]
+            cs = [f"        .clk(clk_{sv_id(dd)})", f"        .arst_n({reset_in.get(p, 'rst_n')})"]
+            cs += [f"        .{port}({net})" for port, net in sorted(reset_out.get(p, {}).items())]
             for d in sorted(self.clk_dom[p] - {dd}, key=lambda d: self.cport(p, d)):
                 cs.append(f"        .{self.cport(p, d)}(clk_{sv_id(d)})")
             for n in self.io_used.get(tn, []):
@@ -2402,7 +2460,9 @@ def cmd_bind(a):
     (out / "bind_latency.json").write_text(json.dumps(dict(schema=SCHEMA, die=raw["die"]["name"],
                                                            note="per crossing bus: as-built stages (relays / landings "
                                                                 "removed) vs bound stages (2 boundary flops)",
-                                                           buses=lat, landing_pads=B.land_pads), indent=1))
+                                                           buses=lat, landing_pads=B.land_pads,
+                                                           **({"reset": json.loads((out / "bind_reset.json").read_text())}
+                                                              if B.wavefront_plan() is not None else {})), indent=1))
     pr = rep["proof"]
     print(json.dumps(dict(partitions=rep["partitions"], types=len(rep["types"]), crossings=rep["crossings"],
                           crossing_bits=rep["crossing_bits"], errors=rep["n_errors"], **pr)))
