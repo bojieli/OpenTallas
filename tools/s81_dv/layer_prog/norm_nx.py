@@ -258,10 +258,14 @@ def emit_all(die, prog, smoke, fixtures, D):
         return e
     for sl, P in plan.items():
         t, i4 = tier(sl), P['attn.NORMR.k4']
-        P['attn.GAIN'] = take(t, i4 + rel['attn.GAIN'], -1)
+        # backwards from the fixed k4: leaves 3..0 (any free edge below k4; one NORMR a leaf), then GAIN >= gain_slot
+        # before the first NORMR, HLOAD >= hload_slot before GAIN (the smoke's VP slot rules, kept as minima)
+        lo_k = i4
+        for k in (3, 2, 1, 0):
+            P[f'attn.NORMR.k{k}'] = take(t, min(lo_k - 1, i4 + rel[f'attn.NORMR.k{k}']), -1)
+            lo_k = min(lo_k, P[f'attn.NORMR.k{k}'])
+        P['attn.GAIN'] = take(t, lo_k - gap_gn, -1)
         P['attn.HLOAD'] = take(t, P['attn.GAIN'] - gap_hg, -1)
-        for k in range(4):
-            P[f'attn.NORMR.k{k}'] = take(t, max(i4 + rel[f'attn.NORMR.k{k}'], P['attn.GAIN'] + gap_gn), +1, hi=i4 - 1)
         P['attn.XFIN_GO'] = take(t, i4 + rel['attn.XFIN_GO'], +1)
     # templates / calendar rows / events (same payloads as lower_norm_smoke)
     eps = 0x358637BD
