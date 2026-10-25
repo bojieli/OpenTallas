@@ -1,0 +1,106 @@
+{
+ "half": "n",
+ "flops_glue": 12786,
+ "flows": 86,
+ "bits": 20052,
+ "over_405_per_stage": 23,
+ "worst": [
+  {
+   "src": "TOP.ck_n",
+   "dst": "u_beat_t.clk",
+   "relay_stages": 0,
+   "bits": 1,
+   "src_span": "x315-315 y1210-1210",
+   "dst_span": "x44-44 y259-259",
+   "max_dx": 271.1,
+   "max_dy": 950.4,
+   "max_manhattan": 1221.5,
+   "reach_per_stage": 1221.5
+  },
+  {
+   "src": "TOP.ck_n",
+   "dst": "u_beate.clk",
+   "relay_stages": 0,
+   "bits": 1,
+   "src_span": "x315-315 y1210-1210",
+   "dst_span": "x563-563 y259-259",
+   "max_dx": 247.3,
+   "max_dy": 950.4,
+   "max_manhattan": 1197.7,
+   "reach_per_stage": 1197.7
+  },
+  {
+   "src": "TOP.ck_n",
+   "dst": "u_land_n.clk",
+   "relay_stages": 0,
+   "bits": 1,
+   "src_span": "x315-315 y1210-1210",
+   "dst_span": "x130-130 y238-238",
+   "max_dx": 185.8,
+   "max_dy": 972.0,
+   "max_manhattan": 1157.7,
+   "reach_per_stage": 1157.7
+  },
+  {
+   "src": "u_lf0.g_xs3.u_xs.o_ilast_w",
+   "dst": "u_lf0.g_ln[1].u_tcc.u_tr.i_last",
+   "relay_stages": 1,
+   "bits": 1,
+   "src_span": "x43-43 y308-308",
+   "dst_span": "x302-302 y1062-1062",
+   "max_dx": 259.2,
+   "max_dy": 754.5,
+   "max_manhattan": 1013.7,
+   "reach_per_stage": 506.9
+  },
+  {
+   "src": "u_lf0.g_xs3.u_xs.o_itag_w",
+   "dst": "u_lf0.g_ln[1].u_tcc.u_tr.i_tag",
+   "relay_stages": 1,
+   "bits": 16,
+   "src_span": "x43-43 y308-313",
+   "dst_span": "x302-302 y1062-1064",
+   "max_dx": 259.2,
+   "max_dy": 754.3,
+   "max_manhattan": 1013.5,
+   "reach_per_stage": 506.7
+  },
+  {
+   "src": "u_lf0.g_xs3.u_xs.o_ifirst_w",
+   "dst": "u_lf0.g_ln[1].u_tcc.u_h1.i_first",
+   "relay_stages": 1,
+   "bits": 1,
+   "src_span": "x43-43 y307-307",
+   "dst_span": "x183-183 y1158-1158",
+   "max_dx": 139.9,
+   "max_dy": 850.5,
+   "max_manhattan": 990.4,
+   "reach_per_stage": 495.2
+  },
+  {
+   "src": "TOP.xs_a1",
+   "dst": "u_lf0.g_xs3.u_xs.xs_a1",
+   "relay_stages": 5,
+   "bits": 9,
+   "src_span": "x240-248 y1210-1210",
+   "dst_span": "x593-596 y592-592",
+   "max_dx": 352.8,
+   "max_dy": 617.8,
+   "max_manhattan": 970.6,
+   "reach_per_stage": 161.8
+  },
+  {
+   "src": "TOP.xs_g1",
+   "dst": "u_lf0.g_xs3.u_xs.xs_g1",
+   "relay_stages": 5,
+   "bits": 5,
+   "src_span": "x249-252 y1210-1210",
+   "dst_span": "x599-600 y592-592",
+   "max_dx": 349.9,
+   "max_dy": 617.8,
+   "max_manhattan": 967.7,
+   "reach_per_stage": 161.3
+  }
+ ],
+ "unplaced_child_pins": {}
+}
