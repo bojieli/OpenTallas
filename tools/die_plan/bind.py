@@ -2541,11 +2541,16 @@ PKG_DEF = re.compile(r"^\s*package\s+([A-Za-z_]\w*)\s*;", re.M)
 PKG_USE = re.compile(r"\b([A-Za-z_]\w*)::")
 
 
-def kit_closure(names, idx, prefer):
+def kit_closure(names, idx, prefer, picks=None):
     """E.closure for a G3 kit (KV-P6 18:51 hub_Wi): (1) a module with a hardened view (macro dir <m>/<m>.lef) is a
     HARD MACRO: its black box (<m>_bb.v, else the model) goes in the list, its lef/libs in the manifest, no descent;
-    (2) a *_sim.sv definition is never picked while a non-sim candidate exists.  -> files, missing, macros"""
+    (2) a *_sim.sv definition is never picked while a non-sim candidate exists.  -> files, missing, macros
+    QC-KITS 10-25: descends only into the NEEDED module bodies (not every module of a picked file: a file picked for
+    one module dragged in the instantiations of its unrelated siblings, e.g. sle_ctl got ot_v41_attn_eng_ctl_endpoint_phys
+    + ot_hdc_fastfp, two different ot_hdc_qadd -> yosys Re-definition of module at the kit preflight).  `picks`
+    (optional dict) receives {module: file} for every needed module (kit_strip_dups keeps those definitions)."""
     seen, files, missing, macros = set(), [], set(), {}
+    picks = {} if picks is None else picks
     todo = list(names)
     while todo:
         n = todo.pop()
@@ -2572,12 +2577,53 @@ def kit_closure(names, idx, prefer):
         if f is None:
             missing.add(n)
             continue
+        picks[n] = f
         if f not in files:
             files.append(f)
-            for m in E.MOD_RE.finditer(E._strip(Path(f).read_text(errors="replace"))):
-                todo += sorted(E.instantiated(E.module_body(f, m.group(1)), idx))
         todo += sorted(E.instantiated(E.module_body(f, n), idx))
     return files, sorted(missing), macros
+
+
+def kit_strip_dups(fl, kd, picks):
+    """QC-KITS 10-25: a module defined in more than one kit file (a needed file also carries an unrelated sibling that
+    another needed file defines too) would stop yosys (Re-definition of module) -- the as-built elab hides it with
+    read_verilog -overwrite (last read wins).  The definition kept is the one the closure picked for that module (else
+    the first in the list); every other file gets a KIT/dedup copy with that module removed (original unchanged), in
+    its place in the list.  -> files, {copy: record}"""
+    defs = {}
+    for f in fl:
+        for m in E.MOD_RE.finditer(E._strip(Path(f).read_text(errors="replace"))):
+            defs.setdefault(m.group(1), [])
+            if f not in defs[m.group(1)]:
+                defs[m.group(1)].append(f)
+    drop = defaultdict(set)                      # file -> modules to remove from it
+    for m, fs in defs.items():
+        if len(fs) < 2:
+            continue
+        keep = next((f for f in fs if m in picks and Path(f).resolve() == Path(picks[m]).resolve()), fs[0])
+        for f in fs:
+            if f != keep:
+                drop[f].add(m)
+    out, rec = [], {}
+    for f in fl:
+        if f not in drop:
+            out.append(f)
+            continue
+        t = Path(f).read_text(errors="replace")
+        new = t
+        for m in sorted(drop[f]):
+            new, k = re.subn(r"^[ \t]*(?:\(\*[^\n]*?\*\)\s*)?module\s+" + re.escape(m) + r"\b.*?^[ \t]*endmodule\b[^\n]*\n?",
+                             "", new, count=1, flags=re.S | re.M)
+            if k != 1:
+                raise BindError(f"kit-rtl: cannot strip duplicate module {m} from {f}")
+        d = Path(kd) / "dedup"
+        d.mkdir(exist_ok=True)
+        c = d / Path(f).name
+        c.write_text(new)
+        rec[str(c)] = dict(original=str(f), removed=sorted(drop[f]),
+                           original_sha256=hashlib.sha256(t.encode()).hexdigest()[:16])
+        out.append(c)
+    return out, rec
 
 
 def kit_packages(files, roots, base):
@@ -2853,7 +2899,8 @@ def cmd_kit_rtl(a):
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
-    cl, cl_missing, macros = kit_closure(leafm, idx, prefer)
+    picks = {}
+    cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks)
     if cl_missing:
         raise BindError(f"kit-rtl {tn}: leaf modules without a source {sorted(cl_missing)[:10]}")
     files = [Path(f).resolve() for f in cl]
@@ -2862,6 +2909,7 @@ def cmd_kit_rtl(a):
     fl = kit_dedupe(tn, [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve(), rs] +
                     [f for f in files if f.name != "bind_cells.sv"])
     fl, inlined = kit_inline_imports(fl, kd)
+    fl, deduped = kit_strip_dups(fl, kd, picks)
     sims = [str(f) for f in fl if SIM_FILE.search(f.name)]
     if sims:
         raise BindError(f"kit-rtl {tn}: simulation models in the kit filelist {sims[:5]} (no *_sim in a kit)")
@@ -2872,7 +2920,7 @@ def cmd_kit_rtl(a):
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
                variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, narrow_buses=narrow,
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
-               packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined,
+               packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())),
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
