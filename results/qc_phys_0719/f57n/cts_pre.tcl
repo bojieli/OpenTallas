@@ -10,7 +10,7 @@ set tech [ord::get_db_tech]; set du [$tech getDbUnitsPerMicron]
 set widths {}; set spaces {}
 foreach ln {M5 M6} {set l [$tech findLayer $ln]; lappend widths $ln [expr {2.0*[$l getWidth]/$du}]; lappend spaces $ln [expr {2.0*[$l getSpacing]/$du}]}
 create_ndr -name f57n_2w2s -width $widths -spacing $spaces
-set nd [$tech findNonDefaultRule f57n_2w2s]
+set nd [[ord::get_db_block] findNonDefaultRule f57n_2w2s]
 if {$nd eq "NULL"} {error "f57n missing physical NDR"}
 foreach n [[ord::get_db_block] getNets] {if {[string match ot_ms_* [$n getName]]} {$n setNonDefaultRule $nd}}
 }
