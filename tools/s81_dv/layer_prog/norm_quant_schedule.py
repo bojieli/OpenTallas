@@ -12,13 +12,20 @@ from pathlib import Path
 import norm_q as Q
 
 
-def solve_report(report, max_delay=512):
+def solve_report(report, max_delay=512, allow_provisional=False):
     sl=report['slices']; names=sorted(sl,key=lambda n:sl[n]['sid'])
     pos={i:(sl[i]['sid']>>1,sl[i]['sid']&1) for i in names}
     byct={v:k for k,v in pos.items()}
     geo=dict(pos=pos,partner={i:byct[(c,1-t)] for i,(c,t) in pos.items()},
              age={(i,s):report['line_age'][i+'.'+s] for i in names for s in ('e','w') if i+'.'+s in report['line_age']})
-    Q.V_ASM={i:2+report['v_age'][i] for i in names}
+    complete=report.get('v_paths_complete') is True
+    assembly=report.get('v_assembly_age',{})
+    if complete and set(assembly)==set(names):
+        Q.V_ASM={i:int(assembly[i]) for i in names}
+    elif allow_provisional:
+        Q.V_ASM={i:2+report['v_age'][i] for i in names}
+    else:
+        raise ValueError('Full V assembly paths are required, including column4 seqhost/bk_sel transit; direct vo age is insufficient')
     footprints={}
     for i in names:
         occ,cl,oa=Q.allgather({i:0},geo)
@@ -58,18 +65,18 @@ def solve_report(report, max_delay=512):
                 if result is not None:return result
         return None
     answer=visit(domains,{})
-    doc=dict(max_delay=max_delay,search_nodes=nodes,calibration='Q_AFTER_ROOT common constant omitted; V_ASM=2+per-slice age',
+    doc=dict(max_delay=max_delay,search_nodes=nodes,calibration=('full V assembly paths' if complete else 'INVALID FOR PRODUCTION: direct V approximation'),
              qualification='release-slot solution only; NORMR attainability and hardware release control NOT PROVEN')
     if answer is None:return dict(doc,verdict='NO_SOLUTION_WITHIN_BOUND')
     occ,cl,oa=Q.allgather(answer,geo)
     assert not cl and not oa
-    return dict(doc,verdict='PREDICTED_RELEASE_SLOTS_PASS',line_collision_edges=len(cl),own_asm_same_edge=len(oa),
+    return dict(doc,verdict=('PREDICTED_RELEASE_SLOTS_PASS' if complete else 'PROVISIONAL_GEOMETRY_RELEASE_SLOTS'),line_collision_edges=len(cl),own_asm_same_edge=len(oa),
                 releases={i:dict(sid=sl[i]['sid'],root_rel=lower[i],q_rel=answer[i],delay=answer[i]-lower[i]) for i in names},
                 release_span=max(answer.values())-min(answer.values()),maximum_delay=max(answer[i]-lower[i] for i in names))
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('report');p.add_argument('--out',required=True);p.add_argument('--max-delay',type=int,default=512)
-    a=p.parse_args();r=solve_report(json.loads(Path(a.report).read_text()),a.max_delay)
+    p=argparse.ArgumentParser();p.add_argument('report');p.add_argument('--out',required=True);p.add_argument('--max-delay',type=int,default=512);p.add_argument('--allow-provisional',action='store_true')
+    a=p.parse_args();r=solve_report(json.loads(Path(a.report).read_text()),a.max_delay,a.allow_provisional)
     Path(a.out).write_text(json.dumps(r,indent=1)+'\n');print(json.dumps(r,indent=1))
 if __name__=='__main__':main()
