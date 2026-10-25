@@ -1,0 +1,5 @@
+# S81 takeover0719
+S81 PLAN+TRIAL: PLAN3 latest7d6acd8849 includes CCONN8cfc6881bf. Plan child collecting svc G2o30/leaf4/CCONN2/IR; approved type reduction 72leaf->12..16 and col12->8. Physical corrections still gate kits.
+S81-CORES: cores child current takeover CORES3 plus legacy/boundary/physical subworkers; failures enginechannel, hcore IO double-pad, VQF6 setup+merge gate, RX re-pin, VSW/VNB withdrawn geometry, legacy tap insertion/CFGinputhold. See own inventory.
+ELEM-S81/KITS: kits0719 child58k1stations face_guard/LEC/bindPASS; inherited density trials t7/t36/t37/t41/t42 running; t8reset447um held. CLOCK+RESETleaf own shared tools. Serdesneighbors23/31/43/44/49/52 holdIRdelta.
+S81-PORTS I13: own codex/s81-i13-0719 from36364ebdb plus read-only paused currentRTL fanout repairs (458insertions111deletions). Existing gates4..8 synthPASS but nativefanoutFAIL; gate5max3878; gate9NOTRUN missingPATH. Latest bench6R3/SRAM PASS and mutant3negative escapes as expected; multi still finishing. Own gate10 admitted preflight preparation to collect currentnativecensus, no route. Review unchanged two-column macroplan already viewed0553. All heavy ot-run.
