@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-10-25 13:43 PDT",
+  "row": "4215a4daad5c",
+  "source": "codex/iohold-1309@366650fa2c",
+  "kit": "codex-iohold-1309/headA_r2/hd_turn_a",
+  "verdict": "PASS-COND one controlled opt-in experiment",
+  "image": "iohold_r2.png",
+  "conditions": [
+    "Normal runner+actual405+structural clock gates beforeDRT",
+    "Usedtapload/TTFF insertion and IN/OUT/internal FF census",
+    "Actual parentCPPR/planfingerprint9c86e327 beforeSIGNED/dieadoption",
+    "Withdrawn349 not revived"
+  ]
+}
