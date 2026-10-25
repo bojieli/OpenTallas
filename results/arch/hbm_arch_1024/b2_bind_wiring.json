@@ -89,6 +89,13 @@
    "plan": "NW and NE hubs become different VM masters (NW2 NC 2 vs NE2); VM_RT / CR_RT and the die cr padding of argmax (6) / idx (8) must be re-derived for the B2 NW path; one dead bank port (xq or xq2, 8 x 276 b constant inside the glue) per hub until a one-port bank variant exists"
   },
   {
+   "id": "R-SU",
+   "kind": "rtl+wiring",
+   "status": "done (sub-agent SU cc8b2b937; qcore w2 here)",
+   "what": "str_C -> ot_hbm_su_stree_root2 (up0/dn0 = NW leg, up1/dn1 = NE leg; dn 82 b = {NE head, NW head}); stl_NW/NE -> ot_hbm_su_stree_leaf NLEG 2 (writer 0 NW, 1 NE); sucore_NW/NE -> ot_hbm_su_static_qcore_r13_w2 (2-writer port bound to core writers 2/3 = as built; writers 0/1 removed inside the master); su_prog -> root_h5 PARTS 2 (part 0 pgp_NW banks 0..319, part 1 pgp_NE 320..639; r_we/r_bank remapped, p_fault {NE, NW})",
+   "plan": "sucore_NW/NE become a new hard master (w2 wrapper: writer 0/1 logic pruned -> re-close the SU core tile); compiler lower_root5(parts=2) exists, --root5 CLI lacks a parts option"
+  },
+  {
    "id": "W-FLT",
    "kind": "param+wiring",
    "status": "done",
@@ -146,6 +153,30 @@
   "hb_vms_NE": {
    "master": "hfd_hgi_vms_static_NE2_glue",
    "params": ""
+  },
+  "str_C": {
+   "master": "ot_hbm_su_stree_root2",
+   "params": ".MUT(0)"
+  },
+  "stl_NW": {
+   "master": "ot_hbm_su_stree_leaf",
+   "params": ".MUT(0), .NLEG(2)"
+  },
+  "sucore_NW": {
+   "master": "ot_hbm_su_static_qcore_r13_w2",
+   "params": ".MUT(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .ROW_EN(2), .WDEC(1)"
+  },
+  "stl_NE": {
+   "master": "ot_hbm_su_stree_leaf",
+   "params": ".MUT(0), .NLEG(2)"
+  },
+  "sucore_NE": {
+   "master": "ot_hbm_su_static_qcore_r13_w2",
+   "params": ".MUT(0), .COLLPORT(1), .RF_LOCAL(1), .PRETREE(1), .ROW_EN(2), .WDEC(1)"
+  },
+  "su_prog": {
+   "master": "ot_hbm_su_programme_root_h5",
+   "params": ".PARTS(2)"
   },
   "fr_NW": {
    "master": "ot_hbm_fault_leaf",
@@ -3071,6 +3102,112 @@
     ]
    ]
   },
+  "str_C": {
+   "up0_i": [
+    [
+     "stl_NW",
+     "up_o",
+     0,
+     40
+    ]
+   ],
+   "up1_i": [
+    [
+     "stl_NE",
+     "up_o",
+     0,
+     40
+    ]
+   ]
+  },
+  "stl_NW": {
+   "dn_i": [
+    [
+     "str_C",
+     "dn0_o",
+     0,
+     81
+    ]
+   ]
+  },
+  "sucore_NW": {
+   "rf_wv": [
+    [
+     "stl_NW",
+     "rf_wv",
+     0,
+     1
+    ]
+   ],
+   "rf_wa": [
+    [
+     "stl_NW",
+     "rf_wa",
+     0,
+     15
+    ]
+   ],
+   "rf_wd": [
+    [
+     "stl_NW",
+     "rf_wd",
+     0,
+     63
+    ]
+   ]
+  },
+  "stl_NE": {
+   "dn_i": [
+    [
+     "str_C",
+     "dn1_o",
+     0,
+     81
+    ]
+   ]
+  },
+  "sucore_NE": {
+   "rf_wv": [
+    [
+     "stl_NE",
+     "rf_wv",
+     0,
+     1
+    ]
+   ],
+   "rf_wa": [
+    [
+     "stl_NE",
+     "rf_wa",
+     0,
+     15
+    ]
+   ],
+   "rf_wd": [
+    [
+     "stl_NE",
+     "rf_wd",
+     0,
+     63
+    ]
+   ]
+  },
+  "su_prog": {
+   "p_fault": [
+    [
+     "pgp_NW",
+     "fault",
+     0,
+     0
+    ],
+    [
+     "pgp_NE",
+     "fault",
+     0,
+     0
+    ]
+   ]
+  },
   "fr_NW": {
    "in": [
     [
@@ -3276,6 +3413,24 @@
   "hb_vms_NW": {
    "cr": 548
   },
+  "str_C": {
+   "dn0_o": 82,
+   "dn1_o": 82
+  },
+  "stl_NW": {
+   "rf_wv": 2,
+   "rf_wa": 16,
+   "rf_wd": 64
+  },
+  "stl_NE": {
+   "rf_wv": 2,
+   "rf_wa": 16,
+   "rf_wd": 64
+  },
+  "su_prog": {
+   "r_we": 2,
+   "r_bank": 32
+  },
   "ep_N0": {
    "h_rx_v": 1,
    "h_rx_frame": 612,
@@ -3344,10 +3499,44 @@
    "cw_in",
    "replay_source"
   ],
+  "str_C": [
+   "up2_i",
+   "up3_i",
+   "dn2_o",
+   "dn3_o"
+  ],
   "host_ep": [
    "sd_tx",
    "sd_rx",
    "sd_st"
   ]
+ },
+ "out_remap": {
+  "su_prog": {
+   "r_we": [
+    [
+     2,
+     2,
+     0
+    ],
+    [
+     3,
+     3,
+     1
+    ]
+   ],
+   "r_bank": [
+    [
+     32,
+     47,
+     0
+    ],
+    [
+     48,
+     63,
+     16
+    ]
+   ]
+  }
  }
 }

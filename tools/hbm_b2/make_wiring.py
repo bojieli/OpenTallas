@@ -72,6 +72,7 @@ def main():
     ab = json.loads(Path(a.asbuilt).read_text())
     die = T.Die(a.die, ab['transport'])
     remaster, rebuild, port_map, out_width, add_ports, drop_ports = {}, {}, {}, {}, {}, {}
+    out_remap = {}
     items = []
     clk = ['hb_ckgen', 'pll_stream', 0, 0]
 
@@ -324,6 +325,37 @@ def main():
                            'padding of argmax (6) / idx (8) must be re-derived for the B2 NW path; one dead bank port '
                            '(xq or xq2, 8 x 276 b constant inside the glue) per hub until a one-port bank variant exists'))
 
+    # ---- R-SU: SU scalar tree 2 legs + SU programme root PARTS 2 + 2-writer SU cores (sub-agent SU cc8b2b937 + here)
+    up = {q: src_list(die, 'str_C', f'up{k}_i') for k, q in ((2, 'NW'), (3, 'NE'))}
+    assert up['NW'] == [['stl_NW', 'up_o', 0, 40]] and up['NE'] == [['stl_NE', 'up_o', 0, 40]], up
+    for q, k in (('NW', 2), ('NE', 3)):
+        assert src_list(die, f'stl_{q}', 'dn_i') == [['str_C', f'dn{k}_o', 0, 163]], src_list(die, f'stl_{q}', 'dn_i')
+        assert src_list(die, f'sucore_{q}', 'rf_wv') == [[f'stl_{q}', 'rf_wv', 0, 3]]
+    remaster['str_C'] = dict(master='ot_hbm_su_stree_root2', params='.MUT(0)')
+    drop_ports['str_C'] = ['up2_i', 'up3_i', 'dn2_o', 'dn3_o']
+    rebuild.setdefault('str_C', {}).update(up0_i=[one('stl_NW', 'up_o', 41)], up1_i=[one('stl_NE', 'up_o', 41)])
+    out_width['str_C'] = dict(dn0_o=82, dn1_o=82)
+    for q, k in (('NW', 0), ('NE', 1)):
+        remaster[f'stl_{q}'] = dict(master='ot_hbm_su_stree_leaf', params='.MUT(0), .NLEG(2)')
+        rebuild.setdefault(f'stl_{q}', {})['dn_i'] = [one('str_C', f'dn{k}_o', 82)]
+        out_width[f'stl_{q}'] = dict(rf_wv=2, rf_wa=16, rf_wd=64)
+        par = die.insts[f'sucore_{q}']['params']
+        remaster[f'sucore_{q}'] = dict(master='ot_hbm_su_static_qcore_r13_w2', params=par)
+        rebuild.setdefault(f'sucore_{q}', {}).update(rf_wv=[one(f'stl_{q}', 'rf_wv', 2)], rf_wa=[one(f'stl_{q}', 'rf_wa', 16)],
+                                                     rf_wd=[one(f'stl_{q}', 'rf_wd', 64)])
+    remaster['su_prog'] = dict(master='ot_hbm_su_programme_root_h5', params='.PARTS(2)')
+    rebuild.setdefault('su_prog', {})['p_fault'] = [one('pgp_NW', 'fault'), one('pgp_NE', 'fault')]
+    out_width['su_prog'] = dict(r_we=2, r_bank=32)
+    out_remap = {'su_prog': dict(r_we=[[2, 2, 0], [3, 3, 1]], r_bank=[[32, 47, 0], [48, 63, 16]])}
+    items.append(dict(id='R-SU', kind='rtl+wiring', status='done (sub-agent SU cc8b2b937; qcore w2 here)',
+                      what='str_C -> ot_hbm_su_stree_root2 (up0/dn0 = NW leg, up1/dn1 = NE leg; dn 82 b = {NE head, NW head}); '
+                           'stl_NW/NE -> ot_hbm_su_stree_leaf NLEG 2 (writer 0 NW, 1 NE); sucore_NW/NE -> '
+                           'ot_hbm_su_static_qcore_r13_w2 (2-writer port bound to core writers 2/3 = as built; writers '
+                           '0/1 removed inside the master); su_prog -> root_h5 PARTS 2 (part 0 pgp_NW banks 0..319, '
+                           'part 1 pgp_NE 320..639; r_we/r_bank remapped, p_fault {NE, NW})',
+                      plan='sucore_NW/NE become a new hard master (w2 wrapper: writer 0/1 logic pruned -> re-close the SU core '
+                           'tile); compiler lower_root5(parts=2) exists, --root5 CLI lacks a parts option'))
+
     # ---- W-FLT: region fault leaves observe every retry lane of the regrown COLL masters (fr_NW / fr_NE N, SYNC_MASK)
     def regrow_leaf(leaf, src, sport, new_w, port='in'):
         old = src_list(die, leaf, port)
@@ -393,7 +425,7 @@ def main():
                keep=dict(quadrants=list(KEEPQ), instances=['tkm_SW'], drop_instances=drop_inst),
                strap_ports=[x.replace('.*\\.', '.*\\.') for x in ab.get('straps', [])],
                items=items, remaster=remaster, rebuild=rebuild, port_map=port_map, out_width=out_width,
-               add_ports=add_ports, drop_ports=drop_ports)
+               add_ports=add_ports, drop_ports=drop_ports, out_remap=out_remap)
     Path(a.out).write_text(json.dumps(out, indent=1))
     print(json.dumps([dict(id=i['id'], status=i['status']) for i in items]))
 

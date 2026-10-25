@@ -18,9 +18,7 @@ FAIL ot_hbm_pc_refresh_cfg              x2      INPUT_TIED tied=tgt
 FAIL ot_hbm_sm_vm_wr_q_t_lanes4         x2      INPUT_TIED tied=lbase,quad,tgt
 FAIL ot_hbm_static_cfg_collar           x3      INPUT_TIED tied=tgt
 FAIL ot_hbm_static_cfg_collar_idx256r   x1      INPUT_TIED tied=tgt
-FAIL ot_hbm_su_programme_root_h5        x1      UNPARSED 
 FAIL ot_hbm_su_static_sfustore_hw       x2      INPUT_TIED tied=qid
-FAIL ot_hbm_su_stree_root               x1      WIDTH_MISMATCH/UNPARSED width=up0_i:1vs41,up1_i:1vs41
 FAIL ot_hbm_svc_pc_ctrl_leaf_cfg_h9b    x32     INPUT_TIED tied=pc_id
 FAIL ot_hbm_svc_sm_group_rel_id         x8      INPUT_TIED tied=id_sm,id_stack
 FAIL ot_hbm_svc_sm_xcal_rel_t           x8      INPUT_TIED tied=tgt
@@ -37,4 +35,4 @@ FAIL ot_hgi_qdq_lg_port_group_r2        x4      INPUT_TIED tied=wq_i
 FAIL ot_hgi_qdq_transport_ctl_r4        x1      INPUT_TIED tied=rl_cfg,wc_cfg
 FAIL ot_hgi_sm_xload_cl2_ctlx           x2      INPUT_TIED tied=tgt
 FAIL ot_static_run_target               x8      INPUT_TIED tied=tgt
-DIE_PORT_BIND FAIL masters=93 instances=344 unbound_masters=0 stub_masters=1 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=10 input_unconnected=0 input_tied=40 unparsed_connections=16 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=35563 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0 spare_out_bits=0 unresolved_children=4 ambiguous_children=0 variant_children=3
+DIE_PORT_BIND FAIL masters=93 instances=344 unbound_masters=0 stub_masters=1 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=8 input_unconnected=0 input_tied=40 unparsed_connections=13 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=35201 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0 spare_out_bits=0 unresolved_children=4 ambiguous_children=0 variant_children=6

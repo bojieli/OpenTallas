@@ -254,6 +254,9 @@ def main():
     rebuild = delta.get('rebuild', {})        # inst -> port -> [[src_inst, src_port, lo, hi] | ["const", w, v]] LSB-first
     out_width = delta.get('out_width', {})    # inst -> {out port: new width} (remastered masters whose outputs grow/shrink)
     add_ports = delta.get('add_ports', {})    # inst -> {port: "out" | "in"} ports the new master has and r18h5 lacked
+    # out_remap: inst -> {out port: [[old_lo, old_hi, new_lo]]}: a remastered output whose bit positions move (e.g. a
+    # PARTS 4 -> 2 slice array); every as-built reader bit is translated, a reader of an unmapped bit is a cut.
+    out_remap = {f'{i}__{p}': v for i, d in delta.get('out_remap', {}).items() for p, v in d.items()}
     straps = [re.compile(x) for x in delta.get('strap_ports', [])]
 
     rep = collections.defaultdict(list)
@@ -325,6 +328,18 @@ def main():
                 tot = sum(h - l + 1 for l, h, _ in pm[v[1]])
                 final[port] = ('out', f'{n}__{port}', tot); continue
             flat = v[1]
+            if out_remap and port not in rebuild.get(n, {}):
+                nf = []
+                for s0, st in flat:
+                    if s0[0] != 'n' or s0[1] not in out_remap:
+                        nf.append((s0, st)); continue
+                    for b in range(s0[2], s0[3] + 1):
+                        hit = [nl + b - l for l, h, nl in out_remap[s0[1]] if l <= b <= h]
+                        if hit:
+                            nf.append((('n', s0[1], hit[0], hit[0]), st))
+                        else:   # the bit has no new position: keep the old (dropped-range) reference -> reported cut
+                            nf.append((('n', s0[1] + '__UNMAPPED', b, b), 'new'))
+                flat = nf
             if port in rebuild.get(n, {}):
                 flat = []
                 for e in rebuild[n][port]:
