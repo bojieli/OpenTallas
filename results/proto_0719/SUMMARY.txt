@@ -1,0 +1,10 @@
+B2n: {'CLEAN': 7, 'STRUCTURAL': 5, 'NOT RUN': 1}
+qwen_compute: {'CLEAN': 34, 'HOTSPOT': 2, 'STRUCTURAL': 2}
+qwen_kvsys: {'CLEAN': 20, 'STRUCTURAL': 3}
+s81_178: {'CLEAN': 103, 'STRUCTURAL': 68, 'HOTSPOT': 6}
+s81_178hc: {'CLEAN': 12, 'STRUCTURAL': 25, 'HOTSPOT': 13, 'NOT RUN': 1}
+s81_head: {'CLEAN': 16}
+s81_t8_spill: {'STRUCTURAL': 1}
+Late leaf t8 finished on epyc2 spill: overflow3724986,20khotgcells,73.6percenthotbbox,TT+18.03FF-2.46.
+These are inherited baseline skeletons, not current corrected-plan gates or physical signoff.
+B2nq_su31 remains active GRT at epyc2,noexit.

@@ -1,0 +1,128 @@
+{
+ "ot_s81sl_leaf__t8": {
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25180919,
+    "demand": 5508441,
+    "usage_pct": 21.88,
+    "overflow": 1055086
+   },
+   "M3": {
+    "resource": 28215652,
+    "demand": 7839686,
+    "usage_pct": 27.78,
+    "overflow": 391817
+   },
+   "M4": {
+    "resource": 21166147,
+    "demand": 4073357,
+    "usage_pct": 19.24,
+    "overflow": 735086
+   },
+   "M5": {
+    "resource": 21160231,
+    "demand": 4707270,
+    "usage_pct": 22.25,
+    "overflow": 313626
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 3658111,
+    "usage_pct": 16.79,
+    "overflow": 1034897
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 2624947,
+    "usage_pct": 12.05,
+    "overflow": 194474
+   }
+  },
+  "total_overflow": 3724986,
+  "wirelength_um": 16746120.0,
+  "errors": [],
+  "pin_access_warnings": 0,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
+  "reach": {},
+  "done": true,
+  "kind": "proto-skeleton",
+  "die": "s81",
+  "type": "ot_s81sl_leaf__t8",
+  "instance": "s_0N_L1",
+  "outline_um": [
+   1442.88,
+   1226.88
+  ],
+  "pins": 16879,
+  "flops": 51669,
+  "leaf_blockages": 27,
+  "adjust": 0.5,
+  "route_layers": "M2-M7",
+  "mem_gb": 19,
+  "period_ps": 833.0,
+  "io_delay_ps": 166.60000000000002,
+  "core_blockages": 27,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 18.03,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 59458,
+   "ff_hold_wns": -2.46,
+   "ff_hold_tns": -84.4,
+   "ff_hold_viol": 70,
+   "ff_hold_endpoints": 59458
+  },
+  "repair_buffers": 72816,
+  "drv": {
+   "violators": 10080
+  },
+  "peak_gb": 15.19,
+  "wall": "42:28.00",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft1",
+    9768
+   ],
+   [
+    "ft0",
+    7779
+   ],
+   [
+    "ft13",
+    3131
+   ],
+   [
+    "ft12",
+    2004
+   ],
+   [
+    "ft11",
+    1521
+   ]
+  ],
+  "hot_bbox_um": [
+   98,
+   0,
+   1442,
+   969
+  ],
+  "ft_hops": null,
+  "classify": {
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 3724986 (20000 gcells, hot bbox 73.6% of outline); skeleton FF hold WNS -2.5 ps (70 endpoints)",
+   "hot_frac": 0.7365
+  }
+ }
+}
