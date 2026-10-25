@@ -2186,15 +2186,9 @@ module ot_hbm_tkm_path_ft21 #(
  assign compact_flit[2114]=rx_flit[2170];
  assign compact_flit[2115]=rx_flit[2179];
  ot_hgi_coll_tkm_m_tp192__root actual_root(.clk(clk),.buffer_clk(buffer_clk),.rst_n(root_rst_n),.start(root_start),.arg_mode(rx_word[19+:1]),.cfg_n(rx_word[50+:12]),.cfg_k(rx_word[37+:13]),.cfg_g(rx_word[20+:8]),.cfg_gbase(rx_word[28+:8]),.cfg_pf(rx_word[115+:16]),.cfg_nout(rx_word[62+:13]),.cfg_obase(rx_word[75+:40]),.cfg_rbase(rx_word[131+:40]),.cfg_has_r(rx_word[36+:1]),.del_slot(rx_word[2351+:4]),.del_valid(rx_word[2355+:4]),.del_flit(compact_flit),.x_u_u_g_tiles_0_e86_u_tile_up_out(up[0]),.x_u_u_g_tiles_0_e86_u_tile_ins_b(root_entry),.x_u_u_g_tiles_0_e86_u_tile_ins_v(root_ev),.x_u_u_g_tiles_0_e86_u_tile_clr(root_clr),.x_u_u_g_tiles_0_e86_u_tile_conv(root_conv),.w_v(n_wv),.w_addr(n_wa),.w_mask(n_wm),.w_data(n_wd),.busy(n_busy),.done(n_done),.fault(n_fault),.stat_cycles(cycles));
- reg[2:0]ctl_return[0:RETURN_CTL_STAGES-1];reg[567:0]data_return[0:RETURN_CTL_STAGES-1];
- always@(posedge clk)begin
-  if(!root_rst_n)begin for(integer j=0;j<RETURN_CTL_STAGES;j=j+1)ctl_return[j]<=0;end else begin
-   ctl_return[0]<={n_wv,n_done,n_fault};for(integer j=1;j<RETURN_CTL_STAGES;j=j+1)ctl_return[j]<=ctl_return[j-1];end
-  data_return[0]<={n_wa,n_wm,n_wd};for(integer j=1;j<RETURN_CTL_STAGES;j=j+1)data_return[j]<=data_return[j-1];
- end
- assign {wv,done,fault}=ctl_return[RETURN_CTL_STAGES-1];
- // coherent return (L12 CTL = L13 DATA): MUT_RETURN drops ONE data edge explicitly (not equivalent at 2/2)
- assign {wa,wm,wd}=data_return[RETURN_CTL_STAGES-1];
- assign busy=n_busy;
+ ot_hbm_tkm_return #(.CTL_STAGES(RETURN_CTL_STAGES),.DATA_STAGES(RETURN_DATA_STAGES)) returned(
+ .clk(clk),.rst_n(root_rst_n),.in_v(n_wv),.in_busy(n_busy),.in_done(n_done),.in_fault(n_fault),
+ .in_addr(n_wa),.in_mask(n_wm),.in_data(n_wd),.out_v(wv),.out_busy(busy),.out_done(done),.out_fault(fault),
+ .out_addr(wa),.out_mask(wm),.out_data(wd));
 endmodule
 `default_nettype wire
