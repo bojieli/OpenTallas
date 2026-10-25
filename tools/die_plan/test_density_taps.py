@@ -142,7 +142,7 @@ def test_density_kit_config_and_defaults_unchanged():
         gen_phys.write_type_kit(P0, "fa", d, [])
         cfg = (Path(d) / "fa" / "config.mk").read_text()
         assert "OT_TAP_MAX_SINKS = 3000" in cfg
-        assert "OT_TAP_REASSIGN_UM" not in cfg and "OT_TAP_GRT" not in cfg
+        assert "OT_TAP_REASSIGN_UM" not in cfg and "OT_TAP_GRT_MODE" not in cfg
         assert not (Path(d) / "fa" / "tap_balance_grt.tcl").exists()
 
 
