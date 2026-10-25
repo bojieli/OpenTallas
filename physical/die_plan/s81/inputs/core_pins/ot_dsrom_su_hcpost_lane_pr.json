@@ -1,8 +1,8 @@
 {
 "module": "ot_dsrom_su_hcpost_lane_pr",
 "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
-"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef (largest non-M1 rect centre, CORE-KS rule); 2 multi-port pins re-pointed to their on-track access rect (core_pins_fix rule)",
-"pinhash": "67f6f101810e",
+"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef (largest non-M1 rect centre, CORE-KS rule); 2 multi-port pins re-pointed to their on-track access rect (core_pins_fix rule); OWNER DECISION 8 10-24: 16 constant pins dropped (inputs/const_pins_dropped.json)",
+"pinhash": "d06925a0587e",
 "pins": [
 {
 "name": "c0[0]",
@@ -785,48 +785,6 @@
 "y": 105.516
 },
 {
-"name": "o[0]",
-"layer": "M4",
-"x": 113.9165,
-"y": 12.876
-},
-{
-"name": "o[10]",
-"layer": "M4",
-"x": 113.9165,
-"y": 41.484
-},
-{
-"name": "o[11]",
-"layer": "M4",
-"x": 113.3225,
-"y": 44.364
-},
-{
-"name": "o[12]",
-"layer": "M4",
-"x": 113.8085,
-"y": 47.244
-},
-{
-"name": "o[13]",
-"layer": "M4",
-"x": 113.9165,
-"y": 50.076
-},
-{
-"name": "o[14]",
-"layer": "M4",
-"x": 113.9165,
-"y": 52.956
-},
-{
-"name": "o[15]",
-"layer": "M4",
-"x": 113.9165,
-"y": 55.788
-},
-{
 "name": "o[16]",
 "layer": "M4",
 "x": 113.6285,
@@ -849,12 +807,6 @@
 "layer": "M4",
 "x": 113.6285,
 "y": 67.26
-},
-{
-"name": "o[1]",
-"layer": "M4",
-"x": 113.9165,
-"y": 15.708
 },
 {
 "name": "o[20]",
@@ -917,12 +869,6 @@
 "y": 95.868
 },
 {
-"name": "o[2]",
-"layer": "M4",
-"x": 113.9165,
-"y": 18.588
-},
-{
 "name": "o[30]",
 "layer": "M4",
 "x": 114.438,
@@ -933,48 +879,6 @@
 "layer": "M4",
 "x": 113.6285,
 "y": 101.628
-},
-{
-"name": "o[3]",
-"layer": "M4",
-"x": 113.9165,
-"y": 21.468
-},
-{
-"name": "o[4]",
-"layer": "M4",
-"x": 113.9165,
-"y": 24.3
-},
-{
-"name": "o[5]",
-"layer": "M4",
-"x": 113.9165,
-"y": 27.18
-},
-{
-"name": "o[6]",
-"layer": "M4",
-"x": 113.9165,
-"y": 30.06
-},
-{
-"name": "o[7]",
-"layer": "M4",
-"x": 113.9165,
-"y": 32.892
-},
-{
-"name": "o[8]",
-"layer": "M4",
-"x": 113.9165,
-"y": 35.772
-},
-{
-"name": "o[9]",
-"layer": "M4",
-"x": 113.9165,
-"y": 38.652
 },
 {
 "name": "p[0]",

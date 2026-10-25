@@ -23,27 +23,27 @@ ot_s81sl_rly #(.W(257),.D(4)) up_lo(.clk(clk),.d({lo_v,lo_d}),.q({lov,lod}));
 wire s_v;wire[159:0]s_d;wire x_rv,x_qv,x_wv;wire[9:0]x_ra,x_wa;wire[7:0]x_wm;wire[255:0]x_qd,x_wd;
 wire u_v,um_v,um_q,um_b;wire[2:0]u_i;wire[255:0]u;wire[7:0]um_i;
 wire swv_,swvi,swfi;wire[255:0]swd_;wire[31:0]sww,swl;wire[63:0]swri;
-wire rav,ravi,rafi,rfv,rff;wire[31:0]rax,rari,rfu,rfu2,rfmx;
+wire rav,ravi,rafi,rfv,rff;wire[31:0]rax,rfmx;wire[30:0]rfu,rfu2,rari;
 wire mv,mq,mb;wire[7:0]mi;
     ot_s81sl_vp u_p (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(2'b00), .cw_a(24'd0), .cw_d(64'd0), .lo_v(lo_v), .lo_d(lo_d),
         .s_v(s_v), .s_d(s_d), .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
         .hw_v(), .hw_j(), .hw_hf(), .hw_d(), .hr_v(), .hr_j(), .hr_hf(), .hq_v(1'b0), .hq_d(256'd0),
         .n_go(), .n_pre(), .m_v(mv), .m_q(mq), .m_b(mb), .m_i(mi), .wl_v(), .wl_i(), .wl_d(), .fault(fp));
-    ot_s81sl_vs #(.MUT(0)) u_s (.clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
+    ot_s81sl_vs #(.MUT(0)) u_s (.clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d({s_d[159:64], s_d[62], s_d[60:0]}),
         .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
         .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .sw_v(swv_), .sw_d(swd_), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
         .ra_v(rav), .ra_x(rax), .ra_vi(ravi), .ra_ri(rari), .ra_fi(rafi),
         .ve_rv(),.ve_rc(),.ve_rh(),.ve_rk(),.ve_rw(),.ve_pv(1'b0),.ve_pc(2'd0),.ve_phh(32'd0),.ve_pkk(32'd0),.ve_pdd(32'd0),
-        .ve_av(),.ve_ac(),.ve_ah(),.ve_aval(),.ve_ag(),.ve_ov(1'b0),.ve_oc(2'd0),.ve_oy(256'd0),.ve_fi(1'b0),
+        .ve_av(),.ve_ac(),.ve_ah(),.ve_aval(),.ve_ag(),.ve_ov(1'b0),.ve_oc(2'd0),.ve_oy(128'd0),.ve_fi(1'b0),
         .e_v(),.e_c(),.e_d(),.g_v(1'b0),.g_c(2'd0),.g_d(32'd0),.fault(fs));
     ot_s81sl_vsw u_w (.clk(clk), .rst_n(rst_n), .i_v(swv_), .i_d(swd_), .i_w(sww), .i_lim(swl), .o_v(swvi), .o_d(swri), .o_f(swfi));
     dsfd_su_t_rxsf u_rf (.ck(clk), .rst(rst_n), .i_v(rav), .i_x(rax), .o_v(rfv), .o_u(rfu), .o_u2(rfu2), .o_mx(rfmx), .o_f(rff));
     dsfd_su_t_rxsb u_rb (.ck(clk), .rst(rst_n), .i_v(rfv), .i_u(rfu), .i_u2(rfu2), .i_mx(rfmx), .i_f(rff), .o_v(ravi), .o_r(rari), .o_f(rafi));
 
 wire xf_v,xf_s;wire[275:0]xf;wire xfv,xfs;wire[275:0]xfd;
-ot_s81sl_vq #(.AQ_XMEM(2)) vq(.clk(clk),.rst_n(rst_n),.y_v(1'b0),.y_i(3'd0),.y(256'd0),
+ot_s81sl_vq #(.AQ_XMEM(2)) vq(.clk(clk),.rst_n(rst_n),.y_v(1'b0),.y_i(3'd0),.y(128'd0),
  .u_v(u_v),.u_i(u_i),.u(u),.sid(4'd6),.k(3'd2),.m_v(mv),.m_q(mq),.m_b(mb),.m_i(mi),
  .um_v(um_v),.um_q(um_q),.um_b(um_b),.um_i(um_i),.xf_v(xf_v),.xf_s(xf_s),.xf(xf),.fault(fq));
 ot_s81sl_rly #(.W(278),.D(4)) up_x(.clk(clk),.d({xf_v,xf_s,xf}),.q({xfv,xfs,xfd}));

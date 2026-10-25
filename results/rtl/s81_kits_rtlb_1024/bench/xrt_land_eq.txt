@@ -1,0 +1,11 @@
+== hb0_l0_none: LANDEQ hb=0 land=0 seed=1 cycles=20000 lo=5435 p=1511 e=1608 fault_cycles=19731 xs_cycles=15904 ci_cycles=2470 err=0 PASS xrt_land_eq hb=0 land=0 seed=1 
+== hb0_l1_land_evpin: LANDEQ hb=0 land=1 seed=1 cycles=20000 lo=5435 p=1511 e=1608 fault_cycles=19728 xs_cycles=15896 ci_cycles=2470 err=14459 NEGATIVE_CONTROL_FAILED_AS_EXPECTED land_evpin 
+== hb0_l1_land_pv: LANDEQ hb=0 land=1 seed=1 cycles=20000 lo=5435 p=1511 e=1608 fault_cycles=19683 xs_cycles=14095 ci_cycles=2470 err=5899 NEGATIVE_CONTROL_FAILED_AS_EXPECTED land_pv 
+== hb0_l1_none: LANDEQ hb=0 land=1 seed=1 cycles=20000 lo=5435 p=1511 e=1608 fault_cycles=19725 xs_cycles=15894 ci_cycles=2470 err=0 PASS xrt_land_eq hb=0 land=1 seed=1 
+== hb1_l0_none: LANDEQ hb=1 land=0 seed=1 cycles=20000 lo=5435 p=1511 e=1608 fault_cycles=19734 xs_cycles=15904 ci_cycles=2470 err=0 PASS xrt_land_eq hb=1 land=0 seed=1 
+== hb1_l1_land_evpin: LANDEQ hb=1 land=1 seed=1 cycles=20000 lo=5435 p=1511 e=1608 fault_cycles=19733 xs_cycles=15896 ci_cycles=2470 err=14459 NEGATIVE_CONTROL_FAILED_AS_EXPECTED land_evpin 
+== hb1_l1_none: LANDEQ hb=1 land=1 seed=1 cycles=20000 lo=5435 p=1511 e=1608 fault_cycles=19731 xs_cycles=15894 ci_cycles=2470 err=0 PASS xrt_land_eq hb=1 land=1 seed=1 
+== sp_hb0_l1_land_pv: LANDEQ hb=0 land=1 seed=2 cycles=40000 lo=1611 p=440 e=393 fault_cycles=37027 xs_cycles=5493 ci_cycles=223 err=34469 NEGATIVE_CONTROL_FAILED_AS_EXPECTED land_pv 
+== sp_hb0_l1_none: LANDEQ hb=0 land=1 seed=2 cycles=40000 lo=1611 p=440 e=393 fault_cycles=37037 xs_cycles=7323 ci_cycles=223 err=0 PASS xrt_land_eq hb=0 land=1 seed=2 
+== sp_hb1_l1_land_evpin: LANDEQ hb=1 land=1 seed=3 cycles=40000 lo=1564 p=417 e=422 fault_cycles=37420 xs_cycles=7529 ci_cycles=220 err=6485 NEGATIVE_CONTROL_FAILED_AS_EXPECTED land_evpin 
+== sp_hb1_l1_none: LANDEQ hb=1 land=1 seed=3 cycles=40000 lo=1564 p=417 e=422 fault_cycles=37461 xs_cycles=7527 ci_cycles=220 err=0 PASS xrt_land_eq hb=1 land=1 seed=3 

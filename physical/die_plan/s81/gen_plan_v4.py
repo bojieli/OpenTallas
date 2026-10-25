@@ -38,19 +38,31 @@ X0 = 12 * G                        # 103.68 seal ring
 NC, NR = 22, 20
 DIE_W = NC * PX + 2 * X0
 DIE_H = NR * PY + 2 * X0
-REACH = 1500.0
+# OWNER DECISION 12 / METHODOLOGY rulings 9.3 + 9.4 (S81/DEC12 2026-10-24): every partition signal is on M4-M7, so the
+# one-cycle signal hop is the 405-um M4-M7 figure for the WHOLE die (was REACH 1500 = an M8/M9 over-the-top hop) and ft
+# stations sit at most 405 um apart in every type (was FT_STATION_MAX 750 for the non-S81-CORES keys).  Station counts
+# keep the generator's 0.98 placement factor (<= 397 um planned spacing) against the exact 405-um check (no 0.9 G0C
+# margin: budgets.reach_margin 1.0).  M8/M9 carry only the die clock spine, die reset and PG (die_use: no ft_reserved).
+REACH = 405.0
 FT_KIT_REACH_UM = 405.0  # measured M4-M7 kit reach at 833ps; M8/M9 are reserved die resources
-FT_STATION_MAX = 750.0     # budgets.ft_station_max_um (tools/die_plan R3)
+FT_STATION_MAX = 405.0     # budgets.ft_station_max_um (tools/die_plan R3, ruling 9.4 ceiling)
 UNIFORM_SEG = True
 SNAP = 0.192
-TR = dict(M4=(0.048, 0.024), M5=(0.048, 0.024), M6=(0.064, 0.032), M7=(0.064, 0.032),
+TR = dict(M3=(0.036, 0.009), M4=(0.048, 0.024), M5=(0.048, 0.024), M6=(0.064, 0.032), M7=(0.064, 0.032),
           M8=(0.080, 0.040), M9=(0.080, 0.040))   # pitch, offset (PLAN-TOOL symmetric tracks)
 # COORD S81 ruling (1)(b) 10-23 07:43: the svc fold faces (svc_2k N | svc_2k+1 S, ~9.0 kb on a 1.44-mm face) take a
 # third pin layer from the reserved die budget via partition_types.<t>.face_layers (PLAN-TOOL @7f9f10e1d).  The fold
 # face is N/S, and the tool requires a vertical pin layer there (M8 is H -> 'layer M8 is H, a S face needs V'), so the
 # grant is M9, the vertical die layer (die M9 PG bands avoided; the kit routes M2-M9 and obstructs the die M8/M9 bands).
-FOLD_GRANT = [] if os.environ.get("S81_V4_NOGRANT") else ["M9"]
+# DEC12 (ruling 9.3): the M9 fold grant is withdrawn -- no signal pin on M8/M9.  The fold rung (svc_2k N | svc_2k+1 S,
+# up to 9.3 kb on the 1442.88-um face = 6.5 pins/um) does not fit the two vertical partition layers M7/M5 at the 6/um
+# face budget, and the fold face is fixed at one lattice cell (every svc_2k must abut the HBM PHY row, so a pair is one
+# column).  The third pin layer therefore comes from the partition's own vertical layers: M3 (V, pitch 36 nm; 3.1
+# pins/um/layer on the worst fold = ~11% of the M3 tracks; the pins land on the svc pin registers at the face).
+# S81_V4_FOLDGRANT=<layer> overrides (e.g. M9 = the pre-DEC12 grant, a G0 ERROR m89_signals; '' = no grant).
+FOLD_GRANT = [x for x in os.environ.get("S81_V4_FOLDGRANT", "").split(",") if x]
 STATS_V4 = {}
+INSTANCE_KEPT = []   # DEC12: types renamed back to their reference name by instance identity
 XO_JOINED = []     # v4.6: xo lanes that share the x lane window (S81-P9)
 
 
@@ -78,6 +90,14 @@ STEP = dict(E=(1, 0), W=(-1, 0), N=(0, 1), S=(0, -1))
 # banded seam kits (frame_seam_pipe.py: band seams at plan width), via inputs/frame_band_census.json
 # (frame_band_census.py).  The v1 constant (1263 / 1229 / 384 / 141) had no basis and r1 -> r0 was 120-126 b short.
 FRAME_BAND_CENSUS = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "frame_band_census.json")
+
+
+# S81-KITS-RTLC 10-24 (owner: register every partition pin, in RTL): the band pass-through stations (dsfd_qbank_N / _S,
+# dsfd_rstg, ot_s81_sstn_payload536 / base566) gained an input pin register (+1 edge per station).  Max stations on a
+# band path ending at each band-to-band bus (tools/s81_dv/frame_band_stations.py on the band RTL; per-field breakdown in
+# results/rtl/s81_kits_rtlc_1024/frame_band_stations.json): priced as fixed cycles of the fi lane carrying that bus.
+FRAME_BAND_STATION_EDGES = {"h9": {("r0", "r1"): 3, ("r1", "r0"): 3, ("r1", "r2"): 3, ("r2", "r1"): 3},
+                            "h10": {("r0", "r1"): 4, ("r1", "r0"): 3, ("r1", "r2"): 3, ("r2", "r1"): 3}}
 
 
 def frame_internal(h):
@@ -264,10 +284,17 @@ _SVC_HC = [dict(inst="u_rsv.u_att.u_eng.g_t[%d].g_ts.u_t.u_hc.g_h[%d].u_c" % (i 
                 origin_um=(round(34.56 + 172.8 * (i % 8), 4), [34.56, 311.04, 587.52, 864.0, 1321.92, 1598.4, 1874.88, 2151.36][i // 8]))
            for i in range(64)]
 NONFRAME_HC = {
+    # S81-KITS-RTLC 10-24 (ruling c): explicit hub-C placement = the former shelf rows (cap | xr | eg) with xfin moved
+    # under eg (centred, 17.28 um gap): the xfin -> eg copy link (core_conns C:xrt*: xf e_* N face -> eg i_* S face)
+    # faces its partner in every type; y-mirror only (the shelf packer never chose an x mirror for the hub C types)
     "C:xrt1": dict(cores=_C_COMMON + [dict(inst="u_c.u_xr", module="ot_s81sl_xrt1", plan_core="xg_xr", cells=67849,
-                                           lef=_rt("s81sl_xrt1", "ot_s81sl_xrt1"))], gaps=_C_GAPS),
+                                           lef=_rt("s81sl_xrt1", "ot_s81sl_xrt1"))], gaps=_C_GAPS,
+                   place={"u_c.u_cap": (34.56, 34.56), "u_c.u_xr": (388.8, 34.56), "u_c.u_xf": (751.68, 34.56),
+                          "u_c.u_eg": (717.12, 233.28)}, mirrors=((False, False), (False, True))),
     "C:xrt3": dict(cores=_C_COMMON + [dict(inst="u_c.u_xr", module="ot_s81sl_xrt3", plan_core="xg_xr", cells=78456,
-                                           lef=_rt("s81sl_xrt3_b", "ot_s81sl_xrt3"))], gaps=_C_GAPS),
+                                           lef=_rt("s81sl_xrt3_b", "ot_s81sl_xrt3"))], gaps=_C_GAPS,
+                   place={"u_c.u_cap": (34.56, 34.56), "u_c.u_xr": (388.8, 34.56), "u_c.u_xf": (1010.88, 34.56),
+                          "u_c.u_eg": (976.32, 233.28)}, mirrors=((False, False), (False, True))),
     "gunit": dict(cores=[dict(inst="u_gunit.u_" + m, module="dsdv_gunit_" + m, lef=_GU % (m, m, m), plan_core=pc,
                               cells=c, bucket=c is not None and pc != "l5f")
                          for m, pc, c in [("l0", "l0_l1_l2", 8213 + 110419 + 9853 + 43954 + 8215),
@@ -422,6 +449,10 @@ CORE_CONNS = {
         "u_eng.u_h0": _cc(**{"in_w,out_res": ["core:u_eng.u_e"]}),
         "u_eng.u_h1": _cc(**{"in_w,out_res": ["core:u_eng.u_e"]}),
     },
+    # S81-KITS-RTLC 10-24 (ruling c): the slice hub C xfin -> eg copy link (ot_s81sl_slice_c1x / c3x xe_*): the re-pinned
+    # xfin table carries e_v / e_c / e_hh / e_kk / e_dd (N face, M5) and eg reads them on i_*
+    **{k: {"u_c.u_xf": _cc(**{"e_v,e_c,e_hh,e_kk,e_dd": ["core:u_c.u_eg"]}),
+           "u_c.u_eg": _cc(**{"i_v,i_c,i_hh,i_kk,i_dd": ["core:u_c.u_xf"]})} for k in ("C:xrt1", "C:xrt3")},
 }
 CORE_CONNS_OUT = {}
 
@@ -946,6 +977,18 @@ ROWPLAN = {"W": {0: ("s_0S", "s_0S"), 1: ("s_2S", "s_2S"), 2: ("s_1S", "s_3S"),
 LK_ROLE = {1: "LK_HEAD", 2: "LK_MID", 3: "LK_TAIL", 4: "LK_HEAD", 5: "LK_MID", 6: "LK_TAIL"}
 
 
+# DEC12 (S81 parent ruling 2026-10-24): fold-rung sub-buses (dsdv_svc_rs receive port stems) that go 2-beat; only
+# sub-buses whose static-schedule duty is <= 50% qualify (TOK-DS calendar).  gi = score gather go/gi (2132 + v),
+# si = scatter (1076 + v), ri = P.V return (514), up = status (16), dn = the q / hw stream (805, high duty: never).
+FOLD_2BEAT = tuple(x for x in os.environ.get("S81_FOLD_2BEAT", "gi").split(",") if x)
+
+
+def fold_pair(a, b):
+    """DEC12: svc_2k <-> svc_2k+1 (the fold rung of svc column k)."""
+    m = [re.match(r"svc_(\d+)$", x) for x in (a, b)]
+    return all(m) and int(m[0].group(1)) // 2 == int(m[1].group(1)) // 2
+
+
 def x_row(fr):
     return 3 + 3 * fr
 
@@ -956,9 +999,11 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
     lanes = []
     fmap = {}
 
-    def L(lid, src, sbus, dst, dbus, width, kind="data", cls="data", role=None, path=None, fixed=0):
+    def L(lid, src, sbus, dst, dbus, width, kind="data", cls="data", role=None, path=None, fixed=0, beats=0,
+          word_bits=0):
         lanes.append(dict(id=lid, src=(src, sbus), dst=(dst, dbus), width=int(width), kind=kind, cls=cls,
-                          role=role or cls, path=path, fixed=fixed))
+                          role=role or cls, path=path, fixed=fixed, **({"beats": beats, "word_bits": int(word_bits)}
+                                                                       if beats else {})))
 
     def cell_of(seg):
         return (seg.c0, seg.r0)
@@ -989,7 +1034,8 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
                 for a, bb, w in frame_internal(h):
                     ia, ib = int(a[1]), int(bb[1])
                     L("fi_%s%d_p%d_%s%s" % (side, fr, pos, a, bb), fb[ia], "%s%s_o" % (a, bb), fb[ib], "%s%s_i" % (a, bb),
-                      w, cls="frame_int", role="fi_%s%s" % (a, bb), fixed=1)   # band RTL seam = K + 1 = 3 edges
+                      w, cls="frame_int", role="fi_%s%s" % (a, bb),
+                      fixed=1 + FRAME_BAND_STATION_EDGES[h][(a, bb)])   # band RTL seam = K + 1 = 3 edges; + stations
             b0 = {pos: frames[(side, fr, pos, 0)].name for pos in range(1, 7)}
             xr = x_row(fr)
             for chain, (half, base) in (("in", (inner, 1)), ("out", (outer, 4))):
@@ -1068,12 +1114,24 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
         cc = blkcls.get((r["src"][2:], r["dst"][2:]))
         c = cc.most_common(1)[0][0] if cc else ("hbmrd" if r["src"] == "u_phy_hbm" else r["kind"])
         c = r.get("cls") or c                         # S81/H4: a retired rung unit's rows stay V-rung (xtier) lanes
+        if not v47 and c == "attn" and fold_pair(ps, pd) and re.sub(r"_[dv]$", "", r["dst_bus"]) in FOLD_2BEAT:
+            c = "attnh"         # DEC12: a low-duty fold sub-bus -> the 2-beat lane
         agg.setdefault((ps, pd, c), 0)
         agg[(ps, pd, c)] += add_b
     if unmapped:
         raise SystemExit("census rows without a partition: %s" % unmapped[:5])
     for (ps, pd, c), b in agg.items():
         kind = "ctl" if c == "ctl" else "data"
+        if c == "attnh":
+            # DEC12 option (A) (S81 parent 2026-10-24, ruling 9.3): the LOW-DUTY fold sub-buses (FOLD_2BEAT) of the svc
+            # fold rung svc_2k <-> svc_2k+1 travel 2-beat on their own lane attnh__<a>__<b> (bus attnh_<peer>_o/i):
+            # word = the selected sub-buses concatenated in FOLD_2BEAT order (each {v, d}); port = {beat, payload[P-1:0]},
+            # P = ceil(b / 2): beat 0 = word[P-1:0], beat 1 (next cycle) = word[b-1:P] (payload bit P-1 = 0 in beat 1
+            # when b is odd); the word lands 1 cycle after the last beat (latency word_cycles).  The high-duty dn
+            # stream and the rest stay full width on attn__<a>__<b>.
+            L("%s__%s__%s" % (c, ps, pd), ps, "%s_%s_o" % (c, pd), pd, "%s_%s_i" % (c, ps), -(-b // 2) + 1,
+              kind=kind, cls=c, role=c, beats=2, word_bits=b)
+            continue
         L("%s__%s__%s" % (c, ps, pd), ps, "%s_%s_o" % (c, pd), pd, "%s_%s_i" % (c, ps), b, kind=kind, cls=c, role=c)
     # ---- v4.8 (S81-P9-R8EQ): bound-top crossings the as-built census lacks (inputs/bound_supplement_v48.json, from the
     #      BINDER4 b3r8 UNPLANNED list): svc_rs chain svc_2k -> svc_2k+1 and the slice C -> LP 1-b lep inputs ----
@@ -1859,8 +1917,26 @@ def emit(parts, lanes, routes, chans, fmap, out):
             if nm and nm not in used:
                 tname[key] = nm
                 used.add(nm)
+        # DEC12 (2026-10-24): a type whose signature changed but whose instances are exactly the instances of ONE
+        # reference type (same partitions, same base) keeps that type's name -- a plan-wide change (e.g. ft station
+        # counts at 405 um) re-kits the type under its old name instead of renumbering it.  Reference instances:
+        # S81_TYPE_PARTS (default instance_map.json next to the name table: type_of {partition: type}).
+        ref_parts_f = Path(os.environ.get("S81_TYPE_PARTS", ref_f.parent / "instance_map.json"))
+        ref_of = json.loads(ref_parts_f.read_text()).get("type_of", {}) if ref_parts_f.is_file() else {}
+        ref_inst = collections.defaultdict(set)
+        for pn, tn_ in ref_of.items():
+            ref_inst[tn_].add(pn)
+        for key in sorted((k for k in types if k not in tname), key=lambda k: (-len(types[k]), types[k][0])):
+            olds = {ref_of.get(n) for n in types[key]}
+            base = re.sub(r"[^A-Za-z0-9_]", "_", key[0])
+            if len(olds) == 1:
+                old = olds.pop()
+                if old and old not in used and ref_inst[old] == set(types[key]) and old.rsplit("__t", 1)[0] == base:
+                    tname[key] = old
+                    used.add(old)
+                    INSTANCE_KEPT.append(old)
         top = collections.Counter()
-        for nm in list(ref.values()) + list(used):
+        for nm in list(ref.values()) + list(used) + list(ref_of.values()):
             b_, n_ = nm.rsplit("__t", 1)
             top[b_] = max(top[b_], int(n_))
         for key in types:
@@ -1870,7 +1946,8 @@ def emit(parts, lanes, routes, chans, fmap, out):
             top[base] += 1
             tname[key] = "%s__t%d" % (base, top[base])
     TYPE_NAMES_OUT.update(names={sig[k]: tname[k] for k in types}, ref=ref_f.name if ref else None,
-                          kept=sum(1 for k in types if ref.get(sig[k]) == tname[k]), types=len(types))
+                          kept=sum(1 for k in types if ref.get(sig[k]) == tname[k]), types=len(types),
+                          kept_by_instances=sorted(INSTANCE_KEPT))
     out_types, busname, ptype = {}, {}, {}
 
     def fsort(e):
@@ -1970,7 +2047,8 @@ def emit(parts, lanes, routes, chans, fmap, out):
                            kind=pt["kind"], face=pt["face"], layers=face_layers(P[pt["a"]], P[pt["b"]], pt["face"]),
                            window_um=[w0, w1],
                            order=pt["order"]))
-    olanes = [dict(id=l["id"], ports=lane_ports[l["id"]], **({"fixed_cycles": l["fixed"]} if l.get("fixed") else {}))
+    olanes = [dict(id=l["id"], ports=lane_ports[l["id"]], **({"fixed_cycles": l["fixed"]} if l.get("fixed") else {}),
+                   **({"beats": l["beats"], "word_bits": l["word_bits"]} if l.get("beats") else {}))
               for l in lanes]
     plan = {
         "schema": "opentallas.die_plan.v1",
@@ -1981,7 +2059,7 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 "outline_um": [round(DIE_W, 4), round(DIE_H, 4)], "period_ps": 833, "reach_um": REACH,
                 "rep_um": 450.0, "grid_um": G,
                 "layer_budget": {"partition_signal_max": "M7", "die_layers": ["M8", "M9"],
-                                 "die_use": ["clock_spine", "pg", "ft_reserved"], "cut_avail": {"M8": 0.6, "M9": 0.6}},
+                                 "die_use": ["clock_spine", "pg"]},   # DEC12: no ft_reserved, no M8/M9 signal cut capacity
                 "pg": {"partition_pg_max": "M7", "grid": [
                     {"layer": "M8", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]},
                     {"layer": "M9", "width_um": 0.48, "pitch_um": 8.64, "offset_um": 4.32, "nets": ["VDD", "VSS"]}],
@@ -2003,12 +2081,17 @@ def emit(parts, lanes, routes, chans, fmap, out):
                   "spine": {"layers": ["M8", "M9"], "root_um": [round(X0 + 11 * PX, 4), round(X0 + 10 * PY, 4)],
                             "topology": "htree"}},
         "reset": {"source": {"part": "@die", "bus": "rst_n"}, "sync_stages": 2, "data_reset": False,
-                  "epoch_bit": True, "release": "counted"},
+                  "epoch_bit": True,
+                  # DEC12 batch (OWNER DECISION 13, claude/reset-1024 on main c5834d0306): neighbour wavefront reset,
+                  # one root synchroniser per die, registered rst_o relays (tools/die_plan/reset_tree.py)
+                  "release": "wavefront"},
         "census": [{"rows": "census/s81_lanes.tsv", "map": "census_map.json",
                     "note": "FT census of the bound as-built die (1364 rows); finer partition-level check incl. "
                             "bus-aware lep rx/tx and src-bus dedup: census_cov.py -> v3/census_cov.json"}],
         "budgets": {"face_pins_per_um": 6, "face_pin_layers": 2, "face_window_um": 10, "pin_track_max": 0.6,
-                    "cut_ratio_max": 0.6, "cut_step_um": 250},
+                    "cut_ratio_max": 0.6, "cut_step_um": 250,
+                    # DEC12 (COORD 22:35): hops / stations <= 405 um exactly -- no extra 0.9 G0C reach margin
+                    "reach_margin": 1.0, "ft_station_max_um": FT_STATION_MAX},
     }
     STATS_V4["macrofree_ft_reach"] = macrofree_ft_reach(plan)
     from tools.die_plan.ft_reach import resize

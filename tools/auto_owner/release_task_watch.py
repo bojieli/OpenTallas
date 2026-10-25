@@ -69,6 +69,26 @@ CLASSES = ['LIVE', 'WAITS-OK', 'BLOCKED-ON-OWNER', 'STALE', 'DEAD']
 GATE_RX = re.compile(r'^[A-Z0-9]+\.(BIND|GRT|STA|CLK)$')
 LANE_TAIL = 40
 NON_LANES = {'COORD', 'COORDINATOR', 'OWNER', 'CLAUDE', 'CODEX', 'ROOT', 'COORD-REVIEW-QUEUE'}
+# 2026-10-24 (INFRA.WATCH): tree owner fields name TEAMS ('QC', 'KV', 'HBM', 'TOK-QK'), lane files name LANES
+# (lanes/QC-A0.md, lanes/KV-G3.md ...).  Without this map every QC/KV/HBM task had no lane file -> "no evidence found".
+LANE_ALIASES = {
+    'QC': ['QC-A0'],
+    'KV': ['KV-G3', 'KV-TOK', 'KVG3-CORES'],
+    'HBM': ['HBM-ARCH', 'ELEM-HBM'],
+    'S81': ['S81', 'S81-CORES', 'S81-HEAD'],
+    'TOK-QK': ['KV-TOK', 'TOK-QW'],
+    'TOK-QW': ['TOK-QW'],
+    'TOK-DS': ['TOK-DS'],
+    'TOK-HBM': ['TOK-HBM'],
+    'CLOCK': ['CLOCK'],
+    'RESET': ['RESET'],
+}
+COORD_OWNERS = {'COORD', 'COORDINATOR'}
+LANE_LIVE_MIN = 120.0     # lane-file / HANDOFF lane lines / lane run dirs: activity < 2 h keeps a task LIVE
+LANE_DIR_SKIP = {'wt', 'moved', 'recovered-1023', 'geom-review', 'die-ci', 'fleet-disk'}   # shared / non-run dirs
+LANE_DIR_RX = re.compile(r'/srv/opentallas-scratch2?/claude/([A-Za-z0-9][A-Za-z0-9_+\-]*)(?=/|\s|$|[,;)`\'"])')
+TS_RX = re.compile(r'^(?:- )?(\d{4})-(\d{2})-(\d{2})[ T](\d{1,2}):(\d{2})(?::\d{2})?(?: (PDT|PST|UTC|GMT|SGT))?\s+([A-Za-z0-9][A-Za-z0-9_\-]*)')
+TZ_OFF_H = {'PDT': -7, 'PST': -8, 'UTC': 0, 'GMT': 0, 'SGT': 8}   # coord lines are written in PDT; hosts may run UTC
 
 NOW = time.time()
 
@@ -165,10 +185,24 @@ def owner_lanes(owner):
     return out
 
 
+def owner_tokens(owner):
+    """raw upper-case owner tokens, NON_LANES included ('S81 / QC / KV / HBM' -> S81, QC, KV, HBM)"""
+    return [p.strip().split()[0].upper() for p in re.split(r'[/,+]| and ', owner or '') if p.strip()]
+
+
+def owner_lane_names(owner):
+    """owner tokens + the lane names they map to (LANE_ALIASES): used to match HANDOFF '<lane>:' lines"""
+    out = list(owner_lanes(owner))
+    for p in owner_lanes(owner):
+        out += LANE_ALIASES.get(p.upper(), [])
+    return list(dict.fromkeys(out))
+
+
 def lane_paths(owner, lanefiles=()):
     parts = owner_lanes(owner)
     cands = []
     for p in parts: cands.append(LANES / (p + '.md'))
+    for p in parts: cands += [LANES / (q + '.md') for q in LANE_ALIASES.get(p.upper(), [])]
     if len(parts) >= 2:
         cands += [LANES / ('%s_%s.md' % (parts[0], q)) for q in parts[1:]]
         cands += [LANES / parts[0] / (q + '.md') for q in parts[1:]]
@@ -192,6 +226,17 @@ def handoff_lines(text, now=None):
     today = datetime.datetime.fromtimestamp(now)
     out = []
     for l in text.splitlines():
+        m = TS_RX.match(l)        # current form: '2026-10-24 21:14 PDT COORD: ...' (also '- 2026-10-24 ...')
+        if m:
+            try:
+                dt = datetime.datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)), int(m.group(4)), int(m.group(5)))
+                if m.group(6) in TZ_OFF_H:
+                    dt = dt.replace(tzinfo=datetime.timezone(datetime.timedelta(hours=TZ_OFF_H[m.group(6)])))
+                t = dt.timestamp()
+            except ValueError: continue
+            if t > now + 300: continue
+            out.append((m.group(7), t, l))
+            continue
         m = HO_RX.match(l); lane = None
         if m:
             lane = re.split(r'[\s/]', m.group(1).strip())[0]
@@ -378,16 +423,53 @@ for t in tags:
     rx = re.compile(r'(^|[\s/=:"\'])' + re.escape(t) + r'($|[\s/."\'_-])')
     L = [[pid, round(start), s[:200]] for pid, start, cwd, s, fds in procs if rx.search(s)]
     if L: tagprocs[t] = L[:4]
+lanedirs = {}
+for nm in D.get('lanedirs', []):
+    for r in D.get('laneroots', []):
+        d = r + '/' + nm
+        if not os.path.isdir(d): continue
+        try: newest = os.stat(d).st_mtime
+        except Exception: newest = 0
+        stack = [(d, 0)]; n = 0
+        while stack and n < 4000:
+            cur, lev = stack.pop()
+            try: ents = list(os.scandir(cur))
+            except Exception: continue
+            for e in ents:
+                n += 1
+                try: newest = max(newest, e.stat(follow_symlinks=False).st_mtime)
+                except Exception: continue
+                if lev < 2 and e.is_dir(follow_symlinks=False): stack.append((e.path, lev + 1))
+        pr = [[pid, round(start), s[:200]] for pid, start, cwd, s, fds in procs
+              if cwd == d or cwd.startswith(d + '/') or (d + '/') in s or s.endswith(d)]
+        pr.sort(key=lambda x: x[1])
+        lanedirs.setdefault(nm, []).append(dict(path=d, newest=newest, nprocs=len(pr), procs=pr[:3]))
 pids = {}
 for pid in D['pids']:
     try: pids[pid] = ' '.join(c.decode('utf-8', 'replace') for c in open('/proc/%%d/cmdline' %% pid, 'rb').read().split(b'\0') if c)[:200]
     except Exception: pass
-print(json.dumps(dict(now=now, runs=runs, tagprocs=tagprocs, pids=pids, nprocs=len(procs))))
+print(json.dumps(dict(now=now, runs=runs, tagprocs=tagprocs, pids=pids, nprocs=len(procs), lanedirs=lanedirs)))
 '''
+LANE_ROOTS = ['/srv/opentallas-scratch/claude', '/srv/opentallas-scratch2/claude']
 
 
-def probe_script(paths, tags, pids):
-    return PROBE % json.dumps(dict(paths=sorted(paths), tags=sorted(tags), pids=sorted(pids), roots=SCAN_ROOTS, deny=DENY_PARENTS))
+def probe_script(paths, tags, pids, lanedirs=()):
+    return PROBE % json.dumps(dict(paths=sorted(paths), tags=sorted(tags), pids=sorted(pids), roots=SCAN_ROOTS, deny=DENY_PARENTS,
+                                   lanedirs=sorted(lanedirs), laneroots=LANE_ROOTS))
+
+
+def lane_dirs_of(lane_file, text):
+    """run-dir names (under /srv/opentallas-scratch*/claude/) of one lane: its lower-case name + every claude/<x> it names"""
+    out = {Path(lane_file).stem.lower()}
+    out |= {m.group(1) for m in LANE_DIR_RX.finditer(text or '')}
+    return {d for d in out if d not in LANE_DIR_SKIP}
+
+
+def lane_last_activity(text, mtime):
+    """newest timestamped line of a lane file ('2026-10-24 21:33 PDT QC: ...'); the file mtime only when it has none
+    (the epyc1 ~/coord mirror resets mtimes on every fast-forward, so mtime alone over-reports activity)"""
+    ts = [t for _, t, _ in handoff_lines(text or '')]
+    return max(ts) if ts else mtime
 
 
 def run_probe(host, script, timeout=90):
@@ -403,8 +485,8 @@ def run_probe(host, script, timeout=90):
         return None, str(e)[:200]
 
 
-def probe_all(hosts, paths, tags, pids):
-    script = probe_script(paths, tags, pids)
+def probe_all(hosts, paths, tags, pids, lanedirs=()):
+    script = probe_script(paths, tags, pids, lanedirs)
     res, errs = {}, {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(hosts)) as ex:
         futs = {ex.submit(run_probe, h, script): h for h in hosts}
@@ -446,6 +528,9 @@ def build_refs(t, lane_texts, pending):
             rr = refs_of(l.split('|')[0], full=False)
             r['lane_jobs'] |= rr['jobs']; r['lane_paths'] |= rr['paths']
     r['lane_jobs'] -= r['jobs']; r['lane_paths'] -= r['paths']
+    # a bare scratch root / lane root named in prose ('/srv/opentallas-scratch2 87%') is not a run: its probe would match
+    # every ot-run command line on the fleet (they all name both scratch roots)
+    r['lane_paths'] = {p for p in r['lane_paths'] if p.rstrip('/') not in DENY_PARENTS and p.rstrip('/').count('/') >= 4}
     r['words'] = {w for w in re.findall(r'[A-Za-z][A-Za-z0-9]*(?:_[A-Za-z0-9]+)+|[A-Za-z]{4,}\w*', line) if len(w) >= 4}
     return r
 
@@ -469,7 +554,8 @@ def gather(tasks, md_mtime, lane_texts, lane_mtimes, hand, pending, jobs, fleet_
     ev = {}
     for t in tasks:
         r = t['refs']
-        e = dict(live=[], activity=[], react=[], runs=[], jobs=[], dead=None, notes=[], harvest=None, tier='own')
+        e = dict(live=[], activity=[], react=[], runs=[], jobs=[], dead=None, notes=[], harvest=None, tier='own',
+                 lane_live=[], lane_act=[])
         tags = r['tags']
         own_runs = _runs_for(probes, r['paths'], tags)
         hashes = {h for h in r['hashes'] if any(len(w) >= 6 and w in n.split('-')[0] for n in by_hash.get(h, []) for w in r.get('words', ()))}
@@ -511,22 +597,42 @@ def gather(tasks, md_mtime, lane_texts, lane_mtimes, hand, pending, jobs, fleet_
             nm = row.get('name') or ''
             if nm and (any(j in nm for j in jtoks) or any(len(tg) >= 8 and tg in nm for tg in tags)):
                 e['live'].append('fleet %s %s on %s' % (row.get('kind', 'job'), nm, row.get('host')))
-        # lane + HANDOFF activity
-        lanes = set(owner_lanes(t['owner']))
+        # lane + HANDOFF activity (lane-level evidence: LANE_LIVE_MIN window, never overrides DEAD)
+        lanes = set(owner_lane_names(t['owner']))
         idrx = re.compile(r'(?<![\w.])%s(?![\w.]*\w)' % re.escape(t['id']))
         named = [t['id']] + sorted(tags)[:20] + sorted(r['jobs'])[:20]
         nrx = re.compile('|'.join(r'(?<![\w.])%s(?![\w])' % re.escape(x) for x in named))
+        seen_dirs = set()
         for lp in t['lane_files']:
-            mt = lane_mtimes.get(lp)
-            if mt: e['activity'].append((mt, 'lane %s' % Path(lp).name))
-            tail = '\n'.join(lane_texts.get(lp, '').splitlines()[-LANE_TAIL:])
-            if mt and nrx.search(tail): e['react'].append((mt, 'lane %s names it' % Path(lp).name))
+            ln = Path(lp).name
+            txt = lane_texts.get(lp, '')
+            la = lane_last_activity(txt, lane_mtimes.get(lp))
+            if la:
+                e['activity'].append((la, 'lane %s' % ln)); e['lane_act'].append((la, 'lane %s' % ln))
+            tail = '\n'.join(txt.splitlines()[-LANE_TAIL:])
+            if la and nrx.search(tail): e['react'].append((la, 'lane %s names it' % ln))
+            for nm in sorted(lane_dirs_of(lp, txt)):     # the lane's run dirs on every probed host
+                for host, d in probes.items():
+                    for x in (d.get('lanedirs') or {}).get(nm, []):
+                        if (host, x['path']) in seen_dirs: continue
+                        seen_dirs.add((host, x['path']))
+                        if x.get('nprocs'):
+                            e['lane_live'].append('%s:%s running, %d proc (lane %s: %s)' % (
+                                host, x['path'], x['nprocs'], ln, x['procs'][0][2][:80] if x.get('procs') else ''))
+                        if x.get('newest'): e['lane_act'].append((x['newest'], 'lane run dir %s:%s touched' % (host, x['path'])))
+        coord = bool(set(owner_tokens(t['owner'])) & COORD_OWNERS) or t['status'] == 'COORD'   # the renderer reads '· COORD ·' as the status
+        last_comp = t['id'].rsplit('.', 1)[-1]
+        crx = re.compile(r'(?<![\w.])%s(?![\w])' % re.escape(last_comp), re.I) if len(last_comp) >= 4 else None
         for lane, ht, l in hand:
             if idrx.search(l):
                 e['activity'].append((ht, 'HANDOFF names %s' % t['id'])); e['react'].append((ht, 'HANDOFF names %s' % t['id']))
+                if lane and (lane in lanes or (coord and lane.upper() in COORD_OWNERS)):
+                    e['lane_act'].append((ht, 'HANDOFF [%s] names %s' % (lane, t['id'])))
             elif lane and lane in lanes:
-                e['activity'].append((ht, 'HANDOFF [%s]' % lane))
+                e['activity'].append((ht, 'HANDOFF [%s]' % lane)); e['lane_act'].append((ht, 'HANDOFF [%s]' % lane))
                 if nrx.search(l): e['react'].append((ht, 'HANDOFF [%s] names it' % lane))
+            elif coord and lane and lane.upper() in COORD_OWNERS and crx and crx.search(l):
+                e['lane_act'].append((ht, 'HANDOFF [%s] names %s' % (lane, last_comp)))
         # dead: the newest named primary run dir / closure job failed and nothing named is live
         cands = [(x['newest'] or x['t_end'] or 0, 'run', x) for x in runs if x['primary'] and x['isdir']]
         cands += [(j['t'], 'job', j) for j in e['jobs']]
@@ -563,7 +669,12 @@ def own_class(t, e, now=None):
     if fresh:
         a = max(fresh, key=lambda x: x[0])
         return 'LIVE', '%s %s ago' % (a[1], hm(age_min(a[0], now))), last
-    return None, None, last
+    if e.get('lane_live'): return 'LIVE', e['lane_live'][0], last
+    lfresh = [a for a in e.get('lane_act', []) if a[0] <= now + 300 and age_min(a[0], now) < LANE_LIVE_MIN]
+    if lfresh:
+        a = max(lfresh, key=lambda x: x[0])
+        return 'LIVE', '%s %s ago' % (a[1], hm(age_min(a[0], now))), max(last, a[0])
+    return None, None, max([last] + [a[0] for a in e.get('lane_act', [])])
 
 
 def parked(t):
@@ -587,7 +698,7 @@ def classify(tasks, ev, now=None):
         else:
             kids_live = [k for k in t['kids'] if k in byid and cls(k)[0] in ('LIVE', 'WAITS-OK')]
             deps = [d for d in sorted(t['refs']['ids']) if d in byid and d != i and not d.startswith(i + '.') and not i.startswith(d + '.')]
-            deps_live = [d for d in deps if cls(d)[0] == 'LIVE']
+            deps_live = [d for d in deps if cls(d)[0] in ('LIVE', 'WAITS-OK')]   # waiting on a task that itself waits OK is OK
             if parked(t):
                 res = ('BLOCKED-ON-OWNER', 'status %s / parked by the owner' % t['status'])
             elif kids_live and t['status'] not in WAIT_ST:
@@ -610,7 +721,7 @@ def classify(tasks, ev, now=None):
         last = own[t['id']][2]
         out.append(dict(id=t['id'], section=t['section'], owner=t['owner'], status_text=t['status'], cls=c, why=why,
                         task=t['task'][:160], last_evidence_min=None if not last else round(age_min(last, now), 1),
-                        live=e['live'][:4], dead=e['dead'], harvest=e['harvest'], notes=e['notes'][:4],
+                        live=e['live'][:4], lane_live=e['lane_live'][:3], dead=e['dead'], harvest=e['harvest'], notes=e['notes'][:4],
                         runs=[dict(host=x['host'], path=x['path'], primary=x['primary'], state=x['state'], rc=x['rc'])
                               for x in sorted(e['runs'], key=lambda x: -(x['newest'] or 0))[:5]],
                         jobs=[dict(name=j['name'], status=j['status']) for j in sorted(e['jobs'], key=lambda j: -j['t'])[:5]],
@@ -660,9 +771,11 @@ def main(argv=None):
     paths = set().union(*[t['refs']['paths'] | t['refs']['lane_paths'] for t in tasks]) if tasks else set()
     tags = set().union(*[t['refs']['tags'] for t in tasks]) if tasks else set()
     pids = set().union(*[t['refs']['pids'] for t in tasks]) if tasks else set()
+    lanedirs = set()
+    for lp in {lp for t in tasks for lp in t['lane_files']}: lanedirs |= lane_dirs_of(lp, lane_texts.get(lp, ''))
     hosts = list(dict.fromkeys(['localhost'] + ([] if a.no_remote else fleet_hosts())))
-    log('tasks %d open; probing %s for %d paths / %d tags' % (len(tasks), ','.join(hosts), len(paths), len(tags)))
-    probes, errs = probe_all(hosts, paths, tags, pids)
+    log('tasks %d open; probing %s for %d paths / %d tags / %d lane dirs' % (len(tasks), ','.join(hosts), len(paths), len(tags), len(lanedirs)))
+    probes, errs = probe_all(hosts, paths, tags, pids, lanedirs)
     jobs = load_jobs()
     try:
         import urllib.request

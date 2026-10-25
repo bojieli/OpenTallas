@@ -56,11 +56,11 @@ def test_part_probe_files_and_worst():
     with tempfile.TemporaryDirectory() as d:
         out = g2.part_probe(P, "fa", d)
         meta = json.loads((out / "probe.json").read_text())
-        # boundary flops for din (64), x_o (277), r_i (71) + one station per bit of fz (65)
+        # boundary flops for din (64), x_o (277), r_i (71) + 4 stations per bit of fz (4 x 65; R3 <= 405 um)
         import gen_phys
         nt = len(gen_phys.tap_pins(P, "fa"))                    # R4 clock tap grid + the reset tap
         assert nt == len(schema.tap_grid(P, "fa")) + 1 and nt > 2
-        assert meta["flops"] == 64 + 277 + 71 + 65 + nt          # + one tap buffer per clock / reset tap
+        assert meta["flops"] == 64 + 277 + 71 + 4 * 65 + nt      # + one tap buffer per clock / reset tap
         v = (out / "probe.v").read_text()
         assert "st_fz_64_0" in v and "CLK" not in v
         assert (out / "io.tcl").read_text().count("place_pin") == 64 + 277 + 71 + 64 + 65 + nt  # fz_i from die IO: no epoch
@@ -177,7 +177,7 @@ def test_kit_overrides_platform_tracks():
         assert (kd / "face_flops.tcl").is_file() and (kd / "face_flops_release.tcl").is_file()
         # COORD 10-23: tap trees balanced to the plan insertion after CTS
         assert "export POST_CTS_TCL = /work/tap_balance.tcl" in cfg and "export OT_TAP_TARGET_PS = 250" in cfg
-        assert "export OT_TAP_WINDOW_PS = 40" in cfg and "export CORNER = TC" in cfg
+        assert "export OT_TAP_WINDOW_PS = 20" in cfg and "export OT_TAP_TOL_PS = 10" in cfg and "export CORNER = TC" in cfg
         assert (kd / "tap_balance.tcl").is_file()
 
 

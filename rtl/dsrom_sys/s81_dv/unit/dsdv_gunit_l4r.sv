@@ -29,8 +29,20 @@ module dsdv_gunit_l4r #(
     ot_dsrom_qadd #(.LAT(LA)) u_eps (clk, rq[1], mq_v, mq, ep, me, f_eps);
     assign me_v = ve[LA];
     ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rq[2]), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
+    // S81-KITS-RTLB 10-24 (owner: register every pin, in RTL): the sticky r_f flop fed its own D and the
+    // port (face_guard 'shared').  r_fs (kept) holds the sticky state; r_f is a pin-only flop loaded with r_fs's next
+    // value, so r_f == r_fs every cycle (0 cycles).
+    (* keep *) reg r_fs;
+    wire r_fn = r_fs | f_div | f_eps | f_rsq;
     always @(posedge clk or negedge rq[2])
-        if (!rq[2]) begin r_v <= 1'b0; r_f <= 1'b0; end
-        else begin r_v <= rr_v; if (f_div | f_eps | f_rsq) r_f <= 1'b1; end
+        if (!rq[2]) begin r_v <= 1'b0; r_f <= 1'b0; r_fs <= 1'b0; end
+        else begin
+            r_v <= rr_v; r_fs <= r_fn;
+`ifdef OT_RTLB_PINFLOP_MUT
+            r_f <= f_div | f_eps | f_rsq;                  // mutant: pin flop not sticky
+`else
+            r_f <= r_fn;
+`endif
+        end
     always @(posedge clk) r_y <= rr;
 endmodule
