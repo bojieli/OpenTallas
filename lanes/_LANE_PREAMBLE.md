@@ -30,3 +30,4 @@ You are a lane agent of the OpenTallas coordinator, which now runs on rtx-pro (t
   over ssh (git -C there, same git rules) -- that is usually simplest for ot-run. epyc1 root is 82%: prune your own
   superseded data, don't add bulk files to epyc1 root.
 - On fleet hosts create worktrees under /srv/opentallas-scratch2/claude/wt/, never ~/wt on root (epyc1 /srv/opentallas-scratch is on root too).
+- Terminology (owner 10-25): 'signed off' / 'sign-off rate' / 'sign-offs per day', not 'signing'/'signatures'.
