@@ -84,6 +84,7 @@ ST_HOP = ST_HOP_BY_SLICE[SLICE_RTL]
 # engine-tree sites that hard-code the slice2 hops (BASE_REV); each is rewritten to the dv_lower constant
 S8_SITES = [('tools/qwen_layerbench/dv_lower_vec.py', '2 * (N - 1 - s)', 'D.ST_HOP * (N - 1 - s)'),
             ('tools/qwen_layerbench/dv_lower_vec.py', '2 * max(s, N - 1 - s)', 'D.ST_HOP * max(s, N - 1 - s)'),
+            ('tools/qwen_layerbench/dv_lower_vec.py', "('x', m, e + 2 * abs(m - s))", "('x', m, e + D.ST_HOP * abs(m - s))"),
             ('tools/qwen_layerbench/dv_lower_xhead.py', 'e5 - 2 * (n - 1 - s)', 'e5 - D.ST_HOP * (n - 1 - s)'),
             ('tools/qwen_layerbench/dv_lower_xhead.py', 'e_s + 2 * abs(m - s)', 'e_s + D.ST_HOP * abs(m - s)'),
             ('tools/qwen_layerbench/dv_layer.py', "['ssq_psum_out'][-1] + 2 * (N - 1) + 61", "['ssq_psum_out'][-1] + D.SC_HOP * (N - 1) + 61"),
