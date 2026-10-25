@@ -1,27 +1,27 @@
 {
  "schema": "opentallas.signoff.v1",
  "name": "hc_kv3_head_eighth_e2__216x216",
- "generated": "2026-10-24T14:23:00-07:00",
+ "generated": "2026-10-24T22:00:16-07:00",
  "host": "tolerant-swine",
  "inputs": {
-  "base": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base",
-  "orfs": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run",
+  "base": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base",
+  "orfs": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run",
   "design": "hc_kv3_head_eighth_e2__216x216",
-  "kit": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216",
-  "odb": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.odb",
-  "spef": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.spef",
-  "sdc": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/constraint.sdc",
+  "kit": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8",
+  "odb": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/constraint.sdc",
   "sdc_source": "kit",
-  "synth": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/1_2_yosys.v",
-  "final_v": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.v",
+  "synth": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/1_2_yosys.v",
+  "final_v": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/6_final.v",
   "metrics": {
-   "5_2_route.json": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/logs/asap7/hc_kv3_head_eighth_e2__216x216/base/5_2_route.json",
-   "5_1_grt.json": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/logs/asap7/hc_kv3_head_eighth_e2__216x216/base/5_1_grt.json",
-   "6_report.json": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/logs/asap7/hc_kv3_head_eighth_e2__216x216/base/6_report.json"
+   "5_2_route.json": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/logs/asap7/hc_kv3_head_eighth_e2__216x216/base/5_2_route.json",
+   "5_1_grt.json": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/logs/asap7/hc_kv3_head_eighth_e2__216x216/base/5_1_grt.json",
+   "6_report.json": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/logs/asap7/hc_kv3_head_eighth_e2__216x216/base/6_report.json"
   },
-  "drc_rpt": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/reports/asap7/hc_kv3_head_eighth_e2__216x216/base/5_route_drc.rpt",
-  "pins": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/pins.json",
-  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/sdc_lint.json",
+  "drc_rpt": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/reports/asap7/hc_kv3_head_eighth_e2__216x216/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/sdc_lint.json",
   "record": null
  },
  "policy": {
@@ -46,7 +46,7 @@
   "tt": {
    "done": true,
    "design": "kv3_head_eighth_e2",
-   "cells": 357944.0,
+   "cells": 372741.0,
    "parasitics": "spef",
    "clocks": [
     "clk",
@@ -95,23 +95,23 @@
     "g_t_5_u_stk__kpv_o"
    ],
    "overlay": "applied vclk in_min -40 out_min 0",
-   "sdc_wns_max": 1.6,
-   "sdc_wns_min": 7.75,
+   "sdc_wns_max": 12.72,
+   "sdc_wns_min": 20.46,
    "sdc_tns_max": 0.0,
    "sdc_tns_min": 0.0,
    "sdc_nviol_max": 0.0,
    "sdc_nviol_min": 0.0,
-   "std_wns_max": 1.6,
-   "std_wns_min": 7.75,
+   "std_wns_max": 12.72,
+   "std_wns_min": 20.46,
    "std_tns_max": 0.0,
    "std_tns_min": 0.0,
    "std_nviol_max": 0.0,
    "std_nviol_min": 0.0,
-   "slew_viol": 265.0,
+   "slew_viol": 15.0,
    "cap_viol": 0.0,
-   "fanout_max": 103.0,
-   "fanout_worst_net": "net8366",
-   "fanout_viol": 59.0,
+   "fanout_max": 27.0,
+   "fanout_worst_net": "clknet_leaf_661_g_front_1_u_front__clk[0]",
+   "fanout_viol": 0.0,
    "check_setup": {
     "unconstrained": 0,
     "unclocked": 0,
@@ -122,20 +122,20 @@
    "ck_errors": 0.0,
    "insertion_all": {
     "n": 28394,
-    "min": 279.47,
-    "mean": 291.51,
-    "max": 312.76,
-    "spread": 33.29
+    "min": 280.0,
+    "mean": 292.5,
+    "max": 313.28,
+    "spread": 33.28
    },
    "insertion_pinflops": {
     "n": 1303,
-    "min": 283.92,
-    "mean": 292.69,
-    "max": 310.84,
-    "spread": 26.92
+    "min": 284.68,
+    "mean": 293.69,
+    "max": 310.74,
+    "spread": 26.06
    },
-   "ocv5_wns_max": -53.65,
-   "ocv5_wns_min": -10.94,
+   "ocv5_wns_max": -41.97,
+   "ocv5_wns_min": -2.94,
    "corner": "tt",
    "rc": 0,
    "macro_libs": [],
@@ -145,7 +145,7 @@
   "ff": {
    "done": true,
    "design": "kv3_head_eighth_e2",
-   "cells": 357944.0,
+   "cells": 372741.0,
    "parasitics": "spef",
    "clocks": [
     "clk",
@@ -194,23 +194,23 @@
     "g_t_5_u_stk__kpv_o"
    ],
    "overlay": "applied vclk in_min -40 out_min 0",
-   "sdc_wns_max": 192.84,
-   "sdc_wns_min": -6.28,
+   "sdc_wns_max": 219.46,
+   "sdc_wns_min": 4.2,
    "sdc_tns_max": 0.0,
-   "sdc_tns_min": -377.98,
+   "sdc_tns_min": 0.0,
    "sdc_nviol_max": 0.0,
-   "sdc_nviol_min": 338.0,
-   "std_wns_max": 192.84,
-   "std_wns_min": -6.28,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 219.46,
+   "std_wns_min": 4.2,
    "std_tns_max": 0.0,
-   "std_tns_min": -377.98,
+   "std_tns_min": 0.0,
    "std_nviol_max": 0.0,
-   "std_nviol_min": 338.0,
-   "slew_viol": 274.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 15.0,
    "cap_viol": 0.0,
-   "fanout_max": 103.0,
-   "fanout_worst_net": "net8366",
-   "fanout_viol": 59.0,
+   "fanout_max": 27.0,
+   "fanout_worst_net": "clknet_leaf_661_g_front_1_u_front__clk[0]",
+   "fanout_viol": 0.0,
    "check_setup": {
     "unconstrained": 0,
     "unclocked": 0,
@@ -221,20 +221,20 @@
    "ck_errors": 0.0,
    "insertion_all": {
     "n": 28394,
-    "min": 223.91,
-    "mean": 234.56,
-    "max": 255.05,
-    "spread": 31.14
+    "min": 224.23,
+    "mean": 235.44,
+    "max": 255.5,
+    "spread": 31.27
    },
    "insertion_pinflops": {
     "n": 1303,
-    "min": 227.46,
-    "mean": 235.79,
-    "max": 253.1,
-    "spread": 25.64
+    "min": 228.19,
+    "mean": 236.66,
+    "max": 253.0,
+    "spread": 24.81
    },
-   "ocv5_wns_max": 150.42,
-   "ocv5_wns_min": -21.87,
+   "ocv5_wns_max": 178.16,
+   "ocv5_wns_min": -14.28,
    "corner": "ff",
    "rc": 0,
    "macro_libs": [],
@@ -247,7 +247,7 @@
   "mode": "kit sdc_lint.json",
   "errors": [],
   "n_errors": 0,
-  "sdc": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/constraint.sdc",
+  "sdc": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/constraint.sdc",
   "sdc_source": "kit"
  },
  "face_guard": {
@@ -275,11 +275,11 @@
     "g_front_1_u_front__f_t3[228]: buffered from port g_front_1_u_front__f_t2[228]"
    ]
   },
-  "netlist": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/1_2_yosys.v",
-  "pins": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/pins.json",
+  "netlist": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/1_2_yosys.v",
+  "pins": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/pins.json",
   "boundary_context": {
-   "manifest": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/boundary_guard_context.json",
-   "source_core_json": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/core.json",
+   "manifest": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/boundary_guard_context.json",
+   "source_core_json": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/core.json",
    "controls": [
     "g_front_1_u_front__clk",
     "g_t_4_u_l8__clk",
@@ -306,50 +306,50 @@
  "checks": {
   "setup_tt": {
    "verdict": "PASS",
-   "wns_ps": 1.6,
+   "wns_ps": 12.72,
    "tns_ps": 0.0,
    "violators": 0.0
   },
   "hold_ff": {
-   "verdict": "FAIL",
-   "wns_ps": -6.28,
-   "tns_ps": -377.98,
-   "violators": 338.0,
-   "sdc_wns_ps": -6.28,
+   "verdict": "PASS",
+   "wns_ps": 4.2,
+   "tns_ps": 0.0,
+   "violators": 0.0,
+   "sdc_wns_ps": 4.2,
    "overlay": "applied vclk in_min -40 out_min 0"
   },
   "drv": {
    "verdict": "FAIL",
    "by_corner": {
     "tt": {
-     "slew": 265.0,
+     "slew": 15.0,
      "cap": 0.0
     },
     "ff": {
-     "slew": 274.0,
+     "slew": 15.0,
      "cap": 0.0
     }
    },
    "failing": {
     "tt": {
-     "slew": 265.0,
+     "slew": 15.0,
      "cap": 0.0
     },
     "ff": {
-     "slew": 274.0,
+     "slew": 15.0,
      "cap": 0.0
     }
    }
   },
   "fanout": {
-   "verdict": "WARN",
+   "verdict": "PASS",
    "limit": 64,
    "violators": {
-    "tt": 59.0,
-    "ff": 59.0
+    "tt": 0.0,
+    "ff": 0.0
    },
-   "max_fanout": 103.0,
-   "worst_net": "net8366"
+   "max_fanout": 27.0,
+   "worst_net": "clknet_leaf_661_g_front_1_u_front__clk[0]"
   },
   "unconstrained": {
    "verdict": "PASS",
@@ -368,34 +368,34 @@
     "tt": {
      "pinflops": {
       "n": 1303,
-      "min": 283.92,
-      "mean": 292.69,
-      "max": 310.84,
-      "spread": 26.92
+      "min": 284.68,
+      "mean": 293.69,
+      "max": 310.74,
+      "spread": 26.06
      },
      "all": {
       "n": 28394,
-      "min": 279.47,
-      "mean": 291.51,
-      "max": 312.76,
-      "spread": 33.29
+      "min": 280.0,
+      "mean": 292.5,
+      "max": 313.28,
+      "spread": 33.28
      },
      "ck_errors": 0.0
     },
     "ff": {
      "pinflops": {
       "n": 1303,
-      "min": 227.46,
-      "mean": 235.79,
-      "max": 253.1,
-      "spread": 25.64
+      "min": 228.19,
+      "mean": 236.66,
+      "max": 253.0,
+      "spread": 24.81
      },
      "all": {
       "n": 28394,
-      "min": 223.91,
-      "mean": 234.56,
-      "max": 255.05,
-      "spread": 31.14
+      "min": 224.23,
+      "mean": 235.44,
+      "max": 255.5,
+      "spread": 31.27
      },
      "ck_errors": 0.0
     }
@@ -409,7 +409,7 @@
    "mode": "kit sdc_lint.json",
    "errors": [],
    "n_errors": 0,
-   "sdc": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/constraint.sdc",
+   "sdc": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/constraint.sdc",
    "sdc_source": "kit"
   },
   "face_guard": {
@@ -437,11 +437,11 @@
      "g_front_1_u_front__f_t3[228]: buffered from port g_front_1_u_front__f_t2[228]"
     ]
    },
-   "netlist": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/1_2_yosys.v",
-   "pins": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/pins.json",
+   "netlist": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/run/results/asap7/hc_kv3_head_eighth_e2__216x216/base/1_2_yosys.v",
+   "pins": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/pins.json",
    "boundary_context": {
-    "manifest": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/boundary_guard_context.json",
-    "source_core_json": "/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216/core.json",
+    "manifest": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/boundary_guard_context.json",
+    "source_core_json": "/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8/core.json",
     "controls": [
      "g_front_1_u_front__clk",
      "g_t_4_u_l8__clk",
@@ -471,8 +471,7 @@
   }
  },
  "reasons": [
-  "hold_ff: FAIL WNS -6.28 ps, 338 endpoints",
-  "drv: FAIL TT slew 265.0 cap 0.0, FF slew 274.0 cap 0.0",
+  "drv: FAIL TT slew 15.0 cap 0.0, FF slew 15.0 cap 0.0",
   "face_guard: FAIL {'shared': 42, 'feedthrough': 41}"
  ],
  "verdict": "NOT SIGNED",
@@ -486,29 +485,18 @@
   "measured": {
    "tt": {
     "n": 1303,
-    "min": 283.92,
-    "mean": 292.69,
-    "max": 310.84,
-    "spread": 26.92
+    "min": 284.68,
+    "mean": 293.69,
+    "max": 310.74,
+    "spread": 26.06
    },
    "ff": {
     "n": 1303,
-    "min": 227.46,
-    "mean": 235.79,
-    "max": 253.1,
-    "spread": 25.64
+    "min": 228.19,
+    "mean": 236.66,
+    "max": 253.0,
+    "spread": 24.81
    }
   }
- },
- "contract_reevaluated": {
-  "by": "collect_core.py (KV-CORES 10-24)",
-  "pre_contract_verdict": "NOT SIGNED",
-  "pre_contract_reasons": [
-   "hold_ff: FAIL WNS -6.28 ps, 338 endpoints",
-   "drv: FAIL TT slew 265.0 cap 0.0, FF slew 274.0 cap 0.0",
-   "clock: FAIL TT pin-flop insertion 292.7 ps not within 250 +- 40",
-   "face_guard: FAIL {'shared': 42, 'feedthrough': 41}"
-  ],
-  "original": "signoff.pre_contract.json"
  }
 }

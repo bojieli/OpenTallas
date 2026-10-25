@@ -48,7 +48,7 @@ if {[info exists ::env(OT_PAD_MASTERS)] && $::env(OT_PAD_MASTERS) ne ""} {
   foreach mp $::env(OT_PAD_MASTERS) {
     lassign [split $mp :] m n
     puts "KVCORES_ECO set_placement_padding -masters $m -left $n -right $n"
-    set_placement_padding -masters [get_lib_cells $m] -left $n -right $n
+    set_placement_padding -masters [list $m] -left $n -right $n
   }
 }
 detailed_placement

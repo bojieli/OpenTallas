@@ -39,6 +39,6 @@
   "signal_max": "M7",
   "kit_hash": "7263232a9a4004e0"
  },
- "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 544/544, TT setup WS 36.609382338693486, FF hold WS -5.91726670029139)",
- "views_status": "abstract_only (not SIGNED)"
+ "verdict": "SIGNED (signoff.py; pin audit PASS)",
+ "views_status": "signoff"
 }

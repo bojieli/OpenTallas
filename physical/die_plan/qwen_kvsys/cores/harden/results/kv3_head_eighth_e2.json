@@ -3,7 +3,7 @@
  "module": "kv3_head_eighth_e2",
  "kit": "kv3_head_eighth_e2__216x216",
  "kit_hash": "0e8620a0f1733134",
- "run": "intel2:/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e2__216x216",
+ "run": "intel2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e2/m8",
  "outline_um": [
   216.0,
   216.0
@@ -20,8 +20,8 @@
  "sdc_lint": "SDC_LINT PASS /work errors 0 liberty 16",
  "face_guard_report_only": "FAIL",
  "synth_cells": null,
- "instances": 357944,
- "std_util": 0.453698,
+ "instances": 372741,
+ "std_util": 0.473759,
  "grt_overflow": null,
  "drc": 0,
  "antenna": 0,
@@ -31,11 +31,11 @@
    "corner": "tt",
    "parasitics": "spef",
    "setup_wns_ps": 0,
-   "setup_ws_ps": 1.597166849607714,
+   "setup_ws_ps": 12.719492177047613,
    "setup_tns_ps": 0.0,
    "setup_viol_endpoints": 0,
    "hold_wns_ps": 0,
-   "hold_ws_ps": 7.749995121090205,
+   "hold_ws_ps": 20.456553199849253,
    "hold_tns_ps": 0.0,
    "hold_viol_endpoints": 0
   },
@@ -43,28 +43,27 @@
    "corner": "ff",
    "parasitics": "spef",
    "setup_wns_ps": 0,
-   "setup_ws_ps": 192.8376355198511,
+   "setup_ws_ps": 219.46305971395276,
    "setup_tns_ps": 0.0,
    "setup_viol_endpoints": 0,
-   "hold_wns_ps": -6.282613343579767,
-   "hold_ws_ps": -6.282613343579767,
-   "hold_tns_ps": -377.97690128946334,
-   "hold_viol_endpoints": 339
+   "hold_wns_ps": 0,
+   "hold_ws_ps": 4.20152803117992,
+   "hold_tns_ps": 0.0,
+   "hold_viol_endpoints": 0
   },
   "ss": null
  },
  "signoff": {
   "verdict": "NOT SIGNED",
   "reasons": [
-   "hold_ff: FAIL WNS -6.28 ps, 338 endpoints",
-   "drv: FAIL TT slew 265.0 cap 0.0, FF slew 274.0 cap 0.0",
+   "drv: FAIL TT slew 15.0 cap 0.0, FF slew 15.0 cap 0.0",
    "face_guard: FAIL {'shared': 42, 'feedthrough': 41}"
   ],
   "checks": {
    "setup_tt": "PASS",
-   "hold_ff": "FAIL",
+   "hold_ff": "PASS",
    "drv": "FAIL",
-   "fanout": "WARN",
+   "fanout": "PASS",
    "unconstrained": "PASS",
    "clock": "PASS",
    "sdc_lint": "PASS",
@@ -73,7 +72,8 @@
    "antenna": "PASS"
   }
  },
- "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 1356/1356, TT setup WS 1.597166849607714, FF hold WS -6.282613343579767)",
+ "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 1356/1356, TT setup WS 12.719492177047613, FF hold WS 4.20152803117992)",
  "views_status": "abstract_only (not SIGNED)",
- "views": "physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2"
+ "views": "physical/ref_tile/kv3_head_eighth_e2/views/kv3_head_eighth_e2",
+ "previous_record": "kv3_head_eighth_e2.prev1.json"
 }
