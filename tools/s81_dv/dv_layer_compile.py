@@ -35,6 +35,7 @@ import json
 import math
 import os
 import re
+import struct
 import subprocess
 import sys
 from pathlib import Path
@@ -74,6 +75,10 @@ BEAT = dict(go_to_partial=112, go_to_partial_normr=115, rstd_to_y0=18, rstd_to_x
 # dv_price.py (S81-DV measured): beat partial -> xfin DL 4 + collector 5; xfin last partial -> rstd 234 (tb_s81dv_xfin16);
 # rstd -> XQ complete at the ring stop 59 + 4 * 4 (last leaf) + DL 4.
 XFIN = dict(dl=4, collector=5, last_partial_to_rstd=234, rstd_to_xq_ring=59 + 16 + 4)
+# TOK-DS NORM-DESKEW 10-25 (COORD ruling 01:34; claude/s81-norm-deskew-1025): ot_s81sl_xrt1 / xrt3 PDSK = leaf 0..4
+# depth 4, 3, 2, 1, 0 -- the per-leaf NORMRs must reach the slice on 5 consecutive edges in leaf order (lower_norm_smoke
+# issues them on t .. t + 4) and the partial set leaves xr 4 edges after the first one would have.
+XR_DESKEW = 4
 HOST_SLOT = 5            # tb_dsdv_seq_host: one host word every 5th edge (the compiler's host slots)
 NOPS = 128               # ot_dsdv_fixed_issue calendar rows per job (NOPS <= 128) and CTL templates (128 x 186 b)
 ENG = dict(VN=0, VS=1, GUNIT=2, SVC=4, KIT=14, END=15)
@@ -650,10 +655,17 @@ def ctl_path(die, sl):
                 'ot_s81_land E + 1 + half-cycle stations + bk_sel 3 + V inject 6 + rstop 2/stop; G8 cut_3S_ctl L0 replay measured)')
 
 
-def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which='attn'):
+def norm_eps_bits():
+    """The released checkpoint's RMSNorm epsilon, encoded as binary32."""
+    config = json.loads((ROOT / 'compiler/models/deepseek-v4.1-flash/inference_config.json').read_text())
+    return struct.unpack('<I', struct.pack('<f', config['norm_eps']))[0]
+
+
+def lower_norm_smoke(die, prog, sl, t0, eps=None, r_h=0, r_gain=64, which='attn'):
     """slice-local hc_pre + RMSNorm + act-quant on ONE slice (the beat bench's proven sequence, issued through the
     seq_host calendar as CTL beats): HLOAD (5 leaves) -> GAIN -> NORMR per leaf (a0 = G-unit row R, a1 = global beat 5 sid + k, n = 3:
     q + BF16 family) -> xfin go (eps).  The partial / rstd / XQ edges follow from the unit latencies."""
+    eps = norm_eps_bits() if eps is None else eps
     s = die.slices()[sl]
     sid, smask = s['sid'], 1 << s['sid']
     eng = ENG['VN'] if sl.endswith('N') else ENG['VS']
@@ -709,6 +721,9 @@ def lower_norm_smoke(die, prog, sl, t0, eps=0x358637BD, r_h=0, r_gain=64, which=
     prog.events.append(dict(cycle=t + 5 + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL', tag=f'{which}.XFIN_GO',
                             payload=f'template {tx}'))
     # derived internal / outgoing edges (plan values the bench checks at the slice boundary where they are visible)
+    # NORM-DESKEW: four edges after leaf0, already present in go[-1]. The
+    # previous faulting serializer restarted at each leaf, so adding another
+    # four edges after the last command would double count that delay.
     last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector']
     rstd = last_partial + XFIN['last_partial_to_rstd']
     xq = rstd + XFIN['rstd_to_xq_ring']
@@ -966,7 +981,9 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False):
+    if entry_norm and not fixtures:
+        raise ValueError('--entry-norm-check needs --fixtures (the layer-entry inputs and the reference model checks)')
     if dense_stage is not None and mu_ctx:
         raise ValueError('DENSE2 MU requires the corrected per-position static stage graph binding')
     if svc_owner_epoch is not None and mu_ctx:
@@ -1042,8 +1059,26 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if sum(len(v) for v in avoid.values()) > 64:
             raise ValueError(f'line slot reservation does not converge: {clash[:4]}')
         return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
-                             mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid)
+                             mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid,
+                             entry_norm=entry_norm)
     prog.line_avoid = {k: sorted(v) for k, v in (line_avoid or {}).items()}
+    if entry_norm:
+        # TOK-DS-GAPS 10-24 (opt-in; default byte-identical): layer-entry residency of the smoke slice as pre-layer CTL
+        # target-5 events + the xfin NX flit as checked output words (layer_prog/norm_nx.py).  After row_ctl_events
+        # and the line-slot pass: the entry beats are not calendar rows and carry an explicit payload186.
+        if sub is None or not str(sub.get('hc_pre_source', '')).startswith('entry.'):
+            raise ValueError('--entry-norm-check: no attn norm smoke on this layer (the NX flit needs the attn norm)')
+        sys.path.insert(0, str(ROOT / 'tools/s81_dv/layer_prog'))
+        import norm_nx
+        if entry_norm == 'all':
+            # the 16-slice composition: every slice's norm + entry state + the snake flit words (own + forwards)
+            sub['entry_norm'] = norm_nx.emit_all(die, prog, sub, fixtures, sys.modules[__name__])
+            clash = line_slot_conflicts(die, prog)
+            if clash:
+                raise ValueError(f'--entry-norm-check all: line slot collision of the 16-slice norm rows: {clash[:4]}')
+        else:
+            sub['entry_norm'] = norm_nx.emit(die, prog, sub, fixtures,
+                                             [e['cycle'] for e in prog.events if e['kind'] == 'CTL'])
     files = {}
     for rel, text in prog.files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -1080,7 +1115,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
-                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid)
+                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid,
+                                 entry_norm=entry_norm)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1127,7 +1163,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
                     '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '
                     'edge the producer\'s output register takes it; boundary offdie = beyond the die\'s elastic link '
                     'layer (no fixed-cycle cut word); dir internal = inside one instance, carried_by its CTL template',
-        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links), indent=1) + '\n')
+        row_ctl_events=n_row_ctl, port_valid=prog.port_valid, links=links,
+        all_links=die.links if entry_norm == 'all' else None), indent=1) + '\n')
     ul = die.unlanded()
     die_gaps = [dict(module='results/arch/s81_dv_1016/bind9/die.v (S81 die GEN, lead S81-DIE6/7)',
                      port=', '.join(sorted(x['link'] for x in ul)),
@@ -1199,6 +1236,10 @@ def main(argv=None):
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
                     help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
+    ap.add_argument('--entry-norm-check', nargs='?', const='smoke', choices=('smoke', 'all'), default=None,
+                    help='TOK-DS-GAPS: emit the smoke slice\'s layer-entry rows (pre-layer CTL target 5) and its attn '
+                         'xfin NX flit as checked output words (needs --fixtures; layer_prog/norm_nx.py); "all" = every '
+                         'slice\'s norm + entry state + the 16-flit snake words')
     a = ap.parse_args(argv)
     if a.dense_stage is not None and (a.mu_cal or a.mu_ctx):
         ap.error('--dense-stage MU requires corrected per-position static stage graph binding')
@@ -1214,7 +1255,7 @@ def main(argv=None):
             return
     tree = die_tree(a.die_ref, a.die_src)
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
-                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage)
+                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
