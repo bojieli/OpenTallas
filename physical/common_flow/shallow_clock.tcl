@@ -157,7 +157,6 @@ proc ::ot_dtsh::node {name x y orient parent} {
   [lindex $ip 0] connect $pn
   [lindex $op 0] connect $net
   pg $inst
-  $inst setDoNotTouch true; $net setDoNotTouch true
   dict set nodes $name [dict create inst $inst net $net parent $pn input [lindex $ip 0] output [lindex $op 0] box $bounds orient $orient]
   occ_add $name $bounds
 }
@@ -170,8 +169,20 @@ proc ::ot_dtsh::leaf {name parent} {
   set inst [$blk findInst $name]
   # Preserve the already legalised tap position and its own local tree interface.
   pg $inst
-  $inst setPlacementStatus FIRM; $inst setDoNotTouch true
+  $inst setPlacementStatus FIRM
   dict set leaves $name $pn
+}
+# OpenDB forbids connecting a new child to a dont_touch net. Freeze only
+# after the entire emitted tree, including every existing tap input, is wired.
+proc ::ot_dtsh::freeze {} {
+  variable blk; variable root; variable nodes; variable taps; variable leaves
+  if {[lsort [dict keys $leaves]] ne [lsort [dict keys $taps]]} { error "OT_DTSH cannot freeze before all tap inputs are wired" }
+  dict for {name info} $nodes {
+    [dict get $info inst] setDoNotTouch true
+    [dict get $info net] setDoNotTouch true
+  }
+  dict for {name info} $taps { [$blk findInst $name] setDoNotTouch true }
+  $root setDoNotTouch true
 }
 proc ::ot_dtsh::audit {} {
   variable blk; variable nodes; variable leaves; variable taps; variable original; variable ff_data; variable root; variable root_extra; variable ndr
@@ -314,7 +325,7 @@ proc ::ot_dtsh::setup {block tap_list root_net cell} {
   # row orientations and complete tap coverage as each operation is applied.
   uplevel #0 [list source $apply]
   if {![dict size $nodes]} { error "OT_DTSH planner emitted no physical trunk nodes" }
-  $root setDoNotTouch true
+  freeze
   trunk_ndr
   audit
   rename ::clock_tree_synthesis ::ot_dtsh::cts_orig

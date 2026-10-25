@@ -114,3 +114,29 @@ puts "BAD [catch {::ot_dtsh::trunk_ndr} msg] $msg"
     assert '-spacing {M2 0.06 M3 0.06 M4 0.06 M5 0.06 M6 0.06 M7 0.06}' in s
     assert 'ASSIGNED {root setNonDefaultRule ndr} {planned setNonDefaultRule ndr}' in s
     assert 'BAD 1 OT_DTSH unknown NDR option invalid' in s
+
+
+def test_freeze_requires_complete_wiring_then_protects_all():
+    s=run('''
+set frozen {}
+proc inst {m value} {lappend ::frozen [list inst $m $value]}
+proc net {m value} {lappend ::frozen [list net $m $value]}
+proc root {m value} {lappend ::frozen [list root $m $value]}
+proc tap0 {m value} {lappend ::frozen [list tap0 $m $value]}
+proc tap1 {m value} {lappend ::frozen [list tap1 $m $value]}
+proc blk {m name} {if {$name eq "ot_dtap_0"} {return tap0};return tap1}
+set ::ot_dtsh::blk blk;set ::ot_dtsh::root root
+set ::ot_dtsh::nodes [dict create n0 [dict create inst inst net net]]
+set ::ot_dtsh::taps [dict create ot_dtap_0 {} ot_dtap_1 {}]
+set ::ot_dtsh::leaves [dict create ot_dtap_0 net]
+puts "EARLY [catch {::ot_dtsh::freeze} msg] $msg FLAGS=$frozen"
+dict set ::ot_dtsh::leaves ot_dtap_1 net
+::ot_dtsh::freeze
+puts "FROZEN $frozen"
+''')
+    assert 'EARLY 1 OT_DTSH cannot freeze before all tap inputs are wired FLAGS=\n' in s
+    assert 'FROZEN {inst setDoNotTouch true} {net setDoNotTouch true} {tap0 setDoNotTouch true} {tap1 setDoNotTouch true} {root setDoNotTouch true}' in s
+    source=RUNTIME.read_text()
+    node=source.split('proc ::ot_dtsh::node {',1)[1].split('proc ::ot_dtsh::freeze',1)[0]
+    assert 'setDoNotTouch' not in node
+    assert source.index('uplevel #0 [list source $apply]') < source.index('\n  freeze\n')
