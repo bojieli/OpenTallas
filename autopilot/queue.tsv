@@ -251,3 +251,5 @@ qwen_compute	qfd_dv_s8_crh_rp1__f57	epyc1:/srv/opentallas-scratch2/claude/qc-pla
 s81	ot_s81_cfg7_seq_bfp	epyc1:/srv/opentallas-scratch2/claude/s81-cores3-lb/kits/ot_s81_cfg7_seq_bfp_c	claude/s81-cores3-lb-1025@fb31ca9fe	REQ	S81-CORES3/LB cfg7bfp	16	12000	S81-CORES	finish		8
 qwen_kvsys	kv3_io_cor_v1	epyc1:/srv/opentallas-scratch2/claude/kv-kits3/k1/m0/kv3_io_cor_v1	claude/kv-kits3-1025@e7e78bb751	REQ	KV-KITS/K1	16	40000	KV-KITS	route
 qwen_kvsys	kv3_io_cor_v1	epyc1:/srv/opentallas-scratch2/claude/kv-kits3/k1/m5/kv3_io_cor_v1	claude/kv-kits3-1025@e7e78bb751	REQ	KV-KITS/K1	16	40000	KV-KITS	route
+s81	slice_station__t8	epyc1:/srv/opentallas-scratch2/claude/s81-kits/k1/m0/slice_station__t8	claude/s81-kits-1025@0ce8b41733	WITHDRAWN	S81-KITS hold: reset relay hop u_rrl_33 447 um > 405 (reset_tree leaf->sink unbounded; CLOCK-RESET ask 05:43)	24	200000	S81-KITS	route		8
+s81	slice_station__t8	epyc1:/srv/opentallas-scratch2/claude/s81-kits/k1/m5/slice_station__t8	claude/s81-kits-1025@0ce8b41733	WITHDRAWN	S81-KITS hold: reset relay hop u_rrl_33 447 um > 405 (reset_tree leaf->sink unbounded; CLOCK-RESET ask 05:43)	24	200000	S81-KITS	route		8
