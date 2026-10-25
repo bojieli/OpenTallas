@@ -566,3 +566,15 @@ def test_structural_constant_closure_proves_both_sides_and_rejects_mutant(tmp_pa
         if not mutant:
             assert all(k in L.hyp for k in [('gold', 'ff:u_dut.a'), ('gold', 'ff:u_dut.b'),
                                            ('gate', 'ff:u_dut.p'), ('gate', 'ff:u_dut.q')])
+
+
+def test_explicit_platform_buffer_loads_functional_liberty_for_gold_and_lint(tmp_path, monkeypatch):
+    (tmp_path / 'rtl.v').write_text('module t(input a, output y); HB4xp67_ASAP7_75t_R u_b(.A(a),.Y(y)); endmodule\n')
+    monkeypatch.setattr(lec, 'NLDM', str(tmp_path))
+    monkeypatch.setattr(lec, 'STD_LIBS', ['buf.lib'])
+    monkeypatch.setattr(lec, 'lib_cells', lambda p: ['HB4xp67_ASAP7_75t_R'])
+    env = {'VERILOG_FILES': '/work/rtl.v', 'DESIGN_NAME': 't'}
+    for frontend in ('verilog', 'slang'):
+        cmds = lec.read_rtl_cmds(env, tmp_path, frontend, [])
+        assert cmds[0] == f'read_liberty -ignore_miss_func {tmp_path}/buf.lib'
+        assert not any('read_liberty -lib ' in c for c in cmds)

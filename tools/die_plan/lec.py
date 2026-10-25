@@ -176,6 +176,22 @@ def top_params(env):
     return list(zip(t[0::2], t[1::2]))
 
 
+def rtl_standard_libs(env, kit):
+    """Resolve explicit ASAP7 cell instances in RTL to the real functional
+    Liberty models, as on the gate side (e.g. ot_hdly's HB4xp67 buffer)."""
+    referenced, defined = set(), set()
+    for f in env["VERILOG_FILES"].split():
+        p = kpath(kit, f)
+        try:
+            text = Path(p).read_text(errors="replace")
+        except OSError:
+            continue
+        referenced.update(re.findall(r"\b[A-Za-z_]\w*_ASAP7_75t_[RLS]\b", text))
+        defined.update(src_modules(p))
+    needed = referenced - defined
+    return [f"{NLDM}/{l}" for l in STD_LIBS if needed and needed.intersection(lib_cells(f"{NLDM}/{l}"))]
+
+
 def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
     cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
@@ -184,7 +200,9 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     defs = env.get("VERILOG_DEFINES", "").split()
     if "-DSYNTHESIS" not in defs:
         defs.append("-DSYNTHESIS")
-    cmds = [f"read_liberty -lib -ignore_miss_func {l}" for l in lib_bbs]
+    # Functional cells must never be replaced by free black-box outputs.
+    cmds = [f"read_liberty -ignore_miss_func {l}" for l in rtl_standard_libs(env, kit)]
+    cmds += [f"read_liberty -lib -ignore_miss_func {l}" for l in lib_bbs]
     if frontend == "slang":
         a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
         a += [f"-I{i}" for i in incs] + defs + files
