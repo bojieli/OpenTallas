@@ -167,7 +167,23 @@ def make_tracks():
             "make_tracks M4 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048\n" + M123_TRACKS)
 
 
-def sdc(per, ins, tol, clks, rsts, tid, straps=()):
+def sender_min_ports(cj, clks, rsts, straps):
+    """IO-HOLD option A (COORD 10:23 ruling (1); PATH-KV ASTK4 COORD ruling (b)) for a hard core: env OT_IO_HOLD=sender_min
+    -> every vector data input's min input delay = the sender's guaranteed output-min, the plan contract
+    (1 - UNC_SPLIT) x UNC_HOLD_PS - 0 = 12.5 ps (every sender in the parent is a registered pin: register-every-pin rule).
+    Scalar inputs, clocks, resets and ID straps keep the flat -insertion_tol.  {} in legacy mode."""
+    import os
+    v = os.environ.get("OT_IO_HOLD") or "legacy"
+    if v not in ("legacy", "sender_min"):
+        raise SystemExit(f"OT_IO_HOLD '{v}' not in (legacy, sender_min)")
+    if v != "sender_min":
+        return {}
+    g = round((1 - UNC_SPLIT) * UNC_HOLD_PS, 4)
+    return {b: g for b, d in cj["port_decl"].items()
+            if d[0] == "input" and b not in clks and b not in rsts and b not in straps and int(d[1]) > int(d[2])}
+
+
+def sdc(per, ins, tol, clks, rsts, tid, straps=(), in_min_ports=None):
     """core SDC in the sdc_lint vocabulary (CP1-R10): one real clock 'clk' on the core clock pin(s), one virtual IO clock
     at the plan common latency, 60/25 ps uncertainty split once per seam, explicit max AND min delays on every port
     (min input = -insertion_tol: seam-hold padding as the partition kits; min output 0)."""
@@ -192,6 +208,11 @@ def sdc(per, ins, tol, clks, rsts, tid, straps=()):
          f"set_input_delay -min {-tol:.4f} -clock vclk $non_clk_in\n"
          f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n"
          f"set_output_delay -min 0.0000 -clock vclk [all_outputs]\n")
+    if in_min_ports:
+        s += "# IO-HOLD option A (OT_IO_HOLD=sender_min): sender output-min guarantee; parent io_hold_parent.py check required\n"
+        for v in sorted(set(in_min_ports.values())):
+            ps = sorted(p for p, x in in_min_ports.items() if x == v)
+            s += f"set_input_delay -min {v:.4f} -clock vclk [get_ports {{{' '.join(p + '[*]' for p in ps)}}}]\n"
     if rsts:
         s += (f"# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)\n"
               f"set_input_delay -max {0.5 * per:.4f} -clock vclk [get_ports {{{' '.join(rsts)}}}]\n")
@@ -338,10 +359,10 @@ ASTK_ZONES = (("zn0", r"^u_u_strip_u_strip_g_zn_0_u_zn[./]", 0.000, 0.606, 0.494
 ASTK_TAP_RE = r"^(u_u_strip_u_strip_g_zn_[0-9]_u_zn)[./]"
 
 
-def astk_zone_fences(kd, cfg, w, h, m):
+def astk_zone_fences(kd, cfg, w, h, m, face_taps=False):
     """GPL zone regions (zone_fence.tcl / zone_fence_release.tcl) + one clock tap per zone, the rest (ctl, strap, fault)
     on one more tap (astk_zone_taps.tcl with OT_LANE_RE = the zone instance prefix); CTS -balance_levels."""
-    for f in ("zone_fence.tcl", "zone_fence_release.tcl", "zone_members.tcl", "astk_zone_taps.tcl"):
+    for f in ("zone_fence.tcl", "zone_fence_release.tcl", "zone_members.tcl", "astk_zone_taps.tcl") + (("astk_face_taps.tcl",) if face_taps else ()):
         shutil.copyfile(HERE / f, kd / f)
     x0, y0, cw, ch = m, m, w - 2 * m, h - 2 * m
     spec = []
@@ -351,7 +372,7 @@ def astk_zone_fences(kd, cfg, w, h, m):
                                          + "\n}\nsource /work/zone_fence.tcl\n")
     (kd / "zone_pre_dpl.tcl").write_text("source /work/face_flops_release.tcl\nsource /work/zone_fence_release.tcl\n")
     (kd / "zone_pre_cts.tcl").write_text("source /work/max_fanout.tcl\nset ::env(OT_LANE_RE) {" + ASTK_TAP_RE
-                                         + "}\nsource /work/astk_zone_taps.tcl\n")
+                                         + "}\nsource /work/" + ("astk_face_taps.tcl" if face_taps else "astk_zone_taps.tcl") + "\n")
     sub = {"export PRE_GLOBAL_PLACE_TCL": "/work/zone_pre_gpl.tcl", "export PRE_DETAIL_PLACE_TCL": "/work/zone_pre_dpl.tcl",
            "export PRE_CTS_TCL": "/work/zone_pre_cts.tcl"}
     out, seen = [], set()
@@ -368,7 +389,9 @@ def astk_zone_fences(kd, cfg, w, h, m):
     # Fence membership is fixed for the GPL phase. Resize after GPL, when the
     # fences are released; mid-GPL repair creates unowned cells outside the zones.
     out.append("export GPL_TIMING_DRIVEN = 0")
-    out.append("export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels")
+    # PATH-KV-ASTK4 (GEOM-REVIEW-2 14:46: CTS1 excess = tree DEPTH, 6 levels under each tap): larger leaf clusters
+    out.append("export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels"
+               + (" -sink_clustering_size 30 -sink_clustering_max_diameter 60" if face_taps else ""))
     (kd / "astk_zone_delta.json").write_text(json.dumps(dict(
         cause="GEOM 10:05 FAIL kv3_astk W2: zones fragmented (zn_1 2 islands, zn_2 2), adder skew 29 ps from one zone on 2 leaf regions",
         regions={nm: [round(x0 + a * cw, 2), round(y0 + b * ch, 2), round(x0 + c * cw, 2), round(y0 + d * ch, 2)]
@@ -410,6 +433,13 @@ def main():
                     help="PATH-KV-ASTK2 10-25 (GEOM 10:05): 4 contiguous zn zone GPL regions (2x2 over the upper core) + ctl "
                          "S band (zone_fence.tcl, released before DPL) and one regional clock tap per zone + ctl "
                          "(astk_zone_taps.tcl, CTS -balance_levels); needs --astk-write-decode")
+    ap.add_argument("--astk-path4", action="store_true",
+                    help="PATH-KV-ASTK4 10-25 (COORD rulings (a)/(b), GEOM-REVIEW-2 14:46): zn_0 pin landing stage zl/tl + "
+                         "16 kept read-address replicas (+1 cycle on zn_0, KV-TOK reprices) and ctl z_k slices with the "
+                         "start select inside each kept slice (0 cycles) (astk_path4.py; needs --astk-write-decode)")
+    ap.add_argument("--astk-face-taps", action="store_true",
+                    help="PATH-KV-ASTK4 10-25 (GEOM-REVIEW-2 ruling (a), LC1): face pin registers on their own taps (one per "
+                         "face chunk <= 500 sinks / 100 um), zone taps, one ctl tap (astk_face_taps.tcl); needs --astk-zone-fences")
     ap.add_argument("--astk-strap-master", action="store_true",
                     help="OWNER option B (COORD 10-25 07:01): ONE kv3_astk master from a corner core json; the corner ID "
                          "constants (ctl st, zn zc[1:0]) come from input strap_corner[1:0] (EN 11 ES 10 WN 01 WS 00) via one "
@@ -539,6 +569,22 @@ def main():
             ctl=dict(zh_replicas=4, zk_r_copies=17, cause="zh -> z_s 4:1 select over z_hd -> ap (30 EP)"),
             miter="core_miter old r3 corner kits vs master, --bias aq start rare; mutants lo_r / zh replica / ES swap"),
             indent=1) + "\n")
+    if a.astk_path4:
+        if not a.astk_write_decode:
+            raise SystemExit("--astk-path4 needs --astk-write-decode")
+        import astk_path4
+        astk_path4.apply_kit(kd / "rtl")
+        exp = astk_path4.replica_expect(json.loads((kd / "replica_expect.json").read_text()))
+        (kd / "replica_expect.json").write_text(json.dumps(exp, indent=1) + "\n")
+        (kd / "astk_path4_delta.json").write_text(json.dumps(dict(
+            zn0=dict(added_cycles=1, ruling="COORD (a) 10-25 14:19 PATH-KV lead + GEOM-REVIEW-2 14:46 (c)",
+                     change="pin landing stage zl/tl (the face registers); zq/tq + 16 qkd_astk_rep5 read-address replicas one edge later",
+                     cause="zq[6:2] (pin landing) drove the 128-b oa/ob read select (up to 2073 loads)",
+                     proof="tb_astk4 lockstep: new == old with tc/zi delayed 1 edge (zo/fo/zq/tq), mutant caught"),
+            ctl=dict(added_cycles=0, change="17 kept qkd_astk_zks slices: q <= start ? zk_st : zk_cn (start-independent terms)",
+                     cause="start -> zst_n/sa_n select -> 16-b subtract -> 17 zk copies (TT -44.68, 19 EP)",
+                     proof="tb_astk4 lockstep 0-cycle (all ctl outputs + 17 zk_r), mutant caught"),
+            tok="KV-TOK: zn_0 chain +1 cycle (zo/fo of zn_0 one edge later -> Z start age +1)"), indent=1) + "\n")
     if a.astk_strap_master:
         src = kd / "rtl" / f"{mod}.sv"
         (kd / "rtl" / f"{astk_strap_master.MASTER}.sv").write_text(astk_strap_master.transform(src.read_text(), mod))
@@ -679,14 +725,23 @@ def main():
     if straps:
         import straps as STR
         STR.write_kit(kd, straps, source=f"plan hard_cores[{cj['inst']}] straps/parent_id_straps + core.json id_strap")
-    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid, straps))
+    ioa = sender_min_ports(cj, clks, rsts, list(straps or ()))
+    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid, straps, ioa))
+    if ioa:
+        (kd / "io_hold.tcl").write_text(
+            "# GENERATED by gen_core_kit_kv.py: IO-HOLD option A per-port min input delays (OT_IO_HOLD=sender_min)\n"
+            "proc ot_io_hold_apply {vclk} {\n" + "".join(
+                f"  set_input_delay -min {v:.4f} -clock $vclk [get_ports {{{' '.join(p + '[*]' for p in sorted(q for q, x in ioa.items() if x == v))}}}]\n"
+                for v in sorted(set(ioa.values())))
+            + f"  puts \"OT_IO_HOLD sender_min ports {len(ioa)} fallback {-tol:g}\"\n}}\n")
     # CP1-R10 fail-closed SDC gate (tools/die_plan/sdc_lint.py): context = the core's ports (+ declared ID straps, written
     # AFTER strap handling so face_guard / signoff / lint_kit_files read the same list)
     ins_ports = [b for b, d in cj["port_decl"].items() if d[0] == "input" and b not in clks]
     outs = [b for b, d in cj["port_decl"].items() if d[0] == "output"]
     lctx = dict(period_ps=per, insertion_ps=ins, insertion_ff_ps=ibind["ff"], insertion_tol_ps=tol, clock_ports=clks, inputs=ins_ports, outputs=outs,
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
-                io_floor_ps={p: IO_BUDGET * per for p in ins_ports + outs}, port_latency_ps={}, straps=straps)
+                io_floor_ps={p: IO_BUDGET * per for p in ins_ports + outs}, port_latency_ps={}, straps=straps,
+                **({"hold_in_min_ports_ps": ioa} if ioa else {}))
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     shutil.copyfile(Path(a.tool) / "sdc_lint.py", kd / "sdc_lint.py")
     shutil.copyfile(Path(a.tool) / "straps.py", kd / "straps.py")
@@ -803,7 +858,9 @@ def main():
     if a.astk_zone_fences:
         if not (mod == "kv3_astk" or mod.startswith("kv3_astk_")) or not a.astk_write_decode:
             raise SystemExit("--astk-zone-fences needs a kv3_astk core + --astk-write-decode")
-        cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM)
+        cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM, face_taps=a.astk_face_taps)
+    elif a.astk_face_taps:
+        raise SystemExit("--astk-face-taps needs --astk-zone-fences")
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
