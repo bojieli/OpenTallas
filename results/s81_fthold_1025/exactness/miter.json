@@ -1,0 +1,8 @@
+{
+  "verdict": "PASS",
+  "lockstep_cycles": 4096,
+  "mutant": "first hold cell inverts the data/epoch bus",
+  "mutant_caught": true,
+  "added_cycles": 0,
+  "stdout": "LOCKSTEP_PASS cycles=4096 mutant_mismatches=4096 added_cycles=0"
+}

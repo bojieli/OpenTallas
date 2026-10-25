@@ -10,6 +10,7 @@
 # ft_stations.txt (slot k in_face out_face [x y ...]).
 # ORFS sources hooks inside a proc: run at global scope so the helper procs below can use `global`
 uplevel #0 {
+if {[file exists /work/ft_hold_pg.tcl]} { source /work/ft_hold_pg.tcl }
 set ff_blk [ord::get_db_block]
 set ff_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ff_core [$ff_blk getCoreArea]

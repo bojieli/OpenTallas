@@ -587,6 +587,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
+    if P.clock.get("ft_in_hold") == "liberty":
+        shutil.copyfile(Path(__file__).with_name("ft_hold_pg.tcl"), kd / "ft_hold_pg.tcl")
     if _density(t):
         shutil.copyfile(Path(__file__).with_name("tap_balance_grt.tcl"), kd / "tap_balance_grt.tcl")
     if forest:

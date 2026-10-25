@@ -1,0 +1,30 @@
+{
+  "type": "slice_station__t8",
+  "stage": "CTS proof only",
+  "structural_gate": "PASS",
+  "signed": "NOT RUN",
+  "tt_ft_input_setup_min_ps": 54.5,
+  "tt_ft_input_setup_violators": 0,
+  "ft_input_bits": 3732,
+  "ff_hold_wns_ps": -46.83,
+  "ff_hold_violators": 149,
+  "hold_classes": {
+    "ft2_i": 75,
+    "ft3_i": 73,
+    "arst_n": 1
+  },
+  "clock_trees_tt_ps": {
+    "clk": 311,
+    "clk_t1": 297,
+    "clk_t11": 276,
+    "clk_t12": 356,
+    "clk_t2": 287,
+    "clk_t3": 280,
+    "clk_t4": 296,
+    "clk_t5": 280,
+    "clk_t7": 292,
+    "clk_t8": 301
+  },
+  "remaining": "Clock trees over250+20ps window require density taps; no route launched on this clock tree. Initial disconnected hold-cell power terminals fixed by explicit supply hookup; original failed PG log retained.",
+  "added_cycles": 0
+}
