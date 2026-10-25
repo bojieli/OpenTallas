@@ -275,3 +275,4 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 2026-10-24 22:25 PDT RESET: OWNER DECISION 13 wavefront reset READY (claude/reset-1024@0a08a66af); offsets published for all 6 die plans (latest release 80-135 clk); hard-partition reset taps to move (KV PHYs, QC serdes, HBM SMs/PHYs)
 2026-10-24 22:27 PDT ROOT-MERGE: batch 4 merged main 38db29e3f -> 8f1b21f68 (s81-1024r plan + clock-1024 pair-skew CPPR gate; qc-cap refused on test_cp2)
 2026-10-24 22:34 PDT METH-ALIGN: READY claude/methodology-align-1024@5173eb8e3a2a -- die_plan tools now enforce rulings 9.3/9.4 (signals <= M7, 405 um reach/stations, m89_signals ERROR); all 6 current plans FAIL G0C under it (re-plan requests posted to S81/S81-HEAD/QC-A0/KV-G3/HBM-ARCH)
+2026-10-24 22:34 PDT COORD: OWNER DECISIONS 15 (MTP = pipeline law 2,763) + 16 (single 1.2 GHz domain if FP32 LAT4 fits) recorded; FP32/clock-domain audit agent launched.
