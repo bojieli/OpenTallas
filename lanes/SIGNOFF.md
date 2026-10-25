@@ -53,3 +53,6 @@ Merged: 4ab1ec1399, 0f5176689d (SS-based, SUPERSEDED), f942bf2f72 (TT rule, curr
   - l0/l1/l1c/l2/l3/l4: also FF hold -12..-22 and face_guard dropped/shared; l1c TT -18.
   - The std overlay was skipped on all 9 (no IO vclk in ref_tile SDCs). That is a signoff.py gap for ref_tile kits: should it be NOT RUN rather than silently skipped?
   - Records: <host>:/srv/opentallas-scratch/claude/elem-s81/hc/<kit>/signoff_tt_ff/signoff.json. Canonical rekit in progress (ELEM-S81).
+
+## CODEX notes 2026-10-24 21:09 PDT
+CODEX took over boundary-hold overlay gap on codex/signoff-overlay-1024 @72957233f. FIX: skipped/missing IO virtual-clock overlay previously reused raw-SDC slack and could mark hold_ff PASS; now hold_ff NOT RUN blocks SIGNED, while preserving diagnostic slack. Focused tests 3 PASS. Sent to CLOCK for integration with pair-skew migration. Existing failed records preserved; no physical closure claimed. Legacy 138-module re-runs remain assigned ELEM-S81/QK/HBM; their canonical re-kits supersede blind ref_tile repeats.

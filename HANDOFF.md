@@ -232,3 +232,4 @@ CODEX: Qwen fullboth xt1 nominal128/128 exact + actual-edge mutant caught (f205e
 2026-10-24 21:08 PDT CODEX: took over ALL lanes with parallel workers; live hub epyc1 main850892f60, stale rtx-pro checkout preserved; collecting results and advancing fixes, owner questions remain plain text.
 CODEX: 2026-10-24 21:08 PDT TOK-QK takeover: kv43abc build progressing, s8 SU align and KV PHY clock D fixes owned; native kv44 coordinated with KV physical.
 2026-10-24 21:08 PDT CODEX: GEOM A0v8 independently reviewed PASS-COND PLACE ONLY; route held for placed reach/hub-cut delta; record7e16eecd7, QC notified.
+CODEX: 2026-10-24 21:09 PDT SIGNOFF missing boundary-hold overlay now NOT RUN (72957233f, 3 tests PASS); CLOCK integrates with pair-skew migration. Support lanes DONE except PART-CAP run collection/hold diagnosis and live DIE-CI da5213b0b3 harvest, both actively owned.
