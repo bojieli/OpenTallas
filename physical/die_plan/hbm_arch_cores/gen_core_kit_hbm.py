@@ -534,6 +534,12 @@ def main():
     shell = None
     if a.face_shell == "on":
         import face_shell as FS
+        # Placement recipes name instances below the unshelled top.  The
+        # shell retains that hierarchy below u_fcore; keep SRAM placement
+        # attached to the same instances when adding the face registers.
+        if rec.get("macro_placement"):
+            rec["macro_placement"] = [dict(p_, inst="u_fcore." + p_["inst"])
+                                      for p_ in rec["macro_placement"]]
         mlibs = []
         for m_ in rec.get("macros", []):
             md_ = REPO / (rec.get("macro_dirs", {}).get(m_) or f"physical/asap7_memory_macros_v2/{m_}")
