@@ -4,23 +4,23 @@
   24744.96
  ],
  "die_mm2": 790.6,
- "partitions": 399,
- "types": 178,
+ "partitions": 398,
+ "types": 177,
  "types_by_kind": {
   "frame": 12,
   "serdes": 11,
   "phy": 1,
   "unit": 5,
   "svc": 16,
-  "slice": 133
+  "slice": 132
  },
- "singleton_types": 152,
- "lanes": 860,
- "ports": 2289,
+ "singleton_types": 151,
+ "lanes": 869,
+ "ports": 2302,
  "bends_max": 2,
  "bends_p90": 1,
  "bends_hist": {
-  "0": 698,
+  "0": 707,
   "1": 141,
   "2": 21
  },
@@ -53,7 +53,7 @@
    "a": "svc_15",
    "b": "svc_14",
    "ratio": 0.833,
-   "pins": 7212,
+   "pins": 7209,
    "len": 1442.9
   },
   {
@@ -121,7 +121,7 @@
   }
  ],
  "faces_over_06": 14,
- "channel_cells": 2,
+ "channel_cells": 3,
  "instances_per_type": {
   "col_h10_r0_p1__t1": 6,
   "col_h10_r1__t1": 12,
@@ -256,7 +256,6 @@
   "ot_s81sl_leaf__t51": 1,
   "dsdv_slice_c1x_C__t7": 1,
   "ot_s81sl_leaf__t52": 1,
-  "slice_station__t19": 1,
   "ot_s81sl_leaf__t55": 1,
   "ot_s81sl_leaf__t56": 1,
   "ot_s81sl_leaf__t57": 1,
@@ -339,7 +338,7 @@
    "cores": 1336
   },
   "slice": {
-   "n": 147,
+   "n": 146,
    "max_partition": 2162983,
    "max_core": 375145,
    "max_glue": 380790,
@@ -379,6 +378,14 @@
     "stations": [
      4,
      5
+    ]
+   },
+   {
+    "type": "dsdv_slice_iq_C__t1",
+    "slot": "ft0",
+    "stations": [
+     5,
+     6
     ]
    },
    {
@@ -501,6 +508,15 @@
    {
     "type": "svc_hi_dsdv_svc_rs__t1",
     "slot": "ft2",
+    "stations": [
+     7,
+     8
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft3",
     "stations": [
      7,
      8
@@ -797,15 +813,6 @@
    },
    {
     "type": "ot_s81sl_leaf__t3",
-    "slot": "ft1",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t3",
     "slot": "ft3",
     "stations": [
      4,
@@ -814,8 +821,35 @@
     "why": "core escape at the 405-um kit reach"
    },
    {
-    "type": "ot_s81sl_leaf__t4",
-    "slot": "ft2",
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft4",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft6",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft7",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft8",
     "stations": [
      4,
      5
@@ -879,6 +913,24 @@
    {
     "type": "ot_s81sl_leaf__t10",
     "slot": "ft6",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t11",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "ot_s81sl_leaf__t11",
+    "slot": "ft3",
     "stations": [
      4,
      5
@@ -1202,15 +1254,6 @@
    },
    {
     "type": "ot_s81sl_leaf__t36",
-    "slot": "ft3",
-    "stations": [
-     6,
-     7
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t36",
     "slot": "ft4",
     "stations": [
      4,
@@ -1490,33 +1533,6 @@
    },
    {
     "type": "ot_s81sl_leaf__t67",
-    "slot": "ft1",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t67",
-    "slot": "ft8",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t68",
-    "slot": "ft3",
-    "stations": [
-     4,
-     5
-    ],
-    "why": "core escape at the 405-um kit reach"
-   },
-   {
-    "type": "ot_s81sl_leaf__t68",
     "slot": "ft4",
     "stations": [
      4,
@@ -1525,8 +1541,8 @@
     "why": "core escape at the 405-um kit reach"
    },
    {
-    "type": "ot_s81sl_leaf__t71",
-    "slot": "ft1",
+    "type": "ot_s81sl_leaf__t68",
+    "slot": "ft5",
     "stations": [
      4,
      5
@@ -1535,7 +1551,7 @@
    },
    {
     "type": "ot_s81sl_leaf__t71",
-    "slot": "ft3",
+    "slot": "ft1",
     "stations": [
      4,
      5
@@ -1665,8 +1681,8 @@
    "xo_W5_out_a",
    "xo_W5_out_b"
   ],
-  "runs": 995,
-  "runs_multi": 379,
+  "runs": 1004,
+  "runs_multi": 380,
   "run_fallback_ports": 7,
   "overfull_faces": [
    "s_2N_C|s_2N_L1|False",
@@ -1888,15 +1904,169 @@
     "margin": 0.98
    }
   ],
-  "frame_ft_bit_sites": [
+  "ft_bit_sites_reused": [
+   "col_h10_r0_p1__t1",
+   "col_h9_r0_p2__t1",
+   "col_h9_r0_p3__t1",
+   "col_h10_r0_p4__t1",
+   "col_h9_r0_p5__t1",
+   "col_h9_r0_p1__t1",
+   "col_h9_r0_p4__t1",
+   "ot_s81sl_leaf__t1",
+   "ot_s81sl_leaf__t2",
+   "ot_s81sl_leaf__t8",
+   "ot_s81sl_leaf__t9",
+   "ot_s81sl_leaf__t10",
+   "ot_s81sl_leaf__t12",
+   "ot_s81sl_leaf__t13",
+   "ot_s81sl_leaf__t14",
+   "ot_s81sl_leaf__t15",
+   "ot_s81sl_leaf__t16",
+   "ot_s81sl_leaf__t17",
+   "ot_s81sl_leaf__t75",
+   "ot_s81sl_leaf__t53",
+   "ot_s81sl_leaf__t21",
+   "ot_s81sl_leaf__t22",
+   "ot_s81sl_leaf__t23",
+   "ot_s81sl_leaf__t24",
+   "ot_s81sl_leaf__t25",
+   "ot_s81sl_leaf__t26",
+   "ot_s81sl_leaf__t27",
+   "ot_s81sl_leaf__t28",
+   "ot_s81sl_leaf__t29",
+   "ot_s81sl_leaf__t30",
+   "ot_s81sl_leaf__t33",
+   "ot_s81sl_leaf__t34",
+   "ot_s81sl_leaf__t35",
+   "ot_s81sl_leaf__t39",
+   "ot_s81sl_leaf__t40",
+   "ot_s81sl_leaf__t41",
+   "ot_s81sl_leaf__t42",
+   "ot_s81sl_leaf__t43",
+   "ot_s81sl_leaf__t44",
+   "ot_s81sl_leaf__t45",
+   "ot_s81sl_leaf__t46",
+   "ot_s81sl_leaf__t47",
+   "ot_s81sl_leaf__t48",
+   "ot_s81sl_leaf__t49",
+   "ot_s81sl_leaf__t50",
+   "ot_s81sl_leaf__t51",
+   "ot_s81sl_leaf__t52",
+   "ot_s81sl_leaf__t55",
+   "ot_s81sl_leaf__t56",
+   "ot_s81sl_leaf__t57",
+   "ot_s81sl_leaf__t58",
+   "ot_s81sl_leaf__t59",
+   "ot_s81sl_leaf__t60",
+   "ot_s81sl_leaf__t61",
+   "ot_s81sl_leaf__t62",
+   "ot_s81sl_leaf__t63",
+   "ot_s81sl_leaf__t64",
+   "ot_s81sl_leaf__t65",
+   "ot_s81sl_leaf__t66",
+   "ot_s81sl_leaf__t72",
+   "ot_s81sl_leaf__t73",
+   "ot_s81sl_leaf__t74"
+  ],
+  "ft_bit_sites": [
    {
-    "type": "col_h10_r0_p1__t1",
+    "type": "svc_lo_dsdv_svc_rs_w__t1",
     "slot": "ft0",
+    "stations": [
+     8,
+     12
+    ],
+    "worst_paired_bit_um": 368.221,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs_w__t1",
+    "slot": "ft2",
+    "stations": [
+     8,
+     8
+    ],
+    "worst_paired_bit_um": 362.949,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs_w__t1",
+    "slot": "ft1",
+    "stations": [
+     8,
+     8
+    ],
+    "worst_paired_bit_um": 362.287,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft0",
+    "stations": [
+     7,
+     8
+    ],
+    "worst_paired_bit_um": 355.609,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft1",
+    "stations": [
+     9,
+     10
+    ],
+    "worst_paired_bit_um": 355.033,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft2",
+    "stations": [
+     8,
+     12
+    ],
+    "worst_paired_bit_um": 368.221,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft4",
     "stations": [
      6,
      6
     ],
-    "worst_paired_bit_um": 370.44,
+    "worst_paired_bit_um": 349.721,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -1905,13 +2075,118 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h10_r0_p1__t1",
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft5",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 350.745,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft6",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 349.977,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft7",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 352.985,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft8",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 353.945,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft9",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 354.905,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t1",
+    "slot": "ft3",
+    "stations": [
+     8,
+     12
+    ],
+    "worst_paired_bit_um": 354.429,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t3",
+    "slot": "ft0",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 367.623,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t3",
     "slot": "ft1",
     "stations": [
      4,
-     5
+     6
     ],
-    "worst_paired_bit_um": 355.827,
+    "worst_paired_bit_um": 361.311,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -1920,13 +2195,13 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h10_r0_p1__t1",
-    "slot": "ft2",
+    "type": "svc_hi_dsdv_svc_rs__t4",
+    "slot": "ft0",
     "stations": [
      4,
-     5
+     6
     ],
-    "worst_paired_bit_um": 356.147,
+    "worst_paired_bit_um": 361.311,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -1935,13 +2210,178 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h10_r0_p1__t1",
+    "type": "svc_hi_dsdv_svc_rs__t4",
+    "slot": "ft1",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 343.71,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t6",
+    "slot": "ft0",
+    "stations": [
+     8,
+     8
+    ],
+    "worst_paired_bit_um": 357.965,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t6",
+    "slot": "ft1",
+    "stations": [
+     7,
+     8
+    ],
+    "worst_paired_bit_um": 354.681,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t6",
+    "slot": "ft2",
+    "stations": [
+     8,
+     8
+    ],
+    "worst_paired_bit_um": 353.689,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t6",
+    "slot": "ft3",
+    "stations": [
+     8,
+     8
+    ],
+    "worst_paired_bit_um": 352.921,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t5",
+    "slot": "ft0",
+    "stations": [
+     8,
+     10
+    ],
+    "worst_paired_bit_um": 357.965,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t5",
+    "slot": "ft1",
+    "stations": [
+     7,
+     8
+    ],
+    "worst_paired_bit_um": 354.681,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t5",
+    "slot": "ft2",
+    "stations": [
+     8,
+     10
+    ],
+    "worst_paired_bit_um": 333.45,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t5",
+    "slot": "ft3",
+    "stations": [
+     8,
+     10
+    ],
+    "worst_paired_bit_um": 344.79,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t7",
+    "slot": "ft0",
+    "stations": [
+     3,
+     4
+    ],
+    "worst_paired_bit_um": 353.235,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t7",
+    "slot": "ft2",
+    "stations": [
+     13,
+     13
+    ],
+    "worst_paired_bit_um": 363.095,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t7",
     "slot": "ft3",
     "stations": [
      4,
-     5
+     4
     ],
-    "worst_paired_bit_um": 357.771,
+    "worst_paired_bit_um": 362.067,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -1950,13 +2390,193 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h10_r0_p1__t1",
+    "type": "svc_lo_dsdv_svc_rs__t7",
     "slot": "ft4",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 358.603,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs__t7",
+    "slot": "ft1",
+    "stations": [
+     9,
+     11
+    ],
+    "worst_paired_bit_um": 357.207,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "slot": "ft1",
+    "stations": [
+     8,
+     8
+    ],
+    "worst_paired_bit_um": 376.595,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "slot": "ft2",
+    "stations": [
+     10,
+     10
+    ],
+    "worst_paired_bit_um": 373.251,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "slot": "ft0",
+    "stations": [
+     13,
+     13
+    ],
+    "worst_paired_bit_um": 352.565,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "slot": "ft4",
+    "stations": [
+     7,
+     7
+    ],
+    "worst_paired_bit_um": 319.857,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "slot": "ft5",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 354.507,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "slot": "ft6",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 353.403,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "slot": "ft7",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 361.8,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "slot": "ft8",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 359.115,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "slot": "ft9",
+    "stations": [
+     7,
+     7
+    ],
+    "worst_paired_bit_um": 322.65,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "svc_hi_dsdv_svc_rs__t6",
+    "slot": "ft3",
+    "stations": [
+     11,
+     11
+    ],
+    "worst_paired_bit_um": 357.591,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_lepw_mus_C__t1",
+    "slot": "ft0",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 358.259,
+    "worst_paired_bit_um": 364.965,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -1965,13 +2585,103 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h10_r0_p1__t1",
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft0",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 355.05,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft1",
+    "stations": [
+     4,
+     8
+    ],
+    "worst_paired_bit_um": 376.11,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft3",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 370.809,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft4",
+    "stations": [
+     5,
+     6
+    ],
+    "worst_paired_bit_um": 365.795,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft7",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 364.579,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft8",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 355.429,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
     "slot": "ft5",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 351.219,
+    "worst_paired_bit_um": 358.221,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -1980,13 +2690,13 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h9_r0_p2__t1",
-    "slot": "ft0",
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft2",
     "stations": [
-     5,
-     6
+     4,
+     4
     ],
-    "worst_paired_bit_um": 367.731,
+    "worst_paired_bit_um": 358.059,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -1995,13 +2705,13 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h9_r0_p2__t1",
-    "slot": "ft1",
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft6",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 355.827,
+    "worst_paired_bit_um": 358.395,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2010,13 +2720,148 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h9_r0_p2__t1",
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft10",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 352.317,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft11",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 352.545,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft12",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 353.931,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft13",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 354.657,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft14",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 346.977,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft15",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 347.937,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t3",
+    "slot": "ft9",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 345.681,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t4",
+    "slot": "ft1",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 365.341,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t4",
+    "slot": "ft4",
+    "stations": [
+     4,
+     7
+    ],
+    "worst_paired_bit_um": 364.579,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t4",
     "slot": "ft2",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 356.147,
+    "worst_paired_bit_um": 364.965,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2025,13 +2870,28 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h9_r0_p2__t1",
+    "type": "ot_s81sl_leaf__t4",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 358.059,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t4",
     "slot": "ft3",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 357.771,
+    "worst_paired_bit_um": 358.395,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2040,10 +2900,190 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h9_r0_p2__t1",
+    "type": "ot_s81sl_leaf__t4",
+    "slot": "ft5",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 354.429,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t5",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 364.965,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t5",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 358.059,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t5",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 364.915,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t5",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 354.429,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft0",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 349.849,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft1",
+    "stations": [
+     4,
+     7
+    ],
+    "worst_paired_bit_um": 354.24,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 364.965,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft2",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 358.059,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
     "slot": "ft4",
     "stations": [
      4,
+     5
+    ],
+    "worst_paired_bit_um": 364.915,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft6",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 352.203,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft7",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 351.283,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft8",
+    "stations": [
+     5,
      5
     ],
     "worst_paired_bit_um": 358.259,
@@ -2055,28 +3095,13 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h9_r0_p3__t1",
-    "slot": "ft0",
-    "stations": [
-     5,
-     6
-    ],
-    "worst_paired_bit_um": 367.731,
-    "budget_um": 394.9,
-    "cell_size_um": [
-     1.404,
-     0.27
-    ],
-    "max_radius_um": 40.0
-   },
-   {
-    "type": "col_h9_r0_p3__t1",
-    "slot": "ft1",
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft9",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 355.827,
+    "worst_paired_bit_um": 357.811,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2085,13 +3110,13 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h9_r0_p3__t1",
-    "slot": "ft2",
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft10",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 356.147,
+    "worst_paired_bit_um": 347.709,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2100,13 +3125,13 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h9_r0_p3__t1",
-    "slot": "ft3",
+    "type": "ot_s81sl_leaf__t6",
+    "slot": "ft11",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 357.771,
+    "worst_paired_bit_um": 348.459,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2115,133 +3140,13 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h10_r0_p4__t1",
-    "slot": "ft0",
-    "stations": [
-     4,
-     5
-    ],
-    "worst_paired_bit_um": 355.827,
-    "budget_um": 394.9,
-    "cell_size_um": [
-     1.404,
-     0.27
-    ],
-    "max_radius_um": 40.0
-   },
-   {
-    "type": "col_h10_r0_p4__t1",
-    "slot": "ft1",
-    "stations": [
-     4,
-     5
-    ],
-    "worst_paired_bit_um": 356.147,
-    "budget_um": 394.9,
-    "cell_size_um": [
-     1.404,
-     0.27
-    ],
-    "max_radius_um": 40.0
-   },
-   {
-    "type": "col_h9_r0_p5__t1",
-    "slot": "ft0",
-    "stations": [
-     4,
-     5
-    ],
-    "worst_paired_bit_um": 355.827,
-    "budget_um": 394.9,
-    "cell_size_um": [
-     1.404,
-     0.27
-    ],
-    "max_radius_um": 40.0
-   },
-   {
-    "type": "col_h9_r0_p1__t1",
-    "slot": "ft0",
-    "stations": [
-     5,
-     6
-    ],
-    "worst_paired_bit_um": 367.731,
-    "budget_um": 394.9,
-    "cell_size_um": [
-     1.404,
-     0.27
-    ],
-    "max_radius_um": 40.0
-   },
-   {
-    "type": "col_h9_r0_p1__t1",
-    "slot": "ft1",
-    "stations": [
-     4,
-     5
-    ],
-    "worst_paired_bit_um": 355.827,
-    "budget_um": 394.9,
-    "cell_size_um": [
-     1.404,
-     0.27
-    ],
-    "max_radius_um": 40.0
-   },
-   {
-    "type": "col_h9_r0_p1__t1",
-    "slot": "ft2",
-    "stations": [
-     4,
-     5
-    ],
-    "worst_paired_bit_um": 356.147,
-    "budget_um": 394.9,
-    "cell_size_um": [
-     1.404,
-     0.27
-    ],
-    "max_radius_um": 40.0
-   },
-   {
-    "type": "col_h9_r0_p1__t1",
-    "slot": "ft3",
-    "stations": [
-     4,
-     5
-    ],
-    "worst_paired_bit_um": 357.771,
-    "budget_um": 394.9,
-    "cell_size_um": [
-     1.404,
-     0.27
-    ],
-    "max_radius_um": 40.0
-   },
-   {
-    "type": "col_h9_r0_p1__t1",
-    "slot": "ft4",
-    "stations": [
-     4,
-     5
-    ],
-    "worst_paired_bit_um": 358.259,
-    "budget_um": 394.9,
-    "cell_size_um": [
-     1.404,
-     0.27
-    ],
-    "max_radius_um": 40.0
-   },
-   {
-    "type": "col_h9_r0_p1__t1",
+    "type": "ot_s81sl_leaf__t6",
     "slot": "ft5",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 351.219,
+    "worst_paired_bit_um": 354.429,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2250,13 +3155,118 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h9_r0_p4__t1",
+    "type": "ot_s81sl_leaf__t7",
+    "slot": "ft4",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 345.6,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t7",
+    "slot": "ft1",
+    "stations": [
+     4,
+     7
+    ],
+    "worst_paired_bit_um": 367.549,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t7",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 355.785,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t7",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 370.925,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t7",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 364.915,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t7",
+    "slot": "ft5",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 354.429,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t11",
+    "slot": "ft3",
+    "stations": [
+     5,
+     8
+    ],
+    "worst_paired_bit_um": 366.127,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t11",
     "slot": "ft0",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 355.827,
+    "worst_paired_bit_um": 360.373,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2265,13 +3275,1783 @@
     "max_radius_um": 40.0
    },
    {
-    "type": "col_h9_r0_p4__t1",
+    "type": "ot_s81sl_leaf__t11",
+    "slot": "ft2",
+    "stations": [
+     3,
+     4
+    ],
+    "worst_paired_bit_um": 356.103,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t11",
+    "slot": "ft1",
+    "stations": [
+     5,
+     8
+    ],
+    "worst_paired_bit_um": 353.745,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t11",
+    "slot": "ft4",
+    "stations": [
+     5,
+     8
+    ],
+    "worst_paired_bit_um": 355.557,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t1",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 356.615,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t10",
+    "slot": "ft0",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 357.741,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t3",
+    "slot": "ft0",
+    "stations": [
+     6,
+     7
+    ],
+    "worst_paired_bit_um": 357.147,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t4",
+    "slot": "ft0",
+    "stations": [
+     7,
+     9
+    ],
+    "worst_paired_bit_um": 361.803,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft8",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 368.455,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 353.893,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 377.079,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft1",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 363.763,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft7",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 359.307,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft4",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 357.907,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft5",
+    "stations": [
+     2,
+     2
+    ],
+    "worst_paired_bit_um": 352.433,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft6",
+    "stations": [
+     2,
+     2
+    ],
+    "worst_paired_bit_um": 352.113,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft9",
+    "stations": [
+     3,
+     4
+    ],
+    "worst_paired_bit_um": 350.829,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t31",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 347.865,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t32",
+    "slot": "ft8",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 369.321,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t32",
+    "slot": "ft4",
+    "stations": [
+     5,
+     6
+    ],
+    "worst_paired_bit_um": 360.271,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t32",
+    "slot": "ft7",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 368.455,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t32",
+    "slot": "ft2",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 353.893,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t32",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 363.095,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t32",
     "slot": "ft1",
     "stations": [
      4,
      5
     ],
-    "worst_paired_bit_um": 356.147,
+    "worst_paired_bit_um": 357.675,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t32",
+    "slot": "ft6",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 358.861,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t32",
+    "slot": "ft5",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 357.907,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t32",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 345.765,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_iq_C__t1",
+    "slot": "ft1",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 332.37,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_iq_C__t1",
+    "slot": "ft3",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 364.221,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_iq_C__t1",
+    "slot": "ft2",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 361.957,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_iq_C__t1",
+    "slot": "ft0",
+    "stations": [
+     6,
+     7
+    ],
+    "worst_paired_bit_um": 349.713,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_kv512_C__t1",
+    "slot": "ft0",
+    "stations": [
+     5,
+     6
+    ],
+    "worst_paired_bit_um": 359.523,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_kv512_C__t1",
+    "slot": "ft1",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 362.611,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_kv512_C__t1",
+    "slot": "ft3",
+    "stations": [
+     5,
+     6
+    ],
+    "worst_paired_bit_um": 360.291,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_kv512_C__t1",
+    "slot": "ft2",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 361.957,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft9",
+    "stations": [
+     5,
+     7
+    ],
+    "worst_paired_bit_um": 350.629,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft8",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 364.751,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft2",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 357.685,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 355.731,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft6",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 356.283,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft4",
+    "stations": [
+     5,
+     8
+    ],
+    "worst_paired_bit_um": 353.805,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft0",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 353.343,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft5",
+    "stations": [
+     5,
+     8
+    ],
+    "worst_paired_bit_um": 353.409,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft7",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 351.009,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t36",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 354.153,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t37",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 369.975,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t37",
+    "slot": "ft0",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 363.027,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t37",
+    "slot": "ft2",
+    "stations": [
+     4,
+     7
+    ],
+    "worst_paired_bit_um": 368.415,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t37",
+    "slot": "ft3",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 354.429,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t38",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 363.765,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t38",
+    "slot": "ft4",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 356.277,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t38",
+    "slot": "ft0",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 370.087,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t38",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 361.26,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t38",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 352.35,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t38",
+    "slot": "ft5",
+    "stations": [
+     4,
+     7
+    ],
+    "worst_paired_bit_um": 345.681,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c3x_C__t1",
+    "slot": "ft0",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 345.681,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c3x_C__t1",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 349.737,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t5",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 356.961,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t5",
+    "slot": "ft1",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 358.395,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t6",
+    "slot": "ft0",
+    "stations": [
+     5,
+     7
+    ],
+    "worst_paired_bit_um": 363.051,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t6",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 349.737,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t6",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 349.737,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t8",
+    "slot": "ft1",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 356.049,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t8",
+    "slot": "ft2",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 356.961,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t8",
+    "slot": "ft3",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 334.53,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t8",
+    "slot": "ft4",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 336.69,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t8",
+    "slot": "ft0",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 349.737,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t8",
+    "slot": "ft5",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 349.737,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t9",
+    "slot": "ft0",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 356.049,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t9",
+    "slot": "ft1",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 356.961,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_c1x_C__t9",
+    "slot": "ft2",
+    "stations": [
+     6,
+     6
+    ],
+    "worst_paired_bit_um": 334.53,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_lepe_nh_mus_C__t1",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 356.961,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_lepe_nh_mus_C__t1",
+    "slot": "ft1",
+    "stations": [
+     3,
+     4
+    ],
+    "worst_paired_bit_um": 345.765,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft0",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 354.78,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft1",
+    "stations": [
+     4,
+     8
+    ],
+    "worst_paired_bit_um": 356.13,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft4",
+    "stations": [
+     5,
+     6
+    ],
+    "worst_paired_bit_um": 365.829,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft5",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 364.779,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft8",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 355.621,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft9",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 363.675,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft2",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 356.961,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 358.827,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft7",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 359.973,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft10",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 352.317,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft11",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 353.277,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft12",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 358.731,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft13",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 354.657,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft14",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 351.411,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft15",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 347.937,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t67",
+    "slot": "ft6",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 354.429,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t68",
+    "slot": "ft2",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 365.829,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t68",
+    "slot": "ft5",
+    "stations": [
+     5,
+     7
+    ],
+    "worst_paired_bit_um": 363.771,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t68",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 356.961,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t68",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 358.827,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t68",
+    "slot": "ft4",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 359.595,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t68",
+    "slot": "ft3",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 354.429,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t69",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 356.961,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t69",
+    "slot": "ft1",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 364.645,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t69",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 365.683,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t69",
+    "slot": "ft2",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 354.429,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft0",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 354.24,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft1",
+    "stations": [
+     4,
+     8
+    ],
+    "worst_paired_bit_um": 355.86,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft2",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 356.961,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 359.245,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft5",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 365.373,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft6",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 352.203,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft7",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 351.283,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft8",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 358.259,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft9",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 357.771,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft10",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 356.811,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft11",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 348.399,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t70",
+    "slot": "ft4",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 354.405,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t71",
+    "slot": "ft5",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 353.271,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t71",
+    "slot": "ft2",
+    "stations": [
+     4,
+     7
+    ],
+    "worst_paired_bit_um": 362.191,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t71",
+    "slot": "ft0",
+    "stations": [
+     4,
+     4
+    ],
+    "worst_paired_bit_um": 362.527,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t71",
+    "slot": "ft1",
+    "stations": [
+     5,
+     5
+    ],
+    "worst_paired_bit_um": 365.185,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t71",
+    "slot": "ft4",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_paired_bit_um": 365.373,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "ot_s81sl_leaf__t71",
+    "slot": "ft3",
+    "stations": [
+     4,
+     6
+    ],
+    "worst_paired_bit_um": 352.245,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "dsdv_slice_lepe_mu_C__t1",
+    "slot": "ft0",
+    "stations": [
+     5,
+     7
+    ],
+    "worst_paired_bit_um": 359.523,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "eng__t1",
+    "slot": "ft0",
+    "stations": [
+     10,
+     10
+    ],
+    "worst_paired_bit_um": 367.573,
+    "budget_um": 394.9,
+    "cell_size_um": [
+     1.404,
+     0.27
+    ],
+    "max_radius_um": 40.0
+   },
+   {
+    "type": "eng__t1",
+    "slot": "ft1",
+    "stations": [
+     5,
+     7
+    ],
+    "worst_paired_bit_um": 371.749,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2280,6 +5060,7 @@
     "max_radius_um": 40.0
    }
   ],
+  "frame_ft_bit_sites": [],
   "face_layers": []
  },
  "cells_missing": [
