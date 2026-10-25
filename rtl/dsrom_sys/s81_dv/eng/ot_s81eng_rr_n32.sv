@@ -542,6 +542,14 @@ module ot_s81eng_win_n32 #(
     ot_s81eng_pinreg_r u_hrce(ck,rst_n,ks_v&&en,h_ce);
     ot_s81eng_pinreg #(.W(9))u_hraddr(ck,{3'd0,ks_user[5:0]},h_ra);
     ot_s81eng_hist_write u_hwrite(ck,h_ce,h_ra,wr,{3'd0,u2[5:0]},{77'd0,h2[33:0],m_cid},h_we,h_wa,h_wd,h_hit,h_forward);
+    // Forwarding reads its own pending command. The SRAM command has private,
+    // same-edge copies so every launch FF can anchor at the macro pin.
+    wire h_ce_macro,h_we_macro;wire[8:0]h_ra_macro,h_wa_macro;wire[127:0]h_wd_macro;
+    ot_s81eng_pinreg_r u_hcmd_rce(ck,rst_n,ks_v&&en,h_ce_macro);
+    ot_s81eng_pinreg #(.W(9))u_hcmd_ra(ck,{3'd0,ks_user[5:0]},h_ra_macro);
+    ot_s81eng_pinreg u_hcmd_we(ck,wr,h_we_macro);
+    ot_s81eng_pinreg #(.W(9))u_hcmd_wa(ck,{3'd0,u2[5:0]},h_wa_macro);
+    ot_s81eng_pinreg #(.W(128))u_hcmd_wd(ck,{77'd0,h2[33:0],m_cid},h_wd_macro);
     ot_s81eng_pinreg #(.W(51))u_hcapture(ck,h_raw[50:0],h_raw_cap);
     ot_s81eng_pinreg #(.W(51))u_hforward(ck,h_forward[50:0],h_forward_cap);
     ot_s81eng_pinreg u_hhit(ck,h_hit,h_hit_cap);
@@ -549,10 +557,11 @@ module ot_s81eng_win_n32 #(
 `else
     wire h_ce=t_v;wire[8:0]h_ra={3'd0,ks_user_s[5:0]},h_wa={3'd0,u2[5:0]};wire h_we=wr;
     wire[127:0]h_raw,h_wd={77'd0,h2[33:0],m_cid};
+    wire h_ce_macro=h_ce,h_we_macro=h_we;wire[8:0]h_ra_macro=h_ra,h_wa_macro=h_wa;wire[127:0]h_wd_macro=h_wd;
     assign rd=h_raw;
 `endif
-    ot_sram_1r1w_512x128_m4_r2c2 u_h (.clk(ck), .r_ce_in(h_ce), .r_addr_in(h_ra), .rd_out(h_raw),
-        .w_ce_in(h_we), .w_addr_in(h_wa), .wd_in(h_wd), .w_mask_in({128{1'b1}}),
+    ot_sram_1r1w_512x128_m4_r2c2 u_h (.clk(ck), .r_ce_in(h_ce_macro), .r_addr_in(h_ra_macro), .rd_out(h_raw),
+        .w_ce_in(h_we_macro), .w_addr_in(h_wa_macro), .wd_in(h_wd_macro), .w_mask_in({128{1'b1}}),
         .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(14'd0));
     wire[67:0] ids_next={b3 ? PAD : h2[50:34], b2 ? PAD : h2[33:17], b1 ? PAD : h2[16:0], m_cid};
     for(genvar wg=0;wg<7;wg=wg+1)begin:g_wi
