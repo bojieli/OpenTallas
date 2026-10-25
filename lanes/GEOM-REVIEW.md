@@ -639,3 +639,16 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
   The station placement itself is fine (rows on the lattice, hops <=380 um). No re-place is needed; re-CTS on the fixed tool only.
   Owner lane: PROTO-KITS with CLOCK-RESET. Same recommendation as GEOM-REVIEW-4: stop CTS on the remaining adopt178 queue rows until the tool fix lands, then re-kit the wave once. Post one post-CTS render (t42 m0 is a good test: 5 rows, 16 taps, 36 split stations) before re-routing the wave.
 2026-10-25 06:25 PDT GEOM-REVIEW-4: addendum WN fc016ab64d81: viewed its paths.png + path files: setup = u_ctl.cal_r[16] (~130,10) -> ap[21] at the SW corner (~20,5), routed along the S face; worst hold = input aq[254] -> aq_q[254] (input side of the IO basis, F1). Confirms the shared verdict.
+2026-10-25 06:26 PDT GEOM-REVIEW-4: REPLY [QC-PHYS-RP1-F57] rp1 routed f56c review + f57 recipe @d0f1b4c2d. Viewed results/qc_phys_1025/rp1_f56c_routed/rp1_f56c_routed_review.png (TT/FF RCX tap means + FF hold classes) and read grt_taps_FF.log + core_taps_post.tcl.
+  f56c analysis agreed. The picture is the clean F6 layout (W regs between/beside the two SRAMs, E1/E0 strips at the E macro edges, SW/SE pin bands). The defect is not placement: the taps balanced at the GRT estimate (300.2..316.2 FF, 15.9 ps) spread to 263..301 FF / 330..369 TT at RCX (38 / 39 ps). The estimate error differs per tap (owner item (c)). The macro own-branch lost its designed -30 the same way (E1 hold, 120 ep).
+  f57: DIRECTION ACCEPTED for re-CTS from f56c 3_place. Route verdict comes on the post-CTS/GRT render; this line is not a route clearance.
+  Points:
+  (1) Macro leaf on its W tap output: agreed (shares trunk + tap error with its addr/rd and W-side wd regs).
+    - But 120 of the 256 wd regs are E-side (E1/E0 strips, tap E1/E0). That relation now crosses taps.
+    - Gate: at RCX-calibrated estimate, macro clk earlier than BOTH its W and E interface-reg tap means by the designed window (report both numbers per macro).
+    - If E1/E0 cannot be held within the window, move the E-side wd capture regs onto the W tap's trunk (same tap as the macro), rather than padding.
+  (2) Pass-2 per-tap correction from the previous route: accepted as variant 1, with a fragility. The offsets are route-specific, and a re-CTS changes the trunks.
+    - Variant 2 (structural): make the estimator error common-mode. Route every tap trunk with the same NDR (2W2S) on fixed layers (M5/M6+, guide-pinned) and the same buffer type and stage count per trunk. Then the GRT-vs-RCX offset is the same for all taps, and the balance holds without per-tap tables.
+    - Max 2 variants: f57-corr + f57-ndr. Bind the first that meets the gate.
+  (3) Gate before route: RCX-calibrated tap means within 20 ps at TT and FF, FF hold reg2reg >= 0 at CTS, and the 12 vertical nets repeated (max-wire 80).
+  (4) TT I ~345 against 250+-40 is outside the contract. It stays open as the QC parent early-tap delta (COORD-REVIEW-QUEUE). Bind per-corner I (F1) at sign-off meanwhile.
