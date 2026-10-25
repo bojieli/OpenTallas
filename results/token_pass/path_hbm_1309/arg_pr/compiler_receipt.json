@@ -1,0 +1,50 @@
+{
+  "status": "COMPILER_PASS_NOT_NATIVE_ADOPTION",
+  "profiles": [
+    {
+      "P": 1,
+      "vm_rt": 0,
+      "issuer_rows": 128,
+      "packed_rows": 66,
+      "II": 32,
+      "source_capture_extra": 1,
+      "last_delivery_extra": 1,
+      "old_capture_mutant": "REJECTED",
+      "default_bytes": "IDENTICAL"
+    },
+    {
+      "P": 6,
+      "vm_rt": 0,
+      "issuer_rows": 128,
+      "packed_rows": 66,
+      "II": 32,
+      "source_capture_extra": 1,
+      "last_delivery_extra": 1,
+      "old_capture_mutant": "REJECTED",
+      "default_bytes": "IDENTICAL"
+    },
+    {
+      "P": 6,
+      "vm_rt": 74,
+      "issuer_rows": 256,
+      "packed_rows": 214,
+      "II": 32,
+      "source_capture_extra": 1,
+      "last_delivery_extra": 1,
+      "old_capture_mutant": "REJECTED",
+      "default_bytes": "IDENTICAL"
+    },
+    {
+      "P": 96,
+      "vm_rt": 0,
+      "issuer_rows": 128,
+      "packed_rows": 66,
+      "II": 32,
+      "source_capture_extra": 1,
+      "last_delivery_extra": 1,
+      "old_capture_mutant": "REJECTED",
+      "default_bytes": "IDENTICAL"
+    }
+  ],
+  "capacity_negative": "ARGMAX_ROWS_COMPILE FAIL capacity VM_RT=0 LEAD=12 lifetime=48 passes=2 peel=16 rows=66 > 64 (--rows 256 = the deeper q3 programme memory)"
+}
