@@ -72,10 +72,11 @@
     "parent_port": "strap_tile_ids[191:0]",
     "literal_per_instance": "6-bit IDs0..31",
     "selected_child_api": "legacy tile_tid face FF (6 per tile), NOT current ownerB compatible",
-    "new_views": "physical worker common06403880004b2ba0 terminal00d0a882f6fa76cf, pending minimum miter and binding mutant",
+    "new_views": "v3 leaf7a2f916258f75f1c terminale1065c3944d31770; identical RTL to064/00d, metadata corrected; physical miter pending",
     "target_api": "strap_tile_tid direct noFF plus typed straps.json and SDC falsepath",
     "strict_alias_required": true,
-    "other_constants_allowed": false
+    "other_constants_allowed": false,
+    "build_variant": "TKM_STATIC_ID_VIEW define / runner STATIC_IDS=1; default legacy, no adoption yet"
   },
   "path_fieldmap": "tools/hbm_b2/tkm_l74/model_ft21.json"
 }

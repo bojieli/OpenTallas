@@ -1,5 +1,16 @@
 `timescale 1ns/1ps
 `default_nettype none
+// Explicit build variant; old timed-ID baseline remains the default until the
+// actual new static-ID views pass their independent binding/equivalence gate.
+`ifdef TKM_STATIC_ID_VIEW
+`define OT_HBM_TKM_LEAF ot_hgi_coll_tkm_tp192_tile_core__idpin__strap
+`define OT_HBM_TKM_TERMINAL ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap
+`define OT_HBM_TKM_ID_PORT strap_tile_tid
+`else
+`define OT_HBM_TKM_LEAF ot_hgi_coll_tkm_tp192_tile_core__idpin
+`define OT_HBM_TKM_TERMINAL ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin
+`define OT_HBM_TKM_ID_PORT tile_tid
+`endif
 // Selected NW->shared-SW TKM path. Explicit native bit envelope and real ft21
 // root/leaf shells. One parent-owned core clock domain; tile/buffer clocks are
 // taps of that domain. ID straps are static at the parent (owner option B).
@@ -63,15 +74,15 @@ module ot_hbm_tkm_path_ft21 #(
  // in-tile control lanes (plan pin template): clr S in -> 1 flop -> N out (down chain); conv N in -> S out (up chain,
  // tile 31 fed by the D-deep tree); MUT_SKEW = every tile fed the tree output (equal latency, must FAIL)
  if(t<31)begin:regular
- ot_hgi_coll_tkm_tp192_tile_core__idpin tile(.tile_clk(tile_clk[t]),.tile_clr((t==0)?root_clr:clr_lane[t-1]),.tile_clr_o(clr_lane[t]),
+ `OT_HBM_TKM_LEAF tile(.tile_clk(tile_clk[t]),.tile_clr((t==0)?root_clr:clr_lane[t-1]),.tile_clr_o(clr_lane[t]),
   .tile_conv((t==31)?bc_conv:conv_lane[t+1]),.tile_conv_o(conv_lane[t]),
-.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_in(up[t+1]),.tile_tid(tid),.tile_ovf_v(dv[t+1]),.tile_ovf_b(down[t+1]),.tile_up_out(up[t]));
+.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_in(up[t+1]),.`OT_HBM_TKM_ID_PORT(tid),.tile_ovf_v(dv[t+1]),.tile_ovf_b(down[t+1]),.tile_up_out(up[t]));
  // strap delivery: the shell's tid face flop must hold this instance's ID (tile_tid is functionally unread by the core:
  // face_shell.json unread_kept, so a wrong ID is caught here, at the face, not by the golden words)
  end else begin:terminal
- ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin tile(.tile_clk(tile_clk[t]),.tile_clr((t==0)?root_clr:clr_lane[t-1]),.tile_clr_o(clr_lane[t]),
+ `OT_HBM_TKM_TERMINAL tile(.tile_clk(tile_clk[t]),.tile_clr((t==0)?root_clr:clr_lane[t-1]),.tile_clr_o(clr_lane[t]),
   .tile_conv((t==31)?bc_conv:conv_lane[t+1]),.tile_conv_o(conv_lane[t]),
-.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_tid(tid),.tile_up_out(up[t]));
+.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.`OT_HBM_TKM_ID_PORT(tid),.tile_up_out(up[t]));
  // strap delivery: the shell's tid face flop must hold this instance's ID (tile_tid is functionally unread by the core:
  // face_shell.json unread_kept, so a wrong ID is caught here, at the face, not by the golden words)
  end
@@ -2199,4 +2210,7 @@ module ot_hbm_tkm_path_ft21 #(
  .in_addr(n_wa),.in_mask(n_wm),.in_data(n_wd),.out_v(wv),.out_busy(busy),.out_done(done),.out_fault(fault),
  .out_addr(wa),.out_mask(wm),.out_data(wd));
 endmodule
+`undef OT_HBM_TKM_LEAF
+`undef OT_HBM_TKM_TERMINAL
+`undef OT_HBM_TKM_ID_PORT
 `default_nettype wire

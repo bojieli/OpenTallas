@@ -20,6 +20,7 @@ case "${ROOT_VARIANT:-cb21}" in
  ft21) rcore="$f/cb21/ot_hgi_coll_tkm_tp192_root_core.sv";defs=(+define+ROOT_CB=21 +define+ROOT_CLRB=0 +define+TILE_FT -GCTL_BCAST_STAGES=21 -GCLR_SYSTOLIC=1);;
  *) echo "bad ROOT_VARIANT";exit 2;;
 esac
+if [ "${STATIC_IDS:-0}" = 1 ];then defs+=(+define+TKM_STATIC_ID_VIEW);fi
 tsh=$f;[ "${ROOT_VARIANT:-cb21}" = ft21 ] && tsh=$f/ft
 src=("$c/tkm/tkm_tp192_e86_hier.vlt" tools/hbm_b2/tkm_l74/tb_hbm_tkm_bound_ft21.sv rtl/hbm_accel/die_glue/b2/ot_hbm_tkm_path_ft21.sv rtl/hbm_accel/die_glue/b2/ot_hbm_tkm_return.sv rtl/hbm_accel/generic/transport/ot_hbm_static_2beat.sv
  "$c/tkm/ot_hgi_coll_tkm_static.sv" "$c/tkm/ot_hgi_coll_tkm.sv" "$c/tkm/ot_hgi_coll_tkm_buffer.sv" "$c/tkm/ot_hgi_coll_tkm_conv_skew.sv"
@@ -27,6 +28,8 @@ src=("$c/tkm/tkm_tp192_e86_hier.vlt" tools/hbm_b2/tkm_l74/tb_hbm_tkm_bound_ft21.
  "$tsh/ot_hgi_coll_tkm_tp192_tile_core__idpin__fshell.sv" "$tsh/ot_hgi_coll_tkm_tp192_tile_core__idpin__wrap.sv"
  "$f/terminal/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__fshell.sv" "$f/terminal/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__wrap.sv"
  rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv
+ "$f/strap/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__fshell.sv" "$f/strap/ot_hgi_coll_tkm_tp192_tile_core__idpin__strap__wrap.sv"
+ "$f/terminal_strap/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__fshell.sv" "$f/terminal_strap/ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap__wrap.sv"
  rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
 "$v" --binary --timing --hierarchical --verilate-jobs 2 --build-jobs "${BUILD_JOBS:-2}" -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --top-module tb_hbm_tkm_bound_ft21 --Mdir "$o/obj" -GTP=192 -GKMAX=2048 -GLINK_STAGES="${LINK_STAGES:-2}" -GRETURN_CTL_STAGES="${RETURN_CTL_STAGES:-2}" -GRETURN_DATA_STAGES="${RETURN_DATA_STAGES:-2}" -GHOP=2 -GFRT=4 "${defs[@]}" "${src[@]}" > "$o/build.log" 2>&1
 b="$o/obj/Vtb_hbm_tkm_bound_ft21"

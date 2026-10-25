@@ -70,8 +70,8 @@ module tb_hbm_tkm_bound_ft21;
  integer tiderr=0;
  for(genvar t=0;t<32;t=t+1)begin:g_id_check
   wire[5:0]captured_id;
-  if(t<31)assign captured_id=bound.actual_tiles[t].regular.tile.tile_tid__fq;
-  else assign captured_id=bound.actual_tiles[t].terminal.tile.tile_tid__fq;
+  if(t<31)assign captured_id=bound.actual_tiles[t].regular.tile.u_fcore.u_core.tile_tid;
+  else assign captured_id=bound.actual_tiles[t].terminal.tile.u_fcore.u_core.tile_tid;
   always@(negedge clk)if(rst_n&&captured_id!==6'(t))$fatal(1,"TILE_TID mismatch tile%0d got%0d",t,captured_id);
  end
  always@(posedge clk)if(rst_n&&(tf||rf))$fatal(1,"L74_TKM_TRANSPORT fault tf=%0d rf=%0d",tf,rf);
