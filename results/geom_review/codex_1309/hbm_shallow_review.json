@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-10-25 13:29 PDT",
+  "verdict": "PASS-COND CTS-only one isolated prototype",
+  "source": "codex-cp1-1309/clock_geometry/hbm_shallow.json",
+  "root_um": [
+    317.352,
+    0.096
+  ],
+  "nodes": 22,
+  "actual_cells_checked": 189672,
+  "overlap_count": 0,
+  "row_site_orient_failures": 0,
+  "max_edge_um": 328.59,
+  "conditions": [
+    "Actual postCTS tree and per-tap TT/FF insertion/load/related pairs before GRT/DRT",
+    "Prior insertion failure unresolved; no signoff claim"
+  ]
+}
