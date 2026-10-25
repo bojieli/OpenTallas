@@ -1,4 +1,4 @@
-# OpenTallas release tree (RECONSTRUCTED 2026-10-24 06:50 PDT)
+# OpenTallas release tree (refreshed 2026-10-24 ~20:30 PDT by the rtx-pro coordinator from the 19:10 handoff + lane PARKED sections)
 
 The original hand-edited tree (~/claude-takeover-20261007/RELEASE_TREE.md on rtx-pro) was lost with that host and
 was never committed. This copy is rebuilt from the coordinator's "Top-Down Day" artifact (10-23 18:45 PDT), COORD
@@ -11,108 +11,61 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 - Tick a line only with committed evidence (sha). Failed verdicts stay, struck through only when superseded.
 - Status words: RUNNING WAITS TODO NEW COORD OWNER FAIL PASS DONE BLOCKED.
 
-## DIE seam · Seam method (all dies) · CP1 = Qwen compute abutted pair
-- [x] SEAM.PHYS CP1 physical abut clean · CP1 · PASS · 10-23 10:44
-- [ ] SEAM.TIME CP1 seam setup + hold at 833 ps on grid taps (r8 RULING, r9 tools) · CP1-R10 · RUNNING · r4 -19.5/-3.6, r6 -90.6/-24.9 ps; r8/r9 result not recorded
-- [ ] SEAM.METHOD Seam method confirmed for every die G4 · COORD · WAITS · waits → SEAM.TIME
+## DIE seam · Clock, reset and seam method (all dies)
+- [ ] SEAM.CLOCK Industry MSCTS spine + pair-skew/CPPR die STA (owner dec. 5) · CLOCK · RUNNING · FF hold FAILS on all 5 trial dies (-46..-417 ps, inter-tap skew)
+  - [ ] SEAM.CLOCK.STA2 die_sta v2 reruns (half-period wrap fix 97fd4371ec) · CLOCK · RUNNING · intel2 die_sta pids, collect
+  - [ ] SEAM.CLOCK.HEAD S81 head seam 81.9 ps TT: re-measure with pair metric · CLOCK · WAITS · → SEAM.CLOCK
+- [ ] SEAM.RESET One pipelined reset tool (KV reset_tree.py + S81 pipelined) · RESET · RUNNING · then CP1/KV hub/S81 frames
+- [ ] SEAM.CP1 CP1 kits signed (seam PASS TT +434.5 / FF +104.9) · RESET · WAITS · r0 recovery -310 (per-tap rsync), r1 FF hold -6.9; reach leaf 6435e46354 unmerged
 
-## DIE s81 · S81 (DeepSeek-V4.1 ROM layer die)
-- [x] S81.G0 Plan check v4.7b · S81-P9 · PASS · ab90f2ade G0 PASS, G0C 76/168
-- [x] S81.G0.V48 Plan v4.8 (r8eq) on main · ROOT-MERGE · DONE · df641549db, G0 0 err
-- [ ] S81.G1 Plan review · S81 · WAITS · COND: needs G2 on exact plan → S81.G2
-- [x] S81.G2 Routing probe v4.8 · S81-P9 · PASS · 31 probes overflow 0, on main df641549db
-- [ ] S81.G0C Completeness 76/168 types clean (92: 75 ot_s81sl_leaf, 14 svc_*_rs, 2 svc_hi_pvso_entry, 1 eng; >400k cells, no hard_cores) · S81 · FAIL · check.py --completeness on main 3e05af806b, 10-24 06:40
-- [ ] S81.G3 Frame partitions with R3 internal stations · S81 · RUNNING · 6/7 frame kits FAILED review (paths to 2.2 mm)
-  - [ ] S81.G3.CORES Hard cores ve / eng / svc · S81 · RUNNING · svc hcore TT WNS -25.29 ps (ld_grp we decode)
-- [ ] S81.G4 Abutted die · S81 · WAITS · waits → S81.G3, SEAM.METHOD
-- [ ] S81.G5 Entry replay token pass · S81 · RUNNING · fc31 native entry 6/6 PASS + mutant caught (KS pulse fix a1f22086cc, main 0e75647078); fc30 = calendar fault + replay-model torn word (not RTL); layer replays wait BK-drain fix (TOK-DS)
+## DIE s81 · S81 (DeepSeek-V4.1 ROM layer die) + 4 head dies
+- [ ] S81.G3 Frames g3k5/g3k6 · S81 · WAITS · 7 kits await GEOM; xa relay->bs2 -368 → SEAM.CLOCK, SEAM.RESET
+  - [ ] S81.G3.CORES Hard cores (vq SIGNED) · S81 · RUNNING · hrow r13 TT -50.1 (r14 running), hcore WPRE signoff epyc2, vs face_guard, c2 kits x10
+  - [ ] S81.G3.ST405 Station405 (t12 SIGNED) · S81 · RUNNING · 21 B routes; t33 repeater, t4/t32 relaunch
+  - [ ] S81.CONST Drop constant output pins from plan (owner dec. 8) · S81 · TODO
+- [ ] S81.HEAD Head die · S81 · RUNNING · elemA c7 / elemB c2 routed NOT SIGNED; hd_tile/tap160 re-route after review
+- [ ] S81.XDIE Reserve pair + pair-B endpoint, rebase on 26-slot ledger · S81 · TODO · real G0C 108 (not 91)
+- [ ] S81.IR PHY supply + bump rows over SerDes windows (owner dec. 7) · S81 · TODO · IR 235-270 mV there
+- [ ] S81.G4 Abutted die · S81 · WAITS · → S81.G3, SEAM.CLOCK
+- [ ] S81.G5 Token pass · TOK-DS · RUNNING · entry 6/6 + L0/L2/L14/L20 control PASS; exactness → TOK.DS.COMP
 
 ## DIE qwen_compute · Qwen compute
-- [x] QC.G0 Plan check · QC-P6 · PASS · d33d3c4e4 G0 PASS, G0C 52/56
-- [ ] QC.G0C Completeness 52/56 (sle_st_a/b, slw_st_a/b ft_budget M9 over) · QC-A0 · FAIL · 10-24 06:40
-- [ ] QC.G1 Plan review · QC-A0 · WAITS · f1964316b9 PASS-COND; waits → QC.G0C, QC.G3.A0
-- [x] QC.G2 Routing probe · Codex · PASS · probe run by Codex 10-23
-- [ ] QC.G3 Partitions · QC-A0 · RUNNING · collective part routes clean; A0 cores FAIL clock (v2..v6 tap methods)
-  - [ ] QC.G3.A0 A0 cores on grid taps · QC-A0 · RUNNING · qc-p6-a0v6 G0 PASS unmerged
-  - [ ] QC.G3.FTC coll_ftc g3h · QC-A0 · TODO · qc-p6-ftc unmerged
-- [ ] QC.G4 Abutted die · QC-A0 · WAITS · waits → QC.G3, SEAM.METHOD
-- [ ] QC.G5 Token pass on generated die · QC-TOK · RUNNING · 3/4
-  - [x] QC.G5.TP8 tp8 · TOKEN · PASS · 10-23 14:41
-  - [x] QC.G5.XDIE xdie · TOKEN · PASS · 10-23 14:41
-  - [x] QC.G5.OVL4U ovl4u · TOKEN · PASS
-  - [x] QC.G5.XT1 xt1 on bound_r8 · QC-TOK · PASS · 64/64 both clusters (CB16 + fill lead 14), main 7d75427c59
-- [ ] QC.PAD R8 delay padding 875k → <150k regs · QC-TOK · TODO · plan change (trees not chains)
+- [ ] QC.G0 Main G0 R8 landing-table error (e56a2f6f vs c56f7e7a) · QC · FAIL · name canonical bus-groups file
+- [ ] QC.CAP Adopt accepted capacity plan (G0C 56/56) on main · QC · RUNNING · qc-cap 72ece79138 + 6 cbf stations + 51 ft moves
+- [ ] QC.G3.A0 A0 v7 NK/NL routes · QC · RUNNING · heavily congested -> structural fix; A0 +7 cyc vs 6 to price
+- [ ] QC.G3.FTC coll_ftc g3i · QC · RUNNING · intel2
+- [ ] QC.G3.TYPES Rebind G3 types on the capacity plan · QC · WAITS · → QC.CAP
+- [ ] QC.G4 Abutted die · QC · WAITS · → QC.G3.A0, SEAM.CLOCK
+- [ ] QC.G5 xt1 on main capacity plan (64/64 both clusters on rebind) · TOK-QK · WAITS · → QC.CAP
 
 ## DIE qwen_kvsys · Qwen KV
-- [x] KV.G0 Plan check v3.8h · KV-P7 · PASS · 0a0966d6f
-- [x] KV.G0C Completeness v3.8u 49/49 (hub_Wi host-core pins) · KV-G3 · PASS · a7e29a44ac
-- [x] KV.G0.V38S Plan v3.8s FIRM astk stations on main · ROOT-MERGE · DONE · 7353065934, superseded by v3.8w main30fe617bcb G0/G0C PASS
-- [x] KV.G1 Plan review · ROOT-MERGE · PASS · f1964316b9 independent PASS-COND v3.8v; hub tile FAIL remains KV.G3 blocker
-- [ ] KV.G2 Routing probe · KV-G3 · TODO
-- [ ] KV.G3 Hub + row partitions from bound RTL · KV-G3 · RUNNING · IO parts 2 PASS 1 COND; hub_Ei waits clock variant spread <= 80
-- [ ] KV.G4 Abutted die · KV-G3 · WAITS · waits → KV.G3, SEAM.METHOD
-- [ ] KV.G5 Token tests · KV-TOK · RUNNING · kv41 lint 0, bind 85/160; hier Verilator bench WIP (tokj-kvslice)
-  - [ ] KV.G5.BOOT Final boot image (PV W request-lane pads) · KV-TOK · RUNNING · kv-p7-1023 non-PV valid
+- [ ] KV.BIND Re-bind from scratch (bound_netlist lost; owner dec. 9) · KV · TODO · main bind.py + bind_post.py
+- [ ] KV.G3.HUB hub_Ei vK (pipelined reset + hotspot spread) · KV · WAITS · → SEAM.RESET; vJ pair skew 74.8/69.7 PASS
+- [ ] KV.G3.CORES KV hard cores (none SIGNED) · KV · RUNNING · pv_pair FF hold -10.75; head_eighth 216 x8 to collect
+- [ ] KV.G4 Abutted die · KV · WAITS · → KV.G3.HUB, SEAM.CLOCK
+- [ ] KV.G5 Boot + token · TOK-QK · RUNNING · boot stalls 528/7161: bugs A/B/C1/C2 -> kv43
 
-## DIE hbm · HBM d4g
-- [x] HBM.G0.FB Fallback plan P7 record · HBM-P7 · DONE · 22911ecdb
-- [ ] HBM.G0C Fallback plan completeness 34/60 (110 core_faces, 10 die_io_plan, 1 ft_budget) · HBM-ARCH · FAIL · superseded by B2 when it lands
-- [ ] HBM.G0 HBM-ARCH B2 plan G0 + G0C · HBM-ARCH · RUNNING · hbm-arch-1023 WIP (H-tree clock, 5 SerDes)
-- [ ] HBM.G1 Plan review · HBM-ARCH · WAITS · waits → HBM.G0
-- [ ] HBM.G2 Routing probe · HBM-ARCH · WAITS · old plan: hc2/hc7 congested, VM|SU2 face overloaded
-- [ ] HBM.R8 r8 bind (held from binder4, COORD 23:10) · HBM-ARCH · BLOCKED · waits → HBM.G0
-- [ ] HBM.G3 Partitions · HBM-ARCH · WAITS · 694 cores pinned on fallback
-- [ ] HBM.G4 Abutted die · HBM-ARCH · WAITS
-- [ ] HBM.G5 Token tests · HBM-ARCH · BLOCKED · held for final plan; price −3.4% accepted
+## DIE hbm · HBM B2l (DS + Qwen)
+- [ ] HBM.B2M B2m = B2l + true H-tree, seam OCV, SerDes IR, %g origin bug · HBM · RUNNING · trunk OCV seam skew 407-594 ps
+- [ ] HBM.NATIVE Native B2l RTL (VM ring stop, quadrant straps, SU tree/root, HC root, IDX selector) · HBM · TODO · b2_native_bind_delta.json
+- [ ] HBM.G3.CORES 89 core kits + 26 placement FAILs (core insertion) · HBM · RUNNING · early core taps
+- [ ] HBM.G4 Abutted die · HBM · WAITS · → HBM.B2M, SEAM.CLOCK
+- [ ] HBM.G5 Token · TOK-HBM · RUNNING · layer gate FAIL on SU/HC transport; DS 1,561-1,886 / QW 893-943 tok/s
+
+## TOKEN · token-pass gate per design
+- [ ] TOK.DS DeepSeek token · TOK-DS · RUNNING
+  - [ ] TOK.DS.COMP Compiler gaps G-COMPILER-ROWS / G-NORMALIZE-SO · TOK-DS · TODO · main DS blocker
+  - [ ] TOK.DS.R8 Price v4.8 landed pads (≤13 cyc) in latency tables · TOK-DS · TODO
+- [ ] TOK.QW Qwen token (stg 527/527, head, attnret, xhead PASS; 1u 4,428 / 4u 11,844 tok/s) · TOK-QK · RUNNING · s8 bound-row on intel2
+- [ ] TOK.FREEZE Final evidence run at RTL freeze · COORD · WAITS · → S81.G5, QC.G5, KV.G5, HBM.G5
+- [ ] MU.CURVE Latency-throughput curve vs A100 80GB · COORD · WAITS · → TOK.FREEZE
 
 ## INFRA · fleet and coordination
-- [x] INFRA.FLEET New fleet provisioned (toolchain + ORFS image on 5 hosts) · COORD · DONE · 2026-10-24
-
-- [ ] INFRA.MERGE 10-23 review queue merged · ROOT-MERGE · RUNNING · lanes/COORD-REVIEW-QUEUE.md
-- [x] INFRA.WATCH release-task liveness watcher redeployed against this tree · CODEX · DONE · acfb8a36e7; read-only timer, all5hosts; legacy element auto-submit held for current-plan/review adaptation
+- [ ] INFRA.SIGNOFF 138 old modules need re-signoff (DBs lost) · S81 / QC / KV / HBM · RUNNING
+- [ ] INFRA.OLDSCR Recover CLOSED results missing from archive, then free old nvme (owner dec. 10) · COORD · TODO
+- [ ] INFRA.AUTOSWITCH Claude/Codex auto-switch on rtx-pro + lane 429 watch (owner dec. 11) · COORD · TODO
+- [ ] INFRA.DISK epyc1 root 82%, rtx-pro 81% · COORD · RUNNING · prune superseded worktrees/data
 
 ## WAITS · who
 ### Waiting on the owner
-- nothing yet
-
-## TOKEN · token-pass gate per design (carried over from the 10-21 tree, ~/coord/RELEASE_TREE_1021.html)
-- [ ] TOK.DS DeepSeek ROM (S81 array) single-user token · TOK-DS · RUNNING
-  - [ ] TOK.DS.LAYER Single-die layer runs on current S81 RTL · TOK-DS · RUNNING · waits S81 entry-replay triage
-  - [ ] TOK.DS.RATE Composed rate from measured stages · TOK-DS · TODO
-  - [ ] S81.HEAD Head die (LM head/argmax/MTP) top-down plan · S81-HEAD · RUNNING · no 72-frame head die exists
-  - [ ] S81.LINK5 5th lane pair, S81.HOST in-band host · S81-HEAD · TODO
-  - [ ] MU.TOK S81 multi-user token pass · TOK-DS · WAITS · after TOK.DS
-- [ ] TOK.QW Qwen ROM single-user + four-user · TOK-QW · RUNNING
-  - [ ] TOK.QW.LAYER Compute-die layer runs (stg3 numeric PASS, normalized FAIL; stg4 to collect) · TOK-QW · RUNNING
-  - [x] TOK.QW.KV 1u/4u KV attention · STEWARD-TOK-QW · PASS · 10-21
-  - [ ] TOK.QW.XDIE Compute to KV D2D co-sim · TOK-QW · TODO
-  - [ ] MU.TOK.QW Qwen four-user token pass · TOK-QW · WAITS
-- [ ] TOK.HDS HBM-DeepSeek single-user token · TOK-HBM · RUNNING
-  - [ ] TOK.HDS.VEH Shared d4g layer bench DS + Qwen · TOK-HBM · RUNNING
-  - [ ] TOK.HDS.XDIE Cross-die collectives co-sim · TOK-HBM · TODO
-- [ ] TOK.HQ HBM-Qwen d4g single-user (L0 + chain; SM RD_LAT fix 045b6666c) · TOK-HBM · RUNNING
-- [ ] TOK.FREEZE Final evidence run at RTL freeze · CODEX · WAITS · waits → S81.G5, QC.G5, KV.G5, HBM.G5
-- [ ] MU.CURVE Latency-throughput curve vs A100 80GB · CODEX · WAITS · waits → TOK.FREEZE
-
-## INFRA · added 10-24
-- [x] INFRA.OTRUN ot-run live on 5 hosts · FLEET-NEW3 · DONE · 8a5d1f3dab
-- [ ] INFRA.OLDSCR Old-fleet scratch on intel1/intel2 /mnt/old-nvme0 (read-only): recover 10-23 outputs, then decide reformat · OWNER · OWNER · 3.5 TB each
-- [ ] S81.G0C.CORES Hard cores for the 92 G0C-failing S81 types · S81-CORES · RUNNING
-
-## INFRA · industry flow lanes (owner 10-24 07:40)
-- [ ] ELEM.ALL Close current-plan partition types / hard cores without a SIGNED view (NOT the obsolete 10-21 element list) · ELEM-S81 / ELEM-QK / ELEM-HBM · RUNNING
-- [ ] FLOW.DISK ot-run scratch-only placement + root guard · FLEET-DISK · RUNNING
-- [ ] FLOW.CI Whole-die prototype CI per plan (G0/G0C/xdie/G2/die STA + SI/IR margins) · DIE-CI · RUNNING
-- [ ] FLOW.SIGNOFF Uniform re-signoff at TT setup / FF hold · SIGNOFF · RUNNING · f942bf2f72: signoff.py is the final run_kit.sh step; 138 closed modules NEED RE-RUN (DBs lost); on paper 124 PASS, 7 FAIL (spread>80), 7 no record; re-runs by ELEM-* lanes
-- [ ] FLOW.TRIAL.S81 Trial die run S81 layer + head · TRIAL-S81 · RUNNING
-- [ ] FLOW.TRIAL.QK Trial die run Qwen compute + KV · TRIAL-QK · RUNNING
-- [ ] FLOW.TRIAL.HBM Trial die run HBM B2 (verify cut 0.55) · TRIAL-HBM · RUNNING
-
-## OWNER · open owner decisions (2026-10-24)
-- [x] OWN.ELASTIC Elastic seams experiment · ELASTIC · DONE · REJECT 8e69517bf2: longest lanes carry 0 pad, elastic 2.9x/5.2x pad area, 0 cyc gain; fix pads plan-side
-- [x] OWN.HEADCNT S81 head dies 12 → 4 (one group meets AR+MTP at <=35% busy; saves 8 dies + 8 host links) · OWNER · DONE · approved 10-24 07:30
-- [x] OWN.HEADHBM HBM stacks on head dies (rack: 4 each; LM head is ROM, plan has none) · OWNER · DONE · approved 10-24 07:30
-- [ ] OWN.DRAFT MTP draft on copy-B dies, no draft fan-out SerDes · S81-HEAD · RUNNING · approved if MTP compose uses no draft link (checking)
-- [ ] OWN.COPYAB Copy-A/B 6th SerDes pair on 64 layer dies: 12-SerDes variant or ride existing pairs · S81 · RUNNING · approved: reserve pair on every layer die (rack spec)
-
-## OWNER decisions 2026-10-24 18:4x (see BRIEFING): QCCAP=ACCEPT · RESET=PIPELINED (one root sync, sync relay every <=405 um) · MARGINS=INFO · HBMPRICE=ACCEPT B2l, recover later
+- nothing open (decisions 1-11 recorded in BRIEFING)
