@@ -1,0 +1,15 @@
+ot-run: intel2         admits   559 GB (avail 882, reserve 0, fresh 232.8, peak 26, headroom 0, waiters 0/0 GB) load 64/112 running 25 disk 2313 GB 
+ot-run: -> intel2
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3781176-1792921355 after 1 s
+DV_LOWER_MAT qkv FAIL 769/769 mutant=0 arf=0 fixture=L0_mat_qkv.npz {"stn": 12, "slices": [1, 3, 5, 6, 8, 10], "isa_gold": "isa_gold_words=768/768", "delivery_span_cycles": 445, "delivery_span_origin": "chain schedule base (same origin as od span_cycles and the legacy anchor)", "legacy_schedule_anchor_span_cycles": 407, "first_stn_command_edge": 134, "first_cluster_word_edge": 159, "last_cluster_word_edge": 236, "first_vm_write_edge": 267, "last_vm_write_edge": 274, "vm_write_window_cycles": 7, "vm_writes_observed": 48, "vm_writes_expected": 48, "vm_write_addresses_missing": 0, "vm_write_observability": "tb_qfd_dv2 S<k>VW probe: station-result VM write (st_vm) edges at the expected word addresses", "producer_kc": 8, "producer_words_per_cluster_per_round": 64, "producer_scope": "STN/VM cut-boundary protocol; upstream MAC arithmetic not simulated here", "span_note": "legacy anchor span is not measured VM latency; input pin edges and readback/drain bounds are recorded separately"}
+    S0ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S11ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    S7ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+ot-run: RAN on intel2 (unit oth-ubuntu-3781176-1792921355): exit 1

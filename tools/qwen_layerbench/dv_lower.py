@@ -159,7 +159,10 @@ def ownership(plan=PLAN):
             elif lv == 7:
                 s, pair, mode = t // 2, t % 2, 'L7'
             else:
-                s, pair, mode = 2 * t, None, 'L9 receiver (sender 2t+1)'
+                # Bound west-row pair heads (W5/W3/W1) have no neighbour input.
+                # Their receivers are W4/W2/W0; the mirrored east row receives at E0/E2/E4.
+                s = ((1, 3, 5, 6, 8, 10)[t] if SLICE_RTL == 's8' else 2 * t)
+                pair, mode = None, (f'L9 receiver (sender {s ^ 1})' if SLICE_RTL == 's8' else 'L9 receiver (sender 2t+1)')
             rows.append(dict(block=b, rows=[BLOCK * b, min(BLOCK * (b + 1), m['rows'])], slice=s, round=rnd, pair=pair,
                              mode=mode))
         out[name] = dict(split=m['split'], level=lv, tiles_per_round=T, rounds=m['rounds'], blocks=rows)

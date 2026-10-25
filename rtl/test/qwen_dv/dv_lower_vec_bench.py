@@ -147,12 +147,14 @@ def calibrate(work, seed):
     lw = {m: V.lower_vec(m, ages=PLACEHOLDER, consts=consts) for m in ('resid', 'qk', 'silu')}
     imgs = bench_words(lw['resid'])
     vm, P, arr = lw['resid']['vm'], V.PIDX, lw['resid']['slice_map']['cmd_arrival']
+    # A probe needs a real Q receiver; west bound S8 pair heads lack L9 input.
+    qprobe = 1 if D.SLICE_RTL == 's8' else 2
     ev = LB.Events()
     t = boot(ev, imgs)
     for s, base, n in ((1, 'X', 384), (11, 'X', 256), (1, 'T', 384), (11, 'T', 256), (10, 'X', 256),
-                       (2, 'QKV', 128), (8, 'QKV', 128), (10, 'QKV', 128), (3, 'GU', 256)):
+                       (qprobe, 'QKV', 128), (8, 'QKV', 128), (10, 'QKV', 128), (3, 'GU', 256)):
         t = land(ev, t, s, vm[base]['base'], (rng.standard_normal(n) * 0.5).astype(F))
-    for s in (2, 3, 8, 10):
+    for s in (qprobe, 3, 8, 10):
         t = land(ev, t, s, vm['RX']['base'], np.full(16, F(0.75)))
     for w in lw['qk']['crom_table'] + lw['resid']['crom_table']:
         ev.at(t, P_SWI, D.stream_table_word(1, w['dst'], w['eaddr'], int(w['payload'], 16)))
@@ -168,8 +170,8 @@ def calibrate(work, seed):
         t += 1
     t += 40
     probes = [('add', 1, P['res1']), ('add', 11, P['res1']), ('xs', 1, P['xs']), ('xs', 10, P['xs']),
-              ('silu', 3, P['silu']), ('red_vm', 2, BENCH_PIDX['qkr_ps']), ('rs', 2, BENCH_PIDX['rs_dd']),
-              ('qn', 2, BENCH_PIDX['qn_dd']), ('rope_q', 2, P['rlo']), ('rope_k', 8, P['rlo']), ('v', 10, P['qkr']),
+              ('silu', 3, P['silu']), ('red_vm', qprobe, BENCH_PIDX['qkr_ps']), ('rs', qprobe, BENCH_PIDX['rs_dd']),
+              ('qn', qprobe, BENCH_PIDX['qn_dd']), ('rope_q', qprobe, P['rlo']), ('rope_k', 8, P['rlo']), ('v', 10, P['qkr']),
               ('gur', 3, BENCH_PIDX['gur_dd']), ('readback', 1, BENCH_PIDX['readback'])]
     at = []
     for name, s, pidx in probes:
@@ -191,8 +193,8 @@ def calibrate(work, seed):
         meas[f'{name}@{s}'] = v
     print('CALIBRATE raw', json.dumps(meas))
     A = dict(schema='opentallas.qwen.dv-slice-vec-ages.v1', add_psum_out=meas['add@1'], xs_out=meas['xs@1'],
-             silu_out=meas['silu@3'], red_vm=(meas['red_vm@2'] or [None])[-1], root_cfg_lead=4,
-             d2d={k: meas[f'{k}@{s}'] for k, s in (('rs', 2), ('qn', 2), ('rope_q', 2), ('rope_k', 8), ('v', 10),
+             silu_out=meas['silu@3'], red_vm=(meas[f'red_vm@{qprobe}'] or [None])[-1], root_cfg_lead=4,
+             d2d={k: meas[f'{k}@{s}'] for k, s in (('rs', qprobe), ('qn', qprobe), ('rope_q', qprobe), ('rope_k', 8), ('v', 10),
                                                     ('gur', 3), ('readback', 1))},
              per_probe=meas,
              source='rtl/test/qwen_dv/dv_lower_vec_bench.py --mode calibrate (tb_qfd_dv2 N 12, Verilator 5.050). '
