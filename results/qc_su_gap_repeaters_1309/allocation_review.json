@@ -1,0 +1,25 @@
+{
+ "status": "GEOMETRY_ALLOCATION_ONLY_NOT_ACTIVE",
+ "pre_dpl_unit": "oth-ubuntu-1940012-1792961626",
+ "read_db_rows_unit": "oth-ubuntu-2728924-1792961745",
+ "new_buffers": 10420,
+ "moved": 1466,
+ "preserved_west_buffers": 107,
+ "actual_rows": 4928,
+ "row_site_step_um": 0.054,
+ "row_height_um": 0.27,
+ "row_origin_um": [
+  4.32,
+  4.32
+ ],
+ "max_dx_um": 0.027000000000001023,
+ "independent_overlap_pairs": 29462935,
+ "overlaps": 0,
+ "data_cycles_added": 0,
+ "remaining": [
+  "independent whole-cell image review",
+  "actual OpenDB apply + legal row orientation bbox validation",
+  "post-DPL x bound/overlap check",
+  "TTsetup FFhold DRV GRT gate"
+ ]
+}
