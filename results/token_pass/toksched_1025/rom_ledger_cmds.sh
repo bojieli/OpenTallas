@@ -28,3 +28,6 @@ python3 $H/kv_v39r_price.py $H/kv_v39r/lane_cycle_delta_vs_main.json $H/kv_v39r/
 python3 $H/rom_ledger_rows.py                                                     # --ledger PATH for a merged ledger
 python3 tools/throughput/accepted_cost.py table | grep -E 'VSW_LR1|SRAM_MIF1|V39R_LANES|^s81:|^qwen_rom:'
 python3 tools/throughput/accepted_cost.py check   # only the pre-existing r25gq COLL quadrant row violation (also on main)
+
+# 2026-10-25 TOK-SCHED merge: KV.PLAN_V39R_LANES, QC.SRAM_MIF1, COLL.TOPK_MERGE tkx and SM BF16 rows were DEMOTED to proposed/interim_log
+# (model/plan-count evidence, no measured run). Do not replay their accept steps; only S81.VSW_LR1 and COLL.ARGMAX_MERGE stay accepted.

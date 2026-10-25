@@ -35,3 +35,6 @@ $AC accept r25gq "$UC" --note "COORD 2026-10-25 12:07 (1) ACCEPTED with conditio
 
 $AC check
 $AC table | grep -E '^\| (design|r25gq)' | head -60
+
+# 2026-10-25 TOK-SCHED merge: KV.PLAN_V39R_LANES, QC.SRAM_MIF1, COLL.TOPK_MERGE tkx and SM BF16 rows were DEMOTED to proposed/interim_log
+# (model/plan-count evidence, no measured run). Do not replay their accept steps; only S81.VSW_LR1 and COLL.ARGMAX_MERGE stay accepted.
