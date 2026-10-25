@@ -19,6 +19,8 @@ set rt_bufm [[ord::get_db] findMaster [expr {[info exists ::env(OT_RT_BUF)] ? $:
 set rt_rep [expr {[info exists ::env(OT_RT_REP_UM)] ? $::env(OT_RT_REP_UM) : ([info exists ::env(OT_RT_PROTECT_SPINE)] && $::env(OT_RT_PROTECT_SPINE) ? 60.0 : 250.0)}]
 set rt_portn [expr {[info exists ::env(OT_RT_PORT)] ? $::env(OT_RT_PORT) : "clk"}]
 set rt_bt [$rt_blk findBTerm $rt_portn]
+# 1-bit bus clock port: SDC get_ports {ck} but the bterm is ck[0]
+if {$rt_bt eq "NULL"} { set rt_bt [$rt_blk findBTerm "${rt_portn}\[0\]"] }
 if {$rt_bt eq "NULL"} { error "OT_RT: no clock port $rt_portn" }
 set rt_root [$rt_bt getNet]
 set core [$rt_blk getCoreArea]
