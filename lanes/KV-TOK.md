@@ -188,3 +188,13 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
 - 2026-10-25 01:24 PDT TOK-QK: took KV-G3 asks: (1) recompile KV boot image on bound_kv44 + make the compile reproducible (kv45 on v3.9 next),
   (2) decision-14 calendar duty check (<= 0.73/PC/cycle at DFI 1:4), (3) R4 dcal profile emb1627 vs ew595 -> sub-agent, branch claude/kv-img-1025,
   output epyc2 /srv/opentallas-scratch2/claude/kv-tok/img44/. kv43abcd BOOT_FAULT target-1 root cause -> second sub-agent.
+- 2026-10-25 01:48 PDT TOK-QK: KV BOOT IMAGE now reproducible: claude/kv-img-1025@57d45c219, physical/die_plan/qwen_kvsys/boot_v36/kv_boot_image.sh BIND_DIR OUT PV_TABLE
+  (manifest sha256 in/out; rtl6 GEN inputs recovered from rtx-pro -> boot_v36/asbuilt_rtl6). Reproduces image_kv41 BIT-EXACT (old 1/3/11/13 diff = wrong
+  prep input, not code). img44 COMPILED (not qualified, as kv41): epyc2 scratch2/claude/kv-tok/img44 + boot_v36/image_kv44; check vs vport_dq_pads_kv44
+  PASS (RL 64, RT 31/32, DQ after 810 W pads). Diff vs kv41: t1 133 words, t3 2, t6-9 96 each (V read +1 edge), t11 13; others 0. kv45/v3.9 = same entry point.
+  R4: kv44 dcal = emb1627 MU+RoPE pair (period 293,376) CONFIRMED; compute die must bind the same pair image.
+  DECISION 14 duty: calendar is still compiled on a 1024-ps HBM controller clock (static_kv_calendar.HBM_PS); per 833-ps cycle sustained 0.651 <= 0.73 PASS
+  (in-burst 0.814). What-if compile with controller ON the die clock FAILS landing pacing check (K read shape 8-on/2-off = 0.800 > 0.73) -> moving kvs_pc
+  to 833 ps needs compiler work (K shape 8/3). OWNER?/KV: decision 14 is not yet compiled; recommend K 8/3 shape in the compiler with the kv45 rebind.
+  DECISION 13: image anchors on forwarded epoch strobe -> dcal epoch_go -> tok_start (no reset-edge keying), but no die-wide START after a reset wavefront
+  exists in kv44 RTL, and the r16 retirement proof still uses reset-release depth (RST_HOLD 273) -> KV/RESET to provide START; compiler proof to follow.
