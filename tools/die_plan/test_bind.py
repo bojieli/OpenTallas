@@ -740,3 +740,34 @@ def test_bump_ports(tmp_path):
     f.write_text(json.dumps(p))
     run(f, tmp_path / "o2", "elab", "bind")
     assert any("as-built pin" in e for e in report(tmp_path / "o2")["errors"])
+
+
+@pytest.mark.parametrize("enabled,named_tie", [(False, False), (True, False), (True, True)])
+def test_internal_primitive_constants_preserve_boundary_audit(tmp_path, enabled, named_tie):
+    """Arithmetic literals survive emission; named boundary constants remain forbidden."""
+    src = tmp_path / "src"
+    shutil.copytree(EX, src)
+    par = src / "par.sv"
+    text = par.read_text().replace(".i(x)", ".i(x + 8'h01)")
+    if named_tie:
+        text = text.replace(".i(a_o)", ".i(8'h01)")
+    par.write_text(text)
+    plan = json.loads((src / "die_plan.json").read_text())
+    plan["asbuilt"]["base"] = str(src)
+    plan["asbuilt"]["internal_primitive_constants"] = enabled
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    out = tmp_path / "out"
+    assert run(pf, out, "elab") == 0
+    rc = run(pf, out, "bind")
+    r = report(out)
+    if enabled and not named_tie:
+        assert rc == 0 and r["proof"]["tied"] == 0
+        assert r["internal_primitive_literals"] > 0
+        assert run(pf, out, "verify") == 0
+        assert verify(out)["verdict"] == "PASS"
+    else:
+        assert r["n_errors"] > 0 and r["proof"]["tied"] > 0
+        assert bind.main(["bind", str(pf), "--out", str(out), "--strict"]) != 0
+        if enabled:
+            assert any("lf_b.i" in str(x) for x in r.get("tied_by_port", [])) or r["proof"]["tied"] >= 16
