@@ -324,3 +324,12 @@ PARKED. Ownbranch codex/qc-sramif-1309@d965a9aada clean, no merges/pushes. RP1f6
 - Stale: autopilot row a670475c7977 vmr_s6h (route started 08:22, container codex-qccqb-s6h-rt6-2841061 on intel1, unit 2840836) is superseded evidence still running after ~6.5 h. Not mine, so I did not kill it; PATH-QC/AUTOPILOT should cancel it.
 - Next: collect the 4 sign-offs. SIGNED goes to bind. NOT SIGNED gets a visual review and a structural fix as above (one successor per core, GEOM PASS first).
 - OWNER? none.
+
+## PARKED 2026-10-25 15:07 PDT PATH-QC (lead)
+- Signed off: 1 of 29 (C1 su8_rst3 only; none of today's successors has a routed sign-off yet).
+- (a) Plan D3 G2 is CLOSED in STRICT mode on plan 441d1401 (codex/root-1309@6c98ad9a6). Fix on claude/path-qc-d3g-1025@fb33362af1: tools/die_plan/gap_repeaters.tcl + proto_sweep.py (gap-row repeater islands for M7 ribbons over M6-capped cores). G2 18/18 W5 types CLEAN; su_l1 overflow 8787 -> 0; reach 0/65 FAIL, max 401.92. GEOM REQ [PATH-QC-PLAN-D3] and READY are posted. My worktree is removed. The predecessor's d3/d3b/d3c worktrees (epyc1 wt/path-qc-plan-d3*-1025, holding uncommitted generated files already captured by Codex 6a152e62f) and scratch path-qc-plan-d3{,b,c,d} are superseded: delete them once 6c98 + fb33 merge. Owed after merge: FLOW hook so the su_l0/su_l1 partition kits source gap_repeaters.tcl around repair_design.
+- (b)/(c) PATH-QC-A0N59 PARKED 14:41: native59 baseline + WIF kits are LIVE to CTS on epyc1 path-qc-a0n59/kits{,_wif}. NL affinity FF -39.75/577: GEOM REQ [PATH-QC-NL-R2]. NK R6 GRT has stalled (ROM-pipe hotspot), autopilot 14e02be8d1cf. PHYB is in 6c98 (lib check PASS).
+- (d)/(e) PATH-QC-SRAMIF PARKED 15:06: rows RP1 f62 897f05140dde (PASS-COND, COORD ask done), btab_s8 39a0c5d4d168 RUNNING, prog_s8b 610890e3f05e RUNNING, vmr_s6kc 6f61cf5ff8c9 WAIT-GEOM. f59/s6j/btab_s7/prog_s7 are terminal NOT SIGNED and superseded.
+- Codex open items: the su_l1 hold -1.16 and the output-pin slew DRV belong to the skeleton class that every CLEAN G2 type has; they are not plan items. The 1569 nd_bf stubs are the standard G2 scope and close at the kit (G3). f62 is enqueued.
+- Cancel needed (AUTOPILOT/COORD, not mine): stale row a670475c7977 vmr_s6h, container codex-qccqb-s6h-rt6-2841061 on intel1, superseded, running ~6.5 h.
+- OWNER? none.
