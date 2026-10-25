@@ -255,7 +255,8 @@ HOLD_OUT_MIN_PS = 0.0   # min output delay of every partition output vs vclk (sd
 
 def _tap_cap(t):
     """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps)."""
-    return int(t.get("clock", {}).get("tap_max_sinks", 3000))
+    return int(t.get("clock", {}).get("tap_max_sinks",
+               1500 if t.get("clock", {}).get("tap_mode") == "density" else 3000))
 
 
 def sdc(P, tn, pins):
@@ -566,9 +567,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                           insertion_tol_ps=P.clock["insertion_tol_ps"],
                           # one clock port per tap (snapped): the R4 grid first, then any ADDED sink-anchored taps
                           tap_mode=t.get("clock", {}).get("tap_mode", "grid"),
-                          tap_pitch_um=S.tap_pitch(P, tn), grid_taps=len(S._grid_taps(P, tn)),
+                          tap_pitch_um=S.tap_pitch(P, tn),
+                          grid_taps=0 if t.get("clock", {}).get("tap_mode") == "density" else len(S._grid_taps(P, tn)),
                           taps=[dict(name=n, xy=[x, y],
-                                     kind="grid" if i < len(S._grid_taps(P, tn)) else "sinks")
+                                     kind="density" if t.get("clock", {}).get("tap_mode") == "density" else ("grid" if i < len(S._grid_taps(P, tn)) else "sinks"))
                                 for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
                           taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
