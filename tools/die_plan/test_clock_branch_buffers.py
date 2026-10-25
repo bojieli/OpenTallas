@@ -36,3 +36,19 @@ def test_parent_must_match():
     r = Report()
     out = check_clock_branch_buffers(SimpleNamespace(types={"root": _t([60, 125], parent="nope")}), r)
     assert out["types"] == ["root"] and len(r.errors()) >= 2
+
+
+def test_buffer_in_station_halo_fails():
+    tt = _t([60, 125])
+    tt["ft_slots"] = [dict(name="Lx", regs_um=[[61.0, 125.5]], bit_site_cell_um=[1.404, 0.27])]
+    r = Report()
+    out = check_clock_branch_buffers(SimpleNamespace(types={"root": tt}), r)
+    assert out["types"] == ["root"]
+
+
+def test_buffer_clear_of_station_ok():
+    tt = _t([60, 125])
+    tt["internal_stations"] = [dict(conn="a|b", regs_um=[[70.0, 125.0]])]
+    r = Report()
+    check_clock_branch_buffers(SimpleNamespace(types={"root": tt}), r)
+    assert not r.errors()

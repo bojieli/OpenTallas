@@ -309,7 +309,8 @@ SCHEMA = {
                                            "drives": {"type": "array", "minItems": 1, "items": _name},
                                            "cell": {"type": "string"}, "legs_um": {"type": "array", "items": _nonneg},
                                            "insertion_ps": _nonneg, "budget_owner": {"type": "string"},
-                                           "site": {"type": "string"}, "note": {"type": "string"}}}},
+                                           "site": {"type": "string"}, "note": {"type": "string"},
+                                           "cell_ll_um": _xy, "orient": {"type": "string"}}}},
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {

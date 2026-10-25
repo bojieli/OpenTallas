@@ -674,7 +674,31 @@ def check_clock_reset(P, R):
 
 
 CLOCK_LEG_MAX_UM = 405.0   # OWNER 10-17 planned reach; GEOM-REVIEW-2 11:35 R1 (3) chain-hop taps <= ~400 um
+CLOCK_BUF_HALO_UM = 2.0   # GEOM-REVIEW 15:24 [PATH-HBM-TKMCLKBUF] (1): halo to any FT bit site / station register
 
+
+def _buf_near_station(t, q, cell=(1.404, 0.27)):
+    """First FT bit site / ft station / internal station register whose cell box (bit_site_cell_um, LL at the point)
+    comes within CLOCK_BUF_HALO_UM of the buffer point q, else None."""
+    h = CLOCK_BUF_HALO_UM
+
+    def hit(p, wh):
+        return (p[0] - h - EPS < q[0] < p[0] + wh[0] + h + EPS) and (p[1] - h - EPS < q[1] < p[1] + wh[1] + h + EPS)
+
+    for f in t.get("ft_slots", []) or []:
+        wh = f.get("bit_site_cell_um") or cell
+        for p in f.get("regs_um", []) or []:
+            if hit(p, wh):
+                return f"ft {f['name']} station {p}"
+        for grp in f.get("bit_sites_um", []) or []:
+            for p in grp:
+                if hit(p, wh):
+                    return f"ft {f['name']} bit site {p}"
+    for s in t.get("internal_stations", []) or []:
+        for p in s.get("regs_um", []) or []:
+            if hit(p, cell):
+                return f"internal station {s.get('conn')} {p}"
+    return None
 
 def check_clock_branch_buffers(P, R):
     """PATH-HBM 10-25 (COORD ruling (1) 14:44): clock.branch_buffers are real std-cell clock buffers: none inside a
@@ -708,6 +732,11 @@ def check_clock_branch_buffers(P, R):
                         if x0 + EPS < q[0] < x1 - EPS and y0 + EPS < q[1] < y1 - EPS), None)
             if hit:
                 R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} is inside hard core {hit}", type=tn)
+                bad = True
+            near = _buf_near_station(t, q)
+            if near:
+                R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} within {CLOCK_BUF_HALO_UM} um halo of "
+                               f"{near}", type=tn)
                 bad = True
             for d in b["drives"]:
                 tp = taps.get(d)

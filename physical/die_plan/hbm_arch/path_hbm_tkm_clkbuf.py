@@ -9,7 +9,7 @@ taps[].parent (schema/check.py check_clock_branch_buffers).  CLOCK-RESET signs t
 
     python3 path_hbm_tkm_clkbuf.py --src <plan dir> --out <new plan dir>
 """
-import argparse, json, os, shutil, sys
+import argparse, json, math, os, shutil, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
@@ -20,6 +20,8 @@ import check as C  # noqa: E402
 
 LEG_MAX = C.CLOCK_LEG_MAX_UM
 CELL = "BUFx12f_ASAP7_75t_R"
+CELL_WH = (1.296, 0.27)   # BUFx12f_ASAP7_75t_R (24 sites x 1 row)
+SITE = (0.054, 0.27)
 BUDGET = ("CLOCK-RESET (COORD 14:44 ruling (1)): the corridor buffer replaces a branch segment of the partition clock "
           "tree; the partition tree balances all 33 TKM taps to the same insertion, so the buffer adds no skew budget; "
           "related-pair skew across the corridor hop = leg mismatch only (equal legs by construction)")
@@ -55,7 +57,11 @@ def apply(plan):
         corr = "L4" if hi - lo > 200 else "L150"
         name = f"u_tkmclk_{corr}_c{col}"
         legs = [round(abs(ta[1] - y), 2), round(abs(tb[1] - y), 2)]
-        bufs.append(dict(name=name, xy=[x, y], drives=[a, b], cell=CELL, legs_um=legs,
+        # legal placement (GEOM-REVIEW 15:24 (1)): cell LL on the ASAP7 site grid (0.054 x 0.27 rows), R0; xy stays
+        # the clock input point (pin x) the legs are measured from
+        ll = [round(math.floor((x - CELL_WH[0] / 2) / SITE[0]) * SITE[0], 3),
+              round(math.floor((y - CELL_WH[1] / 2) / SITE[1]) * SITE[1], 3)]
+        bufs.append(dict(name=name, xy=[x, y], cell_ll_um=ll, orient="R0", drives=[a, b], cell=CELL, legs_um=legs,
                          budget_owner="CLOCK-RESET", site=f"std-cell rows of the {corr} corridor y {lo:.2f}..{hi:.2f} "
                          f"(gap {hi - lo:.2f} um), column {col}",
                          note="PATH-HBM TKMCLKBUF: shared corridor clock buffer (COORD 14:44 ruling (1)); " + BUDGET))
