@@ -127,9 +127,13 @@ module tb_coll_tp8_static_links #(
             localparam integer P = g / 2, D = g % 2;
 `ifdef OT_TP8S_WAVEFRONT
             wire [31:0] wf_t0 = WF_D0 + ((5 * g + 3) % 8) * WF_SKEW;     // die g rst_n deassert cycle
-            wire wf_iss = cyc >= wf_t0 + WF_ISS, wf_core = cyc >= wf_t0 + WF_CORE, wf_n = cyc >= wf_t0 + WF_N;
-            wire wf_s = cyc >= wf_t0 + WF_S, wf_ucie = cyc >= wf_t0 + WF_UCIE, wf_ft = cyc >= wf_t0 + WF_FT;
-            wire [2:0] wf_ser = {cyc >= wf_t0 + WF_SER2, cyc >= wf_t0 + WF_SER1, cyc >= wf_t0 + WF_SER0};
+            // registered taps (the bind's ot_dp_rrelay reset relays): each goes high on the edge that makes cyc = t0 + release
+            reg wf_iss = 0, wf_core = 0, wf_n = 0, wf_s = 0, wf_ucie = 0, wf_ft = 0; reg [2:0] wf_ser = 0;
+            always @(posedge clk) begin
+                wf_iss <= cyc + 1 >= wf_t0 + WF_ISS; wf_core <= cyc + 1 >= wf_t0 + WF_CORE; wf_n <= cyc + 1 >= wf_t0 + WF_N;
+                wf_s <= cyc + 1 >= wf_t0 + WF_S; wf_ucie <= cyc + 1 >= wf_t0 + WF_UCIE; wf_ft <= cyc + 1 >= wf_t0 + WF_FT;
+                wf_ser <= {cyc + 1 >= wf_t0 + WF_SER2, cyc + 1 >= wf_t0 + WF_SER1, cyc + 1 >= wf_t0 + WF_SER0};
+            end
 `else
             wire wf_iss = rst_n, wf_ucie = rst_n;
             wire [2:0] wf_ser = {3{rst_n}};
@@ -223,12 +227,31 @@ module tb_coll_tp8_static_links #(
             if (RU > 0) begin : g_wf_ru
                 initial $fatal(1, "OT_TP8S_WAVEFRONT: UCIe relays (RU>0) have no partition map");
             end
-            // release witness: every partition reset low one cycle before its release and high at it (die g)
+            // release witness: the cycle each FORCED leaf reset port is first seen high (sampled at posedge, = t0 + release
+            // when the leaf is held through its published release); any other value is WF_BAD
+            integer wr_core = -1, wr_f0 = -1, wr_f1 = -1, wr_n = -1, wr_f3 = -1, wr_s = -1, wr_sh = -1, wr_gb = -1, wr_ft = -1, wr_iss = -1;
             always @(posedge clk) begin
-                if (cyc == wf_t0 + WF_CORE - 1 && u_parent.u_io.u_collective.rst_n) $display("WF_BAD die=%0d core early", g);
-                if (cyc == wf_t0 + WF_S - 1 && u_parent.u_io.g_face[4].u_face.rst_n) $display("WF_BAD die=%0d coll_s early", g);
+                if (wr_core < 0 && u_parent.u_io.u_collective.rst_n) wr_core = cyc;
+                if (wr_f0 < 0 && u_parent.u_io.g_face[0].u_face.rst_n) wr_f0 = cyc;
+                if (wr_f1 < 0 && u_parent.u_io.g_face[1].u_face.rst_n) wr_f1 = cyc;
+                if (wr_n < 0 && u_parent.u_io.g_face[2].u_face.rst_n) wr_n = cyc;
+                if (wr_f3 < 0 && u_parent.u_io.g_face[3].u_face.rst_n) wr_f3 = cyc;
+                if (wr_s < 0 && u_parent.u_io.g_face[4].u_face.rst_n) wr_s = cyc;
+                if (wr_sh < 0 && u_parent.u_io.u_shared.rst_n) wr_sh = cyc;
+                if (wr_gb < 0 && u_parent.u_io.g_six_five.u_gearbox.rst_n) wr_gb = cyc;
+                if (wr_ft < 0 && u_parent.u_io.g_face[4].g_relay.u_rxrelay.rst_n) wr_ft = cyc;
+                if (wr_iss < 0 && wf_iss) wr_iss = cyc;
                 if (cyc == START && !(wf_core && wf_n && wf_s && wf_ucie && wf_ft && (&wf_ser) && wf_iss))
                     $display("WF_START_BEFORE_RELEASE die=%0d start=%0d t0=%0d", g, START, wf_t0);
+                if (rst_n && cyc == endc) begin
+                    $display("WF_RISE die=%0d t0=%0d core=%0d f0=%0d f1=%0d n=%0d f3=%0d s=%0d share=%0d gearbox=%0d ft=%0d iss=%0d (rel to t0)",
+                             g, wf_t0, wr_core - wf_t0, wr_f0 - wf_t0, wr_f1 - wf_t0, wr_n - wf_t0, wr_f3 - wf_t0, wr_s - wf_t0,
+                             wr_sh - wf_t0, wr_gb - wf_t0, wr_ft - wf_t0, wr_iss - wf_t0);
+                    if (wr_core != wf_t0 + WF_CORE || wr_f0 != wr_core || wr_f1 != wr_core || wr_n != wf_t0 + WF_N ||
+                        wr_f3 != wf_t0 + WF_S || wr_s != wf_t0 + WF_S || wr_sh != wf_t0 + WF_UCIE || wr_gb != wf_t0 + WF_UCIE ||
+                        wr_ft != wf_t0 + WF_FT || wr_iss != wf_t0 + WF_ISS)
+                        $display("WF_BAD die=%0d forced reset ports did not release at the published cycles", g);
+                end
             end
 `endif
             assign sxv[g*3+:3]={u_parent.u_io.sx2_valid,u_parent.u_io.sx1_valid,u_parent.u_io.sx0_valid};
