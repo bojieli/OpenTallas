@@ -437,6 +437,9 @@ NONFRAME_HC = {
                             "u_eng.u_h1": (round(1209.6 - d_, 4), 432.0)} for d_ in (86.4 * k_ for k_ in range(1, 7))],
                 mirrors=((False, False),)),
 }
+# PORTFIX r4: keep existing hard-core pins facing their real partners.
+from core_layout_r4 import apply as apply_core_layout_r4
+apply_core_layout_r4(NONFRAME_HC)
 HC_REPORT = {}
 # declared port pairs where width / nearest matching is ambiguous: {key: {(core, port): partner port}}
 CORE_PORT_PAIRS = {k_: {("u_c.u_eg", "g"): "eg_d", ("u_c.u_eg", "g_c"): "eg_c", ("u_c.u_eg", "g_v"): "eg_v",
@@ -888,8 +891,12 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
                 # the outline height: R0 pins sit at y = 0.012 (mod 0.048) after the [., 0.012] offset, so the mirrored
                 # pin y' = dy + ch - 0.012 must be 0.024 (mod 0.048) (the core frame M6 tracks follow the same rule)
                 to[1] = round((0.036 - ch) % 0.048, 4)
-            if oc in ("MY", "R180") and spec.get("place"):
-                raise SystemExit("S81-CORES: x-mirrored explicit cores need a V-layer track shift (not implemented)")
+            if spec.get("place") and oc != "R0":
+                # Reuse the frame-core orient-aware lattice search for fixed
+                # non-frame placements. This preserves the actual LEF pins;
+                # mirrored orientations need both V- and H-layer residues.
+                to = core_track_offset(dict(c, size_um=[cw, ch],
+                                            origin_um=[round(x_, 4), round(y_, 4)], orient=oc))
             o.append(dict(c, origin_um=[round(x_, 4), round(y_, 4)], orient=oc, track_offset_um=to))
         return o
 
@@ -987,7 +994,7 @@ FT_MACRO_ADD = []
 NF_HC_TYPES = []
 STATION_BITS_PER_CYCLE = 4096   # S81/LEAFPLAN: placement ranking prices 4096 station flop bits like one added cycle
 CORES_405_KEYS = ("leaf", "svc", "eng")
-INT_STATION_KEYS = CORES_405_KEYS + ("C:xrt1", "C:xrt3")   # R3-INTERNAL stations (core_conns bundles > 405 um)
+INT_STATION_KEYS = CORES_405_KEYS + ("C:xrt1", "C:xrt3", "gunit", "bk_sel")   # R3-INTERNAL stations (core_conns bundles > 405 um)
 FT_HALO = 8.64
 
 
