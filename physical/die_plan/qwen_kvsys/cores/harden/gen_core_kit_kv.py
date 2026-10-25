@@ -326,6 +326,55 @@ def reached_modules(files, top):
     return " ".join(sorted(seen))
 
 
+# PATH-KV-ASTK2 10-25 (GEOM 10:05 FAIL kv3_astk W2: zones in 2-3 islands each; the zn_1 u_cc adder spread over two leaf
+# regions = 29 ps intra-adder skew): zone boxes as fractions of the core.  Chain zn_0 (zi pins, N face x 6-39) NW ->
+# zn_1 NE -> zn_2 SE -> zn_3 SW -> ctl S band (aq/am/ap/cal pins on the S face, xi on E, qo/tc face flops on N stay
+# pinned at their pins by face_flops.tcl).
+ASTK_ZONES = (("zn0", r"^u_u_strip_u_strip_g_zn_0_u_zn[./]", 0.000, 0.660, 0.494, 1.000),
+              ("zn1", r"^u_u_strip_u_strip_g_zn_1_u_zn[./]", 0.506, 0.660, 1.000, 1.000),
+              ("zn2", r"^u_u_strip_u_strip_g_zn_2_u_zn[./]", 0.506, 0.322, 1.000, 0.648),
+              ("zn3", r"^u_u_strip_u_strip_g_zn_3_u_zn[./]", 0.000, 0.322, 0.494, 0.648),
+              ("ctl", r"^u_u_strip_u_strip_u_ctl[./]", 0.000, 0.000, 1.000, 0.310))
+ASTK_TAP_RE = r"^(u_u_strip_u_strip_g_zn_[0-9]_u_zn)[./]"
+
+
+def astk_zone_fences(kd, cfg, w, h, m):
+    """GPL zone regions (zone_fence.tcl / zone_fence_release.tcl) + one clock tap per zone, the rest (ctl, strap, fault)
+    on one more tap (astk_zone_taps.tcl with OT_LANE_RE = the zone instance prefix); CTS -balance_levels."""
+    for f in ("zone_fence.tcl", "zone_fence_release.tcl", "zone_members.tcl", "astk_zone_taps.tcl"):
+        shutil.copyfile(HERE / f, kd / f)
+    x0, y0, cw, ch = m, m, w - 2 * m, h - 2 * m
+    spec = []
+    for nm, rx, fx0, fy0, fx1, fy1 in ASTK_ZONES:
+        spec.append(f"  {nm} {{{rx}}} {x0 + fx0 * cw:.2f} {y0 + fy0 * ch:.2f} {x0 + fx1 * cw:.2f} {y0 + fy1 * ch:.2f}")
+    (kd / "zone_pre_gpl.tcl").write_text("source /work/face_flops.tcl\nset ::ot_zone_spec {\n" + "\n".join(spec)
+                                         + "\n}\nsource /work/zone_fence.tcl\n")
+    (kd / "zone_pre_dpl.tcl").write_text("source /work/face_flops_release.tcl\nsource /work/zone_fence_release.tcl\n")
+    (kd / "zone_pre_cts.tcl").write_text("source /work/max_fanout.tcl\nset ::env(OT_LANE_RE) {" + ASTK_TAP_RE
+                                         + "}\nsource /work/astk_zone_taps.tcl\n")
+    sub = {"export PRE_GLOBAL_PLACE_TCL": "/work/zone_pre_gpl.tcl", "export PRE_DETAIL_PLACE_TCL": "/work/zone_pre_dpl.tcl",
+           "export PRE_CTS_TCL": "/work/zone_pre_cts.tcl"}
+    out, seen = [], set()
+    for line in cfg:
+        k = line.split(" = ", 1)[0]
+        if k in sub:
+            line = f"{k} = {sub[k]}"
+            seen.add(k)
+        out.append(line)
+    if seen != set(sub):
+        raise SystemExit(f"--astk-zone-fences: config lacks {sorted(set(sub) - seen)} (needs face_flops + flow basis)")
+    if any(l.startswith("export CTS_ARGS") for l in out):
+        raise SystemExit("--astk-zone-fences: CTS_ARGS already set")
+    out.append("export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels")
+    (kd / "astk_zone_delta.json").write_text(json.dumps(dict(
+        cause="GEOM 10:05 FAIL kv3_astk W2: zones fragmented (zn_1 2 islands, zn_2 2), adder skew 29 ps from one zone on 2 leaf regions",
+        regions={nm: [round(x0 + a * cw, 2), round(y0 + b * ch, 2), round(x0 + c * cw, 2), round(y0 + d * ch, 2)]
+                 for nm, _, a, b, c, d in ASTK_ZONES},
+        region_kind="INCLUSIVE GPL guide, released before DPL", taps="one per zone (zn_0..3) + rest (ctl/strap/fault)",
+        cts_args="-sink_clustering_enable -repair_clock_nets -balance_levels", added_cycles=0), indent=1) + "\n")
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core-json", required=True)
@@ -350,6 +399,19 @@ def main():
     ap.add_argument("--astk-rep-split", action="store_true",
                     help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
                          "<= 64 loads each; kept regs were merged back: B ES rc[0] 2048 loads) + ctl z_k copies kept the same way (0 cycles)")
+    ap.add_argument("--astk-write-decode", action="store_true",
+                    help="PATH-KV-ASTK 10-25: zn write-decode next-state threshold regs lo_r (15-b pb compare out of the "
+                         "sd write-enable cycle) + 4 ctl zh replicas per z_s slice + 17 zk_r slice copies; 0 cycles "
+                         "(astk_write_decode.py; needs --astk-timing-regs --astk-rep-split)")
+    ap.add_argument("--astk-zone-fences", action="store_true",
+                    help="PATH-KV-ASTK2 10-25 (GEOM 10:05): 4 contiguous zn zone GPL regions (2x2 over the upper core) + ctl "
+                         "S band (zone_fence.tcl, released before DPL) and one regional clock tap per zone + ctl "
+                         "(astk_zone_taps.tcl, CTS -balance_levels); needs --astk-write-decode")
+    ap.add_argument("--astk-strap-master", action="store_true",
+                    help="OWNER option B (COORD 10-25 07:01): ONE kv3_astk master from a corner core json; the corner ID "
+                         "constants (ctl st, zn zc[1:0]) come from input strap_corner[1:0] (EN 11 ES 10 WN 01 WS 00) via one "
+                         "kept landing register; false path from strap_*; needs --astk-face-ports --astk-timing-regs "
+                         "--astk-rep-split --am-g-drop (astk_strap_master.py)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
     ap.add_argument("--am-g-drop", action="store_true",
                     help="COORD ruling 2 (10-25): drop the constant LMAX head-group bit g (am[1]) from qkd_ahub am0..3 and the "
@@ -397,6 +459,12 @@ def main():
     hc = next(h for h in plan["partition_types"][cj["type"]]["hard_cores"] if h["inst"] == cj["inst"])
     w, h = hc["outline_um"]
     tid = f"{mod}__{w:g}x{h:g}"
+    if a.astk_strap_master:
+        if not (mod.startswith("kv3_astk_") and a.astk_face_ports and a.astk_timing_regs and a.astk_rep_split and a.am_g_drop):
+            raise SystemExit("--astk-strap-master needs a kv3_astk_* core json + --astk-face-ports --astk-timing-regs "
+                             "--astk-rep-split --am-g-drop")
+        import astk_strap_master
+        tid = f"{astk_strap_master.MASTER}__{w:g}x{h:g}"
     recs = json.load(open(a.recipes)) if Path(a.recipes).is_file() else {}
     rec = dict(recs.get("_default", {}))
     rec.update(recs.get(mod, {}))
@@ -453,6 +521,35 @@ def main():
             ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL",
             rep_split=(dict(zn_replicas=16, slice_bits=8, max_select_loads=64, kept="keep_hierarchy qkd_astk_rep5/rep4",
                             miter="kv-cores-1025r/astk/G/tb") if a.astk_rep_split else None)), indent=1) + "\n")
+    if a.astk_write_decode:
+        if not (mod.startswith("kv3_astk_") and a.astk_timing_regs and a.astk_rep_split):
+            raise SystemExit("--astk-write-decode needs a kv3_astk_* core + --astk-timing-regs --astk-rep-split")
+        from astk_write_decode import apply_kit as wdec_apply
+        wdec_apply(kd / "rtl")
+        # PATH-KV-ASTK2 10-25: post-synth replica COUNT gate (run_kit_kv.sh runs it on 1_2_yosys.v and 1_synth_odb.v
+        # before floorplan; FAIL stops the kit).  LEC cannot see a merged replica (GEOM 10:05 FAIL on W2).
+        shutil.copyfile(HERE / "replica_check.py", kd / "replica_check.py")
+        shutil.copyfile(HERE / "astk_replica_expect.json", kd / "replica_expect.json")
+        (kd / "astk_wdec_delta.json").write_text(json.dumps(dict(added_cycles=0,
+            zn=dict(lo_r_per_zone=8, kt_ke_r_per_zone=32, cause="tq/zq -> 15-b cb<T compare -> 128-load sd row write enable (TT -61.24, 197 EP)",
+                    fix="lo_r[j] = ({S,sgam(L,j),000} < T[8:0]) registered from next state (zc, tc[9:1]); pb = kt_r[k] | ke_r[k] & lo_r[slot] (16:1, 16:1, 8:1 selects)"),
+            ctl=dict(zh_replicas=4, zk_r_copies=17, cause="zh -> z_s 4:1 select over z_hd -> ap (30 EP)"),
+            miter="core_miter old r3 corner kits vs master, --bias aq start rare; mutants lo_r / zh replica / ES swap"),
+            indent=1) + "\n")
+    if a.astk_strap_master:
+        src = kd / "rtl" / f"{mod}.sv"
+        (kd / "rtl" / f"{astk_strap_master.MASTER}.sv").write_text(astk_strap_master.transform(src.read_text(), mod))
+        src.unlink()
+        srcs = [s.replace(f"/{mod}.sv", f"/{astk_strap_master.MASTER}.sv") for s in srcs]
+        files = [f.replace(f"/{mod}.sv", f"/{astk_strap_master.MASTER}.sv") if Path(f).name == f"{mod}.sv" else f
+                 for f in files]
+        corner_mod = mod
+        astk_strap_master.core_json(cj)
+        (kd / "astk_strap_delta.json").write_text(json.dumps(dict(
+            rule="OWNER option B, COORD 2026-10-25 07:01", master=astk_strap_master.MASTER, from_corner=corner_mod,
+            strap_port=astk_strap_master.STRAP, values=astk_strap_master.CORNER_STRAP,
+            bound=["ctl st", "zn_1..3 zc[1:0]"], landing="one kept 2-b register (strap_q)", sdc="set_false_path -from [get_ports strap_*]",
+            added_cycles=0, settle="+1 edge after power-up (quasi-static)"), indent=1) + "\n")
     if a.ectlk_face_ports:
         if mod != "qkd_ectlk":
             raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
@@ -549,6 +646,7 @@ def main():
     (kd / "pins_added.json").write_text(json.dumps(dict(module=mod, plan_pins=len(pins), added=added,
                                                         why=cj["report"]["added"], straps=cj["report"]["straps"],
                                                         gap_bits=cj["report"].get("gap_bits", [])), indent=1) + "\n")
+    mod = cj["module"]  # ASTK strap master after original corner pin placement
     clk_bits = [n for n, c in cj["pin_class"].items() if c == "clk"]
     if not clk_bits:
         raise SystemExit(f"{tid}: no clock pin")
@@ -699,6 +797,10 @@ def main():
     cfg += core_flow.apply(kd, ibind, mod, time_unit_ps=1.0, rc_cal=not a.stock_rc, hold_ff_margin=a.hold_ff_margin,
                            grt_pre_extra=[v for k, v in own.items() if "PRE_" in k],
                            grt_post_extra=[v for k, v in own.items() if "POST_" in k])
+    if a.astk_zone_fences:
+        if not (mod == "kv3_astk" or mod.startswith("kv3_astk_")) or not a.astk_write_decode:
+            raise SystemExit("--astk-zone-fences needs a kv3_astk core + --astk-write-decode")
+        cfg = astk_zone_fences(kd, cfg, w, h, CORE_MARGIN_UM)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),

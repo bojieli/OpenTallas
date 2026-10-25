@@ -24,12 +24,14 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \$M synth; rc=\$?; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py check --platform-dir \$PD --netlist \$N --report /work/dont_use_check.json; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/replica_expect.json ]; then python3 -I /work/replica_check.py --expect /work/replica_expect.json --netlist \$N --out /work/replica_check.json > /work/replica_check.log 2>&1; rc=\$?; cat /work/replica_check.log; [ \$rc = 0 ] || echo 'REPLICA CHECK FAILED: the kit stops before floorplan (replica_check.json)'; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then python3 -I /work/core_preflight.py /work \$N --out /work/face_guard.json > /work/face_guard.log 2>&1; rc=\$?; tail -3 /work/face_guard.log; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \
     test -n \"\$D\" || rc=103; \
     if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; fi; \
     if [ \$rc = 0 ]; then python3 -I /work/core_preflight.py /work /work/1_synth_odb.v --out /work/face_guard_odb.json > /work/face_guard_odb.log 2>&1; rc=\$?; tail -3 /work/face_guard_odb.log; fi; \
+    if [ \$rc = 0 ] && [ -f /work/replica_expect.json ]; then python3 -I /work/replica_check.py --expect /work/replica_expect.json --netlist /work/1_synth_odb.v --out /work/replica_check_odb.json > /work/replica_check_odb.log 2>&1; rc=\$?; tail -1 /work/replica_check_odb.log; fi; \
   fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/lec.py ] && [ -n \"\$N\" ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
     if [ \$lr = 1 ]; then echo 'LEC NOT EQUIVALENT: the kit stops (lec/lec.json)'; rc=1; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
