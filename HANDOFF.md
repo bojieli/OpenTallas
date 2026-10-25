@@ -253,3 +253,5 @@ CODEX: 2026-10-24 21:12 PDT TRIAL-HBM parked on Claude reset; collected fab_rep_
 
 CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corrective-pad transport analyzer fixed (2 tests PASS); su_mon hierarchy build + Qwen chains continue; no new heavy jobs.
 2026-10-24 21:11 PDT CODEX: CLOCK/RESET parked: signoff pair-skew WIP codex/kit-clock-1024@b88258680 (27 Python PASS, physical smoke NOT RUN); head new-spine FF-10.263; HBM v8 clock FAIL110.88ps/keepouts diagnosed; old CP1P routes remain live.
+2026-10-24 21:11 PDT TOK-DS: PARKED. READY claude/tok-ds-1024@1bafb2e89a (BK sink canonical + boot price) and claude/tok-ds-pads-1024@e7d749213 (R8 pads, 789.1 tok/s); compiler gaps still open (gaps sub-agent hit weekly limit; WIP claude/tok-ds-gaps-1024@a900821fc, cut_0S build live on epyc3)
+2026-10-24 21:11 PDT KV: PARKED @119635e99. hub_Ei vK GRT 0 overflow (M2-M7 7.56%), CTS pair skew TT 68.0/FF 62.2 PASS, reset recovery fixed (+485.7 vs -864); not routed/signed. vL (RESET unified --release pipelined) kit RTL ready, not launched. kv44 bind + core ECOs live, Codex collecting.
