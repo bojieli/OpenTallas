@@ -173,13 +173,25 @@ def main(argv=None):
     a4.add_argument("plan")
     a4.add_argument("--out", required=True)
     a4.add_argument("--views", required=True, help="DIR/<type>/<module>.lef|.lib (each kit's abstract)")
+    a4.add_argument("--pg-map", help="Opt-in regional PDN: JSON {instances: {part: {PG_PIN: NET}}}; checks actual exposed M7 power pins")
     a5 = sub.add_parser("mockview", help="mock abstract LEFs (exact pins + PG + OBS) for a dry die-flow run")
     a5.add_argument("plan")
     a5.add_argument("--out", required=True)
+    a5.add_argument("--planned-phy-pg", action="store_true", help="PLANNED prototype only: split CORE VDD and expose VDDPHY from explicitly mapped die_io/PHY domains")
     a = ap.parse_args(argv)
     if a.cmd == "mockview":
         import gen_phys
-        print("\n".join(str(d) for d in gen_phys.write_mock_views(S.load(a.plan), a.out)))
+        raw = S.load(a.plan)
+        phy_io = None
+        if a.planned_phy_pg:
+            phy_io = raw['die'].get('io')
+            if phy_io is None:
+                phy_io = json.loads((Path(a.plan).parent/'die_io.json').read_text())
+        try:
+            print("\n".join(str(d) for d in gen_phys.write_mock_views(raw, a.out, phy_io)))
+        except ValueError as e:
+            print(f"gen mockview: ERROR {e}")
+            return 1
         return 0
     if a.cmd in ("phys", "assembly"):
         import gen_phys
@@ -192,7 +204,8 @@ def main(argv=None):
                                            (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um,
                                            plan_path=Path(a.plan).resolve())
             else:
-                kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve())]
+                kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve(),
+                                                pg_map=json.loads(Path(a.pg_map).read_text()) if a.pg_map else None)]
         except gen_rtl.GenError as e:
             print(f"gen {a.cmd}: ERROR {e}")
             return 1
