@@ -35,7 +35,7 @@ def test_face_cover_checks_rst_o(tmp_path):
     r = C.face_cover(tmp_path / "b.v", None)
     assert r["verdict"] == "FAIL" and "shared" in r["fails"]
     import face_guard
-    assert face_guard.guard(bad)["verdict"] == "PASS"          # the masking this stage exists for
+    assert face_guard.guard(bad)["verdict"] == "FAIL"          # main now checks rst_o as well; keep the independent canary check
 
 
 def _fan(n):
