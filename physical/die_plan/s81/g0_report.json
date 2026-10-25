@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/srv/opentallas-scratch2/claude/s81-dec12r/gen_s81b/die_plan.json",
+ "plan": "/srv/opentallas-scratch2/claude/codex-s81-dec12-leaf/regen_r4/final_plan.json",
  "verdict": "PASS",
- "mode": "G0",
+ "mode": "G0C",
  "errors": 0,
  "warnings": 1259,
  "summary": {
@@ -13,9 +13,9 @@
    "partitions": 399,
    "singleton_types": 149,
    "max_instances": 60,
-   "near_duplicate_groups": 12,
-   "near_duplicate_types": 26,
-   "mergeable_saving": 14
+   "near_duplicate_groups": 11,
+   "near_duplicate_types": 24,
+   "mergeable_saving": 13
   },
   "ports": 2228,
   "lanes": 854,
@@ -23,24 +23,24 @@
   "taps_cores": {
    "taps": 74,
    "hard_cores": 4094,
-   "core_pins": 3290089,
+   "core_pins": 3290767,
    "core_pins_off_track": 0,
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/srv/opentallas-scratch2/claude/s81-dec12r/gen_s81b/cells_est.json"
+    "/srv/opentallas-scratch2/claude/codex-s81-dec12-leaf/regen_r4/cells_est.json"
    ],
    "no_cells": []
   },
   "core_faces": {
    "groups": 14389,
    "groups_away": 0,
-   "pins": 953894,
-   "pins_away": 13022,
+   "pins": 954572,
+   "pins_away": 14999,
    "types_away": 0,
    "cores": 4094,
    "cores_unchecked": 3283,
-   "groups_side": 666
+   "groups_side": 672
   },
   "complete": {
    "cells": 0,
@@ -336,11 +336,6 @@
     "reach_um": 405.0
    },
    {
-    "lane": "rt_W3_in_0",
-    "hop_um": 380.9,
-    "reach_um": 405.0
-   },
-   {
     "lane": "rt_W3_in_2",
     "hop_um": 380.8,
     "reach_um": 405.0
@@ -348,6 +343,11 @@
    {
     "lane": "coll__lk_EN3__s_7N_LP",
     "hop_um": 379.6,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "ctrl__s_0N_LP__seqhost",
+    "hop_um": 379.4,
     "reach_um": 405.0
    }
   ],
@@ -2620,17 +2620,17 @@
    "fi_W0_p6_r1r0": 6,
    "fi_W0_p6_r1r2": 6,
    "fi_W0_p6_r2r1": 6,
-   "x_W0_in": 27,
+   "x_W0_in": 25,
    "xo_W0_in_a": 2,
    "xo_W0_in_b": 2,
    "rt_W0_in_0": 24,
    "rt_W0_in_1": 29,
    "rt_W0_in_2": 34,
-   "x_W0_out": 46,
+   "x_W0_out": 47,
    "xo_W0_out_a": 2,
    "xo_W0_out_b": 2,
    "rt_W0_out_0": 39,
-   "rt_W0_out_1": 45,
+   "rt_W0_out_1": 44,
    "rt_W0_out_2": 49,
    "fi_W1_p1_r0r1": 7,
    "fi_W1_p1_r1r0": 6,
@@ -2656,18 +2656,18 @@
    "fi_W1_p6_r1r0": 6,
    "fi_W1_p6_r1r2": 6,
    "fi_W1_p6_r2r1": 6,
-   "x_W1_in": 23,
+   "x_W1_in": 21,
    "xo_W1_in_a": 2,
    "xo_W1_in_b": 2,
-   "rt_W1_in_0": 23,
-   "rt_W1_in_1": 28,
-   "rt_W1_in_2": 33,
+   "rt_W1_in_0": 22,
+   "rt_W1_in_1": 27,
+   "rt_W1_in_2": 31,
    "x_W1_out": 42,
    "xo_W1_out_a": 2,
    "xo_W1_out_b": 2,
    "rt_W1_out_0": 36,
-   "rt_W1_out_1": 41,
-   "rt_W1_out_2": 46,
+   "rt_W1_out_1": 42,
+   "rt_W1_out_2": 47,
    "fi_W2_p1_r0r1": 7,
    "fi_W2_p1_r1r0": 6,
    "fi_W2_p1_r1r2": 6,
@@ -2692,13 +2692,13 @@
    "fi_W2_p6_r1r0": 6,
    "fi_W2_p6_r1r2": 6,
    "fi_W2_p6_r2r1": 6,
-   "x_W2_in": 15,
+   "x_W2_in": 14,
    "xo_W2_in_a": 2,
    "xo_W2_in_b": 2,
-   "rt_W2_in_0": 17,
-   "rt_W2_in_1": 22,
-   "rt_W2_in_2": 27,
-   "x_W2_out": 42,
+   "rt_W2_in_0": 16,
+   "rt_W2_in_1": 21,
+   "rt_W2_in_2": 26,
+   "x_W2_out": 41,
    "xo_W2_out_a": 2,
    "xo_W2_out_b": 2,
    "rt_W2_out_0": 41,
@@ -2732,8 +2732,8 @@
    "xo_W3_in_a": 2,
    "xo_W3_in_b": 2,
    "rt_W3_in_0": 17,
-   "rt_W3_in_1": 22,
-   "rt_W3_in_2": 27,
+   "rt_W3_in_1": 21,
+   "rt_W3_in_2": 26,
    "x_W3_out": 44,
    "xo_W3_out_a": 2,
    "xo_W3_out_b": 2,
@@ -2764,18 +2764,18 @@
    "fi_W4_p6_r1r0": 6,
    "fi_W4_p6_r1r2": 6,
    "fi_W4_p6_r2r1": 6,
-   "x_W4_in": 21,
+   "x_W4_in": 22,
    "xo_W4_in_a": 2,
    "xo_W4_in_b": 2,
    "rt_W4_in_0": 20,
    "rt_W4_in_1": 25,
    "rt_W4_in_2": 30,
-   "x_W4_out": 39,
+   "x_W4_out": 40,
    "xo_W4_out_a": 2,
    "xo_W4_out_b": 2,
    "rt_W4_out_0": 35,
-   "rt_W4_out_1": 40,
-   "rt_W4_out_2": 45,
+   "rt_W4_out_1": 41,
+   "rt_W4_out_2": 46,
    "fi_W5_p1_r0r1": 6,
    "fi_W5_p1_r1r0": 6,
    "fi_W5_p1_r1r2": 6,
@@ -2803,7 +2803,7 @@
    "x_W5_in": 21,
    "xo_W5_in_a": 2,
    "xo_W5_in_b": 2,
-   "rt_W5_in_0": 23,
+   "rt_W5_in_0": 24,
    "rt_W5_in_1": 28,
    "rt_W5_in_2": 33,
    "x_W5_out": 38,
@@ -2836,13 +2836,13 @@
    "fi_E0_p6_r1r0": 6,
    "fi_E0_p6_r1r2": 6,
    "fi_E0_p6_r2r1": 6,
-   "x_E0_in": 28,
+   "x_E0_in": 26,
    "xo_E0_in_a": 2,
    "xo_E0_in_b": 2,
-   "rt_E0_in_0": 26,
+   "rt_E0_in_0": 25,
    "rt_E0_in_1": 29,
    "rt_E0_in_2": 34,
-   "x_E0_out": 47,
+   "x_E0_out": 48,
    "xo_E0_out_a": 2,
    "xo_E0_out_b": 2,
    "rt_E0_out_0": 39,
@@ -2872,7 +2872,7 @@
    "fi_E1_p6_r1r0": 6,
    "fi_E1_p6_r1r2": 6,
    "fi_E1_p6_r2r1": 6,
-   "x_E1_in": 24,
+   "x_E1_in": 23,
    "xo_E1_in_a": 2,
    "xo_E1_in_b": 2,
    "rt_E1_in_0": 21,
@@ -2914,12 +2914,12 @@
    "rt_E2_in_0": 16,
    "rt_E2_in_1": 21,
    "rt_E2_in_2": 26,
-   "x_E2_out": 41,
+   "x_E2_out": 39,
    "xo_E2_out_a": 2,
    "xo_E2_out_b": 2,
-   "rt_E2_out_0": 40,
-   "rt_E2_out_1": 45,
-   "rt_E2_out_2": 50,
+   "rt_E2_out_0": 39,
+   "rt_E2_out_1": 44,
+   "rt_E2_out_2": 49,
    "fi_E3_p1_r0r1": 6,
    "fi_E3_p1_r1r0": 6,
    "fi_E3_p1_r1r2": 6,
@@ -2944,13 +2944,13 @@
    "fi_E3_p6_r1r0": 6,
    "fi_E3_p6_r1r2": 6,
    "fi_E3_p6_r2r1": 6,
-   "x_E3_in": 21,
+   "x_E3_in": 20,
    "xo_E3_in_a": 2,
    "xo_E3_in_b": 2,
-   "rt_E3_in_0": 18,
-   "rt_E3_in_1": 23,
-   "rt_E3_in_2": 28,
-   "x_E3_out": 45,
+   "rt_E3_in_0": 17,
+   "rt_E3_in_1": 22,
+   "rt_E3_in_2": 27,
+   "x_E3_out": 46,
    "xo_E3_out_a": 2,
    "xo_E3_out_b": 2,
    "rt_E3_out_0": 39,
@@ -2980,13 +2980,13 @@
    "fi_E4_p6_r1r0": 6,
    "fi_E4_p6_r1r2": 6,
    "fi_E4_p6_r2r1": 6,
-   "x_E4_in": 19,
+   "x_E4_in": 18,
    "xo_E4_in_a": 2,
    "xo_E4_in_b": 2,
    "rt_E4_in_0": 22,
    "rt_E4_in_1": 27,
    "rt_E4_in_2": 32,
-   "x_E4_out": 37,
+   "x_E4_out": 36,
    "xo_E4_out_a": 2,
    "xo_E4_out_b": 2,
    "rt_E4_out_0": 37,
@@ -3019,7 +3019,7 @@
    "x_E5_in": 21,
    "xo_E5_in_a": 2,
    "xo_E5_in_b": 2,
-   "rt_E5_in_0": 23,
+   "rt_E5_in_0": 24,
    "rt_E5_in_1": 28,
    "rt_E5_in_2": 33,
    "x_E5_out": 38,
@@ -3028,7 +3028,7 @@
    "rt_E5_out_0": 38,
    "rt_E5_out_1": 43,
    "rt_E5_out_2": 48,
-   "dn_s_0S_L2": 6,
+   "dn_s_0S_L2": 7,
    "up_s_0S_L2": 6,
    "dn_s_0S_L0": 2,
    "up_s_0S_L0": 2,
@@ -3037,18 +3037,18 @@
    "dn_s_0S_L3": 6,
    "up_s_0S_L3": 6,
    "dn_s_0S_L4": 10,
-   "up_s_0S_L4": 10,
+   "up_s_0S_L4": 11,
    "kd_s_0S": 2,
    "ku_s_0S": 2,
-   "dn_s_0N_L2": 7,
+   "dn_s_0N_L2": 6,
    "up_s_0N_L2": 6,
    "dn_s_0N_L0": 2,
    "up_s_0N_L0": 2,
    "dn_s_0N_L1": 2,
    "up_s_0N_L1": 2,
-   "dn_s_0N_L3": 6,
-   "up_s_0N_L3": 6,
-   "dn_s_0N_L4": 10,
+   "dn_s_0N_L3": 7,
+   "up_s_0N_L3": 7,
+   "dn_s_0N_L4": 11,
    "up_s_0N_L4": 10,
    "kd_s_0N": 2,
    "ku_s_0N": 2,
@@ -3060,10 +3060,10 @@
    "up_s_1S_L0": 2,
    "dn_s_1S_L1": 2,
    "up_s_1S_L1": 2,
-   "dn_s_1S_L3": 6,
+   "dn_s_1S_L3": 7,
    "up_s_1S_L3": 6,
-   "dn_s_1N_L2": 7,
-   "up_s_1N_L2": 7,
+   "dn_s_1N_L2": 6,
+   "up_s_1N_L2": 6,
    "dn_s_1N_L0": 2,
    "up_s_1N_L0": 2,
    "dn_s_1N_L1": 2,
@@ -3080,9 +3080,9 @@
    "up_s_2S_L1": 2,
    "dn_s_2S_L3": 6,
    "up_s_2S_L3": 6,
-   "dn_s_2S_L4": 10,
-   "up_s_2S_L4": 10,
-   "dn_s_2N_L2": 7,
+   "dn_s_2S_L4": 11,
+   "up_s_2S_L4": 11,
+   "dn_s_2N_L2": 6,
    "up_s_2N_L2": 6,
    "dn_s_2N_L0": 2,
    "up_s_2N_L0": 2,
@@ -3090,9 +3090,9 @@
    "up_s_2N_L1": 2,
    "dn_s_2N_L3": 7,
    "up_s_2N_L3": 7,
-   "dn_s_2N_L4": 10,
+   "dn_s_2N_L4": 11,
    "up_s_2N_L4": 12,
-   "dn_s_3S_L2": 6,
+   "dn_s_3S_L2": 7,
    "up_s_3S_L2": 6,
    "dn_s_3S_L0": 2,
    "up_s_3S_L0": 2,
@@ -3114,23 +3114,23 @@
    "up_s_3N_L4": 10,
    "dn_s_4S_L4": 11,
    "up_s_4S_L4": 10,
-   "dn_s_4S_L2": 7,
+   "dn_s_4S_L2": 6,
    "up_s_4S_L2": 6,
    "dn_s_4S_L0": 2,
    "up_s_4S_L0": 2,
    "dn_s_4S_L1": 2,
    "up_s_4S_L1": 2,
-   "dn_s_4S_L3": 6,
-   "up_s_4S_L3": 6,
-   "dn_s_4N_L2": 7,
-   "up_s_4N_L2": 7,
+   "dn_s_4S_L3": 7,
+   "up_s_4S_L3": 7,
+   "dn_s_4N_L2": 6,
+   "up_s_4N_L2": 6,
    "dn_s_4N_L0": 2,
    "up_s_4N_L0": 2,
    "dn_s_4N_L1": 2,
    "up_s_4N_L1": 2,
    "dn_s_4N_L3": 6,
    "up_s_4N_L3": 6,
-   "dn_s_4N_L4": 10,
+   "dn_s_4N_L4": 11,
    "up_s_4N_L4": 10,
    "dn_s_5S_L2": 6,
    "up_s_5S_L2": 6,
@@ -3140,7 +3140,7 @@
    "up_s_5S_L1": 2,
    "dn_s_5S_L3": 6,
    "up_s_5S_L3": 6,
-   "dn_s_5S_L4": 10,
+   "dn_s_5S_L4": 11,
    "up_s_5S_L4": 10,
    "dn_s_5N_L2": 6,
    "up_s_5N_L2": 6,
@@ -3150,9 +3150,9 @@
    "up_s_5N_L1": 2,
    "dn_s_5N_L3": 6,
    "up_s_5N_L3": 6,
-   "dn_s_5N_L4": 11,
-   "up_s_5N_L4": 11,
-   "dn_s_6S_L4": 11,
+   "dn_s_5N_L4": 10,
+   "up_s_5N_L4": 10,
+   "dn_s_6S_L4": 10,
    "up_s_6S_L4": 11,
    "dn_s_6S_L2": 6,
    "up_s_6S_L2": 6,
@@ -3160,18 +3160,18 @@
    "up_s_6S_L0": 2,
    "dn_s_6S_L1": 2,
    "up_s_6S_L1": 2,
-   "dn_s_6S_L3": 6,
+   "dn_s_6S_L3": 7,
    "up_s_6S_L3": 6,
    "dn_s_6N_L2": 6,
-   "up_s_6N_L2": 7,
+   "up_s_6N_L2": 6,
    "dn_s_6N_L0": 2,
    "up_s_6N_L0": 2,
    "dn_s_6N_L1": 2,
    "up_s_6N_L1": 2,
    "dn_s_6N_L3": 6,
    "up_s_6N_L3": 6,
-   "dn_s_6N_L4": 10,
-   "up_s_6N_L4": 10,
+   "dn_s_6N_L4": 11,
+   "up_s_6N_L4": 11,
    "dn_s_7S_L2": 6,
    "up_s_7S_L2": 6,
    "dn_s_7S_L0": 2,
@@ -3180,8 +3180,8 @@
    "up_s_7S_L1": 2,
    "dn_s_7S_L3": 6,
    "up_s_7S_L3": 6,
-   "dn_s_7S_L4": 10,
-   "up_s_7S_L4": 10,
+   "dn_s_7S_L4": 11,
+   "up_s_7S_L4": 11,
    "kd_s_7S": 2,
    "ku_s_7S": 2,
    "dn_s_7N_L2": 7,
@@ -3190,9 +3190,9 @@
    "up_s_7N_L0": 2,
    "dn_s_7N_L1": 2,
    "up_s_7N_L1": 2,
-   "dn_s_7N_L3": 6,
-   "up_s_7N_L3": 6,
-   "dn_s_7N_L4": 10,
+   "dn_s_7N_L3": 7,
+   "up_s_7N_L3": 7,
+   "dn_s_7N_L4": 11,
    "up_s_7N_L4": 10,
    "kd_s_7N": 2,
    "ku_s_7N": 2,
@@ -3211,16 +3211,16 @@
    "coll__s_0S_LP__lk_WS1": 39,
    "xring__s_0S_C__s_1S_C": 2,
    "xring__s_7S_C__s_6S_C": 2,
-   "attn__s_4S_C__svc_11": 20,
+   "attn__s_4S_C__svc_11": 19,
    "xtier__s_3N_C__gunit": 18,
    "xtier__gunit__s_3N_C": 18,
-   "attn__svc_11__s_4S_C": 21,
+   "attn__svc_11__s_4S_C": 19,
    "xtier__s_4S_C__bk_sel": 43,
    "xtier__bk_sel__s_4S_C": 42,
    "unit__svc_14__eng": 2,
    "idx__svc_14__bk_sel": 72,
-   "xtier__seqhost__bk_sel": 76,
-   "xtier__bk_sel__seqhost": 74,
+   "xtier__seqhost__bk_sel": 74,
+   "xtier__bk_sel__seqhost": 73,
    "coll__s_7S_LP__lk_ES0": 34,
    "coll__s_0S_LP__lk_WS0": 31,
    "coll__lk_ES0__s_7S_LP": 33,
@@ -3244,7 +3244,7 @@
    "attn__s_3S_C__svc_5": 20,
    "hbm__svc_15__svc_14": 2,
    "attn__svc_8__svc_10": 2,
-   "ctrl__s_0N_C__seqhost": 48,
+   "ctrl__s_0N_C__seqhost": 47,
    "hbm__svc_3__svc_2": 2,
    "attn__svc_1__svc_3": 2,
    "attn__svc_4__svc_6": 2,
@@ -3266,15 +3266,15 @@
    "hbm__svc_5__svc_4": 2,
    "xtier__seqhost__s_4N_C": 41,
    "hbm__svc_7__svc_6": 2,
-   "xtier__s_4N_C__seqhost": 44,
+   "xtier__s_4N_C__seqhost": 42,
    "hbm__svc_2__svc_3": 2,
    "hbm__svc_14__svc_15": 2,
    "xtier__s_1S_C__s_1N_C": 22,
    "hbm__svc_11__svc_10": 2,
-   "xtier__eng__s_6N_C": 62,
+   "xtier__eng__s_6N_C": 60,
    "xtier__s_6N_C__eng": 69,
    "hbm__svc_8__svc_9": 2,
-   "unit__s_7N_LP__seqhost": 57,
+   "unit__s_7N_LP__seqhost": 56,
    "attn__svc_11__svc_5": 10,
    "hbm__svc_4__svc_5": 2,
    "hbm__svc_12__svc_13": 2,
@@ -3289,7 +3289,7 @@
    "attn__svc_1__svc_0": 2,
    "coll__lk_WN3__s_0N_LP": 18,
    "xtier__gunit__s_3S_C": 44,
-   "xtier__s_3S_C__gunit": 56,
+   "xtier__s_3S_C__gunit": 55,
    "coll__s_0N_LP__lk_WN3": 18,
    "attn__svc_7__svc_6": 2,
    "attn__svc_11__svc_10": 2,
@@ -3314,7 +3314,7 @@
    "hbmrd__phy_hbm__svc_0": 8,
    "xtier__s_2S_C__s_2N_C": 22,
    "xtier__s_5S_C__s_5N_C": 22,
-   "xtier__s_2N_C__s_2S_C": 22,
+   "xtier__s_2N_C__s_2S_C": 23,
    "xtier__s_5N_C__s_5S_C": 22,
    "coll__lk_WN1__s_0N_LP": 28,
    "coll__s_0N_LP__lk_WN1": 29,
@@ -3328,8 +3328,8 @@
    "attn__svc_0__svc_1": 2,
    "attn__svc_12__svc_13": 2,
    "xring__s_3S_C__s_2S_C": 2,
-   "xtier__s_6S_C__eng": 33,
-   "xtier__eng__s_6S_C": 34,
+   "xtier__s_6S_C__eng": 34,
+   "xtier__eng__s_6S_C": 35,
    "idx__svc_0__svc_2": 2,
    "idx__svc_12__svc_14": 2,
    "xtier__s_1N_C__s_1S_C": 22,
@@ -3353,10 +3353,10 @@
    "xring__s_5S_C__s_6S_C": 2,
    "xring__s_5N_C__s_4N_C": 2,
    "xring__s_4N_C__s_3N_C": 2,
-   "unit__seqhost__s_0S_LP": 25,
-   "unit__seqhost__s_7S_LP": 32,
+   "unit__seqhost__s_0S_LP": 24,
+   "unit__seqhost__s_7S_LP": 31,
    "idx__svc_10__svc_12": 2,
-   "unit__seqhost__s_0N_C": 46,
+   "unit__seqhost__s_0N_C": 47,
    "xring__s_2S_C__s_3S_C": 2,
    "hbmrd__phy_hbm__svc_8": 2,
    "dfi__svc_8__phy_hbm": 2,
@@ -3370,15 +3370,15 @@
    "hbmrd__phy_hbm__svc_6": 2,
    "xring__s_2N_C__s_3N_C": 2,
    "unit__svc_8__svc_6": 2,
-   "unit__seqhost__s_0N_LP": 51,
-   "ctrl__s_0N_LP__seqhost": 51,
+   "unit__seqhost__s_0N_LP": 50,
+   "ctrl__s_0N_LP__seqhost": 50,
    "unit__seqhost__eng": 37,
    "unit__svc_5__seqhost": 7,
    "unit__svc_11__seqhost": 10,
    "xtier__s_0N_C__s_0S_C": 22,
    "xtier__s_0S_C__s_0N_C": 22,
-   "xtier__s_7N_C__s_7S_C": 22,
-   "xtier__s_7S_C__s_7N_C": 22,
+   "xtier__s_7N_C__s_7S_C": 23,
+   "xtier__s_7S_C__s_7N_C": 23,
    "idx__svc_2__svc_4": 2,
    "idx__svc_4__svc_6": 2,
    "unit__svc_0__svc_2": 2,
@@ -3416,7 +3416,7 @@
    "tl__bk_sel__s_0N_LP": 38,
    "ca__s_0N_LP__bk_sel": 39,
    "cb__s_0N_LP__bk_sel": 38,
-   "sid_seqhost__s_7S_C": 26,
+   "sid_seqhost__s_7S_C": 27,
    "sid_s_7S_C__s_6S_C": 2,
    "sid_s_6S_C__s_5S_C": 2,
    "sid_s_5S_C__s_4S_C": 2,
@@ -3432,7 +3432,7 @@
    "sid_s_4N_C__s_5N_C": 2,
    "sid_s_5N_C__s_6N_C": 2,
    "sid_s_6N_C__s_7N_C": 2,
-   "sid_s_7N_C__seqhost": 54,
+   "sid_s_7N_C__seqhost": 53,
    "vid_seqhost__svc_0": 20,
    "vid_svc_0__svc_2": 2,
    "vid_svc_2__svc_4": 2,
@@ -5898,12 +5898,6 @@
      "frac": 0.941
     },
     {
-     "lane": "rt_W3_in_0",
-     "hop_um": 380.9,
-     "reach_um": 405.0,
-     "frac": 0.941
-    },
-    {
      "lane": "rt_W3_in_2",
      "hop_um": 380.8,
      "reach_um": 405.0,
@@ -5912,6 +5906,12 @@
     {
      "lane": "coll__lk_EN3__s_7N_LP",
      "hop_um": 379.6,
+     "reach_um": 405.0,
+     "frac": 0.937
+    },
+    {
+     "lane": "ctrl__s_0N_LP__seqhost",
+     "hop_um": 379.4,
      "reach_um": 405.0,
      "frac": 0.937
     }
@@ -6322,8 +6322,7 @@
     }
    ],
    "dropped_bits": 0
-  },
-  "png": "/srv/opentallas-scratch2/claude/s81-dec12r/gen_s81b/g0/die_plan.png"
+  }
  },
  "findings": [
   {
@@ -6365,11 +6364,6 @@
    "level": "WARN",
    "check": "types",
    "msg": "near-duplicate types ['ot_s81sl_leaf__t25', 'ot_s81sl_leaf__t64'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
-  },
-  {
-   "level": "WARN",
-   "check": "types",
-   "msg": "near-duplicate types ['ot_s81sl_kv_leaf__t4', 'ot_s81sl_leaf__t34'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
   },
   {
    "level": "WARN",
@@ -6575,79 +6569,31 @@
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port i_f: 1 pins on face E face away from its partner(s) u_lf.u_rxsf: mean cos -0.06, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t1"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port i_mx: 32 pins on face E face away from its partner(s) u_lf.u_rxsf: mean cos -0.06, 32 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t1"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port i_u: 31 pins on face E face away from its partner(s) u_lf.u_rxsf: mean cos -0.06, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t1"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port i_u2: 31 pins on face E face away from its partner(s) u_lf.u_rxsf: mean cos -0.06, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t1"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port i_v: 1 pins on face E face away from its partner(s) u_lf.u_rxsf: mean cos -0.06, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t1"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.02, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t1"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.02, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t1"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.02, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t1"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsf port o_f: 1 pins on face W face away from its partner(s) u_lf.u_rxsb: mean cos -0.06, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t1"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsf port o_mx: 32 pins on face W face away from its partner(s) u_lf.u_rxsb: mean cos -0.06, 32 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t1"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsf port o_u: 31 pins on face W face away from its partner(s) u_lf.u_rxsb: mean cos -0.06, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t1"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsf port o_u2: 31 pins on face W face away from its partner(s) u_lf.u_rxsb: mean cos -0.06, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t1"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsf port o_v: 1 pins on face W face away from its partner(s) u_lf.u_rxsb: mean cos -0.06, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t1 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.09, 32 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t1"
   },
   {
@@ -6659,79 +6605,49 @@
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_vsw port o_d: 64 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.07, 64 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_vsw port o_d: 64 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.04, 64 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t2"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_vsw port o_f: 1 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.07, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_vsw port o_f: 1 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.04, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t2"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_vsw port o_v: 1 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.07, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_vsw port o_v: 1 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.04, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t2"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsb port i_f: 1 pins on face E face away from its partner(s) u_lf.u_rxsf: mean cos -0.03, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.07, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t2"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsb port i_mx: 32 pins on face E face away from its partner(s) u_lf.u_rxsf: mean cos -0.03, 32 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.07, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t2"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsb port i_u: 31 pins on face E face away from its partner(s) u_lf.u_rxsf: mean cos -0.03, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.07, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t2"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsb port i_u2: 31 pins on face E face away from its partner(s) u_lf.u_rxsf: mean cos -0.03, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t2"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsb port i_v: 1 pins on face E face away from its partner(s) u_lf.u_rxsf: mean cos -0.03, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t2"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsf port o_f: 1 pins on face W face away from its partner(s) u_lf.u_rxsb: mean cos -0.03, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t2"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsf port o_mx: 32 pins on face W face away from its partner(s) u_lf.u_rxsb: mean cos -0.03, 32 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t2"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsf port o_u: 31 pins on face W face away from its partner(s) u_lf.u_rxsb: mean cos -0.03, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t2"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsf port o_u2: 31 pins on face W face away from its partner(s) u_lf.u_rxsb: mean cos -0.03, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
-   "type": "ot_s81sl_leaf__t2"
-  },
-  {
-   "level": "WARN",
-   "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsf port o_v: 1 pins on face W face away from its partner(s) u_lf.u_rxsb: mean cos -0.03, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t2 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.10, 32 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t2"
   },
   {
@@ -6749,37 +6665,49 @@
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_vsw port o_d: 64 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 64 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_vsw port o_d: 64 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 64 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t3"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_vsw port o_f: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_vsw port o_f: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t3"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_vsw port o_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_vsw port o_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t3"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.04, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t3"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.04, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t3"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.04, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t3"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.04, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t3"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t3 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.04, 32 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t3"
   },
   {
@@ -6791,49 +6719,49 @@
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_vsw port o_d: 64 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 64 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_vsw port o_d: 64 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.10, 64 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t4"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_vsw port o_f: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_vsw port o_f: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t4"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_vsw port o_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face E) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_vsw port o_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t4"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.02, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t4"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.02, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t4"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.02, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t4"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.01, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t4"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.01, 32 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t4 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.10, 32 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t4"
   },
   {
@@ -6845,31 +6773,49 @@
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_vsw port o_d: 64 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.07, 64 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_vsw port o_d: 64 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 64 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t5"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_vsw port o_f: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.07, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_vsw port o_f: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t5"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_vsw port o_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.07, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_vsw port o_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t5"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.05, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t5"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.05, 32 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.08, 31 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t5"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.08, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t5"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.00, 1 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t5"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t5 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.00, 32 pins on the far side (re-pin to face S) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t5"
   },
   {
@@ -6881,13 +6827,55 @@
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_vsw port o_d: 64 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.07, 64 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_vsw port i_d: 256 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 256 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t6"
   },
   {
    "level": "WARN",
    "check": "core_faces",
-   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_vsw port o_f: 1 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.07, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
+   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_vsw port i_lim: 32 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 32 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t6"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_vsw port i_v: 1 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 1 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t6"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_vsw port i_w: 32 pins on face N face away from its partner(s) u_lf.u_vs: mean cos -0.09, 32 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t6"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_rxsb port o_f: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t6"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_rxsb port o_r: 31 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 31 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t6"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_rxsb port o_v: 1 pins on face W face away from its partner(s) u_lf.u_vs: mean cos -0.10, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t6"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_rxsf port i_v: 1 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.00, 1 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t6"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t6 core u_lf.u_rxsf port i_x: 32 pins on face E face away from its partner(s) u_lf.u_vs: mean cos -0.00, 32 pins on the far side (re-pin to face N) [about perpendicular: WARN]",
    "type": "ot_s81sl_leaf__t6"
   },
   {
@@ -6895,6 +6883,12 @@
    "check": "core_faces",
    "msg": "type ot_s81sl_leaf__t6: 18/27 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
    "type": "ot_s81sl_leaf__t6"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type ot_s81sl_leaf__t7 core u_lf.u_vsw port o_d: 64 pins on face S face away from its partner(s) u_lf.u_vs: mean cos -0.10, 64 pins on the far side (re-pin to face W) [about perpendicular: WARN]",
+   "type": "ot_s81sl_leaf__t7"
   },
   {
    "level": "WARN",
@@ -7559,7 +7553,13 @@
   {
    "level": "WARN",
    "check": "geometry",
-   "msg": "type ot_s81sl_leaf__t16 slot ft5: crossing ~1335 um > 2 station(s) x reach 405 (see hops)",
+   "msg": "type ot_s81sl_leaf__t14 slot ft5: crossing ~1335 um > 3 station(s) x reach 405 (see hops)",
+   "type": "ot_s81sl_leaf__t14"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type ot_s81sl_leaf__t16 slot ft5: crossing ~1335 um > 3 station(s) x reach 405 (see hops)",
    "type": "ot_s81sl_leaf__t16"
   },
   {
