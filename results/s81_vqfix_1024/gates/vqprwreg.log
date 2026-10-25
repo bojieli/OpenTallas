@@ -1,0 +1,11 @@
+MISMATCH cyc=63 ref v1 s1 f0 new v1 s1 f0 xf_eq=0
+MISMATCH cyc=64 ref v1 s0 f0 new v1 s0 f0 xf_eq=0
+MISMATCH cyc=235 ref v1 s1 f0 new v1 s1 f0 xf_eq=0
+MISMATCH cyc=236 ref v1 s0 f0 new v1 s0 f0 xf_eq=0
+MISMATCH cyc=400 ref v1 s1 f0 new v1 s1 f0 xf_eq=0
+MISMATCH cyc=401 ref v1 s0 f0 new v1 s0 f0 xf_eq=0
+MISMATCH cyc=478 ref v1 s1 f0 new v1 s1 f0 xf_eq=0
+MISMATCH cyc=479 ref v1 s0 f0 new v1 s0 f0 xf_eq=0
+VQEQ vectors=400 fragments=2152 starts=538 mismatches=540 fault ref=0 new=0
+FAIL vq pin-register equivalence
+NEGATIVE_CONTROL_FAILED_AS_EXPECTED mutwreg
