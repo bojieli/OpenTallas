@@ -8,11 +8,12 @@
   "mirror: 28 second-instance port windows set from the first instance (type frame)",
   "re-windowed 19 ports (6 grown to <= 5.6 pins/um on 2 layers); 6 infeasible face groups",
   "mirror pin tables: 16 port pairs nudged to one table, 0 unresolved",
-  "ft slot stations 1188 -> 2741; internal stations 22349 -> 60263 (+0 new links over 405 um); 0 unroutable",
-  "clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4889, \"drivers\": 1870, \"cells\": [64, 64], \"taps\": 3306, \"drivers_moved\": 556, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 170, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1430.2, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 49, \"intra_over_80ps_at_5pct\": 45}",
+  "core grow (B2n_inputs/core_grow.json, HBM-CORES): q_hub: 16 x ot_hbm_svc_pc_ctrl_leaf_cfg_h9b -> 177.984x177.984 (1684 internal links re-routed); q_spt0: 2 x ot_hbm_svc_sm_xcal_rel_t -> 250.56x250.56 (2 internal links re-routed); q_spb2: 2 x ot_hbm_svc_sm_xcal_rel_t -> 250.56x250.56 (4 internal links re-routed); q_b100: grid re-pack 3 columns x 6 rows; q_b100: 16 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (159 internal links re-routed); q_b101: grid re-pack 3 columns x 6 rows; q_b101: 17 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (210 internal links re-routed); q_b102: grid re-pack 3 columns x 6 rows; q_b102: 16 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (159 internal links re-routed); q_b103: grid re-pack 3 columns x 6 rows; q_b103: 17 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (107 internal links re-routed)",
+  "ft slot stations 1188 -> 2736; internal stations 22349 -> 60436 (+0 new links over 405 um); 0 unroutable",
+  "clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4893, \"drivers\": 1873, \"cells\": [64, 64], \"taps\": 3306, \"drivers_moved\": 577, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 194, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1430.7, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 49, \"intra_over_80ps_at_5pct\": 45}",
   "ft_budget: 98 M8/M9 ft reservations dropped (ruling 9.3)",
   "reset: wavefront mode not in this tool base (RESET claude/reset-1024 pending) -> B2m reset kept",
-  "latency: 202/298 lanes +cycles (max +47, sum +2556)"
+  "latency: 202/298 lanes +cycles (max +47, sum +2546)"
  ],
  "infeasible_faces": [
   [
@@ -45,6 +46,7 @@
   "NW_hub->root data 1491 < 3749",
   "NE_hub->root data 1491 < 2709"
  ],
+ "core_grow_unfit": [],
  "lane_cycle_delta": {
   "L4": 23,
   "L4m": 23,
@@ -52,8 +54,8 @@
   "L8m": 21,
   "L9": 34,
   "L9m": 34,
-  "L12": 17,
-  "L12m": 17,
+  "L12": 14,
+  "L12m": 14,
   "L13": 14,
   "L13m": 14,
   "L19": 4,
@@ -225,8 +227,8 @@
   "L131m": 2,
   "L132": 4,
   "L132m": 4,
-  "L133": 9,
-  "L133m": 9,
+  "L133": 8,
+  "L133m": 8,
   "L134": 13,
   "L134m": 13,
   "L135": 3,
@@ -240,8 +242,8 @@
   "L140": 33,
   "L140m": 33,
   "L141": 6,
-  "L142": 6,
-  "L142m": 6,
+  "L142": 5,
+  "L142m": 5,
   "L146": 8,
   "L146m": 8,
   "L147": 21,

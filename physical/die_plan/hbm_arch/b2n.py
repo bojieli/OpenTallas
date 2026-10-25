@@ -254,6 +254,193 @@ def lane_delta(plan, log, path=LANE_DELTA):
     return short
 
 
+CORE_GROW = HERE / "B2n_inputs" / "core_grow.json"
+LAT = 8.64
+
+
+def _regrow_pins(pins, w, h, nw, nh):
+    """same pins on the same face in the same order (per layer), spread evenly on the plan tracks of the new outline
+    (cores_b2.place_pins final rule)."""
+    import cores_b2 as CB
+    faces = defaultdict(list)
+    for p in pins:
+        f = CB.face_of(p["x"], p["y"], w, h)
+        faces[(f, p["layer"])].append(p)
+    out = []
+    for (f, lay), ps in sorted(faces.items()):
+        ps.sort(key=lambda p: (p["x"] if f in "NS" else p["y"]))
+        L = nw if f in "NS" else nh
+        second = lay in ("M6", "M7")
+        tr = CB.tracks(L, f in "NS", lay if second else None)
+        n = len(ps)
+        if n > len(tr):
+            raise ValueError(f"face {f} {lay}: {n} pins > {len(tr)} tracks on {nw}x{nh}")
+        idx = [int(round(i * (len(tr) - 1) / max(1, n - 1))) if n > 1 else len(tr) // 2 for i in range(n)]
+        for p, k in zip(ps, idx):
+            a = tr[k]
+            xy = dict(N=(a, round(nh - CB.INSET, 4)), S=(a, CB.INSET), E=(round(nw - CB.INSET, 4), a),
+                      W=(CB.INSET, a))[f]
+            out.append(dict(name=p["name"], layer=p["layer"], x=xy[0], y=xy[1]))
+    assert len(out) == len(pins)
+    return out
+
+
+def core_grow(plan, log, out, path=CORE_GROW):
+    """HBM-CORES outline grows (B2n_inputs/core_grow.json): every matching hard core gets its new outline, re-sited at
+    the nearest free 8.64-lattice origin to its old centre (8.64 halo to other cores / soft leaves, inside the type),
+    its pins_file re-written for the outline (_regrow_pins), its contents box / split bounding box and core clock tap
+    re-derived, and every internal station landing on it (or with a register now on a core) re-routed by restation."""
+    D = json.loads(Path(path).read_text())
+    T = plan["partition_types"]
+    rows, fails = [], []
+
+    def ru(v):
+        return round(math.ceil(v / 0.864 - 1e-9) * 0.864, 4)
+
+    def ovl(a, b, m):
+        return a[0] < b[2] + m and b[0] < a[2] + m and a[1] < b[3] + m and b[1] < a[3] + m
+
+    for g in D["grow"]:
+        for tn in g["types"]:
+            t = T[tn]
+            W, H = t["outline_um"]
+            hcs = t["hard_cores"]
+            match = [hc for hc in hcs if hc["module"] == g["module"] or
+                     (g.get("prefix") and hc["module"].startswith(g["module"] + "__"))]
+            insts = {hc["inst"] for hc in hcs}
+
+            def box(hc):
+                dx, dy = hc.get("track_offset_um", [0.0, 0.0])
+                x, y = hc["origin_um"][0] + dx, hc["origin_um"][1] + dy
+                return (x, y, x + hc["outline_um"][0], y + hc["outline_um"][1])
+            split = {c["inst"] for c in t.get("contents", []) if c["inst"] not in insts and
+                     any(i.startswith(c["inst"] + "_") for i in insts)}
+            soft = [(c["origin_um"][0], c["origin_um"][1], c["origin_um"][0] + c["outline_um"][0],
+                     c["origin_um"][1] + c["outline_um"][1], c["inst"]) for c in t.get("contents", [])
+                    if "origin_um" in c and "outline_um" in c and c["inst"] not in insts and c["inst"] not in split]
+            moved = {}
+
+            def size(hc):
+                ow, oh = hc["outline_um"]
+                if "outline" in g:
+                    return tuple(g["outline"])
+                s_ = math.sqrt(g["area"])
+                return ru(ow * s_), ru(oh * s_)
+            sites, placed = {}, []
+            for hc in sorted(match, key=lambda c_: c_["inst"]):      # 1. nearest free site to the old centre
+                nw, nh = size(hc)
+                ob = box(hc)
+                dx, dy = hc.get("track_offset_um", [0.0, 0.0])
+                cx, cy = (ob[0] + ob[2]) / 2, (ob[1] + ob[3]) / 2
+                x0 = round((cx - nw / 2 - dx) / LAT) * LAT
+                y0 = round((cy - nh / 2 - dy) / LAT) * LAT
+                others = [box(o) for o in hcs if o is not hc and o["inst"] not in sites] + placed + \
+                         [s_[:4] for s_ in soft]
+                R_ = 80
+                cands = sorted(((i, j) for i in range(-R_, R_ + 1) for j in range(-R_, R_ + 1)),
+                               key=lambda ij: (abs(ij[0]) + abs(ij[1]), abs(ij[1]), ij))
+                for i, j in cands:
+                    ox, oy = x0 + i * LAT, y0 + j * LAT
+                    nb = (ox + dx, oy + dy, ox + dx + nw, oy + dy + nh)
+                    if nb[0] < LAT - 1e-6 or nb[1] < LAT - 1e-6 or nb[2] > W - LAT + 1e-6 or nb[3] > H - LAT + 1e-6:
+                        continue
+                    if any(ovl(nb, o, LAT - 1e-6) for o in others):
+                        continue
+                    sites[hc["inst"]] = (round(ox, 4), round(oy, 4))
+                    placed.append(nb)
+                    break
+                else:
+                    break
+            if len(sites) < len(match):                               # 2. else re-pack the grown set as a grid
+                sites = {}
+                nw, nh = size(match[0])
+                px, py = math.ceil((nw + LAT) / LAT - 1e-9) * LAT, math.ceil((nh + LAT) / LAT - 1e-9) * LAT
+                ncol = int((W - 2 * LAT - nw) // px) + 1
+                span = (ncol - 1) * px + nw
+                gx = max(LAT, math.floor((W - span) / 2 / LAT) * LAT)
+                gy = min(hc["origin_um"][1] for hc in match)
+                order = sorted(match, key=lambda c_: (round(c_["origin_um"][1], 1), c_["origin_um"][0], c_["inst"]))
+                rest = [box(o) for o in hcs if o not in match] + [s_[:4] for s_ in soft]
+                for k, hc in enumerate(order):
+                    ox, oy = gx + (k % ncol) * px, gy + (k // ncol) * py
+                    nb = (ox, oy, ox + nw, oy + nh)
+                    if nb[3] > H - LAT or any(ovl(nb, o, LAT - 1e-6) for o in rest):
+                        fails.append(f"{tn}.{hc['inst']}: grid re-pack does not fit ({ncol} columns)")
+                        sites = {}
+                        break
+                    sites[hc["inst"]] = (round(ox, 4), round(oy, 4))
+                if sites:
+                    rows.append(f"{tn}: grid re-pack {ncol} columns x {math.ceil(len(order) / ncol)} rows")
+            for hc in sorted(match, key=lambda c_: c_["inst"]):
+                if hc["inst"] not in sites:
+                    fails.append(f"{tn}.{hc['inst']}: no free site")
+                    continue
+                ow, oh = hc["outline_um"]
+                nw, nh = size(hc)
+                ob = box(hc)
+                best = sites[hc["inst"]]
+                pins = json.loads((out / hc["pins_file"]).read_text())
+                try:
+                    npins = _regrow_pins(pins, ow, oh, nw, nh)
+                except ValueError as e:
+                    fails.append(f"{tn}.{hc['inst']}: {e}")
+                    continue
+                pf = f"cores/{hc['module']}__{nw:g}x{nh:g}__{tn}_{hc['inst']}.json"
+                (out / pf).write_text(json.dumps(npins))
+                old_pf = hc["pins_file"]
+                hc.update(origin_um=list(best), outline_um=[nw, nh], pins_file=pf)
+                hc["note"] = (hc.get("note", "").split(" | B2n grow")[0] +
+                              f" | B2n grow (HBM-CORES): {ow:g}x{oh:g} -> {nw:g}x{nh:g}, was {old_pf.split('/')[-1]}")
+                moved[hc["inst"]] = (ob, box(hc), {p["name"]: (p["x"], p["y"]) for p in npins})
+                for c in t.get("contents", []):
+                    if c["inst"] == hc["inst"] and "origin_um" in c:
+                        c["origin_um"], c["outline_um"] = list(best), [nw, nh]
+            if not moved:
+                continue
+            for c in t.get("contents", []):           # split masters: bounding box of their pieces
+                if c["inst"] in split and "origin_um" in c:
+                    bs = [box(o) for o in hcs if o["inst"].startswith(c["inst"] + "_")]
+                    x0_, y0_ = min(b[0] for b in bs), min(b[1] for b in bs)
+                    x1_, y1_ = max(b[2] for b in bs), max(b[3] for b in bs)
+                    c["origin_um"] = [round(x0_, 4), round(y0_, 4)]
+                    c["outline_um"] = [round(x1_ - x0_, 4), round(y1_ - y0_, 4)]
+
+            def remap(pt):
+                for ob, nb, _ in moved.values():
+                    if ob[0] - 1.0 <= pt[0] <= ob[2] + 1.0 and ob[1] - 1.0 <= pt[1] <= ob[3] + 1.0:
+                        fx = (pt[0] - ob[0]) / (ob[2] - ob[0])
+                        fy = (pt[1] - ob[1]) / (ob[3] - ob[1])
+                        return [round(nb[0] + min(max(fx, 0.0), 1.0) * (nb[2] - nb[0]), 3),
+                                round(nb[1] + min(max(fy, 0.0), 1.0) * (nb[3] - nb[1]), 3)], True
+                return pt, False
+            nbox = [box(o) for o in hcs]
+            nre = 0
+            for e in t.get("internal_stations", []):
+                e["from_um"], a1 = remap(e["from_um"])
+                e["to_um"], a2 = remap(e["to_um"])
+                on = any(b[0] < r[0] < b[2] and b[1] < r[1] < b[3] for r in e["regs_um"] for b in nbox)
+                if a1 or a2 or on:
+                    e["_regrow"] = True
+                    nre += 1
+            taps = t.get("clock", {}).get("taps", [])
+            for tp in taps:
+                ci, _, port = tp["name"].partition(".")
+                if tp.get("kind") != "core" or ci not in moved:
+                    continue
+                ob, nb, pins = moved[ci]
+                ck = [pins[port]] if port in pins else [xy for n_, xy in pins.items() if n_ in ("ck", "clk", "clock")]
+                if ck:
+                    x, y = nb[0] + ck[0][0], nb[1] + ck[0][1]
+                else:
+                    (x, y), _ = remap(tp["xy"])
+                x, y = S.tap_clear(t, x, y, [tuple(o["xy"]) for o in taps if o is not tp], clear=4.32)
+                tp["xy"] = [round(x, 4), round(y, 4)]
+            rows.append(f"{tn}: {len(moved)} x {g['module']} -> {nw:g}x{nh:g} ({nre} internal links re-routed)")
+    log.append("core grow (B2n_inputs/core_grow.json, HBM-CORES): " + "; ".join(rows) +
+               (f"; NOT FIT: {'; '.join(fails)}" if fails else ""))
+    return fails
+
+
 def drop_die_layers(plan, log):
     n = 0
     for t in plan["partition_types"].values():
@@ -538,7 +725,7 @@ def restation(plan, log):
         ist = t.get("internal_stations", [])
         for e in ist:
             ist0 += len(e["regs_um"])
-            if CK._hops_ok(e["from_um"], e["regs_um"], e["to_um"], REACH):
+            if not e.pop("_regrow", False) and CK._hops_ok(e["from_um"], e["regs_um"], e["to_um"], REACH):
                 ist1 += len(e["regs_um"])
                 continue
             a_, b_ = tuple(e["from_um"]), tuple(e["to_um"])
@@ -687,6 +874,7 @@ def main(argv=None):
     touched, pairs = enforce_mirror(plan, log)
     worst = rewindow(plan, log, fixed_ids=touched)
     fix_mirror_pins(plan, pairs, log)
+    grow_fail = core_grow(plan, log, out)
     fails = restation(plan, log)
     import b2m as B2M   # noqa: E402  (H-tree + tap assignment re-derived: su10/su30 / spu0/spu1 rects moved)
     B2M.clock(plan, out, log)
@@ -710,7 +898,7 @@ def main(argv=None):
     (out / "die_plan.json").write_text(json.dumps(plan, indent=0) + "\n")
     (out / "die_io.json").write_text((src / "die_io.json").read_text())
     (out / "b2n_report.json").write_text(json.dumps(dict(log=log, infeasible_faces=worst, unroutable=fails,
-                                                         lane_delta_short=short,
+                                                         lane_delta_short=short, core_grow_unfit=grow_fail,
                                                          lane_cycle_delta={k: v for k, v in dc.items() if v}),
                                                     indent=1) + "\n")
     lc = dict(schema="opentallas.hbm_b2n_lane_cycles.v1", plan="physical/die_plan/hbm_arch/B2n (claude/hbm-b2n-1024)",

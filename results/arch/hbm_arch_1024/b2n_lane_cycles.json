@@ -6,7 +6,7 @@
   "lanes": 298,
   "lanes_added": 202,
   "max_added": 47,
-  "sum_added": 2556,
+  "sum_added": 2546,
   "new_lanes": [
    "L150",
    "L150m",
@@ -171,14 +171,14 @@
   },
   "L12": {
    "b2m": 12,
-   "b2n": 29,
-   "added": 17,
+   "b2n": 26,
+   "added": 14,
    "note": "root->NW_hub data"
   },
   "L12m": {
    "b2m": 12,
-   "b2n": 29,
-   "added": 17,
+   "b2n": 26,
+   "added": 14,
    "note": "root->NE_hub data (mirror)"
   },
   "L13": {
@@ -1617,14 +1617,14 @@
   },
   "L133": {
    "b2m": 9,
-   "b2n": 18,
-   "added": 9,
+   "b2n": 17,
+   "added": 8,
    "note": "NW_b011->NW_hub ctl"
   },
   "L133m": {
    "b2m": 9,
-   "b2n": 18,
-   "added": 9,
+   "b2n": 17,
+   "added": 8,
    "note": "NE_b011->NE_hub ctl (mirror)"
   },
   "L134": {
@@ -1719,14 +1719,14 @@
   },
   "L142": {
    "b2m": 6,
-   "b2n": 12,
-   "added": 6,
+   "b2n": 11,
+   "added": 5,
    "note": "NW_b000->NW_hub ctl"
   },
   "L142m": {
    "b2m": 6,
-   "b2n": 12,
-   "added": 6,
+   "b2n": 11,
+   "added": 5,
    "note": "NE_b000->NE_hub ctl (mirror)"
   },
   "L143": {
@@ -1944,27 +1944,39 @@
    "internal_stations"
   ],
   "q_b100": [
+   "clock",
+   "contents",
    "face_layers",
    "ft_budget",
    "ft_slots",
+   "hard_cores",
    "internal_stations"
   ],
   "q_b101": [
+   "clock",
+   "contents",
    "face_layers",
    "ft_budget",
    "ft_slots",
+   "hard_cores",
    "internal_stations"
   ],
   "q_b102": [
+   "clock",
+   "contents",
    "face_layers",
    "ft_budget",
    "ft_slots",
+   "hard_cores",
    "internal_stations"
   ],
   "q_b103": [
+   "clock",
+   "contents",
    "face_layers",
    "ft_budget",
    "ft_slots",
+   "hard_cores",
    "internal_stations"
   ],
   "q_b110": [
@@ -1993,9 +2005,12 @@
   ],
   "q_hub": [
    "buses",
+   "clock",
+   "contents",
    "face_layers",
    "ft_budget",
    "ft_slots",
+   "hard_cores",
    "internal_stations"
   ],
   "q_mca": [
@@ -2036,16 +2051,22 @@
    "ft_slots"
   ],
   "q_spb2": [
+   "clock",
+   "contents",
    "face_layers",
    "ft_budget",
    "ft_slots",
+   "hard_cores",
    "internal_stations"
   ],
   "q_spt0": [
    "buses",
+   "clock",
+   "contents",
    "face_layers",
    "ft_budget",
    "ft_slots",
+   "hard_cores",
    "internal_stations"
   ],
   "q_spt1": [
