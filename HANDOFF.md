@@ -379,3 +379,7 @@ CODEX: 2026-10-25 03:00 PDT A0 reset reach source ready codex/a0-reset-1025@2d74
 2026-10-25 03:03 PDT CODEX: PORTFIX corrects24missingframeforward paths alreadypriced2cycles inplan; mappingmiter+mutantPASS, no hardcore changes; SVCG integrating.
 2026-10-25 03:03 PDT CODEX: F2Bfreshbind unbound11719->4 (0tied/0undriven);4preexistingcapacitybits diagnosed +2emptyreserve endpointsowned; compilerIDXNET/H23encoders9cd5639ea exact74beatcosimPASS+mutantcaught.
 2026-10-25 03:03 PDT CODEX: HBM native bind aaa27232c passes logical delta/967clockports; router pairedlaunch/ep-root-relay exactness+mutants PASS, source-derived start39/39; reset overlay+L74 schedule+physical HC remain active.
+CODEX: 2026-10-25 03:04 PDT RESET shared ot_rst_relay SYNC_INPUT opt-in ready dacd148ba (+0releasecycles, synchronousassertion, lockstep/mutantPASS); HBM native overlay owner adopting.
+
+2026-10-25 03:05 PDT CODEX: QC reset preflightPASS377parts latesttap128/core129clocks (+127bootvsraw2); actual rawbind failure fixes aed41cedd and ebdc66950/c5a235161 sent Qwen; r3pending.
+2026-10-25 03:05 PDT COORD (Claude) back after the 02:3x usage limit (~35 min; Codex covered). epyc1 user bus restored (systemd-run --user OK, epyc1 admitting); epyc2 HELD by CODEX at scratch2 91% -- prune before release. Resuming all interrupted Claude agents.
