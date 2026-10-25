@@ -376,3 +376,25 @@ NK reset successor official generation PASS; place-only synth LIVE intel2:/srv/o
   qc-cores/keep_logs; fail_keep/* deleted. STOPPED by exact container (stalled >60 min single-thread incremental GRT, superseded by Codex south4 root-cause
   fix): kqc-qfd_dv_s8x_prog_adj0 (GRT-0232 congestion = FAIL), kqc-qfd_dv_s8x_prog_pd40a0 (948 hold endpoints, idle 1h17), kqc-qfd_dv_s8x_btab_adj10
   (831 hold endpoints, idle 2h10); bulk deleted, logs kept. Still live epyc1: btab_adj0 (DRT, 26.7k violations at 50%), vmr_rw60 (DRT; Codex keeps).
+
+## QC KIT LIST for the post-merge PROTO re-sweep (prepared 2026-10-25 03:11 PDT on qc-meth@a281ceb5ce; plan md5 a651c688 == Codex geometry scan input)
+Rule: only types PROTO re-sweeps CLEAN get kits; 2 recipe variants per kit (V1 = default closing recipe: in-flow hold margin 0..5 ps over
+the SDC 25, m8-style post-route TT/FF ECO, fanout 24; V2 = V1 + density -0.05 / alt placement seed); face_guard/sdc_lint/SELRANGE/port-bind
+FAIL stops before floorplan; stop after CTS if FF hold WNS < -100 ps or > 2000 endpoints; GEOM PASS before route.
+Per-bit geometry (Codex scan.py, every ft bit, station chain incl. pins): 38 soft types 0 over-reach / 0 stations in cores; 15 FAIL.
+A. KIT FIRST (per-bit CLEAN + pre-replan PROTO CLEAN; insts): cbx_q10 (48), cbf_q11 (24), cbn_q11 (24), cbf_q00 (23), glue (1), coll_ucie (1).
+B. KIT if PROTO CLEAN (per-bit CLEAN; were STRUCTURAL pre-replan only for >405 legs that the re-plan fixed):
+   sle/slw_ctl(12), sle/slw_stm, sle/slw_sc, sle/slw_st_a, sle/slw_fe_v1/v2/v3, sle/slw_fw_v1/v2/v3, coll_core, coll_ft (3), coll_ftm, tt_ctlm.
+   sle/slw_hc0..3 (6 each) and native59: kit only from the boundaries regen (codex/qc-boundaries-1025@16220f781: HC b_hw_i 6-bit consumer
+   width = the sle_hc3 face_guard FAIL 2620/2640; native59 duplicate fault lane) -- not from a281ceb5ce as-is.
+   coll_n / coll_s: edge clocks now declared; still need the qfd_coll_static_face hard core (~116k cells, SRAM) hardened first.
+C. RE-PLAN FIRST (per-bit over-reach although centroid G0C passes; max hop / over-reach bits / stations in cores):
+   coll_ftc 483.8/902 (tl_st_wi), sle/slw_su_l0 436.9/422/272 in cores (cws3,rsn,rsf,x_fw_st_a), cbn_q01 428.3/204, cbn_q00 426.5/126,
+   cbf_q01_s2 425.8/188, cbf_q00_s2 423.0/88, sle/slw_st_b 423.8/218 (b_hw_ctl_hc0), sle/slw_su_c 421.7/252, sle_su_l1 421.7/168,
+   slw_su_l1 421.7/193, cbf_q01 416.5/68 (a00), coll_ftn 406.3/7. Plus PROTO (O) channel overflow over cores (M6/M7 only):
+   cbf_q01_s2, cbn_q01, su_l0/l1/c -> fix = per-bit station count/sites in channels (ft_regs per-bit reach) in ONE regen on top of the
+   boundaries branch; QC sub-agent assigned.
+HARD CORES (unchanged by the re-plan; kits from qc-cores generator): su8_rst3 SIGNED, s8x_crh SIGNED; s8_crh_rp1 (clock leaf balance,
+   Claude sub-agent), s8x_vmr (Codex leaf balance, GRT pair 45-61 ps), s8x_btab / s8x_prog (south pin-register band congestion: Codex
+   south4 probes), qfd_qc_su_lane_e / _w (new: kit + GEOM first), A0 qfd_tile_nk_a0c / nl_a0c (v8c: NK k2rs selected, reset reach
+   codex/a0-reset-1025; NL FAIL l3rs, l3rsp/l3rsvm live intel1).
