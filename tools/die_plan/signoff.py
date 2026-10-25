@@ -66,7 +66,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-REPO = HERE.parents[1]
+REPO = HERE.parents[1] if len(HERE.parents) > 1 else HERE  # standalone /work kit copy
 sys.path.insert(0, str(HERE))
 
 SCHEMA = "opentallas.signoff.v1"
