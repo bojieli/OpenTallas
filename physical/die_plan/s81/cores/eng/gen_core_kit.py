@@ -90,9 +90,9 @@ def sdc(clks, rsts, name, half=()):
          f"set_input_delay {io:.4f} -clock vclk $non_clk_in\n"
          f"set_output_delay {io:.4f} -clock vclk [all_outputs]\n"
          f"set_input_delay -min 0.0000 -clock vclk $non_clk_in\n")
-    if rsts:
-        s += (f"# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)\n"
-              f"set_input_delay {0.5 * per:.4f} -clock vclk [get_ports {{{' '.join(rsts)}}}]\n")
+    if rsts:   # OWNER DECISION 13 (reset wavefront, claude/reset-1024 @0a08a66af): the core reset is a SYNCHRONOUS
+        # registered input from the partition's reset relay tree, budgeted like any data pin (no async model, no waiver)
+        s += f"# reset {' '.join(rsts)}: wavefront relay -> registered synchronous input, data IO budget ({io:.4f})\n"
     for b in half:
         # half-cycle crossing input (launched on the partner core's ck NEGEDGE, as in the monolith): arrival T/2 + the
         # partner's clk->q + abutted 17-um drop (0.12 T); hold side unchanged (min 0)
