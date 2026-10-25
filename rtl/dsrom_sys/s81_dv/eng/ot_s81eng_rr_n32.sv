@@ -28,7 +28,7 @@ module ot_s81eng_xq_n32 #(
     //   stage 2 (capture -> u_aq.s0_x): one 8b+5b add U = scale + (c-10) = X+127 gives xb and the overflow / normal
     //            classes, a 5b add gives the subnormal shift k, then the 5-way select.
     // The wait line now stores the DECODED bf16 (32 x 16 = the 512-bit width) from a registered copy bfxq of bf_x
-    // written one edge later at the registered address wa_q (same entry), read one edge later (wp - 10) straight into
+    // written one edge later at the registered address wa_q (same entry), read one edge later (registered address ra_q) into
     // bf_dq: the 64 wait-line decoders, wl_code, the 32 wl scale copies and the id_code_w write copies are gone.
     reg         iv; reg [4:0] ic; reg [2:0] ib;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
@@ -54,10 +54,12 @@ module ot_s81eng_xq_n32 #(
     end endgenerate
     reg [5:0] wp;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
-    reg [511:0] bfxq; reg [5:0] wa_q;      // write copy of the decode, one edge later, at the address of its beat
-    always @(posedge ck) begin bfxq <= bf_x; wa_q <= wp; end
+    // write copy of the decode and the read address, each one edge later than the raw line used them (exact entries and
+    // read order, also across reset pulses of wp)
+    reg [511:0] bfxq; reg [5:0] wa_q, ra_q;
+    always @(posedge ck) begin bfxq <= bf_x; wa_q <= wp; ra_q <= wp - 6'd9; end
     wire [511:0] wl_rd;
-    ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(wp - 6'd10), .rd_out(wl_rd),
+    ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(ra_q), .rd_out(wl_rd),
         .w_ce_in(1'b1), .w_addr_in(wa_q), .wd_in(bfxq), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     always @(posedge ck) bf_dq <= wl_rd;
