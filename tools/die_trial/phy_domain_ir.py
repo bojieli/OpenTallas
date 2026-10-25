@@ -62,7 +62,15 @@ def generate(plan_path, out, axis_bumps=False):
         ir.generate(SimpleNamespace(plan=str(pg/'domain_plan.json'), power=str(pg/'domain_power.json'),
                                     out=str(pg), window=None, tile=43.2, scale=1, no_bumps=excluded))
         bump_counts = None
-        if axis_bumps:
+        declared_sources = domain['bumps'].get('sources_um')
+        if declared_sources:
+            rows = {}
+            for net, source_net in [('VDD','VDDPHY'),('VSS','VSS')]:
+                rows[net] = [f'{x-x0:.4f}, {y-y0:.4f}, {domain["bumps"]["size_um"]:g}, {ir.VDD if net=="VDD" else 0}\n'
+                             for x,y in declared_sources[source_net]]
+                (pg/f'vsrc_{net}.loc').write_text(''.join(rows[net]))
+            bump_counts = {net:len(values) for net,values in rows.items()}
+        elif axis_bumps or domain['bumps'].get('pattern') == 'centered axis-aligned checkerboard':
             # An axis-aligned checkerboard has the same 45um nearest-neighbour
             # spacing and 63.64um same-net spacing as the older rotated lattice.
             # Centre it over the declared bump rectangle; keep each entire bump
@@ -88,7 +96,8 @@ def generate(plan_path, out, axis_bumps=False):
                  supply_net_alias={'VDD':'VDDPHY'},
                  scope='Isolated planned PHY mesh plus its own VSS return; surrounding core return omitted.')
         if bump_counts is not None:
-            m['bumps'].update(n=bump_counts, orientation='axis-aligned checkerboard centred in declared bump rectangle',
+            m['bumps'].update(n=bump_counts, orientation=('declared explicit sources_um' if declared_sources else
+                              'axis-aligned checkerboard centred in declared bump rectangle'),
                               minimum_edge_clearance_um=ir.BUMP/2)
         (pg/'manifest.json').write_text(json.dumps(m, indent=1)+'\n')
         summary.append(dict(name=domain['name'], source_rect_um=domain['rect_um'], power_w=pm['total_w'],

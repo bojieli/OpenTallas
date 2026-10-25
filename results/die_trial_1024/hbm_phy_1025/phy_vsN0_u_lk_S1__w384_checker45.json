@@ -1,0 +1,195 @@
+{
+ "interior_rail_sum_mv": 24.54,
+ "interior_note": "tiles >= one per-rail bump pitch (63.64 um) from the die edge: the checkerboard bump lattice (VSS at k x 63.64, VDD at 31.82 + k x 63.64) loses its die-edge VSS row/column (x = 0 / y = 0), so edge tiles see one-sided bump support (edge artefact of the assumed bump map)",
+ "manifest": {
+  "schema": "opentallas.die_trial.ir_case.v1",
+  "plan": "/srv/opentallas-scratch/claude/codex-hbm-trial-1025/phy_w384_axis/phy_vsN0_u_lk_S1/domain_plan.json",
+  "power": "/srv/opentallas-scratch/claude/codex-hbm-trial-1025/phy_w384_axis/phy_vsN0_u_lk_S1/domain_power.json",
+  "power_total_w": 4.368,
+  "inner_um": [
+   0.0,
+   0.0,
+   727.3279999999995,
+   1113.64
+  ],
+  "solved_um": [
+   0.0,
+   0.0,
+   727.3279999999995,
+   1113.64
+  ],
+  "guard_um": 0,
+  "tile_um": 43.2,
+  "loads": 375,
+  "load_w": 4.368,
+  "grid": {
+   "layers": [
+    "M8",
+    "M9"
+   ],
+   "width_um": 3.84,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "offset_xy_um": [
+    7.480000000000004,
+    4.32
+   ],
+   "scale": 1,
+   "per_net_coverage": 0.4444444444444444,
+   "plan_exact": true
+  },
+  "partition_pg": "mock-LEF M7 stripes (VDD 4.128 / VSS 4.512 mod 8.64, 0.288 um) on <= tile loads",
+  "bumps": {
+   "array_um": 45.0,
+   "per_net_pitch_um": 63.63961030678927,
+   "size_um": 20.0,
+   "n": {
+    "VDD": 150,
+    "VSS": 149
+   },
+   "removed_in": [
+    [
+     0,
+     0,
+     63.63999999999942,
+     1113.64
+    ],
+    [
+     663.6880000000001,
+     0,
+     727.3279999999995,
+     1113.64
+    ],
+    [
+     0,
+     0,
+     727.3279999999995,
+     0.0
+    ],
+    [
+     0,
+     1050.0,
+     727.3279999999995,
+     1113.64
+    ]
+   ],
+   "orientation": "axis-aligned checkerboard centred in declared bump rectangle",
+   "minimum_edge_clearance_um": 10.0
+  },
+  "voltage_v": 0.7,
+  "budget_mv": 35.0,
+  "pdn_implementation": "DEF specialnets with ASAP7 rule-generated VIA78/VIA89 arrays",
+  "pdn_counts": {
+   "VDD": {
+    "via78": 9375,
+    "via89": 10836,
+    "m8_stripes": 129,
+    "m9_stripes": 84
+   },
+   "VSS": {
+    "via78": 11175,
+    "via89": 10752,
+    "m8_stripes": 128,
+    "m9_stripes": 84
+   }
+  },
+  "source_plan": "/srv/opentallas-scratch/claude/codex-hbm-trial-1025/inputs/B2o_phy_width384.json",
+  "supply_domain": {
+   "name": "phy_vsN0_u_lk_S1",
+   "nets": [
+    "VDDPHY",
+    "VSS"
+   ],
+   "io": [
+    "io_vsN0_u_lk_S1"
+   ],
+   "rect_um": [
+    13328.36,
+    0.0,
+    14055.688,
+    1113.64
+   ],
+   "grid": [
+    {
+     "layer": "M8",
+     "width_um": 3.84,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 3.84,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ]
+    }
+   ],
+   "bumps": {
+    "rect_um": [
+     13392.0,
+     0.0,
+     13992.048,
+     1050.0
+    ],
+    "pitch_um": 45.0,
+    "use": "power_ground",
+    "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (checkerboard on the 45-um array); no signal bumps inside except the window's own 26 SerDes sites"
+   },
+   "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid unchanged around it"
+  },
+  "die_um": [
+   727.3279999999995,
+   1113.64
+  ],
+  "supply_net_alias": {
+   "VDD": "VDDPHY"
+  },
+  "scope": "Isolated planned PHY mesh plus its own VSS return; surrounding core return omitted."
+ },
+ "pdn_pass": true,
+ "pg_connected": {
+  "VDD": true,
+  "VSS": true
+ },
+ "done": true,
+ "rails": {
+  "VDD": {
+   "nodes": 375,
+   "worst_mv": 5.482,
+   "worst_at_um": [
+    669.41,
+    540.0
+   ],
+   "worst_inst": "T_15_12",
+   "interior_worst_mv": 5.07,
+   "interior_worst_at_um": [
+    237.41,
+    324.0
+   ]
+  },
+  "VSS": {
+   "nodes": 375,
+   "worst_mv": 22.175,
+   "worst_at_um": [
+    108.19,
+    21.6
+   ],
+   "worst_inst": "T_2_0",
+   "interior_worst_mv": 19.47,
+   "interior_worst_at_um": [
+    108.19,
+    237.6
+   ]
+  }
+ },
+ "rail_sum_mv": 27.657,
+ "verdict": "PASS",
+ "budget_mv": 35.0
+}

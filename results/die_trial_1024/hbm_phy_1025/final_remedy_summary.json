@@ -1,0 +1,60 @@
+{
+ "verdict": "ISOLATED PHY IR PASS5/5; clock corridor adoption pending",
+ "budget_mv": 35,
+ "domains": [
+  {
+   "name": "phy_NW_io_u_lk_N0",
+   "rail_sum_mv": 21.639,
+   "verdict": "PASS",
+   "pg_connected": {
+    "VDD": true,
+    "VSS": true
+   }
+  },
+  {
+   "name": "phy_NW_spb0_u_lk_S0",
+   "rail_sum_mv": 27.657,
+   "verdict": "PASS",
+   "pg_connected": {
+    "VDD": true,
+    "VSS": true
+   }
+  },
+  {
+   "name": "phy_vsN0_u_lk_S1",
+   "rail_sum_mv": 27.657,
+   "verdict": "PASS",
+   "pg_connected": {
+    "VDD": true,
+    "VSS": true
+   }
+  },
+  {
+   "name": "phy_NE_io_u_lk_N2",
+   "rail_sum_mv": 20.993,
+   "verdict": "PASS",
+   "pg_connected": {
+    "VDD": true,
+    "VSS": true
+   }
+  },
+  {
+   "name": "phy_NE_spb0_u_lk_S0",
+   "rail_sum_mv": 28.842,
+   "verdict": "PASS",
+   "pg_connected": {
+    "VDD": true,
+    "VSS": true
+   }
+  }
+ ],
+ "profile": {
+  "width_um": 3.84,
+  "pitch_um": 8.64,
+  "bump_pitch_um": 45,
+  "bump_size_um": 20,
+  "bump_pattern": "centered axis-aligned checkerboard"
+ },
+ "source_plan": "B2o@b6cbd6362",
+ "scope": "4.368W estimated load per SerDes. Isolated supply mesh and its own VSS return. All failures retained; no die timing sign-off."
+}
