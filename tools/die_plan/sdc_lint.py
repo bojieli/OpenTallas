@@ -430,8 +430,8 @@ def kit_context(P, tn):
         ni, no = gen_rtl.sv_id(s["name"] + "_i"), gen_rtl.sv_id(s["name"] + "_o")
         ins.append(ni)
         outs.append(no)
-        floor[ni] = (1 - gen_phys.ft_hop_in_share(P)) * per
-        floor[no] = gen_phys.ft_hop_in_share(P) * per
+        floor[ni] = (1 - gen_phys.ft_hop_in_share(P, tn, s["name"], "in")) * per
+        floor[no] = gen_phys.ft_hop_in_share(P, tn, s["name"], "out") * per
     floor["arst_n"] = gen_phys.IO_BUDGET * per
     import reset_tree as RT
     if RT.start_broadcast(P) and not t.get("hard"):     # decision 13c START in: timed like arst_n

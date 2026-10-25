@@ -401,6 +401,12 @@ SCHEMA = {
             # ft seam budget split (COORD RULING 2026-10-24 12:37, S81): receiver share of T at the ft face (input delay
             # max (1 - share) T on ft_i, output delay max share T on ft_o); default gen_phys.FT_HOP_IN_SHARE (0.08)
             "ft_hop_in_share": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 0.5},
+            # S81/FTHOLD 10-25 (COORD 00:46): deterministic ft input hold cells sized from FF Liberty (ft_hold.py) before
+            # every ft station 0; their TT delay is added to the receiver share.  ft_in_hold_ps overrides the need.
+            "ft_in_hold": {"enum": ["off", "liberty"]}, "ft_in_hold_ps": _nonneg,
+            "ft_in_hold_pairs": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                "required": ["src_type", "src_slot", "dst_type", "dst_slot"],
+                "properties": {k: {"type": "string"} for k in ("src_type", "src_slot", "dst_type", "dst_slot")}}},
             "face_xing": {"enum": ["budgeted", "forwarded_landing"]},
             "spine": {"type": "object", "additionalProperties": False, "properties": {
                 "layers": {"type": "array", "items": _layer}, "root_um": _xy,

@@ -263,9 +263,19 @@ FT_HOP_IN_SHARE = 0.08   # R3 hop share: an ft hop = last station -> out pin (th
 # pads every seam input for the whole window.
 
 
-def ft_hop_in_share(P):
-    """the plan's ft seam receiver share (clock.ft_hop_in_share, COORD RULING 10-24 12:37), else FT_HOP_IN_SHARE."""
-    return float(P.clock.get("ft_hop_in_share", FT_HOP_IN_SHARE))
+def ft_hop_in_share(P, tn=None, slot=None, end="in"):
+    """the plan's ft seam receiver share (clock.ft_hop_in_share, COORD RULING 10-24 12:37), else FT_HOP_IN_SHARE,
+    plus the TT delay of the plan's ft input hold cells (clock.ft_in_hold, ft_hold.py, S81/FTHOLD 10-25): the receiver's
+    setup share hosts them, the sender's last segment gives that time up, no cycle is added."""
+    import ft_hold
+    sh = float(P.clock.get("ft_hop_in_share", FT_HOP_IN_SHARE))
+    cells, _ff, tt = ft_hold.chain(P)
+    active = (ft_hold.selected(P, tn, slot, end) if tn is not None else P.clock.get("ft_in_hold_pairs") is None)
+    if cells and active:
+        sh += tt / float(P.die["period_ps"])
+        if sh >= 0.5:
+            raise ft_hold.FtHoldError(f"ft_in_hold: receiver share {sh:.3f} T >= 0.5 with the hold cells ({tt:g} ps TT)")
+    return sh
 
 
 def hold_in_min_ps(P):
@@ -398,9 +408,17 @@ def sdc(P, tn, pins):
                 f"set_clock_latency -source -clock clk {t_lib(-early):.4f} [get_ports {n}]\n")
     if slots:
         sh = ft_hop_in_share(P)
-        out += (f"# ft slots: hop share {sh:g} T at the face, the rest is the last station segment\n"
-                f"set_input_delay -max {(1 - sh) * per:.4f} -clock vclk [get_ports {{{ft_in}}}]\n"
-                f"set_output_delay -max {sh * per:.4f} -clock vclk [get_ports {{{ft_out}}}]\n")
+        import ft_hold
+        cells, hff, htt = ft_hold.chain(P)
+        if cells:
+            out += (f"# ft input hold cells (clock.ft_in_hold, ft_hold.py): {' + '.join(cells)} per ft_i bit before station 0 = "
+                    f"{hff:g} ps FF min (need {ft_hold.need_ps(P):.1f}) / {htt:g} ps TT max, inside the receiver share\n")
+        for slot in slots:
+            shi = ft_hop_in_share(P, tn, slot, "in")
+            sho = ft_hop_in_share(P, tn, slot, "out")
+            out += (f"# ft slot {slot}: paired receiver shares in {shi:g} / out {sho:g}; physical pad charged once\n"
+                    f"set_input_delay -max {(1 - shi) * per:.4f} -clock vclk [get_ports {{{slot}_i[*]}}]\n"
+                    f"set_output_delay -max {sho * per:.4f} -clock vclk [get_ports {{{slot}_o[*]}}]\n")
     # hold (CP1 r6: seam hold -17..-25 ps; the max-only budget above also served as the MIN arrival, so the kit never
     # padded): the neighbour's face flop can launch from the fast end of the insertion window (ins - tol) with a
     # no clk-to-q / wire credit: min input delay hold_in_min_ps (-tol) on every input
@@ -560,6 +578,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
+    import ft_hold
     lctx = sdc_lint.kit_context(P, tn)
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("sdc_lint.py"), kd / "sdc_lint.py")
@@ -608,6 +627,11 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # unused (r10b: 120 in-bus flops); boundary cells dont_touch around that step only
            "export PRE_SYNTH_TCL = /work/face_keep.tcl",
            "export POST_SYNTH_TCL = /work/face_keep_release.tcl",
+           # Deterministic input delay cells are protected separately for the whole flow. ORFS's
+           # default floorplan setup repair sees ideal capture clocks versus the virtual IO clock and
+           # cannot resize those cells; it loops before placement (t37: 6873 endpoints, zero changes).
+           # Remove only unprotected ABC buffers here; real setup is repaired after placement/CTS.
+           *(["export REMOVE_ABC_BUFFERS = 1"] if ft_hold.has_inputs(P, tn) else []),
            *(["export SKIP_INCREMENTAL_REPAIR = 1   # proof kit: seam / abutment proof, partition IO budgets not "
               "closed (the post-GRT repair loop otherwise runs for hours on the IO paths)"] if proof else []),
            "export TNS_END_PERCENT = 100",
@@ -694,6 +718,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                                                            parent_early_tap_ps=ib["early_tap_ps"],
                                                            rule="METHODOLOGY 9.7 / BRIEFING 5e; FLOW 2026-10-25"),
                                                       indent=1) + "\n")
+    if ft_hold.has_inputs(P, tn):
+        shutil.copyfile(Path(__file__).with_name("ft_hold_pg.tcl"), kd / "ft_hold_pg.tcl")
     if _density(t):
         shutil.copyfile(Path(__file__).with_name("tap_balance_grt.tcl"), kd / "tap_balance_grt.tcl")
     if forest:
