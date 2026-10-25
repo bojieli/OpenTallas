@@ -20,7 +20,7 @@ corner (MCMM = TT + FF (+ SS for information with --corners tt,ff,ss) x 1 functi
 RVT+LVT+SLVT liberty of that corner.
 
 CORNER RULE (owner, restated 2026-10-24, AGENTS.md c7ce2ed69a; supersedes the 2026-09-30 SS rule): timing closes at the
-TYPICAL corner -- setup at TT, hold at FF, 60 / 25 ps uncertainty, pin-flop spread <= 80 ps.  SS never gates; with
+TYPICAL corner -- setup at TT, hold at FF, 60 / 25 ps uncertainty, related flop-pair skew with CPPR <= 80 ps (spread is INFO).  SS never gates; with
 --corners ...,ss it is reported for information only.
 
 CHECKS (each PASS / FAIL / NOT RUN; SIGNED only if every blocking check PASSes):
@@ -35,7 +35,7 @@ CHECKS (each PASS / FAIL / NOT RUN; SIGNED only if every blocking check PASSes):
   unconstrained check_setup -unconstrained_endpoints = 0, no unclocked registers, no loops                blocking
   clock         per corner: active-edge clock arrival at every register clock pin (insertion min/mean/max) and
                 at the PIN FLOPS (registers whose D is in the fan-out of a data input or whose Q reaches a data
-                output); pin-flop spread = max - min <= 80 ps at TT and FF (R4, COORD 10-23); with
+                output); related flop-pair skew with CPPR <= 80 ps at TT and FF (owner decision 5); spread INFO; with
                 --insertion-target the pin-flop mean must be within +-insertion_tol                         blocking
   sdc_lint      tools/die_plan/sdc_lint.py on the golden SDC (kit sdc_lint.json when present, else a context derived
                 from the SDC + the routed netlist's ports with the plan period / insertion / tolerance)     blocking
@@ -57,6 +57,7 @@ import datetime
 import gzip
 import json
 import os
+import math
 import re
 import shlex
 import subprocess
@@ -74,7 +75,10 @@ PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
 PERIOD_PS = 833.0
 UNC_SETUP_PS, UNC_HOLD_PS = 60.0, 25.0
 INSERTION_PS, INSERTION_TOL_PS = 250.0, 40.0
-SPREAD_MAX_PS = 80.0
+PAIR_SKEW_MAX_PS = 80.0
+PAIR_VERIFY_TOL_PS = 1.0             # credited path-end skew vs CK-arrival skew - CPPR (integrity check)
+PAIR_CREDIT_MAX = 5000                 # exact-credit path searches per check before the worst becomes a bound
+SPREAD_MAX_PS = PAIR_SKEW_MAX_PS  # legacy record field; spread is information only
 FANOUT_MAX = 64
 SPREAD_CORNERS = ("tt", "ff")
 CORNERS = ("tt", "ff")                 # the sign-off corners; "ss" may be added for information
@@ -281,6 +285,26 @@ set_timing_derate -early 0.95
 so OCV5_WNS_MAX [so_ps [sta::worst_slack_cmd max]]
 so OCV5_WNS_MIN [so_ps [sta::worst_slack_cmd min]]
 unset_timing_derate
+# ---- related flop-pair skew with CPPR (owner gate, BRIEFING decision 5) ----
+# Measured on the golden SDC exactly as loaded (source latencies, propagated clocks, derate removed), BEFORE the
+# insertion diagnostic below zeroes clock source latency; only the clock uncertainty is zeroed (clk_skew must not
+# carry it) and nothing after this block reads slack.
+set ::ot_ps_lib_only 1
+@PAIR_SKEW@
+unset ::ot_ps_lib_only
+ot_ps_zero_unc
+set so_t0 [clock seconds]
+set so_pm [ot_ps_measure @PAIR_CREDIT_MAX@]
+ot_ps_write $so_pm /out/pair_skew.tsv @C@
+so PAIR_COUNTS regs [dict get $so_pm regs] no_clock_arrival [dict get $so_pm no_clock_arrival] data_pins [dict get $so_pm data_pins] pairs [dict get $so_pm pairs] inter_clock [dict get $so_pm inter_clock]
+foreach dly {max min} {
+  set m [dict get $so_pm $dly]
+  so PAIR_$dly {*}[concat {*}[lmap k {n worst bounded signed launch capture crpr p99_raw searched nopath verify} {list $k [dict get $m $k]}]]
+}
+so PAIR_METHOD [dict get $so_pm method]
+so PAIR_SECONDS [expr {[clock seconds] - $so_t0}]
+unset so_pm
+so PAIR_DONE 1
 # ---- clock: active-edge arrival at register clock pins, pin flops ----
 @CLOCK_FAMILY@
 set so_regs {}
@@ -337,7 +361,9 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@FANOUT_MAX@", str(int(fanout_max))),
-                 ("@CLOCK_FAMILY@", _clock_family_tcl())):
+                 ("@CLOCK_FAMILY@", _clock_family_tcl()),
+                 ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text()),
+                 ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
     return t
 
@@ -437,9 +463,37 @@ def corner_result(parsed):
     out["ck_errors"] = _f(kv.get("CK_ERRORS"))
     out["insertion_all"] = stats(allck)
     out["insertion_pinflops"] = stats(bnd)
+    out["pair_skew"] = pair_skew_result(kv)
     out["ocv5_wns_max"] = _f(kv.get("OCV5_WNS_MAX"))
     out["ocv5_wns_min"] = _f(kv.get("OCV5_WNS_MIN"))
     return out
+
+
+def _kvlist(text):
+    """'k1 v1 k2 v2 ...' -> dict (values as text)"""
+    f = (text or "").split()
+    return dict(zip(f[0::2], f[1::2]))
+
+
+def pair_skew_result(kv):
+    """the SO PAIR_* lines of a corner session (pair_skew.tcl ot_ps_measure): per check (max = setup, min = hold) the
+    EXHAUSTIVE related-pair count, the worst CPPR-credited damage (setup: launch late vs capture early; hold: capture
+    late vs launch early; = the die_sta.py pair skew), whether it is exact or a bound, and the uncredited p99."""
+    checks = {}
+    for dly in ("max", "min"):
+        d = _kvlist(kv.get(f"PAIR_{dly}"))
+        if not d:
+            continue
+        checks[dly] = dict(n=_f(d.get("n")), worst_abs_ps=_f(d.get("worst")), bounded=d.get("bounded") == "1",
+                           worst_signed_ps=_f(d.get("signed")), worst_launch=d.get("launch"),
+                           worst_capture=d.get("capture"), worst_crpr_ps=_f(d.get("crpr")),
+                           p99_raw_ps=_f(d.get("p99_raw")), searched=_f(d.get("searched")),
+                           nopath=_f(d.get("nopath")), verify_ps=_f(d.get("verify")))
+    cnt = {k: _f(v) for k, v in _kvlist(kv.get("PAIR_COUNTS")).items()}
+    return dict(done=kv.get("PAIR_DONE") == "1", checks=checks, counts=cnt, method=kv.get("PAIR_METHOD"), seconds=_f(kv.get("PAIR_SECONDS")),
+                measurement="every same-clock register pair with a timing fan-in relation (exhaustive); worst "
+                            "damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+                tsv="pair_skew.tsv")
 
 
 def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False):
@@ -604,10 +658,13 @@ def evaluate(rec, insertion_target=None):
         w = C["ff"]["std_wns_min"]
         ov = C["ff"].get("overlay") or ""
         v = "PASS" if w >= 0 else "FAIL"
-        if not ov.startswith("applied"):
-            v = "FAIL" if w < 0 else "PASS"
+        # STD_* is printed even when the overlay could not be applied. In that
+        # case it is only another raw-SDC measurement, not boundary-hold proof.
+        if not ov.startswith("applied "):
+            v = "NOT RUN"
         put("hold_ff", v, wns_ps=w, tns_ps=C["ff"].get("std_tns_min"), violators=C["ff"].get("std_nviol_min"),
-            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov)
+            sdc_wns_ps=C["ff"].get("sdc_wns_min"), overlay=ov,
+            reason=None if v != "NOT RUN" else "standard boundary-hold overlay was not applied")
     else:
         put("hold_ff", "NOT RUN")
     if ok_corner("ss"):
@@ -637,13 +694,33 @@ def evaluate(rec, insertion_target=None):
         sp, why = {}, []
         for c in [x for x in ALL_CORNERS if ok_corner(x)]:
             pf = C[c].get("insertion_pinflops")
-            sp[c] = dict(pinflops=pf, all=C[c].get("insertion_all"), ck_errors=C[c].get("ck_errors"))
+            sp[c] = dict(pinflops=pf, all=C[c].get("insertion_all"), ck_errors=C[c].get("ck_errors"),
+                         pair_skew=C[c].get("pair_skew"))
         for c in SPREAD_CORNERS:
             pf = C[c].get("insertion_pinflops")
             if not pf:
                 why.append(f"{c.upper()}: no pin flops measured")
-            elif pf["spread"] > SPREAD_MAX_PS:
-                why.append(f"{c.upper()} pin-flop spread {pf['spread']:.1f} ps > {SPREAD_MAX_PS:g}")
+            ps = C[c].get("pair_skew") or {}
+            checks = ps.get("checks", {})
+            if not ps.get("done") or any(k not in checks for k in ("max", "min")):
+                why.append(f"{c.upper()}: related pair skew NOT RUN")
+            else:
+                na = (ps.get("counts") or {}).get("no_clock_arrival") or 0
+                if na > 0:
+                    why.append(f"{c.upper()}: {int(na)} registers without a unique propagated clock arrival are "
+                               f"missing from the related pair skew")
+                for k, value in checks.items():
+                    n, worst = value.get("n"), value.get("worst_abs_ps")
+                    side = "setup" if k == "max" else "hold"
+                    if not n or worst is None or not math.isfinite(worst):
+                        why.append(f"{c.upper()} {side}: no finite related pair measurement")
+                    elif worst > PAIR_SKEW_MAX_PS:
+                        why.append(f"{c.upper()} {side} related pair skew {worst:.1f} ps > {PAIR_SKEW_MAX_PS:g} "
+                                   f"({value.get('worst_launch')} -> {value.get('worst_capture')}"
+                                   f"{', bound' if value.get('bounded') else ''})")
+                    if (value.get("verify_ps") or 0.0) > PAIR_VERIFY_TOL_PS:
+                        why.append(f"{c.upper()} {side}: pair skew path/arrival cross-check differs by "
+                                   f"{value['verify_ps']:.2f} ps > {PAIR_VERIFY_TOL_PS:g} (measurement suspect)")
             if (C[c].get("ck_errors") or 0) > 0:
                 why.append(f"{c.upper()}: {int(C[c]['ck_errors'])} register clock pins without a unique clock arrival")
         if insertion_target is not None:
@@ -651,7 +728,8 @@ def evaluate(rec, insertion_target=None):
             if pf and abs(pf["mean"] - insertion_target) > INSERTION_TOL_PS:
                 why.append(f"TT pin-flop insertion {pf['mean']:.1f} ps not within {insertion_target:g} +- "
                            f"{INSERTION_TOL_PS:g}")
-        put("clock", "FAIL" if why else "PASS", spread_max_ps=SPREAD_MAX_PS, by_corner=sp, problems=why,
+        put("clock", "FAIL" if why else "PASS", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
+            by_corner=sp, problems=why,
             insertion_target_ps=insertion_target)
     else:
         put("clock", "NOT RUN")
@@ -705,13 +783,16 @@ def summary_line(rec):
 
     def g(k, f):
         return (C.get(k) or {}).get(f)
-    pf = {}
+    pf, ps = {}, {}
     for c in ("tt", "ff"):
         x = ((((C.get("clock") or {}).get("by_corner") or {}).get(c) or {}).get("pinflops") or {})
         pf[c] = x.get("spread")
+        ck = (((((C.get("clock") or {}).get("by_corner") or {}).get(c) or {}).get("pair_skew") or {}).get("checks") or {})
+        w = [v.get("worst_abs_ps") for v in ck.values() if v.get("worst_abs_ps") is not None]
+        ps[c] = max(w) if w else float("nan")
     return (f"{rec.get('name')}: {rec.get('verdict')} | TT setup {g('setup_tt', 'wns_ps')} | FF hold "
             f"{g('hold_ff', 'wns_ps')} (sdc {g('hold_ff', 'sdc_wns_ps')}) | SS setup (info) {g('ss', 'setup_wns_ps')} | "
-            f"spread TT/FF {pf['tt']}/{pf['ff']} | DRC {g('drc', 'count')} ant {g('antenna', 'count')} | "
+            f"pair skew TT/FF {ps['tt']:.1f}/{ps['ff']:.1f} (spread info {pf['tt']}/{pf['ff']}) | DRC {g('drc', 'count')} ant {g('antenna', 'count')} | "
             f"sdc_lint {g('sdc_lint', 'verdict')} face_guard {g('face_guard', 'verdict')}")
 
 
@@ -736,7 +817,7 @@ def cmd_run(a):
                                   "ocv5_* = flat late 1.05 / early 0.95, information only",
                            engine=f"OpenSTA in OpenROAD ({a.image}), one process per corner",
                            libs="ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
-                           corner_rule="setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only "
+                           corner_rule="setup TT / hold FF / 60-25 ps / related pair skew CPPR <= 80 TT+FF; spread INFO; SS information only "
                                        "(owner 2026-10-24, AGENTS.md c7ce2ed69a)"),
                tool_commit=_git_head())
     with cf.ThreadPoolExecutor(len(corners)) as ex:
