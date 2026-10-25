@@ -26,6 +26,7 @@ LAYOUT = ROOT / 'rtl/hbm_accel/generic/collective/p2p/static_uop_layout_v4.json'
 NPT, G, LANES = 3, 96, 4
 M = G // LANES               # 24 input edges a position
 II = 32                      # start + 24 inputs + flush + 6 (publish = flush + 6) -> next start
+ARG_SOURCE_EXTRA = 0         # opt-in _pr publication delay; engine command issue offsets stay unchanged
 VM_RT = 0                    # HBM-BANKLAT-COLL 10-19: COLL parent VM_RT (VM capture n+10+VM_RT); set by --vm-rt
 LEAD = 12                    # VM request of input m at S - LEAD + m (capture +10+VM_RT, sink +11+VM_RT, ARG sees it
                              # +13+VM_RT): LEAD = 12 + VM_RT; the capture/sink/ARG offsets relative to S do not move
@@ -40,6 +41,17 @@ START_O = 0                  # ARG start offset: 0; -1 for ot_hgi_coll_argmax_m_
                              # stays start+2 raw edges, the TP96 alignment; --start-reg)
 
 
+def set_arg_pr_source(enabled):
+    """Select the actual q3 edge _pr +1 publication contract, before set_vm_rt.
+
+    Only ARG source capture and dependent delivery move. The uniform input
+    capture in the engine already delays execution; its instruction rows stay.
+    II32 remains valid. The extra lifetime costs two peeled programme rows.
+    """
+    global ARG_SOURCE_EXTRA
+    ARG_SOURCE_EXTRA = int(bool(enabled))
+
+
 def set_vm_rt(v):
     """re-derive LEAD / PEEL for a COLL parent VM_RT. A position's lifetime W = LEAD + M + 11 spans K = ceil(W / II)
     body passes; the compiler peels a straight-line prologue of PEEL = W - II rows (the cycles in which a modulo body would
@@ -48,7 +60,7 @@ def set_vm_rt(v):
     VM_RT 74: 212 -> the 256-row issuer, coordinator HANDOFF 0kj)."""
     global VM_RT, LEAD, PEEL
     VM_RT, LEAD = v, 12 + v
-    W = LEAD + M + 11
+    W = LEAD + M + 11 + ARG_SOURCE_EXTRA
     PEEL = W - II
     rows = 2 * PEEL + II + 2
     if rows > CAP_ROWS:
@@ -128,12 +140,12 @@ def pos_fields(p, o, rank_pub):
         ar |= 1 << 49                                            # flush
     if o == M + 7:
         ar |= 1 << 50                                            # publication = flush + 6
-    if o == M + 8:
+    if o == M + 8 + ARG_SOURCE_EXTRA:
         d['capture_arg'] = 1
-    if o == M + 9:                                               # sink: SU delivery lane 0 <- ARG source 10
+    if o == M + 9 + ARG_SOURCE_EXTRA:                                               # sink: SU delivery lane 0 <- ARG source 10
         d['sink_slot'] = d.get('sink_slot', 0) | (1 << NPT)
         d['sink_select'] = d.get('sink_select', 0) | ((NPT + 7) << (4 * NPT))
-    if o == M + 10:
+    if o == M + 10 + ARG_SOURCE_EXTRA:
         d['del_obase'] = OBASE + p * DSTRIDE
     return d, ar
 
@@ -153,7 +165,7 @@ def fields_at(c, positions, rank_pub):
     ds = []
     for p in positions:
         o = c - (LEAD + II * p)
-        if -LEAD <= o <= M + 10:
+        if -LEAD <= o <= M + 10 + ARG_SOURCE_EXTRA:
             ds.append(pos_fields(p, o, rank_pub))
     d, ar = merge(ds)
     ar |= (rank_pub & 0xff) << 23
@@ -178,7 +190,7 @@ def compile_program(die, P, mutant=None):
     words, meta = [], []
     BODY0, END = PEEL, PEEL + II - 1
     i0, entry = divmod(PEEL, II)                                 # body entered at row `entry` of iteration i0
-    K = -(-(LEAD + M + 11) // II) + 1                            # positions a body row can reference (filtered)
+    K = -(-(LEAD + M + 11 + ARG_SOURCE_EXTRA) // II) + 1                            # positions a body row can reference (filtered)
     steps = dict(iter_vm_step=0 if mutant == 'vm_step' else VS, iter_del_step=DSTRIDE)
     if P > i0:
         for r in range(PEEL):                                    # prologue: cycles 0..PEEL-1 (no position < 0)
@@ -203,7 +215,7 @@ def compile_program(die, P, mutant=None):
     # independent unroll against the absolute schedule of all P positions
     if mutant is None:
         unroll(words, meta, fields, lambda c: fields_at(c, allp, rank_pub), halt)
-    return words, meta, dict(P=P, rows=len(words), halt=halt, last_delivery=II * (P - 1) + LEAD + M + 11,
+    return words, meta, dict(P=P, rows=len(words), halt=halt, last_delivery=II * (P - 1) + LEAD + M + 11 + ARG_SOURCE_EXTRA,
                              II=II, body_rows=II, prologue=PEEL, epilogue=PEEL)
 
 
@@ -253,18 +265,22 @@ def main():
     ap.add_argument('--vm-rt', type=int, default=0, help='COLL parent VM_RT (extra VM read edges beyond n+10 capture)')
     ap.add_argument('--rows', type=int, default=64, help='q3 issuer programme rows (ROWS 64 | 128 | 256)')
     ap.add_argument('--start-reg', action='store_true', help='ARG unit registers start (argmax_m_tp192, d4g SW TP 192)')
+    ap.add_argument('--arg-pr-source', action='store_true', help='actual q3 edge _pr ARG publication +1: capture and dependent delivery shift, II32 unchanged; needs >=66 rows at VM_RT0')
     ap.add_argument('--npt', type=int, default=3, help='parent link ports NPT (v4 q3 / v8x NLINK 3: 3; d4g SW v8x NLINK 2: 2)')
     a = ap.parse_args()
     set_rows(a.rows)
     set_npt(a.npt)
     global START_O
     START_O = -1 if a.start_reg else 0
+    set_arg_pr_source(a.arg_pr_source)
     set_vm_rt(a.vm_rt)
     a.out.mkdir(parents=True, exist_ok=True)
     man = dict(schema='hcoll.rows.argmax.v1', P=a.P, mutant=a.mutant, vm_rt=a.vm_rt, G=G, II=II, VB=VB, VS=VS, OBASE=OBASE,
                DSTRIDE=DSTRIDE, layout_sha256=hashlib.sha256(LAYOUT.read_bytes()).hexdigest(), parents={})
     if a.rows != 64 or a.npt != 3 or a.start_reg:                # default manifest byte-identical
         man.update(rows=a.rows, npt=a.npt, start_reg=a.start_reg)
+    if a.arg_pr_source:
+        man.update(arg_source_publication_extra=1, source_contract='ot_hgi_coll_argmax_m_tp192_pr', source_adoption='compiler_only_actual_native_caller_pending')
     halt_only = (1 << 44)
     for die in range(2):
         words, meta, info = compile_program(die, a.P, a.mutant)
