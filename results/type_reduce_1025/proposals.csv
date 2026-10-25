@@ -1,0 +1,45 @@
+die,family,kind,now,proposed_cons,proposed_max,mechanism,cost,plan_fields,lane,owner_ruling
+s81,ot_s81sl_leaf,type,72,16,12,"misc system lanes (31.6 kb) leave leaves -> edge station cols 6/15 + C rows; corridor-first fixed leaf template; x+rt re-packed to 2|0 per leaf, xtier 1|0, dn/up 0/1/2 -> 3x2x2 ft classes, all slots used",0 area; moved lanes +2..4 cycles (static schedule); station face load <=8657 pins/col to verify,"leaf ft_slots, buses.window_um/face, hard_cores origin/orient, station ft_slots, lanes, latency",S81-PLAN (LEAF3),no
+s81,slice_station,type,35,35,35,register-only; absorbs misc lanes (7 regular-only classes),cheap sign-off,station ft_slots,S81-PLAN,no
+s81,serdes,type,11,5,5,fixed coll window; ft pairs 0/1/2 on straight cells; equal stations on turn cells (t4=t13); t12 apart,none,"ft_slots, buses.window_um",S81-PLAN2 (IR split delta),no
+s81,dsdv_slice_c1x_C,type,9,4,4,follows leaf ft classes,see leaf,ft_slots/windows,S81-PLAN,no
+s81,ot_s81sl_kv_leaf,type,5,3,3,follows leaf ft classes,see leaf,ft_slots/windows,S81-PLAN,no
+s81,col_h*,type,12,8,8,rt/x pass lanes in a fixed band (h9_r0 p1=p4 p2=p5 p3=p6 except slots),none,ft_slots,S81-PLAN2 (FTCHAN),no
+s81,svc_*,type,15,15,15,architectural (attn ring segment widths differ),-,-,-,no
+s81,singles,type,18,18,18,-,-,-,-,no
+s81,leaf cores _xm views,core,6,0,0,drop _xm pin views; one table + instance MY (N/S bit order reversed inside leaf),0,"hard_cores.pins_file/orient",S81-CORES,no
+s81,dsfd_node LLfu/LLfd NNfu/NNfd(/LLd),core,5,3,2,"RTL equal up to name; one design + MX (E-face bit order reversed); LLd only with a real fault-chain fi driver",0,hard_cores.module/orient,S81-CORES,no
+s81,other cores,core,45,45,44,"distinct (qbank N/S, gunit l*, eng_rr h0/h1, cfg7 bfp, sstn, xrt...); 2 are memory macros",-,-,-,no
+s81_head,hd_*,type,16,16,16,real chain-end/turn/station differences,-,-,-,no
+s81_head,elemA/elemB,core,2,2,1,same RTL+params; B slots take A (both already closed -> low value),0,hard_cores,S81-HEAD,no
+qwen_compute,slice W/E pairs,type,33,16,14,"7 exact merges (fix stale contents label s6b; bound RTL 0 diff); 4 more after symmetric W/E window/ft re-pack; fw/fe 10->2-4 neutral port names + real chain-end lanes",0 cycles; ft wire only (sc +514 b etc),"contents.module, buses.name/window_um, ft_slots, partitions.type/orient",QC-PLAN,no
+qwen_compute,cb*,type,9,7,5,route S2 transit outside CB (-2); align f/n windows q00/q11 (-2),S2 path length tbd,"ft_slots, windows",QC-PLAN,no
+qwen_compute,coll_ft*,type,4,2,2,outline grid + slot re-pack,none,"outline_um, ft_slots",QC-PLAN,no
+qwen_compute,phy_serdes(_b),type,2,1,1,rename (2-line RTL diff),none,names/params,QC-PLAN,no
+qwen_compute,singles,type,8,8,8,-,-,-,-,no
+qwen_compute,su_lane_e/w,core,16 kits,5,4,e=w same RTL; 4 interface classes (lane0/lane1/lanes2-3/4-7) in R0/MY/MX/R180,0,hard_cores.module/pins_file/orient,QC-PLAN,no
+qwen_compute,crh_rp1 -> crh,core,2,1,1,merge,tbd,hard_cores.module,QC-PLAN,no
+qwen_compute,other cores,core,7 (x pins),7,7,-,-,-,-,no
+qwen_kvsys,hg,type,8,3,3,drop R8 per-row alignment pads; publish per-row latency to the compiler (static schedule) or rotating cN chain,0 area; -1076 delay bits/row set,"contents params, latency",KV-PLAN,YES (open TYPE-DEDUP OWNER? R8 pads)
+qwen_kvsys,hgi,type,9,6,1,E/W balanced lane re-pack (6); end rows = mid rows ft (2); N-S FT strip (1),strip ~360 um wide if taken,"ft_slots, lanes",KV-PLAN,no
+qwen_kvsys,pv,type,13,8,3,neutral chain bus names + published pad latency (8); per-row fixed-width reduction of growing 1-bit S->N slots (3),+0..1 cycle/row,"buses.name, ft_slots, latency",KV-PLAN,no
+qwen_kvsys,pc,type,4,3,3,pc_v1=pc_v2 rename,none,names,KV-PLAN,no
+qwen_kvsys,phy/sys_SD/io,type,8,5,4,real ring lane row 0; SD widths via real lanes; io_ft re-pack,small,"lanes, ft_slots",KV-PLAN,no
+qwen_kvsys,hub,type,5,4,4,Eo/Wo merge by MY after astk unified,none,partitions.orient,KV-PLAN,no
+qwen_kvsys,singles,type,2,2,2,-,-,-,-,no
+qwen_kvsys,kv3_head_eighth e0..e7,core,8,3,2,{HID,BSEL} 4-bit boot-config register from ectl config chain (not tie); 3 content classes; MX pairs upper/lower,1088 flops total; 0 datapath cycles,"hard_cores.module, lanes (config)",KV-CORES,YES (config-register straps)
+qwen_kvsys,kv3_astk EN/ES/WN/WS,core,4,1,1,2-bit quadrant config register; MY mirrors EN/WN ES/WS,8 flops,hard_cores,KV-CORES,YES (config-register straps)
+qwen_kvsys,kvs_pc / h_head_p,core,2,2,1,real ring lane + configured PC,small,lanes,KV-CORES,no
+qwen_kvsys,qkd_hr_*,core,15,15,4,3-4 clock-domain cluster cores each <=400k (needs measured cells),tbd,hard_cores,KV-CORES,no
+qwen_kvsys,other cores,core,5,5,5,-,-,-,-,no
+hbm,idx_score hcol HALF0/HALF1 (+tails),core,66,3,3,one pin template per half (6 xy tables each today); whole-instance orient cuts face changes 52%->21%,0 cycles (p90 219 um),"hard_cores.pins_file/orient",HBM-PLAN + HBM-KITS,no
+hbm,coll tkm tile_e86 (+root),core,33,3,3,tile_tid strap -> chain-derived ID (tile i = i-1 +1) or config register; end tile stays separate (no up_in tie),~1 boot cycle; 0 datapath,"RTL strap->ID pin, pins",HBM-PLAN + HBM-KITS,YES (strap->driven ID)
+hbm,sfu split3 lane (+ctl/opstore),core,19,4,4,map_lane_j strap -> driven ID; rename kv_waddr_{n,e,s,w},0 datapath,RTL + pins,HBM-PLAN + HBM-KITS,YES (strap->driven ID)
+hbm,su pgslice exp/lanes4/pretree/sides,core,~33,~8,~7,lane_lane_id strap -> driven ID; one outline for pv0/pv8 lanes4; one pin table per master,+1 relay on outlier pins (p90 480 um) or re-place parent,"outline, pins, RTL",HBM-PLAN + HBM-KITS (exp blocked by ALAT4 SRAM bug),YES (strap->driven ID)
+hbm,hc_bankq* hcp_lanes x3 (+6_7_bank),core,12,5,5,3 interface classes of 3xhcp_lanes; one table each,p90 192-584 um -> relays on bankq lanes6_7,pins,HBM-PLAN,no
+hbm,hc_root tails,core,7,4,4,tail0=tail1 per piece (rest differs only rst_n name),0,pins/names,HBM-PLAN,no
+hbm,multi-table singles (pc_ctrl h9b 10 tables; vms_bank 8; vmdel 5; ...),core,13 modules / 46 tables,13,13,one pin table per module,0 cycles mostly; group_rel_id/kshare p90 454-732 um -> +1 relay or re-place,pins,HBM-PLAN,no
+hbm,other singletons,core,~27,~27,~27,-,-,-,-,no
+hbm,q_sm0..q_sm3,type,4,1,1,identical RTL/widths; only lane-numbered bus names differ -> neutral names + mirror-symmetric windows (already placed R0/MY),0,"buses.name/window_um",HBM-PLAN,no
+hbm,q_b0xx/q_spb/q_spt groups,type,8,6,4,unify interfaces/ft (b001/b003/b012/b013; b002/b011; spb2/spt0),tbd,"buses, ft_slots",HBM-PLAN,no
+hbm,other types,type,37,37,37,-,-,-,-,no
