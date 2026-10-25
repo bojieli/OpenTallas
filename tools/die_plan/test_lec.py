@@ -190,3 +190,24 @@ def test_correspondence_proves_feedback_copies_together(tmp_path, monkeypatch):
     assert any(sd == 'both' and h[0] == 'eq' for (sd, k), h in L.hyp.items())
     after, _ = L.build(with_compare=True, with_hyp=True)
     assert set(_sim_prove(after).values()) == {'proved'}
+
+
+def test_replica_candidates_keep_input_identity_and_prove_both_sides(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    def design(name, second):
+        p = tmp_path / (name + '.aig')
+        p.write_bytes(f'aig 4 2 2 0 0\n2\n{second}\n'.encode())
+        mp = {'input': {0: [('d0', 0)], 1: [('d1', 0)]},
+              'latch': {i: [(f'u_dut.g_copy[{i}].q$_DFF_P_.lecq', 0)] for i in range(2)}, 'output': {}}
+        return lec.read_aig(p), mp
+    for gold_second, gate_second, want_pair, want_result in ((4, 4, False, 'proved'),
+                                                            (2, 2, True, 'proved'),
+                                                            (2, 4, True, 'differs')):
+        g, gm = design('gold', gold_second)
+        t, tm = design('gate', gate_second)
+        L = lec.Lec(g, gm, t, tm)
+        lec.replica_proposals(L, [])
+        assert bool(L.hyp) == want_pair
+        lec.correspond(L, tmp_path, 100, [])
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        assert want_result in set(_sim_prove(m).values())

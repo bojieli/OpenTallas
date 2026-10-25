@@ -921,6 +921,60 @@ def closest(k, cands, cap=512):
     return sorted(cands, key=lambda c: name_dist(k, c)) if len(cands) <= cap else cands
 
 
+GENCOPY = re.compile(r"(?<![A-Za-z0-9_])g_[A-Za-z0-9_]+\[\d+\]")
+
+
+def replica_proposals(L, log):
+    """Propose interchangeable generated-register cohorts on both designs.
+
+    The input-support fingerprint keeps primary/black-box inputs distinct;
+    current-state dependencies may be interchangeable generated feedback copies.
+    This is only candidate discovery: both designs' next-state relations still
+    pass through the normal simultaneous inductive SAT proof/refinement.
+    """
+    norm = lambda k: GENCOPY.sub(lambda m: m[0].split("[")[0] + "[]", k)
+    symbols = {}
+    def sym(k):
+        if k not in symbols:
+            symbols[k] = 1 << len(symbols)
+        return symbols[k]
+    def groups(d, points, compare, side):
+        support = [0] * (d["I"] + d["L"] + d["A"] + 1)
+        for v in range(1, d["I"] + d["L"] + 1):
+            support[v] = sym(("anonymous", side, v))
+        for k, lit in sorted(points.items()):
+            # State copies are induction candidates; external data bits stay distinct.
+            support[lit >> 1] = 0 if k.startswith("ff:") else sym(("point", k))
+        base = d["I"] + d["L"] + 1
+        for i in range(d["A"]):
+            support[base+i] = support[d["ands"][2*i] >> 1] | support[d["ands"][2*i+1] >> 1]
+        out = {}
+        for k, lit in compare.items():
+            if k.startswith("ff:") and GENCOPY.search(k):
+                out.setdefault((norm(k), support[lit >> 1]), []).append(k)
+        return out
+    n = 0
+    for side, d, points, compare in (("gold", L.gold, L.gp, L.gc), ("gate", L.gate, L.tp, L.tc)):
+        for keys in groups(d, points, compare, side).values():
+            if len(keys) < 2:
+                continue
+            common = sorted(set(keys) & set(L.matched))
+            rep = common[0] if common else sorted(keys)[0]
+            rsd = "both" if rep in L.matched else side
+            h = L.hyp.get((rsd, rep))
+            if h and h[0] == "eq" and h[2] in keys:
+                L.hyp.pop((rsd, rep))          # anchor a cohort without a cyclic old representative
+            for k in sorted(keys):
+                if k == rep or (side == "gate" and k in L.matched):
+                    continue                 # matched relations come from the gold cohort
+                sd = "both" if k in L.matched else side
+                h = ("eq", side, rep, 0)
+                if L.hyp.get((sd, k)) != h:
+                    L.hyp[sd, k] = h
+                    n += 1
+    log.append(f"replica proposal: {n} generated-register relations (gold input support modulo copy indices)")
+
+
 def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
     duplicates, or the two frontends named a register differently, e.g. a register that drives an output port):
@@ -935,6 +989,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
     Unpaired flops stay free inputs."""
     relayout(L, log)
     renamed(L, log)
+    replica_proposals(L, log)
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
     for rnd in range(rounds + 40):
         adding = rnd < rounds           # then refine only: drop what fails until the set is inductive
