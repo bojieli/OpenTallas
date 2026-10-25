@@ -1,0 +1,18 @@
+{
+  "verdict": "EXACTNESS PASS; PHYSICAL NOT RUN",
+  "production_shape_bits": 565,
+  "cycles": 3000,
+  "mutant": "BW final relay depth7->6 CAUGHT40 mismatches",
+  "bottom_closure": "spo.o -> spr.i, directly copied from existing tb_s81hd_mini.sv connections (lines23/26)",
+  "pipeline_cycles": {
+    "xw_o": 3,
+    "xe_o": 3,
+    "bw_i": 7,
+    "be_i": 5
+  },
+  "new_bottom_net_cycles": 0,
+  "limits": [
+    "Head controller must send the documented go/null-best seed as in the mini bench.",
+    "Placement-only job launched via ot-run; no timing or sign-off claim."
+  ]
+}
