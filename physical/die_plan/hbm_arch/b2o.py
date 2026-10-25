@@ -999,7 +999,75 @@ def orient_opt(geo, ori, pfaces, poff, links, bt, insts, **kw):
     return out, bad
 
 
-def place_contents(plan, out, types, log):
+def placement_seed(path):
+    """Cache geometry only when every core view, soft leaf, and bus constraint matches exactly."""
+    import hashlib
+    path = Path(path)
+    raw = json.loads(path.read_text())
+    def view(t):
+        hard = sorted((h["inst"], h["module"], tuple(h["outline_um"]),
+                       hashlib.sha256((path.parent / h["pins_file"]).read_bytes()).hexdigest())
+                      for h in t.get("hard_cores", []))
+        ins = {h["inst"] for h in t.get("hard_cores", [])}
+        soft = sorted((c["inst"], c["module"], tuple(c.get("outline_um", [])))
+                      for c in t.get("contents", []) if c["inst"] not in ins and
+                      not any(i.startswith(c["inst"] + "_") for i in ins))
+        return hard, soft
+    def ports(p):
+        ts = {x["name"]: x["type"] for x in p["partitions"]}
+        out = defaultdict(list)
+        for pr in p["ports"]:
+            for side in ("src", "dst"):
+                pn = pr[side]["part"]
+                if pn in ts:
+                    out[ts[pn]].append(json.dumps([side, pr], sort_keys=True))
+        return {k: sorted(v) for k, v in out.items()}
+    return dict(raw=raw, fingerprints={tn: view(t) for tn, t in raw["partition_types"].items()},
+                ports=ports(raw), port_fingerprint=ports)
+
+
+def reuse_placement(tn, plan, out, seed):
+    if not seed or tn not in seed["fingerprints"]:
+        return False
+    import hashlib
+    t = plan["partition_types"][tn]
+    hcs = t.get("hard_cores", [])
+    hard = sorted((h["inst"], h["module"], tuple(h["outline_um"]),
+                   hashlib.sha256((out / h["pins_file"]).read_bytes()).hexdigest()) for h in hcs)
+    ins = {h["inst"] for h in hcs}
+    soft = sorted((c["inst"], c["module"], tuple(c.get("outline_um", []))) for c in t.get("contents", [])
+                  if c["inst"] not in ins and not any(i.startswith(c["inst"] + "_") for i in ins))
+    st = seed["raw"]["partition_types"][tn]
+    if (hard, soft) != seed["fingerprints"][tn] or t["outline_um"] != st["outline_um"] or \
+            seed["current_ports"].get(tn) != seed["ports"].get(tn):
+        return False
+    olds = {h["inst"]: h for h in st.get("hard_cores", [])}
+    for h in hcs:
+        for field in ("origin_um", "orient", "track_offset_um"):
+            if field in olds[h["inst"]]:
+                h[field] = olds[h["inst"]][field]
+            else:
+                h.pop(field, None)
+    oldc = {c["inst"]: c for c in st.get("contents", [])}
+    for c in t.get("contents", []):
+        for field in ("origin_um", "outline_um"):
+            if field in oldc[c["inst"]]:
+                c[field] = oldc[c["inst"]][field]
+    for key in ("clock", "reset"):
+        if "tap_um" in st.get(key, {}):
+            xy = st[key]["tap_um"]
+            t.setdefault(key, {})["tap_um"] = list(S.tap_clear(t, *xy, clear=4.32))
+    oldt = {tp["name"]: tp for tp in st.get("clock", {}).get("taps", [])}
+    taps = t.get("clock", {}).get("taps", [])
+    taken = []
+    for tp in taps:
+        if tp["name"] in oldt:
+            tp["xy"] = list(S.tap_clear(t, *oldt[tp["name"]]["xy"], taken, clear=4.32))
+            taken.append(tuple(tp["xy"]))
+    return True
+
+
+def place_contents(plan, out, types, log, seed=None):
     """data-flow placement of every listed soft type's hard cores + soft leaves (cores_b2.place_flow), core taps
     carried with their core, partition clock / reset tap re-sited, R3-INTERNAL stations re-derived."""
     P = S.Plan(plan)
@@ -1007,11 +1075,16 @@ def place_contents(plan, out, types, log):
     conns = json.loads((out / "core_conns.json").read_text())
     rows, fails = [], []
     chosen = {}
+    if seed:
+        seed["current_ports"] = seed["port_fingerprint"](plan)
     for tn in sorted(types):
         if os.environ.get("B2O_PROGRESS"):
             print(f"place_contents {tn}", flush=True)
         t = T[tn]
         if t.get("hard"):
+            continue
+        if reuse_placement(tn, plan, out, seed):
+            log.append(f"placement seed reused {tn}: exact views, soft leaves, outline and bus constraints")
             continue
         W, H = t["outline_um"]
         t_old_wh = OLD_WH.get(tn, (W, H))
@@ -1413,8 +1486,10 @@ def main(argv=None):
     ap.add_argument("--src", default=str(HERE / "B2n"))
     ap.add_argument("--out", default=str(HERE / "B2o"))
     ap.add_argument("--floorplan", default=str(INP / "floorplan.json"))
+    ap.add_argument("--placement-seed", help="existing plan: reuse only exactly matching core-view/bus constraints")
     a = ap.parse_args(argv)
     src, out = Path(a.src), Path(a.out)
+    seed = placement_seed(a.placement_seed) if a.placement_seed else None
     out.mkdir(parents=True, exist_ok=True)
     for f in SIDECARS:
         s, d = src / f, out / f
@@ -1457,7 +1532,7 @@ def main(argv=None):
     T = plan["partition_types"]
     OLD_WH.update({tn: tuple(t["outline_um"]) for tn, t in base["partition_types"].items()})
     soft_with = [tn for tn, t in T.items() if not t.get("hard")]
-    place_fail = place_contents(plan, out, [tn for tn in soft_with if tn in changed or T[tn].get("hard_cores")], log)
+    place_fail = place_contents(plan, out, [tn for tn in soft_with if tn in changed or T[tn].get("hard_cores")], log, seed=seed)
     ist_fail = internal_stations(plan, out, soft_with, log)
     fails = B.restation(plan, log)
     fix_cross_hops(plan, log)
