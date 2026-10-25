@@ -70,6 +70,9 @@ on to the next piece of real work.
 7. **Log.** One line per milestone in ~/coord/HANDOFF.md prefixed `CODEX:`. Keep notes short in ~/coord/CODEX-LOG.md.
 8. **Owner decisions** (scope, rule or contract changes): write them under "OWNER?" in ~/coord/CODEX-LOG.md and
    continue with other work. Don't decide them, and don't stop working.
+   Ask owner questions as PLAIN TEXT only (OWNER? lines in CODEX-LOG.md, and in your reply). Never open a blocking
+   question/selection dialog or any tool that waits for the owner's input (owner decision 11, 2026-10-24): on 10-24 a
+   coordinator blocked in a question dialog left every lane idle 15:00-18:47.
 
 Keep going until you are told Claude's limit has reset. Never idle: if you're waiting on a job, pick up the next task.
 
