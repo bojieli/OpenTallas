@@ -6,8 +6,8 @@
 # adds 0 cells while the pin-register mean (the quantity postcts_gate and the parent contract use) sits 20-25 ps low.
 # Pin-register set = postcts_gate.tcl's (registers in the fanout of the data inputs / fanin of the outputs); arrival
 # = clock_family.tcl ot_cf_wire (the sign-off clock measure).  Method: group pin-register clock pins by their driving
-# leaf net; each iteration, every group whose GRT mean is below bound - step/2 gets one delay cell at its sink end
-# (new net, cell at the group centroid, legalised, incremental GRT); stop when the overall mean is within
+# leaf net; each iteration the lowest groups (enough to cover the deficit at the measured per-cell step) get one delay
+# cell at their sink end (new net, cell at the group centroid, legalised, incremental GRT); stop when the mean is within
 # OT_PINREG_PAD_TOL (default 5 ps) or after OT_PINREG_PAD_ITERS (default 6).  Groups above the bound are reported
 # (a padding pass cannot trim them: that is a CTS / tap-pitch item).  Interior sinks are never moved.
 # Env: OT_VCLK_TT (bound, kit config), OT_PINREG_PAD_CELL (default BUFx2_ASAP7_75t_R).
@@ -78,19 +78,37 @@ proc pp_measure {} {
   set m [expr {[llength $all] ? [tcl::mathop::+ {*}$all] / [llength $all] : -1}]
   return [list $m [llength $all] $stats]
 }
-set pp_added 0; set pp_step 12.0; set pp_seq 0
+# one delay cell at a group's sink end moves that group by ~step ps (BUFx2 driving a ~25-sink leaf: +42 ps measured on
+# KV io_ft); each iteration pads only the lowest groups whose predicted shift (pin count x step / all pins) covers the
+# deficit, then re-measures and re-estimates step from the padded groups.
+set pp_added 0; set pp_seq 0
+set pp_step [expr {[info exists ::env(OT_PINREG_PAD_STEP)] ? $::env(OT_PINREG_PAD_STEP) : 40.0}]
+set pp_last {}
 for {set it 0} {$it <= $pp_iters} {incr it} {
   lassign [pp_measure] m n stats
+  set moved {}
+  dict for {g v} $pp_last { if {[dict exists $stats $g]} { lappend moved [expr {[lindex [dict get $stats $g] 0] - $v}] } }
+  if {[llength $moved]} { set pp_step [expr {max(5.0, [tcl::mathop::+ {*}$moved] / [llength $moved])}] }
   set lo 0; set hi 0
-  dict for {g v} $stats { if {[lindex $v 0] < $pp_bound - $pp_step / 2.0} { incr lo } elseif {[lindex $v 0] > $pp_bound + $pp_tol} { incr hi } }
-  puts [format "OT_PINREG_PAD it%d pinreg n %d mean %.2f bound %.2f dev %.2f groups %d (below %d, above %d) cells %d" \
-    $it $n $m $pp_bound [expr {$m - $pp_bound}] [dict size $stats] $lo $hi $pp_added]
-  if {$n == 0 || $m >= $pp_bound - $pp_tol || $it == $pp_iters || $lo == 0} break
+  dict for {g v} $stats { if {[lindex $v 0] < $pp_bound} { incr lo } elseif {[lindex $v 0] > $pp_bound + $pp_tol} { incr hi } }
+  puts [format "OT_PINREG_PAD it%d pinreg n %d mean %.2f bound %.2f dev %.2f groups %d (below %d, above %d) step %.1f cells %d" \
+    $it $n $m $pp_bound [expr {$m - $pp_bound}] [dict size $stats] $lo $hi $pp_step $pp_added]
+  if {$n == 0 || abs($m - $pp_bound) <= $pp_tol || $m > $pp_bound || $it == $pp_iters || $lo == 0} break
+  # lowest groups first, until the predicted mean shift covers the deficit
+  set need [expr {($pp_bound - $m) * $n}]
+  set pick {}; set got 0.0
+  set order [lsort -real -index 1 [lmap {g v} $stats {list $g [lindex $v 0]}]]
+  foreach e $order {
+    lassign $e g gm
+    if {$got >= $need || $gm >= $pp_bound} break
+    lappend pick $g
+    set got [expr {$got + [lindex [dict get $stats $g] 1] * $pp_step}]
+  }
+  if {![llength $pick]} break
   global_route -start_incremental
-  set made 0
-  dict for {g v} $stats {
-    lassign $v gm k its
-    if {$gm >= $pp_bound - $pp_step / 2.0} continue
+  set pp_last {}
+  foreach g $pick {
+    lassign [dict get $stats $g] gm k its
     set src [[lindex [lindex $its 0] 0] getNet]
     set nn [odb::dbNet_create $pp_blk "ot_prp_n[incr pp_seq]"]
     $nn setSigType CLOCK
@@ -104,10 +122,10 @@ for {set it 0} {$it <= $pp_iters} {incr it} {
     }
     $inst setLocation [expr {int($sx / [llength $its])}] [expr {int($sy / [llength $its])}]
     $inst setPlacementStatus PLACED
-    incr made
+    dict set pp_last [$nn getName] $gm
+    incr pp_added
   }
   detailed_placement
-  global_route -end_incremental
-  incr pp_added $made
+  global_route -end_incremental {*}[expr {[info exists ::ot_grt_res_aware] ? $::ot_grt_res_aware : ""}]
 }
 puts "OT_PINREG_PAD done: $pp_added delay cells ($pp_cell) on pin-register leaf groups"
