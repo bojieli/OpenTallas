@@ -110,39 +110,42 @@ module dsdv_idx_tx_i13 #(
         for(integer e=0;e<13;e=e+1)if(pmk[e])begin pmax=vw[36*e+16+:20];pn=4'(e+1);end
         for(integer e=1;e<13;e=e+1)if(pmask[e]&&!(vw[36*e+16+:20]>vw[36*(e-1)+16+:20]))pok=0;
     end
-    reg w0v,w0ok,w0qv;reg[7:0]w0tag;reg[1:0]w0q;reg[19:0]w0first,w0max;reg[3:0]w0n;reg[480:0]w0d;
+    reg w0v,w0ok,w0qv;reg[7:0]w0tag;reg[1:0]w0q;
+    reg[19:0]w0first,w0max;reg[3:0]w0n;reg[480:0]w0d;
+    (* keep *)reg[1:0]w0qa,w0qb;(* keep *)reg wba,wbb,wbd;   // qslot / bank copies: lastf read, tailf+hv+lastv read, bank-state read
     always @(posedge ck or negedge rl[0])if(!rl[0])w0v<=0;else w0v<=packet;
     always @(posedge ck)if(packet)begin
-        w0ok<=pok;w0qv<=lqv[vl];w0q<=lqf[2*vl+:2];w0tag<=vw[507:500];w0first<=vw[16+:20];w0max<=pmax;w0n<=pn;w0d<=vw[480:0];
+        w0ok<=pok;w0qv<=lqv[vl];w0q<=lqf[2*vl+:2];
+        w0qa<=lqf[2*vl+:2];w0qb<=lqf[2*vl+:2];wba<=vw[500];wbb<=vw[500];wbd<=vw[500];w0tag<=vw[507:500];w0first<=vw[16+:20];w0max<=pmax;w0n<=pn;w0d<=vw[480:0];
     end
     // bank state: tag, row count, entry count; per {bank,qslot}: head/tail/last id; per row: next (flat arrays)
     reg[15:0]ctag;reg[1:0]ctagv;reg[2*(RB+1)-1:0]nrow;reg[2*(CW+1)-1:0]nent;
     reg[8*RB-1:0]headf,tailf;reg[8*20-1:0]lastf;reg[7:0]hv,lastv;
     reg wk_on;  // the armed job's merge walk started
-    wire wb=w0tag[0];wire[2:0]wqi={wb,w0q};
-    wire wnew=!ctagv[wb]||ctag[8*wb+:8]!=w0tag;
-    wire[RB:0]wrow=wnew?{(RB+1){1'b0}}:nrow[(RB+1)*wb+:(RB+1)];
-    wire[CW:0]went=(wnew?{(CW+1){1'b0}}:nent[(CW+1)*wb+:(CW+1)])+(CW+1)'(w0n);
-    wire wlast=!wnew&&lastv[wqi];
-    wire wbad=!w0ok||!w0qv||(MUT!=3&&wlast&&w0first<=lastf[20*wqi+:20])||wrow>=RW||went>C;
-    wire wbusy=armed&&!done&&j_cam&&jbw==wb;
+    wire wb=w0tag[0];wire[2:0]wqi={wb,w0q},wxa={wba,w0qa},wxb={wbb,w0qb};   // wqi / wb: write side
+    wire wnew=!ctagv[wbd]||ctag[8*wbd+:8]!=w0tag;
+    wire[RB:0]wrow=wnew?{(RB+1){1'b0}}:nrow[(RB+1)*wbd+:(RB+1)];
+    wire[CW:0]went=(wnew?{(CW+1){1'b0}}:nent[(CW+1)*wbd+:(CW+1)])+(CW+1)'(w0n);
+    wire wlast=!wnew&&lastv[wxb];
+    wire wbad=!w0ok||!w0qv||(MUT!=3&&wlast&&w0first<=lastf[20*wxa+:20])||wrow>=RW||went>C;
+    wire wbusy=armed&&!done&&j_cam&&jbw==wbd;
     wire wconf=wbusy&&((w0tag!=j_ot)||wk_on);
     wire wacc=w0v&&!wbad&&!wconf;
     reg cwe;reg[RB:0]cwa;reg[RDW-1:0]cwd;
-    always @(posedge ck)begin cwa<={wb,wrow[RB-1:0]};cwd<={w0max,w0d};end
+    always @(posedge ck)begin cwa<={wbd,wrow[RB-1:0]};cwd<={w0max,w0d};end
     // per-row next pointer: banked link table, write landed one edge later, registered per-bank read address copies
     // (replaces one 2*RW x RB flop array read through one wk_row register)
     wire[RB-1:0]lnk_rd,wk_row_n,wk_row_n2,wk_hsel;wire wk_ld,wk_av;
     // next walk row, formed twice (keep_hierarchy) so each copy drives <= 29 read-address registers
     dsdv_i13_nx #(.W(RB),.ID(0))u_nx0(.hd(wk_ld),.av(wk_av),.h(wk_hsel),.l(lnk_rd),.c(wk_row),.q(wk_row_n));
     dsdv_i13_nx #(.W(RB),.ID(1))u_nx1(.hd(wk_ld),.av(wk_av),.h(wk_hsel),.l(lnk_rd),.c(wk_row),.q(wk_row_n2));
-    dsdv_i13_lnk #(.N(2*RW),.W(RB))u_lnk(.ck(ck),.we(wacc&&!wnew&&hv[wqi]),.wa({wb,tailf[RB*wqi+:RB]}),.wd(wrow[RB-1:0]),
+    dsdv_i13_lnk #(.N(2*RW),.W(RB))u_lnk(.ck(ck),.we(wacc&&!wnew&&hv[wxb]),.wa({wbb,tailf[RB*wxb+:RB]}),.wd(wrow[RB-1:0]),
         .ra_n({jbh,wk_row_n}),.ra_n2({jbh,wk_row_n2}),.rd(lnk_rd));
     reg f_wr;
     // bank tag / row / entry counts and per-qslot head/tail/last are qualified by ctagv / hv / lastv: no reset
     always @(posedge ck)if(wacc)begin
         if(wnew)ctag[8*wb+:8]<=w0tag;
-        if(wnew||!hv[wqi])headf[RB*wqi+:RB]<=wrow[RB-1:0];
+        if(wnew||!hv[wxb])headf[RB*wqi+:RB]<=wrow[RB-1:0];
         tailf[RB*wqi+:RB]<=wrow[RB-1:0];lastf[20*wqi+:20]<=w0max;
         nrow[(RB+1)*wb+:(RB+1)]<=wrow+1'b1;nent[(CW+1)*wb+:(CW+1)]<=went;
     end
