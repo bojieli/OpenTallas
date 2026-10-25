@@ -94,7 +94,7 @@ endmodule
 
 // safe2 = safe1 with every fixed-age ring (all < 2 kb) in flops: qfd_dv_s1_flop_ring (16-bit slices, own pointer,
 // N = D - 1 slots, write and read the same slot each edge = age D), no 32x64 macros; TLS 128x64 natives kept.
-module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=0) (
+module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=0, MEMORY_READ_EXTRA=0) (
     input  wire              clk,
     input  wire              rst_n,
     input  wire              emit0,
@@ -154,6 +154,10 @@ module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=
     input  wire [31:0]       sy_rsq_y,
     input  wire              sy_rsq_f
 );
+    // All-memory MIF staging adds one reply edge without changing relative operand alignment.
+`ifndef SYNTHESIS
+    initial if (MEMORY_READ_EXTRA != 0 && MEMORY_READ_EXTRA != 1) $fatal(1,"memory read extra must be0 or1");
+`endif
     // S8 memory contract: CROM answers3 edges after VM and1 after BTAB. Match data and
     // metadata to the slowest reply; physical CROM relay stages remain intact. Opt-in until exact gate.
     wire [31:0] aligned_va, aligned_vb, aligned_vc; wire [255:0] aligned_wr;
@@ -175,7 +179,7 @@ module qfd_dv_lane_h_safe2 #(parameter integer CONTROL_SAFE=1, MEMORY_ALIGNMENT=
 `ifndef SYNTHESIS
     initial if (MEMORY_ALIGNMENT != 0 && MEMORY_ALIGNMENT != 3) $fatal(1,"S8 memory alignment must be0 or3");
 `endif
-    qfd_dv_safe1_head #(.FLOP(1), .ML(5+MEMORY_ALIGNMENT)) u_h (
+    qfd_dv_safe1_head #(.FLOP(1), .ML(5+MEMORY_ALIGNMENT+MEMORY_READ_EXTRA)) u_h (
         .clk(clk), .rst_n(rst_n), .emit0(emit0), .live(live), .i(i), .fin_th(fin_th), .i_last_r(i_last_r),
         .cura0(cura0), .curb0(curb0), .curc0(curc0), .curd0(curd0), .rrow(rrow), .asi(asi), .bsi(bsi), .csi(csi),
         .dsi(dsi), .asrc(asrc), .bsrc(bsrc), .csrc(csrc), .mc(mc), .md(md), .redsq(redsq), .ma(ma), .mb(mb),
