@@ -12,18 +12,34 @@ def test_hbm_ne_ep_pin_core_and_phy_halo():
     bounds=(4.32,4.32,643.68,2414.88)
     q=RT.push_off(p,boxes,bounds)
     assert RT._free(q,boxes,bounds)
-    assert q==(194.39,1122.29)
-    assert abs(RT._man(p,q)-14.993)<1e-6
+    assert q==(194.4,1122.28)
+    assert abs(RT._man(p,q)-14.973)<1e-6
     # Old first-free-depth choice was legal but too far for the unchanged380um planning limit.
     assert RT._man(p,(201.672,1494.73))>405-25
 
 def test_single_box_and_already_free_unchanged():
     b=[(10,10,30,30)];bounds=(0,0,40,40)
     assert RT.push_off((2,2),b,bounds)==(2,2)
-    assert RT.push_off((11,20),b,bounds)==(9.99,20)
+    assert RT.push_off((11,20),b,bounds)==(10.0,20)
 
 def test_three_overlaps_do_not_stop_at_far_first_projection():
     p=(20,20);b=[(10,10,100,100),(-10,-10,110,25),(5,5,15,35)]
     bounds=(0,0,120,120);q=RT.push_off(p,b,bounds)
     assert RT._free(q,b,bounds)
     assert RT._man(p,q)<30
+
+
+def test_q_su31_exact_two_halo_channel_stays_legal():
+    # Actual q_su31, 8.64um gap, two grown4.32um halos abut at816.48.
+    boxes=[(825.12,82.08,1594.08,816.48),
+           (56.16,82.08,825.1200000000001,816.48),
+           (825.12,816.4799999999999,1594.08,1550.88),
+           (56.16,816.4799999999999,825.1200000000001,1550.88)]
+    bounds=(4.32,4.32,1827.36,1550.88);pin=(933.72,820.819)
+    q=RT.push_off(pin,boxes,bounds)
+    assert q==(933.72,816.48)
+    assert RT._free(q,boxes,bounds)
+    assert abs(RT._man(pin,q)-4.339)<1e-8
+    # Do not turn the numerical equality guard into a physical halo waiver.
+    assert not RT._free((933.72,816.481),boxes,bounds)
+    assert not RT._free((933.72,816.479),boxes,bounds)
