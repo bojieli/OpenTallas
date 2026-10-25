@@ -162,3 +162,61 @@ def test_real_qc_coordinate_spelling_maps_local_reset_and_rejects_ambiguity(tmp_
     b.members[part].append(1)
     with pytest.raises(bind.BindError, match='expected one bound leaf, found 2'):
         b.emit_type('src', part)
+
+
+def simulate_start(tmp_path, S=6, mutant=False):
+    """OWNER DECISION 13c START broadcast through the RAW binder: rst_n released at cycle 0, die start at cycle S;
+    every soft consumer tap releases at S + release[p], rst_o at release[p].  mutant: one start_i tied to the die pin."""
+    if not shutil.which('iverilog'):
+        pytest.skip('iverilog missing')
+    raw = plan()
+    raw['reset']['start'] = 'broadcast'
+    b = emitter(raw)
+    files = b.emit(tmp_path)
+    P = schema.Plan(raw)
+    W = RT.wf_plan(P)
+    top = files[-1]
+    text = top.read_text()
+    assert 'input  wire start' in text
+    if mutant:
+        text, n = re.subn(r'\.start_i\(stw_\w+\)', '.start_i(start)', text, count=1)
+        assert n == 1
+        top.write_text(text)
+    checks = []
+    for p, row in W['parts'].items():
+        if row['type'] not in W['types']:
+            continue
+        T = RT.for_type(P, row['type'])
+        nck = T['n_clock_taps']
+        for k in range(nck):
+            n = f"u.{bind.sv_id(p)}.rst_n_t{k}"
+            checks.append(f"if (cyc >= 0 && {n} !== (cyc + 1 >= {S + row['release']})) bad = bad + 1;")
+        for k in range(len(T['outs'])):
+            n = f"u.{bind.sv_id(p)}.rst_o_{k}"
+            checks.append(f"if (cyc >= 0 && {n} !== (cyc + 1 >= {row['release']})) bad = bad + 1;")
+    mx = W['max_release'] + S
+    tb = tmp_path/'tb.sv'
+    tb.write_text(f'''`timescale 1ns/1ps
+module tb;
+reg clk=0, rst_n=0, start=0; always #0.5 clk=~clk;
+tiny_bound_top u(.clk_core(clk), .rst_n(rst_n), .start(start));
+integer cyc=-{mx+20}, bad=0;
+always @(posedge clk) begin
+ #0.1;
+ {' '.join(checks)}
+ if(cyc == -1) rst_n=1;
+ if(cyc == {S - 1}) start=1;
+ cyc=cyc+1;
+end
+initial begin repeat({2*mx+40}) @(posedge clk); #0.2; $display("BAD %0d", bad); $finish; end
+endmodule
+''')
+    exe = tmp_path/'a.out'
+    subprocess.run(['iverilog','-g2012','-o',str(exe),str(tb),*[str(f) for f in files]], check=True)
+    out = subprocess.run(['vvp',str(exe)], capture_output=True,text=True,check=True).stdout
+    return int(re.search(r'BAD (\d+)',out).group(1))
+
+
+def test_raw_bound_start_broadcast_lockstep_and_mutant(tmp_path):
+    assert simulate_start(tmp_path/'good') == 0
+    assert simulate_start(tmp_path/'mutant', mutant=True) > 0

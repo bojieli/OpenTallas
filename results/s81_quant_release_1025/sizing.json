@@ -1,0 +1,59 @@
+{
+   "creator": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)",
+   "invocation": "stat -json ",
+   "modules": {
+      "\\ot_s81sl_rstd_release": {
+         "num_wires":         47,
+         "num_wire_bits":     223,
+         "num_pub_wires":     16,
+         "num_pub_wire_bits": 136,
+         "num_ports":         8,
+         "num_port_bits":     73,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         40,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$dffe": 2,
+            "$eq": 2,
+            "$logic_not": 1,
+            "$mux": 24,
+            "$ne": 1,
+            "$not": 1,
+            "$reduce_and": 1,
+            "$reduce_bool": 1,
+            "$sdff": 4,
+            "$shiftx": 1,
+            "$sub": 2
+         }
+      }
+   },
+      "design": {
+         "num_wires":         47,
+         "num_wire_bits":     223,
+         "num_pub_wires":     16,
+         "num_pub_wire_bits": 136,
+         "num_ports":         8,
+         "num_port_bits":     73,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         40,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$dffe": 2,
+            "$eq": 2,
+            "$logic_not": 1,
+            "$mux": 24,
+            "$ne": 1,
+            "$not": 1,
+            "$reduce_and": 1,
+            "$reduce_bool": 1,
+            "$sdff": 4,
+            "$shiftx": 1,
+            "$sub": 2
+         }
+      }
+}
+

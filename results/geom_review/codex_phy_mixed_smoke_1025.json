@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-CONDITIONAL",
+  "picture": "results/die_trial_1024/codex_phy_pg_1025/review.png",
+  "findings": [
+    "Viewed disjoint CORE complement around central PHY region: four surrounding CORE rectangles, one PHY rectangle, no overlaps/slivers. CORE150um PG lattice clips PHY interior; PHY45um PG lattice stays within independent supply region. Shared VSS stripe phase set in die frame for every piece; data-flow placement not applicable to this PDN-only smoke.",
+    "16 distributed load abstracts:4 PHY,12 CORE. Region widths >=86.4um; no macro walls, tiny thermal/power vehicle.",
+    "Viewed planned containing-macro M7 pins: CORE VDD is carved around centralPHY region with0.096um isolation, VDDPHY onlyinside it, VSS continuous. This is a generated prototype interface, no released view was edited."
+  ],
+  "conditions": [
+    "Must pass all three supply connectivity checks and no VDD/VDDPHY metal overlap on M8/M9",
+    "PDNSim must complete for both power nets; macro PG pin mapping is per supply"
+  ],
+  "pin_picture": "results/die_trial_1024/codex_phy_pg_1025/pin_review.png",
+  "postrun": "Final containing-macro edge-strip proof:12480 legal actual technology vias, zero cross-supply contacts, VDD/VDDPHY/VSS connectivity PASS. Intermediate connector failures diagnosed in committed result ledger. No released-view or timing credit."
+}
