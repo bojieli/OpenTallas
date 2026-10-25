@@ -1,0 +1,26 @@
+{
+  "verdict": "PASS logical source overlay; physical reset composition remains separate",
+  "host": "intel2",
+  "unit": "oth-ubuntu-2691459-1792924282",
+  "run": "/srv/opentallas-scratch2/claude/codex-hbm-native-rtlsmoke/native_bind_r6_sync",
+  "changed_files": 38,
+  "reset_relay_instances": 62,
+  "SYNC_INPUT": 1,
+  "release_cycle_delta": 0,
+  "local_release": "3 edges for SYNC_STAGES2/TREE1, exact per-core/nested boot metadata required",
+  "native_bind": "PASS beyond retained baseline",
+  "root_policy": "keep hfd_ckgen_nolink source rule without keep_leaf; Binder removes clock/POR source cell and plan u_rst_root owns sole async sync",
+  "source_excision_gate": "codex/bind-wavefront-1025@15ae77b47",
+  "prior_failures": [
+    {
+      "run": "native_bind_r4_sync",
+      "cause": "source_bundle path disappeared; retained rsync-a old mtime, external removal mechanism unproven",
+      "fix": "restore inside active source root, touch new source root"
+    },
+    {
+      "run": "native_bind_r5_sync",
+      "cause": "epyc2 re-enabled and selected old own worktree missing new script",
+      "fix": "unique versioned --dir .native_runs/r6_sync on updated source host; no host pin"
+    }
+  ]
+}

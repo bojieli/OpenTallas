@@ -1,10 +1,21 @@
 #!/usr/bin/env bash
 # Logical native B2 bind; no P&R/STA. Existing failed records stay untouched.
 set -euo pipefail
-OUT=$(realpath -m "${1:?out}");BUNDLE=$(realpath "${2:?source bundle}")
-PL=$(realpath "${3:?extracted plan lanes}");CM=$(realpath "${4:?census map}")
+OUT=$(realpath -m "${1:?out}");BUNDLE=$(realpath -e "${2:?source bundle}")
+PL=$(realpath -e "${3:?extracted plan lanes}");CM=$(realpath -e "${4:?census map}")
+test -f "$BUNDLE/files.f" || { echo "B2_NATIVE_BIND NOT_RUN missing source bundle files.f";exit 2; }
 BASE=${5:-d13ff7c78};ROOT=$(git rev-parse --show-toplevel);cd "$ROOT";mkdir -p "$OUT/ovl"
 export PATH=$HOME/.local/opentallas-tools/bin:$PATH
+python3 - "$OUT/source_contract.json" <<'PY_SOURCE'
+import json,sys
+ab=json.load(open('physical/die_plan/hbm/bind/asbuilt.json'))
+r=[x for x in ab['sources'] if x['module']=='hfd_ckgen_nolink']
+assert len(r)==1 and not r[0].get('keep_leaf'),r
+assert r[0]['outputs']['por_stream']['kind']=='reset',r
+json.dump(dict(verdict='PASS',source_rule=r[0],physical_root='plan u_rst_root only',
+               graph_source_excision_proof='codex/bind-wavefront-1025@15ae77b47',
+               limitation='native concrete-map recipe must preserve this rule; final bound/boot not yet qualified'),open(sys.argv[1],'w'),indent=1)
+PY_SOURCE
 bash tools/hbm_b2/regen_b2.sh "$OUT/raw" "$PL" "$CM" > "$OUT/regen.log" 2>&1
 python3 tools/hbm_b2/native_clock_items.py "$OUT/raw/wiring.json" --out "$OUT/clock_wiring.json"
 python3 tools/hbm_b2/native_root_items.py "$OUT/clock_wiring.json" --out "$OUT/native_wiring.json"
@@ -30,6 +41,10 @@ while read -r f;do
  if [ -f "$OUT/ovl/$f" ];then echo "$OUT/ovl/$f";else echo "$BUNDLE/$f";fi
 done < "$BUNDLE/files.f" > "$OUT/files_abs.f"
 find "$OUT/ovl" -name '*.sv' -o -name '*.v' | sort >> "$OUT/files_abs.f"
+# Delivered-mode internal relays are opted in only for this native source set.
+python3 tools/hbm_b2/reset_overlay.py --files "$OUT/files_abs.f" --out-dir "$OUT/reset_overlay" --out-list "$OUT/reset_files.f" --manifest "$OUT/reset_overlay.json"
+while read -r f;do X+=(--rtl-file "$f" --prefer "$f");echo "$f" >> "$OUT/files_abs.f";done < "$OUT/reset_files.f"
+X+=(--rtl-file "$ROOT/rtl/lib/ot_rst_relay.sv" --prefer "$ROOT/rtl/lib/ot_rst_relay.sv")
 python3 tools/die_port_bind.py "$OUT/top/die_b2.v" --top hbm_b2_die --rtl-root "$BUNDLE/rtl" --rtl-root "$BUNDLE/physical" -f "$OUT/files_abs.f" "${X[@]}" --out "$OUT/port_bind.json" > "$OUT/port_bind.log" 2>&1 || true
 python3 - "$OUT/port_bind.json" <<'PY_CHECK'
 import json,sys
