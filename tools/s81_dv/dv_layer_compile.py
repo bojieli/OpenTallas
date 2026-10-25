@@ -721,9 +721,10 @@ def lower_norm_smoke(die, prog, sl, t0, eps=None, r_h=0, r_gain=64, which='attn'
     prog.events.append(dict(cycle=t + 5 + lat, inst=sl, port=cp['entry_port'], dir='in', kind='CTL', tag=f'{which}.XFIN_GO',
                             payload=f'template {tx}'))
     # derived internal / outgoing edges (plan values the bench checks at the slice boundary where they are visible)
-    # NORM-DESKEW (10-25): xrt delays leaf k by 4 - k edges, the 5 partials meet on leaf 4's edge; the collector then
-    # serialises them, so the last partial reaches xfin XR_DESKEW edges after the old staggered (faulting) collection
-    last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector'] + XR_DESKEW
+    # NORM-DESKEW: four edges after leaf0, already present in go[-1]. The
+    # previous faulting serializer restarted at each leaf, so adding another
+    # four edges after the last command would double count that delay.
+    last_partial = go[-1] + BEAT['go_to_partial_normr'] + XFIN['dl'] + XFIN['collector']
     rstd = last_partial + XFIN['last_partial_to_rstd']
     xq = rstd + XFIN['rstd_to_xq_ring']
     gap16 = ('the norm is lowered on ONE slice (smoke); the xfin NX snake (rstop K_NX) and the XQ all-gather are '

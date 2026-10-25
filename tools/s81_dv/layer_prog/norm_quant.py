@@ -16,18 +16,21 @@ import norm_nx as N
 import rtl_hdc_v41_blockdot_campaign as AQ
 
 
-def golden(fixtures):
+def golden(fixtures, entry_engram_inputs=None):
     V = N._golden()
     F = np.float32
     old = V.ARITH
     V.set_arith('chunk8')
     try:
         h = N._arr(fixtures, 'io/h_in.bin').astype(F)
+        if entry_engram_inputs is not None:
+            import entry_engram
+            h = entry_engram.entry_h(fixtures, entry_engram_inputs)
         pre = N._arr(fixtures, 'io/pre_in.bin').astype(F)
         gain = N._arr(fixtures, 'weights/attn_norm.bin').copy()
         gain = (gain.view('<u2').reshape(-1).astype(np.uint32) << 16).view(F)
         x = V.to_bf16(V.seqsum([V.mul(pre[j], h[j]) for j in range(4)]))
-        p = np.asarray(N.partials(fixtures), np.uint32).view(F)
+        p = np.asarray(N.partials(fixtures, h_override=h), np.uint32).view(F)
         total = F(V.split_sum_parts(p))
         config = json.loads((HERE.parents[2] / 'compiler/models/deepseek-v4.1-flash/inference_config.json').read_text())
         eps = F(config['norm_eps'])
@@ -51,7 +54,25 @@ def golden(fixtures):
             xq = q0 | e0 << 256 | q1 << 266 | e1 << 522
             xb = sum(int(v) << (16 * k) for k, v in enumerate(block.view(np.uint32) >> 16))
             beats.append(dict(index=b, sid=b // 5, leaf=b % 5, xq=xq, xb=xb))
-        return dict(rstd=int(np.asarray(rstd, F).view(np.uint32)), beats=beats)
+        decoded, exponents = [], []
+        for b in beats:
+            for half in range(2):
+                shift = 266 * half
+                codes = np.frombuffer(((b['xq'] >> shift) & ((1 << 256) - 1)).to_bytes(32, 'little'), np.uint8)
+                exponent = (b['xq'] >> (shift + 256)) & 0x3FF
+                exponent -= 1024 if exponent & 512 else 0
+                decoded.extend(V.E4M3[codes])
+                exponents.append(exponent)
+        # The fixture stores 5120 numerical E4M3 grid values followed by 160
+        # signed block exponents, rather than dequantised BF16 activations.
+        want_quant = N._arr(fixtures, 'ops/attn.quant.bin').astype(np.float64)
+        got_quant = np.concatenate([np.asarray(decoded, np.float64), np.asarray(exponents, np.float64)])
+        if not np.array_equal(got_quant.view(np.uint64), want_quant.view(np.uint64)):
+            raise ValueError('encoded XQ words do not reproduce fixture attn.quant')
+        legacy = V.rsqrt(V.add(V.div(total, F(len(x))), F(1e-6)))
+        return dict(rstd=int(np.asarray(rstd, F).view(np.uint32)), beats=beats,
+                    quant_elements=len(decoded), legacy_epsilon_differs=bool(V.bits(legacy) != V.bits(rstd)),
+                    upstream='genuine Engram reference model' if entry_engram_inputs is not None else 'layer entry')
     finally:
         V.set_arith(old)
 
@@ -144,3 +165,40 @@ def events(die, quant, q_edges):
                     walk(partner, side, edge + vage + 2, payload, b['index'],
                          slices[partner]['sid'], kind, sid)
     return result
+
+
+def emit(die, prog, fixtures, q_edges):
+    """Adopt a static quant schedule only after every output slot is exclusive."""
+    from collections import defaultdict
+    quant = golden(fixtures)
+    encoded = events(die, quant, q_edges)
+    occupied = defaultdict(list)
+    for e in prog.events + encoded:
+        if e.get('dir') != 'out' or not e.get('words'):
+            continue
+        for edge, _, _ in e['words']:
+            for port in e.get('ports', [e['port']]):
+                occupied[e['inst'], port, edge].append(e['tag'])
+    clashes = {key: tags for key, tags in occupied.items() if len(tags) > 1}
+    if clashes:
+        first = sorted(clashes, key=lambda k: (k[2], k[0], k[1]))[:4]
+        raise ValueError('quant output schedule collision: ' + repr([(k, clashes[k]) for k in first]))
+    # Own and V-assembled beats must also differ even at an endpoint where the
+    # two beats target different line ports: rstop faults on own_v && asm_v.
+    by_sid = {s['sid']: inst for inst, s in die.slices().items()}
+    occ = defaultdict(list)
+    for inst, q0 in q_edges.items():
+        sid = die.slices()[inst]['sid']
+        partner = by_sid[sid ^ 1]
+        vage = N._lane0(die, inst, 'vo')[3]
+        for d in list(range(0, 20, 4)) + list(range(20, 40, 4)):
+            occ[inst, q0 + d].append(('own', inst))
+            occ[partner, q0 + d + vage + 2].append(('assembled', inst))
+    if any(len(v) > 1 for v in occ.values()):
+        raise ValueError('quant own/assembled schedule collision')
+    prog.events[:] = [e for e in prog.events if not
+                      (e.get('plan_only') and e.get('tag') == 'attn.x_allgather')]
+    prog.events.extend(encoded)
+    return dict(rstd=f'{quant["rstd"]:08x}', quant_beats=80, encoded_words=len(encoded),
+                first_own_xq=dict(q_edges), output_collisions=0,
+                qualification='genuine-input rstd/y reproduce fixture; static output words, full-cut replay required')
