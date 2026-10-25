@@ -230,10 +230,21 @@ def geom_ambiguous(text, tag, group):
         if not v or rtag != want or t is None:
             continue
         body = line[REPLY_RE.search(line).end():]
-        amb = [i.kit_type for i, rt in zip(idents, req_ts) if rt is not None and t >= rt and i.shared_only(body)]
+        amb = [i.kit_type for i, rt in zip(idents, req_ts) if rt is not None and t >= rt and i.shared_only(body)
+               and not _named_later(reps, want, i, t)]
         if amb:
             out.append((t, line, sorted(set(amb))))
     return out
+
+
+def _named_later(reps, want, ident, t0):
+    """a later REPLY of the tag names this row (type / kit dir / row id) with a verdict word: the reviewer re-posted
+    per row, so the old sha-only reply no longer leaves the row without a verdict (2026-10-25: [S81-CORES/LEGACY b1]
+    and [HBM-KITS/B2] were re-posted per row at 11:18, yet the 05:17/07:24 lines kept the gap for 24 h)"""
+    for t, rtag, v, line in reps:
+        if v and rtag == want and t is not None and t > t0 and ident.names(line[REPLY_RE.search(line).end():]):
+            return True
+    return False
 
 
 def gaps_geom_ambiguous(text, groups, now):

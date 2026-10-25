@@ -901,6 +901,19 @@ class TestSharedShaRows(Base):
         (g,) = self.ap.LG.gaps_geom_ambiguous(self.REQ + reply, self.ap.geom_groups(rows), now)
         self.assertIn("AMBIGUOUS-GEOM [PATH-QC-SRAMIF-S7]", g[1])
 
+    def test_per_row_repost_clears_ambiguous_gap(self):
+        reply = ("2026-10-25 10:31 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] claude/path-qc-sramif-1025@90bf56dfa: "
+                 "PASS-COND route\n")
+        repost = ("2026-10-25 10:50 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] (re-post per row)\n"
+                  "    REPLY [PATH-QC-SRAMIF-S7] qfd_dv_s8x_btab__s7: PASS-COND route.\n")
+        rows = self.rows("btab", "prog")
+        now = time.mktime(time.strptime("2026-10-25 11:00", "%Y-%m-%d %H:%M"))
+        (g,) = self.ap.LG.gaps_geom_ambiguous(self.REQ + reply + repost, self.ap.geom_groups(rows), now)
+        self.assertIn("qfd_dv_s8x_prog__s7", g[1])          # prog still has no named verdict
+        self.assertNotIn("qfd_dv_s8x_btab__s7", g[1].split(" only through")[0])
+        repost += "    REPLY [PATH-QC-SRAMIF-S7] qfd_dv_s8x_prog__s7: FAIL.\n"
+        self.assertEqual(self.ap.LG.gaps_geom_ambiguous(self.REQ + reply + repost, self.ap.geom_groups(rows), now), [])
+
     def test_later_fail_naming_type_demotes_and_mixed_reads_fail(self):
         t = (self.REQ + "2026-10-25 10:30 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] btab_s7 PASS-COND route; "
              "prog_s7 PASS-COND route\n2026-10-25 10:40 GEOM-REVIEW-2: REPLY [PATH-QC-SRAMIF-S7] prog_s7 FAIL "
