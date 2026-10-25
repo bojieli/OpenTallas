@@ -16,7 +16,7 @@ d=json.load(open(fs[0])); h={k:v for k,v in d.items() if "hold" in k}
 print("CTS hold metrics:",h)
 ws=[v for k,v in h.items() if k.endswith("hold__ws")]; n=[v for k,v in h.items() if "hold_violation_count" in k]
 ws=min(ws) if ws else 0.0; n=max(n) if n else 0
-wsp=ws*1000 if abs(ws)<5 else ws   # ns -> ps when reported in ns
+wsp=ws   # ORFS ASAP7 metrics are in ps
 print(f"CTS hold WNS {wsp:.1f} ps, endpoints {n}")
 sys.exit(1 if (wsp < -100 or n > 2000) else 0)
 PY
