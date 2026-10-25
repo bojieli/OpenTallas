@@ -1,7 +1,7 @@
 {
   "calibration_sha256": "db9005199aaf928750e61b6831e7b9552d0eafa0522a1220fe3cdd526a2902b0",
   "config": "configs/memories/asap7_macros.json",
-  "config_sha256": "6e58ff9e13615cc1193edf65e5dab5169de6cd5fb7b938edaabe91540141c72c",
+  "config_sha256": "4303b4bcb4c890e0a03f266bf2ddd4f352b802ba3740a55ff94e2f156a885c53",
   "generated_by": "tools/mem_compiler/build_library.py",
   "macros": {
     "ot_rom_1024x72_m8": {
@@ -52,7 +52,7 @@
       "views": {
         "ot_rom_1024x72_m8.lef": "86004770b7b30de920c2504f940eef796f30fc1fa15865215fa94dca3047a03c",
         "ot_rom_1024x72_m8.v": "11a42f89d56c747a02cd0f6d1f5cf969c92011db7518710b016d6324b6af77ae",
-        "ot_rom_1024x72_m8_bb.v": "2f4c7b3c1f29b704abac27921926e3dbac651babfca15a5d41eaa103e2ea814f",
+        "ot_rom_1024x72_m8_bb.v": "adfa3a8b51bef3b7c38118b0827c14dfed0a088967be87a3ab471e18eb61d128",
         "ot_rom_1024x72_m8_ff.lib": "51add7c291724dc77d33d9fbbfe5fe6293f37fa038da10f377b6c63150bf7064",
         "ot_rom_1024x72_m8_ss.lib": "aaf35a188f02e091a24ba0112295962bfb4067fdb19cc0bb0dc66bcc93848f61",
         "ot_rom_1024x72_m8_tt.lib": "64d2c67c81ea891c883efe9472241eb2f5da2cee112c9b48ac9c4c38b278ab33"
@@ -107,12 +107,67 @@
       "views": {
         "ot_rom_16384x266_m16.lef": "ab4689634b32dba3854efd9e03098afc4204fa5de370e4dd60810a64bc8ff17c",
         "ot_rom_16384x266_m16.v": "18ee019329d9eec6ae5f97d76acdc36e854477001e2c19bf1961a42a6dd48b2c",
-        "ot_rom_16384x266_m16_bb.v": "84b504982e74931e7413b622f53c8a458103fb23e4fee12b6ed620018133a0c7",
+        "ot_rom_16384x266_m16_bb.v": "55ffab8e66171736e694cf87408ba8f629c2f276c054a9e0835e5e6fff42cc02",
         "ot_rom_16384x266_m16_ff.lib": "e864f4e88b3cf6e9f783d7427b8dc96d6bc314a8f4660b862087796ecec79d7b",
         "ot_rom_16384x266_m16_ss.lib": "5150905edfbb7e2102491744d13d97153b909622b9a94992486a08aa233adeff",
         "ot_rom_16384x266_m16_tt.lib": "449005614d710b0327fba58a652c1c713867693b5467e0250045fad1838481a6"
       },
       "width_um": 237.168
+    },
+    "ot_rom_2048x266_m8": {
+      "analytical_model_comparison": {
+        "N7": {
+          "bandwidth_ratio_macro_over_model": 62.64942727824319,
+          "density_ratio_macro_over_model": 2.2249596982693065,
+          "macro_array_efficiency": 0.7572953736654803,
+          "macro_rom_bits_per_mm2": 129851744.45567222,
+          "macro_rom_read_bytes_s_per_mm2": 17681060587415.3,
+          "measured_asap7_rom_cell_to_sram_cell_ratio": 0.25,
+          "model_rom_array_efficiency": 0.52,
+          "model_rom_bits_per_mm2": 58361391.69472503,
+          "model_rom_cell_to_sram_cell_ratio": 0.33,
+          "model_rom_read_bytes_s_per_mm2": 282222222222.2222,
+          "model_sram_bits_per_mm2": 24074074.074074075
+        }
+      },
+      "area_um2": 4195.308,
+      "array_efficiency": 0.7573,
+      "capacity_bits": 544768,
+      "clk_to_q_ps": {
+        "ff": 402.0,
+        "ss": 602.7,
+        "tt": 480.1
+      },
+      "density_mb_per_mm2": 129.852,
+      "fmax_mhz": {
+        "ff": 2661.9,
+        "ss": 1777.0,
+        "tt": 2230.9
+      },
+      "height_um": 34.56,
+      "kind": "rom",
+      "leakage_nw_tt": 28108.56,
+      "min_period_ps": {
+        "ff": 375.7,
+        "ss": 562.8,
+        "tt": 448.2
+      },
+      "read_energy_fj_tt": 3844.55,
+      "spec": {
+        "bits": 266,
+        "mux": 8,
+        "name": "ot_rom_2048x266_m8",
+        "words": 2048
+      },
+      "views": {
+        "ot_rom_2048x266_m8.lef": "44ca12c3f5d0927005d35745412c81b1f3376a460e84693e7efe0455c4601b69",
+        "ot_rom_2048x266_m8.v": "d60b17c15f5f8757e4fe622261a9046967df03df74d371dc7ffd7a80a8da9443",
+        "ot_rom_2048x266_m8_bb.v": "dba79e6c4f5b5ef3bf1ba777cc4a61e7a824b49985e3c21d3f3b550ff6e9e9f7",
+        "ot_rom_2048x266_m8_ff.lib": "baa4fa85d656bd7664ced4593519e98f85f196156022046c007722d11105783c",
+        "ot_rom_2048x266_m8_ss.lib": "02db14a62989ae9846e7aa21caffdcccdaf43ee84233f8cfab8e14ae78c71707",
+        "ot_rom_2048x266_m8_tt.lib": "4f551b76b281d654a185cd701fd5a9f3363bcc26a1bbf5da741f364060899b77"
+      },
+      "width_um": 121.392
     },
     "ot_rom_4096x266_m8": {
       "analytical_model_comparison": {
@@ -162,7 +217,7 @@
       "views": {
         "ot_rom_4096x266_m8.lef": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611",
         "ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
-        "ot_rom_4096x266_m8_bb.v": "c23844e60690a83f36e7fb4fc508e91cb4f3354352299a0b13f7eb90e1b41788",
+        "ot_rom_4096x266_m8_bb.v": "dc988a4065e81429a891884d2aa655b16569f1ba514c49812fba264633e62f56",
         "ot_rom_4096x266_m8_ff.lib": "d9c7e59c2e13749d2fff34790226704f512bcc767dd89584ebacddbdbbcbe346",
         "ot_rom_4096x266_m8_ss.lib": "8612ab20df323464bfcdffd197cd2d087a249c2f6f2a2ec92ec8be219cf3d805",
         "ot_rom_4096x266_m8_tt.lib": "6e7116ec070820e045a1e57b342a716bcfc35e05be7c4e5b90d82cdaa9ba2021"
@@ -217,7 +272,7 @@
       "views": {
         "ot_rom_4096x72_m8.lef": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c",
         "ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
-        "ot_rom_4096x72_m8_bb.v": "9e1517f87fd7fa4d41f3dc5b306131b47ec5a510ad90e109cc7e9e3fa83be074",
+        "ot_rom_4096x72_m8_bb.v": "f0bbc1702d85e40d7b3d5d5369f5a01fd01edafb7d5ff5b7c8ed4a23aedc957e",
         "ot_rom_4096x72_m8_ff.lib": "741933894777f2020a8a0cedfa6607f7850642a397a85aa59fe8c50b005cb0d0",
         "ot_rom_4096x72_m8_ss.lib": "dc3a5a3e07e8508650a320f4ab27933622a52756c99e4d013278c849314da59d",
         "ot_rom_4096x72_m8_tt.lib": "bed56e6769daf014adb1204d953c9696ae6aeab2ea3a55891d79e718878faaf6"
@@ -272,7 +327,7 @@
       "views": {
         "ot_rom_8192x104_m8.lef": "8c487b534ccd4bbaaf83afdc6add2a102aea999b804fec86274b79b83d171bca",
         "ot_rom_8192x104_m8.v": "5328922b1106f2a8624c07afc1e43c9c49fd5b4c0ffb625f2c91b7d5e79810cf",
-        "ot_rom_8192x104_m8_bb.v": "8b192ead68e6ec79bc0e5d4a0756ef545fe6efefdc6eb6894f4362a60783f2a4",
+        "ot_rom_8192x104_m8_bb.v": "543b2c14621682f2e318d7667115baa9b0da7c4e2e7247e76bac87d92d93df8a",
         "ot_rom_8192x104_m8_ff.lib": "dc301ef15948b7e59965b55a8f6a98914c7bc53064dad685830981a5e61b195a",
         "ot_rom_8192x104_m8_ss.lib": "f3d045c6158bdac2fc411ab3ec06b7836c221e59f673c19e2ff5bc1e78c32ed9",
         "ot_rom_8192x104_m8_tt.lib": "f35c4179f45d9519770d0bde08b9ddd252586c8b358a1139f03902fc5eed0625"
@@ -327,7 +382,7 @@
       "views": {
         "ot_rom_8192x266_m8.lef": "d193a5f43f7ff2ecd56adf29ba388dfcf3d4d7ff8e8392da78fea78eb81015a5",
         "ot_rom_8192x266_m8.v": "f05e5b3ef11f4ace2c5d2e7f59801c851adc969f52ef238187132ab0f122d350",
-        "ot_rom_8192x266_m8_bb.v": "ef399648cd311941a2c09fbda401e95e62d8bef0f89bdc5101aa849fae7ad01d",
+        "ot_rom_8192x266_m8_bb.v": "b635c86020732de3146d606731379cfd0b2168f382f70cd6931fa2a6f401d5c9",
         "ot_rom_8192x266_m8_ff.lib": "828b417bebed276a3a31d25a23b17d1c12068706214ae287e19484911caf85c0",
         "ot_rom_8192x266_m8_ss.lib": "58190c11e6f06af1cacb2f41addb671f31d98d886a1a807444af120eef14103f",
         "ot_rom_8192x266_m8_tt.lib": "a7ce0e45d5d181b6365823963792f0234fe7d3b9414ea212debef51603a7cf92"
@@ -382,7 +437,7 @@
       "views": {
         "ot_rom_8192x274_m8.lef": "b897f8e0cc8368a321a96f0f7f30980cba32741e6ef5bff8fef6ce29e90a915f",
         "ot_rom_8192x274_m8.v": "47659841275cfe94391679cc4d83f5af1c85aa5298f66a280b231dd86100387d",
-        "ot_rom_8192x274_m8_bb.v": "2c4a7a0c5ce804648a3830d33ec8cba1097e438a2966997d8c07fcd9b1a3d40f",
+        "ot_rom_8192x274_m8_bb.v": "2513cd305aca43d138bb61a4b2e375202860389f84161acb5837553c1dffa517",
         "ot_rom_8192x274_m8_ff.lib": "ccb57b0c33b217e13c21aa1b5d25eb9f559a3f22ad2a5dd9d45aa4a0ecddb22f",
         "ot_rom_8192x274_m8_ss.lib": "a00897b443b77a63c7390bea60bdb0e1b37f6a03286d209ead3028e7a2d33bd4",
         "ot_rom_8192x274_m8_tt.lib": "644f7bd090588b700dffe707f7c7164ce859c005f3be53e66ace0b72625b94e2"
@@ -740,6 +795,50 @@
         "ot_sram_1rw_256x64_m4_r2c2_tt.lib": "267ebb0cb1480243493769fc1cd2aafe4651ce16b40512a528765bdcc5d92886"
       },
       "width_um": 66.312
+    },
+    "ot_sram_1rw_64x128_m1": {
+      "area_um2": 709.171,
+      "array_efficiency": 0.2695,
+      "capacity_bits": 8192,
+      "clk_to_q_ps": {
+        "ff": 227.7,
+        "ss": 370.5,
+        "tt": 283.2
+      },
+      "density_mb_per_mm2": 11.552,
+      "fmax_mhz": {
+        "ff": 4525.2,
+        "ss": 2776.4,
+        "tt": 3636.0
+      },
+      "height_um": 20.52,
+      "kind": "sram",
+      "leakage_nw_tt": 3545.86,
+      "min_period_ps": {
+        "ff": 221.0,
+        "ss": 360.2,
+        "tt": 275.0
+      },
+      "read_energy_fj_tt": 132.38,
+      "spec": {
+        "banks": 1,
+        "bits": 128,
+        "mux": 1,
+        "name": "ot_sram_1rw_64x128_m1",
+        "ports": "1rw",
+        "spare_cols": 0,
+        "spare_rows": 0,
+        "words": 64
+      },
+      "views": {
+        "ot_sram_1rw_64x128_m1.lef": "a53c7ef367ce11c2eae3ee983fb14010e46273bc488cf7c73b37cfd48f65b5f4",
+        "ot_sram_1rw_64x128_m1.v": "2299ffc4b87dfd4ab3ffef82ada743bbbda59fbba25be54dd6811a23ffdcd8e0",
+        "ot_sram_1rw_64x128_m1_bb.v": "0367500b795f40d574634b162ce3961f7fd388ff2cce6a0bed7be573adebaf91",
+        "ot_sram_1rw_64x128_m1_ff.lib": "9e1ad563260ff41758ff08a9fe707f8d3c8f5c76de13290696c4ad142948a9dd",
+        "ot_sram_1rw_64x128_m1_ss.lib": "bd6bbfca9f9086a5850c6a3f41aca2532da93b7f3582bbcf29810668a47cf58c",
+        "ot_sram_1rw_64x128_m1_tt.lib": "3b064d5e9549cc7d67846a359dbd3fb24b44b702c7718ceb4693b7f7be7599d0"
+      },
+      "width_um": 34.56
     },
     "ot_sram_2rw_512x64_m4_r2c2": {
       "area_um2": 4559.108,

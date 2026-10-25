@@ -275,10 +275,10 @@ def verilog_port_decl(pins: list[Pin]) -> str:
     return ",\n".join(out)
 
 
-def blackbox_verilog(name: str, pins: list[Pin], header: str) -> str:
+def blackbox_verilog(name: str, pins: list[Pin], header: str, module_params: str = "") -> str:
     ports = []
     for p in pins:
         rng = f"[{p.width - 1}:0] " if p.width > 1 else ""
         ports.append(f"    {p.direction} wire {rng}{p.name}")
     return (f"`timescale 1ns/1ps\n// {header}\n// Blackbox view for synthesis and place-and-route (the hard macro).\n"
-            f"(* blackbox *)\nmodule {name} (\n" + ",\n".join(ports) + "\n);\nendmodule\n")
+            f"(* blackbox *)\nmodule {name} {module_params}(\n" + ",\n".join(ports) + "\n);\nendmodule\n")
