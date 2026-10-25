@@ -1276,8 +1276,8 @@ def fault_links(P, variant, geo):
            src_leaf="u_pstn.flt_o", dst_leaf="u_collective.fault_ucie")
     P.link("fltc", ws_path(P, "coll_core", "glue"), "flt_o", "coll_flt_i", 1, kind="ctl",
            src_leaf="u_collective.fault_or", dst_leaf="u_sys_face.obs_fault_coll")
-    P.link("fltn", ["native59", "glue"], "flt_o", "n59_flt_i", 1, kind="ctl",
-           src_leaf="u_native59.fault", dst_leaf="u_sys_face.obs_fault_n59")
+    # native59.fault already has the census-derived native59__fault_native_fault lane below.
+    # A second fltn lane gives kit-rtl a duplicate source pin tied to zero (face_guard shared FAIL).
     P.link("fltt", ["tt_ctlm", "native59", "glue"], "flt_o", "ctlm_flt_i", 1, kind="ctl",
            src_leaf="u_tt_ctlm.cf", dst_leaf="u_sys_face.obs_fault_ctlm")
     # QC-P4 10-23 (BINDER2 per-bit UNPLANNED list on 16437c592, 85 b): the as-built carries the coll face fault
