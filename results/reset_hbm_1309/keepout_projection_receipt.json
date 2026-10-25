@@ -1,0 +1,379 @@
+{
+  "plan": "/srv/opentallas-scratch2/claude/codex-hbm-plan-1309/joint_abi/die_plan.json",
+  "keepout_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-plan-1309/tools/die_plan/reset_tree.py",
+  "fixed_function_source": "/srv/opentallas-scratch2/claude/wt/codex-reset-1309/tools/die_plan/reset_tree.py",
+  "before": {
+    "NE_io": {
+      "error": "type NE_io: reset relay -> u_ep_N2.rst_n exceeds reach (380.151 um)"
+    },
+    "q_su00": [
+      {
+        "inst": "u_su_Q0_lane_exp0",
+        "pin": "rst_n",
+        "pin_um": [
+          304.72799999999995,
+          25.939
+        ],
+        "xy": [
+          304.728,
+          21.59
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_lane_exp2",
+        "pin": "rst_n",
+        "pin_um": [
+          788.088,
+          527.059
+        ],
+        "xy": [
+          788.088,
+          522.71
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_lane_exp4",
+        "pin": "rst_n",
+        "pin_um": [
+          1203.288,
+          924.461
+        ],
+        "xy": [
+          1203.288,
+          928.81
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_lane_exp6",
+        "pin": "rst_n",
+        "pin_um": [
+          807.192,
+          751.699
+        ],
+        "xy": [
+          807.192,
+          747.35
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_lane_exp8",
+        "pin": "rst_n",
+        "pin_um": [
+          357.912,
+          250.579
+        ],
+        "xy": [
+          357.912,
+          246.23
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_lane_exp10",
+        "pin": "rst_n",
+        "pin_um": [
+          1256.472,
+          492.499
+        ],
+        "xy": [
+          1256.472,
+          704.17
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_lane_exp12",
+        "pin": "rst_n",
+        "pin_um": [
+          1136.808,
+          285.101
+        ],
+        "xy": [
+          1136.808,
+          289.45
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_lane_exp14",
+        "pin": "rst_n",
+        "pin_um": [
+          754.0079999999999,
+          302.419
+        ],
+        "xy": [
+          754.008,
+          298.07
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_lanes_plain0_3",
+        "pin": "rst_n",
+        "pin_um": [
+          2001.336,
+          25.939
+        ],
+        "xy": [
+          2001.336,
+          21.59
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_lanes_plain8_11",
+        "pin": "rst_n",
+        "pin_um": [
+          1290.5040000000001,
+          25.939
+        ],
+        "xy": [
+          1290.504,
+          21.59
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_side_softplus",
+        "pin": "rst_n",
+        "pin_um": [
+          304.72799999999995,
+          475.219
+        ],
+        "xy": [
+          304.728,
+          470.87
+        ],
+        "internal_depth": 1
+      },
+      {
+        "inst": "u_su_Q0_pretree",
+        "pin": "rst_n",
+        "pin_um": [
+          1815.912,
+          492.499
+        ],
+        "xy": [
+          1827.37,
+          492.499
+        ],
+        "internal_depth": 1
+      }
+    ]
+  },
+  "after": {
+    "NE_io": {
+      "depth": 5,
+      "entry": "relayed",
+      "sync_stages": 2,
+      "max_hop_um": 378.9,
+      "n_tree": 26,
+      "n_pad": 19,
+      "release_after_pin": 6,
+      "core_resets": [
+        {
+          "inst": "u_ep_N2",
+          "pin": "rst_n",
+          "pin_um": [
+            201.672,
+            1114.579
+          ],
+          "xy": [
+            194.39,
+            1122.29
+          ],
+          "internal_depth": 1,
+          "tap": 14
+        }
+      ],
+      "terminal_max_um": 14.993000000000023
+    },
+    "q_su00": {
+      "depth": 7,
+      "entry": "relayed",
+      "sync_stages": 2,
+      "max_hop_um": 380.0,
+      "n_tree": 85,
+      "n_pad": 69,
+      "release_after_pin": 8,
+      "core_resets": [
+        {
+          "inst": "u_su_Q0_lane_exp0",
+          "pin": "rst_n",
+          "pin_um": [
+            304.72799999999995,
+            25.939
+          ],
+          "xy": [
+            304.728,
+            21.59
+          ],
+          "internal_depth": 1,
+          "tap": 22
+        },
+        {
+          "inst": "u_su_Q0_lane_exp2",
+          "pin": "rst_n",
+          "pin_um": [
+            788.088,
+            527.059
+          ],
+          "xy": [
+            788.088,
+            522.71
+          ],
+          "internal_depth": 1,
+          "tap": 23
+        },
+        {
+          "inst": "u_su_Q0_lane_exp4",
+          "pin": "rst_n",
+          "pin_um": [
+            1203.288,
+            924.461
+          ],
+          "xy": [
+            1203.288,
+            928.81
+          ],
+          "internal_depth": 1,
+          "tap": 24
+        },
+        {
+          "inst": "u_su_Q0_lane_exp6",
+          "pin": "rst_n",
+          "pin_um": [
+            807.192,
+            751.699
+          ],
+          "xy": [
+            807.192,
+            747.35
+          ],
+          "internal_depth": 1,
+          "tap": 25
+        },
+        {
+          "inst": "u_su_Q0_lane_exp8",
+          "pin": "rst_n",
+          "pin_um": [
+            357.912,
+            250.579
+          ],
+          "xy": [
+            357.912,
+            246.23
+          ],
+          "internal_depth": 1,
+          "tap": 26
+        },
+        {
+          "inst": "u_su_Q0_lane_exp10",
+          "pin": "rst_n",
+          "pin_um": [
+            1256.472,
+            492.499
+          ],
+          "xy": [
+            1196.63,
+            514.09
+          ],
+          "internal_depth": 1,
+          "tap": 27
+        },
+        {
+          "inst": "u_su_Q0_lane_exp12",
+          "pin": "rst_n",
+          "pin_um": [
+            1136.808,
+            285.101
+          ],
+          "xy": [
+            1136.808,
+            289.45
+          ],
+          "internal_depth": 1,
+          "tap": 28
+        },
+        {
+          "inst": "u_su_Q0_lane_exp14",
+          "pin": "rst_n",
+          "pin_um": [
+            754.0079999999999,
+            302.419
+          ],
+          "xy": [
+            754.008,
+            298.07
+          ],
+          "internal_depth": 1,
+          "tap": 29
+        },
+        {
+          "inst": "u_su_Q0_lanes_plain0_3",
+          "pin": "rst_n",
+          "pin_um": [
+            2001.336,
+            25.939
+          ],
+          "xy": [
+            2001.336,
+            21.59
+          ],
+          "internal_depth": 1,
+          "tap": 30
+        },
+        {
+          "inst": "u_su_Q0_lanes_plain8_11",
+          "pin": "rst_n",
+          "pin_um": [
+            1290.5040000000001,
+            25.939
+          ],
+          "xy": [
+            1290.504,
+            21.59
+          ],
+          "internal_depth": 1,
+          "tap": 31
+        },
+        {
+          "inst": "u_su_Q0_side_softplus",
+          "pin": "rst_n",
+          "pin_um": [
+            304.72799999999995,
+            475.219
+          ],
+          "xy": [
+            304.728,
+            470.87
+          ],
+          "internal_depth": 1,
+          "tap": 32
+        },
+        {
+          "inst": "u_su_Q0_pretree",
+          "pin": "rst_n",
+          "pin_um": [
+            1815.912,
+            492.499
+          ],
+          "xy": [
+            1827.37,
+            492.499
+          ],
+          "internal_depth": 1,
+          "tap": 33
+        }
+      ],
+      "terminal_max_um": 81.43299999999988
+    }
+  },
+  "fixed_source_commit": "25af1ac059",
+  "supersedes": "results/reset_hbm_1309/receipt.json for sources with clock.keepouts_um reset blockages",
+  "scope": "Local type geometry and release after entry only; no full-die timing signoff"
+}
