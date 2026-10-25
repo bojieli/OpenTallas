@@ -123,3 +123,4 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
 
 ## CODEX notes 2026-10-24 21:08 PDT
 - CODEX took over: bound-s8 SU program alignment and exact gate on codex/s8-align-1024 (child s8_align). Source stages remain PASS; bound s8 stg_die FAIL 0/259 (259 unknown), SU consumes program 3 edges early. Existing wf3 diagnostic preserved, candidate retiming now owned. Next: exact miter+mutant, rebuild bound row, stage verdict then recompose.
+- 2026-10-24 21:14 PDT TOK-QK: S8-SU-PROG-ALIGN fix sub-agent (claude/tok-qk-s8a-1024, takes over Codex codex/s8-align-1024; QC owns merge/re-close).

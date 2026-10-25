@@ -152,3 +152,4 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
 
 ## CODEX notes 2026-10-24 21:10 PDT
 - CODEX took over D on codex/kv-d-clock-1024; staged apply_D.py/.sh authored (untested successor), ten HBM PHY face flops per24PC types core->HBM, 0stages. phy partitions already HBM clock. Gate NOT RUN; parked for Claude reset before launching jobs. Existing pd2 FAIL from unrelated HOST crossmodule reference, pd1 head-domain derivation valid.
+- 2026-10-24 21:14 PDT TOK-QK: resumed after account switch; D agent resumed (adopts Codex codex/kv-d-clock-1024 @7cf1d726b apply_D); kv43abc build still live epyc2.
