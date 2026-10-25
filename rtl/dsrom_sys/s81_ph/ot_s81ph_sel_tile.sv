@@ -353,14 +353,16 @@ module dsfd_selt_c #(
         .c_p2(c_p2), .c_p3(c_p3), .c_rep(c_rep), .c_st(c_st), .c_rem(c_rem), .c_hclr(c_hclr),
         .rep_req(rep_req), .ovf(ovf), .busy(busy));
     end endgenerate
-    // command bundles, one per tile, from flops at the pins
-    reg [`SELT_CB-1:0] cmd [0:Q-1];
+    // command bundles, one per tile, from flops at the pins.  S81-KITS-RTLC 10-24 (owner: register every pin, in RTL;
+    // face_guard: the four quarter bundles share every bit but c_rem, so synthesis merged them and the t_c_n / t_c_s
+    // pins shared flops): each quarter's bundle is its own KEPT register (same D, 0 cycles).
     generate for (g = 0; g < Q; g = g + 1) begin : g_c
+        (* keep *) reg [`SELT_CB-1:0] cmd;
         always @(posedge ck[0] or negedge rst_n)
-            if (!rst_n) cmd[g] <= {`SELT_CB{1'b0}};
-            else cmd[g] <= {c_hclr, c_rem[(KW+1)*g +: KW+1], c_st, c_rep, c_p3, c_p2, c_stop, c_ing, c_fg, c_cg, c_fclr,
-                            c_Bt, c_T};
-        assign t_c[`SELT_CB * g +: `SELT_CB] = cmd[g];
+            if (!rst_n) cmd <= {`SELT_CB{1'b0}};
+            else cmd <= {c_hclr, c_rem[(KW+1)*g +: KW+1], c_st, c_rep, c_p3, c_p2, c_stop, c_ing, c_fg, c_cg, c_fclr,
+                         c_Bt, c_T};
+        assign t_c[`SELT_CB * g +: `SELT_CB] = cmd;
     end endgenerate
     // ---- landing FIFOs (head at entry 0), credits
     function automatic [4:0] pop16(input [15:0] x);

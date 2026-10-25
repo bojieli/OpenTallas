@@ -60,8 +60,9 @@ module dsdv_gunit_l5 #(
     input  wire [275:0]  rs_i,  output wire [275:0] rs_o,
     input  wire          launch, input wire mx_v, input wire [4:0] mx_i, input wire [31:0] mx_y, input wire t_set, input wire t_w, input wire [9:0] t_row,
     input  wire [4:0]    t_lm, input wire [15:0] t_sm,
-    input  wire          cw_v, input wire [9:0] cw_a, input wire [255:0] cw_d, input wire [3:0] sid_i,
-    output reg           ct_v, output reg [275:0] ct_b, output reg fault,
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8, no constant / unused pins): cw_a packed {a[9:8], a[5:0]} (a[7:6] not read); ct_b = the packed CTL row
+    input  wire          cw_v, input wire [7:0] cw_a, input wire [255:0] cw_d, input wire [3:0] sid_i,
+    output reg           ct_v, output reg [169:0] ct_b, output reg fault,
     // N face (unit pins, s_3N)
     output wire [275:0]  vo_n,  input wire [275:0] vi_n,
     // E face (L5f: exp / fdiv)
@@ -94,7 +95,7 @@ module dsdv_gunit_l5 #(
     always @(posedge clk) begin
         qm_i <= mx_i; qm_y <= mx_y;
         tj_set <= t_set; tj_w <= t_w; tj_row <= t_row; tj_lm <= t_lm; tj_sm <= t_sm;
-        wa <= cw_a; wd <= cw_d; sid_c <= sid_i;
+        wa <= {cw_a[7:6], 2'd0, cw_a[5:0]}; wd <= cw_d; sid_c <= sid_i;
     end
     generate if (FANOUT_SAFE) begin : g_in_safe
         // ln: three kept same-edge copies (D = ln0, same reset) replace the 76-load ln.
@@ -165,8 +166,8 @@ module dsdv_gunit_l5 #(
         // scales: 4 x 96 flops; 16 kept write enables (24 bits each) predicted from the cw pins (= wv && !wa[9] &&
         // wa[5:0] == 62 && wa[8] == set, one edge early, same reset region as wv's peers).
         reg [95:0] scl_t [0:NSET*2-1];
-        wire scw_d0 = cw_v && !cw_a[9] && cw_a[5:0] == 6'd62 && !cw_a[8];
-        wire scw_d1 = cw_v && !cw_a[9] && cw_a[5:0] == 6'd62 &&  cw_a[8];
+        wire scw_d0 = cw_v && !cw_a[7] && cw_a[5:0] == 6'd62 && !cw_a[6];     // packed: cw_a[7:6] = a[9:8]
+        wire scw_d1 = cw_v && !cw_a[7] && cw_a[5:0] == 6'd62 &&  cw_a[6];
         for (g = 0; g < 32; g = g + 1) begin : g_scw
             wire we;
             (* keep = 1 *) dsdv_gunit_control_first u_q (.clk(clk), .rst_n((g % 2) ? rr[13] : rr[2]), .d((g / 16) ? scw_d1 : scw_d0), .q(we));
@@ -247,6 +248,9 @@ module dsdv_gunit_l5 #(
             ctl = {V{1'b0}}; ctl[0] = 1'b1; ctl[12:9] = s; ctl[21 +: 186] = p;
         end
     endfunction
+    // S81-KITS-RTLC 10-24 (OWNER DECISION 8): the CTL row leaves packed (bits 1..8, 13..20, 38, 40, 41, 189..275 of ctl()
+    // are constant 0; see dsdv_gunit_l3 / L2 unpacks before the vstop inject)
+    function automatic [169:0] ctlpk(input [275:0] w); ctlpk = {w[188:42], w[39], w[37:21], w[12:9], w[0]}; endfunction
     reg c_on; reg [2:0] c_i;
     always @(posedge clk or negedge rq[3])
         if (!rq[3]) begin c_on <= 1'b0; c_i <= 3'd0; ct_v <= 1'b0; fault <= 1'b0; end
@@ -282,14 +286,22 @@ module dsdv_gunit_l5 #(
         // loads; on[1]: bits 37..60 target / lm / a / mask, 21 loads; the data field of hdr is constant 0)
         wire [V-1:0] hdr = ctl(rj_row + {7'd0, c_i}, 128'd0, rj_sm, rj_lm, sid_c);
         wire [V-1:0] gate = {{(V-37){on[1]}}, {37{on[0]}}};
-        always @(posedge clk) ct_b <= (hdr & gate) | {{(V-61-128){1'b0}}, cq, 61'd0};
+`ifdef OT_RTLC_MUT_L5   // RTLC bench mutant: packed coefficient row loses data bit 0 (w[61])
+        always @(posedge clk) ct_b <= ctlpk((hdr & gate) | {{(V-61-128){1'b0}}, cq, 61'd0}) & ~(170'd1 << 42);
+`else
+        always @(posedge clk) ct_b <= ctlpk((hdr & gate) | {{(V-61-128){1'b0}}, cq, 61'd0});
+`endif
     end else begin : g_ct_legacy
     reg [127:0] cq;                                     // coefficient row c_i (decoded constant-index slices)
     always @(*) case (c_i)
         3'd0: cq = coef[127:0];   3'd1: cq = coef[255:128]; 3'd2: cq = coef[383:256];
         3'd3: cq = coef[511:384]; 3'd4: cq = coef[639:512]; default: cq = coef[767:640];
     endcase
-    always @(posedge clk) ct_b <= c_on ? ctl(rj_row + {7'd0, c_i}, cq, rj_sm, rj_lm, sid_c) : {V{1'b0}};
+`ifdef OT_RTLC_MUT_L5   // RTLC bench mutant: packed coefficient row loses data bit 0 (w[61])
+    always @(posedge clk) ct_b <= ctlpk(c_on ? ctl(rj_row + {7'd0, c_i}, cq, rj_sm, rj_lm, sid_c) : {V{1'b0}}) & ~(170'd1 << 42);
+`else
+    always @(posedge clk) ct_b <= ctlpk(c_on ? ctl(rj_row + {7'd0, c_i}, cq, rj_sm, rj_lm, sid_c) : {V{1'b0}});
+`endif
     end endgenerate
 endmodule
 // FANOUT_SAFE kept index copy (fixed width: the module name survives synthesis; instances are (* keep *)).
