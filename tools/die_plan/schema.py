@@ -104,9 +104,20 @@ _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": F
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
 _parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
     name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
-           "properties": {"width": {"type": "integer", "minimum": 1},
-                          "value": {"type": "integer", "minimum": 0}}}
-    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id")}}
+           "properties": {"width": ({"type": "integer", "const": 2} if name in ("strap_corner", "strap_hid", "strap_bsel")
+                                   else {"type": "integer", "minimum": 1}),
+                          "value": {"type": "integer", "minimum": 0,
+                                    **({"maximum": 3} if name in ("strap_corner", "strap_hid", "strap_bsel") else {})}}}
+    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "strap_corner", "strap_hid", "strap_bsel")}}
+
+# Native KV quadrant/head/bank IDs only; this is not a generic configuration strap.
+_core_id_straps = {"type": "array", "items": {
+    "type": "object", "required": ["port", "width", "value"], "additionalProperties": False,
+    "properties": {"port": {"enum": ["strap_corner", "strap_hid", "strap_bsel"]},
+                   "width": {"const": 2},
+                   "value": {"type": ["integer", "string"], "minimum": 0, "maximum": 3,
+                             "pattern": "^2'[bB][01]{2}$"},
+                   "note": {"type": "string"}}}}
 
 SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -297,6 +308,7 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "origin_um", "outline_um"],
                         "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
+                                       "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
@@ -524,7 +536,7 @@ def validate_structure(obj):
     errs = []
     _check(obj, SCHEMA, "$", errs)
     id_types = {tn: t for tn, t in obj.get("partition_types", {}).items()
-                if any(d.get("parent_id_straps") for d in t.get("contents", []) + t.get("hard_cores", []))} if not errs else {}
+                if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", []))} if not errs else {}
     if id_types:
         try:
             from .parent_id_straps import type_parent_id_straps
