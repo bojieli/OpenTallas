@@ -199,14 +199,6 @@ MACRO ot_s81sl_vn_a
         RECT 336.2880 164.0760 336.3120 164.1600 ;
     END
   END c_s[30]
-  PIN c_s[31]
-    DIRECTION OUTPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 346.8240 164.1220 346.8420 164.1600 ;
-    END
-  END c_s[31]
   PIN c_s[3]
     DIRECTION OUTPUT ;
     USE SIGNAL ;

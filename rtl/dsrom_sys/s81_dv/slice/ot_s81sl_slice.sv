@@ -107,7 +107,8 @@ module ot_s81sl_leaf #(
         .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d), .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf),
         .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .fault(f_vp));
-    ot_s81sl_vn u_vn (.clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
+    ot_s81sl_vn_sp u_vn (   // S81/RTLSPLIT: vn = u_a (ot_s81sl_vn_a) + u_b (ot_s81sl_vn_b), p +2 edges
+   .clk(clk), .rst_n(rst_n), .hw_v(hw_v), .hw_j(hw_j), .hw_hf(hw_hf), .hw_d(hw_d),
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d),
         .p_v(p_v), .p_d(p_d), .y_v(y_v), .y_i(y_i), .y(y), .fault(f_vn));
@@ -127,7 +128,8 @@ module ot_s81sl_leaf #(
         .ve_av(va_v), .ve_ac(va_c), .ve_ah(va_h), .ve_aval(va_val), .ve_ag(va_g),
         .ve_ov(vo_v), .ve_oc(vo_c), .ve_oy(vo_y), .ve_fi(vef),
         .e_v(e_v), .e_c(e_c), .e_d(e_d), .g_v(g_v), .g_c(g_c), .g_d(g_d), .fault(f_vs));
-    ot_s81sl_ve u_ve (.clk(clk), .rst_n(rst_n), .r_v(vr_v), .r_c(vr_c), .r_h(vr_h), .r_k(vr_k), .r_w(vr_w),
+    ot_s81sl_ve_sp u_ve (   // S81/RTLSPLIT: ve = u_m (ot_s81sl_ve_m) + u_s (ot_s81sl_ve_s), reduce stream +2 edges
+   .clk(clk), .rst_n(rst_n), .r_v(vr_v), .r_c(vr_c), .r_h(vr_h), .r_k(vr_k), .r_w(vr_w),
         .p_v(vp_v), .p_c(vp_c), .p_hh(vp_hh), .p_kk(vp_kk), .p_dd(vp_dd),
         .a_v(va_v), .a_c(va_c), .a_h(va_h), .a_val(va_val), .a_g(va_g),
         .o_v(vo_v), .o_c(vo_c), .o_y(vo_y), .fault(vef));

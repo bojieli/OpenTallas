@@ -30,6 +30,8 @@ usage (repo root): python3 physical/die_plan/s81/cores/leaf/split.py"""
 import json, os, sys, hashlib
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import repin as R
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+import drop_const_pins as DC
 
 D = "physical/die_plan/s81"
 
@@ -124,6 +126,8 @@ def main():
                                                             "; x-mirrored pin view (E <-> W)" if sp.get("xm") else ""),
                  pinhash=hashlib.sha256(json.dumps(pins, sort_keys=True).encode()).hexdigest()[:12], pins=pins)
         jp = os.path.join(D, "inputs/core_pins/%s.json" % mod)
+        DC.drop(j, lp)                       # OWNER DECISION 8 drops (inputs/const_pins_dropped.json): vn_a / vn_b c_s[31]
+        pins = j["pins"]
         json.dump(j, open(jp, "w"), indent=0)
         out[mod] = dict(size=[W, H], pins=len(pins), cells_est=CELLS[mod.replace("_xm", "")],
                         faces={f: sum(w for _, w in g) for f, g in sp["faces"].items()})

@@ -1,8 +1,8 @@
 {
 "module": "ot_s81sl_vn_a",
 "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_a.lef",
-"source": "S81/LEAFPLAN 10-24 split of ot_s81sl_vn (cores/leaf/split.py): 356.4x164.16, faces {'W': 817, 'E': 65, 'N': 33}; stub until the split RTL view closes",
-"pinhash": "4c2837abaca0",
+"source": "S81/LEAFPLAN 10-24 split of ot_s81sl_vn (cores/leaf/split.py): 356.4x164.16, faces {'W': 817, 'E': 65, 'N': 33}; stub until the split RTL view closes; OWNER DECISION 8 10-24: 1 constant pins dropped (inputs/const_pins_dropped.json)",
+"pinhash": "a80ee67cd131",
 "pins": [
 {
 "name": "c_s[0]",
@@ -147,12 +147,6 @@
 "layer": "M5",
 "x": 336.3,
 "y": 164.118
-},
-{
-"name": "c_s[31]",
-"layer": "M3",
-"x": 346.833,
-"y": 164.141
 },
 {
 "name": "c_s[3]",

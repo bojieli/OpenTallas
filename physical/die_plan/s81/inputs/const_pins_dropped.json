@@ -2241,6 +2241,30 @@
     "pci[266]": "pci[262]",
     "pci[267]": "pci[263]"
    }
+  },
+  "ot_s81sl_vn_a": {
+   "pins": [
+    "c_s[31]"
+   ],
+   "why": "S81/RTLSPLIT 10-24: vn_a chain partial acc3 = a sum of 4 squares, sign bit constant 0 (raw yosys: TIELO); vn_b receives c_s[30:0]"
+  },
+  "ot_s81sl_vn_a_xm": {
+   "pins": [
+    "c_s[31]"
+   ],
+   "why": "S81/RTLSPLIT 10-24: vn_a chain partial acc3 = a sum of 4 squares, sign bit constant 0 (raw yosys: TIELO); vn_b receives c_s[30:0]"
+  },
+  "ot_s81sl_vn_b": {
+   "pins": [
+    "c_s[31]"
+   ],
+   "why": "S81/RTLSPLIT 10-24: vn_a chain partial acc3 = a sum of 4 squares, sign bit constant 0 (raw yosys: TIELO); vn_b receives c_s[30:0]"
+  },
+  "ot_s81sl_vn_b_xm": {
+   "pins": [
+    "c_s[31]"
+   ],
+   "why": "S81/RTLSPLIT 10-24: vn_a chain partial acc3 = a sum of 4 squares, sign bit constant 0 (raw yosys: TIELO); vn_b receives c_s[30:0]"
   }
  }
 }
