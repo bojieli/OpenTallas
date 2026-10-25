@@ -441,6 +441,133 @@ def core_grow(plan, log, out, path=CORE_GROW):
     return fails
 
 
+SU_GRID = HERE / "B2n_inputs" / "su_grid.json"
+
+
+def su_grid(plan, log, path=SU_GRID):
+    """COORD GEOM spot-check 10-24 23:23 (q_su00 tiles off-row, ~300 x 500 um holes): every listed type's hard cores
+    re-placed on ONE regular grid (outline unchanged, pins_file unchanged).  The largest core class fills an R x C
+    grid (R = rows that fit the height, row-major in the old (row, x) order, 8.64-lattice pitch = core + 8.64 halo);
+    other hard cores and the soft leaves stack in one side column beside it.  Grid + column sit as one block at the x
+    that minimises the width-weighted distance to the type's bus windows (spare area on the face away from the links).
+    Moved items carry their core taps / internal station ends by translation; their stations are re-routed by
+    restation; split bounding boxes re-derived."""
+    D = json.loads(Path(path).read_text())
+    P = S.Plan(plan)
+    T = plan["partition_types"]
+    rows = []
+    for tn in D["types"]:
+        t = T[tn]
+        W, H = t["outline_um"]
+        hcs = t["hard_cores"]
+        insts = {h["inst"] for h in hcs}
+        split = {c["inst"] for c in t["contents"] if c["inst"] not in insts and any(i.startswith(c["inst"] + "_")
+                                                                                     for i in insts)}
+        softs = [c for c in t["contents"] if "origin_um" in c and "outline_um" in c and c["inst"] not in insts
+                 and c["inst"] not in split]
+        cls = defaultdict(list)
+        for h in hcs:
+            cls[tuple(h["outline_um"])].append(h)
+        big = max(cls, key=lambda k: (k[0] * k[1] * len(cls[k]), k))
+        cw, ch = big
+        main = sorted(cls[big], key=lambda h: (round(h["origin_um"][1] / (ch / 2)), h["origin_um"][0], h["inst"]))
+        side = sorted([h for k, v in cls.items() if k != big for h in v], key=lambda h: h["inst"]) + \
+            sorted(softs, key=lambda c: (-c["outline_um"][1], c["inst"]))
+        px = math.ceil((cw + LAT) / LAT - 1e-9) * LAT
+        py = math.ceil((ch + LAT) / LAT - 1e-9) * LAT
+        R = int((H - 2 * LAT - ch) // py) + 1
+        C = math.ceil(len(main) / R)
+        R = math.ceil(len(main) / C)                  # fewest rows for that column count (no empty row)
+        gh = (R - 1) * py + ch
+        y0 = max(LAT, math.floor((H - gh) / 2 / LAT) * LAT)
+        # side column: shelf stack (two items side by side when both fit the column width)
+        colw = max([math.ceil(o["outline_um"][0] / LAT - 1e-9) * LAT for o in side] or [0.0])
+        pair = [o for o in side if o["outline_um"][0] * 2 + LAT <= colw + 1e-6]
+        if pair and max(o["outline_um"][0] for o in pair) * 2 + LAT > colw:
+            colw = max(colw, math.ceil((2 * max(o["outline_um"][0] for o in pair) + LAT) / LAT) * LAT)
+        rel, y, x = {}, 0.0, 0.0
+        rowh = 0.0
+        for o in side:
+            w_, h_ = o["outline_um"]
+            if x > 0 and x + w_ <= colw + 1e-6:
+                rel[o["inst"]] = (x, y)
+                x += math.ceil((w_ + LAT) / LAT - 1e-9) * LAT
+                rowh = max(rowh, h_)
+                continue
+            if x > 0:
+                y += math.ceil((rowh + LAT) / LAT - 1e-9) * LAT
+            rel[o["inst"]] = (0.0, y)
+            x, rowh = math.ceil((w_ + LAT) / LAT - 1e-9) * LAT, h_
+        sideh = y + rowh
+        gw = (C - 1) * px + cw
+        bw = gw + (colw + LAT if side else 0.0)
+        assert sideh <= H - 2 * LAT and bw <= W - 2 * LAT, f"su_grid {tn}: block {bw:.0f}x{max(gh, sideh):.0f} does not fit"
+        bt = CK._bus_targets(P, tn)
+        wb = {b["name"]: int(b.get("width", 1)) for b in t.get("buses", [])}
+        best = None
+        for left in (False, True):                    # side column left or right of the grid
+            for k in range(int((W - bw) // LAT) + 1):
+                bx = k * LAT
+                if bx < LAT or bx + bw > W - LAT:
+                    continue
+                cost = sum(wb.get(nm, 1) * max(bx - p[0], 0.0, p[0] - (bx + bw)) for nm, (_, p) in bt.items())
+                key = (round(cost, 3), left, bx)
+                if best is None or key < best[0]:
+                    best = (key, left, bx)
+        _, left, bx = best
+        gx = bx + (colw + LAT if left and side else 0.0)
+        sx = bx if left else bx + gw + LAT
+        new = {}
+        for i, h in enumerate(main):
+            r, c = divmod(i, C)
+            new[h["inst"]] = (round(gx + c * px, 4), round(y0 + r * py, 4))
+        sy = max(LAT, math.floor((H - sideh) / 2 / LAT) * LAT)
+        for o in side:
+            new[o["inst"]] = (round(sx + rel[o["inst"]][0], 4), round(sy + rel[o["inst"]][1], 4))
+        # apply: translation per item
+        delta, oldb = {}, {}
+        for o in hcs + softs:
+            ox, oy = o["origin_um"]
+            nx, ny = new[o["inst"]]
+            dx_, dy_ = (o.get("track_offset_um") or [0.0, 0.0]) if o in hcs else (0.0, 0.0)
+            oldb[o["inst"]] = (ox + dx_, oy + dy_, ox + dx_ + o["outline_um"][0], oy + dy_ + o["outline_um"][1])
+            delta[o["inst"]] = (nx - ox, ny - oy)
+            o["origin_um"] = [nx, ny]
+        for c in t["contents"]:
+            if c["inst"] in insts and "origin_um" in c:
+                c["origin_um"] = list(new[c["inst"]])
+            if c["inst"] in split and "origin_um" in c:
+                bs = [(h["origin_um"][0], h["origin_um"][1], h["origin_um"][0] + h["outline_um"][0],
+                       h["origin_um"][1] + h["outline_um"][1]) for h in hcs if h["inst"].startswith(c["inst"] + "_")]
+                x0_, y0_ = min(b[0] for b in bs), min(b[1] for b in bs)
+                c["origin_um"] = [round(x0_, 4), round(y0_, 4)]
+                c["outline_um"] = [round(max(b[2] for b in bs) - x0_, 4), round(max(b[3] for b in bs) - y0_, 4)]
+
+        def move(pt):
+            for n_, b in oldb.items():
+                if b[0] - 1.0 <= pt[0] <= b[2] + 1.0 and b[1] - 1.0 <= pt[1] <= b[3] + 1.0:
+                    return [round(pt[0] + delta[n_][0], 3), round(pt[1] + delta[n_][1], 3)], True
+            return pt, False
+        nre = 0
+        for e in t.get("internal_stations", []):
+            e["from_um"], a1 = move(e["from_um"])
+            e["to_um"], a2 = move(e["to_um"])
+            e["_regrow"] = True                       # every register re-routed around the new core grid
+            nre += 1
+        taps = t.get("clock", {}).get("taps", [])
+        for tp in taps:
+            ci = tp["name"].partition(".")[0]
+            if tp.get("kind") == "core" and ci in delta:
+                x, y = tp["xy"][0] + delta[ci][0], tp["xy"][1] + delta[ci][1]
+                x, y = S.tap_clear(t, x, y, [tuple(o["xy"]) for o in taps if o is not tp], clear=4.32)
+                tp["xy"] = [round(x, 4), round(y, 4)]
+        if "tap_um" in t.get("clock", {}):
+            t["clock"]["tap_um"] = [round(v, 4) for v in S.tap_clear(t, *t["clock"]["tap_um"], clear=4.32)]
+        rows.append(f"{tn} {R}x{C} grid of {len(main)} {cw:g}x{ch:g} + side column {len(side)} "
+                    f"({'W' if left else 'E'} of grid) at x {bx:g}..{bx + bw:g} of {W:g} ({nre} internal links re-routed)")
+    log.append("SU grid (COORD GEOM 23:23, B2n_inputs/su_grid.json): " + "; ".join(rows))
+
+
 def drop_die_layers(plan, log):
     n = 0
     for t in plan["partition_types"].values():
@@ -875,6 +1002,7 @@ def main(argv=None):
     worst = rewindow(plan, log, fixed_ids=touched)
     fix_mirror_pins(plan, pairs, log)
     grow_fail = core_grow(plan, log, out)
+    su_grid(plan, log)
     fails = restation(plan, log)
     import b2m as B2M   # noqa: E402  (H-tree + tap assignment re-derived: su10/su30 / spu0/spu1 rects moved)
     B2M.clock(plan, out, log)
