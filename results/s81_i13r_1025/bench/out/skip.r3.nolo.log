@@ -1,0 +1,9 @@
+JOB_ACCEPT 811
+FIRST_LOOKUP 844
+FIRST_RETURN 847
+JOB_DONE 1363 lookups=512 returns=512
+I13_RESULT case=skip st=0008 fault=0
+- tb_r3.sv:15: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.026 s; speed 88.884 us/s
+- Verilator: cpu 0.026 s on 1 threads; allocated 7 MB
