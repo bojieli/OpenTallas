@@ -19,6 +19,46 @@ import netcut, gen_core_ports as g                                # noqa: E402
 REPO = os.path.abspath(os.path.join(HERE, '..', '..', '..', '..', '..'))
 
 
+# PATH-HBM/TOK 2026-10-25: plan-added in-tile lanes (ports that are not master cut pins).  The face-shelled TKM chain
+# carries clr / conv inside the tiles (no parent glue in the column gaps); every replica gets the same two ports and the
+# kit maps each plan bus of that name 1:1 (canonical_ports_split.json type_ids[*].cut_pins + plan_lanes).
+TKM_TILE_LANES = dict(
+    marker='// PATH-HBM/TOK 2026-10-25',
+    comment=[
+        "// PATH-HBM/TOK 2026-10-25 (hand edit on top of the generated split top; build_split_tops.py tkm_tile must carry it):",
+        "// in-tile control lanes of the face-shelled chain (plan: no parent glue in the column gaps).",
+        "//   tile_clr  (S face, in) -> 1 flop -> tile_clr_o  (N face, out): clr travels SYSTOLIC DOWN the chain, 3 edges per hop",
+        "//             (shell in + this flop + shell out) <= the data's 5: provably safe (ot_hgi_coll_tkm_static_p CLRB 0).",
+        "//   tile_conv (N face, in; from tile t+1, tile 31 from the root's D=21 tree) -> wire -> tile_conv_o (S face, out, toward",
+        "//             the root): conv travels UP the chain with exactly the up data's 2 face edges per hop, so tile t shifts 2",
+        "//             edges after tile t+1 as the lock-step up_out->up_in shift requires (static_p HOP 2).  0 core flops: a",
+        "//             face-flop to face-flop feed-through (shell in flop -> shell out flop, one tile width).",
+        "//   The tile itself uses tile_clr / tile_conv exactly as before.  Tile 0's conv_o and tile 31's clr_o are unloaded."],
+    after='    input wire tile_conv,',
+    ports=[('tile_clr_o', 'output', 1, 0, '    output reg tile_clr_o,'),
+           ('tile_conv_o', 'output', 1, 0, '    output wire tile_conv_o,')],
+    body_after='        .busy(u_tile__busy));',
+    body=["    always @(posedge tile_clk) tile_clr_o <= tile_clr;   // clr down-chain lane (no reset: control relay, flushed by the root)",
+          "    assign tile_conv_o = tile_conv;                       // conv up-chain lane (face flop to face flop)"])
+
+
+def apply_lanes(txt, ports, ln):
+    """Insert the plan-added lane ports + logic into a generated split top (idempotent).  Returns (text, ports)."""
+    names = [p[0] for p in ports]
+    ports = ports[:names.index('tile_conv') + 1] + [list(p[:4]) for p in ln['ports'] if p[0] not in names] + \
+        [p for p in ports[names.index('tile_conv') + 1:]]
+    if ln['marker'] in txt:
+        return txt, ports
+    L = txt.split('\n')
+    i = next(k for k, l in enumerate(L) if l.startswith('`timescale'))
+    L[i:i] = ln['comment']
+    i = L.index(ln['after'])
+    L[i + 1:i + 1] = [p[4] for p in ln['ports']]
+    i = L.index(ln['body_after'])
+    L[i + 1:i + 1] = ln['body']
+    return '\n'.join(L), ports
+
+
 def sfu_lane(n, m):
     sfu = g.find_paths(n, m, r'ot_su12_sfu'); maps = g.find_paths(n, m, r'sfu_lane_map')
     out = {}
@@ -69,10 +109,11 @@ def pg_groups(sel):
     return f
 
 
-PG_LANE = '#(.LN(7),.KIND(%d),.MLAT(4),.ALAT(3),.LEAF(1),.FETCH_EXTRA_EDGES(2))'
+PG_ALAT = 4 if os.environ.get('OT_HBM_ONECLOCK', '0') == '1' else 3
+PG_LANE = '#(.LN(7),.KIND(%d),.MLAT(4),.ALAT(' + str(PG_ALAT) + '),.LEAF(1),.FETCH_EXTRA_EDGES(2))'
 PG_BANK = ('ot_hbm_su_static_pinned_bank', '#(.READERS(6),.RB(9))')
 PG_SRC = ('rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: '
-          'ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + '
+          'ot_hbm_su_static_lane_pinreg; MLAT4 ALAT' + str(PG_ALAT) + ' LEAF1 FETCH_EXTRA_EDGES2; OT_HBM_ONECLOCK selects decision16a) + '
           'g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent')
 
 
@@ -106,7 +147,8 @@ PIECES = {
         rtl={'u_tile': ('ot_hgi_coll_tkm_tile_e86', '')},
         straps=[('u_tile', 'tid')],
         src='rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv g_tiles[t].e86.u_tile (tile unchanged by '
-            'PIPE 1; clk_r0..3 = tile_clk)'),
+            'PIPE 1; clk_r0..3 = tile_clk)',
+        lanes=TKM_TILE_LANES),
     'score_tail': dict(
         master='ot_hbm_idx_score_quarter_static', top='ot_hbm_idx_tail_native', pieces=score_tail,
         rtl=None, straps=[],
@@ -281,6 +323,12 @@ def recipes(a):
             print('NO ELAB', ft); continue
         ports = [[nm, d, int(w), 0] for d, w, nm in (l.split() for l in open(el + '.ports'))]
         files = json.load(open(el + '.files.json'))
+        if os.environ.get('OT_HBM_ONECLOCK','0')=='1' and ft in ('pgslice_side_rest','pgslice_side_softplus'):
+            # The cached elaboration dependency list predates decision16a.
+            # Ports are identical; select the standard LAT4 f12 arithmetic.
+            if REPO not in sys.path: sys.path.insert(0,REPO)
+            from tools.hbm_layer_vehicle.adopt_pg_oneclock import source_files
+            files['files']=source_files(files['files'])
         ei = sum(p[2] for p in ports if p[1] == 'input'); eo = sum(p[2] for p in ports if p[1] == 'output')
         pw = {p[0]: p for p in ports}
         tmap, checks = {}, []
@@ -312,6 +360,10 @@ def recipes(a):
                 assert all(sum(m[c].values()) == w for c, _, w, _ in cp), pm
             else:
                 m = rec['cut_to_canonical']
+            # plan-added lane ports (PIECES[ft]['lanes']): not master cut pins; the plan bus of the same name maps 1:1
+            lp = [q[:4] for q in (PIECES.get(ft, {}).get('lanes') or {}).get('ports', [])]
+            m = dict(m, **{q[0]: {q[0]: q[2]} for q in lp})
+            ci += sum(q[2] for q in lp if q[1] == 'input'); co += sum(q[2] for q in lp if q[1] == 'output')
             # every canonical bit is covered exactly once by the cut pins, except strap ports
             cov = collections.Counter()
             for c, d in m.items():
@@ -329,6 +381,7 @@ def recipes(a):
             for t in cen:
                 if t['module'] == pm:
                     tmap[t['type_id']] = dict(cut_pins=m, straps=rec.get('straps', {}), cut_bits=[ci, co],
+                                              **({'plan_lanes': [q[0] for q in lp]} if lp else {}),
                                               **({'tied_at_parent': sub['detail']['tied'], 'open_at_parent': sub['detail']['open']}
                                                  if 'detail' in sub else {}),
                                               excluded=t['excluded'], check='PASS' if ok else 'FAIL')
@@ -385,15 +438,51 @@ def subset(R, V, straps):
                 detail=dict(tied=dict(tied), open=dict(opened), bad=[str(x) for x in bad[:20]]))
 
 
+def lanes_only(a, key):
+    """Re-apply PIECES[key]['lanes'] without the as-built netlist / elab dirs (both pruned): the generated top file,
+    split_tops.json ports and canonical_ports_split.json (ports, elab bits, per type_id identity cut_pins + plan_lanes;
+    cut_bits count the lane bits as recipes() does).  Idempotent."""
+    ln = PIECES[key]['lanes']; lp = [q[:4] for q in ln['ports']]
+    tops = json.load(open(a.out)); e = tops[key]
+    f = os.path.join(REPO, e['file'])
+    txt, e['ports'] = apply_lanes(open(f).read(), e['ports'], ln)
+    open(f, 'w').write(txt)
+    json.dump(tops, open(a.out, 'w'), indent=1)
+    cf = os.environ.get('OT_CANON', os.path.join(HERE, 'canonical_ports_split.json')); C = json.load(open(cf))
+    # every functional type built on this top (tkm_tile and the master-ID views tkm_tile_idpin /
+    # tkm_tile_terminal_idpin: same RTL file, straps / ties differ) gets the lane ports
+    for ft, ct in sorted(C['types'].items()):
+        if ct.get('file') != e['file']:
+            continue
+        have = {p[0] for p in ct['ports']}
+        if not all(q[0] in have for q in lp):
+            _, ct['ports'] = apply_lanes(ln['marker'], ct['ports'], ln)
+            ct['elab_bits'] = [ct['elab_bits'][0] + sum(q[2] for q in lp if q[1] == 'input'),
+                               ct['elab_bits'][1] + sum(q[2] for q in lp if q[1] == 'output')]
+        for tid, t in ct['type_ids'].items():
+            if all(q[0] in t['cut_pins'] for q in lp):
+                continue
+            t['cut_pins'].update({q[0]: {q[0]: q[2]} for q in lp})
+            t['cut_bits'] = [t['cut_bits'][0] + sum(q[2] for q in lp if q[1] == 'input'),
+                             t['cut_bits'][1] + sum(q[2] for q in lp if q[1] == 'output')]
+            t['plan_lanes'] = [q[0] for q in lp]
+        print(ft, 'lanes', [q[0] for q in lp], 'ports', len(ct['ports']), 'elab_bits', ct['elab_bits'],
+              'type_ids', len(ct['type_ids']))
+    json.dump(C, open(cf, 'w'), indent=1, sort_keys=True)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--net', default='/home/ubuntu/scratch/hbm-p5-pins-1023/net')
     ap.add_argument('--only', default='')
     ap.add_argument('--out', default=os.path.join(HERE, 'split_tops.json'))
     ap.add_argument('--recipes', action='store_true')
+    ap.add_argument('--lanes-only', default='', help='re-apply PIECES[key][\'lanes\'] only (no netlist / elab needed)')
     ap.add_argument('--census', default='census_3a7e22238.json')
     ap.add_argument('--elab', default='/home/ubuntu/scratch/core-hbm-1023/split/elab')
     a = ap.parse_args()
+    if a.lanes_only:
+        return lanes_only(a, a.lanes_only)
     if a.recipes:
         return recipes(a)
     res = json.load(open(a.out)) if os.path.exists(a.out) else {}
@@ -447,6 +536,8 @@ def main():
                f'// Source wiring: {cfg["src"]}\n'
                f'// Wired bit-exactly as the as-built master netlist (split_conn.py); straps = replica constants tied at the parent.\n')
         txt, ports, _ = sc.emit_wrapper(P0, cfg['top'], cfg['rtl'], straps, hdr)
+        if cfg.get('lanes'):
+            txt, ports = apply_lanes(txt, ports, cfg['lanes'])
         d = os.path.join(REPO, 'rtl', 'hbm_accel', 'cores_split', re.sub(r'__pv\d+$', '', m))
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, cfg['top'] + '.sv'), 'w').write(txt)
