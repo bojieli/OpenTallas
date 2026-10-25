@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.geom-review.v1",
+ "verdict": "PASS-COND",
+ "scope": "clock prototype only; route held until postCTS/GRT review",
+ "image": "results/qc_phys_0719/f57n/predicted.png",
+ "findings": [
+  "Viewed six 500um macro-free branches inside4.32um core boundary and outside SRAM4.32um halos",
+  "Each path has seven identical trunk repeaters; same M5/M6 2W2S rule; no timing assignments or inherited correction table",
+  "Wide south corridor carries only six clock trunks; measured data paths and F6 interface anchors retained",
+  "Macro leaves share W-side trunk; 30ps earlier target; actual TT/FF pair, macro-interface split, insertion and placed density remain prototype gates"
+ ],
+ "added_data_cycles": 0
+}
