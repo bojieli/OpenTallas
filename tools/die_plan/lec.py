@@ -88,6 +88,10 @@ class LecError(Exception):
     pass
 
 
+class LintFail(Exception):
+    """RTL lint failure (implicit nets): fails the kit like NOT EQUIVALENT (exit 1)."""
+
+
 class Unproven(Exception):
     pass
 
@@ -162,9 +166,9 @@ def top_params(env):
     return list(zip(t[0::2], t[1::2]))
 
 
-def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True):
+def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True, slang_extra=()):
     """yosys commands reading the kit RTL with `frontend` ('verilog' | 'slang'); lib_bbs: macro liberty files whose
-    cells have no Verilog body in the sources (read as blackbox cells)."""
+    cells have no Verilog body in the sources (read as blackbox cells); slang_extra: extra read_slang options."""
     files = [kpath(kit, f) for f in env["VERILOG_FILES"].split()]
     incs = [kpath(kit, d) for d in env.get("VERILOG_INCLUDE_DIRS", "").split()]
     defs = env.get("VERILOG_DEFINES", "").split()
@@ -172,7 +176,7 @@ def read_rtl_cmds(env, kit, frontend, lib_bbs, chparam=True):
         defs.append("-DSYNTHESIS")
     cmds = [f"read_liberty -lib -ignore_miss_func {l}" for l in lib_bbs]
     if frontend == "slang":
-        a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]]
+        a = ["--keep-hierarchy", "--compat=vcs", "--ignore-assertions", "--top", env["DESIGN_NAME"]] + list(slang_extra)
         a += [f"-I{i}" for i in incs] + defs + files
         for k, v in top_params(env):
             a += ["-G", f"{k}={v}"]
@@ -223,6 +227,25 @@ def gate_script(env, netlist, stubs, wrap, lecff, out):
     s += [f"read_verilog {stubs}", f"read_verilog {netlist}", f"read_verilog {wrap}", f"hierarchy -check -top {WRAP}",
           "setattr -mod -unset keep_hierarchy", "setattr -unset keep_hierarchy", "proc", "flatten -noscopeinfo", "opt_clean", "techmap", "opt_clean"]
     return "\n".join(s + [c.format(lecff=lecff, out=out) for c in SEQ_TAIL]) + "\n"
+
+
+IMPLICIT_NET = re.compile(r"^(\S+?):(\d+):\d+: warning: implicit net '([^']+)' created \[-Wimplicit-net\]")
+
+
+def implicit_net_lint(env, kit, lib_bbs, out, log):
+    """lint gate (LEC 10-25): an identifier used before its declaration (or never declared) in a port connection
+    becomes an implicit 1-bit net.  yosys-slang (--compat=vcs, the synthesis frontend) leaves that net undriven
+    while read_verilog binds the later declaration: ot_s81eng_aq_n32 g_ec .ep_next(ep_next) tied 8 exponent
+    registers to 0 in every synthesised eng netlist.  Industry practice (`default_nettype none`, lint
+    UndrivenNet / implicit-net rules): any implicit net fails the kit.  Returns [(file, line, net)]."""
+    s = read_rtl_cmds(env, kit, "slang", lib_bbs, slang_extra=["-Wimplicit-net"])
+    run_yosys("\n".join(s) + "\n", out / "lint.ys", log)
+    hits = []
+    for l in Path(str(out / "lint.ys") + ".log").read_text(errors="replace").splitlines():
+        m = IMPLICIT_NET.match(l.strip())
+        if m and (m[1], m[2], m[3]) not in hits:
+            hits.append((m[1], m[2], m[3]))
+    return hits
 
 
 def bb_script(env, kit, frontend, lib_bbs, out):
@@ -1249,6 +1272,15 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         for f in env["VERILOG_FILES"].split():
             srcmods |= set(src_modules(kpath(kit, f)))
         lib_bbs = [l for l in macro_libs(env, kit) if not set(lib_cells(l)) <= srcmods]
+        # 0. lint: implicit nets fail the kit before any proof (see implicit_net_lint)
+        hits = implicit_net_lint(env, kit, lib_bbs, out, log)
+        rec["implicit_nets"] = [dict(file=f.replace("/work/", "", 1), line=int(n), net=w) for f, n, w in hits[:200]]
+        if hits:
+            rec["verdict"] = "LINT FAIL"
+            rec["reason"] = (f"{len(hits)} implicit net(s) created (identifier used before its declaration or "
+                             f"undeclared; undriven in the yosys-slang synthesis): " +
+                             ", ".join(f"{Path(f).name}:{n} {w}" for f, n, w in hits[:8]))
+            raise LintFail(rec["reason"])
         # 1. black boxes of the gold elaboration (ports) -> one stub file for both sides
         run_yosys(bb_script(env, kit, gold_fe, lib_bbs, out / "bb"), out / "bb.ys", log)
         bbports = parse_bb_verilog(out / "bb.v")
@@ -1352,6 +1384,8 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             if rec["x_dont_care_points"]["n"]:
                 rec["note"] += (f"; {rec['x_dont_care_points']['n']} of them reach an RTL X (don't care: equal "
                                 f"wherever the RTL is not X)")
+    except LintFail:
+        pass
     except Unproven as e:
         rec["verdict"], rec["reason"] = "UNPROVEN", str(e)
     except (LecError, OSError, subprocess.SubprocessError, ValueError, KeyError) as e:
@@ -1422,7 +1456,7 @@ def main(argv=None):
     print(f"LEC {r['verdict']}: {r.get('top')} cp={c.get('compare_points')} proved={c.get('proved')} "
           f"differs={c.get('differs')} undecided={c.get('undecided')} {r.get('reason', r.get('note', ''))} "
           f"({r['t_total_s']} s)")
-    return {"EQUIVALENT": 0, "NOT EQUIVALENT": 1, "UNPROVEN": 2}.get(r["verdict"], 3)
+    return {"EQUIVALENT": 0, "NOT EQUIVALENT": 1, "LINT FAIL": 1, "UNPROVEN": 2}.get(r["verdict"], 3)
 
 
 if __name__ == "__main__":
