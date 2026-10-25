@@ -41,6 +41,9 @@ def main():
     ap.add_argument("out")
     ap.add_argument("--new-mod-file")
     ap.add_argument("--cycles", type=int, default=20000)
+    ap.add_argument("--new-mod", help="new top module name (strap master: kv3_astk)")
+    ap.add_argument("--strap", action="append", default=[], help="NEW-only input PORT=VALUE held constant (ID straps)")
+    ap.add_argument("--no-drops", action="store_true", help="old kit already carries the am g drop (compare 1:1)")
     a = ap.parse_args()
     old, new, out = Path(a.old), Path(a.new), Path(a.out)
     shutil.rmtree(out, ignore_errors=True)
@@ -49,7 +52,12 @@ def main():
     cjo = json.load(open(old / "core.json"))
     cjn = json.load(open(new / "core.json"))
     mod = cjo["module"]
-    drops = am_g_drop.drops_for(mod)
+    drops = {} if a.no_drops else am_g_drop.drops_for(mod)
+    nmod = a.new_mod or mod
+    straps = dict(s.split("=", 1) for s in a.strap)
+    extra_new = {p for p, d in cjn["port_decl"].items() if p not in cjo["port_decl"]}
+    if extra_new != set(straps):
+        raise SystemExit(f"new-only ports {sorted(extra_new)} must all be --strap PORT=VAL (got {sorted(straps)})")
     fo, fn = vfiles(old), vfiles(new)
     names = set()
     for f in fo:
@@ -61,7 +69,7 @@ def main():
     for f in fn:
         shutil.copy(new / "rtl" / f, out / "n" / f)
     if a.new_mod_file:
-        shutil.copy(a.new_mod_file, out / "n" / f"{mod}.sv")
+        shutil.copy(a.new_mod_file, out / "n" / f"{nmod}.sv")
     for p in list((old / "rtl").glob("*.svh")) + list((old / "rtl").glob("*.vh")):
         shutil.copy(p, out / "o" / p.name)
         shutil.copy(p, out / "n" / p.name)
@@ -117,7 +125,9 @@ def main():
                 cmp_o.append(f"o_{p}")
             cmp_n.append(f"n_{p}")
     L.append(f"  {mod}_o u_o ({', '.join(conn_o)});")
-    L.append(f"  {mod} u_n ({', '.join(conn_n)});")
+    for p, v in straps.items():
+        conn_n.append(f".{p}({v})")
+    L.append(f"  {nmod} u_n ({', '.join(conn_n)});")
     L.append(f"  wire [99999:0] vo = {{{', '.join(cmp_o)}}};")
     L.append(f"  wire [99999:0] vn = {{{', '.join(cmp_n)}}};")
     L.append(f"  wire dz = |{{{', '.join(drop_bits)}}};" if drop_bits else "  wire dz = 1'b0;")

@@ -335,6 +335,11 @@ def main():
     ap.add_argument("--astk-rep-split", action="store_true",
                     help="with --astk-timing-regs: zn read-address replicas as 16 kept register-module instances (8-b slices, "
                          "<= 64 loads each; kept regs were merged back: B ES rc[0] 2048 loads) + ctl z_k copies kept the same way (0 cycles)")
+    ap.add_argument("--astk-strap-master", action="store_true",
+                    help="OWNER option B (COORD 10-25 07:01): ONE kv3_astk master from a corner core json; the corner ID "
+                         "constants (ctl st, zn zc[1:0]) come from input strap_corner[1:0] (EN 11 ES 10 WN 01 WS 00) via one "
+                         "kept landing register; false path from strap_*; needs --astk-face-ports --astk-timing-regs "
+                         "--astk-rep-split --am-g-drop (astk_strap_master.py)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
     ap.add_argument("--am-g-drop", action="store_true",
                     help="COORD ruling 2 (10-25): drop the constant LMAX head-group bit g (am[1]) from qkd_ahub am0..3 and the "
@@ -373,6 +378,12 @@ def main():
     hc = next(h for h in plan["partition_types"][cj["type"]]["hard_cores"] if h["inst"] == cj["inst"])
     w, h = hc["outline_um"]
     tid = f"{mod}__{w:g}x{h:g}"
+    if a.astk_strap_master:
+        if not (mod.startswith("kv3_astk_") and a.astk_face_ports and a.astk_timing_regs and a.astk_rep_split and a.am_g_drop):
+            raise SystemExit("--astk-strap-master needs a kv3_astk_* core json + --astk-face-ports --astk-timing-regs "
+                             "--astk-rep-split --am-g-drop")
+        import astk_strap_master
+        tid = f"{astk_strap_master.MASTER}__{w:g}x{h:g}"
     recs = json.load(open(a.recipes)) if Path(a.recipes).is_file() else {}
     rec = dict(recs.get("_default", {}))
     rec.update(recs.get(mod, {}))
@@ -429,6 +440,20 @@ def main():
             ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL",
             rep_split=(dict(zn_replicas=16, slice_bits=8, max_select_loads=64, kept="keep_hierarchy qkd_astk_rep5/rep4",
                             miter="kv-cores-1025r/astk/G/tb") if a.astk_rep_split else None)), indent=1) + "\n")
+    if a.astk_strap_master:
+        src = kd / "rtl" / f"{mod}.sv"
+        (kd / "rtl" / f"{astk_strap_master.MASTER}.sv").write_text(astk_strap_master.transform(src.read_text(), mod))
+        src.unlink()
+        srcs = [s.replace(f"/{mod}.sv", f"/{astk_strap_master.MASTER}.sv") for s in srcs]
+        files = [f.replace(f"/{mod}.sv", f"/{astk_strap_master.MASTER}.sv") if Path(f).name == f"{mod}.sv" else f
+                 for f in files]
+        corner_mod = mod
+        astk_strap_master.core_json(cj)
+        (kd / "astk_strap_delta.json").write_text(json.dumps(dict(
+            rule="OWNER option B, COORD 2026-10-25 07:01", master=astk_strap_master.MASTER, from_corner=corner_mod,
+            strap_port=astk_strap_master.STRAP, values=astk_strap_master.CORNER_STRAP,
+            bound=["ctl st", "zn_1..3 zc[1:0]"], landing="one kept 2-b register (strap_q)", sdc="set_false_path -from [get_ports strap_*]",
+            added_cycles=0, settle="+1 edge after power-up (quasi-static)"), indent=1) + "\n")
     if a.ectlk_face_ports:
         if mod != "qkd_ectlk":
             raise SystemExit("--ectlk-face-ports only applies to qkd_ectlk")
@@ -448,7 +473,7 @@ def main():
             nominal_token_cycles=0, note="include extra external-fault edge in collection AGE budget"), indent=1) + "\n")
     # memory macros (black boxes in kit_rtl.f) reached by the core's members
     kj = json.load(open(Path(a.kit_rtl) / cj["type"] / "kit_rtl.json"))
-    hier = reached_modules([kd / "rtl" / Path(f).name for f in files], mod)
+    hier = reached_modules([kd / "rtl" / Path(f).name for f in files], cj["module"])
     lefs, libs, macros, libs_ff = [], [], [], []
     for m, v in (kj.get("hard_macros") or {}).items():
         if re.search(rf"\b{re.escape(m)}\b", hier):
@@ -525,6 +550,7 @@ def main():
     (kd / "pins_added.json").write_text(json.dumps(dict(module=mod, plan_pins=len(pins), added=added,
                                                         why=cj["report"]["added"], straps=cj["report"]["straps"],
                                                         gap_bits=cj["report"].get("gap_bits", [])), indent=1) + "\n")
+    mod = cj["module"]                      # strap master: kv3_astk from here on (pins above = the corner plan pins)
     clk_bits = [n for n, c in cj["pin_class"].items() if c == "clk"]
     if not clk_bits:
         raise SystemExit(f"{tid}: no clock pin")
@@ -535,7 +561,20 @@ def main():
     per = float(plan["die"]["period_ps"])
     ins = float(plan["clock"].get("common_latency_ps", plan["clock"]["insertion_ps"]))
     tol = float(plan["clock"]["insertion_tol_ps"])
-    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid))
+    straps = [s["port"] for s in cj["report"].get("straps", []) if isinstance(s, dict) and s.get("kind") == "id_strap"]
+    import inspect
+    import sys
+    sys.path.insert(0, str(a.tool))
+    import sdc_lint
+    lint_straps = "straps" in inspect.signature(sdc_lint.lint).parameters
+    # OWNER option B rule (2): set_false_path -from the ID straps.  sdc_lint (fail-closed, FLOW-FIX) accepts it only once
+    # it knows the declared straps; until then the strap stays an ordinary registered input (landing flop, IO-timed:
+    # strictly tighter than the false path) and the SDC records the pending exception.
+    (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, tid) + (
+        "# OWNER option B (10-25): ID straps are quasi-static, tied at the parent; the block works for every value\n" +
+        (f"set_false_path -from [get_ports {{{' '.join(straps)}}}]\n" if lint_straps else
+         f"# PENDING FLOW-FIX sdc_lint strap whitelist: set_false_path -from [get_ports {{{' '.join(straps)}}}] "
+         "(until then IO-timed into the landing register)\n") if straps else ""))
     # CP1-R10 fail-closed SDC gate (tools/die_plan/sdc_lint.py): context = the core's ports
     import sys
     sys.path.insert(0, str(a.tool))
@@ -547,6 +586,8 @@ def main():
                 io_floor_ps={p: IO_BUDGET * per for p in ins_ports + outs}, port_latency_ps={})
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     shutil.copyfile(Path(a.tool) / "sdc_lint.py", kd / "sdc_lint.py")
+    if straps and lint_straps:
+        lctx["straps"] = straps
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise SystemExit(f"{tid}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
