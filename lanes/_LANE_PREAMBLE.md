@@ -25,3 +25,7 @@ You are a lane agent of the OpenTallas coordinator, which now runs on rtx-pro (t
 - Up to 3 sub-agents. When blocked on an owner question, write it in your lane file under "OWNER?" and continue other items.
 - Before you stop: write a "## PARKED <date>" section in your lane file (branch@sha, live jobs host:path/pid, results,
   next step, OWNER?) and return a short report.
+- Launching jobs: the previous lanes launched from their worktrees on epyc1 (~/wt/<lane> or
+  /srv/opentallas-scratch/claude/wt/<lane>); ot-run copies sources from there. You may keep using those epyc1 worktrees
+  over ssh (git -C there, same git rules) -- that is usually simplest for ot-run. epyc1 root is 82%: prune your own
+  superseded data, don't add bulk files to epyc1 root.
