@@ -1642,9 +1642,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
-            # (keyed as the candidate loops check it: an "eq" partner by name, its inversion as an int)
-            tried[(side, k, "c") if h[0] == "const" else
-                  (side, k, h[2], h[3]) if h[0] == "eq" else (side, k, str(h[2]), str(h[3]))] += 1
+            tried[(side, k, "c") if h[0] == "const" else (side, k, str(h[2]), str(h[3]))] += 1
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
