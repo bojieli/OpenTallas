@@ -1,0 +1,23 @@
+{
+ "kit": "ot_s81_cfg7_seq_bfp_c",
+ "outline_um": [
+  30.24,
+  60.48
+ ],
+ "regs": 1002,
+ "ck_probe_min_ps": 228.123734,
+ "ck_probe_max_ps": 229.212982,
+ "ck_probe_p50_ps": 228.965332,
+ "ck_probe_spread_ps": 1.0892479999999978,
+ "ckbufs": 81,
+ "macros": 0,
+ "macro_ck_probe_ps": null,
+ "cts_tool": "I 256 (tap 84-92 +7 delay cells), 2966 hold bufs (+34.5% area), hold met +15",
+ "pin_flop_um": {
+  "n": 635,
+  "p50": 11.001,
+  "p90": 13.923000000000002,
+  "max": 19.935000000000002,
+  "over20": 0
+ }
+}
