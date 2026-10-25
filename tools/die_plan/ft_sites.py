@@ -112,6 +112,15 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
             a=np.array([pins[(name+'_i',i)] for i in range(width)])
             b=np.array([pins[(name+'_o',i)] for i in range(width)])
             budget=reach_um*margin-2.0 # reserve actual D/Q pin offsets from cell centres
+            direct=float(np.abs(b-a).sum(axis=1).max())
+            if slot['stations']==1 and direct<=budget:
+                # Station0 is already the input-face register. Do not add a
+                # gratuitous internal pipeline stage to a short direct leg.
+                for key in ('regs_um','bit_sites_um','bit_site_cell_um'):
+                    slot.pop(key,None)
+                ledger.append(dict(type=tn,slot=name,stations=[1,1],worst_paired_bit_um=round(direct,4),
+                                   budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um))
+                continue
             blocked_targets=set();base_used=set(allocator.used);done=False
             for attempt in range(100):
                 allocator.used=set(base_used)
