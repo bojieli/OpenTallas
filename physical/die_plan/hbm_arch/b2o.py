@@ -1435,6 +1435,8 @@ def phy_keepouts(plan, log):
     boxes = [io["rect_um"] for io in plan["die"].get("io", [])]
     boxes += [d["rect_um"] for d in plan["die"].get("pg", {}).get("domains", [])]
     for pn, part in P.parts.items():
+        if plan["partition_types"][part["type"]].get("hard"):
+            continue  # a hard PHY macro IS the reservation; its clock input is the macro LEF pin, not a stdcell tap
         x0, y0, x1, y1 = P.rect(pn)
         for a, b, c, d in boxes:
             a, b, c, d = max(a, x0), max(b, y0), min(c, x1), min(d, y1)

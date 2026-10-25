@@ -1,5 +1,104 @@
 {
- "source": "HBM-BIND native-bind need (B2n b2n_report.json lane_delta_short: NW_hub->root ctl 1491 < 3749, NE 1491 < 2709) + COORD 00:21 ruling (1): RTL sends hub->root over static beats; size L74 >= ceil(need/3) per beat, ideally wider",
- "why": "B2o puts L74 on the hub / root ABUTTING face (one neighbour hop, no transit): 2 static beats (ceil(3749/2) = 1875 NW; NE 2709 -> 1355 fits) instead of 3; full width would take another 1874 pins of the 2073.6-um hub / root face that root -> hub L12/L13 (6286 b) already uses",
- "widen": [{"lanes": ["L74"], "width": [1875]}]
+ "source": "COORD RULING 2026-10-25 03:12 PDT (HBM L74 option (b)) + native W128 HC exact lane census (B2o_inputs/native_hc_lane_delta.json, codex/hbm-native-1025 591bcf802 actual_kinds)",
+ "why": "L74 hub -> root: 2 static beats; NW need 3782 b incl. ep_S1 TX 632 b does not fit 2 x 1875 -> widen to 2341 b (ruling (b)); NE (L74m, MY mirror of the same q_hub type) carries the same pin table, its 2-beat need 2735 -> 1719 b fits. HC bank-chain lanes L10/L11/L14-L20 (+m) sized to the exact native W128 half widths (4096-4383 b), applied in the same re-floorplan batch; exact RTL widths, no spare bits (plan = as-built loads).",
+ "widen": [
+  {
+   "lanes": [
+    "L74"
+   ],
+   "width": [
+    2341
+   ]
+  },
+  {
+   "lanes": [
+    "L14"
+   ],
+   "width": [
+    4116
+   ],
+   "src": "NW_b000",
+   "dst": "NW_b001"
+  },
+  {
+   "lanes": [
+    "L19"
+   ],
+   "width": [
+    4097
+   ],
+   "src": "NW_b000",
+   "dst": "NW_hub"
+  },
+  {
+   "lanes": [
+    "L15"
+   ],
+   "width": [
+    4116
+   ],
+   "src": "NW_b001",
+   "dst": "NW_b002"
+  },
+  {
+   "lanes": [
+    "L10"
+   ],
+   "width": [
+    4383
+   ],
+   "src": "NW_b002",
+   "dst": "NW_b003"
+  },
+  {
+   "lanes": [
+    "L16"
+   ],
+   "width": [
+    4116
+   ],
+   "src": "NW_b003",
+   "dst": "NW_b013"
+  },
+  {
+   "lanes": [
+    "L20"
+   ],
+   "width": [
+    4096
+   ],
+   "src": "NW_b010",
+   "dst": "NW_b000"
+  },
+  {
+   "lanes": [
+    "L11"
+   ],
+   "width": [
+    4383
+   ],
+   "src": "NW_b011",
+   "dst": "NW_b010"
+  },
+  {
+   "lanes": [
+    "L17"
+   ],
+   "width": [
+    4116
+   ],
+   "src": "NW_b012",
+   "dst": "NW_b011"
+  },
+  {
+   "lanes": [
+    "L18"
+   ],
+   "width": [
+    4116
+   ],
+   "src": "NW_b013",
+   "dst": "NW_b012"
+  }
+ ]
 }
