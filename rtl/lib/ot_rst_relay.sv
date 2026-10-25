@@ -16,7 +16,8 @@
 module ot_rst_relay #(
     parameter integer REGIONS     = 4,
     parameter integer SYNC_STAGES = 2,
-    parameter integer TREE_STAGES = 1
+    parameter integer TREE_STAGES = 1,
+    parameter integer SYNC_INPUT = 0
 ) (
     input  wire               clk,
     input  wire               rst_n_in,
@@ -24,26 +25,45 @@ module ot_rst_relay #(
 );
     localparam integer RELEASE_CYCLES = SYNC_STAGES + TREE_STAGES;
 
-    (* async_reg = "true" *) reg [SYNC_STAGES-1:0] sync_q;
-    always @(posedge clk or negedge rst_n_in) begin
-        if (!rst_n_in)
-            sync_q <= {SYNC_STAGES{1'b0}};
-        else
-            sync_q <= {sync_q[SYNC_STAGES-2:0], 1'b1};
-    end
+    // SYNC_INPUT=1 is for a reset delivered by the die's sole root synchroniser and registered wavefront.
+    // Both assertion and release traverse this ordinary synchronous pipeline; no local CDC or async clear remains.
+    reg [SYNC_STAGES-1:0] sync_q;
+    generate
+        if (SYNC_INPUT) begin : g_sync_input
+            always @(posedge clk)
+                sync_q <= {sync_q[SYNC_STAGES-2:0], rst_n_in};
+        end else begin : g_async_input
+            (* async_reg = "true" *) reg [SYNC_STAGES-1:0] async_q;
+            always @(posedge clk or negedge rst_n_in) begin
+                if (!rst_n_in)
+                    async_q <= {SYNC_STAGES{1'b0}};
+                else
+                    async_q <= {async_q[SYNC_STAGES-2:0], 1'b1};
+            end
+            always @* sync_q = async_q;
+        end
+    endgenerate
 
     // relay tree: stage t, region r.  Every stage is replicated per region so each copy drives only its own region.
     (* keep = "true", dont_touch = "true" *) reg [REGIONS-1:0] relay_q [0:TREE_STAGES-1];
     genvar t;
     generate
         for (t = 0; t < TREE_STAGES; t = t + 1) begin : g_stage
-            always @(posedge clk or negedge rst_n_in) begin
-                if (!rst_n_in)
-                    relay_q[t] <= {REGIONS{1'b0}};
-                else if (t == 0)
-                    relay_q[t] <= {REGIONS{sync_q[SYNC_STAGES-1]}};
-                else
-                    relay_q[t] <= relay_q[(t == 0) ? 0 : t-1];
+            if (SYNC_INPUT) begin : g_sync
+                always @(posedge clk)
+                    if (t == 0)
+                        relay_q[t] <= {REGIONS{sync_q[SYNC_STAGES-1]}};
+                    else
+                        relay_q[t] <= relay_q[(t == 0) ? 0 : t-1];
+            end else begin : g_async
+                always @(posedge clk or negedge rst_n_in) begin
+                    if (!rst_n_in)
+                        relay_q[t] <= {REGIONS{1'b0}};
+                    else if (t == 0)
+                        relay_q[t] <= {REGIONS{sync_q[SYNC_STAGES-1]}};
+                    else
+                        relay_q[t] <= relay_q[(t == 0) ? 0 : t-1];
+                end
             end
         end
     endgenerate
@@ -54,6 +74,7 @@ module ot_rst_relay #(
     initial begin
         if (SYNC_STAGES < 2) $error("ot_rst_relay: SYNC_STAGES must be >= 2 (release crosses from the async port)");
         if (TREE_STAGES < 1) $error("ot_rst_relay: TREE_STAGES must be >= 1");
+        if (SYNC_INPUT != 0 && SYNC_INPUT != 1) $error("ot_rst_relay: SYNC_INPUT must be 0 or 1");
         if (REGIONS < 1)     $error("ot_rst_relay: REGIONS must be >= 1");
     end
 `endif
