@@ -566,6 +566,23 @@ class Aig:
                 stack += (self.ands[2 * k] >> 1, self.ands[2 * k + 1] >> 1)
         return ins
 
+    def near_inputs(self, lit, depth):
+        """the inputs / registers within `depth` AND levels of `lit` (a hold mux puts its own Q at depth <= 3)."""
+        seen, front, ins = set(), [lit >> 1], set()
+        for _ in range(depth + 1):
+            nxt = []
+            for v in front:
+                if v == 0 or v in seen:
+                    continue
+                seen.add(v)
+                if v <= self.ni:
+                    ins.add(v)
+                else:
+                    k = v - self.ni - 1
+                    nxt += (self.ands[2 * k] >> 1, self.ands[2 * k + 1] >> 1)
+            front = nxt
+        return ins
+
     def simulate(self, words, seed=1):
         """bit-parallel random simulation (python ints of `words` x 64 bits) -> value list per variable."""
         import random
@@ -1530,10 +1547,15 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                                 new += 1
                     # merged into a matched register of ANOTHER vector (HBM tkm tile: self-holding X[0..3][j] ->
                     # up_out[86 i + j], gt[64..67][j] -> q_bg[8][86 j + 85]): the same cofactor test with every
-                    # matched register held at 0 / at 1; a pair proposed here is proved by induction like any other
+                    # SELF-HOLDING matched register (own Q within 8 AND levels of its next state: the hold mux) held at
+                    # 0 / at 1 -- holding every matched register would make enables / data constant too; a pair
+                    # proposed here is proved by induction like any other
                     ug2 = [k for k in ug if ("gold", k) not in L.hyp and tried[("gold", k, "sib")] < 3]
                     if ug2:
-                        hall = {k for k in L.matched if k.startswith("ff:")}
+                        m, kind = L.build(with_compare=False, with_hyp=False)
+                        var_of = {kk: v for v, (t, kk) in kind.items() if t == "matched"}
+                        hall = {k for k in L.matched if k.startswith("ff:") and k in var_of and
+                                var_of[k] in m.near_inputs(L.dlit[("gold", k)], 8)}
                         hof = []
                         for c in (0, 1):
                             mc, _ = L.build(with_compare=False, with_hyp=False, free_const=c, hold_matched=hall)
