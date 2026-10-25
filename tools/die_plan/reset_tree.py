@@ -156,6 +156,12 @@ def blockages(t, clear=CLEAR_UM):
         if c.get("orient") in ("R90", "R270", "MXR90", "MYR90"):
             cw, ch = ch, cw
         out.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
+    # Analog/isolated-PG keepouts are uniform per type, shared with the clock
+    # planner. Reset relay cells and wavefront port sites must not reoccupy a
+    # domain from which the plan has removed clock taps.
+    for x0, y0, x1, y1 in (t.get("clock", {}) or {}).get("keepouts_um", []):
+        halo = max(clear, 8.64)
+        out.append((x0 - halo, y0 - halo, x1 + halo, y1 + halo))
     return out
 
 
