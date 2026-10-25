@@ -192,12 +192,14 @@ def _num(x, what):
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
-         hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None):
+         hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
     hold_in_min_ps / hold_out_min_ps / seam_hold_ps: the plan's opt-in seam hold contract (gen_phys.seam_hold);
-    absent = legacy (min input <= -insertion_tol, min output <= 0).  -> [errors]"""
+    absent = legacy (min input <= -insertion_tol, min output <= 0).  hold_in_min_ports_ps {input port: ps}: IO-HOLD
+    option A per-port min input delay limits (gen_phys.input_hold_min: the sender's guaranteed output-min) replacing
+    the contract limit on exactly those ports.  -> [errors]"""
     err = []
     u = time_unit_ps
     in_lim = -float(insertion_tol_ps) if hold_in_min_ps is None else float(hold_in_min_ps)
@@ -412,9 +414,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         for m in ("max", "min"):
             if m not in idly[p]:
                 err.append(f"ports: input {p} has no {m} input delay")
-        if "min" in idly[p] and idly[p]["min"][1] > in_lim + EPS:
-            err.append(f"hold: input {p} min input delay {idly[p]['min'][1]:g} ps > {in_lim:g} ps "
+        p_lim = float((hold_in_min_ports_ps or {}).get(p, in_lim))
+        if "min" in idly[p] and idly[p]["min"][1] > p_lim + EPS:
+            err.append(f"hold: input {p} min input delay {idly[p]['min'][1]:g} ps > {p_lim:g} ps "
                        "(seam-hold padding relaxed)")
+    for p in (hold_in_min_ports_ps or {}):
+        if p not in ctx.inputs:
+            err.append(f"hold: IO-HOLD per-port limit on '{p}', which is not an input port")
     for p in ctx.outputs:
         for m in ("max", "min"):
             if m not in odly[p]:
@@ -486,7 +492,14 @@ def kit_context(P, tn):
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
-                port_period_mult=edge, **_seam_ctx(P))
+                port_period_mult=edge, **_seam_ctx(P), **_io_hold_ctx(P, tn))
+
+
+def _io_hold_ctx(P, tn):
+    """IO-HOLD option A per-port min input delay limits (none in legacy mode: byte-identical json)."""
+    import gen_phys
+    m = gen_phys.input_hold_min(P, tn)
+    return dict(hold_in_min_ports_ps={p: d["in_min_ps"] for p, d in sorted(m.items())}) if m else {}
 
 
 def _seam_ctx(P):

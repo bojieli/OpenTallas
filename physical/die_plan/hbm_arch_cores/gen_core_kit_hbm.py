@@ -879,6 +879,9 @@ def main():
                 f"export OT_DTAP_TARGET = {a.clock_tap_sinks}",
                 f"export OT_DTAP_DMAX_UM = {a.clock_tap_dmax:g}",
                 "export OT_DTAP_OUT = /work/dtap.txt",
+                # KITS-SPARE-2/W1 10-25: the tap scripts default to port "clk"; cores clocked from another single port
+                # (pgslice pretree clk_ctl) died in CTS with invalid command name NULL (findBTerm clk -> NULL)
+                f"export OT_DTAP_PORT = {clks[0]}" if len(clks) == 1 else "# OT_DTAP_PORT default clk",
                 "override export POST_CTS_TCL = /work/core_tap_align.tcl",
                 "override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
                 f"{rec.get('cts_delay_buffer_derate', 0.5)} -sink_clustering_max_diameter 30 -sink_clustering_size 20 "

@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS_G0C",
+  "source_revision": "16220f781",
+  "errors": 0,
+  "types_clean": "56/56",
+  "surviving_lane_cycle_changes": {},
+  "removed_lanes": [
+    "native59__fltn"
+  ],
+  "removed_payload_bits": 864,
+  "note": "Native fault still carries the actual fault on native59__fault_native_fault. Consumer CID widths are6 rather than source-ring24. Per-bit physical station repair is still required before routing."
+}

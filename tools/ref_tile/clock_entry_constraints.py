@@ -32,7 +32,8 @@ def signoff_period(spec):
         return actual
     route = spec.get('route', {})
     value = route.get('signoff_period_ps', 833.333)
-    if 'signoff_period_ps' in route and not native_leaf(spec):
+    # Exact 833ps is the common release policy (owner10-24); tightening to it needs no per-leaf clock waiver.
+    if 'signoff_period_ps' in route and value != 833.0 and not native_leaf(spec):
         raise ValueError('signoff_period_ps requires native leaf timing ownership (multiple_cts_roots or hybrid_entries tile)')
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
         raise ValueError('signoff_period_ps must be finite and positive')

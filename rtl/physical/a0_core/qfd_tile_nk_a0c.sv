@@ -68,6 +68,14 @@ module qfd_tile_nk_a0c #(
     input  wire          ck_t36,
 `ifdef OT_A0_CK_TAPS38
     input  wire          ck_t37,
+`ifdef OT_A0_CK_TAPS42
+    // QC-A0 10-24 A0 v8 (F1): hub tap additions (gen_a0c8_taps.py; NK ck_t38..ck_t41 with OT_A0_CK_TAPS42 on top of
+    // OT_A0_CK_TAPS38, NL ck_t37..ck_t40 with OT_A0_CK_TAPS41 instead of OT_A0_CK_TAPS38).  No RTL loads.
+    input  wire          ck_t38,
+    input  wire          ck_t39,
+    input  wire          ck_t40,
+    input  wire          ck_t41,
+`endif
 `endif
 `endif
 `endif

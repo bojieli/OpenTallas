@@ -32,6 +32,11 @@ def declare(P, path, die_clock):
         for hc in hcs:
             v = "nl" if hc["module"].startswith("qfd_tile_nl") else "nk"
             var = cfg["variants"][v]
+            if "reset_depth" in var:
+                depth = var["reset_depth"]
+                if not isinstance(depth, int) or isinstance(depth, bool) or depth < 1:
+                    raise ValueError("a0_core_taps: reset_depth must be a positive integer")
+                hc.setdefault("reset", {})["depth"] = depth
             cw, _ = hc["outline_um"]
             ox, oy = hc["origin_um"]
             dx, dy = hc.get("track_offset_um", [0.0, 0.0])

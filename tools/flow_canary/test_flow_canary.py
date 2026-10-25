@@ -231,3 +231,16 @@ def test_hold_gate_verdict_is_not_a_tcl_crash():
     assert m and all(canary.GATE_ERR_RE.search(log[x.start():].split("\n", 1)[0]) for x in m)
     crash = "Error: cts.tcl, 6 can't read \"rt_named_nets\": no such variable\n"
     assert not canary.GATE_ERR_RE.search(crash)
+
+
+def test_grt_gate_spec_false_still_reads_gate_lines(tmp_path):
+    """spec grt_gate false must not PASS a flow that ran the post-CTS gate and FAILed it (HBM core canary)."""
+    kit = tmp_path / "kit"
+    kit.mkdir()
+    (kit / "config.mk").write_text("export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl\n")
+    (tmp_path / "canary_meta.json").write_text(json.dumps(dict(kit=str(kit), spec=dict(die="x", item="y", grt_gate=False))))
+    assert C.check_run(tmp_path)["stages"]["grt_gate"]["verdict"] == "PASS"
+    (kit / "postcts_gate_TT.log").write_text("OT_POSTCTS_GATE TT (global_routing) pinreg n 557 mean 304.90 bound 250.00 dev 54.90 tol 20.0 FAIL\n")
+    (kit / "postcts_gate_FF.log").write_text("OT_POSTCTS_GATE FF (global_routing) pinreg n 557 mean 266.39 bound 202.50 dev 63.89 tol 20.0 FAIL\n")
+    r = C.check_run(tmp_path)
+    assert r["stages"]["grt_gate"]["verdict"] == "FAIL" and "304.90" in r["stages"]["grt_gate"]["why"]

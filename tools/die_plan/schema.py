@@ -101,6 +101,15 @@ _order = {"enum": ["lsb_low", "lsb_high"]}
 _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
         "properties": {"part": _name, "bus": _name}}
 
+# B2 (PATH-QC-B12 10-25): hard-IP LINE SIDE of a hard core (its bumps, e.g. a UCIe PHY's link_* / far_*): pins absent
+# from the as-built die that the binder exports as die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins)
+_bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", "dir", "width"],
+                                          "additionalProperties": False,
+                                          "properties": {"pin": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"},
+                                                         "dir": {"enum": ["input", "output"]},
+                                                         "width": {"type": "integer", "minimum": 1},
+                                                         "note": {"type": "string"}}}}
+
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
 _parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
     name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
@@ -266,6 +275,9 @@ SCHEMA = {
                         # (insertion_ps = TT, insertion_ff_ps = FF) = the signed view's routed RCX pin-register mean,
                         # or the parent budget before the first sign-off; insertion_basis says which
                         "insertion_ff_ps": _pos, "insertion_basis": {"type": "string"},
+                        # IO-HOLD option A: the signed view's measured guarantee (ps after vclk, FF) that no
+                        # output changes earlier = contract guarantee + worst output-hold slack; absent = contract
+                        "out_hold_guarantee_ps": {"type": "number"},
                         "keepouts_um": {"type": "array", "items": _rect},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
@@ -317,6 +329,7 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
                                        "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
@@ -348,6 +361,7 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "bump_ports": _bump_ports,
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
                                        # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
@@ -442,6 +456,10 @@ SCHEMA = {
             # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
             "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
                           "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
+            # IO-HOLD option A (COORD 10-25 10:23, opt-in; gen_phys.input_hold_min): "sender_min" = each partition
+            # input's min input delay is its driving partition's guaranteed output-min, the related tap pair skew is
+            # checked at the parent (io_hold_parent.py); "legacy" / absent = the flat contract above
+            "io_hold": {"enum": ["legacy", "sender_min"]},
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.
@@ -1008,6 +1026,33 @@ def _grid_taps(P, tn):
     return out
 
 
+def placed_macro_boxes(t, halo=0.0):
+    """Type-frame obstacles shared by FT siting, clock taps and geometry gates.
+
+    Planned hard cores remain obstacles even before a view exists. Physical
+    contents (LEF-bearing SRAM/ROM/hard leaves) are equally real obstacles.
+    Match kit placement: a hard-core record wins over the same content instance,
+    and its track offset is applied once. R0/MX/MY/R180 preserve box dimensions.
+    Logical contents without a physical view do not reserve a macro footprint.
+    """
+    entries = {c['inst']: c for c in t.get('hard_cores', []) or []}
+    for c in t.get('contents', []) or []:
+        if c.get('lef') and c['inst'] not in entries:
+            entries[c['inst']] = c
+    boxes = {}
+    cores = {c['inst'] for c in t.get('hard_cores', []) or []}
+    for name, c in entries.items():
+        if 'origin_um' not in c or 'outline_um' not in c:
+            raise ValueError(f"physical macro {name}: origin_um and outline_um required")
+        x, y = map(float, c['origin_um']); w, h = map(float, c['outline_um'])
+        dx, dy = c.get('track_offset_um', [0.0, 0.0]) if name in cores else (0.0, 0.0)
+        x += dx; y += dy
+        if not all(math.isfinite(v) for v in (x, y, w, h, halo)) or w <= 0 or h <= 0:
+            raise ValueError(f"physical macro {name}: nonphysical footprint")
+        boxes[name] = (x-halo, y-halo, x+w+halo, y+h+halo)
+    return boxes
+
+
 TAP_CLEAR_UM = 8.64       # tap pin (and its root buffer) >= one lattice step off every hard core / macro of the type
 TAP_STEP_UM = 2.16
 
@@ -1020,10 +1065,7 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
     tap is already in a channel, are unchanged (strict=True, density taps: the outline / taken spacing applies even
     without hard cores)."""
     w, h = t["outline_um"]
-    boxes = []
-    for c in t.get("hard_cores", []) or []:
-        (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
-        boxes.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
+    boxes = list(placed_macro_boxes(t, halo=clear).values())
 
     boxes.extend((a - clear, b - clear, c + clear, d + clear)
                  for a, b, c, d in t.get("clock", {}).get("keepouts_um", []))
