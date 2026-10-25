@@ -620,6 +620,22 @@ class TestOwnership(TickBase):
         self.assertIn("OWNERSHIP unavailable", g)
 
 
+class TestChainSafety(Base):
+    def test_parent_staging_client_and_spill_are_busy(self):
+        k = "/srv/opentallas-scratch2/claude/kv/heads/e2/kit"
+        for flag in ("--dir", "--stage"):
+            self.assertTrue(self.ap.process_uses_kit("python3 /home/ubuntu/.local/bin/ot-run " + flag +
+                " /srv/opentallas-scratch2/claude/kv/heads/e2 -- bash /srv/opentallas-scratch2/claude/kv/heads/e2/go.sh", k))
+        self.assertFalse(self.ap.process_uses_kit("ot-run --dir /srv/opentallas-scratch2/claude/kv/heads/e20", k))
+
+    def test_signoff_does_not_finish_busy_adopted_chain(self):
+        self.ap.hub_procs = lambda path: []
+        self.ap.probe_job = lambda j: so()
+        self.ap.rpy = lambda *a, **kw: {"busy": True, "log_age_s": 3000}
+        self.ap.finish = lambda *a: self.fail("finished a live chain")
+        self.ap.poll_adopted({}, {"host": "epyc2", "path": "/kit"})
+
+
 class TestReviewIdentity(unittest.TestCase):
     def test_batches_never_share_clearance(self):
         import loopgaps as L
