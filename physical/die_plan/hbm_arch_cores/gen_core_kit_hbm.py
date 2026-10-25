@@ -657,8 +657,7 @@ def main():
            "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) " + " ".join(fflibs),
            "export ADDITIONAL_LIBS =",
            "override export LIB_FILES = $(TC_LIB_FILES)",
-           *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()],
-           *[f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]]
+           *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()]]
     if lefs:
         cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}",
                 # HBM-ELEM 10-24: the ASAP7 SRAM macros are abstracts (LEF + lib, no GDS in the repo): 6_1_merge failed
@@ -713,6 +712,9 @@ def main():
         cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
+    # HBM-CORES3 10-25: --orfs-var overrides go LAST (a later make export wins; they used to precede the macro block,
+    # so e.g. MACRO_PLACE_HALO=... was silently overridden by the generator default)
+    cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
