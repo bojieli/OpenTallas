@@ -8,10 +8,11 @@
 // and no unmapped REF list's selected_line lane valid bit is ever 1 (sanity of the reference; the random phase reads
 // never-written SRAM rows, whose X propagates identically in REF and DUT and is not counted as a 1).
 // Stimulus: NRUN production op streams (tools/hbm_idx_static_calendar.py shape, as tb_hbm_idx_selector_sel_eq: op1,
-// op3, 171 x op2 ingest, op5 31..0, passes 1 / 2 op3 + 171 x op4 + op5, 171 x op6 compact) with random k, then 4,000
+// op3, 171 x op2 ingest, op5 31..0, passes 1 / 2 op3 + 171 x op4 + op5, 171 x op6 compact) with random k (odd runs:
+// keys from 97 values, so the threshold bin has many equal keys and the tie budget decides), then 4,000
 // random legal ops (0..7). PASS needs 0 mismatches and selected beats > 0.
 module tb_idx_selector_nl #(parameter integer NL = 1, parameter integer OFF = 0, parameter integer SMUT = 0,
-    parameter integer NRUN = 3, parameter integer SEED = 11);
+    parameter integer NRUN = 4, parameter integer SEED = 11);
  reg clk = 0, rst_n = 0; always #1 clk = ~clk;
  reg [3:0] op = 0; reg [1:0] pass = 0; reg [7:0] addr = 0; reg [9:0] k = 0;
  reg [NL*592-1:0] in_d = 0; wire [2367:0] in_r;
@@ -25,6 +26,7 @@ module tb_idx_selector_nl #(parameter integer NL = 1, parameter integer OFF = 0,
   .pass(pass), .addr(addr), .k(k), .in_line(in_r), .selected_v(rsv), .selected_line(rsl), .fault(rf));
  ot_hbm_idx_selector_static_sel #(.MUT(SMUT), .NL(NL)) dut(.clk_ctl(clk), .clk_q({NL{clk}}), .clk_mem({(3*NL){clk}}),
   .rst_n(rst_n), .op(op), .pass(pass), .addr(addr), .k(k), .in_line(in_d), .selected_v(nsv), .selected_line(nsl), .fault(nf));
+ reg lowkey = 0;   // odd production runs draw keys from 97 values: many keys equal the threshold (tie path)
  integer chk = 0, mism = 0, selbeats = 0, chosen = 0, seed = SEED, nflt = 0;
  always @(posedge clk) if (rst_n) begin
   chk = chk + 1;
@@ -46,7 +48,7 @@ module tb_idx_selector_nl #(parameter integer NL = 1, parameter integer OFF = 0,
  task automatic idle(input integer n, input [1:0] p); for (integer i = 0; i < n; i = i + 1) tick(0, p, 0); endtask
  task automatic line(input integer a); begin
   for (integer q = 0; q < NL; q = q + 1) for (integer l = 0; l < 16; l = l + 1)
-   in_d[q*592 + l*37 +: 37] = {20'(a*16 + l), 16'($random(seed)), 1'($random(seed) % 5 != 0)};
+   in_d[q*592 + l*37 +: 37] = {20'(a*16 + l), lowkey ? 16'($unsigned($random(seed)) % 97) : 16'($random(seed)), 1'($random(seed) % 5 != 0)};
  end endtask
  task automatic production(input [9:0] kk); begin
   k <= kk; tick(1, 0, 0); idle(16, 0); idle(128 + 28 + 100, 0);
@@ -66,8 +68,9 @@ module tb_idx_selector_nl #(parameter integer NL = 1, parameter integer OFF = 0,
   idle(4, 0); rst_n = 1; idle(4, 0);
   for (integer r = 0; r < NRUN; r = r + 1) begin
    // k within the lists' capacity (NL*16 lanes x 171 lines, ~80 % valid) so the production stream itself stays legal
-   kk = 1 + ($unsigned($random(seed)) % 512); production(10'(kk));
+   lowkey = r % 2; kk = 1 + ($unsigned($random(seed)) % 512); production(10'(kk));
   end
+  lowkey = 0;
   for (integer i = 0; i < 4000; i = i + 1) begin
    line($unsigned($random(seed)) % 256); k <= 10'($unsigned($random(seed)) % 600);
    tick(4'($unsigned($random(seed)) % 8), 2'($unsigned($random(seed)) % 3), 8'($random(seed)));
