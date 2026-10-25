@@ -122,7 +122,7 @@ proc tech {m} {return 1000}
 proc blk {m args} {if {$m eq "getInsts"} {return $::instances}; if {$m eq "findBTerm"} {return bt}}
 proc bt {m} {return bb}
 proc bb {m} {return [dict get {xMin 457824 xMax 457824 yMin 669996 yMax 669996} $m]}
-set instances {};set placed {};set nets {}
+set instances {};set placed {};set nets {};set status {}
 proc mt {pin dir m} {return [expr {$m eq "getName" ? $pin : $dir}]}
 proc it {inst pin dir net m args} {
   if {$m eq "getMTerm"} {return [list mt $pin $dir]}
@@ -142,7 +142,11 @@ proc ins {id nm master m args} {
   if {$m eq "getName"} {return $nm}
   if {$m eq "getMaster"} {return [list ms $master]}
   if {$m eq "getITerms"} {return [dict get $::terms $id]}
-  if {$m eq "setLocation"} {dict set ::placed $id $args}
+  if {$m eq "setLocation"} {
+    if {[dict exists $::status $id] && [dict get $::status $id] eq "FIRM"} {error "ODB-0359 FIRM $nm"}
+    dict set ::placed $id $args
+  }
+  if {$m eq "setPlacementStatus"} {dict set ::status $id [lindex $args 0]}
 }
 proc ms {master m} {return $master}
 proc mkflop {id nm d qn} {
@@ -156,6 +160,7 @@ proc mkinv {id a y} {
   addterm $id A INPUT $a; addterm $id Y OUTPUT $y
 }
 dict set nets rst_n {}
+dict set status f_0_0 FIRM
 """
     script=stub+'\n'.join(lines)
     script+=f'\nset ::env(RESULTS_DIR) {{{tmp_path}}}\nset ::env(OT_RST_LAND_STAGES) 4\nset ::env(OT_A0_RESET_PATHS) {{{path}}}\nif {{[catch {{source {{{hook}}}}} e]}} {{puts stderr $e; exit 1}}\nputs "PLACED [dict size $placed]"\n'
