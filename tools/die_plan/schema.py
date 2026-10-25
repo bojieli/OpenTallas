@@ -173,20 +173,6 @@ SCHEMA = {
                         "additionalProperties": False,
                         "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos, "offset_um": _nonneg,
                                        "nets": {"type": "array", "items": _name}}}},
-                    # OWNER DECISION 7 (2026-10-24): separate supplies (e.g. the SerDes PHY supply) with their own
-                    # dedicated bump rows over the partitions they feed (the PHY / SerDes windows), isolated from the
-                    # core VDD grid; check.py check_pg_supplies validates parts and warns on SerDes windows left on core VDD
-                    "supplies": {"type": "array", "items": {
-                        "type": "object", "required": ["name", "nets", "parts", "bumps"], "additionalProperties": False,
-                        "properties": {"name": _name, "nets": {"type": "array", "items": _name, "minItems": 1},
-                                       "parts": {"type": "array", "items": _name, "minItems": 1},
-                                       "bumps": {"type": "object", "required": ["rows", "pitch_um"],
-                                                 "additionalProperties": False,
-                                                 "properties": {"rows": {"type": "integer", "minimum": 1},
-                                                                "pitch_um": _pos,
-                                                                "over": {"enum": ["io_window", "partition"]},
-                                                                "note": {"type": "string"}}},
-                                       "basis": {"type": "string"}, "note": {"type": "string"}}}},
                     # OWNER DECISION 7 (2026-10-24, IR over SerDes windows): a separate PHY supply per window with its own
                     # dense die-layer straps and dedicated power/ground bump rows over the macro (die_io.check_pg_domains)
                     "domains": {"type": "array", "items": {
