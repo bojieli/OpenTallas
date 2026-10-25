@@ -4,568 +4,238 @@
   "svc_lo_dsdv_svc_rs_w__t1": {
    "key": "svc",
    "cells": 12917494,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12506318,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 247182,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12506318 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 1
   },
   "svc_hi_dsdv_svc_rs__t1": {
    "key": "svc",
    "cells": 12750850,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12339674,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 80538,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12339674 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 9
   },
   "svc_lo_dsdv_svc_rs__t1": {
    "key": "svc",
    "cells": 12917494,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12506318,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 247182,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12506318 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0
   },
   "svc_hi_dsdv_svc_rs__t2": {
    "key": "svc",
    "cells": 12750850,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12339674,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 80538,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12339674 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0
   },
   "svc_lo_dsdv_svc_rs__t2": {
    "key": "svc",
    "cells": 12917494,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12506318,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 247182,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12506318 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0
   },
   "svc_hi_dsdv_svc_pvso_entry__t1": {
    "key": "svc",
    "cells": 12750850,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12339674,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 80538,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12339674 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0
   },
   "svc_lo_dsdv_svc_rs__t3": {
    "key": "svc",
    "cells": 12917494,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12506318,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 247182,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12506318 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0
   },
   "svc_hi_dsdv_svc_rs__t3": {
    "key": "svc",
    "cells": 12750850,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12339674,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 80538,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12339674 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0
   },
   "svc_lo_dsdv_svc_rs__t4": {
    "key": "svc",
    "cells": 12917494,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12506318,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 247182,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12506318 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0
   },
   "svc_hi_dsdv_svc_rs__t4": {
    "key": "svc",
    "cells": 12750850,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12339674,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 80538,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12339674 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0
   },
   "svc_lo_dsdv_svc_rs__t5": {
    "key": "svc",
    "cells": 12917494,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12506318,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 247182,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12506318 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0
   },
   "svc_hi_dsdv_svc_pvso_entry__t2": {
    "key": "svc",
    "cells": 12750850,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12339674,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 80538,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12339674 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0
   },
   "svc_lo_dsdv_svc_rs__t6": {
    "key": "svc",
    "cells": 12917494,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12506318,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 247182,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12506318 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 4
   },
   "svc_hi_dsdv_svc_rs__t5": {
    "key": "svc",
    "cells": 12750850,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12339674,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 80538,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12339674 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 3
   },
   "svc_lo_dsdv_svc_rs__t7": {
    "key": "svc",
    "cells": 12917494,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12506318,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 247182,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12506318 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 3
   },
   "svc_hi_dsdv_svc_rs__t6": {
    "key": "svc",
    "cells": 12750850,
-   "hard_cells": 411176,
-   "residual_soft_cells": 12339674,
+   "hard_cells": 13389672,
+   "residual_soft_cells": 80538,
    "basis": "svc: attention engine MEASURED 4 tiles x 3,097,168 = 12,388,672 cells (1.413 mm2 std; one 1.770-mm2 lattice cell cannot hold it) as 64 hdp cores 183,981 + 16 hgrp cores 30,272; hrow x8 411,176 measured as 2 cores of 4; svc_att staging glue ESTIMATED 60k (whole synth MISSING)",
-   "gaps": [
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>.<hdp h>",
-     "module": "ot_hdc_v41x_attn_tile_s:hdp_s",
-     "cells": 11774784,
-     "plan_core": "attn_t*_g*_h* (x64)",
-     "why": "no physical view of the attention head datapath hdp_s (183,981 cells x 64)"
-    },
-    {
-     "inst": "u_rsv.u_att.<attn_s>.<tile t>.<hgrp g>",
-     "module": "ot_hdc_v41x_attn_tile_s:hgrp_s",
-     "cells": 484352,
-     "plan_core": "attn_t*_g* (x16)",
-     "why": "no physical view of the head-group local logic hgrp_s (30,272 cells x 16)"
-    },
-    {
-     "inst": "u_rsv (SE/SM/P.V)",
-     "module": "se_sm_pv",
-     "cells": 20538,
-     "plan_core": "se_sm_pv",
-     "why": "no view (flattened, small)"
-    }
-   ],
-   "cores": 8,
-   "emitted": false,
-   "why": "residual soft cells 12339674 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 72,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 11
   },
   "ot_s81sl_leaf__t1": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 0
   },
   "ot_s81sl_leaf__t2": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 2
   },
   "dsdv_slice_lepw_mus_C__t1": {
    "key": "C:xrt1",
@@ -583,6 +253,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -590,97 +261,72 @@
   "ot_s81sl_leaf__t3": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 93
   },
   "ot_s81sl_leaf__t4": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 12
   },
   "ot_s81sl_leaf__t5": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 40.7,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t6": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 33.3,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 5,
+   "alt_place": 104
   },
   "ot_s81sl_leaf__t7": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 4
   },
   "dsdv_slice_lepw_mu_C__t1": {
    "key": "C:xrt1",
@@ -698,6 +344,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -705,116 +352,86 @@
   "ot_s81sl_leaf__t8": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 52.7,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 4,
+   "alt_place": 8
   },
   "ot_s81sl_leaf__t9": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 22
   },
   "ot_s81sl_leaf__t10": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 0
   },
   "ot_s81sl_leaf__t11": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 339.2,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 1,
+   "alt_place": 104
   },
   "ot_s81sl_leaf__t12": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 4,
+   "alt_place": 94
   },
   "ot_s81sl_leaf__t13": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 13
   },
   "dsdv_slice_c1x_C__t1": {
    "key": "C:xrt1",
@@ -832,6 +449,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -839,80 +457,60 @@
   "ot_s81sl_leaf__t14": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 1,
+   "alt_place": 88
   },
   "ot_s81sl_leaf__t15": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 76.6,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t16": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 16
   },
   "ot_s81sl_leaf__t17": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 3
   },
-  "dsdv_slice_c1x_C__t2": {
+  "dsdv_slice_c1x_C__t10": {
    "key": "C:xrt1",
    "cells": 723371,
    "hard_cells": 488443,
@@ -928,104 +526,80 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
   },
-  "ot_s81sl_leaf__t18": {
+  "ot_s81sl_leaf__t75": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 45
   },
-  "ot_s81sl_leaf__t19": {
+  "ot_s81sl_leaf__t53": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
-  "ot_s81sl_leaf__t20": {
+  "ot_s81sl_leaf__t54": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 365.8,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t21": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 21
   },
   "ot_s81sl_leaf__t22": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 2
   },
   "dsdv_slice_c1x_C__t3": {
    "key": "C:xrt1",
@@ -1043,6 +617,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1050,97 +625,72 @@
   "ot_s81sl_leaf__t23": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 17
   },
   "ot_s81sl_leaf__t24": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 19
   },
   "ot_s81sl_leaf__t25": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t26": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 1,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t27": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 4
   },
   "dsdv_slice_c1x_C__t4": {
    "key": "C:xrt1",
@@ -1158,6 +708,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1165,97 +716,72 @@
   "ot_s81sl_leaf__t28": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 342.9,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 14,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t29": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 11
   },
   "ot_s81sl_leaf__t30": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 198.9,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t31": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 0
   },
   "ot_s81sl_leaf__t32": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 2
   },
   "dsdv_slice_iq_C__t1": {
    "key": "C:xrt1",
@@ -1273,6 +799,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1280,59 +807,44 @@
   "ot_s81sl_leaf__t33": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 3,
+   "alt_place": 33
   },
   "ot_s81sl_leaf__t34": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 0
   },
   "ot_s81sl_leaf__t35": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "dsdv_slice_kv512_C__t1": {
    "key": "C:xrt1",
@@ -1350,6 +862,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0
@@ -1357,59 +870,44 @@
   "ot_s81sl_leaf__t36": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 339.2,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 6,
+   "alt_place": 104
   },
   "ot_s81sl_leaf__t37": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 4
   },
   "ot_s81sl_leaf__t38": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 2
   },
   "dsdv_slice_c3x_C__t1": {
    "key": "C:xrt3",
@@ -1427,6 +925,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1434,78 +933,58 @@
   "ot_s81sl_leaf__t39": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 113
   },
   "ot_s81sl_leaf__t40": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 76.6,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t41": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 15
   },
   "ot_s81sl_leaf__t42": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 2
   },
   "dsdv_slice_c1x_C__t5": {
    "key": "C:xrt1",
@@ -1523,6 +1002,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1530,78 +1010,58 @@
   "ot_s81sl_leaf__t43": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 17
   },
   "ot_s81sl_leaf__t44": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 12
   },
   "ot_s81sl_leaf__t45": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 1,
+   "alt_place": 101
   },
   "ot_s81sl_leaf__t46": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 46
   },
   "dsdv_slice_c1x_C__t6": {
    "key": "C:xrt1",
@@ -1619,6 +1079,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0
@@ -1626,97 +1087,72 @@
   "ot_s81sl_leaf__t47": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 17
   },
   "ot_s81sl_leaf__t48": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 12
   },
   "ot_s81sl_leaf__t49": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 76.6,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t50": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 59.3,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 1,
+   "alt_place": 104
   },
   "ot_s81sl_leaf__t51": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 4
   },
   "dsdv_slice_c1x_C__t7": {
    "key": "C:xrt1",
@@ -1734,6 +1170,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1741,116 +1178,58 @@
   "ot_s81sl_leaf__t52": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
-  },
-  "ot_s81sl_leaf__t53": {
-   "key": "leaf",
-   "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
-   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
-  },
-  "ot_s81sl_leaf__t54": {
-   "key": "leaf",
-   "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
-   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 6,
+   "alt_place": 8
   },
   "ot_s81sl_leaf__t55": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 55
   },
   "ot_s81sl_leaf__t56": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 0
   },
   "ot_s81sl_leaf__t57": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 22
   },
   "dsdv_slice_c1x_C__t8": {
    "key": "C:xrt1",
@@ -1868,6 +1247,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1875,78 +1255,58 @@
   "ot_s81sl_leaf__t58": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 2,
+   "alt_place": 58
   },
   "ot_s81sl_leaf__t59": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t60": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 4
   },
   "ot_s81sl_leaf__t61": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 2
   },
   "dsdv_slice_c1x_C__t9": {
    "key": "C:xrt1",
@@ -1964,6 +1324,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -1971,97 +1332,72 @@
   "ot_s81sl_leaf__t62": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 17
   },
   "ot_s81sl_leaf__t63": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 19
   },
   "ot_s81sl_leaf__t64": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t65": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 1
   },
   "ot_s81sl_leaf__t66": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 22
   },
   "dsdv_slice_lepe_nh_mus_C__t1": {
    "key": "C:xrt1",
@@ -2079,6 +1415,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -2086,97 +1423,72 @@
   "ot_s81sl_leaf__t67": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 17
   },
   "ot_s81sl_leaf__t68": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 19
   },
   "ot_s81sl_leaf__t69": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
   },
   "ot_s81sl_leaf__t70": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 4,
+   "alt_place": 35
   },
   "ot_s81sl_leaf__t71": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 0,
+   "alt_place": 4
   },
   "dsdv_slice_lepe_mu_C__t1": {
    "key": "C:xrt1",
@@ -2194,6 +1506,7 @@
     }
    ],
    "cores": 4,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0
@@ -2201,59 +1514,44 @@
   "ot_s81sl_leaf__t72": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 52.7,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 4,
+   "alt_place": 8
   },
   "ot_s81sl_leaf__t73": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 22
   },
   "ot_s81sl_leaf__t74": {
    "key": "leaf",
    "cells": 2162983,
-   "hard_cells": 1687704,
-   "residual_soft_cells": 475279,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [
-    {
-     "inst": "u_lf.u_ve",
-     "module": "ot_s81sl_ve",
-     "cells": 460279,
-     "plan_core": "ve_a/ve_b",
-     "why": "no closed view (closed_archive ot_s81sl_ve/s81sl_ve_r5-f51f4ec42-linked-eco-1021 has no final/ views; repo has stand-in views only); 460,279 cells is itself over the cap"
-    }
-   ],
-   "cores": 7,
-   "emitted": false,
-   "why": "residual soft cells 475279 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 0
   },
   "gunit__t1": {
    "key": "gunit",
@@ -2292,11 +1590,12 @@
     }
    ],
    "cores": 10,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
   },
-  "bk_sel__t1": {
+  "bk_sel__t2": {
    "key": "bk_sel",
    "cells": 808579,
    "hard_cells": 769888,
@@ -2312,6 +1611,7 @@
     }
    ],
    "cores": 7,
+   "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0
@@ -2319,21 +1619,15 @@
   "eng__t1": {
    "key": "eng",
    "cells": 428942,
-   "hard_cells": 0,
-   "residual_soft_cells": 428942,
+   "hard_cells": 448129,
+   "residual_soft_cells": 10000,
    "basis": "dsdv_eng_rr 418,942 (F ep7 ref_gate dsdv_eng_rr_b) > cap: 2 planned cores",
-   "gaps": [
-    {
-     "inst": "u_eng",
-     "module": "dsdv_eng_rr",
-     "cells": 418942,
-     "plan_core": "eng_rr_a/eng_rr_b",
-     "why": "no closed view of dsdv_eng_rr (no LEF in ref_tile / s81_die_views / closed_archive); 418,942 cells as one module is itself over the cap"
-    }
-   ],
-   "cores": 0,
-   "emitted": false,
-   "why": "residual soft cells 428942 > 400000 with the closed views available: real gap (see gaps)"
+   "gaps": [],
+   "cores": 3,
+   "bus_reach_excess_um": 0.0,
+   "emitted": true,
+   "corner": "WS",
+   "ft_stations_added": 2
   }
  }
 }

@@ -7,8 +7,9 @@ KITDIR = a local copy of the kit (rsync the run back first: run/logs, run/report
 views/, pin_audit.json, sdc_lint.log, face_guard.json, freeze.json).  Writes
   physical/ref_tile/<module>/views/<module>/{<module>.lef, <module>_tt.lib, <module>_ff.lib, <module>_ss.lib}
   physical/die_plan/qwen_kvsys/cores/harden/results/<module>.json
-Verdict: PASS only if route DRC 0, GRT overflow 0, pin audit PASS, setup WNS >= 0 at SS (sign-off corner, AGENTS.md),
-hold WNS >= 0 at FF; TT-only closure is recorded as TT pathfinding.  A FAIL still publishes the views, marked
+Verdict (coordinator 10-24): the kit's tools/die_plan/signoff.py record KIT/signoff/signoff.json decides -- closed only
+when it says SIGNED (TT setup / FF hold, DRV, spread, sdc_lint, face_guard, DRC, antenna); the pin audit must also PASS.
+No signoff.json = NOT SIGNED (signoff NOT RUN).  A FAIL still publishes the views, marked
 abstract_only (usable as placement abstracts, not as timing sign-off).  An existing FAIL record is never overwritten
 by a later run: the later run gets <module>.<kit_hash>.json.
 """
@@ -92,22 +93,23 @@ def main():
                sta=sta)
     views = kd / "views"
     lef = next(iter(sorted(views.glob(f"{mod}.lef"))), None)
-    libs = {c: views / f"{mod}_{c}.lib" for c in ("tt", "ff", "ss")}
+    libs = {c: views / f"{mod}_{c}.lib" for c in ("tt", "ff", "ss")}   # SS: information only
     ok_route = rec["drc"] == 0 and rec["grt_overflow"] in (0, None) and pa.get("verdict") == "PASS"
     ss, ff, tt = sta.get("ss") or {}, sta.get("ff") or {}, sta.get("tt") or {}
     setup_ss = ss.get("setup_ws_ps")
     hold_ff = ff.get("hold_ws_ps")
-    if not lef or not all(p.is_file() for p in libs.values()) or not sta["tt"]:
+    so = jload(kd / "signoff" / "signoff.json") or {}
+    rec["signoff"] = dict(verdict=so.get("verdict", "NOT RUN"), reasons=so.get("reasons"),
+                          checks={k: v.get("verdict") if isinstance(v, dict) else v for k, v in (so.get("checks") or {}).items()})
+    if not lef or not all(libs[c].is_file() for c in ("tt", "ff")) or not sta["tt"]:
         verdict = "INCOMPLETE (views / corner STA missing)"
-    elif ok_route and setup_ss is not None and setup_ss >= 0 and hold_ff is not None and hold_ff >= 0:
-        verdict = "PASS (setup SS, hold FF, DRC 0, pin audit PASS)"
-    elif ok_route and tt.get("setup_ws_ps", -1) >= 0 and tt.get("hold_ws_ps", -1) >= 0:
-        verdict = f"FAIL sign-off (TT closes = pathfinding only; SS setup WS {setup_ss} ps, FF hold WS {hold_ff} ps)"
+    elif so.get("verdict") == "SIGNED" and ok_route:
+        verdict = "SIGNED (signoff.py; pin audit PASS)"
     else:
-        verdict = (f"FAIL (DRC {rec['drc']}, GRT ovf {rec['grt_overflow']}, pins {rec['pin_audit']}, "
-                   f"TT setup WS {tt.get('setup_ws_ps')} / SS {setup_ss}, FF hold WS {hold_ff})")
+        verdict = (f"NOT SIGNED (signoff {so.get('verdict', 'NOT RUN')}; DRC {rec['drc']}, GRT ovf {rec['grt_overflow']}, "
+                   f"pins {rec['pin_audit']}, TT setup WS {tt.get('setup_ws_ps')}, FF hold WS {hold_ff})")
     rec["verdict"] = verdict
-    rec["views_status"] = "signoff" if verdict.startswith("PASS") else "abstract_only (timing not closed)"
+    rec["views_status"] = "signoff" if verdict.startswith("SIGNED") else "abstract_only (not SIGNED)"
     repo = Path(a.repo)
     if lef and not a.no_views:
         vd = repo / "physical" / "ref_tile" / mod / "views" / mod
@@ -127,7 +129,7 @@ def main():
     rd.mkdir(exist_ok=True)
     out = rd / f"{mod}.json"
     old = jload(out)
-    if old and str(old.get("verdict", "")).startswith("FAIL") and old.get("kit_hash") != rec["kit_hash"]:
+    if old and not str(old.get("verdict", "")).startswith(("SIGNED", "INCOMPLETE")) and old.get("kit_hash") != rec["kit_hash"]:
         out = rd / f"{mod}.{rec['kit_hash']}.json"     # failed verdicts are never overwritten
     out.write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(dict(module=mod, verdict=verdict, synth_cells=synth_cells, drc=rec["drc"],

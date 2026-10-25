@@ -32,6 +32,10 @@ module ot_s81hd_bundle #(
     parameter integer IOREG = 0,           // ot_dsrom_head_elem IOREG (pin-registered elements)
     parameter integer SAFE = 1,            // ot_s81hd_elem SAFE (registered argmax compare; required)
     parameter integer A_INPUT_STAGES = 0,  // opt-in aligned A transport; model prices every added cycle
+    // MERGE_HOP (S81-HEAD 10-24 hd_tile preview review: c1 -144 / res -288 ps at placement, the four A results meet
+    // from cores 350-700 um apart): 1 = a hop register before each compare level (pk_q -> pk_h -> c1 -> c1_h -> res),
+    // so a stage does EITHER the ~350-um hop OR the 81-b pick.  +2 cycles on the result; 0 = unchanged.
+    parameter integer MERGE_HOP = 0,
     // CV (S81-HEAD 10-24): 1 = the elements are the CLOSED views (physical/dsrom_fh_safe/closed/elem{A,B}) as the hard
     // macros ot_s81hd_elemA_cv (u_eA0..3) / ot_s81hd_elemB_cv (u_eB) in the labelled block g_cv (no generate index in
     // their paths); they are the closed parameter point (CUT 0x1ff, SPLIT9 1, IOREG 1, SAFE 1), checked below.
@@ -109,10 +113,20 @@ module ot_s81hd_bundle #(
         // All 307 bits use the same depth. Validity alone resets; payload
         // travels continuously, retaining the original systolic and B join alignment.
         // Physical implementation must land these groups at the actual A faces.
-        ot_hdc_delay #(.W(2), .D(A_INPUT_STAGES), .RESET(1)) u_av (
-            .clk(clk), .rst_n(rst_n), .d({go_d, bv_r[q]}), .q({a_go[q], bv_a[q]}));
-        ot_hdc_delay #(.W(305), .D(A_INPUT_STAGES)) u_ad (
-            .clk(clk), .rst_n(rst_n), .d({row_in, xsa, bd_r}), .q({row_a[q], x_a[q], bd_a[q]}));
+        if (A_INPUT_STAGES == 0) begin : g_ais0
+            assign {a_go[q], bv_a[q]} = {go_d, bv_r[q]};
+            assign {row_a[q], x_a[q], bd_a[q]} = {row_in, xsa, bd_r};
+        end else begin : g_ais
+            // first stage: this core's OWN kept copy (never merged with the other cores' identical x / bd copies)
+            wire [1:0]   v1;
+            wire [304:0] d1;
+            ot_s81hd_kregr #(.W(2)) u_av1 (.clk(clk), .rst_n(rst_n), .d({go_d, bv_r[q]}), .q(v1));
+            ot_s81hd_kreg #(.W(305)) u_ad1 (.clk(clk), .d({row_in, xsa, bd_r}), .q(d1));
+            ot_hdc_delay #(.W(2), .D(A_INPUT_STAGES - 1), .RESET(1)) u_av (
+                .clk(clk), .rst_n(rst_n), .d(v1), .q({a_go[q], bv_a[q]}));
+            ot_hdc_delay #(.W(305), .D(A_INPUT_STAGES - 1)) u_ad (
+                .clk(clk), .rst_n(rst_n), .d(d1), .q({row_a[q], x_a[q], bd_a[q]}));
+        end
         if (!CV) begin : g_rtl
         ot_s81hd_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_e (
             .clk(clk), .rst_n(rst_n), .go(a_go[q]), .row0(row_a[q]), .x(x_a[q]), .b_v(bv_a[q]), .b_d(bd_a[q]),
@@ -123,7 +137,8 @@ module ot_s81hd_bundle #(
     end endgenerate
     generate if (CV) begin : g_cv
         // closed-view parameter point (ot_dsrom_head_elem IOREG 1 SAFE 1 CUT 0x1ff SPLIT9 1): refuse anything else
-        if (CUT != 9'h1ff || SPLIT9 != 1 || IOREG != 1 || SAFE != 1 || A_INPUT_STAGES != 0) begin : g_bad
+        // A_INPUT_STAGES is tile-side transport (all 307 A input bits + go/bv at equal depth): allowed with the views
+        if (CUT != 9'h1ff || SPLIT9 != 1 || IOREG != 1 || SAFE != 1) begin : g_bad
             ot_s81hd_cv_params_differ_from_the_closed_views u_refuse ();   // elaboration error by design
         end
         wire [3:0] ov, lv;
@@ -149,22 +164,69 @@ module ot_s81hd_bundle #(
     endfunction
     reg [80:0] c1 [0:1];
     reg        c1_v;
+    // S81-HEAD 10-24 (GEOM-REVIEW tile batch 2: u_eA0/best_key -> c1 was a 14-level path across the tile, TT -627 ps):
+    // the four A results are registered at the tile side first (pk_q, next to each element's E face), the level-1
+    // compare starts from local flops.  +1 cycle on the result; the go block window grows by one (gsh 4).
+    reg [80:0] pk_q [0:3];
+    reg [3:0]  pk_done;
     // HD-TILE 10-21: the elements clear `done` IOREG (+1) edges after a_go, so with IOREG = 1 the original
     // `&a_done && !a_go[0]` re-raised res_v for one cycle with the PREVIOUS position's result after every later go
     // (measured: 2nd position fired 20 cycles after go).  The block window covers a_go + 3 cycles.
-    reg [2:0]  gsh;
+    // MERGE_HOP: the block window grows with the two hop stages (the stale done of the previous position travels them)
+    localparam integer GW = 4 + 2 * MERGE_HOP;
+    reg [GW-1:0] gsh;
     wire       gblk = a_go[0] | (|gsh);
+    reg [3:0]  pk_done_h;
+    reg        c1_vh;
+    wire [3:0] pk_done_m = MERGE_HOP ? pk_done_h : pk_done;
+    wire       c1_v_m = MERGE_HOP ? c1_vh : c1_v;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin c1_v <= 1'b0; res_v <= 1'b0; gsh <= 3'd0; end
+        if (!rst_n) begin c1_v <= 1'b0; res_v <= 1'b0; gsh <= {GW{1'b0}}; pk_done <= 4'd0; pk_done_h <= 4'd0; c1_vh <= 1'b0; end
         else begin
-            gsh <= {gsh[1:0], a_go[0]};
-            c1_v <= &a_done && !gblk;
-            res_v <= c1_v && !gblk;
+            gsh <= {gsh[GW-2:0], a_go[0]};
+            pk_done <= a_done;
+            pk_done_h <= pk_done;
+            c1_v <= &pk_done_m && !gblk;
+            c1_vh <= c1_v;
+            res_v <= c1_v_m && !gblk;
         end
+    reg [80:0] pk_h [0:3];
+    reg [80:0] c1_h [0:1];
     always @(posedge clk) begin
-        c1[0] <= pick({a_key[0], a_row[0], a_bits[0]}, {a_key[1], a_row[1], a_bits[1]});
-        c1[1] <= pick({a_key[2], a_row[2], a_bits[2]}, {a_key[3], a_row[3], a_bits[3]});
-        {res_row, res_bits} <= pick(c1[0], c1[1]);
+        for (int pq = 0; pq < 4; pq++) begin
+            pk_q[pq] <= {a_key[pq], a_row[pq], a_bits[pq]};
+            pk_h[pq] <= pk_q[pq];
+        end
+        c1_h[0] <= c1[0];
+        c1_h[1] <= c1[1];
+        if (MERGE_HOP) begin
+            c1[0] <= pick(pk_h[0], pk_h[1]);
+            c1[1] <= pick(pk_h[2], pk_h[3]);
+            {res_row, res_bits} <= pick(c1_h[0], c1_h[1]);
+        end else begin
+            c1[0] <= pick(pk_q[0], pk_q[1]);
+            c1[1] <= pick(pk_q[2], pk_q[3]);
+            {res_row, res_bits} <= pick(c1[0], c1[1]);
+        end
     end
-    assign fault = b_fault | (|a_fault);
+    // MERGE_HOP: the five element fault pins are landed next to their element and hopped (2 stages each) before the OR
+    // (tile_prev2: eA1 fault -> tile bflt_q crossed the tile in one cycle, -224 ps).  The fault is sticky, +2 is free.
+    reg [4:0] flt_q, flt_h;
+    always @(posedge clk) begin flt_q <= {b_fault, a_fault}; flt_h <= flt_q; end
+    assign fault = MERGE_HOP ? (|flt_h) : (b_fault | (|a_fault));
+endmodule
+
+// S81-HEAD 10-24 (hd_tile tile_prev2 placement STA: Yosys opt_merge folded the four per-A-core input copies back into
+// one 305-b register bank, so one copy drove all four A cores' x pins, -290 ps): kept register cells.  keep_hierarchy +
+// keep like ot_s81hd_oreg / the die_plan ot_dp_st cells: each instance survives as its own flops and its q drives only
+// its own load.  ot_s81hd_kreg: data (no reset, OWNER decision 13: control-only reset); ot_s81hd_kregr: control bits.
+(* keep_hierarchy, keep *)
+module ot_s81hd_kreg #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+(* keep_hierarchy, keep *)
+module ot_s81hd_kregr #(parameter integer W = 1) (input wire clk, input wire rst_n, input wire [W-1:0] d,
+                                                 output reg [W-1:0] q);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= '0; else q <= d;
 endmodule

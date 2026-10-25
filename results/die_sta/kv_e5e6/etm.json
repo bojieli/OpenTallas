@@ -1,0 +1,147 @@
+{
+ "top": "kv_pair_e5e6_top",
+ "mode": "etm",
+ "period_ps": 833.333,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "spine": "ideal",
+ "instances": {
+  "io_E5": "kv3_io_cor_v1_part",
+  "io_E6": "kv3_io_ft_v1_part"
+ },
+ "parts": {
+  "kv3_io_cor_v1_part": "/home/ubuntu/ot-scratch/kv-tok/recovered/kv-p7-1023-intel2/seam/parts/kv3_io_cor_v1",
+  "kv3_io_ft_v1_part": "/home/ubuntu/ot-scratch/kv-tok/recovered/kv-p7-1023-intel2/seam/parts/kv3_io_ft_v1"
+ },
+ "abstracts": {},
+ "corners": {
+  "SS": {
+   "seams": {
+    "io_E5->io_E6/ft0_i": {
+     "max": {
+      "paths": 523,
+      "worst": -62.333,
+      "neg": 25,
+      "tns": -812.181,
+      "launch": "0.00",
+      "capture": "0.00",
+      "start": "io_E5/ft11_o[23]",
+      "end": "io_E6/ft0_i[23]"
+     }
+    },
+    "io_E5->io_E6/ft1_i": {
+     "max": {
+      "paths": 2,
+      "worst": 49.289,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "0.00",
+      "capture": "0.00",
+      "start": "io_E5/ft12_o[0]",
+      "end": "io_E6/ft1_i[0]"
+     }
+    },
+    "io_E6->io_E5/ft23_i": {
+     "max": {
+      "paths": 523,
+      "worst": -182.985,
+      "neg": 83,
+      "tns": -4019.682,
+      "launch": "0.00",
+      "capture": "0.00",
+      "start": "io_E6/ft2_o[181]",
+      "end": "io_E5/ft23_i[181]"
+     }
+    },
+    "io_E6->io_E5/ft24_i": {
+     "max": {
+      "paths": 2,
+      "worst": -10.049,
+      "neg": 1,
+      "tns": -10.049,
+      "launch": "0.00",
+      "capture": "0.00",
+      "start": "io_E6/ft3_o[0]",
+      "end": "io_E5/ft24_i[0]"
+     }
+    }
+   },
+   "wns": -1.8298507153957644e-10,
+   "whs": 4.5253550906565465e-10,
+   "sta_seconds": 2.79,
+   "exit": 0,
+   "seconds": 2.8,
+   "peak_rss_gb": 0.18,
+   "check": "setup"
+  },
+  "FF": {
+   "seams": {
+    "io_E5->io_E6/ft0_i": {
+     "min": {
+      "paths": 523,
+      "worst": 254.529,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "0.00",
+      "capture": "0.00",
+      "start": "io_E5/ft11_o[411]",
+      "end": "io_E6/ft0_i[411]"
+     }
+    },
+    "io_E5->io_E6/ft1_i": {
+     "min": {
+      "paths": 2,
+      "worst": 347.422,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "0.00",
+      "capture": "0.00",
+      "start": "io_E5/ft12_o[1]",
+      "end": "io_E6/ft1_i[1]"
+     }
+    },
+    "io_E6->io_E5/ft23_i": {
+     "min": {
+      "paths": 523,
+      "worst": 277.605,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "0.00",
+      "capture": "0.00",
+      "start": "io_E6/ft2_o[151]",
+      "end": "io_E5/ft23_i[151]"
+     }
+    },
+    "io_E6->io_E5/ft24_i": {
+     "min": {
+      "paths": 2,
+      "worst": 423.662,
+      "neg": 0,
+      "tns": 0.0,
+      "launch": "0.00",
+      "capture": "0.00",
+      "start": "io_E6/ft3_o[1]",
+      "end": "io_E5/ft24_i[1]"
+     }
+    }
+   },
+   "wns": 1.0793438365297447e-10,
+   "whs": 2.5452862040253876e-10,
+   "sta_seconds": 2.751,
+   "exit": 0,
+   "seconds": 2.8,
+   "peak_rss_gb": 0.18,
+   "check": "hold",
+   "note": "ETM hold is optimistic (OpenSTA be771a0 clk->out arcs from max arrival); not a hold verdict"
+  }
+ },
+ "seam_groups": 4,
+ "seam_bits": 1050,
+ "verdict": {
+  "setup_SS": -182.985,
+  "setup_SS_neg_endpoints": 109,
+  "hold_FF": 254.529,
+  "hold_FF_neg_endpoints": 0,
+  "status": "INFO (etm: setup cross-check only)"
+ }
+}

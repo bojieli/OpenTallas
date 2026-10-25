@@ -1,0 +1,15 @@
+{
+ "element": "ot_hgi_coll_gq_land@4d3dd24bd7bf (B2n reshape)",
+ "kit": "claude/hbm-cores-1024@c6ae3ad26c",
+ "stage": "placed + CTS",
+ "verdict": "PASS",
+ "reasons": "[2026-10-25 01:01] Looked at placed + context. 142.6x207.4 pin-limited (3,880 pins on 4 faces = 5.5/um average, under the 6/um cap, so it cannot shrink). A clean face-flop ring at p90 8.8 um, a compact centre core, 18% fill, no hot bins, I 256 ps. Context: sits next to its partners in q_hub, one short facing-away bundle and one thin long link to the SE (registered at both faces).",
+ "fixes": "Route + sign-off OK (TT/FF 60/25 under the core contract, GRT/DRC 0).",
+ "images": [
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/misc0100/gq_land_placed.png",
+  "rtx-pro:/srv/opentallas-scratch/claude/geom-review/tiles/misc0100/gq_land_context.png"
+ ],
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-25T01:01:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route"
+}

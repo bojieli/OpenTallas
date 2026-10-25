@@ -28,7 +28,8 @@ OLD_SDC = GOOD_SDC.replace("set_input_delay -min -40.0000", "set_input_delay -mi
     "set_output_delay -max 166.6000", "set_output_delay 166.6000")
 
 
-def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, slew=0, unconstrained=0, done=True):
+def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, slew=0, unconstrained=0, done=True,
+                 pair_setup=30.0, pair_hold=25.0):
     out = {}
     for c, (smax, smin, sp) in dict(ss=(ss_setup, 30.0, 50.0), ff=(150.0, ff_hold, 30.0),
                                     tt=(tt_setup, 10.0, spread_tt)).items():
@@ -44,7 +45,12 @@ def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, sl
              f"Warning: There are {unconstrained} unconstrained endpoints." if unconstrained else "",
              "SO_PATH_END",
              "SO_CK 1 250.0 clk", f"SO_CK 1 {250.0 + sp} clk", "SO_CK 0 260.0 clk", "SO CK_ERRORS 0",
-             "SO OCV5_WNS_MAX -3", "SO OCV5_WNS_MIN -1"]
+             "SO OCV5_WNS_MAX -3", "SO OCV5_WNS_MIN -1",
+             "SO PAIR_COUNTS regs 3 no_clock_arrival 0 data_pins 3 pairs 2 inter_clock 0", "SO PAIR_METHOD tag",
+             f"SO PAIR_max n 2 worst {pair_setup} bounded 0 signed {-pair_setup} launch a capture b crpr 4.0 p99_raw 31 "
+             "searched 1 nopath 0 verify 0.010",
+             f"SO PAIR_min n 2 worst {pair_hold} bounded 0 signed {pair_hold} launch a capture b crpr 4.0 p99_raw 26 "
+             "searched 1 nopath 0 verify 0.020", "SO PAIR_SECONDS 1", "SO PAIR_DONE 1"]
         if done:
             L.append("SO DONE 1")
         out[c] = "\n".join(L)
@@ -54,7 +60,7 @@ def session_text(tt_setup=12.0, ss_setup=-150.0, ff_hold=3.0, spread_tt=40.0, sl
 def record(**kw):
     rec = dict(name="blk", corners={})
     for c, t in session_text(**{k: v for k, v in kw.items() if k in ("tt_setup", "ss_setup", "ff_hold", "spread_tt", "slew",
-                                                                         "unconstrained", "done")}).items():
+                                                                         "unconstrained", "done", "pair_setup", "pair_hold")}).items():
         r = signoff.corner_result(signoff.parse_session(t))
         r.update(corner=c, macro_missing=[])
         rec["corners"][c] = r
@@ -101,10 +107,66 @@ def test_ff_hold_uses_standard_overlay():
     assert h["verdict"] == "FAIL" and h["wns_ps"] == -2.0 and h["sdc_wns_ps"] == 3.0
 
 
-def test_spread_over_80_fails_at_tt():
+def test_ff_hold_missing_overlay_is_not_run():
+    for overlay in (None, "", "skipped vclks 0", "skipped vclks 2"):
+        for slack in (12.0, -2.0):
+            rec = record(ff_hold=slack)
+            rec["corners"]["ff"]["overlay"] = overlay
+            rec = signoff.evaluate(rec)
+            h = rec["checks"]["hold_ff"]
+            assert h["verdict"] == "NOT RUN"
+            assert h["wns_ps"] == slack  # retain the diagnostic raw-SDC result
+            assert "overlay was not applied" in h["reason"]
+            assert rec["verdict"] == "NOT SIGNED"
+
+
+def test_spread_over_80_is_information_only():
     rec = signoff.evaluate(record(spread_tt=85.4))
+    assert rec["checks"]["clock"]["verdict"] == "PASS"
+    assert rec["checks"]["clock"]["spread_info_only"]
+
+
+def test_related_pair_skew_missing_or_over_limit_blocks():
+    rec = signoff.evaluate(record(pair_setup=85.4))
     assert rec["checks"]["clock"]["verdict"] == "FAIL"
-    assert "TT pin-flop spread 85.4 ps > 80" in rec["checks"]["clock"]["problems"][0]
+    assert any("TT setup related pair skew 85.4 ps > 80 (a -> b)" in p for p in rec["checks"]["clock"]["problems"])
+    rec = record()
+    del rec["corners"]["ff"]["pair_skew"]
+    assert signoff.evaluate(rec)["checks"]["clock"]["verdict"] == "FAIL"
+    rec = record()
+    rec["corners"]["tt"]["pair_skew"]["done"] = False
+    assert signoff.evaluate(rec)["checks"]["clock"]["verdict"] == "FAIL"
+
+
+def test_pair_skew_parsed_from_session():
+    ps = record()["corners"]["ff"]["pair_skew"]
+    assert ps["done"] and ps["counts"]["pairs"] == 2
+    h = ps["checks"]["min"]
+    assert h["worst_abs_ps"] == 25.0 and h["worst_signed_ps"] == 25.0 and h["worst_crpr_ps"] == 4.0
+    assert h["worst_launch"] == "a" and h["worst_capture"] == "b" and not h["bounded"]
+    assert ps["checks"]["max"]["worst_signed_ps"] == -30.0
+
+
+def test_pair_skew_at_limit_passes_and_hold_side_fails_at_ff():
+    assert signoff.evaluate(record(pair_hold=80.0))["checks"]["clock"]["verdict"] == "PASS"
+    rec = signoff.evaluate(record(pair_hold=80.5))
+    assert any(p.startswith("FF hold related pair skew 80.5") for p in rec["checks"]["clock"]["problems"])
+
+
+def test_pair_skew_verify_mismatch_blocks():
+    rec = record()
+    rec["corners"]["tt"]["pair_skew"]["checks"]["min"]["verify_ps"] = 3.0
+    rec = signoff.evaluate(rec)
+    assert rec["checks"]["clock"]["verdict"] == "FAIL"
+    assert any("cross-check" in p for p in rec["checks"]["clock"]["problems"])
+
+
+def test_session_measures_pairs_before_source_latency_zeroing():
+    t = signoff.session_tcl("tt", [], "/base/6_final.spef")
+    assert t.index("ot_ps_measure") < t.index("set_clock_latency -source 0")
+    assert t.index("unset_timing_derate") < t.index("ot_ps_measure")
+    assert t.count("read_sdc /sdc/golden.sdc") == 1
+    assert "@PAIR" not in t and "proc ot_ps_measure" in t
 
 
 def test_insertion_target():
@@ -254,3 +316,20 @@ def test_corner_scoped_generic_lib_name(tmp_path):
     (tmp_path / "ff").mkdir(); (tmp_path / "ff/core.lib").write_text("library(c) {}")
     (tmp_path / "config.mk").write_text("export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) /work/ff/core.lib\n")
     assert signoff.macro_libs(tmp_path, "ff") == ([str(tmp_path / "ff/core.lib")], [])
+
+
+def test_summary_line_shows_pair_skew_and_spread_info():
+    line = signoff.summary_line(signoff.evaluate(record(pair_setup=41.0, pair_hold=22.0)))
+    assert "pair skew TT/FF 41.0/41.0" in line and "spread info" in line
+    rec = record()
+    del rec["corners"]["tt"]["pair_skew"]
+    assert "pair skew TT/FF nan/30.0" in signoff.summary_line(signoff.evaluate(rec))
+
+
+def test_pair_skew_registers_without_clock_arrival_block():
+    rec = record()
+    assert rec["corners"]["tt"]["pair_skew"]["method"] == "tag"
+    rec["corners"]["ff"]["pair_skew"]["counts"]["no_clock_arrival"] = 2
+    rec = signoff.evaluate(rec)
+    assert rec["checks"]["clock"]["verdict"] == "FAIL"
+    assert any("FF: 2 registers without a unique propagated clock arrival" in p for p in rec["checks"]["clock"]["problems"])

@@ -208,7 +208,7 @@ def test_run_end_to_end(tmp_path):
     assert g["sta"]["status"].startswith("NOT RUN") and g["sta"]["standin_ports"] == g["sta"]["seams"] > 0
     assert d["verdict"] == "INCOMPLETE" and d["delta"] is None
     assert "| tiny |" in (rd / "SUMMARY.md").read_text()
-    assert "stand-in worst" in (rd / "tiny.md").read_text()
+    assert "stand-in" in (rd / "tiny.md").read_text() and "INFO margined" in (rd / "tiny.md").read_text()
 
 
 def test_run_deltas_and_g2_carry(tmp_path):
@@ -256,3 +256,70 @@ def test_policy_corners_tt_setup_ff_hold():
         abs(m["xtalk"]["mcf_setup"] - 1) * m["lib"]["TT"]["r_eff_ps_per_ff"] * m["xtalk"]["cc_frac"] * m["xtalk"]["c_per_um_ff"] * 60, abs=0.01)
     src = (HERE / "die_ci.py").read_text()
     assert '"--corner", "TT", "--corner", "FF"' in src and 'for c in ("TT", "FF")' in src
+
+
+def test_g2_oom_ladder(tmp_path, monkeypatch):
+    """a part probe killed by its cgroup (EXIT 137) re-runs alone at 2x until the ceiling."""
+    calls = []
+
+    def fake_sh(cmd, cwd=None, log=None, env=None):
+        out = Path(cmd[cmd.index("--out") + 1])
+        mem = int(cmd[cmd.index("--mem") + 1])
+        calls.append((cmd[2], cmd[cmd.index("--types") + 1] if "--types" in cmd else None, mem))
+        if cmd[2] == "die":
+            (out / "die").mkdir(parents=True, exist_ok=True)
+            (out / "die" / "probe.exit").write_text("EXIT 0\n")
+        elif "--types" not in cmd:
+            for t, ex in (("a", 0), ("big", 137)):
+                (out / f"part_{t}").mkdir(parents=True, exist_ok=True)
+                (out / f"part_{t}" / "probe.exit").write_text(f"EXIT {ex}\n")
+        else:
+            (out / "part_big" / "probe.exit").write_text("EXIT 137\n" if mem < 128 else "EXIT 0\n")
+        rep = dict(verdict="PASS", probes={d.name: dict(done=True, total_overflow=0) for d in out.iterdir() if d.is_dir()})
+        (out / "g2_report.json").write_text(json.dumps(rep))
+        return 0, "", 1.0
+    monkeypatch.setattr(C, "sh", fake_sh)
+    monkeypatch.setattr(C.shutil, "which", lambda x: "/usr/bin/docker")
+    r = C.gate_g2(REPO, TINY, tmp_path, 64, 32, 128)
+    assert [c for c in calls if c[1] == "big"] == [("part", "big", 64), ("part", "big", 128)]
+    assert r["oom_at_ceiling"] == [] and len(r["oom_retries"]) == 2 and r["mem_gb"]["part_max"] == 128
+    assert C.job_mem("hbm") >= 128 + 8 and C.job_mem("s81") == max(C.g2_mem("s81")) + 8
+
+
+def test_split_run_collect(tmp_path):
+    plan = _plan_dir(tmp_path)
+    out = tmp_path / "out"
+    for n in ("tinyA", "tinyB"):
+        argv = ["run", "--repo", str(REPO), "--sha", "c" * 40, "--date", "2026-10-24", "--out", str(out),
+                "--plan", f"{n}={plan}", "--g2", "none", "--views", str(tmp_path / "noviews.json"), "--prev", "none",
+                "--name", "split", "--partial"]
+        assert C.main(argv) == 0
+    rd = out / "split"
+    assert (rd / "part_tinyA.json").is_file() and not (rd / "SUMMARY.md").exists()
+    run = C.cmd_collect(rd, expect=["tinyA", "tinyB", "s81"])
+    assert set(run["dies"]) == {"tinyA", "tinyB", "s81"} and run["dies"]["s81"]["verdict"] == "ERROR"
+    assert run["verdict"] == "FAIL" and (rd / "SUMMARY.md").is_file()
+
+
+def test_external_sta_tool(tmp_path):
+    f = tmp_path / "die_sta.py"
+    f.write_text("UNC_SETUP_PS = 60.0\nimport schema\nMARK = schema.__name__\n")
+    mod = C.load_die_sta(REPO, f)
+    assert mod.MARK == "schema" and mod.UNC_SETUP_PS == 60.0
+    old = C.STA_TOOL
+    try:
+        C.STA_TOOL = str(f)
+        assert C.sta_available(REPO)
+    finally:
+        C.STA_TOOL = old
+
+
+def test_sta_gate_on_policy_margined_info_only():
+    """coordinator 10-24: gate on TT/FF + 60/25; margined slack is INFO and never turns the gate red."""
+    rows = [dict(policy_setup_TT=93.3, policy_hold_FF=231.0, final_setup_TT=-20.1, final_hold_FF=170.2)]
+    st = C.sta_status(rows, True, 4, 4, 0)
+    assert st["status"] == "PASS" and st["neg_groups"] == 0 and st["margined_neg_groups_info"] == 1
+    assert C.sta_status(rows, True, 4, 10, 6)["status"].startswith("PARTIAL")
+    rows.append(dict(policy_setup_TT=-1.0, policy_hold_FF=10.0, final_setup_TT=-50.0, final_hold_FF=5.0))
+    assert C.sta_status(rows, True, 4, 4, 0)["status"] == "FAIL"
+    assert C.sta_status(rows, False, 4, 4, 0)["status"].startswith("NOT RUN")

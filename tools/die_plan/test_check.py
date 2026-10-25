@@ -37,9 +37,10 @@ def part(p, n):
 
 def test_example_passes():
     R, summ = g0()
-    assert R.errors() == [] and [i["check"] for i in R.items] == ["types", "census"], R.items   # census: none
+    # reset: the example plans are reset.release "counted" -> one WARN (OWNER RESET RULE 10-24, reset_tree.py)
+    assert R.errors() == [] and [i["check"] for i in R.items] == ["types", "reset", "census"], R.items  # census: none
     R2, _ = check.run(json.loads((HERE / "examples" / "tiny_plan_typegeo.json").read_text()))
-    assert [i["check"] for i in R2.items] == ["census"], R2.items
+    assert [i["check"] for i in R2.items] == ["reset", "census"], R2.items
     assert summ["geometry"]["fill"] == 1.0
     assert summ["latency"]["x"] == 4
 
@@ -413,6 +414,25 @@ def test_latency_groups_pad_to_slowest():
     assert schema.Plan(c).bus_pads()[1]
 
 
+def test_landed_group_one_depth_and_window():
+    """COORD rule 10-23 (S81-P9-R8EQ): a latency group of kind `landed` (one forwarded-clock landing ring, one K)
+    arrives at ONE group depth; its natural lane spread must stay under the landing window margin (window - 1)."""
+    p = copy.deepcopy(EX)
+    p["latency_groups"] = [dict(name="xl", kind="landed", window=4, lanes=["x", "cfg23"])]
+    P = schema.Plan(p)
+    assert P.lane_latency("cfg23")["cycles"] == P.lane_latency("x")["cycles"] == 4 and not P.landed_skew()
+    p["latency"]["lanes"] = gen.latency_table(P)
+    R, _ = g0(lambda q: q.update(copy.deepcopy(p)))
+    assert [i["msg"] for i in R.errors() if i["check"] == "latency"] == []
+    p["latency_groups"][0]["window"] = 2                       # spread 2 > margin 1
+    assert schema.Plan(p).landed_skew()
+    R, _ = g0(lambda q: q.update(copy.deepcopy(p)))
+    assert any("landing window margin" in i["msg"] for i in R.errors())
+    import pytest
+    with pytest.raises(SystemExit):
+        gen.write_latency(p, "/tmp/_landed_test_lat")
+
+
 def test_core_ks_rules(monkeypatch):
     """COORD 10-23 CORE-KS: (a) a type over 400k cells needs hard_cores[], a core without pins is an ERROR;
     (b) M2/M3 core pins are not checked in a mirrored instance's die frame (platform cell-access tracks)."""
@@ -595,3 +615,33 @@ def test_core_face_broadcast_station_capture_scope():
             dict(conn='bus:din', capture='u_other.din', from_um=[0,110], to_um=[100,432], regs_um=[[100,432]])]
     assert errs(_face_core(dict(din='E', x='E'), conns=stations), 'core_faces') == []
     assert len(errs(_face_core(dict(din='W', x='E'), conns=stations), 'core_faces')) == 1
+
+
+def test_gen_latency_fold_r8():
+    """COORD 10-24 18:55: gen.py latency --fold-r8 prices the R8 landing pads per lane (cycles = base + r8_pad, largest
+    member pad of the lane); --rebase-bind moves the bind's bound depths onto this plan; --inplace keeps the base."""
+    def m(port, bits, asb, bound, lane):
+        return dict(sink_port=port, sink_bits=bits, source="u_a.o", source_bits=bits, asbuilt_stages=asb,
+                    bound_stages=bound, landed_stages=bound, lane=lane)
+    bg = dict(die="tiny", replica=[], landing=[dict(sink="u_b", sink_part="pb", src_part="pa", members=[
+        m("xi", [[0, 7]], 0, 4, "x"), m("ri", [[0, 3]], 0, 5, "r"), m("q", [[0, 0]], 0, 2, "UNPLANNED")])])
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        plan = d / "plan.json"
+        plan.write_text(json.dumps(EX))
+        (d / "bg.json").write_text(json.dumps(bg))
+        (d / "bl.json").write_text(json.dumps(dict(buses=[dict(lane="x", plan_cycles=2), dict(lane="r", plan_cycles=5)])))
+        assert gen.main(["latency", str(plan), "--out", str(d / "a"), "--groups", str(d / "bg.json"), "--fold-r8"]) == 0
+        js = json.loads((d / "a" / "tiny_latency.json").read_text())
+        x, r = js["lanes"]["x"], js["lanes"]["r"]
+        assert (x["base"], x["r8_pad"], x["cycles"]) == (4, 1, 5) and (r["base"], r["r8_pad"], r["cycles"]) == (5, 0, 5)
+        assert "localparam int LAT_X = 5;" in (d / "a" / "tiny_lat_pkg.sv").read_text()
+        assert js["r8"]["fold"]["lanes_padded"] == 1 and js["r8"]["fold"]["not_plan_lanes"] == {"UNPLANNED": 3}
+        # rebase: the bind had x at 2 cycles, this plan has 4 -> x bound 6, offset 6 > r 5: r is padded now, x not
+        assert gen.main(["latency", str(plan), "--out", str(d / "b"), "--groups", str(d / "bg.json"), "--fold-r8",
+                         "--rebase-bind", str(d / "bl.json"), "--inplace"]) == 0
+        js = json.loads((d / "b" / "tiny_latency.json").read_text())
+        assert js["lanes"]["x"]["cycles"] == 4 and js["lanes"]["r"]["r8_pad"] == 1 and js["lanes"]["r"]["cycles"] == 6
+        assert js["r8"]["rebase"]["moved"] == 1
+        inpl = json.loads(plan.read_text())["latency"]["lanes"]
+        assert inpl["r"]["cycles"] == 5 and "r8_pad" not in inpl["r"]       # in-plan table stays base (binder, G0)

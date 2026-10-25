@@ -1,0 +1,16 @@
+{
+ "element": "ot_hgi_sfu_core_split3__lane2",
+ "view": "ot_hgi_sfu_core_split3__lane2@2ba0e7ec37ee",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hgi_sfu_core_split3__lane2_2ba0e7ec37ee, B2r2 pins 2ba0e7ec37ee, plan e1c50d83cff2)",
+ "stage": "placed",
+ "verdict": "FAIL",
+ "hash": "516f79ea9b40a601",
+ "reasons": "placed-stage (kit 516f79ea9b40a601): cells 247083, flops 49155, macros 0, fill of free 0.254, buf/inv 0.086, bins>0.8 0 (max bin 0.52), face flops 613 pin->reg p50/p90/max 5.8/6.9/9.3 um. CTS-only probe (tap_balance, CTS repair skipped): mean insertion 455 ps, longest tree 558 ps vs plan 250 +- 40.",
+ "fixes": "Clock insertion beyond the 250+-40 core contract: needs an early core tap in the plan (HBM-ARCH, OWNER? core clock contract) or a smaller/re-floorplanned core; not routed.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/kits_b2l/ot_hgi_sfu_core_split3__lane2_2ba0e7ec37ee/placed.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T14:49:10-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

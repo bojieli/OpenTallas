@@ -60,11 +60,21 @@ module tb_dsdv_eng_rr;
         if (rco_h[0]) lk_rco <= lk_rco + 1;
         if (vo_s[0] || vo_n[0]) lk_vo <= lk_vo + 1;
         if (rco_sp !== rco_h || vo_s_sp !== vo_s || vo_n_sp !== vo_n || st_sp !== st ||
-            {u_sp.hx_w, u_sp.res_m} !== {u_rr.u_lkp.u_e.win_n, u_rr.u_lkp.u_e.hres}) begin
+            u_sp.hx_w !== u_rr.u_lkp.u_e.win_n) begin
             lk_bad <= lk_bad + 1;
             if (lk_bad < 4) $display("TB_ENG_RR_LOCKSTEP mismatch cyc %0d rco %0d vo_s %0d vo_n %0d st %b/%b", cyc,
                                      rco_sp !== rco_h, vo_s_sp !== vo_s, vo_n_sp !== vo_n, st_sp, st);
         end
+    end
+    // S81-KITS-RTLA 10-24: the H cores capture in_w in one pin flop (+1 edge): the crossing res_m is the monolith's hres
+    // one ck edge later.  Both change on negedges only, so they are compared at posedge against last posedge's hres.
+    reg [1151:0] lk_hres_d; longint lk_xbad = 0; reg lk_arm = 0;
+    always @(posedge ck) begin
+        if (rst && lk_arm && u_sp.res_m !== lk_hres_d) begin
+            lk_xbad <= lk_xbad + 1;
+            if (lk_xbad < 4) $display("TB_ENG_RR_LOCKSTEP crossing mismatch cyc %0d", cyc);
+        end
+        lk_hres_d <= u_rr.u_lkp.u_e.hres; lk_arm <= rst;
     end
 `endif
     // ------------------------------------------------------------------ taps, chains, controllers, PHY
@@ -302,8 +312,8 @@ module tb_dsdv_eng_rr;
         errs = e_win + e_ob + e_xq + e_rd + e_rung + e_flt;
 `ifdef OT_S81ENG_RR_SPLIT_LOCKSTEP
         $display("TB_ENG_RR_LOCKSTEP split_mut %0d cycles %0d row_beats %0d rco_words %0d rung_words %0d mismatches %0d",
-                 SPLIT_MUT, lk_cyc, lk_xv, lk_rco, lk_vo, lk_bad);
-        if (lk_bad != 0 || lk_xv == 0) errs = errs + 1;
+                 SPLIT_MUT, lk_cyc, lk_xv, lk_rco, lk_vo, lk_bad + lk_xbad);
+        if (lk_bad != 0 || lk_xbad != 0 || lk_xv == 0) errs = errs + 1;
 `endif
         $display("TB_ENG_RR_LAT (edges from the f_ks start, last window) win_v %0d first_request %0d max_response_age %0d / RETURN_AGE %0d first_fragment %0d last_fragment %0d",
                  l_win, l_rq, age_max, RETURN_AGE, l_x0 + 1, l_x1 + 1);

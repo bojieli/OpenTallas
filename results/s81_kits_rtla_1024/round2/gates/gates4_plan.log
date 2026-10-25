@@ -1,0 +1,8 @@
+WARN  [schema] type col_h9_r0_p2__t1: bus frame_int_o0 has no leaf binding
+... 950 more in g0_report.json
+G0C per type: 174/174 types clean (G3-eligible: 174); die-level {}; reported as WARN (run --completeness)
+G0 PASS: 0 errors, 1150 warnings; 174 types / 400 partitions (28 in near-duplicate groups); worst cut {'ratio': 0.0729, 'at': 'horizontal@18750'}, worst partition segment {'ratio': 0.2152, 'at': 'horizontal@18750:s_7N_L1'}; report /srv/opentallas-scratch2/claude/s81-kits/rtla/gates4/plan/plan/g0/g0_report.json
+{
+}
+dropped pairs (top 25):
+planned-only pairs: 56

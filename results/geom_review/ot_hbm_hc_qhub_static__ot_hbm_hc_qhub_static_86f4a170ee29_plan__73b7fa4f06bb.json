@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_hc_qhub_static",
+ "view": "ot_hbm_hc_qhub_static@86f4a170ee29",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_hc_qhub_static_86f4a170ee29, B2r2 pins 86f4a170ee29, plan e1c50d83cff2)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "73b7fa4f06bb0d01",
+ "reasons": "plan-stage (B2l, GEOM-REVIEW die PASS-COND e1c50d83cff2): 734.4x734.4 um, 9903 pins, faces E:791,N:354,S:4379,W:4379; worst 0.216 pins/track per layer (<=0.6 OK), pins on lattice, spread along faces. Context q_hub/u_hc_Q: 74/79 buses with core_conns partners (nearest endpoint per net); 0 of 9887 connected bits leave a face pointing away from the nearest partner; 9631 bits > 365 um to the nearest partner (plan internal stations, HBM-ARCH). Macros: ['ot_sram_1r1w_1024x256_m2_r2c2']. Fill, density, face-flop distance, clock taps judged at the placed stage.",
+ "fixes": "Place only; route + signoff only after the placed-stage review.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_hc_qhub_static_86f4a170ee29/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_hc_qhub_static_86f4a170ee29/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T12:25:25-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

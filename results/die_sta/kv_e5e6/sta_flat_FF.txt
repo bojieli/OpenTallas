@@ -1,0 +1,13 @@
+mode flat corner FF
+SEAM io_E5->io_E6/ft0_i max paths 523 worst 293.259 neg 0 tns 0.000 launch 192.15 capture 188.77 from io_E5/u_ft_ft11_s2.q[155]$_DFF_P_/QN to io_E6/u_ft_ft0_s0.q[155]$_DFF_P_/D
+SEAM io_E5->io_E6/ft0_i min paths 523 worst 230.957 neg 0 tns 0.000 launch 188.11 capture 190.77 from io_E5/u_ft_ft11_s2.q[411]$_DFF_P_/QN to io_E6/u_ft_ft0_s0.q[411]$_DFF_P_/D
+SEAM io_E5->io_E6/ft1_i max paths 2 worst 377.395 neg 0 tns 0.000 launch 184.07 capture 190.65 from io_E5/u_ft_ft12_s2.q$_DFF_P_/QN to io_E6/u_ft_ft1_s0.q$_DFF_P_/D
+SEAM io_E5->io_E6/ft1_i min paths 2 worst 321.396 neg 0 tns 0.000 launch 184.05 capture 190.64 from io_E5/u_ft_ft12_s2.eq$_DFF_PN0_/QN to io_E6/u_ft_ft1_s0.eq$_DFF_PN0_/D
+SEAM io_E6->io_E5/ft23_i max paths 523 worst 196.766 neg 0 tns 0.000 launch 186.74 capture 188.89 from io_E6/u_ft_ft2_s1.q[441]$_DFF_P_/QN to io_E5/u_ft_ft23_s0.q[441]$_DFF_P_/D
+SEAM io_E6->io_E5/ft23_i min paths 523 worst 235.787 neg 0 tns 0.000 launch 178.57 capture 194.33 from io_E6/u_ft_ft2_s1.q[151]$_DFF_P_/QN to io_E5/u_ft_ft23_s0.q[151]$_DFF_P_/D
+SEAM io_E6->io_E5/ft24_i max paths 2 worst 323.097 neg 0 tns 0.000 launch 188.29 capture 190.92 from io_E6/u_ft_ft3_s1.q$_DFF_P_/QN to io_E5/u_ft_ft24_s0.q$_DFF_P_/D
+SEAM io_E6->io_E5/ft24_i min paths 2 worst 350.811 neg 0 tns 0.000 launch 188.28 capture 190.89 from io_E6/u_ft_ft3_s1.eq$_DFF_PN0_/QN to io_E5/u_ft_ft24_s0.eq$_DFF_PN0_/D
+FFSPREAD io_E5 n 1050 min 180.62 max 199.08 spread 18.46
+FFSPREAD io_E6 n 1050 min 172.10 max 192.15 spread 20.05
+WNS 2.7871316365946086e-11 WHS 5.827116567047597e-12
+SECONDS 31.349

@@ -1,0 +1,17 @@
+{
+ "element": "kv3_hub_Ei",
+ "kit": "epyc1:~/scratch/kv-g3/kit_rtl/g5/vK/kv3_hub_Ei + plans/vK (claude/kv-g3-1024 @6ecd9a39e2; run epyc2:/srv/opentallas-scratch2/claude/kv/g5/vK/kv3_hub_Ei GOAL=grt)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "1129f8336d4a847adc34f71e573423f63bb212665384399181d3444019a34266",
+ "stage": "plan / kit inputs (vK delta: reset + hotspot); placement/CTS/GRT pictures pending",
+ "reasons": "[2026-10-24 19:40] [GEOM-REVIEW delta re-review of KV-G3 vK, datapath carried from vJ c38439fd5a78] Looked at plans/vK/bits.png, /tmp/kv/bits_s25c3_crop.png, bits.json and reset_tree.tcl. RESET: one root 2-flop synchroniser u_rst_root at the arst_n pin (91.4,101.8), 71 synchronous tree relays + 208 pad relays co-located at the taps, equal depth D=7 to all 62 taps, max hop 404.4 um (reach 405), per-tap async syncs removed, release N+D = 9 clk (+7 boot cycles) - matches OWNER DECISION 2 for the partition. HOTSPOT: ft bits re-sited with stagger 0.25 / bin cap 0.3 / 15-um keepout around every clk tap: vJ window (540-700,780-880) planned demand H 101->71, V 105->80 per 10-um gcell, station sites 544->425, max station flops per 10x10 bin 101->73, max bit hop 395.2 um; OT_TAP_MAX_SINKS 1500->1200. Picture: station sites are diagonal per-bit staggers, none on a tap. BUT the planned peak moved: H demand max 107 at (570-610, 400) and V 92 at (920, 920-960) are now hotter than the fixed window (71/80) - unreviewed hotspots.",
+ "fixes": "1. Continue the GRT-only run; gate = 0 GRT overflow overall AND explicit per-gcell usage reported for the old window (560-640,800-840) and the two new planned peaks (570-610,395-410) H and (915-925,915-965) V; if either overflows, apply the same stagger/keepout there before DRT. 2. Show the placed reset hop report (every u_rrl hop <= 405 um after legalisation; 404.4 planned leaves 0.6 um) and CTS TT recovery / FF removal >= 0 on every relay->flop and relay->relay hop. 3. Root per partition is acceptable for this tile gate only: die-level two partitions with their own async roots can release one cycle apart; at die bind the partition rst_n must become a synchronous input fed by the die-region root (RESET lane tool), same relay tree. 4. Re-REQ the placement/CTS/GRT pictures (delta only); DRT after that PASS.",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/vK/bits.png (rtx-pro; = epyc1:~/scratch/kv-g3/plans/vK/bits.png)",
+  "/tmp/kv/bits_s25c3_crop.png (rtx-pro)"
+ ],
+ "owner_lane": "KV-G3",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T19:40:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route; OWNER DECISION 2 reset"
+}

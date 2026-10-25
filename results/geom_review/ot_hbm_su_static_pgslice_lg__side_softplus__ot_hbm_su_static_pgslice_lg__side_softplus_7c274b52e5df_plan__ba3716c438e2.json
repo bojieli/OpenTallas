@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_su_static_pgslice_lg__side_softplus",
+ "view": "ot_hbm_su_static_pgslice_lg__side_softplus@7c274b52e5df",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_su_static_pgslice_lg__side_softplus_7c274b52e5df, B2r2 pins 7c274b52e5df, plan c1bc2d0f7ada)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "ba3716c438e23ea9",
+ "reasons": "plan-stage: 440.64x457.92 um, 70 pins on faces E:32,N:1,S:5,W:32; worst 10-um window 0.1 pins/um all layers, 0.005 pins/track per layer (<= 0.6 OK); pins spread along whole faces, no corner clusters; tracks on the plan lattice (gen lattice check). Context in q_su00: no core_conns for this core (one of the unchecked cores): data-flow/face orientation NOT CHECKED. Macros: none. Utilisation/fill, density, face-flop distance and clock taps are judged at the placed stage.",
+ "fixes": "Place only (TT corner kit); route/STA only after the placed-stage review is recorded. Facing-away / long-reach findings go to HBM-ARCH (plan owner).",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_su_static_pgslice_lg__side_softplus_7c274b52e5df/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_su_static_pgslice_lg__side_softplus_7c274b52e5df/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T08:17:44-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

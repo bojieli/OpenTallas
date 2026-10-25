@@ -1,0 +1,30 @@
+{
+ "schema": "opentallas.hbm.core_freeze.v1",
+ "type": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52",
+ "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "outline_um": [
+  155.52,
+  155.52
+ ],
+ "plan_commit": "3a7e22238",
+ "plan_sha256": "1098c8ccc2a33b84eca5ff82b2db3aab3be8dbfd1f76bdae4654024a84c101fc",
+ "pins_file": "cores/pins_plan/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52.json",
+ "pins_sha256": "859069159d427000ab4fd7bffbdcc5d841c4b8553c7af7b5ee707fae0b890341",
+ "pins": 1229,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "6e189fd3c2d91f3b07150e696cb7a87ca5a83e0e0fc95832b39a327ef1ea0453",
+ "tool": "/home/ubuntu/wt/plan-tool-1023/tools/die_plan@c1bae2221",
+ "period_ps": 833.0,
+ "insertion_budget_ps": 250.0,
+ "signal_max": "M5",
+ "macros": [
+  "ot_sram_1r1w_128x256_m1_r2c2"
+ ],
+ "kit_hash": "85ed84a792001257"
+}

@@ -420,9 +420,12 @@ def kit_context(P, tn):
         ni, no = gen_rtl.sv_id(s["name"] + "_i"), gen_rtl.sv_id(s["name"] + "_o")
         ins.append(ni)
         outs.append(no)
-        floor[ni] = (1 - gen_phys.FT_HOP_IN_SHARE) * per
-        floor[no] = gen_phys.FT_HOP_IN_SHARE * per
+        floor[ni] = (1 - gen_phys.ft_hop_in_share(P)) * per
+        floor[no] = gen_phys.ft_hop_in_share(P) * per
     floor["arst_n"] = gen_phys.IO_BUDGET * per
+    for n, _x, _y in gen_phys.reset_out_pins(P, tn):      # reset wavefront registered outs (OWNER DECISION 13)
+        outs.append(n)
+        floor[n] = gen_phys.IO_BUDGET * per
     return dict(period_ps=per, insertion_ps=float(P.clock["insertion_ps"]),
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,

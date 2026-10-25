@@ -1,5 +1,5 @@
 {
- "status": "PROPOSED, NOT ADOPTED",
+ "status": "ADOPTED (OWNER 2026-10-24 18:4x: price the residual +1; kit A0 v7 = bound +7 on t_out)",
  "source": "full-shape bound-vs-kit NK trace with discriminating X and neighbor mutants",
  "compared": "bound non-FP1 REGROOT2 vs kit FP1 REGROOT_MODE9",
  "added_cycles": {
@@ -17,5 +17,19 @@
   "neighbor_added_cycles": 0,
   "tap_mutant_mismatches": 2560,
   "neighbor_mutant": "NOT_EFFECTIVE:na bit5 unobservableatn_y;do notcountasnegativecontrol"
+ },
+ "price": {
+  "rule": "AGENTS accepted-performance-cost ledger (OWNER 10-13): measured e2e loss <= 5 %/unit, <= 15 % total/design",
+  "residual_cycles_per_rom_pass": 1,
+  "rom_passes_on_token_critical_path": "4 matvecs per layer (qkv, o, gu, down: results/token_pass/measured_qwen_1019/cycles.json result.1u.layer.tile; each waits for its ROM t_out stream) x 36 layers + 1 lm_head pass",
+  "added_cycles_per_token": 145,
+  "compose_1u_cycles_per_token_before": 271106,
+  "compose_1u_cycles_per_token_after": 271251,
+  "tok_s_1u_before": 4428.1,
+  "tok_s_1u_after": 4425.7,
+  "loss_pct": 0.053,
+  "neighbor_n_y": "0 added cycles (exact) -> no change on the neighbour path",
+  "integration": "compiler/R8: the A0 t_out stream lands 1 cycle later than the bound RTL schedules; the rebind on the capacity plan must carry it (QC-TOK compiler constants / R8 landing on the CB lanes fed by t_out) before G3 credit; physical signoff still required",
+  "source": "QC lane 2026-10-24 (steward of QC-A0/QC-TOK plan side); compose numbers TOK-QW 1u 271,106 cyc = 4,428.1 tok/s"
  }
 }

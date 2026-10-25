@@ -88,6 +88,8 @@ set ct_cap [expr {[info exists ::env(OT_TAP_MAX_SINKS)] ? $::env(OT_TAP_MAX_SINK
 # tap gave 465-ps trees); a dense region beyond that needs a finer tap pitch, not longer trees
 set ct_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ct_maxx [expr {0.5 * ([info exists ::env(OT_TAP_PITCH_UM)] ? $::env(OT_TAP_PITCH_UM) : 600.0) * $ct_dbu}]
+# density taps (decision 5, gen.py phys OT_TAP_REASSIGN_UM = clock.tap_radius_um): no pitch; the cluster radius bounds it
+if {[info exists ::env(OT_TAP_REASSIGN_UM)]} { set ct_maxx [expr {$::env(OT_TAP_REASSIGN_UM) * $ct_dbu}] }
 if {[llength $ct_taps] >= 2} {
   set ct_by {}
   foreach tp $ct_taps {

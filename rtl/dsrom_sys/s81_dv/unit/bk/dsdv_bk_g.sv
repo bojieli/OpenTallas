@@ -16,7 +16,10 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_bk_g #(
     parameter integer V   = 276,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // COORD ruling 2026-10-24 18:55: the addressed-drain sink is canonical (the BK drain / slice-CTL namespace collision
+    // is a functional bug); 0 = the retired transparent-forwarding behaviour, kept only to reproduce old records.
+    parameter integer BK_DRAIN_SINK = 1
 ) (
     input  wire [0:0]        clk,
     input  wire [0:0]        rst_n,       // die reset net (active low)
@@ -46,7 +49,7 @@ module dsdv_bk_g #(
     always @(posedge clk[0] or negedge rn) if (!rn) vdv <= 1'b0; else vdv <= vd[1];
     always @(posedge clk[0]) vdd <= vd[513:2];
     wire dnv, dsv; wire [V-1:0] dn, ds, ob; wire vs_f, vi_f, vo_f, ov;
-    ot_dsdv_vstop #(.V(V)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k(tap_k), .sink_k(sink_k), .vi_s(vi_s), .vo_n(vo_n),
+    ot_dsdv_vstop #(.V(V), .BK_DRAIN_SINK(BK_DRAIN_SINK)) u_vs (.clk(clk[0]), .rst_n(rn), .tap_k(tap_k), .sink_k(sink_k), .bk_uid(uid), .vi_s(vi_s), .vo_n(vo_n),
         .vi_n(vi_n), .vo_s(vo_s), .dl_nv(dnv), .dl_n(dn), .dl_sv(dsv), .dl_s(ds),
         .in_nv(ov && egn_c), .in_n(ob), .in_sv(ov && !egn_c), .in_s(ob), .fault(vs_f));
     wire drv; wire [7:0] drn, drd; wire [4*515-1:0] ln;

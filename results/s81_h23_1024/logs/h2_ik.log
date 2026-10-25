@@ -1,0 +1,13 @@
+base s1: SVCIK nik 96 (p>=2^16 94) now 24 words 693 writes_gold 1056 writes_seen 1059 extra 0 missing 0 run_faults 0 own_err 0 neg_len_fault 1 mut 0 verdict=PASS
+base s2: SVCIK nik 96 (p>=2^16 92) now 24 words 727 writes_gold 1056 writes_seen 1059 extra 0 missing 0 run_faults 0 own_err 0 neg_len_fault 1 mut 0 verdict=PASS
+base s3: SVCIK nik 96 (p>=2^16 93) now 24 words 710 writes_gold 1056 writes_seen 1059 extra 0 missing 0 run_faults 0 own_err 0 neg_len_fault 1 mut 0 verdict=PASS
+mut4 s1: SVCIK nik 96 (p>=2^16 94) now 24 words 693 writes_gold 1056 writes_seen 1059 extra 282 missing 282 run_faults 0 own_err 0 neg_len_fault 1 mut 4 verdict=FAIL
+mut4 s2: SVCIK nik 96 (p>=2^16 92) now 24 words 727 writes_gold 1056 writes_seen 1059 extra 276 missing 276 run_faults 0 own_err 0 neg_len_fault 1 mut 4 verdict=FAIL
+mut4 s3: SVCIK nik 96 (p>=2^16 93) now 24 words 710 writes_gold 1056 writes_seen 1059 extra 279 missing 279 run_faults 0 own_err 0 neg_len_fault 1 mut 4 verdict=FAIL
+mut5 s1: SVCIK nik 96 (p>=2^16 94) now 24 words 693 writes_gold 1056 writes_seen 1059 extra 96 missing 96 run_faults 0 own_err 0 neg_len_fault 1 mut 5 verdict=FAIL
+mut5 s2: SVCIK nik 96 (p>=2^16 92) now 24 words 727 writes_gold 1056 writes_seen 1059 extra 96 missing 96 run_faults 0 own_err 0 neg_len_fault 1 mut 5 verdict=FAIL
+mut5 s3: SVCIK nik 96 (p>=2^16 93) now 24 words 710 writes_gold 1056 writes_seen 1059 extra 96 missing 96 run_faults 0 own_err 0 neg_len_fault 1 mut 5 verdict=FAIL
+mut1 s1: SVCIK nik 96 (p>=2^16 94) now 24 words 693 writes_gold 1056 writes_seen 1059 extra 384 missing 384 run_faults 0 own_err 0 neg_len_fault 1 mut 1 verdict=FAIL
+mut1 s2: SVCIK nik 96 (p>=2^16 92) now 24 words 727 writes_gold 1056 writes_seen 1059 extra 384 missing 384 run_faults 0 own_err 0 neg_len_fault 1 mut 1 verdict=FAIL
+mut1 s3: SVCIK nik 96 (p>=2^16 93) now 24 words 710 writes_gold 1056 writes_seen 1059 extra 384 missing 384 run_faults 0 own_err 0 neg_len_fault 1 mut 1 verdict=FAIL
+SVCIK_GATE PASS
