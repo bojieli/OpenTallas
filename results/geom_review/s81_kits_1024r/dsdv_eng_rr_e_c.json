@@ -1,0 +1,8 @@
+{
+ "review": "S81/KITS author review, stage-1 place (c3 @3978437275: RTLA cf3c66ab82 + LEAFPLAN pins + wavefront rst SDC; face_guard raw+ODB PASS, no hook)",
+ "when_pdt": "2026-10-24 23:09",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsdv_eng_rr_e_c",
+ "image": "results/geom_review/s81_kits_1024r/img/dsdv_eng_rr_e_c.png",
+ "findings": "138.5k cells, max bin 0.63; macro-dominated (8 ROMs in two W columns, SRAM stack centre-E + 64x512 block); logic in an NW block + S band, NE and W strips sparse; N pins vi/vo x 33-310 reach the NW logic with 100-200 um runs (< 405); ck/rst_n moved to S middle (move_only repin, other pins exact for abutment with h0/h1); condition: GRT around the macro channels + N-face E-half run lengths at sign-off",
+ "verdict": "PASS-COND"
+}

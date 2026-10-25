@@ -1,0 +1,8 @@
+{
+ "review": "S81/KITS author review, stage-1 place (c3 @3978437275: RTLA cf3c66ab82 + LEAFPLAN pins + wavefront rst SDC; face_guard raw+ODB PASS, no hook)",
+ "when_pdt": "2026-10-24 23:09",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/ot_s81sl_vs_lfp",
+ "image": "results/geom_review/s81_kits_1024r/img/ot_s81sl_vs_lfp.png",
+ "findings": "111.6k cells, 15.8k flops, max bin 0.73; pin-limited tile: N 1267 pins 8.0/um (cap 24.3), W 814 5.0/um (cap 10.42), E 387, S 68; clk/rst_n S middle; uniform fill with a W pin-flop column; face_guard PASS 2534 after RTLA cf3c66ab82",
+ "verdict": "PASS"
+}

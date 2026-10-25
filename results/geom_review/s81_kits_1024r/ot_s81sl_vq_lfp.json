@@ -1,0 +1,8 @@
+{
+ "review": "S81/KITS author review, stage-1 place (c3 @3978437275: RTLA cf3c66ab82 + LEAFPLAN pins + wavefront rst SDC; face_guard raw+ODB PASS, no hook)",
+ "when_pdt": "2026-10-24 23:09",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/ot_s81sl_vq_lfp",
+ "image": "results/geom_review/s81_kits_1024r/img/ot_s81sl_vq_lfp.png",
+ "findings": "46k cells, 10.8k flops, max bin 0.57; clk/rst_n N-face middle (LEAFPLAN pins); y[128] W face 1.5/um, E 2.5/um, N 2/um; SRAM on S centre with 39-um channels; small sparse NE patch; vq r12 re-sign kit",
+ "verdict": "PASS"
+}
