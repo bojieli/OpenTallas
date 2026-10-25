@@ -935,7 +935,7 @@ def core_reset_targets(P, tn):
                 base = HERE.parents[1] / "physical" / "die_plan"
                 paths = list(base.glob("*/" + c["pins_file"])) + list(base.glob("*/*/" + c["pins_file"]))
                 paths = [p for p in paths if isinstance((j := json.loads(p.read_text())), dict)
-                         and j.get("module") == c.get("module")]
+                         and (j.get("module") or j.get("core")) == c.get("module")]
                 if paths and len({p.read_bytes() for p in paths}) == 1:
                     pd = paths[0]
                     for _ in Path(c["pins_file"]).parts:
