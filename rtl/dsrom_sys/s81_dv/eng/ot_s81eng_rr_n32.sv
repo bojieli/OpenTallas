@@ -3,7 +3,8 @@
 module ot_s81eng_xq_n32 #(
     parameter integer TXD = 8,
     parameter integer MUT = 0          // bench negative controls: 1 idx = 4 col + beat (not beat / 2), 2 e0 / e1 swapped,
-                                       // 3 (OT_S81ENG_XQ_OHSEL only) vo_b[137] wrong fragment on select s0
+                                       // 3 (OT_S81ENG_XQ_OHSEL only) vo_b[137] wrong fragment on select s0,
+                                       // 4 (OT_S81ENG_BF_PREDEC only) element 0 sign taken from code bit 6
 ) (
     input  wire         ck,
     input  wire         rst_n,
@@ -18,6 +19,49 @@ module ot_s81eng_xq_n32 #(
     wire [127:0] rl;
     wire mul_reset_early_n;
     ot_s81eng_reset3n32 #(.LEAVES(128)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl),.early_n(mul_reset_early_n));
+`ifdef OT_S81ENG_BF_PREDEC
+    // PATH-S81/ENG3 10-25 (E3 CTS probe: 116 TT EP, wl_code -> bf_dq -129.3, id_code -> u_aq.s0_x -135.4; ~27 levels of
+    // ripple HA/FA inside ot_s81eng_rr_bfraw_byte, local wires, fanout 1-2: pure logic depth).  The bfraw decode is split
+    // across the EXISTING input register (0 added cycles, same ages):
+    //   stage 1 (o_d flop in u_lkp -> kept per-element capture u_p): code-only pre-decode {s, nan, zero, sig, nrm, c-10,
+    //            eb-4}; the scale keeps its 32 kq8 capture copies (no scale logic before the register);
+    //   stage 2 (capture -> u_aq.s0_x): one 8b+5b add U = scale + (c-10) = X+127 gives xb and the overflow / normal
+    //            classes, a 5b add gives the subnormal shift k, then the 5-way select.
+    // The wait line now stores the DECODED bf16 (32 x 16 = the 512-bit width) from a registered copy bfxq of bf_x
+    // written one edge later at the registered address wa_q (same entry), read one edge later (wp - 10) straight into
+    // bf_dq: the 64 wait-line decoders, wl_code, the 32 wl scale copies and the id_code_w write copies are gone.
+    reg         iv; reg [4:0] ic; reg [2:0] ib;
+    always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
+    always @(posedge ck) begin ic <= o_col; ib <= o_beat; end
+    wire [255:0] id_scale_c;
+    wire [639:0] pd;                       // element g: pd[20g +: 20] registered pre-decode of o_d[8g +: 8]
+    for(genvar sc=0;sc<32;sc=sc+1)begin:g_scale_capture
+        ot_s81eng_rr_kq8 u_i(.ck(ck),.d(o_d[263:256]),.q(id_scale_c[8*sc+:8]));
+        ot_s81eng_rr_bfpre #(.MUT((MUT==4&&sc==0)?1:0)) u_p(.ck(ck),.code(o_d[8*sc+:8]),.q(pd[20*sc+:20]));
+    end
+    wire [511:0] bf_x;
+    genvar g;
+    generate for(g=0;g<32;g=g+1)begin:g_dec
+        for(genvar by=0;by<2;by=by+1)begin:g_byte
+            ot_s81eng_rr_bfpost_byte #(.LO(8*by)) u_x(.pd(pd[20*g+:20]),.scale(id_scale_c[8*g+:8]),.q(bf_x[16*g+8*by+:8]));
+        end
+    end endgenerate
+    wire [1023:0] x, xd;
+    reg [511:0] bf_dq;                     // decoded wait-line read (x 12 edges ago)
+    generate for (g = 0; g < 32; g = g + 1) begin : g_x
+        assign x[32 * g +: 32]  = {bf_x[16 * g +: 16], 16'h0};
+        assign xd[32 * g +: 32] = {bf_dq[16 * g +: 16], 16'h0};
+    end endgenerate
+    reg [5:0] wp;
+    always @(posedge ck or negedge rl[0]) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
+    reg [511:0] bfxq; reg [5:0] wa_q;      // write copy of the decode, one edge later, at the address of its beat
+    always @(posedge ck) begin bfxq <= bf_x; wa_q <= wp; end
+    wire [511:0] wl_rd;
+    ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(wp - 6'd10), .rd_out(wl_rd),
+        .w_ce_in(1'b1), .w_addr_in(wa_q), .wd_in(bfxq), .w_mask_in({512{1'b1}}),
+        .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
+    always @(posedge ck) bf_dq <= wl_rd;
+`else
     // ---------------------------------------------------------------- input flops + decode
     reg         iv; reg [4:0] ic; reg [2:0] ib; wire [263:0] id;
     reg[255:0] id_code; wire[255:0] id_scale_c,wl_scale_c;
@@ -63,6 +107,7 @@ module ot_s81eng_xq_n32 #(
     reg[255:0] wl_code;
     always @(posedge ck)wl_code<=wl_rd[255:0];
     assign wl={wl_scale_c[7:0],wl_code};
+`endif
     // ---------------------------------------------------------------- act-quant (closed vq quantiser)
     wire        qv, af; wire[24:0] qv_pair,qodd_pair,rst_pair_n;
     for(genvar qp=0;qp<25;qp=qp+1)begin:g_prst assign rst_pair_n[qp]=rl[12+qp/5];end wire [255:0] qq; wire signed [9:0] qe; wire [511:0] qy_unused;
@@ -563,6 +608,48 @@ endmodule
     assign q=bf16[LO+:8];
 endmodule
 
+// PATH-S81/ENG3 10-25: stage 1 of the split bfraw decode (OT_S81ENG_BF_PREDEC): code-only fields, registered.
+// q = {eb-4 (5b signed), c-10 (5b signed), nrm[2:0], sig[3:0], zero, nan, s}; c = eb + p, eb = (e==0 ? 1 : e),
+// so X + 127 = scale + c - 10 and k = scale + eb - 4 (exactly the bfraw e9/X/k terms).  MUT 1: sign from code[6].
+(* keep_hierarchy = 1 *)module ot_s81eng_rr_bfpre #(parameter integer MUT=0)(input wire ck,input wire[7:0] code,output reg[19:0] q);
+    wire       s = (MUT == 1) ? code[6] : code[7];
+    wire [3:0] e = code[6:3];
+    wire [2:0] m = code[2:0];
+    wire [3:0] sig = (e != 0) ? {1'b1, m} : {1'b0, m};
+    wire [1:0] p = sig[3] ? 2'd3 : sig[2] ? 2'd2 : sig[1] ? 2'd1 : 2'd0;
+    wire [3:0] nrm = sig << (2'd3 - p);
+    wire [4:0] eb = (e == 4'd0) ? 5'd1 : {1'b0, e};
+    wire [4:0] cm10 = eb + {3'd0, p} - 5'd10;    // -9..8
+    wire [4:0] ebm4 = eb - 5'd4;                 // -3..11
+    always @(posedge ck) q <= {ebm4, cm10, nrm[2:0], sig, (sig == 4'd0), (e == 4'hF && m == 3'h7), s};
+endmodule
+// Stage 2: registered pre-decode + registered scale -> bf16 byte LO (same function as ot_s81eng_rr_bfraw_byte).
+(* keep_hierarchy = 1 *)module ot_s81eng_rr_bfpost_byte #(parameter integer LO=0)(input wire[19:0] pd,input wire[7:0] scale,output wire[7:0] q);
+    wire       s = pd[0], nan = pd[1], zero = pd[2];
+    wire [3:0] sig = pd[6:3];
+    wire [2:0] nrm = pd[9:7];
+    wire signed [4:0] cm10 = pd[14:10], ebm4 = pd[19:15];
+    wire signed [9:0] u = $signed({2'b00, scale}) + $signed({{5{cm10[4]}}, cm10});   // X + 127, -9..263
+    wire       ovf = (u > 10'sd254);                          // X > 127
+    wire       norm = (u >= 10'sd1);                          // X >= -126
+    // subnormal output only when u <= 0, i.e. scale <= 9: k = scale + eb - 4 is in -3..6 and fits 5 bits
+    wire signed [4:0] k = $signed(scale[4:0]) + ebm4;
+    wire [1:0] r = k[4] ? (~k[1:0] + 2'd1) : 2'd0;
+    wire [3:0] quotient = sig >> r;
+    wire [3:0] rem = sig & ((4'd1 << r) - 4'd1);
+    wire [3:0] half = (r == 0) ? 4'd0 : (4'd1 << (r - 2'd1));
+    wire       up = (r != 0) && ((rem > half) || (rem == half && quotient[0]));
+    wire [7:0] sub = !k[4] ? ({4'd0, sig} << k[2:0]) : ({4'd0, quotient} + {7'd0, up});
+    reg [15:0] bf16;
+    always @(*) begin
+        if (nan)       bf16 = {s, 15'h7FC0};
+        else if (zero) bf16 = {s, 15'd0};
+        else if (ovf)  bf16 = {s, 8'hFF, 7'd0};
+        else if (norm) bf16 = {s, u[7:0], nrm, 4'd0};
+        else           bf16 = {s, 7'd0, sub};
+    end
+    assign q = bf16[LO+:8];
+endmodule
 (* keep_hierarchy=1 *)module ot_s81eng_rr_validcap(input wire ck,rn,d,output reg q);
  always @(posedge ck or negedge rn)if(!rn)q<=0;else q<=d;
 endmodule
