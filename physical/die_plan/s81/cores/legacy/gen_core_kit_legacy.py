@@ -328,9 +328,9 @@ def sdc(per, ins, tol, clks, rsts, name):
          "set non_clk_in [all_inputs -no_clocks]\n"
          f"set_input_delay -max {io:.4f} -clock vclk $non_clk_in\n"
          f"set_output_delay -max {io:.4f} -clock vclk [all_outputs]\n")
-    if rsts:
-        s += (f"# reset: async assert, released by the partition's reset synchroniser one cycle ahead (recovery at 1 T)\n"
-              f"set_input_delay -max {0.5 * per:.4f} -clock vclk [get_ports {{{' '.join(rsts)}}}]\n")
+    if rsts:   # OWNER DECISION 13 (reset wavefront, claude/reset-1024 @0a08a66af): the core reset is a SYNCHRONOUS
+        # registered input from the partition's reset relay tree, budgeted like any data pin (no async model, no waiver)
+        s += f"# reset {' '.join(rsts)}: wavefront relay -> registered synchronous input, data IO budget ({io:.4f})\n"
     s += (f"# seam hold: neighbour face flop launches from the fast end of the insertion window (-tol, no credit)\n"
           f"set_input_delay -min {-tol:.4f} -clock vclk $non_clk_in\n"
           f"set_output_delay -min 0.0000 -clock vclk [all_outputs]\n")
