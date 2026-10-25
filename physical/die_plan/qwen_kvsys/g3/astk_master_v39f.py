@@ -36,7 +36,11 @@ def face(x, y):
 
 
 def key(q):
-    return q.get("name") or f"{q['bus']}[{q.get('bit', 0)}]"
+    """plan pin name of a kit pins.json row: bus[bit], or the bare bus for a scalar port (kit rows carry bit None;
+    'ck[None]' / 'rst_n[None]' in cores/kv3_astk_pins.json broke the gen_core_kit_kv pin == RTL check, PATH-KV-ASTK5)."""
+    if q.get("name"):
+        return q["name"]
+    return q["bus"] if q.get("bit") is None else f"{q['bus']}[{q['bit']}]"
 
 
 REACH = 405.0
