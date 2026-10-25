@@ -264,3 +264,19 @@ def test_interior_pins_clear_kit_pdn_m7_straps():
         assert 0.672 + 0.116 <= ph + 1e-9 <= 8.64 - 0.116 + 1e-9, (v, c, ph)
         assert abs(c - v) < 1.0
         assert G._snap_tap(P, c, y) == (c, y)
+
+
+def test_build_avoid_cores_opt_in():
+    """KV-PLAN2 10-25 (plan reset.relay_avoid_cores): with avoid_cores every hop keeps one L route outside ALL grown
+    blockages, not only the walls (G2 kv3_pc rrl_13 -> rrl_14 through kvpc0); default stays the wall-only rule."""
+    core = (100.0, 150.0, 500.0, 300.0)
+    boxes = [(core[0] - RT.CLEAR_UM, core[1] - RT.CLEAR_UM, core[2] + RT.CLEAR_UM, core[3] + RT.CLEAR_UM)]
+    taps = [("a", 300.0, 340.0)]
+    box_out = (0.0, 0.0, 700.0, 500.0)
+    T0 = RT.build(taps, (300.0, 50.0), boxes=boxes, box_out=box_out)
+    xy0 = dict({r["q"]: r["xy"] for r in T0["relays"]}, **{"rst_root_n": T0["root"]})
+    assert any(not RT._edge_ok(xy0[r["d"]], r["xy"], boxes) for r in T0["relays"])   # default: hop over the core
+    T = RT.build(taps, (300.0, 50.0), boxes=boxes, box_out=box_out, avoid_cores=True)
+    assert RT.verify(T) == [] and _hops_ok(T) and T["topology"] == "grid"
+    xy = dict({r["q"]: r["xy"] for r in T["relays"]}, **{"rst_root_n": T["root"]})
+    assert all(RT._edge_ok(xy[r["d"]], r["xy"], boxes) for r in T["relays"])

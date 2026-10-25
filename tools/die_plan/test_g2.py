@@ -665,3 +665,11 @@ def test_probe_blockages_keeps_hard_cores_no_leaf_names():
                         {"inst": "e1", "module": "d", "origin_um": [300, 0], "outline_um": [9, 9], "obs_max": "M5"}]}
     obs = {o["inst"]: o.get("obs_max") for o in g2.probe_blockages(t, "M7")}
     assert obs == {"bq_0": "M5", "head2_e0": "M7", "e1": "M5"}
+
+
+def test_station_out_of_cores():
+    boxes = [(100.0, 100.0, 300.0, 200.0), (301.0, 100.0, 400.0, 200.0)]
+    assert g2.out_of_cores((50.0, 50.0), boxes, 500, 500) == (50.0, 50.0)
+    assert g2.out_of_cores((150.0, 190.0), boxes, 500, 500) == (150.0, 202.0)
+    # the nearest edge (x1 + m = 302) lies in the neighbour core -> next nearest outside point
+    assert g2.out_of_cores((295.0, 150.0), boxes, 500, 500) == (295.0, 98.0)
