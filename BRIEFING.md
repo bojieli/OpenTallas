@@ -96,3 +96,18 @@ and review it the way an industry floorplan/physical-design review would:
 All worktrees of ~/OpenTallas share ONE refs/stash. A `git stash pop` in your tree can apply another lane's changes
 (this happened 12:44 between ELEM-S81 and HBM-ARCH). Commit WIP to your own branch instead (`git commit -m WIP`, then
 amend or squash later).
+
+## OWNER DECISIONS 2026-10-24 (answered 18:4x PDT)
+1. QC capacity plan ACCEPTED: adopt Codex's capacity candidate (codex/qc-capacity-1024, 56-type, ~434k pads + CB16
+   alignment). G0C 56/56. Revert only if the both-cluster token pass fails or the model shows a real rate loss
+   (QC-TOK's rebind with CB16 pads: xt1 64/64 + 64/64 PASS).
+2. RESET RULE (all dies): pipeline reset like data. Exactly ONE root 2-flop reset synchroniser per die region (its async
+   input is the only false path; it is a CDC by design). From it the synchronised reset travels as a SYNCHRONOUS signal
+   through relay flops every <= 405 um (same reach rule as data), equal depth to every tap, so every block releases on
+   the same known cycle. Local flops use the delivered reset with normal timed recovery/removal (or as a sync reset).
+   Reset assertion becomes synchronous (clock runs at boot). Price the added boot cycles in boot benches. No recovery
+   waivers. (= KV-G3 option (b).)
+3. DIE-TIMING MARGINS: report only. Gate = TT setup / FF hold with 60/25 ps uncertainty, spread <= 80 ps. Margined
+   slack (xtalk/IR/OCV) stays an INFO column.
+4. HBM B2l SPEED: ACCEPT B2l's ~22% DeepSeek-AR loss vs d4g (d4g was unroutable). Bind B2l natively now; speed recovery
+   (more SMs, wider links) is a later follow-up, not a blocker.

@@ -114,3 +114,5 @@ This file is now version-controlled on branch coord/state (GitHub) so it cannot 
 - [x] OWN.HEADHBM HBM stacks on head dies (rack: 4 each; LM head is ROM, plan has none) · OWNER · DONE · approved 10-24 07:30
 - [ ] OWN.DRAFT MTP draft on copy-B dies, no draft fan-out SerDes · S81-HEAD · RUNNING · approved if MTP compose uses no draft link (checking)
 - [ ] OWN.COPYAB Copy-A/B 6th SerDes pair on 64 layer dies: 12-SerDes variant or ride existing pairs · S81 · RUNNING · approved: reserve pair on every layer die (rack spec)
+
+## OWNER decisions 2026-10-24 18:4x (see BRIEFING): QCCAP=ACCEPT · RESET=PIPELINED (one root sync, sync relay every <=405 um) · MARGINS=INFO · HBMPRICE=ACCEPT B2l, recover later
