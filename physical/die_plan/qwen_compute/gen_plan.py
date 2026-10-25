@@ -516,7 +516,14 @@ def directed_slice_landings(record, su_directed):
     The old L0|L1=504 was shared gb/gv/reset input overlap, not a driven lane.
     Preserve every external landing bit; count actual internal SU directions.
     """
-    rows = [r for r in record["landings"] if "r_su" not in (r["src_region"], r["dst_region"])]
+    rows = [dict(r) for r in record["landings"] if "r_su" not in (r["src_region"], r["dst_region"])]
+    # The landed-parent record describes entire source rings. Plan each destination's consumed port bits,
+    # e.g. cid[23:0] is four independent six-bit identities, not a 24-bit input to every head.
+    consumed = record.get("_reader_port_bits", {})
+    for row in rows:
+        readers = row.get("readers", [])
+        if readers and all(reader in consumed for reader in readers):
+            row["width"] = min(row["width"], sum(consumed[reader] for reader in set(readers)))
     rows += [dict(src_region=r["src"], dst_region=r["dst"], net=r["net"], width=r["bits"])
              for r in su_directed["external"]]
     return rows
@@ -2331,6 +2338,7 @@ def main():
     fp = {"w": json.loads(Path(a.slice_fp_w).read_text()), "e": json.loads(Path(a.slice_fp_e).read_text())}
     fp_pins = {s: {b: f for f, bs in fp[s]["pins"].items() for b in bs} for s in "we"}
     record = json.loads(Path(a.slice_record).read_text())
+    record["_reader_port_bits"] = json.loads(Path(a.slice_record).with_name("slice_reader_widths.json").read_text())["reader_port_bits"]
     su_split = json.loads(Path(a.su_split).read_text())["su_split_bits"]
     su_directed = json.loads(Path(a.su_split).with_name("su_directed.json").read_text())
     cblocks = {b["inst"]: b["master"] for b in census["blocks"]}

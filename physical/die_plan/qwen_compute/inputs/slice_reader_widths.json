@@ -1,0 +1,11 @@
+{
+  "note": "s8_lp_record publishes the full 24-bit cid ring to each region; the actual head port consumes only its six-bit column identity. Preserve original record, plan only consumed bits.",
+  "source": "rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv",
+  "source_sha256": "80e0888c19b9bee122ff7482d6348a1a7e612f3214424f0b9d2e1c45867395eb",
+  "reader_port_bits": {
+    "u_xh0.cid": 6,
+    "u_xh1.cid": 6,
+    "u_xh2.cid": 6,
+    "u_xh3.cid": 6
+  }
+}
