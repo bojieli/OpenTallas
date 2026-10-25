@@ -2,7 +2,7 @@
 "module": "ot_s81sl_vn_a_xm",
 "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_a_xm.lef",
 "source": "S81/LEAFPLAN 10-24 split of ot_s81sl_vn (cores/leaf/split.py): 356.4x164.16, faces {'W': 817, 'E': 65, 'N': 33}; stub until the split RTL view closes; x-mirrored pin view (E <-> W); OWNER DECISION 8 10-24: 1 constant pins dropped (inputs/const_pins_dropped.json)",
-"pinhash": "c14d77f3219d",
+"pinhash": "a38eb11a0ac8",
 "pins": [
 {
 "name": "c_s[0]",
@@ -198,9 +198,9 @@
 },
 {
 "name": "clk",
-"layer": "M4",
-"x": 356.358,
-"y": 81.9
+"layer": "M3",
+"x": 178.173,
+"y": 0.019
 },
 {
 "name": "fault",

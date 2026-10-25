@@ -106,6 +106,16 @@ def build(mod, sp, xm=False):
             c, e = sl[j], R.EDGE[L]
             x, y = {"N": (c, H - e), "S": (c, e), "E": (W - e, c), "W": (e, c)}[face]
             pins.append(dict(name=nm, layer=L, x=round(x, 4), y=round(y, 4)))
+    # GEOM 07:06 / CORES0719: VN_a clock enters the long face at its middle.
+    # The N centre is occupied by c_s[15]; S is clear. Derive the x-mirror
+    # directly on the M3 track lattice instead of reflecting off-track by18nm.
+    if mod.removesuffix("_xm") == "ot_s81sl_vn_a":
+        target = W - 178.209 if xm else 178.209
+        clkx = min(R.tracks("M3", 4.32, W - 4.32, True),
+                   key=lambda c: (round(abs(c - target), 6), c))
+        for p in pins:
+            if p["name"] == "clk":
+                p.update(layer="M3", x=round(clkx, 4), y=R.EDGE["M3"])
     pins.sort(key=lambda p: p["name"])
     return pins
 
