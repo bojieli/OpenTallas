@@ -241,9 +241,10 @@ proc ::ot_dtsh::trunk_ndr {} {
     lappend spacings $name [expr {2.0*[$layer getSpacing]/$dbu}]
   }
   set name ot_dtsh_4w2s
-  if {[$tech findNonDefaultRule $name] ne "NULL"} { error "OT_DTSH NDR name already exists: $name" }
+  # create_ndr makes a BLOCK rule (dbTechNonDefaultRule_create(block)); dbTech::findNonDefaultRule never sees it
+  if {[$blk findNonDefaultRule $name] ne "NULL"} { error "OT_DTSH NDR name already exists: $name" }
   create_ndr -name $name -width $widths -spacing $spacings
-  set ndr [$tech findNonDefaultRule $name]
+  set ndr [$blk findNonDefaultRule $name]
   if {$ndr eq "NULL"} { error "OT_DTSH NDR was not created" }
   $root setNonDefaultRule $ndr
   dict for {node info} $nodes { [dict get $info net] setNonDefaultRule $ndr }
