@@ -102,3 +102,4 @@ Vehicle = generated carve of the FRESH canonical bound top (plan ce2406b9, sourc
 - Not touched: inherited regen7a/7b (PIDs 1256692/1280229); both done (7b G0C PASS).
 - West strip (not in delta): native59 = helper MY col0 / R0 col1 + origins 8.64i+0.012 + fltn dup fix + FT re-site (c4211ef67a) ~0.5 d; glue = v2 orientation-invariant views + +0.012 origins + lef/lib/origin contents + 8376afdfe1 + TXDP params + clk_d2d SDC ~0.5-1 d; phy_ucie_kv = u_pstn ~1180 flops in a zero-area 777.6 outline -> OWNER? A (glue_ucie 777.6x1987.2 merged type) / B (bare macro, registered FDI pins).
 - OWNER?: phy_ucie_kv A/B; native59 split write-data faces accept or regen macro; +32.4 mm2 QC die (SU rows 1339.2) accept.
+2026-10-25 08:42 PDT TOK-LEC: native59 dr_tag fix READY claude/qc-native59-decl-0825@547a3ff22 (S2 kits must be rebuilt after merge). lec.py: '/' ODB separator fix in claude/tok-lec-0825@91fafa6c2 (C1 6_final 1162 / f58 10 false points).

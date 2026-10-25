@@ -516,3 +516,4 @@ READY [KITS-SPARE/S81C 08:34 PDT] claude/kits-spare-1025@9a3446e686 (base main 0
 [COORD 08:37 PDT] URGENT batch -> main 00b759e372 (from 0372e55a45; 0 deletions; gate_rule_guard PASS; test_reset_taps + flow_canary 32/32 PASS on epyc1):
 [COORD 08:37 PDT] APPROVED+MERGED claude/reset-taps-scope-1025@66346540c (global rt_named_nets; fixes cece3ea38 CTS crash on every gen_phys kit). Hub ff'd; canaries RE-TRIGGERED 08:37 on 00b759e37 (5 client services running).
 [COORD 08:37 PDT] APPROVED+MERGED claude/flow-canary-hbmgen-1025@1f564083c (HBM canary gen -E -s).
+READY [TOK-LEC 08:42] claude/qc-native59-decl-0825@547a3ff22: QC native59 RTL bug (real): qfd_native59_svc_obs1.sv g_slot u_land .emit_tag59(dr_tag) used dr_tag before 'reg[58:0]dr_tag' (line 806) -> 1-bit implicit net under LRM/slang, LEC implicit-net LINT FAIL on every native59 kit. Pure declaration move (0 cycles). Rebuild native59 kits after merge.
