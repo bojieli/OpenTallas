@@ -14,11 +14,6 @@
     34.56,
     164.16
   ],
-  "usable_channels_um": [
-    30.24,
-    34.776,
-    30.456
-  ],
   "macro_xy": [
     {
       "instance": "u_fcore.g_bank[0].u_bank.u_data.g_read[0].u_m",
@@ -280,6 +275,17 @@
   "requirements": [
     "Preserve existing y and macro pin identities; re-place existing per-bank IF regs at their own W/E edges.",
     "Place shared control copies locally only if functionally exact, price any extra cycle with miter/mutant.",
-    "Regional clock taps on channel-sink centroid, actual postCTS F6/clock and calibrated FF gate before route."
+    "Regional clock taps on channel-sink centroid, actual postCTS F6/clock and calibrated FF gate before route.",
+    "Quoted30.24/34.776/30.456 gaps are before4.32um halos; actual cell widths25.92/26.136/26.136. Recheck tracks; if30um usable needed each, enlarge outline~13um in plan."
+  ],
+  "clear_gaps_before_halo_um": [
+    30.24,
+    34.776,
+    30.456
+  ],
+  "standard_cell_channels_after_4p32_halos_um": [
+    25.92,
+    26.136,
+    26.136
   ]
 }
