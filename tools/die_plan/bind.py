@@ -2727,7 +2727,7 @@ def _concat(bits):
 _GLUE_BIN = {"$and": "&", "$or": "|", "$xor": "^", "$xnor": "~^", "$add": "+", "$sub": "-", "$mul": "*",
              "$eq": "==", "$ne": "!=", "$eqx": "===", "$nex": "!==", "$lt": "<", "$le": "<=", "$gt": ">", "$ge": ">=",
              "$logic_and": "&&", "$logic_or": "||", "$shl": "<<", "$shr": ">>", "$sshl": "<<<", "$sshr": ">>>"}
-_GLUE_UN = {"$not": "~", "$neg": "-", "$pos": "", "$reduce_and": "&", "$reduce_or": "|", "$reduce_xor": "^",
+_GLUE_UN = {"$buf": "", "$not": "~", "$neg": "-", "$pos": "", "$reduce_and": "&", "$reduce_or": "|", "$reduce_xor": "^",
             "$reduce_xnor": "~^", "$reduce_bool": "|", "$logic_not": "!"}
 
 
