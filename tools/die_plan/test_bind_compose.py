@@ -30,7 +30,7 @@ def test_preserves_registered_hid_and_exact_straps():
     f,s=fixture();sources,r=compose(f,Rules(),s,E.Cell)
     assert len(f.cells)==1 and f.cells[0].ports['strap_hid']==['0','0']
     rtl=sources[0][1]
-    assert '.hid({n6, n4})' in rtl and '.q({n6, n4})' in rtl
+    assert '.hid({n4, n3})' in rtl and '.q({n4, n3})' in rtl
     assert '.hid({strap_hid[1], strap_hid[0]})' in rtl
     assert '.W(2)' in rtl and r['cores'][0]['terminal_count']==16
     assert r['terminal_equality']
@@ -81,9 +81,36 @@ def test_dissolved_constant_driver_is_preserved():
     f,s=fixture();f.cells[2].ports['bsel']=[7,7];f.const_drivers[7]=('1','dissolved.literal')
     del s['cores'][0]['ports']['strap_bsel']
     sources,_=compose(f,Rules(),s,E.Cell)
-    assert "assign n7 = 1'b1;" in sources[0][1]
+    assert "assign n5 = 1'b1;" in sources[0][1]
 
 def test_hidden_undriven_internal_net_rejected():
     f,s=fixture();f.cells[2].ports['bsel']=[7,7]
     del s['cores'][0]['ports']['strap_bsel']
     with pytest.raises(CompositionError,match='no preserved driver'):compose(f,Rules(),s,E.Cell)
+
+
+def test_explicit_live_clock_aliases_cover_disjoint_terminals():
+    f,s=fixture();p=s['cores'][0]['ports'];old=p.pop('clk')
+    for i,anchor in enumerate(old['bits'][0]):p['clk'+str(i)]=dict(dir='input',bits=[[anchor]])
+    sources,_=compose(f,Rules(),s,E.Cell)
+    assert all(f.cells[0].ports['clk'+str(i)]==[1] for i in range(3))
+    assert all('.clk({clk'+str(i)+'[0]})' in sources[0][1] for i in range(3))
+
+def test_incomplete_live_aliases_rejected():
+    f,s=fixture();p=s['cores'][0]['ports'];old=p.pop('clk')
+    for i,anchor in enumerate(old['bits'][0][:2]):p['clk'+str(i)]=dict(dir='input',bits=[[anchor]])
+    with pytest.raises(CompositionError,match='complete terminal coverage'):compose(f,Rules(),s,E.Cell)
+
+def test_repeated_same_master_has_identical_source_despite_global_net_ids():
+    f,s=fixture();clones=copy.deepcopy(f.cells);core=copy.deepcopy(s['cores'][0])
+    remap={c.path:c.path.replace('top.','top.rep.') for c in clones}
+    for c in clones:
+        c.path=remap[c.path]
+        c.ports={p:[b+10 if isinstance(b,int) else b for b in bs] for p,bs in c.ports.items()}
+    core['inst']='top.rep.core';core['members']=[remap[p] for p in core['members']]
+    for pd in core['ports'].values():
+        for anchors in pd['bits']:
+            for a in anchors:a['member']=remap[a['member']]
+    f.cells+=clones;f.top_ports['out2']=('output',[15]);s['cores'].append(core)
+    sources,receipt=compose(f,Rules(),s,E.Cell)
+    assert len(sources)==1 and len(f.cells)==2 and len(receipt['cores'])==2
