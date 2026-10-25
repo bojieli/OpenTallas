@@ -36,6 +36,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
 HARDEN = HERE.parent / "hbm" / "cores" / "harden"
 TOOL = REPO / "tools" / "die_plan"
+FF_TT_INSERTION_RATIO = 0.81   # FLOW 10-25 (tools/die_plan/gen_phys.py): routed RCX FF/TT pin-register mean ratio
 YOSYS = str(Path.home() / ".local/opentallas-tools/bin/yosys")
 CORE_MARGIN_UM = 4.32
 PIN_LEN_UM = 0.192
@@ -438,6 +439,16 @@ def main():
                          "local CTS trees; macro clock pin on its interface-register tap; POST_CTS tap alignment). "
                          "off = single-root TritonCTS (unchanged)")
     ap.add_argument("--clock-tap-sinks", type=int, default=1250)
+    # HBM-KITS 2026-10-25: the FLOW 10-25 shared defaults (main tools/die_plan/gen_phys.py) for HBM core kits:
+    # F2 = ASAP7 per-layer RC calibrated to routed RCX (tools/die_plan/setRC_rcx_asap7.tcl as LAYER_PARASITICS_FILE /
+    # SET_RC_TCL; --stock-rc = old platform setRC basis); F1 = per-corner IO clock basis for the in-flow FF hold repair
+    # (f1_io_ff.tcl at PRE_GLOBAL_ROUTE: output -min = I_TT - I_FF; I_FF = measured FF view value, else
+    # FF_TT_INSERTION_RATIO x I_TT); F4 = zero-logic register chains on one clock leaf (f4_chain_leaf.tcl, POST_CTS,
+    # then the kit's own POST_CTS hook).  Sign-off is unchanged (hard-core latency contract: no FLOW rebind, ROOT-MERGE2).
+    ap.add_argument("--stock-rc", action="store_true", help="old basis: platform setRC.tcl (no RCX-calibrated RC)")
+    ap.add_argument("--no-f1", action="store_true", help="no per-corner FF IO basis in the FF hold repair")
+    ap.add_argument("--no-f4", action="store_true", help="no zero-logic chain leaf affinity post-CTS")
+    ap.add_argument("--io-ff-ps", type=float, default=None, help="measured FF pin-register insertion (overrides the table / ratio)")
     ap.add_argument("--clock-tap-dmax", type=float, default=80.0)
     a = ap.parse_args()
     V = json.load(open(a.views))
@@ -634,7 +645,7 @@ def main():
     # partition logic around the core runs at I in the core's own frame: IO vclk source latency = I (input hold /
     # output setup timed against the real latency, not padded by hold buffers), tap_balance target = I (shorter
     # clock ports padded up to it), sdc_lint / signoff insertion target = I.  Constraints, margins, corners unchanged.
-    contract = None
+    contract, ce_ff = None, None
     if a.core_insertion != "none" and Path(a.core_insertion).is_file():
         ci = json.load(open(a.core_insertion))
         ce = next((x for x in ci["views"] if x["view"] == a.view), None)
@@ -642,6 +653,7 @@ def main():
             contract = dict(file=(str(Path(a.core_insertion).resolve().relative_to(REPO)) if Path(a.core_insertion).resolve().is_relative_to(REPO) else str(a.core_insertion)), sha256=sha(Path(a.core_insertion)),
                             insertion_ps=ce["insertion_mean_ps"], early_tap_ps=ce["early_tap_ps"],
                             measured_kit=ce.get("kit"))
+            ce_ff = ce.get("insertion_ff_mean_ps")
             if ce["insertion_mean_ps"] > common:
                 ins = float(ce["insertion_mean_ps"])
     (kd / "constraint.sdc").write_text(sdc(per, ins, tol, clks, rsts, a.view, common))
@@ -686,6 +698,12 @@ def main():
     if a.clock_taps == "density":
         for f in ("core_density_taps.tcl", "core_tap_align.tcl"):
             shutil.copyfile(HERE / f, kd / f)
+    if not a.stock_rc:
+        shutil.copyfile(TOOL / "setRC_rcx_asap7.tcl", kd / "setRC_rcx.tcl")
+    if not a.no_f1:
+        shutil.copyfile(HERE / "f1_io_ff.tcl", kd / "f1_io_ff.tcl")
+    if not a.no_f4:
+        shutil.copyfile(HERE / "f4_chain_leaf.tcl", kd / "f4_chain_leaf.tcl")
     (kd / "post_synth_actual.tcl").write_text("source /work/face_keep_release.tcl\n# Preserve the actual post-eliminate_dead_logic graph for face_guard.\nwrite_verilog $::env(RESULTS_DIR)/1_synth.v\n")
     lefs, libs, ttlibs, fflibs = [], [], [], []
     for m in rec.get("macros", []):
@@ -836,6 +854,19 @@ def main():
                 "override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
                 f"{rec.get('cts_delay_buffer_derate', 0.5)} -sink_clustering_max_diameter 30 -sink_clustering_size 20 "
                 "-distance_between_buffers 40 -balance_levels"]
+    flow = dict(rc_cal=not a.stock_rc, f1=None, f4=not a.no_f4)
+    if not a.stock_rc:
+        cfg += ["export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl"]
+    if not a.no_f1:
+        ff_meas = a.io_ff_ps if a.io_ff_ps is not None else (ce_ff if contract else None)
+        i_ff = float(ff_meas) if ff_meas else round(FF_TT_INSERTION_RATIO * ins, 1)
+        flow["f1"] = dict(io_tt_ps=ins, io_ff_ps=i_ff,
+                          basis=("measured" if ff_meas else f"FF_TT_INSERTION_RATIO {FF_TT_INSERTION_RATIO:g} x TT"))
+        cfg += ["override export PRE_GLOBAL_ROUTE_TCL = /work/f1_io_ff.tcl",
+                f"export OT_IO_TT_LATENCY_PS = {ins:g}", f"export OT_IO_FF_LATENCY_PS = {i_ff:g}"]
+    if not a.no_f4:
+        nxt = "/work/core_tap_align.tcl" if a.clock_taps == "density" else "/work/tap_balance.tcl"
+        cfg += ["override export POST_CTS_TCL = /work/f4_chain_leaf.tcl", f"export OT_F4_NEXT_TCL = {nxt}"]
     cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
@@ -851,6 +882,7 @@ def main():
                                plan_pins=len(names) + len(shell["dropped"]))
                           if shell else None),
               kit_hash=kit_hash(kd))
+    fz["flow_defaults"] = dict(flow, rule="FLOW 2026-10-25 F1/F2/F4 (HBM-KITS port to core kits)")
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
