@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
-// ot_s81_cfg7_seq: per-pair configuration sequencer of the DS-ROM S81 die (CLAUDE S81-DIE, 2026-10-06).
+// ot_s81_cfg7_seq_local: per-pair configuration sequencer of the DS-ROM S81 die (CLAUDE S81-DIE, 2026-10-06).
 //
 // The S81 die gives every field pair NROM = 7 real cfg ROMs (ot_rom_4096x72_m8): 2^PHW = 1,024 phases x CW = 25 words
 // = 25,600 words per pair (results/uarch/dsrom_c_w4_20261003/s82_inputs/inventory.json, words_per_pair_by_stage).
@@ -44,12 +44,13 @@
 // negative control +define+OT_S81_CFG7_MUT_PRDL (capture 1 edge early) must FAIL.  PINREG = 0 is byte-for-byte the
 // previous behaviour.
 // ---------------------------------------------------------------------------
-module ot_s81_cfg7_seq #(
+module ot_s81_cfg7_seq_local #(
     parameter integer NSEG = 8,
     parameter integer PHW = 10,
     parameter integer NROM = 7,
     parameter integer PQ = 0,
     parameter integer LAYOUT = 0,
+    parameter integer LOCAL_COPY = 0,
     parameter integer PINREG = 0,
     parameter integer CW = 3 * NSEG + 1,
     parameter integer AW = $clog2(CW << PHW)
@@ -64,13 +65,16 @@ module ot_s81_cfg7_seq #(
     output wire [0:0]          go_e,
     output wire [1:0]          st,
     input  wire [1:0]          ef,          // PQ: {bank_free, sh_free} of the element
-    output wire [1:0]          go_tag       // PQ: the op tag that rides with go
+    output wire [1:0]          go_tag,      // PQ: the op tag that rides with go
+    output wire [6:0]          ce_local,
+    output wire [53:0]         cfg_local,
+    output wire               go_local
 );
     initial begin
-        if (NROM != 7) $fatal(1, "ot_s81_cfg7_seq: the port list is written for NROM = 7");
-        if ((CW << PHW) > NROM * 4096) $fatal(1, "ot_s81_cfg7_seq: CW x 2^PHW words exceed NROM 4096-row macros");
-        if (CW > 32 || AW < 12) $fatal(1, "ot_s81_cfg7_seq: CW <= 32 and AW >= 12 required");
-        if (LAYOUT == 1 && (CW > 4 * NROM || PHW + 2 > 12)) $fatal(1, "ot_s81_cfg7_seq: LAYOUT 1 needs CW <= 28 and PHW <= 10");
+        if (NROM != 7) $fatal(1, "ot_s81_cfg7_seq_local: the port list is written for NROM = 7");
+        if ((CW << PHW) > NROM * 4096) $fatal(1, "ot_s81_cfg7_seq_local: CW x 2^PHW words exceed NROM 4096-row macros");
+        if (CW > 32 || AW < 12) $fatal(1, "ot_s81_cfg7_seq_local: CW <= 32 and AW >= 12 required");
+        if (LAYOUT == 1 && (CW > 4 * NROM || PHW + 2 > 12)) $fatal(1, "ot_s81_cfg7_seq_local: LAYOUT 1 needs CW <= 28 and PHW <= 10");
     end
     // ---- reset (PINREG): the rst_n port drives only an ot_rst_relay (async assert, release 3 edges later); pin flops
     // reset from region 0, the sequencer from region 1 (native audit pr2: the port -> 564 async clears was capture 303 ps)
@@ -98,7 +102,7 @@ module ot_s81_cfg7_seq #(
     generate if (PINREG != 0) begin : g_pin
         reg [PHW+4:0] lc_r; reg [1:0] ef_r;
         reg [47:0] q0_r, q1_r, q2_r, q3_r, q4_r, q5_r, q6_r;
-        reg [11:0] a_r; reg [6:0] ce_r; reg [53:0] cfg_r; reg go_e_r; reg [1:0] st_r, go_tag_r;
+        reg [11:0] a_r; (* keep = "true" *) reg [6:0] ce_r; (* keep = "true" *) reg [53:0] cfg_r; (* keep = "true" *) reg go_e_r; reg [1:0] st_r, go_tag_r;
         always @(posedge clk[0] or negedge rst_p)
             if (!rst_p) begin lc_r <= '0; ef_r <= 2'b00; end
             else begin lc_r <= lc; ef_r <= ef; end
@@ -106,11 +110,24 @@ module ot_s81_cfg7_seq #(
         always @(posedge clk[0] or negedge rst_p)
             if (!rst_p) begin a_r <= 12'd0; ce_r <= 7'd0; cfg_r <= 54'd0; go_e_r <= 1'b0; st_r <= 2'b00; go_tag_r <= 2'b00; end
             else begin a_r <= a_c; ce_r <= ce_c; cfg_r <= cfg_c; go_e_r <= go_e_c; st_r <= st_c; go_tag_r <= go_tag_c; end
+        // Same-edge private copies keep boundary output Qs free of local loads.
+        if (LOCAL_COPY != 0) begin : g_local
+        (* keep = "true" *) reg [6:0] ce_l;
+        (* keep = "true" *) reg [53:0] cfg_l;
+        (* keep = "true" *) reg go_l;
+        always @(posedge clk[0] or negedge rst_p)
+            if (!rst_p) begin ce_l <= '0; cfg_l <= '0; go_l <= 1'b0; end
+            else begin ce_l <= ce_c; cfg_l <= cfg_c; go_l <= go_e_c; end
+        assign ce_local = ce_l; assign cfg_local = cfg_l; assign go_local = go_l;
+        end else begin : g_no_local
+            assign ce_local = ce_r; assign cfg_local = cfg_r; assign go_local = go_e_r;
+        end
         assign lc_i = lc_r; assign ef_i = ef_r;
         assign q0_i = q0_r; assign q1_i = q1_r; assign q2_i = q2_r; assign q3_i = q3_r; assign q4_i = q4_r; assign q5_i = q5_r; assign q6_i = q6_r;
         assign a = a_r; assign {ce6, ce5, ce4, ce3, ce2, ce1, ce0} = ce_r;
         assign cfg = cfg_r; assign go_e = go_e_r; assign st = st_r; assign go_tag = go_tag_r;
     end else begin : g_nopin
+        assign ce_local = ce_c; assign cfg_local = cfg_c; assign go_local = go_e_c;
         assign lc_i = lc; assign ef_i = ef;
         assign q0_i = q0; assign q1_i = q1; assign q2_i = q2; assign q3_i = q3; assign q4_i = q4; assign q5_i = q5; assign q6_i = q6;
         assign a = a_c; assign {ce6, ce5, ce4, ce3, ce2, ce1, ce0} = ce_c;
@@ -274,11 +291,66 @@ module ot_s81_cfg7_seq #(
 `endif
 endmodule
 
-// ot_s81_cfg7_seq_bf (s81-die-rtl-bind 2026-10-14): the BF pair's configuration sequencer die master.  The BF pair's
+// ot_s81_cfg7_seq_bf_local (s81-die-rtl-bind 2026-10-14): the BF pair's configuration sequencer die master.  The BF pair's
 // front (ot_s81_bf_front: the DS q element ot_v41_rom_elem_qx_w10 re-cut, not the PQ element) exposes no configuration-
-// shadow handshake, so its loader is the pinned PQ 0 loader of ot_s81_cfg7_seq (load at broadcast, go_tag 0): the same
-// RTL at PQ 0 with no ef / go_tag pins (the PQ 0 loader never reads ef; cycle-identical to ot_s81_cfg7_seq PQ 0, gate
+// shadow handshake, so its loader is the pinned PQ 0 loader of ot_s81_cfg7_seq_local (load at broadcast, go_tag 0): the same
+// RTL at PQ 0 with no ef / go_tag pins (the PQ 0 loader never reads ef; cycle-identical to ot_s81_cfg7_seq_local PQ 0, gate
 // rtl/v41die/test/tb_ot_s81_cfg7_seq.sv PQ 0).
+module ot_s81_cfg7_seq_bf_local #(
+    parameter integer NSEG = 8,
+    parameter integer PHW = 10,
+    parameter integer NROM = 7,
+    parameter integer LAYOUT = 0,
+    parameter integer LOCAL_COPY = 0,
+    parameter integer PINREG = 0
+) (
+    input  wire [0:0]          clk,
+    input  wire [0:0]          rst_n,
+    input  wire [PHW+4:0]      lc,
+    output wire [11:0]         a,
+    output wire [0:0]          ce0, ce1, ce2, ce3, ce4, ce5, ce6,
+    input  wire [47:0]         q0, q1, q2, q3, q4, q5, q6,
+    output wire [53:0]         cfg,
+    output wire [0:0]          go_e,
+    output wire [1:0]          st,
+    output wire [6:0]          ce_local,
+    output wire [53:0]         cfg_local,
+    output wire               go_local
+);
+    wire [1:0] go_tag_0;      // constant 0 at PQ 0
+    ot_s81_cfg7_seq_local #(.NSEG(NSEG), .PHW(PHW), .NROM(NROM), .PQ(0), .LAYOUT(LAYOUT), .LOCAL_COPY(LOCAL_COPY), .PINREG(PINREG)) u (.clk(clk), .rst_n(rst_n), .lc(lc), .a(a),
+        .ce0(ce0), .ce1(ce1), .ce2(ce2), .ce3(ce3), .ce4(ce4), .ce5(ce5), .ce6(ce6),
+        .q0(q0), .q1(q1), .q2(q2), .q3(q3), .q4(q4), .q5(q5), .q6(q6),
+        .cfg(cfg), .go_e(go_e), .st(st), .ef(2'b00), .go_tag(go_tag_0), .ce_local(ce_local), .cfg_local(cfg_local), .go_local(go_local));
+endmodule
+
+// Preserve the released top-level pin and parameter contract.
+module ot_s81_cfg7_seq #(
+    parameter integer NSEG = 8,
+    parameter integer PHW = 10,
+    parameter integer NROM = 7,
+    parameter integer PQ = 0,
+    parameter integer LAYOUT = 0,
+    parameter integer PINREG = 0,
+    parameter integer CW = 3 * NSEG + 1,
+    parameter integer AW = $clog2(CW << PHW)
+) (
+    input  wire [0:0]          clk,
+    input  wire [0:0]          rst_n,
+    input  wire [PHW+4:0]      lc,
+    output wire [11:0]         a,
+    output wire [0:0]          ce0, ce1, ce2, ce3, ce4, ce5, ce6,
+    input  wire [47:0]         q0, q1, q2, q3, q4, q5, q6,
+    output wire [53:0]         cfg,
+    output wire [0:0]          go_e,
+    output wire [1:0]          st,
+    input  wire [1:0]          ef,          // PQ: {bank_free, sh_free} of the element
+    output wire [1:0]          go_tag       // PQ: the op tag that rides with go
+);
+    ot_s81_cfg7_seq_local #(.NSEG(NSEG),.PHW(PHW),.NROM(NROM),.PQ(PQ),.LAYOUT(LAYOUT),.PINREG(PINREG),.CW(CW),.AW(AW)) u_impl (.clk(clk),.rst_n(rst_n),.lc(lc),.a(a),.ce0(ce0),.ce1(ce1),.ce2(ce2),.ce3(ce3),.ce4(ce4),.ce5(ce5),.ce6(ce6),.q0(q0),.q1(q1),.q2(q2),.q3(q3),.q4(q4),.q5(q5),.q6(q6),.cfg(cfg),.go_e(go_e),.st(st),.ef(ef),.go_tag(go_tag));
+endmodule
+
+// Preserve the released top-level pin and parameter contract.
 module ot_s81_cfg7_seq_bf #(
     parameter integer NSEG = 8,
     parameter integer PHW = 10,
@@ -296,9 +368,5 @@ module ot_s81_cfg7_seq_bf #(
     output wire [0:0]          go_e,
     output wire [1:0]          st
 );
-    wire [1:0] go_tag_0;      // constant 0 at PQ 0
-    ot_s81_cfg7_seq #(.NSEG(NSEG), .PHW(PHW), .NROM(NROM), .PQ(0), .LAYOUT(LAYOUT), .PINREG(PINREG)) u (.clk(clk), .rst_n(rst_n), .lc(lc), .a(a),
-        .ce0(ce0), .ce1(ce1), .ce2(ce2), .ce3(ce3), .ce4(ce4), .ce5(ce5), .ce6(ce6),
-        .q0(q0), .q1(q1), .q2(q2), .q3(q3), .q4(q4), .q5(q5), .q6(q6),
-        .cfg(cfg), .go_e(go_e), .st(st), .ef(2'b00), .go_tag(go_tag_0));
+    ot_s81_cfg7_seq_bf_local #(.NSEG(NSEG),.PHW(PHW),.NROM(NROM),.LAYOUT(LAYOUT),.PINREG(PINREG)) u_impl (.clk(clk),.rst_n(rst_n),.lc(lc),.a(a),.ce0(ce0),.ce1(ce1),.ce2(ce2),.ce3(ce3),.ce4(ce4),.ce5(ce5),.ce6(ce6),.q0(q0),.q1(q1),.q2(q2),.q3(q3),.q4(q4),.q5(q5),.q6(q6),.cfg(cfg),.go_e(go_e),.st(st));
 endmodule
