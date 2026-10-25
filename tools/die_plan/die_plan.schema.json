@@ -1217,6 +1217,10 @@
         "lib": {
          "type": "string"
         },
+        "obs_max": {
+         "type": "string",
+         "pattern": "^M[1-9]$"
+        },
         "note": {
          "type": "string"
         }
