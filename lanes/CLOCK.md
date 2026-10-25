@@ -40,3 +40,11 @@ CODEX took over kit sink-density option on codex/kit-taps-1024 @0a71cacba (WIP, 
 
 ## CODEX notes 2026-10-24 21:11 PDT
 CODEX took over kit clock/signoff on codex/kit-clock-1024@b88258680; parked on owner Claude reset. WIP related-pair CPPR signoff implementation + overlay fail-closed; 27 Python tests PASS, routed physical smoke NOT RUN, do not merge/adopt yet. No new heavy jobs.
+
+## 2026-10-24 21:20 PDT CLOCK resumed after Codex park (adopted, no duplicates)
+- claude/clock-1024@1a5c38e58f: merged origin/main, adopted codex die_clock legalisation WIP patch (+test; buffers never left on macros, useless long-hop repeaters skipped); tests 51 PASS; READY posted (includes clock-sta-1024@773165114 + die-sta-1024). codex/die-clock-1024 == old tip, nothing else to adopt.
+- DIE-STA v2 (old tree) collected, TT setup / FF hold worst ps, spread: s81 +654.4/-52.5 (58); head +626.3/-82.1 (105); QC +661.6/-46.4 (56); KV +501.9/-173.4 (217); HBM B2l +411.2/-417.0 (84).
+- New-spine die STA (run_ttff_clk): head DONE TT +701.0 / FF -10.26 (spread 3.8) = stand-in zero-delay abutted floor; s81/QC/KV/HBM in FF stage (intel2, live, not relaunched).
+- HBM v9 clock builds launched (intel2 clock/v9/{hbm_B2l trial, hbm_B2m main plan}).
+- Sub-agents: kit density taps (claude/kit-taps-1024 from codex/kit-taps@0a71cacba, for S81-HEAD hd_tile); kit pair-skew signoff smoke (claude/kit-clock-1024 from codex/kit-clock@b88258680).
+- RULING to S81-HEAD: core-latency contract = signed kit pin->register mean (signed early + 250), not lib max - 250.
