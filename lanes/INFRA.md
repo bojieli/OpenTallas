@@ -116,3 +116,20 @@ Claude reset; full INFRA/DIE-CI/nativeKV45 handoff appended CODEX-LOG.md. Native
 - (2) docker: system df = images 14.55G (9.7G reclaimable only via -a, i.e. tagged images: kept), build cache 0.99G, 3 containers (1 running, 2 Created < 24 h). container prune --filter until=24h and image prune (dangling) reclaimed 0 B; builder prune hangs (>20 min, my pid 271584 left running, ~1G only). overlay2 105G is not reclaimable with the approved commands (no dangling images) -> needs a root-level look (orphan layers) if wanted.
 - (3) removed --force ~/wt/root-merge7-1023, root-merge8-1023, kv-p3-rtl-1023 (21G): diff HEAD excluding __pycache__ empty, HEAD in a remote.
 - (4) 8 codex worktrees were stale 'initializing' locks from interrupted git worktree add at 10-24 21:07 (index never written -> all 'D'). Temp-index compare vs HEAD: A/M = 1 file each (s81-cores-c3: 0; kv-bind: 1 M + 32 untracked kv44 bind files). Saved to /srv/opentallas-scratch/claude/rescue/codex-<name>.patch (non-empty, git apply --cached --check on HEAD OK each). All HEADs in a remote, no unpushed commits, no process/cwd refs, idle >2 h -> removed with worktree remove -f -f (~273G).
+2026-10-25 06:42 PDT INFRA-DISK (pass 6c, COORD 06:22 URGENT; 47 rows appended to lanes/infra-disk-deletions-1025-pass6.tsv):
+- epyc2 scratch2: 91% / 78 GB free -> 82% / 153 GB free. Large files (>5 MB: ODB/DEF/SPEF/netlists) deleted from NOT SIGNED, idle station routes, keeping the signoff json and logs: codex-s81/station405_c1 (19 tiles, all signoff NOT SIGNED, idle 11 h, ~40 G), s81-st-rst/kitsW{,0}/t12 and elem-s81-st405/kitsBmw/t11 (NOT SIGNED, idle >3.8 h, 36 G). Live s81-kits/k1 container untouched.
+- epyc1 scratch2: 96% / 140 GB free at 06:2x -> 92% / 285 GB free, even though about 800 GB was freed. Deleted:
+  - elem-s81/{hc,kits,hc_epyc2_logs} (98 G; 0/9 SIGNED, idle 18 h);
+  - codex-clock/{r2,r3,r4b_ffeco,r4d_ffeco,t7_baseline,t7_grt} (71 G);
+  - codex-s81/stations (49 G);
+  - codex-batch-gates-1025 (2 clean detached worktrees + G0C outputs, 52 G);
+  - qc/a0v8place/src_2dfc218 (42 G plain copy of a pushed commit);
+  - codex-s81-missing/head_ft large files (42 G; the 8 head runs were stopped, launcher FAIL or NOT RUN; json and logs kept);
+  - 10 clean, pushed worktrees idle >=2.5 h (wt/{hbm-face,qc-tok-meth,s81-fthold,s81-head3,s81-leafplan2,s81-portfix,s81-svcg,codex-integration-gates-1025,codex-qc-bind-1025,codex-s81-fthold-proof}, ~320 G).
+  NOT deleted:
+  - proto1025/kits_s81_178 (122 G): live autopilot routes and kits under GEOM review (t28/t29/t12/t50 writing within 15 min);
+  - proto1025/gen (3 G);
+  - codex-s81-split (near-miss runs listed in NEARMISS-ECO, kept for structural review);
+  - kv/kvbind and tokj (kv44 inputs).
+- ROOT CAUSE on epyc1: about 26 FULL (~42 G each, ~1 TB) worktrees were created or touched in claude/wt since 06:00 (lane restart wave): die-proto-{1025,hbm,hk,qc,s81} (3 'git worktree add' of origin/claude/die-proto-1025 running at the same time at 06:3x), kv-core-rtl-{1025,hr,pc}, qc-plan{,3a,3b}, s81-plan2/3-cconn, clock-reset-0610, root-merge-0610, codex-{bind178-reset-0559,qc-physical-0555,qwen-push-1025}, etc. Free space falls ~25 GB/min while they check out. COORD: order every lane to use 'git worktree add --no-checkout' + 'git sparse-checkout set <dirs>' (a lane's tools/physical subset is a few GB), and to remove its worktree on park. Without that, deleting more data cannot keep epyc1 <= 85%.
+- rtx-pro / now 83% (635 GB free): docker builder prune finished late; overlay2 is now 14 G (was 105 G).
