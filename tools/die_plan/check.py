@@ -1227,6 +1227,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     import die_io
     import xdie
     summ["die_io"]["plan"] = die_io.check(P, R)
+    summ["die_io"]["pg_domains"] = die_io.check_pg_domains(P, R)
     summ["die_io"]["source"] = io_src
     summ["cut_lines"] = xdie.check_cut_lines(P, R, geo)
     summ["reach"] = xdie.check_reach(P, R, geo)
