@@ -1083,7 +1083,7 @@ def place_contents(plan, out, types, log, seed=None):
         t = T[tn]
         if t.get("hard"):
             continue
-        if reuse_placement(tn, plan, out, seed):
+        if not any("pdie_serdes" in c.get("module", "") for c in t.get("hard_cores", [])) and reuse_placement(tn, plan, out, seed):
             log.append(f"placement seed reused {tn}: exact views, soft leaves, outline and bus constraints")
             continue
         W, H = t["outline_um"]
@@ -1464,7 +1464,7 @@ def move_digital_io(items, pos, t):
         if k in analog:
             continue
         ox, oy = pos[k]
-        blocks = list(ko) + [(x - LAT, y - LAT, x + dims[j][0] + LAT, y + dims[j][1] + LAT)
+        blocks = [(a - LAT, b - LAT, c + LAT, d + LAT) for a, b, c, d in ko] + [(x - LAT, y - LAT, x + dims[j][0] + LAT, y + dims[j][1] + LAT)
                              for j, (x, y) in done.items()]
         def legal(x, y):
             return LAT <= x and x + w <= W - LAT + 1e-6 and LAT <= y and y + h <= H - LAT + 1e-6 and \
@@ -1528,6 +1528,8 @@ def main(argv=None):
             changed = set(changed) | set(native_hc_ring.TOP + native_hc_ring.BOTTOM)
         phy_keepouts(plan, log)
         if os.environ.get("B2O_PROGRESS"): print("reroute", flush=True)
+        if a.native_hc_ring:
+            lane_delta(plan, log, INP / "native_hc_lane_delta.json")
         routes, we, wt = reroute(plan, log)
         lane_delta(plan, log)
         if a.native_hc_ring:
