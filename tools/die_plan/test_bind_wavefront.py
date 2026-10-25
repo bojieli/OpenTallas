@@ -1,0 +1,118 @@
+"""Raw binder reset emission: lockstep published release offsets and wrong-parent mutant."""
+import copy
+import json
+import re
+import shutil
+import subprocess
+from collections import defaultdict
+from pathlib import Path
+from types import SimpleNamespace
+
+import pytest
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import bind
+import reset_tree as RT
+import schema
+
+HERE = Path(__file__).resolve().parent
+
+
+def emitter(raw):
+    """Smallest Binder vehicle: real raw emitters, reset-only physical partitions."""
+    b = bind.Binder.__new__(bind.Binder)
+    b.plan = raw
+    b.ab = {'top': 'reset_fixture', 'default_clock': 'core'}
+    b.types = raw['partition_types']
+    b.parts = {p['name']: p for p in raw['partitions']}
+    b.members = {p: [] for p in b.parts}
+    b.by_type = defaultdict(list)
+    for p in b.parts:
+        b.by_type[b.parts[p]['type']].append(p)
+    b.tparams = {t: {} for t in b.types}
+    b.tvals = {t: {p: {} for p in ps} for t, ps in b.by_type.items()}
+    b.F = SimpleNamespace(cells=[], top_ports={})
+    b.G = SimpleNamespace(dirs={})
+    b.clk_dom = defaultdict(lambda: {'core'})
+    b.in_bus, b.out_bus, b.ft_bus, b.intra_dly = [defaultdict(list) for _ in range(4)]
+    b.pc = None
+    b.links = []
+    return b
+
+
+def plan():
+    raw = json.loads((HERE/'examples/tiny_plan.json').read_text())
+    raw.setdefault('reset', {})['release'] = 'wavefront'
+    # Raw emitter fixture has no datapath; geometry and reset topology are unchanged.
+    for ty in raw['partition_types'].values():
+        ty.pop('contents', None)
+    return raw
+
+
+def test_raw_bind_emits_wavefront_and_prices_boot(tmp_path):
+    raw = plan()
+    b = emitter(raw)
+    b.emit(tmp_path)
+    W = json.loads((tmp_path/'bind_reset.json').read_text())
+    top = (tmp_path/'rtl/tiny_bound_top.sv').read_text()
+    for p, row in W['parts'].items():
+        name = bind.sv_id(p)
+        inst = re.search(rf'^    \w+ {name} \((.*?)\n    \);', top, re.S | re.M).group(1)
+        if row['parent'] is None:
+            assert '.arst_n(rst_n)' in inst
+        else:
+            net = 'rstw_' + re.sub(r'\W', '_', row['source'])
+            assert f'.arst_n({net})' in inst
+    for ty in raw['partition_types'].values():
+        text = (tmp_path/'rtl'/f"{ty['module']}.sv").read_text()
+        assert 'u_rst_sync' not in text
+        assert 'u_rst_root' in text or 'u_rst_in' in text
+    assert W == RT.wf_plan(schema.Plan(raw))
+    assert W['max_release'] > 2  # publish added boot cycles; data latency unchanged
+
+
+def simulate(tmp_path, mutant=False):
+    if not shutil.which('iverilog'):
+        pytest.skip('iverilog missing')
+    raw = plan()
+    b = emitter(raw)
+    files = b.emit(tmp_path)
+    P = schema.Plan(raw)
+    W = RT.wf_plan(P)
+    if mutant:
+        top = files[-1]
+        text = top.read_text()
+        text, n = re.subn(r'\.arst_n\(rstw_\w+\)', '.arst_n(rst_n)', text, count=1)
+        assert n == 1
+        top.write_text(text)
+    checks = []
+    for p, row in W['parts'].items():
+        T = RT.for_type(P, row['type'])
+        for k in range(len(T['taps'])):
+            n = f"u.{bind.sv_id(p)}.rst_n_t{k}"
+            checks.append(f"if (cyc >= 0 && {n} !== (cyc + 1 >= {row['release']})) bad = bad + 1;")
+    mx = W['max_release']
+    tb = tmp_path/'tb.sv'
+    tb.write_text(f'''`timescale 1ns/1ps
+module tb;
+reg clk=0, rst_n=0; always #0.5 clk=~clk;
+tiny_bound_top u(.clk_core(clk), .rst_n(rst_n));
+integer cyc=-{mx+20}, bad=0;
+always @(posedge clk) begin
+ #0.1;
+ {' '.join(checks)}
+ if(cyc == -1) rst_n=1;
+ cyc=cyc+1;
+end
+initial begin repeat({2*mx+40}) @(posedge clk); #0.2; $display("BAD %0d", bad); $finish; end
+endmodule
+''')
+    exe = tmp_path/'a.out'
+    subprocess.run(['iverilog','-g2012','-o',str(exe),str(tb),*[str(f) for f in files]], check=True)
+    out = subprocess.run(['vvp',str(exe)], capture_output=True,text=True,check=True).stdout
+    return int(re.search(r'BAD (\d+)',out).group(1))
+
+
+def test_raw_bound_reset_lockstep_and_mutant(tmp_path):
+    assert simulate(tmp_path/'good') == 0
+    assert simulate(tmp_path/'mutant', mutant=True) > 0
