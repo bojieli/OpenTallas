@@ -1619,6 +1619,9 @@ def cmd_run(a):
                spine="tree" if a.spine_tree else "branch" if a.spine_branch else ("routed" if a.die_spef else "ideal"),
                instances=inst_mods, parts={m: str(parts[m]) for m in mod_files or parts}, abstracts=abstracts, corners={},
                seam_groups=len(groups), seam_bits=len(seams))
+    # Parent IO-HOLD qualification never treats a budget stand-in as a real view.
+    from io_hold_qualification import view_snapshot
+    res['view_evidence'] = {m: view_snapshot(parts[m]) for m in set(inst_mods.values())}
     if bh_info:
         res["boundary_hold_contract"] = bh_info
     if cl_info:
