@@ -28,7 +28,11 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     parameter integer SWMUT = 0,
     parameter integer ACK = 13,
     parameter integer ELAT = 14,
-    parameter integer VMX = 5
+    parameter integer VMX = 5,
+    // SID (HBM-BIND B2 2026-10-24): quadrant strap = the quadrant whose VM (read group 4 share in the IDX root, hub cq/cr)
+    // this engine reads and writes: a (non-mirror) and o sectors must equal it. Default 0 = the as-built SW engine (the
+    // literal localparam sid = 0), bit-identical. B2 (NW + NE die): 3 (NE). No latency change.
+    parameter [1:0] SID = 2'd0
 )(
     input  wire          clk,
     input  wire          rst_n,
@@ -49,7 +53,7 @@ module ot_hbm_argmax_static_sw_vm_r2 #(
     output wire          busy,
     output reg           done, fault, nan_flag
 );
-    localparam [1:0] sid = 2'd0;
+    localparam [1:0] sid = SID;
     reg busy_i;                                                         // FSM state (internal loads)
     (* keep = "true", dont_touch = "true" *) reg busy_x;           // pin export copy (drives only the busy port)
     assign busy = busy_x;
