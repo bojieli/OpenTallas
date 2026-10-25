@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "reset terminal overlay only; independent geometry and full kit closure separate",
+  "picture": "t8_alias_reset_leaf.png",
+  "source": "cece3ea38d",
+  "findings": [
+    "Canonical source plus nonzero sharedleaf alias classification finds44sinkpins,7more than predecessor37. Seven newlycovered pins reassign to local equaldepth terminals, maximumhop327.348um remains below405.",
+    "Viewed local branches in regular placement bands; sharedleaf coverage removes central fanout beyond its nearest terminal region. Consumer placement unchanged; no added relay/cycle.",
+    "Old37sinkimage/record retained as predecessor evidence, no fullkitroute/PDN/clock approval."
+  ],
+  "job": {
+    "host": "epyc1",
+    "unit": "oth-ubuntu-2697335-1792938985",
+    "exit": 0,
+    "sink_pins": 44,
+    "new_reassignments": 7,
+    "max_hop_um": 327.348
+  },
+  "added_cycles": 0
+}
