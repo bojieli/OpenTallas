@@ -82,6 +82,13 @@
    "what": "vm_status4 NQ 2 {hb_vms_NE, hb_vms_NW} (bench rtl/hbm_accel/generic/vm/static/run_vms_status_nq.sh)"
   },
   {
+   "id": "R-VM",
+   "kind": "rtl+wiring",
+   "status": "done (sub-agent VM 19cfa3d9c)",
+   "what": "hb_vms_NW -> hfd_hgi_vms_glue_nw2_t (NC 2: cq {idx_ctl.cq, argmax.cq}, cr[273:0] argmax / [547:274] idx_ctl; calendar_NW fields at the SW NC 2 widths, ring controls = ccw halves), hb_vms_NE -> hfd_hgi_vms_static_NE2_glue (ring controls = cw halves); ring links as built (NW.ccw_out->NE.ccw_in, NE.cw_out->NW.cw_in); replay_source removed",
+   "plan": "NW and NE hubs become different VM masters (NW2 NC 2 vs NE2); VM_RT / CR_RT and the die cr padding of argmax (6) / idx (8) must be re-derived for the B2 NW path; one dead bank port (xq or xq2, 8 x 276 b constant inside the glue) per hub until a one-port bank variant exists"
+  },
+  {
    "id": "W-FLT",
    "kind": "param+wiring",
    "status": "done",
@@ -131,6 +138,14 @@
   "vm_status4": {
    "master": "ot_vms_status4_static",
    "params": ".NQ(2)"
+  },
+  "hb_vms_NW": {
+   "master": "hfd_hgi_vms_glue_nw2_t",
+   "params": ""
+  },
+  "hb_vms_NE": {
+   "master": "hfd_hgi_vms_static_NE2_glue",
+   "params": ""
   },
   "fr_NW": {
    "master": "ot_hbm_fault_leaf",
@@ -2842,6 +2857,220 @@
     ]
    ]
   },
+  "hb_vms_NW": {
+   "cq": [
+    [
+     "hb_argmax",
+     "cq",
+     0,
+     337
+    ],
+    [
+     "hb_idx__ctl",
+     "cq",
+     0,
+     337
+    ]
+   ],
+   "client_seq": [
+    [
+     "calendar_NW",
+     "client_seq",
+     0,
+     5
+    ]
+   ],
+   "response_enable": [
+    [
+     "calendar_NW",
+     "response_enable",
+     0,
+     2
+    ]
+   ],
+   "response_seq": [
+    [
+     "calendar_NW",
+     "response_seq",
+     0,
+     5
+    ]
+   ],
+   "bank_enable": [
+    [
+     "calendar_NW",
+     "bank_enable",
+     0,
+     7
+    ]
+   ],
+   "bank_client": [
+    [
+     "calendar_NW",
+     "bank_client",
+     0,
+     15
+    ]
+   ],
+   "hub_ring_enable": [
+    [
+     "calendar_NW",
+     "hub_ring_enable",
+     1,
+     1
+    ]
+   ],
+   "hub_ring_client": [
+    [
+     "calendar_NW",
+     "hub_ring_client",
+     2,
+     3
+    ]
+   ],
+   "ring_tx_enable": [
+    [
+     "calendar_NW",
+     "ring_tx_enable",
+     1,
+     1
+    ]
+   ],
+   "ring_tx_source": [
+    [
+     "calendar_NW",
+     "ring_tx_source",
+     3,
+     5
+    ]
+   ],
+   "replay_enable": [
+    [
+     "calendar_NW",
+     "replay_enable",
+     0,
+     0
+    ]
+   ],
+   "cw_in": [
+    [
+     "hb_vms_NE",
+     "cw_out",
+     0,
+     2223
+    ]
+   ]
+  },
+  "hb_vms_NE": {
+   "client_seq": [
+    [
+     "calendar_NE",
+     "client_seq",
+     0,
+     1
+    ]
+   ],
+   "response_enable": [
+    [
+     "calendar_NE",
+     "response_enable",
+     0,
+     0
+    ]
+   ],
+   "response_seq": [
+    [
+     "calendar_NE",
+     "response_seq",
+     0,
+     1
+    ]
+   ],
+   "bank_enable": [
+    [
+     "calendar_NE",
+     "bank_enable",
+     0,
+     7
+    ]
+   ],
+   "bank_client": [
+    [
+     "calendar_NE",
+     "bank_client",
+     0,
+     7
+    ]
+   ],
+   "hub_ring_enable": [
+    [
+     "calendar_NE",
+     "hub_ring_enable",
+     0,
+     0
+    ]
+   ],
+   "hub_ring_client": [
+    [
+     "calendar_NE",
+     "hub_ring_client",
+     0,
+     0
+    ]
+   ],
+   "ring_tx_enable": [
+    [
+     "calendar_NE",
+     "ring_tx_enable",
+     0,
+     0
+    ]
+   ],
+   "ring_tx_source": [
+    [
+     "calendar_NE",
+     "ring_tx_source",
+     0,
+     2
+    ]
+   ],
+   "replay_enable": [
+    [
+     "calendar_NE",
+     "replay_enable",
+     0,
+     0
+    ]
+   ],
+   "ccw_in": [
+    [
+     "hb_vms_NW",
+     "ccw_out",
+     0,
+     2223
+    ]
+   ]
+  },
+  "hb_argmax": {
+   "cr": [
+    [
+     "hb_vms_NW",
+     "cr",
+     0,
+     273
+    ]
+   ]
+  },
+  "hb_idx__ctl": {
+   "cr": [
+    [
+     "hb_vms_NW",
+     "cr",
+     274,
+     547
+    ]
+   ]
+  },
   "fr_NW": {
    "in": [
     [
@@ -3044,6 +3273,9 @@
   "epcal_NE": {
    "payload": 38
   },
+  "hb_vms_NW": {
+   "cr": 548
+  },
   "ep_N0": {
    "h_rx_v": 1,
    "h_rx_frame": 612,
@@ -3080,6 +3312,10 @@
    "tkx_del_valid": "out",
    "tkx_del_flit": "out"
   },
+  "hb_vms_NW": {
+   "cq": "in",
+   "cr": "out"
+  },
   "ep_N0": {
    "h_tx_v": "in",
    "h_tx_frame": "in",
@@ -3098,6 +3334,16 @@
   }
  },
  "drop_ports": {
+  "hb_vms_NW": [
+   "cw_out",
+   "ccw_in",
+   "replay_source"
+  ],
+  "hb_vms_NE": [
+   "ccw_out",
+   "cw_in",
+   "replay_source"
+  ],
   "host_ep": [
    "sd_tx",
    "sd_rx",

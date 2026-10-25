@@ -287,6 +287,43 @@ def main():
     items.append(dict(id='P-VMST', kind='param', status='done',
                       what='vm_status4 NQ 2 {hb_vms_NE, hb_vms_NW} (bench rtl/hbm_accel/generic/vm/static/run_vms_status_nq.sh)'))
 
+    # ---- R-VM: two-stop VM ring (sub-agent VM, claude/hbm-bind-1024r-vm@19cfa3d9c): hb_vms_NW -> NC=2 NW2 master
+    # (takes hb_argmax / hb_idx__ctl, the as-built hb_vms_SW clients), hb_vms_NE -> NE2 glue; ring = the two as-built
+    # links NW.ccw_out -> NE.ccw_in and NE.cw_out -> NW.cw_in.  Calendar fields from the universal calendars.
+    remaster['hb_vms_NW'] = dict(master='hfd_hgi_vms_glue_nw2_t', params='')
+    remaster['hb_vms_NE'] = dict(master='hfd_hgi_vms_static_NE2_glue', params='')
+    drop_ports['hb_vms_NW'] = ['cw_out', 'ccw_in', 'replay_source']
+    drop_ports['hb_vms_NE'] = ['ccw_out', 'cw_in', 'replay_source']
+    add_ports['hb_vms_NW'] = dict(cq='in', cr='out')
+    out_width['hb_vms_NW'] = dict(cr=548)
+    cn = 'calendar_NW'
+    rebuild.setdefault('hb_vms_NW', {}).update(
+        cq=[one('hb_argmax', 'cq', 338), one('hb_idx__ctl', 'cq', 338)],
+        client_seq=[one(cn, 'client_seq', 6)], response_enable=[one(cn, 'response_enable', 3)],
+        response_seq=[one(cn, 'response_seq', 6)], bank_enable=[one(cn, 'bank_enable', 8)],
+        bank_client=[one(cn, 'bank_client', 16)], hub_ring_enable=[one(cn, 'hub_ring_enable', 1, 1)],
+        hub_ring_client=[one(cn, 'hub_ring_client', 2, 2)], ring_tx_enable=[one(cn, 'ring_tx_enable', 1, 1)],
+        ring_tx_source=[one(cn, 'ring_tx_source', 3, 3)], replay_enable=[one(cn, 'replay_enable')],
+        cw_in=[one('hb_vms_NE', 'cw_out', 2224)])
+    ce = 'calendar_NE'
+    rebuild.setdefault('hb_vms_NE', {}).update(
+        client_seq=[one(ce, 'client_seq', 2)], response_enable=[one(ce, 'response_enable')],
+        response_seq=[one(ce, 'response_seq', 2)], bank_enable=[one(ce, 'bank_enable', 8)],
+        bank_client=[one(ce, 'bank_client', 8)], hub_ring_enable=[one(ce, 'hub_ring_enable')],
+        hub_ring_client=[one(ce, 'hub_ring_client')], ring_tx_enable=[one(ce, 'ring_tx_enable')],
+        ring_tx_source=[one(ce, 'ring_tx_source', 3)], replay_enable=[one(ce, 'replay_enable')],
+        ccw_in=[one('hb_vms_NW', 'ccw_out', 2224)])
+    rebuild.setdefault('hb_argmax', {})['cr'] = [one('hb_vms_NW', 'cr', 274)]
+    rebuild.setdefault('hb_idx__ctl', {})['cr'] = [one('hb_vms_NW', 'cr', 274, 274)]
+    items.append(dict(id='R-VM', kind='rtl+wiring', status='done (sub-agent VM 19cfa3d9c)',
+                      what='hb_vms_NW -> hfd_hgi_vms_glue_nw2_t (NC 2: cq {idx_ctl.cq, argmax.cq}, cr[273:0] argmax / '
+                           '[547:274] idx_ctl; calendar_NW fields at the SW NC 2 widths, ring controls = ccw halves), '
+                           'hb_vms_NE -> hfd_hgi_vms_static_NE2_glue (ring controls = cw halves); ring links as built '
+                           '(NW.ccw_out->NE.ccw_in, NE.cw_out->NW.cw_in); replay_source removed',
+                      plan='NW and NE hubs become different VM masters (NW2 NC 2 vs NE2); VM_RT / CR_RT and the die cr '
+                           'padding of argmax (6) / idx (8) must be re-derived for the B2 NW path; one dead bank port '
+                           '(xq or xq2, 8 x 276 b constant inside the glue) per hub until a one-port bank variant exists'))
+
     # ---- W-FLT: region fault leaves observe every retry lane of the regrown COLL masters (fr_NW / fr_NE N, SYNC_MASK)
     def regrow_leaf(leaf, src, sport, new_w, port='in'):
         old = src_list(die, leaf, port)

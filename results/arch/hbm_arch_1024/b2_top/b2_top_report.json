@@ -4,17 +4,17 @@
  "dropped_leaves": 288,
  "transport_collapsed": 83546,
  "bits": {
-  "kept": 471866,
-  "dropped": 8020,
+  "kept": 467348,
+  "reattach": 18757,
   "top": 2735,
   "const": 2975,
-  "reattach": 13010,
-  "out_unread": 40334
+  "dropped": 3024,
+  "out_unread": 35563
  },
  "counts": {
-  "CUT_UNRESOLVED": 85,
+  "CUT_UNRESOLVED": 81,
   "CONST_INPUT": 65,
-  "OUTPUT_UNREAD": 109
+  "OUTPUT_UNREAD": 116
  },
  "remastered": [
   "ep_N0",
@@ -24,6 +24,8 @@
   "fr_NW",
   "hb_coll_NE",
   "hb_coll_NW",
+  "hb_vms_NE",
+  "hb_vms_NW",
   "hleaf_NE",
   "hleaf_NW",
   "host_ep",
@@ -35,9 +37,6 @@
  "top_out": 11,
  "detail": {
   "CUT_UNRESOLVED": [
-   "hb_vms_NW.ccw_in <- hb_vms_SW__ccw_out[2223:0] (2224 b)",
-   "hb_vms_NE.cw_in <- hb_vms_SE__cw_out[2223:0] (2224 b)",
-   "hb_argmax.cr <- hb_vms_SW__cr[273:0] (274 b)",
    "hc_eng.qps_v <- hc_SW__ps_v[0:0] (1 b)",
    "hc_eng.qps_v <- hc_SE__ps_v[0:0] (1 b)",
    "hc_eng.qps <- hc_SW__ps[31:0] (32 b)",
@@ -60,7 +59,6 @@
    "str_C.up1_i <- stl_SE__up_o[40:0] (41 b)",
    "hb_idx__ctl.qfault <- hb_idx__qctl_SW__fault[0:0] (1 b)",
    "hb_idx__ctl.qfault <- hb_idx__qctl_SE__fault[0:0] (1 b)",
-   "hb_idx__ctl.cr <- hb_vms_SW__cr[547:274] (274 b)",
    "hb_idx__ctl.index_rq <- hb_idx__op_SW__vm_rq[135:0] (136 b)",
    "hb_idx__ctl.vm_rr <- vmb_SW0__rr4[256:0] (257 b)",
    "hb_idx__ctl.vm_rr <- vmb_SW1__rr4[256:0] (257 b)",
@@ -189,12 +187,19 @@
    "hb_quant_NW__quant_NW3_lg.wq_i <- 16'0"
   ],
   "OUTPUT_UNREAD": [
-   "hb_vms_NW.cw_out 2224/2224 b",
-   "hb_vms_NE.ccw_out 2224/2224 b",
    "calendar_NW.ordinal 32/32 b",
+   "calendar_NW.hub_ring_enable 1/2 b",
+   "calendar_NW.hub_ring_client 2/6 b",
+   "calendar_NW.ring_tx_enable 1/2 b",
+   "calendar_NW.ring_tx_source 3/6 b",
+   "calendar_NW.replay_source 1/1 b",
    "calendar_NE.ordinal 32/32 b",
+   "calendar_NE.hub_ring_enable 1/2 b",
+   "calendar_NE.hub_ring_client 1/6 b",
+   "calendar_NE.ring_tx_enable 1/2 b",
+   "calendar_NE.ring_tx_source 3/6 b",
+   "calendar_NE.replay_source 1/1 b",
    "vm_status4.vmstat 19/19 b",
-   "hb_argmax.cq 338/338 b",
    "svg_NW0.expected_request 43/43 b",
    "svg_NW0.lt0 1082/1082 b",
    "svg_NW0.lt1 1082/1082 b",
