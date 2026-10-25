@@ -1,0 +1,163 @@
+{
+ "kit": "ot_v41_rom_elem_q_qxpq_w10_gb_gb2",
+ "kit_hash": "156199556517f170",
+ "outline_um": [
+  510.84,
+  221.4
+ ],
+ "pins": 737,
+ "faces": {
+  "N": {
+   "pins": 129,
+   "max_per_um": 10.5,
+   "mean_per_um": 0.25,
+   "layers": {
+    "M5": 129
+   },
+   "span": [
+    151.21,
+    163.5
+   ],
+   "groups": [
+    "busy",
+    "fault",
+    "perr",
+    "pnseg",
+    "ppos",
+    "prow",
+    "pseg",
+    "pv",
+    "pval",
+    "walking"
+   ]
+  },
+  "S": {
+   "pins": 608,
+   "max_per_um": 10.5,
+   "mean_per_um": 1.19,
+   "layers": {
+    "M5": 608
+   },
+   "span": [
+    226.09,
+    284.56
+   ],
+   "groups": [
+    "bank_free",
+    "cfg_a",
+    "cfg_d",
+    "cfg_v",
+    "clk",
+    "go",
+    "go_tag",
+    "rst_n",
+    "sh_free",
+    "xs_b",
+    "xs_e0",
+    "xs_e1",
+    "xs_p",
+    "xs_pos",
+    "xs_q0",
+    "xs_q1",
+    "xs_v"
+   ]
+  },
+  "W": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  },
+  "E": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  }
+ },
+ "macros": [
+  {
+   "master": "ot_rom_4096x274_m8",
+   "at": [
+    25.92,
+    43.392
+   ],
+   "size": [
+    125.304,
+    62.952
+   ],
+   "row_halo": 4.32,
+   "clear_um": {
+    "W": 25.92,
+    "E": 359.62,
+    "S": 43.39,
+    "N": 115.06
+   }
+  },
+  {
+   "master": "ot_rom_4096x274_m8",
+   "at": [
+    25.92,
+    115.008
+   ],
+   "size": [
+    125.304,
+    62.952
+   ],
+   "row_halo": 4.32,
+   "clear_um": {
+    "W": 25.92,
+    "E": 359.62,
+    "S": 115.01,
+    "N": 43.44
+   }
+  },
+  {
+   "master": "ot_rom_4096x274_m8",
+   "at": [
+    359.424,
+    43.392
+   ],
+   "size": [
+    125.304,
+    62.952
+   ],
+   "row_halo": 4.32,
+   "clear_um": {
+    "W": 359.42,
+    "E": 26.11,
+    "S": 43.39,
+    "N": 115.06
+   }
+  },
+  {
+   "master": "ot_rom_4096x274_m8",
+   "at": [
+    359.424,
+    115.008
+   ],
+   "size": [
+    125.304,
+    62.952
+   ],
+   "row_halo": 4.32,
+   "clear_um": {
+    "W": 359.42,
+    "E": 26.11,
+    "S": 115.01,
+    "N": 43.44
+   }
+  }
+ ],
+ "clock_pin": {
+  "name": "clk",
+  "x": 231.372,
+  "y": 0.042,
+  "face": "S",
+  "layer": "M5"
+ }
+}
