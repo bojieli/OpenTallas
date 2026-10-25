@@ -12,7 +12,8 @@ with TIEHI/TIELO next to the pin (gate side: straps.py).
 """
 
 KV_ID_WIDTHS = {'strap_corner': 2, 'strap_hid': 2, 'strap_bsel': 2}
-ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', *KV_ID_WIDTHS})
+PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6}
+ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', *PHYSICAL_ID_WIDTHS})
 
 
 def validate_parent_id_straps(descriptor, inputs=None, pins=None):
@@ -35,7 +36,7 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None):
         if not isinstance(entry, dict) or not {'port','width','value'} <= set(entry) or set(entry) - {'port','width','value','note'}:
             raise ValueError('hard-core ID strap requires port, width, value and optional note')
         port = entry['port']
-        if port not in KV_ID_WIDTHS or port in seen or port in raw:
+        if port not in PHYSICAL_ID_WIDTHS or port in seen or port in raw:
             raise ValueError(f'hard-core ID strap {port!r}: unapproved or duplicate identity port')
         seen.add(port)
         if 'note' in entry and not isinstance(entry['note'], str):
@@ -43,9 +44,10 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None):
         value = entry['value']
         if isinstance(value, str):
             import re
-            if not re.fullmatch(r"2'[bB][01]{2}", value):
-                raise ValueError(f'hard-core ID strap {port}: require an exact two-bit binary literal')
-            value = int(value[3:], 2)
+            width = PHYSICAL_ID_WIDTHS[port]
+            if not re.fullmatch(str(width) + r"'[bB][01]{" + str(width) + "}", value):
+                raise ValueError(f'hard-core ID strap {port}: require an exact {width}-bit binary literal')
+            value = int(value.split("'", 1)[1][1:], 2)
         raw[port] = dict(width=entry['width'], value=value)
     result = {}
     for port, contract in raw.items():
@@ -56,8 +58,8 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None):
         width, value = contract['width'], contract['value']
         if type(width) is not int or width < 1:
             raise ValueError(f'parent_id_straps {port}: width must be a positive integer')
-        if port in KV_ID_WIDTHS and width != KV_ID_WIDTHS[port]:
-            raise ValueError(f'parent_id_straps {port}: identity width must be exactly two bits')
+        if port in PHYSICAL_ID_WIDTHS and width != PHYSICAL_ID_WIDTHS[port]:
+            raise ValueError(f'parent_id_straps {port}: identity width must be exactly {PHYSICAL_ID_WIDTHS[port]} bits')
         if type(value) is not int or value < 0 or value >= 1 << width:
             raise ValueError(f'parent_id_straps {port}: value does not fit width {width}')
         if inputs is not None and inputs.get(port) != width:
