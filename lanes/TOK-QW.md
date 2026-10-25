@@ -99,3 +99,8 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
   merge, recompose. If calibration fails: record it as a FAIL finding (bound s8 row vs slice2 ages).
 - RUNROOTs: intel1 /srv/opentallas-scratch2/claude/tok-qw/{r1024,recovered,xdie_bound} (moved off root fs; symlinks in ~/ot-scratch/tok-qw).
 - OWNER?: see OWNER? section (OBS1_COMPAT=1 + F7 ROM pair adoption on bound top; F1 TXDP bind; KV r17 archive regeneration).
+- UPDATE 19:1x (after park, no new job started): s8cal2 finished. The bound-row Vtb BUILT (intel2 s8exp/die/build/obj_n12/Vtb,
+  make 24,664 s), but slice + vec calibrate rc=1 before simulating: "S8DIE: missing physical/asap7_memory_macros/
+  ot_rom_4096x266_m8/ot_rom_4096x266_m8.v". The intel2 tree copy has physical/ as symlinks into intel1 paths (cp -as).
+  Fix on resume: copy physical/asap7_memory_macros* for real into s8exp/tree (from a main checkout), rerun only the two
+  calibrate commands from s8cal2.sh (the binary is reused because it already exists), then stage_stg_die.sh. This is a vehicle setup error, not an RTL FAIL.
