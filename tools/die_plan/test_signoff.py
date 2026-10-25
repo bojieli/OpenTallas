@@ -101,6 +101,19 @@ def test_ff_hold_uses_standard_overlay():
     assert h["verdict"] == "FAIL" and h["wns_ps"] == -2.0 and h["sdc_wns_ps"] == 3.0
 
 
+def test_ff_hold_missing_overlay_is_not_run():
+    for overlay in (None, "", "skipped vclks 0", "skipped vclks 2"):
+        for slack in (12.0, -2.0):
+            rec = record(ff_hold=slack)
+            rec["corners"]["ff"]["overlay"] = overlay
+            rec = signoff.evaluate(rec)
+            h = rec["checks"]["hold_ff"]
+            assert h["verdict"] == "NOT RUN"
+            assert h["wns_ps"] == slack  # retain the diagnostic raw-SDC result
+            assert "overlay was not applied" in h["reason"]
+            assert rec["verdict"] == "NOT SIGNED"
+
+
 def test_spread_over_80_fails_at_tt():
     rec = signoff.evaluate(record(spread_tt=85.4))
     assert rec["checks"]["clock"]["verdict"] == "FAIL"
