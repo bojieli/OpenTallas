@@ -1,0 +1,14 @@
+1c1
+< # PATH-S81/ELEMB 10-25 (elemB_if2e_b): STRUCTURAL clock (GEOM-REVIEW 12:03 elemB_if2d FAIL). Cause (routed RCX ancestry dump):
+---
+> # PATH-S81/ELEMB 10-25 (elemB_if2e): STRUCTURAL clock (GEOM-REVIEW 12:03 elemB_if2d FAIL). Cause (routed RCX ancestry dump):
+5c5
+< # (231 TT). Fix = HBM-CLKSTRUCT structured clock: density taps (<= 2500 sinks / 110 um, never on a ROM), each ROM clk
+---
+> # (231 TT). Fix = HBM-CLKSTRUCT structured clock: density taps (<= 1250 sinks / 80 um, never on a ROM), each ROM clk
+11,12c11,12
+< export OT_DTAP_TARGET = 2500
+< export OT_DTAP_DMAX_UM = 110
+---
+> export OT_DTAP_TARGET = 1250
+> export OT_DTAP_DMAX_UM = 80
