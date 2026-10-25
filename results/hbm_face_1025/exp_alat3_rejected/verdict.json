@@ -1,0 +1,8 @@
+{
+  "verdict": "FAIL_SOURCE_WRONG_RELEASE",
+  "reason": "exp canonical pg_lane_full wrapper binds MLAT4/ALAT3: lat4 name describes multiplier; owner16a requires ALAT4 f12 at833ps",
+  "affected_variants": 60,
+  "action": "Own exact launcher PIDs, systemd scopes and Docker container IDs cancelled; retained all data and failure logs. No other lane jobs cancelled.",
+  "successor": "codex/hbm-su-core-clock-1025@52c832e03 adopted into isolated FACE branch; ALAT4c12/f12 sources, +1common lane cycle, nonlinear ALAT formulas",
+  "physical_review": "Previous outline/pin review retained as conditional; successor must be re-kitted and CTS-measured before routing."
+}

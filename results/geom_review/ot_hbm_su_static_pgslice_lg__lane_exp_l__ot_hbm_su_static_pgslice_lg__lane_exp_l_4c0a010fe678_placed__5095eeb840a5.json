@@ -1,0 +1,16 @@
+{
+ "element": "ot_hbm_su_static_pgslice_lg__lane_exp_l",
+ "view": "ot_hbm_su_static_pgslice_lg__lane_exp_l@4c0a010fe678",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_su_static_pgslice_lg__lane_exp_l_4c0a010fe678, B2r2 pins 4c0a010fe678, plan 24990bd5dd78)",
+ "stage": "placed",
+ "verdict": "PASS-COND",
+ "hash": "5095eeb840a5a987",
+ "reasons": "Placed+CTS probe viewed (contact sheet epyc1:/srv/opentallas-scratch/claude/elem-hbm/hc2_exp30_placed.png, single kits_b2l/ot_hbm_su_static_pgslice_lg__lane_exp_l_4c0a010fe678/placed.png): 440x458 um, std fill 13-15% of free, max bin 0.53-0.54, 0 bins > 0.8, buf/inv 13-14%; logic one central cluster ~250x250 um, face flops on N/S pin faces (pin->reg p90 6.5 um) so pin-to-cluster wires are 100-200 um (< 405 reach, no station needed); 6 SRAM macros (m_1r1w_128x256) on the W/NE corners up to ~150 um from the cluster. Natural CTS I = 552-601 ps (contract vclk = I, early tap I-250). face_guard FAIL 3-4 pins (OWNER? open, separate verdict).",
+ "fixes": "Outline is pin-limited in width (~1000 pins per N/S face at 2.3 pins/um); height could shrink ~35% (plan request to HBM-ARCH, not a route blocker). Open GEOM 20:06 condition (1): clk_lane/clk_bank/clk_insert/clk_bank_macro/rst_lane_n come core-to-core from lanes_plain0_3 -> plan item (die-spine taps / one leaf CG bank with I counted once). Route = TT/FF timing evidence under the contract.",
+ "pictures": [
+  "epyc1:/srv/opentallas-scratch/claude/elem-hbm/hc2_exp30_placed.png"
+ ],
+ "reviewer": "HBM-CORES2 (author review)",
+ "at": "2026-10-24T23:22:57-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

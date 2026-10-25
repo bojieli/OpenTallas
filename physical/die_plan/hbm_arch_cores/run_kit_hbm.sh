@@ -9,6 +9,9 @@
 #   corners step used to read 'make print-X' as 'X = ...' but ORFS prints 'X: ...' -> empty libs -> STA-0453 -> rc+100
 #   -> signoff skipped on every finished kit).
 set -uo pipefail
+# HBM-CORES3 10-25 (COORD KIT-CENSUS): sdc_lint / SELRANGE / port-bind / face_guard FAIL = STOP before floorplan
+# (marker /work/FAIL_PREFLOOR, rc 3); post-CTS FF hold gate (hold_gate.tcl: WNS < -100 ps or > 2000 endpoints = STOP,
+# marker /work/FAIL_POSTCTS, rc 4: a structural plan/RTL issue, not repaired).
 K=$(cd "$1" && pwd -P); GOAL=${2:-finish}; MEM=${3:-32}; CPUS=${4:-16}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
@@ -16,14 +19,28 @@ NAME=hbmcore-$(basename "$K" | tr -c 'A-Za-z0-9_.-' _ | cut -c1-60)-$$
 $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
-  rc=0; if [ $GOAL != post ]; then python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -2 /work/sdc_lint.log; \
-  if [ \$rc = 0 ] && [ -f /work/selrange_gate.py ]; then python3 -I /work/selrange_gate.py /work --out /work/selrange.json > /work/selrange.log 2>&1; src=\$?; tail -3 /work/selrange.log; if [ \$src = 1 ]; then echo 'SELRANGE FAIL: the kit stops (selrange.json)'; rc=1; elif [ \$src != 0 ]; then echo \"SELRANGE NOT RUN (frontend cannot elaborate; see selrange.log)\"; fi; fi; \
+  rc=0; if [ $GOAL != post ]; then rm -f /work/FAIL_PREFLOOR /work/FAIL_POSTCTS; \
+  python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -2 /work/sdc_lint.log; \
+  if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
+  SP=; if [ \$rc = 0 ] && [ -f /work/selrange_gate.py ]; then ( timeout 7200 python3 -I /work/selrange_gate.py /work --out /work/selrange.json > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc ) & SP=\$!; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_synth.v /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | head -1); \
-  if [ \$rc = 0 ] && [ -n \"\$N\" ]; then python3 -I /work/face_guard_core.py \$N /work > /work/face_guard.log 2>&1; echo \"face_guard rc \$?\"; fi; \
+  if [ \$rc = 0 ] && [ -n \"\$N\" ]; then python3 -I /work/face_guard_core.py \$N /work > /work/face_guard.log 2>&1; fg=\$?; echo \"face_guard rc \$fg\"; \
+    if [ \$fg != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; \
+    python3 -I /work/port_bind_core.py \$N /work > /work/port_bind.log 2>&1; pb=\$?; cat /work/port_bind.log; \
+    if [ \$pb != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
   if [ \$rc = 0 ] && [ -f /work/lec.py ] && [ -n \"\$N\" ]; then python3 -I /work/lec.py /work --netlist \$N --out /work/lec > /work/lec_run.log 2>&1; lr=\$?; tail -1 /work/lec_run.log; \
-    if [ \$lr = 1 ]; then echo 'LEC NOT EQUIVALENT: the kit stops (lec/lec.json)'; rc=1; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
-  if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
+    if [ \$lr = 1 ]; then echo 'FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)' | tee -a /work/FAIL_PREFLOOR; rc=3; elif [ \$lr != 0 ]; then echo \"LEC WARNING (exit \$lr): not proved, recorded in lec/lec.json; the flow continues\"; fi; fi; \
+  if [ -n \"\$SP\" ]; then wait \$SP; sr=\$(cat /work/selrange.rc 2>/dev/null); echo \"selrange rc \$sr\"; \
+    if [ \"\$sr\" = 1 ]; then echo 'FAIL_PREFLOOR selrange' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != synth ]; then \$M cts; rc=\$?; \
+    C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); \
+    if [ \$rc = 0 ] && [ -n \"\$C\" ] && [ -f /work/hold_gate.tcl ]; then \
+      S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); S=\${S:-/work/constraint.sdc}; \
+      PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\$C SDC=\$S PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
+        openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; grep OT_HOLD_GATE /work/hold_gate.log; \
+      if grep -q 'OT_HOLD_GATE FAIL' /work/hold_gate.log; then grep OT_HOLD_GATE /work/hold_gate.log | sed 's/^/FAIL_POSTCTS /' | tee /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \
+  if [ \$rc = 0 ] && [ $GOAL != cts ] && [ $GOAL != synth ]; then \$M $GOAL; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL = finish ]; then \$M generate_abstract; rc=\$?; fi; fi; \
   R=\$(ls -d /work/run/results/asap7/*/base | head -1); \
   O=\$(ls \$R/5_route.odb \$R/6_final.odb 2>/dev/null | tail -1); \

@@ -20,6 +20,20 @@
 // STATIC: no ready, credit or backpressure.  New fault: a quarter subtree sum not on its due edge (ps_v != expected).
 // Pin registers: every input lands in a pin flop, every output is a flop; rst_n through ot_rst_relay.
 // MUT (bench): 2 = tail pre-sigmoid eps dropped (unit 0).
+// NQ (HBM-BIND B2 2026-10-24; default 4 = unchanged): number of partial-sum engines / quadrant clients. NQ 2 = the B2
+// 8-SM die (2 HALVES: slot 0 = NW, slot 1 = NE): half h owns lanes 128h .. 128h + 127 of every W = 256 run, so the
+// core runs with TPRE = log2(256 / NQ) = 7 (half subtree sums = the first 7 levels of the pairwise chunk tree; the core
+// builds the last level h0 + h1). Golden order: the 4-quarter root computes ((q0 + q1) + (q2 + q3)) and each quarter
+// sum is a 6-level aligned subtree; a half sum is the 7-level aligned subtree (q_{2h} + q_{2h+1}) = the same pairs in
+// the same order, so every run sum, mix and result is bit-identical to the 256-lane golden (no numerics change),
+// PROVIDED the half engine builds that 7-level subtree (2 x 64-lane rings + one tree level, or a 128-lane ring).
+// Per-slot port widths: qd_nv NVQ = log2(256/NQ) + 1 (8 at NQ 2: 0 .. 128), qi_w QWW = 5 + log2(4/NQ) (6 at NQ 2:
+// half-local wave index < 64), everything else NQ x the per-quarter width. Event fields addressing a slot (ingq, gmq)
+// and qmask keep their programme width; at NQ 2 a slot >= 2 / a qmask bit >= 2 sets the sticky fault (no silent drop).
+// LATENCY: root edges unchanged; the subtree sums are due SYS_LAT = SYS_LAT0 + 4 + XRD + XRU + TPRE x TLA after tap 0
+// (NQ 2: + TLA, the half's 7th level) and the core's tree is one level (3 edges) shorter, so the raw accumulation
+// arrival moves by TLA - 3 = +4 edges at TLA 7 for the same XRD / XRU (equal latency when the B2 legs have XRU 4 fewer
+// relay stages; compiler constant RAW0 + TLA - 3 - dXRU).
 module ot_hbm_hc_root_static #(
     parameter integer K    = 20480,
     parameter [31:0]  NF   = 32'h46a00000,       // binary32(K)
@@ -28,7 +42,12 @@ module ot_hbm_hc_root_static #(
     parameter integer QDRLY = 1,                 // quarter's centre <-> bank relays (ot_hbm_hc_qeng_static DRLY)
     parameter integer QCHX = 0,                  // HH-9 10-19: quarter bank-chain pin-register edges (qeng CPR 1 -> 11)
     parameter integer TLA  = 7,                  // quarter tree adder stages
-    parameter integer MUT  = 0
+    parameter integer NQ   = 4,                  // partial-sum engines (4 quarters; 2 = B2 halves)
+    parameter integer MUT  = 0,
+    // derived (do not override): per-slot lanes 256/NQ, tree levels outside the core, slot widths
+    parameter integer QB   = (NQ == 2) ? 7 : 6,
+    parameter integer NVQ  = QB + 1,
+    parameter integer QWW  = (NQ == 2) ? 6 : 5
 )(
     input  wire           clk, rst_n,
     // F20 programme bus (folded targets: programme id tgt, table id tgt + 1)
@@ -44,26 +63,28 @@ module ot_hbm_hc_root_static #(
     input  wire           launch_v,
     output wire           configured,
     // quarter engines hc_eng_<q> (q = 0..3 = SW, SE, NW, NE)
-    output reg  [3:0]     qd_v, qd_ss,
-    output reg  [27:0]    qd_nv,
-    output reg  [39:0]    qd_wa, qd_xa,
-    output reg  [3:0]     qi_v, qi_kind,
-    output reg  [7:0]     qi_slot,
-    output reg  [19:0]    qi_lo, qi_w,
-    output reg  [47:0]    qi_cnt,
-    output reg  [39:0]    qi_word,
-    input  wire [3:0]     qps_v,
-    input  wire [127:0]   qps,
-    input  wire [3:0]     qps_f,
-    input  wire [3:0]     q_fault,
+    // (NQ 2: slot 0 = NW, 1 = NE)
+    output reg  [NQ-1:0]      qd_v, qd_ss,
+    output reg  [NQ*NVQ-1:0]  qd_nv,
+    output reg  [NQ*10-1:0]   qd_wa, qd_xa,
+    output reg  [NQ-1:0]      qi_v, qi_kind,
+    output reg  [NQ*2-1:0]    qi_slot,
+    output reg  [NQ*5-1:0]    qi_lo,
+    output reg  [NQ*QWW-1:0]  qi_w,
+    output reg  [NQ*12-1:0]   qi_cnt,
+    output reg  [NQ*10-1:0]   qi_word,
+    input  wire [NQ-1:0]      qps_v,
+    input  wire [NQ*32-1:0]   qps,
+    input  wire [NQ-1:0]      qps_f,
+    input  wire [NQ-1:0]      q_fault,
     // quadrant clients hc_<q>
-    input  wire [3:0]     gathered_mix_v,
-    input  wire [19:0]    gathered_mix_row,
-    input  wire [11:0]    gathered_mix_pos,
-    input  wire [127:0]   gathered_mix_data,
-    output reg  [3:0]     result_v,
-    output reg  [11:0]    result_position,
-    output reg  [3071:0]  result,
+    input  wire [NQ-1:0]      gathered_mix_v,
+    input  wire [NQ*5-1:0]    gathered_mix_row,
+    input  wire [NQ*3-1:0]    gathered_mix_pos,
+    input  wire [NQ*32-1:0]   gathered_mix_data,
+    output reg  [NQ-1:0]      result_v,
+    output reg  [NQ*3-1:0]    result_position,
+    output reg  [NQ*768-1:0]  result,
     output reg            program_active, program_done, fault
 );
     localparam integer W = 256, AW = 10, R = K / (8 * W);
@@ -71,9 +92,12 @@ module ot_hbm_hc_root_static #(
     localparam integer SYS_LAT0 = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR + 2 * QDRLY + QCHX;
     // d0 -> root out flop -> XRD -> quarter pin flop -> chain (SYS_LAT0) -> 6 tree levels -> quarter out flop -> XRU
     // -> root pin flop
-    localparam integer SYS_LAT = SYS_LAT0 + 1 + XRD + 1 + 6 * TLA + 1 + XRU + 1;
+    localparam integer SYS_LAT = SYS_LAT0 + 1 + XRD + 1 + QB * TLA + 1 + XRU + 1;
+    localparam integer QL = W / NQ;                 // lanes per slot
     localparam integer NVW = $clog2(W) + 1;
     initial if (K % (8 * W) != 0 || R > 16) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
+    initial if (!((NQ == 4 && QB == 6 && QWW == 5) || (NQ == 2 && QB == 7 && QWW == 6)) || NVQ != QB + 1)
+        $fatal(1, "NQ must be 4 or 2 (QB / NVQ / QWW are derived)");
 
     // ------------------------------------------------------------------ synced reset
     wire [1:0] rn;
@@ -81,8 +105,8 @@ module ot_hbm_hc_root_static #(
     wire rst_c = rn[0];
 
     // ------------------------------------------------------------------ pin registers
-    reg [3:0] gv_q; reg [19:0] gr_q; reg [11:0] gp_q; reg [127:0] gd_q;
-    reg [3:0] psv_q, psf_q, qf_q; reg [127:0] ps_q;
+    reg [NQ-1:0] gv_q; reg [NQ*5-1:0] gr_q; reg [NQ*3-1:0] gp_q; reg [NQ*32-1:0] gd_q;
+    reg [NQ-1:0] psv_q, psf_q, qf_q; reg [NQ*32-1:0] ps_q;
     always @(posedge clk or negedge rst_c)
         if (!rst_c) begin gv_q <= 0; psv_q <= 0; psf_q <= 0; qf_q <= 0; end
         else begin gv_q <= gathered_mix_v; psv_q <= qps_v; psf_q <= qps_f; qf_q <= q_fault; end
@@ -141,20 +165,23 @@ module ot_hbm_hc_root_static #(
 
     // ------------------------------------------------------------------ ingest event -> quarter e_ingq (out flops)
     always @(posedge clk or negedge rst_c)
-        if (!rst_c) qi_v <= 4'd0; else qi_v <= e_ing ? (4'd1 << e_ingq) : 4'd0;
+        if (!rst_c) qi_v <= {NQ{1'b0}}; else qi_v <= e_ing ? (NQ'(1) << e_ingq) : {NQ{1'b0}};
     always @(posedge clk) if (e_ing) begin
         qi_kind[e_ingq] <= e_kind; qi_slot[e_ingq*2 +: 2] <= e_slot; qi_lo[e_ingq*5 +: 5] <= e_lo;
-        qi_w[e_ingq*5 +: 5] <= e_w[4:0]; qi_cnt[e_ingq*12 +: 12] <= e_cnt; qi_word[e_ingq*10 +: 10] <= e_word;
+        qi_w[e_ingq*QWW +: QWW] <= e_w[QWW-1:0]; qi_cnt[e_ingq*12 +: 12] <= e_cnt; qi_word[e_ingq*10 +: 10] <= e_word;
     end
+    // NQ 2: an event addressing slot >= 2 (ingest, gathered-mix window) or a result mask bit >= 2 is a programme error
+    wire slot_bad = (NQ == 2) && ((e_ing && e_ingq[1]) || (e_gm && e_gmq[1]) || (e_emit && e_qmask[3:2] != 2'd0));
     reg ev_fault;
     always @(posedge clk or negedge rst_c)
-        if (!rst_c) ev_fault <= 1'b0; else if (e_ing && e_w[6:5] != 2'd0) ev_fault <= 1'b1;   // quarter wave index < 32
+        if (!rst_c) ev_fault <= 1'b0;
+        else if ((e_ing && e_w[6:QWW] != {(7-QWW){1'b0}}) || slot_bad) ev_fault <= 1'b1;   // slot wave index < 2^QWW
 
-    // ------------------------------------------------------------------ HCP core (TPRE = 6: partial-sum tree root)
+    // ------------------------------------------------------------------ HCP core (TPRE = QB: partial-sum tree root; 6 at NQ 4, 7 at NQ 2)
     wire sd_v, sd_ss; wire [NVW-1:0] sd_nv; wire [AW-1:0] sd_wa, sd_xa;
     wire o_valid, o_last, core_fault, core_idle; wire [2:0] o_pos; wire [4:0] o_idx; wire [31:0] o_data;
     ot_hdc_v41x_hcp_sys1_static #(.W(W), .TL(4), .PMAX(8), .OMAX(32), .AW(AW), .CW(16), .ML(ML), .DF(32),
-        .STATIC_CALENDAR(1), .SYS(1), .SYS_LAT(SYS_LAT), .TPRE(6)) u_core (
+        .STATIC_CALENDAR(1), .SYS(1), .SYS_LAT(SYS_LAT), .TPRE(QB)) u_core (
         .clk(clk), .reduction_clk(clk), .scalar_clk(clk), .rst_n(rst_c), .calendar_pop(e_pop),
         .cmd_valid(e_launch), .cmd_ready(), .cmd_npos(e_npos), .cmd_nout(6'd24), .cmd_nchunk(16'(K / 8)),
         .cmd_scale(1'b1), .cmd_nf(NF), .cmd_eps(e_eps), .cmd_wbase(AW'({e_wslot, 8'd0})), .cmd_xbase({AW{1'b0}}),
@@ -162,11 +189,12 @@ module ot_hbm_hc_root_static #(
         .o_valid(o_valid), .o_ready(1'b1), .o_pos(o_pos), .o_idx(o_idx), .o_data(o_data), .o_last(o_last),
         .fault(core_fault), .idle(core_idle),
         .sd_v(sd_v), .sd_ss(sd_ss), .sd_nv(sd_nv), .sd_wa(sd_wa), .sd_xa(sd_xa), .sys_sum(ps_q), .sys_fault(|psf_q));
-    // descriptor -> the 4 quarters (out flops); quarter q's lanes are 64q .. 64q + 63 of the run
-    always @(posedge clk or negedge rst_c) if (!rst_c) qd_v <= 4'd0; else qd_v <= {4{sd_v}};
-    always @(posedge clk) for (integer q = 0; q < 4; q = q + 1) begin
+    // descriptor -> the NQ slots (out flops); slot q's lanes are QL q .. QL q + QL - 1 of the run (QL = 64 / 128)
+    always @(posedge clk or negedge rst_c) if (!rst_c) qd_v <= {NQ{1'b0}}; else qd_v <= {NQ{sd_v}};
+    always @(posedge clk) for (integer q = 0; q < NQ; q = q + 1) begin
         qd_ss[q] <= sd_ss; qd_wa[q*10 +: 10] <= sd_wa; qd_xa[q*10 +: 10] <= sd_xa;
-        qd_nv[q*7 +: 7] <= (sd_nv <= NVW'(64 * q)) ? 7'd0 : (sd_nv >= NVW'(64 * q + 64)) ? 7'd64 : 7'(sd_nv - NVW'(64 * q));
+        qd_nv[q*NVQ +: NVQ] <= (sd_nv <= NVW'(QL * q)) ? NVQ'(0) : (sd_nv >= NVW'(QL * q + QL)) ? NVQ'(QL) :
+                               NVQ'(sd_nv - NVW'(QL * q));
     end
     // the subtree sums of the task issued SYS_LAT edges ago must be in the pin flops now (all 4 quarters)
     reg [SYS_LAT-1:0] xv; reg ps_fault;
@@ -174,21 +202,21 @@ module ot_hbm_hc_root_static #(
         if (!rst_c) begin xv <= 0; ps_fault <= 1'b0; end
         else begin
             xv <= {xv[SYS_LAT-2:0], sd_v};
-            if (psv_q != {4{xv[SYS_LAT-1]}}) ps_fault <= 1'b1;
+            if (psv_q != {NQ{xv[SYS_LAT-1]}}) ps_fault <= 1'b1;
         end
 
     // ------------------------------------------------------------------ mix store
-    reg [8*24*32-1:0] mixes; reg [191:0] have; reg mix_fault; reg [3:0] gm_open;
+    reg [8*24*32-1:0] mixes; reg [191:0] have; reg mix_fault; reg [NQ-1:0] gm_open;
     always @(posedge clk or negedge rst_c) begin
         if (!rst_c) begin have <= 0; mix_fault <= 0; gm_open <= 0; end
         else begin
             if (e_clear) have <= 0;
-            if (e_gm) gm_open[e_gmq] <= e_gmo;
+            if (e_gm && (NQ == 4 || !e_gmq[1])) gm_open[e_gmq] <= e_gmo;
             if (o_valid) begin
                 if (o_idx >= 5'd24) mix_fault <= 1'b1;
                 else begin mixes[(o_pos*24 + o_idx)*32 +: 32] <= o_data; have[o_pos*24 + o_idx] <= 1'b1; end
             end
-            for (integer q = 0; q < 4; q = q + 1) if (gv_q[q]) begin
+            for (integer q = 0; q < NQ; q = q + 1) if (gv_q[q]) begin
                 if (!gm_open[q] || gr_q[q*5 +: 5] >= 5'd24) mix_fault <= 1'b1;
                 else begin
                     mixes[(gp_q[q*3 +: 3]*24 + gr_q[q*5 +: 5])*32 +: 32] <= gd_q[q*32 +: 32];
@@ -242,10 +270,10 @@ module ot_hbm_hc_root_static #(
 
     // ------------------------------------------------------------------ result pins (all flops)
     always @(posedge clk or negedge rst_c) begin
-        if (!rst_c) result_v <= 4'd0;
-        else result_v <= e_emit ? e_qmask : 4'd0;
+        if (!rst_c) result_v <= {NQ{1'b0}};
+        else result_v <= e_emit ? e_qmask[NQ-1:0] : {NQ{1'b0}};
     end
-    always @(posedge clk) if (e_emit) for (integer q = 0; q < 4; q = q + 1) if (e_qmask[q]) begin
+    always @(posedge clk) if (e_emit) for (integer q = 0; q < NQ; q = q + 1) if (e_qmask[q]) begin
         result_position[q*3 +: 3] <= tpos[e_eunit]; result[q*768 +: 768] <= tres[e_eunit*768 +: 768];
     end
 

@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.geom_review.v1",
+  "verdict": "PASS-COND",
+  "scope": "corrected4 and exp30 unique views (32 instances): placement and CTS only",
+  "source": "codex/hbm-face-1025 ff8da5442 and B2n119f132a7",
+  "images": [
+    "all_plan_sheet.png",
+    "packing_review.png"
+  ],
+  "findings": [
+    "All34 pin-density plans inspected; faces <=6 pins/um budget; ep_static runs at the budget on one face and needs pin-access check.",
+    "Exp uses six fixed SRAMs in3x2 with side/top/bottom logic bands; macro hierarchy u_fcore.u_core preserved.",
+    "Corrected ep_static 250.56x375.84, sfustore336.96x328.32, programme574.56x738.72 admit unrotated packing envelopes with8.64um channels; automatic actual packing must be inspected after placement.",
+    "No physical route allowed until actual placed macro/clock/reset/PG and CTS hold gates reviewed. Parent partition long buses and stations remain separate B2o work.",
+    "Shell adds1 input and1 output cycle; no reset on face datapath flops. CTS common tap compensation must be measured anew."
+  ]
+}

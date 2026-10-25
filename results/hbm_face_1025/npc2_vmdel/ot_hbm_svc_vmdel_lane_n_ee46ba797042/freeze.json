@@ -1,0 +1,48 @@
+{
+ "schema": "opentallas.hbm_arch.core_freeze.v1",
+ "view": "ot_hbm_svc_vmdel_lane_n@ee46ba797042",
+ "module": "ot_hbm_svc_vmdel_lane_n",
+ "design": "ot_hbm_svc_vmdel_lane_n",
+ "rtl_top": "ot_hbm_svc_vmdel_lane_n",
+ "recipe_key": "ot_hbm_svc_vmdel_lane_n",
+ "recipe_sha256": "2ca65b08cb6202962db76325e2ecc38e53eab735b026fc6dcd69b1f699a38b07",
+ "canonical_type": null,
+ "wrapper": null,
+ "outline_um": [
+  257.04,
+  108.0
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/codex-hbm-face/plan_npc2/physical/die_plan/hbm_arch/B2o/die_plan.json",
+ "plan_sha256": "9f4555d789e8c62f9bd2327b37e0e0c038a98d000e95a5813e1600726e31f73f",
+ "pins_file": "cores/ot_hbm_svc_vmdel_lane_n__257.04x108__q_hub_u_vmdel_Q6_npc2.json",
+ "pins_sha256": "ee46ba7970426b8ee475a52b8fa2ebc5effeebaf99c03d694e9128b6bf9a050d",
+ "pins": 929,
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "period_ps": 833.0,
+ "common_latency_ps": 250.0,
+ "corner": "TC",
+ "plan_common_latency_ps": 250.0,
+ "core_clock_contract": null,
+ "orfs_var_overrides": [],
+ "sdc_lint": "PASS (gen)",
+ "macros": [
+  "ot_sram_1r1w_128x256_m1_r2c2"
+ ],
+ "face_shell": {
+  "core": "ot_hbm_svc_vmdel_lane_n__fcore",
+  "in_cycles": 1,
+  "out_cycles": 1,
+  "face_flops": 927,
+  "dropped": 0,
+  "unread_kept": 0,
+  "const_out_bits": 8,
+  "dup_out_bits": 0,
+  "plan_pins": 929
+ },
+ "kit_hash": "969ec0b8a08cc1b3"
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.geom_review_request.v1",
+  "author": "HBM-CORES (Claude lane), 2026-10-25",
+  "elements": {
+    "ot_hbm_argmax_static_sw_vm_r2 (kit ff8fa2bb6d4c shell, Codex route intel1:/srv/opentallas-scratch2/claude/codex-hbm-face/argmax_route_base)": {
+      "verdict_now": "NOT SIGNED: TT setup +37.9, FF hold -18.23 / 758 ep, slew 262 (TT+FF); DRC 0, face_guard PASS 1117/1117, pair skew 29.6/26.4 PASS, TT pin-reg insertion mean 243.1 (contract 250), FF 190.2",
+      "classification_ff_hold": {
+        "reg_to_out": "480 ep, worst -18.23: output pin regs u_bout_cq/q -> cq[*] vs vclk 250 ps at FF; FF tree is 177-199 ps. In-flow repair saw GRT-estimated clock arrival +36 ps above RCX (below) so it judged them met",
+        "reg_to_reg": "278 ep, worst -9.31: zero-logic shift pairs (dp[k]->dp[k+1], u_native.dval[k]->dval[k+1], e_vals, rr_p, cap_d) on different leaves, 19 ps skew vs 25 ps hold uncertainty",
+        "with_FF_vclk_190.17 (measured FF pin-reg mean)": "only the 278 reg->reg remain"
+      },
+      "rc_basis_finding": "FF clock arrival per sink, GRT estimate (default ASAP7 setRC) minus routed RCX: min 27.2 / p50 35.9 / mean 36.1 / max 54.3 ps over 7357 sinks (same root cause as QC cqb F2). Uniform RC scale fit (results/hbm_cores_1025/argmax_rc_fit_ff.tsv): scale 0.8 -> mean +13.8, 0.6 -> -6.6, zero-mean at ~0.665 (p95 residual ~10 ps).",
+      "proposed_structural_fix": [
+        "F2: kit SET_RC_TCL = setRC scaled 0.665 (R and C, all layers + vias) so CTS, clock_leaf_balance and GRT-stage hold/DRV repair see RCX-correlated clock arrival; generic tool tools/die_plan/rc_fit.tcl",
+        "F1/IO: output-port hold against the plan IO contract is repaired in-flow on the correlated RC (setup on cq has +612 ps); SIGNOFF lane asked to adopt the per-corner measured FF IO reference (CORE_FF_VCLK, 32e1c492c) so the parent's FF clock tree is not taken at TT latency",
+        "hold repair margin 5 ps above the SDC 25 ps (KIT-CENSUS default) covers the ~10 ps residual skew error on zero-logic shift pairs; slew: fanout cap 24 then repair_design (262 slews are one 113-load BUFx10 net net2362 class)",
+        "Re-run from the reviewed 3_place.odb (placement / pins / RTL unchanged; argmax placement GEOM PASS by Codex 02:57): CTS -> GRT -> route -> RCX -> signoff. Not an ECO."
+      ]
+    },
+    "ot_hgi_coll_gq_land@4d3dd24bd7bf": {
+      "verdict_now": "NOT SIGNED: TT setup -99.51 / 283 ep, FF hold -18.14 / 2013, slew 1402/1259; DRC 0, face/clock PASS; functional fill 21.5 %",
+      "cause": "all 283 setup endpoints are RECOVERY paths (path group asynchronous): ONE ot_rst_relay region flop u_rst.relay_q[0] (REGIONS(1)) drives the async reset of every flop incl. the 2248 face clones g_face_clone_vm_kq[*].u_bout_copy on two far faces: clk->Q 123 ps then a 5-buffer tree, fanout 148, slew 451 ps, arrival 1112.8 vs required 1013.3. The clk group itself meets (+3.0). The giant reset net is also most of the slew count.",
+      "structural_fix": "reset regions per the relay design standard (ot_rst_relay header): gen_core_kit_hbm.clone_output_state widens the block relay to REGIONS(1+ceil(2248/128)) = 19 and drives each 128-clone group from its own region flop (placed next to its face cluster). All regions release in the same cycle (replicated relay stage): cycle-exact, zero added cycles. Regenerated kit epyc1:/srv/opentallas-scratch2/claude/hbm-cores-1025/kits_gq/ot_hgi_coll_gq_land_4d3dd24bd7bf; preflight synth + face-shell exactness bench launched. Same F2 RC basis as argmax. The Codex real-MM ECO smokes (gq_eco_m3 / m5_dp, both exit 2) are superseded: no ECO.",
+      "open": "owner reset decision 2 says control-only reset: the vm_kq data state (2248 bits) is reset in the native RTL; removing its reset is a native-RTL change for the HBM native owner, recorded, not done here"
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.hbm_arch.face_shell_bench.v1",
+ "kit": "/srv/opentallas-scratch2/claude/hbm-face/runs_bench/ot_hbm_idx_score_quarter_static__r0c0_k0h1_59bebf732a32.20261025015332.1121492",
+ "view": "ot_hbm_idx_score_quarter_static__r0c0_k0h1@59bebf732a32",
+ "module": "ot_hbm_idx_score_quarter_static__r0c0_k0h1",
+ "simulator": "verilator 5.050 (2-state, x-initial fast)",
+ "cycles": 30000,
+ "seed": 1,
+ "reference": "Z o core o Z (inputs and outputs delayed one clock in the TB; reset undelayed)",
+ "shell": {
+  "mismatches": 0,
+  "first_cycle": -1
+ },
+ "shell_first_mismatches": [],
+ "reset_polarity_args": [
+  "+rstflip"
+ ],
+ "shell_checked_both_reset_polarities": true,
+ "dropped_in_bits": 0,
+ "dropped_driven_random_at_reference": true,
+ "out_bits": 35,
+ "out_bits_toggled": 35,
+ "mutants": [
+  {
+   "kind": "in_bypass",
+   "bus": "qv_b",
+   "bit": 0,
+   "mismatches": 10649,
+   "first_cycle": 136,
+   "caught": true
+  },
+  {
+   "kind": "in_bypass",
+   "bus": "q_b",
+   "bit": 9,
+   "mismatches": 3346,
+   "first_cycle": 365,
+   "caught": true
+  },
+  {
+   "kind": "out_bypass",
+   "bus": "cs_out",
+   "bit": 31,
+   "mismatches": 5144,
+   "first_cycle": 47,
+   "caught": true
+  },
+  {
+   "kind": "out_delay2",
+   "bus": "cs_out",
+   "bit": 0,
+   "mismatches": 16330,
+   "first_cycle": 47,
+   "caught": true
+  }
+ ],
+ "mutant_first_mismatches": [
+  "MISMATCH m2 cs_out cyc 47 dut a75c3a53 exp 275c3a53",
+  "MISMATCH m3 cs_out cyc 47 dut 00000000 exp 275c3a53",
+  "MISMATCH m0 cs_out cyc 136 dut 708f0000 exp 47379eac",
+  "MISMATCH m1 cs_out cyc 365 dut e9980000 exp e7980000"
+ ],
+ "verdict": "PASS",
+ "kit_hash": "279c9301a38ef056"
+}

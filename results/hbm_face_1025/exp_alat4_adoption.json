@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.hbm_pg_oneclock.v1",
+ "changed": [
+  "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_full_core.sv",
+  "physical/die_plan/hbm/cores/harden/split_files/ot_hbm_su_pg_lane_full_core.files",
+  "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core.sv",
+  "physical/die_plan/hbm/cores/harden/split_files/ot_hbm_su_pg_lane_exp_core.files",
+  "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv",
+  "physical/die_plan/hbm/cores/harden/split_files/ot_hbm_su_pg_lanes4_core.files",
+  "physical/die_plan/hbm/cores/harden/recipes_split.json"
+ ],
+ "ALAT": 4,
+ "MLAT": 4,
+ "source_override": [
+  "rtl/hdc/ot_hdc_fastfp_lat_c12.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv"
+ ],
+ "common_lane_result_added_cycles": 1,
+ "nonlinear_latency": "native ALAT4 formulas; exp+8, sigmoid+9, rsqrt+3, softplus+18 core edges from ALAT term",
+ "gate": "minimum LIGHT lane31classes/1984outputs/3968checks+3mutants PASS on codex/hbm-token-1025@d2af28485"
+}

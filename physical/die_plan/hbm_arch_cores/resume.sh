@@ -9,4 +9,5 @@ H=$(grep " $N -> " /srv/opentallas-scratch/claude/elem-hbm/launch.log | tail -1 
 if [ "$H" = localhost ]; then rsync -a -c --exclude run/ --exclude 'run_*.log' "$KD/" "$ROOT/$N/"
 else rsync -a -c --exclude run/ --exclude 'run_*.log' "$KD/" "$H:$ROOT/$N/"; fi
 echo "$(date '+%F %T') $N resume $GOAL on $H mem $MEM thr $THR" >> /srv/opentallas-scratch/claude/elem-hbm/launch.log
-exec ot-run --mem "$MEM" --threads "$THR" --hosts "$H" --dir "$ROOT/$N" -- bash "$ROOT/$N/run_kit_hbm.sh" "$ROOT/$N" "$GOAL" "$MEM" "$THR"
+# lane rule: no --hosts; --dir keeps data locality (only the host holding the run dir qualifies)
+exec ot-run --mem "$MEM" --threads "$THR" --dir "$ROOT/$N" -- bash "$ROOT/$N/run_kit_hbm.sh" "$ROOT/$N" "$GOAL" "$MEM" "$THR"

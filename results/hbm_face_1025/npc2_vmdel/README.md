@@ -1,0 +1,1 @@
+Native B2o NPC2 pin correction e1dec7b2e: five distinct views generated and pass face_guard, SDC lint, port-bind, SELRANGE. The recipe remains the actual NPC2 RTL. Representative 30,000-cycle shell lockstep has zero mismatches and catches input bypass plus both output latency mutants. The published shell adds one input and one output cycle. No P&R/sign-off claim.

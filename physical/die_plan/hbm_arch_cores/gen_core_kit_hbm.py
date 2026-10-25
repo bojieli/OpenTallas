@@ -268,26 +268,67 @@ def retain_unused_inputs(files, top, retained, kd):
     return helper
 
 
+RST_RELAY_RK = """
+
+// HBM-CORES 2026-10-25: ot_rst_relay with one keep_hierarchy region flop per region (same sync, same single relay
+// stage, same release cycle).  Flat Yosys merged the reg-array relay copies of ot_rst_relay into one flop.
+module ot_rst_relay_rk #(parameter integer REGIONS = 4, parameter integer SYNC_STAGES = 2)
+  (input wire clk, input wire rst_n_in, output wire [REGIONS-1:0] rst_n);
+    (* async_reg = "true" *) reg [SYNC_STAGES-1:0] sync_q;
+    always @(posedge clk or negedge rst_n_in)
+        if (!rst_n_in) sync_q <= {SYNC_STAGES{1'b0}}; else sync_q <= {sync_q[SYNC_STAGES-2:0], 1'b1};
+    generate for (genvar r = 0; r < REGIONS; r = r + 1) begin : g_rrl
+        (* keep = 1, keep_hierarchy = 1 *) ot_hbm_face_state_bit u_rrl
+            (.clk(clk), .rst_n(rst_n_in), .d(sync_q[SYNC_STAGES-1]), .q(rst_n[r]));
+    end endgenerate
+endmodule
+"""
+
+
 def clone_output_state(files, top, clone, kd):
     """Duplicate an existing state DFF at each output face, preserving its edge/reset."""
     if not clone:
         return None
     state, nxt, width, reset = (clone[k] for k in ("state", "next", "width", "reset"))
     wire = "face_clone_" + state
+    # HBM-CORES 2026-10-25 (gq_land NOT SIGNED: TT recovery -99.5 ps, 283 endpoints, all from ONE ot_rst_relay flop
+    # driving the 2248 face clones): reset regions per the relay design standard.  When the block's relay is
+    # REGIONS(1) and `reset` is its region-0 output, the relay is widened so each group of <= per clones has its own
+    # region flop (placed next to its face cluster).  All regions release in the same cycle (replicated relay
+    # stage), so the clones stay cycle-exact; no cycle is added.
+    per = int(clone.get("reset_region_bits", 128))
+    nreg = (width + per - 1) // per if width > per else 0
+    rst_expr = reset
     extra = (f"\n    wire [{width-1}:0] {wire};\n"
              f"    generate for (genvar cp=0;cp<{width};cp=cp+1) begin:g_face_clone_{state}\n"
              f"        (* keep = 1, keep_hierarchy = 1 *) ot_hbm_face_state_bit u_bout_copy "
-             f"(.clk(clk),.rst_n({reset}),.d({nxt}[cp]),.q({wire}[cp]));\n    end endgenerate\n")
+             f"(.clk(clk),.rst_n(@RST@),.d({nxt}[cp]),.q({wire}[cp]));\n    end endgenerate\n")
     rx = re.compile(r"(?ms)(^module\s+" + re.escape(top) + r"\b.*?)(^endmodule)")
     matches = 0
     def patch(m):
+        nonlocal rst_expr
         text = m[1]
+        if nreg:
+            mr = re.search(r"wire\s+" + re.escape(reset) + r"\s*=\s*(\w+)\[0\]\s*;", text)
+            if mr:
+                rl = mr[1]
+                text, n1 = re.subn(r"wire\s*\[0:0\]\s*" + re.escape(rl) + r"\s*;", f"wire [{nreg}:0] {rl};", text)
+                # 10-25 05:25 gq_rr19: Yosys merged ot_rst_relay's 19 relay_q copies (keep on a reg array is lost)
+                # into ONE flop.  The regions use ot_rst_relay_rk: same sync + one relay stage, each region flop a
+                # keep_hierarchy ot_hbm_face_state_bit, so the copies survive flat synthesis.
+                text, n2 = re.subn(r"ot_rst_relay(\s*#\(\s*\.REGIONS\()1(\)[^;]*\.rst_n\(\s*" + re.escape(rl) + r"\s*\)\s*\)\s*;)",
+                                   lambda q: "ot_rst_relay_rk" + q[1] + str(1 + nreg) + q[2], text)
+                if n1 == 1 and n2 == 1:
+                    rst_expr = f"{rl}[1 + cp/{per}]"
         for port in clone["ports"]:
             pattern = r"(assign\s+" + re.escape(port) + r"\s*=\s*)" + re.escape(state) + r"(?=\[)"
             text, n = re.subn(pattern, lambda q: q[1] + wire, text)
             if n != 1:
                 raise ValueError(f"expected one output state assignment for {port}")
-        return text + extra + m[2]
+        tail = m[2]
+        if rst_expr != reset:
+            tail += RST_RELAY_RK
+        return text + extra.replace("@RST@", rst_expr) + tail
     for f in files:
         p=Path(f)
         if p.suffix not in (".v", ".sv"):
@@ -372,11 +413,32 @@ def main():
     ap.add_argument("--sigmax", default="auto", help="auto = M5 or the highest plan pin layer (B2r2 pins use M6/M7 on 64 tables)")
     ap.add_argument("--recipe-key", default=None)
     ap.add_argument("--wrapper", default=None, help="hand-checked wrapper SV defining the plan module")
-    ap.add_argument("--hold-margin", type=float, default=30.0, help="HOLD_SLACK_MARGIN ps at the flow corner")
+    # HBM-CORES 10-24: default 30 -> 0.  The gate (TT setup / FF hold, 60/25 ps uncertainty in the SDC) is unchanged;
+    # the extra 30 ps flow margin made ORFS GRT hold repair chase every flop->flop shift-register path in the 0..30 ps
+    # band (sfu lane14 4_cts FF: 1467 endpoints < 0, 37822 < 30) at ~20 iterations/min -> 57 + 16 non-convergent runs.
+    ap.add_argument("--hold-margin", type=float, default=0.0, help="HOLD_SLACK_MARGIN ps at the flow corner (extra over the SDC 25 ps hold uncertainty)")
     ap.add_argument("--tag", default="", help="kit dir suffix (variants)")
+    ap.add_argument("--macro-placement", default=None,
+                    help="HBM-CORES3 10-25: plan family macro placement JSON (e.g. B2n_inputs/exp_lane.json): "
+                         "macro_placement[k] = {macro, origin_um, orient} for macro instance k (fixed, place_macro -exact); "
+                         "--macro-inst-fmt gives the instance path of k")
+    ap.add_argument("--macro-inst-fmt", default=None,
+                    help="instance path of macro k, python format with {k}, e.g. 'u_core.u_bank.u_data.g_read\\[{k}\\].u_m'")
+    ap.add_argument("--face-shell", default="on", choices=["on", "off"],
+                    help="HBM-FACE 10-25: wrap the core in its face-register shell (face_shell.py; +1 cycle per crossing, "
+                         "latency table results/arch/hbm_arch_1024/core_face_shell_latency.json); default on")
+    ap.add_argument("--face-shell-drop", default="on", choices=["on", "off"],
+                    help="drop unread input bits (top-of-bus / whole bus) from the shelled pin table; default on")
     ap.add_argument("--orfs-var", action="append", default=[], help="K=V extra ORFS variable (kit fix, e.g. ROUTING_LAYER_ADJUSTMENT=0.10 for GRT congestion); recorded in freeze.json")
     ap.add_argument("--core-insertion", default=str(HERE / "results" / "core_insertion_b2l.json"),
                     help="CORE CLOCK CONTRACT (owner decision 5e, 2026-10-24): measured core insertion table; a view with a MEASURED I > the plan common latency gets IO vclk latency = I (the plan feeds its clock pin I - common early). 'none' = off")
+    ap.add_argument("--clock-taps", default="off", choices=["off", "density"],
+                    help="HBM-CLKSTRUCT 10-25 (owner decision 5 / 10-23 MSCTS): density = structured in-core clock "
+                         "(port -> CTS trunk -> density taps of <= --clock-tap-sinks sinks within --clock-tap-dmax um -> "
+                         "local CTS trees; macro clock pin on its interface-register tap; POST_CTS tap alignment). "
+                         "off = single-root TritonCTS (unchanged)")
+    ap.add_argument("--clock-tap-sinks", type=int, default=1250)
+    ap.add_argument("--clock-tap-dmax", type=float, default=80.0)
     a = ap.parse_args()
     V = json.load(open(a.views))
     v = next((x for x in V["view_list"] if x["view"] == a.view), None)
@@ -412,7 +474,27 @@ def main():
         a.wrapper = str(HERE / "wrappers" / f"{module}.sv")     # hand-checked split wrapper (exactness record beside it)
     if not rk or rk not in R:
         raise SystemExit(f"NO_RECIPE {a.view}")
-    rec = R[rk]
+    rec = dict(R[rk])
+    # The exp-lane descriptor table is 256 x 61 bits in the proven
+    # split wrapper (Yosys inventory: 15616 bits). Keep that full table;
+    # the ORFS default 4096-bit inference guard rejects it before mapping.
+    if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)", module):
+        rec["synth_memory_max_bits"] = max(256 * 61, rec.get("synth_memory_max_bits", 0))
+        # Every exp view uses the plan's family placement.  A bulk kit
+        # regeneration must not silently return to unconstrained SRAM packing.
+        if not a.macro_placement and all(abs(x - y) < 0.01 for x, y in zip((w, h), (440.64, 207.36))):
+            family_placement = pdir.parent / "B2n_inputs" / "exp_lane.json"
+            if not family_placement.is_file():
+                raise SystemExit(f"{a.view}: exp family MACRO_PLACEMENT missing: {family_placement}")
+            a.macro_placement = str(family_placement)
+            a.macro_inst_fmt = "u_core.u_bank.u_data.g_read[{k}].u_m"
+    if a.macro_placement:
+        if not a.macro_inst_fmt:
+            raise SystemExit("--macro-placement needs --macro-inst-fmt")
+        mp = json.load(open(a.macro_placement))["macro_placement"]
+        rec["macro_placement"] = [dict(inst=a.macro_inst_fmt.format(k=m["k"]), xy_um=m["origin_um"],
+                                       orient=m.get("orient", "R0"), macro=m["macro"]) for m in mp]
+        rec["macro_placement_src"] = dict(file=a.macro_placement, sha256=sha(a.macro_placement))
     canon = None
     if v.get("canonical_type"):
         ct = json.load(open(HARDEN / "canonical_ports_split.json"))["types"][v["canonical_type"]]
@@ -429,7 +511,11 @@ def main():
         if canon[0].get("file") and canon[0]["file"] not in files:
             files = files + [canon[0]["file"]]
         top = canon[0]["top"]
-        params = {}
+        # HBM-FACE 10-25: keep the split recipe's parameters of the canonical top (build_split_tops.py writes them, e.g.
+        # score_hcol_h1 = ot_hidx_score_hcol #(HALF 1)).  They used to be dropped here, so every score_hcol_h1 view was
+        # elaborated and hardened as HALF 0 (default) - the wrong per-head delay depth / seed head - and its cs_in /
+        # cf_in looked unread.
+        params = dict(rec.get("params", {})) if rec.get("top") == top else {}
     commit = rec.get("source_commit", "HEAD")
     srcs, local = [], []
     for f in files:
@@ -482,7 +568,7 @@ def main():
             for k, n in (ti.get("tied_at_parent") or {}).items():
                 pn, val = k.split("=")
                 ties[pn] = val
-            txt, wrap_rep = build_wrapper(module, pb, top, {}, tports, cmap=ti["cut_pins"],
+            txt, wrap_rep = build_wrapper(module, pb, top, params, tports, cmap=ti["cut_pins"],
                                           straps=ti.get("straps") or {}, ties=ties)
         else:
             txt, wrap_rep = build_wrapper(module, pb, top, params, tports)
@@ -497,6 +583,41 @@ def main():
         if bad:
             raise SystemExit(f"PORT_MISMATCH {a.view}: {len(bad)} buses differ, e.g. {bad[:6]}")
         design, dparams = module, params
+    # HBM-FACE 10-25 (default ON, --face-shell off to disable): wrap the core in its face-register shell
+    # (face_shell.py): one kept flop per signal pin bit at the face (+1 cycle in / +1 out), clock/reset pins through,
+    # unread input bits dropped from the pin table (top-of-bus / whole-bus drops keep pin names; report in
+    # face_shell.json, plan change for the lane owner).  The kit top keeps the plan module name.
+    shell = None
+    if a.face_shell == "on":
+        import face_shell as FS
+        # Placement recipes name instances below the unshelled top.  The
+        # shell retains that hierarchy below u_fcore; keep SRAM placement
+        # attached to the same instances when adding the face registers.
+        if rec.get("macro_placement"):
+            rec["macro_placement"] = [dict(p_, inst="u_fcore." + p_["inst"])
+                                      for p_ in rec["macro_placement"]]
+        mlibs = []
+        for m_ in rec.get("macros", []):
+            md_ = REPO / (rec.get("macro_dirs", {}).get(m_) or f"physical/asap7_memory_macros_v2/{m_}")
+            if (md_ / f"{m_}_tt.lib").is_file():
+                mlibs.append(str(md_ / f"{m_}_tt.lib"))
+        try:
+            shell = FS.apply(kd, module, local, srcs, dparams, rec.get("defines", []), mlibs, CLK_RE, RST_RE,
+                             drop=a.face_shell_drop == "on", scalars={b_ for b_, (_, s_) in pb.items() if s_})
+        except RuntimeError as e:
+            raise SystemExit(f"FACE_SHELL {a.view}: {e}")
+        for f_ in shell["files"]:
+            srcs.append(f"/work/rtl/{f_}")
+            local.append(str(kd / "rtl" / f_))
+        dparams = {}
+        drop_ = set(shell["dropped"])
+        pins = [p_ for p_ in pins if p_["name"] not in drop_]
+        names = [p_["name"] for p_ in pins]
+        pb = buses_of(names)
+        tports = [(n_, d_, shell["keep"][n_]) for n_, d_ in shell["dirs"].items() if shell["keep"][n_] > 0]
+        bad = [b for b, (wd, _) in pb.items() if shell["keep"].get(b) != wd]
+        if bad:
+            raise SystemExit(f"FACE_SHELL {a.view}: shell ports != pruned plan pins, e.g. {bad[:6]}")
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
     clks = [n for n in names if re.match(CLK_RE, base(n))]
     rsts = [n for n in names if re.match(RST_RE, base(n)) and n not in clks]
@@ -538,6 +659,8 @@ def main():
             dirs[m.group(2)] = m.group(1)
     else:
         dirs = {n: d for n, d, _ in tports}
+    if shell:
+        dirs = {n: d for n, d, _ in tports}
     if not dirs:
         raise SystemExit("cannot derive port directions for sdc_lint")
     lctx = dict(period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, clock_ports=sorted({base(c) for c in clks}),
@@ -553,13 +676,16 @@ def main():
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise SystemExit(f"{a.view}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
-    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "signoff.py",
+    for f in ("sdc_lint.py", "face_guard.py", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl", "signoff.py", "pair_skew.tcl",
               "lec.py", "selrange_gate.py"):
         shutil.copyfile(TOOL / f, kd / f)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     tb = (TOOL / "tap_balance.tcl").read_text()
     tb = tb.replace("set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}", "set tb_port_re {^(" + "|".join(re.escape(c) for c in sorted(set(clks))) + ")$}")
     (kd / "tap_balance.tcl").write_text(tb)
+    if a.clock_taps == "density":
+        for f in ("core_density_taps.tcl", "core_tap_align.tcl"):
+            shutil.copyfile(HERE / f, kd / f)
     (kd / "post_synth_actual.tcl").write_text("source /work/face_keep_release.tcl\n# Preserve the actual post-eliminate_dead_logic graph for face_guard.\nwrite_verilog $::env(RESULTS_DIR)/1_synth.v\n")
     lefs, libs, ttlibs, fflibs = [], [], [], []
     for m in rec.get("macros", []):
@@ -592,8 +718,11 @@ def main():
                     "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
     (kd / "face_flops.tcl").write_text(ff)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
-    for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py", "hold_cap.tcl"):
+    for f in ("corners_hbm.tcl", "run_kit_hbm.sh", "face_guard_core.py", "dump_placed.py", "hold_cap.tcl",
+              "hold_gate.tcl", "port_bind_core.py"):
         shutil.copyfile(HERE / f, kd / f)
+    # HBM-CORES3 10-25 (COORD KIT-CENSUS): SELRANGE preflight (RTL-SELRANGE gate) ships in every kit
+    shutil.copyfile(TOOL / "selrange_gate.py", kd / "selrange_gate.py")
     shutil.copyfile(HARDEN / "pin_audit_core.py", kd / "pin_audit_core.py")
     m = CORE_MARGIN_UM
     cfg = [f"# GENERATED by gen_core_kit_hbm.py (ELEM-HBM): HBM B2r2 hard-core view {a.view} "
@@ -637,8 +766,7 @@ def main():
            "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) " + " ".join(fflibs),
            "export ADDITIONAL_LIBS =",
            "override export LIB_FILES = $(TC_LIB_FILES)",
-           *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()],
-           *[f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]]
+           *[f"export {k} = {vv}" for k, vv in rec.get("orfs_vars", {}).items()]]
     if lefs:
         cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}",
                 # HBM-ELEM 10-24: the ASAP7 SRAM macros are abstracts (LEF + lib, no GDS in the repo): 6_1_merge failed
@@ -686,13 +814,29 @@ def main():
         lines = []
         for placement in rec["macro_placement"]:
             x, y = placement["xy_um"]
-            inst = placement["inst"]
+            # ODB keeps the flat Yosys name with escaped brackets (g_read\[0\]); an unescaped path finds no
+            # macro (MPL-0020). Escape every bracket the caller's --macro-inst-fmt did not already escape.
+            inst = re.sub(r"(?<!\\)([\[\]])", r"\\\1", placement["inst"])
             orient = placement.get("orient", "R0")
             lines.append(f"place_macro -macro_name {{{inst}}} -location {{{x:g} {y:g}}} -orientation {orient} -exact")
         (kd / "macro_placement.tcl").write_text("\n".join(lines) + "\n")
         cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
+    # HBM-CORES3 10-25: --orfs-var overrides go LAST (a later make export wins; they used to precede the macro block,
+    # so e.g. MACRO_PLACE_HALO=... was silently overridden by the generator default)
+    if a.clock_taps == "density":
+        # HBM-CLKSTRUCT 10-25: the single-root H-tree over a macro-dominated core put its branch points on the SRAMs
+        # (legalised to the macro edges) -> 100-um leaf fans, adjacent flops 212 ps apart (hfd_ep_static 57f33b92eb82).
+        cfg += ["export PRE_CTS_TCL = /work/core_density_taps.tcl",
+                f"export OT_DTAP_TARGET = {a.clock_tap_sinks}",
+                f"export OT_DTAP_DMAX_UM = {a.clock_tap_dmax:g}",
+                "export OT_DTAP_OUT = /work/dtap.txt",
+                "override export POST_CTS_TCL = /work/core_tap_align.tcl",
+                "override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
+                f"{rec.get('cts_delay_buffer_derate', 0.5)} -sink_clustering_max_diameter 30 -sink_clustering_size 20 "
+                "-distance_between_buffers 40 -balance_levels"]
+    cfg += [f"export {kv.split('=', 1)[0]} = {kv.split('=', 1)[1]}" for kv in a.orfs_var]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
@@ -700,10 +844,18 @@ def main():
               plan=str(plan_path), plan_sha256=sha(plan_path), pins_file=v["pins_file"], pins_sha256=v["pins_sha256"],
               pins=len(pins), clocks=clks, resets=rsts, period_ps=per, common_latency_ps=ins, corner=a.corner,
               plan_common_latency_ps=common, core_clock_contract=contract, orfs_var_overrides=a.orfs_var,
-              sdc_lint="PASS (gen)", macros=rec.get("macros", []), kit_hash=kit_hash(kd))
+              sdc_lint="PASS (gen)", macros=rec.get("macros", []),
+              face_shell=(dict(core=shell["core"], in_cycles=1, out_cycles=1, face_flops=shell["face_flops"],
+                               dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),
+                               const_out_bits=shell["const_out_bits"], dup_out_bits=shell["dup_out_bits"],
+                               plan_pins=len(names) + len(shell["dropped"]))
+                          if shell else None),
+              kit_hash=kit_hash(kd))
+    if a.clock_taps != "off":
+        fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=len(rsts), design=design, top=top,
-                          wrapper=bool(wrap_rep), kit_hash=fz["kit_hash"])))
+                          wrapper=bool(wrap_rep), face_shell=fz["face_shell"], kit_hash=fz["kit_hash"])))
 
 
 if __name__ == "__main__":

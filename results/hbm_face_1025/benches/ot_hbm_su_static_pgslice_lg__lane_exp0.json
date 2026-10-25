@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.hbm_arch.face_shell_bench.v1",
+ "kit": "/srv/opentallas-scratch2/claude/hbm-face/runs_bench/ot_hbm_su_static_pgslice_lg__lane_exp0_2dbd1fc9b786.20261025013627.541682",
+ "view": "ot_hbm_su_static_pgslice_lg__lane_exp0@2dbd1fc9b786",
+ "module": "ot_hbm_su_static_pgslice_lg__lane_exp0",
+ "simulator": "verilator 5.050 (2-state, x-initial fast)",
+ "cycles": 30000,
+ "seed": 1,
+ "reference": "Z o core o Z (inputs and outputs delayed one clock in the TB; reset undelayed)",
+ "shell": {
+  "mismatches": 0,
+  "first_cycle": -1
+ },
+ "shell_first_mismatches": [],
+ "reset_polarity_args": [],
+ "shell_checked_both_reset_polarities": true,
+ "dropped_in_bits": 842,
+ "dropped_driven_random_at_reference": true,
+ "out_bits": 438,
+ "out_bits_toggled": 422,
+ "mutants": [
+  {
+   "kind": "in_bypass",
+   "bus": "g_lane_0_g_plain_u_lane_cx_srcs",
+   "bit": 7,
+   "mismatches": 5269,
+   "first_cycle": 6,
+   "caught": true
+  },
+  {
+   "kind": "in_bypass",
+   "bus": "g_lane_0_g_plain_u_lane_vb",
+   "bit": 9,
+   "mismatches": 11866,
+   "first_cycle": 5,
+   "caught": true
+  },
+  {
+   "kind": "out_bypass",
+   "bus": "g_bank_0_u_bank_read_data",
+   "bit": 127,
+   "mismatches": 2219,
+   "first_cycle": 104,
+   "caught": true
+  },
+  {
+   "kind": "out_delay2",
+   "bus": "g_bank_0_u_bank_read_data",
+   "bit": 0,
+   "mismatches": 9881,
+   "first_cycle": 20,
+   "caught": true
+  }
+ ],
+ "mutant_first_mismatches": [
+  "MISMATCH m1 g_bank_0_u_bank_read_addr_1 cyc 5 dut 000000004 exp 000000000",
+  "MISMATCH m0 g_lane_0_g_plain_u_lane_rd_src cyc 6 dut ec exp 6c",
+  "MISMATCH m3 g_bank_0_u_bank_read_data cyc 20 dut 00000000000000000000000000000000 exp 00000000000000005d177a0a00000000",
+  "MISMATCH m2 g_bank_0_u_bank_read_data cyc 104 dut 80000000000000000000000000000000 exp 00000000000000000000000000000000"
+ ],
+ "verdict": "PASS",
+ "kit_hash": "2ea95d4417cff317"
+}

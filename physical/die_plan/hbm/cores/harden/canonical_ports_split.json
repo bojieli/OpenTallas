@@ -19610,15 +19610,21 @@
       },
       "x_u_u_g_tiles_0_e86_u_tile_up_out": {
        "u_up_0": 344
+      },
+      "x_u_u_g_tiles_0_e86_u_tile_clr": {
+       "u_clr_q": 1
+      },
+      "x_u_u_g_tiles_0_e86_u_tile_conv": {
+       "u_conv_q": 1
+      },
+      "x_u_u_g_tiles_0_e86_u_tile_ins_v": {
+       "u_entry_vq": 1
       }
      },
      "excluded": "",
-     "mapped_bits": 3572,
-     "unmapped_cut_pins": [
-      "x_u_u_g_tiles_0_e86_u_tile_clr",
-      "x_u_u_g_tiles_0_e86_u_tile_conv",
-      "x_u_u_g_tiles_0_e86_u_tile_ins_v"
-     ]
+     "mapped_bits": 3575,
+     "unmapped_cut_pins": [],
+     "alias_source": "tkm root exported u_clr_q/u_conv_q/u_entry_vq are the tile0 clr/conv/ins_v wires; canonical root source connections u.clr_q/u.conv_q/u.entry_vq unchanged"
     }
    }
   },

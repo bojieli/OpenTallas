@@ -1,0 +1,14 @@
+{
+  "verdict": "FAIL",
+  "scope": "gq_land base/RLA completed route: no further ECO route before contract/hold fix",
+  "images": [
+    "gq_land_final_base.png",
+    "gq_land_final_rla.png"
+  ],
+  "findings": [
+    "Actual final ODB:153k standardcells,26,516um\u00b2 in26,613um\u00b2 freearea=99.6%fill;228bins>0.8; almostsolid-filledcore.",
+    "Both originalroutesDRC0 butTTsetup-99.51/-106.71ps andFFhold-18.14/-20.49ps; fanout148,>1.2kslewviolations.",
+    "ClockFFmean194.8ps vsIOvclk256ps atbothcorners. Holdchaininflation stronglyimplicates inconsistentboundaryreference; input/outputpercornercontractmustbecorrectedcoherently,nottimingwaived.",
+    "Do nothidewithlargeroutlineorECOontoafullcore. CLOCK/GEOMintegratingboundarycontractintorepair+signoff;restartfromCTSafterthatlands."
+  ]
+}
