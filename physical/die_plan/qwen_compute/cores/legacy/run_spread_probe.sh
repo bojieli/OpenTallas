@@ -16,5 +16,5 @@ B=$(dirname $(find /work/run/results/asap7 -name 3_place.odb -print -quit))
 ODB=$B/3_place.odb OUT=/work/placed.csv openroad -python -exit /work/dump_placed.py
 cp "$B/3_place.odb" "$B/4_cts.odb"
 cp "$B/3_place.sdc" "$B/4_cts.sdc"
-make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES='"$C"' SKIP_INCREMENTAL_REPAIR=1 SKIP_ANTENNA_REPAIR=1 do-grt
+make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES='"$C"' POST_GLOBAL_ROUTE_TCL= SKIP_INCREMENTAL_REPAIR=1 SKIP_ANTENNA_REPAIR=1 do-grt
 ' > "$K/probe.log" 2>&1

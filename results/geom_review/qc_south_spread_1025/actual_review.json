@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS-COND",
+  "picture": "actual_candidates.png",
+  "scope": "btab/prog real-clock CTS prototypes; VMR GRT clock insertion measurement then route if preflight passes",
+  "findings": [
+    "Btab/prog target south register spread survived placement, leaving input escape tracks and >40um clear band to macros.",
+    "Both placed signal-only GRT prototypes reached zero overflow on M2-M5.",
+    "VMR 670 added clock buffers sit in open south/west bands and inter-macro channels, with no macro halo intrusion; prior actualGRT0 and pairmax60.75ps.",
+    "Macro gaps/side channels remain continuous; pins remain source contract, PDN topology unchanged.",
+    "Source ideal-clock probes entered custom postGRT hold repair accidentally; own containers stopped, no physical closure claimed; corrected probe runner suppresses custom posthook.",
+    "Before VMR route bind measured pin-register I, never all-sink mean. Before btab/prog route collect propagated TT/FF CTS hold/pair gate."
+  ]
+}
