@@ -548,3 +548,4 @@ CODEX: 2026-10-25 06:02 PDT HANDOFF to Claude: all lanes parked; main3b207 pushe
 CODEX: 2026-10-25 07:31 PDT S81CCONN xfin measured-fit362.88² all16parents G0C177/1770E/2testsPASS,0cycles, READYd3d96d460a; nativecorekit/signoffowed.
 
 2026-10-25 07:29 PDT CODEX: Qwen ROM synthesis parameter mismatch fixed READY8376afdfe1 (2testsPASS,0cycles,current8ROMbb+hashes); plan7a/b live, f57corrective route engaged; new inventorycodex-qwen-0719-inventory.md.
+2026-10-25 07:30 PDT CODEX: TOK-HBM side LAT4 actual split-core5996II1 exact+2mutantsPASS READY3e0867e321; SU31 corrected-clockFAIL632/1046 diagnosed further in read-only replay epyc2unit2352893.
