@@ -7,7 +7,8 @@ B=$1; O=$2; H=$(cd $(dirname $0) && pwd); mkdir -p $O
 A=$B/obj/Vkv3_pc_part__hierMkArgs.f
 grep -o '"-y" "[^"]*"' $A | tr -d '"' | sed 's/^-y /-y /' > $O/ydirs.f
 grep '^/' $A | grep -v -e 'hier.vlt' -e '/kv_dieslice/' > $O/srcs.f; grep -o '+incdir+[^ "]*' $A >> $O/srcs.f || true
-MAP=${3:-}; [[ $MAP == *=* ]] && sed -i "s#${MAP%%=*}#${MAP#*=}#g" $O/ydirs.f $O/srcs.f
+MAP=${3:-}   # one OLD=NEW, or several separated by ';' (TOK-QK/D: also re-point the build's top_s/kv3_pc_part.sv copy)
+IFS=';' read -ra MAPS <<< "$MAP"; for m in "${MAPS[@]}"; do [[ $m == *=* ]] && sed -i "s#${m%%=*}#${m#*=}#g" $O/ydirs.f $O/srcs.f; done
 EXTRA=("${@:4}")
 cd $O
 $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 --x-assign fast --x-initial fast \

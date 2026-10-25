@@ -10,8 +10,20 @@ module tb_pcpart;
     // +HCK_IS_CLK (diagnostic, KV-TOK B): the HBM clock IS the core clock, so the partition's PHY po/pi boundary lanes
     // (ot_dp_st on the core clock clk although po/pi live in the HBM domain -- a bind clock-domain finding) carry each
     // HBM-domain beat exactly once; default = the real 0.977 GHz HBM clock.
-    reg clk = 0, hck_r = 0; always #0.416667 clk = ~clk; always #0.512 hck_r = ~hck_r;
-    wire hck = $test$plusargs("HCK_IS_CLK") ? clk : hck_r;
+    // TOK-QK/D: +DFI_CORE (owner decision 14, apply_D dfi-core) = the same single clock as +HCK_IS_CLK.  Phase / rate sweep
+    // of the real HBM clock: +HCK_HALF_PS=<half period ps, default 512> +HCK_PHASE_PS=<first-edge offset ps, default 0>.
+    reg clk = 0, hck_r = 0; always #0.416667 clk = ~clk;
+    real hck_half = 0.512, hck_ph = 0.0;
+    initial begin : hgen
+        integer v;
+        if ($value$plusargs("HCK_HALF_PS=%d", v)) hck_half = v / 1000.0;
+        if ($value$plusargs("HCK_PHASE_PS=%d", v)) hck_ph = v / 1000.0;
+        $display("PCB HCK half %0.3f ns phase %0.3f ns%s", hck_half, hck_ph,
+                 ($test$plusargs("HCK_IS_CLK") || $test$plusargs("DFI_CORE")) ? " (unused: single clock)" : "");
+        #(hck_ph);
+        forever #(hck_half) hck_r = ~hck_r;
+    end
+    wire hck = ($test$plusargs("HCK_IS_CLK") || $test$plusargs("DFI_CORE")) ? clk : hck_r;
     reg arst_n = 0, hbm_rn = 0, host_rn = 0, die_rn = 0, bg = 0;
     integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     wire [328:0] po0, po1, po2, po3; wire [288:0] pi0, pi1, pi2, pi3; wire [3:0] fh0, fh1, fh2, fh3, rh0, rh1, rh2, rh3;

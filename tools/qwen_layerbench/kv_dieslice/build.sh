@@ -24,7 +24,10 @@ fi
     case $m in kv3_phy*|kv3_sys_SD*|kv3_sys_c_part) ;; *) echo "hier_block -module \"$m\"";; esac; done; } > $O/hier.vlt
 R=$(cd $H/../../.. && pwd)
 IMGD=${D2D_IMG:-$R/physical/die_plan/qwen_kvsys/boot_v36/image_kv41}   # the pair image the KV boot image carries
+# TOK-QK/D dfi-core: a top without HBM clock inputs (kv43/apply_D.sh, owner decision 14) -> the bench drives none
+DFI=$(grep -q 'input  wire clk_clk_hbm_' $TOPF && echo "" || echo "+define+KV_DFI_CORE")
 cat > $O/vl.f <<EOF
+$DFI
 -Wno-fatal
 -Wno-lint
 -Wno-style
