@@ -1,0 +1,14 @@
+{
+ "review": "S81/KITS author review, stage-1 place, slice_station wavefront kit (byte-identical to gen.py phys on claude/s81-dec12-1024r @d206dfb226 + RESET face_flops fix 6c3989757)",
+ "when_pdt": "2026-10-25 00:42",
+ "kit": "epyc1:/srv/opentallas-scratch2/claude/s81-st-rst/kitsW/slice_station__t31",
+ "image": "results/geom_review/s81_kits_1024r/stations/img_t31.png",
+ "findings": [
+  "27983 cells, 6550 flops, 5292 pins, max bin <= 0.17 (ft-station chains only; ~80-90% of the 1442.88x1226.88 outline is empty by plan: the slice station band)",
+  "wavefront reset: arst_n IN + rst_o relays per plan, 168 relay/pad flops FIRM, OT_RESET_TREE PASS (entry relayed depth 7 placed max hop 379.1 um, 0 hops > 405)",
+  "ft chains straight and evenly spaced (stations <= 397 um planned), pin rows on the faces at the planned windows",
+  "clock: 16 grid taps (400-um pitch) over the whole outline incl. the empty area -> the B-round early-tap / pair-skew misses (t2 t24 t33 t1 t34) are a CLOCK-lane item (decision 5), not geometry",
+  "some ft slots run diagonally (in/out windows at different x): stations on the straight line, per-hop manhattan = L-route share (same reach)"
+ ],
+ "verdict": "PASS-COND (route; sign-off conditions: DRV with --max-wire-um 100, clock pair skew <= 80 / no early tap per CLOCK decision 5)"
+}
