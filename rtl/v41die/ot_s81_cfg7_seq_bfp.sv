@@ -32,10 +32,13 @@ module ot_s81_cfg7_seq_bfp #(
 );
     wire [1:0] st_ld;
     wire pfault;
-    ot_s81_cfg7_seq_bf #(.NSEG(NSEG), .PHW(PHW), .NROM(NROM), .LAYOUT(LAYOUT), .PINREG(PINREG)) u_ld (.clk(clk), .rst_n(rst_n), .lc(lc), .a(a),
+    wire [6:0] ce_local;
+    wire [5:0] cfg_local;
+    wire go_local;
+    ot_s81_cfg7_seq_bf_local #(.NSEG(NSEG), .PHW(PHW), .NROM(NROM), .LAYOUT(LAYOUT), .LOCAL_COPY(PINREG != 0), .PINREG(PINREG)) u_ld (.clk(clk), .rst_n(rst_n), .lc(lc), .a(a),
         .ce0(ce0), .ce1(ce1), .ce2(ce2), .ce3(ce3), .ce4(ce4), .ce5(ce5), .ce6(ce6),
         .q0(q0[47:0]), .q1(q1[47:0]), .q2(q2[47:0]), .q3(q3[47:0]), .q4(q4[47:0]), .q5(q5[47:0]), .q6(q6[47:0]),
-        .cfg(cfg), .go_e(go_e), .st(st_ld));
+        .cfg(cfg), .go_e(go_e), .st(st_ld), .ce_local(ce_local), .cfg_local(cfg_local), .go_local(go_local));
     // PINREG = 1 (S-ELEM-PQ 2026-10-16, owner rule 19:50 "register every pin"; native audit of the cfg7 pr2 view: the
     // rst_n port -> async clears was capture 303 ps): the loader is the PINREG 1 / LAYOUT 1 tile (inputs +1, a/ce +2,
     // cfg/go_e/st +4 from lc); here the spare columns q*[71:48] are captured in pin flops (the loader's q pin-flop edge),
@@ -69,7 +72,7 @@ module ot_s81_cfg7_seq_bfp #(
     end endgenerate
     // spare columns of the macro read on the previous edge (the loader's own registered bank select, rebuilt from ce)
     reg  [2:0] bk, bk_d;
-    wire [6:0] cev = {ce6[0], ce5[0], ce4[0], ce3[0], ce2[0], ce1[0], ce0[0]};
+    wire [6:0] cev = ce_local;
     always @(posedge clk[0]) if (|cev) bk <= cev[0] ? 3'd0 : cev[1] ? 3'd1 : cev[2] ? 3'd2 : cev[3] ? 3'd3 :
                                               cev[4] ? 3'd4 : cev[5] ? 3'd5 : 3'd6;
     always @(posedge clk[0]) bk_d <= bk;
@@ -88,8 +91,8 @@ module ot_s81_cfg7_seq_bfp #(
     wire [23:0] sp_a = (PINREG != 0) ? sp_q2 : sp_q;
 `endif
     reg [95:0] desc;
-    wire       c_v = cfg[53];
-    wire [4:0] c_a = cfg[4:0];
+    wire       c_v = cfg_local[5];
+    wire [4:0] c_a = cfg_local[4:0];
     always @(posedge clk[0] or negedge rn)
         if (!rn) desc <= 96'd0;
 `ifdef OT_S81_CFG7_BFP_MUT_ROW
@@ -97,7 +100,7 @@ module ot_s81_cfg7_seq_bfp #(
 `else
         else if (c_v && c_a < 5'd4) desc[24 * c_a +: 24] <= sp_a;
 `endif
-    ot_s81_bf_prog_seq #(.DELTA(DELTA)) u_prog (.ck(clk[0]), .rst_n(rn), .go(go_e[0]), .desc(desc[81:0]),
+    ot_s81_bf_prog_seq #(.DELTA(DELTA)) u_prog (.ck(clk[0]), .rst_n(rn), .go(go_local), .desc(desc[81:0]),
         .f_prog(f_prog), .fault(pfault));
 endmodule
 `default_nettype wire

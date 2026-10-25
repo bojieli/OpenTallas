@@ -1,6 +1,7 @@
 #!/bin/bash
 # KVG3-CORES (gen_core_kit_kv.py): run one KV core kit through ORFS in docker: synth .. finish (TC), generate_abstract,
-# sdc_lint gate (CP1-R10, fail-closed) before synth, typed face_guard gates after synth and synth ODB export,
+# sdc_lint gate (CP1-R10, fail-closed) before synth, the DONT_USE-honouring adder map (adder_map_dontuse.py gen, ruling 4
+# 10-25) before synth and its DONT_USE netlist check after synth (fail-closed), typed face_guard gates after synth and synth ODB export,
 # LEC (lec.py, 10-24) after the synth ODB gate: NOT EQUIVALENT stops the kit, UNPROVEN is recorded in lec/lec.json,
 # pin audit of the routed ODB, then corners.tcl at TT / FF (STA + write_timing_model), then signoff.py (SIGNED = closed).  Outputs chowned back.
 #   GOAL: finish (full ORFS finish incl. GDS merge: needs every macro GDS) | route (route + do-finish + abstract, no GDS
@@ -17,8 +18,11 @@ $DK run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${M
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; \
   rc=0; python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then python3 -I /work/selrange_gate.py /work --out /work/selrange.json > /work/selrange.log 2>&1; src=\$?; tail -3 /work/selrange.log; if [ \$src = 1 ]; then rc=1; elif [ \$src != 0 ]; then echo \"SELRANGE NOT RUN (frontend cannot elaborate; see selrange.log)\"; fi; fi; \
+  PD=/OpenROAD-flow-scripts/flow/platforms/asap7; \
+  if [ \$rc = 0 ] && [ $GOAL != post ] && grep -q '^export ADDER_MAP_FILE = /work/adder_map_dontuse.v' /work/config.mk; then python3 -I /work/adder_map_dontuse.py gen --platform-dir \$PD --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \$M synth; rc=\$?; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
+  if [ \$rc = 0 ] && [ $GOAL != post ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py check --platform-dir \$PD --netlist \$N --report /work/dont_use_check.json; rc=\$?; fi; \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then python3 -I /work/core_preflight.py /work \$N --out /work/face_guard.json > /work/face_guard.log 2>&1; rc=\$?; tail -3 /work/face_guard.log; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ] && [ $GOAL != post ]; then \

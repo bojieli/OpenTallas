@@ -1,0 +1,20 @@
+{
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "problem": "CROM response3 issue edges later than VM, production residual104/104 outputs match coefficient i-24",
+  "clock_ps": 833,
+  "lanes_per_slice": 8,
+  "correction": {
+    "vm_data_delay_edges": 3,
+    "btab_data_delay_edges": 1,
+    "head_metadata_delay_edges": 3,
+    "crom_delay_edges": 0
+  },
+  "cost": {
+    "steady_state_added_edges_per_su_op": 3,
+    "added_vm_data_flops_per_slice": 2304,
+    "added_btab_flops_per_slice": 2048,
+    "metadata_flops": "3 extra head fixed-age slots, exact census after synth"
+  },
+  "physical": "Keep existing CROM relay topology; re-close changed head and parent adapter before physical adoption",
+  "verification": "Head lockstep against baseline at+3edges and mutant short VM delay; full fixed-s8 stage re-calibration required"
+}

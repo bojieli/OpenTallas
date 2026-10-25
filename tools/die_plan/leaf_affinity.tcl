@@ -10,6 +10,9 @@
 # Env: OT_LEAF_AFF_UM (default 30), OT_LEAF_AFF_MAX_GROUP (default 24), OT_LEAF_AFF_SLACK (default 4),
 #      OT_LEAF_AFF_DEPTH (buffer / inverter hops followed, default 4), OT_LEAF_AFF_REPORT_ONLY=1 (count, no change).
 # Prints OT_LEAF_AFF ... summary lines (pairs, cross-leaf before / after, groups moved / skipped by reason).
+# The ORFS POST_CTS hook may be sourced inside a procedure. Helper procs
+# share these dictionaries/union-find arrays through the global namespace.
+global la_d la_ck la_par la_clock
 proc la_env {k d} { expr {[info exists ::env($k)] && $::env($k) ne "" ? $::env($k) : $d} }
 set la_um [la_env OT_LEAF_AFF_UM 30.0]
 set la_maxg [la_env OT_LEAF_AFF_MAX_GROUP 24]
@@ -21,10 +24,16 @@ set la_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 
 # registers: inst name -> CK iterm; data iterms
 set la_ck [dict create]
+set la_clock [dict create]
 foreach p [all_registers -clock_pins] {
   set it [sta::sta_to_db_pin $p]
   if {$it eq "NULL" || $it eq ""} continue
-  dict set la_ck [[$it getInst] getName] $it
+  set name [[$it getInst] getName]
+  dict set la_ck $name $it
+  set clocks [get_property $p clocks]
+  set clock_name ""
+  if {[llength $clocks] == 1} { set clock_name [get_full_name [lindex $clocks 0]] }
+  dict set la_clock $name $clock_name
 }
 set la_d [dict create]
 foreach p [all_registers -data_pins] {
@@ -42,6 +51,19 @@ proc la_outs {inst} {
   set o {}
   foreach it [$inst getITerms] { if {[$it isOutputSignal] && [$it getNet] ne "NULL"} { lappend o $it } }
   return $o
+}
+# Clock net type alone does not establish domain identity. Reconnecting a clock
+# pin across distinct roots changes behavior even when the data path is short.
+proc la_same_clock {members} {
+  global la_clock
+  set expected ""
+  foreach name $members {
+    if {![dict exists $la_clock $name] || [dict get $la_clock $name] eq ""} { return 0 }
+    set current [dict get $la_clock $name]
+    if {$expected ne "" && $current ne $expected} { return 0 }
+    set expected $current
+  }
+  return [expr {$expected ne ""}]
 }
 # zero-logic successors of register R: registers whose data pin is reached through nets and buf/inv cells only
 proc la_succ {inst depth} {
@@ -103,8 +125,9 @@ dict for {name it} $la_ck {
 set la_cap [expr {$la_fomax + $la_slack}]
 set la_groups [dict create]
 foreach x [array names la_par] { dict lappend la_groups [la_find $x] $x }
-set la_moved 0; set la_gmoved 0; set la_skip_big 0; set la_skip_far 0; set la_skip_cap 0; set la_skip_drv 0; set la_ok 0
+set la_moved 0; set la_gmoved 0; set la_skip_big 0; set la_skip_far 0; set la_skip_cap 0; set la_skip_drv 0; set la_skip_clock 0; set la_ok 0
 dict for {r mem} $la_groups {
+  if {![la_same_clock $mem]} { incr la_skip_clock; continue }
   if {[llength $mem] > $la_maxg} { incr la_skip_big; continue }
   # candidate leaves: by member count, ties -> nearest centroid
   set cnt [dict create]
@@ -115,7 +138,7 @@ dict for {r mem} $la_groups {
   set net [$la_blk findNet $best]
   set drv [la_drv $net]
   if {$drv eq "" || [$net getSigType] ne "CLOCK"} { incr la_skip_drv; continue }
-  # same clock check: every member's CK pin carries the target's clock
+  # la_same_clock above established one unambiguous timing clock for this group.
   lassign [la_xy $drv] dx dy
   set mv {}; set far 0
   foreach m $mem {
@@ -141,5 +164,5 @@ dict for {r mem} $la_groups {
 }
 set la_cross1 0
 foreach pr $la_pairlist { lassign $pr a b; if {[la_leaf $a] ne [la_leaf $b]} { incr la_cross1 } }
-puts "OT_LEAF_AFF pairs $la_pairs groups [dict size $la_groups] cross_leaf_before $la_cross0 cross_leaf_after $la_cross1 groups_moved $la_gmoved sinks_moved $la_moved same_leaf_already $la_ok skip_big $la_skip_big skip_far $la_skip_far skip_cap $la_skip_cap skip_driver $la_skip_drv leaf_cap $la_cap radius_um $la_um report_only $la_ronly"
+puts "OT_LEAF_AFF pairs $la_pairs groups [dict size $la_groups] cross_leaf_before $la_cross0 cross_leaf_after $la_cross1 groups_moved $la_gmoved sinks_moved $la_moved same_leaf_already $la_ok skip_big $la_skip_big skip_far $la_skip_far skip_cap $la_skip_cap skip_driver $la_skip_drv skip_clock $la_skip_clock leaf_cap $la_cap radius_um $la_um report_only $la_ronly"
 if {$la_moved > 0} { estimate_parasitics -placement }

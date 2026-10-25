@@ -1,0 +1,29 @@
+{
+ "source": "/OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_adders_R.v",
+ "dont_use": [
+  "*x1p*_ASAP7*",
+  "*xp*_ASAP7*",
+  "SDF*",
+  "ICG*"
+ ],
+ "replaced": [
+  {
+   "cell": "HAxp5_ASAP7_75t_R",
+   "inst": "halfadder_Cconst"
+  },
+  {
+   "cell": "HAxp5_ASAP7_75t_R",
+   "inst": "halfadder_Bconst"
+  },
+  {
+   "cell": "HAxp5_ASAP7_75t_R",
+   "inst": "halfadder_Aconst"
+  }
+ ],
+ "unknown": [],
+ "dont_use_left": [],
+ "cells_kept": [
+  "FAx1_ASAP7_75t_R"
+ ],
+ "verdict": "PASS"
+}

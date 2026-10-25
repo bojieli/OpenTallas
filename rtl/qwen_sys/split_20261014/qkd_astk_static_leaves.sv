@@ -366,7 +366,11 @@ module qkd_astk_ex_s (
 endmodule
 
 module qkd_astk_ctl_s #(
-    parameter integer Z_STRIDE=4, parameter integer PORT_REGS=0
+    parameter integer Z_STRIDE=4, parameter integer PORT_REGS=0,
+    // COORD ruling 2 (10-25; KV-TOK 05:36: g == 0 for every scheduled op, HEADS=1 static): AM_G_PIN=0 removes the hub's
+    // constant LMAX head-group bit am[1] from the port (am = {data 32, hh 2, valid}, 35 b) and supplies G_CONST instead.
+    // AM_G_PIN=1 keeps the legacy 36-b am {data 32, hh 2, g, valid}.  No cycle changes.
+    parameter integer AM_G_PIN=1, parameter [0:0] G_CONST=1'b0
 ) (
     input  wire [31:0]   cal,       // {Z start age, LMAX start age} (compiler calendar)
     input  wire          ck,
@@ -374,7 +378,7 @@ module qkd_astk_ctl_s #(
     input  wire [1:0]    st,
     input  wire [539:0]  aq,
     output reg  [20:0]   lt,
-    input  wire [35:0]   am,
+    input  wire [34+AM_G_PIN:0] am,
     output reg  [42:0]   ap,         // the hub sideband {so_data 32, so_any, so_k 4, so_hh 2, so_g, so_type 2, so_valid}
     output reg           af,
     output reg  [571:0]  qo,
@@ -393,18 +397,24 @@ module qkd_astk_ctl_s #(
     (* keep *) reg [1:0]   st_q;
     (* keep *) reg [539:0] aq_q;
     (* keep *) reg [35:0]  am_q;
+    wire [35:0] am_x;                                  // the legacy 36-b am word (g from G_CONST when AM_G_PIN=0)
+    generate if (AM_G_PIN != 0) begin : g_am_pin
+        assign am_x = am;
+    end else begin : g_am_const
+        assign am_x = {am[34:1], G_CONST, am[0]};
+    end endgenerate
     (* keep *) reg [266:0] xq;
     (* keep *) reg [262:0] pxq, pyq;
     (* keep *) reg [137:0] zq;
     (* keep *) reg         fx_q, fy_q, fz_q;
     always @(posedge ck) begin
-        st_q <= st; aq_q[20:1] <= aq[20:1]; aq_q[539:22] <= aq[539:22]; am_q[35:1] <= am[35:1]; xq[266:11] <= xi[266:11];
+        st_q <= st; aq_q[20:1] <= aq[20:1]; aq_q[539:22] <= aq[539:22]; am_q[35:1] <= am_x[35:1]; xq[266:11] <= xi[266:11];
         pxq[262:1] <= px[262:1]; pyq[262:1] <= py[262:1]; zq[137:1] <= zi[137:1];
     end
     always @(posedge ck or negedge rn_q)
         if (!rn_q) begin aq_q[0] <= 1'b0; aq_q[21] <= 1'b0; am_q[0] <= 1'b0; xq[10:0] <= 11'd0; pxq[0] <= 1'b0; pyq[0] <= 1'b0;
                          zq[0] <= 1'b0; fx_q <= 1'b0; fy_q <= 1'b0; fz_q <= 1'b0; end
-        else begin aq_q[0] <= aq[0]; aq_q[21] <= aq[21]; am_q[0] <= am[0]; xq[10:0] <= xi[10:0]; pxq[0] <= px[0]; pyq[0] <= py[0];
+        else begin aq_q[0] <= aq[0]; aq_q[21] <= aq[21]; am_q[0] <= am_x[0]; xq[10:0] <= xi[10:0]; pxq[0] <= px[0]; pyq[0] <= py[0];
                    zq[0] <= zi[0]; fx_q <= fx; fy_q <= fy; fz_q <= fz; end
     wire         start = aq_q[0];
     wire [13:0]  T = aq_q[14:1];
