@@ -37,7 +37,13 @@ module tb;
  path #(.MUT(1)) wrong_clock(clk,serial,rst_n,rq,wq,bad,bd,bf);
  localparam[255:0] DATA={8{32'h3f800123}};
  integer reads=0,writes=0;
+ reg[22:0] read_due=0;reg[19:0] write_due=0;
+ always @(posedge clk)begin
+  if(!rst_n)begin read_due<=0;write_due<=0;end
+  else begin read_due<={read_due[21:0],rq[16]};write_due<={write_due[18:0],wq[280]};end
+ end
  always @(negedge clk)if(rst_n)begin
+  if(good[256]!==read_due[22]||gd!==write_due[19])$fatal(1,"golden valid calendar mismatch");
   if(good[256])begin
    if(good[255:0]!==DATA)$fatal(1,"payload mismatch %h",good[255:0]);
    reads=reads+1;
