@@ -27,6 +27,7 @@ module ot_s81ph_sel_su_pipe #(
     localparam integer SW = GW + 2;                 // sum of <= 4 slices
     localparam integer XW = CB + 10;                // suffix sums (16 x SW)
     integer i, s;
+    integer ia, ib;                                 // clocked-block loop indices (one integer per always block, rtl_lint, KITS-SPARE 10-25)
 
     // -- step A: slice sums -> suffix sums -> highest group ----------------------------------
     reg [Q*16*GW-1:0] gs_r;
@@ -67,7 +68,7 @@ module ot_s81ph_sel_su_pipe #(
     reg [16*XW-1:0] s4_r;
     reg [QW-1:0]    q4;
     always @(posedge clk) begin
-        for (i = 0; i < 16; i = i + 1) gea[i] <= (s3_r[XW*i +: XW] >= {{(XW-QW){1'b0}}, q3});
+        for (ia = 0; ia < 16; ia = ia + 1) gea[ia] <= (s3_r[XW*ia +: XW] >= {{(XW-QW){1'b0}}, q3});
         s4_r <= s3_r; q4 <= q3;
     end
     reg [3:0]    ga;
@@ -143,7 +144,7 @@ module ot_s81ph_sel_su_pipe #(
     reg [XW-1:0]    acc_b4;
     reg [3:0]       g_b4;
     always @(posedge clk) begin
-        for (i = 0; i < 16; i = i + 1) geb[i] <= (u3_r[XW*i +: XW] >= {{(XW-QW){1'b0}}, q_b3});
+        for (ib = 0; ib < 16; ib = ib + 1) geb[ib] <= (u3_r[XW*ib +: XW] >= {{(XW-QW){1'b0}}, q_b3});
         u4_r <= u3_r; acc_b4 <= acc_b3; g_b4 <= g_b3;
     end
     reg [3:0]    bb;
