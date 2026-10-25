@@ -96,7 +96,8 @@
   ],
   "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size 30 -sink_clustering_max_diameter 60 -sink_clustering_levels 2 -distance_between_buffers 100 -clustering_unbalance_ratio 0.5",
   "orfs_vars": {
-   "SYNTH_HDL_FRONTEND": "slang"
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
   },
   "rtl_patch": {
    "file": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv",
@@ -137,12 +138,14 @@
   "includes": [],
   "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
   "orfs_vars": {
-   "SYNTH_HDL_FRONTEND": "slang"
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
   },
   "keep_pin_regs": true,
   "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
   "clock_balance": true,
-  "max_buffer_percent": 100
+  "max_buffer_percent": 100,
+  "face_guard_continue": "PATHFINDING: face_guard FAIL c1 = o[15:0] constant (RTL ot_dsrom_su_hcpost.sv:129 o <= {hi, 16'd0}: 16 output pins tied 0, no register survives synthesis) + sticky fault self-loop; needs an RTL / plan decision (drop or keep the const pins) - recorded, not waived"
  },
  "ot_s81sl_vn": {
   "suffix": "c",
@@ -159,7 +162,8 @@
   "includes": [],
   "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
   "orfs_vars": {
-   "SYNTH_HDL_FRONTEND": "slang"
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
   },
   "keep_pin_regs": true,
   "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
@@ -183,7 +187,8 @@
   "includes": [],
   "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
   "orfs_vars": {
-   "SYNTH_HDL_FRONTEND": "slang"
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
   },
   "keep_pin_regs": true,
   "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
@@ -207,7 +212,8 @@
   "includes": [],
   "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
   "orfs_vars": {
-   "SYNTH_HDL_FRONTEND": "slang"
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
   },
   "keep_pin_regs": true,
   "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
@@ -229,7 +235,8 @@
   "includes": [],
   "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
   "orfs_vars": {
-   "SYNTH_HDL_FRONTEND": "slang"
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
   },
   "keep_pin_regs": true,
   "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
@@ -247,15 +254,90 @@
   "pins_snap_to_edge": true,
   "stub_lef": "../../../physical/s81_die_views/closed_import/ot_s81sl_ve/ot_s81sl_ve.lef",
   "closed_cells": 460279,
-  "util": 0.52,
+  "util": 0.5,
   "includes": [],
   "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
   "orfs_vars": {
-   "SYNTH_HDL_FRONTEND": "slang"
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
   },
   "keep_pin_regs": true,
   "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
   "clock_balance": true,
-  "max_buffer_percent": 100
+  "max_buffer_percent": 100,
+  "spec_file": "specs/ot_s81sl_ve.json"
+ },
+ "dsdv_eng_rr_e": {
+  "suffix": "c",
+  "spec_file": "specs/dsdv_eng_rr_e.json",
+  "ref_tile": "physical/die_plan/s81/cores/eng",
+  "outline_um": [
+   345.6,
+   466.56
+  ],
+  "pins_file": "inputs/core_pins/dsdv_eng_rr_e.json",
+  "stub_lef": "cores/eng/lef/dsdv_eng_rr_e.lef",
+  "closed_cells": 96256,
+  "util": 0.5,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "macro_rows_halo": 4.32,
+  "note": "eng split core (no closed view yet): stub-LEF plan pins, cores_eng.json macro sites; half-cycle crossing inputs at T/2 + 0.12T",
+  "pins_snap_to_edge": true
+ },
+ "dsdv_eng_rr_h0": {
+  "suffix": "c",
+  "spec_file": "specs/dsdv_eng_rr_h0.json",
+  "ref_tile": "physical/die_plan/s81/cores/eng",
+  "outline_um": [
+   164.16,
+   267.84
+  ],
+  "pins_file": "inputs/core_pins/dsdv_eng_rr_h0.json",
+  "stub_lef": "cores/eng/lef/dsdv_eng_rr_h0.lef",
+  "closed_cells": 175659,
+  "util": 0.65,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "note": "eng split core (no closed view yet): stub-LEF plan pins, cores_eng.json macro sites; half-cycle crossing inputs at T/2 + 0.12T",
+  "pins_snap_to_edge": true
+ },
+ "dsdv_eng_rr_h1": {
+  "suffix": "c",
+  "spec_file": "specs/dsdv_eng_rr_h1.json",
+  "ref_tile": "physical/die_plan/s81/cores/eng",
+  "outline_um": [
+   164.16,
+   267.84
+  ],
+  "pins_file": "inputs/core_pins/dsdv_eng_rr_h1.json",
+  "stub_lef": "cores/eng/lef/dsdv_eng_rr_h1.lef",
+  "closed_cells": 176214,
+  "util": 0.65,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "note": "eng split core (no closed view yet): stub-LEF plan pins, cores_eng.json macro sites; half-cycle crossing inputs at T/2 + 0.12T",
+  "pins_snap_to_edge": true
  }
 }

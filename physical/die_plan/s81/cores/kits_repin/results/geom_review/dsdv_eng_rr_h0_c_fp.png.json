@@ -1,0 +1,66 @@
+{
+ "kit": "dsdv_eng_rr_h0_c",
+ "kit_hash": "0bc5179cb5f5fa93",
+ "outline_um": [
+  164.16,
+  267.84
+ ],
+ "pins": 645,
+ "faces": {
+  "N": {
+   "pins": 644,
+   "max_per_um": 4.5,
+   "mean_per_um": 3.92,
+   "layers": {
+    "M5": 644
+   },
+   "span": [
+    4.81,
+    159.52
+   ],
+   "groups": [
+    "in_w",
+    "out_res"
+   ]
+  },
+  "S": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  },
+  "W": {
+   "pins": 1,
+   "max_per_um": 0.5,
+   "mean_per_um": 0.0,
+   "layers": {
+    "M4": 1
+   },
+   "span": [
+    133.93,
+    133.93
+   ],
+   "groups": [
+    "ck"
+   ]
+  },
+  "E": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  }
+ },
+ "macros": [],
+ "clock_pin": {
+  "name": "ck",
+  "x": 0.042,
+  "y": 133.932,
+  "face": "W",
+  "layer": "M4"
+ }
+}

@@ -18,7 +18,7 @@
  "resets": [
   "rst_n"
  ],
- "recipe_sha256": "06a2ff86b350e25887d3cd7ca5221a2ccb77a240baecf7dba09165043d14bf85",
+ "recipe_sha256": "0f26c25de04066941262e51de43e4d97d40fd628bad4c95b8b3612972a404dd5",
  "period_ps": 833.0,
  "insertion_ps": 250.0,
  "insertion_tol_ps": 40.0,
@@ -28,7 +28,7 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "64cd9415f3",
+ "repo_rev": "6be7b45a41",
  "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
  "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
  "macros": [
@@ -36,5 +36,5 @@
   "ot_sram_1r1w_128x256_m1_r2c2 107.568 112.368 R0 {*u_lb*u_m}"
  ],
  "rtl_patch": null,
- "kit_hash": "5f3913681416b84d"
+ "kit_hash": "1e6d80fccda60bf8"
 }

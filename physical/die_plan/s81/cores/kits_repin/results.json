@@ -1332,6 +1332,474 @@
     "signoff": "NOT SIGNED"
    },
    "verdict": "NOT CLOSED: signoff NOT SIGNED; FAIL (face_guard FAIL (self-loop only)); physical: FAIL (cts_tt)"
+  },
+  {
+   "kit": "dsdv_svc_sx_hrow_c",
+   "module": "dsdv_svc_sx_hrow",
+   "kit_hash": "5259efa4293bac3d",
+   "host": "localhost",
+   "run_dir": "/srv/opentallas-scratch/claude/s81-cores-kits/r13/dsdv_svc_sx_hrow_c",
+   "outline_um": [
+    138.24,
+    164.16
+   ],
+   "pins": 3851,
+   "recorded": "2026-10-24 18:54 PDT",
+   "gates_built_in": [
+    "sdc_lint (pre-synth)",
+    "face_guard (post-synth)"
+   ],
+   "corner_note": "AGENTS 2026-10-24: timing closes at TT setup / FF hold; SS information only",
+   "functional": "kit-local rtl_patch (duplicate sticky fault flop): lockstep vs unmodified module PASS + mutant caught (results/lockstep_*.json)",
+   "author": "claude kits_repin",
+   "note": "r13: pre-repair clock balance to 250 (ck 208->269 at CTS, 2 cells), 16114 hold buffers at CTS; post-GRT est +0.5 -> -16.9 after hold repair -> RCX TT -50.12/233 (role[1] -> decode fanout tree -> g_a[7] k6 r[156]); FF +8.45; spread 63.7/59.9; insertion 267.9 PASS; DRV 1 slew; next r14: setup margin 40 + post-GRT setup repair",
+   "physical_verdict": "FAIL (cts_tt, tt_setup)",
+   "gates": {
+    "sdc_lint": "PASS",
+    "synth_cells": "NOT RUN",
+    "face_guard": {
+     "verdict": "PASS",
+     "bits": 3849,
+     "ok": 3849,
+     "fails": {},
+     "missing": 0,
+     "extra": 0,
+     "self_loop_only": false,
+     "self_loops": [],
+     "non_self_loop_fails": []
+    },
+    "unreg_pins": 0,
+    "grt_overflow": 0,
+    "route_drc": 0,
+    "pin_audit": {
+     "verdict": "PASS",
+     "ok": 3851,
+     "pins": 3851,
+     "missing": 0,
+     "wrong_layer": 0,
+     "wrong_place": 0,
+     "extra": 0
+    },
+    "sta": {
+     "tt": {
+      "corner": "TT",
+      "setup_wns_ps": -50.12,
+      "setup_tns_ps": -5344.09,
+      "setup_viol": 233,
+      "hold_wns_ps": 23.1,
+      "hold_tns_ps": 0.0,
+      "hold_viol": 0,
+      "ck_sinks": 7311,
+      "ck_min_ps": 231.3,
+      "ck_max_ps": 310.7,
+      "ck_spread_ps": 79.4
+     },
+     "ff": {
+      "corner": "FF",
+      "setup_wns_ps": 176.96,
+      "setup_tns_ps": 0.0,
+      "setup_viol": 0,
+      "hold_wns_ps": 8.45,
+      "hold_tns_ps": 0.0,
+      "hold_viol": 0,
+      "ck_sinks": 7311,
+      "ck_min_ps": 181.8,
+      "ck_max_ps": 256.3,
+      "ck_spread_ps": 74.5
+     },
+     "ss": "NOT RUN"
+    },
+    "signoff": {
+     "dir": "/srv/opentallas-scratch/claude/s81-cores-kits/r13/dsdv_svc_sx_hrow_c/signoff",
+     "verdict": "NOT SIGNED",
+     "reasons": [
+      "setup_tt: FAIL WNS -50.12 ps, 233 endpoints",
+      "drv: FAIL TT slew 1.0 cap 0.0"
+     ],
+     "setup_tt": {
+      "verdict": "FAIL",
+      "wns_ps": -50.12,
+      "tns_ps": -5344.09,
+      "violators": 233.0
+     },
+     "hold_ff": {
+      "verdict": "PASS",
+      "wns_ps": 8.45,
+      "tns_ps": 0.0,
+      "violators": 0.0,
+      "sdc_wns_ps": 8.45,
+      "overlay": "applied vclk in_min -40 out_min 0"
+     },
+     "summary": [
+      "SIGNOFF kr_dsdv_svc_sx_hrow_c: NOT SIGNED | TT setup -50.12 | FF hold 8.45 (sdc 8.45) | SS setup (info) None | spread TT/FF 63.73/59.87 | DRC 0 ant 0 | sdc_lint PASS face_guard PASS"
+     ]
+    }
+   },
+   "gate_verdicts": {
+    "sdc_lint": "PASS",
+    "face_guard": "PASS",
+    "unreg_pins": "PASS",
+    "route_drc": "PASS",
+    "grt_overflow": "PASS",
+    "pin_audit": "PASS",
+    "cts_tt": "FAIL",
+    "tt_setup": "FAIL",
+    "ff_hold": "PASS",
+    "ss_setup (info)": "NOT RUN",
+    "signoff": "NOT SIGNED"
+   },
+   "verdict": "NOT CLOSED: signoff NOT SIGNED; FAIL (cts_tt, tt_setup)"
+  },
+  {
+   "kit": "ot_dsrom_su_hcpost_lane_pr_c",
+   "module": "ot_dsrom_su_hcpost_lane_pr",
+   "kit_hash": "c501100cf62044d4",
+   "host": "localhost",
+   "run_dir": "/srv/opentallas-scratch/claude/s81-cores-kits/c1/ot_dsrom_su_hcpost_lane_pr_c",
+   "outline_um": [
+    114.48,
+    114.48
+   ],
+   "pins": 357,
+   "recorded": "2026-10-24 18:54 PDT",
+   "gates_built_in": [
+    "sdc_lint (pre-synth)",
+    "face_guard (post-synth)"
+   ],
+   "corner_note": "AGENTS 2026-10-24: timing closes at TT setup / FF hold; SS information only",
+   "functional": "RTL unchanged (closed kit's spec.json sources/params byte-identical copies): no miter needed",
+   "author": "claude kits_repin",
+   "note": "c1: FACE_GUARD FAIL top ot_dsrom_su_hcpost_lane_pr bits 355 ok 338 fails {'shared': 17} missing 0 extra 0",
+   "physical_verdict": "INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)",
+   "gates": {
+    "sdc_lint": "PASS",
+    "synth_cells": "NOT RUN",
+    "face_guard": {
+     "verdict": "FAIL",
+     "bits": 355,
+     "ok": 338,
+     "fails": {
+      "shared": 17
+     },
+     "missing": 0,
+     "extra": 0,
+     "self_loop_only": false,
+     "self_loops": [
+      "fault: flop u_core.fault$_DFF_PN0_ feeds back only into its own D (4 nets)"
+     ],
+     "non_self_loop_fails": [
+      "o[15]: net _28749_ has 2207 loads besides the port chain",
+      "o[14]: net _28749_ has 2207 loads besides the port chain",
+      "o[13]: net _28749_ has 2207 loads besides the port chain",
+      "o[12]: net _28749_ has 2207 loads besides the port chain",
+      "o[11]: net _28749_ has 2207 loads besides the port chain",
+      "o[10]: net _28749_ has 2207 loads besides the port chain",
+      "o[9]: net _28749_ has 2207 loads besides the port chain",
+      "o[8]: net _28749_ has 2207 loads besides the port chain",
+      "o[7]: net _28749_ has 2207 loads besides the port chain",
+      "o[6]: net _28749_ has 2207 loads besides the port chain",
+      "o[5]: net _28749_ has 2207 loads besides the port chain",
+      "o[4]: net _28749_ has 2207 loads besides the port chain",
+      "o[3]: net _28749_ has 2207 loads besides the port chain",
+      "o[2]: net _28749_ has 2207 loads besides the port chain",
+      "o[1]: net _28749_ has 2207 loads besides the port chain",
+      "o[0]: net _28749_ has 2207 loads besides the port chain"
+     ]
+    },
+    "unreg_pins": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "sta": {
+     "tt": "NOT RUN",
+     "ff": "NOT RUN",
+     "ss": "NOT RUN"
+    },
+    "signoff": "NOT RUN"
+   },
+   "gate_verdicts": {
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "unreg_pins": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "cts_tt": "NOT RUN",
+    "tt_setup": "NOT RUN",
+    "ff_hold": "NOT RUN",
+    "ss_setup (info)": "NOT RUN",
+    "signoff": "NOT RUN"
+   },
+   "verdict": "NOT CLOSED: signoff NOT RUN; FAIL (face_guard FAIL); physical: INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)"
+  },
+  {
+   "kit": "dsfd_su_t_rxsf_c",
+   "module": "dsfd_su_t_rxsf",
+   "kit_hash": "1d0918b602f9ff0b",
+   "host": "localhost",
+   "run_dir": "/srv/opentallas-scratch/claude/s81-cores-kits/c1/dsfd_su_t_rxsf_c",
+   "outline_um": [
+    140.4,
+    140.4
+   ],
+   "pins": 133,
+   "recorded": "2026-10-24 18:54 PDT",
+   "gates_built_in": [
+    "sdc_lint (pre-synth)",
+    "face_guard (post-synth)"
+   ],
+   "corner_note": "AGENTS 2026-10-24: timing closes at TT setup / FF hold; SS information only",
+   "functional": "RTL unchanged (closed kit's spec.json sources/params byte-identical copies): no miter needed",
+   "author": "claude kits_repin",
+   "note": "c1: ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "physical_verdict": "INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)",
+   "gates": {
+    "sdc_lint": "PASS",
+    "synth_cells": "NOT RUN",
+    "face_guard": "NOT RUN",
+    "unreg_pins": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "sta": {
+     "tt": "NOT RUN",
+     "ff": "NOT RUN",
+     "ss": "NOT RUN"
+    },
+    "signoff": "NOT RUN"
+   },
+   "gate_verdicts": {
+    "sdc_lint": "PASS",
+    "face_guard": "NOT RUN",
+    "unreg_pins": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "cts_tt": "NOT RUN",
+    "tt_setup": "NOT RUN",
+    "ff_hold": "NOT RUN",
+    "ss_setup (info)": "NOT RUN",
+    "signoff": "NOT RUN"
+   },
+   "verdict": "NOT CLOSED: signoff NOT RUN; FAIL (face_guard NOT RUN); physical: INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)"
+  },
+  {
+   "kit": "dsfd_su_t_rxsb_c",
+   "module": "dsfd_su_t_rxsb",
+   "kit_hash": "9762fe44892e1dc8",
+   "host": "localhost",
+   "run_dir": "/srv/opentallas-scratch/claude/s81-cores-kits/c1/dsfd_su_t_rxsb_c",
+   "outline_um": [
+    140.4,
+    140.4
+   ],
+   "pins": 134,
+   "recorded": "2026-10-24 18:54 PDT",
+   "gates_built_in": [
+    "sdc_lint (pre-synth)",
+    "face_guard (post-synth)"
+   ],
+   "corner_note": "AGENTS 2026-10-24: timing closes at TT setup / FF hold; SS information only",
+   "functional": "RTL unchanged (closed kit's spec.json sources/params byte-identical copies): no miter needed",
+   "author": "claude kits_repin",
+   "note": "c1: FACE_GUARD FAIL top dsfd_su_t_rxsb bits 132 ok 131 fails {'shared': 1} missing 0 extra 0",
+   "physical_verdict": "INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)",
+   "gates": {
+    "sdc_lint": "PASS",
+    "synth_cells": "NOT RUN",
+    "face_guard": {
+     "verdict": "FAIL",
+     "bits": 132,
+     "ok": 131,
+     "fails": {
+      "shared": 1
+     },
+     "missing": 0,
+     "extra": 0,
+     "self_loop_only": false,
+     "self_loops": [],
+     "non_self_loop_fails": [
+      "o_r[31]: net _042417_ has 9267 loads besides the port chain"
+     ]
+    },
+    "unreg_pins": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "sta": {
+     "tt": "NOT RUN",
+     "ff": "NOT RUN",
+     "ss": "NOT RUN"
+    },
+    "signoff": "NOT RUN"
+   },
+   "gate_verdicts": {
+    "sdc_lint": "PASS",
+    "face_guard": "FAIL",
+    "unreg_pins": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "cts_tt": "NOT RUN",
+    "tt_setup": "NOT RUN",
+    "ff_hold": "NOT RUN",
+    "ss_setup (info)": "NOT RUN",
+    "signoff": "NOT RUN"
+   },
+   "verdict": "NOT CLOSED: signoff NOT RUN; FAIL (face_guard FAIL); physical: INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)"
+  },
+  {
+   "kit": "ot_s81sl_vsw_c",
+   "module": "ot_s81sl_vsw",
+   "kit_hash": "5f3913681416b84d",
+   "host": "localhost",
+   "run_dir": "/srv/opentallas-scratch/claude/s81-cores-kits/c1/ot_s81sl_vsw_c",
+   "outline_um": [
+    224.64,
+    224.64
+   ],
+   "pins": 389,
+   "recorded": "2026-10-24 18:54 PDT",
+   "gates_built_in": [
+    "sdc_lint (pre-synth)",
+    "face_guard (post-synth)"
+   ],
+   "corner_note": "AGENTS 2026-10-24: timing closes at TT setup / FF hold; SS information only",
+   "functional": "RTL unchanged (closed kit's spec.json sources/params byte-identical copies): no miter needed",
+   "author": "claude kits_repin",
+   "note": "c1: ERROR: TCL interpreter returned an error: Source files actually used in the design:",
+   "physical_verdict": "INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)",
+   "gates": {
+    "sdc_lint": "PASS",
+    "synth_cells": "NOT RUN",
+    "face_guard": "NOT RUN",
+    "unreg_pins": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "sta": {
+     "tt": "NOT RUN",
+     "ff": "NOT RUN",
+     "ss": "NOT RUN"
+    },
+    "signoff": "NOT RUN"
+   },
+   "gate_verdicts": {
+    "sdc_lint": "PASS",
+    "face_guard": "NOT RUN",
+    "unreg_pins": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "cts_tt": "NOT RUN",
+    "tt_setup": "NOT RUN",
+    "ff_hold": "NOT RUN",
+    "ss_setup (info)": "NOT RUN",
+    "signoff": "NOT RUN"
+   },
+   "verdict": "NOT CLOSED: signoff NOT RUN; FAIL (face_guard NOT RUN); physical: INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)"
+  },
+  {
+   "kit": "ot_s81sl_ve_c",
+   "module": "ot_s81sl_ve",
+   "kit_hash": "1d6f9f2832dd90e3",
+   "host": "localhost",
+   "run_dir": "/srv/opentallas-scratch/claude/s81-cores-kits/c1/ot_s81sl_ve_c",
+   "outline_um": [
+    345.6,
+    345.6
+   ],
+   "pins": 1295,
+   "recorded": "2026-10-24 18:54 PDT",
+   "gates_built_in": [
+    "sdc_lint (pre-synth)",
+    "face_guard (post-synth)"
+   ],
+   "corner_note": "AGENTS 2026-10-24: timing closes at TT setup / FF hold; SS information only",
+   "functional": "RTL unchanged (closed kit's spec.json sources/params byte-identical copies): no miter needed",
+   "author": "claude kits_repin",
+   "note": "c1: ERROR: Design elaboration failed; see full log for details",
+   "physical_verdict": "INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)",
+   "gates": {
+    "sdc_lint": "PASS",
+    "synth_cells": "NOT RUN",
+    "face_guard": "NOT RUN",
+    "unreg_pins": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "sta": {
+     "tt": "NOT RUN",
+     "ff": "NOT RUN",
+     "ss": "NOT RUN"
+    },
+    "signoff": "NOT RUN"
+   },
+   "gate_verdicts": {
+    "sdc_lint": "PASS",
+    "face_guard": "NOT RUN",
+    "unreg_pins": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "cts_tt": "NOT RUN",
+    "tt_setup": "NOT RUN",
+    "ff_hold": "NOT RUN",
+    "ss_setup (info)": "NOT RUN",
+    "signoff": "NOT RUN"
+   },
+   "verdict": "NOT CLOSED: signoff NOT RUN; FAIL (face_guard NOT RUN); physical: INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)"
+  },
+  {
+   "kit": "ot_s81sl_vn_c",
+   "module": "ot_s81sl_vn",
+   "kit_hash": "38195b896cecd261",
+   "host": "localhost",
+   "run_dir": "/srv/opentallas-scratch/claude/s81-cores-kits/c1/ot_s81sl_vn_c",
+   "outline_um": [
+    356.4,
+    356.4
+   ],
+   "pins": 1241,
+   "recorded": "2026-10-24 18:54 PDT",
+   "gates_built_in": [
+    "sdc_lint (pre-synth)",
+    "face_guard (post-synth)"
+   ],
+   "corner_note": "AGENTS 2026-10-24: timing closes at TT setup / FF hold; SS information only",
+   "functional": "RTL unchanged (closed kit's spec.json sources/params byte-identical copies): no miter needed",
+   "author": "claude kits_repin",
+   "note": "c1: ",
+   "physical_verdict": "INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)",
+   "gates": {
+    "sdc_lint": "PASS",
+    "synth_cells": "NOT RUN",
+    "face_guard": "NOT RUN",
+    "unreg_pins": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "sta": {
+     "tt": "NOT RUN",
+     "ff": "NOT RUN",
+     "ss": "NOT RUN"
+    },
+    "signoff": "NOT RUN"
+   },
+   "gate_verdicts": {
+    "sdc_lint": "PASS",
+    "face_guard": "NOT RUN",
+    "unreg_pins": "NOT RUN",
+    "route_drc": "NOT RUN",
+    "grt_overflow": "NOT RUN",
+    "pin_audit": "NOT RUN",
+    "cts_tt": "NOT RUN",
+    "tt_setup": "NOT RUN",
+    "ff_hold": "NOT RUN",
+    "ss_setup (info)": "NOT RUN",
+    "signoff": "NOT RUN"
+   },
+   "verdict": "NOT CLOSED: signoff NOT RUN; FAIL (face_guard NOT RUN); physical: INCOMPLETE (unreg_pins, route_drc, grt_overflow, pin_audit, cts_tt, tt_setup, ff_hold NOT RUN)"
   }
  ],
  "vs_pathfinding": {

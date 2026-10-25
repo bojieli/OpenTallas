@@ -1,0 +1,277 @@
+{
+ "name": "s81sl_ve_r5",
+ "top": "ot_s81sl_ve",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "r_v",
+   "r_c",
+   "r_h",
+   "r_k",
+   "r_w",
+   "p_v",
+   "p_c",
+   "p_hh",
+   "p_kk",
+   "p_dd"
+  ],
+  "E": [
+   "a_v",
+   "a_c",
+   "a_h",
+   "a_val",
+   "a_g",
+   "o_v",
+   "o_c",
+   "o_y"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "fault"
+  ],
+  "N": []
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-GUVE 10-20 (tree S81.STA.OWN.3.1): r4 gate 055315 refused at the pre-floorplan native census (4 roots > 32: three fmul s2_top[3] 33 loads + normal hidden-bit decode 34). r5 = r4 RTL + opt-in OT_S81_VE_LOADSAFE5 (73b3a517a): a fifth kept same-edge s2_top copy for the exponent/overflow select, hidden-bit low/high split 9/15 (was 12/12). +1 FF per local fmul, zero added cycles, no arithmetic change. Full actual-source native census (unit2004335) PASS max 32, 0 violations.",
+ "job": {
+  "owner": "Claude:S81-GUVE",
+  "branch": "claude/s81-guve-ve5-1020",
+  "tag": "s81sl_ve_r5",
+  "purpose": "S81.STA.OWN.3.1: native-32 ve r5 (VE5 opt-in) to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "results/rtl/s81_ve4_1020",
+   "results/rtl/s81_ve5_1020",
+   "results/rtl/s81_ve_loadsafe5_1020",
+   "rtl/dsrom_sys/engram/mix",
+   "rtl/dsrom_sys/s81_dv/eng",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/s81_dv/ve_golden.py",
+   "tools/s81_slice/ve_bench.sh",
+   "tools/s81_slice/ve_miter.sh"
+  ],
+  "benches": [
+   {
+    "name": "slve_exact",
+    "cmd": "OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5 bash tools/s81_slice/ve_bench.sh {RUN}/slve_exact 0 0",
+    "expect": "pass",
+    "pass_regex": "^PASS ve MUT=0 GAP=0$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slve_g2s5",
+    "cmd": "OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5 bash tools/s81_slice/ve_bench.sh {RUN}/slve_g2s5 0 2 5",
+    "expect": "pass",
+    "pass_regex": "^PASS ve MUT=0 GAP=2$",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slve_mut1",
+    "cmd": "OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5 bash tools/s81_slice/ve_bench.sh {RUN}/slve_mut1 1 0",
+    "expect": "fail",
+    "fail_regex": "MUTANT 1 REJECTED mismatches=[1-9]",
+    "fail_witness": "results/rtl/s81_ve5_1020/witness_slve_mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slve_mut2",
+    "cmd": "OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5 bash tools/s81_slice/ve_bench.sh {RUN}/slve_mut2 2 1 1",
+    "expect": "fail",
+    "fail_regex": "MUTANT 2 REJECTED mismatches=[1-9]",
+    "fail_witness": "results/rtl/s81_ve5_1020/witness_slve_mut2.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "slve_mut3",
+    "cmd": "OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5 bash tools/s81_slice/ve_bench.sh {RUN}/slve_mut3 3 0",
+    "expect": "fail",
+    "fail_regex": "MUTANT 3 REJECTED mismatches=[1-9]",
+    "fail_witness": "results/rtl/s81_ve5_1020/witness_slve_mut3.log",
+    "threads": 4,
+    "peak_ram_gb": 6
+   },
+   {
+    "name": "ve_miter_s7",
+    "cmd": "OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5 bash tools/s81_slice/ve_miter.sh {RUN}/ve_miter_s7 0 7 0",
+    "expect": "pass",
+    "pass_regex": "^PASS ve miter MUT=0 SEED=7$",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "ve_miter_mut1",
+    "cmd": "OT_VE_DEFS=-DOT_S81_VE_LOADSAFE5 bash tools/s81_slice/ve_miter.sh {RUN}/ve_miter_mut1 1 7 0",
+    "expect": "fail",
+    "fail_regex": "MUTANT 1 REJECTED",
+    "fail_witness": "results/rtl/s81_ve5_1020/witness_miter_m1.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_ve_r5/views",
+  "record_to": "results/rtl/ref_tile/s81sl_ve_r5"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (S81U-MIX): every input lands in a pin flop (*_q), every output is a flop."
+ },
+ "util": 0.5,
+ "std_area_um2": 58000,
+ "pin_ranges": {
+  "r_v": [
+   6.48,
+   8.844
+  ],
+  "r_c": [
+   8.844,
+   11.748
+  ],
+  "r_h": [
+   11.748,
+   82.724
+  ],
+  "r_k": [
+   82.724,
+   153.701
+  ],
+  "r_w": [
+   153.701,
+   224.677
+  ],
+  "p_v": [
+   224.677,
+   227.041
+  ],
+  "p_c": [
+   227.041,
+   229.945
+  ],
+  "p_hh": [
+   229.945,
+   249.057
+  ],
+  "p_kk": [
+   249.057,
+   268.168
+  ],
+  "p_dd": [
+   268.168,
+   287.28
+  ],
+  "a_v": [
+   6.48,
+   8.633
+  ],
+  "a_c": [
+   8.633,
+   11.118
+  ],
+  "a_h": [
+   11.118,
+   97.495
+  ],
+  "a_val": [
+   97.495,
+   183.873
+  ],
+  "a_g": [
+   183.873,
+   196.265
+  ],
+  "o_v": [
+   196.265,
+   198.418
+  ],
+  "o_c": [
+   198.418,
+   200.903
+  ],
+  "o_y": [
+   200.903,
+   287.28
+  ],
+  "fault": [
+   6.48,
+   287.28
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "note": "r5 VE5 opt-in RTL successor of s81sl_ve_r4 (r4 gate refused: native census 4 roots > 32, max 34); new kit name."
+ },
+ "defines": [
+  "OT_S81_VE_LOADSAFE5"
+ ],
+ "source": "git f51f4ec42:physical/ref_tile/s81sl_ve_r5/spec.json + kit.env VERILOG_DEFINES -DOT_S81_VE_LOADSAFE5 (closed ve r5 view; RTL files unchanged at HEAD)"
+}

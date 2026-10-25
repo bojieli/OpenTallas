@@ -1,0 +1,22 @@
+{
+ "name": "eng_h0",
+ "top": "dsdv_eng_rr_h0",
+ "sources": [
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer.sv",
+  "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "macros": [],
+ "defines": [
+  "OT_ENGRAM_CRCMAT",
+  "OT_S81ENG_RR_N32",
+  "OT_S81ENG_RR_MUL_N32"
+ ],
+ "half_cycle_inputs": [
+  "in_w"
+ ],
+ "source": "physical/die_plan/s81/cores/eng/cores_eng.json (CORE-S81-ENG split, GR8-reviewed geometry)"
+}

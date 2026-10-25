@@ -1,0 +1,10 @@
+{
+ "kit": "dsdv_eng_rr_e_c",
+ "kit_hash": "63514695ead5d578",
+ "date": "2026-10-24T19:10-07:00",
+ "reviewer": "claude kits_repin (Read the PNG)",
+ "verdict": "PASS",
+ "png": "results/geom_review/dsdv_eng_rr_e_c_fp.png",
+ "notes": "345.6x466.56; 15 macros at cores_eng.json sites (8 ROM 2x4 W columns, 3 SRAM 64x512 + 512x128 + 3x 128x256 stacked abutted on the E half, all inside the core, halo 4.32); N vi/vo buses 1157 pins at 4.5/um, S hx_res/hx_w 1220 at 4.5/um (H crossing, straight drops), W pci/rco/cfg 321 at 1/um, ck/rst_n W bottom; E pin-free. Same geometry as GR8 review results/geom_review/dsdv_eng_rr_e*. Logic channel x 55-86 and 125-151 between macro columns plus the S strip y<43 to hx pins.",
+ "flow": "canonical (+setup margin 40 post r13)"
+}

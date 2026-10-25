@@ -11,6 +11,7 @@
  "pins_file": "inputs/core_pins/ot_s81sl_vs_lfp.json",
  "pins_sha256": "894d1075fb2934a99286663781e1e51e1a66148c371da77bb457786d13246625",
  "pins": 2859,
+ "pins_snapped_to_lef_edge": 0,
  "clocks": [
   "clk"
  ],
@@ -27,10 +28,10 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "fa182ae8dc",
+ "repo_rev": "6be7b45a41",
  "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
  "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
  "macros": [],
  "rtl_patch": null,
- "kit_hash": "14e6c3edbca1d5f4"
+ "kit_hash": "dd9422568e957b29"
 }

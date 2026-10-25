@@ -11,6 +11,7 @@
  "pins_file": "inputs/core_pins/ot_s81sl_vq_lfp.json",
  "pins_sha256": "507be4265ba6a87350ec6aa3d4903f745a5dd46642b81259f1497d89db7a0ac5",
  "pins": 830,
+ "pins_snapped_to_lef_edge": 0,
  "clocks": [
   "clk"
  ],
@@ -27,7 +28,7 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "64cd9415f3",
+ "repo_rev": "6be7b45a41",
  "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
  "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
  "macros": [
@@ -38,5 +39,5 @@
   "why": "COORD ruling 10-24 (no waiver for the self-loop fault flop): kit-local duplicate sticky flop. fault_q (internal, keep) carries the sticky state; the port flop fault takes the SAME next state (fault_q | events) from fault_q, so its Q drives only the port (face_guard). Same reset, same edge: fault == fault_q every cycle; 0 added cycles; ports unchanged.",
   "sha256": "2d0b645098a9fb325a8059f05fb5b5f2982b0a57eda65891eae03d261c33adfd"
  },
- "kit_hash": "c5a42dbefb3808dc"
+ "kit_hash": "b0c8dd482be9ec5d"
 }

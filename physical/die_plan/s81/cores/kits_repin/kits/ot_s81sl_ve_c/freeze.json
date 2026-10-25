@@ -7,7 +7,7 @@
   345.6
  ],
  "ref_tile": "physical/ref_tile/s81sl_ve",
- "spec_sha256": "4dd88233ade2d6a593e8f6b9b9f555ca5cb9b9cab852642de4c3a07d7782582a",
+ "spec_sha256": "c0c1852c12f72636c6ebf04449ce5a5ff1e17bd2a5899bdda66292638ffac1d2",
  "pins_file": "inputs/core_pins/ot_s81sl_ve.json",
  "pins_sha256": "2b505165a2c9a9f5b926c927fd76de03dfdb82199f2c48c2b0f61c12cfd2ca03",
  "pins": 1295,
@@ -18,7 +18,7 @@
  "resets": [
   "rst_n"
  ],
- "recipe_sha256": "36be6542883034c94d1bba6693cc2b31d34f74a24c013fb64a230a9e2355d157",
+ "recipe_sha256": "f942d7f51e7db55f290016b20f1afb7035059dd62f3a025c3954f9dfe52a9bb5",
  "period_ps": 833.0,
  "insertion_ps": 250.0,
  "insertion_tol_ps": 40.0,
@@ -28,10 +28,10 @@
   "sdc_lint (pre-synth)",
   "face_guard (post-synth)"
  ],
- "repo_rev": "64cd9415f3",
+ "repo_rev": "6be7b45a41",
  "sdc_lint_sha256": "2f368ddf908e928163d83b3b0c9cfc2e52e8faa091c0139f7daf3c1993952fb4",
  "face_guard_sha256": "8c180b2412d3c7703119619d07a3b75ad43d6410e6ed138de8d940f2353100a7",
  "macros": [],
  "rtl_patch": null,
- "kit_hash": "1d6f9f2832dd90e3"
+ "kit_hash": "0a62fbabc0af0d71"
 }
