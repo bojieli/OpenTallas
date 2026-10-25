@@ -1,0 +1,5 @@
+Q/K/V payloads extracted from actual RTL `S0DD` observations in the existing QK component run, ordered by their emitted addresses. The fixture is used only for comparison. `q.hex` has 512 FP32 bit patterns (four 128-element heads); `k.hex` and `v.hex` have 128 each. All 768 compare exactly; no duplicate or missing address. These files are component output evidence, not a whole token or physical signoff claim.
+
+The 548-bit observed word has valid bit 547, kind bits 546:545, lane mask 544:537, eight 24-bit addresses at `345+24*lane`, and eight FP32 values at `89+32*lane`. Kind 0 is Q, 1 is K, 2 is V. The low 89 bits carry other fields. Each hex file line is one 32-bit word, address zero first.
+
+See `summary.json` for source paths and observed cycles, and `extract_actual_qk.py` for the exact extraction and complete comparison. The original source run uses real L0 QK operands at position 8191 and reports QK PASS 7/7, 768/768 ISA reference words. Actual Q emits at cycles 1912..2025, K at 1947..2034, V at 1548..1563. The input QKV projection is fixture-landed; A0/ROM matvec is outside this selected component.

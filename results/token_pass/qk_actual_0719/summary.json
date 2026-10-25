@@ -1,0 +1,38 @@
+{
+  "source_log": "/srv/opentallas-scratch2/claude/codex-qc-crom-cal-1025/representative/qk/run_qk_m0.log",
+  "source_lowering": "/srv/opentallas-scratch2/claude/codex-qc-crom-cal-1025/representative/qk/lowering_qk.json",
+  "source_fixture": "/srv/opentallas-scratch2/claude/codex-qc-crom-cal-1025/stgdie/fx/L0_qk.npz",
+  "payload_source": "actual RTL S0DD output; golden used only for comparison",
+  "packing": "valid[547];kind[546:545];mask[544:537];addr[lane]bits345+24*lane+:24;fp32[lane]bits89+32*lane+:32;low89bitsunusedmetadata",
+  "order": "q.hex indexes0..511 by actual kind0 globalQ address; four128wide heads",
+  "beats": 96,
+  "unique_elements": 768,
+  "roles": {
+    "q": {
+      "actual_words": 512,
+      "gold_words": 512,
+      "mismatches": 0,
+      "first_bad": [],
+      "first_cycle": 1912,
+      "last_cycle": 2025
+    },
+    "k": {
+      "actual_words": 128,
+      "gold_words": 128,
+      "mismatches": 0,
+      "first_bad": [],
+      "first_cycle": 1947,
+      "last_cycle": 2034
+    },
+    "v": {
+      "actual_words": 128,
+      "gold_words": 128,
+      "mismatches": 0,
+      "first_bad": [],
+      "first_cycle": 1548,
+      "last_cycle": 1563
+    }
+  },
+  "errors": [],
+  "verdict": "PASS"
+}
