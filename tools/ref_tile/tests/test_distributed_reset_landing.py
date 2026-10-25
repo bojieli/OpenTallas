@@ -146,3 +146,11 @@ puts PHYSICAL_DEPTH_PASS
     p=subprocess.run(['tclsh'],input=script,text=True,capture_output=True)
     assert p.returncode==0 and not p.stderr,p.stderr
     assert 'PHYSICAL_DEPTH_PASS' in p.stdout
+
+
+def test_release_clock_stays_exact_833_without_custom_frequency_waiver():
+    import clock_entry_constraints as C
+    assert C.signoff_period(dict(kind='cluster',clock='cts',route=dict(period_ps=770,signoff_period_ps=833)))==833.0
+    try:C.signoff_period(dict(kind='cluster',clock='cts',route=dict(period_ps=770,signoff_period_ps=1000)))
+    except ValueError:pass
+    else:raise AssertionError('arbitrary clock override admitted')
