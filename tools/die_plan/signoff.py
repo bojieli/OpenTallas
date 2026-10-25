@@ -78,6 +78,10 @@ PERIOD_PS = 833.0
 UNC_SETUP_PS, UNC_HOLD_PS = 60.0, 25.0
 INSERTION_PS, INSERTION_TOL_PS = 250.0, 40.0
 PAIR_SKEW_MAX_PS = 80.0
+# IO virtual-clock reference: 'sdc' (kit SDC value), 'pin-flop-mean' (FF only, opt-in with a contract), 'rebind'
+# (FLOW 10-25, default for kits with a per-corner insertion binding: TT and FF each rebound to their routed pin-register
+# mean, clock check FAILs when a mean is more than the tolerance from the bound value)
+VCLK_MODES = ("sdc", "pin-flop-mean", "rebind")
 PAIR_VERIFY_TOL_PS = 1.0             # credited path-end skew vs CK-arrival skew - CPPR (integrity check)
 PAIR_CREDIT_MAX = 5000                 # exact-credit path searches per check before the worst becomes a bound
 SPREAD_MAX_PS = PAIR_SKEW_MAX_PS  # legacy record field; spread is information only
@@ -420,9 +424,12 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
     else:
         par, src = (f"source {PLAT}/setRC.tcl\nextract_parasitics -ext_model_file {PLAT}/rcx_patterns.rules\n"
                     "write_spef /out/rcx.spef\nread_spef /out/rcx.spef"), "rcx"
-    if ff_vclk not in ("sdc", "pin-flop-mean"):
+    if ff_vclk not in VCLK_MODES:
         raise ValueError("unsupported FF virtual-clock reference")
-    t = SESSION_TCL.replace("@FF_VCLK@", FF_VCLK_TCL if corner == "ff" and ff_vclk == "pin-flop-mean" else "")
+    # FLOW 10-25 'rebind' (ruling 9.7 / 5e): EVERY sign-off corner times its IO paths against that corner's routed
+    # RCX pin-register mean; the clock check bounds it against the kit's per-corner bound insertion
+    on = (corner == "ff" and ff_vclk == "pin-flop-mean") or (corner in ("tt", "ff") and ff_vclk == "rebind")
+    t = SESSION_TCL.replace("@FF_VCLK@", FF_VCLK_TCL if on else "")
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@FANOUT_MAX@", str(int(fanout_max))),
@@ -736,7 +743,15 @@ def evaluate(rec, insertion_target=None):
         ch[name] = dict(verdict=verdict, **kw)
 
     # setup TT (the sign-off corner, AGENTS.md 2026-10-24)
-    if ok_corner("tt") and C["tt"].get("sdc_wns_max") is not None:
+    requested = rec.get("policy", {}).get("ff_vclk", "sdc")
+    if requested == "rebind" and ok_corner("tt") and C["tt"].get("std_wns_max") is not None:
+        w = C["tt"]["std_wns_max"]
+        ref = C["tt"].get("ff_vclk_reference") or ""
+        v = ("PASS" if w >= 0 else "FAIL") if ref.startswith("applied mode pin_flop_mean ") else "NOT RUN"
+        put("setup_tt", v, wns_ps=w, tns_ps=C["tt"].get("std_tns_max"), violators=C["tt"].get("std_nviol_max"),
+            sdc_wns_ps=C["tt"].get("sdc_wns_max"), vclk_reference=ref,
+            reason=None if v != "NOT RUN" else "TT vclk rebind to the routed pin-register mean unavailable")
+    elif ok_corner("tt") and C["tt"].get("sdc_wns_max") is not None:
         w = C["tt"]["sdc_wns_max"]
         put("setup_tt", "PASS" if w >= 0 else "FAIL", wns_ps=w, tns_ps=C["tt"].get("sdc_tns_max"),
             violators=C["tt"].get("sdc_nviol_max"))
@@ -750,7 +765,6 @@ def evaluate(rec, insertion_target=None):
         # STD_* is printed even when the overlay could not be applied. In that
         # case it is only another raw-SDC measurement, not boundary-hold proof.
         reference = C["ff"].get("ff_vclk_reference")
-        requested = rec.get("policy", {}).get("ff_vclk", "sdc")
         reference_ok = (requested == "sdc" or (reference or "").startswith("applied mode pin_flop_mean "))
         if not ov.startswith("applied ") or not reference_ok:
             v = "NOT RUN"
@@ -815,14 +829,22 @@ def evaluate(rec, insertion_target=None):
                                    f"{value['verify_ps']:.2f} ps > {PAIR_VERIFY_TOL_PS:g} (measurement suspect)")
             if (C[c].get("ck_errors") or 0) > 0:
                 why.append(f"{c.upper()}: {int(C[c]['ck_errors'])} register clock pins without a unique clock arrival")
+        bound = dict(rec.get("policy", {}).get("insertion_bound") or {})
         if insertion_target is not None:
-            pf = C["tt"].get("insertion_pinflops")
-            if pf and abs(pf["mean"] - insertion_target) > INSERTION_TOL_PS:
-                why.append(f"TT pin-flop insertion {pf['mean']:.1f} ps not within {insertion_target:g} +- "
-                           f"{INSERTION_TOL_PS:g}")
+            bound["tt"] = insertion_target
+        tol = float(bound.get("tol", INSERTION_TOL_PS))
+        for c in ("tt", "ff"):          # FLOW 10-25: the routed I of each corner within tol of the bound I
+            if bound.get(c) is None:
+                continue
+            pf = C[c].get("insertion_pinflops")
+            if not pf:
+                continue
+            if abs(pf["mean"] - float(bound[c])) > tol:
+                why.append(f"{c.upper()} pin-flop insertion {pf['mean']:.1f} ps not within bound {float(bound[c]):g} +- "
+                           f"{tol:g}")
         put("clock", "FAIL" if why else "PASS", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
             by_corner=sp, problems=why,
-            insertion_target_ps=insertion_target)
+            insertion_target_ps=insertion_target, insertion_bound=bound or None)
     else:
         put("clock", "NOT RUN")
     # macro liberty coverage (part of setup/hold validity)
@@ -896,14 +918,25 @@ def cmd_run(a):
         raise SystemExit("signoff: no SDC (kit constraint.sdc / 6_final.sdc / --sdc)")
     out = Path(a.out).resolve()
     core_contract = hard_core_latency_contract(disc)
+    bound = None
     if core_contract:
         # COORD ruling 10-24: a hard core carries a core-latency contract -- its measured insertion is published
         # (core.json / the ETM max_clock_tree_path) and the parent tap balance subtracts it (early tap); the plan
         # 250 +- 40 target applies at the PARTITION tap, not inside the core.  Spread / unique-arrival still gate.
+        # (ROOT-MERGE2 10-25: no FLOW per-corner insertion binding inside a hard-core contract kit either.)
         if a.insertion_target is not None:
             raise SystemExit("signoff: --insertion-target conflicts with the kit's hard-core latency contract")
-    elif a.insertion_target is None and disc.get("sdc_lint_ctx"):     # die-plan kit: the plan common latency
-        a.insertion_target = float(json.loads(Path(disc["sdc_lint_ctx"]).read_text())["insertion_ps"])
+    elif disc.get("sdc_lint_ctx"):                                  # die-plan kit: the bound (plan) insertion
+        lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text())
+        if a.insertion_target is None:
+            a.insertion_target = float(lctx["insertion_ps"])
+        if lctx.get("insertion_ff_ps") is not None:                 # FLOW 10-25 per-corner binding
+            bound = dict(tt=float(lctx["insertion_ps"]), ff=float(lctx["insertion_ff_ps"]),
+                         tol=float(lctx.get("insertion_tol_ps", INSERTION_TOL_PS)), source=disc["sdc_lint_ctx"])
+    if a.ff_vclk == "auto":
+        a.ff_vclk = "rebind" if bound else "sdc"
+        if bound:
+            a.ff_vclk_contract = a.ff_vclk_contract or f"kit per-corner insertion binding {bound['source']}"
     out.mkdir(parents=True, exist_ok=True)
     corners = [c for c in a.corners.split(",") if c]
     rec = dict(schema=SCHEMA, name=a.name or disc["design"] or base.name, generated=datetime.datetime.now()
@@ -911,7 +944,7 @@ def cmd_run(a):
                policy=dict(period_ps=PERIOD_PS, uncertainty_setup_ps=UNC_SETUP_PS, uncertainty_hold_ps=UNC_HOLD_PS,
                            spread_max_ps=SPREAD_MAX_PS, spread_corners=list(SPREAD_CORNERS),
                            insertion_tol_ps=INSERTION_TOL_PS, fanout_max=FANOUT_MAX,
-                           ff_vclk=a.ff_vclk, ff_vclk_contract=a.ff_vclk_contract,
+                           ff_vclk=a.ff_vclk, ff_vclk_contract=a.ff_vclk_contract, insertion_bound=bound,
                            hold_overlay="set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
                            derate="none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); "
                                   "ocv5_* = flat late 1.05 / early 0.95, information only",
@@ -976,15 +1009,16 @@ def main(argv=None):
     r.add_argument("--image", default=IMAGE)
     r.add_argument("--docker", default=os.environ.get("SIGNOFF_DOCKER", "sudo docker"))
     r.add_argument("--insertion-target", type=float)
-    r.add_argument("--ff-vclk", choices=("sdc", "pin-flop-mean"), default="sdc",
-                   help="opt-in measured FF boundary clock reference; shifts shared IO virtual clock only")
+    r.add_argument("--ff-vclk", choices=("auto",) + VCLK_MODES, default="auto",
+                   help="IO virtual-clock reference: auto = rebind when the kit carries a per-corner insertion "
+                        "binding (FLOW 10-25), else sdc; pin-flop-mean = opt-in FF-only measured reference")
     r.add_argument("--ff-vclk-contract", help="source-pinned measured core clock contract authorizing the FF reference")
     r.add_argument("--dry", action="store_true")
     v = sub.add_parser("verdict")
     v.add_argument("record")
     v.add_argument("--insertion-target", type=float)
     a = ap.parse_args(argv)
-    if a.cmd == "run" and a.ff_vclk != "sdc" and not (a.ff_vclk_contract or "").strip():
+    if a.cmd == "run" and a.ff_vclk == "pin-flop-mean" and not (a.ff_vclk_contract or "").strip():
         ap.error("--ff-vclk pin-flop-mean requires --ff-vclk-contract (measured core clock contract)")
     return cmd_run(a) if a.cmd == "run" else cmd_verdict(a)
 

@@ -23,5 +23,9 @@
   "sigmax": "M7",
   "face_flops": true,
   "source": "KV-CORES 10-25: macro-composed r2 (4 x ot_nhb_zh + ot_qkh_recip_leaf hard children, --hard-children qkd_ahub_hard_children.json); signals <= M7 (v3.9)"
+ },
+ "qkd_kvs_pc*": {
+  "sigmax": "M7",
+  "source": "KV-CORES/PV-PC 10-25: 10-24 kvs_pc / pc_h_head_p M5 runs GRT overflow 10284 / 4324 (4396 / 3278 pins, N/S M5 + W M4 faces); M7 inside the core as kv3_pv_pair (M7 GRT 0) and head_eighth"
  }
 }

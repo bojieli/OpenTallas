@@ -293,8 +293,27 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
             cells.append(f"  {FLOP} {c} (.D({src}), .QN({q}));")
             nets.append(q)
             place.append((c, *rl["xy"]))
-        for j, (nm, _, _) in enumerate(reset_outs):
+        souts = [o for o in reset_outs if o[0].startswith("start_o_")]
+        routs = [o for o in reset_outs if not o[0].startswith("start_o_")]
+        for j, (nm, _, _) in enumerate(routs):
             cells.append(f"  assign {nm} = pr_reset_rst_n_t{tree['n_clock_taps'] + j};")
+        if souts:                                   # decision 13c START: run relays mirror the reset relays
+            prev = "start_i"
+            for j in range(RT.entry_stages(tree)):
+                c, q = f"pr_run_entry_{j}", f"pr_run_entry_q_{j}"
+                cells.append(f"  {FLOP} {c} (.D({prev}), .QN({q}));")
+                nets.append(q)
+                place.append((c, *tree["start_in"]))
+                prev = q
+            rename = {"rst_root_n": prev}
+            for rl in tree["relays"]:
+                c, q = "pr_run_" + rl["name"], "pr_run_" + rl["q"]
+                src = rename.get(rl["d"], "pr_run_" + rl["d"])
+                cells.append(f"  {FLOP} {c} (.D({src}), .QN({q}));")
+                nets.append(q)
+                place.append((c, *rl["xy"]))
+            for j, (nm, _, _) in enumerate(souts):
+                cells.append(f"  assign {nm} = pr_run_rst_n_t{tree['n_clock_taps'] + j};")
     # functional buses: one boundary flop per pin bit beside its pin
     for bus, lst in sorted(by_bus.items()):
         if bus in buses:

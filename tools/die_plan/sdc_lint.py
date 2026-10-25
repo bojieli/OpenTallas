@@ -7,7 +7,7 @@ liberty files before synthesis):
   units      the liberty time_unit equals gen_phys.LIB_TIME_UNIT_PS (the 10-23 KV-P3b bug: ns values against a ps
              library = a 0.833-ps clock) and every create_clock period x unit = the plan period.
   clocks     every clock referenced (-clock X, get_clocks X) is created; every clock tap port is a create_clock source;
-             only tap ports are clock sources; one virtual IO clock whose source latency = the plan insertion.
+             only tap ports are clock sources; one virtual IO clock whose source latency = the TT-bound insertion (FF-bound value in sdc_lint.json).
   ports      every non-clock input has a max AND a min input delay, every output a max AND a min output delay
              (set_*_delay with neither -max nor -min sets both); no delay on a clock port.
   hold       hold uncertainty on every clock; min input delay <= -insertion_tol (seam-hold padding, CP1 r9);
@@ -189,12 +189,16 @@ def _num(x, what):
 
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
-         io_floor_ps=None, port_latency_ps=None, port_period_mult=None):
+         io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).  -> [errors]"""
     err = []
     u = time_unit_ps
+    # FLOW 10-25 (ruling 9.7 / 5e): the SDC vclk carries the TT-bound insertion; the FF-bound one (FF-only flow steps,
+    # vclk_corner.tcl) must be a positive insertion not above TT
+    if insertion_ff_ps is not None and not (0 < float(insertion_ff_ps) <= float(insertion_ps) + EPS):
+        err.append(f"clocks: bound FF insertion {insertion_ff_ps} ps not in (0, TT {insertion_ps:g}]")
     if liberty_unit_ps is not None and abs(liberty_unit_ps - u) > EPS:
         err.append(f"units: liberty time_unit {liberty_unit_ps:g} ps but the SDC is written in {u:g} ps units")
     ctx = Ctx(inputs, outputs, clock_ports)
@@ -429,10 +433,15 @@ def kit_context(P, tn):
         floor[ni] = (1 - gen_phys.ft_hop_in_share(P)) * per
         floor[no] = gen_phys.ft_hop_in_share(P) * per
     floor["arst_n"] = gen_phys.IO_BUDGET * per
+    import reset_tree as RT
+    if RT.start_broadcast(P) and not t.get("hard"):     # decision 13c START in: timed like arst_n
+        ins.append("start_i")
+        floor["start_i"] = gen_phys.IO_BUDGET * per
     for n, _x, _y in gen_phys.reset_out_pins(P, tn):      # reset wavefront registered outs (OWNER DECISION 13)
         outs.append(n)
         floor[n] = gen_phys.IO_BUDGET * per
-    return dict(period_ps=per, insertion_ps=float(P.clock["insertion_ps"]),
+    ib = gen_phys.insertion_binding(P, tn)
+    return dict(period_ps=per, insertion_ps=ib["tt"], insertion_ff_ps=ib["ff"],
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
