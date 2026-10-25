@@ -1,0 +1,3 @@
+PORT-BIND: NOT RUN (FAIL upstream). bind.py portbind needs out/rtl/*_bound_top.sv; EMIT did not write RTL in any run.
+main adopt178: strict bind FAIL 22 (11 attnh fold-width 11,709 b + 9 fault feeders + EMPTY s_5N_x06 + EMIT); tied 0 undriven 0 multiply 0.
+adopt178+faultfeed(3a58b44a01)+attnh B preview: strict bind 1 error (EMIT wavefront core reset), unbound/tied/undriven/multiply 0/0/0/0, TYPE_SPLIT 0.

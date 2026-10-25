@@ -1,0 +1,22 @@
+{
+ "partitions": 398,
+ "crossings": 869,
+ "crossing_bits": 606165,
+ "proof": {
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 1296,
+  "plan_driven": 0
+ },
+ "errors": [
+  "EMIT wavefront core reset col_h10_r0_p1__t1/u_r0.u_e0.rst_n: expected one bound leaf, found 0"
+ ],
+ "n_errors": 1,
+ "type_splits": [],
+ "open_outputs": 28,
+ "types": 177,
+ "host": "epyc3",
+ "label": "SCRATCH PREVIEW, NOT main plan, NOT port-bind PASS"
+}

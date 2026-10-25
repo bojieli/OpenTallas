@@ -1,0 +1,493 @@
+{
+ "schema": "opentallas.die_plan.bind.v1",
+ "die": "s81",
+ "top": "dv_die",
+ "cells": {
+  "transport": 43545,
+  "leaf": 569,
+  "source": 1,
+  "glue": 16
+ },
+ "dissolved": 104,
+ "partitions": 398,
+ "load_bits": {
+  "clock": 639,
+  "crossing": 606218,
+  "strap": 1296,
+  "reset": 461,
+  "intra_kept_stages": 48340,
+  "intra": 157241,
+  "die_io": 7630
+ },
+ "crossings": 900,
+ "crossing_bits": 606210,
+ "unmapped": 0,
+ "open_outputs": 28,
+ "open_output_examples": [
+  "u_lk_EN0.pma_tck",
+  "u_lk_EN0.pma_tx",
+  "u_lk_EN1.pma_tck",
+  "u_lk_EN1.pma_tx",
+  "u_lk_EN2.pma_tck",
+  "u_lk_EN2.pma_tx",
+  "u_lk_EN3.pma_tck",
+  "u_lk_EN3.pma_tx",
+  "u_lk_ES0.pma_tck",
+  "u_lk_ES0.pma_tx",
+  "u_lk_ES1.pma_tck",
+  "u_lk_ES1.pma_tx",
+  "u_lk_WN0.pma_tck",
+  "u_lk_WN0.pma_tx",
+  "u_lk_WN1.pma_tck",
+  "u_lk_WN1.pma_tx",
+  "u_lk_WN2.pma_tck",
+  "u_lk_WN2.pma_tx",
+  "u_lk_WN3.pma_tck",
+  "u_lk_WN3.pma_tx",
+  "u_lk_WS0.pma_tck",
+  "u_lk_WS0.pma_tx",
+  "u_lk_WS1.pma_tck",
+  "u_lk_WS1.pma_tx",
+  "u_lk_WS2.pma_tck",
+  "u_lk_WS2.pma_tx",
+  "u_lk_WS3.pma_tck",
+  "u_lk_WS3.pma_tx"
+ ],
+ "proof": {
+  "unbound": 11718,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 1296,
+  "plan_driven": 0
+ },
+ "errors": [
+  "UNPLANNED bk_sel -> gunit: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED eng -> svc_14: 1 as-built crossing bits with no plan lane path (43 b planned on direct lanes)",
+  "UNPLANNED gunit -> s_3N_C: 1 as-built crossing bits with no plan lane path (276 b planned on direct lanes)",
+  "UNPLANNED iqf -> svc_0: 1 as-built crossing bits with no plan lane path (513 b planned on direct lanes)",
+  "UNPLANNED phy_hbm -> svc_8: 1 as-built crossing bits with no plan lane path (1120 b planned on direct lanes)",
+  "UNPLANNED s_0N_LP -> s_0N_C: 1 as-built crossing bits with no plan lane path (1104 b planned on direct lanes)",
+  "UNPLANNED s_0S_LP -> s_0S_C: 1 as-built crossing bits with no plan lane path (1104 b planned on direct lanes)",
+  "UNPLANNED s_7N_LP -> s_7N_C: 1 as-built crossing bits with no plan lane path (1104 b planned on direct lanes)",
+  "UNPLANNED s_7S_LP -> s_7S_C: 1 as-built crossing bits with no plan lane path (1104 b planned on direct lanes)",
+  "UNPLANNED svc_0 -> svc_1: 1065 as-built crossing bits with no plan lane path (2160 b planned on direct lanes)",
+  "UNPLANNED svc_10 -> svc_11: 1065 as-built crossing bits with no plan lane path (2160 b planned on direct lanes)",
+  "UNPLANNED svc_14 -> svc_15: 1062 as-built crossing bits with no plan lane path (3241 b planned on direct lanes)",
+  "UNPLANNED svc_15 -> svc_14: 1062 as-built crossing bits with no plan lane path (3632 b planned on direct lanes)",
+  "UNPLANNED svc_2 -> svc_3: 1065 as-built crossing bits with no plan lane path (3237 b planned on direct lanes)",
+  "UNPLANNED svc_3 -> svc_2: 1065 as-built crossing bits with no plan lane path (3632 b planned on direct lanes)",
+  "UNPLANNED svc_4 -> svc_5: 1065 as-built crossing bits with no plan lane path (3237 b planned on direct lanes)",
+  "UNPLANNED svc_5 -> svc_4: 1065 as-built crossing bits with no plan lane path (3632 b planned on direct lanes)",
+  "UNPLANNED svc_6 -> svc_7: 1065 as-built crossing bits with no plan lane path (3237 b planned on direct lanes)",
+  "UNPLANNED svc_7 -> svc_6: 1065 as-built crossing bits with no plan lane path (3632 b planned on direct lanes)",
+  "UNPLANNED svc_9 -> svc_8: 1065 as-built crossing bits with no plan lane path (2555 b planned on direct lanes)",
+  "EMPTY_PARTITION s_5N_x06: no as-built cell maps to it and no lane passes through it",
+  "EMIT wavefront reset carriers lack bound partitions: ['s_5N_x06']"
+ ],
+ "n_errors": 22,
+ "type_splits": [],
+ "tied_by_port": {},
+ "bus_groups": {
+  "landing_groups": 1011,
+  "landing_misaligned_by_lanes": 138,
+  "landing_misaligned_after_pads": 138,
+  "replica_sets": 97,
+  "replica_unequal": 97
+ },
+ "types": 177,
+ "lanes": {
+  "planned": 860,
+  "carrying": 860,
+  "unused": 0,
+  "unused_examples": [],
+  "lane_bits": 594492,
+  "unplanned_bits": 11718,
+  "unplanned_pairs": {
+   "bk_sel->gunit": 1,
+   "eng->svc_14": 1,
+   "gunit->s_3N_C": 1,
+   "iqf->svc_0": 1,
+   "phy_hbm->svc_8": 1,
+   "s_0N_LP->s_0N_C": 1,
+   "s_0S_LP->s_0S_C": 1,
+   "s_7N_LP->s_7N_C": 1,
+   "s_7S_LP->s_7S_C": 1,
+   "svc_0->svc_1": 1065,
+   "svc_10->svc_11": 1065,
+   "svc_14->svc_15": 1062,
+   "svc_15->svc_14": 1062,
+   "svc_2->svc_3": 1065,
+   "svc_3->svc_2": 1065,
+   "svc_4->svc_5": 1065,
+   "svc_5->svc_4": 1065,
+   "svc_6->svc_7": 1065,
+   "svc_7->svc_6": 1065,
+   "svc_9->svc_8": 1065
+  },
+  "reset_spine_bits": {},
+  "landing_alignment": {
+   "groups": 0,
+   "padded_groups": 0,
+   "padded_bits": 0,
+   "pad_flops": 0,
+   "max_pad": 0
+  },
+  "ft_hops": 1429,
+  "forwarded_bits": 3,
+  "forwarding_partitions": {
+   "svc_13": 3,
+   "svc_11": 3,
+   "svc_9": 3,
+   "svc_7": 3,
+   "svc_5": 3,
+   "svc_3": 3,
+   "svc_1": 3,
+   "seqhost": 3,
+   "svc_0": 3,
+   "svc_2": 3,
+   "svc_4": 3,
+   "svc_6": 3,
+   "svc_8": 3,
+   "svc_10": 3,
+   "svc_12": 3
+  },
+  "forwarded_pairs": {
+   "svc_15->svc_14": 3
+  }
+ },
+ "unplanned_bit_list": [
+  {
+   "src_part": "bk_sel",
+   "dst_part": "gunit",
+   "driver": "u_bk_sel.fault[0]",
+   "sink_ports": [
+    "u_frs_gunit.fi"
+   ]
+  },
+  {
+   "src_part": "eng",
+   "dst_part": "svc_14",
+   "driver": "u_eng.rco[42]",
+   "sink_ports": [
+    "u_etap_15.rci"
+   ]
+  },
+  {
+   "src_part": "gunit",
+   "dst_part": "s_3N_C",
+   "driver": "u_gunit.vo_n[275]",
+   "sink_ports": [
+    "u_s_3N.u_slice.u_xg.vi"
+   ]
+  },
+  {
+   "src_part": "iqf",
+   "dst_part": "svc_0",
+   "driver": "u_iqf.qr[512]",
+   "sink_ports": [
+    "u_irg_00.qi"
+   ]
+  },
+  {
+   "src_part": "phy_hbm",
+   "dst_part": "svc_8",
+   "driver": "u_phy_hbm.kr_v[19]",
+   "sink_ports": [
+    "u_ctrl_08.kr_v",
+    "u_ctrl_09.kr_v"
+   ]
+  },
+  {
+   "src_part": "s_0N_LP",
+   "dst_part": "s_0N_C",
+   "driver": "u_s_0N.u_lep.ri[1103]",
+   "sink_ports": [
+    "u_s_0N.u_hbc.from_prev"
+   ]
+  },
+  {
+   "src_part": "s_0S_LP",
+   "dst_part": "s_0S_C",
+   "driver": "u_s_0S.u_lep.ri[1103]",
+   "sink_ports": [
+    "u_s_0S.u_sl.u_xg.ri_w"
+   ]
+  },
+  {
+   "src_part": "s_7N_LP",
+   "dst_part": "s_7N_C",
+   "driver": "u_s_7N.u_lep.ri[1103]",
+   "sink_ports": [
+    "u_s_7N.u_sl.u_xg.ri_e"
+   ]
+  },
+  {
+   "src_part": "s_7S_LP",
+   "dst_part": "s_7S_C",
+   "driver": "u_s_7S.u_lep.ri[1103]",
+   "sink_ports": [
+    "u_s_7S.u_sl.u_xg.ri_e"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1598]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1599]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1600]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1601]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1602]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1603]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1604]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1605]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1606]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1607]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1608]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1609]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1610]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1611]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1612]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1613]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1614]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1615]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1616]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1617]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1618]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1619]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1620]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1621]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1622]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1623]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1624]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1625]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1626]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1627]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  },
+  {
+   "src_part": "svc_0",
+   "dst_part": "svc_1",
+   "driver": "u_rsv_00.go_d_n[1628]",
+   "sink_ports": [
+    "u_rsv_01.gi_d_s"
+   ]
+  }
+ ],
+ "plan": {
+  "path": "physical/die_plan/s81/die_plan.json",
+  "sha256": "a2fdf1ab50b30d87a6474ee8cbced0de6977a20d3a29932da22afb792ed35bbf",
+  "ref": "origin/main 26028effc (adopt178)"
+ },
+ "run": {
+  "host": "epyc1",
+  "dir": "/srv/opentallas-scratch2/claude/tok-ds/bind178",
+  "unit": "oth-ubuntu-577318-1792930899",
+  "manifest": "asb/asbuilt_b178.json"
+ }
+}

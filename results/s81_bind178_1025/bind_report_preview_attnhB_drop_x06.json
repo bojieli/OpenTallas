@@ -1,0 +1,31 @@
+{
+ "partitions": 398,
+ "crossings": 869,
+ "crossing_bits": 606165,
+ "proof": {
+  "unbound": 9,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 1296,
+  "plan_driven": 0
+ },
+ "errors": [
+  "UNPLANNED bk_sel -> gunit: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED eng -> svc_14: 1 as-built crossing bits with no plan lane path (43 b planned on direct lanes)",
+  "UNPLANNED gunit -> s_3N_C: 1 as-built crossing bits with no plan lane path (276 b planned on direct lanes)",
+  "UNPLANNED iqf -> svc_0: 1 as-built crossing bits with no plan lane path (513 b planned on direct lanes)",
+  "UNPLANNED phy_hbm -> svc_8: 1 as-built crossing bits with no plan lane path (1120 b planned on direct lanes)",
+  "UNPLANNED s_0N_LP -> s_0N_C: 1 as-built crossing bits with no plan lane path (1104 b planned on direct lanes)",
+  "UNPLANNED s_0S_LP -> s_0S_C: 1 as-built crossing bits with no plan lane path (1104 b planned on direct lanes)",
+  "UNPLANNED s_7N_LP -> s_7N_C: 1 as-built crossing bits with no plan lane path (1104 b planned on direct lanes)",
+  "UNPLANNED s_7S_LP -> s_7S_C: 1 as-built crossing bits with no plan lane path (1104 b planned on direct lanes)",
+  "EMIT wavefront core reset col_h10_r0_p1__t1/u_r0.u_e0.rst_n: expected one bound leaf, found 0"
+ ],
+ "n_errors": 10,
+ "type_splits": [],
+ "open_outputs": 28,
+ "types": 177,
+ "host": "epyc3",
+ "label": "SCRATCH PREVIEW, NOT main plan, NOT port-bind PASS"
+}
