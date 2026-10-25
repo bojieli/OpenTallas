@@ -629,7 +629,7 @@ def standin_netlist(P, tn, hold_contract=True):
         ports.append(f"  {'input' if dirs.get(b) == 'in' else 'output'} [{bits[b] - 1}:0] {b};")
     cells = []
     k = 0
-    bh = die_sta.bhold_cell(P.clock["insertion_tol_ps"])
+    bh = die_sta.bhold_cell(gen_phys.seam_hold(P)["seam_ps"])
     for bus, bit, ln, x, y, f in sorted(pins, key=lambda p: (p[0], p[1])):
         ck = near(x, y)
         if dirs.get(bus) == "in" and hold_contract:
