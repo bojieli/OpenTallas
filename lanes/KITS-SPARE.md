@@ -110,3 +110,4 @@ Main has NO B2n HBM core views (canary uses B2l): built views_b2n.json from main
 - (b) W1: 4 HBM pgslice kits, none to review: side_rest/side_softplus LEC NEQ (merged-reg class) -> TOK-LEC; pretree (x2 tables) place FAIL, outline ~3x too wide -> DELTA-REQ HBM-PLAN (~150-170 x 457.92). Branch claude/kits-spare2-w1-1025@ae9f392460 (views_b2n.json + gen_core_kit_hbm clock-port fix READY). Everything else NEEDS-KIT is blocked (table above).
 - OWNER?/COORD: S81 vn_b (42 replicas) needs codex/s81-sw-0719@3bf7d67d1c (HW_STAGE) merged before its kit; xrt3 M6 pin grant.
 - No live jobs, no worktrees.
+2026-10-25 11:54 PDT COORD: ot_s81sl_ve_m_1eb0362d3119 (structural.tsv 51d680f779ac): superseded by the DIE-FT-S81 M5-cap re-hardening of the VE cores; no kit from this row.
