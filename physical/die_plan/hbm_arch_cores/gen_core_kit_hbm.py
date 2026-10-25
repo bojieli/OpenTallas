@@ -268,6 +268,23 @@ def retain_unused_inputs(files, top, retained, kd):
     return helper
 
 
+RST_RELAY_RK = """
+
+// HBM-CORES 2026-10-25: ot_rst_relay with one keep_hierarchy region flop per region (same sync, same single relay
+// stage, same release cycle).  Flat Yosys merged the reg-array relay copies of ot_rst_relay into one flop.
+module ot_rst_relay_rk #(parameter integer REGIONS = 4, parameter integer SYNC_STAGES = 2)
+  (input wire clk, input wire rst_n_in, output wire [REGIONS-1:0] rst_n);
+    (* async_reg = "true" *) reg [SYNC_STAGES-1:0] sync_q;
+    always @(posedge clk or negedge rst_n_in)
+        if (!rst_n_in) sync_q <= {SYNC_STAGES{1'b0}}; else sync_q <= {sync_q[SYNC_STAGES-2:0], 1'b1};
+    generate for (genvar r = 0; r < REGIONS; r = r + 1) begin : g_rrl
+        (* keep = 1, keep_hierarchy = 1 *) ot_hbm_face_state_bit u_rrl
+            (.clk(clk), .rst_n(rst_n_in), .d(sync_q[SYNC_STAGES-1]), .q(rst_n[r]));
+    end endgenerate
+endmodule
+"""
+
+
 def clone_output_state(files, top, clone, kd):
     """Duplicate an existing state DFF at each output face, preserving its edge/reset."""
     if not clone:
@@ -296,8 +313,11 @@ def clone_output_state(files, top, clone, kd):
             if mr:
                 rl = mr[1]
                 text, n1 = re.subn(r"wire\s*\[0:0\]\s*" + re.escape(rl) + r"\s*;", f"wire [{nreg}:0] {rl};", text)
-                text, n2 = re.subn(r"(ot_rst_relay\s*#\(\s*\.REGIONS\()1(\)[^;]*\.rst_n\(\s*" + re.escape(rl) + r"\s*\)\s*\)\s*;)",
-                                   lambda q: q[1] + str(1 + nreg) + q[2], text)
+                # 10-25 05:25 gq_rr19: Yosys merged ot_rst_relay's 19 relay_q copies (keep on a reg array is lost)
+                # into ONE flop.  The regions use ot_rst_relay_rk: same sync + one relay stage, each region flop a
+                # keep_hierarchy ot_hbm_face_state_bit, so the copies survive flat synthesis.
+                text, n2 = re.subn(r"ot_rst_relay(\s*#\(\s*\.REGIONS\()1(\)[^;]*\.rst_n\(\s*" + re.escape(rl) + r"\s*\)\s*\)\s*;)",
+                                   lambda q: "ot_rst_relay_rk" + q[1] + str(1 + nreg) + q[2], text)
                 if n1 == 1 and n2 == 1:
                     rst_expr = f"{rl}[1 + cp/{per}]"
         for port in clone["ports"]:
@@ -305,7 +325,10 @@ def clone_output_state(files, top, clone, kd):
             text, n = re.subn(pattern, lambda q: q[1] + wire, text)
             if n != 1:
                 raise ValueError(f"expected one output state assignment for {port}")
-        return text + extra.replace("@RST@", rst_expr) + m[2]
+        tail = m[2]
+        if rst_expr != reset:
+            tail += RST_RELAY_RK
+        return text + extra.replace("@RST@", rst_expr) + tail
     for f in files:
         p=Path(f)
         if p.suffix not in (".v", ".sv"):
