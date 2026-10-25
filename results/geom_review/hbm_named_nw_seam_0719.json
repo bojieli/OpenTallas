@@ -1,0 +1,17 @@
+{
+ "picture": "results/geom_review/hbm_named_nw_seam_0719.png",
+ "previous_failed_picture": "results/geom_review/hbm_l74_no_band_FAIL_0719.png",
+ "verdict": "PASS-COND NAMED SHARED-FACE GEOMETRY ONLY",
+ "source_commit": "7ff73a8320",
+ "plan_path": "/srv/opentallas-scratch2/claude/codex-hbm-plan-0719/l74direct/plan_direct3/die_plan.json",
+ "plan_sha256": "a4788221ca8b892a9456ab1cbb08550988553f57098bf1368b342eba4846057a",
+ "findings": [
+  "Initial direct L74 visual FAIL: macros touched both seam faces with no pin-register channel.",
+  "Revised: root complete hard-core field rigid +17.28um; hub E-touching u_hb_vms_Q -17.28um, no new overlap, same die area.",
+  "Both shared faces have17.28um reserved bands,8.64um usable after macro halos.",
+  "8630 unique M4/M6 bit-pin sites incl epoch are aligned by the common die-frame mapping; all3lanes use one direct shared face.",
+  "L74 input5->2plan cycles; L12 return control11->2, L13 return data2->2: no9cycle R8 return pad on this candidate.",
+  "Cut model0errors, worst partition0.5968<0.6. This is not G0/G0C or signoff.",
+  "Actual placed face flops, core-to-core R3 data links, actual clock/reset/start binding and PDN access must pass before route. No autopilot route approval."
+ ]
+}
