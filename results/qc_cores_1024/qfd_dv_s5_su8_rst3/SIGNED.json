@@ -1,0 +1,11 @@
+{
+ "core": "qfd_dv_s5_su8_rst3",
+ "verdict": "SIGNED",
+ "date": "2026-10-25T00:42:51-07:00",
+ "kit": "/srv/opentallas-scratch2/claude/qc-cores/kits3/qfd_dv_s5_su8_rst3_c (gen_core_kit_qc.py recipes.json, lef_contract closed view)",
+ "route": "/srv/opentallas-scratch2/claude/qc-cores/kits3/qfd_dv_s5_su8_rst3_c r3 (TT +93.56, FF hold -3.64 / 23 ep)",
+ "hold_eco": "/srv/opentallas-scratch2/claude/qc-cores/hold/su8_b: ELEM-QK recipe b warm POST_GRT FF-only hold ECO, margin 3 ps, re-DRT",
+ "signed_dir": "epyc1:/srv/opentallas-scratch2/claude/qc-cores/hold/su8_b (6_final.odb/def/v/spef, views tt/ff .lib)",
+ "rtl_patches": "OWNER DECISION 13 reset relay (rs0/rs1 synchronous) + face_guard xs_pin register merge; benches eq/eqx PASS, mutants caught (results in kit bench)",
+ "tool_commit": null
+}
