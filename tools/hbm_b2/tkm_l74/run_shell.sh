@@ -8,16 +8,19 @@ v=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 c=rtl/hbm_accel/generic/collective
 f=rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192_face
 # ROOT_VARIANT cb14 = root core of ot_hgi_coll_tkm_m_tp192_pf (clr+conv broadcast 14); cb21 = ..._pf21 (conv broadcast 21
-# to tile 31 + deskew, clr systolic down the chain).  The bench checks its CB/CLRB against the root's.
+# to tile 31 + deskew, clr systolic down the chain); ft21 = cb21 root + the IN-TILE clr/conv lanes (tile_clr_o/tile_conv_o,
+# shell in face/ft) instead of the parent relays.  The bench checks its CB/CLRB against the root's.
 case "${ROOT_VARIANT:-cb21}" in
  cb14) rcore="$f/ot_hgi_coll_tkm_tp192_root_core.sv";defs=(+define+ROOT_CB=14 +define+ROOT_CLRB=14 -GCTL_BCAST_STAGES=14 -GCLR_SYSTOLIC=0);;
  cb21) rcore="$f/cb21/ot_hgi_coll_tkm_tp192_root_core.sv";defs=(+define+ROOT_CB=21 +define+ROOT_CLRB=0 -GCTL_BCAST_STAGES=21 -GCLR_SYSTOLIC=1);;
+ ft21) rcore="$f/cb21/ot_hgi_coll_tkm_tp192_root_core.sv";defs=(+define+ROOT_CB=21 +define+ROOT_CLRB=0 +define+TILE_FT -GCTL_BCAST_STAGES=21 -GCLR_SYSTOLIC=1);;
  *) echo "bad ROOT_VARIANT";exit 2;;
 esac
+tsh=$f;[ "${ROOT_VARIANT:-cb21}" = ft21 ] && tsh=$f/ft
 src=("$c/p2p/qtkm_hier.vlt" tools/hbm_b2/tkm_l74/tb_hbm_tkm_l74_shell.sv rtl/hbm_accel/generic/transport/ot_hbm_static_2beat.sv
  "$c/tkm/ot_hgi_coll_tkm_static.sv" "$c/tkm/ot_hgi_coll_tkm.sv" "$c/tkm/ot_hgi_coll_tkm_buffer.sv" "$c/tkm/ot_hgi_coll_tkm_conv_skew.sv"
  "$f/ot_hbm_face_reg.sv" "$f/ot_hgi_coll_tkm_m_tp192__root__fshell.sv" "$f/ot_hgi_coll_tkm_m_tp192__root__wrap.sv" "$rcore"
- "$f/ot_hgi_coll_tkm_tp192_tile_core__idpin__fshell.sv" "$f/ot_hgi_coll_tkm_tp192_tile_core__idpin__wrap.sv"
+ "$tsh/ot_hgi_coll_tkm_tp192_tile_core__idpin__fshell.sv" "$tsh/ot_hgi_coll_tkm_tp192_tile_core__idpin__wrap.sv"
  rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv
  rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
 "$v" --binary --timing --hierarchical --verilate-jobs 2 --build-jobs "${BUILD_JOBS:-2}" -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --top-module tb_hbm_tkm_l74_shell --Mdir "$o/obj" -GTP=192 -GKMAX=2048 -GLINK_STAGES="${LINK_STAGES:-2}" -GRETURN_CTL_STAGES="${RETURN_CTL_STAGES:-2}" -GRETURN_DATA_STAGES="${RETURN_DATA_STAGES:-2}" -GHOP=2 -GFRT=4 "${defs[@]}" "${src[@]}" > "$o/build.log" 2>&1
