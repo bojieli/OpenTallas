@@ -577,3 +577,6 @@ CODEX: 2026-10-25 07:49 PDT CLOCK emptytapfalseOK FIXREADY e142a8da81:5fixturesP
 
 2026-10-25 07:49 PDT CODEX: S81 actualbind blocker diagnosed old cache/split hierarchy + FM source mismatch; coherent actualsplit candidate all25resetmasters reachable, v9 structuralSVelab live; no reset bypass or validemit yet.
 2026-10-25 07:48 PDT CODEX: actualboot-awareEngE/Hadoption363dd0fa20 READY6742cyclelockstep+mutantPASS0cycles; oneL14connectedpathnamed, actualfirstseamEng↔svc14, bind/profile/physicalgatesexplicit; unrelatednewvariantsheld.
+2026-10-25 07:47 PDT CODEX: QC meanclockcontract explicithelper READY485897d27,6helper+11CP2testsPASS; actualhistoricalnodeTT245.9/FF199.6 notMAX267.63, noearly; keepslegacyAPIs forbatchedadoption, noSIGNEDclaim.
+2026-10-25 07:47 PDT CODEX: QC representative RP1f57r4 DRT LIVEunit3193341/source2385baf; actualGRTTT+217.22/FF+6.55ps0ep, gateparserREADY29bcd (2tests/sevencontrols). CQBFFbasisrepairGRTPASS+3.12/0ep8645bufs, old6058caprootcause; checkpointheld/noextraCQBroute. OWNERoneQwenpathfocus: no furthercommonmode/NLvariants; NKledgercorrected maxvsmean.
+2026-10-25 07:51 PDT CODEX: KITS5densityFAILscollected, hardradiusclockfix adopted; optionalManhattankneehelper6ad8eadREADY3geom+3000cyclemiter/mutant; namedL14boundaryt18/t22targeted, nocurrentstationSIGNED.
