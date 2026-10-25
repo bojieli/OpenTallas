@@ -1941,3 +1941,4 @@ REQ [CLOCK-RESET/TKM-SHALLOW-R3 14:23] 2026-10-25 14:23 PDT CLOCK-RESET: ONE CTS
 
 ## RESUMED 2026-10-25 16:17 PDT GEOM-REVIEW-4 (fresh shift; independent reviewer alongside GEOM-REVIEW-3)
 2026-10-25 16:17 PDT GEOM-REVIEW-4: started. Queue checked: every REQ has a REPLY/CLAIM (no open REQ). Will CLAIM before working; expecting re-REQs KV-SYSC, E5 CLOCK-TRUNK, NL-R2 images, CP1 r0 contract, TKM-R3 post-CTS, TKMCLKBUF legalization, DIE-FT-S81 G2 t58/t14/t33/t39, R1DELTA G2 + hub ends.
+2026-10-25 16:24 PDT COORD spot-check: viewed rootep_root_bottom.png (ROOTEP typed endpoints: far fewer root-area detours than the B2o placeholder) and q_hub_ne.png (body_n2 adjacent to vm, chains local; dense W-corner pin fan on body_n2) -> AGREE with GEOM-REVIEW [PATH-HBM-R1DELTA] PASS-COND incl. the body_n2 pin-spread condition.
