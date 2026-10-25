@@ -1050,7 +1050,15 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
             raise ValueError('--entry-norm-check: no attn norm smoke on this layer (the NX flit needs the attn norm)')
         sys.path.insert(0, str(ROOT / 'tools/s81_dv/layer_prog'))
         import norm_nx
-        sub['entry_norm'] = norm_nx.emit(die, prog, sub, fixtures, [e['cycle'] for e in prog.events if e['kind'] == 'CTL'])
+        if entry_norm == 'all':
+            # the 16-slice composition: every slice's norm + entry state + the snake flit words (own + forwards)
+            sub['entry_norm'] = norm_nx.emit_all(die, prog, sub, fixtures, sys.modules[__name__])
+            clash = line_slot_conflicts(die, prog)
+            if clash:
+                raise ValueError(f'--entry-norm-check all: line slot collision of the 16-slice norm rows: {clash[:4]}')
+        else:
+            sub['entry_norm'] = norm_nx.emit(die, prog, sub, fixtures,
+                                             [e['cycle'] for e in prog.events if e['kind'] == 'CTL'])
     files = {}
     for rel, text in prog.files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -1207,9 +1215,10 @@ def main(argv=None):
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
                     help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
-    ap.add_argument('--entry-norm-check', action='store_true',
+    ap.add_argument('--entry-norm-check', nargs='?', const='smoke', choices=('smoke', 'all'), default=None,
                     help='TOK-DS-GAPS: emit the smoke slice\'s layer-entry rows (pre-layer CTL target 5) and its attn '
-                         'xfin NX flit as checked output words (needs --fixtures; layer_prog/norm_nx.py)')
+                         'xfin NX flit as checked output words (needs --fixtures; layer_prog/norm_nx.py); "all" = every '
+                         'slice\'s norm + entry state + the 16-flit snake words')
     a = ap.parse_args(argv)
     if a.dense_stage is not None and (a.mu_cal or a.mu_ctx):
         ap.error('--dense-stage MU requires corrected per-position static stage graph binding')

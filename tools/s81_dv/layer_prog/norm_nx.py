@@ -93,9 +93,11 @@ def partials(fixtures, which='attn'):
         V.set_arith(old)
 
 
-def nxb(sid, hops, data160):
-    """ot_s81sl_rstop nxb(): the line / V word of an xfin flit"""
-    return 1 | K_NX << 1 | (hops & 0xF) << 4 | (sid & 0xF) << 9 | ((NVL * sid) & 0xFF) << 13 | data160 << 21
+def nxb(sid, hops, data160, base=None):
+    """ot_s81sl_rstop nxb(f, sid_c): the line / V word of an xfin flit; [12:9] = the EMITTING stop's sid strap,
+    [20:13] = the flit's base b = NVL * origin sid (forwards keep b, take hops - 1 and the forwarding stop's sid)"""
+    b = NVL * sid if base is None else base
+    return 1 | K_NX << 1 | (hops & 0xF) << 4 | (sid & 0xF) << 9 | (b & 0xFF) << 13 | data160 << 21
 
 
 def flit_ports(sid):
@@ -115,6 +117,22 @@ def flit_ports(sid):
         if not mapped:
             out[port] = HE if side == 'eo' else HW
     return out
+
+
+def side_ports(sid):
+    """xfin side -> slice port: 'e' = the snake-forward side (eo / ei), 'w' = the other.  S line W -> E, up column 7's V,
+    N line E -> W, down column 0's V (ot_s81sl_rstop header)"""
+    col, tier = sid >> 1, sid & 1
+    map_e = col == 0 if tier else col == 7
+    map_w = col == 7 if tier else col == 0
+    e_port = 'vo' if map_e else ('ro_w' if tier else 'ro_e')
+    w_port = 'vo' if map_w else ('ro_e' if tier else 'ro_w')
+    return {'e': e_port, 'w': w_port}
+
+
+def snake_index(sid):
+    col, tier = sid >> 1, sid & 1
+    return col if tier == 0 else NS - 1 - col
 
 
 def entry_writes(die, fixtures, sid):
@@ -162,6 +180,161 @@ def emit(die, prog, smoke, fixtures, ctl_cycles):
                 qualification='NX flit = arithmetic output word of the slice norm (hc_pre mix, square, chunk8 beat '
                               'sums) from layer-entry inputs; rstd / XQ need the 16-slice composition (not compiled)')
 
+
+
+# ================================================================================================ 16-slice composition
+# TOK-DS-GAPS 10-24: --entry-norm-check all.  Every slice runs the attn norm (HLOAD, GAIN, NORMR k0..k4, XFIN_GO, the
+# smoke's arrival-relative pattern) and the 16 xfin flits go round the snake.  ot_s81dv_xstop's schedule contract: every
+# stop injects on the SAME cycle (an injection meeting a forward on either output is a sticky fault), so the compiler
+# aligns the LAST NORMR (leaf 4: the collector injects when leaf NVL-1's partial lands) of every slice on the smoke
+# slice's edge G; each slice's other beats take free line issue edges (one CTL beat a tier line edge, issue domain =
+# arrival - ctl_path edges).  Ring words: each stop's output register carries its own flit (edge E0 = G +
+# NX_AFTER_LAST_NORMR) and, later, every forward (hops > 1) of a flit that landed on it; a forward leaves NX_FWD edges
+# after the flit lands (landed pin -> forwarding output register; CALIBRATION constant per in -> out port class).
+# Every stop's flit words are 'out' events: a cut holding the stop is CHECKED on them, a cut holding the receiver is
+# DRIVEN with them (dv_cut_replay), so a cut sees real arrivals of the other slices' partials (fixture inputs through
+# the reference model) and its own xfin forwards / injects as checked arithmetic words.
+NX_FWD = {('line', 'line'): 4, ('v', 'line'): 4, ('line', 'v'): 4}
+
+
+def _port_class(p):
+    return 'v' if p in ('vo', 'vi') else 'line'
+
+
+def _lane0(die, inst, port):
+    """the lane carrying bits [275:0] of <inst>.<port> -> (link, dst inst, dst port, age)"""
+    cand = [lk for lk, L in die.links.items() if (inst, port) in [tuple(x) for x in L['src']]]
+    l0 = [lk for lk in cand if lk.endswith('_l0')]
+    if len(l0) == 1:
+        cand = l0
+    if len(cand) != 1:
+        raise ValueError(f'norm_nx: lane 0 of {inst}.{port} ambiguous / absent: {cand}')
+    best = (cand[0], die.links[cand[0]])
+    lk, L = best
+    d = L['dst'][0]
+    return lk, d[0], d[1], L['age_edges']
+
+
+def emit_all(die, prog, smoke, fixtures, D):
+    """entry state of all 16 slices + their norm commands + the snake flit words (see the block comment above)"""
+    S = die.slices()
+    by_sid = {v['sid']: k for k, v in S.items()}
+    lat = {sl: D.ctl_path(die, sl)['edges'] for sl in S}
+    eport = {sl: D.ctl_path(die, sl)['entry_port'] for sl in S}
+    tier = lambda sl: 'N' if sl.endswith('N') else 'S'
+    sm = smoke['slice']
+    arr = {e['tag']: e['cycle'] for e in prog.events if e.get('inst') == sm and e['kind'] == 'CTL'
+           and str(e.get('tag', '')).startswith('attn.')}
+    G = arr['attn.NORMR.k4']
+    rel = {t: arr[t] - G for t in ('attn.HLOAD', 'attn.GAIN', 'attn.NORMR.k0', 'attn.NORMR.k1', 'attn.NORMR.k2',
+                                   'attn.NORMR.k3', 'attn.XFIN_GO')}
+    gap_hg = rel['attn.GAIN'] - rel['attn.HLOAD']
+    gap_gn = rel['attn.NORMR.k0'] - rel['attn.GAIN']
+    busy = {'S': set(), 'N': set()}
+    for e in prog.events:
+        if e['kind'] == 'CTL' and e.get('dir') == 'in' and e.get('inst') in S and not e.get('derived_from'):
+            busy[tier(e['inst'])].add(e['cycle'] - lat[e['inst']])
+    for r in prog.rows:
+        if r['eng'] in (D.ENG['VN'], D.ENG['VS']):
+            busy['N' if r['eng'] == D.ENG['VN'] else 'S'].add(r['issue'])
+    # pass 1: every k4 on its fixed issue edge (fail closed on a clash)
+    plan = {}
+    for sl in sorted(S, key=lambda x: S[x]['sid']):
+        if sl == sm:
+            continue
+        i4 = G - lat[sl]
+        if i4 in busy[tier(sl)]:
+            raise ValueError(f'norm_nx all: k4 of {sl} needs issue edge {i4}, taken on tier {tier(sl)}')
+        busy[tier(sl)].add(i4)
+        plan[sl] = {'attn.NORMR.k4': i4}
+
+    def take(t, want, step, lo=None, hi=None):
+        e = want
+        while e in busy[t] or (lo is not None and e < lo) or (hi is not None and e > hi):
+            e += step
+            if (step < 0 and lo is not None and e < lo) or (step > 0 and hi is not None and e > hi) or abs(e - want) > 4096:
+                raise ValueError(f'norm_nx all: no free issue edge near {want} on tier {t}')
+        busy[t].add(e)
+        return e
+    for sl, P in plan.items():
+        t, i4 = tier(sl), P['attn.NORMR.k4']
+        P['attn.GAIN'] = take(t, i4 + rel['attn.GAIN'], -1)
+        P['attn.HLOAD'] = take(t, P['attn.GAIN'] - gap_hg, -1)
+        for k in range(4):
+            P[f'attn.NORMR.k{k}'] = take(t, max(i4 + rel[f'attn.NORMR.k{k}'], P['attn.GAIN'] + gap_gn), +1, hi=i4 - 1)
+        P['attn.XFIN_GO'] = take(t, i4 + rel['attn.XFIN_GO'], +1)
+    # templates / calendar rows / events (same payloads as lower_norm_smoke)
+    eps = 0x358637BD
+    GU_ROWS = dict(D.family_lowerings())['gu'].GU_ROWS
+    r_pre = GU_ROWS['ffn']
+    n_cmd = 0
+    for sl, P in plan.items():
+        sid, smask = S[sl]['sid'], 1 << S[sl]['sid']
+        eng = D.ENG['VN'] if sl.endswith('N') else D.ENG['VS']
+        pay = {'attn.HLOAD': D.ctl_payload(smask, 0, 0x1F, D.vp_cmd(D.VP['HLOAD'], a0=0)),
+               'attn.GAIN': D.ctl_payload(smask, 0, 0x1F, D.vp_cmd(D.VP['GAIN'], a0=64)),
+               'attn.XFIN_GO': D.ctl_payload(smask, 1, 0, D.xfin_go(eps))}
+        for k in range(5):
+            pay[f'attn.NORMR.k{k}'] = D.ctl_payload(smask, 0, 1 << k, D.vp_cmd(D.VP['NORMR'], a0=r_pre, a1=5 * sid + k, n=3))
+        for tag, issue in sorted(P.items(), key=lambda kv: kv[1]):
+            ti = prog.template(f'{tag}.{sl}', pay[tag])
+            prog.vrow(eng, issue, ti, what=f'norm16 {tag} {sl}')
+            prog.events.append(dict(cycle=issue + lat[sl], inst=sl, port=eport[sl], dir='in', kind='CTL', tag=tag,
+                                    payload=f'template {ti}', norm16=True))
+            n_cmd += 1
+    # entry state of every slice: round-robin over the tier's slices, one beat a free issue edge, ending ENTRY_GUARD
+    # before the tier's first CTL issue (two-edge per-slice cadence holds: >= 4 slices interleave on a tier)
+    from entry_inputs import compile_inputs
+    img = compile_inputs(die, fixtures)
+    n_entry = 0
+    first = {}
+    for t in ('S', 'N'):
+        sls = sorted([sl for sl in S if tier(sl) == t], key=lambda x: S[x]['sid'])
+        per = {sl: [w for w in img['writes'] if w['sid'] == S[sl]['sid']] for sl in sls}
+        order = []
+        for i in range(max(len(v) for v in per.values())):
+            order += [(sl, per[sl][i]) for sl in sls if i < len(per[sl])]
+        last = min(busy[t]) - ENTRY_GUARD
+        for j, (sl, w) in enumerate(order):
+            issue = last - (len(order) - 1 - j)
+            pl = int(w['ctl_payload186'], 16)
+            prog.events.append(dict(cycle=issue + lat[sl], inst=sl, port=eport[sl], dir='in', kind='CTL',
+                                    tag=f"entry.{w['region']}.leaf{w['leaf']}.row{w['row']}", payload=f'entry {pl:047x}',
+                                    payload186=f'{pl:047x}', entry_state=True))
+        first[t] = last - (len(order) - 1)
+        n_entry += len(order)
+    # the snake: own flits at E0, forwards after landing
+    p = partials(fixtures)
+    E0 = G + NX_AFTER_LAST_NORMR
+    prog.events[:] = [e for e in prog.events if not (e.get('kind') == 'NX' and e.get('tag') == 'attn.partial_roots')]
+    words = []
+    for o in range(NS):
+        so = by_sid[o]
+        data = sum(v << (32 * k) for k, v in enumerate(p[NVL * o:NVL * o + NVL]))
+        for side, hops in (('e', HE), ('w', HW)):
+            at, port, edge, h = so, side_ports(o)[side], E0, hops
+            while True:
+                words.append(dict(inst=at, port=port, edge=edge, sid=S[at]['sid'], hops=h, origin=o, data=data))
+                if h <= 1:
+                    break
+                lk, nxt, inport, age = _lane0(die, at, port)
+                land = edge + age
+                nsid = S[nxt]['sid']
+                oport = side_ports(nsid)[side]
+                edge = land + NX_FWD[(_port_class(inport), _port_class(oport))]
+                at, port, h = nxt, oport, h - 1
+    for w in words:
+        v = nxb(w['sid'], w['hops'], w['data'], base=NVL * w['origin'])
+        prog.events.append(dict(cycle=w['edge'], inst=w['inst'], port=w['port'], ports=[w['port']], dir='out', kind='NX',
+                                tag=f"attn.nx.o{w['origin']}.h{w['hops']}", width=LANE, valid_bit=0,
+                                words=[[w['edge'], f'{v:x}', f'{(1 << LANE) - 1:x}']],
+                                payload=f"xfin NX flit origin sid {w['origin']} hops {w['hops']} at {w['inst']}",
+                                source='hdc_golden_v41 chunk8 partials of BF16(hc_pre(io/h_in, io/pre_in))^2'))
+    return dict(mode='all', G=G, E0=E0, nx_fwd={f'{a}->{b}': v for (a, b), v in NX_FWD.items()},
+                norm_commands=n_cmd, entry_writes=n_entry, entry_first_issue=first, nx_words=len(words),
+                lat=lat, plan={sl: P for sl, P in plan.items()},
+                qualification='16-slice NX snake words (own + forwards) from layer-entry inputs; NX_FWD is a calibration '
+                              'constant (measured on the cut runs); rstd / XQ words not yet encoded')
 
 if __name__ == '__main__':
     fx = sys.argv[1]
