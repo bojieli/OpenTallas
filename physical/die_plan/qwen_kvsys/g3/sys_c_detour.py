@@ -16,6 +16,8 @@ PHY=[691.2,17.28,1468.8,794.88]
 LEFT=656.64
 RIGHT=1503.36
 NORTH=829.44
+GUARD=8.64    # VDDPHY guard ring W/E/N (one die-grid pitch; clear of the R4 clock taps at x 680 / 1480 and the detour stations)
+S_MOAT=8.64   # S side: the domain stops 8.64 um inside the partition edge (core-VDD moat to the S neighbour)
 
 
 def split_path(path):
@@ -62,17 +64,34 @@ def apply(raw,pins,proposal,io):
     if maxhop>405 or maxout>20:raise ValueError(f'actual FT hop/outface fail: {maxhop}/{maxout}')
     before=slot['stations'];slot.update(stations=12,bit_sites_um=stages,bit_site_cell_um=list(F.CELL));slot.pop('regs_um',None)
     ledger.append(dict(conn='slot:ft1',bits=n,before=before,after=12,added_cycles=12-before,added_flops=(12-before)*n))
+    # PHY PG domain (OWNER decision 7; same form as S81 pg_domains.py / HBM B2m): own VDDPHY+VSS over the UCIe body plus
+    # a guard ring INSIDE sys_c (never over a core-VDD neighbour); on the S side the domain stops S_MOAT short of the
+    # partition edge so VDDPHY M7 straps never meet the S neighbour's core-VDD M7 straps end to end.  Every station, FT
+    # site and SRAM stays outside the domain (core VDD).  Kit side: gen_phys.phy_pg_pdn (PHY region grid + macro grid,
+    # core grid cut, placement blockage); the abstract then exports VDDPHY M7 pins only inside this rect.
+    dom_t=[round(PHY[0]-GUARD,4),round(PHY[1]-S_MOAT,4),round(PHY[2]+GUARD,4),round(PHY[3]+GUARD,4)]
+    assert dom_t[0]>0 and dom_t[1]>0 and dom_t[2]<W and dom_t[3]<H,dom_t
+    def inside(x,y,r=dom_t):return r[0]<=x<=r[2] and r[1]<=y<=r[3]
+    bad=[('ft1',xy) for st in stages for xy in st if xy and inside(*xy)]
+    bad+=[(e['conn'],xy) for e in t.get('internal_stations',[]) for xy in e['regs_um'] if inside(*xy)]
+    bad+=[(m['inst'],m['origin_um']) for m in t['contents'] if m['module']!='ot_qkvd_ucie_x64_phy' and
+          m['origin_um'][0]+m['outline_um'][0]>dom_t[0] and m['origin_um'][0]<dom_t[2] and
+          m['origin_um'][1]+m['outline_um'][1]>dom_t[1] and m['origin_um'][1]<dom_t[3]]
+    if bad:raise ValueError(f'core-VDD objects inside the PHY PG domain: {bad[:5]}')
     part=next(p for p in raw['partitions'] if p['type']=='kv3_sys_c');ox,oy=part['origin_um']
     rect=[round(PHY[0]+ox,4),round(PHY[1]+oy,4),round(PHY[2]+ox,4),round(PHY[3]+oy,4)]
+    drect=[round(dom_t[0]+ox,4),round(dom_t[1]+oy,4),round(dom_t[2]+ox,4),round(dom_t[3]+oy,4)]
     pg=raw['die'].setdefault('pg',{});domains=pg.setdefault('domains',[])
-    dom=dict(name='phy_sys_c_ucie',nets=['VDDPHY','VSS'],io=['io_sys_c_ucie_rom'],rect_um=rect,
-             grid=[dict(layer=l,width_um=.48,pitch_um=8.64,offset_um=4.32,nets=['VDDPHY','VSS']) for l in ['M8','M9']],
-             bumps=dict(rect_um=rect,pitch_um=45.,use='power_ground',note='Dedicated PHY PG rows; retained 45um academic bump assumption, not vendor escape qualification'),
-             note='Ownerdecision7 separate PHY supply; partition kit must expose truthful VDDPHY M7 interface, never relabel coreVDD')
+    dom=dict(name='phy_sys_c_ucie',nets=['VDDPHY','VSS'],io=['io_sys_c_ucie_rom'],rect_um=drect,
+             grid=[dict(layer=l,width_um=1.92,pitch_um=8.64,offset_um=4.32,nets=['VDDPHY','VSS']) for l in ['M8','M9']],
+             bumps=dict(rect_um=rect,pitch_um=45.,use='power_ground',note='dedicated VDDPHY/VSS C4 rows over the UCIe macro (45-um array); academic bump assumption, not vendor escape qualification'),
+             note='OWNER decision 7: separate PHY supply on the UCIe macro, guard ring inside sys_c, no core-VDD object inside; the partition kit exports truthful VDDPHY M7 pins (gen_phys.phy_pg_pdn), never relabels core VDD')
     domains[:]=[d for d in domains if d['name']!=dom['name']];domains.append(dom)
     for e in io:
-        if e['name']=='io_sys_c_ucie_rom':e['rect_um']=rect;e['sites']=int(777.6//45)**2;e['note']=e.get('note','')+' | actual native macro abstract footprint; dedicatedVDDPHY domain'
-    report=dict(type='kv3_sys_c',verdict='GEOMETRY_PASS_PG_NOT_RUN',max_ft_hop_um=maxhop,max_out_hop_um=maxout,ft_sites=len(sites.used),ledger=ledger,phy_rect_type_um=PHY,phy_rect_die_um=rect,sampled=draw,required='Install actual partitionPHYsplitPG, macro clock/reset keepouts; regenerate latency/R8/native bound RTL then G2+review')
+        if e['name']=='io_sys_c_ucie_rom':
+            e['rect_um']=rect;e['sites']=int(777.6//45)**2
+            if 'dedicated VDDPHY' not in e.get('note',''):e['note']=e.get('note','')+' | actual native macro abstract footprint; dedicated VDDPHY domain phy_sys_c_ucie'
+    report=dict(type='kv3_sys_c',verdict="GEOMETRY_PASS_PG_DOMAIN_PLANNED",max_ft_hop_um=maxhop,max_out_hop_um=maxout,ft_sites=len(sites.used),ledger=ledger,phy_rect_type_um=PHY,phy_rect_die_um=rect,pg_domain_type_um=dom_t,pg_domain_die_um=drect,sampled=draw,required='Install actual partitionPHYsplitPG, macro clock/reset keepouts; regenerate latency/R8/native bound RTL then G2+review')
     return report
 
 
