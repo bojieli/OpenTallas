@@ -114,6 +114,7 @@ module ot_s81sl_lep_core #(
     parameter integer TXRP = 1,        // 1: TX read pipeline register beside the SRAM column (S81-FIX3; +1 lo edge)
     parameter integer NATIVE32_STD = 0, // separate opt-in standard bounded SRAM/control path
     parameter integer NATIVE32 = 0,    // opt-in MU same-age bounded control replicas
+    parameter integer IDX_EN = 0,      // 1 (S81/H4 10-24): index rank-tree frames tl -> link, link -> ca / cb (see g_itx)
     parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
 ) (
@@ -156,7 +157,12 @@ module ot_s81sl_lep_core #(
     output wire [1:0]      rxvb,
     input  wire [2:0]      l2_f,
     input  wire [2:0]      l3_f,
-    output reg             fault
+    output reg             fault,
+    // S81/H4 (IDX_EN 1): index rank-tree beats (276-b V beats of dsdv_bk_sel_vmtx): tl <- its tree transmitter tl_o,
+    // ca / cb -> its landed child lanes (unread / 0 at IDX_EN 0)
+    input  wire [275:0]    tl,
+    output wire [275:0]    ca,
+    output wire [275:0]    cb
 );
     localparam integer H = 552;
     localparam integer SAFE_STD=(NATIVE32_STD!=0 && MU_EN==0);
@@ -226,6 +232,28 @@ module ot_s81sl_lep_core #(
       assign ro_x = ro; assign th_x = t_host; assign tk_x = t_kd; assign mc_x = mu_c;
       assign rvx = {NVC{ro[0]}}; assign kvx = {NVC{t_kd[53]}};
     end endgenerate
+    // S81/H4: the tree beat takes a pin flop + the face stage (IN_PIPE), one edge more than ro (a pin here, not a landing); ivx[k] / ibx[k]
+    // = kept copies of its valid / pair-B select for the frame slices, push groups and lane landings (as rvx)
+    wire [275:0] tl_x; wire [NVC-1:0] ivx, ibx;
+    generate if (IDX_EN == 0) begin : g_nitl
+      assign tl_x = 276'd0; assign ivx = '0; assign ibx = '0;
+    end else if (IN_PIPE != 0) begin : g_itlp
+      // tl is a partition pin of the LP slice: ONE pin flop per bit (tlp, the face register face_guard checks: an input
+      // bit loads exactly one flop D), then the face stage (tlq + the kept valid / select copies, all from tlp).
+      reg [275:0] tlp, tlq;
+      always @(posedge clk) begin tlp <= tl; tlq <= tlp; end
+      assign tl_x = tlq;
+      for (genvar vc = 0; vc < NVC; vc = vc + 1) begin : g_vc
+        (* keep=1 *) ot_s81sl_lep_vcopy u_iv (.clk(clk), .d(tlp[0]), .q(ivx[vc]));
+`ifdef OT_S81SL_LEP_MUT_IDXPAIR
+        (* keep=1 *) ot_s81sl_lep_vcopy u_ib (.clk(clk), .d(tlp[0] && tlp[5:4] == 2'd2), .q(ibx[vc]));  // MUTANT: lane 2 -> pair B
+`else
+        (* keep=1 *) ot_s81sl_lep_vcopy u_ib (.clk(clk), .d(tlp[0] && tlp[5:4] == 2'd3), .q(ibx[vc]));
+`endif
+      end
+    end else begin : g_itl
+      assign tl_x = tl; assign ivx = {NVC{tl[0]}}; assign ibx = {NVC{tl[0] && tl[5:4] == 2'd3}};
+    end endgenerate
     reg [NL-1:0] rxv_r;
     always @(posedge clk or negedge rnx) if (!rnx) rxv_r <= {NL{1'b0}}; else rxv_r <= {NL{1'b1}};
     assign rxv = rxv_r[1:0];
@@ -234,6 +262,31 @@ module ot_s81sl_lep_core #(
     reg rov; reg [1103:0] roq;
     always @(posedge clk or negedge rn) if (!rn) rov <= 1'b0; else rov <= rvx[0];
     always @(posedge clk) roq <= ro_x;
+    // ---------------------------------------------------------------- IDX tree frames, TX (IDX_EN 1; S81/H4 10-24)
+    // COORD H4 ruling (option A): the bk_sel tree lanes end here.  A valid tree beat (tl[0]) is sent as ONE non-ring link
+    // frame, like a THOST frame: low half {.., beat 276 at [4 +: 276], type 3'd5 at [3:1], 1'b0}, the rest 0.  Pair = the
+    // beat's lane field (the PARENT's child slot, lower_bk CHILD_LANES = (2, 3)): lane 2 -> pair A (stage NEXT), lane 3 ->
+    // pair B (stage PREV); the receiving end hands pair-B frames to ca and pair-A frames to cb, so lane 2 <-> ca and
+    // lane 3 <-> cb hold on both ends.  Static slot rule (no arbitration, no wait): the compiler gives a tree beat a cycle
+    // with no ring beat at this port; a tree beat on a ring-beat cycle is dropped (the ring beat goes) and a lane field
+    // other than 2 / 3 (3 without pair B) is a sticky fault.  Host frames (HOST_EN 1) wait behind a tree frame.
+    wire iv, ib, ie; wire [275:0] iq;
+    wire igo = iv && !rov;                             // this cycle's frame is the tree beat
+    generate if (IDX_EN != 0) begin : g_itx
+      wire ib_n = ibx[0];
+      reg iv_r, ib_r, ie_r; reg [275:0] iq_r;
+      always @(posedge clk or negedge rn)
+        if (!rn) begin iv_r <= 1'b0; ib_r <= 1'b0; ie_r <= 1'b0; end
+        else begin
+          iv_r <= ivx[0]; ib_r <= ib_n;
+          if (iv_r && rov) ie_r <= 1'b1;               // a tree beat on a ring-beat cycle (compile error)
+          if (iv_r && !(iq_r[5:4] == 2'd2 || (iq_r[5:4] == 2'd3 && NL == 4))) ie_r <= 1'b1;
+        end
+      always @(posedge clk) iq_r <= tl_x;              // data: no reset
+      assign iv = iv_r; assign ib = ib_r; assign ie = ie_r; assign iq = iq_r;
+    end else begin : g_nitx
+      assign iv = 1'b0; assign ib = 1'b0; assign ie = 1'b0; assign iq = 276'd0;
+    end endgenerate
     // ---------------------------------------------------------------- host plane, TX: THOST / TKD frames
     // Link frame = one flit pair.  Ring beat: bit 0 = 1 (the beat itself).  Host-plane frame: bit 0 = 0, [3:1] type
     // (1 HOST, 2 KS: inbound; 3 THOST, 4 TKD: outbound), payload at [4 +: n] in the low half, the rest 0.
@@ -267,7 +320,7 @@ module ot_s81sl_lep_core #(
     end
     assign h_event=ev_h;assign k_event=ev_k;
     assign h_status_now=host_now_regions[11:0];assign h_status_old=st_l;assign h_status_valid=host_valid_regions[0];
-    assign hp_go = !rov && ph_v; assign kp_go = !rov && !ph_v && pk_v;
+    assign hp_go = !rov && !iv && ph_v; assign kp_go = !rov && !iv && !ph_v && pk_v;   // S81/H4: wait behind a tree frame
     assign herr = he; assign ph_d = pd; assign pk_d = kd;
     always @(posedge clk or negedge rn)
         if (!rn) begin ph_v <= 1'b0; pk_v <= 1'b0; he <= 1'b0; end
@@ -306,7 +359,7 @@ module ot_s81sl_lep_core #(
     assign host_now_regions=0;assign host_old_regions=0;assign host_valid_regions=0;
     assign hp_go = 1'b0; assign kp_go = 1'b0; assign herr = 1'b0; assign ph_d = 77'd0; assign pk_d = 54'd0;
     end endgenerate
-    wire push = rov || hp_go || kp_go;
+    wire push = rov || hp_go || kp_go || igo;
     // ---------------------------------------------------------------- MU TX tag window (MU_EN 1)
     wire [31:0] window_count;
     wire wopen, wab; wire [32:0] wtag; wire terr;       // window open, pair B, {pos, user, land, 1}
@@ -364,7 +417,13 @@ module ot_s81sl_lep_core #(
       for(fc=0;fc<FRAME_NS;fc=fc+1) begin:g_slice
         (* keep="true" *) reg rov_r,ph_r,pk_r,kevent_r;
         assign frame_host_pending[fc]=ph_r;assign frame_key_pending[fc]=pk_r;
-        wire hp=!rov_r && ph_r, kp=!rov_r && !ph_r && pk_r;
+        wire iv_s;                                       // S81/H4: this slice's copy of the tree-frame valid
+        if (IDX_EN != 0) begin : g_iv
+          (* keep="true" *) reg iv_r;
+          always @(posedge clk or negedge rr[FRAME_RSTBASE+fc]) if (!rr[FRAME_RSTBASE+fc]) iv_r <= 1'b0; else iv_r <= ivx[fc/23];
+          assign iv_s = iv_r;
+        end else begin : g_niv assign iv_s = 1'b0; end
+        wire hp=!rov_r && !iv_s && ph_r, kp=!rov_r && !iv_s && !ph_r && pk_r, ip=!rov_r && iv_s;
         wire stamp_local;
         if(8*fc<TG+33 && 8*(fc+1)>TG) begin:g_stamp_active
 `ifdef OT_S81SL_LEP_MUT_HSTAMP
@@ -390,7 +449,11 @@ module ot_s81sl_lep_core #(
           if(fb>=4 && fb<58) begin:g_key_payload assign kd=pk_d[fb-4]; end
           else if(fb>=1 && fb<=3) begin:g_key_kind assign kd=1'(3'd4>>(fb-1)); end
           else begin:g_key_zero assign kd=1'b0; end
-          wire base=rov_r?roq[fb]:(hp?hd:(kp?kd:1'b0));
+          wire id;                                       // S81/H4 tree frame bit: type 5 at [3:1], beat at [4 +: 276]
+          if(fb>=4 && fb<280) begin:g_idx_payload assign id=iq[fb-4]; end
+          else if(fb>=1 && fb<=3) begin:g_idx_kind assign id=1'(3'd5>>(fb-1)); end
+          else begin:g_idx_zero assign id=1'b0; end
+          wire base=rov_r?roq[fb]:(ip?id:(hp?hd:(kp?kd:1'b0)));
           if(fb>=TG && fb<TG+33) begin:g_tag
 `ifdef OT_S81SL_LEP_MUT_HSTAMP
             assign fr[fb]=stamp_local?wtag[fb-TG]:base;
@@ -411,6 +474,7 @@ module ot_s81sl_lep_core #(
             if (stamp) fr[TG +: 33] = wtag;
 `endif
         end
+        else if (igo) begin fr[3:1] = 3'd5; fr[4 +: 276] = iq; end       // S81/H4 tree frame
         else if (hp_go) begin fr[3:1] = 3'd3; fr[4 +: 77] = ph_d; end
         else if (kp_go) begin fr[3:1] = 3'd4; fr[4 +: 54] = pk_d; end
 `ifdef OT_S81SL_LEP_MUT_HSTAMP
@@ -418,7 +482,7 @@ module ot_s81sl_lep_core #(
 `endif
     end
     end endgenerate
-    wire [1:0] pp = {push && bsel, push && !bsel};     // push per pair
+    wire [1:0] pp = {(push && bsel) || (igo && ib), push && !bsel && !(igo && ib)};     // push per pair (S81/H4: tree frame by ib)
     wire [2*PUSH_GROUPS-1:0] push_group;
     wire [2*NL-1:0] push_lane;
     generate if(SAFE_FIFO) begin:g_push_groups
@@ -426,13 +490,29 @@ module ot_s81sl_lep_core #(
         (* keep *) reg ring_r;
         always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+pg])
           if(!rr[CTRL_RSTBASE+NL+8+pg]) ring_r<=0;else ring_r<=rvx[pg/3];
-        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && frame_host_pending[pg]),.key_go(!ring_r && !frame_host_pending[pg] && frame_key_pending[pg]),.open(wopen),.pair_b(wab),.pp(push_group[2*pg+:2]));
+        wire iv_g, ib_g; wire [1:0] pp_g;               // S81/H4: tree-frame valid / pair-B copies of this group
+        if (IDX_EN != 0) begin : g_i
+          (* keep *) reg iv_r, ib_r;
+          always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+pg])
+            if(!rr[CTRL_RSTBASE+NL+8+pg]) begin iv_r<=0; ib_r<=0; end else begin iv_r<=ivx[pg/3]; ib_r<=ibx[pg/3]; end
+          assign iv_g = iv_r; assign ib_g = ib_r;
+        end else begin : g_ni assign iv_g = 1'b0; assign ib_g = 1'b0; end
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && !iv_g && frame_host_pending[pg]),.key_go(!ring_r && !iv_g && !frame_host_pending[pg] && frame_key_pending[pg]),.open(wopen),.pair_b(wab),.pp(pp_g));
+        assign push_group[2*pg+:2] = pp_g | {!ring_r && iv_g && ib_g, !ring_r && iv_g && !ib_g};
       end
       for(genvar pl=0;pl<NL;pl=pl+1) begin:g_lane
         (* keep *) reg ring_r;
         always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl])
           if(!rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl]) ring_r<=0;else ring_r<=rvx[1+pl];
-        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && frame_host_pending[PUSH_GROUPS+pl]),.key_go(!ring_r && !frame_host_pending[PUSH_GROUPS+pl] && frame_key_pending[PUSH_GROUPS+pl]),.open(wopen),.pair_b(wab),.pp(push_lane[2*pl+:2]));
+        wire iv_g, ib_g; wire [1:0] pp_g;               // S81/H4: as the push groups
+        if (IDX_EN != 0) begin : g_i
+          (* keep *) reg iv_r, ib_r;
+          always @(posedge clk or negedge rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl])
+            if(!rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl]) begin iv_r<=0; ib_r<=0; end else begin iv_r<=ivx[1+pl]; ib_r<=ibx[1+pl]; end
+          assign iv_g = iv_r; assign ib_g = ib_r;
+        end else begin : g_ni assign iv_g = 1'b0; assign ib_g = 1'b0; end
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && !iv_g && frame_host_pending[PUSH_GROUPS+pl]),.key_go(!ring_r && !iv_g && !frame_host_pending[PUSH_GROUPS+pl] && frame_key_pending[PUSH_GROUPS+pl]),.open(wopen),.pair_b(wab),.pp(pp_g));
+        assign push_lane[2*pl+:2] = pp_g | {!ring_r && iv_g && ib_g, !ring_r && iv_g && !ib_g};
       end
     end endgenerate
     reg [1:0] sq;                                      // frame-sequence parity (TX), per pair
@@ -750,6 +830,8 @@ module ot_s81sl_lep_core #(
 `else
     wire hacc = (HOST_EN != 0) && !rpb && !active_ring_flags[1] && (h0[3:1] == 3'd1 || h0[3:1] == 3'd2);
 `endif
+    // S81/H4: a tree frame (type 5) is accepted on either pair at IDX_EN 1 and never reaches ri (not a ring beat)
+    wire iacc = (IDX_EN != 0) && !h0[0] && h0[3:1] == 3'd5;
     reg [1103:1] rid; reg riv;
     assign ri = {rid, riv};
     wire mcol_w;                                       // MU: replay collided with a cut-through beat
@@ -965,7 +1047,9 @@ module ot_s81sl_lep_core #(
             if (|rxf) perr <= 1'b1;                    // a beat landed on a full RX FIFO (credit protocol broken)
             // a released pair must be one frame (equal sequence parity); a die endpoint accepts ring / HOST / KS only
             // (ring only at HOST_EN 0 and on pair B); both pairs releasing in one cycle is a collision
-            if (rel && (h0[H] != h1[H] || (!active_ring_flags[1] && !hacc))) perr <= 1'b1;
+            if (rel && (h0[H] != h1[H] || (!active_ring_flags[1] && !hacc && !iacc))) perr <= 1'b1;
+            // S81/H4: a tree frame carries a valid beat whose lane matches the pair (pair B / PREV: lane 2, pair A: 3)
+            if (rel && iacc && (!h0[4] || h0[9:8] != (rpb ? 2'd2 : 2'd3))) perr <= 1'b1;
             if (relp[0] && relp[1]) perr <= 1'b1;
         end
     generate if (HOST_EN != 0) begin : g_hrx
@@ -1014,6 +1098,42 @@ module ot_s81sl_lep_core #(
     assign f_host = 515'd0; assign f_ks = 53'd0; assign f_lf = 4'd0;
     end endgenerate
 
+    // ---------------------------------------------------------------- IDX tree frames, RX (IDX_EN 1; S81/H4 10-24)
+    // The released frame's lane-0 head h0 (show-ahead flops) -> ih (data, no reset) and the pair selects -> kept reset
+    // copies (<= 24 data bits each) on the same edge; ca / cb leave from flops one edge later: release -> ca / cb = 2 edges.
+    // Pair B (from the PREV stage) -> ca, pair A (from NEXT) -> cb.  Idle = all-zero (the vmux reads valid-masked data).
+    generate if (IDX_EN != 0) begin : g_irx
+      localparam integer IJ = 12, IW = 23;             // 12 x 23 = 276 bits
+      reg [275:0] ih, ca_q, cb_q;
+      wire [IJ-1:0] sca, scb;
+`ifdef OT_S81SL_LEP_MUT_IDXDMX
+      wire to_ca = rel && iacc && !rpb;                // MUTANT: demux swapped
+`else
+      wire to_ca = rel && iacc && rpb;
+`endif
+      wire to_cb = rel && iacc && !to_ca;
+      always @(posedge clk) ih <= h0[4 +: 276];
+      for (genvar j = 0; j < IJ; j = j + 1) begin : g_j
+        (* keep=1 *) ot_s81sl_lep_idx_sel u_sa (.clk(clk), .rn(rnx), .d(to_ca), .q(sca[j]));
+        (* keep=1 *) ot_s81sl_lep_idx_sel u_sb (.clk(clk), .rn(rnx), .d(to_cb), .q(scb[j]));
+        if (j == 0) begin : g_v
+          always @(posedge clk or negedge rnx)
+            if (!rnx) begin ca_q[0] <= 1'b0; cb_q[0] <= 1'b0; end
+            else begin ca_q[0] <= sca[0] && ih[0]; cb_q[0] <= scb[0] && ih[0]; end
+          always @(posedge clk) begin
+            ca_q[IW-1:1] <= ih[IW-1:1] & {(IW-1){sca[0]}}; cb_q[IW-1:1] <= ih[IW-1:1] & {(IW-1){scb[0]}};
+          end
+        end else begin : g_d
+          always @(posedge clk) begin
+            ca_q[j*IW +: IW] <= ih[j*IW +: IW] & {IW{sca[j]}}; cb_q[j*IW +: IW] <= ih[j*IW +: IW] & {IW{scb[j]}};
+          end
+        end
+      end
+      assign ca = ca_q; assign cb = cb_q;
+    end else begin : g_nirx
+      assign ca = 276'd0; assign cb = 276'd0;
+    end endgenerate
+
     // ---------------------------------------------------------------- fault collector (sticky)
     wire mferr;
     generate if (MU_EN != 0) begin : g_mf
@@ -1034,7 +1154,7 @@ module ot_s81sl_lep_core #(
         if (!rn) begin slq <= 1'b0; lfq <= 6'd0; lfbq <= 6'd0; fault <= 1'b0; end
         else begin
             slq <= sl_f; lfq <= {l1_f, l0_f}; lfbq <= lfb_in;
-            if ((|ovf) || perr || herr || slq || (|lfq) || (|lfbq) || mferr) fault <= 1'b1;
+            if ((|ovf) || perr || herr || slq || (|lfq) || (|lfbq) || mferr || ie) fault <= 1'b1;
         end
 endmodule
 
@@ -1214,6 +1334,60 @@ module ot_s81sl_lep_mu_ab #(
         .lo2_v(lo2_v), .lo2_r(lo2_r), .lo2_d(lo2_d), .lo3_v(lo3_v), .lo3_r(lo3_r), .lo3_d(lo3_d),
         .li2_v(li2_v), .li2_r(li2_r), .li2_d(li2_d), .li3_v(li3_v), .li3_r(li3_r), .li3_d(li3_d), .rxvb(rxvb),
         .l2_f(l2_f), .l3_f(l3_f), .fault(fault));
+endmodule
+
+// S81/H4 (2026-10-24, COORD H4 ruling option A): the s_0N copy-A/B endpoint WITH the index rank-tree frames.  Exactly
+// ot_s81sl_lep_mu_ab plus IDX_EN 1 and the three tree ports: tl (276, <- bk_sel tl_o over the die lane tl__bk_sel__s_0N_LP),
+// ca / cb (276, -> bk_sel ca / cb over the lanes ca__ / cb__s_0N_LP__bk_sel).  Tree frame = one non-ring link frame on the
+// stage circuit picked by the beat's lane field (2 -> pair A / NEXT, 3 -> pair B / PREV); received pair B -> ca, pair A ->
+// cb.  Edges: tl pin -> frame push 3 (IN_PIPE 1: pin flop tlp + face stage tlq + iq_r), FIFO -> lo 3 (TXRP), lanes / link elastic
+// (off-die boundary), RX release -> ca / cb 2.  Faces (kit): as ot_s81sl_lep_mu_ab + tl / ca / cb on the E (ring) face.
+module ot_s81sl_lep_mu_ab_idx #(
+    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0
+) (
+    input  wire            clk,
+    input  wire            rst_n,
+    input  wire [1103:0]   ro,
+    output wire [1103:0]   ri,
+    output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,
+    output wire            lo1_v, input wire lo1_r, output wire [552:0] lo1_d,
+    input  wire            li0_v, output wire li0_r, input wire [552:0] li0_d,
+    input  wire            li1_v, output wire li1_r, input wire [552:0] li1_d,
+    output wire [1:0]      rxv,
+    input  wire            sl_f,
+    input  wire [2:0]      l0_f,
+    input  wire [2:0]      l1_f,
+    input  wire [33:0]     mu_c,
+    output wire [31:0]     mu_rt,
+    output wire            ml_wv,
+    output wire [1103:0]   ml_wd,
+    input  wire            ml_rv,
+    input  wire [1103:0]   ml_rd,
+    input  wire            ml_f,
+    output wire            lo2_v, input wire lo2_r, output wire [552:0] lo2_d,
+    output wire            lo3_v, input wire lo3_r, output wire [552:0] lo3_d,
+    input  wire            li2_v, output wire li2_r, input wire [552:0] li2_d,
+    input  wire            li3_v, output wire li3_r, input wire [552:0] li3_d,
+    output wire [1:0]      rxvb,
+    input  wire [2:0]      l2_f,
+    input  wire [2:0]      l3_f,
+    output wire            fault,
+    input  wire [275:0]    tl,
+    output wire [275:0]    ca,
+    output wire [275:0]    cb
+);
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB),
+        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32), .IDX_EN(1)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
+        .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
+        .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
+        .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
+        .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(2'b00), .l1_st(2'b00),
+        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
+        .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(ml_wv), .ml_wd(ml_wd), .ml_rv(ml_rv), .ml_rd(ml_rd), .ml_f(ml_f),
+        .lo2_v(lo2_v), .lo2_r(lo2_r), .lo2_d(lo2_d), .lo3_v(lo3_v), .lo3_r(lo3_r), .lo3_d(lo3_d),
+        .li2_v(li2_v), .li2_r(li2_r), .li2_d(li2_d), .li3_v(li3_v), .li3_r(li3_r), .li3_d(li3_d), .rxvb(rxvb),
+        .l2_f(l2_f), .l3_f(l3_f), .fault(fault), .tl(tl), .ca(ca), .cb(cb));
 endmodule
 
 // MU-S81b (2026-10-19): hardened master of the copy-A-only multi-user endpoint (kit s81sl_lepmua) for the stages with NO
@@ -1530,6 +1704,11 @@ endmodule
 // LEPCAP 10-19: one face-stage copy of a valid bit (kept hierarchy: Yosys may not merge the copies back into one flop).
 (* keep_hierarchy="yes" *) module ot_s81sl_lep_vcopy(input wire clk, input wire d, output reg q);
  always @(posedge clk) q <= d;
+endmodule
+
+// S81/H4 10-24: one kept, reset (control) copy of a tree-frame demux select (<= 23 data loads each).
+(* keep_hierarchy="yes" *) module ot_s81sl_lep_idx_sel(input wire clk, input wire rn, input wire d, output reg q);
+ always @(posedge clk or negedge rn) if (!rn) q <= 1'b0; else q <= d;
 endmodule
 
 // Native32 MU control regions. Same capture edge and static protocol as the legacy core.
