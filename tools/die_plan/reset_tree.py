@@ -1027,16 +1027,20 @@ def wf_plan(P):
             row.update(source=f"{q}.rst_o_{k}", hop_um=pr[2])
         parts[p] = row
         st += sorted(kids.get(p, []))
+    max_release = max([r["release"] for r in parts.values()] or [0])
+    max_core_release = max([v for r in parts.values() for v in r.get("core_release", {}).values()] or [0])
     out = dict(release="wavefront", sync_stages=N, root=sol["root"], root_type=sol["root_type"],
                hop_um=hop_um(P), relay_um=relay_um(P), unreachable=sol["unreachable"],
-               max_release=max([r["release"] for r in parts.values()] or [0]),
+               max_release=max_release, max_core_release=max_core_release,
+               max_complete_release=max(max_release, max_core_release),
                max_die_hop_um=max([r.get("hop_um", 0.0) for r in parts.values()] or [0.0]),
                long_hops=sorted([[p, r["source"], r["hop_um"]] for p, r in parts.items()
                                  if r.get("hop_um", 0.0) > hop_um(P) + 1e-6], key=lambda x: -x[2]),
                types=types, parts=dict(sorted(parts.items())),
                note="OWNER DECISION 13 (2026-10-24): one root 2-flop synchroniser; neighbour wavefront; release = "
                     "clocks after die rst_n deasserts at which the partition's taps (and its rst_o) release; the "
-                    "static schedule starts with an explicit start broadcast after reset")
+                    "static schedule starts with an explicit start broadcast after max_complete_release (including "
+                    "hard-core internal reset depth); max_release alone covers partition taps/outs")
     cache["wf_plan"] = out
     return out
 

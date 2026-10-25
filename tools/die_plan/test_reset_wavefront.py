@@ -283,3 +283,17 @@ puts CORE_RESET_EQ_PASS
     out = subprocess.run(["tclsh"], input=script, text=True, capture_output=True)
     assert out.returncode == 0 and not out.stderr, out.stderr
     assert out.stdout.strip() == "CORE_RESET_EQ_PASS"
+
+
+def test_complete_release_includes_hard_core_internal_reset_depth():
+    raw = wave(TINY)
+    W = RT.wf_plan(schema.Plan(raw))
+    assert W["max_core_release"] == 0
+    assert W["max_complete_release"] == W["max_release"]
+    for t in raw["partition_types"].values():
+        t["hard_cores"] = [dict(inst="u_hc", module="core", origin_um=[50, 50], outline_um=[200, 300],
+            reset=dict(depth=3), pins=[dict(name="rst_n", layer="M4", xy=[0, 150])])]
+    W = RT.wf_plan(schema.Plan(raw))
+    assert W["max_core_release"] == W["max_release"] + 3
+    assert W["max_complete_release"] == W["max_core_release"]
+    assert W["max_complete_release"] == max(v for r in W["parts"].values() for v in r["core_release"].values())
