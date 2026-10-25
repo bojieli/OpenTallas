@@ -464,6 +464,7 @@ def main():
             macros.append(m)
             lefs.append(f"/work/macros/{m}.lef")
             libs.append(f"/work/macros/{m}_tt.lib")
+            libs_ff.append(f"/work/macros/{m}_ff.lib")   # MCMM bc corner needs the child FF view (STA-1112 without it)
         mp = ["# GENERATED (gen_core_kit_kv.py --hard-children): FIRM sites of the hard children (plan proposal)",
               "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]"]
         for b in hard_children["blocks"]:
