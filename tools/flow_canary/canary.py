@@ -386,8 +386,10 @@ def check_run(run, spec=None, die_plan_dir=None):
     res["cts"] = st(bool(cts) or None, "4_cts.odb" if cts else "no 4_cts.odb " + read(kit / "FAIL_POSTCTS")[-200:])
     g = [read(kit / f"postcts_gate_{c}.log") for c in ("TT", "FF")]
     gl = [l for x in g for l in x.splitlines() if l.startswith("OT_POSTCTS_GATE")]
-    if spec.get("grt_gate", True) is False:
-        res["grt_gate"] = st(True, "not part of this flow (spec grt_gate false)")
+    if spec.get("grt_gate", True) is False and not gl:
+        # FLOW-CANARY 10-25: 'false' only covers a flow WITHOUT the gate; once the flow runs it (HBM core flow on
+        # main: FAIL_POSTCTS insertion TT 304.9/FF 266.4 vs 250/202.5) its lines are the verdict, never a free PASS
+        res["grt_gate"] = st(True, "not part of this flow (spec grt_gate false, no OT_POSTCTS_GATE lines)")
     else:
         hg = [l for l in read(kit / "hold_gate.log").splitlines() if l.startswith("OT_HOLD_GATE")]
         res["grt_gate"] = st(None, "no OT_POSTCTS_GATE lines" + (f" (stopped before: {hg[-1]})" if hg else "")) if not gl else st(
