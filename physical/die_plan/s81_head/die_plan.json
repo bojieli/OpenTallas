@@ -3122,6 +3122,57 @@
       "M6"
      ],
      "order": "lsb_low"
+    },
+    {
+     "name": "tl_i",
+     "dir": "in",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.tl_i",
+     "face": "E",
+     "window_um": [
+      859.7316,
+      921.3032
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "ca_o",
+     "dir": "out",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.ca_o",
+     "face": "E",
+     "window_um": [
+      931.3032,
+      992.8588
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "cb_o",
+     "dir": "out",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.cb_o",
+     "face": "E",
+     "window_um": [
+      1002.8588,
+      1064.4304
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
     }
    ]
   },
@@ -3402,6 +3453,57 @@
      "window_um": [
       440.0,
       466.0
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "tl_o",
+     "dir": "out",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.tl_o",
+     "face": "W",
+     "window_um": [
+      859.7316,
+      921.3032
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "ca_i",
+     "dir": "in",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.ca_i",
+     "face": "W",
+     "window_um": [
+      931.3032,
+      992.8588
+     ],
+     "layers": [
+      "M4",
+      "M6"
+     ],
+     "order": "lsb_low"
+    },
+    {
+     "name": "cb_i",
+     "dir": "in",
+     "width": 276,
+     "kind": "data",
+     "leaf": "u_core.cb_i",
+     "face": "W",
+     "window_um": [
+      1002.8588,
+      1064.4304
      ],
      "layers": [
       "M4",
@@ -14396,6 +14498,45 @@
    "kind": "data"
   },
   {
+   "id": "h4_tl__0",
+   "src": {
+    "part": "ctl",
+    "bus": "tl_o"
+   },
+   "dst": {
+    "part": "lep0N",
+    "bus": "tl_i"
+   },
+   "width": 276,
+   "kind": "data"
+  },
+  {
+   "id": "h4_ca__0",
+   "src": {
+    "part": "lep0N",
+    "bus": "ca_o"
+   },
+   "dst": {
+    "part": "ctl",
+    "bus": "ca_i"
+   },
+   "width": 276,
+   "kind": "data"
+  },
+  {
+   "id": "h4_cb__0",
+   "src": {
+    "part": "lep0N",
+    "bus": "cb_o"
+   },
+   "dst": {
+    "part": "ctl",
+    "bus": "cb_i"
+   },
+   "width": 276,
+   "kind": "data"
+  },
+  {
    "id": "coll_WN0_u__0",
    "src": {
     "part": "lk_WN0",
@@ -17322,6 +17463,27 @@
    "ports": [
     "ctrl_lep__0"
    ]
+  },
+  {
+   "id": "h4_tl",
+   "ports": [
+    "h4_tl__0"
+   ],
+   "param": "LAT_HD_H4_TL"
+  },
+  {
+   "id": "h4_ca",
+   "ports": [
+    "h4_ca__0"
+   ],
+   "param": "LAT_HD_H4_CA"
+  },
+  {
+   "id": "h4_cb",
+   "ports": [
+    "h4_cb__0"
+   ],
+   "param": "LAT_HD_H4_CB"
   },
   {
    "id": "coll_WN0_u",
@@ -20550,6 +20712,36 @@
     "natural": 2,
     "pad": 0,
     "param": "LAT_CTRL_LEP"
+   },
+   "h4_tl": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_HD_H4_TL"
+   },
+   "h4_ca": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_HD_H4_CA"
+   },
+   "h4_cb": {
+    "cycles": 2,
+    "stations": 0,
+    "boundary": 2,
+    "faces": 1,
+    "fixed": 0,
+    "natural": 2,
+    "pad": 0,
+    "param": "LAT_HD_H4_CB"
    },
    "coll_WN0_u": {
     "cycles": 2,
