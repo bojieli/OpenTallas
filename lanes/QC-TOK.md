@@ -126,3 +126,15 @@ Parked on CLAUDE RESET. Complete branch/results/job inventory in CODEX-LOG Hando
 ## CODEX notes — 2026-10-25 05:59 PDT handback
 Collected inherited actual wavefront xt1 PASS near64/64+far64/64, static-edge mutant caught (schedule_gate.json PASS), epyc3 codex-qc-wavefront-run-1025/both. Decision13c explicit START successor NOT RUN. Stopped on reset; detailed handoff CODEX-LOG. No new source/merge/live jobs.
 2026-10-25 06:15 PDT QC-TOK3: started (13c START on current QC plan). Found predecessor's LIVE run epyc3:/srv/opentallas-scratch2/claude/qc-tok-start-1025/both (ot-run bash pid 4107892, tool = e0e0da544 bind_smoke, bind = clock-reset proof qc_bind = main QC plan + reset.start=broadcast, verify PASS): nominal START_AT=200 cal 330 near 64/64 + far 64/64 PASS, hr+1 mutant run done; 3 START negatives (cal@S, cal@S+129, start never) running. Collecting, not relaunching. Branch claude/qc-tok-start2-1025 = qc-tok-1025 + qc-tok-start-1025 + main 6a6fc12dd (+5 START carve unit tests).
+2026-10-25 06:36 PDT QC-TOK3: COLLECTED decision-13c START xt1 both on main's QC plan + reset.start=broadcast (proof bind epyc3 clock-reset/start/qc_bind, verify PASS): nominal START_AT 200 / cal 330 near 64/64 + far 64/64 PASS; hr+1 mutant numerically PASS but schedule gate catches it (PASS); NEG cal@S 0/64+0/64 FAIL, NEG start-never 0/64+0/64 FAIL; cal 1 clock early still PASSES with unchanged edges (contract 130 is conservative, same as xt1_wf_early). Edges relative to the calendar are identical to the r3 wavefront run: 0 cyc/token, boot S+130. Receipt + 5 START carve unit tests: claude/qc-tok-start2-1025@1a6dbd1f6 (READY posted). Asked QC-A0 to fold reset.start=broadcast into the QC plan batch.
+
+## PARKED 2026-10-25 06:36 PDT (QC-TOK3)
+- Branch claude/qc-tok-start2-1025@1a6dbd1f6 (pushed; local worktree /home/ubuntu/wt/qc-tok-start2-1025, sparse). READY in COORD-REVIEW-QUEUE.
+- Live jobs: none (QC-TOK2's epyc3 run qc-tok-start-1025/both finished 06:34; ot-run bash pid 4107892 exited). Run dir kept for
+  ROOT-MERGE checks (obj_089b730b0c7dba35 is 7 GB; delete it after the merge).
+- Results: results/token_pass/qc_1025/xt1_start_broadcast (README table). Build 45.9 min / 79.5 GB peak.
+- Next: (1) the QC plan owner (QC-A0 / qc-plan3) commits reset.start=broadcast in the next per-die batch and re-kits the soft
+  types once (+start_i/+start_o_<k>); (2) rebind on that committed plan and rerun this smoke (prep.sh in the receipt: change
+  --bound, about 50 min on epyc3, 90 GB) to make it plan-of-record; (3) d2d03fe94 (ot_dp_rgate) is still only on
+  claude/clock-reset-1025, and the proof bind used it, so it must reach main with the plan batch.
+- OWNER?: none.
