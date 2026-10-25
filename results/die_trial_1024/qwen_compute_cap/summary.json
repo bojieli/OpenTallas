@@ -678,14 +678,56 @@
   }
  },
  "ir": {
-  "status": "RUNNING",
-  "host": "epyc3 (ot-run spill from epyc2; results copy back to epyc2:/srv/opentallas-scratch2/claude/trial-qk/qc_cap_4b445d_ir_t4)",
-  "container": "trialqk-ir-3003628",
-  "path": "epyc3:/srv/opentallas-scratch2/claude/trial-qk/qc_cap_4b445d_ir_t4",
-  "pdn_s": 592,
+  "status": "DONE",
+  "host": "epyc3 (ot-run spill)",
+  "psm_s": 19024,
+  "peak_rss_gb": 224.1,
   "est_power_w": 234.1,
-  "tile_um": 138.24,
-  "note": "PSM started ~20:30 PDT; old QC plan PSM took 7.4 h at 235 GB peak"
+  "VDD": {
+   "worst_v": 0.61,
+   "avg_v": 0.668,
+   "avg_ir_mv": 31.8,
+   "worst_ir_mv": 89.6
+  },
+  "VSS": {
+   "worst_v": 0.13,
+   "avg_v": 0.0316,
+   "avg_ir_mv": 31.6,
+   "worst_ir_mv": 130.0
+  },
+  "worst_parts_mv": [
+   {
+    "part": "sl_W4_su_l0",
+    "vdd": 89.6,
+    "vss": 110.2,
+    "total": 199.8
+   },
+   {
+    "part": "sl_W4_su_l1",
+    "vdd": 69.8,
+    "vss": 129.6,
+    "total": 199.4
+   },
+   {
+    "part": "sl_W2_su_l0",
+    "vdd": 69.6,
+    "vss": 127.7,
+    "total": 197.4
+   },
+   {
+    "part": "sl_W1_su_l0",
+    "vdd": 88.1,
+    "vss": 108.0,
+    "total": 196.1
+   },
+   {
+    "part": "sl_W5_su_l0",
+    "vdd": 67.1,
+    "vss": 128.8,
+    "total": 195.8
+   }
+  ],
+  "note": "IR inputs (ir.def, ir_power.json, bumps, scripts) are byte-identical to the old v3.8s run (plan 0028ad53): the capacity plan keeps v3.8s partition placement/types (377/377 identical), so the identical result (VDD 89.6 / VSS 130.0 mV worst, avg 31.8 / 31.6 mV) is expected; worst = slice su_l0/su_l1/su_c band y 10.5-11.5 mm, periodic darker columns at x ~6.5/14/21.5/28.5 mm"
  },
  "notes": [
   "GRT here = 3 congestion iterations (epyc3, 2 h 42 m, 22.4 GB): total overflow 84105 (M4 16917, M5 29780, M6 6656, M7 15291, M8 10072, M9 5389), NOT comparable with the old v3.8s 30-iteration 4659. The 30-iteration GRT of the same build was STOPPED 2026-10-25 00:16 PDT at extra iteration 4/30 after 4 h 06 m (QC lane: this capacity plan is superseded by the claude/qc-meth-1024 re-plan); it never reported overflow; its run data was deleted, log kept.",
@@ -700,6 +742,7 @@
   "seam_clock_tree.png",
   "seam_congestion.png",
   "seam_floorplan_lanes.png",
+  "seam_ir_vdd.png",
   "seam_sta_negative.png"
  ],
  "superseded_by": "claude/qc-meth-1024 @a4ab2ba7fc (signals <= M7, no M8/M9 signals, 405-um stations, wavefront reset); next die trial on its final bind with the seam-aligned tree as default"
