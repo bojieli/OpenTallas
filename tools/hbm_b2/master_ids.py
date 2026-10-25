@@ -185,11 +185,14 @@ def transform(plan_dir, canonical_path, recipe_path, out_dir):
             oldc['module']=module;oldc['pins_file']=pinpath
             aliases.append(dict(type=oldtn,inst=oldc['inst'],old_type_id=oldtid,
                                 module=module,id_port=idport,id_value=idvalue,pin_bus_rename=portmap))
+        instances = [part['name']+'.'+core['inst'] for mtn,core,*_ in members
+                     for part in raw['partitions'] if part['type']==mtn]
         views.append(dict(view=module,module=module,outline_um=list(outline),pins_file=pinpath,
                           pins_sha256=hashlib.sha256(pth.read_bytes()).hexdigest(),
-                          recipe_keys=[newid],canonical_type=newfamily,replicas=len(members)))
+                          recipe_keys=[newid],canonical_type=newfamily,replicas=len(members),
+                          instances=instances,placed=len(instances)))
         report.append(dict(family=family,module=module,replicas=len(members),old_pin_templates=len(set(keypins(m) for m in members)),
-                           new_pin_templates=1,id_input_bits=idwidth,pins=len(masterpins),
+                           new_pin_templates=1,placed=len(instances),id_input_bits=idwidth,pins=len(masterpins),
                            inherited_data_specialization=bool(cut.get('tied_at_parent')),added_data_cycles=0,
                            id_latency='existing face shell input stage; boot-static ID'))
     for name in ('die_plan.json','core_conns.json'):

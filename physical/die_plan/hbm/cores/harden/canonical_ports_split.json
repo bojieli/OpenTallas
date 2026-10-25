@@ -20973,6 +20973,529 @@
      }
     }
    }
+  },
+  "sfu_lane_idpin": {
+   "elab_bits": [
+    1190,
+    282
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hgi_sfu_core_split3/ot_hgi_sfu_split3_lane_core.sv",
+   "master": "ot_hgi_sfu_core_split3",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "map_clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "map_rst_n",
+     "input",
+     1,
+     0
+    ],
+    [
+     "map_ld_terms",
+     "input",
+     480,
+     0
+    ],
+    [
+     "map_i_o_v",
+     "input",
+     24,
+     0
+    ],
+    [
+     "map_i_i_v",
+     "input",
+     24,
+     0
+    ],
+    [
+     "map_i_krow",
+     "input",
+     24,
+     0
+    ],
+    [
+     "map_i_ls",
+     "input",
+     4,
+     0
+    ],
+    [
+     "map_i_lvw",
+     "input",
+     4,
+     0
+    ],
+    [
+     "map_i_emit",
+     "input",
+     1,
+     0
+    ],
+    [
+     "map_i_pass",
+     "input",
+     461,
+     0
+    ],
+    [
+     "sfu_clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "sfu_rst_n",
+     "input",
+     1,
+     0
+    ],
+    [
+     "sfu_vi_q",
+     "input",
+     32,
+     0
+    ],
+    [
+     "sfu_rd_q",
+     "input",
+     128,
+     0
+    ],
+    [
+     "map_lane_j",
+     "input",
+     4,
+     0
+    ],
+    [
+     "sfu_vi_re",
+     "output",
+     1,
+     0
+    ],
+    [
+     "sfu_vi_addr",
+     "output",
+     24,
+     0
+    ],
+    [
+     "sfu_rd_addr",
+     "output",
+     96,
+     0
+    ],
+    [
+     "sfu_rd_re",
+     "output",
+     4,
+     0
+    ],
+    [
+     "sfu_rd_src",
+     "output",
+     8,
+     0
+    ],
+    [
+     "sfu_vm_we",
+     "output",
+     1,
+     0
+    ],
+    [
+     "sfu_vm_waddr",
+     "output",
+     24,
+     0
+    ],
+    [
+     "sfu_vm_wdata",
+     "output",
+     32,
+     0
+    ],
+    [
+     "sfu_kv_we",
+     "output",
+     1,
+     0
+    ],
+    [
+     "sfu_kv_waddr",
+     "output",
+     24,
+     0
+    ],
+    [
+     "sfu_kv_wdata",
+     "output",
+     32,
+     0
+    ],
+    [
+     "sfu_ro_v",
+     "output",
+     1,
+     0
+    ],
+    [
+     "sfu_ro_x",
+     "output",
+     32,
+     0
+    ],
+    [
+     "sfu_fault",
+     "output",
+     1,
+     0
+    ],
+    [
+     "sfu_coll",
+     "output",
+     1,
+     0
+    ]
+   ],
+   "top": "ot_hgi_sfu_split3_lane_core",
+   "type_ids": {
+    "ot_hgi_sfu_split3_lane_core__idpin__388.8x345.6": {
+     "check": "PASS",
+     "cut_bits": [
+      1190,
+      282
+     ],
+     "cut_pins": {
+      "map_clk": {
+       "map_clk": 1
+      },
+      "map_i_emit": {
+       "map_i_emit": 1
+      },
+      "map_i_i_v": {
+       "map_i_i_v": 24
+      },
+      "map_i_krow": {
+       "map_i_krow": 24
+      },
+      "map_i_ls": {
+       "map_i_ls": 4
+      },
+      "map_i_lvw": {
+       "map_i_lvw": 4
+      },
+      "map_i_o_v": {
+       "map_i_o_v": 24
+      },
+      "map_i_pass": {
+       "map_i_pass": 461
+      },
+      "map_lane_j": {
+       "map_lane_j": 4
+      },
+      "map_ld_terms": {
+       "map_ld_terms": 480
+      },
+      "map_rst_n": {
+       "map_rst_n": 1
+      },
+      "sfu_clk": {
+       "sfu_clk": 1
+      },
+      "sfu_coll": {
+       "sfu_coll": 1
+      },
+      "sfu_fault": {
+       "sfu_fault": 1
+      },
+      "sfu_kv_waddr": {
+       "sfu_kv_waddr": 24
+      },
+      "sfu_kv_wdata": {
+       "sfu_kv_wdata": 32
+      },
+      "sfu_kv_we": {
+       "sfu_kv_we": 1
+      },
+      "sfu_rd_addr": {
+       "sfu_rd_addr": 96
+      },
+      "sfu_rd_q": {
+       "sfu_rd_q": 128
+      },
+      "sfu_rd_re": {
+       "sfu_rd_re": 4
+      },
+      "sfu_rd_src": {
+       "sfu_rd_src": 8
+      },
+      "sfu_ro_v": {
+       "sfu_ro_v": 1
+      },
+      "sfu_ro_x": {
+       "sfu_ro_x": 32
+      },
+      "sfu_rst_n": {
+       "sfu_rst_n": 1
+      },
+      "sfu_vi_addr": {
+       "sfu_vi_addr": 24
+      },
+      "sfu_vi_q": {
+       "sfu_vi_q": 32
+      },
+      "sfu_vi_re": {
+       "sfu_vi_re": 1
+      },
+      "sfu_vm_waddr": {
+       "sfu_vm_waddr": 24
+      },
+      "sfu_vm_wdata": {
+       "sfu_vm_wdata": 32
+      },
+      "sfu_vm_we": {
+       "sfu_vm_we": 1
+      }
+     },
+     "excluded": "",
+     "straps": {}
+    }
+   }
+  },
+  "tkm_tile_idpin": {
+   "elab_bits": [
+    698,
+    689
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv",
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "tile_clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "tile_clr",
+     "input",
+     1,
+     0
+    ],
+    [
+     "tile_conv",
+     "input",
+     1,
+     0
+    ],
+    [
+     "tile_ins_v",
+     "input",
+     1,
+     0
+    ],
+    [
+     "tile_ins_b",
+     "input",
+     344,
+     0
+    ],
+    [
+     "tile_up_in",
+     "input",
+     344,
+     0
+    ],
+    [
+     "tile_tid",
+     "input",
+     6,
+     0
+    ],
+    [
+     "tile_ovf_v",
+     "output",
+     1,
+     0
+    ],
+    [
+     "tile_ovf_b",
+     "output",
+     344,
+     0
+    ],
+    [
+     "tile_up_out",
+     "output",
+     344,
+     0
+    ]
+   ],
+   "top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "type_ids": {
+    "ot_hgi_coll_tkm_tp192_tile_core__idpin__319.68x345.6": {
+     "check": "PASS",
+     "cut_bits": [
+      698,
+      689
+     ],
+     "cut_pins": {
+      "tile_clk": {
+       "tile_clk": 1
+      },
+      "tile_clr": {
+       "tile_clr": 1
+      },
+      "tile_conv": {
+       "tile_conv": 1
+      },
+      "tile_ins_b": {
+       "tile_ins_b": 344
+      },
+      "tile_ins_v": {
+       "tile_ins_v": 1
+      },
+      "tile_ovf_b": {
+       "tile_ovf_b": 344
+      },
+      "tile_ovf_v": {
+       "tile_ovf_v": 1
+      },
+      "tile_tid": {
+       "tile_tid": 6
+      },
+      "tile_up_in": {
+       "tile_up_in": 344
+      },
+      "tile_up_out": {
+       "tile_up_out": 344
+      }
+     },
+     "excluded": "",
+     "straps": {}
+    }
+   }
+  },
+  "tkm_tile_terminal_idpin": {
+   "elab_bits": [
+    698,
+    689
+   ],
+   "file": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv",
+   "master": "ot_hgi_coll_tkm_m_tp192",
+   "port_check": "PASS",
+   "ports": [
+    [
+     "tile_clk",
+     "input",
+     1,
+     0
+    ],
+    [
+     "tile_clr",
+     "input",
+     1,
+     0
+    ],
+    [
+     "tile_conv",
+     "input",
+     1,
+     0
+    ],
+    [
+     "tile_ins_v",
+     "input",
+     1,
+     0
+    ],
+    [
+     "tile_ins_b",
+     "input",
+     344,
+     0
+    ],
+    [
+     "tile_up_in",
+     "input",
+     344,
+     0
+    ],
+    [
+     "tile_tid",
+     "input",
+     6,
+     0
+    ],
+    [
+     "tile_ovf_v",
+     "output",
+     1,
+     0
+    ],
+    [
+     "tile_ovf_b",
+     "output",
+     344,
+     0
+    ],
+    [
+     "tile_up_out",
+     "output",
+     344,
+     0
+    ]
+   ],
+   "top": "ot_hgi_coll_tkm_tp192_tile_core",
+   "type_ids": {
+    "ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__319.68x345.6": {
+     "check": "PASS",
+     "cut_bits": [
+      354,
+      344
+     ],
+     "cut_pins": {
+      "tile_clk": {
+       "tile_clk": 1
+      },
+      "tile_clr": {
+       "tile_clr": 1
+      },
+      "tile_conv": {
+       "tile_conv": 1
+      },
+      "tile_ins_b": {
+       "tile_ins_b": 344
+      },
+      "tile_ins_v": {
+       "tile_ins_v": 1
+      },
+      "tile_tid": {
+       "tile_tid": 6
+      },
+      "tile_up_out": {
+       "tile_up_out": 344
+      }
+     },
+     "excluded": "",
+     "open_at_parent": {
+      "tile_ovf_b": 344,
+      "tile_ovf_v": 1
+     },
+     "straps": {},
+     "tied_at_parent": {
+      "tile_up_in=0": 344
+     }
+    }
+   }
   }
  }
 }
