@@ -17,6 +17,8 @@ liberty files before synthesis):
   relaxation every period = the plan period, no -waveform; max delays >= the declared IO budgets; and no exception
              command at all (set_false_path, set_multicycle_path, set_max_delay, set_min_delay, set_disable_timing,
              set_clock_groups, set_case_analysis, ... : any command outside the generator's vocabulary is an error).
+             Sole exception (OWNER 10-25 option B): set_false_path -from [get_ports {...}] on declared ID straps
+             (lint(straps=...) / sdc_lint.json "straps" / kit straps.json, strap_* inputs) -- required on every declared strap, refused on any other port.
 """
 import argparse
 import gzip
@@ -189,7 +191,7 @@ def _num(x, what):
 
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
-         io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None):
+         io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).  -> [errors]"""
@@ -209,10 +211,32 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     idly = {p: {} for p in ctx.allp}  # port -> {"max": (clk, ps), "min": ...}
     odly = {p: {} for p in ctx.allp}
     refs = []
+    # OWNER 10-25 option B: declared ID straps (strap_* inputs) are quasi-static: exactly one exception is allowed,
+    # set_false_path -from [get_ports {<declared straps>}] (no case analysis), and every declared strap must have it
+    strap_l = list(straps or [])
+    for x in strap_l:
+        if not isinstance(x, str) or not re.match(r"^strap_[A-Za-z0-9_]+$", x):
+            err.append(f"straps: '{x}' must be named strap_<id> (OWNER 10-25 option B rule 1)")
+        elif x not in ctx.inputs:
+            err.append(f"straps: '{x}' is not an input port")
+    if len(set(strap_l)) != len(strap_l):
+        err.append("straps: duplicate names")
+    strap_fp = set()
     for cmd in _split_cmds(text):
         try:
             w = _words(cmd)
             c = w[0]
+            if c == "set_false_path" and strap_l:
+                if len(w) != 3 or w[1] != "-from":
+                    err.append(f"straps: only 'set_false_path -from [get_ports {{strap_*}}]' is allowed (fail-closed): {cmd}")
+                    continue
+                k, ps = _eval_obj(ctx, w[2])
+                bad = [x for x in ps if x not in strap_l]
+                if k != "ports" or bad:
+                    err.append(f"straps: set_false_path -from on non-strap object(s) {bad or k} (fail-closed): {cmd}")
+                    continue
+                strap_fp.update(ps)
+                continue
             if c not in ALLOWED:
                 err.append(f"forbidden / unknown SDC command (fail-closed): {cmd}")
                 continue
@@ -343,6 +367,9 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
         except (SdcLintError, IndexError) as e:
             err.append(f"parse (fail-closed): {e} [{cmd}]")
     # ---- checks
+    for x in strap_l:
+        if x not in strap_fp:
+            err.append(f"straps: declared strap {x} has no set_false_path -from (quasi-static ID input)")
     for ck in refs:
         if ck not in ctx.clocks:
             err.append(f"clocks: -clock {ck} is not defined")
@@ -462,6 +489,9 @@ def lint_kit_files(kitdir, liberties=()):
         lu = v if lu is None else lu
     if liberties and lu is None:
         err.append("units: no liberty time_unit found")
+    if not ctx.get("straps") and (kd / "straps.json").is_file():
+        d = json.loads((kd / "straps.json").read_text())   # OWNER 10-25 option B: the kit's declared ID straps
+        ctx["straps"] = list(d.get("straps", []) if isinstance(d, dict) else d)
     return err + lint((kd / "constraint.sdc").read_text(), liberty_unit_ps=lu, **ctx)
 
 

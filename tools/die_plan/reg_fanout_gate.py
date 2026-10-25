@@ -25,7 +25,9 @@ CTRL_PIN_RE = re.compile(r"^(CLK|CK|C|RESETN?|SETN?|RN|SN|R|S|CLR|PRE)$", re.I)
 FF_OUT = {"Q", "QN"}
 
 
-def fanout(text, top=None, max_loads=MAX_LOADS):
+def fanout(text, top=None, max_loads=MAX_LOADS, straps=()):
+    """straps: declared ID strap ports (OWNER 10-25 option B).  A register whose D is a strap port bit is the strap's
+    quasi-static landing copy, not a merged replica: it is exempt (listed under strap_landing).  Nothing else is."""
     mods = FG.parse(text)
     if top is None:
         used = {typ for M in mods.values() for typ, _, _ in M.cells}
@@ -34,6 +36,9 @@ def fanout(text, top=None, max_loads=MAX_LOADS):
             raise ValueError(f"cannot pick the top module: {tops}")
         top = tops[0]
     F = FG.Flat(mods, top)
+    sl = FG.strap_list(straps)
+    strap_roots = {F.find(bt) for x in sl for bt in FG._bits_of(mods[top], x)}
+    strap_q = set()
     data_loads, ctrl_loads, ff_drv = defaultdict(int), defaultdict(int), defaultdict(list)
     for ci, (m, path, pp) in enumerate(F.cells):
         ff = FG.is_ff(m)
@@ -43,12 +48,15 @@ def fanout(text, top=None, max_loads=MAX_LOADS):
                 if d == "out":
                     if ff and p.upper() in FF_OUT:
                         ff_drv[r].append(f"{path}.{p}")
+                        if strap_roots and any(F.find(x) in strap_roots for x in pp.get("D", (None, ()))[1]):
+                            strap_q.add(r)
                 elif CTRL_PIN_RE.match(p):
                     ctrl_loads[r] += 1
                 else:
                     data_loads[r] += 1
     n_ff = len({x.rsplit(".", 1)[0] for v in ff_drv.values() for x in v})
-    over = sorted(((data_loads[r], r, ff_drv[r]) for r in ff_drv if data_loads[r] > max_loads), reverse=True)
+    over = sorted(((data_loads[r], r, ff_drv[r]) for r in ff_drv if data_loads[r] > max_loads and r not in strap_q),
+                  reverse=True)
     hist = defaultdict(int)
     for r in ff_drv:
         n = data_loads[r]
@@ -57,7 +65,8 @@ def fanout(text, top=None, max_loads=MAX_LOADS):
     return dict(schema="opentallas.reg_fanout_gate.v1", top=top, max_loads=max_loads, registers=n_ff,
                 reg_nets=len(ff_drv), over=len(over), verdict="PASS" if not over else "FAIL",
                 worst=[dict(loads=n, net=r, regs=d[:4], ctrl_loads=ctrl_loads[r]) for n, r, d in over[:200]],
-                hist=dict(hist))
+                hist=dict(hist), straps=sorted(sl),
+                strap_landing=[dict(loads=data_loads[r], net=r, regs=ff_drv[r][:4]) for r in sorted(strap_q)])
 
 
 def main(argv=None):
@@ -66,9 +75,11 @@ def main(argv=None):
     ap.add_argument("--top")
     ap.add_argument("--max", type=int, default=MAX_LOADS)
     ap.add_argument("--out")
+    ap.add_argument("--straps", help="kit dir or straps.json: declared ID straps (OWNER 10-25 option B)")
     a = ap.parse_args(argv)
     try:
-        r = fanout(Path(a.netlist).read_text(), a.top, a.max)
+        sl = FG.kit_strap_list(Path(a.straps).parent if a.straps.endswith(".json") else a.straps) if a.straps else []
+        r = fanout(Path(a.netlist).read_text(), a.top, a.max, straps=sl)
     except Exception as e:                       # a crash is NOT RUN (2), never a PASS
         r = dict(verdict="ERROR", error=f"{type(e).__name__}: {e}")
     r["netlist"] = a.netlist

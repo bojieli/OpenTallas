@@ -6,7 +6,9 @@ A content or hard_core descriptor may declare::
 
 This is an input-port contract, never permission to constant-drive data, fault,
 valid or control pins. Physical callers must supply their actual input inventory.
-All ID pins retain normal timing and physical pin obligations.
+OWNER DECISION 2026-10-25 07:01 (option B) rule 2 overrides normal pin obligations for these pins: they are
+quasi-static strap_* inputs, exempt from the pin register, set_false_path -from in the kit SDC, tied at the parent
+with TIEHI/TIELO next to the pin (gate side: straps.py).
 """
 
 KV_ID_WIDTHS = {'strap_corner': 2, 'strap_hid': 2, 'strap_bsel': 2}
