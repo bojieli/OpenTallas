@@ -663,6 +663,48 @@ def core_faces_away(k, o, w, h, buses):
     return bad
 
 
+# S81/LEAFPLAN2 10-25 (GEOM review of r9: 65 / 74 leaf types had hcpl lanes > 50 um BEHIND the vn halves' lane face,
+# up to 947 um, wrapping the 256-b h buses around the core): lane-side rule.  {key: (lane insts, {core: port}, exempt)}:
+# the face that carries the core's port (the port group's majority face, placed orientation / pin view applied) splits
+# the type: every lane box lies wholly in front of that face's plane (the lane field), and no other hard core (except
+# the `exempt` ones: the leaf-store SRAMs, wired to the same vn face) reaches into the lane field -- so no lane sits
+# behind a core.  The candidate ranking treats a violation as hard (after the G0C face rule); cores/leaf/search.py too.
+LANE_SIDE = {"leaf": (["u_lf.u_vp.g_ln[%d].u_l" % i for i in range(16)],
+                      {"u_lf.u_vn.u_a": "hq_d", "u_lf.u_vn.u_b": "hq_d"},
+                      ["u_lf.u_vp.u_b0", "u_lf.u_vp.u_b1"])}
+# the bus reach-excess ranking term keeps the 750-um legacy reach (S81 parent 10-25: a 405 term would dominate the
+# ranking; station spacing still meets 405 exactly through the internal / ft station tools)
+RANK_REACH_UM = 750.0
+
+
+def core_lanes_behind(k, o):
+    """(violations, um) of the LANE_SIDE rule: lane-core pairs with the lane box not wholly in front of the core's lane
+    face + non-lane, non-exempt cores reaching into that face's lane field (um = total depth of both)."""
+    if k not in LANE_SIDE:
+        return 0, 0.0
+    lanes, cores, exempt = LANE_SIDE[k]
+    pl = {c["inst"]: _placed_groups(c) for c in o}
+    n, um = 0, 0.0
+    for ci, port in cores.items():
+        if ci not in pl or port not in pl[ci][1]:
+            continue
+        b, fc = pl[ci][0], pl[ci][1][port][3]
+        f = max(fc, key=lambda f_: fc[f_])
+        for ot, (a, _) in pl.items():
+            if ot in cores or ot in exempt:
+                continue
+            if ot in lanes:
+                # lane: wholly in front (distance of its far-side edge beyond the plane >= 0)
+                gap = dict(W=b[0] - a[2], E=a[0] - b[2], S=b[1] - a[3], N=a[1] - b[3])[f]
+            else:
+                # other core: wholly behind the plane (none of it in the lane field)
+                gap = dict(W=a[0] - b[0], E=b[2] - a[2], S=a[1] - b[1], N=b[3] - a[3])[f]
+            if gap < -1e-6:
+                n += 1
+                um += -gap
+    return n, round(um, 2)
+
+
 def _outside(x, y, boxes, w, h):
     """(x, y) moved to the nearest point outside every box it falls in (station legalisation), clamped to the outline."""
     for _ in range(4):
@@ -934,7 +976,7 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
                 a_ = bw_.get(bn)
                 if a_:
                     d_ = max(x0_ - a_[0], 0, a_[0] - x1_) + max(y0_ - a_[1], 0, a_[1] - y1_)
-                    ex += max(0.0, d_ - FT_STATION_MAX)
+                    ex += max(0.0, d_ - RANK_REACH_UM)
         return round(ex, 1)
     # added stations are counted against the same model with no core (at the 405-um reach for the S81-CORES keys)
     sm_ = {"smax": min(FT_STATION_MAX, FT_KIT_REACH_UM) * 0.98} if k in CORES_405_KEYS else {}
@@ -955,21 +997,25 @@ def nonframe_hard_cores(p, w, h, tn, ftsl=(), buses=()):
                         ft_stations_macro(s_, o, w, h) - k0_[i_]) for i_, s_ in enumerate(ftsl))
             # added cost = ft stations + internal-station cycles + internal-station flop bits / STATION_BITS_PER_CYCLE
             # (a far lane / wide bundle pays its station area, not only its worst-hop cycle)
-            key = (fb_, reach_excess(o), round(icyc_ + ftc_ + sum(len(e_["regs_um"]) * e_["bits"] for e_ in ist_)
-                                               / STATION_BITS_PER_CYCLE, 2), ftc_)
-            if best is None or key[:3] < best[0][:3]:
+            # S81/LEAFPLAN2 10-25: lane-side rule (hard, after the face rule): every lane box in front of the face of
+            # the core port it is wired to (core_lanes_behind)
+            lb_ = core_lanes_behind(k, o)[0]
+            key = (fb_, lb_, reach_excess(o), round(icyc_ + ftc_ + sum(len(e_["regs_um"]) * e_["bits"] for e_ in ist_)
+                                                    / STATION_BITS_PER_CYCLE, 2), ftc_)
+            if best is None or key[:4] < best[0][:4]:
                 best = (key, o, (mx, my), ai, ist_, icyc_)
-            if key[:3] == (0, 0, 0):
+            if key[:4] == (0, 0, 0, 0):
                 break
-        if best is not None and best[0][:3] == (0, 0, 0):
+        if best is not None and best[0][:4] == (0, 0, 0, 0):
             break
     if best is not None:
-        rep["bus_reach_excess_um"] = best[0][1]
+        rep["bus_reach_excess_um"] = best[0][2]
         rep["faces_away"] = best[0][0]
+        rep["lanes_behind"] = best[0][1]
         rep["internal_station_cycles"] = best[5]
         rep["internal_stations"] = best[4]
         rep["internal_station_bits"] = sum(len(e_["regs_um"]) * e_["bits"] for e_ in best[4])
-        best = (best[0][3],) + best[1:]
+        best = (best[0][4],) + best[1:]
     if best is None:
         raise SystemExit("S81-P9-HC: type %s: no legal core packing" % tn)
     rep["emitted"] = True
