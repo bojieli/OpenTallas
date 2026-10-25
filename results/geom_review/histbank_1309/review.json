@@ -1,0 +1,20 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "ONE canonical placement/CTS experiment only after ordinary canary/preflight admission; no DRT token",
+ "kit": "epyc1:/srv/opentallas-scratch2/claude/codex-s81-kits-1309/histbank_gated/ot_s81ph_native_sel_hist_bank_hb1309g",
+ "kit_hash": "5396e9868e58c444",
+ "source": "4df4d506a2",
+ "image": "plan.png",
+ "viewed": true,
+ "findings": [
+  "Compact macro-free64.8x54um outline; W162input and E176output buses follow short W-E dataflow",
+  "N31sum/busy and S66select/control pins do not require long crossings; clock/reset share S-face entry nearx20um",
+  "Regular planned PDN spans full free core; no macro wall or narrow logic notch",
+  "W/E pin bands run near one-layer track capacity; histogram max10.5vs10.42 is a bin-level warning, so exacttrack/minspacing and realpinaccess must pass before CTS is accepted"
+ ],
+ "required": [
+  "LEC EQUIVALENT and raw/ODB face guard + register fanout + SDC gates",
+  "Actual placement density/pin-reg distance and track/minspacing checks",
+  "PostCTS TT/FFclock/hold and actual images reviewed before anyGRT/DRT authorization"
+ ]
+}
