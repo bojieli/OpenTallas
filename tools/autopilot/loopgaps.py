@@ -217,7 +217,9 @@ def geom_verdicts(text, tag, kit_type, sha, kit="", rid="", others=()):
 def geom_ambiguous(text, tag, group):
     """REPLY/VERDICT lines of a tag shared by several queued rows (group: (kit_type, kit, sha, rid) tuples) that reach
     some of those rows only through a token they share with a row of another type (the branch sha): no verdict is
-    applied to those rows, the tick reports AMBIGUOUS-GEOM.  -> [(time, line, [types reached only that way])]"""
+    applied to those rows, the tick reports AMBIGUOUS-GEOM.  A row stops being reported once a LATER reply of the tag
+    names it (type, kit dir basename or row id: the reviewer re-posted per row, so geom_verdicts reads that one).
+    -> [(time, line, [types reached only that way])]"""
     if len(group) < 2:
         return []
     reqs, reps = geom_events(text)
@@ -225,12 +227,16 @@ def geom_ambiguous(text, tag, group):
     allk = [tuple(g) for g in group]
     idents = [KitIdent(*a, others=allk[:i] + allk[i + 1:]) for i, a in enumerate(allk)]
     req_ts = [_latest_req(reqs, want, [i]) for i in idents]   # each row's own latest REQ, as geom_verdicts reads it
+    mine = [(t, line, line[REPLY_RE.search(line).end():]) for t, rtag, v, line in reps
+            if v and rtag == want and t is not None]
+
+    def named_later(ident, t):
+        return any(t2 > t and ident.names(b2) for t2, _, b2 in mine)
+
     out = []
-    for t, rtag, v, line in reps:
-        if not v or rtag != want or t is None:
-            continue
-        body = line[REPLY_RE.search(line).end():]
-        amb = [i.kit_type for i, rt in zip(idents, req_ts) if rt is not None and t >= rt and i.shared_only(body)]
+    for t, line, body in mine:
+        amb = [i.kit_type for i, rt in zip(idents, req_ts)
+               if rt is not None and t >= rt and i.shared_only(body) and not named_later(i, t)]
         if amb:
             out.append((t, line, sorted(set(amb))))
     return out
