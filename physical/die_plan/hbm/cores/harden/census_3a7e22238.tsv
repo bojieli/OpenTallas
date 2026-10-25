@@ -1,0 +1,223 @@
+type_id	die_inst	cells	pins	excluded	over_cap	notes	parts
+ot_hbm_sm_attn_leafh_lx__362.88x406.08	384	119608	3617		False	MEASURED-SYNTH	q_sm0a,q_sm0b,q_sm0d,q_sm1a,q_sm1b
+ot_hbm_sm_attn_native_col__362.88x406.08	384	244462	1182		False	MEASURED-SYNTH	q_sm0a,q_sm0b,q_sm0d,q_sm1a,q_sm1b
+ot_hbm_sm_attn_tile_tp__362.88x406.08	192	42460	13612		False	MEASURED-SYNTH	q_sm0a,q_sm0b,q_sm0d,q_sm1a,q_sm1b
+ot_hbm_sm_attn_leafh_lx__362.88x319.68	128	119608	3617		False	MEASURED-SYNTH	q_sm0c,q_sm1c,q_sm2c,q_sm3c
+ot_hbm_sm_attn_native_col__362.88x319.68	128	244462	1182		False	MEASURED-SYNTH	q_sm0c,q_sm1c,q_sm2c,q_sm3c
+ot_hbm_sm_attn_tile_tp__362.88x319.68	64	42460	13612		False	MEASURED-SYNTH	q_sm0c,q_sm1c,q_sm2c,q_sm3c
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52	56	None	1229		False	CLOSED	q_svc0,q_svc1,q_svc2,q_svc3_v1
+hfd_vms_bank_native_q0_faces__270x313.2	32	None	3919	ALL: q_vm	False	CLOSED	q_vm
+ot_hbm_svc_vmdel_lane_n__257.04x108	32	None	1489	ALL: q_vm	False	CLOSED	q_vm
+ot_hgi_sm_xload_cl2_bfqg__302.4x298.08	32	None	1340	ALL: q_vm	False	CLOSED	q_vm
+ot_hbm_hc_bankq_static__lanes0_2__362.88x362.88	16	839978	2719		True	DONE,SPLIT:ot_hbm_hc_bankq_static	q_hc1,q_hc3,q_hc4,q_hc5
+ot_hbm_hc_bankq_static__lanes3_5__362.88x362.88	16	839978	2719		True	DONE,SPLIT:ot_hbm_hc_bankq_static	q_hc1,q_hc3,q_hc4,q_hc5
+ot_hbm_hc_bankq_static__lanes6_7_bank__362.88x362.88	16	839978	9864		True	DONE,SPLIT:ot_hbm_hc_bankq_static	q_hc1,q_hc3,q_hc4,q_hc5
+ot_hbm_sm_attn_front_static__362.88x319.68	16	163494	18922		False	MEASURED-SYNTH	q_sm0c,q_sm1c,q_sm2c,q_sm3c
+ot_hbm_svc_sm_group_rel_id__776.304x646.92	16	None	7688		False	YOSYS	q_svc0,q_svc1,q_svc2,q_svc3,q_svc3_v1
+ot_hbm_svc_sm_xcal_rel_t__209.952x210.6	16	None	507		False	SYNAREA	q_svc0,q_svc1,q_svc2,q_svc3,q_svc3_v1
+ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88	16	None	7343		False	SYNAREA	q_svc0,q_svc1,q_svc2,q_svc3,q_svc3_v1
+ot_smh_static_front__362.88x319.68	16	165789	18749		False	MEASURED-SYNTH	q_sm0c,q_sm1c,q_sm2c,q_sm3c
+ot_hbm_hc_bankq_ft_static__lanes0_2__362.88x362.88	8	828986	2719	SHARED w/ q_hc2	True	DONE,SPLIT:ot_hbm_hc_bankq_ft_static	q_hc2,q_hc6
+ot_hbm_hc_bankq_ft_static__lanes3_5__362.88x362.88	8	828986	2719	SHARED w/ q_hc2	True	DONE,SPLIT:ot_hbm_hc_bankq_ft_static	q_hc2,q_hc6
+ot_hbm_hc_bankq_ft_static__lanes6_7_bank__362.88x362.88	8	828986	4812	SHARED w/ q_hc2	True	DONE,SPLIT:ot_hbm_hc_bankq_ft_static	q_hc2,q_hc6
+ot_hbm_su_static_pgslice_lg__lane_exp0__440.64x457.92	8	5299387	2057		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp1__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp10__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp11__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp12__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp13__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp14__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp3__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp4__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp5__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp6__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp7__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp8__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp9__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lane_exp_l__440.64x457.92	8	5299387	2024		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lanes0_3__587.52x933.12	8	2745404	3789	SHARED w/ q_su2	True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su2,q_su3,q_su3_v1
+ot_hbm_su_static_pgslice_lg__lanes12_15__587.52x933.12	8	2745404	3789	SHARED w/ q_su2	True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su2,q_su3,q_su3_v1
+ot_hbm_su_static_pgslice_lg__lanes16_19__587.52x933.12	8	2745404	3789	SHARED w/ q_su2	True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su2,q_su3,q_su3_v1
+ot_hbm_su_static_pgslice_lg__lanes20_23__587.52x933.12	8	2745404	3789	SHARED w/ q_su2	True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su2,q_su3,q_su3_v1
+ot_hbm_su_static_pgslice_lg__lanes24_27__587.52x933.12	8	2745404	3789	SHARED w/ q_su2	True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su2,q_su3,q_su3_v1
+ot_hbm_su_static_pgslice_lg__lanes28_31__587.52x933.12	8	2745404	3789	SHARED w/ q_su2	True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su2,q_su3,q_su3_v1
+ot_hbm_su_static_pgslice_lg__lanes4_7__587.52x933.12	8	2745404	3789	SHARED w/ q_su2	True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su2,q_su3,q_su3_v1
+ot_hbm_su_static_pgslice_lg__lanes8_11__587.52x933.12	8	2745404	3789	SHARED w/ q_su2	True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su2,q_su3,q_su3_v1
+ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92	8	5299387	3821		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lanes_plain12_15__440.64x457.92	8	5299387	3821		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lanes_plain4_7__440.64x457.92	8	5299387	3821		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__lanes_plain8_11__440.64x457.92	8	5299387	3821		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__pretree__440.64x457.92	8	5299387	1138		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__pretree__587.52x933.12	8	2745404	1138	SHARED w/ q_su2	True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su2,q_su3,q_su3_v1
+ot_hbm_su_static_pgslice_lg__side_rest__440.64x457.92	8	5299387	110		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_su_static_pgslice_lg__side_softplus__440.64x457.92	8	5299387	70		True	DONE,SPLIT:ot_hbm_su_static_pgslice_lg	q_su0,q_su1
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52	8	None	1229		False	CLOSED	q_svc3
+ot_hbm_xp_aq_tree13_fmt__183.6x108	8	None	1807	ALL: q_vm	False	CLOSED	q_vm
+ot_hgi_sm_xload_cl2_bdring__86.4x302.4	8	None	2689	ALL: q_su2,q_vm	False	CLOSED	q_su2,q_vm
+ot_hgi_sm_xload_xq_pegress__369.36x369.36	8	None	5184	ALL: q_su2,q_vm	False	CLOSED	q_su2,q_vm
+ot_pdie_serdes__600.048x600.48	5	None	2118		False	SYNAREA	io,io_v1
+hfd_hgi_vm_calendar_f20__241.92x116.64	4	None	558	ALL: q_vm	False	CLOSED	q_vm
+hfd_hgi_vm_calendar_f20_role__196.344x196.56	4	None	460		False	SYNAREA	q_svc2
+hfd_hgi_vms_glue_nw_t__403.272x403.92	4	None	20160	ALL: q_vm	False	SYNAREA	q_vm
+ot_hbm_hc_bankq0_static__lanes0_2__362.88x362.88	4	846145	1951		True	DONE,SPLIT:ot_hbm_hc_bankq0_static	q_hc0
+ot_hbm_hc_bankq0_static__lanes3_5__362.88x362.88	4	846145	1951		True	DONE,SPLIT:ot_hbm_hc_bankq0_static	q_hc0
+ot_hbm_hc_bankq0_static__lanes6_7_bank__362.88x362.88	4	846145	10377		True	DONE,SPLIT:ot_hbm_hc_bankq0_static	q_hc0
+ot_hbm_hc_bankq_term_static__lanes0_2__362.88x362.88	4	839887	2719	ALL: q_hc7	True	DONE,SPLIT:ot_hbm_hc_bankq_term_static	q_hc7
+ot_hbm_hc_bankq_term_static__lanes3_5__362.88x362.88	4	839887	2719	ALL: q_hc7	True	DONE,SPLIT:ot_hbm_hc_bankq_term_static	q_hc7
+ot_hbm_hc_bankq_term_static__lanes6_7_bank__362.88x362.88	4	839887	9835	ALL: q_hc7	True	DONE,SPLIT:ot_hbm_hc_bankq_term_static	q_hc7
+ot_hbm_hc_qhub_static__734.4x734.4	4	None	9903		False	SYNAREA	q_hcq
+ot_hbm_idx_qctl_static__194.832x195.48	4	None	337		False	SYNAREA	q_r1e,q_r1e_v1
+ot_hbm_idx_query_static__170.64x164.16	4	None	1633	ALL: q_vm	False	CLOSED	q_vm
+ot_hbm_idx_score_quarter_static__r0c0_k0h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c0_k0h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c0_k1h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c0_k1h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c0_k2h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c0_k2h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c0_k3h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c0_k3h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c1_k0h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c1_k0h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c1_k1h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c1_k1h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c1_k2h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c1_k2h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c1_k3h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c1_k3h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c2_k0h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c2_k0h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c2_k1h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c2_k1h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c2_k2h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c2_k2h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c2_k3h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c2_k3h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c3_k0h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c3_k0h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c3_k1h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c3_k1h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c3_k2h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c3_k2h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c3_k3h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r0c3_k3h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c0_k0h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c0_k0h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c0_k1h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c0_k1h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c0_k2h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c0_k2h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c0_k3h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c0_k3h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c1_k0h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c1_k0h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c1_k1h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c1_k1h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c1_k2h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c1_k2h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c1_k3h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c1_k3h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c2_k0h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c2_k0h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c2_k1h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c2_k1h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c2_k2h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c2_k2h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c2_k3h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c2_k3h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c3_k0h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c3_k0h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c3_k1h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c3_k1h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c3_k2h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c3_k2h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c3_k3h0__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__r1c3_k3h1__181.44x155.52	4	12422337	1216		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__tail0__181.44x155.52	4	12422337	612		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_score_quarter_static__tail1__181.44x155.52	4	12422337	612		True	DONE,SPLIT:ot_hbm_idx_score_quarter_static	q_os2
+ot_hbm_idx_vm_query_static_n12__216x108	4	None	3286	ALL: q_vm	False	CLOSED	q_vm
+ot_hbm_sm_vm_wr_q_t_lanes4__142.56x388.8	4	None	3673	ALL: q_vm	False	CLOSED	q_vm
+ot_hbm_su_programme_pslice_c5__939.6x760.32	4	None	2789	ALL: q_vm	False	YOSYS	q_vm
+ot_hbm_su_static_cxport_ij_q__216x388.8	4	None	6213	ALL: q_vm	False	CLOSED	q_vm
+ot_hbm_su_static_qcore_r13__302.4x280.8	4	None	1473	ALL: q_vm	False	CLOSED	q_vm
+ot_hbm_su_static_sfustore_hw__561.6x276.48	4	None	1829		False	CLOSED	q_sfuc
+ot_hbm_svc_wb_kport_q__475.2x475.2	4	None	7084		False	SYNAREA	q_svc2
+ot_hfd_coll_q2_hard_v8g__body__233.28x233.28	4	465018	10894		True	DONE,SPLIT:ot_hfd_coll_q2_hard_v8g	q_rc4,q_rc4_v1,q_rc4_v2,q_rc4_v3
+ot_hfd_coll_q2_hard_v8g__reduce__233.28x233.28	4	465018	1175		True	DONE,SPLIT:ot_hfd_coll_q2_hard_v8g	q_rc4,q_rc4_v1,q_rc4_v2,q_rc4_v3
+ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28	4	465018	2244		True	DONE,SPLIT:ot_hfd_coll_q2_hard_v8g	q_rc4,q_rc4_v1,q_rc4_v2,q_rc4_v3
+ot_hgi_coll_gq_issue__237.6x237.6	4	None	4032		False	SYNAREA	q_rc4,q_rc4_v1,q_rc4_v2,q_rc4_v3
+ot_hgi_coll_gq_land__237.6x237.6	4	None	3880		False	CLOSED	q_rc4,q_rc4_v1,q_rc4_v2,q_rc4_v3
+ot_hgi_coll_inj_idx_join_rg__216x432	4	None	4761		False	CLOSED	q_rc4,q_rc4_v1,q_rc4_v2,q_rc4_v3
+ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84	4	None	4947		False	SYNAREA	q_svc2
+ot_hgi_qw_dec__260x260	4	None	1670	ALL: q_vm	False	CLOSED	q_vm
+ot_hgi_sfu_core_split3__ctl__388.8x345.6	4	5718505	11819		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane0__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane1__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane10__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane11__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane12__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane13__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane14__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane15__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane2__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane3__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane4__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane5__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane6__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane7__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane8__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__lane9__388.8x345.6	4	5718505	1468		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__opstore_a__388.8x345.6	4	5718505	7534		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_core_split3__opstore_b__388.8x345.6	4	5718505	5535		True	DONE,SPLIT:ot_hgi_sfu_core_split3	q_sfuc
+ot_hgi_sfu_programme_store_r10__1080x950.4	4	None	2904		False	SYNAREA	q_rc3,q_rc3_v1
+ot_hgi_sm_xload_cl2_ctlx__388.8x388.8	4	None	5782	ALL: q_vm	False	CLOSED	q_vm
+hfd_ep_static__434.72x371.52	3	None	2288		False	CLOSED	c0,io_v1
+hfd_ep_static__434.72x371.52	3	None	2288		False	CLOSED	io
+hfd_hgi_vm_calendar_f20_role__241.92x116.64	3	None	390		False	SYNAREA	io
+hfd_hgi_vm_calendar_f20_role__241.92x116.64	1	None	409		False	SYNAREA	io_v1
+ot_hbm_argmax_static_sw_vm_r2__118.8x118.8	1	None	1119		False	CLOSED	c0
+ot_hbm_hc_root_static__hcp_sys1__155.52x172.8	1	1514498	244		True	DONE,SPLIT:ot_hbm_hc_root_static	c0
+ot_hbm_hc_root_static__tail0_rest__155.52x172.8	1	1514498	3434		True	DONE,SPLIT:ot_hbm_hc_root_static	c0
+ot_hbm_hc_root_static__tail0_sk_steady__155.52x172.8	1	1514498	1036		True	DONE,SPLIT:ot_hbm_hc_root_static	c0
+ot_hbm_hc_root_static__tail0_sk_step0__155.52x172.8	1	1514498	1030		True	DONE,SPLIT:ot_hbm_hc_root_static	c0
+ot_hbm_hc_root_static__tail1_rest__155.52x172.8	1	1514498	3434		True	DONE,SPLIT:ot_hbm_hc_root_static	c0
+ot_hbm_hc_root_static__tail1_sk_steady__155.52x172.8	1	1514498	1036		True	DONE,SPLIT:ot_hbm_hc_root_static	c0
+ot_hbm_hc_root_static__tail1_sk_step0__155.52x172.8	1	1514498	1030		True	DONE,SPLIT:ot_hbm_hc_root_static	c0
+ot_hbm_host_cp_rxs__434.808x432	1	None	1368		False	SYNAREA	c0
+ot_hbm_idx_rootctl_static_am__475.2x259.2	1	None	5877		False	YOSYS	c0
+ot_hbm_idx_selector_static_sel__600.048x450.36	1	None	4783		False	SYNAREA	c0
+ot_hbm_idx_topk_link_static__650.16x500.04	1	None	4597		False	SYNAREA	c0
+ot_hbm_static_cfg_collar_idx256r__108x108	1	None	1559		False	CLOSED	c0
+ot_hgi_coll_tkm_m_tp192__root__319.68x345.6	1	6614494	3575		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile0__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile1__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile10__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile11__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile12__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile13__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile14__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile15__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile16__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile17__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile18__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile19__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile2__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile20__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile21__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile22__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile23__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile24__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile25__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile26__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile27__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile28__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile29__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile3__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile30__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile31__319.68x345.6	1	6614494	692		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile4__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile5__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile6__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile7__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile8__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0
+ot_hgi_coll_tkm_m_tp192__tile9__319.68x345.6	1	6614494	1381		True	DONE,SPLIT:ot_hgi_coll_tkm_m_tp192	c0

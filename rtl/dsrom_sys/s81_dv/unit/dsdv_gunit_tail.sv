@@ -42,7 +42,8 @@ module dsdv_gunit_tail #(
     parameter integer MUT_SK = 0,
     parameter integer PIN_COPY = 0,
     parameter integer CONTROL_SAFE = 0,
-    parameter integer Q4 = 0
+    parameter integer Q4 = 0,
+    parameter integer XS = 3            // S81-KITS-RTLC 10-24: L5 lands ye/yd in a pin register -> 4
 ) (
     input  wire          clk, rst_n,
     input  wire          launch,
@@ -56,7 +57,6 @@ module dsdv_gunit_tail #(
     output wire          xe_v, output wire [31:0] xe_x, input wire xe_vo, input wire [31:0] xe_y, input wire xe_f,
     output wire          xd_v, output wire [31:0] xd_b, input wire xd_vo, input wire [31:0] xd_y, input wire xd_f
 );
-    localparam integer XS = 3;
     localparam integer LM = 5, LA = 4, LE = 7 * LM + 6 * LA + 2 * 6 + 5 + XS, LD = 21 + XS;   // LE 76 + XS
     localparam integer LMe = LM + 1, LAe = LA + 1, LEe = LE + 1, LDe = LD + 1;
     localparam integer P1 = 1, P2 = P1 + 24 + LMe, MAX = P2 + 24 + LAe, P3 = MAX + 2, P4 = P3 + 16 + LAe;

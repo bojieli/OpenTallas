@@ -1,0 +1,9 @@
+{"element":"ot_s81sl_leaf (ve->ve_m/ve_s, vn->vn_a/vn_b split; die plan r9)","date":"2026-10-24 23:58 PDT","reviewer":"S81/LEAFPLAN (author self-review; independent GEOM review requested)",
+"verdict":"PASS-COND (core split + reach) / FAIL (leaf lane arrangement in many types)",
+"evidence":{"G0":"PASS","G0C":"PASS 0 errors 180/180","type_names":"unchanged","reach_gt_750":0,"reach_max_um":750,
+"13_types_reach_um_before_after":{"t5":[775,567],"t6":[783,749],"t8":[803,725],"t11":[924,708],"t15":[793,585],"t28":[926,727],"t30":[854,646],"t36":[924,708],"t40":[793,585],"t49":[793,585],"t50":[801,749],"t54":[915,708],"t72":[803,725]},
+"internal_stations_exact405":{"leaf_cycles_total":922,"leaf_ft_added":79,"leaf_station_bits":792000,"c3x_eps_scale":"+2 cyc 3 regs 96 bits","other_C":0,"eng_cyc":3},
+"cores":{"ot_s81sl_ve_m":"172.8x345.6 1262 pins est 244k cells","ot_s81sl_ve_s":"164.16x345.6 488 pins est 216k","ot_s81sl_vn_a":"356.4x164.16 917 pins","ot_s81sl_vn_b":"356.4x172.8 954 pins","views":"each + _xm"},
+"lat_lanes":"73 changed, net +29, max 68 unchanged"},
+"open_issues":["65/74 leaf types place lanes >50 um behind the vn halves hq_d face (worst t6 18 lanes/930 um, t50 22/947): visually poor, inflates station bits (792k vs 319k pre-split). Next: leaf search with a hard lane-side constraint.","RTL split of ve/vn per split.py docstring not yet implemented (RTLA)","not yet rebased onto claude/s81-dec12-1024r"],
+"renders":"img/ot_s81sl_leaf__t{1,6,8,11,30,54}.png img/dsdv_slice_{c1x,c3x,kv512}_C__t1.png"}

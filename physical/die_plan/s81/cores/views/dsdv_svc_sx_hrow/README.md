@@ -1,0 +1,1 @@
+Native dsdv_svc_sx_hrow view (r15, 138.24x164.16 um, 154,252 cells). Uniform SIGNED: TT setup 43.43 ps, FF hold 6.0 ps; DRV PASS, DRC/antenna PASS/PASS; sdc_lint/face_guard PASS/PASS; pins 3851/3851. Floorplan/pins = reviewed c2 kit; RTL-only change vs r14 (TT -47.87). Source in source/.

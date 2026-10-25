@@ -24,7 +24,8 @@ Every encoding is read from the RTL of record (byte-identical on claude/tok-s81-
                                         part 1 {qhi, 12'b0, 0, 1, 00, ek, 1}   (qlo = data[255:0], qhi = data[511:256])
   drain CTL (kind 0, tapped not sunk)   dsdv_bk_v.sv:17-21   [28:21] uid, [31:29] op 1, [39:32] n, [47:40] d; window =
         n slots of vo (eg_n 0: vo_s) from (CTL vo edge) + LW 7 + d.  In CTL-payload terms (p = beat[21 +: 186]):
-        p[7:0] uid, p[10:8] op, p[18:11] n, p[26:19] d.  The SAME beat reaches the S-tier slices (s_4S re-injects V CTL
+        p[7:0] uid, p[10:8] op, p[18:11] n, p[26:19] d.  CANONICAL 10-24: the BK stop consumes it (addressed-drain
+        sink); the d[1:0] rule below only guards legacy (forwarding) builds.  Legacy: the SAME beat reached the S-tier slices (s_4S re-injects V CTL
         on its line): ot_s81sl_xr reads p[15:0] as its slice mask and p[20:16] = {d[1:0], n[7:5]} as the target, so
         d[1:0] != 0 is REQUIRED (target >= 8: no slice action; targets 0..5 would be live commands).  Asserted here.
   straps (die.v u_bk_sel)               tap_k 0x11 (CTL + kind 4 delivered), sink_k 0x10 (kind 4 sunk), ik 4, ek 5,
@@ -57,6 +58,11 @@ LW = 7                    # dsdv_bk_vout: CTL vo edge -> first window vo edge = 
 RELAY = 1                 # dsdv_bk_sel u_rs / u_rn: +1 flop per direction
 FWD = 2                   # ot_dsdv_vstop forward: 2 flops (input, output)
 PIN_TO_PIN = RELAY + FWD - 1   # bench edge convention (value sampled at edge e -> vo after edge e + 2), measured
+# COORD ruling 2026-10-24 18:55: the BK addressed-drain sink is canonical (ot_dsdv_vstop BK_DRAIN_SINK=1): u_bk_sel's
+# rung stop consumes the drain CTL addressed to its uid, it is NOT forwarded to vo_s / the slices.  The legacy
+# transparent-forwarding expectation is retired; OT_BK_LEGACY_FWD=1 reproduces it for the old records only.
+import os as _os
+BK_DRAIN_SINK = _os.environ.get('OT_BK_LEGACY_FWD', '0') != '1'
 K_MAX = 512
 TAIL_BUDGET = 640         # edges from the last ingress beat at the vi pin to the drain window's first slot (bench-asserted)
 MAX_WORDS = 512 // 16 + 4 + 1   # worst-case egress words of one segment: sum_q ceil(sel_q / 16) <= 32 + 4, + DONE
@@ -796,7 +802,8 @@ def write_tree_bench(fx, out, k_dies, t_q=200, leg=LEG, mutant=None, layer='L20'
     exp = {}
     for d, p in plans.items():
         eg = {e: b for e, b in p['egress']}
-        eg[p['drain']['vi_n_edge'] + PIN_TO_PIN] = p['drain']['beat']
+        if not BK_DRAIN_SINK:     # legacy record only: the drain CTL forwarded southbound
+            eg[p['drain']['vi_n_edge'] + PIN_TO_PIN] = p['drain']['beat']
         if 'tx' in p:
             eg[p['tx']['ctl_vi_n'] + PIN_TO_PIN] = p['tx']['beat']
         exp[d] = dict(vo={str(e): f'{b:x}' for e, b in sorted(eg.items())},
@@ -1022,8 +1029,10 @@ def write_bench(plan, out, mutant=None, mplan=None):
         for e in sorted(stim):
             f.write(f'{e} {stim[e][0]:069x} {stim[e][1]:069x}\n')
     exp = {e: b for e, b in plan['egress']}
-    # the drain CTL itself is forwarded southbound: vi_n pin -> relay (+1) -> vstop (+2) -> vo_s
-    exp[plan['drain']['vi_n_edge'] + PIN_TO_PIN] = plan['drain']['beat']
+    # canonical sink: the addressed drain CTL is consumed at the BK stop (never on vo_s).  Legacy record only
+    # (OT_BK_LEGACY_FWD=1): it was forwarded southbound, vi_n pin -> relay (+1) -> vstop (+2) -> vo_s
+    if not BK_DRAIN_SINK:
+        exp[plan['drain']['vi_n_edge'] + PIN_TO_PIN] = plan['drain']['beat']
     with open(out / 'exp.txt', 'w') as f:
         for e in sorted(exp):
             f.write(f'{e} {exp[e]:069x}\n')

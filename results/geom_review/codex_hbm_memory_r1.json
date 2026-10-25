@@ -1,0 +1,16 @@
+{
+ "verdict": "PASS-CONDITIONAL: place only",
+ "reviewer": "CODEX",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_hc_root_static__tail0_sk_steady_b7626c6c7a75/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_hc_root_static__tail1_sk_steady_b7626c6c7a75/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_su_static_pgslice_lg__side_rest_1bbe3488b9c4/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review/ot_hbm_su_static_pgslice_lg__side_softplus_7c274b52e5df/plan.png"
+ ],
+ "findings": [
+  "All four viewed: pin density below 6/um, no macro wall, balanced E/W pins on Sinkhorn tails; side pieces sparse pins, no geometry change.",
+  "4096-bit inferred tables require memory synthesis permission. RTL, timing policy and plan pins unchanged.",
+  "Placed review required before route. Parent connectivity/boundary registration restrictions remain."
+ ],
+ "retry_failure": "4096 failed: ORFS error prints threshold, actual table sizes33280/15616; preserved r1; r2 uses measured bounds."
+}

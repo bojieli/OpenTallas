@@ -1,0 +1,7 @@
+{
+ "element": "qc_coll_ftc_g3i",
+ "kit": "claude/qc-a0-1024@ab490d1fbb coll_ftc kit (gen.py phys main tools: sdc_lint PASS, face_keep, face_guard) + kit RTL bind.py kit-rtl on P6 full bind qcp6_status_bind_v5 (spare ft bits through stations) -> intel2:/srv/opentallas-scratch2/claude/qc-a0/g3/ftc_g3i",
+ "verdict": "PASS-COND",
+ "hash": "5e60cbccf5237032",
+ "reasons": "[10-24 13:30] [QC-A0 self-review] Picture results/geom_review/qc_a0_1024/kit_ftc_p6.png: geometry identical to the g3h review (786.24 x 1036.8, 10,216 pins, 28 ft slots, R4 grid 2x3 at ~400 um + 19 sink taps on the station clusters). Changes vs g3h: kit RTL from the P6 full bind (0 mismatch/unbound) and the 8 spare plan bits of crec_tx_s0 / flte / fltv now registered through their slots' 2 stations (were unread inputs + constant outputs -> face_guard FAIL). Same COND as g3h: 10 E->S control slots cross the lower-right quadrant (old GRT hotspot) -> the GRT congestion map is reviewed before any acceptance."
+}

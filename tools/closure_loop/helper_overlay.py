@@ -192,6 +192,13 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE 10-25 (codex/integrate-1025): f991d663c is the KIT-CENSUS hold-stop (owner 10-25): inside P&R hold
+    # repair, a run whose synchronized FF scene shows hold WNS < -100 ps or > 2000 true failing endpoints stops before
+    # repair_timing.  It is P&R flow behaviour only: no pre-route gate check reads orfs_hold_mm.tcl's new proc, so no
+    # gate verdict can change; a routed run is still judged by its own sign-off report.
+    "f991d663cf5f126f244bbf8b25de902d6ac266b5": dict(
+        kind="neutral", rule="hold-structural-stop", paths=("tools/orfs_hold_mm.tcl",),
+        what="orfs_hold_mm: stop structural FF hold failures before repair_timing (flow stop, no gate verdict)"),
     # ROOT-MERGE2 10-23 batch 15: claude/tile-flow2-1023 @6f0229425 (COORD 03:26 approved, condition: in-flight recipe-5
     # kits must not change silently).  Every planner change is behind tile_plan.planner_version 2: a kit generated before
     # this merge (kit.env present, no version in its spec) regenerates with the frozen tile_plan_v1 planner, 3 pins/um, no

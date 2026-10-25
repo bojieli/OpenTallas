@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # S-NET production bench of a generated static return node master.
-#   bench_node_master.sh pass|mut_window|mut_fault|mut_rst MASTER GLUE_SV OUT
+#   bench_node_master.sh pass|mut_window|mut_fault|mut_rst|mut_fiunreg MASTER GLUE_SV OUT
+# mut_fiunreg (S81-KITS-RTLB 10-24): the fault-chain input ORed into fr straight from the pin again (the pre-fix form).
 # mut_window: the master with its node window +1 (sed on the master text); mut_fault: fault chain cut (fo <= flt only);
 # mut_rst: the reset pin register never asserts (node flops see no reset).
 set -eu
@@ -13,7 +14,9 @@ case $mode in
   mut_window) sed -i 's/\.WIN(\([0-9]*\))/.WIN(9\1)/; s/\.WIN(92)/.WIN(3)/; s/\.WIN(91)/.WIN(2)/' "$out/master.sv";;
   mut_rst) grep -q "reg rn;" "$out/master.sv" || { echo "NODE_STATIC FAIL mut_rst needs the reset pin register"; exit 1; }
            sed -i "s/if (!rst_n\[0\]) rn <= 1'b0; else rn <= 1'b1;/rn <= 1'b1;/" "$out/master.sv";;
-  mut_fault) sed -i 's/fr <= flt | fi\[0\];/fr <= 1'"'"'b0;/; s/fr <= flt;/fr <= 1'"'"'b0;/' "$out/master.sv";;
+  mut_fault) sed -i 's/fr <= flt | fi\[0\];/fr <= 1'"'"'b0;/; s/fr <= flt | fil;/fr <= 1'"'"'b0;/; s/fr <= flt;/fr <= 1'"'"'b0;/' "$out/master.sv";;
+  mut_fiunreg) grep -q 'fr <= flt | fil;' "$out/master.sv" || { echo "NODE_STATIC FAIL mut_fiunreg needs the fi pin register"; exit 1; }
+           sed -i 's/fr <= flt | fil;/fr <= flt | fi[0];/' "$out/master.sv";;
 esac
 win=$(grep -o '\.WIN([0-9]*)' "$out/master.sv" | head -1 | tr -dc 0-9); [ "$mode" != pass ] && win=$(grep -o '\.WIN([0-9]*)' "$glue" | head -1 | tr -dc 0-9)
 src=(rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/dsrom_sys/s81_static_net/ot_s81_retn_static.sv

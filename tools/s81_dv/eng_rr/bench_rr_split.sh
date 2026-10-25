@@ -5,6 +5,8 @@
 # output bit + the crossing is compared on every edge.   bench_rr_split.sh <work dir> <base|sm1|sm2> [plusargs...]
 # sm1 / sm2 = SPLIT_MUT negative controls (hash crossing bit flip / H0-H1 halves swapped): must FAIL.
 # Prints ENG_RR_SPLIT PASS <variant> or ENG_RR_SPLIT FAIL <variant>.  Run from the repo root.
+# SPLIT_SV=<file> (S81-KITS-RTLA 10-24) replaces dsdv_eng_rr_split.sv, e.g. the pre-fix split (H cores without the in_w
+# capture flop) as a negative control of the +1-edge crossing check: must FAIL.
 set -u
 W=$(realpath -m ${1:?work}); V=${2:?variant}; shift 2; mkdir -p $W
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
@@ -15,7 +17,7 @@ print(' '.join(re.search(r'F=\((.*?)\)\n', open(sys.argv[1]).read(), re.S).group
 PY
 ))
 F=("${F[@]:0:${#F[@]}-1}" rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer.sv
-   rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv "${F[@]: -1}")
+   rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv ${SPLIT_SV:-rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv} "${F[@]: -1}")
 case $V in base) G=();; sm1) G=(-GSPLIT_MUT=1);; sm2) G=(-GSPLIT_MUT=2);; *) echo "ENG_RR_SPLIT FAIL bad variant $V"; exit 2;; esac
 python3 tools/s81_dv/eng_rr/prep_rom.py $W/rom > $W/prep.log 2>&1 || { echo "ENG_RR_SPLIT FAIL prep_rom"; exit 1; }
 $VL --version

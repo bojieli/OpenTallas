@@ -4,6 +4,8 @@ These rules come from the project owner and bind Codex, Claude and every sub-age
 
 **Latest owner decisions (confirmed 2026-10-07):** Read [docs/OWNER_DIRECTIVES_2026_10_07.md](docs/OWNER_DIRECTIVES_2026_10_07.md). It supersedes conflicting older instructions below, including the Qwen freeze, closure-cost ceilings, older margin targets, and restrictions on parallel structural variants. Model sizing, correctness, immutable evidence, and measured resource admission remain required.
 
+**Binding rule set (2026-10-25):** `/home/ubuntu/coord/METHODOLOGY.md` on the `coord/state` branch is the binding rule set; where rules conflict, the latest owner decision wins.
+
 ## Design method (adopted 2026-09-29)
 
 1. **Microarchitecture model before build.** Before writing engine RTL or launching place and route, the block must be sized in the unified microarchitecture analytical model (`tools/uarch_model.py`, [docs/MICROARCH_MODEL.md](docs/MICROARCH_MODEL.md)). The model covers every design: Qwen3-8B ROM, Qwen3-8B HBM, DeepSeek-V4.1 ROM and DeepSeek-V4.1 HBM. For every block it states:
@@ -29,14 +31,17 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
 - Failed verdicts are never overwritten.
 - Clock and uncertainty constraints are never relaxed without pricing the change.
 - Sign-off corners (owner, restated 2026-10-24; supersedes the 2026-09-30 SS rule):
-  - Timing closes at the TYPICAL (TT) corner: setup at TT, hold at FF, under the 60 ps setup / 25 ps hold uncertainty policy and pin-flop spread <= 80 ps. Never use SS for closure or sign-off.
+  - Timing closes at the TYPICAL (TT) corner: setup at TT, hold at FF, under the 60 ps setup / 25 ps hold uncertainty policy. Never use SS for closure or sign-off.
+  - Clock gate (owner decision 5, 2026-10-24): related launch/capture flop-pair skew with CPPR credit <= 80 ps at TT and FF, intra-partition and seam pairs. Max-min pin-flop spread is information only, never a gate.
   - SS numbers may be reported for information only; they never gate a block, a die or a lever.
   - Memory macros are checked at TT with their own clk->q; results/uarch/v41_rom_depth_study.json has the ROM macro figures.
 - Clock target (user decision, 2026-09-30; corner per the rule above): 1.2 GHz (0.833 ns) at TT; the V4.1 ROM uses 4096-row macros, 2 per element slot. Bottleneck blocks are pipelined or parallelised to meet it, and each added latency cycle is reported to the model.
-- Clock domains (root, 2026-09-30, from the measured FP32 add: 3.31 ns per add at LAT 3 against ~7 ns at the 8–9 stages 1.2 GHz needs):
-  - The streaming domain runs at 1.2 GHz: ROM field and elements, index scan, attention tiles, links, the HBM service.
-  - The serial-chain domain runs at 0.9 GHz (3:4) on the LAT-3 FP32 add: SU, SFU, softplus, Sinkhorn, reducers.
-  - The model prices it at +28% AR against all-1.2 GHz.
+- Clock domains (owner decisions 16/16a, 2026-10-24/25; supersedes the 2026-09-30 two-domain rule):
+  - One core clock domain, 1.2 GHz (833 ps), on every release die.
+  - Serial-chain units use the 4-stage FP32 add `ot_hdc_fp32_add_f12_l4` (bit-exact with the old LAT3, closes 833 ps at TT RVT) and `mul_lat4` / `mul_f12_l5`.
+  - The 0.9 GHz serial domain, `ck_serial` and `ot_ratio_cdc_fifo` are retired; no release die binds them.
+  - Separate clocks exist only inside off-die PHY macros (SerDes/d2d, UCIe gearbox, HBM PHY DFI, host PHY), with async FIFOs at the PHY edge.
+  - The old +28% AR pricing for the serial domain came from the retired v41 model.
 - Operator fusion (user decision, 2026-10-01): dependent operations are chained through lane-local registers as far as possible. A value goes back to the vector memory (or any shared memory) only when another lane, unit or die needs it, or at a true cross-lane step (reduction, rotation, misaligned access). Per-op round trips through a memory network are a latency cost on serial chains. Price them in the model, and design them out.
 - Dataflow levels (user decision, 2026-10-01). Every design adopts levels 1-5 and only those:
   1. lane-local fusion;
@@ -63,7 +68,7 @@ Minimum single-user decode latency first. Aggregate throughput from independent 
 
 ## Workflow habits (owner, 2026-10-03)
 
-- **Merge finished work at once.** When an agent finishes, its work is merged into main and pushed straight away. Use `~/OpenTallas` as the central merge point. Don't wait for another agent to merge it. When a merge conflicts with files main has since evolved, keep main's hunks (`-X ours`) and take the rest of the branch.
+- **Merge finished work at once.** When an agent finishes, its work is merged into main and pushed straight away. Use `~/OpenTallas` as the central merge point. Don't wait for another agent to merge it. Never merge with `-X ours` or `-X theirs` (coordinator ruling 9.1, 2026-10-24): either one silently drops the other side's hunks (a 10-24 `-X ours` merge dropped the DIE-CI README section). On a conflict: `git merge --abort`, merge main into your branch, resolve every conflict there by hand (hunk by hunk, keeping both sides' intent), re-run the touched gates, then merge again with a plain merge and check HEAD == origin/main after the push.
 - **Delete the worktree after the merge.** After merging, remove the finished worktree and its local scratch.
 - **Delete inactive worktrees and scratch.** A worktree is inactive when no live process uses it and it has been untouched for a day. Before removing one, keep its unique state as a `refs/preserve/*` ref plus a patch of any uncommitted changes. Write bulk run outputs to the large compute host, not the local disk.
 - **Bound concurrency by headroom, not by job count.** Keep the fleet saturated with independent work, and launch a large job only through the host's admission guard.

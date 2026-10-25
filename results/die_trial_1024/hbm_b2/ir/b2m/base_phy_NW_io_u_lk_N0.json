@@ -1,0 +1,116 @@
+{
+ "interior_rail_sum_mv": 231.553,
+ "interior_note": "tiles >= one per-rail bump pitch (63.64 um) from the die edge: the checkerboard bump lattice (VSS at k x 63.64, VDD at 31.82 + k x 63.64) loses its die-edge VSS row/column (x = 0 / y = 0), so edge tiles see one-sided bump support (edge artefact of the assumed bump map)",
+ "manifest": {
+  "schema": "opentallas.die_trial.ir_case.v1",
+  "plan": "/tmp/hbm/b2m_basegrid.json",
+  "power": "results/die_trial_1024/hbm_b2/ir/power_map.json",
+  "power_total_w": 642.71,
+  "inner_um": [
+   0.0,
+   6001.64,
+   698.248,
+   7178.92
+  ],
+  "solved_um": [
+   0.0,
+   5961.6,
+   734.4000000000001,
+   7214.400000000001
+  ],
+  "guard_um": 0,
+  "tile_um": 43.2,
+  "loads": 225,
+  "load_w": 4.3681,
+  "grid": {
+   "layers": [
+    "M8",
+    "M9"
+   ],
+   "width_um": 0.48,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "scale": 1.0,
+   "per_net_coverage": 0.05555555555555555,
+   "plan_exact": true
+  },
+  "partition_pg": "mock-LEF M7 stripes (VDD 4.128 / VSS 4.512 mod 8.64, 0.288 um) on <= tile loads",
+  "bumps": {
+   "array_um": 45.0,
+   "per_net_pitch_um": 63.63961030678927,
+   "size_um": 20.0,
+   "n": {
+    "VDD": 170,
+    "VSS": 144
+   },
+   "removed_in": []
+  },
+  "voltage_v": 0.7,
+  "budget_mv": 35.0,
+  "die_um": [
+   28097.28,
+   18351.36
+  ],
+  "domain": {
+   "name": "phy_NW_io_u_lk_N0",
+   "nets": [
+    "VDDPHY",
+    "VSS"
+   ],
+   "bumps_rect_um": [
+    0.0,
+    6065.28,
+    634.608,
+    7115.28
+   ],
+   "load_rects": [
+    [
+     34.56,
+     6099.84,
+     634.608,
+     6700.32
+    ]
+   ],
+   "w_per_mm2": 12.123
+  }
+ },
+ "pdn_pass": true,
+ "pg_connected": {
+  "VDD": true,
+  "VSS": true
+ },
+ "done": true,
+ "rails": {
+  "VDD": {
+   "nodes": 225,
+   "worst_mv": 65.212,
+   "worst_at_um": [
+    194.21,
+    6372.0
+   ],
+   "worst_inst": "T_4_9",
+   "interior_worst_mv": 65.212,
+   "interior_worst_at_um": [
+    194.21,
+    6372.0
+   ]
+  },
+  "VSS": {
+   "nodes": 225,
+   "worst_mv": 166.341,
+   "worst_at_um": [
+    626.59,
+    6328.8
+   ],
+   "worst_inst": "T_14_8",
+   "interior_worst_mv": 166.341,
+   "interior_worst_at_um": [
+    626.59,
+    6328.8
+   ]
+  }
+ },
+ "rail_sum_mv": 231.553,
+ "verdict": "FAIL",
+ "budget_mv": 35.0
+}

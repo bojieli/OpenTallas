@@ -18,6 +18,18 @@
 // Then 13 illegal programs (14 on C3: BIND mu4 10-19 adds a dir-B send config with pairs > 2), each from reset, must raise
 // the sticky fault.  Band port B (C3) is 513 b = {pk[511:0], valid}: legal B configs carry at most 2 pairs.
 // Prints XRB ... err=<n> and PASS / FAIL.  Mutants (RTL): +define+OT_S81SL_XR_MUT_{HOPS,ROW,PORDER,NOCOL,XHOLD} must FAIL.
+// OT_XR_LAND_TB (S81-KITS-RTLB 10-24, xrt FACE_LAND = 1): the lo / p leaf inputs land in a pin register first (+1 edge),
+// so the compiler issues every lo beat and partial set ONE cycle earlier (drive uses program cycle m + 1 for lo / p, the
+// cycle-0 entries go out in one pre-cycle); the expected model is unchanged.  Illegal cases 4 and 12 issue their lo beat
+// one cycle earlier for the same reason.
+// OT_XR_DSK_TB (TOK-DS NORM-DESKEW 10-25, xrt masters with the default per-leaf norm deskew PDSK = 15'o01234): the
+// compiler issues the 5 per-leaf norm commands on 5 consecutive CTL edges, so a partial set arrives STAGGERED (leaf k on
+// program cycle n + k, its word in i_pd[n + k][32 k +: 32]); the deskew aligns the set on leaf 4's edge n + 4, so partial
+// j reaches xfin at n + 6 + j (+4 vs the aligned set; pfree unchanged: aligned edges stay >= 6 apart, the staggered
+// entries of two sets never share a cycle).  Composes with OT_XR_LAND_TB.  Illegal cases 5 / 6 become staggered (two
+// overlapping sets / leaves 0..2 only) and three more must fault: 15 an old-style aligned 5'b11111 set (misaligned after
+// the deskew), 16 a staggered set without leaf 3, 17 a staggered set with leaves 0 and 1 swapped.  Mutant
+// +define+OT_S81SL_XRT_MUT_DSK (leaf 2 one edge too deep) must FAIL.
 module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, parameter integer NC = 6000);
     localparam integer W = 1104, V = 276, BW = 513, NS = NC + 16;
     reg clk = 1'b0;
@@ -237,12 +249,23 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
                     end
                 end
                 // ---- the 5 norm partials (one set, all leaves at once) -> xfin in leaf order
+`ifdef OT_XR_DSK_TB
+                // NORM-DESKEW: staggered set (leaf k on cycle n + k), aligned by the deskew on n + 4 -> xfin n + 6 + j
+                if (n >= pfree && ru(100) < 6) begin
+                    pfree = n + 6; npart = npart + 1;
+                    for (j = 0; j < 5; j = j + 1) begin
+                        i_pv[n + j][j] = 1'b1;
+                        x_xsv[n + 6 + j] = 1; x_xsi[n + 6 + j] = j; x_xs[n + 6 + j] = i_pd[n + j][32 * j +: 32];
+                    end
+                end
+`else
                 if (n >= pfree && ru(100) < 6) begin
                     i_pv[n] = 5'b11111; pfree = n + 6; npart = npart + 1;
                     for (j = 0; j < 5; j = j + 1) begin
                         x_xsv[n + 2 + j] = 1; x_xsi[n + 2 + j] = j; x_xs[n + 2 + j] = i_pd[n][32 * j +: 32];
                     end
                 end
+`endif
                 // ---- xfin rstd -> the 5 vn
                 if (ru(100) < 10) begin
                     i_rbv[n] = 1; x_rbv_e[n + 1] = 1; x_rbd_e[n + 1] = i_rbd[n];
@@ -261,7 +284,13 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
     task automatic drive(input integer m);
         begin
             dl_ev = i_ev[m]; dl_e = i_e[m]; dl_wv = i_wv[m]; dl_w = i_w[m]; dl_vv = i_vv[m]; dl_vb = i_vb[m]; bi = i_b[m];
+`ifdef OT_XR_LAND_TB
+            if (m + 1 < NS) begin lo_v = i_lov[m + 1]; lo_d = i_lod[m + 1]; p_v = i_pv[m + 1]; p_d = i_pd[m + 1]; end
+            else begin lo_v = 0; p_v = 0; end
+            x_rbv = i_rbv[m]; x_rbd = i_rbd[m];
+`else
             lo_v = i_lov[m]; lo_d = i_lod[m]; p_v = i_pv[m]; p_d = i_pd[m]; x_rbv = i_rbv[m]; x_rbd = i_rbd[m];
+`endif
         end
     endtask
     task automatic idle();
@@ -307,6 +336,19 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
             dl_ev = 1; dl_e = ctl_beat(mine_mask(), 5'd4, 5'd0, b); @(negedge clk); idle(); @(negedge clk);
         end
     endtask
+    // NORM-DESKEW: drive one staggered partial set over 5 cycles (leaf k on cycle k if lm[k]; sw01 swaps leaves 0 / 1;
+    // ov2 overlaps a second full set starting 2 cycles later); the last cycle's value is left on p_v for the caller's edge.
+    task automatic stag(input [4:0] lm, input sw01, input ov2);
+        integer c; reg [4:0] a, b; begin
+            for (c = 0; c < 7; c = c + 1) begin
+                a = (c < 5 && lm[c]) ? (5'd1 << c) : 5'd0;
+                if (sw01 && c == 0) a = lm[1] ? 5'b00010 : 5'd0;
+                if (sw01 && c == 1) a = lm[0] ? 5'b00001 : 5'd0;
+                b = (ov2 && c >= 2) ? (5'd1 << (c - 2)) : 5'd0;
+                if (c < 5 || ov2) begin p_v = a | b; if (c < (ov2 ? 6 : 4)) @(negedge clk); end
+            end
+        end
+    endtask
     task automatic illegal(input integer c);
         reg [1119:0] t; reg [159:0] b14; begin
             do_reset(); t = rw();
@@ -316,16 +358,34 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
                          dl_e = rd_beat(4, mine_mask(), 2, 8, 0, t[1023:0]); end
                 3: begin dl_ev = 1; dl_e = rd_beat(4, mine_mask(), 1, 0, 3, t[1023:0]); @(negedge clk);
                          dl_e = ctl_beat(mine_mask(), 5, 5'b00010, 0); end
+`ifdef OT_XR_LAND_TB
+                4: begin b14 = 0; b14[3:0] = 4'b0001; dl_ev = 1; dl_e = ctl_beat(mine_mask(), 5'd4, 5'd0, b14); @(negedge clk);
+                         idle(); lo_v = 5'b00001; @(negedge clk); idle(); @(negedge clk); dl_vv = 1; dl_vb = ctl_beat(other_mask(), 0, 0, 0); end
+`else
                 4: begin cfg_send(0); lo_v = 5'b00001; @(negedge clk); idle(); dl_vv = 1; dl_vb = ctl_beat(other_mask(), 0, 0, 0); end
+`endif
+`ifdef OT_XR_DSK_TB
+                5: stag(5'b11111, 0, 1);
+                6: stag(5'b00111, 0, 0);
+                15: begin p_v = 5'b11111; end
+                16: stag(5'b10111, 0, 0);
+                17: stag(5'b11111, 1, 0);
+`else
                 5: begin p_v = 5'b11111; @(negedge clk); p_v = 0; @(negedge clk); p_v = 5'b11111; end
                 6: begin p_v = 5'b00111; end
+`endif
                 7: begin cfg_send(0); lo_v = 5'b00011; end
                 8: begin dl_ev = 1; dl_e = rd_beat(4, mine_mask(), 0, 0, 0, t[1023:0]);
                          dl_wv = 1; dl_w = rd_beat(6, mine_mask(), 1, 0, 0, t[1023:0]); end
                 9: begin dl_ev = 1; dl_e = rd_beat(4, mine_mask(), 6, 0, 0, t[1023:0]); end
                 10: begin dl_ev = 1; dl_e = ctl_beat(mine_mask(), 7, 0, 0); end
                 11: begin cfg_send(1); dl_ev = 1; dl_e = 0; dl_e[3:1] = 5; dl_wv = 1; dl_w = 0; dl_w[3:1] = 5; end
+`ifdef OT_XR_LAND_TB
+                12: begin b14 = 0; b14[3:0] = 4'b0001; dl_ev = 1; dl_e = ctl_beat(mine_mask(), 5'd4, 5'd0, b14); @(negedge clk);
+                          idle(); lo_v = 5'b00100; @(negedge clk); idle(); dl_ev = 1; dl_e = ctl_beat(mine_mask(), 4, 0, 0); end
+`else
                 12: begin cfg_send(0); dl_ev = 1; dl_e = ctl_beat(mine_mask(), 4, 0, 0); lo_v = 5'b00100; end
+`endif
                 14: begin b14 = 0; b14[3:0] = 4'b1000; b14[42:41] = 2'd2; dl_ev = 1; dl_e = ctl_beat(mine_mask(), 5'd4, 5'd0, b14); end
                 default: begin cfg_send(1); dl_ev = 1; dl_e = 0; dl_e[3:1] = 5; dl_vv = 1; dl_vb = ctl_beat(other_mask(), 0, 0, 0); end
             endcase
@@ -339,6 +399,9 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
         sid = ru(16);
         gen();
         do_reset();
+`ifdef OT_XR_LAND_TB
+        idle(); lo_v = i_lov[0]; lo_d = i_lod[0]; p_v = i_pv[0]; p_d = i_pd[0]; @(negedge clk);   // lo / p of cycle 0, one early
+`endif
         for (n = 0; n < NS; n = n + 1) begin
             drive(n); @(negedge clk); check(n);
         end
@@ -346,6 +409,10 @@ module tb_s81sl_xr #(parameter integer HB = 0, parameter integer SEED = 1, param
             HB, SEED, sid, NS, nctl, nrd, nrw, nlo, nsend, nvre, nsc, npart, err);
         nill = (HB != 0) ? 14 : 13;
         for (cs = 1; cs <= nill; cs = cs + 1) illegal(cs);
+`ifdef OT_XR_DSK_TB
+        for (cs = 15; cs <= 17; cs = cs + 1) illegal(cs);
+        nill = nill + 3;
+`endif
         $display("XRILL missed=%0d of %0d bsends=%0d", nfail_ill, nill, nbs);
         if (err == 0 && nfail_ill == 0 && nsend > 50 && nrd > 200 && nvre > 100 && nsc > 20 && npart > 20 && (HB == 0 || nbs > 10)) $display("PASS");
         else $display("FAIL");

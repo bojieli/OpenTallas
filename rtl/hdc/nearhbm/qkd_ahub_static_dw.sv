@@ -374,7 +374,7 @@ module qkd_ahub_static_core_la #(
     input wire [7:0] si_type,si_hh,
     input wire [15:0] si_k,
     input wire [127:0] si_data,
-    output reg [143:0] am,
+    (* keep *) output reg [143:0] am,   // KV-CORES 10-25: four per-stack am copies stay four pin register sets (no opt_merge; face_guard shared/ft); 0 cycles
     output reg [3:0] zh_start,
     output reg [511:0] zh_we,zh_sid,
     output reg [15:0] zh_iv,
