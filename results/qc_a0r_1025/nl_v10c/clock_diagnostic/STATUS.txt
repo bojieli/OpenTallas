@@ -1,0 +1,7 @@
+Original NL v10c CTS clock diagnostic, 2026-10-25 CODEX takeover1309.
+Unfiltered 205367 related pairs: TT setup248.41 hold263.12; FF setup204.42 hold213.72 ps. FAIL/unresolved retained. Worst paths touch hard-child macro clock pins whose parent clock arrival omits internal child insertion.
+Parent soft-flop-only 180779 related pairs: TT setup77.06 hold66.86; FF setup76.60 hold68.85 ps. Local diagnostic only, NOT complete gate PASS.
+CLOCK ruling: require current SIGNED child per-corner latency/range and parent compensated-tap contract, then actual ILM/flop-expanded parent STA for cross-child physical-pair CPPR. Historical first-route TT means ROM206.9/LSL165.7 are not current SIGNED release evidence. Never ETM MAX as mean.
+Unit original clock/F4 oth-ubuntu-3455195-1792959497 EXIT0; explicit flop-only unit oth-ubuntu-3544948-1792960071 EXIT0. Both computations are diagnostics, not physical closure.
+F4 report-only: 7120 short pairs,998 groups,6806 cross-leaf;251 groups movable,43 same already,skip_big21,skip_far682,skip_cap1,skip_clock0;radius30um,leafcap20. All tap sources belong to ONE core_clk.
+GEOM HOLD original route pending guarded F4 successor actual census/images. Successor runs separately under nl_affinity; original evidence preserved.

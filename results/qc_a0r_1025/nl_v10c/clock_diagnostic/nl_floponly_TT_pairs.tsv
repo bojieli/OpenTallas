@@ -1,0 +1,32 @@
+H	corner	TT
+H	regs	42134
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	42134
+H	pairs	180779
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	180779
+H	max_worst	77.06
+H	max_bounded	0
+H	max_signed	-77.06
+H	max_launch	u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[293]$_DFF_P_
+H	max_capture	u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx9.tc[213]$_SDFF_PP0_
+H	max_crpr	0.0
+H	max_p99_raw	44.31
+H	max_searched	1
+H	max_nopath	0
+H	max_verify	0.000
+P	max	u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[293]$_DFF_P_	u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.g_tx9.tc[213]$_SDFF_PP0_	-77.06	0.00	77.06
+H	min_n	180779
+H	min_worst	66.86
+H	min_bounded	0
+H	min_signed	66.86
+H	min_launch	u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.genblk1.g_col_land.u_qlr1sw.u_safe.g_c[13].g_a[1].q[6]$_SDFF_PN0_
+H	min_capture	u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[326]$_DFF_P_
+H	min_crpr	0.0
+H	min_p99_raw	37.35
+H	min_searched	1
+H	min_nopath	0
+H	min_verify	0.000
+P	min	u_ot_pr_core.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.genblk1.g_col_land.u_qlr1sw.u_safe.g_c[13].g_a[1].q[6]$_SDFF_PN0_	u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.mq_wrom[326]$_DFF_P_	66.86	0.00	66.86
