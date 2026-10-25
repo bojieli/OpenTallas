@@ -4,6 +4,18 @@
     kv_core_rtl.py --plan die_plan.json --type kv3_hub_Eo --core astk_EN --kit-rtl ~/scratch/kv-g3/kit_rtl/g3
                    --kv41 ~/scratch/kv-g3/kv41/rtl --out DIR [--split]   (--core may repeat; --all-cores = every
                    planned core of the type except qkd_hr_* / reuse-closed views)
+    kv_core_rtl.py --plan die_plan.json --type kv3_hub_Wi --core host__qkd_hr_cdc_host --hr-wrappers WDIR --out DIR
+                   [--hr-filelist F] [--hr-keep-families]
+                   (KV-CORES2 10-25, OPT-IN; without --hr-wrappers nothing changes): qkd_hr_* host-root cores of
+                   kv3_hub_Wi from the HOST-CLUSTER WRAPPERS (tools/qwen_kv_die/host_cluster/gen_cluster.py, r2
+                   partition: one clock port per family ck_core / ck_host / ck_ingest / ck_phy_fam).  BRIEFING 16a:
+                   ck_core / ck_host / ck_ingest collapse onto ONE core pin `ck` (die clock), ck_phy_fam -> `ck_phy`
+                   (the PHY side keeps its clock; the only async FIFO left is the PHY edge, qkd_hr_cdc_pc); every
+                   member CDC whose two clocks collapse gets SAMECLK=1 (ot_qwen_die_cdc_ch, qkd_host_native_qm_debt:
+                   same-clock register stage + buffer).  Writes DIR/<module>/<module>.sv (top <module> with the
+                   collapsed clock face around <module>__fam = the wrapper body) + <module>_core.json (ports, clock
+                   classes, SAMECLK edits, CDC-fork blockers, pins-file comparison vs the plan, lint).  r2 'direct'
+                   children (phy_pad, core_rx, phy_adp: kit top = member module) are reported, no wrapper emitted.
 
 For one plan type (its G3 kit RTL: <kit-rtl>/<type>/<type>_part_bound.sv, binder4 kv41) and one or more of its
 hard_cores[] it writes
@@ -835,6 +847,149 @@ def renamed_leaf_files(files, mods, outdir):
     return out, ren
 
 
+# ----------------------------------------------------------------------------------------------- hr cores (opt-in)
+HR_FAM = {'ck_core': 'ck', 'ck_host': 'ck', 'ck_ingest': 'ck', 'ck_phy_fam': 'ck_phy'}
+HR_SAMECLK = ('ot_qwen_die_cdc_ch', 'qkd_host_native_qm_debt')       # members with an opt-in SAMECLK parameter
+HR_FORKS = ('qkd_hr_native_qm_cdc', 'qkd_hr_qm_credit_pacer_cdc', 'qkd_hr_visibility_fence_cdc')  # KV-CDC2 forks
+HR_R2 = Path(__file__).resolve().parents[4] / 'results/arch/qwen_split_1014/host_root_cluster/partition_r2.json'
+
+
+def hr_header(txt, mod):
+    m = re.search(r'\bmodule\s+' + re.escape(mod) + r'\s*\((.*?)\);', txt, re.S)
+    if not m:
+        raise SystemExit(f'{mod}: module header not found')
+    order = [x.strip() for x in m.group(1).split(',') if x.strip()]
+    decl = {}
+    for d, rng, n in re.findall(r'^\s*(input|output|inout)\s+(?:wire\s+)?(\[\s*\d+\s*:\s*\d+\s*\]\s*)?([A-Za-z_]\w*)\s*;',
+                                txt[m.end():], re.M):
+        decl[n] = (d, re.sub(r'\s', '', rng) if rng else '')
+    return order, decl
+
+
+def hr_instances(body):
+    """[(type, params text or None, inst name, conn text, span)] of the wrapper body (gen_cluster write_verilog form)."""
+    out = []
+    for m in re.finditer(r'^\s*([A-Za-z_]\w*)\s*(#\((.*?)\))?\s+\\?([A-Za-z_][\w\[\].$]*)\s*\((.*?)\);', body, re.S | re.M):
+        if m.group(1) in ('module', 'input', 'output', 'wire', 'reg', 'assign', 'inout'):
+            continue
+        out.append((m.group(1), m.group(3), m.group(4), m.group(5), m.span()))
+    return out
+
+
+def hr_clock_alias(body, ports):
+    """net -> family port it is an alias of (assign a = <family>; chains followed)."""
+    al = {p: p for p in ports}
+    for _ in range(4):
+        for l, r in re.findall(r'^\s*assign\s+([A-Za-z_][\w$]*)\s*=\s*([A-Za-z_][\w$]*)\s*;', body, re.M):
+            if r in al:
+                al[l] = al[r]
+    return al
+
+
+def hr_core(hc, wdir, out, pdir, filelist, keep_fam):
+    mod = hc['module']
+    r2 = json.load(open(HR_R2))['children']
+    rec = dict(schema='opentallas.kv.core_rtl_hr.v1', module=mod, inst=hc['inst'], wrappers=str(wdir),
+               r2_members=r2.get(mod, {}).get('members'), sameclk=[], fork_blockers=[], notes=[])
+    if mod in r2 and r2[mod].get('direct'):
+        rec['notes'].append('r2 direct child: kit top = the member module itself; no wrapper emitted (its single '
+                            'clock port is already the core clock pin)')
+        return rec, None
+    src = next((wdir / f'{mod}{e}' for e in ('.v', '.sv') if (wdir / f'{mod}{e}').exists()), None)
+    if src is None:
+        raise SystemExit(f'{mod}: no wrapper {mod}.v/.sv in {wdir} (plan module not an r2 child: re-pin not landed?)')
+    txt = src.read_text()
+    order, decl = hr_header(txt, mod)
+    fams = [p for p in order if p in HR_FAM]
+    fam = {} if keep_fam else {p: HR_FAM[p] for p in fams}
+    body_start = txt.index('module ' + mod)
+    body = txt[body_start:]
+    al = hr_clock_alias(body, fams)
+    # SAMECLK on member crossings whose clocks collapse onto one core pin
+    edits = []
+    for typ, par, inst, conn, span in hr_instances(body):
+        cks = dict(re.findall(r'\.(wclk|rclk|ck|clk_h|clk_i|clk_i_out)\(\s*([A-Za-z_][\w$]*)\s*\)', conn))
+        fset = {fam.get(al.get(n, n), al.get(n, n)) for n in cks.values()}
+        if typ in HR_FORKS:
+            rec['fork_blockers'].append(dict(inst=inst, type=typ, clocks=cks, why='KV-CDC2 CDC fork: regenerate the '
+                                             'wrappers with gen_cluster.py --dieclk (no FORKS) so the original module '
+                                             '(with SAMECLK) is instantiated'))
+            continue
+        if typ in HR_SAMECLK and cks and len(fset) == 1 and not keep_fam:
+            if 'SAMECLK' in (par or ''):
+                continue
+            newpar = (par + ', ' if par else '') + '.SAMECLK(1)'
+            edits.append((span, typ, par, newpar, inst))
+            rec['sameclk'].append(dict(inst=inst, type=typ, clocks=cks, core_pin=fset.pop()))
+    for (st, en), typ, par, newpar, inst in sorted(edits, key=lambda e: -e[0][0]):
+        seg = body[st:en]
+        seg = seg.replace(f'#({par})', f'#({newpar})', 1) if par else seg.replace(typ, f'{typ} #({newpar})', 1)
+        body = body[:st] + seg + body[en:]
+    body = body.replace('module ' + mod, 'module ' + mod + '__fam', 1)
+    # top with the collapsed clock face
+    tports, seen = [], set()
+    for p in order:
+        q = fam.get(p, p)
+        if q not in seen:
+            seen.add(q)
+            tports.append((q, decl[p] if p not in fam else ('input', '')))
+    lines = [f'// GENERATED by kv_core_rtl.py --hr-wrappers (KV-CORES2 10-25, BRIEFING 16a) from {src.name}; do not edit.',
+             '`timescale 1ns/1ps', f'module {mod} ({", ".join(q for q, _ in tports)});']
+    lines += [f'  {d} wire {r + " " if r else ""}{q};' for q, (d, r) in tports]
+    lines.append(f'  {mod}__fam u_fam (' + ', '.join(f'.{p}({fam.get(p, p)})' for p in order) + ');')
+    lines.append('endmodule')
+    cdir = out / mod
+    cdir.mkdir(parents=True, exist_ok=True)
+    cp = cdir / f'{mod}.sv'
+    cp.write_text('\n'.join(lines) + '\n\n' + txt[:body_start] + body)
+    rec['clock_ports_before'] = fams
+    rec['clock_ports_after'] = sorted({fam.get(p, p) for p in fams})
+    rec['ports'] = {q: list(d) for q, d in tports}
+
+    def width(r):
+        m = re.match(r'\[(\d+):(\d+)\]', r or '')
+        return abs(int(m.group(1)) - int(m.group(2))) + 1 if m else 1
+    rec['port_bits'] = sum(width(r) for _, (d, r) in tports)
+    if hc.get('pins_file') and (pdir / hc['pins_file']).exists():
+        pins = load_pins(pdir / hc['pins_file'])
+        pb = defaultdict(int)
+        for (b, i) in pins:
+            pb[b] += 1
+        tb = {q: width(r) for q, (d, r) in tports}
+        rec['pins_check'] = dict(pins_file=hc['pins_file'], pin_bits=len(pins), port_bits=rec['port_bits'],
+                                 ports_without_pins=sorted(set(tb) - set(pb))[:40],
+                                 n_ports_without_pins=len(set(tb) - set(pb)),
+                                 pins_without_port=sorted(set(pb) - set(tb))[:40],
+                                 n_pins_without_port=len(set(pb) - set(tb)),
+                                 width_differs=sorted(b for b in set(tb) & set(pb) if tb[b] != pb[b])[:40],
+                                 verdict='MATCH' if dict(tb) == dict(pb) else 'RE-PIN PENDING (plan pins are not '
+                                         'the r2 wrapper face yet: run core_pins_hr.py on the r2 wrappers)')
+    if filelist:
+        fl = [l.strip() for l in open(filelist) if l.strip() and not l.startswith(('#', '//', '+', '-'))]
+        rec['lint'] = lint([cp] + fl, mod)
+    return rec, cp
+
+
+def main_hr(a, plan, pdir, t):
+    sel = [h for h in t.get('hard_cores', []) if h['module'].startswith('qkd_hr_')
+           and (a.all_cores or h['inst'] in a.core)]
+    if not sel:
+        raise SystemExit('no qkd_hr_* cores selected (--core host__qkd_hr_<x> | --all-cores)')
+    out, done = Path(a.out), set()
+    for hc in sel:
+        if hc['module'] in done:
+            continue
+        done.add(hc['module'])
+        rec, cp = hr_core(hc, Path(a.hr_wrappers), out, pdir, a.hr_filelist, a.hr_keep_families)
+        (out / hc['module']).mkdir(parents=True, exist_ok=True)
+        (out / hc['module'] / f"{hc['module']}_core.json").write_text(json.dumps(rec, indent=1) + '\n')
+        pc = rec.get('pins_check', {})
+        print(json.dumps(dict(module=hc['module'], clocks=[rec.get('clock_ports_before'), rec.get('clock_ports_after')],
+                              sameclk=[s['inst'] for s in rec['sameclk']], fork_blockers=len(rec['fork_blockers']),
+                              port_bits=rec.get('port_bits'), pins=pc.get('verdict'), lint=rec.get('lint', {}).get('errors'),
+                              notes=rec['notes'])))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--plan', required=True)
@@ -846,10 +1001,15 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--split', action='store_true')
     ap.add_argument('--no-consistency', action='store_true')
+    ap.add_argument('--hr-wrappers', help='OPT-IN (KV-CORES2): host-cluster wrapper dir; selects the qkd_hr_* cores only')
+    ap.add_argument('--hr-filelist', help='with --hr-wrappers: member sources for the lint')
+    ap.add_argument('--hr-keep-families', action='store_true', help='with --hr-wrappers: no 16a clock collapse')
     a = ap.parse_args()
     plan = json.load(open(a.plan))
     pdir = Path(a.plan).resolve().parent
     t = plan['partition_types'][a.type]
+    if a.hr_wrappers:
+        return main_hr(a, plan, pdir, t)
     kd = Path(a.kit_rtl) / a.type
     kj = json.load(open(kd / 'kit_rtl.json'))
     bound = kd / f"{kj['bound_module'].replace('_part_bound', '')}_part_bound.sv"
