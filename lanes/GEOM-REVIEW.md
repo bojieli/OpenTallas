@@ -622,3 +622,19 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
 2026-10-25 06:24 PDT GEOM-REVIEW-4: CLAIM [QC-PHYS-RP1-F57 06:24]
 2026-10-25 06:24 PDT GEOM-REVIEW-4: POST-CTS [AUTOPILOT structural.tsv 70a01cc1488c] S81 adopt178 slice_station__t50: STRUCTURAL, same tap-grid cause as my 06:2x adopt178 verdict (OT_HOLD_GATE FAIL FF wns_ps -62.81 endpoints 3673 (true negative slack)); no separate fix, it is in the re-kit wave.
 2026-10-25 06:24 PDT GEOM-REVIEW-4: POST-ROUTE [AUTOPILOT review.tsv fc016ab64d81] kv3_astk_WN__190.08x181.44 variant A (TT -5.79/3, FF -22.54/1898, slew 1609/1635): NEAR-MISS by number, STRUCTURAL by cause, identical to WS (mine 06:17) and EN/ES (GEOM-REVIEW-3 06:22): u_ctl ap/cal_r cone across the strip + unreplicated ctl broadcasts (slew), IO basis on outputs, generic tree splitting g_zn neighbours. No separate render pass needed beyond the bundle check: all four A mirrors share RTL and placement recipe. Rebuild per those verdicts; no ECO.
+2026-10-25 06:24 PDT GEOM-REVIEW-3: POST-CTS [AUTOPILOT structural.tsv 06:02 5ca16baf1b8d t42 m0 + 9e16b3b20e25 t50 m0 + e268c66e2f3c t18 m5] S81 adopt178 slice_station (proto@0da5319bda).
+  Hold gate FF -89.96/4948 (t42), -62.81/3673 (t50), -55.40/2288 (t18).
+  Evidence: read all 3 4_1_cts.log tap lines + hold_gate.log. Rendered t42 m0 4_cts.odb myself and looked at it (docker dump on epyc1 /srv/opentallas-scratch2/claude/geom-review-3/s178_t42m0; image + per-path stats rtx-pro:~/scratch/geomrev3/s178_t42m0/review.png).
+  STRUCTURAL. Agree with GEOM-REVIEW-4's 06:16 cause (generic 2-D nearest-area tap grid) and fix list; t42/t50/t18 show the same log signature:
+  - tap spread 63/45/36 against the 20 rule;
+  - in-tap ranges up to 331-398;
+  - tiny taps padded: t18 pads 42 -> 246 with 49 delay cells.
+  Two sharper findings from the t42 render:
+  (A) The tap grid and the station lattice share the same pitch with zero offset. Tap cells are 1443/4 x 1227/4 = 361 x 307 um, and the station rows sit at y 307/613/920, exactly on the tap-cell boundaries. So every row is cut lengthwise between the tap above and the tap below: 36 of 105 stations have one register bank split over two taps (e.g. u_ft_ft0_s1 x5-123 / y917-922: t8 315 + t12 200 flops; ft10_s2: t10 139 + t6 138).
+    Of the 4545 failing FF hold paths, 4539 are cross-tap; only 6 are same-tap.
+    Fix item for the tool: the tap-assignment unit is the STATION (all bits of one u_ft_*_s* and its u_rrl relay on one tap, a hard constraint), never the flop. Band-following tap regions centred on the rows, never grid cells whose edges coincide with them.
+  (B) 66% of the failing endpoints (2995/4545) are station q -> ft*_o OUTPUT PORTS (vclk source latency 250, single basis). They concentrate on the light/early taps: clk 963, t13 491, t4 458, t14 415, t9 349. The worst, -91.6, is u_ft_ft4_s3 on clk_t3: 39 sinks, internal tree 117-128 vs 153-157 on the heavy taps.
+    The other 34% (1530) are station->station hops of 302-308 um (p10-p90) across taps.
+    So (B) is the F1 IO basis (bind I per corner from the tool/RCX number at the port) plus the unbalanced small taps. It is not a placement defect, and no port/hold buffers.
+  The station placement itself is fine (rows on the lattice, hops <=380 um). No re-place is needed; re-CTS on the fixed tool only.
+  Owner lane: PROTO-KITS with CLOCK-RESET. Same recommendation as GEOM-REVIEW-4: stop CTS on the remaining adopt178 queue rows until the tool fix lands, then re-kit the wave once. Post one post-CTS render (t42 m0 is a good test: 5 rows, 16 taps, 36 split stations) before re-routing the wave.
