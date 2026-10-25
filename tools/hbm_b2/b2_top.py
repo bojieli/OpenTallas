@@ -264,6 +264,8 @@ def main():
     # PARTS 4 -> 2 slice array); every as-built reader bit is translated, a reader of an unmapped bit is a cut.
     out_remap = {f'{i}__{p}': v for i, d in delta.get('out_remap', {}).items() for p, v in d.items()}
     straps = [re.compile(x) for x in delta.get('strap_ports', [])]
+    aliases = delta.get('source_alias', {})
+    alias_exempt = [re.compile(x) for x in delta.get('source_alias_exempt', [])]
 
     rep = collections.defaultdict(list)
     paths = []
@@ -388,6 +390,10 @@ def main():
                             bits.extend([(('c', 1, 'x'), 0)] * (lo + k + 1 - len(bits)))
                         bits[lo + k] = (('n', f'{si}__{sp}', slo + k, slo + k), 'new')
                 flat = bits
+            # Whole-die clock adoption is explicit in the binding delta.  PHY clocks may retain their source.
+            if aliases and not any(rx.fullmatch(n) for rx in alias_exempt):
+                flat = [(('n', aliases[s[1]][0] + '__' + aliases[s[1]][1], s[2], s[3]), 'new')
+                        if s[0] == 'n' and s[1] in aliases else (s, st) for s, st in flat]
             # classify
             for s, st in flat:
                 cls = seg_src_kept(s) if not (s[0] == 'n' and st == 'new') else \
