@@ -80,6 +80,8 @@ def lane_latency(inst, hops):
         m, ports = inst[h]
         if m.startswith("hbfd_rly"):
             lat += 1
+        elif m == "ot_codex_prog_r8_pad":
+            lat += int(ports["_transport_depth"])
         elif m.startswith("hbfd_pad"):
             n = PAD_N.get(h, PAD_MOD_N.get(m))
             if n is None:
