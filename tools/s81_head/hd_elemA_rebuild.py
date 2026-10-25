@@ -55,7 +55,10 @@ ELEMS = dict(
            ROMS="u_m.u_rom0 95.04 146.88 R0 u_m.u_rom1 95.04 233.28 R0"),
     B=dict(WRAP="rtl/dsrom_sys/s81_head/ot_s81hd_elemB_rb.sv", TOP="ot_s81hd_elemB_cv",
            OLD_LEF="physical/dsrom_fh_safe/closed/elemB/ot_dsrom_head_elem.lef", S=277.652,
-           CLK_RECT=(0.0, 257.484, 0.192, 257.676), OLD_CLK=[0.0, 257.568, 0.084, 257.592],
+           # B c6 (10-24 21:10): the 0.192 M4 square under the abstract full-cover M4 OBS has NO DRT access point in
+           # the tile (pin_access DRT-0073 on u_eB/clk, tile_prev1); every standard 0.084 x 0.024 M4 W-edge pin of the
+           # same view is accessible (pin_access PA_OK with only clk set to that size) -> clk = the standard pin
+           CLK_RECT=(0.0, 257.568, 0.084, 257.592), OLD_CLK=[0.0, 257.568, 0.084, 257.592],
            PARAMS="LV 6 PAD 2 JOIN 0 ROWS 128 IOREG 1 SAFE 1 CUT 511 SPLIT9 1", NPINS=None, NICK="hd_elemB_rb",
            ROMS="u_m.u_rom0 77.76 103.68 R0 u_m.u_rom1 77.76 190.08 R0"))
 
