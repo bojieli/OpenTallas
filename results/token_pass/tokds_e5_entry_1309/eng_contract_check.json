@@ -1,0 +1,73 @@
+{
+ "verdict": "PASS",
+ "scope": "selected E5 component source, static L14 DAG dates and minimal actual producer function; whole current bound token NOTRUN",
+ "profile": {
+  "kind": "S81_ENG_F6_TIMED_ENTRY",
+  "entry_guard_cycles": 1,
+  "reset_guard_cycles": 4,
+  "return_age_added_cycles": 0,
+  "manifest": "/srv/opentallas-scratch2/claude/codex-l14-schedule-1309/eng_source_fixture/manifest.json",
+  "profile_sha256": "bae574434e6342bef2b8f4dc0153288c1579abe44206126b651c9ef5aeb4cde0"
+ },
+ "boot": {
+  "cfg_en_stable_from_cycle": 100,
+  "profile_sha256": "bae574434e6342bef2b8f4dc0153288c1579abe44206126b651c9ef5aeb4cde0",
+  "last_core_pin_release_cycle": 100,
+  "start_cycle": 104,
+  "core_ready_cycle": 104,
+  "entry_guard_cycles": 1,
+  "qualification": "STATIC_READINESS_ONLY; actual bound token still required"
+ },
+ "transport_phase": {
+  "engine_fks_pin_cycle": 141,
+  "internal_entry_record_cycle": 142,
+  "return_age_added_cycles": 0
+ },
+ "negative_controls_caught": 8,
+ "old_span": 28082.9,
+ "new_span": 28082.9,
+ "changed_operations": [
+  {
+   "op": "eng.lead_flit",
+   "old_start": -290204.7,
+   "new_start": -290204.7,
+   "old_end": -247574.7,
+   "new_end": -247573.7
+  },
+  {
+   "op": "eng.hash",
+   "old_start": -247574.7,
+   "new_start": -247573.7,
+   "old_end": -247557.7,
+   "new_end": -247556.7
+  },
+  {
+   "op": "eng.hbm_read",
+   "old_start": -247557.7,
+   "new_start": -247556.7,
+   "old_end": -247074.7,
+   "new_end": -247073.7
+  },
+  {
+   "op": "eng.rows_allgather",
+   "old_start": -247074.7,
+   "new_start": -247073.7,
+   "old_end": -245652.7,
+   "new_end": -245651.7
+  },
+  {
+   "op": "eng.wkv",
+   "old_start": -245652.7,
+   "new_start": -245651.7,
+   "old_end": -245122.7,
+   "new_end": -245121.7
+  },
+  {
+   "op": "eng.knorm",
+   "old_start": -245122.7,
+   "new_start": -245121.7,
+   "old_end": -244520.7,
+   "new_end": -244519.7
+  }
+ ]
+}
