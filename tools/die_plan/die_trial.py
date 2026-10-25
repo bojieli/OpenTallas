@@ -502,11 +502,44 @@ def _uncovered(W, H, rects):
     return out
 
 
+GCELL_UM = 10.8   # OpenROAD die gcell here (15 x M3 pitch 0.72; congestion.rpt bboxes, origin 0; floor(W/g) tiles)
+
+
+def _gstrips(rects, vertical, W, H, g=GCELL_UM, eps=0.01):
+    """region rects -> GRT region strips one gcell thick across the layer direction (rows for an H layer, columns
+    for a V layer), snapped to the gcell grid with upper edges pulled in by eps, so every gcell has exactly one owner.
+
+    Why (OpenROAD grt computeRegionAdjustments, read 10-25 at master): interior tiles of a region keep
+    floor(cap * (1 - a)), but every tile in the region's first/last row or column keeps cap - tracks * (1 - a), where
+    tracks = the region's cross-direction extent in that tile.  So a fully covered border tile is derated by (1 - a)
+    instead of a (0.75 asked -> 25 % taken), and where cap is 0 the result is negative and wraps the uint16 capacity
+    (GRT-0113/0114 "Underflow in reduce", 10-25 B2p_r1_band5: 2000+ warnings, every number invalid).  In a strip one
+    tile thick every tile takes the border formula, so the caller passes a = the KEPT fraction and every tile keeps
+    a * cap.  H edges stop before the last tile column and V edges before the last tile row (capacity 0 there, no
+    routing edge).  -> [(x0, y0, x1, y1, *extra)]"""
+    nx, ny = max(1, int(W // g)), max(1, int(H // g))
+    imax = nx - (0 if vertical else 1)
+    jmax = ny - (1 if vertical else 0)
+    out = []
+    for r in rects:
+        i0, j0, i1, j1 = (int(round(v / g)) for v in r[:4])
+        i1, j1 = min(i1, imax), min(j1, jmax)
+        if i1 <= i0 or j1 <= j0:
+            continue
+        if vertical:
+            out += [(round(i * g, 3), round(j0 * g, 3), round((i + 1) * g - eps, 3), round(j1 * g - eps, 3))
+                    + tuple(r[4:]) for i in range(i0, i1)]
+        else:
+            out += [(round(i0 * g, 3), round(j * g, 3), round(i1 * g - eps, 3), round((j + 1) * g - eps, 3))
+                    + tuple(r[4:]) for j in range(j0, j1)]
+    return out
+
+
 def band_region_adjust(P, share_adj, grow=12.0):
     """GRT region adjustments that model the die_ft_bands: the band layers get global adjustment 0, every die area
-    outside a band of that layer gets region adjustment share_adj (= the usual 1 - ft_track_frac; OpenROAD scales the
-    unadjusted capacity, checked 10-25 on a 200x200 test: half-die region 0.75 -> 37.6 % reduction), and a band with
-    die_share < 1 gets 1 - die_share.  Hard-core OBS areas (grown by about one gcell) are left out: OpenROAD subtracts
+    outside a band of that layer keeps 1 - share_adj of its tracks (share_adj = the usual 1 - ft_track_frac), and a
+    band with die_share < 1 keeps die_share; both are emitted as one-gcell strips (_gstrips: OpenROAD's border-tile
+    formula makes the -adjustment value the KEPT fraction there).  Hard-core OBS areas (grown by about one gcell) are left out: OpenROAD subtracts
     the adjustment from the original capacity, so on an OBS (capacity 0) edge it underflows to 65480 tracks
     (GRT-0114, 10-25 B2p_r1_band: M4 derated +246 %).  -> (band layers, [(layer, x0, y0, x1, y1, adjustment)])"""
     rects = ft_band_rects(P)
@@ -516,13 +549,34 @@ def band_region_adjust(P, share_adj, grow=12.0):
     regs = []
     for L, rs in sorted(by.items()):
         cores = die_core_rects(P, L, grow)
-        for x0, y0, x1, y1 in _uncovered(P.W, P.H, [r[:4] for r in rs] + cores):
-            regs.append((L, x0, y0, x1, y1, share_adj))
+        vert = P.layers[L]["dir"] == "V"
+        for x0, y0, x1, y1 in _gstrips(_uncovered(P.W, P.H, [r[:4] for r in rs] + cores), vert, P.W, P.H):
+            regs.append((L, x0, y0, x1, y1, round(1 - share_adj, 3)))     # KEPT fraction, see _gstrips
         for x0, y0, x1, y1, ds in rs:
             if ds < 1.0:
-                for a in _uncovered(x1 - x0, y1 - y0, [(c[0] - x0, c[1] - y0, c[2] - x0, c[3] - y0) for c in cores]):
-                    regs.append((L, a[0] + x0, a[1] + y0, a[2] + x0, a[3] + y0, round(1 - ds, 3)))
+                sub = _uncovered(x1 - x0, y1 - y0, [(c[0] - x0, c[1] - y0, c[2] - x0, c[3] - y0) for c in cores])
+                for a in _gstrips([(a[0] + x0, a[1] + y0, a[2] + x0, a[3] + y0) for a in sub], vert, P.W, P.H):
+                    regs.append((L, *a, round(ds, 3)))
     return sorted(by), regs
+
+
+def band_share_obs(P, regs, g=GCELL_UM):
+    """die_ft_bands outside-band share as OBSTRUCTION stripes, not region adjustments: in every one-gcell strip from
+    band_region_adjust (kept fraction a), obstruct the top (1 - a) of each gcell row (H layer) or the right (1 - a) of
+    each gcell column (V layer).  OpenROAD subtracts obstructions as blocked track intervals merged with the pin and
+    OBS intervals, so the kept tracks are exact per gcell.  Region adjustments cannot do this: their border-tile
+    formula subtracts a fixed tracks * (1 - a), which wrapped zero-capacity edges (GRT-0113/0114) and, once stripped,
+    over-derated every edge whose original capacity was below the track count (10-25 band5f: M6 80.9 % / M7 79.0 %
+    derated vs the 75 % asked).  -> [(layer, x0, y0, x1, y1)]"""
+    out = []
+    for L, x0, y0, x1, y1, a in regs:
+        if a >= 1.0:
+            continue
+        if P.layers[L]["dir"] == "V":
+            out.append((L, round(x0 + a * g, 3), y0, round(x1 + 0.01, 3), round(y1 + 0.01, 3)))
+        else:
+            out.append((L, x0, round(y0 + a * g, 3), round(x1 + 0.01, 3), round(y1 + 0.01, 3)))
+    return out
 
 
 PLACE_PROC = ("proc ot_place {n x y o} { set b [ord::get_db_block]; set i [$b findInst $n]; $i setOrient $o; "
@@ -556,9 +610,6 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     band_layers, band_regs = band_region_adjust(P, dict(adjust).get("M4", 0.75))
     for L, a in adjust:
         t.append(f"set_global_routing_layer_adjustment {L} {0 if L in band_layers else a:g}")
-    for L, x0, y0, x1, y1, a in band_regs:   # die_ft_bands (DIE-FT-HBM 10-25): die-owned band layers
-        t.append(f"set_global_routing_region_adjustment {{{x0:.3f} {y0:.3f} {x1:.3f} {y1:.3f}}} -layer {L} "
-                 f"-adjustment {a:g}")
     t += ["global_route -congestion_iterations 50 -allow_congestion -verbose "
           "-congestion_report_file /work/grt/congestion.rpt",
           "puts \"OT_T grt [expr {[clock seconds]-$t0}]\"",
@@ -570,6 +621,8 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     for L, a, b, c, d in pg_stripes(P):
         obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
     for L, a, b, c, d in reserve:
+        obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
+    for L, a, b, c, d in band_share_obs(P, band_regs):   # die_ft_bands (DIE-FT-HBM 10-25): die share outside bands
         obs.append(f"create_obstruction -region {{{a:.3f} {b:.3f} {c:.3f} {d:.3f}}} -layer {L}")
     (Path(out) / "obs.tcl").write_text("\n".join(obs) + "\n")
     return "\n".join(t) + "\n"
@@ -851,7 +904,7 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
                        adjust=dict(adjust), coarse_m123_um=coarse, clock_reserve_rects=len(reserve),
                        pg_stripes=len(pg_stripes(P)))
     bl, br = band_region_adjust(P, dict(adjust).get("M4", 0.75))
-    meta["grt"]["die_ft_bands"] = dict(layers=bl, band_rects=len(ft_band_rects(P)), region_adjustments=len(br))
+    meta["grt"]["die_ft_bands"] = dict(layers=bl, band_rects=len(ft_band_rects(P)), share_obstructions=len(band_share_obs(P, br)))
     seam_bits = 0
     chan = 0
     for pid, pr in P.ports.items():
