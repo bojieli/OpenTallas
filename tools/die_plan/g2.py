@@ -33,6 +33,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import check  # noqa: E402
 import gen_phys  # noqa: E402
+import ft_bit_sites  # noqa: E402
 import schema as S  # noqa: E402
 
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
@@ -310,6 +311,7 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
     for sn, s in sorted(slots.items()):
         ib, ob = by_bus.get(sn + "_i", []), by_bus.get(sn + "_o", [])
         k = int(s.get("stations", 1))
+        ft_bit_sites.validate_slot(s)
         pi = {bit: (x, y, f) for bit, x, y, f in ib}
         po = {bit: (x, y, f) for bit, x, y, f in ob}
         for bit in sorted(set(pi) | set(po)):
@@ -329,7 +331,16 @@ def part_probe(P, tn, out, adjust=0.5, mem=32):
                 if q.startswith("nq_"):
                     nets.append(q)
                 cells.append(f"  {FLOP} {c} (.D({prev}), .QN({q}));")
-                site = tuple(s["regs_um"][j]) if s.get("regs_um") else check.point_at(seg, L * j / k)
+                if s.get("bit_sites_um") and j > 0:
+                    # Same convention as face_flops.tcl: explicit internal
+                    # stages start at1; metadata stores allocation-envelope LL.
+                    xy = s["bit_sites_um"][j - 1][bit]
+                    cw, ch = s["bit_site_cell_um"]
+                    site = (xy[0] + cw / 2, xy[1] + ch / 2)
+                elif s.get("bit_sites_um"):
+                    site = a  # station0 remains registered beside its input pin
+                else:
+                    site = tuple(s["regs_um"][j]) if s.get("regs_um") else check.point_at(seg, L * j / k)
                 place.append((c, *site))
                 prev = q
     v = ["module ftprobe ("] + [",\n".join(ports)] + [");"] + \

@@ -1,0 +1,169 @@
+H	corner	TT
+H	regs	18548
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	18548
+H	pairs	258033
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	258033
+H	max_worst	37.75
+H	max_bounded	0
+H	max_signed	-37.75
+H	max_launch	u_hash.u_x_43_0/q[35]$_DFF_P_
+H	max_capture	u_hash.s1_43_4[17]$_DFF_P_
+H	max_crpr	1.46
+H	max_p99_raw	28.84
+H	max_searched	100
+H	max_nopath	0
+H	max_verify	0.000
+P	max	u_hash.u_x_43_0/q[35]$_DFF_P_	u_hash.s1_43_4[17]$_DFF_P_	-37.75	1.46	39.21
+P	max	u_hash.u_x_43_0/q[34]$_DFF_P_	u_hash.s1_43_4[17]$_DFF_P_	-37.74	1.46	39.20
+P	max	u_hash.u_x_43_0/q[39]$_DFF_P_	u_hash.s1_43_4[17]$_DFF_P_	-37.68	1.46	39.14
+P	max	u_hash.u_x_43_0/q[35]$_DFF_P_	u_hash.s1_43_4[16]$_DFF_P_	-37.67	1.46	39.13
+P	max	u_hash.u_x_43_0/q[34]$_DFF_P_	u_hash.s1_43_4[16]$_DFF_P_	-37.66	1.46	39.12
+P	max	u_hash.u_x_43_0/q[36]$_DFF_P_	u_hash.s1_43_4[17]$_DFF_P_	-37.64	1.46	39.10
+P	max	u_hash.u_x_43_0/q[39]$_DFF_P_	u_hash.s1_43_4[16]$_DFF_P_	-37.60	1.46	39.06
+P	max	u_hash.u_x_43_0/q[37]$_DFF_P_	u_hash.s1_43_4[17]$_DFF_P_	-37.57	1.46	39.03
+P	max	u_hash.u_x_43_0/q[36]$_DFF_P_	u_hash.s1_43_4[16]$_DFF_P_	-37.56	1.46	39.02
+P	max	u_hash.u_x_43_0/q[38]$_DFF_P_	u_hash.s1_43_4[17]$_DFF_P_	-37.50	1.46	38.96
+P	max	u_hash.u_x_43_0/q[37]$_DFF_P_	u_hash.s1_43_4[16]$_DFF_P_	-37.49	1.46	38.94
+P	max	u_hash.u_x_43_0/q[35]$_DFF_P_	u_hash.s1_43_4[19]$_DFF_P_	-37.44	1.46	38.90
+P	max	u_hash.u_x_43_0/q[34]$_DFF_P_	u_hash.s1_43_4[19]$_DFF_P_	-37.42	1.46	38.88
+P	max	u_hash.u_x_43_0/q[38]$_DFF_P_	u_hash.s1_43_4[16]$_DFF_P_	-37.42	1.46	38.88
+P	max	u_hash.u_x_43_0/q[35]$_DFF_P_	u_hash.s1_43_4[18]$_DFF_P_	-37.38	1.46	38.84
+P	max	u_hash.u_x_43_0/q[34]$_DFF_P_	u_hash.s1_43_4[18]$_DFF_P_	-37.37	1.46	38.83
+P	max	u_hash.u_x_43_0/q[39]$_DFF_P_	u_hash.s1_43_4[19]$_DFF_P_	-37.37	1.46	38.83
+P	max	u_hash.s1_43_5[0]$_DFF_P_	u_hash.s2_43_2[25]$_DFF_P_	-37.34	1.46	38.80
+P	max	u_hash.s1_43_4[0]$_DFF_P_	u_hash.s2_43_2[25]$_DFF_P_	-37.34	1.46	38.79
+P	max	u_hash.s1_43_5[0]$_DFF_P_	u_hash.s2_43_2[24]$_DFF_P_	-37.33	1.46	38.79
+P	max	u_hash.u_x_43_0/q[36]$_DFF_P_	u_hash.s1_43_4[19]$_DFF_P_	-37.32	1.46	38.78
+P	max	u_hash.s1_43_4[0]$_DFF_P_	u_hash.s2_43_2[24]$_DFF_P_	-37.32	1.46	38.78
+P	max	u_hash.u_x_43_0/q[39]$_DFF_P_	u_hash.s1_43_4[18]$_DFF_P_	-37.31	1.46	38.77
+P	max	u_hash.u_x_43_0/q[36]$_DFF_P_	u_hash.s1_43_4[18]$_DFF_P_	-37.27	1.46	38.73
+P	max	u_hash.u_x_43_0/q[37]$_DFF_P_	u_hash.s1_43_4[19]$_DFF_P_	-37.25	1.46	38.71
+P	max	u_hash.u_x_43_0/q[37]$_DFF_P_	u_hash.s1_43_4[18]$_DFF_P_	-37.20	1.46	38.66
+P	max	u_hash.u_x_43_0/q[38]$_DFF_P_	u_hash.s1_43_4[19]$_DFF_P_	-37.18	1.46	38.64
+P	max	u_hash.s1_43_5[0]$_DFF_P_	u_hash.s2_43_2[23]$_DFF_P_	-37.13	1.46	38.59
+P	max	u_hash.u_x_43_0/q[38]$_DFF_P_	u_hash.s1_43_4[18]$_DFF_P_	-37.13	1.46	38.59
+P	max	u_hash.s1_43_4[0]$_DFF_P_	u_hash.s2_43_2[23]$_DFF_P_	-37.12	1.46	38.58
+P	max	u_hash.u_x_43_0/q[35]$_DFF_P_	u_hash.s1_43_4[22]$_DFF_P_	-37.09	1.46	38.55
+P	max	u_hash.u_x_43_0/q[35]$_DFF_P_	u_hash.s1_43_4[14]$_DFF_P_	-37.09	1.46	38.55
+P	max	u_hash.s1_43_5[0]$_DFF_P_	u_hash.s2_43_2[21]$_DFF_P_	-37.09	1.46	38.55
+P	max	u_hash.s1_43_4[0]$_DFF_P_	u_hash.s2_43_2[21]$_DFF_P_	-37.08	1.46	38.54
+P	max	u_hash.u_x_43_0/q[34]$_DFF_P_	u_hash.s1_43_4[22]$_DFF_P_	-37.08	1.46	38.54
+P	max	u_hash.u_x_43_0/q[34]$_DFF_P_	u_hash.s1_43_4[14]$_DFF_P_	-37.08	1.46	38.54
+P	max	u_hash.s1_43_5[0]$_DFF_P_	u_hash.s2_43_2[22]$_DFF_P_	-37.07	1.46	38.53
+P	max	u_hash.s1_43_4[0]$_DFF_P_	u_hash.s2_43_2[22]$_DFF_P_	-37.06	1.46	38.52
+P	max	u_hash.u_x_43_0/q[39]$_DFF_P_	u_hash.s1_43_4[22]$_DFF_P_	-37.02	1.46	38.48
+P	max	u_hash.u_x_43_0/q[39]$_DFF_P_	u_hash.s1_43_4[14]$_DFF_P_	-37.02	1.46	38.48
+P	max	u_hash.u_x_43_0/q[35]$_DFF_P_	u_hash.s1_43_4[24]$_DFF_P_	-37.01	1.46	38.47
+P	max	u_hash.u_x_43_0/q[34]$_DFF_P_	u_hash.s1_43_4[24]$_DFF_P_	-37.00	1.46	38.45
+P	max	u_hash.u_x_43_0/q[36]$_DFF_P_	u_hash.s1_43_4[22]$_DFF_P_	-36.98	1.46	38.44
+P	max	u_hash.u_x_43_0/q[36]$_DFF_P_	u_hash.s1_43_4[14]$_DFF_P_	-36.98	1.46	38.44
+P	max	u_hash.u_x_43_0/q[35]$_DFF_P_	u_hash.s1_43_4[23]$_DFF_P_	-36.94	1.46	38.40
+P	max	u_hash.u_x_43_0/q[39]$_DFF_P_	u_hash.s1_43_4[24]$_DFF_P_	-36.94	1.46	38.40
+P	max	u_hash.u_x_43_0/q[34]$_DFF_P_	u_hash.s1_43_4[23]$_DFF_P_	-36.93	1.46	38.39
+P	max	u_hash.u_x_43_0/q[37]$_DFF_P_	u_hash.s1_43_4[22]$_DFF_P_	-36.91	1.46	38.37
+P	max	u_hash.u_x_43_0/q[37]$_DFF_P_	u_hash.s1_43_4[14]$_DFF_P_	-36.91	1.46	38.37
+P	max	u_hash.u_x_43_0/q[36]$_DFF_P_	u_hash.s1_43_4[24]$_DFF_P_	-36.90	1.46	38.36
+P	max	u_hash.u_x_43_0/q[39]$_DFF_P_	u_hash.s1_43_4[23]$_DFF_P_	-36.87	1.46	38.33
+P	max	u_hash.u_x_43_0/q[38]$_DFF_P_	u_hash.s1_43_4[22]$_DFF_P_	-36.84	1.46	38.30
+P	max	u_hash.u_x_43_0/q[38]$_DFF_P_	u_hash.s1_43_4[14]$_DFF_P_	-36.84	1.46	38.30
+P	max	u_hash.u_x_43_0/q[36]$_DFF_P_	u_hash.s1_43_4[23]$_DFF_P_	-36.83	1.46	38.29
+P	max	u_hash.u_x_43_0/q[37]$_DFF_P_	u_hash.s1_43_4[24]$_DFF_P_	-36.82	1.46	38.28
+P	max	u_hash.u_x_43_0/q[37]$_DFF_P_	u_hash.s1_43_4[23]$_DFF_P_	-36.76	1.46	38.22
+P	max	u_hash.u_x_43_0/q[38]$_DFF_P_	u_hash.s1_43_4[24]$_DFF_P_	-36.75	1.46	38.21
+P	max	u_hash.u_x_43_0/q[43]$_DFF_P_	u_hash.s1_43_5[23]$_DFF_P_	-36.74	1.46	38.20
+P	max	u_hash.u_x_43_0/q[43]$_DFF_P_	u_hash.s1_43_5[22]$_DFF_P_	-36.74	1.46	38.20
+P	max	u_hash.u_x_43_0/q[35]$_DFF_P_	u_hash.s1_43_4[20]$_DFF_P_	-36.73	1.46	38.19
+P	max	u_hash.u_x_43_0/q[35]$_DFF_P_	u_hash.s1_43_4[21]$_DFF_P_	-36.72	1.46	38.18
+P	max	u_hash.u_x_43_0/q[43]$_DFF_P_	u_hash.s1_43_5[24]$_DFF_P_	-36.72	1.46	38.18
+P	max	u_hash.u_x_43_0/q[47]$_DFF_P_	u_hash.s1_43_5[23]$_DFF_P_	-36.72	1.46	38.18
+P	max	u_hash.u_x_43_0/q[34]$_DFF_P_	u_hash.s1_43_4[20]$_DFF_P_	-36.72	1.46	38.17
+P	max	u_hash.u_x_43_0/q[47]$_DFF_P_	u_hash.s1_43_5[22]$_DFF_P_	-36.72	1.46	38.17
+P	max	u_hash.u_x_43_0/q[43]$_DFF_P_	u_hash.s1_43_5[20]$_DFF_P_	-36.71	1.46	38.17
+P	max	u_hash.u_x_43_0/q[34]$_DFF_P_	u_hash.s1_43_4[21]$_DFF_P_	-36.71	1.46	38.17
+P	max	u_hash.u_x_43_0/q[45]$_DFF_P_	u_hash.s1_43_5[23]$_DFF_P_	-36.70	1.46	38.16
+P	max	u_hash.u_x_43_0/q[45]$_DFF_P_	u_hash.s1_43_5[22]$_DFF_P_	-36.70	1.46	38.16
+P	max	u_hash.u_x_43_0/q[47]$_DFF_P_	u_hash.s1_43_5[24]$_DFF_P_	-36.69	1.46	38.15
+P	max	u_hash.u_x_43_0/q[38]$_DFF_P_	u_hash.s1_43_4[23]$_DFF_P_	-36.69	1.46	38.15
+P	max	u_hash.u_x_43_0/q[47]$_DFF_P_	u_hash.s1_43_5[20]$_DFF_P_	-36.69	1.46	38.14
+P	max	u_hash.u_x_43_0/q[43]$_DFF_P_	u_hash.s1_43_5[21]$_DFF_P_	-36.68	1.46	38.14
+P	max	u_hash.u_x_43_0/q[45]$_DFF_P_	u_hash.s1_43_5[24]$_DFF_P_	-36.68	1.46	38.14
+P	max	u_hash.u_x_43_0/q[45]$_DFF_P_	u_hash.s1_43_5[20]$_DFF_P_	-36.67	1.46	38.13
+P	max	u_hash.u_x_43_0/q[43]$_DFF_P_	u_hash.s1_43_5[19]$_DFF_P_	-36.66	1.46	38.12
+P	max	u_hash.u_x_43_0/q[39]$_DFF_P_	u_hash.s1_43_4[20]$_DFF_P_	-36.66	1.46	38.12
+P	max	u_hash.u_x_43_0/q[47]$_DFF_P_	u_hash.s1_43_5[21]$_DFF_P_	-36.66	1.46	38.11
+P	max	u_hash.u_x_43_0/q[39]$_DFF_P_	u_hash.s1_43_4[21]$_DFF_P_	-36.65	1.46	38.11
+P	max	u_hash.u_x_43_0/q[45]$_DFF_P_	u_hash.s1_43_5[21]$_DFF_P_	-36.64	1.46	38.10
+P	max	u_hash.u_x_43_0/q[47]$_DFF_P_	u_hash.s1_43_5[19]$_DFF_P_	-36.63	1.46	38.09
+P	max	u_hash.u_x_43_0/q[44]$_DFF_P_	u_hash.s1_43_5[23]$_DFF_P_	-36.63	1.46	38.09
+P	max	u_hash.u_x_43_0/q[44]$_DFF_P_	u_hash.s1_43_5[22]$_DFF_P_	-36.63	1.46	38.09
+P	max	u_hash.u_x_43_0/q[36]$_DFF_P_	u_hash.s1_43_4[20]$_DFF_P_	-36.62	1.46	38.08
+P	max	u_hash.u_x_43_0/q[45]$_DFF_P_	u_hash.s1_43_5[19]$_DFF_P_	-36.62	1.46	38.08
+P	max	u_hash.u_x_43_0/q[36]$_DFF_P_	u_hash.s1_43_4[21]$_DFF_P_	-36.61	1.46	38.07
+P	max	u_hash.u_x_43_0/q[44]$_DFF_P_	u_hash.s1_43_5[24]$_DFF_P_	-36.61	1.46	38.06
+P	max	u_hash.u_x_43_0/q[44]$_DFF_P_	u_hash.s1_43_5[20]$_DFF_P_	-36.60	1.46	38.06
+P	max	u_hash.u_x_43_0/q[46]$_DFF_P_	u_hash.s1_43_5[23]$_DFF_P_	-36.58	1.46	38.04
+P	max	u_hash.u_x_43_0/q[46]$_DFF_P_	u_hash.s1_43_5[22]$_DFF_P_	-36.58	1.46	38.04
+P	max	u_hash.u_x_43_0/q[44]$_DFF_P_	u_hash.s1_43_5[21]$_DFF_P_	-36.57	1.46	38.03
+P	max	u_hash.u_x_43_0/q[46]$_DFF_P_	u_hash.s1_43_5[24]$_DFF_P_	-36.56	1.46	38.02
+P	max	u_hash.u_x_43_0/q[46]$_DFF_P_	u_hash.s1_43_5[20]$_DFF_P_	-36.55	1.46	38.01
+P	max	u_hash.u_x_43_0/q[37]$_DFF_P_	u_hash.s1_43_4[20]$_DFF_P_	-36.54	1.46	38.00
+P	max	u_hash.u_x_43_0/q[44]$_DFF_P_	u_hash.s1_43_5[19]$_DFF_P_	-36.54	1.46	38.00
+P	max	u_hash.u_x_43_0/q[37]$_DFF_P_	u_hash.s1_43_4[21]$_DFF_P_	-36.54	1.46	38.00
+P	max	u_hash.u_x_43_0/q[46]$_DFF_P_	u_hash.s1_43_5[21]$_DFF_P_	-36.52	1.46	37.98
+P	max	u_hash.u_x_43_0/q[46]$_DFF_P_	u_hash.s1_43_5[19]$_DFF_P_	-36.50	1.46	37.96
+P	max	u_hash.u_x_43_0/q[38]$_DFF_P_	u_hash.s1_43_4[20]$_DFF_P_	-36.47	1.46	37.93
+P	max	u_hash.u_x_43_0/q[38]$_DFF_P_	u_hash.s1_43_4[21]$_DFF_P_	-36.47	1.46	37.93
+H	min_n	258033
+H	min_worst	42.24
+H	min_bounded	0
+H	min_signed	42.24
+H	min_launch	u_hash.s2_42_3[13]$_DFF_P_
+H	min_capture	u_hash.s3_42_1[13]$_DFF_P_
+H	min_crpr	1.46
+H	min_p99_raw	28.81
+H	min_searched	39
+H	min_nopath	0
+H	min_verify	0.000
+P	min	u_hash.s2_42_3[13]$_DFF_P_	u_hash.s3_42_1[13]$_DFF_P_	42.24	1.46	43.70
+P	min	u_hash.s2_42_3[12]$_DFF_P_	u_hash.s3_42_1[13]$_DFF_P_	42.23	1.46	43.69
+P	min	u_hash.s2_42_3[12]$_DFF_P_	u_hash.s3_42_1[12]$_DFF_P_	42.20	1.46	43.66
+P	min	u_hash.s1_43_7[1]$_DFF_P_	u_hash.s2_43_3[3]$_DFF_P_	42.14	1.46	43.60
+P	min	u_hash.s1_43_7[1]$_DFF_P_	u_hash.s2_43_3[2]$_DFF_P_	42.05	1.46	43.51
+P	min	u_hash.s2_43_3[10]$_DFF_P_	u_hash.s3_43_1[13]$_DFF_P_	42.03	1.46	43.49
+P	min	u_hash.s2_42_3[15]$_DFF_P_	u_hash.s3_42_1[23]$_DFF_P_	41.87	1.46	43.33
+P	min	u_hash.s2_42_3[15]$_DFF_P_	u_hash.s3_42_1[20]$_DFF_P_	41.86	1.46	43.32
+P	min	u_hash.s2_42_3[13]$_DFF_P_	u_hash.s3_42_1[23]$_DFF_P_	41.83	1.46	43.29
+P	min	u_hash.s2_42_3[13]$_DFF_P_	u_hash.s3_42_1[20]$_DFF_P_	41.82	1.46	43.28
+P	min	u_hash.s2_42_3[12]$_DFF_P_	u_hash.s3_42_1[23]$_DFF_P_	41.82	1.46	43.27
+P	min	u_hash.s2_42_3[12]$_DFF_P_	u_hash.s3_42_1[20]$_DFF_P_	41.81	1.46	43.27
+P	min	u_hash.s2_42_3[22]$_DFF_P_	u_hash.s3_42_1[23]$_DFF_P_	41.72	1.46	43.18
+P	min	u_hash.s2_42_3[23]$_DFF_P_	u_hash.s3_42_1[23]$_DFF_P_	41.50	1.46	42.95
+P	min	u_hash.s2_42_3[17]$_DFF_P_	u_hash.s3_42_1[23]$_DFF_P_	41.41	1.46	42.87
+P	min	u_hash.s2_42_3[17]$_DFF_P_	u_hash.s3_42_1[20]$_DFF_P_	41.40	1.46	42.86
+P	min	u_hash.s2_42_3[24]$_DFF_P_	u_hash.s3_42_1[25]$_DFF_P_	41.26	1.46	42.72
+P	min	u_hash.s2_42_3[24]$_DFF_P_	u_hash.s3_42_1[24]$_DFF_P_	41.25	1.46	42.71
+P	min	u_hash.s2_42_3[24]$_DFF_P_	u_hash.s3_42_1[26]$_DFF_P_	41.24	1.46	42.70
+P	min	u_hash.s2_42_3[15]$_DFF_P_	u_hash.s3_42_1[25]$_DFF_P_	41.23	1.46	42.69
+P	min	u_hash.s2_42_3[15]$_DFF_P_	u_hash.s3_42_1[24]$_DFF_P_	41.22	1.46	42.68
+P	min	u_hash.s2_42_3[15]$_DFF_P_	u_hash.s3_42_1[26]$_DFF_P_	41.21	1.46	42.67
+P	min	u_hash.s2_42_3[13]$_DFF_P_	u_hash.s3_42_1[25]$_DFF_P_	41.20	1.46	42.65
+P	min	u_hash.s2_42_3[13]$_DFF_P_	u_hash.s3_42_1[24]$_DFF_P_	41.19	1.46	42.65
+P	min	u_hash.s2_42_3[12]$_DFF_P_	u_hash.s3_42_1[25]$_DFF_P_	41.18	1.46	42.64
+P	min	u_hash.s2_42_3[12]$_DFF_P_	u_hash.s3_42_1[24]$_DFF_P_	41.17	1.46	42.63
+P	min	u_hash.s2_42_3[13]$_DFF_P_	u_hash.s3_42_1[26]$_DFF_P_	41.17	1.46	42.63
+P	min	u_hash.s2_42_3[12]$_DFF_P_	u_hash.s3_42_1[26]$_DFF_P_	41.16	1.46	42.62
+P	min	u_hash.s2_42_3[19]$_DFF_P_	u_hash.s3_42_1[23]$_DFF_P_	41.15	1.46	42.61
+P	min	u_hash.s2_42_3[20]$_DFF_P_	u_hash.s3_42_1[23]$_DFF_P_	41.15	1.46	42.61
+P	min	u_hash.s2_42_3[19]$_DFF_P_	u_hash.s3_42_1[20]$_DFF_P_	41.14	1.46	42.60
+P	min	u_hash.s2_42_3[20]$_DFF_P_	u_hash.s3_42_1[20]$_DFF_P_	41.14	1.46	42.60
+P	min	u_hash.s2_42_3[22]$_DFF_P_	u_hash.s3_42_1[25]$_DFF_P_	41.09	1.46	42.55
+P	min	u_hash.s2_42_3[22]$_DFF_P_	u_hash.s3_42_1[24]$_DFF_P_	41.08	1.46	42.54
+P	min	u_hash.s2_42_3[22]$_DFF_P_	u_hash.s3_42_1[26]$_DFF_P_	41.06	1.46	42.52
+P	min	u_hash.s2_43_3[5]$_DFF_P_	u_hash.s3_43_1[13]$_DFF_P_	40.98	1.46	42.44
+P	min	u_hash.s2_42_3[23]$_DFF_P_	u_hash.s3_42_1[25]$_DFF_P_	40.86	1.46	42.32
+P	min	u_hash.s2_42_3[23]$_DFF_P_	u_hash.s3_42_1[24]$_DFF_P_	40.85	1.46	42.31
+P	min	u_hash.s2_42_3[23]$_DFF_P_	u_hash.s3_42_1[26]$_DFF_P_	40.84	1.46	42.30

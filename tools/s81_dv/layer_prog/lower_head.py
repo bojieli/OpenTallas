@@ -44,7 +44,6 @@ HEAD_GAIN = LR.REGIONS['HEADG'][0]          # 480
 PRE_ROW = LR.GU_ROWS['ffn']                 # 1008: final FFN HC pre row (same token)
 EGRESS_FLAG = 128                           # vq gidx bit 7 -> header [20]; ot_s81sl_rstop_xo forwards at s_0N
 XO_SLICE = 'u_s_0N'                         # rstop_xo XO_SID 1 (column 0, tier N): lep pair A, stage NEXT circuit
-EPS = 0x358637BD                            # FP32 1e-6 (DS V4 rms_norm_eps; dv_layer_compile default)
 VP_GAIN, VP_NORMR = 1, 7
 BENCH = 'results/rtl/s81_rtlgap_head_1021/rstop_xo_bench'
 GAP = dict(module='head die (S81.HEAD) + 16-slice norm composition on the die',
@@ -139,7 +138,7 @@ def lower(die, op, ctx):
                 go.append(t + cp['edges'])
                 t += 1
             ti = len(templates)
-            templates.append((f'{s}.head.XFIN_GO', D.ctl_payload(1 << sid, 1, 0, D.xfin_go(EPS))))
+            templates.append((f'{s}.head.XFIN_GO', D.ctl_payload(1 << sid, 1, 0, D.xfin_go(D.norm_eps_bits()))))
             rows.append(dict(eng=eng, issue=t, arg=ti, what=f'head XFIN_GO {s}'))
             events.append(dict(cycle=t + cp['edges'], inst=s, port=cp['entry_port'], dir='in', kind='CTL',
                                tag='head.XFIN_GO', payload=f'template {ti}'))
