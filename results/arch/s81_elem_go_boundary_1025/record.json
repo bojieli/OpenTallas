@@ -23,20 +23,36 @@
         "x_beats": 136036,
         "partial_cycles": 2634,
         "verdict": "PASS"
+      },
+      "3": {
+        "cycles": 1759872,
+        "mismatch_cycles": 0,
+        "phases": 300,
+        "x_beats": 136783,
+        "partial_cycles": 2722,
+        "verdict": "PASS"
       }
     },
     "bypass_mutant": {
       "verdict": "CAUGHT",
       "first_mismatch_cycle": 67,
       "mismatch_cycles": 1417710,
-      "unit": "oth-ubuntu-2615077-1792938926"
+      "unit": "oth-ubuntu-2615077-1792938926",
+      "host": "epyc1",
+      "log": "/srv/opentallas-scratch2/claude/codex-elem-boundary-0719/mut_gb2/mut_bypass_s1.log"
     }
   },
   "raw_guard": {
-    "state": "RUNNING",
+    "state": "PASS",
     "unit": "oth-ubuntu-1955679-1792938996",
     "host": "intel1",
-    "path": "/srv/opentallas-scratch2/claude/codex-elem-boundary-0719/kits/ot_v41_rom_elem_q_qxpq_w10_gb_gb2"
+    "path": "/srv/opentallas-scratch2/claude/codex-elem-boundary-0719/kits/ot_v41_rom_elem_q_qxpq_w10_gb_gb2",
+    "checked": 735,
+    "ok": 735,
+    "fail_counts": {},
+    "missing_ports": 0,
+    "extra_ports": 0,
+    "post_synth_guard": "PASS"
   },
   "failures_preserved": [
     {
@@ -49,5 +65,11 @@
     }
   ],
   "physical_signoff": "NOT RUN",
-  "route": "NOT RUN"
+  "route": "NOT RUN",
+  "review": "results/geom_review/s81_elem_go_boundary_0719/review.json",
+  "adoption_requirements": [
+    "New master plus737pin table/LEF, real fresh SIGNED timing views; never reuse old efs SIGNED view as gb.",
+    "Frame generation metadata/master substitution and early-clock whitelist must adopt actual fresh gb view.",
+    "Parent RTL/binder removes xs_sv connections and selects gb master. Compiler supplies go/tag one edge earlier. Price uncompensated+1go latency in composed model."
+  ]
 }
