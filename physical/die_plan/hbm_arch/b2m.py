@@ -117,6 +117,9 @@ def forbid_rects(P):
             out.append((min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1])))
     for w in P.die.get("io", []) or []:
         out.append(tuple(w["rect_um"]))
+    # Dense PHY PG occupies its full halo on M8/M9; a clock driver must live outside it.
+    for domain in P.die.get("pg", {}).get("domains", []) or []:
+        out.append(tuple(domain["rect_um"]))
     return out
 
 

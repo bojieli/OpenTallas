@@ -18,10 +18,10 @@
     371.52
    ],
    "new_um": [
-    276.48,
-    315.36
+    250.56,
+    375.84
    ],
-   "area_ratio": 0.54,
+   "area_ratio": 0.583,
    "placed": [
     "u_ep_N0",
     "u_host_ep",
@@ -30,11 +30,11 @@
     "u_ep_S1"
    ],
    "pins_files": [
-    "cores/hfd_ep_static__276.48x315.36__NW_io_u_ep_N0.json",
-    "cores/hfd_ep_static__276.48x315.36__NW_io_u_host_ep.json",
-    "cores/hfd_ep_static__276.48x315.36__NE_io_u_ep_N2.json",
-    "cores/hfd_ep_static__276.48x315.36__q_spb0_u_ep_S0.json",
-    "cores/hfd_ep_static__276.48x315.36__vsN0_u_ep_S1.json"
+    "cores/hfd_ep_static__250.56x375.84__NW_io_u_ep_N0.json",
+    "cores/hfd_ep_static__250.56x375.84__NW_io_u_host_ep.json",
+    "cores/hfd_ep_static__250.56x375.84__NE_io_u_ep_N2.json",
+    "cores/hfd_ep_static__250.56x375.84__q_spb0_u_ep_S0.json",
+    "cores/hfd_ep_static__250.56x375.84__vsN0_u_ep_S1.json"
    ],
    "macros": [
     [
@@ -45,7 +45,7 @@
    ],
    "std_um2": 4761,
    "std_fill_old": 0.048,
-   "std_fill_new": 0.191,
+   "std_fill_new": 0.149,
    "why": "placed2 std fill 0.044; I 489-577 ps"
   },
   {
@@ -95,15 +95,15 @@
     276.48
    ],
    "new_um": [
-    293.76,
-    354.24
+    336.96,
+    328.32
    ],
-   "area_ratio": 0.67,
+   "area_ratio": 0.712,
    "placed": [
     "u_sfus_Q"
    ],
    "pins_files": [
-    "cores/ot_hbm_su_static_sfustore_hw__293.76x354.24__q_hub_u_sfus_Q.json"
+    "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__q_hub_u_sfus_Q.json"
    ],
    "macros": [
     [
@@ -114,7 +114,7 @@
    ],
    "std_um2": 2417,
    "std_fill_old": 0.033,
-   "std_fill_new": 0.111,
+   "std_fill_new": 0.085,
    "why": "placed2 std fill 0.026"
   },
   {
@@ -179,15 +179,15 @@
     950.4
    ],
    "new_um": [
-    613.44,
-    691.2
+    574.56,
+    738.72
    ],
-   "area_ratio": 0.413,
+   "area_ratio": 0.414,
    "placed": [
     "u_sfup_Q"
    ],
    "pins_files": [
-    "cores/ot_hgi_sfu_programme_store_r10__613.44x691.2__q_hub_u_sfup_Q.json"
+    "cores/ot_hgi_sfu_programme_store_r10__574.56x738.72__q_hub_u_sfup_Q.json"
    ],
    "macros": [
     [
@@ -198,7 +198,7 @@
    ],
    "std_um2": 13879,
    "std_fill_old": 0.021,
-   "std_fill_new": 0.225,
+   "std_fill_new": 0.224,
    "why": "placed2 std fill 0.019, measured insertion 1150 ps: squarer and smaller so the clock reaches the centre"
   },
   {

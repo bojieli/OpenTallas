@@ -1,0 +1,137 @@
+{
+ "source": "COORD 2026-10-25 00:21 PDT ruling (2)+(3) on B2n@871717c83: SU partitions ~50% empty after the exp-lane reshape; hub perimeter full (star); hub->root L74 short",
+ "rule": "B2o middle region = 3 rows (NW frame, x from the W die edge to the root column at 13357.44; NE = MY mirror). R1 (top, 1036.8): the exp-lane SU types re-gridded 2 cells high + their SFU-core partners (b113 by su00, b112 by su11) + spu0 under spt0. Rh (2419.2: the hub / root abutting face carries all hub <-> root traffic (L4 / L4m hub <-> hub through root, L12 / L13 root -> hub, L74 hub -> root ...), ~14.7 kbit at <= 5.6 pins / um): io | hc ring folded 1 x 8 (b013 b003 b012 b002 b011 b001 b010 b000: every ring edge <= 1 partition apart, b000 on the hub; each bank keeps its lanes / bank / lanes stack, 2419.2 tall) (b0xx, ring order kept, b000/b010 on the hub face) | HUB as a spine abutting ROOT (no hub<->root transit partitions). R4 (bottom, 1555.2): the 2x2 SU types + SFU core b111 (su20) / b110 (hub + su31) + the IDX score quarters b100 (hub) / b101 (root) / b102 / b103 (no lanes: fillers). Widths: 'auto' = the type's compact core grid (cores_b2.pack shelf / column packer at the row height, 8.64 lattice) + 'auto+' share the row slack; 'to:X' = up to x. The middle region shrinks 7257.6 -> 5011.2 um; root keeps 1382.4 wide and grows root_ext_um into vsN2 / vsN4.",
+ "sm_row_h": 4510.08,
+ "old_mid_h": 7257.6,
+ "root_ext_um": 172.8,
+ "row_order": [
+  "R4",
+  "Rh",
+  "R1"
+ ],
+ "rows": {
+  "R4": 1555.2,
+  "Rh": 2419.2,
+  "R1": 1036.8
+ },
+ "seq": {
+  "R4": [
+   [
+    "NW_b102",
+    "auto"
+   ],
+   [
+    "NW_b103",
+    "auto"
+   ],
+   [
+    "NW_b111",
+    "auto"
+   ],
+   [
+    "NW_su20",
+    "auto+"
+   ],
+   [
+    "NW_su21",
+    "to:5771.52"
+   ],
+   [
+    "NW_spu1",
+    "to:7585.92"
+   ],
+   [
+    "NW_su30",
+    "auto+"
+   ],
+   [
+    "NW_b100",
+    "auto+"
+   ],
+   [
+    "NW_b110",
+    "auto+"
+   ],
+   [
+    "NW_su31",
+    "auto+"
+   ],
+   [
+    "NW_b101",
+    "to:13357.44"
+   ]
+  ],
+  "Rh": [
+   [
+    "NW_io",
+    "auto"
+   ],
+   [
+    "NW_b013",
+    "auto"
+   ],
+   [
+    "NW_b003",
+    "auto"
+   ],
+   [
+    "NW_b012",
+    "auto"
+   ],
+   [
+    "NW_b002",
+    "auto"
+   ],
+   [
+    "NW_b011",
+    "auto"
+   ],
+   [
+    "NW_b001",
+    "auto"
+   ],
+   [
+    "NW_b010",
+    "auto"
+   ],
+   [
+    "NW_b000",
+    "auto"
+   ],
+   [
+    "NW_hub",
+    "to:13357.44"
+   ]
+  ],
+  "R1": [
+   [
+    "NW_b113",
+    "auto"
+   ],
+   [
+    "NW_su00",
+    "auto+"
+   ],
+   [
+    "NW_su01",
+    "to:5771.52"
+   ],
+   [
+    "NW_spu0",
+    "to:7585.92"
+   ],
+   [
+    "NW_su10",
+    "auto+"
+   ],
+   [
+    "NW_su11",
+    "auto+"
+   ],
+   [
+    "NW_b112",
+    "to:13357.44"
+   ]
+  ]
+ }
+}

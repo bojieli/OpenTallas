@@ -237,6 +237,7 @@ SCHEMA = {
                                        "layers": _lays, "order": _order}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
+                        "keepouts_um": {"type": "array", "items": _rect},
                         # R4 revised (COORD 10-23): tap grid pitch for this type, sized from the measured tree
                         # (OT_TAP_CHECK WARN suggests it); default budgets.tap_pitch_um
                         "tap_pitch_um": _pos,
@@ -922,7 +923,8 @@ def _grid_taps(P, tn):
     nx, ny = max(1, math.ceil(w / pitch - 1e-9)), max(1, math.ceil(h / pitch - 1e-9))
     if nx == 1 and ny == 1:
         x, y = t.get("clock", {}).get("tap_um", [w / 2, h / 2])
-        return [("clk", float(x), float(y))]
+        x, y = tap_clear(t, float(x), float(y))
+        return [("clk", x, y)]
     out = []
     for j in range(ny):
         for i in range(nx):
@@ -949,6 +951,9 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
         (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
         boxes.append((ox - clear, oy - clear, ox + cw + clear, oy + ch + clear))
 
+    boxes.extend((a - clear, b - clear, c + clear, d + clear)
+                 for a, b, c, d in t.get("clock", {}).get("keepouts_um", []))
+
     def free(px, py):
         if not (clear <= px <= w - clear and clear <= py <= h - clear):
             return False
@@ -957,15 +962,28 @@ def tap_clear(t, x, y, taken=(), clear=TAP_CLEAR_UM, strict=False):
         return not any(x0 < px < x1 and y0 < py < y1 for x0, y0, x1, y1 in boxes)
     if (not boxes and not strict) or free(x, y):
         return x, y
-    for r in range(1, int(max(w, h) / TAP_STEP_UM) + 1):
-        d = r * TAP_STEP_UM
-        ring = [(x + i * TAP_STEP_UM, y + s * d) for i in range(-r, r + 1) for s in (-1, 1)] + \
-               [(x + s * d, y + i * TAP_STEP_UM) for i in range(-r + 1, r) for s in (-1, 1)]
-        ok = [p for p in ring if free(*p)]
-        if ok:
-            px, py = min(ok, key=lambda p: ((p[0] - x) ** 2 + (p[1] - y) ** 2, p))
-            return round(px, 4), round(py, 4)
-    return x, y
+    # Legal regions have axis-aligned boundaries. Project each boundary onto the same origin-centred 2.16-um
+    # lattice as the old expanding rings; their Cartesian product contains the nearest legal ring site. This
+    # avoids enumerating millions of interior points when an analog window pushes a tap hundreds of um.
+    def candidates(origin, extent, edges):
+        values = {origin}
+        for edge in [clear, extent - clear] + list(edges):
+            q = (edge - origin) / TAP_STEP_UM
+            for k in (math.floor(q), math.ceil(q)):
+                v = round(origin + k * TAP_STEP_UM, 8)
+                if clear - 1e-7 <= v <= extent - clear + 1e-7:
+                    values.add(v)
+        return values
+    obs = boxes + [(a - clear, b - clear, a + clear, b + clear) for a, b in taken]
+    xs = candidates(x, w, [v for a, b, c, d in obs for v in (a, c)])
+    ys = candidates(y, h, [v for a, b, c, d in obs for v in (b, d)])
+    ok = [(px, py) for px in xs for py in ys if free(px, py)]
+    if ok:
+        px, py = min(ok, key=lambda p: (round(max(abs(p[0] - x), abs(p[1] - y)), 7),
+                                       (p[0] - x) ** 2 + (p[1] - y) ** 2, p))
+        return round(px, 4), round(py, 4)
+    raise ValueError(f"no legal clock tap site in {t.get('module', 'type')} near ({x}, {y}); "
+                     f"clearance {clear} um, {len(boxes)} keepouts")
 
 
 def has_epoch(port):
