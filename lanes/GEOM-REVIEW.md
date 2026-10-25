@@ -1666,3 +1666,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
     - Insertion matched to the vclk bound, or a vclk re-bind TT~277/FF~207 through the head plan delta (boundary-match).
     - No repair_ff / hold pad.
   ACK: I have consumed the evidence; epyc1 path-s81-headb/elemB_if2d/run/results may be deleted. Owner: PATH-S81.
+2026-10-25 12:04 PDT GEOM-REVIEW-2: CLAIM [PATH-QC-RP1-F59 11:59] qfd_dv_s8_crh_rp1 f59 (SRAMIF-family successor; mine since S7)
