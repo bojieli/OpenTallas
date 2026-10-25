@@ -1,0 +1,81 @@
+{
+ "top": "ot_v41_rom_elem_q_qxpq_w10",
+ "sources": [
+  "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+  "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
+  "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/v41rom/ot_v41_chain3.sv",
+  "rtl/v41rom/ot_v41_chain4.sv",
+  "rtl/v41rom/ot_v41_fadd2.sv",
+  "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_chain.sv",
+  "rtl/v41rom/ot_v41_segtree.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm2_w10.sv",
+  "rtl/v41rom/ot_v41_chain2.sv",
+  "rtl/v41rom/ot_v41_segtree2.sv",
+  "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+  "rtl/v41rom/ot_v41_bterm3_w10.sv",
+  "rtl/v41rom/ot_v41_bterm4_w10.sv",
+  "rtl/v41rom/ot_v41_bterm5_w10.sv",
+  "rtl/v41rom/ot_v41_segtree3.sv",
+  "rtl/v41rom/ot_v41_segtree4.sv",
+  "rtl/v41rom/ot_v41_segtree5.sv",
+  "rtl/v41rom/ot_v41_segtree6.sv"
+ ],
+ "params": {
+  "MTP": 1,
+  "EARLY": 1,
+  "NB": 2,
+  "FAST": 1,
+  "PP": 1,
+  "QTIMING_FIX": 1,
+  "QPIPE": 1,
+  "QP_XS": 1,
+  "QP_CAP": 0,
+  "QP_P1": 1,
+  "QP_CSAM": 10,
+  "QZ": 1,
+  "QZ_NS": 8,
+  "QZ_NE": 4,
+  "QY": 1,
+  "QX": 10,
+  "PQ": 1,
+  "QW": 0,
+  "QM": 5,
+  "QS": 5,
+  "RSTP": 1
+ },
+ "defines": [],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "count": 4,
+   "at": [
+    25.92,
+    43.392
+   ],
+   "orient": "R180"
+  }
+ ],
+ "route": {
+  "pd": 0.6
+ },
+ "children": [],
+ "notes": "S81-CORES2/NC-H 10-25: canonical spec for gen_core_kit_legacy.py, sources from MAIN, params = the S81 die instantiation (rtl/dsrom_sys/s81_dv/frame/col_h10.sv u_e0/u_e2 (QX 10, QM 5, QS 5, RSTP 1; CPR off)). ROM macro view = physical/asap7_memory_macros_v2 (track-aligned in every orientation; same master/content as v1). Uniform contract: no SDC exception, so the ROM->capture read that the closure-loop routes timed as a 2-cycle multicycle (set_multicycle_path -setup 2 -from *u_rom?) is timed single-cycle here (TT clk->Q ~600 ps of 833): macro sites (recipe macro_sites) put each ROM's pin band at the core centre facing the logic so capture regs sit at the pins (F3/F6).",
+ "provenance": "closed_archive ot_v41_rom_elem_q_qxpq_w10/dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb (tools/dsrom_qelem_cl/cl_route_qs.sh QX=10 QM=5 QS=5 RSTP=1)"
+}

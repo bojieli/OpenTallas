@@ -144,5 +144,53 @@
   "plan_module": "dsfd_bf_front_roots",
   "slang": true,
   "suffix": "cs"
+ },
+ "ot_v41_bf_col": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_bf_col",
+  "util": 0.6,
+  "macro_sites": {
+   "ot_rom_4096x274_m8": [
+    [
+     30.24,
+     32.064,
+     "R180"
+    ],
+    [
+     30.24,
+     103.68,
+     "MY"
+    ]
+   ]
+  },
+  "_why": "S81-CORES2/NC-H 10-25 F3/F6: ROM pair stacked on the W side with BOTH pin bands (clk/addr/ce + 130 rd bits, LEF W edge, bottom 15 um) mirrored onto the E edge at the core centre y (u_rom0 R180 below, u_rom1 MY above, 8.66 um gap = the two row halos), facing the column logic and the E-face interface (y 62-136); the 144 other rd bits face a 26 um W capture strip at the same y. Both ROM clk pins + all cap regs share one ~40 um window -> one short clock sub-tree."
+ },
+ "ot_v41_rom_elem_q_qxpq_w10": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_rom_elem_q_qxpq_w10",
+  "util": 0.6,
+  "macro_sites": {
+   "ot_rom_4096x274_m8": [
+    [
+     25.92,
+     43.392,
+     "R180"
+    ],
+    [
+     25.92,
+     115.008,
+     "MY"
+    ],
+    [
+     359.424,
+     43.392,
+     "MX"
+    ],
+    [
+     359.424,
+     115.008,
+     "R0"
+    ]
+   ]
+  },
+  "_why": "S81-CORES2/NC-H 10-25 F3/F6: g_mac[0] ROM pair on the W side (R180 below / MY above: clk/addr/130 rd on the E edge), g_mac[1] pair mirrored on the E side (MX / R0: clk/addr/130 rd on the W edge); every ROM pin band at the core centre y facing the centre logic (S/N plan pins x 136-375); the 144-bit rd edges face 26 um outer capture strips at the same y."
  }
 }
