@@ -1,0 +1,16 @@
+[TCL: yosys -import] Command name collision: found pre-existing command `cd' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `eval' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `exec' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `read' -> skip.
+[TCL: yosys -import] Command name collision: found pre-existing command `trace' -> skip.
+
+1. Executing SLANG frontend.
+Top level design units:
+    top
+
+../out/bad.sv:1:32: error: unknown module 'missing_child'
+module top(input a, output y); missing_child u(.a(a),.y(y)); endmodule
+                               ^~~~~~~~~~~~~
+
+Build failed: 1 error, 0 warnings
+ERROR: Design elaboration failed; see full log for details

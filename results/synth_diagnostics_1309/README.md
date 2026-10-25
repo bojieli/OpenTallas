@@ -1,0 +1,7 @@
+# Slang full diagnostics without a frontend rerun
+
+ORFS native YOSYS_FLAGS=-v3 hides Slang detailed diagnostics. run_command.py already preserves stdout/stderr; its capture is not the cause. Minimal same-image Tcl read_slang fixture reproduces generic-only console output and shows native -l full.log retains the exact bad.sv line/unknown-module diagnostics. Both frontend commands exit1. Actual fixture job3492557-1792962599 EXIT0 verifies both failing controls; no production frontend rerun.
+
+Installer patches only disposable container scripts/synth.sh, with strict anchors/idempotency. It adds Yosys -l stage.log.full.log and an EXIT trap that prints the last160 full-log lines on failure then exits with the original status. Stage-specific full log retains all diagnostics even if the printed excerpt is shorter. No frontend flags/blackboxing/unroll thresholds changed. gen_phys bundles and invokes the installer before normal make; existing/frozen jobs/kits stay untouched. Core generator owners must add the same helper+invocation for future owned successors (S81kits notified).
+
+Focused tests3PASS: idempotent/unknown-anchor rejection, success exit0, original failure exit7 with missing-module detail surfaced. Actual image installer twice and bash-n PASS. Initial existing production failures: rq0 missing definitions, rq0_closure94 duplicate aliases, rq0_dedup93 Slang unroll-limit4000; all remain source failures with their original logs preserved. rq0_unroll32768 inherited live successor untouched.
