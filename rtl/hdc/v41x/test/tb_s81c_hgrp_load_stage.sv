@@ -35,7 +35,19 @@ module tb_s81c_hgrp #(parameter integer GID = 1) (input wire clk);
     ot_s81c_hcore_load_stage u_sender(.clk(clk),.rst_n(rst_n_d),
       .ld_v(raw_v),.ld_mode(raw_mode),.ld_bank(raw_bank),.ld_grp(nx_grp),.ld_w(raw_w),.ld_w2v(nx_w2v),
       .out_v(st_v),.out_mode(st_mode),.out_bank(st_bank),.out_grp(st_grp),.out_w(st_w),.out_w2v(st_w2v));
-    integer rst_pin_edge=-1,rst_core_edge=-1,stage_bad=0,load_words=0;
+    integer rst_pin_edge=-1,rst_core_edge=-1,stage_bad=0,load_words=0,reset_bad=0;
+`ifdef OT_TB_RST_TIMED
+    reg rst_history=0;
+    // Independent two sampled-edge reference; exercise assertion during active traffic.
+    always @(posedge clk) begin
+      rst_history<=rst_n_d;rst_n<=rst_history;
+      if(cyc==1)rst_n_d<=1; // Published boot edge, measured at the following falling edge.
+    end
+    always @(negedge clk) begin
+      if(cyc==5006 || cyc==10006)rst_n_d<=1;
+      if(cyc==5002 || cyc==10002)rst_n_d<=0;
+    end
+`endif
     always @(negedge clk) begin
       if(rst_n_d && rst_pin_edge<0)rst_pin_edge=cyc;
       if(g_h[0].u_c.rst_core_n && rst_core_edge<0)rst_core_edge=cyc;
@@ -83,18 +95,28 @@ module tb_s81c_hgrp #(parameter integer GID = 1) (input wire clk);
     end
     // xorshift32 stimulus generator (seeded by +seed)
     reg [31:0] xs;
-    initial xs = 32'h9e3779b9;
+    // xs is initialized once, after parsing +seed, in the stimulus initial block.
     function [31:0] rnd; input integer dummy; reg [31:0] x; begin
         x = xs; x = x ^ (x << 13); x = x ^ (x >> 17); x = x ^ (x << 5); xs = x; rnd = x; end endfunction
     always @(posedge clk) begin
         cyc <= cyc + 1;
+`ifndef OT_TB_RST_TIMED
         if (cyc == 3) rst_n <= 1'b1;
 `ifdef OT_S81C_HCORE_RSTE
         if (cyc == 1) rst_n_d <= 1'b1;
 `else
         if (cyc == 3) rst_n_d <= 1'b1;
 `endif
-        ld_v<=raw_v;ld_mode<=raw_mode;ld_bank<=raw_bank;ld_w<=raw_w;
+`endif
+`ifdef OT_TB_RST_TIMED
+        if(cyc>4 && g_h[0].u_c.rst_core_n!==rst_n)reset_bad=reset_bad+1;
+`endif
+        `ifdef OT_TB_RST_TIMED
+        ld_v<=rst_n_d ? raw_v : 1'b0;
+`else
+        ld_v<=raw_v;
+`endif
+        ld_mode<=raw_mode;ld_bank<=raw_bank;ld_w<=raw_w;
         // stimulus: phase A (cycles < 400) mostly loads; then mixed
         raw_v <= (cyc < 400) ? (rnd(0) % 8 != 0) : (rnd(0) % 4 == 0);
         raw_mode <= rnd(0) % 3 == 0;
@@ -107,7 +129,7 @@ module tb_s81c_hgrp #(parameter integer GID = 1) (input wire clk);
         iv <= (cyc < 300) ? 1'b0 : (rnd(0) % 4 != 0);
         ibank <= rnd(0) % 5;
         for (i = 0; i < 18; i = i + 1) ib[i*32 +: 32] <= rnd(0);
-        if (rst_n && cyc > 4) begin
+        if (cyc > 4) begin
             if (r_ov !== d_ov || r_oy !== d_oy || r_of !== d_of) begin
                 mism = mism + 1;
                 if (mism <= 5) $display("MISMATCH cyc=%0d ov %b/%b oy %h / %h oflt %h/%h", cyc, r_ov, d_ov,
@@ -116,8 +138,8 @@ module tb_s81c_hgrp #(parameter integer GID = 1) (input wire clk);
             if (r_ov) begin nov = nov + 1; if (r_oy != 0) nz = nz + 1; end
         end
         if (cyc == ncyc) begin
-            $display("S81C_LOAD_PROFILE load_transport=1 reset_release=%0d stage_bad=%0d load_words=%0d",rst_core_edge-rst_pin_edge,stage_bad,load_words);
-            if (mism == 0 && nov > 1000 && nz > 100 && stage_bad==0 && rst_core_edge-rst_pin_edge==2)
+            $display("S81C_LOAD_PROFILE load_transport=1 reset_release=%0d stage_bad=%0d load_words=%0d reset_bad=%0d",rst_core_edge-rst_pin_edge,stage_bad,load_words,reset_bad);
+            if (mism == 0 && nov > 1000 && nz > 100 && stage_bad==0 && reset_bad==0 && rst_core_edge-rst_pin_edge==2)
                 $display("S81C_HGRP_BENCH PASS gid=%0d seed=%0d cycles=%0d mismatches=0 ov=%0d ov_nonzero=%0d", GID, seed, ncyc, nov, nz);
             else
                 $display("S81C_HGRP_BENCH FAIL gid=%0d seed=%0d cycles=%0d mismatches=%0d ov=%0d ov_nonzero=%0d", GID, seed, ncyc, mism, nov, nz);

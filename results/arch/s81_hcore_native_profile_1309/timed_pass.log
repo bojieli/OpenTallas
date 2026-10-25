@@ -1,0 +1,13 @@
+ot-run: localhost      admits   127 GB (avail 364, reserve 0, fresh 148.3, peak 24, headroom 0, waiters 0/0 GB) load 55/256 running 29 disk 1253 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-1458916-1792961156 after 1 s
+S81C_LOAD_PROFILE load_transport=1 reset_release=2 stage_bad=0 load_words=5213 reset_bad=0
+S81C_HGRP_BENCH PASS gid=1 seed=1 cycles=20000 mismatches=0 ov=14644 ov_nonzero=14644
+- /srv/opentallas-scratch2/claude/wt/codex-hcore-profile-1309/rtl/hdc/v41x/test/tb_s81c_hgrp_load_stage.sv:146: Verilog $finish
+S81C_LOAD_PROFILE load_transport=1 reset_release=2 stage_bad=0 load_words=5241 reset_bad=0
+S81C_HGRP_BENCH PASS gid=1 seed=2 cycles=20000 mismatches=0 ov=14750 ov_nonzero=14750
+- /srv/opentallas-scratch2/claude/wt/codex-hcore-profile-1309/rtl/hdc/v41x/test/tb_s81c_hgrp_load_stage.sv:146: Verilog $finish
+S81C_LOAD_PROFILE load_transport=1 reset_release=2 stage_bad=0 load_words=5310 reset_bad=0
+S81C_HGRP_BENCH PASS gid=1 seed=3 cycles=20000 mismatches=0 ov=14668 ov_nonzero=14668
+- /srv/opentallas-scratch2/claude/wt/codex-hcore-profile-1309/rtl/hdc/v41x/test/tb_s81c_hgrp_load_stage.sv:146: Verilog $finish
+ot-run: RAN on localhost (unit oth-ubuntu-1458916-1792961156): exit 0
