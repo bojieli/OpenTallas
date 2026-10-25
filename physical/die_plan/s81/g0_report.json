@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/srv/opentallas-scratch2/claude/s81-dec12/final/die_plan.json",
+ "plan": "/srv/opentallas-scratch2/claude/s81-dec12/final2/die_plan.json",
  "verdict": "PASS",
  "mode": "G0",
  "errors": 0,
@@ -23,12 +23,12 @@
   "taps_cores": {
    "taps": 74,
    "hard_cores": 4000,
-   "core_pins": 3214645,
+   "core_pins": 3214641,
    "core_pins_off_track": 0,
    "types_no_cells": 0,
    "over_cap_no_cores": 0,
    "cell_sources": [
-    "/srv/opentallas-scratch2/claude/s81-dec12/final/cells_est.json"
+    "/srv/opentallas-scratch2/claude/s81-dec12/final2/cells_est.json"
    ],
    "no_cells": []
   },
@@ -6318,7 +6318,7 @@
    ],
    "dropped_bits": 0
   },
-  "png": "/srv/opentallas-scratch2/claude/s81-dec12/final/g0/die_plan.png"
+  "png": "/srv/opentallas-scratch2/claude/s81-dec12/final2/g0/die_plan.png"
  },
  "findings": [
   {
