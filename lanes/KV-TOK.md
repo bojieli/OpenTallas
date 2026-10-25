@@ -178,3 +178,10 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
   J=32, OT_VL_JCAP=0 (documented opt-out; scope bounds it), XINIT=unique: unit oth-ubuntu-963528-1792911762, epyc1
   ~/wt/tok-qw-logs/kv43abcd_build4.otrun.log. m4 mutant tool kv43/mut_m4.py (decode/re-encode exact, +1 on join4 calendar seg 0) in
   run_suite (claude/kv-tok-1024 @389e46906).
+- 2026-10-25 01:23 PDT TOK-QK: kv43abcd (A+B+C1/C2+D dfi-core, kv41 image) BUILT on epyc2 /srv/opentallas-scratch2/claude/kv-tok/kv43abcd_build
+  (hier link raced a block archive: libkv3_pv_v2_part_v1.a truncated -> LTO EOF/undefined protectlib_*; rebuilt that block, relinked top).
+  Boot (zero init): PROGRESS 528 -> 1204/7161 frames, all 4 SLICEBOOT ok, link up cyc 463, but BOOT_FAULT cyc 1459 target 1 (first image,
+  327 words) from hub_Wi host_root_admission; images_ready 0/13 -> boot FAIL; token nominal FAILs at the same boot fault, so m1..m4 are vacuous
+  this run. Logs suite43d_z/. Root cause -> sub-agent (hub_Wi block bench; hypotheses: kv41 HBM-edge calendar under dfi-core vs C transport vs B window).
+  Decision-13 random init (+verilator+rand+reset+2): bench stops PRE-RESET in self-check qkd_kv_ctl_nc32_face.sv:174 ($fatal on negedge when
+  E-face copy != original, ungated by reset) -> bench checks must be gated by reset/start (owner 13: datapath flops carry no reset); lane KV FYI.
