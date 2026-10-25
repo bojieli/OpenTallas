@@ -43,6 +43,21 @@ def _visible(source, targets, boxes):
     return xy|yx
 
 
+def l_route_clear(origin, ends, blocked):
+    """Either rectilinear L route must stay outside every blocked rectangle (HBM avoid_core_routes legs)."""
+    origin=np.asarray(origin);ends=np.asarray(ends)
+    ax,ay=origin[...,0],origin[...,1];bx,by=ends[...,0],ends[...,1]
+    xlo,xhi=np.minimum(ax,bx),np.maximum(ax,bx)
+    ylo,yhi=np.minimum(ay,by),np.maximum(ay,by)
+    hv=np.ones(np.broadcast_shapes(np.shape(ax),np.shape(bx)),bool);vh=hv.copy()
+    for x0,y0,x1,y1 in blocked:
+        horizontal=(xlo<x1)&(xhi>x0)
+        vertical=(ylo<y1)&(yhi>y0)
+        hv &= ~((horizontal&(ay>y0)&(ay<y1))|(vertical&(bx>x0)&(bx<x1)))
+        vh &= ~((vertical&(ax>x0)&(ax<x1))|(horizontal&(by>y0)&(by<y1)))
+    return hv|vh
+
+
 def _path(free,first,last,budget,radius,min_stages,boxes=(),first_point=None,last_point=None):
     parent=np.full(len(free),-2,dtype=np.int64)
     start_ok=first+radius<=budget
@@ -122,8 +137,6 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
                                    budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um))
                 continue
             blocked_targets=set();base_used=set(allocator.used);done=False
-            first_ok=_all_routes_clear(a,targets,boxes) if avoid_core_routes else None
-            last_ok=_all_routes_clear(b,targets,boxes) if avoid_core_routes else None
             for attempt in range(100):
                 allocator.used=set(base_used)
                 free=targets[[i not in blocked_targets for i in range(len(targets))]]
