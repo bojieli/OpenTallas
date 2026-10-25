@@ -1,0 +1,46 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-l14-schedule-1309/vsw_verilator
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-l14-schedule-1309/vsw_verilator
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-l14-schedule-1309/vsw_verilator
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-l14-schedule-1309/vsw_verilator
+ot-run: localhost      admits    58 GB (avail 262, reserve 0, fresh 133.2, peak 6, headroom 0, waiters 0/0 GB) load 47/256 running 30 disk 1259 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-999985-1792960687 after 0 s
+ ... Linking
+ ... Removing symbol tables
+ ... Compiletf functions
+Compiling VVP ...
+ ... VVP file version 12.0 (stable)
+Compile cleanup...
+ ...   261214 functors (net_fun pool=19398656 bytes)
+              79347 logic
+                  0 bufif
+                  0 resolv
+               1442 signals
+ ...   233467 filters (net_fil pool=28049408 bytes)
+ ...    21806 opcodes (540672 bytes)
+ ...    14178 nets
+ ...   261214 vvp_nets (14679616 bytes)
+ ...      544 arrays (3162 words)
+ ...       22 memories
+                 22 logic (746 words)
+                  0 real (0 words)
+ ...    75047 scopes
+ ... 3.51335 seconds, 194352.0/186268.0/6000.0 KBytes size/rss/shared
+Running ...
+ ...execute EndOfCompile callbacks
+ ...propagate initialization events
+ ...execute StartOfSim callbacks
+ ...run scheduler
+ ...execute Postsim callbacks
+ ... 16.4807 seconds, 194352.0/186300.0/6000.0 KBytes size/rss/shared
+Event counts:
+         321 time steps (pool=113)
+      374517 thread schedule events
+      297117 assign events
+             ...assign(vec4) pool=168516
+             ...assign(vec8) pool=204
+             ...assign(real) pool=256
+             ...assign(word) pool=256
+             ...assign(word/r) pool=204
+     5510891 other events (pool=86016)
+ot-run: RAN on localhost (unit oth-ubuntu-999985-1792960687): exit 124

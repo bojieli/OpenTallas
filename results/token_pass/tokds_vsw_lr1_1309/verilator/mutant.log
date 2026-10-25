@@ -1,0 +1,12 @@
+PROGRESS time=                1000 cyc=0
+MISMATCH cyc 134 new v1 f1 d33b933b92c0f36c8 ref(t-1) v1 f1 d8026b0902ddb3481
+MISMATCH cyc 139 new v1 f1 dc23188fdc231c231 ref(t-1) v1 f1 dc2318b9ec231c207
+MISMATCH cyc 146 new v1 f1 dcd7ab5d8bf60b48f ref(t-1) v1 f1 d45d180cebd1fbe7f
+MISMATCH cyc 150 new v1 f1 d001001bc38be38be ref(t-1) v1 f1 d382401a038be808b
+MISMATCH cyc 154 new v1 f1 dcfb4c433cfb49305 ref(t-1) v1 f1 dcfb446d9cfb44cd6
+VSW_LR_EQ cycles 2311 o_v(ref) 341 o_f(ref) cycles 2123 mismatches(shift 1) 303 negative-control mismatches(shift 0) 2059 reset-masked edges 9 held-o_d diffs (o_v=0, info) 1678
+VSW_LR_EQ FAIL
+- tb.sv:58: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.092 s; speed 25.084 us/s
+- Verilator: cpu 0.092 s on 1 threads; allocated 10 MB

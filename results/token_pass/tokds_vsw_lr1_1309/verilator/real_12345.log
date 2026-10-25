@@ -1,0 +1,11 @@
+PROGRESS time=                1000 cyc=0
+PROGRESS time=            10001000 cyc=10000
+PROGRESS time=            20001000 cyc=20000
+PROGRESS time=            30001000 cyc=30000
+PROGRESS time=            40001000 cyc=40000
+VSW_LR_EQ cycles 40311 o_v(ref) 7142 o_f(ref) cycles 40195 mismatches(shift 1) 0 negative-control mismatches(shift 0) 14286 reset-masked edges 9 held-o_d diffs (o_v=0, info) 0
+VSW_LR_EQ PASS
+- tb.sv:58: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 1.594 s; speed 25.291 us/s
+- Verilator: cpu 1.594 s on 1 threads; allocated 10 MB
