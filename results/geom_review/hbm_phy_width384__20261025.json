@@ -1,0 +1,9 @@
+{
+ "verdict": "PASS-COND",
+ "image": "/srv/opentallas-scratch/claude/codex-hbm-trial-1025/phy_w384/review_mesh.png",
+ "findings": [
+  "Viewed local M8/M9 candidate;3.84um alternating supply rails at8.64um period retain0.48um same-layer clearance and continuous orthogonal grid.",
+  "Restricted to declared PHY supply domains, where PHY keepout excludes core signal and clock taps; no global core-grid width change.",
+  "Experimental isolated-domain IR only, not adopted plan; await35mV rail-sum and confirm domain halo clock paths before physical plan adoption."
+ ]
+}

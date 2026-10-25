@@ -215,7 +215,9 @@ def record(a):
              manifest=m, pdn_pass='OT_PDN PASS' in log,
              pg_connected={n: f'OT_PG net={n} PASS' in log for n in ('VDD', 'VSS')},
              done='OT_DONE' in log, rails=rails, rail_sum_mv=s,
-             verdict=('NOT RUN' if not ok else ('PASS' if s <= BUDGET_MV else 'FAIL')),
+             verdict=('NOT RUN' if not ok else ('PASS' if s <= BUDGET_MV and 'OT_PDN PASS' in log
+                      and 'OT_DONE' in log and all(f'OT_PG net={n} PASS' in log for n in ('VDD', 'VSS'))
+                      else 'FAIL')),
              budget_mv=BUDGET_MV)
     (out / 'result.json').write_text(json.dumps(r, indent=1) + '\n')
     print(json.dumps({k: r[k] for k in ('pdn_pass', 'pg_connected', 'done', 'rails', 'rail_sum_mv', 'interior_rail_sum_mv', 'verdict')}))

@@ -1,0 +1,197 @@
+[
+ {
+  "name": "phy_NW_io_u_lk_N0",
+  "verdict": "FAIL",
+  "rail_sum_mv": 71.904,
+  "rails": {
+   "VDD": {
+    "nodes": 375,
+    "worst_mv": 29.408,
+    "worst_at_um": [
+     64.61,
+     1101.6
+    ],
+    "worst_inst": "T_1_25",
+    "interior_worst_mv": 20.754,
+    "interior_worst_at_um": [
+     64.61,
+     1058.4
+    ]
+   },
+   "VSS": {
+    "nodes": 375,
+    "worst_mv": 42.496,
+    "worst_at_um": [
+     21.79,
+     64.8
+    ],
+    "worst_inst": "T_0_1",
+    "interior_worst_mv": 39.613,
+    "interior_worst_at_um": [
+     64.99,
+     64.8
+    ]
+   }
+  },
+  "pg_connected": {
+   "VDD": true,
+   "VSS": true
+  }
+ },
+ {
+  "name": "phy_NW_spb0_u_lk_S0",
+  "verdict": "FAIL",
+  "rail_sum_mv": 74.07900000000001,
+  "rails": {
+   "VDD": {
+    "nodes": 375,
+    "worst_mv": 27.399,
+    "worst_at_um": [
+     626.21,
+     1058.4
+    ],
+    "worst_inst": "T_14_24",
+    "interior_worst_mv": 12.058,
+    "interior_worst_at_um": [
+     323.81,
+     194.4
+    ]
+   },
+   "VSS": {
+    "nodes": 375,
+    "worst_mv": 46.68,
+    "worst_at_um": [
+     108.19,
+     21.6
+    ],
+    "worst_inst": "T_2_0",
+    "interior_worst_mv": 41.109,
+    "interior_worst_at_um": [
+     64.99,
+     64.8
+    ]
+   }
+  },
+  "pg_connected": {
+   "VDD": true,
+   "VSS": true
+  }
+ },
+ {
+  "name": "phy_vsN0_u_lk_S1",
+  "verdict": "FAIL",
+  "rail_sum_mv": 74.07900000000001,
+  "rails": {
+   "VDD": {
+    "nodes": 375,
+    "worst_mv": 27.399,
+    "worst_at_um": [
+     626.21,
+     1058.4
+    ],
+    "worst_inst": "T_14_24",
+    "interior_worst_mv": 12.058,
+    "interior_worst_at_um": [
+     323.81,
+     194.4
+    ]
+   },
+   "VSS": {
+    "nodes": 375,
+    "worst_mv": 46.68,
+    "worst_at_um": [
+     108.19,
+     21.6
+    ],
+    "worst_inst": "T_2_0",
+    "interior_worst_mv": 41.109,
+    "interior_worst_at_um": [
+     64.99,
+     64.8
+    ]
+   }
+  },
+  "pg_connected": {
+   "VDD": true,
+   "VSS": true
+  }
+ },
+ {
+  "name": "phy_NE_io_u_lk_N2",
+  "verdict": "FAIL",
+  "rail_sum_mv": 69.43799999999999,
+  "rails": {
+   "VDD": {
+    "nodes": 400,
+    "worst_mv": 29.214,
+    "worst_at_um": [
+     583.01,
+     1101.6
+    ],
+    "worst_inst": "T_13_25",
+    "interior_worst_mv": 20.465,
+    "interior_worst_at_um": [
+     194.21,
+     1058.4
+    ]
+   },
+   "VSS": {
+    "nodes": 400,
+    "worst_mv": 40.224,
+    "worst_at_um": [
+     695.71,
+     64.8
+    ],
+    "worst_inst": "T_16_1",
+    "interior_worst_mv": 35.617,
+    "interior_worst_at_um": [
+     108.19,
+     64.8
+    ]
+   }
+  },
+  "pg_connected": {
+   "VDD": true,
+   "VSS": true
+  }
+ },
+ {
+  "name": "phy_NE_spb0_u_lk_S0",
+  "verdict": "FAIL",
+  "rail_sum_mv": 71.87899999999999,
+  "rails": {
+   "VDD": {
+    "nodes": 375,
+    "worst_mv": 28.497,
+    "worst_at_um": [
+     626.21,
+     1058.4
+    ],
+    "worst_inst": "T_14_24",
+    "interior_worst_mv": 11.935,
+    "interior_worst_at_um": [
+     64.61,
+     972.0
+    ]
+   },
+   "VSS": {
+    "nodes": 375,
+    "worst_mv": 43.382,
+    "worst_at_um": [
+     108.19,
+     21.6
+    ],
+    "worst_inst": "T_2_0",
+    "interior_worst_mv": 37.148,
+    "interior_worst_at_um": [
+     64.99,
+     64.8
+    ]
+   }
+  },
+  "pg_connected": {
+   "VDD": true,
+   "VSS": true
+  }
+ }
+]

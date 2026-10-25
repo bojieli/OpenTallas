@@ -17,7 +17,7 @@ from hbm_b2_power import io_power
 from ir_specialnets import materialize
 
 
-def generate(plan_path, out):
+def generate(plan_path, out, axis_bumps=False):
     plan = json.loads(Path(plan_path).read_text())
     root = Path(out)
     root.mkdir(parents=True, exist_ok=True)
@@ -61,12 +61,35 @@ def generate(plan_path, out):
         excluded = [0,0,bx0,height, bx1,0,width,height, 0,0,width,by0, 0,by1,width,height]
         ir.generate(SimpleNamespace(plan=str(pg/'domain_plan.json'), power=str(pg/'domain_power.json'),
                                     out=str(pg), window=None, tile=43.2, scale=1, no_bumps=excluded))
+        bump_counts = None
+        if axis_bumps:
+            # An axis-aligned checkerboard has the same 45um nearest-neighbour
+            # spacing and 63.64um same-net spacing as the older rotated lattice.
+            # Centre it over the declared bump rectangle; keep each entire bump
+            # inside that rectangle instead of dropping its boundary row.
+            nx = int((bx1-bx0-ir.BUMP)//ir.ARRAY)+1
+            ny = int((by1-by0-ir.BUMP)//ir.ARRAY)+1
+            if min(nx,ny) <= 0:
+                raise ValueError('bump rectangle is smaller than one bump')
+            rows = {'VDD': [], 'VSS': []}
+            for j in range(ny):
+                y = (by0+by1)/2 + (j-(ny-1)/2)*ir.ARRAY
+                for i in range(nx):
+                    x = (bx0+bx1)/2 + (i-(nx-1)/2)*ir.ARRAY
+                    net = 'VDD' if (i+j)%2 == 0 else 'VSS'
+                    rows[net].append(f'{x:.4f}, {y:.4f}, {ir.BUMP:g}, {ir.VDD if net=="VDD" else 0}\n')
+            for net, values in rows.items():
+                (pg/f'vsrc_{net}.loc').write_text(''.join(values))
+            bump_counts = {net:len(values) for net,values in rows.items()}
         materialize(pg)
         (pg/'run.tcl').write_text((pg/'run_pg.tcl').read_text())
         m = json.loads((pg/'manifest.json').read_text())
         m.update(source_plan=str(plan_path), supply_domain=domain, die_um=[width,height],
                  supply_net_alias={'VDD':'VDDPHY'},
                  scope='Isolated planned PHY mesh plus its own VSS return; surrounding core return omitted.')
+        if bump_counts is not None:
+            m['bumps'].update(n=bump_counts, orientation='axis-aligned checkerboard centred in declared bump rectangle',
+                              minimum_edge_clearance_um=ir.BUMP/2)
         (pg/'manifest.json').write_text(json.dumps(m, indent=1)+'\n')
         summary.append(dict(name=domain['name'], source_rect_um=domain['rect_um'], power_w=pm['total_w'],
                             grid=grids, bumps=m['bumps']['n'], path=str(pg)))
@@ -80,5 +103,6 @@ if __name__ == '__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--plan', required=True)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--axis-bumps', action='store_true', help='centred 45um axis-aligned checkerboard bump layout')
     a=ap.parse_args()
-    print(json.dumps(generate(a.plan,a.out),indent=1))
+    print(json.dumps(generate(a.plan,a.out,a.axis_bumps),indent=1))
