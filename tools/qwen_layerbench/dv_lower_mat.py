@@ -487,7 +487,7 @@ def splice(tile_first=40, ctlm_args=None, ages=None):
             for c in ssq_cmds:
                 put(p['at'] - R['R_CMD'] + c['edge'] - e_min, int(c['cmd'], 16) & ~(0x1FF << 4) | (p['pc'] << 4),
                     f'SU PC{p["pc"]} {c["label"]}')
-            span = max(c['edge'] for c in ssq_cmds) - e_min + lw['ages']['ssq_psum_out'][-1] + 2 * (N - 1) + 61
+            span = max(c['edge'] for c in ssq_cmds) - e_min + lw['ages']['ssq_psum_out'][-1] + D.SC_HOP * (N - 1) + 61
             if p['at'] + span > p['done']:
                 overrun.append(dict(pc=p['pc'], priced_done=p['done'], lowered_done=p['at'] + span))
         elif p['kind'] == 'SU':

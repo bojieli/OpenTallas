@@ -78,7 +78,16 @@ S8_SC_BLOCK = """CMD_HOP = 2
 SC_HOP_BY_SLICE = {'slice2': 2, 's8': 4}   # TOK-QK/S8B 10-25 (= main tools/qwen_layerbench/dv_lower.py)
 SLICE_RTL = 's8' if os.environ.get('DV2_S8DIE', '0') == '1' else 'slice2'
 SC_HOP = SC_HOP_BY_SLICE[SLICE_RTL]
+ST_HOP_BY_SLICE = {'slice2': 2, 's8': 4}   # x stream pass hop (qfd_dv_stream_tile DP 2)
+ST_HOP = ST_HOP_BY_SLICE[SLICE_RTL]
 """
+# engine-tree sites that hard-code the slice2 hops (BASE_REV); each is rewritten to the dv_lower constant
+S8_SITES = [('tools/qwen_layerbench/dv_lower_vec.py', '2 * (N - 1 - s)', 'D.ST_HOP * (N - 1 - s)'),
+            ('tools/qwen_layerbench/dv_lower_vec.py', '2 * max(s, N - 1 - s)', 'D.ST_HOP * max(s, N - 1 - s)'),
+            ('tools/qwen_layerbench/dv_lower_xhead.py', 'e5 - 2 * (n - 1 - s)', 'e5 - D.ST_HOP * (n - 1 - s)'),
+            ('tools/qwen_layerbench/dv_lower_xhead.py', 'e_s + 2 * abs(m - s)', 'e_s + D.ST_HOP * abs(m - s)'),
+            ('tools/qwen_layerbench/dv_layer.py', "['ssq_psum_out'][-1] + 2 * (N - 1) + 61", "['ssq_psum_out'][-1] + D.SC_HOP * (N - 1) + 61"),
+            ('tools/qwen_layerbench/dv_lower_mat.py', "['ssq_psum_out'][-1] + 2 * (N - 1) + 61", "['ssq_psum_out'][-1] + D.SC_HOP * (N - 1) + 61")]
 
 
 def s8die_tree(tree):
@@ -94,13 +103,18 @@ def s8die_tree(tree):
     if n != 1:
         raise SystemExit('s8die: engine dv_lower SC_HOP line not found')
     p.write_text(src2)
+    sites = {}
+    for rel, a, b in S8_SITES:
+        q = tree / rel
+        if q.exists() and a in q.read_text():
+            t = q.read_text(); sites[f'{rel}: {a}'] = t.count(a); q.write_text(t.replace(a, b))
     lp = tree / REC / 'sched/ledger.json'
     lg = json.loads(lp.read_text())
     dropped = lg.pop('dv_age_deltas', None)
     lg['dv_age_deltas_dropped'] = dict(reason='TOK-QK/S8B --s8die: REL s8 ages replace the PRICED SU8/VM8 delta', was=dropped)
     lp.write_text(json.dumps(lg, indent=1))
     os.environ['DV2_S8DIE'] = '1'
-    return dict(engine_sc_hop=4, dropped_dv_age_deltas=dict(per_su_command=(dropped or {}).get('per_su_command'),
+    return dict(engine_sc_hop=4, engine_st_hop=4, rewritten_sites=sites, dropped_dv_age_deltas=dict(per_su_command=(dropped or {}).get('per_su_command'),
                                                             vm_write_extra=(dropped or {}).get('vm_write_extra'),
                                                             keys=(dropped or {}).get('keys')))
 
