@@ -1877,6 +1877,8 @@ class Binder:
         files = [out / "bind_cells.sv"]
         self.pnames = {}
         self.io_used = {}
+        self.parent_id_ports = {}
+        self.parent_id_values = {}
         for tn, ps in sorted(self.by_type.items()):
             t = self.types[tn]
             txt, pnames = self.emit_type(tn, ps[0])
@@ -1887,6 +1889,10 @@ class Binder:
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
         f.write_text(self.emit_top())
         files.append(f)
+        if any(self.parent_id_ports.values()):
+            (out.parent / "bind_parent_id_straps.json").write_text(json.dumps(dict(
+                schema="opentallas.parent_id_straps.v1", types=self.parent_id_ports,
+                instances=self.parent_id_values, added_data_cycles=0), indent=1) + "\n")
         return files
 
     def _pname(self, k):
@@ -1900,6 +1906,16 @@ class Binder:
         mod = t["module"]
         params = self.tparams[tn]
         pdecl, pnames = [], {}
+        if not hasattr(self, "parent_id_ports"):      # emit_type used without emit() (unit vehicles)
+            self.parent_id_ports, self.parent_id_values = {}, {}
+        id_decls = {}
+        if any(d.get("parent_id_straps") or d.get("straps") for d in t.get("contents", []) + t.get("hard_cores", [])):
+            from parent_id_straps import type_parent_id_straps, validate_parent_id_straps
+            try:
+                id_decls = type_parent_id_straps(t)
+            except ValueError as e:
+                raise BindError(str(e)) from e
+        id_ports = {}
         # strap parameters: one per (leaf, port), the port width, constant bits in place
         straps = defaultdict(dict)
         for k, vals in params.items():
@@ -1913,14 +1929,35 @@ class Binder:
             v0 = ["0"] * w
             for b, vals in bitsv.items():
                 v0[b] = vals[0] if vals[0] in "01" else "0"
-            pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")
+            if pn in id_decls.get(r, {}):
+                actual_inputs = {name: len(bits) for name, bits in F.cells[ci].ports.items()
+                                 if G.dirs[ci].get(name) == "input"}
+                try:
+                    validate_parent_id_straps({"parent_id_straps": id_decls[r]}, actual_inputs)
+                except ValueError as e:
+                    raise BindError(f"parent ID {tn}.{r}: {e}") from e
+                if set(bitsv) != set(range(w)) or any(vals[0] not in "01" for vals in bitsv.values()):
+                    raise BindError(f"parent ID {tn}.{r}.{pn}: every bit must be a declared known strap")
+                expected = id_decls[r][pn]["value"]
+                if int(''.join(reversed(v0)), 2) != expected:
+                    raise BindError(f"parent ID {tn}.{r}.{pn}: representative as-built value disagrees with {expected}")
+                id_ports[nm] = dict(leaf=r, port=pn, width=w)
+            else:
+                pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")
             pnames[("strap", r, pn)] = (nm, w)
+        used_ids = {(x["leaf"], x["port"]) for x in id_ports.values()}
+        missing_ids = {(r, pn) for r, ids in id_decls.items() for pn in ids} - used_ids
+        if missing_ids:
+            raise BindError(f"parent ID {tn}: declarations do not match bound known strap inputs {sorted(missing_ids)}")
+        self.parent_id_ports[tn] = id_ports
         for k, vals in params.items():
             if k[0] == "param":
                 nm = short_id(f"P_{k[1]}__{k[2]}", 80)
                 pdecl.append(f"    parameter {nm} = {vals[0]}")
                 pnames[k] = (nm, None)
         ports = ["    input  wire clk", "    input  wire arst_n"]
+        ports += [f"    input wire [{d['width'] - 1}:0] {nm}   // parent-driven ID, normally timed"
+                  for nm, d in sorted(id_ports.items())]
         # die IO inputs (pads) read by this partition's leaves: one partition port per die port, named io_<port>
         io = set()
         for ci in self.members[p]:
@@ -2234,6 +2271,7 @@ class Binder:
             t = self.types[tn]
             pn = self.pnames[tn]
             ov = []
+            parent_ids = []
             for k, (nm, w) in sorted(pn.items(), key=lambda kv: kv[1][0]):
                 if k[0] == "strap":
                     r, port = k[1], k[2]
@@ -2243,11 +2281,22 @@ class Binder:
                     for kk, val in self.tvals[tn][p].items():
                         if kk[0] == "strap" and kk[1] == r and kk[2] == port:
                             v[kk[3]] = val if val in "01" else "0"
-                    ov.append(f".{nm}({width}'b{''.join(reversed(v))})")
+                    if nm in self.parent_id_ports.get(tn, {}):
+                        actual_bits = {kk[3]: val for kk, val in self.tvals[tn][p].items()
+                                       if kk[0] == "strap" and kk[1] == r and kk[2] == port}
+                        if set(actual_bits) != set(range(width)) or any(val not in "01" for val in actual_bits.values()):
+                            raise BindError(f"parent ID {p}.{r}.{port}: unknown or missing as-built ID bits")
+                        expr = f"{width}'b{''.join(reversed(v))}"
+                        parent_ids.append((nm, expr))
+                        self.parent_id_values.setdefault(p, {})[nm] = dict(width=width,
+                            value=int(''.join(reversed(v)), 2))
+                    else:
+                        ov.append(f".{nm}({width}'b{''.join(reversed(v))})")
                 else:
                     ov.append(f".{nm}({self.tvals[tn][p].get(k)})")
             dd = self.default_domain(p)
             cs = [f"        .clk(clk_{sv_id(dd)})", f"        .arst_n({reset_in.get(p, 'rst_n')})"]
+            cs += [f"        .{nm}({expr})" for nm, expr in parent_ids]
             if p in start_in:
                 cs.append(f"        .start_i({start_in[p]})")
             cs += [f"        .{port}({net})" for port, net in sorted(reset_out.get(p, {}).items())]

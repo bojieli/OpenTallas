@@ -54,7 +54,7 @@ def source_snapshot(src, sha, root):
     r = git(src, "worktree", "add", "--no-checkout", "--detach", str(dest), sha)
     if r.returncode:
         raise RuntimeError(r.stderr)
-    patterns = "/*\n!/results/\n!/docs/\n!/.qscratch/\n!/physical/\n/physical/die_plan/\n/physical/common_flow/\n/physical/ref_tile/\n!/physical/die_plan/*/cores/harden/results/\n"
+    patterns = "/*\n!/results/\n!/docs/\n!/.qscratch/\n!/physical/\n/physical/die_plan/\n/physical/common_flow/\n/physical/ref_tile/\n!/physical/ref_tile/*/\n!/physical/die_plan/*/cores/harden/results/\n"
     r = subprocess.run(["git", "-C", str(dest), "sparse-checkout", "set", "--no-cone", "--stdin"],
                        input=patterns, text=True, capture_output=True)
     if r.returncode:

@@ -419,3 +419,21 @@ def test_duplicate_with_different_next_state_is_not_paired(tmp_path, monkeypatch
     m, _ = L.build(with_compare=True, with_hyp=True)
     res = _sim_prove(m)
     assert 'differs' in {res['ff:u_dut.y'], res['ff:u_dut.z']}, res
+
+
+def test_parse_config_make_append_and_conditional(tmp_path):
+    # HEAD0719 kits append a file with make +=: reading it as = dropped every other RTL file (gold = 1 file,
+    # UNPROVEN not a valid top-level module on ot_s81hd_elemB_cv).  ?= must not override an earlier value.
+    (tmp_path / "config.mk").write_text(
+        "export DESIGN_NAME = top\n"
+        "export VERILOG_FILES = /work/rtl/a.sv /work/rtl/b.sv  # base list\n"
+        "export VERILOG_FILES += /work/rtl/c.sv\n"
+        "VERILOG_DEFINES ?= -DSYNTHESIS\n"
+        "VERILOG_DEFINES ?= -DOTHER\n"
+        "export SYNTH_BLACKBOXES += ot_rom_bb\n"
+        "override export DESIGN_NAME := top2\n")
+    env = lec.parse_config(tmp_path)
+    assert env["VERILOG_FILES"].split() == ["/work/rtl/a.sv", "/work/rtl/b.sv", "/work/rtl/c.sv"]
+    assert env["VERILOG_DEFINES"] == "-DSYNTHESIS"
+    assert env["SYNTH_BLACKBOXES"] == "ot_rom_bb"
+    assert env["DESIGN_NAME"] == "top2"
