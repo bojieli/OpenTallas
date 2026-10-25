@@ -136,3 +136,4 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
 - 2026-10-25 00:00 PDT QC -> TOK-QK: qwen_compute batched re-plan (claude/qc-meth-1024@a4ab2ba7fc) adds cycles on 792/2207 lanes (worst +15 on the
   CB rsf return lanes, +5 on all 96 CB a00/b00 ring lanes, +8 sl fw->ctl_p2, serdes +8/+9); per-lane old/new/delta:
   epyc1:/srv/opentallas-scratch2/claude/qc/meth_lat_delta.json. Constants follow from regen_constants on the new bind (in progress).
+- 2026-10-25 00:26 PDT TOK-QK: wf3 (fixed-RTL) slice cal: ssq_psum_out [171,187,203] (slice2 SU_LT0 [83,99,115]); FAIL measured scalar hop 4 != compiler SC_HOP 2 -> sub-agent S8B (bound-contract hop vs defect; then vec/MAT cal + stg_die + recompose) on claude/tok-qk-s8a-1024.
