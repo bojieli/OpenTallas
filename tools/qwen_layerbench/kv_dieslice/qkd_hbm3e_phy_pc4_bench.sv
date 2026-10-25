@@ -46,7 +46,7 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
     // on load, as the write path's ot_qfd_emb_pcport does); PRELOAD_ID >= 0 keeps the numeric form (288-b words).
     // +HBM_LOG=<n>: print the first n RD / WR columns of this slice (pc bank row col edge) -- the address-map self-check.
     string part = "";
-    integer hlog = 0, nlog = 0;
+    integer hlog = 0, nlog = 0, rl = RL;   // rl: RL, or RL + 1 on the partition named by +MUT_RL24=<part> (mutant m2)
     initial begin : pl
         string f, m, ps; integer fd, s, pc, b, r, c, n; reg [287:0] w; reg [255:0] d;
         for (int k = 0; k < 4; k++) for (int j = 0; j < 64; j++) due[k][j] = '0;
@@ -54,6 +54,7 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
         for (int i = 0; i + 4 <= m.len(); i++) if (m.substr(i, i + 3) == "phy_") begin
             int e; e = i; while (e < m.len() && m[e] != ".") e++; part = m.substr(i, e - 1); break; end
         void'($value$plusargs("HBM_LOG=%d", hlog));
+        if ($value$plusargs("MUT_RL24=%s", ps) && ps == part) begin rl = RL + 1; $display("HBM_MUT %s RL %0d", part, rl); end
         if ($value$plusargs("HBM_PRELOAD=%s", f)) begin
             fd = $fopen(f, "r"); n = 0;
             if (fd == 0) $fatal(1, "HBM_PRELOAD %s not readable", f);
@@ -90,8 +91,8 @@ module qkd_hbm3e_phy_pc4 #(parameter integer RL = 23, parameter integer PRELOAD_
                 if (po[k][29]) begin mem[key] = po[k][327:40]; n_wr++; end
                 else begin
                     n_rd++;
-                    if (!mem.exists(key)) begin n_rd_unwritten++; due[k][(edge_n + RL) % 64] = {encode(256'd0), 1'b1}; end
-                    else due[k][(edge_n + RL) % 64] = {mem[key], 1'b1};
+                    if (!mem.exists(key)) begin n_rd_unwritten++; due[k][(edge_n + rl) % 64] = {encode(256'd0), 1'b1}; end
+                    else due[k][(edge_n + rl) % 64] = {mem[key], 1'b1};
                 end
             end
         end
