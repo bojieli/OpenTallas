@@ -163,3 +163,46 @@ def test_run_kit_runs_lec_after_face_guard_and_fails_closed():
     s = gen_phys.RUN_KIT
     assert s.index("face_guard_odb.json") < s.index("/work/lec.py") < s.index("\\$M $GOAL")
     assert "if [ \\$lr = 1 ]; then" in s and "rc=1" in s.split("/work/lec.py", 1)[1].split("fi; fi;")[0]
+
+
+def test_correspondence_proves_feedback_copies_together(tmp_path, monkeypatch):
+    """Two duplicated feedback registers: each frontend chooses a different copy for the feedback.
+    Their equality is inductive, although no individual next-state compare holds with the copies free.
+    """
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    def side(name, feedback):
+        m = lec.Aig()
+        d, a, b = (m.add_input(x) for x in ('d', 'a', 'b'))
+        nxt = m.XOR((a, b)[feedback], d)
+        f = tmp_path / (name + '.aig')
+        m.write(f)
+        _, body = f.read_bytes().split(b'\n', 1)
+        f.write_bytes(f'aig {m.ni + len(m.ands)//2} 1 2 0 {len(m.ands)//2}\n{nxt}\n{nxt}\n'.encode() + body)
+        mp = {'input': {0: [('d', 0)]}, 'latch': {0: [('u_dut.a$_DFF_P_.lecq', 0)],
+              1: [('u_dut.b$_DFF_P_.lecq', 0)]}, 'output': {}}
+        return lec.read_aig(f), mp
+    g, gm = side('gold', 0)
+    t, tm = side('gate', 1)
+    L = lec.Lec(g, gm, t, tm)
+    before, _ = L.build(with_compare=True, with_hyp=False)
+    assert set(_sim_prove(before).values()) == {'differs'}
+    lec.correspond(L, tmp_path, 100, [])
+    assert any(sd == 'both' and h[0] == 'eq' for (sd, k), h in L.hyp.items())
+    after, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(after).values()) == {'proved'}
+
+
+def test_correspondence_constant_uses_rtl_x_care(tmp_path, monkeypatch):
+    """A removed flop whose next state is 0 or RTL X may refine to constant 0."""
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    g = tmp_path / 'gold_x.aig'
+    g.write_bytes(b'aig 4 2 1 0 1\n8\n' + bytes([4, 2]))  # q' = d & X
+    t = tmp_path / 'gate_zero.aig'
+    t.write_bytes(b'aig 2 1 1 0 0\n0\n')
+    gm = {'input': {0: [('d', 0)]}, 'latch': {0: [('u_dut.q$_DFF_P_.lecq', 0)]}, 'output': {}}
+    tm = {'input': {0: [('d', 0)]}, 'latch': {0: [('u_dut.zero$_DFF_P_.lecq', 0)]}, 'output': {}}
+    L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+    lec.correspond(L, tmp_path, 100, [])
+    assert L.hyp['gold', 'ff:u_dut.q'] == ('const', 0)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {'proved'}

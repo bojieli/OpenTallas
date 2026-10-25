@@ -666,6 +666,7 @@ class Lec:
         for k in self.tc:
             self.dlit[("gate", k)] = T(self.tc[k])
         nx = lambda k: lgx.get(self.gc[k] & ~1, 0) ^ 1          # gold next state of k is not X
+        self.dcare = {k: nx(k) for k in self.gc}
         self.xpoints = sorted(k for k in self.gc if lgx.get(self.gc[k] & ~1, 0))
         if with_compare:
             for k in sorted(set(self.gc) & set(self.tc)):
@@ -1050,11 +1051,14 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                             if tried[("gate", c, k, 0)] < 2:
                                 L.hyp[("gate", c)] = ("eq", "gold", k, 0)
                                 new += 1
+                # Duplicate feedback copies can choose different representatives in each frontend.
+                # Group on gold signatures even before individual gold/gate D functions agree;
+                # the hypothesis miter below proves the equality on BOTH sides simultaneously.
                 groups = {}
                 for k in L.matched:
                     if k.startswith("ff:") and ("both", k) not in L.hyp:
                         s = sv("gold", k)
-                        if s in (0, mask) or s != sv("gate", k):
+                        if s in (0, mask):
                             continue
                         inv = s >> (mask.bit_length() - 1)
                         groups.setdefault(s ^ (mask if inv else 0), []).append((k, inv))
@@ -1097,13 +1101,17 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
                     if h[0] != "const":
                         continue
                     s = lit_val(val, mask, L.dlit[("gold" if sd == "both" else sd, k)])
-                    if sd == "both" and s != lit_val(val, mask, L.dlit[("gate", k)]):
-                        s = -1                              # sides disagree: not a constant
-                    want = mask if h[1] else 0
-                    if s != want:
+                    # RTL X may refine to a constant. Use the same care rail as the SAT miter;
+                    # random values assigned to X must not discard a valid constant hypothesis.
+                    care = lit_val(val, mask, L.dcare[k]) if sd in ("gold", "both") else mask
+                    zero, one = (s & care) == 0, (s & care) == care
+                    if sd == "both":
+                        gate_s = lit_val(val, mask, L.dlit[("gate", k)])
+                        zero, one = zero and gate_s == 0, one and gate_s == mask
+                    if not (one if h[1] else zero):
                         del L.hyp[(sd, k)]
-                        if s in (0, mask):
-                            L.hyp[(sd, k)] = ("const", 1 if s else 0)
+                        if zero or one:
+                            L.hyp[(sd, k)] = ("const", 0 if zero else 1)
                         else:
                             tried[(sd, k, "c")] += 2
                         changed += 1
