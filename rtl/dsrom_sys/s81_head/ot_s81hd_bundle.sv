@@ -113,10 +113,20 @@ module ot_s81hd_bundle #(
         // All 307 bits use the same depth. Validity alone resets; payload
         // travels continuously, retaining the original systolic and B join alignment.
         // Physical implementation must land these groups at the actual A faces.
-        ot_hdc_delay #(.W(2), .D(A_INPUT_STAGES), .RESET(1)) u_av (
-            .clk(clk), .rst_n(rst_n), .d({go_d, bv_r[q]}), .q({a_go[q], bv_a[q]}));
-        ot_hdc_delay #(.W(305), .D(A_INPUT_STAGES)) u_ad (
-            .clk(clk), .rst_n(rst_n), .d({row_in, xsa, bd_r}), .q({row_a[q], x_a[q], bd_a[q]}));
+        if (A_INPUT_STAGES == 0) begin : g_ais0
+            assign {a_go[q], bv_a[q]} = {go_d, bv_r[q]};
+            assign {row_a[q], x_a[q], bd_a[q]} = {row_in, xsa, bd_r};
+        end else begin : g_ais
+            // first stage: this core's OWN kept copy (never merged with the other cores' identical x / bd copies)
+            wire [1:0]   v1;
+            wire [304:0] d1;
+            ot_s81hd_kregr #(.W(2)) u_av1 (.clk(clk), .rst_n(rst_n), .d({go_d, bv_r[q]}), .q(v1));
+            ot_s81hd_kreg #(.W(305)) u_ad1 (.clk(clk), .d({row_in, xsa, bd_r}), .q(d1));
+            ot_hdc_delay #(.W(2), .D(A_INPUT_STAGES - 1), .RESET(1)) u_av (
+                .clk(clk), .rst_n(rst_n), .d(v1), .q({a_go[q], bv_a[q]}));
+            ot_hdc_delay #(.W(305), .D(A_INPUT_STAGES - 1)) u_ad (
+                .clk(clk), .rst_n(rst_n), .d(d1), .q({row_a[q], x_a[q], bd_a[q]}));
+        end
         if (!CV) begin : g_rtl
         ot_s81hd_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_e (
             .clk(clk), .rst_n(rst_n), .go(a_go[q]), .row0(row_a[q]), .x(x_a[q]), .b_v(bv_a[q]), .b_d(bd_a[q]),
@@ -199,5 +209,24 @@ module ot_s81hd_bundle #(
             {res_row, res_bits} <= pick(c1[0], c1[1]);
         end
     end
-    assign fault = b_fault | (|a_fault);
+    // MERGE_HOP: the five element fault pins are landed next to their element and hopped (2 stages each) before the OR
+    // (tile_prev2: eA1 fault -> tile bflt_q crossed the tile in one cycle, -224 ps).  The fault is sticky, +2 is free.
+    reg [4:0] flt_q, flt_h;
+    always @(posedge clk) begin flt_q <= {b_fault, a_fault}; flt_h <= flt_q; end
+    assign fault = MERGE_HOP ? (|flt_h) : (b_fault | (|a_fault));
+endmodule
+
+// S81-HEAD 10-24 (hd_tile tile_prev2 placement STA: Yosys opt_merge folded the four per-A-core input copies back into
+// one 305-b register bank, so one copy drove all four A cores' x pins, -290 ps): kept register cells.  keep_hierarchy +
+// keep like ot_s81hd_oreg / the die_plan ot_dp_st cells: each instance survives as its own flops and its q drives only
+// its own load.  ot_s81hd_kreg: data (no reset, OWNER decision 13: control-only reset); ot_s81hd_kregr: control bits.
+(* keep_hierarchy, keep *)
+module ot_s81hd_kreg #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+(* keep_hierarchy, keep *)
+module ot_s81hd_kregr #(parameter integer W = 1) (input wire clk, input wire rst_n, input wire [W-1:0] d,
+                                                 output reg [W-1:0] q);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= '0; else q <= d;
 endmodule
