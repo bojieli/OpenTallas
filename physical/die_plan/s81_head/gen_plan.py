@@ -642,6 +642,11 @@ for tn in ("hd_spn", "hd_spn_end"):
         ist.append(dict(conn=f"bus:{b if a in ('x_i',) else a}", from_um=list(p0), to_um=list(p1),
                         regs_um=stations_on(p0, p1), bits=566, leaf_um=list(lf), bit_route="per_bit",
                         note=f"{a} -> {b} (spo / spr registers at the ends)"))
+    # Physical leaf registers must occupy the point used to size their first/last station legs.
+    # Unconstrained GPL placed the bottom spo at N pins, giving a 551um first leg.
+    for child in types[tn]["contents"]:
+        cx, cy = SPN_LEAF[child["inst"].removeprefix("u_")]
+        child.update(origin_um=[round(cx - 20, 3), round(cy - 20, 3)], outline_um=[40.0, 40.0])
     types[tn]["internal_stations"] = ist
     types[tn]["reset"]["leaf_um"] = [round((SPN_LEAF["spo"][0] + SPN_LEAF["spr"][0]) / 2, 3), SPN_LEAF["spo"][1]]
     # density taps (OWNER decision 5): the per-bit station columns / rows + the spo / spr leaf flops (inventory of the

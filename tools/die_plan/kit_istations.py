@@ -179,7 +179,9 @@ def main(argv):
         if "origin_um" in c and not c.get("lef"):
             ox, oy = c["origin_um"]
             w, h = c.get("outline_um", [0.0, 0.0])
-            tcl.append(f"is_place {{*u_{gen_rtl.sv_id(c['inst'])}[./]*}} {ox + w / 2:g} {oy + h / 2:g} cell:{c['inst']}")
+            inst = gen_rtl.sv_id(c["inst"])
+            inst = inst if inst.startswith("u_") else "u_" + inst
+            tcl.append(f"is_place {{*{inst}[./]*}} {ox + w / 2:g} {oy + h / 2:g} cell:{c['inst']}")
             rep.append(dict(cell=c["inst"], site=[ox, oy]))
     tcl.append("close $is_fh\nputs \"OT_ISTATIONS placed $is_n flops FIRM (missing: [llength $is_miss] $is_miss)\"")
     bfile.write_text(txt)
