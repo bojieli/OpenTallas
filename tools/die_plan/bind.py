@@ -2543,7 +2543,7 @@ def cmd_bind(a):
                                                                 "removed) vs bound stages (2 boundary flops)",
                                                            buses=lat, landing_pads=B.land_pads,
                                                            **({"reset": json.loads((out / "bind_reset.json").read_text())}
-                                                              if B.wavefront_plan() is not None else {})), indent=1))
+                                                              if (out / "bind_reset.json").exists() else {})), indent=1))   # EMIT failure: report, not a traceback
     pr = rep["proof"]
     print(json.dumps(dict(partitions=rep["partitions"], types=len(rep["types"]), crossings=rep["crossings"],
                           crossing_bits=rep["crossing_bits"], errors=rep["n_errors"], **pr)))
