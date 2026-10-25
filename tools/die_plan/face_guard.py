@@ -283,11 +283,16 @@ class Flat:
 
 
 def read_ft1(path):
-    """slot names with ONE station from a kit's ft_stations.txt (`slot stations in_face out_face ...`)."""
+    """slot names with ONE station from a kit's ft_stations.txt (`slot stations in_face out_face ...`), plus explicit
+    one-station bus pairs of a hard core (`pair IN_BUS OUT_BUS`: by the core's RTL contract the single register of bit k
+    is both the in-face register of IN_BUS[k] and the out-face register of OUT_BUS[k]; ELEM-S81 10-24 legacy station
+    cores such as dsfd_qbank_N e_r0 -> d_r0).  A pair is recorded as "IN>OUT"."""
     out = set()
     for ln in Path(path).read_text().splitlines():
         f = ln.split()
-        if f and not f[0].startswith("#") and len(f) >= 2 and f[1] == "1":
+        if f and f[0] == "pair" and len(f) == 3:
+            out.add(f"{f[1]}>{f[2]}")
+        elif f and not f[0].startswith("#") and len(f) >= 2 and f[1] == "1":
             out.add(f[0])
     return out
 
@@ -297,6 +302,10 @@ def _ft1_pair(bs, ft1):
     is by plan both the in-face and the out-face register (ELEM-S81 10-24: slice_station types)."""
     if len(bs) != 2:
         return False
+    mb = [re.match(r"^(.+?)(\[\d+\])?$", b) for b in bs]
+    for i, o in ((0, 1), (1, 0)):             # explicit core pair IN>OUT, same bit index
+        if (f"{mb[i].group(1)}>{mb[o].group(1)}" in ft1 and mb[i].group(2) == mb[o].group(2)):
+            return True
     m = [re.match(r"^(.+)_([io])(\[\d+\])?$", b) for b in bs]
     return (all(m) and m[0].group(1) == m[1].group(1) and m[0].group(1) in ft1 and m[0].group(3) == m[1].group(3)
             and {m[0].group(2), m[1].group(2)} == {"i", "o"})

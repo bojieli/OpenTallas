@@ -148,3 +148,26 @@ endmodule
 """
     r = face_guard.guard(net, pins=[dict(bus="a",bit=None),dict(bus="o",bit=None)])
     assert r["verdict"] == "PASS" and r["checked"] == r["planned_bits"] == 2, r
+
+
+NET_PAIR = """
+module top(ck, e_r0, d_r0, x_i, y_o);
+  input ck; input [1:0] e_r0; output [1:0] d_r0; input x_i; output y_o;
+  DFFHQNx1_ASAP7_75t_R \\r[0]$_DFF_P_  (.CLK(ck), .D(e_r0[0]), .QN(d_r0[0]));
+  DFFHQNx1_ASAP7_75t_R \\r[1]$_DFF_P_  (.CLK(ck), .D(e_r0[1]), .QN(d_r0[1]));
+  DFFHQNx1_ASAP7_75t_R \\s$_DFF_P_  (.CLK(ck), .D(x_i), .QN(y_o));
+endmodule
+"""
+
+
+def test_explicit_core_pair(tmp_path):
+    """`pair IN OUT` declares a hard core's one-station bus pair (same bit index only); undeclared pairs stay merged."""
+    (tmp_path / "ft_stations.txt").write_text("# core kit\npair e_r0 d_r0\n")
+    ft1 = face_guard.read_ft1(tmp_path / "ft_stations.txt")
+    assert ft1 == {"e_r0>d_r0"}
+    r = face_guard.guard(NET_PAIR, skip_re=r"^ck$", ft1=ft1)
+    assert r["fail_counts"].get("merged") == 2 and r["ft1_stations"] == 2, r      # x_i / y_o undeclared
+    r = face_guard.guard(NET_PAIR, skip_re=r"^ck$", ft1=ft1 | {"x_i>y_o"})
+    assert r["verdict"] == "PASS" and r["ft1_stations"] == 3, r
+    swapped = NET_PAIR.replace(".QN(d_r0[0])", ".QN(d_r0[9])").replace("output [1:0] d_r0", "output [9:0] d_r0")
+    assert face_guard.guard(swapped, skip_re=r"^ck$", ft1=ft1 | {"x_i>y_o"})["verdict"] == "FAIL"
