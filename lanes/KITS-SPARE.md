@@ -18,3 +18,4 @@ Excluded (with reason):
   bk_g/gunit_l0/l1/l2 = structural F5 hold (Codex physical early-tap); gunit_l0r = outline growth (plan); idx_tx_n32 = parent param mismatch (plan).
 SELECTED (KITS-SPARE owns from now): S81 cores ot_s81sl_xrt3 (only in dsdv_slice_c3x_C__t1), dsdv_bksel_c, dsdv_bksel_q (bk_sel__t2), dsdv_gunit_l5 (l5_n32, F5/F3/F6 structural kit);
   QC coll_core, coll_s (KIT-PLACED, GEOM cond pin regs <=62/87 um; check plan3 does not touch them).
+2026-10-25 08:15 PDT KITS-SPARE: COUNTS kitted 0 / GEOM-REQ 0 / routed 0 / signed off 0. Sub-lanes live: S81C (legacy gen modern mode RCX+per-corner+lint+reg_fanout on claude/kits-spare-1025; xrt3, bksel_c, bksel_q), L5 (gunit_l5_n32 structural successor F5/F3/F6), QCC (coll_core/coll_s delta check + kits).
