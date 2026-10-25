@@ -4831,15 +4831,61 @@
   }
  },
  "ot_s81sl_leaf__t1": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25182271,
+    "demand": 4244398,
+    "usage_pct": 16.85,
+    "overflow": 2306
+   },
+   "M3": {
+    "resource": 28210401,
+    "demand": 4871065,
+    "usage_pct": 17.27,
+    "overflow": 589
+   },
+   "M4": {
+    "resource": 21156082,
+    "demand": 3577942,
+    "usage_pct": 16.91,
+    "overflow": 3662
+   },
+   "M5": {
+    "resource": 21156642,
+    "demand": 2790639,
+    "usage_pct": 13.19,
+    "overflow": 438
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 1742698,
+    "usage_pct": 8.0,
+    "overflow": 2799
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1244509,
+    "usage_pct": 5.71,
+    "overflow": 437
+   }
+  },
+  "total_overflow": 10231,
+  "wirelength_um": 10733260.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t1",
@@ -4857,11 +4903,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 159.23,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 41784,
+   "ff_hold_wns": -2.03,
+   "ff_hold_tns": -82.8,
+   "ff_hold_viol": 67,
+   "ff_hold_endpoints": 41784
+  },
+  "repair_buffers": 48452,
+  "drv": {
+   "violators": 5724
+  },
+  "peak_gb": 13.46,
+  "wall": "26:00.23",
+  "hot_gcells": 8101,
+  "hot_slots": [
+   [
+    "ft5",
+    4149
+   ],
+   [
+    "ft4",
+    648
+   ],
+   [
+    "ft6",
+    523
+   ],
+   [
+    "ft1",
+    169
+   ],
+   [
+    "ft17",
+    28
+   ]
+  ],
+  "hot_bbox_um": [
+   6,
+   19,
+   1255,
+   1184
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 5.8,
+    "p90": 0.7,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.2,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 20,
    "max_hop_um": 366.4,
@@ -4871,8 +4970,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 10231 (8101 gcells, hot bbox 82.3% of outline); skeleton FF hold WNS -2.0 ps (67 endpoints)",
+   "hot_frac": 0.8231
   }
  },
  "ot_s81sl_leaf__t10": {
@@ -5424,15 +5524,61 @@
   }
  },
  "ot_s81sl_leaf__t14": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25191602,
+    "demand": 2889465,
+    "usage_pct": 11.47,
+    "overflow": 325162
+   },
+   "M3": {
+    "resource": 28216488,
+    "demand": 3930638,
+    "usage_pct": 13.93,
+    "overflow": 330728
+   },
+   "M4": {
+    "resource": 21157561,
+    "demand": 1998100,
+    "usage_pct": 9.44,
+    "overflow": 219808
+   },
+   "M5": {
+    "resource": 21161207,
+    "demand": 1821024,
+    "usage_pct": 8.61,
+    "overflow": 314325
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 1609652,
+    "usage_pct": 7.39,
+    "overflow": 335937
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1156742,
+    "usage_pct": 5.31,
+    "overflow": 179740
+   }
+  },
+  "total_overflow": 1705700,
+  "wirelength_um": 7893764.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t14",
@@ -5450,11 +5596,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 182.37,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 30518,
+   "ff_hold_wns": -2.41,
+   "ff_hold_tns": -84.7,
+   "ff_hold_viol": 69,
+   "ff_hold_endpoints": 30518
+  },
+  "repair_buffers": 34524,
+  "drv": {
+   "violators": 4927
+  },
+  "peak_gb": 12.97,
+  "wall": "31:23.11",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft5",
+    11402
+   ],
+   [
+    "ft4",
+    5317
+   ],
+   [
+    "ft3",
+    3794
+   ],
+   [
+    "ft0",
+    1382
+   ],
+   [
+    "ft2",
+    1006
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   0,
+   1182,
+   919
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 12.7,
+    "p90": 1.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 3.0,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 13,
    "max_hop_um": 360.7,
@@ -5464,8 +5663,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 1705700 (20000 gcells, hot bbox 61.4% of outline); skeleton FF hold WNS -2.4 ps (69 endpoints)",
+   "hot_frac": 0.6139
   }
  },
  "ot_s81sl_leaf__t15": {
@@ -6134,15 +6334,61 @@
   }
  },
  "ot_s81sl_leaf__t22": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25202598,
+    "demand": 1328057,
+    "usage_pct": 5.27,
+    "overflow": 4214
+   },
+   "M3": {
+    "resource": 28210711,
+    "demand": 4377731,
+    "usage_pct": 15.52,
+    "overflow": 110985
+   },
+   "M4": {
+    "resource": 21165353,
+    "demand": 1127224,
+    "usage_pct": 5.33,
+    "overflow": 8297
+   },
+   "M5": {
+    "resource": 21158126,
+    "demand": 2629536,
+    "usage_pct": 12.43,
+    "overflow": 217207
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 712979,
+    "usage_pct": 3.27,
+    "overflow": 22122
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1532573,
+    "usage_pct": 7.04,
+    "overflow": 145504
+   }
+  },
+  "total_overflow": 508329,
+  "wirelength_um": 6861218.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t22",
@@ -6160,11 +6406,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 213.42,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 27002,
+   "ff_hold_wns": -2.31,
+   "ff_hold_tns": -100.3,
+   "ff_hold_viol": 78,
+   "ff_hold_endpoints": 27002
+  },
+  "repair_buffers": 31024,
+  "drv": {
+   "violators": 3067
+  },
+  "peak_gb": 12.61,
+  "wall": "23:28.10",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft1",
+    4296
+   ],
+   [
+    "ft4",
+    458
+   ],
+   [
+    "ft2",
+    454
+   ],
+   [
+    "ft7",
+    4
+   ],
+   [
+    "ft5",
+    3
+   ]
+  ],
+  "hot_bbox_um": [
+   471,
+   311,
+   654,
+   1184
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 4.6,
+    "p90": 1.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.7,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 10,
    "max_hop_um": 368.6,
@@ -6174,20 +6473,67 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 508329 (20000 gcells, hot bbox 9.1% of outline); skeleton FF hold WNS -2.3 ps (78 endpoints)",
+   "hot_frac": 0.0905
   }
  },
  "ot_s81sl_leaf__t23": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25194668,
+    "demand": 2683622,
+    "usage_pct": 10.65,
+    "overflow": 41927
+   },
+   "M3": {
+    "resource": 28212298,
+    "demand": 5063097,
+    "usage_pct": 17.95,
+    "overflow": 5005
+   },
+   "M4": {
+    "resource": 21159067,
+    "demand": 1881867,
+    "usage_pct": 8.89,
+    "overflow": 34543
+   },
+   "M5": {
+    "resource": 21159317,
+    "demand": 2372416,
+    "usage_pct": 11.21,
+    "overflow": 7975
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 1071997,
+    "usage_pct": 4.92,
+    "overflow": 54623
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 941837,
+    "usage_pct": 4.32,
+    "overflow": 18014
+   }
+  },
+  "total_overflow": 162087,
+  "wirelength_um": 8174515.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t23",
@@ -6205,11 +6551,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 199.17,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 31641,
+   "ff_hold_wns": -2.35,
+   "ff_hold_tns": -96.7,
+   "ff_hold_viol": 80,
+   "ff_hold_endpoints": 31641
+  },
+  "repair_buffers": 35711,
+  "drv": {
+   "violators": 5406
+  },
+  "peak_gb": 12.87,
+  "wall": "29:12.65",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft6",
+    13540
+   ],
+   [
+    "ft5",
+    1958
+   ],
+   [
+    "ft0",
+    1160
+   ],
+   [
+    "ft7",
+    933
+   ],
+   [
+    "ft2",
+    21
+   ]
+  ],
+  "hot_bbox_um": [
+   27,
+   0,
+   1324,
+   650
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 8.8,
+    "p90": 1.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 7.0,
+    "p90": 1.7,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 11,
    "max_hop_um": 363.6,
@@ -6219,8 +6618,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 162087 (20000 gcells, hot bbox 47.6% of outline); skeleton FF hold WNS -2.4 ps (80 endpoints)",
+   "hot_frac": 0.4762
   }
  },
  "ot_s81sl_leaf__t24": {
@@ -6760,9 +7160,52 @@
   }
  },
  "ot_s81sl_leaf__t28": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25191028,
+    "demand": 4033141,
+    "usage_pct": 16.01,
+    "overflow": 1532434
+   },
+   "M3": {
+    "resource": 28217804,
+    "demand": 4970629,
+    "usage_pct": 17.62,
+    "overflow": 1419635
+   },
+   "M4": {
+    "resource": 21164055,
+    "demand": 2881490,
+    "usage_pct": 13.62,
+    "overflow": 1044609
+   },
+   "M5": {
+    "resource": 21164156,
+    "demand": 2622987,
+    "usage_pct": 12.39,
+    "overflow": 916329
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 2989131,
+    "usage_pct": 13.72,
+    "overflow": 1322064
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 2020100,
+    "usage_pct": 9.27,
+    "overflow": 330544
+   }
+  },
+  "total_overflow": 6565615,
+  "wirelength_um": 11946710.0,
   "errors": [],
   "pin_access_warnings": 0,
   "pin_access_no_ap": {},
@@ -6787,10 +7230,63 @@
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
   "exit": "NOT RUN",
-  "repair_buffers": null,
+  "sta": {
+   "tt_setup_wns": 93.16,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 41849,
+   "ff_hold_wns": 68.25,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 41849
+  },
+  "repair_buffers": 46132,
+  "drv": {
+   "violators": 14695
+  },
   "peak_gb": null,
   "wall": null,
-  "hot_gcells": 0,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft4",
+    26192
+   ],
+   [
+    "ft5",
+    20134
+   ],
+   [
+    "ft2",
+    4830
+   ],
+   [
+    "ft3",
+    3532
+   ],
+   [
+    "ft0",
+    1884
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   0,
+   1235,
+   1083
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 13.7,
+    "p90": 1.9,
+    "over50": 0
+   },
+   "bf": {
+    "max": 10.8,
+    "p90": 4.8,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 13,
    "max_hop_um": 365.4,
@@ -6922,9 +7418,52 @@
   }
  },
  "ot_s81sl_leaf__t3": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25184997,
+    "demand": 4102408,
+    "usage_pct": 16.29,
+    "overflow": 279786
+   },
+   "M3": {
+    "resource": 28213289,
+    "demand": 6349913,
+    "usage_pct": 22.51,
+    "overflow": 13734
+   },
+   "M4": {
+    "resource": 21158182,
+    "demand": 2765685,
+    "usage_pct": 13.07,
+    "overflow": 181119
+   },
+   "M5": {
+    "resource": 21159092,
+    "demand": 3109224,
+    "usage_pct": 14.69,
+    "overflow": 16760
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 2153451,
+    "usage_pct": 9.89,
+    "overflow": 162914
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1720714,
+    "usage_pct": 7.9,
+    "overflow": 36531
+   }
+  },
+  "total_overflow": 690844,
+  "wirelength_um": 11864394.0,
   "errors": [],
   "pin_access_warnings": 0,
   "pin_access_no_ap": {},
@@ -6949,10 +7488,63 @@
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
   "exit": "NOT RUN",
-  "repair_buffers": null,
+  "sta": {
+   "tt_setup_wns": 197.21,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 43682,
+   "ff_hold_wns": -2.46,
+   "ff_hold_tns": -101.3,
+   "ff_hold_viol": 81,
+   "ff_hold_endpoints": 43682
+  },
+  "repair_buffers": 50334,
+  "drv": {
+   "violators": 8003
+  },
   "peak_gb": null,
   "wall": null,
-  "hot_gcells": 0,
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft0",
+    4843
+   ],
+   [
+    "ft1",
+    1916
+   ],
+   [
+    "ft9",
+    1905
+   ],
+   [
+    "ft8",
+    1589
+   ],
+   [
+    "ft4",
+    446
+   ]
+  ],
+  "hot_bbox_um": [
+   124,
+   0,
+   1441,
+   880
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 8.0,
+    "p90": 0.8,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.2,
+    "p90": 1.7,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 16,
    "max_hop_um": 360.9,
@@ -9272,15 +9864,61 @@
   }
  },
  "ot_s81sl_leaf__t46": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25192742,
+    "demand": 2104915,
+    "usage_pct": 8.36,
+    "overflow": 35367
+   },
+   "M3": {
+    "resource": 28206731,
+    "demand": 5837743,
+    "usage_pct": 20.7,
+    "overflow": 118947
+   },
+   "M4": {
+    "resource": 21160199,
+    "demand": 1623686,
+    "usage_pct": 7.67,
+    "overflow": 32154
+   },
+   "M5": {
+    "resource": 21154125,
+    "demand": 2734935,
+    "usage_pct": 12.93,
+    "overflow": 120226
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 1125539,
+    "usage_pct": 5.17,
+    "overflow": 61365
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1323144,
+    "usage_pct": 6.07,
+    "overflow": 90375
+   }
+  },
+  "total_overflow": 458434,
+  "wirelength_um": 8651034.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t46",
@@ -9298,11 +9936,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 131.97,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 32592,
+   "ff_hold_wns": -2.42,
+   "ff_hold_tns": -89.7,
+   "ff_hold_viol": 80,
+   "ff_hold_endpoints": 32592
+  },
+  "repair_buffers": 39680,
+  "drv": {
+   "violators": 4595
+  },
+  "peak_gb": 13.03,
+  "wall": "32:46.58",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft2",
+    10730
+   ],
+   [
+    "ft4",
+    4346
+   ],
+   [
+    "ft3",
+    1314
+   ],
+   [
+    "ft6",
+    91
+   ],
+   [
+    "ft5",
+    19
+   ]
+  ],
+  "hot_bbox_um": [
+   326,
+   0,
+   661,
+   1226
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 11.6,
+    "p90": 1.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.7,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 11,
    "max_hop_um": 375.4,
@@ -9312,8 +10003,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 458434 (20000 gcells, hot bbox 23.3% of outline); skeleton FF hold WNS -2.4 ps (80 endpoints)",
+   "hot_frac": 0.2327
   }
  },
  "ot_s81sl_leaf__t47": {
@@ -10530,15 +11222,61 @@
   }
  },
  "ot_s81sl_leaf__t56": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25189657,
+    "demand": 3881530,
+    "usage_pct": 15.41,
+    "overflow": 1336
+   },
+   "M3": {
+    "resource": 28212065,
+    "demand": 4939434,
+    "usage_pct": 17.51,
+    "overflow": 876
+   },
+   "M4": {
+    "resource": 21161261,
+    "demand": 3230205,
+    "usage_pct": 15.26,
+    "overflow": 2014
+   },
+   "M5": {
+    "resource": 21158792,
+    "demand": 2475598,
+    "usage_pct": 11.7,
+    "overflow": 740
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 1433967,
+    "usage_pct": 6.58,
+    "overflow": 1942
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 634220,
+    "usage_pct": 2.91,
+    "overflow": 531
+   }
+  },
+  "total_overflow": 7439,
+  "wirelength_um": 9619175.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t56",
@@ -10556,11 +11294,60 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 182.42,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 37441,
+   "ff_hold_wns": -2.07,
+   "ff_hold_tns": -91.0,
+   "ff_hold_viol": 71,
+   "ff_hold_endpoints": 37441
+  },
+  "repair_buffers": 43186,
+  "drv": {
+   "violators": 5673
+  },
+  "peak_gb": 13.2,
+  "wall": "29:14.86",
+  "hot_gcells": 5306,
+  "hot_slots": [
+   [
+    "ft1",
+    1466
+   ],
+   [
+    "ft4",
+    264
+   ],
+   [
+    "ft0",
+    3
+   ],
+   [
+    "ft6",
+    1
+   ]
+  ],
+  "hot_bbox_um": [
+   52,
+   21,
+   1341,
+   1158
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 10.1,
+    "p90": 0.7,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.5,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 16,
    "max_hop_um": 363.5,
@@ -10570,20 +11357,67 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 7439 (5306 gcells, hot bbox 82.9% of outline); skeleton FF hold WNS -2.1 ps (71 endpoints)",
+   "hot_frac": 0.8286
   }
  },
  "ot_s81sl_leaf__t57": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25195718,
+    "demand": 1652031,
+    "usage_pct": 6.56,
+    "overflow": 17319
+   },
+   "M3": {
+    "resource": 28206731,
+    "demand": 5702692,
+    "usage_pct": 20.22,
+    "overflow": 127270
+   },
+   "M4": {
+    "resource": 21160199,
+    "demand": 1301721,
+    "usage_pct": 6.15,
+    "overflow": 19379
+   },
+   "M5": {
+    "resource": 21154125,
+    "demand": 2348475,
+    "usage_pct": 11.1,
+    "overflow": 119103
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 912004,
+    "usage_pct": 4.19,
+    "overflow": 40116
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1291019,
+    "usage_pct": 5.93,
+    "overflow": 87172
+   }
+  },
+  "total_overflow": 410359,
+  "wirelength_um": 7735969.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t57",
@@ -10601,11 +11435,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 103.71,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 28701,
+   "ff_hold_wns": -2.42,
+   "ff_hold_tns": -89.3,
+   "ff_hold_viol": 80,
+   "ff_hold_endpoints": 28701
+  },
+  "repair_buffers": 32862,
+  "drv": {
+   "violators": 5214
+  },
+  "peak_gb": 12.82,
+  "wall": "27:33.26",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft2",
+    14446
+   ],
+   [
+    "ft3",
+    1407
+   ],
+   [
+    "ft8",
+    685
+   ],
+   [
+    "ft9",
+    609
+   ],
+   [
+    "ft1",
+    3
+   ]
+  ],
+  "hot_bbox_um": [
+   326,
+   586,
+   673,
+   1226
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 7.4,
+    "p90": 1.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.2,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 10,
    "max_hop_um": 369.7,
@@ -10615,20 +11502,67 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 410359 (20000 gcells, hot bbox 12.6% of outline); skeleton FF hold WNS -2.4 ps (80 endpoints)",
+   "hot_frac": 0.1257
   }
  },
  "ot_s81sl_leaf__t58": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25194775,
+    "demand": 2988694,
+    "usage_pct": 11.86,
+    "overflow": 110924
+   },
+   "M3": {
+    "resource": 28214526,
+    "demand": 4958170,
+    "usage_pct": 17.57,
+    "overflow": 1479
+   },
+   "M4": {
+    "resource": 21161870,
+    "demand": 2186465,
+    "usage_pct": 10.33,
+    "overflow": 78941
+   },
+   "M5": {
+    "resource": 21159961,
+    "demand": 2103176,
+    "usage_pct": 9.94,
+    "overflow": 4474
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 1406743,
+    "usage_pct": 6.46,
+    "overflow": 73906
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 695404,
+    "usage_pct": 3.19,
+    "overflow": 1778
+   }
+  },
+  "total_overflow": 271502,
+  "wirelength_um": 8398412.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t58",
@@ -10646,11 +11580,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 173.29,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 31320,
+   "ff_hold_wns": 61.6,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 31320
+  },
+  "repair_buffers": 35518,
+  "drv": {
+   "violators": 6284
+  },
+  "peak_gb": 12.91,
+  "wall": "30:36.74",
+  "hot_gcells": 14340,
+  "hot_slots": [
+   [
+    "ft6",
+    5499
+   ],
+   [
+    "ft7",
+    5123
+   ],
+   [
+    "ft0",
+    3226
+   ],
+   [
+    "ft2",
+    39
+   ],
+   [
+    "ft4",
+    7
+   ]
+  ],
+  "hot_bbox_um": [
+   115,
+   0,
+   1367,
+   657
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 11.7,
+    "p90": 1.2,
+    "over50": 0
+   },
+   "bf": {
+    "max": 9.4,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 14,
    "max_hop_um": 371.0,
@@ -10660,8 +11647,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 271502 (14340 gcells, hot bbox 46.5% of outline)",
+   "hot_frac": 0.4649
   }
  },
  "ot_s81sl_leaf__t59": {
@@ -10782,15 +11770,61 @@
   }
  },
  "ot_s81sl_leaf__t6": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25197806,
+    "demand": 3419897,
+    "usage_pct": 13.57,
+    "overflow": 15434
+   },
+   "M3": {
+    "resource": 28207848,
+    "demand": 3213465,
+    "usage_pct": 11.39,
+    "overflow": 4780
+   },
+   "M4": {
+    "resource": 21160716,
+    "demand": 2784647,
+    "usage_pct": 13.16,
+    "overflow": 15729
+   },
+   "M5": {
+    "resource": 21155970,
+    "demand": 1602342,
+    "usage_pct": 7.57,
+    "overflow": 8093
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 1204338,
+    "usage_pct": 5.53,
+    "overflow": 14561
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 606272,
+    "usage_pct": 2.78,
+    "overflow": 6096
+   }
+  },
+  "total_overflow": 64693,
+  "wirelength_um": 7466718.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t6",
@@ -10808,11 +11842,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 113.0,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 28176,
+   "ff_hold_wns": -2.28,
+   "ff_hold_tns": -54.6,
+   "ff_hold_viol": 44,
+   "ff_hold_endpoints": 28176
+  },
+  "repair_buffers": 34479,
+  "drv": {
+   "violators": 4586
+  },
+  "peak_gb": 12.67,
+  "wall": "26:44.81",
+  "hot_gcells": 17142,
+  "hot_slots": [
+   [
+    "ft4",
+    3682
+   ],
+   [
+    "ft1",
+    2585
+   ],
+   [
+    "ft5",
+    181
+   ],
+   [
+    "ft3",
+    3
+   ],
+   [
+    "ft0",
+    3
+   ]
+  ],
+  "hot_bbox_um": [
+   2,
+   0,
+   1442,
+   905
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 8.7,
+    "p90": 0.7,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.4,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 12,
    "max_hop_um": 360.3,
@@ -10822,8 +11909,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 64693 (17142 gcells, hot bbox 73.7% of outline); skeleton FF hold WNS -2.3 ps (44 endpoints)",
+   "hot_frac": 0.737
   }
  },
  "ot_s81sl_leaf__t60": {
@@ -10972,15 +12060,61 @@
   }
  },
  "ot_s81sl_leaf__t61": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25192269,
+    "demand": 1997925,
+    "usage_pct": 7.93,
+    "overflow": 38059
+   },
+   "M3": {
+    "resource": 28209104,
+    "demand": 4314737,
+    "usage_pct": 15.3,
+    "overflow": 98643
+   },
+   "M4": {
+    "resource": 21158160,
+    "demand": 1654136,
+    "usage_pct": 7.82,
+    "overflow": 55399
+   },
+   "M5": {
+    "resource": 21155950,
+    "demand": 2438700,
+    "usage_pct": 11.53,
+    "overflow": 137206
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 1368158,
+    "usage_pct": 6.28,
+    "overflow": 128199
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1588557,
+    "usage_pct": 7.29,
+    "overflow": 122255
+   }
+  },
+  "total_overflow": 579761,
+  "wirelength_um": 7867740.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t61",
@@ -10998,11 +12132,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 149.94,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 27916,
+   "ff_hold_wns": -2.33,
+   "ff_hold_tns": -81.5,
+   "ff_hold_viol": 68,
+   "ff_hold_endpoints": 27916
+  },
+  "repair_buffers": 33271,
+  "drv": {
+   "violators": 6959
+  },
+  "peak_gb": 12.82,
+  "wall": "21:10.03",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft2",
+    3786
+   ],
+   [
+    "ft1",
+    1710
+   ],
+   [
+    "ft6",
+    1149
+   ],
+   [
+    "ft8",
+    144
+   ],
+   [
+    "ft9",
+    27
+   ]
+  ],
+  "hot_bbox_um": [
+   125,
+   277,
+   553,
+   1182
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 8.5,
+    "p90": 0.9,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.2,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 10,
    "max_hop_um": 366.0,
@@ -11012,20 +12199,67 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 579761 (20000 gcells, hot bbox 22.0% of outline); skeleton FF hold WNS -2.3 ps (68 endpoints)",
+   "hot_frac": 0.2197
   }
  },
  "ot_s81sl_leaf__t62": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25186547,
+    "demand": 4339994,
+    "usage_pct": 17.23,
+    "overflow": 264655
+   },
+   "M3": {
+    "resource": 28212298,
+    "demand": 6106211,
+    "usage_pct": 21.64,
+    "overflow": 28534
+   },
+   "M4": {
+    "resource": 21159067,
+    "demand": 2988358,
+    "usage_pct": 14.12,
+    "overflow": 168134
+   },
+   "M5": {
+    "resource": 21159317,
+    "demand": 3073580,
+    "usage_pct": 14.53,
+    "overflow": 32270
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 1906362,
+    "usage_pct": 8.75,
+    "overflow": 273899
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1308633,
+    "usage_pct": 6.01,
+    "overflow": 64569
+   }
+  },
+  "total_overflow": 832061,
+  "wirelength_um": 11553927.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t62",
@@ -11043,11 +12277,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 86.06,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 42850,
+   "ff_hold_wns": -2.26,
+   "ff_hold_tns": -77.3,
+   "ff_hold_viol": 60,
+   "ff_hold_endpoints": 42850
+  },
+  "repair_buffers": 50853,
+  "drv": {
+   "violators": 7244
+  },
+  "peak_gb": 13.74,
+  "wall": "30:58.34",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft7",
+    6879
+   ],
+   [
+    "ft1",
+    4572
+   ],
+   [
+    "ft0",
+    1210
+   ],
+   [
+    "ft6",
+    1121
+   ],
+   [
+    "ft8",
+    364
+   ]
+  ],
+  "hot_bbox_um": [
+   2,
+   0,
+   1440,
+   650
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 10.1,
+    "p90": 1.0,
+    "over50": 0
+   },
+   "bf": {
+    "max": 7.0,
+    "p90": 1.7,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 15,
    "max_hop_um": 363.6,
@@ -11057,8 +12344,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 832061 (20000 gcells, hot bbox 52.8% of outline); skeleton FF hold WNS -2.3 ps (60 endpoints)",
+   "hot_frac": 0.5279
   }
  },
  "ot_s81sl_leaf__t63": {
@@ -11369,15 +12657,61 @@
   }
  },
  "ot_s81sl_leaf__t66": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25194810,
+    "demand": 1776956,
+    "usage_pct": 7.05,
+    "overflow": 11936
+   },
+   "M3": {
+    "resource": 28206731,
+    "demand": 5515965,
+    "usage_pct": 19.56,
+    "overflow": 92143
+   },
+   "M4": {
+    "resource": 21160199,
+    "demand": 1476892,
+    "usage_pct": 6.98,
+    "overflow": 10588
+   },
+   "M5": {
+    "resource": 21154125,
+    "demand": 2567261,
+    "usage_pct": 12.14,
+    "overflow": 81274
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 1043372,
+    "usage_pct": 4.79,
+    "overflow": 36389
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1281788,
+    "usage_pct": 5.88,
+    "overflow": 62097
+   }
+  },
+  "total_overflow": 294427,
+  "wirelength_um": 8001902.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t66",
@@ -11395,11 +12729,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 112.98,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 29747,
+   "ff_hold_wns": -2.42,
+   "ff_hold_tns": -89.3,
+   "ff_hold_viol": 80,
+   "ff_hold_endpoints": 29747
+  },
+  "repair_buffers": 35812,
+  "drv": {
+   "violators": 5077
+  },
+  "peak_gb": 12.86,
+  "wall": "28:38.27",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft2",
+    6086
+   ],
+   [
+    "ft10",
+    3007
+   ],
+   [
+    "ft3",
+    637
+   ],
+   [
+    "ft4",
+    113
+   ],
+   [
+    "ft5",
+    3
+   ]
+  ],
+  "hot_bbox_um": [
+   319,
+   587,
+   673,
+   1226
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 8.7,
+    "p90": 1.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.2,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 11,
    "max_hop_um": 374.6,
@@ -11409,20 +12796,67 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 294427 (20000 gcells, hot bbox 12.8% of outline); skeleton FF hold WNS -2.4 ps (80 endpoints)",
+   "hot_frac": 0.1283
   }
  },
  "ot_s81sl_leaf__t67": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25186099,
+    "demand": 4142262,
+    "usage_pct": 16.45,
+    "overflow": 169069
+   },
+   "M3": {
+    "resource": 28214526,
+    "demand": 6416312,
+    "usage_pct": 22.74,
+    "overflow": 10315
+   },
+   "M4": {
+    "resource": 21161870,
+    "demand": 3042020,
+    "usage_pct": 14.38,
+    "overflow": 114427
+   },
+   "M5": {
+    "resource": 21159961,
+    "demand": 3041018,
+    "usage_pct": 14.37,
+    "overflow": 19620
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 2072320,
+    "usage_pct": 9.51,
+    "overflow": 98432
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1065395,
+    "usage_pct": 4.89,
+    "overflow": 24124
+   }
+  },
+  "total_overflow": 435987,
+  "wirelength_um": 11590064.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t67",
@@ -11440,11 +12874,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 213.42,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 42916,
+   "ff_hold_wns": -2.28,
+   "ff_hold_tns": -71.7,
+   "ff_hold_viol": 60,
+   "ff_hold_endpoints": 42916
+  },
+  "repair_buffers": 51138,
+  "drv": {
+   "violators": 8234
+  },
+  "peak_gb": 13.66,
+  "wall": "32:46.51",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft0",
+    6702
+   ],
+   [
+    "ft9",
+    3356
+   ],
+   [
+    "ft1",
+    2575
+   ],
+   [
+    "ft8",
+    2046
+   ],
+   [
+    "ft6",
+    1823
+   ]
+  ],
+  "hot_bbox_um": [
+   218,
+   0,
+   1442,
+   969
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 11.5,
+    "p90": 0.9,
+    "over50": 0
+   },
+   "bf": {
+    "max": 7.8,
+    "p90": 1.9,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 16,
    "max_hop_um": 362.3,
@@ -11454,8 +12941,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 435987 (20000 gcells, hot bbox 67.1% of outline); skeleton FF hold WNS -2.3 ps (60 endpoints)",
+   "hot_frac": 0.6706
   }
  },
  "ot_s81sl_leaf__t68": {
@@ -12173,15 +13661,61 @@
   }
  },
  "ot_s81sl_leaf__t73": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25203347,
+    "demand": 1154146,
+    "usage_pct": 4.58,
+    "overflow": 11969
+   },
+   "M3": {
+    "resource": 28214274,
+    "demand": 4204689,
+    "usage_pct": 14.9,
+    "overflow": 80684
+   },
+   "M4": {
+    "resource": 21163904,
+    "demand": 932235,
+    "usage_pct": 4.4,
+    "overflow": 22237
+   },
+   "M5": {
+    "resource": 21160798,
+    "demand": 2776135,
+    "usage_pct": 13.12,
+    "overflow": 149067
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 716759,
+    "usage_pct": 3.29,
+    "overflow": 31673
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1531463,
+    "usage_pct": 7.03,
+    "overflow": 123360
+   }
+  },
+  "total_overflow": 418990,
+  "wirelength_um": 6599377.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t73",
@@ -12199,11 +13733,60 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 188.46,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 26143,
+   "ff_hold_wns": -2.28,
+   "ff_hold_tns": -109.3,
+   "ff_hold_viol": 86,
+   "ff_hold_endpoints": 26143
+  },
+  "repair_buffers": 28655,
+  "drv": {
+   "violators": 4483
+  },
+  "peak_gb": 12.55,
+  "wall": "20:45.28",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft8",
+    3272
+   ],
+   [
+    "ft6",
+    542
+   ],
+   [
+    "ft9",
+    228
+   ],
+   [
+    "ft7",
+    29
+   ]
+  ],
+  "hot_bbox_um": [
+   95,
+   7,
+   632,
+   909
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 10.7,
+    "p90": 1.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.7,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 10,
    "max_hop_um": 372.0,
@@ -12213,8 +13796,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 418990 (20000 gcells, hot bbox 27.4% of outline); skeleton FF hold WNS -2.3 ps (86 endpoints)",
+   "hot_frac": 0.274
   }
  },
  "ot_s81sl_leaf__t74": {
@@ -12441,15 +14025,61 @@
   }
  },
  "ot_s81sl_leaf__t9": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 25203336,
+    "demand": 1135312,
+    "usage_pct": 4.5,
+    "overflow": 11166
+   },
+   "M3": {
+    "resource": 28214274,
+    "demand": 4171272,
+    "usage_pct": 14.78,
+    "overflow": 78928
+   },
+   "M4": {
+    "resource": 21163904,
+    "demand": 938055,
+    "usage_pct": 4.43,
+    "overflow": 22260
+   },
+   "M5": {
+    "resource": 21160798,
+    "demand": 2771502,
+    "usage_pct": 13.1,
+    "overflow": 151633
+   },
+   "M6": {
+    "resource": 21783300,
+    "demand": 728508,
+    "usage_pct": 3.34,
+    "overflow": 32990
+   },
+   "M7": {
+    "resource": 21781026,
+    "demand": 1562340,
+    "usage_pct": 7.17,
+    "overflow": 123834
+   }
+  },
+  "total_overflow": 420811,
+  "wirelength_um": 6593929.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "ot_s81sl_leaf__t9",
@@ -12467,11 +14097,60 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 27,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 150.92,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 26143,
+   "ff_hold_wns": -2.28,
+   "ff_hold_tns": -109.3,
+   "ff_hold_viol": 86,
+   "ff_hold_endpoints": 26143
+  },
+  "repair_buffers": 28711,
+  "drv": {
+   "violators": 4401
+  },
+  "peak_gb": 12.57,
+  "wall": "20:37.82",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft8",
+    3830
+   ],
+   [
+    "ft6",
+    559
+   ],
+   [
+    "ft9",
+    196
+   ],
+   [
+    "ft7",
+    30
+   ]
+  ],
+  "hot_bbox_um": [
+   95,
+   0,
+   623,
+   909
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 8.6,
+    "p90": 1.1,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.7,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 10,
    "max_hop_um": 364.7,
@@ -12481,8 +14160,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 420811 (20000 gcells, hot bbox 27.2% of outline); skeleton FF hold WNS -2.3 ps (86 endpoints)",
+   "hot_frac": 0.2718
   }
  },
  "seqhost__t1": {
@@ -18125,15 +19805,61 @@
   }
  },
  "svc_hi_dsdv_svc_rs__t1": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 15903357,
+    "demand": 2079035,
+    "usage_pct": 13.07,
+    "overflow": 267571
+   },
+   "M3": {
+    "resource": 17858589,
+    "demand": 5625296,
+    "usage_pct": 31.5,
+    "overflow": 3191655
+   },
+   "M4": {
+    "resource": 13368952,
+    "demand": 1541369,
+    "usage_pct": 11.53,
+    "overflow": 187270
+   },
+   "M5": {
+    "resource": 13390398,
+    "demand": 4242371,
+    "usage_pct": 31.68,
+    "overflow": 2577029
+   },
+   "M6": {
+    "resource": 43566600,
+    "demand": 1605973,
+    "usage_pct": 3.69,
+    "overflow": 248195
+   },
+   "M7": {
+    "resource": 43572178,
+    "demand": 2445872,
+    "usage_pct": 5.61,
+    "overflow": 591471
+   }
+  },
+  "total_overflow": 7063191,
+  "wirelength_um": 10795509.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "svc_hi_dsdv_svc_rs__t1",
@@ -18151,11 +19877,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 72,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 67.86,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 41622,
+   "ff_hold_wns": -2.31,
+   "ff_hold_tns": -229.8,
+   "ff_hold_viol": 196,
+   "ff_hold_endpoints": 41622
+  },
+  "repair_buffers": 46171,
+  "drv": {
+   "violators": 4318
+  },
+  "peak_gb": 25.68,
+  "wall": "30:22.13",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft1",
+    14531
+   ],
+   [
+    "ft0",
+    6373
+   ],
+   [
+    "ft2",
+    960
+   ],
+   [
+    "ft9",
+    290
+   ],
+   [
+    "ft7",
+    231
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   106,
+   420,
+   2453
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 12.0,
+    "p90": 1.3,
+    "over50": 0
+   },
+   "bf": {
+    "max": 12.2,
+    "p90": 1.4,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 10,
    "max_hop_um": 368.1,
@@ -18165,8 +19944,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 7063191 (20000 gcells, hot bbox 27.9% of outline); skeleton FF hold WNS -2.3 ps (196 endpoints)",
+   "hot_frac": 0.2789
   }
  },
  "svc_hi_dsdv_svc_rs__t2": {
@@ -18689,15 +20469,61 @@
   }
  },
  "svc_hi_dsdv_svc_rs__t6": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 15900709,
+    "demand": 2187130,
+    "usage_pct": 13.75,
+    "overflow": 166511
+   },
+   "M3": {
+    "resource": 17858589,
+    "demand": 5163393,
+    "usage_pct": 28.91,
+    "overflow": 2547085
+   },
+   "M4": {
+    "resource": 13368952,
+    "demand": 1308763,
+    "usage_pct": 9.79,
+    "overflow": 132072
+   },
+   "M5": {
+    "resource": 13390398,
+    "demand": 3982232,
+    "usage_pct": 29.74,
+    "overflow": 2338708
+   },
+   "M6": {
+    "resource": 43566600,
+    "demand": 1396561,
+    "usage_pct": 3.21,
+    "overflow": 176543
+   },
+   "M7": {
+    "resource": 43572178,
+    "demand": 2295538,
+    "usage_pct": 5.27,
+    "overflow": 566182
+   }
+  },
+  "total_overflow": 5927101,
+  "wirelength_um": 10081354.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "svc_hi_dsdv_svc_rs__t6",
@@ -18715,11 +20541,64 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 72,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 59.65,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 44894,
+   "ff_hold_wns": -2.31,
+   "ff_hold_tns": -229.8,
+   "ff_hold_viol": 196,
+   "ff_hold_endpoints": 44894
+  },
+  "repair_buffers": 43803,
+  "drv": {
+   "violators": 3335
+  },
+  "peak_gb": 25.47,
+  "wall": "30:19.13",
+  "hot_gcells": 20000,
+  "hot_slots": [
+   [
+    "ft1",
+    9311
+   ],
+   [
+    "ft2",
+    8422
+   ],
+   [
+    "ft7",
+    558
+   ],
+   [
+    "ft4",
+    445
+   ],
+   [
+    "ft9",
+    407
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   134,
+   365,
+   2453
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 18.7,
+    "p90": 0.7,
+    "over50": 0
+   },
+   "bf": {
+    "max": 8.0,
+    "p90": 1.6,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 10,
    "max_hop_um": 372.0,
@@ -18729,8 +20608,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 5927101 (20000 gcells, hot bbox 23.9% of outline); skeleton FF hold WNS -2.3 ps (196 endpoints)",
+   "hot_frac": 0.239
   }
  },
  "svc_lo_dsdv_svc_rs__t1": {
@@ -19294,15 +21174,61 @@
   }
  },
  "svc_lo_dsdv_svc_rs__t6": {
-  "layers": {},
-  "total_overflow": null,
-  "wirelength_um": null,
+  "layers": {
+   "M1": {
+    "resource": 0,
+    "demand": 0,
+    "usage_pct": 0.0,
+    "overflow": 0
+   },
+   "M2": {
+    "resource": 15915853,
+    "demand": 442830,
+    "usage_pct": 2.78,
+    "overflow": 12
+   },
+   "M3": {
+    "resource": 17858589,
+    "demand": 1720665,
+    "usage_pct": 9.63,
+    "overflow": 1957
+   },
+   "M4": {
+    "resource": 13368952,
+    "demand": 339243,
+    "usage_pct": 2.54,
+    "overflow": 24
+   },
+   "M5": {
+    "resource": 13390398,
+    "demand": 1315380,
+    "usage_pct": 9.82,
+    "overflow": 1190
+   },
+   "M6": {
+    "resource": 43566600,
+    "demand": 271546,
+    "usage_pct": 0.62,
+    "overflow": 10
+   },
+   "M7": {
+    "resource": 43572178,
+    "demand": 1200852,
+    "usage_pct": 2.76,
+    "overflow": 1022
+   }
+  },
+  "total_overflow": 4215,
+  "wirelength_um": 3105752.0,
   "errors": [],
   "pin_access_warnings": 0,
-  "pin_access_no_ap": {},
-  "pin_access_done": false,
+  "pin_access_no_ap": {
+   "stdCellPin": 0,
+   "macro": 0
+  },
+  "pin_access_done": true,
   "reach": {},
-  "done": false,
+  "done": true,
   "kind": "proto-skeleton",
   "die": "s81",
   "type": "svc_lo_dsdv_svc_rs__t6",
@@ -19320,11 +21246,60 @@
   "period_ps": 833.0,
   "io_delay_ps": 166.60000000000002,
   "core_blockages": 72,
-  "exit": "NOT RUN",
-  "repair_buffers": null,
-  "peak_gb": null,
-  "wall": null,
-  "hot_gcells": 0,
+  "exit": "EXIT 0",
+  "sta": {
+   "tt_setup_wns": 154.19,
+   "tt_setup_tns": 0,
+   "tt_setup_viol": 0,
+   "tt_setup_endpoints": 23684,
+   "ff_hold_wns": 32.58,
+   "ff_hold_tns": 0,
+   "ff_hold_viol": 0,
+   "ff_hold_endpoints": 23684
+  },
+  "repair_buffers": 14324,
+  "drv": {
+   "violators": 1435
+  },
+  "peak_gb": 23.1,
+  "wall": "16:58.94",
+  "hot_gcells": 4052,
+  "hot_slots": [
+   [
+    "ft1",
+    384
+   ],
+   [
+    "ft0",
+    225
+   ],
+   [
+    "ft2",
+    221
+   ],
+   [
+    "ft3",
+    155
+   ]
+  ],
+  "hot_bbox_um": [
+   0,
+   389,
+   52,
+   2411
+  ],
+  "displacement_um": {
+   "st": {
+    "max": 6.2,
+    "p90": 0.7,
+    "over50": 0
+   },
+   "bf": {
+    "max": 2.2,
+    "p90": 1.3,
+    "over50": 0
+   }
+  },
   "ft_hops": {
    "slots": 4,
    "max_hop_um": 354.6,
@@ -19334,8 +21309,9 @@
    "st_in_core_slots": {}
   },
   "classify": {
-   "cls": "NOT RUN",
-   "why": "exit NOT RUN"
+   "cls": "STRUCTURAL",
+   "why": "GRT overflow 4215 (4052 gcells, hot bbox 3.0% of outline)",
+   "hot_frac": 0.03
   }
  },
  "svc_lo_dsdv_svc_rs__t7": {
