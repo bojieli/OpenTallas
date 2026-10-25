@@ -34,6 +34,9 @@ partial -- dv_layer_record never counts a partial replay as a layer measurement)
        selects the checked bits (data the cut cannot reproduce -- engine values without the HBM image, fixture rows --
        is masked and named in the event's data_masked); a consumer cut is driven with the full value.  valid_bit names
        the lane's valid bit: the strict check counts extra words on it only (data lanes may hold stale bits).
+       `width` (TOK-DS-GAPS 10-24) limits the word to the low bits of its ports (an xfin NX flit is one 276-b lane word
+       on a 1,104-b line port): bundle age and checked bits are those of the lanes under the width.  A CTL event with
+       `payload186` (layer-entry target-5 row writes) is driven as the seq_host line beat of that payload (no template).
   Not cut words: boundary 'offdie' events (beyond the die's elastic link layer: the end-slice RD beats leave through
        the reliable link lanes, bench_vpx checks them) and dir 'internal' events (inside one instance: the vs command
        rides the CTL beat of its calendar row, `ctl_at`) are listed apart and do not make a replay partial.
@@ -251,8 +254,13 @@ class Cut:
 # ================================================================================================= programme -> words
 def ctl_beat(T, ev, die, inst):
     """the template beat as <inst> receives it on its line face (hops / src rewritten as ot_s81sl_rstop delivers it)"""
-    ti = int(ev['payload'].split()[1].rstrip(';'))
-    beat = int(T[ti]['beat'], 16)
+    if ev.get('payload186') is not None:
+        # TOK-DS-GAPS 10-24: an explicit-payload CTL beat (layer-entry target-5 row writes, layer_prog/norm_nx.py): not a
+        # calendar template; the line beat is the seq_host packer's (dv_layer_compile.ctl_line_beat, src 4, hops 0)
+        ti, beat = None, 1 | 4 << 9 | int(ev['payload186'], 16) << 21
+    else:
+        ti = int(ev['payload'].split()[1].rstrip(';'))
+        beat = int(T[ti]['beat'], 16)
     if (beat >> 4) & 0x1F:
         raise ValueError(f'template {ti} carries hops {(beat >> 4) & 0x1F}: only line-default (0) beats are modelled')
     if ev['port'] == 'vi':
@@ -380,6 +388,11 @@ def event_words(e, die):
         if not b:
             raise ValueError(f'event {e["kind"]} {e["tag"]}: no port {e["inst"]}.{p} in the die build')
         pb += b
+    if e.get('width') is not None:
+        # TOK-DS-GAPS 10-24: a word narrower than its port bundle (an xfin NX flit = one 276-b lane word on a 1,104-b
+        # line port) occupies only the low `width` bits: it is whole when ITS lanes land (the receiving rstop reads
+        # nothing above), so the bundle age and the checked bits are those of the lanes under the width
+        pb = pb[:int(e['width'])]
     vb = e.get('valid_bit')
     out = []
     if e['dir'] == 'in':

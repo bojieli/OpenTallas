@@ -961,7 +961,9 @@ def dense_stage_schedule(sched, half):
                 dense_stage=boundary)
 
 
-def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None):
+def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False, svc_owner_epoch=None, dense_stage=None, line_avoid=None, entry_norm=False):
+    if entry_norm and not fixtures:
+        raise ValueError('--entry-norm-check needs --fixtures (the layer-entry inputs and the reference model checks)')
     if dense_stage is not None and mu_ctx:
         raise ValueError('DENSE2 MU requires the corrected per-position static stage graph binding')
     if svc_owner_epoch is not None and mu_ctx:
@@ -1037,8 +1039,18 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         if sum(len(v) for v in avoid.values()) > 64:
             raise ValueError(f'line slot reservation does not converge: {clash[:4]}')
         return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
-                             mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid)
+                             mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=avoid,
+                             entry_norm=entry_norm)
     prog.line_avoid = {k: sorted(v) for k, v in (line_avoid or {}).items()}
+    if entry_norm:
+        # TOK-DS-GAPS 10-24 (opt-in; default byte-identical): layer-entry residency of the smoke slice as pre-layer CTL
+        # target-5 events + the xfin NX flit as checked output words (layer_prog/norm_nx.py).  After row_ctl_events
+        # and the line-slot pass: the entry beats are not calendar rows and carry an explicit payload186.
+        if sub is None or not str(sub.get('hc_pre_source', '')).startswith('entry.'):
+            raise ValueError('--entry-norm-check: no attn norm smoke on this layer (the NX flit needs the attn norm)')
+        sys.path.insert(0, str(ROOT / 'tools/s81_dv/layer_prog'))
+        import norm_nx
+        sub['entry_norm'] = norm_nx.emit(die, prog, sub, fixtures, [e['cycle'] for e in prog.events if e['kind'] == 'CTL'])
     files = {}
     for rel, text in prog.files.items():
         (out / rel).parent.mkdir(parents=True, exist_ok=True)
@@ -1075,7 +1087,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
-                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid)
+                                 svc_tag=need.pop(), mu_ctx=mu_ctx, svc_owner_epoch=svc_owner_epoch, dense_stage=dense_stage, line_avoid=line_avoid,
+                                 entry_norm=entry_norm)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1194,6 +1207,9 @@ def main(argv=None):
                     help='Opt-in static SO launch-owner fields in CFG; source binding required')
     ap.add_argument('--dense-stage', choices=('A', 'B'),
                     help='Actual DENSE2 stage operation selection; requires explicit topology/alignment/rank/capture env options')
+    ap.add_argument('--entry-norm-check', action='store_true',
+                    help='TOK-DS-GAPS: emit the smoke slice\'s layer-entry rows (pre-layer CTL target 5) and its attn '
+                         'xfin NX flit as checked output words (needs --fixtures; layer_prog/norm_nx.py)')
     a = ap.parse_args(argv)
     if a.dense_stage is not None and (a.mu_cal or a.mu_ctx):
         ap.error('--dense-stage MU requires corrected per-position static stage graph binding')
@@ -1209,7 +1225,7 @@ def main(argv=None):
             return
     tree = die_tree(a.die_ref, a.die_src)
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
-                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage)
+                      svc_owner_epoch=a.svc_owner_epoch, dense_stage=a.dense_stage, entry_norm=a.entry_norm_check)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
