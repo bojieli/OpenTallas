@@ -12,7 +12,7 @@ class Gate(unittest.TestCase):
         self.t=tempfile.TemporaryDirectory(); self.root=Path(self.t.name)
         self.repo=self.root/'repo'; p=self.repo/'tools/flow_canary';p.mkdir(parents=True)
         (p/'canaries.json').write_text(json.dumps({'watch':['tools/die_plan/*']}))
-        self.row={'die':'s81','mode':'submit'}
+        self.row={'die':'s81','mode':'submit','src':'codex/kit@kit123456789'}
         self.git=lambda *a,**kw:(0,'','')
     def tearDown(self):self.t.cleanup()
     def runref(self,name,verdict=None):
@@ -31,6 +31,10 @@ class Gate(unittest.TestCase):
         self.row['canary_fix']='abc123456789@'+str(p/'canary.json');self.assertTrue(self.gate())
     def test_new_flow_blocks_old_pass(self):
         self.runref('old','PASS');self.git=lambda *a,**kw:(0,'tools/die_plan/hold_gate.tcl\n','');self.assertFalse(self.gate())
+    def test_main_pass_does_not_clear_kit_from_different_flow(self):
+        self.runref('ref','PASS')
+        self.git=lambda args,**kw:(0,'tools/die_plan/gen_phys.py\n' if args[-2]=='kit123456789' else '', '')
+        self.assertFalse(self.gate())
     def test_cp1_uses_s81_reference_but_unknown_die_cannot_bypass(self):
         self.runref('s81_ref','PASS')
         self.row['die']='cp1';self.assertTrue(self.gate())
