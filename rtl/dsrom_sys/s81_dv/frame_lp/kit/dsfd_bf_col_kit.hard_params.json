@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.frame_kit.hard_params.v1",
+ "source": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+ "source_sha256": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3",
+ "note": "hardened parameter set of each hard child whose #() the kit stripped (labels INSTANCE, MB excluded); bind_elab bakes these into the hard master stubs",
+ "sites": {
+  "ot_v41_bf_col": 1
+ },
+ "masters": {
+  "ot_v41_bf_col": {
+   "BF16": "1",
+   "BP": "0",
+   "BXST": "2",
+   "CG": "1",
+   "DRAIN": "200",
+   "EARLY": "1",
+   "FAST": "1",
+   "FXST": "2",
+   "GRADUAL_RNE": "1",
+   "LV": "5",
+   "MTP": "1",
+   "NB": "2",
+   "NCH": "16",
+   "NCHB": "8",
+   "NSEG": "8",
+   "PP": "1",
+   "QBF": "2",
+   "QPIPE": "1",
+   "QP_CAP": "0",
+   "QP_CSAM": "10",
+   "QP_P1": "1",
+   "QP_XS": "1",
+   "QTIMING_FIX": "1",
+   "QX": "10",
+   "QY": "1",
+   "QZ": "1",
+   "QZE": "1",
+   "QZ_NE": "4",
+   "QZ_NS": "8",
+   "TCG": "1",
+   "XF": "8"
+  }
+ }
+}
