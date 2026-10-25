@@ -126,7 +126,7 @@ amend or squash later).
 7. IR over SerDes windows (S81, head, HBM): separate PHY supply + dedicated bump rows over the SerDes windows.
 8. S81 constant output pins (hcpl o[15:0], rxsb o_r[31]...): DROP them from the plan (no face_guard constant class).
 9. KV bind: bound_netlist.json lost -> re-bind from scratch with main bind.py + bind_post.py.
-10. Old nvme0n1 data (intel1/intel2/epyc2, mounted RO): recover only CLOSED results missing from the AGIdock archive,
+10. [CLOSED 10-24 ~20:10: disks were already wiped 07:03 -> live scratch2; nothing to recover, lanes/INFRA-old-nvme-manifest.json] Old nvme0n1 data (intel1/intel2/epyc2, mounted RO): recover only CLOSED results missing from the AGIdock archive,
     then the disks may be freed.
 11. Claude<->Codex auto-switch: re-enable on rtx-pro; also watch lane-agent 429s; owner questions as plain text, never
     a blocking dialog.
