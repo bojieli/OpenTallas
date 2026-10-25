@@ -55,6 +55,10 @@ proc rt_launch_xy {net seen} {
 }
 # Bound kits nest the partition below u_bound. Resolve the actual hierarchical
 # net names once; findNet rst_n_tN alone silently skipped all local resets.
+# ORFS sources PRE_CTS / PRE_GLOBAL_PLACE hooks inside a procedure: rt_tapnet reads rt_named_nets via 'global', so
+# the table must live at global scope ('global' is a no-op at true top level). (canary s81_head 0372e55a4:
+# cts.tcl 6 can't read "rt_named_nets": no such variable)
+global rt_named_nets
 set rt_named_nets {}; set rt_zero_aliases {}
 foreach net [$rt_blk getNets] {
   set name [$net getName]
