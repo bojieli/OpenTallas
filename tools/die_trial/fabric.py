@@ -146,7 +146,9 @@ def blockages(P, plan_dir, htree=None):
             top = 5
             pf = h.get("pins_file")
             if pf and (plan_dir / pf).is_file():
-                pl = {x["layer"] for x in json.loads((plan_dir / pf).read_text())}
+                js = json.loads((plan_dir / pf).read_text())
+                js = js.get("pins", []) if isinstance(js, dict) else js      # S81 core_pins files: {"pins": [...]}
+                pl = {x["layer"] for x in js}
                 top = max([top] + [LNUM(x) for x in pl])
             core_top[(tn, h["inst"])] = top
     for part in sorted(P.parts):

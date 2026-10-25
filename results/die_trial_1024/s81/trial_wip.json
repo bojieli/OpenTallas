@@ -1,0 +1,124 @@
+{
+ "status": "WIP (PARKED 2026-10-24)",
+ "die": "s81",
+ "grt": {
+  "nets": 455232,
+  "overflow": 0,
+  "wall": "3m16s",
+  "rss_gb": 18.8,
+  "margin_runs": "0 overflow at ft 15%/M8-9 40% and 10%/25%"
+ },
+ "clock_htree": {
+  "SS": {
+   "insertion_max_ps": 7611.2,
+   "insertion_min_ps": 7416.0,
+   "global_skew_ps": 195.3,
+   "taps": 6868,
+   "part_tap_spread_ps_max": 114.2,
+   "seam_pairs": 2151,
+   "seam_nominal_abs_max_ps": 76.4,
+   "seam_ocv3_ps_max": 461.9,
+   "seam_ocv3_ps_p90": 165.6,
+   "seam_ocv3_ps_over80": 325,
+   "seam_ocv5_ps_max": 760.3,
+   "seam_ocv5_ps_p90": 273.1,
+   "seam_ocv5_ps_over80": 382,
+   "peak_rss_gb": 0.34,
+   "wall_s": 7.0
+  },
+  "TT": {
+   "insertion_max_ps": 6158.8,
+   "insertion_min_ps": 5997.5,
+   "global_skew_ps": 161.3,
+   "taps": 6868,
+   "part_tap_spread_ps_max": 104.5,
+   "seam_pairs": 2151,
+   "seam_nominal_abs_max_ps": 50.9,
+   "seam_ocv3_ps_max": 372.3,
+   "seam_ocv3_ps_p90": 132.7,
+   "seam_ocv3_ps_over80": 280,
+   "seam_ocv5_ps_max": 613.6,
+   "seam_ocv5_ps_p90": 218.1,
+   "seam_ocv5_ps_over80": 368,
+   "peak_rss_gb": 0.33,
+   "wall_s": 7.4
+  },
+  "FF": {
+   "insertion_max_ps": 5186.1,
+   "insertion_min_ps": 5044.1,
+   "global_skew_ps": 141.9,
+   "taps": 6868,
+   "part_tap_spread_ps_max": 99.8,
+   "seam_pairs": 2151,
+   "seam_nominal_abs_max_ps": 43.8,
+   "seam_ocv3_ps_max": 312.9,
+   "seam_ocv3_ps_p90": 111.0,
+   "seam_ocv3_ps_over80": 278,
+   "seam_ocv5_ps_max": 515.7,
+   "seam_ocv5_ps_p90": 182.1,
+   "seam_ocv5_ps_over80": 318,
+   "peak_rss_gb": 0.33,
+   "wall_s": 6.9
+  }
+ },
+ "clock_gate_note": "owner rule: TT setup / FF hold nominal gate, OCV INFO",
+ "ir_windows": {
+  "s81_int_t": {
+   "plan": "physical/die_plan/s81/die_plan.json",
+   "die": "s81",
+   "name": "s81_interior_frames",
+   "window_um": [
+    4000.32,
+    8000.64,
+    6998.400000000001,
+    10998.720000000001
+   ],
+   "area_mm2": 8.988,
+   "density_w_mm2": 0.15,
+   "power_w": 1.3483,
+   "load_blocks": 1225,
+   "block_um": [
+    85.659,
+    85.659
+   ],
+   "bumps": 400,
+   "bumps_vdd": 200,
+   "io_in_window": [],
+   "worst_ir_mv": 30.1,
+   "avg_ir_mv": 21.6,
+   "supply_v": 0.7,
+   "verdict_note": "trial: uniform 0.15 W/mm2 also over PHY windows; die C4 lattice minus IO windows"
+  },
+  "s81_io_t": {
+   "plan": "physical/die_plan/s81/die_plan.json",
+   "die": "s81",
+   "name": "s81_serdes_WS1_WS0",
+   "window_um": [
+    2496.96,
+    0.0,
+    6497.280000000001,
+    2998.0800000000004
+   ],
+   "area_mm2": 11.993,
+   "density_w_mm2": 0.15,
+   "power_w": 1.799,
+   "load_blocks": 1610,
+   "block_um": [
+    86.963,
+    85.659
+   ],
+   "bumps": 312,
+   "bumps_vdd": 156,
+   "io_in_window": [
+    "io_lk_WS0_u_phy",
+    "io_lk_WS1_u_phy"
+   ],
+   "worst_ir_mv": 235.0,
+   "avg_ir_mv": 72.8,
+   "supply_v": 0.7,
+   "verdict_note": "trial: uniform 0.15 W/mm2 also over PHY windows; die C4 lattice minus IO windows"
+  }
+ },
+ "full_die_psm": "NOT RUN to completion: head full-die PSM (Codex c2) segfault in psm::IRSolver::solve at 119 GB RSS after 8672 s; replaced by window PSM",
+ "die_sta": "RUNNING: tools/die_trial/fabric.py budget mode + die-tree TT/FF per-flop tap latency (intel1 s81, intel2 head); die_sta.py ilm with per-tap generated clocks did not finish in >4 h -> stopped"
+}
