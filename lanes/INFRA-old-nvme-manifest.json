@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.infra.old_nvme_recovery.v1",
+  "written": "2026-10-24T19:28:34-0700",
+  "task": "BRIEFING item 10: recover CLOSED results from old nvme0n1 (intel1/intel2/epyc2) missing from AGIdock archive",
+  "outcome": "NOT_POSSIBLE_SOURCE_ALREADY_DESTROYED",
+  "evidence": {
+    "owner_order": "coord/HANDOFF.md 2026-10-24 06:53 COORD: OWNER ORDER wipe /mnt/old-nvme0 at 07:03 PDT; BRIEFING.md 'Old-fleet scratch: WIPED (owner order 2026-10-24 07:03 PDT)'",
+    "journal": {
+      "intel1": "07:03:06 umount /mnt/old-nvme0; 07:03:36 wipefs -a + blkdiscard -f /dev/nvme0n1; 07:03:37 mkfs.ext4 -L ot-scratch2; now /srv/opentallas-scratch2 (UUID d71ddc02..., 950G used)",
+      "intel2": "07:03:40 umount; 07:03:50 wipefs + blkdiscard; 07:03:54 mkfs.ext4; now /srv/opentallas-scratch2 (UUID 7dcb2d21..., 1.1T used)",
+      "epyc2": "07:03:58 umount; wipefs + blkdiscard; 07:03:59 mkfs.ext4; now /srv/opentallas-scratch2 (UUID 3a4a6bce..., 517G used, docker/containerd bind-mounted)"
+    },
+    "recoverability": "blkdiscard -f TRIMmed the whole device and the disks have been rewritten since; old data is unrecoverable"
+  },
+  "per_host": {
+    "intel1": {"closed_found": null, "already_archived": null, "copied": 0, "differing": 0, "unreadable": null},
+    "intel2": {"closed_found": null, "already_archived": null, "copied": 0, "differing": 0, "unreadable": null},
+    "epyc2":  {"closed_found": null, "already_archived": null, "copied": 0, "differing": 0, "unreadable": null}
+  },
+  "bytes_copied": 0,
+  "pre_wipe_lane_rescues_still_present": [
+    "intel1+intel2:/srv/opentallas-scratch{,2}/claude/recovered-1023 (COORD: stw-s81d-tok/fc30, stw-s81c-cap30/gen-main, intel2 s81-p9-fc-1023/fc31)",
+    "intel1:~/ot-scratch/tok-qw/recovered (66G), kv-tok/recovered (45G), s81/recovered (19G), qc-tok (595M), qc-a0 (124M)",
+    "intel2:~/ot-scratch/kv-tok/recovered (42G), s81/recovered (61G), qc-a0 (1.6G)"
+  ],
+  "routed_views_in_rescues_without_closure_record": [
+    "intel1:~/ot-scratch/s81/recovered/core-s81-1023/eng/dsdv_eng_rr_h{0,1}__164.16x267.84 (6_final.odb/gds, PIN_AUDIT PASS 645/645, freeze.json; no CLOSED/signoff record)",
+    "intel2:~/ot-scratch/kv-tok/recovered/kv-p7-1023-intel2/seam/kits9/kv3_io_cor_v1 (6_final.odb, PIN_AUDIT PASS 6106/6106; no CLOSED record)",
+    "intel2:~/ot-scratch/kv-tok/recovered/kv-p6-1023-intel2/tap/kits9/kv3_io_ft_v1 (6_final.odb/gds, PIN_AUDIT PASS 2100/2100; no CLOSED record)"
+  ],
+  "archive_location_note": "AGIdock archive is archive-store 155.103.253.53:/archive (key ~/.ssh/agidock_ot, see ~/bin/backup_to_archive.sh); ot-agidock128 has NO /archive",
+  "free_to_reformat": "MOOT: already reformatted and in use as /srv/opentallas-scratch2 since 07:04 PDT by owner order"
+}
