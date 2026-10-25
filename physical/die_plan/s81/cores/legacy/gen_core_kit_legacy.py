@@ -527,7 +527,24 @@ def main():
     plan = json.load(open(a.plan))
     if rec.get("plan"):
         plan = json.load(open(REPO / rec["plan"]))
-    if rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
+    if rec.get("child_of"):
+        # KITS-SPARE-2/HB 10-25 (COORD ruling 10:23 item 3): a HARD CHILD master of a plan hard core (e.g. the 16
+        # hist_bank children of dsdv_bksel_q) gets ONE kit before its parent.  Pin contract = the child view LEF the
+        # parent's spec binds (every children[] entry of the parent must name exactly that view); plan type = the
+        # parent's plan type (the child has no plan row of its own).
+        par = rec["child_of"]
+        prec = json.load(open(a.recipes))[par]
+        pspec = json.loads(git_show(prec["spec_git"])) if prec.get("spec_git") else \
+            json.load(open(REPO / prec["ref_tile"] / "spec.json"))
+        views = sorted({c["view"] for c in pspec.get("children", [])})
+        want = str(Path(rec["lef_contract"]).parent)
+        if views != [want]:
+            raise SystemExit(f"{a.module}: parent {par} children views {views} != [{want}] (one master required)")
+        ptype, _ = plan_core(plan, par)
+        outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
+        hc = dict(module=a.module, outline_um=outline, lef=rec["lef_contract"], pins=lpins,
+                  pins_file=rec["lef_contract"], child_of=par, child_count=len(pspec["children"]))
+    elif rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
         ptype = rec["plan_type"]
         assert any(c.get("module") == a.module for c in plan["partition_types"][ptype].get("contents", [])), ptype
         outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
@@ -564,7 +581,8 @@ def main():
     srcs = []
     patches = {pt["file"]: pt for pt in rec.get("rtl_patches", [])}
     bbs = set()
-    for f in spec["sources"] + rec.get("includes", []):
+    drop = set(rec.get("drop_sources", []))   # bench-only golden models listed in a historic spec (not synthesised)
+    for f in [s for s in spec["sources"] if s not in drop] + rec.get("includes", []):
         dst = kd / "rtl" / Path(f).name
         if dst.exists() and dst.read_bytes() != (REPO / f).read_bytes():
             raise SystemExit(f"rtl name clash {dst.name}")
@@ -844,6 +862,8 @@ def main():
     fz = dict(schema="opentallas.s81.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),
+              **({"child_of": hc["child_of"], "child_count": hc["child_count"], "drop_sources": sorted(drop)}
+                 if hc.get("child_of") else {}),
               pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else S81 / hc["pins_file"]), pins=len(pins), plan_lef=hc["lef"],
               clocks=clks, resets=rsts,
               recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
