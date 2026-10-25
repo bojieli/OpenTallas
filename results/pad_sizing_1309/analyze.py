@@ -21,7 +21,7 @@ for corner in ('TT','FF'):
  path=r/'libs'/f'asap7sc7p5t_INVBUF_RVT_{corner}_nldm_220122.lib.gz'
  lib=gzip.open(path,'rt').read();libs[corner]={'path':str(path),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
  bufs[corner]={}
- for cell in re.findall(r'cell\s*\(\s*(BUF[^)]*)\)',lib):
+ for cell in re.findall(r'cell\s*\(\s*((?:BUF|HB)[^)]*)\)',lib):
   b=n.block(lib,'cell',cell);assert re.search(r'function\s*:\s*"A"',b)
   tables={pol:n.table(b,'cell_'+pol) for pol in ('rise','fall')};samples=[]
   for p in rec:

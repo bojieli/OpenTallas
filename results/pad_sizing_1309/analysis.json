@@ -9265,6 +9265,2298 @@
       }
      }
     ]
+   },
+   "HB1xp67_ASAP7_75t_R": {
+    "input_cap_ff": {
+     "rise": 0.316706,
+     "fall": 0.316509
+    },
+    "min_delay_ps": 33.82028303333333,
+    "max_delay_ps": 104.10508969583336,
+    "in_table_samples": 70,
+    "total_samples": 70,
+    "all_70_edges_le15_in_table": false,
+    "samples": [
+     {
+      "pad": "ot_prp_d1",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 96.79984209999999,
+        "current_ceff_lookup_ps": 93.66986879999999,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 84.61724416276043,
+        "current_ceff_lookup_ps": 81.31518981032987,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d2",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 101.37116762222222,
+        "current_ceff_lookup_ps": 97.94614453333332,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 88.29229334652777,
+        "current_ceff_lookup_ps": 84.65026149756946,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d3",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 97.61472303125001,
+        "current_ceff_lookup_ps": 94.721056359375,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 85.21558691250002,
+        "current_ceff_lookup_ps": 82.15631203125,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d4",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 100.18859858923611,
+        "current_ceff_lookup_ps": 97.76737621128473,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 87.35585850173611,
+        "current_ceff_lookup_ps": 84.83074315104166,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d5",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 103.49511196979168,
+        "current_ceff_lookup_ps": 100.2471597875,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.08379171493056,
+        "current_ceff_lookup_ps": 86.58747168993055,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d6",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 103.16882431215276,
+        "current_ceff_lookup_ps": 100.33423592881945,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 89.82514444565972,
+        "current_ceff_lookup_ps": 86.81442897725695,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d7",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 93.30110894635418,
+        "current_ceff_lookup_ps": 89.52156031302084,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 81.70813001024307,
+        "current_ceff_lookup_ps": 77.72624142934029,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d8",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 96.67731342552085,
+        "current_ceff_lookup_ps": 93.665507796875,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 84.47732418125001,
+        "current_ceff_lookup_ps": 81.27238246875001,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d9",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 103.52210106250001,
+        "current_ceff_lookup_ps": 100.62851052777778,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.07187123125,
+        "current_ceff_lookup_ps": 87.0125757875,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d10",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 104.10508969583336,
+        "current_ceff_lookup_ps": 100.32574392916668,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.5406112527778,
+        "current_ceff_lookup_ps": 86.51009871562502,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d11",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 101.37868066406253,
+        "current_ceff_lookup_ps": 98.07172875434028,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 88.3091625,
+        "current_ceff_lookup_ps": 84.76426222222224,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d12",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 96.73148440885416,
+        "current_ceff_lookup_ps": 93.54260100572918,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 84.48251034722222,
+        "current_ceff_lookup_ps": 81.08330004166669,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d13",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 102.18191588645834,
+        "current_ceff_lookup_ps": 99.58355961006944,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 88.99366243541667,
+        "current_ceff_lookup_ps": 86.225739625,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d14",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 100.38327524305558,
+        "current_ceff_lookup_ps": 96.89906801944444,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 87.55606532986111,
+        "current_ceff_lookup_ps": 83.81696163888888,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d15",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 87.06199903090278,
+        "current_ceff_lookup_ps": 85.23134654253472,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 76.86956559895835,
+        "current_ceff_lookup_ps": 74.92672286805555,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d16",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 98.10240698263888,
+        "current_ceff_lookup_ps": 95.38583838177084,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 85.81275277777777,
+        "current_ceff_lookup_ps": 82.94762509722223,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d17",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 78.91918378125,
+        "current_ceff_lookup_ps": 77.55974786562498,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 70.01332802152777,
+        "current_ceff_lookup_ps": 68.60121490034723,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d18",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 64.68316079791667,
+        "current_ceff_lookup_ps": 62.61397553923611,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 58.52004111041667,
+        "current_ceff_lookup_ps": 56.377969050694446,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d19",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 92.45418033732639,
+        "current_ceff_lookup_ps": 89.67853341319443,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 81.03056546831598,
+        "current_ceff_lookup_ps": 78.06842566927085,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d20",
+      "loads": 21,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 84.00545965277777,
+        "current_ceff_lookup_ps": 82.40977080902779,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 74.04115392222222,
+        "current_ceff_lookup_ps": 72.33668474166667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d21",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 103.67016784236111,
+        "current_ceff_lookup_ps": 101.30810532847221,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.17655606041667,
+        "current_ceff_lookup_ps": 87.69996774479168,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d22",
+      "loads": 6,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 35.09031279444444,
+        "current_ceff_lookup_ps": 34.91259935798611,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 33.82028303333333,
+        "current_ceff_lookup_ps": 33.62414915,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d23",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 86.91300399340278,
+        "current_ceff_lookup_ps": 84.72793634218749,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 76.44059094722223,
+        "current_ceff_lookup_ps": 74.15815210555556,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d24",
+      "loads": 14,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 63.37913645138888,
+        "current_ceff_lookup_ps": 62.55123541666667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 57.39339099305555,
+        "current_ceff_lookup_ps": 56.517242180555556,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d25",
+      "loads": 15,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 70.70964098090278,
+        "current_ceff_lookup_ps": 69.46849058819444,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 63.095787514236115,
+        "current_ceff_lookup_ps": 61.780964923611116,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d26",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 92.97084309479166,
+        "current_ceff_lookup_ps": 90.43147221961806,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 81.43624251770834,
+        "current_ceff_lookup_ps": 78.81401968333334,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d27",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 85.51873054861112,
+        "current_ceff_lookup_ps": 83.56930302083333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 75.37306743923612,
+        "current_ceff_lookup_ps": 73.33051131597223,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d28",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 53.63030921006944,
+        "current_ceff_lookup_ps": 52.62539884097222,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 49.23072986145834,
+        "current_ceff_lookup_ps": 48.159562671875,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d29",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 53.731641831944444,
+        "current_ceff_lookup_ps": 53.199624641319446,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 49.333533790277784,
+        "current_ceff_lookup_ps": 48.79795636770834,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d30",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 91.44865794166668,
+        "current_ceff_lookup_ps": 89.38169515868057,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 80.29307608333333,
+        "current_ceff_lookup_ps": 78.10783405208335,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d31",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 95.32645736545139,
+        "current_ceff_lookup_ps": 92.84608183524304,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 83.47930263020834,
+        "current_ceff_lookup_ps": 80.85703703645835,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d32",
+      "loads": 20,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 83.00995105069445,
+        "current_ceff_lookup_ps": 80.40920366458333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 73.52477571631945,
+        "current_ceff_lookup_ps": 70.79808191354168,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d33",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 80.735339125,
+        "current_ceff_lookup_ps": 79.08025470138887,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 71.68664950000002,
+        "current_ceff_lookup_ps": 69.93383425,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d34",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 95.03588444097221,
+        "current_ceff_lookup_ps": 92.96903167100693,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 83.47826614583335,
+        "current_ceff_lookup_ps": 81.24425578125,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d35",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 42.34762445833333,
+        "current_ceff_lookup_ps": 42.051810611111115,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 40.162845125000004,
+        "current_ceff_lookup_ps": 39.91767283333334,
+        "outside_table": []
+       }
+      }
+     }
+    ]
+   },
+   "HB2xp67_ASAP7_75t_R": {
+    "input_cap_ff": {
+     "rise": 0.476935,
+     "fall": 0.476455
+    },
+    "min_delay_ps": 45.54708448888889,
+    "max_delay_ps": 114.72870418750001,
+    "in_table_samples": 70,
+    "total_samples": 70,
+    "all_70_edges_le15_in_table": false,
+    "samples": [
+     {
+      "pad": "ot_prp_d1",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 107.412568375,
+        "current_ceff_lookup_ps": 104.281812,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 99.50329171276043,
+        "current_ceff_lookup_ps": 96.1953292936632,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d2",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 111.99426808333334,
+        "current_ceff_lookup_ps": 108.568138,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 103.23374000347224,
+        "current_ceff_lookup_ps": 99.58532372743055,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d3",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 108.23142359375001,
+        "current_ceff_lookup_ps": 105.33694382812502,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 100.12513522916666,
+        "current_ceff_lookup_ps": 97.06044182291667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d4",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 110.80652227604166,
+        "current_ceff_lookup_ps": 108.38460988802085,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 102.2687706857639,
+        "current_ceff_lookup_ps": 99.73918216145836,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d5",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 114.11522485937502,
+        "current_ceff_lookup_ps": 110.8663155625,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 105.00622375173612,
+        "current_ceff_lookup_ps": 101.50372137673614,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d6",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 113.78825561979167,
+        "current_ceff_lookup_ps": 110.95284486979165,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 104.74328332725695,
+        "current_ceff_lookup_ps": 101.72723622482638,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d7",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 103.91437310156252,
+        "current_ceff_lookup_ps": 100.1338336015625,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 96.59560654600693,
+        "current_ceff_lookup_ps": 92.60662208940973,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d8",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 107.2924327890625,
+        "current_ceff_lookup_ps": 104.279813515625,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 99.37529753125001,
+        "current_ceff_lookup_ps": 96.16465671875,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d9",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 114.14413156250002,
+        "current_ceff_lookup_ps": 111.24964541666667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 105.00706478125,
+        "current_ceff_lookup_ps": 101.94238668750002,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d10",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 114.72870418750001,
+        "current_ceff_lookup_ps": 110.94814768750003,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 105.48429568055558,
+        "current_ceff_lookup_ps": 101.44671298437501,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d11",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 112.00040917968752,
+        "current_ceff_lookup_ps": 108.69242428385417,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 103.24296093750002,
+        "current_ceff_lookup_ps": 99.6918277777778,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d12",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 107.3502300390625,
+        "current_ceff_lookup_ps": 104.16039055468751,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 99.40273725694445,
+        "current_ceff_lookup_ps": 95.99753427083334,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d13",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 112.801932359375,
+        "current_ceff_lookup_ps": 110.20280446354167,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 103.91672542708332,
+        "current_ceff_lookup_ps": 101.14391312499998,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d14",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 111.00089677083332,
+        "current_ceff_lookup_ps": 107.51570654166667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 102.4629287326389,
+        "current_ceff_lookup_ps": 98.71718486111112,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d15",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 97.76272715277779,
+        "current_ceff_lookup_ps": 95.93151215972225,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 91.78960732118057,
+        "current_ceff_lookup_ps": 89.84276657986112,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d16",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 108.7355803611111,
+        "current_ceff_lookup_ps": 106.01831547916667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 100.71849611111112,
+        "current_ceff_lookup_ps": 97.8481892138889,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d17",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 89.58569999618055,
+        "current_ceff_lookup_ps": 88.22261626059027,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 84.88486756354166,
+        "current_ceff_lookup_ps": 83.46403305989584,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d18",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 75.46500521562501,
+        "current_ceff_lookup_ps": 73.39065203072917,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 73.377425396875,
+        "current_ceff_lookup_ps": 71.22204829479168,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d19",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 103.06535209114584,
+        "current_ceff_lookup_ps": 100.28902182291668,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 95.91062714053818,
+        "current_ceff_lookup_ps": 92.94318610260416,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d20",
+      "loads": 21,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 94.61401784722224,
+        "current_ceff_lookup_ps": 93.01391581597224,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 88.90765437777779,
+        "current_ceff_lookup_ps": 87.19271018333335,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d21",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 114.29533826041668,
+        "current_ceff_lookup_ps": 111.93248805208333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 105.12812115624999,
+        "current_ceff_lookup_ps": 102.647203046875,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d22",
+      "loads": 6,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 45.54708448888889,
+        "current_ceff_lookup_ps": 45.36684351597223,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 48.112546372222226,
+        "current_ceff_lookup_ps": 47.90961220416666,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d23",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 97.52370208854167,
+        "current_ceff_lookup_ps": 95.3380790390625,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 91.31566894444445,
+        "current_ceff_lookup_ps": 89.0289467,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d24",
+      "loads": 14,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 74.34049736458333,
+        "current_ceff_lookup_ps": 73.51071087500002,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 72.29163986458333,
+        "current_ceff_lookup_ps": 71.41002302083334,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d25",
+      "loads": 15,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 81.3150500515625,
+        "current_ceff_lookup_ps": 80.07051002187502,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 77.90440327656249,
+        "current_ceff_lookup_ps": 76.58147655625,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d26",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 103.584692359375,
+        "current_ceff_lookup_ps": 101.04464126302084,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 96.32666449479169,
+        "current_ceff_lookup_ps": 93.69977491666668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d27",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 96.13789805555557,
+        "current_ceff_lookup_ps": 94.18605607986112,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.25072255034723,
+        "current_ceff_lookup_ps": 88.19981846354167,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d28",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 64.30251143281251,
+        "current_ceff_lookup_ps": 63.294992859375,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 63.997071936284726,
+        "current_ceff_lookup_ps": 62.91927365260417,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d29",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 64.41146469930557,
+        "current_ceff_lookup_ps": 63.878071353993064,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 64.10365171180555,
+        "current_ceff_lookup_ps": 63.564757733854165,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d30",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 102.07342366666668,
+        "current_ceff_lookup_ps": 100.00594109722222,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 95.18367088333333,
+        "current_ceff_lookup_ps": 92.99449060208335,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d31",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 105.93875513194446,
+        "current_ceff_lookup_ps": 103.4577798402778,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 98.37131549131945,
+        "current_ceff_lookup_ps": 95.74433599756945,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d32",
+      "loads": 20,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 93.70923191701391,
+        "current_ceff_lookup_ps": 91.10157605729168,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 88.43274631649308,
+        "current_ceff_lookup_ps": 85.68918748177084,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d33",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 91.4534843125,
+        "current_ceff_lookup_ps": 89.79405432291667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 86.59260250000001,
+        "current_ceff_lookup_ps": 84.82893575,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d34",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 105.74939358333333,
+        "current_ceff_lookup_ps": 103.68189035416668,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 98.41694559027778,
+        "current_ceff_lookup_ps": 96.17880928125,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d35",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 52.98502766666667,
+        "current_ceff_lookup_ps": 52.6846088888889,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 54.69685541666666,
+        "current_ceff_lookup_ps": 54.44312722222223,
+        "outside_table": []
+       }
+      }
+     }
+    ]
+   },
+   "HB3xp67_ASAP7_75t_R": {
+    "input_cap_ff": {
+     "rise": 0.601361,
+     "fall": 0.599837
+    },
+    "min_delay_ps": 57.17601707777778,
+    "max_delay_ps": 127.04478080555558,
+    "in_table_samples": 70,
+    "total_samples": 70,
+    "all_70_edges_le15_in_table": false,
+    "samples": [
+     {
+      "pad": "ot_prp_d1",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 119.70427360416667,
+        "current_ceff_lookup_ps": 116.56923711111112,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 117.14070870572918,
+        "current_ceff_lookup_ps": 113.82287578559028,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d2",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 124.30730809722223,
+        "current_ceff_lookup_ps": 120.87664233333334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 120.918866375,
+        "current_ceff_lookup_ps": 117.25958356250001,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d3",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 120.5306797222222,
+        "current_ceff_lookup_ps": 117.63229569444444,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 117.78342116666667,
+        "current_ceff_lookup_ps": 114.70958291666668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d4",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 123.11007897916667,
+        "current_ceff_lookup_ps": 120.68490548958333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 119.9331696875,
+        "current_ceff_lookup_ps": 117.3960328125,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d5",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 126.42522594444445,
+        "current_ceff_lookup_ps": 123.17196066666666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 122.68190610416664,
+        "current_ceff_lookup_ps": 119.16895560416668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d6",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 126.09688141666668,
+        "current_ceff_lookup_ps": 123.25766141666668,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 122.41563269791666,
+        "current_ceff_lookup_ps": 119.39058617708334,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d7",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 116.20382844097223,
+        "current_ceff_lookup_ps": 112.41814732986111,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 114.23285565625001,
+        "current_ceff_lookup_ps": 110.23195521874999,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d8",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 119.58815417708334,
+        "current_ceff_lookup_ps": 116.5714519375,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 117.024538,
+        "current_ceff_lookup_ps": 113.80431000000002,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d9",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 126.45721218749999,
+        "current_ceff_lookup_ps": 123.55887069444444,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 122.691244,
+        "current_ceff_lookup_ps": 119.61743200000002,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d10",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 127.04478080555558,
+        "current_ceff_lookup_ps": 123.2592130277778,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 123.17499283333333,
+        "current_ceff_lookup_ps": 119.12538306249999,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d11",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 124.31122265625001,
+        "current_ceff_lookup_ps": 120.99883723958334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 120.923015625,
+        "current_ceff_lookup_ps": 117.36130000000001,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d12",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 119.65223437152778,
+        "current_ceff_lookup_ps": 116.4581278090278,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 117.06680979166666,
+        "current_ceff_lookup_ps": 113.651454375,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d13",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 125.110642375,
+        "current_ceff_lookup_ps": 122.50803320833334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 121.59085725,
+        "current_ceff_lookup_ps": 118.809775,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d14",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 123.30412474305555,
+        "current_ceff_lookup_ps": 119.81423581944443,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 120.12365625,
+        "current_ceff_lookup_ps": 116.36672999999999,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d15",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 110.01323959722222,
+        "current_ceff_lookup_ps": 108.17956871527778,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 109.30572574652778,
+        "current_ceff_lookup_ps": 107.35189484374999,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d16",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 121.02111000000001,
+        "current_ceff_lookup_ps": 118.30013525,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 118.32328894444443,
+        "current_ceff_lookup_ps": 115.44458511805554,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d17",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 101.80717673749999,
+        "current_ceff_lookup_ps": 100.43682681875,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 102.33963630381945,
+        "current_ceff_lookup_ps": 100.89318475086804,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d18",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 87.5650526375,
+        "current_ceff_lookup_ps": 85.47975912708333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.47968902604167,
+        "current_ceff_lookup_ps": 88.28508387673611,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d19",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 115.3502677326389,
+        "current_ceff_lookup_ps": 112.57013531944443,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 113.53643558072915,
+        "current_ceff_lookup_ps": 110.560144390625,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d20",
+      "loads": 21,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 106.88653756944444,
+        "current_ceff_lookup_ps": 105.27786116319447,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 106.51473757222223,
+        "current_ceff_lookup_ps": 104.76902132916668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d21",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 126.61352686111113,
+        "current_ceff_lookup_ps": 124.24756297222223,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 122.82341954166668,
+        "current_ceff_lookup_ps": 120.33511572916669,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d22",
+      "loads": 6,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 57.17601707777778,
+        "current_ceff_lookup_ps": 56.99117030069445,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 64.27892942777778,
+        "current_ceff_lookup_ps": 64.06406947083333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d23",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 109.80274747916665,
+        "current_ceff_lookup_ps": 107.61414159375,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 108.93515491666668,
+        "current_ceff_lookup_ps": 106.64086673472222,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d24",
+      "loads": 14,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 86.38011116666665,
+        "current_ceff_lookup_ps": 85.54600400000001,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 89.25134154513889,
+        "current_ceff_lookup_ps": 88.3535523263889,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d25",
+      "loads": 15,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 93.50439362708335,
+        "current_ceff_lookup_ps": 92.25320124583334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 95.2843243064236,
+        "current_ceff_lookup_ps": 93.93762564236111,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d26",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 115.87490606249999,
+        "current_ceff_lookup_ps": 113.33140903125002,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 113.9653818125,
+        "current_ceff_lookup_ps": 111.33064700000001,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d27",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 108.40929541666668,
+        "current_ceff_lookup_ps": 106.45171106250001,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 107.84380755208333,
+        "current_ceff_lookup_ps": 105.77066474826391,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d28",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 76.36766460208334,
+        "current_ceff_lookup_ps": 75.35480222916667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 81.01520760503473,
+        "current_ceff_lookup_ps": 79.91790178385416,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d29",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 76.47504225833335,
+        "current_ceff_lookup_ps": 75.93882126458335,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 81.11557253125,
+        "current_ceff_lookup_ps": 80.5669197734375,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d30",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 114.35176983333335,
+        "current_ceff_lookup_ps": 112.28145979861112,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 112.78291333333335,
+        "current_ceff_lookup_ps": 110.58729083333333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d31",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 118.22623052083334,
+        "current_ceff_lookup_ps": 115.74185089583332,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 115.98885452430557,
+        "current_ceff_lookup_ps": 113.35410658680556,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d32",
+      "loads": 20,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 105.94582740833336,
+        "current_ceff_lookup_ps": 103.324292375,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 105.91491015885418,
+        "current_ceff_lookup_ps": 103.1217659296875,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d33",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 103.67027775000001,
+        "current_ceff_lookup_ps": 102.00203104166667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 104.01821750000002,
+        "current_ceff_lookup_ps": 102.22262625,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d34",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 118.00766597222221,
+        "current_ceff_lookup_ps": 115.93739725694445,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 115.93842784722223,
+        "current_ceff_lookup_ps": 113.69402156249998,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d35",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 64.75947780833333,
+        "current_ceff_lookup_ps": 64.45127721111112,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 71.09601408333333,
+        "current_ceff_lookup_ps": 70.82742144444444,
+        "outside_table": []
+       }
+      }
+     }
+    ]
+   },
+   "HB4xp67_ASAP7_75t_R": {
+    "input_cap_ff": {
+     "rise": 0.721778,
+     "fall": 0.719248
+    },
+    "min_delay_ps": 69.86463430555557,
+    "max_delay_ps": 142.83173858333333,
+    "in_table_samples": 70,
+    "total_samples": 70,
+    "all_70_edges_le15_in_table": false,
+    "samples": [
+     {
+      "pad": "ot_prp_d1",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 133.47960008333334,
+        "current_ceff_lookup_ps": 130.3371608888889,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 136.71552821614583,
+        "current_ceff_lookup_ps": 133.37768653211808,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d2",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 138.09891616666667,
+        "current_ceff_lookup_ps": 134.660188,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 140.5634664236111,
+        "current_ceff_lookup_ps": 136.8820057465278,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d3",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 134.3102599652778,
+        "current_ceff_lookup_ps": 131.40504571180557,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 137.3854199861111,
+        "current_ceff_lookup_ps": 134.2929997986111,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d4",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 136.8960344965278,
+        "current_ceff_lookup_ps": 134.46514741493056,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 139.54778303819447,
+        "current_ceff_lookup_ps": 136.99530932291668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d5",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 140.21970744097223,
+        "current_ceff_lookup_ps": 136.95878245833336,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 142.31733523958331,
+        "current_ceff_lookup_ps": 138.78313948958333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d6",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 139.89025285069445,
+        "current_ceff_lookup_ps": 137.04434601736114,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 142.04601584895832,
+        "current_ceff_lookup_ps": 139.00268158854166,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d7",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 129.97179289756943,
+        "current_ceff_lookup_ps": 126.17717967534723,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 133.79934342534725,
+        "current_ceff_lookup_ps": 129.7742938454861,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d8",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 133.364701828125,
+        "current_ceff_lookup_ps": 130.34088553125,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 136.61282052083334,
+        "current_ceff_lookup_ps": 133.37314497916668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d9",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 140.25286312500003,
+        "current_ceff_lookup_ps": 137.34770416666666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 142.33818468750002,
+        "current_ceff_lookup_ps": 139.24576012499998,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d10",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 140.8426121527778,
+        "current_ceff_lookup_ps": 137.0481462638889,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 142.83173858333333,
+        "current_ceff_lookup_ps": 138.75758934375,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d11",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 138.102037109375,
+        "current_ceff_lookup_ps": 134.7818617621528,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 140.560775,
+        "current_ceff_lookup_ps": 136.9774888888889,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d12",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 133.4311532170139,
+        "current_ceff_lookup_ps": 130.2295287482639,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 136.67512808333333,
+        "current_ceff_lookup_ps": 133.23910225,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d13",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 138.90219755208335,
+        "current_ceff_lookup_ps": 136.29346153819446,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 141.22197731249997,
+        "current_ceff_lookup_ps": 138.42407175,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d14",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 137.0903255416667,
+        "current_ceff_lookup_ps": 133.59221308333335,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 139.7337039236111,
+        "current_ceff_lookup_ps": 135.95408138888888,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d15",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 123.74264803125001,
+        "current_ceff_lookup_ps": 121.904706953125,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 128.76992769097222,
+        "current_ceff_lookup_ps": 126.80219448611109,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d16",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 134.79362927083335,
+        "current_ceff_lookup_ps": 132.066246984375,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 137.88216888888886,
+        "current_ceff_lookup_ps": 134.98612111111112,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d17",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 115.47198090347221,
+        "current_ceff_lookup_ps": 114.08673617673612,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 121.67680746666666,
+        "current_ceff_lookup_ps": 120.19049753333331,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d18",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 101.02496396458335,
+        "current_ceff_lookup_ps": 98.91656198368057,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 109.38760720000002,
+        "current_ceff_lookup_ps": 107.13239306666667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d19",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 129.11501143229168,
+        "current_ceff_lookup_ps": 126.32831264583334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 133.0889498828125,
+        "current_ceff_lookup_ps": 130.09471007812502,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d20",
+      "loads": 21,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 120.6293330277778,
+        "current_ceff_lookup_ps": 119.00334596527779,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 126.02468612777777,
+        "current_ceff_lookup_ps": 124.23091974583333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d21",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 140.41131152083332,
+        "current_ceff_lookup_ps": 138.03979110416668,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 142.48567350694447,
+        "current_ceff_lookup_ps": 139.98227882986112,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d22",
+      "loads": 6,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 69.86463430555557,
+        "current_ceff_lookup_ps": 69.67271294201389,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 81.95554366111111,
+        "current_ceff_lookup_ps": 81.72641952083333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d23",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 123.55499878819445,
+        "current_ceff_lookup_ps": 121.361226328125,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 128.46701808333336,
+        "current_ceff_lookup_ps": 126.1578136375,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d24",
+      "loads": 14,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 99.76663950694444,
+        "current_ceff_lookup_ps": 98.92307908333335,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 108.03875170833334,
+        "current_ceff_lookup_ps": 107.11612158333332,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d25",
+      "loads": 15,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 107.09142002534723,
+        "current_ceff_lookup_ps": 105.82669619930556,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 114.46322952499999,
+        "current_ceff_lookup_ps": 113.07945050000001,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d26",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 129.64252488541666,
+        "current_ceff_lookup_ps": 127.09302883159724,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 133.53329165625,
+        "current_ceff_lookup_ps": 130.8826485,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d27",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 122.1547460416667,
+        "current_ceff_lookup_ps": 120.18602054861114,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 127.35176484375,
+        "current_ceff_lookup_ps": 125.24252891666669,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d28",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 89.73119572118057,
+        "current_ceff_lookup_ps": 88.70722249652779,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 99.72256699722224,
+        "current_ceff_lookup_ps": 98.59499629166667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d29",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 89.83727086527779,
+        "current_ceff_lookup_ps": 89.29516227465278,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 99.81997745555557,
+        "current_ceff_lookup_ps": 99.25619039166668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d30",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 128.11022675000004,
+        "current_ceff_lookup_ps": 126.03503628125002,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 132.31523916666666,
+        "current_ceff_lookup_ps": 130.10638447916665,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d31",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 131.99712684895835,
+        "current_ceff_lookup_ps": 129.50687838020832,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 135.54619460069443,
+        "current_ceff_lookup_ps": 132.89556428819446,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d32",
+      "loads": 20,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 119.64893286736113,
+        "current_ceff_lookup_ps": 116.99882261458333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 125.32453363055556,
+        "current_ceff_lookup_ps": 122.45437760833335,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d33",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 117.340872625,
+        "current_ceff_lookup_ps": 115.65438309027778,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 123.35896650000001,
+        "current_ceff_lookup_ps": 121.51384975,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d34",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 131.75315385416667,
+        "current_ceff_lookup_ps": 129.67807184895835,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 135.43398715277777,
+        "current_ceff_lookup_ps": 133.17608593749998,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d35",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 77.69024451666667,
+        "current_ceff_lookup_ps": 77.37030282222223,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 89.11442870833332,
+        "current_ceff_lookup_ps": 88.82810294444445,
+        "outside_table": []
+       }
+      }
+     }
+    ]
    }
   },
   "FF": {
@@ -17057,6 +19349,2298 @@
           ]
          }
         ]
+       }
+      }
+     }
+    ]
+   },
+   "HB1xp67_ASAP7_75t_R": {
+    "input_cap_ff": {
+     "rise": 0.338359,
+     "fall": 0.338056
+    },
+    "min_delay_ps": 25.174063066666665,
+    "max_delay_ps": 75.11435052777777,
+    "in_table_samples": 70,
+    "total_samples": 70,
+    "all_70_edges_le15_in_table": false,
+    "samples": [
+     {
+      "pad": "ot_prp_d1",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 69.91316522916667,
+        "current_ceff_lookup_ps": 66.18848505555556,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 64.15667174739583,
+        "current_ceff_lookup_ps": 60.6254061234375,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d2",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 73.28469049305555,
+        "current_ceff_lookup_ps": 69.24643029166667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 67.03678307083334,
+        "current_ceff_lookup_ps": 63.19454905833333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d3",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 70.42713088888888,
+        "current_ceff_lookup_ps": 67.01613155555555,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 64.55784130347222,
+        "current_ceff_lookup_ps": 61.33836814305556,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d4",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 72.33082811111112,
+        "current_ceff_lookup_ps": 69.42952141666667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 66.25087040972222,
+        "current_ceff_lookup_ps": 63.58528880781251,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d5",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 74.71804534722222,
+        "current_ceff_lookup_ps": 70.83657778472222,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 68.36788397152777,
+        "current_ceff_lookup_ps": 64.69842790416666,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d6",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 74.50606177777777,
+        "current_ceff_lookup_ps": 71.09507029861112,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 68.18622006666666,
+        "current_ceff_lookup_ps": 65.00137374583333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d7",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 67.38066039583333,
+        "current_ceff_lookup_ps": 63.107086041666676,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 61.90202069670139,
+        "current_ceff_lookup_ps": 57.71304012673611,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d8",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 69.81002026388889,
+        "current_ceff_lookup_ps": 66.24218263194444,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 64.04081956041668,
+        "current_ceff_lookup_ps": 60.648152762500004,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d9",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 74.69910889583335,
+        "current_ceff_lookup_ps": 71.3273409375,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 68.31785897361111,
+        "current_ceff_lookup_ps": 65.13316307916668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d10",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 75.11435052777777,
+        "current_ceff_lookup_ps": 70.72322563888889,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 68.65836475260417,
+        "current_ceff_lookup_ps": 64.40070085416667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d11",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 73.07561397222223,
+        "current_ceff_lookup_ps": 69.19417322222222,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 66.84536253315973,
+        "current_ceff_lookup_ps": 63.14156167569445,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d12",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 69.833158875,
+        "current_ceff_lookup_ps": 66.10852356249998,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 64.01032332708334,
+        "current_ceff_lookup_ps": 60.44481885590278,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d13",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 73.6478354236111,
+        "current_ceff_lookup_ps": 70.55050491666667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 67.41043225781249,
+        "current_ceff_lookup_ps": 64.5372068625,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d14",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 72.45716888194445,
+        "current_ceff_lookup_ps": 68.34044773611112,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 66.39700798194445,
+        "current_ceff_lookup_ps": 62.45049122361111,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d15",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 63.13044843055556,
+        "current_ceff_lookup_ps": 60.81715963194444,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 58.37353969965278,
+        "current_ceff_lookup_ps": 56.29578093923611,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d16",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 70.94281284722223,
+        "current_ceff_lookup_ps": 67.68859322916667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 65.17721730555557,
+        "current_ceff_lookup_ps": 62.13034319444445,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d17",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 57.17611071388889,
+        "current_ceff_lookup_ps": 55.487493801041666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 53.00794402777778,
+        "current_ceff_lookup_ps": 51.551720173611116,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d18",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 45.753213204861105,
+        "current_ceff_lookup_ps": 43.47527553993056,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 43.136779725000004,
+        "current_ceff_lookup_ps": 40.883235818749995,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d19",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 66.82451677777777,
+        "current_ceff_lookup_ps": 63.49190643055557,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 61.424917427777785,
+        "current_ceff_lookup_ps": 58.274470190972224,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d20",
+      "loads": 21,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 60.828722812500004,
+        "current_ceff_lookup_ps": 58.829156250000004,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 56.09886811684028,
+        "current_ceff_lookup_ps": 54.33325492569445,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d21",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 74.37217508333332,
+        "current_ceff_lookup_ps": 71.51012947916666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 67.93730656597222,
+        "current_ceff_lookup_ps": 65.30678149027779,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d22",
+      "loads": 6,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 25.671017916666663,
+        "current_ceff_lookup_ps": 25.394594770833333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 25.174063066666665,
+        "current_ceff_lookup_ps": 24.999137400000002,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d23",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 62.94735258333333,
+        "current_ceff_lookup_ps": 60.28126997222222,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 57.973793452083335,
+        "current_ceff_lookup_ps": 55.5158136607639,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d24",
+      "loads": 14,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 45.918378786458334,
+        "current_ceff_lookup_ps": 44.73985977604167,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 43.284045775,
+        "current_ceff_lookup_ps": 42.278566233333336,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d25",
+      "loads": 15,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 50.9391646125,
+        "current_ceff_lookup_ps": 49.407488389583335,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 47.37942961875,
+        "current_ceff_lookup_ps": 46.026924067708336,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d26",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 67.12941483333333,
+        "current_ceff_lookup_ps": 64.14968494444443,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 61.67374020208334,
+        "current_ceff_lookup_ps": 58.90423167430555,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d27",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 62.041257638888894,
+        "current_ceff_lookup_ps": 59.61040081944445,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 57.2421454625,
+        "current_ceff_lookup_ps": 55.06096359687501,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d28",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 38.94076066319444,
+        "current_ceff_lookup_ps": 37.68413121875,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 36.967294025,
+        "current_ceff_lookup_ps": 35.857906025,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d29",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 39.00538283333333,
+        "current_ceff_lookup_ps": 38.29852173958333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 37.038611599999996,
+        "current_ceff_lookup_ps": 36.4839156,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d30",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 66.17837041666667,
+        "current_ceff_lookup_ps": 63.59068091666668,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 60.932606987326395,
+        "current_ceff_lookup_ps": 58.578259857465284,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d31",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 68.93737043055556,
+        "current_ceff_lookup_ps": 65.91841111111111,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 63.36373169652778,
+        "current_ceff_lookup_ps": 60.593984640972224,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d32",
+      "loads": 20,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 60.09834222222223,
+        "current_ceff_lookup_ps": 56.99998374479166,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 55.69080437777778,
+        "current_ceff_lookup_ps": 52.74650805625001,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d33",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 58.4126353125,
+        "current_ceff_lookup_ps": 56.37177496527778,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 54.229392712499994,
+        "current_ceff_lookup_ps": 52.392684450000004,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d34",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 68.77791685416666,
+        "current_ceff_lookup_ps": 66.19016364583334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 63.39277391927084,
+        "current_ceff_lookup_ps": 61.037994422743054,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d35",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 30.907051197916665,
+        "current_ceff_lookup_ps": 30.472825625,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 30.076597294444447,
+        "current_ceff_lookup_ps": 29.796779383333337,
+        "outside_table": []
+       }
+      }
+     }
+    ]
+   },
+   "HB2xp67_ASAP7_75t_R": {
+    "input_cap_ff": {
+     "rise": 0.517041,
+     "fall": 0.516875
+    },
+    "min_delay_ps": 33.50079851944444,
+    "max_delay_ps": 83.07821320312499,
+    "in_table_samples": 70,
+    "total_samples": 70,
+    "all_70_edges_le15_in_table": false,
+    "samples": [
+     {
+      "pad": "ot_prp_d1",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 77.8881424375,
+        "current_ceff_lookup_ps": 74.1602985,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 74.42921812239584,
+        "current_ceff_lookup_ps": 70.8927955484375,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d2",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 81.24546104999999,
+        "current_ceff_lookup_ps": 77.2034887,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 77.32917799513889,
+        "current_ceff_lookup_ps": 73.47990480972223,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d3",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 78.39630321145833,
+        "current_ceff_lookup_ps": 74.98232053333334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 74.83695642916666,
+        "current_ceff_lookup_ps": 71.61229264166667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d4",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 80.30071312499999,
+        "current_ceff_lookup_ps": 77.39685761874999,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 76.53284840972222,
+        "current_ceff_lookup_ps": 73.86296058281249,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d5",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 82.68767046666667,
+        "current_ceff_lookup_ps": 78.80275536666666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 78.65454395902778,
+        "current_ceff_lookup_ps": 74.97905317916667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d6",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 82.47675671111111,
+        "current_ceff_lookup_ps": 79.06275321944446,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 78.47146415555555,
+        "current_ceff_lookup_ps": 75.28146244861111,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d7",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 75.35218995694444,
+        "current_ceff_lookup_ps": 71.07496349722223,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 72.17269459670139,
+        "current_ceff_lookup_ps": 67.97743412673611,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d8",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 77.78137955972221,
+        "current_ceff_lookup_ps": 74.2104606298611,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 74.31633159236111,
+        "current_ceff_lookup_ps": 70.91843615416667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d9",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 82.6655754986111,
+        "current_ceff_lookup_ps": 79.29076911249999,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 78.60808775208332,
+        "current_ceff_lookup_ps": 75.41788674375002,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d10",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 83.07821320312499,
+        "current_ceff_lookup_ps": 78.683077353125,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 78.95244909288195,
+        "current_ceff_lookup_ps": 74.68710879861112,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d11",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 81.037614415625,
+        "current_ceff_lookup_ps": 77.1526282625,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 77.13672396510418,
+        "current_ceff_lookup_ps": 73.42619741458334,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d12",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 77.79716318333334,
+        "current_ceff_lookup_ps": 74.06920036388888,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 74.29234575625,
+        "current_ceff_lookup_ps": 70.720747046875,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d13",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 81.61587879861112,
+        "current_ceff_lookup_ps": 78.51578921666666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 77.69647868836805,
+        "current_ceff_lookup_ps": 74.81846304027779,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d14",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 80.42764078958334,
+        "current_ceff_lookup_ps": 76.30731107083334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 76.67748503541668,
+        "current_ceff_lookup_ps": 72.72475852291667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d15",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 71.12641593749998,
+        "current_ceff_lookup_ps": 68.81140454375,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 68.61928390017363,
+        "current_ceff_lookup_ps": 66.53975328038194,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d16",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 78.92569847222222,
+        "current_ceff_lookup_ps": 75.66880729166667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 75.44241661805556,
+        "current_ceff_lookup_ps": 72.39177225694445,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d17",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 65.16263834444445,
+        "current_ceff_lookup_ps": 63.46857134583333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 63.250225972222225,
+        "current_ceff_lookup_ps": 61.78335482638889,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d18",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 53.84004577013888,
+        "current_ceff_lookup_ps": 51.55459164756944,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 53.3956568361111,
+        "current_ceff_lookup_ps": 51.12498615208333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d19",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 74.79735780833333,
+        "current_ceff_lookup_ps": 71.46192318854168,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 71.69335776666667,
+        "current_ceff_lookup_ps": 68.53831989583334,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d20",
+      "loads": 21,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 68.79664894444444,
+        "current_ceff_lookup_ps": 66.7953891111111,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 66.36044353072917,
+        "current_ceff_lookup_ps": 64.59220624791666,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d21",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 82.32703419444444,
+        "current_ceff_lookup_ps": 79.46227623472222,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 78.23880839930555,
+        "current_ceff_lookup_ps": 75.60301335694446,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d22",
+      "loads": 6,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 33.50079851944444,
+        "current_ceff_lookup_ps": 33.219680186805554,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 35.000898311111115,
+        "current_ceff_lookup_ps": 34.81982336666667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d23",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 70.91492861875,
+        "current_ceff_lookup_ps": 68.24656590625,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 68.23910750625001,
+        "current_ceff_lookup_ps": 65.77740312395834,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d24",
+      "loads": 14,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 54.156034238541665,
+        "current_ceff_lookup_ps": 52.97345849895834,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 53.62235160416667,
+        "current_ceff_lookup_ps": 52.60911242777778,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d25",
+      "loads": 15,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 58.894690675,
+        "current_ceff_lookup_ps": 57.35798597083333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 57.59160709375,
+        "current_ceff_lookup_ps": 56.229561871875006,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d26",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 75.09764831874999,
+        "current_ceff_lookup_ps": 72.11533540625,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 71.94607638125,
+        "current_ceff_lookup_ps": 69.17226379791667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d27",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 70.01451609166666,
+        "current_ceff_lookup_ps": 67.58164164583333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 67.50099625972223,
+        "current_ceff_lookup_ps": 65.31687575034724,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d28",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 46.92182314097222,
+        "current_ceff_lookup_ps": 45.66114711875,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 47.113275740277786,
+        "current_ceff_lookup_ps": 45.995567162499995,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d29",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 46.99301376666666,
+        "current_ceff_lookup_ps": 46.28387216041666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 47.190520533333334,
+        "current_ceff_lookup_ps": 46.63165971111111,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d30",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 74.15620358576388,
+        "current_ceff_lookup_ps": 71.56637800034723,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 71.19448886510418,
+        "current_ceff_lookup_ps": 68.83709911302083,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d31",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 76.91393532395833,
+        "current_ceff_lookup_ps": 73.89244096666667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 73.63107439027777,
+        "current_ceff_lookup_ps": 70.85757783472222,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d32",
+      "loads": 20,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 68.0935586,
+        "current_ceff_lookup_ps": 64.99146212916666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 65.93716006111111,
+        "current_ceff_lookup_ps": 62.98552734791667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d33",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 66.42357253125002,
+        "current_ceff_lookup_ps": 64.37792857638888,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 64.49520201874999,
+        "current_ceff_lookup_ps": 62.64884093472222,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d34",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 76.78035512916667,
+        "current_ceff_lookup_ps": 74.19069837083333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 73.65359741536457,
+        "current_ceff_lookup_ps": 71.2967579969618,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d35",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 38.914105890624995,
+        "current_ceff_lookup_ps": 38.4724230625,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 40.145309583333336,
+        "current_ceff_lookup_ps": 39.85555265,
+        "outside_table": []
+       }
+      }
+     }
+    ]
+   },
+   "HB3xp67_ASAP7_75t_R": {
+    "input_cap_ff": {
+     "rise": 0.660732,
+     "fall": 0.660726
+    },
+    "min_delay_ps": 42.12206746388888,
+    "max_delay_ps": 92.27359390277778,
+    "in_table_samples": 70,
+    "total_samples": 70,
+    "all_70_edges_le15_in_table": false,
+    "samples": [
+     {
+      "pad": "ot_prp_d1",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 87.06897716666666,
+        "current_ceff_lookup_ps": 83.33641555555556,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 86.63736031770833,
+        "current_ceff_lookup_ps": 83.089937840625,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d2",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 90.43932535555555,
+        "current_ceff_lookup_ps": 86.39241186666666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 89.59818655138889,
+        "current_ceff_lookup_ps": 85.73752129722223,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d3",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 87.58099948055556,
+        "current_ceff_lookup_ps": 84.16274942222222,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 87.06772301666666,
+        "current_ceff_lookup_ps": 83.83322796666667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d4",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 89.48828011111112,
+        "current_ceff_lookup_ps": 86.58080181666668,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 88.76923734722222,
+        "current_ceff_lookup_ps": 86.091213146875,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d5",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 91.87942635555555,
+        "current_ceff_lookup_ps": 87.98968775555556,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.90144091527779,
+        "current_ceff_lookup_ps": 87.21479264166668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d6",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 91.66760426666667,
+        "current_ceff_lookup_ps": 88.24935106666668,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.71421035555555,
+        "current_ceff_lookup_ps": 87.5144914361111,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d7",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 84.5304855888889,
+        "current_ceff_lookup_ps": 80.24785984444446,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 84.37931428576388,
+        "current_ceff_lookup_ps": 80.17107070486111,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d8",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 86.96390056666667,
+        "current_ceff_lookup_ps": 83.38849388333333,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 86.5355016486111,
+        "current_ceff_lookup_ps": 83.12714869166666,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d9",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 91.85891792222222,
+        "current_ceff_lookup_ps": 88.47994830000002,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.86651912083333,
+        "current_ceff_lookup_ps": 87.66674263750001,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d10",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 92.27359390277778,
+        "current_ceff_lookup_ps": 87.8730694138889,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 91.22222733506945,
+        "current_ceff_lookup_ps": 86.94421323611112,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d11",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 90.23049324722223,
+        "current_ceff_lookup_ps": 86.34074392222223,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 89.40290975729167,
+        "current_ceff_lookup_ps": 85.68137742083334,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d12",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 86.98350826666666,
+        "current_ceff_lookup_ps": 83.2509287111111,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 86.5350954875,
+        "current_ceff_lookup_ps": 82.95274840625,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d13",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 90.80662850000002,
+        "current_ceff_lookup_ps": 87.70269480000002,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 89.94361960243054,
+        "current_ceff_lookup_ps": 87.0568937527778,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d14",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 89.61512116111112,
+        "current_ceff_lookup_ps": 85.48964607777778,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 88.90844105416667,
+        "current_ceff_lookup_ps": 84.94360132916665,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d15",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 80.28481505555555,
+        "current_ceff_lookup_ps": 77.96672439444443,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 80.72106950434029,
+        "current_ceff_lookup_ps": 78.63458200954861,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d16",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 88.10422,
+        "current_ceff_lookup_ps": 84.84315000000001,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 87.62237968055557,
+        "current_ceff_lookup_ps": 84.56197006944444,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d17",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 74.31314320277778,
+        "current_ceff_lookup_ps": 72.60519181770835,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 75.35466680555554,
+        "current_ceff_lookup_ps": 73.86433253472222,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d18",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 62.88049254930556,
+        "current_ceff_lookup_ps": 60.576656112152776,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 65.2609858375,
+        "current_ceff_lookup_ps": 62.953321103125,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d19",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 83.97402904444445,
+        "current_ceff_lookup_ps": 80.6343693638889,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 83.89253146666667,
+        "current_ceff_lookup_ps": 80.72767583333334,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d20",
+      "loads": 21,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 77.96563255555556,
+        "current_ceff_lookup_ps": 75.9618368888889,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 78.54721350104167,
+        "current_ceff_lookup_ps": 76.77349475416668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d21",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 91.52577088888889,
+        "current_ceff_lookup_ps": 88.65756114444446,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.53430361805556,
+        "current_ceff_lookup_ps": 87.89089111944445,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d22",
+      "loads": 6,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 42.12206746388888,
+        "current_ceff_lookup_ps": 41.831278767361106,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 46.20899825,
+        "current_ceff_lookup_ps": 46.0167818125,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d23",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 80.08770848333333,
+        "current_ceff_lookup_ps": 77.41597847222224,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 80.43586948750001,
+        "current_ceff_lookup_ps": 77.96656300208333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d24",
+      "loads": 14,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 63.18862298229167,
+        "current_ceff_lookup_ps": 61.99697243020833,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 65.44192219166666,
+        "current_ceff_lookup_ps": 64.41163621111112,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d25",
+      "loads": 15,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 68.0020890875,
+        "current_ceff_lookup_ps": 66.45307059375,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 69.64742984374999,
+        "current_ceff_lookup_ps": 68.262744146875,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d26",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 84.27721568333334,
+        "current_ceff_lookup_ps": 81.29116069444444,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 84.15978423749999,
+        "current_ceff_lookup_ps": 81.37744940416667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d27",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 79.18280802222222,
+        "current_ceff_lookup_ps": 76.7468256111111,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 79.67133614722222,
+        "current_ceff_lookup_ps": 77.48032166597223,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d28",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 55.91117255347223,
+        "current_ceff_lookup_ps": 54.64009693125,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 58.92070314166667,
+        "current_ceff_lookup_ps": 57.785290075,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d29",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 55.98259616666666,
+        "current_ceff_lookup_ps": 55.26761584791666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 58.9955632,
+        "current_ceff_lookup_ps": 58.42782940000001,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d30",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 83.32919605277777,
+        "current_ceff_lookup_ps": 80.73605476944445,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 83.36867170729167,
+        "current_ceff_lookup_ps": 81.00378846145834,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d31",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 86.09228944722223,
+        "current_ceff_lookup_ps": 83.06695324444445,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 85.82167617777777,
+        "current_ceff_lookup_ps": 83.03943262222221,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d32",
+      "loads": 20,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 77.24713982222222,
+        "current_ceff_lookup_ps": 74.136794603125,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 78.0286850611111,
+        "current_ceff_lookup_ps": 75.05819650104166,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d33",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 75.572035,
+        "current_ceff_lookup_ps": 73.5143047013889,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 76.57301833125,
+        "current_ceff_lookup_ps": 74.70538600416667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d34",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 85.94510389999999,
+        "current_ceff_lookup_ps": 83.3519881,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 85.76675965494792,
+        "current_ceff_lookup_ps": 83.40226433376735,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d35",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 47.704529800347224,
+        "current_ceff_lookup_ps": 47.24762564583334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 51.568206988888896,
+        "current_ceff_lookup_ps": 51.26001116666667,
+        "outside_table": []
+       }
+      }
+     }
+    ]
+   },
+   "HB4xp67_ASAP7_75t_R": {
+    "input_cap_ff": {
+     "rise": 0.801889,
+     "fall": 0.801233
+    },
+    "min_delay_ps": 51.562533736111114,
+    "max_delay_ps": 104.95531102430556,
+    "in_table_samples": 70,
+    "total_samples": 70,
+    "all_70_edges_le15_in_table": false,
+    "samples": [
+     {
+      "pad": "ot_prp_d1",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 97.43761421354168,
+        "current_ceff_lookup_ps": 93.69277434722223,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 100.31876094791667,
+        "current_ceff_lookup_ps": 96.74985326875,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d2",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 100.83798738159722,
+        "current_ceff_lookup_ps": 96.77790652291665,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 103.32352213611111,
+        "current_ceff_lookup_ps": 99.43961332777778,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d3",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 97.95819926440973,
+        "current_ceff_lookup_ps": 94.5287490888889,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 100.76239715,
+        "current_ceff_lookup_ps": 97.50835970000001,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d4",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 99.87278338194446,
+        "current_ceff_lookup_ps": 96.95578433229166,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 102.47441819444445,
+        "current_ceff_lookup_ps": 99.78021455625002,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d5",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 102.27438280347224,
+        "current_ceff_lookup_ps": 98.37192631284724,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 104.62153498055557,
+        "current_ceff_lookup_ps": 100.91262398333333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d6",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 102.06046860000001,
+        "current_ceff_lookup_ps": 98.63103000937501,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 104.43136764444446,
+        "current_ceff_lookup_ps": 101.2123184388889,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d7",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 94.8921915732639,
+        "current_ceff_lookup_ps": 90.59548950069446,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 98.04977283402778,
+        "current_ceff_lookup_ps": 93.81605753472222,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d8",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 97.33607698333333,
+        "current_ceff_lookup_ps": 93.74893509166667,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 100.22196391388889,
+        "current_ceff_lookup_ps": 96.79299468333333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d9",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 102.25730434409722,
+        "current_ceff_lookup_ps": 98.86730925312501,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 104.592270275,
+        "current_ceff_lookup_ps": 101.373197175,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d10",
+      "loads": 26,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 102.67665222829862,
+        "current_ceff_lookup_ps": 98.26179669774308,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 104.95531102430556,
+        "current_ceff_lookup_ps": 100.65152863888892,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d11",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 100.6268978748264,
+        "current_ceff_lookup_ps": 96.7244809326389,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 103.12593926875002,
+        "current_ceff_lookup_ps": 99.381995225,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d12",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 97.36386886041667,
+        "current_ceff_lookup_ps": 93.61909516423611,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 100.233363325,
+        "current_ceff_lookup_ps": 96.62940577083333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d13",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 101.19877819270835,
+        "current_ceff_lookup_ps": 98.08469998749999,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 103.65951160069444,
+        "current_ceff_lookup_ps": 100.75535987222223,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d14",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 99.99951283819445,
+        "current_ceff_lookup_ps": 95.86052447361112,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 102.61152034166668,
+        "current_ceff_lookup_ps": 98.62271069166667,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d15",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 90.60213934722223,
+        "current_ceff_lookup_ps": 88.27629879027778,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 94.32180247482638,
+        "current_ceff_lookup_ps": 92.22253034461808,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d16",
+      "loads": 25,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 98.46850619791668,
+        "current_ceff_lookup_ps": 95.196661328125,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 101.29409136111111,
+        "current_ceff_lookup_ps": 98.2150801388889,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d17",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 84.61122359166667,
+        "current_ceff_lookup_ps": 82.877114171875,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 88.92807375000001,
+        "current_ceff_lookup_ps": 87.3888459375,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d18",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 72.94444946666665,
+        "current_ceff_lookup_ps": 70.60526838333334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 78.36432000625,
+        "current_ceff_lookup_ps": 75.9823006546875,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d19",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 94.33195244027777,
+        "current_ceff_lookup_ps": 90.98130363211806,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 97.55707986666667,
+        "current_ceff_lookup_ps": 94.37305508333333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d20",
+      "loads": 21,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 88.30360575868056,
+        "current_ceff_lookup_ps": 86.2932159513889,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 92.18145284791667,
+        "current_ceff_lookup_ps": 90.39699589166668,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d21",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 101.93566095138888,
+        "current_ceff_lookup_ps": 99.05816081631946,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 104.27723598611112,
+        "current_ceff_lookup_ps": 101.6179523388889,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d22",
+      "loads": 6,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 51.562533736111114,
+        "current_ceff_lookup_ps": 51.25788213263888,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 58.495137605555556,
+        "current_ceff_lookup_ps": 58.291132195833335,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d23",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 90.43499062395833,
+        "current_ceff_lookup_ps": 87.7544799357639,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 94.083604325,
+        "current_ceff_lookup_ps": 91.59935544583334,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d24",
+      "loads": 14,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 73.2010852375,
+        "current_ceff_lookup_ps": 71.9910171125,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 78.45428652083334,
+        "current_ceff_lookup_ps": 77.39166920555556,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d25",
+      "loads": 15,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 78.2170903375,
+        "current_ceff_lookup_ps": 76.64422388541666,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 83.06502754375,
+        "current_ceff_lookup_ps": 81.63599646354167,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d26",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 94.64146113645833,
+        "current_ceff_lookup_ps": 91.64561026215279,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 97.832787825,
+        "current_ceff_lookup_ps": 95.033626825,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d27",
+      "loads": 22,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 89.5201268138889,
+        "current_ceff_lookup_ps": 87.07610700694445,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 93.30251972777776,
+        "current_ceff_lookup_ps": 91.09821124027779,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d28",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 65.89993762083333,
+        "current_ceff_lookup_ps": 64.6094422875,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 71.89809654583333,
+        "current_ceff_lookup_ps": 70.7252884125,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d29",
+      "loads": 11,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 65.97003260000001,
+        "current_ceff_lookup_ps": 65.244125225,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 71.96899619999999,
+        "current_ceff_lookup_ps": 71.3825971,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d30",
+      "loads": 23,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 93.67895043559028,
+        "current_ceff_lookup_ps": 91.07724719913196,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 97.01840906874999,
+        "current_ceff_lookup_ps": 94.63916429375001,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d31",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 96.45505991857641,
+        "current_ceff_lookup_ps": 93.41975682777777,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 99.49063190555555,
+        "current_ceff_lookup_ps": 96.69150879444445,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d32",
+      "loads": 20,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 87.55268698888891,
+        "current_ceff_lookup_ps": 84.42482749895832,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 91.60980167222223,
+        "current_ceff_lookup_ps": 88.60089008489584,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d33",
+      "loads": 19,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 85.86391971875,
+        "current_ceff_lookup_ps": 83.78321670833334,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 90.12255639374999,
+        "current_ceff_lookup_ps": 88.20999863958333,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d34",
+      "loads": 24,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 96.27886979062502,
+        "current_ceff_lookup_ps": 93.677072584375,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 99.38763029296874,
+        "current_ceff_lookup_ps": 97.00844443359375,
+        "outside_table": []
+       }
+      }
+     },
+     {
+      "pad": "ot_prp_d35",
+      "loads": 8,
+      "polarities": {
+       "rise": {
+        "total_cap_lookup_ps": 57.35843338020834,
+        "current_ceff_lookup_ps": 56.8796501875,
+        "outside_table": []
+       },
+       "fall": {
+        "total_cap_lookup_ps": 64.06910930000001,
+        "current_ceff_lookup_ps": 63.74240610000001,
+        "outside_table": []
        }
       }
      }
