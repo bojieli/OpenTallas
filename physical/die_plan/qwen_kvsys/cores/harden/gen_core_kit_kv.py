@@ -425,7 +425,7 @@ def main():
     # memory macros (black boxes in kit_rtl.f) reached by the core's members
     kj = json.load(open(Path(a.kit_rtl) / cj["type"] / "kit_rtl.json"))
     hier = reached_modules([kd / "rtl" / Path(f).name for f in files], mod)
-    lefs, libs, macros = [], [], []
+    lefs, libs, macros, libs_ff = [], [], [], []
     for m, v in (kj.get("hard_macros") or {}).items():
         if re.search(rf"\b{re.escape(m)}\b", hier):
             macros.append(m)
@@ -436,6 +436,8 @@ def main():
                 shutil.copyfile(lib, kd / "macros" / Path(lib).name)
             tt = [l for l in v["libs"] if re.search(r"_(tt|TT|typ)", Path(l).name)] or v["libs"][:1]
             libs.append(f"/work/macros/{Path(tt[0]).name}")
+            ffl = [l for l in v["libs"] if re.search(r"_(ff|FF|fast)", Path(l).name)]
+            libs_ff.append(f"/work/macros/{Path(ffl[0]).name}" if ffl else None)
     hard_children = None
     if a.hard_children:
         hard_children = json.load(open(a.hard_children))
@@ -557,6 +559,11 @@ def main():
     if flow_basis:
         shutil.copyfile(tool / "setRC_rcx_asap7.tcl", kd / "setRC_rcx.tcl")
         shutil.copyfile(tool / "leaf_affinity.tcl", kd / "leaf_affinity.tcl")
+        # design-rule fit (PV-PC fd4_mc in-flow recipe, now the core default): fanout cap 24 for every repair_design
+        # (ASTK B: 134 nets > 64, max 162 -> ~1100 routed slew pins) + 20 % slew / cap margin for the routed RC
+        (kd / "max_fanout.tcl").write_text("# KV 10-25 core flow basis: fanout cap 24 for every repair_design (in-flow, not in the golden SDC)\n"
+                                           "set_max_fanout 24 [current_design]\nputs \"KVCORES max_fanout 24\"\n")
+    mcmm = flow_basis and (not lefs or all(libs_ff))
     for f in ("pin_audit_core.py", "corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
@@ -594,8 +601,11 @@ def main():
            "export ADDER_MAP_FILE = /work/adder_map_dontuse.v",
            *(["export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl",
               "export POST_CTS_TCL = /work/leaf_affinity.tcl"] if flow_basis else []),
-           *(["export CORNERS = tc bc", "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
-              "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if flow_basis and not lefs else []),
+           *(["export PRE_RESIZE_TCL = /work/max_fanout.tcl", "export PRE_CTS_TCL = /work/max_fanout.tcl",
+              "export PRE_GLOBAL_ROUTE_TCL = /work/max_fanout.tcl", "export SLEW_MARGIN = 20", "export CAP_MARGIN = 20"]
+             if flow_basis else []),
+           *(["export CORNERS = tc bc", "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) " + " ".join(libs),
+              "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) " + " ".join(l for l in libs_ff if l)] if mcmm else []),
            *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
            *[f"export {kv.split('=', 1)[0].strip()} = {kv.split('=', 1)[1].strip()}" for kv in a.orfs_var]]
     if rec.get("synth_memory_max_bits"):
@@ -612,7 +622,7 @@ def main():
               core_json_sha256=sha(a.core_json), pins=len(allp), plan_pins=len(pins), added_pins=len(added),
               clocks=clks, clock_nets=cj["report"].get("clock_nets"), resets=rsts, recipe=rec, sdc_lint="PASS (gen)", period_ps=per, insertion_budget_ps=ins, macros=macros,
               signal_max=rec.get("sigmax", a.sigmax),
-              flow_basis=("stock" if a.stock_flow else "FLOW-1025: rcx-rc + leaf-affinity" + ("" if lefs else " + mcmm tc/bc")),
+              flow_basis=("stock" if a.stock_flow else "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20" + (" + mcmm tc/bc" if mcmm else " (no FF macro lib: TC only)")),
               kit_hash=kit_hash(kd))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),
