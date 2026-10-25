@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "simulator": "Verilator5.050 two-state independent successor; inherited Icarus four-state remains live",
+ "production_cases": "3seeds*40000cycles allcontrol and validdata shifted1,0mismatch",
+ "mutant": "wrong lg input CAUGHT303mismatches first134",
+ "source_snapshot": "inherited toksched-s81/vsw_eq REV eeb8e96b6e800072102a3674dc72ea8a5f485092; samebench with heartbeat only",
+ "unit": "922703-1792960606",
+ "icarus_diagnosis": "finite slow active-event throughput:20s321timesteps5.51Mevents;40s583timesteps12.98Mevents; NOT delta-loop, inherited not killed",
+ "current_bound_token": "NOTRUN"
+}

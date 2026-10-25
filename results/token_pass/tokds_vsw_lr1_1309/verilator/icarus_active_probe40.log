@@ -1,0 +1,46 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-l14-schedule-1309/vsw_verilator
+ot-run: epyc3          skipped: no /srv/opentallas-scratch2/claude/codex-l14-schedule-1309/vsw_verilator
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-l14-schedule-1309/vsw_verilator
+ot-run: intel2         skipped: no /srv/opentallas-scratch2/claude/codex-l14-schedule-1309/vsw_verilator
+ot-run: localhost      admits    36 GB (avail 262, reserve 0, fresh 142.5, peak 18.9, headroom 0, waiters 1/64 GB) load 45/256 running 31 disk 1256 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-1056629-1792960746 after 1 s
+ ... Linking
+ ... Removing symbol tables
+ ... Compiletf functions
+Compiling VVP ...
+ ... VVP file version 12.0 (stable)
+Compile cleanup...
+ ...   261214 functors (net_fun pool=19398656 bytes)
+              79347 logic
+                  0 bufif
+                  0 resolv
+               1442 signals
+ ...   233467 filters (net_fil pool=28049408 bytes)
+ ...    21806 opcodes (540672 bytes)
+ ...    14178 nets
+ ...   261214 vvp_nets (14679616 bytes)
+ ...      544 arrays (3162 words)
+ ...       22 memories
+                 22 logic (746 words)
+                  0 real (0 words)
+ ...    75047 scopes
+ ... 3.55663 seconds, 194352.0/186312.0/6044.0 KBytes size/rss/shared
+Running ...
+ ...execute EndOfCompile callbacks
+ ...propagate initialization events
+ ...execute StartOfSim callbacks
+ ...run scheduler
+ ...execute Postsim callbacks
+ ... 36.4322 seconds, 194352.0/186344.0/6044.0 KBytes size/rss/shared
+Event counts:
+         583 time steps (pool=113)
+      695734 thread schedule events
+      404459 assign events
+             ...assign(vec4) pool=168516
+             ...assign(vec8) pool=204
+             ...assign(real) pool=256
+             ...assign(word) pool=256
+             ...assign(word/r) pool=204
+    12980346 other events (pool=86016)
+ot-run: RAN on localhost (unit oth-ubuntu-1056629-1792960746): exit 124
