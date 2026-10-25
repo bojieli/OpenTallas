@@ -1,0 +1,111 @@
+[
+ {
+  "name": "io_NW_io_u_lk_N0",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "NW_io",
+  "rect_um": [
+   0.0,
+   6065.28,
+   634.608,
+   7115.28
+  ],
+  "sites": 28,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 35 um; allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+  "note": "die_io.py plan: u_lk_N0 HBM-ARCH 10-24: rack table (tools/release_rack_design.py HBM_PAIRS, connections_hbm-ds.csv) macro for this SerDes: WN quad peer d+2: W edge io (as-built lk_N0); OWNER 10-24: host traffic in-band over this die link (dedicated host UCIe u_host_N dropped); u_host_ep fed from the u_ep_N0 host VC; route NW_io -> [L48] -> root",
+  "rack_macro": "lk_NW0",
+  "host": "in_band",
+  "host_route": "NW_io -> [L48] -> root"
+ },
+ {
+  "name": "io_NW_spb0_u_lk_S0",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "NW_spb0",
+  "rect_um": [
+   5806.08,
+   0.0,
+   6406.128,
+   1050.0
+  ],
+  "sites": 28,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 35 um; allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+  "note": "die_io.py plan: u_lk_S0 HBM-ARCH 10-24: rack table (tools/release_rack_design.py HBM_PAIRS, connections_hbm-ds.csv) macro for this SerDes: WS quad peer d-1: S edge, W tile (as-built lk_S0)",
+  "rack_macro": "lk_SW0"
+ },
+ {
+  "name": "io_PHY_N_u_phy_Q",
+  "kind": "phy_macro",
+  "iface": "hbm_phy",
+  "part": "PHY_N",
+  "rect_um": [
+   9797.76,
+   14031.36,
+   18299.52,
+   16104.96
+  ],
+  "sites": 5698,
+  "pitch_um": 55.0,
+  "signals": 1900,
+  "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 0 um; allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+  "note": "die_io.py plan: u_phy_Q"
+ },
+ {
+  "name": "io_vsN0_u_lk_S1",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "vsN0",
+  "rect_um": [
+   13392.0,
+   0.0,
+   13992.048,
+   1050.0
+  ],
+  "sites": 28,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 35 um; allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+  "note": "die_io.py plan: u_lk_S1; host link (BFS 3 port hop(s) from root): CONFIRM HBM-ARCH 10-24: rack table (tools/release_rack_design.py HBM_PAIRS, connections_hbm-ds.csv) macro for this SerDes: W5 ring previous quad: S edge seam (as-built lk_S1)",
+  "rack_macro": "lk_SW1"
+ },
+ {
+  "name": "io_NE_io_u_lk_N2",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "NE_io",
+  "rect_um": [
+   27462.672,
+   6065.28,
+   28097.28,
+   7115.28
+  ],
+  "sites": 28,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 0 um (B2o: MY image of io_NW_io_u_lk_N0); allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+  "note": "die_io.py plan: u_lk_N2 HBM-ARCH 10-24: rack table (tools/release_rack_design.py HBM_PAIRS, connections_hbm-ds.csv) macro for this SerDes: EN ring next quad: E edge io (as-built lk_N2)",
+  "rack_macro": "lk_NE0"
+ },
+ {
+  "name": "io_NE_spb0_u_lk_S0",
+  "kind": "phy_macro",
+  "iface": "serdes",
+  "part": "NE_spb0",
+  "rect_um": [
+   21691.152,
+   0.0,
+   22291.2,
+   1050.0
+  ],
+  "sites": 28,
+  "pitch_um": 150.0,
+  "signals": 26,
+  "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 35 um; allocated shoreline bump field contains PHY footprint; sites recomputed at declared pitch",
+  "note": "die_io.py plan: u_lk_S0 HBM-ARCH 10-24: rack table (tools/release_rack_design.py HBM_PAIRS, connections_hbm-ds.csv) macro for this SerDes: ES quad peer d+1: S edge, E tile (as-built lk_S3)",
+  "rack_macro": "lk_SE0"
+ }
+]

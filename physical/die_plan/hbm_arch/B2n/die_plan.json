@@ -1,6 +1,6 @@
 {
 "schema": "opentallas.die_plan.v1",
-"note": "HBM-ARCH concept (B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels); gen_arch.py; quad-tile array, beachfront PHYs, seam fabric, root tile; r2 cores_b2.py: hard cores = measured split pieces / d4g cores / SM halves, plan-track pins | B2m derived by physical/die_plan/hbm_arch/b2m.py: host in-band: dropped u_host_N (10333 cells) + io_NW_io_u_host_N; io_NW_io_u_lk_N0 host in_band route NW_io -> [L48] -> root; pg domains: 5 SerDes PHY supplies (phy_NW_io_u_lk_N0, phy_NW_spb0_u_lk_S0, phy_vsN0_u_lk_S1, phy_NE_io_u_lk_N2, phy_NE_spb0_u_lk_S0); core taps: 562 early core taps (434 from measured insertion > 250 ps, the rest SM halves at 250); clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4885, \"drivers\": 1874, \"cells\": [64, 64], \"taps\": 3322, \"drivers_moved\": 554, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 178, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1429.6, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 45, \"intra_over_80ps_at_5pct\": 45}; clock INFO alternative (zero-skew, not adopted): {\"method\": \"partition-aware zero-skew tree (guillotine bisection + linear-delay merge)\", \"taps\": 3322, \"early_taps\": 861, \"nodes\": 6643, \"depth\": 14, \"root_um\": [13754.88, 7078.317], \"insertion_wire_um\": 25254.2, \"insertion_ps_model\": 2525.4, \"wire_mm\": 2220.8, \"snake_mm\": 638.5, \"seams_over_80ps_5pct_ocv\": 118} | B2n derived by physical/die_plan/hbm_arch/b2n.py: decision 12: 460 ports drop M8/M9 (2 pin layers), reach / ft_station_max 405; boundary q_su10 +216 / q_spu0 -216 um (hub<->su10 N face carries 2998+1719+1615+514+514+268 b = 1363 um at 5.6 pins/um on M7/M5 vs 1166 um of hub overlap; spu0 (soft, no cores) gives 216 um (its hub face needs 1087 of 2290 um)); boundary q_su30 +216 / q_spu1 -216 um (hub<->su30 S face: same traffic as su10 (mirror in y); spu1 soft); lane delta (lane_delta.json, results/arch/hbm_arch_1024/b2_delays.json @ 818651e99): 26 lanes widened (L0 2998->2999, L0m 2998->2999, L1 2998->2999, L1m 2998->2999, L2 2998->2999, L2m 2998->2999, L3 2998->2999, L3m 2998->2999, L10 2334->2335, L10m 2334->2335, L11 2334->2335, L11m 2334->2335, L71 266->267, L71m 266->267, L72 266->267, L72m 266->267, L73 266->267, L73m 266->267, L82 139->140, L82m 139->140, L12 2134->3143, L12m 2134->3143, L13 2133->3143, L13m 2133->3143, L74 223->1491, L74m 223->1491); 10 new lanes (L150 NW_hub->NE_hub 560 b via NW_spu0/NW_su10/NW_su11/root/NE_su11/NE_su10/NE_spu0; L150m NE_hub->NW_hub 560 b via NE_spu0/NE_su10/NE_su11/root/NW_su11/NW_su10/NW_spu0; L151 NW_spb0->NW_hub 615 b via NW_spb1/NW_spb2/NW_spu1; L151m NE_spb0->NE_hub 615 b via NE_spb1/NE_spb2/NE_spu1; L152 NW_hub->NW_spb0 632 b via NW_spu1/NW_spb2/NW_spb1; L152m NE_hub->NE_spb0 632 b via NE_spu1/NE_spb2/NE_spb1; L153 vsN0->root 615 b via vsN1/vsN2; L154 root->vsN0 632 b via vsN2/vsN1; L155 NW_spt0->root 9 b via NW_spu0/NW_su10/NW_su11; L155m NE_spt0->root 9 b via NE_spu0/NE_su10/NE_su11); 16/18 bundles carry their RTL need; SHORT (hub perimeter / su-row cuts full, partition change needed): NW_hub->root data 1491 < 3749; NE_hub->root data 1491 < 2709; re-windowed 950 ports (917 grown to <= 5.6 pins/um on 2 layers); 0 infeasible face groups; mirror: 28 second-instance port windows set from the first instance (type frame); re-windowed 19 ports (6 grown to <= 5.6 pins/um on 2 layers); 6 infeasible face groups; mirror pin tables: 16 port pairs nudged to one table, 0 unresolved; core outlines (core_reshape.json): NW_io: 2 x hfd_ep_static -> 276.48x315.36 (128 internal links re-routed); NE_io: 1 x hfd_ep_static -> 276.48x315.36 (16 internal links re-routed); q_spb0: 1 x hfd_ep_static -> 276.48x315.36 (2 internal links re-routed); vsN0: 1 x hfd_ep_static -> 276.48x315.36 (2 internal links re-routed); q_b000: 1 x ot_hbm_hc_bankq0_static__lanes6_7_bank -> 440.64x496.8 (10 internal links re-routed); q_hub: 1 x ot_hbm_su_static_sfustore_hw -> 293.76x354.24 (297 internal links re-routed); q_hub: 1 x ot_hgi_coll_gq_land -> 142.56x207.36 (163 internal links re-routed); q_hub: 1 x ot_hgi_coll_inj_idx_join_rg -> 211.68x315.36 (179 internal links re-routed); q_hub: 1 x ot_hgi_sfu_programme_store_r10 -> 613.44x691.2 (147 internal links re-routed); core outlines (core_grow.json): q_hub: 16 x ot_hbm_svc_pc_ctrl_leaf_cfg_h9b -> 177.984x177.984 (1829 internal links re-routed); q_spt0: 2 x ot_hbm_svc_sm_xcal_rel_t -> 250.56x250.56 (2 internal links re-routed); q_spb2: 2 x ot_hbm_svc_sm_xcal_rel_t -> 250.56x250.56 (4 internal links re-routed); q_b100: grid re-pack 3 columns x 6 rows; q_b100: 16 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (159 internal links re-routed); q_b101: grid re-pack 3 columns x 6 rows; q_b101: 17 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (210 internal links re-routed); q_b102: grid re-pack 3 columns x 6 rows; q_b102: 16 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (159 internal links re-routed); q_b103: grid re-pack 3 columns x 6 rows; q_b103: 17 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (107 internal links re-routed); core outlines (exp_lane.json): q_su00: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (212 internal links re-routed); q_su01: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (138 internal links re-routed); q_su10: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (189 internal links re-routed); q_su11: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (253 internal links re-routed); exp lanes (GEOM 23:29, exp_lane.json): 32 lane_exp cores -> 440.64x207.36, family macro placement (6 SRAM), 32 early core taps; SU grid (COORD GEOM 23:23, B2n_inputs/su_grid.json): q_su00 3x3 grid of 8 440.64x457.92 cells (12 cores, 4 stacked) + side column 5 (E of grid) at x 1062.72..2626.56 of 2885.76 (220 internal links re-routed); q_su01 3x3 grid of 7 440.64x457.92 cells (11 cores, 4 stacked) + side column 0 (E of grid) at x 725.76..2064.96 of 2540.16 (138 internal links re-routed); q_su10 3x3 grid of 8 440.64x457.92 cells (12 cores, 4 stacked) + side column 0 (E of grid) at x 8.64..1347.84 of 2756.16 (196 internal links re-routed); q_su11 3x3 grid of 7 440.64x457.92 cells (11 cores, 4 stacked) + side column 5 (E of grid) at x 8.64..1572.48 of 2885.76 (256 internal links re-routed); q_su20 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 6 (E of grid) at x 898.56..2877.12 of 2885.76 (36 internal links re-routed); q_su21 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 0 (E of grid) at x 535.68..2064.96 of 2540.16 (17 internal links re-routed); q_su30 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 1 (E of grid) at x 8.64..1987.2 of 2756.16 (22 internal links re-routed); q_su31 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 5 (E of grid) at x 8.64..1762.56 of 2885.76 (28 internal links re-routed); ft slot stations 1188 -> 2742; internal stations 22349 -> 59787 (+0 new links over 405 um); 0 unroutable; clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4805, \"drivers\": 1824, \"cells\": [64, 64], \"taps\": 3370, \"drivers_moved\": 458, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 8, \"coherence_moves\": 196, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1412.5, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 47, \"intra_over_80ps_at_5pct\": 45}; ft_budget: 98 M8/M9 ft reservations dropped (ruling 9.3); reset: wavefront mode not in this tool base (RESET claude/reset-1024 pending) -> B2m reset kept; latency: 202/298 lanes +cycles (max +47, sum +2550)",
+"note": "HBM-ARCH concept (B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels); gen_arch.py; quad-tile array, beachfront PHYs, seam fabric, root tile; r2 cores_b2.py: hard cores = measured split pieces / d4g cores / SM halves, plan-track pins | B2m derived by physical/die_plan/hbm_arch/b2m.py: host in-band: dropped u_host_N (10333 cells) + io_NW_io_u_host_N; io_NW_io_u_lk_N0 host in_band route NW_io -> [L48] -> root; pg domains: 5 SerDes PHY supplies (phy_NW_io_u_lk_N0, phy_NW_spb0_u_lk_S0, phy_vsN0_u_lk_S1, phy_NE_io_u_lk_N2, phy_NE_spb0_u_lk_S0); core taps: 562 early core taps (434 from measured insertion > 250 ps, the rest SM halves at 250); clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4885, \"drivers\": 1874, \"cells\": [64, 64], \"taps\": 3322, \"drivers_moved\": 554, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 178, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1429.6, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 45, \"intra_over_80ps_at_5pct\": 45}; clock INFO alternative (zero-skew, not adopted): {\"method\": \"partition-aware zero-skew tree (guillotine bisection + linear-delay merge)\", \"taps\": 3322, \"early_taps\": 861, \"nodes\": 6643, \"depth\": 14, \"root_um\": [13754.88, 7078.317], \"insertion_wire_um\": 25254.2, \"insertion_ps_model\": 2525.4, \"wire_mm\": 2220.8, \"snake_mm\": 638.5, \"seams_over_80ps_5pct_ocv\": 118} | B2n derived by physical/die_plan/hbm_arch/b2n.py: decision 12: 460 ports drop M8/M9 (2 pin layers), reach / ft_station_max 405; boundary q_su10 +216 / q_spu0 -216 um (hub<->su10 N face carries 2998+1719+1615+514+514+268 b = 1363 um at 5.6 pins/um on M7/M5 vs 1166 um of hub overlap; spu0 (soft, no cores) gives 216 um (its hub face needs 1087 of 2290 um)); boundary q_su30 +216 / q_spu1 -216 um (hub<->su30 S face: same traffic as su10 (mirror in y); spu1 soft); lane delta (lane_delta.json, results/arch/hbm_arch_1024/b2_delays.json @ 818651e99): 26 lanes widened (L0 2998->2999, L0m 2998->2999, L1 2998->2999, L1m 2998->2999, L2 2998->2999, L2m 2998->2999, L3 2998->2999, L3m 2998->2999, L10 2334->2335, L10m 2334->2335, L11 2334->2335, L11m 2334->2335, L71 266->267, L71m 266->267, L72 266->267, L72m 266->267, L73 266->267, L73m 266->267, L82 139->140, L82m 139->140, L12 2134->3143, L12m 2134->3143, L13 2133->3143, L13m 2133->3143, L74 223->1491, L74m 223->1491); 10 new lanes (L150 NW_hub->NE_hub 560 b via NW_spu0/NW_su10/NW_su11/root/NE_su11/NE_su10/NE_spu0; L150m NE_hub->NW_hub 560 b via NE_spu0/NE_su10/NE_su11/root/NW_su11/NW_su10/NW_spu0; L151 NW_spb0->NW_hub 615 b via NW_spb1/NW_spb2/NW_spu1; L151m NE_spb0->NE_hub 615 b via NE_spb1/NE_spb2/NE_spu1; L152 NW_hub->NW_spb0 632 b via NW_spu1/NW_spb2/NW_spb1; L152m NE_hub->NE_spb0 632 b via NE_spu1/NE_spb2/NE_spb1; L153 vsN0->root 615 b via vsN1/vsN2; L154 root->vsN0 632 b via vsN2/vsN1; L155 NW_spt0->root 9 b via NW_spu0/NW_su10/NW_su11; L155m NE_spt0->root 9 b via NE_spu0/NE_su10/NE_su11); 16/18 bundles carry their RTL need; SHORT (hub perimeter / su-row cuts full, partition change needed): NW_hub->root data 1491 < 3749; NE_hub->root data 1491 < 2709; re-windowed 950 ports (917 grown to <= 5.6 pins/um on 2 layers); 0 infeasible face groups; mirror: 28 second-instance port windows set from the first instance (type frame); re-windowed 19 ports (6 grown to <= 5.6 pins/um on 2 layers); 6 infeasible face groups; mirror pin tables: 16 port pairs nudged to one table, 0 unresolved; core outlines (core_reshape.json): NW_io: 2 x hfd_ep_static -> 250.56x375.84 (128 internal links re-routed); NE_io: 1 x hfd_ep_static -> 250.56x375.84 (16 internal links re-routed); q_spb0: 1 x hfd_ep_static -> 250.56x375.84 (2 internal links re-routed); vsN0: 1 x hfd_ep_static -> 250.56x375.84 (2 internal links re-routed); q_b000: 1 x ot_hbm_hc_bankq0_static__lanes6_7_bank -> 440.64x496.8 (10 internal links re-routed); q_hub: 1 x ot_hbm_su_static_sfustore_hw -> 336.96x328.32 (297 internal links re-routed); q_hub: 1 x ot_hgi_coll_gq_land -> 142.56x207.36 (178 internal links re-routed); q_hub: 1 x ot_hgi_coll_inj_idx_join_rg -> 211.68x315.36 (194 internal links re-routed); q_hub: 1 x ot_hgi_sfu_programme_store_r10 -> 574.56x738.72 (162 internal links re-routed); core outlines (core_grow.json): q_hub: 16 x ot_hbm_svc_pc_ctrl_leaf_cfg_h9b -> 177.984x177.984 (1844 internal links re-routed); q_spt0: 2 x ot_hbm_svc_sm_xcal_rel_t -> 250.56x250.56 (2 internal links re-routed); q_spb2: 2 x ot_hbm_svc_sm_xcal_rel_t -> 250.56x250.56 (4 internal links re-routed); q_b100: grid re-pack 3 columns x 6 rows; q_b100: 16 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (159 internal links re-routed); q_b101: grid re-pack 3 columns x 6 rows; q_b101: 17 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (210 internal links re-routed); q_b102: grid re-pack 3 columns x 6 rows; q_b102: 16 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (159 internal links re-routed); q_b103: grid re-pack 3 columns x 6 rows; q_b103: 17 x ot_hbm_idx_score_quarter_static -> 218.592x187.488 (107 internal links re-routed); core outlines (exp_lane.json): q_su00: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (212 internal links re-routed); q_su01: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (138 internal links re-routed); q_su10: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (189 internal links re-routed); q_su11: 8 x ot_hbm_su_static_pgslice_lg__lane_exp* -> 440.64x207.36 (253 internal links re-routed); exp lanes (GEOM 23:29, exp_lane.json): 32 lane_exp cores -> 440.64x207.36, family macro placement (6 SRAM), 32 early core taps; SU grid (COORD GEOM 23:23, B2n_inputs/su_grid.json): q_su00 3x3 grid of 8 440.64x457.92 cells (12 cores, 4 stacked) + side column 5 (E of grid) at x 1062.72..2626.56 of 2885.76 (220 internal links re-routed); q_su01 3x3 grid of 7 440.64x457.92 cells (11 cores, 4 stacked) + side column 0 (E of grid) at x 725.76..2064.96 of 2540.16 (138 internal links re-routed); q_su10 3x3 grid of 8 440.64x457.92 cells (12 cores, 4 stacked) + side column 0 (E of grid) at x 8.64..1347.84 of 2756.16 (196 internal links re-routed); q_su11 3x3 grid of 7 440.64x457.92 cells (11 cores, 4 stacked) + side column 5 (E of grid) at x 8.64..1572.48 of 2885.76 (256 internal links re-routed); q_su20 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 6 (E of grid) at x 898.56..2877.12 of 2885.76 (36 internal links re-routed); q_su21 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 0 (E of grid) at x 535.68..2064.96 of 2540.16 (17 internal links re-routed); q_su30 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 1 (E of grid) at x 8.64..1987.2 of 2756.16 (22 internal links re-routed); q_su31 2x2 grid of 4 760.32x725.76 cells (4 cores, 0 stacked) + side column 5 (E of grid) at x 8.64..1762.56 of 2885.76 (28 internal links re-routed); ft slot stations 1188 -> 2742; internal stations 22349 -> 59779 (+0 new links over 405 um); 0 unroutable; clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4805, \"drivers\": 1823, \"cells\": [64, 64], \"taps\": 3370, \"drivers_moved\": 457, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 196, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1412.5, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 47, \"intra_over_80ps_at_5pct\": 45}; ft_budget: 98 M8/M9 ft reservations dropped (ruling 9.3); reset: wavefront mode not in this tool base (RESET claude/reset-1024 pending) -> B2m reset kept; latency: 202/298 lanes +cycles (max +47, sum +2550)",
 "die": {
 "name": "hbm_arch_B2n",
 "label": "B2n = B2m + decision 12 (ft <= M7, 405-um stations); B2m = B2l (accepted 10-24, ~22% DS-AR loss vs d4g) + in-band host, balanced binary H-tree, SerDes PHY supplies",
@@ -36525,8 +36525,8 @@
 "name": "u_sfup_Q",
 "kind": "core",
 "xy": [
-574.536,
-157.699
+572.184,
+131.779
 ],
 "insertion_ps": 1150.0,
 "budget_owner": "ot_hgi_sfu_programme_store_r10",
@@ -39000,7 +39000,7 @@
 "name": "u_sfus_Q",
 "kind": "core",
 "xy": [
-175.128,
+149.208,
 1963.459
 ],
 "insertion_ps": 550.0,
@@ -39332,12 +39332,12 @@
 "cells": 79683,
 "note": "as-built sfup_NW",
 "origin_um": [
-267.84,
-164.16
+285.12,
+138.24
 ],
 "outline_um": [
-613.44,
-691.2
+574.56,
+738.72
 ]
 },
 {
@@ -39902,12 +39902,12 @@
 "cells": 18572,
 "note": "as-built sfus_NW",
 "origin_um": [
-172.8,
+146.88,
 1969.92
 ],
 "outline_um": [
-293.76,
-354.24
+336.96,
+328.32
 ]
 },
 {
@@ -41147,19 +41147,19 @@
 "inst": "u_sfup_Q",
 "module": "ot_hgi_sfu_programme_store_r10",
 "origin_um": [
-267.84,
-164.16
+285.12,
+138.24
 ],
 "outline_um": [
-613.44,
-691.2
+574.56,
+738.72
 ],
 "track_offset_um": [
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hgi_sfu_programme_store_r10__613.44x691.2__q_hub_u_sfup_Q.json",
-"note": "d4g hard core; 79683 cells | B2n grow (HBM-CORES): 1080x950.4 -> 613.44x691.2, was ot_hgi_sfu_programme_store_r10__1080x950.4__q_hub_u_sfup_Q.json"
+"pins_file": "cores/ot_hgi_sfu_programme_store_r10__574.56x738.72__q_hub_u_sfup_Q.json",
+"note": "d4g hard core; 79683 cells | B2n grow (HBM-CORES): 1080x950.4 -> 574.56x738.72, was ot_hgi_sfu_programme_store_r10__1080x950.4__q_hub_u_sfup_Q.json"
 },
 {
 "inst": "u_pgp_Q",
@@ -41813,19 +41813,19 @@
 "inst": "u_sfus_Q",
 "module": "ot_hbm_su_static_sfustore_hw",
 "origin_um": [
-172.8,
+146.88,
 1969.92
 ],
 "outline_um": [
-293.76,
-354.24
+336.96,
+328.32
 ],
 "track_offset_um": [
 0.0,
 0.0
 ],
-"pins_file": "cores/ot_hbm_su_static_sfustore_hw__293.76x354.24__q_hub_u_sfus_Q.json",
-"note": "d4g hard core; 18572 cells | B2n grow (HBM-CORES): 561.6x276.48 -> 293.76x354.24, was ot_hbm_su_static_sfustore_hw__561.6x276.48__q_hub_u_sfus_Q.json"
+"pins_file": "cores/ot_hbm_su_static_sfustore_hw__336.96x328.32__q_hub_u_sfus_Q.json",
+"note": "d4g hard core; 18572 cells | B2n grow (HBM-CORES): 561.6x276.48 -> 336.96x328.32, was ot_hbm_su_static_sfustore_hw__561.6x276.48__q_hub_u_sfus_Q.json"
 },
 {
 "inst": "u_hb_quant_Q__u_dec",
@@ -42520,8 +42520,8 @@
 1293.819
 ],
 "to_um": [
-267.851,
-236.756
+285.13,
+215.827
 ],
 "regs_um": [
 [
@@ -42537,8 +42537,8 @@
 240.809
 ],
 [
-263.52,
-236.756
+280.8,
+215.827
 ]
 ],
 "bits": 471,
@@ -42582,8 +42582,12 @@
 2250.967
 ],
 [
-168.48,
-2056.32
+4.32,
+1896.233
+],
+[
+128.736,
+1961.28
 ],
 [
 424.224,
@@ -42609,7 +42613,7 @@
 "bits": 2470,
 "launch": "face bus L0_o",
 "capture": "u_pgp_Q.command",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 3811 um core link, 6 station(s) (data + epoch), hops <= 750 um; +6 cycle(s) on this link | B2n decision 12: 12 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 3811 um core link, 6 station(s) (data + epoch), hops <= 750 um; +6 cycle(s) on this link | B2n decision 12: 13 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L102_o",
@@ -43513,92 +43517,92 @@
 ],
 "regs_um": [
 [
-3773.889,
+4127.286,
 4142.88
 ],
 [
-3420.492,
+4480.683,
 4142.88
 ],
 [
-3067.095,
+4834.08,
 4142.88
 ],
 [
-2713.698,
-4142.88
+4834.08,
+3788.146
 ],
 [
-2360.3,
-4142.88
+4565.314,
+3753.0
 ],
 [
-2006.903,
-4142.88
+4228.91,
+3753.0
 ],
 [
-1653.506,
-4142.88
+4004.64,
+3643.74
 ],
 [
-1300.109,
-4142.88
+3866.4,
+3490.56
 ],
 [
-946.712,
-4142.88
+3659.04,
+3388.32
 ],
 [
-593.315,
-4142.88
+3391.2,
+3317.76
 ],
 [
-239.918,
-4142.88
+3183.84,
+3215.52
 ],
 [
-4.32,
-4024.635
+2975.184,
+3163.5
 ],
 [
-4.32,
-3669.902
+2750.914,
+3054.24
 ],
 [
-4.32,
-3315.168
+2406.24,
+3041.28
 ],
 [
-4.32,
-2960.434
+2406.24,
+2694.6
 ],
 [
-4.32,
-2605.701
+2207.52,
+2536.92
 ],
 [
-4.32,
-2250.967
+2207.52,
+2190.24
 ],
 [
-168.48,
-2056.32
+2109.024,
+2000.16
 ],
 [
-424.224,
-1961.28
+2017.44,
+1777.68
 ],
 [
-548.64,
-1728.0
+1746.09,
+1706.4
 ],
 [
-635.04,
-1499.04
+1390.5,
+1706.4
 ],
 [
-894.24,
-1408.32
+1153.44,
+1596.549
 ],
 [
 1153.44,
@@ -43622,20 +43626,20 @@
 ],
 "regs_um": [
 [
-470.88,
-159.84
+514.08,
+133.92
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -43736,24 +43740,24 @@
 ],
 "regs_um": [
 [
-239.918,
-4.32
+280.8,
+133.92
 ],
 [
-593.315,
-4.32
+280.8,
+347.451
 ],
 [
-781.92,
-159.84
+280.8,
+667.749
 ],
 [
-885.6,
-393.12
+397.44,
+881.28
 ],
 [
-885.6,
-743.04
+747.36,
+881.28
 ],
 [
 894.24,
@@ -43887,16 +43891,16 @@
 ],
 "regs_um": [
 [
-263.52,
-743.04
+280.8,
+774.514
 ],
 [
-470.88,
-859.68
+397.44,
+881.28
 ],
 [
-781.92,
-859.68
+747.36,
+881.28
 ],
 [
 894.24,
@@ -43936,16 +43940,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -44054,8 +44058,12 @@
 2250.967
 ],
 [
-168.48,
-2056.32
+4.32,
+1896.233
+],
+[
+128.736,
+1961.28
 ],
 [
 424.224,
@@ -44081,7 +44089,7 @@
 "bits": 2470,
 "launch": "face bus L55_i",
 "capture": "u_pgp_Q.command",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 3109 um core link, 5 station(s) (data + epoch), hops <= 750 um; +5 cycle(s) on this link | B2n decision 12: 9 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 3109 um core link, 5 station(s) (data + epoch), hops <= 750 um; +5 cycle(s) on this link | B2n decision 12: 10 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L57_i",
@@ -51746,19 +51754,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -51880,19 +51888,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -52027,19 +52035,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -52173,19 +52181,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -52242,19 +52250,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -52314,16 +52322,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -52359,16 +52367,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -52473,16 +52481,16 @@
 832.032
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -52615,16 +52623,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -52698,19 +52706,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -52832,19 +52840,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -52987,19 +52995,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -53137,19 +53145,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -53327,16 +53335,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -53591,16 +53599,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -53682,19 +53690,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -53816,19 +53824,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -53959,19 +53967,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -54105,19 +54113,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -54174,19 +54182,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -54246,16 +54254,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -54291,16 +54299,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -54405,16 +54413,16 @@
 832.032
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -54547,16 +54555,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -55255,16 +55263,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -55515,16 +55523,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -72854,16 +72862,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -73122,16 +73130,20 @@
 4.32
 ],
 [
-885.6,
-159.84
+828.913,
+4.32
 ],
 [
-885.6,
-509.76
+864.0,
+240.686
 ],
 [
-885.6,
-859.68
+864.0,
+560.983
+],
+[
+864.0,
+881.28
 ],
 [
 894.24,
@@ -73165,7 +73177,7 @@
 "bits": 256,
 "launch": "face bus L40_i",
 "capture": "u_svg_Q2.desc_data",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 3164 um core link, 5 station(s) (data + epoch), hops <= 750 um; +5 cycle(s) on this link | B2n decision 12: 12 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 3164 um core link, 5 station(s) (data + epoch), hops <= 750 um; +5 cycle(s) on this link | B2n decision 12: 13 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L49_o",
@@ -73179,44 +73191,44 @@
 ],
 "regs_um": [
 [
-1771.305,
+2124.702,
 4.32
 ],
 [
-1417.908,
-4.32
+2233.44,
+190.08
 ],
 [
-1064.511,
-4.32
+2276.64,
+419.04
 ],
 [
-885.6,
-159.84
+2257.632,
+747.36
 ],
 [
-885.6,
-509.76
+2101.68,
+937.44
 ],
 [
-885.6,
-859.68
+2101.68,
+1266.994
 ],
 [
-894.24,
-1192.32
-],
-[
-1004.4,
-1408.32
-],
-[
-1153.44,
+2101.68,
 1596.549
 ],
 [
-1196.64,
-1811.52
+1864.62,
+1706.4
+],
+[
+1509.03,
+1706.4
+],
+[
+1486.08,
+2017.44
 ],
 [
 1239.84,
@@ -73386,16 +73398,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -73654,16 +73666,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -75433,16 +75445,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -75701,16 +75713,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -75969,16 +75981,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -76229,16 +76241,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -76497,16 +76509,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -76765,16 +76777,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -77033,16 +77045,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -77301,16 +77313,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -77569,16 +77581,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -77882,20 +77894,20 @@
 ],
 "regs_um": [
 [
-574.56,
-159.84
+630.72,
+133.92
 ],
 [
-885.6,
-159.84
+864.0,
+240.686
 ],
 [
-885.6,
-509.76
+864.0,
+560.983
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 894.24,
@@ -77944,35 +77956,35 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-4.32,
-1186.766
+280.8,
+774.514
 ],
 [
-4.32,
-1541.499
+514.08,
+881.28
 ],
 [
-4.32,
-1896.233
+864.0,
+881.28
 ],
 [
-227.232,
-1961.28
+894.24,
+1192.32
 ],
 [
-548.64,
-1956.96
+1004.4,
+1408.32
 ],
 [
-876.96,
-1974.24
+1153.44,
+1596.549
 ],
 [
 1196.64,
-2004.48
+1811.52
 ],
 [
 1239.84,
@@ -78236,20 +78248,20 @@
 ],
 "regs_um": [
 [
-574.56,
-159.84
+630.72,
+133.92
 ],
 [
-885.6,
-159.84
+864.0,
+240.686
 ],
 [
-885.6,
-509.76
+864.0,
+560.983
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 894.24,
@@ -78298,35 +78310,35 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-4.32,
-1186.766
+280.8,
+774.514
 ],
 [
-4.32,
-1541.499
+514.08,
+881.28
 ],
 [
-4.32,
-1896.233
+864.0,
+881.28
 ],
 [
-227.232,
-1961.28
+894.24,
+1192.32
 ],
 [
-548.64,
-1956.96
+1004.4,
+1408.32
 ],
 [
-876.96,
-1974.24
+1153.44,
+1596.549
 ],
 [
 1196.64,
-2004.48
+1908.0
 ],
 [
 1239.84,
@@ -82991,16 +83003,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -83276,16 +83288,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -83491,16 +83503,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -83715,16 +83727,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -83804,16 +83816,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -84135,16 +84147,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -84375,16 +84387,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -84603,16 +84615,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -84692,16 +84704,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -85023,16 +85035,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -85263,16 +85275,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -90403,20 +90415,20 @@
 ],
 "regs_um": [
 [
-470.88,
-159.84
+514.08,
+133.92
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -90587,16 +90599,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -90648,16 +90660,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -90729,16 +90741,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -90806,16 +90818,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -90855,16 +90867,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -90928,16 +90940,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -90985,16 +90997,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -91931,19 +91943,19 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -92007,16 +92019,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -93157,19 +93169,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -93291,19 +93303,19 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -93363,16 +93375,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -93433,19 +93445,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -94517,19 +94529,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -94651,19 +94663,19 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -94723,16 +94735,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -94793,19 +94805,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -95877,19 +95889,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -96011,19 +96023,19 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -96083,16 +96095,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -96153,19 +96165,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -97237,19 +97249,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -97371,19 +97383,19 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -97443,16 +97455,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -97513,19 +97525,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -104301,19 +104313,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -104386,20 +104398,20 @@
 ],
 "regs_um": [
 [
-574.56,
-159.84
+630.72,
+133.92
 ],
 [
-885.6,
-159.84
+864.0,
+240.686
 ],
 [
-885.6,
-509.76
+864.0,
+560.983
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -104436,19 +104448,19 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -104590,16 +104602,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -104673,19 +104685,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -104763,19 +104775,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -104848,20 +104860,20 @@
 ],
 "regs_um": [
 [
-574.56,
-159.84
+630.72,
+133.92
 ],
 [
-885.6,
-159.84
+864.0,
+240.686
 ],
 [
-885.6,
-509.76
+864.0,
+560.983
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -104898,19 +104910,19 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105052,16 +105064,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105135,19 +105147,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105225,19 +105237,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105310,20 +105322,20 @@
 ],
 "regs_um": [
 [
-574.56,
-159.84
+630.72,
+133.92
 ],
 [
-885.6,
-159.84
+864.0,
+240.686
 ],
 [
-885.6,
-509.76
+864.0,
+560.983
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105360,19 +105372,19 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105514,16 +105526,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105597,19 +105609,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105691,19 +105703,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105780,20 +105792,20 @@
 ],
 "regs_um": [
 [
-574.56,
-159.84
+630.72,
+133.92
 ],
 [
-885.6,
-159.84
+864.0,
+240.686
 ],
 [
-885.6,
-509.76
+864.0,
+560.983
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105830,19 +105842,19 @@
 "regs_um": [
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -105939,32 +105951,32 @@
 ],
 "regs_um": [
 [
-1064.511,
+1417.908,
 4.32
 ],
 [
-885.6,
-159.84
+1771.305,
+4.32
 ],
 [
-885.6,
-509.76
+2124.702,
+4.32
 ],
 [
-885.6,
-859.68
+2233.44,
+190.08
 ],
 [
-1153.44,
-937.44
+2276.64,
+419.04
 ],
 [
-1239.84,
-678.24
+2049.84,
+548.64
 ],
 [
-1401.12,
-678.24
+1766.34,
+548.64
 ],
 [
 1671.84,
@@ -105992,16 +106004,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -106079,19 +106091,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -106282,19 +106294,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -106359,19 +106371,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -106436,19 +106448,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -107216,19 +107228,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -107293,19 +107305,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -107370,19 +107382,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -108252,19 +108264,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -108329,19 +108341,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -108406,19 +108418,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -108879,19 +108891,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -108956,19 +108968,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -109033,19 +109045,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -109563,32 +109575,36 @@
 2250.967
 ],
 [
-168.48,
-2056.32
+4.32,
+1896.233
 ],
 [
-424.224,
-1961.28
+4.32,
+1541.499
 ],
 [
-548.64,
-1728.0
+4.32,
+1186.766
 ],
 [
-635.04,
-1499.04
+4.32,
+832.032
 ],
 [
-894.24,
-1408.32
+280.8,
+774.514
 ],
 [
-894.24,
-1084.32
+514.08,
+881.28
+],
+[
+864.0,
+881.28
 ],
 [
 1153.44,
-1047.291
+937.44
 ],
 [
 1390.5,
@@ -109626,7 +109642,7 @@
 "bits": 17,
 "launch": "face bus L0_o",
 "capture": "u_vmb_Q1.rq0",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 6732 um core link, 10 station(s) (data + epoch), hops <= 750 um; +10 cycle(s) on this link | B2n decision 12: 21 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 6732 um core link, 10 station(s) (data + epoch), hops <= 750 um; +10 cycle(s) on this link | B2n decision 12: 22 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L102_o",
@@ -109645,19 +109661,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -109718,19 +109734,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -109791,19 +109807,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -110061,32 +110077,36 @@
 2250.967
 ],
 [
-168.48,
-2056.32
+4.32,
+1896.233
 ],
 [
-424.224,
-1961.28
+4.32,
+1541.499
 ],
 [
-548.64,
-1728.0
+4.32,
+1186.766
 ],
 [
-635.04,
-1499.04
+4.32,
+832.032
 ],
 [
-894.24,
-1408.32
+280.8,
+774.514
 ],
 [
-894.24,
-1084.32
+514.08,
+881.28
+],
+[
+864.0,
+881.28
 ],
 [
 1153.44,
-1047.291
+937.44
 ],
 [
 1390.5,
@@ -110124,7 +110144,7 @@
 "bits": 17,
 "launch": "face bus L55_i",
 "capture": "u_vmb_Q1.rq0",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 6030 um core link, 9 station(s) (data + epoch), hops <= 750 um; +9 cycle(s) on this link | B2n decision 12: 18 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 6030 um core link, 9 station(s) (data + epoch), hops <= 750 um; +9 cycle(s) on this link | B2n decision 12: 19 station(s), hops <= 405 um"
 },
 {
 "conn": "u_vmb_Q1.rq1|u_hb_dbk_Q",
@@ -110551,19 +110571,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -110624,19 +110644,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -110697,19 +110717,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -111547,19 +111567,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -111620,19 +111640,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -111693,19 +111713,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -112064,32 +112084,36 @@
 2250.967
 ],
 [
-168.48,
-2056.32
+4.32,
+1896.233
 ],
 [
-424.224,
-1961.28
+4.32,
+1541.499
 ],
 [
-548.64,
-1728.0
+4.32,
+1186.766
 ],
 [
-635.04,
-1499.04
+4.32,
+832.032
 ],
 [
-894.24,
-1408.32
+280.8,
+774.514
 ],
 [
-894.24,
-1084.32
+514.08,
+881.28
+],
+[
+864.0,
+881.28
 ],
 [
 1153.44,
-1047.291
+937.44
 ],
 [
 1390.5,
@@ -112127,7 +112151,7 @@
 "bits": 1,
 "launch": "face bus L0_o",
 "capture": "u_vmb_Q1.wq_done0",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 6737 um core link, 10 station(s) (data + epoch), hops <= 750 um; +10 cycle(s) on this link | B2n decision 12: 21 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 6737 um core link, 10 station(s) (data + epoch), hops <= 750 um; +10 cycle(s) on this link | B2n decision 12: 22 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L102_o",
@@ -112146,19 +112170,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -112219,19 +112243,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -112292,19 +112316,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -112562,32 +112586,36 @@
 2250.967
 ],
 [
-168.48,
-2056.32
+4.32,
+1896.233
 ],
 [
-424.224,
-1961.28
+4.32,
+1541.499
 ],
 [
-548.64,
-1728.0
+4.32,
+1186.766
 ],
 [
-635.04,
-1499.04
+4.32,
+832.032
 ],
 [
-894.24,
-1408.32
+280.8,
+774.514
 ],
 [
-894.24,
-1084.32
+514.08,
+881.28
+],
+[
+864.0,
+881.28
 ],
 [
 1153.44,
-1047.291
+937.44
 ],
 [
 1390.5,
@@ -112625,7 +112653,7 @@
 "bits": 1,
 "launch": "face bus L55_i",
 "capture": "u_vmb_Q1.wq_done0",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 6035 um core link, 9 station(s) (data + epoch), hops <= 750 um; +9 cycle(s) on this link | B2n decision 12: 18 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 6035 um core link, 9 station(s) (data + epoch), hops <= 750 um; +9 cycle(s) on this link | B2n decision 12: 19 station(s), hops <= 405 um"
 },
 {
 "conn": "u_vmb_Q1.wslot|u_calendar_Q",
@@ -118294,19 +118322,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -118367,19 +118395,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -118440,19 +118468,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -118638,16 +118666,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -118707,16 +118735,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -119080,19 +119108,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -119153,19 +119181,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -119226,19 +119254,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -119428,16 +119456,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -119497,16 +119525,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -119952,19 +119980,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -120025,19 +120053,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -120098,19 +120126,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -120300,16 +120328,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -120369,16 +120397,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -120439,19 +120467,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -120512,19 +120540,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -120585,19 +120613,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -120783,16 +120811,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -120852,16 +120880,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -121004,19 +121032,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -121081,19 +121109,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -121158,19 +121186,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -121372,16 +121400,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -121445,16 +121473,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -121822,19 +121850,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -121899,19 +121927,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -121976,19 +122004,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -122194,16 +122222,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -122267,16 +122295,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -123065,16 +123093,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -123216,19 +123244,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -123293,19 +123321,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -123370,19 +123398,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -123584,16 +123612,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -123657,16 +123685,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -130715,20 +130743,20 @@
 ],
 "regs_um": [
 [
-470.88,
-159.84
+514.08,
+133.92
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -130837,24 +130865,24 @@
 ],
 "regs_um": [
 [
-239.918,
-4.32
+280.8,
+133.92
 ],
 [
-593.315,
-4.32
+280.8,
+347.451
 ],
 [
-781.92,
-159.84
+280.8,
+667.749
 ],
 [
-885.6,
-393.12
+397.44,
+881.28
 ],
 [
-885.6,
-743.04
+747.36,
+881.28
 ],
 [
 894.24,
@@ -131049,16 +131077,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -132487,20 +132515,20 @@
 ],
 "regs_um": [
 [
-574.56,
-159.84
+630.72,
+133.92
 ],
 [
-885.6,
-159.84
+864.0,
+240.686
 ],
 [
-885.6,
-509.76
+864.0,
+560.983
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 894.24,
@@ -132609,24 +132637,24 @@
 ],
 "regs_um": [
 [
-263.52,
-159.84
+280.8,
+133.92
 ],
 [
-263.52,
-509.76
+280.8,
+454.217
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 894.24,
@@ -132768,16 +132796,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 894.24,
@@ -132821,16 +132849,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+240.686
 ],
 [
-885.6,
-509.76
+864.0,
+560.983
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 894.24,
@@ -134235,20 +134263,20 @@
 ],
 "regs_um": [
 [
-470.88,
-159.84
+514.08,
+133.92
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -134357,24 +134385,24 @@
 ],
 "regs_um": [
 [
-239.918,
-4.32
+280.8,
+133.92
 ],
 [
-593.315,
-4.32
+280.8,
+347.451
 ],
 [
-781.92,
-159.84
+280.8,
+667.749
 ],
 [
-885.6,
-393.12
+397.44,
+881.28
 ],
 [
-885.6,
-743.04
+747.36,
+881.28
 ],
 [
 894.24,
@@ -134561,16 +134589,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -135995,20 +136023,20 @@
 ],
 "regs_um": [
 [
-574.56,
-159.84
+630.72,
+133.92
 ],
 [
-885.6,
-159.84
+864.0,
+240.686
 ],
 [
-885.6,
-509.76
+864.0,
+560.983
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 894.24,
@@ -136117,24 +136145,24 @@
 ],
 "regs_um": [
 [
-263.52,
-159.84
+280.8,
+133.92
 ],
 [
-263.52,
-509.76
+280.8,
+454.217
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 894.24,
@@ -136276,16 +136304,16 @@
 ],
 "regs_um": [
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 894.24,
@@ -136329,16 +136357,16 @@
 4.32
 ],
 [
-885.6,
-159.84
+864.0,
+240.686
 ],
 [
-885.6,
-509.76
+864.0,
+560.983
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 894.24,
@@ -137763,20 +137791,20 @@
 ],
 "regs_um": [
 [
-470.88,
-159.84
+514.08,
+133.92
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -137889,24 +137917,24 @@
 ],
 "regs_um": [
 [
-239.918,
-4.32
+280.8,
+133.92
 ],
 [
-593.315,
-4.32
+280.8,
+347.451
 ],
 [
-781.92,
-159.84
+280.8,
+667.749
 ],
 [
-885.6,
-393.12
+397.44,
+881.28
 ],
 [
-885.6,
-743.04
+747.36,
+881.28
 ],
 [
 894.24,
@@ -138109,16 +138137,16 @@
 4.32
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -138470,39 +138498,35 @@
 414.128
 ],
 "to_um": [
-180.865,
-1969.944
+156.131,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+713.787
 ],
 [
 4.32,
-832.032
+1068.521
 ],
 [
 4.32,
-1186.766
+1423.255
 ],
 [
 4.32,
-1541.499
+1777.989
 ],
 [
-4.32,
-1896.233
-],
-[
-180.865,
+156.131,
 1965.6
 ]
 ],
 "bits": 24,
 "launch": "face bus L23_i",
 "capture": "u_sfus_Q.l00_kv_waddr",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1614 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 6 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1614 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 5 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L5_o",
@@ -138511,32 +138535,32 @@
 156.886
 ],
 "to_um": [
-180.865,
-1969.944
+156.131,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+359.054
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
 4.32,
-1186.766
+1068.521
 ],
 [
 4.32,
-1541.499
+1423.255
 ],
 [
 4.32,
-1896.233
+1777.989
 ],
 [
-180.865,
+156.131,
 1965.6
 ]
 ],
@@ -138552,8 +138576,8 @@
 414.128
 ],
 "to_um": [
-304.053,
-1969.944
+297.435,
+1969.943
 ],
 "regs_um": [
 [
@@ -138577,7 +138601,7 @@
 2014.478
 ],
 [
-304.053,
+297.435,
 1965.6
 ]
 ],
@@ -138593,8 +138617,8 @@
 156.886
 ],
 "to_um": [
-304.053,
-1969.944
+297.435,
+1969.943
 ],
 "regs_um": [
 [
@@ -138622,7 +138646,7 @@
 2014.478
 ],
 [
-304.053,
+297.435,
 1965.6
 ]
 ],
@@ -138638,8 +138662,8 @@
 1293.819
 ],
 "to_um": [
-304.053,
-1969.944
+297.435,
+1969.943
 ],
 "regs_um": [
 [
@@ -138655,7 +138679,7 @@
 2014.478
 ],
 [
-304.053,
+297.435,
 1965.6
 ]
 ],
@@ -138671,8 +138695,8 @@
 414.128
 ],
 "to_um": [
-174.018,
-1969.944
+148.277,
+1969.943
 ],
 "regs_um": [
 [
@@ -138692,7 +138716,7 @@
 1777.989
 ],
 [
-174.018,
+148.277,
 1965.6
 ]
 ],
@@ -138708,8 +138732,8 @@
 156.886
 ],
 "to_um": [
-174.018,
-1969.944
+148.277,
+1969.943
 ],
 "regs_um": [
 [
@@ -138733,7 +138757,7 @@
 1777.989
 ],
 [
-174.018,
+148.277,
 1965.6
 ]
 ],
@@ -138749,39 +138773,35 @@
 414.128
 ],
 "to_um": [
-184.713,
-1969.944
+160.544,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+713.787
 ],
 [
 4.32,
-832.032
+1068.521
 ],
 [
 4.32,
-1186.766
+1423.255
 ],
 [
 4.32,
-1541.499
+1777.989
 ],
 [
-4.32,
-1896.233
-],
-[
-184.713,
+160.544,
 1965.6
 ]
 ],
 "bits": 24,
 "launch": "face bus L23_i",
 "capture": "u_sfus_Q.l00_vi_addr",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1622 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 6 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1622 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 5 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L5_o",
@@ -138790,32 +138810,32 @@
 156.886
 ],
 "to_um": [
-184.713,
-1969.944
+160.544,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+359.054
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
 4.32,
-1186.766
+1068.521
 ],
 [
 4.32,
-1541.499
+1423.255
 ],
 [
 4.32,
-1896.233
+1777.989
 ],
 [
-184.713,
+160.544,
 1965.6
 ]
 ],
@@ -138831,8 +138851,8 @@
 414.128
 ],
 "to_um": [
-309.123,
-1969.944
+303.251,
+1969.943
 ],
 "regs_um": [
 [
@@ -138856,7 +138876,7 @@
 2014.478
 ],
 [
-309.123,
+303.251,
 1965.6
 ]
 ],
@@ -138872,8 +138892,8 @@
 156.886
 ],
 "to_um": [
-309.123,
-1969.944
+303.251,
+1969.943
 ],
 "regs_um": [
 [
@@ -138901,7 +138921,7 @@
 2014.478
 ],
 [
-309.123,
+303.251,
 1965.6
 ]
 ],
@@ -138917,8 +138937,8 @@
 1293.819
 ],
 "to_um": [
-309.123,
-1969.944
+303.251,
+1969.943
 ],
 "regs_um": [
 [
@@ -138934,7 +138954,7 @@
 2014.478
 ],
 [
-309.123,
+303.251,
 1965.6
 ]
 ],
@@ -138950,8 +138970,8 @@
 414.128
 ],
 "to_um": [
-174.168,
-1969.944
+148.45,
+1969.943
 ],
 "regs_um": [
 [
@@ -138971,7 +138991,7 @@
 1777.989
 ],
 [
-174.168,
+148.45,
 1965.6
 ]
 ],
@@ -138987,8 +139007,8 @@
 156.886
 ],
 "to_um": [
-174.168,
-1969.944
+148.45,
+1969.943
 ],
 "regs_um": [
 [
@@ -139012,7 +139032,7 @@
 1777.989
 ],
 [
-174.168,
+148.45,
 1965.6
 ]
 ],
@@ -139028,39 +139048,35 @@
 414.128
 ],
 "to_um": [
-188.523,
-1969.944
+164.915,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+713.787
 ],
 [
 4.32,
-832.032
+1068.521
 ],
 [
 4.32,
-1186.766
+1423.255
 ],
 [
 4.32,
-1541.499
+1777.989
 ],
 [
-4.32,
-1896.233
-],
-[
-188.523,
+164.915,
 1965.6
 ]
 ],
 "bits": 24,
 "launch": "face bus L23_i",
 "capture": "u_sfus_Q.l01_kv_waddr",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1629 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 6 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1629 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 5 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L5_o",
@@ -139069,32 +139085,32 @@
 156.886
 ],
 "to_um": [
-188.523,
-1969.944
+164.915,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+359.054
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
 4.32,
-1186.766
+1068.521
 ],
 [
 4.32,
-1541.499
+1423.255
 ],
 [
 4.32,
-1896.233
+1777.989
 ],
 [
-188.523,
+164.915,
 1965.6
 ]
 ],
@@ -139110,8 +139126,8 @@
 414.128
 ],
 "to_um": [
-314.217,
-1969.944
+309.094,
+1969.943
 ],
 "regs_um": [
 [
@@ -139135,7 +139151,7 @@
 2014.478
 ],
 [
-314.217,
+309.094,
 1965.6
 ]
 ],
@@ -139151,8 +139167,8 @@
 156.886
 ],
 "to_um": [
-314.217,
-1969.944
+309.094,
+1969.943
 ],
 "regs_um": [
 [
@@ -139180,7 +139196,7 @@
 2014.478
 ],
 [
-314.217,
+309.094,
 1965.6
 ]
 ],
@@ -139196,8 +139212,8 @@
 1293.819
 ],
 "to_um": [
-314.217,
-1969.944
+309.094,
+1969.943
 ],
 "regs_um": [
 [
@@ -139213,7 +139229,7 @@
 2014.478
 ],
 [
-314.217,
+309.094,
 1965.6
 ]
 ],
@@ -139229,8 +139245,8 @@
 414.128
 ],
 "to_um": [
-174.319,
-1969.944
+148.622,
+1969.943
 ],
 "regs_um": [
 [
@@ -139250,7 +139266,7 @@
 1777.989
 ],
 [
-174.319,
+148.622,
 1965.6
 ]
 ],
@@ -139266,8 +139282,8 @@
 156.886
 ],
 "to_um": [
-174.319,
-1969.944
+148.622,
+1969.943
 ],
 "regs_um": [
 [
@@ -139291,7 +139307,7 @@
 1777.989
 ],
 [
-174.319,
+148.622,
 1965.6
 ]
 ],
@@ -139307,39 +139323,35 @@
 414.128
 ],
 "to_um": [
-192.346,
-1969.944
+169.301,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+713.787
 ],
 [
 4.32,
-832.032
+1068.521
 ],
 [
 4.32,
-1186.766
+1423.255
 ],
 [
 4.32,
-1541.499
+1777.989
 ],
 [
-4.32,
-1896.233
-],
-[
-192.346,
+169.301,
 1965.6
 ]
 ],
 "bits": 24,
 "launch": "face bus L23_i",
 "capture": "u_sfus_Q.l01_vi_addr",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1636 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 6 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1636 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 5 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L5_o",
@@ -139348,32 +139360,32 @@
 156.886
 ],
 "to_um": [
-192.346,
-1969.944
+169.301,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+359.054
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
 4.32,
-1186.766
+1068.521
 ],
 [
 4.32,
-1541.499
+1423.255
 ],
 [
 4.32,
-1896.233
+1777.989
 ],
 [
-192.346,
+169.301,
 1965.6
 ]
 ],
@@ -139389,20 +139401,20 @@
 1293.819
 ],
 "to_um": [
-192.346,
-1969.944
+169.301,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-1541.499
+1423.255
 ],
 [
 4.32,
-1896.233
+1777.989
 ],
 [
-192.346,
+169.301,
 1965.6
 ]
 ],
@@ -139418,8 +139430,8 @@
 414.128
 ],
 "to_um": [
-319.325,
-1969.944
+314.953,
+1969.943
 ],
 "regs_um": [
 [
@@ -139439,11 +139451,11 @@
 1659.744
 ],
 [
-30.24,
-1961.28
+4.32,
+2014.478
 ],
 [
-319.325,
+314.953,
 1965.6
 ]
 ],
@@ -139459,8 +139471,8 @@
 156.886
 ],
 "to_um": [
-319.325,
-1969.944
+314.953,
+1969.943
 ],
 "regs_um": [
 [
@@ -139484,11 +139496,11 @@
 1659.744
 ],
 [
-30.24,
-1961.28
+4.32,
+2014.478
 ],
 [
-319.325,
+314.953,
 1965.6
 ]
 ],
@@ -139504,8 +139516,8 @@
 1293.819
 ],
 "to_um": [
-319.325,
-1969.944
+314.953,
+1969.943
 ],
 "regs_um": [
 [
@@ -139517,11 +139529,11 @@
 1659.744
 ],
 [
-30.24,
-1961.28
+4.32,
+2014.478
 ],
 [
-319.325,
+314.953,
 1965.6
 ]
 ],
@@ -139537,8 +139549,8 @@
 414.128
 ],
 "to_um": [
-174.47,
-1969.944
+148.795,
+1969.943
 ],
 "regs_um": [
 [
@@ -139558,7 +139570,7 @@
 1777.989
 ],
 [
-174.47,
+148.795,
 1965.6
 ]
 ],
@@ -139574,8 +139586,8 @@
 156.886
 ],
 "to_um": [
-174.47,
-1969.944
+148.795,
+1969.943
 ],
 "regs_um": [
 [
@@ -139599,7 +139611,7 @@
 1777.989
 ],
 [
-174.47,
+148.795,
 1965.6
 ]
 ],
@@ -139615,39 +139627,35 @@
 414.128
 ],
 "to_um": [
-196.201,
-1969.944
+173.723,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+713.787
 ],
 [
 4.32,
-832.032
+1068.521
 ],
 [
 4.32,
-1186.766
+1423.255
 ],
 [
 4.32,
-1541.499
+1777.989
 ],
 [
-4.32,
-1896.233
-],
-[
-196.201,
+173.723,
 1965.6
 ]
 ],
 "bits": 24,
 "launch": "face bus L23_i",
 "capture": "u_sfus_Q.l02_kv_waddr",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1644 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 6 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1644 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 5 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L5_o",
@@ -139656,32 +139664,32 @@
 156.886
 ],
 "to_um": [
-196.201,
-1969.944
+173.723,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+359.054
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
 4.32,
-1186.766
+1068.521
 ],
 [
 4.32,
-1541.499
+1423.255
 ],
 [
 4.32,
-1896.233
+1777.989
 ],
 [
-196.201,
+173.723,
 1965.6
 ]
 ],
@@ -139697,20 +139705,20 @@
 1293.819
 ],
 "to_um": [
-196.201,
-1969.944
+173.723,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-1541.499
+1423.255
 ],
 [
 4.32,
-1896.233
+1777.989
 ],
 [
-196.201,
+173.723,
 1965.6
 ]
 ],
@@ -139726,8 +139734,8 @@
 414.128
 ],
 "to_um": [
-324.445,
-1969.944
+320.825,
+1969.943
 ],
 "regs_um": [
 [
@@ -139751,7 +139759,7 @@
 1961.28
 ],
 [
-324.445,
+320.825,
 1965.6
 ]
 ],
@@ -139767,8 +139775,8 @@
 156.886
 ],
 "to_um": [
-324.445,
-1969.944
+320.825,
+1969.943
 ],
 "regs_um": [
 [
@@ -139796,7 +139804,7 @@
 1961.28
 ],
 [
-324.445,
+320.825,
 1965.6
 ]
 ],
@@ -139812,8 +139820,8 @@
 1293.819
 ],
 "to_um": [
-324.445,
-1969.944
+320.825,
+1969.943
 ],
 "regs_um": [
 [
@@ -139829,7 +139837,7 @@
 1961.28
 ],
 [
-324.445,
+320.825,
 1965.6
 ]
 ],
@@ -139845,8 +139853,8 @@
 414.128
 ],
 "to_um": [
-174.595,
-1969.944
+148.939,
+1969.943
 ],
 "regs_um": [
 [
@@ -139866,7 +139874,7 @@
 1777.989
 ],
 [
-174.595,
+148.939,
 1965.6
 ]
 ],
@@ -139882,8 +139890,8 @@
 156.886
 ],
 "to_um": [
-174.595,
-1969.944
+148.939,
+1969.943
 ],
 "regs_um": [
 [
@@ -139907,7 +139915,7 @@
 1777.989
 ],
 [
-174.595,
+148.939,
 1965.6
 ]
 ],
@@ -139923,39 +139931,35 @@
 414.128
 ],
 "to_um": [
-200.019,
-1969.944
+178.102,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+713.787
 ],
 [
 4.32,
-832.032
+1068.521
 ],
 [
 4.32,
-1186.766
+1423.255
 ],
 [
-4.32,
-1541.499
+30.24,
+1755.154
 ],
 [
-4.32,
-1896.233
-],
-[
-200.019,
+178.102,
 1965.6
 ]
 ],
 "bits": 24,
 "launch": "face bus L23_i",
 "capture": "u_sfus_Q.l02_vi_addr",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1651 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 6 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1651 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 5 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L5_o",
@@ -139964,32 +139968,32 @@
 156.886
 ],
 "to_um": [
-200.019,
-1969.944
+178.102,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-477.298
+359.054
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
 4.32,
-1186.766
+1068.521
 ],
 [
 4.32,
-1541.499
+1423.255
 ],
 [
-4.32,
-1896.233
+30.24,
+1755.154
 ],
 [
-200.019,
+178.102,
 1965.6
 ]
 ],
@@ -140005,20 +140009,20 @@
 1293.819
 ],
 "to_um": [
-200.019,
-1969.944
+178.102,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-1541.499
+1423.255
 ],
 [
-4.32,
-1896.233
+30.24,
+1755.154
 ],
 [
-200.019,
+178.102,
 1965.6
 ]
 ],
@@ -140034,8 +140038,8 @@
 414.128
 ],
 "to_um": [
-329.527,
-1969.944
+326.655,
+1969.943
 ],
 "regs_um": [
 [
@@ -140059,7 +140063,7 @@
 1961.28
 ],
 [
-329.527,
+326.655,
 1965.6
 ]
 ],
@@ -140075,8 +140079,8 @@
 156.886
 ],
 "to_um": [
-329.527,
-1969.944
+326.655,
+1969.943
 ],
 "regs_um": [
 [
@@ -140104,7 +140108,7 @@
 1961.28
 ],
 [
-329.527,
+326.655,
 1965.6
 ]
 ],
@@ -140120,8 +140124,8 @@
 1293.819
 ],
 "to_um": [
-329.527,
-1969.944
+326.655,
+1969.943
 ],
 "regs_um": [
 [
@@ -140137,7 +140141,7 @@
 1961.28
 ],
 [
-329.527,
+326.655,
 1965.6
 ]
 ],
@@ -140153,8 +140157,8 @@
 414.128
 ],
 "to_um": [
-174.746,
-1969.944
+149.112,
+1969.943
 ],
 "regs_um": [
 [
@@ -140174,7 +140178,7 @@
 1777.989
 ],
 [
-174.746,
+149.112,
 1965.6
 ]
 ],
@@ -140190,8 +140194,8 @@
 156.886
 ],
 "to_um": [
-174.746,
-1969.944
+149.112,
+1969.943
 ],
 "regs_um": [
 [
@@ -140215,7 +140219,7 @@
 1777.989
 ],
 [
-174.746,
+149.112,
 1965.6
 ]
 ],
@@ -140231,8 +140235,8 @@
 414.128
 ],
 "to_um": [
-203.835,
-1969.944
+182.479,
+1969.943
 ],
 "regs_um": [
 [
@@ -140256,7 +140260,7 @@
 1896.233
 ],
 [
-203.835,
+182.479,
 1965.6
 ]
 ],
@@ -140272,8 +140276,8 @@
 156.886
 ],
 "to_um": [
-203.835,
-1969.944
+182.479,
+1969.943
 ],
 "regs_um": [
 [
@@ -140297,7 +140301,7 @@
 1896.233
 ],
 [
-203.835,
+182.479,
 1965.6
 ]
 ],
@@ -140313,8 +140317,8 @@
 1293.819
 ],
 "to_um": [
-203.835,
-1969.944
+182.479,
+1969.943
 ],
 "regs_um": [
 [
@@ -140326,7 +140330,7 @@
 1896.233
 ],
 [
-203.835,
+182.479,
 1965.6
 ]
 ],
@@ -140342,8 +140346,8 @@
 414.128
 ],
 "to_um": [
-334.645,
-1969.944
+332.525,
+1969.943
 ],
 "regs_um": [
 [
@@ -140367,7 +140371,7 @@
 1961.28
 ],
 [
-334.645,
+332.525,
 1965.6
 ]
 ],
@@ -140383,8 +140387,8 @@
 156.886
 ],
 "to_um": [
-334.645,
-1969.944
+332.525,
+1969.943
 ],
 "regs_um": [
 [
@@ -140412,7 +140416,7 @@
 1961.28
 ],
 [
-334.645,
+332.525,
 1965.6
 ]
 ],
@@ -140428,8 +140432,8 @@
 1293.819
 ],
 "to_um": [
-334.645,
-1969.944
+332.525,
+1969.943
 ],
 "regs_um": [
 [
@@ -140445,7 +140449,7 @@
 1961.28
 ],
 [
-334.645,
+332.525,
 1965.6
 ]
 ],
@@ -140461,8 +140465,8 @@
 414.128
 ],
 "to_um": [
-174.896,
-1969.944
+149.285,
+1969.943
 ],
 "regs_um": [
 [
@@ -140482,7 +140486,7 @@
 1777.989
 ],
 [
-174.896,
+149.285,
 1965.6
 ]
 ],
@@ -140498,8 +140502,8 @@
 156.886
 ],
 "to_um": [
-174.896,
-1969.944
+149.285,
+1969.943
 ],
 "regs_um": [
 [
@@ -140523,7 +140527,7 @@
 1777.989
 ],
 [
-174.896,
+149.285,
 1965.6
 ]
 ],
@@ -140539,8 +140543,8 @@
 414.128
 ],
 "to_um": [
-207.682,
-1969.944
+186.892,
+1969.943
 ],
 "regs_um": [
 [
@@ -140564,7 +140568,7 @@
 1896.233
 ],
 [
-207.682,
+186.892,
 1965.6
 ]
 ],
@@ -140580,8 +140584,8 @@
 156.886
 ],
 "to_um": [
-207.682,
-1969.944
+186.892,
+1969.943
 ],
 "regs_um": [
 [
@@ -140605,7 +140609,7 @@
 1896.233
 ],
 [
-207.682,
+186.892,
 1965.6
 ]
 ],
@@ -140621,8 +140625,8 @@
 1293.819
 ],
 "to_um": [
-207.682,
-1969.944
+186.892,
+1969.943
 ],
 "regs_um": [
 [
@@ -140634,7 +140638,7 @@
 1896.233
 ],
 [
-207.682,
+186.892,
 1965.6
 ]
 ],
@@ -140650,8 +140654,8 @@
 414.128
 ],
 "to_um": [
-339.749,
-1969.944
+338.38,
+1969.943
 ],
 "regs_um": [
 [
@@ -140675,7 +140679,7 @@
 1961.28
 ],
 [
-339.749,
+338.38,
 1965.6
 ]
 ],
@@ -140691,8 +140695,8 @@
 156.886
 ],
 "to_um": [
-339.749,
-1969.944
+338.38,
+1969.943
 ],
 "regs_um": [
 [
@@ -140720,7 +140724,7 @@
 1961.28
 ],
 [
-339.749,
+338.38,
 1965.6
 ]
 ],
@@ -140736,8 +140740,8 @@
 1293.819
 ],
 "to_um": [
-339.749,
-1969.944
+338.38,
+1969.943
 ],
 "regs_um": [
 [
@@ -140753,7 +140757,7 @@
 1961.28
 ],
 [
-339.749,
+338.38,
 1965.6
 ]
 ],
@@ -140769,8 +140773,8 @@
 414.128
 ],
 "to_um": [
-175.047,
-1969.944
+149.458,
+1969.943
 ],
 "regs_um": [
 [
@@ -140790,7 +140794,7 @@
 1777.989
 ],
 [
-175.047,
+149.458,
 1965.6
 ]
 ],
@@ -140806,8 +140810,8 @@
 156.886
 ],
 "to_um": [
-175.047,
-1969.944
+149.458,
+1969.943
 ],
 "regs_um": [
 [
@@ -140831,7 +140835,7 @@
 1777.989
 ],
 [
-175.047,
+149.458,
 1965.6
 ]
 ],
@@ -140847,8 +140851,8 @@
 414.128
 ],
 "to_um": [
-211.514,
-1969.944
+191.287,
+1969.943
 ],
 "regs_um": [
 [
@@ -140872,7 +140876,7 @@
 1896.233
 ],
 [
-211.514,
+191.287,
 1965.6
 ]
 ],
@@ -140888,8 +140892,8 @@
 156.886
 ],
 "to_um": [
-211.514,
-1969.944
+191.287,
+1969.943
 ],
 "regs_um": [
 [
@@ -140913,7 +140917,7 @@
 1896.233
 ],
 [
-211.514,
+191.287,
 1965.6
 ]
 ],
@@ -140929,8 +140933,8 @@
 1293.819
 ],
 "to_um": [
-211.514,
-1969.944
+191.287,
+1969.943
 ],
 "regs_um": [
 [
@@ -140942,7 +140946,7 @@
 1896.233
 ],
 [
-211.514,
+191.287,
 1965.6
 ]
 ],
@@ -140958,8 +140962,8 @@
 414.128
 ],
 "to_um": [
-344.865,
-1969.944
+344.248,
+1969.943
 ],
 "regs_um": [
 [
@@ -140983,7 +140987,7 @@
 1961.28
 ],
 [
-344.865,
+344.248,
 1965.6
 ]
 ],
@@ -140999,8 +141003,8 @@
 156.886
 ],
 "to_um": [
-344.865,
-1969.944
+344.248,
+1969.943
 ],
 "regs_um": [
 [
@@ -141028,7 +141032,7 @@
 1961.28
 ],
 [
-344.865,
+344.248,
 1965.6
 ]
 ],
@@ -141044,8 +141048,8 @@
 1293.819
 ],
 "to_um": [
-344.865,
-1969.944
+344.248,
+1969.943
 ],
 "regs_um": [
 [
@@ -141061,7 +141065,7 @@
 1961.28
 ],
 [
-344.865,
+344.248,
 1965.6
 ]
 ],
@@ -141077,8 +141081,8 @@
 414.128
 ],
 "to_um": [
-175.198,
-1969.944
+149.63,
+1969.943
 ],
 "regs_um": [
 [
@@ -141098,7 +141102,7 @@
 1777.989
 ],
 [
-175.198,
+149.63,
 1965.6
 ]
 ],
@@ -141114,8 +141118,8 @@
 156.886
 ],
 "to_um": [
-175.198,
-1969.944
+149.63,
+1969.943
 ],
 "regs_um": [
 [
@@ -141139,7 +141143,7 @@
 1777.989
 ],
 [
-175.198,
+149.63,
 1965.6
 ]
 ],
@@ -141155,8 +141159,8 @@
 414.128
 ],
 "to_um": [
-215.331,
-1969.944
+195.666,
+1969.943
 ],
 "regs_um": [
 [
@@ -141180,7 +141184,7 @@
 1896.233
 ],
 [
-215.331,
+195.666,
 1965.6
 ]
 ],
@@ -141196,8 +141200,8 @@
 156.886
 ],
 "to_um": [
-215.331,
-1969.944
+195.666,
+1969.943
 ],
 "regs_um": [
 [
@@ -141221,7 +141225,7 @@
 1896.233
 ],
 [
-215.331,
+195.666,
 1965.6
 ]
 ],
@@ -141237,8 +141241,8 @@
 1293.819
 ],
 "to_um": [
-215.331,
-1969.944
+195.666,
+1969.943
 ],
 "regs_um": [
 [
@@ -141250,7 +141254,7 @@
 1896.233
 ],
 [
-215.331,
+195.666,
 1965.6
 ]
 ],
@@ -141266,8 +141270,8 @@
 414.128
 ],
 "to_um": [
-349.947,
-1969.944
+350.078,
+1969.943
 ],
 "regs_um": [
 [
@@ -141291,7 +141295,7 @@
 1961.28
 ],
 [
-349.947,
+350.078,
 1965.6
 ]
 ],
@@ -141307,8 +141311,8 @@
 156.886
 ],
 "to_um": [
-349.947,
-1969.944
+350.078,
+1969.943
 ],
 "regs_um": [
 [
@@ -141336,7 +141340,7 @@
 1961.28
 ],
 [
-349.947,
+350.078,
 1965.6
 ]
 ],
@@ -141352,8 +141356,8 @@
 1293.819
 ],
 "to_um": [
-349.947,
-1969.944
+350.078,
+1969.943
 ],
 "regs_um": [
 [
@@ -141369,7 +141373,7 @@
 1961.28
 ],
 [
-349.947,
+350.078,
 1965.6
 ]
 ],
@@ -141385,8 +141389,8 @@
 414.128
 ],
 "to_um": [
-175.348,
-1969.944
+149.803,
+1969.943
 ],
 "regs_um": [
 [
@@ -141406,7 +141410,7 @@
 1777.989
 ],
 [
-175.348,
+149.803,
 1965.6
 ]
 ],
@@ -141422,8 +141426,8 @@
 156.886
 ],
 "to_um": [
-175.348,
-1969.944
+149.803,
+1969.943
 ],
 "regs_um": [
 [
@@ -141447,7 +141451,7 @@
 1777.989
 ],
 [
-175.348,
+149.803,
 1965.6
 ]
 ],
@@ -141463,8 +141467,8 @@
 414.128
 ],
 "to_um": [
-219.163,
-1969.944
+200.062,
+1969.943
 ],
 "regs_um": [
 [
@@ -141488,7 +141492,7 @@
 1896.233
 ],
 [
-219.163,
+200.062,
 1965.6
 ]
 ],
@@ -141504,8 +141508,8 @@
 156.886
 ],
 "to_um": [
-219.163,
-1969.944
+200.062,
+1969.943
 ],
 "regs_um": [
 [
@@ -141529,7 +141533,7 @@
 1896.233
 ],
 [
-219.163,
+200.062,
 1965.6
 ]
 ],
@@ -141545,8 +141549,8 @@
 1293.819
 ],
 "to_um": [
-219.163,
-1969.944
+200.062,
+1969.943
 ],
 "regs_um": [
 [
@@ -141558,7 +141562,7 @@
 1896.233
 ],
 [
-219.163,
+200.062,
 1965.6
 ]
 ],
@@ -141574,8 +141578,8 @@
 414.128
 ],
 "to_um": [
-355.068,
-1969.944
+355.952,
+1969.943
 ],
 "regs_um": [
 [
@@ -141599,7 +141603,7 @@
 1961.28
 ],
 [
-355.068,
+355.952,
 1965.6
 ]
 ],
@@ -141615,8 +141619,8 @@
 156.886
 ],
 "to_um": [
-355.068,
-1969.944
+355.952,
+1969.943
 ],
 "regs_um": [
 [
@@ -141644,7 +141648,7 @@
 1961.28
 ],
 [
-355.068,
+355.952,
 1965.6
 ]
 ],
@@ -141660,8 +141664,8 @@
 1293.819
 ],
 "to_um": [
-355.068,
-1969.944
+355.952,
+1969.943
 ],
 "regs_um": [
 [
@@ -141677,7 +141681,7 @@
 1961.28
 ],
 [
-355.068,
+355.952,
 1965.6
 ]
 ],
@@ -141693,8 +141697,8 @@
 414.128
 ],
 "to_um": [
-175.499,
-1969.944
+149.976,
+1969.943
 ],
 "regs_um": [
 [
@@ -141714,7 +141718,7 @@
 1777.989
 ],
 [
-175.499,
+149.976,
 1965.6
 ]
 ],
@@ -141730,8 +141734,8 @@
 156.886
 ],
 "to_um": [
-175.499,
-1969.944
+149.976,
+1969.943
 ],
 "regs_um": [
 [
@@ -141755,7 +141759,7 @@
 1777.989
 ],
 [
-175.499,
+149.976,
 1965.6
 ]
 ],
@@ -141771,8 +141775,8 @@
 414.128
 ],
 "to_um": [
-223.003,
-1969.944
+204.466,
+1969.943
 ],
 "regs_um": [
 [
@@ -141796,7 +141800,7 @@
 1896.233
 ],
 [
-223.003,
+204.466,
 1965.6
 ]
 ],
@@ -141812,8 +141816,8 @@
 156.886
 ],
 "to_um": [
-223.003,
-1969.944
+204.466,
+1969.943
 ],
 "regs_um": [
 [
@@ -141837,7 +141841,7 @@
 1896.233
 ],
 [
-223.003,
+204.466,
 1965.6
 ]
 ],
@@ -141853,8 +141857,8 @@
 1293.819
 ],
 "to_um": [
-223.003,
-1969.944
+204.466,
+1969.943
 ],
 "regs_um": [
 [
@@ -141866,7 +141870,7 @@
 1896.233
 ],
 [
-223.003,
+204.466,
 1965.6
 ]
 ],
@@ -141882,8 +141886,8 @@
 414.128
 ],
 "to_um": [
-360.191,
-1969.944
+361.828,
+1969.943
 ],
 "regs_um": [
 [
@@ -141907,7 +141911,7 @@
 1961.28
 ],
 [
-360.191,
+361.828,
 1965.6
 ]
 ],
@@ -141923,8 +141927,8 @@
 156.886
 ],
 "to_um": [
-360.191,
-1969.944
+361.828,
+1969.943
 ],
 "regs_um": [
 [
@@ -141952,7 +141956,7 @@
 1961.28
 ],
 [
-360.191,
+361.828,
 1965.6
 ]
 ],
@@ -141968,8 +141972,8 @@
 1293.819
 ],
 "to_um": [
-360.191,
-1969.944
+361.828,
+1969.943
 ],
 "regs_um": [
 [
@@ -141985,7 +141989,7 @@
 1961.28
 ],
 [
-360.191,
+361.828,
 1965.6
 ]
 ],
@@ -142001,8 +142005,8 @@
 414.128
 ],
 "to_um": [
-175.625,
-1969.944
+150.12,
+1969.943
 ],
 "regs_um": [
 [
@@ -142022,7 +142026,7 @@
 1777.989
 ],
 [
-175.625,
+150.12,
 1965.6
 ]
 ],
@@ -142038,8 +142042,8 @@
 156.886
 ],
 "to_um": [
-175.625,
-1969.944
+150.12,
+1969.943
 ],
 "regs_um": [
 [
@@ -142063,7 +142067,7 @@
 1777.989
 ],
 [
-175.625,
+150.12,
 1965.6
 ]
 ],
@@ -142079,8 +142083,8 @@
 414.128
 ],
 "to_um": [
-226.828,
-1969.944
+208.853,
+1969.943
 ],
 "regs_um": [
 [
@@ -142104,7 +142108,7 @@
 1896.233
 ],
 [
-226.828,
+208.853,
 1965.6
 ]
 ],
@@ -142120,8 +142124,8 @@
 156.886
 ],
 "to_um": [
-226.828,
-1969.944
+208.853,
+1969.943
 ],
 "regs_um": [
 [
@@ -142145,7 +142149,7 @@
 1896.233
 ],
 [
-226.828,
+208.853,
 1965.6
 ]
 ],
@@ -142161,8 +142165,8 @@
 1293.819
 ],
 "to_um": [
-226.828,
-1969.944
+208.853,
+1969.943
 ],
 "regs_um": [
 [
@@ -142174,7 +142178,7 @@
 1896.233
 ],
 [
-226.828,
+208.853,
 1965.6
 ]
 ],
@@ -142190,8 +142194,8 @@
 414.128
 ],
 "to_um": [
-365.276,
-1969.944
+367.661,
+1969.943
 ],
 "regs_um": [
 [
@@ -142215,7 +142219,7 @@
 1961.28
 ],
 [
-365.276,
+367.661,
 1965.6
 ]
 ],
@@ -142231,8 +142235,8 @@
 156.886
 ],
 "to_um": [
-365.276,
-1969.944
+367.661,
+1969.943
 ],
 "regs_um": [
 [
@@ -142260,7 +142264,7 @@
 1961.28
 ],
 [
-365.276,
+367.661,
 1965.6
 ]
 ],
@@ -142276,8 +142280,8 @@
 1293.819
 ],
 "to_um": [
-365.276,
-1969.944
+367.661,
+1969.943
 ],
 "regs_um": [
 [
@@ -142293,7 +142297,7 @@
 1961.28
 ],
 [
-365.276,
+367.661,
 1965.6
 ]
 ],
@@ -142309,8 +142313,8 @@
 414.128
 ],
 "to_um": [
-175.775,
-1969.944
+150.293,
+1969.943
 ],
 "regs_um": [
 [
@@ -142330,7 +142334,7 @@
 1777.989
 ],
 [
-175.775,
+150.293,
 1965.6
 ]
 ],
@@ -142346,8 +142350,8 @@
 156.886
 ],
 "to_um": [
-175.775,
-1969.944
+150.293,
+1969.943
 ],
 "regs_um": [
 [
@@ -142371,7 +142375,7 @@
 1777.989
 ],
 [
-175.775,
+150.293,
 1965.6
 ]
 ],
@@ -142387,8 +142391,8 @@
 414.128
 ],
 "to_um": [
-230.645,
-1969.944
+213.232,
+1969.943
 ],
 "regs_um": [
 [
@@ -142412,7 +142416,7 @@
 1896.233
 ],
 [
-230.645,
+213.232,
 1965.6
 ]
 ],
@@ -142428,8 +142432,8 @@
 156.886
 ],
 "to_um": [
-230.645,
-1969.944
+213.232,
+1969.943
 ],
 "regs_um": [
 [
@@ -142453,7 +142457,7 @@
 1896.233
 ],
 [
-230.645,
+213.232,
 1965.6
 ]
 ],
@@ -142469,8 +142473,8 @@
 1293.819
 ],
 "to_um": [
-230.645,
-1969.944
+213.232,
+1969.943
 ],
 "regs_um": [
 [
@@ -142482,7 +142486,7 @@
 1896.233
 ],
 [
-230.645,
+213.232,
 1965.6
 ]
 ],
@@ -142498,8 +142502,8 @@
 414.128
 ],
 "to_um": [
-370.376,
-1969.944
+373.511,
+1969.943
 ],
 "regs_um": [
 [
@@ -142523,7 +142527,7 @@
 1961.28
 ],
 [
-370.376,
+373.511,
 1965.6
 ]
 ],
@@ -142539,8 +142543,8 @@
 156.886
 ],
 "to_um": [
-370.376,
-1969.944
+373.511,
+1969.943
 ],
 "regs_um": [
 [
@@ -142568,7 +142572,7 @@
 1961.28
 ],
 [
-370.376,
+373.511,
 1965.6
 ]
 ],
@@ -142584,8 +142588,8 @@
 1293.819
 ],
 "to_um": [
-370.376,
-1969.944
+373.511,
+1969.943
 ],
 "regs_um": [
 [
@@ -142601,7 +142605,7 @@
 1961.28
 ],
 [
-370.376,
+373.511,
 1965.6
 ]
 ],
@@ -142617,8 +142621,8 @@
 414.128
 ],
 "to_um": [
-175.926,
-1969.944
+150.466,
+1969.943
 ],
 "regs_um": [
 [
@@ -142638,7 +142642,7 @@
 1777.989
 ],
 [
-175.926,
+150.466,
 1965.6
 ]
 ],
@@ -142654,8 +142658,8 @@
 156.886
 ],
 "to_um": [
-175.926,
-1969.944
+150.466,
+1969.943
 ],
 "regs_um": [
 [
@@ -142679,7 +142683,7 @@
 1777.989
 ],
 [
-175.926,
+150.466,
 1965.6
 ]
 ],
@@ -142695,8 +142699,8 @@
 414.128
 ],
 "to_um": [
-234.492,
-1969.944
+217.644,
+1969.943
 ],
 "regs_um": [
 [
@@ -142720,7 +142724,7 @@
 1896.233
 ],
 [
-234.492,
+217.644,
 1965.6
 ]
 ],
@@ -142736,8 +142740,8 @@
 156.886
 ],
 "to_um": [
-234.492,
-1969.944
+217.644,
+1969.943
 ],
 "regs_um": [
 [
@@ -142761,7 +142765,7 @@
 1896.233
 ],
 [
-234.492,
+217.644,
 1965.6
 ]
 ],
@@ -142777,8 +142781,8 @@
 1293.819
 ],
 "to_um": [
-234.492,
-1969.944
+217.644,
+1969.943
 ],
 "regs_um": [
 [
@@ -142790,7 +142794,7 @@
 1896.233
 ],
 [
-234.492,
+217.644,
 1965.6
 ]
 ],
@@ -142806,8 +142810,8 @@
 414.128
 ],
 "to_um": [
-375.496,
-1969.944
+379.384,
+1969.943
 ],
 "regs_um": [
 [
@@ -142831,7 +142835,7 @@
 1961.28
 ],
 [
-375.496,
+379.384,
 1965.6
 ]
 ],
@@ -142847,8 +142851,8 @@
 156.886
 ],
 "to_um": [
-375.496,
-1969.944
+379.384,
+1969.943
 ],
 "regs_um": [
 [
@@ -142876,7 +142880,7 @@
 1961.28
 ],
 [
-375.496,
+379.384,
 1965.6
 ]
 ],
@@ -142892,8 +142896,8 @@
 1293.819
 ],
 "to_um": [
-375.496,
-1969.944
+379.384,
+1969.943
 ],
 "regs_um": [
 [
@@ -142909,7 +142913,7 @@
 1961.28
 ],
 [
-375.496,
+379.384,
 1965.6
 ]
 ],
@@ -142925,8 +142929,8 @@
 414.128
 ],
 "to_um": [
-176.077,
-1969.944
+150.638,
+1969.943
 ],
 "regs_um": [
 [
@@ -142946,7 +142950,7 @@
 1777.989
 ],
 [
-176.077,
+150.638,
 1965.6
 ]
 ],
@@ -142962,8 +142966,8 @@
 156.886
 ],
 "to_um": [
-176.077,
-1969.944
+150.638,
+1969.943
 ],
 "regs_um": [
 [
@@ -142987,7 +142991,7 @@
 1777.989
 ],
 [
-176.077,
+150.638,
 1965.6
 ]
 ],
@@ -143003,8 +143007,8 @@
 414.128
 ],
 "to_um": [
-238.316,
-1969.944
+222.031,
+1969.943
 ],
 "regs_um": [
 [
@@ -143028,7 +143032,7 @@
 1896.233
 ],
 [
-238.316,
+222.031,
 1965.6
 ]
 ],
@@ -143044,8 +143048,8 @@
 156.886
 ],
 "to_um": [
-238.316,
-1969.944
+222.031,
+1969.943
 ],
 "regs_um": [
 [
@@ -143069,7 +143073,7 @@
 1896.233
 ],
 [
-238.316,
+222.031,
 1965.6
 ]
 ],
@@ -143085,8 +143089,8 @@
 1293.819
 ],
 "to_um": [
-238.316,
-1969.944
+222.031,
+1969.943
 ],
 "regs_um": [
 [
@@ -143098,7 +143102,7 @@
 1896.233
 ],
 [
-238.316,
+222.031,
 1965.6
 ]
 ],
@@ -143114,8 +143118,8 @@
 414.128
 ],
 "to_um": [
-380.591,
-1969.944
+385.228,
+1969.943
 ],
 "regs_um": [
 [
@@ -143139,7 +143143,7 @@
 1961.28
 ],
 [
-380.591,
+385.228,
 1965.6
 ]
 ],
@@ -143155,8 +143159,8 @@
 156.886
 ],
 "to_um": [
-380.591,
-1969.944
+385.228,
+1969.943
 ],
 "regs_um": [
 [
@@ -143184,7 +143188,7 @@
 1961.28
 ],
 [
-380.591,
+385.228,
 1965.6
 ]
 ],
@@ -143200,8 +143204,8 @@
 1293.819
 ],
 "to_um": [
-380.591,
-1969.944
+385.228,
+1969.943
 ],
 "regs_um": [
 [
@@ -143217,7 +143221,7 @@
 1961.28
 ],
 [
-380.591,
+385.228,
 1965.6
 ]
 ],
@@ -143233,8 +143237,8 @@
 414.128
 ],
 "to_um": [
-176.403,
-1969.944
+151.013,
+1969.943
 ],
 "regs_um": [
 [
@@ -143254,7 +143258,7 @@
 1777.989
 ],
 [
-176.403,
+151.013,
 1965.6
 ]
 ],
@@ -143270,8 +143274,8 @@
 156.886
 ],
 "to_um": [
-176.403,
-1969.944
+151.013,
+1969.943
 ],
 "regs_um": [
 [
@@ -143295,7 +143299,7 @@
 1777.989
 ],
 [
-176.403,
+151.013,
 1965.6
 ]
 ],
@@ -143311,8 +143315,8 @@
 414.128
 ],
 "to_um": [
-242.156,
-1969.944
+226.435,
+1969.943
 ],
 "regs_um": [
 [
@@ -143336,7 +143340,7 @@
 1896.233
 ],
 [
-242.156,
+226.435,
 1965.6
 ]
 ],
@@ -143352,8 +143356,8 @@
 156.886
 ],
 "to_um": [
-242.156,
-1969.944
+226.435,
+1969.943
 ],
 "regs_um": [
 [
@@ -143377,7 +143381,7 @@
 1896.233
 ],
 [
-242.156,
+226.435,
 1965.6
 ]
 ],
@@ -143393,8 +143397,8 @@
 1293.819
 ],
 "to_um": [
-242.156,
-1969.944
+226.435,
+1969.943
 ],
 "regs_um": [
 [
@@ -143406,7 +143410,7 @@
 1896.233
 ],
 [
-242.156,
+226.435,
 1965.6
 ]
 ],
@@ -143422,32 +143426,32 @@
 414.128
 ],
 "to_um": [
-385.694,
-1969.944
+391.082,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-595.543
+713.787
 ],
 [
 4.32,
-950.277
+1068.521
 ],
 [
 4.32,
-1305.01
+1423.255
 ],
 [
 4.32,
-1659.744
+1777.989
 ],
 [
-30.24,
+128.736,
 1961.28
 ],
 [
-385.694,
+391.082,
 1965.6
 ]
 ],
@@ -143463,36 +143467,36 @@
 156.886
 ],
 "to_um": [
-385.694,
-1969.944
+391.082,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-240.809
+359.054
 ],
 [
 4.32,
-595.543
+713.787
 ],
 [
 4.32,
-950.277
+1068.521
 ],
 [
 4.32,
-1305.01
+1423.255
 ],
 [
 4.32,
-1659.744
+1777.989
 ],
 [
-30.24,
+128.736,
 1961.28
 ],
 [
-385.694,
+391.082,
 1965.6
 ]
 ],
@@ -143508,24 +143512,24 @@
 1293.819
 ],
 "to_um": [
-385.694,
-1969.944
+391.082,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-1305.01
+1423.255
 ],
 [
 4.32,
-1659.744
+1777.989
 ],
 [
-30.24,
+128.736,
 1961.28
 ],
 [
-385.694,
+391.082,
 1965.6
 ]
 ],
@@ -143541,8 +143545,8 @@
 414.128
 ],
 "to_um": [
-176.554,
-1969.944
+151.186,
+1969.943
 ],
 "regs_um": [
 [
@@ -143562,7 +143566,7 @@
 1777.989
 ],
 [
-176.554,
+151.186,
 1965.6
 ]
 ],
@@ -143578,8 +143582,8 @@
 156.886
 ],
 "to_um": [
-176.554,
-1969.944
+151.186,
+1969.943
 ],
 "regs_um": [
 [
@@ -143603,7 +143607,7 @@
 1777.989
 ],
 [
-176.554,
+151.186,
 1965.6
 ]
 ],
@@ -143619,8 +143623,8 @@
 414.128
 ],
 "to_um": [
-245.995,
-1969.944
+230.839,
+1969.943
 ],
 "regs_um": [
 [
@@ -143644,7 +143648,7 @@
 1896.233
 ],
 [
-245.995,
+230.839,
 1965.6
 ]
 ],
@@ -143660,8 +143664,8 @@
 156.886
 ],
 "to_um": [
-245.995,
-1969.944
+230.839,
+1969.943
 ],
 "regs_um": [
 [
@@ -143685,7 +143689,7 @@
 1896.233
 ],
 [
-245.995,
+230.839,
 1965.6
 ]
 ],
@@ -143701,8 +143705,8 @@
 1293.819
 ],
 "to_um": [
-245.995,
-1969.944
+230.839,
+1969.943
 ],
 "regs_um": [
 [
@@ -143714,7 +143718,7 @@
 1896.233
 ],
 [
-245.995,
+230.839,
 1965.6
 ]
 ],
@@ -143730,8 +143734,8 @@
 414.128
 ],
 "to_um": [
-390.805,
-1969.944
+396.944,
+1969.943
 ],
 "regs_um": [
 [
@@ -143755,7 +143759,7 @@
 1961.28
 ],
 [
-390.805,
+396.944,
 1965.6
 ]
 ],
@@ -143771,8 +143775,8 @@
 156.886
 ],
 "to_um": [
-390.805,
-1969.944
+396.944,
+1969.943
 ],
 "regs_um": [
 [
@@ -143800,7 +143804,7 @@
 1961.28
 ],
 [
-390.805,
+396.944,
 1965.6
 ]
 ],
@@ -143816,8 +143820,8 @@
 1293.819
 ],
 "to_um": [
-390.805,
-1969.944
+396.944,
+1969.943
 ],
 "regs_um": [
 [
@@ -143833,7 +143837,7 @@
 1961.28
 ],
 [
-390.805,
+396.944,
 1965.6
 ]
 ],
@@ -143849,8 +143853,8 @@
 414.128
 ],
 "to_um": [
-176.704,
-1969.944
+151.358,
+1969.943
 ],
 "regs_um": [
 [
@@ -143870,7 +143874,7 @@
 1777.989
 ],
 [
-176.704,
+151.358,
 1965.6
 ]
 ],
@@ -143886,8 +143890,8 @@
 156.886
 ],
 "to_um": [
-176.704,
-1969.944
+151.358,
+1969.943
 ],
 "regs_um": [
 [
@@ -143911,7 +143915,7 @@
 1777.989
 ],
 [
-176.704,
+151.358,
 1965.6
 ]
 ],
@@ -143927,8 +143931,8 @@
 414.128
 ],
 "to_um": [
-249.811,
-1969.944
+235.216,
+1969.943
 ],
 "regs_um": [
 [
@@ -143952,7 +143956,7 @@
 1896.233
 ],
 [
-249.811,
+235.216,
 1965.6
 ]
 ],
@@ -143968,8 +143972,8 @@
 156.886
 ],
 "to_um": [
-249.811,
-1969.944
+235.216,
+1969.943
 ],
 "regs_um": [
 [
@@ -143993,7 +143997,7 @@
 1896.233
 ],
 [
-249.811,
+235.216,
 1965.6
 ]
 ],
@@ -144009,8 +144013,8 @@
 1293.819
 ],
 "to_um": [
-249.811,
-1969.944
+235.216,
+1969.943
 ],
 "regs_um": [
 [
@@ -144022,7 +144026,7 @@
 1896.233
 ],
 [
-249.811,
+235.216,
 1965.6
 ]
 ],
@@ -144038,8 +144042,8 @@
 414.128
 ],
 "to_um": [
-395.915,
-1969.944
+402.806,
+1969.943
 ],
 "regs_um": [
 [
@@ -144063,7 +144067,7 @@
 1961.28
 ],
 [
-395.915,
+402.806,
 1965.6
 ]
 ],
@@ -144079,8 +144083,8 @@
 156.886
 ],
 "to_um": [
-395.915,
-1969.944
+402.806,
+1969.943
 ],
 "regs_um": [
 [
@@ -144108,7 +144112,7 @@
 1961.28
 ],
 [
-395.915,
+402.806,
 1965.6
 ]
 ],
@@ -144124,8 +144128,8 @@
 1293.819
 ],
 "to_um": [
-395.915,
-1969.944
+402.806,
+1969.943
 ],
 "regs_um": [
 [
@@ -144141,7 +144145,7 @@
 1961.28
 ],
 [
-395.915,
+402.806,
 1965.6
 ]
 ],
@@ -144157,8 +144161,8 @@
 414.128
 ],
 "to_um": [
-176.83,
-1969.944
+151.502,
+1969.943
 ],
 "regs_um": [
 [
@@ -144174,11 +144178,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-176.83,
+151.502,
 1965.6
 ]
 ],
@@ -144194,8 +144198,8 @@
 156.886
 ],
 "to_um": [
-176.83,
-1969.944
+151.502,
+1969.943
 ],
 "regs_um": [
 [
@@ -144215,11 +144219,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-176.83,
+151.502,
 1965.6
 ]
 ],
@@ -144235,8 +144239,8 @@
 414.128
 ],
 "to_um": [
-253.652,
-1969.944
+239.622,
+1969.943
 ],
 "regs_um": [
 [
@@ -144260,7 +144264,7 @@
 1896.233
 ],
 [
-253.652,
+239.622,
 1965.6
 ]
 ],
@@ -144276,8 +144280,8 @@
 156.886
 ],
 "to_um": [
-253.652,
-1969.944
+239.622,
+1969.943
 ],
 "regs_um": [
 [
@@ -144301,7 +144305,7 @@
 1896.233
 ],
 [
-253.652,
+239.622,
 1965.6
 ]
 ],
@@ -144317,8 +144321,8 @@
 1293.819
 ],
 "to_um": [
-253.652,
-1969.944
+239.622,
+1969.943
 ],
 "regs_um": [
 [
@@ -144330,7 +144334,7 @@
 1896.233
 ],
 [
-253.652,
+239.622,
 1965.6
 ]
 ],
@@ -144346,8 +144350,8 @@
 414.128
 ],
 "to_um": [
-401.018,
-1969.944
+408.659,
+1969.943
 ],
 "regs_um": [
 [
@@ -144371,7 +144375,7 @@
 1961.28
 ],
 [
-401.018,
+408.659,
 1965.6
 ]
 ],
@@ -144387,8 +144391,8 @@
 156.886
 ],
 "to_um": [
-401.018,
-1969.944
+408.659,
+1969.943
 ],
 "regs_um": [
 [
@@ -144416,7 +144420,7 @@
 1961.28
 ],
 [
-401.018,
+408.659,
 1965.6
 ]
 ],
@@ -144432,8 +144436,8 @@
 1293.819
 ],
 "to_um": [
-401.018,
-1969.944
+408.659,
+1969.943
 ],
 "regs_um": [
 [
@@ -144449,7 +144453,7 @@
 1961.28
 ],
 [
-401.018,
+408.659,
 1965.6
 ]
 ],
@@ -144465,8 +144469,8 @@
 414.128
 ],
 "to_um": [
-176.98,
-1969.944
+151.675,
+1969.943
 ],
 "regs_um": [
 [
@@ -144482,11 +144486,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-176.98,
+151.675,
 1965.6
 ]
 ],
@@ -144502,8 +144506,8 @@
 156.886
 ],
 "to_um": [
-176.98,
-1969.944
+151.675,
+1969.943
 ],
 "regs_um": [
 [
@@ -144523,11 +144527,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-176.98,
+151.675,
 1965.6
 ]
 ],
@@ -144543,8 +144547,8 @@
 414.128
 ],
 "to_um": [
-257.462,
-1969.944
+243.992,
+1969.943
 ],
 "regs_um": [
 [
@@ -144568,7 +144572,7 @@
 1896.233
 ],
 [
-257.462,
+243.992,
 1965.6
 ]
 ],
@@ -144584,8 +144588,8 @@
 156.886
 ],
 "to_um": [
-257.462,
-1969.944
+243.992,
+1969.943
 ],
 "regs_um": [
 [
@@ -144609,7 +144613,7 @@
 1896.233
 ],
 [
-257.462,
+243.992,
 1965.6
 ]
 ],
@@ -144625,8 +144629,8 @@
 1293.819
 ],
 "to_um": [
-257.462,
-1969.944
+243.992,
+1969.943
 ],
 "regs_um": [
 [
@@ -144638,7 +144642,7 @@
 1896.233
 ],
 [
-257.462,
+243.992,
 1965.6
 ]
 ],
@@ -144654,8 +144658,8 @@
 414.128
 ],
 "to_um": [
-406.118,
-1969.944
+414.509,
+1969.943
 ],
 "regs_um": [
 [
@@ -144679,7 +144683,7 @@
 1961.28
 ],
 [
-406.118,
+414.509,
 1965.6
 ]
 ],
@@ -144695,8 +144699,8 @@
 156.886
 ],
 "to_um": [
-406.118,
-1969.944
+414.509,
+1969.943
 ],
 "regs_um": [
 [
@@ -144724,7 +144728,7 @@
 1961.28
 ],
 [
-406.118,
+414.509,
 1965.6
 ]
 ],
@@ -144740,8 +144744,8 @@
 1293.819
 ],
 "to_um": [
-406.118,
-1969.944
+414.509,
+1969.943
 ],
 "regs_um": [
 [
@@ -144757,7 +144761,7 @@
 1961.28
 ],
 [
-406.118,
+414.509,
 1965.6
 ]
 ],
@@ -144773,8 +144777,8 @@
 414.128
 ],
 "to_um": [
-177.131,
-1969.944
+151.848,
+1969.943
 ],
 "regs_um": [
 [
@@ -144790,11 +144794,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.131,
+151.848,
 1965.6
 ]
 ],
@@ -144810,8 +144814,8 @@
 156.886
 ],
 "to_um": [
-177.131,
-1969.944
+151.848,
+1969.943
 ],
 "regs_um": [
 [
@@ -144831,11 +144835,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.131,
+151.848,
 1965.6
 ]
 ],
@@ -144851,8 +144855,8 @@
 414.128
 ],
 "to_um": [
-261.293,
-1969.944
+248.387,
+1969.943
 ],
 "regs_um": [
 [
@@ -144876,7 +144880,7 @@
 1896.233
 ],
 [
-261.293,
+248.387,
 1965.6
 ]
 ],
@@ -144892,8 +144896,8 @@
 156.886
 ],
 "to_um": [
-261.293,
-1969.944
+248.387,
+1969.943
 ],
 "regs_um": [
 [
@@ -144917,7 +144921,7 @@
 1896.233
 ],
 [
-261.293,
+248.387,
 1965.6
 ]
 ],
@@ -144933,8 +144937,8 @@
 1293.819
 ],
 "to_um": [
-261.293,
-1969.944
+248.387,
+1969.943
 ],
 "regs_um": [
 [
@@ -144946,7 +144950,7 @@
 1896.233
 ],
 [
-261.293,
+248.387,
 1965.6
 ]
 ],
@@ -144962,8 +144966,8 @@
 414.128
 ],
 "to_um": [
-411.227,
-1969.944
+420.37,
+1969.943
 ],
 "regs_um": [
 [
@@ -144987,7 +144991,7 @@
 1961.28
 ],
 [
-411.227,
+420.37,
 1965.6
 ]
 ],
@@ -145003,8 +145007,8 @@
 156.886
 ],
 "to_um": [
-411.227,
-1969.944
+420.37,
+1969.943
 ],
 "regs_um": [
 [
@@ -145032,7 +145036,7 @@
 1961.28
 ],
 [
-411.227,
+420.37,
 1965.6
 ]
 ],
@@ -145048,8 +145052,8 @@
 1293.819
 ],
 "to_um": [
-411.227,
-1969.944
+420.37,
+1969.943
 ],
 "regs_um": [
 [
@@ -145065,7 +145069,7 @@
 1961.28
 ],
 [
-411.227,
+420.37,
 1965.6
 ]
 ],
@@ -145081,8 +145085,8 @@
 414.128
 ],
 "to_um": [
-177.282,
-1969.944
+152.021,
+1969.943
 ],
 "regs_um": [
 [
@@ -145098,11 +145102,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.282,
+152.021,
 1965.6
 ]
 ],
@@ -145118,8 +145122,8 @@
 156.886
 ],
 "to_um": [
-177.282,
-1969.944
+152.021,
+1969.943
 ],
 "regs_um": [
 [
@@ -145139,11 +145143,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.282,
+152.021,
 1965.6
 ]
 ],
@@ -145159,8 +145163,8 @@
 414.128
 ],
 "to_um": [
-265.118,
-1969.944
+252.774,
+1969.943
 ],
 "regs_um": [
 [
@@ -145184,7 +145188,7 @@
 1896.233
 ],
 [
-265.118,
+252.774,
 1965.6
 ]
 ],
@@ -145200,8 +145204,8 @@
 156.886
 ],
 "to_um": [
-265.118,
-1969.944
+252.774,
+1969.943
 ],
 "regs_um": [
 [
@@ -145225,7 +145229,7 @@
 1896.233
 ],
 [
-265.118,
+252.774,
 1965.6
 ]
 ],
@@ -145241,8 +145245,8 @@
 1293.819
 ],
 "to_um": [
-265.118,
-1969.944
+252.774,
+1969.943
 ],
 "regs_um": [
 [
@@ -145254,7 +145258,7 @@
 1896.233
 ],
 [
-265.118,
+252.774,
 1965.6
 ]
 ],
@@ -145270,8 +145274,8 @@
 414.128
 ],
 "to_um": [
-416.344,
-1969.944
+426.239,
+1969.943
 ],
 "regs_um": [
 [
@@ -145295,7 +145299,7 @@
 1961.28
 ],
 [
-416.344,
+426.239,
 1965.6
 ]
 ],
@@ -145311,8 +145315,8 @@
 156.886
 ],
 "to_um": [
-416.344,
-1969.944
+426.239,
+1969.943
 ],
 "regs_um": [
 [
@@ -145340,7 +145344,7 @@
 1961.28
 ],
 [
-416.344,
+426.239,
 1965.6
 ]
 ],
@@ -145356,8 +145360,8 @@
 1293.819
 ],
 "to_um": [
-416.344,
-1969.944
+426.239,
+1969.943
 ],
 "regs_um": [
 [
@@ -145373,7 +145377,7 @@
 1961.28
 ],
 [
-416.344,
+426.239,
 1965.6
 ]
 ],
@@ -145389,8 +145393,8 @@
 414.128
 ],
 "to_um": [
-177.432,
-1969.944
+152.194,
+1969.943
 ],
 "regs_um": [
 [
@@ -145406,11 +145410,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.432,
+152.194,
 1965.6
 ]
 ],
@@ -145426,8 +145430,8 @@
 156.886
 ],
 "to_um": [
-177.432,
-1969.944
+152.194,
+1969.943
 ],
 "regs_um": [
 [
@@ -145447,11 +145451,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.432,
+152.194,
 1965.6
 ]
 ],
@@ -145467,8 +145471,8 @@
 414.128
 ],
 "to_um": [
-268.951,
-1969.944
+257.171,
+1969.943
 ],
 "regs_um": [
 [
@@ -145492,7 +145496,7 @@
 1896.233
 ],
 [
-268.951,
+257.171,
 1965.6
 ]
 ],
@@ -145508,8 +145512,8 @@
 156.886
 ],
 "to_um": [
-268.951,
-1969.944
+257.171,
+1969.943
 ],
 "regs_um": [
 [
@@ -145533,7 +145537,7 @@
 1896.233
 ],
 [
-268.951,
+257.171,
 1965.6
 ]
 ],
@@ -145549,8 +145553,8 @@
 1293.819
 ],
 "to_um": [
-268.951,
-1969.944
+257.171,
+1969.943
 ],
 "regs_um": [
 [
@@ -145562,7 +145566,7 @@
 1896.233
 ],
 [
-268.951,
+257.171,
 1965.6
 ]
 ],
@@ -145578,8 +145582,8 @@
 414.128
 ],
 "to_um": [
-421.436,
-1969.944
+432.08,
+1969.943
 ],
 "regs_um": [
 [
@@ -145603,7 +145607,7 @@
 1961.28
 ],
 [
-421.436,
+432.08,
 1965.6
 ]
 ],
@@ -145619,8 +145623,8 @@
 156.886
 ],
 "to_um": [
-421.436,
-1969.944
+432.08,
+1969.943
 ],
 "regs_um": [
 [
@@ -145648,7 +145652,7 @@
 1961.28
 ],
 [
-421.436,
+432.08,
 1965.6
 ]
 ],
@@ -145664,8 +145668,8 @@
 1293.819
 ],
 "to_um": [
-421.436,
-1969.944
+432.08,
+1969.943
 ],
 "regs_um": [
 [
@@ -145681,7 +145685,7 @@
 1961.28
 ],
 [
-421.436,
+432.08,
 1965.6
 ]
 ],
@@ -145697,8 +145701,8 @@
 414.128
 ],
 "to_um": [
-177.583,
-1969.944
+152.366,
+1969.943
 ],
 "regs_um": [
 [
@@ -145714,11 +145718,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.583,
+152.366,
 1965.6
 ]
 ],
@@ -145734,8 +145738,8 @@
 156.886
 ],
 "to_um": [
-177.583,
-1969.944
+152.366,
+1969.943
 ],
 "regs_um": [
 [
@@ -145755,11 +145759,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.583,
+152.366,
 1965.6
 ]
 ],
@@ -145775,8 +145779,8 @@
 414.128
 ],
 "to_um": [
-272.781,
-1969.944
+261.564,
+1969.943
 ],
 "regs_um": [
 [
@@ -145800,7 +145804,7 @@
 1896.233
 ],
 [
-272.781,
+261.564,
 1965.6
 ]
 ],
@@ -145816,8 +145820,8 @@
 156.886
 ],
 "to_um": [
-272.781,
-1969.944
+261.564,
+1969.943
 ],
 "regs_um": [
 [
@@ -145841,7 +145845,7 @@
 1896.233
 ],
 [
-272.781,
+261.564,
 1965.6
 ]
 ],
@@ -145857,8 +145861,8 @@
 1293.819
 ],
 "to_um": [
-272.781,
-1969.944
+261.564,
+1969.943
 ],
 "regs_um": [
 [
@@ -145870,7 +145874,7 @@
 1896.233
 ],
 [
-272.781,
+261.564,
 1965.6
 ]
 ],
@@ -145886,8 +145890,8 @@
 414.128
 ],
 "to_um": [
-426.541,
-1969.944
+437.936,
+1969.943
 ],
 "regs_um": [
 [
@@ -145911,7 +145915,7 @@
 1961.28
 ],
 [
-426.541,
+437.936,
 1965.6
 ]
 ],
@@ -145927,8 +145931,8 @@
 156.886
 ],
 "to_um": [
-426.541,
-1969.944
+437.936,
+1969.943
 ],
 "regs_um": [
 [
@@ -145956,7 +145960,7 @@
 1961.28
 ],
 [
-426.541,
+437.936,
 1965.6
 ]
 ],
@@ -145972,8 +145976,8 @@
 1293.819
 ],
 "to_um": [
-426.541,
-1969.944
+437.936,
+1969.943
 ],
 "regs_um": [
 [
@@ -145989,7 +145993,7 @@
 1961.28
 ],
 [
-426.541,
+437.936,
 1965.6
 ]
 ],
@@ -146005,8 +146009,8 @@
 414.128
 ],
 "to_um": [
-177.734,
-1969.944
+152.539,
+1969.943
 ],
 "regs_um": [
 [
@@ -146022,11 +146026,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.734,
+152.539,
 1965.6
 ]
 ],
@@ -146042,8 +146046,8 @@
 156.886
 ],
 "to_um": [
-177.734,
-1969.944
+152.539,
+1969.943
 ],
 "regs_um": [
 [
@@ -146063,11 +146067,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.734,
+152.539,
 1965.6
 ]
 ],
@@ -146083,8 +146087,8 @@
 414.128
 ],
 "to_um": [
-276.606,
-1969.944
+265.951,
+1969.943
 ],
 "regs_um": [
 [
@@ -146108,7 +146112,7 @@
 1896.233
 ],
 [
-276.606,
+265.951,
 1965.6
 ]
 ],
@@ -146124,8 +146128,8 @@
 156.886
 ],
 "to_um": [
-276.606,
-1969.944
+265.951,
+1969.943
 ],
 "regs_um": [
 [
@@ -146149,7 +146153,7 @@
 1896.233
 ],
 [
-276.606,
+265.951,
 1965.6
 ]
 ],
@@ -146165,8 +146169,8 @@
 1293.819
 ],
 "to_um": [
-276.606,
-1969.944
+265.951,
+1969.943
 ],
 "regs_um": [
 [
@@ -146178,7 +146182,7 @@
 1896.233
 ],
 [
-276.606,
+265.951,
 1965.6
 ]
 ],
@@ -146194,8 +146198,8 @@
 414.128
 ],
 "to_um": [
-431.662,
-1969.944
+443.81,
+1969.943
 ],
 "regs_um": [
 [
@@ -146219,7 +146223,7 @@
 1961.28
 ],
 [
-431.662,
+443.81,
 1965.6
 ]
 ],
@@ -146235,8 +146239,8 @@
 156.886
 ],
 "to_um": [
-431.662,
-1969.944
+443.81,
+1969.943
 ],
 "regs_um": [
 [
@@ -146264,7 +146268,7 @@
 1961.28
 ],
 [
-431.662,
+443.81,
 1965.6
 ]
 ],
@@ -146280,8 +146284,8 @@
 1293.819
 ],
 "to_um": [
-431.662,
-1969.944
+443.81,
+1969.943
 ],
 "regs_um": [
 [
@@ -146297,7 +146301,7 @@
 1961.28
 ],
 [
-431.662,
+443.81,
 1965.6
 ]
 ],
@@ -146313,8 +146317,8 @@
 414.128
 ],
 "to_um": [
-177.884,
-1969.944
+152.712,
+1969.943
 ],
 "regs_um": [
 [
@@ -146330,11 +146334,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.884,
+152.712,
 1965.6
 ]
 ],
@@ -146350,8 +146354,8 @@
 156.886
 ],
 "to_um": [
-177.884,
-1969.944
+152.712,
+1969.943
 ],
 "regs_um": [
 [
@@ -146371,11 +146375,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-177.884,
+152.712,
 1965.6
 ]
 ],
@@ -146391,8 +146395,8 @@
 414.128
 ],
 "to_um": [
-280.432,
-1969.944
+270.341,
+1969.943
 ],
 "regs_um": [
 [
@@ -146416,7 +146420,7 @@
 1896.233
 ],
 [
-280.432,
+270.341,
 1965.6
 ]
 ],
@@ -146432,8 +146436,8 @@
 156.886
 ],
 "to_um": [
-280.432,
-1969.944
+270.341,
+1969.943
 ],
 "regs_um": [
 [
@@ -146457,7 +146461,7 @@
 1896.233
 ],
 [
-280.432,
+270.341,
 1965.6
 ]
 ],
@@ -146473,8 +146477,8 @@
 1293.819
 ],
 "to_um": [
-280.432,
-1969.944
+270.341,
+1969.943
 ],
 "regs_um": [
 [
@@ -146486,7 +146490,7 @@
 1896.233
 ],
 [
-280.432,
+270.341,
 1965.6
 ]
 ],
@@ -146502,8 +146506,8 @@
 414.128
 ],
 "to_um": [
-436.76,
-1969.944
+449.658,
+1969.943
 ],
 "regs_um": [
 [
@@ -146527,7 +146531,7 @@
 1961.28
 ],
 [
-436.76,
+449.658,
 1965.6
 ]
 ],
@@ -146543,8 +146547,8 @@
 156.886
 ],
 "to_um": [
-436.76,
-1969.944
+449.658,
+1969.943
 ],
 "regs_um": [
 [
@@ -146572,7 +146576,7 @@
 1961.28
 ],
 [
-436.76,
+449.658,
 1965.6
 ]
 ],
@@ -146588,8 +146592,8 @@
 1293.819
 ],
 "to_um": [
-436.76,
-1969.944
+449.658,
+1969.943
 ],
 "regs_um": [
 [
@@ -146605,7 +146609,7 @@
 1961.28
 ],
 [
-436.76,
+449.658,
 1965.6
 ]
 ],
@@ -146621,8 +146625,8 @@
 414.128
 ],
 "to_um": [
-178.01,
-1969.944
+152.856,
+1969.943
 ],
 "regs_um": [
 [
@@ -146638,11 +146642,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.01,
+152.856,
 1965.6
 ]
 ],
@@ -146658,8 +146662,8 @@
 156.886
 ],
 "to_um": [
-178.01,
-1969.944
+152.856,
+1969.943
 ],
 "regs_um": [
 [
@@ -146679,11 +146683,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.01,
+152.856,
 1965.6
 ]
 ],
@@ -146699,8 +146703,8 @@
 414.128
 ],
 "to_um": [
-284.284,
-1969.944
+274.759,
+1969.943
 ],
 "regs_um": [
 [
@@ -146724,7 +146728,7 @@
 1896.233
 ],
 [
-284.284,
+274.759,
 1965.6
 ]
 ],
@@ -146740,8 +146744,8 @@
 156.886
 ],
 "to_um": [
-284.284,
-1969.944
+274.759,
+1969.943
 ],
 "regs_um": [
 [
@@ -146765,7 +146769,7 @@
 1896.233
 ],
 [
-284.284,
+274.759,
 1965.6
 ]
 ],
@@ -146781,8 +146785,8 @@
 1293.819
 ],
 "to_um": [
-284.284,
-1969.944
+274.759,
+1969.943
 ],
 "regs_um": [
 [
@@ -146794,7 +146798,7 @@
 1896.233
 ],
 [
-284.284,
+274.759,
 1965.6
 ]
 ],
@@ -146810,8 +146814,8 @@
 414.128
 ],
 "to_um": [
-441.865,
-1969.944
+455.513,
+1969.943
 ],
 "regs_um": [
 [
@@ -146835,7 +146839,7 @@
 1961.28
 ],
 [
-441.865,
+455.513,
 1965.6
 ]
 ],
@@ -146851,8 +146855,8 @@
 156.886
 ],
 "to_um": [
-441.865,
-1969.944
+455.513,
+1969.943
 ],
 "regs_um": [
 [
@@ -146880,7 +146884,7 @@
 1961.28
 ],
 [
-441.865,
+455.513,
 1965.6
 ]
 ],
@@ -146896,8 +146900,8 @@
 1293.819
 ],
 "to_um": [
-441.865,
-1969.944
+455.513,
+1969.943
 ],
 "regs_um": [
 [
@@ -146913,7 +146917,7 @@
 1961.28
 ],
 [
-441.865,
+455.513,
 1965.6
 ]
 ],
@@ -146929,8 +146933,8 @@
 414.128
 ],
 "to_um": [
-178.16,
-1969.944
+153.029,
+1969.943
 ],
 "regs_um": [
 [
@@ -146946,11 +146950,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.16,
+153.029,
 1965.6
 ]
 ],
@@ -146966,8 +146970,8 @@
 156.886
 ],
 "to_um": [
-178.16,
-1969.944
+153.029,
+1969.943
 ],
 "regs_um": [
 [
@@ -146987,11 +146991,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.16,
+153.029,
 1965.6
 ]
 ],
@@ -147007,8 +147011,8 @@
 414.128
 ],
 "to_um": [
-288.095,
-1969.944
+279.13,
+1969.943
 ],
 "regs_um": [
 [
@@ -147032,7 +147036,7 @@
 1896.233
 ],
 [
-288.095,
+279.13,
 1965.6
 ]
 ],
@@ -147048,8 +147052,8 @@
 156.886
 ],
 "to_um": [
-288.095,
-1969.944
+279.13,
+1969.943
 ],
 "regs_um": [
 [
@@ -147073,7 +147077,7 @@
 1896.233
 ],
 [
-288.095,
+279.13,
 1965.6
 ]
 ],
@@ -147089,8 +147093,8 @@
 1293.819
 ],
 "to_um": [
-288.095,
-1969.944
+279.13,
+1969.943
 ],
 "regs_um": [
 [
@@ -147102,7 +147106,7 @@
 1896.233
 ],
 [
-288.095,
+279.13,
 1965.6
 ]
 ],
@@ -147118,8 +147122,8 @@
 414.128
 ],
 "to_um": [
-446.992,
-1969.944
+461.394,
+1969.943
 ],
 "regs_um": [
 [
@@ -147143,7 +147147,7 @@
 1961.28
 ],
 [
-446.992,
+461.394,
 1965.6
 ]
 ],
@@ -147159,8 +147163,8 @@
 156.886
 ],
 "to_um": [
-446.992,
-1969.944
+461.394,
+1969.943
 ],
 "regs_um": [
 [
@@ -147188,7 +147192,7 @@
 1961.28
 ],
 [
-446.992,
+461.394,
 1965.6
 ]
 ],
@@ -147204,8 +147208,8 @@
 1293.819
 ],
 "to_um": [
-446.992,
-1969.944
+461.394,
+1969.943
 ],
 "regs_um": [
 [
@@ -147221,7 +147225,7 @@
 1961.28
 ],
 [
-446.992,
+461.394,
 1965.6
 ]
 ],
@@ -147237,8 +147241,8 @@
 414.128
 ],
 "to_um": [
-178.311,
-1969.944
+153.202,
+1969.943
 ],
 "regs_um": [
 [
@@ -147254,11 +147258,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.311,
+153.202,
 1965.6
 ]
 ],
@@ -147274,8 +147278,8 @@
 156.886
 ],
 "to_um": [
-178.311,
-1969.944
+153.202,
+1969.943
 ],
 "regs_um": [
 [
@@ -147295,11 +147299,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.311,
+153.202,
 1965.6
 ]
 ],
@@ -147315,8 +147319,8 @@
 414.128
 ],
 "to_um": [
-291.921,
-1969.944
+283.519,
+1969.943
 ],
 "regs_um": [
 [
@@ -147340,7 +147344,7 @@
 1896.233
 ],
 [
-291.921,
+283.519,
 1965.6
 ]
 ],
@@ -147356,8 +147360,8 @@
 156.886
 ],
 "to_um": [
-291.921,
-1969.944
+283.519,
+1969.943
 ],
 "regs_um": [
 [
@@ -147381,7 +147385,7 @@
 1896.233
 ],
 [
-291.921,
+283.519,
 1965.6
 ]
 ],
@@ -147397,8 +147401,8 @@
 1293.819
 ],
 "to_um": [
-291.921,
-1969.944
+283.519,
+1969.943
 ],
 "regs_um": [
 [
@@ -147410,7 +147414,7 @@
 1896.233
 ],
 [
-291.921,
+283.519,
 1965.6
 ]
 ],
@@ -147426,8 +147430,8 @@
 414.128
 ],
 "to_um": [
-452.108,
-1969.944
+467.263,
+1969.943
 ],
 "regs_um": [
 [
@@ -147451,7 +147455,7 @@
 1961.28
 ],
 [
-452.108,
+467.263,
 1965.6
 ]
 ],
@@ -147467,8 +147471,8 @@
 156.886
 ],
 "to_um": [
-452.108,
-1969.944
+467.263,
+1969.943
 ],
 "regs_um": [
 [
@@ -147496,7 +147500,7 @@
 1961.28
 ],
 [
-452.108,
+467.263,
 1965.6
 ]
 ],
@@ -147512,8 +147516,8 @@
 1293.819
 ],
 "to_um": [
-452.108,
-1969.944
+467.263,
+1969.943
 ],
 "regs_um": [
 [
@@ -147529,7 +147533,7 @@
 1961.28
 ],
 [
-452.108,
+467.263,
 1965.6
 ]
 ],
@@ -147545,8 +147549,8 @@
 414.128
 ],
 "to_um": [
-178.638,
-1969.944
+153.576,
+1969.943
 ],
 "regs_um": [
 [
@@ -147562,11 +147566,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.638,
+153.576,
 1965.6
 ]
 ],
@@ -147582,8 +147586,8 @@
 156.886
 ],
 "to_um": [
-178.638,
-1969.944
+153.576,
+1969.943
 ],
 "regs_um": [
 [
@@ -147603,11 +147607,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.638,
+153.576,
 1965.6
 ]
 ],
@@ -147623,32 +147627,32 @@
 414.128
 ],
 "to_um": [
-295.766,
-1969.944
+287.929,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-595.543
+477.298
 ],
 [
 4.32,
-950.277
+832.032
 ],
 [
 4.32,
-1305.01
+1186.766
 ],
 [
 4.32,
-1659.744
+1541.499
 ],
 [
 4.32,
-2014.478
+1896.233
 ],
 [
-295.766,
+287.929,
 1965.6
 ]
 ],
@@ -147664,43 +147668,39 @@
 156.886
 ],
 "to_um": [
-295.766,
-1969.944
+287.929,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-240.809
+477.298
 ],
 [
 4.32,
-595.543
+832.032
 ],
 [
 4.32,
-950.277
+1186.766
 ],
 [
 4.32,
-1305.01
+1541.499
 ],
 [
 4.32,
-1659.744
+1896.233
 ],
 [
-4.32,
-2014.478
-],
-[
-295.766,
+287.929,
 1965.6
 ]
 ],
 "bits": 24,
 "launch": "face bus L5_o",
 "capture": "u_sfus_Q.l15_kv_waddr",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 2091 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 7 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 2091 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 6 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L81_i",
@@ -147709,31 +147709,27 @@
 1293.819
 ],
 "to_um": [
-295.766,
-1969.944
+287.929,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-1305.01
+1541.499
 ],
 [
 4.32,
-1659.744
+1896.233
 ],
 [
-4.32,
-2014.478
-],
-[
-295.766,
+287.929,
 1965.6
 ]
 ],
 "bits": 24,
 "launch": "face bus L81_i",
 "capture": "u_sfus_Q.l15_kv_waddr",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 954 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 4 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 954 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 3 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L23_i",
@@ -147742,8 +147738,8 @@
 414.128
 ],
 "to_um": [
-457.189,
-1969.944
+473.091,
+1969.943
 ],
 "regs_um": [
 [
@@ -147767,7 +147763,7 @@
 1961.28
 ],
 [
-457.189,
+473.091,
 1965.6
 ]
 ],
@@ -147783,8 +147779,8 @@
 156.886
 ],
 "to_um": [
-457.189,
-1969.944
+473.091,
+1969.943
 ],
 "regs_um": [
 [
@@ -147812,7 +147808,7 @@
 1961.28
 ],
 [
-457.189,
+473.091,
 1965.6
 ]
 ],
@@ -147828,8 +147824,8 @@
 1293.819
 ],
 "to_um": [
-457.189,
-1969.944
+473.091,
+1969.943
 ],
 "regs_um": [
 [
@@ -147845,7 +147841,7 @@
 1961.28
 ],
 [
-457.189,
+473.091,
 1965.6
 ]
 ],
@@ -147861,8 +147857,8 @@
 414.128
 ],
 "to_um": [
-178.788,
-1969.944
+153.749,
+1969.943
 ],
 "regs_um": [
 [
@@ -147878,11 +147874,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.788,
+153.749,
 1965.6
 ]
 ],
@@ -147898,8 +147894,8 @@
 156.886
 ],
 "to_um": [
-178.788,
-1969.944
+153.749,
+1969.943
 ],
 "regs_um": [
 [
@@ -147919,11 +147915,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.788,
+153.749,
 1965.6
 ]
 ],
@@ -147939,32 +147935,32 @@
 414.128
 ],
 "to_um": [
-299.591,
-1969.944
+292.316,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-595.543
+477.298
 ],
 [
 4.32,
-950.277
+832.032
 ],
 [
 4.32,
-1305.01
+1186.766
 ],
 [
 4.32,
-1659.744
+1541.499
 ],
 [
 4.32,
-2014.478
+1896.233
 ],
 [
-299.591,
+292.316,
 1965.6
 ]
 ],
@@ -147980,43 +147976,39 @@
 156.886
 ],
 "to_um": [
-299.591,
-1969.944
+292.316,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-240.809
+477.298
 ],
 [
 4.32,
-595.543
+832.032
 ],
 [
 4.32,
-950.277
+1186.766
 ],
 [
 4.32,
-1305.01
+1541.499
 ],
 [
 4.32,
-1659.744
+1896.233
 ],
 [
-4.32,
-2014.478
-],
-[
-299.591,
+292.316,
 1965.6
 ]
 ],
 "bits": 24,
 "launch": "face bus L5_o",
 "capture": "u_sfus_Q.l15_vi_addr",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 2099 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 7 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 2099 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 6 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L81_i",
@@ -148025,31 +148017,27 @@
 1293.819
 ],
 "to_um": [
-299.591,
-1969.944
+292.316,
+1969.943
 ],
 "regs_um": [
 [
 4.32,
-1305.01
+1541.499
 ],
 [
 4.32,
-1659.744
+1896.233
 ],
 [
-4.32,
-2014.478
-],
-[
-299.591,
+292.316,
 1965.6
 ]
 ],
 "bits": 24,
 "launch": "face bus L81_i",
 "capture": "u_sfus_Q.l15_vi_addr",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 962 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 4 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 962 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 3 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L23_i",
@@ -148058,8 +148046,8 @@
 414.128
 ],
 "to_um": [
-462.289,
-1969.944
+478.941,
+1969.943
 ],
 "regs_um": [
 [
@@ -148083,7 +148071,7 @@
 1961.28
 ],
 [
-462.289,
+478.941,
 1965.6
 ]
 ],
@@ -148099,8 +148087,8 @@
 156.886
 ],
 "to_um": [
-462.289,
-1969.944
+478.941,
+1969.943
 ],
 "regs_um": [
 [
@@ -148128,7 +148116,7 @@
 1961.28
 ],
 [
-462.289,
+478.941,
 1965.6
 ]
 ],
@@ -148144,8 +148132,8 @@
 1293.819
 ],
 "to_um": [
-462.289,
-1969.944
+478.941,
+1969.943
 ],
 "regs_um": [
 [
@@ -148161,7 +148149,7 @@
 1961.28
 ],
 [
-462.289,
+478.941,
 1965.6
 ]
 ],
@@ -148177,8 +148165,8 @@
 414.128
 ],
 "to_um": [
-178.939,
-1969.944
+153.922,
+1969.943
 ],
 "regs_um": [
 [
@@ -148194,11 +148182,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.939,
+153.922,
 1965.6
 ]
 ],
@@ -148214,8 +148202,8 @@
 156.886
 ],
 "to_um": [
-178.939,
-1969.944
+153.922,
+1969.943
 ],
 "regs_um": [
 [
@@ -148235,11 +148223,11 @@
 1423.255
 ],
 [
-30.24,
-1755.154
+4.32,
+1777.989
 ],
 [
-178.939,
+153.922,
 1965.6
 ]
 ],
@@ -237580,16 +237568,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -238066,16 +238054,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -238552,16 +238540,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -239038,16 +239026,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -239524,16 +239512,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -240010,16 +239998,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -240496,16 +240484,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -240982,16 +240970,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -242449,16 +242437,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -242935,16 +242923,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -243421,16 +243409,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -244234,16 +244222,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -244716,16 +244704,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -245194,16 +245182,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -245462,19 +245450,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -245676,16 +245664,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -245782,19 +245770,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -246158,16 +246146,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -246632,16 +246620,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -247106,16 +247094,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -247374,19 +247362,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -247584,16 +247572,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -247690,19 +247678,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -248062,16 +248050,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -249521,16 +249509,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -249995,16 +249983,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -250473,16 +250461,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -251274,16 +251262,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -258468,16 +258456,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -258946,16 +258934,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -259424,16 +259412,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -259902,16 +259890,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -260380,16 +260368,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -260858,16 +260846,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -261126,19 +261114,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -261336,16 +261324,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -261442,19 +261430,19 @@
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -261818,16 +261806,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -262040,16 +262028,16 @@
 832.032
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -262153,16 +262141,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -262266,16 +262254,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -262379,16 +262367,16 @@
 832.032
 ],
 [
-263.52,
-859.68
+280.8,
+774.514
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -262492,16 +262480,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -262605,16 +262593,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -263313,16 +263301,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -263791,16 +263779,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -264269,16 +264257,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -264695,96 +264683,96 @@
 ],
 "regs_um": [
 [
-2360.3,
+2949.296,
 4142.88
 ],
 [
-2006.903,
+3302.693,
 4142.88
 ],
 [
-1653.506,
+3656.09,
 4142.88
 ],
 [
-1300.109,
+4009.487,
 4142.88
 ],
 [
-946.712,
+4362.884,
 4142.88
 ],
 [
-593.315,
+4716.281,
 4142.88
 ],
 [
-239.918,
-4142.88
+4834.08,
+3906.391
 ],
 [
-4.32,
-4024.635
+4834.08,
+3551.657
 ],
 [
-4.32,
-3669.902
+4834.08,
+3196.923
 ],
 [
-4.32,
-3315.168
+4834.08,
+2842.19
 ],
 [
-4.32,
-2960.434
+4834.08,
+2487.456
 ],
 [
-4.32,
-2605.701
+4834.08,
+2132.722
 ],
 [
-4.32,
-2250.967
+4834.08,
+1777.989
 ],
 [
-168.48,
-2056.32
+4834.08,
+1423.255
 ],
 [
-424.224,
-1961.28
+4499.28,
+1412.64
 ],
 [
-548.64,
-1728.0
+4196.88,
+1412.64
 ],
 [
-635.04,
-1499.04
+3918.24,
+1373.76
 ],
 [
-894.24,
-1408.32
+3594.24,
+1339.2
 ],
 [
-894.24,
-1084.32
+3406.32,
+1216.08
 ],
 [
-1153.44,
-1047.291
+3106.08,
+1183.68
 ],
 [
-1390.5,
-937.44
+2890.08,
+1043.589
 ],
 [
-1746.09,
-937.44
+2663.712,
+933.984
 ],
 [
-2049.84,
-926.64
+2354.4,
+890.784
 ],
 [
 2172.128,
@@ -265086,16 +265074,16 @@
 950.277
 ],
 [
-263.52,
-859.68
+280.8,
+881.28
 ],
 [
-574.56,
-859.68
+514.08,
+881.28
 ],
 [
-885.6,
-859.68
+864.0,
+881.28
 ],
 [
 1153.44,
@@ -269406,20 +269394,20 @@
 ],
 "regs_um": [
 [
-470.88,
-159.84
+514.08,
+133.92
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -269528,24 +269516,24 @@
 ],
 "regs_um": [
 [
-239.918,
-4.32
+280.8,
+133.92
 ],
 [
-593.315,
-4.32
+280.8,
+347.451
 ],
 [
-781.92,
-159.84
+280.8,
+667.749
 ],
 [
-885.6,
-393.12
+397.44,
+881.28
 ],
 [
-885.6,
-743.04
+747.36,
+881.28
 ],
 [
 894.24,
@@ -271202,20 +271190,20 @@
 ],
 "regs_um": [
 [
-470.88,
-159.84
+514.08,
+133.92
 ],
 [
-781.92,
-159.84
+864.0,
+133.92
 ],
 [
-885.6,
-393.12
+864.0,
+454.217
 ],
 [
-885.6,
-743.04
+864.0,
+774.514
 ],
 [
 894.24,
@@ -271324,24 +271312,24 @@
 ],
 "regs_um": [
 [
-239.918,
-4.32
+280.8,
+133.92
 ],
 [
-593.315,
-4.32
+280.8,
+347.451
 ],
 [
-781.92,
-159.84
+280.8,
+667.749
 ],
 [
-885.6,
-393.12
+397.44,
+881.28
 ],
 [
-885.6,
-743.04
+747.36,
+881.28
 ],
 [
 894.24,
@@ -286096,8 +286084,8 @@
 "name": "u_ep_N0",
 "kind": "core",
 "xy": [
-218.328,
-676.099
+235.608,
+650.179
 ],
 "insertion_ps": 577.0,
 "budget_owner": "hfd_ep_static",
@@ -286135,12 +286123,12 @@
 "cells": 46785,
 "note": "as-built ep_N0",
 "origin_um": [
-216.0,
-682.56
+233.28,
+656.64
 ],
 "outline_um": [
-276.48,
-315.36
+250.56,
+375.84
 ]
 },
 {
@@ -286150,12 +286138,12 @@
 "cells": 46785,
 "note": "as-built host_ep",
 "origin_um": [
-112.32,
-1097.28
+129.6,
+1071.36
 ],
 "outline_um": [
-276.48,
-315.36
+250.56,
+375.84
 ]
 }
 ],
@@ -286183,37 +286171,37 @@
 "inst": "u_ep_N0",
 "module": "hfd_ep_static",
 "origin_um": [
-216.0,
-682.56
+233.28,
+656.64
 ],
 "outline_um": [
-276.48,
-315.36
+250.56,
+375.84
 ],
 "track_offset_um": [
 0.0,
 0.0
 ],
-"pins_file": "cores/hfd_ep_static__276.48x315.36__NW_io_u_ep_N0.json",
-"note": "d4g hard core; 46785 cells | B2n grow (HBM-CORES): 434.72x371.52 -> 276.48x315.36, was hfd_ep_static__434.72x371.52__NW_io_u_ep_N0.json"
+"pins_file": "cores/hfd_ep_static__250.56x375.84__NW_io_u_ep_N0.json",
+"note": "d4g hard core; 46785 cells | B2n grow (HBM-CORES): 434.72x371.52 -> 250.56x375.84, was hfd_ep_static__434.72x371.52__NW_io_u_ep_N0.json"
 },
 {
 "inst": "u_host_ep",
 "module": "hfd_ep_static",
 "origin_um": [
-112.32,
-1097.28
+129.6,
+1071.36
 ],
 "outline_um": [
-276.48,
-315.36
+250.56,
+375.84
 ],
 "track_offset_um": [
 0.0,
 0.0
 ],
-"pins_file": "cores/hfd_ep_static__276.48x315.36__NW_io_u_host_ep.json",
-"note": "d4g hard core; 46785 cells | B2n grow (HBM-CORES): 434.72x371.52 -> 276.48x315.36, was hfd_ep_static__434.72x371.52__NW_io_u_host_ep.json"
+"pins_file": "cores/hfd_ep_static__250.56x375.84__NW_io_u_host_ep.json",
+"note": "d4g hard core; 46785 cells | B2n grow (HBM-CORES): 434.72x371.52 -> 250.56x375.84, was hfd_ep_static__434.72x371.52__NW_io_u_host_ep.json"
 }
 ],
 "internal_stations": [
@@ -286224,8 +286212,8 @@
 216.3
 ],
 "to_um": [
-217.481,
-682.576
+234.622,
+656.659
 ],
 "regs_um": [
 [
@@ -286241,8 +286229,8 @@
 639.36
 ],
 [
-217.481,
-678.24
+234.622,
+652.32
 ]
 ],
 "bits": 1,
@@ -286257,8 +286245,8 @@
 219.226
 ],
 "to_um": [
-217.481,
-682.576
+234.622,
+656.659
 ],
 "regs_um": [
 [
@@ -286274,8 +286262,8 @@
 639.36
 ],
 [
-217.481,
-678.24
+234.622,
+652.32
 ]
 ],
 "bits": 1,
@@ -286290,8 +286278,8 @@
 54.877
 ],
 "to_um": [
-217.481,
-682.576
+234.622,
+656.659
 ],
 "regs_um": [
 [
@@ -286311,8 +286299,8 @@
 639.36
 ],
 [
-217.481,
-678.24
+234.622,
+652.32
 ]
 ],
 "bits": 1,
@@ -286327,8 +286315,8 @@
 161.079
 ],
 "to_um": [
-217.481,
-682.576
+234.622,
+656.659
 ],
 "regs_um": [
 [
@@ -286344,8 +286332,8 @@
 639.36
 ],
 [
-217.481,
-678.24
+234.622,
+652.32
 ]
 ],
 "bits": 1,
@@ -286360,35 +286348,31 @@
 0.0
 ],
 "to_um": [
-377.086,
-997.904
+379.264,
+1032.461
 ],
 "regs_um": [
 [
 4.32,
-122.565
+359.054
 ],
 [
 4.32,
-477.298
+713.787
 ],
 [
-4.32,
-832.032
+228.96,
+844.56
 ],
 [
-211.68,
-894.24
-],
-[
-377.086,
-1002.24
+379.264,
+1036.8
 ]
 ],
 "bits": 11,
 "launch": "face bus L106_i",
 "capture": "u_ep_N0.fault_cause",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1416 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 5 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1416 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 4 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L125_o",
@@ -286397,29 +286381,29 @@
 0.0
 ],
 "to_um": [
-377.086,
-997.904
+379.264,
+1032.461
 ],
 "regs_um": [
 [
 4.32,
-122.565
+4.32
 ],
 [
 4.32,
-477.298
+359.054
 ],
 [
 4.32,
-832.032
+713.787
 ],
 [
-211.68,
-894.24
+228.96,
+844.56
 ],
 [
-377.086,
-1002.24
+379.264,
+1036.8
 ]
 ],
 "bits": 11,
@@ -286434,8 +286418,8 @@
 4147.2
 ],
 "to_um": [
-377.086,
-997.904
+379.264,
+1032.461
 ],
 "regs_um": [
 [
@@ -286475,12 +286459,12 @@
 1068.521
 ],
 [
-108.0,
-1092.96
+125.28,
+1067.04
 ],
 [
-377.086,
-1002.24
+379.264,
+1036.8
 ]
 ],
 "bits": 11,
@@ -286495,8 +286479,8 @@
 4147.2
 ],
 "to_um": [
-377.086,
-997.904
+379.264,
+1032.461
 ],
 "regs_um": [
 [
@@ -286536,12 +286520,12 @@
 1186.766
 ],
 [
-108.0,
-1092.96
+125.28,
+1067.04
 ],
 [
-377.086,
-1002.24
+379.264,
+1036.8
 ]
 ],
 "bits": 11,
@@ -286556,8 +286540,8 @@
 216.3
 ],
 "to_um": [
-217.603,
-682.576
+234.732,
+656.659
 ],
 "regs_um": [
 [
@@ -286573,8 +286557,8 @@
 639.36
 ],
 [
-217.603,
-678.24
+234.732,
+652.32
 ]
 ],
 "bits": 1,
@@ -286589,8 +286573,8 @@
 219.226
 ],
 "to_um": [
-217.603,
-682.576
+234.732,
+656.659
 ],
 "regs_um": [
 [
@@ -286606,8 +286590,8 @@
 639.36
 ],
 [
-217.603,
-678.24
+234.732,
+652.32
 ]
 ],
 "bits": 1,
@@ -286622,8 +286606,8 @@
 54.877
 ],
 "to_um": [
-217.603,
-682.576
+234.732,
+656.659
 ],
 "regs_um": [
 [
@@ -286643,8 +286627,8 @@
 639.36
 ],
 [
-217.603,
-678.24
+234.732,
+652.32
 ]
 ],
 "bits": 1,
@@ -286659,8 +286643,8 @@
 161.079
 ],
 "to_um": [
-217.603,
-682.576
+234.732,
+656.659
 ],
 "regs_um": [
 [
@@ -286676,8 +286660,8 @@
 639.36
 ],
 [
-217.603,
-678.24
+234.732,
+652.32
 ]
 ],
 "bits": 1,
@@ -286692,8 +286676,8 @@
 216.3
 ],
 "to_um": [
-217.755,
-682.576
+234.871,
+656.659
 ],
 "regs_um": [
 [
@@ -286709,8 +286693,8 @@
 639.36
 ],
 [
-217.755,
-678.24
+234.871,
+652.32
 ]
 ],
 "bits": 1,
@@ -286725,8 +286709,8 @@
 219.226
 ],
 "to_um": [
-217.755,
-682.576
+234.871,
+656.659
 ],
 "regs_um": [
 [
@@ -286742,8 +286726,8 @@
 639.36
 ],
 [
-217.755,
-678.24
+234.871,
+652.32
 ]
 ],
 "bits": 1,
@@ -286758,8 +286742,8 @@
 54.877
 ],
 "to_um": [
-217.755,
-682.576
+234.871,
+656.659
 ],
 "regs_um": [
 [
@@ -286779,8 +286763,8 @@
 639.36
 ],
 [
-217.755,
-678.24
+234.871,
+652.32
 ]
 ],
 "bits": 1,
@@ -286795,8 +286779,8 @@
 161.079
 ],
 "to_um": [
-217.755,
-682.576
+234.871,
+656.659
 ],
 "regs_um": [
 [
@@ -286812,8 +286796,8 @@
 639.36
 ],
 [
-217.755,
-678.24
+234.871,
+652.32
 ]
 ],
 "bits": 1,
@@ -286828,8 +286812,8 @@
 216.3
 ],
 "to_um": [
-217.877,
-682.576
+234.981,
+656.659
 ],
 "regs_um": [
 [
@@ -286845,8 +286829,8 @@
 639.36
 ],
 [
-217.877,
-678.24
+234.981,
+652.32
 ]
 ],
 "bits": 1,
@@ -286861,8 +286845,8 @@
 219.226
 ],
 "to_um": [
-217.877,
-682.576
+234.981,
+656.659
 ],
 "regs_um": [
 [
@@ -286878,8 +286862,8 @@
 639.36
 ],
 [
-217.877,
-678.24
+234.981,
+652.32
 ]
 ],
 "bits": 1,
@@ -286894,8 +286878,8 @@
 54.877
 ],
 "to_um": [
-217.877,
-682.576
+234.981,
+656.659
 ],
 "regs_um": [
 [
@@ -286915,8 +286899,8 @@
 639.36
 ],
 [
-217.877,
-678.24
+234.981,
+652.32
 ]
 ],
 "bits": 1,
@@ -286931,8 +286915,8 @@
 161.079
 ],
 "to_um": [
-217.877,
-682.576
+234.981,
+656.659
 ],
 "regs_um": [
 [
@@ -286948,8 +286932,8 @@
 639.36
 ],
 [
-217.877,
-678.24
+234.981,
+652.32
 ]
 ],
 "bits": 1,
@@ -286964,8 +286948,8 @@
 0.0
 ],
 "to_um": [
-228.852,
-997.904
+244.927,
+1032.461
 ],
 "regs_um": [
 [
@@ -286981,8 +286965,8 @@
 950.277
 ],
 [
-228.852,
-1002.24
+244.927,
+1036.8
 ]
 ],
 "bits": 2,
@@ -286997,8 +286981,8 @@
 0.0
 ],
 "to_um": [
-228.852,
-997.904
+244.927,
+1032.461
 ],
 "regs_um": [
 [
@@ -287014,8 +286998,8 @@
 950.277
 ],
 [
-228.852,
-1002.24
+244.927,
+1036.8
 ]
 ],
 "bits": 2,
@@ -287030,8 +287014,8 @@
 4147.2
 ],
 "to_um": [
-228.852,
-997.904
+244.927,
+1032.461
 ],
 "regs_um": [
 [
@@ -287071,8 +287055,8 @@
 1068.521
 ],
 [
-228.852,
-1002.24
+244.927,
+1036.8
 ]
 ],
 "bits": 2,
@@ -287087,8 +287071,8 @@
 4147.2
 ],
 "to_um": [
-228.852,
-997.904
+244.927,
+1032.461
 ],
 "regs_um": [
 [
@@ -287132,8 +287116,8 @@
 950.277
 ],
 [
-228.852,
-1002.24
+244.927,
+1036.8
 ]
 ],
 "bits": 2,
@@ -287148,8 +287132,8 @@
 216.3
 ],
 "to_um": [
-220.498,
-682.576
+237.357,
+656.659
 ],
 "regs_um": [
 [
@@ -287165,8 +287149,8 @@
 639.36
 ],
 [
-220.498,
-678.24
+237.357,
+652.32
 ]
 ],
 "bits": 7,
@@ -287181,8 +287165,8 @@
 219.226
 ],
 "to_um": [
-220.498,
-682.576
+237.357,
+656.659
 ],
 "regs_um": [
 [
@@ -287198,8 +287182,8 @@
 639.36
 ],
 [
-220.498,
-678.24
+237.357,
+652.32
 ]
 ],
 "bits": 7,
@@ -287214,8 +287198,8 @@
 54.877
 ],
 "to_um": [
-220.498,
-682.576
+237.357,
+656.659
 ],
 "regs_um": [
 [
@@ -287235,8 +287219,8 @@
 639.36
 ],
 [
-220.498,
-678.24
+237.357,
+652.32
 ]
 ],
 "bits": 7,
@@ -287251,8 +287235,8 @@
 161.079
 ],
 "to_um": [
-220.498,
-682.576
+237.357,
+656.659
 ],
 "regs_um": [
 [
@@ -287268,8 +287252,8 @@
 639.36
 ],
 [
-220.498,
-678.24
+237.357,
+652.32
 ]
 ],
 "bits": 7,
@@ -287284,8 +287268,8 @@
 216.3
 ],
 "to_um": [
-415.553,
-682.576
+414.125,
+656.659
 ],
 "regs_um": [
 [
@@ -287294,21 +287278,17 @@
 ],
 [
 638.928,
-334.8
+537.84
 ],
 [
-638.928,
-639.36
-],
-[
-415.553,
-678.24
+414.125,
+652.32
 ]
 ],
 "bits": 612,
 "launch": "face bus L101_i",
 "capture": "u_ep_N0.rx_pin_flit",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 939 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 4 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 939 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 3 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L126_o",
@@ -287317,8 +287297,8 @@
 219.226
 ],
 "to_um": [
-415.553,
-682.576
+414.125,
+656.659
 ],
 "regs_um": [
 [
@@ -287327,21 +287307,17 @@
 ],
 [
 638.928,
-334.8
+537.84
 ],
 [
-638.928,
-639.36
-],
-[
-415.553,
-678.24
+414.125,
+652.32
 ]
 ],
 "bits": 612,
 "launch": "face bus L126_o",
 "capture": "u_ep_N0.rx_pin_flit",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 936 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 4 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 936 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 3 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L51_i",
@@ -287350,8 +287326,8 @@
 54.877
 ],
 "to_um": [
-415.553,
-682.576
+414.125,
+656.659
 ],
 "regs_um": [
 [
@@ -287360,15 +287336,15 @@
 ],
 [
 638.928,
-334.8
+233.28
 ],
 [
 638.928,
-639.36
+537.84
 ],
 [
-415.553,
-678.24
+414.125,
+652.32
 ]
 ],
 "bits": 612,
@@ -287383,8 +287359,8 @@
 161.079
 ],
 "to_um": [
-415.553,
-682.576
+414.125,
+656.659
 ],
 "regs_um": [
 [
@@ -287393,15 +287369,15 @@
 ],
 [
 638.928,
-334.8
+233.28
 ],
 [
 638.928,
-639.36
+537.84
 ],
 [
-415.553,
-678.24
+414.125,
+652.32
 ]
 ],
 "bits": 612,
@@ -287416,8 +287392,8 @@
 216.3
 ],
 "to_um": [
-218.03,
-682.576
+235.12,
+656.659
 ],
 "regs_um": [
 [
@@ -287433,8 +287409,8 @@
 639.36
 ],
 [
-218.03,
-678.24
+235.12,
+652.32
 ]
 ],
 "bits": 1,
@@ -287449,8 +287425,8 @@
 219.226
 ],
 "to_um": [
-218.03,
-682.576
+235.12,
+656.659
 ],
 "regs_um": [
 [
@@ -287466,8 +287442,8 @@
 639.36
 ],
 [
-218.03,
-678.24
+235.12,
+652.32
 ]
 ],
 "bits": 1,
@@ -287482,8 +287458,8 @@
 54.877
 ],
 "to_um": [
-218.03,
-682.576
+235.12,
+656.659
 ],
 "regs_um": [
 [
@@ -287503,8 +287479,8 @@
 639.36
 ],
 [
-218.03,
-678.24
+235.12,
+652.32
 ]
 ],
 "bits": 1,
@@ -287519,8 +287495,8 @@
 161.079
 ],
 "to_um": [
-218.03,
-682.576
+235.12,
+656.659
 ],
 "regs_um": [
 [
@@ -287536,8 +287512,8 @@
 639.36
 ],
 [
-218.03,
-678.24
+235.12,
+652.32
 ]
 ],
 "bits": 1,
@@ -287552,8 +287528,8 @@
 216.3
 ],
 "to_um": [
-218.152,
-682.576
+235.23,
+656.659
 ],
 "regs_um": [
 [
@@ -287569,8 +287545,8 @@
 639.36
 ],
 [
-218.152,
-678.24
+235.23,
+652.32
 ]
 ],
 "bits": 1,
@@ -287585,8 +287561,8 @@
 219.226
 ],
 "to_um": [
-218.152,
-682.576
+235.23,
+656.659
 ],
 "regs_um": [
 [
@@ -287602,8 +287578,8 @@
 639.36
 ],
 [
-218.152,
-678.24
+235.23,
+652.32
 ]
 ],
 "bits": 1,
@@ -287618,8 +287594,8 @@
 54.877
 ],
 "to_um": [
-218.152,
-682.576
+235.23,
+656.659
 ],
 "regs_um": [
 [
@@ -287639,8 +287615,8 @@
 639.36
 ],
 [
-218.152,
-678.24
+235.23,
+652.32
 ]
 ],
 "bits": 1,
@@ -287655,8 +287631,8 @@
 161.079
 ],
 "to_um": [
-218.152,
-682.576
+235.23,
+656.659
 ],
 "regs_um": [
 [
@@ -287672,8 +287648,8 @@
 639.36
 ],
 [
-218.152,
-678.24
+235.23,
+652.32
 ]
 ],
 "bits": 1,
@@ -287688,8 +287664,8 @@
 216.3
 ],
 "to_um": [
-218.305,
-682.576
+235.369,
+656.659
 ],
 "regs_um": [
 [
@@ -287705,8 +287681,8 @@
 639.36
 ],
 [
-218.305,
-678.24
+235.369,
+652.32
 ]
 ],
 "bits": 1,
@@ -287721,8 +287697,8 @@
 219.226
 ],
 "to_um": [
-218.305,
-682.576
+235.369,
+656.659
 ],
 "regs_um": [
 [
@@ -287738,8 +287714,8 @@
 639.36
 ],
 [
-218.305,
-678.24
+235.369,
+652.32
 ]
 ],
 "bits": 1,
@@ -287754,8 +287730,8 @@
 54.877
 ],
 "to_um": [
-218.305,
-682.576
+235.369,
+656.659
 ],
 "regs_um": [
 [
@@ -287775,8 +287751,8 @@
 639.36
 ],
 [
-218.305,
-678.24
+235.369,
+652.32
 ]
 ],
 "bits": 1,
@@ -287791,8 +287767,8 @@
 161.079
 ],
 "to_um": [
-218.305,
-682.576
+235.369,
+656.659
 ],
 "regs_um": [
 [
@@ -287808,8 +287784,8 @@
 639.36
 ],
 [
-218.305,
-678.24
+235.369,
+652.32
 ]
 ],
 "bits": 1,
@@ -287824,8 +287800,8 @@
 216.3
 ],
 "to_um": [
-218.427,
-682.576
+235.479,
+656.659
 ],
 "regs_um": [
 [
@@ -287841,8 +287817,8 @@
 639.36
 ],
 [
-218.427,
-678.24
+235.479,
+652.32
 ]
 ],
 "bits": 1,
@@ -287857,8 +287833,8 @@
 219.226
 ],
 "to_um": [
-218.427,
-682.576
+235.479,
+656.659
 ],
 "regs_um": [
 [
@@ -287874,8 +287850,8 @@
 639.36
 ],
 [
-218.427,
-678.24
+235.479,
+652.32
 ]
 ],
 "bits": 1,
@@ -287890,8 +287866,8 @@
 54.877
 ],
 "to_um": [
-218.427,
-682.576
+235.479,
+656.659
 ],
 "regs_um": [
 [
@@ -287911,8 +287887,8 @@
 639.36
 ],
 [
-218.427,
-678.24
+235.479,
+652.32
 ]
 ],
 "bits": 1,
@@ -287927,8 +287903,8 @@
 161.079
 ],
 "to_um": [
-218.427,
-682.576
+235.479,
+656.659
 ],
 "regs_um": [
 [
@@ -287944,8 +287920,8 @@
 639.36
 ],
 [
-218.427,
-678.24
+235.479,
+652.32
 ]
 ],
 "bits": 1,
@@ -287960,8 +287936,8 @@
 216.3
 ],
 "to_um": [
-219.434,
-682.576
+236.392,
+656.659
 ],
 "regs_um": [
 [
@@ -287977,8 +287953,8 @@
 639.36
 ],
 [
-219.434,
-678.24
+236.392,
+652.32
 ]
 ],
 "bits": 6,
@@ -287993,8 +287969,8 @@
 219.226
 ],
 "to_um": [
-219.434,
-682.576
+236.392,
+656.659
 ],
 "regs_um": [
 [
@@ -288010,8 +287986,8 @@
 639.36
 ],
 [
-219.434,
-678.24
+236.392,
+652.32
 ]
 ],
 "bits": 6,
@@ -288026,8 +288002,8 @@
 54.877
 ],
 "to_um": [
-219.434,
-682.576
+236.392,
+656.659
 ],
 "regs_um": [
 [
@@ -288047,8 +288023,8 @@
 639.36
 ],
 [
-219.434,
-678.24
+236.392,
+652.32
 ]
 ],
 "bits": 6,
@@ -288063,8 +288039,8 @@
 161.079
 ],
 "to_um": [
-219.434,
-682.576
+236.392,
+656.659
 ],
 "regs_um": [
 [
@@ -288080,8 +288056,8 @@
 639.36
 ],
 [
-219.434,
-678.24
+236.392,
+652.32
 ]
 ],
 "bits": 6,
@@ -288096,8 +288072,8 @@
 216.3
 ],
 "to_um": [
-218.549,
-682.576
+235.59,
+656.659
 ],
 "regs_um": [
 [
@@ -288113,8 +288089,8 @@
 639.36
 ],
 [
-218.549,
-678.24
+235.59,
+652.32
 ]
 ],
 "bits": 1,
@@ -288129,8 +288105,8 @@
 219.226
 ],
 "to_um": [
-218.549,
-682.576
+235.59,
+656.659
 ],
 "regs_um": [
 [
@@ -288146,8 +288122,8 @@
 639.36
 ],
 [
-218.549,
-678.24
+235.59,
+652.32
 ]
 ],
 "bits": 1,
@@ -288162,8 +288138,8 @@
 54.877
 ],
 "to_um": [
-218.549,
-682.576
+235.59,
+656.659
 ],
 "regs_um": [
 [
@@ -288183,8 +288159,8 @@
 639.36
 ],
 [
-218.549,
-678.24
+235.59,
+652.32
 ]
 ],
 "bits": 1,
@@ -288199,8 +288175,8 @@
 161.079
 ],
 "to_um": [
-218.549,
-682.576
+235.59,
+656.659
 ],
 "regs_um": [
 [
@@ -288216,8 +288192,8 @@
 639.36
 ],
 [
-218.549,
-678.24
+235.59,
+652.32
 ]
 ],
 "bits": 1,
@@ -288232,8 +288208,8 @@
 216.3
 ],
 "to_um": [
-395.698,
-682.576
+396.131,
+656.659
 ],
 "regs_um": [
 [
@@ -288242,21 +288218,17 @@
 ],
 [
 638.928,
-334.8
+537.84
 ],
 [
-638.928,
-639.36
-],
-[
-395.698,
-678.24
+396.131,
+652.32
 ]
 ],
 "bits": 612,
 "launch": "face bus L101_i",
 "capture": "u_ep_N0.tx_frame",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 970 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 4 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 970 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 3 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L126_o",
@@ -288265,8 +288237,8 @@
 219.226
 ],
 "to_um": [
-395.698,
-682.576
+396.131,
+656.659
 ],
 "regs_um": [
 [
@@ -288275,21 +288247,17 @@
 ],
 [
 638.928,
-334.8
+537.84
 ],
 [
-638.928,
-639.36
-],
-[
-395.698,
-678.24
+396.131,
+652.32
 ]
 ],
 "bits": 612,
 "launch": "face bus L126_o",
 "capture": "u_ep_N0.tx_frame",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 967 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 4 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 967 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 3 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L51_i",
@@ -288298,8 +288266,8 @@
 54.877
 ],
 "to_um": [
-395.698,
-682.576
+396.131,
+656.659
 ],
 "regs_um": [
 [
@@ -288308,15 +288276,15 @@
 ],
 [
 638.928,
-334.8
+233.28
 ],
 [
 638.928,
-639.36
+537.84
 ],
 [
-395.698,
-678.24
+396.131,
+652.32
 ]
 ],
 "bits": 612,
@@ -288331,8 +288299,8 @@
 161.079
 ],
 "to_um": [
-395.698,
-682.576
+396.131,
+656.659
 ],
 "regs_um": [
 [
@@ -288341,15 +288309,15 @@
 ],
 [
 638.928,
-334.8
+233.28
 ],
 [
 638.928,
-639.36
+537.84
 ],
 [
-395.698,
-678.24
+396.131,
+652.32
 ]
 ],
 "bits": 612,
@@ -288364,8 +288332,8 @@
 216.3
 ],
 "to_um": [
-218.702,
-682.576
+235.728,
+656.659
 ],
 "regs_um": [
 [
@@ -288381,8 +288349,8 @@
 639.36
 ],
 [
-218.702,
-678.24
+235.728,
+652.32
 ]
 ],
 "bits": 1,
@@ -288397,8 +288365,8 @@
 219.226
 ],
 "to_um": [
-218.702,
-682.576
+235.728,
+656.659
 ],
 "regs_um": [
 [
@@ -288414,8 +288382,8 @@
 639.36
 ],
 [
-218.702,
-678.24
+235.728,
+652.32
 ]
 ],
 "bits": 1,
@@ -288430,8 +288398,8 @@
 54.877
 ],
 "to_um": [
-218.702,
-682.576
+235.728,
+656.659
 ],
 "regs_um": [
 [
@@ -288451,8 +288419,8 @@
 639.36
 ],
 [
-218.702,
-678.24
+235.728,
+652.32
 ]
 ],
 "bits": 1,
@@ -288467,8 +288435,8 @@
 161.079
 ],
 "to_um": [
-218.702,
-682.576
+235.728,
+656.659
 ],
 "regs_um": [
 [
@@ -288484,8 +288452,8 @@
 639.36
 ],
 [
-218.702,
-678.24
+235.728,
+652.32
 ]
 ],
 "bits": 1,
@@ -288500,29 +288468,29 @@
 0.0
 ],
 "to_um": [
-113.801,
-1412.624
+130.942,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-113.801,
-1416.96
+130.942,
+1451.52
 ]
 ],
 "bits": 1,
@@ -288537,29 +288505,29 @@
 0.0
 ],
 "to_um": [
-113.801,
-1412.624
+130.942,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-113.801,
-1416.96
+130.942,
+1451.52
 ]
 ],
 "bits": 1,
@@ -288574,8 +288542,8 @@
 4147.2
 ],
 "to_um": [
-113.801,
-1412.624
+130.942,
+1447.181
 ],
 "regs_um": [
 [
@@ -288611,8 +288579,8 @@
 1423.255
 ],
 [
-113.801,
-1416.96
+130.942,
+1451.52
 ]
 ],
 "bits": 1,
@@ -288627,8 +288595,8 @@
 4147.2
 ],
 "to_um": [
-113.801,
-1412.624
+130.942,
+1447.181
 ],
 "regs_um": [
 [
@@ -288664,8 +288632,8 @@
 1541.499
 ],
 [
-113.801,
-1416.96
+130.942,
+1451.52
 ]
 ],
 "bits": 1,
@@ -288680,29 +288648,29 @@
 0.0
 ],
 "to_um": [
-120.225,
-1412.624
+136.764,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-120.225,
-1416.96
+136.764,
+1451.52
 ]
 ],
 "bits": 11,
@@ -288717,29 +288685,29 @@
 0.0
 ],
 "to_um": [
-120.225,
-1412.624
+136.764,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-120.225,
-1416.96
+136.764,
+1451.52
 ]
 ],
 "bits": 11,
@@ -288754,8 +288722,8 @@
 4147.2
 ],
 "to_um": [
-120.225,
-1412.624
+136.764,
+1447.181
 ],
 "regs_um": [
 [
@@ -288791,8 +288759,8 @@
 1423.255
 ],
 [
-120.225,
-1416.96
+136.764,
+1451.52
 ]
 ],
 "bits": 11,
@@ -288807,8 +288775,8 @@
 4147.2
 ],
 "to_um": [
-120.225,
-1412.624
+136.764,
+1447.181
 ],
 "regs_um": [
 [
@@ -288844,8 +288812,8 @@
 1541.499
 ],
 [
-120.225,
-1416.96
+136.764,
+1451.52
 ]
 ],
 "bits": 11,
@@ -288860,29 +288828,29 @@
 0.0
 ],
 "to_um": [
-114.014,
-1412.624
+131.135,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.014,
-1416.96
+131.135,
+1451.52
 ]
 ],
 "bits": 1,
@@ -288897,29 +288865,29 @@
 0.0
 ],
 "to_um": [
-114.014,
-1412.624
+131.135,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.014,
-1416.96
+131.135,
+1451.52
 ]
 ],
 "bits": 1,
@@ -288934,8 +288902,8 @@
 4147.2
 ],
 "to_um": [
-114.014,
-1412.624
+131.135,
+1447.181
 ],
 "regs_um": [
 [
@@ -288971,8 +288939,8 @@
 1423.255
 ],
 [
-114.014,
-1416.96
+131.135,
+1451.52
 ]
 ],
 "bits": 1,
@@ -288987,8 +288955,8 @@
 4147.2
 ],
 "to_um": [
-114.014,
-1412.624
+131.135,
+1447.181
 ],
 "regs_um": [
 [
@@ -289024,8 +288992,8 @@
 1541.499
 ],
 [
-114.014,
-1416.96
+131.135,
+1451.52
 ]
 ],
 "bits": 1,
@@ -289040,29 +289008,29 @@
 0.0
 ],
 "to_um": [
-114.197,
-1412.624
+131.301,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.197,
-1416.96
+131.301,
+1451.52
 ]
 ],
 "bits": 1,
@@ -289077,29 +289045,29 @@
 0.0
 ],
 "to_um": [
-114.197,
-1412.624
+131.301,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.197,
-1416.96
+131.301,
+1451.52
 ]
 ],
 "bits": 1,
@@ -289114,8 +289082,8 @@
 4147.2
 ],
 "to_um": [
-114.197,
-1412.624
+131.301,
+1447.181
 ],
 "regs_um": [
 [
@@ -289151,8 +289119,8 @@
 1423.255
 ],
 [
-114.197,
-1416.96
+131.301,
+1451.52
 ]
 ],
 "bits": 1,
@@ -289167,8 +289135,8 @@
 4147.2
 ],
 "to_um": [
-114.197,
-1412.624
+131.301,
+1447.181
 ],
 "regs_um": [
 [
@@ -289204,8 +289172,8 @@
 1541.499
 ],
 [
-114.197,
-1416.96
+131.301,
+1451.52
 ]
 ],
 "bits": 1,
@@ -289220,29 +289188,29 @@
 0.0
 ],
 "to_um": [
-114.411,
-1412.624
+131.495,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.411,
-1416.96
+131.495,
+1451.52
 ]
 ],
 "bits": 1,
@@ -289257,29 +289225,29 @@
 0.0
 ],
 "to_um": [
-114.411,
-1412.624
+131.495,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.411,
-1416.96
+131.495,
+1451.52
 ]
 ],
 "bits": 1,
@@ -289294,8 +289262,8 @@
 4147.2
 ],
 "to_um": [
-114.411,
-1412.624
+131.495,
+1447.181
 ],
 "regs_um": [
 [
@@ -289331,8 +289299,8 @@
 1423.255
 ],
 [
-114.411,
-1416.96
+131.495,
+1451.52
 ]
 ],
 "bits": 1,
@@ -289347,8 +289315,8 @@
 4147.2
 ],
 "to_um": [
-114.411,
-1412.624
+131.495,
+1447.181
 ],
 "regs_um": [
 [
@@ -289384,8 +289352,8 @@
 1541.499
 ],
 [
-114.411,
-1416.96
+131.495,
+1451.52
 ]
 ],
 "bits": 1,
@@ -289400,29 +289368,29 @@
 0.0
 ],
 "to_um": [
-115.907,
-1412.624
+132.851,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-115.907,
-1416.96
+132.851,
+1451.52
 ]
 ],
 "bits": 2,
@@ -289437,29 +289405,29 @@
 0.0
 ],
 "to_um": [
-115.907,
-1412.624
+132.851,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-115.907,
-1416.96
+132.851,
+1451.52
 ]
 ],
 "bits": 2,
@@ -289474,8 +289442,8 @@
 4147.2
 ],
 "to_um": [
-115.907,
-1412.624
+132.851,
+1447.181
 ],
 "regs_um": [
 [
@@ -289511,8 +289479,8 @@
 1423.255
 ],
 [
-115.907,
-1416.96
+132.851,
+1451.52
 ]
 ],
 "bits": 2,
@@ -289527,8 +289495,8 @@
 4147.2
 ],
 "to_um": [
-115.907,
-1412.624
+132.851,
+1447.181
 ],
 "regs_um": [
 [
@@ -289564,8 +289532,8 @@
 1541.499
 ],
 [
-115.907,
-1416.96
+132.851,
+1451.52
 ]
 ],
 "bits": 2,
@@ -289580,29 +289548,29 @@
 0.0
 ],
 "to_um": [
-118.227,
-1412.624
+134.953,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-118.227,
-1416.96
+134.953,
+1451.52
 ]
 ],
 "bits": 7,
@@ -289617,29 +289585,29 @@
 0.0
 ],
 "to_um": [
-118.227,
-1412.624
+134.953,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-118.227,
-1416.96
+134.953,
+1451.52
 ]
 ],
 "bits": 7,
@@ -289654,8 +289622,8 @@
 4147.2
 ],
 "to_um": [
-118.227,
-1412.624
+134.953,
+1447.181
 ],
 "regs_um": [
 [
@@ -289691,8 +289659,8 @@
 1423.255
 ],
 [
-118.227,
-1416.96
+134.953,
+1451.52
 ]
 ],
 "bits": 7,
@@ -289707,8 +289675,8 @@
 4147.2
 ],
 "to_um": [
-118.227,
-1412.624
+134.953,
+1447.181
 ],
 "regs_um": [
 [
@@ -289744,8 +289712,8 @@
 1541.499
 ],
 [
-118.227,
-1416.96
+134.953,
+1451.52
 ]
 ],
 "bits": 7,
@@ -289760,8 +289728,8 @@
 0.0
 ],
 "to_um": [
-187.969,
-1412.624
+198.157,
+1447.181
 ],
 "regs_um": [
 [
@@ -289781,8 +289749,8 @@
 1305.01
 ],
 [
-187.969,
-1416.96
+198.157,
+1451.52
 ]
 ],
 "bits": 612,
@@ -289797,8 +289765,8 @@
 0.0
 ],
 "to_um": [
-187.969,
-1412.624
+198.157,
+1447.181
 ],
 "regs_um": [
 [
@@ -289818,8 +289786,8 @@
 1305.01
 ],
 [
-187.969,
-1416.96
+198.157,
+1451.52
 ]
 ],
 "bits": 612,
@@ -289834,8 +289802,8 @@
 4147.2
 ],
 "to_um": [
-187.969,
-1412.624
+198.157,
+1447.181
 ],
 "regs_um": [
 [
@@ -289871,8 +289839,8 @@
 1423.255
 ],
 [
-187.969,
-1416.96
+198.157,
+1451.52
 ]
 ],
 "bits": 612,
@@ -289887,8 +289855,8 @@
 4147.2
 ],
 "to_um": [
-187.969,
-1412.624
+198.157,
+1447.181
 ],
 "regs_um": [
 [
@@ -289924,8 +289892,8 @@
 1541.499
 ],
 [
-187.969,
-1416.96
+198.157,
+1451.52
 ]
 ],
 "bits": 612,
@@ -289940,29 +289908,29 @@
 0.0
 ],
 "to_um": [
-114.594,
-1412.624
+131.661,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.594,
-1416.96
+131.661,
+1451.52
 ]
 ],
 "bits": 1,
@@ -289977,29 +289945,29 @@
 0.0
 ],
 "to_um": [
-114.594,
-1412.624
+131.661,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.594,
-1416.96
+131.661,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290014,8 +289982,8 @@
 4147.2
 ],
 "to_um": [
-114.594,
-1412.624
+131.661,
+1447.181
 ],
 "regs_um": [
 [
@@ -290051,8 +290019,8 @@
 1423.255
 ],
 [
-114.594,
-1416.96
+131.661,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290067,8 +290035,8 @@
 4147.2
 ],
 "to_um": [
-114.594,
-1412.624
+131.661,
+1447.181
 ],
 "regs_um": [
 [
@@ -290104,8 +290072,8 @@
 1541.499
 ],
 [
-114.594,
-1416.96
+131.661,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290120,29 +290088,29 @@
 0.0
 ],
 "to_um": [
-114.808,
-1412.624
+131.855,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.808,
-1416.96
+131.855,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290157,29 +290125,29 @@
 0.0
 ],
 "to_um": [
-114.808,
-1412.624
+131.855,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.808,
-1416.96
+131.855,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290194,8 +290162,8 @@
 4147.2
 ],
 "to_um": [
-114.808,
-1412.624
+131.855,
+1447.181
 ],
 "regs_um": [
 [
@@ -290231,8 +290199,8 @@
 1423.255
 ],
 [
-114.808,
-1416.96
+131.855,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290247,8 +290215,8 @@
 4147.2
 ],
 "to_um": [
-114.808,
-1412.624
+131.855,
+1447.181
 ],
 "regs_um": [
 [
@@ -290284,8 +290252,8 @@
 1541.499
 ],
 [
-114.808,
-1416.96
+131.855,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290300,29 +290268,29 @@
 0.0
 ],
 "to_um": [
-114.991,
-1412.624
+132.021,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.991,
-1416.96
+132.021,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290337,29 +290305,29 @@
 0.0
 ],
 "to_um": [
-114.991,
-1412.624
+132.021,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-114.991,
-1416.96
+132.021,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290374,8 +290342,8 @@
 4147.2
 ],
 "to_um": [
-114.991,
-1412.624
+132.021,
+1447.181
 ],
 "regs_um": [
 [
@@ -290411,8 +290379,8 @@
 1423.255
 ],
 [
-114.991,
-1416.96
+132.021,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290427,8 +290395,8 @@
 4147.2
 ],
 "to_um": [
-114.991,
-1412.624
+132.021,
+1447.181
 ],
 "regs_um": [
 [
@@ -290464,8 +290432,8 @@
 1541.499
 ],
 [
-114.991,
-1416.96
+132.021,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290480,29 +290448,29 @@
 0.0
 ],
 "to_um": [
-115.205,
-1412.624
+132.214,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-115.205,
-1416.96
+132.214,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290517,29 +290485,29 @@
 0.0
 ],
 "to_um": [
-115.205,
-1412.624
+132.214,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-115.205,
-1416.96
+132.214,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290554,8 +290522,8 @@
 4147.2
 ],
 "to_um": [
-115.205,
-1412.624
+132.214,
+1447.181
 ],
 "regs_um": [
 [
@@ -290591,8 +290559,8 @@
 1423.255
 ],
 [
-115.205,
-1416.96
+132.214,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290607,8 +290575,8 @@
 4147.2
 ],
 "to_um": [
-115.205,
-1412.624
+132.214,
+1447.181
 ],
 "regs_um": [
 [
@@ -290644,8 +290612,8 @@
 1541.499
 ],
 [
-115.205,
-1416.96
+132.214,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290660,29 +290628,29 @@
 0.0
 ],
 "to_um": [
-116.889,
-1412.624
+133.741,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-116.889,
-1416.96
+133.741,
+1451.52
 ]
 ],
 "bits": 6,
@@ -290697,29 +290665,29 @@
 0.0
 ],
 "to_um": [
-116.889,
-1412.624
+133.741,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-116.889,
-1416.96
+133.741,
+1451.52
 ]
 ],
 "bits": 6,
@@ -290734,8 +290702,8 @@
 4147.2
 ],
 "to_um": [
-116.889,
-1412.624
+133.741,
+1447.181
 ],
 "regs_um": [
 [
@@ -290771,8 +290739,8 @@
 1423.255
 ],
 [
-116.889,
-1416.96
+133.741,
+1451.52
 ]
 ],
 "bits": 6,
@@ -290787,8 +290755,8 @@
 4147.2
 ],
 "to_um": [
-116.889,
-1412.624
+133.741,
+1447.181
 ],
 "regs_um": [
 [
@@ -290824,8 +290792,8 @@
 1541.499
 ],
 [
-116.889,
-1416.96
+133.741,
+1451.52
 ]
 ],
 "bits": 6,
@@ -290840,29 +290808,29 @@
 0.0
 ],
 "to_um": [
-115.419,
-1412.624
+132.408,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-115.419,
-1416.96
+132.408,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290877,29 +290845,29 @@
 0.0
 ],
 "to_um": [
-115.419,
-1412.624
+132.408,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-115.419,
-1416.96
+132.408,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290914,8 +290882,8 @@
 4147.2
 ],
 "to_um": [
-115.419,
-1412.624
+132.408,
+1447.181
 ],
 "regs_um": [
 [
@@ -290951,8 +290919,8 @@
 1423.255
 ],
 [
-115.419,
-1416.96
+132.408,
+1451.52
 ]
 ],
 "bits": 1,
@@ -290967,8 +290935,8 @@
 4147.2
 ],
 "to_um": [
-115.419,
-1412.624
+132.408,
+1447.181
 ],
 "regs_um": [
 [
@@ -291004,8 +290972,8 @@
 1541.499
 ],
 [
-115.419,
-1416.96
+132.408,
+1451.52
 ]
 ],
 "bits": 1,
@@ -291020,8 +290988,8 @@
 0.0
 ],
 "to_um": [
-321.021,
-1412.624
+318.736,
+1447.181
 ],
 "regs_um": [
 [
@@ -291041,8 +291009,8 @@
 1423.255
 ],
 [
-321.021,
-1416.96
+318.736,
+1451.52
 ]
 ],
 "bits": 612,
@@ -291057,8 +291025,8 @@
 0.0
 ],
 "to_um": [
-321.021,
-1412.624
+318.736,
+1447.181
 ],
 "regs_um": [
 [
@@ -291082,8 +291050,8 @@
 1423.255
 ],
 [
-321.021,
-1416.96
+318.736,
+1451.52
 ]
 ],
 "bits": 612,
@@ -291098,8 +291066,8 @@
 4147.2
 ],
 "to_um": [
-321.021,
-1412.624
+318.736,
+1447.181
 ],
 "regs_um": [
 [
@@ -291135,8 +291103,8 @@
 1423.255
 ],
 [
-321.021,
-1416.96
+318.736,
+1451.52
 ]
 ],
 "bits": 612,
@@ -291151,8 +291119,8 @@
 4147.2
 ],
 "to_um": [
-321.021,
-1412.624
+318.736,
+1447.181
 ],
 "regs_um": [
 [
@@ -291192,8 +291160,8 @@
 1423.255
 ],
 [
-321.021,
-1416.96
+318.736,
+1451.52
 ]
 ],
 "bits": 612,
@@ -291208,29 +291176,29 @@
 0.0
 ],
 "to_um": [
-115.602,
-1412.624
+132.574,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-115.602,
-1416.96
+132.574,
+1451.52
 ]
 ],
 "bits": 1,
@@ -291245,29 +291213,29 @@
 0.0
 ],
 "to_um": [
-115.602,
-1412.624
+132.574,
+1447.181
 ],
 "regs_um": [
 [
 4.32,
-122.565
+240.809
 ],
 [
 4.32,
-477.298
+595.543
 ],
 [
 4.32,
-832.032
+950.277
 ],
 [
 4.32,
-1186.766
+1305.01
 ],
 [
-115.602,
-1416.96
+132.574,
+1451.52
 ]
 ],
 "bits": 1,
@@ -291282,8 +291250,8 @@
 4147.2
 ],
 "to_um": [
-115.602,
-1412.624
+132.574,
+1447.181
 ],
 "regs_um": [
 [
@@ -291319,8 +291287,8 @@
 1423.255
 ],
 [
-115.602,
-1416.96
+132.574,
+1451.52
 ]
 ],
 "bits": 1,
@@ -291335,8 +291303,8 @@
 4147.2
 ],
 "to_um": [
-115.602,
-1412.624
+132.574,
+1447.181
 ],
 "regs_um": [
 [
@@ -291372,8 +291340,8 @@
 1541.499
 ],
 [
-115.602,
-1416.96
+132.574,
+1451.52
 ]
 ],
 "bits": 1,
@@ -296207,8 +296175,8 @@
 "name": "u_ep_S0",
 "kind": "core",
 "xy": [
-201.048,
-676.099
+218.328,
+650.179
 ],
 "insertion_ps": 489.0,
 "budget_owner": "hfd_ep_static",
@@ -296246,12 +296214,12 @@
 "cells": 46785,
 "note": "as-built ep_S0",
 "origin_um": [
-198.72,
-682.56
+216.0,
+656.64
 ],
 "outline_um": [
-276.48,
-315.36
+250.56,
+375.84
 ]
 }
 ],
@@ -296279,19 +296247,19 @@
 "inst": "u_ep_S0",
 "module": "hfd_ep_static",
 "origin_um": [
-198.72,
-682.56
+216.0,
+656.64
 ],
 "outline_um": [
-276.48,
-315.36
+250.56,
+375.84
 ],
 "track_offset_um": [
 0.0,
 0.0
 ],
-"pins_file": "cores/hfd_ep_static__276.48x315.36__q_spb0_u_ep_S0.json",
-"note": "d4g hard core; 46785 cells | B2n grow (HBM-CORES): 434.72x371.52 -> 276.48x315.36, was hfd_ep_static__434.72x371.52__q_spb0_u_ep_S0.json"
+"pins_file": "cores/hfd_ep_static__250.56x375.84__q_spb0_u_ep_S0.json",
+"note": "d4g hard core; 46785 cells | B2n grow (HBM-CORES): 434.72x371.52 -> 250.56x375.84, was hfd_ep_static__434.72x371.52__q_spb0_u_ep_S0.json"
 }
 ],
 "internal_stations": [
@@ -296302,8 +296270,8 @@
 1503.36
 ],
 "to_um": [
-359.806,
-997.904
+361.984,
+1032.461
 ],
 "regs_um": [
 [
@@ -296311,12 +296279,12 @@
 1154.105
 ],
 [
-194.4,
-1002.24
+4.32,
+1039.126
 ],
 [
-359.806,
-1002.24
+361.984,
+1036.8
 ]
 ],
 "bits": 11,
@@ -296331,8 +296299,8 @@
 1503.36
 ],
 "to_um": [
-359.806,
-997.904
+361.984,
+1032.461
 ],
 "regs_um": [
 [
@@ -296340,12 +296308,12 @@
 1154.105
 ],
 [
-194.4,
-1002.24
+4.32,
+1039.126
 ],
 [
-359.806,
-1002.24
+361.984,
+1036.8
 ]
 ],
 "bits": 11,
@@ -391578,8 +391546,8 @@
 "name": "u_ep_S1",
 "kind": "core",
 "xy": [
-201.048,
-676.099
+218.328,
+650.179
 ],
 "insertion_ps": 489.0,
 "budget_owner": "hfd_ep_static",
@@ -391617,12 +391585,12 @@
 "cells": 46785,
 "note": "as-built ep_S1",
 "origin_um": [
-198.72,
-682.56
+216.0,
+656.64
 ],
 "outline_um": [
-276.48,
-315.36
+250.56,
+375.84
 ]
 }
 ],
@@ -391650,19 +391618,19 @@
 "inst": "u_ep_S1",
 "module": "hfd_ep_static",
 "origin_um": [
-198.72,
-682.56
+216.0,
+656.64
 ],
 "outline_um": [
-276.48,
-315.36
+250.56,
+375.84
 ],
 "track_offset_um": [
 0.0,
 0.0
 ],
-"pins_file": "cores/hfd_ep_static__276.48x315.36__vsN0_u_ep_S1.json",
-"note": "d4g hard core; 46785 cells | B2n grow (HBM-CORES): 434.72x371.52 -> 276.48x315.36, was hfd_ep_static__434.72x371.52__vsN0_u_ep_S1.json"
+"pins_file": "cores/hfd_ep_static__250.56x375.84__vsN0_u_ep_S1.json",
+"note": "d4g hard core; 46785 cells | B2n grow (HBM-CORES): 434.72x371.52 -> 250.56x375.84, was hfd_ep_static__434.72x371.52__vsN0_u_ep_S1.json"
 }
 ],
 "internal_stations": [
@@ -391673,8 +391641,8 @@
 1503.36
 ],
 "to_um": [
-359.806,
-997.904
+361.984,
+1032.461
 ],
 "regs_um": [
 [
@@ -391682,12 +391650,12 @@
 1154.105
 ],
 [
-194.4,
-1002.24
+4.32,
+1039.126
 ],
 [
-359.806,
-1002.24
+361.984,
+1036.8
 ]
 ],
 "bits": 11,
@@ -391702,8 +391670,8 @@
 1503.36
 ],
 "to_um": [
-359.806,
-997.904
+361.984,
+1032.461
 ],
 "regs_um": [
 [
@@ -391711,12 +391679,12 @@
 1154.105
 ],
 [
-194.4,
-1002.24
+4.32,
+1039.126
 ],
 [
-359.806,
-1002.24
+361.984,
+1036.8
 ]
 ],
 "bits": 11,
@@ -393118,8 +393086,8 @@
 "name": "u_ep_N2",
 "kind": "core",
 "xy": [
-183.768,
-676.099
+201.048,
+650.179
 ],
 "insertion_ps": 577.0,
 "budget_owner": "hfd_ep_static",
@@ -393157,12 +393125,12 @@
 "cells": 46785,
 "note": "as-built ep_N2",
 "origin_um": [
-181.44,
-682.56
+198.72,
+656.64
 ],
 "outline_um": [
-276.48,
-315.36
+250.56,
+375.84
 ]
 }
 ],
@@ -393190,19 +393158,19 @@
 "inst": "u_ep_N2",
 "module": "hfd_ep_static",
 "origin_um": [
-181.44,
-682.56
+198.72,
+656.64
 ],
 "outline_um": [
-276.48,
-315.36
+250.56,
+375.84
 ],
 "track_offset_um": [
 0.0,
 0.0
 ],
-"pins_file": "cores/hfd_ep_static__276.48x315.36__NE_io_u_ep_N2.json",
-"note": "d4g hard core; 46785 cells | B2n grow (HBM-CORES): 434.72x371.52 -> 276.48x315.36, was hfd_ep_static__434.72x371.52__NE_io_u_ep_N2.json"
+"pins_file": "cores/hfd_ep_static__250.56x375.84__NE_io_u_ep_N2.json",
+"note": "d4g hard core; 46785 cells | B2n grow (HBM-CORES): 434.72x371.52 -> 250.56x375.84, was hfd_ep_static__434.72x371.52__NE_io_u_ep_N2.json"
 }
 ],
 "internal_stations": [
@@ -393213,35 +393181,39 @@
 0.0
 ],
 "to_um": [
-342.526,
-997.904
+344.704,
+1032.461
 ],
 "regs_um": [
 [
-638.928,
-30.24
+592.92,
+4.32
 ],
 [
 638.928,
-334.8
+131.76
 ],
 [
 638.928,
+436.32
+],
+[
+537.48,
 639.36
 ],
 [
-367.2,
-678.24
+453.6,
+844.56
 ],
 [
-342.526,
-1002.24
+344.704,
+1036.8
 ]
 ],
 "bits": 11,
 "launch": "face bus L106_i",
 "capture": "u_ep_N2.fault_cause",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1618 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 5 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1618 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 6 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L125_o",
@@ -393250,35 +393222,39 @@
 0.0
 ],
 "to_um": [
-342.526,
-997.904
+344.704,
+1032.461
 ],
 "regs_um": [
 [
-638.928,
-30.24
+592.92,
+4.32
 ],
 [
 638.928,
-334.8
+131.76
 ],
 [
 638.928,
+436.32
+],
+[
+537.48,
 639.36
 ],
 [
-367.2,
-678.24
+453.6,
+844.56
 ],
 [
-342.526,
-1002.24
+344.704,
+1036.8
 ]
 ],
 "bits": 11,
 "launch": "face bus L125_o",
 "capture": "u_ep_N2.fault_cause",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1615 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 5 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 1615 um core link, 3 station(s) (data + epoch), hops <= 750 um; +3 cycle(s) on this link | B2n decision 12: 6 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L48_o",
@@ -393287,8 +393263,8 @@
 4147.2
 ],
 "to_um": [
-342.526,
-997.904
+344.704,
+1032.461
 ],
 "regs_um": [
 [
@@ -393336,12 +393312,12 @@
 1186.766
 ],
 [
-177.12,
-1002.24
+194.4,
+1036.8
 ],
 [
-342.526,
-1002.24
+344.704,
+1036.8
 ]
 ],
 "bits": 11,
@@ -393356,8 +393332,8 @@
 4147.2
 ],
 "to_um": [
-342.526,
-997.904
+344.704,
+1032.461
 ],
 "regs_um": [
 [
@@ -393405,12 +393381,12 @@
 1068.521
 ],
 [
-177.12,
-894.24
+194.4,
+940.68
 ],
 [
-342.526,
-1002.24
+344.704,
+1036.8
 ]
 ],
 "bits": 11,
@@ -393425,8 +393401,8 @@
 0.0
 ],
 "to_um": [
-194.292,
-997.904
+210.367,
+1032.461
 ],
 "regs_um": [
 [
@@ -393446,12 +393422,12 @@
 639.36
 ],
 [
-177.12,
-678.24
+194.4,
+748.44
 ],
 [
-194.292,
-1002.24
+210.367,
+1036.8
 ]
 ],
 "bits": 2,
@@ -393466,8 +393442,8 @@
 0.0
 ],
 "to_um": [
-194.292,
-997.904
+210.367,
+1032.461
 ],
 "regs_um": [
 [
@@ -393487,12 +393463,12 @@
 639.36
 ],
 [
-177.12,
-678.24
+194.4,
+748.44
 ],
 [
-194.292,
-1002.24
+210.367,
+1036.8
 ]
 ],
 "bits": 2,
@@ -393507,8 +393483,8 @@
 4147.2
 ],
 "to_um": [
-194.292,
-997.904
+210.367,
+1032.461
 ],
 "regs_um": [
 [
@@ -393556,18 +393532,14 @@
 1186.766
 ],
 [
-4.32,
-950.277
-],
-[
-194.292,
-1002.24
+210.367,
+1036.8
 ]
 ],
 "bits": 2,
 "launch": "face bus L48_o",
 "capture": "u_ep_N2.rx_block_ready",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 3889 um core link, 6 station(s) (data + epoch), hops <= 750 um; +6 cycle(s) on this link | B2n decision 12: 13 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 3889 um core link, 6 station(s) (data + epoch), hops <= 750 um; +6 cycle(s) on this link | B2n decision 12: 12 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L53_i",
@@ -393576,8 +393548,8 @@
 4147.2
 ],
 "to_um": [
-194.292,
-997.904
+210.367,
+1032.461
 ],
 "regs_um": [
 [
@@ -393625,8 +393597,8 @@
 1068.521
 ],
 [
-194.292,
-1002.24
+210.367,
+1036.8
 ]
 ],
 "bits": 2,
@@ -393641,8 +393613,8 @@
 216.3
 ],
 "to_um": [
-380.993,
-682.576
+379.565,
+656.659
 ],
 "regs_um": [
 [
@@ -393654,8 +393626,8 @@
 639.36
 ],
 [
-380.993,
-678.24
+379.565,
+652.32
 ]
 ],
 "bits": 612,
@@ -393670,8 +393642,8 @@
 219.226
 ],
 "to_um": [
-380.993,
-682.576
+379.565,
+656.659
 ],
 "regs_um": [
 [
@@ -393683,8 +393655,8 @@
 639.36
 ],
 [
-380.993,
-678.24
+379.565,
+652.32
 ]
 ],
 "bits": 612,
@@ -393699,8 +393671,8 @@
 54.877
 ],
 "to_um": [
-380.993,
-682.576
+379.565,
+656.659
 ],
 "regs_um": [
 [
@@ -393716,8 +393688,8 @@
 639.36
 ],
 [
-380.993,
-678.24
+379.565,
+652.32
 ]
 ],
 "bits": 612,
@@ -393732,8 +393704,8 @@
 161.079
 ],
 "to_um": [
-380.993,
-682.576
+379.565,
+656.659
 ],
 "regs_um": [
 [
@@ -393745,8 +393717,8 @@
 639.36
 ],
 [
-380.993,
-678.24
+379.565,
+652.32
 ]
 ],
 "bits": 612,
@@ -393761,21 +393733,21 @@
 216.3
 ],
 "to_um": [
-361.138,
-682.576
+361.571,
+656.659
 ],
 "regs_um": [
 [
 4.32,
-477.298
+359.054
 ],
 [
-131.688,
+30.24,
 639.36
 ],
 [
-361.138,
-678.24
+361.571,
+652.32
 ]
 ],
 "bits": 612,
@@ -393790,21 +393762,21 @@
 219.226
 ],
 "to_um": [
-361.138,
-682.576
+361.571,
+656.659
 ],
 "regs_um": [
 [
 4.32,
-477.298
+359.054
 ],
 [
-131.688,
+30.24,
 639.36
 ],
 [
-361.138,
-678.24
+361.571,
+652.32
 ]
 ],
 "bits": 612,
@@ -393819,31 +393791,27 @@
 54.877
 ],
 "to_um": [
-361.138,
-682.576
+361.571,
+656.659
 ],
 "regs_um": [
 [
 4.32,
-122.565
+359.054
 ],
 [
-4.32,
-477.298
-],
-[
-131.688,
+30.24,
 639.36
 ],
 [
-361.138,
-678.24
+361.571,
+652.32
 ]
 ],
 "bits": 612,
 "launch": "face bus L51_i",
 "capture": "u_ep_N2.tx_frame",
-"note": "HBM-ARCH cores_b2 R3-INTERNAL: 988 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 4 station(s), hops <= 405 um"
+"note": "HBM-ARCH cores_b2 R3-INTERNAL: 988 um core link, 2 station(s) (data + epoch), hops <= 750 um; +2 cycle(s) on this link | B2n decision 12: 3 station(s), hops <= 405 um"
 },
 {
 "conn": "bus:L52_o",
@@ -393852,21 +393820,21 @@
 161.079
 ],
 "to_um": [
-361.138,
-682.576
+361.571,
+656.659
 ],
 "regs_um": [
 [
 4.32,
-477.298
+359.054
 ],
 [
-131.688,
+30.24,
 639.36
 ],
 [
-361.138,
-678.24
+361.571,
+652.32
 ]
 ],
 "bits": 612,

@@ -1,0 +1,1864 @@
+{
+ "schema": "opentallas.hbm_b2o_lane_cycles.v1",
+ "plan": "physical/die_plan/hbm_arch/B2o (claude/hbm-b2o-1024)",
+ "base": "physical/die_plan/hbm_arch/B2n @871717c83",
+ "rule": "B2o re-floorplan (B2o_inputs/floorplan.json) + full lane re-route + decision 12 stations (b2o.py)",
+ "summary": {
+  "lanes": 308,
+  "lanes_up": 64,
+  "sum_up": 262,
+  "lanes_down": 182,
+  "sum_down": -2680,
+  "net": -2418
+ },
+ "lanes": {
+  "L0": {
+   "b2n": 2,
+   "b2o": 12,
+   "delta": 10,
+   "route": "NW_hub->NW_su01 data (B2o re-route)"
+  },
+  "L0m": {
+   "b2n": 2,
+   "b2o": 12,
+   "delta": 10,
+   "route": "NE_hub->NE_su01 data (mirror) (B2o re-route)"
+  },
+  "L1": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_hub->NW_su10 data (B2o re-route)"
+  },
+  "L1m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_hub->NE_su10 data (mirror) (B2o re-route)"
+  },
+  "L2": {
+   "b2n": 2,
+   "b2o": 6,
+   "delta": 4,
+   "route": "NW_hub->NW_su21 data (B2o re-route)"
+  },
+  "L2m": {
+   "b2n": 2,
+   "b2o": 6,
+   "delta": 4,
+   "route": "NE_hub->NE_su21 data (mirror) (B2o re-route)"
+  },
+  "L3": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_hub->NW_su30 data (B2o re-route)"
+  },
+  "L3m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_hub->NE_su30 data (mirror) (B2o re-route)"
+  },
+  "L4": {
+   "b2n": 49,
+   "b2o": 8,
+   "delta": -41,
+   "route": "NW_hub->NE_hub data (B2o re-route)"
+  },
+  "L4m": {
+   "b2n": 49,
+   "b2o": 8,
+   "delta": -41,
+   "route": "NE_hub->NW_hub data (mirror) (B2o re-route)"
+  },
+  "L5": {
+   "b2n": 2,
+   "b2o": 11,
+   "delta": 9,
+   "route": "NW_hub->NW_b110 data (B2o re-route)"
+  },
+  "L5m": {
+   "b2n": 2,
+   "b2o": 11,
+   "delta": 9,
+   "route": "NE_hub->NE_b110 data (mirror) (B2o re-route)"
+  },
+  "L6": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NW_hub->NW_b100 data (B2o re-route)"
+  },
+  "L6m": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NE_hub->NE_b100 data (mirror) (B2o re-route)"
+  },
+  "L7": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_hub->NW_b100 data (B2o re-route)"
+  },
+  "L7m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_hub->NE_b100 data (mirror) (B2o re-route)"
+  },
+  "L8": {
+   "b2n": 39,
+   "b2o": 50,
+   "delta": 11,
+   "route": "NW_hub->PHY_N data (B2o re-route)"
+  },
+  "L8m": {
+   "b2n": 39,
+   "b2o": 50,
+   "delta": 11,
+   "route": "NE_hub->PHY_N data (mirror) (B2o re-route)"
+  },
+  "L9": {
+   "b2n": 51,
+   "b2o": 35,
+   "delta": -16,
+   "route": "NW_hub->PHY_N data (B2o re-route)"
+  },
+  "L9m": {
+   "b2n": 51,
+   "b2o": 25,
+   "delta": -26,
+   "route": "NE_hub->PHY_N data (mirror) (B2o re-route)"
+  },
+  "L10": {
+   "b2n": 2,
+   "b2o": 6,
+   "delta": 4,
+   "route": "NW_b002->NW_b003 data (B2o re-route)"
+  },
+  "L10m": {
+   "b2n": 2,
+   "b2o": 6,
+   "delta": 4,
+   "route": "NE_b002->NE_b003 data (mirror) (B2o re-route)"
+  },
+  "L11": {
+   "b2n": 2,
+   "b2o": 6,
+   "delta": 4,
+   "route": "NW_b011->NW_b010 data (B2o re-route)"
+  },
+  "L11m": {
+   "b2n": 2,
+   "b2o": 6,
+   "delta": 4,
+   "route": "NE_b011->NE_b010 data (mirror) (B2o re-route)"
+  },
+  "L12": {
+   "b2n": 26,
+   "b2o": 11,
+   "delta": -15,
+   "route": "root->NW_hub data (B2o re-route)"
+  },
+  "L12m": {
+   "b2n": 26,
+   "b2o": 11,
+   "delta": -15,
+   "route": "root->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L13": {
+   "b2n": 26,
+   "b2o": 2,
+   "delta": -24,
+   "route": "root->NW_hub data (B2o re-route)"
+  },
+  "L13m": {
+   "b2n": 26,
+   "b2o": 2,
+   "delta": -24,
+   "route": "root->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L14": {
+   "b2n": 2,
+   "b2o": 7,
+   "delta": 5,
+   "route": "NW_b000->NW_b001 data (B2o re-route)"
+  },
+  "L14m": {
+   "b2n": 2,
+   "b2o": 7,
+   "delta": 5,
+   "route": "NE_b000->NE_b001 data (mirror) (B2o re-route)"
+  },
+  "L15": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NW_b001->NW_b002 data (B2o re-route)"
+  },
+  "L15m": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NE_b001->NE_b002 data (mirror) (B2o re-route)"
+  },
+  "L16": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_b003->NW_b013 data (B2o re-route)"
+  },
+  "L16m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_b003->NE_b013 data (mirror) (B2o re-route)"
+  },
+  "L17": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NW_b012->NW_b011 data (B2o re-route)"
+  },
+  "L17m": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NE_b012->NE_b011 data (mirror) (B2o re-route)"
+  },
+  "L18": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NW_b013->NW_b012 data (B2o re-route)"
+  },
+  "L18m": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NE_b013->NE_b012 data (mirror) (B2o re-route)"
+  },
+  "L19": {
+   "b2n": 12,
+   "b2o": 2,
+   "delta": -10,
+   "route": "NW_b000->NW_hub data (B2o re-route)"
+  },
+  "L19m": {
+   "b2n": 12,
+   "b2o": 2,
+   "delta": -10,
+   "route": "NE_b000->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L20": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_b010->NW_b000 data (B2o re-route)"
+  },
+  "L20m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_b010->NE_b000 data (mirror) (B2o re-route)"
+  },
+  "L21": {
+   "b2n": 52,
+   "b2o": 44,
+   "delta": -8,
+   "route": "PHY_N->NW_hub data (B2o re-route)"
+  },
+  "L21m": {
+   "b2n": 52,
+   "b2o": 44,
+   "delta": -8,
+   "route": "PHY_N->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L22": {
+   "b2n": 51,
+   "b2o": 36,
+   "delta": -15,
+   "route": "PHY_N->NW_hub data (B2o re-route)"
+  },
+  "L22m": {
+   "b2n": 59,
+   "b2o": 36,
+   "delta": -23,
+   "route": "PHY_N->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L23": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_b110->NW_hub data (B2o re-route)"
+  },
+  "L23m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_b110->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L24": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_su01->NW_hub data (B2o re-route)"
+  },
+  "L24m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_su01->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L25": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_su10->NW_hub data (B2o re-route)"
+  },
+  "L25m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_su10->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L26": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_su21->NW_hub data (B2o re-route)"
+  },
+  "L26m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_su21->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L27": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_su30->NW_hub data (B2o re-route)"
+  },
+  "L27m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_su30->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L28": {
+   "b2n": 14,
+   "b2o": 15,
+   "delta": 1,
+   "route": "NW_hub->NW_sm0 data (B2o re-route)"
+  },
+  "L28m": {
+   "b2n": 14,
+   "b2o": 15,
+   "delta": 1,
+   "route": "NE_hub->NE_sm0 data (mirror) (B2o re-route)"
+  },
+  "L29": {
+   "b2n": 19,
+   "b2o": 7,
+   "delta": -12,
+   "route": "NW_hub->NW_sm0 data (B2o re-route)"
+  },
+  "L29m": {
+   "b2n": 19,
+   "b2o": 7,
+   "delta": -12,
+   "route": "NE_hub->NE_sm0 data (mirror) (B2o re-route)"
+  },
+  "L30": {
+   "b2n": 9,
+   "b2o": 7,
+   "delta": -2,
+   "route": "NW_hub->NW_sm1 data (B2o re-route)"
+  },
+  "L30m": {
+   "b2n": 9,
+   "b2o": 7,
+   "delta": -2,
+   "route": "NE_hub->NE_sm1 data (mirror) (B2o re-route)"
+  },
+  "L31": {
+   "b2n": 31,
+   "b2o": 7,
+   "delta": -24,
+   "route": "NW_hub->NW_sm1 data (B2o re-route)"
+  },
+  "L31m": {
+   "b2n": 31,
+   "b2o": 7,
+   "delta": -24,
+   "route": "NE_hub->NE_sm1 data (mirror) (B2o re-route)"
+  },
+  "L32": {
+   "b2n": 14,
+   "b2o": 9,
+   "delta": -5,
+   "route": "NW_hub->NW_sm2 data (B2o re-route)"
+  },
+  "L32m": {
+   "b2n": 14,
+   "b2o": 9,
+   "delta": -5,
+   "route": "NE_hub->NE_sm2 data (mirror) (B2o re-route)"
+  },
+  "L33": {
+   "b2n": 16,
+   "b2o": 13,
+   "delta": -3,
+   "route": "NW_hub->NW_sm2 data (B2o re-route)"
+  },
+  "L33m": {
+   "b2n": 16,
+   "b2o": 13,
+   "delta": -3,
+   "route": "NE_hub->NE_sm2 data (mirror) (B2o re-route)"
+  },
+  "L34": {
+   "b2n": 9,
+   "b2o": 8,
+   "delta": -1,
+   "route": "NW_hub->NW_sm3 data (B2o re-route)"
+  },
+  "L34m": {
+   "b2n": 9,
+   "b2o": 8,
+   "delta": -1,
+   "route": "NE_hub->NE_sm3 data (mirror) (B2o re-route)"
+  },
+  "L35": {
+   "b2n": 18,
+   "b2o": 10,
+   "delta": -8,
+   "route": "NW_hub->NW_sm3 data (B2o re-route)"
+  },
+  "L35m": {
+   "b2n": 18,
+   "b2o": 10,
+   "delta": -8,
+   "route": "NE_hub->NE_sm3 data (mirror) (B2o re-route)"
+  },
+  "L36": {
+   "b2n": 19,
+   "b2o": 9,
+   "delta": -10,
+   "route": "NW_hub->NW_su00 data (B2o re-route)"
+  },
+  "L36m": {
+   "b2n": 19,
+   "b2o": 9,
+   "delta": -10,
+   "route": "NE_hub->NE_su00 data (mirror) (B2o re-route)"
+  },
+  "L37": {
+   "b2n": 35,
+   "b2o": 2,
+   "delta": -33,
+   "route": "NW_hub->NW_su11 data (B2o re-route)"
+  },
+  "L37m": {
+   "b2n": 35,
+   "b2o": 2,
+   "delta": -33,
+   "route": "NE_hub->NE_su11 data (mirror) (B2o re-route)"
+  },
+  "L38": {
+   "b2n": 16,
+   "b2o": 6,
+   "delta": -10,
+   "route": "NW_hub->NW_su20 data (B2o re-route)"
+  },
+  "L38m": {
+   "b2n": 16,
+   "b2o": 6,
+   "delta": -10,
+   "route": "NE_hub->NE_su20 data (mirror) (B2o re-route)"
+  },
+  "L39": {
+   "b2n": 21,
+   "b2o": 2,
+   "delta": -19,
+   "route": "NW_hub->NW_su31 data (B2o re-route)"
+  },
+  "L39m": {
+   "b2n": 21,
+   "b2o": 2,
+   "delta": -19,
+   "route": "NE_hub->NE_su31 data (mirror) (B2o re-route)"
+  },
+  "L40": {
+   "b2n": 11,
+   "b2o": 8,
+   "delta": -3,
+   "route": "NW_spb2->NW_hub data (B2o re-route)"
+  },
+  "L40m": {
+   "b2n": 11,
+   "b2o": 8,
+   "delta": -3,
+   "route": "NE_spb2->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L41": {
+   "b2n": 11,
+   "b2o": 7,
+   "delta": -4,
+   "route": "NW_spt0->NW_hub data (B2o re-route)"
+  },
+  "L41m": {
+   "b2n": 11,
+   "b2o": 7,
+   "delta": -4,
+   "route": "NE_spt0->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L42": {
+   "b2n": 28,
+   "b2o": 14,
+   "delta": -14,
+   "route": "NW_hub->NW_b002 data (B2o re-route)"
+  },
+  "L42m": {
+   "b2n": 28,
+   "b2o": 14,
+   "delta": -14,
+   "route": "NE_hub->NE_b002 data (mirror) (B2o re-route)"
+  },
+  "L43": {
+   "b2n": 40,
+   "b2o": 10,
+   "delta": -30,
+   "route": "NW_hub->NW_b011 data (B2o re-route)"
+  },
+  "L43m": {
+   "b2n": 40,
+   "b2o": 10,
+   "delta": -30,
+   "route": "NE_hub->NE_b011 data (mirror) (B2o re-route)"
+  },
+  "L44": {
+   "b2n": 33,
+   "b2o": 2,
+   "delta": -31,
+   "route": "NW_b110->NW_su31 data (B2o re-route)"
+  },
+  "L44m": {
+   "b2n": 33,
+   "b2o": 2,
+   "delta": -31,
+   "route": "NE_b110->NE_su31 data (mirror) (B2o re-route)"
+  },
+  "L45": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_b111->NW_su20 data (B2o re-route)"
+  },
+  "L45m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_b111->NE_su20 data (mirror) (B2o re-route)"
+  },
+  "L46": {
+   "b2n": 33,
+   "b2o": 2,
+   "delta": -31,
+   "route": "NW_b112->NW_su11 data (B2o re-route)"
+  },
+  "L46m": {
+   "b2n": 33,
+   "b2o": 2,
+   "delta": -31,
+   "route": "NE_b112->NE_su11 data (mirror) (B2o re-route)"
+  },
+  "L47": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_b113->NW_su00 data (B2o re-route)"
+  },
+  "L47m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_b113->NE_su00 data (mirror) (B2o re-route)"
+  },
+  "L48": {
+   "b2n": 55,
+   "b2o": 58,
+   "delta": 3,
+   "route": "NW_io->root data (B2o re-route)"
+  },
+  "L48m": {
+   "b2n": 55,
+   "b2o": 58,
+   "delta": 3,
+   "route": "NE_io->root data (mirror) (B2o re-route)"
+  },
+  "L49": {
+   "b2n": 12,
+   "b2o": 12,
+   "delta": 0,
+   "route": "NW_hub->NW_spb2 data (B2o re-route)"
+  },
+  "L49m": {
+   "b2n": 12,
+   "b2o": 12,
+   "delta": 0,
+   "route": "NE_hub->NE_spb2 data (mirror) (B2o re-route)"
+  },
+  "L50": {
+   "b2n": 10,
+   "b2o": 7,
+   "delta": -3,
+   "route": "NW_hub->NW_spt0 data (B2o re-route)"
+  },
+  "L50m": {
+   "b2n": 10,
+   "b2o": 7,
+   "delta": -3,
+   "route": "NE_hub->NE_spt0 data (mirror) (B2o re-route)"
+  },
+  "L51": {
+   "b2n": 18,
+   "b2o": 24,
+   "delta": 6,
+   "route": "NW_hub->NW_io data (B2o re-route)"
+  },
+  "L51m": {
+   "b2n": 18,
+   "b2o": 24,
+   "delta": 6,
+   "route": "NE_hub->NE_io data (mirror) (B2o re-route)"
+  },
+  "L52": {
+   "b2n": 20,
+   "b2o": 25,
+   "delta": 5,
+   "route": "NW_io->NW_hub data (B2o re-route)"
+  },
+  "L52m": {
+   "b2n": 20,
+   "b2o": 25,
+   "delta": 5,
+   "route": "NE_io->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L53": {
+   "b2n": 55,
+   "b2o": 50,
+   "delta": -5,
+   "route": "root->NW_io data (B2o re-route)"
+  },
+  "L53m": {
+   "b2n": 55,
+   "b2o": 50,
+   "delta": -5,
+   "route": "root->NE_io data (mirror) (B2o re-route)"
+  },
+  "L54": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_su00->NW_b113 data (B2o re-route)"
+  },
+  "L54m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_su00->NE_b113 data (mirror) (B2o re-route)"
+  },
+  "L55": {
+   "b2n": 21,
+   "b2o": 8,
+   "delta": -13,
+   "route": "NW_su00->NW_hub data (B2o re-route)"
+  },
+  "L55m": {
+   "b2n": 21,
+   "b2o": 8,
+   "delta": -13,
+   "route": "NE_su00->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L56": {
+   "b2n": 25,
+   "b2o": 2,
+   "delta": -23,
+   "route": "NW_su11->NW_b112 data (B2o re-route)"
+  },
+  "L56m": {
+   "b2n": 25,
+   "b2o": 2,
+   "delta": -23,
+   "route": "NE_su11->NE_b112 data (mirror) (B2o re-route)"
+  },
+  "L57": {
+   "b2n": 9,
+   "b2o": 2,
+   "delta": -7,
+   "route": "NW_su11->NW_hub data (B2o re-route)"
+  },
+  "L57m": {
+   "b2n": 9,
+   "b2o": 2,
+   "delta": -7,
+   "route": "NE_su11->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L58": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_su20->NW_b111 data (B2o re-route)"
+  },
+  "L58m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_su20->NE_b111 data (mirror) (B2o re-route)"
+  },
+  "L59": {
+   "b2n": 18,
+   "b2o": 7,
+   "delta": -11,
+   "route": "NW_su20->NW_hub data (B2o re-route)"
+  },
+  "L59m": {
+   "b2n": 18,
+   "b2o": 7,
+   "delta": -11,
+   "route": "NE_su20->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L60": {
+   "b2n": 32,
+   "b2o": 2,
+   "delta": -30,
+   "route": "NW_su31->NW_b110 data (B2o re-route)"
+  },
+  "L60m": {
+   "b2n": 32,
+   "b2o": 2,
+   "delta": -30,
+   "route": "NE_su31->NE_b110 data (mirror) (B2o re-route)"
+  },
+  "L61": {
+   "b2n": 21,
+   "b2o": 2,
+   "delta": -19,
+   "route": "NW_su31->NW_hub data (B2o re-route)"
+  },
+  "L61m": {
+   "b2n": 21,
+   "b2o": 2,
+   "delta": -19,
+   "route": "NE_su31->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L62": {
+   "b2n": 31,
+   "b2o": 2,
+   "delta": -29,
+   "route": "root->NW_hub ctl (B2o re-route)"
+  },
+  "L62m": {
+   "b2n": 31,
+   "b2o": 2,
+   "delta": -29,
+   "route": "root->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L63": {
+   "b2n": 82,
+   "b2o": 28,
+   "delta": -54,
+   "route": "NW_hub->PHY_N ctl (B2o re-route)"
+  },
+  "L63m": {
+   "b2n": 78,
+   "b2o": 30,
+   "delta": -48,
+   "route": "NE_hub->PHY_N ctl (mirror) (B2o re-route)"
+  },
+  "L64": {
+   "b2n": 17,
+   "b2o": 2,
+   "delta": -15,
+   "route": "NW_b101->root data (B2o re-route)"
+  },
+  "L64m": {
+   "b2n": 17,
+   "b2o": 2,
+   "delta": -15,
+   "route": "NE_b101->root data (mirror) (B2o re-route)"
+  },
+  "L65": {
+   "b2n": 22,
+   "b2o": 2,
+   "delta": -20,
+   "route": "NW_hub->NW_b000 data (B2o re-route)"
+  },
+  "L65m": {
+   "b2n": 22,
+   "b2o": 2,
+   "delta": -20,
+   "route": "NE_hub->NE_b000 data (mirror) (B2o re-route)"
+  },
+  "L66": {
+   "b2n": 33,
+   "b2o": 30,
+   "delta": -3,
+   "route": "NW_hub->NW_mcb data (B2o re-route)"
+  },
+  "L66m": {
+   "b2n": 33,
+   "b2o": 30,
+   "delta": -3,
+   "route": "NE_hub->NE_mcb data (mirror) (B2o re-route)"
+  },
+  "L67": {
+   "b2n": 11,
+   "b2o": 6,
+   "delta": -5,
+   "route": "NW_sm0->NW_hub data (B2o re-route)"
+  },
+  "L67m": {
+   "b2n": 11,
+   "b2o": 6,
+   "delta": -5,
+   "route": "NE_sm0->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L68": {
+   "b2n": 9,
+   "b2o": 7,
+   "delta": -2,
+   "route": "NW_sm1->NW_hub data (B2o re-route)"
+  },
+  "L68m": {
+   "b2n": 9,
+   "b2o": 7,
+   "delta": -2,
+   "route": "NE_sm1->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L69": {
+   "b2n": 16,
+   "b2o": 7,
+   "delta": -9,
+   "route": "NW_sm2->NW_hub data (B2o re-route)"
+  },
+  "L69m": {
+   "b2n": 16,
+   "b2o": 7,
+   "delta": -9,
+   "route": "NE_sm2->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L70": {
+   "b2n": 21,
+   "b2o": 7,
+   "delta": -14,
+   "route": "NW_sm3->NW_hub data (B2o re-route)"
+  },
+  "L70m": {
+   "b2n": 21,
+   "b2o": 7,
+   "delta": -14,
+   "route": "NE_sm3->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L71": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NW_b002->NW_b001 data (B2o re-route)"
+  },
+  "L71m": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NE_b002->NE_b001 data (mirror) (B2o re-route)"
+  },
+  "L72": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NW_b011->NW_b012 data (B2o re-route)"
+  },
+  "L72m": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NE_b011->NE_b012 data (mirror) (B2o re-route)"
+  },
+  "L73": {
+   "b2n": 36,
+   "b2o": 23,
+   "delta": -13,
+   "route": "NW_hub->NW_b013 data (B2o re-route)"
+  },
+  "L73m": {
+   "b2n": 36,
+   "b2o": 23,
+   "delta": -13,
+   "route": "NE_hub->NE_b013 data (mirror) (B2o re-route)"
+  },
+  "L74": {
+   "b2n": 29,
+   "b2o": 5,
+   "delta": -24,
+   "route": "NW_hub->root data (B2o re-route)"
+  },
+  "L74m": {
+   "b2n": 29,
+   "b2o": 5,
+   "delta": -24,
+   "route": "NE_hub->root data (mirror) (B2o re-route)"
+  },
+  "L75": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_spb2->NW_sm2 data (B2o re-route)"
+  },
+  "L75m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_spb2->NE_sm2 data (mirror) (B2o re-route)"
+  },
+  "L76": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_spb2->NW_sm3 data (B2o re-route)"
+  },
+  "L76m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_spb2->NE_sm3 data (mirror) (B2o re-route)"
+  },
+  "L77": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_spt0->NW_sm0 data (B2o re-route)"
+  },
+  "L77m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_spt0->NE_sm0 data (mirror) (B2o re-route)"
+  },
+  "L78": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_spt0->NW_sm1 data (B2o re-route)"
+  },
+  "L78m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_spt0->NE_sm1 data (mirror) (B2o re-route)"
+  },
+  "L79": {
+   "b2n": 32,
+   "b2o": 34,
+   "delta": 2,
+   "route": "NW_hub->NW_mcb ctl (B2o re-route)"
+  },
+  "L79m": {
+   "b2n": 32,
+   "b2o": 34,
+   "delta": 2,
+   "route": "NE_hub->NE_mcb ctl (mirror) (B2o re-route)"
+  },
+  "L80": {
+   "b2n": 17,
+   "b2o": 2,
+   "delta": -15,
+   "route": "root->NW_b101 data (B2o re-route)"
+  },
+  "L80m": {
+   "b2n": 17,
+   "b2o": 2,
+   "delta": -15,
+   "route": "root->NE_b101 data (mirror) (B2o re-route)"
+  },
+  "L81": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_b110->NW_hub ctl (B2o re-route)"
+  },
+  "L81m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_b110->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L82": {
+   "b2n": 32,
+   "b2o": 21,
+   "delta": -11,
+   "route": "NW_mcb->NW_hub ctl (B2o re-route)"
+  },
+  "L82m": {
+   "b2n": 32,
+   "b2o": 21,
+   "delta": -11,
+   "route": "NE_mcb->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L83": {
+   "b2n": 12,
+   "b2o": 12,
+   "delta": 0,
+   "route": "NW_hub->NW_spb2 ctl (B2o re-route)"
+  },
+  "L83m": {
+   "b2n": 12,
+   "b2o": 12,
+   "delta": 0,
+   "route": "NE_hub->NE_spb2 ctl (mirror) (B2o re-route)"
+  },
+  "L84": {
+   "b2n": 9,
+   "b2o": 7,
+   "delta": -2,
+   "route": "NW_hub->NW_spt0 ctl (B2o re-route)"
+  },
+  "L84m": {
+   "b2n": 9,
+   "b2o": 7,
+   "delta": -2,
+   "route": "NE_hub->NE_spt0 ctl (mirror) (B2o re-route)"
+  },
+  "L85": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NW_b002->NW_b003 ctl (B2o re-route)"
+  },
+  "L85m": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NE_b002->NE_b003 ctl (mirror) (B2o re-route)"
+  },
+  "L86": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NW_b011->NW_b010 ctl (B2o re-route)"
+  },
+  "L86m": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NE_b011->NE_b010 ctl (mirror) (B2o re-route)"
+  },
+  "L87": {
+   "b2n": 12,
+   "b2o": 7,
+   "delta": -5,
+   "route": "NW_spb2->NW_hub ctl (B2o re-route)"
+  },
+  "L87m": {
+   "b2n": 12,
+   "b2o": 7,
+   "delta": -5,
+   "route": "NE_spb2->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L88": {
+   "b2n": 9,
+   "b2o": 6,
+   "delta": -3,
+   "route": "NW_spt0->NW_hub ctl (B2o re-route)"
+  },
+  "L88m": {
+   "b2n": 9,
+   "b2o": 6,
+   "delta": -3,
+   "route": "NE_spt0->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L89": {
+   "b2n": 29,
+   "b2o": 2,
+   "delta": -27,
+   "route": "NW_hub->root ctl (B2o re-route)"
+  },
+  "L89m": {
+   "b2n": 29,
+   "b2o": 2,
+   "delta": -27,
+   "route": "NE_hub->root ctl (mirror) (B2o re-route)"
+  },
+  "L90": {
+   "b2n": 17,
+   "b2o": 2,
+   "delta": -15,
+   "route": "NW_hub->NW_b000 ctl (B2o re-route)"
+  },
+  "L90m": {
+   "b2n": 17,
+   "b2o": 2,
+   "delta": -15,
+   "route": "NE_hub->NE_b000 ctl (mirror) (B2o re-route)"
+  },
+  "L91": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_hub->NW_b100 ctl (B2o re-route)"
+  },
+  "L91m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_hub->NE_b100 ctl (mirror) (B2o re-route)"
+  },
+  "L92": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_b003->NW_b013 ctl (B2o re-route)"
+  },
+  "L92m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_b003->NE_b013 ctl (mirror) (B2o re-route)"
+  },
+  "L93": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NW_b013->NW_b012 ctl (B2o re-route)"
+  },
+  "L93m": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NE_b013->NE_b012 ctl (mirror) (B2o re-route)"
+  },
+  "L94": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NW_b001->NW_b002 ctl (B2o re-route)"
+  },
+  "L94m": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NE_b001->NE_b002 ctl (mirror) (B2o re-route)"
+  },
+  "L95": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NW_b012->NW_b011 ctl (B2o re-route)"
+  },
+  "L95m": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NE_b012->NE_b011 ctl (mirror) (B2o re-route)"
+  },
+  "L96": {
+   "b2n": 52,
+   "b2o": 7,
+   "delta": -45,
+   "route": "NW_hub->NE_hub ctl (B2o re-route)"
+  },
+  "L96m": {
+   "b2n": 52,
+   "b2o": 7,
+   "delta": -45,
+   "route": "NE_hub->NW_hub ctl (mirror) (B2o re-route)"
+  },
+  "L97": {
+   "b2n": 25,
+   "b2o": 7,
+   "delta": -18,
+   "route": "NW_hub->NW_sm0 ctl (B2o re-route)"
+  },
+  "L97m": {
+   "b2n": 25,
+   "b2o": 7,
+   "delta": -18,
+   "route": "NE_hub->NE_sm0 ctl (mirror) (B2o re-route)"
+  },
+  "L98": {
+   "b2n": 13,
+   "b2o": 5,
+   "delta": -8,
+   "route": "NW_hub->NW_sm1 ctl (B2o re-route)"
+  },
+  "L98m": {
+   "b2n": 13,
+   "b2o": 5,
+   "delta": -8,
+   "route": "NE_hub->NE_sm1 ctl (mirror) (B2o re-route)"
+  },
+  "L99": {
+   "b2n": 16,
+   "b2o": 8,
+   "delta": -8,
+   "route": "NW_hub->NW_sm2 ctl (B2o re-route)"
+  },
+  "L99m": {
+   "b2n": 16,
+   "b2o": 8,
+   "delta": -8,
+   "route": "NE_hub->NE_sm2 ctl (mirror) (B2o re-route)"
+  },
+  "L100": {
+   "b2n": 19,
+   "b2o": 7,
+   "delta": -12,
+   "route": "NW_hub->NW_sm3 ctl (B2o re-route)"
+  },
+  "L100m": {
+   "b2n": 19,
+   "b2o": 7,
+   "delta": -12,
+   "route": "NE_hub->NE_sm3 ctl (mirror) (B2o re-route)"
+  },
+  "L101": {
+   "b2n": 20,
+   "b2o": 27,
+   "delta": 7,
+   "route": "NW_hub->NW_io ctl (B2o re-route)"
+  },
+  "L101m": {
+   "b2n": 20,
+   "b2o": 27,
+   "delta": 7,
+   "route": "NE_hub->NE_io ctl (mirror) (B2o re-route)"
+  },
+  "L102": {
+   "b2n": 30,
+   "b2o": 6,
+   "delta": -24,
+   "route": "NW_hub->NW_su00 ctl (B2o re-route)"
+  },
+  "L102m": {
+   "b2n": 30,
+   "b2o": 6,
+   "delta": -24,
+   "route": "NE_hub->NE_su00 ctl (mirror) (B2o re-route)"
+  },
+  "L103": {
+   "b2n": 12,
+   "b2o": 2,
+   "delta": -10,
+   "route": "NW_hub->NW_su11 ctl (B2o re-route)"
+  },
+  "L103m": {
+   "b2n": 12,
+   "b2o": 2,
+   "delta": -10,
+   "route": "NE_hub->NE_su11 ctl (mirror) (B2o re-route)"
+  },
+  "L104": {
+   "b2n": 17,
+   "b2o": 6,
+   "delta": -11,
+   "route": "NW_hub->NW_su20 ctl (B2o re-route)"
+  },
+  "L104m": {
+   "b2n": 17,
+   "b2o": 6,
+   "delta": -11,
+   "route": "NE_hub->NE_su20 ctl (mirror) (B2o re-route)"
+  },
+  "L105": {
+   "b2n": 15,
+   "b2o": 2,
+   "delta": -13,
+   "route": "NW_hub->NW_su31 ctl (B2o re-route)"
+  },
+  "L105m": {
+   "b2n": 15,
+   "b2o": 2,
+   "delta": -13,
+   "route": "NE_hub->NE_su31 ctl (mirror) (B2o re-route)"
+  },
+  "L106": {
+   "b2n": 57,
+   "b2o": 46,
+   "delta": -11,
+   "route": "root->NW_io ctl (B2o re-route)"
+  },
+  "L106m": {
+   "b2n": 57,
+   "b2o": 46,
+   "delta": -11,
+   "route": "root->NE_io ctl (mirror) (B2o re-route)"
+  },
+  "L107": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NW_b000->NW_b001 ctl (B2o re-route)"
+  },
+  "L107m": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NE_b000->NE_b001 ctl (mirror) (B2o re-route)"
+  },
+  "L108": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NW_b002->NW_b001 ctl (B2o re-route)"
+  },
+  "L108m": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NE_b002->NE_b001 ctl (mirror) (B2o re-route)"
+  },
+  "L109": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NW_b011->NW_b012 ctl (B2o re-route)"
+  },
+  "L109m": {
+   "b2n": 2,
+   "b2o": 4,
+   "delta": 2,
+   "route": "NE_b011->NE_b012 ctl (mirror) (B2o re-route)"
+  },
+  "L110": {
+   "b2n": 19,
+   "b2o": 2,
+   "delta": -17,
+   "route": "NW_hub->NW_su01 ctl (B2o re-route)"
+  },
+  "L110m": {
+   "b2n": 19,
+   "b2o": 2,
+   "delta": -17,
+   "route": "NE_hub->NE_su01 ctl (mirror) (B2o re-route)"
+  },
+  "L111": {
+   "b2n": 7,
+   "b2o": 2,
+   "delta": -5,
+   "route": "NW_hub->NW_su10 ctl (B2o re-route)"
+  },
+  "L111m": {
+   "b2n": 7,
+   "b2o": 2,
+   "delta": -5,
+   "route": "NE_hub->NE_su10 ctl (mirror) (B2o re-route)"
+  },
+  "L112": {
+   "b2n": 10,
+   "b2o": 2,
+   "delta": -8,
+   "route": "NW_hub->NW_su21 ctl (B2o re-route)"
+  },
+  "L112m": {
+   "b2n": 10,
+   "b2o": 2,
+   "delta": -8,
+   "route": "NE_hub->NE_su21 ctl (mirror) (B2o re-route)"
+  },
+  "L113": {
+   "b2n": 4,
+   "b2o": 2,
+   "delta": -2,
+   "route": "NW_hub->NW_su30 ctl (B2o re-route)"
+  },
+  "L113m": {
+   "b2n": 4,
+   "b2o": 2,
+   "delta": -2,
+   "route": "NE_hub->NE_su30 ctl (mirror) (B2o re-route)"
+  },
+  "L114": {
+   "b2n": 67,
+   "b2o": 24,
+   "delta": -43,
+   "route": "PHY_N->NW_hub ctl (B2o re-route)"
+  },
+  "L114m": {
+   "b2n": 66,
+   "b2o": 24,
+   "delta": -42,
+   "route": "PHY_N->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L115": {
+   "b2n": 20,
+   "b2o": 15,
+   "delta": -5,
+   "route": "NW_hub->NW_b002 ctl (B2o re-route)"
+  },
+  "L115m": {
+   "b2n": 20,
+   "b2o": 15,
+   "delta": -5,
+   "route": "NE_hub->NE_b002 ctl (mirror) (B2o re-route)"
+  },
+  "L116": {
+   "b2n": 11,
+   "b2o": 11,
+   "delta": 0,
+   "route": "NW_hub->NW_b011 ctl (B2o re-route)"
+  },
+  "L116m": {
+   "b2n": 11,
+   "b2o": 11,
+   "delta": 0,
+   "route": "NE_hub->NE_b011 ctl (mirror) (B2o re-route)"
+  },
+  "L117": {
+   "b2n": 45,
+   "b2o": 38,
+   "delta": -7,
+   "route": "NW_spb0->root data (B2o re-route)"
+  },
+  "L117m": {
+   "b2n": 45,
+   "b2o": 38,
+   "delta": -7,
+   "route": "NE_spb0->root data (mirror) (B2o re-route)"
+  },
+  "L118": {
+   "b2n": 12,
+   "b2o": 19,
+   "delta": 7,
+   "route": "vsN0->root data (B2o re-route)"
+  },
+  "L119": {
+   "b2n": 17,
+   "b2o": 21,
+   "delta": 4,
+   "route": "NW_hub->NW_b013 ctl (B2o re-route)"
+  },
+  "L119m": {
+   "b2n": 17,
+   "b2o": 21,
+   "delta": 4,
+   "route": "NE_hub->NE_b013 ctl (mirror) (B2o re-route)"
+  },
+  "L120": {
+   "b2n": 13,
+   "b2o": 5,
+   "delta": -8,
+   "route": "NW_sm0->NW_hub ctl (B2o re-route)"
+  },
+  "L120m": {
+   "b2n": 13,
+   "b2o": 5,
+   "delta": -8,
+   "route": "NE_sm0->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L121": {
+   "b2n": 13,
+   "b2o": 6,
+   "delta": -7,
+   "route": "NW_sm1->NW_hub ctl (B2o re-route)"
+  },
+  "L121m": {
+   "b2n": 13,
+   "b2o": 6,
+   "delta": -7,
+   "route": "NE_sm1->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L122": {
+   "b2n": 16,
+   "b2o": 7,
+   "delta": -9,
+   "route": "NW_sm2->NW_hub ctl (B2o re-route)"
+  },
+  "L122m": {
+   "b2n": 16,
+   "b2o": 7,
+   "delta": -9,
+   "route": "NE_sm2->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L123": {
+   "b2n": 18,
+   "b2o": 7,
+   "delta": -11,
+   "route": "NW_sm3->NW_hub ctl (B2o re-route)"
+  },
+  "L123m": {
+   "b2n": 18,
+   "b2o": 7,
+   "delta": -11,
+   "route": "NE_sm3->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L124": {
+   "b2n": 20,
+   "b2o": 2,
+   "delta": -18,
+   "route": "root->NW_b101 ctl (B2o re-route)"
+  },
+  "L124m": {
+   "b2n": 20,
+   "b2o": 2,
+   "delta": -18,
+   "route": "root->NE_b101 ctl (mirror) (B2o re-route)"
+  },
+  "L125": {
+   "b2n": 57,
+   "b2o": 47,
+   "delta": -10,
+   "route": "NW_io->root ctl (B2o re-route)"
+  },
+  "L125m": {
+   "b2n": 57,
+   "b2o": 47,
+   "delta": -10,
+   "route": "NE_io->root ctl (mirror) (B2o re-route)"
+  },
+  "L126": {
+   "b2n": 19,
+   "b2o": 27,
+   "delta": 8,
+   "route": "NW_io->NW_hub ctl (B2o re-route)"
+  },
+  "L126m": {
+   "b2n": 19,
+   "b2o": 27,
+   "delta": 8,
+   "route": "NE_io->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L127": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_su00->NW_b113 ctl (B2o re-route)"
+  },
+  "L127m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_su00->NE_b113 ctl (mirror) (B2o re-route)"
+  },
+  "L128": {
+   "b2n": 31,
+   "b2o": 2,
+   "delta": -29,
+   "route": "NW_su11->NW_b112 ctl (B2o re-route)"
+  },
+  "L128m": {
+   "b2n": 31,
+   "b2o": 2,
+   "delta": -29,
+   "route": "NE_su11->NE_b112 ctl (mirror) (B2o re-route)"
+  },
+  "L129": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_su20->NW_b111 ctl (B2o re-route)"
+  },
+  "L129m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_su20->NE_b111 ctl (mirror) (B2o re-route)"
+  },
+  "L130": {
+   "b2n": 33,
+   "b2o": 2,
+   "delta": -31,
+   "route": "NW_su31->NW_b110 ctl (B2o re-route)"
+  },
+  "L130m": {
+   "b2n": 33,
+   "b2o": 2,
+   "delta": -31,
+   "route": "NE_su31->NE_b110 ctl (mirror) (B2o re-route)"
+  },
+  "L131": {
+   "b2n": 8,
+   "b2o": 2,
+   "delta": -6,
+   "route": "NW_su31->NW_hub ctl (B2o re-route)"
+  },
+  "L131m": {
+   "b2n": 8,
+   "b2o": 2,
+   "delta": -6,
+   "route": "NE_su31->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L132": {
+   "b2n": 14,
+   "b2o": 14,
+   "delta": 0,
+   "route": "NW_b002->NW_hub ctl (B2o re-route)"
+  },
+  "L132m": {
+   "b2n": 14,
+   "b2o": 14,
+   "delta": 0,
+   "route": "NE_b002->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L133": {
+   "b2n": 17,
+   "b2o": 10,
+   "delta": -7,
+   "route": "NW_b011->NW_hub ctl (B2o re-route)"
+  },
+  "L133m": {
+   "b2n": 17,
+   "b2o": 10,
+   "delta": -7,
+   "route": "NE_b011->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L134": {
+   "b2n": 29,
+   "b2o": 8,
+   "delta": -21,
+   "route": "NW_su00->NW_hub ctl (B2o re-route)"
+  },
+  "L134m": {
+   "b2n": 29,
+   "b2o": 8,
+   "delta": -21,
+   "route": "NE_su00->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L135": {
+   "b2n": 9,
+   "b2o": 2,
+   "delta": -7,
+   "route": "NW_su11->NW_hub ctl (B2o re-route)"
+  },
+  "L135m": {
+   "b2n": 9,
+   "b2o": 2,
+   "delta": -7,
+   "route": "NE_su11->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L136": {
+   "b2n": 18,
+   "b2o": 7,
+   "delta": -11,
+   "route": "NW_su20->NW_hub ctl (B2o re-route)"
+  },
+  "L136m": {
+   "b2n": 18,
+   "b2o": 7,
+   "delta": -11,
+   "route": "NE_su20->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L137": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_b100->NW_hub ctl (B2o re-route)"
+  },
+  "L137m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_b100->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L138": {
+   "b2n": 44,
+   "b2o": 37,
+   "delta": -7,
+   "route": "NW_spb0->root ctl (B2o re-route)"
+  },
+  "L138m": {
+   "b2n": 44,
+   "b2o": 37,
+   "delta": -7,
+   "route": "NE_spb0->root ctl (mirror) (B2o re-route)"
+  },
+  "L139": {
+   "b2n": 55,
+   "b2o": 36,
+   "delta": -19,
+   "route": "NW_spb2->NE_hub ctl (B2o re-route)"
+  },
+  "L139m": {
+   "b2n": 55,
+   "b2o": 36,
+   "delta": -19,
+   "route": "NE_spb2->NW_hub ctl (mirror) (B2o re-route)"
+  },
+  "L140": {
+   "b2n": 66,
+   "b2o": 37,
+   "delta": -29,
+   "route": "NW_spt0->NE_hub ctl (B2o re-route)"
+  },
+  "L140m": {
+   "b2n": 66,
+   "b2o": 37,
+   "delta": -29,
+   "route": "NE_spt0->NW_hub ctl (mirror) (B2o re-route)"
+  },
+  "L141": {
+   "b2n": 12,
+   "b2o": 19,
+   "delta": 7,
+   "route": "vsN0->root ctl (B2o re-route)"
+  },
+  "L142": {
+   "b2n": 11,
+   "b2o": 2,
+   "delta": -9,
+   "route": "NW_b000->NW_hub ctl (B2o re-route)"
+  },
+  "L142m": {
+   "b2n": 11,
+   "b2o": 2,
+   "delta": -9,
+   "route": "NE_b000->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L143": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NW_b003->NW_b002 ctl (B2o re-route)"
+  },
+  "L143m": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NE_b003->NE_b002 ctl (mirror) (B2o re-route)"
+  },
+  "L144": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NW_b010->NW_b000 ctl (B2o re-route)"
+  },
+  "L144m": {
+   "b2n": 2,
+   "b2o": 2,
+   "delta": 0,
+   "route": "NE_b010->NE_b000 ctl (mirror) (B2o re-route)"
+  },
+  "L145": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NW_b010->NW_b011 ctl (B2o re-route)"
+  },
+  "L145m": {
+   "b2n": 2,
+   "b2o": 5,
+   "delta": 3,
+   "route": "NE_b010->NE_b011 ctl (mirror) (B2o re-route)"
+  },
+  "L146": {
+   "b2n": 23,
+   "b2o": 22,
+   "delta": -1,
+   "route": "NW_b013->NW_hub ctl (B2o re-route)"
+  },
+  "L146m": {
+   "b2n": 23,
+   "b2o": 22,
+   "delta": -1,
+   "route": "NE_b013->NE_hub ctl (mirror) (B2o re-route)"
+  },
+  "L147": {
+   "b2n": 35,
+   "b2o": 25,
+   "delta": -10,
+   "route": "NW_su00->NW_su11 ctl (B2o re-route)"
+  },
+  "L147m": {
+   "b2n": 35,
+   "b2o": 25,
+   "delta": -10,
+   "route": "NE_su00->NE_su11 ctl (mirror) (B2o re-route)"
+  },
+  "L148": {
+   "b2n": 48,
+   "b2o": 31,
+   "delta": -17,
+   "route": "NW_su11->NW_su20 ctl (B2o re-route)"
+  },
+  "L148m": {
+   "b2n": 48,
+   "b2o": 31,
+   "delta": -17,
+   "route": "NE_su11->NE_su20 ctl (mirror) (B2o re-route)"
+  },
+  "L149": {
+   "b2n": 31,
+   "b2o": 31,
+   "delta": 0,
+   "route": "NW_su20->NW_su31 ctl (B2o re-route)"
+  },
+  "L149m": {
+   "b2n": 31,
+   "b2o": 31,
+   "delta": 0,
+   "route": "NE_su20->NE_su31 ctl (mirror) (B2o re-route)"
+  },
+  "L150": {
+   "b2n": 71,
+   "b2o": 15,
+   "delta": -56,
+   "route": "NW_hub->NE_hub data (B2o re-route)"
+  },
+  "L150m": {
+   "b2n": 71,
+   "b2o": 15,
+   "delta": -56,
+   "route": "NE_hub->NW_hub data (mirror) (B2o re-route)"
+  },
+  "L151": {
+   "b2n": 33,
+   "b2o": 17,
+   "delta": -16,
+   "route": "NW_spb0->NW_hub data (B2o re-route)"
+  },
+  "L151m": {
+   "b2n": 33,
+   "b2o": 17,
+   "delta": -16,
+   "route": "NE_spb0->NE_hub data (mirror) (B2o re-route)"
+  },
+  "L152": {
+   "b2n": 32,
+   "b2o": 32,
+   "delta": 0,
+   "route": "NW_hub->NW_spb0 data (B2o re-route)"
+  },
+  "L152m": {
+   "b2n": 32,
+   "b2o": 32,
+   "delta": 0,
+   "route": "NE_hub->NE_spb0 data (mirror) (B2o re-route)"
+  },
+  "L153": {
+   "b2n": 20,
+   "b2o": 19,
+   "delta": -1,
+   "route": "vsN0->root data (B2o re-route)"
+  },
+  "L154": {
+   "b2n": 20,
+   "b2o": 18,
+   "delta": -2,
+   "route": "root->vsN0 data (B2o re-route)"
+  },
+  "L155": {
+   "b2n": 27,
+   "b2o": 26,
+   "delta": -1,
+   "route": "NW_spt0->root data (B2o re-route)"
+  },
+  "L155m": {
+   "b2n": 27,
+   "b2o": 26,
+   "delta": -1,
+   "route": "NE_spt0->root data (mirror) (B2o re-route)"
+  }
+ }
+}

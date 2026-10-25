@@ -284,6 +284,20 @@ def collections_most(xs):
     return max(sorted(c), key=lambda k: c[k])
 
 
+def _packs(macros, w, h, band, halo):
+    """the macros (unrotated: SRAM pins stay on their W/E sides) pack inside the pin bands as one row block per macro
+    kind, stacked N-S: per kind the widest column count that fits the width, rows = ceil(n / cols)
+    (HBM-CORES3 00:38: ep_static 4 x 171x78 failed MPL-0003 in an outline that only passed the area test)."""
+    W, H = w - 2 * band, h - 2 * band
+    used = 0.0
+    for n, mw, mh in sorted(macros, key=lambda m: -m[1]):
+        cols = int((W + 1e-6) // (mw + 2 * halo))
+        if cols < 1:
+            return False
+        used += math.ceil(n / cols) * (mh + 2 * halo)
+    return used <= H + 1e-6
+
+
 def reshape_outline(e, npins):
     """smallest outline (4.32 grid, aspect <= ASPECT) with (a) area - pin band >= macro area (with halo) + std / UTIL,
     (b) the largest macro + 2 pin bands inside, (c) the pins placeable at the kit face budget (place_pins)."""
@@ -300,7 +314,7 @@ def reshape_outline(e, npins):
             w, h = i * 4.32, j * 4.32
             if max(w, h) / min(w, h) > e.get("aspect", 1.5) + 1e-9:
                 continue
-            fits = (w >= mw and h >= mhh) or (h >= mw and w >= mhh)
+            fits = _packs(e["macros"], w, h, band, halo)
             if not fits or w * h - band * 2 * (w + h) < need:
                 continue
             if sum(CB.face_cap(f, w, h) for f in "NSEW") < npins * e.get("pin_slack", 1.05):
