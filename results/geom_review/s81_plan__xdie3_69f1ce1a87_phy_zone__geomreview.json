@@ -1,0 +1,16 @@
+{
+ "element": "S81 die plan XDIE reserve pair, PHY zones (xdie3 = xdie2 rebased on DEC12)",
+ "plan": "claude/s81-xdie3-1024r@69f1ce1a87 (plan 1f82e8785f on DEC12 d206dfb226)",
+ "stage": "die plan",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-REVIEW (independent)",
+ "at": "2026-10-25T03:45:00-07:00",
+ "reasons": "[2026-10-25 03:45] Looked at sw_corner.png and ne_corner.png @69f1ce1a87; the geometry is the xdie2 plan2 I passed at 23:52 (only the record and one render changed in the rebase). PHY zone: the SerDes model (250x2250, 0.563 mm2, re-aspected) sits in a shoreline zone 104 um from the die edge on every lk_* partition: WS0/WS1/EN0/EN1 2886x482 um, WS2/EN3 2802x1228 minus the 600-um corner stress square, EN2 1918x1228, WS3 530x2370 (R0 native). The ft bands stay on core VDD, 63.64 um guard to the VDD_PHY domain, MX/MY puts them on the core side, and no ft slot or coll window crosses a PHY zone. G0 PASS and G0C 177/177.",
+ "fixes": "PASS on the PHY zone for the model PHY; merge after folding into claude/s81-dec12-1025. Conditions: (1) after the fold, the regenerated plan must keep these PHY-zone rects and VDD_PHY domains the same (post the diff, no new render needed if equal); (2) OWNER? real 6x112G PHY size: a ~2.4 mm2 PHY (red dashed) overlaps the ft bands, so keep the variant with the ft bands one core row up ready; (3) lk_ES0/ES1 off-shore zone (396 um from the edge): decide R180 vs accept before any lk_ES kit; (4) WS3 bump escape (26 signals, about 9 C4 rows) in the bump/IR plan; (5) clock taps in the ft bands come from the core clock; the PHY clock is separate and landed; the WS2/EN3 taps that fall inside a PHY zone move to the core-VDD side.",
+ "images": [
+  "results/geom_review/s81_xdie2_1024r/sw_corner.png (on claude/s81-xdie3-1024r)",
+  "results/geom_review/s81_xdie2_1024r/ne_corner.png (on claude/s81-xdie3-1024r)"
+ ],
+ "owner_lane": "S81",
+ "rule": "GEOM 19:53 / 23:52 xdie conditions; COORD 02:04 APPROVED-IF (GEOM PASS on the PHY zone)"
+}

@@ -1848,17 +1848,17 @@
   "max_core": 0
  },
  "iqf": {
-  "cells": 21296,
+  "cells": 21836,
   "glue": 10000,
   "cores": [
    {
     "name": "idx_qf",
-    "cells": 11296
+    "cells": 11836
    }
   ],
   "n_cores": 1,
-  "basis": "dsdv_idx_qf 11,296 (F gold2)",
-  "max_core": 11296
+  "basis": "dsdv_idx_qf 11,296 (F gold2) + S81/IDXNET qc serializer ~540 (256 hold + 258 out + copies) - qc1 513 flops not removed from the estimate (conservative)",
+  "max_core": 11836
  },
  "seqhost": {
   "cells": 139319,
@@ -10149,14 +10149,6 @@
   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
   "max_core": 375145
  },
- "s_5N_x06": {
-  "cells": 5000,
-  "glue": 5000,
-  "cores": [],
-  "n_cores": 0,
-  "basis": "station-only partition (ft flops)",
-  "max_core": 0
- },
  "s_6S_L4": {
   "cells": 2162983,
   "glue": 15000,
@@ -11267,7 +11259,7 @@
   "max_core": 195577
  },
  "bk_sel": {
-  "cells": 808579,
+  "cells": 811179,
   "glue": 10000,
   "cores": [
    {
@@ -11284,11 +11276,11 @@
    },
    {
     "name": "bkg_tx_vmux",
-    "cells": 85437
+    "cells": 88037
    }
   ],
   "n_cores": 4,
-  "basis": "dsdv_bk_sel_vmtx parts (whole pa_lp 1,243,436)",
+  "basis": "dsdv_bk_sel_vmtx parts (whole pa_lp 1,243,436); S81/IDXNET 10-25 +2,600 est: dsdv_idx_vmux6 2 more inputs + tl/tpn/tps/loop regs 4 x 276",
   "max_core": 260094
  },
  "eng": {

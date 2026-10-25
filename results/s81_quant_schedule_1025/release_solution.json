@@ -1,0 +1,109 @@
+{
+ "max_delay": 512,
+ "search_nodes": 17,
+ "calibration": "Q_AFTER_ROOT common constant omitted; V_ASM=2+per-slice age",
+ "qualification": "release-slot solution only; NORMR attainability and hardware release control NOT PROVEN",
+ "verdict": "PREDICTED_RELEASE_SLOTS_PASS",
+ "line_collision_edges": 0,
+ "own_asm_same_edge": 0,
+ "releases": {
+  "u_s_0S": {
+   "sid": 0,
+   "root_rel": 0,
+   "q_rel": 107,
+   "delay": 107
+  },
+  "u_s_0N": {
+   "sid": 1,
+   "root_rel": 1,
+   "q_rel": 68,
+   "delay": 67
+  },
+  "u_s_1S": {
+   "sid": 2,
+   "root_rel": 8,
+   "q_rel": 9,
+   "delay": 1
+  },
+  "u_s_1N": {
+   "sid": 3,
+   "root_rel": 13,
+   "q_rel": 17,
+   "delay": 4
+  },
+  "u_s_2S": {
+   "sid": 4,
+   "root_rel": 12,
+   "q_rel": 79,
+   "delay": 67
+  },
+  "u_s_2N": {
+   "sid": 5,
+   "root_rel": 17,
+   "q_rel": 18,
+   "delay": 1
+  },
+  "u_s_3S": {
+   "sid": 6,
+   "root_rel": 20,
+   "q_rel": 168,
+   "delay": 148
+  },
+  "u_s_3N": {
+   "sid": 7,
+   "root_rel": 22,
+   "q_rel": 151,
+   "delay": 129
+  },
+  "u_s_4S": {
+   "sid": 8,
+   "root_rel": 31,
+   "q_rel": 31,
+   "delay": 0
+  },
+  "u_s_4N": {
+   "sid": 9,
+   "root_rel": 35,
+   "q_rel": 177,
+   "delay": 142
+  },
+  "u_s_5S": {
+   "sid": 10,
+   "root_rel": 19,
+   "q_rel": 144,
+   "delay": 125
+  },
+  "u_s_5N": {
+   "sid": 11,
+   "root_rel": 23,
+   "q_rel": 128,
+   "delay": 105
+  },
+  "u_s_6S": {
+   "sid": 12,
+   "root_rel": 14,
+   "q_rel": 95,
+   "delay": 81
+  },
+  "u_s_6N": {
+   "sid": 13,
+   "root_rel": 15,
+   "q_rel": 18,
+   "delay": 3
+  },
+  "u_s_7S": {
+   "sid": 14,
+   "root_rel": 12,
+   "q_rel": 15,
+   "delay": 3
+  },
+  "u_s_7N": {
+   "sid": 15,
+   "root_rel": 14,
+   "q_rel": 59,
+   "delay": 45
+  }
+ },
+ "release_span": 168,
+ "maximum_delay": 148
+}

@@ -1,0 +1,8 @@
+{
+ "module": "kv3_pv_pair",
+ "variant": "eco ev_m3_dp (evidence only, old pvpair_m7 route, pre fault-dup RTL): OT_DRV_PLACE=1, MAX_FANOUT 24, setup margin 10, hold margin 3, corners tc/bc",
+ "run": "intel1:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_pv_pair/ev_m3_dp",
+ "verdict": "FAILED (no signoff): GRT-0013 'Net not present in FastRouteCore structures when trying to merge' in repair_timing -setup inside the second incremental GRT session (after the DRV-on-placement pass + end/start incremental); DRV split 1385 buffers / 913 nets and left 1152 setup-violating endpoints before the crash",
+ "lesson": "pv_pair DRV fanout split (max_fanout 24) itself costs setup on 1.1k endpoints; the fresh fault-dup kits (fd2_h40 / fd2_h40d40, in-flow hold 40) are the pv_pair path",
+ "recorded": "2026-10-24 23:57 PDT KV-CORES-PAR"
+}

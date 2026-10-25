@@ -154,7 +154,13 @@ def main(argv=None):
     a3.add_argument("--types")
     a3.add_argument("--util", type=float, default=0.5)
     a3.add_argument("--proof", action="store_true", help="proof kit: SKIP_INCREMENTAL_REPAIR (CP1 seam proofs)")
-    a3.add_argument("--hold-ff-margin", type=float, default=None, metavar="PS",
+    a3.add_argument("--hold-mcmm", action="store_true",
+                    help="old GRT repair: one MCMM tc+bc pass with the TT-bound vclk (default since FLOW 10-25: "
+                         "FF-only GRT hold repair with the FF-bound vclk, --hold-ff-margin)")
+    a3.add_argument("--stock-rc", action="store_true",
+                    help="platform setRC.tcl for placement/CTS/GRT estimates (default since FLOW 10-25: the "
+                         "RCX-calibrated tools/die_plan/setRC_rcx_asap7.tcl)")
+    a3.add_argument("--hold-ff-margin", type=float, default=5.0, metavar="PS",
                     help="repair hold at the FF sign-off corner only (CTS-stage combined repair skipped; post-GRT "
                          "repair with CORNERS=bc and this hold margin); TT setup is judged by signoff.py")
     a3.add_argument("--slew-margin", type=float, default=None, metavar="PCT",
@@ -173,13 +179,25 @@ def main(argv=None):
     a4.add_argument("plan")
     a4.add_argument("--out", required=True)
     a4.add_argument("--views", required=True, help="DIR/<type>/<module>.lef|.lib (each kit's abstract)")
+    a4.add_argument("--pg-map", help="Opt-in regional PDN: JSON {instances: {part: {PG_PIN: NET}}}; checks actual exposed M7 power pins")
     a5 = sub.add_parser("mockview", help="mock abstract LEFs (exact pins + PG + OBS) for a dry die-flow run")
     a5.add_argument("plan")
     a5.add_argument("--out", required=True)
+    a5.add_argument("--planned-phy-pg", action="store_true", help="PLANNED prototype only: split CORE VDD and expose VDDPHY from explicitly mapped die_io/PHY domains")
     a = ap.parse_args(argv)
     if a.cmd == "mockview":
         import gen_phys
-        print("\n".join(str(d) for d in gen_phys.write_mock_views(S.load(a.plan), a.out)))
+        raw = S.load(a.plan)
+        phy_io = None
+        if a.planned_phy_pg:
+            phy_io = raw['die'].get('io')
+            if phy_io is None:
+                phy_io = json.loads((Path(a.plan).parent/'die_io.json').read_text())
+        try:
+            print("\n".join(str(d) for d in gen_phys.write_mock_views(raw, a.out, phy_io)))
+        except ValueError as e:
+            print(f"gen mockview: ERROR {e}")
+            return 1
         return 0
     if a.cmd in ("phys", "assembly"):
         import gen_phys
@@ -188,10 +206,13 @@ def main(argv=None):
             if a.cmd == "phys":
                 kits = gen_phys.write_phys(S.load(a.plan), a.out, a.rtl_root,
                                            a.types.split(",") if a.types else None, a.util, a.proof,
-                                           dict(x.split("=", 1) for x in a.kit_rtl), a.hold_ff_margin,
-                                           (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um)
+                                           dict(x.split("=", 1) for x in a.kit_rtl),
+                                           None if a.hold_mcmm else a.hold_ff_margin,
+                                           (a.slew_margin, a.cap_margin), a.skip_kit_ir, a.max_wire_um,
+                                           plan_path=Path(a.plan).resolve(), rc_cal=not a.stock_rc)
             else:
-                kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views)]
+                kits = [gen_phys.write_assembly(S.load(a.plan), a.out, a.views, plan_path=Path(a.plan).resolve(),
+                                                pg_map=json.loads(Path(a.pg_map).read_text()) if a.pg_map else None)]
         except gen_rtl.GenError as e:
             print(f"gen {a.cmd}: ERROR {e}")
             return 1
@@ -200,7 +221,8 @@ def main(argv=None):
     if a.cmd == "rtl":
         import gen_rtl
         try:
-            files = gen_rtl.write_rtl(S.load(a.plan), a.out, a.rtl_root, a.types.split(",") if a.types else None)
+            files = gen_rtl.write_rtl(S.load(a.plan), a.out, a.rtl_root, a.types.split(",") if a.types else None,
+                                     plan_path=Path(a.plan).resolve())
         except gen_rtl.GenError as e:
             print(f"gen rtl: ERROR {e}")
             return 1

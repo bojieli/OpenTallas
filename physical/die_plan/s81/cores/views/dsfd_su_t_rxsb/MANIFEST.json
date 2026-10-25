@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.s81.native_core_view.v1",
+ "module": "dsfd_su_t_rxsb",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/codex-s81-core-eco/rxsb_route_h5",
+ "routed_db": "epyc2:/srv/opentallas-scratch2/claude/codex-s81-core-eco/rxsb_route_h5/run/results/asap7/kr_dsfd_su_t_rxsb_c/base/6_final.odb",
+ "verdict": "SIGNED",
+ "variant": "rxsb_route_h5 (extracted-SPEF hold-only ECO, hold margin 5 ps, launched before the 2026-10-25 04:13 owner no-ECO rule); h0 also SIGNED, h5 preferred",
+ "signoff": {
+  "tt_setup_wns_ps": 11.2,
+  "ff_hold_wns_ps": 3.38,
+  "pair_skew_worst_abs_ps": {
+   "tt": 28.33,
+   "ff": 26.56
+  },
+  "drc": 0,
+  "antenna_nets": 0,
+  "drv": "PASS",
+  "sdc_lint": "PASS",
+  "face_guard": "PASS",
+  "generated": "2026-10-25T03:37:00-07:00"
+ },
+ "scope": "routed abstract + TT/FF timing models (ORFS generate_abstract, tc->_tt, bc->_ff); no GDS",
+ "pins": 131,
+ "pins_note": "plan core_pins unchanged: all 131 plan pins present and within 1.5 um of a same-layer LEF pin rect",
+ "physical_change": "hold-only ECO on extracted SPEF; no RTL, pin, cycle or clock change",
+ "die_view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb (LEF, _tt.lib, _ff.lib, insertion.json replaced; previous files ['abstract.json', 'child_lint.json', 'dsfd_su_t_rxsb.lef', 'dsfd_su_t_rxsb_ff.lib', 'dsfd_su_t_rxsb_ss.lib', 'dsfd_su_t_rxsb_tt.lib', 'export_ff.log', 'export_ff.tcl', 'export_ss.log', 'export_ss.tcl', 'export_tt.log', 'export_tt.tcl', 'insertion.json'])",
+ "files": {
+  "6_final.v.gz": "892fece99f7f4e59d541e236ebb79fef52e88d94ff4a4428c0b57b5d8b86f262",
+  "codex_geom_review.json": "4da0730296d287880361887720ea6483dca9fc62056da40924b70101c8d63973",
+  "config.mk": "1c2f768f649e8298dc21bcc489f3a4d622a0946771d8e2bc5df1bbd06faeb1a5",
+  "constraint.sdc": "40a660480b52332dfba739b5ebff683095879f7e37b32a3d9f42a4566bda996a",
+  "face_guard.json": "d137599c53f3585b067e5a364a54f306e03ea6ba823f7715158839d20768f63b",
+  "freeze.json": "da6f21c2df859398f40ce3a5e47ba1ddefd9f1f5f6c00d977ab29d5b178c0051",
+  "pin_audit.json": "4b1630709d5220904e96a9af48cd4f3a037ed4d4fa5ce28515e7c993b1e4fea6",
+  "pins.json": "536654ec29343ca999885636bc2a91a41b6f7aa26364c5617c10d55e671a3c34",
+  "sdc_lint.json": "6342eb40e294f2c7a42bf3c520561b468f1ea11cc0d5efb9311bb0311e4043f5",
+  "signoff.json": "d92768be0d9741e3a542e7058653260955e2efc7c04ee09e8dda7b5d66bf53f5"
+ },
+ "view_files": {
+  "dsfd_su_t_rxsb.lef": "7de0f6b23db58cead15c42a98c64dd6a0fbe8a315929c9829581fafc2ecf8e90",
+  "dsfd_su_t_rxsb_tt.lib": "ffe5528724e7f59eb3fff41d2980434dfcf2890be393dabe4a31a2430d3dd8aa",
+  "dsfd_su_t_rxsb_ff.lib": "7d42c284fcb8f2d3d6f65b66b08239190a125c387a7aaf9b787a90269aa409f0",
+  "insertion.json": "f6194f09761a4bd244542c4f200131db30f52612eb593227ac1f57bf91c68299"
+ }
+}

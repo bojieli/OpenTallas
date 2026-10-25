@@ -35,7 +35,15 @@ XD = dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0))
 # Q-COLLCAL 10-18 --real-lanes coll_lane_latency.json: the REAL forwarded lanes (+define+OT_TP8S_REAL_LANES), N / K per
 # SerDes port and direction (tx, txv, rx, rxv) from the die GEN; RL = {param: value} (empty = fixed-delay lanes as before)
 RL = dict(params={}, src=None)
-D50 = dict(on=False)   # --duty50: six_five harness with 50 %-duty clocks (half-tick resolution)
+D50 = dict(on=False)
+# QC-TOK 10-25 --wavefront bind_reset.json (owner decision 13): per-partition release plusargs (tb OT_TP8S_WAVEFRONT);
+# empty = the single-edge reset of every earlier bench (unchanged)
+WF = dict(on=False, plus={}, start_rel=None, pw0=20, src=None, sha=None, map=None)
+WF_D0 = 15            # the tb rst_n (rcnt == F) deasserts at cycle 15
+# tb reset group -> plan partitions (bind_names.json of the r3 wavefront bind); a group releases at the LATEST member
+WF_MAP = dict(WF_ISS=["sl_W5_fw"], WF_CORE=["coll_core"], WF_N=["coll_n"], WF_S=["coll_s"], WF_UCIE=["coll_ucie"],
+              WF_FT=["coll_f0", "coll_f1", "coll_f2", "coll_f3", "coll_f4", "coll_f5"], WF_SER0=["io_serdes"],
+              WF_SER1=["io_serdes_1"], WF_SER2=["io_serdes_2"])   # --duty50: six_five harness with 50 %-duty clocks (half-tick resolution)
 VERILATOR = os.environ.get("OT_VERILATOR") or next((v for v in (os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator"),) if os.path.exists(v)), None) or shutil.which("verilator")
 DEPTH, START = 8, 40
 SRC = [ROOT / p for p in (
@@ -121,7 +129,7 @@ def program_words(prog, nwords, cmd_pin_stages=0, start=None):
 
 
 def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, relays=(0,0,0,0), shared=False, six_five=False, seqsu=False):
-    xdtag = ("_d50" if D50["on"] else "") + ("_rl" + hashlib.sha256(json.dumps(RL["params"], sort_keys=True).encode()).hexdigest()[:8] if RL["params"] else "") + ("" if XD == dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0)) else \
+    xdtag = ("_wf" if WF["on"] else "") + ("_d50" if D50["on"] else "") + ("_rl" + hashlib.sha256(json.dumps(RL["params"], sort_keys=True).encode()).hexdigest()[:8] if RL["params"] else "") + ("" if XD == dict(lanes=(0, 0, 0, 0, 0, 0), ev2=0, tok_reg=0, lx=(0, 0, 0)) else \
         "_e" + "-".join(map(str, XD["lanes"])) + f"_v{XD['ev2']}_t{XD['tok_reg']}_x" + "-".join(map(str, XD["lx"])))
     obj = out / f"obj_d{DEPTH}_u{lu}_s{ls}_xu{xu}_xs{xs}_phi{phi}{'_qfd' if qfd else ''}{'_seqsu' if seqsu else ''}{('_' + define) if define else ''}{xdtag}"
     h = out / f"harness_phi{phi}{'_d50' if D50['on'] else ''}.cpp"
@@ -152,6 +160,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
     if RL["params"]:
         cmd += ["+define+OT_TP8S_REAL_LANES"] + [f"-G{k}={v}" for k, v in sorted(RL["params"].items())]
     if seqsu:cmd += ["+define+OT_TP8S_SEQSU"]
+    if WF["on"]:cmd += ["+define+OT_TP8S_WAVEFRONT"]
     if DEPTH != 8:
         cmd += [f"-GISSUE_DEPTH={DEPTH}"]
     if parent:
@@ -170,7 +179,7 @@ def build(out: Path, lu, ls, xu, xs, phi, define=None, qfd=False, parent=False, 
             all(prior.get(k)==v for k,v in dict(latu=lu,lats=ls,xu=xu,xs=xs,phi=phi,
               phy_ucie=PU,phy_serdes=PS,die_name_master=qfd,production_parent=parent,
               relays=list(relays),shared_ucie=shared,six_five=six_five,mutant=define,sequencer_face=seqsu,
-              die_lanes=list(XD['lanes']),valid_skew_port2=XD['ev2'],tok_reg=XD['tok_reg'],calendar_lane_cycles=list(XD['lx']),duty50=D50['on'],real_lanes=RL['params']).items())):
+              die_lanes=list(XD['lanes']),valid_skew_port2=XD['ev2'],tok_reg=XD['tok_reg'],calendar_lane_cycles=list(XD['lx']),duty50=D50['on'],real_lanes=RL['params'],wavefront_build=WF['on']).items())):
             return exe
     r = subprocess.run(cmd, capture_output=True, text=True)
     if r.returncode:
@@ -215,7 +224,35 @@ def main():
     ap.add_argument("--plusarg",action="append",default=[],help="extra +K=V for every case (negative controls TAGBAD=1 / TOKMUT=1)")
     ap.add_argument("--mu-cal", type=Path, help="MU-QWEN: JSON {cases: [{name, kind, cmds: [[cycle, mode, words], ...]}]} "
                     "from tools/qwen_static_schedule/mu_calendar (cycles relative; rebased to the stage start)")
+    ap.add_argument("--wavefront", type=Path, help="bind_reset.json / reset_offsets JSON {parts: {name: {release}}}: per-partition "
+                    "wavefront reset (+define+OT_TP8S_WAVEFRONT) with the stage START broadcast after the latest release")
+    ap.add_argument("--wf-start", type=int, default=130, help="START broadcast, clocks after the LATEST die rst_n (r3 carve: 130 "
+                    "= max_release 128 + 2); negative controls set it earlier")
+    ap.add_argument("--wf-skew", type=int, default=0, help="die g rst_n deasserts ((5g+3) mod 8) * SKEW clocks late (independent die resets)")
+    ap.add_argument("--wf-start-pin", type=int, default=0, help="decision 13c die START pin cycle S (CLOCK-RESET start broadcast): "
+                    "partitions release at max(die rst_n, S) + offset; 0 = pin tied high (plain wavefront)")
+    ap.add_argument("--wf-override", nargs="*", default=[], metavar="WF_X=V", help="negative controls: override one group's release")
     a = ap.parse_args()
+    if a.wavefront:
+        global START
+        rj = json.loads(a.wavefront.read_text())
+        parts = rj["parts"]
+        WF.update(on=True, src=str(a.wavefront), sha=hashlib.sha256(a.wavefront.read_bytes()).hexdigest(), map=WF_MAP,
+                  max_release=rj.get("max_release"), root=rj.get("root"))
+        WF["plus"] = {k: max(int(parts[p]["release"]) for p in ps) for k, ps in WF_MAP.items()}
+        for kv in a.wf_override:
+            k_, v_ = kv.split("=")
+            assert k_ in WF["plus"], k_
+            WF["plus"][k_] = int(v_)
+        WF["plus"]["WF_SKEW"] = a.wf_skew
+        last_rst = max(WF_D0 + 7 * a.wf_skew, a.wf_start_pin)   # latest release origin (die rst_n, or the START pin S)
+        WF["plus"]["WF_SPIN"] = a.wf_start_pin
+        START = last_rst + a.wf_start                          # the START broadcast (one cycle on every die)
+        WF["pw0"] = START - 20                                 # program write window: same distance to start as before
+        WF["start_rel"] = a.wf_start
+        latest = max(v for k, v in WF["plus"].items() if k not in ("WF_SKEW", "WF_SPIN"))
+        print(f"WAVEFRONT {a.wavefront} sha256 {WF['sha'][:12]} releases {WF['plus']} latest {latest} -> START {START} "
+              f"(= latest die rst_n {last_rst} + {a.wf_start}), PW0 {WF['pw0']}", flush=True)
     if a.mu_cal:
         global DEPTH
         MU["cases"] = json.loads(a.mu_cal.read_text())["cases"]
@@ -273,7 +310,7 @@ def main():
         rng = np.random.default_rng(100 + i)
         if mk == "mu":
             mc = next(c for c in MU["cases"] if c["name"] == name)
-            st_ = max(START, 20 + 2 * DEPTH + 1 + 8)          # the issuer is sealed before its start
+            st_ = max(START, WF["pw0"] + 2 * DEPTH + 1 + 8)   # the issuer is sealed before its start
             base = st_ + 8 - min(x[0] for x in mc["cmds"])
             modes = [int(x[1]) for x in mc["cmds"]]
             nw = [int(x[2]) for x in mc["cmds"]]
@@ -292,13 +329,14 @@ def main():
         (vec / "pw.hex").write_text("".join(f"{ad:03x}{d:016x}\n" for ad, d in pw))
         st_run = st_ if mk == "mu" else START
         args = [str(exe), f"+VEC={vec}", f"+NMSG={nmsg}", f"+NPW={len(pw)}", f"+START={st_run}", f"+FDIPHI={a.fdi_phase}"] + \
+               ([f"+PW0={WF['pw0']}"] + [f"+{k}={v}" for k, v in WF["plus"].items()] if WF["on"] else []) + \
                [f"+{k}={v}" for k, v in extra.items()] + [f"+{x}" for x in a.plusarg]
         run = subprocess.run(args, capture_output=True, text=True)
         txt = run.stdout
         (a.out / f"{name}.log").write_text(txt + run.stderr)
         m = RES.search(txt)
         lane_meas[name] = re.findall(r"^TP8SL_LANE .*$", txt, re.M)
-        passed = run.returncode == 0 and bool(m) and any(l.strip() == "PASS" for l in txt.splitlines())
+        passed = run.returncode == 0 and bool(m) and any(l.strip() == "PASS" for l in txt.splitlines()) and "WF_BAD" not in txt
         ok = (not passed) if a.expect_fail else passed
         g = m.groups() if m else None
         span = max(p["last_out"] for p in prog) - prog[0]["first_slot"] + 1
@@ -323,6 +361,9 @@ def main():
         die_lanes=list(XD['lanes']), valid_skew_port2=XD['ev2'], tok_reg=XD['tok_reg'], calendar_lane_cycles=list(XD['lx']), duty50=D50['on'],
         verilator=VERILATOR, verilator_version=subprocess.run([VERILATOR, '--version'], capture_output=True, text=True).stdout.strip(),
         expect_fail=a.expect_fail, production=a.production, issuer_depth=DEPTH, stage_start=START, cmd_pin_stages=int(a.qfd),
+        wavefront=(dict(source=WF["src"], sha256=WF["sha"], root=WF.get("root"), max_release=WF.get("max_release"),
+                        group_map=WF["map"], releases=WF["plus"], die_rst_n_cycle=WF_D0, start_after_latest_die_rst=WF["start_rel"],
+                        pw0=WF["pw0"], start_broadcast=START) if WF["on"] else None),
         modelled="PHY frame pipes only (fixed latency); all on-chip blocks are the real RTL masters",
         mechanism="compiler program -> fixed-issue core -> collective tokens -> IO calendar slots; no credits/ready/"
                   "backpressure; observed validity, CRC and publication are fault-only checks",

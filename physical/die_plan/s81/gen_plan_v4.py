@@ -510,6 +510,54 @@ CORE_CONNS = {
            "u_c.u_eg": _cc(**{"i_v,i_c,i_hh,i_kk,i_dd": ["core:u_c.u_xf"]})} for k in ("C:xrt1", "C:xrt3")},
 }
 CORE_CONNS_OUT = {}
+# S81/PORTFIX 10-25: the hard-core types CORE_CONNS does not list (landed frames: qbank / node / ROM / view cores; gunit;
+# bk_sel) take their core connectivity from inputs/core_conns_derived.json (core_conns_derive.py: yosys, cores black
+# boxes, only DIRECT core-core / core-module-port nets).  A module port maps to a type bus through the contents bind
+# ("bus:<bus>") or, for unbound contents, PF_PORT_BUS (the binder's port -> lane map; the unit fault output reaches flt_o0
+# through the die-level ring stop, soft, so it is not listed).
+CORE_CONNS_DERIVED = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs", "core_conns_derived.json")
+PF_PORT_BUS = {
+    "dsdv_gunit": {"cw_a": "unit_i0", "cw_d": "unit_i0", "cw_v": "unit_i0", "vi_s": "xtier_i0", "vi_n": "xtier_i1",
+                   "vo_s": "xtier_o0", "vo_n": "xtier_o1"},
+    "dsdv_bk_sel_vmtx": {"ca": "ca_i0", "cb": "cb_i0", "vi_idx": "idx_i0", "vi_s": "xtier_i0", "vi_n": "xtier_i1",
+                         "vo_s": "xtier_o0", "vo_n": "xtier_o1", "tl_o": "tl_o0",
+                         "tpn_o": "tp_o1", "tps_o": "tp_o0", "tpn_i": "tp_i0"},
+}
+
+
+def derived_core_conns(types):
+    """S81/PORTFIX: CORE_CONNS_OUT entries for every hard-core type with no hand-written CORE_CONNS key."""
+    if not os.path.exists(CORE_CONNS_DERIVED):
+        return
+    der = json.load(open(CORE_CONNS_DERIVED))
+    for tn, t in types.items():
+        if tn in CORE_CONNS_OUT or not t.get("hard_cores") or len(t.get("contents", [])) != 1:
+            continue
+        c = t["contents"][0]
+        d = der.get(c["module"])
+        if d is None:
+            continue
+        buses = {b["name"] for b in t.get("buses", [])}
+        pb = {k: v[4:] for k, v in (c.get("bind") or {}).items() if str(v).startswith("bus:")}
+        pb.update(PF_PORT_BUS.get(c["module"], {}))
+        hcs = {h["inst"] for h in t["hard_cores"]}
+        ent = {}
+        for ci, ports in d["cores"].items():
+            inst = c["inst"] + "." + ci
+            if inst not in hcs:
+                continue
+            for port, tgs in ports.items():
+                out = []
+                for tg in tgs:
+                    k, _, n = tg.partition(":")
+                    if k == "core" and c["inst"] + "." + n in hcs:
+                        out.append("core:" + c["inst"] + "." + n)
+                    elif k == "port" and pb.get(n) in buses:
+                        out.append("bus:" + pb[n])
+                if out:
+                    ent.setdefault(inst, {})[port] = sorted(set(out))
+        if ent:
+            CORE_CONNS_OUT[tn] = ent
 
 
 def nonframe_hc_key(p):
@@ -1186,7 +1234,7 @@ def build(ab):
              contents=[C("u_phy_hbm", "ot_hbm3e_phy_v41x_aw30_e8p5", "reuse",
                          note="hard HBM3E PHY 8500 x 1177 in a 6-cell S-edge slot (bump field at the die edge)")],
              ckey="phy"))
-    add(Part("iqf", "unit", 7, 0, contents=[C("u_iqf", "dsdv_idx_qf")], ckey="iqf"))
+    add(Part("iqf", "unit", 7, 0, contents=[C("u_iqf", "dsdv_idx_qfs")], ckey="iqf"))   # S81/IDXNET 10-25: qf + 2-beat qc serializer
     add(Part("seqhost", "unit", 10, 5, contents=[C("u_seqhost", "dsdv_seq_host_mux", "rework",
                                                   params={"TAP_K": "8'h00", "SINK_K": "8'h00", "SELECT_HBE": "1'b0"})],
              ckey="seqhost", note="GEOM-REVIEW2: seqhost beside the svc band; its slice/svc fan-out = ID rings"))
@@ -1296,7 +1344,11 @@ def build(ab):
                 else:
                     cont = []
                     ck = "slice_station"
-                p = add(Part("%s_%s" % (hn, role if role != "X" else "x%d%d" % (c - c0, r - r0)), "slice", c, r,
+                pname = "%s_%s" % (hn, role if role != "X" else "x%d%d" % (c - c0, r - r0))
+                if pname in PF_DROP_X:          # S81/PORTFIX: empty station cell (no lane), left free
+                    PF_FREE.append((c, r, pname))
+                    continue
+                p = add(Part(pname, "slice", c, r,
                              orient=orient, contents=cont, ckey=ck, group=hn))
                 p.role = role
                 segs[(c - c0, r - r0)] = p
@@ -1327,6 +1379,10 @@ def build(ab):
     chans.append(dict(rect_um=[X0 + 8 * PX, X0 + 19 * PY, X0 + 9 * PX, X0 + 20 * PY],
                       reason="free cell of the retired bk_col (S81/H4: no consumer in v4.8); top edge between lk_WN3 and "
                              "gunit, no lane routes here"))
+    for c, r, pname in PF_FREE:
+        chans.append(dict(rect_um=[X0 + c * PX, X0 + r * PY, X0 + (c + 1) * PX, X0 + (r + 1) * PY],
+                          reason="free cell (S81/PORTFIX 10-25): %s was an empty slice station (no lane passes it), top "
+                                 "edge; left free for die PG / decap" % pname))
     return parts, frames, serdes, slices, chans, svcg
 
 
@@ -1543,17 +1599,56 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
         L("tl__bk_sel__%s" % lp, "bk_sel", "tl_o", lp, "tl_i", 276, cls="tl", role="tree", path=("cells", up))
         L("ca__%s__bk_sel" % lp, lp, "ca_o", "bk_sel", "ca_i", 276, cls="ca", role="tree", path=("cells", up[::-1]))
         L("cb__%s__bk_sel" % lp, lp, "cb_o", "bk_sel", "cb_i", 276, cls="cb", role="tree", path=("cells", up[::-1]))
+        # ---- S81/IDXNET 10-25 (S81 DECISION 1, topk_final): the TP4 merge of the 4 rank roots, a two-step exchange with no
+        #      single root.  Step 1 swaps candidates with the d+2 peer over the s_7N TP circuit (pair A, both ways); step 2
+        #      sends to d+1 over s_7S and receives from d-1 over s_0S (pair A).  bk_sel's TX (dsdv_idx_tx re-encoder) feeds
+        #      tpn_o / tps_o by the TX job's DST field; the peer lists land on bk_sel tpn_i (s_7N) and, for s_0S, on the s_0N
+        #      lep's ca (tm_i merge: col 6 rows 15-18 are at face load 0.57, no 4th lane there; rows 9-13 are empty).
+        #      276 b each, registered, ft <= M7, fixed station-only paths (col 15 / row 18 / col 6 rows 9-13), routed last.
+        lp7n, lp7s, lp0s = (slices[k]["LP"].name for k in ("s_7N", "s_7S", "s_0S"))
+        c7n = (slices["s_7N"]["LP"].c0, slices["s_7N"]["LP"].r0)
+        c7s = (slices["s_7S"]["LP"].c0, slices["s_7S"]["LP"].r0)
+        c0s = (slices["s_0S"]["LP"].c0, slices["s_0S"]["LP"].r0)
+        bke = (P["bk_sel"].c0 + P["bk_sel"].nc - 1, P["bk_sel"].r0)        # bk_sel E cell, S face
+        tpn = [bke, (bke[0], 18), (c7n[0], 18), c7n]
+        L("tp__bk_sel__%s" % lp7n, "bk_sel", "tpn_o", lp7n, "tp_i", 276, cls="tp", role="idxnet", path=("cells", tpn))
+        L("tp__%s__bk_sel" % lp7n, lp7n, "tp_o", "bk_sel", "tpn_i", 276, cls="tp", role="idxnet", path=("cells", tpn[::-1]))
+        L("tp__bk_sel__%s" % lp7s, "bk_sel", "tps_o", lp7s, "tp_i", 276, cls="tp", role="idxnet",
+          path=("cells", [bke, (bke[0], 18), (c7s[0], 18), c7s]))
+        L("tp__%s__%s" % (lp0s, lp), lp0s, "tp_o", lp, "tm_i", 276, cls="tp", role="idxnet", path=("cells", [c0s, lpc]))
+        # ---- S81/IDXNET 10-25 (S81 DECISION 2, rank-tree query fan-out): iqf (dsdv_idx_qf) <-> the s_0N lep.  ql (513 b,
+        #      every Q word received from stage PREV) and qc (the root's own tree frame, 2-beat 258 b {256 data, beat, v}: a
+        #      513-b qc would put the s_0S_LP S face at 0.607 > 0.60).  Path iqf -> svc_0 (S in, W out) -> col 6 north
+        #      (s_0S_x00..x05, s_0S_LP, s_0S_x07..x09, s_0N_x00/x01) -> s_0N_LP S face; column 7 above svc_0 is leaves/hubs
+        #      already over 0.6.  The lep relays Q frames NEXT-ward itself (cut-through, header relay count), qc1 is gone.
+        iqc = (P["iqf"].c0, P["iqf"].r0)
+        qp = [lpc, (lpc[0], iqc[1] + 2), (iqc[0], iqc[1] + 2), iqc]
+        L("ql__%s__iqf" % lp, lp, "ql_o", "iqf", "ql_i", 513, cls="ql", role="idxnet", path=("cells", qp))
+        L("qc__iqf__%s" % lp, "iqf", "qc_o", lp, "qc_i", 258, cls="qc", role="idxnet", path=("cells", qp[::-1]))
     # ---- ID rings (no tie-offs): slice sid + fault OR, svc sid; counted (sid_o = sid_i + 1), rooted at seqhost ----
     order_s = [slices["s_%dS" % k]["C"].name for k in range(7, -1, -1)] + \
               [slices["s_%dN" % k]["C"].name for k in range(8)]
     ring = ["seqhost"] + order_s + ["seqhost"]
+    # S81/PORTFIX 10-25 (S81 DECISION 4): the rings carry ONE bit, the sticky fault OR (ot_s81_frs ring stops: fo <=
+    # fi | own sticky fault), into seqhost (sid_ri / vid_ri), which reports the die fault word to the host in-band.  The
+    # slice / svc ids stay declared position straps (partition parameters), so the 4-b id field is gone: sid 5 -> 1 b,
+    # vid 4 -> 1 b (v4.8 only; the v4.7 route replay keeps the old widths so no v4.7 lane moves).
     for a, b in zip(ring, ring[1:]):
         L("sid_%s__%s" % (a, b), a, "sid_o" if a != "seqhost" else "sidr_o", b, "sid_i" if b != "seqhost" else "sidr_i",
-          5, kind="ctl", cls="sid", role="sid")
+          5 if v47 else 1, kind="ctl", cls="sid", role="sid")
     svc_ring = ["seqhost"] + ["svc_%d" % n for n in list(range(0, 16, 2)) + list(range(15, 0, -2))] + ["seqhost"]
     for a, b in zip(svc_ring, svc_ring[1:]):
         L("vid_%s__%s" % (a, b), a, "vid_o" if a != "seqhost" else "vidr_o", b, "vid_i" if b != "seqhost" else "vidr_i",
-          4, kind="ctl", cls="vid", role="vid")
+          4 if v47 else 1, kind="ctl", cls="vid", role="vid")
+    # S81/PORTFIX 10-25 (DECISION 4): 1-b unit fault feeders into the nearest ring stop (a short unit chain): units with
+    # no ring stop of their own (iqf, eng, the HBM PHY macro k_oor, bk_sel, gunit) and each lep LP partition (MU
+    # lane-landing fault) -> the adjacent ring member.  bk_sel -> gunit -> s_3N_C is the top-edge unit chain.
+    if not v47:
+        feed = [("iqf", "svc_0"), ("eng", "svc_14"), ("phy_hbm", "svc_8"), ("bk_sel", "gunit"),
+                ("gunit", slices["s_3N"]["C"].name)] + \
+               [(slices[h]["LP"].name, slices[h]["C"].name) for h in ("s_0N", "s_0S", "s_7N", "s_7S")]
+        for a, b in feed:
+            L("flt__%s__%s" % (a, b), a, "flt_o", b, "flt_i", 1, kind="ctl", cls="flt", role="flt")
     fmap = dict(frames=fmap, inst_part={("u_" + k): v for k, v in svc_part.items()},
                 slice_part={("u_" + hn): dict(C=sl["C"].name, LP=sl["LP"].name if sl["LP"] is not None else None)
                             for hn, sl in slices.items()})
@@ -1577,12 +1672,12 @@ UNIT_CORES = {
     "gunit": ([("l0_l1_l2", 8213 + 110419 + 9853 + 43954 + 8215), ("l3_l4", 40887 + 81348 + 73342),
                ("l5f", 97736)], "dsdv_gunit = sum of closed leaves (instance counts not confirmed)"),
     "bk_sel": ([("bksel_c_pa", 260094), ("bksel_q01", 2 * 113262), ("bksel_q23", 2 * 113262),
-                ("bkg_tx_vmux", 2 * 25144 + 31602 + 3547)], "dsdv_bk_sel_vmtx parts (whole pa_lp 1,243,436)"),
+                ("bkg_tx_vmux", 2 * 25144 + 31602 + 3547 + 2600)], "dsdv_bk_sel_vmtx parts (whole pa_lp 1,243,436); S81/IDXNET 10-25 +2,600 est: dsdv_idx_vmux6 2 more inputs + tl/tpn/tps/loop regs 4 x 276"),
     "bk_col": ([], "bk_col FLATTENED: Yosys (PLAN-S81v4-SYN 10-23, ORFS asap7lock RVT) dsdv_bkcol_l 15,770 x4 (2 SRAM "
                "each) + dsdv_bkcol_m 73,514 + bk_g 2 x 25,144 measured = 186,882 cells, 8 SRAM macros"),
     "seqhost": ([("sh_children", 6989 + 11889 + 69671 + 40770)], "seq_host_mux children (sh_vc, mu_hslot, mu_hwin, "
                 "seq_host_c_r3_lp); whole MISSING"),
-    "iqf": ([("idx_qf", 11296)], "dsdv_idx_qf 11,296 (F gold2)"),
+    "iqf": ([("idx_qf", 11296 + 540)], "dsdv_idx_qf 11,296 (F gold2) + S81/IDXNET qc serializer ~540 (256 hold + 258 out + copies) - qc1 513 flops not removed from the estimate (conservative)"),
 }
 
 
@@ -1881,16 +1976,24 @@ def route_v48(grid, lanes47, lanes):
             todo.append(lk)
     # S81-XDIE 10-24: the copy-A/B reserve pair lanes route LAST, on top of every v4.8 load, so no existing lane moves
     rsv = [l for l in todo if RESERVE_RE.search(l["id"])]
-    tree = [l for l in todo if l["role"] == "tree"]
-    res.update(route(grid, [l for l in todo if l not in rsv and l not in tree], {}))
+    tree = [l for l in todo if l["role"] in ("tree", "idxnet")]
+    late = [l for l in todo if l["role"] in ("sid", "vid", "flt")]
+    res.update(route(grid, [l for l in todo if l not in rsv and l not in tree and l not in late], {}))
     res.update(route(grid, rsv, {}))
     # S81/H4 10-24: the bk_sel tree lanes (fixed station path) are applied after every other lane: no lane moves
     res.update(route(grid, tree, {}))
+    # S81/PORTFIX 10-25: the 1-b fault ring / feeder lanes (resized sid / vid, new flt) route after every other lane
+    res.update(route(grid, late, {}))
     ROUTE_V48.update(kept=len(res) - len(todo), rerouted=sorted(l["id"] for l in todo))
     return res
 
 
 ROUTE_V48 = {}
+# S81/PORTFIX 10-25 (S81 DECISION 5): PORTBIND audit EMPTY_PARTITION s_1N_x06 / s_5N_x06.  s_1N_x06 is REUSED: the
+# S81/H4 bk_sel tree lanes tl / ca / cb cross it on row 18 (3 ft slots).  s_5N_x06 carries no lane: it is not a
+# partition; build() leaves it as a free cell (chans)
+PF_DROP_X = {"s_5N_x06"}
+PF_FREE = []
 TYPE_NAMES_OUT = {}
 RESERVE_RE = re.compile(r"lk_(WS[23]|EN[23])\b")
 
@@ -2490,15 +2593,29 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 FT_MACRO_ADD.append(dict(type=tn_, slot=s_["name"], stations=[s_["stations"], s_["stations"] + a_],
                                          why="core escape at the 405-um kit reach"))
                 s_["stations"] += a_
-    from tools.die_plan.ft_sites import place as place_ft_bits
+    from tools.die_plan.ft_sites import place as place_ft_bits, reuse as reuse_ft_bits
     from tools.die_trial.legal_sites import RowAllocator
-    STATS_V4["frame_ft_bit_sites"], _ = place_ft_bits(
-        plan, RowAllocator, types=[n for n in plan["partition_types"] if n.startswith("col_")],
-        reach_um=FT_KIT_REACH_UM, margin=.98)
+    # Every core field needs explicit row-legal FT bit sites, not just frames.
+    # Retain unchanged committed sites so routine plan regeneration does not
+    # repeat the same allocation. Any physical/clock/reset contract change
+    # invalidates the seed and runs the exact allocator again.
+    ft_types = [n for n, t in plan["partition_types"].items() if t.get("hard_cores") and t.get("ft_slots")]
+    seed_path = Path(__file__).with_name("die_plan.json")
+    reused = reuse_ft_bits(plan, json.load(open(seed_path)), types=ft_types) if seed_path.is_file() else []
+    STATS_V4["ft_bit_sites_reused"] = reused
+    STATS_V4["ft_bit_sites"], _ = place_ft_bits(
+        plan, RowAllocator, types=[n for n in ft_types if n not in reused], reach_um=FT_KIT_REACH_UM, margin=.98)
+    STATS_V4["frame_ft_bit_sites"] = [x for x in STATS_V4["ft_bit_sites"] if x["type"].startswith("col_")]
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
     json.dump(TYPE_NAMES_OUT, open(out / "type_names.json", "w"), indent=0, sort_keys=True)
+    # S81-PORTS 10-25: the derived connectivity turns on R3-INTERNAL internal_station / core_faces checks for the 13
+    # landed col_h* frames + bk_sel + gunit (Codex faultfinal G0C: 4766 + 84 ERRORs, all pre-existing core-pair hops
+    # > 405 um with no internal_stations[] entry; the missing-cores / core-relay lane owns them).  It is a separate
+    # gate expansion, not part of the fault-feeder plan delta: opt-in until that lane adopts it.
+    if os.environ.get("OT_S81_DERIVED_CORE_CONNS") == "1":
+        derived_core_conns(plan["partition_types"])
     if CORE_CONNS_OUT:
         json.dump(CORE_CONNS_OUT, open(out / "core_conns.json", "w"), indent=0, sort_keys=True)
     json.dump(dict(note="S81-P9-HC: non-frame types over %d cells: hard cores emitted / residual soft cells / gaps (children "

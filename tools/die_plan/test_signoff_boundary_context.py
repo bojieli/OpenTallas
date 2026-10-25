@@ -62,24 +62,29 @@ def test_uniform_guard_honors_exact_one_station_contract(tmp_path):
     assert signoff.run_face_guard(disc)['fail_counts'] == {'merged': 2}
 
 
-def test_uniform_guard_preserves_wavefront_reset_controls(tmp_path):
-    # A registered reset output can also drive a local reset relay. The canonical guard skips this
-    # typed-by-name control in raw preflight; final signoff must preserve the same contract.
+def test_uniform_guard_checks_wavefront_reset_outs(tmp_path):
+    # S81-PLAN2/STFG 10-25: a registered wavefront rst_o_<k> is a partition pin and needs ONE dedicated relay (owner rule:
+    # register every partition pin, no shared fanout).  The old canonical skip of rst_o_* hid a dangling ORFS insbuf
+    # BUF on every relay (gen_rtl ot_dp_rrelay keep-alias) -> 'shared 1-2' on every routed S81 station.
     net = NET_OK.replace('top(clk, a, o)', 'top(clk, a, o, rst_o_0)').replace(
         'input clk;', 'input clk; output rst_o_0;')
-    reset = r"""
-  wire reset_q; wire reset_local;
-  DFFHQNx1_ASAP7_75t_R \u_rrl_0.r$_DFF_P_  (.CLK(clk), .D(1'b1), .QN(reset_q));
+    dedicated = r"""
+  wire reset_q;
+  DFFHQNx1_ASAP7_75t_R \u_rrl_0.q$_DFF_P_  (.CLK(clk), .D(1'b1), .QN(reset_q));
   INVx3_ASAP7_75t_R reset_out (.A(reset_q), .Y(rst_o_0));
-  DFFHQNx1_ASAP7_75t_R \u_rrl_1.r$_DFF_P_  (.CLK(clk), .D(reset_q), .QN(reset_local));
 """
-    net = net.replace('endmodule', reset + '\nendmodule')
     synth = tmp_path / 'synth.v'
-    synth.write_text(net)
+    synth.write_text(net.replace('endmodule', dedicated + '\nendmodule'))
     disc = dict(kit=str(tmp_path), synth=str(synth))
     r = signoff.run_face_guard(disc)
-    assert r['verdict'] == 'PASS' and r['checked'] == 4, r
-    # A similarly named data output is not exempt and must still expose the shared boundary flop.
-    synth.write_text(net.replace('rst_o_0', 'rst_data_0'))
+    assert r['verdict'] == 'PASS' and r['checked'] == 5, r
+    # mutant 1: the rst_o relay also feeds a local relay (shared pin register)
+    shared = dedicated + "  DFFHQNx1_ASAP7_75t_R \\u_rrl_1.q$_DFF_P_  (.CLK(clk), .D(rst_o_0), .QN(reset_local));\n"
+    synth.write_text(net.replace('endmodule', 'wire reset_local;' + shared + '\nendmodule'))
     r = signoff.run_face_guard(disc)
-    assert r['verdict'] == 'FAIL' and r['fail_counts'].get('shared'), r
+    assert r['verdict'] == 'FAIL' and r['fail_counts'].get('shared') == 1, r
+    # mutant 2: the old keep-alias cell -- a dangling BUF q->r on the relay output
+    alias = dedicated + "  wire reset_r;\n  BUFx2_ASAP7_75t_R keep_alias (.A(rst_o_0), .Y(reset_r));\n"
+    synth.write_text(net.replace('endmodule', alias + '\nendmodule'))
+    r = signoff.run_face_guard(disc)
+    assert r['verdict'] == 'FAIL' and r['fail_counts'].get('shared') == 1, r

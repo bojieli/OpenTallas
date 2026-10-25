@@ -1,0 +1,7 @@
+{
+ "verdict":"PREVIOUS_C1_RELEASE_WITNESS_INVALID_FOR_PRODUCTION",
+ "cause":"C1 model assumed direct V partner for every column. Column4 traverses seqhost/bk_sel and additional links; V_ASM was incomplete.",
+ "affected":"release_solution.json and incomplete joint0..6 search",
+ "search":"Stopped own process after640000 complete candidates; no infeasibility claim. Partial result retained remotely.",
+ "next":"TOK-DS reconstructs full V assembly paths, then regenerate C8 report and solve with fail-closed v_paths_complete/v_assembly_age metadata."
+}
