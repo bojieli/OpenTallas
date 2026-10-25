@@ -206,6 +206,7 @@ if {[llength $ct_taps] >= 2} {
       foreach tp $ct_taps {
         if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] >= $ct_cap} continue
         set d [expr {abs($x - [lindex $tp 2]) + abs($y - [lindex $tp 3]) - $d0}]
+        if {[info exists ::env(OT_TAP_REASSIGN_UM)] && $d+$d0 > $ct_maxx} continue
         if {$best eq "" || $d < $bd} { set best $tp; set bd $d }
       }
       if {$best ne "" && $bd <= $ct_maxx} { lappend cand [list $bd $it $best] }
@@ -223,6 +224,14 @@ if {[llength $ct_taps] >= 2} {
         foreach tp $ct_taps {
           if {[lindex $tp 0] eq $on || [llength [dict get $ct_by [lindex $tp 0]]] + [llength $its] > $ct_cap} continue
           set d [expr {abs($cx - [lindex $tp 2]) + abs($cy - [lindex $tp 3]) - $d0}]
+          if {[info exists ::env(OT_TAP_REASSIGN_UM)]} {
+            set far 0
+            foreach it $its {
+              lassign [[$it getInst] getLocation] gx gy
+              if {abs($gx-[lindex $tp 2])+abs($gy-[lindex $tp 3]) > $ct_maxx} {set far 1; break}
+            }
+            if {$far} continue
+          }
           if {$d <= $ct_maxx && ($gbest eq "" || $d < $gbd)} { set gbest $g; set gbd $d; set gtgt $tp }
         }
       }
