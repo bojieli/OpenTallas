@@ -551,7 +551,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     (kd / "make_tracks.tcl").write_text(make_tracks_tcl(P))
     (kd / "constraint.sdc").write_text(sdc(P, tn, pins))
     (kd / "prects_estimate.tcl").write_text(clock_phase_tcl(P, tn))
-    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True))
+    import reset_tree as RT
+    leaf_check = ""
+    if RT.pipelined(P) or RT.wavefront(P):
+        leaf_check = (f"\nset rt_postplace 1\nset rt_leaf_reach_um {RT.relay_um(P):g}\n"
+                      "source /work/reset_taps.tcl\nunset rt_postplace\n")
+    (kd / "pre_cts.tcl").write_text(clock_phase_tcl(P, tn, before_cts=True) + leaf_check)
     # CP1-R10 / COORD 10-24: fail-closed SDC lint at kit generation (units, clocks, max+min IO delays, hold,
     # 60/25 uncertainty once per seam, no relaxed periods / exceptions); run_kit.sh re-runs it with the image liberty
     import sdc_lint
