@@ -907,6 +907,8 @@ module qfd_dv_s1_delay #(parameter integer W = 32, D = 3, FLOP = 0) (
         qfd_dv_s1_sram_delay #(.W(W), .D(D)) u (.clk(clk), .rst_n(rst_n), .d(d), .q(q));
     end endgenerate
 endmodule
+// MIF1 explicitly sizes the existing133-bit S2 ring at17edges (2128slot bits, +133).
+// Other shapes retain the2048-bit engineering bound; price qwen_sram_if_mif_model.
 // flop ring: 16-bit slices (each pointer drives N slot compares; each slot select drives <= 32 loads), own leaf
 // relays fed by the reset branch rbr (leaves at depth 4 like every other leaf, <= 32 pointer sinks each)
 module qfd_dv_s1_flop_ring #(parameter integer W = 32, D = 3) (
@@ -924,7 +926,7 @@ module qfd_dv_s1_flop_ring #(parameter integer W = 32, D = 3) (
         qfd_dv_s1_ring_slice #(.W(SW), .N(N)) u_s (.clk(clk), .rst_n(lf[k / SPL]), .d(d[16*k +: SW]), .q(q[16*k +: SW]));
     end
 `ifndef SYNTHESIS
-    initial if (D < 3 || D > 33 || W * (D - 1) > 2048) $fatal(1, "S1_FLOP_RING unsupported shape W %0d D %0d", W, D);
+    initial if (D < 3 || D > 33 || (W * (D - 1) > 2048 && !(W == 133 && D == 17))) $fatal(1, "S1_FLOP_RING unsupported shape W %0d D %0d", W, D);
 `endif
 endmodule
 (* keep_hierarchy *)

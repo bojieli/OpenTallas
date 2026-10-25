@@ -17476,3 +17476,30 @@ def qwen_release_programme_store_candidate_model():
     """Finite SU/MU programme storage; physical/native gates remain mandatory."""
     from uarch_model_qwen_programme_store import model
     return model()
+
+
+def qwen_sram_if_mif_model(lanes=8, slices=12, su_commands=0):
+    """Incremental price of the opt-in MIF1 SRAM parent; no release-rate credit.
+
+    Existing SRAM ports, arithmetic/reduction order, and steady-state issue width
+    are unchanged. A fetched SU command launches one edge later; every memory
+    reply and its consuming head metadata land one additional edge later.
+    """
+    if lanes < 1 or slices < 1 or su_commands < 0:
+        raise ValueError("positive geometry and nonnegative command count required")
+    return dict(schema="opentallas.qwen.sram-if-mif.v1",
+                status="CANDIDATE_NOT_ADOPTED",clock_ps=833,
+                memory_read_extra_edges=1,memory_write_extra_edges=1,
+                program_fetch_start_extra_edges=1,head_reply_extra_edges=1,
+                predicted_serial_extra_edges_per_su_command=2,
+                predicted_serial_extra_edges=2*su_commands,
+                minimum_post_table_write_extra_boot_edges=1,
+                added_parent_state_bits_per_slice=lanes*(8+133)+1,
+                added_parent_state_bits_total=slices*(lanes*(8+133)+1),
+                extra_head_ring_shape=dict(width=133,depth=17,slot_bits=2128,
+                                           prior_depth=16,added_slot_bits=133),
+                SRAM_MIF_state_bits="already in the independently measured leaf MIF1 variants; not recounted here",
+                arithmetic_MACs_per_cycle_delta=0,memory_port_count_delta=0,
+                throughput="same streaming issue width; measured compiler ages required before adoption",
+                physical="parent/head changed views require new833ps TT/FF signoff and slot-fit/area measurement",
+                qualification="group read/write exact; head/control and full source-bound schedule gates mandatory")
