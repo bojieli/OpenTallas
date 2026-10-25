@@ -211,3 +211,34 @@ Signed off: 0 of 16.
 2026-10-25 15:04 PDT PATH-HBM/HUBNW2: claude/path-hbm-hubnw-1025@2d5c3c1f38 = TKM spill fix (COORD ruling 3): W end re-floorplanned edge | body, TX on body N face. edge 190.08x1054.08 @(34.56,250.56) W-band strip (W face = link windows, reserved seg 3681 pins; E face face-to-face w/ body W, edge->body max 163 um); body_core 578.88x1054.08 @(241.92,34.56) (top 17.28 under FIRM TX, E 17.28 W of reduce). _place_prio reserves body N seg under TX: TKM 2488/2488 bits on N, 0 stations each (min=max, asserted), max pin->TX 149 um. Body faces N3188/S2394/E5878/W4572 (5.51/4.14/5.58/4.34 per um), perimeter slack 1.135 @5.6 (old 1.19; E face full) -- OPEN. Edge E4458/W3681 slack 1.70; VM unchanged (S/E 5.56, body<->VM still ~1.9 mm). Worst new hop 359.1, worst 372.0 (L96_o, pre-existing). Plan epyc1 /srv/opentallas-scratch2/claude/path-hbm/hubnw2_1025/plan (on tkmclk_1025, sha 17f1bc3315) G0 PASS 0 / G0C 24 = base (identical error set). Render hubnw2_1025/q_hub_nw_west.png (viewed).
 2026-10-25 15:23 PDT PATH-HBM/NE2: DONE claude/path-hbm-ne2-1025@f146eb5bf7. NE coll body NLINK2 split: body_n2 231,533 + vm 69,222 cells (both <=260k), every cut pin registered. Lockstep vs unsplit q2 NLINK2: 4/4 PASS, mutants 1-4 caught, m5 (vmasm_sel[0]) not covered by the stimulus. Plan step path_hbm_q_hub_ne.py on stack_1025 -> ne2_1025/plan: q_hub renamed q_hub_ne; body/vm adjacent, so body-vm and body-reduce need no stations; no lane latency change; G0 0, G0C 24 (same as base). Open: body<->ring_ag is 7.5 mm with 25 stations (qid inherited; ring_fault 1 b is new; same on NW). Render: ne2_1025/q_hub_ne.png
 2026-10-25 15:39 PDT PATH-HBM/ROOTEP: claude/path-hbm-rootep-1025@2f19f85439 path_hbm_root_ep.py (+root_ep_trace.py, render_root_ep.py) = COORD 14:44 (2). Root placeholder for L12/L12m/L13/L13m/L62/L62m/L74m/L89/L89m replaced by a typed bit map traced in the r18h5 as-built netlist (all 2,9xx mapped bits verified, fold SW/NW->NW_hub, SE/NE->NE_hub): L12_o = idx_link.tx2180+tx_v4 -> cij, ctl.cq338 + argmax.cq338 -> hb_vms, ctl.vm_rq136 -> vmb (OPEN 147); L12m_o = link.tx/tx_v (OPEN 959); L13_o = TKM return [571:0] + ctl.index_rr2056 -> idx_op (OPEN 515); L13m_o NO real driver (OPEN 3143); L62/L62m = col_idx pw/start/prm -> qctl/op (324; m +ready/active/fault/nan_flag + 2 hc tail fault UNVERIFIED) ; L89_i = qfault + nwsh c_fault (OPEN 64); L89m_i = qfault (OPEN 65); L74m_i = col_idx cfg/desc/launch <- hleaf (279, OPEN 2062). UNLANED (COORD?): 2740 b real NW_hub->root inputs (ctl.cr274, argmax.cr274, ctl.index_rq136, ctl.vm_rr2056) -- L74 is TKM-only since HUBNW. Plan epyc1 /srv/opentallas-scratch2/claude/path-hbm/rootep_1025/plan (on stack2_1025): root cut_v 0.701 -> 0.302 (y 1067), cut_h 0.33 -> 0.206; G0 PASS 0 / G0C 24 (= base; root core_faces 61 -> 60); 40 chains / 268 stations, worst hop 359.8, lane cycles unchanged. Render rootep_1025/rootep_root_bottom.png (viewed).
+
+## PARKED 2026-10-25 15:56 PDT (PATH-HBM lead, fresh 14:44)
+Sign-off: 0 of 16 signed off.
+Branches (all pushed; worktrees removed):
+- Plan: claude/path-hbm-plan-1025@3dd2905a27. This is f48e2effa0 + HUBNW2 + TKMCLKBUF (+ cond (1) halo/LL fix) + TKMNOID + NE2 + ROOTEP.
+- RTL: claude/hbm-tkm-noid-1025@8b9ec6b43c (tile_tid dropped). Sources: claude/path-hbm-{hubnw,ne2,rootep}-1025.
+Final plan: epyc1:/srv/opentallas-scratch2/claude/path-hbm/stack5_1025/plan (sha f2859a48f5b6), built by run.sh from hubnw2_1025/plan through the steps clkbuf, noid, q_hub_ne (cells 231533/69222) and root_ep.
+- G0 0 / G0C 24 (= base).
+- Root cut_v 0.701 -> 0.302, cut_h 0.33 -> 0.206.
+- q_hub_nw 3.628/0.913 and q_hub_ne 3.656/0.929 vs Codex q_hub 3.649/0.873. The hub-end conns are still the placeholder.
+Live jobs:
+- G2 probes on epyc1, all via ot-run: g2_1025/gen/part_q_hub_nw (173 GB), g2_1025/gen/part_q_b101_nw, g2_1025/gen4/part_root (stack4 = stack5 minus the buffer LL). Collect with: proto_sweep.py collect <gen dir> --json ...
+- syn_cand on epyc1: pid 3856448, unit oth-ubuntu-3855900-1792950234, ~5 h, 75 GB, r5fan/syn_cand.log. Leave it running, then commit the logs and delete r5kit/r5fan on epyc1/epyc2/intel1.
+- root_delivered LEC on intel2: pid 3843244, codex-hbm-physical-1309/root_delivered_v1.
+- epyc1 pid 533011 (lec on the superseded root_k d944a428): kill by PID if it has not finished.
+- Autopilot rows for kits_chain3 (idpin 93d312ab, terminal 0152034d, root 40c00634): these are chain2 pins + only the TKMCLK clk moves, geom_ref GEOM-REVIEW-2 14:48. The chain2 rows are SUPERSEDED.
+Results:
+- GEOM PASS-COND [PATH-HBM-TKMCLK] 14:48.
+- GEOM PASS-COND [PATH-HBM-TKMCLKBUF] 15:24. Cond (1) is fixed. Still open: (2) leg slew TT/FF, (3) tile31->root return pair in the audit, (4) CLOCK-RESET ACK (lanes/CLOCK.md 15:02, no reply yet).
+- Yosys proof (no LEC yet): tile_tid has 0 loads, and DFF counts are equal (950/344) old vs new.
+- NE2 lockstep: 4/4 PASS, mutants 1-4 caught, m5 vmasm_sel[0] uncovered.
+Next:
+- Collect G2. Then get the GEOM verdict on [PATH-HBM-R1DELTA] 15:5x.
+- Re-place q_hub_nw NE2-style. HUBNW2 puts body<->VM 1.9-2.1 mm apart, which means master-internal stations and a cycle change.
+- Type the hub-end core_conns (the mirror of ROOTEP).
+- Answer cond (2)/(3).
+- After the build_split_tops tkm_tile recipe emits the noid RTL, build the TKMNOID kits (no ID pin) and run kit LEC old vs new.
+- Then ONE READY.
+OWNER?/COORD? (COORD-REVIEW-QUEUE 15:5x):
+- 2740 b of NW_hub->root idx traffic (ctl.cr, argmax.cr, index_rq, vm_rr) have no lane since L74 went TKM-only. Either add a lane or widen L74, or retire these paths.
+- Lane width-cut candidates: L13m, L74m, L12m, L89/m.
