@@ -184,3 +184,4 @@ PARKED 2026-10-25 14:17 PDT PATH-KV-SYSC: GEOM REQ posted (plan-level); no kit/j
 - branch claude/path-kv-astk2-1025@dfb6643d6e (pushed; superseded in substance by codex/kv-astk2-1309). Worktree removed. Scratch epyc1 path-kv/astk2 (W2r synth+LEC kit kept for reference; miter_w2r logs).
 - Live jobs: none. Old W2/W1 kit data deleted (failed-job rule).
 - Open (on the Codex z3/CTS1 line): FF hold IO basis (in_min -40 padding, FLOW F1); zn_0 head zq read-select fan-out (zi land on pin flops; replicas need +1 cycle or pin copies, OWNER-free choice for KV lead); miter lo_r coverage (add equality-biased T stimulus).
+2026-10-25 14:18 PDT PATH-KV-ASTK2: note: KEEP epyc1 path-kv/astk2/W2r (Codex astk_cts1/cts_successor_freeze.json cites W2r/lec/lec.json); old path-kv/astk/W2+W1 deleted; worktree removed.
