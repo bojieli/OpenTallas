@@ -1,0 +1,6 @@
+# IO-HOLD option A A/B, FF post-CTS hold gate re-timed on the SAME 4_cts.odb (flow canary 863d618928b6 kits, epyc1:/srv/opentallas-scratch2/claude/flow-canary/runs/*_863d61892_1025_092230_543931); A = legacy in_min -40 on every input, B = per-port sender guaranteed output-min +12.5 (OT_IO_HOLD=sender_min, io_hold_<type>.tcl); census = every FF hold-violating endpoint by class
+kit	A_ports	gate_A_wns	gate_A_ep	gate_B_wns	gate_B_ep	IN_REG_A_ep	IN_REG_A_tns_ns	IN_REG_B_ep	IN_REG_B_tns_ns	R2R_A/B	residual_class
+s81_head/hd_turn_a	1/1	-78.43	567	-78.43	108	567	-20.17	108	-0.61	0/0	t_i 107 + arst_n 1 (fallback -40): late capture
+qwen_compute/coll_ftm	24/24	-144.80	2333	-144.80	908	2330	-119.53	906	-7.50	3/3	out_data_rd_wi_i 513 + crec_tx 204 + fltvc 71: late capture taps (CTS class 5ac03806f)
+qwen_kvsys/kv3_io_ft	4/4	-124.84	1053	-113.74	1053	1053	-112.06	1053	-56.83	0/0	all ft inputs: capture ~285 vs vclk 202.5 (empty taps t4-t7, CTS class)
+s81/slice_station__t12	3/3	-311.79	690	-311.79	690	688	-114.13	688	-78.07	2/2	CTS regression class (-311.8)

@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.io_hold_parent.v1",
+ "plan": null,
+ "mode": "flat",
+ "verdict": "INCOMPLETE",
+ "counts": {
+  "a_ports": 2,
+  "fail": 0,
+  "not_timed": 2,
+  "pass": 0
+ },
+ "worst": {
+  "port": "fW0_p1_b0->fW0_p1_b1/frame_int_i1",
+  "src": "fW0_p1_b0",
+  "dst": "fW0_p1_b1",
+  "dst_type": "fW0_p1_b1",
+  "src_type": "fW0_p1_b0",
+  "bus": "frame_int_i1",
+  "in_min_ps": null,
+  "basis": "--all-seams",
+  "hold_ff_ps": 97.636,
+  "neg": 0,
+  "tns_ps": 0.0,
+  "worst_from": "fW0_p1_b0/u_bout_frame_int_o0/q[963]$_DFF_P_/CLK",
+  "worst_to": "fW0_p1_b1/u_bin_frame_int_i1/q[963]$_DFF_P_/D",
+  "status": "NOT_TIMED",
+  "why": "no related-pair skew (CPPR) at TT in die_sta (rerun with the current die_sta.py); no related-pair skew (CPPR) at FF in die_sta (rerun with the current die_sta.py)"
+ },
+ "kit_types": [],
+ "gate": "every plan port into an IO-HOLD A input: FF seam hold >= 0 (25 ps unc, CPPR, real propagated trees) and related pair skew with CPPR <= 80 ps at TT and FF",
+ "ports": [
+  {
+   "port": "fW0_p1_b0->fW0_p1_b1/frame_int_i1",
+   "src": "fW0_p1_b0",
+   "dst": "fW0_p1_b1",
+   "dst_type": "fW0_p1_b1",
+   "src_type": "fW0_p1_b0",
+   "bus": "frame_int_i1",
+   "in_min_ps": null,
+   "basis": "--all-seams",
+   "hold_ff_ps": 97.636,
+   "neg": 0,
+   "tns_ps": 0.0,
+   "worst_from": "fW0_p1_b0/u_bout_frame_int_o0/q[963]$_DFF_P_/CLK",
+   "worst_to": "fW0_p1_b1/u_bin_frame_int_i1/q[963]$_DFF_P_/D",
+   "status": "NOT_TIMED",
+   "why": "no related-pair skew (CPPR) at TT in die_sta (rerun with the current die_sta.py); no related-pair skew (CPPR) at FF in die_sta (rerun with the current die_sta.py)"
+  },
+  {
+   "port": "fW0_p1_b1->fW0_p1_b0/frame_int_i0",
+   "src": "fW0_p1_b1",
+   "dst": "fW0_p1_b0",
+   "dst_type": "fW0_p1_b0",
+   "src_type": "fW0_p1_b1",
+   "bus": "frame_int_i0",
+   "in_min_ps": null,
+   "basis": "--all-seams",
+   "hold_ff_ps": 136.273,
+   "neg": 0,
+   "tns_ps": 0.0,
+   "worst_from": "fW0_p1_b1/u_bout_frame_int_o1/q[83]$_DFF_P_/CLK",
+   "worst_to": "fW0_p1_b0/u_bin_frame_int_i0/q[83]$_DFF_P_/D",
+   "status": "NOT_TIMED",
+   "why": "no related-pair skew (CPPR) at TT in die_sta (rerun with the current die_sta.py); no related-pair skew (CPPR) at FF in die_sta (rerun with the current die_sta.py)"
+  }
+ ]
+}
