@@ -197,6 +197,45 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "KV.PLAN_V39R_LANES (KV plan v3.9r claude/path-kv-rebase-1025 3832299dfb: 839 lanes vs main lat_v39pd; d2d rx +2 / kvs_attn tx +4 a request, embedding chain +47 a token; L663 host FDI 34->42 (main) / 35 (v3.9r) = 0 token cycles)",
+   "group": "KV.PLAN_V39R_LANES (KV plan v3.9r claude/path-kv-rebase-1025 3832299dfb: 839 lanes vs main lat_v39pd; d2d rx +2 / kvs_attn tx +4 a request, embedding chain +47 a token; L663 host FDI 34->42 (main) / 35 (v3.9r) = 0 token cycles)",
+   "measured": 263.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.105,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "lane-class model on the token-path DAG (kv_v39r_price.py): 36 attention requests x (d2d rx bundle + kvs_attn tx bundle) + embedding (rx + px hop + worst PC chain + slot + row tx)",
+     "base_cycles": 249431.0,
+     "cycles": 249694.0,
+     "added_cycles": 263.0,
+     "tok_s_before": 4810.9,
+     "tok_s_after": 4805.9,
+     "e2e_loss_pct": 0.105,
+     "bracket_upper": {
+      "base_cycles": 249431.0,
+      "cycles": 251170.0,
+      "added_cycles": 1739.0,
+      "tok_s_before": 4810.9,
+      "tok_s_after": 4777.6,
+      "e2e_loss_pct": 0.692
+     }
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/token_pass/toksched_1025/kv_v39r/kv_v39r_price.json results/token_pass/toksched_1025/kv_v39r/lane_cycle_delta_vs_main.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-25",
+   "status": "accepted",
+   "note": "Priced: per attention request d2d rx landed bundle sys_c->hub_C 56->58 (+2) + kvs_attn tx hub_C->sys_c L1427/L1428 51->55 (+4) = +6 x 36 = 216; embedding (once a token) serial upper bound +47 (rx 2 + px hop 2 + worst PC broadcast chain hub_Wo->pc_*_7..0 +31 + emb tx slot L344 +7 + row tx +5). L663 hub_Wi.o_host_fdi->io_W3 (host FDI, 1044 b): boot/admission/host IO, no host node on the token path -> 0. NOT priced: interior attention lanes (vport/slg +8, pv rows/pvw y_valid +16, ahub/astk +7, hroot/hsl +5, acal +5 max) that the hardened equalisation budgets (PV_W, ECTLK RESPONSE_LAT) absorb only while inside the budget; if every family were serial once a request: +1739.0 cyc, 0.692 % (bracket). No KV static calendar on main consumes per-lane plan cycles; the bound KV token vehicle (KV-TOK) is the measurement. On the QC bound composition base (286,726) the priced +263 is 0.092 %.",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-25",
+   "acceptance_note": "COORD/TOK-SCHED 2026-10-25: KV v3.9r rebase (PATH-KV-REBASE) + KV-OBST L663 34->42 approved"
+  },
+  {
+   "design": "qwen_rom",
    "unit": "PV16.TRUNK qkd_pvw_die_t trunked PV pair (registered command trunk + chunk taps, every hop <= 400 um; +TRUNK_D 54 edges a PV pass)",
    "group": "PV16.TRUNK",
    "measured": 1870.0,
@@ -262,6 +301,50 @@
    "status": "proposed",
    "note": "KVPLAN3 0230: on the kvs13l geometry (DW 950.4) the natural WP + O of the far V ports is 77..81 die relay edges; PV_W 59 was met only by pin repair that broke the static schedule (kvs13l2/l3 PV-inexact). Equalised to 82 with exact per-port padding; ctl kit qkd_pv_ctl_t_d54f58a95 (param-only). Q-KV lead 2026-10-17 accepted. Option for later: re-home the 16 V ports nearer the pair.   | Q-KV lead 2026-10-17 ~07:40 PT ACCEPTED (+23 edges a PV pass; PV successor total with PV16.TRUNK ~1.1 % AR).",
    "share_basis": "measured"
+  },
+  {
+   "design": "qwen_rom",
+   "unit": "QC.SRAM_MIF1 (qfd_dv_s8x_vmr / _btab / _prog MIF=1 on sl_W5_su_c, main 32620f9399: vmr q, bs_q, p_q one edge later; +2 serial edges a SU command)",
+   "group": "QC.SRAM_MIF1 (qfd_dv_s8x_vmr / _btab / _prog MIF=1 on sl_W5_su_c, main 32620f9399: vmr q, bs_q, p_q one edge later; +2 serial edges a SU command)",
+   "measured": 866.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.301,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "toksim_compose (engine 94cd97b7a, compiler f0ef9ad67, bound s8exp_wf3 ages; Codex results/uarch/qwen_s8_crom_price_1025 recipe) bound_current with every SU-derived output/retire age +2",
+     "base_cycles": 286726,
+     "cycles": 287592,
+     "added_cycles": 866,
+     "tok_s_before": 4186.9,
+     "tok_s_after": 4174.2,
+     "e2e_loss_pct": 0.301,
+     "lower_bound_plus1": {
+      "cycles": 287159,
+      "tok_s": 4180.5,
+      "e2e_loss_pct": 0.151
+     },
+     "chained_layer": [
+      7862,
+      7886
+     ],
+     "l0_cold": [
+      8371,
+      8397
+     ]
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/token_pass/toksched_1025/qc_mif/mif_summary_raw.json results/token_pass/toksched_1025/qc_mif/bound_su_plus2.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-25",
+   "status": "accepted",
+   "note": "Charged +2 a SU command = Codex tools/uarch_model.py qwen_sram_if_mif_model (codex/qc-mif-1309 c9cdec9e2: program fetch start +1, memory/head reply +1; group/head/fetch exact gates PASS, mutants caught). Lower bound +1 (memory reply only): +433 cyc, 0.151 %. Linear: +12 cycles a chained layer and +13 cold per edge (Codex CROM +3 = 288,025 reproduced exactly as the +3 point). Base = bound_current 286,726 (4,186.9 tok/s), PREDICTED only; current QC token price HELD. Binding .MIF(1) is a pending QC plan/RTL delta; re-price with fresh MIF1 compiler ages.",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-25",
+   "acceptance_note": "COORD/TOK-SCHED 2026-10-25: QC sl_W5_su_c MIF=1 approved (GEOM-REVIEW F6 structural fix)"
   },
   {
    "design": "qwen_rom",
@@ -1541,6 +1624,48 @@
    "share_basis": "modelled",
    "accepted_date": "2026-10-19",
    "acceptance_note": "COORD 10-19 ~05:10 (HANDOFF 0jy): frame landing = option A (landed-regions standard, owner 10-18 0fd accepted landing cost); ledger row AR -1.44 % / MTP -1.19 % accepted"
+  },
+  {
+   "design": "s81",
+   "unit": "S81.VSW_LR1 (ot_s81sl_vsw LR=1 default, main 8d6af30b15: +1 output edge a SW/SWR command in every S81 slice; lower_vs SW16 191->192, SWR 195->196; L14 span 28081.9->28082.9)",
+   "group": "S81.VSW_LR1 (ot_s81sl_vsw LR=1 default, main 8d6af30b15: +1 output edge a SW/SWR command in every S81 slice; lower_vs SW16 191->192, SWR 195->196; L14 span 28081.9->28082.9)",
+   "measured": 40.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.003,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "compose_tok_ds + dv_mu_calendar_phys REL241 single user on the 241-stage map (plan of record at main 05f9f5c69, ADOPT178 base)",
+     "base_cycles": 1528877.6,
+     "cycles": 1528917.6,
+     "added_cycles": 40.0,
+     "tok_s_before": 784.9,
+     "tok_s_after": 784.9,
+     "e2e_loss_pct": 0.003,
+     "dag_added_cycles": 40.0
+    },
+    "mtp": {
+     "model": "same, MTP causal six-position pipeline law of record, tau 4.159",
+     "base_cycles": 1815229.6,
+     "cycles": 1815279.6,
+     "added_cycles": 50.0,
+     "tok_s_before": 2749.4,
+     "tok_s_after": 2749.3,
+     "e2e_loss_pct": 0.003,
+     "dag_added_cycles": 48.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/token_pass/tokds_vsw_lr1_1309/vsw_price_delta.json results/token_pass/toksched_1025/vsw_recheck/compose_1u.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-25",
+   "status": "accepted",
+   "note": "Codex codex/l14-schedule-1309 841db2c43 (on main as c967be25c): lower_vs VS_DUR SW +VSW_LR_CYCLES, dv_layer_compile dependency edge on ffn.(shared_)swiglu, compose_tok_ds transform_current_profile. TOK-SCHED 10-25 re-ran compose_tok_ds on main 05f9f5c69 (identical: AR 1,528,917.6 map / 1,387,278.6 DAG, MTP 1,815,279.6 / 1,794,545.8, calendars PASS) and the L14 layer_schedule (28,081.9 -> 28,082.9). Cross-check on the ledger token-path DAG (accepted_cost compute --match ffn swiglu --node-delta 1): AR +40 (40 of 80 runs critical), MTP +48 (43 critical + 5 wave). Analytical composition, not a bound-RTL token run.",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-25",
+   "acceptance_note": "COORD/TOK-SCHED 2026-10-25: owner-approved vsw LR=1 (owner 10-25 11:59)"
   },
   {
    "design": "s81",
@@ -3276,26 +3401,26 @@
  ],
  "totals": {
   "qwen_rom": {
-   "accepted_pct": 1.065,
+   "accepted_pct": 1.471,
    "proposed_pct": 7.121,
-   "accepted_plus_proposed_pct": 8.186,
+   "accepted_plus_proposed_pct": 8.592,
    "limit_pct": 15.0,
-   "accepted_rows": 4,
+   "accepted_rows": 6,
    "proposed_rows": 12,
-   "headroom_pct": 13.935,
+   "headroom_pct": 13.529,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false,
    "superseded_rows": 0,
    "superseded_pct_not_counted": 0
   },
   "s81": {
-   "accepted_pct": 3.499,
+   "accepted_pct": 3.502,
    "proposed_pct": 6.349,
-   "accepted_plus_proposed_pct": 9.848,
+   "accepted_plus_proposed_pct": 9.851,
    "limit_pct": 15.0,
-   "accepted_rows": 3,
+   "accepted_rows": 4,
    "proposed_rows": 9,
-   "headroom_pct": 11.501,
+   "headroom_pct": 11.498,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": false,
    "superseded_rows": 17,
