@@ -3,7 +3,7 @@ Description=OpenTallas worktree reaper (tools/fleet/wt-reaper.py: removes clean,
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/python3 %h/.local/lib/wt-reaper/wt-reaper.py --apply
+ExecStart=/usr/bin/python3 /srv/opentallas-scratch2/claude/infra/wt-reaper/wt-reaper.py --apply
 TimeoutStartSec=3h
 Nice=10
 IOSchedulingClass=idle

@@ -6,11 +6,12 @@ Runs per host from a systemd --user timer (every 30 min).  A worktree is removed
   1. not protected: path contains root-merge / merge-hub / closed_archive / die-ci, is a repo's main worktree, the hub
      repo (~/OpenTallas) or the coordination mirror (~/coord), or is locked (git worktree lock / an unfinished add);
   2. no live reference: no process has its cwd, root, an open fd, a mapped file or an argv word inside it (/proc, plus
-     `sudo -n` for other users' processes when allowed), no docker container mounts it, no systemd --user unit
+     `sudo -n` for other users' processes when allowed), no docker container mounts it or a specific (non-generic) ancestor of it, no systemd --user unit
      (ot-heavy oth-* scopes name their command) and no ot-run spill_pending record names it;
   3. idle: no file or directory in the tree modified in the last --idle-h hours (find -mmin, bounded by a timeout:
      a timeout counts as busy), and the worktree's git admin files (HEAD, index, logs/HEAD) are as old;
-  4. clean: `git status --porcelain` is empty, ignoring __pycache__ / *.pyc (then `worktree remove --force`);
+  4. clean: `git status --porcelain` is empty, ignoring __pycache__ / *.pyc (then `worktree remove --force`), and
+     at most --ignored-max-mb (100 MB) of gitignored non-cache data (build/, runs/ ... may hold lane results);
   5. pushed: `git branch -r --contains HEAD` is non-empty.
 Then `git -C <repo> worktree remove [--force] <wt>` and `git worktree prune`.  Every removal is logged to
 ~/.local/state/wt-reaper/removals.tsv; every decision of the last run to last-run.tsv.
@@ -36,10 +37,14 @@ DEFAULT_ROOTS = ["/srv/opentallas-scratch2/claude", "/srv/opentallas-scratch/cla
 PROTECT_SUBSTR = ["root-merge", "merge-hub", "closed_archive", "die-ci"]
 PROTECT_PATHS = [str(HOME / "OpenTallas"), str(HOME / "coord")]
 STATE = HOME / ".local/state/wt-reaper"
-RESCUE_DIR = "/srv/opentallas-scratch/claude/rescue"
+RESCUE_DIR = "/srv/opentallas-scratch2/claude/rescue"  # scratch2: /srv/opentallas-scratch is on root on epyc1
 SPILL_PENDING = HOME / ".local/state/ot-run/spill_pending"
 JUNK_RE = re.compile(r"(^|/)__pycache__(/|$)|\.py[co]$")
 UNTRACKED_MAX = 1 << 20
+IGNORED_MAX = 100 << 20  # ignored (gitignored) data above this keeps the tree: build/, runs/ etc. may be lane results
+PATCH_MAX = 2 << 30  # a rescue patch above this is discarded (sparse-state artifacts made 37 GB patches on 10-25)
+CACHE_RE = re.compile(r"(^|/)(__pycache__|\.pytest_cache|\.ruff_cache|\.cache|\.claude)(/|$)|\.py[cod]$")
+GENERIC_MOUNTS = {"/", "/srv", "/home", "/tmp", "/var", str(HOME)}
 
 
 def sh(cmd, timeout=600, **kw):
@@ -154,8 +159,17 @@ def live_refs(sudo=True):
     return paths, texts
 
 
-def referenced(wt, paths, texts):
-    """first live reference inside wt (or None)"""
+def _generic(p, roots=()):
+    """True for a broad ancestor (/, /srv, a scratch root, <scratch>/claude, a reaper root) that says nothing about wt"""
+    p = p.rstrip("/") or "/"
+    if p in GENERIC_MOUNTS or p in {r.rstrip("/") for r in roots}:
+        return True
+    return bool(re.fullmatch(r"/srv/[^/]+(/claude)?(/wt)?", p))
+
+
+def referenced(wt, paths, texts, roots=()):
+    """first live reference inside wt, or a specific (non-generic) ancestor of it such as a docker bind mount
+    of a lane dir that holds the worktree (or None)"""
     cands = {wt.rstrip("/"), os.path.realpath(wt)}
     for c in cands:
         pre = c + "/"
@@ -163,6 +177,8 @@ def referenced(wt, paths, texts):
             p = p.split(" (deleted)")[0]
             if p == c or p.startswith(pre):
                 return "proc/docker path " + p
+            if c.startswith(p.rstrip("/") + "/") and not _generic(p, roots) and os.path.isdir(p):
+                return "ancestor in use " + p
         pat = re.compile(re.escape(c) + r"(?=$|[/\s'\";:,)])")
         for t in texts:
             if pat.search(t):
@@ -214,6 +230,28 @@ def dirt(wt):
     return [l for l in lines if l not in junk], junk
 
 
+def ignored_bytes(wt, timeout=600):
+    """(bytes, example) of gitignored data that is not a cache, or (None, err)"""
+    r = git(wt, "status", "--porcelain", "--ignored=matching", "--untracked-files=normal", timeout=timeout)
+    if r.returncode != 0:
+        return None, (r.stderr.strip() or "git status --ignored failed")[:160]
+    ign = [l[3:].strip('"') for l in r.stdout.splitlines() if l.startswith("!! ")]
+    ign = [p for p in ign if not CACHE_RE.search(p.rstrip("/"))]
+    if not ign:
+        return 0, ""
+    d = sh(["du", "-sxb", "--", *[os.path.join(wt, p) for p in ign[:2000]]], timeout=timeout)
+    if d.returncode == 124:
+        return None, "du timeout on ignored data"
+    total, big = 0, ("", -1)
+    for line in d.stdout.splitlines():
+        n, _, path = line.partition("\t")
+        if n.isdigit():
+            total += int(n)
+            if int(n) > big[1]:
+                big = (path[len(wt):], int(n))
+    return total, big[0]
+
+
 def pushed(wt):
     r = git(wt, "branch", "-r", "--contains", "HEAD", timeout=300)
     br = [b for b in r.stdout.split() if b.startswith("origin/")] if r.returncode == 0 else []
@@ -236,18 +274,39 @@ def rescue_patch(wt, name, rescue_dir, host):
             shutil.copy2(src, idx)
         env = dict(os.environ, GIT_INDEX_FILE=idx)
         git(wt, "add", "-u", env=env)
-        big = []
+        big, small = [], []
         for l in (real or []):
             if l.startswith("??"):
                 p = l[3:].strip('"')
                 fp = os.path.join(wt, p)
-                if os.path.isfile(fp) and os.path.getsize(fp) <= UNTRACKED_MAX:
-                    git(wt, "add", "-f", "--", p, env=env)
+                if os.path.isfile(fp) and os.path.getsize(fp) <= UNTRACKED_MAX and len(small) < 2000:
+                    small.append(p)
                 else:
                     big.append(p)
-        d = sh(["git", "--no-optional-locks", "-C", wt, "diff", "--cached", "--binary", "HEAD"], env=env, timeout=900)
-    Path(rescue_dir).mkdir(parents=True, exist_ok=True)
-    out.write_text(d.stdout)
+        for i in range(0, len(small), 200):
+            git(wt, "add", "-f", "--", *small[i:i + 200], env=env)
+        Path(rescue_dir).mkdir(parents=True, exist_ok=True)
+        tmp = Path(str(out) + ".part")
+        # stream to disk (never into memory); -D: deletions without their content (a wiped sparse index once made
+        # a 37 GB patch); abort above PATCH_MAX
+        with tmp.open("wb") as fh:
+            try:
+                p = subprocess.Popen(["git", "--no-optional-locks", "-C", wt, "diff", "--cached", "--binary",
+                                      "--irreversible-delete", "HEAD"], stdout=fh, stderr=subprocess.DEVNULL, env=env)
+                t0 = time.time()
+                while p.poll() is None:
+                    time.sleep(1)
+                    if tmp.stat().st_size > PATCH_MAX or time.time() - t0 > 1800:
+                        p.kill()
+                        p.wait()
+                        break
+            except OSError:
+                pass
+        ok = p.returncode == 0 and tmp.stat().st_size <= PATCH_MAX
+    if not ok:
+        tmp.unlink()
+        return "", 0, "rescue patch failed or > %d GB (not kept)" % (PATCH_MAX >> 30)
+    tmp.replace(out)
     note = f"untracked >1MB or dirs not saved: {len(big)}" if big else ""
     if big:
         Path(str(out) + ".big.txt").write_text("\n".join(big) + "\n")
@@ -278,7 +337,7 @@ def evaluate(wt, admin, common, refs, a):
     why = protected(wt, admin, common, a.protect)
     if why:
         return "KEEP", why, info
-    why = referenced(wt, *refs)
+    why = referenced(wt, *refs, roots=a.roots)
     if why:
         return "KEEP", why, info
     busy = recently_modified(wt, admin, a.idle_h, timeout=a.find_timeout)
@@ -293,6 +352,11 @@ def evaluate(wt, admin, common, refs, a):
         if stale is None:
             return "DIRTY_IDLE", f"dirty ({len(real)} paths, e.g. {real[0][:80]}) idle > {a.dirty_report_h} h", info
         return "KEEP", f"dirty ({len(real)} paths, e.g. {real[0][:80]})", info
+    ib, ex = ignored_bytes(wt, timeout=a.find_timeout)
+    if ib is None:
+        return "KEEP", "ignored data: " + ex, info
+    if ib > a.ignored_max_mb * (1 << 20):
+        return "KEEP", f"ignored (gitignored) data {ib >> 20} MB, e.g. {ex[:80]}", info
     ok, br = pushed(wt)
     if not ok:
         return "KEEP", "HEAD not in any origin branch", info
@@ -307,6 +371,8 @@ def main(argv=None):
     ap.add_argument("--idle-h", type=float, default=2.0)
     ap.add_argument("--dirty-report-h", type=float, default=24.0)
     ap.add_argument("--find-timeout", type=int, default=900)
+    ap.add_argument("--ignored-max-mb", type=float, default=IGNORED_MAX >> 20,
+                    help="keep a tree holding more gitignored non-cache data than this (MB)")
     ap.add_argument("--protect", nargs="*", default=[], help="extra protected path substrings")
     ap.add_argument("--state", default=str(STATE))
     ap.add_argument("--rescue-dir", default=RESCUE_DIR)
@@ -341,7 +407,7 @@ def main(argv=None):
         if verdict.startswith("REMOVE") and a.apply:
             # re-check live use right before the removal
             fresh = live_refs(sudo=not a.no_sudo)
-            again = referenced(wt, *fresh)
+            again = referenced(wt, *fresh, roots=a.roots)
             if again:
                 verdict, reason = "KEEP", "became live: " + again
             else:

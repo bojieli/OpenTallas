@@ -141,6 +141,45 @@ class Reaper(unittest.TestCase):
         self.assertEqual(v["side"][0], "KEEP")
         self.assertTrue(p.exists())
 
+    def test_ignored_data_kept_cache_ignored(self):
+        (self.repo / ".gitignore").write_text("build/\n__pycache__/\n")
+        run("git", "-C", str(self.repo), "add", ".gitignore")
+        run("git", "-C", str(self.repo), "commit", "-qm", "ign")
+        run("git", "-C", str(self.repo), "push", "-q", "origin", "main")
+        run("git", "-C", str(self.repo), "fetch", "-q", "origin")
+        res = self.wt("res", "b12")
+        (res / "build").mkdir()
+        (res / "build" / "out.bin").write_bytes(b"\1" * (3 << 20))
+        small = self.wt("small", "b13")
+        (small / "build").mkdir()
+        (small / "build" / "x.log").write_bytes(b"\1" * 100)
+        age(res, 5)
+        age(small, 5)
+        v = self.reap("--apply", "--ignored-max-mb", "1")
+        self.assertEqual(v["res"][0], "KEEP", v["res"])
+        self.assertIn("ignored", v["res"][1])
+        self.assertTrue((res / "build" / "out.bin").exists())
+        self.assertEqual(v["small"][0], "REMOVED", v["small"])
+
+    def test_specific_ancestor_reference_counts_generic_does_not(self):
+        d = self.root / "lane" / "wt1"
+        d.mkdir(parents=True)
+        self.assertIn("ancestor", R.referenced(str(d), {str(self.root / "lane")}, [], roots=[str(self.root)]))
+        self.assertIsNone(R.referenced(str(d), {str(self.root), "/", "/srv/opentallas-scratch2/claude"}, [],
+                                       roots=[str(self.root)]))
+        self.assertIsNone(R.referenced(str(d) + "2", {str(d)}, [], roots=[str(self.root)]))
+
+    def test_rescue_patch_omits_deleted_content(self):
+        d = self.wt("del", "b14")
+        (d / "a.py").unlink()
+        age(d, 30)
+        age(self.repo / ".git" / "worktrees" / "del", 30)
+        v = self.reap()
+        self.assertEqual(v["del"][0], "DIRTY_IDLE")
+        txt = next((self.t / "rescue").glob("*.patch")).read_text()
+        self.assertIn("deleted file", txt)
+        self.assertNotIn("x = 1", txt)
+
     def test_main_worktree_and_hub_protected(self):
         self.assertTrue(R.protected(str(self.repo), "", str(self.repo / ".git"), ()))
         self.assertTrue(R.protected("/x/closed_archive/wt", "/nonexistent", "/r/.git", ()))
