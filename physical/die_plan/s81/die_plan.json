@@ -104435,11 +104435,11 @@
    ],
    "hard_cores": [
     {"inst":"u_c.u_cap","module":"ot_s81sl_capc5r","lef":"physical/ref_tile/s81sl_capc5r/views/ot_s81sl_capc5r/ot_s81sl_capc5r.lef","origin_um":[34.56,768.96],"outline_um":[336.96,414.72],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_capc5r.json","obs_max":"M7"},
-    {"inst":"u_c.u_xr","module":"ot_s81sl_xrt1","lef":"physical/ref_tile/s81sl_xrt1/views/ot_s81sl_xrt1/ot_s81sl_xrt1.lef","origin_um":[388.8,794.88],"outline_um":[311.04,395.28],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_xrt1.json","obs_max":"M5"},
+    {"inst":"u_c.u_xr","module":"ot_s81sl_xrt3","lef":"physical/ref_tile/s81sl_xrt3_b/views/ot_s81sl_xrt3/ot_s81sl_xrt3.lef","origin_um":[492.48,1019.52],"outline_um":[207.36,164.16],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_xrt3.json","obs_max":"M6"},
     {"inst":"u_c.u_eg","module":"ot_s81sl_eg","lef":"physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef","origin_um":[768.96,544.32],"outline_um":[259.2,259.2],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81sl_eg_c.json","obs_max":"M7"},
     {"inst":"u_c.u_xf","module":"ot_s81dv_xfin","lef":"physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin/ot_s81dv_xfin.lef","origin_um":[717.12,820.8],"outline_um":[362.88,362.88],"orient":"MX","track_offset_um":[0.108,0.036],"pins_file":"inputs/core_pins/ot_s81dv_xfin.json","obs_max":"M5"}
    ],
-   "note": "slice partition; 1 instance(s) (R0)"
+   "note": "slice partition; 1 instance(s) (R0); PATH-S81 10-25: u_c.u_xr = ot_s81sl_xrt3 (actual HB=1 source, die_b178 u_s_3S #(.HB(1))), c3x_C xrt3 view, origin [492.48, 1019.52]"
   },
   "ot_s81sl_leaf__t33": {
    "module": "s81p_ot_s81sl_leaf__t33",
