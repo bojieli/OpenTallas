@@ -1213,6 +1213,21 @@
        "depth": {
         "type": "integer",
         "minimum": 1
+       },
+       "start_role": {
+        "enum": [
+         "bootstrap",
+         "mission"
+        ]
+       },
+       "core_start_roles": {
+        "type": "object",
+        "additionalProperties": {
+         "enum": [
+          "bootstrap",
+          "mission"
+         ]
+        }
        }
       }
      },
@@ -2084,6 +2099,10 @@
       "none",
       "broadcast"
      ]
+    },
+    "start_port": {
+     "type": "string",
+     "minLength": 1
     },
     "part_depth": {
      "type": "integer",

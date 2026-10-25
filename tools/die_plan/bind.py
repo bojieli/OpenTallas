@@ -871,6 +871,12 @@ class Binder:
             self.errors.append(f"TIED {pin}[{i}] = {s[1]} ({s[2]})") if cnt["tied"] <= 200 else None
             return ("tied", s[1])
         if k == "top":
+            sp = self.plan.get("reset", {}).get("start_port")
+            if sp and s[1] == sp:
+                # declared functional START level (reset.start_port): bound to the partition's local registered
+                # START tap start_t<k> (bootstrap types; emit fails closed elsewhere)
+                cnt["start"] += 1
+                return ("start",)
             cnt["die_io"] += 1
             return ("top", s[1], s[2])
         if k == "multi":
@@ -2164,6 +2170,12 @@ class Binder:
                     return f"~({reset})"
                 need_rst = True
                 return "rst"
+            if k == "start":
+                if rtree is None or rtree.get("start_tap") is None:
+                    raise BindError(f"START consumer {F.cells[ci].path}.{pn}[{i}] in partition {p} (type {tn}): only "
+                                    "a reset.start_role 'bootstrap' type publishes a local START tap; a mission type's "
+                                    "control state is already START-gated")
+                return f"start_t{rtree['start_tap']}"
             if k == "strap":
                 nm, _w = pnames[("strap", self.rel_of(ci), pn)]
                 return f"{nm}[{i}]"

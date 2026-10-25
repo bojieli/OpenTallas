@@ -370,6 +370,8 @@ def wrapper(P, tn, epochs, rtl_root=None):
         decl.append(f"    wire [{nt['width'] - 1}:0] n_{sv_id(nt['name'])};")
         sig[f"net:{nt['name']}"] = f"n_{sv_id(nt['name'])}"
     sig["clk"], sig["rst_n"], sig["rst"] = "clk", "rst_n", "rst"
+    if rtree is not None and rtree.get("start_tap") is not None:
+        sig["start"] = f"start_t{rtree['start_tap']}"     # bootstrap type: local registered START (reset AND run)
     # leaf bindings: contents[].bind plus bus.leaf
     binds = {c["inst"]: dict(c.get("bind", {})) for c in t.get("contents", [])}
     for b in buses:
