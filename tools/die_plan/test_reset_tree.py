@@ -108,7 +108,7 @@ def test_gen_rtl_pipelined_partition_and_die_top():
             r = subprocess.run(["yosys", "-p", f"read_verilog -sv {cells} {t}; synth -top t; stat"],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
-            assert re.search(r"ot_dp_rrelay\s+2", r.stdout), r.stdout        # identical relays are NOT merged
+            assert re.search(r"(?m)^\s*(?:ot_dp_rrelay\s+2|2\s+ot_dp_rrelay)\s*$", r.stdout), r.stdout        # identical relays are NOT merged
 
 
 def test_tiny_die_releases_every_tap_on_one_cycle():
