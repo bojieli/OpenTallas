@@ -2,7 +2,7 @@
 "schema": "opentallas.die_plan.core_pins.v1",
 "core": "qkd_hr_host_qm",
 "frame": "core R0, origin (0,0), outline 77.76 x 77.76",
-"source": "KVG3-WI 10-24 top-down pin assignment (core_pins_hr.py): boundary bits of the real instance members of the host-root cluster child inside the bound hub_Wi leaf u_host (qkd_host_root_admission_obsx, binder kv41, RTL e33504a6f); glue:* members stay partition glue; face = best facing to partners (other cores, host-leaf port -> partition bus windows) over all instances; even spread on the plan tracks",
+"source": "KVG3-WI 10-24 top-down pin assignment (core_pins_hr.py): boundary bits of the real instance members of the host-root cluster child inside the bound hub_Wi leaf u_host (qkd_host_root_admission_obsx, binder kv41, RTL e33504a6f); glue:* members stay partition glue; face = best facing to partners (other cores, host-leaf port -> partition bus windows) over all instances; even spread on the plan tracks | KV-PLAN2 v3.9d core_reface.py (core re-placed in hub_Wi) | native HR clocks from kv_core_rtl.py --hr-elab, data pins unchanged | KV-PLAN2 v3.9d core_reface.py (core re-placed in hub_Wi)",
 "faces": {
 "S": {
 "pins": 10,
@@ -13,64 +13,64 @@
 },
 "pins": [
 {
-"name": "clk_h[0]",
-"layer": "M5",
-"x": 5.832,
-"y": 0.096
-},
-{
-"name": "fault[0]",
-"layer": "M5",
-"x": 13.176,
-"y": 0.096
-},
-{
 "name": "in_crn[0]",
 "layer": "M5",
-"x": 20.52,
-"y": 0.096
+"x": 17.88,
+"y": 0.0
 },
 {
 "name": "in_crn[1]",
 "layer": "M5",
-"x": 27.864,
-"y": 0.096
+"x": 28.392,
+"y": 0.0
 },
 {
 "name": "in_crn[2]",
 "layer": "M5",
-"x": 35.208,
-"y": 0.096
+"x": 38.904,
+"y": 0.0
 },
 {
 "name": "in_crn[3]",
 "layer": "M5",
-"x": 42.552,
-"y": 0.096
+"x": 49.368,
+"y": 0.0
 },
 {
 "name": "in_crn[4]",
 "layer": "M5",
-"x": 49.896,
-"y": 0.096
-},
-{
-"name": "in_v[0]",
-"layer": "M5",
-"x": 57.24,
-"y": 0.096
-},
-{
-"name": "out_cr[0]",
-"layer": "M5",
-"x": 64.584,
-"y": 0.096
+"x": 59.88,
+"y": 0.0
 },
 {
 "name": "rst_n[0]",
 "layer": "M5",
-"x": 71.928,
-"y": 0.096
+"x": 70.344,
+"y": 0.0
+},
+{
+"name": "fault[0]",
+"layer": "M4",
+"x": 0.0,
+"y": 38.904
+},
+{
+"name": "in_v[0]",
+"layer": "M5",
+"x": 14.424,
+"y": 77.76
+},
+{
+"name": "ck[0]",
+"layer": "M5",
+"x": 38.904,
+"y": 77.76
+},
+{
+"name": "out_cr[0]",
+"layer": "M5",
+"x": 63.384,
+"y": 77.76
 }
 ]
 }

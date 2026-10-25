@@ -65,6 +65,7 @@ ASAP7_LAYERS = [
 BASE_LATTICE_UM = 2.16
 GRID_UM = 8.64
 
+FACE_PINS_HARD_CAP = 16.0   # pins/um per face pin layer pair: no type budget above this (COORD KV RULING 10-25 (a))
 DEFAULT_BUDGETS = dict(face_pins_per_um=6.0, face_pin_layers=2, face_window_um=10.0, pin_track_max=0.6,
                        cut_ratio_max=0.6, cut_step_um=250.0, pin_reg_p90_um=30.0,
                        # R3 (METHODOLOGY 5.1 / ruling 9.4, 2026-10-24; was 750 COORD 10-23): ft stations at most
@@ -275,7 +276,7 @@ SCHEMA = {
                                        "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
-                                       "layers": _lays, "order": _order}}},
+                                       "layers": _lays, "order": _order, "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
@@ -413,6 +414,12 @@ SCHEMA = {
                     # ft_track_frac); M8 / M9 keys are G0 ERRORs (m89_signals: no over-the-top ft)
                     "ft_budget": {"type": "object", "additionalProperties": {"type": "number", "minimum": 0,
                                                                              "maximum": 1}},
+                    # per-type face pin density budget (COORD KV RULING 10-25 05:07 (a)): above the die budget only
+                    # after the pins sit in channel gaps, up to the density a per-type G2 probe with hard cores
+                    # obstructing routes clean (face_budget_g2: the probe record), pin_track_max unchanged, hard cap
+                    # FACE_PINS_HARD_CAP pins/um
+                    "face_pins_per_um": {"type": "number", "exclusiveMinimum": 0, "maximum": 16.0},
+                    "face_budget_g2": {"type": "string", "minLength": 3},
                     # per-face pin layer sets (type frame faces); every layer <= M7 (an M8 / M9 face layer, e.g. the
                     # 10-23 S81 svc fold / rail faces, is a G0 ERROR since ruling 9.3)
                     "face_layers": {"type": "object", "additionalProperties": False, "properties": {
@@ -509,6 +516,10 @@ SCHEMA = {
             # OWNER DECISION 13c: "broadcast" = explicit START broadcast riding the wavefront (start_i / start_o_<k>
             # beside arst_n / rst_o_<k>; control state released by reset AND run; reset_tree.start_broadcast)
             "start": {"enum": ["none", "broadcast"]},
+            # KV-PLAN2 10-25 (opt-in, default false = main wall-only rule): every relay hop keeps one L route outside
+            # ALL hard cores / macro leaves of the type, not only outside the walls (G2 kv3_pc: rrl_13 -> rrl_14
+            # through kvpc0 gave 1272 M3 overflow)
+            "relay_avoid_cores": {"type": "boolean"},
             # raw binder: the FUNCTIONAL top input that carries the mission START level to the sources' declared
             # mission-admission inputs (e.g. KV host mission_start); every such sink binds to its partition's local
             # registered START tap start_t<k> (bootstrap types only).  Unset: such a top port stays a die IO.
