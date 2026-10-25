@@ -153,3 +153,7 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
 ## CODEX notes 2026-10-24 21:10 PDT
 - CODEX took over D on codex/kv-d-clock-1024; staged apply_D.py/.sh authored (untested successor), ten HBM PHY face flops per24PC types core->HBM, 0stages. phy partitions already HBM clock. Gate NOT RUN; parked for Claude reset before launching jobs. Existing pd2 FAIL from unrelated HOST crossmodule reference, pd1 head-domain derivation valid.
 - 2026-10-24 21:14 PDT TOK-QK: resumed after account switch; D agent resumed (adopts Codex codex/kv-d-clock-1024 @7cf1d726b apply_D); kv43abc build still live epyc2.
+- 2026-10-24 21:34 PDT TOK-QK: owner decisions 13/14 applied to token work: D sub-agent re-scoped (kvs_pc controller on die clock -> the one CDC sits at
+  the PHY/DFI boundary; pc lanes stay core). Boot/token benches: start on the explicit start broadcast, not the reset edge; datapath
+  flops unreset -> next KV vehicle build (on kv44 bound top) uses --x-initial unique + random init (+verilator+rand+reset+2) so no
+  bench relies on datapath reset values. kv43abc (pre-13/14 vehicle) kept as diagnostic of A/B/C integration only.
