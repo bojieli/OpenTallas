@@ -437,6 +437,91 @@ class TestGeomAutoSubmit(TickBase):
         self.assertNotIn("def456", g)
 
 
+
+class TestGeomDemote(TickBase):
+    """2026-10-25 R5 9a237c656129: plan-only PASS-COND 09:59, post-CTS FAIL 10:06 on the same tag -> must not route"""
+    REQ_ROW = ROW[:4] + ["REQ", "[PROTO-KITS]"] + ROW[6:]
+
+    def geom(self, text):
+        (Path(self.tmp.name) / "coord" / "lanes" / "GEOM-REVIEW.md").write_text(text)
+
+    def log(self):
+        return (Path(self.tmp.name) / "log.txt").read_text()
+
+    REQ = f"GEOM REQ [PROTO-KITS] slice_station__t5 kit\n"
+
+    def test_latest_verdict_wins_both_orders(self):
+        import loopgaps as L
+        pc_fail = (f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 plan "
+                   f"PASS-COND\n{ts(10)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 post-CTS: FAIL, no route\n")
+        self.assertEqual(L.geom_verdicts(pc_fail, "PROTO-KITS", "slice_station__t5", "")[0], "FAIL")
+        fail_pass = (f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: FAIL\n"
+                     f"{ts(10)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 fixed: PASS\n")
+        self.assertEqual(L.geom_verdicts(fail_pass, "PROTO-KITS", "slice_station__t5", "")[0], "PASS")
+        rows = self.ap.parse_queue("\t".join(self.REQ_ROW))
+        self.ap.resolve_geom(rows, pc_fail)
+        self.assertEqual(list(rows.values())[0]["geom"], "FAIL")
+        rows = self.ap.parse_queue("\t".join(self.REQ_ROW))
+        self.ap.resolve_geom(rows, fail_pass)
+        self.assertEqual(list(rows.values())[0]["geom"], "PASS")
+
+    def test_correction_clause_mixing_fail_and_pass_cond_is_fail(self):
+        import loopgaps as L                               # real btab_s6 09:07 wording
+        t = (f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: PASS-COND\n"
+             f"{ts(5)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: FAIL (corrects my 09:0x PASS-COND; autopilot "
+             f"abc must not route). Measured\n")
+        self.assertEqual(L.geom_verdicts(t, "PROTO-KITS", "slice_station__t5", "")[0], "FAIL")
+
+    def held_on_pass_cond(self, row):
+        self.ap.canary_wave_gate = lambda r: (False, "canary unbound")
+        self.queue(row)
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 plan "
+                  f"PASS-COND\n")
+        (j,) = self.tick().values()
+        self.assertEqual((j["status"], j["geom"]), ("WAIT-CANARY", "PASS-COND"))
+
+    def test_later_fail_demotes_held_row_and_it_never_routes(self):
+        self.held_on_pass_cond(self.REQ_ROW)
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 plan "
+                  f"PASS-COND\n{ts(5)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 post-CTS: FAIL, no route\n")
+        (j,) = self.tick().values()
+        self.assertEqual((j["status"], j["geom"]), ("WAIT-GEOM", "FAIL"))
+        self.assertIn("DEMOTE", self.log())
+        self.assertIn("PASS-COND -> FAIL", self.log())
+        self.ap.canary_wave_gate = lambda r: (True, "bound")
+        (j,) = self.tick().values()
+        self.assertEqual((j["status"], self.f.launched), ("WAIT-GEOM", []))
+
+    def test_hand_pass_cond_row_is_demoted_by_later_fail_never_promoted(self):
+        hand = ROW[:4] + ["PASS-COND", "GEOM-REVIEW [PROTO-KITS] reply"] + ROW[6:]
+        self.held_on_pass_cond(hand)
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(5)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: FAIL\n")
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "WAIT-GEOM")
+
+    def test_hand_fail_row_demotes_canary_hold(self):
+        self.held_on_pass_cond(self.REQ_ROW)
+        self.queue(self.REQ_ROW, ROW[:4] + ["FAIL", ""] + ROW[6:])         # the coordinator's 10:1x hand demotion
+        (j,) = self.tick().values()
+        self.assertEqual((j["status"], j["geom"]), ("WAIT-GEOM", "FAIL"))
+        self.assertIn("DEMOTE", self.log())
+
+    def test_fail_after_submit_warns_never_demotes(self):
+        self.queue(self.REQ_ROW)
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: PASS\n")
+        (j,) = self.tick().values()
+        self.assertEqual(j["status"], "RUNNING")
+        self.geom(f"{ts(60)} LANE: {self.REQ}{ts(30)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5: PASS\n"
+                  f"{ts(5)} GEOM-REVIEW: REPLY [PROTO-KITS] slice_station__t5 corrected: FAIL\n")
+        (j,) = self.tick().values()
+        self.tick()
+        self.assertEqual((j["status"], len(self.f.launched)), ("RUNNING", 1))
+        self.assertEqual(self.log().count("WARN GEOM-FAIL-AFTER-SUBMIT"), 1)
+        alerts = (Path(self.tmp.name) / "geom_alerts.tsv").read_text().splitlines()
+        self.assertEqual(len(alerts), 2)
+        self.assertIn("GEOM-FAIL-AFTER-SUBMIT", (Path(self.tmp.name) / "LOOP-GAPS.txt").read_text())
+
+
 class TestRender(unittest.TestCase):
     LOG = """Startpoint: a/q_reg (rising edge-triggered flip-flop clocked by clk)
 Endpoint: b/q_reg (rising edge-triggered flip-flop clocked by clk)
