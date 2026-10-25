@@ -136,7 +136,7 @@ def type_view(P, tn):
 def lef_text(P, tn, rows):
     t = P.types[tn]
     w, h = t["outline_um"]
-    L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {t['module']}", "  CLASS BLOCK ;",
+    L = ["VERSION 5.8 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {macro_name(tn)}", "  CLASS BLOCK ;",
          "  ORIGIN 0 0 ;", f"  SIZE {w:.4f} BY {h:.4f} ;"]
     for nm, d, ln, r in rows:
         L += [f"  PIN {nm}", f"    DIRECTION {d} ;", "    USE SIGNAL ;", "    PORT", f"      LAYER {ln} ;",
@@ -150,8 +150,13 @@ def lef_text(P, tn, rows):
         top = int(c.get("obs_max", "M5")[1:])
         for i in range(4, top + 1):
             L += [f"    LAYER M{i} ;", f"      RECT {x0:.4f} {y0:.4f} {x1:.4f} {y1:.4f} ;"]
-    L += ["  END", f"END {t['module']}", "END LIBRARY", ""]
+    L += ["  END", f"END {macro_name(tn)}", "END LIBRARY", ""]
     return "\n".join(L)
+
+
+def macro_name(tn):
+    """abstract master per partition TYPE (QC types share modules with different pin tables, e.g. cbf_q00 variants)."""
+    return "tq_" + sid(tn)
 
 
 # --------------------------------------------------------------------------------------------------- data nets
@@ -248,7 +253,7 @@ def write_data(P, views, out):
          f"UNITS DISTANCE MICRONS {DBU} ;", f"DIEAREA ( 0 0 ) ( {dbu(P.W)} {dbu(P.H)} ) ;",
          f"COMPONENTS {len(P.parts)} ;"]
     for n, p in sorted(P.parts.items()):
-        m = P.types[p["type"]]["module"]
+        m = macro_name(p["type"])
         D.append(f"- {sid(n)} {m} + FIXED ( {dbu(p['origin_um'][0])} {dbu(p['origin_um'][1])} ) "
                  f"{ORIENT[p.get('orient', 'R0')]} ;")
     D.append("END COMPONENTS")
@@ -394,8 +399,10 @@ def build_clock(P, out, leaf_um=None):
     ntap = sum(len(gen_phys.clock_pins(P, p["type"])) for p in P.parts.values())
     # leaf cell ~ one tap-grid cell: ~ as many leaf drivers as partition taps (power-of-two H-tree counts, rounded down)
     pitch = leaf_um or max(float(P.budgets.get("tap_pitch_um", 400.0)), math.sqrt(W * H / max(1, ntap)))
-    nx = max(1, pow2_at_least(W / 2 / pitch) // 2)
-    nband = max(1, pow2_at_least(H / pitch) // 2)
+    # leaf cell <= the tap pitch (power-of-two counts rounded UP): every tap within ~half a pitch of its leaf driver,
+    # so the leaf -> tap legs (not balanced by delay padding here) stay short and nearly equal
+    nx = pow2_at_least(W / 2 / pitch)
+    nband = pow2_at_least(H / pitch)
     nrib = min(16, nband)
     ny = max(1, nband // nrib)
     segs, leaves = htree_geom(W, H, nrib, nx, ny)
@@ -622,6 +629,14 @@ def cmd_build(a):
     raw = S.load(a.plan)
     P = S.Plan(raw)
     out = Path(a.out)
+    if a.clock_only:
+        tree = build_clock(P, out)
+        info = json.loads((out / "build.json").read_text())
+        info["clock"] = dict(tree["params"], cells=tree["cells"], taps=len(tree["taps"]), htree_wire_um=tree["wire_um"],
+                             local_wire_um=tree["local_um"])
+        (out / "build.json").write_text(json.dumps(info, indent=1) + "\n")
+        print(json.dumps(info["clock"]))
+        return
     (out / "abstracts").mkdir(parents=True, exist_ok=True)
     views, lefs = {}, []
     npins = 0
@@ -630,7 +645,7 @@ def cmd_build(a):
             continue
         rows, st, xy = type_view(P, tn)
         views[tn] = dict(stations=st, xy=xy)
-        f = f"{t['module']}.lef"
+        f = f"{macro_name(tn)}.lef"
         (out / "abstracts" / f).write_text(lef_text(P, tn, rows))
         lefs.append(f)
         npins += len(rows)
@@ -937,6 +952,8 @@ def cmd_report(a):
         st["setup_cal_neg"] += s_setup_cal < 0
         st["hold_neg"] += s_hold < 0
         st["hold_budget_neg"] += s_hold_b < 0
+        st["setup_nom_neg"] += s_setup + sk["SS"][1] < 0             # nominal: no clock OCV
+        st["hold_budget_nom_neg"] += s_hold_b + sk["FF"][1] < 0
         st["setup_lt_tol"] += s_setup < 2 * res["insertion_tol_ps"]
         st["hold_lt_tol"] += s_hold < 2 * res["insertion_tol_ps"]
         hist_len[int(Lh // 250) * 250] += 1
@@ -1417,6 +1434,7 @@ def main(argv=None):
     b.add_argument("--out", required=True)
     b.add_argument("--mem", type=int, default=256)
     b.add_argument("--cpus", type=int, default=16)
+    b.add_argument("--clock-only", action="store_true", help="rebuild only the die clock tree (clock.def / json)")
     c = sub.add_parser("calib")
     c.add_argument("--out", required=True)
     r = sub.add_parser("report")
