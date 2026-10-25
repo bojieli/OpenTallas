@@ -32,15 +32,18 @@ if {[info exists ::env(LAYER_PARASITICS_FILE)] && [file exists $::env(LAYER_PARA
   source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
 }
 # 5_1_grt.odb carries the global routes: use them (the basis the RCX calibration was fitted on, est - RCX <= 5 ps);
-# a CTS / placement odb falls back to the placement estimate (set_wire_rc), which the 10-25 rr_h0 check showed to read
-# the pin-register clock ~75 ps EARLY against routed RCX (188 vs 263.7) -> informational only.
+# a CTS / placement odb falls back to the placement estimate (set_wire_rc) -> informational only.
+# Propagated clocks BEFORE estimate_parasitics: rsz -placement skips nets driven from an ideal clock, so estimating
+# first left the clock tree with no wire RC and read the pin-register CK ~55-62 ps early (KITS-SPARE ve_m 193 vs 316,
+# FLOW 09:41 10-25; the earlier "placement reads ~75 ps early" rr_h0 note was this).  FLOW-INFRA-2 A/B 10-25 on the
+# head + KV canary 5_1_grt.odb: -global_routing is order-independent (bit-identical); fixed placement reads +10..+13 ps.
+set_propagated_clock [get_clocks clk]
 set ot_pg_mode placement
 if {[info exists ::env(OT_POSTCTS_GRT)] && $::env(OT_POSTCTS_GRT) && ![catch {estimate_parasitics -global_routing}]} {
   set ot_pg_mode global_routing
 } else {
   estimate_parasitics -placement
 }
-set_propagated_clock [get_clocks clk]
 set per [get_property [get_clocks clk] period]
 foreach cf [list /work/clock_family.tcl [file join [file dirname [info script]] clock_family.tcl]] {
   if {[file exists $cf]} { source $cf; break }
