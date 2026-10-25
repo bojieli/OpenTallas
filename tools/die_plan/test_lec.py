@@ -668,3 +668,16 @@ def test_structural_twin_closure_rare_carry_and_valid_pipe(tmp_path):
         m, _ = L.build(with_compare=True, with_hyp=True)
         status = _sim_prove(m)
         assert ('differs' in status.values()) == mutant
+
+
+def test_structural_cross_side_alias_and_wrong_enable(tmp_path):
+    for mutant in (False, True):
+        g, gm = _seq(tmp_path, 'alias_gold', ['d','wrong'], ['wce_n','out'],
+                     lambda m,x: {'wce_n':x['d'],'out':x['wce_n']})
+        t, tm = _seq(tmp_path, 'alias_gate', ['d','wrong'], ['wce3','out'],
+                     lambda m,x: {'wce3':x['wrong'] if mutant else x['d'],'out':x['wce3']})
+        L = lec.Lec(g,gm,t,tm)
+        n = lec.structural_twin_closure(L,[])
+        assert n == (0 if mutant else 1)
+        m,_ = L.build(with_compare=True,with_hyp=True)
+        assert ('differs' in _sim_prove(m).values()) == mutant

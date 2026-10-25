@@ -1670,6 +1670,23 @@ def structural_twin_closure(L, log):
                 if choices:
                     c, dc = min(choices)
                     new.append(((side, k), ("eq", side, c, (d ^ dc) & 1)))
+        # The frontends also expose different wire aliases for one flop.
+        # Compare exact functions across sides, including rare enable bits
+        # whose random signatures look constant (XS3 wce_n / wce3).
+        gold = {}
+        for k in L.gonly:
+            d = L.dlit.get(("gold", k), 0)
+            if k.startswith("ff:") and d > 1 and ("gold", k) not in L.hyp:
+                gold.setdefault(d >> 1, []).append((k, d))
+        for k in L.tonly:
+            d = L.dlit.get(("gate", k), 0)
+            if not k.startswith("ff:") or ("gate", k) in L.hyp or d <= 1:
+                continue
+            choices = gold.get(d >> 1, [])
+            if choices:
+                c = closest(k, [q for q, _ in choices])[0]
+                dc = dict(choices)[c]
+                new.append((("gate", k), ("eq", "gold", c, (d ^ dc) & 1)))
         if not new:
             break
         L.hyp.update(new)
