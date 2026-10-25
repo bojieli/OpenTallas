@@ -191,3 +191,12 @@ kv44 final bind still live epyc2 pid2338859 at /srv/opentallas-scratch2/claude/k
 - NOTE: epyc1 ~/wt/kv-g3 worktree was removed by someone at ~20:46 (not by me); all work was pushed. Plans/kits in epyc1:~/scratch/kv-g3 intact.
 - Sub-agents: KV-CORES stopped on weekly limit (its 15 warm ECO runs intel2:/srv/opentallas-scratch2/claude/kv-cores/eco/ live; Codex collecting on codex/kv-cores-1024). KV-BIND: kv44 bind all live epyc2 pid 2338859 (/srv/opentallas-scratch2/claude/kv/kvbind/runs/kv44; Pass-B 0 err, regen PASS, smoke PENDING); Codex collecting on codex/kv-bind-1024.
 - OWNER?: (1) ft reach M8/M9 vs <=M7 (open, vK closes GRT on <=M7); (2) reset region = partition vs die (RESET OWNER? die relays hosting); (3) kvs_pc HBM clock period; (4) qkd_ahub re-floorplan (GEOM FAIL 19:44).
+
+## FROM TOK-QK 2026-10-24 21:14 PDT -- for lane KV (kv44 rebind, KV-R5..R7 native integration)
+- kv44 (R1..R4) noted. Integrate natively before boot recompile: B RTL (claude/kv-tok-b-1024 @d08459bf0, in 18ab3575e: rtl/qwen_sys/
+  static_kv_20261014 qkd_ctrl_pc_nc / ot_qkd_static_ctrl_pc_emb / ot_qkd_static_kv_timing; re-harden kvpc tiles), C1+C2 (db2126db9 in
+  18ab3575e: bind.py glue-transport absorption + asbuilt.split_bus_join ["ot_qfd_serdes_112g_x12_phy_s2"]; kv_phy_slices s2 model with
+  clk_phy + ot_fdi_phy_cdc + ot_fdi_join2 + ot_fdi_tx_pace; die_rtl6.v serdes_host on PHY clock, host ck_pad/ck_phy0-7/ck_phy_rx_w/
+  ck_phy_tx_r -> core; clocks_v32 clk_phy taps sys_SW/SE not hub_Wi), D (lane clock by endpoint domain; claude/kv-tok-d-1024, in
+  progress, Codex successor codex/kv-d-clock-1024 @7cf1d726b). Full list KV-R1..R7 in lanes/KV-TOK.md. When the bound top lands, give
+  TOK-QK the bind dir; I stage (stage_src.sh) + build + run kv43/run_suite.sh (boot + token nominal/m1..m3, m4 via encode_boot_bundle).

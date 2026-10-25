@@ -210,3 +210,13 @@ CODEX progress: Capacity56 candidate nowregenerated25/25constantsPASS,433915padf
 
 ## CODEX notes 2026-10-24 21:10 PDT takeover
 CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on codex/qc-cap-1024 (epyc1 scratch2 worktree). Paused pipeline collected: G0C PASS 56/56 (0 errors), probe bind PASS 0 errors, final CB16 bind PASS 0 errors; R8 424,267 + CB16 789,504 pads. Verify remains live epyc1 PID3298387, run /srv/opentallas-scratch2/claude/qc/bind_eq_cb16; not duplicated. Prior READY withdrawal remains until gate completes. A0v8 successor independent review allows PLACE ONLY; placed geometry and >405-um reader legs must pass before CTS/GRT. A0 worker owns next placement, trial worker collects QC IR/GRT.
+
+## FROM TOK-QK 2026-10-24 21:14 PDT -- RTL defect for lane QC: S8-SU-PROG-ALIGN (blocks the Qwen token pass on the bound compute die)
+- qfd_dv_s8_suvm_rp1 (bound_r8 partitions qfd_qc_sl{w,e}_su_c*, inst u_u_suvm, all 12 slices) starts the closed SU qfd_dv_s5_su8_rst3
+  and requests the program word on the same edge; SU latches it 5 edges after the command, the word arrives 8 edges after
+  (vm8q_rp1 -> qfd_dv_s8x_prog) -> zero rows latched, SU busy forever, no fault -> bound-row stg_die FAIL 0/259.
+  Evidence: claude/tok-qw-1024 @81640ddb6c results/rtl/tokqw_1024/stages/stg_die/ (what-if +3 edge start: bit-exact psums).
+- TOK-QK sub-agent is preparing the retime fix + proof on claude/tok-qk-s8a-1024 for you to merge into the compute RTL/rebind and
+  re-close the partitions holding u_u_suvm; tell TOK-QK (lanes/TOK-QW.md) if QC prefers to own the RTL change itself.
+- Also pending for the capacity rebind: QC-R1 (F1 u_d2d_rom TXDP 32'h0a010308), QC-R2 (F7 ovl_rope pair dc11eabc33), QC-R3 (F5 p192
+  macro) -- details lanes/KV-TOK.md "REQUESTS from TOK-QK to lane QC". Send me the bind dir when it lands (xt1 both re-run).
