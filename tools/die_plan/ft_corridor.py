@@ -255,11 +255,42 @@ def _place_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, jog, step, lo
                                     path=[[round(float(v), 2) for v in p] for p in path])
 
 
-def place(raw, types, reach_um=405., margin=.98, jogs=None, bands=None):
+def place_split_slot(slot, a, b, fin, fout, w, h, boxes, alloc, budget, split_bits):
+    """Route contiguous bit bands separately through an L corner, preserving every bit's pipeline depth."""
+    if split_bits < 1:
+        raise ValueError("split_bits must be positive")
+    used = set(alloc.used)
+    results = []
+    try:
+        for start in range(0, len(a), split_bits):
+            stop = min(start + split_bits, len(a))
+            try:
+                results.append(place_slot(slot, a[start:stop], b[start:stop], fin, fout, w, h, boxes, alloc, budget))
+            except ValueError as e:
+                raise ValueError(f"{slot['name']} bits{start}:{stop} stations{slot['stations']}: {e}") from e
+    except Exception:
+        alloc.used = used
+        raise
+    sites = [np.concatenate([r[0][stage] for r in results], axis=0) for stage in range(int(slot["stations"]) - 1)]
+    cents = [points.mean(axis=0) for points in sites]
+    chain = [a, *sites, b]
+    hops = [float(np.abs(q - p).sum(axis=1).max()) for p, q in zip(chain, chain[1:])]
+    if max(hops, default=0) > budget + 1e-6:
+        alloc.used = used
+        raise HopError(max(hops) - budget)
+    ledger = dict(len_um=max(r[3]["len_um"] for r in results), stations=int(slot["stations"]),
+                  split_bits=split_bits, groups=len(results), hops_um=[round(v, 3) for v in hops],
+                  max_alloc_disp_um=max(r[3].get("max_alloc_disp_um", 0) for r in results),
+                  group_paths=[r[3] for r in results])
+    return sites, cents, results[0][2], ledger
+
+
+def place(raw, types, reach_um=405., margin=.98, jogs=None, bands=None, split_bits=None):
     model = S.Plan(raw)
     ledger = []
     jogs = jogs or {}
     bands = bands or {}
+    split_bits = split_bits or {}
     for tn in types:
         ty = model.types[tn]
         w, h = ty["outline_um"]
@@ -278,9 +309,11 @@ def place(raw, types, reach_um=405., margin=.98, jogs=None, bands=None):
             wd = slot["width"] + 1
             a = np.array([pins[(name + "_i", i)] for i in range(wd)])
             b = np.array([pins[(name + "_o", i)] for i in range(wd)])
-            sites, cents, path, led = place_slot(slot, a, b, slot["in_face"], slot["out_face"], w, h, boxes, alloc,
-                                                 budget, jog=jogs.get(f"{tn}/{name}"),
-                                                 band=bands.get(f"{tn}/{name}"))
+            args = (slot, a, b, slot["in_face"], slot["out_face"], w, h, boxes, alloc, budget)
+            if split_bits.get(f"{tn}/{name}"):
+                sites, cents, path, led = place_split_slot(*args, split_bits=split_bits[f"{tn}/{name}"])
+            else:
+                sites, cents, path, led = place_slot(*args, jog=jogs.get(f"{tn}/{name}"),band=bands.get(f"{tn}/{name}"))
             slot["regs_um"] = [a.mean(axis=0).round(4).tolist()] + [c.round(4).tolist() for c in cents]
             slot["bit_site_cell_um"] = list(CELL)
             slot["bit_sites_um"] = [(p - np.array([CELL[0] / 2, CELL[1] / 2])).round(6).tolist() for p in sites]
