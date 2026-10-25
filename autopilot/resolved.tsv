@@ -49,3 +49,6 @@ KITS-SPARE-2/HB hist_bank	2026-10-25 10:43	QUEUED	ot_s81ph_native_sel_hist_bank_
 PATH-HBM-TKMTERM	2026-10-25 10:53	QUEUED	terminal_idpin row d848929ed189	PATH-HBM	2026-10-25 11:35 PDT	queued, WAIT-CANARY
 PATH-KV-PC2 11:1x	2026-10-25 11:11	NOT-ROUTE	qkd_kvs_pc + head_p pc2 kits	PATH-KV	2026-10-25 11:35 PDT	held: PATH-KV-PC3 restores merged copy flops + LEC first; PC3 re-REQs
 PATH-S81/COLL	2026-10-25 11:17	SUPERSEDED	claude/path-s81-coll-1025@177137898f	PATH-S81	2026-10-25 11:54 PDT	folded into batched S81 delta claude/plan-delta-s81-cl-1025@619d0e262e (APPROVED, ROOT-MERGE-5)
+PATH-QC-NK-R6	2026-10-25 11:24	QUEUED	qfd_tile_nk_a0c row 14e02be8d1cf	PATH-QC	2026-10-25 12:14 PDT	queued, WAIT-CANARY
+PATH-QC-NK-R6	2026-10-25 11:52	QUEUED	qfd_tile_nk_a0c row 14e02be8d1cf	PATH-QC	2026-10-25 12:14 PDT	queued, WAIT-CANARY (per-row re-post)
+PATH-QC-SRAMIF-S7	2026-10-25 11:39	QUEUED	qfd_dv_s8x_prog__s7 row ddc332d9c2dc	PATH-QC	2026-10-25 12:14 PDT	queued, WAIT-CANARY

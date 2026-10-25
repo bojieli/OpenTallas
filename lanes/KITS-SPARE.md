@@ -111,3 +111,4 @@ Main has NO B2n HBM core views (canary uses B2l): built views_b2n.json from main
 - OWNER?/COORD: S81 vn_b (42 replicas) needs codex/s81-sw-0719@3bf7d67d1c (HW_STAGE) merged before its kit; xrt3 M6 pin grant.
 - No live jobs, no worktrees.
 2026-10-25 11:54 PDT COORD: ot_s81sl_ve_m_1eb0362d3119 (structural.tsv 51d680f779ac): superseded by the DIE-FT-S81 M5-cap re-hardening of the VE cores; no kit from this row.
+2026-10-25 12:14 PDT COORD: ot_s81sl_ve_s_476848970c04 (review.tsv aa5f58fb3109): superseded by the DIE-FT-S81 M5-cap VE core re-hardening; no kit from this row.
