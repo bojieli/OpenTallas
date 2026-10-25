@@ -164,3 +164,20 @@ CODEX took over genuine L14 norm-entry H reconstruction on codex/entry-engram-10
   - P.V slot max 295 -> 296 (per-slice -1..+2).
   - Contract: at most 1 gather word per 2 cycles per fold direction; a violation is a sticky fault, not stalled.
   - Please confirm the gather duty in the compiled AR/MTP schedule.
+
+2026-10-25 03:17 PDT S81/PORTFIX -> TOK-DS: boot config + fault formats (S81 DECISIONS 3/4), branch claude/s81-portfix-1024r@8f99dac8c9.
+  Full specs: results/s81_portfix_1024/cfg_formats.md and fault_report_format.md.
+  (1) eng cfg = ONE V CTL beat on the column-6 rung (s_6S.vo->vi_s or s_6N.vo->vi_n):
+      kind 0; payload p = beat[21+:186]; p[15:0] = 0 (slice mask); p[16] = en; p[17] = layer; p[19:18] = rank;
+      p[20] = 1 (op CFG); p[28:21] = uid 0xE6.
+      Required once after EVERY reset on every die, before the first f_ks start. An f_ks start before cfg sets the
+      sticky fault.
+      Keep free: that rung slot, the far slice's ci slot +1, and the tier-line slots.
+      OPEN ITEM for TOK-DS: column 6 has no CTL source. Deliver via the slice xr SEND path: a send config (CTL
+      target 4, s_dir V, s_kind 0, s_mask 0, s_leaf {rank[0], layer, en}, s_row {0xE6, 1, rank[1]}) plus one leaf
+      lo row-pair burst at s_6S or s_6N.
+  (2) iqf CONFIG = one 513-b qs word on idx__s_3S_C__iqf: d[511:508] = 11, len 0, uid in d[7:0].
+      dsdv_idx_bsplit routes type 11 to iq.
+  (3) Faults: one 1-b sticky fault per unit on the sid/vid rings. The die word is t_host[75:71]
+      {fault, sid, vid, own, wf}, sent to the host in a THOST frame on change. Detailed status codes are dropped.
+      0 cycles on the token path.
