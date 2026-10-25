@@ -97,21 +97,40 @@ def io_tcl(P, tn, pins):
 RELAY_MID_RE = r"^(.*[.]u_y_[A-Za-z0-9_]+)[.]"
 
 
-def _snap_tap(P, x, y):
-    """snap an interior tap pin: across the pin to the top layer's tracks, along it to the layer below's (the pin
-    centre must sit on a track crossing, else DRT-0422 "no routing tracks pass through the center" -> DRT-0255)."""
+def _snap_tap(P, x, y, pg_legal=True):
+    """Interior tap at a crossing of the top two routing layers, clear of both layers' PG access bands.
+
+    Partition stripes are offset from CORE_AREA (CORE_MARGIN_UM); the face-pin band policy also includes the
+    zero-origin phase. Keeping access clear at both phases protects the pin rectangle AND its lower-layer via.
+    Hard partition interfaces retain their declared LEF coordinates (pg_legal=False); their owner fixes the view.
+    """
     top = P.layer_budget["partition_signal_max"]
     L = P.layers[top]
-    Lb = P.layers.get(f"M{int(top[1:]) - 1}", L)
+    below = f"M{int(top[1:]) - 1}"
+    Lb = P.layers.get(below, L)
 
-    def snap(v, LL):
-        return round(LL["offset_um"] + round((v - LL["offset_um"]) / LL["pitch_um"]) * LL["pitch_um"], 4)
-    return (snap(x, L), snap(y, Lb)) if L["dir"] == "V" else (snap(x, Lb), snap(y, L))
+    def snap(v, LL, ln):
+        pitch = LL["pitch_um"]
+        k = round((v - LL["offset_um"]) / pitch)
+        if not pg_legal:
+            return round(LL["offset_um"] + k * pitch, 4)
+        # Band guards already include the stripe pair, pin half-width and at least two routing pitches.
+        def clear(q):
+            return not any(S.pg_blocked(ln, q - origin) for origin in (0.0, CORE_MARGIN_UM))
+        for radius in range(1000):
+            ks = [k] if radius == 0 else [k-radius, k+radius]
+            ok = [round(LL["offset_um"] + j*pitch, 4) for j in ks
+                  if clear(LL["offset_um"] + j*pitch)]
+            if ok:
+                return min(ok, key=lambda q: (abs(q-v), q))
+        raise ValueError(f"no PG-free interior tap track near {v:g} on {ln}")
+    return ((snap(x, L, top), snap(y, Lb, below)) if L["dir"] == "V" else
+            (snap(x, Lb, below), snap(y, L, top)))
 
 
 def clock_pins(P, tn):
     """every clock tap pin of a type (COORD 10-23 R4 grid, schema.tap_grid), snapped: [(port, x, y)]."""
-    return [(n,) + _snap_tap(P, x, y) for n, x, y in S.tap_grid(P, tn)]
+    return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y in S.tap_grid(P, tn)]
 
 
 def tap_points(P, tn):
@@ -126,12 +145,13 @@ def tap_points(P, tn):
         rs = [ck[0], ck[1] + 8.64 if ck[1] + 8.64 < h - 1 else ck[1] - 8.64]
         if t.get("hard_cores"):     # S81-P8 10-23: the reset tap also sits in a channel, off the clock taps
             rs = list(S.tap_clear(t, rs[0], rs[1], cks, clear=4.32))
-    return [_snap_tap(P, *ck), _snap_tap(P, *rs)]
+    return [_snap_tap(P, *ck, pg_legal=not t.get("hard")),
+            _snap_tap(P, *rs, pg_legal=not t.get("hard"))]
 
 
 def core_tap_pins(P, tn):
     """CP2 early core taps of a type (schema.core_taps; clock.core_taps 'early'), snapped: [(port, x, y)]."""
-    return [(n,) + _snap_tap(P, x, y) for n, x, y, _ in S.core_taps(P, tn)]
+    return [(n,) + _snap_tap(P, x, y, pg_legal=not P.types[tn].get("hard")) for n, x, y, _ in S.core_taps(P, tn)]
 
 
 def core_tap_rows(P, tn):
