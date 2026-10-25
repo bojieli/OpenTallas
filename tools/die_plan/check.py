@@ -105,6 +105,54 @@ def on_track(c, L):
 
 
 # --------------------------------------------------------------------------------------------------- geometry
+def check_ft_macro_sites(P, R):
+    """Reject station cells inside placed SRAM/ROM/core footprints at actual bit sites."""
+    import gen_phys
+    import ft_bit_sites
+    count = 0
+    for tn, t in P.types.items():
+        try:
+            boxes = S.placed_macro_boxes(t)
+        except ValueError as exc:
+            R.err('geometry', f'type {tn}: {exc}', type=tn)
+            continue
+        if not boxes or not t.get('ft_slots'):
+            continue
+        pins = defaultdict(dict)
+        for bus, bit, _layer, x, y, face in gen_phys.type_pins(P, tn):
+            pins[bus][bit] = (x, y, face)
+        for slot in t['ft_slots']:
+            try:
+                ft_bit_sites.validate_slot(slot)
+            except ValueError as exc:
+                R.err('geometry', f'type {tn} slot {slot["name"]}: {exc}', type=tn)
+                continue
+            name = slot['name']; stages = int(slot.get('stations', 1)); hits = 0; example = None
+            pi, po = pins[name+'_i'], pins[name+'_o']
+            for bit in sorted(set(pi) | set(po)):
+                ap = pi.get(bit) or po[bit]; bp = po.get(bit) or pi[bit]
+                def inset(p):
+                    x, y, face = p
+                    return {'E': (x-1,y), 'W': (x+1,y), 'N': (x,y-1), 'S': (x,y+1)}[face]
+                a, b = inset(ap), inset(bp); route = zroute(a, b, ap[2], bp[2]); length = plen(route)
+                for j in range(stages):
+                    if slot.get('bit_sites_um') and j > 0:
+                        x, y = slot['bit_sites_um'][j-1][bit]; w, h = slot['bit_site_cell_um']
+                        rect = (x, y, x+w, y+h)
+                    else:
+                        xy = a if slot.get('bit_sites_um') else tuple(slot['regs_um'][j]) if slot.get('regs_um') else point_at(route, length*j/stages)
+                        x, y = xy; rect = (x, y, x, y)
+                    for macro, (x0,y0,x1,y1) in boxes.items():
+                        # Centres have no extent; explicit cells must clear with their whole envelope.
+                        hit = (x0+EPS < rect[0] < x1-EPS and y0+EPS < rect[1] < y1-EPS) if rect[0] == rect[2] else (min(rect[2],x1)-max(rect[0],x0)>EPS and min(rect[3],y1)-max(rect[1],y0)>EPS)
+                        if hit:
+                            hits += 1; example = example or (j, bit, macro); break
+            if hits:
+                j, bit, macro = example; count += hits
+                R.err('geometry', f'type {tn} slot {name}: {hits} actual-bit station cells/sites intersect physical macros (stage {j}, bit {bit}, macro {macro})', type=tn)
+    return count
+
+
 def check_geometry(P, R):
     g = P.grid
     for nm, base in [("ORFS base lattice", S.BASE_LATTICE_UM)] + \
@@ -170,8 +218,9 @@ def check_geometry(P, R):
             if span > P.reach * sl.get("stations", 1) + EPS:
                 R.warn("geometry", f"type {tn} slot {sl['name']}: crossing ~{span:.0f} um > {sl.get('stations', 1)} "
                        f"station(s) x reach {P.reach:.0f} (see hops)", type=tn)
+    macro_hits = check_ft_macro_sites(P, R)
     return dict(partition_area_mm2=area / 1e6, channel_area_mm2=chan / 1e6, uncovered_mm2=max(gap, 0) / 1e6,
-                fill=area / (W * H), planned_channels=chans)
+                fill=area / (W * H), planned_channels=chans, station_macro_intersections=macro_hits)
 
 
 def fmt_rect(r):
