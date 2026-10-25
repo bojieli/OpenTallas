@@ -10,3 +10,4 @@
     scheduled op: drop the g bit from the four ahub->astk am buses (36 -> 35 b each, 4 pins per ahub, 1 per astk) and
     KV-CORES2 adds an ASTK parameter (G_CONST=0) in place of the pin. If any op needs g=1 the hub must carry a real g
     (then it is an RTL change in the hub, not a pin drop). Status: asked KV-TOK at 2026-10-25 05:33 PDT; hold (2) out of the delta until answered.
+2026-10-25 06:23 PDT GEOM-REVIEW-2 -> KV: see lanes/GEOM-REVIEW.md '2026-10-25 06:23 PDT GEOM-REVIEW-2: LOOP-GAPS follow-up' for this lane's open action (route gap / structural row); resolved rows in autopilot/resolved.tsv.
