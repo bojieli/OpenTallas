@@ -169,21 +169,42 @@ def geom_tag(ref):
     return LG.tag_of(m.group(1) if m else (ref or ""))
 
 
+def _kit_ident(r):
+    return (r["type"], r["kit"], r["src"].split("@")[-1], r["id"])
+
+
+def geom_groups(rows):
+    """{GEOM tag: [(type, kit, src sha, row id), ...]} over the valid queued rows: a verdict applies to a row only when
+    the reply names its type / kit dir / row id, or a sha / __suffix no other row of the tag shares (2026-10-25
+    btab_s7 + prog_s7 share PATH-QC-SRAMIF-S7 and @90bf56dfa)"""
+    out = {}
+    for r in rows.values():
+        if r["error"] or not r["geom_ref"]:
+            continue
+        tag = geom_tag(r["geom_ref"])
+        if tag:
+            out.setdefault(tag, []).append(_kit_ident(r))
+    return out
+
+
 def resolve_geom(rows, geom_text):
     """GEOM PASS -> submit within one tick: a row queued before its verdict (geom REQ/WAIT, geom_ref = the GEOM REQ
-    tag) takes the verdict from lanes/GEOM-REVIEW.md once a REPLY/VERDICT of that tag names the kit.
+    tag) takes the verdict from lanes/GEOM-REVIEW.md once a REPLY/VERDICT of that tag names the kit (by type, kit dir
+    basename or row id; the shared branch sha alone never names one of several rows under the tag -> AMBIGUOUS-GEOM).
     Re-resolved EVERY tick and the LATEST verdict of that tag naming the kit wins (LG.geom_verdicts keeps the newest
     reply after the newest REQ), so a later FAIL demotes an earlier PASS-COND (2026-10-25: R5 9a237c656129 got a
     plan-only PASS-COND 09:59, post-CTS FAIL 10:06).  A row queued as PASS/PASS-COND by hand with a tagged geom_ref is
     checked too, but only ever DEMOTED (latest verdict FAIL), never changed by a PASS.  admit_new never demotes a job
     that is already submitted: it records a geom_alerts.tsv row + a LOOP-GAPS line for the coordinator instead."""
+    groups = geom_groups(rows)
     for r in rows.values():
         if r["error"] or not r["geom_ref"]:
             continue
         tag = geom_tag(r["geom_ref"])
         if not tag:
             continue
-        v = LG.geom_verdicts(geom_text, tag, r["type"], r["src"].split("@")[-1])
+        v = LG.geom_verdicts(geom_text, tag, r["type"], _kit_ident(r)[2], kit=r["kit"], rid=r["id"],
+                             others=[g for g in groups.get(tag, []) if g[3] != r["id"]])
         if not v:
             continue
         queued_ok = r["geom"].upper() in GEOM_OK
@@ -1087,6 +1108,7 @@ def write_loop_gaps(st, rows, geom_text):
         lane_texts[ln] = t if t else None
     gaps += LG.gaps_review(trows, lane_texts, geom_text, now)
     gaps += LG.gaps_ready(read_coord("lanes/COORD-REVIEW-QUEUE.md"), now)
+    gaps += LG.gaps_geom_ambiguous(geom_text, geom_groups(rows), now)
     for j in jobs:                                     # oldest-first render; keeps the line while the run is live
         if j.get("geom_fail_alert") and j.get("status") == "RUNNING":
             gaps.append((j.get("geom_fail_alert_t") or now,
