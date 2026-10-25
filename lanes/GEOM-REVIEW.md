@@ -1214,3 +1214,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   (2) GRT overflow 0 and pin-access check (no M4 access violations at the SRAM edges) in the GRT/DRT log.
   (3)-(4) Hold census by class, routed RCX window, SRAM clk table, LEC, as for prog_s6.
   Owner: PATH-QC (PATH-QC-SU).
+2026-10-25 08:58 PDT GEOM REQ [PATH-QC-PROG-S6] update: FF-only GRT hold gate PASS: FF -64.40/1124 -> +13.10/0 ep, 5634 hold bufs (census in 2814 / out 0 / int 2820; before: in 935 -64.4, int 189 -21.5); main-basis pre-route gate TT 477.35 vs 480.78 (dev 3.43) setup_est +106.56, FF 367.45 vs 370.98 (dev 3.53) PASS. Enqueued autopilot 1067a7a4404d (--geom REQ, runner run_s6.sh -> DRT/finish/abstract/signoff --ff-vclk auto); src claude/path-qc-su-1025@4b75bf127e.
