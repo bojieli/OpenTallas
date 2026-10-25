@@ -128,7 +128,8 @@ def gen_one(P, tn, out, adjust):
         "set ot_dbu [[ord::get_db_block] getDbUnitsPerMicron]",
         "foreach i [[ord::get_db_block] getInsts] { set bb [$i getBBox]; "
         "puts $ot_f \"[$i getName]\\t[[$i getMaster] getName]\\t[expr {[$bb xMin]/double($ot_dbu)}]\\t"
-        "[expr {[$bb yMin]/double($ot_dbu)}]\" }",
+        "[expr {[$bb yMin]/double($ot_dbu)}]\\t[expr {[$bb xMax]/double($ot_dbu)}]\\t"
+        "[expr {[$bb yMax]/double($ot_dbu)}]\" }",
         "close $ot_f",
     ]
     tcl = tcl[:k] + post + tcl[k:]
@@ -286,6 +287,10 @@ def classify(r, hot):
             cls = "HOTSPOT"
         why.append(f"skeleton FF hold WNS {ff:.1f} ps ({sta.get('ff_hold_viol')} endpoints)")
     geometry = r.get("ft_hops") or {}
+    if geometry.get("actual_sites") is False or geometry.get("errors"):
+        cls = "STRUCTURAL"
+        why.append("actual post-placement FT geometry unqualified: " +
+                   "; ".join(geometry.get("errors") or ["actual station sites unavailable"]))
     if geometry.get("over_reach"):
         cls = "STRUCTURAL"
         legs = ", ".join(f"{k} {v:g}" for k, v in list(geometry["over_reach"].items())[:3])

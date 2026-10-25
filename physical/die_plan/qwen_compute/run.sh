@@ -12,6 +12,7 @@ V=${1:-B}; O=$D; [ "$V" = B ] || O=$(mktemp -d /tmp/qc_plan_$V.XXXX)
 python3 "$D/gen_plan.py" --variant "$V" --census "$I/qc_census.json.gz" --slice-fp-w "$I/fp_w.json" \
   --slice-fp-e "$I/fp_e.json" --slice-record "$I/s8_lp_record.json" --su-split "$I/slice_grid.json" \
   --slice-face-map "$I/slice2_face_map.json" --out "$O/die_plan.json"
+python3 "$D/apply_start_broadcast.py" "$O/die_plan.json"
 python3 "$T/gen.py" latency "$O/die_plan.json" --inplace --out "$O"
 # PLAN-TOOL5 die IO windows (die_io.json sidecar, read by check.py): host link = ucie_kv (d2d_rom <-> KV/system die,
 # which carries the host SerDes); S0-S2 SerDes = collective links; coll UCIe on the W edge in coll_ucie
