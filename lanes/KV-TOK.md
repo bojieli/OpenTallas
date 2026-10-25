@@ -106,3 +106,22 @@ CODEX progress: BO1opt-in source mergedmaina2757edd53, variantdefault0; sixrealb
   all on-die lanes on core clock; rate/flow absorbed only at the off-die host link (elastic allowed there by owner rule);
   remove the unsynchronised crossings instead of stacking a second CDC. C1 durable fix in bind.py (+test) for lane KV's rebind.
 - Next (me): kv43 staged tree = kv42 + BO1 hub_Wi + A (+B +C via kv43/apply_{B,C}.sh), fresh hier build via ot-run on epyc2.
+
+## REQUESTS from TOK-QK to lane KV (KV re-bind from scratch, owner decision 9) -- 2026-10-24 19:34 PDT (will be extended when B/C land)
+Vehicle recipe: tools/qwen_layerbench/kv_dieslice/{stage_src.sh BIND_DIR OUT, build.sh STAGED OUT (J=64, ~32 min, ~35-45 GB),
+rebuild_top.sh (THREADS=16)} on claude/kv-tok-1024 @adb22f9008; kv43/stage_kv43.sh shows the post-bind deltas the rebind must
+make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + run boot/token + mutants on it.
+- KV-R1 (fix A): u_kvpc<k>.rst_n of every kv3_pc* part (96 inst, 24 types) = the delivered HBM reset (host.hbm_rst_n lane,
+  i_host_hbm_rst_n_q[0]), NOT ri_kvpc0 = host.die_rst_n; u_slg keeps die reset. Tool: physical/die_plan/qwen_kvsys/bind/kv_kvpc_hbm_reset.py.
+- KV-R2 (BO1): declare the BO1 HOST boot-event source (main a2757edd53, opt-in variant) ON: qkd_host_root_admission_obsx_bo1.sv +
+  qkd_d2d_boot_event_bridge.sv (L643, 0 data wires changed). Candidate: epyc2:/srv/opentallas-scratch2/claude/codex-qwen/boot_bo1_bound_candidate.
+- KV-R3 (F6): KV d2d u_d2d_kv (qkd_d2d_static*_sfm) parameter OBS1_COMPAT=1 (main 60c21cd01d; 35-layer exchange PASS) -- TOK-QK adopts it.
+- KV-R4 (F7): KV dcal compiled image = the matching pair results/rtl/qwen_rom_pair_candidate_1024 (dc11eabc33: period 293,376,
+  seam C 0a010308 / K 03030443; full-frame exact + slot mutant caught). TOK-QK adopts this pair for BOTH dies (KV image_kv41
+  dcal mu period 249,600 is stale). TXDP_K 03030443 / D2D_KV_TX_LAT 67 unchanged (K1/K2 OK).
+- KV-R5 (B, C1, C2): RTL + bind.py changes coming from TOK-QK sub-agents (branches claude/kv-tok-b-1024, claude/kv-tok-c-1024).
+## REQUESTS from TOK-QK to lane QC (compute re-bind on the capacity plan)
+- QC-R1 (F1): param_regen rule glue.u_d2d_rom TXDP = 32'h0a010308 (regen D2D_TXDP_C [8,3,1,10]; bound_r8 has 0 -> D2D_TXDP_NOT_COMPILED trap).
+- QC-R2 (F7): compute sys_face qfd_d2d_cal_seq_ovl_rope images = results/rtl/qwen_rom_pair_candidate_1024/ovl_release_rope (same pair as KV-R4).
+- QC-R3 (F5): ot_sram_1r1w_64x137_m1_r2c2_p192 macro name (main b1e16de8f0) must elaborate in the bound glue.
+- When the capacity rebind lands: tell TOK-QK the bind dir; I re-run xt1 both (lead 16 + schedule gate + mutants) on it.
