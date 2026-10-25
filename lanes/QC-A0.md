@@ -139,3 +139,21 @@ CODEX progress: Capacity56 candidate nowregenerated25/25constantsPASS,433915padf
   ft kit on all dies): (a) ft kits route to M9 with M8/M9 global adjustment = 1 - cut_avail (die PG/spine share), or
   (b) stations every <= 405 um inside partitions (more stations -> more R8 pads / latency), or (c) die-level ft routing.
   Failed verdict kept; no follow-up route until decided.
+
+## PARKED 19:06 PDT
+- Branch claude/qc-a0-1024 @0850852fc0 (pushed). NOT merged: it carries the WIP capacity plan whose G0 has 66 [r8] errors
+  (stale committed bus_groups/landing). Gated parts on it: bind.py kit-rtl spare-ft-bit stations 24f94f8d3b (test_bind 26
+  pass), ft_regs.py, tap_balance merge with main.
+- Live jobs (keep running, collect): A0 v7 routes via ot-run on localhost pids 426433 (NK) / 429620 (NL) ->
+  intel2:/srv/opentallas-scratch2/claude/qc-a0/run_{nk,nl}_v7 (still in 5_1 GRT congestion iterations, NK 21/30, NL 10/30
+  at 19:06 = heavy congestion; pathfinding only, no G3 credit). Logs ~/scratch/qc-a0/logs/a0_{nk,nl}_route.log.
+- Results: plan (capacity + ft_regs + 5-station serdes TX + grid+sinks coll_ftc + A0 v7 taps): G0C 56/56, G0 FAIL 66 [r8]
+  only. coll_ftc g3i: NOT SIGNED (TT setup -126.95, FF hold -4.40, slew 4165/3675; spread 45.5/38.3 PASS; DRC 0) -- root
+  cause: kit routes ft hops on M2-M7 (reach 405) while the plan budgets them over the top on M8/M9 (stations <= 750 um).
+  coll_ftc g3h (bound_r8): face_guard FAIL (kept). A0 equivalence: kit = bound +7 cycles on t_out (codex receipts).
+- NEXT: (1) QC-TOK names canonical bus_groups + R8/CB16 landing; rebind on 0850852fc0's plan (serdes 5 stations included),
+  gen.py latency --groups, G0 PASS, commit, merge. (2) A0 +1 cycle priced in compiler/R8 (QC-TOK). (3) G3 kits sle/slw
+  st_a/st_b from the rebind (kit-rtl + gen.py phys), after (4) the reset-rule tooling lands and (5) COORD decides the ft
+  routing-layer question; review images before routing. (6) collect A0 GRT overflow + images.
+- OWNER?/COORD: ft hop layers in partition kits (M8/M9 allowed in ft kits vs stations every <= 405 um vs die-level ft
+  routing); owner of the reset-rule implementation in gen_rtl/gen_phys; canonical QC bus_groups (main itself FAILS G0 R8).
