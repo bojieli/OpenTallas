@@ -1,0 +1,605 @@
+{
+ "log": [
+  "floorplan: middle region 7257.6 -> 5011.2 um (die H 18351.4 -> 16105); R4 1555.2: b102 708.48, b103 708.48, b111 803.52, su20 2004.48, su21 1546.56, spu1 1814.4, su30 2064.96, b100 734.4, b110 414.72, su31 1831.68, b101 725.76; Rh 2419.2: io 648, b013 552.96, b003 552.96, b012 552.96, b002 380.16, b011 380.16, b001 552.96, b010 552.96, b000 457.92, hub 8726.4; R1 1036.8: b113 1857.6, su00 2108.16, su01 1805.76, spu0 1814.4, su10 2203.2, su11 2358.72, b112 1209.6",
+  "outlines: 32 types changed (NE_io, NW_io, q_b000, q_b001, q_b002, q_b003, q_b010, q_b011, q_b012, q_b013, q_b100, q_b101, q_b102, q_b103, q_b110, q_b111, q_b112, q_b113, q_hub, q_spu0, q_spu1, q_su00, q_su01, q_su10, q_su11, q_su20, q_su21, q_su30, q_su31, root, vsN2, vsN4); io windows moved: io_PHY_N_u_phy_Q +0,-2246.4; io_NE_io_u_lk_N2 = MY(io_NW_io_u_lk_N0)",
+  "re-route: 156 primaries (152 mirrored) on the new abutment graph, PathFinder best of 42 rounds = round 42 (overflow 0 pin-equivalents); hops mean 2.81 max 12; worst face NW_hub|root 0.97, NE_hub|root 0.97, NW_spt0|NW_spu0 0.97; worst transit NW_spu0.V 0.99, NE_spu0.V 0.99, NW_spu1.V 0.85",
+  "lane delta (lane_delta.json): L74 1491->1875 (2 hops); L74m 1491->1875 (2 hops) -- B2o puts L74 on the hub / root ABUTTING face (one neighbour hop, no transit): 2 static beats (ceil(3749/2) = 1875 NW; NE 2709 -> 1355 fits) instead of 3; full width would take another 1874 pins of the 2073.6-um hub / root face that root -> hub L12/L13 (6286 b) already uses",
+  "re-windowed 808 ports (179 grown to <= 5.6 pins/um on 2 layers); 0 infeasible face groups",
+  "mirror: 95 second-instance port windows set from the first instance (type frame)",
+  "re-windowed 12 ports (4 grown to <= 5.6 pins/um on 2 layers); 26 infeasible face groups",
+  "mirror pin tables: 14 port pairs nudged to one table, 0 unresolved",
+  "contents: 32 types re-placed (pin-aware data flow vs rigid B2n cluster, fewer away-facing core ports first, per-core orient R0/MX/MY/R180 chosen by the core_faces rule; pins / outlines unchanged): q_b000 flow 3 flipped, q_b001 rigid 1 flipped, q_b002 flow 3 flipped, q_b003 rigid 1 flipped, q_b010 rigid, q_b011 flow 3 flipped, q_b012 rigid 1 flipped, q_b013 rigid, q_b100 rigid, q_b101 rigid, q_b102 warp 1 flipped, q_b103 rigid, q_b110 flow 2 flipped, q_b111 rigid, q_b112 flow, q_b113 flow 3 flipped, q_hub warp 19 flipped, q_spb2 flow, q_spt0 flow, q_su00 flow 5 flipped, q_su01 warp 3 flipped, q_su10 flow 4 flipped, q_su11 flow 7 flipped, q_su20 warp 3 flipped, q_su21 rigid 2 flipped, q_su30 rigid 1 flipped, q_su31 rigid 2 flipped, root warp 3 flipped)",
+  "internal stations: 14201 core links over 360 um, 69370 stations",
+  "ft slot stations 299 -> 1468; internal stations 69370 -> 69370 (+0 new links over 405 um); 0 unroutable",
+  "boundary hops: 5 slot(s) got a station on their out-window (macro-blocked downstream window): q_b011.L126x5, q_b011.L132x1, q_b011.L146x4, q_b011.L52x5, q_b013.L126x1",
+  "clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4026.2, 3512.2, 2013.1, 1756.1, 1006.6, 878.0, 503.3, 439.0, 251.6, 219.5, 125.8], \"path_um\": 21755.8, \"model_insertion_ps\": 2175.6, \"ps_per_mm\": 100.0, \"segments\": 4201, \"drivers\": 1513, \"cells\": [64, 64], \"taps\": 2960, \"drivers_moved\": 507, \"driver_moved_max_um\": 423.36, \"tap_driver_max_um\": 467.4, \"taps_over_reach\": 16, \"coherence_moves\": 163, \"max_load\": 22, \"root_driver\": {\"xy\": [13988.16, 8061.12], \"stub_um\": 69.12}, \"wire_mm\": 1203.8, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b000\", \"NE_b001\", \"NE_b002\", \"NE_b003\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_hub\", \"NE_io\", \"NW_b000\", \"NW_b001\", \"NW_b002\", \"NW_b003\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 58, \"seams_over_80ps_at_5pct\": 78, \"intra_over_80ps_at_5pct\": 45}",
+  "reset: wavefront mode not in this tool base (RESET claude/reset-1024 pending) -> B2m reset kept",
+  "latency vs B2n: 64 lanes +cycles (sum +262), 182 lanes -cycles (sum -2680), net -2418"
+ ],
+ "floorplan_widths": {
+  "NW_b102": [
+   708.48,
+   "auto"
+  ],
+  "NW_b103": [
+   708.48,
+   "auto"
+  ],
+  "NW_b111": [
+   803.52,
+   "auto"
+  ],
+  "NW_su20": [
+   2004.48,
+   "auto+"
+  ],
+  "NW_su21": [
+   1546.56,
+   "to:5771.52"
+  ],
+  "NW_spu1": [
+   1814.4,
+   "to:7585.92"
+  ],
+  "NW_su30": [
+   2064.96,
+   "auto+"
+  ],
+  "NW_b100": [
+   734.4,
+   "auto+"
+  ],
+  "NW_b110": [
+   414.72,
+   "auto+"
+  ],
+  "NW_su31": [
+   1831.68,
+   "auto+"
+  ],
+  "NW_b101": [
+   725.76,
+   "to:13357.44"
+  ],
+  "NW_io": [
+   648.0,
+   "auto"
+  ],
+  "NW_b013": [
+   552.96,
+   "auto"
+  ],
+  "NW_b003": [
+   552.96,
+   "auto"
+  ],
+  "NW_b012": [
+   552.96,
+   "auto"
+  ],
+  "NW_b002": [
+   380.16,
+   "auto"
+  ],
+  "NW_b011": [
+   380.16,
+   "auto"
+  ],
+  "NW_b001": [
+   552.96,
+   "auto"
+  ],
+  "NW_b010": [
+   552.96,
+   "auto"
+  ],
+  "NW_b000": [
+   457.92,
+   "auto"
+  ],
+  "NW_hub": [
+   8726.4,
+   "to:13357.44"
+  ],
+  "NW_b113": [
+   1857.6,
+   "auto"
+  ],
+  "NW_su00": [
+   2108.16,
+   "auto+"
+  ],
+  "NW_su01": [
+   1805.76,
+   "to:5771.52"
+  ],
+  "NW_spu0": [
+   1814.4,
+   "to:7585.92"
+  ],
+  "NW_su10": [
+   2203.2,
+   "auto+"
+  ],
+  "NW_su11": [
+   2358.72,
+   "auto+"
+  ],
+  "NW_b112": [
+   1209.6,
+   "to:13357.44"
+  ]
+ },
+ "infeasible_faces": [
+  [
+   "L124_0",
+   "L80_0",
+   "L12_0",
+   "L74_1"
+  ],
+  [
+   "L38_0",
+   "L32_0"
+  ],
+  [
+   "L26_0",
+   "L59_1",
+   "L69_1",
+   "L122_1"
+  ],
+  [
+   "L123_1",
+   "L137_0",
+   "L70_1"
+  ],
+  [
+   "L81_0",
+   "L23_0"
+  ],
+  [
+   "L23m_0",
+   "L81m_0"
+  ],
+  [
+   "L91m_0",
+   "L7m_0",
+   "L70m_1",
+   "L137m_0"
+  ],
+  [
+   "L122m_1",
+   "L69m_1"
+  ],
+  [
+   "L32m_0",
+   "L38m_0"
+  ],
+  [
+   "L124m_0",
+   "L80m_0",
+   "L12m_0",
+   "L74m_1"
+  ],
+  [
+   "L29_0",
+   "L110_0"
+  ],
+  [
+   "L24_0",
+   "L55_1",
+   "L67_1",
+   "L120_1"
+  ],
+  [
+   "L120m_1",
+   "L67m_1"
+  ],
+  [
+   "L110m_0",
+   "L29m_0"
+  ],
+  [
+   "L48_6",
+   "L53_5",
+   "L117_3",
+   "L138_3"
+  ],
+  [
+   "L48m_6",
+   "L53m_5",
+   "L117m_3",
+   "L138m_3"
+  ],
+  [
+   "L149_3",
+   "L5_1",
+   "L6_1",
+   "L48_7"
+  ],
+  [
+   "L48_8",
+   "L53_3",
+   "L117_5",
+   "L138_5"
+  ],
+  [
+   "L149m_3",
+   "L5m_1",
+   "L6m_1",
+   "L48m_7"
+  ],
+  [
+   "L48m_8",
+   "L53m_3",
+   "L117m_5",
+   "L138m_5"
+  ],
+  [
+   "L28_1",
+   "L36_1"
+  ],
+  [
+   "L28m_1",
+   "L36m_1"
+  ],
+  [
+   "L28_0",
+   "L36_0"
+  ],
+  [
+   "L28m_0",
+   "L36m_0"
+  ],
+  [
+   "L48_9",
+   "L53_2",
+   "L117_6",
+   "L138_6"
+  ],
+  [
+   "L48m_9",
+   "L53m_2",
+   "L117m_6",
+   "L138m_6"
+  ]
+ ],
+ "unroutable": [],
+ "contents_unfit": [],
+ "internal_unroutable": [],
+ "route_worst_face": [
+  [
+   0.9696128710712074,
+   [
+    "NW_hub",
+    "root"
+   ],
+   12065
+  ],
+  [
+   0.9696128710712074,
+   [
+    "NE_hub",
+    "root"
+   ],
+   12065
+  ],
+  [
+   0.9653506448593772,
+   [
+    "NW_spt0",
+    "NW_spu0"
+   ],
+   9004
+  ],
+  [
+   0.9653506448593763,
+   [
+    "NE_spt0",
+    "NE_spu0"
+   ],
+   9004
+  ],
+  [
+   0.9639568689394337,
+   [
+    "NW_hub",
+    "NW_spu0"
+   ],
+   8991
+  ],
+  [
+   0.9639568689394327,
+   [
+    "NE_hub",
+    "NE_spu0"
+   ],
+   8991
+  ]
+ ],
+ "route_worst_transit": [
+  [
+   0.9925044091710761,
+   "NW_spu0",
+   "V",
+   9004
+  ],
+  [
+   0.9925044091710751,
+   "NE_spu0",
+   "V",
+   9004
+  ],
+  [
+   0.8527336860670196,
+   "NW_spu1",
+   "V",
+   7736
+  ],
+  [
+   0.8527336860670187,
+   "NE_spu1",
+   "V",
+   7736
+  ],
+  [
+   0.8332047325102881,
+   "NW_su30",
+   "H",
+   6479
+  ],
+  [
+   0.8332047325102881,
+   "NE_su30",
+   "H",
+   6479
+  ]
+ ],
+ "lane_cycle_delta": {
+  "L0": 10,
+  "L0m": 10,
+  "L2": 4,
+  "L2m": 4,
+  "L4": -41,
+  "L4m": -41,
+  "L5": 9,
+  "L5m": 9,
+  "L6": 2,
+  "L6m": 2,
+  "L8": 11,
+  "L8m": 11,
+  "L9": -16,
+  "L9m": -26,
+  "L10": 4,
+  "L10m": 4,
+  "L11": 4,
+  "L11m": 4,
+  "L12": -15,
+  "L12m": -15,
+  "L13": -24,
+  "L13m": -24,
+  "L14": 5,
+  "L14m": 5,
+  "L15": 3,
+  "L15m": 3,
+  "L17": 2,
+  "L17m": 2,
+  "L18": 3,
+  "L18m": 3,
+  "L19": -10,
+  "L19m": -10,
+  "L21": -8,
+  "L21m": -8,
+  "L22": -15,
+  "L22m": -23,
+  "L28": 1,
+  "L28m": 1,
+  "L29": -12,
+  "L29m": -12,
+  "L30": -2,
+  "L30m": -2,
+  "L31": -24,
+  "L31m": -24,
+  "L32": -5,
+  "L32m": -5,
+  "L33": -3,
+  "L33m": -3,
+  "L34": -1,
+  "L34m": -1,
+  "L35": -8,
+  "L35m": -8,
+  "L36": -10,
+  "L36m": -10,
+  "L37": -33,
+  "L37m": -33,
+  "L38": -10,
+  "L38m": -10,
+  "L39": -19,
+  "L39m": -19,
+  "L40": -3,
+  "L40m": -3,
+  "L41": -4,
+  "L41m": -4,
+  "L42": -14,
+  "L42m": -14,
+  "L43": -30,
+  "L43m": -30,
+  "L44": -31,
+  "L44m": -31,
+  "L46": -31,
+  "L46m": -31,
+  "L48": 3,
+  "L48m": 3,
+  "L50": -3,
+  "L50m": -3,
+  "L51": 6,
+  "L51m": 6,
+  "L52": 5,
+  "L52m": 5,
+  "L53": -5,
+  "L53m": -5,
+  "L55": -13,
+  "L55m": -13,
+  "L56": -23,
+  "L56m": -23,
+  "L57": -7,
+  "L57m": -7,
+  "L59": -11,
+  "L59m": -11,
+  "L60": -30,
+  "L60m": -30,
+  "L61": -19,
+  "L61m": -19,
+  "L62": -29,
+  "L62m": -29,
+  "L63": -54,
+  "L63m": -48,
+  "L64": -15,
+  "L64m": -15,
+  "L65": -20,
+  "L65m": -20,
+  "L66": -3,
+  "L66m": -3,
+  "L67": -5,
+  "L67m": -5,
+  "L68": -2,
+  "L68m": -2,
+  "L69": -9,
+  "L69m": -9,
+  "L70": -14,
+  "L70m": -14,
+  "L71": 2,
+  "L71m": 2,
+  "L72": 3,
+  "L72m": 3,
+  "L73": -13,
+  "L73m": -13,
+  "L74": -24,
+  "L74m": -24,
+  "L79": 2,
+  "L79m": 2,
+  "L80": -15,
+  "L80m": -15,
+  "L82": -11,
+  "L82m": -11,
+  "L84": -2,
+  "L84m": -2,
+  "L85": 3,
+  "L85m": 3,
+  "L86": 3,
+  "L86m": 3,
+  "L87": -5,
+  "L87m": -5,
+  "L88": -3,
+  "L88m": -3,
+  "L89": -27,
+  "L89m": -27,
+  "L90": -15,
+  "L90m": -15,
+  "L93": 3,
+  "L93m": 3,
+  "L94": 2,
+  "L94m": 2,
+  "L95": 2,
+  "L95m": 2,
+  "L96": -45,
+  "L96m": -45,
+  "L97": -18,
+  "L97m": -18,
+  "L98": -8,
+  "L98m": -8,
+  "L99": -8,
+  "L99m": -8,
+  "L100": -12,
+  "L100m": -12,
+  "L101": 7,
+  "L101m": 7,
+  "L102": -24,
+  "L102m": -24,
+  "L103": -10,
+  "L103m": -10,
+  "L104": -11,
+  "L104m": -11,
+  "L105": -13,
+  "L105m": -13,
+  "L106": -11,
+  "L106m": -11,
+  "L107": 2,
+  "L107m": 2,
+  "L108": 3,
+  "L108m": 3,
+  "L109": 2,
+  "L109m": 2,
+  "L110": -17,
+  "L110m": -17,
+  "L111": -5,
+  "L111m": -5,
+  "L112": -8,
+  "L112m": -8,
+  "L113": -2,
+  "L113m": -2,
+  "L114": -43,
+  "L114m": -42,
+  "L115": -5,
+  "L115m": -5,
+  "L117": -7,
+  "L117m": -7,
+  "L118": 7,
+  "L119": 4,
+  "L119m": 4,
+  "L120": -8,
+  "L120m": -8,
+  "L121": -7,
+  "L121m": -7,
+  "L122": -9,
+  "L122m": -9,
+  "L123": -11,
+  "L123m": -11,
+  "L124": -18,
+  "L124m": -18,
+  "L125": -10,
+  "L125m": -10,
+  "L126": 8,
+  "L126m": 8,
+  "L128": -29,
+  "L128m": -29,
+  "L130": -31,
+  "L130m": -31,
+  "L131": -6,
+  "L131m": -6,
+  "L133": -7,
+  "L133m": -7,
+  "L134": -21,
+  "L134m": -21,
+  "L135": -7,
+  "L135m": -7,
+  "L136": -11,
+  "L136m": -11,
+  "L138": -7,
+  "L138m": -7,
+  "L139": -19,
+  "L139m": -19,
+  "L140": -29,
+  "L140m": -29,
+  "L141": 7,
+  "L142": -9,
+  "L142m": -9,
+  "L143": 3,
+  "L143m": 3,
+  "L145": 3,
+  "L145m": 3,
+  "L146": -1,
+  "L146m": -1,
+  "L147": -10,
+  "L147m": -10,
+  "L148": -17,
+  "L148m": -17,
+  "L150": -56,
+  "L150m": -56,
+  "L151": -16,
+  "L151m": -16,
+  "L153": -1,
+  "L154": -2,
+  "L155": -1,
+  "L155m": -1
+ }
+}

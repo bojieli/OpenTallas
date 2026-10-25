@@ -1,0 +1,5 @@
+{
+ "source": "HBM-BIND native-bind need (B2n b2n_report.json lane_delta_short: NW_hub->root ctl 1491 < 3749, NE 1491 < 2709) + COORD 00:21 ruling (1): RTL sends hub->root over static beats; size L74 >= ceil(need/3) per beat, ideally wider",
+ "why": "B2o puts L74 on the hub / root ABUTTING face (one neighbour hop, no transit): 2 static beats (ceil(3749/2) = 1875 NW; NE 2709 -> 1355 fits) instead of 3; full width would take another 1874 pins of the 2073.6-um hub / root face that root -> hub L12/L13 (6286 b) already uses",
+ "widen": [{"lanes": ["L74"], "width": [1875]}]
+}
