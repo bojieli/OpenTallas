@@ -1426,6 +1426,14 @@
       "type": "integer",
       "minimum": 0
      },
+     "beats": {
+      "type": "integer",
+      "minimum": 2
+     },
+     "word_bits": {
+      "type": "integer",
+      "minimum": 1
+     },
      "reach_um": {
       "type": "number",
       "exclusiveMinimum": 0
@@ -1741,6 +1749,13 @@
        "pad": {
         "type": "integer",
         "minimum": 0
+       },
+       "beats": {
+        "type": "integer",
+        "minimum": 2
+       },
+       "word_cycles": {
+        "type": "integer"
        },
        "param": {
         "type": "string"
