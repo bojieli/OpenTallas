@@ -101,7 +101,10 @@ proc ot_cf_active {p} {
     # arc. Only an actual physical BLOCK with unique loaded Liberty clock
     # timing-check edges is supported; missing soft-register arcs still fail.
     set master [[ord::get_db] findMaster [get_property $cell ref_name]]
-    if {$master ne "NULL" && [$master isBlock]} {
+    # S81-CORES3/NK 10-25: an integrated clock gate (ASAP7 ICGx*: latch_posedge_precontrol, CLK -> GCLK is a
+    # combinational arc, no clock-to-Q) is a clock-tree sink of the root whose active edge is its ENA/SE setup-check
+    # edge, exactly as a check-only BLOCK entry (bf_col g_tcg u_icg failed tap_balance post-CTS without this).
+    if {$master ne "NULL" && ([$master isBlock] || [regexp {^ICGx[0-9]+[a-z]*_ASAP7} [$master getName]])} {
       set on 0
       foreach line [split $report \n] {
         if {[regexp {^\S} $line]} {set on [regexp { (setup|hold|recovery|removal)$} $line]; continue}
