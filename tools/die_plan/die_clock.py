@@ -67,6 +67,7 @@ OCV = (0.03, 0.05)                      # INFO derates on the uncommon clock pat
 # ASAP7 setRC.tcl (kohm / fF per um); clock NDR 2W2S: R / 2, C x 1.1 (die_trial.py, hbm_arch clock_htree.py)
 LAYER_RC = {"M8": (8.44765e-3, 1.03962e-1), "M9": (8.89556e-3, 9.28446e-2)}
 NDR_R, NDR_C = 0.5, 1.1
+WIDE_UM = 520.0                         # longer segments use the 4W NDR
 VIA_KOHM = {"M8": 0.0172 * 3 + 0.0118 * 2 + 0.0082 * 2, "M9": 0.0172 * 3 + 0.0118 * 2 + 0.0082 * 2 + 0.0063}
 LADDER_UM = 50.0                        # pi-section length of the RC ladder
 STUB_UM = 4.32                          # leaf buffer -> clustered tap driver stub
@@ -75,11 +76,15 @@ SPLIT_WINDOW = 0.25                     # a split may move +-25 % of the region 
 AWARE_LEVELS = 4                        # partition-aware splits on the top levels (largest uncommon latency)
 INTRA_W = 256                           # split weight of two neighbouring taps of one partition (seam pairs: bits)
 MAX_SEG_X = 1.15                        # a legalised segment may reach 1.15 x rep_um, else the level gets a repeater more
-SIDE_MAX_UM = 400.0
+SIDE_MAX_UM = 1500.0
 
 
-def layer_rc(layer):
+def layer_rc(layer, length_um=0.0):
+    """NDR wire RC per um; a segment longer than WIDE_UM (a legalised hop over a macro, or a balance pad) gets the
+    wide NDR (4W: R / 4, C x 1.3) so its slew stays inside the 320-ps limit."""
     r, c = LAYER_RC[layer]
+    if length_um > WIDE_UM:
+        return r * 0.25, c * 1.3
     return r * NDR_R, c * NDR_C
 
 
@@ -206,7 +211,8 @@ def choose_split(lo, hi, ax, coords, pairs, edges, window):
     return best[1], best[0][0]
 
 
-def build(P, leaf_um=600.0, rep_um=450.0, core_early="off", taps=None, keep=None, window=None, aware_levels=None):
+def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=None, window=None, aware_levels=None,
+          pad="sta"):
     W, H = float(P.W), float(P.H)
     window = SPLIT_WINDOW if window is None else window
     aware_levels = AWARE_LEVELS if aware_levels is None else aware_levels
@@ -315,7 +321,7 @@ def build(P, leaf_um=600.0, rep_um=450.0, core_early="off", taps=None, keep=None
                 segs = plan_leg(pos[pk], centre(pk), centre(ck), n)
                 plan[ck if ck in live else ("dummy",) + ck] = segs if ck in live else segs[:1]
             worst = max(g for segs in plan.values() for _, _, g in segs)
-            if worst <= max(max_seg, Lmax / n + 1e-6) or n >= 4 * n0:
+            if worst <= max(max_seg, Lmax / n + 1e-6) or n >= n0 + 2:
                 break
             n += 1
         leg_len[lev] = (Lmax, n)
@@ -357,6 +363,9 @@ def build(P, leaf_um=600.0, rep_um=450.0, core_early="off", taps=None, keep=None
         lev, idx = key
         layer = lay[levels[lev]]
         S_ = seg_std[lev + 1]
+
+        def el(geo):
+            return S_ if pad == "level" else max(geo, 1.0)
         branches = []
         for c in (0, 1):
             ck = (lev + 1, 2 * idx + c)
@@ -365,17 +374,17 @@ def build(P, leaf_um=600.0, rep_um=450.0, core_early="off", taps=None, keep=None
                 names = [f"r{ck[0]}_{ck[1]}_{k}" for k in range(len(segs) - 1)] + [ncell(ck)]
                 for k, (x, y, geo) in enumerate(segs):
                     T.cell(names[k], x, y, "node" if k == len(segs) - 1 else "rep", lev + 1)
-                branches.append((S_, layer, names[0], segs[0][2]))
+                branches.append((el(segs[0][2]), layer, names[0], segs[0][2]))
                 for k in range(1, len(segs)):
                     nets.append(dict(name=f"w_{names[k - 1]}", drv=names[k - 1],
-                                     branches=[(S_, layer, names[k], segs[k][2])]))
+                                     branches=[(el(segs[k][2]), layer, names[k], segs[k][2])]))
                 path_of[ck] = path_of[key] + names
-                children[ncell(key)].append((ncell(ck), f"w_{names[-2]}" if len(segs) > 1 else f"w_{ncell(key)}",
-                                             0 if len(segs) > 1 else len(branches) - 1))
+                children[ncell(key)].append((ncell(ck), [[f"w_{ncell(key)}", len(branches) - 1]] +
+                                             [[f"w_{names[k - 1]}", 0] for k in range(1, len(segs))]))
             else:                                   # pruned branch: dummy first stage (the identical load)
                 x, y, geo = legs[("dummy",) + ck][0]
                 dn = T.cell(f"d{ck[0]}_{ck[1]}", x, y, "dummy", lev + 1)
-                branches.append((S_, layer, dn, geo))
+                branches.append((el(geo), layer, dn, geo))
         nets.append(dict(name=f"w_{ncell(key)}", drv=ncell(key), branches=branches))
     tap_rows = []
     for key in leaf_keys:
@@ -417,7 +426,7 @@ def build(P, leaf_um=600.0, rep_um=450.0, core_early="off", taps=None, keep=None
             if not cuts:
                 nets.append(dict(name=out, drv=prev, branches=[(STUB_UM, "M8", "port:" + out, 0.0)]))
             tap_rows.append(dict(part=part, tap=port, port=out, xy=[X, Y], early_ps=early, leaf=ncell(key),
-                                 path=path_of[key] + [dn] + cells, pad_net=out))
+                                 path=path_of[key] + [dn] + cells, pad_nets=[[f"w_{c}", 0] for c in cells] + [[out, 0]]))
     # chain standard per segment index = the longest legalised chain segment of that index (balance by construction);
     # a core-early chain keeps its cut below the standard
     cmax = defaultdict(float)
@@ -427,11 +436,12 @@ def build(P, leaf_um=600.0, rep_um=450.0, core_early="off", taps=None, keep=None
     for n in nets:
         if "ck" in n:
             L, layer, load, geo = n["branches"][0]
-            n["branches"][0] = (max(chain_std[n["ck"]], cmax[n["ck"]]) - n.pop("cut"), layer, load, geo)
+            std_k = max(chain_std[n["ck"]], cmax[n["ck"]]) if pad == "level" else max(geo, 1.0)
+            n["branches"][0] = (max(1.0, std_k - n.pop("cut")), layer, load, geo)
             n.pop("ck")
     over = max(geo - L for n in nets for L, _, _, geo in n["branches"])
     tot_w = sum(w for _, _, w in pairs)
-    meta = dict(leaf_um=leaf_um, rep_um=rep_um, levels=D, split_axes="".join("xy"[a] for a in levels),
+    meta = dict(leaf_um=leaf_um, rep_um=rep_um, pad=pad, levels=D, split_axes="".join("xy"[a] for a in levels),
                 split_window=window, aware_levels=aware_levels, root_um=list(root), centre_um=list(c0), trunk_um=round(tl, 1), taps=len(taps),
                 leaves_live=len(leaf_keys), tap_drivers_per_leaf=F,
                 last_mile_pad_um=[round(Lx, 2), round(Ly, 2)], last_mile_stages=[kx, ky],
@@ -522,7 +532,7 @@ def write_spef(T, path, design="die_ctree", pads=None):
             return f"{name}:{k[0]}"
         for bi, (L, layer, load, _) in enumerate(n["branches"]):
             L = L + pads.get((name, bi), 0.0)
-            r, c = layer_rc(layer)
+            r, c = layer_rc(layer, L)
             lpin = load[5:] if load.startswith("port:") else f"{load}:A"
             conn.append(f"*P {lpin} O" if load.startswith("port:") else f"*I {lpin} I")
             a = node()
@@ -576,7 +586,7 @@ def cmd_build(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
-    T, tree = build(P, a.leaf_um, a.rep_um, a.core_early, window=a.window, aware_levels=a.aware_levels)
+    T, tree = build(P, a.leaf_um, a.rep_um, a.core_early, window=a.window, aware_levels=a.aware_levels, pad=a.pad)
     write_verilog(T, out / "ctree.v")
     write_spef(T, out / "ctree.spef")
     import hashlib
@@ -628,12 +638,13 @@ def load_tree(d):
     return T
 
 
-def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=300.0):
+def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0):
     """one balance pass: every tap up to the latest tap of its leaf, every child subtree up to its latest sibling,
     by wire pads on the child's last leg segment (a tap's last chain segment).  arrs: [(tap arr, node arr)] per
     corner; the delta is the corner mean.  Returns the largest residual delta (ps) before this pass."""
     nets = {n["name"]: n for n in T.nets}
     leaf_taps = defaultdict(list)
+    tap_pad = {t["port"]: t["pad_nets"] for t in tree["taps"]}
     for t in tree["taps"]:
         leaf_taps[t["leaf"]].append(t["port"])
 
@@ -644,7 +655,7 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=300.0):
     def smax(node):
         if node not in memo:
             v = [tap_a(p) for p in leaf_taps.get(node, ()) if all(p in ta for ta, _ in arrs)]
-            v += [smax(k) for k, _, _ in tree["nodes"][node]["kids"]]
+            v += [smax(k) for k, _ in tree["nodes"][node]["kids"]]
             memo[node] = max(v) if v else None
         return memo[node]
     sys.setrecursionlimit(100000)
@@ -653,27 +664,39 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=300.0):
 
     def sens(net, bi):
         L, layer, load, _ = nets[net]["branches"][bi]
-        r, c = layer_rc(layer)
-        cl = TAP_LOAD_FF if load.startswith("port:") else BUF_CIN_FF
         L += pads.get((net, bi), 0.0)
+        r, c = layer_rc(layer, L)
+        cl = TAP_LOAD_FF if load.startswith("port:") else BUF_CIN_FF
         return R_DRV_KOHM * c + r * c * L + r * cl
 
-    def add(net, bi, dps):
-        um = min(max_step_um, damp * dps / sens(net, bi))
-        pads[(net, bi)] = pads.get((net, bi), 0.0) + um
+    def elen(net, bi):
+        return nets[net]["branches"][bi][0] + pads.get((net, bi), 0.0)
+
+    def add(targets, dps):
+        """spread the pad over the leg / chain: always lengthen the currently shortest segment (keeps every segment
+        short: slew), in steps of <= 50 um, until the delay deficit is covered."""
+        targets = [tuple(t) for t in targets]
+        need = damp * dps
+        moved = 0.0
+        while need > 1e-3 and moved < max_step_um * len(targets):
+            net, bi = min(targets, key=lambda t: elen(*t))
+            um = min(50.0, need / sens(net, bi))
+            pads[(net, bi)] = pads.get((net, bi), 0.0) + um
+            need -= um * sens(net, bi)
+            moved += um
     for node, nd in tree["nodes"].items():
         m = memo.get(node)
         if m is None:
             continue
-        for kid, net, bi in nd["kids"]:
+        for kid, targets in nd["kids"]:
             km = memo.get(kid)
             if km is not None and m - km > 0.05:
                 worst = max(worst, m - km)
-                add(net, bi, m - km)
+                add(targets, m - km)
         for p in leaf_taps.get(node, ()):
             if all(p in ta for ta, _ in arrs) and m - tap_a(p) > 0.05:
                 worst = max(worst, m - tap_a(p))
-                add(p, 0, m - tap_a(p))
+                add(tap_pad[p], m - tap_a(p))
     return worst
 
 
@@ -934,6 +957,7 @@ def main(argv=None):
     b.add_argument("--rep-um", type=float, default=450.0)
     b.add_argument("--core-early", choices=("off", "pad"), default="off")
     b.add_argument("--window", type=float, default=SPLIT_WINDOW)
+    b.add_argument("--pad", choices=("sta", "level"), default="sta")
     b.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
     u = sub.add_parser("run")
     u.add_argument("plan")
@@ -942,10 +966,11 @@ def main(argv=None):
     u.add_argument("--rep-um", type=float, default=450.0)
     u.add_argument("--core-early", choices=("off", "pad"), default="off")
     u.add_argument("--window", type=float, default=SPLIT_WINDOW)
+    u.add_argument("--pad", choices=("sta", "level"), default="sta")
     u.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
     u.add_argument("--corner", action="append")
     u.add_argument("--libdir")
-    u.add_argument("--iters", type=int, default=4)
+    u.add_argument("--iters", type=int, default=10)
     u.add_argument("--stop-ps", type=float, default=2.0)
     s = sub.add_parser("sta")
     s.add_argument("dir")

@@ -32,7 +32,7 @@ def signature(T, tree):
 @pytest.mark.parametrize("leaf", [300.0, 1000.0])
 def test_balanced_by_construction(plan, leaf):
     P = S.Plan(json.loads(plan.read_text()))
-    T, tree = DC.build(P, leaf_um=leaf, rep_um=450.0, keep=[])
+    T, tree = DC.build(P, leaf_um=leaf, rep_um=450.0, keep=[], pad="level")
     taps = DC.plan_taps(P)
     assert len(tree["taps"]) == len(taps)
     sig = signature(T, tree)
@@ -48,11 +48,11 @@ def test_balanced_by_construction(plan, leaf):
 
 def test_keepout_legalisation_keeps_balance():
     P = S.Plan(json.loads(PLANS[1].read_text()))
-    T0, tree0 = DC.build(P, leaf_um=300.0, keep=[])
+    T0, tree0 = DC.build(P, leaf_um=300.0, keep=[], pad="level")
     # a keep-out over a third of the die's H-tree nodes / repeaters
     cells = [c for c in T0.cells.values() if c["kind"] in ("node", "rep")]
     keep = [(c["x"] - 30.0, c["y"] - 30.0, c["x"] + 30.0, c["y"] + 30.0, f"k{i}") for i, c in enumerate(cells[1::3])]
-    T, tree = DC.build(P, leaf_um=300.0, keep=keep)
+    T, tree = DC.build(P, leaf_um=300.0, keep=keep, pad="level")
     K = DC.KeepIndex(keep)
     assert tree["meta"]["cells_on_keepout"] == 0
     assert not [n for n, c in T.cells.items() if c["kind"] in ("node", "rep") and K.hit(c["x"], c["y"])]
@@ -72,7 +72,8 @@ def test_split_keeps_related_taps_together():
 
 @pytest.mark.skipif(not (shutil.which("sta") or Path("~/.local/opentallas-tools/bin/sta").expanduser().is_file()),
                     reason="OpenSTA not installed")
-def test_sta_zero_skew_and_spine(tmp_path):
+@pytest.mark.parametrize("pad", ["level", "sta"])
+def test_sta_skew_and_spine(tmp_path, pad):
     try:
         libdir = DC.find_libdir()
     except SystemExit:
@@ -80,14 +81,15 @@ def test_sta_zero_skew_and_spine(tmp_path):
     plan = PLANS[1]
     a = argparse.Namespace(plan=str(plan), out=str(tmp_path), leaf_um=300.0, rep_um=450.0, core_early="off",
                            window=DC.SPLIT_WINDOW, aware_levels=DC.AWARE_LEVELS, corner=["TT", "FF"], libdir=libdir,
-                           iters=0, stop_ps=2.0)
+                           iters=0 if pad == "level" else 10, stop_ps=2.0, pad=pad)
+    lim = 0.5 if pad == "level" else DC.TARGET_PS
     assert DC.cmd_run(a) == 0
     rep = json.loads((tmp_path / "clock_report.json").read_text())
     for c in ("TT", "FF"):
         cr = rep["corners"][c]
-        assert cr["tap_skew_ps"] < 0.5
+        assert cr["tap_skew_ps"] < lim
         assert cr["tap_slew_max_ps"] < 320
         assert rep["verdict"][c]["gate"] == "PASS"
         sp = json.loads((tmp_path / f"spine_{c}.json").read_text())
         assert sum(len(p["taps"]) for p in sp["parts"].values()) == cr["taps"]
-        assert max(t["offset_ps"] for p in sp["parts"].values() for t in p["taps"].values()) < 0.5
+        assert max(t["offset_ps"] for p in sp["parts"].values() for t in p["taps"].values()) < lim
