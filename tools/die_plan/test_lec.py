@@ -256,6 +256,7 @@ def test_parallel_cones_preserve_each_status(tmp_path, monkeypatch):
 
 
 def test_naive_cone_unknown_does_not_shift_later_status(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, "xor_sat", lambda *args: {})  # parser test isolates the ABC backend
     import re
     from types import SimpleNamespace
     m = lec.Aig()
@@ -364,3 +365,15 @@ def test_fsm_cube_induction_rejects_wrong_state_mapping(tmp_path):
     L.hyp[key] = (h[0], h[1], h[2], [v ^ 1 for v in h[3]])
     m, _ = L.build(with_compare=True, with_hyp=True)
     assert 'differs' in _sim_prove(m).values()
+
+
+def test_xor_sat_checks_original_cnf_and_negative_control():
+    pytest.importorskip('pycryptosat')
+    m = lec.Aig()
+    a, b, c = [m.add_input(n) for n in 'abc']
+    x = m.XOR(m.XOR(a, b), c)
+    y = m.XOR(a, m.XOR(c, b))
+    m.outs = [m.XOR(x, y), m.XOR(x, y ^ 1), m.AND(x, c)]
+    m.onames = ['equal', 'corrupted', 'nonlinear_sat']
+    assert lec.xor_sat(m, list(range(3)), []) == {
+        'equal': 'proved', 'corrupted': 'differs', 'nonlinear_sat': 'differs'}
