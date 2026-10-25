@@ -1,0 +1,65 @@
+# HBM-KITS census by RTL master (B2n sha f710e18c5dd5): 63 masters / 280 views / 226 designs
+master	family	parent	canonical_type	cells	srams	modules	views	placed	outlines	pin_xy_tables	strap_variants	designs	blockers	owner_states
+ot_hfd_coll_q2_body_core	COLL	ot_hfd_coll_q2_hard_v8g	coll_q2_body	222636	None	1	1	2	483.84x712.8	1	0	1		NEEDS-KIT
+ot_hfd_coll_q2_reduce_core	COLL	ot_hfd_coll_q2_hard_v8g	coll_q2_reduce	120719	None	1	1	2	233.28x233.28	1	0	1		NEEDS-KIT
+ot_hfd_coll_q2_ring_ag_core	COLL	ot_hfd_coll_q2_hard_v8g	coll_q2_ring_ag	121663	None	1	1	2	233.28x233.28	1	0	1		NEEDS-KIT
+ot_hgi_coll_gq_issue__237.6x237.6	COLL	ot_hgi_coll_gq_issue		163041		1	1	2	237.6x237.6	1	0	1		NEEDS-KIT
+ot_hgi_coll_gq_land__237.6x237.6	COLL	ot_hgi_coll_gq_land		49024		1	1	2	142.56x207.36	1	0	1		ROUTING
+ot_hgi_coll_inj_idx_join_rg__216x432	COLL	ot_hgi_coll_inj_idx_join_rg		74964		1	1	2	211.68x315.36	1	0	1		NEEDS-KIT
+ot_hbm_hc_qhub_static__734.4x734.4	HC	ot_hbm_hc_qhub_static		305805		1	1	2	734.4x734.4	1	0	1		NEEDS-KIT
+ot_hbm_hc_root_hcp_sys1_core	HC	ot_hbm_hc_root_static	hc_hcp_sys1	56692	0	1	1	1	155.52x172.8	1	0	1		NEEDS-KIT
+ot_hbm_hc_tail_rest_core	HC	ot_hbm_hc_root_static	hc_tail_rest	105730	0	2	2	2	155.52x172.8	1	0	2		NEEDS-KIT
+ot_hdc_sk_steady	HC	ot_hbm_hc_root_static	hc_sk_steady	267115	0	2	2	2	155.52x172.8	2	0	2		NEEDS-KIT
+ot_hdc_sk_step0	HC	ot_hbm_hc_root_static	hc_sk_step0	302248	0	2	2	2	155.52x172.8	2	0	2		NEEDS-KIT
+2 x hcp_lanes + hcp_stage/bank/bankq glue + 12 SRAM	HCB	ot_hbm_hc_bankq0_static		219700	12	4	8	16	362.88x362.88;440.64x496.8;531.36x548.64	8	0	8	MULTI_TABLE;NO_RECIPE	NEEDS-KIT
+ot_hbm_hc_bankq_lanes3_core	HCB	ot_hbm_hc_bankq0_static	bankq_lanes3	288852	0	8	14	28	172.8x345.6	12	2	12	MULTI_TABLE	NEEDS-KIT
+ot_hbm_idx_qctl_static__194.832x195.48	IDX	ot_hbm_idx_qctl_static		1632		1	1	2	194.832x195.48	1	0	1		NEEDS-KIT
+ot_hbm_idx_query_static	IDX	ot_hbm_idx_query_static		95793		1	1	2	170.64x164.16	1	0	1	NO_RECIPE	NEEDS-KIT
+ot_hbm_idx_rootctl_static_am__475.2x259.2	IDX	ot_hbm_idx_rootctl_static_am		63487		1	1	1	475.2x259.2	1	0	1		NEEDS-KIT
+ot_hbm_idx_selector_static_sel__600.048x450.36	IDX	ot_hbm_idx_selector_static_sel		205021		1	1	1	600.048x450.36	1	0	1		NEEDS-KIT
+ot_hbm_idx_topk_link_static__650.16x500.04	IDX	ot_hbm_idx_topk_link_static		189951		1	1	1	650.16x500.04	1	0	1		NEEDS-KIT
+ot_hbm_idx_vm_query_static_n12	IDX	ot_hbm_idx_vm_query_static_n12		47385		1	1	2	216x108	1	0	1	NO_RECIPE	NEEDS-KIT
+ot_hbm_idx_tail_native	IDXS	ot_hbm_idx_score_quarter_static	score_tail	52348	0	2	2	4	218.592x187.488	2	0	2		NEEDS-KIT
+ot_hidx_score_hcol#(HALF 0)	IDXS	ot_hbm_idx_score_quarter_static	score_hcol_h0	195127	0	32	32	64	218.592x187.488	6	0	6		NEEDS-KIT
+ot_hidx_score_hcol#(HALF 1)	IDXS	ot_hbm_idx_score_quarter_static	score_hcol_h1	186410	0	32	32	64	218.592x187.488	6	0	6		NEEDS-KIT
+ot_pdie_serdes__600.048x600.48	LINK	ot_pdie_serdes		394328		1	1	1	600.048x600.48	1	0	1		NEEDS-KIT
+hfd_ep_static	MISC	hfd_ep_static		46785		1	2	2	276.48x315.36	2	0	2	MULTI_TABLE	NEEDS-KIT
+ot_hbm_argmax_static_sw_vm_r2__118.8x118.8	MISC	ot_hbm_argmax_static_sw_vm_r2		38967		1	1	1	118.8x118.8	1	0	1		ROUTING
+ot_hbm_host_cp_rxs__434.808x432	MISC	ot_hbm_host_cp_rxs		43647		1	1	1	434.808x432	1	0	1		NEEDS-KIT
+ot_hbm_static_cfg_collar_idx256r__108x108	MISC	ot_hbm_static_cfg_collar_idx256r		24339		1	1	1	108x108	1	0	1		NEEDS-KIT
+ot_hbm_svc_pc_ctrl_leaf_cfg_h9b__155.52x155.52	MISC	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b		63509		1	10	20	177.984x177.984	10	0	10	MULTI_TABLE	NEEDS-KIT
+ot_hbm_xp_aq_tree13_fmt	MISC	ot_hbm_xp_aq_tree13_fmt		81491		1	2	4	183.6x108	2	0	2	MULTI_TABLE	NEEDS-KIT
+ot_hgi_dma_back_static_vp4_banks_cp__239.976x240.84	MISC	ot_hgi_dma_back_static_vp4_banks_cp		37867		1	1	2	239.976x240.84	1	0	1		NEEDS-KIT
+ot_hgi_qw_dec	MISC	ot_hgi_qw_dec		160001		1	1	2	260x260	1	0	1	NO_RECIPE	NEEDS-KIT
+ot_hbm_su_pg_lanes4_core	PGS	ot_hbm_su_static_pgslice_lg__pv14	pg_lanes4	308632	24	12	21	42	440.64x457.92;760.32x725.76	12	12	21	MULTI_TABLE	NEEDS-KIT
+ot_hbm_su_pg_pretree_core	PGS	ot_hbm_su_static_pgslice_lg__pv14	pg_pretree	212295	0	1	2	4	440.64x457.92	2	0	2	MULTI_TABLE	NEEDS-KIT
+ot_hbm_su_pg_lane_exp_core	PGS	ot_hbm_su_static_pgslice_lg__pv6	pg_lane_exp	209541	6	15	29	58	440.64x207.36	10	15	29	MULTI_TABLE	NEEDS-KIT
+ot_hbm_su_pg_lane_full_core	PGS	ot_hbm_su_static_pgslice_lg__pv6	pg_lane_full	209541	6	1	1	2	440.64x207.36	1	1	1		NEEDS-KIT
+ot_hbm_su_side_rest_core	PGS	ot_hbm_su_static_pgslice_lg__pv6	pgslice_side_rest	189664	0	1	1	4	440.64x457.92	1	0	1		NEEDS-KIT
+ot_hbm_su_side_softplus_core	PGS	ot_hbm_su_static_pgslice_lg__pv6	pgslice_side_softplus	223122	0	1	1	4	440.64x457.92	1	0	1		NEEDS-KIT
+ot_hgi_sfu_split3_ctl_core	SFU	ot_hgi_sfu_core_split3	sfu_ctl	77197	0	1	1	2	669.6x626.4	1	0	1		NEEDS-KIT
+ot_hgi_sfu_split3_lane_core	SFU	ot_hgi_sfu_core_split3	sfu_lane	306861	0	16	16	32	388.8x345.6	8	16	16		NEEDS-KIT
+ot_hgi_sfu_split3_opstore_a_core	SFU	ot_hgi_sfu_core_split3	sfu_opstore_a	240918	32	1	1	2	388.8x345.6	1	0	1		NEEDS-KIT
+ot_hgi_sfu_split3_opstore_b_core	SFU	ot_hgi_sfu_core_split3	sfu_opstore_b	288099	48	1	1	2	760.32x691.2	1	0	1		NEEDS-KIT
+hnx_rp3lp3h_n	SM	hnx_rp3lp3h_n				1	1	128	630.72x1209.6	1	0	1		NEEDS-KIT
+hnx_rp3lp3h_s	SM	hnx_rp3lp3h_s				1	1	128	630.72x1036.8	1	0	1		NEEDS-KIT
+ot_hbm_sm_vm_wr_q_t_lanes4	SMSVC	ot_hbm_sm_vm_wr_q_t_lanes4		48877		1	1	2	142.56x388.8	1	0	1	NO_RECIPE	NEEDS-KIT
+ot_hbm_svc_sm_group_rel_id__776.304x646.92	SMSVC	ot_hbm_svc_sm_group_rel_id		220378		1	4	8	776.304x646.92	4	0	4	MULTI_TABLE	NEEDS-KIT
+ot_hbm_svc_sm_xcal_rel_t__209.952x210.6	SMSVC	ot_hbm_svc_sm_xcal_rel_t		10366		1	4	8	250.56x250.56	4	0	4	MULTI_TABLE	NEEDS-KIT
+ot_hgi_sm_xload_cl2_bdring__86.4x302.4	SMSVC	ot_hgi_sm_xload_cl2_bdring		85191		1	2	4	86.4x302.4	2	0	2	MULTI_TABLE	NEEDS-KIT
+ot_hgi_sm_xload_cl2_bfqg	SMSVC	ot_hgi_sm_xload_cl2_bfqg		20345		1	4	8	302.4x298.08	4	0	4	MULTI_TABLE	NEEDS-KIT
+ot_hgi_sm_xload_cl2_ctlx	SMSVC	ot_hgi_sm_xload_cl2_ctlx		89302		1	1	2	388.8x388.8	1	0	1	NO_RECIPE	NEEDS-KIT
+ot_hgi_sm_xload_xq_pegress__369.36x369.36	SMSVC	ot_hgi_sm_xload_xq_pegress		56602		1	2	4	369.36x369.36	2	0	2	MULTI_TABLE	NEEDS-KIT
+ot_hbm_su_programme_pslice_c5	SU	ot_hbm_su_programme_pslice_c5		78181		1	1	2	939.6x760.32	1	0	1	NO_RECIPE	NEEDS-KIT
+ot_hbm_su_static_cxport_ij_q	SU	ot_hbm_su_static_cxport_ij_q		39043		1	1	2	250.56x449.28	1	0	1	NO_RECIPE	NEEDS-KIT
+ot_hbm_su_static_qcore_r13	SU	ot_hbm_su_static_qcore_r13		168514		1	1	2	302.4x280.8	1	0	1	NO_RECIPE	NEEDS-KIT
+ot_hbm_su_static_sfustore_hw__561.6x276.48	SU	ot_hbm_su_static_sfustore_hw		18572		1	1	2	293.76x354.24	1	0	1		NEEDS-KIT
+ot_hgi_sfu_programme_store_r10__1080x950.4	SU	ot_hgi_sfu_programme_store_r10		79683		1	1	2	613.44x691.2	1	0	1		NEEDS-KIT
+ot_hgi_coll_tkm_tp192_root_core	TKM	ot_hgi_coll_tkm_m_tp192	tkm_root	33795	2	1	1	1	319.68x345.6	1	0	1		NEEDS-KIT
+ot_hgi_coll_tkm_tp192_tile_core	TKM	ot_hgi_coll_tkm_m_tp192	tkm_tile	260110	0	32	32	32	319.68x345.6	4	32	32		NEEDS-KIT
+hfd_hgi_vm_calendar_f20	VM	hfd_hgi_vm_calendar_f20		23959		1	1	2	241.92x116.64	1	0	1	NO_RECIPE	NEEDS-KIT
+hfd_hgi_vms_glue_nw_t	VM	hfd_hgi_vms_glue_nw_t		133859		1	1	2	869.832x1334.88	1	0	1	NO_RECIPE	NEEDS-KIT
+hfd_vms_bank_native_q0_faces	VM	hfd_vms_bank_native_q0_faces		64722		1	8	16	270x313.2	8	0	8	MULTI_TABLE	NEEDS-KIT
+ot_hbm_svc_vm_kshare_splitstrap__146.88x146.88	VM	ot_hbm_svc_vm_kshare_splitstrap		115723		1	4	8	354.24x453.6	3	0	4	MULTI_TABLE	NEEDS-KIT
+ot_hbm_svc_vmdel_lane_n	VM	ot_hbm_svc_vmdel_lane_n		9991		1	5	10	257.04x108	5	0	5	MULTI_TABLE	NEEDS-KIT
+ot_hbm_svc_wb_kport_q__475.2x475.2	VM	ot_hbm_svc_wb_kport_q		321528		1	1	2	475.2x475.2	1	0	1		NEEDS-KIT

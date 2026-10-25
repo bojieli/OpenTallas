@@ -93,3 +93,23 @@ with open(a.out, "w") as f:
     for r in sorted(rows, key=lambda r: (r["family"], r["parent"], r["design"], r["module"])):
         f.write("\t".join(str(r[c]) for c in cols) + "\n")
 print("views", len(rows), "modules", len({r['module'] for r in rows}), "designs", len(D), "unify", len(U))
+# COORD 06:5x (TYPE-REDUCE claude/type-reduce-1025@befcf3f66): key by RTL MASTER (rtl_top + params) -> census_masters.tsv
+# one row per master: kit ONE core per (master, pin template); designs/tables listed only to show the template delta owed.
+M = collections.OrderedDict()
+for r in sorted(rows, key=lambda r: (r["family"], r["parent"], r["rtl_top"])):
+    m = M.setdefault(r["rtl_top"], dict(family=r["family"], parent=r["parent"], canonical_type=r["canonical_type"], cells=r["cells"],
+                                         srams=r["srams"], modules=set(), views=0, placed=0, outlines=set(), tables=set(),
+                                         straps=set(), designs=set(), blockers=set(), owner_states=set()))
+    m["modules"].add(r["module"]); m["views"] += 1; m["placed"] += int(r["placed"]); m["outlines"].add(r["outline"])
+    m["tables"].add(r["pin_xy"]); m["straps"].add(r["straps"]); m["designs"].add(r["design"])
+    m["owner_states"].add(r["owner_state"])
+    if r["view_blockers"]: m["blockers"].add(r["view_blockers"].split(":")[0])
+mo = Path(a.out).with_name("census_masters.tsv")
+with open(mo, "w") as f:
+    f.write(f"# HBM-KITS census by RTL master (B2n sha {psha[:12]}): {len(M)} masters / {len(rows)} views / {len(D)} designs\n")
+    f.write("master\tfamily\tparent\tcanonical_type\tcells\tsrams\tmodules\tviews\tplaced\toutlines\tpin_xy_tables\tstrap_variants\tdesigns\tblockers\towner_states\n")
+    for k, m in M.items():
+        f.write("\t".join(map(str, [k, m["family"], m["parent"], m["canonical_type"], m["cells"], m["srams"], len(m["modules"]), m["views"],
+                                     m["placed"], ";".join(sorted(m["outlines"])), len(m["tables"]), len(m["straps"]) if m["straps"] != {"{}"} else 0,
+                                     len(m["designs"]), ";".join(sorted(m["blockers"])), ";".join(sorted(m["owner_states"]))])) + "\n")
+print("masters", len(M))
