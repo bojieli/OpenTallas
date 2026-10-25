@@ -188,7 +188,7 @@ def main():
         if m == 'ot_hbm_idx_rootctl_static_am':
             sel = next((x for x in die.insts if die.insts[x]['master'].startswith('ot_hbm_idx_selector')), None)
             v = 4 + lc(n, 'sel_op', sel, 'op') + lc(sel, 'selected_v', n, 'selected_v')
-            der.append(dict(inst=n, param='SEL_LAT', want=v, formula='4 + lane(sel_op) + lane(selected_v)'))
+            der.append(dict(inst=n, param='SEL_LAT', have=parse_params(i['params']).get('SEL_LAT', 4), want=v, formula='4 + lane(sel_op) + lane(selected_v)'))
             params[n]['SEL_LAT'] = v
     # hub echo (cq -> hub -> cr) for the root clients on the two-stop ring master
     hub = next((x for x in die.insts if die.insts[x]['master'] == 'hfd_hgi_vms_glue_nw2_t'), None)
@@ -201,7 +201,7 @@ def main():
             sid = parse_params(die.insts[n]['params']).get('SID', 0)
             remote = 0 if sid == 2 else 16 + lo + lb
             v = base + 1 + lc(n, 'cq', hub, 'cq') + lc(hub, 'cr', n, 'cr') + remote
-            der.append(dict(inst=n, param=pn, want=v, formula=f'{base} + 1 (hub pin) + lane(cq) {lc(n, "cq", hub, "cq")} + '
+            der.append(dict(inst=n, param=pn, have=parse_params(die.insts[n]['params']).get(pn), want=v, formula=f'{base} + 1 (hub pin) + lane(cq) {lc(n, "cq", hub, "cq")} + '
                             f'lane(cr) {lc(hub, "cr", n, "cr")} + remote {remote} (SID {sid}; 16 + LINK {lo} + {lb})'))
             params[n][pn] = v
     sc = {}
