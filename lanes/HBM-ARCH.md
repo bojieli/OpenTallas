@@ -260,3 +260,9 @@ OWNER? (HBM, non-blocking): (a) SerDes macro 600x600 for 6x112G is 5-7x denser t
   accumulation order = numerics decision). hc_eng left unbound until decided.
   PLAN notes (B2l, not edited): NW/NE hub types diverge (COLL q3 NLINK3+TKM vs q2 NLINK2; VM nw2 NC2 vs NE2); VM_RT/CR_RT +
   argmax(6)/idx(8) cr padding re-derive for the NW path; sucore tile re-close as w2.
+
+## CODEX notes 2026-10-24 21:09 PDT
+CODEX took over: B2m pipelined-reset adoption and native-bind integration on codex/hbm-arch-r2-1024 (epyc1 scratch2 worktree); HBM core/token/trial/IDX/HC groups active. Native HC exact128 half candidate under construction (W128 banks + seven-level centre, no accumulation reorder), area delta to be planned. Existing jobs preserved.
+
+## CODEX notes — 2026-10-24 21:10 PDT native IDX PARKED
+CODEX took over IDX collection/integration on codex/hbm-bind-idx-r2-1024@8d607ca2e (local /srv/opentallas-scratch/claude/wt/codex-hbm-bind-idx-r2). Merged IDX child2353af4c8 into native bind parentfc76a2c42; no central merge, no new fleet jobs. Rootctl/selector/link gates PASS with mutants caught (epyc2 hbm-bind/hbm-bind-idx/{rootctl,sel,link}.txt). ARGMAX SID gate still active PID1491594/vvp2519911; first3 configs59990checks PASS, remaining DIE1+mutant pending. Native IDX wiring remains unimplemented in make_wiring.py; see CODEX-LOG handoff.

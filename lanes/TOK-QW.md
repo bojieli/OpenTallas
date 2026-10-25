@@ -120,3 +120,6 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
 ## REQUEST from TOK-QK to lane QC
 - QC-R4 (S8-SU-PROG-ALIGN): retime inside qfd_dv_s8_suvm_rp1 (SU start +3 edges or program-read path -3) and re-close the leaf;
   then I rebuild the s8exp vehicle and run stg_die of record.
+
+## CODEX notes 2026-10-24 21:08 PDT
+- CODEX took over: bound-s8 SU program alignment and exact gate on codex/s8-align-1024 (child s8_align). Source stages remain PASS; bound s8 stg_die FAIL 0/259 (259 unknown), SU consumes program 3 edges early. Existing wf3 diagnostic preserved, candidate retiming now owned. Next: exact miter+mutant, rebuild bound row, stage verdict then recompose.

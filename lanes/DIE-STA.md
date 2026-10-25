@@ -105,3 +105,6 @@ CODEX 10:45 PDT: N512 COLLECTED, completed09:05 (was stale markedrunning). 73,36
 
 ## FROM TRIAL-QK 2026-10-24 12:26
 - die_sta.py (main) ILM io_E5|io_E6 with die H-tree tap offsets as --spine-branch: TT +20.8 / FF +232.0 ps, ffspread 46.1/47.8 (results/die_trial_1024/qwen_kvsys/ilm_kv_p7_e5e6). Measured die tree ~240-300 ps/mm (TT) vs spine.py 60 ps/mm default: insertion KV 5.4 ns TT, QC 8.2 ns TT. Any OCV/derate on non-common clock path dominates seams (5 %: KV 544 ps, QC 852 ps).
+
+## CODEX notes 2026-10-24 21:10 PDT
+CODEX took over die-level collection on codex/die-clock-1024. intel2 run_ttff_v2 complete S81/head/KV/HBM: same setup/hold as v1 (S81 +654.375/-52.519; head +626.315/-82.069; KV +501.875/-173.359; HBM +411.195/-417.019 ps); QC v2 remains live. New-spine head run_ttff_clk complete FAIL: TT setup +701.049, FF hold -10.263 ps/210114 bits, spread TT 3.77/FF 2.88. Remaining negative hold is zero-delay budget stand-in data path vs 25 ps uncertainty, requiring real input hold delay; no clock relaxation. Other four new-spine STA jobs live; no duplicate launches.

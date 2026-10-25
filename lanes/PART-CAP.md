@@ -68,3 +68,12 @@ or_capacity_runs.csv, never committed) -- no failure behind it.
 Next: collect n14/n27/n44/n44_tt_tns10/n27_tt_tns10 when done; check n7 FF-hold cause (vehicle chain flops vs size);
 write README (stage table, scaling fits, recommendation, plan_census.py seam/type table, knobs) and merge.
 OWNER?: none.
+
+## CODEX notes 2026-10-24 21:10 PDT — PARKED for Claude reset
+CODEX took over collection on codex/part-cap-collect-1024 from claude/part-cap-1024@1381120171. No new heavy jobs launched.
+- N14 intel2 route complete DRC 0, 1,067,746 cells, peak container 57.8 GB; final FF corner STA still live. Physical old WC-route verdict NOT_MET, not SIGNED.
+- N27 TT/TNS10 intel1 FAIL before GRT: sparse source missing physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl. Missing 6_final.sdc is downstream, NOT congestion or OOM. Existing 3_place floorplan+density viewed: macro-free square, density near 0.5, no hotspots; source-only checkpoint resume review written results/geom_review/part_capacity_n27_resume_1024.json in own tree. Resume NOT LAUNCHED.
+- N7 FF -19.52 is input-to-reg boundary hold; reg-to-reg +3.18, output +45.55. Input q_data/e/row to replica0/input chain; asynchronous reset removal also -3.47ps. Structural capacity is not the cause; next vehicle must use current pipelined reset and proper FF boundary hold repair. No timing/SDC waiver.
+- Original N27 epyc3 now GRT; N44 intel2 and N44 TT/TNS10 epyc3 now DPL, all retained. Original top flow.log is buffered; check work/orfs/logs/.../*tmp.log for live progress.
+- Fresh collected JSON snapshots and copied inspected images: /srv/opentallas-scratch/claude/codex-part-cap-collect/. Own sparse worktree /srv/opentallas-scratch/claude/wt/codex-part-cap-collect; remote own sparse worktree creation intel1 /srv/opentallas-scratch2/claude/wt/codex-part-cap-collect in progress, no route started.
+Next: finish own source checkout, include missing pin-keepout Tcl, resume N27 from copied checkpoint via ot-run; collect N14 final STA and three original live runs, write concise capacity recommendation/report. OWNER?: none.

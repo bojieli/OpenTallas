@@ -207,3 +207,6 @@ CODEX progress: Capacity56 candidate nowregenerated25/25constantsPASS,433915padf
   readers incl. 1,024 flattened g_tx9.tc[] flops; E heads mirrored MY so faces look into the 35-um channel; +4 hub taps (load-less
   ports OT_A0_CK_TAPS42/41), a0_core_taps.json -> v8). Cut ratios head columns 1.41-1.65 -> 0.16-0.49. Self-review PASS-COND; GEOM-REVIEW
   independent review REQUESTED (lanes/GEOM-REVIEW.md). Plan regen with v8 taps after review.
+
+## CODEX notes 2026-10-24 21:10 PDT takeover
+CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on codex/qc-cap-1024 (epyc1 scratch2 worktree). Paused pipeline collected: G0C PASS 56/56 (0 errors), probe bind PASS 0 errors, final CB16 bind PASS 0 errors; R8 424,267 + CB16 789,504 pads. Verify remains live epyc1 PID3298387, run /srv/opentallas-scratch2/claude/qc/bind_eq_cb16; not duplicated. Prior READY withdrawal remains until gate completes. A0v8 successor independent review allows PLACE ONLY; placed geometry and >405-um reader legs must pass before CTS/GRT. A0 worker owns next placement, trial worker collects QC IR/GRT.

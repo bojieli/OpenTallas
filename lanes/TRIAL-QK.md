@@ -42,3 +42,6 @@ Branch claude/trial-qk-1024, worktree localhost:~/wt/trial-qk. Hosts: 1 TB hosts
 - Findings already shared: KV-G3, DIE-STA, HBM-ARCH lane files (FROM TRIAL-QK sections).
   (capacity build pids on localhost: /usr/bin/time 2331863, python 2331864)
 - 18:57 capacity-plan build DONE exit 0 (5 m 18 s, 2.6 GB) -> localhost /srv/opentallas-scratch/claude/trial-qk/qwen_compute_cap (plan sha 33c214a3); no clock/route launched (parked).
+
+## CODEX notes 2026-10-24 21:10 PDT
+Collected QC old-plan IR EXIT0 (VDD89.6/VSS130mV worst,224.1GiB,28282s); combined supply drop exceeds5% for377parts,diagnostic FAIL. Receipt epyc1:/srv/opentallas-scratch2/claude/codex-trial-qk/qc_old_ir/ir.json. Existing capacity GRT/IR still running,no duplicate. codex/trial-qk-1024r@9188ddba07 clean. Claude reset notified;parked. Details CODEX-LOG handoff.

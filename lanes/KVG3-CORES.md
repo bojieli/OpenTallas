@@ -96,3 +96,8 @@ PORT_REGS=1 into kv_core_rtl.py head_eighth members (+ KV-G3 partition binding, 
 (4) e6/e7 TT setup -12/-25 at 216 (review timing paths); (5) pv_pair/kvs_pc/ectlk/astk reruns on v3.8w/x geometry (route goal).
 OWNER?: kvs_pc HBM clock period / CDC SDC vocabulary (KV-G3); PORT_REGS adoption in shared leaves (S81 ref tiles bind the
 same r4.sv; defaults keep them unchanged).
+
+## CODEX notes 2026-10-24 21:09 PDT
+CODEX took over: KV core ECO collection and failed-route repair on codex/kv-cores-1024 (from claude/kv-cores-1024r@f3318adf3). New SIGNED views: head_eighth e5/m8 TT +24.26 / FF +4.31; e7/m8 TT +25.30 / FF +3.13, DRC/antenna0, sdc_lint/face_guard/DRV PASS. Collecting views. e6 b8+m8 FAIL DRT-1231 at same FAx1 CON pin (u_g_t_13_u_l8.g_d[6].u_p/_1086_): local pin-access defect after warm ECO, diagnosis active; other head/PV ECOs still routing or signing.
+
+CODEX PARKED 2026-10-24 21:10 PDT on reset: two SIGNED collected views e5_m8/e7_m8 under localhost:/srv/opentallas-scratch/claude/codex-kv-cores/collected; not committed/published yet. e6 pin-access diagnosis and next local legalization in CODEX-LOG/handoff.json. No new route launched; own worktree checkout PID2026402 still finishes in background.

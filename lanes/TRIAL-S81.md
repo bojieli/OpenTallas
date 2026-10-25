@@ -64,3 +64,8 @@ CODEX 2026-10-24 11:24 PDT: HeadPSMc2 actualM9sources11164/232cachedcolumns, pdn
   results/die_trial_1024/<die>/findings.md + geom_review entry; share with S81/S81-HEAD/DIE-STA/PART-CAP; merge.
 - OWNER?: (1) head die-tree seam skew 81.9 ps TT > 80 -> accept shared seam drops (Codex proposal) or tighter tree;
   (2) power bumps over SerDes IO windows (IR 235-270 mV there).
+
+## CODEX notes 2026-10-24 21:11 PDT / PARKED back to Claude
+- Collected terminal trial fabric WNS (old tree / budget mode): S81 intel1 fabric_TT setup -637.68 ps and fabric_FF hold -42.03 ps; HEAD intel2 setup +133.76 ps / FF hold -75.90 ps. No G4 credit.
+- S81 cause: s_2S_C__st__ft0__39__1 -> stage2, 133.5fF cap, clk-Q364ps + wire759ps, receiving slew2623ps and setup252ps; needs real wire repeaters/station geometry correction. Head worst tW5b10->tW5b9 has capture74.6ps late versus31.7ps data; shared clock branch + real hold insertion needed. Sent causes to S81 parent; CLOCK rebuilding tree already.
+- Full head PSM c2 remains historical SIGSEGV119GB; use PHY-domain/window method. No trial rerun launched.

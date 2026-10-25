@@ -431,3 +431,7 @@ your variant-B SDCs should match these byte for byte in the ft lines. Frame kits
   - xfin: the plan pins don't match main's ENG-mode RTL.
   - cfifo_crs4: the multi-clock boundary contract is undefined.
   - capc5r and bksel_q: sign their children first, or flatten them.
+
+## CODEX notes 2026-10-24 21:10 PDT
+CODEX took over: station result collection, pipelined-reset successors and residual DRV fixes on codex/elem-s81-st405-1024 (hub epyc1 scratch2/wt/codex-st405); canonical legacy cores assigned to CODEX legacy sublane.
+Collected B results unchanged from latest branch 2cb4732766: 7 SIGNED (t5 t12 t15 t16 t17 t20 t21), 11 NOT SIGNED (t1 t2 t11 t13 t23 t24 t26 t30 t31 t33 t34), 14 active runs (t3 t4 t6 t8 t9 t10 t14 t18 t22 t25 t27 t28 t29 t32). Active runs left progressing. Existing max-wire successor t11 Bmw on epyc2:/srv/opentallas-scratch2/claude/elem-s81-st405/kitsBmw/slice_station__t11 is alive in FF hold repair; no duplicate launched. Main already contains --max-wire-um. Reset t13/t30 successors being prepared with unified reset; route waits on revised clock review per owner decision 5. IR remains NOT RUN; seam STA pending.

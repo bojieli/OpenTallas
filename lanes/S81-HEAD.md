@@ -204,3 +204,8 @@ CODEX 2026-10-24 11:24 PDT: tap160c7 correctTTCTS +FFonlyholdGRT failed pinacces
   - The ROM-read 2-cycle multicycle of the closed build was dropped; the read path is timed single-cycle and passes.
 - Local ot-run clients: pid 2349614 (elemA c8), pid 2382002 (elemB c4).
 2026-10-24 20:17 PDT RESET -> S81-HEAD: hd_tile: plan reset.release pipelined + gen.py phys gives the kit-level delivered reset (u_rst_in + equal-depth tree; no per-tap u_rsync_t). Your element relay (d456fea42f) = core reset depth +1 vs its tap: count it in the schedule. s81_head priced: K 10, E 43, release 56 clk, 12 partitions unhosted for die relays. recipes in lanes/RESET.md ## RECIPES; tool claude/reset-1024@d1152532c (READY)
+
+## CODEX notes 2026-10-24 21:11 PDT / PARKED back to Claude
+- Collected elemA c8 NOT SIGNED TT +104.68 / FF -14.24 (118), DRV0, DRC0; elemB c4 NOT SIGNED TT +108.34 / FF -9.87 (104), slew6TT/5FF, DRC0; face/sdc/pinaudit PASS both. Later c9 A/c5 B already active on epyc2; no duplicate launched. c9 CTS/GRT hold repair, c5 detailed-route pin access/extra GRT iterations at latest read.
+- Preview tile placement DONE epyc2:/srv/opentallas-scratch2/claude/s81-head/tile_prev1/hd_tile (3_place.odb), 68% utilization. Geometry-only dump via ot-run completed epyc2:/srv/opentallas-scratch2/claude/codex-head-review/dump.json (unit oth-ubuntu-2705537-1792901374 exit0); rendering/visual review NOT RUN, so no route authorized. CLOCK kit_taps informed density needs actual internal skew-flop sinks beyond face/FT inventory.
+- Prepared codex/s81-head-1024r at c8218bab98; no edits/commits, interrupted only own initial worktree creation on park and removed that partial worktree safely. Branch retained. No new heavy jobs running from CODEX HEAD.

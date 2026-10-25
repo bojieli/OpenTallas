@@ -146,3 +146,9 @@ make natively. Hand me the new bind dir (bind.f + rtl/) and I stage + build + ru
   B legacy qkd_ctrl_pc_host_static_core (not on any die) has boot_window tied 1'b0 -- accepted (not bound).
 - 2026-10-24 20:38 PDT TOK-QK: B+C merged into claude/kv-tok-1024 @18ab3575e. kv43abc (A+B+C) staged + building epyc2 (ot-run oth-ubuntu-2298447-1792899484,
   scratch2/claude/kv-tok/kv43abc_build); kv43a (A only) build also running (recipe check). D will need one more build (kv43abcd).
+
+## CODEX notes 2026-10-24 21:08 PDT
+- CODEX took over: integrate B+C+D and collect kv43 on codex/token-qk-1024. epyc2 scratch2/claude/kv-tok/kv43abc_build remains live (hg_v1 C++ compile progressing); no terminal build verdict. D port-domain pilot derived kvpc ck/hck successfully; broader pd2 FAIL is tool elaboration of unrelated host crossmodule g_mu.program_fault, not RTL failure. Child kv_d_clock owns scoped elaboration, durable binder and apply_D. Physical kv_bind owns native kv44 (RT32/RL64) and image regen; bridge build precedes final kv44 token. Next: D smallest exact gate, kv43abcd build and boot/token/mutants.
+
+## CODEX notes 2026-10-24 21:10 PDT
+- CODEX took over D on codex/kv-d-clock-1024; staged apply_D.py/.sh authored (untested successor), ten HBM PHY face flops per24PC types core->HBM, 0stages. phy partitions already HBM clock. Gate NOT RUN; parked for Claude reset before launching jobs. Existing pd2 FAIL from unrelated HOST crossmodule reference, pd1 head-domain derivation valid.

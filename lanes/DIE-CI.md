@@ -84,3 +84,11 @@ CODEX 10:50 PDT COLLECTED nightly pinned9d2065c7a2, service inactive/exit0 but g
   now fails closed unless the CI worktree HEAD == sha. The 12:31 run on intel2 checked out da5213b0b3 correctly.
 - In-flight run da5213b0b3 (started 12:31) uses the pre-bf41c38 gate (margined); the next hourly commit run on bf41c38
   re-gates (G2 CARRIED where the plan is unchanged).
+
+## CODEX notes 2026-10-24 21:10 PDT
+- CODEX took over: collect pending CI and fix missing current-plan latency tables on codex/die-ci-refresh-1024. Old pinned da5213b0b3 run still progressing: intel2 HBM q_sfuc GRT iter8/30 (20:50), B2 q_b010 iter16/30 (21:05). Left intact; no duplicate. Four completed dies each G2 PASS 6/6, overflow/access0. Old KV policy seam TT +93.348 / FF +230.957 PASS; recorded FAIL came from obsolete margin gate. Current main already gates policy and excludes retired d4g/B2r2.
+- Fixed real current-main latency failures: new base-plan KV lat_v38v tables (2416 lanes,max36 cycles) and HBM B2l lat tables (298,max35). gate_latency PASS both, prior files retained. KV prior lat_v38s differs 43 lane depths, so this is a regenerated table, not a digest relabel. R8/token rebind remains separate. Branch committed/pushed for root integration.
+- Remaining CI failures: S81 old run 91 hardcores/rack128 -> S81 lane; QC old R8+4ft -> capacity adoption lane; missing actual seam views except recovered KV IO -> waiting physical signed views to register.
+
+## CODEX PARKED 2026-10-24 21:10 PDT
+Claude return order: branch codex/die-ci-refresh-1024 @03032ef99 pushed/merge-ready; no jobs started, adopted old CI remains running; details CODEX-LOG handoff.
