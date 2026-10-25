@@ -43,7 +43,13 @@ def dn(v):
 
 
 def template():
-    """{inst: (x, y)} template-frame origins (+ size table check) and the tree sites."""
+    """{inst: (x, y)} template-frame origins, core sizes, bbox, lane-block offset.  LEAFPLAN3 r2 (COORD 10-25: face
+    rule by layout, closed pin tables kept, R0 only):
+      lane block 4 x 4 | vn_a / vn_b stack (W data face, c_s abutted) | vs (level with vn_b) | vsw E of vs (level:
+      its N i_* and S o_* faces both see vs side-on);  above vn: ve_s (E part), ve_m above vs; below vn_a's E half: vq (ve_s E
+      m_* faces ve_m W m_*);  below vn_a: the 2 store SRAMs (W part: vn wl / n_* W face and vs x_* W face both look
+      at them);  below vs: rxsf over rxsb, centred under vs (rxsf E i_x / W o_* and rxsb E i_* / W o_r side-on to
+      vs above them)."""
     sz = {}
     for c in V.NONFRAME_HC["leaf"]["cores"]:
         sz[c["inst"]] = V._lef_size(c["lef"]) if not c.get("outline") else c["outline"]
@@ -53,39 +59,39 @@ def template():
             p[LN % (4 * k + i)] = (i * LP, k * LP)
     blk = 3 * LP + LANE                                   # 503.28
     gap = 17.28
-    vnx = up(blk + 13.8)                                  # vn W face 15.12 um from the lane block (channel)
+    vnx = up(blk + 13.8)
     vna_h, vnb_h = sz["u_lf.u_vn.u_a"][1], sz["u_lf.u_vn.u_b"][1]
-    stack = vna_h + gap + vnb_h                           # c_s faces abutted (17.28 facing gap, pins line up)
+    vn_w = sz["u_lf.u_vn.u_a"][0]
+    stack = vna_h + gap + vnb_h
     vny = dn(blk / 2 - stack / 2)
     p["u_lf.u_vn.u_a"] = (vnx, vny)
-    p["u_lf.u_vn.u_b"] = (vnx, round(vny + vna_h + gap, 4))
-    vnr = vnx + sz["u_lf.u_vn.u_a"][0]
-    cx = up(vnr + 13.8)                                   # vq / store / ve_s column
+    vnby = round(vny + vna_h + gap, 4)
+    p["u_lf.u_vn.u_b"] = (vnx, vnby)
+    vntop = vnby + vnb_h
+    vsx = up(vnx + vn_w + 13.8)
+    vs_w, vs_h = sz["u_lf.u_vs"]
+    vsy = dn(vntop - vs_h)                                # level with vn_b
+    p["u_lf.u_vs"] = (vsx, vsy)
+    vsw_w, vsw_h = sz["u_lf.u_vsw"]
+    p["u_lf.u_vsw"] = (up(vsx + vs_w + 13.8), dn(vsy + vs_h / 2 - vsw_h / 2))
+    # above vn: ve block (ve_s | ve_m, 181.44 offset) with ve_m over vs; vq W of ve_s
+    vey = up(max(vntop, vsy + vs_h) + 13.8)
+    p["u_lf.u_ve.u_m"] = (vsx, vey)
+    p["u_lf.u_ve.u_s"] = (round(vsx - 181.44, 4), vey)
     vq_w, vq_h = sz["u_lf.u_vq"]
-    cen = vny + stack / 2
-    vqy = dn(cen - vq_h / 2)
-    p["u_lf.u_vq"] = (cx, vqy)
-    st_h = sz["u_lf.u_vp.u_b0"][1]
-    b1y = dn(vqy - 13.8 - st_h)
-    b0y = dn(b1y - 13.8 - st_h)
-    p["u_lf.u_vp.u_b1"] = (cx, b1y)
-    p["u_lf.u_vp.u_b0"] = (cx, b0y)
-    colr = cx + max(vq_w, sz["u_lf.u_vp.u_b0"][0])
-    x4 = up(colr + 13.8)                                  # vs / ve_m / vsw column
-    vs_h = sz["u_lf.u_vs"][1]
-    # vs W u (local y 115-166) faces vq E u (local y 6-120): vs centred 55 um below vq's u centroid
-    vsy = dn(vqy + 63 - 140)
-    p["u_lf.u_vs"] = (x4, vsy)
-    vey = up(max(vqy + vq_h, vsy + vs_h) + 13.8)
-    p["u_lf.u_ve.u_m"] = (x4, vey)
-    p["u_lf.u_ve.u_s"] = (round(x4 - 181.44, 4), vey)
-    vsw_h = sz["u_lf.u_vsw"][1]
-    p["u_lf.u_vsw"] = (x4, dn(vsy - 13.8 - vsw_h))
-    rx = sz["u_lf.u_rxsf"]
-    rxy = dn(min(vny, b0y) - 13.8 - rx[1])
-    p["u_lf.u_rxsf"] = (cx, rxy)
-    p["u_lf.u_rxsb"] = (dn(cx - 13.8 - rx[0]), rxy)
-    # normalise: template bbox lower-left at (0, 0)
+    # vq below vn_a's E half: vn E y and vq W y / E u / N xf all see their partners
+    p["u_lf.u_vq"] = (round(vsx - 181.44, 4), dn(vny - 13.8 - vq_h))
+    # below vn_a: stores (W part of vn)
+    st_w, st_h = sz["u_lf.u_vp.u_b0"]
+    b1y = dn(vny - 13.8 - st_h)
+    p["u_lf.u_vp.u_b1"] = (vnx, b1y)
+    p["u_lf.u_vp.u_b0"] = (vnx, dn(b1y - 13.8 - st_h))
+    # below vs: rxsf then rxsb, centred under vs
+    rw, rh = sz["u_lf.u_rxsf"]
+    rx_x = dn(vsx + vs_w / 2 - rw / 2)
+    rfy = dn(vsy - 13.8 - rh)
+    p["u_lf.u_rxsf"] = (rx_x, rfy)
+    p["u_lf.u_rxsb"] = (rx_x, dn(rfy - 13.8 - rh))
     x0 = min(v[0] for v in p.values())
     y0 = min(v[1] for v in p.values())
     p = {k_: (round(v[0] - x0, 4), round(v[1] - y0, 4)) for k_, v in p.items()}
@@ -331,6 +337,38 @@ def other_entries(T, o):
     return ents
 
 
+def w_face_bus(T, o, ents, mt):
+    """dn-bus ports on the vn halves' W face (rb_*, n_go, n_pre): their FIRM chain ends in the lane-block / vn channel
+    in front of the pin (the M channel), so the last register sits W of the face (G0C face rule: the bus reaches the
+    core from its last station) and the wire comes round the stack in the channel, not over vn."""
+    if mt is None:
+        return ents
+    W, H = T["outline_um"]
+    hb = [(b[0] - V.FT_HALO, b[1] - V.FT_HALO, b[2] + V.FT_HALO, b[3] + V.FT_HALO) for b in boxes(o).values()]
+    out = []
+    for e in ents:
+        cap = e.get("capture", "")
+        if not (e["conn"].startswith("bus:") and cap.startswith("u_lf.u_vn.") and
+                cap.rsplit(".", 1)[1] in ("rb_v", "rb_d", "n_go", "n_pre")):
+            out.append(e)
+            continue
+        fr, to = e["from_um"], e["to_um"]
+        C = (mt[0], to[1])
+        L = abs(fr[0] - C[0]) + abs(fr[1] - C[1])
+        n = max(0, math.ceil(L / 400.0) - 1)
+        for _ in range(12):
+            regs = [V._outside(fr[0] + (C[0] - fr[0]) * j / (n + 1), fr[1] + (C[1] - fr[1]) * j / (n + 1), hb, W, H)
+                    for j in range(1, n + 1)] + [C]
+            pts = [fr] + regs + [to]
+            if max(abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(pts, pts[1:])) <= 405.0:
+                break
+            n += 1
+        e = dict(e, regs_um=[[round(x, 3), round(y, 3)] for x, y in regs])
+        e["note"] = "LEAFPLAN3: dn bus -> vn W-face port, last FIRM station in the lane-block / vn channel: %d station(s)" % len(regs)
+        out.append(e)
+    return out
+
+
 def hops(e):
     pts = [e["from_um"]] + e["regs_um"] + [e["to_um"]]
     return [abs(a[0] - b[0]) + abs(a[1] - b[1]) for a, b in zip(pts, pts[1:])]
@@ -354,11 +392,13 @@ def run(plan, types=None):
                 o, sbus = place_type(T, p, sz, lane_off, xo, yo)
                 if not legal(o, W, H):
                     continue
-                bs = band_score(T, o)
-                if best is not None and bs > best[0][0]:
+                fa = V.core_faces_away("leaf", o, W, H, T["buses"])
+                if best is not None and fa > best[0][0]:
                     continue
-                # bus side distance: the template's N side (bus ports of vn_b / vq / vs) toward the bus face
-                key = (bs, -(yo))
+                bs = band_score(T, o)
+                # G0C face rule first, then the ft band estimate, then the template's N side (bus ports) toward
+                # the bus face (N-bus frame: larger y offset = nearer the bus in N and S types alike)
+                key = (fa, bs, -(yo), xo)
                 if best is None or key < best[0]:
                     best = (key, o, sbus, xo, yo)
         key, o, sbus, xo, yo = best
@@ -366,7 +406,7 @@ def run(plan, types=None):
                          V.ft_stations_macro(s_, [dict(origin_um=[-1e6, -1e6], outline_um=[1, 1])], W, H,
                                              smax=V.FT_KIT_REACH_UM * 0.98)) for s_ in T["ft_slots"])
         tree = tree_entries(T, o, M, S, sbus, xo, yo)
-        oth = other_entries(T, o)
+        oth = w_face_bus(T, o, other_entries(T, o), tree[0]["regs_um"][0] if tree else None)
         T["hard_cores"] = o
         T["internal_stations"] = tree + oth
         cls = {}
@@ -374,7 +414,7 @@ def run(plan, types=None):
             a, _, b = e["conn"].partition("|")
             ka = a.rsplit(".", 1)[0] if a.startswith("core:") else a
             cls.setdefault("%s|%s" % (e["conn"].split("|")[0], e.get("capture", "")), len(e["regs_um"]))
-        rep["types"][tn] = dict(offset=[xo, yo], sbus=sbus, band_overcore=key[0], ft_macro_added=ft_add,
+        rep["types"][tn] = dict(offset=[xo, yo], sbus=sbus, faces_away=V.core_faces_away("leaf", o, W, H, T["buses"]), band_overcore=key[1], ft_macro_added=ft_add,
                                 tree_entries=len(tree), other_entries=len(oth),
                                 max_hop=round(max(max(hops(e)) for e in tree + oth), 2),
                                 other_depth={e["conn"] + ("" if e["conn"].startswith("core:") else "->" + e["capture"]):
@@ -397,7 +437,7 @@ def main():
         Path(a.report).write_text(json.dumps(rep, indent=1) + "\n")
     for tn, r in rep["types"].items():
         print(tn, r["offset"], "S" if r["sbus"] else "N", "band", r["band_overcore"], "ftadd", r["ft_macro_added"],
-              "maxhop", r["max_hop"], "oth", r["other_entries"])
+              "maxhop", r["max_hop"], "faces", r["faces_away"], "oth", r["other_entries"])
 
 
 if __name__ == "__main__":
