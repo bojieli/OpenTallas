@@ -793,6 +793,9 @@
        "insertion_basis": {
         "type": "string"
        },
+       "out_hold_guarantee_ps": {
+        "type": "number"
+       },
        "keepouts_um": {
         "type": "array",
         "items": {
@@ -2026,6 +2029,12 @@
        "type": "string"
       }
      }
+    },
+    "io_hold": {
+     "enum": [
+      "legacy",
+      "sender_min"
+     ]
     },
     "common_latency_ps": {
      "type": "number",
