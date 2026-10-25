@@ -7,5 +7,6 @@ adopt178 plan (7c33a7a81). Verdicts: `verdict.json`. Scripts: `replay_dsk.sh`, `
   identical to Codex's `codex_nx138` vehicle (4298 events, 240 NX), and only the XRT contract changes (`nx_compare.json`).
 - cut_0S on ec43: the base sim passes with 15/15 NX words at 2517 cycles and 0 mismatches. The input-corrupt mutant is caught
   (2 mismatches, 248 fault cycles).
+- cut_0N on ec43: base 15/15 NX words at 2518 cycles, 0 mismatches; input-corrupt mutant caught (2 mismatches, 249 fault cycles).
 - The strict check on every run is blocked by the guard `HOST/control runtime proof remains PENDING`. The native ec43 entry
   proof is blocked: the entry mechanism receipt pins TB files that exist on no fleet host.

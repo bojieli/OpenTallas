@@ -1,20 +1,72 @@
 {
  "schema": "opentallas.tokds.dsk_replay.v1",
- "date": "2026-10-25 04:58 PDT",
+ "date": "2026-10-25 05:20 PDT",
  "scope": "L0 entry/norm NX arithmetic phase (hc_pre + per-leaf square + chunk8 sums; no rstd/quant) on fc31 deskew cuts (XRT ec43bbd4); pre-adopt178 plan -> mechanism evidence only",
- "programme": {"prog": "epyc3:/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/prog_L0_su",
-   "source_root": "root31dsk = root30 with ot_s81sl_xrt.sv ec43 (only file differing from the dsk kit rtl_extra/75c077ec9)",
-   "vs_codex_nx138": "4298/4298 events and 240/240 NX events identical; only the XRT contract differs (cfc3 -> ec43)"},
+ "programme": {
+  "prog": "epyc3:/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/prog_L0_su",
+  "source_root": "root31dsk = root30 with ot_s81sl_xrt.sv ec43 (only file differing from the dsk kit rtl_extra/75c077ec9)",
+  "vs_codex_nx138": "4298/4298 events and 240/240 NX events identical; only the XRT contract differs (cfc3 -> ec43)"
+ },
  "old_vehicle_codex_nx138": {
-   "cut_0S": {"sim": "PASS", "cycles": 2517, "out_checks": 15, "mismatches": 0, "check": "REFUSED (contract cfc3 != simulator ec43)"},
-   "cut_0N": {"sim": "PASS", "cycles": 2518, "out_checks": 15, "mismatches": 0, "check": "REFUSED (contract cfc3 != simulator ec43)"}},
+  "cut_0S": {
+   "sim": "PASS",
+   "cycles": 2517,
+   "out_checks": 15,
+   "mismatches": 0,
+   "check": "REFUSED (contract cfc3 != simulator ec43)"
+  },
+  "cut_0N": {
+   "sim": "PASS",
+   "cycles": 2518,
+   "out_checks": 15,
+   "mismatches": 0,
+   "check": "REFUSED (contract cfc3 != simulator ec43)"
+  }
+ },
  "ec43_vehicle": {
-   "cut_0S": {"base": {"sim": "PASS", "cycles": 2517, "out_checks": 15, "mismatches": 0, "check": "BLOCKED: XRT runtime proof PENDING"},
-              "mut_in corrupt:xrW_0S_l0:91": {"sim": "FAIL (caught)", "mismatches": 2, "fault_cycles": 248, "first_fault": 2268},
-              "mut_ex expect-shift:NX:1": {"check": "BLOCKED: XRT runtime proof PENDING"}},
-   "cut_0N": "running at report time", "cut_7": "binary still compiling (make -j4)"},
- "entry_proof_ec43": {"status": "BLOCKED",
-   "reason": "entry_boot.py needs mechanism receipt entry_mechanism_c22.json, whose source_sha256 pins absolute TB files /srv/opentallas-scratch/claude/codex-entry-vp-1021/tb_entry_vp{,_ports}.sv that exist on no fleet host; existing replay_job15..22 progs carry the cfc3 contract",
-   "next": "re-run the entry mechanism proof (entry_mechanism.py) on the ec43 source to get a fresh receipt, then entry_ec43.sh"},
+  "cut_0S": {
+   "base": {
+    "sim": "PASS",
+    "cycles": 2517,
+    "out_checks": 15,
+    "mismatches": 0,
+    "check": "BLOCKED: XRT runtime proof PENDING"
+   },
+   "mut_in corrupt:xrW_0S_l0:91": {
+    "sim": "FAIL (caught)",
+    "mismatches": 2,
+    "fault_cycles": 248,
+    "first_fault": 2268
+   },
+   "mut_ex expect-shift:NX:1": {
+    "check": "BLOCKED: XRT runtime proof PENDING"
+   }
+  },
+  "cut_0N": {
+   "base": {
+    "sim": "PASS",
+    "cycles": 2518,
+    "out_checks": 15,
+    "mismatches": 0,
+    "check": "BLOCKED: XRT runtime proof PENDING"
+   },
+   "mut_in corrupt:xrW_0N_l0:91": {
+    "sim": "FAIL (caught)",
+    "mismatches": 2,
+    "fault_cycles": 249,
+    "first_fault": 2268
+   },
+   "mut_ex expect-shift:NX:1": {
+    "check": "BLOCKED: XRT runtime proof PENDING"
+   },
+   "run": "epyc3 ot-run unit oth-ubuntu-3476465-1792928581 exit 0; out epyc3:/srv/opentallas-scratch2/claude/tok-ds/runs/claude_dsk/nx/L0/cut_0N/"
+  },
+  "cut_7": "binary compiling (epyc3 make PID 2488010, ~7.8k/13.4k objects at 05:15)"
+ },
+ "entry_proof_ec43": {
+  "status": "BLOCKED",
+  "reason": "entry_boot.py needs mechanism receipt entry_mechanism_c22.json, whose source_sha256 pins absolute TB files /srv/opentallas-scratch/claude/codex-entry-vp-1021/tb_entry_vp{,_ports}.sv that exist on no fleet host; existing replay_job15..22 progs carry the cfc3 contract",
+  "next": "TOK-DS/ENTRY regenerates the entry-VP mechanism benches in-repo from main (branch claude/tok-ds-entry-1025), new receipt -> entry_ec43.sh -> strict re-check of all cuts"
+ },
  "adopt178": "not launched: dsk kits are cut from the fc31 die.v (tree_fc31); adopt178 LAT_* changes need a new die.v/tree (fc32) -> cut -> kit -> TB before any Verilator rebuild"
 }
