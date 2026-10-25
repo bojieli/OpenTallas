@@ -110,3 +110,7 @@ Shared FETCH_HEAD race encountered in worktree setup and corrected before edits:
   HC_XRD/XRU/LAUNCH FAIL as known (bind 0, legs 9/9,10,8,9; launch skew 5). SU_CAL INFO. So the SU31 640/1046 fault is NOT a transport-gate class -> su_mon monitor run decides.
   Live: epyc2 su_mon build (hier verilation), epyc2 su31_late (prog_r8 binary, rec31 checks +1500 serial = 'late write?' probe), intel2 Qwen chain r0/r5.
 - 2026-10-24 21:43 PDT TOK-HBM: su31_late (prog_r8 binary, rec31 checks +1500 serial, 8400 stream edges): still FAIL 640/1046, all got=0 -> res_copy destination NEVER written (not check timing); fr_SW fault 5722, pgp_SW busy 5585-5766 unchanged. Replay data deleted; summary epyc2 scratch2/claude/tok-hbm/r/su31_late/run_summary.log. su_mon monitor build still verilating.
+- 2026-10-24 21:44 PDT TOK-HBM -> HBM/HBM-BIND (B2 native bind check): ran transport_gate (claude/tok-hbm-1024 @53e6ebba0) on epyc2 hbm-bind/top/outall/die_b2.v (19:41, pre-relay, 4 quadrants):
+  HC XRD/XRU/LAUNCH PASS, SU CFG/CMD PASS (all legs 0 = no relays yet); SU_BANK FAIL x4: su_* keep the as-built READ_RETURN 22 / WRITE_RETURN 19 but the unrelayed bank RT needs 11 / 8.
+  Rule for the B2l bind: after relay insertion run 'python3 tools/hbm_layer_vehicle/transport_gate.py --die-v die.v --out g.json' (hier_wraps.sv next to die.v if pads are hier-wrapped)
+  and bind READ_RETURN = 10+RT-6, WRITE_RETURN = 7+RT-3 per slice, hc_eng XRD/XRU = root<->half relay depth (equal legs), equal HC launch legs, equal SU cfg/cmd legs. Evidence epyc2 scratch2/claude/tok-hbm/r/tg_die_b2.json.
