@@ -73,3 +73,4 @@ Skipped: coordinator cancelled the request (old scratch wiped by owner order 07:
 
 ## CODEX notes
 - CODEX root integrated shared fixes d311adaf53,44c10ec34d,34a5e602dc,acfb8a36e7,8232aca585; plain merge and HEAD==origin/main checks passed. Remaining plan/core work owned by grouped agents; no queue item orphaned.
+READY [QC 2026-10-24 19:33 PDT] claude/qc-g0fix-1024@9aceac11be: QC main G0 FAIL (R8 landing digest e56a vs c56f) -> PASS 0 errors; r8/bus_groups.json = qcp6_status_bind_v5 (f4f98b), landing regenerated (same pads 248,396), 6 files under physical/die_plan/qwen_compute only, 0 deletions

@@ -157,3 +157,12 @@ CODEX progress: Capacity56 candidate nowregenerated25/25constantsPASS,433915padf
   routing-layer question; review images before routing. (6) collect A0 GRT overflow + images.
 - OWNER?/COORD: ft hop layers in partition kits (M8/M9 allowed in ft kits vs stations every <= 405 um vs die-level ft
   routing); owner of the reset-rule implementation in gen_rtl/gen_phys; canonical QC bus_groups (main itself FAILS G0 R8).
+
+## QC (steward: QC-A0 + ELEM-QK + TRIAL-QK + QC-TOK plan side) -- started 2026-10-24 19:33 PDT
+- 2026-10-24 19:33 PDT QC: worktree epyc1:/srv/opentallas-scratch/claude/wt/qc-1024r (branch claude/qc-g0fix-1024 from origin/main d13ff7c78).
+- 2026-10-24 19:33 PDT QC: MAIN G0 FIX READY: claude/qc-g0fix-1024@9aceac11be. Canonical bus groups for main's P6 status plan =
+  codex-qwen/qcp6_status_bind_v5/bus_groups.json (digest f4f98b2b102ed56f; the bind of that plan, 0 errors, verify PASS).
+  e56a2f6f matches no bus_groups file on any of the 5 hosts (searched). With v5 groups the committed table gives ONLY the
+  digest error; gen.py latency --groups v5 reproduces it: same 7720 members / 248,396 pad flops / max pad 5; only 4
+  members' lane label UNPLANNED -> coll_ucie__fltu. Committed as r8/bus_groups.json + regenerated landing + r8 latency/pkg.
+  G0 PASS 0 errors / 88 warn, G0C 52/56 (unchanged; capacity plan next).
