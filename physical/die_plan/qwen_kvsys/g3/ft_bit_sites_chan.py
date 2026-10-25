@@ -133,11 +133,54 @@ def strip(face, W, H):
     return {"S": 8.0, "N": H - 8.0, "W": 8.0, "E": W - 8.0}[face]
 
 
-def detour(a, b, fin, fout, m, J, W, H):
+LEG_CLEAR = 1.0     # um: a wire leg may pass a hard-core edge this close (stations keep F.CLEAR via Sites)
+
+
+def leg_free(J, p, m, horiz):
+    """the straight leg from face pin p to the jog line m (x = m for an E/W pin, y = m for an N/S pin) misses every
+    hard core (+LEG_CLEAR): a pin in a core's global shadow whose own leg is core-free (e.g. an E-face pin in front of
+    the full-height E channel, or a pin in a narrow mouth slit) needs no face-strip detour (PATH-KV-HUBWI 10-25)"""
+    if J.rects is None:
+        return False
+    if horiz:
+        x0, x1, y0, y1 = min(p[0], m), max(p[0], m), p[1], p[1]
+    else:
+        x0, x1, y0, y1 = p[0], p[0], min(p[1], m), max(p[1], m)
+    return not any(a - LEG_CLEAR < x1 and x0 < c + LEG_CLEAR and b - LEG_CLEAR < y1 and y0 < d + LEG_CLEAR
+                   for a, b, c, d in J.rects)
+
+
+def strip_leg(J, y, other, frac):
+    """E/W pin in the S or N face strip (the core-free band between a face and the first core row): its horizontal
+    leg may run at any height of the strip between the pin and the far end without adding length (monotone route);
+    the slot's bits fan out over the strip in rank order (frac) so their stations spread over the strip's rows
+    instead of piling onto the few rows next to the pins (PATH-KV-HUBWI 10-25: kv3_hub_Wi S/N strips).  None when the
+    pin is not in a face strip."""
+    iv = J.iv["y"]
+    if not iv:
+        return None
+    lo, hi = iv[0]
+    if lo <= 20.0 + 1e-6 and y <= hi + 2.5 and other > y:
+        y0, y1 = max(y, lo + 1.0), hi - 1.0
+        return y0 + frac * (y1 - y0) if y1 > y0 else None
+    lo, hi = iv[-1]
+    if hi >= J.size["y"] - 20.0 - 1e-6 and y >= lo - 2.5 and other < y:
+        y0, y1 = min(y, hi - 1.0), lo + 1.0
+        return y0 - frac * (y0 - y1) if y0 > y1 else None
+    return None
+
+
+def detour(a, b, fin, fout, m, J, W, H, frac=None):
     """straight-through route a -> b with the jog at m; a leg whose pin sits in a core shadow first runs along the face
-    strip to the nearest channel (cores obstruct M1-M7: a leg through a core has no track)"""
+    strip to the nearest channel (cores obstruct M1-M7: a leg through a core has no track), unless its own straight
+    leg to the jog line is core-free (leg_free)"""
     if fin in "EW":
         ca, cb = shadow(J, "y", a[1]), shadow(J, "y", b[1])
+        ca = None if ca is not None and leg_free(J, a, m, True) else ca
+        cb = None if cb is not None and leg_free(J, b, m, True) else cb
+        if frac is not None:
+            ca = strip_leg(J, a[1], b[1], frac) if ca is None else ca
+            cb = strip_leg(J, b[1], a[1], frac) if cb is None else cb
         r = [a]
         if ca is not None:
             r += [(strip(fin, W, H), a[1]), (strip(fin, W, H), ca)]
@@ -148,6 +191,8 @@ def detour(a, b, fin, fout, m, J, W, H):
             r += [(strip(fout, W, H), cb), (strip(fout, W, H), b[1])]
         return r + [b]
     ca, cb = shadow(J, "x", a[0]), shadow(J, "x", b[0])
+    ca = None if ca is not None and leg_free(J, a, m, False) else ca
+    cb = None if cb is not None and leg_free(J, b, m, False) else cb
     r = [a]
     if ca is not None:
         r += [(a[0], strip(fin, W, H)), (ca, strip(fin, W, H))]
@@ -194,6 +239,37 @@ class StripSites(F.Sites):
 
 
 ChanJogs.pick_free = pick_free
+REST_MARGIN = 4.0      # um of reach slack kept for the last hop when the bit has it
+HOP_UM = 405.0 - 1e-3   # per-bit reach, as the PROTO scan: inset pin -> station -> ... -> inset pin, Manhattan
+
+
+def take_if(self, x, y, horiz, pred, rad_max=240):
+    """F.Sites.take with a feasibility predicate on the site cell centre (nearest legal site that keeps the bit's
+    remaining hops within reach); None when no such site lies within rad_max lattice steps"""
+    c0 = round((x - F.CELL[0] / 2 - self.x0) / F.COL_UM)
+    r0 = round((y - F.CELL[1] / 2 - self.y0) / F.ROW)
+    for rad in range(0, rad_max):
+        cand = []
+        for d in range(-rad, rad + 1):
+            e = rad - abs(d)
+            for s_ in ((d, e), (d, -e)) if e else ((d, 0),):
+                dc, dr = (s_[0], s_[1]) if horiz else (s_[1], s_[0])
+                cand.append((abs(dc) * F.COL_UM * (0.25 if horiz else 1) + abs(dr) * F.ROW * (1 if horiz else 0.25),
+                             c0 + dc, r0 + dr))
+        for _, c, r in sorted(cand):
+            if self.ok(c, r):
+                xy = (round(self.x0 + c * F.COL_UM, 4), round(self.y0 + r * F.ROW, 4))
+                if pred((xy[0] + F.CELL[0] / 2, xy[1] + F.CELL[1] / 2)):
+                    self.used.add((c, r))
+                    return xy
+    return None
+
+
+StripSites.take_if = take_if
+
+
+def inset(p, f):
+    return {"E": (p[0] - 1, p[1]), "W": (p[0] + 1, p[1]), "N": (p[0], p[1] - 1), "S": (p[0], p[1] + 1)}[f]
 
 
 def run(raw, P, tn, png=None):
@@ -214,7 +290,13 @@ def run(raw, P, tn, png=None):
         pins[bus][bit] = (x, y)
     rep = dict(type=tn, channels=J.iv, slots={})
     draw = []
-    for s in sorted(t["ft_slots"], key=lambda s: -s["width"]):
+    def slack(s):   # reach slack per bit (stations x 405 - Manhattan pin span): tightest slots take sites first
+        A, B = pins.get(s["name"] + "_i"), pins.get(s["name"] + "_o")
+        if not A or not B:
+            return 0.0
+        return int(s.get("stations", 1)) * HOP_UM - max(F.man(A[q], B[q]) for q in A if q in B)
+
+    for s in sorted(t["ft_slots"], key=lambda s: (slack(s) > 64.0, -s["width"])):
         k = int(s.get("stations", 1))
         if k < 2:
             continue
@@ -240,33 +322,54 @@ def run(raw, P, tn, png=None):
             jog, stag, ch = J.pick("x" if fin in "EW" else "y", lo, hi, n, dshift)
         stages = [[None] * n for _ in range(k - 1)]
         disp = hop = 0.0
+        worst = None
         for i in order:
             if jog is None:
                 r = F.bit_routes(A[i], B[i], fin, fout, rank[i], n, sgn, jog)
             else:
                 off = (rank[i] - (n - 1) / 2) * stag * sgn
-                r = detour(A[i], B[i], fin, fout, jog + off, J, W, H)
+                r = detour(A[i], B[i], fin, fout, jog + off, J, W, H, frac=(rank[i] + 0.5) / n)
             L = F.plen(r)
             pts = [A[i]]
+            a_in, b_in = inset(A[i], fin), B[i]     # as the PROTO scan: inset in-pin ... out pin itself
+            prev, arc = a_in, 0.0
             for j in range(1, k):
-                p = F.at(r, L * j / k)
+                # reach-aware station: target the even split of what is left after the previous station, accept the
+                # nearest legal site with hop <= HOP_UM and Manhattan rest to the out pin <= (k - j) x HOP_UM
+                arc = max(arc, L - F.man(prev, b_in))
+                p = F.at(r, arc + (L - arc) / (k - j + 1))
+                arc = arc + (L - arc) / (k - j + 1)
                 seg = next(((u, v) for u, v in zip(r, r[1:]) if min(u[0], v[0]) - 1e-6 <= p[0] <= max(u[0], v[0]) + 1e-6
                             and min(u[1], v[1]) - 1e-6 <= p[1] <= max(u[1], v[1]) + 1e-6), (r[0], r[1]))
                 horiz = abs(seg[0][1] - seg[1][1]) < 1e-6
-                xy = St.take(p[0], p[1], horiz)
+                # keep REST_MARGIN of the reach slack for the last hop (two L1 balls of radius 405 around the
+                # second-last station and the out pin meet in a thin band: with no slack left it may hold no site)
+                xy = None
+                for mg in ((REST_MARGIN, REST_MARGIN / 2, 0.0) if j < k - 1 else (0.0,)):
+                    xy = St.take_if(p[0], p[1], horiz, lambda q, pv=prev, jj=j, mg=mg: F.man(pv, q) <= HOP_UM and
+                                    F.man(q, b_in) <= (k - jj) * HOP_UM - mg)
+                    if xy is not None:
+                        break
+                if xy is None:
+                    xy = St.take(p[0], p[1], horiz)
                 stages[j - 1][i] = [xy[0], xy[1]]
                 c = (xy[0] + F.CELL[0] / 2, xy[1] + F.CELL[1] / 2)
+                prev = c
                 disp = max(disp, F.man(c, p))
                 pts.append(c)
             pts.append(B[i])
-            hop = max(hop, max(F.man(u, v) for u, v in zip(pts, pts[1:])))
+            hb = max(F.man(u, v) for u, v in zip(pts, pts[1:]))
+            if hb > hop:
+                worst = dict(bit=i, route_um=round(L, 1), hops=[round(F.man(u, v), 1) for u, v in zip(pts, pts[1:])])
+            hop = max(hop, hb)
             if i % 16 == 0:
                 draw.append((r, pts[1:-1]))
         s["bit_sites_um"] = stages
         s["bit_site_cell_um"] = list(F.CELL)
         s.pop("regs_um", None)
         rep["slots"][nm] = dict(width=s["width"], faces=fin + fout, stations=k, jog_um=jog, channel=ch,
-                                stagger_um=stag, max_disp_um=round(disp, 2), max_bit_hop_um=round(hop, 1))
+                                stagger_um=stag, max_disp_um=round(disp, 2), max_bit_hop_um=round(hop, 1),
+                                worst_bit=worst)
     rep["max_bit_hop_um"] = max((v["max_bit_hop_um"] for v in rep["slots"].values()), default=0)
     rep["sites"] = len(St.used)
     if png:
