@@ -276,3 +276,4 @@ s81_head	hd_st_turn__m5	epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m5/h
 s81_head	hd_st_turn__m0	epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m0/hd_st_turn	claude/s81-head-kits-1025@73b82056f0	REQ	[S81-HEAD/KITS 07:05]	24	25267	S81-HEAD	route		8
 s81_head	hd_spn__m5	epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m5/hd_spn	claude/s81-head-kits-1025@73b82056f0	REQ	[S81-HEAD/KITS 07:05]	32	77887	S81-HEAD	route		8
 hbm	ot_hbm_idx_score_quarter_static__tail0_5cf6e5ff5f5a	epyc2:/srv/opentallas-scratch2/claude/hbm-kits-1025/batch1/kits_withdrawn/tail0	claude/hbm-kits-b2-1025@282321554f	WITHDRAWN	HBM-KITS tail0 3d41e712ec5d: LEC NOT EQUIVALENT 36/8715 (FP32 adder err/rd27/rd55), also with keep_regs fix; waits LEC lane	24	70000	HBM-KITS	finish
+s81_head	hd_spn__m0	epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m0/hd_spn	claude/s81-head-kits-1025@73b82056f0	REQ	[S81-HEAD/KITS 07:05]	32	77887	S81-HEAD	route		8
