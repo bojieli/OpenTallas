@@ -56,6 +56,7 @@ from array import array
 from pathlib import Path
 
 SCHEMA = "opentallas.lec.v1"
+PROVE_JOBS = 1
 IMAGE = os.environ.get("OT_ORFS_IMAGE", "openroad/orfs:asap7lock")
 ORFS = "/OpenROAD-flow-scripts"
 NLDM = ORFS + "/flow/platforms/asap7/lib/NLDM"
@@ -720,7 +721,7 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
     ABC: &fraig (simulation + SAT sweeping of the shared gold / gate structure; proved outputs collapse to 0), then
     &sat -a -z on what is left (each output: UNSAT -> const 0, SAT -> counterexample kept).  When &sat leaves undefined
     outputs, random simulation marks the SAT ones and the rest are re-checked one cone at a time (&cone -O i;
-    &cec -m) with 10x the conflicts."""
+    &cec -n -m) with 10x the conflicts on the cone query (no recursive per-node proof expansion)."""
     if not m.outs:
         return {}
     work = Path(work)
@@ -752,16 +753,34 @@ def prove(m, work, conflicts, log, tag="miter", single_cap=2000):
     for i in left:
         st[m.onames[i]] = "differs" if lit_val(val, mask, m.outs[i]) else "undecided"
     left = [i for i in left if st[m.onames[i]] == "undecided"]
-    script = []
-    for i in left[:single_cap]:
-        script.append(f"&r {swept}; &cone -O {i}; &cec -m -C {conflicts * 10}")
-    if script:
-        r = subprocess.run([abc, "-c", "; ".join(script)], capture_output=True, text=True)
-        t = r.stdout + r.stderr
-        log.append(f"==== {tag} single cones\n{t}")
-        res = re.findall(r"Networks are (NOT EQUIVALENT|equivalent|UNDECIDED)", t)
-        for i, v in zip(left[:single_cap], res):
-            st[m.onames[i]] = {"NOT EQUIVALENT": "differs", "equivalent": "proved"}.get(v, "undecided")
+    pending = left[:single_cap]
+    if pending:
+        from concurrent.futures import ThreadPoolExecutor
+        jobs = max(1, PROVE_JOBS)
+        size = len(pending) if jobs == 1 else max(1, (len(pending) + jobs * 4 - 1) // (jobs * 4))
+        batches = [pending[i:i+size] for i in range(0, len(pending), size)]
+        def one_batch(ids):
+            script = [f"&r {swept}; &cone -O {i}; &cec -n -m -C {conflicts * 10}" for i in ids]
+            r = subprocess.run([abc, "-c", "; ".join(script)], capture_output=True, text=True)
+            return ids, r.stdout + r.stderr
+        with ThreadPoolExecutor(max_workers=jobs) as ex:
+            for ids, t in ex.map(one_batch, batches):
+                log.append(f"==== {tag} single cones {ids[0]}..{ids[-1]}\n{t}")
+                # Naive SAT reports one aggregate line for a nontrivial cone; trivial
+                # cones use the CEC sentence. Keep UNDECIDED in sequence: dropping it
+                # would shift a later proof onto the wrong output.
+                pat = (r"Networks are (NOT EQUIVALENT|equivalent|UNDECIDED)|"
+                       r"UNSAT\s*=\s*(\d+)\.\s*SAT\s*=\s*(\d+)\.\s*UNDEC\s*=\s*(\d+)\.")
+                res = []
+                for hit in re.finditer(pat, t):
+                    if hit[1]:
+                        res.append({"NOT EQUIVALENT": "differs", "equivalent": "proved"}.get(hit[1], "undecided"))
+                    else:
+                        u, sat, undec = map(int, hit.group(2, 3, 4))
+                        res.append("proved" if (u, sat, undec) == (1, 0, 0) else
+                                   "differs" if (u, sat, undec) == (0, 1, 0) else "undecided")
+                for i, status in zip(ids, res):
+                    st[m.onames[i]] = status
     return st
 
 
@@ -1352,7 +1371,7 @@ def via_docker(args, image, mem):
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
            "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}",
            image, "bash", "-lc"]
-    inner = ["python3", "-I", "/lec.py", "/work", "--out", "/lecout", "--conflicts", str(args.conflicts)]
+    inner = ["python3", "-I", "/lec.py", "/work", "--out", "/lecout", "--conflicts", str(args.conflicts), "--jobs", str(args.jobs)]
     if args.netlist:
         n = str(Path(args.netlist).resolve())
         if not n.startswith(kit + "/"):
@@ -1370,10 +1389,12 @@ def via_docker(args, image, mem):
 
 
 def main(argv=None):
+    global PROVE_JOBS
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("kit")
     ap.add_argument("--netlist", help="gate netlist (default: KIT/run/results/asap7/*/base/1_2_yosys.v)")
     ap.add_argument("--out", help="output dir (default KIT/lec)")
+    ap.add_argument("--jobs", type=int, default=1, help="parallel independent SAT-cone batches (admit matching threads/memory)")
     ap.add_argument("--gold-frontend", choices=("verilog", "slang"),
                     help="default: the frontend synthesis did NOT use")
     ap.add_argument("--port-map", help="JSON {gate port bit: gold port bit} (renamed packed buses)")
@@ -1382,6 +1403,7 @@ def main(argv=None):
     ap.add_argument("--image", default=None, help="run inside this docker image (default when not in the ORFS image)")
     ap.add_argument("--mem", type=int, default=32, help="docker --memory GB for --image runs")
     a = ap.parse_args(argv)
+    PROVE_JOBS = max(1, a.jobs)
     if not in_image():
         rc = via_docker(a, a.image or IMAGE, a.mem)
         p = Path(a.out or Path(a.kit) / "lec") / "lec.json"

@@ -211,3 +211,49 @@ def test_replica_candidates_keep_input_identity_and_prove_both_sides(tmp_path, m
         lec.correspond(L, tmp_path, 100, [])
         m, _ = L.build(with_compare=True, with_hyp=True)
         assert want_result in set(_sim_prove(m).values())
+
+
+def test_parallel_cones_preserve_each_status(tmp_path, monkeypatch):
+    import re
+    from types import SimpleNamespace
+    m = lec.Aig()
+    x = m.add_input('x')
+    m.outs, m.onames = [x, x], ['equivalent_cone', 'different_cone']
+    monkeypatch.setattr(lec, 'abc_bin', lambda: 'fake-abc')
+    monkeypatch.setattr(lec, 'aig_outputs', lambda p: [2, 2])
+    monkeypatch.setattr(lec, 'lit_val', lambda *args: 0)  # neither leftover is resolved by simulation
+    monkeypatch.setattr(lec, 'PROVE_JOBS', 2)
+    def run(args, **kwargs):
+        script = args[-1]
+        if '&fraig' in script:
+            (tmp_path / 'parallel_swept.aig').touch()
+            return SimpleNamespace(stdout='Undef calls 2', stderr='')
+        ids = [int(i) for i in re.findall(r'&cone -O (\d+)', script)]
+        return SimpleNamespace(stdout='\n'.join('Networks are equivalent' if i == 0 else 'Networks are NOT EQUIVALENT' for i in ids), stderr='')
+    monkeypatch.setattr(lec.subprocess, 'run', run)
+    assert lec.prove(m, tmp_path, 100, [], tag='parallel') == {'equivalent_cone': 'proved', 'different_cone': 'differs'}
+
+
+def test_naive_cone_unknown_does_not_shift_later_status(tmp_path, monkeypatch):
+    import re
+    from types import SimpleNamespace
+    m = lec.Aig()
+    x = m.add_input('x')
+    m.outs, m.onames = [x, x, x], ['unknown', 'proved', 'different']
+    monkeypatch.setattr(lec, 'abc_bin', lambda: 'fake-abc')
+    monkeypatch.setattr(lec, 'aig_outputs', lambda p: [2, 2, 2])
+    monkeypatch.setattr(lec, 'lit_val', lambda *args: 0)
+    monkeypatch.setattr(lec, 'PROVE_JOBS', 1)  # mixed statuses in one serial batch
+    def run(args, **kwargs):
+        script = args[-1]
+        if '&fraig' in script:
+            (tmp_path / 'mixed_swept.aig').touch()
+            return SimpleNamespace(stdout='Undef calls 3', stderr='')
+        assert '&cec -n -m' in script
+        ids = [int(i) for i in re.findall(r'&cone -O (\d+)', script)]
+        replies = ['UNSAT = 0. SAT = 0. UNDEC = 1. Trivial = 0.',
+                   'Networks are equivalent. Time = 0.0 sec',
+                   'UNSAT = 0. SAT = 1. UNDEC = 0. Trivial = 0.']
+        return SimpleNamespace(stdout='\n'.join(replies[i] for i in ids), stderr='')
+    monkeypatch.setattr(lec.subprocess, 'run', run)
+    assert lec.prove(m, tmp_path, 100, [], tag='mixed') == {'unknown': 'undecided', 'proved': 'proved', 'different': 'differs'}
