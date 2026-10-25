@@ -10,3 +10,15 @@ Registration (port_regclass, regclass_*.txt): body_core and vm_core: every cut a
   edge_core: 44 cut input bits captured through logic: arg_mode 1, arg_in_slot 4, arg_in_v 4, link{0,1,2}_epoch_begin 3 (reg+logic),
   link0_epoch_new 8 (shared by the 3 links), link{0,1,2}_held_epoch 24 (link*_ck = clocks, fine). Body launches them from flops.
 Lock-step: build.sh / tb from physical/die_plan/hbm/cores/harden/{split_asm.py,gen_split_tb.py}; results lockstep_*.log.
+EDGE _pr (10-25): edge members -> pin-registered twins rtl/.../p2p/ot_hgi_coll_edge_pr.sv (same ports; build_split_tops coll_q3_edge
+  rtl map + gen_coll_q3_s.py q3 body copy ot_hfd_coll_q3_body_s use them):
+  ot_hgi_coll_link_e_pr: epoch_begin/epoch_new/held_epoch pin flops, epoch select AFTER them (was before the epoch pin flop): 0 edges.
+  ot_hgi_coll_argmax_m_tp192_pr: only the pin-captured fold (old u_chk) with out_v/out_flit/fault; mode gate after the pin flops;
+    u_data (live-input duplicate) removed. ARG publish +1 edge (fault unchanged) -> COLL compiler: ARG-source capture slot +1 edge.
+  port_regclass edge_core (regclass_edge_core.txt): every cut data/control input bit lands on a flop; left = link*_ck[4:1] store clocks.
+  edge_pr_eq/: unit equivalence vs the pinned members (Verilator 5.050, 9 runs x 30k cycles, random stimulus + async resets):
+    link_e_pr == link_e every output every edge; argmax_pr out_v/out_flit == argmax +1 edge, fault same edge (flit while out_v=0,
+    or a faulted publish within 64 edges of an async reset, counted as unqualified: non-reset fold data around the reset);
+    controls mut=1 (no +1) and mut=2 (held_epoch corrupted) FAIL as required.
+Lock-step build (10-25): build.sh verilates only; comp_ind.sh compiles one .cpp per cc1plus (<1 GB each) and links (the vm_classes
+  amalgamations needed >13 GB per unit).

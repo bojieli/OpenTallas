@@ -33,6 +33,7 @@
   "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hdc/ot_hdc_fp32_add_lat.sv",
   "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv",
   "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_issuer_m256v8.sv",
+  "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_edge_pr.sv",
   "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_hard_v8x_s.sv",
   "/srv/opentallas-scratch2/claude/wt/path-hbm-q3-1025/rtl/hbm_accel/cores_split/ot_hfd_coll_q3_hard_v8x/ot_hfd_coll_q3_edge_core.sv"
  ],
@@ -62,7 +63,7 @@
    "direction": "input",
    "width": 1,
    "classes": {
-    "logic": 1
+    "reg": 1
    }
   },
   "arg_cfg_g": {
@@ -90,14 +91,14 @@
    "direction": "input",
    "width": 4,
    "classes": {
-    "logic": 4
+    "reg": 4
    }
   },
   "arg_in_v": {
    "direction": "input",
    "width": 4,
    "classes": {
-    "logic": 4
+    "reg": 4
    }
   },
   "arg_in_key": {
@@ -140,21 +141,21 @@
    "direction": "input",
    "width": 1,
    "classes": {
-    "logic/reg": 1
+    "reg": 1
    }
   },
   "link0_epoch_new": {
    "direction": "input",
    "width": 8,
    "classes": {
-    "logic": 8
+    "reg": 8
    }
   },
   "link0_held_epoch": {
    "direction": "input",
    "width": 8,
    "classes": {
-    "logic": 8
+    "reg": 8
    }
   },
   "link0_wr_v": {
@@ -246,14 +247,14 @@
    "direction": "input",
    "width": 1,
    "classes": {
-    "logic/reg": 1
+    "reg": 1
    }
   },
   "link1_held_epoch": {
    "direction": "input",
    "width": 8,
    "classes": {
-    "logic": 8
+    "reg": 8
    }
   },
   "link1_wr_v": {
@@ -345,14 +346,14 @@
    "direction": "input",
    "width": 1,
    "classes": {
-    "logic/reg": 1
+    "reg": 1
    }
   },
   "link2_held_epoch": {
    "direction": "input",
    "width": 8,
    "classes": {
-    "logic": 8
+    "reg": 8
    }
   },
   "link2_wr_v": {

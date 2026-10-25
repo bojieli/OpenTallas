@@ -16361,22 +16361,22 @@
     "straps": {}
    }
   },
-  "src": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_hard_v8x_s.sv #(NLINK 3, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) u_body.g_link[0..2].u_link (ot_hgi_coll_link_e, ck = clk_link[5k+4:5k]) + u_body.g_q3.t192.u_arg (clk_arg)",
+  "src": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_hard_v8x_s.sv #(NLINK 3, TP 192, AR_ITER 1, ROWS 256, VM_RT 81) u_body.g_link[0..2].u_link (ot_hgi_coll_link_e_pr, ck = clk_link[5k+4:5k]) + u_body.g_q3.t192.u_arg (ot_hgi_coll_argmax_m_tp192_pr, clk_arg)",
   "rtl": {
    "u_link0": [
-    "ot_hgi_coll_link_e",
+    "ot_hgi_coll_link_e_pr",
     ""
    ],
    "u_link1": [
-    "ot_hgi_coll_link_e",
+    "ot_hgi_coll_link_e_pr",
     ""
    ],
    "u_link2": [
-    "ot_hgi_coll_link_e",
+    "ot_hgi_coll_link_e_pr",
     ""
    ],
    "u_arg": [
-    "ot_hgi_coll_argmax_m_tp192",
+    "ot_hgi_coll_argmax_m_tp192_pr",
     ""
    ]
   }

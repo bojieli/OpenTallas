@@ -1,17 +1,7 @@
-('cut', 'input', 'NOT-REG') 56 {'logic': 41, 'ff-ctl:CLK/logic': 12, 'logic/reg': 3}
-('cut', 'input', 'ok') 4053 {'reg': 4048, 'ff-ctl:CLK': 4, 'ff-ctl:ARST': 1}
+('cut', 'input', 'NOT-REG') 12 {'ff-ctl:CLK/logic': 12}
+('cut', 'input', 'ok') 4097 {'reg': 4092, 'ff-ctl:CLK': 4, 'ff-ctl:ARST': 1}
 ('cut', 'output', 'ok') 4030 {'reg': 4015, 'const': 15}
-cut ports not registered: 13 56
-   ('arg_mode', 'input', 'logic', 1)
-   ('arg_in_slot', 'input', 'logic', 4)
-   ('arg_in_v', 'input', 'logic', 4)
+cut ports not registered: 3 12
    ('link0_ck', 'input', 'ff-ctl:CLK/logic', 4)
-   ('link0_epoch_begin', 'input', 'logic/reg', 1)
-   ('link0_epoch_new', 'input', 'logic', 8)
-   ('link0_held_epoch', 'input', 'logic', 8)
    ('link1_ck', 'input', 'ff-ctl:CLK/logic', 4)
-   ('link1_epoch_begin', 'input', 'logic/reg', 1)
-   ('link1_held_epoch', 'input', 'logic', 8)
    ('link2_ck', 'input', 'ff-ctl:CLK/logic', 4)
-   ('link2_epoch_begin', 'input', 'logic/reg', 1)
-   ('link2_held_epoch', 'input', 'logic', 8)
