@@ -678,6 +678,17 @@ plan = dict(
 )
 from early_core_taps import add as add_early_core_taps
 add_early_core_taps(types["hd_tile"], root=ROOT)
+# core-latency contract for the REBUILT views (10-24, S81-HEAD): the element was signed with clk source latency -early
+# (its kit SDC), so its tap is delivered exactly `early` before the common latency; the lib max_clock_tree_path (max
+# over all internal flops, 441 / 435 ps) would over-advance it by ~60 ps and break the boundary timing it was signed
+# with.  MANIFEST.json (tools/s81_head/hd_views_rb.py) carries the kit early.  Request to CLOCK filed 10-24 20:5x.
+for tp in types["hd_tile"]["clock"].get("taps", []):
+    man = ROOT / Path(tp.get("budget_owner", "")).parent / "MANIFEST.json"
+    if "/views_rb/" in tp.get("budget_owner", "") and man.is_file():
+        mf = json.loads(man.read_text())
+        tp["insertion_ps"] = round(250.0 + float(mf["early_core_tap_ps"]), 5)
+        tp["note"] = (f"CP2 early core tap; core-latency contract = signed kit early {mf['early_core_tap_ps']:g} ps "
+                      f"(views_rb MANIFEST; lib max_clock_tree_path {mf['lib_max_clock_tree_path_ps']['tt']:.1f} TT, info)")
 from ft_reach import resize as resize_ft_reach
 resize_ft_reach(plan, reach_um=405.0, margin=REACH / 405.0)
 S.validate  # noqa: B018  (schema import check)
