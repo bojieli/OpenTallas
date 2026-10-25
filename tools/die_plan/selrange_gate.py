@@ -85,6 +85,38 @@ def _is_blackbox_file(f, blackboxes, macro_re=MACRO_RE):
     return bool(mods) and all(m in blackboxes or re.match(macro_re, m) for m in mods)
 
 
+INSIDE = re.compile(r"(\b[A-Za-z_][A-Za-z0-9_$.]*(?:\[[^\]\[]*\])?)\s+inside\s*\{([^{}]*)\}")
+
+
+def _inside_rewrite(text):
+    """read_verilog has no `inside`: `x inside {a, b}` -> `(x == a || x == b)` on the same line (ranges unsupported)."""
+    def rep(m):
+        items = [i.strip() for i in m.group(2).split(",")]
+        if any(i.startswith("[") for i in items):
+            return m.group(0)
+        return "(" + " || ".join(f"{m.group(1)} == {i}" for i in items) + ")"
+    return INSIDE.sub(rep, text)
+
+
+def _prepare(files, td):
+    """copies of files that use `inside`, rewritten for read_verilog (same name, same line numbers) under td."""
+    out = []
+    for i, f in enumerate(files):
+        try:
+            t = Path(f).read_text(errors="replace")
+        except OSError:
+            out.append(f)
+            continue
+        if INSIDE.search(t):
+            d = Path(td) / f"ins{i}"
+            d.mkdir()
+            (d / Path(f).name).write_text(_inside_rewrite(t))
+            out.append(str(d / Path(f).name))
+        else:
+            out.append(f)
+    return out
+
+
 def ys_script(top, files, incs, defines, blackboxes=(), overwrite=False):
     flags = " ".join(["-DSYNTHESIS"] + [f"-D{d}" for d in defines if d.split("=", 1)[0] != "SYNTHESIS"]
                      + [f"-I{d}" for d in incs])
@@ -142,7 +174,7 @@ def run(top, files, incs=(), defines=(), yosys=None, frontend=None, blackboxes=(
         return dict(verdict="ERROR", top=top, errors=[f"missing source {m}" for m in missing[:10]], hits=[])
     with tempfile.TemporaryDirectory() as td:
         ys = Path(td) / "selrange.ys"
-        ys.write_text(ys_script(top, files, incs, defines, blackboxes, overwrite))
+        ys.write_text(ys_script(top, _prepare(files, td), incs, defines, blackboxes, overwrite))
         p = subprocess.run([yosys, "-q", "-l", str(Path(td) / "y.log"), "-s", str(ys)], capture_output=True,
                            text=True)
         log = (Path(td) / "y.log").read_text(errors="replace") if (Path(td) / "y.log").exists() else ""

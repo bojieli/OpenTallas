@@ -132,3 +132,13 @@ def test_run_kit_runs_gate_before_synth():
     assert '[ \\"\\$S\\" = 1 ]; then rc=1' in rk and "SELRANGE NOT RUN" in rk     # FAIL stops; ERROR (2) is NOT RUN
     src = (HERE / "gen_phys.py").read_text()
     assert 'with_name("selrange_gate.py"), kd / "selrange_gate.py"' in src
+
+
+@need_yosys
+def test_inside_operator_is_rewritten(tmp_path):
+    f = _w(tmp_path, "ins.sv", "module ins_t(input wire [3:0] t, input wire [11:0] a, output reg q, output wire h);\n"
+                               "  integer k;\n  assign h = t inside {4'd1, 4'd3};\n"
+                               "  always @* begin q = 1'b0; for (k = 0; k <= 12; k = k + 1) q = q ^ a[k]; end\n"
+                               "endmodule\n")
+    r = G.run("ins_t", [f], yosys=YOSYS)
+    assert r["verdict"] == "FAIL" and r["hits"][0]["file"] == f and r["hits"][0]["line"] == 4, r
