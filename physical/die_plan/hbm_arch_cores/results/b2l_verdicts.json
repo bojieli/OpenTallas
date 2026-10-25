@@ -189,17 +189,67 @@
  },
  "ot_hbm_hc_bankq0_static__lanes0_2_3201a56cbe8d": {
   "view": "ot_hbm_hc_bankq0_static__lanes0_2@3201a56cbe8d",
-  "history": [],
+  "history": [
+   {
+    "path": "localhost:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_hc_bankq0_static__lanes0_2_3201a56cbe8d/signoff",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "hold_ff: FAIL WNS -43.11 ps, 1283 endpoints",
+     "drv: FAIL TT slew 103.0 cap 0.0, FF slew 112.0 cap 0.0",
+     "clock: FAIL TT pin-flop insertion 303.7 ps not within 356 +- 40",
+     "face_guard: FAIL {'shared': 1}"
+    ],
+    "checks": {
+     "setup_tt": "PASS",
+     "hold_ff": "FAIL",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "FAIL",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": 57.11,
+    "hold_ff": -43.11
+   }
+  ],
   "host": "localhost",
   "kit_hash": "20f6e9b836dfc795",
-  "verdict": "NOT RUN"
+  "verdict": "NOT SIGNED"
  },
  "ot_hbm_hc_bankq0_static__lanes3_5_6c5ad9844cef": {
   "view": "ot_hbm_hc_bankq0_static__lanes3_5@6c5ad9844cef",
-  "history": [],
+  "history": [
+   {
+    "path": "intel1:/srv/opentallas-scratch/claude/elem-hbm/runs/ot_hbm_hc_bankq0_static__lanes3_5_6c5ad9844cef/signoff",
+    "verdict": "NOT SIGNED",
+    "reasons": [
+     "hold_ff: FAIL WNS -47.88 ps, 1223 endpoints",
+     "drv: FAIL TT slew 279.0 cap 0.0, FF slew 291.0 cap 0.0",
+     "clock: FAIL TT pin-flop insertion 301.2 ps not within 354 +- 40",
+     "face_guard: FAIL {'shared': 1}"
+    ],
+    "checks": {
+     "setup_tt": "PASS",
+     "hold_ff": "FAIL",
+     "drv": "FAIL",
+     "fanout": "WARN",
+     "unconstrained": "PASS",
+     "clock": "FAIL",
+     "sdc_lint": "PASS",
+     "face_guard": "FAIL",
+     "drc": "PASS",
+     "antenna": "PASS"
+    },
+    "setup_tt": 74.47,
+    "hold_ff": -47.88
+   }
+  ],
   "host": "intel1",
   "kit_hash": "70fece4eadc4949f",
-  "verdict": "NOT RUN"
+  "verdict": "NOT SIGNED"
  },
  "ot_hbm_hc_bankq0_static__lanes6_7_bank_1ce7110970e0": {
   "view": "ot_hbm_hc_bankq0_static__lanes6_7_bank@1ce7110970e0",

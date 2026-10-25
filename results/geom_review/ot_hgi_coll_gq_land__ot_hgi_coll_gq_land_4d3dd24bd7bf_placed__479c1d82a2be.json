@@ -1,0 +1,18 @@
+{
+ "element": "ot_hgi_coll_gq_land",
+ "view": "ot_hgi_coll_gq_land@4d3dd24bd7bf",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hgi_coll_gq_land_4d3dd24bd7bf, B2r2 pins 4d3dd24bd7bf, plan f710e18c5dd5)",
+ "stage": "placed",
+ "verdict": "PASS-COND",
+ "hash": "479c1d82a2be6723",
+ "reasons": "B2n reshape 142.56x207.36 (was low fill); 3880 pins on 4 faces <= 6 pins/um budget (N/S/W at budget); face_guard PASS (registered pins); placed: fill 18% of free (pin-limited outline), max bin 0.55, 0 bins > 0.8, face-flop ring pin->reg p50 6.7 / p90 8.8 / max 22.1 um, logic centred, no macros; CTS insertion 256 ps (early tap 6, contract applied); cond: NE corner flop cluster densest bin - watch GRT pin access there",
+ "fixes": "none before route; if GRT overflows at the 6 pins/um faces -> RLA 0.10 variant",
+ "pictures": [
+  "results/geom_review/hbm_cores3/gq_land_4d3dd24bd7bf_placed.png",
+  "results/geom_review/hbm_cores3/gq_land_4d3dd24bd7bf_plan.png",
+  "results/geom_review/hbm_cores3/gq_land_4d3dd24bd7bf_context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-25T00:59:14-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}
