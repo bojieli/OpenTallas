@@ -37,7 +37,7 @@ module ot_dsrom_su_hcpost_lane #(
     input  wire [31:0] c0, c1, c2, c3, p,      // c[j][k] of this lane's k, post[k]
     output reg         vo,
     output reg  [31:0] o,
-    (* keep *) output reg         fault
+    output reg         fault
 );
     /*verilator hier_block*/
     wire [31:0] m0, m1, m2, m3, m4, a1, a2, a3, a4, m2d, m3d, m4d;

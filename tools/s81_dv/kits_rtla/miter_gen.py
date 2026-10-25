@@ -98,7 +98,7 @@ def main():
     L.append("        repeat (8) @(negedge %s); rst_n = 1;" % clk)
     L.append("        for (cyc = 0; cyc < %d; cyc = cyc + 1) begin" % a.cycles)
     L.append("            @(negedge %s);" % clk)
-    L.append("            if (cyc % 2000 == 0) dens = 1 + ($random(s) & 7);          // 1-bit input density phase")
+    L.append("            if (cyc % 2000 == 0) dens = $random(s) & 7;               // 1-bit input density phase (0 = quiet: sticky state must hold)")
     L.append("            if (cyc % 997 == 500) rst_n = 0; else rst_n = 1;          // reset pulses mid-run")
     for d, w, n in ins:
         if w == 1:

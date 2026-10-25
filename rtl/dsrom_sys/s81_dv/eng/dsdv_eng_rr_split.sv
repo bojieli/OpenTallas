@@ -73,9 +73,13 @@ module dsdv_eng_rr_e #(
     wire xf;
     ot_s81eng_xq_n32 #(.MUT(XQ_MUT)) u_xq (.ck(ck), .rst_n(rl[4]), .o_v(o_v), .o_col(o_col), .o_beat(o_beat), .o_d(o_d),
         .vi_a(vi_s), .vo_a(vo_s), .vi_b(vi_n), .vo_b(vo_n), .fault(xf));
+    // S81-KITS-RTLA 10-24 (face_guard: register on every pin): the sticky status lives in st_s; the pin flops st are an
+    // output-only copy loaded with the same next value (was: st fed back into its own D).  0 cycles, bit / cycle identical.
+    (* keep *) reg [3:0] st_s;
+    wire [3:0] st_n = st_s | {xf, hf | (o_v && o_slot != hr_slot) | (st_v && st_slot != hr_slot), lf | (st_v & st_bad), wf};
     always @(posedge ck or negedge rl[0])
-        if (!rl[0]) st <= 4'd0;
-        else st <= st | {xf, hf | (o_v && o_slot != hr_slot) | (st_v && st_slot != hr_slot), lf | (st_v & st_bad), wf};
+        if (!rl[0]) begin st <= 4'd0; st_s <= 4'd0; end
+        else begin st <= st_n; st_s <= st_n; end
 endmodule
 
 // hash layer cores: the column clocks of a layer are branches of ck (as in the monolith, where ck_hash = {6{ck}})
