@@ -20,6 +20,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 STATE = Path.home() / ".local/state/flow_canary/state.json"
 LIVE_S = 12 * 3600
+LOCK_REASON = "FLOW-CANARY live source; release after all referencing clients finish"
 
 
 def git(src, *a):
@@ -42,6 +43,54 @@ def live_dies(root, now=None):
     return out
 
 
+def source_lock_file(source):
+    p = Path(source) / ".git"
+    if not p.is_file():
+        return None
+    text = p.read_text().strip()
+    if not text.startswith("gitdir: "):
+        return None
+    admin = Path(text[8:])
+    if not admin.is_absolute():
+        admin = p.parent / admin
+    return admin / "locked"
+
+
+def protect_source(repo, source):
+    lock = source_lock_file(source)
+    if lock and lock.exists():
+        return
+    r = git(repo, "worktree", "lock", "--reason", LOCK_REASON, str(source))
+    if r.returncode:
+        raise RuntimeError(r.stderr)
+
+
+def unlock_completed_sources(repo, root):
+    """Reaper may remove a snapshot only after all its reference records and clients finish."""
+    groups = {}
+    for p in Path(root).glob("*/canary_meta.json"):
+        try:
+            m = json.loads(p.read_text())
+            groups.setdefault(m["src"], []).append((p.parent, m))
+        except (OSError, ValueError, KeyError):
+            continue
+    released = []
+    for source, entries in groups.items():
+        lock = source_lock_file(source)
+        if not lock or not lock.exists() or not lock.read_text().startswith(LOCK_REASON):
+            continue
+        if not all((p / "canary.json").is_file() for p, _ in entries):
+            continue
+        units = {m.get("client_unit") for _, m in entries} - {None, ""}
+        if any(subprocess.run(["systemctl", "--user", "is-active", "--quiet", u],
+                              capture_output=True).returncode == 0 for u in units):
+            continue
+        r = git(repo, "worktree", "unlock", source)
+        if r.returncode == 0:
+            released.append(source)
+    return released
+
+
 def source_snapshot(src, sha, root):
     """An immutable sparse source per revision; no checkout underneath any live canary."""
     dest = Path(root).parent / "sources" / sha[:12]
@@ -49,11 +98,13 @@ def source_snapshot(src, sha, root):
         head = git(dest, "rev-parse", "HEAD")
         if head.returncode or head.stdout.strip() != sha:
             raise RuntimeError(f"canary source snapshot {dest} is not pinned to {sha}")
+        protect_source(src, dest)
         return dest
     dest.parent.mkdir(parents=True, exist_ok=True)
     r = git(src, "worktree", "add", "--no-checkout", "--detach", str(dest), sha)
     if r.returncode:
         raise RuntimeError(r.stderr)
+    protect_source(src, dest)
     patterns = "/*\n!/results/\n!/docs/\n!/.qscratch/\n!/physical/\n/physical/die_plan/\n/physical/common_flow/\n/physical/ref_tile/\n!/physical/ref_tile/*/\n!/physical/die_plan/*/cores/harden/results/\n"
     r = subprocess.run(["git", "-C", str(dest), "sparse-checkout", "set", "--no-cone", "--stdin"],
                        input=patterns, text=True, capture_output=True)
@@ -99,6 +150,9 @@ def main(argv=None):
     if git(a.src, "fetch", "-q", "origin", "main").returncode:
         print("FLOW_CANARY_TRIGGER fetch failed")
         return 2
+    released = unlock_completed_sources(a.src, a.root)
+    if released:
+        print(f"FLOW_CANARY_TRIGGER completed sources released for reaper: {released}")
     new = git(a.src, "rev-parse", "origin/main").stdout.strip()
     spec = json.loads((HERE / "canaries.json").read_text())
     specs = [c["die"] for c in spec["canaries"]]
