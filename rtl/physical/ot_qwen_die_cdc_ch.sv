@@ -36,7 +36,14 @@ module ot_qwen_die_cdc_ch #(
     parameter integer RXP = 0,
     // NativeTP8 opt-in: registered-read receive SRAM instead of32x546 flop store. Read the NEXT head each edge;
     // a same-row write bypass supplies the just-written head. The FIFO sees identical words/credits on every edge.
-    parameter integer IBMEM = 0
+    parameter integer IBMEM = 0,
+    // SAMECLK = 1 (KV-CORES2 2026-10-25, BRIEFING 16a; opt-in, 0 = unchanged): wclk and rclk are the SAME clock (KV hub_Wi
+    // host/ingest logic moved onto the die clock).  The Gray-pointer async FIFO is replaced by a same-clock FIFO of the
+    // same depth AD with the same registered write (a word is readable one edge after its store) and, for PIPE >= 2,
+    // the same registered read select (rd word = the word popped at the previous edge).  No synchroniser: the crossing
+    // becomes a plain register stage + AD-slot buffer.  Receive buffer, credits (IBUF / OCRED), faults, PIPE stations,
+    // order and values unchanged; latency fixed and shorter.  Caller ties wclk/rclk to one net, wrst_n/rrst_n to one.
+    parameter integer SAMECLK = 0
 ) (
     input  wire         wclk,
     input  wire         wrst_n,
@@ -205,7 +212,38 @@ module ot_qwen_die_cdc_ch #(
 `ifndef SYNTHESIS
     wire         af_drained;              // bench view: both FIFO pointers equal (whichever FIFO is built)
 `endif
-    generate if (PIPE != 0 || AFW != 0) begin : g_afw
+    generate if (SAMECLK != 0) begin : g_sf
+        initial if (MEMM != 0 || AD < 2 || (AD & (AD - 1)) != 0) $error("SAMECLK needs MEMM = 0 and AD a power of two");
+        localparam integer SA = $clog2(AD);
+        reg [W-1:0]  sm [0:AD-1];
+        reg [SA:0]   swp, spub, srp;           // accepted / stored+published / popped counters (one clock: no Gray code)
+        reg          swv;                      // registered write stage (as ot_qwen_async_fifo_w): store on the next edge
+        reg [W-1:0]  swd;
+        reg [SA-1:0] swa;
+        wire         wfire = (RXP != 0) ? x_af_pop : pop;
+        assign af_ready = ((swp - srp) < AD);  // counts the word in the write stage: never overruns
+        assign af_v = (spub != srp);
+        always @(posedge wclk or negedge wr_n)
+            if (!wr_n) begin swp <= 0; spub <= 0; srp <= 0; swv <= 1'b0; swa <= 0; end
+            else begin
+                swv <= wfire;
+                if (wfire) begin swp <= swp + 1'b1; swa <= swp[SA-1:0]; end
+                if (swv) spub <= spub + 1'b1;
+                if (send) srp <= srp + 1'b1;
+            end
+        always @(posedge wclk) if (wfire) swd <= (RXP != 0) ? x_af_d : ib_head;
+        always @(posedge wclk) if (swv) sm[swa] <= swd;
+        if (PIPE >= 2) begin : g_rs2
+            reg [W-1:0] rsq;
+            always @(posedge wclk) if (send) rsq <= sm[srp[SA-1:0]];
+            assign af_d = rsq;
+        end else begin : g_rs1
+            assign af_d = sm[srp[SA-1:0]];
+        end
+`ifndef SYNTHESIS
+        assign af_drained = (swp == srp);
+`endif
+    end else if (PIPE != 0 || AFW != 0) begin : g_afw
         ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0), .MEMM(MEMM)) u_af (
             .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid((RXP != 0) ? x_af_pop : pop), .wr_ready(af_ready), .wr_data((RXP != 0) ? x_af_d : ib_head), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
