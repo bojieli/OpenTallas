@@ -678,7 +678,24 @@ plan = dict(
 # guard ring, dedicated power/ground C4 rows (45-um array) over the PHY macro; the 26 SerDes signal sites stay at the
 # shoreline edge.  check.py rule pg_domain.  TODO TRIAL/PDN: head PSM / IR with the VDDPHY domains.
 import copy  # noqa: E402
-_io = json.loads((HERE / "die_io.json").read_text()) if (HERE / "die_io.json").exists() else []
+import die_io as DIO  # noqa: E402
+# Same6-lane ot_pdie_serdes placeholder model as S81. Approved reserve policy,
+# not a measured PHY footprint. Source: physical/asap7_v41x_pdie_macros_v2/
+# ot_pdie_serdes/ot_pdie_serdes.json (area562680.012um2; native250.056x2250.216).
+_PHY_MODEL_AREA_UM2 = 562680.012
+_io_old = json.loads((HERE / "die_io.json").read_text()) if (HERE / "die_io.json").exists() else []
+# Re-derive the reserved shoreline zone around actual bus/FT strips. The old
+# whole-partition IO rectangle incorrectly made the digital strip a PHY supply.
+_io = DIO.plan(S.Plan(plan), phy_zone_guard=63.64)
+_old_by_name = {w['name']: w for w in _io_old}
+for w in _io:
+    for field in ('host', 'host_route'):
+        if field in _old_by_name.get(w['name'], {}):
+            w[field] = _old_by_name[w['name']][field]
+    w['basis'] += (f"; ASSUMPTION: same6-lane ot_pdie_serdes MODEL area {_PHY_MODEL_AREA_UM2:g} um2 "
+                   "from physical/asap7_v41x_pdie_macros_v2/ot_pdie_serdes/ot_pdie_serdes.json; "
+                   "rect is a reserved PHY/PG zone, not the measured physical body")
+(HERE/'die_io.json').write_text(json.dumps(_io, indent=1)+'\n')
 if _io:
     plan["die"]["io"] = _io
     _PHY_GRID = [dict(layer="M8", width_um=1.92, pitch_um=8.64, offset_um=4.32, nets=["VDDPHY", "VSS"]),
@@ -689,15 +706,18 @@ if _io:
             continue
         x0, y0, x1, y1 = w["rect_um"]
         g = 63.64
+        _pr = S.Plan(plan).rect(w["part"])
         _doms.append(dict(name=f"phy_{w['part']}", nets=["VDDPHY", "VSS"], io=[w["name"]],
-                          rect_um=[round(max(0.0, x0 - g), 4), round(max(0.0, y0 - g), 4), round(min(W, x1 + g), 4),
-                                   round(min(H, y1 + g), 4)],
+                          rect_um=[round(max(_pr[0], x0 - g), 4), round(max(_pr[1], y0 - g), 4), round(min(_pr[2], x1 + g), 4),
+                                   round(min(_pr[3], y1 + g), 4)],
                           grid=copy.deepcopy(_PHY_GRID),
                           bumps=dict(rect_um=[x0, y0, x1, y1], pitch_um=45.0, use="power_ground",
                                      note="dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal "
                                           "bumps inside except the window's own 26 SerDes sites"),
                           note="OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes "
-                               "window; core VDD grid unchanged around it"))
+                               "window; reserved zone plus63.64um guard clipped to its containing partition; "
+                               "150um digital boundary strip remains on CORE VDD; PHY MODEL area562680.012um2 "
+                               "is a labelled assumption, separate from this reserved zone (no measured body outline claim)"))
     plan["die"]["pg"]["domains"] = _doms
 from early_core_taps import add as add_early_core_taps
 add_early_core_taps(types["hd_tile"], root=ROOT)
