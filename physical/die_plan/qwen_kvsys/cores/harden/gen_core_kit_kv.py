@@ -65,6 +65,14 @@ add_pdn_connect -grid {top} -layers {M2 M5}
 PDN_MACRO = """define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
 add_pdn_connect -grid {macro} -layers {M4 M5}
 """
+# hard children (signed core views) bring their own M5 PG stripes (5.4 pitch, not on the core 4.32 lattice): M5 cannot
+# reach M5, so the macro-composed core adds the partition M6 straps (gen_phys.py recipe: 0.288 / 4.32 / 1.968) over the
+# whole core and every child connects M5 -> M6 (ahub r3 PDN-0233 with the M4-M5 macro grid: no shapes on the children)
+PDN_HARD_CHILDREN = """add_pdn_stripe -grid {top} -layer {M6} -width {0.288} -spacing {0.096} -pitch {4.32} -offset {1.968}
+add_pdn_connect -grid {top} -layers {M5 M6}
+define_pdn_grid -macro -default -name {macro} -voltage_domains {CORE} -halo {2.0 2.0} -grid_over_boundary
+add_pdn_connect -grid {macro} -layers {M5 M6}
+"""
 
 
 def sha(path):
@@ -548,7 +556,7 @@ def main():
     shutil.copyfile(Path(a.tool) / "pair_skew.tcl", kd / "pair_skew.tcl")   # signoff.py reads it beside itself (crashed without it 10-25)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     write_core_contract(kd, cj, clks, rsts)
-    (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
+    (kd / "pdn.tcl").write_text(PDN + (PDN_HARD_CHILDREN if hard_children else PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)
     for name in ("ot_keep_regs.tcl", "ot_pin_regs.tcl"):
