@@ -134,3 +134,29 @@ def test_plan_relative_core_pin_table_without_lef_or_module_metadata(tmp_path):
     target, = RT.core_reset_targets(P, 'src')
     assert target['inst'] == 'u_hc' and target['pin'] == 'rst_n'
     assert target['pin_um'] == [50, 200]
+
+
+def test_real_qc_coordinate_spelling_maps_local_reset_and_rejects_ambiguity(tmp_path):
+    raw = plan()
+    raw['partition_types']['src']['hard_cores'] = [dict(inst='u_t00', module='closed_a0',
+        origin_um=[50, 50], outline_um=[200, 300],
+        pins=[dict(name='rst_n', layer='M4', xy=[0, 150])])]
+    b = emitter(raw)
+    part = next(p for p in b.parts if b.parts[p]['type'] == 'src')
+    # Current QC physical name u_t00 is RTL u_t_0_0, and the hard abstract
+    # module name differs from the unchanged original leaf module.
+    c = SimpleNamespace(path='c16.u_t_0_0', ports={'rst_n': [1]}, module='original_a0', params={})
+    b.F.cells = [c]
+    b.G.dirs = {0: {'rst_n': 'input'}}
+    b.G.kind = ['leaf']
+    b.members[part] = [0]
+    b.sinks = {(0, 'rst_n', 0): ('rst', 'low')}
+    b.rel_of = lambda ci: 'u_t_0_0'
+    text, _ = b.emit_type('src', part)
+    target, = RT.for_type(b.wavefront_plan(), 'src')['core_resets']
+    assert f'.rst_n(rst_n_t{target["tap"]})' in text
+    b.F.cells.append(c)
+    b.G.dirs[1] = {'rst_n': 'input'}
+    b.members[part].append(1)
+    with pytest.raises(bind.BindError, match='expected one bound leaf, found 2'):
+        b.emit_type('src', part)
