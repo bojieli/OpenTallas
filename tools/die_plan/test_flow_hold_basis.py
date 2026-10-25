@@ -117,9 +117,13 @@ def test_preroute_insertion_gate():
     seg = rk[i_gate:rk.index("\\$M $GOAL")]
     assert "rc=6" in seg and "rc=5" not in seg
     g = (HERE / "postcts_gate.tcl").read_text()
-    for k in ("estimate_parasitics -global_routing", "OT_POSTCTS_TOL", "20.0", "OT_VCLK_FF", "all_inputs -no_clocks",
-              "ot_cf_wire", "LAYER_PARASITICS_FILE"):
+    for k in ("estimate_parasitics -global_routing", "OT_POSTCTS_TOL", "20.0", "OT_VCLK_FF", "ot_cf_pinregs",
+              "ot_cf_pinreg_arrival", "LAYER_PARASITICS_FILE"):
         assert k in g, k
+    # the pin-register set + measure live in clock_family.tcl (one proc for gate and pad, CLOCK-RESET 10-25)
+    cf = (HERE.parents[1] / "physical/common_flow/clock_family.tcl").read_text()
+    for k in ("proc ot_cf_pinregs", "all_inputs -no_clocks", "proc ot_cf_pinreg_arrival", "ot_cf_wire $pin"):
+        assert k in cf, k
     with tempfile.TemporaryDirectory() as d:
         kd = gen_phys.write_type_kit(_plan(), "src", d, [], hold_ff_margin=gen_phys.HOLD_FF_MARGIN_DEFAULT)
         assert (kd / "postcts_gate.tcl").is_file()

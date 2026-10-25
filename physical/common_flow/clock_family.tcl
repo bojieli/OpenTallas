@@ -142,3 +142,37 @@ proc ot_cf_wire_transition {pin clock transition {scene {}}} {
   if {[llength $values] != 1} {error "OT_CLOCK_FAMILY: missing unique physical clock arrival [get_full_name $pin] clock=$cn scene=$scene"}
   return [lindex $values 0]
 }
+# Boundary pin registers (CLOCK-RESET 10-25, late-capture rule LC1): the registers in the fanout of the data inputs
+# or the fanin of the outputs, as {instance clock_pin}.  The ONE set the pre-route insertion gate (postcts_gate.tcl)
+# and the pin-register pad (pinreg_pad.tcl) measure, so the pad cannot target a different population than the gate.
+proc ot_cf_pinregs {} {
+  set regs {}
+  foreach p [all_registers -clock_pins] { dict set regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }
+  set bnd {}
+  set din [all_inputs -no_clocks]
+  if {[llength $din]} {
+    foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+      set i [regsub {/[^/]+$} [get_full_name $p] {}]
+      if {[dict exists $regs $i] && ![dict exists $bnd $i]} { dict set bnd $i [dict get $regs $i] }
+    }
+  }
+  if {[llength [all_outputs]]} {
+    foreach p [get_fanin -to [all_outputs] -flat -startpoints_only -trace_arcs all] {
+      set i [regsub {/[^/]+$} [get_full_name $p] {}]
+      if {[dict exists $regs $i] && ![dict exists $bnd $i]} { dict set bnd $i [dict get $regs $i] }
+    }
+  }
+  return $bnd
+}
+# Pin-register clock arrival on the sign-off measure (ot_cf_wire); a falling-edge register read through
+# arrival_max_rise is folded back by half a period.  "" when it cannot be measured.
+proc ot_cf_pinreg_arrival {pin clock per} {
+  set a ""
+  catch {set a [ot_cf_wire $pin $clock]}
+  if {$a eq ""} {
+    if {[catch {set a [get_property $pin arrival_max_rise]}]} { return "" }
+    if {[string is double -strict $a] && $a >= $per / 2.0 && $a < $per} { set a [expr {$a - $per / 2.0}] }
+  }
+  if {![string is double -strict $a]} { return "" }
+  return $a
+}

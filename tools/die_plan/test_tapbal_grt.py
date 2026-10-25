@@ -51,8 +51,12 @@ def test_prepass_script_routes_balances_on_grt_and_rewrites_cts_odb():
 def test_pinreg_pad_uses_gate_set_and_fresh_measure():
     s = (HERE / "pinreg_pad.tcl").read_text()
     g = (HERE / "postcts_gate.tcl").read_text()
-    for frag in ("get_fanout -from", "-endpoints_only -trace_arcs all", "get_fanin -to [all_outputs]", "ot_cf_wire"):
+    # one pin-register set for pad and gate: clock_family.tcl ot_cf_pinregs / ot_cf_pinreg_arrival (CLOCK-RESET 10-25)
+    for frag in ("ot_cf_pinregs", "ot_cf_pinreg_arrival"):
         assert frag in s and frag in g, frag
+    cf = (HERE.parents[1] / "physical/common_flow/clock_family.tcl").read_text()
+    for frag in ("get_fanout -from", "-endpoints_only -trace_arcs all", "get_fanin -to [all_outputs]", "ot_cf_wire"):
+        assert frag in cf, frag
     m = s[s.index("proc pp_measure"):]
     assert m.index("set_propagated_clock [all_clocks]") < m.index("estimate_parasitics -global_routing")
     assert "sta::sta_to_db_pin" in s and "global_route -start_incremental" in s and "global_route -end_incremental" in s
