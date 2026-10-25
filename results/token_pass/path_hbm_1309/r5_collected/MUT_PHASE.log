@@ -1,0 +1,17 @@
+LOCKSTEP MISMATCH t47 twin v0 a0000000000 done0 f1 | pinned-2P v0 a0000000000 done0 f0
+LOCKSTEP MISMATCH t48 twin v0 a0000000000 done0 f1 | pinned-2P v0 a0000000000 done0 f0
+LOCKSTEP MISMATCH t49 twin v0 a0000000000 done0 f1 | pinned-2P v0 a0000000000 done0 f0
+LOCKSTEP MISMATCH t50 twin v0 a0000000000 done0 f1 | pinned-2P v0 a0000000000 done0 f0
+LOCKSTEP MISMATCH t51 twin v0 a0000000000 done0 f1 | pinned-2P v0 a0000000000 done0 f0
+MISMATCH O 0 got00000000 expected000000b6
+MISMATCH O 1 got00000000 expected00000db6
+MISMATCH O 2 got00000000 expected00000e39
+MISMATCH O 3 got00000000 expected000017d8
+MISMATCH O 4 got00000000 expected000018ea
+MISMATCH O 5 got00000000 expected00001cc3
+MISMATCH O 6 got00000000 expected000029f6
+FAULT got1
+[21275000] %Fatal: tb_hbm_tkm_l74_shell.sv:2279: Assertion failed in tb_hbm_tkm_l74_shell: TKM_L74 FAIL errors=26479 lockstep_errors=25454 tid_errors=0 words=1024 cycles=25459
+%Error: tools/hbm_b2/tkm_l74/tb_hbm_tkm_l74_shell.sv:2279: Verilog $stop
+Aborting...
+rc=1
