@@ -610,9 +610,9 @@ def write_spef(T, path, design="die_ctree", pads=None):
         def node():
             k[0] += 1
             return f"{name}:{k[0]}"
-        for bi, (L, layer, load, _) in enumerate(n["branches"]):
+        for bi, (L, layer, load, geo) in enumerate(n["branches"]):
             L = L + pads.get((name, bi), 0.0)
-            r, c = layer_rc(layer, L)
+            r, c = layer_rc(layer, geo)         # NDR class fixed by the routed hop, never by a pad
             lpin = load[5:] if load.startswith("port:") else f"{load}:A"
             conn.append(f"*P {lpin} O" if load.startswith("port:") else f"*I {lpin} I")
             a = node()
@@ -743,9 +743,9 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0):
     worst = 0.0
 
     def sens(net, bi):
-        L, layer, load, _ = nets[net]["branches"][bi]
+        L, layer, load, geo = nets[net]["branches"][bi]
         L += pads.get((net, bi), 0.0)
-        r, c = layer_rc(layer, L)
+        r, c = layer_rc(layer, geo)
         cl = TAP_LOAD_FF if load.startswith("port:") else BUF_CIN_FF
         return R_DRV_KOHM * c + r * c * L + r * cl
 
@@ -763,8 +763,8 @@ def pad_step(T, tree, arrs, pads, damp=0.9, max_step_um=600.0):
             room = PAD_CAP_UM - elen(net, bi)
             if room > 1.0:                          # fill up to the cap first (normal NDR, slew)
                 um = min(50.0, room, need / sens(net, bi))
-            else:                                   # every segment full: jump this one onto the 4W NDR
-                um = max(min(50.0, need / sens(net, bi)), WIDE_UM + 1.0 - elen(net, bi))
+            else:                                   # every segment full: grow the shortest
+                um = min(50.0, need / sens(net, bi))
             pads[(net, bi)] = pads.get((net, bi), 0.0) + um
             need -= um * sens(net, bi)
             moved += um
@@ -792,6 +792,7 @@ def cmd_run(a):
     tree = json.loads((out / "tree.json").read_text())
     pads = {}
     hist = []
+    best = None
     for it in range(a.iters + 1):
         write_spef(T, out / "ctree.spef", pads=pads)
         rc = cmd_sta(argparse.Namespace(dir=str(out), corner=a.corner, libdir=a.libdir))
@@ -801,9 +802,16 @@ def cmd_run(a):
         sk = {c: round(max(x[0].values()) - min(x[0].values()), 2) for c, x in zip(a.corner, arrs)}
         hist.append(dict(iter=it, tap_skew_ps=sk, pads=len(pads), pad_um=round(sum(pads.values()), 1)))
         print(json.dumps(hist[-1]))
+        if best is None or max(sk.values()) < best[0]:
+            best = (max(sk.values()), it, dict(pads))
         if it == a.iters or max(sk.values()) <= a.stop_ps:
             break
         pad_step(T, tree, [(x[0], x[3]) for x in arrs], pads)
+    if best[1] != hist[-1]["iter"]:                 # keep the best iteration (the loop may oscillate)
+        pads = best[2]
+        write_spef(T, out / "ctree.spef", pads=pads)
+        cmd_sta(argparse.Namespace(dir=str(out), corner=a.corner, libdir=a.libdir))
+        hist.append(dict(iter=f"best={best[1]}", tap_skew_ps=best[0]))
     tree["meta"]["balance"] = hist
     tree["meta"]["pads"] = len(pads)
     tree["meta"]["pad_um"] = round(sum(pads.values()), 1)
