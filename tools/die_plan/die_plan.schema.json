@@ -948,6 +948,84 @@
          "minItems": 2,
          "maxItems": 2
         },
+        "parent_id_straps": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "tile_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "tile_tid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "map_lane_j": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "lane_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          }
+         }
+        },
         "orient": {
          "enum": [
           "R0",
@@ -1056,6 +1134,84 @@
           "rework",
           "new"
          ]
+        },
+        "parent_id_straps": {
+         "type": "object",
+         "additionalProperties": false,
+         "properties": {
+          "tile_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "tile_tid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "map_lane_j": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          },
+          "lane_lane_id": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "minimum": 1
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0
+            }
+           }
+          }
+         }
         },
         "kit": {
          "type": "string"

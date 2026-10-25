@@ -101,6 +101,13 @@ _order = {"enum": ["lsb_low", "lsb_high"]}
 _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
         "properties": {"part": _name, "bus": _name}}
 
+# Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
+_parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
+    name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
+           "properties": {"width": {"type": "integer", "minimum": 1},
+                          "value": {"type": "integer", "minimum": 0}}}
+    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id")}}
+
 SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": SCHEMA_ID,
@@ -289,6 +296,7 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "origin_um", "outline_um"],
                         "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
+                                       "parent_id_straps": _parent_id_straps,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement
                                        "pins": {"type": "array", "items": {   # core frame (R0, origin 0)
@@ -307,6 +315,7 @@ SCHEMA = {
                     "contents": {"type": "array", "items": {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
+                                       "parent_id_straps": _parent_id_straps,
                                        "kit": {"type": "string"}, "geom_pass": {"type": "string"},
                                        "origin_um": _xy, "outline_um": _wh, "note": {"type": "string"},
                                        # a macro leaf (SRAM / ROM / hard block): repo-relative views; the kit places it
@@ -513,6 +522,16 @@ def _check(v, s, path, errs):
 def validate_structure(obj):
     errs = []
     _check(obj, SCHEMA, "$", errs)
+    if not errs:
+        try:
+            from .parent_id_straps import type_parent_id_straps
+        except ImportError:
+            from parent_id_straps import type_parent_id_straps
+        for tn, t in obj.get("partition_types", {}).items():
+            try:
+                type_parent_id_straps(t)
+            except ValueError as e:
+                errs.append(f"partition type {tn}: {e}")
     return errs
 
 
