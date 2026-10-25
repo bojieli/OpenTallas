@@ -368,6 +368,37 @@ def run_yosys(script_path, log_path, mounts, mem_gb=32):
         raise ElabError(f"yosys failed (rc {r.returncode}):\n{tail}")
 
 
+def structural_sources(files, keep, out):
+    """Interface-only leaf bodies even when co-hosted with structural wrappers.
+
+    Slang resolves missing private-body references before applying its blackbox
+    attribute, so the same selective source abstraction used by native elab must
+    happen before parsing. Original files remain the verification source set.
+    """
+    import hashlib
+    out.mkdir(parents=True, exist_ok=True)
+    staged = []
+    for name in files:
+        source = Path(name)
+        text = _strip(source.read_text())
+        interfaces = Path(lib_stubs([name], out / "interfaces.sv")).read_text()
+        stubs = {}
+        for match in MOD_RE.finditer(interfaces):
+            end = interfaces.index("endmodule", match.end()) + len("endmodule")
+            stubs[match.group(1)] = interfaces[match.start():end]
+        edits = []
+        for match in MOD_RE.finditer(text):
+            if match.group(1) not in keep:
+                end = text.index("endmodule", match.end()) + len("endmodule")
+                edits.append((match.start(), end, stubs[match.group(1)]))
+        for start, end, replacement in reversed(edits):
+            text = text[:start] + replacement + text[end:]
+        dest = out / (hashlib.sha256(str(source).encode()).hexdigest()[:12] + "_" + source.name)
+        dest.write_text(text)
+        staged.append(str(dest))
+    return staged
+
+
 def string_parameter_compat(files, out):
     """Stage typed string parameters for native Yosys, preserving literal defaults.
 
@@ -433,6 +464,11 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
     if ab.get("lib_stubs", True):
         ylib = [lib_stubs(lib, out / "asbuilt_lib_stubs.sv")] if lib else []
     parse_tops, parse_full, parse_lib = tops, full, ylib
+    if ab.get("frontend", "native") == "slang":
+        keep_bodies = ({ab['top'], ab.get('_elab_top', ab['top'])} | set(ab.get('dissolve', []))
+                       | set(ab.get('substitute', {})) | set(pvar))
+        parse_tops = structural_sources(tops, keep_bodies, out / "structural_tops")
+        parse_full = structural_sources(full, keep_bodies, out / "structural_full")
     if ab.get("string_parameter_compat", False):
         compat = out / "string_parameter_compat"
         parse_tops, rt = string_parameter_compat(tops, compat)
