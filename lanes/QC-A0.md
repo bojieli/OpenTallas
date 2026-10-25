@@ -192,3 +192,8 @@ CODEX progress: Capacity56 candidate nowregenerated25/25constantsPASS,433915padf
   (ot-run epyc1): bind_cap_ref (codex plan 72ece79138, expect groups 5b3a) + bind_cap_probe (new plan incl. lane_eq/ft_regs/serdes).
   FINDING: R8 type check uses BOUND stages from the bind's bus groups, so plan stations only clear the sle_ctl R8 error after
   the probe rebind on the new plan (G0 with old probe groups still 1 error, as expected).
+- 2026-10-24 20:02 PDT QC: CAPACITY PLAN READY: claude/qc-cap-1024r@78992be86f (on g0fix 9aceac11be + qc-a0 0850852fc0): G0 PASS 0 err / 85 warn,
+  G0C 56/56; canonical R8 bus groups = probe bind of THIS plan (epyc1:/srv/opentallas-scratch2/claude/qc/bind_cap_probe, 0 errors,
+  digest f23550b066045561; method check: same bind of codex 72ece79138 reproduces 5b3a exactly); R8 table 7898 members, 424,864 pads,
+  max pad 8 (before CB16). lane_eq W x_fw_ctl_p1 +3 stations; serdes TX 5 stations; ft_regs. pytest test_r8+test_g2+test_bind PASS.
+  Self-review results/geom_review/qc_cap_1024/ PASS-COND (plan sha 4b445d10a0a3912c). merge-tree vs origin/main CLEAN, 0 deletions.

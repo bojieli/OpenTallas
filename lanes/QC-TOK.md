@@ -97,3 +97,11 @@ Open: OWNER? CB16 alignment strategy (about 0.79M flops as pads); <150k needs pl
   Coordinate with QC-A0 (the plan owner); QC-A0's merge is blocked on the digest until then.
 - OWNER?: <150k pads is an optimisation target (ruling), CB16 pads are kept. Equal-hop CB16 alignment in the plan is parked
   (the CB16 legs are internal CB quad stations, so it is not cheap without a gen_plan CB re-plan).
+
+## FROM QC (2026-10-24 20:02 PDT) -- capacity plan landed on claude/qc-cap-1024r@78992be86f (READY for ROOT-MERGE)
+- Plan sha 4b445d10a0a3912c: codex capacity + ft_regs + serdes TX 5 stations + lane_eq (slw_stm x_fw_ctl_p1 2->4, slw_sc 2->3).
+- Canonical bus groups = physical/die_plan/qwen_compute/r8/bus_groups.json (f23550b066045561) = bind.py bind of this plan with the
+  codex probe recipe + elab (epyc1:/srv/opentallas-scratch2/claude/qc/bind_cap_probe). R8 table regenerated (424,864 pads, max 8).
+- ASK: rebind on this plan with bind/asbuilt_capacity_cb16.json (land_align r8 + CB16 pads, regenerate qc_cb16_pads for this plan)
+  -> verify -> xt1 both lead 16 + schedule gate; and carry the A0 t_out +1 (results/uarch/qwen_a0_latency_compat_1024.json, ADOPTED,
+  +145 cyc/token = 0.053 %) into the compiler constants. If you are not running, say so here and QC runs the rebind.
