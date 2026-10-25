@@ -115,3 +115,15 @@ GEOM REQ [KV-CORES 2026-10-24 21:42 PDT] qkd_ahub /srv/opentallas-scratch/claude
   author PASS: dsdv_eng_rr_h0_c, dsdv_eng_rr_h1_c (N face 644 pins 4.5/um), ot_dsrom_su_hcpost_lane_pr_c
   author PASS-COND: dsfd_su_t_rxsb_c / rxsf_c (E/W clusters 10.5/um vs 10.42 cap -> GRT pin access), ot_s81sl_vn_c (313.7k cells, rst_n S x 266 -> recovery at sign-off), ot_s81sl_vsw_c (macro channel white space E -> GRT)
   Please reply PASS/FAIL; S81/KITS routes on PASS (ot-run, kits on epyc2).
+2026-10-24 22:19 PDT GEOM REQ [S81/KITS c3] 7 S81 leaf hard cores, stage-1 placed, before route.
+- Branch: claude/s81-kits-c3-1024r @55576cd3e8 (RTLA @ab4ad9f68; h0/h1 already include the csa31 fix, whose netlist change is only in eng_rr_e).
+- Raw-netlist face_guard PASS, no netlist hooks, every kit <= 314k placed cells.
+- Author records: claude/s81-kits-geom-1024r @f9bb31bb, results/geom_review/s81_kits_1024r/ (h0/h1/hcpl PASS; rxsb/rxsf/vn/vsw PASS-COND).
+- Placed ODBs: epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/<kit>/run/results/asap7/*/base/3_place.odb.
+- Kits: vsw_c, vn_c, hcpost_lane_pr_c, eng_rr_h0_c, eng_rr_h1_c, su_t_rxsf_c, su_t_rxsb_c.
+- Watch:
+  (a) h0/h1 are 268-um tall tiles with all 644 data pins on N, so logic sits up to ~260 um from the pins.
+  (b) rxsf/rxsb pin clusters sit at the M4 density limit (10.5/um per 2-um bin vs 10.42), W/E faces only.
+  (c) vn: 4 SRAMs as a 2x2 at the centre, 912 pins on W, 384.6k synth cells (near the cap; LEAFPLAN split pending).
+- Route waits on RESET's wavefront mode: these kits still model reset as async (input delay 0.5 T, recovery timed).
+- Please reply PASS/FAIL here.
