@@ -1,0 +1,11 @@
+# S81 PORTFIX integration, 2026-10-25
+
+Adopted integrated CFG/FLT/DEAD source at ee9c5d36f2 into codex/s81-portfix-1025. The paused tree is unchanged.
+
+The new die rewrite connects H4 and the fault stops and removes config/status die ports. Its existing elaboration completed with 0 undefined modules; rewrite report has 0 errors. The first audit failed because portbind_audit.py resolved tools relative to an out-of-tree generated plan. It now resolves the tool directory relative to its source file. The copied as-built audit completed via ot-run (8 GB) on epyc1, unit oth-ubuntu-1943834-1792921137, 97 input rows / 46 output rows / 8 unused reserve lanes. This is a diagnostic FAIL, not a closed bind: 11,719 unbound bits, 1,378 tied bits, 0 undriven, 0 multiply bound. The only remaining functional die-top input is iqf.ql (513 bits), owned by IDXNET. The tied rows are old cap30 xfin/xrt/xg definitions against narrowed parent wrappers; a current-source preference re-elaboration is next. Remaining open outputs are the 24 row-end xo_o0 buses and iqf qc1 duplicate; IDXNET owns qc0.
+
+Latest plan r4 G0C fails 12 findings in 2 types (176/178 clean), all hard-core ports facing away: 14 ports in gunit__t1 and 15 in bk_sel__t2. Derived core connectivity exposed these defects; the physical core owner was notified. No routing was launched on these types.
+
+Existing CFG base/strap-reference and split baseline pass; new config mutants caught. Existing fault-ring base passes and six mutants fail as required. Existing capend_eq2 has 0 mismatches over real and random NL3 traces (up to 12,198 edges per trace). The earlier missing reset-copy dependency and earlier two svc q-reader proof failures are retained in their original run records; current DEAD source uses TF=0 for the 513-bit PV/SO query port.
+
+Three previously infrastructure-failed legacy eng mutants (xq1, onesc, sm1) have been relaunched in an isolated staged source kit. First attempt lacked sparse source dependencies; second attempt includes the actual file manifest (HD C, proto, six memory model directories). Results are pending. No extra data cycles are introduced by the audit/tool integration. Fault-level timing remains as documented in fault_report_format.md.
