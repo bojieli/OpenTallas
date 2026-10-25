@@ -382,3 +382,40 @@ def test_xor_sat_checks_original_cnf_and_negative_control():
     m.onames = ['equal', 'corrupted', 'nonlinear_sat']
     assert lec.xor_sat(m, list(range(3)), []) == {
         'equal': 'proved', 'corrupted': 'differs', 'nonlinear_sat': 'differs'}
+
+
+def _merged_dup(tmp_path, gold_s2cn_next):
+    """hcore bmul_s 10-25 (PATH-S81/HLEC): gold s2_sign <= c1_sign and s2_code_n[31] <= c1_sign, then
+    u_cut3 r[2] <= s2_sign and r[39] <= s2_code_n[31] (two RTL copies of the product sign, two levels deep); synthesis
+    merged both levels into one flop each and the u_cut3 bit names were re-laid (gate key matches neither copy).
+    Gate: c, s2cn <= c, rq <= s2cn, y <= rq, z <= rq.  Gold: y <= r39, z <= r2."""
+    names = lambda ks: {i: [(f'u_dut.{k}$_DFF_P_.lecq', 0)] for i, k in enumerate(ks)}
+    g = tmp_path / 'gold.aig'
+    #             c   s2s s2cn            r2  r39 y    z      (latch literals: c=4 s2s=6 s2cn=8 r2=10 r39=12)
+    g.write_bytes(f'aig 8 1 7 0 0\n2\n4\n{gold_s2cn_next}\n6\n8\n12\n10\n'.encode())
+    t = tmp_path / 'gate.aig'
+    t.write_bytes(b'aig 6 1 5 0 0\n2\n4\n6\n8\n8\n')   # c s2cn rq y z
+    gm = {'input': {0: [('d', 0)]}, 'latch': names(['c1', 's2s', 's2cn', 'u_cut3.r2', 'u_cut3.r39', 'y', 'z']),
+          'output': {}}
+    tm = {'input': {0: [('d', 0)]}, 'latch': names(['c1', 's2cn', 'u_cut3.rq', 'y', 'z']), 'output': {}}
+    return lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+
+
+def test_merged_duplicate_register_two_levels_is_proved_by_induction(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    L = _merged_dup(tmp_path, 4)                                  # s2cn <= c1: an exact duplicate of s2s
+    assert set(L.gonly) == {'ff:u_dut.s2s', 'ff:u_dut.u_cut3.r2', 'ff:u_dut.u_cut3.r39'}
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    res = _sim_prove(m)
+    assert res['ff:u_dut.y'] == 'proved' and res['ff:u_dut.z'] == 'proved', res
+    assert set(res.values()) == {'proved'}, res                  # the hypotheses themselves are proved too
+
+
+def test_duplicate_with_different_next_state_is_not_paired(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    L = _merged_dup(tmp_path, 2)                                  # s2cn <= d: one cycle early, NOT a duplicate
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    res = _sim_prove(m)
+    assert 'differs' in {res['ff:u_dut.y'], res['ff:u_dut.z']}, res
