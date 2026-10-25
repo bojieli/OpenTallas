@@ -108,7 +108,15 @@ def main():
     if not x.no_clock:
         import b2m
         clog = []
+        keep = {tn: copy.deepcopy(t.get("ft_budget")) for tn, t in plan["partition_types"].items()}
         b2m.clock(plan, out, clog)
+        # b2m.clock (B2m era) re-derives per-type M8/M9 ft_budget from the clock NDR; since decision 12 / ruling 9.3
+        # M8/M9 carry only clock spine, reset and PG (no ft), so the clock NDR is die-owned: keep every ft_budget as is.
+        for tn, t in plan["partition_types"].items():
+            if keep[tn] is None:
+                t.pop("ft_budget", None)
+            else:
+                t["ft_budget"] = keep[tn]
         ch = json.loads((out / "clock_htree.json").read_text())
         log["htree"] = dict(root_um=ch["root_um"], die_centre_x=plan["die"]["outline_um"][0] / 2,
                             summary={k: v for k, v in ch["summary"].items() if not isinstance(v, list)})
