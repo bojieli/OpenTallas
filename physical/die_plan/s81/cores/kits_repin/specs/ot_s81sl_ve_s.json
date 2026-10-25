@@ -1,0 +1,84 @@
+{
+ "name": "s81sl_ve_s",
+ "top": "ot_s81sl_ve_s",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_rf.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (S81U-MIX): every input lands in a pin flop (*_q), every output is a flop."
+ },
+ "util": 0.5,
+ "std_area_um2": 58000,
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "note": "r5 VE5 opt-in RTL successor of s81sl_ve_r4 (r4 gate refused: native census 4 roots > 32, max 34); new kit name."
+ },
+ "defines": [
+  "OT_S81_VE_LOADSAFE5"
+ ],
+ "source": "git f51f4ec42:physical/ref_tile/s81sl_ve_r5/spec.json + kit.env VERILOG_DEFINES -DOT_S81_VE_LOADSAFE5 (closed ve r5 view; RTL files unchanged at HEAD)"
+}

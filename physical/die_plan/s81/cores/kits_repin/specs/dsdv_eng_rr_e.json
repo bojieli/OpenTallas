@@ -1,0 +1,208 @@
+{
+ "name": "eng_e",
+ "top": "dsdv_eng_rr_e",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv",
+  "rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv",
+  "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+  "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_static.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra512.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra512.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra640.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_rst_relay_bounded32.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv",
+  "rtl/hdc/v41/ot_hdc_engram_gather.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_rr_n32.sv",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_aq_n32.sv",
+  "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+  "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr_split.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    17.28,
+    103.68
+   ],
+   "inst": "*u_win?u_map?m?0??rom",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    17.28,
+    166.608
+   ],
+   "inst": "*u_win?u_map?m?1??rom",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    17.28,
+    229.536
+   ],
+   "inst": "*u_win?u_map?m?2??rom",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    17.28,
+    292.464
+   ],
+   "inst": "*u_win?u_map?m?3??rom",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    86.4,
+    103.68
+   ],
+   "inst": "*u_win?u_map?m?4??rom",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    86.4,
+    166.608
+   ],
+   "inst": "*u_win?u_map?m?5??rom",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    86.4,
+    229.536
+   ],
+   "inst": "*u_win?u_map?m?6??rom",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    86.4,
+    292.464
+   ],
+   "inst": "*u_win?u_map?m?7??rom",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    151.2,
+    43.2
+   ],
+   "inst": "*u_xq?u_wl",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    151.2,
+    120.96
+   ],
+   "inst": "*u_xq?u_b0",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    151.2,
+    198.72
+   ],
+   "inst": "*u_xq?u_b1",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2",
+   "count": 1,
+   "at": [
+    151.2,
+    276.48
+   ],
+   "inst": "*u_win?u_h",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    151.2,
+    306.192
+   ],
+   "inst": "*u_lkp?u_e?u_row_e",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    151.2,
+    347.28
+   ],
+   "inst": "*u_lkp?u_e?u_row_o",
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    151.2,
+    388.368
+   ],
+   "inst": "*u_lkp?u_e?u_row_a",
+   "orient": "R0"
+  }
+ ],
+ "defines": [
+  "OT_ENGRAM_CRCMAT",
+  "OT_S81ENG_RR_N32",
+  "OT_S81ENG_RR_MUL_N32"
+ ],
+ "half_cycle_inputs": [
+  "hx_res"
+ ],
+ "source": "physical/die_plan/s81/cores/eng/cores_eng.json (CORE-S81-ENG split, GR8-reviewed geometry)"
+}

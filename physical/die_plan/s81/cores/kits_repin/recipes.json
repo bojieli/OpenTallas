@@ -1,0 +1,454 @@
+{
+ "_doc": "S81-CORES kits_repin (10-24): ORFS kits for the re-pinned / re-floorplanned closed sub-leaf cores. Sources, params and macros are read from the ref_tile spec.json at generation time (the closed kit's own file list); only the outline and pins change (plan pin tables in inputs/core_pins). util = the closed kit's PLACE_DENSITY (spec route.pd / util). cts_args = the closed kit's CTS setting where it had one.",
+ "ot_s81sl_vs": {
+  "suffix": "lfp",
+  "ref_tile": "physical/ref_tile/s81sl_vs",
+  "outline_um": [
+   172.8,
+   172.8
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_vs_lfp.json",
+  "stub_lef": "cores/leaf/lef/ot_s81sl_vs_lfp.lef",
+  "closed_cells": 117971,
+  "util": 0.52,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang"
+  },
+  "keep_pin_regs": true,
+  "note_c3": "c3 (S81-KITS-C3 10-24): face_guard_continue and pin_reg_split removed: face_guard must PASS on the raw Yosys netlist (RTLA RTL: ra_ri[30:0], ve_oy packed [127:0]) with no netlist hooks"
+ },
+ "ot_s81sl_vq": {
+  "suffix": "lfp",
+  "ref_tile": "physical/ref_tile/s81sl_vq",
+  "outline_um": [
+   172.8,
+   129.6
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_vq_lfp.json",
+  "stub_lef": "cores/leaf/lef/ot_s81sl_vq_lfp.lef",
+  "closed_cells": 46676,
+  "util": 0.49,
+  "includes": [],
+  "macro_inst_glob": "*u_xm*",
+  "macro_sites": {
+   "ot_sram_1r1w_128x256_m1_r2c2": [
+    38.988,
+    4.32,
+    "R0"
+   ]
+  },
+  "macro_site_note": "r2 (site [55.296, 4.32], rows halo 2): GRT-0183 boxed-in net next to the SRAM W pin wall; review 10-24: the new E face carries u/um (vs) over the full height, so the E channel beside the SRAM (22.7 um) took ~90 u face flops + their 256-b stream detour. r3: SRAM centred on the S face (x 38.988 = 722 sites, y 4.32 = core edge, M4 pins on 0.012 + k 0.048), 34.2 um channels to both W (y, vn) and E (u, vs) faces, rows halo 4.32. The S face has no pins; N (xf leaf bus) 80 um above the SRAM.",
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang"
+  },
+  "macro_rows_halo": 4.32,
+  "rtl_patch": {
+   "file": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv",
+   "why": "COORD ruling 10-24 (no waiver for the self-loop fault flop): kit-local duplicate sticky flop. fault_q (internal, keep) carries the sticky state; the port flop fault takes the SAME next state (fault_q | events) from fault_q, so its Q drives only the port (face_guard). Same reset, same edge: fault == fault_q every cycle; 0 added cycles; ports unchanged.",
+   "edits": [
+    [
+     "    wire [1:0] rsv;\n",
+     "    (* keep *) reg fault_q;   // kits_repin: sticky state (internal); fault = the port copy\n    wire [1:0] rsv;\n"
+    ],
+    [
+     "xf_s <= 1'b0; fault <= 1'b0; end",
+     "xf_s <= 1'b0; fault_q <= 1'b0; fault <= 1'b0; end"
+    ],
+    [
+     "            fault <= fault | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);\n",
+     "            fault_q <= fault_q | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);\n            fault <= fault_q | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);\n"
+    ]
+   ],
+   "mutant": [
+    "            fault <= fault_q | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);\n",
+    "            fault <= fault_q | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (vo && blo && run);\n"
+   ],
+   "reset": {
+    "port": "rst_n",
+    "active": 0
+   },
+   "sim_extra": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+   ]
+  },
+  "keep_pin_regs": true
+ },
+ "dsdv_svc_sx_hrow": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/dsdv_svc_sx_hrow",
+  "outline_um": [
+   138.24,
+   164.16
+  ],
+  "pins_file": "inputs/core_pins/dsdv_svc_sx_hrow_c.json",
+  "stub_lef": "cores/svc/lef/dsdv_svc_sx_hrow_c.lef",
+  "closed_cells": 51397,
+  "util": 0.5,
+  "includes": [
+   "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_roles.svh",
+   "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_roles_group72.svh",
+   "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_roles_mut_order.svh",
+   "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_roles_mut_order_group72.svh"
+  ],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 -sink_clustering_size 30 -sink_clustering_max_diameter 60 -sink_clustering_levels 2 -distance_between_buffers 100 -clustering_unbalance_ratio 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "rtl_patch": {
+   "file": "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_hrow.sv",
+   "why": "COORD ruling 10-24 (no waiver for the self-loop fault flop): kit-local duplicate sticky flop. fault_q (internal, keep) holds the sticky state; the port flop fault <= fault_q | chk (= its own next state), so its Q drives only the port. 0 added cycles; ports unchanged.",
+   "edits": [
+    [
+     "    always @(posedge ck or negedge rn) if (!rn) fault <= 1'b0; else if (chk) fault <= 1'b1;\n",
+     "    (* keep *) reg fault_q;   // kits_repin: sticky state (internal); fault = the port copy\n    always @(posedge ck or negedge rn) if (!rn) fault_q <= 1'b0; else if (chk) fault_q <= 1'b1;\n    always @(posedge ck or negedge rn) if (!rn) fault <= 1'b0; else fault <= fault_q | chk;\n"
+    ]
+   ],
+   "mutant": [
+    "else fault <= fault_q | chk;\n",
+    "else fault <= fault_q;\n"
+   ],
+   "reset": {
+    "port": "rst",
+    "active": 0
+   },
+   "sim_extra": []
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "clock_balance_note": "r2/r10 signoff: TT pin-flop insertion 199.7 < 250-40 (clock FAIL) and FF output hold -46.6 (vclk 250 fixed); r6 needed 9826 hold buffers. Lift the tree to 250 before the first repair.",
+  "max_buffer_percent": 100
+ },
+ "ot_dsrom_su_hcpost_lane_pr": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81sl_hcpl",
+  "outline_um": [
+   114.48,
+   114.48
+  ],
+  "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+  "closed_cells": 50540,
+  "util": 0.52,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "note_c3": "c3: face_guard_continue removed (RTLA: o[31:16] only, sticky state in the kept ot_dsrom_su_hcpost_sticky, FDUP 1; raw face_guard PASS 339)"
+ },
+ "ot_s81sl_vn": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81sl_vn",
+  "outline_um": [
+   356.4,
+   356.4
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_vn.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/ref_tile/s81sl_vn/views/ot_s81sl_vn/ot_s81sl_vn.lef",
+  "closed_cells": 375145,
+  "util": 0.52,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "macro_sites_from": "physical/ref_tile/s81sl_vn/place.tcl",
+  "macro_rows_halo": 4.32,
+  "clock_balance": true,
+  "max_buffer_percent": 100
+ },
+ "ot_s81sl_vsw": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81sl_vsw",
+  "outline_um": [
+   224.64,
+   224.64
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_vsw.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
+  "closed_cells": 120703,
+  "util": 0.52,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "macro_sites_from": "physical/ref_tile/s81sl_vsw/place.tcl",
+  "macro_rows_halo": 4.32,
+  "clock_balance": true,
+  "max_buffer_percent": 100
+ },
+ "dsfd_su_t_rxsf": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81su_rxsf_ref",
+  "outline_um": [
+   140.4,
+   140.4
+  ],
+  "pins_file": "inputs/core_pins/dsfd_su_t_rxsf.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf/dsfd_su_t_rxsf.lef",
+  "closed_cells": 82916,
+  "util": 0.6,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "clock_balance": true,
+  "max_buffer_percent": 100
+ },
+ "dsfd_su_t_rxsb": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81su_rxsb_ref",
+  "outline_um": [
+   140.4,
+   140.4
+  ],
+  "pins_file": "inputs/core_pins/dsfd_su_t_rxsb.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+  "closed_cells": 99597,
+  "util": 0.6,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "clock_balance": true,
+  "max_buffer_percent": 100
+ },
+ "ot_s81sl_ve": {
+  "suffix": "c",
+  "ref_tile": "physical/ref_tile/s81sl_ve",
+  "outline_um": [
+   345.6,
+   345.6
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_ve.json",
+  "pins_snap_to_edge": true,
+  "stub_lef": "../../../physical/s81_die_views/closed_import/ot_s81sl_ve/ot_s81sl_ve.lef",
+  "closed_cells": 460279,
+  "util": 0.5,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "note": "G0C leaf hard core, closed-view pins unchanged (plan contract); canonical kit (S81-CORES scope 10-24)",
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "spec_file": "specs/ot_s81sl_ve.json"
+ },
+ "dsdv_eng_rr_e": {
+  "suffix": "c",
+  "spec_file": "specs/dsdv_eng_rr_e.json",
+  "ref_tile": "physical/die_plan/s81/cores/eng",
+  "outline_um": [
+   345.6,
+   466.56
+  ],
+  "pins_file": "inputs/core_pins/dsdv_eng_rr_e.json",
+  "stub_lef": "cores/eng/lef/dsdv_eng_rr_e.lef",
+  "closed_cells": 96256,
+  "util": 0.5,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "macro_rows_halo": 4.32,
+  "note": "eng split core (no closed view yet): stub-LEF plan pins, cores_eng.json macro sites; half-cycle crossing inputs at T/2 + 0.12T",
+  "pins_snap_to_edge": true
+ },
+ "dsdv_eng_rr_h0": {
+  "suffix": "c",
+  "spec_file": "specs/dsdv_eng_rr_h0.json",
+  "ref_tile": "physical/die_plan/s81/cores/eng",
+  "outline_um": [
+   164.16,
+   267.84
+  ],
+  "pins_file": "inputs/core_pins/dsdv_eng_rr_h0.json",
+  "stub_lef": "cores/eng/lef/dsdv_eng_rr_h0.lef",
+  "closed_cells": 175659,
+  "util": 0.65,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "note": "eng split core (no closed view yet): stub-LEF plan pins, cores_eng.json macro sites; half-cycle crossing inputs at T/2 + 0.12T",
+  "pins_snap_to_edge": true
+ },
+ "dsdv_eng_rr_h1": {
+  "suffix": "c",
+  "spec_file": "specs/dsdv_eng_rr_h1.json",
+  "ref_tile": "physical/die_plan/s81/cores/eng",
+  "outline_um": [
+   164.16,
+   267.84
+  ],
+  "pins_file": "inputs/core_pins/dsdv_eng_rr_h1.json",
+  "stub_lef": "cores/eng/lef/dsdv_eng_rr_h1.lef",
+  "closed_cells": 176214,
+  "util": 0.65,
+  "includes": [],
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "note": "eng split core (no closed view yet): stub-LEF plan pins, cores_eng.json macro sites; half-cycle crossing inputs at T/2 + 0.12T",
+  "pins_snap_to_edge": true
+ },
+ "ot_s81sl_ve_m": {
+  "util": 0.5,
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "suffix": "k",
+  "ref_tile": "physical/ref_tile/s81sl_ve",
+  "spec_file": "specs/ot_s81sl_ve_m.json",
+  "outline_um": [
+   172.8,
+   345.6
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_ve_m.json",
+  "stub_lef": "cores/leaf/lef/ot_s81sl_ve_m.lef",
+  "includes": [],
+  "closed_cells": 220000,
+  "note": "S81/KITS 10-25: RTLSPLIT claude/s81-rtlsplit-1024r @b5d2eabeef split core (C3 400k cap), leafplan r9 pin table + LEF; wavefront rst SDC (DECISION 13)"
+ },
+ "ot_s81sl_ve_s": {
+  "util": 0.5,
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "suffix": "k",
+  "ref_tile": "physical/ref_tile/s81sl_ve",
+  "spec_file": "specs/ot_s81sl_ve_s.json",
+  "outline_um": [
+   164.16,
+   345.6
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_ve_s.json",
+  "stub_lef": "cores/leaf/lef/ot_s81sl_ve_s.lef",
+  "includes": [],
+  "closed_cells": 222000,
+  "note": "S81/KITS 10-25: RTLSPLIT claude/s81-rtlsplit-1024r @b5d2eabeef split core (C3 400k cap), leafplan r9 pin table + LEF; wavefront rst SDC (DECISION 13)"
+ },
+ "ot_s81sl_vn_a": {
+  "util": 0.52,
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "suffix": "k",
+  "ref_tile": "physical/ref_tile/s81sl_vn",
+  "spec_file": "specs/ot_s81sl_vn_a.json",
+  "outline_um": [
+   356.4,
+   164.16
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_vn_a.json",
+  "stub_lef": "cores/leaf/lef/ot_s81sl_vn_a.lef",
+  "includes": [],
+  "closed_cells": 184000,
+  "note": "S81/KITS 10-25: RTLSPLIT claude/s81-rtlsplit-1024r @b5d2eabeef split core (C3 400k cap), leafplan r9 pin table + LEF; wavefront rst SDC (DECISION 13)",
+  "macro_sites": {
+   "ot_sram_1r1w_128x256_m1_r2c2": [
+    73.44,
+    60.48,
+    "R0"
+   ]
+  },
+  "macro_inst_glob": "*u_h0*",
+  "macro_rows_halo": 4.32,
+  "macro_site_note": "one h-store SRAM (u_h0 / u_h1) at the closed vn column x 73.44 (W data face hw/hq + E y channels), centred vertically (row + M4-track grid 2.16)"
+ },
+ "ot_s81sl_vn_b": {
+  "util": 0.52,
+  "cts_args": "-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5",
+  "orfs_vars": {
+   "SYNTH_HDL_FRONTEND": "slang",
+   "SYNTH_MEMORY_MAX_BITS": 131072
+  },
+  "keep_pin_regs": true,
+  "clock_balance": true,
+  "max_buffer_percent": 100,
+  "suffix": "k",
+  "ref_tile": "physical/ref_tile/s81sl_vn",
+  "spec_file": "specs/ot_s81sl_vn_b.json",
+  "outline_um": [
+   356.4,
+   172.8
+  ],
+  "pins_file": "inputs/core_pins/ot_s81sl_vn_b.json",
+  "stub_lef": "cores/leaf/lef/ot_s81sl_vn_b.lef",
+  "includes": [],
+  "closed_cells": 200000,
+  "note": "S81/KITS 10-25: RTLSPLIT claude/s81-rtlsplit-1024r @b5d2eabeef split core (C3 400k cap), leafplan r9 pin table + LEF; wavefront rst SDC (DECISION 13)",
+  "macro_sites": {
+   "ot_sram_1r1w_128x256_m1_r2c2": [
+    73.44,
+    64.8,
+    "R0"
+   ]
+  },
+  "macro_inst_glob": "*u_h1*",
+  "macro_rows_halo": 4.32,
+  "macro_site_note": "one h-store SRAM (u_h0 / u_h1) at the closed vn column x 73.44 (W data face hw/hq + E y channels), centred vertically (row + M4-track grid 2.16)"
+ }
+}
