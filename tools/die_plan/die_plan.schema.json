@@ -959,6 +959,42 @@
          "minItems": 2,
          "maxItems": 2
         },
+        "straps": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "required": [
+           "port",
+           "width",
+           "value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "port": {
+            "enum": [
+             "strap_corner",
+             "strap_hid",
+             "strap_bsel"
+            ]
+           },
+           "width": {
+            "const": 2
+           },
+           "value": {
+            "type": [
+             "integer",
+             "string"
+            ],
+            "minimum": 0,
+            "maximum": 3,
+            "pattern": "^2'[bB][01]{2}$"
+           },
+           "note": {
+            "type": "string"
+           }
+          }
+         }
+        },
         "parent_id_straps": {
          "type": "object",
          "additionalProperties": false,
@@ -1032,6 +1068,63 @@
             "value": {
              "type": "integer",
              "minimum": 0
+            }
+           }
+          },
+          "strap_corner": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_hid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_bsel": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
             }
            }
           }
@@ -1222,6 +1315,63 @@
             "value": {
              "type": "integer",
              "minimum": 0
+            }
+           }
+          },
+          "strap_corner": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_hid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_bsel": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
             }
            }
           }
