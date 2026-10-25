@@ -302,6 +302,9 @@ SCHEMA = {
                                        # hardened views (repo-relative): the partition kit places the core as a
                                        # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       # routing obstruction top layer of the core (its LEF OBS/PIN top; G2 probe
+                                       # obstructs M1..obs_max, default partition_signal_max when absent)
+                                       "obs_max": _layer,
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},

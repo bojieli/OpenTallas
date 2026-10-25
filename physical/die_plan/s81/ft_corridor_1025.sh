@@ -13,3 +13,6 @@ T=svc_lo_dsdv_svc_rs_w__t1,svc_hi_dsdv_svc_rs__t3,svc_hi_dsdv_svc_rs__t4,svc_lo_
 C=col_h10_r0_p1__t1,col_h9_r0_p1__t1,col_h9_r0_p2__t1,col_h9_r0_p3__t1
 python3 $ROOT/tools/die_plan/ft_corridor.py $D/die_plan.json --types $T,$C \
   --jog svc_lo_dsdv_svc_rs__t7/ft2=1200 --jog svc_lo_dsdv_svc_rs__t7/ft1=1265 --ledger $D/ft_corridor_ledger.json
+
+# S81-PLAN3 10-25: svc_hi_dsdv_svc_rs__t1 (was not in the FTCHAN run)
+# python3 $ROOT/tools/die_plan/ft_corridor.py $D/die_plan.json --types svc_hi_dsdv_svc_rs__t1 --ledger $D/ft_corridor_ledger_plan3.json

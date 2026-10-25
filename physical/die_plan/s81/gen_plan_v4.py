@@ -547,6 +547,12 @@ def derived_core_conns(types):
             if inst not in hcs:
                 continue
             for port, tgs in ports.items():
+                # S81-PLAN3/CCONN2 10-25: a core port on the contents' CLOCK net (target port:clk -- the landed frames'
+                # bf_front_roots io_clk / io_e / io_n / io_w and cfg7 cr / cr_s / xk pins sit on the frame clk) is clock
+                # distribution (CTS / MSCTS clock gate), not a reg-reg data hop: ~4,000 of the 4,299 R3 'core bundle'
+                # findings were these one-sided clock-net fan-outs (the partners' clk pins are not listed).
+                if any(tg in ("port:clk", "port:ck") for tg in tgs):
+                    continue
                 out = []
                 for tg in tgs:
                     k, _, n = tg.partition(":")
@@ -557,7 +563,13 @@ def derived_core_conns(types):
                 if out:
                     ent.setdefault(inst, {})[port] = sorted(set(out))
         if ent:
-            CORE_CONNS_OUT[tn] = ent
+            # A shared soft-driven input net is not a register-to-register core hop (Codex codex/s81-plan2-1025@f5d465536,
+            # adopted S81-PLAN3/CCONN2 10-25): drop ONLY proven INPUT/INPUT aliases; unknown directions and every real
+            # driver/sink pair stay fail closed.
+            from core_conns_directions import filter_shared_inputs
+            ent = filter_shared_inputs(t, ent, Path(__file__).resolve().parents[3])
+            if ent:
+                CORE_CONNS_OUT[tn] = ent
 
 
 def nonframe_hc_key(p):
@@ -2614,7 +2626,10 @@ def emit(parts, lanes, routes, chans, fmap, out):
     # landed col_h* frames + bk_sel + gunit (Codex faultfinal G0C: 4766 + 84 ERRORs, all pre-existing core-pair hops
     # > 405 um with no internal_stations[] entry; the missing-cores / core-relay lane owns them).  It is a separate
     # gate expansion, not part of the fault-feeder plan delta: opt-in until that lane adopts it.
-    if os.environ.get("OT_S81_DERIVED_CORE_CONNS") == "1":
+    # S81-PLAN3/CCONN2 10-25: still opt-in.  delta_cconn_1025.py closes every R3 internal_station hop (moves +
+    # FIRM stations, bk_sel deferred to COORD), but the derived pin-face rule leaves ~60-80 face-away core ports per
+    # col_h* frame (+44 gunit) that need core re-pins (S81-CORES), so the default flips only after those land.
+    if os.environ.get("OT_S81_DERIVED_CORE_CONNS", "0") == "1":
         derived_core_conns(plan["partition_types"])
     if CORE_CONNS_OUT:
         json.dump(CORE_CONNS_OUT, open(out / "core_conns.json", "w"), indent=0, sort_keys=True)
