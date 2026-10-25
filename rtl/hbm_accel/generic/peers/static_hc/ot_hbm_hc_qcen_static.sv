@@ -12,30 +12,44 @@
 //   reset    ot_rst_relay, 9 regions: rst_b[k] -> bank k (each bank relays again), region 8 = this centre.
 //   fault    sticky: rx order, ingest (unsolicited / missing / wrong word / bad event), any bank's residual check.
 // MUT (bench): 3 = x landing one run off, 4 = tree level-1 pairs (0,2),(1,3).
+// W (HBM-HC 2026-10-24, default 64 = unchanged, bit for bit): lanes of this hub's slice of every W = 256 run.  W 128 =
+// the B2 8-SM die HALF hub (root ot_hbm_hc_root_static NQ 2, TPRE 7): 8 widened W 128 bank tiles, the 7-level aligned
+// subtree over 128 chunk sums (= (q_2h + q_2h+1) of the 4-quarter form: the SAME pairs in the SAME order, no numerics
+// change), 8-bit lane count d_nv, 6-bit half-local wave index i_w (< K/512 a row / position: run i_w / 4, slice
+// i_w % 4), 2-bit write slice j (wc_* 14 b), 4,097-bit chain exit s_i.  Bench mutants: MUT 5 = level-1 pairs (i, i + W/2)
+// (a reordered accumulation, e.g. a 128-lane run folded onto a 64-lane tree), MUT 6 = write slice j = i_w[0] only (wrong
+// j), MUT 7 = top tree level dropped (the left subtree sum is output).
 module ot_hbm_hc_qcen_static #(
     parameter integer K    = 20480,
     parameter integer DRLY = 1,
     parameter integer TLA  = 7,
     parameter integer CHX  = 0,     // HH-9 10-19: extra chain edges (bank chain pin registers, ot_hbm_hc_qeng_static CPR)
-    parameter integer MUT  = 0
+    parameter integer MUT  = 0,
+    parameter integer W    = 64,    // 64 (quarter hub, as built) or 128 (B2 half hub)
+    // derived (do not override)
+    parameter integer NVW  = (W == 128) ? 8 : 7,
+    parameter integer IWW  = (W == 128) ? 6 : 5,
+    parameter integer JW   = (W == 128) ? 2 : 1
 )(
     input  wire           clk, rst_n,
-    input  wire           d_v, d_ss, input wire [6:0] d_nv, input wire [9:0] d_wa, d_xa,
-    input  wire           i_v, i_kind, input wire [1:0] i_slot, input wire [4:0] i_lo, i_w,
+    input  wire           d_v, d_ss, input wire [NVW-1:0] d_nv, input wire [9:0] d_wa, d_xa,
+    input  wire           i_v, i_kind, input wire [1:0] i_slot, input wire [4:0] i_lo, input wire [IWW-1:0] i_w,
     input  wire [11:0]    i_cnt, input wire [9:0] i_word,
     input  wire           x_v, input wire [1:0] x_beat, input wire [9:0] x_word,
-    input  wire [2048:0]  s_i,                       // {lane fault, 64 chunk sums} from bank 0's exit relay
+    input  wire [W*32:0]  s_i,                       // {lane fault, W chunk sums} from bank 0's exit relay
     input  wire [7:0]     wfault_i,
     output wire [7:0]     rst_b,
-    output wire           bd_v, bd_ss, output wire [6:0] bd_nv, output wire [9:0] bd_wa, bd_xa,
-    output wire [12:0]    wc_w, wc_n, wc_e, wc_s,   // {wv, xv, j, wa[9:0]}
+    output wire           bd_v, bd_ss, output wire [NVW-1:0] bd_nv, output wire [9:0] bd_wa, bd_xa,
+    output wire [11+JW:0] wc_w, wc_n, wc_e, wc_s,   // {wv, xv, j[JW-1:0], wa[9:0]}
     output reg            ps_v, output reg [31:0] ps, output reg ps_f,
     output reg            fault
 );
-    localparam integer W = 64, AW = 10, R = K / 2048, WPRQ = K / 1024, NJ = W / 32;
-    localparam integer LM = 8, LA = 7, SOR = 1, ML = 2, NVW = 7, LT = 6;
+    localparam integer AW = 10, R = K / 2048, WPRQ = K * W / 65536, NJ = W / 32;
+    localparam integer LM = 8, LA = 7, SOR = 1, ML = 2, LT = (W == 128) ? 7 : 6;
     localparam integer SB = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR;
-    initial if (K % 2048 != 0 || R > 16 || WPRQ > 32) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
+    initial if (K % 2048 != 0 || R > 16 || WPRQ > (1 << IWW)) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
+    initial if (!((W == 64 && NVW == 7 && IWW == 5 && JW == 1) || (W == 128 && NVW == 8 && IWW == 6 && JW == 2)))
+        $fatal(1, "W must be 64 or 128 (NVW / IWW / JW are derived)");
 
     wire [8:0] rn;
     ot_rst_relay #(.REGIONS(9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
@@ -43,8 +57,8 @@ module ot_hbm_hc_qcen_static #(
     assign rst_b = rn[7:0];
 
     // pin registers
-    reg dv_q, dss_q; reg [6:0] dnv_q; reg [9:0] dwa_q, dxa_q;
-    reg iv_q, ik_q; reg [1:0] is_q; reg [4:0] ilo_q, iw_q; reg [11:0] ic_q; reg [9:0] iwd_q; reg [7:0] wf_q;
+    reg dv_q, dss_q; reg [NVW-1:0] dnv_q; reg [9:0] dwa_q, dxa_q;
+    reg iv_q, ik_q; reg [1:0] is_q; reg [4:0] ilo_q; reg [IWW-1:0] iw_q; reg [11:0] ic_q; reg [9:0] iwd_q; reg [7:0] wf_q;
     always @(posedge clk or negedge rc)
         if (!rc) begin dv_q <= 1'b0; iv_q <= 1'b0; wf_q <= 8'd0; end
         else begin dv_q <= d_v; iv_q <= i_v; wf_q <= wfault_i; end
@@ -66,14 +80,14 @@ module ot_hbm_hc_qcen_static #(
     wire [9:0] xw_q = w_q;
 
     // ingest sequencer (as ot_hbm_hc_qeng_static; the residual low-half check moved into the banks)
-    reg in_act, in_kind; reg [1:0] in_ph, in_slot; reg [4:0] in_lo, in_w; reg [11:0] in_left; reg [9:0] in_word;
+    reg in_act, in_kind; reg [1:0] in_ph, in_slot; reg [4:0] in_lo; reg [IWW-1:0] in_w; reg [11:0] in_left; reg [9:0] in_word;
     wire due = in_act && in_ph == 2'd0;
     wire [3:0] drun = 4'(in_w / NJ);
-    wire dj = in_w[0];
+    wire [JW-1:0] dj = (MUT == 6) ? JW'(in_w[0]) : in_w[JW-1:0];
     wire [9:0] dxaddr = 10'(in_lo * R + drun + ((MUT == 3) ? 1 : 0));
     wire [9:0] dwaddr = 10'(in_slot * 256 + in_lo * R + drun);
     reg ing_fault;
-    (* keep = "true" *) reg [3:0] c_wv, c_xv, c_j; (* keep = "true" *) reg [9:0] c_a [0:3];
+    (* keep = "true" *) reg [3:0] c_wv, c_xv; (* keep = "true" *) reg [JW-1:0] c_j [0:3]; (* keep = "true" *) reg [9:0] c_a [0:3];
     always @(posedge clk or negedge rc) begin
         if (!rc) begin in_act <= 0; in_ph <= 0; c_wv <= 0; c_xv <= 0; ing_fault <= 0; end
         else begin
@@ -84,8 +98,8 @@ module ot_hbm_hc_qcen_static #(
                 in_word <= in_word + 1'b1;
                 in_left <= in_left - 1'b1;
                 if (in_left == 12'd1) in_act <= 1'b0;
-                if (in_w == 5'(WPRQ - 1)) begin
-                    in_w <= 5'd0;
+                if (in_w == IWW'(WPRQ - 1)) begin
+                    in_w <= {IWW{1'b0}};
                     if (in_kind && in_lo == 5'd23) begin in_lo <= 5'd0; in_slot <= in_slot + 1'b1; end
                     else in_lo <= in_lo + 1'b1;
                 end else in_w <= in_w + 1'b1;
@@ -99,8 +113,7 @@ module ot_hbm_hc_qcen_static #(
         end
     end
     always @(posedge clk) begin
-        c_j <= {4{dj}};
-        for (integer f = 0; f < 4; f = f + 1) c_a[f] <= in_kind ? dwaddr : dxaddr;
+        for (integer f = 0; f < 4; f = f + 1) begin c_j[f] <= dj; c_a[f] <= in_kind ? dwaddr : dxaddr; end
     end
     assign wc_w = {c_wv[0], c_xv[0], c_j[0], c_a[0]};
     assign wc_n = {c_wv[1], c_xv[1], c_j[1], c_a[1]};
@@ -117,19 +130,20 @@ module ot_hbm_hc_qcen_static #(
     end
     assign {bd_v, bd_ss, bd_nv, bd_wa, bd_xa} = dr[DRLY-1];
 
-    // 6-level subtree over the chunk sums of the task whose valid entered bank 0 SB + DRLY edges ago
+    // LT-level subtree (6 at W 64, 7 at W 128) over the chunk sums of the task whose valid entered bank 0 SB + DRLY edges ago
     localparam integer VD = SB + DRLY + CHX;
     reg [VD-1:0] vl;
     always @(posedge clk or negedge rc) if (!rc) vl <= 0; else vl <= {vl[VD-2:0], bd_v};
     wire leaf_v = vl[VD-1];
-    wire [64*32-1:0] lv0;
-    for (genvar i = 0; i < 64; i = i + 1) begin : g_perm
-        localparam integer SRC = (MUT == 4) ? ((i & ~3) | ((i & 1) << 1) | ((i >> 1) & 1)) : i;
+    wire [W*32-1:0] lv0;
+    for (genvar i = 0; i < W; i = i + 1) begin : g_perm
+        localparam integer SRC = (MUT == 4) ? ((i & ~3) | ((i & 1) << 1) | ((i >> 1) & 1)) :
+                                 (MUT == 5) ? ((i % 2) * (W / 2) + i / 2) : i;
         assign lv0[i*32 +: 32] = s_i[SRC*32 +: 32];
     end
-    wire [63*32-1:0] nd; wire [62:0] nv, ne;
+    wire [(W-1)*32-1:0] nd; wire [W-2:0] nv, ne;
     for (genvar l = 1; l <= LT; l = l + 1) begin : g_lvl
-        localparam integer N = 64 >> l, OFF = 64 - (128 >> l), POFF = 64 - (256 >> l);
+        localparam integer N = W >> l, OFF = W - ((2*W) >> l), POFF = W - ((4*W) >> l);
         for (genvar i = 0; i < N; i = i + 1) begin : g_n
             wire [31:0] a, b; wire va; wire [1:0] e;
             if (l == 1) begin : g_leaf
@@ -142,7 +156,7 @@ module ot_hbm_hc_qcen_static #(
             assign ne[OFF + i] = nv[OFF + i] && (|e);
         end
     end
-    localparam integer RT = 62;
+    localparam integer RT = (MUT == 7) ? W - 4 : W - 2;   // MUT 7 (bench): top level dropped (left subtree out)
     reg [LT*TLA-1:0] lfd;
     always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_i[W*32] && leaf_v};
     always @(posedge clk or negedge rc) begin
