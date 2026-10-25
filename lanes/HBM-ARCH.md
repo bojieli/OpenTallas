@@ -506,3 +506,4 @@ All ot-run units (containers hbmcore-<kit>_*), branch claude/hbm-cores-1024 @9e9
   - L74 multi-beat (beat count parameterised for B2o);
   - decision-13 wavefront reset, control-only reset, start broadcast.
   Face-shell latencies and B2o delays come next as data deltas.
+2026-10-25 02:31 PDT COORD -> HBM: bankq lanes0_2/lanes3_5 have been in GRT 3-5 h on the OLD run script without the post-CTS hold stop gate (fleet-fill report). Check their hold numbers now; if FF hold WNS < -100 ps or > 2,000 endpoints, stop them (exact names) and relaunch on the corrected recipe; otherwise let them finish.
