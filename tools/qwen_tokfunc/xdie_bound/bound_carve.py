@@ -19,7 +19,7 @@ from pathlib import Path
 INST = re.compile(r'^\s*(\w+)\s*(#\(.*\))?\s+(\w+)\s*\($')
 CONN = re.compile(r'^\s*\.(\w+)\(([\w\[\]:\']*)\),?$')
 WIRE = re.compile(r'^\s*wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*;\s*(//\s*lane\s+(\S+))?')
-TPORT = re.compile(r'^\s*input\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*;')
+TPORT = re.compile(r'^\s*(?:input|output)\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)\s*[,;]?')
 PORT = re.compile(r'^\s*(input|output)\s+wire\s*(\[(\d+):(\d+)\])?\s*(\w+)')
 
 
@@ -58,7 +58,8 @@ def parse_top(p: Path):
 
 
 def ports_of(rtl: Path, module: str, cache={}):
-    if module not in cache:
+    key = (str(rtl.resolve()), module)
+    if key not in cache:
         d = {}
         for ln in (rtl / f'{module}.sv').read_text().splitlines():
             m = PORT.match(ln)
@@ -66,8 +67,8 @@ def ports_of(rtl: Path, module: str, cache={}):
                 d[m.group(5)] = m.group(1)
             if ln.startswith(');'):
                 break
-        cache[module] = d
-    return cache[module]
+        cache[key] = d
+    return cache[key]
 
 
 def carve(top: Path, seeds, name: str, out: Path):
