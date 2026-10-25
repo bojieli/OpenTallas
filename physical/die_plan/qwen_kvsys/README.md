@@ -164,3 +164,26 @@ spreading rule as core_pins_v37p.py; round trip at 285.12 reproduces the v3.7p f
 geometry (in-core station points 1001 -> 942, moved 974, failed 8 as before; no lane latency change) + gen.py latency +
 G0/G0C: G0 PASS 0 err / 1788 warn, G0C PASS 0 err (g0_summary_v38x.json). Only kv3_hg*/kv3_hgi* differ from v3.8w.
 Render: g3/review/part_kv3_hg_v38x.png (no pin faces a non-partner core within 60 um).
+
+## v3.9ft CANDIDATE (KV-FT, 10-24) -- feedthrough-crossing cut (owner decision 12 plan item). NOT main.
+`die_plan_v39ft.json` = `run_v39ft.sh OUT` (post_v39_ft.py MA,MD,MB + post_v39_mb.py on v3.8x; census
+`census/census_{rows,map}_v39ft.*` = planned-RTL census; R8 `r8/bus_groups_v39ft.json` + `r8/qwen_kvsys_r8_landing_v39ft.json`
+from r8.py pads --bus leaf --replica type as main). Check in place:
+`check.py die_plan_v39ft.json --completeness --groups r8/bus_groups_v39ft.json --landing r8/qwen_kvsys_r8_landing_v39ft.json`
+-> G0 / G0C PASS 0 errors (census dropped 0, taptree deficit 0). Report + renders: `ft_v39/` (ft_v39ft_report.json,
+ft_v38x.png / ft_v39ft.png: lanes coloured by crossings, ft-slot count per partition).
+- Diagnosis (ft_audit_v39.py, ft_swap_search_v39.py): v3.8x 446 / 2416 ft lanes, 1523 crossings (mean 3.41, max 12),
+  176,894 bit-crossings, 287,871 ft bit-mm. None of the 3,149 same-outline origin swaps lowers the crossings (BFS model
+  within 40 of the plan): the lattice is already traffic-ordered; the crossings come from star / far-tail connection
+  patterns (pv flag star 448, fault chains 126 + 80, hsl tails 72), the IO-row <-> hub trunk (427, distance-bound
+  12.2 mm) and pc <-> pv through hg+hgi (240, 49 % of bit-crossings; 144 on the row-pair diagonal).
+- MA pv flag reduction chain (3 bits/row: OR fault, AND / OR y_valid; the pv ctl only uses those reductions),
+  MD kvs_ctl -> hroot broadcast trunk (967 shared + 2 x 151 = 1269 b per side, fan in hub_Eo/Wo), MB fault chains run
+  toward their collector (row 7 tail beside hub_Eo/Wo, hroot, hub_C).
+- After: 322 ft lanes, 991 crossings (-34.9 %), mean 3.08, max 12 (L2045 IO trunk), 169,962 bit-crossings (-3.9 %),
+  275,107 bit-mm (-4.4 %); ft slots 888 -> 501; hub-star lanes 288 -> 168. Fault age into hroot 37 -> 16, hub_C 46 -> 37;
+  pv flag check depth 23 -> 37 cycles (FLAG_D; TOK-QK to confirm it is off the data path); kvs_ctl -> hroot +2..3.
+- 30 types change (re-kit): hg (all 7 row types), pc (4), pv (all 16), hub_C/Ei/Eo/Wi/Wo. Unchanged: hgi*, hroot, io*,
+  phy* (hard), sys*. Modelled, not in the candidate: MS pc<->pv row-pair re-bind (-48 crossings, -42k bit-mm, slg/vport
+  10-12 -> 7 cycles), MC E-corridor straightening (-40 crossings, d2d<->kvs_attn 38-42 -> 32 cycles at 405 um, +3 pv
+  types), MR far chain heads (-56).

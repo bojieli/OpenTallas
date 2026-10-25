@@ -1,0 +1,698 @@
+{
+ "schema": "opentallas.kv_ft_report.v1",
+ "before": {
+  "lanes": 2416,
+  "ft_lanes": 446,
+  "crossings": 1523,
+  "mean_crossings": 3.415,
+  "max_crossings": 12,
+  "bit_crossings": 176894,
+  "bit_mm": 287871
+ },
+ "after": {
+  "lanes": 2338,
+  "ft_lanes": 322,
+  "crossings": 991,
+  "mean_crossings": 3.078,
+  "max_crossings": 12,
+  "bit_crossings": 169962,
+  "bit_mm": 275107
+ },
+ "delta": {
+  "lanes": -78,
+  "ft_lanes": -124,
+  "crossings": -532,
+  "mean_crossings": -0.337,
+  "max_crossings": 0,
+  "bit_crossings": -6932,
+  "bit_mm": -12764
+ },
+ "delta_pct": {
+  "lanes": -3.2,
+  "ft_lanes": -27.8,
+  "crossings": -34.9,
+  "mean_crossings": -9.9,
+  "max_crossings": 0.0,
+  "bit_crossings": -3.9,
+  "bit_mm": -4.4
+ },
+ "classes_before": {
+  "B:kvs_ctl->hroot per-quadrant copies": {
+   "lanes": 4,
+   "crossings": 8,
+   "bits": 4472,
+   "bit_crossings": 8944,
+   "bit_mm": 15953
+  },
+  "C:hroot far chain ends": {
+   "lanes": 24,
+   "crossings": 80,
+   "bits": 2036,
+   "bit_crossings": 3880,
+   "bit_mm": 6661
+  },
+  "C:hslice chain tails -> host": {
+   "lanes": 24,
+   "crossings": 72,
+   "bits": 768,
+   "bit_crossings": 2304,
+   "bit_mm": 3743
+  },
+  "D:pc<->pv (shared PV column)": {
+   "lanes": 48,
+   "crossings": 96,
+   "bits": 17152,
+   "bit_crossings": 34304,
+   "bit_mm": 51529
+  },
+  "D:pc<->pv diagonal (row pair)": {
+   "lanes": 48,
+   "crossings": 144,
+   "bits": 17152,
+   "bit_crossings": 51456,
+   "bit_mm": 93642
+  },
+  "H:hub-row internal": {
+   "lanes": 37,
+   "crossings": 52,
+   "bits": 1713,
+   "bit_crossings": 2788,
+   "bit_mm": 4611
+  },
+  "H:hub<->rows": {
+   "lanes": 24,
+   "crossings": 32,
+   "bits": 1360,
+   "bit_crossings": 3688,
+   "bit_mm": 5910
+  },
+  "O:other": {
+   "lanes": 38,
+   "crossings": 38,
+   "bits": 10152,
+   "bit_crossings": 10152,
+   "bit_mm": 15886
+  },
+  "R:fault-chain star / far chain tail": {
+   "lanes": 37,
+   "crossings": 126,
+   "bits": 37,
+   "bit_crossings": 126,
+   "bit_mm": 196
+  },
+  "R:pv flag star (pv rows -> hub_C pv ctl)": {
+   "lanes": 112,
+   "crossings": 448,
+   "bits": 112,
+   "bit_crossings": 448,
+   "bit_mm": 693
+  },
+  "T:io-row<->hub trunk": {
+   "lanes": 50,
+   "crossings": 427,
+   "bits": 7014,
+   "bit_crossings": 58804,
+   "bit_mm": 89046
+  }
+ },
+ "classes_after": {
+  "C:hroot far chain ends": {
+   "lanes": 24,
+   "crossings": 80,
+   "bits": 2036,
+   "bit_crossings": 3880,
+   "bit_mm": 6661
+  },
+  "C:hslice chain tails -> host": {
+   "lanes": 24,
+   "crossings": 72,
+   "bits": 768,
+   "bit_crossings": 2304,
+   "bit_mm": 3743
+  },
+  "D:pc<->pv (shared PV column)": {
+   "lanes": 48,
+   "crossings": 96,
+   "bits": 17152,
+   "bit_crossings": 34304,
+   "bit_mm": 51529
+  },
+  "D:pc<->pv diagonal (row pair)": {
+   "lanes": 48,
+   "crossings": 144,
+   "bits": 17152,
+   "bit_crossings": 51456,
+   "bit_mm": 93642
+  },
+  "H:hub-row internal": {
+   "lanes": 39,
+   "crossings": 54,
+   "bits": 4251,
+   "bit_crossings": 5326,
+   "bit_mm": 8614
+  },
+  "H:hub<->rows": {
+   "lanes": 24,
+   "crossings": 32,
+   "bits": 1360,
+   "bit_crossings": 3688,
+   "bit_mm": 5910
+  },
+  "O:other": {
+   "lanes": 38,
+   "crossings": 38,
+   "bits": 10152,
+   "bit_crossings": 10152,
+   "bit_mm": 15886
+  },
+  "R:fault-chain star / far chain tail": {
+   "lanes": 27,
+   "crossings": 48,
+   "bits": 27,
+   "bit_crossings": 48,
+   "bit_mm": 75
+  },
+  "T:io-row<->hub trunk": {
+   "lanes": 50,
+   "crossings": 427,
+   "bits": 7014,
+   "bit_crossings": 58804,
+   "bit_mm": 89046
+  }
+ },
+ "hub_star": {
+  "before": {
+   "lanes": 288,
+   "crossings": 1145,
+   "ending_at_hub": 280,
+   "through_hub_row": 130
+  },
+  "after": {
+   "lanes": 168,
+   "crossings": 641,
+   "ending_at_hub": 160,
+   "through_hub_row": 124
+  }
+ },
+ "ft_slots": {
+  "before": 888,
+  "after": 501
+ },
+ "types_changed": [
+  {
+   "type": "kv3_hg",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    3,
+    3
+   ],
+   "buses": [
+    27,
+    26
+   ]
+  },
+  {
+   "type": "kv3_hg_v2",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    4,
+    3
+   ],
+   "buses": [
+    37,
+    37
+   ]
+  },
+  {
+   "type": "kv3_hg_v3",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    4,
+    3
+   ],
+   "buses": [
+    30,
+    31
+   ]
+  },
+  {
+   "type": "kv3_hub_C",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    30,
+    30
+   ],
+   "buses": [
+    260,
+    132
+   ]
+  },
+  {
+   "type": "kv3_hub_Ei",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    76,
+    73
+   ],
+   "buses": [
+    6,
+    6
+   ]
+  },
+  {
+   "type": "kv3_hub_Eo",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    32,
+    28
+   ],
+   "buses": [
+    59,
+    64
+   ]
+  },
+  {
+   "type": "kv3_hub_Wi",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    32,
+    29
+   ],
+   "buses": [
+    94,
+    94
+   ]
+  },
+  {
+   "type": "kv3_hub_Wo",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    32,
+    28
+   ],
+   "buses": [
+    59,
+    64
+   ]
+  },
+  {
+   "type": "kv3_pc",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    0,
+    0
+   ],
+   "buses": [
+    41,
+    40
+   ]
+  },
+  {
+   "type": "kv3_pc_v1",
+   "instances": 20,
+   "hard": false,
+   "ft_slots": [
+    2,
+    1
+   ],
+   "buses": [
+    62,
+    62
+   ]
+  },
+  {
+   "type": "kv3_pc_v2",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    2,
+    1
+   ],
+   "buses": [
+    62,
+    62
+   ]
+  },
+  {
+   "type": "kv3_pc_v3",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    2,
+    1
+   ],
+   "buses": [
+    60,
+    61
+   ]
+  },
+  {
+   "type": "kv3_pv",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    6,
+    6
+   ],
+   "buses": [
+    33,
+    27
+   ]
+  },
+  {
+   "type": "kv3_pv_v1",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    9,
+    0
+   ],
+   "buses": [
+    55,
+    53
+   ]
+  },
+  {
+   "type": "kv3_pv_v2",
+   "instances": 2,
+   "hard": false,
+   "ft_slots": [
+    27,
+    10
+   ],
+   "buses": [
+    38,
+    36
+   ]
+  },
+  {
+   "type": "kv3_pv_v3",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    25,
+    0
+   ],
+   "buses": [
+    58,
+    56
+   ]
+  },
+  {
+   "type": "kv3_pv_v4",
+   "instances": 2,
+   "hard": false,
+   "ft_slots": [
+    43,
+    10
+   ],
+   "buses": [
+    38,
+    36
+   ]
+  },
+  {
+   "type": "kv3_pv_v5",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    41,
+    0
+   ],
+   "buses": [
+    58,
+    56
+   ]
+  },
+  {
+   "type": "kv3_pv_v6",
+   "instances": 2,
+   "hard": false,
+   "ft_slots": [
+    59,
+    10
+   ],
+   "buses": [
+    38,
+    36
+   ]
+  },
+  {
+   "type": "kv3_pv_v7",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    57,
+    0
+   ],
+   "buses": [
+    57,
+    56
+   ]
+  },
+  {
+   "type": "kv3_pv_v8",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    6,
+    6
+   ],
+   "buses": [
+    33,
+    27
+   ]
+  },
+  {
+   "type": "kv3_pv_v9",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    9,
+    0
+   ],
+   "buses": [
+    55,
+    53
+   ]
+  },
+  {
+   "type": "kv3_pv_v10",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    25,
+    0
+   ],
+   "buses": [
+    58,
+    56
+   ]
+  },
+  {
+   "type": "kv3_pv_v11",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    41,
+    0
+   ],
+   "buses": [
+    58,
+    56
+   ]
+  },
+  {
+   "type": "kv3_pv_v12",
+   "instances": 1,
+   "hard": false,
+   "ft_slots": [
+    58,
+    1
+   ],
+   "buses": [
+    57,
+    56
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r1",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    4,
+    3
+   ],
+   "buses": [
+    37,
+    37
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r2",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    4,
+    3
+   ],
+   "buses": [
+    37,
+    37
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r3",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    4,
+    3
+   ],
+   "buses": [
+    37,
+    37
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r4",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    4,
+    3
+   ],
+   "buses": [
+    37,
+    37
+   ]
+  },
+  {
+   "type": "kv3_hg_v1_r5",
+   "instances": 4,
+   "hard": false,
+   "ft_slots": [
+    4,
+    3
+   ],
+   "buses": [
+    37,
+    37
+   ]
+  }
+ ],
+ "types_unchanged": [
+  "kv3_hgi",
+  "kv3_hgi_v1",
+  "kv3_hgi_v2",
+  "kv3_hgi_v3",
+  "kv3_hgi_v4",
+  "kv3_hgi_v5",
+  "kv3_hgi_v6",
+  "kv3_hgi_v7",
+  "kv3_hgi_v8",
+  "kv3_hroot",
+  "kv3_io_cor",
+  "kv3_io_cor_v1",
+  "kv3_io_ft",
+  "kv3_io_ft_v1",
+  "kv3_phy",
+  "kv3_phy_v1",
+  "kv3_sys_SD",
+  "kv3_sys_SD_v1",
+  "kv3_sys_c"
+ ],
+ "lane_cycle_changes_kept_ids": {
+  "L1447": [
+   9,
+   7
+  ],
+  "L1448": [
+   8,
+   5
+  ],
+  "L1449": [
+   8,
+   7
+  ],
+  "L1450": [
+   7,
+   5
+  ]
+ },
+ "fault_flag_age_cycles": {
+  "before": {
+   "hub_C": 46,
+   "hroot_EN": 37,
+   "hroot_ES": 37,
+   "hroot_WN": 37,
+   "hroot_WS": 37,
+   "hub_Eo": 0,
+   "hub_Wo": 0
+  },
+  "after": {
+   "hub_C": 37,
+   "hroot_EN": 16,
+   "hroot_ES": 16,
+   "hroot_WN": 16,
+   "hroot_WS": 16,
+   "hub_Eo": 16,
+   "hub_Wo": 16
+  },
+  "note": "longest fch/efault/pv-flag chain path into each collector (lane cycles)"
+ },
+ "kvs_ctl_to_hroot_cycles": {
+  "EN": [
+   9,
+   12
+  ],
+  "ES": [
+   8,
+   10
+  ],
+  "WN": [
+   8,
+   11
+  ],
+  "WS": [
+   7,
+   9
+  ]
+ },
+ "modelled_options": {
+  "MS pc<->pv row-pair re-bind (vport/slg endpoint of even pc rows into the even pv row)": {
+   "lanes": 48,
+   "crossings": -48,
+   "bit_crossings": -17152,
+   "bit_mm": -42112,
+   "cycles": "[10, 11, 12] -> [7]",
+   "cost": "binder content move (pv16 vport + slg landing) between pv row types; pv vo all-gather re-derived; re-kit all pv types"
+  },
+  "MC E-corridor straightening (sys_c <-> hub_C down the pv column)": {
+   "lanes": 20,
+   "crossings": -40,
+   "bits": 1981,
+   "route_um": "14866-16350 -> 12165",
+   "bit_mm": -7368,
+   "cycles_405": "38-42 -> 32",
+   "cost": "plan-only re-route (post_v37s router) but pv_v2/v4/v6 are shared N/S types -> +3 types; per-layer d2d <-> kvs_attn round trip"
+  },
+  "MR far chain heads (host_hbm_rst_n -> phy_X_0 via pc_X_0; idhr ID chain from row 7)": {
+   "lanes": 8,
+   "crossings": -56,
+   "cost": "hbm_rst_n: hard PHY wrapper pin moves N -> W face (kv3_phy, kv3_phy_v1 drops its ft slot); idhr: ID numbering order (strap) change"
+  },
+  "IO-row <-> hub trunk": {
+   "note": "distance-bound: IO row bottom -> hub row top = 12165 um = 31 stations at 405 um whatever the partition labels; same-outline swaps cannot shorten it (ft_swap_search_v39)"
+  }
+ }
+}

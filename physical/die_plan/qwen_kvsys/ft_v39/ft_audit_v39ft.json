@@ -1,0 +1,1007 @@
+{
+ "lanes": 2338,
+ "ft_lanes": 322,
+ "crossings": 991,
+ "mean_crossings": 3.078,
+ "max_crossings": 12,
+ "bits": 441627,
+ "bit_mm": 275107,
+ "ft_bit_mm": 275107,
+ "bit_crossings": 169962,
+ "hist": {
+  "0": 2016,
+  "1": 113,
+  "2": 82,
+  "3": 59,
+  "4": 16,
+  "7": 8,
+  "8": 3,
+  "9": 19,
+  "10": 21,
+  "12": 1
+ },
+ "classes": {
+  "C:hroot far chain ends": {
+   "lanes": 24,
+   "crossings": 80,
+   "bits": 2036,
+   "bit_crossings": 3880,
+   "bit_mm": 6661
+  },
+  "C:hslice chain tails -> host": {
+   "lanes": 24,
+   "crossings": 72,
+   "bits": 768,
+   "bit_crossings": 2304,
+   "bit_mm": 3743
+  },
+  "D:pc<->pv (shared PV column)": {
+   "lanes": 48,
+   "crossings": 96,
+   "bits": 17152,
+   "bit_crossings": 34304,
+   "bit_mm": 51529
+  },
+  "D:pc<->pv diagonal (row pair)": {
+   "lanes": 48,
+   "crossings": 144,
+   "bits": 17152,
+   "bit_crossings": 51456,
+   "bit_mm": 93642
+  },
+  "H:hub-row internal": {
+   "lanes": 39,
+   "crossings": 54,
+   "bits": 4251,
+   "bit_crossings": 5326,
+   "bit_mm": 8614
+  },
+  "H:hub<->rows": {
+   "lanes": 24,
+   "crossings": 32,
+   "bits": 1360,
+   "bit_crossings": 3688,
+   "bit_mm": 5910
+  },
+  "O:other": {
+   "lanes": 38,
+   "crossings": 38,
+   "bits": 10152,
+   "bit_crossings": 10152,
+   "bit_mm": 15886
+  },
+  "R:fault-chain star / far chain tail": {
+   "lanes": 27,
+   "crossings": 48,
+   "bits": 27,
+   "bit_crossings": 48,
+   "bit_mm": 75
+  },
+  "T:io-row<->hub trunk": {
+   "lanes": 50,
+   "crossings": 427,
+   "bits": 7014,
+   "bit_crossings": 58804,
+   "bit_mm": 89046
+  }
+ },
+ "pairs_top_bit_crossings": [
+  {
+   "pair": "pc_EN->pv_N",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 37193
+  },
+  {
+   "pair": "pc_ES->pv_S",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 37193
+  },
+  {
+   "pair": "pc_WN->pv_N",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 34317
+  },
+  {
+   "pair": "pc_WS->pv_S",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 34317
+  },
+  {
+   "pair": "sys_c->hub_C",
+   "lanes": 10,
+   "bits": 1328,
+   "crossings": 100,
+   "bit_crossings": 13280,
+   "bit_mm": 21345
+  },
+  {
+   "pair": "hub_Wi->sys_c",
+   "lanes": 9,
+   "bits": 1120,
+   "crossings": 81,
+   "bit_crossings": 10080,
+   "bit_mm": 14946
+  },
+  {
+   "pair": "hub_Wi->io_W3",
+   "lanes": 2,
+   "bits": 1045,
+   "crossings": 16,
+   "bit_crossings": 8360,
+   "bit_mm": 12713
+  },
+  {
+   "pair": "sys_c->hub_Wi",
+   "lanes": 9,
+   "bits": 772,
+   "crossings": 81,
+   "bit_crossings": 6948,
+   "bit_mm": 10379
+  },
+  {
+   "pair": "hub_C->sys_c",
+   "lanes": 10,
+   "bits": 653,
+   "crossings": 100,
+   "bit_crossings": 6530,
+   "bit_mm": 10122
+  },
+  {
+   "pair": "sys_SE->hub_Wi",
+   "lanes": 1,
+   "bits": 522,
+   "crossings": 12,
+   "bit_crossings": 6264,
+   "bit_mm": 8804
+  },
+  {
+   "pair": "sys_SW->hub_Wi",
+   "lanes": 1,
+   "bits": 523,
+   "crossings": 10,
+   "bit_crossings": 5230,
+   "bit_mm": 7507
+  },
+  {
+   "pair": "pv_N->hg_EN",
+   "lanes": 4,
+   "bits": 2096,
+   "crossings": 4,
+   "bit_crossings": 2096,
+   "bit_mm": 3361
+  },
+  {
+   "pair": "pv_S->hg_ES",
+   "lanes": 4,
+   "bits": 2096,
+   "crossings": 4,
+   "bit_crossings": 2096,
+   "bit_mm": 3361
+  },
+  {
+   "pair": "pv_N->hg_WN",
+   "lanes": 4,
+   "bits": 2096,
+   "crossings": 4,
+   "bit_crossings": 2096,
+   "bit_mm": 3361
+  },
+  {
+   "pair": "pv_S->hg_WS",
+   "lanes": 4,
+   "bits": 2096,
+   "crossings": 4,
+   "bit_crossings": 2096,
+   "bit_mm": 3361
+  },
+  {
+   "pair": "hub_C->hub_Eo",
+   "lanes": 10,
+   "bits": 1756,
+   "crossings": 10,
+   "bit_crossings": 1756,
+   "bit_mm": 2934
+  },
+  {
+   "pair": "hub_C->hub_Wo",
+   "lanes": 10,
+   "bits": 1756,
+   "crossings": 10,
+   "bit_crossings": 1756,
+   "bit_mm": 2536
+  },
+  {
+   "pair": "io_W3->sys_SE",
+   "lanes": 1,
+   "bits": 522,
+   "crossings": 3,
+   "bit_crossings": 1566,
+   "bit_mm": 2528
+  },
+  {
+   "pair": "hub_Wi->pc_ES",
+   "lanes": 1,
+   "bits": 291,
+   "crossings": 4,
+   "bit_crossings": 1164,
+   "bit_mm": 1736
+  },
+  {
+   "pair": "hub_Wi->pc_EN",
+   "lanes": 1,
+   "bits": 291,
+   "crossings": 4,
+   "bit_crossings": 1164,
+   "bit_mm": 2155
+  },
+  {
+   "pair": "hroot_EN->hub_Wi",
+   "lanes": 1,
+   "bits": 299,
+   "crossings": 3,
+   "bit_crossings": 897,
+   "bit_mm": 1665
+  },
+  {
+   "pair": "hroot_ES->hub_Wi",
+   "lanes": 1,
+   "bits": 299,
+   "crossings": 3,
+   "bit_crossings": 897,
+   "bit_mm": 1711
+  },
+  {
+   "pair": "pc_EN->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 28,
+   "bit_crossings": 772,
+   "bit_mm": 1404
+  },
+  {
+   "pair": "pc_ES->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 28,
+   "bit_crossings": 772,
+   "bit_mm": 1170
+  },
+  {
+   "pair": "hub_Wo->hub_Eo",
+   "lanes": 2,
+   "bits": 256,
+   "crossings": 6,
+   "bit_crossings": 768,
+   "bit_mm": 1362
+  },
+  {
+   "pair": "hub_Eo->hub_Wo",
+   "lanes": 2,
+   "bits": 256,
+   "crossings": 6,
+   "bit_crossings": 768,
+   "bit_mm": 1362
+  },
+  {
+   "pair": "hub_Wi->pc_WS",
+   "lanes": 1,
+   "bits": 291,
+   "crossings": 2,
+   "bit_crossings": 582,
+   "bit_mm": 688
+  },
+  {
+   "pair": "hub_Wi->pc_WN",
+   "lanes": 1,
+   "bits": 291,
+   "crossings": 2,
+   "bit_crossings": 582,
+   "bit_mm": 1107
+  },
+  {
+   "pair": "io_W3->sys_SW",
+   "lanes": 2,
+   "bits": 524,
+   "crossings": 2,
+   "bit_crossings": 524,
+   "bit_mm": 670
+  },
+  {
+   "pair": "pc_WN->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 14,
+   "bit_crossings": 386,
+   "bit_mm": 711
+  }
+ ],
+ "pairs_top_crossings": [
+  {
+   "pair": "sys_c->hub_C",
+   "lanes": 10,
+   "bits": 1328,
+   "crossings": 100,
+   "bit_crossings": 13280,
+   "bit_mm": 21345
+  },
+  {
+   "pair": "hub_C->sys_c",
+   "lanes": 10,
+   "bits": 653,
+   "crossings": 100,
+   "bit_crossings": 6530,
+   "bit_mm": 10122
+  },
+  {
+   "pair": "sys_c->hub_Wi",
+   "lanes": 9,
+   "bits": 772,
+   "crossings": 81,
+   "bit_crossings": 6948,
+   "bit_mm": 10379
+  },
+  {
+   "pair": "hub_Wi->sys_c",
+   "lanes": 9,
+   "bits": 1120,
+   "crossings": 81,
+   "bit_crossings": 10080,
+   "bit_mm": 14946
+  },
+  {
+   "pair": "pv_N->pc_EN",
+   "lanes": 16,
+   "bits": 128,
+   "crossings": 40,
+   "bit_crossings": 320,
+   "bit_mm": 519
+  },
+  {
+   "pair": "pv_S->pc_ES",
+   "lanes": 16,
+   "bits": 128,
+   "crossings": 40,
+   "bit_crossings": 320,
+   "bit_mm": 519
+  },
+  {
+   "pair": "pv_N->pc_WN",
+   "lanes": 16,
+   "bits": 128,
+   "crossings": 40,
+   "bit_crossings": 320,
+   "bit_mm": 557
+  },
+  {
+   "pair": "pv_S->pc_WS",
+   "lanes": 16,
+   "bits": 128,
+   "crossings": 40,
+   "bit_crossings": 320,
+   "bit_mm": 557
+  },
+  {
+   "pair": "pc_EN->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 28,
+   "bit_crossings": 772,
+   "bit_mm": 1404
+  },
+  {
+   "pair": "pc_ES->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 28,
+   "bit_crossings": 772,
+   "bit_mm": 1170
+  },
+  {
+   "pair": "pc_EN->pv_N",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 37193
+  },
+  {
+   "pair": "pc_ES->pv_S",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 37193
+  },
+  {
+   "pair": "pc_WN->pv_N",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 34317
+  },
+  {
+   "pair": "pc_WS->pv_S",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 34317
+  },
+  {
+   "pair": "hub_Wi->io_W3",
+   "lanes": 2,
+   "bits": 1045,
+   "crossings": 16,
+   "bit_crossings": 8360,
+   "bit_mm": 12713
+  },
+  {
+   "pair": "hub_Wi->hub_Eo",
+   "lanes": 7,
+   "bits": 51,
+   "crossings": 14,
+   "bit_crossings": 102,
+   "bit_mm": 193
+  },
+  {
+   "pair": "pc_WN->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 14,
+   "bit_crossings": 386,
+   "bit_mm": 711
+  },
+  {
+   "pair": "pc_WS->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 14,
+   "bit_crossings": 386,
+   "bit_mm": 478
+  },
+  {
+   "pair": "pv_N->pv_N",
+   "lanes": 139,
+   "bits": 34061,
+   "crossings": 12,
+   "bit_crossings": 375,
+   "bit_mm": 570
+  },
+  {
+   "pair": "pv_S->pv_S",
+   "lanes": 139,
+   "bits": 34061,
+   "crossings": 12,
+   "bit_crossings": 375,
+   "bit_mm": 570
+  },
+  {
+   "pair": "sys_SE->hub_Wi",
+   "lanes": 1,
+   "bits": 522,
+   "crossings": 12,
+   "bit_crossings": 6264,
+   "bit_mm": 8804
+  },
+  {
+   "pair": "hub_C->hub_Eo",
+   "lanes": 10,
+   "bits": 1756,
+   "crossings": 10,
+   "bit_crossings": 1756,
+   "bit_mm": 2934
+  },
+  {
+   "pair": "hub_C->hub_Wo",
+   "lanes": 10,
+   "bits": 1756,
+   "crossings": 10,
+   "bit_crossings": 1756,
+   "bit_mm": 2536
+  },
+  {
+   "pair": "sys_SW->hub_Wi",
+   "lanes": 1,
+   "bits": 523,
+   "crossings": 10,
+   "bit_crossings": 5230,
+   "bit_mm": 7507
+  },
+  {
+   "pair": "sys_c->hub_Ei",
+   "lanes": 1,
+   "bits": 1,
+   "crossings": 9,
+   "bit_crossings": 9,
+   "bit_mm": 13
+  },
+  {
+   "pair": "hub_Eo->hub_C",
+   "lanes": 8,
+   "bits": 92,
+   "crossings": 8,
+   "bit_crossings": 92,
+   "bit_mm": 119
+  },
+  {
+   "pair": "hub_Wo->hub_C",
+   "lanes": 8,
+   "bits": 92,
+   "crossings": 8,
+   "bit_crossings": 92,
+   "bit_mm": 118
+  },
+  {
+   "pair": "io_W3->hub_Wi",
+   "lanes": 1,
+   "bits": 1,
+   "crossings": 8,
+   "bit_crossings": 8,
+   "bit_mm": 12
+  },
+  {
+   "pair": "hroot_WS->phy_WS",
+   "lanes": 1,
+   "bits": 1,
+   "crossings": 7,
+   "bit_crossings": 7,
+   "bit_mm": 11
+  },
+  {
+   "pair": "hroot_WS->pc_WS",
+   "lanes": 5,
+   "bits": 1087,
+   "crossings": 7,
+   "bit_crossings": 14,
+   "bit_mm": 21
+  }
+ ],
+ "corridors": [
+  {
+   "part": "hgi_WN_0",
+   "ft_lanes": 29,
+   "ft_bits": 6629
+  },
+  {
+   "part": "hub_Ei",
+   "ft_lanes": 73,
+   "ft_bits": 6250
+  },
+  {
+   "part": "hgi_EN_0",
+   "ft_lanes": 29,
+   "ft_bits": 5672
+  },
+  {
+   "part": "hgi_WN_7",
+   "ft_lanes": 27,
+   "ft_bits": 5311
+  },
+  {
+   "part": "hgi_WN_1",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_WN_2",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_WN_3",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_WN_4",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_WN_5",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_WN_6",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_EN_7",
+   "ft_lanes": 26,
+   "ft_bits": 3832
+  },
+  {
+   "part": "hgi_EN_1",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_EN_2",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_EN_3",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_EN_4",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_EN_5",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_EN_6",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_ES_0",
+   "ft_lanes": 7,
+   "ft_bits": 3168
+  },
+  {
+   "part": "hgi_WS_0",
+   "ft_lanes": 7,
+   "ft_bits": 3168
+  },
+  {
+   "part": "io_E5",
+   "ft_lanes": 25,
+   "ft_bits": 3028
+  },
+  {
+   "part": "hub_Wi",
+   "ft_lanes": 29,
+   "ft_bits": 2653
+  },
+  {
+   "part": "io_W3",
+   "ft_lanes": 19,
+   "ft_bits": 2415
+  },
+  {
+   "part": "pv_S_6",
+   "ft_lanes": 10,
+   "ft_bits": 2331
+  },
+  {
+   "part": "pv_N_6",
+   "ft_lanes": 10,
+   "ft_bits": 2331
+  },
+  {
+   "part": "pv_S_4",
+   "ft_lanes": 10,
+   "ft_bits": 2269
+  },
+  {
+   "part": "pv_N_4",
+   "ft_lanes": 10,
+   "ft_bits": 2269
+  },
+  {
+   "part": "pv_S_2",
+   "ft_lanes": 10,
+   "ft_bits": 2207
+  },
+  {
+   "part": "pv_N_2",
+   "ft_lanes": 10,
+   "ft_bits": 2207
+  },
+  {
+   "part": "pv_N_0",
+   "ft_lanes": 6,
+   "ft_bits": 2144
+  },
+  {
+   "part": "pv_S_0",
+   "ft_lanes": 6,
+   "ft_bits": 2144
+  }
+ ],
+ "hub_star": {
+  "lanes": 168,
+  "crossings": 641,
+  "ending_at_hub": 160,
+  "through_hub_row": 124
+ },
+ "worst_lanes": [
+  {
+   "lane": "L2045",
+   "src": "sys_SE.o_serdes_E_rx_flit",
+   "dst": "hub_Wi.i_serdes_E_rx_flit",
+   "bits": 522,
+   "crossings": 12,
+   "route_um": 16866.0,
+   "cycles": 36,
+   "cycles_405": 43,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L351",
+   "src": "sys_c.o_dNd_kv_rx_payload",
+   "dst": "hub_C.i_dNd_kv_rx_payload",
+   "bits": 548,
+   "crossings": 10,
+   "route_um": 16199.2,
+   "cycles": 32,
+   "cycles_405": 41,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1427",
+   "src": "hub_C.o_kvs_attn_attn__tx_payload",
+   "dst": "sys_c.i_kvs_attn_attn__tx_payload",
+   "bits": 548,
+   "crossings": 10,
+   "route_um": 15533.3,
+   "cycles": 31,
+   "cycles_405": 40,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L2048",
+   "src": "sys_SW.o_serdes_W_rx_flit",
+   "dst": "hub_Wi.i_serdes_W_rx_flit",
+   "bits": 523,
+   "crossings": 10,
+   "route_um": 14353.2,
+   "cycles": 30,
+   "cycles_405": 37,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L353",
+   "src": "sys_c.o_dNd_kv_srx",
+   "dst": "hub_C.i_dNd_kv_srx",
+   "bits": 522,
+   "crossings": 10,
+   "route_um": 15983.3,
+   "cycles": 32,
+   "cycles_405": 41,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L355",
+   "src": "sys_c.o_dNd_kv_svc",
+   "dst": "hub_C.i_dNd_kv_svc",
+   "bits": 174,
+   "crossings": 10,
+   "route_um": 15845.2,
+   "cycles": 32,
+   "cycles_405": 41,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1445",
+   "src": "hub_C.o_kvs_ctl_kvi",
+   "dst": "sys_c.i_kvs_ctl_kvi",
+   "bits": 61,
+   "crossings": 10,
+   "route_um": 15328.4,
+   "cycles": 31,
+   "cycles_405": 39,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L346",
+   "src": "sys_c.o_dNd_kv_kvn_word_identity",
+   "dst": "hub_C.i_dNd_kv_kvn_word_identity",
+   "bits": 59,
+   "crossings": 10,
+   "route_um": 16319.3,
+   "cycles": 32,
+   "cycles_405": 42,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1432",
+   "src": "hub_C.o_kvs_ctl_boot__link_cfg_data",
+   "dst": "sys_c.i_kvs_ctl_boot__link_cfg_data",
+   "bits": 32,
+   "crossings": 10,
+   "route_um": 15357.4,
+   "cycles": 31,
+   "cycles_405": 39,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L352",
+   "src": "sys_c.o_dNd_kv_skw",
+   "dst": "hub_C.i_dNd_kv_skw",
+   "bits": 12,
+   "crossings": 10,
+   "route_um": 16088.5,
+   "cycles": 32,
+   "cycles_405": 41,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1431",
+   "src": "hub_C.o_kvs_ctl_boot__link_cfg_addr",
+   "dst": "sys_c.i_kvs_ctl_boot__link_cfg_addr",
+   "bits": 6,
+   "crossings": 10,
+   "route_um": 15368.5,
+   "cycles": 31,
+   "cycles_405": 39,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L341",
+   "src": "sys_c.o_dNd_kv_att_tx_beat",
+   "dst": "hub_C.i_dNd_kv_att_tx_beat",
+   "bits": 5,
+   "crossings": 10,
+   "route_um": 16349.9,
+   "cycles": 32,
+   "cycles_405": 42,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L342",
+   "src": "sys_c.o_dNd_kv_att_tx_kind",
+   "dst": "hub_C.i_dNd_kv_att_tx_kind",
+   "bits": 4,
+   "crossings": 10,
+   "route_um": 16343.3,
+   "cycles": 32,
+   "cycles_405": 42,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L345",
+   "src": "sys_c.o_dNd_kv_kvn_word_generation",
+   "dst": "hub_C.i_dNd_kv_kvn_word_generation",
+   "bits": 2,
+   "crossings": 10,
+   "route_um": 16334.1,
+   "cycles": 32,
+   "cycles_405": 42,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L343",
+   "src": "sys_c.o_dNd_kv_att_tx_slot",
+   "dst": "hub_C.i_dNd_kv_att_tx_slot",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 16338.1,
+   "cycles": 32,
+   "cycles_405": 42,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L359",
+   "src": "sys_c.o_dcal_tks",
+   "dst": "hub_C.i_dcal_tks",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 15805.2,
+   "cycles": 32,
+   "cycles_405": 41,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1428",
+   "src": "hub_C.o_kvs_attn_attn__tx_valid",
+   "dst": "sys_c.i_kvs_attn_attn__tx_valid",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 15424.5,
+   "cycles": 31,
+   "cycles_405": 40,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1433",
+   "src": "hub_C.o_kvs_ctl_boot__link_cfg_rx_we",
+   "dst": "sys_c.i_kvs_ctl_boot__link_cfg_rx_we",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 15347.9,
+   "cycles": 31,
+   "cycles_405": 39,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1434",
+   "src": "hub_C.o_kvs_ctl_boot__link_cfg_tx_we",
+   "dst": "sys_c.i_kvs_ctl_boot__link_cfg_tx_we",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 15344.1,
+   "cycles": 31,
+   "cycles_405": 39,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1451",
+   "src": "hub_C.o_kvs_ctl_oobs__kv_active_local",
+   "dst": "sys_c.i_kvs_ctl_oobs__kv_active_local",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 14877.3,
+   "cycles": 30,
+   "cycles_405": 38,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1452",
+   "src": "hub_C.o_kvs_ctl_oobs__kv_drained_local",
+   "dst": "sys_c.i_kvs_ctl_oobs__kv_drained_local",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 14871.7,
+   "cycles": 30,
+   "cycles_405": 38,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1453",
+   "src": "hub_C.o_kvs_ctl_oobs__kv_flush_local",
+   "dst": "sys_c.i_kvs_ctl_oobs__kv_flush_local",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 14865.7,
+   "cycles": 30,
+   "cycles_405": 38,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L350",
+   "src": "sys_c.o_dNd_kv_rec_rx",
+   "dst": "hub_Wi.i_dNd_kv_rec_rx",
+   "bits": 552,
+   "crossings": 9,
+   "route_um": 13444.5,
+   "cycles": 28,
+   "cycles_405": 35,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L751",
+   "src": "hub_Wi.o_host_rec_tx",
+   "dst": "sys_c.i_host_rec_tx",
+   "bits": 549,
+   "crossings": 9,
+   "route_um": 13345.2,
+   "cycles": 28,
+   "cycles_405": 34,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1524",
+   "src": "hub_Wi.o_kvs_emb_rowtx__emb_tx_payload",
+   "dst": "sys_c.i_kvs_emb_rowtx__emb_tx_payload",
+   "bits": 548,
+   "crossings": 9,
+   "route_um": 13344.4,
+   "cycles": 28,
+   "cycles_405": 34,
+   "cls": "T:io-row<->hub trunk"
+  }
+ ]
+}

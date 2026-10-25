@@ -1,0 +1,1023 @@
+{
+ "lanes": 2416,
+ "ft_lanes": 446,
+ "crossings": 1523,
+ "mean_crossings": 3.415,
+ "max_crossings": 12,
+ "bits": 439169,
+ "bit_mm": 287871,
+ "ft_bit_mm": 287871,
+ "bit_crossings": 176894,
+ "hist": {
+  "0": 1970,
+  "1": 127,
+  "2": 102,
+  "3": 75,
+  "4": 32,
+  "5": 16,
+  "6": 16,
+  "7": 30,
+  "8": 3,
+  "9": 23,
+  "10": 21,
+  "12": 1
+ },
+ "classes": {
+  "B:kvs_ctl->hroot per-quadrant copies": {
+   "lanes": 4,
+   "crossings": 8,
+   "bits": 4472,
+   "bit_crossings": 8944,
+   "bit_mm": 15953
+  },
+  "C:hroot far chain ends": {
+   "lanes": 24,
+   "crossings": 80,
+   "bits": 2036,
+   "bit_crossings": 3880,
+   "bit_mm": 6661
+  },
+  "C:hslice chain tails -> host": {
+   "lanes": 24,
+   "crossings": 72,
+   "bits": 768,
+   "bit_crossings": 2304,
+   "bit_mm": 3743
+  },
+  "D:pc<->pv (shared PV column)": {
+   "lanes": 48,
+   "crossings": 96,
+   "bits": 17152,
+   "bit_crossings": 34304,
+   "bit_mm": 51529
+  },
+  "D:pc<->pv diagonal (row pair)": {
+   "lanes": 48,
+   "crossings": 144,
+   "bits": 17152,
+   "bit_crossings": 51456,
+   "bit_mm": 93642
+  },
+  "H:hub-row internal": {
+   "lanes": 37,
+   "crossings": 52,
+   "bits": 1713,
+   "bit_crossings": 2788,
+   "bit_mm": 4611
+  },
+  "H:hub<->rows": {
+   "lanes": 24,
+   "crossings": 32,
+   "bits": 1360,
+   "bit_crossings": 3688,
+   "bit_mm": 5910
+  },
+  "O:other": {
+   "lanes": 38,
+   "crossings": 38,
+   "bits": 10152,
+   "bit_crossings": 10152,
+   "bit_mm": 15886
+  },
+  "R:fault-chain star / far chain tail": {
+   "lanes": 37,
+   "crossings": 126,
+   "bits": 37,
+   "bit_crossings": 126,
+   "bit_mm": 196
+  },
+  "R:pv flag star (pv rows -> hub_C pv ctl)": {
+   "lanes": 112,
+   "crossings": 448,
+   "bits": 112,
+   "bit_crossings": 448,
+   "bit_mm": 693
+  },
+  "T:io-row<->hub trunk": {
+   "lanes": 50,
+   "crossings": 427,
+   "bits": 7014,
+   "bit_crossings": 58804,
+   "bit_mm": 89046
+  }
+ },
+ "pairs_top_bit_crossings": [
+  {
+   "pair": "pc_EN->pv_N",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 37193
+  },
+  {
+   "pair": "pc_ES->pv_S",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 37193
+  },
+  {
+   "pair": "pc_WN->pv_N",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 34317
+  },
+  {
+   "pair": "pc_WS->pv_S",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 34317
+  },
+  {
+   "pair": "sys_c->hub_C",
+   "lanes": 10,
+   "bits": 1328,
+   "crossings": 100,
+   "bit_crossings": 13280,
+   "bit_mm": 21345
+  },
+  {
+   "pair": "hub_Wi->sys_c",
+   "lanes": 9,
+   "bits": 1120,
+   "crossings": 81,
+   "bit_crossings": 10080,
+   "bit_mm": 14946
+  },
+  {
+   "pair": "hub_Wi->io_W3",
+   "lanes": 2,
+   "bits": 1045,
+   "crossings": 16,
+   "bit_crossings": 8360,
+   "bit_mm": 12713
+  },
+  {
+   "pair": "sys_c->hub_Wi",
+   "lanes": 9,
+   "bits": 772,
+   "crossings": 81,
+   "bit_crossings": 6948,
+   "bit_mm": 10379
+  },
+  {
+   "pair": "hub_C->sys_c",
+   "lanes": 10,
+   "bits": 653,
+   "crossings": 100,
+   "bit_crossings": 6530,
+   "bit_mm": 10122
+  },
+  {
+   "pair": "sys_SE->hub_Wi",
+   "lanes": 1,
+   "bits": 522,
+   "crossings": 12,
+   "bit_crossings": 6264,
+   "bit_mm": 8804
+  },
+  {
+   "pair": "sys_SW->hub_Wi",
+   "lanes": 1,
+   "bits": 523,
+   "crossings": 10,
+   "bit_crossings": 5230,
+   "bit_mm": 7507
+  },
+  {
+   "pair": "hub_C->hroot_EN",
+   "lanes": 1,
+   "bits": 1118,
+   "crossings": 2,
+   "bit_crossings": 2236,
+   "bit_mm": 4424
+  },
+  {
+   "pair": "hub_C->hroot_ES",
+   "lanes": 1,
+   "bits": 1118,
+   "crossings": 2,
+   "bit_crossings": 2236,
+   "bit_mm": 3827
+  },
+  {
+   "pair": "hub_C->hroot_WN",
+   "lanes": 1,
+   "bits": 1118,
+   "crossings": 2,
+   "bit_crossings": 2236,
+   "bit_mm": 4150
+  },
+  {
+   "pair": "hub_C->hroot_WS",
+   "lanes": 1,
+   "bits": 1118,
+   "crossings": 2,
+   "bit_crossings": 2236,
+   "bit_mm": 3552
+  },
+  {
+   "pair": "pv_N->hg_EN",
+   "lanes": 4,
+   "bits": 2096,
+   "crossings": 4,
+   "bit_crossings": 2096,
+   "bit_mm": 3361
+  },
+  {
+   "pair": "pv_S->hg_ES",
+   "lanes": 4,
+   "bits": 2096,
+   "crossings": 4,
+   "bit_crossings": 2096,
+   "bit_mm": 3361
+  },
+  {
+   "pair": "pv_N->hg_WN",
+   "lanes": 4,
+   "bits": 2096,
+   "crossings": 4,
+   "bit_crossings": 2096,
+   "bit_mm": 3361
+  },
+  {
+   "pair": "pv_S->hg_WS",
+   "lanes": 4,
+   "bits": 2096,
+   "crossings": 4,
+   "bit_crossings": 2096,
+   "bit_mm": 3361
+  },
+  {
+   "pair": "io_W3->sys_SE",
+   "lanes": 1,
+   "bits": 522,
+   "crossings": 3,
+   "bit_crossings": 1566,
+   "bit_mm": 2528
+  },
+  {
+   "pair": "hub_Wi->pc_ES",
+   "lanes": 1,
+   "bits": 291,
+   "crossings": 4,
+   "bit_crossings": 1164,
+   "bit_mm": 1736
+  },
+  {
+   "pair": "hub_Wi->pc_EN",
+   "lanes": 1,
+   "bits": 291,
+   "crossings": 4,
+   "bit_crossings": 1164,
+   "bit_mm": 2155
+  },
+  {
+   "pair": "hroot_EN->hub_Wi",
+   "lanes": 1,
+   "bits": 299,
+   "crossings": 3,
+   "bit_crossings": 897,
+   "bit_mm": 1665
+  },
+  {
+   "pair": "hroot_ES->hub_Wi",
+   "lanes": 1,
+   "bits": 299,
+   "crossings": 3,
+   "bit_crossings": 897,
+   "bit_mm": 1711
+  },
+  {
+   "pair": "pc_EN->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 28,
+   "bit_crossings": 772,
+   "bit_mm": 1404
+  },
+  {
+   "pair": "pc_ES->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 28,
+   "bit_crossings": 772,
+   "bit_mm": 1170
+  },
+  {
+   "pair": "hub_Wo->hub_Eo",
+   "lanes": 2,
+   "bits": 256,
+   "crossings": 6,
+   "bit_crossings": 768,
+   "bit_mm": 1362
+  },
+  {
+   "pair": "hub_Eo->hub_Wo",
+   "lanes": 2,
+   "bits": 256,
+   "crossings": 6,
+   "bit_crossings": 768,
+   "bit_mm": 1362
+  },
+  {
+   "pair": "hub_Wi->pc_WS",
+   "lanes": 1,
+   "bits": 291,
+   "crossings": 2,
+   "bit_crossings": 582,
+   "bit_mm": 688
+  },
+  {
+   "pair": "hub_Wi->pc_WN",
+   "lanes": 1,
+   "bits": 291,
+   "crossings": 2,
+   "bit_crossings": 582,
+   "bit_mm": 1107
+  }
+ ],
+ "pairs_top_crossings": [
+  {
+   "pair": "pv_N->hub_C",
+   "lanes": 77,
+   "bits": 1345,
+   "crossings": 231,
+   "bit_crossings": 231,
+   "bit_mm": 357
+  },
+  {
+   "pair": "pv_S->hub_C",
+   "lanes": 77,
+   "bits": 1345,
+   "crossings": 231,
+   "bit_crossings": 231,
+   "bit_mm": 358
+  },
+  {
+   "pair": "sys_c->hub_C",
+   "lanes": 10,
+   "bits": 1328,
+   "crossings": 100,
+   "bit_crossings": 13280,
+   "bit_mm": 21345
+  },
+  {
+   "pair": "hub_C->sys_c",
+   "lanes": 10,
+   "bits": 653,
+   "crossings": 100,
+   "bit_crossings": 6530,
+   "bit_mm": 10122
+  },
+  {
+   "pair": "sys_c->hub_Wi",
+   "lanes": 9,
+   "bits": 772,
+   "crossings": 81,
+   "bit_crossings": 6948,
+   "bit_mm": 10379
+  },
+  {
+   "pair": "hub_Wi->sys_c",
+   "lanes": 9,
+   "bits": 1120,
+   "crossings": 81,
+   "bit_crossings": 10080,
+   "bit_mm": 14946
+  },
+  {
+   "pair": "pv_N->pc_EN",
+   "lanes": 16,
+   "bits": 128,
+   "crossings": 40,
+   "bit_crossings": 320,
+   "bit_mm": 519
+  },
+  {
+   "pair": "pv_S->pc_ES",
+   "lanes": 16,
+   "bits": 128,
+   "crossings": 40,
+   "bit_crossings": 320,
+   "bit_mm": 519
+  },
+  {
+   "pair": "pv_N->pc_WN",
+   "lanes": 16,
+   "bits": 128,
+   "crossings": 40,
+   "bit_crossings": 320,
+   "bit_mm": 557
+  },
+  {
+   "pair": "pv_S->pc_WS",
+   "lanes": 16,
+   "bits": 128,
+   "crossings": 40,
+   "bit_crossings": 320,
+   "bit_mm": 557
+  },
+  {
+   "pair": "pc_EN->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 28,
+   "bit_crossings": 772,
+   "bit_mm": 1404
+  },
+  {
+   "pair": "pc_ES->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 28,
+   "bit_crossings": 772,
+   "bit_mm": 1170
+  },
+  {
+   "pair": "pc_EN->pv_N",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 37193
+  },
+  {
+   "pair": "pc_ES->pv_S",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 37193
+  },
+  {
+   "pair": "pc_WN->pv_N",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 34317
+  },
+  {
+   "pair": "pc_WS->pv_S",
+   "lanes": 8,
+   "bits": 8448,
+   "crossings": 20,
+   "bit_crossings": 21120,
+   "bit_mm": 34317
+  },
+  {
+   "pair": "hub_Wi->io_W3",
+   "lanes": 2,
+   "bits": 1045,
+   "crossings": 16,
+   "bit_crossings": 8360,
+   "bit_mm": 12713
+  },
+  {
+   "pair": "hub_Wi->hub_Eo",
+   "lanes": 7,
+   "bits": 51,
+   "crossings": 14,
+   "bit_crossings": 102,
+   "bit_mm": 193
+  },
+  {
+   "pair": "pc_WN->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 14,
+   "bit_crossings": 386,
+   "bit_mm": 711
+  },
+  {
+   "pair": "pc_WS->hub_Wi",
+   "lanes": 7,
+   "bits": 193,
+   "crossings": 14,
+   "bit_crossings": 386,
+   "bit_mm": 478
+  },
+  {
+   "pair": "pv_N->pv_N",
+   "lanes": 118,
+   "bits": 34040,
+   "crossings": 12,
+   "bit_crossings": 375,
+   "bit_mm": 570
+  },
+  {
+   "pair": "pv_S->pv_S",
+   "lanes": 118,
+   "bits": 34040,
+   "crossings": 12,
+   "bit_crossings": 375,
+   "bit_mm": 570
+  },
+  {
+   "pair": "sys_SE->hub_Wi",
+   "lanes": 1,
+   "bits": 522,
+   "crossings": 12,
+   "bit_crossings": 6264,
+   "bit_mm": 8804
+  },
+  {
+   "pair": "sys_SW->hub_Wi",
+   "lanes": 1,
+   "bits": 523,
+   "crossings": 10,
+   "bit_crossings": 5230,
+   "bit_mm": 7507
+  },
+  {
+   "pair": "hub_C->hub_Eo",
+   "lanes": 9,
+   "bits": 487,
+   "crossings": 9,
+   "bit_crossings": 487,
+   "bit_mm": 777
+  },
+  {
+   "pair": "hub_C->hub_Wo",
+   "lanes": 9,
+   "bits": 487,
+   "crossings": 9,
+   "bit_crossings": 487,
+   "bit_mm": 689
+  },
+  {
+   "pair": "sys_c->hub_Ei",
+   "lanes": 1,
+   "bits": 1,
+   "crossings": 9,
+   "bit_crossings": 9,
+   "bit_mm": 13
+  },
+  {
+   "pair": "hg_EN->hub_C",
+   "lanes": 1,
+   "bits": 1,
+   "crossings": 9,
+   "bit_crossings": 9,
+   "bit_mm": 15
+  },
+  {
+   "pair": "hg_ES->hub_C",
+   "lanes": 1,
+   "bits": 1,
+   "crossings": 9,
+   "bit_crossings": 9,
+   "bit_mm": 14
+  },
+  {
+   "pair": "hg_WN->hub_C",
+   "lanes": 1,
+   "bits": 1,
+   "crossings": 9,
+   "bit_crossings": 9,
+   "bit_mm": 15
+  }
+ ],
+ "corridors": [
+  {
+   "part": "hub_Ei",
+   "ft_lanes": 76,
+   "ft_bits": 7219
+  },
+  {
+   "part": "hgi_WN_0",
+   "ft_lanes": 29,
+   "ft_bits": 6629
+  },
+  {
+   "part": "hgi_EN_0",
+   "ft_lanes": 29,
+   "ft_bits": 5672
+  },
+  {
+   "part": "hgi_WN_7",
+   "ft_lanes": 27,
+   "ft_bits": 5311
+  },
+  {
+   "part": "hgi_WN_1",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_WN_2",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_WN_3",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_WN_4",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_WN_5",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hgi_WN_6",
+   "ft_lanes": 25,
+   "ft_bits": 4533
+  },
+  {
+   "part": "hub_Eo",
+   "ft_lanes": 32,
+   "ft_bits": 4222
+  },
+  {
+   "part": "hub_Wo",
+   "ft_lanes": 32,
+   "ft_bits": 4222
+  },
+  {
+   "part": "hgi_EN_7",
+   "ft_lanes": 26,
+   "ft_bits": 3832
+  },
+  {
+   "part": "hub_Wi",
+   "ft_lanes": 32,
+   "ft_bits": 3622
+  },
+  {
+   "part": "hgi_EN_1",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_EN_2",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_EN_3",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_EN_4",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_EN_5",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_EN_6",
+   "ft_lanes": 25,
+   "ft_bits": 3576
+  },
+  {
+   "part": "hgi_ES_0",
+   "ft_lanes": 7,
+   "ft_bits": 3168
+  },
+  {
+   "part": "hgi_WS_0",
+   "ft_lanes": 7,
+   "ft_bits": 3168
+  },
+  {
+   "part": "io_E5",
+   "ft_lanes": 25,
+   "ft_bits": 3028
+  },
+  {
+   "part": "io_W3",
+   "ft_lanes": 19,
+   "ft_bits": 2415
+  },
+  {
+   "part": "pv_N_6",
+   "ft_lanes": 59,
+   "ft_bits": 2380
+  },
+  {
+   "part": "pv_S_6",
+   "ft_lanes": 59,
+   "ft_bits": 2380
+  },
+  {
+   "part": "pv_N_4",
+   "ft_lanes": 43,
+   "ft_bits": 2302
+  },
+  {
+   "part": "pv_S_4",
+   "ft_lanes": 43,
+   "ft_bits": 2302
+  },
+  {
+   "part": "pv_N_2",
+   "ft_lanes": 27,
+   "ft_bits": 2224
+  },
+  {
+   "part": "pv_S_2",
+   "ft_lanes": 27,
+   "ft_bits": 2224
+  }
+ ],
+ "hub_star": {
+  "lanes": 288,
+  "crossings": 1145,
+  "ending_at_hub": 280,
+  "through_hub_row": 130
+ },
+ "worst_lanes": [
+  {
+   "lane": "L2045",
+   "src": "sys_SE.o_serdes_E_rx_flit",
+   "dst": "hub_Wi.i_serdes_E_rx_flit",
+   "bits": 522,
+   "crossings": 12,
+   "route_um": 16866.0,
+   "cycles": 36,
+   "cycles_405": 43,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L351",
+   "src": "sys_c.o_dNd_kv_rx_payload",
+   "dst": "hub_C.i_dNd_kv_rx_payload",
+   "bits": 548,
+   "crossings": 10,
+   "route_um": 16199.2,
+   "cycles": 32,
+   "cycles_405": 41,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1427",
+   "src": "hub_C.o_kvs_attn_attn__tx_payload",
+   "dst": "sys_c.i_kvs_attn_attn__tx_payload",
+   "bits": 548,
+   "crossings": 10,
+   "route_um": 15533.3,
+   "cycles": 31,
+   "cycles_405": 40,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L2048",
+   "src": "sys_SW.o_serdes_W_rx_flit",
+   "dst": "hub_Wi.i_serdes_W_rx_flit",
+   "bits": 523,
+   "crossings": 10,
+   "route_um": 14353.2,
+   "cycles": 30,
+   "cycles_405": 37,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L353",
+   "src": "sys_c.o_dNd_kv_srx",
+   "dst": "hub_C.i_dNd_kv_srx",
+   "bits": 522,
+   "crossings": 10,
+   "route_um": 15983.3,
+   "cycles": 32,
+   "cycles_405": 41,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L355",
+   "src": "sys_c.o_dNd_kv_svc",
+   "dst": "hub_C.i_dNd_kv_svc",
+   "bits": 174,
+   "crossings": 10,
+   "route_um": 15845.2,
+   "cycles": 32,
+   "cycles_405": 41,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1445",
+   "src": "hub_C.o_kvs_ctl_kvi",
+   "dst": "sys_c.i_kvs_ctl_kvi",
+   "bits": 61,
+   "crossings": 10,
+   "route_um": 15328.4,
+   "cycles": 31,
+   "cycles_405": 39,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L346",
+   "src": "sys_c.o_dNd_kv_kvn_word_identity",
+   "dst": "hub_C.i_dNd_kv_kvn_word_identity",
+   "bits": 59,
+   "crossings": 10,
+   "route_um": 16319.3,
+   "cycles": 32,
+   "cycles_405": 42,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1432",
+   "src": "hub_C.o_kvs_ctl_boot__link_cfg_data",
+   "dst": "sys_c.i_kvs_ctl_boot__link_cfg_data",
+   "bits": 32,
+   "crossings": 10,
+   "route_um": 15357.4,
+   "cycles": 31,
+   "cycles_405": 39,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L352",
+   "src": "sys_c.o_dNd_kv_skw",
+   "dst": "hub_C.i_dNd_kv_skw",
+   "bits": 12,
+   "crossings": 10,
+   "route_um": 16088.5,
+   "cycles": 32,
+   "cycles_405": 41,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1431",
+   "src": "hub_C.o_kvs_ctl_boot__link_cfg_addr",
+   "dst": "sys_c.i_kvs_ctl_boot__link_cfg_addr",
+   "bits": 6,
+   "crossings": 10,
+   "route_um": 15368.5,
+   "cycles": 31,
+   "cycles_405": 39,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L341",
+   "src": "sys_c.o_dNd_kv_att_tx_beat",
+   "dst": "hub_C.i_dNd_kv_att_tx_beat",
+   "bits": 5,
+   "crossings": 10,
+   "route_um": 16349.9,
+   "cycles": 32,
+   "cycles_405": 42,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L342",
+   "src": "sys_c.o_dNd_kv_att_tx_kind",
+   "dst": "hub_C.i_dNd_kv_att_tx_kind",
+   "bits": 4,
+   "crossings": 10,
+   "route_um": 16343.3,
+   "cycles": 32,
+   "cycles_405": 42,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L345",
+   "src": "sys_c.o_dNd_kv_kvn_word_generation",
+   "dst": "hub_C.i_dNd_kv_kvn_word_generation",
+   "bits": 2,
+   "crossings": 10,
+   "route_um": 16334.1,
+   "cycles": 32,
+   "cycles_405": 42,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L343",
+   "src": "sys_c.o_dNd_kv_att_tx_slot",
+   "dst": "hub_C.i_dNd_kv_att_tx_slot",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 16338.1,
+   "cycles": 32,
+   "cycles_405": 42,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L359",
+   "src": "sys_c.o_dcal_tks",
+   "dst": "hub_C.i_dcal_tks",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 15805.2,
+   "cycles": 32,
+   "cycles_405": 41,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1428",
+   "src": "hub_C.o_kvs_attn_attn__tx_valid",
+   "dst": "sys_c.i_kvs_attn_attn__tx_valid",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 15424.5,
+   "cycles": 31,
+   "cycles_405": 40,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1433",
+   "src": "hub_C.o_kvs_ctl_boot__link_cfg_rx_we",
+   "dst": "sys_c.i_kvs_ctl_boot__link_cfg_rx_we",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 15347.9,
+   "cycles": 31,
+   "cycles_405": 39,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1434",
+   "src": "hub_C.o_kvs_ctl_boot__link_cfg_tx_we",
+   "dst": "sys_c.i_kvs_ctl_boot__link_cfg_tx_we",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 15344.1,
+   "cycles": 31,
+   "cycles_405": 39,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1451",
+   "src": "hub_C.o_kvs_ctl_oobs__kv_active_local",
+   "dst": "sys_c.i_kvs_ctl_oobs__kv_active_local",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 14877.3,
+   "cycles": 30,
+   "cycles_405": 38,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1452",
+   "src": "hub_C.o_kvs_ctl_oobs__kv_drained_local",
+   "dst": "sys_c.i_kvs_ctl_oobs__kv_drained_local",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 14871.7,
+   "cycles": 30,
+   "cycles_405": 38,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1453",
+   "src": "hub_C.o_kvs_ctl_oobs__kv_flush_local",
+   "dst": "sys_c.i_kvs_ctl_oobs__kv_flush_local",
+   "bits": 1,
+   "crossings": 10,
+   "route_um": 14865.7,
+   "cycles": 30,
+   "cycles_405": 38,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L350",
+   "src": "sys_c.o_dNd_kv_rec_rx",
+   "dst": "hub_Wi.i_dNd_kv_rec_rx",
+   "bits": 552,
+   "crossings": 9,
+   "route_um": 13444.5,
+   "cycles": 28,
+   "cycles_405": 35,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L751",
+   "src": "hub_Wi.o_host_rec_tx",
+   "dst": "sys_c.i_host_rec_tx",
+   "bits": 549,
+   "crossings": 9,
+   "route_um": 13345.2,
+   "cycles": 28,
+   "cycles_405": 34,
+   "cls": "T:io-row<->hub trunk"
+  },
+  {
+   "lane": "L1524",
+   "src": "hub_Wi.o_kvs_emb_rowtx__emb_tx_payload",
+   "dst": "sys_c.i_kvs_emb_rowtx__emb_tx_payload",
+   "bits": 548,
+   "crossings": 9,
+   "route_um": 13344.4,
+   "cycles": 28,
+   "cycles_405": 34,
+   "cls": "T:io-row<->hub trunk"
+  }
+ ]
+}
