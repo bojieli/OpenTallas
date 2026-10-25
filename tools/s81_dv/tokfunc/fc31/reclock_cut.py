@@ -29,13 +29,14 @@ def main():
     shutil.copytree(cut, oc)
     shutil.copytree(kit, ok, symlinks=True)
     nets = {m.group(2): m.group(1) for m in PIN.finditer((cut / 'slice_top.sv').read_text())}
-    P = json.loads((cut / 'slice_ports.json').read_text())
+    D = json.loads((cut / 'slice_ports.json').read_text())
+    P = D['ports']
     changed = []
     for name, p in P.items():
         if p['dir'] == 'input' and p['kind'] != 'clock' and p.get('net') in nets:
             p['kind'], p['clock_from'] = 'clock', [p['net']]
             changed.append(dict(port=name, pin=nets[p['net']]))
-    (oc / 'slice_ports.json').write_text(json.dumps(P, indent=1) + '\n')
+    (oc / 'slice_ports.json').write_text(json.dumps(D, indent=1) + '\n')
     subprocess.run([sys.executable, str(TB), '--ports', str(oc / 'slice_ports.json'), '--top', 'slice_top',
                     '--out', str(oc)], check=True)
     old = json.loads((cut / 'tb_ports.json').read_text())
