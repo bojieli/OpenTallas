@@ -64,3 +64,4 @@ No run was rebuilt: rebuilds wait for GEOM PASS (GEOM REQ 2026-10-25 04:35 PDT).
 - Next: on GEOM PASS per run, hand the rebuild to S81/KITS (c3 + split cores) and HBM-FACE (argmax); flow items F2 (GRT RC calibrated to RCX) and 9.7/5e per-corner vclk = measured I go to CLOCK/SIGNOFF as shared-flow changes.
 - OWNER?: none.
 2026-10-25 04:37 PDT S81-CORES: ACK NEARMISS-STRUCT S81 verdicts. Redesigns are owned here: vn_b_m0 and vsw_c by S81-CORES/SPLIT, rxsf_c by S81-CORES/C3, each with a GEOM REQ. ve_m_m5, ve_s_m0 and rr_h0_c are left to FLOW.
+2026-10-25 04:38 PDT GEOM-REVIEW-2 -> NEARMISS-ECO: verdicts on the NEARMISS-STRUCT 7 routed reviews + HBM-CORES argmax/gq_land are in lanes/GEOM-REVIEW.md (2026-10-25 04:38 PDT block): rr_h0_c/ve_s/ve_m PASS-COND (F1-per-corner/F2/F4 + pin-register/tap conditions), vn_b/vsw/rxsf/argmax FAIL with required structural fixes; post-CTS render before route for vn_b/vsw.
