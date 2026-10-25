@@ -25,6 +25,11 @@ def test_flop_key_polarity_and_names():
     assert lec.flop_key("u_dut.a.r[0]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq") == ("u_dut.a.r[0]", True)
 
 
+def test_odb_hierarchy_separator():
+    # OpenROAD write_verilog keeps '/' between hierarchy levels in flop instance names (3_place / 6_final)
+    assert lec.flop_key("u_twca/q[0]$_DFF_P_.IQN$_DFF_P_.lecq") == ("u_twca.q[0]", True)
+
+
 def test_genblk_scopes_are_dropped():
     assert lec.GENBLK.sub("", "u_dut.u_s.genblk1.genblk1.g_l5.genblk12.r[0]") == "u_dut.u_s.g_l5.r[0]"
     assert lec.GENBLK.sub("", "genblk2.a.mygenblk1.b") == "a.mygenblk1.b"
@@ -256,6 +261,7 @@ def test_parallel_cones_preserve_each_status(tmp_path, monkeypatch):
 
 
 def test_naive_cone_unknown_does_not_shift_later_status(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, "xor_sat", lambda *args: {})  # parser test isolates the ABC backend
     import re
     from types import SimpleNamespace
     m = lec.Aig()
@@ -308,6 +314,75 @@ def test_implicit_net_lint_pattern():
     assert not lec.IMPLICIT_NET.match("x.sv:3:1: warning: implicit conversion truncates [-Wwidth-trunc]")
 
 
+def test_parity_reassociation_and_imported_xor_are_exact():
+    """CRC XOR trees normalise across associations; a flipped input stays different."""
+    m = lec.Aig()
+    a, b, c, d, e = [m.add_input(n) for n in 'abcde']
+    x = m.XOR(m.XOR(a, b), m.XOR(c, d))
+    assert x == m.XOR(d, m.XOR(c, m.XOR(b, a)))
+    assert m.XOR(m.XOR(a, b), a) == b
+    assert m.XOR(m.XOR(a, b ^ 1), a) == b ^ 1
+    # Import the raw three-AND representation instead of calling XOR.
+    imported = m.AND(m._and(a, b) ^ 1, m._and(a ^ 1, b ^ 1) ^ 1)
+    assert imported == m.XOR(a, b)
+    assert m.XOR(x, e) != x
+    # Exhaust every input assignment and check all canonical-expression records
+    # against their underlying Boolean AIG rather than the same normaliser.
+    val, mask = [0] * (m.ni + len(m.ands) // 2 + 1), (1 << 32) - 1
+    for v in range(1, 6):
+        val[v] = sum(((pattern >> (v - 1)) & 1) << pattern for pattern in range(32))
+    for k in range(len(m.ands) // 2):
+        r0, r1 = m.ands[2 * k:2 * k + 2]
+        val[m.ni + k + 1] = lec.lit_val(val, mask, r0) & lec.lit_val(val, mask, r1)
+    for lit, (terms, const) in m.parity_expr.items():
+        want = mask if const else 0
+        for t in terms:
+            want ^= lec.lit_val(val, mask, t)
+        assert lec.lit_val(val, mask, lit) == want
+
+
+def test_fsm_cube_induction_rejects_wrong_state_mapping(tmp_path):
+    """A binary/one-hot cycle proves; an incorrect recoding constraint fails."""
+    def design(gate):
+        m = lec.Aig()
+        reset = m.add_input('reset')
+        q = [m.add_input(str(i)) for i in range(3 if gate else 2)]
+        if gate:
+            nxt = [m.AND(reset ^ 1, q[2]) ^ 1, m.AND(reset ^ 1, q[0]), m.AND(reset ^ 1, q[1])]
+            # q0' = reset | q2, q1' = !reset & q0, q2' = !reset & q1
+            nxt[0] = m.AND(reset ^ 1, q[2] ^ 1) ^ 1
+        else:
+            nxt = [m.AND(reset ^ 1, m.AND(q[0] ^ 1, q[1] ^ 1)),
+                   m.AND(reset ^ 1, m.AND(q[0], q[1] ^ 1))]
+        d = dict(I=1, L=len(q), O=0, A=len(m.ands) // 2, latches=nxt, outputs=[], ands=m.ands)
+        keys = [f'u_dut.st[{i}]' for i in range(len(q))]
+        mp = {'input': {0: [('reset', 0)]}, 'output': {},
+              'latch': {i: [(k + '$_DFF_P_.lecq', 0)] for i, k in enumerate(keys)}}
+        return d, mp
+    g, gm = design(False)
+    t, tm = design(True)
+    L = lec.Lec(g, gm, t, tm)
+    assert lec.fsm_proposals(L, []) == 3
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {'proved'}
+    key = next(k for k, h in L.hyp.items() if h[0] == 'cube')
+    h = L.hyp[key]
+    L.hyp[key] = (h[0], h[1], h[2], [v ^ 1 for v in h[3]])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert 'differs' in _sim_prove(m).values()
+
+
+def test_xor_sat_checks_original_cnf_and_negative_control():
+    pytest.importorskip('pycryptosat')
+    m = lec.Aig()
+    a, b, c = [m.add_input(n) for n in 'abc']
+    x = m.XOR(m.XOR(a, b), c)
+    y = m.XOR(a, m.XOR(c, b))
+    m.outs = [m.XOR(x, y), m.XOR(x, y ^ 1), m.AND(x, c)]
+    m.onames = ['equal', 'corrupted', 'nonlinear_sat']
+    assert lec.xor_sat(m, list(range(3)), []) == {
+        'equal': 'proved', 'corrupted': 'differs', 'nonlinear_sat': 'differs'}
+
 def test_parse_config_make_append_and_conditional(tmp_path):
     # HEAD0719 kits append a file with make +=: reading it as = dropped every other RTL file (gold = 1 file,
     # UNPROVEN not a valid top-level module on ot_s81hd_elemB_cv).  ?= must not override an earlier value.
@@ -324,3 +399,57 @@ def test_parse_config_make_append_and_conditional(tmp_path):
     assert env["VERILOG_DEFINES"] == "-DSYNTHESIS"
     assert env["SYNTH_BLACKBOXES"] == "ot_rom_bb"
     assert env["DESIGN_NAME"] == "top2"
+
+
+def _aig_bytes(I, latches, ands):
+    """binary AIGER from latch next-state literals and AND gates [(lhs, r0, r1)] (lhs ascending from 2 (I + L) + 2)."""
+    def enc(x):
+        out = bytearray()
+        while x >= 0x80:
+            out.append(x & 0x7F | 0x80)
+            x >>= 7
+        out.append(x)
+        return bytes(out)
+    L = len(latches)
+    b = f"aig {I + L + len(ands)} {I} {L} 0 {len(ands)}\n".encode() + b"".join(f"{n}\n".encode() for n in latches)
+    for lhs, r0, r1 in ands:
+        r0, r1 = max(r0, r1), min(r0, r1)
+        b += enc(lhs - r0) + enc(r0 - r1)
+    return b
+
+
+def _merged_hold_design(tmp_path, x_enable_lit):
+    """HBM tkm tile 10-25: synthesis merged the self-holding gold register X[0][0] (X <= en ? d : X) into the
+    matched register up_out[0] of ANOTHER vector (same enable, same data).  Gold: up_out, X (loading on
+    `x_enable_lit`), o <= X.  Gate: up_out, o <= up_out.  Inputs en = 2, d = 4."""
+    names = lambda ks: {i: [(f"u_dut.{k}$_DFF_P_.lecq", 0)] for i, k in enumerate(ks)}
+    # gold vars: en 1, d 2, up_out 3, X 4, o 5; ANDs 6..: hold mux q' = !(!(en & d) & !(!en & q))
+    g = tmp_path / "gold.aig"
+    g.write_bytes(_aig_bytes(2, [17, 23, 8], [(12, 2, 4), (14, 3, 6), (16, 13, 15),     # up_out' = lit 17
+                                                (18, x_enable_lit, 4), (20, x_enable_lit ^ 1, 8),
+                                                (22, 19, 21)]))                          # X' = lit 23
+    # gate vars: en 1, d 2, up_out 3, o 4; ANDs 5..: up_out' = en ? d : up_out
+    t = tmp_path / "gate.aig"
+    t.write_bytes(_aig_bytes(2, [15, 6], [(10, 2, 4), (12, 3, 6), (14, 11, 13)]))
+    gm = {"input": {0: [("en", 0)], 1: [("d", 0)]}, "latch": names(["up_out[0]", "X[0][0]", "o"]), "output": {}}
+    tm = {"input": {0: [("en", 0)], 1: [("d", 0)]}, "latch": names(["up_out[0]", "o"]), "output": {}}
+    return lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+
+
+def test_self_holding_register_merged_into_another_vector(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    L = _merged_hold_design(tmp_path, 2)                     # gold X loads on en: a legal merge
+    assert L.gonly == ["ff:u_dut.X[0][0]"]
+    lec.correspond(L, tmp_path, 100, [])
+    assert L.hyp.get(("gold", "ff:u_dut.X[0][0]")) == ("eq", "gold", "ff:u_dut.up_out[0]", 0)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {"proved"}
+
+
+def test_self_holding_merge_mutant_still_differs(tmp_path, monkeypatch):
+    """negative control: gold X loads on !en (a wrong merge) -> no pair survives, o differs."""
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    L = _merged_hold_design(tmp_path, 3)
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert "differs" in set(_sim_prove(m).values())
