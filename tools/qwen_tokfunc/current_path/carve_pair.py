@@ -48,33 +48,44 @@ def top_ports(path):
     return result
 
 
-def compose(qc_top, qc_plan, kv_top, out):
+def compose(qc_top, qc_plan, kv_top, out, whole_qc=False):
     out.mkdir(parents=True, exist_ok=False)
     plan = json.loads(qc_plan.read_text())
-    seeds = path_seeds(plan)
-    manifest = BC.carve(qc_top, seeds, 'qc_t1_carve', out)
     _, _, insts = BC.parse_top(qc_top)
+    seeds = sorted(i['name'] for i in insts) if whole_qc else path_seeds(plan)
+    if whole_qc:
+        pp = top_ports(qc_top)
+        manifest = {k:{n:v for n,v in pp.items() if v['direction']==d} for k,d in [('inputs','input'),('outputs','output')]}
+        qc_module = re.search(r'^module\s+(\w+)', qc_top.read_text(), re.M)[1]
+    else:
+        manifest = BC.carve(qc_top, seeds, 'qc_t1_carve', out)
+        qc_module = 'qc_t1_carve'
     keep = [i for i in insts if i['name'] in seeds]
     # Recover image IDs from source names, rather than physical nicknames.
     names = json.loads((qc_top.parent.parent/'bind_names.json').read_text())
     rom = []
     rom_ids = set()
     for i in keep:
-        if not i['name'].startswith('c_W5_'):
+        if not re.fullmatch(r'c_[EW][0-5]_[bt][fn]_[01][01]', i['name']):
             continue
         for r, c in SM.tiles_of(qc_top.parent, i['module']):
             local = f"{i['name']}.u_u_t_{r}_{c}"
             source = names.get(local, '')
-            m = re.fullmatch(r'c16_W5_([0-3])\.u_t_(\d)_(\d)', source)
+            m = re.fullmatch(r'c16_[EW][0-5]_([0-3])\.u_t_(\d)_(\d)', source)
             if not m or (int(m[2]), int(m[3])) != (r, c):
                 raise ValueError(f'no exact source ROM identity for {local}: {source}')
-            rid = 16*int(m[1])+SM.SLOT[(r,c)]
+            strap = re.search(r'\.S_u_t_'+str(r)+'_'+str(c)+r"_tile_id\(16'b([01]{16})\)", '\n'.join(i['text']))
+            if not strap:
+                raise ValueError(f'no exact source tile strap for {local}')
+            high = int(strap[1],2) & ~15
+            rid = high+SM.SLOT[(r,c)]
             if rid in rom_ids:
                 raise ValueError(f'duplicate ROM image {rid}')
             rom_ids.add(rid)
             rom.append(f'defparam `OT_ROM_BIND_TOP.u_qc.{local}.ROM_TILE = {rid};')
-    if rom_ids != set(range(64)):
-        raise ValueError(f'full W5 projection needs all64 ROM images, got {sorted(rom_ids)}')
+    expected_roms = 768 if whole_qc else 64
+    if rom_ids != set(range(expected_roms)):
+        raise ValueError(f'expected {expected_roms} distinct source ROM images, got {sorted(rom_ids)}')
     (out/'rom_bind_pair.vh').write_text('// Define OT_ROM_BIND_TOP as the pair instance. Source-derived image IDs.\n'+'\n'.join(rom)+'\n')
     # Hard PHY receives its reset from the real D2D master; it is not a wavefront carrier.
     by_part = {p['name']:p for p in plan['partitions']}
@@ -142,14 +153,14 @@ def compose(qc_top, qc_plan, kv_top, out):
                 hdr.append(f'{direction} wire {rng}{sig}')
                 connections[die][name] = sig
                 external.append(dict(die=die, name=name, direction=direction, width=width, lane=row.get('lane')))
-    for die, mod in [('qc','qc_t1_carve'),('kv',module)]:
+    for die, mod in [('qc',qc_module),('kv',module)]:
         body.append(f'{mod} u_{die} (\n'+',\n'.join(f'    .{p}({n})' for p,n in connections[die].items())+'\n);')
     text = '// Literal QC projection/transport + native KV; all environmental inputs are explicit.\n`timescale 1ns/1ps\n`default_nettype none\n'
     text += 'module qwen_native_pair (\n    '+',\n    '.join(hdr)+'\n);\n'+'\n'.join(wires+body)+'\nendmodule\n`default_nettype wire\n'
     (out/'qwen_native_pair.sv').write_text(text)
     report = dict(schema='opentallas.qwen.literal_pair.v1',qc_top=str(qc_top),kv_top=str(kv_top),qc_plan=str(qc_plan),
                   qc_top_sha256=BC.sha256(qc_top),kv_top_sha256=BC.sha256(kv_top),plan_sha256=BC.sha256(qc_plan),
-                  qc_seeds=seeds, rom_tiles=len(rom_ids), reset=reset, boundary_ports=external,
+                  qc_seeds=seeds, whole_qc=whole_qc, rom_tiles=len(rom_ids), reset=reset, boundary_ports=external,
                   link='QC.ucie_kv_link_* -> KV.sys_c_far_* and KV.sys_c_link_* -> QC.ucie_kv_far_*',
                   scope='Structural adapter only. Scheduler must drive every environmental input; no boot/token verdict implied.')
     (out/'pair.json').write_text(json.dumps(report,indent=1)+'\n')
@@ -160,5 +171,6 @@ if __name__ == '__main__':
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--qc-top',type=Path,required=True);ap.add_argument('--qc-plan',type=Path,required=True)
     ap.add_argument('--kv-top',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
-    a=ap.parse_args();r=compose(a.qc_top,a.qc_plan,a.kv_top,a.out)
+    ap.add_argument('--whole-qc',action='store_true',help='Retain the entire native QC top for complete projection coverage')
+    a=ap.parse_args();r=compose(a.qc_top,a.qc_plan,a.kv_top,a.out,a.whole_qc)
     print('LITERAL_PAIR_STAGED',len(r['qc_seeds']),'QC partitions,',len(r['boundary_ports']),'explicit boundary ports')
