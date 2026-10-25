@@ -475,3 +475,31 @@ CODEX took over collection + measured-memory fix on codex/elem-hbm-push-1024, ep
 - 30 pgslice exp lanes: CTS done, I 552-601 (core_insertion updated, 226 rows), kits regenerated under contract; author placed review PASS-COND; ROUTE request posted to GEOM-REVIEW (cond (1) clock source open).
 - 2026-10-24 23:29 PDT HBM-CORES2: pair-skew re-signoff (main signoff.py) of routed kits so far, all NOT SIGNED: idx_score_quarter tail0 TT +34.3 / FF -6.7, tail1 TT +35.5 / FF -9.9, xp_aq_tree13_fmt 55d2 TT +18.7 / FF -16.4, a798 TT -14.4 / FF -10.2 (pair skew 23-47 PASS, DRC 0, all face_guard FAIL). Worst FF hold path on aq_tree13 = OUTPUT port y[256] vs vclk 250 ps ideal latency at FF while the core tree at FF is ~163 ps -> the known FF-IO-latency artefact (SIGNOFF item), not a design miss. idx_query (TT -143.9, pair skew 123) and svc_pc 31be7c (TT -155.6, pair skew 183) fail for real (plan: grow outline). argmax_r2 = timing-clean (face_guard only).
 - LAUNCHED 19 variants/finishes (list in HBM-ARCH.md "## HBM-CORES2 launches"): bankq_ft x3 + _pd42, xcal x4 _m6, _cr (CTS hold repair + tight CTS clusters) for sfu lanes x7, qcore_r13, gq_issue. Cause behind _cr: the sfu hold probe shows intra-tree related-pair hold skew of -100 ps (u_pass ring m[0] -> qr); GRT repair fixes ~2 endpoints/iteration.
+
+## PARKED 2026-10-24 23:42 PDT (HBM-CORES2)
+- Branch claude/hbm-cores-1024 @0d4432fa9a (pushed). Worktree epyc1:/srv/opentallas-scratch2/claude/wt/hbm-cores. Merged main c5834d0306. Kits ship main signoff.py (pair-skew gate, spread INFO) + pair_skew.tcl. Both files were pushed into all kits_b2l and run dirs, so in-flight finishes sign off with the new gate. Not merged to main: 0 SIGNED.
+- RESULTS (results/b2l_verdicts.json): 0 SIGNED, 15 NOT SIGNED, all face_guard FAIL.
+  - TIMING-CLEAN (only face_guard fails): argmax_r2 (TT +25.8, FF +14.2, pair skew 31.9/29.5, DRC 0).
+  - Near-clean, only FF hold misses: idx_score_quarter tail0 (TT +34.3, FF -6.7) and tail1 (TT +35.5, FF -9.9); xp_aq_tree13_fmt 55d2 (TT +18.7, FF -16.4). Their worst FF hold path is an OUTPUT port vs vclk at the TT latency, while the core tree at FF is ~0.65-0.8x. This is the SIGNOFF FF-IO-latency item.
+  - Real misses:
+    - idx_query: TT -143.9, pair skew 123.
+    - svc_pc: 31be7c TT -155.6 (pair skew 183); 3f2f98 -47.3; 9467d1 -42.9; 684f/cfc8 similar.
+    - hcp_sys1: TT -88.6.
+    - vm_calendar: TT -30.7.
+    - sm_vm_wr_q: TT -29.7, pair skew 89.7.
+    - aq_tree13 a798: TT -14.4.
+- GEOM: pgslice_lg lane_exp x30 FAIL 23:29 (13-15% fill, macros scattered, cond (1) clocks). Plan request is posted to HBM-ARCH: height ~205 um, family MACRO_PLACEMENT, clk/rst source. The run data was deleted; I 552-601 is kept in core_insertion_b2l.json; kits are regenerated under the contract and wait for the new outline.
+- LIVE JOBS (ot-run; list in HBM-ARCH.md "## HBM-CORES2 launches"; log epyc1:/srv/opentallas-scratch/claude/elem-hbm/hc2_jobs.log; run dirs <host>:/srv/opentallas-scratch/claude/elem-hbm/runs/<kit>):
+  - bankq_ft x3 (epyc1 x2, intel1) + _pd42 x3 (epyc3, intel2 x2): synth/floorplan.
+  - xcal_rel_t x4 _m6 (intel2 x2, epyc3 x2): GRT passes at M6 (was GRT-0116 at M5). Hold repair now WNS -95..-166. These bind only with an M6 grant (OWNER?/HBM-ARCH) or the 1.45x outline.
+  - _cr variants (CTS hold repair + CTS cluster 20/25), all in synth: sfu lanes 14/15/2/4/5/6/9, qcore_r13, gq_issue (intel2/epyc3).
+  - Inherited base runs, carried to signoff:
+    - GRT hold repair, converging slowly: bankq0 l0_2/l3_5, bankq l0_2/l3_5, sfu x7, qcore_r13, gq_issue. qcore WNS is stuck at -117 on e_f[69].
+    - Route: vm_query n12, svc_pc 95777e/3b586c/3ffaa4/a4d8b0, bdring 2f4ce4.
+- NEXT:
+  1. When runs finish, run python3 collect.py in the worktree and commit. Delete the losing variant of each pair as soon as one signs or both fail.
+  2. Once HBM-ARCH lands the outlines, regenerate and run place+CTS for the exp lanes and the 8 low-fill types, then GEOM review.
+- OWNER?:
+  - face_guard on hard-core pins blocks every SIGN except bankq_ft-type.
+  - FF corner IO vclk latency (SIGNOFF).
+  - M6 signal grant for xcal_rel_t.
