@@ -425,6 +425,64 @@ def route_netlist(P, type_bits):
     return "\n".join(v) + "\n", nft
 
 
+
+def ft_band_rects(P):
+    """die-frame rects of every type's die_ft_bands (DIE-FT-HBM 10-25): [(layer, x0, y0, x1, y1, die_share)].
+    A band is a type-frame span (EW: y, NS: x) over the full type width/height where the listed layers belong to the
+    die (die_share of their tracks, default 1.0) instead of the ft_track_frac share."""
+    out = []
+    for n, p in sorted(P.parts.items()):
+        t = P.types[p["type"]]
+        bands = t.get("die_ft_bands") or []
+        if not bands:
+            continue
+        o = p.get("orient", "R0")
+        if o not in ("R0", "MX", "MY", "R180"):
+            raise ValueError(f"die_ft_bands on {n}: orient {o} not supported")
+        w, h = t["outline_um"]
+        ox, oy = p["origin_um"]
+        for b in bands:
+            lo, hi = b["span_um"]
+            if b["dir"] == "EW":
+                if o in ("MX", "R180"):
+                    lo, hi = h - hi, h - lo
+                r = (ox, oy + lo, ox + w, oy + hi)
+            else:
+                if o in ("MY", "R180"):
+                    lo, hi = w - hi, w - lo
+                r = (ox + lo, oy, ox + hi, oy + h)
+            for L in b["layers"]:
+                out.append((L, *r, float(b.get("die_share", 1.0))))
+    return out
+
+
+def band_region_adjust(P, share_adj):
+    """GRT region adjustments that model the die_ft_bands: the band layers get global adjustment 0, every die area
+    outside a band of that layer gets region adjustment share_adj (= the usual 1 - ft_track_frac; OpenROAD scales the
+    unadjusted capacity, checked 10-25 on a 200x200 test: half-die region 0.75 -> 37.6 % reduction), and a band with
+    die_share < 1 gets 1 - die_share.  -> (band layers, [(layer, x0, y0, x1, y1, adjustment)])"""
+    rects = ft_band_rects(P)
+    by = defaultdict(list)
+    for L, x0, y0, x1, y1, ds in rects:
+        by[L].append((x0, y0, x1, y1, ds))
+    regs = []
+    for L, rs in sorted(by.items()):
+        ys = sorted({0.0, P.H} | {r[1] for r in rs} | {r[3] for r in rs})
+        for ya, yb in zip(ys, ys[1:]):
+            if yb - ya < 1e-6:
+                continue
+            cov = sorted((r[0], r[2]) for r in rs if r[1] <= ya + 1e-6 and r[3] >= yb - 1e-6)
+            x = 0.0
+            for a, b in cov + [(P.W, P.W)]:
+                if a > x + 1e-6:
+                    regs.append((L, x, ya, a, yb, share_adj))
+                x = max(x, b)
+        for x0, y0, x1, y1, ds in rs:
+            if ds < 1.0:
+                regs.append((L, x0, y0, x1, y1, round(1 - ds, 3)))
+    return sorted(by), regs
+
+
 PLACE_PROC = ("proc ot_place {n x y o} { set b [ord::get_db_block]; set i [$b findInst $n]; $i setOrient $o; "
               "set d [[$b getTech] getDbUnitsPerMicron]; set X [expr {round($x*$d)}]; set Y [expr {round($y*$d)}]; "
               "$i setLocation $X $Y; set bb [$i getBBox]; "
@@ -453,8 +511,12 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     t.append("source /work/grt/obs.tcl")
     t.append("puts \"OT_T obs [expr {[clock seconds]-$t0}]\"")
     t.append("set_routing_layers -signal M4-M7")          # ruling 9.3: signals <= M7; M8/M9 = clock/reset/PG
+    band_layers, band_regs = band_region_adjust(P, dict(adjust).get("M4", 0.75))
     for L, a in adjust:
-        t.append(f"set_global_routing_layer_adjustment {L} {a:g}")
+        t.append(f"set_global_routing_layer_adjustment {L} {0 if L in band_layers else a:g}")
+    for L, x0, y0, x1, y1, a in band_regs:   # die_ft_bands (DIE-FT-HBM 10-25): die-owned band layers
+        t.append(f"set_global_routing_region_adjustment {{{x0:.3f} {y0:.3f} {x1:.3f} {y1:.3f}}} -layer {L} "
+                 f"-adjustment {a:g}")
     t += ["global_route -congestion_iterations 50 -allow_congestion -verbose "
           "-congestion_report_file /work/grt/congestion.rpt",
           "puts \"OT_T grt [expr {[clock seconds]-$t0}]\"",
@@ -768,6 +830,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     meta["grt"] = dict(ft_bits=nft, ft_slot_instances=len(ft_nets(P)), reset_taps=len(P.parts),
                        adjust=dict(adjust), coarse_m123_um=coarse, clock_reserve_rects=len(reserve),
                        pg_stripes=len(pg_stripes(P)))
+    bl, br = band_region_adjust(P, dict(adjust).get("M4", 0.75))
+    meta["grt"]["die_ft_bands"] = dict(layers=bl, band_rects=len(ft_band_rects(P)), region_adjustments=len(br))
     seam_bits = 0
     chan = 0
     for pid, pr in P.ports.items():
@@ -808,10 +872,14 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
         v, k = standin_netlist(P, tn)
         (d / "6_final.v").write_text(v)
         nff += k * sum(1 for p in P.parts.values() if p["type"] == tn)
-    v = gen_rtl.die_top(P, gen_rtl.bus_epochs(P), {})
-    plain = "\n".join(re.sub(r"^endmodule\s*:.*$", "endmodule", ln) for ln in v.splitlines() if not ln.startswith("`"))
-    (out / "sta" / "die_top.v").write_text(plain + "\n")
-    meta["sta"] = dict(standin_flops=nff, seam_bits=seam_bits)
+    try:
+        v = gen_rtl.die_top(P, gen_rtl.bus_epochs(P), {})
+        plain = "\n".join(re.sub(r"^endmodule\s*:.*$", "endmodule", ln) for ln in v.splitlines() if not ln.startswith("`"))
+        (out / "sta" / "die_top.v").write_text(plain + "\n")
+        meta["sta"] = dict(standin_flops=nff, seam_bits=seam_bits)
+    except Exception as e:   # a plan die-top error (e.g. reset reach) must not cost the GRT / clock / PSM kit
+        meta["sta"] = dict(standin_flops=nff, seam_bits=seam_bits, die_top_error=f"{type(e).__name__}: {e}")
+        print(f"die_trial: NO sta/die_top.v: {type(e).__name__}: {e}", file=sys.stderr)
     for x in ("run_grt.sh", "run_clock.sh", "run_psm.sh"):
         os.chmod(out / x, 0o755)
     (out / "kit.json").write_text(json.dumps(meta, indent=1) + "\n")
