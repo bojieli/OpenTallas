@@ -1,0 +1,38 @@
+{
+  "source_flags": [
+    "OT_S81ENG_RR_N32",
+    "OT_S81ENG_RR_MUL_N32",
+    "OT_S81ENG_TMAP_CPRE",
+    "OT_S81ENG_XQ_OHSEL",
+    "OT_S81ENG_BF_PREDEC",
+    "OT_S81ENG_MACRO_F6",
+    "OT_S81ENG_RST_TIMED"
+  ],
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_rr_n32.sv": "08437b9a45d4fec0153a12eddfc83809b3ac76f4f587c0d59835bd3d4bdca248",
+    "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv": "c135dfdbdddbeaee5d1120cf64cf54952e5d9b31c6cf9238fd7b414d19be03b6",
+    "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv": "1e04bf97a87243913355b77f6343c5a2b34e632f90e711f0c6faa0912c7052ec"
+  },
+  "default": "new flags off",
+  "entry_readiness_added_cycles": 1,
+  "entry_fields": [
+    "f_ks",
+    "cfg_en"
+  ],
+  "LKP_XQ_added_cycles": 0,
+  "HBM_RETURN_AGE": "unchanged measured relative to new window event",
+  "reset_assert_edges": 3,
+  "reset_release_edges": 3,
+  "early_reset_edges": 1,
+  "additional_entry_boot_edges": 1,
+  "clock_ps": 833,
+  "gates": {
+    "core_full": "3seeds*200000cycles allpublic+internalx/xd0mismatch",
+    "xq_full": "3seeds*200000cycles PASS; wrong-ring-RA mutant CAUGHT all3",
+    "win": "3seeds*40000 allpublic0mismatch with physical nonzeroROM payload; no-forward mutant CAUGHT",
+    "reset": "3edge goldshift PASS; depth2mutant CAUGHT"
+  },
+  "area_flops": "native synth pending; no measured area claim",
+  "physical": "SYNTHONLY in progress; newLEC/F6actualimage/CLKreview/signoff NOT RUN",
+  "adoption": "SOURCE ONLY; actual manifest/compiler/plan must price +1 and select exact cohort"
+}

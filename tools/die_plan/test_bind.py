@@ -771,3 +771,69 @@ def test_internal_primitive_constants_preserve_boundary_audit(tmp_path, enabled,
         assert bind.main(["bind", str(pf), "--out", str(out), "--strict"]) != 0
         if enabled:
             assert any("lf_b.i" in str(x) for x in r.get("tied_by_port", [])) or r["proof"]["tied"] >= 16
+
+
+def test_repeated_phy_io_roles_keep_separate_pads_and_outputs(tmp_path):
+    """One hardened PHY type may share a port ABI, while its die pads stay distinct."""
+    src = tmp_path / 'phy_src'
+    src.mkdir()
+    (src / 'phy.sv').write_text('''
+module ck_source(output wire ck); endmodule
+module rs_source(output wire rn); endmodule
+module tiny_phy(input wire clk,rst_n,input wire [3:0] pma_rx,output reg [3:0] pma_tx);
+always @(posedge clk) if(!rst_n)pma_tx<=0;else pma_tx<=pma_rx^4'h5;
+endmodule
+''')
+    (src / 'die.v').write_text('''
+module phy_die(input wire [3:0] a_pma_rx,b_pma_rx,output wire [3:0] a_pma_tx,b_pma_tx);
+wire ck,rn;
+ck_source c(.ck(ck));rs_source r(.rn(rn));
+tiny_phy u0(.clk(ck),.rst_n(rn),.pma_rx(a_pma_rx),.pma_tx(a_pma_tx));
+tiny_phy u1(.clk(ck),.rst_n(rn),.pma_rx(b_pma_rx),.pma_tx(b_pma_tx));
+endmodule
+''')
+    p = dict(schema='opentallas.die_plan.v1', die=dict(name='phy_io'),
+             partition_types=dict(phy=dict(module='bound_phy', reset=dict(sync_stages=2))),
+             partitions=[dict(name='P0', type='phy'), dict(name='P1', type='phy')], ports=[], lanes=[],
+             asbuilt=dict(base=str(src), netlist=['die.v'], top='phy_die', files=['phy.sv'], rtl_roots=[],
+                          sources=[dict(module='ck_source', kind='clock', outputs=dict(ck='core')),
+                                   dict(module='rs_source', kind='reset', outputs=dict(rn='low'))],
+                          map=dict(parts=dict(u0='P0', u1='P1')),
+                          io_roles=[[r'[ab]_(pma_.*)', r'\1']]))
+    f = tmp_path / 'phy.json'
+    f.write_text(json.dumps(p))
+    out = tmp_path / 'bound'
+    assert run(f, out, 'elab', 'bind', 'verify') == 0, report(out)['errors']
+    assert report(out)['type_splits'] == []
+    assert verify(out)['verdict'] == 'PASS'
+    body = (out / 'rtl/bound_phy.sv').read_text()
+    top = (out / 'rtl/phy_io_bound_top.sv').read_text()
+    assert 'input wire [3:0] io_pma_rx' in body and 'output wire [3:0] io_pma_tx' in body
+    assert 'assign io_pma_tx =' in body
+    assert '.io_pma_rx(a_pma_rx)' in top and '.io_pma_rx(b_pma_rx)' in top
+    assert '.io_pma_tx(a_pma_tx)' in top and '.io_pma_tx(b_pma_tx)' in top
+    assert 'output wire [3:0] a_pma_tx;' in top and 'output wire [3:0] b_pma_tx;' in top
+    # Causal control: without roles these two different external names must still split.
+    del p['asbuilt']['io_roles']
+    f2 = tmp_path / 'no_roles.json'
+    f2.write_text(json.dumps(p))
+    out2 = tmp_path / 'no_roles'
+    assert run(f2, out2, 'elab') == 0
+    assert bind.main(['bind', str(f2), '--out', str(out2), '--mem', '4', '--strict']) == 1
+    assert report(out2)['type_splits']
+
+
+def test_glue_source_names_share_only_same_typed_source(tmp_path):
+    src = tmp_path / "src"
+    shutil.copytree(EX, src)
+    p = src / "par.sv"
+    p.write_text(p.read_text().replace(".i(x)", ".i(x + 8'h01)"))
+    plan = json.loads((src / "die_plan.json").read_text())
+    plan["asbuilt"].update(base=str(src), internal_primitive_constants=True, glue_source_names=True)
+    pf = tmp_path / "plan.json"
+    pf.write_text(json.dumps(plan))
+    out = tmp_path / "out"
+    assert run(pf, out, "elab") == 0
+    assert bind.main(["bind", str(pf), "--out", str(out), "--strict"]) == 0
+    assert not report(out)["type_splits"]
+    assert run(pf, out, "verify") == 0 and verify(out)["verdict"] == "PASS"
