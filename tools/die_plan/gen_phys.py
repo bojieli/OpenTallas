@@ -603,7 +603,8 @@ RUN_KIT = r"""#!/bin/bash
 # part-select / index (the class the slang frontend silently drops, e.g. a[31:24] of a 31-b operand inside an
 # unrolled function loop) stops the kit (selrange.json / selrange.log / selrange.rc).  Exit 2 (read_verilog cannot parse
 # a slang-only construct: package import in a module body, defparam into a generate, ...) is reported as NOT RUN and
-# does not stop the kit.
+# does not stop the kit; neither does the 2 h cap (timeout rc 124; the read_verilog elaboration of the largest S81 slices
+# -- ot_s81sl_xs4 -- takes 40+ min).
 #   run_kit.sh KITDIR [GOAL=route] [MEM_GB=16] [CPUS=8]       (heavy: call it through ot-run --mem MEM_GB)
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
@@ -613,7 +614,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   -e HUID=$(id -u) -e HGID=$(id -g) -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
   if [ -f /work/sdc_lint.py ]; then python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; fi; \
-  SRP=; if [ -f /work/selrange_gate.py ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
+  SRP=; if [ -f /work/selrange_gate.py ]; then (timeout \${OT_SELRANGE_TIMEOUT_S:-7200} python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
   if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \$rc = 0 ] && [ \"\$S\" = 1 ]; then rc=1; fi; if [ \"\$S\" != 0 ] && [ \"\$S\" != 1 ]; then echo 'SELRANGE NOT RUN: yosys read_verilog could not elaborate the sources (selrange.log); kit continues'; fi; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
