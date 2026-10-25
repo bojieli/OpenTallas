@@ -164,6 +164,12 @@
    "bench": "LOCKSTEP dsfd_selt_c seeds 1 and 2 PASS (5000 cycles, err 0); mutant FAIL (err 2265)"
   },
   "plan": "G0 PASS 0 errors, G0C PASS 0 errors, 174/174 types clean (plan/g0_g0c_rulings.txt)",
-  "place_kits": "l5_n32 and xfin place-only kits launched on ot-run (/srv/opentallas-scratch2/claude/rtlc2/place)"
+  "place_kits": "l5_n32 and xfin place-only kits launched on ot-run (/srv/opentallas-scratch2/claude/rtlc2/place)",
+  "e_bk_g_face_guard": {
+   "change": "dsdv_bk_vin: lane data pin flops load the word and are 0 when no word arrives (no hold self-loop; wd is 0 when !wv); one kept live chain per lane (the 4 identical dsdv_bk_live chains were merged into one flop feeding all ln*[513]); dsdv_bk_g tap_k / sink_k bits 1 / 2 (kinds K_XQ / K_XB, excluded by ot_dsdv_vstop) dropped: straps packed to [5:0] = {k[7:3], k[0]} at every dsdv_bk_g instance; const_pins_dropped dsdv_bk_g +4 pins / +10 renames, core_pins via drop_const_pins.py (3712 -> 3561)",
+   "cycles": 0,
+   "bench": "run_bk_bench sel base PASS, LP=1 landed PASS, col gold1 PASS; mutant OT_RTLC_MUT_BKLN (lane 1 holds its old word) caught by sel (no completion) and col (errors 21)",
+   "face_guard_raw": "dsdv_bk_g PASS 3559/3559, 0 self-loops (was 2052 shared/self-loop + 4 dropped)"
+  }
  }
 }

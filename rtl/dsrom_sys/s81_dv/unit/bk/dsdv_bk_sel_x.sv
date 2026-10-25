@@ -34,7 +34,7 @@ module dsdv_bk_sel_x #(
     wire [1415:0] fo;
     dsfd_dvrly_276_SN u_rs (.ck(clk), .rs(rst_n), .i(vi_s), .o(vi_s_r), .ck_o(rck_s));
     dsfd_dvrly_276_NS u_rn (.ck(clk), .rs(rst_n), .i(vi_n), .o(vi_n_r), .ck_o(rck_n));
-    dsdv_bk_g u_g (.clk(clk), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),
+    dsdv_bk_g u_g (.clk(clk), .rst_n(rst_n), .tap_k({tap_k[7:3], tap_k[0]}), .sink_k({sink_k[7:3], sink_k[0]}), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n),
         .vi_s(vi_s_r), .vo_s(vo_s), .vi_n(vi_n_r), .vo_n(vo_n), .ln0(l0), .ln1(l1), .ln2(l2), .ln3(l3), .vd(vd), .fault(fault));
     dsdv_bksel_q u_q0 (.ck(clk), .rst(rst_n), .lane(l0), .f_c(tc[65:0]), .f_cr(tcr[0]), .t_s(fs[864:0]), .t_o(fo[353:0]));
     dsdv_bksel_q u_q1 (.ck(clk), .rst(rst_n), .lane(l1), .f_c(tc[131:66]), .f_cr(tcr[1]), .t_s(fs[1729:865]), .t_o(fo[707:354]));

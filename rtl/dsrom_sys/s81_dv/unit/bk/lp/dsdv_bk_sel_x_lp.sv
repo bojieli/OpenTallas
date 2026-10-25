@@ -60,7 +60,7 @@ module dsdv_bk_sel_x_lp #(
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
     dsfd_dvrly_276_SN u_rs (.ck(ck_rs), .rs(lpr_c_u_rs), .i(vi_s), .o(vi_s_r), .ck_o(rck_s));   // region rs, t = 0
     dsfd_dvrly_276_NS u_rn (.ck(ck_rn), .rs(lpr_c_u_rn), .i(vi_n), .o(vi_n_r), .ck_o(rck_n));   // region rn, t = 0
-    dsdv_bk_g u_g (.clk(ck_core), .rst_n(lpr_c_u_g), .tap_k(tap_k), .sink_k(sink_k), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n), .vi_s(vi_s_r__l_core), .vo_s(vo_s), .vi_n(vi_n_r__l_core), .vo_n(vo_n), .ln0(l0), .ln1(l1), .ln2(l2), .ln3(l3), .vd(vd), .fault(fault));   // region core, t = 3
+    dsdv_bk_g u_g (.clk(ck_core), .rst_n(lpr_c_u_g), .tap_k({tap_k[7:3], tap_k[0]}), .sink_k({sink_k[7:3], sink_k[0]}), .ik(ik), .ek(ek), .uid(uid), .eg_n(eg_n), .vi_s(vi_s_r__l_core), .vo_s(vo_s), .vi_n(vi_n_r__l_core), .vo_n(vo_n), .ln0(l0), .ln1(l1), .ln2(l2), .ln3(l3), .vd(vd), .fault(fault));   // region core, t = 3
     dsdv_bksel_q u_q0 (.ck(ck_core), .rst(lpr_c_u_q0), .lane(l0), .f_c(tc[65:0]), .f_cr(tcr[0]), .t_s(fs[864:0]), .t_o(fo[353:0]));   // region core, t = 3
     dsdv_bksel_q u_q1 (.ck(ck_core), .rst(lpr_c_u_q1), .lane(l1), .f_c(tc[131:66]), .f_cr(tcr[1]), .t_s(fs[1729:865]), .t_o(fo[707:354]));   // region core, t = 3
     dsdv_bksel_q u_q2 (.ck(ck_core), .rst(lpr_c_u_q2), .lane(l2), .f_c(tc[197:132]), .f_cr(tcr[2]), .t_s(fs[2594:1730]), .t_o(fo[1061:708]));   // region core, t = 3

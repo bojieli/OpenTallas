@@ -1,8 +1,8 @@
 {
 "module": "dsdv_bk_g",
 "lef": "physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g.lef",
-"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 514 constant pins dropped (inputs/const_pins_dropped.json)",
-"pinhash": "183103decc4e",
+"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 528 constant pins dropped (inputs/const_pins_dropped.json)",
+"pinhash": "144195efc3c7",
 "pins": [
 {
 "name": "clk[0]",
@@ -12434,40 +12434,28 @@
 "name": "sink_k[1]",
 "layer": "M4",
 "x": 215.958,
-"y": 83.58
+"y": 84.3
 },
 {
 "name": "sink_k[2]",
 "layer": "M4",
 "x": 215.958,
-"y": 83.916
+"y": 84.684
 },
 {
 "name": "sink_k[3]",
 "layer": "M4",
 "x": 215.958,
-"y": 84.3
+"y": 85.068
 },
 {
 "name": "sink_k[4]",
 "layer": "M4",
 "x": 215.958,
-"y": 84.684
-},
-{
-"name": "sink_k[5]",
-"layer": "M4",
-"x": 215.958,
-"y": 85.068
-},
-{
-"name": "sink_k[6]",
-"layer": "M4",
-"x": 215.958,
 "y": 85.452
 },
 {
-"name": "sink_k[7]",
+"name": "sink_k[5]",
 "layer": "M4",
 "x": 215.958,
 "y": 85.836
@@ -12482,40 +12470,28 @@
 "name": "tap_k[1]",
 "layer": "M4",
 "x": 215.958,
-"y": 80.556
+"y": 81.324
 },
 {
 "name": "tap_k[2]",
 "layer": "M4",
 "x": 215.958,
-"y": 80.94
+"y": 81.708
 },
 {
 "name": "tap_k[3]",
 "layer": "M4",
 "x": 215.958,
-"y": 81.324
+"y": 82.044
 },
 {
 "name": "tap_k[4]",
 "layer": "M4",
 "x": 215.958,
-"y": 81.708
-},
-{
-"name": "tap_k[5]",
-"layer": "M4",
-"x": 215.958,
-"y": 82.044
-},
-{
-"name": "tap_k[6]",
-"layer": "M4",
-"x": 215.958,
 "y": 82.428
 },
 {
-"name": "tap_k[7]",
+"name": "tap_k[5]",
 "layer": "M4",
 "x": 215.958,
 "y": 82.812
@@ -21395,5 +21371,5 @@
 "y": 0.042
 }
 ],
-"const_rename": 367
+"const_rename": 377
 }
