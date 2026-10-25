@@ -412,6 +412,8 @@ SCHEMA = {
                            # beat-index bits ceil(log2 beats), MSB).  cycles stay the lane's register stages (no bind
                            # pads); latency adds word_cycles = cycles + beats - 1 (the last beat lands beats - 1 later)
                            "beats": {"type": "integer", "minimum": 2}, "word_bits": {"type": "integer", "minimum": 1},
+                           # PATH-HBM 10-25: beat_index_bits 0 = static slot from boot_start (tkx 2-beat), no index pin
+                           "beat_index_bits": {"type": "integer", "minimum": 0},
                            "reach_um": _pos, "param": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
                            "route_layers": {"type": "array", "items": _layer, "minItems": 1},
                            "note": {"type": "string"}}}},

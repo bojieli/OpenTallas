@@ -617,7 +617,7 @@ def check_latency(P, R):
             # DEC12 multi-beat lane: both keys, and the port carries ceil(word / beats) + beat-index bits
             bt, wb = int(ln_.get("beats", 0)), int(ln_.get("word_bits", 0))
             w0 = int(P.ports[ln_["ports"][0]]["width"])
-            need = -(-wb // bt) + max(1, (bt - 1).bit_length()) if bt and wb else None
+            need = -(-wb // bt) + int(ln_.get("beat_index_bits", max(1, (bt - 1).bit_length()))) if bt and wb else None
             if need is None or w0 != need:
                 R.err("latency", f"lane {lid}: beats {bt} / word_bits {wb} need port width {need}, got {w0}", lane=lid)
         want = P.lane_latency(lid)
