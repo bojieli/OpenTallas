@@ -1,0 +1,39 @@
+{
+  "verdict": "FAIL_NO_DRT",
+  "basis": "actual5_1_grt guides, calibrated setRC_fit, exact native TT/FF libraries, original250/170ps virtual references",
+  "source": "b147da16bc",
+  "overflow": 0,
+  "antenna": 0,
+  "pinreg_mean_ps": {
+    "TT": 285.48,
+    "FF": 213.43
+  },
+  "pinreg_deviation_ps": {
+    "TT": 35.48,
+    "FF": 43.43
+  },
+  "setup_wns_ps": {
+    "TT": 131.81,
+    "FF": 248.05
+  },
+  "hold_wns_ps": {
+    "TT": -120.62,
+    "FF": -129.27
+  },
+  "related_pair_worst_ps": {
+    "TT": 87.21,
+    "FF": 82.62
+  },
+  "related_pair_count": 173778,
+  "unbounded_pairs": 0,
+  "F6": "538/538 <=20um; captures max12.213,launch max11.7",
+  "diagnosis": "Placement improvement was RC optimism. Macro0-to-bank actual guide clock split remains64..75ps; obsolete flags do not form common local subtree. Guarded F4 is only partial improvement.",
+  "FF_negative_hold_endpoints": {
+    "input": 307,
+    "reset": 1,
+    "chain": 620,
+    "other_r2r": 338,
+    "cap_transport": 67
+  },
+  "next": "Explicit one-domain per-ROM269-register+macro buffered subtree with realCKload; legalize and size exact buffer branches, then review image before newCTS; integrate qualified shallow root and short-chain unitgroups. No hold padding or extra flag variants."
+}

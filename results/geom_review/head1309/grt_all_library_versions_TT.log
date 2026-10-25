@@ -1,0 +1,33 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+OT_POSTCTS_GATE TT (global_routing) pinreg n 457 mean 285.48 bound 250.00 dev 35.48 tol 20.0 setup_est 131.81 hold_est -120.62 FAIL
+HEAD_CLOCK tt all n 7787 min 232.390778 mean 281.4222876178245 max 322.984161
+HEAD_CLOCK tt cap0 n 256 min 255.267975 mean 297.933487824219 max 311.773834
+HEAD_CLOCK tt cap1 n 256 min 235.438644 mean 245.27068000390608 max 258.055573
+HEAD_CLOCK tt chain n 17847 min 229.306137 mean 277.5119684513361 max 323.716339
+HEAD_CLOCK tt macro:u_m.u_rom0 n 1 min 233.095078 mean 233.095078 max 233.095078
+HEAD_CLOCK tt macro:u_m.u_rom1 n 1 min 233.562256 mean 233.562256 max 233.562256
+HEAD_CLOCK tt addr0 n 12 min 307.672455 mean 308.43492125 max 308.782928
+HEAD_CLOCK tt addr1 n 12 min 243.170929 mean 253.072333 max 257.739838
+HEAD_STA tt basis GLOBAL_ROUTING_DIAGNOSTIC setup 131.81317201561424 hold -120.61655888974228
+HEAD_HOLD tt input n 307 min -120.616562 mean -82.43108952117267 max -41.250935
+HEAD_HOLD tt reset n 1 min -85.034813 mean -85.034813 max -85.034813
+HEAD_HOLD tt chain n 167 min -55.783932 mean -24.689335718562873 max -0.071221
+HEAD_HOLD tt r2r n 111 min -49.835609 mean -17.848590783783777 max -0.083933
+HEAD_HOLD tt cap_transport n 10 min -15.182272 mean -10.638826 max -0.139250
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_PS tt max n 173778 worst 84.39 bounded 0 signed -84.39 u_m.g_t[0].g_pair.u_a.y[5]$_DFF_PN0_ -> u_m.g_t[1].g_pair.u_a.u_c0.g_r.r[5]$_SDFF_PP0_ crpr 4.24 p99_raw 47.34 verify 0.000
+OT_PS tt min n 173778 worst 87.21 bounded 0 signed 87.21 u_m.cap1[131]$_DFFE_PP_ -> u_m.t_r[131]$_DFF_P_ crpr 4.24 p99_raw 76.50 verify 0.000
+OT_PS_DONE tt 19 s
