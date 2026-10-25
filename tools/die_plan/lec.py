@@ -1474,6 +1474,34 @@ def care_pairs(L, words, seed, tried, keys, cap=256):
     return new
 
 
+def structural_constant_closure(L, log):
+    """Propose exact next-state constants through both sides' padding pipes.
+
+    Called after the existing hypotheses have proved. Every added relation is
+    included in the next simultaneous induction proof before acceptance.
+    """
+    total = 0
+    while True:
+        L.build(with_compare=False, with_hyp=False)
+        new = []
+        for side, keys in (("gold", L.gonly), ("gate", L.tonly)):
+            for k in keys:
+                d = L.dlit.get((side, k), 2)
+                if k.startswith("ff:") and (side, k) not in L.hyp and d in (0, 1):
+                    new.append(((side, k), ("const", d)))
+        for k in L.matched:
+            g, t = L.dlit.get(("gold", k), 2), L.dlit.get(("gate", k), 3)
+            if k.startswith("ff:") and ("both", k) not in L.hyp and g == t and g in (0, 1):
+                new.append((("both", k), ("const", g)))
+        if not new:
+            break
+        L.hyp.update(new)
+        total += len(new)
+    if total:
+        log.append(f"structural constant closure: {total} relations proposed")
+    return total
+
+
 def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
     duplicates, or the two frontends named a register differently, e.g. a register that drives an output port):
@@ -1805,6 +1833,8 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
         log.append(f"correspondence round {rnd}: {len(st)} hypotheses, {len(bad)} failed "
                    f"({sum(st[n] == 'undecided' for n in bad)} undecided) {bad[:6]}")
         if not bad:
+            if structural_constant_closure(L, log):
+                continue     # prove the new constants before returning
             if L.hyp == before or not adding:
                 return
             continue

@@ -550,3 +550,19 @@ def test_cut_output_alias_is_proved_and_mutated_cut_is_rejected(tmp_path, monkey
         m, _ = L.build(with_compare=True, with_hyp=True)
         statuses = _sim_prove(m)
         assert ('differs' in statuses.values()) == mutant
+
+
+def test_structural_constant_closure_proves_both_sides_and_rejects_mutant(tmp_path):
+    for mutant in (False, True):
+        g, gm = _seq(tmp_path, 'pad_gold', ['d'], ['a', 'b', 'o'],
+                     lambda m, x: {'a':0,'b':x['a'],'o':x['b']})
+        t, tm = _seq(tmp_path, 'pad_gate', ['d'], ['p', 'q', 'o'],
+                     lambda m, x: {'p':x['d'] if mutant else 0,'q':x['p'],'o':x['q']})
+        L = lec.Lec(g, gm, t, tm)
+        assert lec.structural_constant_closure(L, []) >= 2
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        statuses = _sim_prove(m)
+        assert ('differs' in statuses.values()) == mutant
+        if not mutant:
+            assert all(k in L.hyp for k in [('gold', 'ff:u_dut.a'), ('gold', 'ff:u_dut.b'),
+                                           ('gate', 'ff:u_dut.p'), ('gate', 'ff:u_dut.q')])
