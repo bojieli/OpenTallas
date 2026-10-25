@@ -1345,14 +1345,17 @@ def fsm_proposals(L, log, words=2, max_bits=4):
     return n_new
 
 
-def seq_traces(L, log, words=4, warm=2, cycles=48, seed=2718):
+def seq_traces(L, log, words=4, warm=2, cycles=96, seed=2718):
     """sequential random simulation of gold and gate from the all-zero register state (every keyed register at
     logical 0 on both sides, as LEC compares from equal states) with the SAME random values on every matched primary
     input / black-box output each cycle -> per register key (side, key): (trace hash, complemented-trace hash) or
     None when constant.  Register correspondence candidates independent of names and of the current hypotheses:
     a re-laid / cross-instance-named gate flop (hcore g_ske skew lines: yosys kept ANOTHER instance's name on a
     merged delay-line flop; HBM tkm leaf: slang X[w][flat] vs read_verilog SX[p][b]) has the trace of its RTL
-    register.  Candidates only: every pair is proved by the inductive correspondence like any other."""
+    register.  Candidates only: every pair is proved by the inductive correspondence like any other.
+    Input bias: per matched input, a random third of the lanes sees it at p = 1/16 and another third at p = 15/16
+    (the rest 1/2), so in some lanes clear / flush controls stay off and deep state fills (HBM tkm leaf: with p = 1/2
+    tile_clr cleared the 64-entry sorted array every other cycle, entries >= 20 never left 0 and stayed unpaired)."""
     import random
     W = 64 * words
     mask = (1 << W) - 1
@@ -1369,8 +1372,14 @@ def seq_traces(L, log, words=4, warm=2, cycles=48, seed=2718):
                 st[(lit >> 1) - I - 1] = mask if lit & 1 else 0
         states.append(st)
     acc = {}
+    part = {k: (rnd.getrandbits(W), rnd.getrandbits(W)) for k in shared}
+
+    def biased(k):
+        a, b = part[k]
+        low = rnd.getrandbits(W) & rnd.getrandbits(W) & rnd.getrandbits(W) & rnd.getrandbits(W)
+        return (rnd.getrandbits(W) & ~a & mask) | (low & a & b) | (~low & a & ~b & mask)
     for cyc in range(warm + cycles):
-        sv = {k: rnd.getrandbits(W) for k in shared}
+        sv = {k: biased(k) for k in shared}
         for si, (side, d, P) in enumerate(sides):
             I, NL, a = d["I"], d["L"], d["ands"]
             r2 = random.Random(seed * 7919 + cyc * 2 + si)
@@ -1404,58 +1413,49 @@ def seq_traces(L, log, words=4, warm=2, cycles=48, seed=2718):
 
 
 def trace_proposals(L, T, tried, log):
-    """pair still-unpaired registers whose sequential traces (seq_traces) are equal, either polarity: gold-only with
-    gate-only, gold-only with a matched register, gold-only with an earlier gold-only of the same trace (synthesis
-    merged both into one gate flop), gate-only with a matched / gold-only register.  At most 2 tries per pair,
-    nearest name first; the inductive proof decides.  -> number of hypotheses added."""
+    """bind still-unpaired registers whose sequential traces (seq_traces) are equal, either polarity, to ONE
+    representative per trace class: a matched register if the class has one, else its first gold-only register.
+    Every other gold-only and gate-only member becomes 'eq' to it.  A class with several members on each side is
+    a set of replicated copies (HBM tkm q_bg / p_bg group copies, re-laid #t on the gate side): copies are equal
+    only together, so pairing them 1:1 by name (wrong group under a re-laid index) is not inductive, binding all of
+    them to one register is.  At most 2 tries per register; the inductive proof decides.  -> hypotheses added."""
     partnered = anchored(L)
     bound = bound_keys(L)
     canon = lambda t: (min(t), int(t[0] > t[1]))          # (canonical hash, polarity of this register)
-    pool_t, pool_m = collections.defaultdict(list), collections.defaultdict(list)
-    for k in L.tonly:
-        t = T.get(("gate", k))
-        if t and k.startswith("ff:") and ("gate", k) not in L.hyp and k not in bound:
-            c, p = canon(t)
-            pool_t[c].append((k, p))
+    cls = collections.defaultdict(lambda: ([], [], []))  # class -> (matched, gold-only, gate-only) [(key, pol)]
     for k in L.matched:
         t = T.get(("gold", k))
         if t and k.startswith("ff:") and T.get(("gate", k)) == t:
             c, p = canon(t)
-            pool_m[c].append((k, p))
-    rep = {}                       # canonical trace -> (gold key whose value carries it, its polarity)
-    n = 0
+            cls[c][0].append((k, p))
     for k in L.gonly:
         t = T.get(("gold", k))
-        if not t or not k.startswith("ff:") or ("gold", k) in L.hyp or k in partnered:
+        if t and k.startswith("ff:") and ("gold", k) not in L.hyp and k not in partnered:
+            c, p = canon(t)
+            cls[c][1].append((k, p))
+    for k in L.tonly:
+        t = T.get(("gate", k))
+        if t and k.startswith("ff:") and ("gate", k) not in L.hyp and k not in bound:
+            c, p = canon(t)
+            cls[c][2].append((k, p))
+    nat = lambda e: [int(x) if x.isdigit() else x for x in re.split(r"(\d+)", e[0])]
+    n = 0
+    for c, (ms, gs, ts) in cls.items():
+        if not gs and not ts:
             continue
-        c, p = canon(t)
-        hit = None
-        for g, q in sorted(pool_t.get(c, []), key=lambda e: name_dist(k, e[0])):
-            if tried[("tr", "gate", g, k)] < 2:
-                hit = ("gate", g, ("eq", "gold", k, p ^ q))
-                pool_t[c].remove((g, q))
-                rep.setdefault(c, (k, p))
-                break
-        if not hit:
-            for g, q in sorted(pool_m.get(c, []), key=lambda e: name_dist(k, e[0])):
-                if tried[("tr", "gold", k, g)] < 2:
-                    hit = ("gold", k, ("eq", "gold", g, p ^ q))
-                    rep.setdefault(c, (g, q))
-                    break
-        if not hit and c in rep and rep[c][0] != k and tried[("tr", "gold", k, rep[c][0])] < 2:
-            hit = ("gold", k, ("eq", "gold", rep[c][0], p ^ rep[c][1]))
-        if not hit:
-            rep.setdefault(c, (k, p))
-            continue
-        tried[("tr",) + hit[:2] + (hit[2][2],)] += 1
-        L.hyp[hit[:2]] = hit[2]
-        n += 1
-    for c, ks in pool_t.items():
-        for g, q in ks:
-            tgt = rep.get(c) or next(iter(pool_m.get(c, [])), None)
-            if tgt and tried[("tr", "gate", g, tgt[0])] < 2:
-                tried[("tr", "gate", g, tgt[0])] += 1
-                L.hyp[("gate", g)] = ("eq", "gold", tgt[0], q ^ tgt[1])
+        gs, ts = sorted(gs, key=nat), sorted(ts, key=nat)
+        if ms:
+            rep, rp = sorted(ms, key=nat)[0]
+        elif gs:
+            rep, rp = gs.pop(0)
+        else:
+            continue                                    # gate-only class with no RTL register: nothing to bind
+        for side, members in (("gold", gs), ("gate", ts)):
+            for k, p in members:
+                if k == rep or tried[("tr", side, k)] >= 2:
+                    continue
+                tried[("tr", side, k)] += 1
+                L.hyp[(side, k)] = ("eq", "gold", rep, p ^ rp)
                 n += 1
     if n:
         log.append(f"trace proposals: {n} register relations from equal sequential traces")
@@ -1498,7 +1498,10 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     replica_proposals(L, log)
     register_alias_proposals(L, log)
     fsm_proposals(L, log)
-    traces = None                      # sequential traces (seq_traces), computed on first need
+    # names-free candidates up front: every register whose sequential trace equals another's (round 0 proves or
+    # drops them with the rest; the signature passes below place what they leave)
+    traces = seq_traces(L, log) if (L.gonly or L.tonly) else {}
+    trace_proposals(L, traces, collections.Counter(), log)
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
     # refine-only rounds drop at least one hypothesis each, so they always end; past rounds + 40 they go on
     # while the time budget lasts (s81 hd_tile: false copies along 60-stage skew delay lines peel one stage
@@ -1609,8 +1612,6 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 # registers no next-state signature places (re-laid / cross-instance-named delay-line flops, slang
                 # vs read_verilog array layouts): pair them by their sequential traces from the zero state
                 if not new:
-                    if traces is None:
-                        traces = seq_traces(L, log)
                     new += trace_proposals(L, traces, tried, log)
                 # self-holding registers (load-enable) depend on their own state, which differs by side: pair the
                 # unpaired ones by the signature of D with every unpaired register held at 0, and at 1
