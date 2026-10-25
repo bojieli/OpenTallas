@@ -1,5 +1,5 @@
 {
- "_doc": "ELEM-S81 canonical legacy core recipes for gen_core_kit_legacy.py. Key = plan hard-core module (or plan_module). ref_tile from results/signoff_1024/inventory.json (bksel_q: the hk2l kit whose views closed; l5: the n32 kit at 1766568f01 = main's binding). Defaults: util = spec route.pd, CTS args of VQ r12, hold margin 15, fanout 24.",
+ "_doc": "ELEM-S81 canonical legacy core recipes for gen_core_kit_legacy.py. Key = plan hard-core module (or plan_module). ref_tile from results/signoff_1024/inventory.json (bksel_q: the hk2l kit whose views closed; l5: the n32 kit at 1766568f01 = main's binding). Defaults: util = spec route.pd, CTS args of VQ r12, hold margin 15, fanout 24. 10-25 (S81-CORES/LEGACY): qbank_N/S + sstn_base566 ft1_pairs dropped: main RTL (dc23a738f / e7390b932) lands every station input in its own pin register (2 flops per bit, +1 cycle), so no one-station pair exists and canonical face_guard needs none. dsfd_rstg / ot_s81_sstn_payload536: relay2 (0c1b14693) 2-flop stations, suffix r2, no ft1_pairs.",
  "dsdv_gunit_l0": {
   "ref_tile": "physical/ref_tile/dsdv_gunit_l0"
  },
@@ -28,7 +28,8 @@
   "ref_tile": "physical/ref_tile/dsdv_gunit_l5f"
  },
  "dsdv_bk_g": {
-  "ref_tile": "physical/ref_tile/s81dvbk_g2"
+  "ref_tile": "physical/ref_tile/s81dvbk_g2",
+  "rtl_dirs": true
  },
  "dsdv_bksel_c": {
   "ref_tile": "physical/ref_tile/s81dvbk_selc2"
@@ -37,7 +38,8 @@
   "ref_tile": "physical/ref_tile/s81dvbk_sq_hk2l"
  },
  "ot_s81dv_xfin": {
-  "ref_tile": "physical/ref_tile/s81dv_xfin"
+  "ref_tile": "physical/ref_tile/s81dv_xfin",
+  "rtl_dirs": true
  },
  "ot_s81sl_capc5r": {
   "ref_tile": "physical/ref_tile/s81sl_capc5r"
@@ -76,42 +78,10 @@
  },
  "dsfd_qbank_N": {
   "ref_tile": "physical/ref_tile/s81fill2_qbank_n",
-  "ft1_pairs": [
-   [
-    "e_r0",
-    "d_r0"
-   ],
-   [
-    "e_r1",
-    "d_r1"
-   ],
-   [
-    "e_st",
-    "d_st"
-   ]
-  ],
   "core_margin": 1.08
  },
  "dsfd_qbank_S": {
   "ref_tile": "physical/ref_tile/s81fill2_qbank_s",
-  "ft1_pairs": [
-   [
-    "i_cfg",
-    "o_cfg"
-   ],
-   [
-    "i_go",
-    "o_go"
-   ],
-   [
-    "i_x0",
-    "o_x0"
-   ],
-   [
-    "i_x1",
-    "o_x1"
-   ]
-  ],
   "core_margin": 1.08
  },
  "ot_s81_cfg7_seq": {
@@ -122,21 +92,7 @@
   "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr"
  },
  "ot_s81_sstn_base566": {
-  "ref_tile": "physical/ref_tile/s81_sstn_base566",
-  "ft1_pairs": [
-   [
-    "cci",
-    "cc"
-   ],
-   [
-    "xai",
-    "xa"
-   ],
-   [
-    "xbi",
-    "xb"
-   ]
-  ]
+  "ref_tile": "physical/ref_tile/s81_sstn_base566"
  },
  "ot_s81_sstn_payload536": {
   "ref_tile": "physical/ref_tile/s81_sstn_payload536",
