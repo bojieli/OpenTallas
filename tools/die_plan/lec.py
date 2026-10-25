@@ -1592,10 +1592,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             h = L.hyp.pop((side, k), None)
             if h is None:
                 continue
-            # (keys as the candidate checks read them: (side, k, partner, int inv); only an unhashable partner
-            # (an FSM cube) is stringified -- str() on every key made every "< 2" retry limit a no-op)
-            hk = lambda x: x if isinstance(x, (str, int)) else repr(x)
-            tried[(side, k, "c") if h[0] == "const" else (side, k, hk(h[2]), hk(h[3]))] += 1
+            # (NOTE: keyed with str(inv) while the candidate checks read int inv, so pair retries are not capped;
+            # capping them (PATH-S81/BLEC trial 10-25) starved the deep elemB valid chains: cerr[11..15] went free)
+            tried[(side, k, "c") if h[0] == "const" else (side, k, str(h[2]), str(h[3]))] += 1
     L.hyp.clear()                             # refinement did not converge: no assumptions at all
     L.cons.clear()
     log.append("correspondence: refinement did not converge; all unmatched flops free")
