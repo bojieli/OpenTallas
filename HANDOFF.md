@@ -252,3 +252,4 @@ CODEX: 2026-10-24 21:10 PDT PART-CAP parked: N14 route DRC0 1.068M cells peak57.
 CODEX: 2026-10-24 21:12 PDT TRIAL-HBM parked on Claude reset; collected fab_rep_m8 TT+398.87/FF-2.52 diagnostic FAIL; B2l r4 GRT live preserved; draft DEF-specialnet PG helper saved, no new fleet jobs.
 
 CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corrective-pad transport analyzer fixed (2 tests PASS); su_mon hierarchy build + Qwen chains continue; no new heavy jobs.
+2026-10-24 21:11 PDT CODEX: CLOCK/RESET parked: signoff pair-skew WIP codex/kit-clock-1024@b88258680 (27 Python PASS, physical smoke NOT RUN); head new-spine FF-10.263; HBM v8 clock FAIL110.88ps/keepouts diagnosed; old CP1P routes remain live.
