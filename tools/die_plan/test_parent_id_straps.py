@@ -24,3 +24,11 @@ def test_duplicate_descriptors_must_agree():
     b={'inst':'u_tile','parent_id_straps':{'tile_id':{'width':16,'value':2}}}
     assert type_parent_id_straps({'contents':[a],'hard_cores':[a]})=={'u_tile':a['parent_id_straps']}
     with pytest.raises(ValueError):type_parent_id_straps({'contents':[a],'hard_cores':[b]})
+
+
+def test_explicit_local_leaf_mapping_is_exact():
+    d={'inst':'u_t00','parent_id_leaf':'u_t[0][0]',
+       'parent_id_straps':{'tile_id':{'width':16,'value':5}}}
+    assert set(type_parent_id_straps({'contents':[d]}))=={'u_t[0][0]'}
+    d['parent_id_leaf']=''
+    with pytest.raises(ValueError):type_parent_id_straps({'contents':[d]})
