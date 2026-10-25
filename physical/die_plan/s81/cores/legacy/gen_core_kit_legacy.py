@@ -80,7 +80,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import face_guard as G
 net, top, skip, pins, out = sys.argv[1:6]
-r = G.guard(Path(net).read_text(), top, skip_re=skip)
+_ftf = Path(__file__).resolve().parent / "ft_stations.txt"
+r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())
 want = {(p["bus"] if p.get("bit") is None else f"{p['bus']}[{p['bit']}]") for p in json.load(open(pins))
         if not re.match(skip, p["bus"])}
 T = G.parse(Path(net).read_text())[top]
@@ -206,7 +207,7 @@ $DOCKER run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap=
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
-  N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
+  N=\$(ls /work/run/results/asap7/*/base/1_synth.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard_core.py \$N $TOP '$SKIP' /work/pins.json /work/face_guard.json; rc=\$?; \
     if [ \$rc != 0 ] && [ -f /work/face_guard_continue ]; then echo 'FACE_GUARD FAIL: PATHFINDING physical run continues (face_guard_continue), FAIL recorded'; rc=0; fi; fi; \
   if [ \$rc = 0 ]; then \$M $GOAL; rc=\$?; fi; \
@@ -510,6 +511,13 @@ def main():
         shutil.copyfile(TOOL / f, kd / f)
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)
+    # one-station bus pairs of the core's RTL contract (reviewed per recipe; face_guard / signoff read ft_stations.txt)
+    pairs = rec.get("ft1_pairs", [])
+    for i_, o_ in pairs:
+        if not (i_ in buses_in and o_ in buses_out):
+            raise SystemExit(f"{mod}: ft1 pair {i_}>{o_} is not an input -> output bus pair of the plan pins")
+    (kd / "ft_stations.txt").write_text("# core kit (gen_core_kit_legacy.py): no ft slots; one-station bus pairs below\n"
+                                        + "".join(f"pair {i_} {o_}\n" for i_, o_ in pairs))
     # typed boundary roles (signoff.py boundary_controls): the clock / reset buses only, never a data pin
     roles = {ckb: "clk", **{r: "reset" for r in rsb}}
     (kd / "core.json").write_text(json.dumps(dict(module=mod, plan_type=ptype, boundary_role=roles), indent=1) + "\n")
@@ -544,7 +552,13 @@ def main():
             f"{ms} {{{' '.join('{%g %g %s}' % s for s in v)}}}" for ms, v in mplace.items()))
     # register-on-every-pin synthesis hook of the closed kits (keep_pin_regs: distinct pin registers are not folded)
     shutil.copyfile(REPO / "physical/common_flow/ot_keep_regs.tcl", kd / "ot_keep_regs.tcl")
-    extra = ["export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl", "export OT_KEEP_PIN_REGS = 1"]
+    extra = ["export SYNTH_CANONICALIZE_TCL = /work/ot_keep_regs.tcl", "export OT_KEEP_PIN_REGS = 1",
+             # implemented-netlist face registers (output flop clones, unused-input captures) + 1_synth.v for the gates
+             "export POST_SYNTH_TCL = /work/core_face_post_synth.tcl", f"export OT_CORE_CLK = {ckb}",
+             f"export OT_CORE_SKIP = {' '.join([ckb] + rsb)}",
+             f"export SYNTH_MEMORY_MAX_BITS = {rec.get('memory_max_bits', 262144)}"]
+    shutil.copyfile(REPO / "physical/common_flow/pin_reg_split.tcl", kd / "pin_reg_split.tcl")
+    shutil.copyfile(HERE / "core_face_post_synth.tcl", kd / "core_face_post_synth.tcl")
     gpl = "/work/face_flops.tcl"
     m_ = CORE_MARGIN_UM
     params = dict(spec.get("params", {}) or {}, **rec.get("params", {}))
@@ -593,7 +607,8 @@ def main():
               f"export MACRO_ROWS_HALO_X = {rec.get('macro_rows_halo', 4.32):g}",
               f"export MACRO_ROWS_HALO_Y = {rec.get('macro_rows_halo', 4.32):g}"]
              if mplace else []),
-           "export SYNTH_HDL_FRONTEND = slang",
+           # legacy closures used the default Yosys frontend (it keeps 1-bit [0:0] buses: plan pins ck[0], fo[0])
+           *(["export SYNTH_HDL_FRONTEND = slang"] if rec.get("slang") else []),
            *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()]]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     rev = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True,
