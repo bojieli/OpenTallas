@@ -9,7 +9,9 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_vsw #(
     parameter integer LM = 5,
-    parameter integer LA = 4
+    parameter integer LA = 4,
+    // SRAM-side lb input stage, compensated inside its wait line (0 external cycles).
+    parameter integer LB_STAGE = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -43,7 +45,7 @@ module ot_s81sl_vsw #(
     wire [31:0] ln_g = v_q ? d_q[31:0] : sg[31:0], ln_u = v_q ? d_q[159:128] : su[31:0];
     wire [31:0] ln_w = v_q ? w_q : sw, ln_l = v_q ? l_q : sl;
     wire [31:0] a, ab; wire [1:0] ta; wire vo, lf;
-    ot_s81_su_swl #(.LM(LM), .LA(LA), .TW(2)) u_l (.clk(clk), .rst_n(rs_l), .v(ln_v), .g(ln_g), .u(ln_u), .w(ln_w),
+    ot_s81_su_swl #(.LM(LM), .LA(LA), .TW(2), .LB_STAGE(LB_STAGE)) u_l (.clk(clk), .rst_n(rs_l), .v(ln_v), .g(ln_g), .u(ln_u), .w(ln_w),
         .lim(ln_l), .t(v_q ? 2'd0 : cnt + 2'd1), .a(a), .ta(ta), .vo(vo), .fault(lf));
     ot_dsrom_su_bf16rnd u_r (.x(a), .y(ab));
     // deserialiser: element ta -> bits 16 ta; the group leaves with its 4th result

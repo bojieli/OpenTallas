@@ -1,0 +1,11 @@
+{
+  "status": "NOT_ADOPTED",
+  "opt_in": "LB_STAGE=1,default0",
+  "active_data_flops_added": 66,
+  "external_added_cycles": 0,
+  "word_per_cycle": 1,
+  "mechanism": "SRAM-side inputstage +1 edge, SRAM ringdepth21->20; totalwaitline remains21",
+  "exactness": "mainVSW fullshape3seeds120900ALLpublicoutputcyclechecks,missingstage mutantcaughtcycle129; separateLR1physicalproposalalsopassed120900checks",
+  "physical_status": "NOT RUN; placement/F6/clock/signoffpending",
+  "rationale": "separateu_la outputcaptureand u_lb inputregister allowsbothmacrointerfaces localwithoutanaddedpubliccycle"
+}

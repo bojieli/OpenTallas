@@ -22,7 +22,9 @@
 // SRAM wait line (ot_sram_dline on the 128 x 256 macro): q(t) = d(t - D), D in [3, 128], W <= 256 a macro
 module ot_s81_su_dl128 #(
     parameter integer W = 108,
-    parameter integer D = 80
+    parameter integer D = 80,
+    // Physical SRAM write interface stage; reduce ring depth to keep total D.
+    parameter integer IN_STAGE = 0
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -31,13 +33,21 @@ module ot_s81_su_dl128 #(
 );
     localparam integer NM = (W + 255) / 256;
 `ifndef SYNTHESIS
-    initial if (D < 3 || D > 128) $fatal(1, "ot_s81_su_dl128: D must be in [3, 128]");
+    initial if (D < 3 + (IN_STAGE != 0) || D > 128) $fatal(1, "ot_s81_su_dl128: D must be in [3, 128]");
 `endif
     reg [6:0] wp, rp;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wp <= 7'd0; rp <= 7'd0 - (D - 2); end
+        if (!rst_n) begin wp <= 7'd0; rp <= 7'd0 - (D - 2 - (IN_STAGE != 0)); end
         else begin wp <= wp + 7'd1; rp <= rp + 7'd1; end
     wire [NM*256-1:0] wd = {{(NM*256-W){1'b0}}, d};
+    wire [NM*256-1:0] wd_mem;
+    generate if (IN_STAGE != 0) begin : g_input_stage
+        reg [NM*256-1:0] data_at_macro;
+        always @(posedge clk) data_at_macro <= wd;
+        assign wd_mem = data_at_macro;
+    end else begin : g_direct_input
+        assign wd_mem = wd;
+    end endgenerate
     wire [NM*256-1:0] rq;
     reg  [NM*256-1:0] cq;                                  // capture flops at the macro outputs
     always @(posedge clk) cq <= rq;
@@ -45,7 +55,7 @@ module ot_s81_su_dl128 #(
     genvar m;
     generate for (m = 0; m < NM; m = m + 1) begin : g_m
         ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(clk), .r_ce_in(1'b1), .r_addr_in(rp), .rd_out(rq[256*m +: 256]),
-            .w_ce_in(1'b1), .w_addr_in(wp), .wd_in(wd[256*m +: 256]), .w_mask_in({256{1'b1}}),
+            .w_ce_in(1'b1), .w_addr_in(wp), .wd_in(wd_mem[256*m +: 256]), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
 endmodule
@@ -53,7 +63,7 @@ endmodule
 // one SwiGLU lane (ot_dsrom_su_swiglu_lane, ROUTED 1, IREG 0, ESUM 0) with its g / u / w delay lines in SRAM and a tag
 // carried to the result; fault = the units' raw flags (the engine keeps them sticky)
 module ot_s81_su_swl #(
-    parameter integer LM = 5, LA = 4, TW = 12
+    parameter integer LM = 5, LA = 4, TW = 12, LB_STAGE = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -91,7 +101,7 @@ module ot_s81_su_swl #(
     wire [31:0] g_d, u_d, w_d, uA, wA, wB; wire [TW-1:0] tA, tB;
     ot_s81_su_dl128 #(.W(96 + TW), .D(D_EXP + LA)) u_la (.clk(clk), .rst_n(rst_n), .d({p_t, p_w, p_u, p_g}),
                                                         .q({tA, wA, uA, g_d}));
-    ot_s81_su_dl128 #(.W(64 + TW), .D(D_DIV)) u_lb (.clk(clk), .rst_n(rst_n), .d({tA, wA, uA}), .q({tB, wB, u_d}));
+    ot_s81_su_dl128 #(.W(64 + TW), .D(D_DIV), .IN_STAGE(LB_STAGE)) u_lb (.clk(clk), .rst_n(rst_n), .d({tA, wA, uA}), .q({tB, wB, u_d}));
     ot_hdc_delay #(.W(32), .D(LM)) u_wd (.clk(clk), .rst_n(rst_n), .d(wB), .q(w_d));
     ot_hdc_delay #(.W(TW), .D(2 * LM)) u_td (.clk(clk), .rst_n(rst_n), .d(tB), .q(ta));
     // s = g' / (exp(-g') + 1)
