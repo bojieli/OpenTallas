@@ -1,0 +1,66 @@
+{
+ "status": "ACTUAL_PLACEMENT_ONLY_PASS_NO_GRT",
+ "movers": 1466,
+ "all_movers_FIRM": true,
+ "actual_cell_count": 20831,
+ "mover_bbox_equals_allocation": true,
+ "row_orientation_matches": true,
+ "rows_occupied": 3057,
+ "full_row_overlaps": 0,
+ "max_ribbon_dx_um": 0.027000000000001023,
+ "added_cycles": 0,
+ "signal_bbox_HPWL_um_max": [
+  365.832,
+  "rsf_o[513]"
+ ],
+ "signal_bbox_HPWL_um_top10": [
+  [
+   365.832,
+   "rsf_o[513]"
+  ],
+  [
+   365.454,
+   "rsf_o[503]"
+  ],
+  [
+   365.118,
+   "rsf_o[501]"
+  ],
+  [
+   364.782,
+   "rsf_o[499]"
+  ],
+  [
+   364.758,
+   "rsf_o[500]"
+  ],
+  [
+   364.062,
+   "rsf_o[495]"
+  ],
+  [
+   361.392,
+   "rsf_o[481]"
+  ],
+  [
+   361.056,
+   "rsf_o[479]"
+  ],
+  [
+   360.386,
+   "rsf_o[484]"
+  ],
+  [
+   360.328,
+   "rsf_o[478]"
+  ]
+ ],
+ "signal_bbox_HPWL_gt450": 0,
+ "geometry_note": "Boundingbox of actual terminal-cell centers, includes BPin boxes; not routedRC or timing. Ideal/global clock excluded by name.",
+ "first_attempt_failure": "validator used dbBox.dx/dy, actualAPI getDX/getDY; DPLcompleted before instrumentationfailure; fixed then sameplacementvehiclePASS",
+ "remaining": [
+  "postDPL actualimage independentreview",
+  "TTsetup/FFhold/DRV/GRT pilot gate",
+  "production activation HELD"
+ ]
+}

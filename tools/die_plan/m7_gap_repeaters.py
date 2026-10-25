@@ -89,7 +89,7 @@ proc ot_gap_validate_after_dpl {{max_dx 4.0}} {
     set i [$block findInst $nm]
     if {$i eq "NULL"} { lappend failures "$nm:missing"; continue }
     set b [$i getBBox]; set x [expr {[$b xMin]/double($dbu)}]; set y [expr {[$b yMin]/double($dbu)}]
-    set h [expr {[$b dy]/double($dbu)}]; set oldx [lindex $ot_gap_moved($nm) 0]
+    set h [expr {[$b getDY]/double($dbu)}]; set oldx [lindex $ot_gap_moved($nm) 0]
     set fit 0
     foreach band $ot_gap_bands { lassign $band lo hi; if {$y>=$lo-1e-6 && $y+$h<=$hi+1e-6} { set fit 1 } }
     if {!$fit || abs($x-$oldx)>$max_dx} { lappend failures "$nm:x=$x,y=$y,oldx=$oldx" }
@@ -156,3 +156,52 @@ def emit_sites_tcl(sites):
                   '$ot_gap_i setPlacementStatus FIRM',
                   f'set ot_gap_moved({name}) [list {s["intended_x_um"]} {s["y_um"]} {s["width_um"]} {s["height_um"]}]']
     return '\n'.join(lines)+'\n'
+
+
+def allocate_capture(type_raw, capture, out, original_rtl=None):
+    """Same snapshot adapter for prototype and production (inside admitted flow).
+
+    Production capture cells.tsv carries explicit fresh bits from before/after
+    ID comparison. The original-RTL option only imports the initial diagnostic
+    vehicle, which predates that shared capture hook. No name-based new-ID guess.
+    """
+    import json
+    from pathlib import Path
+    capture=Path(capture);out=Path(out);out.mkdir(parents=True,exist_ok=True)
+    old=None
+    if original_rtl:
+        old={a[1] for ln in Path(original_rtl).read_text().splitlines()
+             if len(a:=ln.split())>2 and a[2].startswith('(')}
+    cells=[]
+    src=capture/('cells.tsv' if (capture/'cells.tsv').exists() else 'pre_dpl_insts.tsv')
+    for ln in src.read_text().splitlines():
+        a=ln.split('\t')
+        if len(a)==7:fresh=bool(int(a[6]))
+        elif old is not None:fresh=a[0] not in old and a[1].startswith(('BUF','INV'))
+        else:raise ValueError('exact before/after ID capture required')
+        cells.append(dict(name=a[0],master=a[1],bbox_um=[float(x)/1000 for x in a[2:6]],is_new_buffer=fresh))
+    rows=[]
+    for ln in (capture/'pre_dpl.def').read_text().splitlines():
+        if not ln.startswith('ROW '):continue
+        a=ln.split()
+        if a[8:11]!=['BY','1','STEP']:raise ValueError('unsupported actual row geometry')
+        rows.append(dict(x_um=int(a[3])/1000,y_um=int(a[4])/1000,orient=a[5],count=int(a[7]),step_um=int(a[11])/1000))
+    sites=allocate_sites(type_raw,cells,rows)
+    report=dict(status='INACTIVE_ALLOCATION_REQUIRES_GEOMETRY_REVIEW',rows=len(rows),cells=len(cells),
+                new_buffer_count=sum(c['is_new_buffer'] for c in cells),allocated=len(sites),
+                max_dx_um=max((abs(s['x_um']-s['intended_x_um']) for s in sites),default=0),sites=sites)
+    (out/'actual_sites.json').write_text(json.dumps(report,indent=1)+'\n')
+    (out/'allocated_sites.tcl').write_text(emit_sites_tcl(sites))
+    (out/'adapter.tcl').write_text(emit_tcl(type_raw))
+    return report
+
+
+if __name__=='__main__':
+    import argparse,json
+    from pathlib import Path
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('plan');ap.add_argument('type');ap.add_argument('capture');ap.add_argument('out')
+    ap.add_argument('--original-rtl',help='initial diagnostic only; production uses exact capture fresh bits')
+    args=ap.parse_args();raw=json.loads(Path(args.plan).read_text())
+    result=allocate_capture(raw['partition_types'][args.type],args.capture,args.out,args.original_rtl)
+    print(json.dumps({k:v for k,v in result.items() if k!='sites'}))

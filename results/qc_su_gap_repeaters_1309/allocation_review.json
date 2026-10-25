@@ -2,7 +2,7 @@
  "status": "GEOMETRY_ALLOCATION_ONLY_NOT_ACTIVE",
  "pre_dpl_unit": "oth-ubuntu-1940012-1792961626",
  "read_db_rows_unit": "oth-ubuntu-2728924-1792961745",
- "new_buffers": 10420,
+ "new_buffers": 10410,
  "moved": 1466,
  "preserved_west_buffers": 107,
  "actual_rows": 4928,
@@ -21,5 +21,7 @@
   "actual OpenDB apply + legal row orientation bbox validation",
   "post-DPL x bound/overlap check",
   "TTsetup FFhold DRV GRT gate"
- ]
+ ],
+ "initial_buffers_preserved": 10,
+ "capture_accounting": "10420 total BUF/INV minus10 initial tap buffers =10410 new; all1466 movers are new wire buffers"
 }
