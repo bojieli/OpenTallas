@@ -462,6 +462,41 @@ def lef_contract(path, module):
     return [w, h], pins
 
 
+def pin_expand(pins, exp, w, h, step=0.096):
+    """KITS-SPARE-2/HB 10-25: widen scalar / narrow contract pins into one pin per kept capture flop (recipe
+    "pin_expand": {bus: n_bits}).  The bus keeps its face and layer; its old centres are reused (in order) and the extra
+    bits take the free tracks of that face nearest the old centroid, >= step um from every other pin of the face."""
+    out = list(pins)
+    for bus, n in exp.items():
+        old = [q for q in out if re.sub(r"\[\d+\]$", "", q["name"]) == bus]
+        if not old:
+            raise SystemExit(f"pin_expand: bus {bus} not in the contract")
+        f = face_of(old[0]["x"], old[0]["y"], w, h)
+        L = old[0]["layer"]
+        ax = "x" if f in "NS" else "y"
+        pitch, off = {"M3": (0.036, 0.009), "M4": (0.048, 0.012), "M5": (0.048, 0.012)}[L]
+        rest = [q for q in out if q not in old]
+        taken = sorted(q[ax] for q in rest if face_of(q["x"], q["y"], w, h) == f)
+        cen = sum(q[ax] for q in old) / len(old)
+        lim = (w if ax == "x" else h) - CORE_MARGIN_UM
+        cand, k0 = [], round((cen - off) / pitch)
+        for d in range(0, int(lim / pitch) * 2):
+            for k in ((k0 + d // 2) if d % 2 == 0 else (k0 - (d + 1) // 2),):
+                c = round(off + k * pitch, 4)
+                if CORE_MARGIN_UM <= c <= lim and all(abs(c - t) >= step - 1e-6 for t in taken + cand):
+                    cand.append(c)
+            if len(cand) >= n:
+                break
+        if len(cand) < n:
+            raise SystemExit(f"pin_expand: {bus}: only {len(cand)} free {f} tracks")
+        perp = old[0]["y"] if ax == "x" else old[0]["x"]
+        new = []
+        for i, c in enumerate(sorted(cand[:n])):
+            new.append(dict(name=f"{bus}[{i}]", layer=L, x=c if ax == "x" else perp, y=perp if ax == "x" else c))
+        out = rest + new
+    return out
+
+
 def core_insertion(rec, plan):
     """FLOW 10-25 per-corner IO vclk binding (gen_core_kit_qc.core_insertion form): TT = recipe insertion_ps (measured
     core) else the plan clock insertion_ps; FF = recipe insertion_ff_ps, else plan clock.insertion_ff_ps (only with the
@@ -527,7 +562,26 @@ def main():
     plan = json.load(open(a.plan))
     if rec.get("plan"):
         plan = json.load(open(REPO / rec["plan"]))
-    if rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
+    if rec.get("child_of"):
+        # KITS-SPARE-2/HB 10-25 (COORD ruling 10:23 item 3): a HARD CHILD master of a plan hard core (e.g. the 16
+        # hist_bank children of dsdv_bksel_q) gets ONE kit before its parent.  Pin contract = the child view LEF the
+        # parent's spec binds (every children[] entry of the parent must name exactly that view); plan type = the
+        # parent's plan type (the child has no plan row of its own).
+        par = rec["child_of"]
+        prec = json.load(open(a.recipes))[par]
+        pspec = json.loads(git_show(prec["spec_git"])) if prec.get("spec_git") else \
+            json.load(open(REPO / prec["ref_tile"] / "spec.json"))
+        views = sorted({c["view"] for c in pspec.get("children", [])})
+        want = str(Path(rec["lef_contract"]).parent)
+        if views != [want]:
+            raise SystemExit(f"{a.module}: parent {par} children views {views} != [{want}] (one master required)")
+        ptype, _ = plan_core(plan, par)
+        outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
+        if rec.get("pin_expand"):
+            lpins = pin_expand(lpins, rec["pin_expand"], *outline)
+        hc = dict(module=a.module, outline_um=outline, lef=rec["lef_contract"], pins=lpins,
+                  pins_file=rec["lef_contract"], child_of=par, child_count=len(pspec["children"]))
+    elif rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
         ptype = rec["plan_type"]
         assert any(c.get("module") == a.module for c in plan["partition_types"][ptype].get("contents", [])), ptype
         outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
@@ -564,7 +618,8 @@ def main():
     srcs = []
     patches = {pt["file"]: pt for pt in rec.get("rtl_patches", [])}
     bbs = set()
-    for f in spec["sources"] + rec.get("includes", []):
+    drop = set(rec.get("drop_sources", []))   # bench-only golden models listed in a historic spec (not synthesised)
+    for f in [s for s in spec["sources"] if s not in drop] + rec.get("includes", []):
         dst = kd / "rtl" / Path(f).name
         if dst.exists() and dst.read_bytes() != (REPO / f).read_bytes():
             raise SystemExit(f"rtl name clash {dst.name}")
@@ -844,6 +899,9 @@ def main():
     fz = dict(schema="opentallas.s81.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),
+              **({"child_of": hc["child_of"], "child_count": hc["child_count"], "drop_sources": sorted(drop),
+                   "pin_expand": rec.get("pin_expand", {})}
+                 if hc.get("child_of") else {}),
               pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else S81 / hc["pins_file"]), pins=len(pins), plan_lef=hc["lef"],
               clocks=clks, resets=rsts,
               recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
