@@ -1,0 +1,23 @@
+ot-run: localhost      admits   267 GB (avail 343, reserve 0, fresh 10, peak 0.6, headroom 0, waiters 0/0 GB) load 73/256 running 17 disk 1378 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-1920636-1792953099 after 0 s
+== MIF=1 vs ORIG (and MIF=0 vs ORIG)
+MITER_RP1 N=20000 seed=1 q_mism=0 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19649 reads=14520 kind1_writes=9062
+MITER_RP1 N=20000 seed=7 q_mism=0 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19705 reads=14448 kind1_writes=9049
+MITER_RP1 N=20000 seed=1234 q_mism=0 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19672 reads=14449 kind1_writes=9161
+MUTANT mut_rb
+RP1 MISMATCH c=23
+RP1 MISMATCH c=25
+RP1 MISMATCH c=26
+MITER_RP1 N=20000 seed=3 q_mism=18778 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19703 reads=14580 kind1_writes=9057
+MUTANT mut_rs
+RP1 MISMATCH c=27
+RP1 MISMATCH c=30
+RP1 MISMATCH c=35
+MITER_RP1 N=20000 seed=3 q_mism=19824 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19703 reads=14580 kind1_writes=9057
+MUTANT mut_wb
+RP1 MISMATCH c=21
+RP1 MISMATCH c=22
+RP1 MISMATCH c=24
+MITER_RP1 N=20000 seed=3 q_mism=9666 fault_mism=0 mif0_vs_orig=0 nonzero_cmp=19703 reads=14580 kind1_writes=9057
+ot-run: RAN on localhost (unit oth-ubuntu-1920636-1792953099): exit 0
