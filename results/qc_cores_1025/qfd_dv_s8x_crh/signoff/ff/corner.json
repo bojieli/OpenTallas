@@ -1,0 +1,124 @@
+{
+ "done": true,
+ "design": "qfd_dv_s8x_crh",
+ "cells": 146364.0,
+ "parasitics": "spef",
+ "clocks": [
+  "clk",
+  "vclk"
+ ],
+ "vclks": [
+  "vclk"
+ ],
+ "periods": {
+  "clk": 833.0,
+  "vclk": 833.0
+ },
+ "clock_ports": [
+  "ck"
+ ],
+ "inputs": [
+  "cr_addr",
+  "cr_re",
+  "rst_n",
+  "tw_addr",
+  "tw_d",
+  "tw_kind",
+  "tw_we"
+ ],
+ "outputs": [
+  "fault",
+  "q"
+ ],
+ "overlay": "applied vclk in_min -40 out_min 0",
+ "sdc_wns_max": 276.39,
+ "sdc_wns_min": 3.87,
+ "sdc_tns_max": 0.0,
+ "sdc_tns_min": 0.0,
+ "sdc_nviol_max": 0.0,
+ "sdc_nviol_min": 0.0,
+ "std_wns_max": 276.39,
+ "std_wns_min": 3.87,
+ "std_tns_max": 0.0,
+ "std_tns_min": 0.0,
+ "std_nviol_max": 0.0,
+ "std_nviol_min": 0.0,
+ "slew_viol": 0.0,
+ "cap_viol": 0.0,
+ "fanout_max": 27.0,
+ "fanout_worst_net": "clknet_leaf_23_ck_regs",
+ "fanout_viol": 0.0,
+ "check_setup": {
+  "unconstrained": 0,
+  "unclocked": 0,
+  "loops": 0,
+  "multiple_clock": 0,
+  "generated": 0
+ },
+ "ck_errors": 0.0,
+ "insertion_all": {
+  "n": 2208,
+  "min": 220.01,
+  "mean": 247.91,
+  "max": 293.37,
+  "spread": 73.36
+ },
+ "insertion_pinflops": {
+  "n": 998,
+  "min": 223.61,
+  "mean": 240.62,
+  "max": 264.64,
+  "spread": 41.03
+ },
+ "pair_skew": {
+  "done": true,
+  "checks": {
+   "max": {
+    "n": 10349.0,
+    "worst_abs_ps": 62.04,
+    "bounded": false,
+    "worst_signed_ps": -62.04,
+    "worst_launch": "u_twcd/q[299]$_DFF_P_",
+    "worst_capture": "g_crb[1].u_m",
+    "worst_crpr_ps": 1.33,
+    "p99_raw_ps": 57.96,
+    "searched": 17.0,
+    "nopath": 0.0,
+    "verify_ps": 0.0
+   },
+   "min": {
+    "n": 10349.0,
+    "worst_abs_ps": 68.24,
+    "bounded": false,
+    "worst_signed_ps": 68.24,
+    "worst_launch": "ptw_d[391]$_DFF_P_",
+    "worst_capture": "u_twcd/q[391]$_DFF_P_",
+    "worst_crpr_ps": 3.73,
+    "p99_raw_ps": 58.45,
+    "searched": 1.0,
+    "nopath": 0.0,
+    "verify_ps": 0.0
+   }
+  },
+  "counts": {
+   "regs": 2208.0,
+   "no_clock_arrival": 0.0,
+   "data_pins": 3350.0,
+   "pairs": 10349.0,
+   "inter_clock": 0.0
+  },
+  "method": "tag",
+  "seconds": 1.0,
+  "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+  "tsv": "pair_skew.tsv"
+ },
+ "ocv5_wns_max": 233.16,
+ "ocv5_wns_min": -20.06,
+ "corner": "ff",
+ "rc": 0,
+ "macro_libs": [
+  "/srv/opentallas-scratch2/claude/codex-qc-cores/crh_i291_m5/macros/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib"
+ ],
+ "macro_missing": [],
+ "errors": []
+}
