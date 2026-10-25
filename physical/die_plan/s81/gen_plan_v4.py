@@ -2516,11 +2516,19 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 FT_MACRO_ADD.append(dict(type=tn_, slot=s_["name"], stations=[s_["stations"], s_["stations"] + a_],
                                          why="core escape at the 405-um kit reach"))
                 s_["stations"] += a_
-    from tools.die_plan.ft_sites import place as place_ft_bits
+    from tools.die_plan.ft_sites import place as place_ft_bits, reuse as reuse_ft_bits
     from tools.die_trial.legal_sites import RowAllocator
-    STATS_V4["frame_ft_bit_sites"], _ = place_ft_bits(
-        plan, RowAllocator, types=[n for n in plan["partition_types"] if n.startswith("col_")],
-        reach_um=FT_KIT_REACH_UM, margin=.98)
+    # Every core field needs explicit row-legal FT bit sites, not just frames.
+    # Retain unchanged committed sites so routine plan regeneration does not
+    # repeat the same allocation. Any physical/clock/reset contract change
+    # invalidates the seed and runs the exact allocator again.
+    ft_types = [n for n, t in plan["partition_types"].items() if t.get("hard_cores") and t.get("ft_slots")]
+    seed_path = Path(__file__).with_name("die_plan.json")
+    reused = reuse_ft_bits(plan, json.load(open(seed_path)), types=ft_types) if seed_path.is_file() else []
+    STATS_V4["ft_bit_sites_reused"] = reused
+    STATS_V4["ft_bit_sites"], _ = place_ft_bits(
+        plan, RowAllocator, types=[n for n in ft_types if n not in reused], reach_um=FT_KIT_REACH_UM, margin=.98)
+    STATS_V4["frame_ft_bit_sites"] = [x for x in STATS_V4["ft_bit_sites"] if x["type"].startswith("col_")]
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)
