@@ -299,6 +299,17 @@ SCHEMA = {
                         # latency) early, so the core's internal flops see the common latency.  Absent: taps[] are
                         # plan records only (unchanged kits).
                         "core_taps": {"enum": ["early"]},
+                        # PATH-HBM 10-25 (COORD ruling (1) 14:44): planned shared clock branch buffers on std-cell
+                        # sites (never on a hard core) -- one buffer drives the core taps it names (taps[].parent),
+                        # so a chain hop across a corridor shares its last common clock point (CPPR) with legs
+                        # <= the M8/M9 reach.  The insertion budget per buffer is CLOCK-RESET's (budget_owner).
+                        "branch_buffers": {"type": "array", "items": {
+                            "type": "object", "required": ["name", "xy", "drives"], "additionalProperties": False,
+                            "properties": {"name": _name, "xy": _xy,
+                                           "drives": {"type": "array", "minItems": 1, "items": _name},
+                                           "cell": {"type": "string"}, "legs_um": {"type": "array", "items": _nonneg},
+                                           "insertion_ps": _nonneg, "budget_owner": {"type": "string"},
+                                           "site": {"type": "string"}, "note": {"type": "string"}}}},
                         # matched M8/M9 branch leaves below the partition root tap_um: one per planned core or
                         # landed glue region (COORD 10-23 07:24; QC-FIX)
                         "taps": {"type": "array", "items": {
@@ -306,7 +317,8 @@ SCHEMA = {
                             "properties": {"name": _name, "xy": _xy, "kind": {"enum": ["core", "glue", "leaf"]},
                                            "orient": {"enum": list(ORIENTS)}, "insertion_ps": _pos,
                                            "insertion_tol_ps": _nonneg, "budget_owner": {"type": "string"},
-                                           "from_root_um": _nonneg, "note": {"type": "string"}}}}}},
+                                           "from_root_um": _nonneg, "parent": _name,
+                                           "note": {"type": "string"}}}}}},
                     # hard cores built on PLATFORM tracks (macros inside): a per-core placement offset puts their
                     # boundary pins on the plan tracks (COORD 10-23 08:36; A0: y +0.012)
                     "hard_cores": {"type": "array", "items": {

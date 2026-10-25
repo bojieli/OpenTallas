@@ -673,6 +673,63 @@ def check_clock_reset(P, R):
                       type=tn)
 
 
+CLOCK_LEG_MAX_UM = 405.0   # OWNER 10-17 planned reach; GEOM-REVIEW-2 11:35 R1 (3) chain-hop taps <= ~400 um
+
+
+def check_clock_branch_buffers(P, R):
+    """PATH-HBM 10-25 (COORD ruling (1) 14:44): clock.branch_buffers are real std-cell clock buffers: none inside a
+    hard core, every driven tap exists and names the buffer as its parent (and every taps[].parent is a buffer),
+    and every leg (buffer -> driven tap, Manhattan) is <= CLOCK_LEG_MAX_UM."""
+    out = dict(buffers=0, worst_leg_um=0.0, types=[])
+    reach = CLOCK_LEG_MAX_UM
+    for tn, t in P.types.items():
+        ck = t.get("clock") or {}
+        bufs = ck.get("branch_buffers") or []
+        taps = {tp["name"]: tp for tp in ck.get("taps", []) or []}
+        names = [b["name"] for b in bufs]
+        bad = False
+        if len(set(names)) != len(names):
+            R.err("clock", f"type {tn}: duplicate branch buffer names", type=tn)
+            bad = True
+        for nm, tp in taps.items():
+            if tp.get("parent") and tp["parent"] not in names:
+                R.err("clock", f"type {tn}: tap {nm} parent {tp['parent']} is not a branch buffer", type=tn)
+                bad = True
+        boxes = []
+        for c in t.get("hard_cores", []) or []:
+            x, y = c["origin_um"]
+            dx, dy = c.get("track_offset_um", [0, 0])
+            w, h = c["outline_um"]
+            boxes.append((c["inst"], x + dx, y + dy, x + dx + w, y + dy + h))
+        for b in bufs:
+            out["buffers"] += 1
+            q = b["xy"]
+            hit = next((n for n, x0, y0, x1, y1 in boxes
+                        if x0 + EPS < q[0] < x1 - EPS and y0 + EPS < q[1] < y1 - EPS), None)
+            if hit:
+                R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} is inside hard core {hit}", type=tn)
+                bad = True
+            for d in b["drives"]:
+                tp = taps.get(d)
+                if tp is None:
+                    R.err("clock", f"type {tn}: branch buffer {b['name']} drives unknown tap {d}", type=tn)
+                    bad = True
+                    continue
+                if tp.get("parent") != b["name"]:
+                    R.err("clock", f"type {tn}: tap {d} driven by {b['name']} but its parent is {tp.get('parent')}",
+                          type=tn)
+                    bad = True
+                leg = abs(tp["xy"][0] - q[0]) + abs(tp["xy"][1] - q[1])
+                out["worst_leg_um"] = max(out["worst_leg_um"], round(leg, 2))
+                if leg > reach + EPS:
+                    R.err("clock", f"type {tn}: branch buffer {b['name']} leg to {d} {leg:.1f} um > reach {reach:g}",
+                          type=tn)
+                    bad = True
+        if bad:
+            out["types"].append(tn)
+    return out
+
+
 def check_reset(P, R):
     """OWNER RESET RULE 2026-10-24 (reset_tree.py): pipelined plans -- every type's equal-depth relay tree builds with
     hops <= reset.relay_um under the plan contract part_depth, the die region trees reach every partition; counted
@@ -1415,6 +1472,7 @@ def run(raw, png=None, plan_dir=None, groups=None, landing=None, evidence=None, 
     summ["latency"] = check_latency(P, R)
     summ["r8"] = check_r8(P, R, plan_dir, groups, landing)
     check_clock_reset(P, R)
+    summ["clock_branch_buffers"] = check_clock_branch_buffers(P, R)
     summ["reset"] = check_reset(P, R)
     summ["seams"] = check_seams(P, R)
     summ["die_io"] = check_die_io(P, R)
