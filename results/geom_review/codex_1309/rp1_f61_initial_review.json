@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-10-25 13:48 PDT",
+  "source": "codex/qc-sramif-1309@d8bdaa94ec later HEAD6aa7f1fc4d",
+  "kit": "epyc1:codex-qc-sramif-1309/rp1_f61",
+  "verdict": "Geometry direction PASS-COND; route HOLD pending exact row/final gates",
+  "images": [
+    "rp1_f61_clock.png",
+    "rp1_f61_review.png"
+  ],
+  "findings": [
+    "Actual clock graph/currentCSV2790FF2macros3080edges",
+    "Eight complete22FF snapshot/offset/onehot families compactW0macrofree stripx8..28y130..160;24existing snapshotFFcolocated",
+    "No new macrohalo/channelwall;0RTL/data/cyclechange"
+  ],
+  "conditions": [
+    "FinalFFgate terminal and per-class903EP diagnosis; no negativegate route",
+    "Exact row/tag/kithash before authorization",
+    "Fullmacroread/writeF6 and FFmacroCK-vs-writebank/tapmeanwindow",
+    "Shortfamilyrelatedpairs census at actualGRT",
+    "No inheritedf58/f59token"
+  ]
+}
