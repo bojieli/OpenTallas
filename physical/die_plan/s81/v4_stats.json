@@ -5,24 +5,24 @@
  ],
  "die_mm2": 790.6,
  "partitions": 399,
- "types": 176,
+ "types": 178,
  "types_by_kind": {
   "frame": 12,
   "serdes": 11,
   "phy": 1,
   "unit": 5,
   "svc": 16,
-  "slice": 131
+  "slice": 133
  },
- "singleton_types": 149,
- "lanes": 854,
- "ports": 2228,
+ "singleton_types": 152,
+ "lanes": 860,
+ "ports": 2289,
  "bends_max": 2,
  "bends_p90": 1,
  "bends_hist": {
-  "0": 697,
+  "0": 698,
   "1": 141,
-  "2": 16
+  "2": 21
  },
  "detour_p90": 1.0,
  "detour_max": 1.191,
@@ -53,7 +53,7 @@
    "a": "svc_15",
    "b": "svc_14",
    "ratio": 0.833,
-   "pins": 7208,
+   "pins": 7212,
    "len": 1442.9
   },
   {
@@ -165,8 +165,9 @@
   "svc_hi_dsdv_svc_rs__t5": 1,
   "svc_lo_dsdv_svc_rs__t7": 1,
   "svc_hi_dsdv_svc_rs__t6": 1,
-  "slice_station__t35": 3,
+  "slice_station__t49": 1,
   "slice_station__t36": 1,
+  "slice_station__t50": 2,
   "slice_station__t37": 1,
   "slice_station__t38": 1,
   "dsdv_slice_lepw_mus_LP__t2": 1,
@@ -294,8 +295,9 @@
   "ot_s81sl_leaf__t74": 1,
   "slice_station__t31": 1,
   "dsdv_slice_lepe_mu_LP__t2": 1,
-  "slice_station__t39": 2,
+  "slice_station__t51": 1,
   "slice_station__t40": 2,
+  "slice_station__t52": 1,
   "gunit__t1": 1,
   "bk_sel__t2": 1,
   "eng__t1": 1
@@ -324,7 +326,7 @@
   },
   "unit": {
    "n": 5,
-   "max_partition": 808579,
+   "max_partition": 811179,
    "max_core": 260094,
    "max_glue": 69648,
    "cores": 11
@@ -456,6 +458,24 @@
     "slot": "ft0",
     "stations": [
      7,
+     8
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs_w__t1",
+    "slot": "ft1",
+    "stations": [
+     7,
+     8
+    ],
+    "why": "core escape at the 405-um kit reach"
+   },
+   {
+    "type": "svc_lo_dsdv_svc_rs_w__t1",
+    "slot": "ft2",
+    "stations": [
+     6,
      8
     ],
     "why": "core escape at the 405-um kit reach"
@@ -1645,8 +1665,8 @@
    "xo_W5_out_a",
    "xo_W5_out_b"
   ],
-  "runs": 979,
-  "runs_multi": 370,
+  "runs": 995,
+  "runs_multi": 379,
   "run_fallback_ports": 7,
   "overfull_faces": [
    "s_2N_C|s_2N_L1|False",
@@ -1732,9 +1752,42 @@
     "worst_bit_route_um": 1225.28,
     "reach_um": 405.0,
     "margin": 0.98
+   },
+   {
+    "type": "slice_station__t52",
+    "slot": "ft2",
+    "stations": [
+     3,
+     4
+    ],
+    "worst_bit_route_um": 1246.784,
+    "reach_um": 405.0,
+    "margin": 0.98
+   },
+   {
+    "type": "slice_station__t52",
+    "slot": "ft3",
+    "stations": [
+     4,
+     5
+    ],
+    "worst_bit_route_um": 1595.264,
+    "reach_um": 405.0,
+    "margin": 0.98
    }
   ],
   "corefull_ft_reach": [
+   {
+    "type": "svc_lo_dsdv_svc_rs_w__t1",
+    "slot": "ft1",
+    "stations": [
+     6,
+     7
+    ],
+    "worst_bit_route_um": 2393.712,
+    "reach_um": 405.0,
+    "margin": 0.98
+   },
    {
     "type": "svc_hi_dsdv_svc_rs__t6",
     "slot": "ft1",
@@ -1933,7 +1986,7 @@
      5,
      6
     ],
-    "worst_paired_bit_um": 362.971,
+    "worst_paired_bit_um": 367.731,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2008,7 +2061,7 @@
      5,
      6
     ],
-    "worst_paired_bit_um": 362.971,
+    "worst_paired_bit_um": 367.731,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
@@ -2113,7 +2166,7 @@
      5,
      6
     ],
-    "worst_paired_bit_um": 362.971,
+    "worst_paired_bit_um": 367.731,
     "budget_um": 394.9,
     "cell_size_um": [
      1.404,
