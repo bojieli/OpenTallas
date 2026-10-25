@@ -106,7 +106,40 @@ def _snap_tap(P, x, y):
 
     def snap(v, LL):
         return round(LL["offset_um"] + round((v - LL["offset_um"]) / LL["pitch_um"]) * LL["pitch_um"], 4)
-    return (snap(x, L), snap(y, Lb)) if L["dir"] == "V" else (snap(x, Lb), snap(y, L))
+    if L["dir"] == "V":
+        return (_clear_strap(top, snap(x, L), L), snap(y, Lb))
+    return (snap(x, Lb), _clear_strap(top, snap(y, L), L))
+
+
+# kit PDN stripes of the interior-pin layer, as pdngen builds them from PDN (offset = first (VSS) stripe centre from
+# CORE_AREA, VDD one width + spacing later; measured on a kit 2_floorplan.odb: M7 VSS 8.304-8.592, VDD 8.688-8.976,
+# pitch 8.64).  layer: (pitch, offset, width, spacing)
+PDN_PIN_LAYER_STRAPS = dict(M5=(4.32, 2.064, 0.12, 0.072), M7=(8.64, 4.128, 0.288, 0.096))
+STRAP_CLEAR_UM = 0.1    # pin edge -> strap edge (M7 min spacing 0.072 + EOL margin)
+
+
+def _clear_strap(layer, v, L):
+    """S81-HEAD 10-25 (hd_st_m DRC 3: rst_o_1 interior M7 pin snapped between the kit-PDN VSS/VDD M7 straps): move a
+    snapped interior pin coordinate (across the pin layer) to the nearest track whose pin rectangle clears the kit PDN
+    stripe pair of that layer by STRAP_CLEAR_UM.  Interior pins only; face pins and the PDN are unchanged."""
+    if layer not in PDN_PIN_LAYER_STRAPS:
+        return v
+    pitch, off, wid, sp = PDN_PIN_LAYER_STRAPS[layer]
+    lo_rel = CORE_MARGIN_UM + off - wid / 2           # pair start, first period
+    hi_rel = lo_rel + 2 * wid + sp                    # pair end
+    half = LAYER_W.get(layer, 0.04) / 2 + STRAP_CLEAR_UM
+
+    def bad(c):
+        k = math.floor((c - lo_rel + half) / pitch)
+        lo = lo_rel + k * pitch
+        return lo - half < c < lo + (hi_rel - lo_rel) + half
+    if not bad(v):
+        return v
+    for j in range(1, 64):
+        for c in (v - j * L["pitch_um"], v + j * L["pitch_um"]):
+            if not bad(c):
+                return round(c, 4)
+    raise ValueError(f"no {layer} track clears the PDN straps near {v}")
 
 
 def clock_pins(P, tn):

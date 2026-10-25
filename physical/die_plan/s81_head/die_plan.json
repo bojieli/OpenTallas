@@ -1341,7 +1341,15 @@
      "bind": {
       "ck": "clk",
       "rst_n": "rst_n"
-     }
+     },
+     "origin_um": [
+      765.966,
+      1863.6
+     ],
+     "outline_um": [
+      40.0,
+      40.0
+     ]
     },
     {
      "inst": "u_spr",
@@ -1352,7 +1360,15 @@
      "bind": {
       "ck": "clk",
       "rst_n": "rst_n"
-     }
+     },
+     "origin_um": [
+      915.49,
+      1863.6
+     ],
+     "outline_um": [
+      40.0,
+      40.0
+     ]
     }
    ],
    "note": "spine node of one row-pair: x/go down + W/E chain heads (upper row); chain tails + level below merged (capture-all-then-fire argmax) up; ft for the S-side host / mesh lanes",
@@ -1910,7 +1926,15 @@
       "ck": "clk",
       "rst_n": "rst_n",
       "o": "net:bottom_seed"
-     }
+     },
+     "origin_um": [
+      765.966,
+      1863.6
+     ],
+     "outline_um": [
+      40.0,
+      40.0
+     ]
     },
     {
      "inst": "u_spr",
@@ -1922,7 +1946,15 @@
       "ck": "clk",
       "rst_n": "rst_n",
       "i": "net:bottom_seed"
-     }
+     },
+     "origin_um": [
+      915.49,
+      1863.6
+     ],
+     "outline_um": [
+      40.0,
+      40.0
+     ]
     }
    ],
    "note": "spine node of one row-pair: x/go down + W/E chain heads (upper row); chain tails + level below merged (capture-all-then-fire argmax) up; ft for the S-side host / mesh lanes (bottom: no level below)",
@@ -17784,6 +17816,7 @@
   "insertion_tol_ps": 40,
   "neighbour_skew_ps": 80,
   "face_xing": "budgeted",
+  "ft_hop_in_share": 0.16,
   "spine": {
    "layers": [
     "M8",
