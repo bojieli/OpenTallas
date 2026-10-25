@@ -19,21 +19,33 @@
 #   * ROM-zone groups (L1 rings rsw/rnw/rse/rne, readers lsw..lne, operand dw/de) are v7 unchanged.
 # --e-orient MY (default): the E LSL column (sl3/6/7) is mirrored so its pin face looks W into the 35-um channel at
 # x 300.24-335.66 (beside the hub) instead of the 20-um E die margin: no head word crosses the E column.
-# generated: gen_a0c8_regions.py nl --e-orient MY --qlr3 mix
+# generated: gen_a0c8_regions.py nl --e-orient MY --layout v8b
 set qrl_groups [list \
   [dict create name land_rq type FREE regex {g_rom_pipe\.rq_(ce|ad)_[sn]\[1\]\[} boxes {} min 1 max 100000] \
+  [dict create name fltq type INCLUSIVE regex {u_me\.fault_q\[} boxes {{150.000 980.232 200.000 989.544}} min 1 max 64] \
   [dict create name land_fault type FREE regex {u_me\.(fault_q\[|g_hier\.g_sl\[[0-7]\]\.g_hd\.g_fl\.q)} boxes {} min 0 max 200] \
-  [dict create name f0 type INCLUSIVE regex {g_sl\[0\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_out9\.u_qlw3\.|g_lrr\.rq|g_out9\.u_qlr3\.)} boxes {{79.656 673.920 95.056 814.320}} min 1 max 100000] \
-  [dict create name f1 type INCLUSIVE regex {g_sl\[1\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_out9\.u_qlw3\.|g_lrr\.rq|g_out9\.u_qlr3\.)} boxes {{79.656 834.432 95.056 974.832}} min 1 max 100000] \
-  [dict create name f2 type INCLUSIVE regex {g_sl\[2\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_out9\.u_qlw3\.|g_lrr\.rq|g_out9\.u_qlr3\.)} boxes {{79.656 994.944 95.056 1135.344}} min 1 max 100000] \
-  [dict create name f3 type INCLUSIVE regex {g_sl\[3\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_out9\.u_qlw3\.|g_lrr\.rq)} boxes {{319.240 673.920 330.064 814.320}} min 1 max 100000] \
-  [dict create name f4 type INCLUSIVE regex {g_sl\[4\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_out9\.u_qlw3\.|g_lrr\.rq|g_out9\.u_qlr3\.)} boxes {{305.840 834.432 316.840 974.832}} min 1 max 100000] \
-  [dict create name f5 type INCLUSIVE regex {g_sl\[5\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_out9\.u_qlw3\.|g_lrr\.rq|g_out9\.u_qlr3\.)} boxes {{305.840 994.944 316.840 1135.344}} min 1 max 100000] \
-  [dict create name f6 type INCLUSIVE regex {g_sl\[6\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_out9\.u_qlw3\.|g_lrr\.rq|g_out9\.u_qlr3\.)} boxes {{319.240 834.432 330.064 974.832}} min 1 max 100000] \
-  [dict create name f7 type INCLUSIVE regex {g_sl\[7\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_out9\.u_qlw3\.|g_lrr\.rq|g_out9\.u_qlr3\.)} boxes {{319.240 994.944 330.064 1135.344}} min 1 max 100000] \
+  [dict create name f0 type INCLUSIVE regex {g_sl\[0\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_lrr\.rq)} boxes {{79.656 673.920 95.056 753.920}} min 1 max 100000] \
+  [dict create name o0 type INCLUSIVE regex {g_sl\[0\]\.g_hd\.(g_out9\.u_qlw3\.|g_out9\.u_qlr3\.)} boxes {{79.656 753.920 95.056 814.320}} min 1 max 100000] \
+  [dict create name f1 type INCLUSIVE regex {g_sl\[1\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_lrr\.rq)} boxes {{79.656 834.432 95.056 914.432}} min 1 max 100000] \
+  [dict create name o1 type INCLUSIVE regex {g_sl\[1\]\.g_hd\.(g_out9\.u_qlw3\.|g_out9\.u_qlr3\.)} boxes {{79.656 914.432 95.056 974.832}} min 1 max 100000] \
+  [dict create name f2 type INCLUSIVE regex {g_sl\[2\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_lrr\.rq)} boxes {{79.656 974.832 95.056 994.944} {95.056 980.232 150.000 989.544}} min 1 max 100000] \
+  [dict create name o2 type INCLUSIVE regex {g_sl\[2\]\.g_hd\.(g_out9\.u_qlw3\.|g_out9\.u_qlr3\.)} boxes {{79.656 1074.944 95.056 1135.344}} min 1 max 100000] \
+  [dict create name f3 type INCLUSIVE regex {g_sl\[3\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_lrr\.rq)} boxes {{319.240 673.920 330.064 753.920}} min 1 max 100000] \
+  [dict create name o3 type INCLUSIVE regex {g_sl\[3\]\.g_hd\.(g_out9\.u_qlw3\.)} boxes {{319.240 753.920 330.064 814.320}} min 1 max 100000] \
+  [dict create name q3 type INCLUSIVE regex {g_sl\[3\]\.g_hd\.g_out9\.u_qlr3\.} boxes {{150.000 819.720 200.000 829.032}} min 1 max 100000] \
+  [dict create name f4 type INCLUSIVE regex {g_sl\[4\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_lrr\.rq)} boxes {{305.840 834.432 316.840 914.432}} min 1 max 100000] \
+  [dict create name o4 type INCLUSIVE regex {g_sl\[4\]\.g_hd\.(g_out9\.u_qlw3\.|g_out9\.u_qlr3\.)} boxes {{305.840 914.432 316.840 974.832}} min 1 max 100000] \
+  [dict create name f5 type INCLUSIVE regex {g_sl\[5\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_lrr\.rq)} boxes {{260.000 980.232 305.840 989.544} {305.840 974.832 316.840 994.944}} min 1 max 100000] \
+  [dict create name o5 type INCLUSIVE regex {g_sl\[5\]\.g_hd\.(g_out9\.u_qlw3\.)} boxes {{305.840 1074.944 316.840 1135.344}} min 1 max 100000] \
+  [dict create name q5 type INCLUSIVE regex {g_sl\[5\]\.g_hd\.g_out9\.u_qlr3\.} boxes {{305.840 994.944 316.840 1034.944}} min 1 max 100000] \
+  [dict create name f6 type INCLUSIVE regex {g_sl\[6\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_lrr\.rq)} boxes {{319.240 834.432 330.064 914.432}} min 1 max 100000] \
+  [dict create name o6 type INCLUSIVE regex {g_sl\[6\]\.g_hd\.(g_out9\.u_qlw3\.|g_out9\.u_qlr3\.)} boxes {{319.240 914.432 330.064 974.832}} min 1 max 100000] \
+  [dict create name f7 type INCLUSIVE regex {g_sl\[7\]\.g_hd\.(g_tx9\.g_r\[\d+\]\.u_tx/|g_lrr\.rq)} boxes {{319.240 994.944 330.064 1074.944}} min 1 max 100000] \
+  [dict create name o7 type INCLUSIVE regex {g_sl\[7\]\.g_hd\.(g_out9\.u_qlw3\.)} boxes {{319.240 1074.944 330.064 1135.344}} min 1 max 100000] \
+  [dict create name q7 type INCLUSIVE regex {g_sl\[7\]\.g_hd\.g_out9\.u_qlr3\.} boxes {{319.240 974.832 330.064 994.944}} min 1 max 100000] \
   [dict create name hd0 type INCLUSIVE regex {g_sl\[0\]\.g_hd\.g_tx9\.(u_qlw2[we]\.|u_qlr2[cwe]\.|tc\[)} boxes {{205.848 660.640 242.845 716.771}} min 1 max 100000] \
   [dict create name hd1 type INCLUSIVE regex {g_sl\[1\]\.g_hd\.g_tx9\.(u_qlw2[we]\.|u_qlr2[cwe]\.|tc\[)} boxes {{205.848 716.771 242.845 772.901}} min 1 max 100000] \
-  [dict create name hd2 type INCLUSIVE regex {(g_sl\[2\]\.g_hd\.g_tx9\.(u_qlw2[we]\.|u_qlr2[cwe]\.|tc\[)|g_sl\[[3]\]\.g_hd\.g_out9\.u_qlr3\.)} boxes {{205.848 772.901 242.845 829.032}} min 1 max 100000] \
+  [dict create name hd2 type INCLUSIVE regex {g_sl\[2\]\.g_hd\.g_tx9\.(u_qlw2[we]\.|u_qlr2[cwe]\.|tc\[)} boxes {{205.848 772.901 242.845 829.032}} min 1 max 100000] \
   [dict create name hd3 type INCLUSIVE regex {g_sl\[3\]\.g_hd\.g_tx9\.(u_qlw2[we]\.|u_qlr2[cwe]\.|tc\[)} boxes {{279.843 660.640 316.840 716.771}} min 1 max 100000] \
   [dict create name hd4 type INCLUSIVE regex {g_sl\[4\]\.g_hd\.g_tx9\.(u_qlw2[we]\.|u_qlr2[cwe]\.|tc\[)} boxes {{242.845 716.771 279.843 772.901}} min 1 max 100000] \
   [dict create name hd5 type INCLUSIVE regex {g_sl\[5\]\.g_hd\.g_tx9\.(u_qlw2[we]\.|u_qlr2[cwe]\.|tc\[)} boxes {{242.845 772.901 279.843 829.032}} min 1 max 100000] \

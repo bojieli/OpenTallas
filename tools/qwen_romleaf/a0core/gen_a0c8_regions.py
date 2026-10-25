@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 r"""QC-A0 10-24 A0 v8 regions (F1, structural): each LSL head's rung-0 landed crossing is co-located at the hub.
 
-    gen_a0c8_regions.py nk|nl OUT.tcl [--e-orient MY|R0] [--qlr3 hub|face]
+    gen_a0c8_regions.py nk|nl OUT.tcl [--e-orient MY|R0] [--layout v8b|v8] [--qlr3 hub|face|mix (v8 only)]
 
 v7 -> v8 (same outline, pins, RTL body, cycles):
   * per head g, ONE hub sub-box hd<g> holds the head's ring WRITERS (u_qlw2w/e) AND its READERS (u_qlr2c/w/e,
@@ -80,13 +80,39 @@ QLR3 = dict(face={g: "face" for g in range(8)},
             mix={g: ("hd2" if g == 3 else "face") for g in range(8)})
 
 
+# v8b (QC-A0 10-24 22:xx, GEOM-REVIEW cond. "reader/rung1 507, u_qlr3 517-522 um > 405"): every reg -> reg hop of the
+# head words <= 405 um in the uniform box model, 0 cycles, no RTL change.  The face box is split at the head's pin
+# groups (ot_qwen_tile_lsl_fp1: inputs w_d/v_d/split_d/rst_n/x_d at macro y 6-100, outputs lfault/t_out/tfault at
+# y 104-134): rung 1 + leaf reset relay sit over the INPUT span (y0 .. y0+80; x_d[127] at y0+100 is <= 40 um away),
+# the result-ring writer u_qlw3 at the OUTPUT end (y0+80 .. y0+140.4: 60 um tall so u_qlw3 + u_qlr3 (551 flops)
+# stay <= 0.25 sequential fill in the 11-um M / E face columns).  Row-2 heads sl2 / sl5 (pins 166+ um above the hub top) take rung 1 in the
+# row-1/2 channel just below their face (hub reader -> rung 1 <= 385 um, rung 1 -> farthest input pin <= 170 um).
+# The result-ring reader u_qlr3 goes where its 64-b word reaches its consumer (NK: node t_d pins at x 69.9; NL:
+# t_out pin flops FIRM at the W edge y 900-1000) within 405 um: face out box (heads 0/1/2/4/6), face lower box
+# (sl5: its rung 1 left), the gap-column channel cell (sl7), hub hd2 (NK sl3) or the row-0/1 channel W of the
+# hub (NL sl3).  The 5-b per-head fault OR register u_me.fault_q (fed by all eight u_qlr3) is boxed in the
+# row-1/2 channel at x 150-200 (<= 335 um from every head).
+CH12 = (Y_R[1] + LH, Y_R[2])                      # full channel between LSL rows 1 and 2 (974.832 .. 994.944)
+CH12R = (Y_R[1] + LH + HALO, Y_R[2] - HALO)       # its standard-cell rows under the LSL halos (980.232 .. 989.544)
+CH01R = (Y_R[0] + LH + HALO, Y_R[1] - HALO)       # rows of the row-0/1 channel W of the hub (819.72 .. 829.032)
+PIN_IN_TOP = 80.0                                 # rung-1 / result split (input pins up to y0+99.92, outputs from y0+104)
+RUNG_CH = {2: [(79.656, CH12[0], 95.056, CH12[1]), (95.056, CH12R[0], 150.0, CH12R[1])],
+           5: [(260.0, CH12R[0], 305.84, CH12R[1]), (305.84, CH12[0], 316.84, CH12[1])]}
+QLR3_V8B = dict(nk={0: "face", 1: "face", 2: "face", 3: "hd2", 4: "face", 5: "low", 6: "face", 7: "ch"},
+                nl={0: "face", 1: "face", 2: "face", 3: "ch01", 4: "face", 5: "low", 6: "face", 7: "ch"})
+QLR3_BOX = {"low": lambda g, fb: (fb[0], fb[1], fb[2], fb[1] + 40.0),
+            "ch": lambda g, fb: (fb[0], CH12[0], fb[2], CH12[1]),
+            "ch01": lambda g, fb: (150.0, CH01R[0], 200.0, CH01R[1])}
+FLTQ_BOX = (150.0, CH12R[0], 200.0, CH12R[1])
+
+
 def sub_box(col, row):
     x0, y0, x1, y1 = HUB
     dx, dy = (x1 - x0) / 3, (y1 - y0) / 3
     return (round(x0 + col * dx, 3), round(y0 + row * dy, 3), round(x0 + (col + 1) * dx, 3), round(y0 + (row + 1) * dy, 3))
 
 
-def gen(k, e_orient, qlr3):
+def gen(k, e_orient, qlr3, layout="v8b"):
     P = r"g_sl\[%d\]\.g_hd\."
     lines = []
 
@@ -95,20 +121,35 @@ def gen(k, e_orient, qlr3):
         lines.append(f"  [dict create name {name} type {typ} regex {{{rx}}} boxes {{{b}}} min {mn} max {mx}] \\")
 
     grp("land_rq", "FREE", r"g_rom_pipe\.rq_(ce|ad)_[sn]\[1\]\[", [], 1)
+    if layout == "v8b":
+        grp("fltq", "INCLUSIVE", r"u_me\.fault_q\[", [FLTQ_BOX], 1, 64)
+        qmap = QLR3_V8B[k]
+    else:
+        qmap = QLR3[qlr3]
     grp("land_fault", "FREE", r"u_me\.(fault_q\[|g_hier\.g_sl\[[0-7]\]\.g_hd\.g_fl\.q)", [], 0, 200)
-    # head face boxes: rung 1 (kept u_tx, '/' hierarchy), result-ring writer, leaf reset relay (+ result reader)
-    for g in range(8):
-        col, row = HEADS[g]
-        fr = (P % g) + r"(g_tx9\.g_r\[\d+\]\.u_tx/|g_out9\.u_qlw3\.|g_lrr\.rq"
-        if QLR3[qlr3][g] == "face":
-            fr += r"|g_out9\.u_qlr3\."
-        fr += ")"
-        grp(f"f{g}", "INCLUSIVE", fr, [face_box(g, e_orient)])
+    if layout == "v8b":
+        for g in range(8):
+            fb = face_box(g, e_orient)
+            # rung 1 + leaf reset relay at the head's input pin span (or the channel below it for sl2 / sl5)
+            grp(f"f{g}", "INCLUSIVE", (P % g) + r"(g_tx9\.g_r\[\d+\]\.u_tx/|g_lrr\.rq)",
+                RUNG_CH.get(g, [(fb[0], fb[1], fb[2], fb[1] + PIN_IN_TOP)]))
+            orx = (P % g) + r"(g_out9\.u_qlw3\." + (r"|g_out9\.u_qlr3\." if qmap[g] == "face" else "") + ")"
+            grp(f"o{g}", "INCLUSIVE", orx, [(fb[0], fb[1] + PIN_IN_TOP, fb[2], fb[3])])
+            if qmap[g] in QLR3_BOX:
+                grp(f"q{g}", "INCLUSIVE", (P % g) + r"g_out9\.u_qlr3\.", [QLR3_BOX[qmap[g]](g, fb)])
+    else:
+        # head face boxes: rung 1 (kept u_tx, '/' hierarchy), result-ring writer, leaf reset relay (+ result reader)
+        for g in range(8):
+            fr = (P % g) + r"(g_tx9\.g_r\[\d+\]\.u_tx/|g_out9\.u_qlw3\.|g_lrr\.rq"
+            if qmap[g] == "face":
+                fr += r"|g_out9\.u_qlr3\."
+            fr += ")"
+            grp(f"f{g}", "INCLUSIVE", fr, [face_box(g, e_orient)])
     # hub sub-boxes: writers + readers (+ result reader of the non-W heads when --qlr3 hub)
     for g in range(8):
         col, row = HEADS[g]
         hr = (P % g) + r"g_tx9\.(u_qlw2[we]\.|u_qlr2[cwe]\.|tc\[)"
-        rq = [h for h in range(8) if QLR3[qlr3][h] == f"hd{g}"]
+        rq = [h for h in range(8) if qmap[h] == f"hd{g}"]
         if rq:
             hr = "(" + hr + "|" + r"g_sl\[[%s]\]\.g_hd\.g_out9\.u_qlr3\." % "".join(map(str, rq)) + ")"
         grp(f"hd{g}", "INCLUSIVE", hr, [sub_box(SUBCOL[col], row)])
@@ -129,11 +170,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("k"); ap.add_argument("out")
     ap.add_argument("--e-orient", default="MY"); ap.add_argument("--qlr3", default="mix")
+    ap.add_argument("--layout", default="v8b", help="v8b (default: face split at the pin groups) | v8 (39e12308a8)")
     a = ap.parse_args()
-    body = gen(a.k, a.e_orient, a.qlr3)
+    body = gen(a.k, a.e_orient, a.qlr3, a.layout)
     hdr = (__doc__.strip().splitlines())
     txt = "".join("# " + l + "\n" if l else "#\n" for l in hdr[3:])
-    txt += f"# generated: gen_a0c8_regions.py {a.k} --e-orient {a.e_orient} --qlr3 {a.qlr3}\n"
+    txt += (f"# generated: gen_a0c8_regions.py {a.k} --e-orient {a.e_orient} --layout {a.layout}"
+            + (f" --qlr3 {a.qlr3}" if a.layout == "v8" else "") + "\n")
     txt += "set qrl_groups [list \\\n" + "\n".join(body) + "\n]\n"
     txt += "source /src/tools/qwen_romleaf/rc14_2000/baseline/parent_regions.tcl\n"
     Path(a.out).write_text(txt)
