@@ -29,6 +29,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import g2  # noqa: E402
 import schema as S  # noqa: E402
+from proto_geometry import hop_stats  # noqa: E402
 
 LIBS = ["AO", "INVBUF", "OA", "SEQ", "SIMPLE"]
 LIBDIR = "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM"
@@ -229,6 +230,7 @@ def parse_dir(d):
                 disp[p[0][:2]].append(abs(float(p[2]) - x0) + abs(float(p[3]) - y0))
         r["displacement_um"] = {k: dict(max=round(max(v), 1), p90=round(sorted(v)[int(0.9 * (len(v) - 1))], 1),
                                         over50=sum(1 for x in v if x > 50)) for k, v in disp.items() if v}
+    r["ft_hops"] = hop_stats(d)
     r["classify"] = classify(r, hot)
     (d / "proto.json").write_text(json.dumps(r, indent=1) + "\n")
     return r, hot
@@ -283,6 +285,14 @@ def classify(r, hot):
         if cls == "CLEAN" and ff < -30:
             cls = "HOTSPOT"
         why.append(f"skeleton FF hold WNS {ff:.1f} ps ({sta.get('ff_hold_viol')} endpoints)")
+    geometry = r.get("ft_hops") or {}
+    if geometry.get("over_reach"):
+        cls = "STRUCTURAL"
+        legs = ", ".join(f"{k} {v:g}" for k, v in list(geometry["over_reach"].items())[:3])
+        why.append(f"{len(geometry['over_reach'])} ft slots exceed 405 um at actual pin-bit coordinates ({legs} um)")
+    if geometry.get("st_in_core"):
+        cls = "STRUCTURAL"
+        why.append(f"{geometry['st_in_core']} planned ft station sites inside hard cores")
     return dict(cls=cls, why="; ".join(why) or "GRT 0 overflow, skeleton timing met", hot_frac=round(frac, 4))
 
 
