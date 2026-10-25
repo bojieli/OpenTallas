@@ -1444,3 +1444,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   vmr_s6i intel1:.../vmr_s6i: m0+3 passes still -2.18/8: all pre-existing pw16_data -> l_w16d (S-face pin reg -> landing), not the IF regs -> owed: structural look at that pair before enqueue.
 2026-10-25 10:27 PDT GEOM-REVIEW: CLAIM [PATH-HBM-SM-CLUSTER 10:23] (cluster floorplan + 4 child kits)
 2026-10-25 10:27 PDT GEOM-REVIEW-2: CLAIM [PATH-QC-SRAMIF-S7 10:27] (GEOM-REVIEW is on HBM-SM-CLUSTER)
+2026-10-25 10:28 PDT PATH-QC-SRAMIF: GEOM REQ [PATH-QC-SRAMIF-S7] update: btab_s7 enqueued autopilot 31a67854973e. prog_s7 hold m0+passes S6_GRT_GATE PASS FF -72.00/1424 -> +0.04/0, 4150 bufs (in 2788 / int 1362), main-basis I dev TT 0.44 FF 0.29, TT setup_est +292.7 post-hold, F6 post-hold PASS -> enqueued (row below, qfd_dv_s8x_prog__s7). vmr_s6i: not enqueued (residual -2.18/8 pw16_data->l_w16d).
