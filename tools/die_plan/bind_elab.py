@@ -318,7 +318,7 @@ def yosys_script(ab, tops, full, lib, out_json, check=False, inc_files=()):
     if ab.get("frontend", "native") == "slang":
         # One compilation unit preserves cross-file parameterisation; interface
         # stubs are explicit empty blackboxes, structural parents retain names.
-        lines.append(f"read_slang --keep-hierarchy --empty-blackboxes --top {ab.get('_elab_top', ab['top'])} "
+        lines.append(f"read_slang --keep-hierarchy --empty-blackboxes --allow-use-before-declare --ignore-unknown-modules --top {ab.get('_elab_top', ab['top'])} "
                      f"{dflags} {iflags} " + " ".join(lib + full + tops))
     elif ab.get("frontend", "native") == "native":
         for f in lib:
