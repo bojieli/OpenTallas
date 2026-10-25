@@ -48,7 +48,7 @@ module tb_s81sl_beat #(parameter integer RB_GAP = 4, parameter integer BEAT = 37
     reg rst_n = 1'b0, c_v = 1'b0, sw_v = 1'b0, rb_v = 1'b0;
     reg [159:0] c_d = 0; reg [9:0] sw_a = 0; reg [255:0] sw_d = 0; reg [7:0] sw_m = 0; reg [31:0] rb_d = 0;
     wire lo_v, hw_v, hr_v, hq_v, n_go, wl_v, fp, fn, fq, p_v, y_v, hw_hf, hr_hf, m_v, m_q, m_b; wire [7:0] m_i;
-    wire [255:0] lo_d, hw_d, hq_d, wl_d, y; wire [2:0] hw_j, hr_j, wl_i, y_i; wire [127:0] n_pre; wire [31:0] p_d;
+    wire [255:0] lo_d, hw_d, hq_d, wl_d; wire [127:0] y; wire [2:0] hw_j, hr_j, wl_i, y_i; wire [127:0] n_pre; wire [31:0] p_d;
     // the leaf's x beats arrive as 4 x 276-b fragments: re-assemble them (as the ring stop does)
     wire xf_v, xf_s; wire [275:0] xf; reg [1103:0] xo = 0; reg [1:0] frn = 0; reg xo_v = 0;
     always @(posedge clk) begin

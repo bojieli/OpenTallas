@@ -50,7 +50,8 @@ module ot_s81sl_vn #(
     output reg  [31:0]   p_d,
     output reg           y_v,
     output reg  [2:0]    y_i,
-    output reg  [255:0]  y,
+    output reg  [127:0]  y,              // packed BF16: y[16 k +: 16] = lane k (was [32 k + 16 +: 16] of a 256-bit
+                                         // word whose low halves are constant 0; OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA):)
     (* keep *) output reg           fault
 );
     wire [3:0] rsv;
@@ -201,5 +202,6 @@ module ot_s81sl_vn #(
             fault_s <= fault_n;
             fault <= fault_n;
         end
-    always @(posedge clk) begin p_d <= a_y; y_i <= gy_i[2:0]; y <= gy; end
+    always @(posedge clk) begin p_d <= a_y; y_i <= gy_i[2:0];
+        y <= {gy[255:240], gy[223:208], gy[191:176], gy[159:144], gy[127:112], gy[95:80], gy[63:48], gy[31:16]}; end
 endmodule

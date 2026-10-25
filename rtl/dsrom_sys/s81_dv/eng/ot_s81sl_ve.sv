@@ -65,7 +65,7 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
     input  wire [31:0]  a_g,
     output reg          o_v,
     output reg  [1:0]   o_c,
-    output reg  [255:0] o_y,
+    output reg  [127:0] o_y,             // packed BF16: o_y[16 k +: 16] = lane k (low halves were constant 0; OWNER DECISION 8 (2026-10-24, S81-KITS-RTLA):)
     (* keep *) output reg          fault
 );
     // ---------------------------------------------------------------- reset regions (<= 32 reset loads each)
@@ -162,7 +162,7 @@ module ot_s81sl_ve #(parameter integer LM = 5, LA = 4, MUT = 0) (
     always @(posedge clk or negedge rn)
         if (!rn) o_v <= 1'b0;
         else o_v <= yv;
-    always @(posedge clk) begin o_c <= yc; o_y <= yd; end
+    always @(posedge clk) begin o_c <= yc; o_y <= {yd[255:240], yd[223:208], yd[191:176], yd[159:144], yd[127:112], yd[95:80], yd[63:48], yd[31:16]}; end
 
     // S81-KITS-RTLA 10-24 (face_guard: register on every pin): sticky state in fault_s, the pin flop fault is an
     // output-only copy of the same next value (was: fault fed back into its own D).  0 cycles, bit / cycle identical.

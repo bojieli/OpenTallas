@@ -11,7 +11,7 @@ module tb_norm_leaf_source;
  integer cyc=0,np=0,ny=0,nxf=0,with_rstd=0,mut=0;
  string dir,rstd_path;
  wire hv,hh,hrv,hrhf,hqv,nv,wlv,mv,mq,mb,pv,yv,xfv,xfs,pf,nf,qf;
- wire[2:0]hj,hrj,wli,yi;wire[255:0]hd,hqd,wld,y;
+ wire[2:0]hj,hrj,wli,yi;wire[255:0]hd,hqd,wld;wire[127:0]y;
  wire[127:0]pre;wire[7:0]mi;wire[31:0]pd;wire[275:0]xf;
  function automatic[159:0]cmd(input integer op,input integer a0,input integer a1,input integer n);
   reg[159:0]v;begin v=0;v[3:0]=op;v[13:4]=a0;v[23:14]=a1;v[31:24]=n;cmd=v;end

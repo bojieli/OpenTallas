@@ -1,3 +1,4 @@
+# OT const_rename: packed buses renamed (physical/die_plan/s81/inputs/const_pins_dropped.json)
 VERSION 5.8 ;
 BUSBITCHARS "[]" ;
 DIVIDERCHAR "/" ;
@@ -12591,1596 +12592,12 @@ MACRO ot_s81sl_vs
         RECT 85.2480 172.7160 85.2720 172.8000 ;
     END
   END ve_ov
-  PIN ve_oy[0]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 85.5360 172.7620 85.5540 172.8000 ;
-    END
-  END ve_oy[0]
-  PIN ve_oy[100]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 95.9040 172.7620 95.9220 172.8000 ;
-    END
-  END ve_oy[100]
-  PIN ve_oy[101]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 96.0000 172.7160 96.0240 172.8000 ;
-    END
-  END ve_oy[101]
-  PIN ve_oy[102]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 96.1200 172.7620 96.1380 172.8000 ;
-    END
-  END ve_oy[102]
-  PIN ve_oy[103]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 96.1920 172.7160 96.2160 172.8000 ;
-    END
-  END ve_oy[103]
-  PIN ve_oy[104]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 96.3360 172.7620 96.3540 172.8000 ;
-    END
-  END ve_oy[104]
-  PIN ve_oy[105]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 96.3840 172.7160 96.4080 172.8000 ;
-    END
-  END ve_oy[105]
-  PIN ve_oy[106]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 96.4800 172.7620 96.4980 172.8000 ;
-    END
-  END ve_oy[106]
-  PIN ve_oy[107]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 96.5760 172.7160 96.6000 172.8000 ;
-    END
-  END ve_oy[107]
-  PIN ve_oy[108]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 96.6960 172.7620 96.7140 172.8000 ;
-    END
-  END ve_oy[108]
-  PIN ve_oy[109]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 96.8640 172.7160 96.8880 172.8000 ;
-    END
-  END ve_oy[109]
-  PIN ve_oy[10]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 86.6160 172.7620 86.6340 172.8000 ;
-    END
-  END ve_oy[10]
-  PIN ve_oy[110]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 96.9120 172.7620 96.9300 172.8000 ;
-    END
-  END ve_oy[110]
-  PIN ve_oy[111]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 97.0560 172.7160 97.0800 172.8000 ;
-    END
-  END ve_oy[111]
-  PIN ve_oy[112]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 97.1280 172.7620 97.1460 172.8000 ;
-    END
-  END ve_oy[112]
-  PIN ve_oy[113]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 97.2480 172.7160 97.2720 172.8000 ;
-    END
-  END ve_oy[113]
-  PIN ve_oy[114]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 97.3440 172.7620 97.3620 172.8000 ;
-    END
-  END ve_oy[114]
-  PIN ve_oy[115]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 97.4400 172.7160 97.4640 172.8000 ;
-    END
-  END ve_oy[115]
-  PIN ve_oy[116]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 97.5600 172.7620 97.5780 172.8000 ;
-    END
-  END ve_oy[116]
-  PIN ve_oy[117]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 97.6320 172.7160 97.6560 172.8000 ;
-    END
-  END ve_oy[117]
-  PIN ve_oy[118]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 97.7760 172.7620 97.7940 172.8000 ;
-    END
-  END ve_oy[118]
-  PIN ve_oy[119]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 97.8240 172.7160 97.8480 172.8000 ;
-    END
-  END ve_oy[119]
-  PIN ve_oy[11]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 86.6880 172.7160 86.7120 172.8000 ;
-    END
-  END ve_oy[11]
-  PIN ve_oy[120]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 97.9920 172.7620 98.0100 172.8000 ;
-    END
-  END ve_oy[120]
-  PIN ve_oy[121]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 98.0160 172.7160 98.0400 172.8000 ;
-    END
-  END ve_oy[121]
-  PIN ve_oy[122]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 98.1360 172.7620 98.1540 172.8000 ;
-    END
-  END ve_oy[122]
-  PIN ve_oy[123]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 98.3040 172.7160 98.3280 172.8000 ;
-    END
-  END ve_oy[123]
-  PIN ve_oy[124]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 98.3520 172.7620 98.3700 172.8000 ;
-    END
-  END ve_oy[124]
-  PIN ve_oy[125]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 98.4960 172.7160 98.5200 172.8000 ;
-    END
-  END ve_oy[125]
-  PIN ve_oy[126]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 98.5680 172.7620 98.5860 172.8000 ;
-    END
-  END ve_oy[126]
-  PIN ve_oy[127]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 98.6880 172.7160 98.7120 172.8000 ;
-    END
-  END ve_oy[127]
-  PIN ve_oy[128]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 98.7840 172.7620 98.8020 172.8000 ;
-    END
-  END ve_oy[128]
-  PIN ve_oy[129]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 98.8800 172.7160 98.9040 172.8000 ;
-    END
-  END ve_oy[129]
-  PIN ve_oy[12]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 86.8320 172.7620 86.8500 172.8000 ;
-    END
-  END ve_oy[12]
-  PIN ve_oy[130]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 99.0000 172.7620 99.0180 172.8000 ;
-    END
-  END ve_oy[130]
-  PIN ve_oy[131]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 99.0720 172.7160 99.0960 172.8000 ;
-    END
-  END ve_oy[131]
-  PIN ve_oy[132]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 99.2160 172.7620 99.2340 172.8000 ;
-    END
-  END ve_oy[132]
-  PIN ve_oy[133]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 99.2640 172.7160 99.2880 172.8000 ;
-    END
-  END ve_oy[133]
-  PIN ve_oy[134]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 99.4320 172.7620 99.4500 172.8000 ;
-    END
-  END ve_oy[134]
-  PIN ve_oy[135]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 99.5520 172.7160 99.5760 172.8000 ;
-    END
-  END ve_oy[135]
-  PIN ve_oy[136]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 99.6480 172.7620 99.6660 172.8000 ;
-    END
-  END ve_oy[136]
-  PIN ve_oy[137]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 99.7440 172.7160 99.7680 172.8000 ;
-    END
-  END ve_oy[137]
-  PIN ve_oy[138]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 99.7920 172.7620 99.8100 172.8000 ;
-    END
-  END ve_oy[138]
-  PIN ve_oy[139]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 99.9360 172.7160 99.9600 172.8000 ;
-    END
-  END ve_oy[139]
-  PIN ve_oy[13]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 86.8800 172.7160 86.9040 172.8000 ;
-    END
-  END ve_oy[13]
-  PIN ve_oy[140]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 100.0080 172.7620 100.0260 172.8000 ;
-    END
-  END ve_oy[140]
-  PIN ve_oy[141]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 100.1280 172.7160 100.1520 172.8000 ;
-    END
-  END ve_oy[141]
-  PIN ve_oy[142]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 100.2240 172.7620 100.2420 172.8000 ;
-    END
-  END ve_oy[142]
-  PIN ve_oy[143]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 100.3200 172.7160 100.3440 172.8000 ;
-    END
-  END ve_oy[143]
-  PIN ve_oy[144]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 100.4400 172.7620 100.4580 172.8000 ;
-    END
-  END ve_oy[144]
-  PIN ve_oy[145]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 100.5120 172.7160 100.5360 172.8000 ;
-    END
-  END ve_oy[145]
-  PIN ve_oy[146]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 100.6560 172.7620 100.6740 172.8000 ;
-    END
-  END ve_oy[146]
-  PIN ve_oy[147]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 100.7040 172.7160 100.7280 172.8000 ;
-    END
-  END ve_oy[147]
-  PIN ve_oy[148]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 100.8720 172.7620 100.8900 172.8000 ;
-    END
-  END ve_oy[148]
-  PIN ve_oy[149]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 100.9920 172.7160 101.0160 172.8000 ;
-    END
-  END ve_oy[149]
-  PIN ve_oy[14]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 86.9760 172.7620 86.9940 172.8000 ;
-    END
-  END ve_oy[14]
-  PIN ve_oy[150]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 101.0880 172.7620 101.1060 172.8000 ;
-    END
-  END ve_oy[150]
-  PIN ve_oy[151]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 101.1840 172.7160 101.2080 172.8000 ;
-    END
-  END ve_oy[151]
-  PIN ve_oy[152]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 101.2320 172.7620 101.2500 172.8000 ;
-    END
-  END ve_oy[152]
-  PIN ve_oy[153]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 101.3760 172.7160 101.4000 172.8000 ;
-    END
-  END ve_oy[153]
-  PIN ve_oy[154]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 101.4480 172.7620 101.4660 172.8000 ;
-    END
-  END ve_oy[154]
-  PIN ve_oy[155]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 101.5680 172.7160 101.5920 172.8000 ;
-    END
-  END ve_oy[155]
-  PIN ve_oy[156]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 101.6640 172.7620 101.6820 172.8000 ;
-    END
-  END ve_oy[156]
-  PIN ve_oy[157]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 101.7600 172.7160 101.7840 172.8000 ;
-    END
-  END ve_oy[157]
-  PIN ve_oy[158]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 101.8800 172.7620 101.8980 172.8000 ;
-    END
-  END ve_oy[158]
-  PIN ve_oy[159]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 101.9520 172.7160 101.9760 172.8000 ;
-    END
-  END ve_oy[159]
-  PIN ve_oy[15]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 87.0720 172.7160 87.0960 172.8000 ;
-    END
-  END ve_oy[15]
-  PIN ve_oy[160]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 102.0960 172.7620 102.1140 172.8000 ;
-    END
-  END ve_oy[160]
-  PIN ve_oy[161]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 102.2400 172.7160 102.2640 172.8000 ;
-    END
-  END ve_oy[161]
-  PIN ve_oy[162]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 102.3120 172.7620 102.3300 172.8000 ;
-    END
-  END ve_oy[162]
-  PIN ve_oy[163]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 102.4320 172.7160 102.4560 172.8000 ;
-    END
-  END ve_oy[163]
-  PIN ve_oy[164]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 102.5280 172.7620 102.5460 172.8000 ;
-    END
-  END ve_oy[164]
-  PIN ve_oy[165]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 102.6240 172.7160 102.6480 172.8000 ;
-    END
-  END ve_oy[165]
-  PIN ve_oy[166]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 102.7440 172.7620 102.7620 172.8000 ;
-    END
-  END ve_oy[166]
-  PIN ve_oy[167]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 102.8160 172.7160 102.8400 172.8000 ;
-    END
-  END ve_oy[167]
-  PIN ve_oy[168]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 102.8880 172.7620 102.9060 172.8000 ;
-    END
-  END ve_oy[168]
-  PIN ve_oy[169]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 103.0080 172.7160 103.0320 172.8000 ;
-    END
-  END ve_oy[169]
-  PIN ve_oy[16]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 87.1920 172.7620 87.2100 172.8000 ;
-    END
-  END ve_oy[16]
-  PIN ve_oy[170]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 103.1040 172.7620 103.1220 172.8000 ;
-    END
-  END ve_oy[170]
-  PIN ve_oy[171]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 103.2000 172.7160 103.2240 172.8000 ;
-    END
-  END ve_oy[171]
-  PIN ve_oy[172]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 103.3200 172.7620 103.3380 172.8000 ;
-    END
-  END ve_oy[172]
-  PIN ve_oy[173]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 103.3920 172.7160 103.4160 172.8000 ;
-    END
-  END ve_oy[173]
-  PIN ve_oy[174]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 103.5360 172.7620 103.5540 172.8000 ;
-    END
-  END ve_oy[174]
-  PIN ve_oy[175]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 103.6800 172.7160 103.7040 172.8000 ;
-    END
-  END ve_oy[175]
-  PIN ve_oy[176]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 103.7520 172.7620 103.7700 172.8000 ;
-    END
-  END ve_oy[176]
-  PIN ve_oy[177]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 103.8720 172.7160 103.8960 172.8000 ;
-    END
-  END ve_oy[177]
-  PIN ve_oy[178]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 103.9680 172.7620 103.9860 172.8000 ;
-    END
-  END ve_oy[178]
-  PIN ve_oy[179]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 104.0640 172.7160 104.0880 172.8000 ;
-    END
-  END ve_oy[179]
-  PIN ve_oy[17]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 87.3600 172.7160 87.3840 172.8000 ;
-    END
-  END ve_oy[17]
-  PIN ve_oy[180]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 104.1840 172.7620 104.2020 172.8000 ;
-    END
-  END ve_oy[180]
-  PIN ve_oy[181]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 104.2560 172.7160 104.2800 172.8000 ;
-    END
-  END ve_oy[181]
-  PIN ve_oy[182]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 104.4000 172.7620 104.4180 172.8000 ;
-    END
-  END ve_oy[182]
-  PIN ve_oy[183]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 104.4480 172.7160 104.4720 172.8000 ;
-    END
-  END ve_oy[183]
-  PIN ve_oy[184]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 104.5440 172.7620 104.5620 172.8000 ;
-    END
-  END ve_oy[184]
-  PIN ve_oy[185]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 104.6400 172.7160 104.6640 172.8000 ;
-    END
-  END ve_oy[185]
-  PIN ve_oy[186]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 104.7600 172.7620 104.7780 172.8000 ;
-    END
-  END ve_oy[186]
-  PIN ve_oy[187]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 104.9280 172.7160 104.9520 172.8000 ;
-    END
-  END ve_oy[187]
-  PIN ve_oy[188]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 104.9760 172.7620 104.9940 172.8000 ;
-    END
-  END ve_oy[188]
-  PIN ve_oy[189]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 105.1200 172.7160 105.1440 172.8000 ;
-    END
-  END ve_oy[189]
-  PIN ve_oy[18]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 87.4080 172.7620 87.4260 172.8000 ;
-    END
-  END ve_oy[18]
-  PIN ve_oy[190]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 105.1920 172.7620 105.2100 172.8000 ;
-    END
-  END ve_oy[190]
-  PIN ve_oy[191]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 105.3120 172.7160 105.3360 172.8000 ;
-    END
-  END ve_oy[191]
-  PIN ve_oy[192]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 105.4080 172.7620 105.4260 172.8000 ;
-    END
-  END ve_oy[192]
-  PIN ve_oy[193]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 105.5040 172.7160 105.5280 172.8000 ;
-    END
-  END ve_oy[193]
-  PIN ve_oy[194]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 105.6240 172.7620 105.6420 172.8000 ;
-    END
-  END ve_oy[194]
-  PIN ve_oy[195]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 105.6960 172.7160 105.7200 172.8000 ;
-    END
-  END ve_oy[195]
-  PIN ve_oy[196]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 105.8400 172.7620 105.8580 172.8000 ;
-    END
-  END ve_oy[196]
-  PIN ve_oy[197]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 105.8880 172.7160 105.9120 172.8000 ;
-    END
-  END ve_oy[197]
-  PIN ve_oy[198]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 105.9840 172.7620 106.0020 172.8000 ;
-    END
-  END ve_oy[198]
-  PIN ve_oy[199]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 106.0800 172.7160 106.1040 172.8000 ;
-    END
-  END ve_oy[199]
-  PIN ve_oy[19]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 87.5520 172.7160 87.5760 172.8000 ;
-    END
-  END ve_oy[19]
-  PIN ve_oy[1]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 85.6320 172.7160 85.6560 172.8000 ;
-    END
-  END ve_oy[1]
-  PIN ve_oy[200]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 106.2000 172.7620 106.2180 172.8000 ;
-    END
-  END ve_oy[200]
-  PIN ve_oy[201]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 106.3680 172.7160 106.3920 172.8000 ;
-    END
-  END ve_oy[201]
-  PIN ve_oy[202]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 106.4160 172.7620 106.4340 172.8000 ;
-    END
-  END ve_oy[202]
-  PIN ve_oy[203]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 106.5600 172.7160 106.5840 172.8000 ;
-    END
-  END ve_oy[203]
-  PIN ve_oy[204]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 106.6320 172.7620 106.6500 172.8000 ;
-    END
-  END ve_oy[204]
-  PIN ve_oy[205]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 106.7520 172.7160 106.7760 172.8000 ;
-    END
-  END ve_oy[205]
-  PIN ve_oy[206]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 106.8480 172.7620 106.8660 172.8000 ;
-    END
-  END ve_oy[206]
-  PIN ve_oy[207]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 106.9440 172.7160 106.9680 172.8000 ;
-    END
-  END ve_oy[207]
-  PIN ve_oy[208]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 107.0640 172.7620 107.0820 172.8000 ;
-    END
-  END ve_oy[208]
-  PIN ve_oy[209]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 107.1360 172.7160 107.1600 172.8000 ;
-    END
-  END ve_oy[209]
-  PIN ve_oy[20]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 87.6240 172.7620 87.6420 172.8000 ;
-    END
-  END ve_oy[20]
-  PIN ve_oy[210]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 107.2800 172.7620 107.2980 172.8000 ;
-    END
-  END ve_oy[210]
-  PIN ve_oy[211]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 107.3280 172.7160 107.3520 172.8000 ;
-    END
-  END ve_oy[211]
-  PIN ve_oy[212]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 107.4960 172.7620 107.5140 172.8000 ;
-    END
-  END ve_oy[212]
-  PIN ve_oy[213]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 107.5200 172.7160 107.5440 172.8000 ;
-    END
-  END ve_oy[213]
-  PIN ve_oy[214]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 107.6400 172.7620 107.6580 172.8000 ;
-    END
-  END ve_oy[214]
-  PIN ve_oy[215]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 107.8080 172.7160 107.8320 172.8000 ;
-    END
-  END ve_oy[215]
-  PIN ve_oy[216]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 107.8560 172.7620 107.8740 172.8000 ;
-    END
-  END ve_oy[216]
-  PIN ve_oy[217]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 108.0000 172.7160 108.0240 172.8000 ;
-    END
-  END ve_oy[217]
-  PIN ve_oy[218]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 108.0720 172.7620 108.0900 172.8000 ;
-    END
-  END ve_oy[218]
-  PIN ve_oy[219]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 108.1920 172.7160 108.2160 172.8000 ;
-    END
-  END ve_oy[219]
-  PIN ve_oy[21]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 87.7440 172.7160 87.7680 172.8000 ;
-    END
-  END ve_oy[21]
-  PIN ve_oy[220]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 108.2880 172.7620 108.3060 172.8000 ;
-    END
-  END ve_oy[220]
-  PIN ve_oy[221]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 108.3840 172.7160 108.4080 172.8000 ;
-    END
-  END ve_oy[221]
-  PIN ve_oy[222]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 108.5040 172.7620 108.5220 172.8000 ;
-    END
-  END ve_oy[222]
-  PIN ve_oy[223]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 108.5760 172.7160 108.6000 172.8000 ;
-    END
-  END ve_oy[223]
-  PIN ve_oy[224]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 108.7200 172.7620 108.7380 172.8000 ;
-    END
-  END ve_oy[224]
-  PIN ve_oy[225]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 108.7680 172.7160 108.7920 172.8000 ;
-    END
-  END ve_oy[225]
-  PIN ve_oy[226]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 108.9360 172.7620 108.9540 172.8000 ;
-    END
-  END ve_oy[226]
-  PIN ve_oy[227]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 109.0560 172.7160 109.0800 172.8000 ;
-    END
-  END ve_oy[227]
-  PIN ve_oy[228]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 109.1520 172.7620 109.1700 172.8000 ;
-    END
-  END ve_oy[228]
-  PIN ve_oy[229]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 109.2480 172.7160 109.2720 172.8000 ;
-    END
-  END ve_oy[229]
-  PIN ve_oy[22]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 87.8400 172.7620 87.8580 172.8000 ;
-    END
-  END ve_oy[22]
-  PIN ve_oy[230]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 109.2960 172.7620 109.3140 172.8000 ;
-    END
-  END ve_oy[230]
-  PIN ve_oy[231]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 109.4400 172.7160 109.4640 172.8000 ;
-    END
-  END ve_oy[231]
-  PIN ve_oy[232]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 109.5120 172.7620 109.5300 172.8000 ;
-    END
-  END ve_oy[232]
-  PIN ve_oy[233]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 109.6320 172.7160 109.6560 172.8000 ;
-    END
-  END ve_oy[233]
-  PIN ve_oy[234]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 109.7280 172.7620 109.7460 172.8000 ;
-    END
-  END ve_oy[234]
-  PIN ve_oy[235]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 109.8240 172.7160 109.8480 172.8000 ;
-    END
-  END ve_oy[235]
-  PIN ve_oy[236]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 109.9440 172.7620 109.9620 172.8000 ;
-    END
-  END ve_oy[236]
-  PIN ve_oy[237]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 110.0160 172.7160 110.0400 172.8000 ;
-    END
-  END ve_oy[237]
-  PIN ve_oy[238]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 110.1600 172.7620 110.1780 172.8000 ;
-    END
-  END ve_oy[238]
-  PIN ve_oy[239]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 110.2080 172.7160 110.2320 172.8000 ;
-    END
-  END ve_oy[239]
-  PIN ve_oy[23]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 87.9360 172.7160 87.9600 172.8000 ;
-    END
-  END ve_oy[23]
-  PIN ve_oy[240]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 110.3760 172.7620 110.3940 172.8000 ;
-    END
-  END ve_oy[240]
-  PIN ve_oy[241]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 110.4960 172.7160 110.5200 172.8000 ;
-    END
-  END ve_oy[241]
-  PIN ve_oy[242]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 110.5920 172.7620 110.6100 172.8000 ;
-    END
-  END ve_oy[242]
-  PIN ve_oy[243]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 110.6880 172.7160 110.7120 172.8000 ;
-    END
-  END ve_oy[243]
-  PIN ve_oy[244]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 110.8080 172.7620 110.8260 172.8000 ;
-    END
-  END ve_oy[244]
-  PIN ve_oy[245]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 110.8800 172.7160 110.9040 172.8000 ;
-    END
-  END ve_oy[245]
-  PIN ve_oy[246]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 110.9520 172.7620 110.9700 172.8000 ;
-    END
-  END ve_oy[246]
-  PIN ve_oy[247]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 111.0720 172.7160 111.0960 172.8000 ;
-    END
-  END ve_oy[247]
-  PIN ve_oy[248]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 111.1680 172.7620 111.1860 172.8000 ;
-    END
-  END ve_oy[248]
-  PIN ve_oy[249]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 111.2640 172.7160 111.2880 172.8000 ;
-    END
-  END ve_oy[249]
-  PIN ve_oy[24]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 88.0560 172.7620 88.0740 172.8000 ;
-    END
-  END ve_oy[24]
-  PIN ve_oy[250]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 111.3840 172.7620 111.4020 172.8000 ;
-    END
-  END ve_oy[250]
-  PIN ve_oy[251]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 111.4560 172.7160 111.4800 172.8000 ;
-    END
-  END ve_oy[251]
-  PIN ve_oy[252]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 111.6000 172.7620 111.6180 172.8000 ;
-    END
-  END ve_oy[252]
-  PIN ve_oy[253]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 111.7440 172.7160 111.7680 172.8000 ;
-    END
-  END ve_oy[253]
-  PIN ve_oy[254]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 111.8160 172.7620 111.8340 172.8000 ;
-    END
-  END ve_oy[254]
-  PIN ve_oy[255]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 111.9360 172.7160 111.9600 172.8000 ;
-    END
-  END ve_oy[255]
-  PIN ve_oy[25]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 88.1280 172.7160 88.1520 172.8000 ;
-    END
-  END ve_oy[25]
-  PIN ve_oy[26]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 88.2720 172.7620 88.2900 172.8000 ;
-    END
-  END ve_oy[26]
-  PIN ve_oy[27]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 88.3200 172.7160 88.3440 172.8000 ;
-    END
-  END ve_oy[27]
-  PIN ve_oy[28]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 88.4880 172.7620 88.5060 172.8000 ;
-    END
-  END ve_oy[28]
-  PIN ve_oy[29]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 88.5120 172.7160 88.5360 172.8000 ;
-    END
-  END ve_oy[29]
-  PIN ve_oy[2]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 85.7520 172.7620 85.7700 172.8000 ;
-    END
-  END ve_oy[2]
-  PIN ve_oy[30]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 88.6320 172.7620 88.6500 172.8000 ;
-    END
-  END ve_oy[30]
-  PIN ve_oy[31]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 88.8000 172.7160 88.8240 172.8000 ;
-    END
-  END ve_oy[31]
-  PIN ve_oy[32]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 88.8480 172.7620 88.8660 172.8000 ;
-    END
-  END ve_oy[32]
-  PIN ve_oy[33]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 88.9920 172.7160 89.0160 172.8000 ;
-    END
-  END ve_oy[33]
-  PIN ve_oy[34]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 89.0640 172.7620 89.0820 172.8000 ;
-    END
-  END ve_oy[34]
-  PIN ve_oy[35]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 89.1840 172.7160 89.2080 172.8000 ;
-    END
-  END ve_oy[35]
-  PIN ve_oy[36]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 89.2800 172.7620 89.2980 172.8000 ;
-    END
-  END ve_oy[36]
-  PIN ve_oy[37]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 89.3760 172.7160 89.4000 172.8000 ;
-    END
-  END ve_oy[37]
-  PIN ve_oy[38]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 89.4960 172.7620 89.5140 172.8000 ;
-    END
-  END ve_oy[38]
-  PIN ve_oy[39]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 89.5680 172.7160 89.5920 172.8000 ;
-    END
-  END ve_oy[39]
-  PIN ve_oy[3]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 85.8240 172.7160 85.8480 172.8000 ;
-    END
-  END ve_oy[3]
-  PIN ve_oy[40]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 89.7120 172.7620 89.7300 172.8000 ;
-    END
-  END ve_oy[40]
-  PIN ve_oy[41]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 89.7600 172.7160 89.7840 172.8000 ;
-    END
-  END ve_oy[41]
-  PIN ve_oy[42]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 89.9280 172.7620 89.9460 172.8000 ;
-    END
-  END ve_oy[42]
-  PIN ve_oy[43]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 90.0480 172.7160 90.0720 172.8000 ;
-    END
-  END ve_oy[43]
-  PIN ve_oy[44]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 90.1440 172.7620 90.1620 172.8000 ;
-    END
-  END ve_oy[44]
-  PIN ve_oy[45]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 90.2400 172.7160 90.2640 172.8000 ;
-    END
-  END ve_oy[45]
-  PIN ve_oy[46]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 90.2880 172.7620 90.3060 172.8000 ;
-    END
-  END ve_oy[46]
-  PIN ve_oy[47]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 90.4320 172.7160 90.4560 172.8000 ;
-    END
-  END ve_oy[47]
   PIN ve_oy[48]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 90.5040 172.7620 90.5220 172.8000 ;
+        RECT 97.1280 172.7620 97.1460 172.8000 ;
     END
   END ve_oy[48]
   PIN ve_oy[49]
@@ -14188,23 +12605,15 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 90.6240 172.7160 90.6480 172.8000 ;
+        RECT 97.2480 172.7160 97.2720 172.8000 ;
     END
   END ve_oy[49]
-  PIN ve_oy[4]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 85.9680 172.7620 85.9860 172.8000 ;
-    END
-  END ve_oy[4]
   PIN ve_oy[50]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 90.7200 172.7620 90.7380 172.8000 ;
+        RECT 97.3440 172.7620 97.3620 172.8000 ;
     END
   END ve_oy[50]
   PIN ve_oy[51]
@@ -14212,7 +12621,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 90.8160 172.7160 90.8400 172.8000 ;
+        RECT 97.4400 172.7160 97.4640 172.8000 ;
     END
   END ve_oy[51]
   PIN ve_oy[52]
@@ -14220,7 +12629,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 90.9360 172.7620 90.9540 172.8000 ;
+        RECT 97.5600 172.7620 97.5780 172.8000 ;
     END
   END ve_oy[52]
   PIN ve_oy[53]
@@ -14228,7 +12637,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 91.0080 172.7160 91.0320 172.8000 ;
+        RECT 97.6320 172.7160 97.6560 172.8000 ;
     END
   END ve_oy[53]
   PIN ve_oy[54]
@@ -14236,7 +12645,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 91.1520 172.7620 91.1700 172.8000 ;
+        RECT 97.7760 172.7620 97.7940 172.8000 ;
     END
   END ve_oy[54]
   PIN ve_oy[55]
@@ -14244,7 +12653,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 91.2000 172.7160 91.2240 172.8000 ;
+        RECT 97.8240 172.7160 97.8480 172.8000 ;
     END
   END ve_oy[55]
   PIN ve_oy[56]
@@ -14252,7 +12661,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 91.3680 172.7620 91.3860 172.8000 ;
+        RECT 97.9920 172.7620 98.0100 172.8000 ;
     END
   END ve_oy[56]
   PIN ve_oy[57]
@@ -14260,7 +12669,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 91.4880 172.7160 91.5120 172.8000 ;
+        RECT 98.0160 172.7160 98.0400 172.8000 ;
     END
   END ve_oy[57]
   PIN ve_oy[58]
@@ -14268,7 +12677,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 91.5840 172.7620 91.6020 172.8000 ;
+        RECT 98.1360 172.7620 98.1540 172.8000 ;
     END
   END ve_oy[58]
   PIN ve_oy[59]
@@ -14276,23 +12685,15 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 91.6800 172.7160 91.7040 172.8000 ;
+        RECT 98.3040 172.7160 98.3280 172.8000 ;
     END
   END ve_oy[59]
-  PIN ve_oy[5]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M5 ;
-        RECT 86.1120 172.7160 86.1360 172.8000 ;
-    END
-  END ve_oy[5]
   PIN ve_oy[60]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 91.7280 172.7620 91.7460 172.8000 ;
+        RECT 98.3520 172.7620 98.3700 172.8000 ;
     END
   END ve_oy[60]
   PIN ve_oy[61]
@@ -14300,7 +12701,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 91.8720 172.7160 91.8960 172.8000 ;
+        RECT 98.4960 172.7160 98.5200 172.8000 ;
     END
   END ve_oy[61]
   PIN ve_oy[62]
@@ -14308,7 +12709,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 91.9440 172.7620 91.9620 172.8000 ;
+        RECT 98.5680 172.7620 98.5860 172.8000 ;
     END
   END ve_oy[62]
   PIN ve_oy[63]
@@ -14316,7 +12717,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 92.0640 172.7160 92.0880 172.8000 ;
+        RECT 98.6880 172.7160 98.7120 172.8000 ;
     END
   END ve_oy[63]
   PIN ve_oy[64]
@@ -14324,7 +12725,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 92.1600 172.7620 92.1780 172.8000 ;
+        RECT 100.4400 172.7620 100.4580 172.8000 ;
     END
   END ve_oy[64]
   PIN ve_oy[65]
@@ -14332,7 +12733,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 92.2560 172.7160 92.2800 172.8000 ;
+        RECT 100.5120 172.7160 100.5360 172.8000 ;
     END
   END ve_oy[65]
   PIN ve_oy[66]
@@ -14340,7 +12741,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 92.3760 172.7620 92.3940 172.8000 ;
+        RECT 100.6560 172.7620 100.6740 172.8000 ;
     END
   END ve_oy[66]
   PIN ve_oy[67]
@@ -14348,7 +12749,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 92.4480 172.7160 92.4720 172.8000 ;
+        RECT 100.7040 172.7160 100.7280 172.8000 ;
     END
   END ve_oy[67]
   PIN ve_oy[68]
@@ -14356,7 +12757,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 92.5920 172.7620 92.6100 172.8000 ;
+        RECT 100.8720 172.7620 100.8900 172.8000 ;
     END
   END ve_oy[68]
   PIN ve_oy[69]
@@ -14364,23 +12765,15 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 92.7360 172.7160 92.7600 172.8000 ;
+        RECT 100.9920 172.7160 101.0160 172.8000 ;
     END
   END ve_oy[69]
-  PIN ve_oy[6]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 86.1840 172.7620 86.2020 172.8000 ;
-    END
-  END ve_oy[6]
   PIN ve_oy[70]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 92.8080 172.7620 92.8260 172.8000 ;
+        RECT 101.0880 172.7620 101.1060 172.8000 ;
     END
   END ve_oy[70]
   PIN ve_oy[71]
@@ -14388,7 +12781,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 92.9280 172.7160 92.9520 172.8000 ;
+        RECT 101.1840 172.7160 101.2080 172.8000 ;
     END
   END ve_oy[71]
   PIN ve_oy[72]
@@ -14396,7 +12789,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 93.0240 172.7620 93.0420 172.8000 ;
+        RECT 101.2320 172.7620 101.2500 172.8000 ;
     END
   END ve_oy[72]
   PIN ve_oy[73]
@@ -14404,7 +12797,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 93.1200 172.7160 93.1440 172.8000 ;
+        RECT 101.3760 172.7160 101.4000 172.8000 ;
     END
   END ve_oy[73]
   PIN ve_oy[74]
@@ -14412,7 +12805,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 93.2400 172.7620 93.2580 172.8000 ;
+        RECT 101.4480 172.7620 101.4660 172.8000 ;
     END
   END ve_oy[74]
   PIN ve_oy[75]
@@ -14420,7 +12813,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 93.3120 172.7160 93.3360 172.8000 ;
+        RECT 101.5680 172.7160 101.5920 172.8000 ;
     END
   END ve_oy[75]
   PIN ve_oy[76]
@@ -14428,7 +12821,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 93.3840 172.7620 93.4020 172.8000 ;
+        RECT 101.6640 172.7620 101.6820 172.8000 ;
     END
   END ve_oy[76]
   PIN ve_oy[77]
@@ -14436,7 +12829,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 93.5040 172.7160 93.5280 172.8000 ;
+        RECT 101.7600 172.7160 101.7840 172.8000 ;
     END
   END ve_oy[77]
   PIN ve_oy[78]
@@ -14444,7 +12837,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 93.6000 172.7620 93.6180 172.8000 ;
+        RECT 101.8800 172.7620 101.8980 172.8000 ;
     END
   END ve_oy[78]
   PIN ve_oy[79]
@@ -14452,23 +12845,23 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 93.6960 172.7160 93.7200 172.8000 ;
+        RECT 101.9520 172.7160 101.9760 172.8000 ;
     END
   END ve_oy[79]
-  PIN ve_oy[7]
+  PIN ve_oy[0]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
-      LAYER M5 ;
-        RECT 86.3040 172.7160 86.3280 172.8000 ;
+      LAYER M3 ;
+        RECT 87.1920 172.7620 87.2100 172.8000 ;
     END
-  END ve_oy[7]
+  END ve_oy[0]
   PIN ve_oy[80]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 93.8160 172.7620 93.8340 172.8000 ;
+        RECT 103.7520 172.7620 103.7700 172.8000 ;
     END
   END ve_oy[80]
   PIN ve_oy[81]
@@ -14476,7 +12869,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 93.8880 172.7160 93.9120 172.8000 ;
+        RECT 103.8720 172.7160 103.8960 172.8000 ;
     END
   END ve_oy[81]
   PIN ve_oy[82]
@@ -14484,7 +12877,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 94.0320 172.7620 94.0500 172.8000 ;
+        RECT 103.9680 172.7620 103.9860 172.8000 ;
     END
   END ve_oy[82]
   PIN ve_oy[83]
@@ -14492,15 +12885,23 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 94.1760 172.7160 94.2000 172.8000 ;
+        RECT 104.0640 172.7160 104.0880 172.8000 ;
     END
   END ve_oy[83]
+  PIN ve_oy[1]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 87.3600 172.7160 87.3840 172.8000 ;
+    END
+  END ve_oy[1]
   PIN ve_oy[84]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 94.2480 172.7620 94.2660 172.8000 ;
+        RECT 104.1840 172.7620 104.2020 172.8000 ;
     END
   END ve_oy[84]
   PIN ve_oy[85]
@@ -14508,7 +12909,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 94.3680 172.7160 94.3920 172.8000 ;
+        RECT 104.2560 172.7160 104.2800 172.8000 ;
     END
   END ve_oy[85]
   PIN ve_oy[86]
@@ -14516,7 +12917,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 94.4640 172.7620 94.4820 172.8000 ;
+        RECT 104.4000 172.7620 104.4180 172.8000 ;
     END
   END ve_oy[86]
   PIN ve_oy[87]
@@ -14524,7 +12925,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 94.5600 172.7160 94.5840 172.8000 ;
+        RECT 104.4480 172.7160 104.4720 172.8000 ;
     END
   END ve_oy[87]
   PIN ve_oy[88]
@@ -14532,7 +12933,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 94.6800 172.7620 94.6980 172.8000 ;
+        RECT 104.5440 172.7620 104.5620 172.8000 ;
     END
   END ve_oy[88]
   PIN ve_oy[89]
@@ -14540,23 +12941,15 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 94.7520 172.7160 94.7760 172.8000 ;
+        RECT 104.6400 172.7160 104.6640 172.8000 ;
     END
   END ve_oy[89]
-  PIN ve_oy[8]
-    DIRECTION INPUT ;
-    USE SIGNAL ;
-    PORT
-      LAYER M3 ;
-        RECT 86.4000 172.7620 86.4180 172.8000 ;
-    END
-  END ve_oy[8]
   PIN ve_oy[90]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 94.8960 172.7620 94.9140 172.8000 ;
+        RECT 104.7600 172.7620 104.7780 172.8000 ;
     END
   END ve_oy[90]
   PIN ve_oy[91]
@@ -14564,7 +12957,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 94.9440 172.7160 94.9680 172.8000 ;
+        RECT 104.9280 172.7160 104.9520 172.8000 ;
     END
   END ve_oy[91]
   PIN ve_oy[92]
@@ -14572,7 +12965,7 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 95.0400 172.7620 95.0580 172.8000 ;
+        RECT 104.9760 172.7620 104.9940 172.8000 ;
     END
   END ve_oy[92]
   PIN ve_oy[93]
@@ -14580,15 +12973,23 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 95.1360 172.7160 95.1600 172.8000 ;
+        RECT 105.1200 172.7160 105.1440 172.8000 ;
     END
   END ve_oy[93]
+  PIN ve_oy[2]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 87.4080 172.7620 87.4260 172.8000 ;
+    END
+  END ve_oy[2]
   PIN ve_oy[94]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 95.2560 172.7620 95.2740 172.8000 ;
+        RECT 105.1920 172.7620 105.2100 172.8000 ;
     END
   END ve_oy[94]
   PIN ve_oy[95]
@@ -14596,15 +12997,23 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 95.3280 172.7160 95.3520 172.8000 ;
+        RECT 105.3120 172.7160 105.3360 172.8000 ;
     END
   END ve_oy[95]
+  PIN ve_oy[3]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 87.5520 172.7160 87.5760 172.8000 ;
+    END
+  END ve_oy[3]
   PIN ve_oy[96]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 95.4720 172.7620 95.4900 172.8000 ;
+        RECT 107.0640 172.7620 107.0820 172.8000 ;
     END
   END ve_oy[96]
   PIN ve_oy[97]
@@ -14612,15 +13021,23 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 95.6160 172.7160 95.6400 172.8000 ;
+        RECT 107.1360 172.7160 107.1600 172.8000 ;
     END
   END ve_oy[97]
+  PIN ve_oy[4]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 87.6240 172.7620 87.6420 172.8000 ;
+    END
+  END ve_oy[4]
   PIN ve_oy[98]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M3 ;
-        RECT 95.6880 172.7620 95.7060 172.8000 ;
+        RECT 107.2800 172.7620 107.2980 172.8000 ;
     END
   END ve_oy[98]
   PIN ve_oy[99]
@@ -14628,17 +13045,577 @@ MACRO ot_s81sl_vs
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 95.8080 172.7160 95.8320 172.8000 ;
+        RECT 107.3280 172.7160 107.3520 172.8000 ;
     END
   END ve_oy[99]
+  PIN ve_oy[100]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 107.4960 172.7620 107.5140 172.8000 ;
+    END
+  END ve_oy[100]
+  PIN ve_oy[101]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 107.5200 172.7160 107.5440 172.8000 ;
+    END
+  END ve_oy[101]
+  PIN ve_oy[102]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 107.6400 172.7620 107.6580 172.8000 ;
+    END
+  END ve_oy[102]
+  PIN ve_oy[103]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 107.8080 172.7160 107.8320 172.8000 ;
+    END
+  END ve_oy[103]
+  PIN ve_oy[104]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 107.8560 172.7620 107.8740 172.8000 ;
+    END
+  END ve_oy[104]
+  PIN ve_oy[105]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 108.0000 172.7160 108.0240 172.8000 ;
+    END
+  END ve_oy[105]
+  PIN ve_oy[106]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 108.0720 172.7620 108.0900 172.8000 ;
+    END
+  END ve_oy[106]
+  PIN ve_oy[107]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 108.1920 172.7160 108.2160 172.8000 ;
+    END
+  END ve_oy[107]
+  PIN ve_oy[5]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 87.7440 172.7160 87.7680 172.8000 ;
+    END
+  END ve_oy[5]
+  PIN ve_oy[108]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 108.2880 172.7620 108.3060 172.8000 ;
+    END
+  END ve_oy[108]
+  PIN ve_oy[109]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 108.3840 172.7160 108.4080 172.8000 ;
+    END
+  END ve_oy[109]
+  PIN ve_oy[110]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 108.5040 172.7620 108.5220 172.8000 ;
+    END
+  END ve_oy[110]
+  PIN ve_oy[111]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 108.5760 172.7160 108.6000 172.8000 ;
+    END
+  END ve_oy[111]
+  PIN ve_oy[6]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 87.8400 172.7620 87.8580 172.8000 ;
+    END
+  END ve_oy[6]
+  PIN ve_oy[7]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 87.9360 172.7160 87.9600 172.8000 ;
+    END
+  END ve_oy[7]
+  PIN ve_oy[112]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 110.3760 172.7620 110.3940 172.8000 ;
+    END
+  END ve_oy[112]
+  PIN ve_oy[113]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 110.4960 172.7160 110.5200 172.8000 ;
+    END
+  END ve_oy[113]
+  PIN ve_oy[114]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 110.5920 172.7620 110.6100 172.8000 ;
+    END
+  END ve_oy[114]
+  PIN ve_oy[115]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 110.6880 172.7160 110.7120 172.8000 ;
+    END
+  END ve_oy[115]
+  PIN ve_oy[116]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 110.8080 172.7620 110.8260 172.8000 ;
+    END
+  END ve_oy[116]
+  PIN ve_oy[117]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 110.8800 172.7160 110.9040 172.8000 ;
+    END
+  END ve_oy[117]
+  PIN ve_oy[118]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 110.9520 172.7620 110.9700 172.8000 ;
+    END
+  END ve_oy[118]
+  PIN ve_oy[119]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 111.0720 172.7160 111.0960 172.8000 ;
+    END
+  END ve_oy[119]
+  PIN ve_oy[120]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 111.1680 172.7620 111.1860 172.8000 ;
+    END
+  END ve_oy[120]
+  PIN ve_oy[121]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 111.2640 172.7160 111.2880 172.8000 ;
+    END
+  END ve_oy[121]
+  PIN ve_oy[8]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 88.0560 172.7620 88.0740 172.8000 ;
+    END
+  END ve_oy[8]
+  PIN ve_oy[122]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 111.3840 172.7620 111.4020 172.8000 ;
+    END
+  END ve_oy[122]
+  PIN ve_oy[123]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 111.4560 172.7160 111.4800 172.8000 ;
+    END
+  END ve_oy[123]
+  PIN ve_oy[124]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 111.6000 172.7620 111.6180 172.8000 ;
+    END
+  END ve_oy[124]
+  PIN ve_oy[125]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 111.7440 172.7160 111.7680 172.8000 ;
+    END
+  END ve_oy[125]
+  PIN ve_oy[126]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 111.8160 172.7620 111.8340 172.8000 ;
+    END
+  END ve_oy[126]
+  PIN ve_oy[127]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 111.9360 172.7160 111.9600 172.8000 ;
+    END
+  END ve_oy[127]
   PIN ve_oy[9]
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT 86.4960 172.7160 86.5200 172.8000 ;
+        RECT 88.1280 172.7160 88.1520 172.8000 ;
     END
   END ve_oy[9]
+  PIN ve_oy[10]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 88.2720 172.7620 88.2900 172.8000 ;
+    END
+  END ve_oy[10]
+  PIN ve_oy[11]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 88.3200 172.7160 88.3440 172.8000 ;
+    END
+  END ve_oy[11]
+  PIN ve_oy[12]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 88.4880 172.7620 88.5060 172.8000 ;
+    END
+  END ve_oy[12]
+  PIN ve_oy[13]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 88.5120 172.7160 88.5360 172.8000 ;
+    END
+  END ve_oy[13]
+  PIN ve_oy[14]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 88.6320 172.7620 88.6500 172.8000 ;
+    END
+  END ve_oy[14]
+  PIN ve_oy[15]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 88.8000 172.7160 88.8240 172.8000 ;
+    END
+  END ve_oy[15]
+  PIN ve_oy[16]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 90.5040 172.7620 90.5220 172.8000 ;
+    END
+  END ve_oy[16]
+  PIN ve_oy[17]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 90.6240 172.7160 90.6480 172.8000 ;
+    END
+  END ve_oy[17]
+  PIN ve_oy[18]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 90.7200 172.7620 90.7380 172.8000 ;
+    END
+  END ve_oy[18]
+  PIN ve_oy[19]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 90.8160 172.7160 90.8400 172.8000 ;
+    END
+  END ve_oy[19]
+  PIN ve_oy[20]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 90.9360 172.7620 90.9540 172.8000 ;
+    END
+  END ve_oy[20]
+  PIN ve_oy[21]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 91.0080 172.7160 91.0320 172.8000 ;
+    END
+  END ve_oy[21]
+  PIN ve_oy[22]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 91.1520 172.7620 91.1700 172.8000 ;
+    END
+  END ve_oy[22]
+  PIN ve_oy[23]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 91.2000 172.7160 91.2240 172.8000 ;
+    END
+  END ve_oy[23]
+  PIN ve_oy[24]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 91.3680 172.7620 91.3860 172.8000 ;
+    END
+  END ve_oy[24]
+  PIN ve_oy[25]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 91.4880 172.7160 91.5120 172.8000 ;
+    END
+  END ve_oy[25]
+  PIN ve_oy[26]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 91.5840 172.7620 91.6020 172.8000 ;
+    END
+  END ve_oy[26]
+  PIN ve_oy[27]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 91.6800 172.7160 91.7040 172.8000 ;
+    END
+  END ve_oy[27]
+  PIN ve_oy[28]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 91.7280 172.7620 91.7460 172.8000 ;
+    END
+  END ve_oy[28]
+  PIN ve_oy[29]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 91.8720 172.7160 91.8960 172.8000 ;
+    END
+  END ve_oy[29]
+  PIN ve_oy[30]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 91.9440 172.7620 91.9620 172.8000 ;
+    END
+  END ve_oy[30]
+  PIN ve_oy[31]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 92.0640 172.7160 92.0880 172.8000 ;
+    END
+  END ve_oy[31]
+  PIN ve_oy[32]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 93.8160 172.7620 93.8340 172.8000 ;
+    END
+  END ve_oy[32]
+  PIN ve_oy[33]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 93.8880 172.7160 93.9120 172.8000 ;
+    END
+  END ve_oy[33]
+  PIN ve_oy[34]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 94.0320 172.7620 94.0500 172.8000 ;
+    END
+  END ve_oy[34]
+  PIN ve_oy[35]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 94.1760 172.7160 94.2000 172.8000 ;
+    END
+  END ve_oy[35]
+  PIN ve_oy[36]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 94.2480 172.7620 94.2660 172.8000 ;
+    END
+  END ve_oy[36]
+  PIN ve_oy[37]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 94.3680 172.7160 94.3920 172.8000 ;
+    END
+  END ve_oy[37]
+  PIN ve_oy[38]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 94.4640 172.7620 94.4820 172.8000 ;
+    END
+  END ve_oy[38]
+  PIN ve_oy[39]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 94.5600 172.7160 94.5840 172.8000 ;
+    END
+  END ve_oy[39]
+  PIN ve_oy[40]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 94.6800 172.7620 94.6980 172.8000 ;
+    END
+  END ve_oy[40]
+  PIN ve_oy[41]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 94.7520 172.7160 94.7760 172.8000 ;
+    END
+  END ve_oy[41]
+  PIN ve_oy[42]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 94.8960 172.7620 94.9140 172.8000 ;
+    END
+  END ve_oy[42]
+  PIN ve_oy[43]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 94.9440 172.7160 94.9680 172.8000 ;
+    END
+  END ve_oy[43]
+  PIN ve_oy[44]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 95.0400 172.7620 95.0580 172.8000 ;
+    END
+  END ve_oy[44]
+  PIN ve_oy[45]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 95.1360 172.7160 95.1600 172.8000 ;
+    END
+  END ve_oy[45]
+  PIN ve_oy[46]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M3 ;
+        RECT 95.2560 172.7620 95.2740 172.8000 ;
+    END
+  END ve_oy[46]
+  PIN ve_oy[47]
+    DIRECTION INPUT ;
+    USE SIGNAL ;
+    PORT
+      LAYER M5 ;
+        RECT 95.3280 172.7160 95.3520 172.8000 ;
+    END
+  END ve_oy[47]
   PIN ve_pc[0]
     DIRECTION INPUT ;
     USE SIGNAL ;

@@ -122,9 +122,10 @@ module ot_dsrom_su_hcpost_lane #(
     wire fault_x = fm[0] | (va1 && ea1 != 2'd0) | (va2 && ea2 != 2'd0) | (va3 && ea3 != 2'd0) | (va4 && ea4 != 2'd0);
     wire fault_h;                           // the sticky state the next fault ORs into
     generate if (FDUP != 0) begin : g_fdup
-        (* keep *) reg fault_s;             // FDUP 1: own state flop; the fault pin flop has no other load
-        always @(posedge clk or negedge rst_n) if (!rst_n) fault_s <= 1'b0; else fault_s <= fault_s | fault_x;
-        assign fault_h = fault_s;
+        // FDUP 1: the sticky state in its own kept-hierarchy flop (a plain duplicate in this module is folded back into
+        // the fault flop by opt_merge -- measured: identical D, the kit synth re-made the self-loop); the fault pin flop
+        // then has no load but the port.
+        ot_dsrom_su_hcpost_sticky u_fs (.clk(clk), .rst_n(rst_n), .x(fault_x), .q(fault_h));
     end else begin : g_fself
         assign fault_h = fault;             // FDUP 0: unchanged (fault holds itself)
     end endgenerate
@@ -253,4 +254,9 @@ module ot_dsrom_su_hcpost #(
     end endgenerate
     assign out_v = g_v[0];
     assign fault = |g_f;
+endmodule
+// S81-KITS-RTLA 10-24: sticky fault state of ot_dsrom_su_hcpost_lane FDUP 1 (q <= q | x, async reset), kept as its own
+// hierarchy so synthesis cannot merge it with the lane's fault output flop (same next value by construction).
+(* keep_hierarchy = "yes" *) module ot_dsrom_su_hcpost_sticky (input wire clk, input wire rst_n, input wire x, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= q | x;
 endmodule

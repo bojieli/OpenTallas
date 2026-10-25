@@ -8,6 +8,8 @@ every one of them <name>_old (references inside the extracted text too) and writ
 OUT_DIR/tb_miter.sv: TOP_old and the fixed TOP (from the repo sources the caller compiles) on the SAME random stimulus
 (async reset low 8 edges, then random pulses; 1-bit inputs random with a per-phase density 1/16 .. 1/2; buses random),
 every output bit compared with !== on every posedge after reset (both are cycle-exact by construction: 0-cycle fix).
+Narrowed outputs (OWNER DECISION 8: constant pins dropped) compare the old bits under the new range; --pack BUS compares
+a packed BF16 bus (new[16k+j] == old[32k+16+j]); the dropped old bits are constant (TIELO in the raw netlists).
 Prints MITER PASS|FAIL top T cycles N mismatches M, plus per-output activity (cycles high / value changes) so the
 bench shows that the fixed pins were exercised.  Exit is the caller's (grep MITER PASS)."""
 import argparse
@@ -45,10 +47,10 @@ def ports(text, name):
         tok = tok.strip()
         m = re.match(r"(input|output)\s+(?:wire|reg|logic)?\s*(?:signed\s*)?(\[\s*(\d+)\s*:\s*(\d+)\s*\])?\s*(\w+)$", tok)
         if m:
-            cur = (m.group(1), int(m.group(3)) - int(m.group(4)) + 1 if m.group(2) else 1)
-            out.append((cur[0], cur[1], m.group(5)))
+            cur = (m.group(1), int(m.group(3)) if m.group(2) else 0, int(m.group(4)) if m.group(2) else 0)
+            out.append(cur + (m.group(5),))
         elif re.match(r"^\w+$", tok) and cur:
-            out.append((cur[0], cur[1], tok))
+            out.append(cur + (tok,))
         elif tok:
             raise ValueError("port token %r" % tok)
     return out
@@ -63,6 +65,8 @@ def main():
     ap.add_argument("--cycles", type=int, default=40000)
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--param", action="append", default=[])
+    ap.add_argument("--pack", action="append", default=[],
+                    help="output bus packed in the fix (OWNER DECISION 8): new[16k+j] == old[32k+16+j], 8 lanes")
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -73,13 +77,40 @@ def main():
     for m in sorted(mods, key=len, reverse=True):
         txt = re.sub(r"\b%s\b" % re.escape(m), m + "_old", txt)
     (out / "old_top.sv").write_text("`timescale 1ns/1ps\n" + txt + "\n")
-    P = ports(Path(a.new).read_text(), a.top)
+    Pn = ports(Path(a.new).read_text(), a.top)
     Po = ports(txt, a.top + "_old")
-    assert P == Po, ("port lists differ", P, Po)
+    assert [(d, n) for d, _, _, n in Pn] == [(d, n) for d, _, _, n in Po], ("port lists differ", Pn, Po)
+    assert [p for p in Pn if p[0] == "input"] == [p for p in Po if p[0] == "input"], "input ranges differ"
+    O = {n: (m, l) for d, m, l, n in Po}
+    # (dir, width, name) for the stimulus; outputs carry old / new ranges for the compare (narrowed / packed buses)
+    P = [(d, m - l + 1, n) for d, m, l, n in Pn]
+    NR = {n: (m, l) for d, m, l, n in Pn}
     ins = [p for p in P if p[0] == "input" and p[2] not in ("clk", "ck", "rst_n")]
     outs = [p for p in P if p[0] == "output"]
     clk = "ck" if any(p[2] == "ck" for p in P) else "clk"
     has_rst = any(p[2] == "rst_n" for p in P)
+
+    def old_view(n):
+        """the old output's bits that correspond to the new port, as an expression"""
+        om, ol = O[n]
+        nm, nl = NR[n]
+        if n in a.pack:
+            return "{" + ", ".join("%s_a[%d:%d]" % (n, 32 * k + 31, 32 * k + 16) for k in range(7, -1, -1)) + "}"
+        if (om, ol) == (nm, nl):
+            return "%s_a" % n
+        assert ol <= nl <= nm <= om, (n, O[n], NR[n])
+        return "%s_a[%d:%d]" % (n, nm, nl)
+
+    def old_dropped(n):
+        """the old output's bits the fix dropped (must be constant 0), or None"""
+        om, ol = O[n]
+        nm, nl = NR[n]
+        if n in a.pack:
+            return "(%s_a & {8{32'h0000ffff}})" % n
+        if (om, ol) == (nm, nl):
+            return None
+        parts = (["%s_a[%d:%d]" % (n, om, nm + 1)] if om > nm else []) + (["%s_a[%d:%d]" % (n, nl - 1, ol)] if nl > ol else [])
+        return "{" + ", ".join(parts) + "}"
     par = ", ".join(".%s(%s)" % tuple(x.split("=", 1)) for x in a.param)
     par = " #(%s)" % par if par else ""
     L = ["`timescale 1ns/1ps", "module tb_miter;", "    reg %s = 0; always #1 %s = ~%s;" % (clk, clk, clk),
@@ -87,7 +118,8 @@ def main():
     for d, w, n in ins:
         L.append("    reg [%d:0] %s = 0;" % (w - 1, n))
     for d, w, n in outs:
-        L.append("    wire [%d:0] %s_a, %s_b; integer act_%s = 0, chg_%s = 0;" % (w - 1, n, n, n, n))
+        L.append("    wire [%d:%d] %s_a; wire [%d:%d] %s_b; integer act_%s = 0, chg_%s = 0;"
+                 % (O[n][0], O[n][1], n, NR[n][0], NR[n][1], n, n, n))
     conn = lambda sfx: ", ".join([".%s(%s)" % (clk, clk)] + ([".rst_n(rst_n)"] if has_rst else []) +
                                  [".%s(%s)" % (n, n) for d, w, n in ins] + [".%s(%s_%s)" % (n, n, sfx) for d, w, n in outs])
     L.append("    %s_old%s u_old (%s);" % (a.top, par, conn("a")))
@@ -115,13 +147,16 @@ def main():
     L.append("    end")
     L.append("    always @(posedge %s) if (cyc > 0) begin" % clk)
     for d, w, n in outs:
-        L.append("        if (%s_a !== %s_b) begin bad = bad + 1; if (bad < 6) $display(\"MISMATCH cyc %%0d %s old %%h new %%h\", cyc, %s_a, %s_b); end"
-                 % (n, n, n, n, n))
-        L.append("        if (|%s_a) act_%s = act_%s + 1;" % (n, n, n))
+        L.append("        if (%s !== %s_b) begin bad = bad + 1; if (bad < 6) $display(\"MISMATCH cyc %%0d %s old %%h new %%h\", cyc, %s, %s_b); end"
+                 % (old_view(n), n, n, old_view(n), n))
+        L.append("        if (|%s_b) act_%s = act_%s + 1;" % (n, n, n))
+        if old_dropped(n):
+            L.append("        if (|%s) begin bad = bad + 1; if (bad < 6) $display(\"DROPPED_BITS_NONZERO cyc %%0d %s\", cyc); end"
+                     % (old_dropped(n), n))
     L.append("    end")
     for d, w, n in outs:
-        L.append("    reg [%d:0] %s_p; always @(posedge %s) begin if (cyc > 0 && %s_p !== %s_a) chg_%s = chg_%s + 1; %s_p <= %s_a; end"
-                 % (w - 1, n, clk, n, n, n, n, n, n))
+        L.append("    reg [%d:%d] %s_p; always @(posedge %s) begin if (cyc > 0 && %s_p !== %s_b) chg_%s = chg_%s + 1; %s_p <= %s_b; end"
+                 % (NR[n][0], NR[n][1], n, clk, n, n, n, n, n, n))
     L.append("endmodule")
     (out / "tb_miter.sv").write_text("\n".join(L) + "\n")
     print("wrote", out / "old_top.sv", out / "tb_miter.sv", "inputs", len(ins), "outputs", len(outs))
