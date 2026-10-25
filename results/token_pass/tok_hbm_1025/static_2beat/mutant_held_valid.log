@@ -1,0 +1,6 @@
+2BEAT ERROR word=2 qlo=daa67285 reflo=daa67285 side=049c6 want=049c6 fault=0
+2BEAT ERROR word=3 qlo=184c686f reflo=184c686f side=04ec5 want=04ec5 fault=0
+2BEAT ERROR word=4 qlo=d54c55b2 reflo=d54c55b2 side=029b9 want=029b9 fault=0
+[2750000] %Fatal: tb.sv:59: Assertion failed in tb: 2BEAT FAIL words=134 checks=268 errors=128
+%Error: tools/hbm_layer_vehicle/static_2beat/tb.sv:59: Verilog $stop
+Aborting...

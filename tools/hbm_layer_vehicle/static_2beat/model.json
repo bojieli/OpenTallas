@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.hbm_static_2beat.model.v1",
+ "logical_bits": 3749,
+ "physical_bits": 1875,
+ "beats": 2,
+ "latency_edges": "LINK_STAGES+2 from TX sample to RX publication; +1 external producer edge; +1 consumer capture edge",
+ "initiation_interval_edges": 2,
+ "word_rate_per_cycle": 0.5,
+ "logical_payload_bits_per_cycle": 1874.5,
+ "payload_register_bits": {
+  "tx_high": 1874,
+  "tx_beat": 1875,
+  "rx_low": 1875,
+  "rx_output": 3749,
+  "total": 9373
+ },
+ "control": "one explicit start-aligned phase per endpoint; CONTROL_MASK enumerates every source event/valid bit; all must be zero on slot1",
+ "fault_transport": "physical beat[B-1] on high beat is spare; sticky wrong-phase fault uses it; receiver masks control bits, reports fault",
+ "datapath_reset": false,
+ "compiler_cost": "N consecutive logical words require 2N-1 launch cycles, versus N at II1; charge N-1 exposed stream cycles plus endpoint latency difference, not blanket +1 per operation",
+ "physical_status": "MODEL ONLY; no P&R or sign-off claimed",
+ "integration": "native L74 CONTROL_MASK/source map, per-producer period2 windows, start alignment, plan/relay ownership pending",
+ "owned_register_transfer_stages": 3,
+ "wide_baseline_boundary_stages": 2,
+ "first_word_extra_edges_vs_wide": 1,
+ "side_register_bits": "2*S for correlated CTL",
+ "ne_padding": {
+  "bits": 1040,
+  "function": "registered low-beat duplicate payload checked at RX",
+  "compare_area": "1040 XOR plus balanced reduction OR (11 OR levels)",
+  "fault_visibility": "same RX complete-word edge; no extra data edges",
+  "timing": "NOT QUALIFIED"
+ },
+ "output_control": "each accepted DATA/SIDE event pulses one cycle on completed word; payload holds between words; fault suppresses events",
+ "production_shapes": {
+  "NW": {
+   "W": 3749,
+   "B": 1875,
+   "S": 33,
+   "endpoint_payload_FF": 9439
+  },
+  "NE": {
+   "W": 2709,
+   "B": 1875,
+   "S": 26,
+   "endpoint_payload_FF": 7345,
+   "duplicate_XOR": 1040,
+   "duplicate_OR2": 1039
+  }
+ }
+}

@@ -1,0 +1,1630 @@
+{
+ "NW_hub": {
+  "data": {
+   "lane": "L74",
+   "width": 3749,
+   "fields": [
+    {
+     "source": "epcal_NW",
+     "port": "payload",
+     "ranges": [
+      [
+       38,
+       56
+      ]
+     ],
+     "width": 19,
+     "offset": 0,
+     "control_positions": [
+      0,
+      9,
+      11
+     ],
+     "sinks": [
+      "b2_ep1_root.tx_i"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_arg_mode",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 19,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.arg_mode"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_cfg_g",
+     "ranges": [
+      [
+       0,
+       7
+      ]
+     ],
+     "width": 8,
+     "offset": 20,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.cfg_g"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_cfg_gbase",
+     "ranges": [
+      [
+       0,
+       7
+      ]
+     ],
+     "width": 8,
+     "offset": 28,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.cfg_gbase"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_cfg_has_r",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 36,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.cfg_has_r"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_cfg_k",
+     "ranges": [
+      [
+       0,
+       12
+      ]
+     ],
+     "width": 13,
+     "offset": 37,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.cfg_k"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_cfg_n",
+     "ranges": [
+      [
+       0,
+       11
+      ]
+     ],
+     "width": 12,
+     "offset": 50,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.cfg_n"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_cfg_nout",
+     "ranges": [
+      [
+       0,
+       12
+      ]
+     ],
+     "width": 13,
+     "offset": 62,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.cfg_nout"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_cfg_obase",
+     "ranges": [
+      [
+       0,
+       39
+      ]
+     ],
+     "width": 40,
+     "offset": 75,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.cfg_obase"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_cfg_pf",
+     "ranges": [
+      [
+       0,
+       15
+      ]
+     ],
+     "width": 16,
+     "offset": 115,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.cfg_pf"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_cfg_rbase",
+     "ranges": [
+      [
+       0,
+       39
+      ]
+     ],
+     "width": 40,
+     "offset": 131,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.cfg_rbase"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_del_flit",
+     "ranges": [
+      [
+       0,
+       2179
+      ]
+     ],
+     "width": 2180,
+     "offset": 171,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.del_flit"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_del_slot",
+     "ranges": [
+      [
+       0,
+       3
+      ]
+     ],
+     "width": 4,
+     "offset": 2351,
+     "control_positions": [],
+     "sinks": [
+      "tkm_SW.del_slot"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_del_valid",
+     "ranges": [
+      [
+       0,
+       3
+      ]
+     ],
+     "width": 4,
+     "offset": 2355,
+     "control_positions": [
+      0,
+      1,
+      2,
+      3
+     ],
+     "sinks": [
+      "tkm_SW.del_valid"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tkx_start",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 2359,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "tkm_SW.start"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tx_pin_flit",
+     "ranges": [
+      [
+       1224,
+       1835
+      ]
+     ],
+     "width": 612,
+     "offset": 2360,
+     "control_positions": [],
+     "sinks": [
+      "b2_ep1_root.tx_i"
+     ]
+    },
+    {
+     "source": "hb_coll_NW",
+     "port": "tx_pin_v",
+     "ranges": [
+      [
+       2,
+       2
+      ]
+     ],
+     "width": 1,
+     "offset": 2972,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "b2_ep1_root.tx_i"
+     ]
+    },
+    {
+     "source": "hb_vms_NW",
+     "port": "cr",
+     "ranges": [
+      [
+       0,
+       547
+      ]
+     ],
+     "width": 548,
+     "offset": 2973,
+     "control_positions": [
+      273,
+      547
+     ],
+     "sinks": [
+      "hb_argmax.cr",
+      "hb_idx__ctl.cr"
+     ]
+    },
+    {
+     "source": "hb_vms_NW",
+     "port": "vmstat",
+     "ranges": [
+      [
+       0,
+       18
+      ]
+     ],
+     "width": 19,
+     "offset": 3521,
+     "control_positions": [],
+     "sinks": [
+      "vm_status4.quadrant_status"
+     ]
+    },
+    {
+     "source": "hc_NW",
+     "port": "gathered_mix_data",
+     "ranges": [
+      [
+       0,
+       31
+      ]
+     ],
+     "width": 32,
+     "offset": 3540,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.gathered_mix_data"
+     ]
+    },
+    {
+     "source": "hc_NW",
+     "port": "ps",
+     "ranges": [
+      [
+       0,
+       31
+      ]
+     ],
+     "width": 32,
+     "offset": 3572,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.qps"
+     ]
+    },
+    {
+     "source": "hleaf_NW",
+     "port": "s_active",
+     "ranges": [
+      [
+       0,
+       18
+      ]
+     ],
+     "width": 19,
+     "offset": 3604,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_active"
+     ]
+    },
+    {
+     "source": "hleaf_NW",
+     "port": "s_fault",
+     "ranges": [
+      [
+       0,
+       30
+      ]
+     ],
+     "width": 31,
+     "offset": 3623,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hleaf_NW",
+     "port": "s_ready",
+     "ranges": [
+      [
+       0,
+       18
+      ]
+     ],
+     "width": 19,
+     "offset": 3654,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_ready"
+     ]
+    },
+    {
+     "source": "obs_NW",
+     "port": "r_d",
+     "ranges": [
+      [
+       0,
+       31
+      ]
+     ],
+     "width": 32,
+     "offset": 3673,
+     "control_positions": [],
+     "sinks": [
+      "host_cp_ingress.obs_r_d"
+     ]
+    },
+    {
+     "source": "pgp_NW",
+     "port": "busy",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 3705,
+     "control_positions": [],
+     "sinks": [
+      "col_su.c_busy"
+     ]
+    },
+    {
+     "source": "pgp_NW",
+     "port": "done",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 3706,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "col_su.c_done"
+     ]
+    },
+    {
+     "source": "pgp_NW",
+     "port": "valid",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 3707,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "col_su.c_busy"
+     ]
+    },
+    {
+     "source": "stl_NW",
+     "port": "up_o",
+     "ranges": [
+      [
+       0,
+       40
+      ]
+     ],
+     "width": 41,
+     "offset": 3708,
+     "control_positions": [
+      40
+     ],
+     "sinks": [
+      "str_C.up0_i"
+     ]
+    }
+   ],
+   "control_mask": "0x10000000000c000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000f8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a01",
+   "cycles": 5,
+   "boundary": 2,
+   "stations": 3
+  },
+  "ctl": {
+   "lane": "L89",
+   "width": 33,
+   "fields": [
+    {
+     "source": "fr_NW",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 0,
+     "control_positions": [],
+     "sinks": [
+      "host_status.a_fault"
+     ]
+    },
+    {
+     "source": "hb_idx__nwsh",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 1,
+     "control_positions": [],
+     "sinks": [
+      "col_idx.c_fault"
+     ]
+    },
+    {
+     "source": "hb_idx__qctl_NW",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 2,
+     "control_positions": [],
+     "sinks": [
+      "hb_idx__ctl.qfault"
+     ]
+    },
+    {
+     "source": "hc_NW",
+     "port": "eng_fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 3,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.q_fault"
+     ]
+    },
+    {
+     "source": "hc_NW",
+     "port": "gathered_mix_pos",
+     "ranges": [
+      [
+       0,
+       2
+      ]
+     ],
+     "width": 3,
+     "offset": 4,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.gathered_mix_pos"
+     ]
+    },
+    {
+     "source": "hc_NW",
+     "port": "gathered_mix_row",
+     "ranges": [
+      [
+       0,
+       4
+      ]
+     ],
+     "width": 5,
+     "offset": 7,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.gathered_mix_row"
+     ]
+    },
+    {
+     "source": "hc_NW",
+     "port": "gathered_mix_v",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 12,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "hc_eng.gathered_mix_v"
+     ]
+    },
+    {
+     "source": "hc_NW",
+     "port": "ps_f",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 13,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.qps_f"
+     ]
+    },
+    {
+     "source": "hc_NW",
+     "port": "ps_v",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 14,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "hc_eng.qps_v"
+     ]
+    },
+    {
+     "source": "hcollb_NW",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 15,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hcollgi_NW",
+     "port": "active",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 16,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_active"
+     ]
+    },
+    {
+     "source": "hcollgi_NW",
+     "port": "configured",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 17,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_ready"
+     ]
+    },
+    {
+     "source": "hcollgi_NW",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 18,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hcollgi_NW",
+     "port": "tgt_fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 19,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hcollgl_NW",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 20,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hcollks_NW",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 21,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hcollrs_NW",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 22,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "obs_NW",
+     "port": "r_idx",
+     "ranges": [
+      [
+       0,
+       7
+      ]
+     ],
+     "width": 8,
+     "offset": 23,
+     "control_positions": [],
+     "sinks": [
+      "host_cp_ingress.obs_r_idx"
+     ]
+    },
+    {
+     "source": "obs_NW",
+     "port": "r_v",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 31,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "host_cp_ingress.obs_r_v"
+     ]
+    },
+    {
+     "source": "pgp_NW",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 32,
+     "control_positions": [],
+     "sinks": [
+      "su_prog.p_fault"
+     ]
+    }
+   ],
+   "control_mask": "0x80005000",
+   "cycles": 2,
+   "boundary": 2,
+   "stations": 0
+  },
+  "ctl_padding_to_data": 3
+ },
+ "NE_hub": {
+  "data": {
+   "lane": "L74m",
+   "width": 2709,
+   "fields": [
+    {
+     "source": "hb_idx__op_NE",
+     "port": "vm_rq",
+     "ranges": [
+      [
+       0,
+       135
+      ]
+     ],
+     "width": 136,
+     "offset": 0,
+     "control_positions": [
+      16,
+      33,
+      50,
+      67,
+      84,
+      101,
+      118,
+      135
+     ],
+     "sinks": [
+      "hb_idx__ctl.index_rq"
+     ]
+    },
+    {
+     "source": "hb_vms_NE",
+     "port": "vmstat",
+     "ranges": [
+      [
+       0,
+       18
+      ]
+     ],
+     "width": 19,
+     "offset": 136,
+     "control_positions": [],
+     "sinks": [
+      "vm_status4.quadrant_status"
+     ]
+    },
+    {
+     "source": "hc_NE",
+     "port": "gathered_mix_data",
+     "ranges": [
+      [
+       0,
+       31
+      ]
+     ],
+     "width": 32,
+     "offset": 155,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.gathered_mix_data"
+     ]
+    },
+    {
+     "source": "hc_NE",
+     "port": "ps",
+     "ranges": [
+      [
+       0,
+       31
+      ]
+     ],
+     "width": 32,
+     "offset": 187,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.qps"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "a_cfg_addr",
+     "ranges": [
+      [
+       0,
+       11
+      ]
+     ],
+     "width": 12,
+     "offset": 219,
+     "control_positions": [],
+     "sinks": [
+      "col_idx.cfg_addr",
+      "col_su.cfg_addr",
+      "hc_eng.cfg_addr"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "a_cfg_data",
+     "ranges": [
+      [
+       0,
+       255
+      ]
+     ],
+     "width": 256,
+     "offset": 231,
+     "control_positions": [],
+     "sinks": [
+      "col_idx.cfg_data",
+      "col_su.cfg_data",
+      "hc_eng.cfg_data"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "a_cfg_target",
+     "ranges": [
+      [
+       0,
+       7
+      ]
+     ],
+     "width": 8,
+     "offset": 487,
+     "control_positions": [],
+     "sinks": [
+      "col_idx.cfg_target",
+      "col_su.cfg_target",
+      "hc_eng.cfg_target"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "a_cfg_v",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 495,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "col_idx.cfg_v",
+      "col_su.cfg_v",
+      "hc_eng.cfg_v"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "a_desc_base",
+     "ranges": [
+      [
+       0,
+       11
+      ]
+     ],
+     "width": 12,
+     "offset": 496,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.desc_base"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "a_desc_limit",
+     "ranges": [
+      [
+       0,
+       12
+      ]
+     ],
+     "width": 13,
+     "offset": 508,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.desc_limit"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "a_desc_loops",
+     "ranges": [
+      [
+       0,
+       15
+      ]
+     ],
+     "width": 16,
+     "offset": 521,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.desc_loops"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "a_desc_v",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 537,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "col_idx.desc_v",
+      "col_su.desc_v",
+      "hc_eng.desc_v"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "a_launch_v",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 538,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "col_idx.launch_v",
+      "col_su.launch_v",
+      "hc_eng.launch_v"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "s_active",
+     "ranges": [
+      [
+       0,
+       20
+      ]
+     ],
+     "width": 21,
+     "offset": 539,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_active"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "s_fault",
+     "ranges": [
+      [
+       0,
+       30
+      ]
+     ],
+     "width": 31,
+     "offset": 560,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hleaf_NE",
+     "port": "s_ready",
+     "ranges": [
+      [
+       0,
+       20
+      ]
+     ],
+     "width": 21,
+     "offset": 591,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_ready"
+     ]
+    },
+    {
+     "source": "stl_NE",
+     "port": "up_o",
+     "ranges": [
+      [
+       0,
+       40
+      ]
+     ],
+     "width": 41,
+     "offset": 612,
+     "control_positions": [
+      40
+     ],
+     "sinks": [
+      "str_C.up1_i"
+     ]
+    },
+    {
+     "source": "vmb_NE0",
+     "port": "rr4",
+     "ranges": [
+      [
+       0,
+       256
+      ]
+     ],
+     "width": 257,
+     "offset": 653,
+     "control_positions": [
+      256
+     ],
+     "sinks": [
+      "hb_idx__ctl.vm_rr"
+     ]
+    },
+    {
+     "source": "vmb_NE1",
+     "port": "rr4",
+     "ranges": [
+      [
+       0,
+       256
+      ]
+     ],
+     "width": 257,
+     "offset": 910,
+     "control_positions": [
+      256
+     ],
+     "sinks": [
+      "hb_idx__ctl.vm_rr"
+     ]
+    },
+    {
+     "source": "vmb_NE2",
+     "port": "rr4",
+     "ranges": [
+      [
+       0,
+       256
+      ]
+     ],
+     "width": 257,
+     "offset": 1167,
+     "control_positions": [
+      256
+     ],
+     "sinks": [
+      "hb_idx__ctl.vm_rr"
+     ]
+    },
+    {
+     "source": "vmb_NE3",
+     "port": "rr4",
+     "ranges": [
+      [
+       0,
+       256
+      ]
+     ],
+     "width": 257,
+     "offset": 1424,
+     "control_positions": [
+      256
+     ],
+     "sinks": [
+      "hb_idx__ctl.vm_rr"
+     ]
+    },
+    {
+     "source": "vmb_NE4",
+     "port": "rr4",
+     "ranges": [
+      [
+       0,
+       256
+      ]
+     ],
+     "width": 257,
+     "offset": 1681,
+     "control_positions": [
+      256
+     ],
+     "sinks": [
+      "hb_idx__ctl.vm_rr"
+     ]
+    },
+    {
+     "source": "vmb_NE5",
+     "port": "rr4",
+     "ranges": [
+      [
+       0,
+       256
+      ]
+     ],
+     "width": 257,
+     "offset": 1938,
+     "control_positions": [
+      256
+     ],
+     "sinks": [
+      "hb_idx__ctl.vm_rr"
+     ]
+    },
+    {
+     "source": "vmb_NE6",
+     "port": "rr4",
+     "ranges": [
+      [
+       0,
+       256
+      ]
+     ],
+     "width": 257,
+     "offset": 2195,
+     "control_positions": [
+      256
+     ],
+     "sinks": [
+      "hb_idx__ctl.vm_rr"
+     ]
+    },
+    {
+     "source": "vmb_NE7",
+     "port": "rr4",
+     "ranges": [
+      [
+       0,
+       256
+      ]
+     ],
+     "width": 257,
+     "offset": 2452,
+     "control_positions": [
+      256
+     ],
+     "sinks": [
+      "hb_idx__ctl.vm_rr"
+     ]
+    }
+   ],
+   "control_mask": "0x100000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000600000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008000400020001000080004000200010000",
+   "cycles": 5,
+   "boundary": 2,
+   "stations": 3
+  },
+  "ctl": {
+   "lane": "L89m",
+   "width": 26,
+   "fields": [
+    {
+     "source": "fr_NE",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 0,
+     "control_positions": [],
+     "sinks": [
+      "host_status.a_fault"
+     ]
+    },
+    {
+     "source": "hb_idx__qctl_NE",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 1,
+     "control_positions": [],
+     "sinks": [
+      "hb_idx__ctl.qfault"
+     ]
+    },
+    {
+     "source": "hc_NE",
+     "port": "eng_fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 2,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.q_fault"
+     ]
+    },
+    {
+     "source": "hc_NE",
+     "port": "gathered_mix_pos",
+     "ranges": [
+      [
+       0,
+       2
+      ]
+     ],
+     "width": 3,
+     "offset": 3,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.gathered_mix_pos"
+     ]
+    },
+    {
+     "source": "hc_NE",
+     "port": "gathered_mix_row",
+     "ranges": [
+      [
+       0,
+       4
+      ]
+     ],
+     "width": 5,
+     "offset": 6,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.gathered_mix_row"
+     ]
+    },
+    {
+     "source": "hc_NE",
+     "port": "gathered_mix_v",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 11,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "hc_eng.gathered_mix_v"
+     ]
+    },
+    {
+     "source": "hc_NE",
+     "port": "ps_f",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 12,
+     "control_positions": [],
+     "sinks": [
+      "hc_eng.qps_f"
+     ]
+    },
+    {
+     "source": "hc_NE",
+     "port": "ps_v",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 13,
+     "control_positions": [
+      0
+     ],
+     "sinks": [
+      "hc_eng.qps_v"
+     ]
+    },
+    {
+     "source": "hcollb_NE",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 14,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hcollgi_NE",
+     "port": "active",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 15,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_active"
+     ]
+    },
+    {
+     "source": "hcollgi_NE",
+     "port": "configured",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 16,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_ready"
+     ]
+    },
+    {
+     "source": "hcollgi_NE",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 17,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hcollgi_NE",
+     "port": "tgt_fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 18,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hcollgl_NE",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 19,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hcollks_NE",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 20,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "hcollrs_NE",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 21,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    },
+    {
+     "source": "pgp_NE",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 22,
+     "control_positions": [],
+     "sinks": [
+      "su_prog.p_fault"
+     ]
+    },
+    {
+     "source": "smw_NE",
+     "port": "active",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 23,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_active"
+     ]
+    },
+    {
+     "source": "smw_NE",
+     "port": "configured",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 24,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_ready"
+     ]
+    },
+    {
+     "source": "smw_NE",
+     "port": "fault",
+     "ranges": [
+      [
+       0,
+       0
+      ]
+     ],
+     "width": 1,
+     "offset": 25,
+     "control_positions": [],
+     "sinks": [
+      "host_status.t_fault"
+     ]
+    }
+   ],
+   "control_mask": "0x2800",
+   "cycles": 2,
+   "boundary": 2,
+   "stations": 0
+  },
+  "ctl_padding_to_data": 3
+ }
+}
