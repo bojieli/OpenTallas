@@ -8,7 +8,7 @@
  },
  "compute_children": {
   "root": "ot_hgi_coll_tkm_m_tp192__root cb21",
-  "leaf": "ot_hgi_coll_tkm_tp192_tile_core__idpin ft",
+  "leaf": "31common ft leaf +1actual terminal kit3d5770ed24cd01fd",
   "count": 32,
   "IDs": "parent constants0..31"
  },
@@ -28,5 +28,14 @@
   "rank128_zeros_internal": 886
  },
  "qualification": "r5 actual-child mechanism PASS for syn_sel and rank128_zeros; extracted bound IO module pending own minimum gate; no die-level physical/token closure",
- "outstanding": "raw die bind of NW producer/reset START + same signed child views and wavefront offsets; parent integrates final path plan"
+ "outstanding": "raw die bind of NW producer/reset START + same signed child views and wavefront offsets; parent integrates final path plan",
+ "return_status": {
+  "busy": 2,
+  "done": 2,
+  "fault": 2,
+  "write_valid": 2,
+  "data": 2,
+  "extra_busy_FF_vs_oldbench": 2
+ },
+ "terminal_unused_output": "tile31.tile_clr_o is connected to clr_lane31 but has no successor; exact kit currently keeps pin. GEOM condition drop/record remains physical-owner item."
 }

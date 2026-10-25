@@ -62,11 +62,19 @@ module ot_hbm_tkm_path_ft21 #(
  wire[5:0]tid=strap_tile_ids[6*t+:6];
  // in-tile control lanes (plan pin template): clr S in -> 1 flop -> N out (down chain); conv N in -> S out (up chain,
  // tile 31 fed by the D-deep tree); MUT_SKEW = every tile fed the tree output (equal latency, must FAIL)
+ if(t<31)begin:regular
  ot_hgi_coll_tkm_tp192_tile_core__idpin tile(.tile_clk(tile_clk[t]),.tile_clr((t==0)?root_clr:clr_lane[t-1]),.tile_clr_o(clr_lane[t]),
   .tile_conv((t==31)?bc_conv:conv_lane[t+1]),.tile_conv_o(conv_lane[t]),
 .tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_up_in(up[t+1]),.tile_tid(tid),.tile_ovf_v(dv[t+1]),.tile_ovf_b(down[t+1]),.tile_up_out(up[t]));
  // strap delivery: the shell's tid face flop must hold this instance's ID (tile_tid is functionally unread by the core:
  // face_shell.json unread_kept, so a wrong ID is caught here, at the face, not by the golden words)
+ end else begin:terminal
+ ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin tile(.tile_clk(tile_clk[t]),.tile_clr((t==0)?root_clr:clr_lane[t-1]),.tile_clr_o(clr_lane[t]),
+  .tile_conv((t==31)?bc_conv:conv_lane[t+1]),.tile_conv_o(conv_lane[t]),
+.tile_ins_v(dv[t]),.tile_ins_b(down[t]),.tile_tid(tid),.tile_up_out(up[t]));
+ // strap delivery: the shell's tid face flop must hold this instance's ID (tile_tid is functionally unread by the core:
+ // face_shell.json unread_kept, so a wrong ID is caught here, at the face, not by the golden words)
+ end
  end
  wire[2179:0]rx_flit=rx_word[171+:2180];wire[2115:0]compact_flit;
  assign compact_flit[0]=rx_flit[0];
