@@ -11,7 +11,7 @@ Path: PC_EN_0 (kvpc0 h_head_p, kvpc1..3 kvs_pc) -> PHY_EN_0, HG_EN_0/HGI_EN_0 he
 | P2 | phy_EN_0 | kv3_phy | NEEDS-KIT (no face err) | kit; ck_phy PHY pad/adapters only |
 | P3 | hg_EN_0 | kv3_hg (G2 13.2 proven) | NEEDS-KIT (no face err) | kit after head masters |
 | P4 | hgi_EN_0 | kv3_hgi_v3 | PLAN FIXED on f7ch (cd5885c33b): channel FT sites, G2 overflow 0 (27.3%), face budget 13.2, PROTO geom PASS; GEOM REQ 09:0x | GEOM verdict, then kit (needs head views) |
-| P5 | hub_Eo | kv3_hub_Eo (0 face err) | G2 PASS on f7ch sites (overflow 0, 17.9%, 0 no-AP); PROTO geom PASS; GEOM REQ | kit after ASTK master view (C11) |
+| P5 | hub_Eo | kv3_hub_Eo | plan G2 PASS (f7ch); GEOM REQ plan PASS (plan-only) | kit after ASTK2 master (C11 W2 FAIL 10:05) |
 | P6 | sys_c | kv3_sys_c | NEEDS-KIT; 5-macro detour WIP 0ed44e59d; PHY PG domain hook NOT written | kits; PG hook |
 | C1 | kvpc0 core | qkd_kvs_pc_h_head_p | FIXED face_guard 0/2984 (claude/path-kv-pc-1025@b739812028, private port flops, miter PASS); place via ot-run; GEOM REQ [PATH-KV-PC 09:1x] | GEOM verdict -> route (autopilot e9adf4c1f601) |
 | C2 | kvpc1..3 core | qkd_kvs_pc | FIXED face_guard 0/4126 (same branch; o_prev +1 edge per non-head hop); place live; GEOM REQ | GEOM verdict -> route (autopilot 74f6f76067a8) |
@@ -20,12 +20,12 @@ Path: PC_EN_0 (kvpc0 h_head_p, kvpc1..3 kvs_pc) -> PHY_EN_0, HG_EN_0/HGI_EN_0 he
 | C5 | head even master e6 (serves e4) | kv3_head_eighth_e6 | diagnostic only TT -71.64 / FF -73.96, no per-corner basis | structural: per-lane taps + MCMM basis |
 | C6-C9 | odd heads e1/e3/e5/e7 | kv3_head_eighth_e{1,3,5,7} | SIGNED (historical views) | verify pins == f7, bind |
 | C10 | ECTLK q0..q3 in hg | qkd_ectlk | FIX (pin drop 413->271 approved) | KV-CORES |
-| C11 | ASTK_EN | kv3_astk master (strap_corner 11) | LEC PASS 28432/28432, fanout <=64; TT -61.24 (WRITE-addr zn3.tq->sd) FF -54.96 | structural write/decode fix |
+| C11 | ASTK_EN | kv3_astk master | W2 TT +1.18 (placement RC), LEC EQ; GEOM FAIL 10:05 (replicas merged in synth, zones fragmented) | PATH-KV-ASTK2 live: keep + fail-closed replica check + zone regions |
 | P7 | pv_N_0 (REPRESENTATIVE add, owner 10-25) | kv3_pv_v8: 16x kv3_pv_pair + 4x ot_qwen_tp8_pv_join_t | NEEDS-KIT; G2 10.5 proven | why: kv3_pv_pair = MOST replicated KV core (256, OWNERS.tsv) and pv_join_t 64; pv_N_0 is the direct consumer of hgi_EN_0 (L2075_2 1056 b hgi_EN_0->pv_N_0), so attention PV is exercised by the token |
 | C12 | PV pair | kv3_pv_pair (256 replicas) | ROUTING/NOT SIGNED: fd4_cc FF -17.59 (mem->old macro clock), pair skew 85.5>80 | structural: macro-interface clock (SRAM clk from capture-flop regional tap) |
 | C13 | PV join | ot_qwen_tp8_pv_join_t (64) | NEEDS-KIT | kit |
 | M1 | sys_c macros | UCIe 777.6^2 + 4x d2d_sram_64x137 | views present; placement proposal PASS-COND | with P6 |
-| D1 | plan G0C | f7ch (path-kv-1025@cd5885c33b) | faces 20 -> 7 (hgi_v8 G2 running; hub_Wi needs geometry: no full-height FT channel); KV path base ruling pending (COORD 08:45 picked v3.9pd, which is PROTO-geom red on all path FT types) | COORD + KV-PLAN3F rebase |
+| D1 | plan G0C | main+0302: claude/path-kv-obst-1025@a9faecc2ab (G0/G0C 0E, READY); f7ch: claude/path-kv-1025@3310364c8e (faces 20 -> 4 hgi_v8; hub_Wi geometry PASS-COND) | main-base path FT types: hg PROTO PASS; hgi_v3 still 427 bits >405 on main (fixed only on f7ch) | COORD: KV-PLAN3F rebase f7ch onto main |
 | D2 | native bind | f7 rebind bf7b | 14 TYPE_SPLIT; path instances = reference variants (hg_EN_0, pc_EN_0) | KV parent: lane-latency equalisation |
 | D3 | R8 landing | f5 run3 | FAIL 3 families (hg_v1 cal_exp, pc/pc_v1 x_tok) | KV parent |
 | T1 | START bootstrap role | reset_tree start_role | DEADLOCK: global START gates HOST/hub_Wi bootstrap | CLOCK-RESET |
@@ -137,3 +137,11 @@ Path under test: compute peer -> UCIe line -> sys_c.u_ucie_rom (tx_v+tx_flit[582
 - NO KIT, NO GEOM REQ: hub_Wi partition kit is BLOCKED. (a) host core views: NONE exist for the 15 qkd_hr_* modules (OWNERS NEEDS-KIT, KV-CORES); gen_phys.type_macros needs lef+TT lib per hard core. (b) bound RTL (bf7b kv3_hub_Wi_part.sv) instantiates the as-built qkd_host_root_admission_obsx_bo1_c45, NOT the 22 planned qkd_hr_* cores -> no core boundary to blackbox; flat kit = ~0.59M cells (> 400k cap) with cores floating. Plan wrapper gen fails (o_efault_hub_Wi_fault unbound). Needs: binder composes host from the 15 KV-CORE-RTL/HR modules (591ac8cae) + glue, then core kits/views (or owner-approved stand-in LEF+lib).
 - FINDING (blocks GEOM cond 1 even with a kit): face_flops.tcl FIRMs stations at the site lower-left; real station master DFFHQNx1 is 1.08 um vs 1.404 envelope -> centre -0.162 um -> 21 ft4 bits > 405 (max 405.149). ft4 (E->W 256 b, 7 st) has only 3.0 um pin-span slack over 7 hops. Also: rerunning ft_bit_sites_chan on the committed plan gives max 406.0 (committed 404.997 sites not reproducible). Structural fix options for the KV delta: (i) generator measures hops on the real master centre with a per-hop margin (3.0/7 = 0.43 um/hop available), (ii) ft4 +1 station (+1 cycle, priced), (iii) re-face ft4 pins to shorten the span.
 - worktree removed; nothing live.
+
+## PARKED 2026-10-25 10:30 PDT PATH-KV (lead)
+Signed off now: 4 of 34 path items (odd heads e1/e3/e5/e7, historical views). Nothing new signed off this session; this session moved plan/geometry and core masters to GEOM/kit stage.
+Branches: claude/path-kv-1025@3310364c8e (f7ch: KV v3.9g + channel FT sites + hub_Wi channel + audit/test; READY for KV-PLAN3F rebase, not main); claude/path-kv-obst-1025@a9faecc2ab (main c45a6e + 0302d3b06a + head-macro station fix, G0/G0C 0E, one lane L663 34->42; READY for ROOT-MERGE).
+Sub-lanes LIVE (fresh, short, each parks itself): PATH-KV-ASTK2 (C11 replica keep + fail-closed check), PATH-KV-PC2 (C1/C2 port names hck->ck, re-kit, re-REQ), PATH-KV-SYSC (P6/X5 PG hook + sys_c kit). Parked: HEAD (e2/e6 PASS-COND, autopilot e2 ca7b71612269 HOLD on canary 863d618, e6 4847507f5c04; e0 LEC NEQ -> KV-LEC), PC (superseded by PC2), TOK (tok_short/m1_cmdlate ~11:45 on epyc2, tok_full ~17 h; run4 native build), HUBWI, WIKIT.
+Jobs: epyc1 docker g2part (chan3 kv3_hgi_v8 G2, diagnostic, not path; result -> f7ch face budget for hgi_v8). Scratch epyc1:/srv/opentallas-scratch2/claude/path-kv/.
+Blockers: (1) KV plan base split: main (v3.9pd) path type kv3_hgi_v3 has 427 bits >405 and pv 621 -> needs the f7ch station counts (KV-PLAN3F rebase, latency reprice by KV-TOK). (2) hub_Wi: no host core views (15 qkd_hr_* NEEDS-KIT, bound RTL still as-built c45 module) + ft4 placed-hop 405.149 with the 1.08-um flop (plan assumes 1.404) -> measure on real flop centre or +1 station. (3) START bootstrap scope (hub_C missing from CLOCK-RESET KV list). (4) flow canary 863d618 FAIL holds all KV kits.
+OWNER? none.
