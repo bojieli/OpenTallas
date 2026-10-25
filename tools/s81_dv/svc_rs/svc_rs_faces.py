@@ -147,8 +147,7 @@ COMMON_IN = ("input wire ck, input wire rst, input wire [3:0] sid,\n"
              "    input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag, input wire [2*4-1:0] r_beat, input wire [1:0] hs")
 ENTRY_IO = ("input wire [32:0] j, output wire [1:0] jd, input wire [512:0] q, input wire [291:0] hw, output wire [8:0] hc,\n"
             "    output wire fault, output wire [1:0] st_rg, output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x,\n"
-            "    input wire [561:0] local_pv_landed, input wire [561:0] peer_pv,\n"
-            "    output wire so_ready, output wire so_done, output wire [11:0] so_fault_code")
+            "    input wire [561:0] local_pv_landed, input wire [561:0] peer_pv")
 OBS = ("`ifdef RS_OBS\n    , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d,"
        " output wire [11:0] w_st\n    , output wire [2678:0] obs\n`endif\n")
 
@@ -214,11 +213,10 @@ def module(kind_entry, m, fh=None):
     if kind_entry:
         L.append(f"    dsdv_svc_rs_pvso_entry{'' if fh is None else '_f2b'} #(.PVSO_ENABLE(PVSO_ENABLE), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), "
                  f".SRAM_MACRO(SRAM_MACRO), .PV_IDENTITY(PV_IDENTITY), .SMT(SMT), .FM({fmv}){f2b}) u (\n"
-                 f"        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q({{2'b00, q}}), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),\n"
+                 f"        .ck(ck), .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q), .hw(hw), .hc(hc), .fault(fault), .st_rg(st_rg),\n"
                  f"        {pc},\n"
                  f"        .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data), .r_tag(r_tag), .r_beat(r_beat), .hs(hs),\n"
-                 f"        .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .local_pv_landed(local_pv_landed), .peer_pv(peer_pv),\n"
-                 f"        .so_ready(so_ready), .so_done(so_done), .so_fault_code(so_fault_code)\n"
+                 f"        .pv_v(pv_v), .pv_d(pv_d), .pv_x(pv_x), .local_pv_landed(local_pv_landed), .peer_pv(peer_pv)\n"
                  "`ifdef RS_OBS\n        , .w_v(w_v), .w_a(w_a), .w_m(w_m), .w_d(w_d), .w_st(w_st), .obs(obs)\n`endif\n        );")
     else:
         L.append("    wire [1:0] jd_nc; wire [8:0] hc_nc; wire fault_nc; wire pv_v_nc; wire [512:0] pv_d_nc; wire [47:0] pv_x_nc;"

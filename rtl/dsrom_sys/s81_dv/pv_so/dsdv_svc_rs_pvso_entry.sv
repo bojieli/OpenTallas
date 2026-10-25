@@ -4,7 +4,8 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
                            parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
                            parameter logic [39:0] FM = {40{1'b1}}) (   // S81-P9-FACE face mask -> dsdv_svc_rs_c
     input  wire ck, rst, input wire [3:0] sid,
-    input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
+    input  wire [32:0] j, output wire [1:0] jd, input wire [512:0] q,   // the die's 513-b q lane {d 512, v}
+    input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
@@ -13,8 +14,9 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
     input  wire [2*4-1:0] r_beat, input wire [1:0] hs,
     output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x,
-    input wire [561:0] local_pv_landed,peer_pv,
-    output wire so_ready,so_done,output wire[11:0]so_fault_code
+    input wire [561:0] local_pv_landed,peer_pv
+    // S81/PORTFIX-FLT 10-25 (S81 DECISION 4): the SO status outputs so_ready / so_done (status) and so_fault_code[11:0]
+    // (detail code) are dropped; the ingress fault (= |so_fault_code, sticky) stays OR-ed into the one fault output.
 
 `ifdef RS_OBS
     , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
@@ -26,10 +28,11 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
 `endif
     wire so_cfg_v,so_param_v,so_launch,program_fault;
+    wire so_ready,so_done;wire[11:0]so_fault_code;   // internal (bench taps only)
     wire[19:0]so_owner,so_param_owner;wire[20:0]so_position,so_param_position;
     wire[7:0]so_se_jid,so_jid;wire[15:0]so_local_first,so_peer_first;
     wire[2:0]so_param_row;wire[511:0]so_param_d;wire[514:0]q_filtered;
-    dsdv_pv_so_program #(.ENABLE(PVSO_ENABLE)) u_program(.clk(ck),.rst_n(rst),.q(q),.q_pass(q_filtered),
+    dsdv_pv_so_program #(.ENABLE(PVSO_ENABLE),.TF(0)) u_program(.clk(ck),.rst_n(rst),.q({2'b00,q}),.q_pass(q_filtered),
       .cfg_v(so_cfg_v),.owner(so_owner),.position(so_position),.se_jid(so_se_jid),.so_jid(so_jid),
       .local_first(so_local_first),.peer_first(so_peer_first),.param_v(so_param_v),.param_row(so_param_row),
       .param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),.launch(so_launch),.fault(program_fault));
@@ -39,7 +42,10 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     reg collision;
     always @(posedge ck or negedge rst)if(!rst)collision<=0;else if(generated_v && q_filtered[0])collision<=1;
     assign q_entry=generated_v?{2'd0,generated_d,1'b1}:q_filtered;
-    assign fault=entry_fault|ingress_fault|join_fault|collision|program_fault;
+    // S81/PORTFIX-FLT 10-25: the one fault output leaves a sticky flop (pin registered; +1 edge on the fault level only)
+    reg fault_q;
+    always @(posedge ck or negedge rst)if(!rst)fault_q<=0;else fault_q<=fault_q|entry_fault|ingress_fault|join_fault|collision|program_fault;
+    assign fault=fault_q;
     generate if(PVSO_ENABLE!=0)begin:g_join
       dsdv_pv_half_join u_join(.clk(ck),.rst_n(rst),.cfg_v(so_cfg_v),
        .local_first(so_local_first),.peer_first(so_peer_first),.local_pv(local_pv_landed),.peer_pv(peer_pv),
@@ -65,25 +71,27 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
         );
 endmodule
 
-// S81/SVCG (2026-10-25, OWNER DECISION 12 / DEC12 FOLD 2-BEAT CONTRACT): the DEC12 die master of the two entries --
-// dsdv_svc_rs_pvso_entry with the 2-beat fold gather (F2B = 1, FH = sx_fh(sid) per instance, gh_i / gh_o faces
-// {beat, payload 1,067} on lane attnh__svc_A__svc_B).  dsdv_svc_rs_pvso_entry is the pre-DEC12 master, unchanged.
+// DEC12: same sticky-fault/q513 entry with the fold gather transport enabled.
+`timescale 1ns/1ps
+// Existing service entry ABI plus static all-quarter SO source assembly.
 module dsdv_svc_rs_pvso_entry_f2b #(parameter integer PVSO_ENABLE=0, parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
                            parameter bit SRAM_MACRO = 0, parameter integer PV_IDENTITY = 0, parameter bit SMT = 1,
                            parameter logic [39:0] FM = {40{1'b1}}, parameter logic [7:0] FH = 8'h00) (   // S81-P9-FACE face mask -> dsdv_svc_rs_c
     input  wire ck, rst, input wire [3:0] sid,
-    input  wire [32:0] j, output wire [1:0] jd, input wire [514:0] q, input wire [291:0] hw, output wire [8:0] hc,
+    input  wire [32:0] j, output wire [1:0] jd, input wire [512:0] q,   // the die's 513-b q lane {d 512, v}
+    input wire [291:0] hw, output wire [8:0] hc,
     output wire fault, output wire [1:0] st_rg,
     input  wire [4*805-1:0] dn_i, output wire [4*805-1:0] dn_o, input wire [4*16-1:0] up_i, output wire [4*16-1:0] up_o,
     input  wire [4*514-1:0] ri, output wire [4*514-1:0] ro,
     input  wire [3:0] gi_v, input wire [4*2132-1:0] gi_d, output wire [3:0] go_v, output wire [4*2132-1:0] go_d,
-    input  wire [4*1068-1:0] gh_i, output wire [4*1068-1:0] gh_o,
+    input wire [4*1068-1:0] gh_i, output wire [4*1068-1:0] gh_o,
     input  wire [3:0] si_v, input wire [4*1076-1:0] si_d, output wire [3:0] so_v, output wire [4*1076-1:0] so_d,
     output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
     input  wire [2*4-1:0] r_beat, input wire [1:0] hs,
     output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x,
-    input wire [561:0] local_pv_landed,peer_pv,
-    output wire so_ready,so_done,output wire[11:0]so_fault_code
+    input wire [561:0] local_pv_landed,peer_pv
+    // S81/PORTFIX-FLT 10-25 (S81 DECISION 4): the SO status outputs so_ready / so_done (status) and so_fault_code[11:0]
+    // (detail code) are dropped; the ingress fault (= |so_fault_code, sticky) stays OR-ed into the one fault output.
 
 `ifdef RS_OBS
     , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
@@ -95,10 +103,11 @@ module dsdv_svc_rs_pvso_entry_f2b #(parameter integer PVSO_ENABLE=0, parameter i
     wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
 `endif
     wire so_cfg_v,so_param_v,so_launch,program_fault;
+    wire so_ready,so_done;wire[11:0]so_fault_code;   // internal (bench taps only)
     wire[19:0]so_owner,so_param_owner;wire[20:0]so_position,so_param_position;
     wire[7:0]so_se_jid,so_jid;wire[15:0]so_local_first,so_peer_first;
     wire[2:0]so_param_row;wire[511:0]so_param_d;wire[514:0]q_filtered;
-    dsdv_pv_so_program #(.ENABLE(PVSO_ENABLE)) u_program(.clk(ck),.rst_n(rst),.q(q),.q_pass(q_filtered),
+    dsdv_pv_so_program #(.ENABLE(PVSO_ENABLE),.TF(0)) u_program(.clk(ck),.rst_n(rst),.q({2'b00,q}),.q_pass(q_filtered),
       .cfg_v(so_cfg_v),.owner(so_owner),.position(so_position),.se_jid(so_se_jid),.so_jid(so_jid),
       .local_first(so_local_first),.peer_first(so_peer_first),.param_v(so_param_v),.param_row(so_param_row),
       .param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),.launch(so_launch),.fault(program_fault));
@@ -108,7 +117,10 @@ module dsdv_svc_rs_pvso_entry_f2b #(parameter integer PVSO_ENABLE=0, parameter i
     reg collision;
     always @(posedge ck or negedge rst)if(!rst)collision<=0;else if(generated_v && q_filtered[0])collision<=1;
     assign q_entry=generated_v?{2'd0,generated_d,1'b1}:q_filtered;
-    assign fault=entry_fault|ingress_fault|join_fault|collision|program_fault;
+    // S81/PORTFIX-FLT 10-25: the one fault output leaves a sticky flop (pin registered; +1 edge on the fault level only)
+    reg fault_q;
+    always @(posedge ck or negedge rst)if(!rst)fault_q<=0;else fault_q<=fault_q|entry_fault|ingress_fault|join_fault|collision|program_fault;
+    assign fault=fault_q;
     generate if(PVSO_ENABLE!=0)begin:g_join
       dsdv_pv_half_join u_join(.clk(ck),.rst_n(rst),.cfg_v(so_cfg_v),
        .local_first(so_local_first),.peer_first(so_peer_first),.local_pv(local_pv_landed),.peer_pv(peer_pv),
@@ -122,8 +134,7 @@ module dsdv_svc_rs_pvso_entry_f2b #(parameter integer PVSO_ENABLE=0, parameter i
       .param_v(so_param_v),.param_row(so_param_row),.param_owner(so_param_owner),.param_position(so_param_position),.param_d(so_param_d),
       .den_v(1'b0),.den_mask(16'd0),.den_owner(20'd0),.den_jid(8'd0),.launch(so_launch),
       .q_v(generated_v),.q_d(generated_d),.ready(so_ready),.done(so_done),.fault(ingress_fault),.fault_code(so_fault_code));
-    dsdv_svc_rs_c #(.ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PVSO_ENABLE!=0?1:PV_IDENTITY), .FM(FM),
-                    .F2B(1), .FH(FH)) u (.ck(ck),
+    dsdv_svc_rs_c #(.F2B(1), .FH(FH), .ENTRY(1), .MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .SMT(SMT), .PV_IDENTITY(PVSO_ENABLE!=0?1:PV_IDENTITY), .FM(FM)) u (.ck(ck),
         .rst(rst), .sid(sid), .j(j), .jd(jd), .q(q_entry), .hw(hw), .hc(hc), .fault(entry_fault), .st_rg(st_rg), .dn_i(dn_i),
         .dn_o(dn_o), .up_i(up_i), .up_o(up_o), .ri(ri), .ro(ro), .gi_v(gi_v), .gi_d(gi_d), .go_v(go_v), .go_d(go_d), .gh_i(gh_i), .gh_o(gh_o),
         .si_v(si_v), .si_d(si_d), .so_v(so_v), .so_d(so_d), .rq(rq), .rk(rk), .wd(wd), .rv(rv), .r_data(r_data),
