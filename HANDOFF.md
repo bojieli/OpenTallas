@@ -233,3 +233,22 @@ CODEX: Qwen fullboth xt1 nominal128/128 exact + actual-edge mutant caught (f205e
 CODEX: 2026-10-24 21:08 PDT TOK-QK takeover: kv43abc build progressing, s8 SU align and KV PHY clock D fixes owned; native kv44 coordinated with KV physical.
 2026-10-24 21:08 PDT CODEX: GEOM A0v8 independently reviewed PASS-COND PLACE ONLY; route held for placed reach/hub-cut delta; record7e16eecd7, QC notified.
 CODEX: 2026-10-24 21:09 PDT SIGNOFF missing boundary-hold overlay now NOT RUN (72957233f, 3 tests PASS); CLOCK integrates with pair-skew migration. Support lanes DONE except PART-CAP run collection/hold diagnosis and live DIE-CI da5213b0b3 harvest, both actively owned.
+CODEX: 2026-10-24 21:10 PDT ELEM-S81 collected station B 7 SIGNED/11 NOT SIGNED/14 live; t11 max-wire successor epyc2 active; preparing unified-reset successors, legacy sublane collects latest cores.
+2026-10-24 21:09 PDT CODEX: KV cores e5/m8 + e7/m8 SIGNED (TT +24.26/+25.30, FF +4.31/+3.13); collecting views; e6 ECO pin-access failure diagnosed.
+CODEX: 2026-10-24 21:09 PDT KV hub_Ei vK GRT 0 overflow (147912 nets); collecting for delivered-reset successor; e5/e7 KV head ECO SIGNED TT/FF.
+CODEX: 2026-10-24 21:10 PDT QC capacity PHY RX equalisation collected G0C56/56 + probe/final-CB16 bind0errors; verify live epyc1 PID3298387. Own codex/qc-cap-1024 integration active; A0v8 placement-only and QC trial collection assigned.
+2026-10-24 21:10 PDT CODEX: DIE-CI regenerated current KV/B2l latency tables, gate_latency PASS 2416/298 lanes (max36/35cyc), codex/die-ci-refresh-1024; old 12:31 CI still GRT, no duplicate/kill.
+
+CODEX: 2026-10-24 21:11 PDT S81-CORES parked: C3 hcpl/rxsf/rxsb/vq placement PASS -> reviewed own C4 routes epyc2 (clients epyc1 2360040..43); VS raw boundary FAIL 738 bits diagnosed; exact-ref checkout correction owed (shared FETCH_HEAD race). Full paths in lane/CODEX-LOG.
+
+CODEX: 2026-10-24 21:11 PDT HEAD/TRIAL parked: collected c8/c4 NOT SIGNED; successors c9/c5 preserved; preview geometry dump done (not reviewed); S81 fabric TT -637.68/FF -42.03, head +133.76/-75.90 diagnosed wire slew / seam skew; no RTL edits/new routes.
+CODEX: 2026-10-24 21:10 PDT RESET/CP1 parked on Claude return; no source changes/jobs; original CP1P routes live intel1, final signoff pending, residual IO path + placed-leaf reset mapping diagnosed.
+
+2026-10-24 21:10 PDT CODEX: Claude returned; parking all workers. Main a11334b988 pushed+clean (S81 signed views+hrow15+canonical BK drain/reset boot price); per-lane handoff in CODEX-LOG.md.
+CODEX: 2026-10-24 21:10 PDT TOK-DS parked on Claude reset: canonical merged main a11334b988; codex/norm-gap-1024@b94a136074 runner ready for existing epyc3 cut_0S build (PID3143537); arithmetic replay pending; no new heavy jobs.
+CODEX: 2026-10-24 21:10 PDT ELEM-HBM PARKED for Claude reset:117 jobs collected,30 memory guard FAIL15616/4096 diagnosed+fix preserved,4GRT FAIL,22CTS done;no new fleet job;codex/elem-hbm-push-1024@77ad44e788, notes ELEM-HBM.md.
+
+CODEX: 2026-10-24 21:10 PDT PART-CAP parked: N14 route DRC0 1.068M cells peak57.8GB, FF STA live; N27 TT/TNS10 missing sparse pin-keepout Tcl diagnosed (resume NOT launched); N7 boundary FF hold + reset removal diagnosed; N27 GRT/N44x2 DPL live retained.
+CODEX: 2026-10-24 21:12 PDT TRIAL-HBM parked on Claude reset; collected fab_rep_m8 TT+398.87/FF-2.52 diagnostic FAIL; B2l r4 GRT live preserved; draft DEF-specialnet PG helper saved, no new fleet jobs.
+
+CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corrective-pad transport analyzer fixed (2 tests PASS); su_mon hierarchy build + Qwen chains continue; no new heavy jobs.
