@@ -1,0 +1,6 @@
+{"element":"dsdv_eng_rr_e","rev":"E4","kit":"epyc1:/srv/opentallas-scratch2/claude/path-s81-eng/dsdv_eng_rr_e_e4","stage":"4_cts (density taps 400/60)",
+"gates":{"rtl_lint":"PASS","synth":"rc0 9970.8um2 72413 cells","sdc_lint":"PASS","face_guard":"2688/2688","lec":"RUNNING (TOK-LEC cdc63805d)"},
+"f6_um_max_by_bank":{"b0":8.9,"b1":8.8,"b2":9.1,"b3":9.2,"b4":9.1,"b5":9.2,"b6":9.8,"b7":9.2},"f6_um_median":"6.8-7.1","bank_words_anchored":"544/544",
+"clock":{"taps":122,"sinks":16444,"sinks_per_tap_med":123,"sinks_per_tap_max":313,"tt_ps":[571,622],"ff_ps":[457,494],"intra_tap_spread_ps_max":{"tt":21,"ff":22}},
+"sta_cts":{"tt":{"clk_setup_wns_ps":66.9,"io_setup_wns_ps":-370.6,"hold_wns_ps":-401.5,"removal_ps":-389.9},"ff":{"clk_setup_wns_ps":246.1,"io_setup_wns_ps":-222.5,"hold_wns_ps":-334.6,"removal_ps":-322.4}},
+"open":"IO fails purely on clock insertion ~600 ps vs vclk 250/202.5; needs core-latency/early-feed contract (CLOCK-RESET)"}
