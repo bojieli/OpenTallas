@@ -247,9 +247,12 @@ def calibrate(work, seed):
         land = t
         # The ARF-enabled positive vehicle must have one root framer arm per
         # eight-word probe, before its first AR word. ARF=0 ignores the arm.
-        ev.cmd(land - 2 * s - 1, D.cmd_xc(0, 0, 8, 0x100 * (s + 1)))
-        ev.cmd(land - 2 * s, D.cmd_stn(s, 1, 1, 8, 0, M.DST_AR, 0x100 * (s + 1), kc=1))
         far = land + 10
+        ev.cmd(land - 2 * s - 1, D.cmd_xc(0, 0, 8, 0x100 * (s + 1)))
+        # TOK-QK/S8B 10-25: the STN lands M.STN_LEAD edges before the first far word (the compiler's rule, after the
+        # near words that run SK ahead).  It used to land 10 before far = inside the near words: the s8 / safe stations
+        # (cfg_schedule_fault: cfg_v landing while rs / nb words land) fault on that; slice2 tolerated it.
+        ev.cmd(far - M.STN_LEAD - 2 * s, D.cmd_stn(s, 1, 1, 8, 0, M.DST_AR, 0x100 * (s + 1), kc=1))
         for j in range(8):
             LB_pair(ev, s, v(), v(), v(), v(), far + j)
         probes[s] = far
@@ -266,7 +269,7 @@ def calibrate(work, seed):
     ev.cmd(t + 2, D.cmd_amax(0, arx=1))
     t += 30
     for s in (0, 5):
-        ev.cmd(t - 2 * s - 1, D.cmd_stn(s, 1, 1, 8, 0, 0, 0x40 * s, amax=1, kc=1))
+        ev.cmd(t + 10 - M.STN_LEAD - 2 * s - 1, D.cmd_stn(s, 1, 1, 8, 0, 0, 0x40 * s, amax=1, kc=1))   # as above
     for j in range(8):
         for s in (0, 5):
             LB_pair(ev, s, v(), v(), v(), v(), t + 10 + j)
