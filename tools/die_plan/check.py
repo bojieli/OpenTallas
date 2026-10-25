@@ -675,6 +675,9 @@ def check_reset(P, R):
         R.warn("reset", w)
     if info is None:
         return dict(release=P.reset.get("release", "counted"))
+    if info.get("release") == "wavefront":     # OWNER DECISION 13: per-partition release offsets (reset_tree.py offsets)
+        return {k: info[k] for k in ("release", "sync_stages", "root", "hop_um", "relay_um", "max_release",
+                                     "max_die_hop_um", "unreachable")}
     return dict(release=info["release"], part_depth_K=info["part_depth_K"], relay_um=info["relay_um"],
                 regions=[{k: v for k, v in r.items() if k not in ("nonuniform_types", "busiest_hosts")}
                          for r in info["regions"]])

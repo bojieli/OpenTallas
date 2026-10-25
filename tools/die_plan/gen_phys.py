@@ -86,6 +86,9 @@ def io_tcl(P, tn, pins):
     for name, x, y in tap_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: die spine tap")
+    for name, x, y in reset_out_pins(P, tn):
+        lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
+                     f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: reset wavefront out")
     return "\n".join(lines) + "\n"
 
 
@@ -154,7 +157,18 @@ def core_tap_rows(P, tn):
 
 def tap_pins(P, tn):
     """[(port, x, y)]: every clock tap (+ early core taps) + the reset tap."""
-    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + tuple(tap_points(P, tn)[1])]
+    import reset_tree as RT
+    if RT.wavefront(P) and not P.types[tn].get("hard"):     # OWNER DECISION 13: the wavefront reset IN site
+        rs = tuple(RT.in_pin(P, tn))
+    else:
+        rs = tuple(tap_points(P, tn)[1])
+    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + rs]
+
+
+def reset_out_pins(P, tn):
+    """[(port, x, y)] interior registered reset OUT pins of a wavefront plan type (reset_tree.out_pins)."""
+    import reset_tree as RT
+    return RT.out_pins(P, tn)
 
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
@@ -546,7 +560,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     import reset_tree as RT
     if rtt:
         shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
-    elif RT.pipelined(P):
+    elif RT.delivered(P):
         (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
@@ -1024,6 +1038,8 @@ def mock_lef(P, tn):
     for name, x, y in tap_pins(P, tn):
         L += pin(name, "INPUT", "SIGNAL" if name == "arst_n" else "CLOCK",
                  [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
+    for name, x, y in reset_out_pins(P, tn):
+        L += pin(name, "OUTPUT", "SIGNAL", [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
     # PG: the kit's M5 / M6 / M7 stripes (gen_phys.PDN; VSS one width + spacing after VDD)
     for net, j in (("VDD", 0), ("VSS", 1)):
         rects = []
