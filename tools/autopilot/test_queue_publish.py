@@ -45,6 +45,13 @@ class Publication(unittest.TestCase):
   self.g('two','fetch','-q','origin','coord/state')
   text=self.g('two','show','origin/coord/state:autopilot/queue.tsv')
   self.assertIn('competing reviewed row',text);self.assertIn('our reviewed row',text)
+ def test_geom_packet_is_append_only_and_idempotent(self):
+  text='GEOM REQ exact source\nGEOM REPLY exact source PASS-COND'
+  a=Q.publish(self.r/'one',text,'publish reviewed packet',path='lanes/GEOM-REVIEW.md')
+  b=Q.publish(self.r/'one',text,'repeat packet',path='lanes/GEOM-REVIEW.md')
+  self.assertEqual(a,b)
+  self.assertIn(text,self.g('one','show',a+':lanes/GEOM-REVIEW.md'))
+  self.assertIn('original',self.g('one','show',a+':autopilot/queue.tsv'))
  def test_repeated_exact_row_is_idempotent(self):
   a=Q.publish(self.r/'one','same row','first');b=Q.publish(self.r/'one','same row','repeat')
   self.assertEqual(a,b)
