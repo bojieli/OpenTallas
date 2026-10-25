@@ -610,3 +610,4 @@ CODEX: 2026-10-25 08:03 PDT S81CCONNparkedonClaudeRESET, engE2reservationREADY70
 
 2026-10-25 08:04 PDT CODEX GEOM: parked on Claude reset. Shared obstacle0302d3b06a13PASS and actual prototype sites80f96e7eb36PASS READY; review branchbbd882d627 results only. L14 EngE2/t18/t22 scoped reviews complete; g2.py source fix still OPEN and unedited. Detailed CODEX-LOG handoff.
 2026-10-25 08:04 PDT CODEX: S81parkedexplicitRESET; engineadopt363merged6742cyclemiterPASS, L14actualpathnamed; hcoreprofile/leafCS/physicalhold/5KVtypegapsassigned, nofalseclosure, alljobsretained.
+2026-10-25 08:04 PDT CODEX: KITS0719 parked onRESET; helper6ad8ead READY+t18plannedPASS-COND0cycles; t22clockmodel49taps173.6um,5olddensityFAILsdiagnosed; nofreshroute/SIGNED, modelresetdeltaPID3857503live.
