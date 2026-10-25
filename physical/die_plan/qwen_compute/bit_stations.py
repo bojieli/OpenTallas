@@ -16,6 +16,7 @@ import check
 import gen_phys
 import schema as S
 import ft_sites
+import re
 from tools.die_trial.legal_sites import RowAllocator
 
 
@@ -105,12 +106,22 @@ def repair(raw, log=print, only_types=None):
             ledger.append(row)
             if new != old or declared:
                 log(f"bit_stations: {tn}.{name} {old}->{new}, actual max{row['worst_paired_bit_um']:.3f}um; per-bit routes")
-    if core_types:
-        rows, _ = ft_sites.place(raw, RowAllocator, types=core_types, reach_um=limit, margin=1.0, max_radius_um=40.0,
-                                avoid_core_routes=True)
+    # QC-PLAN 10-25: the SU-row types (su_l0 / su_l1 / su_c, SU lane cores filling ~86% of the width) are HELD for a
+    # slice ft re-plan. Core-free channel legs jam their 65-um macro-free strip (PROTO sle_su_l0 GRT ov 397k strict,
+    # 443k strict+bit-ordered) and the slice negotiation is infeasible once their transit is priced physically
+    # (QC_NEG_CORE_FT=1, slice W5). Until that re-plan they keep the corridor-mode sites (stations off the cores,
+    # legs may cross the cores on M6/M7) so every other type keeps the strict channel-safe result.
+    su_types = [t for t in core_types if re.search(r'_su_(l0|l1|c)(_v\d+)?$', t)]
+    strict_types = [t for t in core_types if t not in su_types]
+    for types, strict, mode in ((strict_types, True, 'row-legal-per-bit'),
+                                (su_types, False, 'row-legal-corridor (SU row HELD: slice ft re-plan)')):
+        if not types:
+            continue
+        rows, _ = ft_sites.place(raw, RowAllocator, types=types, reach_um=limit, margin=1.0, max_radius_um=40.0,
+                                 avoid_core_routes=strict)
         for row in rows:
-            row['mode'] = 'row-legal-per-bit'
-            log(f"bit_stations: {row['type']}.{row['slot']} {row['stations']}, actual max{row['worst_paired_bit_um']:.3f}um; macro-free")
+            row['mode'] = mode
+            log(f"bit_stations: {row['type']}.{row['slot']} {row['stations']}, actual max{row['worst_paired_bit_um']:.3f}um; {mode}")
         ledger.extend(rows)
     return dict(checked=len(ledger), added=[r for r in ledger if r['stations'][1] > r['stations'][0]], slots=ledger)
 
