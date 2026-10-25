@@ -90,6 +90,26 @@ foreach mit $macs {
 set ingrp {}
 dict for {m g} $grp { foreach r $g { dict set ingrp $r $m } ; puts "OT_RT macro group $m: [llength $g] interface registers" }
 # ---- regions + H-tree
+# OT_RT_SPLIT=count (S81-CORES3/SW 10-25, GEOM-REVIEW-3 05:47 vn_a/vn_b: regions cut to equal sink count instead of
+# padding the light taps): every binary cut goes at the median coordinate of the non-macro-group registers inside the
+# node's box (clamped to the middle half of the span, no sliver regions); tap buffer at the child box centre as before.
+# The spine arms are then unequal by construction; regional_taps_balance.tcl brings the taps inside OT_RT_WIN_PS.
+# Default (geom) = geometric halves, unchanged.
+set rt_split [expr {[info exists ::env(OT_RT_SPLIT)] ? $::env(OT_RT_SPLIT) : "geom"}]
+set rt_pts {}
+foreach it $regs { if {[dict exists $ingrp [[$it getInst] getName]]} continue; lappend rt_pts [rt_ctr [$it getInst]] }
+proc rt_cut {a b c d byx} {
+  global rt_pts rt_split
+  set lo [expr {$byx ? $a : $c}]; set hi [expr {$byx ? $b : $d}]
+  set g [expr {($lo + $hi) / 2.0}]
+  if {$rt_split ne "count"} { return $g }
+  set v {}
+  foreach p $rt_pts { lassign $p x y; if {$x >= $a && $x <= $b && $y >= $c && $y <= $d} { lappend v [expr {$byx ? $x : $y}] } }
+  if {[llength $v] < 2} { return $g }
+  set v [lsort -real $v]; set m [lindex $v [expr {[llength $v] / 2}]]
+  set q [expr {($hi - $lo) / 4.0}]
+  return [expr {min(max($m, $lo + $q), $hi - $q)}]
+}
 set W [expr {$cx1-$cx0}]; set H [expr {$cy1-$cy0}]
 set rw [expr {$W/$rt_nx}]; set rh [expr {$H/$rt_ny}]
 # port -> centre trunk
@@ -109,12 +129,12 @@ while {$cols > 1 || $rows > 1} {
   foreach nd $nodes {
     lassign $nd x y n a b c d
     if {$byx} {
-      set m [expr {($a+$b)/2.0}]
+      set m [rt_cut $a $b $c $d 1]
       foreach {xa xb} [list $a $m $m $b] { set xc [expr {($xa+$xb)/2.0}]
         set e [rt_run "h${lvl}_[llength $nn]" $x $y $xc $y $n]
         lappend nn [list $xc $y [rt_buf "h${lvl}_[llength $nn]" $xc $y $e] $xa $xb $c $d $e] }
     } else {
-      set m [expr {($c+$d)/2.0}]
+      set m [rt_cut $a $b $c $d 0]
       foreach {ya yb} [list $c $m $m $d] { set yc [expr {($ya+$yb)/2.0}]
         set e [rt_run "h${lvl}_[llength $nn]" $x $y $x $yc $n]
         lappend nn [list $x $yc [rt_buf "h${lvl}_[llength $nn]" $x $yc $e] $a $b $ya $yb $e] }
@@ -123,7 +143,7 @@ while {$cols > 1 || $rows > 1} {
   if {$byx} { set cols [expr {$cols/2}] } else { set rows [expr {$rows/2}] }
   set nodes $nn
 }
-puts "OT_RT H-tree: $lvl levels, [llength $nodes] leaf nodes (taps), region [format %.1f $rw] x [format %.1f $rh] um, $rt_n spine buffers"
+puts "OT_RT H-tree ($rt_split split): $lvl levels, [llength $nodes] leaf nodes (taps), region [format %.1f $rw] x [format %.1f $rh] um, $rt_n spine buffers"
 # taps: the leaf node buffer output net is the regional tap net
 set k 0; set tapnet {}
 foreach nd $nodes { lassign $nd x y n a b c d; dict set tapnet $k $nd; incr k }
