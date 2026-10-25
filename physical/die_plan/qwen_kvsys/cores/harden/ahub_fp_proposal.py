@@ -17,7 +17,7 @@ Proposal = macro-composed core (owner rule 10-11 top-down hierarchy: replicated 
   * outline shrunk from 734.4 x 540 to W x H below, S-E corner kept in place in hub_C (ahub talks only S (ap/am to
     the ASTK stacks, hs from kvs_attn) and E (fr to pvfin)), so no link gets longer; the freed N/W L-strip returns to
     hub_C glue.  Pins re-assigned by core_pins_v37p.py on the new outline (same faces S / E; plan tool, KV-P);
-  * clock (decision 5 + core-latency contract (e)): ck stays at the S-E corner; a parent spine with 6 taps
+  * clock (decision 5 + core-latency contract (e)): ck / rst_n at the S-face centre (COORD 10-24), one spine to a hub at the channel centre, 6 taps
     (5 child clk pins + 1 glue tap grid over the S band and the channel), each child's tap delayed so child flop latency
     (zh TT 246 / recip 224 ps measured inside) lands in one 20-ps window with the glue flops; published core latency =
     that window (core_latency.json), parent compensates with an early core tap.  No single corner tree over the core.
@@ -34,11 +34,11 @@ BAND = 7 * G                                   # S glue band 60.48 (pin flops ap
 blocks = [
     # row A: MX -> zh inputs (LEF S face, 268 b) face UP into the A/B channel where u_core_la + u_ri sit; roots (64 b
     # + zerr 4) face DOWN to the S band (registered at the band, then ~170 um to u_core)
-    dict(inst='g_zh[0].u_zh', master='ot_nhb_zh', x=3 * G, y=8 * G, w=ZH, h=ZH, orient='MX'),
+    dict(inst='g_zh[0].u_zh', master='ot_nhb_zh', x=3 * G, y=8 * G, w=ZH, h=ZH, orient='R180'),
     dict(inst='g_zh[1].u_zh', master='ot_nhb_zh', x=23 * G, y=8 * G, w=ZH, h=ZH, orient='MX'),
     # row B: R0 -> inputs (S) face DOWN into the same channel; roots (N) return down the W / middle side channels
     # (the closed qkd_ahub_sdw used the same MX-below / R0-above pairing around its core channel)
-    dict(inst='g_zh[2].u_zh', master='ot_nhb_zh', x=3 * G, y=30.5 * G, w=ZH, h=ZH, orient='R0'),
+    dict(inst='g_zh[2].u_zh', master='ot_nhb_zh', x=3 * G, y=30.5 * G, w=ZH, h=ZH, orient='MY'),
     dict(inst='g_zh[3].u_zh', master='ot_nhb_zh', x=23 * G, y=30.5 * G, w=ZH, h=ZH, orient='R0'),
     # reciprocal leaf on the E side next to the fr export face; x pins (N, left corner) toward the channel / core,
     # y (S, right) down to the S band (RX_RLY 1 / RY_RLY 2 relays exist in the RTL)
@@ -51,10 +51,29 @@ regions = [
          h=30.5 * G - 8 * G - ZH),
     dict(name='E column: fr export flops u_rw (145 b) at the E pins', x=W - 2 * G, y=BAND, w=2 * G, h=H - BAND),
 ]
-taps = [dict(name=f"tap->{b['inst']}/clk", x=b['x'] - 1.0, y=b['y'] + (148.4 if b['master'] == 'ot_nhb_zh' and b['orient'] == 'R0' else 2.8 if b['master'] == 'ot_nhb_zh' else 113.9))
-        for b in blocks] + [dict(name='glue tap grid (S band + channel)', x=W / 2, y=BAND / 2)]
-pins = dict(S=dict(groups=['am0..3 (144)', 'ap0..3 (172)', 'hf', 'hs_* (166)'], count=482),
-            E=dict(groups=['ck (S-E corner)', 'fr_epoch', 'fr_rz (128)', 'fr_valid', 'rst_n'], count=147))
+# left-column zh mirrored in x (MY / R180) so every zh clk pin (LEF W face, y 148.4) sits on the column gap next to
+# the spine; vertical flip (MX / R180) for row A so its inputs face the channel
+def clk_xy(b):
+    if b['master'] != 'ot_nhb_zh':
+        return b['x'] - 1.0, b['y'] + 113.9
+    fx = b['orient'] in ('MY', 'R180'); fy = b['orient'] in ('MX', 'R180')
+    return (b['x'] + b['w'] + 1.0 if fx else b['x'] - 1.0), b['y'] + (b['h'] - 148.4 if fy else 148.4)
+
+
+taps = [dict(name=f"tap->{b['inst']}/clk", x=clk_xy(b)[0], y=clk_xy(b)[1])
+        for b in blocks] + [dict(name='glue tap grid (S band + channel)', x=W / 2, y=BAND / 2)]   # fed off the spine foot
+# COORD spot-check 10-24: ck / rst_n move from the S-E corner to the S-face centre (between the ap and hs groups); the
+# clock is centre-fed: S-centre pin -> one spine up the zh0/zh1 column gap -> hub at the A/B channel centre -> taps
+CK = (21.5 * G, 0.0)                         # 185.76: S face, centre of the zh column gap / channel hub x
+HUB = (21.5 * G, 8 * G + ZH + (30.5 * G - 8 * G - ZH) / 2)     # channel centre (185.76, 241.92)
+pins = dict(S=dict(groups=['am0..3 (144)', 'ap0..3 (172)', 'ck + rst_n (S centre, x ~186)', 'hf', 'hs_* (166)'],
+                   count=484),
+            E=dict(groups=['fr_epoch', 'fr_rz (128)', 'fr_valid'], count=145))
+
+
+def spine_d(t):
+    """Manhattan distance from a tap to the clock spine (S-centre pin -> channel hub, vertical at CK x)."""
+    return abs(t['x'] - CK[0]) + max(0.0, t['y'] - HUB[1])
 
 
 def check():
@@ -93,23 +112,30 @@ def render(out):
         ax.text(b['x'] + b['w'] / 2, b['y'] + b['h'] / 2, f"{b['inst']}\n{b['master']}\n{b['w']}^2 {b['orient']}",
                 ha='center', va='center', fontsize=8)
         if b['master'] == 'ot_nhb_zh':      # LEF: input pins S x 32-96, roots N x 87-100, clk W top (MX: swapped)
-            yi, yo = (b['y'] + 1, b['y'] + b['h'] - 1) if b['orient'] == 'R0' else (b['y'] + b['h'] - 1, b['y'] + 1)
-            ax.plot([b['x'] + 32, b['x'] + 96], [yi, yi], color='red', lw=3)
-            ax.plot([b['x'] + 87, b['x'] + 100], [yo, yo], color='purple', lw=3)
+            fy = b['orient'] in ('MX', 'R180'); fx = b['orient'] in ('MY', 'R180')
+            yi, yo = (b['y'] + b['h'] - 1, b['y'] + 1) if fy else (b['y'] + 1, b['y'] + b['h'] - 1)
+            X = (lambda u: b['x'] + b['w'] - u) if fx else (lambda u: b['x'] + u)
+            ax.plot([X(32), X(96)], [yi, yi], color='red', lw=3)
+            ax.plot([X(87), X(100)], [yo, yo], color='purple', lw=3)
         else:                                # x N x 1-13, y S x 193-208
             ax.plot([b['x'] + 1, b['x'] + 13], [b['y'] + b['h'] - 1] * 2, color='red', lw=3)
             ax.plot([b['x'] + 193, b['x'] + 208], [b['y'] + 1] * 2, color='purple', lw=3)
-    ck = (W, 3.96)
+    ck = CK
+    ax.plot([ck[0], HUB[0]], [ck[1], HUB[1]], color='darkorange', lw=2.5)
     for t in taps:
-        ax.plot([ck[0], t['x']], [ck[1], t['y']], color='orange', lw=.8, ls='--')
+        y0 = min(max(t['y'], 0), HUB[1])
+        ax.plot([HUB[0], t['x'], t['x']], [y0, y0, t['y']], color='orange', lw=.9, ls='--')
         ax.plot(t['x'], t['y'], 'o', color='orange', ms=5)
-    ax.plot(*ck, 's', color='orange', ms=9)
-    ax.text(ck[0] - 4, ck[1] + 8, 'ck', color='darkorange', ha='right')
+    ax.plot(*ck, 's', color='orange', ms=9); ax.plot(*HUB, 'D', color='darkorange', ms=8)
+    ax.text(ck[0] + 4, ck[1] + 8, 'ck / rst_n (S centre)', color='darkorange', fontsize=8)
+    far = max(spine_d(t) for t in taps)
+    ax.text(HUB[0] + 4, HUB[1] + 6, f'clock spine {HUB[1]:.0f} um + hub; max spine->tap {far:.0f} um', fontsize=7,
+            color='darkorange')
     ax.plot([0, W], [-3, -3], color='crimson', lw=5)
-    ax.text(W / 2, -16, 'S face 482 pins: am0..3 | ap0..3 | hf | hs_* (to ASTK stacks / kvs_attn)', ha='center',
+    ax.text(W / 2, -16, 'S face 484 pins: am0..3 | ap0..3 | ck rst_n | hf | hs_* (to ASTK stacks / kvs_attn)', ha='center',
             fontsize=8)
     ax.plot([W + 3, W + 3], [0, H], color='olivedrab', lw=5)
-    ax.text(W + 10, H / 2, 'E face 147 pins: fr_* to pvfin, ck, rst_n', rotation=90, va='center', fontsize=8)
+    ax.text(W + 10, H / 2, 'E face 145 pins: fr_* to pvfin', rotation=90, va='center', fontsize=8)
     s = check()
     ax.set_title(f"qkd_ahub PROPOSAL (KV-CORES 10-24): macro-composed, {W:.1f} x {H:.2f} um "
                  f"({s['area_um2']} um2, macros {s['macro_fraction']:.0%}); red = child inputs, purple = child "
@@ -122,7 +148,9 @@ def main():
     out = Path(sys.argv[1]); out.mkdir(parents=True, exist_ok=True)
     s = check()
     plan = dict(schema='opentallas.kv.core_fp_proposal.v1', core='qkd_ahub', status='PROPOSAL (no P&R before GEOM PASS)',
-                summary=s, blocks=blocks, regions=regions, clock_taps=taps, pins=pins,
+                summary=dict(s, clock=dict(pin_xy=CK, hub_xy=HUB, spine_um=HUB[1],
+                             max_spine_to_tap_um=round(max(spine_d(t) for t in taps), 1))),
+                blocks=blocks, regions=regions, clock_taps=taps, pins=pins,
                 reuse_views={'ot_nhb_zh': 'physical/ref_tile/ot_nhb_zh_m5/views/ot_nhb_zh',
                              'ot_qkh_recip_leaf': 'physical/ref_tile/qkh_recip_ref/views/ot_qkh_recip_leaf'},
                 prior_closed_composition='physical/ref_tile/qkd_ahub_sdw (qkd_ahub_static_dw 734.4 x 540, same children)',
