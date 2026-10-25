@@ -11,6 +11,7 @@
 // images re-skewed by tools/s81_head/hd_reskew_images.py; 0x17b / 0 = SK 8 = the 10-21 images as committed).
 module tb_s81hd_mini #(parameter [8:0] CUT = 9'b1_1111_1111, parameter integer SPLIT9 = 1, parameter integer CV = 0,
                        parameter integer AIS = 0, parameter integer MH = 0, parameter integer CS = 0,
+                       parameter integer ASL = 0, parameter integer BDH = 0,
                        parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9);
     reg ck = 1'b0, rst_n = 1'b0;
     always #0.5 ck = ~ck;
@@ -21,8 +22,8 @@ module tb_s81hd_mini #(parameter [8:0] CUT = 9'b1_1111_1111, parameter integer S
     reg [16:0] r0_0, r0_1;
     reg t0en, t1en;
     ot_s81hd_spo u_spo (.ck(ck), .rst_n(rst_n), .i(bi), .o(so), .ow(sw), .oe(se));
-    ot_s81hd_tile #(.INSTANCE("t0"), .CUT(CUT), .SPLIT9(SPLIT9), .CV(CV), .A_INPUT_STAGES(AIS), .MERGE_HOP(MH), .CMP_STAGES(CS)) u_t0 (.ck(ck), .rst_n(rst_n), .i(sw), .o(t0o), .row0(r0_0), .ten(t0en));
-    ot_s81hd_tile #(.INSTANCE("t1"), .CUT(CUT), .SPLIT9(SPLIT9), .CV(CV), .A_INPUT_STAGES(AIS), .MERGE_HOP(MH), .CMP_STAGES(CS)) u_t1 (.ck(ck), .rst_n(rst_n), .i(t0o), .o(t1o), .row0(r0_1), .ten(t1en));
+    ot_s81hd_tile #(.INSTANCE("t0"), .CUT(CUT), .SPLIT9(SPLIT9), .CV(CV), .A_INPUT_STAGES(AIS), .MERGE_HOP(MH), .CMP_STAGES(CS), .A_SKEW_LINES(ASL), .BD_HOPS(BDH)) u_t0 (.ck(ck), .rst_n(rst_n), .i(sw), .o(t0o), .row0(r0_0), .ten(t0en));
+    ot_s81hd_tile #(.INSTANCE("t1"), .CUT(CUT), .SPLIT9(SPLIT9), .CV(CV), .A_INPUT_STAGES(AIS), .MERGE_HOP(MH), .CMP_STAGES(CS), .A_SKEW_LINES(ASL), .BD_HOPS(BDH)) u_t1 (.ck(ck), .rst_n(rst_n), .i(t0o), .o(t1o), .row0(r0_1), .ten(t1en));
     ot_s81hd_spr u_spr (.ck(ck), .rst_n(rst_n), .i(so), .iw(t1o), .ie(se), .o(ro));
     reg [255:0] ma [0:255];
     reg [255:0] mb [0:63];

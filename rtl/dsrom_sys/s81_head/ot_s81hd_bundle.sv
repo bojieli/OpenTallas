@@ -36,6 +36,17 @@ module ot_s81hd_bundle #(
     // from cores 350-700 um apart): 1 = a hop register before each compare level (pk_q -> pk_h -> c1 -> c1_h -> res),
     // so a stage does EITHER the ~350-um hop OR the 81-b pick.  +2 cycles on the result; 0 = unchanged.
     parameter integer MERGE_HOP = 0,
+    // A_SKEW_LINES (S81/HEAD2 10-24, COORD ruling 23:0x on hd_tile__s81_head_prev5__FAIL: the shared skew-line tails
+    // and bd_r sit 350-1000 um from the four A cores, GPL collapses the hop stages onto the copies): 1 = every A core
+    // gets its OWN transport line from the bundle input: kept copy of {row, xa} (+ go) -> BST + A_INPUT_STAGES - 1
+    // delay -> its own systolic skew lines -> A pins, so every stage of a core's line sits between two fixed ends
+    // (x pin register at the W face, the core's x pins).  The shared u_x xa half, xsa skew and bd_r drop out.
+    // Same depth on every bit as A_SKEW_LINES 0 (delays commute): 0 cycles on x / go.  Requires A_INPUT_STAGES >= 1.
+    // BD_HOPS: extra registered hops on each core's own B-root line (per-core kept copy of the B output -> A_INPUT_STAGES
+    // + BD_HOPS stages -> A b pins; eB -> far A core ~1000 um).  The A join is a FIFO (pop when both roots are there),
+    // so a later B root is exact; the tail moves only when B's last root is the late one (bench measures it).
+    parameter integer A_SKEW_LINES = 0,
+    parameter integer BD_HOPS = 0,
     // CV (S81-HEAD 10-24): 1 = the elements are the CLOSED views (physical/dsrom_fh_safe/closed/elem{A,B}) as the hard
     // macros ot_s81hd_elemA_cv (u_eA0..3) / ot_s81hd_elemB_cv (u_eB) in the labelled block g_cv (no generate index in
     // their paths); they are the closed parameter point (CUT 0x1ff, SPLIT9 1, IOREG 1, SAFE 1), checked below.
@@ -56,6 +67,9 @@ module ot_s81hd_bundle #(
     output wire [127:0] head_d,
     output wire [67:0]  head_row
 );
+    generate if (A_SKEW_LINES != 0 && A_INPUT_STAGES == 0) begin : g_bad_asl
+        ot_s81hd_a_skew_lines_need_a_input_stages u_refuse ();   // elaboration error by design
+    end endgenerate
     // registered broadcast
     wire        go_d;
     wire [511:0] x_d;
@@ -116,6 +130,35 @@ module ot_s81hd_bundle #(
         if (A_INPUT_STAGES == 0) begin : g_ais0
             assign {a_go[q], bv_a[q]} = {go_d, bv_r[q]};
             assign {row_a[q], x_a[q], bd_a[q]} = {row_in, xsa, bd_r};
+        end else if (A_SKEW_LINES != 0) begin : g_asl
+            // this core's own line: kept copy at the bundle input, then BST + A_INPUT_STAGES - 1 stages, then its own
+            // skew lines (lane j: SK * (j mod 8)) -- the same per-bit depth as go/x_d/xsa/copy/stages of A_SKEW_LINES 0
+            wire         g1;
+            wire [272:0] d1;
+            wire [255:0] xl;
+            ot_s81hd_kregr #(.W(1)) u_av1 (.clk(clk), .rst_n(rst_n), .d(go), .q(g1));
+            ot_s81hd_kreg #(.W(273)) u_ad1 (.clk(clk), .d({row_in, xa}), .q(d1));
+            ot_hdc_delay #(.W(1), .D(BST + A_INPUT_STAGES - 1), .RESET(1)) u_av (
+                .clk(clk), .rst_n(rst_n), .d(g1), .q(a_go[q]));
+            ot_hdc_delay #(.W(273), .D(BST + A_INPUT_STAGES - 1)) u_ad (
+                .clk(clk), .rst_n(rst_n), .d(d1), .q({row_a[q], xl}));
+            for (j = 0; j < 16; j = j + 1) begin : g_skl
+`ifdef OT_S81HD_MUT_SKEW_LANE
+                // MUTANT: core 1 (holds the golden argmax rows 21946 / 21818) lane 9 skew line one stage short
+                localparam integer DL = SK * (j % 8) - ((q == 1 && j == 9) ? 1 : 0);
+`else
+                localparam integer DL = SK * (j % 8);
+`endif
+                ot_hdc_delay #(.W(16), .D(DL)) u_l (.clk(clk), .rst_n(rst_n), .d(xl[16*j +: 16]), .q(x_a[q][16*j +: 16]));
+            end
+            // this core's own B-root line: kept copy of the B output (replaces the shared bd_r), A_INPUT_STAGES +
+            // BD_HOPS stages; bv_r[q] (one per core already) travels the same depth
+            wire [31:0] bd1;
+            ot_s81hd_kreg #(.W(32)) u_bd1 (.clk(clk), .d(bo_d), .q(bd1));
+            ot_hdc_delay #(.W(32), .D(A_INPUT_STAGES + BD_HOPS)) u_bd (
+                .clk(clk), .rst_n(rst_n), .d(bd1), .q(bd_a[q]));
+            ot_hdc_delay #(.W(1), .D(A_INPUT_STAGES + BD_HOPS), .RESET(1)) u_bv (
+                .clk(clk), .rst_n(rst_n), .d(bv_r[q]), .q(bv_a[q]));
         end else begin : g_ais
             // first stage: this core's OWN kept copy (never merged with the other cores' identical x / bd copies)
             wire [1:0]   v1;

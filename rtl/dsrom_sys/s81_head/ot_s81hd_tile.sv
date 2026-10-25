@@ -40,6 +40,10 @@ module ot_s81hd_tile #(
     //                   3 = hop + registered 16-b half compares (gt / eq a half, row lt) + combine;
     //                   the capture / fire state waits the same number of cycles (+CMP_STAGES a tile on the chain)
     parameter integer A_INPUT_STAGES = 0,
+    //   A_SKEW_LINES / BD_HOPS (S81/HEAD2 10-24): per-A-core transport lines (bundle: own copy -> own skew lines; own
+    //   B-root line with BD_HOPS extra hops); 0 cycles on x / go, BD_HOPS only on a late B root (bench-measured)
+    parameter integer A_SKEW_LINES = 0,
+    parameter integer BD_HOPS = 0,
     parameter integer MERGE_HOP = 0,
     parameter integer CMP_STAGES = 0
 ) (
@@ -92,7 +96,8 @@ module ot_s81hd_tile #(
     wire [127:0] nc_hd;
     wire [67:0]  nc_hr;
     ot_s81hd_bundle #(.INSTANCE(INSTANCE), .IOREG(IOREG), .SAFE(1), .CUT(CUT), .SPLIT9(SPLIT9), .CV(CV),
-                     .A_INPUT_STAGES(A_INPUT_STAGES), .MERGE_HOP(MERGE_HOP)) u_b (
+                     .A_INPUT_STAGES(A_INPUT_STAGES), .MERGE_HOP(MERGE_HOP),
+                     .A_SKEW_LINES(A_SKEW_LINES), .BD_HOPS(BD_HOPS)) u_b (
         .clk(ck), .rst_n(rst_n),
 `ifdef OT_S81HD_MUT_TEN_IGNORED
         .go(go_q),
