@@ -8,9 +8,13 @@ if {$corner ni {TT FF}} {error "OT_CC only TT/FF supported"}
 if {[file tail $::env(OT_CC_ODB)] ne "4_cts.odb"} {error "OT_CC requires terminal 4_cts.odb"}
 file mkdir $out
 read_db $::env(OT_CC_ODB)
-set libs [lsort [glob /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_RVT_${corner}_nldm_*.lib*]]
-if {![llength $libs]} {error "OT_CC missing actual $corner libraries"}
-foreach lib $libs {read_liberty $lib}
+# Use the canonical native-kit exact selector (dea197bb09). Installed-library
+# globs can silently mix SIMPLE/SEQ generations and invalidate measurements.
+set helper [file join [file dirname [info script]] timing_libs.tcl]
+if {![file isfile $helper]} {error "OT_CC requires exact native timing_libs.tcl selector"}
+source $helper
+set libs [ot_lib_load $corner $out/libraries_${corner}.json $kit/config.mk]
+if {[llength $libs] != 5} {error "OT_CC expected this macro-free kit's exact five standard-cell libraries"}
 read_sdc $kit/constraint.sdc
 set root [get_clocks -quiet clk]
 if {[llength $root] != 1 || abs([get_property $root period]-833.0)>0.01} {error "OT_CC expected actual clk at833ps"}
