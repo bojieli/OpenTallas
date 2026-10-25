@@ -102,11 +102,27 @@ _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": F
         "properties": {"part": _name, "bus": _name}}
 
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
+_physical_id_widths = {"strap_corner": 2, "strap_hid": 2, "strap_bsel": 2, "strap_tile_tid": 6}
 _parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
     name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
-           "properties": {"width": {"type": "integer", "minimum": 1},
-                          "value": {"type": "integer", "minimum": 0}}}
-    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id")}}
+           "properties": {"width": ({"type": "integer", "const": _physical_id_widths[name]} if name in _physical_id_widths
+                                   else {"type": "integer", "minimum": 1}),
+                          "value": {"type": "integer", "minimum": 0,
+                                    **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
+    for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", *_physical_id_widths)}}
+
+# Exact identity ports only. G0's semantic validator enforces each port's width;
+# allOf gives full JSON-Schema consumers the same cross-field restriction.
+_core_id_straps = {"type": "array", "items": {
+    "type": "object", "required": ["port", "width", "value"], "additionalProperties": False,
+    "properties": {"port": {"enum": list(_physical_id_widths)},
+                   "width": {"enum": [2, 6]},
+                   "value": {"type": ["integer", "string"], "minimum": 0, "maximum": 63,
+                             "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6})$"},
+                   "note": {"type": "string"}},
+    "allOf": [{"if": {"properties": {"port": {"const": "strap_tile_tid"}}},
+               "then": {"properties": {"width": {"const": 6}, "value": {"maximum": 63, "pattern": "^6'[bB][01]{6}$"}}},
+               "else": {"properties": {"width": {"const": 2}, "value": {"maximum": 3, "pattern": "^2'[bB][01]{2}$"}}}}]}}
 
 SCHEMA = {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -297,6 +313,7 @@ SCHEMA = {
                         "type": "object", "required": ["inst", "origin_um", "outline_um"],
                         "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
+                                       "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps,
                                        "orient": {"enum": list(ORIENTS)},
                                        "track_offset_um": _xy,      # added to origin_um (lattice) at placement

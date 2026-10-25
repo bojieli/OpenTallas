@@ -779,6 +779,12 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
             if not pins:
                 R.err("hard_cores", f"type {tn} core {hc['inst']}: no pins listed (pins / pins_file): the core pins "
                       "must be proven on the kit tracks", type=tn)
+            if hc.get("straps") or hc.get("parent_id_straps"):
+                from parent_id_straps import validate_parent_id_straps
+                try:
+                    validate_parent_id_straps(hc, pins=pins)
+                except ValueError as e:
+                    R.err("hard_cores", f"type {tn} core {hc[inst]}: {e}", type=tn)
             insts = [n for n, p_ in P.parts.items() if p_["type"] == tn]
             bad = 0
             for nm, ln, x, y in pins:

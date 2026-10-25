@@ -959,6 +959,79 @@
          "minItems": 2,
          "maxItems": 2
         },
+        "straps": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "required": [
+           "port",
+           "width",
+           "value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "port": {
+            "enum": [
+             "strap_corner",
+             "strap_hid",
+             "strap_bsel",
+             "strap_tile_tid"
+            ]
+           },
+           "width": {
+            "enum": [
+             2,
+             6
+            ]
+           },
+           "value": {
+            "type": [
+             "integer",
+             "string"
+            ],
+            "minimum": 0,
+            "maximum": 63,
+            "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6})$"
+           },
+           "note": {
+            "type": "string"
+           }
+          },
+          "allOf": [
+           {
+            "if": {
+             "properties": {
+              "port": {
+               "const": "strap_tile_tid"
+              }
+             }
+            },
+            "then": {
+             "properties": {
+              "width": {
+               "const": 6
+              },
+              "value": {
+               "maximum": 63,
+               "pattern": "^6'[bB][01]{6}$"
+              }
+             }
+            },
+            "else": {
+             "properties": {
+              "width": {
+               "const": 2
+              },
+              "value": {
+               "maximum": 3,
+               "pattern": "^2'[bB][01]{2}$"
+              }
+             }
+            }
+           }
+          ]
+         }
+        },
         "parent_id_straps": {
          "type": "object",
          "additionalProperties": false,
@@ -1032,6 +1105,82 @@
             "value": {
              "type": "integer",
              "minimum": 0
+            }
+           }
+          },
+          "strap_corner": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_hid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_bsel": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_tile_tid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 6
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 63
             }
            }
           }
@@ -1219,6 +1368,82 @@
             "value": {
              "type": "integer",
              "minimum": 0
+            }
+           }
+          },
+          "strap_corner": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_hid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_bsel": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 2
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 3
+            }
+           }
+          },
+          "strap_tile_tid": {
+           "type": "object",
+           "required": [
+            "width",
+            "value"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "width": {
+             "type": "integer",
+             "const": 6
+            },
+            "value": {
+             "type": "integer",
+             "minimum": 0,
+             "maximum": 63
             }
            }
           }
