@@ -1,6 +1,9 @@
 #!/bin/bash
 # PATH-HBM/TOK 2026-10-25: face-shelled TKM path gate (r4).  run_shell.sh <out dir>
 set -euo pipefail
+# hier config: tkm_tp192_e86_hier.vlt (e86 wrapper = hier block). r3 / r4 / r4b / r4c used p2p/qtkm_hier.vlt, whose tile_rg
+# hier block Verilator does not substitute through the e86 wrapper: all 32 tile bodies flattened into the top pass -> memcg
+# OOM at 128 / 192 GB (verilator_bin 191 GB).
 cd "$(dirname "$0")/../../.."
 o=$(realpath -m "${1:?out}");mkdir -p "$o"
 OPENBLAS_NUM_THREADS=1 python3 tools/hgi_coll_tkm_tp192_vectors.py --out "$o/vec" > "$o/vectors.log"
@@ -17,7 +20,7 @@ case "${ROOT_VARIANT:-cb21}" in
  *) echo "bad ROOT_VARIANT";exit 2;;
 esac
 tsh=$f;[ "${ROOT_VARIANT:-cb21}" = ft21 ] && tsh=$f/ft
-src=("$c/p2p/qtkm_hier.vlt" tools/hbm_b2/tkm_l74/tb_hbm_tkm_l74_shell.sv rtl/hbm_accel/generic/transport/ot_hbm_static_2beat.sv
+src=("$c/tkm/tkm_tp192_e86_hier.vlt" tools/hbm_b2/tkm_l74/tb_hbm_tkm_l74_shell.sv rtl/hbm_accel/generic/transport/ot_hbm_static_2beat.sv
  "$c/tkm/ot_hgi_coll_tkm_static.sv" "$c/tkm/ot_hgi_coll_tkm.sv" "$c/tkm/ot_hgi_coll_tkm_buffer.sv" "$c/tkm/ot_hgi_coll_tkm_conv_skew.sv"
  "$f/ot_hbm_face_reg.sv" "$f/ot_hgi_coll_tkm_m_tp192__root__fshell.sv" "$f/ot_hgi_coll_tkm_m_tp192__root__wrap.sv" "$rcore"
  "$tsh/ot_hgi_coll_tkm_tp192_tile_core__idpin__fshell.sv" "$tsh/ot_hgi_coll_tkm_tp192_tile_core__idpin__wrap.sv"
