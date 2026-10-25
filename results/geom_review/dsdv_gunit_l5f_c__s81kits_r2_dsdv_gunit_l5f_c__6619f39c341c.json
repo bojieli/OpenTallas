@@ -1,0 +1,18 @@
+{
+ "element": "dsdv_gunit_l5f_c",
+ "kit": "epyc1:/srv/opentallas-scratch/claude/elem-s81-cores/r2/dsdv_gunit_l5f_c (gen claude/elem-s81-cores-1024 @dc52d4a06f; author records claude/s81-kits-geom-1024r @a854c5530)",
+ "verdict": "PASS-CONDITIONAL",
+ "hash": "6619f39c341c18741e7f0360c7049d2c5c82db8173ea271817290b8a1bf97936",
+ "reasons": "[2026-10-24 19:39] [GEOM-REVIEW, independent second review of S81/KITS stage-1 place] Looked at the author image and my own layout_review render of 3_place.odb (/srv/opentallas-scratch/claude/geom-review/tiles/GR-KITS/dsdv_gunit_l5f_c/rev/review.png). 151.2x151.2 um, 78k cells / 10,648 flops, fill 39.9% of free, empty 12%, no macros, uniform density (max 5-um bin 0.64). 136 pins all on W in two clusters (y 42-62, 92-100) at 5.5/um vs cap 10.42, 134/135 signal pins registered, pin->reg p90 7.4 / max 8.8 um. clk + rst_n at W y~49, farthest sink ~150 um. Reset: delivered rst_n used as a timed synchronous reset - allowed by OWNER DECISION 2 (local flops use the delivered reset with normal timed recovery), but one cycle from one pin to 10.6k flops over 150 um is the same shape as hcore r3 (-4.9 ps at 170 um / 28k flops).",
+ "fixes": "1. Route. Sign-off needs TT setup incl. rst_n recovery >= 0 and FF hold/removal >= 0 at 6_final; if rst_n misses, add an in-core reset relay stage (equal depth to every flop, priced as +1 boot cycle) - no recovery waiver and no buffer-only patch. 2. Pair-skew <= 80 ps TT/FF per decision 5 on the final tree.",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/GR-KITS/dsdv_gunit_l5f_c/rev/review.png",
+  "results/geom_review/s81_kits_1024r/img/dsdv_gunit_l5f_c.png (author, a854c5530)"
+ ],
+ "stage": "3_place",
+ "owner_lane": "S81",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T19:39:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route",
+ "hash_method": "kit_hash_fs over the kit dir excluding run/ and *.log"
+}

@@ -1,0 +1,6 @@
+{"lane": "CP1-R10", "time": "2026-10-24 12:40 PDT", "plan": "/srv/opentallas-scratch/claude/cp1-r10/reach405L/pair_plan.json",
+ "basis": "Codex reach405 plan (G0 PASS, rendered + reviewed: reach405/review/*.png, review.json) with ONLY leaves.sv replaced (pair.py --leaves-only, reach leaf)",
+ "checks": {"pins.json": "byte-identical to reach405 (both types)", "clock_taps.tcl": "byte-identical", "constraint.sdc": "identical except header line",
+            "G0": "PASS 0 errors 8 warnings", "leaf": "5 out folds, each from its nearest in bus at 170-754 um (<= 3 hops of 364.5 um incl. leaf regs -> 0 stages); legacy all-bus fold removed"},
+ "r1_finding": "reach405 r1 TT -241.76: worst path u_bin_frame_int_i1/q[703] -> 13 BUFx6f (~900 ps) -> u_leaf.q[703]; all 1234 slew violators inside face-flop<->leaf wires; not the seam",
+ "verdict": "PASS for submission (geometry unchanged from reviewed plan; leaf-only fix)"}

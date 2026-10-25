@@ -1,0 +1,17 @@
+{
+ "element": "ot_hbm_svc_vm_kshare_splitstrap",
+ "view": "ot_hbm_svc_vm_kshare_splitstrap@6bbd87383348",
+ "kit": "physical/die_plan/hbm_arch_cores (kit ot_hbm_svc_vm_kshare_splitstrap_6bbd87383348, B2r2 pins 6bbd87383348, plan e1c50d83cff2)",
+ "stage": "plan",
+ "verdict": "PASS-COND",
+ "hash": "cda016e64855ddde",
+ "reasons": "plan-stage (B2l, GEOM-REVIEW die PASS-COND e1c50d83cff2): 354.24x453.6 um, 7343 pins, faces E:450,N:2099,S:2099,W:2695; worst 0.216 pins/track per layer (<=0.6 OK), pins on lattice, spread along faces. Context q_hub/u_vmks_Q3: 47/53 buses with core_conns partners (nearest endpoint per net); 0 of 7333 connected bits leave a face pointing away from the nearest partner; 5773 bits > 365 um to the nearest partner (plan internal stations, HBM-ARCH). Macros: none. Fill, density, face-flop distance, clock taps judged at the placed stage.",
+ "fixes": "Place only; route + signoff only after the placed-stage review.",
+ "pictures": [
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_svc_vm_kshare_splitstrap_6bbd87383348/plan.png",
+  "/srv/opentallas-scratch/claude/elem-hbm/review_b2l/ot_hbm_svc_vm_kshare_splitstrap_6bbd87383348/context.png"
+ ],
+ "reviewer": "ELEM-HBM (author review)",
+ "at": "2026-10-24T12:25:28-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route (BRIEFING)"
+}

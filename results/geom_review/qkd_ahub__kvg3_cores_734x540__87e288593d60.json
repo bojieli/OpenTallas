@@ -1,0 +1,19 @@
+{
+ "element": "qkd_ahub",
+ "kit": "epyc3:/srv/opentallas-scratch/claude/kv-g3/cores/kits/qkd_ahub__734.4x540 (6_final 10-24 11:12)",
+ "verdict": "FAIL",
+ "hash": "87e288593d60ffc7cf22b2a17aee452f7920f1112c0a357c4642a0f7b61435e9",
+ "stage": "6_final",
+ "reasons": "[2026-10-24 19:44] [GEOM-REVIEW tile, backlog KV core review] Looked at ORFS final_placement/final_clocks/final_congestion/final_routing (rtx-pro /srv/opentallas-scratch/claude/geom-review/tiles/ahub/final_*.png) and 6_finish.rpt / 6_report.json. 734.4x540 um outline, pins along the full S face and full E face; the 412k-cell logic (45.7k um2 std area, 11.9% utilisation; 379k logic + 32.5k tapcells - at the 400k OpenROAD cap) collapsed by GPL into one irregular blob in the centre (~40% of the area), W and N thirds empty. Face flops sit at the S/E pins and reach the blob over 150-400 um wires; ragged blob edges + long fingers to the E face. One clock port (SE corner) drives a single tree over the whole core: source latency up to 897 ps, setup skew 169 / hold skew 152 ps. Result TT WNS -89.9, TNS -10.8 ns. This is GPL deciding the floorplan, not a data-flow floorplan.",
+ "fixes": "1. Floorplan the core top-down: either shrink the outline to the logic (~83k um2 at ~55% util) with the S/E pin windows compressed to the faces the neighbours actually need, or keep the pin-limited outline and place the datapath slices as bands along the S and E faces they talk to (region/guide constraints per sub-block, register stations every <= 405 um between face flops and logic). No empty thirds, no blob. 2. Split into hardened sub-cores if the logic stays ~380k cells (OpenROAD cap 400k incl. taps; this run is at 412k instances). 3. Clock per owner decision 5: taps on a density-pruned grid over the logic bands (load <= ~1500 sinks), balanced to a common latency (<= 20 ps window), not one corner port with an 897-ps tree. 4. Reset per decision 2. 5. Re-REQ with a placement render before any route.",
+ "images": [
+  "/srv/opentallas-scratch/claude/geom-review/tiles/ahub/final_placement.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/ahub/final_clocks.png",
+  "/srv/opentallas-scratch/claude/geom-review/tiles/ahub/final_congestion.png"
+ ],
+ "owner_lane": "KV-G3",
+ "reviewer": "GEOM-REVIEW",
+ "at": "2026-10-24T19:44:00-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before route",
+ "hash_method": "sha256 of config.mk + io.tcl + constraint.sdc + pdn.tcl (concatenated)"
+}

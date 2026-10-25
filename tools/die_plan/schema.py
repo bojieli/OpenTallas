@@ -165,20 +165,23 @@ SCHEMA = {
                         "additionalProperties": False,
                         "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos, "offset_um": _nonneg,
                                        "nets": {"type": "array", "items": _name}}}},
-                    # OWNER DECISION 7 (2026-10-24): separate supplies (e.g. the SerDes PHY supply) with their own
-                    # dedicated bump rows over the partitions they feed (the PHY / SerDes windows), isolated from the
-                    # core VDD grid; check.py check_pg_supplies validates parts and warns on SerDes windows left on core VDD
-                    "supplies": {"type": "array", "items": {
-                        "type": "object", "required": ["name", "nets", "parts", "bumps"], "additionalProperties": False,
-                        "properties": {"name": _name, "nets": {"type": "array", "items": _name, "minItems": 1},
-                                       "parts": {"type": "array", "items": _name, "minItems": 1},
-                                       "bumps": {"type": "object", "required": ["rows", "pitch_um"],
-                                                 "additionalProperties": False,
-                                                 "properties": {"rows": {"type": "integer", "minimum": 1},
-                                                                "pitch_um": _pos,
-                                                                "over": {"enum": ["io_window", "partition"]},
-                                                                "note": {"type": "string"}}},
-                                       "basis": {"type": "string"}, "note": {"type": "string"}}}}}},
+                    # OWNER DECISION 7 (2026-10-24, IR over SerDes windows): a separate PHY supply per window with its own
+                    # dense die-layer straps and dedicated power/ground bump rows over the macro (die_io.check_pg_domains)
+                    "domains": {"type": "array", "items": {
+                        "type": "object", "required": ["name", "nets", "io", "rect_um", "grid", "bumps"],
+                        "additionalProperties": False,
+                        "properties": {
+                            "name": _name, "nets": {"type": "array", "items": _name, "minItems": 2},
+                            "io": {"type": "array", "items": _name, "minItems": 1}, "rect_um": _rect,
+                            "grid": {"type": "array", "minItems": 1, "items": {
+                                "type": "object", "required": ["layer", "width_um", "pitch_um", "offset_um"],
+                                "additionalProperties": False,
+                                "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos,
+                                               "offset_um": _nonneg, "nets": {"type": "array", "items": _name}}}},
+                            "bumps": {"type": "object", "required": ["rect_um", "pitch_um"], "additionalProperties": False,
+                                      "properties": {"rect_um": _rect, "pitch_um": _pos,
+                                                     "use": {"enum": ["power_ground"]}, "note": {"type": "string"}}},
+                            "note": {"type": "string"}}}}}},
             }},
         "partition_types": {
             "type": "object", "minProperties": 1,
@@ -359,7 +362,17 @@ SCHEMA = {
                 "branch_ps_per_mm": _pos, "branch_leaf_um": _pos}}}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
             "source": _end, "sync_stages": {"type": "integer", "minimum": 2},
-            "data_reset": {"const": False}, "epoch_bit": {"const": True}, "release": {"enum": ["counted"]}}},
+            "data_reset": {"const": False}, "epoch_bit": {"const": True},
+            # OWNER RESET RULE 2026-10-24 (BRIEFING decision 2; tools/die_plan/reset_tree.py): "pipelined" = ONE root
+            # synchroniser per die region, then synchronous relay flops every <= relay_um (405) with equal depth to every
+            # clock tap; partitions take arst_n as a SYNCHRONOUS input (pin register + equal-depth tree, part_depth K).
+            # "counted" = legacy per-tap asynchronous synchronisers (does not meet the rule; G0 warns).
+            "release": {"enum": ["counted", "pipelined"]}, "relay_um": _pos,
+            "part_depth": {"type": "integer", "minimum": 1},
+            "regions": {"type": "array", "items": {
+                "type": "object", "required": ["name"], "additionalProperties": False,
+                "properties": {"name": _name, "parts": {"type": "array", "items": _name}, "root_um": _xy,
+                               "note": {"type": "string"}}}}}},
         "latency": {"type": "object", "additionalProperties": False, "properties": {
             "lanes": {"type": "object", "additionalProperties": {
                 "type": "object", "required": ["cycles"], "additionalProperties": False,

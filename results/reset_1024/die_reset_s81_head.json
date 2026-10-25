@@ -1,0 +1,56 @@
+{
+ "release": "pipelined",
+ "sync_stages": 2,
+ "part_depth_K": 10,
+ "relay_um": 405.0,
+ "regions": [
+  {
+   "region": "die",
+   "root_um": [
+    8769.6,
+    8776.04
+   ],
+   "root_host": "sp3",
+   "members": 326,
+   "die_depth_E": 43,
+   "die_relays": 7826,
+   "die_tree_relays": 2951,
+   "die_pad_relays": 4875,
+   "max_hop_um": 379.9,
+   "release_clocks": 56,
+   "boot_cycles_added_vs_one_sync": 54,
+   "host_partitions": 326,
+   "unhosted": 12,
+   "max_relays_in_one_partition": 490,
+   "busiest_hosts": [
+    [
+     490,
+     "sp3"
+    ],
+    [
+     251,
+     "tW2b0"
+    ],
+    [
+     227,
+     "tW3o2"
+    ],
+    [
+     190,
+     "tE3o2"
+    ],
+    [
+     188,
+     "tE3o1"
+    ]
+   ],
+   "types_with_nonuniform_hosting": 4,
+   "nonuniform_types": [
+    "hd_spn",
+    "hd_tile",
+    "hd_turn_a",
+    "hd_turn_b"
+   ]
+  }
+ ]
+}
