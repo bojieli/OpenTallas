@@ -87,17 +87,20 @@ proc tb_rise {pin {buffer_output 0}} {
   return [ot_cf_wire $pin $clock]
 }
 proc tb_measure {{est 1}} {
-  global tb_blk tb_clat tb_cores tb_port_re tb_grt
+  global tb_blk tb_clat tb_cores tb_port_re tb_port tb_clock tb_grt
   set tb_cores {}
   set_propagated_clock [all_clocks]
   if {$est} { if {$tb_grt} { estimate_parasitics -global_routing } else { estimate_parasitics -placement } }
   ot_cf_refresh
-  set res {}
+  set res {}; set available {}; set matched {}; set connected {}
   foreach bt [$tb_blk getBTerms] {
     set n [$bt getName]
+    if {[regexp -nocase {clk|clock|^ck} $n]} { lappend available $n }
     if {![regexp $tb_port_re $n]} continue
+    lappend matched $n
     set net [$bt getNet]
     if {$net eq "NULL"} continue
+    lappend connected $n
     set s 0.0; set k 0; set mx 0.0; set mn 1e9
     set cs 0.0; set ck 0; set cmx 0.0; set cmn 1e9
     foreach p [tb_sinks $net] {
@@ -122,6 +125,9 @@ proc tb_measure {{est 1}} {
       # a tap of core pins only (an early core tap): its statistics are the effective arrivals
       dict set res $n [list [expr {$cs / $ck}] $cmn $cmx $ck $bt]
     }
+  }
+  if {![dict size $res]} {
+    error "OT_TAP_CHECK FAIL: no active measured taps for port family $tb_port (SDC clock $tb_clock); matched ports {$matched}, connected ports {$connected}, available clock ports {[lrange $available 0 15]}. Set OT_TAP_PORT/OT_TAP_CLOCK to the real interface; an empty measurement is not a clock verdict."
   }
   return $res
 }

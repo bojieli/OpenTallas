@@ -55,6 +55,10 @@ proc rt_launch_xy {net seen} {
 }
 # Bound kits nest the partition below u_bound. Resolve the actual hierarchical
 # net names once; findNet rst_n_tN alone silently skipped all local resets.
+# ORFS sources PRE_CTS / PRE_GLOBAL_PLACE hooks inside a procedure: rt_tapnet reads rt_named_nets via 'global', so
+# the table must live at global scope ('global' is a no-op at true top level). (canary s81_head 0372e55a4:
+# cts.tcl 6 can't read "rt_named_nets": no such variable)
+global rt_named_nets
 set rt_named_nets {}; set rt_zero_aliases {}
 foreach net [$rt_blk getNets] {
   set name [$net getName]
@@ -84,6 +88,19 @@ if {[llength $rt_zero_aliases] == 1} {
   if {$rt_alias_tap ne "" && ![dict exists $rt_named_nets $rt_alias_tap]} {
     dict set rt_named_nets $rt_alias_tap [lindex $rt_zero_aliases 0]
   }
+}
+# HEAD-SPINE2 10-25: the leaf alias `wire rst_n = rst_n_t<leaf>` (gen_rtl, reset_tree.leaf_tap) merges into ONE net that
+# keeps the name rst_n, so tap <leaf> had no named net, its FIRM flops (internal-station epoch flops) were never
+# re-pointed and stayed on the leaf relay up to 2 mm away.  Bind the unique alias to the unique tap without a named net.
+set rt_unnamed {}
+foreach bt [$rt_blk getBTerms] {
+  set n [$bt getName]
+  if {$n eq "clk"} { set i 0 } elseif {![regexp {^clk_t([0-9]+)$} $n -> i]} { continue }
+  if {![dict exists $rt_named_nets $i]} { lappend rt_unnamed $i }
+}
+if {[llength $rt_unnamed] == 1 && [llength $rt_zero_aliases] == 1} {
+  dict set rt_named_nets [lindex $rt_unnamed 0] [lindex $rt_zero_aliases 0]
+  puts "OT_RESET_TAPS leaf alias [[lindex $rt_zero_aliases 0] getName] -> tap [lindex $rt_unnamed 0]"
 }
 proc rt_tapnet {blk i} {
   global rt_named_nets

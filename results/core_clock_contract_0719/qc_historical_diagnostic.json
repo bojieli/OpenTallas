@@ -1,0 +1,68 @@
+{
+ "node": {
+  "clk": {
+   "corners": {
+    "tt": {
+     "mean_ps": 245.9,
+     "n": 2058,
+     "basis": "pin_register_mean",
+     "source": "/srv/opentallas-scratch/claude/codex-core-clock-contract0719-data/node/insertion.json:clk:tt:boundary"
+    },
+    "ff": {
+     "mean_ps": 199.6,
+     "n": 2058,
+     "basis": "pin_register_mean",
+     "source": "/srv/opentallas-scratch/claude/codex-core-clock-contract0719-data/node/insertion.json:clk:ff:boundary"
+    }
+   },
+   "signed": false,
+   "contract_source": "/srv/opentallas-scratch/claude/codex-core-clock-contract0719-data/node/insertion.json",
+   "signoff_source": null,
+   "diagnostic": "historical measurement; not release qualified"
+  }
+ },
+ "romleaf": {
+  "clk": {
+   "corners": {
+    "tt": {
+     "mean_ps": 206.9,
+     "n": 529,
+     "basis": "pin_register_mean",
+     "source": "/srv/opentallas-scratch/claude/codex-core-clock-contract0719-data/romleaf/insertion.json:clk:tt:boundary"
+    },
+    "ff": {
+     "mean_ps": 173.9,
+     "n": 529,
+     "basis": "pin_register_mean",
+     "source": "/srv/opentallas-scratch/claude/codex-core-clock-contract0719-data/romleaf/insertion.json:clk:ff:boundary"
+    }
+   },
+   "signed": false,
+   "contract_source": "/srv/opentallas-scratch/claude/codex-core-clock-contract0719-data/romleaf/insertion.json",
+   "signoff_source": null,
+   "diagnostic": "historical measurement; not release qualified"
+  }
+ },
+ "lsl": {
+  "clk": {
+   "corners": {
+    "tt": {
+     "mean_ps": 165.7,
+     "n": 272,
+     "basis": "pin_register_mean",
+     "source": "/srv/opentallas-scratch/claude/codex-core-clock-contract0719-data/lsl/insertion.json:clk:tt:boundary"
+    },
+    "ff": {
+     "mean_ps": 133.9,
+     "n": 272,
+     "basis": "pin_register_mean",
+     "source": "/srv/opentallas-scratch/claude/codex-core-clock-contract0719-data/lsl/insertion.json:clk:ff:boundary"
+    }
+   },
+   "signed": false,
+   "contract_source": "/srv/opentallas-scratch/claude/codex-core-clock-contract0719-data/lsl/insertion.json",
+   "signoff_source": null,
+   "diagnostic": "historical measurement; not release qualified"
+  }
+ }
+}

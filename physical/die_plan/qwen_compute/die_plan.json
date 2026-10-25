@@ -29993,157 +29993,6 @@
    },
    "ft_track_frac": 0.5
   },
-  "sle_hc3": {
-   "module": "qfd_qc_sle_hc3",
-   "outline_um": [
-    622.08,
-    1080.0
-   ],
-   "buses": [
-    {
-     "name": "cw_n3",
-     "dir": "out",
-     "width": 516,
-     "kind": "data",
-     "leaf": "u_pstn.cw_n3",
-     "face": "N",
-     "window_um": [
-      4.32,
-      93.504
-     ],
-     "layers": [
-      "M7",
-      "M5"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "cw_s3",
-     "dir": "out",
-     "width": 516,
-     "kind": "data",
-     "leaf": "u_pstn.cw_s3",
-     "face": "S",
-     "window_um": [
-      280.56,
-      370.0
-     ],
-     "layers": [
-      "M7",
-      "M5"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "b_hw_i",
-     "dir": "in",
-     "width": 1592,
-     "kind": "data",
-     "leaf": "u_pstn.b_hw_i",
-     "face": "S",
-     "window_um": [
-      4.32,
-      279.6
-     ],
-     "layers": [
-      "M7",
-      "M5"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "x_ctl_o",
-     "dir": "out",
-     "width": 8,
-     "kind": "data",
-     "leaf": "u_pstn.x_ctl_o",
-     "face": "W",
-     "window_um": [
-      4.32,
-      5.824
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "x_hc2_o",
-     "dir": "out",
-     "width": 1,
-     "kind": "data",
-     "leaf": "u_pstn.x_hc2_o",
-     "face": "W",
-     "window_um": [
-      6.784,
-      7.168
-     ],
-     "layers": [
-      "M6",
-      "M4"
-     ],
-     "order": "lsb_low"
-    },
-    {
-     "name": "flt_o",
-     "dir": "out",
-     "width": 1,
-     "kind": "ctl",
-     "leaf": "u_pstn.flt_o",
-     "face": "S",
-     "window_um": [
-      370.96,
-      371.344
-     ],
-     "layers": [
-      "M7",
-      "M5"
-     ],
-     "order": "lsb_low"
-    }
-   ],
-   "ft_slots": [],
-   "contents": [
-    {
-     "inst": "u_pstn",
-     "module": "sle_hc3_pstn",
-     "status": "new",
-     "note": "plan boundary: pin registers, ft stations, forwarding relays, fault OR (generated from the plan, flattened with the glue)"
-    }
-   ],
-   "note": "slice region partition hc3 (E slice, landed region hc3); est. std-cell fill 0.02 at util 0.6: 50% of M4-M7 to ft",
-   "clock": {
-    "tap_um": [
-     311.04,
-     535.68
-    ],
-    "layer": "M9",
-    "insertion_ps": 250,
-    "insertion_tol_ps": 40,
-    "taps": [
-     {
-      "name": "glue",
-      "kind": "glue",
-      "xy": [
-       311.04,
-       535.68
-      ],
-      "insertion_ps": 270,
-      "insertion_tol_ps": 40,
-      "from_root_um": 0.0
-     }
-    ]
-   },
-   "reset": {
-    "tap_um": [
-     311.04,
-     535.68
-    ],
-    "sync_stages": 2
-   },
-   "ft_track_frac": 0.5
-  },
   "sle_st_b": {
    "module": "qfd_qc_sle_st_b",
    "outline_um": [
@@ -34752,7 +34601,7 @@
     },
     {
      "inst": "u_lane6",
-     "module": "qfd_qc_su_lane_e",
+     "module": "qfd_qc_su_lane_w",
      "origin_um": [
       17.28,
       578.88
@@ -34766,7 +34615,7 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/su/sle_su_l1_u_lane6_pins.json",
+     "pins_file": "cores/su/slw_su_l1_u_lane6_pins.json",
      "note": "SU lane-group 6 hard core = u_exp6, u_rsq6, u_head6, u_rcp6, u_lrly6 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
     },
     {
@@ -36520,7 +36369,7 @@
    "hard_cores": [
     {
      "inst": "u_lane0",
-     "module": "qfd_qc_su_lane_e",
+     "module": "qfd_qc_su_lane_w",
      "origin_um": [
       69.12,
       25.92
@@ -36534,12 +36383,12 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/su/sle_su_l0_u_lane0_pins.json",
+     "pins_file": "cores/su/slw_su_l0_u_lane0_pins.json",
      "note": "SU lane-group 0 hard core = u_rsq0, u_exp0, u_rcp0, u_head0, u_lrly0 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 247, ctl/stm/sc share of the group)"
     },
     {
      "inst": "u_lane1",
-     "module": "qfd_qc_su_lane_e",
+     "module": "qfd_qc_su_lane_w",
      "origin_um": [
       69.12,
       285.12
@@ -36553,12 +36402,12 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/su/sle_su_l0_u_lane1_pins.json",
+     "pins_file": "cores/su/slw_su_l0_u_lane1_pins.json",
      "note": "SU lane-group 1 hard core = u_rsq1, u_exp1, u_rcp1, u_head1, u_lrly1 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
     },
     {
      "inst": "u_lane2",
-     "module": "qfd_qc_su_lane_e",
+     "module": "qfd_qc_su_lane_w",
      "origin_um": [
       69.12,
       578.88
@@ -36572,12 +36421,12 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/su/sle_su_l0_u_lane2_pins.json",
+     "pins_file": "cores/su/slw_su_l0_u_lane2_pins.json",
      "note": "SU lane-group 2 hard core = u_rsq2, u_exp2, u_rcp2, u_head2, u_lrly2 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
     },
     {
      "inst": "u_lane3",
-     "module": "qfd_qc_su_lane_e",
+     "module": "qfd_qc_su_lane_w",
      "origin_um": [
       69.12,
       838.08
@@ -36591,7 +36440,7 @@
       0.0,
       0.0
      ],
-     "pins_file": "cores/su/sle_su_l0_u_lane3_pins.json",
+     "pins_file": "cores/su/slw_su_l0_u_lane3_pins.json",
      "note": "SU lane-group 3 hard core = u_rsq3, u_exp3, u_rcp3, u_head3, u_lrly3 (closed slice leaves, flattened inside the core); top-down pins (c_i 760 incl. gb 500 broadcast, c_o 219, ctl/stm/sc share of the group)"
     }
    ]
@@ -53748,7 +53597,7 @@
   },
   {
    "name": "sl_E0_hc3",
-   "type": "sle_hc3",
+   "type": "slw_hc3",
    "origin_um": [
     18239.04,
     13694.4
@@ -53874,7 +53723,7 @@
   },
   {
    "name": "sl_E1_hc3",
-   "type": "sle_hc3",
+   "type": "slw_hc3",
    "origin_um": [
     20710.08,
     13694.4
@@ -54000,7 +53849,7 @@
   },
   {
    "name": "sl_E2_hc3",
-   "type": "sle_hc3",
+   "type": "slw_hc3",
    "origin_um": [
     23181.12,
     13694.4
@@ -54126,7 +53975,7 @@
   },
   {
    "name": "sl_E3_hc3",
-   "type": "sle_hc3",
+   "type": "slw_hc3",
    "origin_um": [
     25652.16,
     13694.4
@@ -54252,7 +54101,7 @@
   },
   {
    "name": "sl_E4_hc3",
-   "type": "sle_hc3",
+   "type": "slw_hc3",
    "origin_um": [
     28123.2,
     13694.4
@@ -54378,7 +54227,7 @@
   },
   {
    "name": "sl_E5_hc3",
-   "type": "sle_hc3",
+   "type": "slw_hc3",
    "origin_um": [
     30594.24,
     13694.4
@@ -113728,7 +113577,158 @@
   "epoch_bit": true,
   "release": "wavefront",
   "relay_um": 405.0,
-  "hop_um": 405.0
+  "hop_um": 405.0,
+  "start": "broadcast",
+  "in_sites": {
+   "cbf_q00": [
+    8.16,
+    8.608
+   ],
+   "cbf_q00_s2": [
+    772.192,
+    8.608
+   ],
+   "cbf_q01": [
+    8.16,
+    8.608
+   ],
+   "cbf_q01_s2": [
+    772.192,
+    8.608
+   ],
+   "cbf_q11": [
+    1227.36,
+    8.608
+   ],
+   "cbn_q00": [
+    772.192,
+    8.608
+   ],
+   "cbn_q01": [
+    8.16,
+    8.608
+   ],
+   "cbn_q11": [
+    8.16,
+    1308.96
+   ],
+   "cbx_q10": [
+    8.16,
+    8.608
+   ],
+   "coll_core": [
+    778.08,
+    794.848
+   ],
+   "coll_ft": [
+    778.08,
+    828.0
+   ],
+   "coll_ftc": [
+    778.08,
+    518.368
+   ],
+   "coll_ftm": [
+    778.08,
+    756.0
+   ],
+   "coll_ftn": [
+    778.08,
+    172.832
+   ],
+   "coll_n": [
+    778.08,
+    393.12
+   ],
+   "coll_s": [
+    778.08,
+    401.76
+   ],
+   "coll_ucie": [
+    768.48,
+    820.768
+   ],
+   "glue": [
+    768.48,
+    756.0
+   ],
+   "native59": [
+    768.48,
+    388.768
+   ],
+   "sle_ctl": [
+    1217.76,
+    540.0
+   ],
+   "slw_fe_v1": [
+    156.0,
+    1071.392
+   ],
+   "slw_fe_v2": [
+    612.96,
+    540.0
+   ],
+   "slw_fw_v1": [
+    612.96,
+    1071.392
+   ],
+   "slw_fw_v2": [
+    612.96,
+    1071.392
+   ],
+   "slw_fw_v3": [
+    612.96,
+    1071.392
+   ],
+   "slw_hc0": [
+    612.96,
+    8.608
+   ],
+   "slw_hc1": [
+    605.28,
+    540.0
+   ],
+   "slw_hc2": [
+    605.28,
+    8.608
+   ],
+   "slw_hc3": [
+    156.0,
+    8.608
+   ],
+   "slw_sc": [
+    605.28,
+    1071.392
+   ],
+   "slw_st_a": [
+    612.96,
+    540.0
+   ],
+   "slw_st_b": [
+    612.96,
+    540.0
+   ],
+   "slw_stm": [
+    605.28,
+    540.0
+   ],
+   "slw_su_c": [
+    1217.76,
+    540.0
+   ],
+   "slw_su_l0": [
+    612.96,
+    1071.392
+   ],
+   "slw_su_l1": [
+    612.96,
+    1071.392
+   ],
+   "tt_ctlm": [
+    768.48,
+    388.768
+   ]
+  }
  },
  "budgets": {
   "face_pins_per_um": 6,

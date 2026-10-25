@@ -1,33 +1,13 @@
 {
  "schema": "kv-p6 cells evidence 10-23",
  "cells_per_type": {
-  "kv3_hg_v2": {
-   "flat_k": 4966,
-   "basis": "l1_cores_v31 per_type kv3_hg_v2 (same contents/leaves; v3.1 type renamed by later splits)"
-  },
   "kv3_hg_v1_r2": {
-   "flat_k": 4966,
-   "basis": "l1_cores_v31 per_type kv3_hg_v1 (same contents/leaves; v3.1 type renamed by later splits)"
-  },
-  "kv3_hg_v1_r3": {
-   "flat_k": 4966,
-   "basis": "l1_cores_v31 per_type kv3_hg_v1 (same contents/leaves; v3.1 type renamed by later splits)"
-  },
-  "kv3_hg_v1_r4": {
-   "flat_k": 4966,
-   "basis": "l1_cores_v31 per_type kv3_hg_v1 (same contents/leaves; v3.1 type renamed by later splits)"
-  },
-  "kv3_hg_v1_r5": {
    "flat_k": 4966,
    "basis": "l1_cores_v31 per_type kv3_hg_v1 (same contents/leaves; v3.1 type renamed by later splits)"
   },
   "kv3_pc_v2": {
    "flat_k": 802,
    "basis": "l1_cores_v31 per_type kv3_pc_v2 (same contents/leaves; v3.1 type renamed by later splits)"
-  },
-  "kv3_pv_v8": {
-   "flat_k": 6987,
-   "basis": "l1_cores_v31 per_type kv3_pv (same contents/leaves; v3.1 type renamed by later splits)"
   },
   "kv3_pv_v9": {
    "flat_k": 6987,

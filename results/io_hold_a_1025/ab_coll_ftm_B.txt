@@ -1,0 +1,21 @@
+OT_IO_HOLD sender_min ports 24 fallback -40
+OT_HOLD_GATE FAIL FF wns_ps -144.80 endpoints 908 (true negative slack)
+CENSUS IN_REG n 906 worst -144.80 tns -7499.8
+CENSUS R2R n 3 worst -56.59 tns -94.3
+CENSUS REG_OUT n 0 worst 0 tns 0
+CENSUS_BUS ard_wo_in_data_i 46
+CENSUS_BUS arst_n 1
+CENSUS_BUS cmd_free_io_cmd_free_i 2
+CENSUS_BUS crec_rx_s0_i 52
+CENSUS_BUS crec_tx_s0_i 204
+CENSUS_BUS fault_io_fault_i 2
+CENSUS_BUS fltc_i 2
+CENSUS_BUS fltvc_i 71
+CENSUS_BUS out_data_rd_wi_i 513
+CENSUS_BUS out_err_re_wi_i 2
+CENSUS_BUS out_last_rl_wi_i 2
+CENSUS_BUS out_rank_rr_wi_i 4
+CENSUS_BUS out_valid_rv_wi_i 2
+CENSUS_BUS shared_fault_io_shared_fault_i 2
+CENSUS_BUS start_i 1
+CENSUS_TOTAL 909

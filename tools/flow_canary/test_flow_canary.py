@@ -128,9 +128,11 @@ def test_check_run_rc_and_tcl_errors(tmp_path):
 
 def test_spec_complete():
     specs, d = C.load_spec()
-    assert set(specs) == {"s81", "s81_head", "qwen_compute", "qwen_kvsys", "hbm"}
+    assert set(specs) == {"s81", "s81_head", "qwen_compute", "qwen_kvsys", "hbm", "qwen_kvsys_core"}
     for c in specs.values():
         kv = dict(src="/S", gen="/G", run="/R", item=c["item"], top=c["top"], image="i", mem=c["mem_gb"], cpus=8)
+        kv.update({k: C.fmt(v, **kv) for k, v in c.get("vars", {}).items()})
+        assert not re.search(r"(^|[ ='])/home/|/srv/opentallas-scratch/", json.dumps([c["gen"], c.get("vars", {})]))
         kv["kit"] = C.fmt(c["kit"], **kv)
         assert "{" not in C.fmt(c["gen"], **kv) + C.fmt(c["run"], **kv) + " ".join(C.fmt(c.get("prep", []), **kv))
         assert c["mem_gb"] >= 16
@@ -149,3 +151,83 @@ def test_submit_dry(tmp_path):
     import subprocess
     subprocess.run(["git", "init", "-q", str(tmp_path / "src")], check=True)
     assert T.main(["--src", str(tmp_path / "src"), "--root", str(tmp_path / "runs"), "--state", str(tmp_path / "st.json")]) == 2  # no origin: fetch fails, NOT RUN
+
+
+def test_submit_dry_kv_core(tmp_path):
+    assert C.main(["submit", "--src", str(tmp_path), "--root", str(tmp_path / "runs"), "--dry", "--die", "qwen_kvsys_core"]) == 0
+    job = (next((tmp_path / "runs").iterdir()) / "job.sh").read_text()
+    inp = "/srv/opentallas-scratch2/claude/flow-canary/inputs/kv/20261025_head_e1"
+    assert f"gen_core_kit_kv.py --core-json {inp}/core/kv3_head_eighth_e1_core.json --plan {inp}/plan/die_plan.json" in job
+    assert "/kv3_head_eighth_e1__216x216/run_kit_kv.sh" in job and f"[ ! -f {inp}/MANIFEST.json ]" in job and "{" + "inputs}" not in job
+
+
+# ---- vclk_basis (COORD 10-25: IO virtual clock = per-corner insertion binding, gen_phys keys) ----
+def _vkit(tmp_path, tt=262.5, ff=212.6, sdc=None, binding=True, cfg=True, tol=40):
+    k = tmp_path / "kit"
+    k.mkdir(exist_ok=True)
+    (k / "config.mk").write_text("export DESIGN_NAME = t\n" + (f"export OT_VCLK_TT = {tt:.4f}\nexport OT_VCLK_FF = {ff:.4f}\n" if cfg else ""))
+    lat = tt if sdc is None else sdc
+    (k / "constraint.sdc").write_text(f"create_clock -name vclk -period 833.0000\nset_clock_latency -source {lat:.4f} [get_clocks vclk]\n")
+    if binding:
+        (k / "clock_binding.json").write_text(json.dumps(dict(type="t", insertion_ps=dict(tt=tt, ff=ff), insertion_tol_ps=tol)))
+    return k
+
+
+def _so(tt=262.5, ff=212.6, mode="rebind", applied=True):
+    ref = "applied mode pin_flop_mean clock vclk latency_ps 1" if applied else "unavailable mode pin_flop_mean"
+    return dict(policy=dict(ff_vclk=mode, insertion_bound=dict(tt=262.5, ff=212.6, tol=40)),
+                corners={c: dict(parasitics="spef", ff_vclk_reference=ref, insertion_pinflops=dict(mean=m))
+                         for c, m in (("tt", tt), ("ff", ff))})
+
+
+def test_vclk_basis_pass(tmp_path):
+    k = _vkit(tmp_path)
+    r = C.vclk_basis(k, _so(tt=270.0, ff=190.0))
+    assert r["verdict"] == "PASS", r["why"]
+    assert C.vclk_basis(k, None)["verdict"] == "NOT RUN"            # pre-route OK, routed mean unchecked = NOT RUN
+
+
+def test_vclk_basis_missing_binding_fails(tmp_path):
+    r = C.vclk_basis(_vkit(tmp_path, tt=250.0, binding=False, cfg=False), _so())
+    assert r["verdict"] == "FAIL" and "no clock_binding.json" in r["why"] and "OT_VCLK_TT" in r["why"]
+    assert "old fixed 250 ps" in r["why"]
+    (tmp_path / "b").mkdir()
+    r = C.vclk_basis(_vkit(tmp_path / "b", binding=True, cfg=False), _so())
+    assert r["verdict"] == "FAIL" and "config.mk sets no OT_VCLK_FF" in r["why"]
+
+
+def test_vclk_basis_sdc_not_bound_fails(tmp_path):
+    r = C.vclk_basis(_vkit(tmp_path, sdc=250.0), _so())
+    assert r["verdict"] == "FAIL" and "!= OT_VCLK_TT" in r["why"]
+    assert C.vclk_basis(_vkit(tmp_path, sdc=262.9), _so())["verdict"] == "PASS"     # within 0.5 ps
+
+
+def test_vclk_basis_routed_mean_off_fails(tmp_path):
+    k = _vkit(tmp_path)
+    r = C.vclk_basis(k, _so(ff=212.6 - 40.5))
+    assert r["verdict"] == "FAIL" and "FF routed pin-register mean" in r["why"]
+    assert C.vclk_basis(k, _so(mode="sdc"))["verdict"] == "FAIL"               # no rebind = fixed-vclk IO timing
+    assert C.vclk_basis(k, _so(applied=False))["verdict"] == "FAIL"
+    so = _so()
+    del so["corners"]["tt"]["insertion_pinflops"]
+    assert "not measured" in C.vclk_basis(k, so)["why"]
+
+
+def test_check_run_has_vclk_basis(tmp_path):
+    k = _vkit(tmp_path)
+    (tmp_path / "canary_meta.json").write_text(json.dumps(dict(kit=str(k), spec=dict(die="x", item="y"))))
+    r = C.check_run(tmp_path)
+    assert "vclk_basis" in C.STAGES and r["stages"]["vclk_basis"]["verdict"] == "NOT RUN" and "vclk_basis" in r["failing"]
+    (k / "signoff").mkdir()
+    (k / "signoff" / "signoff.json").write_text(json.dumps(dict(_so(), verdict="NOT SIGNED", checks={})))
+    assert C.check_run(tmp_path)["stages"]["vclk_basis"]["verdict"] == "PASS"
+
+
+def test_hold_gate_verdict_is_not_a_tcl_crash():
+    import canary
+    log = ("OT_HOLD_GATE FAIL FF wns_ps -152.02 endpoints 1053 (true negative slack)\n"
+           "Error: hold_gate.tcl, 40 structural FF hold failure: revise plan/RTL/boundary before repair\n")
+    m = list(canary.TCL_ERR_RE.finditer(log))
+    assert m and all(canary.GATE_ERR_RE.search(log[x.start():].split("\n", 1)[0]) for x in m)
+    crash = "Error: cts.tcl, 6 can't read \"rt_named_nets\": no such variable\n"
+    assert not canary.GATE_ERR_RE.search(crash)

@@ -128,6 +128,69 @@ def bhold_lib(cells):
     return "\n".join(out + ["}"]) + "\n"
 
 
+# Clock-latency contract of a budget stand-in (CLOCK-RESET/dieproto 2026-10-25).  A real partition's clock tap port
+# drives its kit CTS root buffer (one input pin, ~die_clock.TAP_LOAD_FF), and the kit tree behind it delivers the
+# pin registers at the bound insertion (gen_phys.insertion_binding: TT / FF pin-register mean, = the kit IO vclk
+# latency).  A stand-in that hangs its face flops directly on the tap port instead loads the die tree with hundreds
+# to thousands of DFF.CLK pins per tap (the head DIE-PROTO no-PHY run: pair skew 213.65 / 177.04 ps on a tree that is
+# 5 ps balanced against the modelled 3 fF tap load) and drops the kit insertion.  The contract cell OT_CLAT_<tt>_<ff>
+# sits between each tap port and the flops it clocks: input cap CLAT_CIN_FF, constant A -> Y delay = the bound
+# insertion of the corner (per-corner liberty), load independent -- the model of the kit tree, not a circuit.
+CLAT_RE = re.compile(r"\bOT_CLAT_(\d+)p(\d)_(\d+)p(\d)\b")
+CLAT_CIN_FF = 3.0                       # == die_clock.TAP_LOAD_FF (the die tree is balanced against this load)
+CLAT_SLEW_PS = 20.0                     # kit leaf clock slew at the pin registers
+
+
+def clat_cell(tt_ps, ff_ps):
+    """cell name of a clock-latency contract (TT, FF insertion, 0.1-ps resolution): (250, 202.5) -> OT_CLAT_250p0_202p5."""
+    return (f"OT_CLAT_{float(tt_ps):.1f}_{float(ff_ps):.1f}").replace(".", "p")
+
+
+def clat_lib(cells, corner):
+    """liberty text of OT_CLAT_<tt>_<ff> cells for one corner (TT -> tt, FF -> ff; any other corner fails closed:
+    the contract binds TT setup / FF hold only)."""
+    if corner not in ("TT", "FF"):
+        raise ValueError(f"clock-latency contract has no {corner} value (TT / FF only)")
+    vals = {}
+    for c in sorted(set(cells)):
+        m = CLAT_RE.fullmatch(c)
+        if not m:
+            raise ValueError(f"not a clock-latency contract cell: {c}")
+        vals[c] = f"{m.group(1)}.{m.group(2)}" if corner == "TT" else f"{m.group(3)}.{m.group(4)}"
+    return _const_lib("ot_clock_contract", vals, CLAT_CIN_FF, CLAT_SLEW_PS)
+
+
+def clat_cells_used(paths):
+    """OT_CLAT_* cell names instantiated by any of the netlists."""
+    used = set()
+    for p in paths:
+        with _open(p) as f:
+            for line in f:
+                if "OT_CLAT_" in line:
+                    used.update(m.group(0) for m in CLAT_RE.finditer(line))
+    return used
+
+
+def _const_lib(lib, vals, cin, slew):
+    """liberty of constant-delay A -> Y cells {name: delay text (ps)} with input cap cin (fF), output slew (ps)."""
+    out = [f"library ({lib}) {{", '  delay_model : table_lookup;', '  time_unit : "1ps";',
+           '  voltage_unit : "1V";', '  current_unit : "1mA";', '  pulling_resistance_unit : "1kohm";',
+           "  capacitive_load_unit (1, ff);", "  nom_process : 1;", "  nom_voltage : 0.7;", "  nom_temperature : 25;",
+           "  input_threshold_pct_rise : 50;", "  input_threshold_pct_fall : 50;",
+           "  output_threshold_pct_rise : 50;", "  output_threshold_pct_fall : 50;",
+           "  slew_lower_threshold_pct_rise : 10;", "  slew_upper_threshold_pct_rise : 90;",
+           "  slew_lower_threshold_pct_fall : 10;", "  slew_upper_threshold_pct_fall : 90;"]
+    for c, d in sorted(vals.items()):
+        arcs = "".join(f"        {k} (scalar) {{ values (\"{v}\"); }}\n" for k, v in
+                       (("cell_rise", d), ("cell_fall", d), ("rise_transition", f"{slew:g}"),
+                        ("fall_transition", f"{slew:g}")))
+        out += [f"  cell ({c}) {{", "    area : 0;", f"    pin (A) {{ direction : input; capacitance : {cin:g}; }}",
+                "    pin (Y) {", "      direction : output;", '      function : "A";', "      max_capacitance : 100000;",
+                "      timing () {", '        related_pin : "A";', "        timing_sense : positive_unate;",
+                arcs.rstrip("\n"), "      }", "    }", "  }"]
+    return "\n".join(out + ["}"]) + "\n"
+
+
 def bhold_cells_used(paths):
     """OT_BHOLD_* cell names instantiated by any of the netlists."""
     used = set()
@@ -1520,6 +1583,20 @@ def cmd_run(a):
         bh_info = dict(cells=sorted(bh), lib=str(p.resolve()), note=(
             "stand-in input bits carry the signed-kit receiver padding guarantee (signoff.py hold_ff overlay: "
             "input min -insertion_tol, output min 0); sender unc/2 and receiver t_hold+unc/2 not credited"))
+    # clock-latency contract cells of budget stand-ins: one liberty per corner (TT / FF value of the bound insertion)
+    cl = clat_cells_used(sorted(str(parts[m] / "6_final.v") for m in set(inst_mods.values())))
+    cl_lib, cl_info = {}, None
+    if cl:
+        for c in sorted(set(a.corner) | {"TT"}):
+            p = out / f"ot_clock_contract_{c}.lib"
+            try:
+                p.write_text(clat_lib(cl, c))
+            except ValueError as e:
+                raise SystemExit(f"die_sta: {e}")
+            cl_lib[c] = [str(p.resolve())]
+        cl_info = dict(cells=sorted(cl), libs={c: v[0] for c, v in cl_lib.items()}, tap_load_ff=CLAT_CIN_FF, note=(
+            "stand-in clock taps drive one kit-root load and reach their flops after the bound TT / FF pin-register "
+            "insertion (kit CTS tree modelled by its contract)"))
     mod_files, abstracts = {}, {}
     for m in sorted(set(inst_mods.values())):
         d = parts[m]
@@ -1529,7 +1606,7 @@ def cmd_run(a):
         elif a.mode == "ilm":
             ad = out / "ilm" / m
             if not (ad / "ilm.json").is_file() or a.rebuild:
-                st = make_ilm(d / "6_final.v", sp if sp.is_file() else None, ad, corner_libs("TT", a.libdir, a.lib) + bh_lib,
+                st = make_ilm(d / "6_final.v", sp if sp.is_file() else None, ad, corner_libs("TT", a.libdir, a.lib) + bh_lib + cl_lib.get("TT", []),
                               sdc=d / "6_final.sdc")
             else:
                 st = json.loads((ad / "ilm.json").read_text())
@@ -1544,6 +1621,8 @@ def cmd_run(a):
                seam_groups=len(groups), seam_bits=len(seams))
     if bh_info:
         res["boundary_hold_contract"] = bh_info
+    if cl_info:
+        res["clock_latency_contract"] = cl_info
     top_path = Path(a.top).resolve()
     extra_v, pdirs = [], {m: port_dirs(parts[m] / "6_final.v") for m in set(inst_mods.values())}
     inst_spef = {i: mod_files[m]["spef"] for i, m in inst_mods.items() if mod_files.get(m, {}).get("spef")}
@@ -1569,7 +1648,7 @@ def cmd_run(a):
     for corner in a.corner:
         # '{c}' in --spine-branch: one spine file per corner (die_trial.py writes spine_<corner>.json)
         spine = load_spine(a.spine_branch.replace("{c}", corner) if a.spine_branch else None, set(inst_mods))
-        libs = corner_libs(corner, a.libdir, a.lib) + bh_lib
+        libs = corner_libs(corner, a.libdir, a.lib) + bh_lib + cl_lib.get(corner, [])
         etm_libs = None
         if a.mode == "etm":
             etm_libs = []

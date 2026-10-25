@@ -38,7 +38,24 @@
 module ot_s81sl_vp #(
     parameter integer ML = 7,
     parameter integer AL = 6,
-    parameter integer HPL = 1 + ML + 4 * AL + 1      // lane_pr latency: pin flop + mul + 4 adds + BF16 output register
+    parameter integer HPL = 1 + ML + 4 * AL + 1,     // lane_pr latency: pin flop + mul + 4 adds + BF16 output register
+    // S81-PLAN R3 (10-25): core<->core stations of the leaf plan (die_plan internal_stations, class h = vn <-> the 16
+    // hc_post lanes), every one 0 by default (= the pre-R3 netlist exactly).  All signals of one interface get the SAME
+    // depth, every lane the same depth (static schedule: the compiler sees one fixed latency):
+    //   CS_HI_D   stations on every lane input (v, r0..r3, y, c0..c3, p), tree form: the first CS_HI_GS stages are shared
+    //             by a group of CS_H_G lanes (u_cst_hi_g<g> = g_hig[g].u_cst), the remaining CS_HI_D - CS_HI_GS are per
+    //             lane (g_ln[l].u_cst_hi)
+    //   CS_HO_D   stations on every lane output (vo, o, fault): CS_HO_D - CS_HO_GS per lane (g_ln[l].u_cst_ho) first,
+    //             then CS_HO_GS shared per group (g_hog[g].u_cst)
+    //   HQX       extra edges of the leaf's vn seam round trip hr -> hq (the leaf passes CS_VNI_D + CS_VNO_D)
+    // Every fixed vp timeline that crosses these seams is derived from them: hc_post write-back = HPL + CS_HI_D +
+    // CS_HO_D (+ HQX on the half-row tag), POST lane issue and HSTORE capture + HQX.
+    parameter integer CS_HI_D = 0,
+    parameter integer CS_HI_GS = 0,
+    parameter integer CS_HO_D = 0,
+    parameter integer CS_HO_GS = 0,
+    parameter integer CS_H_G = 4,
+    parameter integer HQX = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -216,30 +233,73 @@ module ot_s81sl_vp #(
     // POST step s >= 5 (cycle T): the y row read and the h half-row request (hr) leave together; the y row is at q in
     // T + 2 (macro + output register) and at yrow_d[2] in T + 5, the h half row at hqd_c in T + 5 (hr out flop, vn pin
     // flop, vn h macro edge, vn output flop, this leaf's pin flop): the lanes issue in T + 5.
-    reg [255:0] yrow_d [0:3]; reg [3:0] ydv;
-    always @(posedge clk or negedge rs_p) if (!rs_p) ydv <= 4'd0;
-        else ydv <= {ydv[2:0], dv && dop == OP_POST && dsi >= 8'd5};
+    // S81-PLAN R3: the leaf's vn seam stations add HQX edges to the hr -> hq trip: the y row waits HQX more (YA)
+    localparam integer YA = 2 + HQX;
+    reg [127:0] yrow_d [0:YA]; reg [YA:0] ydv;
+    integer yj;
+    always @(posedge clk or negedge rs_p) if (!rs_p) ydv <= {(YA + 1){1'b0}};
+        else ydv <= {ydv[YA - 1:0], dv && dop == OP_POST && dsi >= 8'd5};
     always @(posedge clk) begin
-        yrow_d[0] <= {128'd0, q1r}; yrow_d[1] <= yrow_d[0]; yrow_d[2] <= yrow_d[1]; yrow_d[3] <= yrow_d[2];
+        yrow_d[0] <= q1r; for (yj = 1; yj <= YA; yj = yj + 1) yrow_d[yj] <= yrow_d[yj - 1];
     end
     // lanes: r0..r3 = h copies (BF16 -> FP32 pattern), y = y[e], c_j = comb[j][k] (word 4j + k), p = post[k]
     wire [15:0] lv, lf; wire [31:16] lo [0:15];   // lane o[15:0] is constant 0: not a lane pin (OWNER DECISION 8)
     reg  lane_v; reg [31:0] lr [0:15][0:3]; reg [31:0] ly [0:15];
-    genvar gl;
+    // S81-PLAN R3: lane station trees (see CS_HI_* / CS_HO_*).  Lane bundle (256 b): {p, c3, c2, c1, c0, y, r3..r0 high
+    // halves} (r*[15:0] are constant 0 at the lane: not carried).
+    localparam integer NG = 16 / CS_H_G, GW = 256 * CS_H_G;
+    initial begin
+        if (CS_H_G < 1 || 16 % CS_H_G != 0) $fatal(1, "ot_s81sl_vp: CS_H_G must divide 16");
+        if (CS_HI_GS < 0 || CS_HI_GS > CS_HI_D || CS_HO_GS < 0 || CS_HO_GS > CS_HO_D || HQX < 0)
+            $fatal(1, "ot_s81sl_vp: station depths must satisfy 0 <= CS_H*_GS <= CS_H*_D, HQX >= 0");
+    end
+    wire [4095:0] hi_s, hi_g; wire [NG-1:0] hiv_g;            // lane input bundles at the glue / after the group stages
+    wire [16 * 18 - 1:0] ho_l;                               // lane output bundles {fault, vo, o[31:16]} after the per-lane stages
+    wire [16 * 18 - 1:0] ho_g;                               // ... after the group stages (= what the glue reads)
+    genvar gl, gg;
+    generate for (gg = 0; gg < NG; gg = gg + 1) begin : g_hig
+        ot_s81sl_cst #(.W(GW), .V(1), .D(CS_HI_GS)) u_cst (.clk(clk), .rst_n(rs_p), .d(hi_s[GW * gg +: GW]), .dv(lane_v),
+            .q(hi_g[GW * gg +: GW]), .qv(hiv_g[gg]));
+    end endgenerate
+    generate for (gg = 0; gg < NG; gg = gg + 1) begin : g_hog
+        // per group: data o (16 b a lane), valid/control {fault, vo} (2 b a lane)
+        wire [16 * CS_H_G - 1:0] od, oq; wire [2 * CS_H_G - 1:0] ov, oqv;
+        for (gl = 0; gl < CS_H_G; gl = gl + 1) begin : g_m
+            assign od[16 * gl +: 16] = ho_l[18 * (CS_H_G * gg + gl) +: 16];
+            assign ov[2 * gl +: 2] = ho_l[18 * (CS_H_G * gg + gl) + 16 +: 2];
+            assign ho_g[18 * (CS_H_G * gg + gl) +: 18] = {oqv[2 * gl +: 2], oq[16 * gl +: 16]};
+        end
+        ot_s81sl_cst #(.W(16 * CS_H_G), .V(2 * CS_H_G), .D(CS_HO_GS)) u_cst (.clk(clk), .rst_n(rs_p), .d(od), .dv(ov),
+            .q(oq), .qv(oqv));
+    end endgenerate
     generate for (gl = 0; gl < 16; gl = gl + 1) begin : g_ln
         localparam integer KK = gl / 4, II = gl % 4;
+        wire [255:0] li; wire liv, lvn, lfn; wire [31:16] lon; wire [15:0] lq; wire [1:0] lqv;
+        assign hi_s[256 * gl +: 256] = {cf[16 + KK], cf[12 + KK], cf[8 + KK], cf[4 + KK], cf[KK], ly[gl],
+                                        lr[gl][3][31:16], lr[gl][2][31:16], lr[gl][1][31:16], lr[gl][0][31:16]};
+`ifndef OT_S81SL_CST_MUT_LANE
+        localparam integer HIM = 0;
+`else
+        localparam integer HIM = (gl == 5) ? 1 : 0;   // bench mutant: lane 5 one input station deeper than its peers
+`endif
+        ot_s81sl_cst #(.W(256), .V(1), .D(CS_HI_D - CS_HI_GS + HIM)) u_cst_hi (.clk(clk), .rst_n(rs_p),
+            .d(hi_g[256 * gl +: 256]), .dv(hiv_g[gl / CS_H_G]), .q(li), .qv(liv));
 `ifndef OT_S81SL_VP_HARD
-        ot_dsrom_su_hcpost_lane_pr #(.ML(ML), .AL(AL)) u_l (.clk(clk), .rst_n(rs_p), .v(lane_v),
+        ot_dsrom_su_hcpost_lane_pr #(.ML(ML), .AL(AL)) u_l (.clk(clk), .rst_n(rs_p), .v(liv),
 `else
         // hardened cluster: the closed s81sl_hcpl view (its kit fixes ML 7 / AL 6; no #() on a hard child)
-        ot_dsrom_su_hcpost_lane_pr u_l (.clk(clk), .rst_n(rs_p), .v(lane_v),
+        ot_dsrom_su_hcpost_lane_pr u_l (.clk(clk), .rst_n(rs_p), .v(liv),
 `endif
-            .r0(lr[gl][0]), .r1(lr[gl][1]), .r2(lr[gl][2]), .r3(lr[gl][3]), .y(ly[gl]),
-            .c0(cf[KK]), .c1(cf[4 + KK]), .c2(cf[8 + KK]), .c3(cf[12 + KK]), .p(cf[16 + KK]),
-            .vo(lv[gl]), .o(lo[gl]), .fault(lf[gl]));
+            .r0({li[15:0], 16'd0}), .r1({li[31:16], 16'd0}), .r2({li[47:32], 16'd0}), .r3({li[63:48], 16'd0}),
+            .y(li[95:64]), .c0(li[127:96]), .c1(li[159:128]), .c2(li[191:160]), .c3(li[223:192]), .p(li[255:224]),
+            .vo(lvn), .o(lon), .fault(lfn));
+        ot_s81sl_cst #(.W(16), .V(2), .D(CS_HO_D - CS_HO_GS)) u_cst_ho (.clk(clk), .rst_n(rs_p), .d(lon), .dv({lfn, lvn}),
+            .q(lq), .qv(lqv));
+        assign ho_l[18 * gl +: 18] = {lqv, lq};
+        assign lo[gl] = ho_g[18 * gl +: 16]; assign lv[gl] = ho_g[18 * gl + 16]; assign lf[gl] = ho_g[18 * gl + 17];
     end endgenerate
     // the h half row of POST step s (requested with the y read: hq arrives aligned with ydv[2])
-    always @(posedge clk or negedge rs_p) if (!rs_p) lane_v <= 1'b0; else lane_v <= ydv[2];
+    always @(posedge clk or negedge rs_p) if (!rs_p) lane_v <= 1'b0; else lane_v <= ydv[YA];
     always @(posedge clk) begin
         for (k = 0; k < 4; k = k + 1)
             for (i = 0; i < 4; i = i + 1) begin
@@ -247,7 +307,7 @@ module ot_s81sl_vp #(
                 lr[4 * k + i][1] <= {hqd_c[(4 * 1 + i) * 16 +: 16], 16'd0};
                 lr[4 * k + i][2] <= {hqd_c[(4 * 2 + i) * 16 +: 16], 16'd0};
                 lr[4 * k + i][3] <= {hqd_c[(4 * 3 + i) * 16 +: 16], 16'd0};
-                ly[4 * k + i] <= yrow_d[2][32 * i +: 32];
+                ly[4 * k + i] <= yrow_d[YA][32 * i +: 32];
             end
     end
     // write-back tag: the half-row index rides a delay line of the lane latency
@@ -257,8 +317,9 @@ module ot_s81sl_vp #(
         pidx_q[4] <= pidx_q[3]; pidx <= pidx_q[4];
     end
     wire [3:0] widx; wire wvl;
-    ot_hdc_delay #(.W(4), .D(HPL)) u_wi (.clk(clk), .rst_n(rs_p), .d(pidx), .q(widx));
-    ot_hdc_delay #(.W(1), .D(HPL), .RESET(1)) u_wv (.clk(clk), .rst_n(rs_p), .d(lane_v), .q(wvl));
+    // S81-PLAN R3: + the lane station depths (both directions); the tag also waits the vn seam's HQX (lane_v does)
+    ot_hdc_delay #(.W(4), .D(HPL + HQX + CS_HI_D + CS_HO_D)) u_wi (.clk(clk), .rst_n(rs_p), .d(pidx), .q(widx));
+    ot_hdc_delay #(.W(1), .D(HPL + CS_HI_D + CS_HO_D), .RESET(1)) u_wv (.clk(clk), .rst_n(rs_p), .d(lane_v), .q(wvl));
 
     // ---------------------------------------------------------------- vn seam (registered outputs)
     reg hrq_v; reg [3:0] hrq_i;                  // h read request this cycle (POST / HSTORE)
@@ -268,17 +329,20 @@ module ot_s81sl_vp #(
         if (srun && sop == OP_HSTORE) begin hrq_v = 1'b1; hrq_i = si[3:0]; end
     end
     // HSTORE: the half row returns from vn three edges after hr, plus this leaf's input flop
-    reg [3:0] hsi_q [0:4];
-    reg [4:0] hsv_q;
-    always @(posedge clk or negedge rs_o) if (!rs_o) hsv_q <= 5'd0;
-        else hsv_q <= {hsv_q[3:0], srun && sop == OP_HSTORE};
+    // S81-PLAN R3: + HQX (the leaf's vn seam stations on hr and hq)
+    localparam integer HA = 4 + HQX;
+    reg [3:0] hsi_q [0:HA];
+    reg [HA:0] hsv_q;
+    integer hj;
+    always @(posedge clk or negedge rs_o) if (!rs_o) hsv_q <= {(HA + 1){1'b0}};
+        else hsv_q <= {hsv_q[HA - 1:0], srun && sop == OP_HSTORE};
     always @(posedge clk) begin
-        hsi_q[0] <= si[3:0]; hsi_q[1] <= hsi_q[0]; hsi_q[2] <= hsi_q[1]; hsi_q[3] <= hsi_q[2]; hsi_q[4] <= hsi_q[3];
+        hsi_q[0] <= si[3:0]; for (hj = 1; hj <= HA; hj = hj + 1) hsi_q[hj] <= hsi_q[hj - 1];
     end
     reg [9:0] hs_base;
     always @(posedge clk) if (cv_c && op == OP_HSTORE) hs_base <= a0;
-    always @(posedge clk or negedge rs_o) if (!rs_o) hs_v <= 1'b0; else hs_v <= hsv_q[4] && hqv_c;
-    always @(posedge clk) begin hs_a <= hs_base + {hsi_q[4], 1'b0}; hs_d <= hqd_c; end
+    always @(posedge clk or negedge rs_o) if (!rs_o) hs_v <= 1'b0; else hs_v <= hsv_q[HA] && hqv_c;
+    always @(posedge clk) begin hs_a <= hs_base + {hsi_q[HA], 1'b0}; hs_d <= hqd_c; end
 
     wire nr_done = dv && dop == OP_NORMR;          // NORMR: the hc_pre row is at q this cycle
     always @(posedge clk or negedge rs_o)
@@ -324,7 +388,39 @@ module ot_s81sl_vp #(
         else begin
             lvbad <= (lv[0] != wvl) || (|lv != &lv);
             fault <= fault | wcol | busy_hit | xrcol | (|lf) | lvbad | (wvl && dv && dop == OP_HLOAD) |
-                     (hsv_q[4] && !hqv_c) | (ydv[2] && !hqv_c) |
+                     (hsv_q[HA] && !hqv_c) | (ydv[YA] && !hqv_c) |
                      (cv_c && op == OP_NORM && nr_done);
         end
 endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// S81-PLAN R3 (10-25): core<->core plan stations.  ot_s81sl_cst1 = ONE station stage (kept as its own module so the kit
+// can place each stage at its plan site): W data bits with NO reset (flushed by the producer under the static schedule,
+// the ot_dp_st rule) and V valid / control / fault bits asynchronously cleared by the region reset.  ot_s81sl_cst = D
+// such stages in a chain (s[0] nearest the launch side), D = 0 is a wire (the pre-R3 netlist exactly).
+// ---------------------------------------------------------------------------------------------------------------------
+(* keep_hierarchy *)
+module ot_s81sl_cst1 #(parameter integer W = 1, parameter integer V = 1) (
+    input wire clk, input wire rst_n, input wire [W-1:0] d, input wire [V-1:0] dv, output reg [W-1:0] q, output reg [V-1:0] qv
+);
+    always @(posedge clk) q <= d;
+    always @(posedge clk or negedge rst_n) if (!rst_n) qv <= {V{1'b0}}; else qv <= dv;
+endmodule
+
+/* verilator lint_off UNUSEDSIGNAL */   // D = 0: clk / rst_n unused (a wire)
+module ot_s81sl_cst #(parameter integer W = 1, parameter integer V = 1, parameter integer D = 0) (
+    input wire clk, input wire rst_n, input wire [W-1:0] d, input wire [V-1:0] dv, output wire [W-1:0] q, output wire [V-1:0] qv
+);
+    generate if (D <= 0) begin : g0
+        assign q = d; assign qv = dv;
+    end else begin : gd
+        wire [W-1:0] cd [0:D]; wire [V-1:0] cv [0:D];
+        assign cd[0] = d; assign cv[0] = dv;
+        genvar j;
+        for (j = 0; j < D; j = j + 1) begin : s
+            ot_s81sl_cst1 #(.W(W), .V(V)) u (.clk(clk), .rst_n(rst_n), .d(cd[j]), .dv(cv[j]), .q(cd[j + 1]), .qv(cv[j + 1]));
+        end
+        assign q = cd[D]; assign qv = cv[D];
+    end endgenerate
+endmodule
+/* verilator lint_on UNUSEDSIGNAL */

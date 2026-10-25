@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS-COND plan placement; BLOCKED G3 until regenerated internal relay sites and priced latency",
+  "image": "results/geom_review/codex_s81_missing_1025/core_layout_r4.png",
+  "findings": [
+    "Viewed revised gunit and staggered bk_sel layout. gunit keeps adjacent-stage chain and open north relay field; orientations repair far-side ports. bk_sel alternates north/south quarter banks around central g, matching north/south collector groups and even/odd g input faces, with channels between cores and free escape regions.",
+    "Original hard-core pin tables and signed-view files unchanged. 29 structural core-port direction errors become zero; zero core pins off track under full target G0C checks.",
+    "Long multi-core buses require R3 registered hops through declared channels, generated after this change using PORTFIX connections. Parent must regenerate stations/latency and rebind before route. No P&R/STA launched on these cores."
+  ],
+  "baseline": {
+    "gunit_away_ports": 14,
+    "bk_sel_away_ports": 15
+  },
+  "candidate": {
+    "away_ports": 0,
+    "off_track_pins": 0
+  },
+  "scope": "generator input only; no final plan output changed"
+}

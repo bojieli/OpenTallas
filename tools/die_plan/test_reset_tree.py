@@ -56,6 +56,31 @@ def test_build_routes_relays_around_a_macro():
     assert T["topology"] == "grid"
 
 
+def test_build_routes_hops_around_a_wall():
+    """CLOCK-RESET 10-25 (S81 col_h9_r1 u_rrl_73 -> 74, TT -247.6 in the PROTO probe): a core closed through the top
+    signal layer (a WALL) on the straight root -> tap line.  Without walls the planned hop crosses it (the kit then
+    detours ~2x); with walls every hop has a wall-free L route, at the same reach."""
+    wall = (100.0, 150.0, 500.0, 300.0)
+    boxes = [(wall[0] - RT.CLEAR_UM, wall[1] - RT.CLEAR_UM, wall[2] + RT.CLEAR_UM, wall[3] + RT.CLEAR_UM)]
+    taps = [("a", 300.0, 340.0)]
+    box_out = (0.0, 0.0, 700.0, 500.0)
+    T0 = RT.build(taps, (300.0, 50.0), boxes=boxes, box_out=box_out)
+    xy0 = dict({r["q"]: r["xy"] for r in T0["relays"]}, **{"rst_root_n": T0["root"]})
+    assert any(not RT._lfree(xy0[r["d"]], r["xy"], [wall]) for r in T0["relays"])     # the old plan crosses the wall
+    T = RT.build(taps, (300.0, 50.0), boxes=boxes, box_out=box_out, walls=[wall])
+    assert RT.verify(T) == [] and _hops_ok(T) and T["topology"] == "grid"
+    xy = dict({r["q"]: r["xy"] for r in T["relays"]}, **{"rst_root_n": T["root"]})
+    assert all(RT._lfree(xy[r["d"]], r["xy"], [wall]) for r in T["relays"])
+    # a wall with no way around inside the outline fails closed
+    try:
+        RT.build(taps, (300.0, 50.0), boxes=[(-5.0, 145.0, 705.0, 305.0)], box_out=box_out,
+                 walls=[(-10.0, 150.0, 710.0, 300.0)])
+    except RT.ResetError:
+        pass
+    else:
+        raise AssertionError("walled hop accepted")
+
+
 def test_plan_trees_and_g0():
     P = schema.Plan(piped(PAIR))
     K = RT.part_depth(P)
@@ -225,3 +250,17 @@ def test_gen_phys_kit_gets_reset_tree_tcl():
         assert len(re.findall(r"^rtr_place ", tcl, re.M)) == len(T["relays"]) + 1 and "OT_RESET_TREE entry relayed" in tcl
     ff = (HERE / "face_flops.tcl").read_text()
     assert ff.index("source /work/reset_tree.tcl") < ff.index("source /work/reset_taps.tcl")
+
+
+def test_interior_pins_clear_kit_pdn_m7_straps():
+    """S81-HEAD 10-25: hd_st_m rst_o_1 (1434.272) shorted the kit M7 VDD strap; interior pins clear the strap pair."""
+    import gen_phys as G
+    import schema as S
+    raw = json.loads((Path(__file__).parent / "examples/tiny_plan.json").read_text())
+    P = S.Plan(raw)
+    for v in (8.304, 8.608, 8.976, 1434.272, 17.312, 812.0):
+        c, y = G._snap_tap(P, v, 153.376)
+        ph = (c - 8.304) % 8.64
+        assert 0.672 + 0.116 <= ph + 1e-9 <= 8.64 - 0.116 + 1e-9, (v, c, ph)
+        assert abs(c - v) < 1.0
+        assert G._snap_tap(P, c, y) == (c, y)

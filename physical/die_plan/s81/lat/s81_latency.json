@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "s81",
- "plan_digest": "260bb3ecd59638f1",
+ "plan_digest": "bd2b875cbfbb7e24",
  "period_ps": 833,
  "lanes": {
   "attn__s_3S_C__svc_5": {
@@ -808,10 +808,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_0__SVC_1",
    "src": {
     "part": "svc_0",
@@ -821,7 +819,7 @@
     "part": "svc_1",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "attnh__svc_10__svc_11": {
    "cycles": 2,
@@ -829,10 +827,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_10__SVC_11",
    "src": {
     "part": "svc_10",
@@ -842,7 +838,7 @@
     "part": "svc_11",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "attnh__svc_14__svc_15": {
    "cycles": 2,
@@ -850,10 +846,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_14__SVC_15",
    "src": {
     "part": "svc_14",
@@ -863,7 +857,7 @@
     "part": "svc_15",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "attnh__svc_15__svc_14": {
    "cycles": 2,
@@ -871,10 +865,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_15__SVC_14",
    "src": {
     "part": "svc_15",
@@ -884,7 +876,7 @@
     "part": "svc_14",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "attnh__svc_2__svc_3": {
    "cycles": 2,
@@ -892,10 +884,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_2__SVC_3",
    "src": {
     "part": "svc_2",
@@ -905,7 +895,7 @@
     "part": "svc_3",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "attnh__svc_3__svc_2": {
    "cycles": 2,
@@ -913,10 +903,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_3__SVC_2",
    "src": {
     "part": "svc_3",
@@ -926,7 +914,7 @@
     "part": "svc_2",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "attnh__svc_4__svc_5": {
    "cycles": 2,
@@ -934,10 +922,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_4__SVC_5",
    "src": {
     "part": "svc_4",
@@ -947,7 +933,7 @@
     "part": "svc_5",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "attnh__svc_5__svc_4": {
    "cycles": 2,
@@ -955,10 +941,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_5__SVC_4",
    "src": {
     "part": "svc_5",
@@ -968,7 +952,7 @@
     "part": "svc_4",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "attnh__svc_6__svc_7": {
    "cycles": 2,
@@ -976,10 +960,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_6__SVC_7",
    "src": {
     "part": "svc_6",
@@ -989,7 +971,7 @@
     "part": "svc_7",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "attnh__svc_7__svc_6": {
    "cycles": 2,
@@ -997,10 +979,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_7__SVC_6",
    "src": {
     "part": "svc_7",
@@ -1010,7 +990,7 @@
     "part": "svc_6",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "attnh__svc_9__svc_8": {
    "cycles": 2,
@@ -1018,10 +998,8 @@
    "boundary": 2,
    "faces": 1,
    "fixed": 0,
-   "beats": 2,
    "natural": 2,
    "pad": 0,
-   "word_cycles": 3,
    "param": "LAT_ATTNH__SVC_9__SVC_8",
    "src": {
     "part": "svc_9",
@@ -1031,7 +1009,7 @@
     "part": "svc_8",
     "bus": "attnh_i0"
    },
-   "width": 1068
+   "width": 2133
   },
   "ca__s_0N_LP__bk_sel": {
    "cycles": 39,

@@ -26,7 +26,7 @@ def test_runner_stops_before_costly_stage(tmp_path,gate,code):
     (kit/'config.mk').write_text('')
     out=kit/'run/results/asap7/top/base';out.mkdir(parents=True)
     for f in ['1_2_yosys.v','1_synth.odb','4_cts.odb','4_cts.sdc']:(out/f).write_text('')
-    for name in ['sdc_lint','selrange_gate','port_bind_gate','face_guard','signoff','pin_audit']:
+    for name in ['rtl_lint','reg_fanout_gate','sdc_lint','selrange_gate','port_bind_gate','face_guard','signoff','pin_audit']:
         (kit/(name+'.py')).write_text('import sys\nraise SystemExit('+str(code if name==gate else 0)+')\n')
     envsh=tmp_path/'env.sh'; envsh.write_text('export PATH='+str(fake)+':$PATH\n')
     (fake/'docker').write_text('#!'+sys.executable+'\nimport os,subprocess,sys\na=sys.argv[1:]\n'
