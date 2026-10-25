@@ -56,11 +56,11 @@ def test_part_probe_files_and_worst():
     with tempfile.TemporaryDirectory() as d:
         out = g2.part_probe(P, "fa", d)
         meta = json.loads((out / "probe.json").read_text())
-        # boundary flops for din (64), x_o (277), r_i (71) + one station per bit of fz (65)
+        # boundary flops for din (64), x_o (277), r_i (71) + 4 stations per bit of fz (4 x 65; R3 <= 405 um)
         import gen_phys
         nt = len(gen_phys.tap_pins(P, "fa"))                    # R4 clock tap grid + the reset tap
         assert nt == len(schema.tap_grid(P, "fa")) + 1 and nt > 2
-        assert meta["flops"] == 64 + 277 + 71 + 65 + nt          # + one tap buffer per clock / reset tap
+        assert meta["flops"] == 64 + 277 + 71 + 4 * 65 + nt      # + one tap buffer per clock / reset tap
         v = (out / "probe.v").read_text()
         assert "st_fz_64_0" in v and "CLK" not in v
         assert (out / "io.tcl").read_text().count("place_pin") == 64 + 277 + 71 + 64 + 65 + nt  # fz_i from die IO: no epoch
@@ -73,7 +73,7 @@ def test_assembly_die_flow():
         kd = gen_phys.write_assembly(PAIR, d, str(Path(d) / "views"))
         kd = Path(d) / "die"
         tcl = (kd / "die_flow.tcl").read_text()
-        assert "place_macro -macro_name pfb -location {1434.24 0} -orientation R0 -exact" in tcl and "detailed_route" in tcl
+        assert "findInst {pfb}]" in tcl and "setLocation [expr {round(1434.24 * $_d)}] [expr {round(0 * $_d)}]" in tcl and "detailed_route" in tcl
         v = (kd / "die_top_struct.v").read_text()
         assert "endmodule :" not in v and "w_x" in v
         assert (kd / "seams.json").is_file() and (kd / "abut_audit.py").is_file() and (kd / "run_die.sh").is_file()
@@ -177,7 +177,7 @@ def test_kit_overrides_platform_tracks():
         assert (kd / "face_flops.tcl").is_file() and (kd / "face_flops_release.tcl").is_file()
         # COORD 10-23: tap trees balanced to the plan insertion after CTS
         assert "export POST_CTS_TCL = /work/tap_balance.tcl" in cfg and "export OT_TAP_TARGET_PS = 250" in cfg
-        assert "export OT_TAP_WINDOW_PS = 40" in cfg and "export CORNER = TC" in cfg
+        assert "export OT_TAP_WINDOW_PS = 20" in cfg and "export OT_TAP_TOL_PS = 10" in cfg and "export CORNER = TC" in cfg
         assert (kd / "tap_balance.tcl").is_file()
 
 
@@ -271,19 +271,32 @@ def test_kit_places_content_macros(tmp_path):
     import pytest
     raw = copy.deepcopy(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
     (tmp_path / "m.lef").write_text("VERSION 5.8 ;\n")
-    (tmp_path / "m.lib").write_text("library(m) {}\n")
+    (tmp_path / "m_tt.lib").write_text("library(m) {}\n")
+    (tmp_path / "m_ff.lib").write_text("library(m_ff) {}\n")
     t = raw["partition_types"]["src"]
-    t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m.lib",
+    t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m_tt.lib",
                                              origin_um=[17.28, 25.92], orient="MX"))
     t["hard_cores"] = [dict(inst="u_core", module="core_m", origin_um=[8.64, 8.64], outline_um=[8.64, 8.64],
-                            track_offset_um=[0.0, 0.012], lef="m.lef")]
+                            track_offset_um=[0.0, 0.012], lef="m.lef", lib="m_tt.lib")]
     P = schema.Plan(raw)
     kd = gen_phys.write_type_kit(P, "src", tmp_path / "k", [], root=tmp_path)
+    assert (kd / "macros/m_ff.lib").read_text() == "library(m_ff) {}\n"
+    assert (kd / "face_keep.tcl").is_file()
+    assert (kd / "face_keep_release.tcl").is_file()
     mp = (kd / "macro_place.tcl").read_text()
     assert "place_macro -macro_name {u_sram} -location {17.2800 25.9200} -orientation MX -exact" in mp
     assert "-macro_name {u_core} -location {8.6400 8.6520} -orientation R0" in mp
     cfg = (kd / "config.mk").read_text()
     assert "ADDITIONAL_LEFS = /work/macros/m.lef" in cfg and "MACRO_PLACEMENT_TCL = /work/macro_place.tcl" in cfg
+    del t["hard_cores"][0]["lib"]
+    with pytest.raises(ValueError, match="LEF but no timing liberty"):
+        gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "missing_lib", [], root=tmp_path)
+    assert not (tmp_path / "missing_lib").exists()
+    t["hard_cores"][0]["lib"] = "m_ss.lib"
+    with pytest.raises(ValueError, match="requires TT macro liberty"):
+        gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "ss_lib", [], root=tmp_path)
+    assert not (tmp_path / "ss_lib").exists()
+    t["hard_cores"][0]["lib"] = "m_tt.lib"
     del t["contents"][-1]["origin_um"]
     with pytest.raises(ValueError):
         gen_phys.write_type_kit(schema.Plan(raw), "src", tmp_path / "k2", [], root=tmp_path)
@@ -500,6 +513,27 @@ def test_empty_grid_taps_dropped_at_assembly():
         assert dr == {"fa": sorted(grid[1:3])}                  # fb: all empty -> nothing dropped
 
 
+def test_tap_port_family_env():
+    """QC-A0 10-24: clock_taps.tcl / tap_balance.tcl match the tap port family OT_TAP_PORT (default clk; A0 hard cores
+    ck / ck_t<i>) and tap_balance measures on clock OT_TAP_CLOCK, so hard-core kits source the tools unchanged.  The
+    port regexp is checked in tclsh on the real script text (default clk family unchanged)."""
+    import re
+    import shutil
+    import subprocess
+    ct = (HERE / "clock_taps.tcl").read_text()
+    tb = (HERE / "tap_balance.tcl").read_text()
+    assert "OT_TAP_PORT" in ct and "findBTerm $ct_port" in ct and "findBTerm clk" not in ct
+    assert "OT_TAP_PORT" in tb and "OT_TAP_CLOCK" in tb and "get_clocks clk]" not in tb
+    pat = re.search(r'regexp ("\^\$\{ct_port\}[^"]*")', ct).group(1)
+    if not shutil.which("tclsh"):
+        return
+    for port, names, want in (("clk", ["clk", "clk_t3", "ck", "clk_x", "ck_t1"], [1, 1, 0, 0, 0]),
+                              ("ck", ["ck", "ck_t37", "clk", "ck_tx", "ck_t"], [1, 1, 0, 0, 0])):
+        prog = f"set ct_port {port}\n" + "".join(f"puts [regexp {pat} {n}]\n" for n in names)
+        r = subprocess.run(["tclsh"], input=prog, capture_output=True, text=True)
+        assert [int(x) for x in r.stdout.split()] == want, (port, r.stdout, r.stderr)
+
+
 def test_pair_drops_hard_cores():
     """CP1-R10 (10-24): pair.py's proof leaf replaces every content, so hard_cores[] (S81 v4.7+ frame cores with LEF
     views) are dropped too; kept, the kit would place macros the proof netlist does not instantiate."""
@@ -516,7 +550,7 @@ def test_pair_drops_hard_cores():
 
 
 def test_run_die_signoff_corners():
-    """CP1-R10: the die STA runs at SS (setup sign-off), TT (pathfinding) and FF (hold sign-off)."""
+    """CP1-R10: the die STA runs at TT (setup sign-off), FF (hold sign-off) and SS (information only, AGENTS.md 10-24)."""
     import gen_phys
     assert "for c in SS TT FF" in gen_phys.RUN_DIE
 

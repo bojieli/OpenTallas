@@ -28,8 +28,8 @@ def main():
     for bt in block.getBTerms():
         n = bt.getName()
         if n not in want:
-            # clock taps (R4: clk, clk_t<i>) and the reset tap are interior die-spine pins, not face pins
-            if not re.match(r"^(clk(_t[0-9]+)?|arst_n)$", n) and not bt.getSigType() in ("POWER", "GROUND"):
+            # clock taps (R4: clk, clk_t<i>), the reset tap and reset wavefront outs are interior die pins, not face pins
+            if not re.match(r"^(clk(_t[0-9]+|_c[0-9]+)?|arst_n|rst_o_[0-9]+)$", n) and not bt.getSigType() in ("POWER", "GROUND"):
                 res["extra"].append(n)
             continue
         seen.add(n)

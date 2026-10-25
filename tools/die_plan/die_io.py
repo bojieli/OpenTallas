@@ -9,7 +9,10 @@ modelled). Their off-die signals therefore exist only as bump counts, not as RTL
 `iface` + `signals`, and lists `ports` only when the plan has real @die ports (S81-P5 form, check_die_io).
 
     die.io[] = {name, kind: phy_macro, iface: serdes|ucie|hbm_phy|host, part, rect_um, sites, pitch_um, signals,
-                host: true (this window also carries the die's host link), basis, note}
+                host: true (this window also carries the die's host link)
+                    | "in_band" (S81-XDIE 10-24: the die has NO host link; host traffic rides this die link in-band,
+                                 e.g. S81 stage dies: stage-in WN2/3 -> s_0N_LP -> seqhost, RELEASE_RACK 2.1 S81.HOST),
+                host_route (in_band: the declared on-die route to the host logic), basis, note}
 
 Catalog (CLASSES): content module regex -> interface class, off-die signals per instance, bump pitch.
   serdes   4 per lane (TX+/-, RX+/-) + 2 refclk. Lanes from the module name (_x12 / _x6); ot_pdie_serdes = 6
@@ -24,16 +27,21 @@ G0C (`check.py --completeness`, check name 'die_io_plan'):
   - every placed instance of an IO-class content has a window of its class over it (inside its partition);
   - each window is on the shoreline: its rect within budgets.io_edge_max_um (200) of a die edge;
   - signals <= sites;
-  - the die names its host link: one window with iface 'host' or host: true;
+  - the die names its host link: one window with iface 'host' or host: true, OR (in-band-host die) one or more
+    windows host: "in_band" from which the port graph reaches the host logic (host_rt / seq_host / ...);
+    a die may not mix a dedicated host window with in-band ones;
   - die.io empty -> one die-level ERROR.
 
 Host link: no die has a host PHY macro; the host rides a die link PHY (serdes / ucie). `plan` marks the link PHY
 nearest (port-graph hops) to the host logic (host_rt / seq_host / host_cp / sys_face) host: true -- CONFIRM it.
+`plan --in-band-host PART[=LANE+LANE...][,...]` instead marks the windows on those partitions host: "in_band" (no BFS
+guess) and records the ingress lane route to the host logic in host_route (declared lane chain, checked; else the
+shortest functional lane path).  G0C re-checks a declared host_route against the plan's lanes.
 
 The plan's die.io wins; without it check.py reads PLANDIR/die_io.json (written by `plan --out`), so the windows
 survive the die generators' regeneration of die_plan.json.
 
-    python3 tools/die_plan/die_io.py plan PLAN.json [--inplace] [--out PLANDIR/die_io.json]   # propose from the catalog
+    python3 tools/die_plan/die_io.py plan PLAN.json [--inplace] [--out PLANDIR/die_io.json] [--in-band-host P1,P2]
 """
 import argparse
 import json
@@ -122,6 +130,73 @@ def port_graph(P):
     return g
 
 
+def lane_graph(P):
+    """functional graph: lane source partition -> lane sink partition (ft pass-throughs skipped), edge label = lane."""
+    g = {}
+    for lid, ln in P.lanes.items():
+        ps = ln.get("ports") or []
+        if not ps or ps[0] not in P.ports or ps[-1] not in P.ports:
+            continue
+        a, b = P.ports[ps[0]]["src"]["part"], P.ports[ps[-1]]["dst"]["part"]
+        if DIE_PART in (a, b) or a == b:
+            continue
+        g.setdefault(a, {}).setdefault(b, lid)
+    return g
+
+
+def lane_ends(P, lid):
+    ps = P.lanes[lid].get("ports") or []
+    return P.ports[ps[0]]["src"]["part"], P.ports[ps[-1]]["dst"]["part"]
+
+
+def route_path(P, start, lanes, targets):
+    """declared in-band route: the lane chain from start must be continuous and end at host logic.
+    Returns ([part, lane, part, ...], error or None)."""
+    path, cur = [start], start
+    for lid in lanes:
+        if lid not in P.lanes:
+            return path, f"lane {lid} not in the plan"
+        a, b = lane_ends(P, lid)
+        if a != cur:
+            return path, f"lane {lid} starts at {a}, not {cur}"
+        path += [lid, b]
+        cur = b
+    if cur not in targets:
+        return path, f"route ends at {cur}, not at host logic ({', '.join(sorted(targets)) or 'none'})"
+    return path, None
+
+
+def fmt_path(path):
+    return " -> ".join(("[%s]" % x) if k % 2 else x for k, x in enumerate(path))
+
+
+def parse_route(txt):
+    """'a -> [l1] -> b -> [l2] -> c' -> (start, [l1, l2])"""
+    toks = [t.strip() for t in txt.split("->")]
+    return toks[0], [t[1:-1] for t in toks[1:] if t.startswith("[")]
+
+
+def host_path(P, start, targets):
+    """BFS path start -> nearest of targets over the functional lane graph (directed, source -> sink):
+    [part, lane, part, lane, ..., part], or None."""
+    g = lane_graph(P)
+    prev = {start: None}
+    q = deque([start])
+    while q:
+        u = q.popleft()
+        if u in targets:
+            path = [u]
+            while prev[u] is not None:
+                u, lid = prev[u]
+                path[:0] = [u, lid]
+            return path
+        for v, lid in sorted(g.get(u, {}).items()):
+            if v not in prev:
+                prev[v] = (u, lid)
+                q.append(v)
+    return None
+
+
 def nearest_io(P, starts, io_parts):
     """BFS over the port graph from the host-logic partitions to the nearest IO partition: (part, hops)."""
     g = port_graph(P)
@@ -138,8 +213,9 @@ def nearest_io(P, starts, io_parts):
     return None, None
 
 
-def plan(P):
-    """proposed die.io list from the catalog (one window per IO-class content instance)."""
+def plan(P, in_band=None):
+    """proposed die.io list from the catalog (one window per IO-class content instance).  in_band: partitions whose
+    link windows carry the host traffic in-band (host: "in_band"; replaces the BFS host guess)."""
     io = []
     names = set()
     inst = io_instances(P)
@@ -154,6 +230,25 @@ def plan(P):
                        sites=sites, pitch_um=pitch, signals=sig,
                        basis=basis + f"; shoreline {edge_dist(P, r):.0f} um", note=f"die_io.py plan: {ci}"))
     hp = host_parts(P)
+    if in_band:
+        in_band = dict(x if isinstance(x, tuple) else (x, None) for x in in_band)    # part -> declared lanes | None
+        miss = sorted(set(in_band) - {w["part"] for w in io if w["iface"] in HOST_CARRIERS})
+        if miss:
+            raise SystemExit(f"die_io plan: --in-band-host {miss}: no serdes / ucie window on those partitions")
+        for w in io:
+            if w["part"] in in_band and w["iface"] in HOST_CARRIERS:
+                w["host"] = "in_band"
+                lanes = in_band[w["part"]]
+                if lanes:
+                    path, err = route_path(P, w["part"], lanes, set(hp))
+                    if err:
+                        raise SystemExit(f"die_io plan: --in-band-host {w['part']}: {err}")
+                else:
+                    path = host_path(P, w["part"], set(hp))
+                w["host_route"] = fmt_path(path) if path else ""
+                w["note"] += ("; in-band host (no host link on this die), %s route: " % (
+                    "declared" if lanes else "shortest lane")) + (w["host_route"] or "NO ROUTE")
+        return io
     if io and hp:
         via, hops = nearest_io(P, hp, {w["part"] for w in io if w["iface"] in HOST_CARRIERS})
         if via:
@@ -200,10 +295,32 @@ def check(P, R, edge_max=None):
             summ["over_sites"] += 1
             R.err("die_io_plan", f"io window {w['name']}: {sig} off-die signals > {w['sites']} sites", type=tn,
                   part=w.get("part"))
-    hw = [w["name"] for w in io if w.get("iface") == "host" or w.get("host")]
-    summ["host"] = hw
-    if not hw:
-        R.err("die_io_plan", "no host link window (a die.io entry with iface 'host' or host: true)")
+    hw = [w["name"] for w in io if w.get("iface") == "host" or w.get("host") is True]
+    ib = [w for w in io if w.get("host") == "in_band"]
+    summ["host"] = hw + [w["name"] for w in ib]
+    summ["host_mode"] = "in_band" if ib and not hw else ("dedicated" if hw and not ib else ("mixed" if hw else None))
+    bad = [w["name"] for w in io if w.get("host") not in (None, False, True, "in_band")]
+    if bad:
+        R.err("die_io_plan", f"io windows {bad}: host must be true or \"in_band\"")
+    if hw and ib:
+        R.err("die_io_plan", f"host link windows {hw} AND in-band host windows {[w['name'] for w in ib]}: a die has "
+              "either a host link or in-band host traffic")
+    elif ib:
+        hp = set(host_parts(P))
+        for w in ib:
+            if w.get("iface") not in HOST_CARRIERS:
+                R.err("die_io_plan", f"io window {w['name']}: in-band host on iface {w.get('iface')} (serdes / ucie only)")
+            elif w.get("host_route"):
+                st, lanes = parse_route(w["host_route"])
+                _, err = route_path(P, st, lanes, hp) if st == w["part"] else (None, f"starts at {st}, not {w['part']}")
+                if err:
+                    R.err("die_io_plan", f"io window {w['name']}: in-band host route {w['host_route']!r}: {err}")
+            elif not hp or not host_path(P, w["part"], hp):
+                R.err("die_io_plan", f"io window {w['name']}: in-band host, but no lane route from {w['part']} to the "
+                      f"host logic ({', '.join(sorted(hp)) or 'none on this die'})")
+    elif not hw:
+        R.err("die_io_plan", "no host link window (a die.io entry with iface 'host' or host: true, or in-band host "
+              "windows host: \"in_band\")")
     return summ
 
 
@@ -213,10 +330,18 @@ def main(argv=None):
     ap.add_argument("plan_json")
     ap.add_argument("--inplace", action="store_true", help="write die.io into the plan (keeps existing port windows)")
     ap.add_argument("--out", help="write the proposed die.io list to this JSON file")
+    ap.add_argument("--in-band-host", help="comma-separated PART[=LANE+LANE...]: partitions whose link windows carry "
+                    "the host traffic in-band (the die has no host link): host: \"in_band\" instead of the BFS host "
+                    "guess; the optional lane chain declares the on-die ingress route to the host logic (checked)")
     a = ap.parse_args(argv)
     raw = S.load(a.plan_json)
     P = S.Plan(raw)
-    io = plan(P)
+    ib = []
+    for x in (a.in_band_host or "").split(","):
+        if x:
+            pn, _, lanes = x.partition("=")
+            ib.append((pn, [l for l in lanes.split("+") if l] or None))
+    io = plan(P, in_band=ib)
     keep = [w for w in (raw["die"].get("io") or []) if not w.get("iface")]
     new = keep + io
     if a.out:
@@ -226,10 +351,50 @@ def main(argv=None):
         Path(a.plan_json).write_text(json.dumps(raw, indent=1) + "\n")
     for w in io:
         print(f"{w['name']:40s} {w['iface']:8s} sites {w['sites']:6d} signals {w['signals']:5d} "
-              f"{'HOST ' if w.get('host') else ''}{w['basis'].split('; ')[-1]}")
+              f"{'HOST-IN-BAND ' if w.get('host') == 'in_band' else 'HOST ' if w.get('host') else ''}"
+              f"{w['basis'].split('; ')[-1]}")
     print(f"{len(io)} io windows ({len(keep)} port windows kept)")
     return 0
 
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+def check_pg_domains(P, R):
+    """OWNER DECISION 7 (2026-10-24): IR over SerDes windows -> a separate PHY supply + dedicated bump rows per window.
+    ERROR: a domain names an unknown io window, does not cover its windows, has bumps outside its rect or not over
+    the window, or straps on a non-die layer.  WARN: a serdes window without a domain (not yet adopted)."""
+    pg = P.die.get("pg", {}) or {}
+    doms = pg.get("domains", []) or []
+    io = {w["name"]: w for w in P.die.get("io", []) or []}
+    die_layers = set(P.layer_budget.get("die_layers", []))
+
+    def inside(a, b, e=0.01):
+        return a[0] >= b[0] - e and a[1] >= b[1] - e and a[2] <= b[2] + e and a[3] <= b[3] + e
+    covered = set()
+    for d in doms:
+        r = d["rect_um"]
+        for n in d["io"]:
+            w = io.get(n)
+            if w is None:
+                R.err("pg_domain", f"pg domain {d['name']}: io window {n} not in die.io")
+                continue
+            covered.add(n)
+            if not inside(w["rect_um"], r):
+                R.err("pg_domain", f"pg domain {d['name']}: rect {r} does not cover io window {n} {w['rect_um']}")
+            b = d["bumps"]["rect_um"]
+            if not (b[0] < w["rect_um"][2] and b[2] > w["rect_um"][0] and b[1] < w["rect_um"][3] and b[3] > w["rect_um"][1]):
+                R.err("pg_domain", f"pg domain {d['name']}: bump rows {b} not over io window {n}")
+        if not inside(d["bumps"]["rect_um"], r):
+            R.err("pg_domain", f"pg domain {d['name']}: bump rect outside the domain rect")
+        for g in d["grid"]:
+            if die_layers and g["layer"] not in die_layers:
+                R.err("pg_domain", f"pg domain {d['name']}: strap layer {g['layer']} not a die layer {sorted(die_layers)}")
+            if g["width_um"] >= g["pitch_um"] / 2:
+                R.err("pg_domain", f"pg domain {d['name']}: {g['layer']} width {g['width_um']} >= half pitch (two nets)")
+    for n, w in io.items():
+        if w.get("iface") == "serdes" and n not in covered:
+            R.warn("pg_domain", f"serdes window {n}: no separate PHY supply / bump rows (OWNER decision 7)")
+    return dict(domains=len(doms), serdes_windows=sum(1 for w in io.values() if w.get("iface") == "serdes"),
+                covered=len(covered))

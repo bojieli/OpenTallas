@@ -139,6 +139,10 @@ def _eval_obj(ctx, w):
     a = _words(w[1:-1])
     c = a[0]
     if c == "all_inputs":
+        if a[1:] == ["-no_clocks"]:
+            return ("ports", list(ctx.inputs))
+        if len(a) != 1:
+            raise SdcLintError(f"unsupported all_inputs options: {w}")
         return ("ports", ctx.inputs + ctx.clock_ports)
     if c == "all_outputs":
         return ("ports", list(ctx.outputs))
@@ -165,8 +169,7 @@ def _eval_obj(ctx, w):
         kind, lst = _eval_obj(ctx, rest[0])
         pat = rest[1]
         if "-regexp" in fl:
-            rx = pat[1:-1] if pat.startswith("{") else pat
-            return (kind, [p for p in lst if not re.search(rx, p)])
+            raise SdcLintError("regexp on port objects cannot filter names in OpenSTA; use all_inputs -no_clocks")
         _, ex = _eval_obj(ctx, pat)
         return (kind, [p for p in lst if p not in ex])
     raise SdcLintError(f"unsupported expression {w}")
@@ -186,7 +189,7 @@ def _num(x, what):
 
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
-         io_floor_ps=None, port_latency_ps=None):
+         io_floor_ps=None, port_latency_ps=None, port_period_mult=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).  -> [errors]"""
@@ -233,9 +236,13 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 if "-waveform" in opts:
                     err.append(f"relaxation: create_clock {nm} -waveform (only the default 50% waveform is allowed)")
                 per = _num(opts["-period"], "period") * u
-                if abs(per - period_ps) > EPS:
+                srcp = _eval_obj(ctx, obj)[1] if obj is not None else []
+                mult = {int((port_period_mult or {}).get(p, 1)) for p in srcp} or {1}
+                if len(mult) > 1:
+                    err.append(f"clocks: clock {nm} mixes ports of different plan periods")
+                if abs(per - period_ps * max(mult)) > EPS:
                     err.append(f"units/relaxation: clock {nm} period {opts['-period']} x {u:g} ps = {per:g} ps, "
-                               f"plan period {period_ps:g} ps")
+                               f"plan period {period_ps * max(mult):g} ps")
                 if nm in ctx.clocks:
                     err.append(f"clocks: {nm} created twice")
                 src = []
@@ -406,6 +413,8 @@ def kit_context(P, tn):
     import gen_rtl
     t = P.types[tn]
     cks = [n for n, _, _ in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)]
+    edge = {n: m for n, _x, _y, m in gen_phys.edge_clock_pins(P, tn)}
+    cks += list(edge)
     plat = {n: -float(early) for n, _i, _p, early, _s in gen_phys.core_tap_rows(P, tn)}
     ins, outs, floor = ["arst_n"], [], {}
     per = float(P.die["period_ps"])
@@ -417,13 +426,17 @@ def kit_context(P, tn):
         ni, no = gen_rtl.sv_id(s["name"] + "_i"), gen_rtl.sv_id(s["name"] + "_o")
         ins.append(ni)
         outs.append(no)
-        floor[ni] = (1 - gen_phys.FT_HOP_IN_SHARE) * per
-        floor[no] = gen_phys.FT_HOP_IN_SHARE * per
+        floor[ni] = (1 - gen_phys.ft_hop_in_share(P)) * per
+        floor[no] = gen_phys.ft_hop_in_share(P) * per
     floor["arst_n"] = gen_phys.IO_BUDGET * per
+    for n, _x, _y in gen_phys.reset_out_pins(P, tn):      # reset wavefront registered outs (OWNER DECISION 13)
+        outs.append(n)
+        floor[n] = gen_phys.IO_BUDGET * per
     return dict(period_ps=per, insertion_ps=float(P.clock["insertion_ps"]),
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
-                time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat)
+                time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
+                port_period_mult=edge)
 
 
 def lint_kit_files(kitdir, liberties=()):

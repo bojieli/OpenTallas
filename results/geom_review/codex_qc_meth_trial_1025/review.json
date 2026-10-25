@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS-COND BUILD ONLY",
+  "image": "qc_meth_plan.png",
+  "source_plan": "claude/qc-meth-1024@a281ceb5ce",
+  "findings": [
+    "377 partitions,56types; wide slice-column traffic concentrated in central horizontal band,SerDes windows along W edge.",
+    "Inter-partition windows align at abutting faces; tool-generated stations/taps cover regular arrays.",
+    "Central SU/feedthrough crossings remain a capacity risk; per-type PROTO must be CLEAN before routes.",
+    "Current trial tool and TRIAL-QK tip diverge; standalone full-hop diagnostic source staged without replacing current main die_trial.py.",
+    "Clock source must use current CLOCK spine before timing; current new signal-route policy forbids M8/M9."
+  ],
+  "conditions": [
+    "No new GRT/STA submitted until final re-plan batch, prototype pass, and current clock-source review.",
+    "Full-hop trial report needs legal M6/M7 calibration; historic M8/M9 tables cannot gate it."
+  ]
+}

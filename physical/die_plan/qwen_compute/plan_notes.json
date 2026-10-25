@@ -3,8 +3,8 @@
  "partitions": 377,
  "types": 56,
  "types_merged": 135,
- "ports": 3002,
- "lanes": 2015,
+ "ports": 3410,
+ "lanes": 2207,
  "die_um": [
   31216.32,
   25228.8
@@ -561,28 +561,29 @@
  },
  "r3_internal_stations": {
   "buses": {
-   "cbf_q00.na_i00": 2,
-   "cbf_q00.nb_i00": 3,
-   "cbf_q00.y_o00": 1,
-   "cbf_q00_s2.na_i00": 2,
-   "cbf_q00_s2.nb_i00": 3,
-   "cbf_q00_s2.y_o00": 1,
-   "cbf_q01.nb_i12": 2,
-   "cbf_q01.y_o12": 1,
-   "cbf_q01_s2.nb_i12": 2,
-   "cbf_q01_s2.y_o12": 1,
-   "cbf_q11.na_i22": 1,
-   "cbf_q11.nb_i22": 1,
-   "cbn_q00.na_i00": 2,
-   "cbn_q00.nb_i00": 3,
-   "cbn_q00.y_o00": 1,
-   "cbn_q01.nb_i12": 2,
-   "cbn_q01.y_o12": 1,
-   "cbn_q11.na_i22": 1,
-   "cbn_q11.nb_i22": 1
+   "cbf_q00.na_i00": 4,
+   "cbf_q00.nb_i00": 7,
+   "cbf_q00.y_o00": 3,
+   "cbf_q00_s2.na_i00": 4,
+   "cbf_q00_s2.nb_i00": 7,
+   "cbf_q00_s2.y_o00": 3,
+   "cbf_q01.nb_i12": 4,
+   "cbf_q01.y_o12": 2,
+   "cbf_q01_s2.nb_i12": 4,
+   "cbf_q01_s2.y_o12": 2,
+   "cbf_q11.na_i22": 2,
+   "cbf_q11.nb_i22": 2,
+   "cbn_q00.na_i00": 4,
+   "cbn_q00.nb_i00": 7,
+   "cbn_q00.y_o00": 3,
+   "cbn_q01.nb_i12": 4,
+   "cbn_q01.y_o12": 2,
+   "cbn_q11.na_i22": 2,
+   "cbn_q11.nb_i22": 2,
+   "cbx_q10.y_o21": 1
   },
   "lanes": 288,
-  "stations": 31
+  "stations": 69
  },
  "internal_bits_absorbed": {
   "bc00": 24768,
@@ -771,7 +772,7 @@
    "module": "qfd_coll_static_face",
    "origin_um": [
     8.64,
-    8.64
+    10.8
    ],
    "outline_um": [
     518.4,
@@ -848,6 +849,27 @@
    "cells_est": 116000
   }
  ],
+ "a0_core_taps": {
+  "source": "a0_core_taps.json",
+  "insertion_ps": 250,
+  "insertion_tol_ps": 40,
+  "neighbour_skew_ps": 80,
+  "taps_per_core": {
+   "nk": 42,
+   "nl": 41
+  },
+  "drops_per_quad": {
+   "cbf_q00": 168,
+   "cbf_q00_s2": 168,
+   "cbf_q01": 168,
+   "cbf_q01_s2": 168,
+   "cbf_q11": 168,
+   "cbn_q00": 168,
+   "cbn_q01": 168,
+   "cbn_q11": 168,
+   "cbx_q10": 167
+  }
+ },
  "leaf_params": {
   "tt_ctlm": {
    "ot_qfd_tt_ctlm_static_hr": {

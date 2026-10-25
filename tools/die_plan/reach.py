@@ -16,11 +16,16 @@ One table for all dies: the minimum over all measured relays, so a lane is plann
 class until a die measures a better relay of its own (then add a row with its source, never a literal).
 
 Owner rules that bound it (memory 10-16/10-17/10-22): plan 405 um for LOCAL partition-layer hops (the M4-M7 row is
-min(measured, 405)); repeaters every <= 450 um (slew 320 ps); M8/M9 relay hop 1.0-1.5 mm per die.
+min(measured, 405)); repeaters every <= 450 um (slew 320 ps).
 
-A hop's layer set: lane.route_layers, else die.layer_budget.ft_route_layers, else the die layers (M8/M9) when
-die.layer_budget.die_use has "ft_reserved" (FT pushdown: over-the-top feedthrough wires use M8/M9), else the partition
-ft layers M4-M7. Its reach is the MINIMUM over that set (the router may use any of them). G0C ERROR: a hop longer
+METHODOLOGY 5.1 / coordinator ruling 9.3 (B#12, 2026-10-24): ALL signal routing (partition ft AND die-top nets) is on
+<= M7; M8/M9 carry only the die clock spine, die reset and PG.  The M8/M9 rows stay in the table as measured
+references (clock/reset relay reach), never as a signal reach: SIGNAL_LAYERS = M4-M7, so every signal hop is judged
+against 405 um.
+
+A hop's layer set: lane.route_layers, else die.layer_budget.ft_route_layers, else the partition ft layers M4-M7, in
+each case restricted to SIGNAL_LAYERS (an M8/M9 entry is dropped here and is a G0 ERROR in check.py m89_signals;
+`ft_reserved` no longer routes hops over the top).  Its reach is the MINIMUM over that set. G0C ERROR: a hop longer
 than budgets.reach_margin (0.9) x that reach.
 
     python3 tools/die_plan/reach.py table                       # the table
@@ -45,6 +50,9 @@ BASIS = {
     "M9": "REACH-M89 M9 best calibrated (BUFx12f 250 um), min hbfd_rly_48_NS",
 }
 PARTITION_LAYERS = ("M4", "M5", "M6", "M7")
+SIGNAL_LAYERS = PARTITION_LAYERS     # ruling 9.3: signals <= M7; M8/M9 = clock spine / reset / PG only
+NON_SIGNAL = {"M8": "die clock spine / reset relay reference only (ruling 9.3: no signals on M8/M9)",
+              "M9": "die clock spine / reset relay reference only (ruling 9.3: no signals on M8/M9)"}
 
 
 def table():
@@ -52,7 +60,10 @@ def table():
     out = {}
     for ln, v in MEASURED.items():
         r = min(v, OWNER_LOCAL_PLAN_UM) if ln in PARTITION_LAYERS else v
-        out[ln] = dict(reach_um=r, measured_um=v, basis=BASIS[ln] + (" ; owner local plan 405" if r != v else ""))
+        out[ln] = dict(reach_um=r, measured_um=v, basis=BASIS[ln] + (" ; owner local plan 405" if r != v else ""),
+                       signal=ln in SIGNAL_LAYERS)
+        if ln in NON_SIGNAL:
+            out[ln]["use"] = NON_SIGNAL[ln]
     return out
 
 
@@ -64,15 +75,13 @@ def layer_reach(ln):
 
 
 def hop_layers(P, lane=None):
-    """layer set a lane's hops may route on (see the module docstring)."""
-    if lane and lane.get("route_layers"):
-        return list(lane["route_layers"])
+    """layer set a lane's hops may route on (see the module docstring): signal layers (<= M7) only."""
     lb = P.layer_budget
-    if lb.get("ft_route_layers"):
-        return list(lb["ft_route_layers"])
-    if "ft_reserved" in lb.get("die_use", []):
-        return [n for n in lb.get("die_layers", ["M8", "M9"])]
-    return list(PARTITION_LAYERS)
+    for ls in ((lane or {}).get("route_layers"), lb.get("ft_route_layers")):
+        if ls:
+            sig = [n for n in ls if n in SIGNAL_LAYERS]
+            return sig or list(SIGNAL_LAYERS)
+    return list(SIGNAL_LAYERS)
 
 
 def hop_reach(P, lane=None):
@@ -80,7 +89,7 @@ def hop_reach(P, lane=None):
     can only lower it."""
     ls = hop_layers(P, lane)
     vals = [layer_reach(n) for n in ls if layer_reach(n) is not None]
-    r = min(vals) if vals else min(v["reach_um"] for v in TABLE.values())
+    r = min(vals) if vals else min(TABLE[n]["reach_um"] for n in SIGNAL_LAYERS)
     if lane and "reach_um" in lane:
         r = min(r, float(lane["reach_um"]))
     return r, ls

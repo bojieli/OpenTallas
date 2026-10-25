@@ -703,7 +703,7 @@ def clock_tcl(P):
          "source /work/make_tracks.tcl",
          "source /work/pg_obs.tcl",
          "set_routing_layers -signal M2-M9 -clock M2-M9"]
-    t += [f"set_global_routing_layer_adjustment M{i} 1.0" for i in range(2, 8)]
+    t += [f"set_global_routing_layer_adjustment M{i} 1.0" for i in range(2, 6)]
     t += ["global_route -congestion_iterations 30 -allow_congestion -verbose "
           "-congestion_report_file /work/clock_congestion.rpt",
           "puts \"OT_T_GRT [expr {[clock seconds]-$t0}]\"",
@@ -823,13 +823,13 @@ CAL_L = [2, 25, 50, 100, 150, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000,
 
 
 def cmd_calib(a):
-    """repeated-wire register-to-register hops: DFF -> BUFx12f every REP_UM -> DFF, straight on M8 (H) and M9 (V)."""
+    """Repeated-wire hops on legal signal layers M6 (H) and M7 (V)."""
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     comps, nets = [], []
     W, H = 3000.0, 3000.0
     rows = []
-    for li, (ln, horiz) in enumerate((("M8", True), ("M9", False))):
+    for li, (ln, horiz) in enumerate((("M6", True), ("M7", False))):
         for k, L in enumerate(CAL_L):
             tag = f"{ln}_{L}"
             p0 = (100.0, 100.0 + k * 40.0) if horiz else (1200.0 + k * 40.0, 300.0)
@@ -862,8 +862,8 @@ def cmd_calib(a):
     (out / "calib.json").write_text(json.dumps(rows, indent=0) + "\n")
     tcl = [f"read_lef {TECH_LEF}", f"read_lef {SC_LEF}",
            f"foreach f [glob {PLAT}/lib/NLDM/*RVT_TT_nldm*.lib*] {{ read_liberty $f }}",
-           "read_def /work/calib.def", "source /work/make_tracks.tcl", "set_routing_layers -signal M2-M9"]
-    tcl += [f"set_global_routing_layer_adjustment M{i} 1.0" for i in range(2, 8)]
+           "read_def /work/calib.def", "source /work/make_tracks.tcl", "set_routing_layers -signal M2-M7"]
+    tcl += [f"set_global_routing_layer_adjustment M{i} 1.0" for i in range(2, 6)]
     tcl += ["global_route -allow_congestion -verbose", f"source {PLAT}/setRC.tcl",
             "estimate_parasitics -global_routing -spef_file /work/calib.spef", "write_verilog /work/calib.v",
             "report_wire_length -net [get_nets w_*] -global_route -file /work/calib_wl.csv", "puts OT_DONE"]
@@ -873,7 +873,7 @@ foreach f [glob $L/*RVT_$::env(CORNER)_nldm*.lib*] {{ read_liberty $f }}
 read_verilog /work/calib.v
 link_design calib
 read_spef /work/calib.spef
-create_clock -name clk -period 833.333 [get_ports clk]
+create_clock -name clk -period 833 [get_ports clk]
 set_clock_uncertainty 60 -setup [all_clocks]
 set_clock_uncertainty 25 -hold [all_clocks]
 report_checks -path_delay max -format end
@@ -884,7 +884,7 @@ puts OT_DONE
     (out / "sta_calib.tcl").write_text(sta)
     P = S.Plan(json.loads((HERE / "examples" / "tiny_plan.json").read_text()))
     (out / "make_tracks.tcl").write_text(die_tracks_tcl(P))
-    write_run(out, "calib", "openroad -exit /work/calib.tcl > /work/calib.log 2>&1 || RC=1; for c in TT FF SS; do "
+    write_run(out, "calib", "openroad -exit /work/calib.tcl > /work/calib.log 2>&1 || RC=1; for c in TT FF; do "
               "CORNER=\\$c OUT=/work/calib_\\$c.txt sta -no_splash -exit /work/sta_calib.tcl > /work/sta_calib_\\$c.log "
               "2>&1 || RC=1; done;", 16, 4)
     print(out)
@@ -900,8 +900,12 @@ END_RE = re.compile(r"^(c_(M\d)_(\d+))/D \S+\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)
 
 def load_calib(cdir):
     """{corner: {layer: [(L, setup_slack, hold_slack, arrival)]}} from the calib run (report_checks -format end)."""
+    metadata = json.loads((Path(cdir) / "calib.json").read_text())
+    layers = {r["layer"] for r in metadata}
+    if layers != {"M6", "M7"}:
+        raise ValueError(f"current signal trials require M6/M7 calibration; found {sorted(layers)}")
     out = {}
-    for c in ("SS", "TT", "FF"):
+    for c in ("TT", "FF"):
         tab = defaultdict(dict)
         for dly in ("max", "min"):
             f = Path(cdir) / f"calib_{c}.txt.{dly}"
@@ -932,7 +936,7 @@ def interp(rows, L, col):
 
 
 def hop_setup(cal, corner, L, calibrated=False):
-    """worst of M8 / M9 register-to-register setup slack of a repeated hop of length L (ps)."""
+    """Worst calibrated legal-layer register-to-register setup slack (ps)."""
     v = []
     for ln, rows in cal[corner].items():
         s = interp(rows, L, 1)
@@ -948,7 +952,7 @@ def hop_hold(cal, corner, L):
 
 def load_arrivals(bdir):
     arr = {}
-    for c in ("TT", "FF", "SS"):
+    for c in ("TT", "FF"):
         f = Path(bdir) / f"clock_arr_{c}.txt"
         d = {}
         if f.is_file():
@@ -1067,7 +1071,7 @@ def cmd_report(a):
         ct = g2.parse_grt(clog.read_text(errors="replace"))
         ck["grt_overflow"] = ct.get("total_overflow")
         ck["grt_wirelength_um"] = ct.get("wirelength_um")
-    for c in ("TT", "FF", "SS"):
+    for c in ("TT", "FF"):
         lg = B / f"sta_clock_{c}.log"
         if lg.is_file():
             t = lg.read_text(errors="replace")
@@ -1106,7 +1110,7 @@ def cmd_report(a):
     for nm, kind, L0, C0, Lh, Lr in hop_rows:
         ti, tj = tap_t(L0), tap_t(C0)
         sk = {}
-        for c in ("TT", "FF", "SS"):
+        for c in ("TT", "FF"):
             d = arr.get(c, {})
             if ti in d and tj in d:
                 cm = common(ti, tj)
@@ -1193,7 +1197,7 @@ def cmd_report(a):
     # nominal |capture - launch| arrival (CPPR exact: the common tree path cancels), "<C>" adds the OCV INFO term
     res["seam_skew"] = {c: dict(pairs=len(v), max_ps=max(v), p99_ps=sorted(v)[int(0.99 * (len(v) - 1))],
                                 over_80=sum(x > res["seam_skew_rule_ps"] for x in v)) for c, v in sk_vals.items() if v}
-    res["pair_skew"] = {c: res["seam_skew"][c + "_nom"] for c in ("TT", "FF", "SS") if c + "_nom" in res["seam_skew"]}
+    res["pair_skew"] = {c: res["seam_skew"][c + "_nom"] for c in ("TT", "FF") if c + "_nom" in res["seam_skew"]}
     for c in ("TT", "FF"):
         k = res["pair_skew"].get(c)
         if k:

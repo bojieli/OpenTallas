@@ -150,3 +150,52 @@ def test_core_tap_source_latency_only_as_planned():
     assert any("early core tap" in x for x in _errs(txt + line, ctx))
     assert _errs(txt + line, ctx, port_latency_ps={tap: -30.0}) == []
     assert any("has no source latency" in x for x in _errs(txt, ctx, port_latency_ps={tap: -30.0}))
+
+
+def test_opaque_clock_port_filter_rejected():
+    txt, ctx = _kit(TINY)
+    bad = txt.replace("[all_inputs -no_clocks]", "[lsearch -inline -all -not -regexp [all_inputs] {^(clk.*)$}]")
+    assert any("port objects" in e for e in _errs(bad, ctx))
+
+
+def test_ft_hop_in_share_plan_field():
+    """COORD RULING 10-24 12:37 (S81): clock.ft_hop_in_share re-splits the ft seam (receiver share at the face): the kit
+    SDC and the lint floors follow it together; the default stays gen_phys.FT_HOP_IN_SHARE (0.08); a kit made with the
+    old split fails the lint of a 0.16 plan (input delay over the 0.84 T floor is fine, output 0.08 T under 0.16 T is not)."""
+    import copy
+    P0 = schema.Plan(PAIR)
+    tn = next(t for t in P0.types if P0.types[t].get("ft_slots") and any(p["type"] == t for p in P0.parts.values()))
+    assert gen_phys.ft_hop_in_share(P0) == gen_phys.FT_HOP_IN_SHARE
+    raw = copy.deepcopy(PAIR)
+    raw["clock"]["ft_hop_in_share"] = 0.16
+    assert schema.validate(raw) == [] if hasattr(schema, "validate") else True
+    P = schema.Plan(raw)
+    per = float(P.die["period_ps"])
+    txt = gen_phys.sdc(P, tn, gen_phys.type_pins(P, tn))
+    assert f"set_input_delay -max {gen_phys.t_lib(0.84 * per):.4f}" in txt
+    assert f"set_output_delay -max {gen_phys.t_lib(0.16 * per):.4f}" in txt
+    assert _errs(txt, sdc_lint.kit_context(P, tn)) == []
+    old = gen_phys.sdc(P0, tn, gen_phys.type_pins(P0, tn))
+    assert _errs(old, sdc_lint.kit_context(P, tn))
+
+
+def test_edge_clocks_declared_and_linted():
+    """plan clock.edge_clocks (OWNER dec. 16, QC PHY-edge clocks): an interior pin + a synchronous kit clock at
+    period_mult x T; the lint accepts exactly that period and rejects any other."""
+    import copy
+    raw = copy.deepcopy(TINY)
+    P0 = schema.Plan(raw)
+    tn = next(t for t in P0.types if not P0.types[t].get("hard") and any(p["type"] == t for p in P0.parts.values()))
+    x, y = raw["partition_types"][tn]["clock"]["tap_um"] if "clock" in raw["partition_types"][tn] else (20.0, 20.0)
+    raw["partition_types"][tn].setdefault("clock", {})["edge_clocks"] = [
+        {"port": "clk_coll", "tap_um": [x + 17.28, y + 8.64]},
+        {"port": "clk_coll_blk", "tap_um": [x + 34.56, y + 8.64], "period_mult": 6}]
+    assert schema.validate(raw) == []
+    txt, ctx = _kit(raw, tn)
+    P = schema.Plan(raw)
+    per = gen_phys.t_lib(P.die["period_ps"])
+    assert f"create_clock -name clk_coll_blk -period {6 * per:.4f} [get_ports clk_coll_blk]" in txt
+    assert {"clk_coll", "clk_coll_blk"} <= {n for n, _x, _y in gen_phys.tap_pins(P, tn)}
+    assert _errs(txt, ctx) == []
+    bad = txt.replace(f"-period {6 * per:.4f} [get_ports clk_coll_blk]", f"-period {per:.4f} [get_ports clk_coll_blk]")
+    assert any("clk_coll_blk" in e and "period" in e for e in _errs(bad, ctx))

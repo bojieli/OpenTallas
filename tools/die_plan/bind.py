@@ -467,6 +467,16 @@ class Binder:
         self.errors, self.warns = [], []
         self.R = Rules(self.ab)
         self.F = E.flatten(yjs, self.ab["top"], self.ab.get("substitute_parent", []))
+        # Yosys omits instance parameters when a leaf uses its declared defaults. Keep their
+        # declarations for param_regen, without changing otherwise untouched leaf interfaces.
+        # Key by both original Yosys type and RTL master so a substituted variant cannot
+        # accidentally acquire parameters declared only on the predecessor master.
+        self.param_defaults = {}
+        for c in self.F.cells:
+            key = (c.ytype, c.module)
+            if key not in self.param_defaults:
+                self.param_defaults[key] = {k: E._pval(v)[0] for k, v in
+                    yjs["modules"].get(c.ytype, {}).get("parameter_default_values", {}).items()}
         for r in self.F.parent_variants:
             if r["dropped_net_ports"]:
                 self.errors.append(f"PARENT_VARIANT_NET {r['inst']} -> {r['variant']}: as-built nets on ports the variant "
@@ -698,6 +708,9 @@ class Binder:
                 self.variants.append(dict(inst=c.path, master=c.module, variant=m, dropped_params=dropped,
                                           open_new_outputs=outs_new, reason=r.get("reason")))
                 c.module = m
+                # The selected variant may declare a new opt-in control parameter. Use
+                # only its own declarations; predecessor-only parameters remain invalid.
+                self.param_defaults[(c.ytype, c.module)] = dict(vm.params)
             if n == 0:
                 self.errors.append(f"VARIANT_NO_MATCH substitute_inst {r['inst']} -> {m}: no leaf instance matches")
 
@@ -1427,6 +1440,120 @@ class Binder:
                     seen_f.add(k)
                     st["pad_flops"] += d[7]
 
+    def pad_trees(self):
+        """asbuilt.land_pad_tree = true (QC-TOK 10-24, opt-in): realise the R8 landing pads as DELAY TREES instead of one
+        chain per sink partition.  The landed depth of every sink bit is unchanged (bound + pad, the R8 table / compiler
+        value); only WHERE the reset-less stages sit changes:
+          * every lane bit (L, k) carries U(L, k) stages inserted upstream of it: in the source partition (a tapped delay
+            line on the leaf driver bit, before the out boundary flop) or, for a forwarded bit, in the forwarding
+            partition (a tap of the delay line on its incoming lane bit);
+          * U(L, k) = the smallest pad still owed by any consumer reached through (L, k) (local sinks of L's destination
+            and, recursively, every lane that forwards it), so a broadcast to replicas at different lane depths shares one
+            line and the forwarded copies leave from the tap they need;
+          * a sink's local pad becomes pad - U(its lane bit); one tapped line per (in-lane bit), length = largest tap.
+        Hardened types stay one module: U is lowered to the minimum over the instances of the source type (per out bus
+        bit) and of the destination type (per in bus bit) until a fixpoint, and every forwarded tap stays >= 0.
+        bind verify proves the result independently (each sink's traced stage count = bound + pad)."""
+        if self.pc:
+            self.findings.append("PAD_TREE skipped: plan cells present (their lane reads are not modelled)")
+            return
+        allL = {}
+        for p, ls in self.out_bus.items():
+            for L in ls:
+                allL[id(L)] = L
+        for p, ls in self.in_bus.items():
+            for L in ls:
+                allL[id(L)] = L
+        skip = {i for i, L in allL.items() if L.get("spine") or L.get("plan")}
+        local = defaultdict(list)            # (lane id, k) -> pads owed by the destination's sinks (0 = unpadded read)
+
+        def walk(d, top):
+            if d[0] == "x":
+                L, j = self.bitpos[(d[1], d[6], d[2], d[3], d[4])]
+                local[(id(L), j)].append(d[7] if (top and len(d) > 7) else 0)
+            elif d[0] in ("or", "and"):
+                for x in d[1]:
+                    walk(x, False)
+        for (ci, pn, i), d in self.sinks.items():
+            if isinstance(d, tuple) and d:
+                walk(d, True)
+        kids = defaultdict(list)             # (in lane id, k) -> [(out lane id, k')] forwarded from it
+        for i, L in allL.items():
+            for k, it in enumerate(L["items"]):
+                if it[0] == "fwd":
+                    kids[(id(it[1]), it[2])].append((i, k))
+        R = {}
+
+        def req(key):
+            if key in R:
+                return R[key]
+            if key[0] in skip:
+                R[key] = 0
+                return 0
+            c = list(local.get(key, ())) + [req(x) for x in kids.get(key, ())]
+            R[key] = min(c) if c else 0
+            return R[key]
+        U = {}
+        for i, L in allL.items():
+            for k in range(len(L["items"])):
+                U[(i, k)] = req((i, k))
+        ptype = {p: self.parts[p]["type"] for p in self.parts}
+        by_src, by_dst = defaultdict(list), defaultdict(list)
+        for i, L in allL.items():
+            if i in skip:
+                continue
+            for k in range(len(L["items"])):
+                by_src[(ptype.get(L["src"]), L["oname"], k)].append((i, k))
+                by_dst[(ptype.get(L["dst"]), L["iname"], k)].append((i, k))
+        fwd_up = [((i, k), (id(it[1]), it[2])) for i, L in allL.items() for k, it in enumerate(L["items"]) if it[0] == "fwd"]
+        rounds = 0
+        while True:
+            rounds += 1
+            ch = 0
+            for grp in list(by_src.values()) + list(by_dst.values()):
+                m = min(U[x] for x in grp)
+                for x in grp:
+                    if U[x] != m:
+                        U[x] = m
+                        ch += 1
+            for out_k, in_k in fwd_up:
+                if U[in_k] > U[out_k]:
+                    U[in_k] = U[out_k]
+                    ch += 1
+            if not ch or rounds > 200:
+                break
+        if rounds > 200:
+            raise BindError("PAD_TREE: type uniformisation did not converge")
+        self.ptree = U
+        # flop count: per partition instance, one line per in-lane bit (largest tap) + one per source driver bit
+        flops = chain = 0
+        lines_in = defaultdict(int)
+        for key, pads in local.items():
+            if key[0] in skip:
+                continue
+            for x in pads:
+                if x:
+                    lines_in[key] = max(lines_in[key], x - U[key])
+        for (i, k), U0 in U.items():
+            if i in skip:
+                continue
+            it = allL[i]["items"][k]
+            if it[0] == "fwd":
+                up = (id(it[1]), it[2])
+                lines_in[up] = max(lines_in[up], U0 - U[up])
+        root = defaultdict(int)
+        for (i, k), U0 in U.items():
+            it = allL[i]["items"][k]
+            if i not in skip and it[0] == "leaf" and U0:
+                root[(allL[i]["src"],) + tuple(it[1:])] = max(root[(allL[i]["src"],) + tuple(it[1:])], U0)
+        flops = sum(lines_in.values()) + sum(root.values())
+        st = self.pad_stats
+        st["tree"] = dict(pad_flops=flops, chain_pad_flops=st.get("pad_flops"), root_lines=len(root),
+                          root_flops=sum(root.values()), fwd_lines=sum(1 for v in lines_in.values() if v),
+                          hoisted_bits=sum(1 for v in U.values() if v), uniform_rounds=rounds)
+        self.findings.append(f"PAD_TREE: {st.get('pad_flops')} chain pad flops -> {flops} tree flops "
+                             f"(root lines {len(root)}, uniformisation rounds {rounds})")
+
     def depth(self, path, port):
         """bound landed depth (register stages incl. landing pads) per bit of input `port` of leaf `path`:
         {bit: stages}; a bit not on a crossing is 0 (same partition)."""
@@ -1470,10 +1597,11 @@ class Binder:
                 continue
             c = self.F.cells[ci]
             for k, v in ps.items():
-                if k not in c.params:
+                defaults = self.param_defaults.get((c.ytype, c.module), {})
+                if k not in c.params and k not in defaults:
                     self.errors.append(f"PARAM_REGEN {path}.{k}: not a parameter of the leaf")
                     continue
-                old = str(c.params[k]).strip('"')
+                old = str(c.params[k] if k in c.params else defaults[k]).strip('"')
                 if old != str(v):
                     changed.append(dict(inst=path, param=k, asbuilt=old, bound=v))
                 c.params[k] = str(v)
@@ -1784,6 +1912,7 @@ class Binder:
             render = self.pc.emit(p, tn, {L["iname"]: L["width"] for L in ibus},
                                   {L["oname"]: L["width"] for L in obus if L.get("plan")}, drv_w,
                                   {self.rel_of(ci): ci for ci in self.members[p]}, decl, body, ub)
+        obus_tree = []
         for L in obus:
             n, W = L["oname"], L["width"]
             ports.append(f"    output wire [{W}:0] {n}   // {W} data + epoch [{W}]: {_bus_note(L, 'out')}")
@@ -1795,6 +1924,9 @@ class Binder:
             if L.get("plan"):
                 body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d(pb_{n}), .ea(rst_n), "
                             f".q({n}[{W - 1}:0]), .eq({n}[{W}]));  // plan-cell driven")
+                continue
+            if getattr(self, "ptree", None) is not None:
+                obus_tree.append(L)          # PAD_TREE: emitted after the tap helpers exist (below)
                 continue
             d = _concat([f"{drv_w[(it[1], it[2])]}[{it[3]}]" if it[0] == "leaf" else f"{it[1]['iname']}_q[{it[2]}]"
                          for it in L["items"]])
@@ -1826,6 +1958,29 @@ class Binder:
             body.append(f"    ot_dp_dly #(.W({W}), .D({st})) u_{nm} (.clk(clk), .d({drv_w[(sci, spn)]}), .q({nm}));")
         orn = {}
         pads = {}
+        PT = getattr(self, "ptree", None)
+        taps = {}                            # (line src expr, name stem) -> {position: wire}
+
+        def tap(src, stem, x):
+            """position x (>= 0) of the tapped reset-less delay line on 1-bit `src` (PAD_TREE)"""
+            if x < 0:
+                raise BindError(f"PAD_TREE negative tap {x} on {src}")
+            if x == 0:
+                return src
+            ln = taps.setdefault(src, {"stem": stem, "pos": {}})
+            if x not in ln["pos"]:
+                ln["pos"][x] = short_id(f"pt{x}_{stem}", 100)
+            return f"{ln['pos'][x]}[0]"
+
+        def emit_taps():
+            for src, ln in taps.items():
+                prev, at = src, 0
+                for x in sorted(ln["pos"]):
+                    nm = ln["pos"][x]
+                    decl.append(f"    wire [0:0] {nm};")
+                    body.append(f"    ot_dp_dly #(.W(1), .D({x - at})) u_{nm} (.clk(clk), .d({prev}), .q({nm}));  "
+                                f"// pad tree: +{x} on {src}")
+                    prev, at = f"{nm}[0]", x
 
         def expr(d, ci, pn, i):
             nonlocal need_rst
@@ -1835,6 +1990,8 @@ class Binder:
                 return f"{w}[{d[3]}]"
             if k == "x":
                 L, j = self.bitpos[(d[1], p, d[2], d[3], d[4])]
+                if len(d) > 7 and PT is not None:      # PAD_TREE: tap of the in-lane bit's line
+                    return tap(f"{L['iname']}_q[{j}]", f"{L['iname']}_{j}", d[7] - PT[(id(L), j)])
                 if len(d) > 7:          # landing pad (land_align): shared per (in-bus bit, pad)
                     key = (L["iname"], j, d[7])
                     if key not in pads:
@@ -1902,6 +2059,18 @@ class Binder:
             pstr = (" #(" + ", ".join(ps) + ")") if ps else ""
             cs = ",\n".join(f"        .{pn}({e})" for pn, e in conns)
             insts.append(f"    // as-built {c.path}\n    {c.module}{pstr} {short_id('u_' + r, 90)} (\n{cs}\n    );")
+        for L in obus_tree:
+            n, W = L["oname"], L["width"]
+            src = []
+            for k, it in enumerate(L["items"]):
+                U0 = PT[(id(L), k)]
+                if it[0] == "leaf":
+                    src.append(tap(f"{drv_w[(it[1], it[2])]}[{it[3]}]", f"{self.rel_of(it[1])}__{it[2]}_{it[3]}", U0))
+                else:
+                    src.append(tap(f"{it[1]['iname']}_q[{it[2]}]", f"{it[1]['iname']}_{it[2]}", U0 - PT[(id(it[1]), it[2])]))
+            body.append(f"    ot_dp_st #(.W({W})) u_bout_{n} (.clk(clk), .rst_n(rst_n), .d({_concat(src)}), .ea(rst_n), "
+                        f".q({n}[{W - 1}:0]), .eq({n}[{W}]));")
+        emit_taps()
         if need_rst:
             decl.append("    wire rst = ~rst_n;")
         head = (f"// GENERATED by tools/die_plan/bind.py from die_plan {self.plan['die']['name']} + the as-built die "
@@ -2191,6 +2360,8 @@ def cmd_bind(a):
     B.align_landings()
     B.regen_params()
     B.check_types()
+    if B.ab.get("land_pad_tree"):
+        B.pad_trees()
     files = []
     try:
         files = B.emit(out)
@@ -2402,6 +2573,22 @@ def kit_inline_imports(fl, kd):
     return out, rec
 
 
+def bindf_prefer(out, base):
+    """QC-A0 10-24: the RTL files the bind itself listed (OUT/bind.f, relative to the source tree) win every module-name
+    ambiguity in the kit closure.  A later tree that adds a second definition of a bound module (the A0 snapshot dirs
+    rtl/physical/a0_rc1[45]_selected_2000/ sort before rtl/physical/qfd_tile_*) must not silently swap the bound
+    module for another RTL in the G3 kit."""
+    f = Path(out) / "bind.f"
+    if not f.is_file():
+        return []
+    res = []
+    for ln in f.read_text().split():
+        p = Path(ln) if Path(ln).is_absolute() else Path(base) / ln
+        if p.is_file():
+            res.append(str(p))
+    return res
+
+
 def kit_dedupe(tn, fl):
     """one file per basename (gen_phys flattens rtl/): identical copies are dropped, different contents are an error."""
     out, by = [], {}
@@ -2496,6 +2683,50 @@ def cmd_kit_rtl(a):
                 body.append(f"    assign {n}[{Wd - 1}:{bwd}] = {Wd - bwd}'d0;  // spare plan bits (bound carries {bwd})")
                 spare.append(dict(port=n, bits=Wd - bwd))
             conns.append(f".{n}({w})")
+    # QC-A0 10-24 (CP1-R10 face_guard: coll_ftc kit FAILed dropped 8 / shared 8 = the spare bits of narrow ft slots: unread
+    # input bits + constant output bits): the spare bits of an ft slot whose _i and _o are BOTH narrow / unbound by the
+    # same bits ride the slot's own station chain (stations x ot_dp_st, keep) from S_i to S_o, so every plan pin bit is
+    # registered at its face like a bound bit.  Spare bits of other buses keep the rule above (listed in spare_out_bits).
+    spare_in = {}
+    for d, n, W, Wd, ep in plan:
+        if d != "input":
+            continue
+        if n not in bmap:
+            spare_in[n] = (0, W)                         # whole bus (data + epoch) unread
+        else:
+            bwd = bmap[n][1] - 1 if ep else bmap[n][1]
+            if bwd < Wd:
+                spare_in[n] = (bwd, Wd)
+    spare_pass = []
+    for sl in t.get("ft_slots", []):
+        ni, no = gen_rtl.sv_id(sl["name"] + "_i"), gen_rtl.sv_id(sl["name"] + "_o")
+        k = max(1, int(sl.get("stations", 1)))
+        so = next((x for x in spare if x["port"] == no), None)
+        if ni not in spare_in or so is None:
+            continue
+        lo, hi = spare_in[ni]
+        if hi - lo != so["bits"]:
+            continue
+        wd = hi - lo
+        if no in bmap:
+            old_a = f"    assign {no}[{hi - 1}:{lo}] = {wd}'d0;  // spare plan bits (bound carries {lo})"
+        else:
+            old_a = f"    assign {no} = {hi}'d0;  // plan bus with no bound bit (spare lane)"
+        if old_a not in body:
+            continue
+        i = body.index(old_a)
+        chain = [f"    // spare ft bits {sl['name']} [{hi - 1}:{lo}]: {k} station(s) S_i -> S_o (registered at both faces)"]
+        prev = f"{ni}[{hi - 1}:{lo}]"
+        for j in range(k):
+            q = f"{no}[{hi - 1}:{lo}]" if j == k - 1 else f"sp_{no}_s{j}"
+            if j < k - 1:
+                chain.append(f"    wire [{wd - 1}:0] {q};")
+            chain.append(f"    ot_dp_st #(.W({wd})) u_ft_spare_{no}_s{j} (.clk(clk), .rst_n(1'b1), .d({prev}), .ea(1'b0), "
+                         f".q({q}), .eq());")
+            prev = q
+        body[i:i + 1] = chain
+        spare.remove(so)
+        spare_pass.append(dict(slot=sl["name"], bits=wd, stations=k))
     extra = []
     for d, w, n in bports:
         if n in seen:
@@ -2534,7 +2765,7 @@ def cmd_kit_rtl(a):
     base = plan_base(a.plan, raw)
     idx = E.module_index(ab0.get("rtl_roots", ["rtl"]), ab0.get("files", []), base)
     prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab0.get("prefer", [])] + \
-        rep.get("extra_lib", [])
+        rep.get("extra_lib", []) + bindf_prefer(out, base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
                    {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync"})
@@ -2555,7 +2786,7 @@ def cmd_kit_rtl(a):
     bbs = {str(Path(m["bb"])): m["model"] for m in macros.values() if m.get("bb") and m.get("model")}
     (kd / "kit_rtl_sim.f").write_text("\n".join(bbs.get(str(x), str(x)) for x in fl) + "\n")
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
-               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, narrow_buses=narrow,
+               variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, narrow_buses=narrow,
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined,
                hard_macros=dict(sorted(macros.items())),
