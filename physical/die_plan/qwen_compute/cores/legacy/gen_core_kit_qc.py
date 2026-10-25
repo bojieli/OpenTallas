@@ -415,13 +415,14 @@ def main():
     if rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
         ptype = rec["plan_type"]
         pt_ = plan["partition_types"][ptype]
-        hcs = [h for h in pt_.get("hard_cores", []) if h["module"] == a.module]
-        assert hcs or any(c.get("module") == a.module for c in pt_.get("contents", [])), ptype
-        outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
+        pmod = rec.get("plan_module", a.module)   # QC: variant recipe keys name their plan module
+        hcs = [h for h in pt_.get("hard_cores", []) if h["module"] == pmod]
+        assert hcs or any(c.get("module") == pmod for c in pt_.get("contents", [])), ptype
+        outline, lpins = lef_contract(REPO / rec["lef_contract"], pmod)
         for h_ in hcs:   # QC: the closed geometry must be the plan's slot exactly
             if [round(v, 4) for v in h_["outline_um"]] != [round(v, 4) for v in outline]:
                 raise SystemExit(f"{a.module}: closed LEF {outline} != plan hard core {h_['inst']} {h_['outline_um']}")
-        hc = dict(module=a.module, outline_um=outline, lef=rec["lef_contract"], pins=lpins,
+        hc = dict(module=pmod, outline_um=outline, lef=rec["lef_contract"], pins=lpins,
                   pins_file=rec["lef_contract"])
     else:
         ptype, hc = plan_core(plan, rec.get("plan_module", a.module))
