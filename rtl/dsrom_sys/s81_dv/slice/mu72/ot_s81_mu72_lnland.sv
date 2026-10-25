@@ -35,3 +35,30 @@ module ot_s81_mu72_lnland #(parameter integer MUT = 0) (
     assign {n_li_r, n_rxv, n_lo_v, n_lo_d} = kn;
     assign {k_st, k_flt, k_lo_r, k_li_v, k_li_d} = nk;
 endmodule
+
+// S81/PORTFIX-FLT 10-25 (D-FNET, S81 DECISION 4): ot_s81_mu72_lnland_nst = ot_s81_mu72_lnland WITHOUT the PHY lane status
+// landing (no n_st in, no k_st out; N -> K bundle 557 b), for the lane ends whose lep has no host plane (s_0N, s_0S,
+// s_7S: k_st had no consumer there, an open output of the LP partition).  k_st = {live, fault} of the die rx port is
+// pure status for the fault network: its fault bit rx[512] already enters the lane (lane rx[514] -> flt[2], sticky in the
+// lep's fault collector via l<i>_f -> the slice's 1-bit `fault`), and live is status.  Same landing, same +3 each way;
+// s_7N keeps ot_s81_mu72_lnland (its k_st feeds the host plane f_lf).  MUT as ot_s81_mu72_lnland.
+module ot_s81_mu72_lnland_nst #(parameter integer MUT = 0) (
+    input  wire         ck_k, ck_n, rs_k, rs_n,
+    // K side (u_lep)
+    input  wire         k_lo_v,  input  wire [552:0] k_lo_d, output wire k_lo_r,
+    output wire         k_li_v,  output wire [552:0] k_li_d, input  wire k_li_r,
+    input  wire         k_rxv,   output wire [2:0]   k_flt,
+    // N side (u_ln)
+    output wire         n_lo_v,  output wire [552:0] n_lo_d, input  wire n_lo_r,
+    input  wire         n_li_v,  input  wire [552:0] n_li_d, output wire n_li_r,
+    output wire         n_rxv,   input  wire [2:0]   n_flt
+);
+    wire [555:0] kn_i = {k_li_r, k_rxv, k_lo_v, k_lo_d}, kn_o;
+    wire [556:0] nk_i = {n_flt, n_lo_r, n_li_v, n_li_d}, nk_o;
+    ot_s81_mu72_land #(.W(556)) u_kn (.ck_w(ck_k), .ck_r(ck_n), .rs_w(rs_k), .rs_r(rs_n), .i(kn_i), .o(kn_o));
+    ot_s81_mu72_land #(.W(557)) u_nk (.ck_w(ck_n), .ck_r(ck_k), .rs_w(rs_n), .rs_r(rs_k), .i(nk_i), .o(nk_o));
+    wire [555:0] kn = (MUT == 1) ? kn_i : (MUT == 3) ? {kn_i[555], kn_o[554:0]} : kn_o;
+    wire [556:0] nk = (MUT == 2) ? nk_i : nk_o;
+    assign {n_li_r, n_rxv, n_lo_v, n_lo_d} = kn;
+    assign {k_flt, k_lo_r, k_li_v, k_li_d} = nk;
+endmodule

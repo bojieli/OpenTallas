@@ -36,7 +36,7 @@ module tb_lnl_mon #(parameter integer W = 1) (input wire ck_s, ck_d, input wire 
     end
 endmodule
 
-module tb_lnl_side #(parameter integer LAND = 1, CRED = 12, MUT = 0, LAT1 = 9, KIT = 0) (
+module tb_lnl_side #(parameter integer LAND = 1, CRED = 12, MUT = 0, LAT1 = 9, KIT = 0, NST = 0) (
     input wire ck_k, ck_n0, ck_n1, rst_n,
     input wire [1103:0] ro, output wire [1103:0] ri, output wire [31:0] rt, output wire fault, output wire [5:0] flt,
     output wire [1025:0] pma_tx, output wire [1:0] pma_tck, input wire [1025:0] pma_rx, input wire [1:0] pma_rck,
@@ -61,12 +61,22 @@ module tb_lnl_side #(parameter integer LAND = 1, CRED = 12, MUT = 0, LAT1 = 9, K
         wire [31:0] esum, psum;                      // per-lane landing contract errors / pulses (0 when unlanded)
         if (LAND != 0) begin : g_land
             wire [1:0] kst;
+            if (NST != 0) begin : g_nst   // S81/PORTFIX-FLT 10-25: the status-less landing of the s_0N / s_0S / s_7S ends
+            ot_s81_mu72_lnland_nst #(.MUT(g == 0 ? ((MUT == 1) ? 1 : (MUT == 3) ? 3 : 0) : ((MUT == 2) ? 2 : 0))) u_lnl (
+                .ck_k(ck_k), .ck_n(ckn[g]), .rs_k(rk), .rs_n(rnn[g]),
+                .k_lo_v(lv[g]), .k_lo_d(ld[553*g +: 553]), .k_lo_r(lr[g]), .k_li_v(iv[g]), .k_li_d(id[553*g +: 553]),
+                .k_li_r(ir[g]), .k_rxv(rxv[g]), .k_flt(lf[3*g +: 3]),
+                .n_lo_v(nlv[g]), .n_lo_d(nld[553*g +: 553]), .n_lo_r(nlr[g]), .n_li_v(niv[g]), .n_li_d(nid[553*g +: 553]),
+                .n_li_r(nir[g]), .n_rxv(nrxv[g]), .n_flt(nf[3*g +: 3]));
+            assign kst = 2'b00;
+            end else begin : g_st
             ot_s81_mu72_lnland #(.MUT(g == 0 ? ((MUT == 1) ? 1 : (MUT == 3) ? 3 : 0) : ((MUT == 2) ? 2 : 0))) u_lnl (
                 .ck_k(ck_k), .ck_n(ckn[g]), .rs_k(rk), .rs_n(rnn[g]),
                 .k_lo_v(lv[g]), .k_lo_d(ld[553*g +: 553]), .k_lo_r(lr[g]), .k_li_v(iv[g]), .k_li_d(id[553*g +: 553]),
                 .k_li_r(ir[g]), .k_rxv(rxv[g]), .k_flt(lf[3*g +: 3]), .k_st(kst),
                 .n_lo_v(nlv[g]), .n_lo_d(nld[553*g +: 553]), .n_lo_r(nlr[g]), .n_li_v(niv[g]), .n_li_d(nid[553*g +: 553]),
                 .n_li_r(nir[g]), .n_rxv(nrxv[g]), .n_flt(nf[3*g +: 3]), .n_st(st[2*g +: 2]));
+            end
             integer e0, e1, e2, e3, c0, c1, c2, c3;
             tb_lnl_mon #(.W(553)) m_lo (.ck_s(ck_k), .ck_d(ckn[g]), .v_s(lv[g]), .d_s(ld[553*g +: 553]), .v_d(nlv[g]), .d_d(nld[553*g +: 553]), .err(e0), .n(c0));
             tb_lnl_mon #(.W(553)) m_li (.ck_s(ckn[g]), .ck_d(ck_k), .v_s(niv[g]), .d_s(nid[553*g +: 553]), .v_d(iv[g]), .d_d(id[553*g +: 553]), .err(e1), .n(c1));
@@ -152,7 +162,7 @@ module tb_lnl_side_r4l #(parameter integer MUT = 0, LAT1 = 9) (
     end
 endmodule
 
-module tb_s81_mu72_lnland #(parameter integer P_LAND = 1, P_CRED = 12, P_MUT = 0, P_PH = 0, SEED = 1, P_R4L = 0, P_KIT = 0,
+module tb_s81_mu72_lnland #(parameter integer P_LAND = 1, P_CRED = 12, P_MUT = 0, P_PH = 0, SEED = 1, P_R4L = 0, P_KIT = 0, P_NST = 0,
                             P_RATE = 80, N_BURST = 600, P_SLACK = 4, WAIT = 8000);
     localparam real T = 0.8333;
     reg ck0 = 0; always #(T / 2) ck0 = ~ck0;                          // reference + DUT ck_K of side X
@@ -183,9 +193,9 @@ module tb_s81_mu72_lnland #(parameter integer P_LAND = 1, P_CRED = 12, P_MUT = 0
             .rst_n(rst_n), .ro(yro), .ri(dyri), .rt(dyrt), .fault(dyf), .flt(f_dy), .pma_tx(q_dy), .pma_tck(k_dy), .pma_rx(q_dx), .pma_rck(k_dx), .lerr(le_dy), .lpulses(lp_dy));
         assign dxl = f_dx[5:0] | f_dx[11:6]; assign dyl = f_dy[5:0] | f_dy[11:6];
     end else begin : g_plain
-    tb_lnl_side #(.LAND(P_LAND), .CRED(P_CRED), .MUT(P_MUT), .KIT(P_KIT)) s_dx (.ck_k(cxk), .ck_n0(P_LAND ? cxn0 : cxk), .ck_n1(P_LAND ? cxn1 : cxk),
+    tb_lnl_side #(.LAND(P_LAND), .CRED(P_CRED), .MUT(P_MUT), .KIT(P_KIT), .NST(P_NST)) s_dx (.ck_k(cxk), .ck_n0(P_LAND ? cxn0 : cxk), .ck_n1(P_LAND ? cxn1 : cxk),
         .rst_n(rst_n), .ro(xro), .ri(dxri), .rt(dxrt), .fault(dxf), .flt(dxl), .pma_tx(p_dx), .pma_tck(c_dx), .pma_rx(p_dy), .pma_rck(c_dy), .lerr(le_dx), .lpulses(lp_dx));
-    tb_lnl_side #(.LAND(P_LAND), .CRED(P_CRED), .MUT(0), .KIT(P_KIT)) s_dy (.ck_k(cyk), .ck_n0(P_LAND ? cyn0 : cyk), .ck_n1(P_LAND ? cyn1 : cyk),
+    tb_lnl_side #(.LAND(P_LAND), .CRED(P_CRED), .MUT(0), .KIT(P_KIT), .NST(P_NST)) s_dy (.ck_k(cyk), .ck_n0(P_LAND ? cyn0 : cyk), .ck_n1(P_LAND ? cyn1 : cyk),
         .rst_n(rst_n), .ro(yro), .ri(dyri), .rt(dyrt), .fault(dyf), .flt(dyl), .pma_tx(p_dy), .pma_tck(c_dy), .pma_rx(p_dx), .pma_rck(c_dx), .lerr(le_dy), .lpulses(lp_dy));
     end endgenerate
     tb_lnl_side #(.LAND(0), .CRED(8)) s_rx (.ck_k(ck0), .ck_n0(ck0), .ck_n1(ck0),

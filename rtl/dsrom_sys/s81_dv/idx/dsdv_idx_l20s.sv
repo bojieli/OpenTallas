@@ -938,6 +938,8 @@ endmodule
 // beats join u_sel.vo_n in ONE output register (vo_n leaves a flop: the northbound rung bk_sel -> seqhost is one edge
 // longer for every beat, priced in the rung schedule); a relay beat in a cycle where u_sel.vo_n is not idle (all-zero)
 // is a sticky fault (static schedule, never arbitrated).  fault = u_sel.fault | the encoder / merge faults (registered).
+// S81/PORTFIX-FLT 10-25: fault = sticky (registered) OR of u_sel.fault, u_vm.fault, u_tx.st[0] and the encoder / merge
+// faults; the vm_fault / tx_st ports are gone (die fault ring: 1-bit feeder bk_sel -> gunit -> s_3N C stop).
 // SELE 0 = the pre-H23 master (no encoder, vo_n / fault straight from u_sel).
 // ===================================================================================================================
 module dsdv_bk_sel_vmtx #(
@@ -964,10 +966,13 @@ module dsdv_bk_sel_vmtx #(
     input  wire [V-1:0]  ca,
     input  wire [V-1:0]  cb,
     output wire          fault,
-    output wire          vm_fault,
-    output wire [V-1:0]  tl_o,
-    output wire [15:0]   tx_st
+    output wire [V-1:0]  tl_o
 );
+    // S81/PORTFIX-FLT 10-25 (S81 DECISION 4): ONE 1-bit sticky fault port.  vm_fault (vmux) and tx_st (the tree TX
+    // status {fault cause 8, 0, done, armed, busy, fault}) are internal: their fault bits (vm_fault, tx_st[0]) are OR-ed
+    // into the registered sticky fault; done / armed / busy and the cause code are dropped (bench taps only).
+    wire         vm_fault;
+    wire [15:0]  tx_st;
     wire [V-1:0] vi_m;
     dsdv_idx_vmux #(.V(V)) u_vm (.ck(clk), .rst(rst_n), .i_r(vi_s), .i_s(vi_idx), .i_a(ca), .i_b(cb), .o(vi_m), .fault(vm_fault));
     wire [V-1:0] sel_vo_n; wire sel_f;
@@ -984,11 +989,13 @@ module dsdv_bk_sel_vmtx #(
             else begin
                 vn[0] <= sel_vo_n[0] | eo[0];
                 if (eo[0] && sel_vo_n != {V{1'b0}}) mf <= 1'b1;               // relay beat on a busy rung slot
-                fq <= sel_f | ef | mf;
+                fq <= fq | sel_f | ef | mf | vm_fault | tx_st[0];
             end
         always @(posedge clk) vn[V-1:1] <= sel_vo_n[V-1:1] | eo[V-1:1];
         assign vo_n = vn; assign fault = fq;
     end else begin : g_nosel
-        assign vo_n = sel_vo_n; assign fault = sel_f;
+        reg fq;
+        always @(posedge clk or negedge rst_n) if (!rst_n) fq <= 1'b0; else fq <= fq | sel_f | vm_fault | tx_st[0];
+        assign vo_n = sel_vo_n; assign fault = fq;
     end endgenerate
 endmodule

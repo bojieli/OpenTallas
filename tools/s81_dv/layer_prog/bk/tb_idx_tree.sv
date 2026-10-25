@@ -34,7 +34,9 @@ module tb_idx_tree;
         // dsdv_idx_tx_n32), die straps as the IDX4 bind table; i_r (column rung) idle as before
         dsdv_bk_sel_vmtx #(.TX_MUT(`TX_MUT), .TX_SRAM(`TX_SRAM)) u_die (.clk(clk), .rst_n(rst_n), .tap_k(8'h11), .sink_k(8'h10),
             .ik(3'd4), .ek(3'd5), .uid(8'h5B), .eg_n(1'b0), .vi_s({V{1'b0}}), .vo_n(vo_n[g]), .vi_n(vi_n[g]), .vo_s(vo_s[g]),
-            .vi_idx(i_s[g]), .ca(i_a[g]), .cb(i_b[g]), .fault(f_sel[g]), .vm_fault(f_vm[g]), .tl_o(lo[g]), .tx_st(tst[g]));
+            .vi_idx(i_s[g]), .ca(i_a[g]), .cb(i_b[g]), .fault(f_sel[g]), .tl_o(lo[g]));
+        // S81/PORTFIX-FLT 10-25: vm_fault / tx_st are internal now (the port fault is their sticky OR): bench taps
+        assign f_vm[g] = u_die.vm_fault; assign tst[g] = u_die.tx_st;
 `else
         dsdv_idx_vmux u_vm (.ck(clk), .rst(rst_n), .i_r({V{1'b0}}), .i_s(i_s[g]), .i_a(i_a[g]), .i_b(i_b[g]), .o(vi_s[g]), .fault(f_vm[g]));
         dsdv_bk_sel u_bk_sel (.clk(clk), .rst_n(rst_n), .tap_k(8'h11), .sink_k(8'h10), .ik(3'd4), .ek(3'd5), .uid(8'h5B),
