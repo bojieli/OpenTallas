@@ -10,6 +10,9 @@
 # Env: OT_LEAF_AFF_UM (default 30), OT_LEAF_AFF_MAX_GROUP (default 24), OT_LEAF_AFF_SLACK (default 4),
 #      OT_LEAF_AFF_DEPTH (buffer / inverter hops followed, default 4), OT_LEAF_AFF_REPORT_ONLY=1 (count, no change).
 # Prints OT_LEAF_AFF ... summary lines (pairs, cross-leaf before / after, groups moved / skipped by reason).
+# The ORFS POST_CTS hook may be sourced inside a procedure. Helper procs
+# share these dictionaries/union-find arrays through the global namespace.
+global la_d la_ck la_par
 proc la_env {k d} { expr {[info exists ::env($k)] && $::env($k) ne "" ? $::env($k) : $d} }
 set la_um [la_env OT_LEAF_AFF_UM 30.0]
 set la_maxg [la_env OT_LEAF_AFF_MAX_GROUP 24]
