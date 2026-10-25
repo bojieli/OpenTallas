@@ -763,7 +763,12 @@ def row_ctl_events(die, prog):
             # canonical BK addressed-drain sink (COORD ruling 2026-10-24 18:55; ot_dsdv_vstop BK_DRAIN_SINK=1): the
             # u_bk_sel rung stop between u_seqhost and u_s_4S consumes a kind-0 CTL beat addressed to its uid with op 1,
             # so the beat never reaches a slice (no vi / line arrival); record the consumption only.
-            prog.events.append(dict(cycle=r['issue'], inst=BK_SEL_INST, port='vi_n', dir='internal', kind='BKDRAIN',
+            # ctl_at = the edge the beat lands at u_bk_sel.vi_n (seqhost V command register -> vo_s + rung land + tvS_seqhost
+            # age): dv_cut_replay lists it as an internal event (not partial); its effect -- no slice / line CTL arrival --
+            # is what the line checks assert (their expected beats exclude it).
+            lk = die.links.get('tvS_seqhost', {})
+            ctl_at = r['issue'] + SEQ['v_cmd_to_vo'] + SEQ['vo_s_land'] + lk['age_edges'] if 'age_edges' in lk else None
+            prog.events.append(dict(cycle=r['issue'], inst=BK_SEL_INST, port='vi_n', dir='internal', kind='BKDRAIN', ctl_at=ctl_at,
                                     tag=f"{prog.tnames[ti]}", payload=f'template {ti}', from_row=r['issue'],
                                     note='consumed at the BK stop (addressed drain sink); no slice CTL arrival'))
             continue
