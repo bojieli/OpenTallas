@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_idx_tx_i13",
+ "enable": false,
+ "reason": "Source-registered (dsdv_idx_tx_i13): every input lands in a flop at the pin (vr / orr), every output leaves a flop (lo / st)."
+}

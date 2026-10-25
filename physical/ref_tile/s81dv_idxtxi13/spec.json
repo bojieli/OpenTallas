@@ -1,0 +1,236 @@
+{
+ "name": "s81dv_idxtxi13",
+ "top": "dsdv_idx_tx_i13",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tx_i13.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "V": 276,
+  "D": 8192,
+  "C": 1024,
+  "RW": 128,
+  "IF": 128,
+  "GF": 8,
+  "SRAM_MACRO": 1,
+  "RDL": 1,
+  "WDL": 1,
+  "RIL": 1,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 626.4,
+  "h": 561.6,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_dense.g_m.g_b[0].u_mem",
+   "at": [
+    72.576,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_dense.g_m.g_b[1].u_mem",
+   "at": [
+    72.576,
+    138.24
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_dense.g_m.g_b[2].u_mem",
+   "at": [
+    72.576,
+    233.28
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_dense.g_m.g_b[3].u_mem",
+   "at": [
+    72.576,
+    328.32
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_dense.g_m.g_b[4].u_mem",
+   "at": [
+    378.432,
+    328.32
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_dense.g_m.g_b[5].u_mem",
+   "at": [
+    378.432,
+    233.28
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_dense.g_m.g_b[6].u_mem",
+   "at": [
+    378.432,
+    138.24
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u_dense.g_m.g_b[7].u_mem",
+   "at": [
+    378.432,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "inst": "u_crow.g_m.g_c[0].g_256.u_mem",
+   "at": [
+    72.576,
+    423.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "inst": "u_crow.g_m.g_c[1].g_256.u_mem",
+   "at": [
+    378.432,
+    423.36
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "u_ids.g_m.g_c[0].g_128.u_mem",
+   "at": [
+    378.432,
+    486.0
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "u_ids.g_m.g_c[1].g_128.u_mem",
+   "at": [
+    495.072,
+    486.0
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "lo",
+   "st"
+  ],
+  "W": [
+   "ck",
+   "rst"
+  ]
+ },
+ "pin_ranges": {
+  "vi": [
+   21.6,
+   302.4
+  ],
+  "vo": [
+   324.0,
+   604.8
+  ],
+  "lo": [
+   21.6,
+   518.4
+  ],
+  "st": [
+   529.2,
+   604.8
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (dsdv_idx_tx_i13): every input lands in a flop at the pin (vr / orr), every output leaves a flop (lo / st)."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "structural_change": "s81dv_idxtxi13 (S81-I13 2026-10-25): rank-aware indexed13 TX helper restructured accelerator-style: candidate rows in 2x 256x256 SRAM (one indexed13 word per row, 2 tag banks), per-qslot linked row lists, O(1) write-time duplicate/order check, streaming merge-join lookup with a 2-row window (no 1024-way compare), selected ids in 2x 128x256 SRAM, dense store 8x 1024x256 with RDL/WDL/RIL landings as n32x. 554 cycles command->done (K=512).",
+ "why_floorplan": "Same TX slot 626.4 x 561.6 and the n32x two-column structure: dense banks 0-3 col A x 72.576, 4-7 col B x 378.432 (rows pitch 95.04, 24.6-um channels); candidate-row halves at y 423.36 in both columns (rq window sits in the mid band between them); id FIFO pair N-E at y 486 next to the vo pins (N face E half). Mid band 131 um holds the merge/pack logic.",
+ "job": {
+  "owner": "S81-I13",
+  "branch": "claude/s81-i13r-1025",
+  "tag": "i13",
+  "purpose": "I13 TX helper (SRAM rows + merge-join)",
+  "views_to": "physical/ref_tile/s81dv_idxtxi13/views",
+  "record_to": "results/rtl/ref_tile/s81dv_idxtxi13",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/lib",
+   "results/s81_i13r_1025/bench"
+  ],
+  "benches": [],
+  "benched_by_note": "results/s81_i13r_1025/bench (Verilator 5.050 R3/SRAM/multi/mutant3, PASS)"
+ },
+ "children": [],
+ "hold_budget": "die",
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "OT_SPINE_LEAF_N": "16",
+  "OT_SPINE_BIN": "32",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_SEG": "80",
+  "OT_SPINE_SYM_MERGE": "60",
+  "OT_SPINE_SYM_FAN": "8",
+  "OT_MEG_OUT_UM": "1.2",
+  "OT_MEG_DEPTH_UM": "2.4"
+ },
+ "clock": "spine",
+ "pin_hook_before_flops": [
+  "physical/common_flow/macro_pin_flops.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/common_flow/macro_pin_flops_release.tcl"
+ ]
+}
