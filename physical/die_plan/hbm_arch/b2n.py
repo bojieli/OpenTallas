@@ -96,6 +96,164 @@ def move_boundaries(plan, log):
         log.append(f"boundary {grow} +{d:g} / {shrink} -{d:g} um ({why})")
 
 
+LANE_DELTA = HERE / "B2n_inputs" / "lane_delta.json"
+OPPF = {"E": "W", "W": "E", "N": "S", "S": "N"}
+FACE_LAYERS = {"N": ["M7", "M5"], "S": ["M7", "M5"], "E": ["M6", "M4"], "W": ["M6", "M4"]}
+
+
+def _mir(n):
+    return "NE_" + n[3:] if n.startswith("NW_") else "NW_" + n[3:] if n.startswith("NE_") else n
+
+
+def _adjacency(P, minc=400.0):
+    """partition adjacency on the current rects: adj[a][b] = (face of a, lo, hi) of the shared segment (um)."""
+    R = {n: P.rect(n) for n in P.parts}
+    adj = defaultdict(dict)
+    for a, (x0, y0, x1, y1) in R.items():
+        for b, (a0, b0, a1, b1) in R.items():
+            if a == b:
+                continue
+            if abs(x1 - a0) < 0.01 and min(y1, b1) - max(y0, b0) > minc:
+                adj[a][b] = ("E", max(y0, b0), min(y1, b1)); adj[b][a] = ("W", max(y0, b0), min(y1, b1))
+            if abs(y1 - b0) < 0.01 and min(x1, a1) - max(x0, a0) > minc:
+                adj[a][b] = ("N", max(x0, a0), min(x1, a1)); adj[b][a] = ("S", max(x0, a0), min(x1, a1))
+    return R, adj
+
+
+def _lane_slots(P, lid):
+    """[(part, slot name)] crossed by lane lid (the ft slot of every intermediate partition)."""
+    out = []
+    for pid in P.lanes[lid]["ports"][:-1]:
+        d = P.ports[pid]["dst"]
+        out.append((d["part"], d["bus"][:-2]))
+    return out
+
+
+def lane_delta(plan, log, path=LANE_DELTA):
+    """HBM-BIND native-bind lane capacity (B2n_inputs/lane_delta.json, from b2_delays.json capacity_over / no_lane):
+    widen lanes (ports along the lane, end buses, ft slots in every crossed type; a mirrored pair Lx / Lxm takes the max
+    of its two needs, so replicated types keep one bus / slot width) and add new lanes (Dijkstra over abutting soft
+    partitions, gen_arch.shortest; mirrored NW <-> NE with shared bus / slot names in replicated types, 'm' names in
+    single-instance ones, as emit_mirror).  Windows are provisional: rewindow / enforce_mirror place them."""
+    import gen_arch as GA
+    D = json.loads(Path(path).read_text())
+    P = S.Plan(plan)
+    T = plan["partition_types"]
+    ports = {p["id"]: p for p in plan["ports"]}
+    lanes = {l["id"]: l for l in plan["lanes"]}
+
+    def tbus(part, name):
+        return next(b for b in T[P.parts[part]["type"]]["buses"] if b["name"] == name)
+
+    def tslot(part, name):
+        return next(s for s in T[P.parts[part]["type"]]["ft_slots"] if s["name"] == name)
+
+    def set_width(lid, w):
+        L = lanes[lid]
+        for pid in L["ports"]:
+            ports[pid]["width"] = w
+        p0, p1 = ports[L["ports"][0]], ports[L["ports"][-1]]
+        tbus(p0["src"]["part"], p0["src"]["bus"])["width"] = w
+        tbus(p1["dst"]["part"], p1["dst"]["bus"])["width"] = w
+        for part, sn in _lane_slots(P, lid):
+            tslot(part, sn)["width"] = w
+
+    rows = []
+    for e in D["widen"]:
+        for lid, w in zip(e["lanes"], e["width"]):
+            for x in (lid, lid + "m"):
+                if x not in lanes:
+                    continue
+                w0 = int(ports[lanes[x]["ports"][0]]["width"])
+                assert w >= w0, f"lane_delta: {x} would shrink {w0} -> {w}"
+                if w > w0:
+                    set_width(x, w)
+                    rows.append(f"{x} {w0}->{w}")
+                if e.get("place") == "high":      # desired window at the high end of every face it crosses (order hint
+                    for pid in lanes[x]["ports"]:  # for rewindow: keeps the neighbours' windows where they were)
+                        pr = ports[pid]
+                        _, a1, b1 = CK.face_line(P.rect(pr["src"]["part"]), pr["face"])
+                        _, a2, b2 = CK.face_line(P.rect(pr["dst"]["part"]), S.OPP[pr["face"]])
+                        L_ = max(S.port_pins_count(pr) / PIN_DENS + 0.5, MIN_WIN)
+                        hi = min(b1, b2) - 0.5
+                        pr["window_um"] = [snap(hi - L_), snap(hi)]
+    # ---- new lanes
+    R, adj = _adjacency(P)
+    hard = {n for n in P.parts if T[P.parts[n]["type"]].get("hard")}
+    nxt = 1 + max(int(l[1:].rstrip("m")) for l in lanes)
+    added = []
+    for e in D["new"]:
+        i = nxt
+        nxt += 1
+        a, b = e["src"], e["dst"]
+        pth = [a] + list(e["via"]) + [b] if e.get("via") else GA.shortest(R, adj, P.parts, a, b, hard)
+        if pth is None:
+            raise SystemExit(f"lane_delta: no path {a}->{b}")
+        paths = [pth] + ([[_mir(x) for x in pth]] if e.get("mirror") else [])
+        for mi, pp in enumerate(paths):
+            for x, y in zip(pp, pp[1:]):
+                assert y in adj[x], f"lane_delta: {x} and {y} do not abut ({pp})"
+            for h in range(1, len(pp) - 1):
+                assert adj[pp[h - 1]][pp[h]][0] != OPPF[adj[pp[h]][pp[h + 1]][0]], f"lane_delta: U-turn at {pp[h]} ({pp})"
+            lid = f"L{i}" + ("m" if mi else "")
+
+            def bn(part, base):
+                return base if (_mir(part) != part or not mi) else base.replace(f"L{i}", f"L{i}m", 1)
+            pids = []
+            for h in range(len(pp) - 1):
+                x, y = pp[h], pp[h + 1]
+                face, lo, hi = adj[x][y]
+                sb = bn(x, f"L{i}_o" if h == 0 else f"L{i}x{h}_o")
+                db = bn(y, f"L{i}_i" if h == len(pp) - 2 else f"L{i}x{h + 1}_i")
+                n = int(e["width"]) + 1
+                L_ = max(n / PIN_DENS + 0.5, MIN_WIN)
+                c = 0.5 * (lo + hi)
+                pr = dict(id=f"{lid}_{h}", src=dict(part=x, bus=sb), dst=dict(part=y, bus=db), width=int(e["width"]),
+                          kind=e["kind"], face=face, layers=list(FACE_LAYERS[face]),
+                          window_um=[snap(c - L_ / 2), snap(c + L_ / 2)])
+                if mi and face in "NS":
+                    pr["order"] = "lsb_high"
+                plan["ports"].append(pr)
+                ports[pr["id"]] = pr
+                pids.append(pr["id"])
+                for part, bus, dr in ((x, sb, "out"), (y, db, "in")):
+                    if (h == 0 and dr == "out") or (h == len(pp) - 2 and dr == "in"):
+                        bl = T[P.parts[part]["type"]].setdefault("buses", [])
+                        if not any(q["name"] == bus for q in bl):
+                            bl.append(dict(name=bus, dir=dr, width=int(e["width"]), kind=e["kind"]))
+            for h in range(1, len(pp) - 1):
+                p = pp[h]
+                nm = f"L{i}x{h}" if not (_mir(p) == p and mi) else f"L{i}mx{h}"
+                sl = T[P.parts[p]["type"]].setdefault("ft_slots", [])
+                if not any(q["name"] == nm for q in sl):
+                    tf = {P.die_face(p, g): g for g in "NSEW"}      # die face -> type face (MY swaps E / W)
+                    sl.append(dict(name=nm, in_face=tf[OPPF[adj[pp[h - 1]][p][0]]], out_face=tf[adj[p][pp[h + 1]][0]],
+                                   width=int(e["width"]), stations=1))
+            L = dict(id=lid, ports=pids, note=f"{pp[0]}->{pp[-1]} {e['kind']}" + (" (mirror)" if mi else "") +
+                     " (B2n lane delta, HBM-BIND)")
+            plan["lanes"].append(L)
+            lanes[lid] = L
+            added.append(f"{lid} {pp[0]}->{pp[-1]} {e['width']} b via {'/'.join(pp[1:-1]) or '-'}")
+    # ---- every bundle (NW pair and its NE mirror) carries its RTL need
+    P = S.Plan(plan)
+    cap = defaultdict(int)
+    for lid, L in P.lanes.items():
+        p0, p1 = P.ports[L["ports"][0]], P.ports[L["ports"][-1]]
+        cap[(p0["src"]["part"], p1["dst"]["part"], p0["kind"])] += int(p0["width"])
+    short = []
+    for bd in D["bundles"]:
+        keys = [(bd["src"], bd["dst"], bd["kind"])]
+        if len(bd["need"]) > 1:
+            keys.append((_mir(bd["src"]), _mir(bd["dst"]), bd["kind"]))
+        for k, nd in zip(keys, bd["need"]):
+            if cap[k] < nd:
+                short.append(f"{k[0]}->{k[1]} {k[2]} {cap[k]} < {nd}")
+    log.append(f"lane delta ({Path(path).name}, {D['source']['file']} @ {D['source']['commit'].split()[0]}): "
+               f"{len(rows)} lanes widened ({', '.join(rows)}); {len(added)} new lanes ({'; '.join(added)}); {len(D['bundles']) - len(short)}/{len(D['bundles'])} bundles carry their RTL need"
+               + (f"; SHORT (hub perimeter / su-row cuts full, partition change needed): {'; '.join(short)}" if short else ""))
+    return short
+
+
 def drop_die_layers(plan, log):
     n = 0
     for t in plan["partition_types"].values():
@@ -524,6 +682,7 @@ def main(argv=None):
                                                         "stations); B2m = ")
     drop_die_layers(plan, log)
     move_boundaries(plan, log)
+    short = lane_delta(plan, log)
     rewindow(plan, log)
     touched, pairs = enforce_mirror(plan, log)
     worst = rewindow(plan, log, fixed_ids=touched)
@@ -551,8 +710,24 @@ def main(argv=None):
     (out / "die_plan.json").write_text(json.dumps(plan, indent=0) + "\n")
     (out / "die_io.json").write_text((src / "die_io.json").read_text())
     (out / "b2n_report.json").write_text(json.dumps(dict(log=log, infeasible_faces=worst, unroutable=fails,
+                                                         lane_delta_short=short,
                                                          lane_cycle_delta={k: v for k, v in dc.items() if v}),
                                                     indent=1) + "\n")
+    lc = dict(schema="opentallas.hbm_b2n_lane_cycles.v1", plan="physical/die_plan/hbm_arch/B2n (claude/hbm-b2n-1024)",
+              rule="decision 12 / rulings 9.3+9.4 + HBM-BIND lane delta (B2n_inputs/lane_delta.json)",
+              summary=dict(lanes=len(dc), lanes_added=len(up), max_added=max(up) if up else 0, sum_added=sum(up),
+                           new_lanes=sorted(set(plan["latency"]["lanes"]) - set(c0)), lane_delta_short=short),
+              lanes={lid: dict(b2m=c0[lid]["cycles"] if lid in c0 else None, b2n=v["cycles"],
+                               added=(v["cycles"] - c0[lid]["cycles"]) if lid in c0 else None,
+                               note=P.lanes[lid].get("note", ""))
+                     for lid, v in sorted(plan["latency"]["lanes"].items(),
+                                          key=lambda kv: (int(kv[0][1:].rstrip("m")), kv[0]))})
+    src_t = json.loads((src / "die_plan.json").read_text())["partition_types"]
+    lc["types_changed"] = {tn: sorted(k for k in set(t) | set(src_t.get(tn, {})) if t.get(k) != src_t.get(tn, {}).get(k))
+                           for tn, t in sorted(plan["partition_types"].items()) if t != src_t.get(tn)}
+    rp = ROOT / "results/arch/hbm_arch_1024/b2n_lane_cycles.json"
+    if out.resolve() == (HERE / "B2n").resolve():
+        rp.write_text(json.dumps(lc, indent=1) + "\n")
     print("\n".join(log))
     for x in (worst[:5] + fails[:10]):
         print("  !", x)

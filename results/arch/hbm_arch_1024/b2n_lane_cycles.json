@@ -1,12 +1,28 @@
 {
  "schema": "opentallas.hbm_b2n_lane_cycles.v1",
  "plan": "physical/die_plan/hbm_arch/B2n (claude/hbm-b2n-1024)",
- "rule": "decision 12 / rulings 9.3+9.4",
+ "rule": "decision 12 / rulings 9.3+9.4 + HBM-BIND lane delta (B2n_inputs/lane_delta.json)",
  "summary": {
   "lanes": 298,
-  "lanes_added": 204,
+  "lanes_added": 202,
   "max_added": 47,
-  "sum_added": 2665
+  "sum_added": 2556,
+  "new_lanes": [
+   "L150",
+   "L150m",
+   "L151",
+   "L151m",
+   "L152",
+   "L152m",
+   "L153",
+   "L154",
+   "L155",
+   "L155m"
+  ],
+  "lane_delta_short": [
+   "NW_hub->root data 1491 < 3749",
+   "NE_hub->root data 1491 < 2709"
+  ]
  },
  "lanes": {
   "L0": {
@@ -155,26 +171,26 @@
   },
   "L12": {
    "b2m": 12,
-   "b2n": 24,
-   "added": 12,
+   "b2n": 29,
+   "added": 17,
    "note": "root->NW_hub data"
   },
   "L12m": {
    "b2m": 12,
-   "b2n": 24,
-   "added": 12,
+   "b2n": 29,
+   "added": 17,
    "note": "root->NE_hub data (mirror)"
   },
   "L13": {
    "b2m": 12,
-   "b2n": 22,
-   "added": 10,
+   "b2n": 26,
+   "added": 14,
    "note": "root->NW_hub data"
   },
   "L13m": {
    "b2m": 12,
-   "b2n": 22,
-   "added": 10,
+   "b2n": 26,
+   "added": 14,
    "note": "root->NE_hub data (mirror)"
   },
   "L14": {
@@ -239,14 +255,14 @@
   },
   "L19": {
    "b2m": 8,
-   "b2n": 14,
-   "added": 6,
+   "b2n": 12,
+   "added": 4,
    "note": "NW_b000->NW_hub data"
   },
   "L19m": {
    "b2m": 8,
-   "b2n": 14,
-   "added": 6,
+   "b2n": 12,
+   "added": 4,
    "note": "NE_b000->NE_hub data (mirror)"
   },
   "L20": {
@@ -275,14 +291,14 @@
   },
   "L22": {
    "b2m": 24,
-   "b2n": 53,
-   "added": 29,
+   "b2n": 51,
+   "added": 27,
    "note": "PHY_N->NW_hub data"
   },
   "L22m": {
    "b2m": 25,
-   "b2n": 61,
-   "added": 36,
+   "b2n": 59,
+   "added": 34,
    "note": "PHY_N->NE_hub data (mirror)"
   },
   "L23": {
@@ -503,14 +519,14 @@
   },
   "L41": {
    "b2m": 4,
-   "b2n": 12,
-   "added": 8,
+   "b2n": 11,
+   "added": 7,
    "note": "NW_spt0->NW_hub data"
   },
   "L41m": {
    "b2m": 4,
-   "b2n": 12,
-   "added": 8,
+   "b2n": 11,
+   "added": 7,
    "note": "NE_spt0->NE_hub data (mirror)"
   },
   "L42": {
@@ -791,14 +807,14 @@
   },
   "L65": {
    "b2m": 13,
-   "b2n": 23,
-   "added": 10,
+   "b2n": 22,
+   "added": 9,
    "note": "NW_hub->NW_b000 data"
   },
   "L65m": {
    "b2m": 13,
-   "b2n": 23,
-   "added": 10,
+   "b2n": 22,
+   "added": 9,
    "note": "NE_hub->NE_b000 data (mirror)"
   },
   "L66": {
@@ -899,14 +915,14 @@
   },
   "L74": {
    "b2m": 17,
-   "b2n": 31,
-   "added": 14,
+   "b2n": 29,
+   "added": 12,
    "note": "NW_hub->root data"
   },
   "L74m": {
    "b2m": 17,
-   "b2n": 31,
-   "added": 14,
+   "b2n": 29,
+   "added": 12,
    "note": "NE_hub->root data (mirror)"
   },
   "L75": {
@@ -959,14 +975,14 @@
   },
   "L79": {
    "b2m": 13,
-   "b2n": 33,
-   "added": 20,
+   "b2n": 32,
+   "added": 19,
    "note": "NW_hub->NW_mcb ctl"
   },
   "L79m": {
    "b2m": 13,
-   "b2n": 33,
-   "added": 20,
+   "b2n": 32,
+   "added": 19,
    "note": "NE_hub->NE_mcb ctl (mirror)"
   },
   "L80": {
@@ -995,38 +1011,38 @@
   },
   "L82": {
    "b2m": 13,
-   "b2n": 33,
-   "added": 20,
+   "b2n": 32,
+   "added": 19,
    "note": "NW_mcb->NW_hub ctl"
   },
   "L82m": {
    "b2m": 13,
-   "b2n": 33,
-   "added": 20,
+   "b2n": 32,
+   "added": 19,
    "note": "NE_mcb->NE_hub ctl (mirror)"
   },
   "L83": {
    "b2m": 5,
-   "b2n": 13,
-   "added": 8,
+   "b2n": 12,
+   "added": 7,
    "note": "NW_hub->NW_spb2 ctl"
   },
   "L83m": {
    "b2m": 5,
-   "b2n": 13,
-   "added": 8,
+   "b2n": 12,
+   "added": 7,
    "note": "NE_hub->NE_spb2 ctl (mirror)"
   },
   "L84": {
    "b2m": 4,
-   "b2n": 10,
-   "added": 6,
+   "b2n": 9,
+   "added": 5,
    "note": "NW_hub->NW_spt0 ctl"
   },
   "L84m": {
    "b2m": 4,
-   "b2n": 10,
-   "added": 6,
+   "b2n": 9,
+   "added": 5,
    "note": "NE_hub->NE_spt0 ctl (mirror)"
   },
   "L85": {
@@ -1055,50 +1071,50 @@
   },
   "L87": {
    "b2m": 5,
-   "b2n": 13,
-   "added": 8,
+   "b2n": 12,
+   "added": 7,
    "note": "NW_spb2->NW_hub ctl"
   },
   "L87m": {
    "b2m": 5,
-   "b2n": 13,
-   "added": 8,
+   "b2n": 12,
+   "added": 7,
    "note": "NE_spb2->NE_hub ctl (mirror)"
   },
   "L88": {
    "b2m": 4,
-   "b2n": 10,
-   "added": 6,
+   "b2n": 9,
+   "added": 5,
    "note": "NW_spt0->NW_hub ctl"
   },
   "L88m": {
    "b2m": 4,
-   "b2n": 10,
-   "added": 6,
+   "b2n": 9,
+   "added": 5,
    "note": "NE_spt0->NE_hub ctl (mirror)"
   },
   "L89": {
    "b2m": 17,
-   "b2n": 30,
-   "added": 13,
+   "b2n": 29,
+   "added": 12,
    "note": "NW_hub->root ctl"
   },
   "L89m": {
    "b2m": 17,
-   "b2n": 30,
-   "added": 13,
+   "b2n": 29,
+   "added": 12,
    "note": "NE_hub->root ctl (mirror)"
   },
   "L90": {
    "b2m": 13,
-   "b2n": 20,
-   "added": 7,
+   "b2n": 17,
+   "added": 4,
    "note": "NW_hub->NW_b000 ctl"
   },
   "L90m": {
    "b2m": 13,
-   "b2n": 20,
-   "added": 7,
+   "b2n": 17,
+   "added": 4,
    "note": "NE_hub->NE_b000 ctl (mirror)"
   },
   "L91": {
@@ -1163,14 +1179,14 @@
   },
   "L96": {
    "b2m": 29,
-   "b2n": 54,
-   "added": 25,
+   "b2n": 52,
+   "added": 23,
    "note": "NW_hub->NE_hub ctl"
   },
   "L96m": {
    "b2m": 29,
-   "b2n": 54,
-   "added": 25,
+   "b2n": 52,
+   "added": 23,
    "note": "NE_hub->NW_hub ctl (mirror)"
   },
   "L97": {
@@ -1187,14 +1203,14 @@
   },
   "L98": {
    "b2m": 7,
-   "b2n": 11,
-   "added": 4,
+   "b2n": 13,
+   "added": 6,
    "note": "NW_hub->NW_sm1 ctl"
   },
   "L98m": {
    "b2m": 7,
-   "b2n": 11,
-   "added": 4,
+   "b2n": 13,
+   "added": 6,
    "note": "NE_hub->NE_sm1 ctl (mirror)"
   },
   "L99": {
@@ -1211,14 +1227,14 @@
   },
   "L100": {
    "b2m": 9,
-   "b2n": 20,
-   "added": 11,
+   "b2n": 19,
+   "added": 10,
    "note": "NW_hub->NW_sm3 ctl"
   },
   "L100m": {
    "b2m": 9,
-   "b2n": 20,
-   "added": 11,
+   "b2n": 19,
+   "added": 10,
    "note": "NE_hub->NE_sm3 ctl (mirror)"
   },
   "L101": {
@@ -1247,14 +1263,14 @@
   },
   "L103": {
    "b2m": 8,
-   "b2n": 16,
-   "added": 8,
+   "b2n": 12,
+   "added": 4,
    "note": "NW_hub->NW_su11 ctl"
   },
   "L103m": {
    "b2m": 8,
-   "b2n": 16,
-   "added": 8,
+   "b2n": 12,
+   "added": 4,
    "note": "NE_hub->NE_su11 ctl (mirror)"
   },
   "L104": {
@@ -1271,14 +1287,14 @@
   },
   "L105": {
    "b2m": 11,
-   "b2n": 18,
-   "added": 7,
+   "b2n": 15,
+   "added": 4,
    "note": "NW_hub->NW_su31 ctl"
   },
   "L105m": {
    "b2m": 11,
-   "b2n": 18,
-   "added": 7,
+   "b2n": 15,
+   "added": 4,
    "note": "NE_hub->NE_su31 ctl (mirror)"
   },
   "L106": {
@@ -1367,62 +1383,62 @@
   },
   "L113": {
    "b2m": 5,
-   "b2n": 6,
-   "added": 1,
+   "b2n": 4,
+   "added": -1,
    "note": "NW_hub->NW_su30 ctl"
   },
   "L113m": {
    "b2m": 5,
-   "b2n": 6,
-   "added": 1,
+   "b2n": 4,
+   "added": -1,
    "note": "NE_hub->NE_su30 ctl (mirror)"
   },
   "L114": {
    "b2m": 30,
-   "b2n": 68,
-   "added": 38,
+   "b2n": 67,
+   "added": 37,
    "note": "PHY_N->NW_hub ctl"
   },
   "L114m": {
    "b2m": 30,
-   "b2n": 67,
-   "added": 37,
+   "b2n": 66,
+   "added": 36,
    "note": "PHY_N->NE_hub ctl (mirror)"
   },
   "L115": {
    "b2m": 14,
-   "b2n": 24,
-   "added": 10,
+   "b2n": 20,
+   "added": 6,
    "note": "NW_hub->NW_b002 ctl"
   },
   "L115m": {
    "b2m": 14,
-   "b2n": 24,
-   "added": 10,
+   "b2n": 20,
+   "added": 6,
    "note": "NE_hub->NE_b002 ctl (mirror)"
   },
   "L116": {
    "b2m": 8,
-   "b2n": 19,
-   "added": 11,
+   "b2n": 11,
+   "added": 3,
    "note": "NW_hub->NW_b011 ctl"
   },
   "L116m": {
    "b2m": 8,
-   "b2n": 19,
-   "added": 11,
+   "b2n": 11,
+   "added": 3,
    "note": "NE_hub->NE_b011 ctl (mirror)"
   },
   "L117": {
    "b2m": 21,
-   "b2n": 44,
-   "added": 23,
+   "b2n": 45,
+   "added": 24,
    "note": "NW_spb0->root data"
   },
   "L117m": {
    "b2m": 21,
-   "b2n": 44,
-   "added": 23,
+   "b2n": 45,
+   "added": 24,
    "note": "NE_spb0->root data (mirror)"
   },
   "L118": {
@@ -1433,14 +1449,14 @@
   },
   "L119": {
    "b2m": 11,
-   "b2n": 28,
-   "added": 17,
+   "b2n": 17,
+   "added": 6,
    "note": "NW_hub->NW_b013 ctl"
   },
   "L119m": {
    "b2m": 11,
-   "b2n": 28,
-   "added": 17,
+   "b2n": 17,
+   "added": 6,
    "note": "NE_hub->NE_b013 ctl (mirror)"
   },
   "L120": {
@@ -1457,14 +1473,14 @@
   },
   "L121": {
    "b2m": 6,
-   "b2n": 11,
-   "added": 5,
+   "b2n": 13,
+   "added": 7,
    "note": "NW_sm1->NW_hub ctl"
   },
   "L121m": {
    "b2m": 6,
-   "b2n": 11,
-   "added": 5,
+   "b2n": 13,
+   "added": 7,
    "note": "NE_sm1->NE_hub ctl (mirror)"
   },
   "L122": {
@@ -1481,14 +1497,14 @@
   },
   "L123": {
    "b2m": 9,
-   "b2n": 20,
-   "added": 11,
+   "b2n": 18,
+   "added": 9,
    "note": "NW_sm3->NW_hub ctl"
   },
   "L123m": {
    "b2m": 9,
-   "b2n": 20,
-   "added": 11,
+   "b2n": 18,
+   "added": 9,
    "note": "NE_sm3->NE_hub ctl (mirror)"
   },
   "L124": {
@@ -1565,26 +1581,26 @@
   },
   "L130": {
    "b2m": 16,
-   "b2n": 34,
-   "added": 18,
+   "b2n": 33,
+   "added": 17,
    "note": "NW_su31->NW_b110 ctl"
   },
   "L130m": {
    "b2m": 16,
-   "b2n": 34,
-   "added": 18,
+   "b2n": 33,
+   "added": 17,
    "note": "NE_su31->NE_b110 ctl (mirror)"
   },
   "L131": {
    "b2m": 6,
-   "b2n": 9,
-   "added": 3,
+   "b2n": 8,
+   "added": 2,
    "note": "NW_su31->NW_hub ctl"
   },
   "L131m": {
    "b2m": 6,
-   "b2n": 9,
-   "added": 3,
+   "b2n": 8,
+   "added": 2,
    "note": "NE_su31->NE_hub ctl (mirror)"
   },
   "L132": {
@@ -1661,38 +1677,38 @@
   },
   "L138": {
    "b2m": 21,
-   "b2n": 45,
-   "added": 24,
+   "b2n": 44,
+   "added": 23,
    "note": "NW_spb0->root ctl"
   },
   "L138m": {
    "b2m": 21,
-   "b2n": 45,
-   "added": 24,
+   "b2n": 44,
+   "added": 23,
    "note": "NE_spb0->root ctl (mirror)"
   },
   "L139": {
    "b2m": 28,
-   "b2n": 58,
-   "added": 30,
+   "b2n": 55,
+   "added": 27,
    "note": "NW_spb2->NE_hub ctl"
   },
   "L139m": {
    "b2m": 28,
-   "b2n": 58,
-   "added": 30,
+   "b2n": 55,
+   "added": 27,
    "note": "NE_spb2->NW_hub ctl (mirror)"
   },
   "L140": {
    "b2m": 33,
-   "b2n": 69,
-   "added": 36,
+   "b2n": 66,
+   "added": 33,
    "note": "NW_spt0->NE_hub ctl"
   },
   "L140m": {
    "b2m": 33,
-   "b2n": 68,
-   "added": 35,
+   "b2n": 66,
+   "added": 33,
    "note": "NE_spt0->NW_hub ctl (mirror)"
   },
   "L141": {
@@ -1751,14 +1767,14 @@
   },
   "L146": {
    "b2m": 15,
-   "b2n": 24,
-   "added": 9,
+   "b2n": 23,
+   "added": 8,
    "note": "NW_b013->NW_hub ctl"
   },
   "L146m": {
    "b2m": 15,
-   "b2n": 24,
-   "added": 9,
+   "b2n": 23,
+   "added": 8,
    "note": "NE_b013->NE_hub ctl (mirror)"
   },
   "L147": {
@@ -1775,250 +1791,388 @@
   },
   "L148": {
    "b2m": 24,
-   "b2n": 50,
-   "added": 26,
+   "b2n": 48,
+   "added": 24,
    "note": "NW_su11->NW_su20 ctl"
   },
   "L148m": {
    "b2m": 24,
-   "b2n": 50,
-   "added": 26,
+   "b2n": 48,
+   "added": 24,
    "note": "NE_su11->NE_su20 ctl (mirror)"
   },
   "L149": {
    "b2m": 15,
-   "b2n": 33,
-   "added": 18,
+   "b2n": 31,
+   "added": 16,
    "note": "NW_su20->NW_su31 ctl"
   },
   "L149m": {
    "b2m": 15,
-   "b2n": 33,
-   "added": 18,
+   "b2n": 31,
+   "added": 16,
    "note": "NE_su20->NE_su31 ctl (mirror)"
+  },
+  "L150": {
+   "b2m": null,
+   "b2n": 67,
+   "added": null,
+   "note": "NW_hub->NE_hub data (B2n lane delta, HBM-BIND)"
+  },
+  "L150m": {
+   "b2m": null,
+   "b2n": 67,
+   "added": null,
+   "note": "NE_hub->NW_hub data (mirror) (B2n lane delta, HBM-BIND)"
+  },
+  "L151": {
+   "b2m": null,
+   "b2n": 33,
+   "added": null,
+   "note": "NW_spb0->NW_hub data (B2n lane delta, HBM-BIND)"
+  },
+  "L151m": {
+   "b2m": null,
+   "b2n": 33,
+   "added": null,
+   "note": "NE_spb0->NE_hub data (mirror) (B2n lane delta, HBM-BIND)"
+  },
+  "L152": {
+   "b2m": null,
+   "b2n": 32,
+   "added": null,
+   "note": "NW_hub->NW_spb0 data (B2n lane delta, HBM-BIND)"
+  },
+  "L152m": {
+   "b2m": null,
+   "b2n": 32,
+   "added": null,
+   "note": "NE_hub->NE_spb0 data (mirror) (B2n lane delta, HBM-BIND)"
+  },
+  "L153": {
+   "b2m": null,
+   "b2n": 20,
+   "added": null,
+   "note": "vsN0->root data (B2n lane delta, HBM-BIND)"
+  },
+  "L154": {
+   "b2m": null,
+   "b2n": 20,
+   "added": null,
+   "note": "root->vsN0 data (B2n lane delta, HBM-BIND)"
+  },
+  "L155": {
+   "b2m": null,
+   "b2n": 27,
+   "added": null,
+   "note": "NW_spt0->root data (B2n lane delta, HBM-BIND)"
+  },
+  "L155m": {
+   "b2m": null,
+   "b2n": 27,
+   "added": null,
+   "note": "NE_spt0->root data (mirror) (B2n lane delta, HBM-BIND)"
   }
  },
  "types_changed": {
-  "q_b000": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b001": [
-   "ft_slots",
-   "face_layers"
-  ],
-  "q_b002": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b003": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b010": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b011": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b012": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b013": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b100": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b101": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b102": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b103": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b110": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b111": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b112": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_b113": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_hub": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
+  "NE_io": [
+   "face_layers",
+   "ft_budget",
+   "internal_stations"
   ],
   "NW_io": [
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_mca": [
-   "face_layers"
-  ],
-  "q_mcb": [
-   "ft_slots",
-   "face_layers"
-  ],
-  "q_sm0": [
-   "face_layers"
-  ],
-  "q_sm1": [
-   "face_layers"
-  ],
-  "q_sm2": [
-   "face_layers"
-  ],
-  "q_sm3": [
-   "face_layers"
-  ],
-  "q_spb0": [
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_spb1": [
-   "ft_slots",
-   "face_layers"
-  ],
-  "q_spb2": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_spt0": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_spt1": [
-   "ft_slots",
-   "face_layers"
-  ],
-  "q_spt2": [
-   "ft_slots",
-   "face_layers"
-  ],
-  "q_spu0": [
-   "ft_slots",
-   "outline",
-   "face_layers"
-  ],
-  "q_spu1": [
-   "ft_slots",
-   "outline",
-   "face_layers"
-  ],
-  "q_su00": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_su01": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_su10": [
-   "ft_slots",
-   "internal_stations",
-   "outline",
-   "face_layers"
-  ],
-  "q_su11": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_su20": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_su21": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
-  ],
-  "q_su30": [
-   "ft_slots",
-   "internal_stations",
-   "outline",
-   "face_layers"
-  ],
-  "q_su31": [
-   "ft_slots",
-   "internal_stations",
-   "face_layers"
+   "face_layers",
+   "ft_budget",
+   "internal_stations"
   ],
   "PHY_N": [
-   "face_layers"
+   "face_layers",
+   "ft_budget"
+  ],
+  "q_b000": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b001": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots"
+  ],
+  "q_b002": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b003": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b010": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b011": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b012": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b013": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b100": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b101": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b102": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b103": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b110": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b111": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b112": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_b113": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_hub": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_mca": [
+   "face_layers",
+   "ft_budget"
+  ],
+  "q_mcb": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots"
+  ],
+  "q_sm0": [
+   "face_layers",
+   "ft_budget"
+  ],
+  "q_sm1": [
+   "face_layers",
+   "ft_budget"
+  ],
+  "q_sm2": [
+   "face_layers",
+   "ft_budget"
+  ],
+  "q_sm3": [
+   "face_layers",
+   "ft_budget"
+  ],
+  "q_spb0": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "internal_stations"
+  ],
+  "q_spb1": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots"
+  ],
+  "q_spb2": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_spt0": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_spt1": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots"
+  ],
+  "q_spt2": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots"
+  ],
+  "q_spu0": [
+   "clock",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "outline_um",
+   "reset"
+  ],
+  "q_spu1": [
+   "clock",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "outline_um",
+   "reset"
+  ],
+  "q_su00": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_su01": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_su10": [
+   "buses",
+   "clock",
+   "contents",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "hard_cores",
+   "internal_stations",
+   "outline_um",
+   "reset"
+  ],
+  "q_su11": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_su20": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_su21": [
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
+  ],
+  "q_su30": [
+   "buses",
+   "clock",
+   "contents",
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "hard_cores",
+   "internal_stations",
+   "outline_um",
+   "reset"
+  ],
+  "q_su31": [
+   "face_layers",
+   "ft_budget",
+   "ft_slots",
+   "internal_stations"
   ],
   "root": [
+   "buses",
+   "face_layers",
+   "ft_budget",
    "ft_slots",
-   "internal_stations",
-   "face_layers"
+   "internal_stations"
   ],
   "vsN0": [
-   "internal_stations",
-   "face_layers"
+   "buses",
+   "face_layers",
+   "ft_budget",
+   "internal_stations"
   ],
   "vsN1": [
-   "ft_slots",
-   "face_layers"
+   "face_layers",
+   "ft_budget",
+   "ft_slots"
   ],
   "vsN2": [
-   "ft_slots",
-   "face_layers"
+   "face_layers",
+   "ft_budget",
+   "ft_slots"
   ],
   "vsN4": [
-   "ft_slots",
-   "face_layers"
+   "face_layers",
+   "ft_budget",
+   "ft_slots"
   ],
   "vsN5": [
-   "ft_slots",
-   "face_layers"
+   "face_layers",
+   "ft_budget",
+   "ft_slots"
   ],
   "vsN6": [
-   "ft_slots",
-   "face_layers"
-  ],
-  "NE_io": [
-   "internal_stations",
-   "face_layers"
+   "face_layers",
+   "ft_budget",
+   "ft_slots"
   ]
  }
 }
