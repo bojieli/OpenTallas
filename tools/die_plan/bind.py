@@ -2624,7 +2624,7 @@ class Binder:
             bound = L["cycles"] if L.get("spine") else 2 + sum(h["stations"] for h in L["ft"]) + lane_pad(L)
             lat.append(dict(lane=L["lane"], src=L["src"], dst=L["dst"], bus_out=L["oname"], bus_in=L["iname"],
                             width=L["width"], planned_width=L.get("cap"), param=L.get("param"),
-                            leaves=_seg_summary(L, F), forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
+                            leaves=_seg_summary(L, F), source_bits=_source_bits(L, F), source_bit_order="lsb_first", forwarded=sum(1 for it in L["items"] if it[0] == "fwd"),
                             asbuilt_stages=[min(st), max(st)], bound_stages=bound,
                             plan_cycles=L.get("cycles", 2), delta=bound - max(st)))
             if L["lane"] and bound != L.get("cycles"):
@@ -2675,6 +2675,12 @@ def _strip_comment_comma(ports):
         else:
             out.append(ln + ("" if last else ","))
     return out
+
+
+def _source_bits(L, F):
+    """Exact payload order used by emit_type's LSB-first concatenation, not run counts."""
+    return [["leaf", F.cells[it[1]].path, it[2], it[3]] if it[0] == "leaf"
+            else ["forward", it[1].get("lane"), it[2]] for it in L["items"]]
 
 
 def _seg_summary(L, F):
