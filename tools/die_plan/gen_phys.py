@@ -360,8 +360,10 @@ def input_hold_min(P, tn):
         if pr["dst"]["part"] in insts:
             drv.setdefault((pr["dst"]["part"], pr["dst"]["bus"]), []).append((pid, pr))
     t = P.types[tn]
-    in_buses = [b["name"] for b in t.get("buses", []) if b["dir"] == "in"]
-    in_buses += [s["name"] + "_i" for s in t.get("ft_slots", [])]
+    # vector inputs only (COORD 15:23 / GEOM-REVIEW-2 15:54 (b)): 1-bit scalars (slot / valid / strobe controls) keep the
+    # fallback contract, as rst and the strap_* ID pins (not plan buses) do
+    in_buses = [b["name"] for b in t.get("buses", []) if b["dir"] == "in" and int(b.get("width", 2)) > 1]
+    in_buses += [s["name"] + "_i" for s in t.get("ft_slots", []) if int(s.get("width", 2)) > 1]
     out = {}
     for bus in in_buses:
         vals, why = [], None
