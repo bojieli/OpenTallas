@@ -44,7 +44,8 @@ if {[info exists ::env(OT_CORE_LAT)] && [file exists $::env(OT_CORE_LAT)]} {
 }
 set tb_cores {}
 # QC-A0 10-24: the family follows OT_TAP_PORT (A0 hard cores: ck / ck_t<i>)
-set tb_port_re "^${tb_port}(_t\[0-9\]+|_c\[0-9\]+)?\$"
+set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}
+if {$tb_port ne "clk"} { set tb_port_re "^${tb_port}(_t\[0-9\]+|_c\[0-9\]+)?\$" }
 proc tb_is_buf {inst} {
   set m [[$inst getMaster] getName]
   return [expr {[string match "BUF*" $m] || [string match "INV*" $m] || [string match "CKINV*" $m] || [string match "HB*" $m]}]
