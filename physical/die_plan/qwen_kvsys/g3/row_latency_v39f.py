@@ -9,7 +9,8 @@ v3.9f plan.  Output (schema opentallas.die_plan.row_latency.v1):
   rows{}      per hg row 0..7 and quadrant, the landed depth of the row-scheduled buses (astk ep chain xi / zi from the row
               above, ep cal_exp from kvs_attn, ep qi from the astk ctl, ectl cfg / epoch / kgo / layer from kvs_hroot) and
               the as-built offsets the old pads kept (xi - zi, cfg - epoch) next to the v3.9f ones;
-  summary     pads removed (sites, bits, flops), max |delta|, rows touched.
+  summary     pad change on the changed members (bits, flops; negative = more pads), die pad flops v3.9e -> v3.9f,
+              max |delta|, rows touched, members outside the hg family (fwd_reach stations change those).
 The compiler must schedule each (row, quadrant) bus at its v3.9f `landed` depth; nothing else in the die moved.
 
     row_latency_v39f.py OLD_LANDING.json NEW_LANDING.json PLAN_V39F.json --out row_latency.json
@@ -84,7 +85,7 @@ def main():
               "included (= r8 landing members[].landed)",
         sources=dict(old=str(a.old), new=str(a.new), plan=str(a.plan), old_digest=old.get("bus_groups_digest"),
                      new_digest=new.get("bus_groups_digest")),
-        summary=dict(changed_members=len(changed), pads_removed_bits=bits, pad_flops_removed=flops,
+        summary=dict(changed_members=len(changed), pad_changed_bits=bits, pad_flops_removed_on_changed=flops,
                      max_abs_delta=max((abs(c["delta"]) for c in changed), default=0),
                      rows_touched=sorted({int(c["sink_part"].split("_")[-1]) for c in changed
                                           if c["sink_part"].startswith("hg_")}),
@@ -96,8 +97,8 @@ def main():
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(out, indent=1) + "\n")
     s = out["summary"]
-    print(f"row_latency: {s['changed_members']} members changed (rows {s['rows_touched']}), {s['pad_flops_removed']} pad "
-          f"flops removed, max |delta| {s['max_abs_delta']}, non-family changes {s['non_family_changes']}")
+    print(f"row_latency: {s['changed_members']} members changed (rows {s['rows_touched']}), pad flops die "
+          f"{s['pad_flops_die']['v39e']} -> {s['pad_flops_die']['v39f']}, max |delta| {s['max_abs_delta']}, non-family changes {s['non_family_changes']}")
 
 
 if __name__ == "__main__":
