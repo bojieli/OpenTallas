@@ -2680,6 +2680,45 @@ def _pkg_index(roots, base, recurse=True):
 BODY_IMPORT = re.compile(r"^[ \t]+import\s+([A-Za-z_]\w*)::\*\s*;[ \t]*$", re.M)
 
 
+KIT_INCLUDE = re.compile(r'^([ \t]*)`include\s+"([^"]+)"[^\n]*$', re.M)
+
+
+def kit_inline_includes(fl, kd):
+    """gen.py phys flattens the kit RTL into KIT/rtl/, so a source `include "sub/x.svh"` (resolved by the simulator
+    relative to the including file) no longer opens in the kit (QC-KITS 10-25: qwen_compute glue, SELRANGE "Can't open
+    include file ovl_release_rope/ovl_release_img.svh").  A file with includes is copied into KIT/inline/ with each
+    include replaced by the included text (recursively, relative to the including file; original sources unchanged);
+    the copy takes the original's place in the list.  A missing include is a BindError.  -> files, {copy: record}"""
+    def expand(path, depth, seen):
+        if depth > 8:
+            raise BindError(f"kit-rtl: `include nesting > 8 at {path}")
+        t = path.read_text(errors="replace")
+
+        def sub(m):
+            q = (path.parent / m.group(2)).resolve()
+            if not q.is_file():
+                raise BindError(f'kit-rtl: {path}: `include "{m.group(2)}" not found next to the including file')
+            seen.append(str(q))
+            return f'{m.group(1)}// kit-rtl inlined `include "{m.group(2)}"\n' + expand(q, depth + 1, seen) + "\n"
+        return KIT_INCLUDE.sub(sub, t)
+    out, rec = [], {}
+    for f in fl:
+        f = Path(f)
+        t = f.read_text(errors="replace")
+        if not KIT_INCLUDE.search(t):
+            out.append(f)
+            continue
+        seen = []
+        new = expand(f, 0, seen)
+        d = Path(kd) / "inline"
+        d.mkdir(exist_ok=True)
+        c = d / f.name
+        c.write_text(new)
+        rec[str(c)] = dict(original=str(f), includes=seen, original_sha256=hashlib.sha256(t.encode()).hexdigest()[:16])
+        out.append(c)
+    return out, rec
+
+
 def kit_inline_imports(fl, kd):
     """Yosys read_verilog rejects a package import inside a module body ('unexpected TOK_IMPORT'): such a file is
     copied into KIT/inline/ with each `import P::*;` replaced by P's body (the tools/emb_hbm_synth_sources.py transform,
@@ -2912,6 +2951,7 @@ def cmd_kit_rtl(a):
     rs = Path(__file__).resolve().parent.parent.parent / "rtl" / "lib" / "ot_reset_sync.sv"
     fl = kit_dedupe(tn, [kd / f"{mod}.sv"] + pkgs + [bfile, (out / "rtl" / "bind_cells.sv").resolve(), rs] +
                     [f for f in files if f.name != "bind_cells.sv"])
+    fl, incl = kit_inline_includes(fl, kd)
     fl, inlined = kit_inline_imports(fl, kd)
     fl, deduped = kit_strip_dups(fl, kd, picks)
     sims = [str(f) for f in fl if SIM_FILE.search(f.name)]
@@ -2924,7 +2964,7 @@ def cmd_kit_rtl(a):
     man = dict(schema="opentallas.die_plan.kit_rtl.v1", plan_type=tn, plan_module=mod, bound_type=key, bound_module=bmod,
                variants=variants, bind_out=str(out), instances=sorted(pinst), params=pset, taps=taps, spare_out_bits=spare, spare_ft_passthrough=spare_pass, narrow_buses=narrow,
                plan_buses_unbound=missing, bound_only_pins=extra, defines=ab0.get("defines", []), files=[str(x) for x in fl],
-               packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, module_dedup=deduped,
+               packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())),
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
