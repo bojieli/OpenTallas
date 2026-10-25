@@ -27,15 +27,14 @@ module tb_s81sl_xrt_qrel_eq #(parameter integer HB = 0, parameter integer LAND =
     wire [4:0] f_lo_v = LAND ? r_lo_v : lo_v, f_p_v = LAND ? r_p_v : p_v, f_e_v = LAND ? r_e_v : e_v;
     wire [1279:0] f_lo_d = LAND ? r_lo_d : lo_d; wire [159:0] f_p_d = LAND ? r_p_d : p_d;
     wire [9:0] f_e_c = LAND ? r_e_c : e_c; wire [479:0] f_e_d = LAND ? r_e_d : e_d;
-    localparam [127:0] QLUT={8'd45,8'd3,8'd3,8'd81,8'd105,8'd125,8'd142,8'd0,
-                            8'd129,8'd148,8'd1,8'd67,8'd4,8'd1,8'd67,8'd107};
+    localparam [127:0] QLUT=128'h866f166f5f3b9a00888a3e0050029d55;
     wire ref_rst_c;
     ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) ref_reset(
         .clk(clk),.rst_n_in(rst_n),.rst_n(ref_rst_c));
-    reg [147:0] qv=0;reg [31:0] qd[0:147];integer qi;
+    reg [254:0] qv=0;reg [31:0] qd[0:254];integer qi;
     always @(posedge clk) begin
-        if(!ref_rst_c)qv<=0;else qv<={qv[146:0],x_rbv};
-        qd[0]<=x_rbd;for(qi=1;qi<148;qi=qi+1)qd[qi]<=qd[qi-1];
+        if(!ref_rst_c)qv<=0;else qv<={qv[253:0],x_rbv};
+        qd[0]<=x_rbd;for(qi=1;qi<255;qi=qi+1)qd[qi]<=qd[qi-1];
     end
     wire [7:0] qdelay=QEN ? QLUT[8*sid +:8] : 8'd0;
     wire ref_rv=(qdelay==0)?x_rbv:qv[qdelay-1];
