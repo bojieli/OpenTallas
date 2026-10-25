@@ -1,0 +1,18 @@
+elemB_if2e / elemB_if2e_b (PATH-S81/ELEMB 2026-10-25 14:50 PDT): density-tap structured clock on the GEOM-PASS if2d 3_place.
+5_1_grt GRT 0 overflow (both). GRT-RC (setRC_rcx) per-sink dump (ckdump2), ps:
+                      if2d routed RCX      if2e (1250/80)     if2e_b (2500/110)
+ TT pinregs mean       277.3               371.0              332.2     (bound 250)
+ FF pinregs mean       206.9               275.5              244.4     (bound 170)
+ TT rom0 CK/cap0/addr0 231/293.5/308.6     363/365/361        314/340/331
+ TT rom1 CK/cap1/addr1 230.6/244.5/250.2   372/387/377        351/335/350
+ FF hold WNS/EP        -44.0/1200          -165.3/2147        -135.5/2034
+ TT hold WNS/EP        -19.7/51            -177.5/550         -141.6/508
+ setup TT/FF           +92.6/+234.5        +96.5/+221.7       +106.3/+227.9
+FIXED: ROM macro CK now on the tap of its own IF regs (rom-vs-IF |delta| 2..26 ps vs 62..78).
+FAIL 1 insertion: TritonCTS trunk over 17/33 tap sinks is 59..167 ps deep (delaybuf chains), core_tap_align then delays every
+ tap to the latest -> pin regs +64..+109 over the bound (worse than the H-tree). Needs a planned wire-balanced shallow trunk.
+FAIL 2 zero-logic hops: DFFHQNx1 clk-q 35 + INV 7 = 42 ps vs FF hold unc 25 + lib hold 13 = 38 ps -> a Q->D hop tolerates
+ only ~4 ps launch/capture skew after CPPR, i.e. launch and capture MUST share one leaf buffer. F4 moved 5.7k of 14.0k pairs
+ (3.2-3.5k skipped: chain >16 or leaf cap 12; 2.6-2.7k far >20 um). FF hold families: u_a.u_c#.g_r.r chains 870-1130 EP, codea/y.
+FAIL 3 in_port->x_q 256 + u_bin_jn 50: = insertion (pin regs 65-95 ps late vs vclk_ff 170, in_min -40).
+Gate tool note: postcts_gate.tcl config.mk parser takes the FIRST export of LAYER_PARASITICS_FILE (make = last) -> read setRC_fit.
