@@ -1,0 +1,8 @@
+{
+ "review": "S81/KITS author review, stage-1 place (c3 re-kit, RTLA claude/s81-kits-1024r @ab4ad9f68 via claude/s81-kits-c3-1024r @55576cd3e8; raw face_guard PASS, no netlist hook)",
+ "when_pdt": "2026-10-24 22:18",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/ot_dsrom_su_hcpost_lane_pr_c",
+ "image": "results/geom_review/s81_kits_1024r/img/ot_dsrom_su_hcpost_lane_pr_c.png",
+ "findings": "44k cells, 6.6k flops, max bin 0.61; pins N 2/um + W/E, clk/rst S; uniform density",
+ "verdict": "PASS"
+}

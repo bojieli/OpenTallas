@@ -1,0 +1,8 @@
+{
+ "review": "S81/KITS author review, stage-1 place (c3 re-kit, RTLA claude/s81-kits-1024r @ab4ad9f68 via claude/s81-kits-c3-1024r @55576cd3e8; raw face_guard PASS, no netlist hook)",
+ "when_pdt": "2026-10-24 22:18",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsfd_su_t_rxsf_c",
+ "image": "results/geom_review/s81_kits_1024r/img/dsfd_su_t_rxsf_c.png",
+ "findings": "68.8k cells, 10.1k flops, max bin 0.72; W/E clusters peak 10.5/um vs 10.42 (marginal); ck/rst E; same condition as rxsb",
+ "verdict": "PASS-COND"
+}

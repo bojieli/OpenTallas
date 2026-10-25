@@ -1,0 +1,8 @@
+{
+ "review": "S81/KITS author review, stage-1 place (c3 re-kit, RTLA claude/s81-kits-1024r @ab4ad9f68 via claude/s81-kits-c3-1024r @55576cd3e8; raw face_guard PASS, no netlist hook)",
+ "when_pdt": "2026-10-24 22:18",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/ot_s81sl_vn_c",
+ "image": "results/geom_review/s81_kits_1024r/img/ot_s81sl_vn_c.png",
+ "findings": "313.7k cells (< 400k cap), 50.7k flops, 4 SRAM macros centred with halo, max bin 0.62; W face 912 pins 3/um, N 66, E y[128] 4.5/um; clk S x 90 / rst_n S x 266 (far corner ~330 um -> recovery to check); condition: rst_n recovery and CTS insertion met at sign-off",
+ "verdict": "PASS-COND"
+}

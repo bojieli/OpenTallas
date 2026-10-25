@@ -1,0 +1,8 @@
+{
+ "review": "S81/KITS author review, stage-1 place (c3 re-kit, RTLA claude/s81-kits-1024r @ab4ad9f68 via claude/s81-kits-c3-1024r @55576cd3e8; raw face_guard PASS, no netlist hook)",
+ "when_pdt": "2026-10-24 22:18",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsdv_eng_rr_h0_c",
+ "image": "results/geom_review/s81_kits_1024r/img/dsdv_eng_rr_h0_c.png",
+ "findings": "644 data pins N face full width (4.5/um vs 24.3), ck W mid; 138k cells, 18.5k flops, max bin 0.67, no bin > 0.8; lower-left corner lightly used (logic pulled to the N face), no slivers; no reset port",
+ "verdict": "PASS"
+}
