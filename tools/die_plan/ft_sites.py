@@ -271,12 +271,11 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
                              bit_order=bit_order)
     model=S.Plan(raw);selected=set(types) if types else set(model.types);ledger=[];explicit={}
     for tn,ty in model.types.items():
-        if tn not in selected or not ty.get('hard_cores') or not ty.get('ft_slots'):continue
+        if tn not in selected or not ty.get('ft_slots'):continue
+        boxes=list(S.placed_macro_boxes(ty, halo=8.64).values())
+        if not boxes:continue
         w,h=ty['outline_um'];pins={(b,i):(x,y) for b,i,_,x,y,_ in type_pins(model,tn)}
-        boxes=[]
-        for c in ty['hard_cores']:
-            x,y=c['origin_um'];cw,ch=c['outline_um'];dx,dy=c.get('track_offset_um',[0,0]);halo=8.64
-            boxes.append((x+dx-halo,y+dy-halo,x+dx+cw+halo,y+dy+ch+halo))
+
         allocator=allocator_cls((4.32,4.32,w-4.32,h-4.32),blocked=boxes,
                                 cell_size=(1.404,.27),column_pitch=2.16,row_pitch=.27,origin=(4.32,4.32))
         xs=np.arange(8.64,w-4.32,8.64);ys=np.arange(8.64,h-4.32,8.64)
@@ -368,7 +367,7 @@ def main():
     ap.add_argument('--reuse',help='previous generated plan with exact sites; reuse only identical complete type contracts')
     a=ap.parse_args();raw=json.loads(Path(a.plan).read_text())
     if a.types and a.all_core_types:ap.error('--types and --all-core-types are mutually exclusive')
-    selected=([n for n,t in raw['partition_types'].items() if t.get('hard_cores') and t.get('ft_slots')]
+    selected=([n for n,t in raw['partition_types'].items() if (t.get('hard_cores') or any(c.get('lef') for c in t.get('contents', []))) and t.get('ft_slots')]
               if a.all_core_types else a.types.split(',') if a.types else [n for n in raw['partition_types'] if n.startswith('col_')])
     reused=reuse(raw,json.loads(Path(a.reuse).read_text()),types=selected) if a.reuse else []
     ledger,_=place(raw,RowAllocator,types=[n for n in selected if n not in reused])
