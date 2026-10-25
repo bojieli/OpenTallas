@@ -195,6 +195,38 @@ def preserve_head_relays(path):
     Path(path).write_text(text[:start] + body + text[end:])
 
 
+def core_clocks_resets(cj):
+    """(clock ports, reset ports) of a core RTL record, by the same rules main() uses for the SDC."""
+    clks = list(dict.fromkeys(split_name(n)[0] for n, c in cj["pin_class"].items() if c == "clk"))
+    rsts = list(dict.fromkeys(split_name(n)[0] for n, c in cj["pin_class"].items()
+                              if c == "in" and re.search(RST_RE, split_name(n)[0])))
+    return clks, rsts
+
+
+def write_core_contract(kd, cj, clks, rsts):
+    """KIT/core.json (typed boundary roles + hard-core latency contract) and KIT/boundary_guard_context.json.
+    Also used by retrofit_contract.py on kits generated before befed6a747 (same content, no timing change)."""
+    kd = Path(kd)
+    # Declaration context only: unused clock aliases and reset ports are not data.
+    # Data pins still require their physical boundary registers without exceptions.
+    unused_clks = sorted({split_name(n)[0] for n, c in cj["pin_class"].items() if c == "clk_unused"})
+    core_contract = dict(cj)
+    core_contract["boundary_role"] = {split_name(n)[0]: c for n, c in cj["pin_class"].items()}
+    core_contract["boundary_role"].update({n: "reset" for n in rsts})
+    # COORD ruling 10-24: hard-core latency contract -- the core publishes its measured insertion (signoff.json
+    # core_latency -> views core.json, ETM max_clock_tree_path); the parent tap balance subtracts it (early tap) and the
+    # plan insertion target applies at the partition tap, not inside the core
+    core_contract["clock_contract"] = dict(
+        kind="hard_core_latency", ruling="COORD 10-24",
+        target_applies_at="parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+        measured_in="KIT/signoff/signoff.json core_latency; views <module>.core.json; <module>_tt.lib max_clock_tree_path")
+    (kd / "core.json").write_text(json.dumps(core_contract, indent=1) + "\n")
+    (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
+        schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json",
+        clock_ports=clks, unused_clock_ports=unused_clks, reset_ports=rsts,
+        data_pin_exemptions=[]), indent=1) + "\n")
+
+
 def kit_hash(kd):
     h = hashlib.sha256()
     for f in sorted(p for p in Path(kd).rglob("*") if p.is_file() and "run" not in p.relative_to(kd).parts[:1]
@@ -333,24 +365,7 @@ def main():
     # SIGNOFF 10-24 (coordinator): tools/die_plan/signoff.py is the final kit step (run_kit_kv.sh); closed = SIGNED only
     shutil.copyfile(Path(a.tool) / "signoff.py", kd / "signoff.py")
     shutil.copyfile(REPO / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
-    # Declaration context only: unused clock aliases and reset ports are not data.
-    # Data pins still require their physical boundary registers without exceptions.
-    unused_clks = sorted({split_name(n)[0] for n, c in cj["pin_class"].items() if c == "clk_unused"})
-    core_contract = dict(cj)
-    core_contract["boundary_role"] = {split_name(n)[0]: c for n, c in cj["pin_class"].items()}
-    core_contract["boundary_role"].update({n: "reset" for n in rsts})
-    # COORD ruling 10-24: hard-core latency contract -- the core publishes its measured insertion (signoff.json
-    # core_latency -> views core.json, ETM max_clock_tree_path); the parent tap balance subtracts it (early tap) and the
-    # plan insertion target applies at the partition tap, not inside the core
-    core_contract["clock_contract"] = dict(
-        kind="hard_core_latency", ruling="COORD 10-24",
-        target_applies_at="parent partition tap (tap_balance / early core tap subtracts the core insertion)",
-        measured_in="KIT/signoff/signoff.json core_latency; views <module>.core.json; <module>_tt.lib max_clock_tree_path")
-    (kd / "core.json").write_text(json.dumps(core_contract, indent=1) + "\n")
-    (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
-        schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json",
-        clock_ports=clks, unused_clock_ports=unused_clks, reset_ports=rsts,
-        data_pin_exemptions=[]), indent=1) + "\n")
+    write_core_contract(kd, cj, clks, rsts)
     (kd / "pdn.tcl").write_text(PDN + (PDN_MACRO if lefs else ""))
     (kd / "make_tracks.tcl").write_text(make_tracks())
     tool = Path(a.tool)

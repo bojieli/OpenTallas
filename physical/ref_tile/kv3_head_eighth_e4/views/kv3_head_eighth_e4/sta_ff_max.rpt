@@ -1,0 +1,750 @@
+Startpoint: g_t_9_u_stk__rst_n[0] (input port clocked by vclk)
+Endpoint: u_g_t_9_u_stk.u_rst.sync_q[0]$_DFF_PN0_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock vclk (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+ 416.50  666.50 ^ input external delay
+   2.19  668.69 ^ g_t_9_u_stk__rst_n[0] (in)
+  15.95  684.63 ^ hold11600/Y (BUFx2_ASAP7_75t_R)
+  18.57  703.20 ^ hold11598/Y (BUFx2_ASAP7_75t_R)
+  18.02  721.22 ^ hold11601/Y (BUFx2_ASAP7_75t_R)
+  16.01  737.24 ^ input3027/Y (BUFx2_ASAP7_75t_R)
+  12.81  750.05 ^ hold11602/Y (BUFx2_ASAP7_75t_R)
+  23.22  773.27 ^ hold11599/Y (BUFx2_ASAP7_75t_R)
+  39.57  812.85 ^ place9934/Y (BUFx6f_ASAP7_75t_R)
+  27.46  840.30 ^ u_g_t_9_u_stk.u_rst.sync_q[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         840.30   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ g_front_2_u_front__clk[0] (in)
+  27.66  860.66 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  32.08  892.75 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.48  915.23 ^ clkbuf_1_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.42  936.65 ^ clkbuf_2_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.79  960.44 ^ clkbuf_3_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.87  983.31 ^ clkbuf_4_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.13 1005.44 ^ clkbuf_6_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.60 1027.04 ^ clkbuf_7_0__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  36.49 1063.53 ^ clkbuf_leaf_1359_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.63 1064.16 ^ u_g_t_9_u_stk.u_rst.sync_q[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -30.00 1034.16   inter-clock uncertainty
+   0.00 1034.16   clock reconvergence pessimism
+  20.02 1054.18   library recovery time
+        1054.18   data required time
+---------------------------------------------------------
+        1054.18   data required time
+        -840.30   data arrival time
+---------------------------------------------------------
+         213.88   slack (MET)
+
+
+Startpoint: g_t_9_u_stk__rst_n[0] (input port clocked by vclk)
+Endpoint: u_g_t_9_u_stk.u_rst.sync_q[1]$_DFF_PN0_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock vclk (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+ 416.50  666.50 ^ input external delay
+   2.19  668.69 ^ g_t_9_u_stk__rst_n[0] (in)
+  15.95  684.63 ^ hold11600/Y (BUFx2_ASAP7_75t_R)
+  18.57  703.20 ^ hold11598/Y (BUFx2_ASAP7_75t_R)
+  18.02  721.22 ^ hold11601/Y (BUFx2_ASAP7_75t_R)
+  16.01  737.24 ^ input3027/Y (BUFx2_ASAP7_75t_R)
+  12.81  750.05 ^ hold11602/Y (BUFx2_ASAP7_75t_R)
+  23.22  773.27 ^ hold11599/Y (BUFx2_ASAP7_75t_R)
+  39.57  812.85 ^ place9934/Y (BUFx6f_ASAP7_75t_R)
+  27.49  840.34 ^ u_g_t_9_u_stk.u_rst.sync_q[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         840.34   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ g_front_2_u_front__clk[0] (in)
+  27.66  860.66 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  32.08  892.75 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.48  915.23 ^ clkbuf_1_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.42  936.65 ^ clkbuf_2_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.79  960.44 ^ clkbuf_3_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.87  983.31 ^ clkbuf_4_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.13 1005.44 ^ clkbuf_6_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.60 1027.04 ^ clkbuf_7_0__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  36.49 1063.53 ^ clkbuf_leaf_1359_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.68 1064.21 ^ u_g_t_9_u_stk.u_rst.sync_q[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -30.00 1034.21   inter-clock uncertainty
+   0.00 1034.21   clock reconvergence pessimism
+  20.03 1054.23   library recovery time
+        1054.23   data required time
+---------------------------------------------------------
+        1054.23   data required time
+        -840.34   data arrival time
+---------------------------------------------------------
+         213.89   slack (MET)
+
+
+Startpoint: g_t_9_u_stk__rst_n[0] (input port clocked by vclk)
+Endpoint: u_g_t_9_u_stk.u_rst.rst_n$_DFF_PN0_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock vclk (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+ 416.50  666.50 ^ input external delay
+   2.19  668.69 ^ g_t_9_u_stk__rst_n[0] (in)
+  15.95  684.63 ^ hold11600/Y (BUFx2_ASAP7_75t_R)
+  18.57  703.20 ^ hold11598/Y (BUFx2_ASAP7_75t_R)
+  18.02  721.22 ^ hold11601/Y (BUFx2_ASAP7_75t_R)
+  16.01  737.24 ^ input3027/Y (BUFx2_ASAP7_75t_R)
+  12.81  750.05 ^ hold11602/Y (BUFx2_ASAP7_75t_R)
+  23.22  773.27 ^ hold11599/Y (BUFx2_ASAP7_75t_R)
+  41.70  814.97 ^ hold11603/Y (BUFx2_ASAP7_75t_R)
+   5.56  820.54 ^ u_g_t_9_u_stk.u_rst.rst_n$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         820.54   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ g_front_2_u_front__clk[0] (in)
+  27.66  860.66 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  32.08  892.75 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.05  914.79 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.06  936.85 ^ clkbuf_2_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.59  960.44 ^ clkbuf_3_4_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.56  982.99 ^ clkbuf_4_8_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.06 1005.06 ^ clkbuf_6_34_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  20.91 1025.97 ^ clkbuf_7_68__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.53 1050.50 ^ clkbuf_leaf_962_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.32 1050.82 ^ u_g_t_9_u_stk.u_rst.rst_n$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -30.00 1020.82   inter-clock uncertainty
+   0.00 1020.82   clock reconvergence pessimism
+  16.81 1037.63   library recovery time
+        1037.63   data required time
+---------------------------------------------------------
+        1037.63   data required time
+        -820.54   data arrival time
+---------------------------------------------------------
+         217.10   slack (MET)
+
+
+Startpoint: g_t_8_u_stin__rst_n[0] (input port clocked by vclk)
+Endpoint: u_g_t_8_u_stin.u_rst.rst_n$_DFF_PN0_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock vclk (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+ 416.50  666.50 ^ input external delay
+   0.92  667.42 ^ g_t_8_u_stin__rst_n[0] (in)
+  12.17  679.59 ^ hold9970/Y (BUFx2_ASAP7_75t_R)
+  12.15  691.74 ^ hold9966/Y (BUFx2_ASAP7_75t_R)
+  12.34  704.08 ^ hold9971/Y (BUFx2_ASAP7_75t_R)
+  12.70  716.78 ^ hold9960/Y (BUFx2_ASAP7_75t_R)
+  12.76  729.53 ^ hold9972/Y (BUFx2_ASAP7_75t_R)
+  12.55  742.08 ^ hold9967/Y (BUFx2_ASAP7_75t_R)
+  12.21  754.30 ^ hold9973/Y (BUFx2_ASAP7_75t_R)
+  12.33  766.63 ^ input3024/Y (BUFx2_ASAP7_75t_R)
+  12.07  778.70 ^ hold9974/Y (BUFx2_ASAP7_75t_R)
+  11.81  790.52 ^ hold9968/Y (BUFx2_ASAP7_75t_R)
+  12.02  802.54 ^ hold9961/Y (BUFx2_ASAP7_75t_R)
+  15.83  818.37 ^ hold9969/Y (BUFx2_ASAP7_75t_R)
+   0.22  818.59 ^ u_g_t_8_u_stin.u_rst.rst_n$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         818.59   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ g_front_2_u_front__clk[0] (in)
+  27.66  860.66 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  32.08  892.75 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.05  914.79 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.06  936.85 ^ clkbuf_2_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.60  960.45 ^ clkbuf_3_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.54  981.99 ^ clkbuf_4_10_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.71 1004.70 ^ clkbuf_6_42_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  20.87 1025.57 ^ clkbuf_7_84__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  34.46 1060.03 ^ clkbuf_leaf_953_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.69 1060.72 ^ u_g_t_8_u_stin.u_rst.rst_n$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -30.00 1030.72   inter-clock uncertainty
+   0.00 1030.72   clock reconvergence pessimism
+  13.54 1044.27   library recovery time
+        1044.27   data required time
+---------------------------------------------------------
+        1044.27   data required time
+        -818.59   data arrival time
+---------------------------------------------------------
+         225.68   slack (MET)
+
+
+Startpoint: g_front_2_u_front__rst_n[0] (input port clocked by vclk)
+Endpoint: u_g_front_2_u_front.u_rst.sync_q[1]$_DFF_PN0_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock vclk (rise edge)
+ 250.00  250.00   clock network delay (ideal)
+ 416.50  666.50 ^ input external delay
+   1.79  668.29 ^ g_front_2_u_front__rst_n[0] (in)
+  13.05  681.34 ^ hold9975/Y (BUFx2_ASAP7_75t_R)
+  12.19  693.53 ^ hold9962/Y (BUFx2_ASAP7_75t_R)
+  12.09  705.62 ^ hold9976/Y (BUFx2_ASAP7_75t_R)
+  11.90  717.52 ^ hold9958/Y (BUFx2_ASAP7_75t_R)
+  11.93  729.45 ^ hold9977/Y (BUFx2_ASAP7_75t_R)
+  11.97  741.42 ^ hold9963/Y (BUFx2_ASAP7_75t_R)
+  12.18  753.59 ^ hold9978/Y (BUFx2_ASAP7_75t_R)
+  12.55  766.15 ^ input3023/Y (BUFx2_ASAP7_75t_R)
+  12.85  778.99 ^ hold9979/Y (BUFx2_ASAP7_75t_R)
+  12.37  791.37 ^ hold9964/Y (BUFx2_ASAP7_75t_R)
+  11.92  803.28 ^ hold9959/Y (BUFx2_ASAP7_75t_R)
+  15.90  819.19 ^ hold9965/Y (BUFx2_ASAP7_75t_R)
+   0.28  819.47 ^ u_g_front_2_u_front.u_rst.sync_q[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         819.47   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ g_front_2_u_front__clk[0] (in)
+  27.66  860.66 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  32.08  892.75 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.05  914.79 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.06  936.85 ^ clkbuf_2_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.60  960.45 ^ clkbuf_3_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.54  981.99 ^ clkbuf_4_10_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.71 1004.70 ^ clkbuf_6_42_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  20.87 1025.57 ^ clkbuf_7_84__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  34.46 1060.03 ^ clkbuf_leaf_953_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   1.86 1061.89 ^ u_g_front_2_u_front.u_rst.sync_q[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -30.00 1031.89   inter-clock uncertainty
+   0.00 1031.89   clock reconvergence pessimism
+  13.90 1045.79   library recovery time
+        1045.79   data required time
+---------------------------------------------------------
+        1045.79   data required time
+        -819.47   data arrival time
+---------------------------------------------------------
+         226.32   slack (MET)
+
+
+Startpoint: u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[95]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ g_front_2_u_front__clk[0] (in)
+  28.24   28.24 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  33.34   61.58 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.83   84.41 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.06  107.47 ^ clkbuf_2_3_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.52  132.00 ^ clkbuf_3_7_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.96  156.96 ^ clkbuf_4_14_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.53  181.49 ^ clkbuf_6_56_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.46  203.95 ^ clkbuf_7_113__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  29.75  233.70 ^ clkbuf_leaf_672_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.47  234.17 ^ u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  42.65  276.82 v u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  18.52  295.33 v place9483/Y (BUFx6f_ASAP7_75t_R)
+ 132.44  427.77 v place9482/Y (BUFx6f_ASAP7_75t_R)
+  45.44  473.21 v place9481/Y (BUFx6f_ASAP7_75t_R)
+  81.51  554.72 v _20744_/Y (OA21x2_ASAP7_75t_R)
+  26.50  581.22 v _20746_/Y (AO21x1_ASAP7_75t_R)
+  32.18  613.40 v u_g_t_9_u_l8.g_d[7].u_b/_3874_/Y (OR4x1_ASAP7_75t_R)
+  32.91  646.30 v u_g_t_9_u_l8.g_d[7].u_b/_3875_/Y (OR5x1_ASAP7_75t_R)
+  35.46  681.76 v u_g_t_9_u_l8.g_d[7].u_b/_3877_/Y (OR5x1_ASAP7_75t_R)
+  16.82  698.58 ^ u_g_t_9_u_l8.g_d[7].u_b/_3880_/Y (NOR3x1_ASAP7_75t_R)
+  37.23  735.81 ^ u_g_t_9_u_l8.g_d[7].u_b/_3890_/Y (AND3x1_ASAP7_75t_R)
+  31.05  766.86 ^ u_g_t_9_u_l8.g_d[7].u_b/place8534/Y (BUFx3_ASAP7_75t_R)
+  36.57  803.43 ^ u_g_t_9_u_l8.g_d[7].u_b/_3914_/Y (AO32x1_ASAP7_75t_R)
+   0.06  803.49 ^ u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[95]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+         803.49   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ g_front_2_u_front__clk[0] (in)
+  27.66  860.66 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  32.08  892.75 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.48  915.23 ^ clkbuf_1_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  19.58  934.81 ^ clkbuf_2_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.11  957.92 ^ clkbuf_3_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.99  979.91 ^ clkbuf_4_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.73 1001.64 ^ clkbuf_6_20_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.57 1023.21 ^ clkbuf_7_40__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  25.76 1048.97 ^ clkbuf_leaf_244_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.68 1049.65 ^ u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[95]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00  989.65   clock uncertainty
+   1.83  991.48   clock reconvergence pessimism
+  -6.42  985.06   library setup time
+         985.06   data required time
+---------------------------------------------------------
+         985.06   data required time
+        -803.49   data arrival time
+---------------------------------------------------------
+         181.57   slack (MET)
+
+
+Startpoint: u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[84]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ g_front_2_u_front__clk[0] (in)
+  28.24   28.24 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  33.34   61.58 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.83   84.41 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.06  107.47 ^ clkbuf_2_3_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.52  132.00 ^ clkbuf_3_7_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.96  156.96 ^ clkbuf_4_14_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.53  181.49 ^ clkbuf_6_56_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.46  203.95 ^ clkbuf_7_113__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  29.75  233.70 ^ clkbuf_leaf_672_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.47  234.17 ^ u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  42.65  276.82 v u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  18.52  295.33 v place9483/Y (BUFx6f_ASAP7_75t_R)
+ 132.44  427.77 v place9482/Y (BUFx6f_ASAP7_75t_R)
+  45.44  473.21 v place9481/Y (BUFx6f_ASAP7_75t_R)
+  81.51  554.72 v _20744_/Y (OA21x2_ASAP7_75t_R)
+  26.50  581.22 v _20746_/Y (AO21x1_ASAP7_75t_R)
+  32.18  613.40 v u_g_t_9_u_l8.g_d[7].u_b/_3874_/Y (OR4x1_ASAP7_75t_R)
+  32.91  646.30 v u_g_t_9_u_l8.g_d[7].u_b/_3875_/Y (OR5x1_ASAP7_75t_R)
+  35.46  681.76 v u_g_t_9_u_l8.g_d[7].u_b/_3877_/Y (OR5x1_ASAP7_75t_R)
+  16.82  698.58 ^ u_g_t_9_u_l8.g_d[7].u_b/_3880_/Y (NOR3x1_ASAP7_75t_R)
+  37.23  735.81 ^ u_g_t_9_u_l8.g_d[7].u_b/_3890_/Y (AND3x1_ASAP7_75t_R)
+  31.05  766.86 ^ u_g_t_9_u_l8.g_d[7].u_b/place8534/Y (BUFx3_ASAP7_75t_R)
+  36.13  802.99 ^ u_g_t_9_u_l8.g_d[7].u_b/_3928_/Y (AO32x1_ASAP7_75t_R)
+   0.07  803.06 ^ u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[84]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+         803.06   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ g_front_2_u_front__clk[0] (in)
+  27.66  860.66 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  32.08  892.75 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.48  915.23 ^ clkbuf_1_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  19.58  934.81 ^ clkbuf_2_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.11  957.92 ^ clkbuf_3_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.99  979.91 ^ clkbuf_4_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.73 1001.64 ^ clkbuf_6_20_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.57 1023.21 ^ clkbuf_7_40__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  25.76 1048.97 ^ clkbuf_leaf_244_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   1.61 1050.58 ^ u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[84]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00  990.58   clock uncertainty
+   1.83  992.41   clock reconvergence pessimism
+  -6.46  985.95   library setup time
+         985.95   data required time
+---------------------------------------------------------
+         985.95   data required time
+        -803.06   data arrival time
+---------------------------------------------------------
+         182.89   slack (MET)
+
+
+Startpoint: u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[101]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ g_front_2_u_front__clk[0] (in)
+  28.24   28.24 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  33.34   61.58 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.83   84.41 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.06  107.47 ^ clkbuf_2_3_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.52  132.00 ^ clkbuf_3_7_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.96  156.96 ^ clkbuf_4_14_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.53  181.49 ^ clkbuf_6_56_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.46  203.95 ^ clkbuf_7_113__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  29.75  233.70 ^ clkbuf_leaf_672_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.47  234.17 ^ u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  42.65  276.82 v u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  18.52  295.33 v place9483/Y (BUFx6f_ASAP7_75t_R)
+ 132.44  427.77 v place9482/Y (BUFx6f_ASAP7_75t_R)
+  45.44  473.21 v place9481/Y (BUFx6f_ASAP7_75t_R)
+  81.51  554.72 v _20744_/Y (OA21x2_ASAP7_75t_R)
+  26.50  581.22 v _20746_/Y (AO21x1_ASAP7_75t_R)
+  32.18  613.40 v u_g_t_9_u_l8.g_d[7].u_b/_3874_/Y (OR4x1_ASAP7_75t_R)
+  32.91  646.30 v u_g_t_9_u_l8.g_d[7].u_b/_3875_/Y (OR5x1_ASAP7_75t_R)
+  35.46  681.76 v u_g_t_9_u_l8.g_d[7].u_b/_3877_/Y (OR5x1_ASAP7_75t_R)
+  16.82  698.58 ^ u_g_t_9_u_l8.g_d[7].u_b/_3880_/Y (NOR3x1_ASAP7_75t_R)
+  37.23  735.81 ^ u_g_t_9_u_l8.g_d[7].u_b/_3890_/Y (AND3x1_ASAP7_75t_R)
+  31.05  766.86 ^ u_g_t_9_u_l8.g_d[7].u_b/place8534/Y (BUFx3_ASAP7_75t_R)
+  35.98  802.84 ^ u_g_t_9_u_l8.g_d[7].u_b/_3907_/Y (AO32x1_ASAP7_75t_R)
+   0.05  802.88 ^ u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[101]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+         802.88   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ g_front_2_u_front__clk[0] (in)
+  27.66  860.66 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  32.08  892.75 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.48  915.23 ^ clkbuf_1_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  19.58  934.81 ^ clkbuf_2_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.11  957.92 ^ clkbuf_3_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.99  979.91 ^ clkbuf_4_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.73 1001.64 ^ clkbuf_6_20_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.57 1023.21 ^ clkbuf_7_40__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  25.76 1048.97 ^ clkbuf_leaf_244_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   1.16 1050.13 ^ u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[101]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00  990.13   clock uncertainty
+   1.83  991.96   clock reconvergence pessimism
+  -6.14  985.82   library setup time
+         985.82   data required time
+---------------------------------------------------------
+         985.82   data required time
+        -802.88   data arrival time
+---------------------------------------------------------
+         182.94   slack (MET)
+
+
+Startpoint: u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[93]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ g_front_2_u_front__clk[0] (in)
+  28.24   28.24 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  33.34   61.58 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.83   84.41 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.06  107.47 ^ clkbuf_2_3_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.52  132.00 ^ clkbuf_3_7_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.96  156.96 ^ clkbuf_4_14_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.53  181.49 ^ clkbuf_6_56_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.46  203.95 ^ clkbuf_7_113__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  29.75  233.70 ^ clkbuf_leaf_672_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.47  234.17 ^ u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  42.65  276.82 v u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  18.52  295.33 v place9483/Y (BUFx6f_ASAP7_75t_R)
+ 132.44  427.77 v place9482/Y (BUFx6f_ASAP7_75t_R)
+  45.44  473.21 v place9481/Y (BUFx6f_ASAP7_75t_R)
+  81.51  554.72 v _20744_/Y (OA21x2_ASAP7_75t_R)
+  26.50  581.22 v _20746_/Y (AO21x1_ASAP7_75t_R)
+  32.18  613.40 v u_g_t_9_u_l8.g_d[7].u_b/_3874_/Y (OR4x1_ASAP7_75t_R)
+  32.91  646.30 v u_g_t_9_u_l8.g_d[7].u_b/_3875_/Y (OR5x1_ASAP7_75t_R)
+  35.46  681.76 v u_g_t_9_u_l8.g_d[7].u_b/_3877_/Y (OR5x1_ASAP7_75t_R)
+  16.82  698.58 ^ u_g_t_9_u_l8.g_d[7].u_b/_3880_/Y (NOR3x1_ASAP7_75t_R)
+  37.23  735.81 ^ u_g_t_9_u_l8.g_d[7].u_b/_3890_/Y (AND3x1_ASAP7_75t_R)
+  31.05  766.86 ^ u_g_t_9_u_l8.g_d[7].u_b/place8534/Y (BUFx3_ASAP7_75t_R)
+  35.66  802.52 ^ u_g_t_9_u_l8.g_d[7].u_b/_3917_/Y (AO32x1_ASAP7_75t_R)
+   0.05  802.57 ^ u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[93]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+         802.57   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ g_front_2_u_front__clk[0] (in)
+  27.66  860.66 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  32.08  892.75 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.48  915.23 ^ clkbuf_1_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  19.58  934.81 ^ clkbuf_2_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.11  957.92 ^ clkbuf_3_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.99  979.91 ^ clkbuf_4_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.73 1001.64 ^ clkbuf_6_20_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.57 1023.21 ^ clkbuf_7_40__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  25.76 1048.97 ^ clkbuf_leaf_244_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   1.20 1050.17 ^ u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[93]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00  990.17   clock uncertainty
+   1.83  992.01   clock reconvergence pessimism
+  -6.16  985.85   library setup time
+         985.85   data required time
+---------------------------------------------------------
+         985.85   data required time
+        -802.57   data arrival time
+---------------------------------------------------------
+         183.28   slack (MET)
+
+
+Startpoint: u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[100]$_SDFF_PP0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ g_front_2_u_front__clk[0] (in)
+  28.24   28.24 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  33.34   61.58 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.83   84.41 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.06  107.47 ^ clkbuf_2_3_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.52  132.00 ^ clkbuf_3_7_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.96  156.96 ^ clkbuf_4_14_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.53  181.49 ^ clkbuf_6_56_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.46  203.95 ^ clkbuf_7_113__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  29.75  233.70 ^ clkbuf_leaf_672_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.47  234.17 ^ u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  42.65  276.82 v u_g_t_9_u_l8.u_ltd.genblk1.g_line.line[38]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  18.52  295.33 v place9483/Y (BUFx6f_ASAP7_75t_R)
+ 132.44  427.77 v place9482/Y (BUFx6f_ASAP7_75t_R)
+  45.44  473.21 v place9481/Y (BUFx6f_ASAP7_75t_R)
+  81.51  554.72 v _20744_/Y (OA21x2_ASAP7_75t_R)
+  26.50  581.22 v _20746_/Y (AO21x1_ASAP7_75t_R)
+  32.18  613.40 v u_g_t_9_u_l8.g_d[7].u_b/_3874_/Y (OR4x1_ASAP7_75t_R)
+  32.91  646.30 v u_g_t_9_u_l8.g_d[7].u_b/_3875_/Y (OR5x1_ASAP7_75t_R)
+  35.46  681.76 v u_g_t_9_u_l8.g_d[7].u_b/_3877_/Y (OR5x1_ASAP7_75t_R)
+  16.82  698.58 ^ u_g_t_9_u_l8.g_d[7].u_b/_3880_/Y (NOR3x1_ASAP7_75t_R)
+  37.23  735.81 ^ u_g_t_9_u_l8.g_d[7].u_b/_3890_/Y (AND3x1_ASAP7_75t_R)
+  31.05  766.86 ^ u_g_t_9_u_l8.g_d[7].u_b/place8534/Y (BUFx3_ASAP7_75t_R)
+  35.68  802.54 ^ u_g_t_9_u_l8.g_d[7].u_b/_3908_/Y (AO32x1_ASAP7_75t_R)
+   0.06  802.60 ^ u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[100]$_SDFF_PP0_/D (DFFHQNx1_ASAP7_75t_R)
+         802.60   data arrival time
+
+ 833.00  833.00   clock clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ g_front_2_u_front__clk[0] (in)
+  27.66  860.66 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  32.08  892.75 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.48  915.23 ^ clkbuf_1_0_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  19.58  934.81 ^ clkbuf_2_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.11  957.92 ^ clkbuf_3_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.99  979.91 ^ clkbuf_4_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.73 1001.64 ^ clkbuf_6_20_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  21.57 1023.21 ^ clkbuf_7_40__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  25.76 1048.97 ^ clkbuf_leaf_244_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   2.31 1051.28 ^ u_g_t_9_u_l8.g_d[7].u_b/u_ca.g_r.r[100]$_SDFF_PP0_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00  991.28   clock uncertainty
+   1.83  993.11   clock reconvergence pessimism
+  -6.13  986.98   library setup time
+         986.98   data required time
+---------------------------------------------------------
+         986.98   data required time
+        -802.60   data arrival time
+---------------------------------------------------------
+         184.38   slack (MET)
+
+
+Startpoint: u_g_front_2_u_front.u_rsd/q[534]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_front_2_u_front__f_t3[150] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ g_front_2_u_front__clk[0] (in)
+  28.24   28.24 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  33.34   61.58 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.83   84.41 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.90  107.31 ^ clkbuf_2_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.67  131.98 ^ clkbuf_3_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.40  154.38 ^ clkbuf_4_10_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.29  176.67 ^ clkbuf_6_43_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.28  199.95 ^ clkbuf_7_87__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  30.02  229.97 ^ clkbuf_leaf_876_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.75  230.73 ^ u_g_front_2_u_front.u_rsd/q[534]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  38.75  269.47 ^ u_g_front_2_u_front.u_rsd/q[534]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  15.25  284.72 v u_g_front_2_u_front.u_rsd/_1328_/Y (INVx2_ASAP7_75t_R)
+ 130.28  415.00 v output3317/Y (BUFx2_ASAP7_75t_R)
+   0.37  415.37 v g_front_2_u_front__f_t3[150] (out)
+         415.37   data arrival time
+
+ 833.00  833.00   clock vclk (rise edge)
+ 250.00 1083.00   clock network delay (ideal)
+ -30.00 1053.00   inter-clock uncertainty
+   0.00 1053.00   clock reconvergence pessimism
+-166.60  886.40   output external delay
+         886.40   data required time
+---------------------------------------------------------
+         886.40   data required time
+        -415.37   data arrival time
+---------------------------------------------------------
+         471.03   slack (MET)
+
+
+Startpoint: u_g_front_2_u_front.u_rsd/q[528]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_front_2_u_front__f_t3[144] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ g_front_2_u_front__clk[0] (in)
+  28.24   28.24 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  33.34   61.58 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.83   84.41 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.90  107.31 ^ clkbuf_2_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.67  131.98 ^ clkbuf_3_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.40  154.38 ^ clkbuf_4_10_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.29  176.67 ^ clkbuf_6_43_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.28  199.95 ^ clkbuf_7_87__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  27.70  227.65 ^ clkbuf_leaf_879_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   2.28  229.94 ^ u_g_front_2_u_front.u_rsd/q[528]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  39.38  269.32 ^ u_g_front_2_u_front.u_rsd/q[528]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  32.75  302.07 v u_g_front_2_u_front.u_rsd/_1322_/Y (INVx2_ASAP7_75t_R)
+  97.44  399.51 v output3310/Y (BUFx2_ASAP7_75t_R)
+   0.37  399.88 v g_front_2_u_front__f_t3[144] (out)
+         399.88   data arrival time
+
+ 833.00  833.00   clock vclk (rise edge)
+ 250.00 1083.00   clock network delay (ideal)
+ -30.00 1053.00   inter-clock uncertainty
+   0.00 1053.00   clock reconvergence pessimism
+-166.60  886.40   output external delay
+         886.40   data required time
+---------------------------------------------------------
+         886.40   data required time
+        -399.88   data arrival time
+---------------------------------------------------------
+         486.52   slack (MET)
+
+
+Startpoint: u_g_front_2_u_front.u_rsd/q[514]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_front_2_u_front__f_t3[130] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ g_front_2_u_front__clk[0] (in)
+  28.24   28.24 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  33.34   61.58 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.83   84.41 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.90  107.31 ^ clkbuf_2_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.67  131.98 ^ clkbuf_3_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.40  154.38 ^ clkbuf_4_10_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.29  176.67 ^ clkbuf_6_43_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.28  199.95 ^ clkbuf_7_87__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  27.53  227.48 ^ clkbuf_leaf_880_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.59  228.06 ^ u_g_front_2_u_front.u_rsd/q[514]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  35.85  263.92 ^ u_g_front_2_u_front.u_rsd/q[514]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  35.99  299.91 v u_g_front_2_u_front.u_rsd/_1308_/Y (INVx1_ASAP7_75t_R)
+  94.01  393.92 v output3295/Y (BUFx2_ASAP7_75t_R)
+   0.52  394.43 v g_front_2_u_front__f_t3[130] (out)
+         394.43   data arrival time
+
+ 833.00  833.00   clock vclk (rise edge)
+ 250.00 1083.00   clock network delay (ideal)
+ -30.00 1053.00   inter-clock uncertainty
+   0.00 1053.00   clock reconvergence pessimism
+-166.60  886.40   output external delay
+         886.40   data required time
+---------------------------------------------------------
+         886.40   data required time
+        -394.43   data arrival time
+---------------------------------------------------------
+         491.97   slack (MET)
+
+
+Startpoint: u_g_front_2_u_front.u_rsd/q[523]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_front_2_u_front__f_t3[139] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ g_front_2_u_front__clk[0] (in)
+  28.24   28.24 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  33.34   61.58 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.83   84.41 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.90  107.31 ^ clkbuf_2_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.67  131.98 ^ clkbuf_3_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.40  154.38 ^ clkbuf_4_10_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.29  176.67 ^ clkbuf_6_43_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.28  199.95 ^ clkbuf_7_87__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  27.70  227.65 ^ clkbuf_leaf_879_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   1.35  229.01 ^ u_g_front_2_u_front.u_rsd/q[523]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  39.32  268.33 ^ u_g_front_2_u_front.u_rsd/q[523]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  34.93  303.26 v u_g_front_2_u_front.u_rsd/_1317_/Y (INVx2_ASAP7_75t_R)
+  87.19  390.45 v output3304/Y (BUFx2_ASAP7_75t_R)
+   0.38  390.83 v g_front_2_u_front__f_t3[139] (out)
+         390.83   data arrival time
+
+ 833.00  833.00   clock vclk (rise edge)
+ 250.00 1083.00   clock network delay (ideal)
+ -30.00 1053.00   inter-clock uncertainty
+   0.00 1053.00   clock reconvergence pessimism
+-166.60  886.40   output external delay
+         886.40   data required time
+---------------------------------------------------------
+         886.40   data required time
+        -390.83   data arrival time
+---------------------------------------------------------
+         495.57   slack (MET)
+
+
+Startpoint: u_g_front_2_u_front.u_rsd/q[519]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: g_front_2_u_front__f_t3[135] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ g_front_2_u_front__clk[0] (in)
+  28.24   28.24 ^ wire9935/Y (BUFx12_ASAP7_75t_R)
+  33.34   61.58 ^ clkbuf_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.83   84.41 ^ clkbuf_1_1_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.90  107.31 ^ clkbuf_2_2_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  24.67  131.98 ^ clkbuf_3_5_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.40  154.38 ^ clkbuf_4_10_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  22.29  176.67 ^ clkbuf_6_43_0_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  23.28  199.95 ^ clkbuf_7_87__f_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+  27.70  227.65 ^ clkbuf_leaf_879_g_front_2_u_front__clk[0]/Y (BUFx24_ASAP7_75t_R)
+   0.50  228.15 ^ u_g_front_2_u_front.u_rsd/q[519]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  36.01  264.16 ^ u_g_front_2_u_front.u_rsd/q[519]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  34.14  298.30 v u_g_front_2_u_front.u_rsd/_1313_/Y (INVx1_ASAP7_75t_R)
+  89.37  387.67 v output3300/Y (BUFx2_ASAP7_75t_R)
+   0.39  388.05 v g_front_2_u_front__f_t3[135] (out)
+         388.05   data arrival time
+
+ 833.00  833.00   clock vclk (rise edge)
+ 250.00 1083.00   clock network delay (ideal)
+ -30.00 1053.00   inter-clock uncertainty
+   0.00 1053.00   clock reconvergence pessimism
+-166.60  886.40   output external delay
+         886.40   data required time
+---------------------------------------------------------
+         886.40   data required time
+        -388.05   data arrival time
+---------------------------------------------------------
+         498.35   slack (MET)
+
+

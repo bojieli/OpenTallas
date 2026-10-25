@@ -59,6 +59,34 @@ def grep_last(path, rx):
     return v
 
 
+def contract_reeval(kd, so):
+    """A signoff.json written before the kit carried the hard-core latency contract (signoff.py befed6a747) judged the
+    core's internal insertion against the partition-tap target 250 +- 40.  When the kit now carries the typed contract
+    (core.json clock_contract kind hard_core_latency), re-evaluate the SAME measured record with signoff.evaluate()
+    without the insertion target (spread / unique arrival still gate) and publish core_latency, as signoff.py run
+    does.  The original record is kept as signoff.pre_contract.json (failed verdicts are never overwritten)."""
+    if not so or so.get("core_latency"):
+        return so
+    import sys
+    sys.path.insert(0, str(HERE.parents[4] / "tools" / "die_plan"))
+    import signoff
+    cc = signoff.hard_core_latency_contract(dict(kit=str(kd)))
+    if not cc:
+        return so
+    pre = kd / "signoff" / "signoff.pre_contract.json"
+    if not pre.exists():
+        shutil.copyfile(kd / "signoff" / "signoff.json", pre)
+    rec = json.loads(json.dumps(so))
+    signoff.evaluate(rec, None)
+    rec["core_latency"] = dict(contract=cc, measured={c: v.get("insertion_pinflops") for c, v in rec["corners"].items()
+                                                      if v.get("done")})
+    rec["checks"]["clock"]["core_latency_contract"] = cc.get("kind")
+    rec["contract_reevaluated"] = dict(by="collect_core.py (KV-CORES 10-24)", pre_contract_verdict=so.get("verdict"),
+                                       pre_contract_reasons=so.get("reasons"), original="signoff.pre_contract.json")
+    (kd / "signoff" / "signoff.json").write_text(json.dumps(rec, indent=1) + "\n")
+    return rec
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("kitdir")
@@ -86,7 +114,7 @@ def main():
                synth_cells=synth_cells,
                instances=pick(m, r"finish__design__instance__count", r"detailedplace__design__instance__count"),
                std_util=pick(m, r"finish__design__instance__utilization", r"detailedplace__design__instance__utilization"),
-               grt_overflow=pick(m, r"globalroute__route__overflow.*", r"globalroute__.*overflow.*"),
+               grt_overflow=pick(m, r"globalroute__route__overflow", r"globalroute__route__overflow__total"),   # never *_iterations_s (a runtime)
                drc=pick(m, r"detailedroute__route__drc_errors", r"finish__route__drc_errors"),
                antenna=pick(m, r"detailedroute__antenna__violating__nets", r"finish__antenna.*"),
                pin_audit=f"{pa.get('verdict', 'NOT RUN')} {pa.get('ok', 0)}/{pa.get('pins', 0)}",
@@ -102,6 +130,7 @@ def main():
     setup_ss = ss.get("setup_ws_ps")
     hold_ff = ff.get("hold_ws_ps")
     so = jload(kd / "signoff" / "signoff.json") or {}
+    so = contract_reeval(kd, so)
     rec["signoff"] = dict(verdict=so.get("verdict", "NOT RUN"), reasons=so.get("reasons"),
                           checks={k: v.get("verdict") if isinstance(v, dict) else v for k, v in (so.get("checks") or {}).items()})
     if not lef or not all(libs[c].is_file() for c in ("tt", "ff")) or not sta["tt"]:
