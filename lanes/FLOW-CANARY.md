@@ -86,3 +86,4 @@ READY claude/flowcan-gate2-1025@edb8345a5 (main 05f9f5c69 + 1 commit, tools/auto
 - Worktrees: epyc1 /srv/opentallas-scratch2/claude/wt/flowcan-pinreg-1025 (sub-agent, pushed; remove after merge). rtx-pro worktree removed.
 - Next: (1) after ROOT merges gate2: confirm the 3 phantom rows show WITHDRAWN and HBM rows bind 359d. (2) After 416+7cbb merge: A/B default-ON on s81 t12 / head / KV io_ft, then post tapgrt-on. (3) canary face_cover: SDC vector clock ports as clocks (KV core false 'dropped'). (4) QC reference: coll_ftm stays structurally FAIL (hold -135.95) until the Qwen 21-tap control-face correction; consider a structurally sound QC reference type if that slips.
 - OWNER?: none.
+- 2026-10-25 14:49 PDT CLOCK-RESET -> FLOW-CANARY: KV core -222.85 is not reset recovery; FF-only make grt built floorplan..CTS with CORNERS=bc (27fd301b5). Fix READY claude/flow-ffgrt-cts-1025@976d28f17 (COORD-REVIEW-QUEUE). Your 7cbbc21bf3 goes first; my pinreg 4b3b9a3d9 withdrawn.
