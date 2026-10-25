@@ -172,12 +172,18 @@ def main():
             dirs = lef_dirs("physical/ref_tile/%s/views/%s/%s.lef" % (rt, mod, mod))
         lp = os.path.join(D, spec.get("dir", "cores/%s/lef" % ("svc" if sfx == "_c" else "leaf")), "%s%s.lef" % (mod, sfx))
         os.makedirs(os.path.dirname(lp), exist_ok=True)
-        open(lp, "w").write(lef(mod, W, H, pins, dirs))
+        # the source pin table already carries the OWNER DECISION 8 drops / renames (src["const_rename"] = renames applied):
+        # the new table and LEF continue from that count, so drop() below applies only renames appended since
+        done = int(src.get("const_rename") or 0)
+        open(lp, "w").write(("# OT const_rename %d: inherited from the source pin table\n" % done if done else "") +
+                            lef(mod, W, H, pins, dirs))
         import hashlib
         j = dict(module=mod, lef=lp, source="S81-CORES 10-24 re-pin (cores/leaf/repin.py) of %s: same ports, "
                  "%gx%g, faces %s" % (src["lef"], W, H, {f: len(g) for f, g in spec["faces"].items()}
                                        if "faces" in spec else "kept"),
                  pinhash=hashlib.sha256(json.dumps(pins, sort_keys=True).encode()).hexdigest()[:12], pins=pins)
+        if done:
+            j["const_rename"] = done
         sys.path.insert(0, D)
         import drop_const_pins            # OWNER DECISION 8: constant pins are not plan pins
         drop_const_pins.drop(j, lp)
