@@ -159,8 +159,8 @@ module ot_s81sl_vq #(
 `else
                     wa_m <= wp;
 `endif
-`ifdef OT_VQ_MUT_XPTR
-                    ra_m <= wp - 4'd8;      // mutant: one cycle short (the bench must catch it)
+`ifdef OT_VQ_MUT_RDQ
+                    ra_m <= wp - 4'd8;      // mutant OT_VQ_MUT_RDQ (own name: the ref RTL also reads OT_VQ_MUT_XPTR): one row late, must FAIL
 `else
                     ra_m <= wp - 4'd9;
 `endif
