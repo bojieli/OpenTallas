@@ -140,6 +140,12 @@ module hnx_xs3_leaf #(
     output wire                     o_ilast_w,
     output wire [TAGW-1:0]          o_itag_w,
     output wire [LSB*16-1:0]        o_iwf_w
+`ifdef OT_SMH_FACE_CLONE
+    ,
+    output wire                     o_ifirst_e,     // E-face copies (OT_SMH_FACE_CLONE)
+    output wire                     o_ilast_e,
+    output wire [TAGW-1:0]          o_itag_e
+`endif
 `else
     output wire                     gv,
     output wire                     gf,
@@ -361,8 +367,29 @@ module hnx_xs3_leaf #(
 `ifdef OT_SMH_HIER
     // el1011-hbm-smh OT_SMH_HIER: the columns and the G1 stage live in ot_hbm_accel_smh_leafh; the i stage is the
     // front's registered output (its j stage became the column input pin flops: 0 cycles)
+`ifdef OT_SMH_FACE_CLONE
+    // PATH-HBM-SM 10-25 (face_guard R2, one register per face pin bit): the plain i-stage flops iv_f / ifirst / ilast /
+    // itag / iw[hi] were folded into the kept W-face copies below (same D), so one flop drove the N, W and E face pins
+    // ~500 um apart (face_guard: 563 shared + 5 feedthrough).  Here the N-face (o_*) and E-face (o_*_e) copies are their
+    // own kept registers with the same D and reset as the W copies: cycle-exact, no schedule change.
+    (* keep *) reg iv_fk, ifirst_k, ilast_k, ifirst_e, ilast_e;
+    (* keep *) reg [TAGW-1:0] itag_k, itag_e;
+    (* keep *) reg [LSB*16-1:0] iwe_k;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) iv_fk <= 1'b0;
+        else iv_fk <= c3bv[0];
+    always @(posedge clk) begin
+        ifirst_k <= c3bd[CW-3]; ilast_k <= c3bd[CW-4]; itag_k <= c3bd[TAGW-1:0];
+        ifirst_e <= c3bd[CW-3]; ilast_e <= c3bd[CW-4]; itag_e <= c3bd[TAGW-1:0];
+        iwe_k <= w3b[LBS*266 +: LSB*16];
+    end
+    assign o_iv_b = iv_b; assign o_iv_f = iv_fk; assign o_ifirst = ifirst_k; assign o_ilast = ilast_k; assign o_ifp4 = ifp4;
+    assign o_itag = itag_k; assign o_iw = {iwe_k, iw[LBS*266-1:0]}; assign o_ix = ix;
+    assign o_ifirst_e = ifirst_e; assign o_ilast_e = ilast_e; assign o_itag_e = itag_e;
+`else
     assign o_iv_b = iv_b; assign o_iv_f = iv_f; assign o_ifirst = ifirst; assign o_ilast = ilast; assign o_ifp4 = ifp4;
     assign o_itag = itag; assign o_iw = iw; assign o_ix = ix;
+`endif
     // HNX-XS4 face split: the BF16 lanes on the W face take their own copy of the i stage (same D, same cycle; kept
     // so synthesis cannot merge them back: one register set per face, no 500-um fan-out).  MUT 4 (bench only):
     // W-face weight sign bits inverted.
@@ -472,7 +499,9 @@ module hnx_xs3 #(parameter integer TAGW = 16, parameter integer NBEAT = 13, para
     output wire o_ifirst_e, output wire o_ilast_e, output wire [TAGW-1:0] o_itag_e
 );
     localparam integer XW = 7, CW = 6 + TAGW, WSW = 788, RBW = CW + WSW + 1 + XW, BBW = 1 + XW + NBEAT + 2048, NG = 25;
+`ifndef OT_SMH_FACE_CLONE
     assign o_ifirst_e = o_ifirst; assign o_ilast_e = o_ilast; assign o_itag_e = o_itag;
+`endif
     wire rl_n;
 `ifdef OT_SMH_RSTRELAY
     ot_rst_relay #(.REGIONS(1)) u_rr (.clk(clk), .rst_n_in(rst_a), .rst_n(rl_n));
@@ -514,7 +543,11 @@ module hnx_xs3 #(parameter integer TAGW = 16, parameter integer NBEAT = 13, para
         .b_en(bk[BBW-1]), .b_a(bk[BBW-2 -: XW]), .b_d(bk[2047:0]), .b_wl(wlq), .ohr(ohr),
         .o_iv_b(o_iv_b), .o_iv_f(o_iv_f), .o_ifirst(o_ifirst), .o_ilast(o_ilast), .o_ifp4(o_ifp4), .o_itag(o_itag),
         .o_iw(iw_a), .o_ix(ix_a), .o_iv_fw(o_iv_fw), .o_ifirst_w(o_ifirst_w), .o_ilast_w(o_ilast_w),
-        .o_itag_w(o_itag_w), .o_iwf_w(o_iwf_w));
+        .o_itag_w(o_itag_w), .o_iwf_w(o_iwf_w)
+`ifdef OT_SMH_FACE_CLONE
+        , .o_ifirst_e(o_ifirst_e), .o_ilast_e(o_ilast_e), .o_itag_e(o_itag_e)
+`endif
+        );
     // face split of the leaf's i stage (wires only)
     localparam integer PW = (P + 1) / 2;
     assign o_iwb = iw_a[531:0]; assign o_iwf_e = iw_a[787:532];

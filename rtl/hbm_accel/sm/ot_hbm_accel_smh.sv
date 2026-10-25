@@ -3092,10 +3092,22 @@ module ot_hbm_accel_smh_tcl #(parameter integer L = 8, parameter integer IL = 8,
         always @(posedge clk) sum_q[32*l +: 32] <= sum[32*l +: 32];
         assign lf[l] = f0 | f1;
     end endgenerate
+`ifdef OT_SMH_FACE_CLONE
+    // PATH-HBM-SM 10-25 (face_guard R2): the sticky fault flop fed both its own hold path and the lfault pin (shared).
+    // The pin gets its own kept copy with the same D and reset (lane_fault | |lf): cycle-exact, lane_fault keeps the
+    // feedback.  Both are kept so synthesis cannot fold them back into one flop.
+    (* keep *) reg lane_fault;
+    (* keep *) reg lfault_k;
+    always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault <= 1'b0; else lane_fault <= lane_fault | (|lf);
+    always @(posedge clk or negedge rst_n) if (!rst_n) lfault_k <= 1'b0; else lfault_k <= lane_fault | (|lf);
+    assign sum_o = sum_q;
+    assign lfault = lfault_k;
+`else
     reg lane_fault;
     always @(posedge clk or negedge rst_n) if (!rst_n) lane_fault <= 1'b0; else lane_fault <= lane_fault | (|lf);
     assign sum_o = sum_q;
     assign lfault = lane_fault;
+`endif
 endmodule
 
 // tct: the 16-lane tree of ot_hbm_accel_smh_tc_col (HARDENED); sum_q2 is its input pin register.  The sticky lane
