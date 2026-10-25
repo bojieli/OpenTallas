@@ -1,0 +1,1046 @@
+{
+ "schema": "opentallas.qc.bound_memory_views.v1",
+ "added_cycles": 0,
+ "types": {
+  "glue": {
+   "source": "/srv/opentallas-scratch2/claude/qc-kits/wave_p3/m5/glue/run/results/asap7/dp_glue/base/1_2_yosys.v",
+   "memories": [
+    {
+     "inst": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[0].u_store.u_sram",
+     "module": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+     "status": "reuse",
+     "outline_um": [
+      57.912,
+      45.672
+     ],
+     "origin_um": [
+      80.0,
+      100.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+     "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[1].u_store.u_sram",
+     "module": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+     "status": "reuse",
+     "outline_um": [
+      57.912,
+      45.672
+     ],
+     "origin_um": [
+      220.0,
+      100.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+     "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[2].u_store.u_sram",
+     "module": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+     "status": "reuse",
+     "outline_um": [
+      57.912,
+      45.672
+     ],
+     "origin_um": [
+      80.0,
+      240.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+     "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_d2d_rom.u_core.u_end.u_link.g_bank[3].u_store.u_sram",
+     "module": "d2d_sram_1r1w_64x137_m1_r2c2_p192",
+     "status": "reuse",
+     "outline_um": [
+      57.912,
+      45.672
+     ],
+     "origin_um": [
+      220.0,
+      240.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.lef",
+     "lib": "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_embed_prov.store.codes",
+     "module": "ot_sram_1r1w_64x512_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      171.288,
+      77.76
+     ],
+     "origin_um": [
+      450.0,
+      500.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_sys_face.u_ot_pr_core.u_cseq.u_rx_rom",
+     "module": "ot_rom_4096x72_m8",
+     "status": "reuse",
+     "outline_um": [
+      38.016,
+      62.91
+     ],
+     "origin_um": [
+      480.0,
+      850.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+     "lib": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_sys_face.u_ot_pr_core.u_cseq.u_tx_rom",
+     "module": "ot_rom_4096x72_m8",
+     "status": "reuse",
+     "outline_um": [
+      38.016,
+      62.91
+     ],
+     "origin_um": [
+      540.0,
+      850.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+     "lib": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_sys_face.u_ot_pr_core.u_rom",
+     "module": "ot_rom_4096x72_m8",
+     "status": "reuse",
+     "outline_um": [
+      38.016,
+      62.91
+     ],
+     "origin_um": [
+      600.0,
+      850.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+     "lib": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    }
+   ]
+  },
+  "sle_st_a": {
+   "source": "/srv/opentallas-scratch2/claude/qc-kits/wave_p3/m5/sle_st_a/run/results/asap7/dp_sle_st_a/base/1_2_yosys.v",
+   "memories": [
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.04
+     ],
+     "origin_um": [
+      90.0,
+      80.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.04
+     ],
+     "origin_um": [
+      90.0,
+      366.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.04
+     ],
+     "origin_um": [
+      90.0,
+      652.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.04
+     ],
+     "origin_um": [
+      90.0,
+      938.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      100.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      100.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      510.0,
+      100.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      160.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      160.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      386.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      386.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      510.0,
+      386.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      446.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      446.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      672.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      672.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      510.0,
+      672.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      732.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      732.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      958.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      958.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      510.0,
+      958.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      1018.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      1018.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    }
+   ]
+  },
+  "slw_st_a": {
+   "source": "/srv/opentallas-scratch2/claude/qc-kits/wave_p3/m5/slw_st_a/run/results/asap7/dp_slw_st_a/base/1_2_yosys.v",
+   "memories": [
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.04
+     ],
+     "origin_um": [
+      90.0,
+      80.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.04
+     ],
+     "origin_um": [
+      90.0,
+      366.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.04
+     ],
+     "origin_um": [
+      90.0,
+      652.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
+     "module": "ot_sram_1r1w_128x256_m1_r2c2",
+     "status": "reuse",
+     "outline_um": [
+      94.824,
+      41.04
+     ],
+     "origin_um": [
+      90.0,
+      938.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
+     "lib": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      100.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      100.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      510.0,
+      100.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      160.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      160.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      386.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      386.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      510.0,
+      386.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      446.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      446.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      672.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      672.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      510.0,
+      672.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      732.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      732.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      958.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      958.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      510.0,
+      958.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      400.0,
+      1018.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m",
+     "module": "ot_sram_1r1w_32x64_m1",
+     "status": "reuse",
+     "outline_um": [
+      31.968,
+      17.28
+     ],
+     "origin_um": [
+      455.0,
+      1018.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    }
+   ]
+  },
+  "sle_stm": {
+   "source": "/srv/opentallas-scratch2/claude/qc-kits/wave_p3/m5/sle_stm/run/results/asap7/dp_sle_stm/base/1_2_yosys.v",
+   "memories": [
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m0",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.824,
+      62.91
+     ],
+     "origin_um": [
+      90.0,
+      420.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m1",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.824,
+      62.91
+     ],
+     "origin_um": [
+      350.0,
+      420.0
+     ],
+     "orient": "MY",
+     "lef": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m2",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.824,
+      62.91
+     ],
+     "origin_um": [
+      90.0,
+      550.0
+     ],
+     "orient": "R0",
+     "lef": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    },
+    {
+     "inst": "u_bound.u_core.u_tload.u_ld.m3",
+     "module": "ot_rom_4096x266_m8",
+     "status": "reuse",
+     "outline_um": [
+      121.824,
+      62.91
+     ],
+     "origin_um": [
+      350.0,
+      550.0
+     ],
+     "orient": "MY",
+     "lef": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+     "lib": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+     "note": "Existing bound RTL memory: physical view placement,0 added cycles"
+    }
+   ]
+  }
+ }
+}
