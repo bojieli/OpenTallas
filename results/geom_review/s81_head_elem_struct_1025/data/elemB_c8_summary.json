@@ -1,0 +1,55 @@
+{
+ "n_sinks": 26148,
+ "gap_grt_minus_rcx_FF_min_ps": {
+  "min": 20.89,
+  "p1": 31.47,
+  "median": 37.28,
+  "p99": 49.8,
+  "max": 58.79
+ },
+ "gap_face_flops_median": 39.37,
+ "gap_internal_median": 37.27,
+ "rcx_FF_early_arrival": {
+  "face_median": 169.73,
+  "internal_median": 172.67
+ },
+ "grt_FF_early_arrival": {
+  "face_median": 208.49,
+  "internal_median": 209.7
+ },
+ "rcx_FF_hold_paths_slack_lt15": 736,
+ "to_output_ports": 136,
+ "rcx_FF_hold_worst": [
+  [
+   "u_oreg/q[0]$_DFF_PN0_",
+   "fault",
+   -4.786809837398209
+  ],
+  [
+   "u_oreg/q[90]$_DFF_PN0_",
+   "l_d[7]",
+   2.3474833188430466
+  ],
+  [
+   "u_oreg/q[74]$_DFF_PN0_",
+   "best_row[9]",
+   2.4234780848786386
+  ],
+  [
+   "u_m.x_t[58]$_DFF_P_",
+   "u_m.x_t[58]$_DFF_P_/D",
+   2.4388269181940814
+  ],
+  [
+   "u_oreg/q[82]$_DFF_PN0_",
+   "done",
+   2.7593760609789797
+  ]
+ ],
+ "t_r_to_w_r_manhattan_um": {
+  "median": 89.5,
+  "p90": 183.9,
+  "max": 212.2,
+  "n_over_100": 124
+ }
+}

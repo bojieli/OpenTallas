@@ -1,0 +1,55 @@
+{
+ "n_sinks": 28723,
+ "gap_grt_minus_rcx_FF_min_ps": {
+  "min": 32.48,
+  "p1": 63.2,
+  "median": 69.1,
+  "p99": 74.59,
+  "max": 77.83
+ },
+ "gap_face_flops_median": 70.21,
+ "gap_internal_median": 69.08,
+ "rcx_FF_early_arrival": {
+  "face_median": 155.35,
+  "internal_median": 152.76
+ },
+ "grt_FF_early_arrival": {
+  "face_median": 223.88,
+  "internal_median": 221.28
+ },
+ "rcx_FF_hold_paths_slack_lt15": 750,
+ "to_output_ports": 149,
+ "rcx_FF_hold_worst": [
+  [
+   "u_oreg/q[43]$_DFF_PN0_",
+   "best_bits[10]",
+   -13.319290115276772
+  ],
+  [
+   "u_oreg/q[7]$_DFF_PN0_",
+   "best_key[6]",
+   -13.022777300975008
+  ],
+  [
+   "u_oreg/q[42]$_DFF_PN0_",
+   "best_bits[9]",
+   -12.4729393480294
+  ],
+  [
+   "u_oreg/q[74]$_DFF_PN0_",
+   "best_row[9]",
+   -11.580347791806389
+  ],
+  [
+   "u_oreg/q[124]$_DFF_PN0_",
+   "o_d[8]",
+   -11.54731865682379
+  ]
+ ],
+ "t_r_to_w_r_manhattan_um": {
+  "median": 15.0,
+  "p90": 75.9,
+  "max": 150.5,
+  "n_over_100": 13
+ }
+}
