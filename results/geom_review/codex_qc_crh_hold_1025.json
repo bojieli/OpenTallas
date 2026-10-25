@@ -1,0 +1,13 @@
+{
+  "image": "epyc1:/srv/opentallas-scratch2/claude/qc-cores/review/qfd_dv_s8x_crh_c.png",
+  "viewed_copy": "/srv/opentallas-scratch/claude/codex-qc-cores/review/qfd_dv_s8x_crh_c.png",
+  "verdict": "PASS-COND",
+  "scope": "Warm post-route hold ECO, fixed outline/pin/macro placement",
+  "findings": [
+    "Two SRAM rows leave 25um horizontal and >34um face bands, no macro wall across S/W pin faces.",
+    "S/W bus groups stay separated; W pin density at track capacity, DRC0 on source routed checkpoint.",
+    "ck/rst_n at S x19.932/20.124um; clock marker at figure centre is legend. Existing related-pair clock gate passes crh_bd.",
+    "PDN vertical stripes continue across both SRAMs. No RTL or cycle changes.",
+    "Candidate uses core insertion contract and warm FF hold margin5; signoff TT/FF decides."
+  ]
+}
