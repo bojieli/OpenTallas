@@ -553,6 +553,9 @@ class Binder:
         self.extra_lib, self.variants = [], []
         if self.ab.get("substitute_inst"):
             self.substitute_inst(base or str(E.REPO))
+        if self.ab.get("compose"):
+            import bind_compose
+            bind_compose.apply(self, self.ab["compose"])
         self.G = Graph(self.F, self.R, self.errors)
         self.parts = {p["name"]: dict(p) for p in plan["partitions"]}
         self.types = {k: dict(v) for k, v in plan["partition_types"].items()}
