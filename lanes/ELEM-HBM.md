@@ -513,3 +513,26 @@ CODEX took over collection + measured-memory fix on codex/elem-hbm-push-1024, ep
 - COLLECT (results/b2l_verdicts.json): 0 SIGNED, 16 NOT SIGNED. New: vm_query n12 TT -3.2 / FF -38.8 (2625 ep) / slew 1975 viol, face_guard PASS; worst FF hold = output port vs vclk 259 ps at FF while core tree ~177 ps (FF-IO-latency artefact, SIGNOFF), real internal -11.8 (tags shift reg). cfg_collar_idx256r TT +33.4 / FF +8.6, fails only drv (1 slew) + face_guard.
 - xcal_rel_t _m6 x4 DELETED (2 DPL-0033 FAIL, 2 superseded by the 250.56^2 outline now in place+CTS).
 2026-10-25 00:46 PDT COORD CORRECTION (KIT-CENSUS data, supersedes my 01:3x item 1 'HOLD_SLACK_MARGIN 40'): oversized hold-repair margins are the #1 waste (104 runs, 457 run-h; 37,822 'failing' endpoints vs 1,467 real at margin 30). NEW DEFAULT: in-flow hold repair margin = 0..5 ps above the SDC FF uncertainty (25 ps is already in the SDC); fix feedthrough-station chains with deterministic delay cells from the plan; STOP after CTS if FF hold WNS < -100 ps or > 2,000 hold endpoints (structural -> plan/RTL fix, not repair). Also: face_guard / sdc_lint / SELRANGE / port-bind FAIL = STOP before floorplan on every die (run_kit_hbm.sh too). Act on ~/coord/STALLS.txt every hour: STALLED > 90 min or RUNAWAY hold loops are stopped and relaunched with the corrected recipe.
+- 2026-10-25 01:11 PDT HBM-CORES3: B2n CTS results:
+  - core insertion (core_insertion_b2l.json +B2n views, update_insertion.py --views/--kits multi): gq_land 256, svc_pc 253-287, xcal 348-432, inj 353, sfustore 458, idx tails 288.
+  - Placed: xcal 6% fill at 250.56^2 (10.6k cells); svc_pc 29%; inj 13%; gq_land 18%.
+  - Macro packing: ep_static is plan-infeasible (MPL-0003, PLAN REQUEST in HBM-ARCH). sfustore/programme_store fit only with an N-S halo of 0 / 2.16 (SRAM pins are W/E) -> -hy variants.
+  - Generator fix: --orfs-var overrides now come last (they were masked by the default halo).
+- 2026-10-25 01:11 PDT KIT-CENSUS (lane owner directive; counts in HBM-ARCH '## HBM-CORES3 KIT-CENSUS'):
+  - Preflight STOP gates are in run_kit_hbm.sh (f00af2ec65). 118 face_guard-FAIL runs stopped and deleted.
+  - Hold gate proven: vm_query n12 FAIL_POSTCTS (FF WNS -20.3 ps, 3189 endpoints > 2000; intra-tree shift-register pairs) -> structural RTL/plan item, not repaired.
+- 2026-10-25 01:11 PDT gq_land@4d3dd24bd7bf (face_guard PASS): GEOM PASS 01:06. Route+signoff launched (intel1, resume) plus RLA 0.10 variant -rla (epyc3).
+- 2026-10-25 01:11 PDT bankq0 lanes0_2/3_5 NOT SIGNED: FF hold -43/-48, insertion 303 vs contract 356 +-40, slew, face_guard shared 1.
+
+## PARKED 2026-10-25 01:11 PDT (HBM-CORES3)
+- Branch claude/hbm-cores-1024 @ec8799b0b3 (pushed); worktree epyc1:/srv/opentallas-scratch2/claude/wt/hbm-cores. 0 SIGNED; not merged.
+- LIVE (ot-run; run dirs <host>:/srv/opentallas-scratch/claude/elem-hbm/runs/<kit>; logs epyc1:.../elem-hbm/hc2_jobs.log + hc3_jobs.log):
+  - gq_land 4d3dd24bd7bf finish (intel1) + -rla (epyc3).
+  - bankq_ft lanes0_2 43d2/d7bc (epyc1) + lanes3_5 1d3d (intel1) + _pd42 x3 (epyc3, intel2 x2), in GRT.
+  - bankq lanes0_2 e6588042a5d1 / lanes3_5 60b283a425e3 (epyc1), in GRT.
+  - All face_guard PASS, all on the OLD run script (no hold gate).
+- NEXT:
+  - When runs finish: python3 collect.py in the worktree, commit, READY line for any SIGNED view. Delete the loser of each pair (gq_land vs -rla; bankq_ft vs _pd42).
+  - 116 face_guard-FAIL B2n kits (kits_b2n) wait for HBM-FACE shells (claude/hbm-face-1024): merge, regenerate, relaunch (the gates are in).
+  - Before the exp-lane route: re-measure exp-lane insertion with the new outline. sfustore/programme_store use the -hy kits.
+- OWNER? / blockers: FF IO vclk latency in signoff (SIGNOFF lane; artefact on output hold). ep_static outline (HBM-PLAN). face_guard -> HBM-FACE.
