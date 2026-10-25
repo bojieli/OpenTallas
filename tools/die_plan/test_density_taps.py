@@ -152,3 +152,25 @@ def test_tap_balance_grt_hook_text():
     assert "${n}_tb${tb_tag}${it}_tree" in s                                # GRT pass cells never clash with CTS ones
     g = (HERE / "tap_balance_grt.tcl").read_text()
     assert "write_guides $::env(RESULTS_DIR)/route.guide" in g and "OT_TAP_EST) grt" in g
+
+
+def test_sparse_control_bank_keeps_its_own_tap(monkeypatch):
+    _no_pins(monkeypatch)
+    # Data bank at the left, a single reset-control flop 550 um away.
+    # The minimum sink preference must not pull that control onto the band.
+    P = _plan([[100+i*.1, 600] for i in range(200)] + [[650, 600]], cores=[],
+              tap_max_sinks=1250, tap_target_sinks=1000,
+              tap_radius_um=175, tap_min_sinks=50)
+    tl=taps.density_taps(P,'hd')
+    assert len(tl)==2
+    assert sorted(t[3] for t in tl)==[1,200]
+    assert max(t[4] for t in tl)<=175
+
+
+def test_sparse_nearby_group_may_merge_without_long_clock_arm():
+    leaves=[(100,100,200,5,[(95,100,100),(105,100,100)]),
+            (110,100,1,0,[(110,100,1)]),
+            (650,100,1,0,[(650,100,1)])]
+    result=taps._absorb(leaves,1000,50,175)
+    assert sorted(q[2] for q in result)==[1,201]
+    assert max(q[3] for q in result)<=175

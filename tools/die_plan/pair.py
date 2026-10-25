@@ -119,6 +119,51 @@ def reach_plan(ins, outs, geo, hop_um):
     return out
 
 
+def _unique_fold(wi, w, k, used=None):
+    """Fold an in bus of wi bits into w out bits: [sorted in-bit indices per out bit], every out bit a DISTINCT,
+    non-constant XOR (no two out bits share a term set).
+    Why (CLOCK-RESET/cp1 10-25): the old narrow-bus fold q[j % wi] ^ q[(j*7+k+1) % wi] repeats with period wi, so out
+    bits j, j+wi, j+2wi, ... were identical functions; Yosys merged their leaf registers (r1 frame_int_o0: 1230 output
+    pin registers fed by 384 leaf flops) and ONE leaf flop drove 3-4 face flops 166-254 um apart along the face ->
+    post-route D-pin slew 400-436 ps (320 limit) that no ECO repaired.  Every output pin register must have its own
+    source register (industry practice: no register sharing across ports)."""
+    used = set() if used is None else used     # shared per in bus: out buses of one in bus stay distinct too
+    if wi > w:      # wide in bus: disjoint residue classes (distinct within the bus); widen one on a cross-bus clash
+        out = []
+        for j in range(w):
+            ms = set(range(j % wi, wi, w))
+            p = (j * 7 + k + 1) % wi
+            while frozenset(ms) in used and len(ms) < wi:
+                if p not in ms:
+                    ms.add(p)
+                p = (p + 1) % wi
+            used.add(frozenset(ms))
+            out.append(sorted(ms))
+        return out
+    if wi == 1:     # one in bit: only q and ~q exist; distinctness impossible (caller's plan should not do this)
+        return [[0] for _ in range(w)]
+    out = []
+    npairs = wi * (wi - 1) // 2
+    for j in range(w):
+        a = j % wi
+        if len(used) >= npairs:     # pairs exhausted (tiny in bus): triples, still distinct up to C(wi, 3)
+            b = (a + 1 + j // wi) % wi
+            c = (b + 1 + (j * 7 + k) % max(1, wi - 2)) % wi
+            ms = tuple(sorted({a, b, c}))
+            out.append(list(ms))
+            continue
+        p = (j * 7 + k + 1 + 13 * (j // wi)) % wi
+        for _ in range(wi):
+            if p != a and frozenset((a, p)) not in used:
+                break
+            p = (p + 1) % wi
+        else:       # every partner of a used: take the first free pair anywhere
+            a, p = next((x, y) for x in range(wi) for y in range(x + 1, wi) if frozenset((x, y)) not in used)
+        used.add(frozenset((a, p)))
+        out.append(sorted((a, p)))
+    return out
+
+
 def proof_leaf(module, ins, outs, cores=(), geo=None, hop_um=None):
     """ins/outs: [(bus, width)].  geo {bus: (x, y)} (type frame pin centroids): the reach-aware leaf (reach_plan):
     every out bus is a registered XOR fold of its nearest in bus(es), each pipelined by its own stage count, so no
@@ -145,16 +190,15 @@ def proof_leaf(module, ins, outs, cores=(), geo=None, hop_um=None):
             offs[b] = o_
             o_ += w
         plan = reach_plan(ins, outs, geo, hop_um or leaf_hop_um())
+        folds = {}
         for k, (b, w) in enumerate(outs):
             terms = []
             for i, d, st in plan[b]:
                 wi, base = wid[i], offs[i]
                 # fold in bus i into w bits: bit j = XOR of q_i[m] for m = j, j + w, ... (+ a rotated partner when the
                 # in bus is narrower), all from ONE in bus (one face window)
-                bits = []
-                for j in range(w):
-                    ms = list(range(j % wi, wi, w)) if wi > w else [j % wi, (j * 7 + k + 1) % wi]
-                    bits.append(" ^ ".join(f"q[{base + m}]" for m in sorted(set(ms))))
+                bits = _unique_fold(wi, w, k, folds.setdefault(i, set()))
+                bits = [" ^ ".join(f"q[{base + m}]" for m in ms) for ms in bits]
                 f = f"f_{b}_{i}"
                 body.append(f"    // {b} <- {i}: {d:g} um, {st} pipeline stage(s) (hop <= {hop_um or leaf_hop_um():g} um)")
                 body.append(f"    reg [{w - 1}:0] {f}_s0;")

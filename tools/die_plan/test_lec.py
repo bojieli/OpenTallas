@@ -215,6 +215,25 @@ def test_replica_candidates_keep_input_identity_and_prove_both_sides(tmp_path, m
         assert want_result in set(_sim_prove(m).values())
 
 
+def test_gold_only_replica_representative_still_pairs_with_matched_flop(tmp_path, monkeypatch):
+    """kv3_astk / kv3_pv_pair 10-25: synthesis merged the valid flop of four adder replicas g_add[0..3] into a matched
+    tag-line flop.  The replica cohort g_add[1] == g_add[0] is gold-only on both ends; its representative g_add[0]
+    must still be paired with the matched tag flop, else it stays a free input and every cone it feeds 'differs'."""
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    names = lambda ks: {i: [(f'u_dut.{k}$_DFF_P_.lecq', 0)] for i, k in enumerate(ks)}
+    g = tmp_path / 'gold.aig'
+    g.write_bytes(b'aig 5 1 4 0 0\n2\n2\n2\n6\n')          # tag, g_add[0].v, g_add[1].v <= d0; o <= g_add[0].v
+    t = tmp_path / 'gate.aig'
+    t.write_bytes(b'aig 3 1 2 0 0\n2\n4\n')                # tag <= d0; o <= tag
+    gm = {'input': {0: [('d0', 0)]}, 'latch': names(['tag', 'g_add[0].v', 'g_add[1].v', 'o']), 'output': {}}
+    tm = {'input': {0: [('d0', 0)]}, 'latch': names(['tag', 'o']), 'output': {}}
+    L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+    lec.correspond(L, tmp_path, 100, [])
+    assert L.hyp.get(('gold', 'ff:u_dut.g_add[0].v'), (None,))[0] == 'eq'
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {'proved'}
+
+
 def test_parallel_cones_preserve_each_status(tmp_path, monkeypatch):
     import re
     from types import SimpleNamespace
@@ -259,3 +278,31 @@ def test_naive_cone_unknown_does_not_shift_later_status(tmp_path, monkeypatch):
         return SimpleNamespace(stdout='\n'.join(replies[i] for i in ids), stderr='')
     monkeypatch.setattr(lec.subprocess, 'run', run)
     assert lec.prove(m, tmp_path, 100, [], tag='mixed') == {'unknown': 'undecided', 'proved': 'proved', 'different': 'differs'}
+
+
+def test_constant_cohort_representative_is_a_constant(tmp_path, monkeypatch):
+    """10-25 triage: each lane's non-reset register with a constant next state (s1_small[27] of every FP-add lane)
+    is one replica cohort; synthesis removed them all (opt_dff).  The cohort representative must get the constant
+    hypothesis too, else it stays a free input and the downstream register y differs (false NOT EQUIVALENT)."""
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    g = tmp_path / 'gold.aig'
+    # inputs d0; latches g_add[0].c (next 0), g_add[1].c (next 0), y (next = c0 | c1 = !(!c0 & !c1): AND 10 = 7 & 5,
+    # binary deltas 3, 2)
+    g.write_bytes(b'aig 5 1 3 0 1\n0\n0\n11\n' + bytes([3, 2]))
+    gm = {'input': {0: [('d0', 0)]}, 'output': {},
+          'latch': {0: [('u_dut.g_add[0].c$_DFF_P_.lecq', 0)], 1: [('u_dut.g_add[1].c$_DFF_P_.lecq', 0)],
+                    2: [('u_dut.y$_DFF_P_.lecq', 0)]}}
+    t = tmp_path / 'gate.aig'
+    t.write_bytes(b'aig 2 1 1 0 0\n0\n')
+    tm = {'input': {0: [('d0', 0)]}, 'output': {}, 'latch': {0: [('u_dut.y$_DFF_P_.lecq', 0)]}}
+    L = lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {'proved'}, L.hyp
+
+
+def test_implicit_net_lint_pattern():
+    l = ("../work/rtl/ot_s81eng_aq_n32.sv:111:49: warning: implicit net 'ep_next' created [-Wimplicit-net]")
+    m = lec.IMPLICIT_NET.match(l)
+    assert m and (m[1], m[2], m[3]) == ("../work/rtl/ot_s81eng_aq_n32.sv", "111", "ep_next")
+    assert not lec.IMPLICIT_NET.match("x.sv:3:1: warning: implicit conversion truncates [-Wwidth-trunc]")

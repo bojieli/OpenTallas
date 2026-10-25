@@ -1,0 +1,30 @@
+{
+ "stage": "tp8",
+ "grade": "RTL-functional (source assembly), wavefront reset",
+ "src_commit": "669d5efe1cdde6190047bff410b000f4b8d4041b",
+ "verdict": "PASS",
+ "cycles": {
+  "AR256_E": 315,
+  "AR256_span": 826,
+  "AR256_first_in_to_first_out": 570,
+  "AR256x2_back_to_back_span": 1082,
+  "argmax_1w_E": 467,
+  "argmax_1w_span": 475,
+  "layer_2xAR_plus_argmax_span": 1500,
+  "LS": 407,
+  "LU": 53,
+  "token_allreduce_E_36x2": 22680,
+  "token_E_incl_argmax": 23147,
+  "token_span": 59947,
+  "mu4_window_span": 36780,
+  "mu4_window_E": 315,
+  "mu4_user0_alone_span": 30586,
+  "mu4_user0_alone_E": 315
+ },
+ "mutants": {
+  "spin_neg_start_rel85": "FAIL as required",
+  "spin_neg_start_s25": "FAIL as required"
+ }
+}
+grep: /srv/opentallas-scratch2/claude/qc-tok-1025/tp8_wf/rr_spin/tp8/probes/*.log: No such file or directory
+rc=2

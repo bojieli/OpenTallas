@@ -101,12 +101,29 @@ def plan_taps(P):
     """[(part, port, x_die, y_die, early_ps)]: every partition clock tap exactly as the kits / stand-ins see it."""
     import gen_phys
     out = []
+    by_type = {}
     for n, p in sorted(P.parts.items()):
         tn = p["type"]
-        early = {nm: S.core_tap_early_ps(P, tp) for nm, _, _, tp in S.core_taps(P, tn)}
-        for port, x, y in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn):
+        if tn not in by_type:
+            t = P.types[tn]
+            if t.get("hard") and not t.get("hard_cores"):
+                # A hard macro terminal is fixed by its physical view, rather
+                # than a proposed standard-cell buffer location.
+                xy = t.get("clock", {}).get("tap_um")
+                if not isinstance(xy, (list, tuple)) or len(xy) != 2:
+                    raise ValueError(f"hard type {tn} requires an explicit clock.tap_um")
+                x, y = map(float, xy)
+                w, h = map(float, t["outline_um"])
+                if not (math.isfinite(x) and math.isfinite(y) and 0 <= x <= w and 0 <= y <= h):
+                    raise ValueError(f"hard type {tn} has an invalid clock.tap_um: {xy}")
+                by_type[tn] = [("clk", x, y, 0.0)]
+            else:
+                early = {nm: S.core_tap_early_ps(P, tp) for nm, _, _, tp in S.core_taps(P, tn)}
+                by_type[tn] = [(port, x, y, float(early.get(port, 0.0)))
+                               for port, x, y in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)]
+        for port, x, y, early_ps in by_type[tn]:
             X, Y = P.to_die(n, (x, y))
-            out.append((n, port, round(X, 3), round(Y, 3), float(early.get(port, 0.0))))
+            out.append((n, port, round(X, 3), round(Y, 3), early_ps))
     return out
 
 
@@ -115,6 +132,10 @@ def keepouts(P):
     out = []
     for n, p in P.parts.items():
         t = P.types[p["type"]]
+        for i, rect in enumerate(t.get("clock", {}).get("keepouts_um", [])):
+            corners = [P.to_die(n, (x, y)) for x in (rect[0], rect[2]) for y in (rect[1], rect[3])]
+            out.append((min(x for x, y in corners), min(y for x, y in corners),
+                        max(x for x, y in corners), max(y for x, y in corners), f"{n}/clock_keepout_{i}"))
         for hc in t.get("hard_cores", []) or []:
             (x0, y0), (w, h) = hc["origin_um"], hc["outline_um"]
             a, b = P.to_die(n, (x0, y0)), P.to_die(n, (x0 + w, y0 + h))
@@ -238,13 +259,119 @@ def choose_split(lo, hi, ax, coords, pairs, edges, window):
     return best[1], best[0][0]
 
 
+def phy_domains(P):
+    """Only explicit PHY supply domains block die clock wires, not ordinary hard macros."""
+    return [(tuple(d['rect_um']), d['name']) for d in (P.die.get('pg', {}) or {}).get('domains', [])]
+
+
+def route_domain_tree(T, tree, P, clear_um=8.64, rep_um=450.0):
+    """Route physical clock branches around full PHY PG domains; keep fixed tap interfaces.
+
+    Mixed M8/M9 legs are retained in each net's routes for SPEF, rendering and
+    subsequent STA balance. New legal repeaters become real netlist cells.
+    """
+    import clock_corridor as C
+    domains = phy_domains(P)
+    if not domains:
+        tree['meta']['domain_corridors'] = dict(domains=0, changed_edges=0, repeaters=0)
+        return
+    boxes = [(x0-clear_um,y0-clear_um,x1+clear_um,y1+clear_um) for (x0,y0,x1,y1),_ in domains]
+    taps = {'port:'+t['port']:tuple(t['xy']) for t in tree['taps']}
+    taps['port:root'] = tuple(tree['meta']['root_um'])
+    blocked = [(p,xy) for p,xy in taps.items() if any(C.inside(xy,r) for r in boxes)]
+    if blocked:
+        raise ValueError(f'fixed clock ports inside PHY PG clearance: {blocked[:12]}')
+    keep = keepouts(P)+[(*r,'PG/'+name) for (r,name) in zip(boxes,[n for _,n in domains])]
+    K = KeepIndex(keep,die=(P.W,P.H))
+    for name,c in T.cells.items():
+        if K.hit(c['x'],c['y']):
+            x,y,_ = _slide((c['x'],c['y']),(c['x'],c['y']),(c['x'],c['y']),K)
+            c.update(x=round(x,3),y=round(y,3))
+    def xy(name):
+        return taps[name] if name.startswith('port:') else (T.cells[name]['x'],T.cells[name]['y'])
+    def length(route):
+        return sum(abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(route,route[1:]))
+    changed=0; added=0; extra_um=0.; remap={}; result=[]
+    for old in T.nets:
+        net=dict(old,branches=[],routes=[])
+        additions=[]
+        for bi,(L,layer,load,geo) in enumerate(old['branches']):
+            a,b=xy(old['drv']),xy(load)
+            path=C.route(a,b,boxes,(P.W,P.H))
+            plen=length(path)
+            extra_um+=max(0.,plen-geo)
+            if plen>geo+1e-6: changed+=1
+            mids=[]
+            for pa,pb in zip(path,path[1:]):
+                n=max(1,math.ceil((abs(pa[0]-pb[0])+abs(pa[1]-pb[1]))/rep_um-1e-9))
+                for q in _leg_points(pa,pb,n):
+                    if abs(q[0]-b[0])+abs(q[1]-b[1])<1e-6: continue
+                    x,y,_=_slide(q,pa,pb,K)
+                    q=(round(x,3),round(y,3))
+                    if abs(q[0]-a[0])+abs(q[1]-a[1])<1 or (mids and q==mids[-1]): continue
+                    if q!=b: mids.append(q)
+            cells=[]
+            for q in mids:
+                name=T.cell(f'ncr{added}',*q,'corridor',None);added+=1;cells.append(name)
+            chain=cells+[load];prev=old['drv'];targets=[]
+            for j,dst in enumerate(chain):
+                route=C.route(xy(prev),xy(dst),boxes,(P.W,P.H))
+                g=length(route)
+                lay='M8' if len(route)<2 or route[-1][1]==route[-2][1] else 'M9'
+                branch=(max(1e-3,g)+max(0.,L-geo) if j==0 else max(1e-3,g),lay,dst,g)
+                if j==0:
+                    net['branches'].append(branch);net['routes'].append(route)
+                    targets.append([old['name'],len(net['branches'])-1])
+                else:
+                    nn=old['name'] if dst.startswith('port:') else f'w_{cells[j-1]}'
+                    additions.append(dict(name=nn,drv=prev,branches=[branch],routes=[route]))
+                    targets.append([nn,0])
+                prev=dst
+            if cells and load.startswith('port:'):
+                # Port name must remain on its last physical hop.
+                net['name']=f"w_pre_{old['name']}"
+                targets[0][0]=net['name']
+            remap[(old['name'],bi)]=targets
+        result.append(net);result.extend(additions)
+    T.nets=result
+    for t in tree['taps']:
+        t['pad_nets']=[r for target in t['pad_nets'] for r in remap.get(tuple(target),[target])]
+    for nd in tree['nodes'].values():
+        for _,targets in nd.get('kids',[]):
+            targets[:]=[r for target in targets for r in remap.get(tuple(target),[target])]
+    parent={ld:n['drv'] for n in T.nets for _,_,ld,_ in n['branches']}
+    def path_to(load):
+        path=[];seen=set();p=load
+        while p!='port:root':
+            if p in seen or p not in parent: raise ValueError(f'broken clock corridor ancestry at {p}')
+            seen.add(p)
+            if not p.startswith('port:'):path.append(p)
+            p=parent[p]
+        return list(reversed(path))
+    for t in tree['taps']:t['path']=path_to('port:'+t['port'])
+    for name,nd in tree['nodes'].items():
+        nd['path']=path_to(name);nd['xy']=list(xy(name))
+    bad_cells=[n for n,c in T.cells.items() if any(C.inside((c['x'],c['y']),r) for r in boxes)]
+    bad_wires=[n['name'] for n in T.nets for route in n['routes'] for a,b in zip(route,route[1:])
+               if any(C.intersects(a,b,r) for r in boxes)]
+    if bad_cells or bad_wires:raise ValueError(f'PG corridor invariant failed: cells {bad_cells[:5]} wires {bad_wires[:5]}')
+    tree['meta'].update(cells=len(T.cells),wire_um=round(sum(L for n in T.nets for L,*_ in n['branches']),1))
+    tree['meta']['domain_corridors']=dict(domains=len(domains),clear_um=clear_um,changed_edges=changed,
+        extra_physical_um=round(extra_um,3),repeaters=added,cell_violations=0,wire_violations=0,
+        max_physical_hop_um=round(max(g for n in T.nets for *_,g in n['branches']),3))
+
+
 def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=None, window=None, aware_levels=None,
-          pad="sta"):
+          pad="sta", domain_corridors=False, domain_clear_um=8.64):
     W, H = float(P.W), float(P.H)
     window = SPLIT_WINDOW if window is None else window
     aware_levels = AWARE_LEVELS if aware_levels is None else aware_levels
     taps = plan_taps(P) if taps is None else taps
-    K = KeepIndex(keep if keep is not None else keepouts(P), die=(W, H))
+    base_keep = list(keep if keep is not None else keepouts(P))
+    if domain_corridors:
+        base_keep += [(r[0]-domain_clear_um,r[1]-domain_clear_um,r[2]+domain_clear_um,r[3]+domain_clear_um,
+                       'PG/'+n) for r,n in phy_domains(P)]
+    K = KeepIndex(base_keep, die=(W, H))
     T = Tree()
     sp = P.clock.get("spine", {}) or {}
     root = tuple(sp.get("die_root_um") or sp.get("root_um") or (W / 2, H / 2))
@@ -596,6 +723,8 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     nodes = {ncell(k): dict(level=k[0], xy=list(pos.get(k, npos[k])), region=[round(v, 3) for v in region[k]],
                             path=path_of.get(k), kids=children.get(ncell(k), [])) for k in live}
     tree = dict(meta=meta, taps=tap_rows, nodes=nodes, root_node=ncell((0, 0)))
+    if domain_corridors:
+        route_domain_tree(T, tree, P, domain_clear_um, rep_um)
     return T, tree
 
 
@@ -637,6 +766,7 @@ def expand_pads(T, pads, snake_um=SNAKE_UM):
     stages = 0
     for n in T.nets:
         branches = []
+        routes = list(n.get("routes") or [])
         for bi, (L, layer, load, geo) in enumerate(n["branches"]):
             p = pads.get((n["name"], bi), 0.0)
             tot = L + p
@@ -648,14 +778,20 @@ def expand_pads(T, pads, snake_um=SNAKE_UM):
             names = [f"s{stages + j}_{n['name']}" for j in range(m)]
             for j, sn in enumerate(names):
                 E.cells[sn] = dict(x=dx, y=dy, kind="snake", level=None)
-            branches.append((snake_um, layer, names[0], min(geo, snake_um)))
+            branches.append((snake_um, layer, names[0], 0.0 if routes else min(geo, snake_um)))
+            original_route=routes[bi] if routes else None
+            if routes:routes[bi]=[[dx,dy],[dx,dy]]
             for j in range(m):
                 last = j == m - 1
-                E.nets.append(dict(name=n["name"] if (last and load.startswith("port:")) else f"w_{names[j]}",
-                                   drv=names[j], branches=[(tot - m * snake_um, layer, load, geo) if last
-                                                           else (snake_um, layer, names[j + 1], min(geo, snake_um))]))
+                item=dict(name=n["name"] if (last and load.startswith("port:")) else f"w_{names[j]}",
+                          drv=names[j],branches=[(tot-m*snake_um,layer,load,geo) if last
+                                                else (snake_um,layer,names[j+1],0.0 if routes else min(geo,snake_um))])
+                if routes:item["routes"]=[original_route if last else [[dx,dy],[dx,dy]]]
+                E.nets.append(item)
             stages += m
-        E.nets.append(dict(n, branches=branches))
+        item=dict(n,branches=branches)
+        if routes:item["routes"]=routes
+        E.nets.append(item)
     # a port net whose last stage took its name: the driver-side net is renamed
     names = defaultdict(int)
     for x in E.nets:
@@ -714,21 +850,31 @@ def write_spef(T, path, design="die_ctree", pads=None):
             return f"{name}:{k[0]}"
         for bi, (L, layer, load, geo) in enumerate(n["branches"]):
             L = L + pads.get((name, bi), 0.0)
-            r, c = layer_rc(layer, geo)         # NDR class fixed by the routed hop, never by a pad
             lpin = load[5:] if load.startswith("port:") else f"{load}:A"
             conn.append(f"*P {lpin} O" if load.startswith("port:") else f"*I {lpin} I")
-            a = node()
-            ress.append((dpin, a, VIA_KOHM[layer]))
-            m = max(1, math.ceil(L / LADDER_UM))
-            seg = L / m
-            prev = a
-            for s in range(m):
-                b = node()
-                ress.append((prev, b, r * seg))
-                caps.append((prev, c * seg / 2))
-                caps.append((b, c * seg / 2))
-                prev = b
-            ress.append((prev, lpin, VIA_KOHM[layer]))
+            routes = n.get("routes")
+            if routes:
+                points = routes[bi]
+                pieces = [(abs(a[0]-b[0])+abs(a[1]-b[1]), "M8" if a[1]==b[1] else "M9")
+                          for a,b in zip(points,points[1:]) if a!=b]
+                physical = sum(x[0] for x in pieces)
+                pad_length = max(0.0,L-physical)
+                if pad_length or not pieces:pieces.append((max(1e-3,pad_length),layer))
+            else:pieces=[(L,layer)]
+            prev = node()
+            ress.append((dpin,prev,VIA_KOHM[pieces[0][1]]))
+            last_layer=pieces[0][1]
+            for wire,lay in pieces:
+                if lay!=last_layer:
+                    via=node();ress.append((prev,via,abs(VIA_KOHM[lay]-VIA_KOHM[last_layer])))
+                    prev=via
+                r,c=layer_rc(lay,wire if routes else geo)
+                m=max(1,math.ceil(wire/LADDER_UM));seg=wire/m
+                for _ in range(m):
+                    nxt=node();ress.append((prev,nxt,r*seg))
+                    caps.append((prev,c*seg/2));caps.append((nxt,c*seg/2));prev=nxt
+                last_layer=lay
+            ress.append((prev,lpin,VIA_KOHM[last_layer]))
         cap = defaultdict(float)
         for nd, v in caps:
             cap[nd] += v
@@ -768,7 +914,9 @@ def cmd_build(a):
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
-    T, tree = build(P, a.leaf_um, a.rep_um, a.core_early, window=a.window, aware_levels=a.aware_levels, pad=a.pad)
+    T, tree = build(P, a.leaf_um, a.rep_um, a.core_early, window=a.window, aware_levels=a.aware_levels, pad=a.pad,
+                    domain_corridors=getattr(a,"domain_corridors",False),
+                    domain_clear_um=getattr(a,"domain_clear_um",8.64))
     write_verilog(T, out / "ctree.v")
     write_spef(T, out / "ctree.spef")
     import hashlib
@@ -1149,7 +1297,16 @@ def cmd_render(a):
         ax.add_patch(Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, lw=0.3, ec="0.6"))
     for r in keepouts(P):
         ax.add_patch(Rectangle((r[0], r[1]), r[2] - r[0], r[3] - r[1], fc="tan", ec="none", alpha=0.5))
-    for k, nd in tree["nodes"].items():
+    nj=json.loads((d / "nets.json").read_text())
+    routed=any(n.get("routes") for n in nj["nets"])
+    if routed:
+        for rect,name in phy_domains(P):
+            ax.add_patch(Rectangle((rect[0],rect[1]),rect[2]-rect[0],rect[3]-rect[1],
+                                   fc="magenta",ec="purple",alpha=0.25))
+        for net in nj["nets"]:
+            for points in net.get("routes",[]):
+                if len(points)>1:ax.plot([q[0] for q in points],[q[1] for q in points],lw=0.35,c="tab:blue")
+    for k, nd in ([] if routed else tree["nodes"].items()):
         for kid, _ in nd.get("kids", []):
             pth = tree["nodes"][kid]["path"]
             leg = [c for c in pth[len(nd["path"]) - 1:] if c in cells]
@@ -1197,6 +1354,8 @@ def main(argv=None):
     b.add_argument("--core-early", choices=("off", "pad"), default="off")
     b.add_argument("--window", type=float, default=SPLIT_WINDOW)
     b.add_argument("--pad", choices=("sta", "level"), default="sta")
+    b.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
+    b.add_argument("--domain-clear-um", type=float, default=8.64)
     b.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
     u = sub.add_parser("run")
     u.add_argument("plan")
@@ -1206,6 +1365,8 @@ def main(argv=None):
     u.add_argument("--core-early", choices=("off", "pad"), default="off")
     u.add_argument("--window", type=float, default=SPLIT_WINDOW)
     u.add_argument("--pad", choices=("sta", "level"), default="sta")
+    u.add_argument("--domain-corridors", action="store_true", help="route outside full PHY PG domains; real mixed-layer RC")
+    u.add_argument("--domain-clear-um", type=float, default=8.64)
     u.add_argument("--aware-levels", type=int, default=AWARE_LEVELS)
     u.add_argument("--corner", action="append")
     u.add_argument("--libdir")

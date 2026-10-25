@@ -87,10 +87,28 @@ ssh "$HOST" "rm -rf $R/results/die_ci/$NAME"
 PIDS=""
 for d in $DIES; do
   M=$(ssh "$HOST" "cd $R/wt && python3 tools/die_plan/die_ci.py job-mem $d")
+  # Harvest each completed die immediately. A congested probe on another die can
+  # take hours; it must not hide the completed gates until the whole batch ends.
+  {
   ot-run --hosts "$HOST" --mem "$M" --threads 8 --dir "$R" --priority die -- \
     bash -lc "export PATH=\$HOME/.local/opentallas-tools/bin:\$PATH; cd $R/wt && python3 tools/die_plan/die_ci.py run \
       --sha $SHA --mode $MODE --g2 $G2 --out $R/results/die_ci --name $NAME --partial --dies $d \
-      --views-root $R/views $PREVARG $STAARG --jobs 1" > "$LR/logs/run_${STAMP}_$d.log" 2>&1 &
+      --views-root $R/views $PREVARG $STAARG --jobs 1" > "$LR/logs/run_${STAMP}_$d.log" 2>&1
+  RC=$?
+  PARTIAL="$LR/partials/die_ci/$NAME"
+  mkdir -p "$PARTIAL"
+  if rsync -a --include="/$d.json" --include="/$d.md" --include="/part_$d.json" --exclude='*' \
+      "$HOST:$R/results/die_ci/$NAME/" "$PARTIAL/" >> "$LR/logs/run_${STAMP}_$d.log" 2>&1; then
+    if [ -s "$PARTIAL/part_$d.json" ]; then
+      log "$MODE $SHA: die $d finished (exit $RC); record $PARTIAL/$d.md; other dies may still be running"
+    else
+      log "$MODE $SHA: die $d exited $RC without a completed record (see logs/run_${STAMP}_$d.log)"
+    fi
+  else
+    log "$MODE $SHA: die $d exited $RC; partial harvest FAILED (see logs/run_${STAMP}_$d.log)"
+  fi
+  exit "$RC"
+  } &
   PIDS="$PIDS $!"
 done
 for p in $PIDS; do wait $p; done

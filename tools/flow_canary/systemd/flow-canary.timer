@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenTallas flow canary trigger every 15 min
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=15min
+Persistent=true
+
+[Install]
+WantedBy=timers.target

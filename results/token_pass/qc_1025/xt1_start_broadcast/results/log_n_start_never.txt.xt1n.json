@@ -1,0 +1,102 @@
+{
+ "verdict": "FAIL",
+ "mode": "nominal",
+ "lead": 24,
+ "gap": 4,
+ "near": {
+  "verdict": "FAIL",
+  "mode": "nominal",
+  "lead": 24,
+  "gap": 4,
+  "exact": "0/64",
+  "per_op": {
+   "qkv": {
+    "hr_go": 151,
+    "cw_go": [],
+    "rs_edges": [],
+    "exact": "0/8"
+   },
+   "o": {
+    "hr_go": 1696,
+    "cw_go": [],
+    "rs_edges": [],
+    "exact": "0/24"
+   },
+   "gu": {
+    "hr_go": 3351,
+    "cw_go": [],
+    "rs_edges": [],
+    "exact": "0/8"
+   },
+   "down": {
+    "hr_go": 4912,
+    "cw_go": [],
+    "rs_edges": [],
+    "exact": "0/24"
+   }
+  },
+  "errors": [
+   "qkv: 0 rs words, expected 64 (= rounds x k x 8)",
+   "qkv: no column go on cw_s* after the hr go",
+   "qkv: 0 rs words, expected 8",
+   "o: 0 rs words, expected 48 (= rounds x k x 8)",
+   "o: no column go on cw_s* after the hr go",
+   "o: 0 rs words, expected 24",
+   "gu: 0 rs words, expected 256 (= rounds x k x 8)",
+   "gu: no column go on cw_s* after the hr go",
+   "gu: 0 rs words, expected 8",
+   "down: 0 rs words, expected 144 (= rounds x k x 8)",
+   "down: no column go on cw_s* after the hr go",
+   "down: 0 rs words, expected 24"
+  ],
+  "end": "6460 END hd_fault 0 stm_fault 0 near_fault 0 far_fault 0 mut 0"
+ },
+ "far": {
+  "verdict": "FAIL",
+  "mode": "nominal",
+  "lead": 24,
+  "gap": 4,
+  "exact": "0/64",
+  "per_op": {
+   "qkv": {
+    "hr_go": 151,
+    "cw_go": [],
+    "rs_edges": [],
+    "exact": "0/8"
+   },
+   "o": {
+    "hr_go": 1696,
+    "cw_go": [],
+    "rs_edges": [],
+    "exact": "0/24"
+   },
+   "gu": {
+    "hr_go": 3351,
+    "cw_go": [],
+    "rs_edges": [],
+    "exact": "0/8"
+   },
+   "down": {
+    "hr_go": 4912,
+    "cw_go": [],
+    "rs_edges": [],
+    "exact": "0/24"
+   }
+  },
+  "errors": [
+   "qkv: 0 rs words, expected 64 (= rounds x k x 8)",
+   "qkv: no column go on cw_s* after the hr go",
+   "qkv: 0 rs words, expected 8",
+   "o: 0 rs words, expected 48 (= rounds x k x 8)",
+   "o: no column go on cw_s* after the hr go",
+   "o: 0 rs words, expected 24",
+   "gu: 0 rs words, expected 256 (= rounds x k x 8)",
+   "gu: no column go on cw_s* after the hr go",
+   "gu: 0 rs words, expected 8",
+   "down: 0 rs words, expected 144 (= rounds x k x 8)",
+   "down: no column go on cw_s* after the hr go",
+   "down: 0 rs words, expected 24"
+  ],
+  "end": "6460 END hd_fault 0 stm_fault 0 near_fault 0 far_fault 0 mut 0"
+ }
+}

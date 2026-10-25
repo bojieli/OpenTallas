@@ -196,6 +196,7 @@ module tb_kvslice;
     end
     // partition input record (+REC_hub_Wi=<file>, partrec/gen_partrec.py) for the flat replay sub-bench
 `include "partrec_hub_Wi.svh"
+`include "kvtok2_obs.svh"
     // heartbeat (+HB=<core cycles>, default 20000): progress line + stdout flush (the log is a redirected file)
     integer hb = 20000;
     initial void'($value$plusargs("HB=%d", hb));

@@ -1,0 +1,80 @@
+{
+ "schema": "opentallas.kv_cores_1025.hr_cdc_miter.v1",
+ "date": "2026-10-25",
+ "lane": "KV-CORE-RTL/HR",
+ "ruling": "BRIEFING 16a: KV hub_Wi host/ingest logic on the die clock; async FIFO only at the PHY edge (qkd_hr_cdc_pc)",
+ "source_base": "5aa0e185c9a7cd9852fa4e2f75d431a08b54e5c6",
+ "run_dir": "/srv/opentallas-scratch2/claude/kv-cores-1025r/hr/miter",
+ "simulator": "Verilator 5.050 --binary, one clock, 200k random cycles",
+ "miters": {
+  "ot_link_afifo SAMECLK=1 (qkd_hr_cdc_hi u_hx/u_cx, qkd_hr_cdc_ci u_ox/u_rx)": {
+   "reference": "ot_link_afifo SAMECLK=0 SYNC=1 on the same clock (unchanged Gray/sync construction, one stage)",
+   "compared": "wfull, wfreed, ovf, rempty, rcount, rdata (when !rempty), every cycle",
+   "nominal": {
+    "afifo_W514": [
+     "LATENCY write->visible edges: SYNC2(old)=3 SAMECLK(new)=2 ; pop->wfreed edges: old=3 new=2",
+     "MITER PASS W=514 AW=4 cycles_compared=200019 mismatches=0 full_cycles=31549 ovf_cycles=0"
+    ],
+    "afifo_W289": [
+     "LATENCY write->visible edges: SYNC2(old)=3 SAMECLK(new)=2 ; pop->wfreed edges: old=3 new=2",
+     "MITER PASS W=289 AW=4 cycles_compared=200019 mismatches=0 full_cycles=42087 ovf_cycles=0"
+    ],
+    "afifo_W256": [
+     "LATENCY write->visible edges: SYNC2(old)=3 SAMECLK(new)=2 ; pop->wfreed edges: old=3 new=2",
+     "MITER PASS W=256 AW=4 cycles_compared=200019 mismatches=0 full_cycles=26365 ovf_cycles=2020"
+    ],
+    "afifo_W64": [
+     "LATENCY write->visible edges: SYNC2(old)=3 SAMECLK(new)=2 ; pop->wfreed edges: old=3 new=2",
+     "MITER PASS W=64 AW=4 cycles_compared=200019 mismatches=0 full_cycles=52808 ovf_cycles=2020"
+    ]
+   },
+   "mutant": {
+    "define": "OT_LINK_AFIFO_MUT_SAMECLK (register stage dropped)",
+    "log": [
+     "MISMATCH cyc 24: full 0/0 freed 0/0 ovf 0/0 empty 0/1 cnt 0/0 data eq",
+     "MISMATCH cyc 38: full 0/0 freed 0/0 ovf 0/0 empty 0/1 cnt 0/0 data eq",
+     "MISMATCH cyc 43: full 0/0 freed 1/1 ovf 0/0 empty 0/1 cnt 0/0 data eq",
+     "MISMATCH cyc 47: full 0/0 freed 1/1 ovf 0/0 empty 0/1 cnt 0/0 data eq",
+     "MISMATCH cyc 251: full 0/0 freed 1/1 ovf 0/0 empty 0/1 cnt 0/0 data eq",
+     "LATENCY write->visible edges: SYNC2(old)=3 SAMECLK(new)=1 ; pop->wfreed edges: old=3 new=2",
+     "MITER FAIL W=514 AW=4 cycles_compared=200019 mismatches=199453 full_cycles=31515 ovf_cycles=0"
+    ]
+   },
+   "verdict": "PASS (nominal 4 shapes 0 mismatches) / mutant FAIL as required"
+  },
+  "ot_qwen_same_fifo_w (SAMECLK body of ot_qwen_die_cdc_ch; qkd_hr_cdc_ch u_ing/u_done)": {
+   "reference": "independent SV queue model: word accepted at edge e readable 2 edges later, ready = accepted-not-popped < DEPTH, RSEL2 = word popped at previous edge",
+   "compared": "wr_ready, rd_valid, drained, rd_data every cycle",
+   "nominal": {
+    "samefifo_rsel2": [
+     "MITER PASS W=546 D=8 RSEL2=1 cycles_compared=200000 mismatches=0 full_cycles=39091"
+    ],
+    "samefifo_rsel0": [
+     "MITER PASS W=546 D=8 RSEL2=0 cycles_compared=200000 mismatches=0 full_cycles=39091"
+    ]
+   },
+   "mutant": {
+    "define": "OT_QWEN_SAMEFIFO_MUT (register stage skipped)",
+    "log": [
+     "MISMATCH edge 6: ready 1/1 valid 1/0 data eq",
+     "MISMATCH edge 7: ready 1/1 valid 0/0 data DIFF",
+     "MISMATCH edge 8: ready 1/1 valid 0/0 data DIFF",
+     "MISMATCH edge 9: ready 1/1 valid 0/0 data DIFF",
+     "MISMATCH edge 10: ready 1/1 valid 0/0 data DIFF",
+     "MITER FAIL W=546 D=8 RSEL2=1 cycles_compared=200000 mismatches=64997 full_cycles=38988"
+    ]
+   },
+   "bug_found": "KV-CORES2 WIP wr_ready = ((swp - srp) < AD) widened the counters to 32 bit before the subtraction: ready stuck low after pointer wrap (miter FAIL 48,823 mismatches); fixed with an SA+1-bit occupancy wire",
+   "verdict": "PASS (RSEL2 1 and 0, 0 mismatches) / mutant FAIL as required"
+  }
+ },
+ "cycle_accounting": {
+  "ot_link_afifo": "write -> visible: 3 edges (SYNC=2, shipped) -> 2 edges (SAMECLK); pop -> wfreed credit: 3 -> 2 edges. -1 cycle per crossing, one register stage per direction remains (= SYNC 1 behaviour). Applies to the 4 qm crossings u_hx (host->ingest), u_cx (ingest->host), u_ox (ingest->core), u_rx (core->ingest).",
+  "ot_qwen_die_cdc_ch": "qkd_hr_cdc_ch shape (W546 IBUF4 OCRED4 AD8 PIPE2), isolated word i_v -> o_v: 11 edges (SAMECLK=0, both clocks tied) -> 8 edges (SAMECLK=1): -3 cycles per crossing (u_ing core->host, u_done host->core); i_v -> i_cr credit return unchanged 4; 20,000-word stream identical in value/order, no faults.",
+  "log": [
+   "CDC_CH LATENCY i_v->o_v edges: SAMECLK0(old,tied clocks)=11 SAMECLK1(new)=8 ; i_v->i_cr: old=4 new=4",
+   "STREAM PASS stream words=20000 recv old=20000 new=20000 order/value mismatches=0 faults=0 end_cycle=38701"
+  ],
+  "added_cycles": "none added: every crossing is shorter; qkd_hr_cdc_pc (PHY edge) unchanged (async FIFO kept)"
+ }
+}
