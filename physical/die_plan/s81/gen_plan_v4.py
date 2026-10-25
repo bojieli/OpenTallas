@@ -557,7 +557,10 @@ def derived_core_conns(types):
                 if out:
                     ent.setdefault(inst, {})[port] = sorted(set(out))
         if ent:
-            CORE_CONNS_OUT[tn] = ent
+            # A shared soft-driven input net is not a register-to-register core hop.
+            # Keep unresolved directions and every real driver/sink pair fail closed.
+            from core_conns_directions import filter_shared_inputs
+            CORE_CONNS_OUT[tn] = filter_shared_inputs(t, ent, Path(__file__).resolve().parents[3])
 
 
 def nonframe_hc_key(p):
