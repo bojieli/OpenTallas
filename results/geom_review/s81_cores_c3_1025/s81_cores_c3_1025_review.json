@@ -1,0 +1,52 @@
+{
+ "ot_s81c_attn_hcore": {
+  "run": "intel2:/srv/opentallas-scratch2/claude/s81/hcore/ot_s81c_attn_hcore__157.68x259.2_r3",
+  "signoff_current_tool": "signoff_cur (main 794550c82): NOT SIGNED TT -4.91/18; FF +8.56; pair skew TT 29.9 / FF 28.0; DRC 0; lint/face_guard PASS",
+  "causes": [
+   "(1) TT -4.91 = rst_n recovery: rst_n (S face x 81.9) enters UNREGISTERED and drives the async-reset pins of the whole core through a placement/fanout buffer chain (input BUFx8 -> place BUFx6f 97 ps wire hop -> fanout BUFx2 x16 loads, slew 72-82 ps): 405 ps inside the core vs SDC budget 833-416.5. Breaks the pin-register rule and the 10-24 reset rule (decision 2/13: reset = registered relay tree); DEC12 G-REVIEW condition (1) also asks for an in-partition reset relay at the 128 attn_hcore rst pins.",
+   "(2) TT -2.46 reg-reg = WPRE=0 build: write predicates decoded from r_ld_grp (u_rc q) in the write cycle -> 14/16-fanout decode tree -> g_m[16].ab enables (20 logic+buffer stages). The RTL already has WPRE=1 (predicates captured at R0, same values/edges; bench_s81c_hgrp_wpre_1024 PASS, mutant FAIL) and main has kit ..._wpre; r3 was built without -DOT_S81C_HCORE_WPRE.",
+   "(3) 26.4k hold buffers at CTS (HOLD_SLACK_MARGIN 25 + input min -40 vs FF vclk 250, ruling 9.7/5e not yet in SDC); r3 total 404,873 instances > 400k cap."
+  ],
+  "fix": [
+   "F-a (kit, 0 cycles, launched): r3 recipe + VERILOG_DEFINES -DOT_S81C_HCORE_WPRE, HOLD_SLACK_MARGIN 15 (main _wpre kit value) -> intel2 /srv/opentallas-scratch2/claude/s81-cores-c3/hcore_wpre_c1 GOAL=cts (config hcore_wpre_c1.config.mk).",
+   "F-b (RTL, parent): reset entry flop at the rst_n pin + ot_rst_relay #(REGIONS 4 quadrants, SYNC_STAGES 1, TREE_STAGES 1) inside ot_s81c_attn_hcore so the reset distribution is reg->reg (full cycle) from regional relays; cost 0 data cycles, reset release +2 cycles (static offset, identical in all 1024 cores; tile_hc bench must hold rst 2 cycles longer). Must be co-designed with the DEC12 in-partition relay (decision 13) so the total relay depth to every core is equal.",
+   "F-c (shared flow): FF vclk = measured FF I (9.7/5e) and F2 GRT-RC->RCX calibration to remove the 26k-buffer CTS hold repair (cell cap)."
+  ]
+ },
+ "dsdv_eng_rr_e": {
+  "run": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsdv_eng_rr_e_c",
+  "grt": "5_1_grt FAILED GRT-0116 after 30 extra iterations: overflow 235,866 (M2 111,609 / M3 66,285 / M4 49,361 / M5 8,611), avg use 45%, 3 h 13 min; congestion.rpt hot spots 'capacity:0' at (164,254) (164,140) (204,131) (263,176) = over the SRAM column, (96,140) = over ROM col 2.",
+  "causes": [
+   "All 15 macros OBS M1-M4 and MAX_ROUTING_LAYER = M5 (vertical): over a macro there is ZERO horizontal capacity. The floorplan (eng_rr_e_c_place.png) puts the 8 ROMs in two vertical columns at x 17 and 86 and the SRAM stack at x 151-325, so the logic is cut into vertical slivers (x 4-13, 55-82, 125-147, 325-341) that can only talk horizontally ACROSS macros -> impossible; every macro has its pins on its W edge (x=0), so the ROM col at x 17 faces a 13-um sliver at the die edge and the SRAM pins face the ROM column. Not a density problem (GPL util 23%, std area 15.2k um2)."
+  ],
+  "fix": [
+   "Re-floorplan by rule: (i) no logic region may be reachable only by a horizontal crossing of a macro; (ii) every macro pin edge faces a logic channel that is connected to the main logic region without a macro crossing; (iii) macros abut the E face (0 pins) or each other with no logic sliver E of them. Concretely: SRAM stack (3x 64x512 + 512x128 + 3x 128x256 = 446 um incl. halos) abutting the E core edge, pins W into a >= 30-um vertical channel that opens into N and S pin bands; ROMs as horizontal rows (4 x 38 um) with pin channels, or rotated R180/MY so their pin edges face the same channel; W face pci band + W logic region contiguous. Alternative needing a grant: MAX_ROUTING_LAYER M6 (horizontal over macros) -> COORD/OWNER (M6 pin grants not growth rule). _m5 sibling (HOLD margin 5, same floorplan) is in 5_1_grt and will fail the same way."
+  ]
+ },
+ "ot_s81sl_vq": {
+  "runs": "epyc3:/srv/opentallas-scratch2/claude/s81-vq/ot_s81sl_vq_lfp_f5 (+f5b, same recipe except SLEW_MARGIN 50)",
+  "signoff_current_tool": "f5 signoff_main: TT +32.93, FF -2.38/19, DRV TT slew 1; pair skew TT 54.5 / FF 48.7. f5b: TT -58.79/298, FF -0.45/5, pair skew 60.4/54.1.",
+  "main_view_stale": "main physical/die_plan/s81/cores/views/ot_s81sl_vq (r12, 10-24) != main rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vq.sv: y port [255:0] -> [127:0] (DECISION 8, pins changed), VQFIX wd_m/wa_m/ra_m flops at u_xm, fault_q removed -> a new sign-off on current RTL is required (f5/f5b already use it).",
+  "causes": [
+   "FF worst -2.38 = output pin-reg xf[267] -> port: FF pin-flop I 171-189 ps vs vclk 250 at FF (ruling 9.7/5e not in kit SDC; already 3 hold buffers on the output path). Internal -0.24 = s13_g -> INV -> s14_g zero-logic pair on adjacent leaves (leaf_79 vs leaf_81, 12 ps) = F4.",
+   "f5b -58.8: yv_c -> bf enable broadcast fanout chain (816+ bf flops) - placement-variance sensitive; same RTL as f5.",
+   "f5 recipe lacks the h1 SIGNED recipe items (tap_balance POST_CTS 250+-40, PRE_CTS hold_budget, cts_post)."
+  ],
+  "fix": [
+   "Kit: move vq to the eng-h1 SIGNED recipe (tap_balance/hold_budget/cts_post, SKIP_CTS_REPAIR_TIMING) + F4 same-leaf pin-reg/successor + shared F2 / 9.7-5e SDC (lane FLOW proving on rr_h0).",
+   "RTL proposal (parent): register-replicate the yv_c -> bf load enable: 4 copies of the enable flop (one per bf quarter, keep_hierarchy kreg), each loaded from the same source one level earlier (y_v pin flop already 1 cycle before yv_c, so en_q[k] <= y_v-derived term) = 0 cycles if derived from the pin-flop input, else +1 cycle on the bf load (vq->xf latency +1); needs vq_pinreg_eq.sh lockstep proof."
+  ]
+ },
+ "dsfd_su_t_rxsf": {
+  "run": "epyc2:/srv/opentallas-scratch2/claude/s81-kits/c3/dsfd_su_t_rxsf_c",
+  "signoff_current_tool": "signoff_cur (main 794550c82): TT -6.19/1, FF -2.52/13, pair skew TT 28.4 / FF 25.3",
+  "causes": "per NEARMISS-STRUCT 04:35 (claude/nearmiss-struct-1025@cc8be6df9): setup = 58-point exp normalise/shift path in u_exp.m_t (logic depth, 12 um); hold = output pin-regs vs vclk 250 (FF I 198.6); clk port on E face while all pins sit in 3 clusters on the W face.",
+  "fix": "Coordinator 04:37: split u_exp.m_t into 2 pipeline stages (RTL, +1 cycle on the rxsf exp path unless absorbed by a downstream delay line -> parent with lockstep bench) + clock entry to the middle of the W data face + spread the W pin clusters + bind I (9.7/5e)."
+ },
+ "dsdv_eng_rr_h1": {
+  "result": "SIGNED with current tool (TT +34.75 / FF +0.87, pair skew 42.24/37.93); views integrated on claude/s81-engh1-view-1025@abfc4323b8 (READY posted)."
+ },
+ "dsdv_eng_rr_h0": {
+  "result": "dropped per coordinator 04:37 (lane FLOW rebuilds it). Current-tool signoff_cur also flags clock 'pair skew path/arrival cross-check differs 17.6 ps (measurement suspect)' -> for FLOW/SIGNOFF."
+ }
+}
