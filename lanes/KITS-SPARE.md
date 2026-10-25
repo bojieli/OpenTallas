@@ -112,3 +112,8 @@ Main has NO B2n HBM core views (canary uses B2l): built views_b2n.json from main
 - No live jobs, no worktrees.
 2026-10-25 11:54 PDT COORD: ot_s81sl_ve_m_1eb0362d3119 (structural.tsv 51d680f779ac): superseded by the DIE-FT-S81 M5-cap re-hardening of the VE cores; no kit from this row.
 2026-10-25 12:14 PDT COORD: ot_s81sl_ve_s_476848970c04 (review.tsv aa5f58fb3109): superseded by the DIE-FT-S81 M5-cap VE core re-hardening; no kit from this row.
+
+## CODEX notes 2026-10-25 13:13 PDT — takeover1309
+Read currentstates: ve_s aa5f NOTSIGNED TT+18.36/FF-3.83ps8EP, DRC0ant0; ve_m51d6 DRTError247 peak25.14GB under24GB. Both remainSUPERSEDED by M5-cap DIE-FT-S81; no stale reruns. Histbank51bb WAIT-CANARY, S81kitsowner confirmed; no bypass. SelectedL14 G2/strictbind/boundarykits owned S81parents; genericPROTO worker coordinates focusedunblock, no broadblockedwave.
+
+CODEX KITS1309: READY shared modern legacy runner 4df4d506a2dc4ef0dce082378734394956b6d63c (actualhub codex/s81-kits-1309),22 focusedPASS. Fixes missing synthesized-RTL LEC and missing pre-DRT TT/FF extracted insertion gate; only new EQUIVALENT +both GRT PASS advance, legacy-flow bytes unchanged. Root merge requested. S81 native histbank51bb WAITCANARY stays parked; fresh435pin64.8x54 macrofree plan rendered/viewed, actual placement/review/currentmain canary still required. No oldkit route. VE_s actualFF m_hh[12]->mhh[12]/D-3.83ps/8EP remains NOTSIGNED; VE_m DRT25.14GB>24GB crash. Both superseded by DIE-FT-S81 M5 source, no old retries. Detailed inventory codex-s81-kits-1309-inventory.md.
