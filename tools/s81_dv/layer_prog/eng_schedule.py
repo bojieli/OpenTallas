@@ -18,7 +18,7 @@ def load_profile(manifest):
     if any(q.get(k) != v for k, v in required.items()):
         raise ValueError('unsupported E5 entry/reset contract')
     gates = q.get('gates', {})
-    if 'allpublic+internalx/xd0mismatch' not in gates.get('core_full', '') or any('CAUGHT' not in gates.get(k, '') for k in ('xq_full', 'win', 'reset')):
+    if not gates.get('core_full', '').startswith('3seeds*200000cycles allpublic+internalx/xd0mismatch') or any('CAUGHT' not in gates.get(k, '') for k in ('xq_full', 'win', 'reset')):
         raise ValueError('E5 component or negative-control gate missing')
     hashes = q.get('source_sha256', {})
     if len(hashes) != 3 or c.get('source_sha256') != hashes:

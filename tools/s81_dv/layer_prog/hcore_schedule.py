@@ -8,15 +8,19 @@ def load_profile(manifest):
     p = Path(manifest)
     d = json.loads(p.read_text())
     c = d.get('core_profile') or {}
-    if c.get('kind') != 'S81_CTLA_RSTE_NATIVE_LOAD_STAGE':
+    if c.get('kind') != 'S81_CTLA_TIMED_RESET_NATIVE_LOAD_STAGE':
         raise ValueError('not a qualified native hcore load-stage profile')
-    if not {'OT_ATTN_HCORE', 'OT_S81C_HCORE_CTLA', 'OT_S81C_HCORE_RSTE'} <= set(d.get('defines', [])):
-        raise ValueError('selected manifest lacks native CTLA/RSTE defines')
+    if not {'OT_ATTN_HCORE', 'OT_S81C_HCORE_CTLA', 'OT_S81C_HCORE_RST_TIMED'} <= set(d.get('defines', [])):
+        raise ValueError('selected manifest lacks native CTLA/timed-reset defines')
     if c.get('stationary_load_transport_added_cycles') != 1 or c.get('reset_release_cycles_after_core_pin') != 2:
         raise ValueError('unsupported hcore load/reset readiness contract')
+    if c.get('reset_contract') != 'TIMED_SYNC_INPUT' or c.get('reset_assertion_cycles_after_core_pin') != 2 or c.get('minimum_asserted_core_clock_edges') != 2:
+        raise ValueError('unsupported hcore timed reset assertion contract')
     q = json.loads(Path(c['component_qualification']).read_text())
     if q.get('miter') != 'PASS' or q.get('mutant') != 'CAUGHT':
         raise ValueError('hcore qualification is not PASS with mutant caught')
+    if q.get('reset_contract') != 'TIMED_SYNC_INPUT':
+        raise ValueError('hcore component did not qualify timed reset input')
     if c.get('reset_input_timed') is not True or q.get('reset_input_timed') is not True:
         raise ValueError('native hcore cohort does not qualify the required timed reset input')
     for field in ('files', 'prefer'):
@@ -40,10 +44,12 @@ def boot_witness(profile, witness):
     d = json.loads(Path(witness).read_text())
     if d.get('profile_sha256') != profile['profile_sha256']:
         raise ValueError('reset/start witness belongs to a different hcore cohort')
+    if not isinstance(d.get('core_asserted_clock_edges'), int) or d['core_asserted_clock_edges'] < 2:
+        raise ValueError('hcore timed input reset needs at least two asserted edges')
     release, start = d.get('last_core_pin_release_cycle'), d.get('start_cycle')
     if not isinstance(release, int) or not isinstance(start, int) or start < release + profile['reset_guard_cycles']:
         raise ValueError('START precedes hcore pin release plus two readiness edges')
-    return dict(last_core_pin_release_cycle=release, start_cycle=start, core_ready_cycle=release + 2,
+    return dict(core_asserted_clock_edges=d['core_asserted_clock_edges'], last_core_pin_release_cycle=release, start_cycle=start, core_ready_cycle=release + 2,
                 profile_sha256=profile['profile_sha256'], qualification='STATIC_READINESS_ONLY; bound RTL token still required')
 
 
