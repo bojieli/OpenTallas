@@ -862,36 +862,14 @@
       "rect_um": [
        9841.012,
        103.68,
-       10140.2,
+       10203.84,
        2343.8
       ],
       "pitch_um": 45.0,
       "use": "power_ground",
       "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
      },
-     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 0.67 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
-     "phy_macro_um": [
-      9841.012,
-      103.68,
-      10140.2,
-      2343.8
-     ],
-     "core_strip_um": [
-      [
-       8760.96,
-       2407.44,
-       10203.84,
-       2557.44
-      ],
-      [
-       8760.96,
-       103.68,
-       9777.372,
-       2407.44
-      ]
-     ],
-     "core_edge_bumps": "relocate",
-     "phy_area_target_mm2": 2.4
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
     },
     {
      "name": "phy_lk_EN2",
@@ -1321,14 +1299,14 @@
     "rect_um": [
      9841.012,
      103.68,
-     10140.2,
+     10203.84,
      2343.8
     ],
-    "sites": 14,
+    "sites": 28,
     "pitch_um": 150.0,
     "signals": 26,
     "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
-    "note": "die_io.py plan: u_phy; PHY zone 363 x 2240 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 299 x 2240 um = 0.67 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
+    "note": "die_io.py plan: u_phy; PHY zone 363 x 2240 um beside the strip (14 blocked strip / ft rects, 63.64-um guard)"
    },
    {
     "name": "io_lk_EN2_u_phy",
@@ -138065,15 +138043,7 @@
      "inst": "u_phy",
      "module": "ot_pdie_serdes",
      "status": "rework",
-     "note": "SerDes PHY model re-aspected into a 1442.88 x 2453.76 slot; a strip beside it holds the boundary flops and ft stations; S81.IR split (10-25): PHY macro slot 299.188 x 2240.12 um at the die-edge side (= phy_macro_um); the rest of the partition is the core strip (boundary flops, ft stations)",
-     "origin_um": [
-      1080.052,
-      213.64
-     ],
-     "outline_um": [
-      299.188,
-      2240.12
-     ]
+     "note": "SerDes PHY model re-aspected into a 1442.88 x 2453.76 slot; a strip beside it holds the boundary flops and ft stations"
     }
    ],
    "note": "serdes partition; 1 instance(s) (MX)"

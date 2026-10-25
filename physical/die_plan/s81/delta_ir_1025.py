@@ -45,6 +45,12 @@ def apply(raw):
             rep.append(f"{pn} {P.parts[pn]['type']}: PHY zone {[round(v, 2) for v in zone]} OFF-SHORE "
                        f"({DIO.edge_dist(P, zone):.0f} um): left unsplit (orient / window fix owed)")
             continue
+        mac0 = PG.split_domain(zone, prect[pn], W, H)[0]
+        ex0 = [e for e in (w.get("bump_exclude_um") or [])]
+        if DIO.count_sites(mac0, w["pitch_um"], ex0) < w["signals"]:
+            rep.append(f"{pn} {P.parts[pn]['type']}: split macro {mac0} has {DIO.count_sites(mac0, w['pitch_um'], ex0)} "
+                       f"sites < {w['signals']} signals: left unsplit (PHY does not fit; window re-lay owed)")
+            continue
         w["rect_um"] = [round(v, 4) for v in zone]
         d = doms.get(w["name"])
         if d is None:

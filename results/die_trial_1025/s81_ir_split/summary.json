@@ -1,0 +1,4712 @@
+{
+ "s81_A": {
+  "result": {
+   "manifest": {
+    "schema": "opentallas.s81_ir_domains.case.v1",
+    "plan": "plan_s81.json",
+    "phy_box": null,
+    "nets": [
+     "VDD",
+     "VSS"
+    ],
+    "die": "s81",
+    "mode": "domains",
+    "window_um": [
+     0.0,
+     0.0,
+     10368.0,
+     2851.2000000000003
+    ],
+    "tile_um": 43.2,
+    "density_w_mm2": 0.15,
+    "voltage_v": 0.7,
+    "gate_mv": 35.0,
+    "core_grid": [
+     {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     }
+    ],
+    "domain_grid": [
+     {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     }
+    ],
+    "domains": [
+     {
+      "name": "phy_lk_WS0",
+      "io": [
+       "io_lk_WS0_u_phy"
+      ],
+      "rect_um": [
+       5875.2,
+       103.68,
+       8760.96,
+       649.188
+      ],
+      "bumps_rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "phy_macro_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "core_strip_um": [
+       [
+        5875.2,
+        649.188,
+        8760.96,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS1",
+      "io": [
+       "io_lk_WS1_u_phy"
+      ],
+      "rect_um": [
+       2989.44,
+       103.68,
+       5875.2,
+       649.188
+      ],
+      "bumps_rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "phy_macro_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "core_strip_um": [
+       [
+        2989.44,
+        649.188,
+        5875.2,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS2",
+      "io": [
+       "io_lk_WS2_u_phy"
+      ],
+      "rect_um": [
+       103.68,
+       103.68,
+       2839.44,
+       1091.8
+      ],
+      "bumps_rect_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "phy_macro_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "core_strip_um": [
+       [
+        103.68,
+        1091.8,
+        2989.44,
+        1330.56
+       ],
+       [
+        2839.44,
+        103.68,
+        2989.44,
+        1091.8
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS3",
+      "io": [
+       "io_lk_WS3_u_phy"
+      ],
+      "rect_um": [
+       9777.372,
+       103.68,
+       10203.84,
+       2407.44
+      ],
+      "bumps_rect_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "phy_macro_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "core_strip_um": [
+       [
+        8760.96,
+        2407.44,
+        10203.84,
+        2557.44
+       ],
+       [
+        8760.96,
+        103.68,
+        9777.372,
+        2407.44
+       ]
+      ]
+     }
+    ],
+    "region_boxes": [
+     [
+      103.68,
+      103.68,
+      2839.44,
+      1091.8
+     ],
+     [
+      2989.44,
+      103.68,
+      8760.96,
+      649.188
+     ],
+     [
+      9777.372,
+      103.68,
+      10203.84,
+      2407.44
+     ]
+    ],
+    "phy": [
+     {
+      "dom": "phy_lk_WS0",
+      "rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_WS1",
+      "rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_WS2",
+      "rect_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8113
+     },
+     {
+      "dom": "phy_lk_WS3",
+      "rect_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "w": 4.368,
+      "w_per_mm2": 6.5173
+     }
+    ],
+    "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+    "tiles": {
+     "core": 11092,
+     "phy": 3025
+    },
+    "core_load_w": 3.2051,
+    "phy_load_w": 17.472,
+    "core_area_mm2": 21.3673,
+    "channels_unloaded": [
+     [
+      0,
+      0,
+      10368.0,
+      103.68
+     ],
+     [
+      0,
+      103.68,
+      103.68,
+      2851.2000000000003
+     ]
+    ],
+    "uncovered_core_area_mm2": 1.094,
+    "bumps": {
+     "core": 1046,
+     "core_relocated_to_domain_edges": 223,
+     "domain": 2809,
+     "by_net": {
+      "VDD": 523,
+      "VSS": 523,
+      "VDDPHY": 1323,
+      "VSSPHY": 1486
+     }
+    },
+    "io_in_window": [
+     "io_lk_WS0_u_phy",
+     "io_lk_WS1_u_phy",
+     "io_lk_WS2_u_phy",
+     "io_lk_WS3_u_phy"
+    ]
+   },
+   "done": true,
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "log_worst": {},
+   "rails": {
+    "VDD": {
+     "all": {
+      "worst_mv": 29.63,
+      "at_um": [
+       4884.9,
+       2375.6
+      ],
+      "tile": "C_110_53"
+     },
+     "core": {
+      "worst_mv": 29.63,
+      "at_um": [
+       4884.9,
+       2375.6
+      ],
+      "tile": "C_110_53"
+     },
+     "core_near_domain": {
+      "worst_mv": 27.11,
+      "at_um": [
+       9078.6,
+       617.4
+      ],
+      "tile": "C_206_13"
+     },
+     "core_far": {
+      "worst_mv": 29.63,
+      "at_um": [
+       4884.9,
+       2375.6
+      ],
+      "tile": "C_110_53"
+     }
+    },
+    "VSS": {
+     "all": {
+      "worst_mv": 30.32,
+      "at_um": [
+       4281.5,
+       1631.5
+      ],
+      "tile": "C_96_36"
+     },
+     "core": {
+      "worst_mv": 30.32,
+      "at_um": [
+       4281.5,
+       1631.5
+      ],
+      "tile": "C_96_36"
+     },
+     "core_near_domain": {
+      "worst_mv": 28.53,
+      "at_um": [
+       9036.2,
+       712.4
+      ],
+      "tile": "C_205_15"
+     },
+     "core_far": {
+      "worst_mv": 30.17,
+      "at_um": [
+       4281.5,
+       1674.6
+      ],
+      "tile": "C_96_37"
+     }
+    }
+   },
+   "gate_mv": 35.0,
+   "supply_worst_mv": {
+    "VDD": 29.63
+   },
+   "vss_worst_mv": {
+    "all": 30.32,
+    "core": 30.32,
+    "core_near_domain": 28.53,
+    "core_far": 30.17
+   },
+   "verdict": "PASS"
+  },
+  "window_um": [
+   0.0,
+   0.0,
+   10368.0,
+   2851.2000000000003
+  ],
+  "solved_box": null,
+  "phy": [
+   {
+    "dom": "phy_lk_WS0",
+    "rect_um": [
+     5938.84,
+     103.68,
+     8697.32,
+     585.548
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_WS1",
+    "rect_um": [
+     3053.08,
+     103.68,
+     5811.56,
+     585.548
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_WS2",
+    "rect_um": [
+     167.32,
+     103.68,
+     2775.8,
+     1028.16
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8113
+   },
+   {
+    "dom": "phy_lk_WS3",
+    "rect_um": [
+     9841.012,
+     103.68,
+     10140.2,
+     2343.8
+    ],
+    "w": 4.368,
+    "w_per_mm2": 6.5173
+   }
+  ],
+  "domains": [
+   "phy_lk_WS0",
+   "phy_lk_WS1",
+   "phy_lk_WS2",
+   "phy_lk_WS3"
+  ],
+  "bumps": {
+   "core": 1046,
+   "core_relocated_to_domain_edges": 223,
+   "domain": 2809,
+   "by_net": {
+    "VDD": 523,
+    "VSS": 523,
+    "VDDPHY": 1323,
+    "VSSPHY": 1486
+   }
+  },
+  "uncovered_core_area_mm2": 1.094,
+  "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-plan-ir-1025/s81_A"
+ },
+ "s81_B": {
+  "result": {
+   "manifest": {
+    "schema": "opentallas.s81_ir_domains.case.v1",
+    "plan": "plan_s81.json",
+    "phy_box": null,
+    "nets": [
+     "VDD",
+     "VSS"
+    ],
+    "die": "s81",
+    "mode": "domains",
+    "window_um": [
+     20131.2,
+     21893.760000000002,
+     31950.72,
+     24744.96
+    ],
+    "tile_um": 43.2,
+    "density_w_mm2": 0.15,
+    "voltage_v": 0.7,
+    "gate_mv": 35.0,
+    "core_grid": [
+     {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     }
+    ],
+    "domain_grid": [
+     {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     }
+    ],
+    "domains": [
+     {
+      "name": "phy_lk_EN0",
+      "io": [
+       "io_lk_EN0_u_phy"
+      ],
+      "rect_um": [
+       23189.76,
+       24095.772,
+       26075.52,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "phy_macro_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        23189.76,
+        23414.4,
+        26075.52,
+        24095.772
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN1",
+      "io": [
+       "io_lk_EN1_u_phy"
+      ],
+      "rect_um": [
+       26075.52,
+       24095.772,
+       28961.28,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "phy_macro_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        26075.52,
+        23414.4,
+        28961.28,
+        24095.772
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN2",
+      "io": [
+       "io_lk_EN2_u_phy"
+      ],
+      "rect_um": [
+       20304.0,
+       23414.4,
+       22099.236,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "phy_macro_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        22099.236,
+        23414.4,
+        23189.76,
+        24641.28
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN3",
+      "io": [
+       "io_lk_EN3_u_phy"
+      ],
+      "rect_um": [
+       29111.28,
+       23653.16,
+       31847.04,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "phy_macro_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        28961.28,
+        23414.4,
+        31847.04,
+        23653.16
+       ],
+       [
+        28961.28,
+        23653.16,
+        29111.28,
+        24641.28
+       ]
+      ]
+     }
+    ],
+    "region_boxes": [
+     [
+      20304.0,
+      23414.4,
+      22099.236,
+      24641.28
+     ],
+     [
+      23189.76,
+      24095.772,
+      28961.28,
+      24641.28
+     ],
+     [
+      29111.28,
+      23653.16,
+      31847.04,
+      24641.28
+     ]
+    ],
+    "phy": [
+     {
+      "dom": "phy_lk_EN0",
+      "rect_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_EN1",
+      "rect_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_EN2",
+      "rect_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 2.2513
+     },
+     {
+      "dom": "phy_lk_EN3",
+      "rect_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8113
+     }
+    ],
+    "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+    "tiles": {
+     "core": 12499,
+     "phy": 3682
+    },
+    "core_load_w": 3.6203,
+    "phy_load_w": 17.472,
+    "core_area_mm2": 24.1353,
+    "channels_unloaded": [
+     [
+      20131.2,
+      24641.28,
+      31950.72,
+      24744.96
+     ],
+     [
+      31847.04,
+      21893.760000000002,
+      31950.72,
+      24641.28
+     ]
+    ],
+    "uncovered_core_area_mm2": 1.044,
+    "bumps": {
+     "core": 1178,
+     "core_relocated_to_domain_edges": 223,
+     "domain": 3456,
+     "by_net": {
+      "VDD": 589,
+      "VSS": 589,
+      "VDDPHY": 1651,
+      "VSSPHY": 1805
+     }
+    },
+    "io_in_window": [
+     "io_lk_EN0_u_phy",
+     "io_lk_EN1_u_phy",
+     "io_lk_EN2_u_phy",
+     "io_lk_EN3_u_phy"
+    ]
+   },
+   "done": true,
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "log_worst": {},
+   "rails": {
+    "VDD": {
+     "all": {
+      "worst_mv": 28.03,
+      "at_um": [
+       23318.1,
+       22958.2
+      ],
+      "tile": "C_72_24"
+     },
+     "core": {
+      "worst_mv": 28.03,
+      "at_um": [
+       23318.1,
+       22958.2
+      ],
+      "tile": "C_72_24"
+     },
+     "core_near_domain": {
+      "worst_mv": 27.27,
+      "at_um": [
+       22382.8,
+       24127.6
+      ],
+      "tile": "C_51_50"
+     },
+     "core_far": {
+      "worst_mv": 28.03,
+      "at_um": [
+       23318.1,
+       22958.2
+      ],
+      "tile": "C_72_24"
+     }
+    },
+    "VSS": {
+     "all": {
+      "worst_mv": 29.5,
+      "at_um": [
+       23167.9,
+       23218.9
+      ],
+      "tile": "C_69_30"
+     },
+     "core": {
+      "worst_mv": 29.5,
+      "at_um": [
+       23167.9,
+       23218.9
+      ],
+      "tile": "C_69_30"
+     },
+     "core_near_domain": {
+      "worst_mv": 28.88,
+      "at_um": [
+       21201.6,
+       23132.0
+      ],
+      "tile": "C_24_28"
+     },
+     "core_far": {
+      "worst_mv": 29.38,
+      "at_um": [
+       23037.1,
+       23088.5
+      ],
+      "tile": "C_66_27"
+     }
+    }
+   },
+   "gate_mv": 35.0,
+   "supply_worst_mv": {
+    "VDD": 28.03
+   },
+   "vss_worst_mv": {
+    "all": 29.5,
+    "core": 29.5,
+    "core_near_domain": 28.88,
+    "core_far": 29.38
+   },
+   "verdict": "PASS"
+  },
+  "window_um": [
+   20131.2,
+   21893.760000000002,
+   31950.72,
+   24744.96
+  ],
+  "solved_box": null,
+  "phy": [
+   {
+    "dom": "phy_lk_EN0",
+    "rect_um": [
+     23253.4,
+     24159.412,
+     26011.88,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_EN1",
+    "rect_um": [
+     26139.16,
+     24159.412,
+     28897.64,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_EN2",
+    "rect_um": [
+     20367.64,
+     23478.04,
+     22035.596,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 2.2513
+   },
+   {
+    "dom": "phy_lk_EN3",
+    "rect_um": [
+     29174.92,
+     23716.8,
+     31783.4,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8113
+   }
+  ],
+  "domains": [
+   "phy_lk_EN0",
+   "phy_lk_EN1",
+   "phy_lk_EN2",
+   "phy_lk_EN3"
+  ],
+  "bumps": {
+   "core": 1178,
+   "core_relocated_to_domain_edges": 223,
+   "domain": 3456,
+   "by_net": {
+    "VDD": 589,
+    "VSS": 589,
+    "VDDPHY": 1651,
+    "VSSPHY": 1805
+   }
+  },
+  "uncovered_core_area_mm2": 1.044,
+  "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-plan-ir-1025/s81_B"
+ },
+ "head_A": {
+  "result": {
+   "manifest": {
+    "schema": "opentallas.s81_ir_domains.case.v1",
+    "plan": "plan_head.json",
+    "phy_box": null,
+    "nets": [
+     "VDD",
+     "VSS"
+    ],
+    "die": "s81_head",
+    "mode": "domains",
+    "window_um": [
+     0.0,
+     0.0,
+     11836.800000000001,
+     2851.2000000000003
+    ],
+    "tile_um": 43.2,
+    "density_w_mm2": 0.15,
+    "voltage_v": 0.7,
+    "gate_mv": 35.0,
+    "core_grid": [
+     {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     }
+    ],
+    "domain_grid": [
+     {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     }
+    ],
+    "domains": [
+     {
+      "name": "phy_lk_WS1",
+      "io": [
+       "io_lk_WS1_u_phy"
+      ],
+      "rect_um": [
+       103.68,
+       103.68,
+       2989.44,
+       1039.96
+      ],
+      "bumps_rect_um": [
+       167.32,
+       103.68,
+       2925.8,
+       976.32
+      ],
+      "phy_macro_um": [
+       167.32,
+       103.68,
+       2925.8,
+       976.32
+      ],
+      "core_strip_um": [
+       [
+        103.68,
+        1039.96,
+        2989.44,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS0",
+      "io": [
+       "io_lk_WS0_u_phy"
+      ],
+      "rect_um": [
+       2989.44,
+       103.68,
+       5875.2,
+       1039.96
+      ],
+      "bumps_rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       976.32
+      ],
+      "phy_macro_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       976.32
+      ],
+      "core_strip_um": [
+       [
+        2989.44,
+        1039.96,
+        5875.2,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_HOST0",
+      "io": [
+       "io_lk_HOST0_u_phy"
+      ],
+      "rect_um": [
+       5875.2,
+       103.68,
+       8760.96,
+       1039.96
+      ],
+      "bumps_rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       976.32
+      ],
+      "phy_macro_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       976.32
+      ],
+      "core_strip_um": [
+       [
+        5875.2,
+        1039.96,
+        8760.96,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_HOST1",
+      "io": [
+       "io_lk_HOST1_u_phy"
+      ],
+      "rect_um": [
+       8760.96,
+       103.68,
+       11646.72,
+       1039.96
+      ],
+      "bumps_rect_um": [
+       8824.6,
+       103.68,
+       11583.08,
+       976.32
+      ],
+      "phy_macro_um": [
+       8824.6,
+       103.68,
+       11583.08,
+       976.32
+      ],
+      "core_strip_um": [
+       [
+        8760.96,
+        1039.96,
+        11646.72,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_ES0",
+      "io": [
+       "io_lk_ES0_u_phy"
+      ],
+      "rect_um": [
+       11646.72,
+       103.68,
+       14532.48,
+       1039.96
+      ],
+      "bumps_rect_um": [
+       11710.36,
+       103.68,
+       14468.84,
+       976.32
+      ],
+      "phy_macro_um": [
+       11710.36,
+       103.68,
+       14468.84,
+       976.32
+      ],
+      "core_strip_um": [
+       [
+        11646.72,
+        1039.96,
+        14532.48,
+        1330.56
+       ]
+      ]
+     }
+    ],
+    "region_boxes": [
+     [
+      103.68,
+      103.68,
+      11836.800000000001,
+      1039.96
+     ]
+    ],
+    "phy": [
+     {
+      "dom": "phy_lk_WS1",
+      "rect_um": [
+       167.32,
+       103.68,
+       2925.8,
+       976.32
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8146
+     },
+     {
+      "dom": "phy_lk_WS0",
+      "rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       976.32
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8146
+     },
+     {
+      "dom": "phy_lk_HOST0",
+      "rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       976.32
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8146
+     },
+     {
+      "dom": "phy_lk_HOST1",
+      "rect_um": [
+       8824.6,
+       103.68,
+       11583.08,
+       976.32
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8146
+     },
+     {
+      "dom": "phy_lk_ES0",
+      "rect_um": [
+       11710.36,
+       103.68,
+       14468.84,
+       976.32
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8146
+     }
+    ],
+    "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+    "tiles": {
+     "core": 10332,
+     "phy": 5180
+    },
+    "core_load_w": 2.9222,
+    "phy_load_w": 17.6722,
+    "core_area_mm2": 19.4813,
+    "channels_unloaded": [
+     [
+      0,
+      0,
+      11836.800000000001,
+      103.68
+     ],
+     [
+      0,
+      103.68,
+      103.68,
+      2851.2000000000003
+     ],
+     [
+      103.68,
+      1330.5600000000002,
+      1546.5600000000002,
+      2557.4400000000005
+     ]
+    ],
+    "uncovered_core_area_mm2": 1.2465,
+    "bumps": {
+     "core": 947,
+     "core_relocated_to_domain_edges": 232,
+     "domain": 4725,
+     "by_net": {
+      "VDD": 474,
+      "VSS": 473,
+      "VDDPHY": 2275,
+      "VSSPHY": 2450
+     }
+    },
+    "io_in_window": [
+     "io_lk_WS1_u_phy",
+     "io_lk_WS0_u_phy",
+     "io_lk_HOST0_u_phy",
+     "io_lk_HOST1_u_phy",
+     "io_lk_ES0_u_phy"
+    ]
+   },
+   "done": true,
+   "pg_check": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK"
+   },
+   "log_worst": {},
+   "rails": {
+    "VDD": {
+     "all": {
+      "worst_mv": 28.99,
+      "at_um": [
+       1611.2,
+       2316.4
+      ],
+      "tile": "C_36_52"
+     },
+     "core": {
+      "worst_mv": 28.99,
+      "at_um": [
+       1611.2,
+       2316.4
+      ],
+      "tile": "C_36_52"
+     },
+     "core_near_domain": {
+      "worst_mv": 26.13,
+      "at_um": [
+       1568.1,
+       1352.5
+      ],
+      "tile": "C_35_30"
+     },
+     "core_far": {
+      "worst_mv": 28.99,
+      "at_um": [
+       1611.2,
+       2316.4
+      ],
+      "tile": "C_36_52"
+     }
+    },
+    "VSS": {
+     "all": {
+      "worst_mv": 29.92,
+      "at_um": [
+       1611.2,
+       1878.3
+      ],
+      "tile": "C_36_42"
+     },
+     "core": {
+      "worst_mv": 29.92,
+      "at_um": [
+       1611.2,
+       1878.3
+      ],
+      "tile": "C_36_42"
+     },
+     "core_near_domain": {
+      "worst_mv": 26.89,
+      "at_um": [
+       9665.1,
+       1352.5
+      ],
+      "tile": "C_220_30"
+     },
+     "core_far": {
+      "worst_mv": 29.18,
+      "at_um": [
+       1611.2,
+       2185.0
+      ],
+      "tile": "C_36_49"
+     }
+    }
+   },
+   "gate_mv": 35.0,
+   "supply_worst_mv": {
+    "VDD": 28.99
+   },
+   "vss_worst_mv": {
+    "all": 29.92,
+    "core": 29.92,
+    "core_near_domain": 26.89,
+    "core_far": 29.18
+   },
+   "verdict": "PASS"
+  },
+  "window_um": [
+   0.0,
+   0.0,
+   11836.800000000001,
+   2851.2000000000003
+  ],
+  "solved_box": null,
+  "phy": [
+   {
+    "dom": "phy_lk_WS1",
+    "rect_um": [
+     167.32,
+     103.68,
+     2925.8,
+     976.32
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8146
+   },
+   {
+    "dom": "phy_lk_WS0",
+    "rect_um": [
+     3053.08,
+     103.68,
+     5811.56,
+     976.32
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8146
+   },
+   {
+    "dom": "phy_lk_HOST0",
+    "rect_um": [
+     5938.84,
+     103.68,
+     8697.32,
+     976.32
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8146
+   },
+   {
+    "dom": "phy_lk_HOST1",
+    "rect_um": [
+     8824.6,
+     103.68,
+     11583.08,
+     976.32
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8146
+   },
+   {
+    "dom": "phy_lk_ES0",
+    "rect_um": [
+     11710.36,
+     103.68,
+     14468.84,
+     976.32
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8146
+   }
+  ],
+  "domains": [
+   "phy_lk_WS1",
+   "phy_lk_WS0",
+   "phy_lk_HOST0",
+   "phy_lk_HOST1",
+   "phy_lk_ES0"
+  ],
+  "bumps": {
+   "core": 947,
+   "core_relocated_to_domain_edges": 232,
+   "domain": 4725,
+   "by_net": {
+    "VDD": 474,
+    "VSS": 473,
+    "VDDPHY": 2275,
+    "VSSPHY": 2450
+   }
+  },
+  "uncovered_core_area_mm2": 1.2465,
+  "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-plan-ir-1025/head_A"
+ },
+ "s81_A_b0": {
+  "result": {
+   "manifest": {
+    "schema": "opentallas.s81_ir_domains.case.v1",
+    "plan": "plan_s81.json",
+    "phy_box": 0,
+    "nets": [
+     "VDDPHY",
+     "VSSPHY"
+    ],
+    "die": "s81",
+    "mode": "domains",
+    "window_um": [
+     0.0,
+     0.0,
+     10368.0,
+     2851.2000000000003
+    ],
+    "tile_um": 43.2,
+    "density_w_mm2": 0.15,
+    "voltage_v": 0.7,
+    "gate_mv": 35.0,
+    "core_grid": [
+     {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     }
+    ],
+    "domain_grid": [
+     {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     }
+    ],
+    "domains": [
+     {
+      "name": "phy_lk_WS0",
+      "io": [
+       "io_lk_WS0_u_phy"
+      ],
+      "rect_um": [
+       5875.2,
+       103.68,
+       8760.96,
+       649.188
+      ],
+      "bumps_rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "phy_macro_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "core_strip_um": [
+       [
+        5875.2,
+        649.188,
+        8760.96,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS1",
+      "io": [
+       "io_lk_WS1_u_phy"
+      ],
+      "rect_um": [
+       2989.44,
+       103.68,
+       5875.2,
+       649.188
+      ],
+      "bumps_rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "phy_macro_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "core_strip_um": [
+       [
+        2989.44,
+        649.188,
+        5875.2,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS2",
+      "io": [
+       "io_lk_WS2_u_phy"
+      ],
+      "rect_um": [
+       103.68,
+       103.68,
+       2839.44,
+       1091.8
+      ],
+      "bumps_rect_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "phy_macro_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "core_strip_um": [
+       [
+        103.68,
+        1091.8,
+        2989.44,
+        1330.56
+       ],
+       [
+        2839.44,
+        103.68,
+        2989.44,
+        1091.8
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS3",
+      "io": [
+       "io_lk_WS3_u_phy"
+      ],
+      "rect_um": [
+       9777.372,
+       103.68,
+       10203.84,
+       2407.44
+      ],
+      "bumps_rect_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "phy_macro_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "core_strip_um": [
+       [
+        8760.96,
+        2407.44,
+        10203.84,
+        2557.44
+       ],
+       [
+        8760.96,
+        103.68,
+        9777.372,
+        2407.44
+       ]
+      ]
+     }
+    ],
+    "region_boxes": [
+     [
+      103.68,
+      103.68,
+      2839.44,
+      1091.8
+     ],
+     [
+      2989.44,
+      103.68,
+      8760.96,
+      649.188
+     ],
+     [
+      9777.372,
+      103.68,
+      10203.84,
+      2407.44
+     ]
+    ],
+    "phy": [
+     {
+      "dom": "phy_lk_WS0",
+      "rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_WS1",
+      "rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_WS2",
+      "rect_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8113
+     },
+     {
+      "dom": "phy_lk_WS3",
+      "rect_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "w": 4.368,
+      "w_per_mm2": 6.5173
+     }
+    ],
+    "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+    "tiles": {
+     "core": 11092,
+     "phy": 1260
+    },
+    "core_load_w": 3.2051,
+    "phy_load_w": 4.368,
+    "core_area_mm2": 21.3673,
+    "channels_unloaded": [
+     [
+      0,
+      0,
+      10368.0,
+      103.68
+     ],
+     [
+      0,
+      103.68,
+      103.68,
+      2851.2000000000003
+     ]
+    ],
+    "uncovered_core_area_mm2": 1.094,
+    "bumps": {
+     "core": 1046,
+     "core_relocated_to_domain_edges": 223,
+     "domain": 2809,
+     "by_net": {
+      "VDD": 523,
+      "VSS": 523,
+      "VDDPHY": 574,
+      "VSSPHY": 615
+     }
+    },
+    "io_in_window": [
+     "io_lk_WS0_u_phy",
+     "io_lk_WS1_u_phy",
+     "io_lk_WS2_u_phy",
+     "io_lk_WS3_u_phy"
+    ]
+   },
+   "done": true,
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "log_worst": {},
+   "rails": {
+    "VDDPHY": {
+     "all": {
+      "worst_mv": 13.5,
+      "at_um": [
+       189.1,
+       432.2
+      ],
+      "tile": "P_3_9"
+     },
+     "phy": {
+      "worst_mv": 13.5,
+      "at_um": [
+       189.1,
+       432.2
+      ],
+      "tile": "P_3_9"
+     },
+     "per_domain": {
+      "phy_lk_WS2": {
+       "worst_mv": 13.5,
+       "whole_in_window": true
+      }
+     }
+    },
+    "VSSPHY": {
+     "all": {
+      "worst_mv": 11.49,
+      "at_um": [
+       2754.1,
+       617.4
+      ],
+      "tile": "P_62_13"
+     },
+     "phy": {
+      "worst_mv": 11.49,
+      "at_um": [
+       2754.1,
+       617.4
+      ],
+      "tile": "P_62_13"
+     },
+     "per_domain": {
+      "phy_lk_WS2": {
+       "worst_mv": 11.49,
+       "whole_in_window": true
+      }
+     }
+    }
+   },
+   "gate_mv": 35.0,
+   "supply_worst_mv": {
+    "VDDPHY": 13.5
+   },
+   "vss_worst_mv": {
+    "phy_domain": 11.49
+   },
+   "verdict": "PASS"
+  },
+  "window_um": [
+   0.0,
+   0.0,
+   10368.0,
+   2851.2000000000003
+  ],
+  "solved_box": [
+   103.68,
+   103.68,
+   2839.44,
+   1091.8
+  ],
+  "phy": [
+   {
+    "dom": "phy_lk_WS0",
+    "rect_um": [
+     5938.84,
+     103.68,
+     8697.32,
+     585.548
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_WS1",
+    "rect_um": [
+     3053.08,
+     103.68,
+     5811.56,
+     585.548
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_WS2",
+    "rect_um": [
+     167.32,
+     103.68,
+     2775.8,
+     1028.16
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8113
+   },
+   {
+    "dom": "phy_lk_WS3",
+    "rect_um": [
+     9841.012,
+     103.68,
+     10140.2,
+     2343.8
+    ],
+    "w": 4.368,
+    "w_per_mm2": 6.5173
+   }
+  ],
+  "domains": [
+   "phy_lk_WS0",
+   "phy_lk_WS1",
+   "phy_lk_WS2",
+   "phy_lk_WS3"
+  ],
+  "bumps": {
+   "core": 1046,
+   "core_relocated_to_domain_edges": 223,
+   "domain": 2809,
+   "by_net": {
+    "VDD": 523,
+    "VSS": 523,
+    "VDDPHY": 574,
+    "VSSPHY": 615
+   }
+  },
+  "uncovered_core_area_mm2": 1.094,
+  "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-plan-ir-1025/s81_A_b0"
+ },
+ "s81_A_b1": {
+  "result": {
+   "manifest": {
+    "schema": "opentallas.s81_ir_domains.case.v1",
+    "plan": "plan_s81.json",
+    "phy_box": 1,
+    "nets": [
+     "VDDPHY",
+     "VSSPHY"
+    ],
+    "die": "s81",
+    "mode": "domains",
+    "window_um": [
+     0.0,
+     0.0,
+     10368.0,
+     2851.2000000000003
+    ],
+    "tile_um": 43.2,
+    "density_w_mm2": 0.15,
+    "voltage_v": 0.7,
+    "gate_mv": 35.0,
+    "core_grid": [
+     {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     }
+    ],
+    "domain_grid": [
+     {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     }
+    ],
+    "domains": [
+     {
+      "name": "phy_lk_WS0",
+      "io": [
+       "io_lk_WS0_u_phy"
+      ],
+      "rect_um": [
+       5875.2,
+       103.68,
+       8760.96,
+       649.188
+      ],
+      "bumps_rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "phy_macro_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "core_strip_um": [
+       [
+        5875.2,
+        649.188,
+        8760.96,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS1",
+      "io": [
+       "io_lk_WS1_u_phy"
+      ],
+      "rect_um": [
+       2989.44,
+       103.68,
+       5875.2,
+       649.188
+      ],
+      "bumps_rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "phy_macro_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "core_strip_um": [
+       [
+        2989.44,
+        649.188,
+        5875.2,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS2",
+      "io": [
+       "io_lk_WS2_u_phy"
+      ],
+      "rect_um": [
+       103.68,
+       103.68,
+       2839.44,
+       1091.8
+      ],
+      "bumps_rect_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "phy_macro_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "core_strip_um": [
+       [
+        103.68,
+        1091.8,
+        2989.44,
+        1330.56
+       ],
+       [
+        2839.44,
+        103.68,
+        2989.44,
+        1091.8
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS3",
+      "io": [
+       "io_lk_WS3_u_phy"
+      ],
+      "rect_um": [
+       9777.372,
+       103.68,
+       10203.84,
+       2407.44
+      ],
+      "bumps_rect_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "phy_macro_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "core_strip_um": [
+       [
+        8760.96,
+        2407.44,
+        10203.84,
+        2557.44
+       ],
+       [
+        8760.96,
+        103.68,
+        9777.372,
+        2407.44
+       ]
+      ]
+     }
+    ],
+    "region_boxes": [
+     [
+      2989.44,
+      103.68,
+      8760.96,
+      649.188
+     ],
+     [
+      103.68,
+      103.68,
+      2839.44,
+      1091.8
+     ],
+     [
+      9777.372,
+      103.68,
+      10203.84,
+      2407.44
+     ]
+    ],
+    "phy": [
+     {
+      "dom": "phy_lk_WS0",
+      "rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_WS1",
+      "rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_WS2",
+      "rect_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8113
+     },
+     {
+      "dom": "phy_lk_WS3",
+      "rect_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "w": 4.368,
+      "w_per_mm2": 6.5173
+     }
+    ],
+    "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+    "tiles": {
+     "core": 11092,
+     "phy": 1408
+    },
+    "core_load_w": 3.2051,
+    "phy_load_w": 8.736,
+    "core_area_mm2": 21.3673,
+    "channels_unloaded": [
+     [
+      0,
+      0,
+      10368.0,
+      103.68
+     ],
+     [
+      0,
+      103.68,
+      103.68,
+      2851.2000000000003
+     ]
+    ],
+    "uncovered_core_area_mm2": 1.094,
+    "bumps": {
+     "core": 1046,
+     "core_relocated_to_domain_edges": 223,
+     "domain": 2809,
+     "by_net": {
+      "VDD": 523,
+      "VSS": 523,
+      "VDDPHY": 609,
+      "VSSPHY": 696
+     }
+    },
+    "io_in_window": [
+     "io_lk_WS0_u_phy",
+     "io_lk_WS1_u_phy",
+     "io_lk_WS2_u_phy",
+     "io_lk_WS3_u_phy"
+    ]
+   },
+   "done": true,
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "log_worst": {},
+   "rails": {
+    "VDDPHY": {
+     "all": {
+      "worst_mv": 21.35,
+      "at_um": [
+       5790.0,
+       432.2
+      ],
+      "tile": "P_131_9"
+     },
+     "phy": {
+      "worst_mv": 21.35,
+      "at_um": [
+       5790.0,
+       432.2
+      ],
+      "tile": "P_131_9"
+     },
+     "per_domain": {
+      "phy_lk_WS0": {
+       "worst_mv": 18.28,
+       "whole_in_window": true
+      },
+      "phy_lk_WS1": {
+       "worst_mv": 21.35,
+       "whole_in_window": true
+      }
+     }
+    },
+    "VSSPHY": {
+     "all": {
+      "worst_mv": 19.68,
+      "at_um": [
+       4410.8,
+       257.0
+      ],
+      "tile": "P_99_5"
+     },
+     "phy": {
+      "worst_mv": 19.68,
+      "at_um": [
+       4410.8,
+       257.0
+      ],
+      "tile": "P_99_5"
+     },
+     "per_domain": {
+      "phy_lk_WS0": {
+       "worst_mv": 19.22,
+       "whole_in_window": true
+      },
+      "phy_lk_WS1": {
+       "worst_mv": 19.68,
+       "whole_in_window": true
+      }
+     }
+    }
+   },
+   "gate_mv": 35.0,
+   "supply_worst_mv": {
+    "VDDPHY": 21.35
+   },
+   "vss_worst_mv": {
+    "phy_domain": 19.68
+   },
+   "verdict": "PASS"
+  },
+  "window_um": [
+   0.0,
+   0.0,
+   10368.0,
+   2851.2000000000003
+  ],
+  "solved_box": [
+   2989.44,
+   103.68,
+   8760.96,
+   649.188
+  ],
+  "phy": [
+   {
+    "dom": "phy_lk_WS0",
+    "rect_um": [
+     5938.84,
+     103.68,
+     8697.32,
+     585.548
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_WS1",
+    "rect_um": [
+     3053.08,
+     103.68,
+     5811.56,
+     585.548
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_WS2",
+    "rect_um": [
+     167.32,
+     103.68,
+     2775.8,
+     1028.16
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8113
+   },
+   {
+    "dom": "phy_lk_WS3",
+    "rect_um": [
+     9841.012,
+     103.68,
+     10140.2,
+     2343.8
+    ],
+    "w": 4.368,
+    "w_per_mm2": 6.5173
+   }
+  ],
+  "domains": [
+   "phy_lk_WS0",
+   "phy_lk_WS1",
+   "phy_lk_WS2",
+   "phy_lk_WS3"
+  ],
+  "bumps": {
+   "core": 1046,
+   "core_relocated_to_domain_edges": 223,
+   "domain": 2809,
+   "by_net": {
+    "VDD": 523,
+    "VSS": 523,
+    "VDDPHY": 609,
+    "VSSPHY": 696
+   }
+  },
+  "uncovered_core_area_mm2": 1.094,
+  "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-plan-ir-1025/s81_A_b1"
+ },
+ "s81_A_b2": {
+  "result": {
+   "manifest": {
+    "schema": "opentallas.s81_ir_domains.case.v1",
+    "plan": "plan_s81.json",
+    "phy_box": 2,
+    "nets": [
+     "VDDPHY",
+     "VSSPHY"
+    ],
+    "die": "s81",
+    "mode": "domains",
+    "window_um": [
+     0.0,
+     0.0,
+     10368.0,
+     2851.2000000000003
+    ],
+    "tile_um": 43.2,
+    "density_w_mm2": 0.15,
+    "voltage_v": 0.7,
+    "gate_mv": 35.0,
+    "core_grid": [
+     {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     }
+    ],
+    "domain_grid": [
+     {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     }
+    ],
+    "domains": [
+     {
+      "name": "phy_lk_WS0",
+      "io": [
+       "io_lk_WS0_u_phy"
+      ],
+      "rect_um": [
+       5875.2,
+       103.68,
+       8760.96,
+       649.188
+      ],
+      "bumps_rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "phy_macro_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "core_strip_um": [
+       [
+        5875.2,
+        649.188,
+        8760.96,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS1",
+      "io": [
+       "io_lk_WS1_u_phy"
+      ],
+      "rect_um": [
+       2989.44,
+       103.68,
+       5875.2,
+       649.188
+      ],
+      "bumps_rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "phy_macro_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "core_strip_um": [
+       [
+        2989.44,
+        649.188,
+        5875.2,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS2",
+      "io": [
+       "io_lk_WS2_u_phy"
+      ],
+      "rect_um": [
+       103.68,
+       103.68,
+       2839.44,
+       1091.8
+      ],
+      "bumps_rect_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "phy_macro_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "core_strip_um": [
+       [
+        103.68,
+        1091.8,
+        2989.44,
+        1330.56
+       ],
+       [
+        2839.44,
+        103.68,
+        2989.44,
+        1091.8
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS3",
+      "io": [
+       "io_lk_WS3_u_phy"
+      ],
+      "rect_um": [
+       9777.372,
+       103.68,
+       10203.84,
+       2407.44
+      ],
+      "bumps_rect_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "phy_macro_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "core_strip_um": [
+       [
+        8760.96,
+        2407.44,
+        10203.84,
+        2557.44
+       ],
+       [
+        8760.96,
+        103.68,
+        9777.372,
+        2407.44
+       ]
+      ]
+     }
+    ],
+    "region_boxes": [
+     [
+      9777.372,
+      103.68,
+      10203.84,
+      2407.44
+     ],
+     [
+      103.68,
+      103.68,
+      2839.44,
+      1091.8
+     ],
+     [
+      2989.44,
+      103.68,
+      8760.96,
+      649.188
+     ]
+    ],
+    "phy": [
+     {
+      "dom": "phy_lk_WS0",
+      "rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_WS1",
+      "rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_WS2",
+      "rect_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8113
+     },
+     {
+      "dom": "phy_lk_WS3",
+      "rect_um": [
+       9841.012,
+       103.68,
+       10140.2,
+       2343.8
+      ],
+      "w": 4.368,
+      "w_per_mm2": 6.5173
+     }
+    ],
+    "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+    "tiles": {
+     "core": 11092,
+     "phy": 357
+    },
+    "core_load_w": 3.2051,
+    "phy_load_w": 4.368,
+    "core_area_mm2": 21.3673,
+    "channels_unloaded": [
+     [
+      0,
+      0,
+      10368.0,
+      103.68
+     ],
+     [
+      0,
+      103.68,
+      103.68,
+      2851.2000000000003
+     ]
+    ],
+    "uncovered_core_area_mm2": 1.094,
+    "bumps": {
+     "core": 1046,
+     "core_relocated_to_domain_edges": 223,
+     "domain": 2809,
+     "by_net": {
+      "VDD": 523,
+      "VSS": 523,
+      "VDDPHY": 140,
+      "VSSPHY": 175
+     }
+    },
+    "io_in_window": [
+     "io_lk_WS0_u_phy",
+     "io_lk_WS1_u_phy",
+     "io_lk_WS2_u_phy",
+     "io_lk_WS3_u_phy"
+    ]
+   },
+   "done": true,
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "log_worst": {},
+   "rails": {
+    "VDDPHY": {
+     "all": {
+      "worst_mv": 50.42,
+      "at_um": [
+       10118.8,
+       432.2
+      ],
+      "tile": "P_230_9"
+     },
+     "phy": {
+      "worst_mv": 50.42,
+      "at_um": [
+       10118.8,
+       432.2
+      ],
+      "tile": "P_230_9"
+     },
+     "per_domain": {
+      "phy_lk_WS3": {
+       "worst_mv": 50.42,
+       "whole_in_window": true
+      }
+     }
+    },
+    "VSSPHY": {
+     "all": {
+      "worst_mv": 40.33,
+      "at_um": [
+       9862.4,
+       617.4
+      ],
+      "tile": "P_224_13"
+     },
+     "phy": {
+      "worst_mv": 40.33,
+      "at_um": [
+       9862.4,
+       617.4
+      ],
+      "tile": "P_224_13"
+     },
+     "per_domain": {
+      "phy_lk_WS3": {
+       "worst_mv": 40.33,
+       "whole_in_window": true
+      }
+     }
+    }
+   },
+   "gate_mv": 35.0,
+   "supply_worst_mv": {
+    "VDDPHY": 50.42
+   },
+   "vss_worst_mv": {
+    "phy_domain": 40.33
+   },
+   "verdict": "FAIL"
+  },
+  "window_um": [
+   0.0,
+   0.0,
+   10368.0,
+   2851.2000000000003
+  ],
+  "solved_box": [
+   9777.372,
+   103.68,
+   10203.84,
+   2407.44
+  ],
+  "phy": [
+   {
+    "dom": "phy_lk_WS0",
+    "rect_um": [
+     5938.84,
+     103.68,
+     8697.32,
+     585.548
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_WS1",
+    "rect_um": [
+     3053.08,
+     103.68,
+     5811.56,
+     585.548
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_WS2",
+    "rect_um": [
+     167.32,
+     103.68,
+     2775.8,
+     1028.16
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8113
+   },
+   {
+    "dom": "phy_lk_WS3",
+    "rect_um": [
+     9841.012,
+     103.68,
+     10140.2,
+     2343.8
+    ],
+    "w": 4.368,
+    "w_per_mm2": 6.5173
+   }
+  ],
+  "domains": [
+   "phy_lk_WS0",
+   "phy_lk_WS1",
+   "phy_lk_WS2",
+   "phy_lk_WS3"
+  ],
+  "bumps": {
+   "core": 1046,
+   "core_relocated_to_domain_edges": 223,
+   "domain": 2809,
+   "by_net": {
+    "VDD": 523,
+    "VSS": 523,
+    "VDDPHY": 140,
+    "VSSPHY": 175
+   }
+  },
+  "uncovered_core_area_mm2": 1.094,
+  "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-plan-ir-1025/s81_A_b2"
+ },
+ "s81_B_b0": {
+  "result": {
+   "manifest": {
+    "schema": "opentallas.s81_ir_domains.case.v1",
+    "plan": "plan_s81.json",
+    "phy_box": 0,
+    "nets": [
+     "VDDPHY",
+     "VSSPHY"
+    ],
+    "die": "s81",
+    "mode": "domains",
+    "window_um": [
+     20131.2,
+     21893.760000000002,
+     31950.72,
+     24744.96
+    ],
+    "tile_um": 43.2,
+    "density_w_mm2": 0.15,
+    "voltage_v": 0.7,
+    "gate_mv": 35.0,
+    "core_grid": [
+     {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     }
+    ],
+    "domain_grid": [
+     {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     }
+    ],
+    "domains": [
+     {
+      "name": "phy_lk_EN0",
+      "io": [
+       "io_lk_EN0_u_phy"
+      ],
+      "rect_um": [
+       23189.76,
+       24095.772,
+       26075.52,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "phy_macro_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        23189.76,
+        23414.4,
+        26075.52,
+        24095.772
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN1",
+      "io": [
+       "io_lk_EN1_u_phy"
+      ],
+      "rect_um": [
+       26075.52,
+       24095.772,
+       28961.28,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "phy_macro_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        26075.52,
+        23414.4,
+        28961.28,
+        24095.772
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN2",
+      "io": [
+       "io_lk_EN2_u_phy"
+      ],
+      "rect_um": [
+       20304.0,
+       23414.4,
+       22099.236,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "phy_macro_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        22099.236,
+        23414.4,
+        23189.76,
+        24641.28
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN3",
+      "io": [
+       "io_lk_EN3_u_phy"
+      ],
+      "rect_um": [
+       29111.28,
+       23653.16,
+       31847.04,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "phy_macro_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        28961.28,
+        23414.4,
+        31847.04,
+        23653.16
+       ],
+       [
+        28961.28,
+        23653.16,
+        29111.28,
+        24641.28
+       ]
+      ]
+     }
+    ],
+    "region_boxes": [
+     [
+      20304.0,
+      23414.4,
+      22099.236,
+      24641.28
+     ],
+     [
+      23189.76,
+      24095.772,
+      28961.28,
+      24641.28
+     ],
+     [
+      29111.28,
+      23653.16,
+      31847.04,
+      24641.28
+     ]
+    ],
+    "phy": [
+     {
+      "dom": "phy_lk_EN0",
+      "rect_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_EN1",
+      "rect_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_EN2",
+      "rect_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 2.2513
+     },
+     {
+      "dom": "phy_lk_EN3",
+      "rect_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8113
+     }
+    ],
+    "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+    "tiles": {
+     "core": 12499,
+     "phy": 1014
+    },
+    "core_load_w": 3.6203,
+    "phy_load_w": 4.368,
+    "core_area_mm2": 24.1353,
+    "channels_unloaded": [
+     [
+      20131.2,
+      24641.28,
+      31950.72,
+      24744.96
+     ],
+     [
+      31847.04,
+      21893.760000000002,
+      31950.72,
+      24641.28
+     ]
+    ],
+    "uncovered_core_area_mm2": 1.044,
+    "bumps": {
+     "core": 1178,
+     "core_relocated_to_domain_edges": 223,
+     "domain": 3456,
+     "by_net": {
+      "VDD": 589,
+      "VSS": 589,
+      "VDDPHY": 468,
+      "VSSPHY": 494
+     }
+    },
+    "io_in_window": [
+     "io_lk_EN0_u_phy",
+     "io_lk_EN1_u_phy",
+     "io_lk_EN2_u_phy",
+     "io_lk_EN3_u_phy"
+    ]
+   },
+   "done": true,
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "log_worst": {},
+   "rails": {
+    "VDDPHY": {
+     "all": {
+      "worst_mv": 14.85,
+      "at_um": [
+       22014.2,
+       23685.0
+      ],
+      "tile": "P_43_40"
+     },
+     "phy": {
+      "worst_mv": 14.85,
+      "at_um": [
+       22014.2,
+       23685.0
+      ],
+      "tile": "P_43_40"
+     },
+     "per_domain": {
+      "phy_lk_EN2": {
+       "worst_mv": 14.85,
+       "whole_in_window": true
+      }
+     }
+    },
+    "VSSPHY": {
+     "all": {
+      "worst_mv": 17.19,
+      "at_um": [
+       20389.0,
+       24127.6
+      ],
+      "tile": "P_5_50"
+     },
+     "phy": {
+      "worst_mv": 17.19,
+      "at_um": [
+       20389.0,
+       24127.6
+      ],
+      "tile": "P_5_50"
+     },
+     "per_domain": {
+      "phy_lk_EN2": {
+       "worst_mv": 17.19,
+       "whole_in_window": true
+      }
+     }
+    }
+   },
+   "gate_mv": 35.0,
+   "supply_worst_mv": {
+    "VDDPHY": 14.85
+   },
+   "vss_worst_mv": {
+    "phy_domain": 17.19
+   },
+   "verdict": "PASS"
+  },
+  "window_um": [
+   20131.2,
+   21893.760000000002,
+   31950.72,
+   24744.96
+  ],
+  "solved_box": [
+   20304.0,
+   23414.4,
+   22099.236,
+   24641.28
+  ],
+  "phy": [
+   {
+    "dom": "phy_lk_EN0",
+    "rect_um": [
+     23253.4,
+     24159.412,
+     26011.88,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_EN1",
+    "rect_um": [
+     26139.16,
+     24159.412,
+     28897.64,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_EN2",
+    "rect_um": [
+     20367.64,
+     23478.04,
+     22035.596,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 2.2513
+   },
+   {
+    "dom": "phy_lk_EN3",
+    "rect_um": [
+     29174.92,
+     23716.8,
+     31783.4,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8113
+   }
+  ],
+  "domains": [
+   "phy_lk_EN0",
+   "phy_lk_EN1",
+   "phy_lk_EN2",
+   "phy_lk_EN3"
+  ],
+  "bumps": {
+   "core": 1178,
+   "core_relocated_to_domain_edges": 223,
+   "domain": 3456,
+   "by_net": {
+    "VDD": 589,
+    "VSS": 589,
+    "VDDPHY": 468,
+    "VSSPHY": 494
+   }
+  },
+  "uncovered_core_area_mm2": 1.044,
+  "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-plan-ir-1025/s81_B_b0"
+ },
+ "s81_B_b1": {
+  "result": {
+   "manifest": {
+    "schema": "opentallas.s81_ir_domains.case.v1",
+    "plan": "plan_s81.json",
+    "phy_box": 1,
+    "nets": [
+     "VDDPHY",
+     "VSSPHY"
+    ],
+    "die": "s81",
+    "mode": "domains",
+    "window_um": [
+     20131.2,
+     21893.760000000002,
+     31950.72,
+     24744.96
+    ],
+    "tile_um": 43.2,
+    "density_w_mm2": 0.15,
+    "voltage_v": 0.7,
+    "gate_mv": 35.0,
+    "core_grid": [
+     {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     }
+    ],
+    "domain_grid": [
+     {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     }
+    ],
+    "domains": [
+     {
+      "name": "phy_lk_EN0",
+      "io": [
+       "io_lk_EN0_u_phy"
+      ],
+      "rect_um": [
+       23189.76,
+       24095.772,
+       26075.52,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "phy_macro_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        23189.76,
+        23414.4,
+        26075.52,
+        24095.772
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN1",
+      "io": [
+       "io_lk_EN1_u_phy"
+      ],
+      "rect_um": [
+       26075.52,
+       24095.772,
+       28961.28,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "phy_macro_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        26075.52,
+        23414.4,
+        28961.28,
+        24095.772
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN2",
+      "io": [
+       "io_lk_EN2_u_phy"
+      ],
+      "rect_um": [
+       20304.0,
+       23414.4,
+       22099.236,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "phy_macro_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        22099.236,
+        23414.4,
+        23189.76,
+        24641.28
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN3",
+      "io": [
+       "io_lk_EN3_u_phy"
+      ],
+      "rect_um": [
+       29111.28,
+       23653.16,
+       31847.04,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "phy_macro_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        28961.28,
+        23414.4,
+        31847.04,
+        23653.16
+       ],
+       [
+        28961.28,
+        23653.16,
+        29111.28,
+        24641.28
+       ]
+      ]
+     }
+    ],
+    "region_boxes": [
+     [
+      23189.76,
+      24095.772,
+      28961.28,
+      24641.28
+     ],
+     [
+      20304.0,
+      23414.4,
+      22099.236,
+      24641.28
+     ],
+     [
+      29111.28,
+      23653.16,
+      31847.04,
+      24641.28
+     ]
+    ],
+    "phy": [
+     {
+      "dom": "phy_lk_EN0",
+      "rect_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_EN1",
+      "rect_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_EN2",
+      "rect_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 2.2513
+     },
+     {
+      "dom": "phy_lk_EN3",
+      "rect_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8113
+     }
+    ],
+    "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+    "tiles": {
+     "core": 12499,
+     "phy": 1408
+    },
+    "core_load_w": 3.6203,
+    "phy_load_w": 8.736,
+    "core_area_mm2": 24.1353,
+    "channels_unloaded": [
+     [
+      20131.2,
+      24641.28,
+      31950.72,
+      24744.96
+     ],
+     [
+      31847.04,
+      21893.760000000002,
+      31950.72,
+      24641.28
+     ]
+    ],
+    "uncovered_core_area_mm2": 1.044,
+    "bumps": {
+     "core": 1178,
+     "core_relocated_to_domain_edges": 223,
+     "domain": 3456,
+     "by_net": {
+      "VDD": 589,
+      "VSS": 589,
+      "VDDPHY": 609,
+      "VSSPHY": 696
+     }
+    },
+    "io_in_window": [
+     "io_lk_EN0_u_phy",
+     "io_lk_EN1_u_phy",
+     "io_lk_EN2_u_phy",
+     "io_lk_EN3_u_phy"
+    ]
+   },
+   "done": true,
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "log_worst": {},
+   "rails": {
+    "VDDPHY": {
+     "all": {
+      "worst_mv": 21.95,
+      "at_um": [
+       26160.7,
+       24181.3
+      ],
+      "tile": "P_137_51"
+     },
+     "phy": {
+      "worst_mv": 21.95,
+      "at_um": [
+       26160.7,
+       24181.3
+      ],
+      "tile": "P_137_51"
+     },
+     "per_domain": {
+      "phy_lk_EN0": {
+       "worst_mv": 21.18,
+       "whole_in_window": true
+      },
+      "phy_lk_EN1": {
+       "worst_mv": 21.95,
+       "whole_in_window": true
+      }
+     }
+    },
+    "VSSPHY": {
+     "all": {
+      "worst_mv": 17.44,
+      "at_um": [
+       27583.1,
+       24444.2
+      ],
+      "tile": "P_170_57"
+     },
+     "phy": {
+      "worst_mv": 17.44,
+      "at_um": [
+       27583.1,
+       24444.2
+      ],
+      "tile": "P_170_57"
+     },
+     "per_domain": {
+      "phy_lk_EN0": {
+       "worst_mv": 17.2,
+       "whole_in_window": true
+      },
+      "phy_lk_EN1": {
+       "worst_mv": 17.44,
+       "whole_in_window": true
+      }
+     }
+    }
+   },
+   "gate_mv": 35.0,
+   "supply_worst_mv": {
+    "VDDPHY": 21.95
+   },
+   "vss_worst_mv": {
+    "phy_domain": 17.44
+   },
+   "verdict": "PASS"
+  },
+  "window_um": [
+   20131.2,
+   21893.760000000002,
+   31950.72,
+   24744.96
+  ],
+  "solved_box": [
+   23189.76,
+   24095.772,
+   28961.28,
+   24641.28
+  ],
+  "phy": [
+   {
+    "dom": "phy_lk_EN0",
+    "rect_um": [
+     23253.4,
+     24159.412,
+     26011.88,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_EN1",
+    "rect_um": [
+     26139.16,
+     24159.412,
+     28897.64,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_EN2",
+    "rect_um": [
+     20367.64,
+     23478.04,
+     22035.596,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 2.2513
+   },
+   {
+    "dom": "phy_lk_EN3",
+    "rect_um": [
+     29174.92,
+     23716.8,
+     31783.4,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8113
+   }
+  ],
+  "domains": [
+   "phy_lk_EN0",
+   "phy_lk_EN1",
+   "phy_lk_EN2",
+   "phy_lk_EN3"
+  ],
+  "bumps": {
+   "core": 1178,
+   "core_relocated_to_domain_edges": 223,
+   "domain": 3456,
+   "by_net": {
+    "VDD": 589,
+    "VSS": 589,
+    "VDDPHY": 609,
+    "VSSPHY": 696
+   }
+  },
+  "uncovered_core_area_mm2": 1.044,
+  "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-plan-ir-1025/s81_B_b1"
+ },
+ "s81_B_b2": {
+  "result": {
+   "manifest": {
+    "schema": "opentallas.s81_ir_domains.case.v1",
+    "plan": "plan_s81.json",
+    "phy_box": 2,
+    "nets": [
+     "VDDPHY",
+     "VSSPHY"
+    ],
+    "die": "s81",
+    "mode": "domains",
+    "window_um": [
+     20131.2,
+     21893.760000000002,
+     31950.72,
+     24744.96
+    ],
+    "tile_um": 43.2,
+    "density_w_mm2": 0.15,
+    "voltage_v": 0.7,
+    "gate_mv": 35.0,
+    "core_grid": [
+     {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     }
+    ],
+    "domain_grid": [
+     {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     }
+    ],
+    "domains": [
+     {
+      "name": "phy_lk_EN0",
+      "io": [
+       "io_lk_EN0_u_phy"
+      ],
+      "rect_um": [
+       23189.76,
+       24095.772,
+       26075.52,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "phy_macro_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        23189.76,
+        23414.4,
+        26075.52,
+        24095.772
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN1",
+      "io": [
+       "io_lk_EN1_u_phy"
+      ],
+      "rect_um": [
+       26075.52,
+       24095.772,
+       28961.28,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "phy_macro_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        26075.52,
+        23414.4,
+        28961.28,
+        24095.772
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN2",
+      "io": [
+       "io_lk_EN2_u_phy"
+      ],
+      "rect_um": [
+       20304.0,
+       23414.4,
+       22099.236,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "phy_macro_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        22099.236,
+        23414.4,
+        23189.76,
+        24641.28
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_EN3",
+      "io": [
+       "io_lk_EN3_u_phy"
+      ],
+      "rect_um": [
+       29111.28,
+       23653.16,
+       31847.04,
+       24641.28
+      ],
+      "bumps_rect_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "phy_macro_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "core_strip_um": [
+       [
+        28961.28,
+        23414.4,
+        31847.04,
+        23653.16
+       ],
+       [
+        28961.28,
+        23653.16,
+        29111.28,
+        24641.28
+       ]
+      ]
+     }
+    ],
+    "region_boxes": [
+     [
+      29111.28,
+      23653.16,
+      31847.04,
+      24641.28
+     ],
+     [
+      20304.0,
+      23414.4,
+      22099.236,
+      24641.28
+     ],
+     [
+      23189.76,
+      24095.772,
+      28961.28,
+      24641.28
+     ]
+    ],
+    "phy": [
+     {
+      "dom": "phy_lk_EN0",
+      "rect_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_EN1",
+      "rect_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 3.2861
+     },
+     {
+      "dom": "phy_lk_EN2",
+      "rect_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 2.2513
+     },
+     {
+      "dom": "phy_lk_EN3",
+      "rect_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8113
+     }
+    ],
+    "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+    "tiles": {
+     "core": 12499,
+     "phy": 1260
+    },
+    "core_load_w": 3.6203,
+    "phy_load_w": 4.368,
+    "core_area_mm2": 24.1353,
+    "channels_unloaded": [
+     [
+      20131.2,
+      24641.28,
+      31950.72,
+      24744.96
+     ],
+     [
+      31847.04,
+      21893.760000000002,
+      31950.72,
+      24641.28
+     ]
+    ],
+    "uncovered_core_area_mm2": 1.044,
+    "bumps": {
+     "core": 1178,
+     "core_relocated_to_domain_edges": 223,
+     "domain": 3456,
+     "by_net": {
+      "VDD": 589,
+      "VSS": 589,
+      "VDDPHY": 574,
+      "VSSPHY": 615
+     }
+    },
+    "io_in_window": [
+     "io_lk_EN0_u_phy",
+     "io_lk_EN1_u_phy",
+     "io_lk_EN2_u_phy",
+     "io_lk_EN3_u_phy"
+    ]
+   },
+   "done": true,
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "log_worst": {},
+   "rails": {
+    "VDDPHY": {
+     "all": {
+      "worst_mv": 15.84,
+      "at_um": [
+       31761.7,
+       24127.6
+      ],
+      "tile": "P_265_50"
+     },
+     "phy": {
+      "worst_mv": 15.84,
+      "at_um": [
+       31761.7,
+       24127.6
+      ],
+      "tile": "P_265_50"
+     },
+     "per_domain": {
+      "phy_lk_EN3": {
+       "worst_mv": 15.84,
+       "whole_in_window": true
+      }
+     }
+    },
+    "VSSPHY": {
+     "all": {
+      "worst_mv": 10.19,
+      "at_um": [
+       29240.1,
+       24356.5
+      ],
+      "tile": "P_207_55"
+     },
+     "phy": {
+      "worst_mv": 10.19,
+      "at_um": [
+       29240.1,
+       24356.5
+      ],
+      "tile": "P_207_55"
+     },
+     "per_domain": {
+      "phy_lk_EN3": {
+       "worst_mv": 10.19,
+       "whole_in_window": true
+      }
+     }
+    }
+   },
+   "gate_mv": 35.0,
+   "supply_worst_mv": {
+    "VDDPHY": 15.84
+   },
+   "vss_worst_mv": {
+    "phy_domain": 10.19
+   },
+   "verdict": "PASS"
+  },
+  "window_um": [
+   20131.2,
+   21893.760000000002,
+   31950.72,
+   24744.96
+  ],
+  "solved_box": [
+   29111.28,
+   23653.16,
+   31847.04,
+   24641.28
+  ],
+  "phy": [
+   {
+    "dom": "phy_lk_EN0",
+    "rect_um": [
+     23253.4,
+     24159.412,
+     26011.88,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_EN1",
+    "rect_um": [
+     26139.16,
+     24159.412,
+     28897.64,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 3.2861
+   },
+   {
+    "dom": "phy_lk_EN2",
+    "rect_um": [
+     20367.64,
+     23478.04,
+     22035.596,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 2.2513
+   },
+   {
+    "dom": "phy_lk_EN3",
+    "rect_um": [
+     29174.92,
+     23716.8,
+     31783.4,
+     24641.28
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8113
+   }
+  ],
+  "domains": [
+   "phy_lk_EN0",
+   "phy_lk_EN1",
+   "phy_lk_EN2",
+   "phy_lk_EN3"
+  ],
+  "bumps": {
+   "core": 1178,
+   "core_relocated_to_domain_edges": 223,
+   "domain": 3456,
+   "by_net": {
+    "VDD": 589,
+    "VSS": 589,
+    "VDDPHY": 574,
+    "VSSPHY": 615
+   }
+  },
+  "uncovered_core_area_mm2": 1.044,
+  "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-plan-ir-1025/s81_B_b2"
+ },
+ "head_A_b0": {
+  "result": {
+   "manifest": {
+    "schema": "opentallas.s81_ir_domains.case.v1",
+    "plan": "plan_head.json",
+    "phy_box": 0,
+    "nets": [
+     "VDDPHY",
+     "VSSPHY"
+    ],
+    "die": "s81_head",
+    "mode": "domains",
+    "window_um": [
+     0.0,
+     0.0,
+     11646.720000000001,
+     2851.2000000000003
+    ],
+    "tile_um": 43.2,
+    "density_w_mm2": 0.15,
+    "voltage_v": 0.7,
+    "gate_mv": 35.0,
+    "core_grid": [
+     {
+      "layer": "M8",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 0.48,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDD",
+       "VSS"
+      ]
+     }
+    ],
+    "domain_grid": [
+     {
+      "layer": "M8",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     },
+     {
+      "layer": "M9",
+      "width_um": 1.92,
+      "pitch_um": 8.64,
+      "offset_um": 4.32,
+      "nets": [
+       "VDDPHY",
+       "VSS"
+      ]
+     }
+    ],
+    "domains": [
+     {
+      "name": "phy_lk_WS1",
+      "io": [
+       "io_lk_WS1_u_phy"
+      ],
+      "rect_um": [
+       103.68,
+       103.68,
+       2989.44,
+       1039.96
+      ],
+      "bumps_rect_um": [
+       167.32,
+       103.68,
+       2925.8,
+       976.32
+      ],
+      "phy_macro_um": [
+       167.32,
+       103.68,
+       2925.8,
+       976.32
+      ],
+      "core_strip_um": [
+       [
+        103.68,
+        1039.96,
+        2989.44,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_WS0",
+      "io": [
+       "io_lk_WS0_u_phy"
+      ],
+      "rect_um": [
+       2989.44,
+       103.68,
+       5875.2,
+       1039.96
+      ],
+      "bumps_rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       976.32
+      ],
+      "phy_macro_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       976.32
+      ],
+      "core_strip_um": [
+       [
+        2989.44,
+        1039.96,
+        5875.2,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_HOST0",
+      "io": [
+       "io_lk_HOST0_u_phy"
+      ],
+      "rect_um": [
+       5875.2,
+       103.68,
+       8760.96,
+       1039.96
+      ],
+      "bumps_rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       976.32
+      ],
+      "phy_macro_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       976.32
+      ],
+      "core_strip_um": [
+       [
+        5875.2,
+        1039.96,
+        8760.96,
+        1330.56
+       ]
+      ]
+     },
+     {
+      "name": "phy_lk_HOST1",
+      "io": [
+       "io_lk_HOST1_u_phy"
+      ],
+      "rect_um": [
+       8760.96,
+       103.68,
+       11646.72,
+       1039.96
+      ],
+      "bumps_rect_um": [
+       8824.6,
+       103.68,
+       11583.08,
+       976.32
+      ],
+      "phy_macro_um": [
+       8824.6,
+       103.68,
+       11583.08,
+       976.32
+      ],
+      "core_strip_um": [
+       [
+        8760.96,
+        1039.96,
+        11646.72,
+        1330.56
+       ]
+      ]
+     }
+    ],
+    "region_boxes": [
+     [
+      103.68,
+      103.68,
+      11646.72,
+      1039.96
+     ]
+    ],
+    "phy": [
+     {
+      "dom": "phy_lk_WS1",
+      "rect_um": [
+       167.32,
+       103.68,
+       2925.8,
+       976.32
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8146
+     },
+     {
+      "dom": "phy_lk_WS0",
+      "rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       976.32
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8146
+     },
+     {
+      "dom": "phy_lk_HOST0",
+      "rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       976.32
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8146
+     },
+     {
+      "dom": "phy_lk_HOST1",
+      "rect_um": [
+       8824.6,
+       103.68,
+       11583.08,
+       976.32
+      ],
+      "w": 4.368,
+      "w_per_mm2": 1.8146
+     }
+    ],
+    "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+    "tiles": {
+     "core": 10164,
+     "phy": 5120
+    },
+    "core_load_w": 2.8705,
+    "phy_load_w": 17.472,
+    "core_area_mm2": 19.137,
+    "channels_unloaded": [
+     [
+      0,
+      0,
+      11646.720000000001,
+      103.68
+     ],
+     [
+      0,
+      103.68,
+      103.68,
+      2851.2000000000003
+     ],
+     [
+      103.68,
+      1330.5600000000002,
+      1546.5600000000002,
+      2557.4400000000005
+     ]
+    ],
+    "uncovered_core_area_mm2": 1.1789,
+    "bumps": {
+     "core": 921,
+     "core_relocated_to_domain_edges": 232,
+     "domain": 4685,
+     "by_net": {
+      "VDD": 461,
+      "VSS": 460,
+      "VDDPHY": 2249,
+      "VSSPHY": 2436
+     }
+    },
+    "io_in_window": [
+     "io_lk_WS1_u_phy",
+     "io_lk_WS0_u_phy",
+     "io_lk_HOST0_u_phy",
+     "io_lk_HOST1_u_phy"
+    ]
+   },
+   "done": true,
+   "pg_check": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "psm": {
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "log_worst": {},
+   "rails": {
+    "VDDPHY": {
+     "all": {
+      "worst_mv": 13.38,
+      "at_um": [
+       188.9,
+       605.4
+      ],
+      "tile": "P_3_13"
+     },
+     "phy": {
+      "worst_mv": 13.38,
+      "at_um": [
+       188.9,
+       605.4
+      ],
+      "tile": "P_3_13"
+     },
+     "per_domain": {
+      "phy_lk_WS1": {
+       "worst_mv": 13.38,
+       "whole_in_window": true
+      },
+      "phy_lk_WS0": {
+       "worst_mv": 11.67,
+       "whole_in_window": true
+      },
+      "phy_lk_HOST0": {
+       "worst_mv": 10.0,
+       "whole_in_window": true
+      },
+      "phy_lk_HOST1": {
+       "worst_mv": 11.66,
+       "whole_in_window": true
+      }
+     }
+    },
+    "VSSPHY": {
+     "all": {
+      "worst_mv": 12.82,
+      "at_um": [
+       2904.2,
+       256.4
+      ],
+      "tile": "P_66_5"
+     },
+     "phy": {
+      "worst_mv": 12.82,
+      "at_um": [
+       2904.2,
+       256.4
+      ],
+      "tile": "P_66_5"
+     },
+     "per_domain": {
+      "phy_lk_WS1": {
+       "worst_mv": 12.82,
+       "whole_in_window": true
+      },
+      "phy_lk_WS0": {
+       "worst_mv": 10.98,
+       "whole_in_window": true
+      },
+      "phy_lk_HOST0": {
+       "worst_mv": 10.68,
+       "whole_in_window": true
+      },
+      "phy_lk_HOST1": {
+       "worst_mv": 11.03,
+       "whole_in_window": true
+      }
+     }
+    }
+   },
+   "gate_mv": 35.0,
+   "supply_worst_mv": {
+    "VDDPHY": 13.38
+   },
+   "vss_worst_mv": {
+    "phy_domain": 12.82
+   },
+   "verdict": "PASS"
+  },
+  "window_um": [
+   0.0,
+   0.0,
+   11646.720000000001,
+   2851.2000000000003
+  ],
+  "solved_box": [
+   103.68,
+   103.68,
+   11646.72,
+   1039.96
+  ],
+  "phy": [
+   {
+    "dom": "phy_lk_WS1",
+    "rect_um": [
+     167.32,
+     103.68,
+     2925.8,
+     976.32
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8146
+   },
+   {
+    "dom": "phy_lk_WS0",
+    "rect_um": [
+     3053.08,
+     103.68,
+     5811.56,
+     976.32
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8146
+   },
+   {
+    "dom": "phy_lk_HOST0",
+    "rect_um": [
+     5938.84,
+     103.68,
+     8697.32,
+     976.32
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8146
+   },
+   {
+    "dom": "phy_lk_HOST1",
+    "rect_um": [
+     8824.6,
+     103.68,
+     11583.08,
+     976.32
+    ],
+    "w": 4.368,
+    "w_per_mm2": 1.8146
+   }
+  ],
+  "domains": [
+   "phy_lk_WS1",
+   "phy_lk_WS0",
+   "phy_lk_HOST0",
+   "phy_lk_HOST1"
+  ],
+  "bumps": {
+   "core": 921,
+   "core_relocated_to_domain_edges": 232,
+   "domain": 4685,
+   "by_net": {
+    "VDD": 461,
+    "VSS": 460,
+    "VDDPHY": 2249,
+    "VSSPHY": 2436
+   }
+  },
+  "uncovered_core_area_mm2": 1.1789,
+  "run_dir": "epyc2:/srv/opentallas-scratch2/claude/s81-plan-ir-1025/head_A_b0"
+ }
+}
