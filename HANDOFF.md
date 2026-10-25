@@ -511,3 +511,7 @@ CODEX: 2026-10-25 06:05 PDT HBM-plan parked on Claude reset; collected B2o clock
 2026-10-25 06:01 PDT CODEX: TOK-HBM parked on Claude reset; corrected-clock SU31 BUILD_PASS/replay LIVE epyc2; side LAT4 temporal miter724bd168c compiling epyc1 unit2623004, source-list migration WIP NOT READY, full handoff CODEX-LOG.
 
 2026-10-25 06:08 PDT CODEX: GEOM queue parked on Claude reset; codex/geom-0555-1025@d26526746 results only. QCf56c and S81t6/t27 conditional placement reviews, RVrxsf structural hold; late PROTO channel failures collected. Detailed CODEX-LOG handoff.
+2026-10-25 06:07 PDT CODEX: KV core chain failclosed READY codex/kv-chain-0553@4f1cf08b9 (7mockcasesPASS,syntaxPASS); collected7 NOT SIGNED runs with internal clock-affinity/reset removal diagnosis; ASTK/PV LEC open; parked on Claude reset, no heavy jobs launched.
+
+2026-10-25 06:01 PDT CODEX: RESET leaf reach WIP d5bdf506d parked on Claude reset; actual t8 all37control sinks<=327.348um after1reset reassign;15focusedtestsPASS, no route/signoff; single-tap/review owed.
+2026-10-25 06:02 PDT CODEX: KV takeover parked on Claude reset; preserved v3.9dWIP13bafb044/G0FAIL326, astkchain failclosedREADY4f1cf08b9, EbootFAIL despite13images, WL7miter128PASS+mutant; detailed CODEX-LOG.
