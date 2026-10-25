@@ -2,19 +2,26 @@
 // Actual512-result native collective producer. Eight real memory banks absorb
 // up to64chosen records/edge. Compiler issues exactly171ingest edges, fixed
 // flush, then16 four-flit emit beats at8-edge intervals. No ready/credits.
-module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0)(
+// NL (HBM-BIND B2 2026-10-24, lane hbm-bind-idx): number of 16-lane selector lists on selected_line (NL*592 b) =
+// the selector's NL. Default 4 = as built (bit-identical; bench rtl/test/hbm_idx_static/run_idx_link_nl.sh). The ingest
+// packs up to 16*NL records an edge (lists 0..NL-1, lanes 0..15, in that order); the carry holds (16*NL+8) records
+// (4,608 b at NL 4). The eight 64 x 512 banks, the 512-record / 64-flit frame, the 16 four-flit emit beats and every
+// edge are unchanged. B2 die (NW + NE): NL 1 (list 0 = {NE, NW}, as list 1 of the as-built 4-list master).
+// MUT 3 (bench only): list NL-1 is not ingested.
+module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0, parameter integer NL=4)(
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
- input wire clear,ingest_v,input wire[2367:0]selected_line,
+ input wire clear,ingest_v,input wire[NL*592-1:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
  output reg[3:0]tx_v,output reg[2179:0]tx,
  output reg fault,output wire[9:0]selected_count
 );
- reg[4607:0]carry;
+ localparam integer CW=(16*NL+8)*64;
+ reg[CW-1:0]carry;
  reg[2:0]fill;
  reg[6:0]flits;
  reg[9:0]total;
  assign selected_count=total;
- reg[4607:0]packed_next;
+ reg[CW-1:0]packed_next;
  integer n,nf,count,bank,row;
  reg[7:0]we;
  reg[47:0]wa;
@@ -24,7 +31,7 @@ module ot_hbm_idx_topk_link_static_core #(parameter integer MUT=0)(
  reg[63:0]record;
  always @*begin
   packed_next=carry;n=int'(fill);count=0;
-  if(ingest_v)for(integer q=0;q<4;q=q+1)for(integer l=0;l<16;l=l+1)begin
+  if(ingest_v)for(integer q=0;q<((MUT==3)?NL-1:NL);q=q+1)for(integer l=0;l<16;l=l+1)begin
    if(selected_line[q*592+l*37])begin
     record={12'd0,selected_line[q*592+l*37+17+:20],selected_line[q*592+l*37+1+:16],16'd0};
     if(MUT==1)record={record[31:0],record[63:32]};
@@ -77,9 +84,9 @@ endmodule
 // ot_hbm_idx_topk_link_static_core. Latency: +1 edge on every input, +1 edge on every output; the IDX
 // calendar compiler (tools/hbm_idx_static_calendar.py, PIN table) schedules them.
 // Pin flops have no reset (as physical/common_flow/ot_pin_regs.tcl); the core is reset.
-module ot_hbm_idx_topk_link_static #(parameter integer MUT=0)(
+module ot_hbm_idx_topk_link_static #(parameter integer MUT=0, parameter integer NL=4)(   // NL: see the core
  input wire clk,input wire[7:0]clk_mem,input wire rst_n,
- input wire clear,ingest_v,input wire[2367:0]selected_line,
+ input wire clear,ingest_v,input wire[NL*592-1:0]selected_line,
  input wire flush,emit_v,input wire[3:0]emit_group,input wire[7:0]rank,gbase,
  output reg[3:0]tx_v,output reg[2179:0]tx,
  output reg fault,output reg[9:0]selected_count
@@ -89,13 +96,13 @@ module ot_hbm_idx_topk_link_static #(parameter integer MUT=0)(
  (* keep *) reg [1:0] rst_sync;
  always @(posedge clk or negedge rst_n) if(!rst_n) rst_sync<=2'b00; else rst_sync<={rst_sync[0],1'b1};
  wire rst_core_n=rst_sync[1];
- (* keep *) reg clear_r,ingest_r,flush_r,emit_r;(* keep *) reg[2367:0]line_r;(* keep *) reg[3:0]group_r;(* keep *) reg[7:0]rank_r,gbase_r;
+ (* keep *) reg clear_r,ingest_r,flush_r,emit_r;(* keep *) reg[NL*592-1:0]line_r;(* keep *) reg[3:0]group_r;(* keep *) reg[7:0]rank_r,gbase_r;
  wire[3:0]c_tx_v;wire[2179:0]c_tx;wire c_fault;wire[9:0]c_count;
  always @(posedge clk)begin
   clear_r<=clear;ingest_r<=ingest_v;line_r<=selected_line;flush_r<=flush;emit_r<=emit_v;group_r<=emit_group;rank_r<=rank;gbase_r<=gbase;
   tx_v<=c_tx_v;tx<=c_tx;fault<=c_fault;selected_count<=c_count;
  end
- ot_hbm_idx_topk_link_static_core #(.MUT(MUT)) core(.clk(clk),.clk_mem(clk_mem),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
+ ot_hbm_idx_topk_link_static_core #(.MUT(MUT),.NL(NL)) core(.clk(clk),.clk_mem(clk_mem),.rst_n(rst_core_n),.clear(clear_r),.ingest_v(ingest_r),
   .selected_line(line_r),.flush(flush_r),.emit_v(emit_r),.emit_group(group_r),.rank(rank_r),.gbase(gbase_r),
   .tx_v(c_tx_v),.tx(c_tx),.fault(c_fault),.selected_count(c_count));
 endmodule
