@@ -239,3 +239,9 @@ PATH-QC-B12 -> PATH-QC-PLAN3: please fold claude/path-qc-b12-1025@46cd8c44c (ONE
 - Batched review owed (COORD-REVIEW-QUEUE delta, with the NK ones): tools/die_plan/clock_taps.tcl OT_CORE_ONLY_TAPS comma split; rtl/physical/a0_core/qfd_tile_nk_a0c.sv OT_A0_CK_TAPS53 ports; gate RC-before-SDC order (r6/hold_gate_ref.tcl; port to main hold_gate.tcl / autopilot adapters -- every ref_tile gate that reads SDC before estimate_parasitics under-reads the QDM reference by ~30-35 ps on A0); die plan a0_core_taps.json NK delta (a0c10_nk_core_clock.json).
 - Next: GEOM verdict -> autopilot route/finish/sign-off. If NEAR-MISS on XTAP/SAMETAP: ck_t52 (cap-overflow 1284 sinks) and ck_t14 trees.
 - A2 NL: AFFECTED by the IO-basis bug; exact fix in the 10:2x line above (sdc_clock_extra + regenerated io_ref_skew + core-only taps + RC-first gate). NL not built.
+2026-10-25 11:23 PDT PATH-QC (park addendum 2): NK2 collected.
+- R6 qfd_tile_nk_a0cv10: post-CTS FF -31.83/1478 (R5 -57.00/1807). XTAP 170 + SAMETAP 36; pair skew <=48; 2 trees >290 (t14 292, t52 296).
+- Autopilot 14e02be8d1cf waits for GEOM [PATH-QC-NK-R6]. Evidence claude/path-qc-nk2-1025@bcce182646.
+- R6 adds 11 unloaded tap ports (OT_A0_CK_TAPS53). LEC = CTS/SDC-only change + ports.
+- NL (A2) is affected by the ref-min-0 bug; the fix recipe is in this file.
+- No PATH-QC sub-agents remain live.
