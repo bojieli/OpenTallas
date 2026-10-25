@@ -285,7 +285,7 @@ endmodule
 
 // RA lane FRONT leaf: x -> exp(-|x|) Horner -> u = t / (t + 2) -> u^2 (ot_hdc_v41x_softplus_s up to T_U2, the same
 // units), max(x, 0) carried to T_U2; seam outputs registered.  Flat lane time t = this leaf's input-flop time t.
-module ot_s81_su_rxsf #(parameter integer PCUT = 1) (
+module ot_s81_su_rxsf #(parameter integer PCUT = 1, parameter integer TFTZ = 0) (
     input  wire        clk, rst_in,
     input  wire        i_v,
     input  wire [31:0] i_x,
@@ -306,7 +306,7 @@ module ot_s81_su_rxsf #(parameter integer PCUT = 1) (
     wire [31:0] p_pre, u, u2, u_d, mx_d;
     wire [8:0]  n_pre;
     wire f_exp, f_div, f_u2;
-    ot_hdc_v41x_exp_s #(.PCUT(PCUT)) u_exp (.clk(clk), .rst_n(rst_n), .v(v_q), .x({1'b1, x_q[30:0]}), .y(), .vo(),
+    ot_hdc_v41x_exp_s #(.PCUT(PCUT), .TFTZ(TFTZ)) u_exp (.clk(clk), .rst_n(rst_n), .v(v_q), .x({1'b1, x_q[30:0]}), .y(), .vo(),
                              .p_pre(p_pre), .n_pre(n_pre), .fault(f_exp));
     ot_hdc_v41x_spdiv u_div (.clk(clk), .rst_n(rst_n), .v(vd[T_PN]), .p(p_pre), .n(n_pre), .y(u), .vo(), .fault(f_div));
     ot_hdc_fp32_mul_x2 #(.DOUBLE(0), .CUT(PCUT)) m_u2 (.clk(clk), .rst_n(rst_n), .v(vd[T_U]), .a(u), .b(u), .y(u2), .fault(f_u2));
@@ -578,7 +578,9 @@ module dsfd_su_t_rxsf (
 );
     wire [31:0] u_w, u2_w;
     assign o_u = u_w[30:0]; assign o_u2 = u2_w[30:0];
-    ot_s81_su_rxsf #(.PCUT(1)) u_f (.clk(ck), .rst_in(rst), .i_v(i_v), .i_x(i_x), .o_v(o_v), .o_u(u_w), .o_u2(u2_w),
+    // S81-CORES2/RV 2026-10-25 (GEOM FAIL 04:38, TT -6.19 on u_exp.m_t s2_sh -> y): TFTZ 1 drops t's dead subnormal
+    // encode (shift + round + zero test) from m_t's last stage; 0 cycles, outputs identical (tools/s81_slice/rxsf_ftz_eq.sh).
+    ot_s81_su_rxsf #(.PCUT(1), .TFTZ(1)) u_f (.clk(ck), .rst_in(rst), .i_v(i_v), .i_x(i_x), .o_v(o_v), .o_u(u_w), .o_u2(u2_w),
         .o_mx(o_mx), .o_f(o_f));
 endmodule
 module dsfd_su_t_rxsb (

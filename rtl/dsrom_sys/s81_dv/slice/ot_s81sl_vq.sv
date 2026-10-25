@@ -78,7 +78,27 @@ module ot_s81sl_vq #(
     wire sv_ = yv_c | uv_c; wire [2:0] si_ = yv_c ? yi_c : ui_c; wire [255:0] sd_ = yv_c ? y_c : u_c;
     // block assembly: 4 sub-beats of 8 FP32 words -> 32 words; BF16 copy of all 64
     reg [1023:0] blk; reg bv, bbk; reg [2:0] nexp; reg ord_f;
-    reg [1023:0] bf;
+    wire [1023:0] bf;
+    // S81-CORES2/RV (2026-10-25, GEOM PASS-COND 04:45; f5b TT -58.8/298 = yv_c -> bf load-enable broadcast over the
+    // whole 1024-flop bf array): the bf load is steered by FOUR replicated pin-register copies of (y_v, y_i, u_v, u_i),
+    // one per bf quarter q (bf[256 q +: 256] = sub-beats 2q, 2q+1), each loaded from the pins on the same edge as
+    // yv_c / yi_c / uv_c / ui_c (0 cycles: bf is cycle-identical, tools/s81_slice/vq_pinreg_eq.sh vs main).  Each copy
+    // drives its quarter's enables and data-select only (256 + 128 loads instead of 1024 + 128 on yv_c); (* keep *) +
+    // ot_keep_regs.tcl keep the copies from being merged back into yv_c.
+    (* keep *) reg [3:0] yv_b, uv_b;
+    (* keep *) reg [2:0] yi_b0, yi_b1, yi_b2, yi_b3, ui_b0, ui_b1, ui_b2, ui_b3;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) begin yv_b <= 4'd0; uv_b <= 4'd0; end
+        else begin yv_b <= {4{y_v}}; uv_b <= {4{u_v}}; end
+    always @(posedge clk) begin
+        yi_b0 <= y_i; yi_b1 <= y_i; yi_b2 <= y_i; yi_b3 <= y_i;
+`ifdef OT_VQ_MUT_BFQ
+        ui_b0 <= u_i; ui_b1 <= u_i; ui_b2 <= u_i; ui_b3 <= y_i;   // mutant: quarter 3 steered by the wrong index (must FAIL)
+`else
+        ui_b0 <= u_i; ui_b1 <= u_i; ui_b2 <= u_i; ui_b3 <= u_i;
+`endif
+    end
+    wire [11:0] yi_bq = {yi_b3, yi_b2, yi_b1, yi_b0}, ui_bq = {ui_b3, ui_b2, ui_b1, ui_b0};
     integer l, j;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin bv <= 1'b0; nexp <= 3'd0; ord_f <= 1'b0; end
@@ -90,8 +110,22 @@ module ot_s81sl_vq #(
     always @(posedge clk)
         if (sv_) begin
             for (j = 0; j < 4; j = j + 1) if (si_[1:0] == j) blk[256 * j +: 256] <= sd_;
-            for (j = 0; j < 8; j = j + 1) if (si_ == j) for (l = 0; l < 8; l = l + 1) bf[(8 * j + l) * 16 +: 16] <= sd_[l * 32 + 16 +: 16];
         end
+    genvar bq;
+    generate
+        for (bq = 0; bq < 4; bq = bq + 1) begin : g_bfq
+            // quarter bq: the same function as the shared form (sv_ && si_ == j, data sd_), from its own copies
+            wire        sv_q = yv_b[bq] | uv_b[bq];
+            wire [2:0]  si_q = yv_b[bq] ? yi_bq[3 * bq +: 3] : ui_bq[3 * bq +: 3];
+            reg [255:0] bfq;                    // = bf[256 bq +: 256]
+            integer lq, jq;
+            always @(posedge clk)
+                if (sv_q) for (jq = 0; jq < 2; jq = jq + 1) if (si_q == 2 * bq + jq)
+                    for (lq = 0; lq < 8; lq = lq + 1)
+                        bfq[(8 * jq + lq) * 16 +: 16] <= yv_b[bq] ? y_c[lq * 32 + 16 +: 16] : u_c[lq * 32 + 16 +: 16];
+            assign bf[256 * bq +: 256] = bfq;
+        end
+    endgenerate
     // the quantiser registers x itself (aq12 S0): blk feeds it directly; bv is high in the cycle after the block's last
     // sub-beat was written, so aq12 samples the complete block (the next sub-beat lands on the same edge)
     wire vo, af; wire [255:0] q; wire signed [9:0] e; wire [511:0] qy;
