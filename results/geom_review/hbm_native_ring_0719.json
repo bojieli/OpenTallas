@@ -1,0 +1,11 @@
+{
+ "picture": "results/geom_review/hbm_native_ring_0719.png",
+ "verdict": "PASS-COND MODEL GEOMETRY ONLY",
+ "findings": [
+  "Viewed exact8pairx8bank layout: all8ringedges abut directly; no old skipped-bank sum transit",
+  "Same ring bounding rectangle and die area; shared250.56x267.84 pair pin masters",
+  "Broad central corridors and34.56rowchannels, no oldW64macro walls",
+  "Fullactual-bit stations, per-bit pin alignment, cut tracks, parent controlglue/binder and PDN/clock still required; no P&R/STA authorization"
+ ],
+ "geometry_check": "64paircuts,8directbankedges,0area_delta PASS"
+}

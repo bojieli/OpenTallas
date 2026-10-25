@@ -1489,6 +1489,7 @@ def main(argv=None):
     ap.add_argument("--out", default=str(HERE / "B2o"))
     ap.add_argument("--floorplan", default=str(INP / "floorplan.json"))
     ap.add_argument("--placement-seed", help="existing plan: reuse only exactly matching core-view/bus constraints")
+    ap.add_argument("--native-hc-ring", action="store_true", help="candidate: exact W128 pair cuts in a 2x4 bank ring")
     a = ap.parse_args(argv)
     src, out = Path(a.src), Path(a.out)
     seed = placement_seed(a.placement_seed) if a.placement_seed else None
@@ -1514,17 +1515,23 @@ def main(argv=None):
                                                         "spine abutting root); B2n = ", 1)
     import os
     import pickle
-    cache = os.environ.get("B2O_STAGE_CACHE")      # developer speed-up only: reuse steps 1-4 of an identical run
+    cache = None if a.native_hc_ring else os.environ.get("B2O_STAGE_CACHE")      # developer speed-up only: reuse steps 1-4 of an identical run
     if cache and Path(cache).exists():
         plan, log, widths, changed, we, wt, worst = pickle.loads(Path(cache).read_bytes())
     else:
         if os.environ.get("B2O_PROGRESS"): print("layout", flush=True)
         rect, newH, dy, widths = layout(plan, FP, log)
         changed = apply_rects(plan, rect, newH, dy, log)
+        if a.native_hc_ring:
+            import native_hc_ring
+            native_hc_ring.apply(plan, out, INP, log)
+            changed = set(changed) | set(native_hc_ring.TOP + native_hc_ring.BOTTOM)
         phy_keepouts(plan, log)
         if os.environ.get("B2O_PROGRESS"): print("reroute", flush=True)
         routes, we, wt = reroute(plan, log)
         lane_delta(plan, log)
+        if a.native_hc_ring:
+            lane_delta(plan, log, INP / "native_hc_lane_delta.json")
         B.rewindow(plan, log)
         touched, pairs = B.enforce_mirror(plan, log)
         worst = B.rewindow(plan, log, fixed_ids=touched)
@@ -1535,6 +1542,8 @@ def main(argv=None):
     OLD_WH.update({tn: tuple(t["outline_um"]) for tn, t in base["partition_types"].items()})
     soft_with = [tn for tn, t in T.items() if not t.get("hard")]
     place_fail = place_contents(plan, out, [tn for tn in soft_with if tn in changed or T[tn].get("hard_cores")], log, seed=seed)
+    if a.native_hc_ring:
+        native_hc_ring.apply(plan, out, INP, log)
     ist_fail = internal_stations(plan, out, soft_with, log)
     fails = B.restation(plan, log)
     fix_cross_hops(plan, log)
