@@ -1168,3 +1168,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
   (4) LEC: 10 UNPROVEN u_twca *_mif anchor regs, identical in f57r4. Not a route blocker. Before bind, it goes to the LEC lane as a flow gap (it must become EQUIV or an explicit proven exception).
   (5) Insertion TT 348.9 / FF 283.5 (pin regs, 998) vs the 250+-40 contract: this is the same QC parent early-tap delta as vmr_s6h (COORD-REVIEW-QUEUE), owned by PATH-QC. The pair skew 42.2/31.1 is fine.
   Owner: PATH-QC (PATH-QC-RP1).
+2026-10-25 08:23 PDT GEOM-REVIEW-2: CLAIM [AUTOPILOT structural.tsv 1e6ddd577b30 qfd_dv_s8x_prog__t2 routed-not-signed] (PATH-QC C4 post-route row; GEOM-REVIEW has the f58 REQ)
