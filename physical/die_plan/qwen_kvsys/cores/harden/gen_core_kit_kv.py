@@ -268,6 +268,9 @@ def main():
     ap.add_argument("--tool", default=str(REPO / "tools/die_plan"))
     ap.add_argument("--ectlk-three-taps", action="store_true", help="restore co-timed ECTLK ck[2:0] roots, zero added cycles")
     ap.add_argument("--astk-face-ports", action="store_true", help="ASTK exclusive tc/qo copies + fault-b landing (+78FF measured WN,0 command cycles,+1 external-fault cycle)")
+    ap.add_argument("--hard-children", help="JSON {children: {master: view_dir}, blocks: [{inst, master, x, y, orient}]}: "
+                    "macro-composed core (owner 10-11 top-down hierarchy): children are signed hard views, blackboxed in "
+                    "synthesis and placed FIRM at the planned sites (MACRO_PLACEMENT_TCL)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
@@ -349,6 +352,37 @@ def main():
                 shutil.copyfile(lib, kd / "macros" / Path(lib).name)
             tt = [l for l in v["libs"] if re.search(r"_(tt|TT|typ)", Path(l).name)] or v["libs"][:1]
             libs.append(f"/work/macros/{Path(tt[0]).name}")
+    hard_children = None
+    if a.hard_children:
+        hard_children = json.load(open(a.hard_children))
+        (kd / "macros").mkdir(exist_ok=True)
+        for m, vdir in hard_children["children"].items():
+            vdir = Path(vdir) if Path(vdir).is_absolute() else REPO / vdir
+            if not re.search(rf"\b{re.escape(m)}\b", hier):
+                raise SystemExit(f"{tid}: hard child {m} not reached by the core")
+            for f in [vdir / f"{m}.lef", vdir / f"{m}_tt.lib", vdir / f"{m}_ff.lib"]:
+                if not f.exists():
+                    raise SystemExit(f"{tid}: hard child view file missing {f}")
+                shutil.copyfile(f, kd / "macros" / f.name)
+            macros.append(m)
+            lefs.append(f"/work/macros/{m}.lef")
+            libs.append(f"/work/macros/{m}_tt.lib")
+        mp = ["# GENERATED (gen_core_kit_kv.py --hard-children): FIRM sites of the hard children (plan proposal)",
+              "set blk [ord::get_db_block]", "set dbu [$blk getDbUnitsPerMicron]"]
+        for b in hard_children["blocks"]:
+            # flattened instance name ends with the planned hierarchical name (escaped brackets tolerated)
+            pat = "(^|[./])" + re.escape(b["inst"]).replace(r"\[", r"\\?\[").replace(r"\]", r"\\?\]") + "$"
+            mp += ["set hit {}",
+                   f"foreach i [$blk getInsts] {{ if {{[[$i getMaster] getName] eq \"{b['master']}\" && [regexp {{{pat}}} [$i getName]]}} {{ lappend hit $i }} }}",
+                   f"if {{[llength $hit] != 1}} {{ error \"hard child {b['inst']}: [llength $hit] matches\" }}",
+                   "set i [lindex $hit 0]",
+                   f"$i setOrient {b['orient']}",
+                   "$i setLocation 0 0",
+                   "set bb [$i getBBox]",
+                   f"$i setLocation [expr {{round({b['x']} * $dbu) - [$bb xMin]}}] [expr {{round({b['y']} * $dbu) - [$bb yMin]}}]",
+                   "$i setPlacementStatus FIRM",
+                   f"puts \"hard child {b['inst']} -> [$i getName] {b['orient']} at {b['x']} {b['y']}\""]
+        (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
     # pins: plan pins file + added / gap / strap pins
     pins = json.load(open(plandir / hc["pins_file"]))["pins"]
     have = {p["name"] for p in pins}
@@ -414,7 +448,7 @@ def main():
         (kd / name).write_text(text)
     skip = "^(" + "|".join(re.escape(n) for n in clks + rsts) + ")$"
     ff = (tool / "face_flops.tcl").read_text()
-    ff, replacements = re.subn(r"^set ff_skip_re \{[^\n]*\}$",
+    ff, replacements = re.subn(r"^set ff_skip_re \{[^}\n]*\}",
                                lambda _: "set ff_skip_re {" + skip + "}", ff, flags=re.M)
     assert replacements == 1, "face_flops.tcl must declare exactly one skip regex"
     ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
@@ -464,6 +498,8 @@ def main():
     if lefs:
         cfg += [f"export ADDITIONAL_LEFS = {' '.join(lefs)}", f"export ADDITIONAL_LIBS = {' '.join(libs)}",
                 "export MACRO_PLACE_HALO = 4.32 4.32",
+                *([f"export SYNTH_BLACKBOXES = {' '.join(hard_children['children'])}",
+                   "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if hard_children else []),
                 "export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5"]
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
