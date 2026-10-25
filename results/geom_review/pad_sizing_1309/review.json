@@ -1,0 +1,11 @@
+{
+ "image": "results/pad_sizing_1309/graph.png",
+ "verdict": "PASS-COND",
+ "scope": "read-only sizing sensitivity on an existing graph only, no route or physical adoption approval",
+ "findings": [
+  "Actual35padnodes identified on boundary sink bands; topology not changed",
+  "Candidate strength models are evaluated at existing node locations and extracted wires; pin relocation/legalization not represented",
+  "Inherited diagonal sink bands/empty outline remain reference design findings, not cleared here",
+  "Any topology change including unpadding requires fresh coherent parasitics"
+ ]
+}
