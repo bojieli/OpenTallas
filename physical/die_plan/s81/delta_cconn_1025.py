@@ -16,7 +16,7 @@ window<->core bundle <= 405 um or a FIRM internal_stations[] entry:
      +1 cycle to every lane landing on / leaving that bus (lanes[].fixed_cycles + latency table); core<->core
      stations need frame RTL (kit_istations fails closed outside leaf CS_* chains).
   4. bk_sel deferred (DEFER): no core site closes c/g <-> 4 x 648-um q in a 1226.88 slot -> COORD decision.
-  5. xfin: 181.44^2 -> 345.6^2 in every hub-C slice (right of xr, eg above, FT corridors avoided, MX handled);
+  5. xfin: 181.44^2 -> 362.88^2 in every hub-C slice (right of xr, eg above, FT corridors avoided, MX handled);
      inputs/core_pins/ot_s81dv_xfin.json E/N faces moved out, groups re-spread (--pins).
 
     python3 physical/die_plan/s81/delta_cconn_1025.py PLAN [OUT] [--pins] [--sidecar CORE_CONNS.json] [--report R.json]
@@ -361,10 +361,10 @@ def bump_lanes(raw, tn, cyc, rep):
 # ------------------------------------------------------------------------------------------------ xfin (S81-CORES (3))
 # COORD 05:40 S81-CORES RULINGS (3): xfin's kit failed GPL at 255 % (75,438.654 um2 of cells in 181.44^2): the hub-C
 # parent slot (the 16 dsdv_slice_*_C types, 1442.88 x 1226.88, cap | xr | eg+xf) has the room, so xfin grows top-down to
-# 345.6 x 345.6 (119,439 um2, cell fill 0.63) and eg (the xfin -> eg copy link, xf N face -> eg S face) re-sits on top of
+# 362.88 x 362.88 (131,682 um2, measured-cell fill 0.573) and eg (the xfin -> eg copy link, xf N face -> eg S face) re-sits on top of
 # it.  Site search per type (S81-PLAN2/XFIN search.py): xf on the cap/xr row edge right of xr (>= 17.28 um gap), eg above
 # xf (>= 60 % x overlap), both clear of every FT station polyline (half window + 10 um) and of cap / xr.
-XF = ("ot_s81dv_xfin", 345.6)
+XF = ("ot_s81dv_xfin", 362.88)
 XF_GAP, XF_EDGE, EG = 17.28, 34.56, 259.2
 
 
@@ -385,11 +385,11 @@ def _segbox(p, q, box):
 
 
 def xfin_sizes():
-    """345.6^2 first, then the 115-126k um2 lattice rectangles (aspect <= 1.8) by aspect: ONE outline for every
+    """362.88^2 first, then lattice rectangles sized for measured cell area / 60% fill (aspect <= 1.8) by aspect: ONE outline for every
     instance (one module = one hardened view)."""
     return [(XF[1], XF[1])] + sorted(((a * G, b * G) for a in range(30, 60) for b in range(30, 60)
-                                      if 115000 <= a * b * G * G <= 126000 and max(a, b) / min(a, b) <= 1.8
-                                      and (a, b) != (40, 40)), key=lambda s_: (max(s_) / min(s_), s_))
+                                      if 75438.654 / 0.60 <= a * b * G * G <= 140000 and max(a, b) / min(a, b) <= 1.8
+                                      and (a, b) != (42, 42)), key=lambda s_: (max(s_) / min(s_), s_))
 
 
 def xfin_grow(t, rep, size, dry=False):
@@ -467,15 +467,17 @@ def _xf_search(w, h, xr, fixed, W, H, ftok, gapok):
 
 
 def xfin_pins(path, size):
-    """ot_s81dv_xfin plan pin table 181.44^2 -> 345.6^2: E-face pins x += dW, N-face pins y += dH, and every face's
+    """ot_s81dv_xfin plan pin table resized from its current square outline: E-face pins x += dW, N-face pins y += dH, and every face's
     bus groups re-spread along the longer face (group start scaled, shifts in 0.576-um multiples = whole M4 / M5 tracks;
     a group's internal pitch is kept)."""
     import re
     txt = open(path).read()
     d = json.loads(txt)
-    old = 181.44
-    if any(p["x"] > old + 1 or p["y"] > old + 1 for p in d["pins"]):
+    old = max(max(p["x"] for p in d["pins"]), max(p["y"] for p in d["pins"])) + 0.042
+    if abs(old - size[0]) < 1e-3 and abs(old - size[1]) < 1e-3:
         return False
+    if old > min(size) + 1e-3:
+        raise ValueError("xfin pin-table shrink is not supported")
     w_new, h_new = size
     Q = 0.576
     faces = {}
@@ -506,7 +508,7 @@ def xfin_pins(path, size):
                 p["x"] = round(p["x"] + w_new - old, 4)
             elif f == "N":
                 p["y"] = round(p["y"] + h_new - old, 4)
-    d["source"] = d.get("source", "") + (" | S81-PLAN3/CCONN2 10-25: outline 181.44^2 -> %gx%g (COORD S81-CORES (3), "
+    d["source"] = d.get("source", "") + (" | S81-PLAN3/CCONN2 10-25: outline current -> %gx%g (COORD S81-CORES (3), "
                                          "parent-slot growth): E/N faces moved out, bus groups re-spread along each face"
                                          % (w_new, h_new))
     d["pinhash"] = hashlib.sha256(json.dumps(d["pins"], sort_keys=True).encode()).hexdigest()[:12]
