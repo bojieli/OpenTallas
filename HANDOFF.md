@@ -549,3 +549,12 @@ CODEX: 2026-10-25 07:31 PDT S81CCONN xfin measured-fit362.88² all16parents G0C1
 
 2026-10-25 07:29 PDT CODEX: Qwen ROM synthesis parameter mismatch fixed READY8376afdfe1 (2testsPASS,0cycles,current8ROMbb+hashes); plan7a/b live, f57corrective route engaged; new inventorycodex-qwen-0719-inventory.md.
 2026-10-25 07:30 PDT CODEX: TOK-HBM side LAT4 actual split-core5996II1 exact+2mutantsPASS READY3e0867e321; SU31 corrected-clockFAIL632/1046 diagnosed further in read-only replay epyc2unit2352893.
+2026-10-25 07:30 PDT CODEX: FLOW strictRTLlint63795270e READY17tests+5dieactualPASS;freshFFrepairheadB endsoldMMstall3.93sec1136cells butmargin0postlegalizationFAIL-1.99/69, margin5running;GEOMqueuecleared.
+
+2026-10-25 07:31 PDT CODEX GEOM: six HBMbatch2 exact reviews+resetleaf independent acceptance; sfustore F6 measuredFAIL16macros501..782pins each>20um,max487.39; structuralowners notified; results-only READY6206a9ad14 actualhub. No route started.
+2026-10-25 07:34 PDT CODEX: CP1 corrected Wpair RUNNING07:32 autopilot92cd4ba072f2/1c283eb44e4f intel2; added actualGRT TTFF boutD/distance/density stopgate a55d43c2a, oldR124slewFAILsmokeconfirmed; noSIGNEDyet.
+CODEX: 2026-10-25 07:37 PDT S81 PLAN3: optionalFT split-band source770fce5b5e(mechanismPASS,actual2typegeometryviewed), hi/lo_t6 G2 liveintel2units758336/758333; threewhole-slot+1cycles pricedpendingexactbaseline. IRallintermediatePHYavoidance requiredframeFTingress+adjacentrowdetour; route succeeds, fullplanemit livehub2232399. RSW27cores+17.28um channelwiden+FTrepack livehubclient2559505. Leaf/CCONNchildren fixingactualcoherence/lattice/outlinefailures.
+2026-10-25 07:35 PDT CODEX: KVplan0719 source54b0a1869 pushed; ASTKface2errorsfixed,G0C40/40clean326facesremain;15HRclockpinupdates dataunchanged;4G2probeslive, tokenwholeEboot160build+native833pcpart4/4PASS, masterhead/ASTKgatesprogress.
+CODEX: 2026-10-25 07:38 PDT S81CCONN l0r267.84² measured-fitREADY77523b3ce7 G0C177/177PASS/3testsPASS/0cycles; nativekit/signoffCORES.
+
+CODEX: 2026-10-25 07:36 PDT takeover0719 all-lane work active; main499eb8179 canary/boot160/START/lint and4bbbf780b autopilotdispatch+diagnosticretention pushed/HEAD==originmain. Head assembledclockFAIL diagnosed budgettap load mismatch; all lane currentinventories lanes/CODEX.md.
