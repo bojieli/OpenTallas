@@ -1,0 +1,259 @@
+{
+ "schema": "opentallas.hbm_b2.l74_beats.v1",
+ "lane": "L74",
+ "lane_width": 1875,
+ "rule": "HBM-BIND2 (2026-10-25): schedule-aware fit of the hub -> root lane (L74 / L74m) with ot_hbm_b2_beat_tx/rx\n(rtl/hbm_accel/die_glue/b2/ot_hbm_b2_beat_link.sv: a valid-qualified word crosses LW = ceil(W / BEATS) wires + 1 beat-0\nflag in BEATS beats, word latency BEATS + 1 edges, words of one group >= BEATS edges apart or a sticky schedule fault).",
+ "hubs": {
+  "NE_hub": {
+   "need_unserialised": 2735,
+   "level_bits": 223,
+   "level_top": [
+    [
+     "stl_NE.up_o",
+     41
+    ],
+    [
+     "hc_NE.ps",
+     32
+    ],
+    [
+     "hc_NE.gathered_mix_data",
+     32
+    ],
+    [
+     "hleaf_NE.s_fault",
+     31
+    ],
+    [
+     "hleaf_NE.s_active",
+     21
+    ],
+    [
+     "hleaf_NE.s_ready",
+     21
+    ],
+    [
+     "hb_vms_NE.vmstat",
+     19
+    ],
+    [
+     "hc_NE.gathered_mix_row",
+     5
+    ]
+   ],
+   "groups": {
+    "idx_vm_rr": {
+     "width": 2056,
+     "cadence": "NE VM bank read responses to the root idx share (8 banks x 257 b): the share's read issue spacing per bank must be >= BEATS (VM_RT / VM_RT_EXTRA +BEATS+1)",
+     "valid": [
+      "rr4"
+     ]
+    },
+    "host_cfg_a": {
+     "width": 320,
+     "cadence": "host cfg / desc / launch copy a: host VC spacing HMIN 10 >= BEATS (sparse)",
+     "valid": [
+      "a_cfg_v",
+      "a_desc_v",
+      "a_launch_v"
+     ]
+    },
+    "idx_rq": {
+     "width": 136,
+     "cadence": "op_NE index read requests to the root share",
+     "valid": [
+      "vm_rq"
+     ]
+    }
+   },
+   "all_serialised": {
+    "1": {
+     "wires": 2735,
+     "fits": false,
+     "serialised": {
+      "idx_vm_rr": 2056,
+      "host_cfg_a": 320,
+      "idx_rq": 136
+     }
+    },
+    "2": {
+     "wires": 1493,
+     "fits": true,
+     "serialised": {
+      "idx_vm_rr": 1040,
+      "host_cfg_a": 161,
+      "idx_rq": 69
+     }
+    },
+    "3": {
+     "wires": 1074,
+     "fits": true,
+     "serialised": {
+      "idx_vm_rr": 696,
+      "host_cfg_a": 108,
+      "idx_rq": 47
+     }
+    },
+    "4": {
+     "wires": 867,
+     "fits": true,
+     "serialised": {
+      "idx_vm_rr": 528,
+      "host_cfg_a": 81,
+      "idx_rq": 35
+     }
+    }
+   },
+   "minimal": {
+    "2": {
+     "groups": [
+      "idx_vm_rr"
+     ],
+     "wires": 1719,
+     "fits": true
+    },
+    "3": {
+     "groups": [
+      "idx_vm_rr"
+     ],
+     "wires": 1375,
+     "fits": true
+    },
+    "4": {
+     "groups": [
+      "idx_vm_rr"
+     ],
+     "wires": 1207,
+     "fits": true
+    }
+   }
+  },
+  "NW_hub": {
+   "need_unserialised": 3782,
+   "level_bits": 893,
+   "level_top": [
+    [
+     "hb_coll_NW.tx_pin_flit",
+     612
+    ],
+    [
+     "stl_NW.up_o",
+     41
+    ],
+    [
+     "hc_NW.ps",
+     32
+    ],
+    [
+     "obs_NW.r_d",
+     32
+    ],
+    [
+     "hc_NW.gathered_mix_data",
+     32
+    ],
+    [
+     "hleaf_NW.s_fault",
+     31
+    ],
+    [
+     "hleaf_NW.s_ready",
+     19
+    ],
+    [
+     "hb_vms_NW.vmstat",
+     19
+    ]
+   ],
+   "groups": {
+    "tkx_del": {
+     "width": 2188,
+     "cadence": "TKM delivery flits (4 slots / edge at line rate): needs the compiler to space deliveries >= BEATS",
+     "valid": [
+      "tkx_del_valid"
+     ]
+    },
+    "vms_cr": {
+     "width": 548,
+     "cadence": "VM ring responses to argmax / idx root ctl: one per request; spacing = the clients' request spacing (CR_RT / ACK re-derived +BEATS+1)",
+     "valid": [
+      "cr"
+     ]
+    },
+    "tkx_cfg": {
+     "width": 153,
+     "cadence": "TKM op start + config: once per top-k op (sparse); MUST share the tkx_del latency (start vs delivery alignment), i.e. both groups serialised with the same BEATS or tkx_del padded",
+     "valid": [
+      "tkx_start"
+     ]
+    }
+   },
+   "all_serialised": {
+    "1": {
+     "wires": 3782,
+     "fits": false,
+     "serialised": {
+      "tkx_del": 2188,
+      "vms_cr": 548,
+      "tkx_cfg": 153
+     }
+    },
+    "2": {
+     "wires": 2341,
+     "fits": false,
+     "serialised": {
+      "tkx_del": 1095,
+      "vms_cr": 275,
+      "tkx_cfg": 78
+     }
+    },
+    "3": {
+     "wires": 1860,
+     "fits": true,
+     "serialised": {
+      "tkx_del": 731,
+      "vms_cr": 184,
+      "tkx_cfg": 52
+     }
+    },
+    "4": {
+     "wires": 1619,
+     "fits": true,
+     "serialised": {
+      "tkx_del": 548,
+      "vms_cr": 138,
+      "tkx_cfg": 40
+     }
+    }
+   },
+   "minimal": {
+    "2": {
+     "groups": [
+      "tkx_del",
+      "vms_cr",
+      "tkx_cfg"
+     ],
+     "wires": 2341,
+     "fits": false
+    },
+    "3": {
+     "groups": [
+      "tkx_del",
+      "vms_cr",
+      "tkx_cfg"
+     ],
+     "wires": 1860,
+     "fits": true
+    },
+    "4": {
+     "groups": [
+      "tkx_del",
+      "vms_cr"
+     ],
+     "wires": 1732,
+     "fits": true
+    }
+   }
+  }
+ }
+}
