@@ -1,0 +1,157 @@
+{
+  "schema": "opentallas.hbm.selected_tkm.fieldmap.v1",
+  "module": "ot_hbm_tkm_path_tkx_ft21",
+  "data_bits": 3749,
+  "side_bits": 33,
+  "beat_bits": 1171,
+  "root_instance": "actual_root",
+  "source_scope": "NW raw native packed envelope into shared SW TKM root; remaining envelope returned through rx_word/rx_side",
+  "direct_root_fields": [
+    {
+      "root_port": "arg_mode",
+      "width": 1,
+      "tkx_raw_lsb": 0
+    },
+    {
+      "root_port": "cfg_n",
+      "width": 12,
+      "tkx_raw_lsb": 31
+    },
+    {
+      "root_port": "cfg_k",
+      "width": 13,
+      "tkx_raw_lsb": 18
+    },
+    {
+      "root_port": "cfg_g",
+      "width": 8,
+      "tkx_raw_lsb": 1
+    },
+    {
+      "root_port": "cfg_gbase",
+      "width": 8,
+      "tkx_raw_lsb": 9
+    },
+    {
+      "root_port": "cfg_pf",
+      "width": 16,
+      "tkx_raw_lsb": 96
+    },
+    {
+      "root_port": "cfg_nout",
+      "width": 13,
+      "tkx_raw_lsb": 43
+    },
+    {
+      "root_port": "cfg_obase",
+      "width": 40,
+      "tkx_raw_lsb": 56
+    },
+    {
+      "root_port": "cfg_rbase",
+      "width": 40,
+      "tkx_raw_lsb": 112
+    },
+    {
+      "root_port": "cfg_has_r",
+      "width": 1,
+      "tkx_raw_lsb": 17
+    },
+    {
+      "root_port": "del_slot",
+      "width": 4,
+      "tkx_raw_lsb": 2332
+    },
+    {
+      "root_port": "del_valid",
+      "width": 4,
+      "tkx_raw_lsb": 2336
+    }
+  ],
+  "runtime_start": {
+    "root_port": "start",
+    "width": 1,
+    "extra_register_edges": 1,
+    "tx_producer_schedule": "send one edge earlier than original unframed logical start",
+    "tkx_raw_lsb": 2340
+  },
+  "compact_flit": {
+    "root_port": "del_flit",
+    "width": 2116,
+    "native_flit_width": 2180,
+    "source_note": "Exact assigned live bit subset; omitted native bits are discarded by selected actual core cut",
+    "ranges": [
+      {
+        "destination_lsb": 0,
+        "width": 520,
+        "tkx_raw_lsb": 152
+      },
+      {
+        "destination_lsb": 520,
+        "width": 8,
+        "tkx_raw_lsb": 680
+      },
+      {
+        "destination_lsb": 528,
+        "width": 521,
+        "tkx_raw_lsb": 696
+      },
+      {
+        "destination_lsb": 1049,
+        "width": 8,
+        "tkx_raw_lsb": 1225
+      },
+      {
+        "destination_lsb": 1057,
+        "width": 521,
+        "tkx_raw_lsb": 1241
+      },
+      {
+        "destination_lsb": 1578,
+        "width": 8,
+        "tkx_raw_lsb": 1770
+      },
+      {
+        "destination_lsb": 1586,
+        "width": 521,
+        "tkx_raw_lsb": 1786
+      },
+      {
+        "destination_lsb": 2107,
+        "width": 8,
+        "tkx_raw_lsb": 2315
+      },
+      {
+        "destination_lsb": 2115,
+        "width": 1,
+        "tkx_raw_lsb": 2331
+      }
+    ],
+    "native_tkx_raw_lsb": 152
+  },
+  "serializer_masks_hex": {
+    "CONTROL_MASK": "0x1ff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "HOLD_MASK": "0x0"
+  },
+  "clock_reset_id_contract": "clock_reset_id_ft21.json",
+  "adoption": "SELECTED_LOGICAL_SCOPE_NUMERIC_GATE_PENDING_ACTUAL_Q3_CUT_PORT_PERMUTATION_AND_PHYSICAL_ENDPOINTS_OPEN",
+  "raw_bits": 2341,
+  "header_bits": 1,
+  "padding_bits": 0,
+  "side_channel_bits": 0,
+  "other_raw_bits_external": 1408,
+  "other_side_bits_external": 33,
+  "selected_source_subset": "old fullword[19+:2341]",
+  "pulse_positions": [
+    2332,
+    2333,
+    2334,
+    2335,
+    2336,
+    2337,
+    2338,
+    2339,
+    2340
+  ],
+  "hold_positions": []
+}
