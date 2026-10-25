@@ -26,7 +26,14 @@ def t_ports():
     v = N.nxb(5, 8, 0xABC)
     assert v & 1 and (v >> 1) & 7 == 3 and (v >> 4) & 0x1F == 8 and (v >> 9) & 0xF == 5 and (v >> 13) & 0xFF == 25
     assert v >> 21 == 0xABC and v.bit_length() <= N.LANE
-    print('PASS flit ports / header')
+    # side ports agree with the injection ports, the snake visits every stop once each way
+    for sid in range(16):
+        sp = N.side_ports(sid)
+        assert {sp['e']: N.HE, sp['w']: N.HW} == N.flit_ports(sid), sid
+    assert sorted(N.snake_index(s) for s in range(16)) == list(range(16))
+    assert [N.snake_index(s) for s in (0, 14, 15, 1)] == [0, 7, 8, 15]
+    assert N.nxb(3, 6, 0, base=25) >> 13 & 0xFF == 25 and N.nxb(3, 6, 0, base=25) >> 9 & 0xF == 3
+    print('PASS flit ports / header / snake')
 
 
 class Die:

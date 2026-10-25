@@ -1,0 +1,232 @@
+{
+ "schema": "opentallas.tokds.gap_scope.v1",
+ "as_of": "2026-10-24",
+ "lane": "TOK-DS (sub-agent gaps)",
+ "die": "fc31 (die.v 35ba1ef7, epyc3 tok-ds/fc31/tree_fc31); programmes L0/L2/L14/L20 single-user, main compiler (compile_fc31.sh)",
+ "order": "first = unblocks arithmetic exactness on a data cut (cut_0S / cut_0N / cut_7) soonest",
+ "classes": {
+  "G-COMPILER-ROWS": "compose_tok_ds.BLOCKERS: attn.idx.score|attn.gather|attn.scores|attn.pv|eng.gate|attn.idx.newkey|attn.out_allreduce|wkv",
+  "G-NORMALIZE-SO": "attn.normalize",
+  "DATA-CUT": "the 0S / 0N / 7 cuts encode no output check: RD all-gather beats are offdie (masked fixture rows), the NX / XQ norm exchanges were plan_only, the per-leaf norm programme is emitted on ONE slice (lower_norm_smoke)"
+ },
+ "counts": {
+  "items": 16,
+  "compiler_only": 12,
+  "hardware_missing": [
+   "IDX-GATHER",
+   "IDX-MERGE-PATH",
+   "IDX-NEWKEY"
+  ],
+  "compiler_plus_hardware": [
+   "SVC-COMPRESSED"
+  ],
+  "tool": [
+   "CUT-CLOCKS",
+   "RD-ALLGATHER"
+  ],
+  "note": "hardware missing = attn.gather (svc runtime-index row read + bk_col frames), attn.idx.newkey (svc index-key row write job), attn.idx.topk_merge (bk_sel IDX words -> end slice). The index SCORE unit is NOT missing on fc31 (dsdv_idx_rg3 scorers bound); it is a compiler gap plus die qualification."
+ },
+ "items": [
+  {
+   "rank": 0,
+   "id": "CUT-CLOCKS",
+   "ops": [
+    "every op checked on a fc31 data cut"
+   ],
+   "kind": "TOOL (bench) -- FIXED on this branch",
+   "exists": "dv_slice_cut / dv_slice_tb cut benches",
+   "missing": "CLOCK_PORT_RE missed slice region clock pins ck_<REGION>: fc31 cut_0S / 0N / 7 / 3S_ctl benches held 11 / 10 / 22 / 9 region clocks (ck_K, ck_ML, ck_L0/L1/L3/L4, ck_CAP_*) at 0",
+   "check_added": "makes every data-cut replay exercise leaves 0, 1, 3, 4 and the K / ML / CAP regions (were frozen)",
+   "effort": "S (done: regex + reclock_cut.py; cuts rebuilt)"
+  },
+  {
+   "rank": 1,
+   "id": "NX-SMOKE",
+   "ops": [
+    "attn.norm.sumsq (L0 L2 L14 L20)"
+   ],
+   "kind": "COMPILER-ONLY",
+   "status": "IMPLEMENTED (this branch)",
+   "exists": "RTL ot_s81dv_xfin / ot_s81dv_xstop / ot_s81sl_rstop nxb in every slice (fc31 kit); lower_norm_smoke issues HLOAD/GAIN/5 NORMR/XFIN_GO on u_s_0S; entry_inputs.py target-5 packing; Codex component proof norm_leaf_source (80 actual partials)",
+   "missing": "entry-state rows on the cut and an encoded NX output word (was plan_only, payload 'fixture')",
+   "check_added": "cut_0S: 2 lane words a norm (o__w_xrE_0S_l0_lnd hops 8, o__w_tvN_s_0S_lnd hops 7), 276 b each, 5 FP32 partials = hdc_golden_v41 chunk8 beat sums of BF16(hc_pre)^2",
+   "effort": "S (done)"
+  },
+  {
+   "rank": 2,
+   "id": "NORM16",
+   "ops": [
+    "attn.norm.sumsq/rsqrt/scale",
+    "attn.quant",
+    "ffn.norm.* (header only until the attn chain is compiled)"
+   ],
+   "kind": "COMPILER-ONLY",
+   "exists": "same RTL in all 16 slices; xfin finish tree (bit-identical golden, ot_s81dv_norm_finish); vq/aq12x act-quant; Codex norm_producer_r1: 16-slice actual rstd + y match the fixture scoreboard (component, ring model)",
+   "missing": "lower_norm on every slice (16 x HLOAD/GAIN/5 NORMR/XFIN_GO, one CTL a line edge), entry rows for all 16 slices (3,920 target-5 beats, ~1,960 a tier at 2 edges = ~3.9k-cycle preamble), the snake schedule (inject edge + per-hop line age + rstop 2; xstop forwards hops-1, never delayed) -> NX words at every data-cut face (outputs) and the other slices' flits as driven inputs; XQ beat encoder (vq ABI) + golden act-quant codes -> XQ words",
+   "check_added": "cut_0S / cut_0N / cut_7: own NX flits (outputs) + XQ all-gather beats (x FP8 codes + scales) after the replicated rstd; rstd itself is internal (checked through every XQ word)",
+   "effort": "M (2-3 days): snake model 0.5 d, entry/16-slice emission 0.5 d, XQ encoder + golden 1 d, runs 0.5 d"
+  },
+  {
+   "rank": 3,
+   "id": "Q-NORM4",
+   "ops": [
+    "attn.q_norm.sumsq/rsqrt/scale",
+    "attn.q_quant"
+   ],
+   "kind": "COMPILER-ONLY",
+   "exists": "same xfin/vn RTL; q_norm = plain RMSNorm (static NORM imm)",
+   "missing": "qa rows = a_proj return rows whose frame placement is not compiled (GAP_FRAME_PLACE) + 4-slice xfin composition",
+   "check_added": "4-slice q_norm flits / q_quant beats on the cuts holding those slices (needs the a_proj state: frames not in the data cuts -> entry-state of qa rows or a frame cut)",
+   "effort": "L"
+  },
+  {
+   "rank": 4,
+   "id": "RD-ALLGATHER",
+   "ops": [
+    "attn.a_allgather",
+    "attn.rows_allgather",
+    "ffn.router_allgather",
+    "substage_hop0"
+   ],
+   "kind": "COMPILER + TOOL",
+   "exists": "RD endpoint ABI lowered + bench_vpx (s_0S <-> s_7S through real lep + lane tiles); lep / lane tiles in the cuts",
+   "missing": "(a) payload = a_proj capture rows (xs frame return placement, not in the data cuts); (b) the RD beats leave through the lep link endpoint (elastic framing on lt_lk_*): not a fixed-cycle cut word -> the replay needs a link-frame decoder that checks payload order, not cycle (TOOL)",
+   "check_added": "cut_0S / cut_7 / cut_0N: RD payload rows at lt_lk (order-checked), receive side drives lr_lk inputs with peer rows (off-die = PHY modelled, legitimate)",
+   "effort": "L (tool 1-2 d + frame return placement)"
+  },
+  {
+   "rank": 5,
+   "id": "OUT-ALLREDUCE",
+   "ops": [
+    "attn.out_allreduce"
+   ],
+   "kind": "COMPILER-ONLY",
+   "exists": "owner fold SU op (vs RB) RTL-proven (tokds_comp_1024 owner fold PASS 20/20/20); RS/AG transport = benched RD endpoint ABI",
+   "missing": "fold encoder in lower_vs/lower_vpx (vs fork), RS row ownership placement, calendar rows",
+   "check_added": "end-slice cuts: folded rows ((p0+p1)+(p2+p3), FP32 exact) on the AG beats (same off-die tool as rank 4); own partial needs the wo_b state",
+   "effort": "M-L"
+  },
+  {
+   "rank": 6,
+   "id": "COMBINE-ALLREDUCE",
+   "ops": [
+    "ffn.combine_allreduce"
+   ],
+   "kind": "COMPILER-ONLY",
+   "exists": "final_ffn.py VS13/POST words + capture/move map",
+   "missing": "VPX lifetimes, current RD paths, allgather arrivals on all four ranks; production calendar",
+   "check_added": "as rank 5",
+   "effort": "L"
+  },
+  {
+   "rank": 7,
+   "id": "PV-L0-EVIDENCE",
+   "ops": [
+    "attn.pv (L0)"
+   ],
+   "kind": "COMPILER-ONLY (evidence)",
+   "exists": "lower_svc ALLQ P.V lowered; bench_allq",
+   "missing": "results/rtl/s81_rtlgap_so_1021/bench_allq/check.json absent from the compile tree (bench_ok gate) -> PARTIAL",
+   "check_added": "none on data cuts (svc entries are not in 0S/0N/7); svc/host cut",
+   "effort": "S (commit / point to the bench receipt)"
+  },
+  {
+   "rank": 8,
+   "id": "NORMALIZE-SO",
+   "ops": [
+    "attn.normalize (L0)"
+   ],
+   "kind": "COMPILER-ONLY on fc31 (bind verified, programme missing)",
+   "exists": "fc31 die binds dsdv_svc_rs_pvso_entry #(PVSO_ENABLE 1, SMT 1) at u_rsv_05 / u_rsv_11; lower_svc ALLQ+SMT SOT + SO programme proven on 16 real dsdv_svc_rs (results/rtl/s81_rtlgap_sukv_1022/sot_so_fin: PASS + 6 mutants caught) with the SO operands on the q stream as a stand-in for the ingress",
+   "missing": "lower_svc must emit the PVSO-ingress programme (transpose per half, half exchange XH on existing lanes, SOT14 booking dates, deferred END) instead of the q-stream stand-in; RTL check: confirm the XH half-exchange path exists in the bound pvso_entry (dsdv_pv_half_join) -- if not, RTL-NEEDED",
+   "check_added": "svc / host cut (normalized o rows, SO gather words); none on 0S/0N/7",
+   "effort": "M"
+  },
+  {
+   "rank": 9,
+   "id": "SVC-COMPRESSED",
+   "ops": [
+    "attn.scores / attn.pv / attn.normalize (L2 L14 L20)"
+   ],
+   "kind": "COMPILER (window share) + RTL (compressed rows)",
+   "exists": "L0 window path lowered (lower_svc)",
+   "missing": "'window-only layers': the compressed-row selection rows come from attn.gather (rank 11)",
+   "check_added": "svc cuts",
+   "effort": "M (window share) + rank 11"
+  },
+  {
+   "rank": 10,
+   "id": "IDX-SCORE",
+   "ops": [
+    "attn.idx.score",
+    "attn.idx.topk_local/final (PARTIAL)"
+   ],
+   "kind": "COMPILER-ONLY (scorer RTL bound on fc31; lowering gap text stale)",
+   "exists": "fc31 die.v binds the regional index reader / SCORER: 7 x dsdv_idx_rg3 + 1 x dsdv_idx_rg3_nq (u_irg_00..07; rg3 = rg2 with PHY-corner HBM faces; rg2 header: \"PAIRED regional index reader / scorer ... scores both regions' keys: 1 key a cycle\", EL 124 engine latency), dsdv_idx_qf (u_iqf), ot_s81sl_slice_iq (s_3S band-B iq split), dsdv_bk_sel_vmtx (score-chain tail -> bk_sel vi_idx), 16 dsfd_ctrl_rg3; reset inverters of RG-IDX defect A absent (0 rinv_irg / rinv_iqf). The lowering's \"no index-score unit\" text was written against bind_p4l3_g8 and is wrong for fc31.",
+   "missing": "lowering: idx q frames (types 4 / 8 / 10 on band B via ot_s81sl_slice_iq), reader job headers + ctrl_rg3 reader-slot calendar (HBM index-key scan), score chain -> bk_sel BK-format beats; RTL qualification on the die: RG-IDX defect B (readers ~25 mm from their controllers) and no CLOSED reader / qf / ctrl_rg3 view (S81 owns)",
+   "check_added": "bk / host cut (BK ingress beats); none on 0S/0N/7",
+   "effort": "L"
+  },
+  {
+   "rank": 11,
+   "id": "IDX-GATHER",
+   "ops": [
+    "attn.gather"
+   ],
+   "kind": "HARDWARE MISSING: runtime-index row read",
+   "exists": "dsdv_bk_col (u_bk_col) bound; svc_rs window / own-row jobs",
+   "missing": "dsdv_svc_rs job that reads HBM rows by a runtime index list + a bk_col frame producer on the column-1 rung (port: svc row-read-by-index job, bk_col frames); 512 rows x >= 2 V beats",
+   "check_added": "svc / bk cut",
+   "effort": "L (RTL owner S81-ELEM) + compiler M"
+  },
+  {
+   "rank": 11.5,
+   "id": "IDX-MERGE-PATH",
+   "ops": [
+    "attn.idx.topk_merge (L2 L14 L20)"
+   ],
+   "kind": "HARDWARE MISSING: index-word path to the end slice",
+   "exists": "bk_sel egress kind-5 IDX words (dsdv_bk_sel_vmtx); end-slice lep link endpoints",
+   "missing": "no path carries the bk_sel IDX words from u_s_4S rstop V receive to an end slice (lep) for the cross-die merge; collective owned by TOKEN-XDIE-S81",
+   "check_added": "end-slice cut (merge words on the link)",
+   "effort": "M (RTL: route + rstop/lep kind) + S (compiler)"
+  },
+  {
+   "rank": 12,
+   "id": "IDX-NEWKEY",
+   "ops": [
+    "attn.idx.newkey"
+   ],
+   "kind": "HARDWARE MISSING: index-key row write job",
+   "exists": "own-row write job (attn.own_row_write LOWERED)",
+   "missing": "dsdv_svc_rs s_j job writing the index-key row into the HBM index cache (job table has attention window / own row only); key compute idx.q . wk is a slice op (compiler)",
+   "check_added": "svc cut (HBM write words)",
+   "effort": "M (RTL) + S (compiler)"
+  },
+  {
+   "rank": 13,
+   "id": "ENG-GATE",
+   "ops": [
+    "eng.gate (L14)",
+    "eng.dot/eng.add PARTIAL"
+   ],
+   "kind": "COMPILER-ONLY",
+   "exists": "ot_s81sl_ve / ot_s81sl_eg / xfin ENG mode RTL; op14 REDUCE/ADD encoder inside tb_s81sl_slice_eng; dsdv_eng_rr + 16 dsdv_eng_tap bound",
+   "missing": "encoder moved into lower_vs (xfin ENG go + gate fan-out) and the svc Engram row read (eng.hbm_read) lowering",
+   "check_added": "data cuts on L14: ENG-mode flits (same xstop ring, b = {vec, sid}) -> checkable like NX once A0 rows are entry-state",
+   "effort": "M"
+  },
+  {
+   "rank": 14,
+   "id": "ENG-WKV",
+   "ops": [
+    "eng.wkv (L14)"
+   ],
+   "kind": "COMPILER-ONLY",
+   "exists": "xs calendar / cap cfg_d emitted and benched (bench_xs_slice)",
+   "missing": "xs_place frame images must emit rank-local row tags; die-wide multi-phase xs calendar; no frame bench of its own",
+   "check_added": "frame cuts (not 0S/0N/7)",
+   "effort": "L"
+  }
+ ]
+}
