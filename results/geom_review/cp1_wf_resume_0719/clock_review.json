@@ -1,0 +1,15 @@
+{
+ "verdict": "PASS-COND",
+ "picture": "clock_local.png",
+ "source": "current main4bbbf780 die_clock.py, build --pad level --rep-um405; NO STA",
+ "findings": [
+  "Rejected inherited originaldie clock root15975.36,12372.48 outside pair; gave26.4mm out-of-frame trunk.",
+  "Local proof-pair root717.12,1226.88 yields4.32um trunk,258buffers,112tapoutputs,8liveleaves,16dummyloads; all258buffer origins insidepair.",
+  "Viewed symmetric3levelHtree y/x/y branchstructure,nomacros,legaluniformtapgrid. Shape/state/dataRTL unchanged."
+ ],
+ "conditions": [
+  "Pair-local clock model only; not fullS81die clock evidence.",
+  "Final seam STA must connect actual SIGNED partition physicalclock roots; standalone3fF tap loads cannot qualify actual seam.",
+  "Wait bothactualGRTCP1conditionsPASS and partitionsSIGNED before assembledSTA."
+ ]
+}
