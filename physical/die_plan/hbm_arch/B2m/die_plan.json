@@ -1,6 +1,6 @@
 {
 "schema": "opentallas.die_plan.v1",
-"note": "HBM-ARCH concept (B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels); gen_arch.py; quad-tile array, beachfront PHYs, seam fabric, root tile; r2 cores_b2.py: hard cores = measured split pieces / d4g cores / SM halves, plan-track pins | B2m derived by physical/die_plan/hbm_arch/b2m.py: host in-band: dropped u_host_N (10333 cells) + io_NW_io_u_host_N; io_NW_io_u_lk_N0 host in_band route NW_io -> [L48] -> root; pg domains: 5 SerDes PHY supplies (phy_NW_io_u_lk_N0, phy_NW_spb0_u_lk_S0, phy_vsN0_u_lk_S1, phy_NE_io_u_lk_N2, phy_NE_spb0_u_lk_S0); core taps: 128 SM-half core taps on the q_sm tiles (insertion from 0 measured modules); clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4849, \"drivers\": 1829, \"cells\": [64, 64], \"taps\": 2461, \"drivers_moved\": 518, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 8, \"coherence_moves\": 148, \"max_load\": 4, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1424.4, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 45, \"intra_over_80ps_at_5pct\": 45}; clock INFO alternative (zero-skew, not adopted): {\"method\": \"partition-aware zero-skew tree (guillotine bisection + linear-delay merge)\", \"taps\": 2461, \"early_taps\": 0, \"nodes\": 4921, \"depth\": 14, \"root_um\": [14048.64, 7008.352], \"insertion_wire_um\": 25047.7, \"insertion_ps_model\": 2504.8, \"wire_mm\": 2015.8, \"snake_mm\": 224.3, \"seams_over_80ps_5pct_ocv\": 89}",
+"note": "HBM-ARCH concept (B2j: 8 SM with 103.68um column broadcast channels and 17.28um clock/reset row channels); gen_arch.py; quad-tile array, beachfront PHYs, seam fabric, root tile; r2 cores_b2.py: hard cores = measured split pieces / d4g cores / SM halves, plan-track pins | B2m derived by physical/die_plan/hbm_arch/b2m.py: host in-band: dropped u_host_N (10333 cells) + io_NW_io_u_host_N; io_NW_io_u_lk_N0 host in_band route NW_io -> [L48] -> root; pg domains: 5 SerDes PHY supplies (phy_NW_io_u_lk_N0, phy_NW_spb0_u_lk_S0, phy_vsN0_u_lk_S1, phy_NE_io_u_lk_N2, phy_NE_spb0_u_lk_S0); core taps: 562 early core taps (434 from measured insertion > 250 ps, the rest SM halves at 250); clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4885, \"drivers\": 1874, \"cells\": [64, 64], \"taps\": 3322, \"drivers_moved\": 554, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 178, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1429.6, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 45, \"intra_over_80ps_at_5pct\": 45}; clock INFO alternative (zero-skew, not adopted): {\"method\": \"partition-aware zero-skew tree (guillotine bisection + linear-delay merge)\", \"taps\": 3322, \"early_taps\": 861, \"nodes\": 6643, \"depth\": 14, \"root_um\": [13754.88, 7078.317], \"insertion_wire_um\": 25254.2, \"insertion_ps_model\": 2525.4, \"wire_mm\": 2220.8, \"snake_mm\": 638.5, \"seams_over_80ps_5pct_ocv\": 118}",
 "die": {
 "name": "hbm_arch_B2m",
 "label": "B2m = B2l (accepted 10-24, ~22% DS-AR loss vs d4g) + in-band host, balanced binary H-tree, SerDes PHY supplies",
@@ -584,7 +584,43 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hcb_Q0_lanes0_2",
+"kind": "core",
+"xy": [
+226.968,
+45.379
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hbm_hc_bankq0_static__lanes0_2",
+"note": "HBM-ELEM measured I 356 ps (max 373), view ot_hbm_hc_bankq0_static__lanes0_2@3201a56cbe8d"
+},
+{
+"name": "u_hcb_Q0_lanes3_5",
+"kind": "core",
+"xy": [
+218.179,
+1056.264
+],
+"insertion_ps": 354.0,
+"budget_owner": "ot_hbm_hc_bankq0_static__lanes3_5",
+"note": "HBM-ELEM measured I 354 ps (max 396), view ot_hbm_hc_bankq0_static__lanes3_5@6c5ad9844cef"
+},
+{
+"name": "u_hcb_Q0_lanes6_7_bank",
+"kind": "core",
+"xy": [
+584.952,
+408.259
+],
+"insertion_ps": 806.0,
+"budget_owner": "ot_hbm_hc_bankq0_static__lanes6_7_bank",
+"note": "HBM-ELEM measured I 806 ps (max 983), view ot_hbm_hc_bankq0_static__lanes6_7_bank@1ce7110970e0"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -1110,7 +1146,21 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hcb_Q1_lanes0_2",
+"kind": "core",
+"xy": [
+313.368,
+97.219
+],
+"insertion_ps": 360.0,
+"budget_owner": "ot_hbm_hc_bankq_static__lanes0_2",
+"note": "HBM-ELEM measured I 360 ps (max 374), view ot_hbm_hc_bankq_static__lanes0_2@96294e05efa9"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -3207,7 +3257,21 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hcb_Q3_lanes3_5",
+"kind": "core",
+"xy": [
+209.688,
+667.459
+],
+"insertion_ps": 360.0,
+"budget_owner": "ot_hbm_hc_bankq_static__lanes3_5",
+"note": "HBM-ELEM measured I 360 ps (max 375), view ot_hbm_hc_bankq_static__lanes3_5@60b283a425e3"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -3292,7 +3356,7 @@
 ],
 "ft_budget": {
 "M8": 0.596985,
-"M9": 0.590488
+"M9": 0.589696
 },
 "internal_stations": [
 {
@@ -3493,7 +3557,21 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hcb_Q7_lanes3_5",
+"kind": "core",
+"xy": [
+680.381,
+606.984
+],
+"insertion_ps": 361.0,
+"budget_owner": "ot_hbm_hc_bankq_term_static__lanes3_5",
+"note": "HBM-ELEM measured I 361 ps (max 379), view ot_hbm_hc_bankq_term_static__lanes3_5@2d54ff50920c"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -6379,7 +6457,32 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hcb_Q5_lanes0_2",
+"kind": "core",
+"xy": [
+226.968,
+97.219
+],
+"insertion_ps": 361.0,
+"budget_owner": "ot_hbm_hc_bankq_static__lanes0_2",
+"note": "HBM-ELEM measured I 361 ps (max 372), view ot_hbm_hc_bankq_static__lanes0_2@e6588042a5d1"
+},
+{
+"name": "u_hcb_Q5_lanes3_5",
+"kind": "core",
+"xy": [
+403.901,
+1056.264
+],
+"insertion_ps": 361.0,
+"budget_owner": "ot_hbm_hc_bankq_static__lanes3_5",
+"note": "HBM-ELEM measured I 361 ps (max 379), view ot_hbm_hc_bankq_static__lanes3_5@2d54ff50920c"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -6747,7 +6850,21 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hcb_Q4_lanes3_5",
+"kind": "core",
+"xy": [
+576.701,
+606.984
+],
+"insertion_ps": 361.0,
+"budget_owner": "ot_hbm_hc_bankq_static__lanes3_5",
+"note": "HBM-ELEM measured I 361 ps (max 379), view ot_hbm_hc_bankq_static__lanes3_5@2d54ff50920c"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -7192,7 +7309,362 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hb_idx__s_Q_r0c0_k0h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+196.541
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k0h0",
+"note": "HBM-ELEM measured I 257 ps (max 286), view ot_hbm_idx_score_quarter_static__r0c0_k0h0@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k0h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+196.541
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k0h0",
+"note": "HBM-ELEM measured I 257 ps (max 286), view ot_hbm_idx_score_quarter_static__r0c0_k0h0@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k0h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+369.341
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k0h1",
+"note": "HBM-ELEM measured I 255 ps (max 277), view ot_hbm_idx_score_quarter_static__r0c0_k0h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k0h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+369.341
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k0h1",
+"note": "HBM-ELEM measured I 255 ps (max 277), view ot_hbm_idx_score_quarter_static__r0c0_k0h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k1h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+542.141
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k1h0",
+"note": "HBM-ELEM measured I 257 ps (max 289), view ot_hbm_idx_score_quarter_static__r0c0_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k1h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+542.141
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k1h0",
+"note": "HBM-ELEM measured I 257 ps (max 289), view ot_hbm_idx_score_quarter_static__r0c0_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k1h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+369.341
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k1h1",
+"note": "HBM-ELEM measured I 257 ps (max 279), view ot_hbm_idx_score_quarter_static__r0c0_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k1h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+369.341
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k1h1",
+"note": "HBM-ELEM measured I 257 ps (max 279), view ot_hbm_idx_score_quarter_static__r0c0_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k2h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+542.141
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k2h0",
+"note": "HBM-ELEM measured I 255 ps (max 284), view ot_hbm_idx_score_quarter_static__r0c0_k2h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k2h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+542.141
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k2h0",
+"note": "HBM-ELEM measured I 255 ps (max 284), view ot_hbm_idx_score_quarter_static__r0c0_k2h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k2h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+196.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k2h1",
+"note": "HBM-ELEM measured I 256 ps (max 274), view ot_hbm_idx_score_quarter_static__r0c0_k2h1@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k2h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+196.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k2h1",
+"note": "HBM-ELEM measured I 256 ps (max 274), view ot_hbm_idx_score_quarter_static__r0c0_k2h1@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k3h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+369.341
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k3h0",
+"note": "HBM-ELEM measured I 258 ps (max 284), view ot_hbm_idx_score_quarter_static__r0c0_k3h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k3h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+369.341
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k3h0",
+"note": "HBM-ELEM measured I 258 ps (max 284), view ot_hbm_idx_score_quarter_static__r0c0_k3h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k3h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+196.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k3h1",
+"note": "HBM-ELEM measured I 256 ps (max 276), view ot_hbm_idx_score_quarter_static__r0c0_k3h1@ba1b24330410"
+},
+{
+"name": "u_hb_idx__s_Q_r0c0_k3h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+196.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c0_k3h1",
+"note": "HBM-ELEM measured I 256 ps (max 276), view ot_hbm_idx_score_quarter_static__r0c0_k3h1@ba1b24330410"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k0h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+542.141
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k0h0",
+"note": "HBM-ELEM measured I 258 ps (max 279), view ot_hbm_idx_score_quarter_static__r0c1_k0h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k0h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+542.141
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k0h0",
+"note": "HBM-ELEM measured I 258 ps (max 279), view ot_hbm_idx_score_quarter_static__r0c1_k0h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k0h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+714.941
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k0h1",
+"note": "HBM-ELEM measured I 257 ps (max 283), view ot_hbm_idx_score_quarter_static__r0c1_k0h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k0h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+714.941
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k0h1",
+"note": "HBM-ELEM measured I 257 ps (max 283), view ot_hbm_idx_score_quarter_static__r0c1_k0h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k1h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+714.941
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k1h0",
+"note": "HBM-ELEM measured I 256 ps (max 299), view ot_hbm_idx_score_quarter_static__r0c1_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k1h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+714.941
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k1h0",
+"note": "HBM-ELEM measured I 256 ps (max 299), view ot_hbm_idx_score_quarter_static__r0c1_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k1h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+714.941
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k1h1",
+"note": "HBM-ELEM measured I 257 ps (max 282), view ot_hbm_idx_score_quarter_static__r0c1_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k1h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+714.941
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k1h1",
+"note": "HBM-ELEM measured I 257 ps (max 282), view ot_hbm_idx_score_quarter_static__r0c1_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k2h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+719.299
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k2h0",
+"note": "HBM-ELEM measured I 256 ps (max 274), view ot_hbm_idx_score_quarter_static__r0c1_k2h0@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k2h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+719.299
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k2h0",
+"note": "HBM-ELEM measured I 256 ps (max 274), view ot_hbm_idx_score_quarter_static__r0c1_k2h0@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k2h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+719.299
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k2h1",
+"note": "HBM-ELEM measured I 256 ps (max 282), view ot_hbm_idx_score_quarter_static__r0c1_k2h1@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k2h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+719.299
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k2h1",
+"note": "HBM-ELEM measured I 256 ps (max 282), view ot_hbm_idx_score_quarter_static__r0c1_k2h1@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k3h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+719.299
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k3h0",
+"note": "HBM-ELEM measured I 256 ps (max 287), view ot_hbm_idx_score_quarter_static__r0c1_k3h0@89ef38113ef5"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k3h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+719.299
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k3h0",
+"note": "HBM-ELEM measured I 256 ps (max 287), view ot_hbm_idx_score_quarter_static__r0c1_k3h0@89ef38113ef5"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k3h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+158.712,
+892.099
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k3h1",
+"note": "HBM-ELEM measured I 257 ps (max 276), view ot_hbm_idx_score_quarter_static__r0c1_k3h1@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r0c1_k3h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+163.224,
+892.099
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c1_k3h1",
+"note": "HBM-ELEM measured I 257 ps (max 276), view ot_hbm_idx_score_quarter_static__r0c1_k3h1@1fe4ffdd8f5c"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -7511,7 +7983,7 @@
 ],
 "ft_budget": {
 "M8": 0.596711,
-"M9": 0.58957
+"M9": 0.588768
 },
 "internal_stations": [
 {
@@ -10993,7 +11465,340 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hb_idx__s_Q_r0c2_k0h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+369.341
+],
+"insertion_ps": 259.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k0h1",
+"note": "HBM-ELEM measured I 259 ps (max 281), view ot_hbm_idx_score_quarter_static__r0c2_k0h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k0h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+369.341
+],
+"insertion_ps": 259.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k0h1",
+"note": "HBM-ELEM measured I 259 ps (max 281), view ot_hbm_idx_score_quarter_static__r0c2_k0h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k1h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+542.141
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k1h0",
+"note": "HBM-ELEM measured I 256 ps (max 282), view ot_hbm_idx_score_quarter_static__r0c2_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k1h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+542.141
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k1h0",
+"note": "HBM-ELEM measured I 256 ps (max 282), view ot_hbm_idx_score_quarter_static__r0c2_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k1h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+369.341
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k1h1",
+"note": "HBM-ELEM measured I 257 ps (max 283), view ot_hbm_idx_score_quarter_static__r0c2_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k1h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+369.341
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k1h1",
+"note": "HBM-ELEM measured I 257 ps (max 283), view ot_hbm_idx_score_quarter_static__r0c2_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k2h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+196.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k2h0",
+"note": "HBM-ELEM measured I 256 ps (max 279), view ot_hbm_idx_score_quarter_static__r0c2_k2h0@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k2h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+196.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k2h0",
+"note": "HBM-ELEM measured I 256 ps (max 279), view ot_hbm_idx_score_quarter_static__r0c2_k2h0@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k2h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+542.141
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k2h1",
+"note": "HBM-ELEM measured I 257 ps (max 289), view ot_hbm_idx_score_quarter_static__r0c2_k2h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k2h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+542.141
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k2h1",
+"note": "HBM-ELEM measured I 257 ps (max 289), view ot_hbm_idx_score_quarter_static__r0c2_k2h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k3h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+369.341
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k3h0",
+"note": "HBM-ELEM measured I 256 ps (max 279), view ot_hbm_idx_score_quarter_static__r0c2_k3h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k3h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+369.341
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k3h0",
+"note": "HBM-ELEM measured I 256 ps (max 279), view ot_hbm_idx_score_quarter_static__r0c2_k3h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k3h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+196.541
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k3h1",
+"note": "HBM-ELEM measured I 255 ps (max 275), view ot_hbm_idx_score_quarter_static__r0c2_k3h1@ba1b24330410"
+},
+{
+"name": "u_hb_idx__s_Q_r0c2_k3h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+196.541
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c2_k3h1",
+"note": "HBM-ELEM measured I 255 ps (max 275), view ot_hbm_idx_score_quarter_static__r0c2_k3h1@ba1b24330410"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k0h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+542.141
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k0h0",
+"note": "HBM-ELEM measured I 255 ps (max 277), view ot_hbm_idx_score_quarter_static__r0c3_k0h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k0h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+542.141
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k0h0",
+"note": "HBM-ELEM measured I 255 ps (max 277), view ot_hbm_idx_score_quarter_static__r0c3_k0h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k0h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+714.941
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k0h1",
+"note": "HBM-ELEM measured I 257 ps (max 283), view ot_hbm_idx_score_quarter_static__r0c3_k0h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k0h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+714.941
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k0h1",
+"note": "HBM-ELEM measured I 257 ps (max 283), view ot_hbm_idx_score_quarter_static__r0c3_k0h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k1h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+714.941
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k1h0",
+"note": "HBM-ELEM measured I 258 ps (max 290), view ot_hbm_idx_score_quarter_static__r0c3_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k1h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+714.941
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k1h0",
+"note": "HBM-ELEM measured I 258 ps (max 290), view ot_hbm_idx_score_quarter_static__r0c3_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k1h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+714.941
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k1h1",
+"note": "HBM-ELEM measured I 257 ps (max 281), view ot_hbm_idx_score_quarter_static__r0c3_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k1h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+714.941
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k1h1",
+"note": "HBM-ELEM measured I 257 ps (max 281), view ot_hbm_idx_score_quarter_static__r0c3_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k2h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+719.299
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k2h0",
+"note": "HBM-ELEM measured I 255 ps (max 273), view ot_hbm_idx_score_quarter_static__r0c3_k2h0@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k2h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+719.299
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k2h0",
+"note": "HBM-ELEM measured I 255 ps (max 273), view ot_hbm_idx_score_quarter_static__r0c3_k2h0@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k3h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+719.299
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k3h0",
+"note": "HBM-ELEM measured I 257 ps (max 296), view ot_hbm_idx_score_quarter_static__r0c3_k3h0@89ef38113ef5"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k3h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+719.299
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k3h0",
+"note": "HBM-ELEM measured I 257 ps (max 296), view ot_hbm_idx_score_quarter_static__r0c3_k3h0@89ef38113ef5"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k3h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+343.421,
+901.656
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k3h1",
+"note": "HBM-ELEM measured I 256 ps (max 285), view ot_hbm_idx_score_quarter_static__r0c3_k3h1@a63ccfad37b9"
+},
+{
+"name": "u_hb_idx__s_Q_r0c3_k3h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+343.421,
+906.216
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r0c3_k3h1",
+"note": "HBM-ELEM measured I 256 ps (max 285), view ot_hbm_idx_score_quarter_static__r0c3_k3h1@a63ccfad37b9"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k0h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+373.699,
+901.656
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k0h0",
+"note": "HBM-ELEM measured I 256 ps (max 275), view ot_hbm_idx_score_quarter_static__r1c0_k0h0@a9d045104181"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k0h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+373.699,
+906.216
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k0h0",
+"note": "HBM-ELEM measured I 256 ps (max 275), view ot_hbm_idx_score_quarter_static__r1c0_k0h0@a9d045104181"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -11330,7 +12135,7 @@
 ],
 "ft_budget": {
 "M8": 0.597533,
-"M9": 0.587163
+"M9": 0.585558
 },
 "internal_stations": [
 {
@@ -15928,7 +16733,318 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hb_idx__s_Q_r1c0_k1h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+369.341
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k1h0",
+"note": "HBM-ELEM measured I 257 ps (max 277), view ot_hbm_idx_score_quarter_static__r1c0_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k1h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+369.341
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k1h0",
+"note": "HBM-ELEM measured I 257 ps (max 277), view ot_hbm_idx_score_quarter_static__r1c0_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k1h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+542.141
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k1h1",
+"note": "HBM-ELEM measured I 255 ps (max 271), view ot_hbm_idx_score_quarter_static__r1c0_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k1h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+542.141
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k1h1",
+"note": "HBM-ELEM measured I 255 ps (max 271), view ot_hbm_idx_score_quarter_static__r1c0_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k2h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+369.341
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k2h0",
+"note": "HBM-ELEM measured I 256 ps (max 280), view ot_hbm_idx_score_quarter_static__r1c0_k2h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k2h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+369.341
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k2h0",
+"note": "HBM-ELEM measured I 256 ps (max 280), view ot_hbm_idx_score_quarter_static__r1c0_k2h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k2h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+542.141
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k2h1",
+"note": "HBM-ELEM measured I 258 ps (max 289), view ot_hbm_idx_score_quarter_static__r1c0_k2h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k2h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+542.141
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k2h1",
+"note": "HBM-ELEM measured I 258 ps (max 289), view ot_hbm_idx_score_quarter_static__r1c0_k2h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k3h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+196.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k3h0",
+"note": "HBM-ELEM measured I 256 ps (max 274), view ot_hbm_idx_score_quarter_static__r1c0_k3h0@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k3h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+196.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k3h0",
+"note": "HBM-ELEM measured I 256 ps (max 274), view ot_hbm_idx_score_quarter_static__r1c0_k3h0@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k3h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+369.341
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k3h1",
+"note": "HBM-ELEM measured I 256 ps (max 275), view ot_hbm_idx_score_quarter_static__r1c0_k3h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c0_k3h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+369.341
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c0_k3h1",
+"note": "HBM-ELEM measured I 256 ps (max 275), view ot_hbm_idx_score_quarter_static__r1c0_k3h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k0h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+196.541
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k0h0",
+"note": "HBM-ELEM measured I 255 ps (max 275), view ot_hbm_idx_score_quarter_static__r1c1_k0h0@ba1b24330410"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k0h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+196.541
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k0h0",
+"note": "HBM-ELEM measured I 255 ps (max 275), view ot_hbm_idx_score_quarter_static__r1c1_k0h0@ba1b24330410"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k0h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+542.141
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k0h1",
+"note": "HBM-ELEM measured I 256 ps (max 274), view ot_hbm_idx_score_quarter_static__r1c1_k0h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k0h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+542.141
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k0h1",
+"note": "HBM-ELEM measured I 256 ps (max 274), view ot_hbm_idx_score_quarter_static__r1c1_k0h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k1h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+714.941
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k1h0",
+"note": "HBM-ELEM measured I 256 ps (max 280), view ot_hbm_idx_score_quarter_static__r1c1_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k1h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+714.941
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k1h0",
+"note": "HBM-ELEM measured I 256 ps (max 280), view ot_hbm_idx_score_quarter_static__r1c1_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k1h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+714.941
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k1h1",
+"note": "HBM-ELEM measured I 255 ps (max 284), view ot_hbm_idx_score_quarter_static__r1c1_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k1h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+714.941
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k1h1",
+"note": "HBM-ELEM measured I 255 ps (max 284), view ot_hbm_idx_score_quarter_static__r1c1_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k2h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+714.941
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k2h0",
+"note": "HBM-ELEM measured I 258 ps (max 279), view ot_hbm_idx_score_quarter_static__r1c1_k2h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k2h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+714.941
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k2h0",
+"note": "HBM-ELEM measured I 258 ps (max 279), view ot_hbm_idx_score_quarter_static__r1c1_k2h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k2h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+719.299
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k2h1",
+"note": "HBM-ELEM measured I 256 ps (max 281), view ot_hbm_idx_score_quarter_static__r1c1_k2h1@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k2h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+719.299
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k2h1",
+"note": "HBM-ELEM measured I 256 ps (max 281), view ot_hbm_idx_score_quarter_static__r1c1_k2h1@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k3h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+719.299
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k3h0",
+"note": "HBM-ELEM measured I 257 ps (max 281), view ot_hbm_idx_score_quarter_static__r1c1_k3h0@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k3h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+719.299
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k3h0",
+"note": "HBM-ELEM measured I 257 ps (max 281), view ot_hbm_idx_score_quarter_static__r1c1_k3h0@1fe4ffdd8f5c"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k3h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+719.299
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k3h1",
+"note": "HBM-ELEM measured I 257 ps (max 291), view ot_hbm_idx_score_quarter_static__r1c1_k3h1@89ef38113ef5"
+},
+{
+"name": "u_hb_idx__s_Q_r1c1_k3h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+719.299
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c1_k3h1",
+"note": "HBM-ELEM measured I 257 ps (max 291), view ot_hbm_idx_score_quarter_static__r1c1_k3h1@89ef38113ef5"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -16246,7 +17362,7 @@
 }
 ],
 "ft_budget": {
-"M9": 0.590372,
+"M9": 0.58957,
 "M8": 0.596436
 },
 "internal_stations": [
@@ -19736,7 +20852,274 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hb_idx__s_Q_r1c2_k0h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+196.541
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k0h1",
+"note": "HBM-ELEM measured I 257 ps (max 288), view ot_hbm_idx_score_quarter_static__r1c2_k0h1@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k0h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+196.541
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k0h1",
+"note": "HBM-ELEM measured I 257 ps (max 288), view ot_hbm_idx_score_quarter_static__r1c2_k0h1@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k1h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+542.141
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k1h1",
+"note": "HBM-ELEM measured I 258 ps (max 279), view ot_hbm_idx_score_quarter_static__r1c2_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k1h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+542.141
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k1h1",
+"note": "HBM-ELEM measured I 258 ps (max 279), view ot_hbm_idx_score_quarter_static__r1c2_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k2h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+369.341
+],
+"insertion_ps": 259.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k2h0",
+"note": "HBM-ELEM measured I 259 ps (max 278), view ot_hbm_idx_score_quarter_static__r1c2_k2h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k2h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+369.341
+],
+"insertion_ps": 259.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k2h0",
+"note": "HBM-ELEM measured I 259 ps (max 278), view ot_hbm_idx_score_quarter_static__r1c2_k2h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k2h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+542.141
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k2h1",
+"note": "HBM-ELEM measured I 257 ps (max 289), view ot_hbm_idx_score_quarter_static__r1c2_k2h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k2h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+542.141
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k2h1",
+"note": "HBM-ELEM measured I 257 ps (max 289), view ot_hbm_idx_score_quarter_static__r1c2_k2h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k3h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+196.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k3h0",
+"note": "HBM-ELEM measured I 256 ps (max 274), view ot_hbm_idx_score_quarter_static__r1c2_k3h0@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k3h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+196.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k3h0",
+"note": "HBM-ELEM measured I 256 ps (max 274), view ot_hbm_idx_score_quarter_static__r1c2_k3h0@f49c4145dffe"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k3h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+369.341
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k3h1",
+"note": "HBM-ELEM measured I 257 ps (max 281), view ot_hbm_idx_score_quarter_static__r1c2_k3h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c2_k3h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+369.341
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c2_k3h1",
+"note": "HBM-ELEM measured I 257 ps (max 281), view ot_hbm_idx_score_quarter_static__r1c2_k3h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c3_k0h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+542.141
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c3_k0h0",
+"note": "HBM-ELEM measured I 257 ps (max 284), view ot_hbm_idx_score_quarter_static__r1c3_k0h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c3_k0h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+542.141
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c3_k0h0",
+"note": "HBM-ELEM measured I 257 ps (max 284), view ot_hbm_idx_score_quarter_static__r1c3_k0h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c3_k0h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+196.541
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c3_k0h1",
+"note": "HBM-ELEM measured I 257 ps (max 285), view ot_hbm_idx_score_quarter_static__r1c3_k0h1@ba1b24330410"
+},
+{
+"name": "u_hb_idx__s_Q_r1c3_k0h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+196.541
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c3_k0h1",
+"note": "HBM-ELEM measured I 257 ps (max 285), view ot_hbm_idx_score_quarter_static__r1c3_k0h1@ba1b24330410"
+},
+{
+"name": "u_hb_idx__s_Q_r1c3_k1h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+245.112,
+714.941
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c3_k1h0",
+"note": "HBM-ELEM measured I 255 ps (max 284), view ot_hbm_idx_score_quarter_static__r1c3_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c3_k1h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+249.624,
+714.941
+],
+"insertion_ps": 255.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c3_k1h0",
+"note": "HBM-ELEM measured I 255 ps (max 284), view ot_hbm_idx_score_quarter_static__r1c3_k1h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c3_k1h1.clk_pair[0]",
+"kind": "core",
+"xy": [
+452.472,
+714.941
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c3_k1h1",
+"note": "HBM-ELEM measured I 258 ps (max 283), view ot_hbm_idx_score_quarter_static__r1c3_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c3_k1h1.clk_pair[1]",
+"kind": "core",
+"xy": [
+456.984,
+714.941
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c3_k1h1",
+"note": "HBM-ELEM measured I 258 ps (max 283), view ot_hbm_idx_score_quarter_static__r1c3_k1h1@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c3_k2h0.clk_pair[0]",
+"kind": "core",
+"xy": [
+37.752,
+714.941
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c3_k2h0",
+"note": "HBM-ELEM measured I 258 ps (max 291), view ot_hbm_idx_score_quarter_static__r1c3_k2h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_r1c3_k2h0.clk_pair[1]",
+"kind": "core",
+"xy": [
+42.264,
+714.941
+],
+"insertion_ps": 258.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__r1c3_k2h0",
+"note": "HBM-ELEM measured I 258 ps (max 291), view ot_hbm_idx_score_quarter_static__r1c3_k2h0@1f7bba803ab7"
+},
+{
+"name": "u_hb_idx__s_Q_tail0",
+"kind": "core",
+"xy": [
+157.848,
+1060.541
+],
+"insertion_ps": 256.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__tail0",
+"note": "HBM-ELEM measured I 256 ps (max 278), view ot_hbm_idx_score_quarter_static__tail0@9c94121ae264"
+},
+{
+"name": "u_hb_idx__s_Q_tail1",
+"kind": "core",
+"xy": [
+157.848,
+1064.899
+],
+"insertion_ps": 257.0,
+"budget_owner": "ot_hbm_idx_score_quarter_static__tail1",
+"note": "HBM-ELEM measured I 257 ps (max 284), view ot_hbm_idx_score_quarter_static__tail1@fd8a24ead83a"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -22322,7 +23705,7 @@
 ],
 "ft_budget": {
 "M8": 0.596985,
-"M9": 0.587163
+"M9": 0.585558
 }
 },
 "q_b110": {
@@ -22853,7 +24236,98 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_sfucore_Q_lane0.clk_lane",
+"kind": "core",
+"xy": [
+1237.848,
+593.981
+],
+"insertion_ps": 507.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane0",
+"note": "HBM-ELEM measured I 507 ps (max 525), view ot_hgi_sfu_core_split3__lane0@9d8e648ad19a"
+},
+{
+"name": "u_sfucore_Q_lane0.clk_map",
+"kind": "core",
+"xy": [
+1242.744,
+593.981
+],
+"insertion_ps": 507.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane0",
+"note": "HBM-ELEM measured I 507 ps (max 525), view ot_hgi_sfu_core_split3__lane0@9d8e648ad19a"
+},
+{
+"name": "u_sfucore_Q_lane1.clk_lane",
+"kind": "core",
+"xy": [
+1237.848,
+956.861
+],
+"insertion_ps": 489.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane1",
+"note": "HBM-ELEM measured I 489 ps (max 551), view ot_hgi_sfu_core_split3__lane1@4ac2c15c8837"
+},
+{
+"name": "u_sfucore_Q_lane1.clk_map",
+"kind": "core",
+"xy": [
+1242.744,
+956.861
+],
+"insertion_ps": 489.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane1",
+"note": "HBM-ELEM measured I 489 ps (max 551), view ot_hgi_sfu_core_split3__lane1@4ac2c15c8837"
+},
+{
+"name": "u_sfucore_Q_lane2.clk_lane",
+"kind": "core",
+"xy": [
+1237.848,
+961.219
+],
+"insertion_ps": 489.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane2",
+"note": "HBM-ELEM measured I 489 ps (max 617), view ot_hgi_sfu_core_split3__lane2@2ba0e7ec37ee"
+},
+{
+"name": "u_sfucore_Q_lane2.clk_map",
+"kind": "core",
+"xy": [
+1242.696,
+961.219
+],
+"insertion_ps": 489.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane2",
+"note": "HBM-ELEM measured I 489 ps (max 617), view ot_hgi_sfu_core_split3__lane2@2ba0e7ec37ee"
+},
+{
+"name": "u_sfucore_Q_lane3.clk_lane",
+"kind": "core",
+"xy": [
+1224.701,
+244.104
+],
+"insertion_ps": 510.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane3",
+"note": "HBM-ELEM measured I 510 ps (max 548), view ot_hgi_sfu_core_split3__lane3@90d039bd5093"
+},
+{
+"name": "u_sfucore_Q_lane3.clk_map",
+"kind": "core",
+"xy": [
+1224.701,
+249.192
+],
+"insertion_ps": 510.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane3",
+"note": "HBM-ELEM measured I 510 ps (max 548), view ot_hgi_sfu_core_split3__lane3@90d039bd5093"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -22956,7 +24430,7 @@
 ],
 "ft_budget": {
 "M8": 0.594243,
-"M9": 0.587664
+"M9": 0.587322
 },
 "internal_stations": [
 {
@@ -24177,7 +25651,120 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_sfucore_Q_lane4.clk_lane",
+"kind": "core",
+"xy": [
+97.032,
+386.621
+],
+"insertion_ps": 450.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane4",
+"note": "HBM-ELEM measured I 450 ps (max 499), view ot_hgi_sfu_core_split3__lane4@ef3314d95b46"
+},
+{
+"name": "u_sfucore_Q_lane4.clk_map",
+"kind": "core",
+"xy": [
+102.168,
+386.621
+],
+"insertion_ps": 450.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane4",
+"note": "HBM-ELEM measured I 450 ps (max 499), view ot_hgi_sfu_core_split3__lane4@ef3314d95b46"
+},
+{
+"name": "u_sfucore_Q_lane5.clk_lane",
+"kind": "core",
+"xy": [
+36.888,
+749.501
+],
+"insertion_ps": 504.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane5",
+"note": "HBM-ELEM measured I 504 ps (max 557), view ot_hgi_sfu_core_split3__lane5@9818e0f96722"
+},
+{
+"name": "u_sfucore_Q_lane5.clk_map",
+"kind": "core",
+"xy": [
+41.688,
+749.501
+],
+"insertion_ps": 504.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane5",
+"note": "HBM-ELEM measured I 504 ps (max 557), view ot_hgi_sfu_core_split3__lane5@9818e0f96722"
+},
+{
+"name": "u_sfucore_Q_lane6.clk_lane",
+"kind": "core",
+"xy": [
+36.888,
+753.859
+],
+"insertion_ps": 489.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane6",
+"note": "HBM-ELEM measured I 489 ps (max 538), view ot_hgi_sfu_core_split3__lane6@c8a5f8831c4a"
+},
+{
+"name": "u_sfucore_Q_lane6.clk_map",
+"kind": "core",
+"xy": [
+41.736,
+753.859
+],
+"insertion_ps": 489.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane6",
+"note": "HBM-ELEM measured I 489 ps (max 538), view ot_hgi_sfu_core_split3__lane6@c8a5f8831c4a"
+},
+{
+"name": "u_sfucore_Q_lane7.clk_lane",
+"kind": "core",
+"xy": [
+451.608,
+390.979
+],
+"insertion_ps": 489.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane7",
+"note": "HBM-ELEM measured I 489 ps (max 535), view ot_hgi_sfu_core_split3__lane7@dec25f7e131a"
+},
+{
+"name": "u_sfucore_Q_lane7.clk_map",
+"kind": "core",
+"xy": [
+456.6,
+390.979
+],
+"insertion_ps": 489.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane7",
+"note": "HBM-ELEM measured I 489 ps (max 535), view ot_hgi_sfu_core_split3__lane7@dec25f7e131a"
+},
+{
+"name": "u_sfucore_Q_lane8.clk_lane",
+"kind": "core",
+"xy": [
+451.608,
+386.621
+],
+"insertion_ps": 502.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane8",
+"note": "HBM-ELEM measured I 502 ps (max 641), view ot_hgi_sfu_core_split3__lane8@4ab19d2ea3d5"
+},
+{
+"name": "u_sfucore_Q_lane8.clk_map",
+"kind": "core",
+"xy": [
+456.504,
+386.621
+],
+"insertion_ps": 502.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane8",
+"note": "HBM-ELEM measured I 502 ps (max 641), view ot_hgi_sfu_core_split3__lane8@4ab19d2ea3d5"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -24757,7 +26344,120 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_sfucore_Q_lane9.clk_lane",
+"kind": "core",
+"xy": [
+97.032,
+386.621
+],
+"insertion_ps": 451.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane9",
+"note": "HBM-ELEM measured I 451 ps (max 516), view ot_hgi_sfu_core_split3__lane9@9617422dda57"
+},
+{
+"name": "u_sfucore_Q_lane9.clk_map",
+"kind": "core",
+"xy": [
+102.168,
+386.621
+],
+"insertion_ps": 451.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane9",
+"note": "HBM-ELEM measured I 451 ps (max 516), view ot_hgi_sfu_core_split3__lane9@9617422dda57"
+},
+{
+"name": "u_sfucore_Q_lane10.clk_lane",
+"kind": "core",
+"xy": [
+36.888,
+749.501
+],
+"insertion_ps": 482.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane10",
+"note": "HBM-ELEM measured I 482 ps (max 541), view ot_hgi_sfu_core_split3__lane10@97960a525679"
+},
+{
+"name": "u_sfucore_Q_lane10.clk_map",
+"kind": "core",
+"xy": [
+41.688,
+749.501
+],
+"insertion_ps": 482.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane10",
+"note": "HBM-ELEM measured I 482 ps (max 541), view ot_hgi_sfu_core_split3__lane10@97960a525679"
+},
+{
+"name": "u_sfucore_Q_lane11.clk_lane",
+"kind": "core",
+"xy": [
+36.888,
+753.859
+],
+"insertion_ps": 482.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane11",
+"note": "HBM-ELEM measured I 482 ps (max 541), view ot_hgi_sfu_core_split3__lane11@3db9e50b9251"
+},
+{
+"name": "u_sfucore_Q_lane11.clk_map",
+"kind": "core",
+"xy": [
+41.736,
+753.859
+],
+"insertion_ps": 482.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane11",
+"note": "HBM-ELEM measured I 482 ps (max 541), view ot_hgi_sfu_core_split3__lane11@3db9e50b9251"
+},
+{
+"name": "u_sfucore_Q_lane12.clk_lane",
+"kind": "core",
+"xy": [
+517.992,
+390.979
+],
+"insertion_ps": 444.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane12",
+"note": "HBM-ELEM measured I 444 ps (max 532), view ot_hgi_sfu_core_split3__lane12@c40b418bbe20"
+},
+{
+"name": "u_sfucore_Q_lane12.clk_map",
+"kind": "core",
+"xy": [
+522.84,
+390.979
+],
+"insertion_ps": 444.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane12",
+"note": "HBM-ELEM measured I 444 ps (max 532), view ot_hgi_sfu_core_split3__lane12@c40b418bbe20"
+},
+{
+"name": "u_sfucore_Q_lane13.clk_lane",
+"kind": "core",
+"xy": [
+511.752,
+386.621
+],
+"insertion_ps": 450.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane13",
+"note": "HBM-ELEM measured I 450 ps (max 498), view ot_hgi_sfu_core_split3__lane13@1e37cdb3434e"
+},
+{
+"name": "u_sfucore_Q_lane13.clk_map",
+"kind": "core",
+"xy": [
+516.888,
+386.621
+],
+"insertion_ps": 450.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane13",
+"note": "HBM-ELEM measured I 450 ps (max 498), view ot_hgi_sfu_core_split3__lane13@1e37cdb3434e"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -24877,7 +26577,7 @@
 }
 ],
 "ft_budget": {
-"M9": 0.58835,
+"M9": 0.587664,
 "M8": 0.593969
 },
 "internal_stations": [
@@ -25220,7 +26920,54 @@
 1036.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_sfucore_Q_lane14.clk_lane",
+"kind": "core",
+"xy": [
+1138.301,
+1557.384
+],
+"insertion_ps": 511.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane14",
+"note": "HBM-ELEM measured I 511 ps (max 543), view ot_hgi_sfu_core_split3__lane14@66f75664efb4"
+},
+{
+"name": "u_sfucore_Q_lane14.clk_map",
+"kind": "core",
+"xy": [
+1138.301,
+1562.472
+],
+"insertion_ps": 511.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane14",
+"note": "HBM-ELEM measured I 511 ps (max 543), view ot_hgi_sfu_core_split3__lane14@66f75664efb4"
+},
+{
+"name": "u_sfucore_Q_lane15.clk_lane",
+"kind": "core",
+"xy": [
+1151.299,
+1595.064
+],
+"insertion_ps": 473.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane15",
+"note": "HBM-ELEM measured I 473 ps (max 526), view ot_hgi_sfu_core_split3__lane15@ed3d202ade36"
+},
+{
+"name": "u_sfucore_Q_lane15.clk_map",
+"kind": "core",
+"xy": [
+1151.299,
+1600.44
+],
+"insertion_ps": 473.0,
+"budget_owner": "ot_hgi_sfu_core_split3__lane15",
+"note": "HBM-ELEM measured I 473 ps (max 526), view ot_hgi_sfu_core_split3__lane15@ed3d202ade36"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -26131,7 +27878,2804 @@
 2073.6
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_sfup_Q",
+"kind": "core",
+"xy": [
+574.584,
+28.099
+],
+"insertion_ps": 1150.0,
+"budget_owner": "ot_hgi_sfu_programme_store_r10",
+"note": "HBM-ELEM measured I 1150 ps (max 1457), view ot_hgi_sfu_programme_store_r10@de93d4cbfe0e"
+},
+{
+"name": "u_cij_Q.clk_r0",
+"kind": "core",
+"xy": [
+1006.584,
+1021.699
+],
+"insertion_ps": 417.0,
+"budget_owner": "ot_hgi_coll_inj_idx_join_rg",
+"note": "HBM-ELEM measured I 417 ps (max 504), view ot_hgi_coll_inj_idx_join_rg@6849648aeb49"
+},
+{
+"name": "u_cij_Q.clk_r1",
+"kind": "core",
+"xy": [
+892.099,
+1457.256
+],
+"insertion_ps": 417.0,
+"budget_owner": "ot_hgi_coll_inj_idx_join_rg",
+"note": "HBM-ELEM measured I 417 ps (max 504), view ot_hgi_coll_inj_idx_join_rg@6849648aeb49"
+},
+{
+"name": "u_cxij_Q_q",
+"kind": "core",
+"xy": [
+546.499,
+1950.168
+],
+"insertion_ps": 447.0,
+"budget_owner": "ot_hbm_su_static_cxport_ij_q",
+"note": "HBM-ELEM measured I 447 ps (max 513), view ot_hbm_su_static_cxport_ij_q@cbed03b3f6ce"
+},
+{
+"name": "u_smw_Q.clk",
+"kind": "core",
+"xy": [
+3596.381,
+1624.968
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hbm_sm_vm_wr_q_t_lanes4",
+"note": "HBM-ELEM measured I 356 ps (max 437), view ot_hbm_sm_vm_wr_q_t_lanes4@c732439590f8"
+},
+{
+"name": "u_smw_Q.clk_cal",
+"kind": "core",
+"xy": [
+3596.381,
+1629.72
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hbm_sm_vm_wr_q_t_lanes4",
+"note": "HBM-ELEM measured I 356 ps (max 437), view ot_hbm_sm_vm_wr_q_t_lanes4@c732439590f8"
+},
+{
+"name": "u_smw_Q.clk_l0",
+"kind": "core",
+"xy": [
+3440.899,
+1629.768
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hbm_sm_vm_wr_q_t_lanes4",
+"note": "HBM-ELEM measured I 356 ps (max 437), view ot_hbm_sm_vm_wr_q_t_lanes4@c732439590f8"
+},
+{
+"name": "u_smw_Q.clk_l1",
+"kind": "core",
+"xy": [
+3440.899,
+1634.424
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hbm_sm_vm_wr_q_t_lanes4",
+"note": "HBM-ELEM measured I 356 ps (max 437), view ot_hbm_sm_vm_wr_q_t_lanes4@c732439590f8"
+},
+{
+"name": "u_smw_Q.clk_l2",
+"kind": "core",
+"xy": [
+3440.899,
+1623.96
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hbm_sm_vm_wr_q_t_lanes4",
+"note": "HBM-ELEM measured I 356 ps (max 437), view ot_hbm_sm_vm_wr_q_t_lanes4@c732439590f8"
+},
+{
+"name": "u_smw_Q.clk_l3",
+"kind": "core",
+"xy": [
+3447.379,
+1639.416
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hbm_sm_vm_wr_q_t_lanes4",
+"note": "HBM-ELEM measured I 356 ps (max 437), view ot_hbm_sm_vm_wr_q_t_lanes4@c732439590f8"
+},
+{
+"name": "u_xl_Q_ctl.clk",
+"kind": "core",
+"xy": [
+3786.499,
+2621.88
+],
+"insertion_ps": 505.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_ctlx",
+"note": "HBM-ELEM measured I 505 ps (max 573), view ot_hgi_sm_xload_cl2_ctlx@d28d9e54d299"
+},
+{
+"name": "u_xl_Q_ctl.clk_cal",
+"kind": "core",
+"xy": [
+3786.499,
+2626.44
+],
+"insertion_ps": 505.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_ctlx",
+"note": "HBM-ELEM measured I 505 ps (max 573), view ot_hgi_sm_xload_cl2_ctlx@d28d9e54d299"
+},
+{
+"name": "u_xq_Q_p0_eg.clk",
+"kind": "core",
+"xy": [
+1670.52,
+3224.899
+],
+"insertion_ps": 377.0,
+"budget_owner": "ot_hgi_sm_xload_xq_pegress",
+"note": "HBM-ELEM measured I 377 ps (max 527), view ot_hgi_sm_xload_xq_pegress@7730b41f6dbc"
+},
+{
+"name": "u_xq_Q_p0_eg.clk_w",
+"kind": "core",
+"xy": [
+1731.384,
+3224.899
+],
+"insertion_ps": 377.0,
+"budget_owner": "ot_hgi_sm_xload_xq_pegress",
+"note": "HBM-ELEM measured I 377 ps (max 527), view ot_hgi_sm_xload_xq_pegress@7730b41f6dbc"
+},
+{
+"name": "u_xq_Q_p0_eg.clk_s",
+"kind": "core",
+"xy": [
+1792.2,
+3224.899
+],
+"insertion_ps": 377.0,
+"budget_owner": "ot_hgi_sm_xload_xq_pegress",
+"note": "HBM-ELEM measured I 377 ps (max 527), view ot_hgi_sm_xload_xq_pegress@7730b41f6dbc"
+},
+{
+"name": "u_xq_Q_p0_eg.clk_e",
+"kind": "core",
+"xy": [
+1852.92,
+3224.899
+],
+"insertion_ps": 377.0,
+"budget_owner": "ot_hgi_sm_xload_xq_pegress",
+"note": "HBM-ELEM measured I 377 ps (max 527), view ot_hgi_sm_xload_xq_pegress@7730b41f6dbc"
+},
+{
+"name": "u_xq_Q_p0_eg.clk_c",
+"kind": "core",
+"xy": [
+1913.736,
+3224.899
+],
+"insertion_ps": 377.0,
+"budget_owner": "ot_hgi_sm_xload_xq_pegress",
+"note": "HBM-ELEM measured I 377 ps (max 527), view ot_hgi_sm_xload_xq_pegress@7730b41f6dbc"
+},
+{
+"name": "u_xq_Q_p1_eg.clk",
+"kind": "core",
+"xy": [
+1678.488,
+546.499
+],
+"insertion_ps": 448.0,
+"budget_owner": "ot_hgi_sm_xload_xq_pegress",
+"note": "HBM-ELEM measured I 448 ps (max 580), view ot_hgi_sm_xload_xq_pegress@9839b19b37d6"
+},
+{
+"name": "u_xq_Q_p1_eg.clk_w",
+"kind": "core",
+"xy": [
+1769.736,
+546.499
+],
+"insertion_ps": 448.0,
+"budget_owner": "ot_hgi_sm_xload_xq_pegress",
+"note": "HBM-ELEM measured I 448 ps (max 580), view ot_hgi_sm_xload_xq_pegress@9839b19b37d6"
+},
+{
+"name": "u_xq_Q_p1_eg.clk_s",
+"kind": "core",
+"xy": [
+1860.984,
+546.499
+],
+"insertion_ps": 448.0,
+"budget_owner": "ot_hgi_sm_xload_xq_pegress",
+"note": "HBM-ELEM measured I 448 ps (max 580), view ot_hgi_sm_xload_xq_pegress@9839b19b37d6"
+},
+{
+"name": "u_xq_Q_p1_eg.clk_e",
+"kind": "core",
+"xy": [
+1952.088,
+546.499
+],
+"insertion_ps": 448.0,
+"budget_owner": "ot_hgi_sm_xload_xq_pegress",
+"note": "HBM-ELEM measured I 448 ps (max 580), view ot_hgi_sm_xload_xq_pegress@9839b19b37d6"
+},
+{
+"name": "u_xq_Q_p1_eg.clk_c",
+"kind": "core",
+"xy": [
+2043.336,
+546.499
+],
+"insertion_ps": 448.0,
+"budget_owner": "ot_hgi_sm_xload_xq_pegress",
+"note": "HBM-ELEM measured I 448 ps (max 580), view ot_hgi_sm_xload_xq_pegress@9839b19b37d6"
+},
+{
+"name": "u_vmb_Q0.clk",
+"kind": "core",
+"xy": [
+3886.44,
+872.621
+],
+"insertion_ps": 405.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 405 ps (max 497), view hfd_vms_bank_native_q0_faces@9119a4edb587"
+},
+{
+"name": "u_vmb_Q0.clk_n",
+"kind": "core",
+"xy": [
+3891.0,
+872.621
+],
+"insertion_ps": 405.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 405 ps (max 497), view hfd_vms_bank_native_q0_faces@9119a4edb587"
+},
+{
+"name": "u_vmb_Q0.clk_s",
+"kind": "core",
+"xy": [
+3755.16,
+546.499
+],
+"insertion_ps": 405.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 405 ps (max 497), view hfd_vms_bank_native_q0_faces@9119a4edb587"
+},
+{
+"name": "u_vmb_Q0.clk_e",
+"kind": "core",
+"xy": [
+3896.621,
+863.968
+],
+"insertion_ps": 405.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 405 ps (max 497), view hfd_vms_bank_native_q0_faces@9119a4edb587"
+},
+{
+"name": "u_vmb_Q0.clk_macro0",
+"kind": "core",
+"xy": [
+3613.699,
+847.456
+],
+"insertion_ps": 405.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 405 ps (max 497), view hfd_vms_bank_native_q0_faces@9119a4edb587"
+},
+{
+"name": "u_vmb_Q0.clk_macro1",
+"kind": "core",
+"xy": [
+3613.699,
+852.96
+],
+"insertion_ps": 405.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 405 ps (max 497), view hfd_vms_bank_native_q0_faces@9119a4edb587"
+},
+{
+"name": "u_vmb_Q0.clk_macro2",
+"kind": "core",
+"xy": [
+3613.699,
+858.464
+],
+"insertion_ps": 405.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 405 ps (max 497), view hfd_vms_bank_native_q0_faces@9119a4edb587"
+},
+{
+"name": "u_vmb_Q0.clk_w",
+"kind": "core",
+"xy": [
+3613.699,
+863.968
+],
+"insertion_ps": 405.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 405 ps (max 497), view hfd_vms_bank_native_q0_faces@9119a4edb587"
+},
+{
+"name": "u_vmb_Q2.clk_s",
+"kind": "core",
+"xy": [
+3755.16,
+892.099
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 492), view hfd_vms_bank_native_q0_faces@08b030c8c5fa"
+},
+{
+"name": "u_vmb_Q2.clk_e",
+"kind": "core",
+"xy": [
+3896.621,
+1209.568
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 492), view hfd_vms_bank_native_q0_faces@08b030c8c5fa"
+},
+{
+"name": "u_vmb_Q2.clk",
+"kind": "core",
+"xy": [
+3613.699,
+1205.88
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 492), view hfd_vms_bank_native_q0_faces@08b030c8c5fa"
+},
+{
+"name": "u_vmb_Q2.clk_macro0",
+"kind": "core",
+"xy": [
+3613.699,
+1210.536
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 492), view hfd_vms_bank_native_q0_faces@08b030c8c5fa"
+},
+{
+"name": "u_vmb_Q2.clk_macro1",
+"kind": "core",
+"xy": [
+3613.699,
+1200.072
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 492), view hfd_vms_bank_native_q0_faces@08b030c8c5fa"
+},
+{
+"name": "u_vmb_Q2.clk_macro2",
+"kind": "core",
+"xy": [
+3613.699,
+1215.528
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 492), view hfd_vms_bank_native_q0_faces@08b030c8c5fa"
+},
+{
+"name": "u_vmb_Q2.clk_n",
+"kind": "core",
+"xy": [
+3620.179,
+1218.024
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 492), view hfd_vms_bank_native_q0_faces@08b030c8c5fa"
+},
+{
+"name": "u_vmb_Q2.clk_w",
+"kind": "core",
+"xy": [
+3626.659,
+1216.2
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 492), view hfd_vms_bank_native_q0_faces@08b030c8c5fa"
+},
+{
+"name": "u_vmb_Q3.clk",
+"kind": "core",
+"xy": [
+4491.24,
+1736.621
+],
+"insertion_ps": 437.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 437 ps (max 534), view hfd_vms_bank_native_q0_faces@cdf7edf6aef9"
+},
+{
+"name": "u_vmb_Q3.clk_n",
+"kind": "core",
+"xy": [
+4495.752,
+1736.621
+],
+"insertion_ps": 437.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 437 ps (max 534), view hfd_vms_bank_native_q0_faces@cdf7edf6aef9"
+},
+{
+"name": "u_vmb_Q3.clk_s",
+"kind": "core",
+"xy": [
+4492.768,
+1410.499
+],
+"insertion_ps": 437.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 437 ps (max 534), view hfd_vms_bank_native_q0_faces@cdf7edf6aef9"
+},
+{
+"name": "u_vmb_Q3.clk_e",
+"kind": "core",
+"xy": [
+4501.421,
+1573.56
+],
+"insertion_ps": 437.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 437 ps (max 534), view hfd_vms_bank_native_q0_faces@cdf7edf6aef9"
+},
+{
+"name": "u_vmb_Q3.clk_macro0",
+"kind": "core",
+"xy": [
+4218.499,
+1713.056
+],
+"insertion_ps": 437.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 437 ps (max 534), view hfd_vms_bank_native_q0_faces@cdf7edf6aef9"
+},
+{
+"name": "u_vmb_Q3.clk_macro1",
+"kind": "core",
+"xy": [
+4218.499,
+1717.984
+],
+"insertion_ps": 437.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 437 ps (max 534), view hfd_vms_bank_native_q0_faces@cdf7edf6aef9"
+},
+{
+"name": "u_vmb_Q3.clk_macro2",
+"kind": "core",
+"xy": [
+4218.499,
+1722.976
+],
+"insertion_ps": 437.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 437 ps (max 534), view hfd_vms_bank_native_q0_faces@cdf7edf6aef9"
+},
+{
+"name": "u_vmb_Q3.clk_w",
+"kind": "core",
+"xy": [
+4218.499,
+1727.968
+],
+"insertion_ps": 437.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 437 ps (max 534), view hfd_vms_bank_native_q0_faces@cdf7edf6aef9"
+},
+{
+"name": "u_vmb_Q4.clk",
+"kind": "core",
+"xy": [
+3583.176,
+1218.221
+],
+"insertion_ps": 408.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 408 ps (max 502), view hfd_vms_bank_native_q0_faces@48eaaf6eb467"
+},
+{
+"name": "u_vmb_Q4.clk_n",
+"kind": "core",
+"xy": [
+3588.12,
+1218.221
+],
+"insertion_ps": 408.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 408 ps (max 502), view hfd_vms_bank_native_q0_faces@48eaaf6eb467"
+},
+{
+"name": "u_vmb_Q4.clk_s",
+"kind": "core",
+"xy": [
+3585.576,
+892.099
+],
+"insertion_ps": 408.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 408 ps (max 502), view hfd_vms_bank_native_q0_faces@48eaaf6eb467"
+},
+{
+"name": "u_vmb_Q4.clk_e",
+"kind": "core",
+"xy": [
+3594.221,
+1209.568
+],
+"insertion_ps": 408.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 408 ps (max 502), view hfd_vms_bank_native_q0_faces@48eaaf6eb467"
+},
+{
+"name": "u_vmb_Q4.clk_macro0",
+"kind": "core",
+"xy": [
+3311.299,
+1208.76
+],
+"insertion_ps": 408.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 408 ps (max 502), view hfd_vms_bank_native_q0_faces@48eaaf6eb467"
+},
+{
+"name": "u_vmb_Q4.clk_macro1",
+"kind": "core",
+"xy": [
+3311.299,
+1213.368
+],
+"insertion_ps": 408.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 408 ps (max 502), view hfd_vms_bank_native_q0_faces@48eaaf6eb467"
+},
+{
+"name": "u_vmb_Q4.clk_macro2",
+"kind": "core",
+"xy": [
+3311.299,
+1202.808
+],
+"insertion_ps": 408.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 408 ps (max 502), view hfd_vms_bank_native_q0_faces@48eaaf6eb467"
+},
+{
+"name": "u_vmb_Q4.clk_w",
+"kind": "core",
+"xy": [
+3317.779,
+1218.216
+],
+"insertion_ps": 408.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 408 ps (max 502), view hfd_vms_bank_native_q0_faces@48eaaf6eb467"
+},
+{
+"name": "u_vmb_Q6.clk",
+"kind": "core",
+"xy": [
+4187.976,
+1736.621
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 460), view hfd_vms_bank_native_q0_faces@1dc19a048d64"
+},
+{
+"name": "u_vmb_Q6.clk_n",
+"kind": "core",
+"xy": [
+4192.92,
+1736.621
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 460), view hfd_vms_bank_native_q0_faces@1dc19a048d64"
+},
+{
+"name": "u_vmb_Q6.clk_e",
+"kind": "core",
+"xy": [
+4199.021,
+1419.144
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 460), view hfd_vms_bank_native_q0_faces@1dc19a048d64"
+},
+{
+"name": "u_vmb_Q6.clk_s",
+"kind": "core",
+"xy": [
+4199.021,
+1727.976
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 460), view hfd_vms_bank_native_q0_faces@1dc19a048d64"
+},
+{
+"name": "u_vmb_Q6.clk_macro0",
+"kind": "core",
+"xy": [
+3916.099,
+1721.504
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 460), view hfd_vms_bank_native_q0_faces@1dc19a048d64"
+},
+{
+"name": "u_vmb_Q6.clk_macro1",
+"kind": "core",
+"xy": [
+3916.099,
+1725.84
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 460), view hfd_vms_bank_native_q0_faces@1dc19a048d64"
+},
+{
+"name": "u_vmb_Q6.clk_macro2",
+"kind": "core",
+"xy": [
+3916.099,
+1732.272
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 460), view hfd_vms_bank_native_q0_faces@1dc19a048d64"
+},
+{
+"name": "u_vmb_Q6.clk_w",
+"kind": "core",
+"xy": [
+3922.579,
+1736.608
+],
+"insertion_ps": 406.0,
+"budget_owner": "hfd_vms_bank_native_q0_faces",
+"note": "HBM-ELEM measured I 406 ps (max 460), view hfd_vms_bank_native_q0_faces@1dc19a048d64"
+},
+{
+"name": "u_xq_Q_p0_bd",
+"kind": "core",
+"xy": [
+1978.584,
+3583.421
+],
+"insertion_ps": 272.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bdring",
+"note": "HBM-ELEM measured I 272 ps (max 287), view ot_hgi_sm_xload_cl2_bdring@709af958dd74"
+},
+{
+"name": "u_xq_Q_p1_bd",
+"kind": "core",
+"xy": [
+2149.032,
+589.699
+],
+"insertion_ps": 288.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bdring",
+"note": "HBM-ELEM measured I 288 ps (max 304), view ot_hgi_sm_xload_cl2_bdring@2f4ce4cfb609"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk",
+"kind": "core",
+"xy": [
+3828.456,
+2836.099
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_n",
+"kind": "core",
+"xy": [
+3833.016,
+2836.099
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_s",
+"kind": "core",
+"xy": [
+3822.504,
+2836.099
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_ctrl",
+"kind": "core",
+"xy": [
+3837.864,
+2836.099
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_m0",
+"kind": "core",
+"xy": [
+3829.464,
+2831.779
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_m1",
+"kind": "core",
+"xy": [
+3840.84,
+2842.579
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_m2",
+"kind": "core",
+"xy": [
+3834.6,
+2831.779
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_m3",
+"kind": "core",
+"xy": [
+3824.04,
+2831.779
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_m4",
+"kind": "core",
+"xy": [
+3841.608,
+2849.059
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_m5",
+"kind": "core",
+"xy": [
+3839.688,
+2831.779
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_m6",
+"kind": "core",
+"xy": [
+3844.248,
+2838.259
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_m7",
+"kind": "core",
+"xy": [
+3844.488,
+2833.939
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_l0",
+"kind": "core",
+"xy": [
+3818.856,
+2831.779
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_l1",
+"kind": "core",
+"xy": [
+3840.696,
+2855.539
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_l2",
+"kind": "core",
+"xy": [
+3845.256,
+2844.739
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_l3",
+"kind": "core",
+"xy": [
+3845.544,
+2829.619
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_l4",
+"kind": "core",
+"xy": [
+3845.784,
+2855.539
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_l5",
+"kind": "core",
+"xy": [
+3846.024,
+2851.219
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_l6",
+"kind": "core",
+"xy": [
+3833.304,
+2827.459
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq0.clk_l7",
+"kind": "core",
+"xy": [
+3848.712,
+2840.419
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk",
+"kind": "core",
+"xy": [
+3958.056,
+3181.699
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_n",
+"kind": "core",
+"xy": [
+3962.616,
+3181.699
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_s",
+"kind": "core",
+"xy": [
+3952.104,
+3181.699
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_ctrl",
+"kind": "core",
+"xy": [
+3967.464,
+3181.699
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_m0",
+"kind": "core",
+"xy": [
+3959.064,
+3177.379
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_m1",
+"kind": "core",
+"xy": [
+3970.44,
+3188.179
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_m2",
+"kind": "core",
+"xy": [
+3964.2,
+3177.379
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_m3",
+"kind": "core",
+"xy": [
+3953.64,
+3177.379
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_m4",
+"kind": "core",
+"xy": [
+3971.208,
+3194.659
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_m5",
+"kind": "core",
+"xy": [
+3969.288,
+3177.379
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_m6",
+"kind": "core",
+"xy": [
+3973.848,
+3183.859
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_m7",
+"kind": "core",
+"xy": [
+3974.088,
+3179.539
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_l0",
+"kind": "core",
+"xy": [
+3948.456,
+3177.379
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_l1",
+"kind": "core",
+"xy": [
+3970.296,
+3201.139
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_l2",
+"kind": "core",
+"xy": [
+3974.856,
+3190.339
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_l3",
+"kind": "core",
+"xy": [
+3975.144,
+3175.219
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_l4",
+"kind": "core",
+"xy": [
+3975.384,
+3201.139
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_l5",
+"kind": "core",
+"xy": [
+3975.624,
+3196.819
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_l6",
+"kind": "core",
+"xy": [
+3962.904,
+3173.059
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq1.clk_l7",
+"kind": "core",
+"xy": [
+3978.312,
+3186.019
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk",
+"kind": "core",
+"xy": [
+3482.856,
+3008.899
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_n",
+"kind": "core",
+"xy": [
+3487.416,
+3008.899
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_s",
+"kind": "core",
+"xy": [
+3476.904,
+3008.899
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_ctrl",
+"kind": "core",
+"xy": [
+3492.264,
+3008.899
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_m0",
+"kind": "core",
+"xy": [
+3483.864,
+3004.579
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_m1",
+"kind": "core",
+"xy": [
+3495.24,
+3015.379
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_m2",
+"kind": "core",
+"xy": [
+3489.0,
+3004.579
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_m3",
+"kind": "core",
+"xy": [
+3495.72,
+3019.699
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_m4",
+"kind": "core",
+"xy": [
+3478.728,
+3004.579
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_m5",
+"kind": "core",
+"xy": [
+3494.088,
+3004.579
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_m6",
+"kind": "core",
+"xy": [
+3496.488,
+3026.179
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_m7",
+"kind": "core",
+"xy": [
+3496.728,
+3011.059
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_l0",
+"kind": "core",
+"xy": [
+3499.176,
+3006.739
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_l1",
+"kind": "core",
+"xy": [
+3473.496,
+3004.579
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_l2",
+"kind": "core",
+"xy": [
+3499.656,
+3002.419
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_l3",
+"kind": "core",
+"xy": [
+3486.984,
+3000.259
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_l4",
+"kind": "core",
+"xy": [
+3500.184,
+3017.539
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_l5",
+"kind": "core",
+"xy": [
+3502.584,
+3013.219
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_l6",
+"kind": "core",
+"xy": [
+3492.024,
+3000.259
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq2.clk_l7",
+"kind": "core",
+"xy": [
+3500.952,
+3024.019
+],
+"insertion_ps": 356.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 356 ps (max 443), view ot_hgi_sm_xload_cl2_bfqg@c13e769a54d7"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk",
+"kind": "core",
+"xy": [
+3449.688,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_n",
+"kind": "core",
+"xy": [
+3464.424,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_s",
+"kind": "core",
+"xy": [
+3479.208,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_ctrl",
+"kind": "core",
+"xy": [
+3494.28,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_m0",
+"kind": "core",
+"xy": [
+3509.064,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_m1",
+"kind": "core",
+"xy": [
+3524.136,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_m2",
+"kind": "core",
+"xy": [
+3538.92,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_m3",
+"kind": "core",
+"xy": [
+3553.992,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_m4",
+"kind": "core",
+"xy": [
+3568.776,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_m5",
+"kind": "core",
+"xy": [
+3583.896,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_m6",
+"kind": "core",
+"xy": [
+3598.632,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_m7",
+"kind": "core",
+"xy": [
+3613.368,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_l0",
+"kind": "core",
+"xy": [
+3628.44,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_l1",
+"kind": "core",
+"xy": [
+3643.224,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_l2",
+"kind": "core",
+"xy": [
+3658.296,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_l3",
+"kind": "core",
+"xy": [
+3673.08,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_l4",
+"kind": "core",
+"xy": [
+3688.152,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_l5",
+"kind": "core",
+"xy": [
+3702.936,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_l6",
+"kind": "core",
+"xy": [
+3717.912,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p0_bfq3.clk_l7",
+"kind": "core",
+"xy": [
+3732.696,
+2101.699
+],
+"insertion_ps": 385.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 385 ps (max 452), view ot_hgi_sm_xload_cl2_bfqg@1d82ff40b7b2"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk",
+"kind": "core",
+"xy": [
+3363.288,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_n",
+"kind": "core",
+"xy": [
+3378.024,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_s",
+"kind": "core",
+"xy": [
+3392.808,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_ctrl",
+"kind": "core",
+"xy": [
+3407.88,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_m0",
+"kind": "core",
+"xy": [
+3422.664,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_m1",
+"kind": "core",
+"xy": [
+3437.736,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_m2",
+"kind": "core",
+"xy": [
+3452.52,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_m3",
+"kind": "core",
+"xy": [
+3467.592,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_m4",
+"kind": "core",
+"xy": [
+3482.376,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_m5",
+"kind": "core",
+"xy": [
+3497.496,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_m6",
+"kind": "core",
+"xy": [
+3512.232,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_m7",
+"kind": "core",
+"xy": [
+3526.968,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_l0",
+"kind": "core",
+"xy": [
+3542.04,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_l1",
+"kind": "core",
+"xy": [
+3556.824,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_l2",
+"kind": "core",
+"xy": [
+3571.896,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_l3",
+"kind": "core",
+"xy": [
+3586.68,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_l4",
+"kind": "core",
+"xy": [
+3601.752,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_l5",
+"kind": "core",
+"xy": [
+3616.536,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_l6",
+"kind": "core",
+"xy": [
+3631.512,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq0.clk_l7",
+"kind": "core",
+"xy": [
+3646.296,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk",
+"kind": "core",
+"xy": [
+3708.888,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_n",
+"kind": "core",
+"xy": [
+3723.624,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_s",
+"kind": "core",
+"xy": [
+3738.408,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_ctrl",
+"kind": "core",
+"xy": [
+3753.48,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_m0",
+"kind": "core",
+"xy": [
+3768.264,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_m1",
+"kind": "core",
+"xy": [
+3783.336,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_m2",
+"kind": "core",
+"xy": [
+3798.12,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_m3",
+"kind": "core",
+"xy": [
+3813.192,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_m4",
+"kind": "core",
+"xy": [
+3827.976,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_m5",
+"kind": "core",
+"xy": [
+3843.096,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_m6",
+"kind": "core",
+"xy": [
+3857.832,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_m7",
+"kind": "core",
+"xy": [
+3872.568,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_l0",
+"kind": "core",
+"xy": [
+3887.64,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_l1",
+"kind": "core",
+"xy": [
+3902.424,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_l2",
+"kind": "core",
+"xy": [
+3917.496,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_l3",
+"kind": "core",
+"xy": [
+3932.28,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_l4",
+"kind": "core",
+"xy": [
+3947.352,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_l5",
+"kind": "core",
+"xy": [
+3962.136,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_l6",
+"kind": "core",
+"xy": [
+3977.112,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq1.clk_l7",
+"kind": "core",
+"xy": [
+3991.896,
+1756.099
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk",
+"kind": "core",
+"xy": [
+3380.232,
+2144.899
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_n",
+"kind": "core",
+"xy": [
+3385.896,
+2144.899
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_s",
+"kind": "core",
+"xy": [
+3373.896,
+2144.899
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_ctrl",
+"kind": "core",
+"xy": [
+3392.184,
+2144.899
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_m0",
+"kind": "core",
+"xy": [
+3384.552,
+2140.579
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_m1",
+"kind": "core",
+"xy": [
+3390.216,
+2140.579
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_m2",
+"kind": "core",
+"xy": [
+3397.656,
+2144.899
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_m3",
+"kind": "core",
+"xy": [
+3379.224,
+2140.579
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_m4",
+"kind": "core",
+"xy": [
+3395.736,
+2140.579
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_m5",
+"kind": "core",
+"xy": [
+3401.064,
+2140.579
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_m6",
+"kind": "core",
+"xy": [
+3391.224,
+2136.259
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_m7",
+"kind": "core",
+"xy": [
+3396.552,
+2136.259
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_l0",
+"kind": "core",
+"xy": [
+3406.536,
+2144.899
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_l1",
+"kind": "core",
+"xy": [
+3405.384,
+2140.579
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_l2",
+"kind": "core",
+"xy": [
+3408.504,
+2151.379
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_l3",
+"kind": "core",
+"xy": [
+3409.512,
+2155.699
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_l4",
+"kind": "core",
+"xy": [
+3408.648,
+2162.179
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_l5",
+"kind": "core",
+"xy": [
+3411.816,
+2147.059
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_l6",
+"kind": "core",
+"xy": [
+3410.616,
+2140.579
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq2.clk_l7",
+"kind": "core",
+"xy": [
+3413.784,
+2162.179
+],
+"insertion_ps": 359.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 359 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@a386c1ab9f9d"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk",
+"kind": "core",
+"xy": [
+4097.688,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_n",
+"kind": "core",
+"xy": [
+4112.424,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_s",
+"kind": "core",
+"xy": [
+4127.208,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_ctrl",
+"kind": "core",
+"xy": [
+4142.28,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_m0",
+"kind": "core",
+"xy": [
+4157.064,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_m1",
+"kind": "core",
+"xy": [
+4172.136,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_m2",
+"kind": "core",
+"xy": [
+4186.92,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_m3",
+"kind": "core",
+"xy": [
+4201.992,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_m4",
+"kind": "core",
+"xy": [
+4216.776,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_m5",
+"kind": "core",
+"xy": [
+4231.896,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_m6",
+"kind": "core",
+"xy": [
+4246.632,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_m7",
+"kind": "core",
+"xy": [
+4261.368,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_l0",
+"kind": "core",
+"xy": [
+4276.44,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_l1",
+"kind": "core",
+"xy": [
+4291.224,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_l2",
+"kind": "core",
+"xy": [
+4306.296,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_l3",
+"kind": "core",
+"xy": [
+4321.08,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_l4",
+"kind": "core",
+"xy": [
+4336.152,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_l5",
+"kind": "core",
+"xy": [
+4350.936,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_l6",
+"kind": "core",
+"xy": [
+4365.912,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_xq_Q_p1_bfq3.clk_l7",
+"kind": "core",
+"xy": [
+4380.696,
+1885.699
+],
+"insertion_ps": 380.0,
+"budget_owner": "ot_hgi_sm_xload_cl2_bfqg",
+"note": "HBM-ELEM measured I 380 ps (max 444), view ot_hgi_sm_xload_cl2_bfqg@1b2fb119b618"
+},
+{
+"name": "u_sucore_Q",
+"kind": "core",
+"xy": [
+1500.744,
+1712.899
+],
+"insertion_ps": 434.0,
+"budget_owner": "ot_hbm_su_static_qcore_r13",
+"note": "HBM-ELEM measured I 434 ps (max 528), view ot_hbm_su_static_qcore_r13@30cedff7c089"
+},
+{
+"name": "u_sfus_Q",
+"kind": "core",
+"xy": [
+592.92,
+1972.099
+],
+"insertion_ps": 550.0,
+"budget_owner": "ot_hbm_su_static_sfustore_hw",
+"note": "HBM-ELEM measured I 550 ps (max 614), view ot_hbm_su_static_sfustore_hw@881e9a5e0761"
+},
+{
+"name": "u_hb_quant_Q__u_dec",
+"kind": "core",
+"xy": [
+3013.512,
+1756.099
+],
+"insertion_ps": 368.0,
+"budget_owner": "ot_hgi_qw_dec",
+"note": "HBM-ELEM measured I 368 ps (max 386), view ot_hgi_qw_dec@3ea301eff4ef"
+},
+{
+"name": "u_hcollgi_Q",
+"kind": "core",
+"xy": [
+1237.699,
+2249.448
+],
+"insertion_ps": 343.0,
+"budget_owner": "ot_hgi_coll_gq_issue",
+"note": "HBM-ELEM measured I 343 ps (max 364), view ot_hgi_coll_gq_issue@620157ecc938"
+},
+{
+"name": "u_hcollgl_Q",
+"kind": "core",
+"xy": [
+1237.699,
+2506.272
+],
+"insertion_ps": 328.0,
+"budget_owner": "ot_hgi_coll_gq_land",
+"note": "HBM-ELEM measured I 328 ps (max 384), view ot_hgi_coll_gq_land@c9df5f7e46f9"
+},
+{
+"name": "u_hb_idx__q_Q",
+"kind": "core",
+"xy": [
+2274.499,
+350.04
+],
+"insertion_ps": 275.0,
+"budget_owner": "ot_hbm_idx_query_static",
+"note": "HBM-ELEM measured I 275 ps (max 394), view ot_hbm_idx_query_static@57472ecfc79f"
+},
+{
+"name": "u_ctl_Q_p00",
+"kind": "core",
+"xy": [
+2231.299,
+2801.544
+],
+"insertion_ps": 295.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 295 ps (max 369), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@95777efcb2fa"
+},
+{
+"name": "u_ctl_Q_p01",
+"kind": "core",
+"xy": [
+2792.899,
+2908.056
+],
+"insertion_ps": 270.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 270 ps (max 284), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@9467d1b02397"
+},
+{
+"name": "u_ctl_Q_p02",
+"kind": "core",
+"xy": [
+2231.299,
+2628.744
+],
+"insertion_ps": 295.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 295 ps (max 369), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@95777efcb2fa"
+},
+{
+"name": "u_ctl_Q_p03",
+"kind": "core",
+"xy": [
+2058.499,
+2758.344
+],
+"insertion_ps": 277.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 277 ps (max 296), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@684f400248e5"
+},
+{
+"name": "u_ctl_Q_p05",
+"kind": "core",
+"xy": [
+3872.899,
+2801.544
+],
+"insertion_ps": 295.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 295 ps (max 369), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@95777efcb2fa"
+},
+{
+"name": "u_ctl_Q_p06",
+"kind": "core",
+"xy": [
+4304.899,
+2563.896
+],
+"insertion_ps": 263.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 263 ps (max 326), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@3b586cbb332d"
+},
+{
+"name": "u_ctl_Q_p07",
+"kind": "core",
+"xy": [
+4607.299,
+2951.304
+],
+"insertion_ps": 273.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 273 ps (max 315), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@31be7c8a3d52"
+},
+{
+"name": "u_ctl_Q_p08",
+"kind": "core",
+"xy": [
+2231.299,
+2519.256
+],
+"insertion_ps": 267.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 267 ps (max 349), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@84cf452f04c0"
+},
+{
+"name": "u_ctl_Q_p09",
+"kind": "core",
+"xy": [
+1885.699,
+2671.944
+],
+"insertion_ps": 282.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 282 ps (max 362), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@3f2f98babe4c"
+},
+{
+"name": "u_ctl_Q_p10",
+"kind": "core",
+"xy": [
+1669.699,
+2369.544
+],
+"insertion_ps": 277.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 277 ps (max 296), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@684f400248e5"
+},
+{
+"name": "u_ctl_Q_p11",
+"kind": "core",
+"xy": [
+1928.899,
+2023.944
+],
+"insertion_ps": 281.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 281 ps (max 347), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@cfc804fdbfd4"
+},
+{
+"name": "u_ctl_Q_p12",
+"kind": "core",
+"xy": [
+2576.899,
+771.144
+],
+"insertion_ps": 277.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 277 ps (max 296), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@684f400248e5"
+},
+{
+"name": "u_ctl_Q_p13",
+"kind": "core",
+"xy": [
+2360.899,
+771.144
+],
+"insertion_ps": 277.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 277 ps (max 296), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@684f400248e5"
+},
+{
+"name": "u_ctl_Q_p14",
+"kind": "core",
+"xy": [
+3052.099,
+1807.944
+],
+"insertion_ps": 280.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 280 ps (max 348), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@a4d8b0938055"
+},
+{
+"name": "u_ctl_Q_p15",
+"kind": "core",
+"xy": [
+2188.099,
+771.144
+],
+"insertion_ps": 295.0,
+"budget_owner": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+"note": "HBM-ELEM measured I 295 ps (max 369), view ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@95777efcb2fa"
+},
+{
+"name": "u_vmks_Q0.hbm_clk",
+"kind": "core",
+"xy": [
+2771.261,
+3031.848
+],
+"insertion_ps": 543.0,
+"budget_owner": "ot_hbm_svc_vm_kshare_splitstrap",
+"note": "HBM-ELEM measured I 543 ps (max 657), view ot_hbm_svc_vm_kshare_splitstrap@5b4268cf4000"
+},
+{
+"name": "u_vmks_Q0.stream_clk",
+"kind": "core",
+"xy": [
+2771.261,
+3036.504
+],
+"insertion_ps": 543.0,
+"budget_owner": "ot_hbm_svc_vm_kshare_splitstrap",
+"note": "HBM-ELEM measured I 543 ps (max 657), view ot_hbm_svc_vm_kshare_splitstrap@5b4268cf4000"
+},
+{
+"name": "u_vmks_Q1.hbm_clk",
+"kind": "core",
+"xy": [
+4585.661,
+3068.952
+],
+"insertion_ps": 534.0,
+"budget_owner": "ot_hbm_svc_vm_kshare_splitstrap",
+"note": "HBM-ELEM measured I 534 ps (max 683), view ot_hbm_svc_vm_kshare_splitstrap@cd020cecd26b"
+},
+{
+"name": "u_vmks_Q1.stream_clk",
+"kind": "core",
+"xy": [
+4585.661,
+3074.28
+],
+"insertion_ps": 534.0,
+"budget_owner": "ot_hbm_svc_vm_kshare_splitstrap",
+"note": "HBM-ELEM measured I 534 ps (max 683), view ot_hbm_svc_vm_kshare_splitstrap@cd020cecd26b"
+},
+{
+"name": "u_vmks_Q2.hbm_clk",
+"kind": "core",
+"xy": [
+1886.232,
+2654.621
+],
+"insertion_ps": 518.0,
+"budget_owner": "ot_hbm_svc_vm_kshare_splitstrap",
+"note": "HBM-ELEM measured I 518 ps (max 585), view ot_hbm_svc_vm_kshare_splitstrap@fcb962e88e4d"
+},
+{
+"name": "u_vmks_Q2.stream_clk",
+"kind": "core",
+"xy": [
+1921.224,
+2654.621
+],
+"insertion_ps": 518.0,
+"budget_owner": "ot_hbm_svc_vm_kshare_splitstrap",
+"note": "HBM-ELEM measured I 518 ps (max 585), view ot_hbm_svc_vm_kshare_splitstrap@fcb962e88e4d"
+},
+{
+"name": "u_vmks_Q3.hbm_clk",
+"kind": "core",
+"xy": [
+3289.661,
+1168.152
+],
+"insertion_ps": 527.0,
+"budget_owner": "ot_hbm_svc_vm_kshare_splitstrap",
+"note": "HBM-ELEM measured I 527 ps (max 660), view ot_hbm_svc_vm_kshare_splitstrap@6bbd87383348"
+},
+{
+"name": "u_vmks_Q3.stream_clk",
+"kind": "core",
+"xy": [
+3289.661,
+1173.48
+],
+"insertion_ps": 527.0,
+"budget_owner": "ot_hbm_svc_vm_kshare_splitstrap",
+"note": "HBM-ELEM measured I 527 ps (max 660), view ot_hbm_svc_vm_kshare_splitstrap@6bbd87383348"
+},
+{
+"name": "u_hb_idx__op_Q",
+"kind": "core",
+"xy": [
+2231.299,
+181.08
+],
+"insertion_ps": 259.0,
+"budget_owner": "ot_hbm_idx_vm_query_static_n12",
+"note": "HBM-ELEM measured I 259 ps (max 281), view ot_hbm_idx_vm_query_static_n12@2cc6e51647e9"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -29330,7 +33874,7 @@
 ],
 "ft_budget": {
 "M8": 0.585883,
-"M9": 0.580028
+"M9": 0.579088
 },
 "internal_stations": [
 {
@@ -161170,7 +165714,32 @@
 2073.6
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_lk_N0",
+"kind": "core",
+"xy": [
+334.44,
+28.099
+],
+"insertion_ps": 627.0,
+"budget_owner": "ot_pdie_serdes",
+"note": "HBM-ELEM measured I 627 ps (max 722), view ot_pdie_serdes@8104b4722883"
+},
+{
+"name": "u_ep_N0",
+"kind": "core",
+"xy": [
+569.696,
+650.179
+],
+"insertion_ps": 577.0,
+"budget_owner": "hfd_ep_static",
+"note": "HBM-ELEM measured I 577 ps (max 725), view hfd_ep_static@7d8cfe0c9f2c"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -165235,7 +169804,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t00_n",
@@ -165246,7 +169815,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t10_s",
@@ -165257,7 +169826,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t10_n",
@@ -165268,7 +169837,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t01_s",
@@ -165279,7 +169848,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t01_n",
@@ -165290,7 +169859,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t11_s",
@@ -165301,7 +169870,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t11_n",
@@ -165312,7 +169881,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t02_s",
@@ -165323,7 +169892,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t02_n",
@@ -165334,7 +169903,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t12_s",
@@ -165345,7 +169914,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t12_n",
@@ -165356,7 +169925,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t03_s",
@@ -165367,7 +169936,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t03_n",
@@ -165378,7 +169947,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t13_s",
@@ -165389,7 +169958,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t13_n",
@@ -165400,7 +169969,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t04_s",
@@ -165411,7 +169980,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t04_n",
@@ -165422,7 +169991,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t14_s",
@@ -165433,7 +170002,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t14_n",
@@ -165444,7 +170013,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t05_s",
@@ -165455,7 +170024,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t05_n",
@@ -165466,7 +170035,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t15_s",
@@ -165477,7 +170046,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t15_n",
@@ -165488,7 +170057,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t06_s",
@@ -165499,7 +170068,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t06_n",
@@ -165510,7 +170079,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t16_s",
@@ -165521,7 +170090,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t16_n",
@@ -165532,7 +170101,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t07_s",
@@ -165543,7 +170112,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t07_n",
@@ -165554,7 +170123,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t17_s",
@@ -165565,7 +170134,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t17_n",
@@ -165576,7 +170145,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 }
 ]
 },
@@ -166350,7 +170919,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t00_n",
@@ -166361,7 +170930,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t10_s",
@@ -166372,7 +170941,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t10_n",
@@ -166383,7 +170952,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t01_s",
@@ -166394,7 +170963,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t01_n",
@@ -166405,7 +170974,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t11_s",
@@ -166416,7 +170985,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t11_n",
@@ -166427,7 +170996,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t02_s",
@@ -166438,7 +171007,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t02_n",
@@ -166449,7 +171018,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t12_s",
@@ -166460,7 +171029,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t12_n",
@@ -166471,7 +171040,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t03_s",
@@ -166482,7 +171051,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t03_n",
@@ -166493,7 +171062,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t13_s",
@@ -166504,7 +171073,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t13_n",
@@ -166515,7 +171084,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t04_s",
@@ -166526,7 +171095,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t04_n",
@@ -166537,7 +171106,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t14_s",
@@ -166548,7 +171117,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t14_n",
@@ -166559,7 +171128,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t05_s",
@@ -166570,7 +171139,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t05_n",
@@ -166581,7 +171150,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t15_s",
@@ -166592,7 +171161,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t15_n",
@@ -166603,7 +171172,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t06_s",
@@ -166614,7 +171183,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t06_n",
@@ -166625,7 +171194,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t16_s",
@@ -166636,7 +171205,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t16_n",
@@ -166647,7 +171216,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t07_s",
@@ -166658,7 +171227,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t07_n",
@@ -166669,7 +171238,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t17_s",
@@ -166680,7 +171249,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t17_n",
@@ -166691,7 +171260,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 }
 ]
 },
@@ -167465,7 +172034,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t00_n",
@@ -167476,7 +172045,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t10_s",
@@ -167487,7 +172056,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t10_n",
@@ -167498,7 +172067,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t01_s",
@@ -167509,7 +172078,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t01_n",
@@ -167520,7 +172089,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t11_s",
@@ -167531,7 +172100,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t11_n",
@@ -167542,7 +172111,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t02_s",
@@ -167553,7 +172122,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t02_n",
@@ -167564,7 +172133,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t12_s",
@@ -167575,7 +172144,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t12_n",
@@ -167586,7 +172155,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t03_s",
@@ -167597,7 +172166,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t03_n",
@@ -167608,7 +172177,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t13_s",
@@ -167619,7 +172188,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t13_n",
@@ -167630,7 +172199,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t04_s",
@@ -167641,7 +172210,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t04_n",
@@ -167652,7 +172221,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t14_s",
@@ -167663,7 +172232,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t14_n",
@@ -167674,7 +172243,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t05_s",
@@ -167685,7 +172254,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t05_n",
@@ -167696,7 +172265,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t15_s",
@@ -167707,7 +172276,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t15_n",
@@ -167718,7 +172287,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t06_s",
@@ -167729,7 +172298,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t06_n",
@@ -167740,7 +172309,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t16_s",
@@ -167751,7 +172320,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t16_n",
@@ -167762,7 +172331,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t07_s",
@@ -167773,7 +172342,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t07_n",
@@ -167784,7 +172353,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t17_s",
@@ -167795,7 +172364,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t17_n",
@@ -167806,7 +172375,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 }
 ]
 },
@@ -168580,7 +173149,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t00_n",
@@ -168591,7 +173160,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t10_s",
@@ -168602,7 +173171,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t10_n",
@@ -168613,7 +173182,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t01_s",
@@ -168624,7 +173193,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t01_n",
@@ -168635,7 +173204,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t11_s",
@@ -168646,7 +173215,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t11_n",
@@ -168657,7 +173226,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t02_s",
@@ -168668,7 +173237,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t02_n",
@@ -168679,7 +173248,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t12_s",
@@ -168690,7 +173259,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t12_n",
@@ -168701,7 +173270,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t03_s",
@@ -168712,7 +173281,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t03_n",
@@ -168723,7 +173292,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t13_s",
@@ -168734,7 +173303,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t13_n",
@@ -168745,7 +173314,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t04_s",
@@ -168756,7 +173325,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t04_n",
@@ -168767,7 +173336,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t14_s",
@@ -168778,7 +173347,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t14_n",
@@ -168789,7 +173358,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t05_s",
@@ -168800,7 +173369,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t05_n",
@@ -168811,7 +173380,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t15_s",
@@ -168822,7 +173391,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t15_n",
@@ -168833,7 +173402,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t06_s",
@@ -168844,7 +173413,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t06_n",
@@ -168855,7 +173424,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t16_s",
@@ -168866,7 +173435,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t16_n",
@@ -168877,7 +173446,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t07_s",
@@ -168888,7 +173457,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t07_n",
@@ -168899,7 +173468,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t17_s",
@@ -168910,7 +173479,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_s",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 },
 {
 "name": "u_sm_t17_n",
@@ -168921,7 +173490,7 @@
 ],
 "insertion_ps": 250.0,
 "budget_owner": "hnx_rp3lp3h_n",
-"note": "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"
+"note": "SM half: insertion NOT MEASURED (250 = common latency, not early)"
 }
 ]
 },
@@ -169658,7 +174227,32 @@
 751.68
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_lk_S0",
+"kind": "core",
+"xy": [
+334.44,
+28.099
+],
+"insertion_ps": 627.0,
+"budget_owner": "ot_pdie_serdes",
+"note": "HBM-ELEM measured I 627 ps (max 722), view ot_pdie_serdes@8104b4722883"
+},
+{
+"name": "u_ep_S0",
+"kind": "core",
+"xy": [
+359.16,
+650.179
+],
+"insertion_ps": 489.0,
+"budget_owner": "hfd_ep_static",
+"note": "HBM-ELEM measured I 489 ps (max 641), view hfd_ep_static@67dc73e05678"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -170102,7 +174696,32 @@
 751.68
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_xc_Q2",
+"kind": "core",
+"xy": [
+380.568,
+1246.339
+],
+"insertion_ps": 519.0,
+"budget_owner": "ot_hbm_svc_sm_xcal_rel_t",
+"note": "HBM-ELEM measured I 519 ps (max 677), view ot_hbm_svc_sm_xcal_rel_t@9ee64da70704"
+},
+{
+"name": "u_xc_Q3",
+"kind": "core",
+"xy": [
+519.624,
+1246.339
+],
+"insertion_ps": 521.0,
+"budget_owner": "ot_hbm_svc_sm_xcal_rel_t",
+"note": "HBM-ELEM measured I 521 ps (max 685), view ot_hbm_svc_sm_xcal_rel_t@afccc19766de"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -170582,7 +175201,32 @@
 751.68
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_xc_Q0",
+"kind": "core",
+"xy": [
+1002.648,
+28.099
+],
+"insertion_ps": 527.0,
+"budget_owner": "ot_hbm_svc_sm_xcal_rel_t",
+"note": "HBM-ELEM measured I 527 ps (max 693), view ot_hbm_svc_sm_xcal_rel_t@2fe24f8b638c"
+},
+{
+"name": "u_xc_Q1",
+"kind": "core",
+"xy": [
+1279.128,
+28.099
+],
+"insertion_ps": 520.0,
+"budget_owner": "ot_hbm_svc_sm_xcal_rel_t",
+"note": "HBM-ELEM measured I 520 ps (max 678), view ot_hbm_svc_sm_xcal_rel_t@f9e949331096"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -171586,7 +176230,43 @@
 777.6
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_su_Q0_side_softplus.clk_side[0]",
+"kind": "core",
+"xy": [
+1913.784,
+1013.059
+],
+"insertion_ps": 572.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_softplus",
+"note": "HBM-ELEM measured I 572 ps (max 678), view ot_hbm_su_static_pgslice_lg__side_softplus@7c274b52e5df"
+},
+{
+"name": "u_su_Q0_side_softplus.clk_side[1]",
+"kind": "core",
+"xy": [
+2022.792,
+1013.059
+],
+"insertion_ps": 572.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_softplus",
+"note": "HBM-ELEM measured I 572 ps (max 678), view ot_hbm_su_static_pgslice_lg__side_softplus@7c274b52e5df"
+},
+{
+"name": "u_su_Q0_side_softplus.clk_side[2]",
+"kind": "core",
+"xy": [
+2131.752,
+1013.059
+],
+"insertion_ps": 572.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_softplus",
+"note": "HBM-ELEM measured I 572 ps (max 678), view ot_hbm_su_static_pgslice_lg__side_softplus@7c274b52e5df"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -177251,7 +181931,43 @@
 777.6
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_su_Q0_side_rest.clk_side[0]",
+"kind": "core",
+"xy": [
+420.264,
+1013.059
+],
+"insertion_ps": 515.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_rest",
+"note": "HBM-ELEM measured I 515 ps (max 605), view ot_hbm_su_static_pgslice_lg__side_rest@1bbe3488b9c4"
+},
+{
+"name": "u_su_Q0_side_rest.clk_side[1]",
+"kind": "core",
+"xy": [
+430.872,
+1013.059
+],
+"insertion_ps": 515.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_rest",
+"note": "HBM-ELEM measured I 515 ps (max 605), view ot_hbm_su_static_pgslice_lg__side_rest@1bbe3488b9c4"
+},
+{
+"name": "u_su_Q0_side_rest.clk_side[2]",
+"kind": "core",
+"xy": [
+441.144,
+1013.059
+],
+"insertion_ps": 515.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_rest",
+"note": "HBM-ELEM measured I 515 ps (max 605), view ot_hbm_su_static_pgslice_lg__side_rest@1bbe3488b9c4"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -180948,7 +185664,43 @@
 777.6
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_su_Q1_side_softplus.clk_side[0]",
+"kind": "core",
+"xy": [
+1654.584,
+1013.059
+],
+"insertion_ps": 572.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_softplus",
+"note": "HBM-ELEM measured I 572 ps (max 678), view ot_hbm_su_static_pgslice_lg__side_softplus@7c274b52e5df"
+},
+{
+"name": "u_su_Q1_side_softplus.clk_side[1]",
+"kind": "core",
+"xy": [
+1763.592,
+1013.059
+],
+"insertion_ps": 572.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_softplus",
+"note": "HBM-ELEM measured I 572 ps (max 678), view ot_hbm_su_static_pgslice_lg__side_softplus@7c274b52e5df"
+},
+{
+"name": "u_su_Q1_side_softplus.clk_side[2]",
+"kind": "core",
+"xy": [
+1872.552,
+1013.059
+],
+"insertion_ps": 572.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_softplus",
+"note": "HBM-ELEM measured I 572 ps (max 678), view ot_hbm_su_static_pgslice_lg__side_softplus@7c274b52e5df"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -185729,7 +190481,43 @@
 777.6
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_su_Q1_side_rest.clk_side[0]",
+"kind": "core",
+"xy": [
+2156.904,
+313.219
+],
+"insertion_ps": 515.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_rest",
+"note": "HBM-ELEM measured I 515 ps (max 605), view ot_hbm_su_static_pgslice_lg__side_rest@1bbe3488b9c4"
+},
+{
+"name": "u_su_Q1_side_rest.clk_side[1]",
+"kind": "core",
+"xy": [
+2167.512,
+313.219
+],
+"insertion_ps": 515.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_rest",
+"note": "HBM-ELEM measured I 515 ps (max 605), view ot_hbm_su_static_pgslice_lg__side_rest@1bbe3488b9c4"
+},
+{
+"name": "u_su_Q1_side_rest.clk_side[2]",
+"kind": "core",
+"xy": [
+2177.784,
+313.219
+],
+"insertion_ps": 515.0,
+"budget_owner": "ot_hbm_su_static_pgslice_lg__side_rest",
+"note": "HBM-ELEM measured I 515 ps (max 605), view ot_hbm_su_static_pgslice_lg__side_rest@1bbe3488b9c4"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -198180,7 +202968,21 @@
 3628.8
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_hc_eng_hcp_sys1",
+"kind": "core",
+"xy": [
+399.768,
+1358.659
+],
+"insertion_ps": 251.0,
+"budget_owner": "ot_hbm_hc_root_static__hcp_sys1",
+"note": "HBM-ELEM measured I 251 ps (max 259), view ot_hbm_hc_root_static__hcp_sys1@eeab1883a31b"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -230321,7 +235123,32 @@
 751.68
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_lk_S1",
+"kind": "core",
+"xy": [
+334.44,
+28.099
+],
+"insertion_ps": 627.0,
+"budget_owner": "ot_pdie_serdes",
+"note": "HBM-ELEM measured I 627 ps (max 722), view ot_pdie_serdes@8104b4722883"
+},
+{
+"name": "u_ep_S1",
+"kind": "core",
+"xy": [
+359.16,
+650.179
+],
+"insertion_ps": 489.0,
+"budget_owner": "hfd_ep_static",
+"note": "HBM-ELEM measured I 489 ps (max 641), view hfd_ep_static@67dc73e05678"
+}
+]
 },
 "reset": {
 "tap_um": [
@@ -231008,7 +235835,32 @@
 2073.6
 ],
 "layer": "M9",
-"insertion_ps": 250
+"insertion_ps": 250,
+"core_taps": "early",
+"taps": [
+{
+"name": "u_lk_N2",
+"kind": "core",
+"xy": [
+334.44,
+28.099
+],
+"insertion_ps": 627.0,
+"budget_owner": "ot_pdie_serdes",
+"note": "HBM-ELEM measured I 627 ps (max 722), view ot_pdie_serdes@8104b4722883"
+},
+{
+"name": "u_ep_N2",
+"kind": "core",
+"xy": [
+535.136,
+650.179
+],
+"insertion_ps": 577.0,
+"budget_owner": "hfd_ep_static",
+"note": "HBM-ELEM measured I 577 ps (max 725), view hfd_ep_static@7d8cfe0c9f2c"
+}
+]
 },
 "reset": {
 "tap_um": [
