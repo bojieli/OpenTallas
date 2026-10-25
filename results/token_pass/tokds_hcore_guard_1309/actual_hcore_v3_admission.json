@@ -1,0 +1,95 @@
+{
+ "verdict": "PASS",
+ "scope": "actual immutable native timed hcore v3 source admission plus static schedule; actual bound layer token NOTRUN",
+ "profile": {
+  "kind": "S81_CTLA_TIMED_RESET_NATIVE_LOAD_STAGE",
+  "load_guard_cycles": 1,
+  "reset_guard_cycles": 2,
+  "manifest": "/srv/opentallas-scratch2/claude/codex-hcore-1309/manifest_vp_hcore_v3.json",
+  "profile_sha256": "7069a8ad0227ce0b9156bae94e3387ad8546e707174f5a3bab7dea8f871a3591"
+ },
+ "source_cohort_admitted": true,
+ "cases": [
+  {
+   "T": 32,
+   "ppath": false,
+   "allq": false
+  },
+  {
+   "T": 128,
+   "ppath": false,
+   "allq": false
+  },
+  {
+   "T": 256,
+   "ppath": false,
+   "allq": false
+  },
+  {
+   "T": 500,
+   "ppath": false,
+   "allq": false
+  },
+  {
+   "T": 32,
+   "ppath": false,
+   "allq": true
+  },
+  {
+   "T": 128,
+   "ppath": false,
+   "allq": true
+  },
+  {
+   "T": 256,
+   "ppath": false,
+   "allq": true
+  },
+  {
+   "T": 500,
+   "ppath": false,
+   "allq": true
+  },
+  {
+   "T": 32,
+   "ppath": true,
+   "allq": false
+  },
+  {
+   "T": 128,
+   "ppath": true,
+   "allq": false
+  },
+  {
+   "T": 256,
+   "ppath": true,
+   "allq": false
+  },
+  {
+   "T": 500,
+   "ppath": true,
+   "allq": false
+  },
+  {
+   "T": 32,
+   "ppath": true,
+   "allq": true
+  },
+  {
+   "T": 128,
+   "ppath": true,
+   "allq": true
+  },
+  {
+   "T": 256,
+   "ppath": true,
+   "allq": true
+  },
+  {
+   "T": 500,
+   "ppath": true,
+   "allq": true
+  }
+ ],
+ "boot_contract": "requires actual witness of >=2 asserted core edges then START>=last core pin release+2; witness not yet supplied for bound layer"
+}

@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS",
+ "scope": "exact bit packing and actual source-cycle contract only; current whole bound RTL token NOTRUN",
+ "whole_KS_words": 100,
+ "gapped_multi_source_bus": true,
+ "negative_controls_caught": 8,
+ "observed_trace_E5_readiness": true,
+ "actual_vp_cst": "REJECTED strictfail/partialemit",
+ "binder_source_bits_schema": "leaf,path,port,originalbit; forward,previouslane,bit; order=physicalbusLSBfirst"
+}
