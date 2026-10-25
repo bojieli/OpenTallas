@@ -98,13 +98,15 @@ def sched_ports(text, mut=0):
     """P3b fo / fo_g private port flops + P5 single pi[0] capture (qkd_ctrl_pc_nc.sv)"""
     i, j = _module(text, "qkd_ctrl_pc_sched_nc")
     s = text[i:j]
-    s = _sub1(s, "    output reg          fo,\n", "    (* keep *) output reg fo,\n    (* keep *) output reg fo_g,\n")
+    s = _sub1(s, "    output reg          fo,\n", "    output wire         fo,\n    output wire         fo_g,\n")
     old = "        if (!h_rn) fo <= 1'b0;\n        else fo <= fo | "
     k = s.index(old)
     e = s.index(";", k + len(old))
     rest = s[k + len(old):e]          # the fault terms
-    s = s[:k] + ("        if (!h_rn) begin fo_i <= 1'b0; fo <= 1'b0; fo_g <= 1'b0; end\n"
-                 "        else begin fo_i <= fo_n; fo <= fo_n; fo_g <= " + ("~fo_n" if mut == 13 else "fo_n") + "; end") + s[e + 1:]
+    # fo / fo_g: kept single-bit pin flop instances (a kept `output reg` got a dangling insbuf load on the port net)
+    s = s[:k] + ("        if (!h_rn) fo_i <= 1'b0;\n        else fo_i <= fo_n;\n"
+                 "    (* keep *) ot_kvpc_pin_ar0 u_fo_q (.ck(hclk), .rn(h_rn), .d(fo_n), .q(fo));\n"
+                 "    (* keep *) ot_kvpc_pin_ar0 u_fo_g_q (.ck(hclk), .rn(h_rn), .d(" + ("~fo_n" if mut == 13 else "fo_n") + "), .q(fo_g));") + s[e + 1:]
     s = _sub1(s, "    // ---- sticky fault chain, S -> N",
               "    // PATH-KV-PC 10-25 (P3b): internal sticky fo_i; fo (pc__fo) and fo_g (o_grp[294]) are private port flops of\n"
               "    // the identical next state (0 cycles)\n    (* keep *) reg fo_i;\n    wire fo_n = fo_i | " + rest + ";\n"
@@ -112,7 +114,7 @@ def sched_ports(text, mut=0):
     n = s.count("&&!fo&&")
     assert n == 2, n
     s = s.replace("&&!fo&&", "&&!fo_i&&")
-    assert not re.search(r"(?<![\w.])fo(?![\w\[])\s*(\||&|\)|;)", s.split("wire fo_n")[1].split("\n", 1)[1]), "fo still read"
+    assert not re.search(r"(?<![\w.(])fo(?![\w\[])\s*(\||&|\)|;)", s.split("wire fo_n")[1].split("\n", 1)[1]), "fo still read"
     # P5
     s = _sub1(s, '    (* keep *) reg         rv_q,rawslot_q;', '    reg rv_q; (* keep *) reg rawslot_q;')
     s = _sub1(s, "    always @(posedge hclk or negedge h_rn) if (!h_rn) rv_q <= 1'b0; else rv_q <= pi_v;",
