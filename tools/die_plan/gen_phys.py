@@ -748,6 +748,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     # CP1-R10 / COORD 10-24: boundary-register guard on the Yosys netlist (run_kit.sh, right after synth)
     shutil.copyfile(Path(__file__).with_name("face_guard.py"), kd / "face_guard.py")
     shutil.copyfile(Path(__file__).with_name("selrange_gate.py"), kd / "selrange_gate.py")
+    # FLOW-CANARY / COORD 10-25: register fanout gate right after face_guard (kv3_astk B: Yosys merged replicas -> 2048 loads)
+    shutil.copyfile(Path(__file__).with_name("reg_fanout_gate.py"), kd / "reg_fanout_gate.py")
     for helper in ("port_bind_gate.py", "hold_gate.tcl"):
         shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
     # LEC 10-24: RTL vs synthesised netlist equivalence (run_kit.sh, right after face_guard; NOT EQUIVALENT stops)
@@ -776,14 +778,15 @@ RUN_KIT = r"""#!/bin/bash
 # LEC (10-24): lec.py proves the Yosys netlist equivalent to the kit RTL read with the OTHER HDL frontend, right after
 # face_guard: NOT EQUIVALENT stops the kit before floorplan; UNPROVEN / tool error is a warning in lec/lec.json.
 # Gate exit codes (classify by the FAIL_PREFLOOR / FAIL_POSTCTS marker text): 3 selrange, 4 FF structural hold gate,
-# 5 LEC NOT EQUIVALENT, 6 pre-route insertion gate (FLOW 10-25); other non-zero = sdc_lint / face_guard / flow step rc.
+# 5 LEC NOT EQUIVALENT, 6 pre-route insertion gate (FLOW 10-25), 7 reg_fanout (FLOW-CANARY 10-25: register > 64 data
+# loads on the Yosys netlist = replicas merged by Yosys); other non-zero = sdc_lint / face_guard / flow step rc.
 set -uo pipefail
 K=$(cd "$1" && pwd); GOAL=${2:-route}; MEM=${3:-16}; CPUS=${4:-8}
 IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 NAME=dpkit-$(basename "$K")-$$
 # Preserve existing gate verdicts when a corrected kit reuses a run directory.
 HISTORY="$K/preflight_history/$(date +%Y%m%d_%H%M%S)_$$"
-for f in sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json; do
+for f in sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
   if [ -f "$K/$f" ]; then mkdir -p "$HISTORY"; cp -p "$K/$f" "$HISTORY/$f"; fi
 done
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
@@ -799,6 +802,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/port_bind_gate.py \"\$N\" /work > /work/port_bind.log 2>&1; rc=\$?; tail -2 /work/port_bind.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then python3 -I /work/face_guard.py \$N --pins /work/pins.json --out /work/face_guard.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR face_guard' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
+  if [ \$rc = 0 ]; then python3 -I /work/reg_fanout_gate.py \$N --out /work/reg_fanout.json > /work/reg_fanout.log 2>&1; rc=\$?; head -12 /work/reg_fanout.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR reg_fanout (register > 64 data loads: merged replicas; or NOT RUN), see reg_fanout.json' | tee -a /work/FAIL_PREFLOOR; rc=7; fi; fi; \
   D=\$(ls /work/run/results/asap7/*/base/1_synth.odb 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then printf 'read_db %s\\nwrite_verilog /work/1_synth_odb.v\\n' \$D > /work/synth_odb_v.tcl; openroad -exit /work/synth_odb_v.tcl > /work/synth_odb_v.log 2>&1; rc=\$?; \
     if [ \$rc = 0 ]; then python3 -I /work/face_guard.py /work/1_synth_odb.v --pins /work/pins.json --out /work/face_guard_odb.json; rc=\$?; fi; \

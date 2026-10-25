@@ -83,7 +83,7 @@ MAX_NOTRUN = 3                                          # 'NOT RUN' (never admit
 KIT_RE = re.compile(r"^([A-Za-z0-9_.-]+):(/srv/opentallas-scratch2?/claude/[A-Za-z0-9_./+=-]+)$")
 SRC_RE = re.compile(r"^[A-Za-z0-9_./-]+@[0-9a-f]{7,40}$")
 GEOM_OK = ("PASS", "PASS-COND")
-QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode"]
+QCOLS = ["die", "type", "kit", "src", "geom", "geom_ref", "mem_gb", "cells", "lane", "goal", "runner", "threads", "mode", "canary_fix"]
 TSV_HEAD = {
     "signed.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tarchive\tmirror\ttt_wns_ps\tff_wns_ps\tlane",
     "review.tsv": "time\tid\tdie\ttype\tsrc\thost\tkit\tclass\treasons\treview_dir\tpng\tpaths\tlane",
@@ -287,7 +287,8 @@ out["config"] = os.path.isfile(os.path.join(K, "config.mk"))
 out["has_run"] = os.path.isdir(os.path.join(K, "run"))
 out["signoff_dirs"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(K, "signoff*")) if os.path.isdir(p))
 B = os.path.join(K, "run", "results", "asap7", "*", "base")
-out["routed"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(B, "5_*.odb")) + glob.glob(os.path.join(B, "6_*.odb")))
+out["routed"] = sorted(os.path.basename(p) for p in glob.glob(os.path.join(B, "5_*.odb")) + glob.glob(os.path.join(B, "6_*.odb"))
+                       if not os.path.basename(p).startswith("5_1_grt"))
 out["fail_marks"] = [f for f in ("FAIL_PREFLOOR", "FAIL_POSTCTS") if os.path.exists(os.path.join(K, f))]
 lm = [os.path.getmtime(p) for p in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*")) +
       glob.glob(os.path.join(K, "*.log"))]
@@ -650,11 +651,17 @@ def submit(st, j, attempt_note=""):
             f"{attempt_note} (src {j['src']}, geom {j['geom']} {j['geom_ref']})")
 
 
+def canary_wave_gate(row):
+    import canary_gate
+    return canary_gate.assess(row, os.environ.get("AP_CANARY_ROOT", "/srv/opentallas-scratch2/claude/flow-canary/runs"),
+                              HOME / "OpenTallas", sh)
+
+
 def admit_new(st, rows):
     submitted = 0
     for rid, r in sorted(rows.items(), key=lambda kv: kv[1]["line"]):
         j = st["jobs"].get(rid)
-        if j and j.get("status") not in (None, "WAIT-GEOM", "REJECTED"):
+        if j and j.get("status") not in (None, "WAIT-GEOM", "WAIT-CANARY", "REJECTED"):
             continue                                   # already handled; the queue never restarts a job
         if j and j.get("status") == "REJECTED" and j.get("queue_line") == r["line"]:
             continue                                   # re-judged only when the row is re-appended
@@ -676,6 +683,15 @@ def admit_new(st, rows):
             continue
         if r.get("geom_auto") and (not j or j.get("geom_auto") != r["geom_auto"]):
             log(f"GEOM {rid} {r['die']}/{r['type']}: verdict from lanes/GEOM-REVIEW.md -> {r['geom_auto']}")
+        allowed, canary_why = canary_wave_gate(r)
+        if not allowed:
+            j = st["jobs"].setdefault(rid, dict(r))
+            j.update(r)
+            set_status(st, j, "WAIT-CANARY", canary_why)
+            log(f"HOLD {rid} {r['die']}/{r['type']}: {canary_why}")
+            continue
+        if r.get("canary_fix"):
+            log(f"CORRECTIVE {rid} {r['die']}/{r['type']}: {canary_why}")
         if submitted >= MAX_SUBMIT_PER_TICK:
             break
         p = rpy(r["host"], PROBE_KIT, {"kit": r["path"], "runner": r["runner"]}, timeout=120)
@@ -920,31 +936,41 @@ def record_failure(st, j):
         log(f"KEEP {j['id']}: flow exit 0 without signoff.json (sign-off tool problem?) -- data kept for a GOAL=post re-sign")
         set_status(st, j, "DONE-" + cls, j.get("reasons", "")[:200])
         return
-    # owner rule: failed job data deleted at once (logs, reports, signoff records and the review bundle stay)
-    d = ({"errors": ["live hub client owns kit or its staging ancestor"]} if hub_procs(j["path"]) else
-         rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800))
-    if d.get("error") or d.get("errors"):
-        log(f"DELETE {j['id']} on {host}: {d.get('error') or d.get('errors')}; retry next tick")
-        j["delete_pending"] = True
-    else:
-        j["delete_pending"] = False
-        log(f"DELETED {j['id']} bulk data on {host}: {', '.join(d.get('deleted') or ['nothing left'])}")
+    # Keep the physical checkpoint until the owning lane has diagnosed the failure.
+    # A signoff/log summary cannot replace the ODB/netlist for structural path analysis.
+    j["delete_pending"] = False
+    log(f"KEEP {j['id']} failed physical checkpoints for owner diagnosis; no automatic bulk deletion")
     set_status(st, j, "DONE-" + cls, j.get("reasons", "")[:200])
 
 
+def failure_resolutions():
+    """Owner releases bulk data only after diagnosis/evidence consumption: id TAB DELETE TAB evidence."""
+    resolved = {}
+    for line in read_coord("autopilot/failure-resolved.tsv").splitlines():
+        if line.lstrip().startswith("#"):
+            continue
+        f = line.split("\t", 2)
+        if len(f) == 3 and f[1].strip() == "DELETE" and f[2].strip():
+            resolved[f[0].strip()] = f[2].strip()
+    return resolved
+
+
 def retry_pending(st):
+    released = failure_resolutions()
     for j in list(st["jobs"].values()):
         if j.get("status") == "SIGNED" and not DRY:
             archive(st, j)
-        elif str(j.get("status", "")).startswith("DONE-") and j.get("delete_pending"):
-            host = ssh_host(j.get("probe") or j["host"])
-            if hub_procs(j["path"]):
+        elif str(j.get("status", "")).startswith("DONE-") and not j.get("data_deleted"):
+            if j["id"] not in released or hub_procs(j["path"]):
                 continue
+            host = ssh_host(j.get("probe") or j["host"])
             d = rpy(host, PROBE_DELETE, {"kit": j["path"], "dry": DRY}, timeout=1800)
             if not (d.get("error") or d.get("errors")):
-                j["delete_pending"] = False
-                log(f"DELETED {j['id']} bulk data on {host}: {', '.join(d.get('deleted') or ['nothing left'])}")
+                j.update(delete_pending=False, data_deleted=not DRY, diagnostic_evidence=released[j["id"]])
+                log(f"DELETED {j['id']} diagnosed failure bulk data on {host}: "
+                    f"{released[j['id']]}: {', '.join(d.get('deleted') or ['nothing left'])}")
                 save_state(st)
+
 
 
 # ------------------------------------------------------------------------------------------------ commands
