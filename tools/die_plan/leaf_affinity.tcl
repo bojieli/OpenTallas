@@ -28,6 +28,9 @@ set la_clock [dict create]
 foreach p [all_registers -clock_pins] {
   set it [sta::sta_to_db_pin $p]
   if {$it eq "NULL" || $it eq ""} continue
+  # Hard-child sequential abstracts are returned by all_registers too.
+  # Their compensated clock pins are not parent CTS leaves and must stay bound.
+  if {[[[$it getInst] getMaster] isBlock]} continue
   set name [[$it getInst] getName]
   dict set la_ck $name $it
   set clocks [get_property $p clocks]
