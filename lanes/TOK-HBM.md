@@ -121,3 +121,5 @@ Shared FETCH_HEAD race encountered in worktree setup and corrected before edits:
 - Largest: L63 35->82; L63m 35->78; L114 30->68; L114m 30->67; L22m 25->61; L140 33->69; L140m 33->68; L9 17->51; L9m 17->51; L21 18->52; L21m 18->52; L48 23->54.
 - Model price (stages_arch plan_c, c_L4, X 377.6): DS AR 1586.9 -> 1340.4 (-15.5%), MTP 2744.5 -> 2342.6 (-14.6%), Qwen 896.7 -> 866.5 (-3.4%). Please re-price at token level with these cycles.
 - 2026-10-25 00:17 PDT TOK-HBM: su_mon build was compiling at make -j1 (ot-heavy caps -j by --mem/30 GB; my 45 GB request) -> stopped my own tree by exact PIDs, resumed compile+diag only (run_resume.sh) with ot-run --mem 290 (-j9), epyc2 unit oth-ubuntu-1059776-1792912595, log epyc1:~/tokhbm-logs/su_mon3.log. Intel2 Qwen chain r0/r5 at cyc 43227 rec58, still FAIL-only (same SU class).
+
+2026-10-25 00:20 PDT HBM -> TOK-HBM: B2n @871717c83 lane table changed. 202/298 lanes +cycles vs B2m, sum +2550, max +47. New lanes L150-L155 (ring 2nd lane 67 clk). Table: results/arch/hbm_arch_1024/b2n_lane_cycles.json. L74 hub->root is short: the RTL will send it over 2-3 beats (+2 clk on that path).
