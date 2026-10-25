@@ -1219,7 +1219,15 @@ def anchored(L):
     constant, else the whole cohort stays a free input and every cone it feeds 'differs' (kv3_astk / kv3_pv_pair
     adders, 2026-10-25)."""
     ms = set(L.matched)
-    return {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and (sd != "gold" or h[2] in ms)}
+    return {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and h[1] != "gate" and (sd != "gold" or h[2] in ms)}
+
+
+def bound_keys(L):
+    """registers that are not free for new pairing: those with a hypothesis, and the partners of cross-side / matched
+    relations.  A gate-only REPRESENTATIVE of a gate-side replica cohort (g_ft[1..3].u_rsd.q#t[135] == g_ft[0]'s) is
+    still free: it needs a gold partner or a constant of its own, else the whole cohort stays a free input (KV head
+    e0/e2/e6: the constant-0 relay bit qb_send[5] that gold drops, kept by gate keep -> 4..39 points UNPROVEN)."""
+    return {k for (sd, k) in L.hyp} | {h[2] for h in L.hyp.values() if h[0] == "eq" and h[1] != "gate"}
 def register_alias_proposals(L, log):
     """Propose an exact register/_r alias across frontends; every proposal is
     still proved on its next-state cone before any result is accepted."""
@@ -1337,6 +1345,123 @@ def fsm_proposals(L, log, words=2, max_bits=4):
     return n_new
 
 
+def seq_traces(L, log, words=4, warm=2, cycles=48, seed=2718):
+    """sequential random simulation of gold and gate from the all-zero register state (every keyed register at
+    logical 0 on both sides, as LEC compares from equal states) with the SAME random values on every matched primary
+    input / black-box output each cycle -> per register key (side, key): (trace hash, complemented-trace hash) or
+    None when constant.  Register correspondence candidates independent of names and of the current hypotheses:
+    a re-laid / cross-instance-named gate flop (hcore g_ske skew lines: yosys kept ANOTHER instance's name on a
+    merged delay-line flop; HBM tkm leaf: slang X[w][flat] vs read_verilog SX[p][b]) has the trace of its RTL
+    register.  Candidates only: every pair is proved by the inductive correspondence like any other."""
+    import random
+    W = 64 * words
+    mask = (1 << W) - 1
+    rnd = random.Random(seed)
+    shared = sorted(k for k in L.matched if not k.startswith("ff:"))
+    out = {}
+    sides = (("gold", L.gold, L.gp), ("gate", L.gate, L.tp))
+    states = []
+    for side, d, P in sides:
+        st = [0] * d["L"]
+        I = d["I"]
+        for k, lit in P.items():
+            if k.startswith("ff:") and lit >> 1 > I:
+                st[(lit >> 1) - I - 1] = mask if lit & 1 else 0
+        states.append(st)
+    acc = {}
+    for cyc in range(warm + cycles):
+        sv = {k: rnd.getrandbits(W) for k in shared}
+        for si, (side, d, P) in enumerate(sides):
+            I, NL, a = d["I"], d["L"], d["ands"]
+            r2 = random.Random(seed * 7919 + cyc * 2 + si)
+            val = [0] * (1 + I + NL + d["A"])
+            for v in range(1, I + 1):
+                val[v] = r2.getrandbits(W)
+            st = states[si]
+            for i in range(NL):
+                val[I + 1 + i] = st[i]
+            for k in shared:
+                lit = P.get(k)
+                if lit is not None:
+                    val[lit >> 1] = sv[k] ^ (mask if lit & 1 else 0)
+            base = I + NL + 1
+            for j in range(d["A"]):
+                r0, r1 = a[2 * j], a[2 * j + 1]
+                val[base + j] = (val[r0 >> 1] ^ (mask if r0 & 1 else 0)) & (val[r1 >> 1] ^ (mask if r1 & 1 else 0))
+            if cyc >= warm:
+                for k, lit in P.items():
+                    if k.startswith("ff:"):
+                        v = val[lit >> 1] ^ (mask if lit & 1 else 0)
+                        h = acc.get((side, k))
+                        acc[(side, k)] = (hash((h[0], v)), hash((h[1], v ^ mask)), h[2] and v == 0,
+                                          h[3] and v == mask) if h else (hash(v), hash(v ^ mask), v == 0, v == mask)
+            states[si] = [val[l >> 1] ^ (mask if l & 1 else 0) for l in d["latches"]]
+    for key, (hp, hn, c0, c1) in acc.items():
+        out[key] = None if (c0 or c1) else (hp, hn)
+    log.append(f"sequential traces: {len(out)} registers, {sum(v is None for v in out.values())} constant, "
+               f"{warm}+{cycles} cycles x {W} lanes")
+    return out
+
+
+def trace_proposals(L, T, tried, log):
+    """pair still-unpaired registers whose sequential traces (seq_traces) are equal, either polarity: gold-only with
+    gate-only, gold-only with a matched register, gold-only with an earlier gold-only of the same trace (synthesis
+    merged both into one gate flop), gate-only with a matched / gold-only register.  At most 2 tries per pair,
+    nearest name first; the inductive proof decides.  -> number of hypotheses added."""
+    partnered = anchored(L)
+    bound = bound_keys(L)
+    canon = lambda t: (min(t), int(t[0] > t[1]))          # (canonical hash, polarity of this register)
+    pool_t, pool_m = collections.defaultdict(list), collections.defaultdict(list)
+    for k in L.tonly:
+        t = T.get(("gate", k))
+        if t and k.startswith("ff:") and ("gate", k) not in L.hyp and k not in bound:
+            c, p = canon(t)
+            pool_t[c].append((k, p))
+    for k in L.matched:
+        t = T.get(("gold", k))
+        if t and k.startswith("ff:") and T.get(("gate", k)) == t:
+            c, p = canon(t)
+            pool_m[c].append((k, p))
+    rep = {}                       # canonical trace -> (gold key whose value carries it, its polarity)
+    n = 0
+    for k in L.gonly:
+        t = T.get(("gold", k))
+        if not t or not k.startswith("ff:") or ("gold", k) in L.hyp or k in partnered:
+            continue
+        c, p = canon(t)
+        hit = None
+        for g, q in sorted(pool_t.get(c, []), key=lambda e: name_dist(k, e[0])):
+            if tried[("tr", "gate", g, k)] < 2:
+                hit = ("gate", g, ("eq", "gold", k, p ^ q))
+                pool_t[c].remove((g, q))
+                rep.setdefault(c, (k, p))
+                break
+        if not hit:
+            for g, q in sorted(pool_m.get(c, []), key=lambda e: name_dist(k, e[0])):
+                if tried[("tr", "gold", k, g)] < 2:
+                    hit = ("gold", k, ("eq", "gold", g, p ^ q))
+                    rep.setdefault(c, (g, q))
+                    break
+        if not hit and c in rep and rep[c][0] != k and tried[("tr", "gold", k, rep[c][0])] < 2:
+            hit = ("gold", k, ("eq", "gold", rep[c][0], p ^ rep[c][1]))
+        if not hit:
+            rep.setdefault(c, (k, p))
+            continue
+        tried[("tr",) + hit[:2] + (hit[2][2],)] += 1
+        L.hyp[hit[:2]] = hit[2]
+        n += 1
+    for c, ks in pool_t.items():
+        for g, q in ks:
+            tgt = rep.get(c) or next(iter(pool_m.get(c, [])), None)
+            if tgt and tried[("tr", "gate", g, tgt[0])] < 2:
+                tried[("tr", "gate", g, tgt[0])] += 1
+                L.hyp[("gate", g)] = ("eq", "gold", tgt[0], q ^ tgt[1])
+                n += 1
+    if n:
+        log.append(f"trace proposals: {n} register relations from equal sequential traces")
+    return n
+
+
 def drop_failed(L, bad):
     """drop failing hypotheses / constraints (a failing constraint takes its FSM's cube hypotheses with it)."""
     for n in bad:
@@ -1373,6 +1498,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     replica_proposals(L, log)
     register_alias_proposals(L, log)
     fsm_proposals(L, log)
+    traces = None                      # sequential traces (seq_traces), computed on first need
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
     # refine-only rounds drop at least one hypothesis each, so they always end; past rounds + 40 they go on
     # while the time budget lasts (s81 hd_tile: false copies along 60-stage skew delay lines peel one stage
@@ -1388,7 +1514,7 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 m, kind = L.build(with_compare=False, with_hyp=False)
                 val, mask = m.simulate(words, seed=7 * rnd + it + 1)
                 sv = lambda side, k: lit_val(val, mask, L.dlit[(side, k)])
-                bound = {k for (sd, k), h in L.hyp.items()} | {h[2] for h in L.hyp.values() if h[0] == "eq"}
+                bound = bound_keys(L)
                 gbound = {k for (sd, k), h in L.hyp.items()} | anchored(L)
                 tsig = {}
                 for k in L.tonly:
@@ -1480,6 +1606,12 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                             L.hyp[("gate", k)] = ("eq", "gold", c, inv)
                             new += 1
                             break
+                # registers no next-state signature places (re-laid / cross-instance-named delay-line flops, slang
+                # vs read_verilog array layouts): pair them by their sequential traces from the zero state
+                if not new:
+                    if traces is None:
+                        traces = seq_traces(L, log)
+                    new += trace_proposals(L, traces, tried, log)
                 # self-holding registers (load-enable) depend on their own state, which differs by side: pair the
                 # unpaired ones by the signature of D with every unpaired register held at 0, and at 1
                 if not new:

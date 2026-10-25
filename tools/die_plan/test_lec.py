@@ -453,3 +453,79 @@ def test_self_holding_merge_mutant_still_differs(tmp_path, monkeypatch):
     lec.correspond(L, tmp_path, 100, [])
     m, _ = L.build(with_compare=True, with_hyp=True)
     assert "differs" in set(_sim_prove(m).values())
+
+
+def _skew_line_design(tmp_path, gate_tap):
+    """S81 hcore g_ske 10-25: two RTL delay lines A, B (2 stages each, both fed by d) feed outputs oA, oB; synthesis
+    merged them into ONE line whose flops carry another instance's re-laid names (gate-only B.r#t[0][5],
+    B.r#t[1][5]) -- no name or array map relates them.  `gate_tap` = the gate literal both outputs load: 6 (stage 2,
+    the legal merge) or 4 (stage 1: a line one stage short, the negative control).  Inputs d = 2."""
+    names = lambda ks: {i: [(f"u_dut.{k}$_DFF_P_.lecq", 0)] for i, k in enumerate(ks)}
+    # gold vars: d 1, A0 2, A1 3, B0 4, B1 5, oA 6, oB 7
+    g = tmp_path / "gold.aig"
+    g.write_bytes(_aig_bytes(1, [2, 4, 2, 8, 6, 10], []))
+    # gate vars: d 1, z0 2, z1 3, oA 4, oB 5
+    t = tmp_path / f"gate{gate_tap}.aig"
+    t.write_bytes(_aig_bytes(1, [2, 4, gate_tap, gate_tap], []))
+    gm = {"input": {0: [("d", 0)]}, "latch": names(["A.r[0][5]", "A.r[1][5]", "B.r[0][5]", "B.r[1][5]", "oA", "oB"]),
+          "output": {}}
+    tm = {"input": {0: [("d", 0)]}, "latch": names(["B.r#t[0][5]", "B.r#t[1][5]", "oA", "oB"]), "output": {}}
+    return lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+
+
+def test_sequential_traces_pair_cross_instance_relaid_line(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    L = _skew_line_design(tmp_path, 6)
+    T = lec.seq_traces(L, [])
+    assert T[("gold", "ff:u_dut.A.r[1][5]")] == T[("gold", "ff:u_dut.B.r[1][5]")] == T[("gate", "ff:u_dut.B.r#t[1][5]")]
+    assert T[("gold", "ff:u_dut.A.r[0][5]")] != T[("gold", "ff:u_dut.A.r[1][5]")]
+    n = lec.trace_proposals(L, T, lec.collections.Counter(), [])
+    assert n == 4                                   # 2 gate flops -> gold, the other gold line -> its twin
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {"proved"}
+
+
+def test_sequential_traces_line_one_stage_short_differs(tmp_path, monkeypatch):
+    """negative control: the gate outputs load stage 1 (one cycle early) -> oA / oB differ."""
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    L = _skew_line_design(tmp_path, 4)
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    st = _sim_prove(m)
+    assert st["ff:u_dut.oA"] == "differs" and st["ff:u_dut.oB"] == "differs"
+
+
+def _gate_cohort_const_design(tmp_path, d0):
+    """KV head e2 10-25: relay bit qb_send[5] = 1'b0 -- gold (wreduce) drops the register, the gate keeps it in every
+    port copy (keep), re-keyed q#t[5]; replica_proposals binds g_ft[1] to the gate-side representative g_ft[0], which
+    must still get its constant.  Gold: oA' = oB' = 0.  Gate: c0' = `d0` (0 legal; the input d = negative control),
+    c1' = 0, oA' = c0, oB' = c1."""
+    names = lambda ks: {i: [(f"u_dut.{k}$_DFF_P_.lecq", 0)] for i, k in enumerate(ks)}
+    g = tmp_path / "gold.aig"
+    g.write_bytes(_aig_bytes(1, [0, 0], []))
+    t = tmp_path / f"gate{d0}.aig"
+    t.write_bytes(_aig_bytes(1, [d0, 0, 4, 6], []))
+    gm = {"input": {0: [("d", 0)]}, "latch": names(["oA", "oB"]), "output": {}}
+    tm = {"input": {0: [("d", 0)]}, "latch": names(["g_ft[0].q#t[5]", "g_ft[1].q#t[5]", "oA", "oB"]), "output": {}}
+    return lec.Lec(lec.read_aig(g), gm, lec.read_aig(t), tm)
+
+
+def test_gate_side_cohort_representative_gets_its_constant(tmp_path, monkeypatch):
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    L = _gate_cohort_const_design(tmp_path, 0)
+    L.hyp[("gate", "ff:u_dut.g_ft[1].q#t[5]")] = ("eq", "gate", "ff:u_dut.g_ft[0].q#t[5]", 0)   # the replica cohort
+    assert "ff:u_dut.g_ft[0].q#t[5]" not in lec.anchored(L)
+    lec.correspond(L, tmp_path, 100, [])
+    assert L.hyp.get(("gate", "ff:u_dut.g_ft[0].q#t[5]")) == ("const", 0)
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert set(_sim_prove(m).values()) == {"proved"}
+
+
+def test_gate_side_cohort_representative_not_constant_differs(tmp_path, monkeypatch):
+    """negative control: the representative loads d (not constant) -> oA differs."""
+    monkeypatch.setattr(lec, "prove", _sim_prove)
+    L = _gate_cohort_const_design(tmp_path, 2)
+    lec.correspond(L, tmp_path, 100, [])
+    m, _ = L.build(with_compare=True, with_hyp=True)
+    assert _sim_prove(m)["ff:u_dut.oA"] == "differs"
