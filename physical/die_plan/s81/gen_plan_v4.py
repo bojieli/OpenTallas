@@ -520,7 +520,8 @@ PF_PORT_BUS = {
     "dsdv_gunit": {"cw_a": "unit_i0", "cw_d": "unit_i0", "cw_v": "unit_i0", "vi_s": "xtier_i0", "vi_n": "xtier_i1",
                    "vo_s": "xtier_o0", "vo_n": "xtier_o1"},
     "dsdv_bk_sel_vmtx": {"ca": "ca_i0", "cb": "cb_i0", "vi_idx": "idx_i0", "vi_s": "xtier_i0", "vi_n": "xtier_i1",
-                         "vo_s": "xtier_o0", "vo_n": "xtier_o1", "tl_o": "tl_o0"},
+                         "vo_s": "xtier_o0", "vo_n": "xtier_o1", "tl_o": "tl_o0",
+                         "tpn_o": "tp_o1", "tps_o": "tp_o0", "tpn_i": "tp_i0"},
 }
 
 
