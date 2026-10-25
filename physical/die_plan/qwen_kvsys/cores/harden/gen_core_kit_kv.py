@@ -325,6 +325,8 @@ def main():
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
+    ap.add_argument("--stock-flow", action="store_true",
+                    help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
@@ -545,6 +547,16 @@ def main():
                     "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(tool / "face_flops_release.tcl", kd / "face_flops_release.tcl")
+    # KV 10-25 structural flow basis (owner rule 10-25 c; FLOW 9f716b354 defaults for new kits, now also for KV hard cores):
+    # every KV even-head / ASTK route missed FF hold by 13..40 ps after TC-only repair on the stock setRC wire model,
+    # while sign-off is FF on routed RCX: (F2) placement / CTS / GRT estimates on the RCX-calibrated ASAP7 RC
+    # (setRC_rcx_asap7.tcl; stock put clock sinks 11-57 ps above RCX), (MCMM) repair over TC + BC so hold is repaired
+    # at the sign-off hold corner (macro-free cores; macro cores need per-corner macro libs), (F4) zero-logic register
+    # pairs re-hung onto one clock leaf after CTS (leaf_affinity.tcl; e6 worst FF = s1_exp -> g_hs.u_hc split leaves).
+    flow_basis = not a.stock_flow
+    if flow_basis:
+        shutil.copyfile(tool / "setRC_rcx_asap7.tcl", kd / "setRC_rcx.tcl")
+        shutil.copyfile(tool / "leaf_affinity.tcl", kd / "leaf_affinity.tcl")
     for f in ("pin_audit_core.py", "corners.tcl", "run_kit_kv.sh", "core_preflight.py", "core_keep.tcl", "core_keep_release.tcl"):
         shutil.copyfile(HERE / f, kd / f)
     (kd / "ft_stations.txt").write_text("# core kit: no ft slots\n")
@@ -580,6 +592,10 @@ def main():
               "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl"] if rec.get("face_flops", True) else []),
            "export CORNER = TC",
            "export ADDER_MAP_FILE = /work/adder_map_dontuse.v",
+           *(["export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl",
+              "export POST_CTS_TCL = /work/leaf_affinity.tcl"] if flow_basis else []),
+           *(["export CORNERS = tc bc", "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES)",
+              "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES)"] if flow_basis and not lefs else []),
            *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
            *[f"export {kv.split('=', 1)[0].strip()} = {kv.split('=', 1)[1].strip()}" for kv in a.orfs_var]]
     if rec.get("synth_memory_max_bits"):
@@ -595,7 +611,9 @@ def main():
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
               core_json_sha256=sha(a.core_json), pins=len(allp), plan_pins=len(pins), added_pins=len(added),
               clocks=clks, clock_nets=cj["report"].get("clock_nets"), resets=rsts, recipe=rec, sdc_lint="PASS (gen)", period_ps=per, insertion_budget_ps=ins, macros=macros,
-              signal_max=rec.get("sigmax", a.sigmax), kit_hash=kit_hash(kd))
+              signal_max=rec.get("sigmax", a.sigmax),
+              flow_basis=("stock" if a.stock_flow else "FLOW-1025: rcx-rc + leaf-affinity" + ("" if lefs else " + mcmm tc/bc")),
+              kit_hash=kit_hash(kd))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),
                           macros=macros, kit_hash=fz["kit_hash"])))
