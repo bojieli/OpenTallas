@@ -344,7 +344,7 @@ CODEX: 2026-10-25 02:39 PDT CP1 collected P-r0 and R-r1 failures; R-r1 timing cl
 CODEX: 2026-10-25 HBM-FACE codex/hbm-face-1025@bce88fd9b collected 266 guard PASS + eight exact shell benches PASS; +1/+1 cycle/drop tables; topk-link synth OOM diagnosed, 128GB ot-run retry intel1 codex-hbm-face/link_mem128.
 
 2026-10-25 02:39 PDT CODEX: norm deskew READY codex/s81-norm-1025@0b0fddd16; xrt1/xrt3 post-synth LEC EQUIVALENT 28,507/32,651 compare points, zero diff/undecided; functional4/mutants2/locksteps4 PASS. +4 cycles from first norm leaf command; strict check kept. No jobs started; inherited LEC jobs completed.
-2026-10-25 02:5x PDT CODEX: KV channel proposal developed;2 reviewed G2 pilots launched via ot-run,297 lanes+921 proposed natural cycles (R8 pending). vL/vM GRT complete; vL setup/hold FAIL despite pair-skew PASS; no obsolete DRT launched.
+2026-10-25 02:40 PDT CODEX: KV channel proposal developed;2 reviewed G2 pilots launched via ot-run,297 lanes+921 proposed natural cycles (R8 pending). vL/vM GRT complete; vL setup/hold FAIL despite pair-skew PASS; no obsolete DRT launched.
 2026-10-25 02:42 PDT CODEX: KV K8/3 candidate compiles128PC calendars at1024ps; core833 diagnostic FAIL from V sector192 irregular put pacing (267 vs264), V-gap fix sweep live; exact encoded256-sector+rate-mutant checks PASS2/2. Existing E boot nominal preserved.
 CODEX: 2026-10-25 02:43 PDT QC-CORES su8 signed views archived codex/qc-cores-1025@6425849ea (TT+93.04/FF+2.39, pair34.08/32.05); 23 runs harvested, 21 NOT SIGNED diagnosed; own warm crh I291/margin5 route launched epyc2 scratch2, client epyc1 PID1945516. Five original jobs preserved.
 2026-10-25 02:42 PDT CODEX: S81 four split cores x m0/m5 routes launched after GEOM PASS-COND; hcpost two FF-repair variants; FTHOLD t8/t37 loop fix progressing. Logs in codex-s81-split / codex-s81-hcpost / codex-s81-fthold (epyc1 scratch2).
@@ -356,3 +356,13 @@ CODEX: 2026-10-25 02:43 PDT QC-CORES su8 signed views archived codex/qc-cores-10
 2026-10-25 02:44 PDT CODEX: CLOCK pair-skew launch-source fix b0613e9d9 ready; routed head elemB TT63.68/62.02 FF59.39/57.26 verify0.000,35 testsPASS; original failed record retained.
 2026-10-25 02:43 PDT CODEX: S81 PORTFIX cfaaa9a09 pushed: scratch audit import fixed + die rewrite preserved; config/fault die-top gaps removed, mixed-source bind FAIL diagnosed, current-source re-elab and missing legacy mutants running.
 2026-10-25 02:45 PDT CODEX: HBM native HC integration PASS (cut0,width0,newFAIL0) on codex/hbm-native-1025@591bcf802; physical W128 sizing and B2o concrete-cut capacity reconciliation active.
+
+CODEX: 2026-10-25 02:46 PDT DIE-CI harvested4 finished dies G2 24/24 PASS;14h lock waits2 live retired HBM probes, no kills; incremental harvest fix on codex/die-ci-ops1025. epyc2 new admissions held for disk risk.
+
+2026-10-25 02:48 PDT CODEX: HBM5PHY dedicated1.92um meshes measuredFAIL69.44..74.08mV rail-sum;3.84um/centered45um C4 remedies reviewed+running epyc3; exactDEF PG matches referencePDNSim11.212vs11.210mV (codex/hbm-trial-1025@9ce8967db).
+CODEX: 2026-10-25 02:50 PDT RESET core reset target fix ready codex/reset-targets-1025@b26d0ce3c:9 tests PASS, S81 max boot101->101,32 partition offsets shift; S81 notified.
+2026-10-25 02:48 PDT CODEX: LEC feedback-copy proposal candidate dbf362d6a:9 tests + csa31 pre/fix controls PASS; constant-X proposal rejected+retained; engine diagnosis rerun live epyc2 codex-lec-1025/engfix.
+CODEX: 2026-10-25 02:50 PDT QC-CORES south-band placement fix d54df8949 reviewed; 2 place/GRT probes intel1 btab_south4(client2376012), intel2 prog_south4(client2370428),32GB8thr; no RTL/cycles/pins/layers changed. su8 archive-only b96eee32d ready root.
+
+2026-10-25 02:52 PDT CODEX: KV even-head frontq boundary fixed @98c25c4a8: real e2 raw+ODB1344/1344PASS, miter6000PASS/mutant5996FAIL; +1FF0cycles on approved PORT_REGS; native dec17 re-kit then route.
+2026-10-25 02:52 PDT CODEX: QC fixed-SU bind0errors, verify live; native59 duplicate fault + HC CID dead18bit boundary fixes in regeneration codex/qc-boundaries-1025@16220f781; signed SU8 archive standalone READY.
