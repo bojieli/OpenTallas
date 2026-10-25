@@ -1,0 +1,3 @@
+# PLAN-DELTA lane (coordinator, started 2026-10-25 08:25 PDT): fold approved TYPE-REDUCE reductions (non-path types only) into ONE batched delta per die
+Inputs: TYPE-REDUCE REPORT claude/type-reduce-1025@befcf3f66; COORD rulings 06:08 (PHY_SHORT a), 06:47 (TYPE-REDUCE), 07:01 (ID straps option B). Path types (PATH-S81/QC/HBM lane files + brief item 10 KV list) are EXCLUDED unless the PATH lane agrees in its lane file.
+2026-10-25 08:10 PDT PLAN-DELTA: started; main 394765394. Type counts on main: s81 177 (head 16), qc 56, kv 49, hbm 60 (main plan). 4 sub-agents (S81 / QC / KV / HBM), one delta branch per die. Ownership keying: owners-distinct (main ccdefedaf) already keys cores by (RTL master, outline, pin-table sha) -> checking straps/template coverage.
