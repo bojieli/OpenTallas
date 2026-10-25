@@ -293,6 +293,79 @@ proc ::ot_dtsh::cts {args} {
   puts "OT_DTSH CTS PASS: selected [llength $nets] existing density-tap output nets; no planned-trunk insertion before POST_CTS"
   return $result
 }
+# CLOSED-LOOP trunk (OT_DTSH_CLOSED_LOOP=1, CLOCK-TRUNK 10-25): same names and
+# topology every iteration; only the planned buffers move between legal free
+# sites.  Each iteration is scored with OpenROAD's own parasitic estimate.
+proc ::ot_dtsh::occ_remove {names} {
+  variable occupied
+  set drop [dict create]; foreach n $names { dict set drop $n 1 }
+  set out [dict create]
+  dict for {k lst} $occupied {
+    set keep {}
+    foreach b $lst { if {![dict exists $drop [lindex $b 0]]} { lappend keep $b } }
+    dict set out $k $keep
+  }
+  set occupied $out
+}
+proc ::ot_dtsh::relocate_begin {} {
+  variable nodes
+  occ_remove [dict keys $nodes]
+}
+proc ::ot_dtsh::relocate {name x y orient} {
+  variable nodes
+  if {![dict exists $nodes $name]} { error "OT_DTSH relocate of unknown planned node $name" }
+  check_site $x $y $orient
+  set inst [dict get $nodes $name inst]
+  $inst setOrient $orient; $inst setLocation $x $y
+  set bounds [box $inst]
+  if {[lrange $bounds 0 1] ne [list $x $y]} { error "OT_DTSH lower-left location mismatch for $name" }
+  dict set nodes $name box $bounds
+  dict set nodes $name orient $orient
+  occ_add $name $bounds
+}
+proc ::ot_dtsh::relocate_end {} {
+  variable nodes; variable occupied; variable ymin; variable rowheight
+  # every planned node must be back in the occupancy map exactly once
+  set seen [dict create]
+  dict for {k lst} $occupied { foreach b $lst { if {[dict exists $nodes [lindex $b 0]]} { dict set seen [lindex $b 0] 1 } } }
+  if {[dict size $seen] != [dict size $nodes]} { error "OT_DTSH relocation left [expr {[dict size $nodes]-[dict size $seen]}] planned nodes unplaced" }
+}
+proc ::ot_dtsh::measure {path} {
+  variable nodes; variable taps
+  set fh [open $path w]
+  dict for {name info} $taps {
+    set p [get_pins -quiet "$name/[[[dict get $info input] getMTerm] getName]"]
+    if {$p eq ""} { close $fh; error "OT_DTSH no STA pin for tap $name" }
+    puts $fh "T $name [get_property $p arrival_max_rise] [get_property $p arrival_min_rise]"
+  }
+  dict for {name info} $nodes {
+    set p [get_pins -quiet "$name/[[[dict get $info input] getMTerm] getName]"]
+    if {$p eq ""} { close $fh; error "OT_DTSH no STA pin for node $name" }
+    puts $fh "B $name [get_property $p arrival_max_rise] [get_property $p arrival_min_rise]"
+  }
+  close $fh
+}
+proc ::ot_dtsh::closed_loop {dir geom plan} {
+  set iters [expr {[info exists ::env(OT_DTSH_CL_ITERS)] ? $::env(OT_DTSH_CL_ITERS) : 12}]
+  set target [expr {[info exists ::env(OT_DTSH_CL_TARGET_PS)] ? $::env(OT_DTSH_CL_TARGET_PS) : 12}]
+  set_propagated_clock [all_clocks]
+  set last ""
+  for {set i 1} {$i <= $iters + 1} {incr i} {
+    estimate_parasitics -placement
+    set meas [file join $dir ot_dtsh_meas_$i.tsv]
+    measure $meas
+    set moves [file join $dir ot_dtsh_moves_$i.tcl]
+    file delete -force $moves
+    # the last pass only records the final measurement (no re-placement)
+    set t [expr {$i > $iters ? 1e9 : $target}]
+    set last [exec python3 /work/shallow_clock.py $geom --out $plan --cl-step $meas --apply $moves --target-ps $t]
+    puts "OT_DTSH CL $last"
+    if {$i > $iters || ![file exists $moves]} break
+    uplevel #0 [list source $moves]
+  }
+  unset_propagated_clock [all_clocks]
+  puts "OT_DTSH CLOSED-LOOP DONE: $last"
+}
 proc ::ot_dtsh::setup {block tap_list root_net cell} {
   variable active; variable blk; variable root; variable master; variable taps; variable nodes; variable leaves; variable root_extra
   if {$active || [llength [info commands ::ot_dtsh::cts_orig]]} { error "OT_DTSH setup may run only once per database/process" }
@@ -321,11 +394,13 @@ proc ::ot_dtsh::setup {block tap_list root_net cell} {
   set plan [file join $dir ot_dtsh_plan.json]
   set apply [file join $dir ot_dtsh_apply.tcl]
   export $geom
-  puts [exec python3 /work/shallow_clock.py $geom --out $plan --apply $apply]
+  set cl [expr {[info exists ::env(OT_DTSH_CLOSED_LOOP)] && $::env(OT_DTSH_CLOSED_LOOP) eq "1"}]
+  puts [exec python3 /work/shallow_clock.py $geom --out $plan --apply $apply {*}[expr {$cl ? "--closed-loop" : ""}]]
   # The planner emits only node/leaf calls. Guard all names, free footprints,
   # row orientations and complete tap coverage as each operation is applied.
   uplevel #0 [list source $apply]
   if {![dict size $nodes]} { error "OT_DTSH planner emitted no physical trunk nodes" }
+  if {$cl} { closed_loop $dir $geom $plan }
   trunk_ndr
   freeze
   audit

@@ -140,3 +140,33 @@ puts "FROZEN $frozen"
     node=source.split('proc ::ot_dtsh::node {',1)[1].split('proc ::ot_dtsh::freeze',1)[0]
     assert 'setDoNotTouch' not in node
     assert source.index('uplevel #0 [list source $apply]') < source.index('\n  freeze\n')
+
+
+def test_closed_loop_relocate_keeps_occupancy_and_guards():
+    s=run('''
+proc master {m} {if {$m eq "getWidth"} {return 1620};return 270}
+set ::ot_dtsh::master master
+set ::ot_dtsh::rows [dict create 4320 {{4320 54 1000 270 R0}}]
+set ::ot_dtsh::ymin 4320;set ::ot_dtsh::rowheight 270
+proc mkinst {name x y} {
+  set ::loc($name) [list $x $y]
+  proc $name {m args} "if {\\$m eq {setLocation}} {set ::loc($name) \\$args} elseif {\\$m eq {getBBox}} {return ${name}_bb} elseif {\\$m eq {getMaster}} {return master}"
+  proc ${name}_bb {m} "lassign \\$::loc($name) x y; switch \\$m {xMin {return \\$x} yMin {return \\$y} xMax {return \\[expr {\\$x+1620}\\]} yMax {return \\[expr {\\$y+270}\\]}}"
+}
+mkinst i0 4320 4320; mkinst i1 8640 4320
+set ::ot_dtsh::nodes [dict create ot_dtsh_0 [dict create inst i0 box {4320 4320 5940 4590} orient R0] ot_dtsh_1 [dict create inst i1 box {8640 4320 10260 4590} orient R0]]
+set ::ot_dtsh::occupied [dict create 0 {{data_ff 12960 4320 14580 4590} {ot_dtsh_0 4320 4320 5940 4590} {ot_dtsh_1 8640 4320 10260 4590}}]
+::ot_dtsh::relocate_begin
+puts "SWAP [catch {::ot_dtsh::relocate ot_dtsh_0 8640 4320 R0; ::ot_dtsh::relocate ot_dtsh_1 4320 4320 R0} m] $m"
+puts "END [catch {::ot_dtsh::relocate_end} m] $m"
+puts "BOX [dict get $::ot_dtsh::nodes ot_dtsh_0 box]"
+::ot_dtsh::relocate_begin
+puts "DATA [catch {::ot_dtsh::relocate ot_dtsh_0 12960 4320 R0} m] $m"
+puts "MISS [catch {::ot_dtsh::relocate_end} m] $m"
+puts "UNK [catch {::ot_dtsh::relocate ot_dtap_3 4320 4320 R0} m] $m"
+''')
+    assert 'SWAP 0' in s and 'END 0' in s
+    assert 'BOX 8640 4320 10260 4590' in s
+    assert 'DATA 1 OT_DTSH planned node overlaps data_ff' in s
+    assert 'MISS 1 OT_DTSH relocation left 2 planned nodes unplaced' in s
+    assert 'UNK 1 OT_DTSH relocate of unknown planned node' in s
