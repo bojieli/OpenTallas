@@ -66,3 +66,4 @@ AUTOPILOT structural.tsv 1c283eb44e4f	2026-10-25 11:22	SUPERSEDED	cp1 col_h10_r1
 QC RP1f62 d965a9aada	2026-10-25 13:53	QUEUED	queue row [PATH-QC-RP1-F62] qfd_dv_s8_crh_rp1__f62 (routing since 15:12)	COORD	2026-10-25 15:14 PDT	same kit queued under lane tag (re-key without brackets)
 DIE-FT-S81	2026-10-25 14:42	NOT-ROUTE	S81 die-FT plan content cd93218aee	DIE-FT	2026-10-25 15:14 PDT	plan-level review; die GRT by DIE-FT
 PATH-HBM-TKMCLK	2026-10-25 14:48	NOT-ROUTE	TKM clock pin move (plan cc80a3a89f8d)	PATH-HBM	2026-10-25 15:14 PDT	plan pin change; PATH-HBM regenerates the idpin/terminal/root kits and enqueues them
+PATH-HBM-TKMCHAIN	2026-10-25 08:20	SUPERSEDED	queue 516e99e47f4e (idpin kits_chain2) + d848929ed189 (terminal_idpin kits_chain2)	PATH-HBM	2026-10-25 15:19 PDT	superseded by kits_chain3 rows (TKMCLK E-mid clock pins, GEOM-REVIEW-2 14:48 PASS-COND); never route chain2
