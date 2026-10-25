@@ -194,6 +194,8 @@ NEG_L9_RESERVE = int(__import__("os").environ.get("QC_NEG_L9_RESERVE", "514"))
 NEG_SPLIT = int(__import__("os").environ.get("QC_NEG_SPLIT", "800"))
 NEG_FT_FILL = float(__import__("os").environ.get("QC_NEG_FT_FILL", "1.0"))     # V (M9)
 NEG_FT_FILL_H = float(__import__("os").environ.get("QC_NEG_FT_FILL_H", "1.0"))  # H (M8)
+NEG_CORE_FT = __import__("os").environ.get("QC_NEG_CORE_FT", "0") == "1"   # price SU-core partitions by macro-free ft length
+NEG_CORE_OVER = float(__import__("os").environ.get("QC_NEG_CORE_OVER", "0.3333"))  # share of cored length usable (M6/M7 of M2-M7)
 PIN_MAX = 5.8                          # pins/um the laid window may reach at its worst 10-um span (G0 budget 6)
 FACE_MAX = 6.0                         # QC-P2: per-window pins/um by the tool rule (G0 = 6/um + 2 pins/layer allowance)
 _QL = {}
@@ -605,6 +607,18 @@ def negotiate(P, geo, k, flows, iters=300):
         x0, y0, x1, y1 = P.rect(n)
         f = NEG_FT_TRK_UM * NEG_FT_AVAIL
         ncap[(n, "H")], ncap[(n, "V")] = (y1 - y0) * f * NEG_FT_FILL_H, (x1 - x0) * f * NEG_FT_FILL
+        reg = n.split("_", 2)[2]
+        if NEG_CORE_FT and reg in ("su_l0", "su_l1", "su_c"):
+            # QC-PLAN 10-25 (PROTO sle_su_l0 STRUCTURAL, GRT ov 17k point / 397k strict channel): ft runs on M2-M7
+            # inside the partition (decision 12), the SU lane cores block M1-M5 and every station site must sit in
+            # the macro-free strip / gaps.  Price a SU partition's transit capacity by its macro-free length plus
+            # NEG_CORE_OVER of the cored length (M6/M7 over the macros), not by its full outline.
+            ncol = 2 if reg == "su_c" else 1
+            cw, ch = SU_LANE_CORE
+            hfree, hcore = (y1 - y0) - len(SU_LANE_Y) * ch, len(SU_LANE_Y) * ch
+            vfree, vcore = (x1 - x0) - ncol * cw, ncol * cw
+            ncap[(n, "H")] = (hfree + NEG_CORE_OVER * hcore) * f
+            ncap[(n, "V")] = (vfree + NEG_CORE_OVER * vcore) * f
 
     def ftdirs(fi, fo):
         fs = {fi, fo}
