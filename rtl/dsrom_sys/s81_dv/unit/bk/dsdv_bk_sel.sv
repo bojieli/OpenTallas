@@ -44,7 +44,7 @@ module dsdv_bk_sel #(
     output wire          fault
 );
     localparam integer CB = 66, SB = 865, OB = 354;   // = `SELT_CB / `SELT_SB / `SELT_OB (ot_s81ph_sel_tile.sv)
-    wire [514:0] l0, l1, l2, l3; wire [513:0] vd;
+    wire [514:0] l0, l1, l2, l3; wire [366:0] vd;   // packed (bk_g VD_PK)
     wire [V-1:0] vi_s_r, vi_n_r; wire rck_s, rck_n;      // rung relays (+1 cycle per direction); ck_o unused
     dsfd_dvrly_276_SN u_rs (.ck(clk), .rs(rst_n), .i(vi_s), .o(vi_s_r), .ck_o(rck_s));
     dsfd_dvrly_276_NS u_rn (.ck(clk), .rs(rst_n), .i(vi_n), .o(vi_n_r), .ck_o(rck_n));

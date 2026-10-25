@@ -27,7 +27,7 @@ module dsdv_bk_sel_x_lp #(
     input wire ck_rn
 );
     wire [514:0] l0, l1, l2, l3;
-    wire [513:0] vd;
+    wire [366:0] vd;   // packed (bk_g VD_PK)
     wire [V-1:0] vi_s_r, vi_n_r;
     wire rck_s, rck_n;
     wire [263:0] tc;

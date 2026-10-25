@@ -360,8 +360,13 @@ module dsfd_selt_c #(
         (* keep *) reg [`SELT_CB-1:0] cmd;
         always @(posedge ck[0] or negedge rst_n)
             if (!rst_n) cmd <= {`SELT_CB{1'b0}};
+`ifdef OT_RTLC_MUT_SELT   // RTLC bench mutant: the last quarters bundle carries quarter 0s c_rem (a merged-copy slip)
+            else cmd <= {c_hclr, c_rem[(KW+1)*((g == Q - 1) ? 0 : g) +: KW+1], c_st, c_rep, c_p3, c_p2, c_stop, c_ing, c_fg,
+                         c_cg, c_fclr, c_Bt, c_T};
+`else
             else cmd <= {c_hclr, c_rem[(KW+1)*g +: KW+1], c_st, c_rep, c_p3, c_p2, c_stop, c_ing, c_fg, c_cg, c_fclr,
                          c_Bt, c_T};
+`endif
         assign t_c[`SELT_CB * g +: `SELT_CB] = cmd;
     end endgenerate
     // ---- landing FIFOs (head at entry 0), credits
