@@ -897,8 +897,11 @@ def build(ab):
                               C=next(q for q in segs.values() if q.role == "C"),
                               LP=next((q for q in segs.values() if q.role == "LP"), None),
                               leaves=[q for q in segs.values() if q.role.startswith("L") and q.role != "LP"])
-    # units row 19: WN3 (6-7) | bk_col 8 | gunit 9-10 | bk_sel 11-13 | s_7N top (14-15)
-    add(Part("bk_col", "unit", 8, 19, contents=[C("u_bk_col", "dsfd_bk_collector")], ckey="bk_col"))
+    # units row 19: WN3 (6-7) | (8 free: bk_col retired, S81/H4) | gunit 9-10 | bk_sel 11-13 | s_7N top (14-15)
+    # S81/H4 10-24 (TOK-DS H3 + COORD 22:00): bk_col (dsfd_bk_collector / dsdv_bk_col, the column-1 V-rung row collector)
+    # has no consumer in v4.8: no compiler job emits bk_col frames (dv_layer_compile attn.gather GAP: "nothing produces
+    # bk_col frames"), the gather is the svc-local SEL_IDS fetch + ROWS frames (dsdv_svc_att types 7 / 6).  The partition
+    # is dropped; its 4 rung lanes become the plain column-1 rung s_1S_C <-> s_1N_C (as columns 2 / 5: RETIRED_RUNG).
     add(Part("gunit", "unit", 9, 19, nc=2, contents=[C("u_gunit", "dsdv_gunit", "rework", params={"SID": "4'd3"},
                                                        note="re-aspected 950x1469 -> 2-cell row slot")],
              ckey="gunit"))
@@ -912,6 +915,11 @@ def build(ab):
                   reason="die-corner end of the SerDes PHY row: bump/ESD keep-out of the corner PHY (no logic routes "
                          "here; both neighbours are PHY or seal ring)")
              for c, r in ((20, 0),)]          # S81-XDIE: (0,0) = lk_WS2, (20,19) = lk_EN3
+    # S81/H4 10-24: the cell bk_col held (retired, see above) carries no logic: top-edge cell between lk_WN3 and gunit, on
+    # no lane path (every lane of this corner runs on row 18 / the slice columns); left free for die PG / decap
+    chans.append(dict(rect_um=[X0 + 8 * PX, X0 + 19 * PY, X0 + 9 * PX, X0 + 20 * PY],
+                      reason="free cell of the retired bk_col (S81/H4: no consumer in v4.8); top edge between lk_WN3 and "
+                             "gunit, no lane routes here"))
     return parts, frames, serdes, slices, chans, svcg
 
 
@@ -1059,6 +1067,7 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
         seen[key] = b
         cc = blkcls.get((r["src"][2:], r["dst"][2:]))
         c = cc.most_common(1)[0][0] if cc else ("hbmrd" if r["src"] == "u_phy_hbm" else r["kind"])
+        c = r.get("cls") or c                         # S81/H4: a retired rung unit's rows stay V-rung (xtier) lanes
         agg.setdefault((ps, pd, c), 0)
         agg[(ps, pd, c)] += add_b
     if unmapped:
@@ -1083,6 +1092,22 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
                 lk = "lk_" + nm
                 L("coll__%s__%s" % (lp, lk), lp, "coll_%s_o" % lk, lk, "coll_%s_i" % lp, 512, cls="coll", role="coll")
                 L("coll__%s__%s" % (lk, lp), lk, "coll_%s_o" % lp, lp, "coll_%s_i" % lk, 514, cls="coll", role="coll")
+    # ---- S81/H4 10-24 (COORD H4 ruling = option A): the index RANK TREE lanes of the bk_sel master dsdv_bk_sel_vmtx.
+    #      tl_o (its dsdv_idx_tx tree transmitter, the lane to the parent die) and ca / cb (the two landed child lanes into
+    #      dsdv_idx_vmux) end at the s_0N lep (LP), which owns the STAGE circuits: the tree (lower_bk shard_tree) spans the
+    #      k = 3 / 6 adjacent stages of one rank, i.e. stage NEXT = pair A (WN0/1) and stage PREV = pair B (WN2/3); the
+    #      TP4 peer circuits (s_0S / s_7S / s_7N pair A) join ranks of the SAME stage and carry no tree edge.  The lep
+    #      sends a tl beat as an IDX link frame (lane field 2 -> pair A, 3 -> pair B) and demuxes received IDX frames:
+    #      pair B (from PREV) -> ca, pair A (from NEXT) -> cb (ot_s81sl_lep_mu_ab_idx).  276 b each, registered, ft <= M7.
+    if not v47:
+        # path: only slice STATION cells (row 18 x06/x16 of s_4N..s_0N, then s_0N's outer column x05..x03): no leaf, hub
+        # or unit type gains a slot; the LP is entered on its N face (the coll lane face)
+        lp = slices["s_0N"]["LP"].name
+        lpc = (slices["s_0N"]["LP"].c0, slices["s_0N"]["LP"].r0)
+        up = [(P["bk_sel"].c0, P["bk_sel"].r0), (P["bk_sel"].c0, 18), (lpc[0], 18), lpc]
+        L("tl__bk_sel__%s" % lp, "bk_sel", "tl_o", lp, "tl_i", 276, cls="tl", role="tree", path=("cells", up))
+        L("ca__%s__bk_sel" % lp, lp, "ca_o", "bk_sel", "ca_i", 276, cls="ca", role="tree", path=("cells", up[::-1]))
+        L("cb__%s__bk_sel" % lp, lp, "cb_o", "bk_sel", "cb_i", 276, cls="cb", role="tree", path=("cells", up[::-1]))
     # ---- ID rings (no tie-offs): slice sid + fault OR, svc sid; counted (sid_o = sid_i + 1), rooted at seqhost ----
     order_s = [slices["s_%dS" % k]["C"].name for k in range(7, -1, -1)] + \
               [slices["s_%dN" % k]["C"].name for k in range(8)]
@@ -1170,8 +1195,6 @@ def cells_core_plan(p):
                     "MISSING kv512 leaf; SU KV leaves kve/kvp/kvq/kvr/kvt summed"
             return LEAF_CORES, 15000, "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)"
         return [], 5000, "station-only partition (ft flops)"
-    if p.name == "bk_col":
-        return [], 4 * 15770 + 73514 + 2 * 25144, UNIT_CORES["bk_col"][1]
     if p.name == "seqhost":
         # v4: the MU history window (dsdv_mu_hwin_capture_1019, 69,671 cells + SRAM columns) is a planned hard core
         # (GEOM-REVIEW: SUPERSEDED dsdv_mu_hwin_capture_1019 by seqhost core hwin); the other children flattened
@@ -1183,8 +1206,28 @@ def cells_core_plan(p):
     return [], 0, "MISSING"
 
 
+# S81/H4 10-24: retired V-rung units {inst: {its rung output bus: the slice that feeds the opposite rung input}}.  The
+# as-built census still carries them; their rung rows collapse onto the direct slice <-> slice rung (the unit was a
+# fixed-latency transparent stop, ot_dsdv_vstop), every other row of the unit (reset) is dropped with it.
+RETIRED_RUNG = {"u_bk_col": {"vo_n": "u_s_1S", "vo_s": "u_s_1N"}}
+
+
+def retire_rung(rows):
+    out = []
+    for r in rows:
+        if r["dst"] in RETIRED_RUNG:
+            continue
+        if r["src"] in RETIRED_RUNG:
+            rr = dict(r, src=RETIRED_RUNG[r["src"]][r["src_bus"]], src_bus="vo", cls="xtier")
+            out.append(rr)
+            continue
+        out.append(r)
+    return out
+
+
 def census_collapse(rows):
     """landing cells (ld_*) re-attributed to their single source (reset fan-in excluded)."""
+    rows = retire_rung(rows)
     into = collections.defaultdict(set)
     for r in rows:
         if r["dst"].startswith("ld_") and r["kind"] != "reset":
@@ -1291,7 +1334,14 @@ def route(grid, lanes, slices):
     for lk in order:
         s, d = lk["src"][0], lk["dst"][0]
         w = lk["width"] + 1
-        if lk.get("path") and lk["path"][0] == "xrow":
+        if lk.get("path") and lk["path"][0] == "cells":
+            # S81/H4: an explicit corner path (cell polyline); every cell between the end partitions must be ft-able
+            seq = poly_cells(list(lk["path"][1]))
+            assert grid.owner[seq[0]] == s and grid.owner[seq[-1]] == d, (lk["id"], seq[0], seq[-1])
+            for c_ in seq[1:-1]:
+                q_ = P[grid.owner[c_]]
+                assert q_.ft_ok and q_.kind not in ("frame", "serdes"), (lk["id"], c_, q_.name)
+        elif lk.get("path") and lk["path"][0] == "xrow":
             _, side, xr = lk["path"]
             # fixed: from the slice segment straight to the array on the x row (turn at the segment if the x row is
             # below the half), then through the frame b0 bands
@@ -1393,8 +1443,11 @@ def route_v48(grid, lanes47, lanes):
             todo.append(lk)
     # S81-XDIE 10-24: the copy-A/B reserve pair lanes route LAST, on top of every v4.8 load, so no existing lane moves
     rsv = [l for l in todo if RESERVE_RE.search(l["id"])]
-    res.update(route(grid, [l for l in todo if l not in rsv], {}))
+    tree = [l for l in todo if l["role"] == "tree"]
+    res.update(route(grid, [l for l in todo if l not in rsv and l not in tree], {}))
     res.update(route(grid, rsv, {}))
+    # S81/H4 10-24: the bk_sel tree lanes (fixed station path) are applied after every other lane: no lane moves
+    res.update(route(grid, tree, {}))
     ROUTE_V48.update(kept=len(res) - len(todo), rerouted=sorted(l["id"] for l in todo))
     return res
 
@@ -1492,7 +1545,15 @@ def census_map(plan, lanes, fmap, out):
                       "reason": "die clock/reset ports"}]}
     json.dump(cm, open(out / "census_map.json", "w"), indent=0)
     (out / "census").mkdir(exist_ok=True)
-    shutil.copy(CENSUS_SRC[0], out / "census" / "s81_lanes.tsv")
+    # S81/H4 10-24: the plan's census = the as-built census with the retired rung units (RETIRED_RUNG: bk_col) collapsed
+    # onto the direct slice <-> slice rung, exactly as the lanes were derived (the as-built source stays inputs/)
+    with open(CENSUS_SRC[0]) as f_:
+        rd_ = csv.DictReader(f_, delimiter="\t")
+        hdr_, rows_ = rd_.fieldnames, retire_rung(list(rd_))
+    with open(out / "census" / "s81_lanes.tsv", "w", newline="") as f_:
+        wr_ = csv.DictWriter(f_, fieldnames=hdr_, delimiter="\t", extrasaction="ignore", lineterminator="\n")
+        wr_.writeheader()
+        wr_.writerows(rows_)
 
 
 CENSUS_SRC = []
