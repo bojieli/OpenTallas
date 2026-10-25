@@ -543,6 +543,7 @@ class Lec:
     def __init__(self, gold, gmap, gate, tmap, port_map=None):
         self.gold, self.gate = gold, gate
         self.gp, self.gc, self.gx, self.ganon, galias = key_points(gold, gmap)
+        self.galias = galias
         self.tp, self.tc, self.tx, self.tanon, _ = key_points(gate, tmap)
         # a gold register whose Q net also carries the name the gate flop was given (synthesis named the flop after
         # an alias, e.g. the output port it drives): re-key it to that name
@@ -1037,6 +1038,90 @@ def anchored(L):
     return {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and (sd != "gold" or h[2] in ms)}
 
 
+def alias_arrays(L, log, words=4):
+    """an RTL array whose gate flops synthesis named after an ALIAS array (`assign SX[i] = X[i]`: rename -wire picked
+    the alias wire, so the gate holds SX[i][b] while the gold, read with the other frontend, holds X[h][flat]): the
+    gold flops' own Q-net alias names carry the gate base, which is the evidence that pairs the two bases.  The index
+    tuples are flattened mixed-radix (outer index reversed or not, either side) and the gate keys re-keyed to the gold
+    names when the flattened gate set is a subset of the gold set (synthesis may have merged some elements into other
+    registers: those gold flops stay gold-only and are paired by function in correspond); among the variants the one
+    with the fewest disagreeing matched compare points in simulation is kept.  Sound: the re-key is a bijection of
+    key points and every next-state function is still proved (a wrong layout can only produce a difference)."""
+    def split(keys):
+        d = {}
+        for k in keys:
+            m = IDX.match(k)
+            if k.startswith("ff:") and m:
+                d.setdefault(m.group(1), {})[k] = tuple(int(x) for x in re.findall(r"\d+", m.group(2)))
+        return d
+
+    def flats(d, rev):
+        n = len(next(iter(d.values())))
+        if len({len(v) for v in d.values()}) != 1:
+            return None
+        hi = [max(v[j] for v in d.values()) + 1 for j in range(n)]
+        r = {}
+        for k, v in d.items():
+            f = 0
+            for j in range(n):
+                x = (hi[j] - 1 - v[j]) if (rev and j == 0 and n > 1) else v[j]
+                f = f * hi[j] + x
+            r[f] = k
+        return r if len(r) == len(d) else None
+
+    def mismatches():
+        m, kind = L.build(with_compare=False, with_hyp=False)
+        val, mask = m.simulate(words, seed=4343)
+        return sum(1 for k in L.matched if k.startswith("ff:") and
+                   lit_val(val, mask, L.dlit[("gold", k)]) != lit_val(val, mask, L.dlit[("gate", k)]))
+
+    def apply(mp):                                   # gate key -> gold key
+        for tk, gk in mp.items():
+            L.tp[gk] = L.tp.pop(tk)
+            if tk in L.tc:
+                L.tc[gk] = L.tc.pop(tk)
+        L.matched = sorted(set(L.gp) & set(L.tp))
+        L.gonly = sorted(set(L.gp) - set(L.tp))
+        L.tonly = sorted(set(L.tp) - set(L.gp))
+
+    galias = getattr(L, "galias", {})
+    G, T = split(L.gonly), split(L.tonly)
+    for gb, g in sorted(G.items()):
+        votes = collections.Counter()
+        for k in g:
+            for a in galias.get(k, ()):
+                m = IDX.match(a)
+                if m and m.group(1) in T and m.group(1) != gb:
+                    votes[m.group(1)] += 1
+        for tb, n in votes.most_common(1):
+            t = T[tb]
+            if 2 * n < len(g) or 2 * len(t) < len(g) or len(t) > len(g):
+                continue
+            cands = []
+            for gr in (False, True):
+                for tr in (False, True):
+                    fg, ft = flats(g, gr), flats(t, tr)
+                    if fg and ft and set(ft) <= set(fg):
+                        mp = {ft[f]: fg[f] for f in ft}
+                        if mp not in cands:
+                            cands.append(mp)
+            if not cands:
+                continue
+            base = mismatches()
+            best = None
+            for mp in cands:
+                apply(mp)
+                n_ = mismatches()
+                apply({v: k for k, v in mp.items()})
+                if best is None or n_ < best[0]:
+                    best = (n_, mp)
+            if best[0] < base:
+                apply(best[1])
+                del T[tb]
+                log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
+                           f"({len(g)} b, Q-net alias evidence {n}); mismatching compare points {base} -> {best[0]}")
+
+
 def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
     duplicates, or the two frontends named a register differently, e.g. a register that drives an output port):
@@ -1049,6 +1134,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
          all hypotheses assumed: an inductive invariant.  Failing hypotheses are dropped and the loop repeats (new
          candidates for `rounds` rounds, then refinement only, which shrinks monotonically to an inductive set).
     Unpaired flops stay free inputs."""
+    alias_arrays(L, log)
     relayout(L, log)
     renamed(L, log)
     replica_proposals(L, log)
