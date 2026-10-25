@@ -688,7 +688,7 @@ def tcl_text(T):
           "  if {$h > $rtr_hmax} { set rtr_hmax $h }",
           "  if {$h > $rtr_lim} { incr rtr_hbad }",
           "}",
-          "set rtr_v [expr {$rtr_hbad ? \"FAIL\" : \"PASS\"}]",
+          "set rtr_v [expr {($rtr_hbad || [llength $rtr_miss]) ? \"FAIL\" : \"PASS\"}]",
           f"puts \"OT_RESET_TREE entry {T['entry']} depth {T['depth']} ({T['n_tree']} tree + {T['n_pad']} pad relays, "
           f"planned max hop {T['max_hop_um']} um): placed $rtr_n flops FIRM, placed max hop "
           "[format %.1f [expr {$rtr_hmax / double($ff_dbu)}]] um, $rtr_hbad hops > "
