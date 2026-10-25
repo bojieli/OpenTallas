@@ -1717,3 +1717,23 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
    (2) Clock on the write side. The clk pin is on the READ face, 167 um from the write pins, so the hold-critical reg->SRAM write class (wd/we/w_addr) is launched in the outer channel and captured at the corridor-side clock. Use the SRAMIF recipe: macro tap-out with the macro clock ~15-20 ps EARLY against its write-reg bank, and a site-placed tap in each outer channel per bank pair. Post per bank: write-reg CK mean vs macro clk, and the tap-mean window (<= 20, RCX-corrected).
    (3) Banks 0-3 write slices (dd_i enters E) cross the corridor in the existing p_dd stages. Post those stations' sites (none in a macro or halo, hops <= 405 incl. the corridor) and the row-channel cut for that traffic.
    (4) Re-confirm the u_bound.u_core.u_qb.u_qseat instance prefix against the fresh bound netlist, and re-run the pin_track audit on the kit's own DEF. Owner PATH-QC (sub-lane PATH-QC-N59).
+
+## PARKED 2026-10-25 12:28 PDT (GEOM-REVIEW, shift 10:08-12:30; S81 + HBM split, GEOM-REVIEW-2 has KV/QC/KITS-SPARE)
+Verdicts this shift:
+  - S81R slice_station t23/t46: PRE-REVIEW FAIL.
+  - TKMTERM: PASS-COND (carried to kits_chain2).
+  - SM-CLUSTER plan: FAIL.
+  - S81/FT t55 G2: PASS-COND.
+  - elemB_if2d: routed RCX arbiter -> FAIL (my placement dump was ~50 ps optimistic; use GRT-mode gates for F3); OK to delete the run/results bulk.
+  - E4 dsdv_eng_rr_e_e4: FAIL. (3)/(2b)/(4) accepted. F6 launch side fails on every non-ROM-rd macro pin (ROM addr_in 581, u_e rows wd_in 593, row_e rd 185). Clock: planned shallow trunk, not a 600 ps contract.
+  - DIE-FT-HBM B2p_r1_band: FAIL. Bands sized by the 6/um face budget; full-width NS stripes. Fix: 12/um M4+M6, minimum stripes, station-site audit.
+  - AMBIGUOUS-GEOM per-row re-posts done (S81-CORES b1, HBM-KITS B2; 11:18).
+Open for the next reviewer:
+  - hcore kit_swr: still LEC UNPROVEN (22 g_ske points, TOK-LEC owed). Nothing to review until it relaunches. At CTS, check kit_swr placement plus the post-CTS F3 / pair skew.
+  - hi t6 G2 (epyc1 path-s81-ft/g2/part_svc_hi_dsdv_svc_rs__t6) is slow, at extra iteration 10/30 at 12:30. Rule on its overflow when it ends.
+  - Expected successors: E4->E5 (F6 all macros + trunk), elemB structural kit, S81R slice_station sink-site taps, SM-CLUSTER plan rev, DIE-FT-HBM band rev, HBM B2 FAIL kits.
+  - F6 method: always run the reviewer dumps (dumpif.py + dumpif_in.py) on ALL macro pin classes. An author's table may cover only one class (E4 did).
+Scratch:
+  - epyc1 /srv/opentallas-scratch2/claude/geomrev-1025/{s81r,elemB_grt,e4}
+  - rtx-pro ~/scratch/geomrev1025/{s81r,hbm/term,hbm/sm,elemB,e4,dieft}
+  - waitev.sh event waiter
