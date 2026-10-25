@@ -12,6 +12,9 @@ Fix (industry practice: next-state precompute registers + register duplication p
           kt_r[i] = ({0,i} < T[13:9]), ke_r[i] = ({0,i} == T[13:9]) are registered from the NEXT state of zc_q / tq
           (zc, tc; neither has a reset), so they equal the combinational terms on every edge.  The 15-b compare and
           T (tq) leave the write cycle: pb = two 16:1 + one 8:1 selects by the zq k/slot fields (40 regs/zone).
+          PATH-KV-ASTK2: the 40 regs live in one kept qkd_astk_wdec instance per zone (u_wd): every zone sees the same tc
+          broadcast, so plain kept regs were merged across zones by opt_merge (GEOM 10:05 FAIL); astk_replica_check.py
+          counts them after synthesis and fails closed.
           tc is internal (ctl tc face copies) in every zn incl. the chain head, so no logic is added on a core pin.
   * ctl : zh gets 4 kept same-edge replicas (keep_hierarchy counter module, identical next state:
           start ? 0 : (!l_pend && z_emit) ? +1 : hold, async reset rn_q), one per 8-b slice of z_s; the zk_r copies go
@@ -31,6 +34,39 @@ ZH_MOD = """
 endmodule
 """
 
+WDEC_MOD = """
+// PATH-KV-ASTK2 10-25: per-zone write-decode next-state registers (40 FF).  keep_hierarchy + no parameters: a user-module
+// instance is never merged by opt_merge and the module name survives (no $paramod rename), so astk_replica_check.py can
+// count 4 x 40 in the synthesized netlist; (* keep *) on the regs keeps every bit inside the module (ot_keep_regs.tcl).
+(* keep_hierarchy *) module qkd_astk_wdec (input wire ck, input wire [3:0] zcn, input wire [14:1] tcn,
+        output wire [15:0] kt, output wire [15:0] ke, output wire [7:0] lo);
+    (* keep *) reg [15:0] kt_r;
+    (* keep *) reg [15:0] ke_r;
+    (* keep *) reg [7:0]  lo_r;
+    reg  [7:0]  lo_n;
+    reg  [3:0]  sib_n, sg_n, jj_;
+    reg  [15:0] kt_n, ke_n;
+    reg  [4:0]  ki_;
+    integer     j_, i_;
+    always @* for (j_ = 0; j_ < 8; j_ = j_ + 1) begin
+        jj_ = j_;
+        sib_n = {jj_[2:0], 1'b1};
+        sg_n = (zcn[3:2] == 2'd0) ? sib_n : (zcn[3:2] == 2'd1) ? {sib_n[2:0], 1'b0} :
+               (zcn[3:2] == 2'd2) ? {sib_n[1:0], 2'b00} : {sib_n[0], 3'b000};
+        lo_n[j_] = {zcn[1:0], sg_n, 3'b000} < tcn[9:1];
+    end
+    always @* for (i_ = 0; i_ < 16; i_ = i_ + 1) begin
+        ki_ = i_;
+        kt_n[i_] = ki_ < tcn[14:10];
+        ke_n[i_] = ki_ == tcn[14:10];
+    end
+    always @(posedge ck) begin kt_r <= kt_n; ke_r <= ke_n; lo_r <= lo_n; end
+    assign kt = kt_r;
+    assign ke = ke_r;
+    assign lo = lo_r;
+endmodule
+"""
+
 
 def zn(text, name, mut=False):
     i = text.index("module " + name + " ")
@@ -44,30 +80,16 @@ def zn(text, name, mut=False):
     assert s.count("tq[14:1] <= tc[14:1];") == 1, name
     xor = " ^ 8'd1" if mut else ""
     new = (
-        "    // PATH-KV-ASTK 10-25: write-decode next-state threshold registers (0 cycles).  lo_r[j] equals\n"
-        "    // ({S, sgam(L, slot[3:1] = j), 3'b000} < T[8:0]) on every edge: registered from the next state of zc_q / tq.\n"
+        "    // PATH-KV-ASTK2 10-25: write-decode next-state threshold registers (0 cycles) in ONE kept per-zone register\n"
+        "    // module instance u_wd (qkd_astk_wdec, keep_hierarchy, no parameters): every zone gets the tc broadcast, so plain\n"
+        "    // kept regs were merged across zones by opt_merge (W2: kt_r/ke_r only in zn_2, lo_r 8/4/2/1).  lo_r[j] equals\n"
+        "    // ({S, sgam(L, slot[3:1] = j), 3'b000} < T[8:0]); kt_r[i] = ({0,i} < T[13:9]); ke_r[i] = ({0,i} == T[13:9]);\n"
+        "    // all registered from the next state of zc_q / tq (zc, tc), so they equal the combinational terms on every edge.\n"
         f"    wire [3:0]  zc_n = {zc_n};\n"
-        "    reg  [7:0]  lo_n, lo_r;\n"
-        "    reg  [3:0]  sib_n, sg_n, jj_;\n"
-        "    integer     j_;\n"
-        "    always @* for (j_ = 0; j_ < 8; j_ = j_ + 1) begin\n"
-        "        jj_ = j_;\n"
-        "        sib_n = {jj_[2:0], 1'b1};\n"
-        "        sg_n = (zc_n[3:2] == 2'd0) ? sib_n : (zc_n[3:2] == 2'd1) ? {sib_n[2:0], 1'b0} :\n"
-        "               (zc_n[3:2] == 2'd2) ? {sib_n[1:0], 2'b00} : {sib_n[0], 3'b000};\n"
-        "        lo_n[j_] = {zc_n[1:0], sg_n, 3'b000} < tc[9:1];\n"
-        "    end\n"
-        f"    always @(posedge ck) lo_r <= lo_n{xor};\n"
-        "    // kt_r[i] = ({0,i} < T[13:9]), ke_r[i] = ({0,i} == T[13:9]), registered from tc[14:10]: T leaves the write cycle\n"
-        "    reg  [15:0] kt_n, ke_n, kt_r, ke_r;\n"
-        "    reg  [4:0]  ki_;\n"
-        "    integer     i_;\n"
-        "    always @* for (i_ = 0; i_ < 16; i_ = i_ + 1) begin\n"
-        "        ki_ = i_;\n"
-        "        kt_n[i_] = ki_ < tc[14:10];\n"
-        "        ke_n[i_] = ki_ == tc[14:10];\n"
-        "    end\n"
-        "    always @(posedge ck) begin kt_r <= kt_n; ke_r <= ke_n; end\n"
+        "    wire [15:0] kt_r, ke_r;\n"
+        "    wire [7:0]  lo_q, lo_r;\n"
+        "    (* keep *) qkd_astk_wdec u_wd (.ck(ck), .zcn(zc_n), .tcn(tc[14:1]), .kt(kt_r), .ke(ke_r), .lo(lo_q));\n"
+        f"    assign lo_r = lo_q{xor};\n"
         "    wire        pb = (kt_r[k] || (ke_r[k] && lo_r[slot[3:1]])) && (`KVD_AKMUT != 3);\n")
     s = s.replace(old, new)
     return text[:i] + s + text[j:]
@@ -109,7 +131,7 @@ def apply_kit(rtl_dir, mut=False):
     from pathlib import Path
     d = Path(rtl_dir)
     p = d / "qkd_astk_leaves.sv"
-    p.write_text(zn(p.read_text(), "qkd_astk_zn", mut))
+    p.write_text(zn(p.read_text(), "qkd_astk_zn", mut) + WDEC_MOD)
     p = d / "qkd_astk_zn_head_p.sv"
     p.write_text(zn(p.read_text(), "qkd_astk_zn_head_p", mut))
     p = d / "qkd_astk_static_leaves.sv"
