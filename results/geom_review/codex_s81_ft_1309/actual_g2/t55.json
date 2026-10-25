@@ -1,0 +1,85 @@
+{
+ "layers": {
+  "M1": {
+   "resource": 0,
+   "demand": 0,
+   "usage_pct": 0.0,
+   "overflow": 0
+  },
+  "M2": {
+   "resource": 25204055,
+   "demand": 2551161,
+   "usage_pct": 10.12,
+   "overflow": 0
+  },
+  "M3": {
+   "resource": 28200881,
+   "demand": 1537509,
+   "usage_pct": 5.45,
+   "overflow": 0
+  },
+  "M4": {
+   "resource": 21161895,
+   "demand": 443356,
+   "usage_pct": 2.1,
+   "overflow": 0
+  },
+  "M5": {
+   "resource": 21338317,
+   "demand": 421899,
+   "usage_pct": 1.98,
+   "overflow": 0
+  },
+  "M6": {
+   "resource": 21783300,
+   "demand": 641722,
+   "usage_pct": 2.95,
+   "overflow": 0
+  },
+  "M7": {
+   "resource": 21781026,
+   "demand": 1598795,
+   "usage_pct": 7.34,
+   "overflow": 0
+  }
+ },
+ "total_overflow": 0,
+ "wirelength_um": 4131947.0,
+ "errors": [],
+ "pin_access_warnings": 0,
+ "pin_access_no_ap": {
+  "stdCellPin": 0,
+  "macro": 0
+ },
+ "pin_access_done": true,
+ "reach": {},
+ "done": true,
+ "capacity_valid": true,
+ "kind": "g2-partition",
+ "die": "s81",
+ "type": "ot_s81sl_leaf__t55",
+ "instance": "s_6S_L4",
+ "outline_um": [
+  1442.88,
+  1226.88
+ ],
+ "pins": 6355,
+ "flops": 18254,
+ "leaf_blockages": 27,
+ "adjust": 0.5,
+ "route_layers": "M2-M7",
+ "ft_hops": {
+  "slots": 10,
+  "max_hop_um": 339.39,
+  "over_reach": {},
+  "over_reach_bits": 0,
+  "st_in_core": 0,
+  "st_in_core_slots": {},
+  "actual_sites": true,
+  "errors": [],
+  "station_cells": 16815,
+  "coordinate_basis": "actual post-placement cell centres; fixed generated IO pins",
+  "explicit_anchor_drift_um": 0.0
+ },
+ "geometry_verdict": "PASS"
+}

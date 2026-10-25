@@ -21,5 +21,35 @@
   "all_error_check": "complete internal_station contracts",
   "station_macro_intersections": 0,
   "geometry_stations_latency_seam_errors": 0
+ },
+ "actual_g2": {
+  "source": "cd93218aee",
+  "plan_sha256": "630b6b6ce684c3e0719f0b507f3f8c48430e70ba8f3121819fa11f8b2212d226",
+  "t55": {
+   "host": "epyc3",
+   "unit": "1839964-1792961705",
+   "geometry": "PASS",
+   "overflow": 0,
+   "max_hop_um": 339.39,
+   "station_cells": 16815
+  },
+  "station41": {
+   "host": "intel1",
+   "unit": "364915-1792961705",
+   "geometry": "PASS",
+   "overflow": 0,
+   "max_hop_um": 401.49,
+   "station_cells": 34949
+  },
+  "t58": {
+   "host": "epyc3",
+   "unit": "1839966-1792961705",
+   "status": "RUNNING"
+  },
+  "reviewers": [
+   "Codex plan actual PNGs viewed",
+   "GEOM independent actual PNG and grt.json review"
+  ],
+  "scope": "Targeted geometry/capacity only; timing/clock/native hardening and broad die route remain unqualified. Generic taps require sink-based 175um radius design before actual hardening."
  }
 }
