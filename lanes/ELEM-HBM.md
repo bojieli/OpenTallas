@@ -468,3 +468,8 @@ CODEX took over collection + measured-memory fix on codex/elem-hbm-push-1024, ep
   - PLAN: grow svc_pc (~1.3x), xcal_rel_t (~1.45x), idx_score_quarter (~1.45x, earlier). In-core clock taps for pgslice lanes (I 870-940). Earlier list from 20:20 still open.
   - lanes_plain12_15@871944: PDN-0179 (M2 VSS channel 4.6 um at y=396 between macros) -> macro halo/channel fix in the generator.
 2026-10-24 23:11 PDT COORD (owner): fleet has ~1.5 TB admittable -- launch known fixes and alternative variants IN PARALLEL now (first to sign wins, delete losers at once); do not serialize fixes behind running attempts. Routes still need GEOM PASS and must not start on types the dec. 17 re-plan changes.
+
+## HBM-CORES2 (sub-agent of lane HBM) 2026-10-24 23:23 PDT
+- 2026-10-24 23:23 PDT HBM-CORES2: branch claude/hbm-cores-1024 @9e9e8feb8b (merged main c5834d0306; kits now ship main signoff.py + pair_skew.tcl = pair-skew gate, spread INFO; generator copies pair_skew.tcl). New signoff.py pushed into all 266 kits_b2l + run dirs on 5 hosts. Probe argmax_r2: TT 25.76 / FF 14.18 / pair skew TT/FF 31.9/29.5 / DRC 0 -> NOT SIGNED only on face_guard (timing-clean). Pair-skew re-signoff of the 14 other routed kits running (hc2_reso_<host>.log on epyc1/epyc3/intel1).
+- LAUNCHED bankq_ft x3 finish (GEOM PASS 22:13) + PLACE_DENSITY 0.42 variants (_pd42), 6 ot-run units (epyc1 hc2_jobs.log).
+- 30 pgslice exp lanes: CTS done, I 552-601 (core_insertion updated, 226 rows), kits regenerated under contract; author placed review PASS-COND; ROUTE request posted to GEOM-REVIEW (cond (1) clock source open).
