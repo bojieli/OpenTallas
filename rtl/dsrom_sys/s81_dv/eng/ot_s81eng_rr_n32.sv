@@ -2,7 +2,8 @@
 // Isolated same-edge XQ consumer successor; selected only by OT_S81ENG_RR_N32.
 module ot_s81eng_xq_n32 #(
     parameter integer TXD = 8,
-    parameter integer MUT = 0          // bench negative controls: 1 idx = 4 col + beat (not beat / 2), 2 e0 / e1 swapped
+    parameter integer MUT = 0          // bench negative controls: 1 idx = 4 col + beat (not beat / 2), 2 e0 / e1 swapped,
+                                       // 3 (OT_S81ENG_XQ_OHSEL only) vo_b[137] wrong fragment on select s0
 ) (
     input  wire         ck,
     input  wire         rst_n,
@@ -115,12 +116,38 @@ module ot_s81eng_xq_n32 #(
     wire [1103:0] full = {551'd0, cur[531:0], {1'b0, cur[538:532]}, 4'd0, 5'd1, 3'd1, 1'b1};
     // fanout (safe checklist 3): the 552 rung output muxes take their select from 48 KEPT copies of tx and of fc[1:0]
     // (12 bits a copy), registered with the same next state as tx / fc
+`ifdef OT_S81ENG_XQ_OHSEL
+    // PATH-S81/ENG2 10-25 (GEOM 08:08 cond 2b): the payload rung muxes read a REGISTERED one-hot fragment select.
+    // E3 cone was fck flop -> 4 serial BUFx2 fanout levels (24/17/24/24 loads) -> 7-level mux: the indexed part-select
+    // full[276*fck+vbit] synthesises as an arithmetic offset (276*f -> HA/FA) into a log shifter per bit.  Now each of
+    // 96 select copies holds {s1 = tx & f==1, s0 = tx & f==0, pass = !tx}, registered from the SAME next state
+    // (txn, fcn) as the tx/fc copies (0 added cycles), and feeds one AND-OR (AO222) on 5-6 rung bits of one direction.
+    // full[552+v] / full[828+v] are 0 for v >= 1, so fragments 2/3 need no select term on the payload bits; bit 0
+    // (valid) keeps the txk/fck form.  tx/fc copies 0..48 stay for curcap / rv / bit 0; copies 49..95 had only rung
+    // loads and are dropped (NT = 0).
+    wire[48:0] txk;
+    wire[97:0] fck;
+    wire[287:0] osel;                      // copy k: osel[3k] pass, [3k+1] s0, [3k+2] s1; vo_b k 0..47, vo_a 48..95
+    for(genvar cg=0;cg<6;cg=cg+1)begin:g_ctl
+        if(cg<3)begin:g_tf
+            ot_s81eng_rr_ctlsel16 #(.TXD(TXD),.NT(16)) u_c(.ck(ck),.rn(rl[32+16*cg+:16]),.first(first),.tc(tc),.fc(fc),
+                .txk(txk[16*cg+:16]),.fck(fck[32*cg+:32]),.osel(osel[48*cg+:48]));
+        end else if(cg==3)begin:g_t1
+            ot_s81eng_rr_ctlsel16 #(.TXD(TXD),.NT(1)) u_c(.ck(ck),.rn(rl[32+16*cg+:16]),.first(first),.tc(tc),.fc(fc),
+                .txk(txk[48]),.fck(fck[97:96]),.osel(osel[48*cg+:48]));
+        end else begin:g_os
+            ot_s81eng_rr_ctlsel16 #(.TXD(TXD),.NT(0)) u_c(.ck(ck),.rn(rl[32+16*cg+:16]),.first(first),.tc(tc),.fc(fc),
+                .txk(),.fck(),.osel(osel[48*cg+:48]));
+        end
+    end
+`else
     wire[95:0] txk;
     wire[191:0] fck;
     for(genvar cg=0;cg<6;cg=cg+1)begin:g_ctl
         ot_s81eng_rr_ctl16 #(.TXD(TXD)) u_c(.ck(ck),.rn(rl[32+16*cg+:16]),.first(first),.tx(tx),.tc(tc),.fc(fc),
             .txk(txk[16*cg+:16]),.fck(fck[32*cg+:32]));
     end
+`endif
     reg  [1:0] pa, pb;                     // pass-through train fragments still to come (a -> b, b -> a)
     reg  [275:0] ia, ib_;
     always @(posedge ck) begin ia <= vi_a; ib_ <= vi_b; end
@@ -149,10 +176,21 @@ module ot_s81eng_xq_n32 #(
                 fault <= 1'b1;
         end
     // Payload never resets: validbit0 remains on the original control reset leaf.
+`ifdef OT_S81ENG_XQ_OHSEL
+    // rung bit v (1..275) reads select copy (48 v) / 276 (5-6 bits a copy) of its direction; MUT 3 = bench negative
+    // control (vo_b bit 137 takes fragment 1 on the fragment-0 select)
+    always @(posedge ck)for(integer vbit=1;vbit<276;vbit=vbit+1)begin
+        vo_b[vbit]<=(osel[3*((48*vbit)/276)]&ia[vbit])|(osel[3*((48*vbit)/276)+1]&full[(MUT==3&&vbit==137)?276+vbit:vbit])|
+                    (osel[3*((48*vbit)/276)+2]&full[276+vbit]);
+        vo_a[vbit]<=(osel[3*(48+(48*vbit)/276)]&ib_[vbit])|(osel[3*(48+(48*vbit)/276)+1]&full[vbit])|
+                    (osel[3*(48+(48*vbit)/276)+2]&full[276+vbit]);
+    end
+`else
     always @(posedge ck)for(integer vbit=1;vbit<276;vbit=vbit+1)begin
         vo_b[vbit]<=txk[vbit/6]?full[276*fck[2*(vbit/6)+:2]+vbit]:ia[vbit];
         vo_a[vbit]<=txk[48+vbit/6]?full[276*fck[2*(48+vbit/6)+:2]+vbit]:ib_[vbit];
     end
+`endif
     for(genvar rb=0;rb<8;rb=rb+1)begin:g_rv
         ot_s81eng_rr_rvbyte #(.BANK(rb)) u_b(.ck(ck),.rn(rl[4+rb]),.tx(txk[rb]),.last(train_last),.bw(bw),.mask(rv_setmask[8*rb+:8]),.q(rv[8*rb+:8]));
     end
@@ -181,6 +219,32 @@ endmodule
   (* keep=1 *) reg t;(* keep=1 *)reg[1:0] f;
   always @(posedge ck or negedge rn[g])if(!rn[g])begin t<=0;f<=0;end else begin t<=txn;f<=fcn;end
   assign txk[g]=t;assign fck[2*g+:2]=f;
+ end
+endmodule
+// OT_S81ENG_XQ_OHSEL: ctl16 plus 16 registered one-hot rung selects {s1, s0, pass}; NT (0, 1 or 16) tx/fc copies.
+// Next state is ctl16's exactly; local_tx = !pass[0] (same reset leaf, same next state as ctl16's t[0]).
+(* keep_hierarchy = 1 *)module ot_s81eng_rr_ctlsel16 #(parameter integer TXD=8,parameter integer NT=16)(
+ input wire ck,input wire[15:0] rn,input wire first,input wire[7:0] tc,input wire[6:0] fc,
+ output wire[((NT>0)?NT:1)-1:0] txk,output wire[2*((NT>0)?NT:1)-1:0] fck,output wire[47:0] osel);
+ wire[15:0] p;
+ wire local_tx=!p[0];
+ wire start=first&&!local_tx&&tc==8'(TXD-1);
+ wire txn=start?1'b1:(local_tx&&fc==7'd95)?1'b0:local_tx;
+ wire[1:0] fcn=start?2'd0:local_tx?fc[1:0]+2'd1:fc[1:0];
+ for(genvar g=0;g<16;g=g+1)begin:g_s
+  (* keep=1 *) reg sp;(* keep=1 *) reg s0;(* keep=1 *) reg s1;
+  always @(posedge ck or negedge rn[g])if(!rn[g])begin sp<=1'b1;s0<=1'b0;s1<=1'b0;end
+   else begin sp<=!txn;s0<=txn&&fcn==2'd0;s1<=txn&&fcn==2'd1;end
+  assign p[g]=sp;assign osel[3*g+:3]={s1,s0,sp};
+ end
+ if(NT>0)begin:g_tf
+  for(genvar g=0;g<NT;g=g+1)begin:g_c
+   (* keep=1 *) reg t;(* keep=1 *)reg[1:0] f;
+   always @(posedge ck or negedge rn[g])if(!rn[g])begin t<=0;f<=0;end else begin t<=txn;f<=fcn;end
+   assign txk[g]=t;assign fck[2*g+:2]=f;
+  end
+ end else begin:g_none
+  assign txk=1'b0;assign fck=2'b00;   // NT = 0: no tx/fc copy; the instance leaves both outputs open
  end
 endmodule
 
