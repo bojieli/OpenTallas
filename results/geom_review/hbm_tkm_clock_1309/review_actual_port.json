@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.geom_review.v1",
+  "design": "HBM TKM tile reference clock",
+  "source": "flow-canary hbm_e68a26c61_1025_121753_405831 / core flow e68a26c61",
+  "stage": "4_cts",
+  "picture": "results/geom_review/hbm_tkm_clock_1309/tkm_clock_cts_failure_actual_port.png",
+  "verdict": "FAIL",
+  "reviewed": "2026-10-25 13:35 PDT",
+  "observed": {
+    "sink_count": 13724,
+    "density_taps": 35,
+    "natural_tap_mean_ps": [
+      477.1,
+      519.8
+    ],
+    "padded_tap_mean_ps": [
+      511.8,
+      533.8
+    ],
+    "bound_tt_ps": 250,
+    "clock_port_um": [
+      317.352,
+      0.096
+    ],
+    "path_clock_port_um": [
+      159.84,
+      345.6
+    ],
+    "macro_count": 0
+  },
+  "findings": [
+    "Correction: the actual reference pins.json has tile_clk on the S face at x317.352 (ODB BTerm centre317.352,0.096), not the old common-master N-corner position plotted in a160a0a13e. The reference clock enters at the S-right corner; the body occupies the right two-thirds.",
+    "Tiny 19/25/34/37-sink groups at the N face and N-middle are separate clock trees; the slow 25-sink branch sets the target and pads the large body groups.",
+    "The full corner-fed CTS trunk plus local trees produces approximately twice the intended insertion; tap padding cannot shorten it.",
+    "There are no macros or macro walls. Local clock-region loads and trunk depth are the required structural changes.",
+    "The reviewed PATH N-mid clock position is a different physical view; moving that port alone has not been proved to fix this reference. The prototype must use its actual ODB source before any placement or CTS."
+  ],
+  "required_fix": [
+    "A reviewed shallow spatial trunk with bounded fanout/depth, protected trunks and local CTS below the density taps.",
+    "Merge tiny face groups into a face-band group. Evaluate any clock entry change using its actual pin/view contract; do not infer the reference source from a different master.",
+    "Keep the 250 ps TT bound; qualify per-corner insertion and the 20 ps local tap window on GRT/routed RC before route."
+  ],
+  "scope": "Existing CTS clock geometry and logs; logical connection segments are not routed wire shapes. No new STA, P&R or signoff claim.",
+  "correction_to": "a160a0a13e results/geom_review/hbm_tkm_clock_1309/review.json (original retained)"
+}
