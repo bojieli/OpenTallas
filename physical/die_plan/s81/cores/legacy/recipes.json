@@ -51,7 +51,9 @@
   "ref_tile": "physical/ref_tile/s81sl_xrt1"
  },
  "ot_s81sl_xrt3": {
-  "ref_tile": "physical/ref_tile/s81sl_xrt3_b"
+  "ref_tile": "physical/ref_tile/s81sl_xrt3_b",
+  "rtl_dirs": true,
+  "track_offsets": {"M6": 0.004}
  },
  "dsfd_node_LLd": {
   "ref_tile": "physical/ref_tile/s81net_node_lld"
