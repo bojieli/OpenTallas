@@ -235,7 +235,7 @@ SCHEMA = {
                                        "bit_site_cell_um": _xy,  # allocated cell footprint; explicit sites are lower-left
                                        "layer": _layer,                             # in-partition ft layer (<= M7)
                                        "in_window_um": _win, "out_window_um": _win,  # type frame pin windows
-                                       "layers": _lays, "order": _order}}},
+                                       "layers": _lays, "order": _order, "note": {"type": "string"}}}},
                     "clock": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "layer": _layer, "insertion_ps": _pos, "insertion_tol_ps": _nonneg,
                         # FLOW 10-25 (ruling 9.7 / decision 5e): this type's bound pin-register insertion per corner
