@@ -325,8 +325,8 @@ proc ::ot_dtsh::setup {block tap_list root_net cell} {
   # row orientations and complete tap coverage as each operation is applied.
   uplevel #0 [list source $apply]
   if {![dict size $nodes]} { error "OT_DTSH planner emitted no physical trunk nodes" }
-  freeze
   trunk_ndr
+  freeze
   audit
   rename ::clock_tree_synthesis ::ot_dtsh::cts_orig
   proc ::clock_tree_synthesis {args} { return [::ot_dtsh::cts {*}$args] }
