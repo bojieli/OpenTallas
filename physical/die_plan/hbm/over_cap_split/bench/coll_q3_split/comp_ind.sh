@@ -8,7 +8,7 @@ export CF
 [ -f Vtb__pch.h.fast.gch ] || g++ $CF -x c++-header Vtb__pch.h -o Vtb__pch.h.fast.gch
 [ -f Vtb__pch.h.slow.gch ] || cp Vtb__pch.h.fast.gch Vtb__pch.h.slow.gch
 mkdir -p ind
-{ grep -h "^#include" Vtb_vm_classes_*.cpp | sed "s/#include \"\(.*\)\.cpp\"/\1/"; grep -o "Vtb__Syms__[A-Za-z0-9_]*Slow\|Vtb__ConstPool[A-Za-z0-9_]*" Vtb_classes.mk; } | sort -u > ind/list
+ls *.cpp | grep -v "^Vtb_vm_classes_" | sed "s/\.cpp$//" | sort -u > ind/list
 echo "units $(wc -l < ind/list)"
 xargs -a ind/list -P $P -I{} sh -c "[ -s ind/{}.o ] || g++ \$CF -include Vtb__pch.h.fast -c {}.cpp -o ind/{}.o || echo FAILED {}" > ind/compile.log 2>&1
 grep -c FAILED ind/compile.log && exit 3

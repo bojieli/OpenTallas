@@ -22,3 +22,9 @@ EDGE _pr (10-25): edge members -> pin-registered twins rtl/.../p2p/ot_hgi_coll_e
     controls mut=1 (no +1) and mut=2 (held_epoch corrupted) FAIL as required.
 Lock-step build (10-25): build.sh verilates only; comp_ind.sh compiles one .cpp per cc1plus (<1 GB each) and links (the vm_classes
   amalgamations needed >13 GB per unit).
+LOCK-STEP a4 (10-25): asm.sh -> asm4.v (body_core + edge_core[_pr members] + vm_core + coll_q2 reduce/ring_ag cores) vs the
+  monolithic ot_hfd_coll_q3_hard_v8x_s (q3 body copy with the same _pr edge members, so the ARG +1 edge is on both sides and every
+  master output is compared on every edge; the _pr vs pinned-member relation is proven separately in edge_pr_eq/).
+  run_a4.sh (FILES=q3b.files build.sh verilate-only + comp_ind.sh), run_ls.sh a4 2000: 4/4 positive PASS (seeds 1-4, dens 8/2/32/4,
+  errors 0 incl. async resets every 997 cycles), 5/5 mutants CAUGHT (1 reduce_in_v, 2 link0_wr_v, 3 arg_start, 4 qcap[2] src_v,
+  5 arg_fault) -> lockstep_a4.log.  a3 (asm3.v) failed every positive case on hgi_fault: assembly alias bug, fixed in split_asm.py.
