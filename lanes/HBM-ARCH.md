@@ -250,3 +250,13 @@ OWNER? (HBM, non-blocking): (a) SerDes macro 600x600 for 6x112G is 5-7x denser t
   Also: fr_NW/fr_NE N15 (all retry lanes), tkm_SW.stat_cycles -> obs_C N125.
 2026-10-24 20:17 PDT RESET -> HBM: B2l priced with the unified tool: K 23 (deepest type), die E 52, 2,754 die relays, release 78 clk; hbm 79. Your die-level tree input (19:31) matches the tool (root at clock root, L paths, equal depth). recipes in lanes/RESET.md ## RECIPES; tool claude/reset-1024@d1152532c (READY)
 - 2026-10-24 20:24 PDT HBM: B2m @1ea0fc4ab: early core taps (decision 5e) from HBM-ELEM core_insertion_b2l.json: 562 core taps (434 measured I>250, 128 SM halves at 250), H-tree re-assigned (3322 taps, 1874 drivers, max load 28 in the hub), G0C 49/49 0 err. 304 taps early > 40 ps; worst q_hub u_sfup_Q 900 ps (programme_store_r10 I=1150), hcb lanes6_7_bank 556, SerDes 377, ep 327 -> those cores should be reshaped (HBM-ELEM list), not tapped from high in the tree. HBM-ELEM done: 89 B2l kits 0 SIGNED (13 routed NOT SIGNED, 76 FAIL), 26 contract reruns + 91 SPLIT2 CTS probes live (ELEM-HBM.md).
+- 2026-10-24 21:02 PDT HBM-BIND: @fc76a2c42 merged VM (19cfa3d9c) + SU (cc8b2b937) sub-agents and bound them in the delta:
+  VM 2-stop ring (hb_vms_NW -> nw2_t NC2 with argmax/idx clients, NE -> NE2; default bit-exact 440k checks, 2-stop 7 cfgs x 312k
+  checks, 10 mutants FAIL); SU stree root2/leaf NLEG2, programme PARTS2 (both default bit-exact, mutants FAIL); NEW here:
+  sucore_NW/NE -> ot_hbm_su_static_qcore_r13_w2 (2-writer port = core writers 2/3, writers 0/1 pruned inside; PASS 20000/0,
+  MUTW1 FAIL). Port-bind now fails only on IDX (sub-agent still running) + HC root (below) + as-built baseline classes.
+  OWNER?: HC on B2 -- hc_eng NQ2/TPRE7 root is built + bit-exact, but hc_NW/hc_NE are 64-lane quarter hubs; 2 halves need
+  128-lane half hubs (2x bank tiles + 1 tree level, new block) or a 128-lane run on the old hubs (changes per-lane
+  accumulation order = numerics decision). hc_eng left unbound until decided.
+  PLAN notes (B2l, not edited): NW/NE hub types diverge (COLL q3 NLINK3+TKM vs q2 NLINK2; VM nw2 NC2 vs NE2); VM_RT/CR_RT +
+  argmax(6)/idx(8) cr padding re-derive for the NW path; sucore tile re-close as w2.
