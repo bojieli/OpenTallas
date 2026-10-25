@@ -75,6 +75,8 @@ STEP_UM = 2.16                          # legalisation search step
 SPLIT_WINDOW = 0.25                     # a split may move +-25 % of the region extent to a partition edge
 AWARE_LEVELS = 4                        # partition-aware splits on the top levels (largest uncommon latency)
 INTRA_W = 256                           # split weight of two neighbouring taps of one partition (seam pairs: bits)
+CORRIDOR_WINDOW = 0.25                  # a node may move +-25 % of its region extent along its incoming leg
+CORRIDOR_STEP_UM = 17.28
 MAX_SEG_X = 1.15                        # a legalised segment may reach 1.15 x rep_um, else the level gets a repeater more
 SIDE_MAX_UM = 1500.0
 
@@ -123,8 +125,9 @@ def keepouts(P):
 
 
 class KeepIndex:
-    def __init__(self, rects, bucket=500.0):
+    def __init__(self, rects, bucket=500.0, die=None):
         self.b = bucket
+        self.die = die
         self.g = defaultdict(list)
         for r in rects:
             for i in range(int(r[0] // bucket), int(r[2] // bucket) + 1):
@@ -132,6 +135,8 @@ class KeepIndex:
                     self.g[(i, j)].append(r)
 
     def hit(self, x, y, m=0.5):
+        if self.die and not (1.0 <= x <= self.die[0] - 1.0 and 1.0 <= y <= self.die[1] - 1.0):
+            return (0, 0, 0, 0, "outside die")
         for r in self.g.get((int(x // self.b), int(y // self.b)), ()):
             if r[0] - m <= x <= r[2] + m and r[1] - m <= y <= r[3] + m:
                 return r
@@ -217,7 +222,7 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     window = SPLIT_WINDOW if window is None else window
     aware_levels = AWARE_LEVELS if aware_levels is None else aware_levels
     taps = plan_taps(P) if taps is None else taps
-    K = KeepIndex(keep if keep is not None else keepouts(P))
+    K = KeepIndex(keep if keep is not None else keepouts(P), die=(W, H))
     T = Tree()
     sp = P.clock.get("spine", {}) or {}
     root = tuple(sp.get("die_root_um") or sp.get("root_um") or (W / 2, H / 2))
@@ -279,6 +284,77 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
 
     def ncell(key):
         return f"n{key[0]}_{key[1]}"
+    # --- corridor-aware node placement: a node moves along its incoming leg (up to +-CORRIDOR_WINDOW of its region
+    # extent) to the spot where its two outgoing legs cross the shortest blocked (macro) run, so repeaters find sites
+    # (die channels between hard cores) instead of hopping over them.
+    keep_rects = keep if keep is not None else keepouts(P)
+
+    def blocked_run(x0, y0, x1, y1, rects):
+        """longest continuous run of the axis-parallel line (x0,y0)-(x1,y1) over keep-out rects."""
+        horiz = abs(y1 - y0) < 1e-9
+        lo, hi = (min(x0, x1), max(x0, x1)) if horiz else (min(y0, y1), max(y0, y1))
+        iv = []
+        for r in rects:
+            if horiz and r[1] <= y0 <= r[3]:
+                iv.append((max(lo, r[0]), min(hi, r[2])))
+            elif not horiz and r[0] <= x0 <= r[2]:
+                iv.append((max(lo, r[1]), min(hi, r[3])))
+        iv = sorted(v for v in iv if v[1] > v[0])
+        best, cur = 0.0, None
+        for a_, b_ in iv:
+            if cur and a_ <= cur[1] + STEP_UM:
+                cur = (cur[0], max(cur[1], b_))
+            else:
+                cur = (a_, b_)
+            best = max(best, cur[1] - cur[0])
+        return best
+
+    def corridor(key, x, y, along):
+        """best coordinate on axis `along` for node key's outgoing legs (they run on the other axis)."""
+        lev = key[0]
+        r = region[key]
+        oax = levels[lev]
+        ext_out = (r[2] - r[0]) if oax == 0 else (r[3] - r[1])
+        span = ext_out / 4.0
+        ext_al = (r[2] - r[0]) if along == 0 else (r[3] - r[1])
+        w_ = CORRIDOR_WINDOW * ext_al
+        c = x if along == 0 else y
+        box = (x - w_ - span, y - span, x + w_ + span, y + span) if along == 0 else \
+            (x - span, y - w_ - span, x + span, y + w_ + span)
+        rects = [q for q in keep_rects if q[0] < box[2] and q[2] > box[0] and q[1] < box[3] and q[3] > box[1]]
+        if not rects:
+            return c
+        best = None
+        k = 0
+        while True:
+            for sgn in ((1,) if k == 0 else (1, -1)):
+                v = c + sgn * k * CORRIDOR_STEP_UM
+                if along == 0:
+                    run = blocked_run(v, y - span, v, y + span, rects)
+                else:
+                    run = blocked_run(x - span, v, x + span, v, rects)
+                if best is None or run < best[0] - 1e-6:
+                    best = (run, v)
+            k += 1
+            if k * CORRIDOR_STEP_UM > w_ or best[0] <= 0:
+                break
+        return best[1]
+    npos = {}
+    for lev in range(0, D + 1):
+        for key in sorted(k for k in region if k[0] == lev):
+            cx, cy = centre(key)
+            if lev:
+                ax = levels[lev - 1]
+                px, py = npos[(lev - 1, key[1] // 2)]
+                cx, cy = (cx, py) if ax == 0 else (px, cy)
+                if lev < D and levels[lev] != ax and key in live:
+                    v = corridor(key, cx, cy, ax)
+                    cx, cy = (v, cy) if ax == 0 else (cx, v)
+            elif D:
+                oax = levels[0]
+                v = corridor(key, cx, cy, 1 - oax)
+                cx, cy = (cx, v) if oax == 0 else (v, cy)
+            npos[key] = (cx, cy)
     # --- segments: plan every leg from the legalised parent, one cut count per level, pad to the level standard
 
     def plan_leg(a0, a, b, n):
@@ -290,7 +366,7 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
             prev = (x, y)
         return out
     # trunk (root -> the die-region centre): common to every tap
-    c0 = centre((0, 0))
+    c0 = npos[(0, 0)]
     tl = abs(c0[0] - root[0]) + abs(c0[1] - root[1])
     trunk = []
     if tl > 1e-6:
@@ -312,13 +388,13 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
     for lev in range(1, D + 1):
         parents = sorted(k for k in live if k[0] == lev - 1)
         kids = [(pk, (lev, 2 * pk[1] + c)) for pk in parents for c in (0, 1)]
-        Lmax = max(abs(centre(ck)[0] - centre(pk)[0]) + abs(centre(ck)[1] - centre(pk)[1]) for pk, ck in kids)
+        Lmax = max(abs(npos[ck][0] - npos[pk][0]) + abs(npos[ck][1] - npos[pk][1]) for pk, ck in kids)
         n0 = max(1, math.ceil(Lmax / rep_um - 1e-9))
         n = n0
         while True:                                 # one n per level: escalate until every legalised segment fits
             plan = {}
             for pk, ck in kids:
-                segs = plan_leg(pos[pk], centre(pk), centre(ck), n)
+                segs = plan_leg(pos[pk], npos[pk], npos[ck], n)
                 plan[ck if ck in live else ("dummy",) + ck] = segs if ck in live else segs[:1]
             worst = max(g for segs in plan.values() for _, _, g in segs)
             if worst <= max(max_seg, Lmax / n + 1e-6) or n >= n0 + 2:
@@ -453,8 +529,11 @@ def build(P, leaf_um=1000.0, rep_um=450.0, core_early="off", taps=None, keep=Non
                 pair_weight=tot_w, cut_weight_per_level={lev: round(v) for lev, v in sorted(cut_w.items())},
                 wire_um=round(sum(L for n in nets for L, *_ in n["branches"]), 1),
                 padding_um=round(sum(L - g for n in nets for L, _, _, g in n["branches"]), 1))
+    tok = [f"{t[0]}/{t[1]}" for t in taps if K.hit(t[2], t[3])]
+    meta["taps_on_keepout"] = len(tok)
+    meta["taps_on_keepout_list"] = tok[:50]
     meta["cells_on_keepout"] = sum(1 for c in T.cells.values() if c["kind"] != "dummy" and K.hit(c["x"], c["y"]))
-    nodes = {ncell(k): dict(level=k[0], xy=list(pos.get(k, centre(k))), region=[round(v, 3) for v in region[k]],
+    nodes = {ncell(k): dict(level=k[0], xy=list(pos.get(k, npos[k])), region=[round(v, 3) for v in region[k]],
                             path=path_of.get(k), kids=children.get(ncell(k), [])) for k in live}
     tree = dict(meta=meta, taps=tap_rows, nodes=nodes, root_node=ncell((0, 0)))
     return T, tree
@@ -911,15 +990,13 @@ def cmd_render(a):
     for r in keepouts(P):
         ax.add_patch(Rectangle((r[0], r[1]), r[2] - r[0], r[3] - r[1], fc="tan", ec="none", alpha=0.5))
     for k, nd in tree["nodes"].items():
-        pth = nd.get("path") or []
-        if len(pth) >= 2:
-            xs = [cells[c]["x"] for c in pth[-2:] if c in cells]
-            ys = [cells[c]["y"] for c in pth[-2:] if c in cells]
-    # legs: draw parent node -> child node
-    for k, nd in tree["nodes"].items():
-        pth = [c for c in (nd.get("path") or []) if c in cells]
-        for u, w in zip(pth, pth[1:]):
-            ax.plot([cells[u]["x"], cells[w]["x"]], [cells[u]["y"], cells[w]["y"]], "-", lw=0.5, c="tab:blue")
+        for kid, _ in nd.get("kids", []):
+            pth = tree["nodes"][kid]["path"]
+            leg = [c for c in pth[len(nd["path"]) - 1:] if c in cells]
+            for u, w in zip(leg, leg[1:]):
+                L = abs(cells[u]["x"] - cells[w]["x"]) + abs(cells[u]["y"] - cells[w]["y"])
+                ax.plot([cells[u]["x"], cells[w]["x"]], [cells[u]["y"], cells[w]["y"]], "-",
+                        lw=1.2 if L > WIDE_UM else 0.5, c="tab:red" if L > WIDE_UM else "tab:blue")
     arr = {}
     if (d / "arr_TT.txt").is_file():
         arr = read_arr(d / "arr_TT.txt")[0]
@@ -935,11 +1012,13 @@ def cmd_render(a):
     ax.set_ylim(0, P.H)
     ax.set_aspect("equal")
     m = tree["meta"]
-    t = (f"{Path(a.plan).parent.name}: die clock H-tree {m['levels']} levels, leaf {m['leaf_region_um']}, "
-         f"{m['taps']} taps, pad {m['last_mile_pad_um']}")
+    t = (f"{Path(a.plan).parent.name}: die clock H-tree {m['levels']} levels (leaf {m['leaf_um']:g} um), "
+         f"{m['taps']} taps, {m['cells']} cells, wire {m['wire_um'] / 1e6:.2f} m + pads {m.get('pad_um', 0) / 1e6:.2f} m; "
+         f"red = hop > {WIDE_UM:g} um (4W NDR), x = dummy load")
     if rep and "TT" in rep["corners"]:
         cr = rep["corners"]["TT"]
-        t += f"\nTT insertion {cr['insertion_max_ps']} ps, tap skew {cr['tap_skew_ps']} ps, seam pair max {cr['seam']['max_abs_ps']} ps"
+        t += (f"\nTT insertion {cr['insertion_max_ps']} ps, tap skew {cr['tap_skew_ps']} ps, pair skew max seam "
+              f"{cr['seam']['max_abs_ps']} / intra {cr['intra']['max_abs_ps']} ps, tap slew max {cr['tap_slew_max_ps']} ps")
     ax.set_title(t, fontsize=9)
     out = Path(a.out) if a.out else d / "die_clock.png"
     fig.savefig(out, dpi=a.dpi, bbox_inches="tight")
