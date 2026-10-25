@@ -48,3 +48,9 @@ Still required: native kv45 rebind+recompile on its ages, native PC/group
 regeneration and timing closure, boot/token/mutants. The record does not claim
 SIGNED hardware or full-die token qualification. SRAM clone regeneration also
 picks up the already-accepted B boot window from its canonical source.
+
+Actual bound-image follow-up PASS (controller_actual_bundle_pass.json): the
+PC0 words from full kv44 core833 compiled target6, decoded/re-encoded exactly,
+now drive the actual controller bench. K first148/last496, Vfirst1129/last1570;
+36layers18432reads/landed at each jitter0/8/16 and physicalJEDEC checks PASS.
+Replay with --target results/rtl/kv_core_clock_1025/target6_pc0.hex.
