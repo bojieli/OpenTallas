@@ -1,0 +1,638 @@
+
+-- Running command `read_verilog -formal -sv transport.sv miter.sv; chparam -set MUT 1 miter; prep -top miter -flatten; async2sync; opt; sat -seq 14 -set-init-zero -set-assumes -prove-asserts -verify' --
+
+1. Executing Verilog-2005 frontend: transport.sv
+Parsing formal SystemVerilog input from `transport.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_svc_f2b_tx'.
+Generating RTLIL representation for module `\dsdv_svc_f2b_rx'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: miter.sv
+Parsing formal SystemVerilog input from `miter.sv' to AST representation.
+Generating RTLIL representation for module `\miter'.
+Successfully finished Verilog frontend.
+Parameter \MUT = 1
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\miter'.
+Parameter \MUT = 1
+Generating RTLIL representation for module `$paramod\miter\MUT=s32'00000000000000000000000000000001'.
+
+4. Executing PREP pass.
+
+4.1. Executing HIERARCHY pass (managing design hierarchy).
+
+4.1.1. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     \dsdv_svc_f2b_tx
+Used module:     \dsdv_svc_f2b_rx
+Parameter \W = 5
+Parameter \MUT = 1
+
+4.1.2. Executing AST frontend in derive mode using pre-parsed AST for module `\dsdv_svc_f2b_tx'.
+Parameter \W = 5
+Parameter \MUT = 1
+Generating RTLIL representation for module `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx'.
+Parameter \W = 5
+
+4.1.3. Executing AST frontend in derive mode using pre-parsed AST for module `\dsdv_svc_f2b_rx'.
+Parameter \W = 5
+Generating RTLIL representation for module `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101'.
+
+4.1.4. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     $paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx
+Used module:     $paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101
+
+4.1.5. Analyzing design hierarchy..
+Top module:  \miter
+Used module:     $paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx
+Used module:     $paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101
+Removing unused module `\dsdv_svc_f2b_rx'.
+Removing unused module `\dsdv_svc_f2b_tx'.
+Removed 2 unused modules.
+Module miter directly or indirectly contains formal properties -> setting "keep" attribute.
+Mapping positional arguments of cell miter.tx ($paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx).
+Mapping positional arguments of cell miter.rx ($paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101).
+
+4.2. Executing PROC pass (convert processes to netlists).
+
+4.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$miter.sv:6$48 in module miter.
+Marked 1 switch rules as full_case in process $proc$transport.sv:52$85 in module $paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.
+Marked 1 switch rules as full_case in process $proc$transport.sv:22$76 in module $paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.
+Removed a total of 0 dead cases.
+
+4.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 7 redundant assignments.
+Promoted 11 assignments to connections.
+
+4.2.4. Executing PROC_INIT pass (extract init attributes).
+Found init rule in `\miter.$proc$miter.sv:5$69'.
+  Set init value: \age = 4'0000
+Found init rule in `\miter.$proc$miter.sv:5$70'.
+  Set init value: \pv = 1'0
+
+4.2.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rn in `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:52$85'.
+Found async reset \rn in `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:22$76'.
+
+4.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~9 debug messages>
+
+4.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\miter.$proc$miter.sv:6$48'.
+     1/6: $assert$miter.sv:10$67_EN
+     2/6: $assert$miter.sv:10$65_EN
+     3/6: $assert$miter.sv:10$63_EN
+     4/6: $assert$miter.sv:10$61_EN
+     5/6: $assume$miter.sv:8$53_EN
+     6/6: $assume$miter.sv:8$51_EN
+Creating decoders for process `\miter.$proc$miter.sv:5$69'.
+Creating decoders for process `\miter.$proc$miter.sv:5$70'.
+Creating decoders for process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:52$85'.
+     1/4: $0\exp[0:0]
+     2/4: $0\iq_v[0:0]
+     3/4: $0\iq_b[0:0]
+     4/4: $0\fault[0:0]
+Creating decoders for process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:51$83'.
+     1/1: $0\lo[2:0]
+Creating decoders for process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:46$82'.
+Creating decoders for process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:22$76'.
+     1/4: $0\oq_v[0:0]
+     2/4: $0\oq_b[0:0]
+     3/4: $0\owe[0:0]
+     4/4: $0\fault[0:0]
+Creating decoders for process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:21$74'.
+Creating decoders for process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:20$71'.
+     1/1: $0\hold[2:0]
+
+4.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+4.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\miter.\vv' using process `\miter.$proc$miter.sv:6$48'.
+  created $dff cell `$procdff$123' with positive edge clock.
+Creating register for signal `\miter.\dd0' using process `\miter.$proc$miter.sv:6$48'.
+  created $dff cell `$procdff$124' with positive edge clock.
+Creating register for signal `\miter.\dd1' using process `\miter.$proc$miter.sv:6$48'.
+  created $dff cell `$procdff$125' with positive edge clock.
+Creating register for signal `\miter.\dd2' using process `\miter.$proc$miter.sv:6$48'.
+  created $dff cell `$procdff$126' with positive edge clock.
+Creating register for signal `\miter.\age' using process `\miter.$proc$miter.sv:6$48'.
+  created $dff cell `$procdff$127' with positive edge clock.
+Creating register for signal `\miter.\pv' using process `\miter.$proc$miter.sv:6$48'.
+  created $dff cell `$procdff$128' with positive edge clock.
+Creating register for signal `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.\fault' using process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:52$85'.
+  created $adff cell `$procdff$133' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.\iq_b' using process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:52$85'.
+  created $adff cell `$procdff$138' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.\iq_v' using process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:52$85'.
+  created $adff cell `$procdff$143' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.\exp' using process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:52$85'.
+  created $adff cell `$procdff$148' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.\lo' using process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:51$83'.
+  created $dff cell `$procdff$149' with positive edge clock.
+Creating register for signal `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.\iq_d' using process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:46$82'.
+  created $dff cell `$procdff$150' with positive edge clock.
+Creating register for signal `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.\fault' using process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:22$76'.
+  created $adff cell `$procdff$155' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.\owe' using process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:22$76'.
+  created $adff cell `$procdff$160' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.\oq_b' using process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:22$76'.
+  created $adff cell `$procdff$165' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.\oq_v' using process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:22$76'.
+  created $adff cell `$procdff$170' with positive edge clock and positive level reset.
+Creating register for signal `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.\oq_d' using process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:21$74'.
+  created $dff cell `$procdff$171' with positive edge clock.
+Creating register for signal `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.\hold' using process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:20$71'.
+  created $dff cell `$procdff$172' with positive edge clock.
+
+4.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 3 empty switches in `\miter.$proc$miter.sv:6$48'.
+Removing empty process `miter.$proc$miter.sv:6$48'.
+Removing empty process `miter.$proc$miter.sv:5$69'.
+Removing empty process `miter.$proc$miter.sv:5$70'.
+Found and cleaned up 3 empty switches in `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:52$85'.
+Removing empty process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:52$85'.
+Found and cleaned up 1 empty switch in `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:51$83'.
+Removing empty process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:51$83'.
+Removing empty process `$paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.$proc$transport.sv:46$82'.
+Found and cleaned up 1 empty switch in `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:22$76'.
+Removing empty process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:22$76'.
+Removing empty process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:21$74'.
+Found and cleaned up 1 empty switch in `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:20$71'.
+Removing empty process `$paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.$proc$transport.sv:20$71'.
+Cleaned up 9 empty switches.
+
+4.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+Optimizing module $paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.
+<suppressed ~9 debug messages>
+Optimizing module $paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.
+<suppressed ~8 debug messages>
+
+4.3. Executing FLATTEN pass (flatten design).
+Deleting now unused module $paramod\dsdv_svc_f2b_rx\W=s32'00000000000000000000000000000101.
+Deleting now unused module $paramod$a64ab351a1d6b0fc9fa464c5b9d111491e13c4e4\dsdv_svc_f2b_tx.
+<suppressed ~2 debug messages>
+
+4.4. Executing FUTURE pass.
+
+4.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+4.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 11 unused cells and 59 unused wires.
+<suppressed ~12 debug messages>
+
+4.7. Executing CHECK pass (checking for obvious problems).
+Checking module miter...
+Found and reported 0 problems.
+
+4.8. Executing OPT pass (performing simple optimizations).
+
+4.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+4.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 68 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 66 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 65 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~9 debug messages>
+Removed a total of 3 cells.
+
+4.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~27 debug messages>
+
+4.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+4.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 65 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 63 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+4.8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 5 unused wires.
+<suppressed ~1 debug messages>
+
+4.8.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+4.8.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.8.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~23 debug messages>
+
+4.8.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+4.8.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 63 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+4.8.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+4.8.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+4.8.14. Finished fast OPT passes. (There is nothing left to do.)
+
+4.9. Executing WREDUCE pass (reducing word size of cells).
+Removed top 31 bits (of 32) from port B of cell miter.$add$miter.sv:7$49 ($add).
+Removed top 28 bits (of 32) from port Y of cell miter.$add$miter.sv:7$49 ($add).
+Removed top 30 bits (of 32) from port B of cell miter.$lt$miter.sv:8$50 ($lt).
+Removed top 29 bits (of 32) from port B of cell miter.$gt$miter.sv:10$58 ($gt).
+Removed top 28 bits (of 32) from port B of cell miter.$lt$miter.sv:10$59 ($lt).
+
+4.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+4.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+4.12. Executing OPT pass (performing simple optimizations).
+
+4.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+4.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 63 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+4.12.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+4.12.4. Finished fast OPT passes.
+
+4.13. Executing SORT pass.
+
+4.14. Printing statistics.
+
+=== miter ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       78 wires
+      141 wire bits
+       43 public wires
+       98 public wire bits
+        4 ports
+        7 port bits
+       63 cells
+        1   $add
+        8   $adff
+        7   $check
+       10   $dff
+        2   $eq
+        1   $gt
+        8   $logic_and
+        8   $logic_not
+        1   $logic_or
+        2   $lt
+       13   $mux
+        2   $scopeinfo
+
+4.15. Executing CHECK pass (checking for obvious problems).
+Checking module miter...
+Found and reported 0 problems.
+
+5. Executing ASYNC2SYNC pass.
+Replacing miter.$flatten\rx.$procdff$133 ($adff): ARST=\rn, D=$flatten\rx.$0\fault[0:0], Q=\rx.fault
+Replacing miter.$flatten\rx.$procdff$138 ($adff): ARST=\rn, D=\tx.oq_b, Q=\rx.iq_b
+Replacing miter.$flatten\rx.$procdff$143 ($adff): ARST=\rn, D=\tx.oq_v, Q=\rx.iq_v
+Replacing miter.$flatten\rx.$procdff$148 ($adff): ARST=\rn, D=$flatten\rx.$0\exp[0:0], Q=\rx.exp
+Replacing miter.$flatten\tx.$procdff$155 ($adff): ARST=\rn, D=$flatten\tx.$0\fault[0:0], Q=\tx.fault
+Replacing miter.$flatten\tx.$procdff$160 ($adff): ARST=\rn, D=$flatten\tx.$0\owe[0:0], Q=\tx.owe
+Replacing miter.$flatten\tx.$procdff$165 ($adff): ARST=\rn, D=\tx.owe, Q=\tx.oq_b
+Replacing miter.$flatten\tx.$procdff$170 ($adff): ARST=\rn, D=$flatten\tx.$0\oq_v[0:0], Q=\tx.oq_v
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 106 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Computing hashes of 98 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+<suppressed ~24 debug messages>
+Removed a total of 8 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~39 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 98 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $flatten\tx.$procdff$172 ($dff) from module miter (D = { \d [1:0] \v }, Q = \tx.hold).
+Adding SRST signal on $flatten\tx.$procdff$171 ($dff) from module miter (D = \tx.hold [2], Q = \tx.oq_d [1], rval = 1'0).
+Adding EN signal on $flatten\rx.$procdff$149 ($dff) from module miter (D = { \rx.iq_d \rx.iq_v }, Q = \rx.lo).
+Adding SRST signal on $auto$async2sync.cc:110:execute$183 ($dff) from module miter (D = $procmux$99_Y, Q = $auto$async2sync.cc:107:execute$181, rval = 1'0).
+Adding SRST signal on $flatten\rx.$procdff$138 ($sdff) from module miter (D = $auto$async2sync.cc:253:execute$229, Q = $auto$async2sync.cc:253:execute$219, rval = 1'0).
+Adding SRST signal on $flatten\rx.$procdff$143 ($sdff) from module miter (D = $auto$async2sync.cc:253:execute$231, Q = $auto$async2sync.cc:253:execute$221, rval = 1'0).
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+Removed 19 unused cells and 26 unused wires.
+<suppressed ~20 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \miter..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~30 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \miter.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\miter'.
+Computing hashes of 79 cells of `\miter'.
+Finding duplicate cells in `\miter'.
+Removed a total of 0 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \miter..
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module miter.
+
+6.16. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$205 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$203 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$199 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$197 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$193 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$191 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$185 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$181 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$179 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$215 = 1'1
+Import set-constraint from init attribute: $auto$async2sync.cc:107:execute$211 = 1'0
+Import set-constraint from init attribute: $auto$async2sync.cc:116:execute$209 = 1'1
+Import set-constraint from init attribute: \age = 4'0000
+Import set-constraint from init attribute: \pv = 1'0
+Final init constraint equation: { \dd2 \dd1 \dd0 \vv \tx.hold \tx.oq_d \rx.iq_d \rx.lo $auto$async2sync.cc:253:execute$231 $auto$async2sync.cc:253:execute$227 $auto$async2sync.cc:253:execute$223 $auto$async2sync.cc:253:execute$219 $auto$async2sync.cc:253:execute$229 $auto$async2sync.cc:253:execute$217 $auto$async2sync.cc:253:execute$221 $auto$async2sync.cc:253:execute$225 \pv \age $auto$async2sync.cc:116:execute$209 $auto$async2sync.cc:107:execute$211 $auto$async2sync.cc:116:execute$215 $auto$async2sync.cc:116:execute$179 $auto$async2sync.cc:107:execute$181 $auto$async2sync.cc:116:execute$185 $auto$async2sync.cc:116:execute$191 $auto$async2sync.cc:107:execute$193 $auto$async2sync.cc:116:execute$197 $auto$async2sync.cc:107:execute$199 $auto$async2sync.cc:116:execute$203 $auto$async2sync.cc:107:execute$205 } = 50'00000000000000000000000000000000000000101101101010
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 2:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 3:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 4:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 5:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 6:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 7:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 8:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 9:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 10:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 11:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 12:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 13:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Setting up time step 14:
+Final constraint equation: { } = { }
+Imported 79 cells to SAT database.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$209 when $auto$async2sync.cc:107:execute$205.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$203 when $auto$async2sync.cc:107:execute$199.
+Import constraint from assume cell: $auto$async2sync.cc:116:execute$215 when $auto$async2sync.cc:107:execute$211.
+Import proof for assert: $auto$async2sync.cc:116:execute$197 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$179 when $auto$async2sync.cc:107:execute$193.
+Import proof for assert: $auto$async2sync.cc:116:execute$185 when $auto$async2sync.cc:107:execute$181.
+Import proof for assert: $auto$async2sync.cc:116:execute$191 when $auto$async2sync.cc:107:execute$193.
+
+Solving problem with 7291 variables and 19144 clauses..
+SAT proof finished - model found: FAIL!
+
+   ______                   ___       ___       _ _            _ _ 
+  (_____ \                 / __)     / __)     (_) |          | | |
+   _____) )___ ___   ___ _| |__    _| |__ _____ _| | _____  __| | |
+  |  ____/ ___) _ \ / _ (_   __)  (_   __|____ | | || ___ |/ _  |_|
+  | |   | |  | |_| | |_| || |       | |  / ___ | | || ____( (_| |_ 
+  |_|   |_|   \___/ \___/ |_|       |_|  \_____|_|\_)_____)\____|_|
+
+
+  Time Signal Name                                      Dec       Hex           Bin
+  ---- ---------------------------------------- ----------- --------- -------------
+  init $auto$async2sync.cc:107:execute$181                0         0             0
+  init $auto$async2sync.cc:107:execute$193                0         0             0
+  init $auto$async2sync.cc:107:execute$199                0         0             0
+  init $auto$async2sync.cc:107:execute$205                0         0             0
+  init $auto$async2sync.cc:107:execute$211                0         0             0
+  init $auto$async2sync.cc:116:execute$179                1         1             1
+  init $auto$async2sync.cc:116:execute$185                1         1             1
+  init $auto$async2sync.cc:116:execute$191                1         1             1
+  init $auto$async2sync.cc:116:execute$197                1         1             1
+  init $auto$async2sync.cc:116:execute$203                1         1             1
+  init $auto$async2sync.cc:116:execute$209                1         1             1
+  init $auto$async2sync.cc:116:execute$215                1         1             1
+  init $auto$async2sync.cc:253:execute$217                0         0             0
+  init $auto$async2sync.cc:253:execute$219                0         0             0
+  init $auto$async2sync.cc:253:execute$221                0         0             0
+  init $auto$async2sync.cc:253:execute$223                0         0             0
+  init $auto$async2sync.cc:253:execute$225                0         0             0
+  init $auto$async2sync.cc:253:execute$227                0         0             0
+  init $auto$async2sync.cc:253:execute$229                0         0             0
+  init $auto$async2sync.cc:253:execute$231                0         0             0
+  init \age                                               0         0          0000
+  init \dd0                                               0         0          0000
+  init \dd1                                               0         0          0000
+  init \dd2                                               0         0          0000
+  init \pv                                                0         0             0
+  init \rx.iq_d                                           0         0            00
+  init \rx.lo                                             0         0           000
+  init \tx.hold                                           0         0           000
+  init \tx.oq_d [0]                                       0         0             0
+  init \tx.oq_d [1]                                       0         0             0
+  init \vv                                                0         0           000
+
+ERROR: Called with -verify and proof did fail!
