@@ -242,7 +242,7 @@ foreach {master x y orient pat} {%s} {
   set hit {}
   foreach i [$b getInsts] {
     if {[[$i getMaster] getName] ne $master} continue
-    set n [string map {\\ {}} [$i getName]]
+    set n [string map {\\\\ {}} [$i getName]]
     if {[lsearch -exact $kr_used $n] >= 0} continue
     if {$pat ne "" && $n ne $pat && ![string match $pat $n]} continue
     lappend hit [list $n $i]
