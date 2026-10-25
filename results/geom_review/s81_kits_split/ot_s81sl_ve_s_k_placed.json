@@ -1,0 +1,83 @@
+{
+ "kit": "ot_s81sl_ve_s_k",
+ "kit_hash": "453f7879590c6e95",
+ "outline_um": [
+  164.16,
+  345.6
+ ],
+ "pins": 488,
+ "faces": {
+  "N": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  },
+  "S": {
+   "pins": 100,
+   "max_per_um": 1.0,
+   "mean_per_um": 0.61,
+   "layers": {
+    "M5": 50,
+    "M3": 50
+   },
+   "span": [
+    5.12,
+    159.08
+   ],
+   "groups": [
+    "fault",
+    "p_c",
+    "p_dd",
+    "p_hh",
+    "p_kk",
+    "p_v"
+   ]
+  },
+  "W": {
+   "pins": 0,
+   "max_per_um": 0.0,
+   "mean_per_um": 0.0,
+   "layers": {},
+   "span": null,
+   "groups": []
+  },
+  "E": {
+   "pins": 388,
+   "max_per_um": 1.5,
+   "mean_per_um": 1.12,
+   "layers": {
+    "M4": 388
+   },
+   "span": [
+    4.72,
+    340.81
+   ],
+   "groups": [
+    "clk",
+    "m_dd",
+    "m_hh",
+    "m_kk",
+    "m_pre",
+    "m_v",
+    "rst_n"
+   ]
+  }
+ },
+ "macros": [],
+ "placed": {
+  "cells": 153410,
+  "flops": 30810,
+  "bins5_over_0p8": 0,
+  "max_bin": 0.56
+ },
+ "clock_pin": {
+  "name": "clk",
+  "x": 164.118,
+  "y": 172.332,
+  "face": "E",
+  "layer": "M4"
+ }
+}

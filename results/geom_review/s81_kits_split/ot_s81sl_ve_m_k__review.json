@@ -1,0 +1,13 @@
+{
+ "review": "S81/KITS author review, placed + CTS, RTLSPLIT split core kit (kits_repin on claude/s81-kits-split-1024r @5f5f155f3a, RTL claude/s81-rtlsplit-1024r @b5d2eabeef, wavefront rst SDC)",
+ "when_pdt": "2026-10-25 02:15",
+ "kit": "epyc1:/srv/opentallas-scratch2/claude/s81-kits/split/ot_s81sl_ve_m_k",
+ "image": "results/geom_review/s81_kits_split/ot_s81sl_ve_m_k_placed.png",
+ "findings": [
+  "uniform fill over the whole 172.8x345.6 core, max bin 0.59, 0 bins > 0.8 (167.6k cells, 25.5k flops)",
+  "pins: S 876 (5.5/um, cap 24.3), W 386 m_* (1.5/um); clk/rst_n at the S-face centre; face flops at their faces",
+  "post-CTS FF hold gate WNS -1.27 ps, 3 endpoints (STOP limits -100 / 2000)",
+  "small light patches at the SW corner / W edge only"
+ ],
+ "verdict": "PASS (route, 2 corrected-recipe variants)"
+}
