@@ -117,7 +117,7 @@ def lprg(lp):
     t = one(t, ' output wire[1:0]generation,\n',
             ' output wire[1:0]generation,\n'
             ' // KDIE5-RTL: E-face copies (kept registers, identical D / clock / reset)\n'
-            ' output reg ctrl_go_e,kgo_e,vgo_e,output wire[5:0]layer_e,output wire[15:0]epoch_e,output wire[13:0]ctx_t_e,\n',
+            ' (* keep *) output reg ctrl_go_e,(* keep *) output reg kgo_e,(* keep *) output reg vgo_e,output wire[5:0]layer_e,output wire[15:0]epoch_e,output wire[13:0]ctx_t_e,\n',
             'lprg ports')
     t = one(t, ' localparam integer RC=RCOPIES;\n',
             ' localparam integer RC=RCOPIES;\n (* keep *) reg[5:0]stage_oe;(* keep *) reg[15:0]om_e_ep;'

@@ -641,7 +641,7 @@ module qkd_static_kv_layer_programme_nc32 #(parameter integer MUT=0,parameter in
  output wire[15:0]epoch,output wire[17:0]token,position,output wire[13:0]ctx_t,
  output wire[1:0]generation,
  // KDIE5-RTL: E-face copies (kept registers, identical D / clock / reset)
- output reg ctrl_go_e,kgo_e,vgo_e,output wire[5:0]layer_e,output wire[15:0]epoch_e,output wire[13:0]ctx_t_e,
+ (* keep *) output reg ctrl_go_e,(* keep *) output reg kgo_e,(* keep *) output reg vgo_e,output wire[5:0]layer_e,output wire[15:0]epoch_e,output wire[13:0]ctx_t_e,
  output reg configured,active,done,output wire fault,output reg[7:0]fault_code,
  output wire[31:0]age,token_cycles
 );

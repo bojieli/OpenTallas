@@ -2,5 +2,5 @@ boot: 471 words through qkd_static_kv_boot_dispatch_mu, layer programme configur
 FAIL MU_KV_BOOT: user 0 differs from MU 0 (pulses) cyc 1895 (rel 879) mu mask 000 ref mask 010 epoch 0000 lprg fault 00 boot fault 00
 - rtl/test/mu_qwen_1018/tb_mu_kv_boot.sv:49: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 4us; walltime 0.005 s; speed 718.018 us/s
-- Verilator: cpu 0.005 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 4us; walltime 0.009 s; speed 426.489 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB

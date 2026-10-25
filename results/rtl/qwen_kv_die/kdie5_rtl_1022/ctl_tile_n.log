@@ -1,5 +1,5 @@
 PASS KV_CTL_C32_TILE mismatches0 cycles200000 compared199930 nonzero_output_cycles200000 outbits5078
 - rtl/test/kv_ctl10_1020/tb_kv_ctl_c32_tile.sv:130: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 2ms; walltime 0.848 s; speed 2.359 ms/s
-- Verilator: cpu 0.847 s on 1 threads; allocated 7 MB
+- Verilator: $finish at 2ms; walltime 1.226 s; speed 1.632 ms/s
+- Verilator: cpu 1.225 s on 1 threads; allocated 7 MB
