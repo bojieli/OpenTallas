@@ -391,12 +391,119 @@ def htree_geom(W, H, nrib, nx, ny):
     return segs, leaves
 
 
+SEAM_INTRA_W = 64      # weight of a partition-internal neighbouring tap pair (kit-internal related flops) in the cut cost
+SEAM_WINDOW = 0.2      # a cut may move this fraction of the span off the tap-box centre to find a cheap seam
+SEAM_LEAF_TAPS = 2     # leaf driver = a group of <= this many taps
+
+
+def hop_tap_pairs(out, P, taps):
+    """related tap pairs of the die hops (nets.tsv.gz: launch / capture register -> partition tap) with their bit
+    counts, plus partition-internal neighbouring tap pairs (kit flops on two taps are related too, decision 5)."""
+    idx = {(n, nm): i for i, (n, nm, x, y) in enumerate(taps)}
+    w = defaultdict(int)
+    f = Path(out) / "nets.tsv.gz"
+    if f.is_file():
+        with gzip.open(f, "rt") as fh:
+            next(fh)
+            for ln in fh:
+                p = ln.rstrip("\n").split("\t")
+                if p[1] == "io" or not p[4] or not p[5]:
+                    continue
+                a = p[4].split(";")[0].split(":")
+                i = idx.get((a[0], a[2]))
+                for c in p[5].split(";"):
+                    b = c.split(":")
+                    j = idx.get((b[0], b[2]))
+                    if i is not None and j is not None and i != j:
+                        w[(min(i, j), max(i, j))] += 1
+    byp = defaultdict(list)
+    for i, (n, nm, x, y) in enumerate(taps):
+        byp[n].append(i)
+    for n, ii in byp.items():
+        for a in ii:
+            # each tap to its nearest neighbours in the partition (within 1.6 x the nearest distance)
+            d = sorted((abs(taps[a][2] - taps[b][2]) + abs(taps[a][3] - taps[b][3]), b) for b in ii if b != a)
+            if not d:
+                continue
+            for dd, b in d[:4]:
+                if dd <= 1.6 * d[0][0] + 1e-6:
+                    w[(min(a, b), max(a, b))] += SEAM_INTRA_W
+    return w
+
+
+def seam_tree_geom(taps, w, leaf_taps=SEAM_LEAF_TAPS, window=SEAM_WINDOW):
+    """seam-aligned die clock tree (owner decision 5(f): seam neighbours on the same spine branch).  Recursive
+    bisection of the tap set: at every node the cut runs across the longer side of the tap box, within +-window of
+    its centre, at the position that cuts the least related-pair weight (die hop bits between the two taps' flops +
+    partition-internal neighbour pairs) -- so the cuts fall on the partition / cluster seams that carry no traffic and
+    every heavily related tap pair shares a deep common branch (CPPR removes the shared path).  Node = centre of its
+    tap box; ties go to the cut nearest the centre.  Residual latency differences are padded at the taps
+    (clock_pad_probe), so the tree need not be symmetric.  -> nodes [(id, parent, x, y, depth)], leaf_of {tap: node},
+    cut stats."""
+    adj = defaultdict(list)
+    for (i, j), c in w.items():
+        adj[i].append((j, c))
+        adj[j].append((i, c))
+    nodes, leaf_of, cuts = [], {}, []
+
+    def box(T):
+        xs = [taps[t][2] for t in T]
+        ys = [taps[t][3] for t in T]
+        return min(xs), min(ys), max(xs), max(ys)
+
+    def rec(T, parent, depth):
+        x0, y0, x1, y1 = box(T)
+        nid = len(nodes)
+        nodes.append((nid, parent, (x0 + x1) / 2.0, (y0 + y1) / 2.0, depth))
+        if len(T) <= leaf_taps or (x1 - x0 < 1.0 and y1 - y0 < 1.0):
+            for t in T:
+                leaf_of[t] = nid
+            return
+        ax = 2 if (x1 - x0) >= (y1 - y0) else 3
+        lo, hi = (x0, x1) if ax == 2 else (y0, y1)
+        if hi - lo < 1.0:
+            ax = 5 - ax
+            lo, hi = (x0, x1) if ax == 2 else (y0, y1)
+        T = sorted(T, key=lambda t: (taps[t][ax], taps[t][5 - ax]))
+        pos = {t: k for k, t in enumerate(T)}
+        c, span = (lo + hi) / 2.0, hi - lo
+        cost, best = 0, None
+        for k in range(1, len(T)):
+            t = T[k - 1]                  # move t to the left side
+            for j, cw in adj[t]:
+                pj = pos.get(j)
+                if pj is None:
+                    continue
+                cost += -cw if pj < k - 1 else cw
+            a, b = taps[T[k - 1]][ax], taps[T[k]][ax]
+            if b - a < 1e-6:
+                continue
+            cut = (a + b) / 2.0
+            off = abs(cut - c)
+            if off > window * span + 1e-6:
+                continue
+            key = (cost, off)
+            if best is None or key < best[0]:
+                best = (key, k, cut)
+        if best is None:              # no legal cut in the window: split at the median
+            k = len(T) // 2
+            best = ((None, 0), k, None)
+        k = best[1]
+        cuts.append(dict(depth=depth, n=len(T), axis="x" if ax == 2 else "y", cut=best[2], weight=best[0][0]))
+        rec(T[:k], nid, depth + 1)
+        rec(T[k:], nid, depth + 1)
+    sys.setrecursionlimit(10000)
+    rec(list(range(len(taps))), None, 0)
+    return nodes, leaf_of, cuts
+
+
 def pow2_at_least(v):
     return 1 << max(0, math.ceil(math.log2(max(1.0, v))))
 
 
-def build_clock(P, out, leaf_um=None):
-    """die clock tree netlist (DEF, std cells only) + tree topology for CPPR."""
+def build_clock(P, out, leaf_um=None, topo="seam"):
+    """die clock tree netlist (DEF, std cells only) + tree topology for CPPR.  topo seam (default, owner decision
+    5(f)): seam_tree_geom, related taps on one branch; htree: the uniform B2 H-tree with nearest-leaf taps."""
     W, H = P.W, P.H
     ntap = sum(len(gen_phys.clock_pins(P, p["type"])) for p in P.parts.values())
     # leaf cell ~ one tap-grid cell: ~ as many leaf drivers as partition taps (power-of-two H-tree counts, rounded down)
@@ -407,7 +514,29 @@ def build_clock(P, out, leaf_um=None):
     nband = pow2_at_least(H / pitch)
     nrib = min(16, nband)
     ny = max(1, nband // nrib)
-    segs, leaves = htree_geom(W, H, nrib, nx, ny)
+    taps = []
+    for n, p in sorted(P.parts.items()):
+        for nm, x, y in gen_phys.clock_pins(P, p["type"]) + gen_phys.core_tap_pins(P, p["type"]):
+            taps.append((n, nm, *P.to_die(n, (x, y))))
+    if topo == "seam":
+        w = hop_tap_pairs(out, P, taps)
+        snodes, leaf_of, cuts = seam_tree_geom(taps, w)
+        segs, leaves = [], []
+        lev_max = max(d for *_, d in snodes)
+        for nid, par, x, y, d in snodes:
+            if par is not None:
+                px, py = snodes[par][2], snodes[par][3]
+                segs.append((round(px, 3), round(py, 3), round(x, 3), round(y, 3), d,
+                             "M9" if abs(px - x) < abs(py - y) else "M8"))
+        cut_w = defaultdict(int)
+        for c in cuts:
+            cut_w[c["depth"]] += c["weight"] or 0
+        seam_info = dict(topology="seam_bisection", nodes=len(snodes), depth_max=lev_max, pair_weight=sum(w.values()),
+                         cut_weight_by_depth=dict(sorted(cut_w.items())), leaf_taps=SEAM_LEAF_TAPS, window=SEAM_WINDOW,
+                         intra_weight=SEAM_INTRA_W)
+    else:
+        segs, leaves = htree_geom(W, H, nrib, nx, ny)
+        seam_info = dict(topology="htree")
     cx, cy = W / 2.0, H / 2.0
     root_pin = {n: (x, y) for n, L, x, y in gen_phys.die_root_pins(P)}["clk"]
     comps, nets = [], []          # comps: (name, cell, x, y); nets: (name, driver (inst, pin) | PIN, [(inst, pin)])
@@ -449,18 +578,23 @@ def build_clock(P, out, leaf_um=None):
     first = add_buf("ck_root", *root_pin)
     nets.append(("clk", ("PIN", "clk"), [(first, "A")]))
     parent[first] = None
-    node_of[(round(cx, 3), round(cy, 3))] = chain(first, root_pin, (cx, cy), "ck_stub", end_name="ck_c")
+    if topo == "seam":
+        # root stub -> the seam tree's top node (centre of the tap box); node ids explicit (two nodes may share a point)
+        top = (snodes[0][2], snodes[0][3])
+        sinst = {0: chain(first, root_pin, top, "ck_stub", end_name="ck_c")}
+        for nid, par, x, y, d in snodes[1:]:     # pre-order: parent before child
+            sinst[nid] = chain(sinst[par], (snodes[par][2], snodes[par][3]), (x, y), f"ck_l{d}_{nid}",
+                               end_name=f"ck_n{nid}")
+        tap_src = {k: (sinst[leaf_of[k]], (snodes[leaf_of[k]][2], snodes[leaf_of[k]][3])) for k in range(len(taps))}
+    else:
+        node_of[(round(cx, 3), round(cy, 3))] = chain(first, root_pin, (cx, cy), "ck_stub", end_name="ck_c")
     nseg = 0
-    for (x0, y0, x1, y1, lev, ln) in segs:          # segs are emitted parent before child
+    for (x0, y0, x1, y1, lev, ln) in (segs if topo != "seam" else []):     # segs are emitted parent before child
         src = node_of[(x0, y0)]
         nseg += 1
         node_of[(x1, y1)] = chain(src, (x0, y0), (x1, y1), f"ck_l{lev}_{nseg}", end_name=f"ck_n{nseg}")
     leaf_inst = {lf: node_of[lf] for lf in leaves}
-    # taps -> nearest leaf; leaf -> mid buffer -> tap root buffer (equal stage count)
-    taps = []
-    for n, p in sorted(P.parts.items()):
-        for nm, x, y in gen_phys.clock_pins(P, p["type"]) + gen_phys.core_tap_pins(P, p["type"]):
-            taps.append((n, nm, *P.to_die(n, (x, y))))
+    # taps -> leaf (seam: its bisection leaf; htree: nearest grid leaf); leaf -> mid buffer -> tap root buffer
     import bisect
     lx = sorted(set(l[0] for l in leaves))
     ly = sorted(set(l[1] for l in leaves))
@@ -471,8 +605,11 @@ def build_clock(P, out, leaf_um=None):
         return min(c, key=lambda a: abs(a - v))
     tap_rows = []
     for k, (n, nm, x, y) in enumerate(taps):
-        lf = (near(x, lx), near(y, ly))
-        src = leaf_inst[lf]
+        if topo == "seam":
+            src, lf = tap_src[k]
+        else:
+            lf = (near(x, lx), near(y, ly))
+            src = leaf_inst[lf]
         mid = ((lf[0] + x) / 2, (lf[1] + y) / 2)
         tb = f"tap_{sid(n)}__{nm}"
         mb = add_buf(f"ckm_{k}", *mid)
@@ -505,8 +642,9 @@ def build_clock(P, out, leaf_um=None):
     ncell = defaultdict(int)
     for _, c, _, _ in comps:
         ncell[c] += 1
-    tree = dict(params=dict(nrib=nrib, nx=nx, ny=ny, leaves=len(leaves), rep_um=REP_UM, leaf_pitch_um=pitch,
-                            centre=[cx, cy], root_pin=list(root_pin)),
+    nleaf = len(set(leaf_of.values())) if topo == "seam" else len(leaves)
+    tree = dict(params=dict(nrib=nrib, nx=nx, ny=ny, leaves=nleaf, rep_um=REP_UM, leaf_pitch_um=pitch,
+                            centre=[cx, cy], root_pin=list(root_pin), **seam_info),
                 cells=dict(ncell), segments=[list(s) for s in segs], taps=tap_rows, parent=parent,
                 wire_um=round(sum(abs(s[0] - s[2]) + abs(s[1] - s[3]) for s in segs), 1),
                 local_um=round(sum(t["leaf_um"] for t in tap_rows), 1))
@@ -544,7 +682,9 @@ def route_tcl(P, lefs, mode="g0"):
     t += ["global_route -congestion_iterations 30 -allow_congestion -verbose "
           f"-congestion_report_file /work/grt_{mode}_congestion.rpt",
           "puts \"OT_T_GRT [expr {[clock seconds]-$t0}]\"",
-          f"report_wire_length -net [get_nets *] -global_route -file /work/grt_{mode}_wl.csv",
+          # report_wire_length over ~1.9M nets ran > 7 h single-thread (QC v3.8s): write the route guides instead
+          # (linear) and take per-net GRT lengths from them in `report` (guide_wl)
+          f"write_guides /work/grt_{mode}.guide",
           "puts \"OT_T_WL [expr {[clock seconds]-$t0}]\"",
           f"if {{[catch {{gui::dump_heatmap Routing /work/grt_{mode}_heatmap.csv}} e]}} {{ puts \"OT_HEATMAP_FAIL $e\" }}",
           "puts \"OT_T_DONE [expr {[clock seconds]-$t0}]\"",
@@ -633,7 +773,7 @@ def cmd_build(a):
     P = S.Plan(raw)
     out = Path(a.out)
     if a.clock_only:
-        tree = build_clock(P, out)
+        tree = build_clock(P, out, topo=a.clock_topo)
         info = json.loads((out / "build.json").read_text())
         info["clock"] = dict(tree["params"], cells=tree["cells"], taps=len(tree["taps"]), htree_wire_um=tree["wire_um"],
                              local_wire_um=tree["local_um"])
@@ -657,7 +797,7 @@ def cmd_build(a):
     info["data"] = write_data(P, views, out)
     info["pg_obstructions"] = write_pg_obs(P, out / "pg_obs.tcl")
     (out / "make_tracks.tcl").write_text(die_tracks_tcl(P))
-    tree = build_clock(P, out)
+    tree = build_clock(P, out, topo=a.clock_topo)
     info["clock"] = dict(tree["params"], cells=tree["cells"], taps=len(tree["taps"]), htree_wire_um=tree["wire_um"],
                          local_wire_um=tree["local_um"])
     for mode in ("g0", "ott"):
@@ -833,6 +973,32 @@ def read_wl(path):
     return wl
 
 
+def guide_wl(path):
+    """per-net GRT wire length from route guides (write_guides): a guide box of k gcells along its long side holds
+    ~ (k - 1) gcells of wire, i.e. long - short side; 1 x 1 via boxes add nothing.  {net: um}"""
+    wl = {}
+    if not Path(path).is_file():
+        return wl
+    opener = gzip.open if str(path).endswith(".gz") else open
+    with opener(path, "rt") as f:
+        net, acc = None, 0.0
+        for ln in f:
+            p = ln.split()
+            if not p:
+                continue
+            if len(p) == 1:
+                if p[0] == "(":
+                    acc = 0.0
+                elif p[0] == ")":
+                    wl[net] = round(acc / DBU, 1)
+                else:
+                    net = p[0]
+            elif len(p) >= 5:
+                w, h = abs(int(p[2]) - int(p[0])), abs(int(p[3]) - int(p[1]))
+                acc += max(w, h) - min(w, h)
+    return wl
+
+
 def parse_reg(s):
     p = s.split(":")
     return dict(part=p[0], pin=p[1], tap=p[2], x=float(p[3]), y=float(p[4]))
@@ -910,6 +1076,11 @@ def cmd_report(a):
     # ---------------- hops
     cal = load_calib(a.calib)
     wl = read_wl(B / "grt_g0_wl.csv")
+    if not wl:
+        for gp in (B / "grt_g0.guide.gz", B / "grt_g0.guide"):
+            if gp.is_file():
+                wl = guide_wl(gp)
+                break
     hop_rows = []
     pair_skew = {}
     with gzip.open(B / "nets.tsv.gz", "rt") as f:
@@ -1559,6 +1730,8 @@ def main(argv=None):
     b.add_argument("--mem", type=int, default=256)
     b.add_argument("--cpus", type=int, default=16)
     b.add_argument("--clock-only", action="store_true", help="rebuild only the die clock tree (clock.def / json)")
+    b.add_argument("--clock-topo", choices=("seam", "htree"), default="seam",
+                   help="die tree: seam-aligned bisection (default, decision 5(f)) or the uniform B2 H-tree")
     c = sub.add_parser("calib")
     c.add_argument("--out", required=True)
     r = sub.add_parser("report")
