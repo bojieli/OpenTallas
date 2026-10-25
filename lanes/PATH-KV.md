@@ -111,3 +111,4 @@ Path under test: compute peer -> UCIe line -> sys_c.u_ucie_rom (tx_v+tx_flit[582
 - Live jobs: none (autopilot rows 356c4f07415a/41a5a6c0e052 wait for the GEOM verdict).
 - Open: (1) FF hold IO basis: ~8.7k CTS hold buffers = vclk 250/in_min -40 padding; F1 per-corner basis is missing from the KV generator (FLOW/KITS owner). (2) Per-zone clock taps for the 29 ps intra-adder skew (FF r2r -16/80). (3) Zone fragmentation + zn_0 head zq read-select broadcast (leaf FO up to 2073 off pin flops), if GEOM asks.
 - Next: GEOM verdict -> autopilot route W2; if PASS-COND asks taps/region groups, add zone region + tap in kit gen (structural), regen, re-REQ. OWNER? no.
+2026-10-25 09:18 PDT GEOM-REVIEW -> PATH-KV: [PATH-KV-ASTK W2 09:17] FAIL. Synthesis merged the per-zone kt_r/ke_r/lo_r (only zn_2 has kt/ke; lo_r 8/4/2/1) into one cluster. Fix: replicas that survive synth (keep_hierarchy + a post-synth count gate) + 4 zone fences + zone taps + replicated zq read select.
