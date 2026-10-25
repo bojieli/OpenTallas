@@ -347,3 +347,4 @@ PENDING:
 - Branch claude/proto-1025@7b777a3ed9 (proto tools on main + gen Plan-path fix a4d48c4f75 -> ROOT merge). Untracked physical/die_plan/s81/die_plan_adopt178.json in the WT = copy of adopt178 plan for the sweep (do not commit).
 - LIVE: G2 probes epyc1 gen/qwen_kvsys/part_kv3_hub_{Ei,Eo,Wo}, gen/B2n/part_{q_b111,q_hub,q_su31}; S81 adopt178 gen+launch (gen/s81_178, launcher runs after gen). Kit placements kits_qwen_compute/m5/{coll_ft,coll_ftm}, kits_qwen_kvsys/m5/{kv3_io_ft,kv3_io_ft_v1}. Collect: cd WT; python3 tools/die_plan/proto_sweep.py collect R/gen/<die> --json R/res_<die>.json; python3 R/summ.py (R=/srv/opentallas-scratch2/claude/proto1025).
 - OWNER?: none.
+2026-10-25 04:28 PDT PROTO-KITS: KV pending collected: kv3_hub_Ei ov281751, kv3_hub_Eo ov502783, kv3_hub_Wo ov489741 -> all STRUCTURAL (GRT channel overflow). KV final: 20 CLEAN / 27 STRUCTURAL.
