@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.kv.core_latency.v1",
- "generated": "2026-10-24T22:19:35-07:00",
+ "generated": "2026-10-25T01:13:59-07:00",
  "producer": "physical/die_plan/qwen_kvsys/cores/harden/publish_core_latency.py",
  "rule": "BRIEFING decision 5(e) core-latency contract: the parent compensates the core insertion at the core clock pin (early core tap); the 250 +- 40 plan target applies at the partition tap",
  "cores": {
@@ -249,9 +249,9 @@
   },
   "kv3_head_eighth_e3": {
    "module": "kv3_head_eighth_e3",
-   "verdict": "NOT SIGNED (signoff NOT SIGNED; DRC 0, GRT ovf None, pins PASS 544/544, TT setup WS 46.34170843374852, FF hold WS -6.1286254094489525)",
-   "views_status": "abstract_only (not SIGNED)",
-   "run": "intel2:/srv/opentallas-scratch2/claude/kv-g3/cores/kits38x/kv3_head_eighth_e3__216x216",
+   "verdict": "SIGNED (signoff.py; pin audit PASS)",
+   "views_status": "signoff",
+   "run": "intel2:/srv/opentallas-scratch2/claude/kv-cores/eco/kv3_head_eighth_e3/m8_dlr2",
    "kit_hash": "edfb7dcff23b216f",
    "outline_um": [
     216.0,
@@ -270,16 +270,16 @@
      "layer": "M5",
      "face": "N",
      "tt": {
-      "rise": 302.74,
-      "fall": 325.64,
-      "min_rise": 260.56,
-      "min_fall": 283.24
+      "rise": 301.78,
+      "fall": 323.67,
+      "min_rise": 261.88,
+      "min_fall": 284.58
      },
      "ff": {
-      "rise": 245.55,
-      "fall": 257.22,
-      "min_rise": 208.08,
-      "min_fall": 218.25
+      "rise": 243.78,
+      "fall": 254.84,
+      "min_rise": 209.34,
+      "min_fall": 219.59
      }
     }
    },
@@ -288,44 +288,44 @@
     "tt": {
      "pinflops": {
       "n": 534,
-      "min": 285.57,
-      "mean": 291.43,
-      "max": 299.37,
-      "spread": 13.8
+      "min": 287.85,
+      "mean": 293.5,
+      "max": 300.31,
+      "spread": 12.46
      },
      "all_registers": {
       "n": 26510,
-      "min": 270.42,
-      "mean": 286.8,
-      "max": 302.74,
-      "spread": 32.32
+      "min": 271.87,
+      "mean": 288.45,
+      "max": 301.78,
+      "spread": 29.91
      }
     },
     "ff": {
      "pinflops": {
       "n": 534,
-      "min": 229.57,
-      "mean": 234.65,
-      "max": 242.3,
-      "spread": 12.73
+      "min": 230.89,
+      "mean": 236.6,
+      "max": 242.87,
+      "spread": 11.98
      },
      "all_registers": {
       "n": 26510,
-      "min": 216.35,
-      "mean": 230.33,
-      "max": 245.55,
-      "spread": 29.2
+      "min": 217.73,
+      "mean": 231.88,
+      "max": 243.78,
+      "spread": 26.05
      }
     }
    },
    "contract": "hard_core_latency",
-   "signoff_generated": "2026-10-24T14:20:40-07:00",
+   "signoff_generated": "2026-10-25T01:08:37-07:00",
    "signoff_tool_commit": null,
    "early_tap": {
-    "tt_max_clock_tree_rise_ps": 302.74,
+    "tt_max_clock_tree_rise_ps": 301.78,
     "common_latency_ps": 250.0,
     "needs_early_tap": true,
-    "parent_tap_earlier_by_ps": 52.74
+    "parent_tap_earlier_by_ps": 51.78
    }
   },
   "kv3_head_eighth_e4": {
