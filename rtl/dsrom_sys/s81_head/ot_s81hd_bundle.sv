@@ -255,8 +255,33 @@ module ot_s81hd_bundle #(
 `undef OT_S81HD_EA
     end endgenerate
     // 2-level compare tree (lowest-id first max): level 1 (0,1) (2,3), level 2
+    // S81/HEAD3 10-25 (tile_prev10 placement STA: cb_h -> kh_gt 25 levels / -546 ps, c1_h -> s2 -151 ps): a ">" / "<" in
+    // Yosys becomes an $alu carry chain mapped onto HA cells (ripple; ABC cannot restructure the hard adder cells).
+    // ot_cmp32 = {a > b, a == b} as a log-depth gt/eq prefix tree (5 AO21 levels), identical function.
+    function automatic [1:0] ot_cmp32(input [31:0] a, input [31:0] b);
+        reg [31:0] g, e;
+        integer w, i;
+        begin
+            g = a & ~b;
+            e = ~(a ^ b);
+            for (w = 16; w >= 1; w = w / 2)
+                for (i = 0; i < w; i = i + 1) begin
+                    g[i] = g[2*i+1] | (e[2*i+1] & g[2*i]);
+                    e[i] = e[2*i+1] & e[2*i];
+                end
+            ot_cmp32 = {g[0], e[0]};
+        end
+    endfunction
+    function automatic vbetter(input [80:0] u, input [80:0] v);   // 1 = v wins (higher key, lower row on ties)
+        reg [1:0] k, r;
+        begin
+            k = ot_cmp32(v[80:49], u[80:49]);
+            r = ot_cmp32({15'd0, u[48:32]}, {15'd0, v[48:32]});
+            vbetter = k[1] || (k[0] && r[1]);
+        end
+    endfunction
     function automatic [80:0] pick(input [80:0] u, input [80:0] v);   // {key, row, bits}
-        pick = (v[80:49] > u[80:49] || (v[80:49] == u[80:49] && v[48:32] < u[48:32])) ? v : u;
+        pick = vbetter(u, v) ? v : u;
     endfunction
     reg [80:0] c1 [0:1];
     reg        c1_v;
@@ -292,7 +317,7 @@ module ot_s81hd_bundle #(
     reg [80:0] c1_h [0:1];
     // MERGE_HOP 2: registered compare results + the operands one stage later
     function automatic better(input [80:0] u, input [80:0] v);   // 1 = pick(u, v) is v
-        better = v[80:49] > u[80:49] || (v[80:49] == u[80:49] && v[48:32] < u[48:32]);
+        better = vbetter(u, v);
     endfunction
     reg [80:0] p2 [0:3];
     reg [80:0] c2 [0:1];

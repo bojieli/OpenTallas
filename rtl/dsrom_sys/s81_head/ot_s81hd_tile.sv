@@ -168,6 +168,23 @@ module ot_s81hd_tile #(
         end
 
     // ---------------- max under the ot_rom_argmax_rows key ----------------------------------------------------------
+    // S81/HEAD3 10-25 (tile_prev10 placement STA: cb_h -> kh_gt 25 levels / -546 ps, c1_h -> s2 -151 ps): a ">" / "<" in
+    // Yosys becomes an $alu carry chain mapped onto HA cells (ripple; ABC cannot restructure the hard adder cells).
+    // ot_cmp32 = {a > b, a == b} as a log-depth gt/eq prefix tree (5 AO21 levels), identical function.
+    function automatic [1:0] ot_cmp32(input [31:0] a, input [31:0] b);
+        reg [31:0] g, e;
+        integer w, i;
+        begin
+            g = a & ~b;
+            e = ~(a ^ b);
+            for (w = 16; w >= 1; w = w / 2)
+                for (i = 0; i < w; i = i + 1) begin
+                    g[i] = g[2*i+1] | (e[2*i+1] & g[2*i]);
+                    e[i] = e[2*i+1] & e[2*i];
+                end
+            ot_cmp32 = {g[0], e[0]};
+        end
+    endfunction
     function automatic [31:0] okey(input [31:0] x);        // order-preserving key; -0 as +0
         reg [31:0] c;
         begin
@@ -183,16 +200,18 @@ module ot_s81hd_tile #(
     wire [31:0] c_rb = CMP_STAGES >= 2 ? rb_h : res_bits, c_cb = CMP_STAGES >= 2 ? cb_h : ch_bits;
     wire [31:0] k_own = okey(c_rb), k_ch = okey(c_cb);
 `ifdef OT_S81HD_MUT_TIE_FLIP
-    wire row_lt = c_rr > c_cr;                                                        // MUTANT: highest id on ties
+    wire [1:0] rcmp = ot_cmp32({15'd0, c_rr}, {15'd0, c_cr});
+    wire row_lt = rcmp[1];                                                        // MUTANT: highest id on ties
 `else
-    wire row_lt = c_rr < c_cr;
+    wire [1:0] rcmp = ot_cmp32({15'd0, c_cr}, {15'd0, c_rr});
+    wire row_lt = rcmp[1];
 `endif
     // CMP_STAGES 3 (tile_prev2: the one-cycle 49-b compare after the hop was 22 levels, -38 ps at placement): the
     // two 16-b key halves and the row compare are registered, then combined
     reg kh_gt, kh_eq, kl_gt, kl_eq, rl_q;
     always @(posedge ck) begin
-        kh_gt <= k_own[31:16] > k_ch[31:16]; kh_eq <= k_own[31:16] == k_ch[31:16];
-        kl_gt <= k_own[15:0] > k_ch[15:0];   kl_eq <= k_own[15:0] == k_ch[15:0];
+        {kh_gt, kh_eq} <= ot_cmp32({16'd0, k_own[31:16]}, {16'd0, k_ch[31:16]});
+        {kl_gt, kl_eq} <= ot_cmp32({16'd0, k_own[15:0]}, {16'd0, k_ch[15:0]});
         rl_q  <= row_lt;
     end
     wire own_better = CMP_STAGES >= 3 ? b_en && (kh_gt || (kh_eq && (kl_gt || (kl_eq && rl_q))))
