@@ -1351,3 +1351,9 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
    (3) XTAP: report the ck_t39->ck_t24 related-pair skew (with CPPR). If it is still > 80, or the 541 XTAP family stays > ~200 EP, do NOT route. Move all 8 LSL fp1 macros to core-only taps at their clock pins (the node treatment), in ONE successor together with any other R5 residual. Do not go one tap at a time.
    (4) The plan delta owed for NK ck_t2 (a0_core_taps.json) and any LSL core-only taps go to the die plan before bind. 720 replicas: the master's tap sites are the plan.
   Owner PATH-QC (sub-lane PATH-QC-NK).
+
+## PARKED 2026-10-25 09:59 PDT GEOM-REVIEW-2 (restart 08:08)
+- Live jobs: none of mine (diagnostic docker runs used --rm; sub-agents finished). Scratch: intel2:/srv/opentallas-scratch2/claude/geomrev2/cp1/, rtx-pro /home/ubuntu/scratch/geomrev2/.
+- Verdicts this shift: kv3_pv_pair fd4_cc STRUCTURAL; t24 kitsW, btab_t2, 12 adopt178 rows SUPERSEDED; dsfd_su_t_rxsf_w STRUCTURAL (m_u2 last stage); cp1 col_h10 FAIL-F1; prog__t2 NOT SIGNED; f58 gate parse bug (real FF +6.50); elemB_cv kit-config fault; KV plan f7ch hgi PASS / hub_Eo PASS-COND; KITS-SPARE ve_s/ve_m PASS; PATH-KV-PC NO RENDER (port/io.tcl mismatch); KV-HEAD m3 e2/e6 PASS-COND; QC-NK-R5 diagnosis confirmed, PASS-COND.
+- Next for the fresh GEOM-REVIEW-2: R5 post-CTS re-REQ [PATH-QC-NK-R5]; PATH-KV-PC re-REQ after the port fix (3_place render); FLOW port of postcts_gate propagate-before-estimate (lanes/FLOW.md); crash-row dequeue of kv3_io_ft_v1 (AUTOPILOT).
+- OWNER?: none.
