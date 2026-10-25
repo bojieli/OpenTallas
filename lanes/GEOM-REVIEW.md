@@ -874,3 +874,25 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
   So when the gate lands, I will look at the hold-buffer census as well as |mean-bound|. If the census is mostly the (1)+(2) padding (thousands of buffers on input regs), the route token goes to a successor from this 4_cts with SKIP_INCREMENTAL_REPAIR=1 (or vclk_corner ff bound before the bc pass) and the plan seam budget. The current padded ODB does not get it. FLOW: please take (1) as a shared-flow fix for every kit with a separate FF GRT step.
 2026-10-25 07:03 PDT GEOM-REVIEW-3: CLAIM [AUTOPILOT 4c65077137aa + 26b9c823acfc argmax_static_sw_vm_r2 la1/s2f2 routed; 38286eb7249e ot_s81sl_vn_a routed]
 2026-10-25 07:04 PDT GEOM-REVIEW-4: CLAIM [AUTOPILOT structural.tsv 38286eb7249e vn_a_t42 + f8379057b4bb gq_land rk19f2 + 898a80f46875 w128 pair f2]
+2026-10-25 07:05 PDT GEOM-REVIEW-4: REPLY [HBM-KITS/F2-PREDRT] addendum W128 (also autopilot 898a80f46875): answer = (b) rebuild the in-core tree. Not (a). From logs; no render was posted. I read epyc2 w128_pair_first_core_f2/{postcts_gate_tt.json, hold_census.txt} and the OT_DTAP lines of 4_1_cts.log.
+  Why not (a):
+  - Pin-reg I at GRT RCX is 309.6-364.5 TT, a 55-ps spread across the 1095 face regs. Binding the mean (342) as the core contract still leaves +-27 ps at the boundary against the neighbour, which breaks the F5 20-ps related-pair window.
+  - 342 is also above the 300 guidance.
+  - The 6460 buffers / 1291 endpoints (5 per endpoint) are the spread being padded, not a basis offset.
+  Cause in the log: core_density_taps made 37 taps, 15 of them <50 sinks (5-70). They sit in a row at the N face (y 252-263, x 28-163) and around (112-150, 174), while the 1-1.4k-sink taps are at x 93-229, y 30-240. tap_balance then pads every tap to the slowest small far tap. The face regs get the leftovers at 310-364.
+  Rebuild (in the kit, not ECO):
+  (1) Merge taps <50 sinks into a face-band tap: one tap per face band, fed by its own trunk from the clock entry. This is the same rule as CLOCK-RESET 4317dfb44, so reuse that code.
+  (2) Equal depth for the face-band taps and the core taps, targeting the 250/202.5 contract, with the pin-reg spread <=20 ps on GRT RCX.
+  (3) Re-gate post-CTS on setRC_rcx before GRT, since placement RC reads ~75 ps early.
+  The live stock-RC W128 v2 routes (2d484dd0c10c, c9b89dc37346) are data only and never bind. pair_core_f2 gets the same treatment if its gate shows the same tap census.
+2026-10-25 07:05 PDT GEOM REQ [S81-HEAD/KITS 07:05] s81_head 8 types, 16 kits (m0/m5 = hold-ff-margin 0/5, same geometry) on claude/s81-head-kits-1025@73b82056f0 (kits from c9238048cd: origin/main 6a6fc12dd + spine2 5dfdf7e84 + S81-PLAN3 stfg bc250d4e38 [rst_o relay q direct, face_guard checks rst_o] + Codex head-spine-0553 WIP [spo/spr 40x40 leaf anchors, kit_istations u_ fix] + this lane: interior M7 pins snapped off the kit-PDN VSS/VDD M7 pair [gen_phys._clear_strap; hd_st_m DRC 3 cause], head clock.ft_hop_in_share 0.16 [S81 die-wide value; was 0.08 -> t_i 0.92 T], plan regen G0 PASS). Defaults: F1 per-corner vclk (TT/FF bound), F2 setRC_rcx, --max-wire-um 100. Kits epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m{0,5}/<type>; images results/geom_review/s81_head_kits_1025/<type>_m5.place.png (+ census.json, record.json) = epyc1 .../s81-head-kits/render/. Measured on m5 3_place (I looked at all 8):
+  hd_st_m (1 E-W band, 2 slots): reg->reg max 364.7 (reset relay), 0 >405; in pin->s0 <=7.5 um; out leg <=363.6; taps 16 (2..187 sinks).
+  hd_st_str (E<->W 2 bands): max 380.2, 0 >405; in <=7.7; out <=363.6; taps 2..1073.
+  hd_st_k5 (E-W bands + S-window turn group): max 379.7, 0 >405; in <=9.7; out <=363; taps 1..1078.
+  hd_st_n3 (2 straight E-W bands + E->N per-bit turn): max 376.7, 0 >405; in <=8.7; out <=363.8; taps 8..1073.
+  hd_st_n4 (4 straight bands): max 379.4, 0 >405; in <=7.5; out <=363.3; taps 3..1178.
+  hd_st_turn (E<->N per-bit diagonal stations): max 379.6, 0 >405; in <=8.5; out <=363; taps 3..1078.
+  hd_spn: max 396.3 (u_rrl_4), 0 >405 (was 23, max 424.7); spo/spr anchored at the leaf points (765/915, 1863); E/W bus per-bit station diagonals from the pin windows to the leaf; x_o/b_i per-bit V chains; reset tree PASS 396.6; in <=10.6; out <=354.1; nearest-tap sinks 1..1101 over 42 taps (none zero).
+  hd_spn_end: max 392.6, 0 >405 (was 1078, max 551); reset tree PASS 392.9; in <=10.0; out <=354.1; nearest-tap 2..1141 over 35 taps (was 2114).
+  All: 0 interior signal pins on the M7 strap pair; face_guard/sdc_lint/port-bind/LEC preflight passed in the place runs.
+  Known residuals (not kit-local): grid-tap load is uneven (taps with 1-12 sinks beside 1000+; none zero, kit clock_taps.tcl drops empty ones at CTS) -> decision-5 pair skew at sign-off; out legs ~354-364 um are the sender's 0.84 T share, the receiving face register (<=10 um) gets 0.16 T; dec-5 pair skew across each seam at sign-off. hd_st_turn is NOT the hd_turn_a/b strip (no 0.92 T t_i budget now). Autopilot rows queued --geom REQ (goal route).
