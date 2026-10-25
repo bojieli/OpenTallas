@@ -32,3 +32,12 @@ def test_soft_type_still_uses_legal_grid(monkeypatch):
     monkeypatch.setattr(H.gen_phys, 'tap_points', lambda *a: ([3, 4], [5, 6]))
     monkeypatch.setattr(H.gen_phys, 'clock_pins', lambda *a: [('clk', 3, 4), ('clk_t1', 9, 10)])
     assert H.plan_taps(p) == [('phy', 'clk', 103, 204), ('phy', 'clk_t1', 109, 210)]
+
+
+def test_hard_assembly_retains_grid_and_declared_core_taps(monkeypatch):
+    p = Plan([1, 2])
+    p.t['hard_cores'] = [{'inst': 'core0'}]
+    p.t['clock']['taps'] = [{'xy': [7, 8]}]
+    monkeypatch.setattr(H.gen_phys, 'tap_points', lambda *a: ([3, 4], [5, 6]))
+    monkeypatch.setattr(H.gen_phys, 'clock_pins', lambda *a: [('clk', 3, 4), ('clk_t1', 9, 10)])
+    assert H.plan_taps(p) == [('phy', 'clk', 103, 204), ('phy', 'clk_t1', 109, 210), ('phy', 'declared_0', 107, 208)]
