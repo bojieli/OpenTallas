@@ -102,7 +102,8 @@ def repair(raw, log=print, only_types=None):
             if new != old or declared:
                 log(f"bit_stations: {tn}.{name} {old}->{new}, actual max{row['worst_paired_bit_um']:.3f}um; per-bit routes")
     if core_types:
-        rows, _ = ft_sites.place(raw, RowAllocator, types=core_types, reach_um=limit, margin=1.0, max_radius_um=40.0)
+        rows, _ = ft_sites.place(raw, RowAllocator, types=core_types, reach_um=limit, margin=1.0, max_radius_um=40.0,
+                                avoid_core_routes=True)
         for row in rows:
             row['mode'] = 'row-legal-per-bit'
             log(f"bit_stations: {row['type']}.{row['slot']} {row['stations']}, actual max{row['worst_paired_bit_um']:.3f}um; macro-free")
