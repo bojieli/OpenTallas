@@ -784,7 +784,7 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
                 try:
                     validate_parent_id_straps(hc, pins=pins)
                 except ValueError as e:
-                    R.err("hard_cores", f"type {tn} core {hc[inst]}: {e}", type=tn)
+                    R.err("hard_cores", f"type {tn} core {hc['inst']}: {e}", type=tn)
             insts = [n for n, p_ in P.parts.items() if p_["type"] == tn]
             bad = 0
             for nm, ln, x, y in pins:
@@ -946,7 +946,7 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
         for hc in hcs:
             cw, ch = hc["outline_um"]
             dx, dy = hc.get("track_offset_um", [0.0, 0.0])
-            boxes[hc["inst"]] = (hc["origin_um"][0] + dx + cw / 2, hc["origin_um"][1] + dy + ch / 2)
+            boxes[hc['inst']] = (hc["origin_um"][0] + dx + cw / 2, hc["origin_um"][1] + dy + ch / 2)
         cent = dict(boxes)
         for c in t.get("contents", []):
             if c["inst"] not in cent and "origin_um" in c and "outline_um" in c:
@@ -981,7 +981,7 @@ def check_core_faces(P, R, plan_dir=None, conns_file=None, max_msgs=5):
                     conns.setdefault((ci, lp), []).append((k, nm))
         bad_t = unchecked = 0
         for hc in hcs:
-            ci = hc["inst"]
+            ci = hc['inst']
             out["cores"] += 1
             mine = [(lp, tg) for (li, lp), tg in conns.items() if li == ci or ci.startswith(li + "_")]
             if not mine:
@@ -1154,7 +1154,7 @@ def check_completeness(P, R, no_cells=(), max_msgs=5, side=None):
         for hc in t.get("hard_cores", []):
             dx, dy = hc.get("track_offset_um", [0.0, 0.0])
             x0, y0 = hc["origin_um"][0] + dx, hc["origin_um"][1] + dy
-            boxes[hc["inst"]] = (x0, y0, x0 + hc["outline_um"][0], y0 + hc["outline_um"][1])
+            boxes[hc['inst']] = (x0, y0, x0 + hc["outline_um"][0], y0 + hc["outline_um"][1])
         for c in t.get("contents", []):
             if c["inst"] not in boxes and "origin_um" in c and "outline_um" in c:
                 x0, y0 = c["origin_um"]
