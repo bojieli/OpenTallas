@@ -1547,11 +1547,17 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
             # constants for the gold-only flops left: fixpoint in simulation, starting from 0
             partners = anchored(L)
             # (a constant that failed while its neighbours were wrong is retried once its next state has become
-            # a structural constant under the hypotheses now in place)
+            # a structural constant under the hypotheses now in place -- for a self-holding register, with the
+            # unpaired registers (itself) held at 0: eng u_e.hq_atom[30] <= iss ? baddr[][35] : hq_atom[30] is
+            # dropped in early rounds and becomes constant only once the cb_q -> r8 -> baddr chain is proved)
+            m, kind = L.build(with_compare=False, with_hyp=False, free_const=0)
+            zdl = dict(L.dlit)
+            m, kind = L.build(with_compare=False, with_hyp=False)
             for side, keys in (("gold", L.gonly), ("gate", L.tonly)):    # gate-only flops: constant candidates too
                 for k in keys:
                     if k.startswith("ff:") and (side, k) not in L.hyp and k not in partners and \
-                            (tried[(side, k, "c")] < 2 or L.dlit.get((side, k), 2) in (0, 1)):
+                            (tried[(side, k, "c")] < 2 or L.dlit.get((side, k), 2) in (0, 1) or
+                             (zdl.get((side, k)) == 0 and tried[(side, k, "c")] < 6)):
                         L.hyp[(side, k)] = ("const", L.dlit.get((side, k)) if L.dlit.get((side, k)) in (0, 1) else 0)
             # matched flops whose next state simulates constant on both sides (synthesis may have merged such a
             # flop into another constant one, so the gate's copy is a different, free register)
