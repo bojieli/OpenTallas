@@ -36,7 +36,21 @@ def _path(free,first,last,budget,radius,min_stages):
     while end>=0:
         solution.append(int(end));end=int(parent[end])
     solution.reverse()
-    if len(solution)+1<min_stages:raise ValueError('old excess stages need explicit preservation')
+    # A lane equalisation pass may have deliberately added more pipeline stages
+    # than reach alone needs. Preserve those cycles, spreading the existing
+    # stages along the legal target chain instead of silently shortening it.
+    while len(solution)+1<min_stages:
+        pairs=list(zip(solution,solution[1:]))
+        if not pairs:
+            solution.append(solution[0])
+            continue
+        a,b=max(pairs,key=lambda ab:float(np.abs(free[ab[0]]-free[ab[1]]).sum()))
+        mid=(free[a]+free[b])/2
+        legal=(np.abs(free-free[a]).sum(axis=1)<=budget-2*radius)&(np.abs(free-free[b]).sum(axis=1)<=budget-2*radius)
+        ids=np.flatnonzero(legal)
+        if not len(ids):raise ValueError('cannot preserve old station count within legal reach')
+        chosen=int(ids[np.argmin(np.abs(free[ids]-mid).sum(axis=1))])
+        solution.insert(solution.index(a)+1,chosen)
     return solution
 
 
@@ -60,6 +74,15 @@ def place(raw,allocator_cls,types=None,reach_um=405.,margin=.98,max_radius_um=40
             a=np.array([pins[(name+'_i',i)] for i in range(width)])
             b=np.array([pins[(name+'_o',i)] for i in range(width)])
             budget=reach_um*margin-2.0 # reserve actual D/Q pin offsets from cell centres
+            direct=float(np.abs(b-a).sum(axis=1).max())
+            if slot['stations']==1 and direct<=budget:
+                # Station0 is already the input-face register. Do not add a
+                # gratuitous internal pipeline stage to a short direct leg.
+                for key in ('regs_um','bit_sites_um','bit_site_cell_um'):
+                    slot.pop(key,None)
+                ledger.append(dict(type=tn,slot=name,stations=[1,1],worst_paired_bit_um=round(direct,4),
+                                   budget_um=budget,cell_size_um=[1.404,.27],max_radius_um=max_radius_um))
+                continue
             blocked_targets=set();base_used=set(allocator.used);done=False
             for attempt in range(100):
                 allocator.used=set(base_used)

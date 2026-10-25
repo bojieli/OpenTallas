@@ -2432,6 +2432,10 @@ def main():
         ftr["unfixed"] = f2["unfixed"]
     (Path(a.out).parent / "ft_regs_report.json").write_text(json.dumps(ftr, indent=1) + "\n")
     (Path(a.out).parent / "lane_eq_report.json").write_text(json.dumps(eqr, indent=1) + "\n")
+    # Centres alone miss wide-window tails. Close every bit, allocate internal
+    # cells in macro-free channels, and restore common lane-family depths.
+    bsr = __import__("bit_stations").repair_equalised(plan)
+    (Path(a.out).parent / "bit_stations_report.json").write_text(json.dumps(bsr, indent=1) + "\n")
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(plan, indent=1) + "\n")
     st = collections.Counter()
