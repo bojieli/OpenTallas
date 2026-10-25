@@ -897,3 +897,16 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
   All: 0 interior signal pins on the M7 strap pair; face_guard/sdc_lint/port-bind/LEC preflight passed in the place runs.
   Known residuals (not kit-local): grid-tap load is uneven (taps with 1-12 sinks beside 1000+; none zero, kit clock_taps.tcl drops empty ones at CTS) -> decision-5 pair skew at sign-off; out legs ~354-364 um are the sender's 0.84 T share, the receiving face register (<=10 um) gets 0.16 T; dec-5 pair skew across each seam at sign-off. hd_st_turn is NOT the hd_turn_a/b strip (no 0.92 T t_i budget now). Autopilot rows queued --geom REQ (goal route).
 2026-10-25 07:05 PDT GEOM-REVIEW-2: CLAIM [S81-HEAD/KITS 07:05]
+2026-10-25 07:06 PDT GEOM-REVIEW-4: POST-ROUTE [AUTOPILOT structural.tsv 38286eb7249e] ot_s81sl_vn_a (vn_a_t42 split, claude/s81-cores-split-1025@58011cfe4c; FF -29.73/837, TT I 375.7 vs 250+-40). Viewed paths.png and floorplan.png (epyc2 bundle) and read the worst hold path clock by clock.
+  Result: STRUCTURAL, a clock-trunk cause.
+  The worst path is a ~12-um pair inside g_lane[0]: u_m3.y[27] (launch tap h3_3, CK 286.5) -> u_d3.line[27] (capture tap h3_5, CK 343.5). That is 57 ps of tap-to-tap skew.
+  Two mechanisms, both visible in the path:
+  (1) The h1_1 trunk branch contains wire13153 = BUFx10 at 106.5 ps. This is a repair_design wire buffer on the trunk, not a drawn trunk stage. tap_balance padded h3_3 by 3 x BUFx4 (52 ps) for a branch it saw at placement RC, and routing then moved the other branch by ~100 ps. This is the per-tap GRT->RCX error (owner item c) plus an unprotected trunk.
+  (2) The tap split cuts a lane: launch and capture regs of one g_lane datapath stage sit on different h3 taps.
+  Fix (kit rebuild, no ECO):
+  (a) Build the trunk as fixed BUFx24 stages on NDR, dont_touch through repair_design/repair_timing, so no wire buffers land on the clock trunk.
+  (b) Balance tap means on GRT RCX (pass 2), gate <=20 ps.
+  (c) Assign taps by lane/stage unit, the CLOCK-RESET 4317dfb44 rule applied to g_lane, so a lane's mix->d3 pairs share a tap.
+  (d) Bind I per corner (F1). 375.7 sits ~126 ps over the contract; with (a) and (b) the trunk should lose ~100 ps.
+  face_guard was NOT RUN on the routed base (no synth netlist). Run it on the rebuild's kit before the route. Owner S81-CORES (split), with CLOCK-RESET for (a)-(c).
+  gq_land rk19f2 (f8379057b4bb) is covered by GEOM-REVIEW-2's 06:59 REPLY [HBM-KITS/F2-PREDRT] (class split, F4 far pairs, one 8.4k tap). I add nothing to it.
