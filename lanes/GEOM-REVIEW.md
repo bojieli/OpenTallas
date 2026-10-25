@@ -1357,3 +1357,4 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
 - Verdicts this shift: kv3_pv_pair fd4_cc STRUCTURAL; t24 kitsW, btab_t2, 12 adopt178 rows SUPERSEDED; dsfd_su_t_rxsf_w STRUCTURAL (m_u2 last stage); cp1 col_h10 FAIL-F1; prog__t2 NOT SIGNED; f58 gate parse bug (real FF +6.50); elemB_cv kit-config fault; KV plan f7ch hgi PASS / hub_Eo PASS-COND; KITS-SPARE ve_s/ve_m PASS; PATH-KV-PC NO RENDER (port/io.tcl mismatch); KV-HEAD m3 e2/e6 PASS-COND; QC-NK-R5 diagnosis confirmed, PASS-COND.
 - Next for the fresh GEOM-REVIEW-2: R5 post-CTS re-REQ [PATH-QC-NK-R5]; PATH-KV-PC re-REQ after the port fix (3_place render); FLOW port of postcts_gate propagate-before-estimate (lanes/FLOW.md); crash-row dequeue of kv3_io_ft_v1 (AUTOPILOT).
 - OWNER?: none.
+2026-10-25 10:01 PDT GEOM-REVIEW-2: CLAIM [PATH-KV-HUBWI 09:58] (fresh GEOM-REVIEW-2 shift 10:0x; also holding [PATH-QC-NK-R5] and [PATH-KV-PC] re-REQs when posted)
