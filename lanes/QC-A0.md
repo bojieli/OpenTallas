@@ -229,3 +229,10 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   drops, ~9.4-11.5k overflow per report at 5/10/15/20, not falling). Stopped (epyc3 container dpkit-tt_ctlm-440715), run data deleted,
   logs/reports kept epyc3:/srv/opentallas-scratch/claude/elem-qk/keep_tt_ctlm_g3qc3. Needs a structural congestion review on the
   capacity-plan re-kit before any new route (same review method as A0 v7).
+- 2026-10-24 21:25 PDT QC: RESUMED after account switch (COORD priorities 1-5). Live: xt1 both re-run on bind_eq_cb16 (sub-agent; ot-run epyc3 dir
+  /srv/opentallas-scratch2/claude/qc-tok-capeq/xt1_both); TRIAL-QK capacity die trial (sub-agent; GRT epyc1 dir trial-qk/qc_cap_4b445d*,
+  IR epyc3 qc_cap_4b445d_ir_t4); full tools/die_plan pytest incl test_cp2 on 806bcb4058 (epyc1 pid 2607821, log
+  /srv/opentallas-scratch2/claude/qc/logs/pytest_806.log). NEW sub-agent: first QC signoff kits (sle_hc3, coll_n, coll_s, sle_hc1/2) on
+  bind_eq_cb16 + claude/reset-1024 reset rule -> branch claude/qc-g3-1024; route only after GEOM-REVIEW PASS.
+  S8-SU-PROG-ALIGN: TOK-QK's fix sub-agent (claude/tok-qk-s8a-1024) is on the RTL retime; QC reviews the design fix (prefer re-timing the
+  PROG read so the word meets su8's accept edge over adding +3 start cycles if the cmd is known early) and owns merge/re-close.
