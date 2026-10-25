@@ -1,0 +1,76 @@
+OT_RC_CAL layer RC scaled: R h0.8 v0.8, C h0.9 v0.9 (estimates only; RCX unaffected)
+OT_MSCTS_TRUNK SW path 29.0 um = 7 stages x 4.14 um, tap at (72.0, 14.0)
+OT_MSCTS_TRUNK SE path 80.0 um = 7 stages x 11.43 um, tap at (165.0, 14.0)
+OT_MSCTS_TRUNK W0 path 172.0 um = 7 stages x 24.57 um, tap at (25.0, 110.0)
+OT_MSCTS_TRUNK W1 path 252.0 um = 7 stages x 36.00 um, tap at (20.0, 185.0)
+OT_MSCTS_TRUNK E path 283.0 um = 7 stages x 40.43 um, tap at (232.0, 150.0)
+OT_MSCTS_BUILD sinks SW 1066
+OT_MSCTS_BUILD sinks SE 957
+OT_MSCTS_BUILD sinks W1 943
+OT_MSCTS_BUILD sinks W0 489
+OT_MSCTS_BUILD sinks E 256
+OT_MSCTS_BUILD macro g_bank\[1\].u_m leaf ot_ms_m0_leaf at (37.0,182.2) from tap W1 trunk end, 0 pad cells
+OT_MSCTS_BUILD macro g_bank\[0\].u_m leaf ot_ms_m1_leaf at (37.0,87.2) from tap W0 trunk end, 0 pad cells
+OT_MSCTS_BUILD taps 5 trunk 7 stages per tap (L_max 283.0 um), root (93.0, 6.0), 3711 register sinks, 2 macro leaves
+OT_MSCTS_BAL cts iter 0 tap means 284.3..328.8 (window 44.5) target 328.8 pad step 18.0 ps edits {tap SW 2} {tap SE 2} {tap W0 1} {mac ot_ms_m0_leaf 4} {mac ot_ms_m1_leaf 4}
+OT_MSCTS_BAL cts iter 1 tap means 327.3..339.8 (window 12.5) target 339.8 pad step 23.3 ps edits 
+OT_MSCTS_TAP cts TT SW n 1066 mean 330.5 min 327.8 max 333.2
+OT_MSCTS_TAP cts TT SE n 957 mean 339.8 min 335.2 max 344.7
+OT_MSCTS_TAP cts TT W0 n 489 mean 335.0 min 330.2 max 337.9
+OT_MSCTS_TAP cts TT W1 n 943 mean 328.3 min 323.8 max 335.8
+OT_MSCTS_TAP cts TT E n 256 mean 327.3 min 325.6 max 329.5
+OT_MSCTS_WINDOW cts TT tap-mean window 12.5 ps (limit 20) PASS
+OT_MSCTS_MACRO cts TT g_bank\[1\].u_m clk 334.8 interface regs n 543 mean 327.0 (323.8..330.9) diff +7.8
+OT_MSCTS_MACRO cts TT g_bank\[0\].u_m clk 321.2 interface regs n 543 mean 332.9 (324.8..337.6) diff -11.6
+OT_MSCTS_TAP cts FF SW n 1066 mean 243.5 min 241.0 max 245.9
+OT_MSCTS_TAP cts FF SE n 957 mean 251.4 min 247.2 max 255.5
+OT_MSCTS_TAP cts FF W0 n 489 mean 248.1 min 244.2 max 250.3
+OT_MSCTS_TAP cts FF W1 n 943 mean 244.2 min 240.0 max 250.3
+OT_MSCTS_TAP cts FF E n 256 mean 245.7 min 244.1 max 247.6
+OT_MSCTS_WINDOW cts FF tap-mean window 8.0 ps (limit 20) PASS
+OT_MSCTS_MACRO cts FF g_bank\[1\].u_m clk 249.6 interface regs n 543 mean 243.6 (240.0..247.1) diff +5.9
+OT_MSCTS_MACRO cts FF g_bank\[0\].u_m clk 238.9 interface regs n 543 mean 247.3 (241.3..250.3) diff -8.4
+OT_RC_CAL layer RC scaled: R h0.8 v0.8, C h0.9 v0.9 (estimates only; RCX unaffected)
+S5_PRE slew_viol 0 cap_viol 0 hold -58.37/1574 setup 196.98
+OT_MSCTS_BAL grt iter 0 tap means 342.1..351.7 (window 9.6) target 351.7 pad step 18.0 ps edits {tap SW 1} {mac ot_ms_m1_leaf 1}
+OT_MSCTS_BAL grt iter 1 tap means 344.3..363.8 (window 19.5) target 363.8 pad step 21.8 ps edits {tap E 1} {tap SE 1} {tap W0 1} {tap W1 1}
+OT_MSCTS_BAL grt iter 2 tap means 363.8..373.6 (window 9.7) target 363.8 pad step 24.2 ps edits {mac ot_ms_m0_leaf 1} {mac ot_ms_m1_leaf 1}
+OT_MSCTS_BAL grt iter 3 tap means 363.8..373.6 (window 9.7) target 363.8 pad step 22.3 ps edits 
+OT_MSCTS_TAP grt TT E n 256 mean 369.0 min 366.5 max 370.7
+OT_MSCTS_TAP grt TT SE n 957 mean 373.6 min 368.3 max 379.6
+OT_MSCTS_TAP grt TT SW n 1066 mean 363.8 min 360.9 max 366.7
+OT_MSCTS_TAP grt TT W0 n 489 mean 372.2 min 366.6 max 375.2
+OT_MSCTS_TAP grt TT W1 n 943 mean 368.2 min 361.8 max 378.9
+OT_MSCTS_WINDOW grt TT tap-mean window 9.7 ps (limit 20) PASS
+OT_MSCTS_MACRO grt TT g_bank\[1\].u_m clk 365.9 interface regs n 543 mean 366.9 (362.8..370.7) diff -1.0
+OT_MSCTS_MACRO grt TT g_bank\[0\].u_m clk 376.6 interface regs n 543 mean 371.1 (363.5..374.9) diff +5.5
+OT_MSCTS_TAP grt FF E n 256 mean 276.6 min 274.5 max 278.2
+OT_MSCTS_TAP grt FF SE n 957 mean 276.9 min 272.2 max 282.0
+OT_MSCTS_TAP grt FF SW n 1066 mean 268.7 min 266.2 max 271.1
+OT_MSCTS_TAP grt FF W0 n 489 mean 276.0 min 271.5 max 278.4
+OT_MSCTS_TAP grt FF W1 n 943 mean 273.8 min 268.3 max 283.1
+OT_MSCTS_WINDOW grt FF tap-mean window 8.3 ps (limit 20) PASS
+OT_MSCTS_MACRO grt FF g_bank\[1\].u_m clk 272.7 interface regs n 543 mean 273.1 (268.9..278.1) diff -0.4
+OT_MSCTS_MACRO grt FF g_bank\[0\].u_m clk 279.9 interface regs n 543 mean 275.9 (269.9..278.4) diff +4.0
+S5_I_GRT pin-register mean TT 369.29 ps over 1507 pin registers (vclk source latency bound in-session)
+OT_MSCTS_TAP grt TT E n 256 mean 369.0 min 366.5 max 370.7
+OT_MSCTS_TAP grt TT SE n 957 mean 373.6 min 368.3 max 379.6
+OT_MSCTS_TAP grt TT SW n 1066 mean 363.8 min 360.9 max 366.7
+OT_MSCTS_TAP grt TT W0 n 489 mean 372.2 min 366.6 max 375.2
+OT_MSCTS_TAP grt TT W1 n 943 mean 368.2 min 361.8 max 378.9
+OT_MSCTS_WINDOW grt TT tap-mean window 9.7 ps (limit 20) PASS
+OT_MSCTS_MACRO grt TT g_bank\[1\].u_m clk 365.9 interface regs n 543 mean 366.9 (362.8..370.7) diff -1.0
+OT_MSCTS_MACRO grt TT g_bank\[0\].u_m clk 376.6 interface regs n 543 mean 371.1 (363.5..374.9) diff +5.5
+OT_MSCTS_TAP grt FF E n 256 mean 276.6 min 274.5 max 278.2
+OT_MSCTS_TAP grt FF SE n 957 mean 276.9 min 272.2 max 282.0
+OT_MSCTS_TAP grt FF SW n 1066 mean 268.7 min 266.2 max 271.1
+OT_MSCTS_TAP grt FF W0 n 489 mean 276.0 min 271.5 max 278.4
+OT_MSCTS_TAP grt FF W1 n 943 mean 273.8 min 268.3 max 283.1
+OT_MSCTS_WINDOW grt FF tap-mean window 8.3 ps (limit 20) PASS
+OT_MSCTS_MACRO grt FF g_bank\[1\].u_m clk 272.7 interface regs n 543 mean 273.1 (268.9..278.1) diff -0.4
+OT_MSCTS_MACRO grt FF g_bank\[0\].u_m clk 279.9 interface regs n 543 mean 275.9 (269.9..278.4) diff +4.0
+S5_GRT_TT setup 193.97 ep 0 slew 0 cap 0 tap_window PASS I_grt 369.29
+OT_RC_CAL layer RC scaled: R h0.8 v0.8, C h0.9 v0.9 (estimates only; RCX unaffected)
+S5_HOLD_FF_BEFORE -52.35 ep 613 (vclk I 369.29, margin 15)
+S5_HOLD_FF_AFTER 11.64 ep 0 hold buffers 2905
+S5_GATE PASS

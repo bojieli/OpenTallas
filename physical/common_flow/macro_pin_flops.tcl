@@ -16,6 +16,14 @@ set ot_mpf_hops [ot_mpf_env OT_MPF_HOPS 4]
 set ot_mpf_gap [ot_mpf_env OT_MPF_GAP_UM 0.54]
 set ot_mpf_halo [ot_mpf_env OT_MPF_HALO_UM [ot_mpf_env MACRO_ROWS_HALO_X 5.4]]
 set ot_mpf_core [$ot_mpf_blk getCoreArea]
+# OT_MPF_TREE=1 (QC-CQB2 2026-10-25, opt-in): a write-landing flop may also fan out through a buffer / inverter TREE
+# (any fanout per stage) as long as every leaf is an input pin of the same ONE hard macro (vmr_cqb: each w_mask landing
+# flop g_mw[i].u_m/q[k] drives 32 w_mask_in pins through 32 INVx3; without this they stayed 165-190 um from their pins).
+# Anchored at the centroid of its leaf pins.  Unset: unchanged single-fanout rule.
+# OT_MPF_SHARED=1 (with OT_MPF_TREE): the tree may also reach other logic, if it reaches at least as many pins of the ONE
+# macro as other loads (vmr_cqb: the write-address / write-enable landing flops g_mw[i].u_r / u_e feed the SRAM
+# w_addr_in / w_ce_in pin AND one read/write address-compare gate each; they stayed 92-224 um from their pins).
+set ot_mpf_tree [ot_mpf_env OT_MPF_TREE 0]
 proc ot_mpf_isff {inst} { set m [[$inst getMaster] getName]; expr {[string match "DFF*" $m] || [string match "ASYNC_DFF*" $m]} }
 proc ot_mpf_isbuf {inst} { set m [[$inst getMaster] getName]; expr {[string match "INV*" $m] || [string match "BUF*" $m] || [string match "HB*" $m]} }
 proc ot_mpf_sinks {net} { set s {}; foreach it [$net getITerms] { if {[$it isInputSignal]} { lappend s $it } }; return $s }
@@ -40,7 +48,29 @@ proc ot_mpf_capture {net hops} {
   return ""
 }
 # (b) flop -> its sink pins through single-fanout buffers; returns the sink ITerms if they are ALL pins of one macro
+proc ot_mpf_launch_tree {ff hops} {
+  # every leaf of the buffer/inverter fanout tree of ff must be an input pin of one macro
+  set todo [list [list [ot_mpf_out_net $ff] 0]]; set m ""; set leaves {}; set other 0
+  set shared [ot_mpf_env OT_MPF_SHARED 0]
+  while {[llength $todo]} {
+    lassign [lindex $todo end] net d; set todo [lrange $todo 0 end-1]
+    if {$net eq "" || [ot_mpf_nports $net]} { return "" }
+    set s [ot_mpf_sinks $net]; if {![llength $s]} { return "" }
+    foreach it $s {
+      set i [$it getInst]
+      if {[[$i getMaster] isBlock]} {
+        if {$m eq ""} { set m $i } elseif {$m ne $i} { return "" }
+        lappend leaves $it
+      } elseif {[ot_mpf_isbuf $i] && $d < $hops} {
+        lappend todo [list [ot_mpf_out_net $i] [expr {$d + 1}]]
+      } elseif {$shared} { incr other } else { return "" }
+    }
+  }
+  if {$other > [llength $leaves]} { return "" }
+  return $leaves
+}
 proc ot_mpf_launch_sinks {ff hops} {
+  if {[ot_mpf_env OT_MPF_TREE 0]} { return [ot_mpf_launch_tree $ff $hops] }
   set net [ot_mpf_out_net $ff]; if {$net eq ""} { return "" }
   for {set h 0} {$h <= $hops} {incr h} {
     if {[ot_mpf_nports $net]} { return "" }
@@ -104,7 +134,7 @@ foreach mac [$ot_mpf_blk getInsts] {
         if {[ot_mpf_isff $i]} { set ff $i; break }
         if {![ot_mpf_isbuf $i]} break
         set n2 [ot_mpf_in_net $i]; if {$n2 eq ""} break
-        if {[llength [ot_mpf_sinks $n2]] != 1 || [ot_mpf_nports $n2]} break
+        if {(!$ot_mpf_tree && [llength [ot_mpf_sinks $n2]] != 1) || [ot_mpf_nports $n2]} break
         set d [ot_mpf_drv $n2]
       }
       if {$ff eq "" || [$ff isFixed] || [$ff getPlacementStatus] eq "FIRM" || [dict exists $ot_mpf_seen [$ff getName]]} continue
