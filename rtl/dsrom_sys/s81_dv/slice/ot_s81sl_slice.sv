@@ -238,7 +238,29 @@ module ot_s81sl_slice #(
     parameter integer KV_HARD_RQ = 0, // reuse CLOSED D512 reduce and quant views
     parameter integer KV_CNIK = 0,   // RTLGAP-SUKV: leaf0 bank also runs CN / IK (needs KV_ENABLE)
     parameter integer KV_CP = 0,     // RTLGAP-SUKV: leaf0 also hosts the compressor pool (needs KV_ENABLE)
-    parameter integer VS_MUT = 0     // bench negative controls only (ot_s81sl_vs MUT through the leaves); 0 in every build
+    parameter integer VS_MUT = 0,    // bench negative controls only (ot_s81sl_vs MUT through the leaves); 0 in every build
+    // PATH-S81 X2 (10-25): per-leaf S81-PLAN R3 core<->core station depths, forwarded to lf[k].u_lf.CS_<class>; 4 bits a
+    // leaf, leaf k = LF_CS_<class>[4 k +: 4].  The die plan gives each leaf partition type its own depths (normal t7 / t55 /
+    // t56 / t57: HI 2, HO 2, H_G 4, PVS / SWR / U / VNI / VSP / Y 1, the rest 0).  Every default = today's leaf (CS 0,
+    // H_G 4), so a slice without overrides is the pre-R3 netlist exactly.  The KV_ENABLE leaf 0 must keep PVS / VSP 0
+    // (ot_s81sl_leaf $fatal).
+    parameter [19:0] LF_CS_HI_D = 20'd0,
+    parameter [19:0] LF_CS_HI_GS = 20'd0,
+    parameter [19:0] LF_CS_HO_D = 20'd0,
+    parameter [19:0] LF_CS_HO_GS = 20'd0,
+    parameter [19:0] LF_CS_H_G = {5{4'd4}},
+    parameter [19:0] LF_CS_VNI_D = 20'd0,
+    parameter [19:0] LF_CS_VNO_D = 20'd0,
+    parameter [19:0] LF_CS_Y_D = 20'd0,
+    parameter [19:0] LF_CS_U_D = 20'd0,
+    parameter [19:0] LF_CS_SW_D = 20'd0,
+    parameter [19:0] LF_CS_SWR_D = 20'd0,
+    parameter [19:0] LF_CS_RA_D = 20'd0,
+    parameter [19:0] LF_CS_RAR_D = 20'd0,
+    parameter [19:0] LF_CS_VE_D = 20'd0,
+    parameter [19:0] LF_CS_VER_D = 20'd0,
+    parameter [19:0] LF_CS_PVS_D = 20'd0,
+    parameter [19:0] LF_CS_VSP_D = 20'd0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -274,7 +296,11 @@ module ot_s81sl_slice #(
     wire [4:0] ev_l, ev_x, gv_l; wire [9:0] ec_l, ec_x, gc_l; wire [479:0] ed_l, ed_x; wire [159:0] gd_l;
     genvar k;
     generate for (k = 0; k < 5; k = k + 1) begin : lf
-        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
+        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ),
+            // PATH-S81 X2: this leaf's R3 station depths
+            .CS_HI_D(LF_CS_HI_D[4 * k +: 4]), .CS_HI_GS(LF_CS_HI_GS[4 * k +: 4]), .CS_HO_D(LF_CS_HO_D[4 * k +: 4]), .CS_HO_GS(LF_CS_HO_GS[4 * k +: 4]), .CS_H_G(LF_CS_H_G[4 * k +: 4]),
+            .CS_VNI_D(LF_CS_VNI_D[4 * k +: 4]), .CS_VNO_D(LF_CS_VNO_D[4 * k +: 4]), .CS_Y_D(LF_CS_Y_D[4 * k +: 4]), .CS_U_D(LF_CS_U_D[4 * k +: 4]), .CS_SW_D(LF_CS_SW_D[4 * k +: 4]), .CS_SWR_D(LF_CS_SWR_D[4 * k +: 4]),
+            .CS_RA_D(LF_CS_RA_D[4 * k +: 4]), .CS_RAR_D(LF_CS_RAR_D[4 * k +: 4]), .CS_VE_D(LF_CS_VE_D[4 * k +: 4]), .CS_VER_D(LF_CS_VER_D[4 * k +: 4]), .CS_PVS_D(LF_CS_PVS_D[4 * k +: 4]), .CS_VSP_D(LF_CS_VSP_D[4 * k +: 4])) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
             .c_v(c_v_l[k]), .c_d(c_d_l[160 * k +: 160]),
             .sw_v(sw_v_l[k]), .sw_a(sw_a_l[10 * k +: 10]), .sw_m(sw_m_l[8 * k +: 8]), .sw_d(sw_d_l[256 * k +: 256]),
             .cw_v(cw_v_l[2 * k +: 2]), .cw_a(cw_a_l[24 * k +: 24]), .cw_d(cw_d_l[64 * k +: 64]),
