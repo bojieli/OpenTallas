@@ -275,7 +275,7 @@ def test_kit_places_content_macros(tmp_path):
     (tmp_path / "m_ff.lib").write_text("library(m_ff) {}\n")
     t = raw["partition_types"]["src"]
     t.setdefault("contents", []).append(dict(inst="u_sram", module="sram_m", status="planned", lef="m.lef", lib="m_tt.lib",
-                                             origin_um=[17.28, 25.92], orient="MX"))
+                                             origin_um=[17.28, 25.92], outline_um=[8.64, 8.64], orient="MX"))
     t["hard_cores"] = [dict(inst="u_core", module="core_m", origin_um=[8.64, 8.64], outline_um=[8.64, 8.64],
                             track_offset_um=[0.0, 0.012], lef="m.lef", lib="m_tt.lib")]
     P = schema.Plan(raw)
