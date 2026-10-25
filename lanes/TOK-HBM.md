@@ -89,3 +89,13 @@ Branch claude/tok-hbm-1024 (worktree localhost ~/wt/tok-hbm, epyc2 ~/wt/tok-hbm)
   SU31; then HC die bind (pads + XRD/XRU=10) and HC_MIX replays re-emitted with RAW0; hand transport_gate to HBM-ARCH
   as the B2l native-bind check.
 - OWNER?: none new (B2l native bind accepted 18:47).
+
+## RESUMED 2026-10-24 19:32 PDT (rtx-pro lane agent; wt rtx-pro:/home/ubuntu/wt/tok-hbm-1024r sparse, branch claude/tok-hbm-1024 @909ec66a01)
+- 2026-10-24 19:32 PDT TOK-HBM: intel2 ld/t_qw_chain_r0/r5 (pids 150727/150729) still running at 12 h, cycle 33552/67531: both FAIL so far
+  1600 checks / 9 records (rec 6,10,17,23,27,33,37,41,54; rec17 128 checks = got_zero/dest unwritten) = same SU class as L0. Left running (exit.txt on finish).
+- 2026-10-24 19:32 PDT TOK-HBM: FINDING: every layer replay installs the SU calendar as cx_layer_1021.epoch_calendar = ONE row (rslot_v=wslot_v=lg_local_read=lg_local_write=0xff, owner 0) looped over the
+  whole epoch (replay_su31: target 96 installs at stream 94/621/1104, loops 303/285/4834). With a constant word the per-bank SU_CAL relation (slot-lg-rq) cannot mis-time anything
+  inside the epoch -> the 'SU_CAL' suspect is NOT the SU31 fault; calendar padding would change nothing. Also hb_vms_SW__vmstat never changes in the prog_r8 SU31 run (bank
+  schedule faults not raised). fr_SW fault (stream 5722) must come from fl_SW chain (su lg_fault / su / sfu / hc fault), sfault_SW, sucore, subr, cij, dbk, ring.
+- 2026-10-24 19:32 PDT TOK-HBM: launched instrumented rebuild (prog_r8_leafslice die.v + display-only monitor of 195 fault/valid nets: su lg_fault per slice, vmb pin valids per owner, rslot/wslot,
+  rr/wq_done) + SU31 replay: ot-run on epyc2 /srv/opentallas-scratch2/claude/tok-hbm/r/su_mon (run_build.sh; launcher epyc1 pid 3416951, log epyc1:~/tokhbm-logs/su_mon.log). ~3 h.
