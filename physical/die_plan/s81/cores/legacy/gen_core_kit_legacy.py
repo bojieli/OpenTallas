@@ -355,6 +355,37 @@ def plan_core(plan, module):
     raise SystemExit(f"{module}: not a hard core of the plan")
 
 
+def lef_contract(path, module):
+    """pin contract of a closed view that the plan lists as partition CONTENTS (no plan pins file): outline = LEF SIZE,
+    pin centre = the centre of the pin's non-M1 rect that touches the outline (the edge pin itself)."""
+    txt = Path(path).read_text()
+    w, h = map(float, re.search(r"SIZE ([\d.]+) BY ([\d.]+)", txt).groups())
+    pins, cur, layer = [], None, None
+    best = {}
+    for ln in txt.splitlines():
+        t = ln.split()
+        if t[:1] == ["PIN"]:
+            cur = t[1]
+        elif cur and t[:1] == ["LAYER"]:
+            layer = t[1]
+        elif cur and t[:1] == ["USE"] and t[1] in ("POWER", "GROUND"):
+            best[cur] = None
+        elif cur and t[:1] == ["RECT"] and layer not in (None, "M1") and best.get(cur, 0) is not None:
+            x0, y0, x1, y1 = map(float, t[1:5])
+            if min(x0, y0) <= 1e-6 or x1 >= w - 1e-6 or y1 >= h - 1e-6:
+                best.setdefault(cur, (layer, round((x0 + x1) / 2, 4), round((y0 + y1) / 2, 4)))
+        elif t[:1] == ["END"] and cur and t[1:2] == [cur]:
+            if cur not in best:
+                raise SystemExit(f"{module}: LEF pin {cur} has no rect on the outline")
+            cur, layer = None, None
+    for n, v in best.items():
+        if v is None:
+            continue
+        L, x, y = v
+        pins.append(dict(name=n, layer=L, x=x, y=y))
+    return [w, h], pins
+
+
 def git_show(spec):
     return subprocess.run(["git", "-C", str(REPO), "show", spec], capture_output=True, text=True, check=True).stdout
 
@@ -368,7 +399,16 @@ def main():
     a = ap.parse_args()
     rec = json.load(open(a.recipes))[a.module]
     plan = json.load(open(a.plan))
-    ptype, hc = plan_core(plan, rec.get("plan_module", a.module))
+    if rec.get("plan"):
+        plan = json.load(open(REPO / rec["plan"]))
+    if rec.get("lef_contract"):          # partition CONTENTS core: the closed view LEF is the pin contract
+        ptype = rec["plan_type"]
+        assert any(c.get("module") == a.module for c in plan["partition_types"][ptype].get("contents", [])), ptype
+        outline, lpins = lef_contract(REPO / rec["lef_contract"], a.module)
+        hc = dict(module=a.module, outline_um=outline, lef=rec["lef_contract"], pins=lpins,
+                  pins_file=rec["lef_contract"])
+    else:
+        ptype, hc = plan_core(plan, rec.get("plan_module", a.module))
     spec_src = rec.get("spec_git")       # "<rev>:<path>" for a kit spec that is only in history (sources from the tree)
     spec = json.loads(git_show(spec_src)) if spec_src else json.load(open(REPO / rec["ref_tile"] / "spec.json"))
     mod = spec["top"]
@@ -379,7 +419,7 @@ def main():
     per = float(plan["die"]["period_ps"])
     ins = float(plan["clock"]["insertion_ps"])
     tol = float(plan["clock"]["insertion_tol_ps"])
-    pins = json.load(open(S81 / hc["pins_file"]))["pins"]
+    pins = hc["pins"] if "pins" in hc else json.load(open(S81 / hc["pins_file"]))["pins"]
     dirs = lef_dirs(REPO / hc["lef"])
     shapes = lef_pin_rects(REPO / hc["lef"])
     suffix = rec.get("suffix", "c")
@@ -437,7 +477,7 @@ def main():
             k = (y + ph - 0.012) / 0.048
             if abs(k - round(k)) > 1e-3:
                 raise SystemExit(f"{master}: site y {y} off the M4 track phase")
-            m_ = CORE_MARGIN_UM
+            m_ = rec.get("core_margin", CORE_MARGIN_UM)
             if not (x >= m_ and y >= m_ and x + mw <= w - m_ and y + mh <= h - m_):
                 raise SystemExit(f"{master}: site {x},{y} ({mw}x{mh}) outside the core area of {w}x{h}")
             mplace[master].append((x, y, o))
@@ -536,6 +576,13 @@ def main():
     ff = ff.replace("    if {$f eq \"\"} { incr ff_miss; continue }",
                     "    if {$f eq \"\"} { incr ff_miss; puts $ff_unreg \"$pass\\t$nm\"; continue }")
     assert "ot_unreg_pins" in ff and "puts $ff_unreg" in ff, "face_flops.tcl miss anchor changed"
+    if pairs:
+        # one-station core pairs: the single register sits at its INPUT face (it registers the in pin by plan); its out
+        # port is not given a cloned flop (face_flops would otherwise duplicate every station flop at the out face)
+        anc = '    if {$pass eq "OUTPUT" && [ff_slot_of $nm _o] ne ""} continue\n'
+        assert anc in ff, "face_flops.tcl ft-out anchor changed"
+        ore = "^(" + "|".join(re.escape(o_) for _, o_ in pairs) + r")(\[[0-9]+\])?$"
+        ff = ff.replace(anc, anc + '    if {$pass eq "OUTPUT" && [regexp {' + ore + '} $nm]} continue\n')
     (kd / "face_flops.tcl").write_text(ff)
     shutil.copyfile(S81 / "cores/svc/pin_audit_core.py", kd / "pin_audit.py")
     shutil.copyfile(S81 / "cores/svc/dump_placed.py", kd / "dump_placed.py")
@@ -560,7 +607,7 @@ def main():
     shutil.copyfile(REPO / "physical/common_flow/pin_reg_split.tcl", kd / "pin_reg_split.tcl")
     shutil.copyfile(HERE / "core_face_post_synth.tcl", kd / "core_face_post_synth.tcl")
     gpl = "/work/face_flops.tcl"
-    m_ = CORE_MARGIN_UM
+    m_ = rec.get("core_margin", CORE_MARGIN_UM)   # tiny station cores: 1.08 (4 rows)
     params = dict(spec.get("params", {}) or {}, **rec.get("params", {}))
     defines = list(spec.get("defines", []) or []) + rec.get("defines", [])
     util = rec.get("util", (spec.get("route") or {}).get("pd", 0.5))
@@ -616,7 +663,7 @@ def main():
     fz = dict(schema="opentallas.s81.core_freeze.v1", kit=f"{mod}_{suffix}", module=mod, plan_type=ptype,
               outline_um=[w, h], ref_tile=rec.get("ref_tile"), spec=spec_src or f"{rec['ref_tile']}/spec.json",
               spec_sha256=hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest(),
-              pins_file=hc["pins_file"], pins_sha256=sha(S81 / hc["pins_file"]), pins=len(pins), plan_lef=hc["lef"],
+              pins_file=hc["pins_file"], pins_sha256=sha(REPO / hc["pins_file"] if "pins" in hc else S81 / hc["pins_file"]), pins=len(pins), plan_lef=hc["lef"],
               clocks=clks, resets=rsts,
               recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               period_ps=per, insertion_ps=ins, insertion_tol_ps=tol, unc_setup_ps=UNC_SETUP_PS, unc_hold_ps=UNC_HOLD_PS,

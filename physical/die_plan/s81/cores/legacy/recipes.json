@@ -93,7 +93,8 @@
     "e_st",
     "d_st"
    ]
-  ]
+  ],
+  "core_margin": 1.08
  },
  "dsfd_qbank_S": {
   "ref_tile": "physical/ref_tile/s81fill2_qbank_s",
@@ -114,10 +115,12 @@
     "i_x1",
     "o_x1"
    ]
-  ]
+  ],
+  "core_margin": 1.08
  },
  "ot_s81_cfg7_seq": {
-  "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_pr"
+  "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_pr",
+  "core_margin": 1.08
  },
  "ot_s81_cfg7_seq_bfp": {
   "ref_tile": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr"
@@ -153,5 +156,17 @@
   "ref_tile": "physical/ref_tile/dsdv_gunit_l5_n32",
   "spec_git": "1766568f01:physical/ref_tile/dsdv_gunit_l5_n32/spec.json",
   "suffix": "n32"
+ },
+ "ot_s81hd_spo": {
+  "ref_tile": "physical/ref_tile/s81hd_spo_m",
+  "plan": "physical/die_plan/s81_head/die_plan.json",
+  "plan_type": "hd_spn",
+  "lef_contract": "physical/ref_tile/s81hd_spo_m/views/ot_s81hd_spo/ot_s81hd_spo.lef"
+ },
+ "ot_s81hd_spr": {
+  "ref_tile": "physical/ref_tile/s81hd_spr_m4",
+  "plan": "physical/die_plan/s81_head/die_plan.json",
+  "plan_type": "hd_spn",
+  "lef_contract": "physical/ref_tile/s81hd_spr_m4/views/ot_s81hd_spr/ot_s81hd_spr.lef"
  }
 }
