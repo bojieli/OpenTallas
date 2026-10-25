@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS-COND",
+  "image": "/srv/opentallas-scratch/claude/codex-s81-missing/head_ft_review.png",
+  "plan": "codex/s81-dec12-1025@5c6fd2a2a",
+  "types": [
+    "hd_turn_a",
+    "hd_turn_b",
+    "hd_st_turn",
+    "hd_st_str",
+    "hd_st_n3",
+    "hd_st_n4",
+    "hd_st_m",
+    "hd_st_k5"
+  ],
+  "findings": [
+    "Viewed all eight type panels before P&R. Pure feedthrough content has no missing compute leaf; all endpoints registered by gen_rtl. Eight sparse macrofree station fields with short registered spans; grid taps balanced spatially, no obstructing macro walls.",
+    "Pin bundles occupy consistent abutting faces with separated channels. Turns preserve routing space and station chains, signal max M7. PDN standard continuous full outline.",
+    "Conditional route approval: verify actual TT setup, FF hold with 60/25 ps, related-pair skew <=80 ps, DRC and propagated clocks. No full-die sign-off credit."
+  ],
+  "changes": "No plan geometry or cycle changes: fresh wavefront reset kits from DEC12 plan, hold repair margin 0 or5ps."
+}

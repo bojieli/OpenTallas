@@ -1210,6 +1210,14 @@
         "type": "integer",
         "minimum": 2
        },
+       "leaf_um": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+       },
        "depth": {
         "type": "integer",
         "minimum": 1
@@ -1526,6 +1534,19 @@
         },
         "note": {
          "type": "string"
+        },
+        "leaf_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "bit_route": {
+         "enum": [
+          "per_bit"
+         ]
         }
        }
       }
