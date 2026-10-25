@@ -1003,6 +1003,37 @@
         "lib": {
          "type": "string"
         },
+        "straps": {
+         "type": "array",
+         "items": {
+          "type": "object",
+          "required": [
+           "port",
+           "width",
+           "value"
+          ],
+          "additionalProperties": false,
+          "properties": {
+           "port": {
+            "type": "string",
+            "pattern": "^strap_"
+           },
+           "width": {
+            "type": "integer",
+            "minimum": 1
+           },
+           "value": {
+            "type": [
+             "integer",
+             "string"
+            ]
+           },
+           "note": {
+            "type": "string"
+           }
+          }
+         }
+        },
         "note": {
          "type": "string"
         }

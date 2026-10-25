@@ -300,6 +300,18 @@ SCHEMA = {
                                        # hardened views (repo-relative): the partition kit places the core as a
                                        # macro at origin_um + track_offset_um (COORD 10-23: kits place content macros)
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
+                                       # ID straps (owner option B, COORD 10-25 07:01): a replicated MASTER core reads
+                                       # its constant identity (head HID/BSEL, astk quadrant) on strap_* input pins;
+                                       # each core instance supplies the values, the partition places TIEHI/TIELO
+                                       # cells next to those pins.  Every entry of one module declares the same
+                                       # strap ports (check.py hard_cores); value = integer or Verilog literal.
+                                       "straps": {"type": "array", "items": {
+                                           "type": "object", "required": ["port", "width", "value"],
+                                           "additionalProperties": False,
+                                           "properties": {"port": {"type": "string", "pattern": "^strap_"},
+                                                          "width": {"type": "integer", "minimum": 1},
+                                                          "value": {"type": ["integer", "string"]},
+                                                          "note": {"type": "string"}}}},
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},

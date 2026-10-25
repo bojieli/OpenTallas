@@ -734,10 +734,53 @@ def core_pins(hc, plan_dir=None):
     return pins
 
 
+def strap_value(v, width):
+    """strap value -> int: integer, or a Verilog literal N'b.. / N'd.. / N'h.. (sized width must match)."""
+    if isinstance(v, int):
+        return v
+    m = re.fullmatch(r"\s*(\d+)?'([bdhBDH])([0-9a-fA-F_]+)\s*", v)
+    if not m:
+        raise ValueError(f"value {v!r} is not an integer or a Verilog literal")
+    if m.group(1) and int(m.group(1)) != width:
+        raise ValueError(f"literal {v!r} is {m.group(1)} bits, strap is {width}")
+    return int(m.group(3).replace("_", ""), {"b": 2, "d": 10, "h": 16}[m.group(2).lower()])
+
+
+def check_straps(R, tn, hc, pins, strap_sig, out):
+    """hard_cores[].straps (owner option B 10-25): unique strap_* ports, values that fit, every strap bit a core pin
+    (the partition ties it with a TIEHI/TIELO next to that pin), one strap port set per core module (master)."""
+    st = hc.get("straps") or []
+    names = {p_[0] for p_ in pins}
+    seen = set()
+    for s_ in st:
+        out["straps"] += 1
+        out["strap_bits"] += s_["width"]
+        if s_["port"] in seen:
+            R.err("hard_cores", f"type {tn} core {hc['inst']}: strap {s_['port']} declared twice", type=tn)
+        seen.add(s_["port"])
+        try:
+            v = strap_value(s_["value"], s_["width"])
+            if not 0 <= v < (1 << s_["width"]):
+                raise ValueError(f"value {s_['value']} does not fit {s_['width']} bits")
+        except ValueError as e:
+            R.err("hard_cores", f"type {tn} core {hc['inst']}: strap {s_['port']}: {e}", type=tn)
+        if pins:
+            want = [s_["port"]] if s_["width"] == 1 and s_["port"] in names else \
+                [f"{s_['port']}[{b}]" for b in range(s_["width"])]
+            miss = [n for n in want if n not in names]
+            if miss:
+                R.err("hard_cores", f"type {tn} core {hc['inst']}: strap {s_['port']} pins {miss[:4]} not in the core "
+                      "pins (the tie cell sits next to the core pin)", type=tn)
+    if hc.get("module"):
+        strap_sig[hc["module"]].append((tuple(sorted((s_["port"], s_["width"]) for s_ in st)), f"{tn}.{hc['inst']}"))
+
+
 def check_taps_cores(P, R, plan_dir=None, evidence=None):
     """clock.taps[] inside the type outline, unique names; hard_cores[]: pins land on the plan tracks after
     origin + track_offset and the core orient, in the type frame AND in every placed instance's die frame (MX/MY)."""
-    out = dict(taps=0, hard_cores=0, core_pins=0, core_pins_off_track=0, types_no_cells=0, over_cap_no_cores=0)
+    out = dict(taps=0, hard_cores=0, core_pins=0, core_pins_off_track=0, types_no_cells=0, over_cap_no_cores=0,
+               straps=0, strap_bits=0)
+    strap_sig = defaultdict(list)       # core module -> [(sorted (port, width), "type.inst")]
     import cells as CE
     est, out["cell_sources"] = CE.estimate(P.raw, plan_dir, evidence or ())
     no_cells = []
@@ -810,6 +853,11 @@ def check_taps_cores(P, R, plan_dir=None, evidence=None):
             out["core_pins_off_track"] += bad
             if bad > 5:
                 R.err("hard_cores", f"type {tn} core {hc['inst']}: {bad} pins off the plan tracks", type=tn)
+            check_straps(R, tn, hc, pins, strap_sig, out)
+    for mod, sigs in sorted(strap_sig.items()):
+        if len({sg for sg, _ in sigs}) > 1:
+            R.err("hard_cores", f"core module {mod}: entries declare different strap ports "
+                  f"({'; '.join(f'{w}: {list(sg)}' for sg, w in sigs[:4])}): one master, one strap port set")
     out["no_cells"] = no_cells
     if False and out["types_no_cells"]:
         R.warn("hard_cores", f"{out['types_no_cells']} types without a cell estimate (type.cells, contents[].cells or "
