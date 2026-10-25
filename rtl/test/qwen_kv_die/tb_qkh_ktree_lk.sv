@@ -6,14 +6,22 @@
 `ifndef KLK_MUT
 `define KLK_MUT 0
 `endif
+// KVG3-CORES 10-24: -DKLK_PR=1 builds the tile with PORT_REGS=1 (kpv / gf face flops, lanes compared registered): sc_d /
+// sc_f must still equal the reference every edge and g_f must equal the reference g_f ONE EDGE LATER (priced fault +1).
+`ifndef KLK_PR
+`define KLK_PR 0
+`endif
 module tb_qkh_ktree_lk;
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst_n = 0;
     reg [511:0] kp; reg [15:0] kpv, gf;
     wire [31:0] sc_r, sc_l; wire sf_r, sf_l, gf_r, gf_l;
     ot_qkh_ktree    u_ref (.clk(clk), .rst_n(rst_n), .kp_in(kp), .kpv_in(kpv[0]), .gf_in(gf), .sc_d(sc_r), .sc_f(sf_r), .g_f(gf_r));
-    ot_qkh_ktree_lk #(.MUT(`KLK_MUT)) u_lk (.clk(clk), .rst_n(rst_n), .kp_in(kp), .kpv_in(kpv), .gf_in(gf),
+    ot_qkh_ktree_lk #(.MUT(`KLK_MUT), .PORT_REGS(`KLK_PR)) u_lk (.clk(clk), .rst_n(rst_n), .kp_in(kp), .kpv_in(kpv), .gf_in(gf),
                                               .sc_d(sc_l), .sc_f(sf_l), .g_f(gf_l));
+    reg gf_rd = 1'b0;                          // reference g_f one edge later (the PORT_REGS=1 fault latency)
+    always @(posedge clk) gf_rd <= gf_r;
+    wire gf_exp = (`KLK_PR != 0) ? gf_rd : gf_r;
     integer i, t, k, mism = 0, det = 0, falsepos = 0, edges = 0;
     reg v;
     task drive_rand(input bit with_gf);
@@ -27,7 +35,7 @@ module tb_qkh_ktree_lk;
     task check_eq;
         begin
             edges = edges + 1;
-            if (sc_r !== sc_l || sf_r !== sf_l || gf_r !== gf_l) begin
+            if (sc_r !== sc_l || sf_r !== sf_l || gf_exp !== gf_l) begin
                 mism = mism + 1;
                 if (mism < 6) $display("MISMATCH edge %0d sc %h/%h sf %b/%b gf %b/%b", edges, sc_r, sc_l, sf_r, sf_l, gf_r, gf_l);
             end
@@ -59,6 +67,7 @@ module tb_qkh_ktree_lk;
                 @(posedge clk);
                 #0.1 kpv = (k == 0) ? (16'h1 << t) : 16'h0;                  // k0: the late lane arrives one edge later
                 @(posedge clk);                                                 // g_f = |gf_r of the injected edge
+                if (`KLK_PR != 0) begin #0.1 kpv = 0; @(posedge clk); end        // PORT_REGS: the lane check is registered
                 #0.05 if (gf_l === 1'b1) det = det + 1;
                 if (gf_r !== 1'b0) falsepos = falsepos + 1;
                 #0.1 kpv = 0;

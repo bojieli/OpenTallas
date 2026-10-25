@@ -1756,6 +1756,12 @@
      "type": "string",
      "minLength": 1
     },
+    "start": {
+     "enum": [
+      "none",
+      "broadcast"
+     ]
+    },
     "part_depth": {
      "type": "integer",
      "minimum": 1

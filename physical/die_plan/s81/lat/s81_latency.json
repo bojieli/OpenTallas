@@ -1,16 +1,16 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "s81",
- "plan_digest": "cf2f96c02c280c82",
+ "plan_digest": "260bb3ecd59638f1",
  "period_ps": 833,
  "lanes": {
   "attn__s_3S_C__svc_5": {
-   "cycles": 21,
-   "stations": 19,
+   "cycles": 20,
+   "stations": 18,
    "boundary": 2,
    "faces": 5,
    "fixed": 0,
-   "natural": 21,
+   "natural": 20,
    "pad": 0,
    "param": "LAT_ATTN__S_3S_C__SVC_5",
    "src": {
@@ -518,12 +518,12 @@
    "width": 3210
   },
   "attn__svc_5__s_3S_C": {
-   "cycles": 23,
-   "stations": 21,
+   "cycles": 22,
+   "stations": 20,
    "boundary": 2,
    "faces": 5,
    "fixed": 0,
-   "natural": 23,
+   "natural": 22,
    "pad": 0,
    "param": "LAT_ATTN__SVC_5__S_3S_C",
    "src": {
@@ -1604,12 +1604,12 @@
    "width": 512
   },
   "ctrl__s_0N_C__seqhost": {
-   "cycles": 60,
-   "stations": 58,
+   "cycles": 58,
+   "stations": 56,
    "boundary": 2,
    "faces": 12,
    "fixed": 0,
-   "natural": 60,
+   "natural": 58,
    "pad": 0,
    "param": "LAT_CTRL__S_0N_C__SEQHOST",
    "src": {
@@ -1965,12 +1965,12 @@
    "width": 597
   },
   "dn_s_0S_L4": {
-   "cycles": 13,
-   "stations": 11,
+   "cycles": 15,
+   "stations": 13,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 13,
+   "natural": 15,
    "pad": 0,
    "param": "LAT_DN_S_0S_L4",
    "src": {
@@ -3276,12 +3276,12 @@
    "width": 597
   },
   "dn_s_7S_L3": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 8,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_DN_S_7S_L3",
    "src": {
@@ -3295,12 +3295,12 @@
    "width": 597
   },
   "dn_s_7S_L4": {
-   "cycles": 13,
-   "stations": 11,
+   "cycles": 15,
+   "stations": 13,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 13,
+   "natural": 15,
    "pad": 0,
    "param": "LAT_DN_S_7S_L4",
    "src": {
@@ -8785,6 +8785,177 @@
    },
    "width": 321
   },
+  "flt__bk_sel__gunit": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_FLT__BK_SEL__GUNIT",
+   "src": {
+    "part": "bk_sel",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "gunit",
+    "bus": "flt_i0"
+   },
+   "width": 1
+  },
+  "flt__eng__svc_14": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_FLT__ENG__SVC_14",
+   "src": {
+    "part": "eng",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "svc_14",
+    "bus": "flt_i0"
+   },
+   "width": 1
+  },
+  "flt__gunit__s_3N_C": {
+   "cycles": 18,
+   "stations": 16,
+   "boundary": 2,
+   "faces": 5,
+   "fixed": 0,
+   "natural": 18,
+   "pad": 0,
+   "param": "LAT_FLT__GUNIT__S_3N_C",
+   "src": {
+    "part": "gunit",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "s_3N_C",
+    "bus": "flt_i0"
+   },
+   "width": 1
+  },
+  "flt__iqf__svc_0": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_FLT__IQF__SVC_0",
+   "src": {
+    "part": "iqf",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "svc_0",
+    "bus": "flt_i0"
+   },
+   "width": 1
+  },
+  "flt__phy_hbm__svc_8": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_FLT__PHY_HBM__SVC_8",
+   "src": {
+    "part": "phy_hbm",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "svc_8",
+    "bus": "flt_i0"
+   },
+   "width": 1
+  },
+  "flt__s_0N_LP__s_0N_C": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_FLT__S_0N_LP__S_0N_C",
+   "src": {
+    "part": "s_0N_LP",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "s_0N_C",
+    "bus": "flt_i0"
+   },
+   "width": 1
+  },
+  "flt__s_0S_LP__s_0S_C": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_FLT__S_0S_LP__S_0S_C",
+   "src": {
+    "part": "s_0S_LP",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "s_0S_C",
+    "bus": "flt_i0"
+   },
+   "width": 1
+  },
+  "flt__s_7N_LP__s_7N_C": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_FLT__S_7N_LP__S_7N_C",
+   "src": {
+    "part": "s_7N_LP",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "s_7N_C",
+    "bus": "flt_i0"
+   },
+   "width": 1
+  },
+  "flt__s_7S_LP__s_7S_C": {
+   "cycles": 2,
+   "stations": 0,
+   "boundary": 2,
+   "faces": 1,
+   "fixed": 0,
+   "natural": 2,
+   "pad": 0,
+   "param": "LAT_FLT__S_7S_LP__S_7S_C",
+   "src": {
+    "part": "s_7S_LP",
+    "bus": "flt_o0"
+   },
+   "dst": {
+    "part": "s_7S_C",
+    "bus": "flt_i0"
+   },
+   "width": 1
+  },
   "hbm__svc_0__svc_1": {
    "cycles": 2,
    "stations": 0,
@@ -11234,7 +11405,7 @@
     "part": "s_1N_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_0S_C__s_0N_C": {
    "cycles": 26,
@@ -11253,7 +11424,7 @@
     "part": "s_0N_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_1N_C__s_2N_C": {
    "cycles": 2,
@@ -11272,7 +11443,7 @@
     "part": "s_2N_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_1S_C__s_0S_C": {
    "cycles": 2,
@@ -11291,7 +11462,7 @@
     "part": "s_0S_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_2N_C__s_3N_C": {
    "cycles": 2,
@@ -11310,7 +11481,7 @@
     "part": "s_3N_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_2S_C__s_1S_C": {
    "cycles": 2,
@@ -11329,7 +11500,7 @@
     "part": "s_1S_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_3N_C__s_4N_C": {
    "cycles": 2,
@@ -11348,7 +11519,7 @@
     "part": "s_4N_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_3S_C__s_2S_C": {
    "cycles": 2,
@@ -11367,7 +11538,7 @@
     "part": "s_2S_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_4N_C__s_5N_C": {
    "cycles": 2,
@@ -11386,7 +11557,7 @@
     "part": "s_5N_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_4S_C__s_3S_C": {
    "cycles": 2,
@@ -11405,7 +11576,7 @@
     "part": "s_3S_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_5N_C__s_6N_C": {
    "cycles": 2,
@@ -11424,7 +11595,7 @@
     "part": "s_6N_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_5S_C__s_4S_C": {
    "cycles": 2,
@@ -11443,7 +11614,7 @@
     "part": "s_4S_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_6N_C__s_7N_C": {
    "cycles": 2,
@@ -11462,7 +11633,7 @@
     "part": "s_7N_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_6S_C__s_5S_C": {
    "cycles": 2,
@@ -11481,15 +11652,15 @@
     "part": "s_5S_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_7N_C__seqhost": {
-   "cycles": 62,
-   "stations": 60,
+   "cycles": 65,
+   "stations": 63,
    "boundary": 2,
    "faces": 13,
    "fixed": 0,
-   "natural": 62,
+   "natural": 65,
    "pad": 0,
    "param": "LAT_SID_S_7N_C__SEQHOST",
    "src": {
@@ -11500,7 +11671,7 @@
     "part": "seqhost",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_s_7S_C__s_6S_C": {
    "cycles": 2,
@@ -11519,7 +11690,7 @@
     "part": "s_6S_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "sid_seqhost__s_7S_C": {
    "cycles": 33,
@@ -11538,7 +11709,7 @@
     "part": "s_7S_C",
     "bus": "sid_i0"
    },
-   "width": 5
+   "width": 1
   },
   "tl__bk_sel__s_0N_LP": {
    "cycles": 38,
@@ -11826,12 +11997,12 @@
    "width": 325
   },
   "unit__seqhost__svc_5": {
-   "cycles": 7,
-   "stations": 5,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 7,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_UNIT__SEQHOST__SVC_5",
    "src": {
@@ -12073,12 +12244,12 @@
    "width": 268
   },
   "unit__svc_5__seqhost": {
-   "cycles": 7,
-   "stations": 5,
+   "cycles": 6,
+   "stations": 4,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 7,
+   "natural": 6,
    "pad": 0,
    "param": "LAT_UNIT__SVC_5__SEQHOST",
    "src": {
@@ -12320,12 +12491,12 @@
    "width": 668
   },
   "up_s_0S_L3": {
-   "cycles": 7,
-   "stations": 5,
+   "cycles": 8,
+   "stations": 6,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 7,
+   "natural": 8,
    "pad": 0,
    "param": "LAT_UP_S_0S_L3",
    "src": {
@@ -13650,12 +13821,12 @@
    "width": 668
   },
   "up_s_7S_L3": {
-   "cycles": 8,
-   "stations": 6,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 8,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_UP_S_7S_L3",
    "src": {
@@ -13669,12 +13840,12 @@
    "width": 668
   },
   "up_s_7S_L4": {
-   "cycles": 13,
-   "stations": 11,
+   "cycles": 14,
+   "stations": 12,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 13,
+   "natural": 14,
    "pad": 0,
    "param": "LAT_UP_S_7S_L4",
    "src": {
@@ -13688,12 +13859,12 @@
    "width": 668
   },
   "vid_seqhost__svc_0": {
-   "cycles": 27,
-   "stations": 25,
+   "cycles": 30,
+   "stations": 28,
    "boundary": 2,
    "faces": 5,
    "fixed": 0,
-   "natural": 27,
+   "natural": 30,
    "pad": 0,
    "param": "LAT_VID_SEQHOST__SVC_0",
    "src": {
@@ -13704,7 +13875,7 @@
     "part": "svc_0",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_0__svc_2": {
    "cycles": 2,
@@ -13723,7 +13894,7 @@
     "part": "svc_2",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_10__svc_12": {
    "cycles": 2,
@@ -13742,7 +13913,7 @@
     "part": "svc_12",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_11__svc_9": {
    "cycles": 2,
@@ -13761,7 +13932,7 @@
     "part": "svc_9",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_12__svc_14": {
    "cycles": 2,
@@ -13780,7 +13951,7 @@
     "part": "svc_14",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_13__svc_11": {
    "cycles": 2,
@@ -13799,7 +13970,7 @@
     "part": "svc_11",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_14__svc_15": {
    "cycles": 2,
@@ -13818,7 +13989,7 @@
     "part": "svc_15",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_15__svc_13": {
    "cycles": 2,
@@ -13837,15 +14008,15 @@
     "part": "svc_13",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_1__seqhost": {
-   "cycles": 14,
-   "stations": 12,
+   "cycles": 18,
+   "stations": 16,
    "boundary": 2,
    "faces": 4,
    "fixed": 0,
-   "natural": 14,
+   "natural": 18,
    "pad": 0,
    "param": "LAT_VID_SVC_1__SEQHOST",
    "src": {
@@ -13856,7 +14027,7 @@
     "part": "seqhost",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_2__svc_4": {
    "cycles": 2,
@@ -13875,7 +14046,7 @@
     "part": "svc_4",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_3__svc_1": {
    "cycles": 2,
@@ -13894,7 +14065,7 @@
     "part": "svc_1",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_4__svc_6": {
    "cycles": 2,
@@ -13913,7 +14084,7 @@
     "part": "svc_6",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_5__svc_3": {
    "cycles": 2,
@@ -13932,7 +14103,7 @@
     "part": "svc_3",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_6__svc_8": {
    "cycles": 2,
@@ -13951,7 +14122,7 @@
     "part": "svc_8",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_7__svc_5": {
    "cycles": 2,
@@ -13970,7 +14141,7 @@
     "part": "svc_5",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_8__svc_10": {
    "cycles": 2,
@@ -13989,7 +14160,7 @@
     "part": "svc_10",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "vid_svc_9__svc_7": {
    "cycles": 2,
@@ -14008,7 +14179,7 @@
     "part": "svc_7",
     "bus": "vid_i0"
    },
-   "width": 4
+   "width": 1
   },
   "x_E0_in": {
    "cycles": 29,
@@ -14353,12 +14524,12 @@
    "width": 1104
   },
   "x_W3_in": {
-   "cycles": 24,
-   "stations": 22,
+   "cycles": 23,
+   "stations": 21,
    "boundary": 2,
    "faces": 5,
    "fixed": 0,
-   "natural": 24,
+   "natural": 23,
    "pad": 0,
    "param": "LAT_X_W3_IN",
    "src": {
@@ -16044,12 +16215,12 @@
    "width": 276
   },
   "xtier__s_0S_C__s_0N_C": {
-   "cycles": 26,
-   "stations": 24,
+   "cycles": 27,
+   "stations": 25,
    "boundary": 2,
    "faces": 6,
    "fixed": 0,
-   "natural": 26,
+   "natural": 27,
    "pad": 0,
    "param": "LAT_XTIER__S_0S_C__S_0N_C",
    "src": {
@@ -16291,12 +16462,12 @@
    "width": 276
   },
   "xtier__s_7N_C__s_7S_C": {
-   "cycles": 26,
-   "stations": 24,
+   "cycles": 27,
+   "stations": 25,
    "boundary": 2,
    "faces": 6,
    "fixed": 0,
-   "natural": 26,
+   "natural": 27,
    "pad": 0,
    "param": "LAT_XTIER__S_7N_C__S_7S_C",
    "src": {
@@ -16310,12 +16481,12 @@
    "width": 276
   },
   "xtier__s_7S_C__s_7N_C": {
-   "cycles": 26,
-   "stations": 24,
+   "cycles": 27,
+   "stations": 25,
    "boundary": 2,
    "faces": 6,
    "fixed": 0,
-   "natural": 26,
+   "natural": 27,
    "pad": 0,
    "param": "LAT_XTIER__S_7S_C__S_7N_C",
    "src": {

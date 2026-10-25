@@ -1,0 +1,29 @@
+{
+ "verdict": "FAIL",
+ "top": "kv3_astk_WN",
+ "checked": 1690,
+ "ok": 1680,
+ "fail_counts": {
+  "dropped": 10
+ },
+ "fails": {
+  "dropped": [
+   "u_strip_u_strip_u_ctl__aq[20]: no load on u_strip_u_strip_u_ctl__aq[20] (register removed)",
+   "u_strip_u_strip_u_ctl__aq[19]: no load on u_strip_u_strip_u_ctl__aq[19] (register removed)",
+   "u_strip_u_strip_u_ctl__aq[18]: no load on u_strip_u_strip_u_ctl__aq[18] (register removed)",
+   "u_strip_u_strip_u_ctl__aq[17]: no load on u_strip_u_strip_u_ctl__aq[17] (register removed)",
+   "u_strip_u_strip_u_ctl__aq[16]: no load on u_strip_u_strip_u_ctl__aq[16] (register removed)"
+  ]
+ },
+ "netlist": "/work/1_synth_odb.v",
+ "pins": "/work/pins.json",
+ "boundary_context": {
+  "manifest": "/work/boundary_guard_context.json",
+  "source_core_json": "/work/core.json",
+  "controls": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "one_station_ft_slots": []
+}

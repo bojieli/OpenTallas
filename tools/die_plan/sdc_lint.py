@@ -433,6 +433,10 @@ def kit_context(P, tn):
         floor[ni] = (1 - gen_phys.ft_hop_in_share(P)) * per
         floor[no] = gen_phys.ft_hop_in_share(P) * per
     floor["arst_n"] = gen_phys.IO_BUDGET * per
+    import reset_tree as RT
+    if RT.start_broadcast(P) and not t.get("hard"):     # decision 13c START in: timed like arst_n
+        ins.append("start_i")
+        floor["start_i"] = gen_phys.IO_BUDGET * per
     for n, _x, _y in gen_phys.reset_out_pins(P, tn):      # reset wavefront registered outs (OWNER DECISION 13)
         outs.append(n)
         floor[n] = gen_phys.IO_BUDGET * per

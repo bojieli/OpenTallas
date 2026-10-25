@@ -113,6 +113,9 @@ def test_preroute_insertion_gate():
     i_grt, i_gate = rk.index("grt CORNER=BC CORNERS=bc"), rk.index("postcts_gate.tcl")
     assert i_grt < i_gate < rk.index("\\$M $GOAL")
     assert "OT_POSTCTS_GRT=1" in rk and "FAIL_POSTCTS pre-route insertion gate" in rk
+    # ROOT-MERGE2 10-25: distinct exit codes (3 selrange, 4 FF hold gate, 5 LEC NOT EQUIVALENT, 6 pre-route insertion)
+    seg = rk[i_gate:rk.index("\\$M $GOAL")]
+    assert "rc=6" in seg and "rc=5" not in seg
     g = (HERE / "postcts_gate.tcl").read_text()
     for k in ("estimate_parasitics -global_routing", "OT_POSTCTS_TOL", "20.0", "OT_VCLK_FF", "all_inputs -no_clocks",
               "ot_cf_wire", "LAYER_PARASITICS_FILE"):
