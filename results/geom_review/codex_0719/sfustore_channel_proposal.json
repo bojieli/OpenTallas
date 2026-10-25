@@ -1,0 +1,285 @@
+{
+  "kind": "structural proposal only, no generated kit/route authorization",
+  "outline_um": [
+    293.76,
+    354.24
+  ],
+  "core_um": [
+    4.32,
+    4.32,
+    289.44,
+    349.92
+  ],
+  "column_x": [
+    34.56,
+    164.16
+  ],
+  "usable_channels_um": [
+    30.24,
+    34.776,
+    30.456
+  ],
+  "macro_xy": [
+    {
+      "instance": "u_fcore.g_bank[0].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        8.64,
+        99.564,
+        103.464,
+        140.628
+      ],
+      "new_xy": [
+        34.56,
+        99.564
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.824,
+      "height": 41.06399999999999
+    },
+    {
+      "instance": "u_fcore.g_bank[10].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        8.64,
+        17.34,
+        103.464,
+        58.404
+      ],
+      "new_xy": [
+        34.56,
+        17.34
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.824,
+      "height": 41.06400000000001
+    },
+    {
+      "instance": "u_fcore.g_bank[11].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        177.336,
+        17.34,
+        272.16,
+        58.404
+      ],
+      "new_xy": [
+        164.16,
+        17.34
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.82400000000001,
+      "height": 41.06400000000001
+    },
+    {
+      "instance": "u_fcore.g_bank[12].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        177.336,
+        140.652,
+        272.16,
+        181.716
+      ],
+      "new_xy": [
+        164.16,
+        140.652
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.82400000000001,
+      "height": 41.06400000000002
+    },
+    {
+      "instance": "u_fcore.g_bank[13].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        8.64,
+        185.532,
+        103.464,
+        226.596
+      ],
+      "new_xy": [
+        34.56,
+        185.532
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.824,
+      "height": 41.06399999999999
+    },
+    {
+      "instance": "u_fcore.g_bank[14].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        8.64,
+        267.756,
+        103.464,
+        308.82
+      ],
+      "new_xy": [
+        34.56,
+        267.756
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.824,
+      "height": 41.06400000000002
+    },
+    {
+      "instance": "u_fcore.g_bank[15].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        177.336,
+        226.62,
+        272.16,
+        267.684
+      ],
+      "new_xy": [
+        164.16,
+        226.62
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.82400000000001,
+      "height": 41.06400000000002
+    },
+    {
+      "instance": "u_fcore.g_bank[1].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        8.64,
+        308.844,
+        103.464,
+        349.908
+      ],
+      "new_xy": [
+        34.56,
+        308.844
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.824,
+      "height": 41.06400000000002
+    },
+    {
+      "instance": "u_fcore.g_bank[2].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        8.64,
+        58.428,
+        103.464,
+        99.492
+      ],
+      "new_xy": [
+        34.56,
+        58.428
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.824,
+      "height": 41.06400000000001
+    },
+    {
+      "instance": "u_fcore.g_bank[3].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        8.64,
+        226.62,
+        103.464,
+        267.684
+      ],
+      "new_xy": [
+        34.56,
+        226.62
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.824,
+      "height": 41.06400000000002
+    },
+    {
+      "instance": "u_fcore.g_bank[4].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        177.336,
+        267.756,
+        272.16,
+        308.82
+      ],
+      "new_xy": [
+        164.16,
+        267.756
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.82400000000001,
+      "height": 41.06400000000002
+    },
+    {
+      "instance": "u_fcore.g_bank[5].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        8.64,
+        140.652,
+        103.464,
+        181.716
+      ],
+      "new_xy": [
+        34.56,
+        140.652
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.824,
+      "height": 41.06400000000002
+    },
+    {
+      "instance": "u_fcore.g_bank[6].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        177.336,
+        99.564,
+        272.16,
+        140.628
+      ],
+      "new_xy": [
+        164.16,
+        99.564
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.82400000000001,
+      "height": 41.06399999999999
+    },
+    {
+      "instance": "u_fcore.g_bank[7].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        177.336,
+        308.844,
+        272.16,
+        349.908
+      ],
+      "new_xy": [
+        164.16,
+        308.844
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.82400000000001,
+      "height": 41.06400000000002
+    },
+    {
+      "instance": "u_fcore.g_bank[8].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        177.336,
+        185.532,
+        272.16,
+        226.596
+      ],
+      "new_xy": [
+        164.16,
+        185.532
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.82400000000001,
+      "height": 41.06399999999999
+    },
+    {
+      "instance": "u_fcore.g_bank[9].u_bank.u_data.g_read[0].u_m",
+      "old_bbox": [
+        177.336,
+        58.428,
+        272.16,
+        99.492
+      ],
+      "new_xy": [
+        164.16,
+        58.428
+      ],
+      "orientation": "preserve existing until IF assignment",
+      "width": 94.82400000000001,
+      "height": 41.06400000000001
+    }
+  ],
+  "requirements": [
+    "Preserve existing y and macro pin identities; re-place existing per-bank IF regs at their own W/E edges.",
+    "Place shared control copies locally only if functionally exact, price any extra cycle with miter/mutant.",
+    "Regional clock taps on channel-sink centroid, actual postCTS F6/clock and calibrated FF gate before route."
+  ]
+}
