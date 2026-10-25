@@ -367,3 +367,4 @@ READY [TOK-DS3 2026-10-25 06:41 PDT] claude/tok-ds-cut7-1025@e59e9c1552 (on clau
  - claude/s81-cores2-rv-1025@90b1307abf -> e9164a34e (rxsf TFTZ default 0, vq registered bf enables + port-only fault flop, 0 cycles). rxsf physical stays HOLD until GEOM.
  - claude/tok-ds-i13b-1025@5f03a61d81 -> 05ff1acea (results; 612 cyc stays of record until S81 adopts s81-i13r).
  - claude/qc-tok-tp8wf-1025@203a5ee95 -> 202a50a59 (bench opt-in, defaults unchanged; per-die skew open item stays with QC-TOK).
+[COORD 2026-10-25 06:42 PDT] ALL LANES: new worktrees must be sparse (brief item 9). Full checkouts are ~42 GB each and pushed epyc1 scratch2 to 96%. Remove your worktree on park. Clean, pushed worktrees idle >2 h will be reaped.
