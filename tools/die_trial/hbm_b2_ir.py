@@ -51,6 +51,7 @@ def generate(a):
     g = plan["die"]["pg"]["grid"]
     assert [x["layer"] for x in g] == ["M8", "M9"], g
     wid, pitch, off = g[0]["width_um"] * a.scale, g[0]["pitch_um"] * a.scale, g[0]["offset_um"] * a.scale
+    offx = g[1]["offset_um"] * a.scale
     x0, y0, x1, y1 = a.window or (0.0, 0.0, DW, DH)
     guard = 0 if not a.window else 2 * VP
     T = a.tile
@@ -120,8 +121,8 @@ def generate(a):
         nb[net] = len(rows)
     # die-phase stripe offsets in the case frame (pdngen offset = from the core edge to the first stripe's edge?
     # we place the stripe CENTRE phase explicitly: centre = off + k * pitch in die coordinates)
-    def ofs(base):
-        return (off - base) % pitch          # pdngen 26Q3: -offset = the first stripe's CENTRE (checked: OT_STRIPE)
+    def ofs(base, phase):
+        return (phase - base) % pitch          # pdngen 26Q3: -offset = the first stripe's CENTRE (checked: OT_STRIPE)
     sp = pitch / 2 - wid
     t = f'''read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
@@ -132,8 +133,8 @@ add_global_connection -net VSS -inst_pattern {{.*}} -pin_pattern {{^VSS$}} -grou
 global_connect
 set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name top -voltage_domains CORE
-add_pdn_stripe -grid top -layer M8 -width {wid:.4f} -pitch {pitch:.4f} -spacing {sp:.4f} -offset {ofs(by):.4f} -starts_with POWER
-add_pdn_stripe -grid top -layer M9 -width {wid:.4f} -pitch {pitch:.4f} -spacing {sp:.4f} -offset {ofs(bx):.4f} -starts_with POWER
+add_pdn_stripe -grid top -layer M8 -width {wid:.4f} -pitch {pitch:.4f} -spacing {sp:.4f} -offset {ofs(by, off):.4f} -starts_with POWER
+add_pdn_stripe -grid top -layer M9 -width {wid:.4f} -pitch {pitch:.4f} -spacing {sp:.4f} -offset {ofs(bx, offx):.4f} -starts_with POWER
 add_pdn_connect -grid top -layers {{M8 M9}}
 define_pdn_grid -macro -name load -cells {{{" ".join(sizes.values())}}} -halo {{0 0 0 0}} -voltage_domains CORE
 add_pdn_connect -grid load -layers {{M7 M8}}
@@ -160,7 +161,7 @@ puts OT_DONE
     man = dict(schema='opentallas.die_trial.ir_case.v1', plan=a.plan, power=a.power, power_total_w=pm['total_w'],
                inner_um=[x0, y0, x1, y1], solved_um=[bx, by, ex, ey], guard_um=guard, tile_um=T,
                loads=len(loads), load_w=round(sum(loads.values()), 4),
-               grid=dict(layers=['M8', 'M9'], width_um=wid, pitch_um=pitch, offset_um=off, scale=a.scale,
+               grid=dict(layers=['M8', 'M9'], width_um=wid, pitch_um=pitch, offset_um=off, offset_xy_um=[offx, off], scale=a.scale,
                          per_net_coverage=wid / pitch, plan_exact=a.scale == 1),
                partition_pg='mock-LEF M7 stripes (VDD 4.128 / VSS 4.512 mod 8.64, 0.288 um) on <= tile loads',
                bumps=dict(array_um=ARRAY, per_net_pitch_um=VP, size_um=BUMP, n=nb, removed_in=nob),

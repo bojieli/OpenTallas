@@ -1,0 +1,10 @@
+{
+ "verdict": "PASS-COND",
+ "image": "results/die_trial_1024/hbm_phy_1025/review_domains.png",
+ "plan_ref": "claude/hbm-b2o-1024@b6cbd6362",
+ "findings": [
+  "Viewed five dedicated PHY domain windows; all load regions have uniform checkerboard VDDPHY/VSS bump coverage and surrounding 63.64um domain halo where present.",
+  "1.92um M8/M9 rails retain global die phase, dedicated supplies separated from digital VDD; no signal routing or CTS change.",
+  "Isolated-domain IR includes PHY estimated4.368W each and its own return mesh; shared core return benefit omitted. Must report PG connectivity and rail sum, not timing sign-off."
+ ]
+}
