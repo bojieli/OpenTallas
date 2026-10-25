@@ -56,3 +56,10 @@ the shared flow, not per kit). (b) 4 of 7 have output pin-register -> port FF ho
 measured FF pin-register mean is 190-220 ps: ruling 9.7 / decision 5e (FF vclk = measured FF I) is not yet in the kit SDCs.
 (c) Macro interface registers are not next to their SRAM (vn_b, vsw), as in QC cqb (F6).
 No run was rebuilt: rebuilds wait for GEOM PASS (GEOM REQ 2026-10-25 04:35 PDT). Owners for rebuilds: S81/KITS (c3 + split cores), HBM-FACE (argmax).
+
+## PARKED 2026-10-25 04:35 PDT
+- Branch claude/nearmiss-struct-1025@cc8be6df9 (pushed; records + renders + probe tools only, no READY needed until a fix lands).
+- No live jobs. Probe outputs (dumps, read-only diagnostics): epyc1/epyc2/intel1:/srv/opentallas-scratch2/claude/nearmiss/<run>/; local copies rtx-pro ~/coord-scratch/nearmiss/. Original run dirs untouched. No ECO launched, nothing to delete.
+- Sign-offs gained: 0 (by design after owner correction).
+- Next: on GEOM PASS per run, hand the rebuild to S81/KITS (c3 + split cores) and HBM-FACE (argmax); flow items F2 (GRT RC calibrated to RCX) and 9.7/5e per-corner vclk = measured I go to CLOCK/SIGNOFF as shared-flow changes.
+- OWNER?: none.
