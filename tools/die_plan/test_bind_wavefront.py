@@ -176,3 +176,42 @@ def test_contextless_pin_table_fallback_accepts_explicit_core_metadata(tmp_path,
     monkeypatch.setattr(RT, 'HERE', repo/'tools/die_plan')
     target, = RT.core_reset_targets(schema.Plan(raw), 'src')
     assert target['inst'] == 'u_hc' and target['pin_um'] == [50, 200]
+
+
+def test_hbm_native_clock_source_is_excised_before_raw_wavefront_emit(tmp_path):
+    # Actual hfd_ckgen_nolink interface/rule retained by the native B2 recipe.
+    # The source rule removes its internal u_rs/u_rel rather than cascading a
+    # native POR conditioner in front of the generated wavefront synchronizer.
+    outputs = {f'pll_{d}': {'kind': 'clock', 'value': d} for d in ('stream', 'serial', 'hbm')}
+    outputs.update({f'por_{d}': {'kind': 'reset', 'value': 'low'} for d in ('stream', 'serial', 'hbm')})
+    source = dict(module='hfd_ckgen_nolink', outputs=outputs, drop_in=['refclk', 'por_n'])
+    ports = {name: [k+3] for k, name in enumerate(outputs)}
+    ports.update(refclk=[1], por_n=[2])
+    cell = SimpleNamespace(path='hb_ckgen', module='hfd_ckgen_nolink', ytype='hfd_ckgen_nolink',
+        kind='leaf', ports=ports, dirs={n: 'output' if n in outputs else 'input' for n in ports})
+    F = SimpleNamespace(cells=[cell], const_drivers={},
+        top_ports={'hb_ckgen__refclk': ('input', [1]), 'hb_ckgen__por_n': ('input', [2])})
+    rules = dict(sources=[source], map=dict(parts={'hb_ckgen': 'pa'}))
+    errors = []
+    G = bind.Graph(F, bind.Rules(rules), errors)
+    assert not errors and G.kind == ['source']
+    assert G.source(ports['por_stream'][0]) == ('reset', 'low', 0)
+    assert G.source(ports['pll_stream'][0]) == ('clock', 'stream')
+    b = emitter(plan())
+    b.F, b.G, b.R, b.errors = F, G, bind.Rules(rules), []
+    b.map_cells()
+    assert not b.cpart and not b.errors  # hb_ckgen is not a retained leaf
+    for p in b.parts:
+        b.members.setdefault(p, [])
+    files = b.emit(tmp_path)
+    assert all('hfd_ckgen_nolink hb_ckgen' not in f.read_text() for f in files)
+    top = files[-1].read_text()
+    assert 'input  wire rst_n' in top and '.arst_n(rst_n)' in top
+    # Negative control: accidentally retaining the source turns the old native
+    # conditioner back into a leaf, which this topology assertion must reject.
+    bad = copy.deepcopy(rules)
+    bad['sources'][0]['keep_leaf'] = True
+    mutant = bind.Graph(F, bind.Rules(bad), [])
+    b.G, b.R = mutant, bind.Rules(bad)
+    b.map_cells()
+    assert mutant.kind == ['leaf'] and b.cpart == {0: 'pa'}
