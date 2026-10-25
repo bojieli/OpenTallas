@@ -89,19 +89,120 @@
     "FF": 47.8
    }
   },
-  "ir": "NOT RUN: own 128 GB run EXIT 137; Codex kv_ir_retry256 (256 GB) adopted, analysis running"
+  "ir": {
+   "source": "Codex kv_ir_retry256 (adopted; same die_trial ir inputs, 256 GB, PSM 12236 s, 109.6 GB peak, EXIT 0)",
+   "total_w": 88.9,
+   "vdd_worst_mv": 67.4,
+   "vdd_avg_mv": 28.1,
+   "vss_worst_mv": 71.5,
+   "vss_avg_mv": 31.1,
+   "parts_over_5pct_total": 160,
+   "parts": 160,
+   "worst_parts_mv": [
+    {
+     "part": "pv_S_0",
+     "vdd": 65.7,
+     "vss": 64.3,
+     "total": 130.0
+    },
+    {
+     "part": "hgi_ES_0",
+     "vdd": 67.4,
+     "vss": 51.7,
+     "total": 119.1
+    },
+    {
+     "part": "pv_N_5",
+     "vdd": 48.0,
+     "vss": 69.5,
+     "total": 117.5
+    },
+    {
+     "part": "pv_S_5",
+     "vdd": 51.6,
+     "vss": 64.9,
+     "total": 116.5
+    },
+    {
+     "part": "pv_S_2",
+     "vdd": 48.0,
+     "vss": 68.5,
+     "total": 116.4
+    },
+    {
+     "part": "pv_S_4",
+     "vdd": 53.8,
+     "vss": 62.5,
+     "total": 116.3
+    }
+   ],
+   "model": "die M8/M9 per plan budget coarsened x4 + M7 tile grids (69 um tiles), 150 um VDD/VSS checkerboard area bumps, power = estimate (89 W), M1-M6 not modelled"
+  },
+  "clock_padded": {
+   "tool": "tools/die_plan/clock_pad_probe.py (Codex) on this tree",
+   "pad_buffers": 12610,
+   "total_bufx16f": 25040,
+   "insertion_ps": {
+    "TT": [
+     5566.5,
+     5613.6
+    ],
+    "FF": [
+     4680.1,
+     4743.3
+    ],
+    "SS": [
+     6885.0,
+     6964.8
+    ]
+   },
+   "global_skew_ps": {
+    "TT": 47.1,
+    "FF": 63.2,
+    "SS": 79.8
+   },
+   "seam_skew_nominal_max_ps": {
+    "TT": 32.9,
+    "FF": 28.7
+   },
+   "seam_over80_nominal": 0,
+   "seam_skew_ocv5_max_ps": {
+    "TT": 571.3,
+    "FF": 480.6
+   },
+   "hop_setup_TT_nominal_neg": 0,
+   "hold_budget_nominal_neg": 0,
+   "slew_cap_violations": 0
+  }
  },
  "visual_review": [
   "floorplan_lanes: hub row (y 12.2-13.8 mm) is the crossroads; N half carries two ~12 mm vertical ft corridors (hgi columns x~3.6/7.4 mm) to the io row at the N edge; S half has none -> all off-die traffic exits N",
   "congestion: corridors 10-20 % above the 68 % reserved baseline; only >100 % gcells are two points hub_Wo x2.53 / hub_Eo x8.27 mm, y13.06-13.12 mm = 1118-bit ft2/ft30 station hops through one ~10 um gcell column (393/151)",
   "clock_tree: insertion grows with |y-13.5 mm| (fishbone trunk feeding 16 ribs) -> 212 ps global skew; root split (x5.41, y13.52 mm) cuts through hub_C/Ei/Eo/Wo, so hub taps share only the root -> full 5.3 ns non-common path, 528 ps at 5 % OCV",
-  "sta_negative: with OCV hold fails on every ft chain (clock-model driven); only inter-partition setup failure is hub_Ei->hgi_EN_7 (700 um)"
+  "sta_negative: with OCV hold fails on every ft chain (clock-model driven); only inter-partition setup failure is hub_Ei->hgi_EN_7 (700 um)",
+  "ir_vdd: drop is power-density shaped: central 7 mm (x 1.9-8.9) ~35-50 mV VDD, outer pc columns and hub row ~15-25 mV; darkest the E hgi/pv column x 6.3-7.7 mm (55-67 mV) - mirror W column is lighter (E/W power asymmetry in the estimate); bump sites visible as periodic light squares, so sources do attach",
+  "clock_tree_clkpad: after tap padding the trunk gradient is gone (5567-5614 ps speckle); hub row slightly early"
  ],
  "g4_breaks": [
-  "CLOCK: 5.4 ns die tree; any % derate on non-common paths exceeds the 80 ps seam rule (5 %: 528 ps at the hub row). Fix: move root split off the hub row, shorten insertion / mesh or multi-root top level, OWNER decision on OCV number",
+  "CLOCK: 5.4 ns die tree; any % derate on non-common paths exceeds the 80 ps seam rule (5 %: 528 ps at the hub row). Fix: move root split off the hub row, shorten insertion / mesh or multi-root top level, OWNER decision on OCV number | padded tree: nominal skew 33 ps (0 > 80), still 571 ps at 5 % OCV",
   "ROUTE: hub_Eo ft30 / hub_Wo ft2 1118-bit stations need >= ~30 um pin spread (2.6x local overflow); rest of die routes at <= 7.6 % layer usage",
   "TIMING: intra-hub station hops up to 1085 um are the first setup failures under any OCV",
   "SEAMS: closed io_E5|io_E6 pair PASS at TT/FF with die-tree offsets (+20.8/+232 ps)",
-  "IR: unknown (NOT RUN)"
- ]
+  "IR: static VDD 67.4 / VSS 71.5 mV worst (avg 28 / 31 mV) at the 89 W estimate; VDD+VSS > 35 mV (5 %) in all 160 partitions -> die PG budget (M8/M9 fraction, bump pitch) or the 5 % budget must be revisited; abstract model, not signoff"
+ ],
+ "gate_owner_decision3": {
+  "rule": "TT setup / FF hold 60/25, seam spread <= 80 nominal; OCV INFO",
+  "clock": "padded tree",
+  "verdict": "PASS (abstract budget trial, not signoff)",
+  "setup_neg": 0,
+  "hold_window_neg": 0,
+  "seam_max_ps": {
+   "TT": 32.9,
+   "FF": 28.7
+  },
+  "info_ocv5": {
+   "setup_neg": 7552,
+   "hold_window_neg": 439161
+  }
+ }
 }

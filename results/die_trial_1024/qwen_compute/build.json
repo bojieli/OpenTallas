@@ -1,0 +1,44 @@
+{
+ "plan": "/home/ubuntu/wt/trial-qk/physical/die_plan/qwen_compute/die_plan.json",
+ "die": "qwen_compute",
+ "outline_um": [
+  31216.32,
+  25228.8
+ ],
+ "parts": 377,
+ "types": 56,
+ "abstract_pins": 889608,
+ "data": {
+  "nets": 1914481,
+  "kinds": {
+   "abut": 1050837,
+   "ft": 863644
+  },
+  "io_pins": 0
+ },
+ "pg_obstructions": 13064,
+ "clock": {
+  "nrib": 16,
+  "nx": 64,
+  "ny": 4,
+  "leaves": 8192,
+  "rep_um": 250.0,
+  "leaf_pitch_um": 400.0,
+  "centre": [
+   15608.16,
+   12614.4
+  ],
+  "root_pin": [
+   15610.28,
+   12614.4
+  ],
+  "cells": {
+   "BUFx16f_ASAP7_75t_R": 29438,
+   "DFFHQNx2_ASAP7_75t_R": 6684
+  },
+  "taps": 6684,
+  "htree_wire_um": 4470265.8,
+  "local_wire_um": 1048598.3
+ },
+ "plan_sha256": "0028ad5329ca89f7d825464a3df8dcc5049813a88b784779efc76d294c893bc4"
+}

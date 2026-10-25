@@ -956,6 +956,7 @@ def cmd_report(a):
         st["hold_budget_neg"] += s_hold_b < 0
         st["setup_nom_neg"] += s_setup + sk[SETUP_C][1] < 0             # nominal: no clock OCV
         st["hold_budget_nom_neg"] += s_hold_b + sk[HOLD_C][1] < 0
+        st["hold_nom_neg"] += s_hold + sk[HOLD_C][1] < 0
         st["setup_lt_tol"] += s_setup < 2 * res["insertion_tol_ps"]
         st["hold_lt_tol"] += s_hold < 2 * res["insertion_tol_ps"]
         hist_len[int(Lh // 250) * 250] += 1
@@ -987,12 +988,32 @@ def cmd_report(a):
                                                    skew_ocv_ps=v[8]) for k, v in worst.items()},
                       hop_len_hist_250um=dict(sorted(hist_len.items())),
                       calib_reach_um={c: {ln: reach_of(rows) for ln, rows in cal[c].items()} for c in cal})
+    # OWNER 2026-10-24 (BRIEFING decision 3): gate = TT setup / FF hold with 60 / 25 ps uncertainty and seam spread
+    # <= 80 ps on the NOMINAL clock; margined slack (OCV / xtalk / IR) is an INFO column only.
+    tot = lambda key: sum(v.get(key, 0) for v in stats.values())
+    res["gate"] = dict(rule="TT setup / FF hold, 60/25 ps, seam spread <= 80 ps, nominal clock (OCV INFO only)",
+                       # hold: kit contract (gen_phys hold_in_min_ps) pads every seam input for a neighbour launching
+                       # insertion_tol early with no clk->q / wire credit -> the gate is that window vs the die skew;
+                       # the bare flop-wire-flop FF hold (no input padding, ~-2 ps at 0 um) is INFO
+                       setup_neg=tot("setup_nom_neg"), hold_neg=tot("hold_budget_nom_neg"),
+                       info_bare_hold_neg=tot("hold_nom_neg"),
+                       info_ocv=dict(ocv=OCV, setup_neg=tot("setup_neg"), hold_neg=tot("hold_budget_neg"),
+                                     bare_hold_neg=tot("hold_neg")))
     sk_vals = defaultdict(list)
     for v in pair_skew.values():
         for c, x in v.items():
             sk_vals[c].append(x)
     res["seam_skew"] = {c: dict(pairs=len(v), max_ps=max(v), p99_ps=sorted(v)[int(0.99 * (len(v) - 1))],
                                 over_80=sum(x > res["seam_skew_rule_ps"] for x in v)) for c, v in sk_vals.items() if v}
+    for c in (SETUP_C, HOLD_C):
+        k = res["seam_skew"].get(c + "_nom")
+        if k:
+            res["gate"][f"seam_over_80_{c}"] = k["over_80"]
+            res["gate"][f"seam_max_{c}_ps"] = k["max_ps"]
+    g = res["gate"]
+    g["verdict"] = "PASS" if not (g["setup_neg"] or g["hold_neg"] or any(v for k, v in g.items() if k.startswith("seam_over_80"))) \
+        else "FAIL"
+    g["note"] = "budget/abstract trial: hop = calibrated repeated wire, partitions at 250 ps common latency; not signoff"
     wp = sorted(pair_skew.items(), key=lambda kv: -kv[1].get("TT", 0))[:20]
     res["seam_skew_worst"] = [dict(launch=f"{k[0]}/{k[1]}", capture=f"{k[2]}/{k[3]}", **v) for k, v in wp]
     res["seams_worst"] = [dict(src=g[0], dst=g[1], **e) for g, e in sorted(seam.items(), key=lambda kv: kv[1]["setup"])[:40]]
@@ -1006,7 +1027,7 @@ def cmd_report(a):
     if a.g2 and Path(a.g2).is_file():
         res["g2_compare"] = g2_compare(P, json.loads(Path(a.g2).read_text()), rt.get("g0", {}))
     # ---------------- IR
-    irj = B.parent / (B.name + "_ir") / "ir.json"
+    irj = (Path(a.ir_dir) if a.ir_dir else B.parent / (B.name + "_ir")) / "ir.json"
     if irj.is_file():
         res["ir"] = json.loads(irj.read_text())
     out = Path(a.out) if a.out else B
@@ -1252,7 +1273,7 @@ def cmd_ir(a):
     print(json.dumps(basis))
 
 
-def ir_summary(d):
+def ir_summary(d, P=None):
     """PDNSim results: worst / mean IR per net, per partition worst, from ir.log + psm_<net>.csv."""
     d = Path(d)
     txt = (d / "ir.log").read_text(errors="replace") if (d / "ir.log").is_file() else ""
@@ -1265,6 +1286,35 @@ def ir_summary(d):
                             worst_ir_mv=round(float(m.group(4)) * 1e3, 2))
     res["pg_check"] = re.findall(r"OT_PG_CHECK_(\w+) (\w+)", txt)
     res["psm"] = re.findall(r"OT_PSM_(\w+) (\w+)", txt)
+    m = re.search(r"Maximum resident set size \(kbytes\): (\d+)", txt)
+    res["peak_rss_gb"] = round(int(m.group(1)) / 1048576, 1) if m else None
+    m = re.search(r"OT_T_PSM (\d+)", txt)
+    res["psm_seconds"] = int(m.group(1)) if m else None
+    m = re.findall(r"^EXIT (\d+)", txt, re.M)
+    res["exit"] = int(m[-1]) if m else None
+    if P is not None:
+        # per-partition worst drop from the per-tile PSM voltages (tile origin -> partition)
+        rects = sorted((n, P.rect(n)) for n in P.parts)
+        per = defaultdict(dict)
+        for net in ("VDD", "VSS"):
+            f = d / f"psm_{net}.csv"
+            if not f.is_file():
+                continue
+            with open(f) as fh:
+                next(fh)
+                for ln in fh:
+                    q = ln.split(",")
+                    x, y, v = float(q[3]), float(q[4]), float(q[5])
+                    drop = (VDD_V - v if net == "VDD" else v) * 1e3
+                    for n, (x0, y0, x1, y1) in rects:
+                        if x0 <= x < x1 and y0 <= y < y1:
+                            per[n][net] = max(per[n].get(net, 0.0), drop)
+                            break
+        tot = {n: round(v.get("VDD", 0) + v.get("VSS", 0), 1) for n, v in per.items()}
+        res["worst_parts_mv"] = [dict(part=n, vdd=round(per[n].get("VDD", 0), 1), vss=round(per[n].get("VSS", 0), 1),
+                                      total=t) for n, t in sorted(tot.items(), key=lambda kv: -kv[1])[:20]]
+        res["parts_over_5pct_total"] = sum(t > 0.05 * VDD_V * 1e3 for t in tot.values())
+        res["parts"] = len(tot)
     return res
 
 
@@ -1401,7 +1451,7 @@ def cmd_render(a):
         plt.close(fig)
         made.append("congestion.png")
     # 4. IR map
-    irc = B.parent / (B.name + "_ir") / "psm_VDD.csv"
+    irc = (Path(a.ir_dir) if a.ir_dir else B.parent / (B.name + "_ir")) / "psm_VDD.csv"
     if irc.is_file():
         import numpy as np
         xs, ys, vs = [], [], []
@@ -1411,9 +1461,21 @@ def cmd_render(a):
                 p = ln.split(",")
                 xs.append(float(p[3])); ys.append(float(p[4])); vs.append(float(p[5]))
         plt, fig, ax = _fig(P)
-        _base(P, ax, label=False)
         drop = (VDD_V - np.array(vs)) * 1e3
-        sc = ax.scatter(xs, ys, c=drop, s=1.5, marker="s", cmap="magma_r", zorder=3)
+        xs, ys = np.array(xs), np.array(ys)
+        ux = np.unique(xs)
+        t = float(np.median(np.diff(ux))) if len(ux) > 1 else 100.0
+        nx, ny = int(P.W // t) + 1, int(P.H // t) + 1
+        img = np.full((ny, nx), np.nan)
+        ix = np.clip((xs // t).astype(int), 0, nx - 1)
+        iy = np.clip((ys // t).astype(int), 0, ny - 1)
+        img[iy, ix] = np.fmax(img[iy, ix], drop) if False else drop
+        sc = ax.imshow(img, origin="lower", extent=(0, nx * t, 0, ny * t), cmap="magma_r", interpolation="nearest",
+                       vmin=0, vmax=float(np.nanmax(img)), zorder=2)
+        for n in P.parts:
+            x0, y0, x1, y1 = P.rect(n)
+            ax.add_patch(plt.Rectangle((x0, y0), x1 - x0, y1 - y0, fill=False, lw=0.3, ec="#20a0ff", zorder=3))
+        ax.set_xlim(0, P.W); ax.set_ylim(0, P.H)
         fig.colorbar(sc, ax=ax, fraction=0.03, label="static VDD IR drop (mV)")
         ax.set_title(f"{P.name}: PDNSim static VDD drop, die M8/M9 grid over partition M7 (coarsened x{IR_K}), "
                      f"worst {drop.max():.1f} mV", fontsize=9)
@@ -1465,6 +1527,7 @@ def main(argv=None):
     r.add_argument("--g2")
     r.add_argument("--out")
     r.add_argument("--window", type=float, default=250.0)
+    r.add_argument("--ir-dir", help="finished ir run dir with ir.json (default DIR_ir)")
     i = sub.add_parser("ir")
     i.add_argument("plan")
     i.add_argument("--out", required=True)
@@ -1472,16 +1535,25 @@ def main(argv=None):
     i.add_argument("--bump-um", type=float, default=150.0)
     i.add_argument("--tile-pitches", type=int, default=2,
                    help="power tile = N coarse PG pitches (8.64 um x IR_K); larger -> fewer pdngen instance grids")
+    q = sub.add_parser("irsum", help="summarise a finished ir run dir -> DIR/ir.json")
+    q.add_argument("dir")
+    q.add_argument("plan")
     v = sub.add_parser("render")
     v.add_argument("dir")
     v.add_argument("--out")
     v.add_argument("--corner", default="TT")
+    v.add_argument("--ir-dir", help="finished ir run dir (default DIR_ir)")
     v.add_argument("--dpi", type=int, default=110)
     a = ap.parse_args(argv)
     if a.cmd == "render":
         cmd_render(a)
     elif a.cmd == "ir":
         cmd_ir(a)
+    elif a.cmd == "irsum":
+        r = ir_summary(a.dir, S.Plan(S.load(a.plan)))
+        r["power"] = json.loads((Path(a.dir) / "ir_power.json").read_text()) if (Path(a.dir) / "ir_power.json").is_file() else None
+        (Path(a.dir) / "ir.json").write_text(json.dumps(r, indent=1) + "\n")
+        print(json.dumps({k: v for k, v in r.items() if k not in ("worst_parts_mv", "power")}))
     elif a.cmd == "report":
         cmd_report(a)
     elif a.cmd == "build":
