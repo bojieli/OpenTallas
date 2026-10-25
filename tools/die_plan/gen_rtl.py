@@ -457,11 +457,11 @@ def die_top(P, epochs, dropped=None):
             + "\n".join(wires + rlines) + "\n" + "\n".join(insts) + f"\nendmodule : {mod}\n`default_nettype wire\n")
 
 
-def write_rtl(raw, out, rtl_root=None, types=None):
+def write_rtl(raw, out, rtl_root=None, types=None, plan_path=None):
     errs = S.validate(raw)
     if errs:
         raise GenError("plan invalid:\n  " + "\n  ".join(errs[:20]))
-    P = S.Plan(raw)
+    P = S.Plan(raw, plan_path)
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     ep = bus_epochs(P)
