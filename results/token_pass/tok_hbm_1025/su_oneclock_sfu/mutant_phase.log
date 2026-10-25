@@ -1,0 +1,11 @@
+SU_LANE ERROR op=0 cycle=106 output edge 106 want 105
+SU_LANE ERROR op=0 cycle=107 output edge 107 want 106
+SU_LANE ERROR op=0 cycle=108 output edge 108 want 107
+SU_LANE ERROR op=0 cycle=109 output edge 109 want 108
+SU_LANE ERROR op=0 cycle=110 output edge 110 want 109
+SU_LANE ERROR op=0 cycle=111 output edge 111 want 110
+SU_LANE ERROR op=0 cycle=112 output edge 112 want 111
+SU_LANE ERROR op=0 cycle=113 output edge 113 want 112
+[30970000] %Fatal: tb_lane.sv:96: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=1024 errors=512 outputs=512
+%Error: /srv/opentallas-scratch2/claude/codex-hbm-su-oneclock-1025/out_sfu/tb_lane.sv:96: Verilog $stop
+Aborting...

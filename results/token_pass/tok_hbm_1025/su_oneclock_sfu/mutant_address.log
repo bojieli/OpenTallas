@@ -1,0 +1,11 @@
+SU_LANE ERROR op=0 cycle=105 word=0 got=3e9758cf want=3e92b0c2
+SU_LANE ERROR op=0 cycle=106 word=1 got=3e92b0c2 want=3e9758cf
+SU_LANE ERROR op=0 cycle=107 word=2 got=3ea11ba2 want=3e9c26b4
+SU_LANE ERROR op=0 cycle=108 word=3 got=3e9c26b4 want=3ea11ba2
+SU_LANE ERROR op=0 cycle=109 word=4 got=3eab7f9e want=3ea638d9
+SU_LANE ERROR op=0 cycle=110 word=5 got=3ea638d9 want=3eab7f9e
+SU_LANE ERROR op=0 cycle=111 word=6 got=3eb68f2a want=3eb0f145
+SU_LANE ERROR op=0 cycle=112 word=7 got=3eb0f145 want=3eb68f2a
+[30970000] %Fatal: tb_lane.sv:96: Assertion failed in tb_su_static_lane_leaf: SU_LANE FAIL checks=1024 errors=1022 outputs=512
+%Error: /srv/opentallas-scratch2/claude/codex-hbm-su-oneclock-1025/out_sfu/tb_lane.sv:96: Verilog $stop
+Aborting...
