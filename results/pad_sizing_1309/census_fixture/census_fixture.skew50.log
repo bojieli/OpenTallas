@@ -1,0 +1,39 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+Startpoint: launch (rising edge-triggered flip-flop clocked by clk)
+Endpoint: capture (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+
+     Delay       Time   Description
+---------------------------------------------------------------
+   0.00000    0.00000   clock clk (rise edge)
+   0.00000    0.00000   clock network delay (ideal)
+   0.00000    0.00000 ^ launch/CLK (DFFHQNx1_ASAP7_75t_R)
+  32.89291   32.89291 v launch/QN (DFFHQNx1_ASAP7_75t_R)
+   0.00000   32.89291 v capture/D (DFFHQNx1_ASAP7_75t_R)
+             32.89291   data arrival time
+
+   0.00000    0.00000   clock clk (rise edge)
+  50.00000   50.00000   clock network delay (ideal)
+  25.00000   75.00000   clock uncertainty
+   0.00000   75.00000   clock reconvergence pessimism
+             75.00000 ^ capture/CLK (DFFHQNx1_ASAP7_75t_R)
+  10.60880   85.60880   library hold time
+             85.60880   data required time
+---------------------------------------------------------------
+             85.60880   data required time
+            -32.89291   data arrival time
+---------------------------------------------------------------
+            -52.71589   slack (VIOLATED)
+
+
+CENSUS_REAL status MEASURED n 1 worst_ps -52.715893 tns_ps -52.715893 margin_n 1
+CENSUS_BAD_METRIC value=<NaN> rejected=1 message=<OT_CLOCK_FAMILY: output hold census unavailable>
+CENSUS_BAD_METRIC value=<> rejected=1 message=<OT_CLOCK_FAMILY: output hold census unavailable>
+CENSUS_BAD_METRIC value=<unavailable> rejected=1 message=<OT_CLOCK_FAMILY: output hold census unavailable>
+CENSUS_FIXTURE_PASS
