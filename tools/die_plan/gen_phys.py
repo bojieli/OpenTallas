@@ -564,6 +564,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            "export SYNTH_HIERARCHICAL = 0",
            "export SYNTH_REPEATABLE_BUILD = 1",
            "export LEC_CHECK = 0",
+           # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
+           # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
+           "export ADDER_MAP_FILE = /work/adder_map_dontuse.v",
            # Owner 00:46: uncertainty is in SDC; repair only 0..5 ps above it.
            "export HOLD_SLACK_MARGIN = 5",
            "export SETUP_SLACK_MARGIN = 0",
@@ -721,6 +724,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         shutil.copyfile(Path(__file__).with_name(helper), kd / helper)
     # LEC 10-24: RTL vs synthesised netlist equivalence (run_kit.sh, right after face_guard; NOT EQUIVALENT stops)
     shutil.copyfile(Path(__file__).with_name("lec.py"), kd / "lec.py")
+    shutil.copyfile(Path(__file__).with_name("adder_map_dontuse.py"), kd / "adder_map_dontuse.py")   # ruling 4 (10-25)
     for f in ("face_keep.tcl", "face_keep_release.tcl"):   # CP1-R10 (restored: lost in main merge 0ce45ab03c)
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
@@ -760,7 +764,9 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
   SRP=; if [ \$rc = 0 ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
+  if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py gen --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR adder_map_dontuse' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
+  if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py check --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --netlist \$(ls /work/run/results/asap7/*/base/1_2_yosys.v | tail -1) --report /work/dont_use_check.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR dont_use_check' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ -n \"\$SRP\" ]; then wait \$SRP; S=\$(cat /work/selrange.rc 2>/dev/null || echo 2); tail -3 /work/selrange.log; if [ \"\$S\" != 0 ]; then echo 'FAIL_PREFLOOR selrange (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=3; fi; fi; \
   N=\$(ls /work/run/results/asap7/*/base/1_2_yosys.v 2>/dev/null | tail -1); \
   if [ \$rc = 0 ]; then python3 -I /work/port_bind_gate.py \"\$N\" /work > /work/port_bind.log 2>&1; rc=\$?; tail -2 /work/port_bind.log; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR port_bind' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
