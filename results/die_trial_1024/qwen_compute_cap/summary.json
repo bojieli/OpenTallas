@@ -688,7 +688,7 @@
   "note": "PSM started ~20:30 PDT; old QC plan PSM took 7.4 h at 235 GB peak"
  },
  "notes": [
-  "GRT here = 3 congestion iterations (epyc3, 2 h 42 m, 22.4 GB): total overflow 84105 (M4 16917, M5 29780, M6 6656, M7 15291, M8 10072, M9 5389), NOT comparable with the old v3.8s 30-iteration 4659; the 30-iteration GRT of the same build is still running on epyc1 (iteration 4/30 after 4 h).",
+  "GRT here = 3 congestion iterations (epyc3, 2 h 42 m, 22.4 GB): total overflow 84105 (M4 16917, M5 29780, M6 6656, M7 15291, M8 10072, M9 5389), NOT comparable with the old v3.8s 30-iteration 4659. The 30-iteration GRT of the same build was STOPPED 2026-10-25 00:16 PDT at extra iteration 4/30 after 4 h 06 m (QC lane: this capacity plan is superseded by the claude/qc-meth-1024 re-plan); it never reported overflow; its run data was deleted, log kept.",
   "Overflow hotspots: point hotspots at lane station/pin terminals, repeated per cluster column (vertical slice->tile feed lanes on the W edge of each 2-tile column, jogs at y~6.6/18.6 mm), the slice su_c/su_l0 band (y 10.5-10.75 mm, windows 92-93 %), slice fe gcells at y 12.07 mm (178 %), coll_f4 (68 entries), c_W5_bf_01 (71). The old W system column hotspot (coll_f3/coll_f4/tt_ctlm) is reduced to coll_f4 only.",
   "Clock: H-tree baseline on the new plan (old recipe, tap padding at TT) = FAIL 17556 FF-hold negative hops on tn/bn x0/x1 vertical seams (decision 5(f) violation), pair skew 33.7 TT / 51.3 FF.",
   "Seam-aligned tree (min-cut bisection on related-pair weight) + branch padding balanced on FF arrivals: 0 setup / 0 hold negative, pair skew max 24.4 TT / 34.4 FF ps, 2943 pad buffers (tap padding would need 93001). Worst hold +3.9 ps on the root-cut seam sl_W0_fe->sl_E0_fw (the middle slice row is an abutting chain across the die, so some slice seam must be cut at the root); TT-balanced branch padding left it at -0.8 ps (887 hops), FF balancing fixes it at a cost of <= ~26 ps TT skew (TT setup slack >= 375 ps).",
@@ -701,5 +701,6 @@
   "seam_congestion.png",
   "seam_floorplan_lanes.png",
   "seam_sta_negative.png"
- ]
+ ],
+ "superseded_by": "claude/qc-meth-1024 @a4ab2ba7fc (signals <= M7, no M8/M9 signals, 405-um stations, wavefront reset); next die trial on its final bind with the seam-aligned tree as default"
 }
