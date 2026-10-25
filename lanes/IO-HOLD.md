@@ -1,0 +1,20 @@
+# IO-HOLD lane (option A input-min contract; COORD ruling 2026-10-25 10:23 (1))
+
+2026-10-25 10:38 PDT IO-HOLD: branch claude/io-hold-a-1025@dbd81734d1 (base main 55b7f9277; merges clean into 2c31876f3, 155 related tests PASS on the merge). Opt-in only: plan clock.io_hold = "sender_min" or env OT_IO_HOLD=sender_min at gen.py phys; default legacy = byte-identical kits (test).
+- gen_phys.input_hold_min: per partition-driven bus / ft input, min input delay = the driver's guaranteed output-min = (1-UNC_SPLIT)*UNC_HOLD - out_min = +12.5 ps (legacy sender), or the signed view's types[].clock.out_hold_guarantee_ps (new optional schema key). @die / die-channel / undriven-in-any-instance inputs (and arst_n/start_i) keep the fallback (-40 or seam_hold). One value per type port = min over all instances.
+- Kit SDC: per-port set_input_delay -min lines after the fallback line; kit io_hold.tcl (proc ot_io_hold_apply) re-applied by hold_gate.tcl after its uniform overlay; sdc_lint per-port limits (sdc_lint.json hold_in_min_ports_ps); signoff.py overlay per-port lines. postcts_gate.tcl NOT touched (FLOW-INFRA-2 owns it).
+- Parent check tools/die_plan/io_hold_parent.py over die_sta.py run (flat/ilm, TT+FF): every plan port into an A input needs FF seam hold >= 0 (25 ps unc, CPPR, real propagated trees) and related-pair skew with CPPR <= 80 at TT and FF; stand-in types / missing pairskew / untimed = INCOMPLETE (kit under A does not count yet). --all-seams = every die_sta seam group without a plan.
+- Seam composition under A (documented in gen_phys): kit checks sum to (e_tx - e_rx) - 12.5 at the seam, i.e. the pair skew + receiver unc half are carried ONLY by the parent check (as ruled).
+
+2026-10-25 10:38 PDT IO-HOLD: A/B (results/io_hold_a_1025/ab_summary.tsv) = FF post-CTS hold gate + violator census re-timed on the SAME 4_cts.odb of the 863d618928b6 flow-canary kits (ot-run on epyc1, 12 GB each):
+- s81_head hd_turn_a: IN->REG 567 ep / TNS -20.17 ns -> 108 / -0.61 ns (WNS -78.43 unchanged: late-capture residual on t_i + arst_n fallback).
+- qwen_compute coll_ftm: IN->REG 2330 / -119.5 ns -> 906 / -7.5 ns; residual out_data_rd_wi_i 513 + crec_tx 204 + fltvc 71 = late capture taps (CTS class), gate still FAIL -144.8.
+- qwen_kvsys kv3_io_ft: 1053 / -112.1 ns -> 1053 / -56.8 ns (exactly -52.5 ps per endpoint), WNS -124.8 -> -113.7: capture ~285 vs vclk 202.5 (empty taps) = CTS structural, not contract.
+- s81 slice_station__t12: 688 / -114.1 -> 688 / -78.1 ns, WNS -311.8: CTS regression class.
+- R2R / REG->OUT unchanged everywhere (3/2/0) = A only moves the input contract.
+Parent check runs: s81_head DIE-PROTO sta_clat (stand-ins, legacy contract) 428 seams -> 398 PASS / 30 FAIL worst tE2o2->tE2o3/i -33.84 (= DIE-PROTO's known FF residual); CP1 reach405 flat real views: seam FF hold +97.6/+136.3 ps (legacy-padded receivers; ~+45 left after A's 52.5) but INCOMPLETE (that die_sta.json predates pairskew).
+
+## PARKED 2026-10-25 10:38 PDT
+- Branch claude/io-hold-a-1025@dbd81734d1 READY in COORD-REVIEW-QUEUE. No live jobs (8 A/B probes finished; data epyc1:/srv/opentallas-scratch2/claude/io-hold/). Worktrees: local ~/wt/io-hold-1025 removed at park; epyc1 /srv/opentallas-scratch2/claude/wt/io-hold-1025 removed.
+- Next (after merge): (1) pick ONE canary per die, regenerate with OT_IO_HOLD=sender_min and route it end-to-end (FF GRT hold repair count A vs legacy); (2) die/parent run with die_sta.py (current version, pairskew) on real views + io_hold_parent.py before any A-kit counts as signed off; (3) die_ci.py / die_trial.py stand-ins still model the fallback contract (bhold = seam_ps); under sender_min they should report A seams as 'needs parent check', not a contract slack (follow-up, not done); (4) default-on only after (1)+(2) PASS; kits whose residual is late capture (kv3_io_ft, slice_station t12, coll_ftm out_data) still need the CTS structural fix (CLOCK-RESET / FLOW-INFRA-2).
+- OWNER? none (ruled option A; the kit-level seam margin under A is (e_tx - e_rx) - 12.5 by design, covered only by the parent check).
