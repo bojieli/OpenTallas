@@ -64,7 +64,7 @@ def test_plan_trees_and_g0():
         assert T["entry"] == "relayed" and T["depth"] == K and RT.verify(T) == []
         assert RT.release_clocks(T) == 1 + K
     e, w, info = RT.check(P)
-    assert e == [] and w == [] and info["part_depth_K"] == K
+    assert e == [] and len(w) == 1 and "DECISION 13" in w[0] and info["part_depth_K"] == K   # superseded mode
     r = info["regions"][0]
     assert r["members"] == 2 and r["release_clocks"] == 2 + r["die_depth_E"] + 1 + K
     # a counted plan is flagged (warning) but not failed

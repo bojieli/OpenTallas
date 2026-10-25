@@ -25,12 +25,12 @@ module tb_aq12_xmem_eq #(parameter integer N = 20000, parameter integer SEED = 1
     // vq pair
     reg yv; reg [2:0] yi; reg [255:0] yd; reg mv, mq, mb; reg [7:0] mi;
     wire xfv0, xfv1, xfs0, xfs1, vf0, vf1; wire [275:0] xf0, xf1;
-    ot_s81sl_vq #(.AQ_XMEM(0)) v_ref (.clk(clk), .rst_n(rst_n), .y_v(yv), .y_i(yi), .y(yd), .u_v(1'b0), .u_i(3'd0), .u(256'd0),
+    ot_s81sl_vq #(.AQ_XMEM(0)) v_ref (.clk(clk), .rst_n(rst_n), .y_v(yv), .y_i(yi), .y({yd[255:240], yd[223:208], yd[191:176], yd[159:144], yd[127:112], yd[95:80], yd[63:48], yd[31:16]}), .u_v(1'b0), .u_i(3'd0), .u(256'd0),
         .sid(4'd3), .k(3'd2), .m_v(mv), .m_q(mq), .m_b(mb), .m_i(mi), .um_v(1'b0), .um_q(1'b0), .um_b(1'b0), .um_i(8'd0),
         .xf_v(xfv0), .xf_s(xfs0), .xf(xf0), .fault(vf0));
     wire xfv2, xfs2, vf2; wire [275:0] xf2;
     reg uon;
-    ot_s81sl_vq #(.AQ_XMEM(2)) v_d2 (.clk(clk), .rst_n(rst_n), .y_v(yv && !uon), .y_i(yi), .y(yd), .u_v(yv && uon), .u_i(yi), .u(yd),
+    ot_s81sl_vq #(.AQ_XMEM(2)) v_d2 (.clk(clk), .rst_n(rst_n), .y_v(yv && !uon), .y_i(yi), .y({yd[255:240], yd[223:208], yd[191:176], yd[159:144], yd[127:112], yd[95:80], yd[63:48], yd[31:16]}), .u_v(yv && uon), .u_i(yi), .u(yd),
         .sid(4'd3), .k(3'd2), .m_v(mv), .m_q(mq), .m_b(mb), .m_i(mi), .um_v(1'b0), .um_q(1'b0), .um_b(1'b0), .um_i(8'd0),
         .xf_v(xfv2), .xf_s(xfs2), .xf(xf2), .fault(vf2));
     integer seed, cyc, err, nvo, nxf, verr, verr2, i, gap, sb;
@@ -72,7 +72,7 @@ module tb_aq12_xmem_eq #(parameter integer N = 20000, parameter integer SEED = 1
             if (gap > 0) begin yv = 1'b0; gap = gap - 1; end
             else begin
                 yv = 1'b1; yi = sb[2:0];
-                for (i = 0; i < 8; i = i + 1) yd[32*i +: 32] = rword($urandom, $urandom, $urandom);
+                for (i = 0; i < 8; i = i + 1) begin yd[32*i +: 32] = rword($urandom, $urandom, $urandom); yd[32*i +: 16] = 16'd0; end  // vn's y: BF16 (low half 0)
                 sb = sb + 1;
                 if (sb == 8) begin sb = 0; gap = 44 + ($urandom % 20); uon = $urandom; end
             end

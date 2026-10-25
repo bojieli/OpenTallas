@@ -178,12 +178,18 @@ module dsdv_svc_rs_c #(
         wire [514:0] cq;
         ot_s81_svc_job #(.MUT(0)) u_job (.ck(ck), .rs_n(rn), .j_cmd(j), .j_dn(jdc), .q(qp), .core_q(cq),
             .ad({513'd0, rad[512:0]}), .xd({512'd0, 1'b0, 1'b1}), .od({512'd0, 1'b0, 1'b1}));
+        // S81/H23 (10-24, COORD H3): the on-die SEL_IDS producer's entry leg.  Class-3 host-write words (the seqhost SEL
+        // relay, dsdv_sh_selr) never go down the hw stream; dsdv_svc_selq turns each pair into one SEL_IDS q frame
+        // (header + 1 payload word) injected on the q part in the compiled window (a q word from the job gate in the
+        // same cycle = sticky fault, never arbitrated).
+        wire sq_v, sq_f, hp_sel; wire [511:0] sq_d;
+        dsdv_svc_selq u_selq (.ck(ck), .rn(rn), .hw(hp), .q_v(sq_v), .q_d(sq_d), .hw_sel(hp_sel), .cq_v(cq[0]), .fault(sq_f));
         reg [DW-1:0] r1;
         always @(posedge ck or negedge rn) if (!rn) begin r1[0] <= 1'b0; r1[513] <= 1'b0; end
-            else begin r1[0] <= cq[0]; r1[513] <= hp[0]; end
-        always @(posedge ck) begin r1[512:1] <= cq[512:1]; r1[DW-1:514] <= hp[291:1]; end
+            else begin r1[0] <= cq[0] | sq_v; r1[513] <= hp[0] && !hp_sel; end
+        always @(posedge ck) begin r1[512:1] <= sq_v ? sq_d : cq[512:1]; r1[DW-1:514] <= hp[291:1]; end
         assign hst = r1;
-        assign jf = 1'b0;
+        assign jf = sq_f;
     end else begin : g_nohost
         assign hst = '0; assign jdc = 2'b00; assign jf = 1'b0;
     end endgenerate
@@ -456,7 +462,7 @@ module dsdv_svc_rs_c #(
     end else begin : g_nofmchk
         assign fm_f = 1'b0;
     end endgenerate
-    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f | p_f | zt_f | (|sot_fc) | gw_f | (zt_ret_v && zt_ret_e) | fm_f;
+    wire lf = a_f | x_f | rcol | o_fo | dstray | r_f | p_f | zt_f | (|sot_fc) | gw_f | (zt_ret_v && zt_ret_e) | fm_f | jf;   // jf: S81/H23 SEL injection fault (entry)
     (* async_reg = "true" *) reg [1:0] hs0, hs1;
     reg hs_up, hs_hf, hs_f;
     always @(posedge ck or negedge rn)
@@ -651,4 +657,46 @@ module dsdv_pv_den_stamp #(parameter integer ENABLE=0)(
  end
  assign stamped=pv_d[512]?((pv_d & ~(513'h1ff<<120)) | (513'({jid,seen && owner==pv_d[91:72]})<<120)):pv_d;
  end endgenerate
+endmodule
+
+// ---------------------------------------------------------------------------------------------------------------------
+// S81/H23 (2026-10-24, COORD H3, attn.gather): dsdv_svc_selq, the svc ENTRY leg of the on-die SEL_IDS producer.
+// bk_sel's encoder (dsdv_bk_selids) sends every index word of the final top-k (16 ranks) as 2 relay beats; the seqhost
+// (dsdv_sh_selr) puts each on this half's host-write port as a class-3 word {cls 3, we 0, addr, d 256, v}:
+//   addr[0] part (0: ranks s_first + 0..7, 1: + 8..15), addr[10:1] s_first, addr[15:11] s_cnt (1..16), addr[19:16] mask,
+//   d[32 e +: 32] = the id of rank s_first + 8 part + e (21-b compressed position, zero-extended; 0 past s_cnt).
+// Part 0 -> a SEL_IDS header q word {type 7, mask, len 1, [19:10] s_cnt, [9:0] s_first} in the SAME cycle (combinational
+// from the hw pin flop, registered by the entry's r1 stage as every q word); part 1 (the next word) -> the payload q word
+// {d1, d0}.  So one index word = 2 consecutive q words on the entry's dn stream, in the window the compiler reserved
+// (no q word from the job gate there).  Sticky faults (never arbitrated): a q word from the job gate in a relay cycle,
+// part 1 without part 0 or with other meta, part 0 while part 1 is owed, s_cnt 0 or > 16.  Reset: the pending bit and
+// the fault only.  MUT (bench only): 1 = payload halves swapped.
+// ---------------------------------------------------------------------------------------------------------------------
+module dsdv_svc_selq #(parameter integer MUT = 0) (
+    input  wire         ck, rn,
+    input  wire [291:0] hw,            // the entry's hw pin flop
+    input  wire         cq_v,          // a q word from the job gate this cycle
+    output wire         hw_sel,        // this hw word is a SEL relay word (kept off the hw stream)
+    output wire         q_v,
+    output wire [511:0] q_d,
+    output reg          fault
+);
+    wire [31:0] a = hw[288:257];
+    assign hw_sel = hw[0] && hw[291:290] == 2'b11;
+    reg pend; reg [255:0] d0; reg [18:0] m0;
+    wire p0 = hw_sel && !a[0], p1 = hw_sel && a[0];
+    wire [511:0] hdr = {4'd7, 1'b0, a[19:16], 8'd0, 3'd0, 12'd1, 480'd0} | {492'd0, 5'd0, a[15:11], a[10:1]};
+    assign q_v = hw_sel;
+    assign q_d = p0 ? hdr : ((MUT == 1) ? {d0, hw[256:1]} : {hw[256:1], d0});
+    always @(posedge ck) if (p0) begin d0 <= hw[256:1]; m0 <= a[19:1]; end
+    always @(posedge ck or negedge rn)
+        if (!rn) begin pend <= 1'b0; fault <= 1'b0; end
+        else begin
+            pend <= p0;
+            if (hw_sel && cq_v) fault <= 1'b1;                                  // relay word in a job-gate q cycle
+            if (p1 && (!pend || a[19:1] != m0)) fault <= 1'b1;                  // part 1 without its part 0
+            if (p0 && pend) fault <= 1'b1;                                      // part 0 while part 1 is owed
+            if (pend && !p1) fault <= 1'b1;                                     // part 1 not on the next edge
+            if (p0 && (a[15:11] == 5'd0 || a[15:11] > 5'd16)) fault <= 1'b1;
+        end
 endmodule

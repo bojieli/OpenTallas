@@ -1,0 +1,1 @@
+Native dsdv_gunit_l4r view (S81 gunit, 129.6x129.6 um, 63k cells). Uniform SIGNED: TT setup 5.42 ps, FF hold 4.75 ps; DRV/DRC/antenna PASS; sdc_lint/face_guard PASS (raw netlist, no hook); pin audit PASS. Clock insertion balanced to 250 ps. Reset: timed synchronous rst_n input (pre OWNER DECISION 13). Source staged in source/. Routed abstract + TT/FF timing models.

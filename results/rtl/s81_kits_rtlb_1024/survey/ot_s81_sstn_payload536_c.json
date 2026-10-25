@@ -1,0 +1,29 @@
+{
+ "kit": "/srv/opentallas-scratch/claude/elem-s81-cores/r4/ot_s81_sstn_payload536_c",
+ "top": "ot_s81_sstn_payload536",
+ "netlist": "/srv/opentallas-scratch/claude/elem-s81-cores/r4/ot_s81_sstn_payload536_c/run/results/asap7/kl_ot_s81_sstn_payload536_c/base/1_2_yosys.v",
+ "verdict": "FAIL",
+ "checked": 1072,
+ "ok": 0,
+ "fail_counts": {
+  "merged": 1072
+ },
+ "groups": [
+  {
+   "bus": "i",
+   "dir": "input",
+   "cls": "merged",
+   "sub": "['o']",
+   "n": 536,
+   "bits": "[0..535]"
+  },
+  {
+   "bus": "o",
+   "dir": "output",
+   "cls": "merged",
+   "sub": "['i']",
+   "n": 536,
+   "bits": "[0..535]"
+  }
+ ]
+}

@@ -65,6 +65,7 @@ module ot_s81dv_norm_finish_sram #(
     always @(posedge clk) begin ib <= f_base; id <= f_d; eps_c <= eps; end
     (* keep *) reg [NLC*P-1:0] ivl; (* keep *) reg [NLC*P*8-1:0] ibl;   // leaf-match copies, one per IX region
     genvar cl;
+    genvar n, p, k;                     // slang: declared before g_dec uses p (source order only)
     generate for (cl = 0; cl < NLC; cl = cl + 1) begin : g_lc
         always @(posedge clk or negedge rsr[cl % NRS]) if (!rsr[cl % NRS]) ivl[cl*P +: P] <= {P{1'b0}};
             else ivl[cl*P +: P] <= go_t[cl % NGO] ? {P{1'b0}} : f_v;
@@ -89,7 +90,6 @@ module ot_s81dv_norm_finish_sram #(
     wire        wr_v;                   // adder result write-back
     wire [7:0]  wr_n;
     wire [31:0] wr_d;
-    genvar n, p, k;
     generate
         for (n = NVP; n < 2 * NVP; n = n + 1) begin : g_leaf
             localparam integer IX = n - NVP;

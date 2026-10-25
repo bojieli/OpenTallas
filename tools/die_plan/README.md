@@ -56,16 +56,15 @@ python3 -m pytest -q tools/die_plan/
   boundary flops is `clock.insertion_ps` +/- `insertion_tol_ps` (250 +/- 40), and neighbour skew is <= 80 ps.
   `face_xing` = `budgeted` means abutted faces are timed as ordinary synchronous hops under that budget.
   `forwarded_landing` means a forwarded clock plus a landing at every abutted face.
-- **Reset** (OWNER RESET RULE 2026-10-24, `reset.release: "pipelined"`, tool `reset_tree.py`): exactly ONE root 2-flop
-  synchroniser per die REGION (`reset.regions`, default one region = the die, root at the die `rst_n` pin); its async
-  input is the only reset false path. From it the synchronised reset travels as a SYNCHRONOUS signal through relay flops
-  (`ot_dp_rrelay`) every <= `reset.relay_um` (405) um with EQUAL depth to every clock tap, so every block releases on the
-  same known cycle. A partition takes `arst_n` as a synchronous input: a pin register `u_rst_in` at the reset tap, then
-  an equal-depth relay tree `u_rrl_<k>` of exactly `reset.part_depth` (K, plan-wide; default the deepest type's own
-  depth) stages to every tap (`rst_n_t<i>`); local flops use their nearest tap's `rst_n_t<i>` with normal timed
-  recovery/removal. Every tap of a region releases `sync_stages + E + 1 + K` clocks after the die reset (E = the die
-  relay tree depth, `reset_tree.py die`). Assertion is synchronous too (hold the die reset >= that many clocks at boot).
-  No recovery waivers. Die-level relays need hosting inside partitions (open; `reset_tree.py die` reports it).
+- **Reset** (OWNER RESET RULE 2026-10-24 + OWNER DECISION 13, `reset.release: "wavefront"`, tool `reset_tree.py`):
+  ONE root 2-flop synchroniser per DIE (in the partition at the die `rst_n` pin; its async input is the only reset false
+  path), then a NEIGHBOUR WAVEFRONT: every partition registers its incoming reset (`arst_n` -> `u_rst_in`, a synchronous
+  pin register at the type's IN pin) and re-drives registered `rst_o_<k>` outs to its neighbours; inside, an equal-depth
+  relay tree (`ot_dp_rrelay u_rrl_<k>`, hops <= `reset.relay_um` 405 um) reaches every clock tap and every `rst_o`.
+  Pins are uniform per type; the die top only wires `rst_o_<k>` -> neighbour `arst_n` (<= `reset.hop_um`). Release
+  cycles differ per partition and are PUBLISHED (`reset_tree.py offsets`); the schedule starts with an explicit start
+  broadcast after reset; only control state is reset. No recovery waivers. (`"pipelined"` = the superseded equal-depth
+  die tree, G0 WARN.)
   Legacy `release: "counted"`: one async-assert / sync-deassert synchroniser per partition (per tap for a tap grid);
   G0 warns that it does not meet the rule. Data and ft flops have no reset (`data_reset` is const false), and each
   station carries one epoch bit (`epoch_bit` is const true).
@@ -163,8 +162,11 @@ ERROR only under `--completeness`, counts in `summary.xdie_counts`):
 - `ft_budget` (e): per type, over-the-top ft bits (E-W slots on M8, N-S on M9, turning slots on both) + non-ft M8 / M9
   face pins <= usable M8 / M9 tracks across the type x `type.ft_budget[L]` (default `layer_budget.cut_avail[L]`).
 
-R4 (owner clock rule, COORD 10-23 19:55): `OT_TAP_CHECK` (tree insertion) and `OT_CLOCK_TAPS` (sinks per tap) only
-WARN. The hard clock checks are face-flop spread <= 80 ps (TT+FF, RC) and seam skew <= 80 ps to the common latency.
+R4 (owner clock rule, COORD 10-23 19:55; gate SUPERSEDED by owner decision 5, 2026-10-24): `OT_TAP_CHECK` (tree
+insertion) and `OT_CLOCK_TAPS` (sinks per tap) only WARN. The clock gate is the RELATED launch/capture flop-pair skew
+with CPPR <= 80 ps at TT and FF (seam and intra-partition pairs) plus propagated-clock STA closing TT setup / FF hold
+(60/25 ps); face-flop spread is an INFO column.  Local tap trees: balanced to the common latency within
+`clock.local_window_ps` (20) by tap_balance.tcl (step `clock.local_tol_ps`, 10).
 Tap method (CP1 r8 RULING, COORD 10-23 21:26): every partition gets a GRID of clock taps at `budgets.tap_pitch_um`
 (default 400 um, or type `clock.tap_pitch_um`), every sink on its nearest tap, trees balanced to the common latency.
 `clock.tap_mode` `grid+sinks` (alias `sinks`) only ADDS sink-anchored taps (taps.py) for face-register clusters after
@@ -190,30 +192,34 @@ This writes `latency.lanes` back into the plan (with `--inplace`), `<die>_lat_pk
 named by `lane.param` or `LAT_<ID>`) and `<die>_latency.json` (the compiler's input, which carries the plan digest).
 A die-IO lane counts 1 cycle: the boundary flop of its partition end.
 
-## Pipelined reset (`reset_tree.py`, lane RESET, OWNER RESET RULE 2026-10-24)
+## Reset wavefront (`reset_tree.py`, lane RESET, OWNER RESET RULE 2026-10-24 + DECISION 13)
 
-One tool for every die (replaces the per-tap `u_rsync_t<i>` synchronisers, KV-G3's per-partition tree and S81's
-per-tap `ot_dp_rpipe` chains).
+One tool for every die (replaces the per-tap `u_rsync_t<i>` synchronisers, KV-G3's per-partition tree, S81's
+`ot_dp_rpipe` chains and the superseded equal-depth `pipelined` die tree).
 
 ```
+python3 tools/die_plan/reset_tree.py offsets PLAN.json [--out J]   # per-partition release cycles (compiler, benches)
 python3 tools/die_plan/reset_tree.py all  PLAN.json        # G0 rule check (also run by check.py: summary.reset)
-python3 tools/die_plan/reset_tree.py type PLAN.json TYPE   # one type: entry, depth K, relays, release clocks
-python3 tools/die_plan/reset_tree.py die  PLAN.json [--out J]   # regions: die depth E, release clocks, hosting
-python3 tools/die_plan/kit_rsync.py PLAN.json TYPE KIT_RTL_DIR [--release pipelined]   # bound kit -> tree
+python3 tools/die_plan/reset_tree.py type PLAN.json TYPE   # one type: entry, depth K, relays, outs, release after pin
+python3 tools/die_plan/reset_tree.py render PLAN.json TYPE [--png F]   # review picture of the type's tree
+python3 tools/die_plan/kit_rsync.py PLAN.json TYPE KIT_RTL_DIR [--release wavefront]   # bound kit -> tree + rst_o
 ```
+(any form takes `--release wavefront` to price a plan that has not switched yet)
 
-- Switch a plan: `"reset": {..., "release": "pipelined"}` (optional `relay_um`, `part_depth`, `regions`). G0 then
-  checks every type's tree (hops <= relay_um, equal depth K) and the die region trees; `counted` plans get one WARN.
-- Generated kits (`gen.py rtl` + `gen.py phys`): the wrapper gets `u_rst_in` + `u_rrl_<k>`; `gen.py phys` writes
-  `reset_tree.tcl` (FIRM sites, sourced by `face_flops.tcl` before `reset_taps.tcl`; it prints `OT_RESET_TREE ... placed
-  max hop ... PASS|FAIL`). The die top holds the region root synchroniser(s) and the die relay tree (functional model).
-- Bound kits (`bind.py kit-rtl`): run `kit_rsync.py` before `gen.py phys --kit-rtl`; it replaces `u_rst_sync` (or old
-  per-tap / tree lines) and writes `reset_tree.tcl` next to the kit RTL. `--release pipelined` lets a kit trial use the
-  rule before its plan lane switches the plan.
-- Relays are planned at `relay_um - 25` um (legalisation slack) and never inside hard cores / macro leaves (+4.32 um);
-  a tap over a fully tiled macro array gets its relay at the nearest free site (`tap_offset_um`).
-- Boot price: `release_clocks` (die: `sync_stages + E + 1 + K`) in `reset_tree.py die`; boot benches hold the die reset
-  at least that many clocks (assertion is synchronous) and count the release that many clocks after deassert.
+- Switch a plan: `"reset": {..., "release": "wavefront"}` (optional `relay_um`, `hop_um`, `in_sites {type: [x, y]}`,
+  `root_part`; hard types `partition_types[T].reset.depth` / `tap_um`). G0 checks every type's tree (hops <= relay_um,
+  equal depth inside the type) and that every partition's IN pin has a parent `rst_o` within `hop_um` (errors list the
+  long hops: move the IN pin -- hard types: `reset.tap_um` on the face toward a soft neighbour).
+- Generated kits (`gen.py rtl` + `gen.py phys`): the wrapper gets `u_rst_in` (or `u_rst_root` in the root's type),
+  `u_rrl_<k>` and `assign rst_o_<k> = ...`; `io.tcl` / mock LEF place `arst_n` at the IN site and `rst_o_<k>` (OUTPUT)
+  at their face sites; `reset_tree.tcl` places every relay FIRM and prints `OT_RESET_TREE ... PASS|FAIL`; sdc_lint
+  budgets `rst_o_<k>` like a data output. The die top wires parent `rst_o_<k>` -> child `arst_n`.
+- Bound kits (`bind.py kit-rtl`): run `kit_rsync.py` before `gen.py phys --kit-rtl`; it replaces `u_rst_sync` (or
+  old per-tap / tree lines), adds `output wire rst_o_<k>` to the bound module and the port-only wrapper (+ the
+  `.rst_o_<k>(rst_o_<k>)` connection) and writes `reset_tree.tcl`.
+- Release: root partition `sync_stages + K_root`, child `release(parent) + entry + K` (entry 1, or `sync_stages` in the
+  root's type); simulated in `test_reset_wavefront.py`. Boot benches hold the die reset >= `max_release` clocks.
+- `face_keep.tcl` keeps the reset relays through ORFS eliminate_dead_logic (a tap with no RTL load still gets its relay).
 
 ## G2 probes (`g2.py`, redefined by COORD on 10-23)
 
@@ -319,13 +325,38 @@ The runner picks a scratch2 host with `ot-run --pick`, runs there via `ot-run`, 
 
 Optional FT bit sites: a slot may declare `bit_sites_um` as internal stages j=1..stations-1, each containing width+1 cell lower-left x/y coordinates (payload bits then epoch), and `bit_site_cell_um` as the allocated width/height envelope. The physical generator emits exact sites; the hook requires real row/site alignment, row orientation, core bounds and master dimensions. Slots without this declaration keep their existing placement. Validate actual macro/cell overlap and paired-bit reach in the placed ODB before routing; coordinates alone do not establish those gates.
 
+## Die clock (`die_clock.py`, lane CLOCK, owner decision 5 2026-10-24)
+
+    die_clock.py run PLAN --out DIR [--leaf-um 1000] [--rep-um 450] [--pad sta|level] [--core-early off|pad]
+    die_clock.py render DIR --plan PLAN            # tree, keep-outs, tap arrivals, red = hops > 400 um (4W NDR)
+
+The die-level clock from the plan's spine root to EVERY partition clock tap (schema.tap_grid + early core taps), on
+M8/M9 with a 2W2S NDR (4W on hops > 400 um), BUFx24 only:
+- trunk root -> die centre; binary H-tree bisection (one axis and one leg layer per level).  The top 4 levels may move
+  a split +-25 % onto a partition edge when that cuts less related-pair weight (seam launch/capture taps by bits,
+  neighbouring taps of a partition): seam neighbours stay on one branch.  Nodes slide along their incoming leg to the
+  least-blocked crossing for their outgoing legs (die channels between hard cores).
+- one cut count per level (escalated until every legalised segment <= 1.15 rep_um), no buffer on a hard core / PHY
+  macro / outside the die, pruned branches end in a dummy first stage, every leaf drives the same number of tap
+  drivers (dummies), one equal-stage last-mile chain per tap: EVERY root -> tap path has the same cells and fan-outs.
+- `--pad sta` (default): wires keep their geometry and an STA loop (OpenSTA on the exact ladder RC, mean of TT/FF)
+  adds wire pads (serpentine) on the faster branch at every node and on each tap's chain, spread over the leg's
+  segments.  `--pad level`: every segment of a level / chain index padded to the longest (exact by construction, but
+  2-5x the wire on macro-dense dies).
+- outputs: ctree.v (module die_ctree: root -> t_<inst>__<port>), ctree.spef, tree.json, place.json, pads.json,
+  clock_report.json (insertion, tap skew, slew, related pair skew per seam / intra-partition tap pair, CPPR from the
+  lowest common node, OCV 3/5 % on the uncommon path as INFO) and die_sta.py spine files spine_<C>.json
+  (`die_sta.py run --spine-branch spine_{c}.json`, or the netlist itself with `--spine-tree DIR`).
+- `meta.taps_on_keepout` lists plan taps sitting on a PHY / hard core (a plan defect for the die lane).
+
 ## Die STA (`die_sta.py`, G4 seam timing; lane DIE-STA 10-24)
 
 ```
 python3 tools/die_plan/die_sta.py extract --odb KIT/run/results/asap7/*/base/5_route.odb --out PARTS/<type>   # RCX
 python3 tools/die_plan/die_sta.py top  --plan PLAN.json --out DIE/die_top.v [--views VIEWS]   # = die_top_struct.v
 python3 tools/die_plan/die_sta.py run  --top DIE/die_top.v --parts PARTS --out OUT [--mode ilm|flat|etm]
-        [--corner TT --corner FF] [--spine-branch DIE/spine_branch.json] [--die-spef DIE/6_final.spef] [--threads N]
+        [--corner TT --corner FF] [--spine-branch DIE/spine_branch.json | --spine-tree CTREE_DIR]
+        [--die-spef DIE/6_final.spef] [--crpr-pairs 200] [--intra-pairs 200] [--no-stitch] [--threads N]
 python3 tools/die_plan/die_sta.py compare OUT_FLAT/die_sta.json OUT_ILM/die_sta.json --tol 2
 python3 tools/die_plan/die_sta.py replica --netlist P/6_final.v --spef P/6_final.spef --n N --out DIR   # capacity
 ```
@@ -333,15 +364,42 @@ python3 tools/die_plan/die_sta.py replica --netlist P/6_final.v --spef P/6_final
 `PARTS/<x>/6_final.v|.spef` per partition (found by the module name in the netlist; `6_final.sdc` names the clock
 ports).  Seams are found from the die top (every internal net from a partition output to another partition's input)
 and reported per `src->dst/bus`: worst slack, path count, violating endpoints, TNS, launch/capture clock arrival.
-Constraints follow AGENTS.md (owner 2026-10-24): one clock on die `clk`, propagated through each partition's own routed
-tree, 60 ps setup / 25 ps hold uncertainty; signoff = setup at TT, hold at FF (the default `--corner TT --corner FF`),
-plus the R4 face-flop spread: clock arrival spread over every register launching into / capturing from a seam,
-<= 80 ps per partition at TT and FF (`FFSPREAD`).  SS may be run for information and never gates.
-`verdict.status` is PASS only when TT setup and FF hold ran, every seam slack is >= 0 and every spread <= 80 ps;
-otherwise FAIL or NOT RUN.
+Constraints follow AGENTS.md: one clock on die `clk`, propagated through each partition's own routed tree, 60 ps setup /
+25 ps hold uncertainty, CPPR on (`sta_crpr_enabled 1`).  Gate (owner, BRIEFING decision 5, 2026-10-24): setup at TT
+and hold at FF >= 0 (the default `--corner TT --corner FF`) AND related launch/capture pair skew with CPPR credit
+<= 80 ps at TT and FF, seam pairs and intra-partition pairs.  `verdict`: `setup_<c>`, `hold_<c>`, `pairskew_<c>`
+(worst |skew| with CPPR), `pairskew_<c>_over` (pairs over 80 ps before credit: conservative), `pairskew_<c>_pairs`,
+`ffspread_<c>_info` (max-min face-flop spread per partition, INFO only, no longer a gate), `status` PASS / FAIL /
+NOT RUN.  SS may be run for information and never gates.
+Related pairs: every seam bit's launch registers (fan-in startpoints of the source pin) x capture registers (fan-out
+endpoints of the destination pin), all combinations; skew = capture - launch clock arrival at the CK pins (pin
+arrival properties, no per-bit search; hold side late capture - early launch, + hurts hold; setup side early capture
+- late launch, - hurts setup).  CPPR credit (`check_crpr` of the launch->capture path) is searched for the
+`--crpr-pairs` worst pairs (each seam group's worst hold- and setup-side pair).  Per corner `pairskew[group]` (n,
+max/min raw and `_cppr`, worst pairs, p99 |skew|, over) and the summary `pair_skew`.  Intra-partition pairs (flat
+mode, `--intra-pairs K`): the K worst internal setup and hold paths of every partition instance, skew = capture -
+launch arrival -/+ CPPR -> `intra[inst][max|min]` (worst, pair, p99, over); ILM drops internal paths (not timed),
+a stand-in partition has 0 pairs.
 Die spine: ideal by default (taps at the plan's common latency), `--spine-branch` (CP2 H-tree branch offsets as
-source latency on every tap pin), or the routed die SPEF.  All current plans (s81, qwen_compute, qwen_kvsys, hbm)
-have no channel ports, so every seam wire is a zero-length abutment; channel seams need the routed die SPEF.
+source latency on every tap pin), `--spine-tree DIR` (DIR/ctree.v, module `die_ctree` with input `root` and one output
+`t_<inst>__<port>` per partition clock tap, + DIR/ctree.spef from die_clock.py: instantiated as `u_dieclk`, die clk ->
+root, each tap pin -> its output, one clock on clk, so CPPR sees the real common path; a tap without an output is an
+error), or the routed die SPEF.  All current plans (s81, qwen_compute, qwen_kvsys, hbm) have no channel ports, so
+every seam wire is a zero-length abutment; channel seams need the routed die SPEF.
+
+SPEF stitch (lane CLOCK 10-24).  OpenSTA (2.6.0 and the fleet be771a0) keys a parasitic network on the top net it
+reaches from the driver pin, while `read_spef -path <inst>` leaves a partition's port nets on the partition-internal
+net: every net crossing a partition port (clock tap nets, both halves of every seam) lost its routed RC in the die
+run.  Tiny proof (two instances of a 4-cell partition, port-net RC 1.5 k + 1.5 k on the tap, 0.8 k + 0.8 k / 1 k + 1 k
+on the seam halves, TT): tap-wire delay 16.7 ps -> 0.0, flop CK arrival 49.6 -> 18.2 ps, seam slack 140.3 ->
+190.5 ps (50 ps optimistic) against the flattened netlist + SPEF; identical on both binaries.  Now each partition
+(and die_ctree) SPEF is split once per module into `OUT/stitch/<module>.core.spef` (no port nets, read with `-path`)
+and every top net joining partition ports is written as ONE network in `OUT/stitch/stitch.spef` (port-net segments
+with the instance path prefixed, the partition `*P` nodes as junction nodes, plus the die-level segment of
+`--die-spef`, whose remaining nets go to `die.core.spef`), read last without `-path`.  Coupling caps are grounded on
+the local node (read_spef default).  Port nets joining two top nets (partition feedthroughs) or unconnected ports stay
+in the core SPEF (`stitch.skipped_multi_top`).  Stitched == flattened to < 0.01 ps (test_die_sta.py, flat and ilm,
+with and without die tree / die segment).  `--no-stitch` restores the old reads.
 
 Modes:
 - **ilm** (default, continuous die check): each partition is replaced by its interface logic model, extracted from

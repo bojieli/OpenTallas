@@ -86,6 +86,9 @@ def io_tcl(P, tn, pins):
     for name, x, y in tap_pins(P, tn):
         lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
                      f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: die spine tap")
+    for name, x, y in reset_out_pins(P, tn):
+        lines.append(f"place_pin -pin_name {name} -layer {top} -location {{{x:.4f} {y:.4f}}} "
+                     f"-pin_size {{{LAYER_W.get(top, 0.04):.4f} {4 * PIN_LEN_UM:.4f}}}   ;# interior: reset wavefront out")
     return "\n".join(lines) + "\n"
 
 
@@ -154,7 +157,18 @@ def core_tap_rows(P, tn):
 
 def tap_pins(P, tn):
     """[(port, x, y)]: every clock tap (+ early core taps) + the reset tap."""
-    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + tuple(tap_points(P, tn)[1])]
+    import reset_tree as RT
+    if RT.wavefront(P) and not P.types[tn].get("hard"):     # OWNER DECISION 13: the wavefront reset IN site
+        rs = tuple(RT.in_pin(P, tn))
+    else:
+        rs = tuple(tap_points(P, tn)[1])
+    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + rs]
+
+
+def reset_out_pins(P, tn):
+    """[(port, x, y)] interior registered reset OUT pins of a wavefront plan type (reset_tree.out_pins)."""
+    import reset_tree as RT
+    return RT.out_pins(P, tn)
 
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
@@ -253,9 +267,29 @@ UNC_SPLIT = 0.5
 HOLD_OUT_MIN_PS = 0.0   # min output delay of every partition output vs vclk (sdc_lint: must be <= 0)
 
 
+def _density(t):
+    """clock.tap_mode "density" (OWNER decision 5, 10-24): taps placed by sink density (taps.density_taps), no grid."""
+    return t.get("clock", {}).get("tap_mode") == "density"
+
+
 def _tap_cap(t):
-    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps)."""
-    return int(t.get("clock", {}).get("tap_max_sinks", 3000))
+    """OT_TAP_MAX_SINKS: the plan's clock.tap_max_sinks, else 3000 (COORD 10-23; applies to grid and added taps);
+    density taps default to 1500 (decision 5: ~1000-1500 sinks a tap)."""
+    return int(t.get("clock", {}).get("tap_max_sinks", 1500 if _density(t) else 3000))
+
+
+def _density_cfg(t):
+    """config.mk lines of a density kit (none otherwise: defaults unchanged).  The kit's cap pass may move a sink at
+    most tap_radius_um further (grid kits: half the pitch); the GRT-RC tap hook (clock.tap_balance_rc, default
+    grt_report) runs as POST_GLOBAL_ROUTE."""
+    if not _density(t):
+        return []
+    ck = t.get("clock", {})
+    mode = ck.get("tap_balance_rc", "grt_report")
+    out = [f"export OT_TAP_REASSIGN_UM = {float(ck.get('tap_radius_um', 200.0)):g}"]
+    if mode != "placement":
+        out += ["export POST_GLOBAL_ROUTE_TCL = /work/tap_balance_grt.tcl", f"export OT_TAP_GRT_MODE = {mode}"]
+    return out
 
 
 def sdc(P, tn, pins):
@@ -493,8 +527,12 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # COORD 10-23: tap trees balanced to one insertion (delay chains on the short trees, <= tol spread)
            "export POST_CTS_TCL = /work/tap_balance.tcl",
            f"export OT_TAP_TARGET_PS = {float(P.clock['insertion_ps']):g}",
-           f"export OT_TAP_WINDOW_PS = {float(P.clock['insertion_tol_ps']):g}",
+           # decision 5 (d) (owner 2026-10-24): every local tree balanced to the common latency within a 20 ps window
+           # (clock.local_window_ps; insertion_tol_ps stays the kit SDC seam-hold budget), padding step <= 10 ps
+           f"export OT_TAP_WINDOW_PS = {float(P.clock.get('local_window_ps', 20.0)):g}",
+           f"export OT_TAP_TOL_PS = {float(P.clock.get('local_tol_ps', 10.0)):g}",
            f"export OT_TAP_PITCH_UM = {S.tap_pitch(P, tn):g}",
+           *_density_cfg(t),
            # CP2: hard-core internal clock latency (core_latency.txt: inst pin ps tap) for tap_balance.tcl's effective
            # arrival, and the early core taps (core_taps.txt) clock_taps.tcl hangs the core clock pins on
            *(["export OT_CORE_LAT = /work/core_latency.txt"] if clat["rows"] else []),
@@ -530,6 +568,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
+    if _density(t):
+        shutil.copyfile(Path(__file__).with_name("tap_balance_grt.tcl"), kd / "tap_balance_grt.tcl")
     if forest:
         shutil.copyfile(Path(__file__).with_name("forest_recluster.tcl"), kd / "forest_recluster.tcl")
     # KV-G3 10-24: FIRM plan internal stations / plan-cell sites of a bound kit (kit_istations.py next to its RTL)
@@ -543,7 +583,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     import reset_tree as RT
     if rtt:
         shutil.copyfile(rtt[0], kd / "reset_tree.tcl")
-    elif RT.pipelined(P):
+    elif RT.delivered(P):
         (kd / "reset_tree.tcl").write_text(RT.tcl_text(RT.for_type(P, tn)))
     if macros:     # S81-P8 10-23: soft relay stations on their source-sink lines (relay_mid.tcl, after face_flops)
         shutil.copyfile(Path(__file__).with_name("relay_mid.tcl"), kd / "relay_mid.tcl")
@@ -563,9 +603,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
                           insertion_tol_ps=P.clock["insertion_tol_ps"],
                           # one clock port per tap (snapped): the R4 grid first, then any ADDED sink-anchored taps
                           tap_mode=t.get("clock", {}).get("tap_mode", "grid"),
-                          tap_pitch_um=S.tap_pitch(P, tn), grid_taps=len(S._grid_taps(P, tn)),
-                          taps=[dict(name=n, xy=[x, y],
-                                     kind="grid" if i < len(S._grid_taps(P, tn)) else "sinks")
+                          tap_pitch_um=S.tap_pitch(P, tn),
+                          grid_taps=0 if _density(t) else len(S._grid_taps(P, tn)),
+                          taps=[dict(name=n, xy=[x, y], kind="density" if _density(t) else
+                                     ("grid" if i < len(S._grid_taps(P, tn)) else "sinks"))
                                 for i, (n, x, y) in enumerate(S.tap_grid(P, tn))],
                           sink_taps=(T.report(P, tn)["taps"] if S.sink_tap_mode(t) else []),
                           taps_snapped=[dict(name=n, xy=[x, y]) for n, x, y in clock_pins(P, tn)],
@@ -583,6 +624,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
     # SIGNOFF 10-24: uniform sign-off as the final kit-flow step (run_kit.sh after route): signoff.py + its helpers
     shutil.copyfile(Path(__file__).with_name("signoff.py"), kd / "signoff.py")
+    shutil.copyfile(Path(__file__).with_name("pair_skew.tcl"), kd / "pair_skew.tcl")
     shutil.copyfile(Path(__file__).resolve().parents[2] / "physical/common_flow/clock_family.tcl", kd / "clock_family.tcl")
     (kd / "pins.json").write_text(json.dumps([dict(bus=b, bit=i, layer=l, x=x, y=y, face=f)
                                               for b, i, l, x, y, f in pins]) + "\n")
@@ -1021,6 +1063,8 @@ def mock_lef(P, tn):
     for name, x, y in tap_pins(P, tn):
         L += pin(name, "INPUT", "SIGNAL" if name == "arst_n" else "CLOCK",
                  [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
+    for name, x, y in reset_out_pins(P, tn):
+        L += pin(name, "OUTPUT", "SIGNAL", [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
     # PG: the kit's M5 / M6 / M7 stripes (gen_phys.PDN; VSS one width + spacing after VDD)
     for net, j in (("VDD", 0), ("VSS", 1)):
         rects = []

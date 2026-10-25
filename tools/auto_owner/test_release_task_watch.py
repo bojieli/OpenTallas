@@ -202,5 +202,66 @@ class Render(unittest.TestCase):
                 rtr.TASKS_JSON = old
 
 
+class LaneEvidence(unittest.TestCase):
+    """2026-10-24 INFRA.WATCH: team owners (QC/KV/HBM/TOK-QK/COORD) map to lane files, lane run dirs and HANDOFF lines"""
+    TREE2 = """# tree
+## DIE kv · KV · rev x · est. x
+- [ ] KV.G3.CORES KV hard cores · KV · RUNNING · none signed
+- [ ] KV.G5 Boot + token · TOK-QK · RUNNING · boot stalls
+- [ ] KV.IDLE Nothing · KV-NOBODY · TODO · nothing
+## INFRA · fleet
+- [ ] INFRA.DISK epyc2 scratch 87% · COORD · RUNNING · prune pass 2
+"""
+
+    def setUp(self):
+        self.d = tempfile.TemporaryDirectory(); self.old = w.LANES; w.LANES = Path(self.d.name)
+        (w.LANES / 'KV-G3.md').write_text('# KV-G3\n2026-10-24 21:33 PDT KV-G3: eco on /srv/opentallas-scratch2/claude/kv-cores/eco\n')
+        (w.LANES / 'TOK-QW.md').write_text('# TOK-QW\nno timestamps\n')
+
+    def tearDown(self):
+        w.LANES = self.old; self.d.cleanup()
+
+    def texts(self):
+        return {str(f): f.read_text() for f in w.LANES.glob('*.md')}
+
+    def test_aliases_and_dirs(self):
+        self.assertEqual([p.name for p in w.lane_paths('KV')], ['KV-G3.md'])
+        self.assertEqual([p.name for p in w.lane_paths('TOK-QK')], ['TOK-QW.md'])
+        self.assertIn('KV-TOK', w.owner_lane_names('TOK-QK'))
+        self.assertEqual(w.lane_dirs_of('/x/KV-G3.md', '/srv/opentallas-scratch/claude/wt/a /srv/opentallas-scratch2/claude/kv-cores/eco'),
+                         {'kv-g3', 'kv-cores'})
+
+    def test_dated_lines(self):
+        hl = w.handoff_lines('2026-10-24 21:14 PDT COORD: x\n- 2026-10-24 21:20 PDT S81: PARKED\n', now=2e9)
+        self.assertEqual([h[0] for h in hl], ['COORD', 'S81'])
+        self.assertEqual(hl[1][1] - hl[0][1], 360)
+
+    def gather(self, ts, now, lane_mtimes=None, probes=None, hand=()):
+        ev = w.gather(ts, now - 7200, self.texts(), lane_mtimes or {}, list(hand), [], {}, [], probes or {}, {}, now=now)
+        return {r['id']: r for r in w.classify(ts, ev, now=now)}
+
+    def test_lane_activity_and_run_dirs(self):
+        lt = self.texts()
+        ts = [t for t in w.load_tasks(self.TREE2) if not t['checked']]
+        for t in ts: t['refs'] = w.build_refs(t, lt, [])
+        t0 = w.handoff_lines(lt[str(w.LANES / 'KV-G3.md')], now=2e9)[0][1]
+        res = self.gather(ts, t0 + 100 * 60)                       # lane line 100 min old: LIVE (< 2 h)
+        self.assertEqual(res['KV.G3.CORES']['cls'], 'LIVE'); self.assertIn('KV-G3.md', res['KV.G3.CORES']['why'])
+        self.assertEqual(res['KV.IDLE']['cls'], 'STALE')
+        res = self.gather(ts, t0 + 150 * 60)                       # 2.5 h: STALE (the epyc1 mirror mtime does not count)
+        self.assertEqual(res['KV.G3.CORES']['cls'], 'STALE')
+        d = '/srv/opentallas-scratch2/claude/kv-cores'
+        probes = {'intel2': dict(lanedirs={'kv-cores': [dict(path=d, newest=t0, nprocs=2, procs=[[5, t0, 'bash run_eco.sh']])]})}
+        res = self.gather(ts, t0 + 150 * 60, probes=probes)        # a live ot-run unit in the lane's run dir: LIVE
+        self.assertEqual(res['KV.G3.CORES']['cls'], 'LIVE'); self.assertIn('run_eco', res['KV.G3.CORES']['why'])
+        res = self.gather(ts, t0 + 150 * 60, lane_mtimes={str(w.LANES / 'TOK-QW.md'): t0 + 140 * 60})
+        self.assertEqual(res['KV.G5']['cls'], 'LIVE')              # TOK-QK -> TOK-QW.md (no timestamps: mtime)
+        self.assertEqual(res['INFRA.DISK']['cls'], 'STALE')
+        hand = [('COORD', t0 + 60 * 60, '2026-10-24 22:33 PDT COORD: disk prune pass 2 done on epyc2')]
+        self.assertEqual(self.gather(ts, t0 + 150 * 60, hand=hand)['INFRA.DISK']['cls'], 'LIVE')
+        hand = [('COORD', t0 + 60 * 60, '2026-10-24 22:33 PDT COORD: hourly, nothing about it')]
+        self.assertEqual(self.gather(ts, t0 + 150 * 60, hand=hand)['INFRA.DISK']['cls'], 'STALE')
+
+
 if __name__ == '__main__':
     unittest.main()
