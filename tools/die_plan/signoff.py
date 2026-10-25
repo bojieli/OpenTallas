@@ -20,7 +20,7 @@ corner (MCMM = TT + FF (+ SS for information with --corners tt,ff,ss) x 1 functi
 RVT+LVT+SLVT liberty of that corner.
 
 CORNER RULE (owner, restated 2026-10-24, AGENTS.md c7ce2ed69a; supersedes the 2026-09-30 SS rule): timing closes at the
-TYPICAL corner -- setup at TT, hold at FF, 60 / 25 ps uncertainty, pin-flop spread <= 80 ps.  SS never gates; with
+TYPICAL corner -- setup at TT, hold at FF, 60 / 25 ps uncertainty, related flop-pair skew with CPPR <= 80 ps (spread is INFO).  SS never gates; with
 --corners ...,ss it is reported for information only.
 
 CHECKS (each PASS / FAIL / NOT RUN; SIGNED only if every blocking check PASSes):
@@ -35,7 +35,7 @@ CHECKS (each PASS / FAIL / NOT RUN; SIGNED only if every blocking check PASSes):
   unconstrained check_setup -unconstrained_endpoints = 0, no unclocked registers, no loops                blocking
   clock         per corner: active-edge clock arrival at every register clock pin (insertion min/mean/max) and
                 at the PIN FLOPS (registers whose D is in the fan-out of a data input or whose Q reaches a data
-                output); pin-flop spread = max - min <= 80 ps at TT and FF (R4, COORD 10-23); with
+                output); related flop-pair skew with CPPR <= 80 ps at TT and FF (owner decision 5); spread INFO; with
                 --insertion-target the pin-flop mean must be within +-insertion_tol                         blocking
   sdc_lint      tools/die_plan/sdc_lint.py on the golden SDC (kit sdc_lint.json when present, else a context derived
                 from the SDC + the routed netlist's ports with the plan period / insertion / tolerance)     blocking
@@ -74,7 +74,8 @@ PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
 PERIOD_PS = 833.0
 UNC_SETUP_PS, UNC_HOLD_PS = 60.0, 25.0
 INSERTION_PS, INSERTION_TOL_PS = 250.0, 40.0
-SPREAD_MAX_PS = 80.0
+PAIR_SKEW_MAX_PS = 80.0
+SPREAD_MAX_PS = PAIR_SKEW_MAX_PS  # legacy record field; spread is information only
 FANOUT_MAX = 64
 SPREAD_CORNERS = ("tt", "ff")
 CORNERS = ("tt", "ff")                 # the sign-off corners; "ss" may be added for information
@@ -322,6 +323,21 @@ dict for {i p} $so_regs {
   puts "SO_CK [expr {[dict exists $so_bnd $i] ? 1 : 0}] [format %.2f $a] [get_full_name [lindex $cl 0]]"
 }
 so CK_ERRORS $so_ck_err
+# Related pairs use the original source latencies (including early hard-core taps).
+# Restore the SDC after the insertion-only diagnostic zeroed physical clock source latency.
+read_sdc /sdc/golden.sdc
+set_propagated_clock [all_clocks]
+set ::ot_ps_lib_only 1
+@PAIR_SKEW@
+unset ::ot_ps_lib_only
+ot_ps_zero_unc
+set so_pair_limit [expr {max(1, [llength [all_registers -data_pins]])}]
+foreach dly {max min} {
+  set rows [ot_ps_pairs $dly $so_pair_limit]
+  # count/worst-absolute/worst-signed/p99 and names; no path sample is used for the gate.
+  so PAIR_$dly {*}[ot_ps_summary $rows]
+}
+so PAIR_DONE 1
 so DONE 1
 exit
 """
@@ -337,7 +353,8 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
                  ("@INS_TOL@", f"{ins_tol:g}"), ("@FANOUT_MAX@", str(int(fanout_max))),
-                 ("@CLOCK_FAMILY@", _clock_family_tcl())):
+                 ("@CLOCK_FAMILY@", _clock_family_tcl()),
+                 ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text())):
         t = t.replace(k, v)
     return t
 
@@ -437,6 +454,16 @@ def corner_result(parsed):
     out["ck_errors"] = _f(kv.get("CK_ERRORS"))
     out["insertion_all"] = stats(allck)
     out["insertion_pinflops"] = stats(bnd)
+    pairs = {}
+    for dly in ("max", "min"):
+        fields = (kv.get(f"PAIR_{dly}") or "").split()
+        if len(fields) >= 4:
+            pairs[dly] = dict(n=_f(fields[0]), worst_abs_ps=_f(fields[1]),
+                              worst_signed_ps=_f(fields[2]), p99_abs_ps=_f(fields[3]),
+                              worst_launch=fields[4] if len(fields) > 4 else None,
+                              worst_capture=fields[5] if len(fields) > 5 else None)
+    out["pair_skew"] = dict(done=kv.get("PAIR_DONE") == "1", checks=pairs,
+                            measurement="worst timing path per register endpoint, setup and hold, CPPR credited")
     out["ocv5_wns_max"] = _f(kv.get("OCV5_WNS_MAX"))
     out["ocv5_wns_min"] = _f(kv.get("OCV5_WNS_MIN"))
     return out
@@ -640,13 +667,23 @@ def evaluate(rec, insertion_target=None):
         sp, why = {}, []
         for c in [x for x in ALL_CORNERS if ok_corner(x)]:
             pf = C[c].get("insertion_pinflops")
-            sp[c] = dict(pinflops=pf, all=C[c].get("insertion_all"), ck_errors=C[c].get("ck_errors"))
+            sp[c] = dict(pinflops=pf, all=C[c].get("insertion_all"), ck_errors=C[c].get("ck_errors"),
+                         pair_skew=C[c].get("pair_skew"))
         for c in SPREAD_CORNERS:
             pf = C[c].get("insertion_pinflops")
             if not pf:
                 why.append(f"{c.upper()}: no pin flops measured")
-            elif pf["spread"] > SPREAD_MAX_PS:
-                why.append(f"{c.upper()} pin-flop spread {pf['spread']:.1f} ps > {SPREAD_MAX_PS:g}")
+            ps = C[c].get("pair_skew") or {}
+            checks = ps.get("checks", {})
+            if not ps.get("done") or any(k not in checks for k in ("max", "min")):
+                why.append(f"{c.upper()}: related pair skew NOT RUN")
+            else:
+                for k, value in checks.items():
+                    n, worst = value.get("n"), value.get("worst_abs_ps")
+                    if not n or worst is None or not __import__("math").isfinite(worst):
+                        why.append(f"{c.upper()} {k}: no finite related pair measurement")
+                    elif worst > PAIR_SKEW_MAX_PS:
+                        why.append(f"{c.upper()} {k} related pair skew {worst:.1f} ps > {PAIR_SKEW_MAX_PS:g}")
             if (C[c].get("ck_errors") or 0) > 0:
                 why.append(f"{c.upper()}: {int(C[c]['ck_errors'])} register clock pins without a unique clock arrival")
         if insertion_target is not None:
@@ -654,7 +691,8 @@ def evaluate(rec, insertion_target=None):
             if pf and abs(pf["mean"] - insertion_target) > INSERTION_TOL_PS:
                 why.append(f"TT pin-flop insertion {pf['mean']:.1f} ps not within {insertion_target:g} +- "
                            f"{INSERTION_TOL_PS:g}")
-        put("clock", "FAIL" if why else "PASS", spread_max_ps=SPREAD_MAX_PS, by_corner=sp, problems=why,
+        put("clock", "FAIL" if why else "PASS", pair_skew_max_ps=PAIR_SKEW_MAX_PS, spread_info_only=True,
+            by_corner=sp, problems=why,
             insertion_target_ps=insertion_target)
     else:
         put("clock", "NOT RUN")
@@ -739,7 +777,7 @@ def cmd_run(a):
                                   "ocv5_* = flat late 1.05 / early 0.95, information only",
                            engine=f"OpenSTA in OpenROAD ({a.image}), one process per corner",
                            libs="ASAP7 NLDM RVT+LVT+SLVT per corner + kit ADDITIONAL_LIBS per corner",
-                           corner_rule="setup TT / hold FF / 60-25 ps / spread <= 80 TT+FF; SS information only "
+                           corner_rule="setup TT / hold FF / 60-25 ps / related pair skew CPPR <= 80 TT+FF; spread INFO; SS information only "
                                        "(owner 2026-10-24, AGENTS.md c7ce2ed69a)"),
                tool_commit=_git_head())
     with cf.ThreadPoolExecutor(len(corners)) as ex:
