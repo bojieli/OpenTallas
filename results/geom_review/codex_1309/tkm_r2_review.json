@@ -1,0 +1,32 @@
+{
+  "timestamp": "2026-10-25 14:05 PDT",
+  "source": "codex/clock-1309@b1d94371df",
+  "row": "09d824b64e8c",
+  "kit": "codex-shallow-1309/tkm35_r2",
+  "verdict": "PASS-COND ONE CTS-only retry; noGRTDRT",
+  "runtime_plan_sha256": "f5e75b12ab906c35cec848e745c7646811edbe8e2720e10494ad372239fe6844",
+  "nodes": 22,
+  "actual_cells_checked": 188307,
+  "row_site_orient_errors": 0,
+  "occupancy_or_mutual_overlaps": 0,
+  "changed_nodes_um": {
+    "ot_dtsh_13": [
+      1.836,
+      2.16
+    ],
+    "ot_dtsh_15": [
+      2.592,
+      -1.35
+    ]
+  },
+  "max_move_Manhattan_um": 3.996,
+  "tap_count": 35,
+  "levels": 5,
+  "max_edge_um": 328.59,
+  "failure_preserved": "df036e594d98 failedODB0373 donttouch-before-child-connect; sourcefixgraphcomplete/NDR/freeze/audit",
+  "conditions": [
+    "CustomCTS-only DIAGNOSTIC_ONLY wrapper",
+    "ActualpostCTS tree/load TTFFinsertion/relatedpairs before nextstage",
+    "NoGRTDRT/defaultcanaryPASS/SIGNED"
+  ]
+}
