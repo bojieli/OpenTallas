@@ -8,8 +8,11 @@ mutants fail. Wrong-slot DATA or CTL events produce a sticky fault and
 suppress consumer event bits. NE duplicate corruption raises RX fault.
 
 Source: rtl/hbm_accel/generic/transport/ot_hbm_static_2beat.sv.
-One aligned start broadcast establishes a static two-cycle phase at both
-endpoints. Accept words only on slot0; every event/valid bit in CONTROL_MASK
+One boot-only aligned start broadcast establishes a static two-cycle phase at both
+endpoints before first HC root configuration. Repeated start raises sticky
+fault and is ignored for phase; per-token launch must not be used. Before
+start payload may be unknown, RX DATA/SIDE event bits are0, and startup
+warmup rejects uninitialized channel beats. Accept words only on slot0; every event/valid bit in CONTROL_MASK
 and SIDE_CONTROL_MASK must be0 on slot1. Payload may vary there. RX emits
 one-cycle event pulses on completion, never repeats a held valid. DATA
 and correlated CTL traverse the same number of registered channel stages.

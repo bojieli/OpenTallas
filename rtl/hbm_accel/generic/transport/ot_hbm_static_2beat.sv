@@ -4,7 +4,8 @@
 // event/valid in CONTROL_MASK and correlated CTL event in SIDE_CONTROL_MASK
 // MUST be0 on slot1. Payload may change there. The spare high-beat MSB carries
 // a sticky phase fault; RX clears all DATA/CTL valid bits on fault.
-// Start is an explicit aligned broadcast after both wavefront resets release.
+// Start is one boot-only aligned broadcast after both wavefront resets release.
+// Repeated start faults and is ignored for phase; never bind per-token launch.
 // DATA and correlated SIDE paths must each have exactly LINK_STAGES channel
 // registers (pad the short path). End-to-end age=LINK_STAGES+2 edges, II2.
 // No ready/arbitration/queue, feedback scheduling, or reset on payload flops.
@@ -24,13 +25,13 @@ module ot_hbm_static_2beat_tx #(
  reg running,phase;
  reg[HI-1:0] high_q;
  wire bad_phase=phase&&((|(d&CONTROL_MASK))||(|(side_d&SIDE_CONTROL_MASK)));
- assign slot0=running&&!phase&&!start;
+ assign slot0=running&&!phase;
  always @(posedge clk)begin
   if(!rst_n)begin running<=0;phase<=0;fault<=0;end
-  else if(start)begin running<=1;phase<=0;end
-  else if(running)begin phase<=~phase;if(bad_phase)fault<=1;end
+  else if(start&&!running)begin running<=1;phase<=0;end
+  else if(running)begin phase<=~phase;if(bad_phase||start)fault<=1;end
  end
- always @(posedge clk)if(running&&!start)begin
+ always @(posedge clk)if(running)begin
   if(!phase)begin high_q<=d[W-1:B];beat<=d[B-1:0];side_beat<=side_d;end
   else begin
    beat<={{(B-HI){1'b0}},high_q} ^ (MUT==1?{{(B-3){1'b0}},3'b100}:{B{1'b0}});
@@ -65,13 +66,14 @@ module ot_hbm_static_2beat_rx #(
   assign duplicate_bad=|(beat[HI+:PAD]^low_q[0+:PAD]);
  end else begin:g_no_duplicate assign duplicate_bad=1'b0;end
  wire complete_fault=beat[B-1]||duplicate_bad;
- wire active=running&&!start&&warmup==0;
+ wire active=running&&warmup==0;
  assign q=(data_q&~CONTROL_MASK)|control_q;
  assign side_q=(side_data_q&~SIDE_CONTROL_MASK)|side_control_q;
  always @(posedge clk)begin
   if(!rst_n)begin running<=0;phase<=0;have_low<=0;warmup<=0;control_q<=0;side_control_q<=0;fault<=0;end
-  else if(start)begin running<=1;phase<=1'(LINK_STAGES%2);have_low<=0;warmup<=CW'(LINK_STAGES+1);control_q<=0;side_control_q<=0;end
+  else if(start&&!running)begin running<=1;phase<=1'(LINK_STAGES%2);have_low<=0;warmup<=CW'(LINK_STAGES+1);control_q<=0;side_control_q<=0;end
   else if(running)begin
+   if(start)fault<=1;
    phase<=~phase;
    if(warmup!=0)warmup<=warmup-1'b1;
    else begin
@@ -81,8 +83,8 @@ module ot_hbm_static_2beat_rx #(
     end
     if(!phase&&have_low)begin
      if(complete_fault)fault<=1;
-     control_q<=fault||complete_fault?{W{1'b0}}:(complete_word&CONTROL_MASK);
-     side_control_q<=fault||complete_fault?{S{1'b0}}:(side_beat&SIDE_CONTROL_MASK);
+     control_q<=fault||complete_fault||start?{W{1'b0}}:(complete_word&CONTROL_MASK);
+     side_control_q<=fault||complete_fault||start?{S{1'b0}}:(side_beat&SIDE_CONTROL_MASK);
     end
    end
   end
