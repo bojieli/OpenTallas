@@ -268,9 +268,42 @@ def ft_hop_in_share(P):
     return float(P.clock.get("ft_hop_in_share", FT_HOP_IN_SHARE))
 
 
+# CLOCK-RESET IO-HOLD 10-25 (opt-in plan clock.seam_hold {sender_ps, seam_ps}; absent = the legacy contract above).
+# Seam hold composes from the two kit checks: the sender's output hold (set_output_delay -min -sender_ps, its half
+# uncertainty 12.5) guarantees port data >= vclk + 12.5 + sender_ps in its own propagated frame; the receiver's input
+# hold (set_input_delay -min sender_ps - seam_ps, its half 12.5) guarantees port -> D >= capture - vclk + t_hold +
+# 12.5 + seam_ps - sender_ps.  Summed in the die frame: seam hold slack >= seam_ps - (e_rx - e_tx), e = each kit's
+# die-tap delivery error vs its sign-off (RCX-rebound) pin-register mean, i.e. the die related tap skew.  So seam_ps
+# only has to cover the die tap skew bound (20 ps, decision 5 balance target) + routed-RCX error (5 ps); the 25 ps
+# die hold uncertainty is already the two 12.5 halves.  The legacy contract (sender 0, receiver -tol 40) credits no
+# clk->q: a pin-registered output has cq + port buffer 55.5-58 ps at FF (payload536 4_cts), so sender_ps 25 costs no
+# sender padding while the receiver pads 40 ps less per seam bit (results/clock_iohold_0810).
+SEAM_HOLD_MIN_PS = 25.0
+
+
+def seam_hold(P):
+    """{in_min_ps, out_min_ps, seam_ps, basis}: the kit min input / output delays vs vclk (ps) of the seam hold contract."""
+    sh = P.clock.get("seam_hold")
+    if not sh:
+        tol = float(P.clock["insertion_tol_ps"])
+        return dict(in_min_ps=-tol, out_min_ps=HOLD_OUT_MIN_PS, seam_ps=tol - HOLD_OUT_MIN_PS,
+                    basis="legacy: receiver pads the whole insertion window (-insertion_tol), sender 0")
+    snd, seam = float(sh["sender_ps"]), float(sh["seam_ps"])
+    if snd < 0 or seam < SEAM_HOLD_MIN_PS:
+        raise ValueError(f"clock.seam_hold: sender_ps {snd:g} must be >= 0 and seam_ps {seam:g} >= "
+                         f"{SEAM_HOLD_MIN_PS:g} (die tap skew bound + RCX error)")
+    return dict(in_min_ps=snd - seam, out_min_ps=-snd, seam_ps=seam,
+                basis=f"clock.seam_hold: sender {snd:g} ps after vclk, seam {seam:g} ps")
+
+
 def hold_in_min_ps(P):
     """seam-hold padding: the kit's min input delay vs vclk (ps)."""
-    return -float(P.clock["insertion_tol_ps"])
+    return seam_hold(P)["in_min_ps"]
+
+
+def hold_out_min_ps(P):
+    """the kit's min output delay vs vclk (ps, <= 0): the sender's share of the seam hold contract."""
+    return seam_hold(P)["out_min_ps"]
 
 
 # FLOW 10-25 (METHODOLOGY ruling 9.7, BRIEFING decision 5e; NEARMISS-STRUCT: 4 of 7 near misses = output pin register
@@ -408,7 +441,7 @@ def sdc(P, tn, pins):
     # CP1-R10 (sdc_lint): explicit min output delay.  Until 10-24 the plain set_output_delay also set the MIN output
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
-    out += (f"set_output_delay -min {t_lib(HOLD_OUT_MIN_PS):.4f} -clock vclk [all_outputs]\n")
+    out += (f"set_output_delay -min {t_lib(hold_out_min_ps(P)):.4f} -clock vclk [all_outputs]\n")
     return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 
@@ -634,6 +667,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # FLOW 10-25 (ruling 9.7 / decision 5e): bound pin-register insertion per corner (vclk_corner.tcl)
            f"export OT_VCLK_TT = {t_lib(ib['tt']):.4f}",
            f"export OT_VCLK_FF = {t_lib(ib['ff']):.4f}",
+           # CLOCK-RESET IO-HOLD 10-25: the seam hold contract the post-CTS FF gate applies (hold_gate.tcl)
+           f"export OT_HOLD_IN_MIN = {t_lib(hold_in_min_ps(P)):.4f}",
+           f"export OT_HOLD_OUT_MIN = {t_lib(hold_out_min_ps(P)):.4f}",
            # FLOW 10-25 F2: placement / CTS / GRT parasitic estimates on the ASAP7 per-layer RC calibrated to routed
            # RCX (setRC_rcx_asap7.tcl; the stock setRC.tcl put clock sinks 11-57 ps above RCX).  ORFS reads
            # LAYER_PARASITICS_FILE (this image) / SET_RC_TCL (newer variables.yaml) instead of the platform setRC.tcl.
@@ -816,6 +852,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
     if [ \$rc = 0 ]; then C=\$(ls /work/run/results/asap7/*/base/4_cts.odb 2>/dev/null | head -1); S=\$(ls /work/run/results/asap7/*/base/4_cts.sdc 2>/dev/null | head -1); \
       PLIBS=\"\$(\$M print-BC_LIB_FILES 2>/dev/null | sed -n 's/^BC_LIB_FILES *[:=] *//p')\" ODB=\"\$C\" SDC=\"\$S\" PLATFORM_DIR=/OpenROAD-flow-scripts/flow/platforms/asap7 \
         OT_VCLK_TT=\$(sed -n 's/^export OT_VCLK_TT = //p' /work/config.mk) OT_VCLK_FF=\$(sed -n 's/^export OT_VCLK_FF = //p' /work/config.mk) \
+        OT_HOLD_IN_MIN=\$(sed -n 's/^export OT_HOLD_IN_MIN = //p' /work/config.mk) OT_HOLD_OUT_MIN=\$(sed -n 's/^export OT_HOLD_OUT_MIN = //p' /work/config.mk) \
         LAYER_PARASITICS_FILE=\$(sed -n 's/^export LAYER_PARASITICS_FILE = //p' /work/config.mk) \
         openroad -exit /work/hold_gate.tcl > /work/hold_gate.log 2>&1; rc=\$?; tail -3 /work/hold_gate.log; \
       if [ \$rc != 0 ]; then echo 'FAIL_POSTCTS FF structural hold gate (or NOT RUN)' | tee -a /work/FAIL_POSTCTS; rc=4; fi; fi; fi; \

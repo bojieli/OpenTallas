@@ -651,7 +651,7 @@ def standin_netlist(P, tn, hold_contract=True, clock_contract=True):
             ckcells.append(f"  {lat} c{j} (.A({n}), .Y(ck_{n}));")
     cells = []
     k = 0
-    bh = die_sta.bhold_cell(P.clock["insertion_tol_ps"])
+    bh = die_sta.bhold_cell(gen_phys.seam_hold(P)["seam_ps"])
     for bus, bit, ln, x, y, f in sorted(pins, key=lambda p: (p[0], p[1])):
         ck = ckn[near(x, y)]
         if dirs.get(bus) == "in" and hold_contract:

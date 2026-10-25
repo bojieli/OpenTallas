@@ -330,9 +330,9 @@ puts "SO_PATH_END"
 set so_reference_ok 1
 @FF_VCLK@
 if {[llength $so_vclk] == 1 && $so_reference_ok} {
-  if {[llength $so_din]} { set_input_delay -min [expr {-@INS_TOL@}] -clock [lindex $so_vclk 0] $so_din }
-  if {[llength [all_outputs]]} { set_output_delay -min 0 -clock [lindex $so_vclk 0] [all_outputs] }
-  so OVERLAY applied [get_full_name [lindex $so_vclk 0]] in_min -@INS_TOL@ out_min 0
+  if {[llength $so_din]} { set_input_delay -min @IN_MIN@ -clock [lindex $so_vclk 0] $so_din }
+  if {[llength [all_outputs]]} { set_output_delay -min @OUT_MIN@ -clock [lindex $so_vclk 0] [all_outputs] }
+  so OVERLAY applied [get_full_name [lindex $so_vclk 0]] in_min @IN_MIN_LOG@ out_min @OUT_MIN@
 } else {
   so OVERLAY skipped vclks [llength $so_vclk]
 }
@@ -431,7 +431,13 @@ exit
 
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
-                ff_vclk="sdc", ff_bound_ps=None):
+                ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None):
+    """hold_in_min / hold_out_min: the kit's seam hold contract (sdc_lint.json hold_in_min_ps / hold_out_min_ps,
+    CLOCK-RESET IO-HOLD 10-25); None = legacy overlay (min input -ins_tol, min output 0)."""
+    hin = -float(ins_tol) if hold_in_min is None else float(hold_in_min)
+    hout = 0.0 if hold_out_min is None else float(hold_out_min)
+    if hout > 0:
+        raise ValueError(f"hold overlay: min output delay {hout:g} > 0 waives the sender hold check")
     if spef:
         par, src = "read_spef /base/6_final.spef", "spef"
     else:
@@ -450,7 +456,9 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
         t = SESSION_TCL.replace("@FF_VCLK@", FF_VCLK_TCL if on else "")
     for k, v in (("@ODB@", odb), ("@PLAT@", PLAT), ("@C@", corner.upper()), ("@PARASITICS@", par), ("@PARSRC@", src),
                  ("@MACRO_LIBS@", "\n".join(f"read_liberty {x}" for x in mlibs_ctr)),
-                 ("@INS_TOL@", f"{ins_tol:g}"), ("@FANOUT_MAX@", str(int(fanout_max))),
+                 ("@INS_TOL@", f"{ins_tol:g}"), ("@IN_MIN@", f"[expr {{-{ins_tol:g}}}]" if hold_in_min is None else f"{hin:g}"),
+                 ("@IN_MIN_LOG@", f"{hin:g}"), ("@OUT_MIN@", f"{hout:g}"),
+                 ("@FANOUT_MAX@", str(int(fanout_max))),
                  ("@CLOCK_FAMILY@", _clock_family_tcl()),
                  ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text()),
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
@@ -598,8 +606,11 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     for i, lp in enumerate(mlibs):
         mounts.append((f"ml{i}", str(Path(lp).parent)))
         ml_ctr.append(f"/ml{i}/{Path(lp).name}")
+    lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text()) if disc.get("sdc_lint_ctx") else {}
     (od / "session.tcl").write_text(session_tcl(corner, ml_ctr, disc["spef"], odb=Path(disc["odb"]).name, ff_vclk=ff_vclk,
-                                                    ff_bound_ps=disc.get("ff_bound_ps")))
+                                                ff_bound_ps=disc.get("ff_bound_ps"),
+                                                hold_in_min=lctx.get("hold_in_min_ps"),
+                                                hold_out_min=lctx.get("hold_out_min_ps")))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")

@@ -423,6 +423,11 @@ SCHEMA = {
             # FLOW 10-25 (ruling 9.7 / decision 5e): die-wide FF pin-register insertion budget (the TT one is
             # insertion_ps / common_latency_ps); absent -> gen_phys.FF_TT_INSERTION_RATIO x TT
             "insertion_ff_ps": _pos,
+            # CLOCK-RESET IO-HOLD 10-25 (opt-in seam hold contract, gen_phys.seam_hold): the sender guarantees its
+            # output changes >= sender_ps after vclk (+ its half uncertainty), the receiver pads for the rest of
+            # seam_ps (>= gen_phys.SEAM_HOLD_MIN_PS = die tap related-pair skew bound + routed-RCX error)
+            "seam_hold": {"type": "object", "additionalProperties": False, "required": ["sender_ps", "seam_ps"],
+                          "properties": {"sender_ps": _nonneg, "seam_ps": _nonneg, "note": {"type": "string"}}},
             # R4 owner rule (COORD 10-23 19:55): ONE die-wide common latency target; every partition balances its
             # face-flop insertion to it (seam skew <= 80 ps TT+FF); the IO SDC proxy uses it as vclk latency.
             # Absolute insertion / sinks per tap are guidance (OT_TAP_CHECK WARN).  G0 completeness requires it.
