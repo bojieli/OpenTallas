@@ -283,7 +283,9 @@ SCHEMA = {
                                        "lef": {"type": "string"}, "lib": {"type": "string"},
                                        "note": {"type": "string"}}}},
                     "reset": {"type": "object", "additionalProperties": False, "properties": {
-                        "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2}}},
+                        "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
+                        # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
+                        "depth": {"type": "integer", "minimum": 1}}},
                     "contents": {"type": "array", "items": {
                         "type": "object", "required": ["inst", "module", "status"], "additionalProperties": False,
                         "properties": {"inst": _name, "module": _name, "status": {"enum": list(STATUS)},
@@ -389,7 +391,13 @@ SCHEMA = {
             # synchroniser per die region, then synchronous relay flops every <= relay_um (405) with equal depth to every
             # clock tap; partitions take arst_n as a SYNCHRONOUS input (pin register + equal-depth tree, part_depth K).
             # "counted" = legacy per-tap asynchronous synchronisers (does not meet the rule; G0 warns).
-            "release": {"enum": ["counted", "pipelined"]}, "relay_um": _pos,
+            # OWNER DECISION 13 (2026-10-24, supersedes equal depth): "wavefront" = ONE root synchroniser per die, then
+            # every partition registers its incoming reset (arst_n) and re-drives registered rst_o_<k> outs to its
+            # neighbours; per-partition release cycles published by reset_tree.py offsets.  hop_um = die hop reach
+            # (parent rst_o relay -> child u_rst_in, default relay_um); in_sites {type: [x, y]} overrides the solver's
+            # IN pin; root_part names the root partition (default: the one at the die rst_n pin).
+            "release": {"enum": ["counted", "pipelined", "wavefront"]}, "relay_um": _pos, "hop_um": _pos,
+            "in_sites": {"type": "object", "additionalProperties": _xy}, "root_part": _name,
             "part_depth": {"type": "integer", "minimum": 1},
             "regions": {"type": "array", "items": {
                 "type": "object", "required": ["name"], "additionalProperties": False,
