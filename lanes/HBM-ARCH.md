@@ -223,7 +223,7 @@ Many 'within' kits still have a longest tree 300-580 ps (SRAM / far sinks); pin-
       meta src rank [528+:8] ({v,kind8,src8,gi16}, ot_hgi_coll_amerge/argmax_static); argmax_static legal-G list + gbase+g<=256;
       ~140 [7:0] rank/src/gsz/gbase declarations over ~40 collective/index files (record/decode/ep/qrec/qep/tkm*/idx_client).
       tkm_static already derives RANK_W=clog2(TP) (9 at 384) -> tkm element width +1 b.
-      Options: (a) widen to 9 b (meta: take src[8] from a spare meta bit; inst: 2 spare bits) -- golden machine + compiler +
+      Options: (a) widen to 9 b (meta src[8] and 2 inst bits: free positions NOT yet confirmed in the HGI-1 ISA map) -- golden machine + compiler +
       RTL change together; (b) keep 8-bit fields and run TP-384 as 2 x 192-rank halves (not exact for TOPK/ARGMAX group-wide
       merges without a second merge level -> +1 collective/merge, priced). Recommend (a). I proceed with the die-internal
       2-quadrant RTL (independent of TP) and leave the TP field widening until the call.
