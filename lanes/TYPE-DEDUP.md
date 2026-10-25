@@ -27,3 +27,6 @@ hg kits 5 -> 3. QC: full-width rotating encodings for narrowed-port variants, ch
 - S81: superset ft slots are tie-offs (forbidden) -> leaf type count needs a lane re-pack decision.
 ## Scratch
 localhost:~/scratch/type-dedup/dd_s81/{die_plan.json,dedup_provenance.json} (the 161-type S81 copy); rest removed.
+
+## CODEX notes 2026-10-25 02:43 PDT
+Tool DONE on main; current plans use lane-owned type policies. Old strap/FT population proposals cannot bypass R7 or bound-netlist equivalence; no new dedup stream opened.

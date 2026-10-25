@@ -326,3 +326,30 @@ CODEX: 2026-10-24 21:10 PDT TOK-HBM PARKED codex/tok-hbm-r2-1024@53e6ebba0 corre
 
 2026-10-25 02:36 PDT CODEX: all lanes taken over; S81 replan generated gates recovered, dec17 integration in own branch; eight worker groups collecting results and executing fixes; epyc1 bus repair preserves running scopes.
 2026-10-25 02:38 PDT CODEX: Qwen source-bind takeover codex/qc-bind-1025@1b9b6f587; fixed-SU fresh bind pipeline running epyc1 codex-qc-bind-1025 PID1910174; meth xt1 nominal both64/64 collected, mutant follows.
+
+2026-10-25 02:38 PDT CODEX: KV core runner fails boundary/range violations before floorplan and propagates signoff failures; codex/kv-cores-1025 ready; inherited pv_pair four ECOs live.
+2026-10-25 02:38 PDT CODEX: HBM FACE shell gates collected 258 PASS; first argmax shell CTS variants launched epyc2/intel2; inherited gq_land DRT/bankq_ft progressing, no SIGNED claim.
+2026-10-25 02:40 PDT CODEX: HEAD c9 collected NOT SIGNED +117.24/-14.34ps; BC-only hold5 warm successors c8/c9 launched via ot-run, source-latency120ps pair-metric discrepancy sent CLOCK.
+
+2026-10-25 02:38 PDT CODEX: PART-CAP N14 collected DRC0 TT+66.33 FF-25.29 boundary hold FAIL; source-only N27 resume submitted intel1 128GB, codex/partcap-1025@ee919dc4e.
+2026-10-25 02:38 PDT CODEX: S81 DEC12R base READY codex/s81-dec12-1025@5c6fd2a2a; S81/head G0C0E; FAIL22 over-core route holds retained; LEAFPLAN2 regen launched.
+
+CODEX: 2026-10-25 02:38 PDT INFRA recovered epyc1 private/user bus via in-place manager reexec; preserved jobs, removed localhost hold; all5 hosts admit. Runtime dbus Type=exec until safe manager restart.
+CODEX: 2026-10-25 02:39 PDT CP1 collected P-r0 and R-r1 failures; R-r1 timing clean but slew146/82; owned m8/m8_dl data-net ECOs launched intel1 codex-cp1-push. Inherited R-r0 obsolete hold-margin loop left intact.
+
+2026-10-25 02:39 PDT CODEX: ELEM-QK KV r2/g3h six jobs collected (4 NOT SIGNED, 2 GRT-0183); diagnosed excessive120um buffer insertion and PHY local blockage, queued native405/wavefront re-kits after dec17.
+2026-10-25 02:39 PDT CODEX: S81/SVCG fold2beat implementation captured73afc9ff5; exact unit +16slice exchange PASS, all controls caught; +3composed cycles priced, compiler duty conditional; no new heavy jobs.
+2026-10-25 02:39 PDT CODEX: QC A0 NK v8c selected (peak density0.766,data hops<=405); reset delivery FAIL736.5um assigned RESET helper; NL two placements retained live; codex/qca0-review-1025.
+2026-10-25 02:40 PDT CODEX: QC A0 NK v8c selected (peak density0.766,data hops<=405); reset delivery FAIL736.5um assigned RESET helper; NL2 placements retained live; codex/qca0-review-1025@ccfd2778c.
+CODEX: 2026-10-25 HBM-FACE codex/hbm-face-1025@bce88fd9b collected 266 guard PASS + eight exact shell benches PASS; +1/+1 cycle/drop tables; topk-link synth OOM diagnosed, 128GB ot-run retry intel1 codex-hbm-face/link_mem128.
+
+2026-10-25 02:39 PDT CODEX: norm deskew READY codex/s81-norm-1025@0b0fddd16; xrt1/xrt3 post-synth LEC EQUIVALENT 28,507/32,651 compare points, zero diff/undecided; functional4/mutants2/locksteps4 PASS. +4 cycles from first norm leaf command; strict check kept. No jobs started; inherited LEC jobs completed.
+2026-10-25 02:5x PDT CODEX: KV channel proposal developed;2 reviewed G2 pilots launched via ot-run,297 lanes+921 proposed natural cycles (R8 pending). vL/vM GRT complete; vL setup/hold FAIL despite pair-skew PASS; no obsolete DRT launched.
+2026-10-25 02:42 PDT CODEX: KV K8/3 candidate compiles128PC calendars at1024ps; core833 diagnostic FAIL from V sector192 irregular put pacing (267 vs264), V-gap fix sweep live; exact encoded256-sector+rate-mutant checks PASS2/2. Existing E boot nominal preserved.
+CODEX: 2026-10-25 02:43 PDT QC-CORES su8 signed views archived codex/qc-cores-1025@6425849ea (TT+93.04/FF+2.39, pair34.08/32.05); 23 runs harvested, 21 NOT SIGNED diagnosed; own warm crh I291/margin5 route launched epyc2 scratch2, client epyc1 PID1945516. Five original jobs preserved.
+2026-10-25 02:42 PDT CODEX: S81 four split cores x m0/m5 routes launched after GEOM PASS-COND; hcpost two FF-repair variants; FTHOLD t8/t37 loop fix progressing. Logs in codex-s81-split / codex-s81-hcpost / codex-s81-fthold (epyc1 scratch2).
+2026-10-25 02:44 PDT CODEX: TOK-HBM SU31 diagnosed mixed serial/stream request relay clocks (43); real tap+bank minimum PASS8writes/8reads, mutant caught; full corrected SU31 rebuild/replay epyc2 codex-hbm-token-1025/full live; Qwen chains collected FAIL1824/1824 each.
+
+2026-10-25 02:43 PDT CODEX: READY codex/hold-stop-1025@666c6ac70 pre-repair structural FF hold stop (<-100ps/>2000 true endpoints); 5 Tcl fixtures +39 hold-stop tests PASS.
+
+2026-10-25 02:43 PDT CODEX: GEOM split4 route PASS-COND + LEAFPLAN2/DEC12R PHY plan PASS-COND records fda531177; signoff FF-vclk correction smoke live; current proto gates stay held until CLEAN.

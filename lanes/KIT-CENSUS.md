@@ -165,3 +165,6 @@ Why the GRT hold loops never converge (key evidence):
   usage-limit gaps (08:50-12:04, 14:30-18:49 10-24) left finished runs uncollected.
 Implication for change 1: set the hold repair margin to the sign-off hold margin (5 ps) + ft-chain delay cells, and stop at CTS
 when endpoints-under-margin >> real violators.
+
+## CODEX notes 2026-10-25 02:43 PDT
+Historical census DONE; operational recipe findings retained (hold margin0..5; early preflight stop; postCTS trueFF structural stop). CLOCK/CP1 implementing common runner stop gates; no duplicate census.

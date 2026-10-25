@@ -92,3 +92,6 @@ CODEX 10:50 PDT COLLECTED nightly pinned9d2065c7a2, service inactive/exit0 but g
 
 ## CODEX PARKED 2026-10-24 21:10 PDT
 Claude return order: branch codex/die-ci-refresh-1024 @03032ef99 pushed/merge-ready; no jobs started, adopted old CI remains running; details CODEX-LOG handoff.
+
+## CODEX notes 2026-10-25 02:43 PDT
+Operational job collection and 14h stale CI lock handed to INFRA owner /root/infra_fleet. Latest SUMMARY found on intel2 was 9f6cbf066233; no runs touched. Current-plan latency/schema fixes remain with CODEX geom/proto if new failures collected.

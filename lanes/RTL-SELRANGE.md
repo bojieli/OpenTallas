@@ -144,3 +144,6 @@ Earlier forms of xrt (lines 270/383/395/419/532/551) and kv_bank (236-240) exist
   2. Delete /srv/opentallas-scratch/claude/selrange-<host> on epyc1, epyc2, epyc3, intel1 and intel2, and epyc2:/srv/opentallas-scratch/claude/selrange. The latter is on the root FS.
   3. Lanes merge the csa31 fix and the waivers, then root-merge the gate.
   4. Lane generators wire in the gate.
+
+## CODEX notes 2026-10-25 02:43 PDT
+Standalone approved checker fc4d5fa9c supplied to KV cores and CLOCK/CP1 runner integration. Whole-runner adoption waits source-local S81 benign-select waivers; csa31 real fix already merged. Old redo paths absent and PIDs gone; no live job duplicated.
