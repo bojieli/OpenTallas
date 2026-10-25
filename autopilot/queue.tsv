@@ -279,3 +279,4 @@ hbm	ot_hbm_idx_score_quarter_static__tail0_5cf6e5ff5f5a	epyc2:/srv/opentallas-sc
 s81_head	hd_spn__m0	epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m0/hd_spn	claude/s81-head-kits-1025@73b82056f0	REQ	[S81-HEAD/KITS 07:05]	32	77887	S81-HEAD	route		8
 s81_head	hd_spn_end__m5	epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m5/hd_spn_end	claude/s81-head-kits-1025@73b82056f0	REQ	[S81-HEAD/KITS 07:05]	32	49656	S81-HEAD	route		8
 s81_head	hd_spn_end__m0	epyc1:/srv/opentallas-scratch2/claude/s81-head-kits/m0/hd_spn_end	claude/s81-head-kits-1025@73b82056f0	REQ	[S81-HEAD/KITS 07:05]	32	49656	S81-HEAD	route		8
+s81	ot_s81sl_vn_b	epyc2:/srv/opentallas-scratch2/claude/s81-cores3-sw/vn_b_f6s	claude/s81-cores2-sw-1025@c2a8417f0	REQ	S81-CORES3/SW 07:14	32	175000	S81-CORES	finish	/srv/opentallas-scratch2/claude/s81-cores3-sw/vn_b_f6s/run_kit_flow.sh	16	submit
