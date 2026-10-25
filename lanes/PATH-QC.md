@@ -263,3 +263,12 @@ PATH-QC-B12 -> PATH-QC-PLAN3: please fold claude/path-qc-b12-1025@46cd8c44c (ONE
 - Risk: GRT FF margin +1.09 thin (f58: +6.50 GRT -> -3.66 routed). If routed NEAR-MISS on reg->macro wd_in: structural lever = SRAM clk earlier (30 ps as f58) or bank0 macro-leaf match (reached only -13 of the 20 target).
 - Live jobs: none. OWNER? none.
 2026-10-25 12:14 PDT PATH-QC-PROGVMR: vmr_s6j (SE tap split SEa/SEb, re-CTS from s6i 3_place) S6_GRT_GATE PASS FF +0.03/0 EP m0, window FF 7.3/TT 7.7, F6 PASS; GEOM REQ posted, autopilot row queued; evidence claude/path-qc-progvmr-1025@0693fed9e.
+
+## PARKED 2026-10-25 12:15 PDT PATH-QC-N59
+- Branch claude/path-qc-n59-1025@db0e6267fb (rebased on main eeb8e96b6). Worktree removed. No live jobs (epyc1 scratch /srv/opentallas-scratch2/claude/path-qc-n59: miter + LEC runs, kept for review; delete after merge).
+- Done (COORD ruling B 11:31): mem_compiler mask_gran + pin_faces options (defaults byte-identical); ot_sram_1r1w_32x512_m1 regenerated 167.40x52.92 (-30.5%), reads one edge / writes other; qbank 2-line mask change.
+- Proof: miter EQUIVALENT 3 modes (200k cyc, outputs + arrays), 2 mutants caught; LEC EQUIVALENT 29119/29119 (mutant NOT EQUIV 4096 cp).
+- Re-site: helper native59_memory_views.py (MY left / R0 right, +0.012 origins, 8424/8424 pins on tracks); FT 21 slots unchanged, 0 obstacle crossings; render viewed. GEOM REQ [PATH-QC-N59] posted; READY line posted.
+- Area: -31,096 um2 macro per native59; die area unchanged (outline plan-fixed); no pricing table carries the macro.
+- Next: GEOM verdict -> apply helper in the QC plan batch (PATH-QC-PLAN) -> rebuild native59 kits with the new LEF; after merge regenerate the QSLOT qbank pin-edge proof (sha pins).
+- OWNER? none.
