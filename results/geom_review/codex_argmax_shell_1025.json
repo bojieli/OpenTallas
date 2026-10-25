@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "place and CTS only; review placed image before route",
+  "picture": "results/geom_review/codex_argmax_shell_plan_1025.png",
+  "findings": [
+    "North and south face bundles uniformly spaced across full 118.8um edge, no pin clustering above6/um.",
+    "No macros, no narrow channel or macro wall.",
+    "Per-pin registered shell removes old shared/feedthrough boundary faults; +1 input/+1 output cycle published to HBM bind.",
+    "Clock and PDN are kit-generated; inspect placed sink distribution and CTS before route."
+  ],
+  "kit_hash": "117a5386717ae2b2"
+}

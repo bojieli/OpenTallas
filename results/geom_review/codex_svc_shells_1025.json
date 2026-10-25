@@ -1,0 +1,16 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "place+CTS only; placed SRAM halo/channel/sink review required before route",
+  "picture": "results/geom_review/codex_svc_shell_sheet_1025.png",
+  "findings": [
+    "All ten 177.984um square variants inspected. 1229 pins occupy two aligned edges, max face density within6/um.",
+    "Perimeter face-register bands and 29% pre-shell std-cell fill leave room for shell flops; two small SRAMs fit without macro wall.",
+    "Face orientation follows B2n view per partner; no changes to partner pin order.",
+    "Automatic SRAM placement needs explicit placed-image check; compact square permits balanced CTS."
+  ],
+  "variants": [
+    "default_place_density0.5",
+    "place_density0.42"
+  ],
+  "rtl_cycles_delta": "shell +1 input/+1 output; density variants zero"
+}
