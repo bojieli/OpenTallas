@@ -488,3 +488,10 @@ CODEX: 2026-10-25 03:54 PDT immediate handback on user reset; read-only takeover
 2026-10-25 05:43 PDT AUTOPILOT-OWN: OWNERS.tsv live on epyc1 (05:42 tick: 655 plan items; UNOWNED s81 124, head 9, QC 52, KV 60, HBM 232); READY claude/autopilot-owners-1025@d173791f71
 2026-10-25 05:48 PDT INFRA-DISK: pass 6 done: epyc2 scratch2 91->81% (ot-run admits again), epyc1 scratch2 92->82%, rtx-pro / 91->87% (still >85%: closure-loop-local 43G, docker overlay2 105G, codex all-D worktrees ~260G need ROOT/owner call; lanes/INFRA.md).
 2026-10-25 05:49 PDT S81-PLAN2: batched S81 delta part 1 on claude/s81-plan2-1025r@77789afa6b (faultfeed base): IR --split 12/14 (7 PHY_SHORT), gather B full-width fold (G0C 0E), R3 station RTL merged; sub-agents CCONN (derived core-conns + qbank_S), XFIN, STFG (slice_station face_guard) live; LEAF3/FTCHAN from S81-PLAN live; GEOM REQ posted, G2 svc x16 running.
+
+2026-10-25 05:58 PDT CODEX: PART-CAP N27/N44 live collected, reset/boundary failures diagnosed; report READY codex/partcap-0555@5e9020b422, no route launched.
+2026-10-25 05:58 PDT CODEX: TOK-DS collected native-HOST entry and strict NX0S/0N PASS, controls caught; existing READY10f0bf6cc+494c7aa4f8; cut7 build8852/13377 live, no duplicate.
+2026-10-25 05:59 PDT CODEX: AUTOPILOT main deployed/timer active; fixed exact review batch identity 8e299a5e1d and adopted staging-chain classification/delete race dd1ab00716, 4 focused regression PASS, root integration pending.
+2026-10-25 05:59 PDT CODEX: FLOW scope crash fixed codex/flow-fix-1025r@09ac1d1bd9;14tests PASS, READY root merge; inherited proof jobs preserved.
+
+CODEX: 2026-10-25 05:59 PDT all-lane takeover active; exact geometry verdict tag bug fixed/pushed main3b2073709c (B1/B2 separation, continuation lists; two focused tests PASS); all lane groups collecting/fixing existing failures, inventories lanes/CODEX.md.

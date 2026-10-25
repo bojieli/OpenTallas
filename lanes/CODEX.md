@@ -954,3 +954,250 @@ Current/next/failures from lane (latest):
 
 Jobs/source paths (latest; worker confirms live vs terminal):
 - localhost:~/scratch/type-dedup/dd_s81/{die_plan.json,dedup_provenance.json} (the 161-type S81 copy); rest removed.
+
+## CODEX all-lane takeover 2026-10-25 05:53 PDT
+
+Root owns ROOT-MERGE/COORD queue and release integration. S81 physical/plan/head: s81; Qwen compute: qwen; KV: kv; HBM: hbm; clock/reset/seams/capacity: clock_reset; DeepSeek token/LEC/SELRANGE: token_lec; geometry/prototypes/shared FLOW/signoff/census/dedup: flow_geom; fleet/CI/autopilot: infra. Historical DONE lanes retain their owning group; no duplicate work. Every group collects live jobs before successors.
+
+### codex-clock-inventory
+# CODEX CLOCK group takeover 2026-10-25 05:56 PDT
+
+- CLOCK: own codex/clock-push-1025 from current origin/main; collect contract-budget reruns and finish actual B2o clock PG corridors. Live intel2:/srv/opentallas-scratch2/claude/clock-reset/hold/{s81,qwen_compute,qwen_kvsys}/run_bhc_{TT,FF}, six units334*1792928128; s81_head TT666.062/FF31.086 ps, pair3.59/5.30 PASS diagnostic only (833.333 historical budget). Main clock lacks domain-corridor opt-in0a9c3adaa; current B2o generation failed PHY_N tap legalization, HBM-PLAN owns repair, then real current clock build/review/STA.
+- DIE-STA: same running hold-contract jobs above; earlier negative v11 hold caused missing input-boundary delay in stand-ins, fixed4ab537cdb8 already merged. Actual matching SIGNED partition ILMs required for die G4, no final gate claimed.
+- RESET: delegated clock_reset/cp1; current t8 false PASS leaf relay->sink448um source repair, reset/start bound adoption coordinate token_lec binder worker. No reset_tree.py overlapping edits.
+- CP1-R10: delegated clock_reset/cp1; earlier runs stopped05:41, retain W placed structural artifacts. Fix CP1 structural slew then image review before successor.
+- PART-CAP: delegated clock_reset/partcap; inherited intel1:/srv/opentallas-scratch2/claude/codex-partcap1025/n27_resume live old reset setup WNS-137.923/995; epyc3:/srv/opentallas-scratch/claude/part-cap/pc_rep_n44_tt_tns10 live GRT. Both diagnostic only, collect runtime/mem and concise capacity recommendation, no duplicate routes.
+- FP32: complete standalone condition16a; no live jobs. Actual core operand-mux timing and one-clock adoption belongs HBM/KV owners; told root no repeat verification.
+- ELASTIC: REJECTED8e69517bf2, no open task or jobs; static plan-side padding remains.
+
+OWNER? None new. Existing PHY contract questions remain with owner; continue technical work.
+
+
+### codex-cp1-inventory
+# CP1 / RESET takeover 2026-10-25 06:08 PDT
+- CP1-R10: no live jobs (05:41 snapshot); old m8 ECOs collected NOT SIGNED TT+181.49/FF+8.39,146/82slew unchanged; source failure is output-face D-pin data-net slew400..436ps, structural face/source placement fix owed. Retained intel1:/srv/opentallas-scratch2/claude/reset/cp1_reach405R; intel2:/srv/opentallas-scratch2/claude/codex-cp1-wavefront{-v2,-v3} placed proof kits. Next inspect routed failing net then structural correction and GEOM review before queued route.
+- RESET: wavefront/start/core targets on main; relay2 rstg/payload SIGNED merged, no rerun. Open hd_st_m M7 PG pin-access finding; existing181eaa1e0 fix must be adopted by regenerated plans. Open t8 reset leaf448um falsely PASS while relay-only max379um. CODEX took over leaf delivery/check on codex/reset-leafs-0553, own sparse worktree /srv/opentallas-scratch/claude/wt/codex-reset-leafs-0553. Fix uses actual terminal reset flop location rather than clock BTerm and pre-CTS checks all placed control sinks, no cycles added. Small tests running; actual t8 successor review/physical proof next.
+
+
+### codex-flow-inventory
+# CODEX FLOW/GEOM takeover inventory
+
+GEOM-REVIEW: independent pending reviews owned child geom_queue; QC-RP1 f56c reviewed PASS-COND, S81 t6/t27 review active. No blanket auto-PASS allowed; INFRA fixes exact autopilot tag matching.
+PROTO: inherited S81 adopt178 G2/hard-core-obstruction sweep and generated station kits; child collecting remaining G2 outputs. 10 content types need adopt178 bound RTL (S81/TOK-DS owners); geometric PASS alone insufficient. S81 leaf and QC SU/channel G2 failures structural; respective plan owners handle.
+FLOW: own branch codex/flow-fix-1025r@09ac1d1bd9 scope fix READY; 14 tests PASS. Three inherited proof rebuilds live: epyc1 source /srv/opentallas-scratch2/claude/flow/rebuild/{dsdv_eng_rr_h0_c,ot_s81sl_ve_s_k_m0,ot_s81sl_ve_m_k_m5}; autopilot ids651a84ceaabc,40a107b688fb,ab4ba18ef26e. RR at CTS/tap balance; ve_s/ve_m place. Shared la_d scope defect diagnosed, source fixed. Successor should use coherent sdc_lint dependencies; do not mutate live jobs. QC RP1 repair-vs-independent FF discrepancy6.18vs1.68ps under investigation.
+NEARMISS-ECO (STRUCT): 7 structural causes established, no ECO permitted. Design owners redesign vn_b/vsw/rxsf/argmax; FLOW basis fixes merged already, F4scope now READY. No owned heavy jobs.
+METH-ALIGN: methodology source integrated on main, current <=M7/405um/833ps policy binding. No additional rerun bookkeeping needed; plan owners apply batch.
+KIT-CENSUS: historical census complete; early fail-closed/preflight/hold margin0..5 operational findings retained. No duplicate census.
+SIGNOFF: current TT/FF signoff on main; old138 lost DB views remain rerun candidates only; historical paper closed labels do not sign current cores. No duplicate signoff source edits.
+TYPE-DEDUP: done; no running job or remaining independent task; preserve current type identities while plan owners integrate actual kits.
+
+
+### codex-hbm-core-rest-inventory
+# CODEX HBM remaining cores — 2026-10-25 06:04 PDT
+Branch codex/hbm-rest-1025 from claude/hbm-cores-1025; own worktree /srv/opentallas-scratch/claude/wt/codex-hbm-rest-1025.
+- CLKSTRUCT ep_static (3) + sfustore (2): completed v4 CTS, hold gate -14.7..-24.5ps, geometry FAIL F6 and high insertion536..541ps. Hosts intel1/2:/srv/opentallas-scratch2/claude/hbm-cores-1025/clk/runs/*_v4. No route allowed. Next actual macro-pin/interface floorplan repair, clk entry E-mid/S-mid, natural local-tree latency; coordinate plan delta HBM owner.
+- programme_store44macros: FAIL GPL divergence;79% area incl halos and8.6um channels. No route. HBM plan owner notified split2/regular lattice>=30um channels.
+- SM2 hnx n/s: collected synth preflight PASS face_guard/port_bind/SELRANGE on intel2 units2234244/2233954. Next reviewed CTS probes.
+- TKM root: synth guards PASS, 24GB bench MEMCG-OOM;128GB retry PASS shell0 mismatches898/951 toggled, all5mutants caught. intel2 units968914/2234404. Next reviewed CTS.
+- NPC2 vmdel five views: all synth guards PASS on localhost units2623803/2627102/2627098/2627085/2627088. Representative bench previously PASS. Next reviewed CTS.
+- topk_link128 retry: intel1 unit1476926-1792921176 still no terminal ot-run log;48GB first run MEMCG-OOM peak50.24GB. Collect live scope/process before retry.
+- Generic old svc/SM/bankq/SFU/idx routes remain historical NOT SIGNED; post-route structural review failures govern successor work. Further collection in progress; inherited jobs untouched.
+
+
+### codex-hbm-exp-inventory
+# HBM EXP takeover 2026-10-25
+Current: diagnose missing five of six EXP SRAM replicas after synthesis; canonical RTLIL retains all six, flat mapped netlist retains only g_read[5]. Source clocks SELRANGE and macro bracket escape already fixed in parent branch87ac07bda.
+Inherited job evidence: intel2:/srv/opentallas-scratch2/claude/hbm-cores-1025/exp/runs/ot_hbm_su_static_pgslice_lg__lane_exp0_2dbd1fc9b786_base; 60 CTS wave expected floorplan missing-macro failure, not routed.
+Own diagnostic: epyc1:/srv/opentallas-scratch2/claude/codex-hbm-exp-diag via ot-run8GB1thread; optimizing canonicalized RTLIL to locate first destructive pass. First diagnostic launch NOT RUN due shell argument environment parsing, corrected with script file.
+Own source branch: codex/hbm-exp-1025 from hub claude/hbm-cores-1025@87ac07bda, checkout in progress /srv/opentallas-scratch/claude/wt/codex-hbm-exp-1025. No source edits yet.
+Next: isolate destructive pass/root cause, minimal exactness + mutant, regenerate one EXP kit and macro count check, review before any route.
+
+
+### codex-hbm-inventory
+# CODEX HBM takeover 2026-10-25 06:00 PDT
+| Lane | Current step | Running/results | Failure diagnosis / next step | Owner |
+| HBM-ARCH | B2o physical replan; native one-clock/reset/TDM bind | intel1:/srv/opentallas-scratch2/claude/codex-b2o-final gen.exit1 collected | no legal PHY_N clock tap inside full PG keepout; recover stage cache with external macro-clock endpoint; integrate W128/L74 widths and broadcast start | codex HBM plan + native |
+| HBM-CORES | W128 pairs/subtrees, EXP/argmax structural closure | epyc2 hbm-cores-1025/w128 runs_finish subtree32 x2; pairv2 CTS wait review | EXP flat synthesis eliminates5/6 SRAMs despite preflight; investigate observation/constant path. Argmax s2 exact/mutants now PASS; route followthrough | codex HBM physical |
+| ELEM-HBM | Core shell physical closure and reviewed structural successors | inherited routes/CTS harvested by physical worker | ep_static/sfustore F6/clock-entry and programme_store macro packing require plan repair; historical gq and other near misses stay FAIL | codex HBM physical + plan |
+| TRIAL-HBM | PHY PG/clock integration | no current IR job; five isolated domains PASS20.993..28.842mV | adoption waits actual full-PG clock corridors; CLOCK coordinating current B2o artifact | codex HBM plan + CLOCK |
+| TOK-HBM | Corrected-clock SU31 replay + native component/schedule integration | epyc2:/srv/opentallas-scratch2/claude/codex-hbm-token-1025/full BUILD_PASS05:50; sim PID3661199 live | SU31 verdict pending; native L74 II2 producer calendar/boot/reset integration and face latency pricing remain | codex HBM token + native |
+
+
+### codex-hbm-plan-inventory
+# HBM plan continuation 2026-10-25 05:53 takeover
+- HBM-ARCH: current B2o candidate codex/hbm-b2o-capacity-1025@96be80ec2; parent routes held for actual-bit FT, W128 manifest, PG/clock/reset. Collected intel1:/srv/opentallas-scratch2/claude/codex-b2o-final gen.exit1: FAIL03:38, htree_clock.plan_taps attempts stdcell grid legalization inside hard PHY full keepout. Cause diagnosed, fixed exact physical hard CK terminal census in codex/hbm-plan-0553@61d6ccd52; 6 focused checks PASS. CLOCK owner authorized targeted fix.
+- Successor model-only regeneration launched through ot-run, isolated intel1:/srv/opentallas-scratch2/claude/codex-b2o-0553, cached placement seed preserved, check gen0553.{log,exit}; launcher log /tmp/codex_b2o_0553.otrun.log. No route/STA authorized.
+- Next: collect regenerated full artifact for CLOCK, adopt W128 physical manifest from physical child and structural core pin/packing deltas from core_rest, apply NW L74>=2341/HC chain>=4127, correct actual-bit FT channels, finalize wavefront/reset.start broadcast. All data-cycle deltas must be repriced.
+- TRIAL-HBM: prior5 isolatedPHY3.84um/45um bumps IR PASS20.993..28.842mV; no new own IR job, cannot adopt profile until full PG clock corridor geometry/timing ready. Legacy B2l missing fabric artifacts stay historical; no duplicate stale run.
+
+
+### codex-hbm-token-inventory
+# TOK-HBM takeover 2026-10-25 05:58 PDT
+- Current: full corrected-stream-clock SU31 replay inherited and live. Side ALAT4/MLAT4 arithmetic migration completing on codex/hbm-token-push-1025 (own codex-hbm-token-push2 source tree).
+- Running: epyc2:/srv/opentallas-scratch2/claude/codex-hbm-token-1025/full; unit oth-ubuntu-3686175-1792921264; simulator PID3661199. BUILD_PASS05:50, diag/run.log buffered. Do not relaunch.
+- Collected historical: Qwen chains FAIL1824/1824 each; SU31 old FAIL640/1046 diagnosed request-path pll_serial vs stream domain. Minimal actual bank temporal miter PASS22/19edges + wrong-clock mutant. OneclockLIGHT1984 outputs/3968checks and SFU512outputs/1024checks PASS + mutants; no full native token PASS.
+- Next: collect live SU31 replay; then use minimum fault monitor if failures remain. Finish side oneclock exact latency miter, compiler horizons, source list/recipe regeneration. Parent native owner integrates L74 period2 producer/reset/start and face-shell latency.
+- Remaining failures: full native token requires native transport/reset/start assembly, L74+FACE per-record timing. Previous HC_XRD/XRU/LAUNCH failures on historical cut retained; native component corrections do not establish whole-token closure. Side c48c87a7d was unqualified WIP; successor must gate.
+
+
+### codex-hbm-w128-inventory
+# CODEX HBM W128 takeover 2026-10-25 05:58 PDT
+- Source claude/hbm-cores-w128-1025@57735a4779; own branch codex/hbm-w128-r3-1025 being prepared.
+- subtree32 hm0/hm5: LIVE GRT on epyc2:/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/runs_finish/ot_hbm_hc_subtree32_core_3abde8dae72d.20261025051815.4025654 and .20261025051818.4028015. 05:55 hm0 2410 hold iterations, WNS -35.25ps improving; hm5 completed repair and routing estimates. Original jobs preserved.
+- pair_first_core v2: GEOM PASS-COND 05:37, autopilot 2d484dd0c10c launched route 05:52, LIVE GRT epyc2:/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/runs_cts/ot_hbm_hc_bank128_pair_first_core_0c39789d46b1.20261025051956.409863. Unit oth-ubuntu-3689499-1792932741.
+- pair_core v2: GEOM PASS-COND 05:40, CTS hold gate PASS -23.83ps/518 rr endpoints; ports -137.49ps/1093. epyc2:/srv/opentallas-scratch2/claude/hbm-cores-1025/w128/runs_cts/ot_hbm_hc_bank128_pair_core_ba77076d4cc8.20261025051953.405262. Autopilot c9b89dc37346 resolved PASS-COND but no route submitted yet; current tick is admitting queue, avoid duplicate.
+- Next: collect inherited routes; fix coherent per-corner IO clock basis before signoff. No SIGNED claim; no owner question; 0 new data cycles.
+
+
+### codex-infra-inventory
+# CODEX INFRA takeover 2026-10-25 05:59 PDT
+- AUTOPILOT: timer operational, main cdf4a64124 runs directly; owners preview retired. Last05:52 tick exit0 queue103/RUNNING36/WAIT-GEOM38. Failure: review tag truncation cross-applies B2 to B1, fixed READY 8e299a5e1d; ancestor-stage adopt clients falsely CRASH/deletion race, fixed READY dd1ab00716. Exact reviewed-batch and busy-chain regressions4PASS; broader targeted checks underway. Root merges.
+- INFRA/FLEET-DISK: all roots fleet<=26%, hub scratch86%499GB->420GB amid kit writes; epyc2 scratch115GB; intel1/2 >2TB free; epyc3 6.2TB free. No others' jobs stopped; no deletions of others' work. New own sparse worktree epyc1:/srv/opentallas-scratch2/claude/wt/codex-autopilot-safety. Cancelled only own accidental full checkout (git pid2476288) before source edits, cleaning its main-identical partial files.
+- INFRA2/FLEET-NEW3/OTRUN-HUB-RECOVERY: ot-run status5hosts admits, user bus operational with known runtime Type=exec workaround; restart requires drain and remains unexecuted. Backups last02:39rc0, standby refreshed02:42 per inherited notes, no cutover needed.
+- DIE-CI: inherited service PID3819714 still activating/live; collecting old slow intel2 retired HBM probes before any successor. Four completed old dies already harvested G2 6/6 each, stale-plan failures retained and current owners handle replacements. No duplicate job launched. Next: harvest terminal peers or keep progressing independent ops fixes.
+
+
+### codex-kv-cores-inventory
+# KV hard cores takeover 2026-10-25 06:00 PDT
+Current: 4/34 signed (e1/e3/e5/e7 existing). Collect 22 inherited runs; preserve all failed records; no inherited cancellations.
+Jobs: epyc1:/srv/opentallas-scratch2/claude/kv-cores-1025r/{heads,astk,ahub}; heads e2 spilled intel1, e4 h5m8 epyc2. PV intel1:.../par/kv3_pv_pair/{fd4_mc,fd4_cc}. Most previous chain scripts attempt forbidden ECO; successor chain branch99997558cc removes ECO but needs fail-closed return handling.
+Collected: ASTK A EN/ES/WN/WS NOT SIGNED TT -17.56/-31.19/-5.79/-24.34 ps, FF -37.39/-36.65/-39.67/-37.33ps; slew TT1959/1771/1609/1257, FF1915/1570/1635/1178. Heads e6 h5m8 TT+28.56/FF-15.01 (1210ep), e4 h0m8dlr +16.22/-14.46 (1363ep), e6 h0m8dlr +24.85/-13.44 (1301ep), all NOT SIGNED.
+Failures: e6 worst FF is real INTERNAL s1_exp[4]->g_hs.u_hc.q[32], split clock leaves25.7ps beforeCPPR; not virtual-I-only. Asynchronous reset removal also fails. Structural local-clock affinity + synchronous/control-only reset needed, no ECO tweaks.
+LEC: intel1 /srv/opentallas-scratch2/claude/lec-cp1-infra/sweep/1321b5ddb7 PV fd3_et 358differences; epyc2 sweep/56374dfa41 ASTK EN B reason53differences but expanded counts608. Common adder q[27]/rd[55] and err[1], validity; source-vs-tool diagnosis retained active.
+Next assigned: /root/kv/cores/ectlk four-column exact RTL/pins; /root/kv/cores/pc_boundary PC/H-head boundary source fix; parent KV plan consumes g35 narrowing, am always0 confirmed. Lead: chain failclosed, ahub/ASTK g narrowing, LEC triage and structural head diagnosis.
+
+
+### codex-kv-inventory
+# KV takeover 2026-10-25 05:53 PDT
+- KV/KV-G3 plan: claude/kv-plan-1025r now 3f2721bc3 (newer than handoff). v3.9d pv-column widening +259.2um, hub_Wi channel and four ECTLK quarter placeholders; remaining NO_FIT, actual quarter RTL/pins, per-bit packing, G0C and G2. Own codex/kv-plan-0553 collecting plan2 outputs; no plan route started. Prior v3.9c FAIL613 (313 latency,242 face,58 replicated mismatch,39 NO_FIT); channel-mouth pilots seven types GRT0 vs prior421k/1.28M.
+- KVG3-CORES: child /root/kv/cores owns 22 route/ECO collections at epyc1 scratch2/claude/kv-cores-1025r (heads x8,astk x8,pv_pair x2,kvs_pc/head_p x4 with latter preflight failures). Odd heads e1/e3/e5/e7 signed. All others not signed; new astk/pv_pair LEC NEQ under diagnosis, missing pair_skew.tcl signoff crashes patched by prior lane. Structural ECTLK four-quarter split, ahub g-pin drop, host single-clock cores and pv_join re-kit next.
+- KV-TOK: child /root/kv/token owns native45/reset/start/compiler/boot. E nominal3 epyc2 scratch2/claude/kv-tok/E/runs/nominal3 now finished exit0; exact boot result collecting. Native45 nine TYPE_SPLIT families, PV converter and true START adoption remain; WL7 miter mismatch21.658ns/time0 Gray assertion under diagnosis.
+- KVG3-WI original pin census DONE22/22/G0C0; no duplicate lane job. Native host one-core-clock hardening carried by plan+cores/token.
+
+
+### codex-kv-token-inventory
+# KV token takeover 2026-10-25 05:53
+- KV-TOK host E: epyc2:/srv/opentallas-scratch2/claude/kv-tok/E/runs/nominal3 completed exit0 but BOOT FAIL: frames7161/7161, images13/13,errors0,boot_fault0,host_faults0,setup_ready0. Cold boot WS/WN32done15ok17fault; ES/EN32done14ok18fault. Host AUTH drain/replay gap fixes initial image deadlock; PHY/write coldboot still fails.
+- WL7 miter inherited intel2:codex-kv-write-latency FAIL at21.658ns; own copy codex-kv-write-0553 diagnostic running, investigate independently randomized invalid data versus actual write transfer.
+- Native45 pcpart: epyc1:codex-kv-nativeboot-1025 compile404modules PASS; time0 random-init Gray assertion FAIL. Needs reset-valid assertion guard + smallest re-run; native45 TYPE_SPLIT and reset/start/833 integration remain.
+- Own source tree /srv/opentallas-scratch/claude/wt/codex-kv-token-0553 branch codex/kv-token-0553 from fd9ae53e7; no source changes committed yet. Prior WRITE WIP copied read-only from previous codex branch, no other agent tree edited.
+
+
+### codex-partcap-inventory
+# PART-CAP takeover 2026-10-25 05:56 PDT
+Current: collect retained N27/N44 capacity diagnostics and refresh recommendation; no new route needed.
+Running: intel1:/srv/opentallas-scratch2/claude/codex-partcap1025/n27_resume; container codex-partcap-n27-1025, unit oth-ubuntu-1462271-1792921126. GRT completed3281s, now setup repair on obsolete asynchronous rst_n RESETN, WNS-137.923ps/995 endpoints. Current34.87GiB,1 CPU.
+Running: epyc3:/srv/opentallas-scratch/claude/part-cap/pc_rep_n44_tt_tns10; container ecstatic_williams (fce0c63a9a4d). GRT resources build, pinaccess1775s, peak53.1GiB; CTS19260.5s/32527.2CPUsec, mean1.69threads.
+Failure diagnoses: N7/N14 boundary hold; old N27 source include repaired by isolated resume; old N27/N44 runaway timing loops were obsolete reset/boundary plus mixed-corner recipe, not capacity/OOM. Old WC originals were retired by prior LEC-CP1-2; no job killed in this takeover.
+Next: report diagnostic limits and current runtime/memory; collect final jobs if they finish. Keep400k release cap; measured history supplies no memory wall at400k, but no authorization to change cap. New sizes should use current reset/clock/boundary and physical gates.
+OWNER?: none new.
+
+
+### codex-qwen-inventory
+# Qwen takeover 2026-10-25 05:58 PDT
+- QC-A0 plan: CODEX owns codex/qwen-push-1025 (epyc1 scratch2 own worktree). Predecessor regen3 terminal G0 FAIL19 census dropped5458 bits/17pairs after274 no-load template lanes removed;72/72 types clean. Next reconcile current as-built census without suppressing real loads, collect existing SUROW taller-row/190um-channel successor epyc1:/srv/opentallas-scratch2/claude/qc-plan/surow/regen3 (live05:45), then per-bit/PROTO gates before routes.
+- QC-A0 physical: CODEX child physical owns collection/fix. intel1 qc-plan/s8bp/btab_t2 DRT90%446viol; intel2 prog_t2 route active. RP1 epyc1 qc-plan/rp1/f56c terminal NOT SIGNED TT+226.91/FF-13.22ps200ep, slew22/17 DRC0 pair53.42/50.09; routed I345.8/276.32 vs GRT382.5/307.3, shared calibration/leaf fault. CQB intel1 qc-cqb/vmr_s5 pass2 active; structural reviews required for failures. NK intel2 qc-plan/a0r/nk_r4 place complete; reset hook PASS85FF same-index max352.064um; density/data geometry analysis next. NL l3rsp/l3rsvm failed density/hops; combine geometry fixes after NK collection.
+- QC-TOK: child tokens owns wavefront/START integration. Existing epyc3 codex-qc-wavefront-run-1025/both nominal near64/64 far64/64 PASS; strict schedule gate collecting. Next production START/plan rebind, no final G5 claim.
+- TOK-QW: child tokens owns inherited intel2 CROM full-row completed build, SFU6336checks/320outputs exact and mutant480 mismatches caught, MAT112/112 PASS. Next minimal CROM calibration/cuts, collect receipts and price.
+- ELEM-QK: all obsolete KV r2 terminal NOT SIGNED and diagnosed, current KV successors owned root KV group. Old QC tt_ctlm structural congestion FAIL; fresh soft types wait current plan correction+PROTO CLEAN, no obsolete reroutes.
+- TRIAL-QK: old meth full-hop build complete377parts/2.707M nets; physical trials held actual-bit/SU row structural failures. Current die_clock/STA shared CLOCK lane; old IR QC VDD89.6/VSS130mV FAIL, diagnostic old plan. Next corrected current-main plan die trial only after geometry clears.
+
+
+### codex-s81-cores-inventory
+# CODEX S81 cores takeover 2026-10-25 05:56 PDT
+- S81-CORES: 15 actual signed views on main; vq old r12 stale versus changed RTL. Core work assigned physical worker (RV/EH/SW), legacy worker (LA/NC), boundary worker (LB cfg7/l0r).
+- Live RV: epyc2:/srv/opentallas-scratch2/claude/s81-cores2-rv/kits/dsfd_su_t_rxsf_ftz; epyc3:.../ot_s81sl_vq_bfq. 0-cycle exact fixes claude/s81-cores2-rv-1025@5d10e4293. Collect CTS, review, route only when acceptable.
+- EH: eng e1/e1r epyc2:/srv/opentallas-scratch2/claude/s81-cores2-eh/dsdv_eng_rr_e_e1*. Macro LEFs have pins both W/E; original outline channels too narrow. e1 grew width345.6->410.4 (+18.75%), preliminary overflow6437 versus12269, GRT pending; requires plan delta. Aq ordering fixed41f01591c2; token_lec notified to prove.
+- SPLIT vn_a t42 PASS-COND postCTS; vn_b/vsw FAIL F6 interface placement. epyc2:/srv/opentallas-scratch2/claude/s81-cores-split/{vn_a_t42,vn_b_t42,vsw_t22}. ~360ps insertion must bind per corner/early parent tap; no assumption of signed status.
+- LEGACY stage1 epyc3 + copies epyc1:/srv/opentallas-scratch2/claude/s81-cores-legacy; live bksel_c,l5_n32,eg,xrt3,xfin. qbankN/l1c/l3/l4 queued but l4 LEC-HOLD. Failure diagnoses: bk_g macro clock mismatch; l0/l1/l2/xrt1 late single-tree clock -> regional taps; qbankS utilization118%; xfin cell area72.5k>32.9k outline; cfg7 shared14/l0r sticky output sharing -> RTL duplicated output flops.
+- NC: VS stage1 epyc2 unit3509677. XM pin tables stale widths need parent regenerate. BF roots slang conflicting-driver keep-hook failure; legacy worker diagnosing. bf_col/elem_q/idx native old views NOT SIGNED; idx params mismatch requires plan/RTL adoption. capc5r/bksel_q children unsigned; cfifo multi-clock contract remains owner item.
+- ELEM-S81 old B station views obsolete versus wavefront/adopt178; current t6/t27 place jobs physical geometry parent-owned. No obsolete station reroute. Existing failed evidence retained.
+- FLOW owns ve_m/ve_s/rr_h0 proof routes. leaf_affinity local/global Tcl bug already reported05:48, forward to flow owner.
+
+
+### codex-s81-head-inventory
+# CODEX S81-HEAD 2026-10-25 05:58 PDT
+- Elements: s3 A/B c50/c60 LIVE epyc1:/srv/opentallas-scratch2/claude/s81-head-elem/kits; FF hold repair -36..-47ps after 500-1400 iterations. Diagnosed incorrect vclk -max250/-min155/170 early/late semantics; own codex/head-elems-0555 successor adopting shared FLOW per-corner mechanism. No original mutation.
+- Tile: actual source anchor proof PASS max402.192um, 0>405, reset max369.4; blocked on current SIGNED elements. Keep actual placement/previews, no old LEF route.
+- Spines: latest origin/claude/s81-head-spine2-1025@5dfdf7e84 actual placements terminal; newly viewed FAIL (23/1078 reg hops>405 max424.7/551um), own spine worker fixing leaf endpoint anchors, zero new cycles planned. Six FT wave source existed but no kits generated before pause; same worker owns wave.
+- hd_ctl/host/mesh: missing release RTL; endpoint worker mapping existing H10/H11 real contracts, implementing smallest real gap with miter+mutant, no stubs.
+- hd_lep0N/serdes: need regenerated layer binder kit RTL (previous sources pruned); endpoint worker owns.
+- Existing OWNER? host 553b/2beats requires279 wires vs276; calendar slots and H4 endpoint authority; actual PHY/package contract remain unresolved, logged earlier. Other work continues.
+
+
+### codex-s81-inventory
+# CODEX S81 takeover 2026-10-25 06:00 PDT
+
+S81-PORTS: newer rewrite claude/s81-i13r-1025@36364ebdb already exists beyond handoff: O(1) ordered duplicate check+SRAM rows+streaming merge-join. R3, native SRAM, two-source, two-job and mutant controls PASS; generic552/native554cycles (old612). Original failed synth is superseded but preserved in lane record. Own codex/s81-i13-0553. Plan image viewed PASS-COND for synthesis/floorplan. Gate2 NOT RUN stale daemon path missing cg_pushdown.tcl, corrected explicit own OT_CLOSURE_DAEMON_TREE for gate3; source missing leaf_inhold_release.tcl fixed by sparse materialization. Strict die bind remains token owner; idx_tx_n32 parent parameter mismatch next.
+
+
+# CODEX S81 PLAN2 inventory 2026-10-25 05:58 PDT
+Current: own branch codex/s81-plan2-1025 from claude/s81-plan2-1025r@77789afa6b; gathers full-width B, IR split12/14, R3 RTL. No final merged plan yet.
+Running: epyc1:/srv/opentallas-scratch2/claude/s81-plan2/g2svc 16 gather-B probes; 8 terminal clean logs, 5 still GRT congestion; full collection ongoing. epyc1:.../s81-plan-leaf/r3 72 FT allocator jobs (not GRT): ledger geometry max386.91um; r3 combined plan exists but not yet committed/reviewed/G2.
+Paused source: CCONN branch has no new commit; partial source/results in epyc1:.../s81-plan2-cconn; filters shared input/input nets before derived connection enumeration, v3 plan/rep exists. XFIN branch no new commit; search.py only, approved outline growth >=120kum2 needed. STFG branch no new commit; relay output dangling BUFx2 cause, fixed source in paused wt uncommitted to be harvested separately.
+Failures: r2 leaf geometry PASS but G2 worse7/8; fixed template lacks FT corridors. Original svc/col corridors overflow; FTCHAN9 prototype fixes3 CLEAN/5 HOTSPOT/1 STRUCTURAL (737). 4766 derived internal-station +84 core-face baseline findings, most input-input fanout false pairs need accurate driver-sink correction; remaining true crossings need stations. WS3 IR50.4/40.3mV >35mV and7 PHY_SHORT remain. Stale VS XM pins widths and IDX parent removed RIC contracts need refresh.
+Next: harvest existing results and paused uncommitted source into own branch without touching original worktrees, inspect actual images, integrate per-field deltas, run smallest geometry/G0C/prototype fixes. No new heavy job launched yet.
+
+
+# CODEX S81 cores takeover 2026-10-25 05:56 PDT
+- S81-CORES: 15 actual signed views on main; vq old r12 stale versus changed RTL. Core work assigned physical worker (RV/EH/SW), legacy worker (LA/NC), boundary worker (LB cfg7/l0r).
+- Live RV: epyc2:/srv/opentallas-scratch2/claude/s81-cores2-rv/kits/dsfd_su_t_rxsf_ftz; epyc3:.../ot_s81sl_vq_bfq. 0-cycle exact fixes claude/s81-cores2-rv-1025@5d10e4293. Collect CTS, review, route only when acceptable.
+- EH: eng e1/e1r epyc2:/srv/opentallas-scratch2/claude/s81-cores2-eh/dsdv_eng_rr_e_e1*. Macro LEFs have pins both W/E; original outline channels too narrow. e1 grew width345.6->410.4 (+18.75%), preliminary overflow6437 versus12269, GRT pending; requires plan delta. Aq ordering fixed41f01591c2; token_lec notified to prove.
+- SPLIT vn_a t42 PASS-COND postCTS; vn_b/vsw FAIL F6 interface placement. epyc2:/srv/opentallas-scratch2/claude/s81-cores-split/{vn_a_t42,vn_b_t42,vsw_t22}. ~360ps insertion must bind per corner/early parent tap; no assumption of signed status.
+- LEGACY stage1 epyc3 + copies epyc1:/srv/opentallas-scratch2/claude/s81-cores-legacy; live bksel_c,l5_n32,eg,xrt3,xfin. qbankN/l1c/l3/l4 queued but l4 LEC-HOLD. Failure diagnoses: bk_g macro clock mismatch; l0/l1/l2/xrt1 late single-tree clock -> regional taps; qbankS utilization118%; xfin cell area72.5k>32.9k outline; cfg7 shared14/l0r sticky output sharing -> RTL duplicated output flops.
+- NC: VS stage1 epyc2 unit3509677. XM pin tables stale widths need parent regenerate. BF roots slang conflicting-driver keep-hook failure; legacy worker diagnosing. bf_col/elem_q/idx native old views NOT SIGNED; idx params mismatch requires plan/RTL adoption. capc5r/bksel_q children unsigned; cfifo multi-clock contract remains owner item.
+- ELEM-S81 old B station views obsolete versus wavefront/adopt178; current t6/t27 place jobs physical geometry parent-owned. No obsolete station reroute. Existing failed evidence retained.
+- FLOW owns ve_m/ve_s/rr_h0 proof routes. leaf_affinity local/global Tcl bug already reported05:48, forward to flow owner.
+
+
+# CODEX S81-HEAD 2026-10-25 05:58 PDT
+- Elements: s3 A/B c50/c60 LIVE epyc1:/srv/opentallas-scratch2/claude/s81-head-elem/kits; FF hold repair -36..-47ps after 500-1400 iterations. Diagnosed incorrect vclk -max250/-min155/170 early/late semantics; own codex/head-elems-0555 successor adopting shared FLOW per-corner mechanism. No original mutation.
+- Tile: actual source anchor proof PASS max402.192um, 0>405, reset max369.4; blocked on current SIGNED elements. Keep actual placement/previews, no old LEF route.
+- Spines: latest origin/claude/s81-head-spine2-1025@5dfdf7e84 actual placements terminal; newly viewed FAIL (23/1078 reg hops>405 max424.7/551um), own spine worker fixing leaf endpoint anchors, zero new cycles planned. Six FT wave source existed but no kits generated before pause; same worker owns wave.
+- hd_ctl/host/mesh: missing release RTL; endpoint worker mapping existing H10/H11 real contracts, implementing smallest real gap with miter+mutant, no stubs.
+- hd_lep0N/serdes: need regenerated layer binder kit RTL (previous sources pruned); endpoint worker owns.
+- Existing OWNER? host 553b/2beats requires279 wires vs276; calendar slots and H4 endpoint authority; actual PHY/package contract remain unresolved, logged earlier. Other work continues.
+
+
+### codex-s81-legacy-inventory
+# CODEX S81 legacy takeover 2026-10-25 05:58 PDT
+Own branch codex/s81-legacy-0554 (from claude/s81-cores-legacy-1025@ca0e38135), sparse worktree /srv/opentallas-scratch/claude/wt/codex-s81-legacy-0554.
+- bksel_c, eg, xrt3: stage1 CTS completed on epyc3/back-copied epyc1:/srv/opentallas-scratch2/claude/s81-cores-legacy/<kit>. Next actual CTS render, F3/F6/clock review then enqueue qualified successors. bksel_c/eg read-only probes live under own epyc1 codex-s81-legacy-0554/review via ot-run.
+- l5_n32: inherited CTS still live epyc3, epyc1 client2832205; do not duplicate. At CTS final metrics; LEC separately running sweep/c67d367c0b.
+- xfin: FAIL GPL0301 utilization255.670%, actual cells75438.654um2 vs insufficient outline. Needs plan outline growth; forwarded to parent.
+- qbank_N/l1c/l3: prior geometry PASS-COND/REQ autopilot; collect current route and ensure current FLOW before promotion.
+- l4: LEC1045points NEQ hold retained. Inherited sim built05:52; own actual run seeds1/7 50kcycles each FAIL mx_y only39885/42372cycles. Checking whether differences occur on valid payloads before classifying exact cause. No route approved.
+- bk_g/l0/l1/l2/xrt1: previous review FAIL on macro/local clock imbalance and high insertion; structural regional-tap rebuilds required, no unchanged route.
+- VS nck: stage1 on epyc2 unit3509677, collect actual remote logs next; original epyc1 has no run copy yet.
+- BF roots: synth duplicate-driver/assert in keep hook. Diagnose generic flow hook before RTL change.
+- cfifo: raw shared1120 + straps/unregistered outputs; contract-changing +1stage proposal remains held.
+- capc5r/bksel_q: unsigned children prevent parent kits; existing parent-owner choice unresolved. BF column/elem_q/idx views NOT SIGNED and retain current failures; parameter mismatch idx requires S81 plan coordination.
+
+
+### codex-s81-physical-inventory
+# S81 physical takeover 2026-10-25 05:59 PDT
+Owner CODEX /root/s81/cores/physical; branch codex/s81-physical-1025 from claude/s81-cores2-eh-1025.
+- RV rxsf_ftz epyc2:/srv/opentallas-scratch2/claude/s81-cores2-rv/kits/dsfd_su_t_rxsf_ftz: CTS complete, FF -21.57ps/370 endpoints. Needs post-CTS render/review and normal structural route with FLOW calibration; no closure claim.
+- RV vq_bfq epyc3: same root kits/ot_s81sl_vq_bfq: CTS complete FF -31.17ps/356 endpoints. Needs post-CTS review.
+- EH eng_rr_e_e1r epyc2:/srv/opentallas-scratch2/claude/s81-cores2-eh/dsdv_eng_rr_e_e1r: live GPL iteration262 overflow0.632; preserved. Successor corrects AQ implicit nets; collect placement then render/review before route.
+- EH hcore_eh1 intel2:/srv/opentallas-scratch2/claude/s81-cores2-eh/hcore_eh1: live setup-repair iterations683..696 no changes/four endpoints/TNS77.451; diagnosing preserved-datapath repair loop. No inherited job stopped.
+- SW vn_b_f6 + vsw_f6 epyc2:/srv/opentallas-scratch2/claude/s81-cores2-sw: FAIL before synthesis TypeError lint() unexpected insertion_ff_ps at sdc_lint.py446. Kit has newer bound context but stale lint implementation. Next own clones refresh coherent main lint/tools, preflight, review F6 placement and run CTS.
+- SPLIT vn_a_t42 epyc2:/srv/opentallas-scratch2/claude/s81-cores-split: queued38286eb7249e; parent early-tap/per-corner insertion remains contract dependency, no duplicate route.
+- FLOW owns ve_m/ve_s/rr_h0; not duplicated here.
+
+
+### codex-s81-plan-inventory
+# CODEX S81 PLAN2 inventory 2026-10-25 05:58 PDT
+Current: own branch codex/s81-plan2-1025 from claude/s81-plan2-1025r@77789afa6b; gathers full-width B, IR split12/14, R3 RTL. No final merged plan yet.
+Running: epyc1:/srv/opentallas-scratch2/claude/s81-plan2/g2svc 16 gather-B probes; 8 terminal clean logs, 5 still GRT congestion; full collection ongoing. epyc1:.../s81-plan-leaf/r3 72 FT allocator jobs (not GRT): ledger geometry max386.91um; r3 combined plan exists but not yet committed/reviewed/G2.
+Paused source: CCONN branch has no new commit; partial source/results in epyc1:.../s81-plan2-cconn; filters shared input/input nets before derived connection enumeration, v3 plan/rep exists. XFIN branch no new commit; search.py only, approved outline growth >=120kum2 needed. STFG branch no new commit; relay output dangling BUFx2 cause, fixed source in paused wt uncommitted to be harvested separately.
+Failures: r2 leaf geometry PASS but G2 worse7/8; fixed template lacks FT corridors. Original svc/col corridors overflow; FTCHAN9 prototype fixes3 CLEAN/5 HOTSPOT/1 STRUCTURAL (737). 4766 derived internal-station +84 core-face baseline findings, most input-input fanout false pairs need accurate driver-sink correction; remaining true crossings need stations. WS3 IR50.4/40.3mV >35mV and7 PHY_SHORT remain. Stale VS XM pins widths and IDX parent removed RIC contracts need refresh.
+Next: harvest existing results and paused uncommitted source into own branch without touching original worktrees, inspect actual images, integrate per-field deltas, run smallest geometry/G0C/prototype fixes. No new heavy job launched yet.
+
+
+### codex-token-inventory
+# TOK-DS / LEC / RTL-SELRANGE takeover 2026-10-25 06:02 PDT
+- TOK-DS: entry receipt + strict cut0S/0N are already PASS on claude/tok-ds-entry-1025@10f0bf6cc and replay@494c7aa4f8; child collecting/replaying cut7 progressing epyc3 make2488010. Next native bind178 sole nested-hard-core reset EMIT failure is assigned clock_reset/partcap; current integrated die RTL not emitted. Quant adopt178 LUT0collisions118cyc/attn16 ready, remaining norm modes open; I13 successor native554 vs612 cycles awaits physical/synth collection S81.
+- LEC: S81 eng exponent REAL frontend bug fixed already41f01591c2; EH synth collection S81, re-LEC mine. Residual FSM tool gap and old t1a/b NOT RUN yosys-abc missingPATH diagnosed.3 new FP-add-signature NEQ under direct triage: astk_EN53, pv_pair358, gunit_l4_c1045.5host sweep remains live; avoid duplicates.
+- RTL-SELRANGE: sweep live fivehosts /srv/opentallas-scratch2/claude/lec-cp1-infra/selsweep/*.tsv. Existing xrt snapshot guard waiver hits known; gold mem_v2 init-port/head elaboration are tool gaps. No owner decision needed.
+
