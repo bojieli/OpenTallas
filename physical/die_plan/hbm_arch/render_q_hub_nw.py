@@ -38,8 +38,22 @@ for pr in P["ports"]:
         ox, oy = hub["origin_um"]
         if pr["face"] in "NS": ax.plot([a - ox, b - ox], [0, 0], "-", color="red", lw=5)
         else: ax.plot([W, W], [a - oy, b - oy], "-", color="magenta", lw=5)
+# HUBNW2: reserved face segments (body N -> TX for the TKM source bits, edge W -> link windows)
+try:
+    R = json.load(open(os.path.join(d, "q_hub_nw_report.json")))
+    hc = {c["inst"]: c for c in t["hard_cores"]}
+    for k, v in R.get("pieces", {}).items():
+        sg = v.get("reserved_segment")
+        if not sg: continue
+        x, y = hc[k]["origin_um"]; w, h = hc[k]["outline_um"]; a, b = sg["segment"]
+        xy = dict(N=([x + a, x + b], [y + h, y + h]), S=([x + a, x + b], [y, y]),
+                  E=([x + w, x + w], [y + a, y + b]), W=([x, x], [y + a, y + b]))[sg["face"]]
+        ax.plot(*xy, "-", color="lime" if sg["tag"] == "tkm" else "blue", lw=4, alpha=0.7)
+        ax.text(xy[0][0], xy[1][0] + 12, "%s %d pins (%s face)" % (sg["tag"], sg["pins"], sg["face"]), fontsize=7)
+except (OSError, KeyError):
+    pass
 ax.set_xlim(-50, W + 50); ax.set_ylim(-50, H + 50); ax.set_aspect("equal")
 ax.set_title("q_hub_nw %gx%g: gold body_core, orange edge, violet vm, lime TX; red = L74 1171-b beat chain TX->L74_o (S face window), magenta = L13 tkx return, green = body->TX, teal = new, grey = rerouted" % (W, H), fontsize=9)
 fig.tight_layout(); fig.savefig(outp, dpi=110)
 # zoom on the W end
-ax.set_xlim(-30, 2500); ax.set_ylim(-30, H + 30); fig.set_size_inches(14, 13); fig.tight_layout(); fig.savefig(outp.replace(".png", "_west.png"), dpi=110)
+ax.set_xlim(-30, 1500); ax.set_ylim(-30, 1700); fig.set_size_inches(13, 14); fig.tight_layout(); fig.savefig(outp.replace(".png", "_west.png"), dpi=110)

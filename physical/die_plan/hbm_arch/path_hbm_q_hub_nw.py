@@ -22,6 +22,9 @@ What it does (COORD 10-25: q_hub_nw ACCEPTED, q3 pieces at the W end of NW_hub; 
   * return: L13_i[571:0] = {fault, done, busy, w_data512, w_mask16, w_addr40, w_v} -> vm writer_tkw_* (569 b) and
     body_core tkx_{busy,done,fault}; L13 is the direct root->NW_hub E-face port (L12 carries no TKM bits).
   * internal_stations (R3-INTERNAL, hops <= 360 um, cores_b2.RelayRouter, TX box is an obstacle).
+  * HUBNW2 (COORD 10-25 ruling 3, no TKM spill onto the body W face): W end re-floorplanned edge | body with TX on the
+    body N face (see PLACE); _place_prio reserves a body N-face segment under TX for all TKM source bits (asserted: one
+    face, equal station count) and an edge W-face segment at the link windows.  --edge-w explores the edge strip width.
 """
 import argparse, collections, copy, json, math, os, re, shutil, sys
 
@@ -45,9 +48,31 @@ CELLS = {BODY: 229064, EDGE: 82038, VM: 72841, RING: 147960, RED: 129647}
 MODS = {BODY: 'ot_hfd_coll_q3_body_core', EDGE: 'ot_hfd_coll_q3_edge_core', VM: 'ot_hfd_coll_q3_vm_core'}
 REGCLASS = {BODY: 'regclass_body_core.json', EDGE: 'regclass_edge_core.json', VM: 'regclass_vm_core.json'}
 FACE_BAND, CHAN = 34.56, 17.28
-PLACE = {BODY: ((34.56, 34.56), (924.48, 786.24)),
-         EDGE: ((34.56, 838.08), (449.28, 466.56)),
-         VM: ((1296.0, 1684.8), (648.0, 648.0))}
+# HUBNW2 (10-25, COORD ruling 3: no TKM spill onto the body W face): W end = edge | body, TX on the body N face.
+#   edge   = tall W-band strip: W face on the hub W link windows (L51/L52/L101/L126, y 946-1202), E face face-to-face
+#            with the body W face (0-station core-core cut, ~8.4k bits both ways).
+#   body   = between the edge and u_hb_coll_Q_reduce (x <= 820.8), top one channel below the FIRM TX site, so the TX
+#            S face sits 17.28 um above the body N face; the TKM source pins get a reserved N-face segment centred
+#            under TX (every TKM bit <= HOP from TX -> the SAME station count, 0, for all L74 source bits).
+#   vm     = unchanged (NE, next to its kq / rs leaves).
+EDGE_W = 190.08
+BODY_TOP = 1105.92 - 17.28                     # TX origin y - CHAN
+BODY_X1 = 838.08 - 17.28                       # u_hb_coll_Q_reduce x - CHAN
+EDGE_Y0 = 250.56                               # edge spans y 250.56..1304.64: W face covers the link windows
+
+
+def _place(edge_w=EDGE_W):
+    bx0 = FACE_BAND + edge_w + CHAN
+    bh = round(BODY_TOP - FACE_BAND, 4)
+    return {BODY: ((bx0, FACE_BAND), (round(BODY_X1 - bx0, 4), bh)),
+            EDGE: ((FACE_BAND, EDGE_Y0), (edge_w, bh)),
+            VM: ((1296.0, 1684.8), (648.0, 648.0))}
+
+
+PLACE = _place()
+# reserved face segments: (piece, group tag) -> (face, partner); the tagged groups are placed first, on a segment of
+# that face centred on the partner (TX box centre / link window centroid), the rest of the face is shared as before.
+PRIO = {BODY: ('tkm', 'N', f'core:{TX}'), EDGE: ('link', 'W', 'bus:links')}
 TX_SITE = dict(inst=TX, module='ot_hbm_tkx_2beat_tx', cells=11467, origin_um=[501.12, 1105.92],
                outline_um=[198.72, 198.72], ff=2344, area_um2=1437.471)
 RX_SITE = dict(inst=RX, module='ot_hbm_tkx_2beat_rx', cells=13686, origin_um=[112.32, 1010.88],
@@ -150,7 +175,7 @@ def _groups(piece, n, w, tkm):
         return [('x', allb, tg)]
     if piece == EDGE:
         if re.search(r'link\d_(tx_pin|rx_pin|phy_up)', n):
-            return [('x', allb, [f'bus:{b}' for b in LINK_BUSES])]
+            return [('link', allb, [f'bus:{b}' for b in LINK_BUSES])]
         if 'retry' in n:
             return [('x', allb, ['leaf:u_fr_Q', f'core:{BODY}'])]
         return [('x', allb, [f'core:{BODY}'])]
@@ -196,6 +221,94 @@ def _sep(a, b, c):
     x, y, w, h = a
     bx, by, bw, bh = b
     return x + w + c <= bx + 1e-6 or bx + bw + c <= x + 1e-6 or y + h + c <= by + 1e-6 or by + bh + c <= y + 1e-6
+
+
+def _place_prio(groups, w, h, tag, face, centre):
+    """cb.place_pins with a reserved segment: the groups tagged `tag` all go on `face`, on the tracks of a segment
+    centred on `centre` (face coordinate) just long enough for them; the other groups are placed by the cb.place_pins
+    greedy (same order / pull / MEAN_MIN rules) with that face reduced to its tracks outside the segment."""
+    vert = face in 'NS'
+    L = w if vert else h
+    lay2 = 'M7' if vert else 'M6'
+    tr1, tr2 = cb.tracks(L, vert), cb.tracks(L, vert, lay2)
+    prio = [g for g in groups if g[0].rsplit('#', 1)[-1] == tag]
+    rest = [g for g in groups if g[0].rsplit('#', 1)[-1] != tag]
+    npri = sum(len(g[1]) for g in prio)
+
+    def caps(a, b, inside):
+        t1 = [v for v in tr1 if (a <= v <= b) == inside]
+        t2 = [v for v in tr2 if (a <= v <= b) == inside]
+        ln = (b - a) if inside else max(0.0, L - 2 * cb.KEEP - (b - a))
+        return t1, t2, min(len(t1), int(cb.CAP * ln)), min(len(t2), int(cb.CAP2 * ln))
+    s = math.ceil(npri / PIN_MAX / G) * G
+    while True:
+        a = max(cb.KEEP, min(centre - s / 2, L - cb.KEEP - s))
+        b = min(L - cb.KEEP, a + s)
+        i1, i2, c1, c2 = caps(a, b, True)
+        if c1 + c2 >= npri:
+            break
+        if b - a >= L - 2 * cb.KEEP - 1e-6:
+            raise ValueError(f'reserved {face} segment cannot hold {npri} {tag} pins')
+        s += G
+    o1, o2, d1, d2 = caps(a, b, False)
+    cap = {f: cb.face_cap(f, w, h) for f in 'NSEW'}
+    cap[face] = d1 + d2
+    if sum(len(g[1]) for g in rest) > sum(cap.values()):
+        raise ValueError('perimeter full outside the reserved segment')
+    load = collections.Counter()
+    on = collections.defaultdict(list)
+    gf = {}
+    blind = lambda g: len(g[3]) == 1 and abs(list(g[3].values())[0] - 0.01) < 1e-9
+    ngood = lambda g: sum(1 for v in g[3].values() if v >= 0)
+    for port, names, f, pull in sorted(rest, key=lambda g: (blind(g), ngood(g), len(g[1]))):
+        isb = blind((port, names, f, pull))
+        if isb:
+            order = [f] + sorted((x for x in 'NSEW' if x != f), key=lambda x: (x not in cb.ADJ[f], load[x] - cap[x]))
+        else:
+            order = sorted('NSEW', key=lambda x: -pull.get(x, -1))
+        cnt, tot = collections.Counter(), 0.0
+        for i, nm in enumerate(sorted(names, key=cb.bitk)):
+            for x in order:
+                if load[x] >= cap[x]:
+                    continue
+                pv = pull.get(x, -1)
+                if not isb and pv < 0 and (tot + pv) / (i + 1) < cb.MEAN_MIN:
+                    continue
+                load[x] += 1; on[x].append(nm); cnt[x] += 1; tot += pv
+                break
+            else:
+                raise ValueError(f'port {port}: faces {order} full')
+        gf[port] = cnt.most_common(1)[0][0]
+    for port, names, _, _ in prio:
+        gf[port] = face
+
+    def spread(names_, tr, f, lay):
+        n = len(names_)
+        idx = [int(round(i * (len(tr) - 1) / max(1, n - 1))) if n > 1 else len(tr) // 2 for i in range(n)]
+        res = []
+        for nm, k in zip(names_, idx):
+            v = tr[k]
+            lv, lh = lay or 'M5', lay or 'M4'
+            res.append(dict(N=(nm, lv, v, round(h - cb.INSET, 4)), S=(nm, lv, v, cb.INSET),
+                            E=(nm, lh, round(w - cb.INSET, 4), v), W=(nm, lh, cb.INSET, v))[f])
+        return res
+    out = []
+    for f in 'NSEW':
+        if f == face:
+            pn = [nm for g in prio for nm in sorted(g[1], key=cb.bitk)]
+            for names_, t1, t2, c in ((pn, i1, i2, c1), (on[f], o1, o2, d1)):
+                for part, tr, lay in ((names_[:c], t1, None), (names_[c:], t2, lay2)):
+                    if part:
+                        out += spread(part, tr, f, lay)
+            continue
+        names = on[f]
+        if not names:
+            continue
+        c1f, _ = cb.face_caps(f, w, h)
+        for part, lay in ((names[:c1f], None), (names[c1f:], 'M7' if f in 'NS' else 'M6')):
+            if part:
+                out += spread(part, cb.tracks(w if f in 'NS' else h, f in 'NS', lay), f, lay)
+    return out, gf, (round(a, 3), round(b, 3), npri)
 
 
 def apply(plan, out, cc):
@@ -269,7 +382,7 @@ def apply(plan, out, cc):
     # ------------------------------------------------------------------ pins of the q3 pieces
     tkm = _tkm_bits()
     os.makedirs(os.path.join(out, 'cores'), exist_ok=True)
-    new_hc, pconn_all, gpins, rep_p = [], {}, {}, {}
+    new_hc, pconn_all, gpins, rep_p, rep_seg = [], {}, {}, {}, {}
     for k in (BODY, EDGE, VM):
         x0, y0, cw, ch = geo[k]
         cx, cy = x0 + cw / 2, y0 + ch / 2
@@ -305,7 +418,18 @@ def apply(plan, out, cc):
                     f = 'S' if k == BODY else 'E'
                     pull = {f: 0.01}
                 groups.append((gname, names, f, pull))
-        pins, gf = cb.place_pins(groups, cw, ch)
+        if k in PRIO:
+            tag, face, partner = PRIO[k]
+            if partner == 'bus:links':
+                ys = [bt[b][1][1] for b in LINK_BUSES if b in bt and bt[b][0] == face]
+                ctr = sum(ys) / len(ys) - y0
+            else:
+                pb = geo[partner.split(':', 1)[1]]
+                ctr = (pb[0] + pb[2] / 2 - x0) if face in 'NS' else (pb[1] + pb[3] / 2 - y0)
+            pins, gf, seg = _place_prio(groups, cw, ch, tag, face, ctr)
+            rep_seg[k] = dict(tag=tag, face=face, centre=round(ctr, 2), segment=list(seg[:2]), pins=seg[2])
+        else:
+            pins, gf = cb.place_pins(groups, cw, ch)
         key = f'{MODS[k]}__{cw:g}x{ch:g}__q_hub_nw_{k}'
         pf = f'cores/{key}.json'
         json.dump([dict(name=n, layer=l, x=x, y=y) for n, l, x, y in pins], open(os.path.join(out, pf), 'w'))
@@ -319,14 +443,35 @@ def apply(plan, out, cc):
             if gname in gtg:
                 gp[gname] = (gtg[gname][0], gtg[gname][1], [pin_xy[nm] for nm in names])
         gpins[k] = gp
+        capx = sum(PIN_MAX * max(0.0, (cw if f in 'NS' else ch) - 2 * cb.KEEP) for f in 'NSEW')
         rep_p[k] = dict(module=MODS[k], cells=CELLS[k], origin_um=[x0, y0], outline_um=[cw, ch], pins=len(pins),
-                        port_bits=nbits, pins_per_um_face=dens, pins_file=pf)
+                        port_bits=nbits, pins_per_face=dict(per_face), pins_per_um_face=dens,
+                        perimeter_slack_at_pin_max=round(capx / len(pins), 3), reserved_segment=rep_seg.get(k),
+                        pins_file=pf)
         new_hc.append(dict(inst=k, module=MODS[k], origin_um=[x0, y0], outline_um=[cw, ch], track_offset_um=[0.0, 0.0],
                            pins_file=pf, note=f'PATH-HBM/HUBNW 10-25: q3 split piece ({SRC}); {CELLS[k]} cells; '
                            'qout pins split per bit by dest class (exact TKM projection)'))
         pconn_all[k] = dict(pconn)
     tkm_pins = sum(len(v[2]) for v in gpins[BODY].values() if f'core:{TX}' in v[1])
     rep['tx_source_pins_on_body_core'] = tkm_pins
+    # every TKM source bit: body_core pin -> TX box (Manhattan); stations = registers needed at hop <= HOP
+    tb_ = geo[TX]
+    st = collections.Counter()
+    dmax = 0.0
+    tface = collections.Counter()
+    for gname, (port, tg, pp) in gpins[BODY].items():
+        if f'core:{TX}' not in tg:
+            continue
+        for p in pp:
+            q = _clamp(p, tb_)
+            d = abs(p[0] - q[0]) + abs(p[1] - q[1])
+            dmax = max(dmax, d)
+            st[max(0, math.ceil(d / HOP) - 1)] += 1
+            tface[cb.face_of(p[0] - geo[BODY][0], p[1] - geo[BODY][1], geo[BODY][2], geo[BODY][3])] += 1
+    rep['tkm_source_bits'] = dict(bits=sum(st.values()), faces=dict(tface), stations_hist=dict(st),
+                                  stations_min=min(st), stations_max=max(st), max_pin_to_TX_um=round(dmax, 2))
+    assert rep['tkm_source_bits']['stations_min'] == rep['tkm_source_bits']['stations_max'], st
+    assert set(tface) == {PRIO[BODY][1]}, tface
     i = [h['inst'] for h in t['hard_cores']].index(OLD)
     t['hard_cores'] = t['hard_cores'][:i] + new_hc + t['hard_cores'][i + 1:]
     rep['pieces'] = rep_p
@@ -564,7 +709,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('plan')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--edge-w', type=float, default=EDGE_W, help='edge strip width (um, 8.64 grid); default %(default)s')
     a = ap.parse_args()
+    PLACE.clear(); PLACE.update(_place(a.edge_w))
     src = os.path.dirname(os.path.abspath(a.plan))
     os.makedirs(a.out, exist_ok=True)
     for f in os.listdir(src):
@@ -585,7 +732,7 @@ def main():
     json.dump(plan, open(os.path.join(a.out, 'die_plan.json'), 'w'), indent=0)
     json.dump(rep, open(os.path.join(a.out, 'q_hub_nw_report.json'), 'w'), indent=1)
     print(json.dumps({k: rep[k] for k in ('stations', 'tkx', 'lane_latency', 'root', 'body_core_to_TX_box_um',
-                                          'tx_source_pins_on_body_core')}, indent=1))
+                                          'tx_source_pins_on_body_core', 'tkm_source_bits', 'pieces')}, indent=1))
 
 
 if __name__ == '__main__':
