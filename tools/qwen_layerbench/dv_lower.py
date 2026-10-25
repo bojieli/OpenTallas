@@ -65,6 +65,13 @@ CMD_HOP = 2                       # slice2 and s8: cmd pin register + cmd_o regi
 SC_HOP_BY_SLICE = {'slice2': 2, 's8': 4}
 SLICE_RTL = 's8' if os.environ.get('DV2_S8DIE', '0') == '1' else 'slice2'
 SC_HOP = SC_HOP_BY_SLICE[SLICE_RTL]
+# x stream (st_up / st_dn) pass hop, same rule:
+#   'slice2' qfd_dv_stream: sw_q pin register + so_e / so_w register                                            = 2
+#   's8'     u_stm = qfd_dv_s6_stm -> qfd_dv_stream_tile (QW-STREAM3): sw_q pin + DP 2 (face root + leaf) + so_e   = 4
+#            (stream_tile header: 'sw_i / se_i: reference inputs delayed DP = 2 edges ... relay outputs on the reference edge')
+# The D2D return chain (ch, 2 edges a hop) and the cmd chain are unchanged in s8 (vec calibrate d2d ages equal for all slices).
+ST_HOP_BY_SLICE = {'slice2': 2, 's8': 4}
+ST_HOP = ST_HOP_BY_SLICE[SLICE_RTL]
 W_VM, W_X, W_D2D, W_SC = 0, 1 << 22, 2 << 22, 3 << 22
 SPLIT_LEVEL = {128: 7, 256: 8, 512: 9}
 

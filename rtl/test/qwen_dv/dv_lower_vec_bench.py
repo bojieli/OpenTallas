@@ -185,7 +185,7 @@ def calibrate(work, seed):
         if name in ('add', 'red_vm'):
             v = sorted(c - (te + arr[s]) for (m, c), _ in ps.items() if m == s and lo <= c < hi)
         elif name in ('xs', 'silu'):
-            v = sorted(c - te - arr[s] - 2 * (N - 1 - s) for c, (src, _, _) in e5.items() if src == s and lo <= c < hi)
+            v = sorted(c - te - arr[s] - D.ST_HOP * (N - 1 - s) for c, (src, _, _) in e5.items() if src == s and lo <= c < hi)
         else:
             v = sorted(c - te - arr[s] - 2 * s for c, _, _ in dd if lo <= c < hi)
         meas[f'{name}@{s}'] = v
@@ -197,7 +197,7 @@ def calibrate(work, seed):
              per_probe=meas,
              source='rtl/test/qwen_dv/dv_lower_vec_bench.py --mode calibrate (tb_qfd_dv2 N 12, Verilator 5.050). '
                     'Offsets from the slice cmd landing (entry + 2 s): PSUM = leave edge of the slice dn_o (S<s>SD); '
-                    'x = edge at the E5 end (S11E) - 2 (11 - s); D2D = edge at W5 (S0DD) - 2 s; d2d rs / qn / gur are '
+                    'x = edge at the E5 end (S11E) - ST_HOP (11 - s); D2D = edge at W5 (S0DD) - 2 s; d2d rs / qn / gur are '
                     'the VM-only ops re-targeted to the D2D window (same pipeline) = their last-write ages; red_vm = '
                     'the head SSQ reducer result (PSUM-window variant) age')
     want = dict(add_psum_out=3, xs_out=6, silu_out=2)
@@ -207,7 +207,7 @@ def calibrate(work, seed):
     if meas['add@11'] != meas['add@1'][:2]:
         errs.append(f'add PSUM offsets differ by slice {meas["add@1"]} / {meas["add@11"]}')
     if meas['xs@10'] != meas['xs@1'][:4]:
-        errs.append(f'x stream offsets differ by slice (2-edge stream hop model) {meas["xs@1"]} / {meas["xs@10"]}')
+        errs.append(f'x stream offsets differ by slice ({D.ST_HOP}-edge stream hop model, dv_lower.ST_HOP) {meas["xs@1"]} / {meas["xs@10"]}')
     for k, n in (('rs', 1), ('qn', 16), ('rope_q', 8), ('rope_k', 8), ('v', 16), ('gur', 32), ('readback', 48)):
         if len(A['d2d'][k]) != n:
             errs.append(f'd2d {k}: {len(A["d2d"][k])} words, want {n}')
