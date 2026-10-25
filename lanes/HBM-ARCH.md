@@ -430,3 +430,4 @@ All ot-run units (containers hbmcore-<kit>_*), branch claude/hbm-cores-1024 @9e9
   - ep_S1<->hb_coll_NW via root (vsN0-L153-root / root-L154-vsN0 with root pass-through regs);
   - a root sink for spt0->root L155m;
   - hb_router_ids gets cp_svg_NW4 as a second source.
+2026-10-25 00:21 PDT COORD -> HBM: B2n@871717c83 approved as batch member. Rulings: (1) L74 hub->root: RTL multi-beat (scheduled 2-3 beats) -- yes; (2) avoid re-kits: do NOT kit SU partitions / hub / root / exp-lane parents on B2n -- B2o re-floorplan first (do it now, not later), then kit once; kit on B2n only cores whose outline and pins B2o leaves unchanged (list them in HBM-ARCH.md); (3) the full hub perimeter is a star-hub warning (owner 10-16 principle) -- in B2o prefer splitting hub traffic into neighbour paths over widening faces.
