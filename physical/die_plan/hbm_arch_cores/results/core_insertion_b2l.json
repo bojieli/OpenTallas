@@ -9,9 +9,9 @@
  "source": "4_1_cts.log 'OT_TAP_BALANCE it0' of each kit's run dir (host:/srv/opentallas-scratch/claude/elem-hbm/runs/<kit>)",
  "counts": {
   "no kit": 15,
-  "measured, early tap > 0": 183,
-  "early tap > 40 (over tol)": 111,
-  "not measured": 77,
+  "measured, early tap > 0": 220,
+  "early tap > 40 (over tol)": 148,
+  "not measured": 40,
   "measured, I <= 250": 6
  },
  "views": [
@@ -722,7 +722,7 @@
     345.6
    ],
    "kit": "ot_hbm_hc_bankq_ft_static__lanes0_2_43d2a3be8b5a",
-   "kit_hash": "c56751eaafde64dd",
+   "kit_hash": "89f47f91bf783152",
    "status": "MEASURED",
    "host": "localhost",
    "ports": {
@@ -752,7 +752,7 @@
     345.6
    ],
    "kit": "ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862",
-   "kit_hash": "cbad262641704a53",
+   "kit_hash": "cb50e32c508cf2d9",
    "status": "MEASURED",
    "host": "localhost",
    "ports": {
@@ -782,7 +782,7 @@
     345.6
    ],
    "kit": "ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3",
-   "kit_hash": "79590be5dbb80600",
+   "kit_hash": "7f73d30b8a0d5bf9",
    "status": "MEASURED",
    "host": "intel1",
    "ports": {
@@ -3910,17 +3910,17 @@
    "status": "MEASURED",
    "ports": {
     "clk": {
-     "mean_ps": 298,
-     "min_ps": 254,
-     "max_ps": 397,
+     "mean_ps": 295,
+     "min_ps": 255,
+     "max_ps": 370,
      "sinks": 8548
     }
    },
-   "insertion_mean_ps": 298,
-   "insertion_sink_weighted_mean_ps": 298.0,
-   "insertion_max_ps": 397,
-   "early_tap_ps": 48,
-   "contract_vclk_latency_ps": 298
+   "insertion_mean_ps": 295,
+   "insertion_sink_weighted_mean_ps": 295.0,
+   "insertion_max_ps": 370,
+   "early_tap_ps": 45,
+   "contract_vclk_latency_ps": 295
   },
   {
    "view": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@a4d8b0938055",
@@ -4103,9 +4103,130 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp0_f4260de3a745",
-   "kit_hash": "f71602762f03097a",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "794ee955d53f47d6",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 434,
+     "min_ps": 414,
+     "max_ps": 456,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 90,
+     "min_ps": 90,
+     "max_ps": 90,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 136,
+     "min_ps": 136,
+     "max_ps": 136,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 113,
+     "min_ps": 113,
+     "max_ps": 113,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 235,
+     "min_ps": 235,
+     "max_ps": 235,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 65,
+     "min_ps": 65,
+     "max_ps": 65,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 210,
+     "min_ps": 210,
+     "max_ps": 210,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 441,
+     "min_ps": 428,
+     "max_ps": 456,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 445,
+     "min_ps": 431,
+     "max_ps": 467,
+     "sinks": 5520
+    },
+    "clk_insert[2]": {
+     "mean_ps": 438,
+     "min_ps": 427,
+     "max_ps": 457,
+     "sinks": 5520
+    },
+    "clk_insert[3]": {
+     "mean_ps": 422,
+     "min_ps": 404,
+     "max_ps": 443,
+     "sinks": 4140
+    },
+    "clk_lane[0]": {
+     "mean_ps": 561,
+     "min_ps": 535,
+     "max_ps": 631,
+     "sinks": 2366
+    },
+    "clk_lane[1]": {
+     "mean_ps": 453,
+     "min_ps": 439,
+     "max_ps": 509,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 434,
+     "min_ps": 417,
+     "max_ps": 479,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 378,
+     "min_ps": 351,
+     "max_ps": 392,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 406,
+     "min_ps": 394,
+     "max_ps": 420,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 381,
+     "min_ps": 361,
+     "max_ps": 441,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 382,
+     "min_ps": 371,
+     "max_ps": 507,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 278,
+     "min_ps": 276,
+     "max_ps": 280,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 561,
+   "insertion_sink_weighted_mean_ps": 434.0,
+   "insertion_max_ps": 631,
+   "early_tap_ps": 311,
+   "contract_vclk_latency_ps": 561
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp1@1f3670ca53a4",
@@ -4120,9 +4241,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp1_1f3670ca53a4",
-   "kit_hash": "53bd4a5a53a49f1f",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "05089f2d7fee1dcb",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 523,
+     "min_ps": 464,
+     "max_ps": 565,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 359,
+     "min_ps": 359,
+     "max_ps": 359,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 336,
+     "min_ps": 336,
+     "max_ps": 336,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 359,
+     "min_ps": 359,
+     "max_ps": 359,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 203,
+     "min_ps": 203,
+     "max_ps": 203,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 320,
+     "min_ps": 320,
+     "max_ps": 320,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 391,
+     "min_ps": 391,
+     "max_ps": 391,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 303,
+     "min_ps": 286,
+     "max_ps": 321,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 283,
+     "min_ps": 269,
+     "max_ps": 301,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 601,
+     "min_ps": 578,
+     "max_ps": 711,
+     "sinks": 2983
+    },
+    "clk_lane[1]": {
+     "mean_ps": 392,
+     "min_ps": 382,
+     "max_ps": 472,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 271,
+     "min_ps": 254,
+     "max_ps": 306,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 250,
+     "min_ps": 237,
+     "max_ps": 273,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 395,
+     "min_ps": 384,
+     "max_ps": 408,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 259,
+     "min_ps": 243,
+     "max_ps": 282,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 283,
+     "min_ps": 273,
+     "max_ps": 313,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 356,
+     "min_ps": 339,
+     "max_ps": 416,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 601,
+   "insertion_sink_weighted_mean_ps": 370.8,
+   "insertion_max_ps": 711,
+   "early_tap_ps": 351,
+   "contract_vclk_latency_ps": 601
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp1@26b9599d5540",
@@ -4137,9 +4367,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp1_26b9599d5540",
-   "kit_hash": "87a0b0b29811cd4b",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "5c3719b845c79cef",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 431,
+     "min_ps": 360,
+     "max_ps": 490,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 60,
+     "min_ps": 60,
+     "max_ps": 60,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 100,
+     "min_ps": 100,
+     "max_ps": 100,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 79,
+     "min_ps": 79,
+     "max_ps": 79,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 34,
+     "min_ps": 34,
+     "max_ps": 34,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 224,
+     "min_ps": 224,
+     "max_ps": 224,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 56,
+     "min_ps": 56,
+     "max_ps": 56,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 470,
+     "min_ps": 450,
+     "max_ps": 500,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 457,
+     "min_ps": 446,
+     "max_ps": 476,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 573,
+     "min_ps": 548,
+     "max_ps": 726,
+     "sinks": 2983
+    },
+    "clk_lane[1]": {
+     "mean_ps": 468,
+     "min_ps": 452,
+     "max_ps": 521,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 421,
+     "min_ps": 399,
+     "max_ps": 473,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 381,
+     "min_ps": 366,
+     "max_ps": 420,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 437,
+     "min_ps": 423,
+     "max_ps": 449,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 392,
+     "min_ps": 380,
+     "max_ps": 444,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 365,
+     "min_ps": 344,
+     "max_ps": 421,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 261,
+     "min_ps": 259,
+     "max_ps": 263,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 573,
+   "insertion_sink_weighted_mean_ps": 456.1,
+   "insertion_max_ps": 726,
+   "early_tap_ps": 323,
+   "contract_vclk_latency_ps": 573
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp10@3902ba786f1f",
@@ -4154,9 +4493,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp10_3902ba786f1f",
-   "kit_hash": "962afe61ffcdf407",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "6cb664a496e70fc0",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 413,
+     "min_ps": 359,
+     "max_ps": 457,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 207,
+     "min_ps": 207,
+     "max_ps": 207,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 20,
+     "min_ps": 20,
+     "max_ps": 20,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 181,
+     "min_ps": 181,
+     "max_ps": 181,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 168,
+     "min_ps": 168,
+     "max_ps": 168,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 147,
+     "min_ps": 147,
+     "max_ps": 147,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 180,
+     "min_ps": 180,
+     "max_ps": 180,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 338,
+     "min_ps": 328,
+     "max_ps": 359,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 299,
+     "min_ps": 289,
+     "max_ps": 316,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 591,
+     "min_ps": 574,
+     "max_ps": 651,
+     "sinks": 3209
+    },
+    "clk_lane[1]": {
+     "mean_ps": 456,
+     "min_ps": 443,
+     "max_ps": 570,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 341,
+     "min_ps": 332,
+     "max_ps": 372,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 248,
+     "min_ps": 235,
+     "max_ps": 272,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 418,
+     "min_ps": 404,
+     "max_ps": 430,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 233,
+     "min_ps": 217,
+     "max_ps": 282,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 203,
+     "min_ps": 189,
+     "max_ps": 255,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 117,
+     "min_ps": 113,
+     "max_ps": 121,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 591,
+   "insertion_sink_weighted_mean_ps": 394.3,
+   "insertion_max_ps": 651,
+   "early_tap_ps": 341,
+   "contract_vclk_latency_ps": 591
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp10@cdab528a3523",
@@ -4171,9 +4619,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp10_cdab528a3523",
-   "kit_hash": "02f8e3d54462c804",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "f092a1e2595a6693",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 410,
+     "min_ps": 343,
+     "max_ps": 466,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 168,
+     "min_ps": 168,
+     "max_ps": 168,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 80,
+     "min_ps": 80,
+     "max_ps": 80,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 188,
+     "min_ps": 188,
+     "max_ps": 188,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 153,
+     "min_ps": 153,
+     "max_ps": 153,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 126,
+     "min_ps": 126,
+     "max_ps": 126,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 172,
+     "min_ps": 172,
+     "max_ps": 172,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 408,
+     "min_ps": 391,
+     "max_ps": 444,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 354,
+     "min_ps": 346,
+     "max_ps": 382,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 559,
+     "min_ps": 532,
+     "max_ps": 797,
+     "sinks": 3209
+    },
+    "clk_lane[1]": {
+     "mean_ps": 416,
+     "min_ps": 401,
+     "max_ps": 520,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 326,
+     "min_ps": 314,
+     "max_ps": 363,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 260,
+     "min_ps": 240,
+     "max_ps": 304,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 377,
+     "min_ps": 355,
+     "max_ps": 397,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 274,
+     "min_ps": 265,
+     "max_ps": 310,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 201,
+     "min_ps": 190,
+     "max_ps": 251,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 123,
+     "min_ps": 119,
+     "max_ps": 127,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 559,
+   "insertion_sink_weighted_mean_ps": 390.5,
+   "insertion_max_ps": 797,
+   "early_tap_ps": 309,
+   "contract_vclk_latency_ps": 559
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp11@41000f85c440",
@@ -4188,9 +4745,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp11_41000f85c440",
-   "kit_hash": "ed0a63e78caf9537",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "c5a0e085ea049d26",
+   "status": "MEASURED",
+   "host": "intel1",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 529,
+     "min_ps": 493,
+     "max_ps": 574,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 359,
+     "min_ps": 359,
+     "max_ps": 359,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 208,
+     "min_ps": 208,
+     "max_ps": 208,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 391,
+     "min_ps": 391,
+     "max_ps": 391,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 358,
+     "min_ps": 358,
+     "max_ps": 358,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 319,
+     "min_ps": 319,
+     "max_ps": 319,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 335,
+     "min_ps": 335,
+     "max_ps": 335,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 302,
+     "min_ps": 286,
+     "max_ps": 320,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 276,
+     "min_ps": 264,
+     "max_ps": 292,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 567,
+     "min_ps": 536,
+     "max_ps": 669,
+     "sinks": 3323
+    },
+    "clk_lane[1]": {
+     "mean_ps": 393,
+     "min_ps": 381,
+     "max_ps": 450,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 267,
+     "min_ps": 251,
+     "max_ps": 308,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 238,
+     "min_ps": 219,
+     "max_ps": 254,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 397,
+     "min_ps": 387,
+     "max_ps": 409,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 261,
+     "min_ps": 251,
+     "max_ps": 288,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 288,
+     "min_ps": 273,
+     "max_ps": 313,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 348,
+     "min_ps": 338,
+     "max_ps": 366,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 567,
+   "insertion_sink_weighted_mean_ps": 369.4,
+   "insertion_max_ps": 669,
+   "early_tap_ps": 317,
+   "contract_vclk_latency_ps": 567
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp11@cd46a885af6c",
@@ -4205,9 +4871,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp11_cd46a885af6c",
-   "kit_hash": "5df59a4e35c37473",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "2280ae15fe7b2238",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 519,
+     "min_ps": 500,
+     "max_ps": 543,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 386,
+     "min_ps": 386,
+     "max_ps": 386,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 231,
+     "min_ps": 231,
+     "max_ps": 231,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 301,
+     "min_ps": 301,
+     "max_ps": 301,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 270,
+     "min_ps": 270,
+     "max_ps": 270,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 401,
+     "min_ps": 401,
+     "max_ps": 401,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 122,
+     "min_ps": 122,
+     "max_ps": 122,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 310,
+     "min_ps": 293,
+     "max_ps": 333,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 293,
+     "min_ps": 276,
+     "max_ps": 313,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 600,
+     "min_ps": 584,
+     "max_ps": 665,
+     "sinks": 3323
+    },
+    "clk_lane[1]": {
+     "mean_ps": 407,
+     "min_ps": 395,
+     "max_ps": 501,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 289,
+     "min_ps": 280,
+     "max_ps": 332,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 260,
+     "min_ps": 253,
+     "max_ps": 278,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 400,
+     "min_ps": 391,
+     "max_ps": 412,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 269,
+     "min_ps": 256,
+     "max_ps": 333,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 303,
+     "min_ps": 293,
+     "max_ps": 349,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 330,
+     "min_ps": 321,
+     "max_ps": 382,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 600,
+   "insertion_sink_weighted_mean_ps": 380.9,
+   "insertion_max_ps": 665,
+   "early_tap_ps": 350,
+   "contract_vclk_latency_ps": 600
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp12@832f35030626",
@@ -4222,9 +4997,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp12_832f35030626",
-   "kit_hash": "16e495bfd87bbbde",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "00714f72b7d58051",
+   "status": "MEASURED",
+   "host": "intel2",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 460,
+     "min_ps": 449,
+     "max_ps": 485,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 311,
+     "min_ps": 311,
+     "max_ps": 311,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 311,
+     "min_ps": 311,
+     "max_ps": 311,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 331,
+     "min_ps": 331,
+     "max_ps": 331,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 281,
+     "min_ps": 281,
+     "max_ps": 281,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 256,
+     "min_ps": 256,
+     "max_ps": 256,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 170,
+     "min_ps": 170,
+     "max_ps": 170,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 279,
+     "min_ps": 265,
+     "max_ps": 296,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 259,
+     "min_ps": 243,
+     "max_ps": 285,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 556,
+     "min_ps": 529,
+     "max_ps": 651,
+     "sinks": 3209
+    },
+    "clk_lane[1]": {
+     "mean_ps": 396,
+     "min_ps": 383,
+     "max_ps": 533,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 264,
+     "min_ps": 246,
+     "max_ps": 330,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 222,
+     "min_ps": 206,
+     "max_ps": 246,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 371,
+     "min_ps": 360,
+     "max_ps": 387,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 202,
+     "min_ps": 182,
+     "max_ps": 262,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 165,
+     "min_ps": 148,
+     "max_ps": 194,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 126,
+     "min_ps": 123,
+     "max_ps": 139,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 556,
+   "insertion_sink_weighted_mean_ps": 346.2,
+   "insertion_max_ps": 651,
+   "early_tap_ps": 306,
+   "contract_vclk_latency_ps": 556
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp12@f9b7578c2d46",
@@ -4239,9 +5123,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp12_f9b7578c2d46",
-   "kit_hash": "a015e16e7319b651",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "e83fb42db0555a85",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 413,
+     "min_ps": 387,
+     "max_ps": 441,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 39,
+     "min_ps": 39,
+     "max_ps": 39,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 115,
+     "min_ps": 115,
+     "max_ps": 115,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 280,
+     "min_ps": 280,
+     "max_ps": 280,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 136,
+     "min_ps": 136,
+     "max_ps": 136,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 18,
+     "min_ps": 18,
+     "max_ps": 18,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 172,
+     "min_ps": 172,
+     "max_ps": 172,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 481,
+     "min_ps": 467,
+     "max_ps": 509,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 448,
+     "min_ps": 430,
+     "max_ps": 491,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 570,
+     "min_ps": 547,
+     "max_ps": 666,
+     "sinks": 3209
+    },
+    "clk_lane[1]": {
+     "mean_ps": 452,
+     "min_ps": 441,
+     "max_ps": 526,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 417,
+     "min_ps": 397,
+     "max_ps": 485,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 390,
+     "min_ps": 363,
+     "max_ps": 417,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 415,
+     "min_ps": 402,
+     "max_ps": 427,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 412,
+     "min_ps": 378,
+     "max_ps": 452,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 422,
+     "min_ps": 403,
+     "max_ps": 463,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 261,
+     "min_ps": 260,
+     "max_ps": 263,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 570,
+   "insertion_sink_weighted_mean_ps": 449.6,
+   "insertion_max_ps": 666,
+   "early_tap_ps": 320,
+   "contract_vclk_latency_ps": 570
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp13@d2d04c202775",
@@ -4256,9 +5249,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp13_d2d04c202775",
-   "kit_hash": "2ac2e1e3683f5c3e",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "5e17dbcb258f53b3",
+   "status": "MEASURED",
+   "host": "intel1",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 527,
+     "min_ps": 501,
+     "max_ps": 581,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 357,
+     "min_ps": 357,
+     "max_ps": 357,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 388,
+     "min_ps": 388,
+     "max_ps": 388,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 355,
+     "min_ps": 355,
+     "max_ps": 355,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 332,
+     "min_ps": 332,
+     "max_ps": 332,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 315,
+     "min_ps": 315,
+     "max_ps": 315,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 56,
+     "min_ps": 56,
+     "max_ps": 56,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 283,
+     "min_ps": 271,
+     "max_ps": 300,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 274,
+     "min_ps": 263,
+     "max_ps": 289,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 576,
+     "min_ps": 559,
+     "max_ps": 663,
+     "sinks": 3323
+    },
+    "clk_lane[1]": {
+     "mean_ps": 430,
+     "min_ps": 412,
+     "max_ps": 561,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 337,
+     "min_ps": 325,
+     "max_ps": 398,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 238,
+     "min_ps": 230,
+     "max_ps": 261,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 369,
+     "min_ps": 356,
+     "max_ps": 387,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 208,
+     "min_ps": 188,
+     "max_ps": 260,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 166,
+     "min_ps": 157,
+     "max_ps": 193,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 125,
+     "min_ps": 122,
+     "max_ps": 135,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 576,
+   "insertion_sink_weighted_mean_ps": 360.2,
+   "insertion_max_ps": 663,
+   "early_tap_ps": 326,
+   "contract_vclk_latency_ps": 576
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp13@ee054eacab0f",
@@ -4273,9 +5375,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp13_ee054eacab0f",
-   "kit_hash": "f5c62944d1965f67",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "dd264fdbf607ee53",
+   "status": "MEASURED",
+   "host": "epyc3",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 512,
+     "min_ps": 486,
+     "max_ps": 570,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 335,
+     "min_ps": 335,
+     "max_ps": 335,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 358,
+     "min_ps": 358,
+     "max_ps": 358,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 356,
+     "min_ps": 356,
+     "max_ps": 356,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 389,
+     "min_ps": 389,
+     "max_ps": 389,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 299,
+     "min_ps": 299,
+     "max_ps": 299,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 155,
+     "min_ps": 155,
+     "max_ps": 155,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 277,
+     "min_ps": 259,
+     "max_ps": 305,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 256,
+     "min_ps": 238,
+     "max_ps": 279,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 556,
+     "min_ps": 534,
+     "max_ps": 641,
+     "sinks": 3323
+    },
+    "clk_lane[1]": {
+     "mean_ps": 408,
+     "min_ps": 390,
+     "max_ps": 501,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 309,
+     "min_ps": 295,
+     "max_ps": 351,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 222,
+     "min_ps": 209,
+     "max_ps": 252,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 380,
+     "min_ps": 371,
+     "max_ps": 390,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 204,
+     "min_ps": 189,
+     "max_ps": 250,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 181,
+     "min_ps": 166,
+     "max_ps": 205,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 103,
+     "min_ps": 100,
+     "max_ps": 104,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 556,
+   "insertion_sink_weighted_mean_ps": 354.0,
+   "insertion_max_ps": 641,
+   "early_tap_ps": 306,
+   "contract_vclk_latency_ps": 556
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp14@0aa5ae0c4a16",
@@ -4290,9 +5501,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp14_0aa5ae0c4a16",
-   "kit_hash": "ad9e8e909889f15d",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "0e31c098e24584ad",
+   "status": "MEASURED",
+   "host": "epyc2",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 426,
+     "min_ps": 385,
+     "max_ps": 532,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 220,
+     "min_ps": 220,
+     "max_ps": 220,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 238,
+     "min_ps": 238,
+     "max_ps": 238,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 257,
+     "min_ps": 257,
+     "max_ps": 257,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 236,
+     "min_ps": 236,
+     "max_ps": 236,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 82,
+     "min_ps": 82,
+     "max_ps": 82,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 188,
+     "min_ps": 188,
+     "max_ps": 188,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 336,
+     "min_ps": 324,
+     "max_ps": 366,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 309,
+     "min_ps": 298,
+     "max_ps": 331,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 574,
+     "min_ps": 549,
+     "max_ps": 650,
+     "sinks": 3323
+    },
+    "clk_lane[1]": {
+     "mean_ps": 447,
+     "min_ps": 431,
+     "max_ps": 543,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 319,
+     "min_ps": 299,
+     "max_ps": 368,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 273,
+     "min_ps": 264,
+     "max_ps": 298,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 418,
+     "min_ps": 406,
+     "max_ps": 430,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 265,
+     "min_ps": 254,
+     "max_ps": 306,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 196,
+     "min_ps": 184,
+     "max_ps": 249,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 119,
+     "min_ps": 116,
+     "max_ps": 122,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 574,
+   "insertion_sink_weighted_mean_ps": 393.1,
+   "insertion_max_ps": 650,
+   "early_tap_ps": 324,
+   "contract_vclk_latency_ps": 574
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp14@ae74e585c4b2",
@@ -4307,9 +5627,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp14_ae74e585c4b2",
-   "kit_hash": "4201e8804b2e7457",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "eda1f3b02a294e9b",
+   "status": "MEASURED",
+   "host": "epyc2",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 507,
+     "min_ps": 483,
+     "max_ps": 543,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 35,
+     "min_ps": 35,
+     "max_ps": 35,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 336,
+     "min_ps": 336,
+     "max_ps": 336,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 356,
+     "min_ps": 356,
+     "max_ps": 356,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 356,
+     "min_ps": 356,
+     "max_ps": 356,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 314,
+     "min_ps": 314,
+     "max_ps": 314,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 388,
+     "min_ps": 388,
+     "max_ps": 388,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 283,
+     "min_ps": 267,
+     "max_ps": 317,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 261,
+     "min_ps": 242,
+     "max_ps": 292,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 554,
+     "min_ps": 531,
+     "max_ps": 645,
+     "sinks": 3323
+    },
+    "clk_lane[1]": {
+     "mean_ps": 419,
+     "min_ps": 408,
+     "max_ps": 492,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 302,
+     "min_ps": 282,
+     "max_ps": 359,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 222,
+     "min_ps": 210,
+     "max_ps": 255,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 384,
+     "min_ps": 367,
+     "max_ps": 403,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 225,
+     "min_ps": 216,
+     "max_ps": 261,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 235,
+     "min_ps": 223,
+     "max_ps": 285,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 103,
+     "min_ps": 101,
+     "max_ps": 105,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 554,
+   "insertion_sink_weighted_mean_ps": 359.8,
+   "insertion_max_ps": 645,
+   "early_tap_ps": 304,
+   "contract_vclk_latency_ps": 554
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp2@c09772cac4ee",
@@ -4324,9 +5753,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp2_c09772cac4ee",
-   "kit_hash": "a0f2129de96c0706",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "9cebbffc8780c73f",
+   "status": "MEASURED",
+   "host": "epyc3",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 486,
+     "min_ps": 469,
+     "max_ps": 524,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 95,
+     "min_ps": 95,
+     "max_ps": 95,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 176,
+     "min_ps": 176,
+     "max_ps": 176,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 67,
+     "min_ps": 67,
+     "max_ps": 67,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 112,
+     "min_ps": 112,
+     "max_ps": 112,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 57,
+     "min_ps": 57,
+     "max_ps": 57,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 34,
+     "min_ps": 34,
+     "max_ps": 34,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 455,
+     "min_ps": 443,
+     "max_ps": 480,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 432,
+     "min_ps": 421,
+     "max_ps": 457,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 586,
+     "min_ps": 565,
+     "max_ps": 670,
+     "sinks": 2982
+    },
+    "clk_lane[1]": {
+     "mean_ps": 423,
+     "min_ps": 414,
+     "max_ps": 477,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 419,
+     "min_ps": 408,
+     "max_ps": 476,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 356,
+     "min_ps": 333,
+     "max_ps": 397,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 393,
+     "min_ps": 380,
+     "max_ps": 408,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 401,
+     "min_ps": 388,
+     "max_ps": 447,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 392,
+     "min_ps": 383,
+     "max_ps": 419,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 274,
+     "min_ps": 272,
+     "max_ps": 298,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 586,
+   "insertion_sink_weighted_mean_ps": 431.6,
+   "insertion_max_ps": 670,
+   "early_tap_ps": 336,
+   "contract_vclk_latency_ps": 586
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp2@de562e97562d",
@@ -4341,9 +5879,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp2_de562e97562d",
-   "kit_hash": "87a0131753906bc9",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "072cc5b0be87a894",
+   "status": "MEASURED",
+   "host": "intel2",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 426,
+     "min_ps": 389,
+     "max_ps": 454,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 38,
+     "min_ps": 38,
+     "max_ps": 38,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 113,
+     "min_ps": 113,
+     "max_ps": 113,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 283,
+     "min_ps": 283,
+     "max_ps": 283,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 135,
+     "min_ps": 135,
+     "max_ps": 135,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 17,
+     "min_ps": 17,
+     "max_ps": 17,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 175,
+     "min_ps": 175,
+     "max_ps": 175,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 473,
+     "min_ps": 459,
+     "max_ps": 497,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 445,
+     "min_ps": 429,
+     "max_ps": 472,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 586,
+     "min_ps": 567,
+     "max_ps": 672,
+     "sinks": 2982
+    },
+    "clk_lane[1]": {
+     "mean_ps": 485,
+     "min_ps": 470,
+     "max_ps": 563,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 437,
+     "min_ps": 425,
+     "max_ps": 492,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 379,
+     "min_ps": 364,
+     "max_ps": 433,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 423,
+     "min_ps": 412,
+     "max_ps": 434,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 421,
+     "min_ps": 402,
+     "max_ps": 500,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 418,
+     "min_ps": 383,
+     "max_ps": 455,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 260,
+     "min_ps": 258,
+     "max_ps": 263,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 586,
+   "insertion_sink_weighted_mean_ps": 457.1,
+   "insertion_max_ps": 672,
+   "early_tap_ps": 336,
+   "contract_vclk_latency_ps": 586
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp3@7637efd0080a",
@@ -4358,9 +6005,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp3_7637efd0080a",
-   "kit_hash": "367be61757a3e270",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "4eaf2829bcff2e9d",
+   "status": "MEASURED",
+   "host": "epyc2",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 424,
+     "min_ps": 380,
+     "max_ps": 484,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 171,
+     "min_ps": 171,
+     "max_ps": 171,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 86,
+     "min_ps": 86,
+     "max_ps": 86,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 170,
+     "min_ps": 170,
+     "max_ps": 170,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 191,
+     "min_ps": 191,
+     "max_ps": 191,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 131,
+     "min_ps": 131,
+     "max_ps": 131,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 155,
+     "min_ps": 155,
+     "max_ps": 155,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 320,
+     "min_ps": 310,
+     "max_ps": 349,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 287,
+     "min_ps": 276,
+     "max_ps": 309,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 564,
+     "min_ps": 539,
+     "max_ps": 690,
+     "sinks": 3096
+    },
+    "clk_lane[1]": {
+     "mean_ps": 439,
+     "min_ps": 422,
+     "max_ps": 538,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 323,
+     "min_ps": 313,
+     "max_ps": 358,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 247,
+     "min_ps": 238,
+     "max_ps": 285,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 397,
+     "min_ps": 388,
+     "max_ps": 410,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 226,
+     "min_ps": 214,
+     "max_ps": 277,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 209,
+     "min_ps": 193,
+     "max_ps": 246,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 104,
+     "min_ps": 102,
+     "max_ps": 106,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 564,
+   "insertion_sink_weighted_mean_ps": 376.0,
+   "insertion_max_ps": 690,
+   "early_tap_ps": 314,
+   "contract_vclk_latency_ps": 564
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp3@953ddd655d82",
@@ -4375,9 +6131,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp3_953ddd655d82",
-   "kit_hash": "db52603d9b8fc444",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "c2279b6eb9fed456",
+   "status": "MEASURED",
+   "host": "intel1",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 537,
+     "min_ps": 437,
+     "max_ps": 614,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 350,
+     "min_ps": 350,
+     "max_ps": 350,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 375,
+     "min_ps": 375,
+     "max_ps": 375,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 334,
+     "min_ps": 334,
+     "max_ps": 334,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 348,
+     "min_ps": 348,
+     "max_ps": 348,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 311,
+     "min_ps": 311,
+     "max_ps": 311,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 233,
+     "min_ps": 233,
+     "max_ps": 233,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 291,
+     "min_ps": 274,
+     "max_ps": 313,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 267,
+     "min_ps": 251,
+     "max_ps": 284,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 583,
+     "min_ps": 543,
+     "max_ps": 725,
+     "sinks": 3096
+    },
+    "clk_lane[1]": {
+     "mean_ps": 388,
+     "min_ps": 378,
+     "max_ps": 450,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 249,
+     "min_ps": 230,
+     "max_ps": 289,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 235,
+     "min_ps": 226,
+     "max_ps": 247,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 385,
+     "min_ps": 375,
+     "max_ps": 401,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 244,
+     "min_ps": 232,
+     "max_ps": 283,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 279,
+     "min_ps": 271,
+     "max_ps": 307,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 341,
+     "min_ps": 332,
+     "max_ps": 395,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 583,
+   "insertion_sink_weighted_mean_ps": 360.2,
+   "insertion_max_ps": 725,
+   "early_tap_ps": 333,
+   "contract_vclk_latency_ps": 583
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp4@3bbe6b04b241",
@@ -4392,9 +6257,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp4_3bbe6b04b241",
-   "kit_hash": "99284655c6e8d564",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "b7d36da4abe6b634",
+   "status": "MEASURED",
+   "host": "epyc3",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 552,
+     "min_ps": 533,
+     "max_ps": 591,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 222,
+     "min_ps": 222,
+     "max_ps": 222,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 235,
+     "min_ps": 235,
+     "max_ps": 235,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 254,
+     "min_ps": 254,
+     "max_ps": 254,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 234,
+     "min_ps": 234,
+     "max_ps": 234,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 274,
+     "min_ps": 274,
+     "max_ps": 274,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 180,
+     "min_ps": 180,
+     "max_ps": 180,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 450,
+     "min_ps": 432,
+     "max_ps": 480,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 442,
+     "min_ps": 428,
+     "max_ps": 471,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 566,
+     "min_ps": 542,
+     "max_ps": 748,
+     "sinks": 2983
+    },
+    "clk_lane[1]": {
+     "mean_ps": 443,
+     "min_ps": 420,
+     "max_ps": 524,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 439,
+     "min_ps": 427,
+     "max_ps": 499,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 375,
+     "min_ps": 351,
+     "max_ps": 396,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 407,
+     "min_ps": 391,
+     "max_ps": 422,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 402,
+     "min_ps": 393,
+     "max_ps": 440,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 355,
+     "min_ps": 345,
+     "max_ps": 377,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 271,
+     "min_ps": 268,
+     "max_ps": 275,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 566,
+   "insertion_sink_weighted_mean_ps": 438.7,
+   "insertion_max_ps": 748,
+   "early_tap_ps": 316,
+   "contract_vclk_latency_ps": 566
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp4@e2edf8618205",
@@ -4409,9 +6383,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp4_e2edf8618205",
-   "kit_hash": "e3c53a33cd9d4b34",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "adad9b5ef203c3d7",
+   "status": "MEASURED",
+   "host": "epyc3",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 436,
+     "min_ps": 398,
+     "max_ps": 481,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 169,
+     "min_ps": 169,
+     "max_ps": 169,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 234,
+     "min_ps": 234,
+     "max_ps": 234,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 269,
+     "min_ps": 269,
+     "max_ps": 269,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 157,
+     "min_ps": 157,
+     "max_ps": 157,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 191,
+     "min_ps": 191,
+     "max_ps": 191,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 253,
+     "min_ps": 253,
+     "max_ps": 253,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 290,
+     "min_ps": 278,
+     "max_ps": 311,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 277,
+     "min_ps": 267,
+     "max_ps": 294,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 575,
+     "min_ps": 551,
+     "max_ps": 746,
+     "sinks": 2983
+    },
+    "clk_lane[1]": {
+     "mean_ps": 436,
+     "min_ps": 422,
+     "max_ps": 539,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 318,
+     "min_ps": 305,
+     "max_ps": 352,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 222,
+     "min_ps": 211,
+     "max_ps": 256,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 386,
+     "min_ps": 373,
+     "max_ps": 402,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 209,
+     "min_ps": 193,
+     "max_ps": 257,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 174,
+     "min_ps": 161,
+     "max_ps": 207,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 126,
+     "min_ps": 124,
+     "max_ps": 128,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 575,
+   "insertion_sink_weighted_mean_ps": 364.1,
+   "insertion_max_ps": 746,
+   "early_tap_ps": 325,
+   "contract_vclk_latency_ps": 575
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp5@fa5d09aa2efe",
@@ -4426,9 +6509,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp5_fa5d09aa2efe",
-   "kit_hash": "d820b2df970ab7aa",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "bb142b5cbd2297ff",
+   "status": "MEASURED",
+   "host": "intel2",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 455,
+     "min_ps": 435,
+     "max_ps": 521,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 342,
+     "min_ps": 342,
+     "max_ps": 342,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 171,
+     "min_ps": 171,
+     "max_ps": 171,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 68,
+     "min_ps": 68,
+     "max_ps": 68,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 265,
+     "min_ps": 265,
+     "max_ps": 265,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 183,
+     "min_ps": 183,
+     "max_ps": 183,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 288,
+     "min_ps": 288,
+     "max_ps": 288,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 307,
+     "min_ps": 292,
+     "max_ps": 334,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 291,
+     "min_ps": 282,
+     "max_ps": 317,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 573,
+     "min_ps": 555,
+     "max_ps": 635,
+     "sinks": 3097
+    },
+    "clk_lane[1]": {
+     "mean_ps": 448,
+     "min_ps": 436,
+     "max_ps": 578,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 314,
+     "min_ps": 295,
+     "max_ps": 368,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 243,
+     "min_ps": 225,
+     "max_ps": 268,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 379,
+     "min_ps": 368,
+     "max_ps": 394,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 226,
+     "min_ps": 220,
+     "max_ps": 268,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 193,
+     "min_ps": 178,
+     "max_ps": 246,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 106,
+     "min_ps": 104,
+     "max_ps": 108,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 573,
+   "insertion_sink_weighted_mean_ps": 369.7,
+   "insertion_max_ps": 635,
+   "early_tap_ps": 323,
+   "contract_vclk_latency_ps": 573
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp5@ffeb082cfe27",
@@ -4443,9 +6635,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp5_ffeb082cfe27",
-   "kit_hash": "29639824c194cec1",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "0c5f419e53989b00",
+   "status": "MEASURED",
+   "host": "intel1",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 423,
+     "min_ps": 391,
+     "max_ps": 461,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 39,
+     "min_ps": 39,
+     "max_ps": 39,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 138,
+     "min_ps": 138,
+     "max_ps": 138,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 114,
+     "min_ps": 114,
+     "max_ps": 114,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 59,
+     "min_ps": 59,
+     "max_ps": 59,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 18,
+     "min_ps": 18,
+     "max_ps": 18,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 156,
+     "min_ps": 156,
+     "max_ps": 156,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 485,
+     "min_ps": 475,
+     "max_ps": 503,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 455,
+     "min_ps": 445,
+     "max_ps": 477,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 596,
+     "min_ps": 569,
+     "max_ps": 722,
+     "sinks": 3097
+    },
+    "clk_lane[1]": {
+     "mean_ps": 453,
+     "min_ps": 430,
+     "max_ps": 564,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 430,
+     "min_ps": 402,
+     "max_ps": 491,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 395,
+     "min_ps": 367,
+     "max_ps": 423,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 445,
+     "min_ps": 433,
+     "max_ps": 458,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 416,
+     "min_ps": 409,
+     "max_ps": 457,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 395,
+     "min_ps": 387,
+     "max_ps": 433,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 273,
+     "min_ps": 271,
+     "max_ps": 275,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 596,
+   "insertion_sink_weighted_mean_ps": 463.9,
+   "insertion_max_ps": 722,
+   "early_tap_ps": 346,
+   "contract_vclk_latency_ps": 596
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp6@02295511db66",
@@ -4460,9 +6761,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp6_02295511db66",
-   "kit_hash": "6d0fc424808214e0",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "d7ca1f6c20c5c6d6",
+   "status": "MEASURED",
+   "host": "intel1",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 419,
+     "min_ps": 379,
+     "max_ps": 509,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 225,
+     "min_ps": 225,
+     "max_ps": 225,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 80,
+     "min_ps": 80,
+     "max_ps": 80,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 225,
+     "min_ps": 225,
+     "max_ps": 225,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 240,
+     "min_ps": 240,
+     "max_ps": 240,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 171,
+     "min_ps": 171,
+     "max_ps": 171,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 190,
+     "min_ps": 190,
+     "max_ps": 190,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 302,
+     "min_ps": 286,
+     "max_ps": 317,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 288,
+     "min_ps": 279,
+     "max_ps": 301,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 575,
+     "min_ps": 551,
+     "max_ps": 717,
+     "sinks": 3097
+    },
+    "clk_lane[1]": {
+     "mean_ps": 445,
+     "min_ps": 429,
+     "max_ps": 512,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 315,
+     "min_ps": 297,
+     "max_ps": 370,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 239,
+     "min_ps": 227,
+     "max_ps": 261,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 392,
+     "min_ps": 382,
+     "max_ps": 402,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 250,
+     "min_ps": 239,
+     "max_ps": 315,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 197,
+     "min_ps": 191,
+     "max_ps": 239,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 122,
+     "min_ps": 118,
+     "max_ps": 126,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 575,
+   "insertion_sink_weighted_mean_ps": 373.3,
+   "insertion_max_ps": 717,
+   "early_tap_ps": 325,
+   "contract_vclk_latency_ps": 575
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp6@885c0bb0d945",
@@ -4477,9 +6887,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp6_885c0bb0d945",
-   "kit_hash": "21ea27c7de000c2f",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "15f1c13e96840364",
+   "status": "MEASURED",
+   "host": "epyc2",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 462,
+     "min_ps": 418,
+     "max_ps": 504,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 273,
+     "min_ps": 273,
+     "max_ps": 273,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 175,
+     "min_ps": 175,
+     "max_ps": 175,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 18,
+     "min_ps": 18,
+     "max_ps": 18,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 35,
+     "min_ps": 35,
+     "max_ps": 35,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 168,
+     "min_ps": 168,
+     "max_ps": 168,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 110,
+     "min_ps": 110,
+     "max_ps": 110,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 492,
+     "min_ps": 478,
+     "max_ps": 524,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 459,
+     "min_ps": 446,
+     "max_ps": 478,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 585,
+     "min_ps": 570,
+     "max_ps": 666,
+     "sinks": 3097
+    },
+    "clk_lane[1]": {
+     "mean_ps": 452,
+     "min_ps": 436,
+     "max_ps": 521,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 409,
+     "min_ps": 389,
+     "max_ps": 467,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 380,
+     "min_ps": 353,
+     "max_ps": 435,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 415,
+     "min_ps": 402,
+     "max_ps": 428,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 411,
+     "min_ps": 398,
+     "max_ps": 490,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 378,
+     "min_ps": 353,
+     "max_ps": 452,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 261,
+     "min_ps": 259,
+     "max_ps": 263,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 585,
+   "insertion_sink_weighted_mean_ps": 452.6,
+   "insertion_max_ps": 666,
+   "early_tap_ps": 335,
+   "contract_vclk_latency_ps": 585
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp7@059f6ce06578",
@@ -4494,9 +7013,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp7_059f6ce06578",
-   "kit_hash": "455ff0b5e2b44816",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "5e782684bcbb7090",
+   "status": "MEASURED",
+   "host": "epyc3",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 521,
+     "min_ps": 492,
+     "max_ps": 544,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 336,
+     "min_ps": 336,
+     "max_ps": 336,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 358,
+     "min_ps": 358,
+     "max_ps": 358,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 206,
+     "min_ps": 206,
+     "max_ps": 206,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 358,
+     "min_ps": 358,
+     "max_ps": 358,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 319,
+     "min_ps": 319,
+     "max_ps": 319,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 390,
+     "min_ps": 390,
+     "max_ps": 390,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 307,
+     "min_ps": 293,
+     "max_ps": 325,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 286,
+     "min_ps": 270,
+     "max_ps": 306,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 599,
+     "min_ps": 577,
+     "max_ps": 674,
+     "sinks": 3211
+    },
+    "clk_lane[1]": {
+     "mean_ps": 393,
+     "min_ps": 385,
+     "max_ps": 450,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 278,
+     "min_ps": 258,
+     "max_ps": 315,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 266,
+     "min_ps": 253,
+     "max_ps": 286,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 398,
+     "min_ps": 387,
+     "max_ps": 409,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 300,
+     "min_ps": 291,
+     "max_ps": 324,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 285,
+     "min_ps": 278,
+     "max_ps": 324,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 341,
+     "min_ps": 330,
+     "max_ps": 400,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 599,
+   "insertion_sink_weighted_mean_ps": 376.4,
+   "insertion_max_ps": 674,
+   "early_tap_ps": 349,
+   "contract_vclk_latency_ps": 599
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp7@4bcaf4f8b16b",
@@ -4511,9 +7139,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp7_4bcaf4f8b16b",
-   "kit_hash": "03e71400475715c1",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "fa9ff5b923195faf",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 543,
+     "min_ps": 499,
+     "max_ps": 598,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 386,
+     "min_ps": 386,
+     "max_ps": 386,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 302,
+     "min_ps": 302,
+     "max_ps": 302,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 309,
+     "min_ps": 309,
+     "max_ps": 309,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 354,
+     "min_ps": 354,
+     "max_ps": 354,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 403,
+     "min_ps": 403,
+     "max_ps": 403,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 270,
+     "min_ps": 270,
+     "max_ps": 270,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 307,
+     "min_ps": 295,
+     "max_ps": 327,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 283,
+     "min_ps": 272,
+     "max_ps": 300,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 586,
+     "min_ps": 562,
+     "max_ps": 669,
+     "sinks": 3211
+    },
+    "clk_lane[1]": {
+     "mean_ps": 425,
+     "min_ps": 412,
+     "max_ps": 516,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 293,
+     "min_ps": 282,
+     "max_ps": 363,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 256,
+     "min_ps": 244,
+     "max_ps": 272,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 377,
+     "min_ps": 365,
+     "max_ps": 393,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 262,
+     "min_ps": 251,
+     "max_ps": 297,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 283,
+     "min_ps": 275,
+     "max_ps": 326,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 335,
+     "min_ps": 324,
+     "max_ps": 368,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 586,
+   "insertion_sink_weighted_mean_ps": 371.6,
+   "insertion_max_ps": 669,
+   "early_tap_ps": 336,
+   "contract_vclk_latency_ps": 586
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp8@acad9084ae48",
@@ -4529,9 +7266,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp8_acad9084ae48",
-   "kit_hash": "60281cd204d42e9d",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "4fb0711ada2c358c",
+   "status": "MEASURED",
+   "host": "intel1",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 406,
+     "min_ps": 350,
+     "max_ps": 446,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 154,
+     "min_ps": 154,
+     "max_ps": 154,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 174,
+     "min_ps": 174,
+     "max_ps": 174,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 173,
+     "min_ps": 173,
+     "max_ps": 173,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 187,
+     "min_ps": 187,
+     "max_ps": 187,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 125,
+     "min_ps": 125,
+     "max_ps": 125,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 79,
+     "min_ps": 79,
+     "max_ps": 79,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 295,
+     "min_ps": 284,
+     "max_ps": 311,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 267,
+     "min_ps": 253,
+     "max_ps": 288,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 557,
+     "min_ps": 527,
+     "max_ps": 723,
+     "sinks": 2981
+    },
+    "clk_lane[1]": {
+     "mean_ps": 445,
+     "min_ps": 434,
+     "max_ps": 554,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 308,
+     "min_ps": 292,
+     "max_ps": 354,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 226,
+     "min_ps": 210,
+     "max_ps": 249,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 397,
+     "min_ps": 385,
+     "max_ps": 410,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 208,
+     "min_ps": 192,
+     "max_ps": 261,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 192,
+     "min_ps": 185,
+     "max_ps": 222,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 126,
+     "min_ps": 123,
+     "max_ps": 128,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 557,
+   "insertion_sink_weighted_mean_ps": 366.8,
+   "insertion_max_ps": 723,
+   "early_tap_ps": 307,
+   "contract_vclk_latency_ps": 557
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp9@7b5a181caac3",
@@ -4546,9 +7392,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp9_7b5a181caac3",
-   "kit_hash": "c190ac2036c9d2f6",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "eb9eba401a585305",
+   "status": "MEASURED",
+   "host": "epyc3",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 461,
+     "min_ps": 448,
+     "max_ps": 496,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 253,
+     "min_ps": 253,
+     "max_ps": 253,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 308,
+     "min_ps": 308,
+     "max_ps": 308,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 266,
+     "min_ps": 266,
+     "max_ps": 266,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 178,
+     "min_ps": 178,
+     "max_ps": 178,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 327,
+     "min_ps": 327,
+     "max_ps": 327,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 177,
+     "min_ps": 177,
+     "max_ps": 177,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 281,
+     "min_ps": 265,
+     "max_ps": 299,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 256,
+     "min_ps": 241,
+     "max_ps": 273,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 552,
+     "min_ps": 533,
+     "max_ps": 627,
+     "sinks": 3209
+    },
+    "clk_lane[1]": {
+     "mean_ps": 411,
+     "min_ps": 400,
+     "max_ps": 514,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 303,
+     "min_ps": 293,
+     "max_ps": 337,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 225,
+     "min_ps": 211,
+     "max_ps": 253,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 369,
+     "min_ps": 360,
+     "max_ps": 378,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 212,
+     "min_ps": 188,
+     "max_ps": 245,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 173,
+     "min_ps": 157,
+     "max_ps": 203,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 122,
+     "min_ps": 117,
+     "max_ps": 145,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 552,
+   "insertion_sink_weighted_mean_ps": 349.8,
+   "insertion_max_ps": 627,
+   "early_tap_ps": 302,
+   "contract_vclk_latency_ps": 552
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp9@b20af5f8bd8a",
@@ -4563,9 +7518,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp9_b20af5f8bd8a",
-   "kit_hash": "3e43f391f7efee42",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "678672cd415a23e6",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 531,
+     "min_ps": 508,
+     "max_ps": 600,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 358,
+     "min_ps": 358,
+     "max_ps": 358,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 300,
+     "min_ps": 300,
+     "max_ps": 300,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 334,
+     "min_ps": 334,
+     "max_ps": 334,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 314,
+     "min_ps": 314,
+     "max_ps": 314,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 403,
+     "min_ps": 403,
+     "max_ps": 403,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 21,
+     "min_ps": 21,
+     "max_ps": 21,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 282,
+     "min_ps": 262,
+     "max_ps": 304,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 259,
+     "min_ps": 241,
+     "max_ps": 287,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 554,
+     "min_ps": 535,
+     "max_ps": 626,
+     "sinks": 3209
+    },
+    "clk_lane[1]": {
+     "mean_ps": 434,
+     "min_ps": 422,
+     "max_ps": 536,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 315,
+     "min_ps": 301,
+     "max_ps": 356,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 222,
+     "min_ps": 212,
+     "max_ps": 250,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 386,
+     "min_ps": 371,
+     "max_ps": 403,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 224,
+     "min_ps": 215,
+     "max_ps": 269,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 212,
+     "min_ps": 188,
+     "max_ps": 253,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 103,
+     "min_ps": 101,
+     "max_ps": 105,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 554,
+   "insertion_sink_weighted_mean_ps": 361.8,
+   "insertion_max_ps": 626,
+   "early_tap_ps": 304,
+   "contract_vclk_latency_ps": 554
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp_l@49e428ab0c53",
@@ -4580,9 +7644,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp_l_49e428ab0c53",
-   "kit_hash": "cc471fa3b62867e2",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "641a56ae4ba99f90",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 398,
+     "min_ps": 357,
+     "max_ps": 467,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 154,
+     "min_ps": 154,
+     "max_ps": 154,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 30,
+     "min_ps": 30,
+     "max_ps": 30,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 273,
+     "min_ps": 273,
+     "max_ps": 273,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 256,
+     "min_ps": 256,
+     "max_ps": 256,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 170,
+     "min_ps": 170,
+     "max_ps": 170,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 12,
+     "min_ps": 12,
+     "max_ps": 12,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 323,
+     "min_ps": 309,
+     "max_ps": 344,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 293,
+     "min_ps": 282,
+     "max_ps": 317,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 559,
+     "min_ps": 536,
+     "max_ps": 640,
+     "sinks": 3437
+    },
+    "clk_lane[1]": {
+     "mean_ps": 434,
+     "min_ps": 423,
+     "max_ps": 588,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 326,
+     "min_ps": 310,
+     "max_ps": 379,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 260,
+     "min_ps": 250,
+     "max_ps": 288,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 377,
+     "min_ps": 359,
+     "max_ps": 397,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 235,
+     "min_ps": 220,
+     "max_ps": 297,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 242,
+     "min_ps": 225,
+     "max_ps": 290,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 103,
+     "min_ps": 100,
+     "max_ps": 105,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 559,
+   "insertion_sink_weighted_mean_ps": 372.4,
+   "insertion_max_ps": 640,
+   "early_tap_ps": 309,
+   "contract_vclk_latency_ps": 559
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lane_exp_l@4c0a010fe678",
@@ -4597,9 +7770,118 @@
     457.92
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lane_exp_l_4c0a010fe678",
-   "kit_hash": "f0cc65e9a867a339",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "4a0091c8fa08b9cf",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank": {
+     "mean_ps": 444,
+     "min_ps": 418,
+     "max_ps": 508,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 249,
+     "min_ps": 249,
+     "max_ps": 249,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 65,
+     "min_ps": 65,
+     "max_ps": 65,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 269,
+     "min_ps": 269,
+     "max_ps": 269,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 191,
+     "min_ps": 191,
+     "max_ps": 191,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 171,
+     "min_ps": 171,
+     "max_ps": 171,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 330,
+     "min_ps": 330,
+     "max_ps": 330,
+     "sinks": 1
+    },
+    "clk_insert[0]": {
+     "mean_ps": 291,
+     "min_ps": 278,
+     "max_ps": 310,
+     "sinks": 5520
+    },
+    "clk_insert[1]": {
+     "mean_ps": 280,
+     "min_ps": 270,
+     "max_ps": 297,
+     "sinks": 3450
+    },
+    "clk_lane[0]": {
+     "mean_ps": 554,
+     "min_ps": 534,
+     "max_ps": 612,
+     "sinks": 3437
+    },
+    "clk_lane[1]": {
+     "mean_ps": 446,
+     "min_ps": 427,
+     "max_ps": 560,
+     "sinks": 4482
+    },
+    "clk_lane[2]": {
+     "mean_ps": 320,
+     "min_ps": 305,
+     "max_ps": 358,
+     "sinks": 1588
+    },
+    "clk_lane[3]": {
+     "mean_ps": 227,
+     "min_ps": 212,
+     "max_ps": 248,
+     "sinks": 557
+    },
+    "clk_lane[4]": {
+     "mean_ps": 386,
+     "min_ps": 375,
+     "max_ps": 400,
+     "sinks": 10763
+    },
+    "clk_lane[5]": {
+     "mean_ps": 203,
+     "min_ps": 188,
+     "max_ps": 251,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 186,
+     "min_ps": 178,
+     "max_ps": 218,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 204,
+     "min_ps": 190,
+     "max_ps": 235,
+     "sinks": 191
+    }
+   },
+   "insertion_mean_ps": 554,
+   "insertion_sink_weighted_mean_ps": 367.5,
+   "insertion_max_ps": 612,
+   "early_tap_ps": 304,
+   "contract_vclk_latency_ps": 554
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lanes0_3@edae47abf4e2",
@@ -4615,9 +7897,352 @@
     725.76
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lanes0_3_edae47abf4e2",
-   "kit_hash": "fd8838b420dbfc22",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "5673459cbe8c488d",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank[0]": {
+     "mean_ps": 801,
+     "min_ps": 725,
+     "max_ps": 1001,
+     "sinks": 304
+    },
+    "clk_bank[1]": {
+     "mean_ps": 878,
+     "min_ps": 818,
+     "max_ps": 997,
+     "sinks": 304
+    },
+    "clk_bank[2]": {
+     "mean_ps": 704,
+     "min_ps": 649,
+     "max_ps": 819,
+     "sinks": 304
+    },
+    "clk_bank[3]": {
+     "mean_ps": 830,
+     "min_ps": 719,
+     "max_ps": 950,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 219,
+     "min_ps": 219,
+     "max_ps": 219,
+     "sinks": 1
+    },
+    "clk_bank_macro[10]": {
+     "mean_ps": 173,
+     "min_ps": 173,
+     "max_ps": 173,
+     "sinks": 1
+    },
+    "clk_bank_macro[11]": {
+     "mean_ps": 232,
+     "min_ps": 232,
+     "max_ps": 232,
+     "sinks": 1
+    },
+    "clk_bank_macro[12]": {
+     "mean_ps": 64,
+     "min_ps": 64,
+     "max_ps": 64,
+     "sinks": 1
+    },
+    "clk_bank_macro[13]": {
+     "mean_ps": 337,
+     "min_ps": 337,
+     "max_ps": 337,
+     "sinks": 1
+    },
+    "clk_bank_macro[14]": {
+     "mean_ps": 147,
+     "min_ps": 147,
+     "max_ps": 147,
+     "sinks": 1
+    },
+    "clk_bank_macro[15]": {
+     "mean_ps": 167,
+     "min_ps": 167,
+     "max_ps": 167,
+     "sinks": 1
+    },
+    "clk_bank_macro[16]": {
+     "mean_ps": 182,
+     "min_ps": 182,
+     "max_ps": 182,
+     "sinks": 1
+    },
+    "clk_bank_macro[17]": {
+     "mean_ps": 100,
+     "min_ps": 100,
+     "max_ps": 100,
+     "sinks": 1
+    },
+    "clk_bank_macro[18]": {
+     "mean_ps": 455,
+     "min_ps": 455,
+     "max_ps": 455,
+     "sinks": 1
+    },
+    "clk_bank_macro[19]": {
+     "mean_ps": 266,
+     "min_ps": 266,
+     "max_ps": 266,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 405,
+     "min_ps": 405,
+     "max_ps": 405,
+     "sinks": 1
+    },
+    "clk_bank_macro[20]": {
+     "mean_ps": 480,
+     "min_ps": 480,
+     "max_ps": 480,
+     "sinks": 1
+    },
+    "clk_bank_macro[21]": {
+     "mean_ps": 81,
+     "min_ps": 81,
+     "max_ps": 81,
+     "sinks": 1
+    },
+    "clk_bank_macro[22]": {
+     "mean_ps": 320,
+     "min_ps": 320,
+     "max_ps": 320,
+     "sinks": 1
+    },
+    "clk_bank_macro[23]": {
+     "mean_ps": 292,
+     "min_ps": 292,
+     "max_ps": 292,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 202,
+     "min_ps": 202,
+     "max_ps": 202,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 371,
+     "min_ps": 371,
+     "max_ps": 371,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 449,
+     "min_ps": 449,
+     "max_ps": 449,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 250,
+     "min_ps": 250,
+     "max_ps": 250,
+     "sinks": 1
+    },
+    "clk_bank_macro[6]": {
+     "mean_ps": 155,
+     "min_ps": 155,
+     "max_ps": 155,
+     "sinks": 1
+    },
+    "clk_bank_macro[7]": {
+     "mean_ps": 129,
+     "min_ps": 129,
+     "max_ps": 129,
+     "sinks": 1
+    },
+    "clk_bank_macro[8]": {
+     "mean_ps": 269,
+     "min_ps": 269,
+     "max_ps": 269,
+     "sinks": 1
+    },
+    "clk_bank_macro[9]": {
+     "mean_ps": 154,
+     "min_ps": 154,
+     "max_ps": 154,
+     "sinks": 1
+    },
+    "clk_lane[0]": {
+     "mean_ps": 886,
+     "min_ps": 867,
+     "max_ps": 1061,
+     "sinks": 2944
+    },
+    "clk_lane[10]": {
+     "mean_ps": 489,
+     "min_ps": 454,
+     "max_ps": 618,
+     "sinks": 1588
+    },
+    "clk_lane[11]": {
+     "mean_ps": 469,
+     "min_ps": 422,
+     "max_ps": 518,
+     "sinks": 557
+    },
+    "clk_lane[13]": {
+     "mean_ps": 489,
+     "min_ps": 411,
+     "max_ps": 536,
+     "sinks": 1075
+    },
+    "clk_lane[14]": {
+     "mean_ps": 410,
+     "min_ps": 302,
+     "max_ps": 460,
+     "sinks": 708
+    },
+    "clk_lane[15]": {
+     "mean_ps": 418,
+     "min_ps": 354,
+     "max_ps": 499,
+     "sinks": 190
+    },
+    "clk_lane[16]": {
+     "mean_ps": 899,
+     "min_ps": 873,
+     "max_ps": 1032,
+     "sinks": 3172
+    },
+    "clk_lane[17]": {
+     "mean_ps": 423,
+     "min_ps": 414,
+     "max_ps": 479,
+     "sinks": 1088
+    },
+    "clk_lane[18]": {
+     "mean_ps": 417,
+     "min_ps": 404,
+     "max_ps": 490,
+     "sinks": 1588
+    },
+    "clk_lane[19]": {
+     "mean_ps": 376,
+     "min_ps": 347,
+     "max_ps": 457,
+     "sinks": 557
+    },
+    "clk_lane[1]": {
+     "mean_ps": 493,
+     "min_ps": 459,
+     "max_ps": 609,
+     "sinks": 1088
+    },
+    "clk_lane[21]": {
+     "mean_ps": 439,
+     "min_ps": 375,
+     "max_ps": 490,
+     "sinks": 1075
+    },
+    "clk_lane[22]": {
+     "mean_ps": 366,
+     "min_ps": 311,
+     "max_ps": 397,
+     "sinks": 708
+    },
+    "clk_lane[23]": {
+     "mean_ps": 411,
+     "min_ps": 362,
+     "max_ps": 511,
+     "sinks": 190
+    },
+    "clk_lane[24]": {
+     "mean_ps": 891,
+     "min_ps": 855,
+     "max_ps": 987,
+     "sinks": 3286
+    },
+    "clk_lane[25]": {
+     "mean_ps": 463,
+     "min_ps": 439,
+     "max_ps": 505,
+     "sinks": 1088
+    },
+    "clk_lane[26]": {
+     "mean_ps": 480,
+     "min_ps": 460,
+     "max_ps": 561,
+     "sinks": 1588
+    },
+    "clk_lane[27]": {
+     "mean_ps": 472,
+     "min_ps": 423,
+     "max_ps": 487,
+     "sinks": 557
+    },
+    "clk_lane[29]": {
+     "mean_ps": 502,
+     "min_ps": 458,
+     "max_ps": 618,
+     "sinks": 1075
+    },
+    "clk_lane[2]": {
+     "mean_ps": 474,
+     "min_ps": 463,
+     "max_ps": 565,
+     "sinks": 1588
+    },
+    "clk_lane[30]": {
+     "mean_ps": 491,
+     "min_ps": 387,
+     "max_ps": 524,
+     "sinks": 708
+    },
+    "clk_lane[31]": {
+     "mean_ps": 569,
+     "min_ps": 516,
+     "max_ps": 631,
+     "sinks": 190
+    },
+    "clk_lane[3]": {
+     "mean_ps": 423,
+     "min_ps": 374,
+     "max_ps": 482,
+     "sinks": 557
+    },
+    "clk_lane[5]": {
+     "mean_ps": 455,
+     "min_ps": 361,
+     "max_ps": 510,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 393,
+     "min_ps": 293,
+     "max_ps": 433,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 393,
+     "min_ps": 342,
+     "max_ps": 480,
+     "sinks": 190
+    },
+    "clk_lane[8]": {
+     "mean_ps": 905,
+     "min_ps": 886,
+     "max_ps": 1107,
+     "sinks": 3172
+    },
+    "clk_lane[9]": {
+     "mean_ps": 587,
+     "min_ps": 489,
+     "max_ps": 657,
+     "sinks": 1088
+    }
+   },
+   "insertion_mean_ps": 905,
+   "insertion_sink_weighted_mean_ps": 630.9,
+   "insertion_max_ps": 1107,
+   "early_tap_ps": 655,
+   "contract_vclk_latency_ps": 905
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lanes12_15@aee690bf3444",
@@ -5352,9 +8977,352 @@
     725.76
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lanes16_19_0d1ec45f866e",
-   "kit_hash": "703e32bc634720d1",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "2b8e25f04b0e1260",
+   "status": "MEASURED",
+   "host": "intel2",
+   "ports": {
+    "clk_bank[0]": {
+     "mean_ps": 812,
+     "min_ps": 782,
+     "max_ps": 870,
+     "sinks": 304
+    },
+    "clk_bank[1]": {
+     "mean_ps": 888,
+     "min_ps": 835,
+     "max_ps": 1089,
+     "sinks": 304
+    },
+    "clk_bank[2]": {
+     "mean_ps": 889,
+     "min_ps": 824,
+     "max_ps": 990,
+     "sinks": 304
+    },
+    "clk_bank[3]": {
+     "mean_ps": 881,
+     "min_ps": 826,
+     "max_ps": 958,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 157,
+     "min_ps": 157,
+     "max_ps": 157,
+     "sinks": 1
+    },
+    "clk_bank_macro[10]": {
+     "mean_ps": 168,
+     "min_ps": 168,
+     "max_ps": 168,
+     "sinks": 1
+    },
+    "clk_bank_macro[11]": {
+     "mean_ps": 263,
+     "min_ps": 263,
+     "max_ps": 263,
+     "sinks": 1
+    },
+    "clk_bank_macro[12]": {
+     "mean_ps": 609,
+     "min_ps": 609,
+     "max_ps": 609,
+     "sinks": 1
+    },
+    "clk_bank_macro[13]": {
+     "mean_ps": 412,
+     "min_ps": 412,
+     "max_ps": 412,
+     "sinks": 1
+    },
+    "clk_bank_macro[14]": {
+     "mean_ps": 317,
+     "min_ps": 317,
+     "max_ps": 317,
+     "sinks": 1
+    },
+    "clk_bank_macro[15]": {
+     "mean_ps": 662,
+     "min_ps": 662,
+     "max_ps": 662,
+     "sinks": 1
+    },
+    "clk_bank_macro[16]": {
+     "mean_ps": 559,
+     "min_ps": 559,
+     "max_ps": 559,
+     "sinks": 1
+    },
+    "clk_bank_macro[17]": {
+     "mean_ps": 146,
+     "min_ps": 146,
+     "max_ps": 146,
+     "sinks": 1
+    },
+    "clk_bank_macro[18]": {
+     "mean_ps": 232,
+     "min_ps": 232,
+     "max_ps": 232,
+     "sinks": 1
+    },
+    "clk_bank_macro[19]": {
+     "mean_ps": 623,
+     "min_ps": 623,
+     "max_ps": 623,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 210,
+     "min_ps": 210,
+     "max_ps": 210,
+     "sinks": 1
+    },
+    "clk_bank_macro[20]": {
+     "mean_ps": 253,
+     "min_ps": 253,
+     "max_ps": 253,
+     "sinks": 1
+    },
+    "clk_bank_macro[21]": {
+     "mean_ps": 410,
+     "min_ps": 410,
+     "max_ps": 410,
+     "sinks": 1
+    },
+    "clk_bank_macro[22]": {
+     "mean_ps": 504,
+     "min_ps": 504,
+     "max_ps": 504,
+     "sinks": 1
+    },
+    "clk_bank_macro[23]": {
+     "mean_ps": 560,
+     "min_ps": 560,
+     "max_ps": 560,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 180,
+     "min_ps": 180,
+     "max_ps": 180,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 104,
+     "min_ps": 104,
+     "max_ps": 104,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 229,
+     "min_ps": 229,
+     "max_ps": 229,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 166,
+     "min_ps": 166,
+     "max_ps": 166,
+     "sinks": 1
+    },
+    "clk_bank_macro[6]": {
+     "mean_ps": 125,
+     "min_ps": 125,
+     "max_ps": 125,
+     "sinks": 1
+    },
+    "clk_bank_macro[7]": {
+     "mean_ps": 157,
+     "min_ps": 157,
+     "max_ps": 157,
+     "sinks": 1
+    },
+    "clk_bank_macro[8]": {
+     "mean_ps": 372,
+     "min_ps": 372,
+     "max_ps": 372,
+     "sinks": 1
+    },
+    "clk_bank_macro[9]": {
+     "mean_ps": 155,
+     "min_ps": 155,
+     "max_ps": 155,
+     "sinks": 1
+    },
+    "clk_lane[0]": {
+     "mean_ps": 880,
+     "min_ps": 843,
+     "max_ps": 1077,
+     "sinks": 3287
+    },
+    "clk_lane[10]": {
+     "mean_ps": 741,
+     "min_ps": 684,
+     "max_ps": 802,
+     "sinks": 1588
+    },
+    "clk_lane[11]": {
+     "mean_ps": 698,
+     "min_ps": 638,
+     "max_ps": 716,
+     "sinks": 557
+    },
+    "clk_lane[13]": {
+     "mean_ps": 718,
+     "min_ps": 601,
+     "max_ps": 782,
+     "sinks": 1075
+    },
+    "clk_lane[14]": {
+     "mean_ps": 607,
+     "min_ps": 582,
+     "max_ps": 689,
+     "sinks": 708
+    },
+    "clk_lane[15]": {
+     "mean_ps": 734,
+     "min_ps": 608,
+     "max_ps": 806,
+     "sinks": 190
+    },
+    "clk_lane[16]": {
+     "mean_ps": 912,
+     "min_ps": 884,
+     "max_ps": 1169,
+     "sinks": 3515
+    },
+    "clk_lane[17]": {
+     "mean_ps": 600,
+     "min_ps": 586,
+     "max_ps": 651,
+     "sinks": 1088
+    },
+    "clk_lane[18]": {
+     "mean_ps": 597,
+     "min_ps": 584,
+     "max_ps": 659,
+     "sinks": 1588
+    },
+    "clk_lane[19]": {
+     "mean_ps": 603,
+     "min_ps": 569,
+     "max_ps": 629,
+     "sinks": 557
+    },
+    "clk_lane[1]": {
+     "mean_ps": 735,
+     "min_ps": 703,
+     "max_ps": 820,
+     "sinks": 1088
+    },
+    "clk_lane[21]": {
+     "mean_ps": 632,
+     "min_ps": 584,
+     "max_ps": 691,
+     "sinks": 1075
+    },
+    "clk_lane[22]": {
+     "mean_ps": 619,
+     "min_ps": 519,
+     "max_ps": 653,
+     "sinks": 708
+    },
+    "clk_lane[23]": {
+     "mean_ps": 617,
+     "min_ps": 579,
+     "max_ps": 680,
+     "sinks": 190
+    },
+    "clk_lane[24]": {
+     "mean_ps": 917,
+     "min_ps": 888,
+     "max_ps": 1077,
+     "sinks": 3629
+    },
+    "clk_lane[25]": {
+     "mean_ps": 629,
+     "min_ps": 616,
+     "max_ps": 765,
+     "sinks": 1088
+    },
+    "clk_lane[26]": {
+     "mean_ps": 637,
+     "min_ps": 604,
+     "max_ps": 744,
+     "sinks": 1588
+    },
+    "clk_lane[27]": {
+     "mean_ps": 644,
+     "min_ps": 611,
+     "max_ps": 681,
+     "sinks": 557
+    },
+    "clk_lane[29]": {
+     "mean_ps": 687,
+     "min_ps": 660,
+     "max_ps": 798,
+     "sinks": 1075
+    },
+    "clk_lane[2]": {
+     "mean_ps": 699,
+     "min_ps": 677,
+     "max_ps": 815,
+     "sinks": 1588
+    },
+    "clk_lane[30]": {
+     "mean_ps": 649,
+     "min_ps": 615,
+     "max_ps": 706,
+     "sinks": 708
+    },
+    "clk_lane[31]": {
+     "mean_ps": 717,
+     "min_ps": 639,
+     "max_ps": 754,
+     "sinks": 190
+    },
+    "clk_lane[3]": {
+     "mean_ps": 692,
+     "min_ps": 626,
+     "max_ps": 709,
+     "sinks": 557
+    },
+    "clk_lane[5]": {
+     "mean_ps": 725,
+     "min_ps": 634,
+     "max_ps": 781,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 640,
+     "min_ps": 590,
+     "max_ps": 687,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 627,
+     "min_ps": 573,
+     "max_ps": 671,
+     "sinks": 190
+    },
+    "clk_lane[8]": {
+     "mean_ps": 916,
+     "min_ps": 890,
+     "max_ps": 1068,
+     "sinks": 3515
+    },
+    "clk_lane[9]": {
+     "mean_ps": 755,
+     "min_ps": 699,
+     "max_ps": 827,
+     "sinks": 1088
+    }
+   },
+   "insertion_mean_ps": 917,
+   "insertion_sink_weighted_mean_ps": 768.0,
+   "insertion_max_ps": 1169,
+   "early_tap_ps": 667,
+   "contract_vclk_latency_ps": 917
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lanes16_19@6930bb464143",
@@ -5369,9 +9337,352 @@
     725.76
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lanes16_19_6930bb464143",
-   "kit_hash": "98d44068ffcecb0b",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "3ee6827b99e51541",
+   "status": "MEASURED",
+   "host": "intel1",
+   "ports": {
+    "clk_bank[0]": {
+     "mean_ps": 888,
+     "min_ps": 861,
+     "max_ps": 957,
+     "sinks": 304
+    },
+    "clk_bank[1]": {
+     "mean_ps": 928,
+     "min_ps": 862,
+     "max_ps": 1150,
+     "sinks": 304
+    },
+    "clk_bank[2]": {
+     "mean_ps": 841,
+     "min_ps": 784,
+     "max_ps": 973,
+     "sinks": 304
+    },
+    "clk_bank[3]": {
+     "mean_ps": 899,
+     "min_ps": 866,
+     "max_ps": 1008,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 645,
+     "min_ps": 645,
+     "max_ps": 645,
+     "sinks": 1
+    },
+    "clk_bank_macro[10]": {
+     "mean_ps": 95,
+     "min_ps": 95,
+     "max_ps": 95,
+     "sinks": 1
+    },
+    "clk_bank_macro[11]": {
+     "mean_ps": 188,
+     "min_ps": 188,
+     "max_ps": 188,
+     "sinks": 1
+    },
+    "clk_bank_macro[12]": {
+     "mean_ps": 505,
+     "min_ps": 505,
+     "max_ps": 505,
+     "sinks": 1
+    },
+    "clk_bank_macro[13]": {
+     "mean_ps": 69,
+     "min_ps": 69,
+     "max_ps": 69,
+     "sinks": 1
+    },
+    "clk_bank_macro[14]": {
+     "mean_ps": 357,
+     "min_ps": 357,
+     "max_ps": 357,
+     "sinks": 1
+    },
+    "clk_bank_macro[15]": {
+     "mean_ps": 172,
+     "min_ps": 172,
+     "max_ps": 172,
+     "sinks": 1
+    },
+    "clk_bank_macro[16]": {
+     "mean_ps": 415,
+     "min_ps": 415,
+     "max_ps": 415,
+     "sinks": 1
+    },
+    "clk_bank_macro[17]": {
+     "mean_ps": 269,
+     "min_ps": 269,
+     "max_ps": 269,
+     "sinks": 1
+    },
+    "clk_bank_macro[18]": {
+     "mean_ps": 466,
+     "min_ps": 466,
+     "max_ps": 466,
+     "sinks": 1
+    },
+    "clk_bank_macro[19]": {
+     "mean_ps": 181,
+     "min_ps": 181,
+     "max_ps": 181,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 591,
+     "min_ps": 591,
+     "max_ps": 591,
+     "sinks": 1
+    },
+    "clk_bank_macro[20]": {
+     "mean_ps": 480,
+     "min_ps": 480,
+     "max_ps": 480,
+     "sinks": 1
+    },
+    "clk_bank_macro[21]": {
+     "mean_ps": 54,
+     "min_ps": 54,
+     "max_ps": 54,
+     "sinks": 1
+    },
+    "clk_bank_macro[22]": {
+     "mean_ps": 372,
+     "min_ps": 372,
+     "max_ps": 372,
+     "sinks": 1
+    },
+    "clk_bank_macro[23]": {
+     "mean_ps": 432,
+     "min_ps": 432,
+     "max_ps": 432,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 614,
+     "min_ps": 614,
+     "max_ps": 614,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 682,
+     "min_ps": 682,
+     "max_ps": 682,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 446,
+     "min_ps": 446,
+     "max_ps": 446,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 327,
+     "min_ps": 327,
+     "max_ps": 327,
+     "sinks": 1
+    },
+    "clk_bank_macro[6]": {
+     "mean_ps": 662,
+     "min_ps": 662,
+     "max_ps": 662,
+     "sinks": 1
+    },
+    "clk_bank_macro[7]": {
+     "mean_ps": 574,
+     "min_ps": 574,
+     "max_ps": 574,
+     "sinks": 1
+    },
+    "clk_bank_macro[8]": {
+     "mean_ps": 641,
+     "min_ps": 641,
+     "max_ps": 641,
+     "sinks": 1
+    },
+    "clk_bank_macro[9]": {
+     "mean_ps": 339,
+     "min_ps": 339,
+     "max_ps": 339,
+     "sinks": 1
+    },
+    "clk_lane[0]": {
+     "mean_ps": 941,
+     "min_ps": 892,
+     "max_ps": 1103,
+     "sinks": 3287
+    },
+    "clk_lane[10]": {
+     "mean_ps": 523,
+     "min_ps": 512,
+     "max_ps": 598,
+     "sinks": 1588
+    },
+    "clk_lane[11]": {
+     "mean_ps": 405,
+     "min_ps": 370,
+     "max_ps": 491,
+     "sinks": 557
+    },
+    "clk_lane[13]": {
+     "mean_ps": 411,
+     "min_ps": 340,
+     "max_ps": 499,
+     "sinks": 1075
+    },
+    "clk_lane[14]": {
+     "mean_ps": 380,
+     "min_ps": 341,
+     "max_ps": 456,
+     "sinks": 708
+    },
+    "clk_lane[15]": {
+     "mean_ps": 256,
+     "min_ps": 244,
+     "max_ps": 298,
+     "sinks": 190
+    },
+    "clk_lane[16]": {
+     "mean_ps": 902,
+     "min_ps": 863,
+     "max_ps": 1007,
+     "sinks": 3515
+    },
+    "clk_lane[17]": {
+     "mean_ps": 396,
+     "min_ps": 383,
+     "max_ps": 459,
+     "sinks": 1088
+    },
+    "clk_lane[18]": {
+     "mean_ps": 407,
+     "min_ps": 397,
+     "max_ps": 467,
+     "sinks": 1588
+    },
+    "clk_lane[19]": {
+     "mean_ps": 361,
+     "min_ps": 349,
+     "max_ps": 413,
+     "sinks": 557
+    },
+    "clk_lane[1]": {
+     "mean_ps": 512,
+     "min_ps": 499,
+     "max_ps": 579,
+     "sinks": 1088
+    },
+    "clk_lane[21]": {
+     "mean_ps": 348,
+     "min_ps": 319,
+     "max_ps": 423,
+     "sinks": 1075
+    },
+    "clk_lane[22]": {
+     "mean_ps": 339,
+     "min_ps": 289,
+     "max_ps": 381,
+     "sinks": 708
+    },
+    "clk_lane[23]": {
+     "mean_ps": 336,
+     "min_ps": 321,
+     "max_ps": 400,
+     "sinks": 190
+    },
+    "clk_lane[24]": {
+     "mean_ps": 899,
+     "min_ps": 856,
+     "max_ps": 1058,
+     "sinks": 3629
+    },
+    "clk_lane[25]": {
+     "mean_ps": 493,
+     "min_ps": 481,
+     "max_ps": 576,
+     "sinks": 1088
+    },
+    "clk_lane[26]": {
+     "mean_ps": 502,
+     "min_ps": 485,
+     "max_ps": 662,
+     "sinks": 1588
+    },
+    "clk_lane[27]": {
+     "mean_ps": 432,
+     "min_ps": 409,
+     "max_ps": 479,
+     "sinks": 557
+    },
+    "clk_lane[29]": {
+     "mean_ps": 478,
+     "min_ps": 412,
+     "max_ps": 541,
+     "sinks": 1075
+    },
+    "clk_lane[2]": {
+     "mean_ps": 404,
+     "min_ps": 396,
+     "max_ps": 450,
+     "sinks": 1588
+    },
+    "clk_lane[30]": {
+     "mean_ps": 493,
+     "min_ps": 392,
+     "max_ps": 529,
+     "sinks": 708
+    },
+    "clk_lane[31]": {
+     "mean_ps": 469,
+     "min_ps": 453,
+     "max_ps": 609,
+     "sinks": 190
+    },
+    "clk_lane[3]": {
+     "mean_ps": 347,
+     "min_ps": 337,
+     "max_ps": 401,
+     "sinks": 557
+    },
+    "clk_lane[5]": {
+     "mean_ps": 340,
+     "min_ps": 298,
+     "max_ps": 382,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 415,
+     "min_ps": 336,
+     "max_ps": 440,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 275,
+     "min_ps": 260,
+     "max_ps": 349,
+     "sinks": 190
+    },
+    "clk_lane[8]": {
+     "mean_ps": 922,
+     "min_ps": 869,
+     "max_ps": 1058,
+     "sinks": 3515
+    },
+    "clk_lane[9]": {
+     "mean_ps": 531,
+     "min_ps": 513,
+     "max_ps": 607,
+     "sinks": 1088
+    }
+   },
+   "insertion_mean_ps": 941,
+   "insertion_sink_weighted_mean_ps": 634.3,
+   "insertion_max_ps": 1150,
+   "early_tap_ps": 691,
+   "contract_vclk_latency_ps": 941
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lanes20_23@f5958ea07f29",
@@ -5386,9 +9697,352 @@
     725.76
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lanes20_23_f5958ea07f29",
-   "kit_hash": "65a8ba127f9d740d",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "89371c7695f1a02c",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank[0]": {
+     "mean_ps": 814,
+     "min_ps": 769,
+     "max_ps": 950,
+     "sinks": 304
+    },
+    "clk_bank[1]": {
+     "mean_ps": 855,
+     "min_ps": 810,
+     "max_ps": 1029,
+     "sinks": 304
+    },
+    "clk_bank[2]": {
+     "mean_ps": 765,
+     "min_ps": 697,
+     "max_ps": 889,
+     "sinks": 304
+    },
+    "clk_bank[3]": {
+     "mean_ps": 695,
+     "min_ps": 637,
+     "max_ps": 804,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 108,
+     "min_ps": 108,
+     "max_ps": 108,
+     "sinks": 1
+    },
+    "clk_bank_macro[10]": {
+     "mean_ps": 350,
+     "min_ps": 350,
+     "max_ps": 350,
+     "sinks": 1
+    },
+    "clk_bank_macro[11]": {
+     "mean_ps": 233,
+     "min_ps": 233,
+     "max_ps": 233,
+     "sinks": 1
+    },
+    "clk_bank_macro[12]": {
+     "mean_ps": 504,
+     "min_ps": 504,
+     "max_ps": 504,
+     "sinks": 1
+    },
+    "clk_bank_macro[13]": {
+     "mean_ps": 235,
+     "min_ps": 235,
+     "max_ps": 235,
+     "sinks": 1
+    },
+    "clk_bank_macro[14]": {
+     "mean_ps": 489,
+     "min_ps": 489,
+     "max_ps": 489,
+     "sinks": 1
+    },
+    "clk_bank_macro[15]": {
+     "mean_ps": 294,
+     "min_ps": 294,
+     "max_ps": 294,
+     "sinks": 1
+    },
+    "clk_bank_macro[16]": {
+     "mean_ps": 144,
+     "min_ps": 144,
+     "max_ps": 144,
+     "sinks": 1
+    },
+    "clk_bank_macro[17]": {
+     "mean_ps": 271,
+     "min_ps": 271,
+     "max_ps": 271,
+     "sinks": 1
+    },
+    "clk_bank_macro[18]": {
+     "mean_ps": 202,
+     "min_ps": 202,
+     "max_ps": 202,
+     "sinks": 1
+    },
+    "clk_bank_macro[19]": {
+     "mean_ps": 339,
+     "min_ps": 339,
+     "max_ps": 339,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 61,
+     "min_ps": 61,
+     "max_ps": 61,
+     "sinks": 1
+    },
+    "clk_bank_macro[20]": {
+     "mean_ps": 201,
+     "min_ps": 201,
+     "max_ps": 201,
+     "sinks": 1
+    },
+    "clk_bank_macro[21]": {
+     "mean_ps": 325,
+     "min_ps": 325,
+     "max_ps": 325,
+     "sinks": 1
+    },
+    "clk_bank_macro[22]": {
+     "mean_ps": 120,
+     "min_ps": 120,
+     "max_ps": 120,
+     "sinks": 1
+    },
+    "clk_bank_macro[23]": {
+     "mean_ps": 260,
+     "min_ps": 260,
+     "max_ps": 260,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 274,
+     "min_ps": 274,
+     "max_ps": 274,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 571,
+     "min_ps": 571,
+     "max_ps": 571,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 613,
+     "min_ps": 613,
+     "max_ps": 613,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 249,
+     "min_ps": 249,
+     "max_ps": 249,
+     "sinks": 1
+    },
+    "clk_bank_macro[6]": {
+     "mean_ps": 316,
+     "min_ps": 316,
+     "max_ps": 316,
+     "sinks": 1
+    },
+    "clk_bank_macro[7]": {
+     "mean_ps": 378,
+     "min_ps": 378,
+     "max_ps": 378,
+     "sinks": 1
+    },
+    "clk_bank_macro[8]": {
+     "mean_ps": 548,
+     "min_ps": 548,
+     "max_ps": 548,
+     "sinks": 1
+    },
+    "clk_bank_macro[9]": {
+     "mean_ps": 564,
+     "min_ps": 564,
+     "max_ps": 564,
+     "sinks": 1
+    },
+    "clk_lane[0]": {
+     "mean_ps": 852,
+     "min_ps": 810,
+     "max_ps": 1077,
+     "sinks": 3515
+    },
+    "clk_lane[10]": {
+     "mean_ps": 659,
+     "min_ps": 624,
+     "max_ps": 713,
+     "sinks": 1588
+    },
+    "clk_lane[11]": {
+     "mean_ps": 601,
+     "min_ps": 589,
+     "max_ps": 674,
+     "sinks": 557
+    },
+    "clk_lane[13]": {
+     "mean_ps": 568,
+     "min_ps": 540,
+     "max_ps": 663,
+     "sinks": 1075
+    },
+    "clk_lane[14]": {
+     "mean_ps": 538,
+     "min_ps": 524,
+     "max_ps": 597,
+     "sinks": 708
+    },
+    "clk_lane[15]": {
+     "mean_ps": 642,
+     "min_ps": 594,
+     "max_ps": 696,
+     "sinks": 190
+    },
+    "clk_lane[16]": {
+     "mean_ps": 832,
+     "min_ps": 792,
+     "max_ps": 1047,
+     "sinks": 3629
+    },
+    "clk_lane[17]": {
+     "mean_ps": 500,
+     "min_ps": 482,
+     "max_ps": 608,
+     "sinks": 1088
+    },
+    "clk_lane[18]": {
+     "mean_ps": 551,
+     "min_ps": 540,
+     "max_ps": 606,
+     "sinks": 1588
+    },
+    "clk_lane[19]": {
+     "mean_ps": 542,
+     "min_ps": 534,
+     "max_ps": 595,
+     "sinks": 557
+    },
+    "clk_lane[1]": {
+     "mean_ps": 692,
+     "min_ps": 643,
+     "max_ps": 759,
+     "sinks": 1088
+    },
+    "clk_lane[21]": {
+     "mean_ps": 546,
+     "min_ps": 527,
+     "max_ps": 622,
+     "sinks": 1075
+    },
+    "clk_lane[22]": {
+     "mean_ps": 493,
+     "min_ps": 475,
+     "max_ps": 539,
+     "sinks": 708
+    },
+    "clk_lane[23]": {
+     "mean_ps": 622,
+     "min_ps": 565,
+     "max_ps": 664,
+     "sinks": 190
+    },
+    "clk_lane[24]": {
+     "mean_ps": 836,
+     "min_ps": 772,
+     "max_ps": 1049,
+     "sinks": 3743
+    },
+    "clk_lane[25]": {
+     "mean_ps": 586,
+     "min_ps": 569,
+     "max_ps": 652,
+     "sinks": 1088
+    },
+    "clk_lane[26]": {
+     "mean_ps": 576,
+     "min_ps": 559,
+     "max_ps": 682,
+     "sinks": 1588
+    },
+    "clk_lane[27]": {
+     "mean_ps": 576,
+     "min_ps": 564,
+     "max_ps": 621,
+     "sinks": 557
+    },
+    "clk_lane[29]": {
+     "mean_ps": 590,
+     "min_ps": 545,
+     "max_ps": 652,
+     "sinks": 1075
+    },
+    "clk_lane[2]": {
+     "mean_ps": 622,
+     "min_ps": 610,
+     "max_ps": 685,
+     "sinks": 1588
+    },
+    "clk_lane[30]": {
+     "mean_ps": 539,
+     "min_ps": 524,
+     "max_ps": 565,
+     "sinks": 708
+    },
+    "clk_lane[31]": {
+     "mean_ps": 606,
+     "min_ps": 546,
+     "max_ps": 688,
+     "sinks": 190
+    },
+    "clk_lane[3]": {
+     "mean_ps": 593,
+     "min_ps": 584,
+     "max_ps": 660,
+     "sinks": 557
+    },
+    "clk_lane[5]": {
+     "mean_ps": 548,
+     "min_ps": 532,
+     "max_ps": 617,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 524,
+     "min_ps": 505,
+     "max_ps": 590,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 606,
+     "min_ps": 562,
+     "max_ps": 730,
+     "sinks": 190
+    },
+    "clk_lane[8]": {
+     "mean_ps": 848,
+     "min_ps": 809,
+     "max_ps": 1010,
+     "sinks": 3629
+    },
+    "clk_lane[9]": {
+     "mean_ps": 720,
+     "min_ps": 642,
+     "max_ps": 767,
+     "sinks": 1088
+    }
+   },
+   "insertion_mean_ps": 855,
+   "insertion_sink_weighted_mean_ps": 694.1,
+   "insertion_max_ps": 1077,
+   "early_tap_ps": 605,
+   "contract_vclk_latency_ps": 855
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lanes20_23@f62fbff895b8",
@@ -5403,9 +10057,352 @@
     725.76
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lanes20_23_f62fbff895b8",
-   "kit_hash": "220c471c8cb8970a",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "debcdadaf02811c2",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank[0]": {
+     "mean_ps": 824,
+     "min_ps": 724,
+     "max_ps": 1142,
+     "sinks": 304
+    },
+    "clk_bank[1]": {
+     "mean_ps": 874,
+     "min_ps": 833,
+     "max_ps": 978,
+     "sinks": 304
+    },
+    "clk_bank[2]": {
+     "mean_ps": 693,
+     "min_ps": 642,
+     "max_ps": 824,
+     "sinks": 304
+    },
+    "clk_bank[3]": {
+     "mean_ps": 758,
+     "min_ps": 717,
+     "max_ps": 875,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 432,
+     "min_ps": 432,
+     "max_ps": 432,
+     "sinks": 1
+    },
+    "clk_bank_macro[10]": {
+     "mean_ps": 415,
+     "min_ps": 415,
+     "max_ps": 415,
+     "sinks": 1
+    },
+    "clk_bank_macro[11]": {
+     "mean_ps": 334,
+     "min_ps": 334,
+     "max_ps": 334,
+     "sinks": 1
+    },
+    "clk_bank_macro[12]": {
+     "mean_ps": 99,
+     "min_ps": 99,
+     "max_ps": 99,
+     "sinks": 1
+    },
+    "clk_bank_macro[13]": {
+     "mean_ps": 153,
+     "min_ps": 153,
+     "max_ps": 153,
+     "sinks": 1
+    },
+    "clk_bank_macro[14]": {
+     "mean_ps": 51,
+     "min_ps": 51,
+     "max_ps": 51,
+     "sinks": 1
+    },
+    "clk_bank_macro[15]": {
+     "mean_ps": 101,
+     "min_ps": 101,
+     "max_ps": 101,
+     "sinks": 1
+    },
+    "clk_bank_macro[16]": {
+     "mean_ps": 66,
+     "min_ps": 66,
+     "max_ps": 66,
+     "sinks": 1
+    },
+    "clk_bank_macro[17]": {
+     "mean_ps": 125,
+     "min_ps": 125,
+     "max_ps": 125,
+     "sinks": 1
+    },
+    "clk_bank_macro[18]": {
+     "mean_ps": 249,
+     "min_ps": 249,
+     "max_ps": 249,
+     "sinks": 1
+    },
+    "clk_bank_macro[19]": {
+     "mean_ps": 118,
+     "min_ps": 118,
+     "max_ps": 118,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 155,
+     "min_ps": 155,
+     "max_ps": 155,
+     "sinks": 1
+    },
+    "clk_bank_macro[20]": {
+     "mean_ps": 24,
+     "min_ps": 24,
+     "max_ps": 24,
+     "sinks": 1
+    },
+    "clk_bank_macro[21]": {
+     "mean_ps": 172,
+     "min_ps": 172,
+     "max_ps": 172,
+     "sinks": 1
+    },
+    "clk_bank_macro[22]": {
+     "mean_ps": 183,
+     "min_ps": 183,
+     "max_ps": 183,
+     "sinks": 1
+    },
+    "clk_bank_macro[23]": {
+     "mean_ps": 233,
+     "min_ps": 233,
+     "max_ps": 233,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 170,
+     "min_ps": 170,
+     "max_ps": 170,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 192,
+     "min_ps": 192,
+     "max_ps": 192,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 91,
+     "min_ps": 91,
+     "max_ps": 91,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 155,
+     "min_ps": 155,
+     "max_ps": 155,
+     "sinks": 1
+    },
+    "clk_bank_macro[6]": {
+     "mean_ps": 448,
+     "min_ps": 448,
+     "max_ps": 448,
+     "sinks": 1
+    },
+    "clk_bank_macro[7]": {
+     "mean_ps": 320,
+     "min_ps": 320,
+     "max_ps": 320,
+     "sinks": 1
+    },
+    "clk_bank_macro[8]": {
+     "mean_ps": 361,
+     "min_ps": 361,
+     "max_ps": 361,
+     "sinks": 1
+    },
+    "clk_bank_macro[9]": {
+     "mean_ps": 391,
+     "min_ps": 391,
+     "max_ps": 391,
+     "sinks": 1
+    },
+    "clk_lane[0]": {
+     "mean_ps": 926,
+     "min_ps": 896,
+     "max_ps": 1150,
+     "sinks": 3515
+    },
+    "clk_lane[10]": {
+     "mean_ps": 531,
+     "min_ps": 501,
+     "max_ps": 620,
+     "sinks": 1588
+    },
+    "clk_lane[11]": {
+     "mean_ps": 456,
+     "min_ps": 444,
+     "max_ps": 512,
+     "sinks": 557
+    },
+    "clk_lane[13]": {
+     "mean_ps": 485,
+     "min_ps": 409,
+     "max_ps": 536,
+     "sinks": 1075
+    },
+    "clk_lane[14]": {
+     "mean_ps": 474,
+     "min_ps": 427,
+     "max_ps": 591,
+     "sinks": 708
+    },
+    "clk_lane[15]": {
+     "mean_ps": 482,
+     "min_ps": 389,
+     "max_ps": 529,
+     "sinks": 190
+    },
+    "clk_lane[16]": {
+     "mean_ps": 897,
+     "min_ps": 882,
+     "max_ps": 1034,
+     "sinks": 3629
+    },
+    "clk_lane[17]": {
+     "mean_ps": 370,
+     "min_ps": 346,
+     "max_ps": 387,
+     "sinks": 1088
+    },
+    "clk_lane[18]": {
+     "mean_ps": 396,
+     "min_ps": 384,
+     "max_ps": 429,
+     "sinks": 1588
+    },
+    "clk_lane[19]": {
+     "mean_ps": 367,
+     "min_ps": 354,
+     "max_ps": 414,
+     "sinks": 557
+    },
+    "clk_lane[1]": {
+     "mean_ps": 434,
+     "min_ps": 422,
+     "max_ps": 495,
+     "sinks": 1088
+    },
+    "clk_lane[21]": {
+     "mean_ps": 441,
+     "min_ps": 353,
+     "max_ps": 498,
+     "sinks": 1075
+    },
+    "clk_lane[22]": {
+     "mean_ps": 441,
+     "min_ps": 374,
+     "max_ps": 484,
+     "sinks": 708
+    },
+    "clk_lane[23]": {
+     "mean_ps": 417,
+     "min_ps": 384,
+     "max_ps": 480,
+     "sinks": 190
+    },
+    "clk_lane[24]": {
+     "mean_ps": 908,
+     "min_ps": 870,
+     "max_ps": 1022,
+     "sinks": 3743
+    },
+    "clk_lane[25]": {
+     "mean_ps": 525,
+     "min_ps": 514,
+     "max_ps": 671,
+     "sinks": 1088
+    },
+    "clk_lane[26]": {
+     "mean_ps": 518,
+     "min_ps": 506,
+     "max_ps": 598,
+     "sinks": 1588
+    },
+    "clk_lane[27]": {
+     "mean_ps": 476,
+     "min_ps": 450,
+     "max_ps": 526,
+     "sinks": 557
+    },
+    "clk_lane[29]": {
+     "mean_ps": 561,
+     "min_ps": 477,
+     "max_ps": 652,
+     "sinks": 1075
+    },
+    "clk_lane[2]": {
+     "mean_ps": 445,
+     "min_ps": 419,
+     "max_ps": 521,
+     "sinks": 1588
+    },
+    "clk_lane[30]": {
+     "mean_ps": 542,
+     "min_ps": 428,
+     "max_ps": 642,
+     "sinks": 708
+    },
+    "clk_lane[31]": {
+     "mean_ps": 470,
+     "min_ps": 430,
+     "max_ps": 528,
+     "sinks": 190
+    },
+    "clk_lane[3]": {
+     "mean_ps": 435,
+     "min_ps": 424,
+     "max_ps": 489,
+     "sinks": 557
+    },
+    "clk_lane[5]": {
+     "mean_ps": 432,
+     "min_ps": 411,
+     "max_ps": 557,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 398,
+     "min_ps": 373,
+     "max_ps": 518,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 380,
+     "min_ps": 340,
+     "max_ps": 466,
+     "sinks": 190
+    },
+    "clk_lane[8]": {
+     "mean_ps": 913,
+     "min_ps": 888,
+     "max_ps": 1138,
+     "sinks": 3629
+    },
+    "clk_lane[9]": {
+     "mean_ps": 515,
+     "min_ps": 468,
+     "max_ps": 591,
+     "sinks": 1088
+    }
+   },
+   "insertion_mean_ps": 926,
+   "insertion_sink_weighted_mean_ps": 652.7,
+   "insertion_max_ps": 1150,
+   "early_tap_ps": 676,
+   "contract_vclk_latency_ps": 926
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lanes24_27@53fde75129b8",
@@ -6860,9 +11857,352 @@
     725.76
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lanes4_7_3b8d20184137",
-   "kit_hash": "93571c18dd9a14b8",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "616e26c187e4829a",
+   "status": "MEASURED",
+   "host": "intel1",
+   "ports": {
+    "clk_bank[0]": {
+     "mean_ps": 850,
+     "min_ps": 812,
+     "max_ps": 998,
+     "sinks": 304
+    },
+    "clk_bank[1]": {
+     "mean_ps": 900,
+     "min_ps": 866,
+     "max_ps": 977,
+     "sinks": 304
+    },
+    "clk_bank[2]": {
+     "mean_ps": 818,
+     "min_ps": 729,
+     "max_ps": 883,
+     "sinks": 304
+    },
+    "clk_bank[3]": {
+     "mean_ps": 788,
+     "min_ps": 720,
+     "max_ps": 825,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 279,
+     "min_ps": 279,
+     "max_ps": 279,
+     "sinks": 1
+    },
+    "clk_bank_macro[10]": {
+     "mean_ps": 373,
+     "min_ps": 373,
+     "max_ps": 373,
+     "sinks": 1
+    },
+    "clk_bank_macro[11]": {
+     "mean_ps": 321,
+     "min_ps": 321,
+     "max_ps": 321,
+     "sinks": 1
+    },
+    "clk_bank_macro[12]": {
+     "mean_ps": 101,
+     "min_ps": 101,
+     "max_ps": 101,
+     "sinks": 1
+    },
+    "clk_bank_macro[13]": {
+     "mean_ps": 83,
+     "min_ps": 83,
+     "max_ps": 83,
+     "sinks": 1
+    },
+    "clk_bank_macro[14]": {
+     "mean_ps": 124,
+     "min_ps": 124,
+     "max_ps": 124,
+     "sinks": 1
+    },
+    "clk_bank_macro[15]": {
+     "mean_ps": 424,
+     "min_ps": 424,
+     "max_ps": 424,
+     "sinks": 1
+    },
+    "clk_bank_macro[16]": {
+     "mean_ps": 292,
+     "min_ps": 292,
+     "max_ps": 292,
+     "sinks": 1
+    },
+    "clk_bank_macro[17]": {
+     "mean_ps": 268,
+     "min_ps": 268,
+     "max_ps": 268,
+     "sinks": 1
+    },
+    "clk_bank_macro[18]": {
+     "mean_ps": 152,
+     "min_ps": 152,
+     "max_ps": 152,
+     "sinks": 1
+    },
+    "clk_bank_macro[19]": {
+     "mean_ps": 125,
+     "min_ps": 125,
+     "max_ps": 125,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 262,
+     "min_ps": 262,
+     "max_ps": 262,
+     "sinks": 1
+    },
+    "clk_bank_macro[20]": {
+     "mean_ps": 46,
+     "min_ps": 46,
+     "max_ps": 46,
+     "sinks": 1
+    },
+    "clk_bank_macro[21]": {
+     "mean_ps": 118,
+     "min_ps": 118,
+     "max_ps": 118,
+     "sinks": 1
+    },
+    "clk_bank_macro[22]": {
+     "mean_ps": 261,
+     "min_ps": 261,
+     "max_ps": 261,
+     "sinks": 1
+    },
+    "clk_bank_macro[23]": {
+     "mean_ps": 273,
+     "min_ps": 273,
+     "max_ps": 273,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 418,
+     "min_ps": 418,
+     "max_ps": 418,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 165,
+     "min_ps": 165,
+     "max_ps": 165,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 101,
+     "min_ps": 101,
+     "max_ps": 101,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 329,
+     "min_ps": 329,
+     "max_ps": 329,
+     "sinks": 1
+    },
+    "clk_bank_macro[6]": {
+     "mean_ps": 177,
+     "min_ps": 177,
+     "max_ps": 177,
+     "sinks": 1
+    },
+    "clk_bank_macro[7]": {
+     "mean_ps": 408,
+     "min_ps": 408,
+     "max_ps": 408,
+     "sinks": 1
+    },
+    "clk_bank_macro[8]": {
+     "mean_ps": 152,
+     "min_ps": 152,
+     "max_ps": 152,
+     "sinks": 1
+    },
+    "clk_bank_macro[9]": {
+     "mean_ps": 201,
+     "min_ps": 201,
+     "max_ps": 201,
+     "sinks": 1
+    },
+    "clk_lane[0]": {
+     "mean_ps": 906,
+     "min_ps": 883,
+     "max_ps": 1105,
+     "sinks": 3172
+    },
+    "clk_lane[10]": {
+     "mean_ps": 485,
+     "min_ps": 461,
+     "max_ps": 560,
+     "sinks": 1588
+    },
+    "clk_lane[11]": {
+     "mean_ps": 441,
+     "min_ps": 415,
+     "max_ps": 520,
+     "sinks": 557
+    },
+    "clk_lane[13]": {
+     "mean_ps": 442,
+     "min_ps": 393,
+     "max_ps": 484,
+     "sinks": 1075
+    },
+    "clk_lane[14]": {
+     "mean_ps": 395,
+     "min_ps": 324,
+     "max_ps": 438,
+     "sinks": 708
+    },
+    "clk_lane[15]": {
+     "mean_ps": 440,
+     "min_ps": 365,
+     "max_ps": 481,
+     "sinks": 190
+    },
+    "clk_lane[16]": {
+     "mean_ps": 874,
+     "min_ps": 833,
+     "max_ps": 1000,
+     "sinks": 3286
+    },
+    "clk_lane[17]": {
+     "mean_ps": 396,
+     "min_ps": 382,
+     "max_ps": 471,
+     "sinks": 1088
+    },
+    "clk_lane[18]": {
+     "mean_ps": 416,
+     "min_ps": 373,
+     "max_ps": 483,
+     "sinks": 1588
+    },
+    "clk_lane[19]": {
+     "mean_ps": 383,
+     "min_ps": 365,
+     "max_ps": 428,
+     "sinks": 557
+    },
+    "clk_lane[1]": {
+     "mean_ps": 455,
+     "min_ps": 435,
+     "max_ps": 552,
+     "sinks": 1088
+    },
+    "clk_lane[21]": {
+     "mean_ps": 468,
+     "min_ps": 335,
+     "max_ps": 520,
+     "sinks": 1075
+    },
+    "clk_lane[22]": {
+     "mean_ps": 411,
+     "min_ps": 315,
+     "max_ps": 448,
+     "sinks": 708
+    },
+    "clk_lane[23]": {
+     "mean_ps": 460,
+     "min_ps": 370,
+     "max_ps": 515,
+     "sinks": 190
+    },
+    "clk_lane[24]": {
+     "mean_ps": 909,
+     "min_ps": 875,
+     "max_ps": 1030,
+     "sinks": 3400
+    },
+    "clk_lane[25]": {
+     "mean_ps": 495,
+     "min_ps": 404,
+     "max_ps": 554,
+     "sinks": 1088
+    },
+    "clk_lane[26]": {
+     "mean_ps": 495,
+     "min_ps": 481,
+     "max_ps": 569,
+     "sinks": 1588
+    },
+    "clk_lane[27]": {
+     "mean_ps": 463,
+     "min_ps": 408,
+     "max_ps": 487,
+     "sinks": 557
+    },
+    "clk_lane[29]": {
+     "mean_ps": 503,
+     "min_ps": 457,
+     "max_ps": 606,
+     "sinks": 1075
+    },
+    "clk_lane[2]": {
+     "mean_ps": 457,
+     "min_ps": 443,
+     "max_ps": 549,
+     "sinks": 1588
+    },
+    "clk_lane[30]": {
+     "mean_ps": 506,
+     "min_ps": 421,
+     "max_ps": 525,
+     "sinks": 708
+    },
+    "clk_lane[31]": {
+     "mean_ps": 582,
+     "min_ps": 495,
+     "max_ps": 640,
+     "sinks": 190
+    },
+    "clk_lane[3]": {
+     "mean_ps": 426,
+     "min_ps": 385,
+     "max_ps": 481,
+     "sinks": 557
+    },
+    "clk_lane[5]": {
+     "mean_ps": 390,
+     "min_ps": 363,
+     "max_ps": 508,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 372,
+     "min_ps": 308,
+     "max_ps": 396,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 372,
+     "min_ps": 308,
+     "max_ps": 454,
+     "sinks": 190
+    },
+    "clk_lane[8]": {
+     "mean_ps": 889,
+     "min_ps": 860,
+     "max_ps": 1059,
+     "sinks": 3286
+    },
+    "clk_lane[9]": {
+     "mean_ps": 529,
+     "min_ps": 518,
+     "max_ps": 568,
+     "sinks": 1088
+    }
+   },
+   "insertion_mean_ps": 909,
+   "insertion_sink_weighted_mean_ps": 630.9,
+   "insertion_max_ps": 1105,
+   "early_tap_ps": 659,
+   "contract_vclk_latency_ps": 909
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lanes4_7@7c5136131e9e",
@@ -7597,9 +12937,352 @@
     725.76
    ],
    "kit": "ot_hbm_su_static_pgslice_lg__lanes8_11_a1c0c37ab566",
-   "kit_hash": "9fe4aa4c15017a2a",
-   "status": "NOT MEASURED",
-   "note": "kit never reached CTS"
+   "kit_hash": "ce8a51a0dcf521ca",
+   "status": "MEASURED",
+   "host": "localhost",
+   "ports": {
+    "clk_bank[0]": {
+     "mean_ps": 823,
+     "min_ps": 796,
+     "max_ps": 1044,
+     "sinks": 304
+    },
+    "clk_bank[1]": {
+     "mean_ps": 678,
+     "min_ps": 649,
+     "max_ps": 746,
+     "sinks": 304
+    },
+    "clk_bank[2]": {
+     "mean_ps": 826,
+     "min_ps": 797,
+     "max_ps": 914,
+     "sinks": 304
+    },
+    "clk_bank[3]": {
+     "mean_ps": 863,
+     "min_ps": 803,
+     "max_ps": 975,
+     "sinks": 304
+    },
+    "clk_bank_macro[0]": {
+     "mean_ps": 351,
+     "min_ps": 351,
+     "max_ps": 351,
+     "sinks": 1
+    },
+    "clk_bank_macro[10]": {
+     "mean_ps": 282,
+     "min_ps": 282,
+     "max_ps": 282,
+     "sinks": 1
+    },
+    "clk_bank_macro[11]": {
+     "mean_ps": 302,
+     "min_ps": 302,
+     "max_ps": 302,
+     "sinks": 1
+    },
+    "clk_bank_macro[12]": {
+     "mean_ps": 290,
+     "min_ps": 290,
+     "max_ps": 290,
+     "sinks": 1
+    },
+    "clk_bank_macro[13]": {
+     "mean_ps": 409,
+     "min_ps": 409,
+     "max_ps": 409,
+     "sinks": 1
+    },
+    "clk_bank_macro[14]": {
+     "mean_ps": 395,
+     "min_ps": 395,
+     "max_ps": 395,
+     "sinks": 1
+    },
+    "clk_bank_macro[15]": {
+     "mean_ps": 199,
+     "min_ps": 199,
+     "max_ps": 199,
+     "sinks": 1
+    },
+    "clk_bank_macro[16]": {
+     "mean_ps": 250,
+     "min_ps": 250,
+     "max_ps": 250,
+     "sinks": 1
+    },
+    "clk_bank_macro[17]": {
+     "mean_ps": 387,
+     "min_ps": 387,
+     "max_ps": 387,
+     "sinks": 1
+    },
+    "clk_bank_macro[18]": {
+     "mean_ps": 491,
+     "min_ps": 491,
+     "max_ps": 491,
+     "sinks": 1
+    },
+    "clk_bank_macro[19]": {
+     "mean_ps": 436,
+     "min_ps": 436,
+     "max_ps": 436,
+     "sinks": 1
+    },
+    "clk_bank_macro[1]": {
+     "mean_ps": 319,
+     "min_ps": 319,
+     "max_ps": 319,
+     "sinks": 1
+    },
+    "clk_bank_macro[20]": {
+     "mean_ps": 384,
+     "min_ps": 384,
+     "max_ps": 384,
+     "sinks": 1
+    },
+    "clk_bank_macro[21]": {
+     "mean_ps": 364,
+     "min_ps": 364,
+     "max_ps": 364,
+     "sinks": 1
+    },
+    "clk_bank_macro[22]": {
+     "mean_ps": 307,
+     "min_ps": 307,
+     "max_ps": 307,
+     "sinks": 1
+    },
+    "clk_bank_macro[23]": {
+     "mean_ps": 429,
+     "min_ps": 429,
+     "max_ps": 429,
+     "sinks": 1
+    },
+    "clk_bank_macro[2]": {
+     "mean_ps": 492,
+     "min_ps": 492,
+     "max_ps": 492,
+     "sinks": 1
+    },
+    "clk_bank_macro[3]": {
+     "mean_ps": 470,
+     "min_ps": 470,
+     "max_ps": 470,
+     "sinks": 1
+    },
+    "clk_bank_macro[4]": {
+     "mean_ps": 511,
+     "min_ps": 511,
+     "max_ps": 511,
+     "sinks": 1
+    },
+    "clk_bank_macro[5]": {
+     "mean_ps": 393,
+     "min_ps": 393,
+     "max_ps": 393,
+     "sinks": 1
+    },
+    "clk_bank_macro[6]": {
+     "mean_ps": 248,
+     "min_ps": 248,
+     "max_ps": 248,
+     "sinks": 1
+    },
+    "clk_bank_macro[7]": {
+     "mean_ps": 476,
+     "min_ps": 476,
+     "max_ps": 476,
+     "sinks": 1
+    },
+    "clk_bank_macro[8]": {
+     "mean_ps": 425,
+     "min_ps": 425,
+     "max_ps": 425,
+     "sinks": 1
+    },
+    "clk_bank_macro[9]": {
+     "mean_ps": 411,
+     "min_ps": 411,
+     "max_ps": 411,
+     "sinks": 1
+    },
+    "clk_lane[0]": {
+     "mean_ps": 845,
+     "min_ps": 819,
+     "max_ps": 993,
+     "sinks": 3058
+    },
+    "clk_lane[10]": {
+     "mean_ps": 592,
+     "min_ps": 573,
+     "max_ps": 750,
+     "sinks": 1588
+    },
+    "clk_lane[11]": {
+     "mean_ps": 557,
+     "min_ps": 522,
+     "max_ps": 619,
+     "sinks": 557
+    },
+    "clk_lane[13]": {
+     "mean_ps": 622,
+     "min_ps": 535,
+     "max_ps": 688,
+     "sinks": 1075
+    },
+    "clk_lane[14]": {
+     "mean_ps": 494,
+     "min_ps": 401,
+     "max_ps": 511,
+     "sinks": 708
+    },
+    "clk_lane[15]": {
+     "mean_ps": 501,
+     "min_ps": 466,
+     "max_ps": 584,
+     "sinks": 190
+    },
+    "clk_lane[16]": {
+     "mean_ps": 854,
+     "min_ps": 812,
+     "max_ps": 1007,
+     "sinks": 3286
+    },
+    "clk_lane[17]": {
+     "mean_ps": 576,
+     "min_ps": 551,
+     "max_ps": 636,
+     "sinks": 1088
+    },
+    "clk_lane[18]": {
+     "mean_ps": 579,
+     "min_ps": 555,
+     "max_ps": 631,
+     "sinks": 1588
+    },
+    "clk_lane[19]": {
+     "mean_ps": 532,
+     "min_ps": 511,
+     "max_ps": 578,
+     "sinks": 557
+    },
+    "clk_lane[1]": {
+     "mean_ps": 532,
+     "min_ps": 514,
+     "max_ps": 605,
+     "sinks": 1088
+    },
+    "clk_lane[21]": {
+     "mean_ps": 521,
+     "min_ps": 491,
+     "max_ps": 590,
+     "sinks": 1075
+    },
+    "clk_lane[22]": {
+     "mean_ps": 538,
+     "min_ps": 496,
+     "max_ps": 566,
+     "sinks": 708
+    },
+    "clk_lane[23]": {
+     "mean_ps": 530,
+     "min_ps": 504,
+     "max_ps": 610,
+     "sinks": 190
+    },
+    "clk_lane[24]": {
+     "mean_ps": 868,
+     "min_ps": 790,
+     "max_ps": 1057,
+     "sinks": 3400
+    },
+    "clk_lane[25]": {
+     "mean_ps": 701,
+     "min_ps": 671,
+     "max_ps": 789,
+     "sinks": 1088
+    },
+    "clk_lane[26]": {
+     "mean_ps": 689,
+     "min_ps": 677,
+     "max_ps": 758,
+     "sinks": 1588
+    },
+    "clk_lane[27]": {
+     "mean_ps": 631,
+     "min_ps": 615,
+     "max_ps": 718,
+     "sinks": 557
+    },
+    "clk_lane[29]": {
+     "mean_ps": 641,
+     "min_ps": 629,
+     "max_ps": 839,
+     "sinks": 1075
+    },
+    "clk_lane[2]": {
+     "mean_ps": 544,
+     "min_ps": 495,
+     "max_ps": 644,
+     "sinks": 1588
+    },
+    "clk_lane[30]": {
+     "mean_ps": 625,
+     "min_ps": 600,
+     "max_ps": 755,
+     "sinks": 708
+    },
+    "clk_lane[31]": {
+     "mean_ps": 621,
+     "min_ps": 526,
+     "max_ps": 708,
+     "sinks": 190
+    },
+    "clk_lane[3]": {
+     "mean_ps": 555,
+     "min_ps": 502,
+     "max_ps": 573,
+     "sinks": 557
+    },
+    "clk_lane[5]": {
+     "mean_ps": 497,
+     "min_ps": 466,
+     "max_ps": 613,
+     "sinks": 1075
+    },
+    "clk_lane[6]": {
+     "mean_ps": 516,
+     "min_ps": 477,
+     "max_ps": 559,
+     "sinks": 708
+    },
+    "clk_lane[7]": {
+     "mean_ps": 511,
+     "min_ps": 488,
+     "max_ps": 573,
+     "sinks": 190
+    },
+    "clk_lane[8]": {
+     "mean_ps": 842,
+     "min_ps": 813,
+     "max_ps": 1002,
+     "sinks": 3286
+    },
+    "clk_lane[9]": {
+     "mean_ps": 611,
+     "min_ps": 526,
+     "max_ps": 667,
+     "sinks": 1088
+    }
+   },
+   "insertion_mean_ps": 868,
+   "insertion_sink_weighted_mean_ps": 690.0,
+   "insertion_max_ps": 1057,
+   "early_tap_ps": 618,
+   "contract_vclk_latency_ps": 868
   },
   {
    "view": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3@835991219cf1",
@@ -9998,20 +15681,20 @@
    "ports": {
     "clk_lane": {
      "mean_ps": 504,
-     "min_ps": 477,
-     "max_ps": 545,
+     "min_ps": 478,
+     "max_ps": 555,
      "sinks": 46523
     },
     "clk_map": {
-     "mean_ps": 470,
-     "min_ps": 458,
-     "max_ps": 494,
+     "mean_ps": 469,
+     "min_ps": 456,
+     "max_ps": 502,
      "sinks": 2992
     }
    },
    "insertion_mean_ps": 504,
    "insertion_sink_weighted_mean_ps": 501.9,
-   "insertion_max_ps": 545,
+   "insertion_max_ps": 555,
    "early_tap_ps": 254,
    "contract_vclk_latency_ps": 504
   },
@@ -10033,23 +15716,23 @@
    "status": "MEASURED",
    "ports": {
     "clk_lane": {
-     "mean_ps": 482,
-     "min_ps": 461,
-     "max_ps": 536,
+     "mean_ps": 490,
+     "min_ps": 471,
+     "max_ps": 546,
      "sinks": 46523
     },
     "clk_map": {
      "mean_ps": 455,
-     "min_ps": 443,
-     "max_ps": 539,
+     "min_ps": 438,
+     "max_ps": 572,
      "sinks": 2992
     }
    },
-   "insertion_mean_ps": 482,
-   "insertion_sink_weighted_mean_ps": 480.4,
-   "insertion_max_ps": 539,
-   "early_tap_ps": 232,
-   "contract_vclk_latency_ps": 482
+   "insertion_mean_ps": 490,
+   "insertion_sink_weighted_mean_ps": 487.9,
+   "insertion_max_ps": 572,
+   "early_tap_ps": 240,
+   "contract_vclk_latency_ps": 490
   },
   {
    "view": "ot_hgi_sfu_core_split3__lane7@dec25f7e131a",
@@ -10141,23 +15824,23 @@
    "status": "MEASURED",
    "ports": {
     "clk_lane": {
-     "mean_ps": 449,
-     "min_ps": 429,
-     "max_ps": 514,
+     "mean_ps": 467,
+     "min_ps": 443,
+     "max_ps": 532,
      "sinks": 46523
     },
     "clk_map": {
-     "mean_ps": 445,
-     "min_ps": 431,
-     "max_ps": 505,
+     "mean_ps": 429,
+     "min_ps": 410,
+     "max_ps": 470,
      "sinks": 2992
     }
    },
-   "insertion_mean_ps": 449,
-   "insertion_sink_weighted_mean_ps": 448.8,
-   "insertion_max_ps": 514,
-   "early_tap_ps": 199,
-   "contract_vclk_latency_ps": 449
+   "insertion_mean_ps": 467,
+   "insertion_sink_weighted_mean_ps": 464.7,
+   "insertion_max_ps": 532,
+   "early_tap_ps": 217,
+   "contract_vclk_latency_ps": 467
   },
   {
    "view": "ot_hgi_sfu_core_split3__opstore_a@e3e965283c36",
