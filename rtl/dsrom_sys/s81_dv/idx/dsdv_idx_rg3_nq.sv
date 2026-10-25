@@ -22,9 +22,9 @@ module dsdv_idx_rg3_nq #(
     output wire [275:0]  so,
     output wire [183:0]  rqo,
     input  wire [1087:0] rri,
-    output wire [9:0]    st
+    output wire          fault   // S81/PORTFIX-FLT 10-25: 1-bit sticky fault (was st[9:0])
 );
     wire [512:0] qo_end;      // chain end: no downstream reader
     dsdv_idx_rg3_nq_native #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .IQD(IQD), .SQD(SQD), .LFD(LFD), .EL(EL), .IH(IH), .KR(KR)) u_rg3 (
-        .ck(ck), .rst(rst), .sid(sid), .qi(qi), .qo(qo_end), .si(si), .so(so), .rqo(rqo), .rri(rri), .st(st));
+        .ck(ck), .rst(rst), .sid(sid), .qi(qi), .qo(qo_end), .si(si), .so(so), .rqo(rqo), .rri(rri), .fault(fault));
 endmodule

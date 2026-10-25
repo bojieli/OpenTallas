@@ -24,15 +24,18 @@ module tb_dsdv_seq_host_mu;
     reg [1:0] st_rg_w = 2'b01, st_rg_e = 2'b01;
     wire [3:0] t_mf; wire [4*34-1:0] mu_c; wire [4*11-1:0] mu_rc; reg [31:0] mu_rt_7n = 0, mu_rt_0n = 0;
     if (1) begin : g_mux
+        wire sid_l, vid_l;
         dsdv_hostb_seqhost_mux #(.HOSTB_ENABLE(0), .STATIC_KS6(0)) dut (
             .select_hbe(1'b0), .hbe_f_host(515'd0), .starter_f_ks(53'd0), .hbe_ks_slot(3'd0),
-            .engram_f_ks(), .hostb_fault(), .hb_job_active(), .hb_starter_armed(),.ck(ck), .rst_n(rst_n), .tap_k(8'h00), .sink_k(8'h00), .vi_s(vi_s), .vo_s(vo_s),
+            .engram_f_ks(), .hb_starter_armed(), .sid_ri(sid_l), .vid_ri(vid_l), .sid_ro(sid_l), .vid_ro(vid_l),.ck(ck), .rst_n(rst_n), .tap_k(8'h00), .sink_k(8'h00), .vi_s(vi_s), .vo_s(vo_s),
             .vi_n(vi_n), .vo_n(vo_n), .f_host(f_host), .t_host(t_host), .f_lf(4'b0101), .f_ks(f_ks), .t_kd(t_kd),
-            .t_mf(t_mf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w),
+            .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w),
             .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d),
             .mu_c_7n(mu_c[0 +: 34]), .mu_c_7s(mu_c[34 +: 34]), .mu_c_0n(mu_c[68 +: 34]), .mu_c_0s(mu_c[102 +: 34]),
             .mu_rc_7n(mu_rc[0 +: 11]), .mu_rc_7s(mu_rc[11 +: 11]), .mu_rc_0n(mu_rc[22 +: 11]), .mu_rc_0s(mu_rc[33 +: 11]),
             .mu_rt_7n(mu_rt_7n), .mu_rt_0n(mu_rt_0n));
+        // S81/PORTFIX-FLT 10-25: t_mf is internal now (bench tap); the fault rings are closed head -> end (no stops)
+        assign t_mf = dut.t_mf;
     end
     // the issuer of the real unit (fixed_issue): sealed / start phase / fault, through either wrapper
     wire iss_sealed = `ISS.sealed;

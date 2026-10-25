@@ -17,6 +17,8 @@
 // as u_ln0 / u_ln1, HF-3 CH_BOARD 700, strap ch_b) on new die ports tx2 / tx3 / rx2 / rx3 (die SerDes link_0_4 / link_0_5).
 // Pair A = stage NEXT (user 0 + every un-windowed beat), pair B = stage PREV; fixed static circuits, no destination field.
 // Same landings, reset forests, u_sl, MU landing as lepw_mu_72; no tied functional port.
+// S81/PORTFIX-FLT 10-25: lane landings = ot_s81_mu72_lnland_nst (no PHY status k_st: it had no consumer in this lep;
+// the PHY fault bit reaches the lep fault collector through the lane flt[2] -> the 1-bit `fault` output).
 module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
     parameter integer MUT = 0,
     // No production clock book is implied by physical source binding.
@@ -30,9 +32,9 @@ module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
     input wire [76:0] hb_status_t_host,input wire [53:0] hb_status_t_kd,
     input wire hb_starter_armed,
     output wire [514:0] hb_f_host,output wire [52:0] hb_ks,output wire [2:0] hb_ks_slot,
-    output wire [5:0] hb_arm_mask,output wire hb_arm_commit,
-    output wire [11:0] hb_fault,output wire [7:0] hb_hbc_fault,output wire [3:0] hb_return_fault,
-    output wire hb_ctx_valid,
+    // S81/PORTFIX-FLT 10-25 (S81 DECISION 4): the HBC receiver's one 1-bit sticky fault (was hb_arm_mask[5:0],
+    // hb_arm_commit, hb_fault[11:0], hb_hbc_fault[7:0], hb_return_fault[3:0], hb_ctx_valid); region K, leaves a flop.
+    output wire hb_fault,
     input wire rst_n,
     input wire [3:0] sid,
     input wire [1103:0] ri_e,
@@ -79,13 +81,13 @@ module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
     wire [514:0] lrx2, lrx3;
     wire mwv, mrv, mf; wire [1103:0] mwd, mrd;
     wire n0rxk = rxv[0];
-    wire n0lv, n0lr, n0iv, n0ir, n0rxv; wire [552:0] n0ld, n0id; wire [2:0] n0f; wire [1:0] n0stk;
+    wire n0lv, n0lr, n0iv, n0ir, n0rxv; wire [552:0] n0ld, n0id; wire [2:0] n0f;
     wire n1rxk = rxv[1];
-    wire n1lv, n1lr, n1iv, n1ir, n1rxv; wire [552:0] n1ld, n1id; wire [2:0] n1f; wire [1:0] n1stk;
+    wire n1lv, n1lr, n1iv, n1ir, n1rxv; wire [552:0] n1ld, n1id; wire [2:0] n1f;
     wire n2rxk = rxvb[0];
-    wire n2lv, n2lr, n2iv, n2ir, n2rxv; wire [552:0] n2ld, n2id; wire [2:0] n2f; wire [1:0] n2stk;
+    wire n2lv, n2lr, n2iv, n2ir, n2rxv; wire [552:0] n2ld, n2id; wire [2:0] n2f;
     wire n3rxk = rxvb[1];
-    wire n3lv, n3lr, n3iv, n3ir, n3rxv; wire [552:0] n3ld, n3id; wire [2:0] n3f; wire [1:0] n3stk;
+    wire n3lv, n3lr, n3iv, n3ir, n3rxv; wire [552:0] n3ld, n3id; wire [2:0] n3f;
     assign lrx0 = {rx0[512], rx0[513], rx0[511:0], n0rxv};
     assign lrx1 = {rx1[512], rx1[513], rx1[511:0], n1rxv};
     assign lrx2 = {rx2[512], rx2[513], rx2[511:0], n2rxv};
@@ -142,21 +144,21 @@ module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
     ot_s81sl_slice_c1x_k8_cap5r_lp #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0)) u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4),
         .ck_CAP_RT(ck_CAP_RT), .ck_CAP_CW(ck_CAP_CW), .ck_CAP_CE(ck_CAP_CE), .ck_CAP_RN(ck_CAP_RN), .ck_CAP_RS(ck_CAP_RS), .rst_n(lpr_c_u_sl), .sid(sid), .ri_w(lri__l_S), .ri_e(ri_e), .ro_e(ro_e), .ro_w(lro), .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(sf));   // region S, t = 0
-    ot_s81_mu72_lnland #(.MUT((MUT == 5) ? 1 : (MUT == 7) ? 3 : 0)) u_lnl0 (.ck_k(ck_K), .ck_n(ck_N0), .rs_k(lpr_K), .rs_n(lpr_c_u_ln0),
-        .k_lo_v(l0v), .k_lo_d(l0d), .k_lo_r(l0r), .k_li_v(i0v), .k_li_d(i0d), .k_li_r(i0r), .k_rxv(n0rxk), .k_flt(f0), .k_st(n0stk),
-        .n_lo_v(n0lv), .n_lo_d(n0ld), .n_lo_r(n0lr), .n_li_v(n0iv), .n_li_d(n0id), .n_li_r(n0ir), .n_rxv(n0rxv), .n_flt(n0f), .n_st(rx0[513:512]));   // K <-> N0, +3 each way
+    ot_s81_mu72_lnland_nst #(.MUT((MUT == 5) ? 1 : (MUT == 7) ? 3 : 0)) u_lnl0 (.ck_k(ck_K), .ck_n(ck_N0), .rs_k(lpr_K), .rs_n(lpr_c_u_ln0),
+        .k_lo_v(l0v), .k_lo_d(l0d), .k_lo_r(l0r), .k_li_v(i0v), .k_li_d(i0d), .k_li_r(i0r), .k_rxv(n0rxk), .k_flt(f0),
+        .n_lo_v(n0lv), .n_lo_d(n0ld), .n_lo_r(n0lr), .n_li_v(n0iv), .n_li_d(n0id), .n_li_r(n0ir), .n_rxv(n0rxv), .n_flt(n0f));   // K <-> N0, +3 each way
     dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln0 (.ck(ck_N0), .rs(lpr_c_u_ln0), .chb(ch_b), .rx(lrx0), .tx(tx0), .lo_v(n0lv), .lo_r(n0lr), .lo_d(n0ld), .li_v(n0iv), .li_r(n0ir), .li_d(n0id), .flt(n0f));   // region N0, t = 0
-    ot_s81_mu72_lnland #(.MUT((MUT == 6) ? 2 : 0)) u_lnl1 (.ck_k(ck_K), .ck_n(ck_N1), .rs_k(lpr_K), .rs_n(lpr_c_u_ln1),
-        .k_lo_v(l1v), .k_lo_d(l1d), .k_lo_r(l1r), .k_li_v(i1v), .k_li_d(i1d), .k_li_r(i1r), .k_rxv(n1rxk), .k_flt(f1), .k_st(n1stk),
-        .n_lo_v(n1lv), .n_lo_d(n1ld), .n_lo_r(n1lr), .n_li_v(n1iv), .n_li_d(n1id), .n_li_r(n1ir), .n_rxv(n1rxv), .n_flt(n1f), .n_st(rx1[513:512]));   // K <-> N1, +3 each way
+    ot_s81_mu72_lnland_nst #(.MUT((MUT == 6) ? 2 : 0)) u_lnl1 (.ck_k(ck_K), .ck_n(ck_N1), .rs_k(lpr_K), .rs_n(lpr_c_u_ln1),
+        .k_lo_v(l1v), .k_lo_d(l1d), .k_lo_r(l1r), .k_li_v(i1v), .k_li_d(i1d), .k_li_r(i1r), .k_rxv(n1rxk), .k_flt(f1),
+        .n_lo_v(n1lv), .n_lo_d(n1ld), .n_lo_r(n1lr), .n_li_v(n1iv), .n_li_d(n1id), .n_li_r(n1ir), .n_rxv(n1rxv), .n_flt(n1f));   // K <-> N1, +3 each way
     dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln1 (.ck(ck_N1), .rs(lpr_c_u_ln1), .chb(ch_b), .rx(lrx1), .tx(tx1), .lo_v(n1lv), .lo_r(n1lr), .lo_d(n1ld), .li_v(n1iv), .li_r(n1ir), .li_d(n1id), .flt(n1f));   // region N1, t = 0
-    ot_s81_mu72_lnland #(.MUT(0)) u_lnl2 (.ck_k(ck_K), .ck_n(ck_N2), .rs_k(lpr_K), .rs_n(lpr_c_u_ln2),
-        .k_lo_v(l2v), .k_lo_d(l2d), .k_lo_r(l2r), .k_li_v(i2v), .k_li_d(i2d), .k_li_r(i2r), .k_rxv(n2rxk), .k_flt(f2), .k_st(n2stk),
-        .n_lo_v(n2lv), .n_lo_d(n2ld), .n_lo_r(n2lr), .n_li_v(n2iv), .n_li_d(n2id), .n_li_r(n2ir), .n_rxv(n2rxv), .n_flt(n2f), .n_st(rx2[513:512]));   // K <-> N2, +3 each way
+    ot_s81_mu72_lnland_nst #(.MUT(0)) u_lnl2 (.ck_k(ck_K), .ck_n(ck_N2), .rs_k(lpr_K), .rs_n(lpr_c_u_ln2),
+        .k_lo_v(l2v), .k_lo_d(l2d), .k_lo_r(l2r), .k_li_v(i2v), .k_li_d(i2d), .k_li_r(i2r), .k_rxv(n2rxk), .k_flt(f2),
+        .n_lo_v(n2lv), .n_lo_d(n2ld), .n_lo_r(n2lr), .n_li_v(n2iv), .n_li_d(n2id), .n_li_r(n2ir), .n_rxv(n2rxv), .n_flt(n2f));   // K <-> N2, +3 each way
     dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln2 (.ck(ck_N2), .rs(lpr_c_u_ln2), .chb(ch_b), .rx(lrx2), .tx(tx2), .lo_v(n2lv), .lo_r(n2lr), .lo_d(n2ld), .li_v(n2iv), .li_r(n2ir), .li_d(n2id), .flt(n2f));   // region N2, t = 0
-    ot_s81_mu72_lnland #(.MUT(0)) u_lnl3 (.ck_k(ck_K), .ck_n(ck_N3), .rs_k(lpr_K), .rs_n(lpr_c_u_ln3),
-        .k_lo_v(l3v), .k_lo_d(l3d), .k_lo_r(l3r), .k_li_v(i3v), .k_li_d(i3d), .k_li_r(i3r), .k_rxv(n3rxk), .k_flt(f3), .k_st(n3stk),
-        .n_lo_v(n3lv), .n_lo_d(n3ld), .n_lo_r(n3lr), .n_li_v(n3iv), .n_li_d(n3id), .n_li_r(n3ir), .n_rxv(n3rxv), .n_flt(n3f), .n_st(rx3[513:512]));   // K <-> N3, +3 each way
+    ot_s81_mu72_lnland_nst #(.MUT(0)) u_lnl3 (.ck_k(ck_K), .ck_n(ck_N3), .rs_k(lpr_K), .rs_n(lpr_c_u_ln3),
+        .k_lo_v(l3v), .k_lo_d(l3d), .k_lo_r(l3r), .k_li_v(i3v), .k_li_d(i3d), .k_li_r(i3r), .k_rxv(n3rxk), .k_flt(f3),
+        .n_lo_v(n3lv), .n_lo_d(n3ld), .n_lo_r(n3lr), .n_li_v(n3iv), .n_li_d(n3id), .n_li_r(n3ir), .n_rxv(n3rxv), .n_flt(n3f));   // K <-> N3, +3 each way
     dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln3 (.ck(ck_N3), .rs(lpr_c_u_ln3), .chb(ch_b), .rx(lrx3), .tx(tx3), .lo_v(n3lv), .lo_r(n3lr), .lo_d(n3ld), .li_v(n3iv), .li_r(n3ir), .li_d(n3id), .flt(n3f));   // region N3, t = 0
     ot_s81sl_lep_mu_ab_idx #(.CRED(12), .DR(12), .RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro_ep), .ri(lri_ep), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf),
         .lo2_v(l2v), .lo2_r(l2r), .lo2_d(l2d), .lo3_v(l3v), .lo3_r(l3r), .lo3_d(l3d), .li2_v(i2v), .li2_r(i2r), .li2_d(i2d), .li3_v(i3v), .li3_r(i3r), .li3_d(i3d), .rxvb(rxvb), .l2_f(f2), .l3_f(f3), .fault(fault__o), .tl(tl), .ca(ca), .cb(cb));   // region K, t = 0 (S81/H4: + tree ports)
@@ -164,16 +166,14 @@ module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
     // real host/KS outputs and booked sequencer status cross the die boundary.
     // The unused external-return arm of RETURN_LOCAL=1 reads actual local_ro;
     // the selected return emitter exclusively captures the real landed status.
-    wire [47:0] hb_receiver_edge,hb_boot_edge;
     dsdv_hostb_stage_hbc #(.ENABLE(HBC_ENABLE),.LOCAL_STAGE(HBC_LOCAL_STAGE),.LOCAL_RANK(HBC_LOCAL_RANK),
       .PHASE_BOUND(HBC_PHASE_BOUND),.CLOCK_RESET_ID(HBC_CLOCK_RESET_ID),
       .BOOT_HEADER_EDGE(HBC_BOOT_HEADER_EDGE),.BOOT_COMMIT_EDGE(HBC_BOOT_COMMIT_EDGE),
       .VARIABLE_WORDS(1),.ALLOW_RELOAD(1),.RETURN_LOCAL(1),.RETURN_REQUIRE_KIT(1),.RETURN_ARRIVAL_DEADLINE(HBC_RETURN_ARRIVAL_DEADLINE)) u_hbc(
       .ck(ck_K),.rst_n(lpr_K_leaves[LPR_LEAVES_K-1]),.job_active(hb_status_t_host[65]),.starter_armed(hb_starter_armed),
       .from_prev(lri_ep),.local_ro(lro__l_K),.return_ro(lro__l_K),
-      .status_t_host(hb_status_t_host),.status_t_kd(hb_status_t_kd),.return_fault(hb_return_fault),
+      .status_t_host(hb_status_t_host),.status_t_kd(hb_status_t_kd),
       .to_local(lri),.next_ro(lro_ep),.f_host(hb_f_host),.ks_descriptor(hb_ks),.ks_slot(hb_ks_slot),
-      .arm_mask(hb_arm_mask),.arm_commit(hb_arm_commit),.fault(hb_fault),.context_valid(hb_ctx_valid),
-      .receiver_edge(hb_receiver_edge),.boot_edge(hb_boot_edge),.hbc_fault(hb_hbc_fault));
+      .fault(hb_fault));
     dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)) u_land (.clk(ck_ML), .rst_n(lpr_c_u_land), .wv(mwv_ml), .wd(mwd_ml), .rc(mu_rc_ml), .rv(mrv_ml), .rd(mrd_ml), .fault(mf_ml)); // region ML
 endmodule

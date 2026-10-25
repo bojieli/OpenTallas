@@ -7,9 +7,12 @@ module tb_hostb_variable;
  dsdv_hostb_stage_hbc #(.ENABLE(1),.LOCAL_STAGE(1),.LOCAL_RANK(0),.PHASE_BOUND(1),.VARIABLE_WORDS(1),
  .CLOCK_RESET_ID(64'h5381C7C0DE1021),.BOOT_HEADER_EDGE(48'd20),.BOOT_COMMIT_EDGE(48'd30)) dut(
  .ck(ck),.rst_n(rn),.job_active(1'b0),.starter_armed(1'b0),.from_prev(ring),.local_ro(1104'd0),.return_ro(1104'd0),
- .status_t_host(77'd0),.status_t_kd(54'd0),.return_fault(),.to_local(ordinary),.next_ro(forwarded),
- .f_host(fh),.ks_descriptor(ks),.ks_slot(slot),.arm_mask(mask),.arm_commit(arm),.fault(fault),
- .context_valid(ctx),.receiver_edge(epoch),.boot_edge(boot),.hbc_fault(hbc_fault));
+ .status_t_host(77'd0),.status_t_kd(54'd0),.to_local(ordinary),.next_ro(forwarded),
+ .f_host(fh),.ks_descriptor(ks),.ks_slot(slot),.fault(flt));
+ // S81/PORTFIX-FLT 10-25: the unit's ports are one 1-bit sticky fault (flt); the former status ports are tapped
+ wire flt;assign mask=dut.arm_mask;assign arm=dut.arm_commit;assign fault=dut.stage_fault;
+ assign ctx=dut.context_valid;assign epoch=dut.receiver_edge;assign boot=dut.boot_edge;assign hbc_fault=dut.hbc_fault;
+ always @(posedge ck)if(flt&&!(|fault)&&!(|hbc_fault)&&!(|dut.return_fault))$fatal(1,"FAIL 1-bit fault set with no unit fault");
  string vec;
  initial begin
   if(!$value$plusargs("COUNT=%d",count)||!$value$plusargs("VEC=%s",vec))$fatal(1,"COUNT/VEC required");
@@ -29,7 +32,7 @@ module tb_hostb_variable;
    writes++;
   end
   if(ctx&&epoch==finish_edge)begin
-   if(writes!=count||fault||hbc_fault||dut.g_hbc.u_book.remaining!=0)$fatal(1,"count%0d writes%0d fault%h/%h remaining%0d",count,writes,fault,hbc_fault,dut.g_hbc.u_book.remaining);
+   if(writes!=count||fault||hbc_fault||flt||dut.g_hbc.u_book.remaining!=0)$fatal(1,"count%0d writes%0d fault%h/%h remaining%0d",count,writes,fault,hbc_fault,dut.g_hbc.u_book.remaining);
    $display("HBC_VARIABLE PASS count%0d writes%0d exact opaque payload; all affine slots exhausted",count,writes);$finish;
   end
  end

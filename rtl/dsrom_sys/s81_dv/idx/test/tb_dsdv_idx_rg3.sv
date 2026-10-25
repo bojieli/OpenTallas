@@ -142,7 +142,8 @@ module tb_dsdv_idx_rg3;
     wire [543:0] lrd_c [0:R-1], lrd_r [0:R-1];      // response lanes at the controller / at the reader
     function automatic integer sd_of(input integer p_); sd_of = SDX + ((p_ < 4) ? 3 + 5 * p_ : 3 + 5 * (7 - p_)); endfunction
     wire [512:0] qx; wire [275:0] sx;              // W -> E crossing outputs
-    wire [9:0]   st [0:NRD-1];
+    // S81/PORTFIX-FLT 10-25: the reader's port is the 1-bit sticky fault (was st[9:0] = {fc, act, fault}); act is tapped
+    wire [NRD-1:0] flt, act_v;
     reg  [681:0] rq_tb [0:R-1];
     assign qch[0] = qin;
     assign sch[0] = 276'd0;
@@ -156,7 +157,8 @@ module tb_dsdv_idx_rg3;
         wire [275:0] si_ = (r == 4) ? sx : sch[r];
         dsdv_idx_rg3 #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .SQD(SQD), .IQD(IQD), .OH(OH), .RH(RH), .IH(IH), .KR(KR)) u (
             .ck(ck), .rst(rst), .sid(4'(2 * r)), .qi(qi_), .qo(qch[r + 1]), .si(si_), .so(sch[r + 1]),
-            .rqo({lrq_r[2 * r + 1], lrq_r[2 * r]}), .rri({lrd_r[2 * r + 1], lrd_r[2 * r]}), .st(st[r]));
+            .rqo({lrq_r[2 * r + 1], lrq_r[2 * r]}), .rri({lrd_r[2 * r + 1], lrd_r[2 * r]}), .fault(flt[r]));
+        assign act_v[r] = u.act;
         // relay stations (registered hops) on the lanes of both controllers of the pair
         tb_idx3_dly #(.W(92),  .D(sd_of(r))) u_q0 (.ck(ck), .d(lrq_r[2 * r]),     .q(lrq_c[2 * r]));
         tb_idx3_dly #(.W(92),  .D(sd_of(r))) u_q1 (.ck(ck), .d(lrq_r[2 * r + 1]), .q(lrq_c[2 * r + 1]));
@@ -387,8 +389,8 @@ module tb_dsdv_idx_rg3;
         // wait for the window: T0 + 10 + P nw after END at the first region, + 32 chain edges + decode
         while (cyc < t_end + T0 + 10 + P * nw + 200 && lw_n[0] <= nw) @(posedge ck);
         repeat (100) @(posedge ck);
-        for (a = 0; a < NRD; a = a + 1) if (st[a][0] || st[a][1]) begin
-            fail = 1; $display("TB_IDXRD reader %0d st %b (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})", a, st[a]);
+        for (a = 0; a < NRD; a = a + 1) if (flt[a] || act_v[a]) begin
+            fail = 1; $display("TB_IDXRD reader %0d fault %b active %b", a, flt[a], act_v[a]);
         end
         for (i = 0; i < 4; i = i + 1) if (lw_n[i] != (i == 0 ? nw + 1 : (OPEN[i - 1] ? 0 : 2))) begin
             fail = 1; $display("TB_IDXRD lane %0d words %0d expected %0d", i, lw_n[i], i == 0 ? nw + 1 : (OPEN[i - 1] ? 0 : 2));

@@ -5,7 +5,9 @@
 #   kit   P_KIT 1 (u_lep RX_SRAM / IN_PIPE / NATIVE32 1 as the tops): seeds 1, ph 3 -> PASS; P_MUT 1 -> FAIL
 #   r4l   P_R4L 1 (die-side successor end, regional lep r4l on K/KA/KB + 4 landed lanes): seeds 1, ph 3 -> PASS;
 #         P_MUT 1 / 2 / 3 -> FAIL
-# Usage (cwd = repo root): run_mu72_lnland_bench.sh OUTDIR [base|mut|kit|r4l|all]
+#   nst   S81/PORTFIX-FLT 10-25: P_NST 1 (ot_s81_mu72_lnland_nst, the status-less landing of s_0N / s_0S / s_7S, kit
+#         lep params): seeds 1, ph 3 -> PASS; P_MUT 1 / 2 / 3 -> FAIL
+# Usage (cwd = repo root): run_mu72_lnland_bench.sh OUTDIR [base|mut|kit|r4l|nst|all]
 set -u
 O=$(realpath -m "${1:?outdir}"); WHAT=${2:-all}; mkdir -p "$O"
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
@@ -45,6 +47,10 @@ fi
 if [ "$WHAT" = r4l ] || [ "$WHAT" = kr ] || [ "$WHAT" = all ]; then
   one r4l_s1 PASS -GP_R4L=1 -GSEED=1 & one r4l_ph_s3 PASS -GP_R4L=1 -GSEED=3 -GP_PH=1 & wait
   one r4l_mut1 FAIL -GP_R4L=1 -GP_MUT=1 & one r4l_mut2 FAIL -GP_R4L=1 -GP_MUT=2 & one r4l_mut3 FAIL -GP_R4L=1 -GP_MUT=3 & wait
+fi
+if [ "$WHAT" = nst ] || [ "$WHAT" = all ]; then
+  one nst_s1 PASS -GP_NST=1 -GP_KIT=1 -GSEED=1 & one nst_ph_s3 PASS -GP_NST=1 -GP_KIT=1 -GSEED=3 -GP_PH=1 & wait
+  one nst_mut1 FAIL -GP_NST=1 -GP_KIT=1 -GP_MUT=1 & one nst_mut2 FAIL -GP_NST=1 -GP_KIT=1 -GP_MUT=2 & one nst_mut3 FAIL -GP_NST=1 -GP_KIT=1 -GP_MUT=3 & wait
 fi
 ls $O/*.bad >/dev/null 2>&1 && bad=1 || bad=0
 [ $bad = 0 ] && echo "MU72_LNLAND_BENCH PASS" || echo "MU72_LNLAND_BENCH FAIL"; exit $bad

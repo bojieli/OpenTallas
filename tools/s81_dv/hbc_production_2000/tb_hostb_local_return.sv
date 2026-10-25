@@ -14,10 +14,14 @@ module tb_hostb_local_return;
  dsdv_hostb_stage_hbc #(.ENABLE(1),.LOCAL_STAGE(1),.LOCAL_RANK(0),.PHASE_BOUND(1),.CLOCK_RESET_ID(64'h5381C7C0DE1021),
   .BOOT_HEADER_EDGE(48'd20),.BOOT_COMMIT_EDGE(48'd30),
   .RETURN_LOCAL(1),.RETURN_ARRIVAL_DEADLINE(48'd8100)) dut(.ck(ck),.rst_n(rst_n),.job_active(1'b0),.starter_armed(1'b0),
-  .status_t_host(status_host),.status_t_kd(status_kd),.return_fault(return_fault),
+  .status_t_host(status_host),.status_t_kd(status_kd),
+
   .from_prev(ring),.local_ro(1104'd0),.return_ro(1104'd0),
-  .to_local(to_local),.next_ro(next_ro),.f_host(f_host),.ks_descriptor(ks),.ks_slot(ks_slot),.arm_mask(arm_mask),
-  .arm_commit(arm_commit),.fault(fault),.context_valid(context_valid),.receiver_edge(receiver_edge),.boot_edge(boot_edge),.hbc_fault(hbc_fault));
+  .to_local(to_local),.next_ro(next_ro),.f_host(f_host),.ks_descriptor(ks),.ks_slot(ks_slot),
+  .fault(flt));
+ // S81/PORTFIX-FLT 10-25: the unit's ports are one 1-bit sticky fault (flt); the former status ports are tapped
+ wire flt;assign return_fault=dut.return_fault;assign arm_mask=dut.arm_mask;assign arm_commit=dut.arm_commit;assign fault=dut.stage_fault;
+ assign context_valid=dut.context_valid;assign receiver_edge=dut.receiver_edge;assign boot_edge=dut.boot_edge;assign hbc_fault=dut.hbc_fault;
  string vec;
  initial begin
   if(!$value$plusargs("VEC=%s",vec))$fatal(1,"+VEC");
@@ -48,6 +52,7 @@ module tb_hostb_local_return;
    returns++;
   end
   if(boot_edge==48'd7000)begin
+   if(flt!==((|fault)||(|hbc_fault)||(|return_fault)))$fatal(1,"FAIL 1-bit fault %b != sticky OR rf%h f%h hbc%h",flt,return_fault,fault,hbc_fault);
    if(mode==0)begin
     if(writes!=1||returns!=1||return_fault!=0||fault!=0||hbc_fault!=0)$fatal(1,"return positive failed returns%0d rf%h f%h",returns,return_fault,fault);
     $display("HBC_RETURN PASS actual sampled status/token + committed context -> one booked return; explicit upstream test deadline8100");

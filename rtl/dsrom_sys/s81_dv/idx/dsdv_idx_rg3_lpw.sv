@@ -6,6 +6,8 @@
 // Latency vs dsdv_idx_rg3 #(IH 1, OH 2, RH 2, KR 1) (the rg3p kit): q / s chains 0, rq lane 0, response pop -> budget +1,
 // key -> score -> metadata ring +8 (internal: LX 8, absorbed by T0), st +3, reset release +4 (lp reset runs).
 // OH / RH / IH / KR are accepted and ignored (benches pass them; the banded chain is fixed: W pin flop, 1 S23 stage).
+// S81/PORTFIX-FLT 10-25: follows dsdv_idx_rg3's port change st[9:0] -> fault (1-bit sticky = the parent's st[0] flop);
+// act (st[1]) stays an internal net for the bench's end-of-window check.
 module dsdv_idx_rg3_lpw #(
     parameter integer MUT = 0,
     parameter bit SRAM_MACRO = 1,
@@ -26,8 +28,11 @@ module dsdv_idx_rg3_lpw #(
     output wire [275:0]  so,
     output wire [183:0]  rqo,
     input  wire [1087:0] rri,
-    output wire [9:0]    st
+    output wire          fault
 );
+    wire [9:0] st;
+    assign fault = st[0];
+    wire act = st[1];   // bench tap only
     dsdv_idx_rg3_bf_lp #(.MUTR(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .IQD(IQD), .SQD(SQD), .RH(1), .KR(1), .LX(8), .PD(2)
 `ifdef OT_LPW_LPMUT
         , .MUT(`OT_LPW_LPMUT)                     // lp.py's own landing / reset mutants (negative campaigns only)

@@ -13,8 +13,9 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     output wire [2*341-1:0] rq, input wire [1:0] rk, wd, rv, input wire [2*256-1:0] r_data, input wire [2*17-1:0] r_tag,
     input  wire [2*4-1:0] r_beat, input wire [1:0] hs,
     output wire pv_v, output wire [512:0] pv_d, output wire [47:0] pv_x,
-    input wire [561:0] local_pv_landed,peer_pv,
-    output wire so_ready,so_done,output wire[11:0]so_fault_code
+    input wire [561:0] local_pv_landed,peer_pv
+    // S81/PORTFIX-FLT 10-25 (S81 DECISION 4): the SO status outputs so_ready / so_done (status) and so_fault_code[11:0]
+    // (detail code) are dropped; the ingress fault (= |so_fault_code, sticky) stays OR-ed into the one fault output.
 
 `ifdef RS_OBS
     , output wire w_v, output wire [13:0] w_a, output wire [15:0] w_m, output wire [511:0] w_d, output wire [11:0] w_st
@@ -26,6 +27,7 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     wire w_v; wire [13:0] w_a; wire [15:0] w_m; wire [511:0] w_d; wire [11:0] w_st;
 `endif
     wire so_cfg_v,so_param_v,so_launch,program_fault;
+    wire so_ready,so_done;wire[11:0]so_fault_code;   // internal (bench taps only)
     wire[19:0]so_owner,so_param_owner;wire[20:0]so_position,so_param_position;
     wire[7:0]so_se_jid,so_jid;wire[15:0]so_local_first,so_peer_first;
     wire[2:0]so_param_row;wire[511:0]so_param_d;wire[514:0]q_filtered;
@@ -39,7 +41,10 @@ module dsdv_svc_rs_pvso_entry #(parameter integer PVSO_ENABLE=0, parameter integ
     reg collision;
     always @(posedge ck or negedge rst)if(!rst)collision<=0;else if(generated_v && q_filtered[0])collision<=1;
     assign q_entry=generated_v?{2'd0,generated_d,1'b1}:q_filtered;
-    assign fault=entry_fault|ingress_fault|join_fault|collision|program_fault;
+    // S81/PORTFIX-FLT 10-25: the one fault output leaves a sticky flop (pin registered; +1 edge on the fault level only)
+    reg fault_q;
+    always @(posedge ck or negedge rst)if(!rst)fault_q<=0;else fault_q<=fault_q|entry_fault|ingress_fault|join_fault|collision|program_fault;
+    assign fault=fault_q;
     generate if(PVSO_ENABLE!=0)begin:g_join
       dsdv_pv_half_join u_join(.clk(ck),.rst_n(rst),.cfg_v(so_cfg_v),
        .local_first(so_local_first),.peer_first(so_peer_first),.local_pv(local_pv_landed),.peer_pv(peer_pv),
