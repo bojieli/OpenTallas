@@ -334,7 +334,9 @@ for tn, end in (("hd_spn", False), ("hd_spn_end", True)):
 T("hd_serdes", "ot_s81hd_serdes", (SW, SH), 0,
   contents=[dict(inst="u_phy", module="ot_pdie_serdes", status="reuse",
                  note="same PHY model, slot and bump field as the layer die's serdes partitions")],
-  note="SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops")
+  note="SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops; PDN (OWNER 10-24 "
+       "decision 7, IR over SerDes windows): separate PHY supply (VDDPHY/VSSPHY, not the core VDD/VSS M8/M9 grid) "
+       "fed by dedicated bump rows over the SerDes window")
 BUS("hd_serdes", "coll_i0", "in", 512, "u_phy.tx")
 BUS("hd_serdes", "coll_o0", "out", 514, "u_phy.rx")
 
@@ -641,7 +643,11 @@ plan = dict(
     note="S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/"
          "s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die "
          "(253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die "
-         "s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST).",
+         "s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). "
+         "PDN (OWNER 10-24 decision 7): the 12 hd_serdes windows (lk_*) get a separate PHY supply domain "
+         "(VDDPHY/VSSPHY) and dedicated PHY power/ground bump rows over each SerDes window; the core VDD/VSS M8/M9 "
+         "grid (die.pg) does not feed the PHY. TODO (TRIAL/PDN lane): model the PHY domain + its bump rows in the "
+         "head abstract PSM / IR run (die.pg schema has no supply-domain field yet).",
     die=dict(name="s81_head", label="DeepSeek ROM S81 release head die (LM head / argmax / MTP / host)", tech="asap7",
              outline_um=[W, H], period_ps=833, reach_um=1500.0, rep_um=450.0, grid_um=G,
              layer_budget=dict(partition_signal_max="M7", die_layers=["M8", "M9"],

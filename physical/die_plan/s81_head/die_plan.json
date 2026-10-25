@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.v1",
- "note": "S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die (253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST).",
+ "note": "S81 release head die (S81.HEAD), top-down plan from tools/s81_head_die_model.py (results/uarch/s81_head_die.json); generator physical/die_plan/s81_head/gen_plan.py. LM head 1/4 vocabulary a die (253 of 264 tile slots active), argmax spine, ctl at the spine root, stage-circuit endpoint = layer-die s_0N_LP, 3 TP4 mesh pairs, host pair (S81.HOST). PDN (OWNER 10-24 decision 7): the 12 hd_serdes windows (lk_*) get a separate PHY supply domain (VDDPHY/VSSPHY) and dedicated PHY power/ground bump rows over each SerDes window; the core VDD/VSS M8/M9 grid (die.pg) does not feed the PHY. TODO (TRIAL/PDN lane): model the PHY domain + its bump rows in the head abstract PSM / IR run (die.pg schema has no supply-domain field yet).",
  "die": {
   "name": "s81_head",
   "label": "DeepSeek ROM S81 release head die (LM head / argmax / MTP / host)",
@@ -1388,7 +1388,7 @@
      "note": "same PHY model, slot and bump field as the layer die's serdes partitions"
     }
    ],
-   "note": "SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops",
+   "note": "SerDes partition: 112G PHY (6 lanes, 512-b TX flit / 514-b RX {st, rx}) + boundary flops; PDN (OWNER 10-24 decision 7, IR over SerDes windows): separate PHY supply (VDDPHY/VSSPHY, not the core VDD/VSS M8/M9 grid) fed by dedicated bump rows over the SerDes window",
    "buses": [
     {
      "name": "coll_i0",

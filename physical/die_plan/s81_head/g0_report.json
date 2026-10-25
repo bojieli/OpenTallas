@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_plan.g0.v1",
- "plan": "/home/ubuntu/wt/s81-head/physical/die_plan/s81_head/die_plan.json",
+ "plan": "/srv/opentallas-scratch/claude/wt/s81-head-r/physical/die_plan/s81_head/die_plan.json",
  "verdict": "PASS",
  "mode": "G0C",
  "errors": 0,
@@ -21,7 +21,7 @@
   "lanes": 325,
   "bits": 211794,
   "taps_cores": {
-   "taps": 0,
+   "taps": 5,
    "hard_cores": 5,
    "core_pins": 2290,
    "core_pins_off_track": 0,
@@ -134,53 +134,53 @@
   ],
   "worst_hops": [
    {
-    "lane": "chW3_t",
-    "hop_um": 468.3,
+    "lane": "m7S_tx",
+    "hop_um": 360.7,
     "reach_um": 1500.0
    },
    {
-    "lane": "chW2_t",
-    "hop_um": 468.3,
+    "lane": "m7N_tx",
+    "hop_um": 360.7,
     "reach_um": 1500.0
    },
    {
-    "lane": "chW1_t",
-    "hop_um": 468.3,
+    "lane": "coll_ES1_u",
+    "hop_um": 360.7,
     "reach_um": 1500.0
    },
    {
-    "lane": "chW0_t",
-    "hop_um": 468.3,
+    "lane": "coll_ES1_d",
+    "hop_um": 360.7,
     "reach_um": 1500.0
    },
    {
-    "lane": "chW4_t",
-    "hop_um": 468.3,
+    "lane": "coll_EN1_u",
+    "hop_um": 360.7,
     "reach_um": 1500.0
    },
    {
-    "lane": "chE3_t",
-    "hop_um": 468.3,
+    "lane": "coll_EN1_d",
+    "hop_um": 360.7,
     "reach_um": 1500.0
    },
    {
-    "lane": "chW5_t",
-    "hop_um": 468.3,
+    "lane": "m0S_tx",
+    "hop_um": 360.7,
     "reach_um": 1500.0
    },
    {
-    "lane": "chE5_t",
-    "hop_um": 468.3,
+    "lane": "coll_WS1_u",
+    "hop_um": 360.7,
     "reach_um": 1500.0
    },
    {
-    "lane": "chE4_t",
-    "hop_um": 468.3,
+    "lane": "coll_WS1_d",
+    "hop_um": 360.7,
     "reach_um": 1500.0
    },
    {
-    "lane": "chE2_t",
-    "hop_um": 468.3,
+    "lane": "coll_WN2_u",
+    "hop_um": 360.7,
     "reach_um": 1500.0
    }
   ],
@@ -1539,7 +1539,7 @@
    "chE0_o7": 2,
    "chE0_o8": 2,
    "chE0_o9": 2,
-   "chE0_t": 5,
+   "chE0_t": 7,
    "chE0_b0": 2,
    "chE0_b1": 2,
    "chE0_b2": 2,
@@ -1562,7 +1562,7 @@
    "chW0_o7": 2,
    "chW0_o8": 2,
    "chW0_o9": 2,
-   "chW0_t": 5,
+   "chW0_t": 7,
    "chW0_b0": 2,
    "chW0_b1": 2,
    "chW0_b2": 2,
@@ -1585,7 +1585,7 @@
    "chE1_o7": 2,
    "chE1_o8": 2,
    "chE1_o9": 2,
-   "chE1_t": 5,
+   "chE1_t": 7,
    "chE1_b0": 2,
    "chE1_b1": 2,
    "chE1_b2": 2,
@@ -1608,7 +1608,7 @@
    "chW1_o7": 2,
    "chW1_o8": 2,
    "chW1_o9": 2,
-   "chW1_t": 5,
+   "chW1_t": 7,
    "chW1_b0": 2,
    "chW1_b1": 2,
    "chW1_b2": 2,
@@ -1631,7 +1631,7 @@
    "chE2_o7": 2,
    "chE2_o8": 2,
    "chE2_o9": 2,
-   "chE2_t": 5,
+   "chE2_t": 7,
    "chE2_b0": 2,
    "chE2_b1": 2,
    "chE2_b2": 2,
@@ -1654,7 +1654,7 @@
    "chW2_o7": 2,
    "chW2_o8": 2,
    "chW2_o9": 2,
-   "chW2_t": 5,
+   "chW2_t": 7,
    "chW2_b0": 2,
    "chW2_b1": 2,
    "chW2_b2": 2,
@@ -1677,7 +1677,7 @@
    "chE3_o7": 2,
    "chE3_o8": 2,
    "chE3_o9": 2,
-   "chE3_t": 5,
+   "chE3_t": 7,
    "chE3_b0": 2,
    "chE3_b1": 2,
    "chE3_b2": 2,
@@ -1700,7 +1700,7 @@
    "chW3_o7": 2,
    "chW3_o8": 2,
    "chW3_o9": 2,
-   "chW3_t": 5,
+   "chW3_t": 7,
    "chW3_b0": 2,
    "chW3_b1": 2,
    "chW3_b2": 2,
@@ -1723,7 +1723,7 @@
    "chE4_o7": 2,
    "chE4_o8": 2,
    "chE4_o9": 2,
-   "chE4_t": 5,
+   "chE4_t": 7,
    "chE4_b0": 2,
    "chE4_b1": 2,
    "chE4_b2": 2,
@@ -1746,7 +1746,7 @@
    "chW4_o7": 2,
    "chW4_o8": 2,
    "chW4_o9": 2,
-   "chW4_t": 5,
+   "chW4_t": 7,
    "chW4_b0": 2,
    "chW4_b1": 2,
    "chW4_b2": 2,
@@ -1769,7 +1769,7 @@
    "chE5_o7": 2,
    "chE5_o8": 2,
    "chE5_o9": 2,
-   "chE5_t": 5,
+   "chE5_t": 7,
    "chE5_b0": 2,
    "chE5_b1": 2,
    "chE5_b2": 2,
@@ -1792,7 +1792,7 @@
    "chW5_o7": 2,
    "chW5_o8": 2,
    "chW5_o9": 2,
-   "chW5_t": 5,
+   "chW5_t": 7,
    "chW5_b0": 2,
    "chW5_b1": 2,
    "chW5_b2": 2,
@@ -1818,12 +1818,12 @@
    "sp_b5": 2,
    "host_tx": 38,
    "host_rx": 38,
-   "m0S_tx": 48,
-   "m0S_rx": 48,
-   "m7S_tx": 45,
-   "m7S_rx": 45,
+   "m0S_tx": 49,
+   "m0S_rx": 51,
+   "m7S_tx": 46,
+   "m7S_rx": 47,
    "m7N_tx": 6,
-   "m7N_rx": 6,
+   "m7N_rx": 7,
    "kd": 2,
    "ku": 2,
    "lepf": 2,
@@ -1831,24 +1831,24 @@
    "ctrl_lep": 2,
    "coll_WN0_u": 2,
    "coll_WN0_d": 2,
-   "coll_WN1_u": 10,
-   "coll_WN1_d": 9,
-   "coll_WN2_u": 20,
-   "coll_WN2_d": 19,
-   "coll_WN3_u": 6,
-   "coll_WN3_d": 6,
+   "coll_WN1_u": 12,
+   "coll_WN1_d": 10,
+   "coll_WN2_u": 21,
+   "coll_WN2_d": 20,
+   "coll_WN3_u": 7,
+   "coll_WN3_d": 7,
    "coll_EN0_u": 2,
    "coll_EN0_d": 2,
-   "coll_EN1_u": 12,
-   "coll_EN1_d": 11,
+   "coll_EN1_u": 13,
+   "coll_EN1_d": 12,
    "coll_WS0_u": 2,
    "coll_WS0_d": 2,
-   "coll_WS1_u": 12,
-   "coll_WS1_d": 11,
+   "coll_WS1_u": 13,
+   "coll_WS1_d": 12,
    "coll_ES0_u": 2,
    "coll_ES0_d": 2,
-   "coll_ES1_u": 12,
-   "coll_ES1_d": 11,
+   "coll_ES1_u": 13,
+   "coll_ES1_d": 12,
    "coll_HOST1_u": 2,
    "coll_HOST1_d": 2,
    "coll_HOST0_u": 6,
@@ -3233,9 +3233,10 @@
     ],
     "uncovered": 0,
     "off_shore": 0,
-    "over_sites": 0
+    "over_sites": 0,
+    "host_mode": "dedicated"
    },
-   "source": "/home/ubuntu/wt/s81-head/physical/die_plan/s81_head/die_io.json"
+   "source": "/srv/opentallas-scratch/claude/wt/s81-head-r/physical/die_plan/s81_head/die_io.json"
   },
   "cut_lines": {
    "vertical": [
@@ -3785,68 +3786,68 @@
    "by_layers": {},
    "over_if_partition_layers": {
     "limit_um": 364.5,
-    "lanes": 21
+    "lanes": 0
    },
    "worst": [
     {
-     "lane": "chW3_t",
-     "hop_um": 468.3,
+     "lane": "m7S_tx",
+     "hop_um": 360.7,
      "reach_um": 1001.2,
-     "frac": 0.468
+     "frac": 0.36
     },
     {
-     "lane": "chW2_t",
-     "hop_um": 468.3,
+     "lane": "m7N_tx",
+     "hop_um": 360.7,
      "reach_um": 1001.2,
-     "frac": 0.468
+     "frac": 0.36
     },
     {
-     "lane": "chW1_t",
-     "hop_um": 468.3,
+     "lane": "coll_ES1_u",
+     "hop_um": 360.7,
      "reach_um": 1001.2,
-     "frac": 0.468
+     "frac": 0.36
     },
     {
-     "lane": "chW0_t",
-     "hop_um": 468.3,
+     "lane": "coll_ES1_d",
+     "hop_um": 360.7,
      "reach_um": 1001.2,
-     "frac": 0.468
+     "frac": 0.36
     },
     {
-     "lane": "chW4_t",
-     "hop_um": 468.3,
+     "lane": "coll_EN1_u",
+     "hop_um": 360.7,
      "reach_um": 1001.2,
-     "frac": 0.468
+     "frac": 0.36
     },
     {
-     "lane": "chE3_t",
-     "hop_um": 468.3,
+     "lane": "coll_EN1_d",
+     "hop_um": 360.7,
      "reach_um": 1001.2,
-     "frac": 0.468
+     "frac": 0.36
     },
     {
-     "lane": "chW5_t",
-     "hop_um": 468.3,
+     "lane": "m0S_tx",
+     "hop_um": 360.7,
      "reach_um": 1001.2,
-     "frac": 0.468
+     "frac": 0.36
     },
     {
-     "lane": "chE5_t",
-     "hop_um": 468.3,
+     "lane": "coll_WS1_u",
+     "hop_um": 360.7,
      "reach_um": 1001.2,
-     "frac": 0.468
+     "frac": 0.36
     },
     {
-     "lane": "chE4_t",
-     "hop_um": 468.3,
+     "lane": "coll_WS1_d",
+     "hop_um": 360.7,
      "reach_um": 1001.2,
-     "frac": 0.468
+     "frac": 0.36
     },
     {
-     "lane": "chE2_t",
-     "hop_um": 468.3,
+     "lane": "coll_WN2_u",
+     "hop_um": 360.7,
      "reach_um": 1001.2,
-     "frac": 0.468
+     "frac": 0.36
     }
    ]
   },
@@ -4214,8 +4215,7 @@
   "census": {
    "declared": "none",
    "reason": "top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the bottom-up H10 die chain used a different block split and FAILED STA); census follows the first bind (G3)"
-  },
-  "png": "/tmp/s81h_g0png/die_plan.png"
+  }
  },
  "findings": [
   {
