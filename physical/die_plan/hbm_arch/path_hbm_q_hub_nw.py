@@ -25,6 +25,13 @@ What it does (COORD 10-25: q_hub_nw ACCEPTED, q3 pieces at the W end of NW_hub; 
   * HUBNW2 (COORD 10-25 ruling 3, no TKM spill onto the body W face): W end re-floorplanned edge | body with TX on the
     body N face (see PLACE); _place_prio reserves a body N-face segment under TX for all TKM source bits (asserted: one
     face, equal station count) and an edge W-face segment at the link windows.  --edge-w explores the edge strip width.
+  * HUBNW3 (COORD 10-25 15:56, "like the NE split"): the vm piece moves from the NE site (1296,1684.8 648x648, body<->vm
+    1.6-1.9 mm = 4-6 stations on a master-internal cut) to the slot E of the body under the reduce (838.08,34.56
+    328.32x717.12, 17.28 channel to the body E face); the soft leaf u_cxij_Q_s (5184 cells, was in that slot) moves
+    E of the vm, directly under its partner u_cxij_Q_q S face (146.88x302.4, area +1.7%, was 112.32x388.8).
+    Body E face gets two more reserved segments (RESV): the vm-target pins centred on the vm, the reduce-target pins
+    centred on the reduce, so every master-internal body<->vm / body<->reduce bit is <= HOP pin-to-box (0 stations,
+    asserted).  Pieces cells / modules / ports unchanged; body, edge, TX unchanged.
 """
 import argparse, collections, copy, json, math, os, re, shutil, sys
 
@@ -54,11 +61,20 @@ FACE_BAND, CHAN = 34.56, 17.28
 #   body   = between the edge and u_hb_coll_Q_reduce (x <= 820.8), top one channel below the FIRM TX site, so the TX
 #            S face sits 17.28 um above the body N face; the TKM source pins get a reserved N-face segment centred
 #            under TX (every TKM bit <= HOP from TX -> the SAME station count, 0, for all L74 source bits).
-#   vm     = unchanged (NE, next to its kq / rs leaves).
+#   vm     = HUBNW3: E of the body under the reduce, W face face-to-face with the body E face (17.28 channel);
+#            x up to u_xq_Q_p1_eg - CHAN (1166.4), top = u_cxij_Q_q - CHAN (751.68).  HUBNW/HUBNW2 had it NE at
+#            VM_OLD next to its kq / rs leaves (leaf conns carry no station chains; the cost is bit-mm only, reported).
 EDGE_W = 190.08
 BODY_TOP = 1105.92 - 17.28                     # TX origin y - CHAN
 BODY_X1 = 838.08 - 17.28                       # u_hb_coll_Q_reduce x - CHAN
 EDGE_Y0 = 250.56                               # edge spans y 250.56..1304.64: W face covers the link windows
+VM_OLD = (1296.0, 1684.8, 648.0, 648.0)
+VM_BOX = ((838.08, FACE_BAND), (328.32, 717.12))
+# soft leaf moved out of the vm slot: as-built cxij_NW_s 112.32x388.8 at (976.32,423.36) -> directly under its partner
+# u_cxij_Q_q (whose reused pins to it sit on its S face + ob1 on its W face): 17.28 channel to the cxij_Q_q S face and
+# the vm E face, centre 17.28 E of the cxij_Q_q centre so the W-face ob1 pins still score >= -0.1 (G0C core_faces;
+# an N-of-reduce site and a 190.08-wide site under cxij_Q_q both failed it).
+LEAF_MOVE = {'u_cxij_Q_s': ((1183.68, 449.28), (146.88, 302.4))}
 
 
 def _place(edge_w=EDGE_W):
@@ -66,13 +82,22 @@ def _place(edge_w=EDGE_W):
     bh = round(BODY_TOP - FACE_BAND, 4)
     return {BODY: ((bx0, FACE_BAND), (round(BODY_X1 - bx0, 4), bh)),
             EDGE: ((FACE_BAND, EDGE_Y0), (edge_w, bh)),
-            VM: ((1296.0, 1684.8), (648.0, 648.0))}
+            VM: VM_BOX}
 
 
 PLACE = _place()
-# reserved face segments: (piece, group tag) -> (face, partner); the tagged groups are placed first, on a segment of
-# that face centred on the partner (TX box centre / link window centroid), the rest of the face is shared as before.
-PRIO = {BODY: ('tkm', 'N', f'core:{TX}'), EDGE: ('link', 'W', 'bus:links')}
+# reserved face segments, per piece in order: (name, face, partner, select); the selected groups are placed first, on a
+# segment of that face centred on the partner (box centre / link window centroid) just long enough for them; the rest
+# of the face (outside every segment) is shared by the greedy as before.  select: ('tag', t) = group tag; ('tgt', v) =
+# groups whose targets include v (first matching reservation wins).
+RESV = {BODY: [('tkm', 'N', f'core:{TX}', ('tag', 'tkm')),
+               ('vm', 'E', f'core:{VM}', ('tgt', f'core:{VM}')),
+               ('red', 'E', f'core:{RED}', ('tgt', f'core:{RED}')),
+               ('cij', 'S', 'core:u_cij_Q', ('tgt', 'core:u_cij_Q'))],   # E face is full (vm + reduce): inj_* at the S-E corner
+        EDGE: [('link', 'W', 'bus:links', ('tag', 'link'))]}
+PRIO = {k: v[0][:3] for k, v in RESV.items()}            # HUBNW2 name: the first (one-face) reservation per piece
+ASSERT_MI = True                    # HUBNW3 gate (False only for the HUBNW2-geometry comparison run)
+INTERNAL = (EDGE, VM, RED)          # master-internal partners of body_core: a station chain there is a cycle change
 TX_SITE = dict(inst=TX, module='ot_hbm_tkx_2beat_tx', cells=11467, origin_um=[501.12, 1105.92],
                outline_um=[198.72, 198.72], ff=2344, area_um2=1437.471)
 RX_SITE = dict(inst=RX, module='ot_hbm_tkx_2beat_rx', cells=13686, origin_um=[112.32, 1010.88],
@@ -223,38 +248,61 @@ def _sep(a, b, c):
     return x + w + c <= bx + 1e-6 or bx + bw + c <= x + 1e-6 or y + h + c <= by + 1e-6 or by + bh + c <= y + 1e-6
 
 
-def _place_prio(groups, w, h, tag, face, centre):
-    """cb.place_pins with a reserved segment: the groups tagged `tag` all go on `face`, on the tracks of a segment
-    centred on `centre` (face coordinate) just long enough for them; the other groups are placed by the cb.place_pins
-    greedy (same order / pull / MEAN_MIN rules) with that face reduced to its tracks outside the segment."""
-    vert = face in 'NS'
-    L = w if vert else h
-    lay2 = 'M7' if vert else 'M6'
-    tr1, tr2 = cb.tracks(L, vert), cb.tracks(L, vert, lay2)
-    prio = [g for g in groups if g[0].rsplit('#', 1)[-1] == tag]
-    rest = [g for g in groups if g[0].rsplit('#', 1)[-1] != tag]
-    npri = sum(len(g[1]) for g in prio)
+def _place_resv(groups, w, h, resv):
+    """cb.place_pins with reserved segments.  resv = [(name, face, centre, members)]: the groups named in `members` all
+    go on `face`, on the tracks of a segment centred on `centre` (face coordinate, clamped into the face) just long
+    enough for them (segments on one face must not overlap); the other groups are placed by the cb.place_pins greedy
+    (same order / pull / MEAN_MIN rules) with every face reduced to its tracks outside the segments.
+    (HUBNW2 _place_prio = one reservation.)"""
+    def lay2(f):
+        return 'M7' if f in 'NS' else 'M6'
 
-    def caps(a, b, inside):
-        t1 = [v for v in tr1 if (a <= v <= b) == inside]
-        t2 = [v for v in tr2 if (a <= v <= b) == inside]
-        ln = (b - a) if inside else max(0.0, L - 2 * cb.KEEP - (b - a))
-        return t1, t2, min(len(t1), int(cb.CAP * ln)), min(len(t2), int(cb.CAP2 * ln))
-    s = math.ceil(npri / PIN_MAX / G) * G
-    while True:
-        a = max(cb.KEEP, min(centre - s / 2, L - cb.KEEP - s))
-        b = min(L - cb.KEEP, a + s)
-        i1, i2, c1, c2 = caps(a, b, True)
-        if c1 + c2 >= npri:
-            break
-        if b - a >= L - 2 * cb.KEEP - 1e-6:
-            raise ValueError(f'reserved {face} segment cannot hold {npri} {tag} pins')
-        s += G
-    o1, o2, d1, d2 = caps(a, b, False)
-    cap = {f: cb.face_cap(f, w, h) for f in 'NSEW'}
-    cap[face] = d1 + d2
+    def flen(f):
+        return w if f in 'NS' else h
+
+    tr = {f: (cb.tracks(flen(f), f in 'NS'), cb.tracks(flen(f), f in 'NS', lay2(f))) for f in 'NSEW'}
+    segs, taken = [], set()
+    for name, face, centre, members in resv:
+        L = flen(face)
+        t1, t2 = tr[face]
+        pri = [g for g in groups if g[0] in members and g[0] not in taken]
+        taken.update(g[0] for g in pri)
+        npri = sum(len(g[1]) for g in pri)
+        s = math.ceil(npri / PIN_MAX / G) * G
+        while True:
+            a = max(cb.KEEP, min(centre - s / 2, L - cb.KEEP - s))
+            b = min(L - cb.KEEP, a + s)
+            i1 = [v for v in t1 if a <= v <= b]
+            i2 = [v for v in t2 if a <= v <= b]
+            c1, c2 = min(len(i1), int(cb.CAP * (b - a))), min(len(i2), int(cb.CAP2 * (b - a)))
+            if c1 + c2 >= npri:
+                break
+            if b - a >= L - 2 * cb.KEEP - 1e-6:
+                raise ValueError(f'reserved {face} segment {name} cannot hold {npri} pins')
+            s += G
+        for s2 in segs:
+            if s2['face'] == face and not (b < s2['a'] or s2['b'] < a):
+                raise ValueError(f'reserved segments {name} / {s2["name"]} overlap on face {face}')
+        segs.append(dict(name=name, face=face, a=a, b=b, groups=pri, n=npri, t1=i1, t2=i2, c1=c1))
+    rest = [g for g in groups if g[0] not in taken]
+
+    def outside(f):
+        L = flen(f)
+        fs = [s for s in segs if s['face'] == f]
+        ins = lambda v: any(s['a'] <= v <= s['b'] for s in fs)
+        o1 = [v for v in tr[f][0] if not ins(v)]
+        o2 = [v for v in tr[f][1] if not ins(v)]
+        ln = max(0.0, L - 2 * cb.KEEP - sum(s['b'] - s['a'] for s in fs))
+        return o1, o2, min(len(o1), int(cb.CAP * ln)), min(len(o2), int(cb.CAP2 * ln))
+    cap, outs = {}, {}
+    for f in 'NSEW':
+        if any(s['face'] == f for s in segs):
+            outs[f] = outside(f)
+            cap[f] = outs[f][2] + outs[f][3]
+        else:
+            cap[f] = cb.face_cap(f, w, h)
     if sum(len(g[1]) for g in rest) > sum(cap.values()):
-        raise ValueError('perimeter full outside the reserved segment')
+        raise ValueError('perimeter full outside the reserved segments')
     load = collections.Counter()
     on = collections.defaultdict(list)
     gf = {}
@@ -279,36 +327,63 @@ def _place_prio(groups, w, h, tag, face, centre):
             else:
                 raise ValueError(f'port {port}: faces {order} full')
         gf[port] = cnt.most_common(1)[0][0]
-    for port, names, _, _ in prio:
-        gf[port] = face
+    for s in segs:
+        for g in s['groups']:
+            gf[g[0]] = s['face']
 
-    def spread(names_, tr, f, lay):
+    def spread(names_, tr_, f, lay):
         n = len(names_)
-        idx = [int(round(i * (len(tr) - 1) / max(1, n - 1))) if n > 1 else len(tr) // 2 for i in range(n)]
+        idx = [int(round(i * (len(tr_) - 1) / max(1, n - 1))) if n > 1 else len(tr_) // 2 for i in range(n)]
         res = []
         for nm, k in zip(names_, idx):
-            v = tr[k]
+            v = tr_[k]
             lv, lh = lay or 'M5', lay or 'M4'
             res.append(dict(N=(nm, lv, v, round(h - cb.INSET, 4)), S=(nm, lv, v, cb.INSET),
                             E=(nm, lh, round(w - cb.INSET, 4), v), W=(nm, lh, cb.INSET, v))[f])
         return res
     out = []
     for f in 'NSEW':
-        if f == face:
-            pn = [nm for g in prio for nm in sorted(g[1], key=cb.bitk)]
-            for names_, t1, t2, c in ((pn, i1, i2, c1), (on[f], o1, o2, d1)):
-                for part, tr, lay in ((names_[:c], t1, None), (names_[c:], t2, lay2)):
+        fs = [s for s in segs if s['face'] == f]
+        if fs:
+            o1, o2, d1, _ = outs[f]
+            parts = [([nm for g in s['groups'] for nm in sorted(g[1], key=cb.bitk)], s['t1'], s['t2'], s['c1'])
+                     for s in fs] + [(on[f], o1, o2, d1)]
+            for names_, t1, t2, c in parts:
+                for part, tr_, lay in ((names_[:c], t1, None), (names_[c:], t2, lay2(f))):
                     if part:
-                        out += spread(part, tr, f, lay)
+                        out += spread(part, tr_, f, lay)
             continue
         names = on[f]
         if not names:
             continue
         c1f, _ = cb.face_caps(f, w, h)
-        for part, lay in ((names[:c1f], None), (names[c1f:], 'M7' if f in 'NS' else 'M6')):
+        for part, lay in ((names[:c1f], None), (names[c1f:], lay2(f))):
             if part:
-                out += spread(part, cb.tracks(w if f in 'NS' else h, f in 'NS', lay), f, lay)
-    return out, gf, (round(a, 3), round(b, 3), npri)
+                out += spread(part, cb.tracks(flen(f), f in 'NS', lay), f, lay)
+    return out, gf, [dict(tag=s['name'], face=s['face'], segment=[round(s['a'], 3), round(s['b'], 3)], pins=s['n'])
+                     for s in segs]
+
+
+GRID_SEEDS = 120.0   # HUBNW3: free relay candidates on a 120-um grid besides the macro perimeters (see _seed_router)
+
+
+def _seed_router(rt, boxes, W, H, m=4.32):
+    """cb.RelayRouter only offers relay sites on obstacle perimeters, so moving a piece (vm) away removes the sites a
+    corridor used (HUBNW2 routes ran along the old vm box) and BFS then finds MORE hops through the same free space.
+    Add free sites on a GRID_SEEDS grid so hop counts follow the free space, not the obstacle history."""
+    import numpy as np
+    pts = set(rt.points)
+    nx, ny = int(W // GRID_SEEDS), int(H // GRID_SEEDS)
+    for i in range(nx + 1):
+        for j in range(ny + 1):
+            x, y = round(min(max(m, i * GRID_SEEDS), W - m), 4), round(min(max(m, j * GRID_SEEDS), H - m), 4)
+            if not any(bx - m + 1e-6 < x < bx + bw + m - 1e-6 and by - m + 1e-6 < y < by + bh + m - 1e-6
+                       for bx, by, bw, bh in boxes):
+                pts.add((x, y))
+    rt.points = sorted(pts)
+    rt.xy = np.asarray(rt.points)
+    rt.near = lambda p: np.flatnonzero(np.abs(rt.xy - p).sum(axis=1) < rt.limit - 1e-5).tolist()
+    rt.neighbors = [rt.near(p) for p in rt.points]
 
 
 def apply(plan, out, cc):
@@ -327,6 +402,16 @@ def apply(plan, out, cc):
     hcs = [h for h in t['hard_cores'] if h['inst'] != OLD]
     others = {h['inst']: _box(h) for h in hcs}
     hcn = {h['inst'] for h in t['hard_cores']}
+    rep['leaf_moves'] = {}
+    for c in t['contents']:
+        if c['inst'] in LEAF_MOVE:
+            (lx, ly), (lw, lh) = LEAF_MOVE[c['inst']]
+            assert lw * lh >= c['outline_um'][0] * c['outline_um'][1] - 1e-6, c['inst']
+            rep['leaf_moves'][c['inst']] = dict(old=[c['origin_um'], c['outline_um']], new=[[lx, ly], [lw, lh]])
+            c['note'] = (c.get('note', '') + '; ' if c.get('note') else '') + \
+                (f'PATH-HBM/HUBNW3 10-25: soft region moved {c["origin_um"]} {c["outline_um"]} -> [{lx}, {ly}] '
+                 f'[{lw}, {lh}] (vm piece took its slot; now face-to-face with the u_cxij_Q_q S face)')
+            c['origin_um'], c['outline_um'] = [lx, ly], [lw, lh]
     leafs = {c['inst']: (c['origin_um'][0], c['origin_um'][1], c['outline_um'][0], c['outline_um'][1])
              for c in t['contents'] if 'origin_um' in c and c['inst'] not in hcn
              and not any(h.startswith(c['inst'] + '_') for h in hcn)}
@@ -344,6 +429,13 @@ def apply(plan, out, cc):
                                                                     if k2 != k]:
             if nm != 'u_hb_coll_Q' and not _sep(geo[k], b, CHAN):
                 raise ValueError(f'{k} overlaps / no {CHAN} channel to {nm}')
+    for lm in LEAF_MOVE:
+        lb = leafs[lm]
+        for v in lb:
+            assert abs(v / G - round(v / G)) < 1e-6, (lm, v)
+        for nm, b in list(geo.items()) + [(n2, b2) for n2, b2 in leafs.items() if n2 != lm]:
+            if nm != 'u_hb_coll_Q' and not _sep(lb, b, CHAN):
+                raise ValueError(f'{lm} overlaps / no {CHAN} channel to {nm}')
     cent = {k: (b[0] + b[2] / 2, b[1] + b[3] / 2) for k, b in geo.items()}
     for k, b in leafs.items():
         cent.setdefault(k, (b[0] + b[2] / 2, b[1] + b[3] / 2))
@@ -418,16 +510,21 @@ def apply(plan, out, cc):
                     f = 'S' if k == BODY else 'E'
                     pull = {f: 0.01}
                 groups.append((gname, names, f, pull))
-        if k in PRIO:
-            tag, face, partner = PRIO[k]
-            if partner == 'bus:links':
-                ys = [bt[b][1][1] for b in LINK_BUSES if b in bt and bt[b][0] == face]
-                ctr = sum(ys) / len(ys) - y0
-            else:
-                pb = geo[partner.split(':', 1)[1]]
-                ctr = (pb[0] + pb[2] / 2 - x0) if face in 'NS' else (pb[1] + pb[3] / 2 - y0)
-            pins, gf, seg = _place_prio(groups, cw, ch, tag, face, ctr)
-            rep_seg[k] = dict(tag=tag, face=face, centre=round(ctr, 2), segment=list(seg[:2]), pins=seg[2])
+        if k in RESV:
+            rv, rep_seg[k] = [], []
+            for name, face, partner, (sk, sv) in RESV[k]:
+                if partner == 'bus:links':
+                    ys = [bt[b][1][1] for b in LINK_BUSES if b in bt and bt[b][0] == face]
+                    ctr = sum(ys) / len(ys) - y0
+                else:
+                    pb = geo[partner.split(':', 1)[1]]
+                    ctr = (pb[0] + pb[2] / 2 - x0) if face in 'NS' else (pb[1] + pb[3] / 2 - y0)
+                mem = {g[0] for g in groups if (g[0].rsplit('#', 1)[-1] == sv if sk == 'tag'
+                                                else g[0] in gtg and sv in gtg[g[0]][1])}
+                rv.append((name, face, ctr, mem))
+            pins, gf, segl = _place_resv(groups, cw, ch, rv)
+            for (name, face, ctr, _), sg in zip(rv, segl):
+                rep_seg[k].append(dict(sg, centre=round(ctr, 2)))
         else:
             pins, gf = cb.place_pins(groups, cw, ch)
         key = f'{MODS[k]}__{cw:g}x{ch:g}__q_hub_nw_{k}'
@@ -526,6 +623,8 @@ def apply(plan, out, cc):
     # ------------------------------------------------------------------ q_hub_nw internal stations
     boxes = [geo[k] for k in geo]
     route = cb.RelayRouter(boxes, W, H, HOP)
+    if GRID_SEEDS:
+        _seed_router(route, boxes, W, H)
     free = lambda p: cb.free_point(p, boxes, W, H)
     ist_old = t.get('internal_stations', [])
     keep, drop, rerouted = [], collections.Counter(), 0
@@ -622,6 +721,55 @@ def apply(plan, out, cc):
     for k, port, nm, bits, d in lstat:
         cut[f'{k}->{nm}'][0] += bits; cut[f'{k}->{nm}'][1] = max(cut[f'{k}->{nm}'][1], d)
     rep['links'] = {k: dict(bits=v[0], max_um=round(v[1])) for k, v in sorted(cut.items(), key=lambda kv: -kv[1][0])}
+    # HUBNW3: per-bit pin -> partner (box / bus window point) distances, bit-mm and station chains per piece pair
+    def _tpt(p, v):
+        kd, _, nm = v.partition(':')
+        if kd == 'bus':
+            return bt[nm][1] if nm in bt else None
+        b = geo.get(nm) or leafs.get(nm)
+        return _clamp(p, b) if b else None
+    pair = collections.defaultdict(lambda: dict(bits=0, bit_mm=0.0, max_pin_um=0.0))
+    for k in (BODY, EDGE, VM):
+        for gname, (port, tg, pp) in gpins[k].items():
+            for v in tg:
+                for p in pp:
+                    q = _tpt(p, v)
+                    if q is None:
+                        continue
+                    d = abs(p[0] - q[0]) + abs(p[1] - q[1])
+                    r = pair[f'{k}->{v.split(":", 1)[1]}']
+                    r['bits'] += 1; r['bit_mm'] += d / 1000.0; r['max_pin_um'] = max(r['max_pin_um'], d)
+    for e in added:
+        if e['conn'].startswith('core:'):
+            a_, b_ = e['conn'].split('|')
+            r = pair[f'{a_[5:].split(".")[0]}->{b_[5:]}']
+            r['station_chains'] = r.get('station_chains', 0) + (1 if e['regs_um'] else 0)
+            r['station_bit_regs'] = r.get('station_bit_regs', 0) + e['bits'] * len(e['regs_um'])
+    rep['pairs'] = {k: dict(v, bit_mm=round(v['bit_mm'], 1), max_pin_um=round(v['max_pin_um'], 1))
+                    for k, v in sorted(pair.items(), key=lambda kv: -kv[1]['bit_mm'])}
+    mi = {}
+    for a_, b_ in [(BODY, VM), (VM, BODY), (BODY, RED), (BODY, EDGE), (EDGE, BODY)]:
+        r = rep['pairs'].get(f'{a_}->{b_}', {})
+        mi[f'{a_}->{b_}'] = dict(bits=r.get('bits', 0), max_pin_um=r.get('max_pin_um'),
+                                 station_chains=r.get('station_chains', 0), station_bit_regs=r.get('station_bit_regs', 0))
+    rep['master_internal'] = mi
+    for kk in (f'{BODY}->{VM}', f'{VM}->{BODY}', f'{BODY}->{RED}') if ASSERT_MI else ():
+        assert mi[kk]['station_chains'] == 0 and mi[kk]['max_pin_um'] <= HOP, (kk, mi[kk])
+
+    def _bb(a, b):
+        return round(max(b[0] - (a[0] + a[2]), a[0] - (b[0] + b[2]), 0) + max(b[1] - (a[1] + a[3]), a[1] - (b[1] + b[3]), 0), 2)
+    vp = {}
+    for nm in [BODY, RED, 'u_hcollrs_Q', 'u_hcollks_Q_p0', 'u_hcollks_Q_p1', 'u_hcollks_Q_p2', 'u_hcollks_Q_p3']:
+        b = geo.get(nm) or leafs.get(nm)
+        vp[nm] = dict(old=_bb(VM_OLD, b), new=_bb(geo[VM], b))
+    w13 = bt['L13_i'][1]
+    vp['L13_i window'] = dict(old=round(abs(w13[0] - _clamp(w13, VM_OLD)[0]) + abs(w13[1] - _clamp(w13, VM_OLD)[1]), 2),
+                              new=round(abs(w13[0] - _clamp(w13, geo[VM])[0]) + abs(w13[1] - _clamp(w13, geo[VM])[1]), 2))
+    rep['vm_partner_box_um'] = vp
+    gb = {k: tuple(b) for k, b in geo.items()}
+    rep['box_gaps_um'] = {'body-vm': _bb(gb[BODY], gb[VM]), 'body-reduce': _bb(gb[BODY], gb[RED]),
+                          'body-edge': _bb(gb[BODY], gb[EDGE]), 'body-TX': _bb(gb[BODY], gb[TX]),
+                          'vm-reduce': _bb(gb[VM], gb[RED])}
 
     # ------------------------------------------------------------------ clock taps
     ck = t['clock']
@@ -732,7 +880,8 @@ def main():
     json.dump(plan, open(os.path.join(a.out, 'die_plan.json'), 'w'), indent=0)
     json.dump(rep, open(os.path.join(a.out, 'q_hub_nw_report.json'), 'w'), indent=1)
     print(json.dumps({k: rep[k] for k in ('stations', 'tkx', 'lane_latency', 'root', 'body_core_to_TX_box_um',
-                                          'tx_source_pins_on_body_core', 'tkm_source_bits', 'pieces')}, indent=1))
+                                          'tx_source_pins_on_body_core', 'tkm_source_bits', 'pieces', 'leaf_moves',
+                                          'master_internal', 'box_gaps_um', 'vm_partner_box_um')}, indent=1))
 
 
 if __name__ == '__main__':

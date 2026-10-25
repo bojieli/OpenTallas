@@ -16,6 +16,13 @@ for c in t["hard_cores"]:
         ax.plot([x + p["x"] for p in pins[::8]], [y + p["y"] for p in pins[::8]], ",", color="crimson")
     if w * h > 0.004 * W * H or c["inst"] in new:
         ax.text(x + w / 2, y + h / 2, c["inst"].replace("u_hb_", ""), fontsize=6, ha="center", va="center")
+hcn = {c["inst"] for c in t["hard_cores"]}
+for c in t["contents"]:   # soft leaves (dashed), HUBNW3 moved u_cxij_Q_s highlighted
+    if "origin_um" not in c or c["inst"] in hcn or c["inst"] in ("u_hb_coll_Q", "u_tkx_tx_Q"): continue
+    x, y = c["origin_um"]; w, h = c["outline_um"]
+    mv = c["inst"] == "u_cxij_Q_s"
+    ax.add_patch(Rectangle((x, y), w, h, fc="khaki" if mv else "none", ec="olive", lw=0.8 if mv else 0.4, ls="--"))
+    if mv or w * h > 0.002 * W * H: ax.text(x + w / 2, y + h / 2, c["inst"].replace("u_", ""), fontsize=6, ha="center", va="center", color="olive")
 for c in t["contents"]:
     if c["inst"] == "u_tkx_tx_Q":
         x, y = c["origin_um"]; w, h = c["outline_um"]
@@ -43,17 +50,19 @@ try:
     R = json.load(open(os.path.join(d, "q_hub_nw_report.json")))
     hc = {c["inst"]: c for c in t["hard_cores"]}
     for k, v in R.get("pieces", {}).items():
-        sg = v.get("reserved_segment")
-        if not sg: continue
-        x, y = hc[k]["origin_um"]; w, h = hc[k]["outline_um"]; a, b = sg["segment"]
-        xy = dict(N=([x + a, x + b], [y + h, y + h]), S=([x + a, x + b], [y, y]),
-                  E=([x + w, x + w], [y + a, y + b]), W=([x, x], [y + a, y + b]))[sg["face"]]
-        ax.plot(*xy, "-", color="lime" if sg["tag"] == "tkm" else "blue", lw=4, alpha=0.7)
-        ax.text(xy[0][0], xy[1][0] + 12, "%s %d pins (%s face)" % (sg["tag"], sg["pins"], sg["face"]), fontsize=7)
+        sgl = v.get("reserved_segment")
+        if not sgl: continue
+        for sg in (sgl if isinstance(sgl, list) else [sgl]):   # HUBNW3: list of reserved segments per piece
+            x, y = hc[k]["origin_um"]; w, h = hc[k]["outline_um"]; a, b = sg["segment"]
+            xy = dict(N=([x + a, x + b], [y + h, y + h]), S=([x + a, x + b], [y, y]),
+                      E=([x + w, x + w], [y + a, y + b]), W=([x, x], [y + a, y + b]))[sg["face"]]
+            col = dict(tkm="lime", vm="violet", red="brown", cij="cyan").get(sg["tag"], "blue")
+            ax.plot(*xy, "-", color=col, lw=4, alpha=0.7)
+            ax.text(xy[0][0] + 4, xy[1][0] + 12, "%s %d pins (%s face)" % (sg["tag"], sg["pins"], sg["face"]), fontsize=7)
 except (OSError, KeyError):
     pass
 ax.set_xlim(-50, W + 50); ax.set_ylim(-50, H + 50); ax.set_aspect("equal")
-ax.set_title("q_hub_nw %gx%g: gold body_core, orange edge, violet vm, lime TX; red = L74 1171-b beat chain TX->L74_o (S face window), magenta = L13 tkx return, green = body->TX, teal = new, grey = rerouted" % (W, H), fontsize=9)
+ax.set_title("q_hub_nw %gx%g: HUBNW3 gold body_core, orange edge, violet vm, lime TX; red = L74 1171-b beat chain TX->L74_o (S face window), magenta = L13 tkx return, green = body->TX, teal = new, grey = rerouted" % (W, H), fontsize=9)
 fig.tight_layout(); fig.savefig(outp, dpi=110)
 # zoom on the W end
 ax.set_xlim(-30, 1500); ax.set_ylim(-30, 1700); fig.set_size_inches(13, 14); fig.tight_layout(); fig.savefig(outp.replace(".png", "_west.png"), dpi=110)
