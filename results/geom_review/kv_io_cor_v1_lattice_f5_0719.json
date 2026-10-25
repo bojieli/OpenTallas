@@ -1,0 +1,14 @@
+{
+ "schema": "opentallas.geom_review.v1",
+ "type": "kv3_io_cor_v1",
+ "plan": "KV v3.9f f5",
+ "image": "results/geom_review/kv_io_cor_v1_lattice_f5_0719.png",
+ "verdict": "PASS-COND",
+ "scope": "explicit planned FT station geometry only; no P&R/STA route token",
+ "findings": [
+  "Viewed actual f5 per-bit station plot. Straight horizontal/vertical register bands replace diagonal free chains; paired bands enclose each bend without macro walls (core-free type).",
+  "All 3053 payload/epoch bits audited: 16256 distinct nonoverlapping legal cell sites, max adjacent hop 389.988um, last station to output pin max19.709um.",
+  "The delta adds6049 flops and+1..3cycles on25slots (sum44 catalogue slotcycles). Parent must regenerate lane latency/R8/native bound RTL; never inject extra stages into an old compiled kit.",
+  "Clock and reset are not represented in this planned-sites plot. Current true-sink reset tracing plus band-following taps, successor placed render/G2 and CTS FF gate are required before route."
+ ]
+}
