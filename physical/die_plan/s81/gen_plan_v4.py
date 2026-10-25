@@ -1186,7 +1186,7 @@ def build(ab):
              contents=[C("u_phy_hbm", "ot_hbm3e_phy_v41x_aw30_e8p5", "reuse",
                          note="hard HBM3E PHY 8500 x 1177 in a 6-cell S-edge slot (bump field at the die edge)")],
              ckey="phy"))
-    add(Part("iqf", "unit", 7, 0, contents=[C("u_iqf", "dsdv_idx_qf")], ckey="iqf"))
+    add(Part("iqf", "unit", 7, 0, contents=[C("u_iqf", "dsdv_idx_qfs")], ckey="iqf"))   # S81/IDXNET 10-25: qf + 2-beat qc serializer
     add(Part("seqhost", "unit", 10, 5, contents=[C("u_seqhost", "dsdv_seq_host_mux", "rework",
                                                   params={"TAP_K": "8'h00", "SINK_K": "8'h00", "SELECT_HBE": "1'b0"})],
              ckey="seqhost", note="GEOM-REVIEW2: seqhost beside the svc band; its slice/svc fan-out = ID rings"))
@@ -1543,6 +1543,32 @@ def lanes_all(ab, census, parts, frames, serdes, slices, v47=False):
         L("tl__bk_sel__%s" % lp, "bk_sel", "tl_o", lp, "tl_i", 276, cls="tl", role="tree", path=("cells", up))
         L("ca__%s__bk_sel" % lp, lp, "ca_o", "bk_sel", "ca_i", 276, cls="ca", role="tree", path=("cells", up[::-1]))
         L("cb__%s__bk_sel" % lp, lp, "cb_o", "bk_sel", "cb_i", 276, cls="cb", role="tree", path=("cells", up[::-1]))
+        # ---- S81/IDXNET 10-25 (S81 DECISION 1, topk_final): the TP4 merge of the 4 rank roots, a two-step exchange with no
+        #      single root.  Step 1 swaps candidates with the d+2 peer over the s_7N TP circuit (pair A, both ways); step 2
+        #      sends to d+1 over s_7S and receives from d-1 over s_0S (pair A).  bk_sel's TX (dsdv_idx_tx re-encoder) feeds
+        #      tpn_o / tps_o by the TX job's DST field; the peer lists land on bk_sel tpn_i (s_7N) and, for s_0S, on the s_0N
+        #      lep's ca (tm_i merge: col 6 rows 15-18 are at face load 0.57, no 4th lane there; rows 9-13 are empty).
+        #      276 b each, registered, ft <= M7, fixed station-only paths (col 15 / row 18 / col 6 rows 9-13), routed last.
+        lp7n, lp7s, lp0s = (slices[k]["LP"].name for k in ("s_7N", "s_7S", "s_0S"))
+        c7n = (slices["s_7N"]["LP"].c0, slices["s_7N"]["LP"].r0)
+        c7s = (slices["s_7S"]["LP"].c0, slices["s_7S"]["LP"].r0)
+        c0s = (slices["s_0S"]["LP"].c0, slices["s_0S"]["LP"].r0)
+        bke = (P["bk_sel"].c0 + P["bk_sel"].nc - 1, P["bk_sel"].r0)        # bk_sel E cell, S face
+        tpn = [bke, (bke[0], 18), (c7n[0], 18), c7n]
+        L("tp__bk_sel__%s" % lp7n, "bk_sel", "tpn_o", lp7n, "tp_i", 276, cls="tp", role="idxnet", path=("cells", tpn))
+        L("tp__%s__bk_sel" % lp7n, lp7n, "tp_o", "bk_sel", "tpn_i", 276, cls="tp", role="idxnet", path=("cells", tpn[::-1]))
+        L("tp__bk_sel__%s" % lp7s, "bk_sel", "tps_o", lp7s, "tp_i", 276, cls="tp", role="idxnet",
+          path=("cells", [bke, (bke[0], 18), (c7s[0], 18), c7s]))
+        L("tp__%s__%s" % (lp0s, lp), lp0s, "tp_o", lp, "tm_i", 276, cls="tp", role="idxnet", path=("cells", [c0s, lpc]))
+        # ---- S81/IDXNET 10-25 (S81 DECISION 2, rank-tree query fan-out): iqf (dsdv_idx_qf) <-> the s_0N lep.  ql (513 b,
+        #      every Q word received from stage PREV) and qc (the root's own tree frame, 2-beat 258 b {256 data, beat, v}: a
+        #      513-b qc would put the s_0S_LP S face at 0.607 > 0.60).  Path iqf -> svc_0 (S in, W out) -> col 6 north
+        #      (s_0S_x00..x05, s_0S_LP, s_0S_x07..x09, s_0N_x00/x01) -> s_0N_LP S face; column 7 above svc_0 is leaves/hubs
+        #      already over 0.6.  The lep relays Q frames NEXT-ward itself (cut-through, header relay count), qc1 is gone.
+        iqc = (P["iqf"].c0, P["iqf"].r0)
+        qp = [lpc, (lpc[0], iqc[1] + 2), (iqc[0], iqc[1] + 2), iqc]
+        L("ql__%s__iqf" % lp, lp, "ql_o", "iqf", "ql_i", 513, cls="ql", role="idxnet", path=("cells", qp))
+        L("qc__iqf__%s" % lp, "iqf", "qc_o", lp, "qc_i", 258, cls="qc", role="idxnet", path=("cells", qp[::-1]))
     # ---- ID rings (no tie-offs): slice sid + fault OR, svc sid; counted (sid_o = sid_i + 1), rooted at seqhost ----
     order_s = [slices["s_%dS" % k]["C"].name for k in range(7, -1, -1)] + \
               [slices["s_%dN" % k]["C"].name for k in range(8)]
@@ -1577,12 +1603,12 @@ UNIT_CORES = {
     "gunit": ([("l0_l1_l2", 8213 + 110419 + 9853 + 43954 + 8215), ("l3_l4", 40887 + 81348 + 73342),
                ("l5f", 97736)], "dsdv_gunit = sum of closed leaves (instance counts not confirmed)"),
     "bk_sel": ([("bksel_c_pa", 260094), ("bksel_q01", 2 * 113262), ("bksel_q23", 2 * 113262),
-                ("bkg_tx_vmux", 2 * 25144 + 31602 + 3547)], "dsdv_bk_sel_vmtx parts (whole pa_lp 1,243,436)"),
+                ("bkg_tx_vmux", 2 * 25144 + 31602 + 3547 + 2600)], "dsdv_bk_sel_vmtx parts (whole pa_lp 1,243,436); S81/IDXNET 10-25 +2,600 est: dsdv_idx_vmux6 2 more inputs + tl/tpn/tps/loop regs 4 x 276"),
     "bk_col": ([], "bk_col FLATTENED: Yosys (PLAN-S81v4-SYN 10-23, ORFS asap7lock RVT) dsdv_bkcol_l 15,770 x4 (2 SRAM "
                "each) + dsdv_bkcol_m 73,514 + bk_g 2 x 25,144 measured = 186,882 cells, 8 SRAM macros"),
     "seqhost": ([("sh_children", 6989 + 11889 + 69671 + 40770)], "seq_host_mux children (sh_vc, mu_hslot, mu_hwin, "
                 "seq_host_c_r3_lp); whole MISSING"),
-    "iqf": ([("idx_qf", 11296)], "dsdv_idx_qf 11,296 (F gold2)"),
+    "iqf": ([("idx_qf", 11296 + 540)], "dsdv_idx_qf 11,296 (F gold2) + S81/IDXNET qc serializer ~540 (256 hold + 258 out + copies) - qc1 513 flops not removed from the estimate (conservative)"),
 }
 
 
@@ -1881,7 +1907,7 @@ def route_v48(grid, lanes47, lanes):
             todo.append(lk)
     # S81-XDIE 10-24: the copy-A/B reserve pair lanes route LAST, on top of every v4.8 load, so no existing lane moves
     rsv = [l for l in todo if RESERVE_RE.search(l["id"])]
-    tree = [l for l in todo if l["role"] == "tree"]
+    tree = [l for l in todo if l["role"] in ("tree", "idxnet")]     # S81/IDXNET 10-25: + the topk_final / Q lanes
     res.update(route(grid, [l for l in todo if l not in rsv and l not in tree], {}))
     res.update(route(grid, rsv, {}))
     # S81/H4 10-24: the bk_sel tree lanes (fixed station path) are applied after every other lane: no lane moves
@@ -2490,11 +2516,19 @@ def emit(parts, lanes, routes, chans, fmap, out):
                 FT_MACRO_ADD.append(dict(type=tn_, slot=s_["name"], stations=[s_["stations"], s_["stations"] + a_],
                                          why="core escape at the 405-um kit reach"))
                 s_["stations"] += a_
-    from tools.die_plan.ft_sites import place as place_ft_bits
+    from tools.die_plan.ft_sites import place as place_ft_bits, reuse as reuse_ft_bits
     from tools.die_trial.legal_sites import RowAllocator
-    STATS_V4["frame_ft_bit_sites"], _ = place_ft_bits(
-        plan, RowAllocator, types=[n for n in plan["partition_types"] if n.startswith("col_")],
-        reach_um=FT_KIT_REACH_UM, margin=.98)
+    # Every core field needs explicit row-legal FT bit sites, not just frames.
+    # Retain unchanged committed sites so routine plan regeneration does not
+    # repeat the same allocation. Any physical/clock/reset contract change
+    # invalidates the seed and runs the exact allocator again.
+    ft_types = [n for n, t in plan["partition_types"].items() if t.get("hard_cores") and t.get("ft_slots")]
+    seed_path = Path(__file__).with_name("die_plan.json")
+    reused = reuse_ft_bits(plan, json.load(open(seed_path)), types=ft_types) if seed_path.is_file() else []
+    STATS_V4["ft_bit_sites_reused"] = reused
+    STATS_V4["ft_bit_sites"], _ = place_ft_bits(
+        plan, RowAllocator, types=[n for n in ft_types if n not in reused], reach_um=FT_KIT_REACH_UM, margin=.98)
+    STATS_V4["frame_ft_bit_sites"] = [x for x in STATS_V4["ft_bit_sites"] if x["type"].startswith("col_")]
     STATS_V4["face_layers"] = FACE_GRANTS     # svc fold faces (COORD S81 ruling (1)(b) 10-23 07:43)
     out.mkdir(parents=True, exist_ok=True)
     json.dump(plan, open(out / "die_plan.json", "w"), indent=0)

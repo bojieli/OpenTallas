@@ -1,6 +1,6 @@
 {
  "schema": "s81.bound_supplement.v1",
- "note": "S81-P9-R8EQ 10-23 (plan v4.8): bound-top crossings that the as-built census (s81_lanes.tsv) does not carry, from BINDER4 b3r8 bind_report.json lanes.unplanned_bit_list (scratch/binder4-1023/s81/b3r8, plan v4.7b): the svc_rs chain svc_2k -> svc_2k+1 (rsv ro/ri, so_d/so_v -> si_d/si_v, up_o -> up_i; new svc_rs RTL, not in the as-built die) and the slice C -> LP 1-b lep inputs (u_flt.q -> u_lep.sl_f, u_xg.ro_* -> u_lep.ro).  seqhost <-> s_*_LP (mu_*/f_*/t_* = 1,032 b) is NOT here: the census has those rows; gen_plan_v4 ipart() now maps the lep buses to the LP partition.  One lane per entry (width = bits); C -> LP widens nothing (own lane).",
+ "note": "S81-P9-R8EQ 10-23 (plan v4.8): bound-top crossings that the as-built census (s81_lanes.tsv) does not carry, from BINDER4 b3r8 bind_report.json lanes.unplanned_bit_list (scratch/binder4-1023/s81/b3r8, plan v4.7b): the svc_rs chain svc_2k -> svc_2k+1 (rsv ro/ri, so_d/so_v -> si_d/si_v, up_o -> up_i; new svc_rs RTL, not in the as-built die) and the slice C -> LP 1-b lep inputs (u_flt.q -> u_lep.sl_f, u_xg.ro_* -> u_lep.ro).  seqhost <-> s_*_LP (mu_*/f_*/t_* = 1,032 b) is NOT here: the census has those rows; gen_plan_v4 ipart() now maps the lep buses to the LP partition.  One lane per entry (width = bits); C -> LP widens nothing (own lane). CODEX 10-25: svc14->15 rsv supplement grows46->50 after current narrowed PVSO bind found up_o_n[15:12] outside the old total3234-bit allocation (actual3238); same path and latency. Port-count metadata is the legacy residual supplement, not the final bus packed ranges; the fresh bind measures four additional live crossing bits and may redistribute packing across direct lanes.",
  "source": "/home/ubuntu/scratch/binder4-1023/s81/b3r8/bind_report.json",
  "entries": [
   {
@@ -72,10 +72,10 @@
   {
    "src": "svc_14",
    "dst": "svc_15",
-   "bits": 46,
+   "bits": 50,
    "cls": "rsv",
    "ports": {
-    "u_rsv_14.so_d -> u_rsv_15.si_d": 29,
+    "u_rsv_14.so_d -> u_rsv_15.si_d": 33,
     "u_rsv_14.so_v -> u_rsv_15.si_v": 1,
     "u_rsv_14.up_o -> u_rsv_15.up_i": 16
    }
