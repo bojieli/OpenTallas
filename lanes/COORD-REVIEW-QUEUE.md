@@ -188,3 +188,6 @@ READY [FP32 2026-10-25 00:00 PDT] claude/fp32-lat4-1024@3bdf3392e0: decision-16 
 [COORD 00:00] APPROVED claude/fp32-lat4-1024@3bdf3392e0 (new files only: tools/fp32_lat4, results). Delete epyc1 scratch2 fp32/wt after merge.
 READY [AGENTS-CLK 2026-10-25 00:02 PDT] claude/agents-clock-1024@1b7b3c892: AGENTS.md only (+11/-6): one 1.2 GHz core domain (dec. 16/16a, f12_l4/mul_lat4/mul_f12_l5, ck_serial+ot_ratio_cdc_fifo retired, PHY-only clocks), sign-off clock gate = related-pair skew + CPPR <=80 ps TT+FF (dec. 5, spread INFO), merge never -X ours/theirs (ruling 9.1), pointer to coord METHODOLOGY.md.
 [COORD 00:02] APPROVED claude/agents-clock-1024@1b7b3c892 (AGENTS.md only: one 1.2 GHz domain dec. 16/16a, pair-skew gate dec. 5, no -X ours/theirs, METHODOLOGY pointer).
+READY [S81 2026-10-25 00:02 PDT] claude/s81-kits-1024r-nodes@c981d256b9, supersedes @9a2a099a57.
+- Adds the bk_g face_guard fix: dsdv_bk_vin per-lane live chains; lane data zeroed when idle (no self-hold); unread tap_k/sink_k[2:1] packed to [5:0] at both ends (bk_g 3712 -> 3561 pins, 0 cycles).
+- bk_g raw face_guard 3559/3559, 0 self-loops; bk benches PASS, BKLN mutant caught; G0/G0C 0 err.
