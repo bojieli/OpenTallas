@@ -1037,7 +1037,7 @@ def anchored(L):
     return {h[2] for (sd, k), h in L.hyp.items() if h[0] == "eq" and (sd != "gold" or h[2] in ms)}
 
 
-def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
+def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     """register correspondence for flops that do not match by name (synthesis removed a constant flop, merged
     duplicates, or the two frontends named a register differently, e.g. a register that drives an output port):
       1. pairing by simulation: gold-only and gate-only flops (and matched flops, for merges) are paired when their
@@ -1048,7 +1048,11 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
       3. proof: every hypothesis (D(flop) == partner's D / == constant) is an output of one miter, proved by ABC with
          all hypotheses assumed: an inductive invariant.  Failing hypotheses are dropped and the loop repeats (new
          candidates for `rounds` rounds, then refinement only, which shrinks monotonically to an inductive set).
-    Unpaired flops stay free inputs."""
+    Unpaired flops stay free inputs.
+    rounds=24 (was 10): in deep lane trees (dsdv_gunit_l4 g_lv[3..4], kv3_astk zn u_tag) a merged valid line
+    (u_tv.line[4] == u_k5.g_r.v == valid_out) is dropped while its upstream index-line constants are still being
+    refined and needs adding rounds after them; 10 left it free -> false NOT EQUIVALENT (gunit_l4 895 points,
+    EQUIVALENT at 24 rounds, 738 s)."""
     relayout(L, log)
     renamed(L, log)
     replica_proposals(L, log)
