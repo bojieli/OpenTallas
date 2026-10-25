@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.hbm.tkm_bound_ft21.v1",
+ "master": "ot_hbm_tkm_path_ft21",
+ "native_input_bits": {
+  "DATA": 3749,
+  "SIDE_CTL": 33,
+  "wire": 2341
+ },
+ "compute_children": {
+  "root": "ot_hgi_coll_tkm_m_tp192__root cb21",
+  "leaf": "ot_hgi_coll_tkm_tp192_tile_core__idpin ft",
+  "count": 32,
+  "IDs": "parent constants0..31"
+ },
+ "root_contract": {
+  "HOP": 2,
+  "FRT": 4,
+  "CB": 21,
+  "CLRB": 0
+ },
+ "measured_cycles": {
+  "forward": 5,
+  "split": 2,
+  "face": 258,
+  "return": 2,
+  "total": 267,
+  "syn_sel_internal": 25459,
+  "rank128_zeros_internal": 886
+ },
+ "qualification": "r5 actual-child mechanism PASS for syn_sel and rank128_zeros; extracted bound IO module pending own minimum gate; no die-level physical/token closure",
+ "outstanding": "raw die bind of NW producer/reset START + same signed child views and wavefront offsets; parent integrates final path plan"
+}
