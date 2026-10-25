@@ -602,3 +602,25 @@ def test_gold_script_marks_kept_registers():
     s = lec.gold_script({"VERILOG_FILES": "a.v", "DESIGN_NAME": "t"}, "/k", "verilog", [], "s.v", "w.v", "f.v", "/o/gold")
     assert s.index("a:keep %i") < s.index("setattr -mod -unset keep_hierarchy")
     assert "A:keep_hierarchy" in s and "select -write /o/gold.keep" in s
+
+
+def test_cut_output_alias_is_proved_and_mutated_cut_is_rejected(tmp_path, monkeypatch):
+    """KV e0: slang calls bit41 q while verilog calls the same cut flop g_r.r."""
+    monkeypatch.setattr(lec, 'prove', _sim_prove)
+    def design(name, reg, bad):
+        p = tmp_path / (name + '.aig')
+        # Inputs d0,d1; two latches, named cut flop and the common consumer.
+        p.write_bytes(f'aig 4 2 2 0 0\n{4 if bad else 2}\n6\n'.encode())
+        mp = {'input': {0: [('d0', 0)], 1: [('d1', 0)]}, 'output': {},
+              'latch': {0: [(f'u_dut.u_c3.{reg}$_DFF_P_.lecq', 0)],
+                        1: [('u_dut.out$_DFF_P_.lecq', 0)]}}
+        return lec.read_aig(p), mp
+    for mutant in (False, True):
+        g, gm = design('gold', 'g_r.r[41]', False)
+        t, tm = design('gate', 'q[41]', mutant)
+        L = lec.Lec(g, gm, t, tm)
+        lec.register_alias_proposals(L, [])
+        assert L.hyp[('gate', 'ff:u_dut.u_c3.q[41]')] == ('eq', 'gold', 'ff:u_dut.u_c3.g_r.r[41]', 0)
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        statuses = _sim_prove(m)
+        assert ('differs' in statuses.values()) == mutant

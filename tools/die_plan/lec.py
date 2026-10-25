@@ -1240,10 +1240,12 @@ def bound_keys(L):
     e0/e2/e6: the constant-0 relay bit qb_send[5] that gold drops, kept by gate keep -> 4..39 points UNPROVEN)."""
     return {k for (sd, k) in L.hyp} | {h[2] for h in L.hyp.values() if h[0] == "eq" and h[1] != "gate"}
 def register_alias_proposals(L, log):
-    """Propose an exact register/_r alias across frontends; every proposal is
-    still proved on its next-state cone before any result is accepted."""
+    """Propose register aliases across frontends, including a cut's output q
+    versus its internal g_r.r register. Every relation is proved/refined."""
     n = 0
-    strip = lambda k: re.sub(r"_r(?=(?:\[\d+\])*$)", "", k)
+    def strip(k):
+        k = re.sub(r"_r(?=(?:\[\d+\])*$)", "", k)
+        return re.sub(r"\.(?:g_r|g_rv|g_reg)\.r((?:\[\d+\])*)$", r".q\1", k)
     by_name = collections.defaultdict(list)
     for k in L.gonly:
         by_name[strip(k)].append(k)
@@ -1252,7 +1254,7 @@ def register_alias_proposals(L, log):
         if len(cand) == 1 and ("gate", k) not in L.hyp:
             L.hyp[("gate", k)] = ("eq", "gold", cand[0], 0)
             n += 1
-    log.append(f"register aliases: {n} same-name / _r relations proposed")
+    log.append(f"register aliases: {n} same-name / register-output relations proposed")
 
 
 def cone_sim(m, lits, fixed, words, seed):
