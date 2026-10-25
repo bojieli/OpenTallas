@@ -627,7 +627,7 @@ class Lec:
         # and proved on the next state together with the hypotheses (an inductive invariant like the others)
         self.cons = []
 
-    def build(self, with_compare=True, with_hyp=True, extra=None, free_const=None):
+    def build(self, with_compare=True, with_hyp=True, extra=None, free_const=None, hold_matched=()):
         """one AIG with every matched key point a shared input; a hypothesised gold-only flop becomes its constant /
         its partner's input; other unmatched key points and X sources are free inputs.  Outputs: XOR per matched
         compare point (with_compare) and per hypothesis (D(flop) vs constant / partner's D).
@@ -654,6 +654,11 @@ class Lec:
                 continue
             if h:                                 # register correspondence among matched flops: k == representative
                 merged.append(k)
+                continue
+            if free_const is not None and k in hold_matched:
+                shared[k] = free_const            # cofactor: these matched registers held at the constant too
+                bind(lg, self.gp[k], free_const)
+                bind(lt, self.tp[k], free_const)
                 continue
             v = m.add_input(k)
             kind[v >> 1] = ("matched", k)
@@ -841,6 +846,8 @@ def xor_sat(m, ids, log):
     are redundant exact identities from the Boolean normaliser, never design
     assumptions. If pycryptosat is absent the caller retains UNDECIDED.
     """
+    if os.environ.get("LEC_SOLVER_PATH") and os.environ["LEC_SOLVER_PATH"] not in sys.path:
+        sys.path.append(os.environ["LEC_SOLVER_PATH"])       # pycryptosat (cp310 wheel extracted), see via_docker
     try:
         import pycryptosat
     except ImportError:
@@ -1472,6 +1479,42 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                             if tried[("gate", c, k, 0)] < 2:
                                 L.hyp[("gate", c)] = ("eq", "gold", k, 0)
                                 new += 1
+                    # load-enable registers merged by synthesis into a MATCHED sibling bit (no reset, one enable,
+                    # equal data: QC su8 fa[313]/fa[314] -> fa[315]): with the unpaired registers and the matched
+                    # bits of their own vectors held at 0 / at 1 (self-hold removed, other state random), a gold-only
+                    # register pairs with the one matched sibling of its (non-constant) cofactor signature, several
+                    # gold registers may share it; induction decides
+                    ug = [k for k in ug if ("gold", k) not in L.hyp]
+                    vb = {IDX.match(k).group(1) for k in ug if IDX.match(k)}
+                    hold = {k for k in L.matched if k.startswith("ff:") and IDX.match(k) and IDX.match(k).group(1) in vb}
+                    if ug and hold:
+                        hof = []
+                        for c in (0, 1):
+                            mc, _ = L.build(with_compare=False, with_hyp=False, free_const=c, hold_matched=hold)
+                            vc, _ = mc.simulate(words, seed=37 * rnd + it + 3)
+                            hof.append(lambda side, k, vc=vc, dl=dict(L.dlit): lit_val(vc, mask, dl[(side, k)]))
+                        hm = {}
+                        for k in hold:
+                            if ("both", k) not in L.hyp:
+                                hm.setdefault((hof[0]("gold", k), hof[1]("gold", k)), []).append(k)
+                        hg = {k: (hof[0]("gold", k), hof[1]("gold", k)) for k in ug}
+                        m, kind = L.build(with_compare=False, with_hyp=False)
+                        v2, _ = m.simulate(words, seed=41 * rnd + it + 7)
+                        looks_const = {k for k in ug if lit_val(v2, mask, L.dlit[("gold", k)]) in (0, mask)}
+                        for k, a in hg.items():
+                            if a[0] in (0, mask) and a[1] in (0, mask):
+                                continue
+                            # several siblings may look alike (sign-extension / borrow bits): nearest name first,
+                            # a failed pair moves on to the next one
+                            # (a constant-looking register tries its constant first; at most 3 siblings per register)
+                            if tried[("gold", k, "sib")] >= 3 or (tried[("gold", k, "c")] < 1 and
+                                                                   k in looks_const):
+                                continue
+                            c = next((c for c in closest(k, hm.get(a, [])) if tried[("gold", k, c, 0)] < 1), None)
+                            if c:
+                                tried[("gold", k, "sib")] += 1
+                                L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+                                new += 1
                 # Duplicate feedback copies can choose different representatives in each frontend.
                 # Group on gold signatures even before individual gold/gate D functions agree;
                 # the hypothesis miter below proves the equality on BOTH sides simultaneously.
@@ -1514,6 +1557,27 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 a, b = lit_val(val, mask, L.dlit[("gold", k)]), lit_val(val, mask, L.dlit[("gate", k)])
                 if a == b and a in (0, mask):
                     L.hyp[("both", k)] = ("const", 1 if a else 0)
+            # self-holding constants: a matched register that only ever reloads a constant or holds itself
+            # (eng u_e.hq_atom[30] <= iss ? baddr[][35] (constant 0) : hq_atom[30]) simulates non-constant from a
+            # random state; with the free matched registers held at c its next state is c on both sides, and its
+            # own Q is in its next-state cone.  Candidate only; induction decides.
+            var_of = {kk: v for v, (t, kk) in kind.items() if t == "matched"}
+            gdl = dict(L.dlit)
+            cands = {k for k in L.matched if k.startswith("ff:") and ("both", k) not in L.hyp and k not in reps
+                     and tried[("both", k, "c")] < 2}
+            selfc = []
+            for c in (0, 1):
+                mc, _ = L.build(with_compare=False, with_hyp=False, free_const=c, hold_matched=cands)
+                vc, _ = mc.simulate(words, seed=997 + c)
+                want = mask if c else 0
+                for k in sorted(cands):
+                    if lit_val(vc, mask, L.dlit[("gold", k)]) == want and lit_val(vc, mask, L.dlit[("gate", k)]) == want \
+                            and k in var_of and len(selfc) < 4096 and (var_of[k] in m.cone_inputs(gdl[("gold", k)])):
+                        selfc.append((k, c))
+            m, kind = L.build(with_compare=False, with_hyp=False)
+            for k, c in selfc:
+                if ("both", k) not in L.hyp:
+                    L.hyp[("both", k)] = ("const", c)
             for it in range(sim_iters):
                 m, kind = L.build(with_compare=False, with_hyp=False)
                 val, mask = m.simulate(words, seed=1000 + it)
@@ -1738,8 +1802,12 @@ def via_docker(args, image, mem):
     Path(out).mkdir(parents=True, exist_ok=True)
     me = str(Path(__file__).resolve())
     cmd = ["docker", "run", "--rm", f"--memory={mem}g", f"--memory-swap={mem}g", "-v", f"{kit}:/work:ro",
-           "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}",
-           image, "bash", "-lc"]
+           "-v", f"{out}:/lecout", "-v", f"{me}:/lec.py:ro", "-e", f"HUID={os.getuid()}", "-e", f"HGID={os.getgid()}"]
+    # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
+    sol = os.environ.get("OT_LEC_SOLVER", "")
+    if sol and os.path.isdir(sol):
+        cmd += ["-v", f"{os.path.abspath(sol)}:/lecsolver:ro", "-e", "LEC_SOLVER_PATH=/lecsolver"]
+    cmd += [image, "bash", "-lc"]
     inner = ["python3", "-I", "/lec.py", "/work", "--out", "/lecout", "--conflicts", str(args.conflicts), "--jobs", str(args.jobs)]
     if args.netlist:
         n = str(Path(args.netlist).resolve())
