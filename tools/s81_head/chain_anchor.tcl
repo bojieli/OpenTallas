@@ -12,6 +12,7 @@ uplevel #0 {
 set ca_blk [ord::get_db_block]
 set ca_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ca_re $::env(OT_CHAIN_HEAD_RE)
+set ca_lead [expr {int(([info exists ::env(OT_CHAIN_LEAD_UM)] ? $::env(OT_CHAIN_LEAD_UM) : 30.0) * $ca_dbu)}]
 set ca_core [$ca_blk getCoreArea]
 set ca_x0 [$ca_core xMin]; set ca_y0 [$ca_core yMin]; set ca_x1 [$ca_core xMax]; set ca_y1 [$ca_core yMax]
 set ca_rows [$ca_blk getRows]
@@ -116,20 +117,64 @@ proc ca_near {x y} {
   }
   return [list $x $y]
 }
+# nearest point whose +-R neighbourhood (4 compass points + centre) is outside every halo: chain stages never sit in a
+# narrow corridor (prev11b: the A cores' W/E-face x pins sit in the 13-um die-edge strip next to the tile input face
+# flops; chains whose sinks were those pins ran along the strip and DPL could not legalise them)
+proc ca_ok {x y r} { foreach {dx dy} [list 0 0 $r 0 -$r 0 0 $r 0 -$r] { if {![ca_free [expr {$x + $dx}] [expr {$y + $dy}]]} { return 0 } }; return 1 }
+proc ca_wide {x y} {
+  global ca_dbu ca_wide_r
+  set r $ca_wide_r
+  if {[ca_ok $x $y $r]} { return [list $x $y] }
+  set st [expr {int(2.16 * $ca_dbu)}]
+  for {set k 1} {$k < 400} {incr k} {
+    set d [expr {$k * $st}]
+    foreach {dx dy} [list 0 $d 0 -$d $d 0 -$d 0 $d $d -$d $d $d -$d -$d -$d] {
+      if {[ca_ok [expr {$x + $dx}] [expr {$y + $dy}] $r]} { return [list [expr {$x + $dx}] [expr {$y + $dy}]] }
+    }
+  }
+  return [ca_near $x $y]
+}
+set ca_wide_r [expr {int(([info exists ::env(OT_CHAIN_WIDE_UM)] ? $::env(OT_CHAIN_WIDE_UM) : 14.0) * $ca_dbu)}]
 set ca_spot {}
 set ca_out_f [open $::env(RESULTS_DIR)/ot_relay_mid.txt a]
 set ca_log [open $::env(RESULTS_DIR)/ot_chain_anchor.txt w]
 set ca_n 0; set ca_nchain 0; set ca_skip 0; set ca_seen {}
-# one cell at a spot: compact 8-column cluster per 4-um bin, rows stacking upward
-proc ca_put {c x y} {
-  global ca_spot ca_sw ca_rh ca_x0 ca_y0 ca_x1 ca_y1 ca_orient ca_dbu ca_out_f ca_n
-  lassign [ca_near $x $y] x y
-  set key "[expr {$x / (4*$ca_dbu)}],[expr {$y / (4*$ca_dbu)}]"
-  set k [expr {[dict exists $ca_spot $key] ? [dict get $ca_spot $key] : 0}]
-  dict set ca_spot $key [expr {$k + 1}]
-  set pitch [expr {$ca_sw * 24}]
-  set cx [expr {$x + ($k % 8) * $pitch - 4 * $pitch}]
-  set cy [expr {$y + ($k / 8) * $ca_rh}]
+# one cell at a spot: 4.32-um bins of at most 24 flops (3 columns x 8 alternate rows, ~37 % flop density); a full bin
+# spills to the nearest free bin (spiral), so chains that share a spot spread instead of stacking (prev11c: 1,000+
+# flops piled up the die-edge strip at the channel mouth)
+set ca_bin [expr {int(4.32 * $ca_dbu)}]
+set ca_edge [expr {int(([info exists ::env(OT_CHAIN_EDGE_UM)] ? $::env(OT_CHAIN_EDGE_UM) : 16.0) * $ca_dbu)}]
+proc ca_binfree {bx by wide} {
+  global ca_bin ca_edge ca_x0 ca_x1
+  set x0 [expr {$bx * $ca_bin}]; set y0 [expr {$by * $ca_bin}]
+  # chain stages stay out of the die-edge strips (A-core W/E-face x pins + tile input face flops live there)
+  if {$wide && ($x0 < $ca_x0 + $ca_edge || $x0 + $ca_bin > $ca_x1 - $ca_edge)} { return 0 }
+  foreach {dx dy} [list 0 0 $ca_bin 0 0 $ca_bin $ca_bin $ca_bin] { if {![ca_free [expr {$x0 + $dx}] [expr {$y0 + $dy}]]} { return 0 } }
+  return 1
+}
+proc ca_put {c x y {wide 1}} {
+  global ca_spot ca_sw ca_rh ca_x0 ca_y0 ca_x1 ca_y1 ca_orient ca_dbu ca_out_f ca_n ca_bin
+  if {$wide} { lassign [ca_wide $x $y] x y } else { lassign [ca_near $x $y] x y }
+  set bx [expr {$x / $ca_bin}]; set by [expr {$y / $ca_bin}]
+  set got {}
+  for {set r 0} {$r < 60 && $got eq {}} {incr r} {
+    for {set dx -$r} {$dx <= $r && $got eq {}} {incr dx} {
+      if {abs($dx) == $r} { set dys {}; for {set q -$r} {$q <= $r} {incr q} { lappend dys $q } } else { set dys [list -$r $r] }
+      foreach dy $dys {
+        if {1} {
+          set kx [expr {$bx + $dx}]; set ky [expr {$by + $dy}]
+          set key "$kx,$ky"
+          set k [expr {[dict exists $ca_spot $key] ? [dict get $ca_spot $key] : 0}]
+          if {$k < 24 && [ca_binfree $kx $ky $wide]} { set got [list $kx $ky $k]; break }
+        }
+      }
+    }
+  }
+  if {$got eq {}} { set got [list $bx $by 0] }
+  lassign $got kx ky k
+  dict set ca_spot "$kx,$ky" [expr {$k + 1}]
+  set cx [expr {$kx * $ca_bin + ($k % 3) * $ca_sw * 24}]
+  set cy [expr {$ky * $ca_bin + ($k / 3) * 2 * $ca_rh}]
   set cx [expr {$ca_x0 + (($cx - $ca_x0) / $ca_sw) * $ca_sw}]
   set cy [expr {$ca_y0 + (($cy - $ca_y0) / $ca_rh) * $ca_rh}]
   set cx [expr {min(max($cx, $ca_x0), $ca_x1 - [[$c getMaster] getWidth])}]
@@ -188,10 +233,15 @@ foreach h [$ca_blk getInsts] {
   } else {
     set cx $ax; set cy $ay
   }
+  # stages along the last leg between LEAD um after the corner (clear of the face-flop strip at the die edge / channel
+  # mouth; prev11a: all 512 pair chains turned at x 4.86 and DPL could not legalise the pile) and 8 um before the sinks
   set n [llength $chain]
+  set leg [expr {abs($bx - $cx) + abs($by - $cy)}]
+  set lead [expr {min($ca_lead, 0.4 * $leg)}]
+  set span [expr {max(0.0, $leg - $lead - 8.0 * $ca_dbu)}]
   set k 0
   foreach c $chain {
-    set f [expr {($k + 0.5) / double($n)}]
+    set f [expr {$leg > 0 ? ($lead + $span * ($k + 0.5) / double($n)) / $leg : 0.0}]
     ca_put $c [expr {int($cx + ($bx - $cx) * $f)}] [expr {int($cy + ($by - $cy) * $f)}]
     dict set ca_seen [$c getName] 1
     incr k
@@ -199,7 +249,7 @@ foreach h [$ca_blk getInsts] {
   foreach t $tails {
     lassign $t ti tp
     if {[dict exists $ca_seen [$ti getName]]} continue
-    ca_put $ti {*}$tp
+    ca_put $ti {*}$tp 0
     dict set ca_seen [$ti getName] 1
   }
   incr ca_nchain

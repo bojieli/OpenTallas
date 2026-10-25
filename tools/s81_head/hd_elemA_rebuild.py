@@ -101,6 +101,11 @@ def main():
     # output face flops.  outputs = the margin applies to the output ports only (hold false path to every register D
     # for that pass, then unset_path_exceptions), followed by a margin-0 pass on all endpoints (real violations only).
     ap.add_argument("--post-grt-hold-scope", choices=["all", "outputs"], default="all")
+    # c11/c12 B c8/c9 (S81/HEAD3 10-25, COORD 00:46 hold recipe): CTS STOP gate before any hold repair (FF hold WNS < -100
+    # or > 2000 FF endpoints = structural -> stop, report; tools/s81_head/post_cts_gate.tcl), then the unchanged ORFS CTS
+    # repair at --hold-margin (ORFS HOLD_SLACK_MARGIN; COORD: 0..5 ps above the SDC 25 ps FF uncertainty).
+    ap.add_argument("--cts-gate", action="store_true")
+    ap.add_argument("--hold-margin", type=float, default=15.0)
     a = ap.parse_args()
     globals().update(ELEMS[a.elem])
     K, old = Path(a.out), Path(a.infra)
@@ -187,7 +192,7 @@ export PLACE_DENSITY = {a.density}
 export SYNTH_HIERARCHICAL = 0
 export SYNTH_REPEATABLE_BUILD = 1
 export LEC_CHECK = 0
-export HOLD_SLACK_MARGIN = 15
+export HOLD_SLACK_MARGIN = {a.hold_margin:g}
 export SETUP_SLACK_MARGIN = 0
 export SKIP_LAST_GASP = 0
 export TNS_END_PERCENT = 100
@@ -246,6 +251,9 @@ foreach {name x y orient} {%s} {
             + "detailed_placement\ncheck_placement -verbose\nglobal_route -end_incremental\n"
             "estimate_parasitics -global_routing\n")
         cfg += "export POST_GLOBAL_ROUTE_TCL = /work/post_grt_drv.tcl\n"
+    if a.cts_gate:
+        shutil.copy2(R / "tools/s81_head/post_cts_gate.tcl", K / "post_cts_gate.tcl")
+        cfg += "export SKIP_CTS_REPAIR_TIMING = 1\nexport POST_CTS_TCL = /work/post_cts_gate.tcl\n"
     (K / "config.mk").write_text(cfg)
     (K / "core.json").write_text(json.dumps({"boundary_role": {"clk": "clk", "rst_n": "reset"}}) + "\n")
     (K / "boundary_guard_context.json").write_text(json.dumps(dict(
