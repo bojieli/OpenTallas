@@ -30,7 +30,7 @@ from collections import defaultdict
 from pathlib import Path
 
 BIND_REG = {"ot_dp_st", "ot_dp_dly"}
-SYNC_CELLS = {"ot_dp_rsync": ("a", "clk"), "ot_reset_sync": ("async_rst_n", "clk")}
+SYNC_CELLS = {"ot_dp_rsync": ("a", "clk"), "ot_reset_sync": ("async_rst_n", "clk"), "ot_dp_lsync": ("a", "clk")}
 # CDC cells (multi-clock by design): their ports' domains come from --pd like any leaf; listed here as "a synchroniser"
 CDC_CELLS = re.compile(r"^(ot_fdi_phy_cdc|ot_async_fifo\w*|ot_cdc\w*|ot_sync\w*)$")
 
@@ -458,7 +458,7 @@ class Audit:
                 return rs.pop(), sync
             if not rs:
                 return None, sync
-            return "mixed:" + "+".join(sorted(rs)), sync
+            return "mixed:" + "+".join(sorted(rs, key=str)), sync
         rs = set(pins.values())
         if len(rs) == 1:
             return next(iter(rs)), None
@@ -495,7 +495,7 @@ class Audit:
                 key = (mt, inst, mod, role, qn == "eq")
                 rows[key]["bits"] += 1
                 rows[key]["launch"] |= lr
-                rows[key]["example"] = rows[key]["example"] or sorted(Ls)[0][1]
+                rows[key]["example"] = rows[key]["example"] or sorted(Ls, key=str)[0][1]
             for inst, mod, p, k, role, src, sync in G["caps"]:
                 if role is None or (role or "").startswith("mixed") and False:
                     pass
@@ -509,7 +509,7 @@ class Audit:
                 key = (mt, inst, f"{mod}.{p}", role, sync or "")
                 rows[key]["bits"] += 1
                 rows[key]["launch"] |= lr
-                rows[key]["example"] = rows[key]["example"] or sorted(Ls)[0][1]
+                rows[key]["example"] = rows[key]["example"] or sorted(Ls, key=str)[0][1]
         return rows
 
     # ---------------------------------------------------------------- lanes (end to end)
@@ -606,8 +606,10 @@ class Audit:
                 stack.extend(d[1])
             elif d[0] == "reg":
                 e = d[1]
+                if e[1] in ("ot_reset_sync", "ot_dp_rsync"):
+                    continue            # a lane epoch (ea = the partition's synchronised reset): not a data launch
                 if e[1] in BIND_REG:
-                    regs.add((mt, e[0].split("_")[0] + "_" + e[1], e[2]))
+                    regs.add((mt, e[0], e[2]))
                     stack.extend(G["regd"].get(e, []))
                 else:
                     roles.add(e[2])
@@ -632,11 +634,13 @@ class Audit:
             vis.add(x)
             for cap in G["capby"].get(x, []):
                 inst, mod, p, role, sync = cap
+                if mod == "ot_dp_efault":
+                    continue            # the lane epoch check (plan cell): the epoch level, not lane data
                 out.setdefault((role, sync), f"{mt}:{mod} {inst}.{p}")
             for y in G["fwd"].get(x, []):
                 if y[0] == "__reg":
                     q = y[1:]
-                    regs.add((mt, q[0].split("_")[0] + "_" + "reg", G["regrole"][q]))
+                    regs.add((mt, q[0], G["regrole"][q]))
                     qb = G["qbit"].get(q)
                     if qb is not None:
                         stack.append(qb)
@@ -651,8 +655,12 @@ def classify(r):
     regroles = {g[2] for g in r["regs"]}
     if not r["down"]:
         return "FT_ONLY"            # forwarded to another partition only: judged at its final in-bus
-    if not up or not down:
-        return "UNRESOLVED"
+    if len(up) == 1 and "?" not in up and not down and r["down"]:
+        # every capture is an unloaded / clock-less leaf input: the lane belongs to its launch domain
+        d = next(iter(up))
+        return "OK" if regroles <= {d} else "WRONG_CLOCK"
+    if not up or not down or "?" in up | down:
+        return "UNRESOLVED"     # an end without a known domain (a multi-clock leaf with no --pd record)
     if len(up) == 1 and up == down:
         d = next(iter(up))
         return "OK" if regroles <= {d} else "WRONG_CLOCK"
@@ -676,14 +684,14 @@ def main(argv=None):
     for (mt, p), r in sorted(lanes.items()):
         c = classify(r)
         by[c].append(dict(type=mt, port=p, bits=r["bits"], launch=dict(r["up"]), capture=dict(r["down"]),
-                          reg_clocks=sorted({g[2] for g in r["regs"]}), sync=sorted(r["sync"]),
+                          reg_clocks=sorted({g[2] for g in r["regs"]}, key=str), sync=sorted(r["sync"], key=str),
                           ex_launch=r["ex_up"], ex_capture=r["ex_down"],
                           instances=sum(1 for t in A.inst_type.values() if t == mt)))
     arcs = A.arcs()
     arcrows = [dict(type=k[0], elem=k[1], cell=k[2], capture_role=k[3], tag=k[4], bits=v["bits"],
-                    launch=sorted(v["launch"]), example=v["example"],
-                    instances=sum(1 for t in A.inst_type.values() if t == k[0])) for k, v in sorted(arcs.items())]
-    unknown = sorted({u for G in A.T.values() for u in G["unknown"]})
+                    launch=sorted(v["launch"], key=str), example=v["example"],
+                    instances=sum(1 for t in A.inst_type.values() if t == k[0])) for k, v in sorted(arcs.items(), key=str)]
+    unknown = sorted({u for G in A.T.values() for u in G["unknown"]}, key=str)
     print(f"lane_clock_audit {a.rtl}: {len(A.mods)} partition types, {len(A.inst_type)} instances")
     for c in ("WRONG_CLOCK", "CROSS_BARE", "CROSS_SYNC", "UNRESOLVED", "FT_ONLY", "OK"):
         rows = by.get(c, [])
@@ -703,7 +711,7 @@ def main(argv=None):
         print("   FINDING", f)
     if a.json:
         Path(a.json).write_text(json.dumps(dict(lanes=by, arcs=arcrows, unknown=unknown, findings=A.findings),
-                                           indent=1, sort_keys=True, default=str) + "\n")
+                                           indent=1, default=str) + "\n")
     return 0
 
 

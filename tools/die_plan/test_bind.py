@@ -504,6 +504,9 @@ def test_clock_roles(tmp_path):
             [x for x in p["asbuilt"]["sources"] if x["kind"] != "clock"]
         p["asbuilt"]["default_clock"] = "clk_q_A"
         p["asbuilt"]["clock_roles"] = [[r"clk_q_[AB]", "clk_q"]]
+        # A0 <-> A1 lanes join two different die clocks through plain registers: refused (LANE_CDC) in the default
+        # endpoint mode (TOK-QK/D); this test is about the role naming, so it binds in the legacy partition mode
+        p["asbuilt"]["lane_clock"] = "partition"
     p = json.loads((EX / "die_plan.json").read_text())
     edit(p)
     p["asbuilt"]["base"] = str(src)

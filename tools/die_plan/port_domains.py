@@ -45,10 +45,22 @@ FF_PORTS = {   # yosys internal flop / latch types: clock pin, data-like inputs,
     "$dlatchsr": ("EN", ["D"], ["SET", "CLR"], ["Q"]),
 }
 SEQ_BB = re.compile(r"^(DFF|SDF|DHL|DLL|ICG|ASYNC_DFF)", re.I)
+MACRO_BB = re.compile(r"sram|_rom_|^ot_rom|regfile", re.I)       # memory macros: black boxes (their clocked ports)
+CLK_PIN = re.compile(r"(^|_)(clk|ck|clock|CLK)[a-zA-Z0-9]*$")
 
 
-def is_seq_bb(ctype):
-    return bool(SEQ_BB.match(ctype.lstrip("\\")))
+def is_seq_bb(ctype, conns=None):
+    n = ctype.lstrip("\\")
+    if SEQ_BB.match(n):
+        return True
+    return bool(MACRO_BB.search(n)) and conns is not None and any(CLK_PIN.search(p) for p in conns)
+
+
+def bb_clock_pins(c):
+    """clock pins of a sequential black box: CLK for a standard cell, every clock-named input of a macro"""
+    if "CLK" in c["connections"]:
+        return ["CLK"]
+    return [p for p in c["connections"] if CLK_PIN.search(p) and c.get("port_directions", {}).get(p, "input") == "input"]
 
 
 def analyse(js, top):
@@ -81,7 +93,7 @@ def analyse(js, top):
             return "ff"
         if t == "$mem_v2" or t == "$mem":
             return "mem"
-        if not t.startswith("$") and is_seq_bb(t):
+        if not t.startswith("$") and is_seq_bb(t, cells[cn]["connections"]):
             return "bbseq"
         return "comb"
 
@@ -120,9 +132,10 @@ def analyse(js, top):
             k = kind(cn)
             c = cells[cn]
             if k == "bbseq":     # ICG: GCLK from CLK
-                for x2 in c["connections"].get("CLK", []):
-                    if isinstance(x2, int):
-                        stack.append(x2)
+                for p in bb_clock_pins(c):
+                    for x2 in c["connections"].get(p, []):
+                        if isinstance(x2, int):
+                            stack.append(x2)
                 continue
             if k in ("ff", "mem"):
                 res.add(f"derived:{cn}")
@@ -135,12 +148,12 @@ def analyse(js, top):
         c = cells[cn]
         k = kind(cn)
         if k == "ff":
-            pin = FF_PORTS[c["type"]][0]
+            pins = [FF_PORTS[c["type"]][0]]
         elif k == "bbseq":
-            pin = "CLK"
+            pins = bb_clock_pins(c)
         else:
-            pin = which
-        bits = [x for x in c["connections"].get(pin, []) if isinstance(x, int)]
+            pins = [which]
+        bits = [x for p in pins for x in c["connections"].get(p, []) if isinstance(x, int)]
         r = set()
         for x in bits:
             r |= clock_root(x)
@@ -156,8 +169,11 @@ def analyse(js, top):
                     q_clock[x] = (ff_clock(cn), cn)
         elif k == "bbseq":
             ck = ff_clock(cn)
-            for pn in ("Q", "QN", "GCLK"):
-                for x in c["connections"].get(pn, []):
+            dirs = c.get("port_directions", {})
+            for pn, bits in c["connections"].items():
+                if dirs.get(pn) != "output":
+                    continue
+                for x in bits:
                     if isinstance(x, int):
                         q_clock[x] = (ck, cn) if pn != "GCLK" else (frozenset(), cn)
         elif k == "mem":
@@ -215,7 +231,7 @@ def analyse(js, top):
                         clocks |= ff_clock(cn)
                         firsts.append((cn, pn, x == b))
                 elif k == "bbseq":
-                    if pn == "CLK":
+                    if pn in bb_clock_pins(c):
                         clkpin = True
                     elif pn.upper() in ("RESETN", "SETN", "RN", "SN"):
                         asyn = True
@@ -314,6 +330,8 @@ def cmd_yosys(a):
             idx.setdefault(m.group(1), f)
         for m in re.finditer(r"^\s*package\s+(\w+)", s, re.M):
             pkg.setdefault(m.group(1), f)
+    # memory macro models are black boxes too (a 1024x256 behavioural array would flatten into 262k flops)
+    lib += sorted({f for f in cand if MACRO_BB.search(Path(f).stem) and f not in lib})
     libmods = set()
     for f in lib:
         libmods |= {m.group(1) for m in E.MOD_RE.finditer(E._strip(Path(f).read_text(errors="replace")))}
@@ -345,9 +363,14 @@ def cmd_yosys(a):
     for f in pk + [x for x in need if x not in pk]:
         s = Path(f).read_text(errors="replace")
         imps = re.findall(r"^[ \t]*import\s+\w+::\*\s*;[ \t]*$", s, re.M)
-        if imps and f not in pk:
+        fatal = re.search(r"\$(fatal|error)\b", s)
+        if (imps and f not in pk) or fatal:
+            # analysis copy only: elaboration-time checks ($fatal / $error in generate / always) become $display
             fixd.mkdir(exist_ok=True)
-            body = re.sub(r"^[ \t]*import\s+\w+::\*\s*;[ \t]*$", "", s, flags=re.M)
+            body = re.sub(r"^[ \t]*import\s+\w+::\*\s*;[ \t]*$", "", s, flags=re.M) if f not in pk else s
+            body = re.sub(r"\$(fatal|error)\s*\(\s*\d+\s*,", "$display(", body)
+            body = re.sub(r"\$(fatal|error)\b", "$display", body)
+            imps = imps if f not in pk else []
             g = fixd / (re.sub(r"[^\w.]", "_", str(Path(f).parent.name)) + "__" + Path(f).name)
             g.write_text("".join(sorted({x.strip() + "\n" for x in imps})) + body)
             f = str(g)
@@ -357,7 +380,7 @@ def cmd_yosys(a):
     for t in tops:
         cp = " ".join(f"-chparam {k} {v}" for x in (a.chparam or []) if x.startswith(t + ":")
                       for k, v in (kv.split("=", 1) for kv in x.split(":", 1)[1].split(",")))
-        lines += ["design -load srcs", f"hierarchy -top {t} {cp}".rstrip(), "proc", "flatten", "opt_clean -purge",
+        lines += ["design -load srcs", f"hierarchy -top {t} {cp}".rstrip(), "proc", "setattr -mod -unset keep_hierarchy *", "flatten", "opt_clean -purge",
                   f"write_json {out}/{t}.json"]
     sc = out / "pd.ys"
     sc.write_text("\n".join(lines) + "\n")
