@@ -453,6 +453,9 @@ def main():
     ap.add_argument("--no-f1", action="store_true", help="no per-corner FF IO basis in the FF hold repair")
     ap.add_argument("--no-f4", action="store_true", help="no zero-logic chain leaf affinity post-CTS")
     ap.add_argument("--clock-tap-dmax", type=float, default=80.0)
+    ap.add_argument("--rtl-override", action="append", default=[], metavar="FILE.sv=PATH",
+                    help="PATH-HBM 10-25: replace the recipe RTL file with this basename by PATH (a reviewed successor "
+                         "with identical ports, e.g. the TOKEN-lane cb21 root core); recorded in freeze.json")
     a = ap.parse_args()
     V = json.load(open(a.views))
     v = next((x for x in V["view_list"] if x["view"] == a.view), None)
@@ -538,9 +541,15 @@ def main():
         dst = kd / "rtl" / Path(f).name
         fat = rec.get("files_at", {})        # per-file source pin (RECIPES2: as-built scoped closure + committed core)
         fetch(f, fat.get(f, commit), dst, at_commit=bool(rec.get("read_at_commit")) or f in fat)
+        ovr = dict(kv.split("=", 1) for kv in a.rtl_override)
+        if dst.name in ovr:
+            shutil.copyfile(ovr[dst.name], dst)
         local.append(str(dst))
         if not f.endswith((".svh", ".vh")):
             srcs.append(f"/work/rtl/{dst.name}")
+    _miss = {kv.split("=", 1)[0] for kv in a.rtl_override} - {Path(f).name for f in files}
+    if _miss:
+        raise SystemExit(f"--rtl-override names not in the recipe files: {sorted(_miss)}")
     retained = rec.get("retain_unused_input_bits", {})
     retention_helper = retain_unused_inputs(local, top, retained, kd)
     if retention_helper:
@@ -900,6 +909,8 @@ def main():
               plan=str(plan_path), plan_sha256=sha(plan_path), pins_file=v["pins_file"], pins_sha256=v["pins_sha256"],
               pins=len(pins), clocks=clks, resets=rsts, period_ps=per, common_latency_ps=ins, corner=a.corner,
               plan_common_latency_ps=common, core_clock_contract=contract, orfs_var_overrides=a.orfs_var,
+              rtl_overrides={kv.split("=", 1)[0]: dict(path=kv.split("=", 1)[1], sha256=sha(kv.split("=", 1)[1]))
+                             for kv in a.rtl_override},
               sdc_lint="PASS (gen)", macros=rec.get("macros", []),
               face_shell=(dict(core=shell["core"], in_cycles=1, out_cycles=1, face_flops=shell["face_flops"],
                                dropped=len(shell["dropped"]), unread_kept=len(shell["unread_kept"]),

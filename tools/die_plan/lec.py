@@ -1086,13 +1086,15 @@ def alias_arrays(L, log, words=4):
 
     galias = getattr(L, "galias", {})
     G, T = split(L.gonly), split(L.tonly)
-    for gb, g in sorted(G.items()):
+    for gb, g in sorted(G.items(), key=lambda x: -len(x[1])):
         votes = collections.Counter()
         for k in g:
             for a in galias.get(k, ()):
                 m = IDX.match(a)
                 if m and m.group(1) in T and m.group(1) != gb:
                     votes[m.group(1)] += 1
+        if gb + "#t" in T:                          # the same array, re-keyed (relaid) because the frontends
+            votes[gb + "#t"] = len(g)                # index it differently (slang gt[row][4 words] vs gt[q][j])
         for tb, n in votes.most_common(1):
             t = T[tb]
             if 2 * n < len(g) or 2 * len(t) < len(g) or len(t) > len(g):
@@ -1115,11 +1117,69 @@ def alias_arrays(L, log, words=4):
                 apply({v: k for k, v in mp.items()})
                 if best is None or n_ < best[0]:
                     best = (n_, mp)
-            if best[0] < base:
+            # the alias evidence decides the pairing; simulation only orders the layout variants (a gold array
+            # whose next state reads X sources or merged elements disagrees in raw simulation either way)
+            if True:
                 apply(best[1])
                 del T[tb]
                 log.append(f"alias array: gate {tb.split('.')[-1]} ({len(t)} b) -> gold {gb.split('.')[-1]} "
                            f"({len(g)} b, Q-net alias evidence {n}); mismatching compare points {base} -> {best[0]}")
+
+
+def merged_proposals(L, log, cap=4096):
+    """a gold-only register synthesis MERGED into another register of the same function (opt_merge: the TKM tile's
+    X[0..3] and up_out load the same value on every op, so the gate keeps only up_out): neither the names nor a raw
+    simulation pair them (each one's hold path reads its own, still unbound, state).  Candidate = a matched gold flop
+    whose next-state support equals the gold-only flop's, with each flop's OWN state read as SELF; proposed as an
+    'eq' hypothesis and proved inductively with all the others (a wrong proposal is dropped, never assumed)."""
+    d, gp = L.gold, L.gp
+    I, Lc = d["I"], d["L"]
+    base = I + Lc + 1
+    ands = d["ands"]
+    sym = {}
+    for k, lit in gp.items():
+        sym[lit >> 1] = k
+    memo = {}
+
+    def support(lit):
+        v0 = lit >> 1
+        if v0 in memo:
+            return memo[v0]
+        out, seen, st = set(), set(), [v0]
+        while st:
+            v = st.pop()
+            if v in seen or v == 0:
+                continue
+            seen.add(v)
+            if v in sym:
+                out.add(sym[v])
+            elif v < base:
+                out.add(("x", v))
+            else:
+                i = v - base
+                st.append(ands[2 * i] >> 1)
+                st.append(ands[2 * i + 1] >> 1)
+        memo[v0] = frozenset(out)
+        return memo[v0]
+    gonly = [k for k in L.gonly if k.startswith("ff:") and ("gold", k) not in L.hyp and k in L.gc][:cap]
+    if not gonly:
+        return
+    fp = {}
+    for k in gonly:
+        s_ = support(L.gc[k])
+        fp.setdefault(frozenset("SELF" if x == k else x for x in s_), []).append(k)
+    n = 0
+    for c in L.matched:
+        if not c.startswith("ff:") or c not in L.gc:
+            continue
+        s_ = support(L.gc[c])
+        ks = fp.get(frozenset("SELF" if x == c else x for x in s_))
+        if ks:
+            for k in ks:
+                if ("gold", k) not in L.hyp:
+                    L.hyp[("gold", k)] = ("eq", "gold", c, 0)
+                    n += 1
+    log.append(f"merged proposal: {n} of {len(gonly)} gold-only registers share a matched register's next-state support")
 
 
 def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
@@ -1138,6 +1198,7 @@ def correspond(L, work, conflicts, log, rounds=10, sim_iters=12, words=16):
     relayout(L, log)
     renamed(L, log)
     replica_proposals(L, log)
+    merged_proposals(L, log)
     tried = collections.Counter()      # failed attempts per candidate (a pair may fail while a neighbour is wrong)
     for rnd in range(rounds + 40):
         adding = rnd < rounds           # then refine only: drop what fails until the set is inductive
