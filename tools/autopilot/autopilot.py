@@ -1054,13 +1054,39 @@ def write_loop_gaps(st, rows, geom_text):
     except Exception as e:
         log(f"OWNERS failed: {type(e).__name__}: {e}")
         head = [f"# OWNERSHIP unavailable this tick: {type(e).__name__}: {str(e)[:200]}"]
-    text = LG.render(gaps, now, head)
+    text = hub_sync_banner(now) + LG.render(gaps, now, head)
     if DRY:
         print(text, end="")
         return
     tmp = AP_DIR / f".LOOP-GAPS.txt.{os.getpid()}"
     tmp.write_text(text)
     os.replace(tmp, AP_DIR / "LOOP-GAPS.txt")
+
+
+HUB_SYNC_STALE_S = 45 * 60      # hub_git_sync.sh runs before every tick (10 min); 45 min without a success is a failure
+
+
+def hub_sync_banner(now):
+    """first line of LOOP-GAPS.txt while the hub checkout sync fails (10-25: the hub sat at 08:29 for 86 min, silently):
+    autopilot/HUB-SYNC-FAILED (written by hub_git_sync.sh) or a HUB-SYNC-OK older than HUB_SYNC_STALE_S"""
+    try:
+        f = (AP_DIR / "HUB-SYNC-FAILED").read_text().splitlines()
+    except OSError:
+        f = None
+    if f is not None:
+        since = f[0][6:].strip() if f and f[0].startswith("since ") else "?"
+        why = " ".join(l.strip() for l in f[1:] if l.strip())
+        return f"HUB-SYNC-FAILED since {since}: {why or 'see hub_git_sync.sh output'}\n"
+    ok = AP_DIR / "HUB-SYNC-OK"
+    try:
+        age = now - ok.stat().st_mtime
+        last = ok.read_text().split("\n", 1)[0].strip()
+    except OSError:
+        return ""                                      # never synced by hub_git_sync.sh (tests, manual runs)
+    if age > HUB_SYNC_STALE_S:
+        return (f"HUB-SYNC-FAILED since {last.rsplit(' ', 1)[0] if ' ' in last else last}: "
+                f"no successful hub checkout sync for {age / 60:.0f} min (hub_git_sync.sh not running?)\n")
+    return ""
 
 
 def write_file(name, text):
