@@ -205,3 +205,11 @@ def test_kit_rsync_adds_reset_outs_to_bound_and_wrapper():
             r = subprocess.run(["iverilog", "-g2012", "-o", str(d / "x"), str(w), str(b), str(kd / "kit_cells.sv")],
                                capture_output=True, text=True)
             assert r.returncode == 0, r.stderr
+
+
+def test_face_flops_leaves_reset_outs_to_reset_tree():
+    """S81/KITS 10-24: face_flops.tcl placed the rst_o relay FIRM as an output pin register, then reset_tree.tcl moved
+    it (ODB-0359 in GPL).  rst_o ports are skipped like arst_n; reset_tree.tcl places their relays."""
+    ff = (HERE / "face_flops.tcl").read_text()
+    m = re.search(r"set ff_skip_re \{(.*?)\}\s", ff)
+    assert m and re.match(m.group(1), "rst_o_3") and re.match(m.group(1), "arst_n") and not re.match(m.group(1), "x_o")
