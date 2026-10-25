@@ -394,6 +394,20 @@ class TestGeomAutoSubmit(TickBase):
         self.assertTrue(any("HOST-IDLE epyc4" in l for l in body))
         self.assertFalse(any("epyc2" in l or "[NEW]" in l or "QC-VMR" in l for l in body))
 
+    def test_resolved_verdict_is_not_a_gap(self):
+        self.geom(f"{ts(300)} GEOM-REVIEW: REPLY [S81/KITS {ts(305)[11:16]}] eg_c r7: PASS -> route\n"
+                  f"{ts(100)} GEOM-REVIEW: REPLY [S81/KITS {ts(105)[11:16]}] slice_station x6: PASS-COND -> route\n"
+                  f"{ts(90)} GEOM-REVIEW: REPLY [HBM-CORES] gq_land: PASS -> route\n")
+        (Path(self.tmp.name) / "coord" / "autopilot").mkdir()
+        (Path(self.tmp.name) / "coord" / "autopilot" / "resolved.tsv").write_text(
+            self.ap.LG.RESOLVED_HEAD + "\n" + f"S81/KITS\t{ts(300)[:16]}\tSUPERSEDED\teg_c\tPASS-RECON\tx\tlegacy kit\n"
+            f"HBM-CORES\t{ts(90)[:16]}\t\tgq_land\tPASS-RECON\tx\tno resolution -> still a gap\n")
+        self.tick()
+        g = (Path(self.tmp.name) / "LOOP-GAPS.txt").read_text()
+        self.assertNotIn("eg_c r7", g)                       # resolved verdict
+        self.assertIn("slice_station x6", g)                 # same tag, other verdict: still flagged
+        self.assertIn("GEOM-PASS-NOT-ROUTED [HBM-CORES]", g)  # empty resolution does not count
+
     def test_review_row_without_lane_action(self):
         p = Path(self.tmp.name)
         old = time.strftime("%Y-%m-%d %H:%M:%S %Z", time.localtime(time.time() - 7200))

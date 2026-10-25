@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS-CONDITIONAL",
+  "reviewer": "Codex",
+  "pictures": [
+    "results/die_trial_1024/codex_phy_1025/s81_WS0/domain_review.png",
+    "results/die_trial_1024/codex_phy_1025/head_HOST0/domain_review.png",
+    "results/die_trial_1024/codex_phy_1025/s81_WS3/domain_review.png"
+  ],
+  "findings": [
+    "Reviewed both actual domain dimensions and dedicated PG lattice: continuous orthogonal M8/M9 stripes, 45um alternating VDDPHY/VSS rows, no omitted shoreline power zone. S81 bottom PHY band remains 64um without bumps at its top; mesh carries this local distance. Head PHY grid extends63.64um beyond power-bump rectangle on each edge.",
+    "Load pins are distributed M7 stripes on ~86um abstract blocks, connected to explicit domain M8/M9 mesh. No timing or signal-route inference made.",
+    "Viewed vertical S81 WS3 reserve-pair domain: continuous mesh and dedicated rows fill the long axis, only63.64um W/N fringe; no long supply starvation zone despite narrow aspect."
+  ],
+  "conditions": [
+    "Uniform density0.15W/mm2 is assumed, not measured PHY power",
+    "Actual package/PHY signal-map PG collision check and coupled core-ground loading remain outside this standalone window"
+  ],
+  "postrun": "All3 grids connected and solved; IR plots viewed. Worst drop matches bump-free fringes (2.55/2.74/3.12mV), no unexplained hotspot. Standalone modeled-density result only."
+}

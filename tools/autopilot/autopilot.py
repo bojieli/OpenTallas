@@ -976,7 +976,7 @@ def write_loop_gaps(st, rows, geom_text):
     jobs = list(st["jobs"].values())
     submitted_tags = {geom_tag(j.get("geom_ref", "")) for j in jobs
                       if j.get("status") not in ("WAIT-GEOM", "REJECTED", None) and (j.get("attempts") or j.get("adopted"))}
-    gaps = LG.gaps_geom(geom_text, now, submitted_tags)
+    gaps = LG.gaps_geom(geom_text, now, submitted_tags, LG.parse_resolved(read_coord("autopilot/resolved.tsv")))
     gaps += LG.gaps_runs([j for j in jobs if j.get("status") == "RUNNING" or str(j.get("status")).startswith("REVIEW-")
                           or j.get("status") == "SIGNED"], now)
     trows = read_tsv_rows("review.tsv") + read_tsv_rows("structural.tsv")
