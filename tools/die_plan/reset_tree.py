@@ -211,22 +211,70 @@ def push_off(p, boxes, box_out, step=2.16):
     return best[1] if best else p
 
 
+def _seg_hits(p, q, walls):
+    """the axis-parallel segment p -> q runs through the interior of a wall box."""
+    lx, hx = min(p[0], q[0]), max(p[0], q[0])
+    ly, hy = min(p[1], q[1]), max(p[1], q[1])
+    return any(lx < c and hx > a and ly < d and hy > b for a, b, c, d in walls)
+
+
+def _lfree(a, b, walls):
+    """a wall-free L route a -> b exists (x-then-y or y-then-x): the hop routes at its Manhattan length."""
+    if not walls:
+        return True
+    for k in ((b[0], a[1]), (a[0], b[1])):
+        if not _seg_hits(a, k, walls) and not _seg_hits(k, b, walls):
+            return True
+    return False
+
+
+def walls(P, tn):
+    """WIRE walls of a type (CLOCK-RESET 10-25, S81 col_h9_r1 u_rrl_73 -> 74): blockages whose routing obstruction
+    reaches the type's top signal layer (S81 ROM elem / BF col views: LEF OBS M1-M7 under MAX_ROUTING_LAYER M7).  A
+    partition wire cannot cross them on any layer it owns (M8/M9 are the die's: BRIEFING decision 12), so a relay hop
+    over one is a ~2x detour in the kit, not its planned Manhattan length.  Same obstruction convention as the G2 /
+    PROTO probe (g2.probe_blockages obs_max).  Un-grown core outlines: relay sites already keep CLEAR_UM off them."""
+    import g2                                  # lazy: g2 -> gen_phys -> reset_tree
+    t = P.types[tn]
+    top = int(P.type_top_layer(tn)[1:])
+    out = []
+    for c in g2.probe_blockages(t, P.type_top_layer(tn)):
+        if "origin_um" not in c or "outline_um" not in c or int(str(c.get("obs_max", "M5"))[1:]) < top:
+            continue
+        (ox, oy), (cw, ch) = c["origin_um"], c["outline_um"]
+        if c.get("orient") in ("R90", "R270", "MXR90", "MYR90"):
+            cw, ch = ch, cw
+        out.append((ox, oy, ox + cw, oy + ch))
+    return out
+
+
+def walled_hops(nodes, root, walls):
+    """hops (child node, parent xy) with no wall-free L route."""
+    out = []
+    for v, nd in enumerate(nodes):
+        pu = root if nd["par"] < 0 else nodes[nd["par"]]["xy"]
+        if not _lfree(nd["xy"], pu, walls):
+            out.append(v)
+    return out
+
+
 # ----------------------------------------------------------------------------------------------- the tree
-def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, prefix=""):
+def build(taps, root_xy, depth=None, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, prefix="", walls=()):
     """taps [(name, x, y)] (tap index = list index); root_xy = the entry stage (reset pin).
     Topology: a shortest-hop tree over the taps (ties: fewer intermediate relays, then shorter wire) with intermediate
     relays on the x-then-y L path, pushed off `boxes`; when a push-off breaks the reach, a shortest-hop tree over a
-    grid of free relay sites (wires may cross blockages, relays may not).  Equal depth: every tap is padded to D =
+    grid of free relay sites (wires may cross blockages that leave the top signal layer open -- never a wall() --, relays may not).  Equal depth: every tap is padded to D =
     max(own depth, `depth`); pads go as HIGH in the tree as possible (on the edge into the subtree that has slack), so
     one pad serves every tap below it.
     Returns {root, depth, own_depth, relays[{name, xy, d, q, depth, tap, kind}], reach_um, max_hop_um, ...}."""
-    topo = topology(taps, root_xy, reach, margin, boxes, box_out)
+    topo = topology(taps, root_xy, reach, margin, boxes, box_out, walls)
     return assign(topo, depth, prefix)
 
 
-def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None):
+def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=None, walls=()):
     """the depth-independent part of build(): relay sites and parents.  A tap (or the entry) over a blockage gets its
-    relay site at the nearest free point (tap_offset_um records how far)."""
+    relay site at the nearest free point (tap_offset_um records how far).  `walls` (see walls()): every hop must have
+    a wall-free L route, else the grid topology routes around them; a remaining walled hop fails closed."""
     if not taps:
         raise ResetError("reset tree: no taps")
     root = (float(root_xy[0]), float(root_xy[1]))
@@ -238,11 +286,16 @@ def topology(taps, root_xy, reach=REACH_UM, margin=MARGIN_UM, boxes=(), box_out=
         off = max(_man(a, b) for a, b in zip(pts, sites))
         pts = sites
     plan_reach = reach - margin
+    walls = list(walls or ())
     nodes, method = _topo_taps(pts, root, plan_reach, boxes, box_out), "taps"
-    if _maxhop(nodes, root) > reach + 1e-6 and boxes:
-        nodes, method = _topo_grid(pts, root, plan_reach, boxes, box_out), "grid"
+    if (_maxhop(nodes, root) > reach + 1e-6 and boxes) or walled_hops(nodes, root, walls):
+        nodes, method = _topo_grid(pts, root, plan_reach, boxes, box_out, walls=walls), "grid"
+    bad = walled_hops(nodes, root, walls)
+    if bad:
+        raise ResetError(f"reset tree: {len(bad)} relay hop(s) cross a wall (blockage closed to the top signal layer) "
+                         f"with no wall-free L route, e.g. node {bad[0]} at {nodes[bad[0]]['xy']}")
     return dict(nodes=nodes, root=root, ntap=len(pts), reach=reach, plan_reach=plan_reach, method=method,
-                taps=[n for n, _, _ in taps], tap_offset_um=round(off, 1))
+                taps=[n for n, _, _ in taps], tap_offset_um=round(off, 1), walls=len(walls))
 
 
 def assign(topo, depth=None, prefix=""):
@@ -296,7 +349,7 @@ def _topo_taps(pts, root, reach, boxes, box_out):
     return nodes
 
 
-def _topo_grid(pts, root, reach, boxes, box_out, pitch=None):
+def _topo_grid(pts, root, reach, boxes, box_out, pitch=None, walls=()):
     """shortest-hop tree over the taps + a grid of free relay sites (pitch um); ties: fewer hops, then less wire."""
     x0, y0, x1, y1 = box_out
     pitch = pitch or max(21.6, reach / 4)
@@ -332,7 +385,7 @@ def _topo_grid(pts, root, reach, boxes, box_out, pitch=None):
         for dx in (-1, 0, 1):
             for dy in (-1, 0, 1):
                 for k in buckets.get((cx + dx, cy + dy), ()):
-                    if _man(q, allp[k]) <= reach:
+                    if _man(q, allp[k]) <= reach and _lfree(q, allp[k], walls):
                         yield k
     dist = {}
     par = {}
@@ -504,7 +557,7 @@ def _type_tree0(P, tn, depth, reach):
         w, h = t["outline_um"]
         cache[("topo", tn, reach)] = topology(_taps(P, tn), reset_pin(P, tn), reach=reach,
                                               boxes=blockages(t), box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM,
-                                                                           h - CLEAR_UM))
+                                                                           h - CLEAR_UM), walls=walls(P, tn))
     return assign(cache[("topo", tn, reach)], depth)
 
 
@@ -1034,7 +1087,7 @@ def _wf_type_tree(P, tn):
             c["tap"] = len(pts)
             pts.append((f"core_rst{k}", *c["xy"]))
         topo = topology(pts, in_pin(P, tn), reach=relay_um(P), boxes=blockages(t),
-                        box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM))
+                        box_out=(CLEAR_UM, CLEAR_UM, w - CLEAR_UM, h - CLEAR_UM), walls=walls(P, tn))
         T = assign(topo, None)
         T.update(n_clock_taps=len(taps), outs=[[x, y] for _, x, y in outs], core_resets=core_rst)
         cache[key] = T
