@@ -1,0 +1,27 @@
+{
+ "source_master": "ot_hgi_coll_tkm_m_tp192",
+ "compute": "actual canonical root+32common tile cores",
+ "producer": "independent original TP192 fixed-slot8 calendar",
+ "plan": "B2o fcd78fa50f reference; LINK/RETURN stages explicit parameters for successor",
+ "native_L74": {
+  "W": 3749,
+  "SIDE": 33,
+  "B": 2341,
+  "channel_stations": 3,
+  "raw_consumer_age": 6
+ },
+ "phase_bridge": "transmit runtime start1edge early; register receivedstart1edge. Del_flit schedule unchanged, no inputqueue/backpressure. Must wire priced registeredbridge in release.",
+ "split": {
+  "PIPE": 1,
+  "added_cycles": 2
+ },
+ "return": {
+  "DATA_L13": 2,
+  "CTL_L12": 11,
+  "data_alignment_registers": 9,
+  "coherent_return_age": 11
+ },
+ "total_path_added_edges_vs_direct_unsplit_compute": 19,
+ "TKM_ingressII": 8,
+ "purpose": "one complete TKM compute+L74+coherentreturn functional gate; physical root/tile/link closure still required"
+}
