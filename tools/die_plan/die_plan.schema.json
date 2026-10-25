@@ -940,6 +940,10 @@
            "type": "number",
            "exclusiveMinimum": 0
           },
+          "insertion_ff_ps": {
+           "type": "number",
+           "exclusiveMinimum": 0
+          },
           "insertion_tol_ps": {
            "type": "number",
            "minimum": 0
