@@ -681,3 +681,21 @@ Scope: routed NOT SIGNED runs (autopilot review.tsv/structural.tsv once created;
   (c) Placed density at the top face band must stay <=0.8 with the +1.7k flops (the clump at x190-300 is already the dense spot).
   (d) The runner's preflight, post-CTS FF gate (per-corner I, F1/F2) and the autopilot review stay in force.
 2026-10-25 06:35 PDT GEOM-REVIEW-4: POST-ROUTE [AUTOPILOT review.tsv d728ffa7f790] qfd_dv_s8_crh_rp1__f56c (FF -13.22/200, slew 22/17): NEAR-MISS by number, STRUCTURAL by cause; covered by my 06:26 REPLY [QC-PHYS-RP1-F57] (viewed rp1_f56c_routed_review.png): per-tap GRT->RCX error spreads taps 263..301 FF, macro own-branch lost its early window (E1->g_crb[1] wd, 120 ep), W0 pin-reg->port IO basis (67), 12 unrepeated 167-179 um vertical nets (slew). Rebuild = f57 (corr + NDR variants), no ECO on f56c.
+2026-10-25 06:36 PDT GEOM-REVIEW-3: POST-ROUTE [AUTOPILOT structural.tsv 8d12dfba2db3] kv3_astk_ES variant B (timing regs: zn_read_replicas 8, +40 FF/zone, ctl +22), claude/kv-cores-astk-1025r@40aa5462a1.
+  Numbers: TT setup PASS, FF -39.68/1626, slew 927/920, FANOUT_VIOL 129 (max 213).
+  Viewed paths/paths_zoom/density. The run dir is already deleted, so I traced the slew pins in the kit's 1_synth_odb.v (epyc1 /srv/opentallas-scratch2/claude/geom-review-3/astkB).
+  STRUCTURAL. B fixed variant A's setup cause, since ap[] now sits at the W face with its decision state, but it left one broadcast.
+  (1) Slew (all top violators, 482-497 ps at NAND2/OA211 B/A2 pins): every one traces back through Yosys BUFx2 trees to ONE register, u_zn.g_zn_1.g_rd[7].rc[0] (QN). It has 2048 leaf loads: a read-column select bit fanned out to the whole 2048-bit read mux of that replica.
+    The 8 read replicas split the data path, but each replica's rc select register is still single, so the broadcast moved instead of shrinking.
+    Fix in RTL: replicate the rc/select registers per mux slice (<=64 loads each, e.g. 32 copies of each rc bit per replica). Keep them as distinct kept regs (keep attribute plus the paramod keep check; Yosys merges equal regs otherwise) and place each with its slice. Same cycle, so no schedule change.
+    Check every other select/enable register with leaf fanout >64 in the synth netlist before the next route; the 129 FANOUT_VIOL nets say there are more.
+  (2) FF hold -39.68 on u_ctl.ap[13] -> port ap[13] = IO basis: F1 per-corner I binding; no port buffers.
+  (3) Reg2reg -14.2 inside g_zn_3 adder (u_ca r[89] -> s1_code[6]) and removal rn_q -> zq[0] (-1.7): generic tree splitting a zone. Zone taps as in the A verdicts.
+  Picture: as A. Cells fill the W/centre; the NE and SE corners are empty; the face moat stays.
+  Rebuild from synth with (1) + zone taps; post-CTS render before route. Owner KV-CORES (astk).
+2026-10-25 06:36 PDT GEOM-REVIEW-3: POST-ROUTE [AUTOPILOT review.tsv 5905ee49c1cb] kv3_head_eighth_e0 h5m8 (FF -9.75/1259, slew 55/62), claude/kv-cores-heads-1025r@d222ff6f53.
+  Viewed paths/density and read paths_ff_hold. Fill is even; one drawn path, inside g_d[2].u_b at ~(55,140).
+  NEAR-MISS by number, STRUCTURAL by cause: the same generic-H-tree defect as GEOM-REVIEW-4's 06:05 head_eighth verdict.
+  - The launch s1_code[21] and capture u_cb r[85] sit in one lane submodule, a few um apart.
+  - They split at level 3 of a 9-level tree (clkbuf_3_2_0 vs 3_3_0); leaf arrival 223.9 vs 239.6.
+  Fix as in that verdict: per-lane regional taps incl. the lane rst, leaf load equal, <=20 ps, I per corner. No m8 ECO as the closure path. Owner KV-CORES.
