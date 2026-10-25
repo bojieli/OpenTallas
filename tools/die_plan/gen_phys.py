@@ -563,6 +563,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     lctx = sdc_lint.kit_context(P, tn)
     (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
     shutil.copyfile(Path(__file__).with_name("sdc_lint.py"), kd / "sdc_lint.py")
+    shutil.copyfile(Path(__file__).with_name("rtl_lint.py"), kd / "rtl_lint.py")
     lerr = sdc_lint.lint((kd / "constraint.sdc").read_text(), **lctx)
     if lerr:
         raise sdc_lint.SdcLintError(f"type {tn}: constraint.sdc fails sdc_lint ({len(lerr)}): " + "; ".join(lerr[:8]))
@@ -683,6 +684,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
               "grt_post.tcl", "cts_post.tcl", "leaf_affinity.tcl"):
         shutil.copyfile(Path(__file__).with_name(f), kd / f)
+        if f == "reset_taps.tcl" and (RT.pipelined(P) or RT.wavefront(P)):
+            hook = kd / f
+            hook.write_text(f"set rt_leaf_tap {RT.leaf_tap(P, tn)}\n" + hook.read_text())
     if rc_cal:
         shutil.copyfile(Path(__file__).with_name(RC_CAL_FILE), kd / RC_CAL_KIT)
     (kd / "clock_binding.json").write_text(json.dumps(dict(type=tn, insertion_ps=dict(tt=ib["tt"], ff=ib["ff"]),
@@ -783,7 +787,7 @@ IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 NAME=dpkit-$(basename "$K")-$$
 # Preserve existing gate verdicts when a corrected kit reuses a run directory.
 HISTORY="$K/preflight_history/$(date +%Y%m%d_%H%M%S)_$$"
-for f in sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
+for f in rtl_lint.json sdc_lint.json selrange.json port_bind.json face_guard.json face_guard_odb.json reg_fanout.json; do
   if [ -f "$K/$f" ]; then mkdir -p "$HISTORY"; cp -p "$K/$f" "$HISTORY/$f"; fi
 done
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
@@ -791,6 +795,7 @@ docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
   python3 -I /work/sdc_lint.py /work --liberty \$(ls /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*RVT_*.lib* 2>/dev/null | grep -v FAKE) > /work/sdc_lint.log 2>&1; rc=\$?; tail -3 /work/sdc_lint.log; \
   if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR sdc_lint' | tee -a /work/FAIL_PREFLOOR; fi; \
+  if [ \$rc = 0 ]; then python3 -I /work/rtl_lint.py /work; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR rtl_lint (FAIL or NOT RUN)' | tee -a /work/FAIL_PREFLOOR; rc=8; fi; fi; \\\
   SRP=; if [ \$rc = 0 ]; then (python3 -I /work/selrange_gate.py /work > /work/selrange.log 2>&1; echo \$? > /work/selrange.rc) & SRP=\$!; fi; \
   if [ \$rc = 0 ] && [ -f /work/adder_map_dontuse.py ]; then python3 -I /work/adder_map_dontuse.py gen --platform-dir /OpenROAD-flow-scripts/flow/platforms/asap7 --out /work/adder_map_dontuse.v --report /work/adder_map_dontuse.json; rc=\$?; if [ \$rc != 0 ]; then echo 'FAIL_PREFLOOR adder_map_dontuse' | tee -a /work/FAIL_PREFLOOR; fi; fi; \
   if [ \$rc = 0 ]; then \$M synth; rc=\$?; fi; \
