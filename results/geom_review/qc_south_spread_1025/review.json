@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "place/GRT congestion prototypes only",
+  "picture": "south_proposals.png",
+  "reviewed": true,
+  "findings": [
+    "All source pins, x ordering, netlists, clock entry, macro locations and PDN remain unchanged.",
+    "1035 btab/925 prog south face flops formerly in y4.32..10.8um now target y12.96..38.88um, opening horizontal routing escape at the congested south face.",
+    "At least43um stays between target registers and first macro halo at y82.08um; no register targets enter macros.",
+    "Input pin to register distance stays under40um, short against405um reach; no cycles added.",
+    "Four SRAM rows retain >26um horizontal channels and side bands; vertical PDN continuity maintained.",
+    "Check actual placed target retention and GRT congestion before any route/STA. M6/M7 remain reserved outside core."
+  ]
+}
