@@ -28,3 +28,5 @@ LOCK-STEP a4 (10-25): asm.sh -> asm4.v (body_core + edge_core[_pr members] + vm_
   run_a4.sh (FILES=q3b.files build.sh verilate-only + comp_ind.sh), run_ls.sh a4 2000: 4/4 positive PASS (seeds 1-4, dens 8/2/32/4,
   errors 0 incl. async resets every 997 cycles), 5/5 mutants CAUGHT (1 reduce_in_v, 2 link0_wr_v, 3 arg_start, 4 qcap[2] src_v,
   5 arg_fault) -> lockstep_a4.log.  a3 (asm3.v) failed every positive case on hgi_fault: assembly alias bug, fixed in split_asm.py.
+EDGE _pr synth (10-25, ORFS ASAP7, orfs_config_edge_pr.mk, clocks arg_clk + link*_ck): ot_hfd_coll_q3_edge_core 82,747 cells
+  (link_e_pr 24,361 x3, argmax_m_tp192_pr 9,664: +730 = key/meta pin flops) -> synth_stat_edge_pr.txt (was 82,038).
