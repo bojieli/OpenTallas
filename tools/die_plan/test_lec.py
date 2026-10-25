@@ -334,3 +334,66 @@ def test_gold_script_marks_kept_registers():
     s = lec.gold_script({"VERILOG_FILES": "a.v", "DESIGN_NAME": "t"}, "/k", "verilog", [], "s.v", "w.v", "f.v", "/o/gold")
     assert s.index("a:keep %i") < s.index("setattr -mod -unset keep_hierarchy")
     assert "A:keep_hierarchy" in s and "select -write /o/gold.keep" in s
+
+
+def _exact_prove(m, *a, **k):
+    """exhaustive stand-in for ABC (every input pattern; small test designs only): exact, unlike _sim_prove,
+    so a rare event that random simulation never excites is still seen."""
+    n = m.ni
+    assert n <= 20
+    W = 1 << n
+    mask = (1 << W) - 1
+    val = [0] * (n + len(m.ands) // 2 + 1)
+    for v in range(1, n + 1):
+        blk = 1 << (v - 1)
+        pat = ((1 << blk) - 1) << blk                    # 0..0 1..1 repeated: input bit v-1 of the pattern index
+        rep = 0
+        for s in range(0, W, 2 * blk):
+            rep |= pat << s
+        val[v] = rep & mask
+    for k in range(len(m.ands) // 2):
+        r0, r1 = m.ands[2 * k], m.ands[2 * k + 1]
+        val[n + 1 + k] = lec.lit_val(val, mask, r0) & lec.lit_val(val, mask, r1)
+    return {nm: ("proved" if lec.lit_val(val, mask, o) == 0 else "differs") for nm, o in zip(m.onames, m.outs)}
+
+
+def test_hint_pairs_a_rare_event_twin_and_a_wrong_hint_is_dropped(tmp_path, monkeypatch):
+    """PATH-KV-PC4 10-25 (ot_qkd_static_kv_timing with REF_MODE=1: the row opcode is PRE 0 / ACT 1 / REFPB 6, so
+    c_op[2] == c_op[1]; synthesis merged the twins c_op[2] -> c_op[1], row_op[2] -> row_op[1]).  Both bits are set
+    only by a refresh, which random simulation never excites: their signatures look constant, the constant hypothesis
+    fails the proof and no partner is ever proposed, so every consumer of row_op[2] differed (591 points).  A hint
+    pairs them and the same induction proves it; a wrong hint (inverted) is dropped, never a waiver."""
+    monkeypatch.setattr(lec, "prove", _exact_prove)
+    ins = [f"a{i}" for i in range(14)]
+
+    def rare(m, l):
+        r = l["a0"]
+        for i in ins[1:]:
+            r = m.AND(r, l[i])
+        return r                                          # 1 in 16384 patterns
+    g, gm = _seq(tmp_path, "gold", ins, ["c1", "c2", "o"],
+                 lambda m, l: {"c1": rare(m, l), "c2": rare(m, l), "o": m.XOR(l["c2"], l["a0"])})
+    t, tm = _seq(tmp_path, "gate", ins, ["c1", "o"],
+                 lambda m, l: {"c1": rare(m, l), "o": m.XOR(l["c1"], l["a0"])})
+    for hint, want in (([["gold", "ff:u_dut.c2", ["eq", "gold", "ff:u_dut.c1", 0]]], "proved"),
+                       ([["gold", "ff:u_dut.c2", ["eq", "gold", "ff:u_dut.c1", 1]]], "differs"),
+                       ([["gold", "ff:u_dut.c2", ["const", 0]]], "differs"),
+                       ([["gold", "ff:u_dut.nope", ["eq", "gold", "ff:u_dut.c1", 0]]], "differs")):
+        L = lec.Lec(g, gm, t, tm)
+        assert L.gonly == ["ff:u_dut.c2"] and not L.tonly
+        sig, mask = L.build(with_compare=False, with_hyp=False)[0].simulate(16, seed=7)
+        assert lec.lit_val(sig, mask, L.dlit[("gold", "ff:u_dut.c2")]) == 0      # looks constant to the signatures
+        r = lec.apply_hints(L, hint, tmp_path, 100, [])
+        m, _ = L.build(with_compare=True, with_hyp=True)
+        assert _exact_prove(m)["ff:u_dut.o"] == want
+        if want == "proved":
+            assert r["applied"] == 1 and not r["dropped"] and L.hyp[("gold", "ff:u_dut.c2")][2] == "ff:u_dut.c1"
+        elif "nope" in hint[0][1]:
+            assert r["skipped"] and not r["applied"]
+        else:
+            assert r["dropped"] == ["ff:u_dut.c2"] and ("gold", "ff:u_dut.c2") not in L.hyp
+
+
+def test_hints_are_read_from_the_kit_and_passed_into_the_image():
+    s = Path(lec.__file__).read_text()
+    assert 'Path(kit) / "lec_hints.json"' in s and '"--hints", "/lecout/hints.json"' in s
