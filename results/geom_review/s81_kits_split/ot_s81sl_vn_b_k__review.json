@@ -1,0 +1,13 @@
+{
+ "review": "S81/KITS author review, placed + CTS, RTLSPLIT split core kit (kits_repin on claude/s81-kits-split-1024r @5f5f155f3a, RTL claude/s81-rtlsplit-1024r @b5d2eabeef, wavefront rst SDC)",
+ "when_pdt": "2026-10-25 02:20",
+ "kit": "epyc1:/srv/opentallas-scratch2/claude/s81-kits/split/ot_s81sl_vn_b_k",
+ "image": "results/geom_review/s81_kits_split/ot_s81sl_vn_b_k_placed.png",
+ "findings": [
+  "one h-store SRAM (u_h1) at (73.44, 64.8), 73 um from the W data face, vertically centred; logic on all four sides, max bin 0.60, 0 bins > 0.8 (163.3k cells, 29.9k flops)",
+  "pins: W 786 (5.0/um, cap 10.4), N 66 rb/p (0.5/um), E 69 y/fault (0.5/um), S 32 c_s/c_v (0.5/um); clk/rst_n at the W-face middle",
+  "face_guard raw + ODB PASS 951/951",
+  "post-CTS FF hold gate WNS -25.09 ps, 105 endpoints (limits -100 / 2000)"
+ ],
+ "verdict": "PASS (route, 2 corrected-recipe variants)"
+}
