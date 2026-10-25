@@ -510,7 +510,7 @@
    "ft_stations_added": 4,
    "alt_place": 115
   },
-  "dsdv_slice_c1x_C__t2": {
+  "dsdv_slice_c1x_C__t10": {
    "key": "C:xrt1",
    "cells": 723371,
    "hard_cells": 488443,
@@ -529,9 +529,9 @@
    "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 1
+   "ft_stations_added": 0
   },
-  "ot_s81sl_leaf__t18": {
+  "ot_s81sl_leaf__t75": {
    "key": "leaf",
    "cells": 2162983,
    "hard_cells": 2111927,
@@ -539,27 +539,13 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 301.2,
+   "bus_reach_excess_um": 201.4,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 3,
-   "alt_place": 82
-  },
-  "ot_s81sl_leaf__t19": {
-   "key": "leaf",
-   "cells": 2162983,
-   "hard_cells": 2111927,
-   "residual_soft_cells": 51056,
-   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 170.4,
-   "emitted": true,
-   "corner": "WN",
-   "ft_stations_added": 2,
+   "ft_stations_added": 7,
    "alt_place": 80
   },
-  "ot_s81sl_leaf__t20": {
+  "ot_s81sl_leaf__t53": {
    "key": "leaf",
    "cells": 2162983,
    "hard_cells": 2111927,
@@ -567,7 +553,21 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 878.6,
+   "bus_reach_excess_um": 779.2,
+   "emitted": true,
+   "corner": "WN",
+   "ft_stations_added": 0,
+   "alt_place": 25
+  },
+  "ot_s81sl_leaf__t54": {
+   "key": "leaf",
+   "cells": 2162983,
+   "hard_cells": 2111927,
+   "residual_soft_cells": 51056,
+   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
+   "gaps": [],
+   "cores": 25,
+   "bus_reach_excess_um": 1745.8,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -1189,34 +1189,6 @@
    "ft_stations_added": 23,
    "alt_place": 8
   },
-  "ot_s81sl_leaf__t53": {
-   "key": "leaf",
-   "cells": 2162983,
-   "hard_cells": 2111927,
-   "residual_soft_cells": 51056,
-   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 779.2,
-   "emitted": true,
-   "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 25
-  },
-  "ot_s81sl_leaf__t54": {
-   "key": "leaf",
-   "cells": 2162983,
-   "hard_cells": 2111927,
-   "residual_soft_cells": 51056,
-   "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
-   "gaps": [],
-   "cores": 25,
-   "bus_reach_excess_um": 1745.8,
-   "emitted": true,
-   "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 25
-  },
   "ot_s81sl_leaf__t55": {
    "key": "leaf",
    "cells": 2162983,
@@ -1623,7 +1595,7 @@
    "corner": "WS",
    "ft_stations_added": 0
   },
-  "bk_sel__t1": {
+  "bk_sel__t2": {
    "key": "bk_sel",
    "cells": 808579,
    "hard_cells": 769888,

@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "s81",
- "plan_digest": "79c54f9b0fd1ea25",
+ "plan_digest": "2090f41b52932b8d",
  "period_ps": 833,
  "lanes": {
   "attn__s_3S_C__svc_5": {
@@ -1033,6 +1033,44 @@
    },
    "width": 1068
   },
+  "ca__s_0N_LP__bk_sel": {
+   "cycles": 39,
+   "stations": 37,
+   "boundary": 2,
+   "faces": 10,
+   "fixed": 0,
+   "natural": 39,
+   "pad": 0,
+   "param": "LAT_CA__S_0N_LP__BK_SEL",
+   "src": {
+    "part": "s_0N_LP",
+    "bus": "ca_o0"
+   },
+   "dst": {
+    "part": "bk_sel",
+    "bus": "ca_i0"
+   },
+   "width": 276
+  },
+  "cb__s_0N_LP__bk_sel": {
+   "cycles": 38,
+   "stations": 36,
+   "boundary": 2,
+   "faces": 10,
+   "fixed": 0,
+   "natural": 38,
+   "pad": 0,
+   "param": "LAT_CB__S_0N_LP__BK_SEL",
+   "src": {
+    "part": "s_0N_LP",
+    "bus": "cb_o0"
+   },
+   "dst": {
+    "part": "bk_sel",
+    "bus": "cb_i0"
+   },
+   "width": 276
+  },
   "coll__lk_EN0__s_7N_LP": {
    "cycles": 19,
    "stations": 17,
@@ -2003,12 +2041,12 @@
    "width": 597
   },
   "dn_s_1N_L3": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_DN_S_1N_L3",
    "src": {
@@ -11464,6 +11502,25 @@
    },
    "width": 5
   },
+  "tl__bk_sel__s_0N_LP": {
+   "cycles": 38,
+   "stations": 36,
+   "boundary": 2,
+   "faces": 10,
+   "fixed": 0,
+   "natural": 38,
+   "pad": 0,
+   "param": "LAT_TL__BK_SEL__S_0N_LP",
+   "src": {
+    "part": "bk_sel",
+    "bus": "tl_o0"
+   },
+   "dst": {
+    "part": "s_0N_LP",
+    "bus": "tl_i0"
+   },
+   "width": 276
+  },
   "unit__eng__svc_14": {
    "cycles": 2,
    "stations": 0,
@@ -12244,12 +12301,12 @@
    "width": 668
   },
   "up_s_1N_L3": {
-   "cycles": 6,
-   "stations": 4,
+   "cycles": 7,
+   "stations": 5,
    "boundary": 2,
    "faces": 2,
    "fixed": 0,
-   "natural": 6,
+   "natural": 7,
    "pad": 0,
    "param": "LAT_UP_S_1N_L3",
    "src": {
@@ -12263,12 +12320,12 @@
    "width": 668
   },
   "up_s_1N_L4": {
-   "cycles": 11,
-   "stations": 9,
+   "cycles": 10,
+   "stations": 8,
    "boundary": 2,
    "faces": 3,
    "fixed": 0,
-   "natural": 11,
+   "natural": 10,
    "pad": 0,
    "param": "LAT_UP_S_1N_L4",
    "src": {
@@ -14239,12 +14296,12 @@
    "width": 1104
   },
   "x_W4_out": {
-   "cycles": 39,
-   "stations": 37,
+   "cycles": 40,
+   "stations": 38,
    "boundary": 2,
    "faces": 8,
    "fixed": 0,
-   "natural": 39,
+   "natural": 40,
    "pad": 0,
    "param": "LAT_X_W4_OUT",
    "src": {
@@ -15739,44 +15796,6 @@
    },
    "width": 1104
   },
-  "xtier__bk_col__s_1N_C": {
-   "cycles": 18,
-   "stations": 16,
-   "boundary": 2,
-   "faces": 5,
-   "fixed": 0,
-   "natural": 18,
-   "pad": 0,
-   "param": "LAT_XTIER__BK_COL__S_1N_C",
-   "src": {
-    "part": "bk_col",
-    "bus": "xtier_o1"
-   },
-   "dst": {
-    "part": "s_1N_C",
-    "bus": "xtier_i0"
-   },
-   "width": 276
-  },
-  "xtier__bk_col__s_1S_C": {
-   "cycles": 42,
-   "stations": 40,
-   "boundary": 2,
-   "faces": 11,
-   "fixed": 0,
-   "natural": 42,
-   "pad": 0,
-   "param": "LAT_XTIER__BK_COL__S_1S_C",
-   "src": {
-    "part": "bk_col",
-    "bus": "xtier_o0"
-   },
-   "dst": {
-    "part": "s_1S_C",
-    "bus": "xtier_i0"
-   },
-   "width": 276
-  },
   "xtier__bk_sel__s_4S_C": {
    "cycles": 42,
    "stations": 40,
@@ -15929,40 +15948,40 @@
    },
    "width": 276
   },
-  "xtier__s_1N_C__bk_col": {
-   "cycles": 18,
-   "stations": 16,
+  "xtier__s_1N_C__s_1S_C": {
+   "cycles": 22,
+   "stations": 20,
    "boundary": 2,
-   "faces": 5,
+   "faces": 6,
    "fixed": 0,
-   "natural": 18,
+   "natural": 22,
    "pad": 0,
-   "param": "LAT_XTIER__S_1N_C__BK_COL",
+   "param": "LAT_XTIER__S_1N_C__S_1S_C",
    "src": {
     "part": "s_1N_C",
     "bus": "xtier_o0"
    },
    "dst": {
-    "part": "bk_col",
-    "bus": "xtier_i1"
+    "part": "s_1S_C",
+    "bus": "xtier_i0"
    },
    "width": 276
   },
-  "xtier__s_1S_C__bk_col": {
-   "cycles": 43,
-   "stations": 41,
+  "xtier__s_1S_C__s_1N_C": {
+   "cycles": 22,
+   "stations": 20,
    "boundary": 2,
-   "faces": 11,
+   "faces": 6,
    "fixed": 0,
-   "natural": 43,
+   "natural": 22,
    "pad": 0,
-   "param": "LAT_XTIER__S_1S_C__BK_COL",
+   "param": "LAT_XTIER__S_1S_C__S_1N_C",
    "src": {
     "part": "s_1S_C",
     "bus": "xtier_o0"
    },
    "dst": {
-    "part": "bk_col",
+    "part": "s_1N_C",
     "bus": "xtier_i0"
    },
    "width": 276

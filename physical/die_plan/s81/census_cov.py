@@ -149,6 +149,10 @@ def main():
     for k, w_ in retopo.items():
         planned[k] += w_
     rows2, unresolved = collapse_landing(rows)
+    # S81/H4 10-24: retired V-rung units (gen_plan_v4.RETIRED_RUNG: bk_col) -> the direct slice <-> slice rung
+    retired = {"u_bk_col": {"vo_n": "u_s_1S", "vo_s": "u_s_1N"}}
+    rows2 = [dict(r, src=retired[r["src"]][r["src_bus"]], src_bus="vo") if r["src"] in retired else r
+             for r in rows2 if r["dst"] not in retired]
     asb = collections.Counter()
     seen_bus = {}
     clkrst = collections.Counter()
