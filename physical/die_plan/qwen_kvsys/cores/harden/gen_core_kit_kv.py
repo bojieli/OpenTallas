@@ -325,12 +325,21 @@ def main():
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--ectlk-face-ports", action="store_true", help="ECTLK private port flops for sc/lmax/fault/req outputs + one cfg landing flop (0 schedule cycles; miter results/ectlk_preflight_1025)")
+    ap.add_argument("--am-g-drop", action="store_true",
+                    help="COORD ruling 2 (10-25): drop the constant LMAX head-group bit g (am[1]) from qkd_ahub am0..3 and the "
+                         "ASTK am input (+ its qo[537] copy); ASTK ctl AM_G_PIN=0/G_CONST=0; plan pins renamed compactly "
+                         "(old b -> b-1 above the dropped bit) in memory until the KV-PLAN3 delta lands (am_g_drop.py)")
     ap.add_argument("--stock-flow", action="store_true",
                     help="old core basis: stock setRC, TC-only repair, no leaf affinity (default = FLOW 10-25 basis, below)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
     cj = json.load(open(a.core_json))
+    if a.am_g_drop:
+        import am_g_drop
+        if cj["module"].startswith("kv3_astk_") and not a.astk_face_ports:
+            raise SystemExit("--am-g-drop on ASTK needs --astk-face-ports (repo qkd_astk_static_leaves.sv carries AM_G_PIN)")
+        am_g_drop.core_json(cj)
     if a.ectlk_three_taps:
         if cj["module"] != "qkd_ectlk":
             raise SystemExit("--ectlk-three-taps only applies to qkd_ectlk")
@@ -387,6 +396,8 @@ def main():
             dst.write_text(head_port_regs(dst.read_text(), mod, kd))
         if a.head_lane_ltcopy and dst.stem == mod:
             dst.write_text(head_lane_ltcopy(dst.read_text(), mod, kd))
+        if a.am_g_drop and dst.stem == mod:
+            dst.write_text(am_g_drop.transform(dst.read_text(), mod))
         if a.ectlk_three_taps and dst.stem == mod:
             text = dst.read_text()
             old = ".ck({ck[0], ck[0], ck[0]})"
@@ -471,6 +482,14 @@ def main():
         (kd / "macro_place.tcl").write_text("\n".join(mp) + "\n")
     # pins: plan pins file + added / gap / strap pins
     pins = json.load(open(plandir / hc["pins_file"]))["pins"]
+    if a.am_g_drop:
+        pins, g_dropped = am_g_drop.plan_pins(pins, mod)
+        (kd / "am_g_delta.json").write_text(json.dumps(dict(
+            ruling="COORD ruling 2 (10-25), KV-TOK 05:36 g == 0 for every scheduled op", added_cycles=0, added_flops=0,
+            ports={p: f"[{ {1: 35, 537: 571}[d] }:0] -> [{ {1: 34, 537: 570}[d] }:0], old bit {d} dropped, old b -> b-1 above it"
+                   for p, d in am_g_drop.drops_for(mod).items()},
+            plan_pins=("renamed in memory (KV-PLAN3 delta pending): dropped " + ", ".join(g_dropped)) if g_dropped
+            else "plan already carries the delta"), indent=1) + "\n")
     have = {p["name"] for p in pins}
     names = []
     for n, c in cj["pin_class"].items():
