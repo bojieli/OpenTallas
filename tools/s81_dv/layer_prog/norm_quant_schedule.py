@@ -23,6 +23,7 @@ def solve_report(report, max_delay=512, allow_provisional=False):
     if complete and set(assembly)==set(names):
         Q.V_ASM={i:int(assembly[i]) for i in names}
     elif allow_provisional:
+        complete=False
         Q.V_ASM={i:2+report['v_age'][i] for i in names}
     else:
         raise ValueError('Full V assembly paths are required, including column4 seqhost/bk_sel transit; direct vo age is insufficient')
