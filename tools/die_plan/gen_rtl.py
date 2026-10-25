@@ -106,12 +106,13 @@ module ot_dp_rsync_s3 (input wire clk, input wire async_rst_n, output wire sync_
 endmodule
 // ot_dp_rrelay: one synchronous reset relay flop (OWNER RESET RULE 10-24, tools/die_plan/reset_tree.py).  No reset
 // of its own: the synchronised reset is carried like data, so assertion is synchronous too (the clock runs at boot).
-// keep_hierarchy + keep: the per-tap relays have identical inputs and would otherwise be merged (Yosys opt_merge).
-(* keep_hierarchy *)
-module ot_dp_rrelay (input wire clk, input wire d, output wire q);
-    (* keep *) reg r;
-    always @(posedge clk) r <= d;
-    assign q = r;
+// keep_hierarchy + keep: the per-tap relays have identical inputs and would otherwise be merged (Yosys opt_merge), and a
+// relay whose tap has no sinks is kept.  The flop drives q DIRECTLY (output reg, like ot_dp_ep): an internal kept alias
+// (keep reg r; assign q = r) made ORFS insbuf hang a dangling BUFx2 q->r on every relay output, so a registered
+// rst_o_<k> / start_o_<k> pin register had a load besides its port (face_guard 'shared', S81 stations 10-25).
+(* keep_hierarchy, keep *)
+module ot_dp_rrelay (input wire clk, input wire d, output reg q);
+    always @(posedge clk) q <= d;
 endmodule
 `default_nettype wire
 """
