@@ -17,7 +17,9 @@ Usage:
     selrange_gate.py KITDIR [--out KITDIR/selrange.json]          (reads KITDIR/config.mk; /work/... -> KITDIR/...)
     selrange_gate.py --top T [-D X] [-I DIR] [--filelist F] [files...]
     env OT_YOSYS / --yosys: the yosys binary (default: yosys on PATH)
-Exit: 0 PASS, 1 FAIL (unwaived out-of-range select), 2 ERROR (yosys could not read / elaborate the sources).
+Exit: 0 PASS, 1 FAIL (unwaived out-of-range select), 2 ERROR (yosys could not read / elaborate the sources, or the
+checker crashed).  run_kit.sh stops the kit on 1 only; 2 is logged as NOT RUN (read_verilog rejects some constructs
+slang accepts: a package import inside a module body, a defparam into a generate block, ...).
 """
 import argparse
 import json
@@ -196,4 +198,10 @@ def main(argv=None):
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except SystemExit:
+        raise
+    except Exception as e:      # a crash of the checker is NOT RUN (2), never a FAIL verdict (1)
+        print(f"SELRANGE ERROR checker crashed: {e!r}")
+        sys.exit(2)

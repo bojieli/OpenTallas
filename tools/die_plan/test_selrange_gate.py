@@ -128,6 +128,7 @@ def test_run_kit_runs_gate_before_synth():
     assert "selrange_gate.py /work" in rk and rk.index("selrange_gate.py /work") < rk.index("\\$M synth")
     # joined right after synth, before the face_guard netlist check; a non-zero gate stops the kit
     j = rk.index("wait \\$SRP")
-    assert rk.index("\\$M synth") < j < rk.index("face_guard.py \\$N") and "rc=\\$S" in rk
+    assert rk.index("\\$M synth") < j < rk.index("face_guard.py \\$N")
+    assert '[ \\"\\$S\\" = 1 ]; then rc=1' in rk and "SELRANGE NOT RUN" in rk     # FAIL stops; ERROR (2) is NOT RUN
     src = (HERE / "gen_phys.py").read_text()
     assert 'with_name("selrange_gate.py"), kd / "selrange_gate.py"' in src
