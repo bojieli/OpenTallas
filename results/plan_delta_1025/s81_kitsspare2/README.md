@@ -14,3 +14,20 @@ Script: physical/die_plan/s81/delta_kitsspare2_1025.py (idempotent; base main 55
   (PATH-S81 part). Knee sites there would have cost +1 cycle on 3 slots.
 Gates (epyc1, this tree): G0 PASS 0E 1265W (main 0E 1265W); G0C PASS 0E 1265W; latency table unchanged.
 Renders BEFORE|AFTER in img/ (viewed). Note: the BEFORE xrt3 pins in the c3x panel are drawn from the new table (render artefact).
+
+## Update 10:50 PDT (coll A withdrawn; hist_bank contract added)
+- slice_station t23 now re-planned here too (coll A withdrawn by COORD: the coll lanes stay). ft_knee_sites gained an
+  arclength-target candidate (stations at uniform arclength along the shared Manhattan spine, no forced bank at the
+  knee); the allocator keeps the candidate with the fewest banks. t23: ft0..ft3 at their OLD depth (0 added cycles),
+  worst paired-bit hop 402.5 um (<=403), every bank a compact row ~110 um x 2.7 um. density taps on banks / face strips.
+  test_ft_knee_sites.py: the per-leg axis check became "stations monotone on the spine" (summed Manhattan legs =
+  end-to-end Manhattan); PASS3.
+- Open plan note (GEOM 10:12): t23 sinks use only x<460 of its 1442x1227 slot; outline right-sizing is a parent-slot
+  change, NOT in this delta.
+- hist_bank pin contract 359 -> 435 (merged claude/kits-spare2-hb-1025@7d5b9515ca, GEOM-REVIEW-2 PASS): OT_HB_PINCOPY,
+  one pin per kept capture flop (clr[16:0], gsel[63:0]), parent hq_parts multicasts; default RTL unchanged; equiv
+  17334/17334. dsdv_bksel_q is re-kitted ONLY after hist_bank signs off (needs OT_HB_PINCOPY + the new child view).
+- ft_knee_sites now writes regs_um = [in-pin centroid, allocated bank centroids] (was the spine targets, which sit up
+  to a half bank-width off the bits when the knee anchor moves to a window edge; G0 measures hops between regs_um and
+  flagged 414-442 um on the t23 coll lanes). The candidate reach test also covers the centroid chain. G0 PASS 0E 1265W,
+  G0C PASS 0E 1265W on the merged branch (main baseline 0E 1265W). t46 keeps its 660e7287e4 sites (passes either way).

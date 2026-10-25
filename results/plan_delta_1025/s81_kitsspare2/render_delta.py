@@ -10,7 +10,7 @@ import schema as S
 
 base, after, out = sys.argv[1], sys.argv[2], Path(sys.argv[3]); out.mkdir(parents=True, exist_ok=True)
 PB, PA = S.Plan(json.load(open(base))), S.Plan(json.load(open(after)))
-TYPES = ["bk_sel__t2", "gunit__t1", "dsdv_slice_c3x_C__t1", "slice_station__t46"]
+TYPES = ["bk_sel__t2", "gunit__t1", "dsdv_slice_c3x_C__t1", "slice_station__t23", "slice_station__t46"]
 
 def panel(ax, P, tn, title):
     t = P.types[tn]; w, h = t["outline_um"]

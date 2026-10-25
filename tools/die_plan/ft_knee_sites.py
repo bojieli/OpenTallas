@@ -98,6 +98,9 @@ def _allocate_candidate(allocator, a, b, in_face, out_face, depth, reach, radius
                               span_um=np.ptp(points,axis=0).tolist(),spine_segment=segment,fraction=frac))
         chain = [a, *banks, b]
         hops = [float(np.abs(q-p).sum(axis=1).max()) for p,q in zip(chain, chain[1:])]
+        # the die plan (check.py lane_geometry) measures bank-centroid to pin-window hops: keep those in reach too
+        cent = [c.mean(axis=0) for c in chain]
+        hops = [max(h, float(np.abs(q-p).sum())) for h,p,q in zip(hops, cent, cent[1:])]
         if max(hops, default=0) <= reach-2.0:
             return path, banks, stats, hops
         j = max(range(len(hops)), key=hops.__getitem__)
@@ -151,7 +154,9 @@ def place(raw, names):
             old = slot['stations']
             path,banks,stats,hops = allocate_bank_chain(allocator,a,b,slot['in_face'],slot['out_face'],old)
             slot['stations'] = len(banks)+1
-            slot['regs_um'] = [v.round(6).tolist() for v in path[:-1]]
+            # station 0 at the in-pin centroid, then each bank at its ALLOCATED centroid (the die plan measures hops
+            # between these; the spine target can sit a half bank-width off the bits when the knee anchor is moved)
+            slot['regs_um'] = [v.round(6).tolist() for v in [path[0], *[bk.mean(axis=0) for bk in banks]]]
             slot['bit_site_cell_um'] = [1.404,.27]
             slot['bit_sites_um'] = [(p-np.array([.702,.135])).round(6).tolist() for p in banks]
             ledger.append(dict(type=name,slot=slot['name'],old_stations=old,new_stations=slot['stations'],
