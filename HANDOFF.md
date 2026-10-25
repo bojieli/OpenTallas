@@ -558,3 +558,12 @@ CODEX: 2026-10-25 07:37 PDT S81 PLAN3: optionalFT split-band source770fce5b5e(me
 CODEX: 2026-10-25 07:38 PDT S81CCONN l0r267.84² measured-fitREADY77523b3ce7 G0C177/177PASS/3testsPASS/0cycles; nativekit/signoffCORES.
 
 CODEX: 2026-10-25 07:36 PDT takeover0719 all-lane work active; main499eb8179 canary/boot160/START/lint and4bbbf780b autopilotdispatch+diagnosticretention pushed/HEAD==originmain. Head assembledclockFAIL diagnosed budgettap load mismatch; all lane currentinventories lanes/CODEX.md.
+CODEX: 2026-10-25 07:39 PDT RESET sharedleaf false-zeroPASS FIXREADY cece3ea38d (branch9439af93cc): actualKV K1 99sinkpins,max326.916um vsold1305;16testsPASS,+0cycles; stableSTART companionb2b31b9507 READY.
+
+2026-10-25 07:37 PDT CODEX: HBM core flow source-only f90c555daf READY; actual EXP unsafe initialization pruning fixed/analyzed842pins restored, boot miter+mutantPASS0cycles; one fullmaster synth diagnosticLIVE, parent/master pin delta owed.
+2026-10-25 07:39 PDT CODEX: S81 VN_b optional F6write-stage source3bf7d67d1c qualified119994cycles+mutant0externallatency; VSWorientation-onlyfixfailed0/4, compensatedwaitline-stagefullmiterlive. qbankcurrentF1NOTSIGNEDdespitelegacysignoff; genericlegacyrunnerfailclosedfixda791126a8 READY.
+2026-10-25 07:37 PDT CODEX: freshFFrepairAPIbbca0eeff READY;actualheadBplacementTT+122.21/FF+0.0116ps0EP,2passes~1.2kbufs vsoldMM45minstall;rootmerges,headownsroute.
+2026-10-25 07:33 PDT CODEX: TOKDS/LEC narrowinactive-read+HXsourceREADYc8496ae75 0cycles,3x3510all13portsmiterPASS+mutantCAUGHT. LECtoolimplicit-netlintREADYf6433f29314tests+CSAcontrols; currentengine28977proved,3offsetDIFFER+2statusUNDECIDED underdiagnosis,nostaleNEQwaivers.
+2026-10-25 07:40 PDT CODEX: QC hc0/fwfaultfailure diagnosed stale m5preflight: exact48unusedfaultlanes already currentunloaded274 (plan0719setdiff0); realhead/SU/stationfaultpaths retained. Freshsource/elabPASS,7bcurrentbind next; noextra replan.
+2026-10-25 07:38 PDT CODEX: AUTOPILOT07:32 actual tick preserved KV failed checkpoints, held bulk waves and dispatched reviewed CP1 corrective pair; stale CP1 source rows superseded in coord8ed5b32ce5. Canary isolation/queued-flow matching/clock-cover correction READY e54d57b84e, true HBM3shared faults retained; original canary failures unchanged.
+2026-10-25 07:41 PDT CODEX: KV-KITS exact405FTlattice READYdb9b8251a3(all3053bits,max402.57/output19.71,+5832FF/+34slotcycles); parentf7fold; G2r2+macroinventorylive; oldioFT48GBjobsretained.
