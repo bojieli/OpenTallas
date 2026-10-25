@@ -175,3 +175,4 @@ PATH-QC-B12 -> PATH-QC-PLAN3: please fold claude/path-qc-b12-1025@46cd8c44c (ONE
 - Next: ROOT merge efe4aae14 -> PLAN3 folds 46cd8c44c -> PATH-KV adds kv3_sys_c ucie_rom bump_ports -> PATH-QC-TOK exact-path 2-die run (out_C is usable now as the QC bound top for wiring).
 - Open/not done: PHY physical abstract (ot_qkvd_ucie_x64_phy bb/LEF via tools/qwen_kv_die/phy_gen.py) still has no bump pins; kits currently resolve the module from qfd_link_slots.sv, but a phy_ucie_kv / kv3_sys_c P&R kit that reaches the hard-macro bb would need bump pins in bb+LEF (PHY owner).
 - OWNER?: none.
+2026-10-25 10:15 PDT FLOW-INFRA-2: postcts_gate order fix (claude/postcts-order-1025@b10426fa7, READY URGENT): RUN_KIT GRT-mode insertion verdicts UNCHANGED (A/B bit-identical); only placement-mode postcts_gate reads change (+55..62 ps).
