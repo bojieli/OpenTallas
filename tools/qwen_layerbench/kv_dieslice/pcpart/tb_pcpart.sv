@@ -7,7 +7,11 @@
 // = hbm_rst_n (+KVPC_RST_HBM).  Every other input 0 (embgw est 0 = boot window).  Prints the boot-check state, the
 // slice word at each stage (slice ctrl_es -> es_merge hq/es -> PHY po) and the slice status.
 module tb_pcpart;
-    reg clk = 0, hck = 0; always #0.416667 clk = ~clk; always #0.512 hck = ~hck;
+    // +HCK_IS_CLK (diagnostic, KV-TOK B): the HBM clock IS the core clock, so the partition's PHY po/pi boundary lanes
+    // (ot_dp_st on the core clock clk although po/pi live in the HBM domain -- a bind clock-domain finding) carry each
+    // HBM-domain beat exactly once; default = the real 0.977 GHz HBM clock.
+    reg clk = 0, hck_r = 0; always #0.416667 clk = ~clk; always #0.512 hck_r = ~hck_r;
+    wire hck = $test$plusargs("HCK_IS_CLK") ? clk : hck_r;
     reg arst_n = 0, hbm_rn = 0, host_rn = 0, die_rn = 0, bg = 0;
     integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
     wire [328:0] po0, po1, po2, po3; wire [288:0] pi0, pi1, pi2, pi3; wire [3:0] fh0, fh1, fh2, fh3, rh0, rh1, rh2, rh3;
