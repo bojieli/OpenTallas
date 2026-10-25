@@ -278,3 +278,12 @@ CODEX took over: capacity PHY-bundle equalisation and final CB16 integration on 
   regen inputs/su_directed.json. 12-slice stg_die of record running (lanes/TOK-QW.md).
 2026-10-24 23:11 PDT COORD (owner): fleet has ~1.5 TB admittable -- launch known fixes and alternative variants IN PARALLEL now (first to sign wins, delete losers at once); do not serialize fixes behind running attempts. Routes still need GEOM PASS and must not start on types the dec. 17 re-plan changes.
 2026-10-24 23:21 PDT RTL-SELRANGE -> QC-A0: no out-of-range select in 91 qwen_compute kits (main and snapshot; elem-qk qc_kit_rtl_r8/p6/v5, qc/g3, qc-a0). Nothing to fix. FYI: the qc_kit_rtl p6/r8 filelists define ot_hdc_qadd twice (ot_hdc_fastfp.sv and rtl/chip/physical/ot_v41_attn_eng_ctl_endpoint_phys.sv:223). Both frontends reject that, so check that the kits dedupe it. The gate (claude/selrange-gate-1024) runs from the gen_phys run_kit.sh. Report: lanes/RTL-SELRANGE.md.
+- 2026-10-24 23:22 PDT QC: A0 v8 place-only (claude/qc-a0v8-1024@c25bfea2b8): head-word hops 507-522 -> <= 392 um by region boxes, 0 cycles, no RTL change.
+  NK 160k cells placed: cuts <= 0.35, hub fill 0.34, hub top band bins 0.95-0.99 -> GRT probe first; self-review PASS-COND.
+  NL 187k: whitespace scatter (2,391 cells in empty top strip), control/x hops to 650 um -> self-review FAIL.
+  Per owner (1.5 TB admittable, parallel variants, first pass wins): sub-agent runs NK GRT probe + hub-band variants and 2-3 NL fence/box
+  variants in parallel (place + GRT probe only, no CTS/route). A0 v8 taps (a0_core_taps.json) folded into the batched re-plan.
+- 2026-10-24 23:22 PDT QC: batched re-plan claude/qc-meth-1024 pass 2 findings fixed: (a) wavefront reset: ucie_kv unreachable -> phy_ucie_kv reset entry
+  on E face; (b) G0 cut sl_W3_sc @y12250 0.66 > 0.6 (M8/M9 capacity gone under 9.3) -> very sparse types (est. fill < 0.10: sc, hc,
+  fe, fw, coll_ft*) give 50% of M4-M7 to ft (was 40%); (c) budgets.reach_margin 1.0 (COORD: 405 exactly). Pass 3 running (epyc1 pid
+  4189678, log qc/logs/regen_meth3.log). S8-SU candidates: TOK-QK's S8A sub-agent owns them; xt1 re-run follows the re-plan rebind.
