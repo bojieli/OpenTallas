@@ -1,0 +1,46 @@
+{
+  "api_qualification": "PASS",
+  "physical_design_verdict": "FAIL_GROUP_SPREAD",
+  "boundary_members_each_corner": 1133,
+  "groups_each_corner": 54,
+  "same_member_set": true,
+  "routed_final_group_spread_ps": {
+    "TT": 49.83176391454231,
+    "FF": 42.88980819596128
+  },
+  "routed_final_ff_census": {
+    "status": "MEASURED",
+    "n": 0,
+    "worst_ps": 0,
+    "tns_ps": 0,
+    "margin_n": 0
+  },
+  "postgate_validation": {
+    "validation": "PASS",
+    "corners": {
+      "tt": {
+        "pinreg_n": 1133,
+        "groups": 54,
+        "mean_ps": 242.91,
+        "group_spread_ps": 49.1841,
+        "design_verdict": "FAIL",
+        "census_status": "NOT_RUN",
+        "census_n": -1
+      },
+      "ff": {
+        "pinreg_n": 1133,
+        "groups": 54,
+        "mean_ps": 192.15,
+        "group_spread_ps": 40.3152,
+        "design_verdict": "FAIL",
+        "census_status": "MEASURED",
+        "census_n": 0
+      }
+    }
+  },
+  "jobs": {
+    "helper": "oth-ubuntu-927962-1792960611 EXIT0",
+    "postgate": "oth-ubuntu-1034925-1792960720 EXIT1 due wrapper validator quoting after both Tcl sessions passed; standalone corrected validator PASS without rerunning STA"
+  },
+  "production_changes": false
+}

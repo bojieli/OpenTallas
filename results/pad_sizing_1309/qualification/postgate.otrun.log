@@ -1,0 +1,8 @@
+ot-run: localhost      admits    57 GB (avail 255, reserve 0, fresh 127.2, peak 5.8, headroom 0, waiters 2/32 GB) load 47/256 running 30 disk 1259 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tender-ray as oth-ubuntu-1034925-1792960720 after 0 s
+  File "<string>", line 1
+    import pathlib,json; p=pathlib.Path(/postgate_kit); [print(f.name,json.loads(f.read_text())) for f in sorted(p.glob(qualification_gate_*.json))]
+                                        ^
+SyntaxError: invalid syntax
+ot-run: RAN on localhost (unit oth-ubuntu-1034925-1792960720): exit 1

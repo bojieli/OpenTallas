@@ -1,0 +1,23 @@
+{
+ "validation": "PASS",
+ "corners": {
+  "tt": {
+   "pinreg_n": 1133,
+   "groups": 54,
+   "mean_ps": 242.91,
+   "group_spread_ps": 49.1841,
+   "design_verdict": "FAIL",
+   "census_status": "NOT_RUN",
+   "census_n": -1
+  },
+  "ff": {
+   "pinreg_n": 1133,
+   "groups": 54,
+   "mean_ps": 192.15,
+   "group_spread_ps": 40.3152,
+   "design_verdict": "FAIL",
+   "census_status": "MEASURED",
+   "census_n": 0
+  }
+ }
+}

@@ -32,3 +32,9 @@ The actual existing35 group means span49.83psTT/42.89psFF. Uniform6f replacement
 A valid no-pad TOTAL inserted-stage delta was NOT RUN: removing a pad merges two extracted nets and invalidates the saved SPEF topology. There is no matched pre-pad GRT/RCX graph in the reference checkpoints. Therefore neither the cell-only lookup nor the paired strength change is a certified <=15ps inserted-stage quantum. A future opt-in method needs actual before/after graph timing, explicit group spread/max limits, FF internal-to-output hold checks and new physical legality/RC validation before adoption.
 
 The paired job oth-ubuntu-623248-1792960296 completed EXIT0 through ot-run4GB/1thread. whatif_analysis.json and per-group TSVs retain all baseline/candidate values. canonical_clock_family.tcl is the exact parent-provided getter copy used in this experiment.
+
+## Canonical collector and tagged postgate qualification
+
+Read-only retained head graph qualifies actual OpenSTA API operation: 1,133 identical boundary members in TT/FF, 54 clock-leaf groups. Final routed group spreads TT49.8318ps/FF42.8898ps fail the 20ps group balance guard. FF internal-register to output-register hold census reports MEASURED with zero violating endpoints; this is one path class, not complete signoff. No mutation or route adoption.
+
+Tagged postgate on retained GRT also emits parseable JSON and 54 groups summing to1,133: TT mean242.91ps/spread49.1841ps; FF mean192.15ps/spread40.3152ps, both expected FAIL. TT census NOT_RUN, FF MEASURED n0. Original postgate wrapper exited1 only after successful Tcl sessions because inline validator Python quoting was invalid. Failed wrapper preserved; fixed standalone validator passes against saved outputs, without repeating STA. Qualification source snapshots, scripts, exact logs and outputs are under qualification/.
