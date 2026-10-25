@@ -19625,7 +19625,7 @@
   "tkm_tile": {
    "elab_bits": [
     698,
-    689
+    691
    ],
    "file": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_tp192_tile_core.sv",
    "master": "ot_hgi_coll_tkm_m_tp192",
@@ -19646,6 +19646,18 @@
     [
      "tile_conv",
      "input",
+     1,
+     0
+    ],
+    [
+     "tile_clr_o",
+     "output",
+     1,
+     0
+    ],
+    [
+     "tile_conv_o",
+     "output",
      1,
      0
     ],
@@ -19698,7 +19710,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_0_e86_u_tile_clr": {
@@ -19727,9 +19739,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "000000"
      }
@@ -19738,7 +19760,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_10_e86_u_tile_clr": {
@@ -19767,9 +19789,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "001010"
      }
@@ -19778,7 +19810,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_11_e86_u_tile_clr": {
@@ -19807,9 +19839,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "001011"
      }
@@ -19818,7 +19860,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_12_e86_u_tile_clr": {
@@ -19847,9 +19889,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "001100"
      }
@@ -19858,7 +19910,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_13_e86_u_tile_clr": {
@@ -19887,9 +19939,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "001101"
      }
@@ -19898,7 +19960,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_14_e86_u_tile_clr": {
@@ -19927,9 +19989,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "001110"
      }
@@ -19938,7 +20010,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_15_e86_u_tile_clr": {
@@ -19967,9 +20039,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "001111"
      }
@@ -19978,7 +20060,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_16_e86_u_tile_clr": {
@@ -20007,9 +20089,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "010000"
      }
@@ -20018,7 +20110,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_17_e86_u_tile_clr": {
@@ -20047,9 +20139,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "010001"
      }
@@ -20058,7 +20160,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_18_e86_u_tile_clr": {
@@ -20087,9 +20189,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "010010"
      }
@@ -20098,7 +20210,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_19_e86_u_tile_clr": {
@@ -20127,9 +20239,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "010011"
      }
@@ -20138,7 +20260,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_1_e86_u_tile_clr": {
@@ -20167,9 +20289,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "000001"
      }
@@ -20178,7 +20310,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_20_e86_u_tile_clr": {
@@ -20207,9 +20339,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "010100"
      }
@@ -20218,7 +20360,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_21_e86_u_tile_clr": {
@@ -20247,9 +20389,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "010101"
      }
@@ -20258,7 +20410,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_22_e86_u_tile_clr": {
@@ -20287,9 +20439,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "010110"
      }
@@ -20298,7 +20460,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_23_e86_u_tile_clr": {
@@ -20327,9 +20489,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "010111"
      }
@@ -20338,7 +20510,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_24_e86_u_tile_clr": {
@@ -20367,9 +20539,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "011000"
      }
@@ -20378,7 +20560,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_25_e86_u_tile_clr": {
@@ -20407,9 +20589,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "011001"
      }
@@ -20418,7 +20610,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_26_e86_u_tile_clr": {
@@ -20447,9 +20639,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "011010"
      }
@@ -20458,7 +20660,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_27_e86_u_tile_clr": {
@@ -20487,9 +20689,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "011011"
      }
@@ -20498,7 +20710,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_28_e86_u_tile_clr": {
@@ -20527,9 +20739,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "011100"
      }
@@ -20538,7 +20760,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_29_e86_u_tile_clr": {
@@ -20567,9 +20789,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "011101"
      }
@@ -20578,7 +20810,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_2_e86_u_tile_clr": {
@@ -20607,9 +20839,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "000010"
      }
@@ -20618,7 +20860,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_30_e86_u_tile_clr": {
@@ -20647,9 +20889,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "011110"
      }
@@ -20658,7 +20910,7 @@
      "check": "PASS",
      "cut_bits": [
       348,
-      344
+      346
      ],
      "cut_pins": {
       "g_tiles_31_e86_u_tile_clr": {
@@ -20678,6 +20930,12 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
@@ -20685,6 +20943,10 @@
       "tile_ovf_b": 344,
       "tile_ovf_v": 1
      },
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "011111"
      },
@@ -20696,7 +20958,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_3_e86_u_tile_clr": {
@@ -20725,9 +20987,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "000011"
      }
@@ -20736,7 +21008,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_4_e86_u_tile_clr": {
@@ -20765,9 +21037,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "000100"
      }
@@ -20776,7 +21058,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_5_e86_u_tile_clr": {
@@ -20805,9 +21087,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "000101"
      }
@@ -20816,7 +21108,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_6_e86_u_tile_clr": {
@@ -20845,9 +21137,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "000110"
      }
@@ -20856,7 +21158,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_7_e86_u_tile_clr": {
@@ -20885,9 +21187,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "000111"
      }
@@ -20896,7 +21208,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_8_e86_u_tile_clr": {
@@ -20925,9 +21237,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "001000"
      }
@@ -20936,7 +21258,7 @@
      "check": "PASS",
      "cut_bits": [
       692,
-      689
+      691
      ],
      "cut_pins": {
       "g_tiles_9_e86_u_tile_clr": {
@@ -20965,9 +21287,19 @@
       },
       "tile_clk": {
        "tile_clk": 1
+      },
+      "tile_clr_o": {
+       "tile_clr_o": 1
+      },
+      "tile_conv_o": {
+       "tile_conv_o": 1
       }
      },
      "excluded": "",
+     "plan_lanes": [
+      "tile_clr_o",
+      "tile_conv_o"
+     ],
      "straps": {
       "tile_tid": "001001"
      }
