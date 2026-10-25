@@ -62,6 +62,7 @@ TR = dict(M3=(0.036, 0.009), M4=(0.048, 0.024), M5=(0.048, 0.024), M6=(0.064, 0.
 # S81_V4_FOLDGRANT=<layer> overrides (e.g. M9 = the pre-DEC12 grant, a G0 ERROR m89_signals; '' = no grant).
 FOLD_GRANT = [x for x in os.environ.get("S81_V4_FOLDGRANT", "").split(",") if x]
 STATS_V4 = {}
+INSTANCE_KEPT = []   # DEC12: types renamed back to their reference name by instance identity
 XO_JOINED = []     # v4.6: xo lanes that share the x lane window (S81-P9)
 
 
@@ -1855,8 +1856,26 @@ def emit(parts, lanes, routes, chans, fmap, out):
             if nm and nm not in used:
                 tname[key] = nm
                 used.add(nm)
+        # DEC12 (2026-10-24): a type whose signature changed but whose instances are exactly the instances of ONE
+        # reference type (same partitions, same base) keeps that type's name -- a plan-wide change (e.g. ft station
+        # counts at 405 um) re-kits the type under its old name instead of renumbering it.  Reference instances:
+        # S81_TYPE_PARTS (default instance_map.json next to the name table: type_of {partition: type}).
+        ref_parts_f = Path(os.environ.get("S81_TYPE_PARTS", ref_f.parent / "instance_map.json"))
+        ref_of = json.loads(ref_parts_f.read_text()).get("type_of", {}) if ref_parts_f.is_file() else {}
+        ref_inst = collections.defaultdict(set)
+        for pn, tn_ in ref_of.items():
+            ref_inst[tn_].add(pn)
+        for key in sorted((k for k in types if k not in tname), key=lambda k: (-len(types[k]), types[k][0])):
+            olds = {ref_of.get(n) for n in types[key]}
+            base = re.sub(r"[^A-Za-z0-9_]", "_", key[0])
+            if len(olds) == 1:
+                old = olds.pop()
+                if old and old not in used and ref_inst[old] == set(types[key]) and old.rsplit("__t", 1)[0] == base:
+                    tname[key] = old
+                    used.add(old)
+                    INSTANCE_KEPT.append(old)
         top = collections.Counter()
-        for nm in list(ref.values()) + list(used):
+        for nm in list(ref.values()) + list(used) + list(ref_of.values()):
             b_, n_ = nm.rsplit("__t", 1)
             top[b_] = max(top[b_], int(n_))
         for key in types:
@@ -1866,7 +1885,8 @@ def emit(parts, lanes, routes, chans, fmap, out):
             top[base] += 1
             tname[key] = "%s__t%d" % (base, top[base])
     TYPE_NAMES_OUT.update(names={sig[k]: tname[k] for k in types}, ref=ref_f.name if ref else None,
-                          kept=sum(1 for k in types if ref.get(sig[k]) == tname[k]), types=len(types))
+                          kept=sum(1 for k in types if ref.get(sig[k]) == tname[k]), types=len(types),
+                          kept_by_instances=sorted(INSTANCE_KEPT))
     out_types, busname, ptype = {}, {}, {}
 
     def fsort(e):

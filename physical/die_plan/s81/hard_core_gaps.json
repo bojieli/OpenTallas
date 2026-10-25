@@ -25,7 +25,7 @@
    "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 9
+   "ft_stations_added": 10
   },
   "svc_lo_dsdv_svc_rs__t1": {
    "key": "svc",
@@ -194,7 +194,7 @@
    "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 3
+   "ft_stations_added": 6
   },
   "svc_hi_dsdv_svc_rs__t6": {
    "key": "svc",
@@ -207,7 +207,7 @@
    "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 11
+   "ft_stations_added": 17
   },
   "ot_s81sl_leaf__t1": {
    "key": "leaf",
@@ -217,11 +217,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 235.3,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 0
+   "ft_stations_added": 9,
+   "alt_place": 115
   },
   "ot_s81sl_leaf__t2": {
    "key": "leaf",
@@ -231,11 +231,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 377.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 8,
+   "alt_place": 52
   },
   "dsdv_slice_lepw_mus_C__t1": {
    "key": "C:xrt1",
@@ -266,11 +266,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 181.9,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 93
+   "ft_stations_added": 4,
+   "alt_place": 124
   },
   "ot_s81sl_leaf__t4": {
    "key": "leaf",
@@ -280,11 +280,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 393.1,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 12
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t5": {
    "key": "leaf",
@@ -294,7 +294,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 40.7,
+   "bus_reach_excess_um": 1189.9,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -308,11 +308,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 33.3,
+   "bus_reach_excess_um": 1198.3,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 5,
-   "alt_place": 104
+   "alt_place": 69
   },
   "ot_s81sl_leaf__t7": {
    "key": "leaf",
@@ -322,11 +322,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 427.4,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 4
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "dsdv_slice_lepw_mu_C__t1": {
    "key": "C:xrt1",
@@ -357,7 +357,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 52.7,
+   "bus_reach_excess_um": 1291.9,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 4,
@@ -371,11 +371,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 369.7,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 22
+   "alt_place": 82
   },
   "ot_s81sl_leaf__t10": {
    "key": "leaf",
@@ -385,11 +385,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 216.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 0
+   "ft_stations_added": 6,
+   "alt_place": 100
   },
   "ot_s81sl_leaf__t11": {
    "key": "leaf",
@@ -399,7 +399,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 339.2,
+   "bus_reach_excess_um": 1711.1,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 1,
@@ -413,11 +413,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 785.9,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 4,
-   "alt_place": 94
+   "ft_stations_added": 7,
+   "alt_place": 79
   },
   "ot_s81sl_leaf__t13": {
    "key": "leaf",
@@ -427,11 +427,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 207.7,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0,
-   "alt_place": 13
+   "alt_place": 144
   },
   "dsdv_slice_c1x_C__t1": {
    "key": "C:xrt1",
@@ -462,11 +462,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 141.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 1,
-   "alt_place": 88
+   "ft_stations_added": 2,
+   "alt_place": 100
   },
   "ot_s81sl_leaf__t15": {
    "key": "leaf",
@@ -476,7 +476,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 76.6,
+   "bus_reach_excess_um": 1259.3,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -490,11 +490,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 587.5,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 16
+   "ft_stations_added": 1,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t17": {
    "key": "leaf",
@@ -504,11 +504,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 187.8,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 3
+   "ft_stations_added": 4,
+   "alt_place": 115
   },
   "dsdv_slice_c1x_C__t2": {
    "key": "C:xrt1",
@@ -528,8 +528,8 @@
    "cores": 4,
    "bus_reach_excess_um": 0.0,
    "emitted": true,
-   "corner": "WS",
-   "ft_stations_added": 0
+   "corner": "WN",
+   "ft_stations_added": 1
   },
   "ot_s81sl_leaf__t18": {
    "key": "leaf",
@@ -539,11 +539,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 301.2,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 1,
-   "alt_place": 132
+   "ft_stations_added": 3,
+   "alt_place": 82
   },
   "ot_s81sl_leaf__t19": {
    "key": "leaf",
@@ -553,11 +553,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 170.4,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 0
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t20": {
    "key": "leaf",
@@ -567,7 +567,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 878.6,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -581,11 +581,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 246.9,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 21
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t22": {
    "key": "leaf",
@@ -595,11 +595,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 377.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 2,
+   "alt_place": 52
   },
   "dsdv_slice_c1x_C__t3": {
    "key": "C:xrt1",
@@ -630,11 +630,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 225.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 17
+   "ft_stations_added": 3,
+   "alt_place": 124
   },
   "ot_s81sl_leaf__t24": {
    "key": "leaf",
@@ -644,11 +644,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 263.3,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 19
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t25": {
    "key": "leaf",
@@ -658,7 +658,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 1060.1,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -672,11 +672,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 1068.5,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 1,
-   "alt_place": 25
+   "alt_place": 69
   },
   "ot_s81sl_leaf__t27": {
    "key": "leaf",
@@ -686,11 +686,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 297.6,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 4
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "dsdv_slice_c1x_C__t4": {
    "key": "C:xrt1",
@@ -710,7 +710,7 @@
    "cores": 4,
    "bus_reach_excess_um": 0.0,
    "emitted": true,
-   "corner": "WS",
+   "corner": "WN",
    "ft_stations_added": 0
   },
   "ot_s81sl_leaf__t28": {
@@ -721,10 +721,10 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 342.9,
+   "bus_reach_excess_um": 1395.1,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 14,
+   "ft_stations_added": 22,
    "alt_place": 25
   },
   "ot_s81sl_leaf__t29": {
@@ -735,11 +735,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 623.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 11
+   "ft_stations_added": 1,
+   "alt_place": 35
   },
   "ot_s81sl_leaf__t30": {
    "key": "leaf",
@@ -749,7 +749,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 198.9,
+   "bus_reach_excess_um": 1502.6,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -763,11 +763,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 237.8,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 0
+   "ft_stations_added": 2,
+   "alt_place": 85
   },
   "ot_s81sl_leaf__t32": {
    "key": "leaf",
@@ -777,11 +777,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 377.4,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 2,
+   "alt_place": 52
   },
   "dsdv_slice_iq_C__t1": {
    "key": "C:xrt1",
@@ -802,7 +802,7 @@
    "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0
+   "ft_stations_added": 4
   },
   "ot_s81sl_leaf__t33": {
    "key": "leaf",
@@ -812,11 +812,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 715.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 3,
-   "alt_place": 33
+   "ft_stations_added": 14,
+   "alt_place": 8
   },
   "ot_s81sl_leaf__t34": {
    "key": "leaf",
@@ -826,11 +826,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 166.9,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 0
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t35": {
    "key": "leaf",
@@ -840,7 +840,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 881.1,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -865,7 +865,7 @@
    "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0
+   "ft_stations_added": 1
   },
   "ot_s81sl_leaf__t36": {
    "key": "leaf",
@@ -875,10 +875,10 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 339.2,
+   "bus_reach_excess_um": 1711.1,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 6,
+   "ft_stations_added": 8,
    "alt_place": 104
   },
   "ot_s81sl_leaf__t37": {
@@ -889,11 +889,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 424.9,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 4
+   "ft_stations_added": 3,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t38": {
    "key": "leaf",
@@ -903,11 +903,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 187.1,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 3,
+   "alt_place": 115
   },
   "dsdv_slice_c3x_C__t1": {
    "key": "C:xrt3",
@@ -938,11 +938,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 141.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 113
+   "ft_stations_added": 2,
+   "alt_place": 100
   },
   "ot_s81sl_leaf__t40": {
    "key": "leaf",
@@ -952,7 +952,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 76.6,
+   "bus_reach_excess_um": 1259.3,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -966,11 +966,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 587.5,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0,
-   "alt_place": 15
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t42": {
    "key": "leaf",
@@ -980,11 +980,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 187.8,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 2,
+   "alt_place": 115
   },
   "dsdv_slice_c1x_C__t5": {
    "key": "C:xrt1",
@@ -1005,7 +1005,7 @@
    "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0
+   "ft_stations_added": 1
   },
   "ot_s81sl_leaf__t43": {
    "key": "leaf",
@@ -1015,11 +1015,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 159.6,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 17
+   "ft_stations_added": 3,
+   "alt_place": 124
   },
   "ot_s81sl_leaf__t44": {
    "key": "leaf",
@@ -1029,11 +1029,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 446.6,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 12
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t45": {
    "key": "leaf",
@@ -1043,11 +1043,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 228.8,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 1,
-   "alt_place": 101
+   "ft_stations_added": 2,
+   "alt_place": 41
   },
   "ot_s81sl_leaf__t46": {
    "key": "leaf",
@@ -1057,11 +1057,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 593.3,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 46
+   "ft_stations_added": 2,
+   "alt_place": 8
   },
   "dsdv_slice_c1x_C__t6": {
    "key": "C:xrt1",
@@ -1092,11 +1092,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 159.6,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 17
+   "ft_stations_added": 4,
+   "alt_place": 124
   },
   "ot_s81sl_leaf__t48": {
    "key": "leaf",
@@ -1106,11 +1106,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 446.6,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 12
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t49": {
    "key": "leaf",
@@ -1120,7 +1120,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 76.6,
+   "bus_reach_excess_um": 1259.3,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -1134,7 +1134,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 59.3,
+   "bus_reach_excess_um": 1251.5,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 1,
@@ -1148,11 +1148,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 481.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 4
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "dsdv_slice_c1x_C__t7": {
    "key": "C:xrt1",
@@ -1183,10 +1183,10 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 715.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 6,
+   "ft_stations_added": 23,
    "alt_place": 8
   },
   "ot_s81sl_leaf__t53": {
@@ -1197,7 +1197,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 779.2,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -1211,7 +1211,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 365.8,
+   "bus_reach_excess_um": 1745.8,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -1225,11 +1225,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 582.9,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 55
+   "ft_stations_added": 4,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t56": {
    "key": "leaf",
@@ -1239,11 +1239,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 158.9,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 0
+   "ft_stations_added": 5,
+   "alt_place": 115
   },
   "ot_s81sl_leaf__t57": {
    "key": "leaf",
@@ -1253,11 +1253,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 440.7,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 22
+   "ft_stations_added": 3,
+   "alt_place": 8
   },
   "dsdv_slice_c1x_C__t8": {
    "key": "C:xrt1",
@@ -1278,7 +1278,7 @@
    "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0
+   "ft_stations_added": 5
   },
   "ot_s81sl_leaf__t58": {
    "key": "leaf",
@@ -1288,11 +1288,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 246.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 2,
-   "alt_place": 58
+   "ft_stations_added": 10,
+   "alt_place": 124
   },
   "ot_s81sl_leaf__t59": {
    "key": "leaf",
@@ -1302,7 +1302,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 878.6,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -1316,11 +1316,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 242.1,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 0,
-   "alt_place": 4
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t61": {
    "key": "leaf",
@@ -1330,11 +1330,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 320.1,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 2
+   "ft_stations_added": 3,
+   "alt_place": 126
   },
   "dsdv_slice_c1x_C__t9": {
    "key": "C:xrt1",
@@ -1355,7 +1355,7 @@
    "bus_reach_excess_um": 0.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0
+   "ft_stations_added": 3
   },
   "ot_s81sl_leaf__t62": {
    "key": "leaf",
@@ -1365,11 +1365,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 225.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 17
+   "ft_stations_added": 4,
+   "alt_place": 124
   },
   "ot_s81sl_leaf__t63": {
    "key": "leaf",
@@ -1379,11 +1379,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 263.3,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 19
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t64": {
    "key": "leaf",
@@ -1393,7 +1393,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 1060.1,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -1407,11 +1407,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 159.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 1
+   "ft_stations_added": 6,
+   "alt_place": 115
   },
   "ot_s81sl_leaf__t66": {
    "key": "leaf",
@@ -1421,11 +1421,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 449.2,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 22
+   "ft_stations_added": 5,
+   "alt_place": 8
   },
   "dsdv_slice_lepe_nh_mus_C__t1": {
    "key": "C:xrt1",
@@ -1456,11 +1456,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 239.4,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 17
+   "ft_stations_added": 4,
+   "alt_place": 124
   },
   "ot_s81sl_leaf__t68": {
    "key": "leaf",
@@ -1470,11 +1470,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 220.6,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 19
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "ot_s81sl_leaf__t69": {
    "key": "leaf",
@@ -1484,7 +1484,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 1006.3,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
@@ -1498,11 +1498,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 1014.8,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 4,
-   "alt_place": 35
+   "ft_stations_added": 5,
+   "alt_place": 69
   },
   "ot_s81sl_leaf__t71": {
    "key": "leaf",
@@ -1512,11 +1512,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 255.0,
    "emitted": true,
    "corner": "WS",
-   "ft_stations_added": 0,
-   "alt_place": 4
+   "ft_stations_added": 2,
+   "alt_place": 80
   },
   "dsdv_slice_lepe_mu_C__t1": {
    "key": "C:xrt1",
@@ -1547,7 +1547,7 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 52.7,
+   "bus_reach_excess_um": 1291.9,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 4,
@@ -1561,11 +1561,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 369.7,
    "emitted": true,
    "corner": "WN",
    "ft_stations_added": 0,
-   "alt_place": 22
+   "alt_place": 82
   },
   "ot_s81sl_leaf__t74": {
    "key": "leaf",
@@ -1575,11 +1575,11 @@
    "basis": "ot_s81sl_leaf children measured (vp/vn/ve/vsw/vq/vs/rxsf/rxsb)",
    "gaps": [],
    "cores": 25,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 216.0,
    "emitted": true,
    "corner": "WN",
-   "ft_stations_added": 0,
-   "alt_place": 0
+   "ft_stations_added": 6,
+   "alt_place": 100
   },
   "gunit__t1": {
    "key": "gunit",
@@ -1652,7 +1652,7 @@
    "basis": "dsdv_eng_rr 418,942 (F ep7 ref_gate dsdv_eng_rr_b) > cap: 2 planned cores",
    "gaps": [],
    "cores": 3,
-   "bus_reach_excess_um": 0.0,
+   "bus_reach_excess_um": 167.7,
    "emitted": true,
    "corner": "WS",
    "ft_stations_added": 2
