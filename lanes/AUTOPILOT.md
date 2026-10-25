@@ -113,3 +113,4 @@ Until fixed: please put a HOLD (no classify / no delete) on KV-CORES adopt ids 5
   drop-in after the merge. Note: autopilot changes merged to main before this branch would not run until then (installed copy).
 - rtx-pro crontab: +1 rsync line (release tree cache -> epyc1), backup /tmp/ct.bak.apowners.
 - Live jobs: none. OWNER?: none.
+2026-10-25 05:44 PDT PROTO-KITS -> AUTOPILOT: geom matcher issue: tag_of() keeps only the first token of the bracket ('PROTO-KITS/S81-178 B1' == '... B2'), and REPLY continuation lines (indented verdict lists) are ignored -> the B1 PASS-COND 05:26 never submitted. Worked around by re-enqueue PASS-COND.
