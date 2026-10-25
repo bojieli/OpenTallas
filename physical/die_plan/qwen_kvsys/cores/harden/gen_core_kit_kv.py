@@ -248,6 +248,76 @@ def head_lane_ltcopy(text, mod, kd):
     return text
 
 
+
+
+def head_lane_s3copy(text, mod, kd):
+    """PATH-KV-HEAD 10-25 (head6ff TT -71.64 structural fix): ot_qkh_lane8 S3_COPY=1 -- every lane gets its own S3 pin-flop
+    copy of {c_in[3:2], c_in[0], e_in, q_valid_in, q_beat_in, hid, bsel} and its own q0/q1 slice write enables, so the
+    g3g / g3k / e3 broadcast (8 lanes x 16-bit a mux + valid, 3-level BUFx2 tree ~240 ps from u_l8.g3g) becomes 8 lane nets.
+    0 cycles (same D, same edges), +31 FF per lane = +248 per lane8; default S3_COPY=0 keeps the signed odd heads identical."""
+    rx = re.compile(r"(ot_qkh_lane8 #\()(?![^)]*S3_COPY)")
+    text, n = rx.subn(r"\1.S3_COPY(1), ", text)
+    if n < 1:
+        raise SystemExit(f"{mod}: --head-lane-s3copy found no parameterised ot_qkh_lane8 instance")
+    (kd / "head_lane_s3copy_delta.json").write_text(json.dumps(dict(
+        lane8_s3_copy=n, extra_flops_estimate=248 * n, added_cycles=0,
+        source="PATH-KV-HEAD 2026-10-25: head6ff TT worst u_g_t_13_u_l8.g3g -> g_d[*].u_p stage1 through a 3-level fanout "
+               "tree; rtl/hdc/nearhbm/ot_qkh_subtiles.sv S3_COPY",
+        note="default S3_COPY=0 = unchanged leaf (odd heads e1/e3/e5/e7 signed)"), indent=1) + "\n")
+    return text
+
+
+def head_strap_master(text, mod, kd, cj):
+    """OWNER DECISION 2026-10-25 07:01 (option B, ID straps): the head-dependent constants of an even head_eighth become
+    strap_* INPUT ports of one hardened master, tied at the parent (TIEHI/TIELO next to the pin): BSEL (the 2-bit
+    .bsel(2'bXX) constant of both g_t lanes' ot_qkh_lane8, e0 00 / e2 01 / e4 10 / e6 11) -> strap_bsel[1:0], and HID (the
+    existing g_front_<n>_u_front__hid[1:0] strap port, value from the plan's S_head<k> parameter) -> strap_hid[1:0].
+    e4 and e6 have identical pin tables (names differ only by the g_front / g_t instance index), so the e6 kit is the
+    master netlist of {e4, e6}; e2 (shifted pin table) and e0 (K-tree class) need the KV-PLAN3 pin template to merge."""
+    vals = sorted(set(re.findall(r"\.bsel\(2'b([01]{2})\)", text)))
+    if len(vals) != 1:
+        raise SystemExit(f"{mod}: --head-strap-master expects one .bsel(2'bXX) constant, found {vals}")
+    text, nb = re.subn(r"\.bsel\(2'b[01]{2}\)", ".bsel(strap_bsel)", text)
+    hids = [k for k in cj["port_decl"] if k.endswith("_u_front__hid")]
+    if len(hids) != 1:
+        raise SystemExit(f"{mod}: --head-strap-master expects one *_u_front__hid port, found {hids}")
+    hid = hids[0]
+    text, nh = re.subn(rf"\b{re.escape(hid)}\b", "strap_hid", text)
+    text, nd = re.subn(r"(\n\s*input wire \[1:0\] strap_hid)", r"\n    input wire [1:0] strap_bsel,\1", text, count=1)
+    if nh < 2 or nd != 1:
+        raise SystemExit(f"{mod}: --head-strap-master could not rewrite the hid port ({nh} refs, decl {nd})")
+    hv = next((s["value"] for s in cj["report"].get("straps", []) if s["pin"] == hid), None)
+    cj["port_decl"]["strap_hid"] = cj["port_decl"].pop(hid)
+    cj["port_decl"]["strap_bsel"] = ["input", 1, 0]
+    for b in (0, 1):
+        cj["pin_class"].pop(f"{hid}[{b}]")
+        cj["pin_class"][f"strap_hid[{b}]"] = "strap"
+        cj["pin_class"][f"strap_bsel[{b}]"] = "strap"
+    cj["report"]["straps"] = [dict(pin="strap_hid", width=2, value=hv, was=hid),
+                              dict(pin="strap_bsel", width=2, value="2'b" + vals[0], was=".bsel constant (ot_qkh_lane8 x%d)" % nb)]
+    (kd / "head_strap_master.json").write_text(json.dumps(dict(
+        module=mod, straps=cj["report"]["straps"], lane8_bsel_bindings=nb,
+        rule="OWNER DECISION 2026-10-25 07:01 option B: ID straps as strap_* input pins, tied at the parent; block valid for all values",
+        sdc_note="strap ports keep the regular IO delays (timed, stricter) until FLOW-FIX admits set_false_path -from strap_* in sdc_lint",
+        members={"kv3_head_eighth_e6": {"strap_bsel": "2'b11"}, "kv3_head_eighth_e4": {"strap_bsel": "2'b10"}} if mod in
+                ("kv3_head_eighth_e4", "kv3_head_eighth_e6") else {mod: {"strap_bsel": "2'b" + vals[0]}},
+        lec="each master vs every original constant variant under the matching strap values (KV-LEC)"), indent=1) + "\n")
+    return text
+
+
+def head_lane_taps(kd, tool_dir):
+    """KV-HEADCLK 10-25 (COORD verdict, GEOM-REVIEW-4 06:05/06:53): per-lane regional clock taps. GPL lane guide regions
+    (head_lane_fence.tcl, released before DPL) keep each ot_qkh_lane8 g_d lane compact; at PRE_CTS each lane's flops move
+    to their own tap buffer at the lane centroid (head_lane_taps.tcl), the rest of the core to one more tap; CTS
+    -balance_levels builds the port -> taps tree and one tree per tap."""
+    for f in ("head_lane_fence.tcl", "head_lane_fence_release.tcl", "head_lane_taps.tcl"):
+        t = (HERE / f).read_text()
+        (kd / f).write_text(t)
+    (kd / "lane_pre_gpl.tcl").write_text("source /work/face_flops.tcl\nsource /work/head_lane_fence.tcl\n")
+    (kd / "lane_pre_dpl.tcl").write_text("source /work/face_flops_release.tcl\nsource /work/head_lane_fence_release.tcl\n")
+    (kd / "lane_pre_cts.tcl").write_text("source /work/max_fanout.tcl\nsource /work/head_lane_taps.tcl\n")
+
+
 def preserve_head_relays(path):
     """Retain existing physical command-relay FFs, including unused command fields; no logic/cycle change."""
     if Path(path).name != "ot_qwen_nearhbm_head_hs.sv":
@@ -345,6 +415,13 @@ def main():
     ap.add_argument("--head-lane-ltcopy", action="store_true",
                     help="even head_eighth cores: ot_qkh_lane8 LT_COPY=1 (per-lane last decision-word flop, +63 FF/lane8, "
                          "0 cycles, COORD ruling 5); needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
+    ap.add_argument("--head-lane-s3copy", action="store_true",
+                    help="even head_eighth: ot_qkh_lane8 S3_COPY=1 (per-lane S3 pin-flop copies, 0 cycles, PATH-KV-HEAD 10-25)")
+    ap.add_argument("--head-lane-taps", action=argparse.BooleanOptionalAction, default=None,
+                    help="per-lane regional clock taps + GPL lane guide regions (KV-HEADCLK 10-25); default ON for the even "
+                         "head_eighth cores, --no-head-lane-taps = old single-tree CTS")
+    ap.add_argument("--head-strap-master", action="store_true",
+                    help="even head_eighth: BSEL constant + HID port -> strap_bsel / strap_hid input pins (OWNER 10-25 07:01 option B)")
     ap.add_argument("--orfs-var", action="append", default=[], help="KEY=VALUE appended to config.mk (recipe variant)")
     ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--astk-rep-split", action="store_true",
@@ -394,6 +471,15 @@ def main():
         raise SystemExit("--head-lane-ltcopy needs --head-port-regs (repo ot_qkh_subtiles.sv carries LT_COPY)")
     if a.head_port_regs and not re.fullmatch(r"kv3_head_eighth_e[0246]", mod):
         raise SystemExit("--head-port-regs only applies to the even head_eighth cores (e0/e2/e4/e6)")
+    is_even_head = bool(re.fullmatch(r"kv3_head_eighth_e[0246]", mod))
+    if a.head_lane_taps is None:
+        a.head_lane_taps = is_even_head
+    if a.head_lane_taps and not is_even_head:
+        raise SystemExit("--head-lane-taps only applies to the even head_eighth cores (e0/e2/e4/e6)")
+    if a.head_lane_taps and a.stock_flow:
+        raise SystemExit("--head-lane-taps needs the FLOW 10-25 basis (max_fanout.tcl hooks); drop --stock-flow")
+    if a.head_strap_master and not is_even_head:
+        raise SystemExit("--head-strap-master only applies to the even head_eighth cores (e0/e2/e4/e6)")
     hc = next(h for h in plan["partition_types"][cj["type"]]["hard_cores"] if h["inst"] == cj["inst"])
     w, h = hc["outline_um"]
     tid = f"{mod}__{w:g}x{h:g}"
@@ -431,6 +517,10 @@ def main():
             dst.write_text(head_port_regs(dst.read_text(), mod, kd))
         if a.head_lane_ltcopy and dst.stem == mod:
             dst.write_text(head_lane_ltcopy(dst.read_text(), mod, kd))
+        if a.head_lane_s3copy and dst.stem == mod:
+            dst.write_text(head_lane_s3copy(dst.read_text(), mod, kd))
+        if a.head_strap_master and dst.stem == mod:
+            dst.write_text(head_strap_master(dst.read_text(), mod, kd, cj))
         if a.am_g_drop and dst.stem == mod:
             dst.write_text(am_g_drop.transform(dst.read_text(), mod))
         if a.ectlk_three_taps and dst.stem == mod:
@@ -670,19 +760,26 @@ def main():
            "export SETUP_SLACK_MARGIN = 0",
            "export SKIP_LAST_GASP = 1",
            "export TNS_END_PERCENT = 100",
-           *(["export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl",
-              "export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl"] if rec.get("face_flops", True) else []),
+           *(["export PRE_GLOBAL_PLACE_TCL = /work/" + ("lane_pre_gpl.tcl" if a.head_lane_taps else "face_flops.tcl"),
+              "export PRE_DETAIL_PLACE_TCL = /work/" + ("lane_pre_dpl.tcl" if a.head_lane_taps else "face_flops_release.tcl")]
+             if rec.get("face_flops", True) else []),
            "export CORNER = TC",
            "export ADDER_MAP_FILE = /work/adder_map_dontuse.v",
            *(["export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl",
               "export POST_CTS_TCL = /work/leaf_affinity.tcl"] if flow_basis else []),
-           *(["export PRE_RESIZE_TCL = /work/max_fanout.tcl", "export PRE_CTS_TCL = /work/max_fanout.tcl",
+           *(["export PRE_RESIZE_TCL = /work/max_fanout.tcl",
+              "export PRE_CTS_TCL = /work/" + ("lane_pre_cts.tcl" if a.head_lane_taps else "max_fanout.tcl"),
               "export PRE_GLOBAL_ROUTE_TCL = /work/max_fanout.tcl", "export SLEW_MARGIN = 20", "export CAP_MARGIN = 20"]
              if flow_basis else []),
            *(["export CORNERS = tc bc", "export TC_LIB_FILES = $(TC_NLDM_LIB_FILES) " + " ".join(libs),
               "export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) " + " ".join(l for l in libs_ff if l)] if mcmm else []),
            *[f"export {k} = {v}" for k, v in rec.get("orfs_vars", {}).items()],
            *[f"export {kv.split('=', 1)[0].strip()} = {kv.split('=', 1)[1].strip()}" for kv in a.orfs_var]]
+    if a.head_lane_taps:
+        if not rec.get("face_flops", True):
+            raise SystemExit("--head-lane-taps chains face_flops.tcl; recipe face_flops=false is not supported")
+        head_lane_taps(kd, tool)
+        cfg += ["export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -balance_levels"]
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     if lefs:
@@ -706,6 +803,8 @@ def main():
               clocks=clks, clock_nets=cj["report"].get("clock_nets"), resets=rsts, recipe=rec, sdc_lint="PASS (gen)", period_ps=per, insertion_budget_ps=ins, macros=macros,
               signal_max=rec.get("sigmax", a.sigmax),
               flow_basis=("stock" if a.stock_flow else "FLOW-1025: rcx-rc + leaf-affinity + fanout24/slew-cap-margin20" + (" + mcmm tc/bc" if mcmm else " (no FF macro lib: TC only)")),
+              head_lane_taps=bool(a.head_lane_taps), head_strap_master=bool(a.head_strap_master),
+              head_lane_s3copy=bool(a.head_lane_s3copy),
               kit_hash=kit_hash(kd))
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),
