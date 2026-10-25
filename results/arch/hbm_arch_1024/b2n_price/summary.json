@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.hbm_b2n_price.v1",
+ "rule": "OWNER DECISION 12 (2026-10-24 21:31): partition ft <= M7, stations <= 405 um",
+ "recipe": "stages_arch.py PLAN price/st_B2.json OUT --slot plan_c; python3 -m hgi_sim.plan_study_price_1017 --stages OUT --x-c 377.6 (variant c_L4). Same recipe for B2l and B2n (relative delta); Codex's B2l model (results/arch/hbm_codex_1024/price_B2l.json, internal legs charged) = 1475.3 AR",
+ "B2l": {
+  "ar": 1586.9,
+  "mtp": 2744.5,
+  "qwen": 896.7
+ },
+ "B2n": {
+  "ar": 1340.4,
+  "mtp": 2342.6,
+  "qwen": 866.5
+ },
+ "delta_pct": {
+  "ar": -15.5,
+  "mtp": -14.6,
+  "qwen": -3.4
+ },
+ "scaled_to_codex_b2l": {
+  "ar": 1246.1,
+  "vs_d4g_1896_pct": -34.3
+ },
+ "plan": [
+  "decision 12: 460 ports drop M8/M9 (2 pin layers), reach / ft_station_max 405",
+  "boundary q_su10 +216 / q_spu0 -216 um (hub<->su10 N face carries 2998+1719+1615+514+514+268 b = 1363 um at 5.6 pins/um on M7/M5 vs 1166 um of hub overlap; spu0 (soft, no cores) gives 216 um (its hub face needs 1087 of 2290 um))",
+  "boundary q_su30 +216 / q_spu1 -216 um (hub<->su30 S face: same traffic as su10 (mirror in y); spu1 soft)",
+  "re-windowed 918 ports (918 grown to <= 5.6 pins/um on 2 layers); 0 infeasible face groups",
+  "mirror: 14 second-instance port windows set from the first instance (type frame)",
+  "re-windowed 19 ports (6 grown to <= 5.6 pins/um on 2 layers); 8 infeasible face groups",
+  "mirror pin tables: 13 port pairs nudged to one table, 0 unresolved",
+  "ft slot stations 1167 -> 2602; internal stations 22349 -> 60263 (+0 new links over 405 um); 0 unroutable",
+  "clock: {\"method\": \"symmetric binary H-tree (decision 5a) -> pruned tap-driver grid (5b) -> distance+load assignment with partition coherence (5c, 5f)\", \"levels\": 12, \"level_um\": [7024.3, 4587.8, 3512.2, 2293.9, 1756.1, 1147.0, 878.0, 573.5, 439.0, 286.7, 219.5, 143.4], \"path_um\": 22861.4, \"model_insertion_ps\": 2286.1, \"ps_per_mm\": 100.0, \"segments\": 4889, \"drivers\": 1870, \"cells\": [64, 64], \"taps\": 3306, \"drivers_moved\": 556, \"driver_moved_max_um\": 380.16, \"tap_driver_max_um\": 468.9, \"taps_over_reach\": 9, \"coherence_moves\": 170, \"max_load\": 28, \"root_driver\": {\"xy\": [13988.16, 9175.68], \"stub_um\": 60.48}, \"wire_mm\": 1430.2, \"intra_split_top2\": [\"root\", \"vsN0\", \"vsN1\", \"vsN2\", \"vsN4\", \"vsN5\", \"vsN6\", \"NE_b010\", \"NE_b011\", \"NE_b012\", \"NE_b013\", \"NE_b102\", \"NE_b103\", \"NE_b112\", \"NE_b113\", \"NE_hub\", \"NE_io\", \"NW_b010\", \"NW_b011\", \"NW_b012\", \"NW_b013\", \"NW_b102\", \"NW_b103\", \"NW_b112\", \"NW_b113\", \"NW_hub\", \"NW_io\"], \"seams_top2\": 27, \"seams_over_80ps_at_5pct\": 49, \"intra_over_80ps_at_5pct\": 45}",
+  "latency: 204/298 lanes +cycles (max +47, sum +2665)"
+ ]
+}
