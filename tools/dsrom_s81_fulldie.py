@@ -11557,7 +11557,11 @@ def glue_rtl(m):
                         '.a_v(a_v), .a_t(a_t), .a_d(a_d), .a_e(a_e), .b_v(b_v), .b_t(b_t), .b_d(b_d), .b_e(b_e), '
                         '.o_v(ov), .o_t(ot_), .o_d(od), .o_e(oe), .fault(flt), .quiet());')
             body.append('    assign o = {oe, od, ot_, ov};')
-            fi = ' | fi[0]' if fch else ''
+            fi = ' | fil' if fch else ''
+            if fch:     # S81-KITS-RTLB 10-24 (owner: register every pin, in RTL): the fault-chain input lands in its own
+                        # pin register before the OR into fr -> +1 cycle per 'f' node on the sticky fault chain
+                body.append(f'    reg fil; always @(posedge clk[0] or negedge {nrs}) if (!{nrs}) fil <= 1\'b0; else fil <= fi[0];'
+                            '   // fault-chain input pin register (+1 cycle)')
             body.append(f'    reg fr; always @(posedge clk[0] or negedge {nrs}) if (!{nrs}) fr <= 1\'b0; else fr <= flt{fi};')
             body.append('    assign fo = fr;')
         elif mst.startswith('dsfd_rstg') and SSTN_REG:   # S-NET --sstn-reg: valid in a column-reset flop at the pin
