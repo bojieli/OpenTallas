@@ -5948,7 +5948,7 @@
      "face": "N",
      "window_um": [
       6.144,
-      415.268
+      437.636
      ],
      "layers": [
       "M7",
@@ -5963,8 +5963,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      416.448,
-      562.332
+      439.772,
+      596.136
      ],
      "layers": [
       "M7",
@@ -6075,8 +6075,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      566.016,
-      583.076
+      730.172,
+      741.636
      ],
      "layers": [
       "M7",
@@ -6091,8 +6091,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      729.216,
-      840.54
+      743.772,
+      861.159
      ],
      "layers": [
       "M7",
@@ -6103,16 +6103,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      841.728,
-      1073.828
+      863.295,
+      1189.322
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -6123,8 +6124,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1075.2,
-      1190.364
+      1191.458,
+      1312.972
      ],
      "layers": [
       "M7",
@@ -6246,7 +6247,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (R0)"
+   "note": "svc partition; 1 instance(s) (R0)",
+   "face_layers": {
+    "N": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_hi_dsdv_svc_rs__t1": {
    "module": "s81p_svc_hi_dsdv_svc_rs__t1",
@@ -6295,8 +6303,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      566.016,
-      583.076
+      730.172,
+      741.636
      ],
      "layers": [
       "M7",
@@ -6311,8 +6319,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      729.216,
-      840.54
+      743.772,
+      861.159
      ],
      "layers": [
       "M7",
@@ -6323,16 +6331,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      841.728,
-      1073.828
+      863.295,
+      1189.322
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -6343,8 +6352,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1075.2,
-      1190.364
+      1191.458,
+      1312.972
      ],
      "layers": [
       "M7",
@@ -6392,7 +6401,7 @@
      "face": "S",
      "window_um": [
       6.144,
-      415.268
+      437.636
      ],
      "layers": [
       "M7",
@@ -6407,8 +6416,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      416.448,
-      562.332
+      439.772,
+      596.136
      ],
      "layers": [
       "M7",
@@ -6516,7 +6525,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (R0)"
+   "note": "svc partition; 1 instance(s) (R0)",
+   "face_layers": {
+    "S": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_lo_dsdv_svc_rs__t1": {
    "module": "s81p_svc_lo_dsdv_svc_rs__t1",
@@ -6550,7 +6566,7 @@
      "face": "N",
      "window_um": [
       6.144,
-      392.412
+      357.619
      ],
      "layers": [
       "M7",
@@ -6561,16 +6577,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      948.096,
-      1166.172
+      929.712,
+      1195.279
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -6581,8 +6598,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1169.472,
-      1309.412
+      1197.415,
+      1324.783
      ],
      "layers": [
       "M7",
@@ -6709,8 +6726,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      394.56,
-      724.58
+      359.755,
+      659.873
      ],
      "layers": [
       "M7",
@@ -6721,16 +6738,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      726.72,
-      945.948
+      662.009,
+      927.576
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -6741,8 +6759,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1311.552,
-      1416.732
+      1326.919,
+      1422.538
      ],
      "layers": [
       "M7",
@@ -6757,7 +6775,7 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1418.688,
+      1424.674,
       1434.012
      ],
      "layers": [
@@ -6892,7 +6910,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (R0)"
+   "note": "svc partition; 1 instance(s) (R0)",
+   "face_layers": {
+    "N": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_hi_dsdv_svc_rs__t2": {
    "module": "s81p_svc_hi_dsdv_svc_rs__t2",
@@ -6941,8 +6966,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      394.56,
-      724.58
+      359.755,
+      659.873
      ],
      "layers": [
       "M7",
@@ -6953,16 +6978,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      726.72,
-      945.948
+      662.009,
+      927.576
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -6973,8 +6999,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1311.552,
-      1416.732
+      1326.919,
+      1422.538
      ],
      "layers": [
       "M7",
@@ -6989,7 +7015,7 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1418.688,
+      1424.674,
       1434.012
      ],
      "layers": [
@@ -7038,7 +7064,7 @@
      "face": "S",
      "window_um": [
       6.144,
-      392.412
+      357.619
      ],
      "layers": [
       "M7",
@@ -7049,16 +7075,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      948.096,
-      1166.172
+      929.712,
+      1195.279
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -7069,8 +7096,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1169.472,
-      1309.412
+      1197.415,
+      1324.783
      ],
      "layers": [
       "M7",
@@ -7199,7 +7226,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (R0)"
+   "note": "svc partition; 1 instance(s) (R0)",
+   "face_layers": {
+    "S": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_lo_dsdv_svc_rs__t2": {
    "module": "s81p_svc_lo_dsdv_svc_rs__t2",
@@ -7249,7 +7283,7 @@
      "face": "N",
      "window_um": [
       6.144,
-      392.412
+      357.619
      ],
      "layers": [
       "M7",
@@ -7260,16 +7294,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      948.096,
-      1166.172
+      929.712,
+      1195.279
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -7280,8 +7315,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1169.472,
-      1309.412
+      1197.415,
+      1324.783
      ],
      "layers": [
       "M7",
@@ -7424,8 +7459,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      394.56,
-      724.58
+      359.755,
+      659.873
      ],
      "layers": [
       "M7",
@@ -7436,16 +7471,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      726.72,
-      945.948
+      662.009,
+      927.576
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -7456,8 +7492,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1311.552,
-      1416.732
+      1326.919,
+      1422.538
      ],
      "layers": [
       "M7",
@@ -7472,7 +7508,7 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1418.688,
+      1424.674,
       1434.012
      ],
      "layers": [
@@ -7607,7 +7643,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (R0)"
+   "note": "svc partition; 1 instance(s) (R0)",
+   "face_layers": {
+    "N": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_hi_dsdv_svc_pvso_entry__t1": {
    "module": "s81p_svc_hi_dsdv_svc_pvso_entry__t1",
@@ -7704,8 +7747,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      394.56,
-      724.58
+      359.755,
+      659.873
      ],
      "layers": [
       "M7",
@@ -7716,16 +7759,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      726.72,
-      945.948
+      662.009,
+      927.576
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -7736,8 +7780,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1311.552,
-      1416.732
+      1326.919,
+      1422.538
      ],
      "layers": [
       "M7",
@@ -7752,7 +7796,7 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1418.688,
+      1424.674,
       1434.012
      ],
      "layers": [
@@ -7849,7 +7893,7 @@
      "face": "S",
      "window_um": [
       6.144,
-      392.412
+      357.619
      ],
      "layers": [
       "M7",
@@ -7860,16 +7904,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      948.096,
-      1166.172
+      929.712,
+      1195.279
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -7880,8 +7925,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1169.472,
-      1309.412
+      1197.415,
+      1324.783
      ],
      "layers": [
       "M7",
@@ -8010,7 +8055,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (R0)"
+   "note": "svc partition; 1 instance(s) (R0)",
+   "face_layers": {
+    "S": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_lo_dsdv_svc_rs__t3": {
    "module": "s81p_svc_lo_dsdv_svc_rs__t3",
@@ -8044,7 +8096,7 @@
      "face": "N",
      "window_um": [
       6.144,
-      392.412
+      357.619
      ],
      "layers": [
       "M7",
@@ -8055,16 +8107,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      948.096,
-      1166.172
+      929.712,
+      1195.279
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -8075,8 +8128,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1169.472,
-      1309.412
+      1197.415,
+      1324.783
      ],
      "layers": [
       "M7",
@@ -8219,8 +8272,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      394.56,
-      724.58
+      359.755,
+      659.873
      ],
      "layers": [
       "M7",
@@ -8231,16 +8284,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      726.72,
-      945.948
+      662.009,
+      927.576
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -8251,8 +8305,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1311.552,
-      1416.732
+      1326.919,
+      1422.538
      ],
      "layers": [
       "M7",
@@ -8267,7 +8321,7 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1418.688,
+      1424.674,
       1434.012
      ],
      "layers": [
@@ -8418,7 +8472,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (R0)"
+   "note": "svc partition; 1 instance(s) (R0)",
+   "face_layers": {
+    "N": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_hi_dsdv_svc_rs__t3": {
    "module": "s81p_svc_hi_dsdv_svc_rs__t3",
@@ -8467,8 +8528,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      394.56,
-      724.58
+      359.755,
+      659.873
      ],
      "layers": [
       "M7",
@@ -8479,16 +8540,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      726.72,
-      945.948
+      662.009,
+      927.576
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -8499,8 +8561,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1311.552,
-      1416.732
+      1326.919,
+      1422.538
      ],
      "layers": [
       "M7",
@@ -8515,7 +8577,7 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1418.688,
+      1424.674,
       1434.012
      ],
      "layers": [
@@ -8564,7 +8626,7 @@
      "face": "S",
      "window_um": [
       6.144,
-      392.412
+      357.619
      ],
      "layers": [
       "M7",
@@ -8575,16 +8637,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      948.096,
-      1166.172
+      929.712,
+      1195.279
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -8595,8 +8658,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1169.472,
-      1309.412
+      1197.415,
+      1324.783
      ],
      "layers": [
       "M7",
@@ -8728,7 +8791,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (R0)"
+   "note": "svc partition; 1 instance(s) (R0)",
+   "face_layers": {
+    "S": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_lo_dsdv_svc_rs__t4": {
    "module": "s81p_svc_lo_dsdv_svc_rs__t4",
@@ -8793,8 +8863,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      356.736,
-      504.924
+      456.768,
+      647.103
      ],
      "layers": [
       "M7",
@@ -8805,16 +8875,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      618.624,
-      850.908
+      794.266,
+      1191.123
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -8825,8 +8896,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      852.096,
-      1025.06
+      1193.259,
+      1417.922
      ],
      "layers": [
       "M7",
@@ -8906,7 +8977,7 @@
      "face": "N",
      "window_um": [
       6.144,
-      355.364
+      454.632
      ],
      "layers": [
       "M7",
@@ -8921,8 +8992,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      506.112,
-      617.436
+      649.239,
+      792.13
      ],
      "layers": [
       "M7",
@@ -8937,8 +9008,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1028.352,
-      1045.412
+      1420.058,
+      1434.012
      ],
      "layers": [
       "M7",
@@ -9120,7 +9191,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (MY)"
+   "note": "svc partition; 1 instance(s) (MY)",
+   "face_layers": {
+    "N": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_hi_dsdv_svc_rs__t4": {
    "module": "s81p_svc_hi_dsdv_svc_rs__t4",
@@ -9154,7 +9232,7 @@
      "face": "S",
      "window_um": [
       6.144,
-      355.364
+      454.632
      ],
      "layers": [
       "M7",
@@ -9169,8 +9247,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      506.112,
-      617.436
+      649.239,
+      792.13
      ],
      "layers": [
       "M7",
@@ -9185,8 +9263,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1028.352,
-      1045.412
+      1420.058,
+      1434.012
      ],
      "layers": [
       "M7",
@@ -9265,8 +9343,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      356.736,
-      504.924
+      456.768,
+      647.103
      ],
      "layers": [
       "M7",
@@ -9277,16 +9355,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      618.624,
-      850.908
+      794.266,
+      1191.123
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -9297,8 +9376,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      852.096,
-      1025.06
+      1193.259,
+      1417.922
      ],
      "layers": [
       "M7",
@@ -9414,7 +9493,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (MY)"
+   "note": "svc partition; 1 instance(s) (MY)",
+   "face_layers": {
+    "S": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_lo_dsdv_svc_rs__t5": {
    "module": "s81p_svc_lo_dsdv_svc_rs__t5",
@@ -9496,7 +9582,7 @@
      "face": "N",
      "window_um": [
       6.144,
-      415.268
+      531.38
      ],
      "layers": [
       "M7",
@@ -9511,8 +9597,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      416.448,
-      562.332
+      533.516,
+      723.851
      ],
      "layers": [
       "M7",
@@ -9607,8 +9693,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      566.016,
-      677.156
+      725.987,
+      868.878
      ],
      "layers": [
       "M7",
@@ -9619,16 +9705,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      678.528,
-      910.628
+      871.014,
+      1267.871
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -9639,8 +9726,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      911.808,
-      1025.82
+      1270.007,
+      1417.922
      ],
      "layers": [
       "M7",
@@ -9655,8 +9742,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1028.352,
-      1045.412
+      1420.058,
+      1434.012
      ],
      "layers": [
       "M7",
@@ -9838,7 +9925,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (MY)"
+   "note": "svc partition; 1 instance(s) (MY)",
+   "face_layers": {
+    "N": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_hi_dsdv_svc_pvso_entry__t2": {
    "module": "s81p_svc_hi_dsdv_svc_pvso_entry__t2",
@@ -9919,8 +10013,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      566.016,
-      677.156
+      725.987,
+      868.878
      ],
      "layers": [
       "M7",
@@ -9931,16 +10025,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      678.528,
-      910.628
+      871.014,
+      1267.871
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -9951,8 +10046,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      911.808,
-      1025.82
+      1270.007,
+      1417.922
      ],
      "layers": [
       "M7",
@@ -9967,8 +10062,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1028.352,
-      1045.412
+      1420.058,
+      1434.012
      ],
      "layers": [
       "M7",
@@ -10096,7 +10191,7 @@
      "face": "S",
      "window_um": [
       6.144,
-      415.268
+      531.38
      ],
      "layers": [
       "M7",
@@ -10111,8 +10206,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      416.448,
-      562.332
+      533.516,
+      723.851
      ],
      "layers": [
       "M7",
@@ -10225,7 +10320,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (MY)"
+   "note": "svc partition; 1 instance(s) (MY)",
+   "face_layers": {
+    "S": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_lo_dsdv_svc_rs__t6": {
    "module": "s81p_svc_lo_dsdv_svc_rs__t6",
@@ -10952,7 +11054,7 @@
      "face": "N",
      "window_um": [
       6.144,
-      367.652
+      338.36
      ],
      "layers": [
       "M7",
@@ -10963,16 +11065,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      889.344,
-      1094.948
+      879.456,
+      1130.472
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -10983,8 +11086,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1096.896,
-      1228.188
+      1132.608,
+      1252.996
      ],
      "layers": [
       "M7",
@@ -11063,8 +11166,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      370.368,
-      679.652
+      340.496,
+      624.168
      ],
      "layers": [
       "M7",
@@ -11075,16 +11178,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "N",
      "window_um": [
-      681.792,
-      887.196
+      626.304,
+      877.32
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -11095,8 +11199,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1230.144,
-      1328.612
+      1255.132,
+      1345.512
      ],
      "layers": [
       "M7",
@@ -11111,8 +11215,8 @@
      "kind": "data",
      "face": "N",
      "window_um": [
-      1330.56,
-      1341.476
+      1361.084,
+      1369.91
      ],
      "layers": [
       "M7",
@@ -11127,8 +11231,8 @@
      "kind": "ctl",
      "face": "N",
      "window_um": [
-      1364.736,
-      1379.876
+      1372.046,
+      1372.752
      ],
      "layers": [
       "M7",
@@ -11268,7 +11372,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (MY)"
+   "note": "svc partition; 1 instance(s) (MY)",
+   "face_layers": {
+    "N": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "svc_hi_dsdv_svc_rs__t6": {
    "module": "s81p_svc_hi_dsdv_svc_rs__t6",
@@ -11301,8 +11412,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      370.368,
-      679.652
+      340.496,
+      624.168
      ],
      "layers": [
       "M7",
@@ -11313,16 +11424,17 @@
     {
      "name": "attnh_i0",
      "dir": "in",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      681.792,
-      887.196
+      626.304,
+      877.32
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -11333,8 +11445,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1230.144,
-      1328.612
+      1255.132,
+      1345.512
      ],
      "layers": [
       "M7",
@@ -11349,8 +11461,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1330.56,
-      1341.476
+      1361.084,
+      1369.91
      ],
      "layers": [
       "M7",
@@ -11365,8 +11477,8 @@
      "kind": "ctl",
      "face": "S",
      "window_um": [
-      1364.736,
-      1379.876
+      1372.046,
+      1372.752
      ],
      "layers": [
       "M7",
@@ -11414,7 +11526,7 @@
      "face": "S",
      "window_um": [
       6.144,
-      367.652
+      338.36
      ],
      "layers": [
       "M7",
@@ -11425,16 +11537,17 @@
     {
      "name": "attnh_o0",
      "dir": "out",
-     "width": 1068,
+     "width": 2133,
      "kind": "data",
      "face": "S",
      "window_um": [
-      889.344,
-      1094.948
+      879.456,
+      1130.472
      ],
      "layers": [
       "M7",
-      "M5"
+      "M5",
+      "M3"
      ],
      "order": "lsb_low"
     },
@@ -11445,8 +11558,8 @@
      "kind": "data",
      "face": "S",
      "window_um": [
-      1096.896,
-      1228.188
+      1132.608,
+      1252.996
      ],
      "layers": [
       "M7",
@@ -11554,7 +11667,14 @@
     {"inst":"u_rsv.u_sx.g_r[3].g_h[0].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1080.0,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"},
     {"inst":"u_rsv.u_sx.g_r[3].g_h[1].u_hrow","module":"dsdv_svc_sx_hrow","lef":"physical/die_plan/s81/cores/svc/lef/dsdv_svc_sx_hrow_c.lef","origin_um":[1252.8,1140.48],"outline_um":[138.24,164.16],"orient":"R0","track_offset_um":[0.108,0.012],"pins_file":"inputs/core_pins/dsdv_svc_sx_hrow_c.json"}
    ],
-   "note": "svc partition; 1 instance(s) (MY)"
+   "note": "svc partition; 1 instance(s) (MY)",
+   "face_layers": {
+    "S": [
+     "M7",
+     "M5",
+     "M3"
+    ]
+   }
   },
   "slice_station__t49": {
    "module": "s81p_slice_station__t49",
@@ -259798,16 +259918,17 @@
     "part": "svc_2",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "S",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    12594.816,
-    12812.892
+    12576.432,
+    12841.999
    ],
    "order": "lsb_low"
   },
@@ -259821,16 +259942,17 @@
     "part": "svc_6",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "S",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    15480.576,
-    15698.652
+    15462.192,
+    15727.759
    ],
    "order": "lsb_low"
   },
@@ -259844,16 +259966,17 @@
     "part": "svc_8",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "S",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    16567.332,
-    16799.616
+    16227.117,
+    16623.974
    ],
    "order": "lsb_high"
   },
@@ -259867,16 +259990,17 @@
     "part": "svc_14",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "S",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    20651.932,
-    20857.536
+    20616.408,
+    20867.424
    ],
    "order": "lsb_high"
   },
@@ -260051,16 +260175,17 @@
     "part": "svc_4",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "S",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    14037.696,
-    14255.772
+    14019.312,
+    14284.879
    ],
    "order": "lsb_low"
   },
@@ -260197,8 +260322,8 @@
     "M5"
    ],
    "window_um": [
-    10620.288,
-    10766.172
+    10643.612,
+    10799.976
    ],
    "order": "lsb_low"
   },
@@ -260404,8 +260529,8 @@
     "M5"
    ],
    "window_um": [
-    20518.692,
-    20649.984
+    20493.884,
+    20614.272
    ],
    "order": "lsb_high"
   },
@@ -260726,8 +260851,8 @@
     "M5"
    ],
    "window_um": [
-    12816.192,
-    12956.132
+    12844.135,
+    12971.503
    ],
    "order": "lsb_low"
   },
@@ -260787,16 +260912,17 @@
     "part": "svc_5",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "N",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    13816.32,
-    14035.548
+    13751.609,
+    14017.176
    ],
    "order": "lsb_low"
   },
@@ -260833,16 +260959,17 @@
     "part": "svc_3",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "N",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    12373.44,
-    12592.668
+    12308.729,
+    12574.296
    ],
    "order": "lsb_low"
   },
@@ -260856,16 +260983,17 @@
     "part": "svc_7",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "N",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    15259.2,
-    15478.428
+    15194.489,
+    15460.056
    ],
    "order": "lsb_low"
   },
@@ -260879,16 +261007,17 @@
     "part": "svc_11",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "N",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    17950.492,
-    18182.592
+    17593.249,
+    17990.106
    ],
    "order": "lsb_high"
   },
@@ -260902,16 +261031,17 @@
     "part": "svc_1",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "N",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    11045.568,
-    11277.668
+    11067.135,
+    11393.162
    ],
    "order": "lsb_low"
   },
@@ -260925,16 +261055,17 @@
     "part": "svc_15",
     "bus": "attnh_i0"
    },
-   "width": 1068,
+   "width": 2133,
    "kind": "data",
    "face": "N",
    "layers": [
     "M7",
-    "M5"
+    "M5",
+    "M3"
    ],
    "window_um": [
-    20859.684,
-    21065.088
+    20869.56,
+    21120.576
    ],
    "order": "lsb_high"
   },
@@ -261048,8 +261179,8 @@
     "M5"
    ],
    "window_um": [
-    16913.316,
-    17061.504
+    16771.137,
+    16961.472
    ],
    "order": "lsb_high"
   },
@@ -261117,8 +261248,8 @@
     "M5"
    ],
    "window_um": [
-    10933.056,
-    11044.38
+    10947.612,
+    11064.999
    ],
    "order": "lsb_low"
   },
@@ -261140,8 +261271,8 @@
     "M5"
    ],
    "window_um": [
-    14259.072,
-    14399.012
+    14287.015,
+    14414.383
    ],
    "order": "lsb_low"
   },
@@ -261393,8 +261524,8 @@
     "M5"
    ],
    "window_um": [
-    15701.952,
-    15841.892
+    15729.895,
+    15857.263
    ],
    "order": "lsb_low"
   },
@@ -261646,8 +261777,8 @@
     "M5"
    ],
    "window_um": [
-    12958.272,
-    13063.452
+    12973.639,
+    13069.258
    ],
    "order": "lsb_low"
   },
@@ -261669,8 +261800,8 @@
     "M5"
    ],
    "window_um": [
-    20418.268,
-    20516.736
+    20401.368,
+    20491.748
    ],
    "order": "lsb_high"
   },
@@ -261830,8 +261961,8 @@
     "M5"
    ],
    "window_um": [
-    18298.788,
-    18444.672
+    18137.269,
+    18327.604
    ],
    "order": "lsb_high"
   },
@@ -262451,8 +262582,8 @@
     "M5"
    ],
    "window_um": [
-    16800.804,
-    16912.128
+    16626.11,
+    16769.001
    ],
    "order": "lsb_high"
   },
@@ -262865,8 +262996,8 @@
     "M5"
    ],
    "window_um": [
-    14401.152,
-    14506.332
+    14416.519,
+    14512.138
    ],
    "order": "lsb_low"
   },
@@ -262980,8 +263111,8 @@
     "M5"
    ],
    "window_um": [
-    13484.16,
-    13814.18
+    13449.355,
+    13749.473
    ],
    "order": "lsb_low"
   },
@@ -263003,8 +263134,8 @@
     "M5"
    ],
    "window_um": [
-    14927.04,
-    15257.06
+    14892.235,
+    15192.353
    ],
    "order": "lsb_low"
   },
@@ -263026,7 +263157,7 @@
     "M5"
    ],
    "window_um": [
-    17062.876,
+    16963.608,
     17412.096
    ],
    "order": "lsb_high"
@@ -263049,8 +263180,8 @@
     "M5"
    ],
    "window_um": [
-    12041.28,
-    12371.3
+    12006.475,
+    12306.593
    ],
    "order": "lsb_low"
   },
@@ -263072,8 +263203,8 @@
     "M5"
    ],
    "window_um": [
-    21067.228,
-    21376.512
+    21122.712,
+    21406.384
    ],
    "order": "lsb_high"
   },
@@ -263095,8 +263226,8 @@
     "M5"
    ],
    "window_um": [
-    18183.964,
-    18295.104
+    17992.242,
+    18135.133
    ],
    "order": "lsb_high"
   },
@@ -263118,8 +263249,8 @@
     "M5"
    ],
    "window_um": [
-    15844.032,
-    15949.212
+    15859.399,
+    15955.018
    ],
    "order": "lsb_low"
   },
@@ -263142,7 +263273,7 @@
    ],
    "window_um": [
     10209.984,
-    10619.108
+    10641.476
    ],
    "order": "lsb_low"
   },
@@ -263924,7 +264055,7 @@
    ],
    "window_um": [
     14538.624,
-    14924.892
+    14890.099
    ],
    "order": "lsb_low"
   },
@@ -263946,7 +264077,7 @@
     "M5"
    ],
    "window_um": [
-    18445.852,
+    18329.74,
     18854.976
    ],
    "order": "lsb_high"
@@ -263970,7 +264101,7 @@
    ],
    "window_um": [
     11652.864,
-    12039.132
+    12004.339
    ],
    "order": "lsb_low"
   },
@@ -263993,7 +264124,7 @@
    ],
    "window_um": [
     13095.744,
-    13482.012
+    13447.219
    ],
    "order": "lsb_low"
   },
@@ -264107,7 +264238,7 @@
     "M5"
    ],
    "window_um": [
-    21379.228,
+    21408.52,
     21740.736
    ],
    "order": "lsb_high"
@@ -264682,8 +264813,8 @@
     "M5"
    ],
    "window_um": [
-    17835.3,
-    17949.312
+    17443.198,
+    17591.113
    ],
    "order": "lsb_high"
   },
@@ -265694,8 +265825,8 @@
     "M5"
    ],
    "window_um": [
-    16393.18,
-    16566.144
+    16000.318,
+    16224.981
    ],
    "order": "lsb_high"
   },
@@ -265832,8 +265963,8 @@
     "M5"
    ],
    "window_um": [
-    11279.04,
-    11394.204
+    11395.298,
+    11516.812
    ],
    "order": "lsb_low"
   },
@@ -269949,8 +270080,8 @@
     "M5"
    ],
    "window_um": [
-    10769.856,
-    10786.916
+    10934.012,
+    10945.476
    ],
    "order": "lsb_low"
   },
@@ -269972,8 +270103,8 @@
     "M5"
    ],
    "window_um": [
-    17815.708,
-    17832.768
+    17427.108,
+    17441.062
    ],
    "order": "lsb_high"
   },
@@ -270018,8 +270149,8 @@
     "M5"
    ],
    "window_um": [
-    20405.404,
-    20416.32
+    20376.97,
+    20385.796
    ],
    "order": "lsb_high"
   },
@@ -270041,7 +270172,7 @@
     "M5"
    ],
    "window_um": [
-    13065.408,
+    13071.394,
     13080.732
    ],
    "order": "lsb_low"
@@ -270064,7 +270195,7 @@
     "M5"
    ],
    "window_um": [
-    14508.288,
+    14514.274,
     14523.612
    ],
    "order": "lsb_low"
@@ -270087,7 +270218,7 @@
     "M5"
    ],
    "window_um": [
-    15951.168,
+    15957.154,
     15966.492
    ],
    "order": "lsb_low"
@@ -270110,8 +270241,8 @@
     "M5"
    ],
    "window_um": [
-    16372.828,
-    16389.888
+    15984.228,
+    15998.182
    ],
    "order": "lsb_high"
   },
@@ -274802,8 +274933,8 @@
     "M5"
    ],
    "window_um": [
-    20367.004,
-    20382.144
+    20374.128,
+    20374.834
    ],
    "order": "lsb_high"
   },
@@ -280160,7 +280291,7 @@
    "ports": [
     "attnh__svc_3__svc_2__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
@@ -280168,7 +280299,7 @@
    "ports": [
     "attnh__svc_7__svc_6__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
@@ -280176,7 +280307,7 @@
    "ports": [
     "attnh__svc_9__svc_8__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
@@ -280184,7 +280315,7 @@
    "ports": [
     "attnh__svc_15__svc_14__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
@@ -280204,7 +280335,7 @@
    "ports": [
     "attnh__svc_5__svc_4__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
@@ -280293,7 +280424,7 @@
    "ports": [
     "attnh__svc_4__svc_5__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
@@ -280307,7 +280438,7 @@
    "ports": [
     "attnh__svc_2__svc_3__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
@@ -280315,7 +280446,7 @@
    "ports": [
     "attnh__svc_6__svc_7__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
@@ -280323,7 +280454,7 @@
    "ports": [
     "attnh__svc_10__svc_11__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
@@ -280331,7 +280462,7 @@
    "ports": [
     "attnh__svc_0__svc_1__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
@@ -280339,7 +280470,7 @@
    "ports": [
     "attnh__svc_14__svc_15__0"
    ],
-   "beats": 2,
+   "beats": 1,
    "word_bits": 2133
   },
   {
