@@ -1,0 +1,13 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "CTS/GRT prototype only; post-GRT review before route",
+ "image": "results/qc_sramif_1309/rp1_f60/rp1_f60_decode_groups.png",
+ "findings": [
+  "Viewed actual f59 placement and failing route path. Offset-to-onehot decode19FF families occupy the macro-free W0 strip.",
+  "Clock-only local-leaf grouping closes the logical decoder cone rather than adding delay to the failed endpoint.",
+  "Every group must have19FF and fit within30um of an existing W0 clock driver with <=60 sinks; mismatch fails closed.",
+  "SRAM interface anchors, macros, pins, PDN and RTL remain unchanged; post-prototype TT/FF checks must pass before route."
+ ],
+ "added_data_cycles": 0,
+ "inherited_mif_read_write_cycles": 1
+}
