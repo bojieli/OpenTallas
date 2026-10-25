@@ -168,13 +168,14 @@ def tap_pins(P, tn):
         rs = tuple(RT.in_pin(P, tn))
     else:
         rs = tuple(tap_points(P, tn)[1])
-    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + rs] + [e[:3] for e in edge_clock_pins(P, tn)]
+    st = [("start_i",) + tuple(RT.start_in_pin(P, tn))] if RT.start_broadcast(P) and not P.types[tn].get("hard") else []
+    return clock_pins(P, tn) + core_tap_pins(P, tn) + [("arst_n",) + rs] + st + [e[:3] for e in edge_clock_pins(P, tn)]
 
 
 def reset_out_pins(P, tn):
     """[(port, x, y)] interior registered reset OUT pins of a wavefront plan type (reset_tree.out_pins)."""
     import reset_tree as RT
-    return RT.out_pins(P, tn)
+    return RT.out_pins(P, tn) + RT.start_out_pins(P, tn)
 
 
 M123_TRACKS = """make_tracks M3 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
@@ -1089,7 +1090,7 @@ def mock_lef(P, tn):
         L += pin(f"{bus}[{bit}]", dirs.get(bus, "INPUT"), "SIGNAL", [(ln, *r)])
     tw = LAYER_W.get(top, 0.032) / 2
     for name, x, y in tap_pins(P, tn):
-        L += pin(name, "INPUT", "SIGNAL" if name == "arst_n" else "CLOCK",
+        L += pin(name, "INPUT", "SIGNAL" if name in ("arst_n", "start_i") else "CLOCK",
                  [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
     for name, x, y in reset_out_pins(P, tn):
         L += pin(name, "OUTPUT", "SIGNAL", [(top, x - tw, y - 2 * PIN_LEN_UM, x + tw, y + 2 * PIN_LEN_UM)])
