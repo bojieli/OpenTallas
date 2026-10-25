@@ -272,3 +272,9 @@ PATH-QC-B12 -> PATH-QC-PLAN3: please fold claude/path-qc-b12-1025@46cd8c44c (ONE
 - Area: -31,096 um2 macro per native59; die area unchanged (outline plan-fixed); no pricing table carries the macro.
 - Next: GEOM verdict -> apply helper in the QC plan batch (PATH-QC-PLAN) -> rebuild native59 kits with the new LEF; after merge regenerate the QSLOT qbank pin-edge proof (sha pins).
 - OWNER? none.
+
+## PARKED 2026-10-25 12:15 PDT PATH-QC-PROGVMR
+- prog_s7 (qfd_dv_s8x_prog__s7): GEOM-REVIEW-2 PASS-COND 11:39; follow-up evidence posted 11:46 (int = 458 reg->macro + 31 reg->reg; tap window 25.6/25.2; no Whi tail >20 ps; cond 3 fold artefact closed 11:47). Autopilot row ddc332d9c2dc is HOLD: its canary ref (863d61892) must be bumped to the newest canary eeb8e96b6e80, and every qwen_compute canary is FAIL now (FLOW-CANARY).
+- vmr_s6j (qfd_dv_s8x_vmr__s6j, intel1 path-qc-sramif/vmr_s6j): SE tap split SEa/SEb, re-CTS from the s6i 3_place. S6_GRT_GATE PASS at m0, FF +0.03 / 0 EP. Window FF 7.3 / TT 7.7. F6 PASS. Render viewed. GEOM REQ posted; autopilot row REQ (canary eeb8e96b6e80).
+- Evidence: claude/path-qc-progvmr-1025@0693fed9e. vmr_s6i run data deleted (SUPERSEDED marker). Debug outputs removed; worktree removed.
+- Owed: FLOW fix for the postcts_gate.tcl -T/2 fold when ot_cf_wire is empty (prog pinreg_min artefact). Watch: 4 pw16[256..259]->l_w16d pairs 130-138 um (setup, route).
