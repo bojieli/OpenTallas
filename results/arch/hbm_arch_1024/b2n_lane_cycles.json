@@ -1,0 +1,2024 @@
+{
+ "schema": "opentallas.hbm_b2n_lane_cycles.v1",
+ "plan": "physical/die_plan/hbm_arch/B2n (claude/hbm-b2n-1024)",
+ "rule": "decision 12 / rulings 9.3+9.4",
+ "summary": {
+  "lanes": 298,
+  "lanes_added": 204,
+  "max_added": 47,
+  "sum_added": 2665
+ },
+ "lanes": {
+  "L0": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_hub->NW_su01 data"
+  },
+  "L0m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_hub->NE_su01 data (mirror)"
+  },
+  "L1": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_hub->NW_su10 data"
+  },
+  "L1m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_hub->NE_su10 data (mirror)"
+  },
+  "L2": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_hub->NW_su21 data"
+  },
+  "L2m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_hub->NE_su21 data (mirror)"
+  },
+  "L3": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_hub->NW_su30 data"
+  },
+  "L3m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_hub->NE_su30 data (mirror)"
+  },
+  "L4": {
+   "b2m": 26,
+   "b2n": 49,
+   "added": 23,
+   "note": "NW_hub->NE_hub data"
+  },
+  "L4m": {
+   "b2m": 26,
+   "b2n": 49,
+   "added": 23,
+   "note": "NE_hub->NW_hub data (mirror)"
+  },
+  "L5": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_hub->NW_b110 data"
+  },
+  "L5m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_hub->NE_b110 data (mirror)"
+  },
+  "L6": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_hub->NW_b100 data"
+  },
+  "L6m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_hub->NE_b100 data (mirror)"
+  },
+  "L7": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_hub->NW_b100 data"
+  },
+  "L7m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_hub->NE_b100 data (mirror)"
+  },
+  "L8": {
+   "b2m": 18,
+   "b2n": 39,
+   "added": 21,
+   "note": "NW_hub->PHY_N data"
+  },
+  "L8m": {
+   "b2m": 18,
+   "b2n": 39,
+   "added": 21,
+   "note": "NE_hub->PHY_N data (mirror)"
+  },
+  "L9": {
+   "b2m": 17,
+   "b2n": 51,
+   "added": 34,
+   "note": "NW_hub->PHY_N data"
+  },
+  "L9m": {
+   "b2m": 17,
+   "b2n": 51,
+   "added": 34,
+   "note": "NE_hub->PHY_N data (mirror)"
+  },
+  "L10": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b002->NW_b003 data"
+  },
+  "L10m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b002->NE_b003 data (mirror)"
+  },
+  "L11": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b011->NW_b010 data"
+  },
+  "L11m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b011->NE_b010 data (mirror)"
+  },
+  "L12": {
+   "b2m": 12,
+   "b2n": 24,
+   "added": 12,
+   "note": "root->NW_hub data"
+  },
+  "L12m": {
+   "b2m": 12,
+   "b2n": 24,
+   "added": 12,
+   "note": "root->NE_hub data (mirror)"
+  },
+  "L13": {
+   "b2m": 12,
+   "b2n": 22,
+   "added": 10,
+   "note": "root->NW_hub data"
+  },
+  "L13m": {
+   "b2m": 12,
+   "b2n": 22,
+   "added": 10,
+   "note": "root->NE_hub data (mirror)"
+  },
+  "L14": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b000->NW_b001 data"
+  },
+  "L14m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b000->NE_b001 data (mirror)"
+  },
+  "L15": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b001->NW_b002 data"
+  },
+  "L15m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b001->NE_b002 data (mirror)"
+  },
+  "L16": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b003->NW_b013 data"
+  },
+  "L16m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b003->NE_b013 data (mirror)"
+  },
+  "L17": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b012->NW_b011 data"
+  },
+  "L17m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b012->NE_b011 data (mirror)"
+  },
+  "L18": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b013->NW_b012 data"
+  },
+  "L18m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b013->NE_b012 data (mirror)"
+  },
+  "L19": {
+   "b2m": 8,
+   "b2n": 14,
+   "added": 6,
+   "note": "NW_b000->NW_hub data"
+  },
+  "L19m": {
+   "b2m": 8,
+   "b2n": 14,
+   "added": 6,
+   "note": "NE_b000->NE_hub data (mirror)"
+  },
+  "L20": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b010->NW_b000 data"
+  },
+  "L20m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b010->NE_b000 data (mirror)"
+  },
+  "L21": {
+   "b2m": 18,
+   "b2n": 52,
+   "added": 34,
+   "note": "PHY_N->NW_hub data"
+  },
+  "L21m": {
+   "b2m": 18,
+   "b2n": 52,
+   "added": 34,
+   "note": "PHY_N->NE_hub data (mirror)"
+  },
+  "L22": {
+   "b2m": 24,
+   "b2n": 53,
+   "added": 29,
+   "note": "PHY_N->NW_hub data"
+  },
+  "L22m": {
+   "b2m": 25,
+   "b2n": 61,
+   "added": 36,
+   "note": "PHY_N->NE_hub data (mirror)"
+  },
+  "L23": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b110->NW_hub data"
+  },
+  "L23m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b110->NE_hub data (mirror)"
+  },
+  "L24": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_su01->NW_hub data"
+  },
+  "L24m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_su01->NE_hub data (mirror)"
+  },
+  "L25": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_su10->NW_hub data"
+  },
+  "L25m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_su10->NE_hub data (mirror)"
+  },
+  "L26": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_su21->NW_hub data"
+  },
+  "L26m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_su21->NE_hub data (mirror)"
+  },
+  "L27": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_su30->NW_hub data"
+  },
+  "L27m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_su30->NE_hub data (mirror)"
+  },
+  "L28": {
+   "b2m": 7,
+   "b2n": 14,
+   "added": 7,
+   "note": "NW_hub->NW_sm0 data"
+  },
+  "L28m": {
+   "b2m": 7,
+   "b2n": 14,
+   "added": 7,
+   "note": "NE_hub->NE_sm0 data (mirror)"
+  },
+  "L29": {
+   "b2m": 11,
+   "b2n": 18,
+   "added": 7,
+   "note": "NW_hub->NW_sm0 data"
+  },
+  "L29m": {
+   "b2m": 11,
+   "b2n": 18,
+   "added": 7,
+   "note": "NE_hub->NE_sm0 data (mirror)"
+  },
+  "L30": {
+   "b2m": 5,
+   "b2n": 9,
+   "added": 4,
+   "note": "NW_hub->NW_sm1 data"
+  },
+  "L30m": {
+   "b2m": 5,
+   "b2n": 9,
+   "added": 4,
+   "note": "NE_hub->NE_sm1 data (mirror)"
+  },
+  "L31": {
+   "b2m": 16,
+   "b2n": 31,
+   "added": 15,
+   "note": "NW_hub->NW_sm1 data"
+  },
+  "L31m": {
+   "b2m": 16,
+   "b2n": 31,
+   "added": 15,
+   "note": "NE_hub->NE_sm1 data (mirror)"
+  },
+  "L32": {
+   "b2m": 8,
+   "b2n": 14,
+   "added": 6,
+   "note": "NW_hub->NW_sm2 data"
+  },
+  "L32m": {
+   "b2m": 8,
+   "b2n": 14,
+   "added": 6,
+   "note": "NE_hub->NE_sm2 data (mirror)"
+  },
+  "L33": {
+   "b2m": 9,
+   "b2n": 15,
+   "added": 6,
+   "note": "NW_hub->NW_sm2 data"
+  },
+  "L33m": {
+   "b2m": 9,
+   "b2n": 15,
+   "added": 6,
+   "note": "NE_hub->NE_sm2 data (mirror)"
+  },
+  "L34": {
+   "b2m": 6,
+   "b2n": 9,
+   "added": 3,
+   "note": "NW_hub->NW_sm3 data"
+  },
+  "L34m": {
+   "b2m": 6,
+   "b2n": 9,
+   "added": 3,
+   "note": "NE_hub->NE_sm3 data (mirror)"
+  },
+  "L35": {
+   "b2m": 11,
+   "b2n": 18,
+   "added": 7,
+   "note": "NW_hub->NW_sm3 data"
+  },
+  "L35m": {
+   "b2m": 11,
+   "b2n": 18,
+   "added": 7,
+   "note": "NE_hub->NE_sm3 data (mirror)"
+  },
+  "L36": {
+   "b2m": 12,
+   "b2n": 19,
+   "added": 7,
+   "note": "NW_hub->NW_su00 data"
+  },
+  "L36m": {
+   "b2m": 12,
+   "b2n": 19,
+   "added": 7,
+   "note": "NE_hub->NE_su00 data (mirror)"
+  },
+  "L37": {
+   "b2m": 18,
+   "b2n": 35,
+   "added": 17,
+   "note": "NW_hub->NW_su11 data"
+  },
+  "L37m": {
+   "b2m": 18,
+   "b2n": 35,
+   "added": 17,
+   "note": "NE_hub->NE_su11 data (mirror)"
+  },
+  "L38": {
+   "b2m": 9,
+   "b2n": 16,
+   "added": 7,
+   "note": "NW_hub->NW_su20 data"
+  },
+  "L38m": {
+   "b2m": 9,
+   "b2n": 16,
+   "added": 7,
+   "note": "NE_hub->NE_su20 data (mirror)"
+  },
+  "L39": {
+   "b2m": 12,
+   "b2n": 21,
+   "added": 9,
+   "note": "NW_hub->NW_su31 data"
+  },
+  "L39m": {
+   "b2m": 12,
+   "b2n": 21,
+   "added": 9,
+   "note": "NE_hub->NE_su31 data (mirror)"
+  },
+  "L40": {
+   "b2m": 4,
+   "b2n": 11,
+   "added": 7,
+   "note": "NW_spb2->NW_hub data"
+  },
+  "L40m": {
+   "b2m": 4,
+   "b2n": 11,
+   "added": 7,
+   "note": "NE_spb2->NE_hub data (mirror)"
+  },
+  "L41": {
+   "b2m": 4,
+   "b2n": 12,
+   "added": 8,
+   "note": "NW_spt0->NW_hub data"
+  },
+  "L41m": {
+   "b2m": 4,
+   "b2n": 12,
+   "added": 8,
+   "note": "NE_spt0->NE_hub data (mirror)"
+  },
+  "L42": {
+   "b2m": 16,
+   "b2n": 28,
+   "added": 12,
+   "note": "NW_hub->NW_b002 data"
+  },
+  "L42m": {
+   "b2m": 16,
+   "b2n": 28,
+   "added": 12,
+   "note": "NE_hub->NE_b002 data (mirror)"
+  },
+  "L43": {
+   "b2m": 18,
+   "b2n": 40,
+   "added": 22,
+   "note": "NW_hub->NW_b011 data"
+  },
+  "L43m": {
+   "b2m": 18,
+   "b2n": 40,
+   "added": 22,
+   "note": "NE_hub->NE_b011 data (mirror)"
+  },
+  "L44": {
+   "b2m": 17,
+   "b2n": 33,
+   "added": 16,
+   "note": "NW_b110->NW_su31 data"
+  },
+  "L44m": {
+   "b2m": 17,
+   "b2n": 33,
+   "added": 16,
+   "note": "NE_b110->NE_su31 data (mirror)"
+  },
+  "L45": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b111->NW_su20 data"
+  },
+  "L45m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b111->NE_su20 data (mirror)"
+  },
+  "L46": {
+   "b2m": 13,
+   "b2n": 32,
+   "added": 19,
+   "note": "NW_b112->NW_su11 data"
+  },
+  "L46m": {
+   "b2m": 13,
+   "b2n": 32,
+   "added": 19,
+   "note": "NE_b112->NE_su11 data (mirror)"
+  },
+  "L47": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b113->NW_su00 data"
+  },
+  "L47m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b113->NE_su00 data (mirror)"
+  },
+  "L48": {
+   "b2m": 23,
+   "b2n": 54,
+   "added": 31,
+   "note": "NW_io->root data"
+  },
+  "L48m": {
+   "b2m": 23,
+   "b2n": 54,
+   "added": 31,
+   "note": "NE_io->root data (mirror)"
+  },
+  "L49": {
+   "b2m": 4,
+   "b2n": 12,
+   "added": 8,
+   "note": "NW_hub->NW_spb2 data"
+  },
+  "L49m": {
+   "b2m": 4,
+   "b2n": 12,
+   "added": 8,
+   "note": "NE_hub->NE_spb2 data (mirror)"
+  },
+  "L50": {
+   "b2m": 4,
+   "b2n": 10,
+   "added": 6,
+   "note": "NW_hub->NW_spt0 data"
+  },
+  "L50m": {
+   "b2m": 4,
+   "b2n": 10,
+   "added": 6,
+   "note": "NE_hub->NE_spt0 data (mirror)"
+  },
+  "L51": {
+   "b2m": 9,
+   "b2n": 18,
+   "added": 9,
+   "note": "NW_hub->NW_io data"
+  },
+  "L51m": {
+   "b2m": 9,
+   "b2n": 18,
+   "added": 9,
+   "note": "NE_hub->NE_io data (mirror)"
+  },
+  "L52": {
+   "b2m": 10,
+   "b2n": 20,
+   "added": 10,
+   "note": "NW_io->NW_hub data"
+  },
+  "L52m": {
+   "b2m": 10,
+   "b2n": 20,
+   "added": 10,
+   "note": "NE_io->NE_hub data (mirror)"
+  },
+  "L53": {
+   "b2m": 25,
+   "b2n": 54,
+   "added": 29,
+   "note": "root->NW_io data"
+  },
+  "L53m": {
+   "b2m": 25,
+   "b2n": 54,
+   "added": 29,
+   "note": "root->NE_io data (mirror)"
+  },
+  "L54": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_su00->NW_b113 data"
+  },
+  "L54m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_su00->NE_b113 data (mirror)"
+  },
+  "L55": {
+   "b2m": 12,
+   "b2n": 21,
+   "added": 9,
+   "note": "NW_su00->NW_hub data"
+  },
+  "L55m": {
+   "b2m": 12,
+   "b2n": 21,
+   "added": 9,
+   "note": "NE_su00->NE_hub data (mirror)"
+  },
+  "L56": {
+   "b2m": 14,
+   "b2n": 25,
+   "added": 11,
+   "note": "NW_su11->NW_b112 data"
+  },
+  "L56m": {
+   "b2m": 14,
+   "b2n": 25,
+   "added": 11,
+   "note": "NE_su11->NE_b112 data (mirror)"
+  },
+  "L57": {
+   "b2m": 6,
+   "b2n": 9,
+   "added": 3,
+   "note": "NW_su11->NW_hub data"
+  },
+  "L57m": {
+   "b2m": 6,
+   "b2n": 9,
+   "added": 3,
+   "note": "NE_su11->NE_hub data (mirror)"
+  },
+  "L58": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_su20->NW_b111 data"
+  },
+  "L58m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_su20->NE_b111 data (mirror)"
+  },
+  "L59": {
+   "b2m": 10,
+   "b2n": 18,
+   "added": 8,
+   "note": "NW_su20->NW_hub data"
+  },
+  "L59m": {
+   "b2m": 10,
+   "b2n": 18,
+   "added": 8,
+   "note": "NE_su20->NE_hub data (mirror)"
+  },
+  "L60": {
+   "b2m": 17,
+   "b2n": 32,
+   "added": 15,
+   "note": "NW_su31->NW_b110 data"
+  },
+  "L60m": {
+   "b2m": 17,
+   "b2n": 32,
+   "added": 15,
+   "note": "NE_su31->NE_b110 data (mirror)"
+  },
+  "L61": {
+   "b2m": 12,
+   "b2n": 21,
+   "added": 9,
+   "note": "NW_su31->NW_hub data"
+  },
+  "L61m": {
+   "b2m": 12,
+   "b2n": 21,
+   "added": 9,
+   "note": "NE_su31->NE_hub data (mirror)"
+  },
+  "L62": {
+   "b2m": 16,
+   "b2n": 31,
+   "added": 15,
+   "note": "root->NW_hub ctl"
+  },
+  "L62m": {
+   "b2m": 16,
+   "b2n": 31,
+   "added": 15,
+   "note": "root->NE_hub ctl (mirror)"
+  },
+  "L63": {
+   "b2m": 35,
+   "b2n": 82,
+   "added": 47,
+   "note": "NW_hub->PHY_N ctl"
+  },
+  "L63m": {
+   "b2m": 35,
+   "b2n": 78,
+   "added": 43,
+   "note": "NE_hub->PHY_N ctl (mirror)"
+  },
+  "L64": {
+   "b2m": 7,
+   "b2n": 17,
+   "added": 10,
+   "note": "NW_b101->root data"
+  },
+  "L64m": {
+   "b2m": 7,
+   "b2n": 17,
+   "added": 10,
+   "note": "NE_b101->root data (mirror)"
+  },
+  "L65": {
+   "b2m": 13,
+   "b2n": 23,
+   "added": 10,
+   "note": "NW_hub->NW_b000 data"
+  },
+  "L65m": {
+   "b2m": 13,
+   "b2n": 23,
+   "added": 10,
+   "note": "NE_hub->NE_b000 data (mirror)"
+  },
+  "L66": {
+   "b2m": 13,
+   "b2n": 33,
+   "added": 20,
+   "note": "NW_hub->NW_mcb data"
+  },
+  "L66m": {
+   "b2m": 13,
+   "b2n": 33,
+   "added": 20,
+   "note": "NE_hub->NE_mcb data (mirror)"
+  },
+  "L67": {
+   "b2m": 7,
+   "b2n": 12,
+   "added": 5,
+   "note": "NW_sm0->NW_hub data"
+  },
+  "L67m": {
+   "b2m": 7,
+   "b2n": 12,
+   "added": 5,
+   "note": "NE_sm0->NE_hub data (mirror)"
+  },
+  "L68": {
+   "b2m": 5,
+   "b2n": 9,
+   "added": 4,
+   "note": "NW_sm1->NW_hub data"
+  },
+  "L68m": {
+   "b2m": 5,
+   "b2n": 9,
+   "added": 4,
+   "note": "NE_sm1->NE_hub data (mirror)"
+  },
+  "L69": {
+   "b2m": 9,
+   "b2n": 16,
+   "added": 7,
+   "note": "NW_sm2->NW_hub data"
+  },
+  "L69m": {
+   "b2m": 9,
+   "b2n": 16,
+   "added": 7,
+   "note": "NE_sm2->NE_hub data (mirror)"
+  },
+  "L70": {
+   "b2m": 9,
+   "b2n": 21,
+   "added": 12,
+   "note": "NW_sm3->NW_hub data"
+  },
+  "L70m": {
+   "b2m": 9,
+   "b2n": 21,
+   "added": 12,
+   "note": "NE_sm3->NE_hub data (mirror)"
+  },
+  "L71": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b002->NW_b001 data"
+  },
+  "L71m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b002->NE_b001 data (mirror)"
+  },
+  "L72": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b011->NW_b012 data"
+  },
+  "L72m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b011->NE_b012 data (mirror)"
+  },
+  "L73": {
+   "b2m": 20,
+   "b2n": 36,
+   "added": 16,
+   "note": "NW_hub->NW_b013 data"
+  },
+  "L73m": {
+   "b2m": 20,
+   "b2n": 36,
+   "added": 16,
+   "note": "NE_hub->NE_b013 data (mirror)"
+  },
+  "L74": {
+   "b2m": 17,
+   "b2n": 31,
+   "added": 14,
+   "note": "NW_hub->root data"
+  },
+  "L74m": {
+   "b2m": 17,
+   "b2n": 31,
+   "added": 14,
+   "note": "NE_hub->root data (mirror)"
+  },
+  "L75": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_spb2->NW_sm2 data"
+  },
+  "L75m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_spb2->NE_sm2 data (mirror)"
+  },
+  "L76": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_spb2->NW_sm3 data"
+  },
+  "L76m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_spb2->NE_sm3 data (mirror)"
+  },
+  "L77": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_spt0->NW_sm0 data"
+  },
+  "L77m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_spt0->NE_sm0 data (mirror)"
+  },
+  "L78": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_spt0->NW_sm1 data"
+  },
+  "L78m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_spt0->NE_sm1 data (mirror)"
+  },
+  "L79": {
+   "b2m": 13,
+   "b2n": 33,
+   "added": 20,
+   "note": "NW_hub->NW_mcb ctl"
+  },
+  "L79m": {
+   "b2m": 13,
+   "b2n": 33,
+   "added": 20,
+   "note": "NE_hub->NE_mcb ctl (mirror)"
+  },
+  "L80": {
+   "b2m": 8,
+   "b2n": 17,
+   "added": 9,
+   "note": "root->NW_b101 data"
+  },
+  "L80m": {
+   "b2m": 8,
+   "b2n": 17,
+   "added": 9,
+   "note": "root->NE_b101 data (mirror)"
+  },
+  "L81": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b110->NW_hub ctl"
+  },
+  "L81m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b110->NE_hub ctl (mirror)"
+  },
+  "L82": {
+   "b2m": 13,
+   "b2n": 33,
+   "added": 20,
+   "note": "NW_mcb->NW_hub ctl"
+  },
+  "L82m": {
+   "b2m": 13,
+   "b2n": 33,
+   "added": 20,
+   "note": "NE_mcb->NE_hub ctl (mirror)"
+  },
+  "L83": {
+   "b2m": 5,
+   "b2n": 13,
+   "added": 8,
+   "note": "NW_hub->NW_spb2 ctl"
+  },
+  "L83m": {
+   "b2m": 5,
+   "b2n": 13,
+   "added": 8,
+   "note": "NE_hub->NE_spb2 ctl (mirror)"
+  },
+  "L84": {
+   "b2m": 4,
+   "b2n": 10,
+   "added": 6,
+   "note": "NW_hub->NW_spt0 ctl"
+  },
+  "L84m": {
+   "b2m": 4,
+   "b2n": 10,
+   "added": 6,
+   "note": "NE_hub->NE_spt0 ctl (mirror)"
+  },
+  "L85": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b002->NW_b003 ctl"
+  },
+  "L85m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b002->NE_b003 ctl (mirror)"
+  },
+  "L86": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b011->NW_b010 ctl"
+  },
+  "L86m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b011->NE_b010 ctl (mirror)"
+  },
+  "L87": {
+   "b2m": 5,
+   "b2n": 13,
+   "added": 8,
+   "note": "NW_spb2->NW_hub ctl"
+  },
+  "L87m": {
+   "b2m": 5,
+   "b2n": 13,
+   "added": 8,
+   "note": "NE_spb2->NE_hub ctl (mirror)"
+  },
+  "L88": {
+   "b2m": 4,
+   "b2n": 10,
+   "added": 6,
+   "note": "NW_spt0->NW_hub ctl"
+  },
+  "L88m": {
+   "b2m": 4,
+   "b2n": 10,
+   "added": 6,
+   "note": "NE_spt0->NE_hub ctl (mirror)"
+  },
+  "L89": {
+   "b2m": 17,
+   "b2n": 30,
+   "added": 13,
+   "note": "NW_hub->root ctl"
+  },
+  "L89m": {
+   "b2m": 17,
+   "b2n": 30,
+   "added": 13,
+   "note": "NE_hub->root ctl (mirror)"
+  },
+  "L90": {
+   "b2m": 13,
+   "b2n": 20,
+   "added": 7,
+   "note": "NW_hub->NW_b000 ctl"
+  },
+  "L90m": {
+   "b2m": 13,
+   "b2n": 20,
+   "added": 7,
+   "note": "NE_hub->NE_b000 ctl (mirror)"
+  },
+  "L91": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_hub->NW_b100 ctl"
+  },
+  "L91m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_hub->NE_b100 ctl (mirror)"
+  },
+  "L92": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b003->NW_b013 ctl"
+  },
+  "L92m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b003->NE_b013 ctl (mirror)"
+  },
+  "L93": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b013->NW_b012 ctl"
+  },
+  "L93m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b013->NE_b012 ctl (mirror)"
+  },
+  "L94": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b001->NW_b002 ctl"
+  },
+  "L94m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b001->NE_b002 ctl (mirror)"
+  },
+  "L95": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b012->NW_b011 ctl"
+  },
+  "L95m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b012->NE_b011 ctl (mirror)"
+  },
+  "L96": {
+   "b2m": 29,
+   "b2n": 54,
+   "added": 25,
+   "note": "NW_hub->NE_hub ctl"
+  },
+  "L96m": {
+   "b2m": 29,
+   "b2n": 54,
+   "added": 25,
+   "note": "NE_hub->NW_hub ctl (mirror)"
+  },
+  "L97": {
+   "b2m": 14,
+   "b2n": 25,
+   "added": 11,
+   "note": "NW_hub->NW_sm0 ctl"
+  },
+  "L97m": {
+   "b2m": 14,
+   "b2n": 25,
+   "added": 11,
+   "note": "NE_hub->NE_sm0 ctl (mirror)"
+  },
+  "L98": {
+   "b2m": 7,
+   "b2n": 11,
+   "added": 4,
+   "note": "NW_hub->NW_sm1 ctl"
+  },
+  "L98m": {
+   "b2m": 7,
+   "b2n": 11,
+   "added": 4,
+   "note": "NE_hub->NE_sm1 ctl (mirror)"
+  },
+  "L99": {
+   "b2m": 9,
+   "b2n": 17,
+   "added": 8,
+   "note": "NW_hub->NW_sm2 ctl"
+  },
+  "L99m": {
+   "b2m": 9,
+   "b2n": 17,
+   "added": 8,
+   "note": "NE_hub->NE_sm2 ctl (mirror)"
+  },
+  "L100": {
+   "b2m": 9,
+   "b2n": 20,
+   "added": 11,
+   "note": "NW_hub->NW_sm3 ctl"
+  },
+  "L100m": {
+   "b2m": 9,
+   "b2n": 20,
+   "added": 11,
+   "note": "NE_hub->NE_sm3 ctl (mirror)"
+  },
+  "L101": {
+   "b2m": 11,
+   "b2n": 20,
+   "added": 9,
+   "note": "NW_hub->NW_io ctl"
+  },
+  "L101m": {
+   "b2m": 11,
+   "b2n": 20,
+   "added": 9,
+   "note": "NE_hub->NE_io ctl (mirror)"
+  },
+  "L102": {
+   "b2m": 16,
+   "b2n": 30,
+   "added": 14,
+   "note": "NW_hub->NW_su00 ctl"
+  },
+  "L102m": {
+   "b2m": 16,
+   "b2n": 30,
+   "added": 14,
+   "note": "NE_hub->NE_su00 ctl (mirror)"
+  },
+  "L103": {
+   "b2m": 8,
+   "b2n": 16,
+   "added": 8,
+   "note": "NW_hub->NW_su11 ctl"
+  },
+  "L103m": {
+   "b2m": 8,
+   "b2n": 16,
+   "added": 8,
+   "note": "NE_hub->NE_su11 ctl (mirror)"
+  },
+  "L104": {
+   "b2m": 10,
+   "b2n": 17,
+   "added": 7,
+   "note": "NW_hub->NW_su20 ctl"
+  },
+  "L104m": {
+   "b2m": 10,
+   "b2n": 17,
+   "added": 7,
+   "note": "NE_hub->NE_su20 ctl (mirror)"
+  },
+  "L105": {
+   "b2m": 11,
+   "b2n": 18,
+   "added": 7,
+   "note": "NW_hub->NW_su31 ctl"
+  },
+  "L105m": {
+   "b2m": 11,
+   "b2n": 18,
+   "added": 7,
+   "note": "NE_hub->NE_su31 ctl (mirror)"
+  },
+  "L106": {
+   "b2m": 28,
+   "b2n": 57,
+   "added": 29,
+   "note": "root->NW_io ctl"
+  },
+  "L106m": {
+   "b2m": 28,
+   "b2n": 57,
+   "added": 29,
+   "note": "root->NE_io ctl (mirror)"
+  },
+  "L107": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b000->NW_b001 ctl"
+  },
+  "L107m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b000->NE_b001 ctl (mirror)"
+  },
+  "L108": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b002->NW_b001 ctl"
+  },
+  "L108m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b002->NE_b001 ctl (mirror)"
+  },
+  "L109": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b011->NW_b012 ctl"
+  },
+  "L109m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b011->NE_b012 ctl (mirror)"
+  },
+  "L110": {
+   "b2m": 11,
+   "b2n": 19,
+   "added": 8,
+   "note": "NW_hub->NW_su01 ctl"
+  },
+  "L110m": {
+   "b2m": 11,
+   "b2n": 19,
+   "added": 8,
+   "note": "NE_hub->NE_su01 ctl (mirror)"
+  },
+  "L111": {
+   "b2m": 4,
+   "b2n": 7,
+   "added": 3,
+   "note": "NW_hub->NW_su10 ctl"
+  },
+  "L111m": {
+   "b2m": 4,
+   "b2n": 7,
+   "added": 3,
+   "note": "NE_hub->NE_su10 ctl (mirror)"
+  },
+  "L112": {
+   "b2m": 6,
+   "b2n": 10,
+   "added": 4,
+   "note": "NW_hub->NW_su21 ctl"
+  },
+  "L112m": {
+   "b2m": 6,
+   "b2n": 10,
+   "added": 4,
+   "note": "NE_hub->NE_su21 ctl (mirror)"
+  },
+  "L113": {
+   "b2m": 5,
+   "b2n": 6,
+   "added": 1,
+   "note": "NW_hub->NW_su30 ctl"
+  },
+  "L113m": {
+   "b2m": 5,
+   "b2n": 6,
+   "added": 1,
+   "note": "NE_hub->NE_su30 ctl (mirror)"
+  },
+  "L114": {
+   "b2m": 30,
+   "b2n": 68,
+   "added": 38,
+   "note": "PHY_N->NW_hub ctl"
+  },
+  "L114m": {
+   "b2m": 30,
+   "b2n": 67,
+   "added": 37,
+   "note": "PHY_N->NE_hub ctl (mirror)"
+  },
+  "L115": {
+   "b2m": 14,
+   "b2n": 24,
+   "added": 10,
+   "note": "NW_hub->NW_b002 ctl"
+  },
+  "L115m": {
+   "b2m": 14,
+   "b2n": 24,
+   "added": 10,
+   "note": "NE_hub->NE_b002 ctl (mirror)"
+  },
+  "L116": {
+   "b2m": 8,
+   "b2n": 19,
+   "added": 11,
+   "note": "NW_hub->NW_b011 ctl"
+  },
+  "L116m": {
+   "b2m": 8,
+   "b2n": 19,
+   "added": 11,
+   "note": "NE_hub->NE_b011 ctl (mirror)"
+  },
+  "L117": {
+   "b2m": 21,
+   "b2n": 44,
+   "added": 23,
+   "note": "NW_spb0->root data"
+  },
+  "L117m": {
+   "b2m": 21,
+   "b2n": 44,
+   "added": 23,
+   "note": "NE_spb0->root data (mirror)"
+  },
+  "L118": {
+   "b2m": 6,
+   "b2n": 12,
+   "added": 6,
+   "note": "vsN0->root data"
+  },
+  "L119": {
+   "b2m": 11,
+   "b2n": 28,
+   "added": 17,
+   "note": "NW_hub->NW_b013 ctl"
+  },
+  "L119m": {
+   "b2m": 11,
+   "b2n": 28,
+   "added": 17,
+   "note": "NE_hub->NE_b013 ctl (mirror)"
+  },
+  "L120": {
+   "b2m": 7,
+   "b2n": 13,
+   "added": 6,
+   "note": "NW_sm0->NW_hub ctl"
+  },
+  "L120m": {
+   "b2m": 7,
+   "b2n": 13,
+   "added": 6,
+   "note": "NE_sm0->NE_hub ctl (mirror)"
+  },
+  "L121": {
+   "b2m": 6,
+   "b2n": 11,
+   "added": 5,
+   "note": "NW_sm1->NW_hub ctl"
+  },
+  "L121m": {
+   "b2m": 6,
+   "b2n": 11,
+   "added": 5,
+   "note": "NE_sm1->NE_hub ctl (mirror)"
+  },
+  "L122": {
+   "b2m": 9,
+   "b2n": 17,
+   "added": 8,
+   "note": "NW_sm2->NW_hub ctl"
+  },
+  "L122m": {
+   "b2m": 9,
+   "b2n": 17,
+   "added": 8,
+   "note": "NE_sm2->NE_hub ctl (mirror)"
+  },
+  "L123": {
+   "b2m": 9,
+   "b2n": 20,
+   "added": 11,
+   "note": "NW_sm3->NW_hub ctl"
+  },
+  "L123m": {
+   "b2m": 9,
+   "b2n": 20,
+   "added": 11,
+   "note": "NE_sm3->NE_hub ctl (mirror)"
+  },
+  "L124": {
+   "b2m": 8,
+   "b2n": 20,
+   "added": 12,
+   "note": "root->NW_b101 ctl"
+  },
+  "L124m": {
+   "b2m": 8,
+   "b2n": 20,
+   "added": 12,
+   "note": "root->NE_b101 ctl (mirror)"
+  },
+  "L125": {
+   "b2m": 28,
+   "b2n": 57,
+   "added": 29,
+   "note": "NW_io->root ctl"
+  },
+  "L125m": {
+   "b2m": 28,
+   "b2n": 57,
+   "added": 29,
+   "note": "NE_io->root ctl (mirror)"
+  },
+  "L126": {
+   "b2m": 11,
+   "b2n": 19,
+   "added": 8,
+   "note": "NW_io->NW_hub ctl"
+  },
+  "L126m": {
+   "b2m": 11,
+   "b2n": 19,
+   "added": 8,
+   "note": "NE_io->NE_hub ctl (mirror)"
+  },
+  "L127": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_su00->NW_b113 ctl"
+  },
+  "L127m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_su00->NE_b113 ctl (mirror)"
+  },
+  "L128": {
+   "b2m": 13,
+   "b2n": 31,
+   "added": 18,
+   "note": "NW_su11->NW_b112 ctl"
+  },
+  "L128m": {
+   "b2m": 13,
+   "b2n": 31,
+   "added": 18,
+   "note": "NE_su11->NE_b112 ctl (mirror)"
+  },
+  "L129": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_su20->NW_b111 ctl"
+  },
+  "L129m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_su20->NE_b111 ctl (mirror)"
+  },
+  "L130": {
+   "b2m": 16,
+   "b2n": 34,
+   "added": 18,
+   "note": "NW_su31->NW_b110 ctl"
+  },
+  "L130m": {
+   "b2m": 16,
+   "b2n": 34,
+   "added": 18,
+   "note": "NE_su31->NE_b110 ctl (mirror)"
+  },
+  "L131": {
+   "b2m": 6,
+   "b2n": 9,
+   "added": 3,
+   "note": "NW_su31->NW_hub ctl"
+  },
+  "L131m": {
+   "b2m": 6,
+   "b2n": 9,
+   "added": 3,
+   "note": "NE_su31->NE_hub ctl (mirror)"
+  },
+  "L132": {
+   "b2m": 10,
+   "b2n": 14,
+   "added": 4,
+   "note": "NW_b002->NW_hub ctl"
+  },
+  "L132m": {
+   "b2m": 10,
+   "b2n": 14,
+   "added": 4,
+   "note": "NE_b002->NE_hub ctl (mirror)"
+  },
+  "L133": {
+   "b2m": 9,
+   "b2n": 18,
+   "added": 9,
+   "note": "NW_b011->NW_hub ctl"
+  },
+  "L133m": {
+   "b2m": 9,
+   "b2n": 18,
+   "added": 9,
+   "note": "NE_b011->NE_hub ctl (mirror)"
+  },
+  "L134": {
+   "b2m": 16,
+   "b2n": 29,
+   "added": 13,
+   "note": "NW_su00->NW_hub ctl"
+  },
+  "L134m": {
+   "b2m": 16,
+   "b2n": 29,
+   "added": 13,
+   "note": "NE_su00->NE_hub ctl (mirror)"
+  },
+  "L135": {
+   "b2m": 6,
+   "b2n": 9,
+   "added": 3,
+   "note": "NW_su11->NW_hub ctl"
+  },
+  "L135m": {
+   "b2m": 6,
+   "b2n": 9,
+   "added": 3,
+   "note": "NE_su11->NE_hub ctl (mirror)"
+  },
+  "L136": {
+   "b2m": 10,
+   "b2n": 18,
+   "added": 8,
+   "note": "NW_su20->NW_hub ctl"
+  },
+  "L136m": {
+   "b2m": 10,
+   "b2n": 18,
+   "added": 8,
+   "note": "NE_su20->NE_hub ctl (mirror)"
+  },
+  "L137": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b100->NW_hub ctl"
+  },
+  "L137m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b100->NE_hub ctl (mirror)"
+  },
+  "L138": {
+   "b2m": 21,
+   "b2n": 45,
+   "added": 24,
+   "note": "NW_spb0->root ctl"
+  },
+  "L138m": {
+   "b2m": 21,
+   "b2n": 45,
+   "added": 24,
+   "note": "NE_spb0->root ctl (mirror)"
+  },
+  "L139": {
+   "b2m": 28,
+   "b2n": 58,
+   "added": 30,
+   "note": "NW_spb2->NE_hub ctl"
+  },
+  "L139m": {
+   "b2m": 28,
+   "b2n": 58,
+   "added": 30,
+   "note": "NE_spb2->NW_hub ctl (mirror)"
+  },
+  "L140": {
+   "b2m": 33,
+   "b2n": 69,
+   "added": 36,
+   "note": "NW_spt0->NE_hub ctl"
+  },
+  "L140m": {
+   "b2m": 33,
+   "b2n": 68,
+   "added": 35,
+   "note": "NE_spt0->NW_hub ctl (mirror)"
+  },
+  "L141": {
+   "b2m": 6,
+   "b2n": 12,
+   "added": 6,
+   "note": "vsN0->root ctl"
+  },
+  "L142": {
+   "b2m": 6,
+   "b2n": 12,
+   "added": 6,
+   "note": "NW_b000->NW_hub ctl"
+  },
+  "L142m": {
+   "b2m": 6,
+   "b2n": 12,
+   "added": 6,
+   "note": "NE_b000->NE_hub ctl (mirror)"
+  },
+  "L143": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b003->NW_b002 ctl"
+  },
+  "L143m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b003->NE_b002 ctl (mirror)"
+  },
+  "L144": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b010->NW_b000 ctl"
+  },
+  "L144m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b010->NE_b000 ctl (mirror)"
+  },
+  "L145": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NW_b010->NW_b011 ctl"
+  },
+  "L145m": {
+   "b2m": 2,
+   "b2n": 2,
+   "added": 0,
+   "note": "NE_b010->NE_b011 ctl (mirror)"
+  },
+  "L146": {
+   "b2m": 15,
+   "b2n": 24,
+   "added": 9,
+   "note": "NW_b013->NW_hub ctl"
+  },
+  "L146m": {
+   "b2m": 15,
+   "b2n": 24,
+   "added": 9,
+   "note": "NE_b013->NE_hub ctl (mirror)"
+  },
+  "L147": {
+   "b2m": 14,
+   "b2n": 35,
+   "added": 21,
+   "note": "NW_su00->NW_su11 ctl"
+  },
+  "L147m": {
+   "b2m": 14,
+   "b2n": 35,
+   "added": 21,
+   "note": "NE_su00->NE_su11 ctl (mirror)"
+  },
+  "L148": {
+   "b2m": 24,
+   "b2n": 50,
+   "added": 26,
+   "note": "NW_su11->NW_su20 ctl"
+  },
+  "L148m": {
+   "b2m": 24,
+   "b2n": 50,
+   "added": 26,
+   "note": "NE_su11->NE_su20 ctl (mirror)"
+  },
+  "L149": {
+   "b2m": 15,
+   "b2n": 33,
+   "added": 18,
+   "note": "NW_su20->NW_su31 ctl"
+  },
+  "L149m": {
+   "b2m": 15,
+   "b2n": 33,
+   "added": 18,
+   "note": "NE_su20->NE_su31 ctl (mirror)"
+  }
+ },
+ "types_changed": {
+  "q_b000": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b001": [
+   "ft_slots",
+   "face_layers"
+  ],
+  "q_b002": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b003": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b010": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b011": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b012": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b013": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b100": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b101": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b102": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b103": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b110": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b111": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b112": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_b113": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_hub": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "NW_io": [
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_mca": [
+   "face_layers"
+  ],
+  "q_mcb": [
+   "ft_slots",
+   "face_layers"
+  ],
+  "q_sm0": [
+   "face_layers"
+  ],
+  "q_sm1": [
+   "face_layers"
+  ],
+  "q_sm2": [
+   "face_layers"
+  ],
+  "q_sm3": [
+   "face_layers"
+  ],
+  "q_spb0": [
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_spb1": [
+   "ft_slots",
+   "face_layers"
+  ],
+  "q_spb2": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_spt0": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_spt1": [
+   "ft_slots",
+   "face_layers"
+  ],
+  "q_spt2": [
+   "ft_slots",
+   "face_layers"
+  ],
+  "q_spu0": [
+   "ft_slots",
+   "outline",
+   "face_layers"
+  ],
+  "q_spu1": [
+   "ft_slots",
+   "outline",
+   "face_layers"
+  ],
+  "q_su00": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_su01": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_su10": [
+   "ft_slots",
+   "internal_stations",
+   "outline",
+   "face_layers"
+  ],
+  "q_su11": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_su20": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_su21": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "q_su30": [
+   "ft_slots",
+   "internal_stations",
+   "outline",
+   "face_layers"
+  ],
+  "q_su31": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "PHY_N": [
+   "face_layers"
+  ],
+  "root": [
+   "ft_slots",
+   "internal_stations",
+   "face_layers"
+  ],
+  "vsN0": [
+   "internal_stations",
+   "face_layers"
+  ],
+  "vsN1": [
+   "ft_slots",
+   "face_layers"
+  ],
+  "vsN2": [
+   "ft_slots",
+   "face_layers"
+  ],
+  "vsN4": [
+   "ft_slots",
+   "face_layers"
+  ],
+  "vsN5": [
+   "ft_slots",
+   "face_layers"
+  ],
+  "vsN6": [
+   "ft_slots",
+   "face_layers"
+  ],
+  "NE_io": [
+   "internal_stations",
+   "face_layers"
+  ]
+ }
+}
