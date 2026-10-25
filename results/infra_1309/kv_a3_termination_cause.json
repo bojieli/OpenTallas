@@ -1,0 +1,23 @@
+{
+  "kind": "external_manual_SIGTERM",
+  "lane": "TOK-SCHED",
+  "timestamp_pdt": "2026-10-25 12:26:36.231",
+  "sim_pids": [
+    3317843,
+    3317882,
+    3317915
+  ],
+  "scope_units": [
+    "oth-ubuntu-3316881-1792943026",
+    "oth-ubuntu-3316839-1792943026",
+    "oth-ubuntu-3316892-1792943026"
+  ],
+  "observed_end": "2026-10-25 12:26:38 PDT",
+  "signal": 15,
+  "inner_exit": 143,
+  "outer_exit_before_fix": 0,
+  "memory_available_percent_near_event": 72.98,
+  "source_tool_record": "/home/ubuntu/.claude/projects/-home-ubuntu-OpenTallas/b7f906df-7fae-44f7-85c4-22c768baf49f/subagents/agent-a61d203ac2ed6b117.jsonl",
+  "source_timestamp_utc": "2026-10-25T19:26:36.231Z",
+  "conclusion": "No OOM, fleet deadline, or infrastructure policy inferred; exact explicit kill command found. No jobs restarted."
+}

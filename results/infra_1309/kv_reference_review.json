@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "read-only TT/FF signoff of retained routed reference",
+  "images": [
+    "/srv/opentallas-scratch2/claude/codex-infra-1309/kv-canary-recover/img/floorplan.png",
+    "/srv/opentallas-scratch2/claude/codex-infra-1309/kv-canary-recover/img/density.png"
+  ],
+  "findings": [
+    "No macros or macro walls; sparse station/clock groups distributed across slot.",
+    "No placement-density hotspot in the image; wide feedthrough field remains open.",
+    "PG stripes continuous across the slot; dense PG topology relative to sparse cells explains the expensive IR solve.",
+    "Low utilization is a planning cost, not a reason to erase existing route or timing evidence; no reroute is required to collect this checkpoint."
+  ],
+  "source_canary": "1ae8ebeb0a0b",
+  "clock_ps": 833,
+  "setup_corner": "tt",
+  "hold_corner": "ff",
+  "uncertainty_ps": [
+    60,
+    25
+  ]
+}
