@@ -1,0 +1,25 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/macros/d2d_sram_1r1w_64x137_m1_r2c2_p288.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/macros/ot_qkvd_ucie_x64_phy.lef, created 1 library cells
+[WARNING ORD-2011] LEF master BUFx2_ASAP7_75t_R has no liberty cell.
+[INFO IFP-0001] Added 3808 rows of 39840 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 2160.000 1036.800 ) um
+[INFO IFP-0101] Core BBox: (  4.320  4.320 ) ( 2155.680 1032.480 ) um
+[INFO IFP-0102] Core area:                      2211942.298 um^2
+[INFO IFP-0103] Total instances area:            620300.853 um^2
+[INFO IFP-0104] Effective utilization:                0.280
+[INFO IFP-0105] Number of instances:                      6
+ACTUAL_INST u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[0\].u_store.g_p288.u_sram
+ACTUAL_INST u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[1\].u_store.g_p288.u_sram
+ACTUAL_INST u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[2\].u_store.g_p288.u_sram
+ACTUAL_INST u_bound.u_d2d_kv.u_core.u_end.u_link.g_bank\[3\].u_store.g_p288.u_sram
+ACTUAL_INST u_bound.u_ucie_rom
+ACTUAL_INST u_logic
+[INFO ODB-0303] The initial 3808 rows (151710720 sites) were cut with 5 shapes for a total of 7768 rows (108566752 sites).
+[ERROR PDN-0006] VDD on M4 is blocked by obstructions on M5 for u_bound.u_ucie_rom
+Error: run.tcl, 59 PDN-0006

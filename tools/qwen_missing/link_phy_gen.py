@@ -121,7 +121,7 @@ def track_phase_x0(x0: float, w: float) -> float:
 
 
 def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, west: bool = False,
-              track_phase: bool = False):
+              track_phase: bool = False, pg_access_layer: str = "M4"):
     L = [f"# OpenTallas tools/qwen_missing/link_phy_gen.py: {name} hard-macro ABSTRACT (licensed PHY IP; FDI side only)",
          "VERSION 5.7 ;", 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f"MACRO {name}",
          f"  FOREIGN {name} 0 0 ;", "  SYMMETRY X Y ;", f"  SIZE {w:.3f} BY {h:.3f} ;", "  CLASS BLOCK ;"]
@@ -144,15 +144,28 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, wes
               f"      RECT 0 {y:.3f} {pl:.3f} {y + pw:.3f} ;" if west else
               f"      RECT {x:.3f} {h - pl:.3f} {x + pw:.3f} {h:.3f} ;", "    END",
               f"  END {b}"]
-    sw, sp = 0.288, 2.4
+    if pg_access_layer not in ("M4", "M6"):
+        raise ValueError("PHY PG access layer must be M4 or M6")
+    sw = 0.288
     straps = {"VDD": [], "VSS": []}
-    y, k = 1.0, 0
-    while y + sw < h - 1.0:
-        straps["VDD" if k % 2 == 0 else "VSS"].append(y)
-        y += sp / 2
-        k += 1
+    if pg_access_layer == "M4":
+        # Historical view, byte-identical by default. M5 OBS can hide this
+        # interface from a legal external PDN; retain it as failure evidence.
+        y, k = 1.0, 0
+        while y + sw < h - 1.0:
+            straps["VDD" if k % 2 == 0 else "VSS"].append(y)
+            y += 1.2
+            k += 1
+    else:
+        # Explicit generated-model interface ABOVE the M5 obstruction. These
+        # are power terminals, not permission to route signals inside the IP.
+        # Macro internal PG/GDS is outside this abstract's claim boundary.
+        for net, centre in (("VDD", 2.352), ("VSS", 1.968)):
+            while centre + sw / 2 < h - 1.0:
+                straps[net].append(centre - sw / 2)
+                centre += 4.32
     for net, use in (("VDD", "POWER"), ("VSS", "GROUND")):
-        L += [f"  PIN {net}", "    DIRECTION INOUT ;", f"    USE {use} ;", "    PORT", "      LAYER M4 ;"]
+        L += [f"  PIN {net}", "    DIRECTION INOUT ;", f"    USE {use} ;", "    PORT", f"      LAYER {pg_access_layer} ;"]
         L += [f"      RECT 0.500 {yy:.3f} {w - 0.5:.3f} {yy + sw:.3f} ;" for yy in straps[net]]
         L += ["    END", f"  END {net}"]
     L += ["  OBS"]
@@ -180,6 +193,9 @@ def write_lef(name: str, w: float, h: float, plist: list[Pin], pitch: float, wes
     L += ["  END", f"END {name}", "", "END LIBRARY"]
     pin_info = dict(signal_pins=len(bits), pin_pitch_um=pitch, pin_layer="M4" if west else "M5",
                     pin_edge="west (adapter-facing)" if west else "top (core-facing)")
+    if pg_access_layer != "M4":
+        pin_info["pg_access_layer"] = pg_access_layer
+        pin_info["pg_claim"] = "generated-model external PG interface; no licensed macro internal GDS claim"
     pin_info["pin_block_y_um" if west else "pin_block_x_um"] = [600.0, round(600.0 + span, 3)] if west else [x0, round(x0 + span, 3)]
     return "\n".join(L) + "\n", pin_info
 
