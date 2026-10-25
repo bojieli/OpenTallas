@@ -64,37 +64,44 @@ def host_in_band(plan, log):
 
 
 def core_taps(plan, ins, log):
-    """decision 5e core-latency contract: every hard core of a q_sm tile (32 SM halves) gets its own die-tree tap
-    (kind core) beside its clock pin, in the tile's driver / column channels (schema.tap_clear), early by the core's
-    measured insertion - common latency (HBM-ELEM list; 250 = not early until measured).  The q_sm 'clk' grid tap
-    keeps only the tile glue in the channels.  Without this the die tree reached 32 core pins through one tile-centre
-    tap and ~2.9 mm of tile glue (DIE-STA 10-24: hbm NW_sm2 tap +440 ps)."""
-    n = 0
+    """decision 5e core-latency contract: a hard core whose measured internal insertion I exceeds the common latency
+    gets its own die-tree tap (kind core) beside its clock pin, in a channel (schema.tap_clear), early by I - 250
+    (HBM-ELEM physical/die_plan/hbm_arch_cores/results/core_insertion_b2l.json, `ins` = {(type, inst): view row}).
+    Every hard core of a q_sm tile (32 SM halves) gets one too (I = 250 until measured): without it the die tree
+    reached 32 core pins through one tile-centre tap and ~2.9 mm of tile glue (DIE-STA 10-24: NW_sm2 tap +440 ps)."""
+    n = nm = 0
     for tn, t in plan["partition_types"].items():
-        if not (t.get("hard") and t.get("channels") and t.get("hard_cores")):
-            continue
+        sm = bool(t.get("hard") and t.get("channels") and t.get("hard_cores"))
         taps = []
-        for c in t["hard_cores"]:
+        for c in t.get("hard_cores", []) or []:
+            r = ins.get((tn, c["inst"]))
+            if not sm and not (r and r.get("early_tap_ps", 0) > 0):
+                continue
             pins = json.loads((HERE / "B2l" / c["pins_file"]).read_text())
-            ck = [p for p in pins if p["name"].startswith("ck") or p["name"] in ("clk", "clock")]
-            assert len(ck) == 1, (tn, c["inst"], ck)
-            (ox, oy) = c["origin_um"]
-            x, y = S.tap_clear(t, ox + ck[0]["x"], oy + ck[0]["y"], [tuple(a["xy"]) for a in taps], clear=4.32)
-            m = ins.get(c["module"])
-            taps.append(dict(name=c["inst"], kind="core", xy=[round(x, 4), round(y, 4)],
-                             insertion_ps=round(float(m["insertion_ps"]), 3) if m else 250.0,
-                             budget_owner=c["module"],
-                             note=("measured " + m.get("source", "")) if m else
-                             "insertion NOT MEASURED yet (250 = common latency, not early); HBM-ELEM list pending"))
-        t["clock"].update(core_taps="early", taps=taps)
-        n += len(taps)
+            ports = list((r or {}).get("ports", {}).keys()) or ["ck", "clk", "clock"]
+            ck = [p for p in pins if p["name"] in ports or (not r and p["name"].startswith("ck"))]
+            if not ck:
+                raise SystemExit(f"core tap: no clock pin {ports} on {tn}.{c['inst']}")
+            for p in ck:
+                (ox, oy) = c["origin_um"]
+                x, y = S.tap_clear(t, ox + p["x"], oy + p["y"], [tuple(a["xy"]) for a in taps], clear=4.32)
+                I = float(r["insertion_mean_ps"]) if r else 250.0
+                taps.append(dict(name=c["inst"] if len(ck) == 1 else f"{c['inst']}.{p['name']}", kind="core",
+                                 xy=[round(x, 4), round(y, 4)], insertion_ps=round(max(I, 250.0), 3),
+                                 budget_owner=c["module"],
+                                 note=(f"HBM-ELEM measured I {I:g} ps (max {r.get('insertion_max_ps')}), view {r['view']}"
+                                       if r else "SM half: insertion NOT MEASURED (250 = common latency, not early)")))
+                nm += 1 if r else 0
+        if taps:
+            t["clock"].update(core_taps="early", taps=taps)
+            n += len(taps)
     # PHY_N (hard HBM PHY, no channels): its clock pin on the S face (toward the die), not the tile centre: the die
     # tree may not place a driver over the PHY, so a centre pin hung 1.2 mm of unbuffered wire off the nearest leaf
     tp = plan["partition_types"]["PHY_N"]
     w, h = tp["outline_um"]
     tp["clock"]["tap_um"] = [round(w / 2, 4), 4.32]
     tp["reset"]["tap_um"] = [round(w / 2 + 8.64, 4), 4.32]
-    log.append(f"core taps: {n} SM-half core taps on the q_sm tiles (insertion from {len(ins)} measured modules)")
+    log.append(f"core taps: {n} early core taps ({nm} from measured insertion > 250 ps, the rest SM halves at 250)")
 
 
 def forbid_rects(P):
@@ -480,8 +487,11 @@ def main(argv=None):
     pg_domains(plan, log)
     ins = {}
     if a.core_insertion:
-        for r in json.loads(Path(a.core_insertion).read_text()).get("cores", []):
-            ins[r["module"]] = r
+        for r in json.loads(Path(a.core_insertion).read_text()).get("views", []):
+            if r.get("status") == "MEASURED":
+                for ti in r["instances"]:
+                    tn_, inst = ti.split(".", 1)
+                    ins[(tn_, inst)] = r
     core_taps(plan, ins, log)
     clock(plan, out, log)
     clock_zst(json.loads(json.dumps(plan)), out, log)
