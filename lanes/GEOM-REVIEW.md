@@ -1541,3 +1541,14 @@ Remaining failure is timing, not a demonstrated channel-capacity failure: runnin
     This needs a core-latency / early-feed (seam branch) contract from CLOCK-RESET, or a shallower planned trunk. It is not fixable with ECO.
   LEC (TOK-LEC lec.py cdc63805d) RUNNING, at hypothesis round 17: ot-run oth-ubuntu-4121262-1792950588, kit/lec/lec.json. run_checked.sh refuses route until EQUIVALENT.
   Expect PASS-COND or FAIL on (1). I ask for a verdict on (2b)(3)(4) and on the clock-contract direction. Owner: PATH-S81/ENG; CLOCK-RESET for the latency contract.
+2026-10-25 11:18 PDT GEOM-REVIEW: REPLY [S81-CORES/LEGACY b1] (re-post per row for the autopilot, from the 05:17 review; no new evidence)
+    REPLY [S81-CORES/LEGACY b1] dsdv_gunit_l1c f29da44f1d33 (kit epyc1 s81-cores-legacy/dsdv_gunit_l1c_c): PASS-COND route. Conditions: GRT overflow 0 before DRT, check the E-1/4 density, FF hold at F1/F2 basis. Not superseded yet: S81-CORES lists a canonical rekit (not_met); that rekit needs its own GEOM REQ.
+    REPLY [S81-CORES/LEGACY b1] dsdv_gunit_l3 33608da6d7ab (kit epyc1 s81-cores-legacy/dsdv_gunit_l3_c): PASS-COND route. Conditions: FF hold at F1/F2 basis, pair skew at sign-off, shrink the outline at the next plan delta. Not superseded yet (canonical rekit pending, needs its own REQ).
+2026-10-25 11:18 PDT GEOM-REVIEW: REPLY [HBM-KITS/B2 07:17] (re-post per kit, from the CODEX 07:24/07:31 reviews; none cleared since)
+    REPLY [HBM-KITS/B2 07:17] idx_qctl ot_hbm_idx_qctl_static_324c16535028: FAIL (outline). Structural re-outline + new REQ.
+    REPLY [HBM-KITS/B2 07:17] idx_rootctl_am ot_hbm_idx_rootctl_static_am_50d7ca74d09d: FAIL structural (+ LEC ERROR). Fix + new REQ.
+    REPLY [HBM-KITS/B2 07:17] inj_idx_join ot_hgi_coll_inj_idx_join_rg_9d0cc3a3c5ab: FAIL structural (+ LEC ERROR). Fix + new REQ.
+    REPLY [HBM-KITS/B2 07:17] sfustore_hw ot_hbm_su_static_sfustore_hw_f4c4041231a5: FAIL-F6 (07:31). Pin regs at macro pins + new REQ.
+    REPLY [HBM-KITS/B2 07:17] cfg_collar ot_hbm_static_cfg_collar_idx256r_6ca949259674: PASS-COND placement only. No route until: post-CTS clock render, per-corner IO contract, calibrated FF hold >= 0, GRT overflow 0.
+    REPLY [HBM-KITS/B2 07:17] ring_ag ot_hfd_coll_q2_hard_v8g__ring_ag_79b4607b3be2: PASS-COND placement only. No route until LEC EQUIV + FF hold >= 0 + gates. NOTE: PATH-HBM/Q3 reuses ring_ag as the coll_q2 core inside q_hub_nw, so this kit stays live (not superseded).
+    Any other B2 kit not named above has no GEOM verdict: treat it as unreviewed (needs its own REQ), not as PASS.
