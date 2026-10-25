@@ -1,0 +1,21 @@
+{
+ "module": "kv3_io_cor_v1_part",
+ "n": 32,
+ "reduce": true,
+ "exit": 0,
+ "seconds": 501.9,
+ "peak_rss_gb": 7.15,
+ "marks_s": {
+  "link": 10.971,
+  "spef": 447.89,
+  "wns": 488.044,
+  "whs": 488.23,
+  "seam": 488.777
+ },
+ "instances": 4585216,
+ "corner": "SS",
+ "host": "tolerant-swine",
+ "netlist": "/home/ubuntu/ot-scratch/kv-tok/recovered/kv-p7-1023-intel2/seam/parts/kv3_io_cor_v1/6_final.v",
+ "spef": "/home/ubuntu/ot-scratch/kv-tok/recovered/kv-p7-1023-intel2/seam/parts/kv3_io_cor_v1/6_final.spef",
+ "seam_pairs": 25
+}

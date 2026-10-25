@@ -1,0 +1,19 @@
+%Error-MODMISSING: src/qc/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe7.sv:73:5: Cannot find file containing module: 'ot_sram_1r1w_64x137_m1_r2c2_p192'
+   73 |     ot_sram_1r1w_64x137_m1_r2c2_p192 u_sram (
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... Looked in:
+                        src/qc/rtl/qwen_sys/d2d_static_20261015/ot_sram_1r1w_64x137_m1_r2c2_p192
+                        src/qc/rtl/qwen_sys/d2d_static_20261015/ot_sram_1r1w_64x137_m1_r2c2_p192.v
+                        src/qc/rtl/qwen_sys/d2d_static_20261015/ot_sram_1r1w_64x137_m1_r2c2_p192.sv
+                        ot_sram_1r1w_64x137_m1_r2c2_p192
+                        ot_sram_1r1w_64x137_m1_r2c2_p192.v
+                        ot_sram_1r1w_64x137_m1_r2c2_p192.sv
+                        obj_dir/ot_sram_1r1w_64x137_m1_r2c2_p192
+                        obj_dir/ot_sram_1r1w_64x137_m1_r2c2_p192.v
+                        obj_dir/ot_sram_1r1w_64x137_m1_r2c2_p192.sv
+                   ... With current working directory '/srv/opentallas-scratch/tok-qw/xdie_bound/run2/carve'
+%Error-MODMISSING: src/qc/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv:315:9: Cannot find file containing module: 'D2D_TXDP_NOT_COMPILED___05Fset_TXDP_from_the_compiler'
+  315 |         D2D_TXDP_NOT_COMPILED__set_TXDP_from_the_compiler u_txdp_uncompiled ();
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to 2 error(s)

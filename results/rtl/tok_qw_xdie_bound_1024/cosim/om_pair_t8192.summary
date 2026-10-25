@@ -1,0 +1,6 @@
+om_pair_t8192 expect=PASS got=PASS -> OK
+    integer CS_TXS = 2; integer CS_RXV = 2; integer CS_RXP = 2; integer CS_X3S = 3; integer SC_TX = 2; integer SC_X3 = 2; integer KS_RXV = 34; integer KS_RXP = 34; integer KS_TXS = 32; integer KS_TXK = 32; integer KS_TXB = 32; integer SK_TXV = 31; integer SK_TXP = 31; [31:0] P_TXDP_C = 32'h0a010308; [31:0] P_TXDP_K = 32'h03030443; 
+    XQ_FIN layer 1 T 8192: pvfin beat0 at root age 1744 = PV 909 + max(P0 756, P1 756, R 818) + 17 -> 1744 | programme tx_first 1751 end 1998 (RETIRE_STATIC 1 STATUS_DELAY 213)
+    XQ_E C2K_cmd_issue_to_land=55 C2K_q31_issue_to_land=56 C2K_q_first_issue_to_last_land=88 K2C_r31_issue_to_land=53 K2C_r0_issue_to_land=53 K2C_r_first_issue_to_last_land=84 KVN_k3_issue_to_land=20 roundtrip_cmd_issue_to_r31_land=1887 kv_service_cmd_land_to_r31_issue=1779 compute_done_after_r31_land=219 K2C_status_issue_to_land=49
+    XQ_CFG C_REAL=1 K_REAL=4 QGAP=0 PHY=5 TXL=6 X=8 period=7056 stages C 2,2,2,3,2,2 K 34,34,32,32,32,31,31 MUT=0 layers=35
+    XQ_PASS layers=35 bit-exact Q/RESULT/KVN, every landing on its compiled cycle, no fault

@@ -1,0 +1,11 @@
+{
+ "element": "s81_g3_slice_station__t14",
+ "kit": "claude/elem-s81-1024 (main 6ba0c8b80c tools) plan v4.8 physical/die_plan/s81 kit localhost:/srv/opentallas-scratch/claude/elem-s81/kits/slice_station__t14",
+ "verdict": "PASS-COND",
+ "hash": "cd0a7b1a169f",
+ "reasons": "[ELEM-S81 self review 2026-10-24T08:10:34-07:00] placed 3_place.odb rendered (slice_station__t14/review/place.png) and viewed. ft slots [ft0 2 E W; ft1 2 E W; ft2 3 E S; ft3 3 E S; ft4 2 E W; ft5 3 S E; ft6 3 S E; ft7 2 W E; ft8 2 W E]. cells 36322, FF 6727, buf/inv 81% (repeaters on the station-to-pin legs), max std density 0.127 (no bin > 0.8), no macros, 17 R4 grid taps (most tap regions empty: logic sits only along the lane routes). Station flops follow the in-face -> out-face route (turning slots on the diagonal, straight slots in stripes); in-face register at the pin (pin->reg p50/p90/max 6.77/8.3/11.18 um vs p90 limit 30); further stations spread along the route, the out face is reached from the last station (plan ft model). reg-reg {'F>F async': (22, 328.4, 0), 'F>F data': (4072, 719.2, 0)}: 0 pairs > 750 um. Pins only on the planned face windows (die plan G0 abutment PASS; die_plan_g0.png: stations carry the central-band lanes between frames and slices). Utilization ~1-15%: the plan spends a full 1442.88x1226.88 cell on ft-only stations (plan-level area note, not a kit defect).",
+ "fixes": "Route allowed at >= 28 GB (12 GB OOMs in GRT/DRT init, peak 12.6 GB). Judge at route + signoff.py: TT setup >= 0, FF hold >= 0 (OWNER 08:10: typical sign-off, never SS) (std boundary-hold overlay), DRC 0, pin-flop spread <= 80 ps TT/FF, sdc_lint + face_guard (1-station slot rule, main 6ba0c8b80c).",
+ "reviewer": "ELEM-S81 (author self review; GEOM-REVIEW second review pending)",
+ "at": "2026-10-24T08:10:34-07:00",
+ "rule": "OWNER 2026-10-24 08:05 review before you route"
+}

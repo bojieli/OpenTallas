@@ -24,7 +24,15 @@
 set -u
 RUNROOT=$(readlink -f "$1"); shift
 NET=""
-while [ $# -gt 0 ]; do case "$1" in --die-netlist) NET=$(readlink -f "$2"); shift 2;; *) echo "bad arg $1"; exit 2;; esac; done
+LEAF=0
+# --leaf DIR (TOK-QW 10-24): same vehicle as --die-netlist, but DIR/head_leaf.v (+ helpers.sv) is the DIE-SELECTED head leaf
+#   RTL (the leaf the bound compute die instantiates: rtl/qwen_dv/headprep13/h16za/native32_1r_param.v +
+#   native32_helpers.sv, module ot_qfd_tt_ctlm_static_hr_safe32_native32_1r, selected by tt_ctlm =
+#   qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1 in physical/die_plan/qwen_compute/bind/bound_r8/bind.f).  The behavioural
+#   h16y family is not on main (results/rtl/qw_r56_selected_head_1023/README.md) -> this is the RTL head run; grade is
+#   "RTL-functional (die-selected leaf, source assembly)", never die-netlist.
+while [ $# -gt 0 ]; do case "$1" in --die-netlist) NET=$(readlink -f "$2"); shift 2;;
+  --leaf) NET=$(readlink -f "$2"); LEAF=1; shift 2;; *) echo "bad arg $1"; exit 2;; esac; done
 SRC=$RUNROOT/src; S=$RUNROOT/head; FX=$S/fx; T=$S/tree; HERE=$(dirname "$(readlink -f "$0")")
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 verilator --version | grep -q '5.050' || { echo "need Verilator 5.050"; exit 2; }
@@ -47,7 +55,7 @@ if [ -z "$NET" ]; then
   python3 results/rtl/qw_head_safe32_1020/h16y/prepare_rtl_parent.py > $R/prepare.log 2>&1 || { cat $R/prepare.log; exit 2; }
   B=rtl/test/qwen_dv/tt_ctlm_prog_safe32_h16y_bench.py
 else
-  GRADE="die-netlist"
+  GRADE="die-netlist"; [ $LEAF = 1 ] && GRADE="RTL-functional (die-selected leaf, source assembly)"
   rm -rf $S/net; mkdir -p $S/net; cp "$NET/head_leaf.v" $S/net/native32_1r_param.v
   if [ -f "$NET/helpers.sv" ]; then cp "$NET/helpers.sv" $S/net/native32_helpers.sv; else cp results/rtl/qw_head_safe32_1020/h16y/net_ifg2/native32_helpers.sv $S/net/; fi
   sed -e "s#Path('results/rtl/qw_head_safe32_1020/h16y/net_ifg2')#Path('$S/net')#" \
