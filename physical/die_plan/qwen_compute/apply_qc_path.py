@@ -12,6 +12,7 @@ import apply_start_broadcast
 import apply_registered_phy
 import native59_memory_views
 import coll_ftm_clock
+import apply_st_a_ctl_width
 
 PHY_BUMPS = [dict(pin=p,dir=d,width=w) for p,d,w in (
     ('link_v','output',1),('link_flit','output',583),('far_v','input',1),('far_flit','input',583))]
@@ -20,6 +21,7 @@ PHY_BUMPS = [dict(pin=p,dir=d,width=w) for p,d,w in (
 def apply(raw):
     if raw.get('die',{}).get('name') != 'qwen_compute':
         raise ValueError('QC path batch is scoped to qwen_compute')
+    apply_st_a_ctl_width.apply(raw)
     apply_start_broadcast.apply(raw)
     phy=raw['partition_types']['phy_ucie_kv']
     cores=[c for c in phy['contents'] if c.get('module')=='ot_qkvd_ucie_x64_phy']

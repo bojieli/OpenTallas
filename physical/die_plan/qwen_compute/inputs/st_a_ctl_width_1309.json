@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.scoped_bound_width.v1",
+ "verdict": "POST_PARAM_REGEN_PASS",
+ "old_width": 267,
+ "new_width": 268,
+ "lanes": [
+  "sl_E0_st_a__x_st_a_ctl",
+  "sl_E1_st_a__x_st_a_ctl",
+  "sl_E2_st_a__x_st_a_ctl",
+  "sl_E3_st_a__x_st_a_ctl",
+  "sl_E4_st_a__x_st_a_ctl",
+  "sl_E5_st_a__x_st_a_ctl",
+  "sl_W0_st_a__x_st_a_ctl",
+  "sl_W1_st_a__x_st_a_ctl",
+  "sl_W2_st_a__x_st_a_ctl",
+  "sl_W3_st_a__x_st_a_ctl",
+  "sl_W4_st_a__x_st_a_ctl",
+  "sl_W5_st_a__x_st_a_ctl"
+ ],
+ "actual_components": {
+  "fault": 1,
+  "nb_oc": 1,
+  "r_d": 256,
+  "idx": 8,
+  "last": 1,
+  "valid": 1
+ },
+ "data_cycles_added": 0,
+ "source": {
+  "out": "/srv/opentallas-scratch2/claude/codex-qc-token-1309/plan_posthook_width268_complete/base_r8",
+  "source_commit": "eccf35226c with canonical coll_regen and R8",
+  "reports": {
+   "bind_latency.json": "bbbd6bc01665d8b087529856b9c5fe57ce1df046e0b4748b72a66611a49520a4",
+   "bind_report.json": "3badb9f7ba0d4f28911c89223e680c506e9059d593628158f18a1e324ca4aabb",
+   "param_regen.json": "244ad26219c3e5fbd337780c82827a1bc88854cdb8181eb4530b0cf31b45b939"
+  }
+ },
+ "proof": {
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 11568,
+  "plan_driven": 0
+ },
+ "scope": "Twelve direct station-to-controller lanes only; historical267 receipt preserved"
+}

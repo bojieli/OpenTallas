@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.die_plan.latency.v1",
  "die": "qwen_compute",
- "plan_digest": "08ed0508bc550c26",
+ "plan_digest": "8660ca9d6f43c655",
  "period_ps": 833,
  "lanes": {
   "c_E0_bf_00__a22": {
@@ -14100,7 +14100,7 @@
     "part": "sl_E0_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_E0_st_a__x_st_a_fe": {
    "cycles": 12,
@@ -16076,7 +16076,7 @@
     "part": "sl_E1_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_E1_st_a__x_st_a_fe": {
    "cycles": 12,
@@ -18071,7 +18071,7 @@
     "part": "sl_E2_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_E2_st_a__x_st_a_fe": {
    "cycles": 12,
@@ -20047,7 +20047,7 @@
     "part": "sl_E3_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_E3_st_a__x_st_a_fe": {
    "cycles": 12,
@@ -22042,7 +22042,7 @@
     "part": "sl_E4_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_E4_st_a__x_st_a_fe": {
    "cycles": 12,
@@ -23695,7 +23695,7 @@
     "part": "sl_E5_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_E5_st_a__x_st_a_fe": {
    "cycles": 12,
@@ -25690,7 +25690,7 @@
     "part": "sl_W0_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_W0_st_a__x_st_a_fe": {
    "cycles": 8,
@@ -27666,7 +27666,7 @@
     "part": "sl_W1_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_W1_st_a__x_st_a_fe": {
    "cycles": 8,
@@ -29661,7 +29661,7 @@
     "part": "sl_W2_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_W2_st_a__x_st_a_fe": {
    "cycles": 8,
@@ -31637,7 +31637,7 @@
     "part": "sl_W3_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_W3_st_a__x_st_a_fe": {
    "cycles": 8,
@@ -33632,7 +33632,7 @@
     "part": "sl_W4_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_W4_st_a__x_st_a_fe": {
    "cycles": 8,
@@ -35627,7 +35627,7 @@
     "part": "sl_W5_ctl",
     "bus": "x_st_a_i"
    },
-   "width": 267
+   "width": 268
   },
   "sl_W5_st_a__x_st_a_fe": {
    "cycles": 8,
