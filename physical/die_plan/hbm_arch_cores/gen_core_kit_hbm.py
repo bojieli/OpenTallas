@@ -452,7 +452,6 @@ def main():
     ap.add_argument("--stock-rc", action="store_true", help="old basis: platform setRC.tcl (no RCX-calibrated RC)")
     ap.add_argument("--no-f1", action="store_true", help="no per-corner FF IO basis in the FF hold repair")
     ap.add_argument("--no-f4", action="store_true", help="no zero-logic chain leaf affinity post-CTS")
-    ap.add_argument("--io-ff-ps", type=float, default=None, help="measured FF pin-register insertion (overrides the table / ratio)")
     ap.add_argument("--clock-tap-dmax", type=float, default=80.0)
     a = ap.parse_args()
     V = json.load(open(a.views))
@@ -696,7 +695,8 @@ def main():
                 outputs=[b for b in pb if dirs.get(b) == "output"],
                 unc_setup_ps=sdc_lint.POLICY_SETUP_PS, unc_hold_ps=sdc_lint.POLICY_HOLD_PS, time_unit_ps=1.0,
                 io_floor_ps={b: IO_BUDGET * per for b in pb}, port_latency_ps={})
-    (kd / "sdc_lint.json").write_text(json.dumps(lctx, indent=1) + "\n")
+    # sdc_lint.lint_kit_files passes this file as lint(**ctx): only lint() keywords (F1 FF basis lives in freeze.json flow.f1)
+    (kd / "sdc_lint.json").write_text(json.dumps({k: v for k, v in lctx.items() if k not in ("insertion_ff_ps", "insertion_basis")}, indent=1) + "\n")
     rst_in = [r for r in rsts if dirs.get(base(r)) != "output"]   # RECIPES2: a reset-named OUTPUT (remainder relay
     if rst_in != rsts:                                               # output) is a data output, never an input delay
         rsts = rst_in
