@@ -263,3 +263,15 @@ CLEAN: hd_ctl hd_host hd_lep0N hd_mesh hd_serdes hd_spn hd_spn_end hd_st_k5 hd_s
 | svc_lo_dsdv_svc_rs__t7 (1) | STRUCTURAL | 0 | 158.59/77.2 | 355 | 3100 default station sites inside cores |
 | svc_lo_dsdv_svc_rs_w__t1 (1) | STRUCTURAL | 0 | 267.46/96.32 | 313 | 2694 default station sites inside cores |
 CLEAN: bk_col__t1 bk_sel__t1 dsdv_slice_c1x_C__t7 dsdv_slice_lepe_mu_LP__t1 dsdv_slice_lepe_nh_mus_LP__t1 dsdv_slice_lepw_mu_C__t1 dsdv_slice_lepw_mu_LP__t1 dsdv_slice_lepw_mus_LP__t1 gunit__t1 iqf__t1 ot_s81sl_kv_leaf__t1 ot_s81sl_kv_leaf__t2 ot_s81sl_kv_leaf__t3 ot_s81sl_kv_leaf__t4 ot_s81sl_kv_leaf__t5 ot_s81sl_leaf__t54 seqhost__t1 serdes__t1 serdes__t2 serdes__t3 serdes__t4 serdes__t5 serdes__t6 svc_hi_dsdv_svc_pvso_entry__t1 svc_hi_dsdv_svc_pvso_entry__t2 svc_hi_dsdv_svc_rs__t2 svc_lo_dsdv_svc_rs__t1 svc_lo_dsdv_svc_rs__t2 svc_lo_dsdv_svc_rs__t3 svc_lo_dsdv_svc_rs__t4 svc_lo_dsdv_svc_rs__t5
+
+### HBM idle hard cores (ELEM-HBM kits, placed but never routed; copies at <host>:/srv/opentallas-scratch2/claude/proto-cores/<kit>; ORFS to GRT + STA TT/FF on 4_cts.odb, else 3_place.odb)
+| core | host | furthest stage | GRT | TT setup / FF hold WNS ps | class | why |
+|---|---|---|---|---|---|---|
+| ot_hbm_svc_sm_group_rel_id | epyc3 | CTS done, GRT stopped at congestion round 11/30 | congested | -584.5 / -267.1 (post-CTS, GRT not done) | STRUCTURAL | CTS repair: WNS -5921 ps, setup skew 597 ps, 37k hold violators, 58k hold buffers; clock tree / reset (stream_rst_n -> u_hbm_reset pipe) structure, not tunable |
+| ot_hbm_svc_wb_kport_q | epyc3 | CTS done, GRT stopped at congestion round 3/30 | congested | -217.6 / +30.7 | STRUCTURAL | CTS WNS -2288 -> -677 ps after repair; wd_q[*] fan-in; GRT needs congestion rounds |
+| ot_pdie_serdes | epyc3 | GRT FAILED (GRT-0116) | overflow 254271 (M2 40% use, M2-M5 only) | -32.6 / -389.9 | STRUCTURAL | 385k nets on a M5-capped core: too dense for 4 routing layers -> more area or M6/M7 for the core |
+| ot_hbm_idx_qctl_static | intel1 | CTS FAILED RSZ-0060 (max buffer count) | - | +124.1 / +25.7 (3_place, ideal clock) | STRUCTURAL | CTS buffer explosion = huge-fanout / high-skew clock structure |
+| ot_hbm_su_static_cxport_ij_q | intel1 | CTS repair stopped after ~3 h (WNS -173 ps, +9% area) | - | +226.9 / -107.7 (3_place) | HOTSPOT | sf_q DFF_PN0 setup -173 at CTS; repairable-looking, hold needs CTS |
+| ot_hgi_qw_dec | intel1 | CTS repair stopped after ~3 h (WNS -169 ps) | - | +419.1 / -123.2 (3_place) | HOTSPOT | i_x[*] input-register setup -169 at CTS |
+Already known from ELEM-HBM's runs: dma_back_static_vp4_banks_cp MPL-0065 (cells do not fit beside macros: outline too small = STRUCTURAL); su_programme_pslice_c5 DPL crash (tool); hfd_hgi_vms_glue_nw_t GPL exit 245 after 1 h. KV/QC/S81 core candidates (qkd_pv_join, qfd_dv_s5_su8_rst3, s8x_crh, s8_crh_rp1, S81 dsdv_bk_g/gunit_l2/l4/cfg7_seq_bfp) NOT run this pass.
+2026-10-25 00:46 PDT PROTO: HBM core runs stopped (exact container names) after recording: four of them were hours from GRT end, and their state already answers the question.
