@@ -1,0 +1,1142 @@
+{
+ "note": "S81/PORTBIND 10-25: port-bind gap audit of the S81 die plan against the as-built die (tools/die_plan/bind.py).",
+ "plan": "/srv/opentallas-scratch2/claude/codex-s81-portfix/plan/die_plan.json",
+ "asbuilt": "/srv/opentallas-scratch2/claude/codex-s81-portfix/asb/asbuilt_pf_r6.json",
+ "proof": {
+  "unbound": 11719,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 1292,
+  "plan_driven": 0
+ },
+ "load_bits": {
+  "clock": 623,
+  "crossing": 600239,
+  "strap": 1292,
+  "reset": 445,
+  "intra_kept_stages": 48340,
+  "intra": 148329,
+  "die_io": 5963
+ },
+ "inputs": [
+  {
+   "kind": "top",
+   "pin": "u_iqf.ql",
+   "module": "dsdv_idx_qf",
+   "port": "ql",
+   "part": "iqf",
+   "type": "iqf__t1",
+   "bits": 513,
+   "ranges": [
+    [
+     0,
+     512
+    ]
+   ],
+   "src": [
+    "iqf_ql"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_EN0.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_EN0",
+   "type": "serdes__t9",
+   "bits": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "src": [
+    "lk_EN0_pma_rck"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_EN0.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_EN0",
+   "type": "serdes__t9",
+   "bits": 544,
+   "ranges": [
+    [
+     0,
+     543
+    ]
+   ],
+   "src": [
+    "lk_EN0_pma_rx"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_EN1.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_EN1",
+   "type": "serdes__t10",
+   "bits": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "src": [
+    "lk_EN1_pma_rck"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_EN1.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_EN1",
+   "type": "serdes__t10",
+   "bits": 544,
+   "ranges": [
+    [
+     0,
+     543
+    ]
+   ],
+   "src": [
+    "lk_EN1_pma_rx"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_ES0.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_ES0",
+   "type": "serdes__t5",
+   "bits": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "src": [
+    "lk_ES0_pma_rck"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_ES0.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_ES0",
+   "type": "serdes__t5",
+   "bits": 544,
+   "ranges": [
+    [
+     0,
+     543
+    ]
+   ],
+   "src": [
+    "lk_ES0_pma_rx"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_ES1.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_ES1",
+   "type": "serdes__t6",
+   "bits": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "src": [
+    "lk_ES1_pma_rck"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_ES1.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_ES1",
+   "type": "serdes__t6",
+   "bits": 544,
+   "ranges": [
+    [
+     0,
+     543
+    ]
+   ],
+   "src": [
+    "lk_ES1_pma_rx"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WN0.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WN0",
+   "type": "serdes__t3",
+   "bits": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "src": [
+    "lk_WN0_pma_rck"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WN0.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WN0",
+   "type": "serdes__t3",
+   "bits": 544,
+   "ranges": [
+    [
+     0,
+     543
+    ]
+   ],
+   "src": [
+    "lk_WN0_pma_rx"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WN1.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WN1",
+   "type": "serdes__t1",
+   "bits": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "src": [
+    "lk_WN1_pma_rck"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WN1.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WN1",
+   "type": "serdes__t1",
+   "bits": 544,
+   "ranges": [
+    [
+     0,
+     543
+    ]
+   ],
+   "src": [
+    "lk_WN1_pma_rx"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WN2.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WN2",
+   "type": "serdes__t2",
+   "bits": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "src": [
+    "lk_WN2_pma_rck"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WN2.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WN2",
+   "type": "serdes__t2",
+   "bits": 544,
+   "ranges": [
+    [
+     0,
+     543
+    ]
+   ],
+   "src": [
+    "lk_WN2_pma_rx"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WN3.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WN3",
+   "type": "serdes__t4",
+   "bits": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "src": [
+    "lk_WN3_pma_rck"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WN3.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WN3",
+   "type": "serdes__t4",
+   "bits": 544,
+   "ranges": [
+    [
+     0,
+     543
+    ]
+   ],
+   "src": [
+    "lk_WN3_pma_rx"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WS0.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WS0",
+   "type": "serdes__t7",
+   "bits": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "src": [
+    "lk_WS0_pma_rck"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WS0.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WS0",
+   "type": "serdes__t7",
+   "bits": 544,
+   "ranges": [
+    [
+     0,
+     543
+    ]
+   ],
+   "src": [
+    "lk_WS0_pma_rx"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WS1.pma_rck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rck",
+   "part": "lk_WS1",
+   "type": "serdes__t8",
+   "bits": 1,
+   "ranges": [
+    [
+     0,
+     0
+    ]
+   ],
+   "src": [
+    "lk_WS1_pma_rck"
+   ]
+  },
+  {
+   "kind": "top",
+   "pin": "u_lk_WS1.pma_rx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_rx",
+   "part": "lk_WS1",
+   "type": "serdes__t8",
+   "bits": 544,
+   "ranges": [
+    [
+     0,
+     543
+    ]
+   ],
+   "src": [
+    "lk_WS1_pma_rx"
+   ]
+  }
+ ],
+ "outputs": [
+  {
+   "kind": "open_out",
+   "pin": "u_f_0L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW0_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_0L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW5_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_0R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW0_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_0R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW5_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_1L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW2_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_1L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW3_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_2L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW1_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_2L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW4_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_2R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW1_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_2R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW4_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_3L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW2_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_3L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fW3_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_4R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE2_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_4R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE3_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_5L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE1_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_5L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE4_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_5R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE1_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_5R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE4_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_6R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE2_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_6R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE3_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_7L01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE0_p1_b0",
+   "type": "col_h10_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_7L10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE5_p1_b0",
+   "type": "col_h9_r0_p1__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_7R01.u_r0.xo_o0",
+   "module": "col_h10_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE0_p4_b0",
+   "type": "col_h10_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "open_out",
+   "pin": "u_f_7R10.u_r0.xo_o0",
+   "module": "col_h9_l4_lp_r0",
+   "port": "xo_o0",
+   "part": "fE5_p4_b0",
+   "type": "col_h9_r0_p4__t1",
+   "bits": 1104,
+   "top": [],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_iqf.qc0",
+   "module": "dsdv_idx_qf",
+   "port": "qc0",
+   "part": "iqf",
+   "type": "iqf__t1",
+   "bits": 513,
+   "top": [
+    "iqf_qc0"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_iqf.qc1",
+   "module": "dsdv_idx_qf",
+   "port": "qc1",
+   "part": "iqf",
+   "type": "iqf__t1",
+   "bits": 513,
+   "top": [
+    "iqf_qc1"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_EN0.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_EN0",
+   "type": "serdes__t9",
+   "bits": 1,
+   "top": [
+    "lk_EN0_pma_tck"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_EN0.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_EN0",
+   "type": "serdes__t9",
+   "bits": 544,
+   "top": [
+    "lk_EN0_pma_tx"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_EN1.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_EN1",
+   "type": "serdes__t10",
+   "bits": 1,
+   "top": [
+    "lk_EN1_pma_tck"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_EN1.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_EN1",
+   "type": "serdes__t10",
+   "bits": 544,
+   "top": [
+    "lk_EN1_pma_tx"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_ES0.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_ES0",
+   "type": "serdes__t5",
+   "bits": 1,
+   "top": [
+    "lk_ES0_pma_tck"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_ES0.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_ES0",
+   "type": "serdes__t5",
+   "bits": 544,
+   "top": [
+    "lk_ES0_pma_tx"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_ES1.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_ES1",
+   "type": "serdes__t6",
+   "bits": 1,
+   "top": [
+    "lk_ES1_pma_tck"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_ES1.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_ES1",
+   "type": "serdes__t6",
+   "bits": 544,
+   "top": [
+    "lk_ES1_pma_tx"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WN0.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WN0",
+   "type": "serdes__t3",
+   "bits": 1,
+   "top": [
+    "lk_WN0_pma_tck"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WN0.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WN0",
+   "type": "serdes__t3",
+   "bits": 544,
+   "top": [
+    "lk_WN0_pma_tx"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WN1.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WN1",
+   "type": "serdes__t1",
+   "bits": 1,
+   "top": [
+    "lk_WN1_pma_tck"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WN1.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WN1",
+   "type": "serdes__t1",
+   "bits": 544,
+   "top": [
+    "lk_WN1_pma_tx"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WN2.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WN2",
+   "type": "serdes__t2",
+   "bits": 1,
+   "top": [
+    "lk_WN2_pma_tck"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WN2.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WN2",
+   "type": "serdes__t2",
+   "bits": 544,
+   "top": [
+    "lk_WN2_pma_tx"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WN3.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WN3",
+   "type": "serdes__t4",
+   "bits": 1,
+   "top": [
+    "lk_WN3_pma_tck"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WN3.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WN3",
+   "type": "serdes__t4",
+   "bits": 544,
+   "top": [
+    "lk_WN3_pma_tx"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WS0.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WS0",
+   "type": "serdes__t7",
+   "bits": 1,
+   "top": [
+    "lk_WS0_pma_tck"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WS0.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WS0",
+   "type": "serdes__t7",
+   "bits": 544,
+   "top": [
+    "lk_WS0_pma_tx"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WS1.pma_tck",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tck",
+   "part": "lk_WS1",
+   "type": "serdes__t8",
+   "bits": 1,
+   "top": [
+    "lk_WS1_pma_tck"
+   ],
+   "all_unloaded": true
+  },
+  {
+   "kind": "die_io_out",
+   "pin": "u_lk_WS1.pma_tx",
+   "module": "ot_pdie_serdes_col",
+   "port": "pma_tx",
+   "part": "lk_WS1",
+   "type": "serdes__t8",
+   "bits": 544,
+   "top": [
+    "lk_WS1_pma_tx"
+   ],
+   "all_unloaded": true
+  }
+ ],
+ "unused_lanes": [
+  "coll__lk_EN2__s_7N_LP",
+  "coll__lk_EN3__s_7N_LP",
+  "coll__lk_WS2__s_0S_LP",
+  "coll__lk_WS3__s_0S_LP",
+  "coll__s_0S_LP__lk_WS2",
+  "coll__s_0S_LP__lk_WS3",
+  "coll__s_7N_LP__lk_EN2",
+  "coll__s_7N_LP__lk_EN3"
+ ],
+ "empty": [
+  "EMPTY_PARTITION lk_WS2: no as-built cell maps to it and no lane passes through it",
+  "EMPTY_PARTITION lk_EN3: no as-built cell maps to it and no lane passes through it"
+ ],
+ "top_ports": {
+  "lk_WS0_pma_tx": [
+   "output",
+   544
+  ],
+  "lk_WS0_pma_tck": [
+   "output",
+   1
+  ],
+  "lk_WS0_pma_rx": [
+   "input",
+   544
+  ],
+  "lk_WS0_pma_rck": [
+   "input",
+   1
+  ],
+  "lk_WS1_pma_tx": [
+   "output",
+   544
+  ],
+  "lk_WS1_pma_tck": [
+   "output",
+   1
+  ],
+  "lk_WS1_pma_rx": [
+   "input",
+   544
+  ],
+  "lk_WS1_pma_rck": [
+   "input",
+   1
+  ],
+  "lk_WN0_pma_tx": [
+   "output",
+   544
+  ],
+  "lk_WN0_pma_tck": [
+   "output",
+   1
+  ],
+  "lk_WN0_pma_rx": [
+   "input",
+   544
+  ],
+  "lk_WN0_pma_rck": [
+   "input",
+   1
+  ],
+  "lk_WN1_pma_tx": [
+   "output",
+   544
+  ],
+  "lk_WN1_pma_tck": [
+   "output",
+   1
+  ],
+  "lk_WN1_pma_rx": [
+   "input",
+   544
+  ],
+  "lk_WN1_pma_rck": [
+   "input",
+   1
+  ],
+  "lk_ES0_pma_tx": [
+   "output",
+   544
+  ],
+  "lk_ES0_pma_tck": [
+   "output",
+   1
+  ],
+  "lk_ES0_pma_rx": [
+   "input",
+   544
+  ],
+  "lk_ES0_pma_rck": [
+   "input",
+   1
+  ],
+  "lk_ES1_pma_tx": [
+   "output",
+   544
+  ],
+  "lk_ES1_pma_tck": [
+   "output",
+   1
+  ],
+  "lk_ES1_pma_rx": [
+   "input",
+   544
+  ],
+  "lk_ES1_pma_rck": [
+   "input",
+   1
+  ],
+  "lk_EN0_pma_tx": [
+   "output",
+   544
+  ],
+  "lk_EN0_pma_tck": [
+   "output",
+   1
+  ],
+  "lk_EN0_pma_rx": [
+   "input",
+   544
+  ],
+  "lk_EN0_pma_rck": [
+   "input",
+   1
+  ],
+  "lk_EN1_pma_tx": [
+   "output",
+   544
+  ],
+  "lk_EN1_pma_tck": [
+   "output",
+   1
+  ],
+  "lk_EN1_pma_rx": [
+   "input",
+   544
+  ],
+  "lk_EN1_pma_rck": [
+   "input",
+   1
+  ],
+  "iqf_ql": [
+   "input",
+   513
+  ],
+  "iqf_qc0": [
+   "output",
+   513
+  ],
+  "iqf_qc1": [
+   "output",
+   513
+  ],
+  "lk_WN2_pma_tx": [
+   "output",
+   544
+  ],
+  "lk_WN2_pma_tck": [
+   "output",
+   1
+  ],
+  "lk_WN2_pma_rx": [
+   "input",
+   544
+  ],
+  "lk_WN2_pma_rck": [
+   "input",
+   1
+  ],
+  "lk_WN3_pma_tx": [
+   "output",
+   544
+  ],
+  "lk_WN3_pma_tck": [
+   "output",
+   1
+  ],
+  "lk_WN3_pma_rx": [
+   "input",
+   544
+  ],
+  "lk_WN3_pma_rck": [
+   "input",
+   1
+  ]
+ }
+}
