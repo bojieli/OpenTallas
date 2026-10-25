@@ -57,7 +57,7 @@ if [ "$MODE" = lint ]; then
   echo "LINT rc=$rc errors $(grep -c '^%Error' lint.log) $(grep 'Maximum resident' lint.log)"; exit $rc
 fi
 J=${J:-48}
-/usr/bin/time -v $VL --binary --timing $([ "${HIER:-1}" = 1 ] && echo --hierarchical) -O1 --x-assign fast --x-initial fast --output-split 20000 --output-groups 256 \
+/usr/bin/time -v $VL --binary --timing $([ "${HIER:-1}" = 1 ] && echo --hierarchical) -O1 --x-assign ${XASSIGN:-fast} --x-initial ${XINIT:-fast} --output-split 20000 --output-groups 256 \
   -j $J --build-jobs $J -CFLAGS ${COPT:--O1} -Mdir obj -f vl.f > build.log 2>&1; rc=$?
 echo "BUILD rc=$rc errors $(grep -c '^%Error' build.log) $(grep -E 'Maximum resident|Elapsed' build.log | tr -s ' ' | tr '\n' ' ')"
 exit $rc

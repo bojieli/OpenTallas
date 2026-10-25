@@ -15,6 +15,6 @@ if [ "${PRELOAD:-1}" = 1 ]; then
     ${PRELOAD_ARGS:-} > preload.txt 2> preload.log || exit 2
   PL="+HBM_PRELOAD=$O/$N/preload.txt"
 fi
-/usr/bin/time -f "%e s %M KB" -o time $B +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$(cat $I/epoch.txt) \
+/usr/bin/time -f "%e s %M KB" -o time $B +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$(cat $I/epoch.txt) ${RUNARGS:-} \
   +FAR=1 +VEC=$V +CTX=$CTX +POST=$POST +HBM_LOG=${HBM_LOG:-16} $PL "$@" > sim.log 2>&1; echo $? > exit
 echo "$N exit=$(cat exit) $(cat time) | $(grep -m1 '^KVSLICE_BOOT' sim.log | cut -c1-60) | $(grep -m1 '^FAR_SUMMARY' sim.log)"
