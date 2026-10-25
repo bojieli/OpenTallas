@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND",
+  "picture": "results/geom_review/s81_rxsf_north_0719/pins.png",
+  "findings": [
+    "33 input pins i_v/i_x[31:0] move E/M4 to N/M3 in bit order; 98 other signal pins unchanged, outputs W toward rxsb.",
+    "N bundle spans 6.912um at 0.216um pitch; each M3 pin lies on plan track after .108um core X offset.",
+    "Canonical N-input receiver faces vs producer above; MX uses same contract with N mirrored to S. Optional XM mirrors entire pin/OBS view with V tracks snapped.",
+    "Planned successor only: old routed rxsf view cannot implement these pins. Native successor must be re-kitted, rendered, routed and signed before adoption."
+  ],
+  "rtl_cycles_added": 0,
+  "pins": 131,
+  "moved_inputs": 33,
+  "canonical_hash": "93c3cf07b5fd",
+  "xm_hash": "f502cd18d435"
+}
