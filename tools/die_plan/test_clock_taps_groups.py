@@ -85,10 +85,13 @@ set NET(q_u_rrl_3/q) rq
 '''
 
 
+GROUP_ON = "set ::env(OT_TAP_GROUP_RE) {(?:^|[/.])(u_ft_[A-Za-z0-9]+_s[0-9]+)[/.]}"
+
+
 def test_station_group_whole_and_relay_follows(tmp_path):
     # 60 filler flops on each tap so neither tap is "small"
     fill = ''.join(f'mkflop f{i} {0 if i < 60 else 1000}\n' for i in range(120))
-    p = run(tmp_path, STATION + fill)
+    p = run(tmp_path, STATION + fill, env=GROUP_ON)
     assert p.returncode == 0, p.stderr
     out = p.stdout
     assert 'GROUPS 1 groups' in out and '1 were split over taps by the nearest-flop pass' in out, out
@@ -100,7 +103,7 @@ def test_station_group_whole_and_relay_follows(tmp_path):
 
 def test_small_tap_merged_into_neighbour(tmp_path):
     fill = ''.join(f'mkflop f{i} 0\n' for i in range(60)) + 'mkflop lone 1000\n'
-    p = run(tmp_path, fill, env='set ::env(OT_TAP_PITCH_UM) 2400')
+    p = run(tmp_path, fill, env='set ::env(OT_TAP_PITCH_UM) 2400\nset ::env(OT_TAP_MIN_SINKS) 50')
     assert p.returncode == 0, p.stderr
     assert 'NET ck_lone nclk' in p.stdout
     assert 'clk_t1(1)->clk' in p.stdout
@@ -109,7 +112,20 @@ def test_small_tap_merged_into_neighbour(tmp_path):
 
 def test_small_tap_beyond_pitch_kept(tmp_path):
     fill = ''.join(f'mkflop f{i} 0\n' for i in range(60)) + 'mkflop lone 1000\n'
-    p = run(tmp_path, fill, env='set ::env(OT_TAP_PITCH_UM) 600')
+    p = run(tmp_path, fill, env='set ::env(OT_TAP_PITCH_UM) 600\nset ::env(OT_TAP_MIN_SINKS) 50')
     assert p.returncode == 0, p.stderr
     assert 'NET ck_lone nt1' in p.stdout
     assert 'WARN clk_t1 keeps 1 sinks' in p.stdout
+
+
+def test_default_is_nearest_sink_no_group_no_merge(tmp_path):
+    """FLOW-CANARY 10-25: grouping and the small-tap merge are opt-in; the default is the 202a nearest-sink
+    assignment (on by default they regressed the s81/KV/QC canaries' structural FF hold gate)."""
+    fill = ''.join(f'mkflop f{i} 0\n' for i in range(60)) + 'mkflop lone 1000\n'
+    p = run(tmp_path, STATION + fill, env='set ::env(OT_TAP_PITCH_UM) 2400')
+    assert p.returncode == 0, p.stderr
+    out = p.stdout
+    assert 'GROUPS' not in out and 'MIN ' not in out, out
+    assert 'NET ck_u_ft_ft0_s1/q_2 nt1' in out      # nearest flop, group not forced together
+    assert 'NET ck_u_rrl_3/q nt1' in out            # relay not re-hung
+    assert 'NET ck_lone nt1' in out                 # small tap not merged

@@ -88,7 +88,12 @@ if {[llength $ct_taps] < 2} {
 # pinned: the cap pass and the small-tap merge below move whole taps or ungrouped sinks only.
 global ct_taps ct_k ct_pinned  ;# sourced from inside an ORFS proc: procs below read these as globals
 set ct_pinned {}
-set ct_gre [expr {[info exists ::env(OT_TAP_GROUP_RE)] ? $::env(OT_TAP_GROUP_RE) : {(?:^|[/.])(u_ft_[A-Za-z0-9]+_s[0-9]+)[/.]}}]
+# FLOW-CANARY 10-25: OPT-IN (default off = the 202a nearest-sink assignment).  On by default it regressed every
+# gen_phys canary (s81 t12 / KV io_ft / QC coll_ftm structural FF hold -311.8/-152.0/-144.8 vs 202a PASS; a whole
+# long station row on the tap nearest its centroid left 4-8 taps EMPTY and grew 460-556 ps trees; A/B with 202a
+# clock_taps on the same kits: 0 empty taps, hold gate PASS).  Opt in with OT_TAP_GROUP_RE (the station form is
+# OT_TAP_GROUP_RE='(?:^|[/.])(u_ft_[A-Za-z0-9]+_s[0-9]+)[/.]') once a variant passes the canaries.
+set ct_gre [expr {[info exists ::env(OT_TAP_GROUP_RE)] ? $::env(OT_TAP_GROUP_RE) : {}}]
 set ct_fre [expr {[info exists ::env(OT_TAP_FOLLOW_RE)] ? $::env(OT_TAP_FOLLOW_RE) : {(?:^|[/.])(u_rrl_[0-9]+)[/.]}}]
 proc ct_tapnets {} { global ct_taps; set d {}; foreach tp $ct_taps { dict set d [[lindex $tp 1] getName] $tp }; return $d }
 proc ct_clk_iterm {inst} {
@@ -278,11 +283,12 @@ if {[llength $ct_taps] >= 2} {
     puts "OT_CLOCK_TAPS followers after cap pass: $ct_fmoved of $ct_fn re-hung on their sinks' tap"
   }
 }
-# CLOCK-RESET 10-25 (GEOM-REVIEW-4 06:16 item 5): a tap with fewer than OT_TAP_MIN_SINKS (default 50) sinks is a
+# CLOCK-RESET 10-25 (GEOM-REVIEW-4 06:16 item 5): a tap with fewer than OT_TAP_MIN_SINKS (opt-in; 50 was the default) sinks is a
 # nearly empty tree that tap_balance must pad (t18: 42 -> 246 ps with 49 delay cells) and that launches early into
 # its neighbours: its sinks (whole groups included) join the nearest tap that has >= the minimum, if that tap lies
 # within one tap pitch; otherwise it stays (WARN).  The emptied tap is then dropped like any tap without sinks.
-set ct_min [expr {[info exists ::env(OT_TAP_MIN_SINKS)] ? $::env(OT_TAP_MIN_SINKS) : 50}]
+# FLOW-CANARY 10-25: OPT-IN too (default 0 = off, as 202a); part of the same canary regression (merged taps -> deep trees).
+set ct_min [expr {[info exists ::env(OT_TAP_MIN_SINKS)] ? $::env(OT_TAP_MIN_SINKS) : 0}]
 if {[llength $ct_taps] >= 2 && $ct_min > 0} {
   set ct_k {}
   foreach tp $ct_taps {
