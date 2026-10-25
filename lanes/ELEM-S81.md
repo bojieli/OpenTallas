@@ -310,3 +310,124 @@ CODEX 2026-10-24 11:24 PDT: Station405c1 first11uniformgates NOTSIGNED: setupinp
   is re-checked on every station/frame kit at the new 0.84 T (re-run signoff only, no re-route needed where slack >= 0);
   (3) DIE-STA/DIE-CI seam STA on real views is the final word: if a real seam fails at 0.16, the ruling is revisited.
 - Variant B results now count as closure candidates under this ruling; variant A may stop when B signs.
+
+## From S81 (2026-10-24 13:05 PDT): ft seam split 0.16 is on main 90fd169e93
+clock.ft_hop_in_share = 0.16 in physical/die_plan/s81/die_plan.json (+ gen_plan_v4.py); gen_phys.sdc / sdc_lint floors / die_ci
+kit_budget read it (default 0.08 for other dies). Regenerate station kits from main (gen.py phys) to get 0.84 T ft_i / 0.16 T ft_o;
+your variant-B SDCs should match these byte for byte in the ft lines. Frame kits (S81 g3k4) switch at the same plan sha.
+
+## station405 (sub-agent)
+- 12:50 st405: inventory of 32 station405_c1 types: 17 finished (t1 t2 t11 t12 t13 t15 t16 t17 t20 t21 t23 t24 t28 t30 t31 t33 t34), 15 live (t3 t5 t6 t8 t9 t10 t14 t18 t22 t24.. in DRT; t27 in GRT reset-recovery repair -207), t4/t32 NOT RUN (ot-run race). Re-signoff with main e9367f5c (KIT/signoff_main_e9367f5c, old KIT/signoff kept): 16/17 NOT SIGNED, t13 rerun. t34 face_guard now PASS (2060 merged was the false positive).
+- root causes: (1) DRV: repair_design repeaters ~190-196 um on ASAP7 setRC, RCX slew 1.8x (worst 438..587 ps on EVERY tile, 86..1830 violators = counts not slews) -> SLEW_MARGIN 50 / CAP_MARGIN 20. (2) TT in2reg setup vs FF hold: at ft share 0.08 T the station-0 window is ~3 ps (setup+hold = 0.2*I_TT - 42) -> COORD approved 0.16 T die-wide (plan clock.ft_hop_in_share; S81 owns the plan value). (3) ORFS repaired hold at TT too (~-40 at TT, vclk fixed) -> opt-in FF-only hold repair (--hold-ff-margin). (4) old kits carried pre-0231295e92 tap_balance (spread > 80 on t1 t11 t23 t33). (5) arst_n -> rsync recovery (t28 -122, wire-RC dominated; t9/t25/t27 loops) watched after SLEW_MARGIN.
+- branch claude/elem-s81-st405-1024: 6c9780bdff (generator fix), 95e3a5b3c3 (schema.py), b45417e66d (pre-route review PASS-COND results/geom_review/elem_s81_station405B_review_1024.json). NOT merged (lane reviews).
+- launched 36 cold runs (ot-run 36 GB/8 thr): B (plan share 0.16, FF-only hold margin 5) x32 epyc3/localhost/intel1/intel2; A (0.08, FF-only margin 0) t12 t2 t15 t33. Kits localhost:/srv/opentallas-scratch/claude/elem-s81-st405/kits{A,B} (epyc3 same; intel1/2 under scratch2). Logs .../elem-s81-st405/logs/t<N>.<V>.otrun.log, launches.txt. Also STA-only 0.16 re-signoff of the 17 c1 routes (sender reg2out at 0.84 T) running: epyc2/intel1 scratch2 elem-s81-st405/share016_sta.
+- INCIDENT: my git stash crossed with ~/wt/hbm-arch (shared refs/stash); their changes saved as .../elem-s81-st405/FOREIGN_stash_popped_into_st405.patch (relayed by COORD). No more stash.
+- 14:3x merged main 460bcf40fd (st405 @f25acc2468): opt-in --slew-margin/--cap-margin + --hold-ff-margin. The 32 B station kits regenerate
+  byte-identical from canonical main, so they count. 0.16 re-STA of 17 c1 routes: sender reg2out min +179.3 (t24). Remaining: arst_n->rsync
+  recovery t13 -20 / t28 -122 / t33 -14, t11 unpadded clk_t1 tap. A (0.08) runs = diagnostics.
+- 14:49 st405 VERDICTS (B = plan share 0.16 + FF-only hold + SLEW/CAP margin + kit IR skip; DIE-STA seam STA on real views PENDING for all):
+  SIGNED B t12 (TT +18.24 / FF +8.62, spread 45.3/41.1, DRV 0, DRC 0), B t15 (+13.40/+7.74, 73.5/58.7), B t17 (+10.29/+10.38, 36.4/33.4), B t21 (+9.82/+10.14, 65.2/50.4); records localhost:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t<N>/signoff/signoff.json.
+  NOT SIGNED B t13: TT -67.37 = arst_n -> u_rsync_t12 recovery (capture clk_t12 sink at 161 ps: intra-tap skew 86 ps at CTS, routed ~25 ps below CTS estimate) + ft1_s0 eq in2reg -8.91 (same early leaf); FF +10.22, DRV 0. Diagnosis in progress (leaf-level clock pad toward plan insertion).
+  A t15 (0.08 contract) diagnostic: NOT SIGNED TT -20.90 / FF -2.90 (DRV now 0): confirms the 0.08 window failure. A t12 STOPPED (B SIGNED).
+  Station kits need > 36 GB in ORFS 6_report with per-kit PSM IR (peak 67 GB): kits now carry --skip-kit-ir (IR NOT RUN, TRIAL IR required); 6_report OOMs resumed warm from each kit's own 5_route.odb (resume_finish.sh, 64 GB; no P&R change).
+  0.16 STA re-signoff of the 17 old c1 routes: sender ft reg2out at 0.84 T >= +179.3 ps (t24) on all 17 -> PASS (records epyc2/intel1:/srv/opentallas-scratch2/claude/elem-s81-st405/share016_sta/<type>/signoff_share016/).
+  c1 (old recipe, superseded) finished since: t5 t8 t10 t14 t18 all NOT SIGNED (TT -36..-91, FF -18..-45).
+  branch: main 460bcf40fd merged the st405 fixes; +4c37e60fb1 (--skip-kit-ir) on claude/elem-s81-st405-1024, not merged.
+- 18:5x RESUMED after the 2nd limit (14:4x-17:00). Station B: t12 SIGNED (A t12 stopped); A t15 confirms the 0.08 failure (TT -20.9/FF -2.9).
+  OWNER DECISIONS 18:4x adopted: pipelined synchronous reset from one root synchroniser (reuse KV-G3 kit_rsync; no recovery
+  waivers), margins INFO only. Station + canonical-core sub-agents resumed with these.
+- 2026-10-24 18:50 PDT: r1 (12:35) superseded: all 23 face_guard FAIL from RTL boundary (shared/self-loop output flops, unused inputs, 1-station pairs, [0:0] buses lost by slang). Fixes on branch d1852f8f10 (no RTL change): POST_SYNTH pin_reg_split output clones + unused-input capture flops + 1_synth.v, default Yosys frontend, explicit `pair IN OUT` one-station core pairs in face_guard (+test). Local synth checks: rstg/LLd/cfg7_bfp face_guard PASS. r2 stage-1 (place) running on all 29 (+ head spo kit via LEF contract). Reset: kit SDC times rst as a synchronous input (input delay max 0.5T / min -40 vs vclk; recovery/removal checked), no false path -- same as VQ r12. Blocked: xfin (main RTL has ENG ports, 102 bits not in plan pins), cfifo_crs4 (6-clock CDC landing, needs a multi-clock contract), capc5r/bksel_q (unsigned hard children), spr (ot_s81hd_key.sv not on main).
+- 19:0x epyc2 scratch2 prune (COORD urgent): freed ~204 GB (19 -> 223 GB free); see HANDOFF.
+- 19:1x st405 B VERDICTS (B = share 0.16 + FF-only hold + SLEW 50/CAP 20 + --skip-kit-ir; IR NOT RUN in every record (TRIAL IR required); DIE-STA seam STA on real views PENDING for all):
+  SIGNED B t16 (TT +13.02 / FF +10.23, spread 37.9/33.3, DRV 0, DRC 0) localhost:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t16/signoff/signoff.json
+  SIGNED B t20 (TT +12.05 / FF +9.97, spread 40.6/33.8, DRV 0, DRC 0) localhost:.../kitsB/slice_station__t20/signoff/signoff.json
+  (earlier SIGNED: t12 localhost:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t12/signoff/signoff.json, t15, t17, t21 -> 6 SIGNED.)
+  NOT SIGNED B t30: TT -81.43 = arst_n -> u_rsync_t13 recovery (2 endpoints, same class as t13); FF +9.86, DRV 0, spread 41.9. intel1:/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__t30/signoff/signoff.json
+  NOT SIGNED B t11: DRV 4 slew (worst 371.9/320 on u_ft_ft0_s0 BUFx3 place-buffer -> INVx1 net, 149 um run); TT +12.94 / FF +9.90, spread 64.3/53.5 (current tap_balance: PASS). epyc3:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__t11/signoff/signoff.json
+  NOT SIGNED B t34: DRV 2 slew (330/320, u_ft_ft2_s0, same net class) + TT pin-flop spread 88.6 > 80; TT +2.55 / FF +10.22. intel1:.../kitsB/slice_station__t34/signoff/signoff.json
+  NOT SIGNED B t13: TT -67.37 recovery (unchanged).  A t2: TT -77.96 / FF -16.33 / spread 98.4; A t33: TT -27.67 / FF -43.8 / spread 116.6 (0.08 diagnostics, superseded by B).
+  Recovery class (t13, t30) -> owner RESET RULE; requested the shared implementation in KV-G3.md (kit_rsync on main is still per-tap async; station kits get it from gen_rtl.py). No re-kit until it lands.
+  Residual DRV class (t11, t34): repair_design at GRT (slew margin 50) leaves 1-4 near-miss nets with ~150 um place-buffer->INV runs; candidate = shorter max wire / post-route repair, not launched (needs review).
+  B still routing (cold, 36 GB/8 t): epyc3 t1(6_report) t2 t23 t24 t33 (detail route) t3 t4 t9 t25 t27 t28 t32 (GRT); intel1 t31(6_report) t5 t10 t6 t8; intel2 t14 t18 t22 t26 t29. t4/t32 at GRT on epyc3.
+  --skip-kit-ir: branch claude/elem-s81-st405-1024 e61ddd9234 (= 4c37e60fb1 + main merge), default unchanged (diff = 3 config lines only with the flag), die_plan tests 73 pass / 1 pre-existing fail. READY FOR MERGE.
+## PARKED 18:56 PDT (station405 sub-agent)
+- Branch: claude/elem-s81-st405-1024 @ e61ddd9234 (pushed; merged to main by COORD). No WIP and no stash. Worktree /srv/opentallas-scratch/claude/wt/elem-s81-st405.
+- Watcher auto_resume.sh (localhost pid 745780) STOPPED by me at park, so it can't launch anything new. No new jobs were started.
+- LIVE B jobs: ot-run launcher pid on localhost, container dpkit-slice_station__tN on the host; cold kits; 36 GB / 8 threads. Collect each with:
+  grep ^SIGNOFF logs/tN.B.otrun.log
+  - epyc3:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__tN:
+    - t1 (6_report, pid 2355875)
+    - detailed route: t2 (2354717), t23 (2357829), t24 (2359058), t33 (2358944)
+    - global route: t3 (2359361), t4 (2352217), t9 (2360299), t25 (2361702), t27 (2362857), t28 (2359247), t32 (2353081)
+  - intel1:/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__tN:
+    - t31 (6_report, 2386183)
+    - t5 (2388643), t6 (2389368), t8 (2390102), t10 (2390720)
+  - intel2:/srv/opentallas-scratch2/claude/elem-s81-st405/kitsB/slice_station__tN:
+    - t14 (2391131), t18 (2391528), t22 (2391812), t26 (2392084), t29 (2392476)
+  - Logs: localhost:/srv/opentallas-scratch/claude/elem-s81-st405/logs/
+  - If 6_report dies with Error 247, resume warm from the kit's own 5_route.odb with resume_finish.sh (manual now that the watcher is stopped).
+- VERDICTS (B; IR NOT RUN; DIE-STA seam STA pending):
+  - SIGNED: t12, t15, t16, t17, t20, t21. Records: localhost:/srv/opentallas-scratch/claude/elem-s81-st405/kitsB/slice_station__tN/signoff/signoff.json. Numbers in the 14:49 and 19:1x lines above.
+  - NOT SIGNED:
+    - t13: TT -67.37, recovery. localhost:.../kitsB/slice_station__t13/signoff/signoff.json
+    - t30: TT -81.43, arst_n -> u_rsync_t13 recovery. intel1:.../kitsB/slice_station__t30/signoff/signoff.json
+    - t11: DRV 4 slew, worst 372/320. epyc3:.../kitsB/slice_station__t11/signoff/signoff.json
+    - t34: DRV 2 slew (330/320) and TT spread 88.6. intel1:.../kitsB/slice_station__t34/signoff/signoff.json
+  - A (0.08 T) runs are diagnostic only: t2, t15 and t33 NOT SIGNED. t19 is the empty type and was NOT RUN. t7 belongs to Root.
+- CAUSES:
+  - t13/t30: the per-tap async reset synchronisers set up a recovery check across about 2 mm. The owner RESET RULE removes it.
+  - t11/t34 slew: after the routing-stage repair at slew margin 50, a BUFx3 placement buffer still drives an INVx1 about 149 um away on the station-0 flop output, and it lands just over the limit.
+  - t34 spread: tap balancing is done on the CTS-stage estimate; routed insertion comes out 20-30 ps low, and big taps have large internal skew.
+- NEXT:
+  1. Collect the 21 running tiles; write verdict lines here.
+  2. t11/t34: write a slew-repair hook. ORFS repair_design_helper (util.tcl) passes only CAP/SLEW_MARGIN, with no max wire length. Use a kit tcl that runs repair_design -max_wire_length about 100 um, or a repair after routing on 5_2_route.odb followed by incremental detailed route. Review it, then re-run warm from each tile's own pre-fill route checkpoint.
+  3. t34 spread: look at tap_balance on the worst tap.
+  4. t13/t30: wait for the shared reset implementation (request with the 5 points is in KV-G3.md at 19:1x), then re-kit from main. If there is no ETA within about 2 h, offer to write the gen_rtl + kit_rsync implementation on a branch for KV-G3 to review.
+- OWNER?:
+  - Reset rule for a tile that is not its region's root: is rst_n a synchronous input with an input-delay budget, or is there one root synchroniser per tile?
+  - Boot-cycle cost of the relay depth.
+
+## PARKED 2026-10-24 18:56 PDT (canonical cores sub-agent)
+- Branch claude/elem-s81-cores-1024 @dc52d4a06f (pushed; NOT merged). WT localhost:/srv/opentallas-scratch/claude/wt/elem-s81-cores. Commits: c111758856 generator+recipes, d1852f8f10 implemented-netlist face regs + face_guard `pair IN OUT` (+test), dc52d4a06f const-output flops / pair outputs / core_margin / LEF-contract mode.
+- Generator: physical/die_plan/s81/cores/legacy/gen_core_kit_legacy.py (+recipes.json, core_face_post_synth.tcl, render_kit.py). VQ r12 recipe (833 ps, vclk 250, 60/25 split, seam hold -40, MCMM tc+bc, post-GRT DRV pass) on plan hard-core pins. rst is a TIMED synchronous input (max 0.5T / min -40 vs vclk, recovery/removal checked), no false path = owner reset rule, same as VQ r12. No RTL edits anywhere.
+- Run root <host>:/srv/opentallas-scratch/claude/elem-s81-cores/<round>/<kit> (intel2 symlinked to scratch2); logs + bin/{launch,status,render}.sh on localhost. Only stage 1 (synth+face_guard+place) has run. NO route, NO signoff yet -> 0 SIGNED.
+- LIVE (ot-run stage-1 place, all mine, leave running): localhost r2 l0r, l4, l4r, l5f, eg; r5 l1, l3, xrt1, xrt3 (const-flop fix); intel2 r2 l1c, l5_n32 (48 GB); intel1 r2 xfin (will FAIL face_guard: see below). Containers named klegacy-<kit>-<pid>.
+- Stage-1 PASS (placed, placed.csv present, ready for review render + route): localhost r2 l0, l2, bk_g, LLd, cfg7_seq_bfp(intel2), r4 qbank_N, qbank_S, rstg, cfg7_seq, sstn_payload536. Reviews done: r2 rstg/cfg7_seq/payload536 (review/*.png): rstg PASS-COND; cfg7_seq REVISED (4.32 margin left an 8.6-um core, bins >0.8 -> core_margin 1.08 in r4); payload536 REVISED (face_flops cloned every 1-station flop -> pair outputs skipped in r4). r4 renders not yet viewed. No geom_review record committed yet.
+- FAIL causes: r2 bksel_c face_guard shared 146 (r2 hook predates const-output fix; regenerate like l3 and rerun); nodes LLfd/LLfu/NNfd/NNfu + sstn_base566: RTL ORs a fault/status INPUT (fi / e0,e1,c0,c1,si,nf) into the fault flop -> face_guard 'unregistered' (OWNER?); xfin: main RTL has ENG ports (mode, e_v/e_c/e_hh/kk/dd, ~100 bits) absent from plan pins (OWNER?/S81 plan); cfifo_crs4: 6 clocks (cr, cr_s, xk[3:0]) CDC landing, single-clock SDC invalid (needs multi-clock contract); capc5r, bksel_q: unsigned hard children (generator refuses); spr: ot_s81hd_key.sv not on main (only 3ff002b64c); gunit signoff of legacy runs: 0/9 (sibling, "## gunit signoff").
+- NEXT: (1) wait for live stage-1; bin/render.sh <rnd> <kit> <host>, Read PNG, write results/geom_review/elem_s81_core_<kit>.json; (2) route on the SAME host: bin/launch.sh <rnd> <kit> route 32 16 <host> (run_kit.sh continues from place, then do-finish/abstract, pin audit, signoff.py tt,ff -> <kit>/signoff/signoff.json); (3) regen bksel_c (r6) and rerun stage 1; (4) on SIGNED copy LEF/libs/signoff.json into physical/die_plan/s81/cores/views/<module>; (5) l5_n32 uses plan l5 outline 345.6 (n32 kit was 388.8): watch utilization; (6) refresh kit files of r2 survivors from current generator (only core_face_post_synth.tcl/freeze differ; no-op without TIE outputs).
+- OWNER?: (a) fault/status inputs ORed combinationally into the fault flop (5 network nodes, sstn_base566): conforming to register-on-every-pin needs +1 cycle on the fault/status chain + bench update; (b) xfin plan pins vs main ENG-mode RTL; (c) cfifo_crs4 multi-clock boundary contract; (d) capc5r/bksel_q: sign children first or flatten; (e) implemented-netlist face registers (output clones / unused-input capture / constant-output flops, all 0-cycle, no RTL) accepted as the face_guard remedy?
+
+## PARKED 2026-10-24 18:56 PDT (ELEM-S81 lane, root agent)
+- Branches:
+  - claude/elem-s81-1024 @18c5f769c2, merged in main e7c09034ae.
+  - claude/elem-s81-st405-1024 @e61ddd9234, merged in main bf6ac37681 (with 460bcf40fd).
+  - claude/elem-s81-cores-1024 @dc52d4a06f, NOT merged. Ungated: it changes the shared face_guard.py (pair IN OUT), so it needs review + signoff evidence first.
+  - wt-bind48 (localhost elem-s81/wt-bind48, uncommitted v4.8 bind scripts): dead sub-agent, superseded by S81 p11.
+  - No stash anywhere.
+- Live jobs: none of my own. The sub-agent jobs are listed in the two PARKED blocks above: 21 station B routes on epyc3/intel1/intel2, and stage-1 core places on localhost/intel1/intel2. All watchers are stopped.
+- Adopted Codex jobs, now finished:
+  - BK drain full-layer replay (epyc3:/srv/opentallas-scratch/claude/codex-s81/bk_drain_layer, own sink-ON kit): build rc 0, run rc 0,
+    TB_DV_SLICE FAIL, 2 SCHEDULE_MISMATCH (cycle 6535 port 2244, cycle 6546 port 2248: got 0, want data), fault_cycles 0, 6652 cycles.
+    So the addressed-drain candidate is NOT adoptable as is. Default OFF on main stays correct.
+  - Head abstract PSM c2 (intel2 scratch2 codex-s81/trial_head_psm_c2): PDN/bumps connected PASS, then the IR analysis crashed with
+    OpenROAD signal 11 after 2:30 h (119 GB RSS). IR NOT RUN (crash). It needs TRIAL IR with a coarser grid or a newer OpenROAD.
+- Results:
+  - station405 B: 6 SIGNED (t12 t15 t16 t17 t20 t21; IR NOT RUN, DIE-STA seam pending).
+  - NOT SIGNED: t11 and t34 (slew; t34 spread 88.6), t13 and t30 (reset recovery -> owner reset rule).
+  - Legacy gunit routes through signoff.py: 0/9 SIGNED. The old recipe is superseded by the canonical rekit.
+  - Canonical cores: stage 1 only, 0 SIGNED.
+  - Disk: freed ~349 GB on localhost and ~204 GB on epyc2 scratch2; removed 104 GB from the epyc2 root disk.
+- Failures pending owner decisions: see the OWNER? items in the two sub-agent PARKED blocks above.
+- Next, in order:
+  1. Collect the 21 B tiles. Resume any 6_report that hit exit 247 by hand with resume_finish.sh.
+  2. Write the t11/t34 slew hook.
+  3. Re-kit t13/t30 under the reset rule, using the shared KV-G3 implementation.
+  4. Run review/route/signoff for the canonical cores, starting with the stage-1 PASS kits.
+  5. Old frame kits: S81 owns them.
+  6. Not run: dsdv_eng_tap(_w), idx_tx_n32, bf_front_roots, bf_col and elem_q have no kit in the repo; head hd_spn/serdes/lep0N/mesh/ctl/host are blocked on plan sources.
+- OWNER?:
+  - The reset delivery contract for non-root tiles and cores, and the boot-cycle cost.
+  - Network nodes and sstn_base566 OR fault inputs combinationally into the fault flop. Registering them costs +1 cycle.
+  - xfin: the plan pins don't match main's ENG-mode RTL.
+  - cfifo_crs4: the multi-clock boundary contract is undefined.
+  - capc5r and bksel_q: sign their children first, or flatten them.

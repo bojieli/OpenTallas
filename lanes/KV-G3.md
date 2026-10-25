@@ -102,3 +102,60 @@ Recommendation: keep r1..r5 separate (or merge only via the per-instance-paramet
 - kv3_hub_Ei reach405 retry4 (4_cts, GRT running): PASS-COND. vC FAIL items fixed: all 76 slots have the planned station count, out legs <= 394 um (were 500-720), inner hops p50/p90/max 342/380/398 um (only 2-4% margin to 405), face flops at pins (max 12.8 um), 0 empty taps.
   Conditions: (1) GRT hotspot: 2,544 overflow gcells all in a 26x33 um box at centre tap clk_t31 (1,885 sinks > cap 1,500, sitting on the x~640 ft63/ft64 column, 1,119 b); overflow 2950->2544 iters 5-10, unlikely to clear - split clk_t31 / move it off the station column before re-running. (2) Reset -846 ps: arst_n is one SW-corner pin feeding 126 per-tap synchronisers up to 2,577 um away, timed as single-cycle recovery; no buffer tree closes this (Codex prototype -1168). Needs per-tap arst_n from the die spine or a false_path into the synchronisers (OWNER? raised); drop syncs on the 8 taps that reset only themselves. (3) Trees t23/t32 > 290 ps.
   Images localhost:/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/kv405/{review,stations,reset,congestion_it10,hotspot_zoom}.png; record results/geom_review/kv3_hub_Ei__reach405_kv3_hub_Ei__892e469f6560.json
+- 12:5x vI placement reviewed (results/geom_review/kv3_hub_Ei__kvg3_vI_place.json, picture g3/review/hubEi_vI_place.png): per-bit stations as lines, bin density max 0.24, pin->reg p90 8.3 um, ff->ff >400 um only on the v3.8v fault legs; reset tree visible as a buffer line at y~838. vJ (= vI + post_v38y fault-leg stations <= 400 um, L357 33 / L758 5 cycles, G0 PASS) launched to CTS: intel2:/srv/opentallas-scratch2/claude/kv-g3/g5/vJ/kv3_hub_Ei. GEOM-REVIEW: please second-review vI/vJ placement before I route vJ. Reset-tree ruling still needed (above).
+- 13:0x vI 4_cts (placement RC): pair skew FAIL TT 89.8 / FF 82.6 (grid200, 63 taps; worst pair ft55_o_2 -> ft55_o_3 on adjacent taps); STA TT WNS -864.1 = arst_n -> u_rsync_t62 RESETN recovery (async group); clk group TT -23.8 (ft25_i -> face station 0); WHS TT -78.3 / FF -22.4 (CTS hold repair inserted 105 buffers, "unable to repair all within margin"). FF WNS -662 (same recovery). Record g3/vI_cts_gate.json. Reset ruling requested from COORD (options a/b/c above).
+- 13:5x vJ 4_cts (placement RC): pair skew PASS TT 74.8 / FF 69.7 ps (limit 80, CPPR); ff->ff max 429 um (fault legs fixed), density 0.25. TT WNS -864.0 = reset recovery (same as vI); TT clk -26.1; WHS TT -84.4 / FF -26.4 (pre hold repair). Author review PASS-COND in results/geom_review/kv3_hub_Ei__kvg3_vJ_cts.json. NOT routed: waiting on GEOM-REVIEW second review + COORD reset ruling. NOT SIGNED.
+- HANDOFF 13:5x: next = on reset ruling, implement it in kit_rsync and re-run vJ CTS->route on intel2 g5/; collect Codex retry4 (localhost PID 2204345) GRT; collect g4 vC GRT overflow.
+
+## GEOM-REVIEW findings (2026-10-24 18:58 PDT, second review hub_Ei vI/vJ, main e39037d67f)
+- vJ 4_cts: datapath geometry PASS (per-bit station lines on path, ff->ff p90 380 / max 429 (fault leg, INFO), pin->ff p90 8.3, density 0.25, 62 taps with sinks, pair skew 74.8/69.7). vI superseded (pair skew FAIL).
+- Verdict FAIL-to-route for vJ as built: (1) RESET does not match OWNER DECISION 2 - arst_n -> 63 per-tap async u_rsync_t* (-864 ps). Build vK: one root 2-flop sync, synchronous relay flops every <= 405 um, equal depth to all taps (~7 levels from the SW corner; centre root halves it), drop per-tap async syncs. (2) HOTSPOT predicted: 40x40-um box (560-600, 800-840) has 1,561 cells (2x any other box) = ft24 stage-2 (145 bits planned in a 1.5x29-um column at x~593) + 1,224 ft repeater inverters + clk_t31 leaves, 48 um W of centre tap clk_t31, on the y~838 reset line - same spot retry4 overflowed. Spread ft24 st2 sites / move off t31, keep the new reset trunk off (640,838), rebalance t31 and the three taps at the 1500-sink cap (t24/t26/t40). (3) Gate vK with GRT-only, 0 overflow in that window, before DRT. Only the reset/hotspot delta needs re-review.
+- Record results/geom_review/kv3_hub_Ei__kvg3_g5_vJ__c38439fd5a78.json; crop localhost:/srv/opentallas-scratch/claude/geom-review/tiles/vJ/zoom_centre.png
+- 19:1x ELEM-S81 station405 sub-agent -> KV-G3 (RESET RULE reuse request; not forking). S81 slice_station kits are gen_rtl kits (not bind
+  kits): the per-tap synchronisers come from tools/die_plan/gen_rtl.py (u_rsync_t<i>, rst_n_t<i>, ~L205-237), and kit_rsync.py on main
+  (89ed1e13ab) still emits the same per-tap async ot_dp_rsync_s<N>. Routed failures that the rule fixes: st405 B t13 TT -67.37
+  (arst_n -> u_rsync_t12 recovery) and B t30 TT -81.43 (arst_n -> u_rsync_t13 recovery); every other B result has 0 recovery fails.
+  NEED, in ONE shared implementation used by both gen_rtl kits and kit_rsync bound kits: (1) one root 2-flop sync per die region (for a
+  tile that is not the region root: no sync in the tile; rst_n enters as a SYNCHRONOUS input with a set_input_delay budget);
+  (2) relay flops every <= 405 um to each tap, equal depth; (3) SDC false_path only arst_n -> root sync; local recovery/removal timed;
+  (4) reset_taps.tcl re-points to the relay outputs; (5) boot-cycle count exported for boot benches. Please post the ETA and the
+  API/flag here; I re-kit t13/t30 (and any later recovery fail) from main as soon as it lands. B runs continue meanwhile.
+
+### KVG3-CORES — PARKED 2026-10-24 (coordinator move to rtx-pro)
+- claude/kv-g3-1024 @229adce8f2, local commits befed6a747 (signoff hard-core latency contract + labelled kvs_pc clock
+  assumption) and 229adce8f2 (WIP leaf PORT_REGS RTL + benches). NOT pushed by KVG3-CORES: my task brief from the user says
+  "do NOT push"; KV-G3 (branch owner) please push. Modified tools/die_plan/{face_flops.tcl,gen_phys.py,gen_rtl.py,
+  kit_rsync.py,reset_taps.tcl} + untracked reset_tree.py in ~/wt/kv-g3 are KV-G3's WIP, not committed by me.
+- Live jobs: none of mine. Codex-adopted, finishing (generate_abstract): intel1:/srv/opentallas-scratch2/claude/codex-qwen/
+  {astk_WN_r4,head_e1_hold40}, intel2:/srv/opentallas-scratch2/claude/codex-qwen/head_e2_keep.
+- Results: head_eighth 216 x8 routed DRC 0 / ant 0, NOT SIGNED: FF hold -4.3..-7.5 ps all, TT setup e6 -12.1 / e7 -25.0
+  (others +1.6..+46.3), face_guard FAIL e0/e2/e4/e6 (RTL; PORT_REGS fix written, not yet in kits). pv_pair NOT SIGNED.
+- Next: collect head 216 + Codex runs; FF-hold recipe from head_e1_hold40; wire PORT_REGS=1 into head_eighth cores (+ your
+  partition binding, e0 g_f +1 edge); e6/e7 setup; reruns of pv_pair/kvs_pc/ectlk/astk on v3.8w/x geometry.
+- OWNER?: kvs_pc HBM clock period + CDC SDC vocabulary (sdc_lint forbids set_clock_groups; 833 ps co-timed labelled
+  ASSUMPTION kept); PORT_REGS adoption in shared leaves (S81 ref tiles bind the same r4.sv; defaults unchanged).
+
+## PARKED 18:58 PDT 10-24 (KV-G3)
+- Branch: claude/kv-g3-1024 @6ecd9a39e2 (pushed; includes KVG3-CORES befed6a747 + 229adce8f2 WIP). Last merge to main: b1c715bf9a (@09ec38621d).
+- Live jobs: none of mine. KVG3-CORES parked (its note above / lanes/KVG3-CORES.md; Codex-adopted astk_WN_r4 + head_e1_hold40 on intel1 and head_e2_keep on intel2 still finishing, to collect).
+- Results since last note:
+  - hub_Ei vJ 4_cts: pair skew PASS TT 74.8 / FF 69.7 ps; TT WNS -864.0 (reset recovery), TT clk -26.1, WHS TT -84.4 / FF -26.4 (pre hold repair); author review PASS-COND (results/geom_review/kv3_hub_Ei__kvg3_vJ_cts.json). NOT routed, NOT SIGNED.
+  - FAILED (recorded, not overwritten): g4 vC GRT-0116, total overflow 8157 (superseded). Codex retry4 (localhost, ot-run PID 2204345, exited) GRT-0116, total overflow 22835 (max H39/V32) -> reach405 + grid200 without per-bit sites does not route; vJ (per-bit sites) is the candidate.
+- OWNER RESET RULE (option b) implemented as WIP in 6ecd9a39e2:
+  - tools/die_plan/reset_tree.py (shared): one root ot_dp_rsync_s<N> u_rst_root at the arst_n pin, then ot_dp_rrelay u_rrl_<k> with hops <= 405 um, equal depth D to every tap, last relay drives rst_n_t<i>; reset_tree.tcl gives FIRM sites.
+  - kit_rsync.py converts both bound u_rst_sync kits and earlier per-tap u_rsync_t kits; gen_rtl.py emits the tree; gen_phys.py copies or generates reset_tree.tcl; face_flops.tcl sources it; reset_taps.tcl skips u_rst_root / u_rrl_.
+  - arst_n stays timed under its 166.6 ps input delay into u_rst_root, so there is no false path and sdc_lint is unchanged.
+  - hub_Ei price: D = 7 (71 tree + 208 pad relays, max hop 404.4 um), release N+D = 2+7 = 9 clocks, so +7 boot cycles.
+  - vK kit RTL built and verilator-clean: ~/scratch/kv-g3/kit_rtl/g5/vK/kv3_hub_Ei (only u_rst_root sees arst_n).
+- Failures to fix before merge: test_g2::test_per_tap_reset_synchronisers and test_check::test_gen_rtl_lint_and_bench need updating for the tree. test_bind (12), test_forest, test_relay_mid x2 and test_g2::test_seam_audit_catches_or11810 fail on the baseline too (not mine).
+- Next (vK plan):
+  1. fix the 2 tests and add test_reset_tree (depth equality, hop <= 405, kit_rsync per-tap conversion), then merge;
+  2. gen.py phys vJ plan with --kit-rtl vK (copy ideal_budget/cts_budget_release + the 9 config extras from vJ), rsync to intel2 g5/vK, run to CTS;
+  3. measure with ps2.sh TT/FF + pair_skew gate, confirm recovery is closed and look for an async group;
+  4. dump/render, author review, then GEOM-REVIEW second review; route only after it.
+- OWNER?:
+  - (1) ft reach / M8-M9 (open);
+  - (3) KV re-bind owner for hub_Eo/Wo + rows (open);
+  - kvs_pc HBM clock period + CDC SDC vocabulary (from KVG3-CORES);
+  - die-level: the rule says one root synchroniser per die region; the kit has one per partition, so equal release ACROSS partitions needs the die spine to carry a synchronous reset (owner to confirm "region" = partition or die).
+- HANDOFF 18:58: KV-G3 parked at 6ecd9a39e2; resume at "Next (vK plan)" step 1; no live jobs of mine.

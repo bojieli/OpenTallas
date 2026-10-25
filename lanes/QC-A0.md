@@ -98,3 +98,44 @@ CODEX progress: Capacity56 candidate nowregenerated25/25constantsPASS,433915padf
   sys_face__native_fault, the P6-R8 per-bit as-built lane). Bind binds the leaf to 'fault', so flt_o is a spare lane tied
   to 0 (not allowed). Proposed fix: drop the fltn link (and n59_flt_i on glue) from gen_plan, regen plan + rebind. Check
   fltt/fltc for the same duplication (tt_ctlm passes face_guard, so fltt is bound there). OWNER? if you prefer otherwise.
+- 13:25 ab490d1fbb pushed (claude/qc-a0-1024): ft_regs.py = GEOM-REVIEW batch-1 fix on ROUTED hops (8.64-um grid, cores
+  blocked: A0/SU cores route to M7): 51 in-core stations + 23 over-limit routed hops found; 31 slots now have regs_um in
+  channels; picture results/geom_review/qc_a0_1024/ft_regs2.png, record qwen_compute_plan_ft_regs__*.json (PASS-COND).
+  Lanes/ports identical to main; coll_ftc = grid+sinks taps; A0 v7 core taps.
+  OWNER?/COORD: 6 serdes TX slots (cbf_q00_s2/cbf_q01_s2: tx_flit 597 b, tx_valid, tx_up) need 5 stations (routed hops
+  734-804 um with 4; Manhattan/G0 OK) -> bound RTL (qcp6_status_bind_v5 bakes 4 stations) + R8 + latency change.
+  COORD: main 24b2da3433 itself FAILS G0: "R8 landing table ... made from other bus groups (digest e56a2f6f7e7e9337 !=
+  c56f7e7abff4cabb)" -- codex 90907cf3b1 (P6 bind recovery) regenerated r8/qwen_compute_r8_landing.json from bus groups
+  that are not committed (no codex-qwen bus_groups*.json has digest e56a...). Not mine to regenerate (would replace the
+  P6 R8 table). My branch has the same single error; I will not merge until COORD/QC-TOK says which bus_groups is canonical.
+- 13:40 coll_ftc g3i RUNNING intel2:/srv/opentallas-scratch2/claude/qc-a0/g3/ftc_g3i (ot-run 48 GB / 16 thr; log
+  ~/scratch/qc-a0/logs/ftc_g3i_route.log): kit on ab490d1fbb plan + P6 full-bind kit RTL (qcp6_status_bind_v5) with
+  bind.py kit-rtl spare-ft-bit stations (24f94f8d3b); sdc_lint PASS; FACE_GUARD PASS 10216/10216 (513 1-station pairs).
+  Review record qc_coll_ftc_g3i__5e60cbccf5237032.json (PASS-COND: GRT congestion map must be reviewed).
+- A0 v7 routes: still in GRT congestion iterations (NK 14/30, NL 11/30 at 13:05) -> heavy congestion signal (GEOM-REVIEW
+  cond. 1); pathfinding only.
+- OWNER? (open, 13:45): (a) A0 G3 credit: kit (FP1 REGROOT_MODE9) = bound +7 cycles on t_out (spec prices +6, residual
+  +1; codex receipts results/rtl/qwen_a0_shifted_1024) -> adopt kit + price +1 in compiler/R8 (QC-TOK), or re-kit A0 on
+  the bound module. (b) G0C 56/56 = codex capacity candidate (+185k pad flops) or stay 52/56. (c) +1 station on the 6
+  cbf_q0x_s2 serdes TX slots (routed hops 734-804 um). (d) main's R8 landing digest (G0 FAIL on main) -> blocks my merge.
+- NEXT: collect ftc_g3i (GRT congestion map review, then TT setup / FF hold via signoff.py), A0 v7 GRT overflow + images.
+
+## 19:1x OWNER RULING received (capacity plan accepted; +1 serdes stations in the same rebind; A0 +1 priced; reset rule)
+- Capacity plan adopted on claude/qc-a0-1024: cherry-picked codex 406d3a497a / 72ece79138 / f553f73d91 (7938b61ac7,
+  027930db3d, ec45162186) on top of ft_regs; ft_regs now adds stations where routed hops cannot meet the limit (6 serdes TX
+  slots 4 -> 5, routed hops 570-648). Regen running (~/scratch/qc-a0/logs/regen_cap_1900.log). Asked QC-TOK (their lane
+  file) for the canonical bus_groups + R8/CB16 landing recipe and the rebind on this plan; A0 +1 pricing is theirs too.
+- RESET RULE: coll_ftc g3i (and every gen_rtl kit with > 1 tap) still has one reset synchroniser PER TAP -> not compliant.
+  Waiting for the shared gen_rtl/gen_phys implementation (KV-G3 proposed option (b)); COORD: who owns it? I regenerate my
+  kits when it lands.
+- coll_ftc g3i RESULT (intel2 .../g3/ftc_g3i, signoff.py): NOT SIGNED. TT setup -126.95 ps (2670 endpoints), FF hold -4.40
+  (132), DRV slew 4165 TT / 3675 FF; spread TT 45.5 / FF 38.3 (PASS), insertion TT 214-260 mean 246; DRC 0, antenna 0;
+  sdc_lint + face_guard PASS. Worst path = ft station hop crec_rx_s0 s0 -> s1 (N face -> (60,458), ~580 um): 884 ps of data
+  incl. one 240-ps wire segment and an INVx1 at 306 ps slew. Images /tmp/qca0/g3i/*.png (congestion: hotspots at the E->S
+  control fan and mid-left).
+  ROOT CAUSE (flow vs plan): the plan budgets ft hops OVER THE TOP on M8/M9 (die_use ft_reserved, ft_budget, reach M8 1001 /
+  M9 1013, stations every <= 750 um), but the partition kit routes everything on M2-M7 (MAX_ROUTING_LAYER M7; M4-M7 reach
+  405 um). OpenROAD here has no per-net layer range (only set_routing_layers -signal/-clock). COORD decision (affects every
+  ft kit on all dies): (a) ft kits route to M9 with M8/M9 global adjustment = 1 - cut_avail (die PG/spine share), or
+  (b) stations every <= 405 um inside partitions (more stations -> more R8 pads / latency), or (c) die-level ft routing.
+  Failed verdict kept; no follow-up route until decided.

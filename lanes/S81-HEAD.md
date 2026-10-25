@@ -148,3 +148,36 @@ CODEX 2026-10-24 11:24 PDT: tap160c7 correctTTCTS +FFonlyholdGRT failed pinacces
 ## GEOM-REVIEW findings (2026-10-24 13:40 PDT, tile batch 2, main da5213b0b3)
 - hd_tile tap160c7 (4_cts, GRT fail): FAIL. Pin defect confirmed visually: elemA_cv M5 clock pin is 84 nm tall, 60 nm of it under the macro's own M5 OBS and an M6 OBS under the via, leaving a 24x24 nm opening, on all 4 elemA instances. Fix: regenerate the elemA_cv LEF/abstract (the native rebuild path), then rerun GRT/DRT only. Separately: u_eA0/best_key 14-level logic path TT -627 ps needs an RTL pipeline register before route. 8 taps carry no sinks. CTS (tap means 238-264 ps) and face flops (p90 6.7 um) are fine. STOP resubmitting this kit until the LEF and the best_key path are fixed.
   Images localhost:/srv/opentallas-scratch/claude/geom-review/tiles/GR-B2/hd_tile_tap160c7/{review,clkpin_obs_zoom,codex_tap_review}.png; record results/geom_review/hd_tile__head_tap160_c7_ff__1681610bdc9a.json
+- 2026-10-24 13:16 PDT elemA rebuild progress:
+  - c3 (lane RTL + sim wrapper): FAIL face_guard ('shared' l_d / best_row / go / done).
+  - c4 (f11 RTL + keep regs on o/l): FAIL face_guard. Keep on the reg wires leaves a buffer load on the port net; best_row feeds the argmax compare; done / best_* are hold flops feeding their own D.
+  - c5: f11f3cc47 RTL under rtl/dsrom_sys/s81_head/ot_s81hd_elemA_rb.sv, with one dedicated output stage ot_s81hd_oreg (keep_hierarchy, as ot_dp_st) on EVERY output.
+    - Cost: +1 cycle on all elemA outputs. The tile sim model ot_s81hd_elem_cv.sv carries the same stage.
+    - Tile bench CV=1 ALL PASS at 8,430 cycles (was 8,429). Die model +1: 9,115 a position.
+    - face_guard PASS 456/456. Auto ROM placement REJECTED at review: both ROMs on the W core edge, rd/ctl pins in the halo.
+  - c6: fixed centred R0 ROM sites. Floorplan review PASS-COND (results/geom_review/s81_head_elemA_rebuild__s81_head__745b97d78c32.json + s81_head_img/elemA_rb_c{5,6}_floorplan*.png). GEOM-REVIEW second review welcome.
+  - ROUTE c6 running on intel2 (scratch2 .../s81-head/elemA_rb/elemA_rb_c6): route + abstract + pin audit + TT/FF corners + signoff.py.
+  - Next: new view → views_rb, regenerate the hd_tile plan/kit (main gen.py, face_keep), review, route the tile.
+- 2026-10-24 14:27 PDT (Claude) elemA/elemB rebuild + reply to GEOM-REVIEW tile batch 2:
+  - LEF/clk-pin finding: being fixed by the native rebuild. Element clk pins are now 0.192 squares: A M5 at the N edge, B M4 at the W edge.
+  - best_key -627 ps finding: fixed in RTL. ot_s81hd_bundle now has a pk_q register stage, so the four A results are registered tile-side before the level-1 compare.
+    - The element outputs are also dedicated flops now (ot_s81hd_oreg).
+    - Tile bench ALL PASS: CV=1 8,432, CV=0 8,430. Die model 9,117.
+    - Mutants re-running.
+  - elemA c6 route cancelled: the TT CTS tree is ~450 ps, which gave -214 ps IO hold on every pin register (21.5k hold buffers).
+  - elemA c7 = CP2 early core tap: kit SDC has clk source latency -200, and sdc_lint port_latency matches. The tile must deliver it early.
+  - c7 CTS: 976 setup endpoints and 16.2k hold endpoints before repair (HOLD_SLACK_MARGIN 15 on a CUT-0x1ff pipeline: 1-gate flop-to-flop paths). 21.8k hold buffers. Route continuing.
+  - elemB c2: face_guard PASS (u_bin_jn kept register on the JOIN-0 unused inputs, plus face_keep hooks). Floorplan review PASS-COND (results/geom_review/s81_head_elemB_rebuild__s81_head__c04272d38bef.json). Route running, early tap 170.
+  - The hd_tile kit is NOT resubmitted until both views are routed and signed.
+- 2026-10-24 18:53 PDT (Claude) after the second resume. Owner decisions (BRIEFING 10-24 18:4x) are applied to the head elements.
+  - Status: main 9b1a4d16e0.
+  - Done already: builder committed, floorplans reviewed, best_key pipeline register (bundle pk_q).
+  - Reset rule: each rebuilt element takes rst_n through one local relay flop (synchronous delivery), and its flops then use timed recovery/removal. Bench CV=1 ALL PASS.
+  - elemA c7 routed: NOT SIGNED.
+    - Clean checks: DRC 0, ant 0, pin audit 458/458, face_guard / sdc_lint PASS.
+    - TT setup -71.32: rst_n recovery only. The clk group is +159.9, vclk +500.
+    - FF hold -43.21 (150): output face flops arrive at 122 ps FF against the fixed 250-ps vclk, because the early tap of 200 is too large at FF.
+    - Pin-register insertion TT mean 214 / FF 138, spread 54.
+  - elemB c2 routed: NOT SIGNED. TT -3.26 (2), FF hold -36.78 (149 outputs), TT slew 5, TT insertion 199.5 (< 210).
+  - Relaunched: elemA c8 (early 160 + reset relay) and elemB c4 (early 120 + reset relay), both full route on intel2 scratch2 .../s81-head/elemA_rb/.
+  - Margins: INFO only, per decision 3.

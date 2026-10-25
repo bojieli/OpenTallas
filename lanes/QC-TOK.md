@@ -1,19 +1,14 @@
 # QC-TOK (lane file)
 Branch claude/qc-tok-1024 (worktree localhost:~/wt/qc-tok), host intel1 for heavy runs.
 ## Current step
-RESUMED 12:15 PDT (Claude). Adopted: Codex job intel2:/srv/opentallas-scratch2/claude/codex-qwen/xt1_capacity_both16_v2
-(capacity candidate codex/qc-capacity-1024 @72ece79138, 433,915 pads, xt1 both, lead 16; building since ~11:30).
-Branch claude/qc-tok-1024 fast-forwarded to the Codex tip 210a1be64f, plus 9f6778464f (r8_tree receipts).
-State of xt1: bound_r8 + CB16 pads + fill lead +6 (14): near 64/64, far 64/64 (Codex both14), hr+1 mutant caught
-only by the fixed-edge schedule gate (numeric 128/128). The P5 cb16 chain verify and the cb16_tree verify both PASS
-(2,723,870 matched, 0 mismatched, lint 0). Tree vs chain on the xt1 carve: EQUIVALENT (r8_tree/equivalence.txt).
-Baseline bound_r8 lead 8 both: FAIL 0/64 near + far (intel1 smoke_both, expected).
-MERGED main 7d75427c59 (link + xt1 recovery + opt-in trees).
-12:25 adopted capacity both16 (lead 16) FAILED: near 0/64, far 0/64 (FAULT near_cluster at 296, far_cluster at 325; no
-heads fault). Root cause B again: the capacity bind (P6 plan, codex-qc-a0, 430,195 pads) has CB16 leg skews of 18/12/2
-(cb16b.py). Fix under test: cap_cb16 rebind with qc_cb16_pads_capacity.json (+789,504 -> 1,219,699 pads, 0 errors, 0
-residual skew; only the 7 CB files change), localhost:/srv/opentallas-scratch/claude/qc-tok/cap_cb16 (verify running);
-xt1 both lead 16 on intel2:/srv/opentallas-scratch2/claude/qc-tok/xt1_cap_cb16_both16 (run.log, building).
+DONE 2026-10-24 13:5x PDT (RESUMED 12:15; adopted Codex xt1_capacity_both16_v2 and collected it). Merged main 7d75427c59 + 4c571021f4.
+- Link on bound_r8+kv41: tp8 3/3 + 9/9 mutants FAIL, xdie 9/9 + 13/13, ovl4u 2/2 + 8/8 -> PASS.
+- xt1 bound_r8: FAIL 0/64 had two root causes: (A) x fill lead +6 (XT1_FILL_LEAD_OFFSET, regen_constants qc_xfill, consumed
+  by bind_smoke); (B) CB16 n_a/n_b leg skew (cb16_pads.py). Fixed: both 64/64 + 64/64 (Codex both14), schedule gate PASS.
+- Capacity candidate (430,195 pads) xt1 both16: FAIL 0/64 + 0/64 (CB16 skew 18/12/2). With the CB16 pads (1,219,699):
+  64/64 + 64/64 PASS, schedule-gate mutant PASS, verify PASS.
+- R8 trees (opt-in land_pad_tree): P5 870,428 -> 587,936, verify PASS, xt1 carve tree == chain. <150k NOT reached (OWNER?).
+Open: OWNER? CB16 alignment strategy (about 0.79M flops as pads); <150k needs plan/compiler-side alignment.
 ## Runs
 - xt1 sub-lane (fork) -> branch claude/qc-tok-xt1-1024, intel1:~/scratch/qc-tok/xt1 (see section xt1)
 - link sub-lane (fork) tp8/xdie/ovl4u -> claude/qc-tok-link-1024, intel1:~/scratch/qc-tok/link (see section link)
@@ -57,3 +52,17 @@ xt1 both lead 16 on intel2:/srv/opentallas-scratch2/claude/qc-tok/xt1_cap_cb16_b
 - CODEX own near lead14 retest nominal64/64 PASS. hr+1 mutant also numerically64/64 but shifts actual CW/result edges+1; original numeric wrapper is insensitive and remains FAIL. New separate fixed-consumer-edge sensitivity gate PASS (artifacts preserve both numeric PASSs), codex/qc-tok-1024 c6ec9651aa. Full both+CB16+fill6 build live intel2 scratch2/codex-qwen/xt1_both14 (~76GB elaboration), no duplicate.
 
 - CODEX fullboth lead14 complete: nominal near64/64 + far64/64 (QKV/O/GU/down all exact), build3603s/sim680s/peak75.9GB. HR+1 numeric mutant ALSO128/128; timing-aware schedule gate catches changed actual CW/RS edges and PASSes. Original smoke wrapper FAIL preserved, no generated-die token/physical credit. Receipts results/rtl/qwen_xt1_both14_1024 on codex/qc-tok-1024.
+
+## FROM QC-A0 (2026-10-24 18:5x PDT) -- OWNER RULING: QC capacity plan ACCEPTED, adopt together
+- QC-A0 is building the canonical capacity plan on claude/qc-a0-1024: codex/qc-capacity-1024 (406d3a497a + 72ece79138 +
+  f553f73d91 landing) + ft_regs station sites off hard cores (ab490d1fbb) + OWNER-approved +1 station on the 6
+  cbf_q0x_s2 serdes TX slots (routed hops 734-804 um with 4) + coll_ftc grid+sinks taps + A0 v7 taps.
+  The +1 serdes station changes 3 lanes x 2 types -> needs the SAME rebind (owner: "do it in the same rebind").
+- ASK 1: name the canonical bus_groups.json (+ the R8 landing recipe incl. CB16 pads) that your xt1 64/64+64/64 rebind used,
+  so the committed r8/bus_groups.json + r8/qwen_compute_r8_landing.json digests match (main 24b2da3433 FAILS G0:
+  landing digest e56a2f6f7e7e9337 != committed bus_groups c56f7e7abff4cabb; capacity landing f553 = 5b3a39e809083115,
+  qcp_capacity_final_canonical bus_groups = 38322708f76c85be).
+- ASK 2: I will post the regenerated capacity plan sha here; please rebind on it (or tell me the recipe + bind dir and I run
+  it: base recipe /srv/opentallas-scratch/claude/codex-qwen/qcp_capacity_final_canonical/recipe.json) and re-run xt1 both.
+- A0 +1 cycle (owner): priced in the compiler/R8 tables (kit t_out = bound +7, spec +6): needs your compiler/R8 table
+  change; receipts results/rtl/qwen_a0_shifted_1024 (on claude/qc-a0-1024).

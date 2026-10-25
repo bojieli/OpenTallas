@@ -7,6 +7,62 @@
 - MERGED main e70305aec7: die_sta.py + tests + README + results/die_sta (was missing on main -> DIE-CI sta NOT RUN).
 - Next: die STA on the trial dies (s81, s81_head, qk, hbm) at TT/FF via their sta/ stand-ins.
 
+## PARKED 18:55 PDT
+- Branch claude/die-sta-1024@97fd4371ec (pushed). main has up to 96ce86b63e; branch adds: no half-period arrival wrap,
+  empty-pin fix, tests 9/9, results/die_sta/trial (v1). NOT yet merged (merge after v2 results).
+- Live jobs (intel2 = tolerant-swine, ot-run, die_sta.py pids): hbm_B2l:1389069 qwen_kvsys:1389720 s81:1389748 s81_head:1390005 qwen_compute:1390007 hbm_B2l:1390279 qwen_kvsys:1390349 s81:1390356 qwen_compute:1390361 s81_head:1390362 hbm_B2l:1390576 hbm_B2l:1390577 hbm_B2l:1390594 qwen_kvsys:1390617 qwen_kvsys:1390618 qwen_kvsys:1390635 s81:1390653 s81:1390654 s81:1390671 qwen_compute:1390680 qwen_compute:1390681 qwen_compute:1390702 s81_head:1390721 s81_head:1390722 s81_head:1390739 
+  dirs intel2:/srv/opentallas-scratch2/claude/die-sta/trial/<die>/sta/run_ttff_v2 (logs run_ttff_v2.log;
+  ot-run logs ~/coord/part-cap-logs/die-sta-run2-*.log). ~1-2 h (hbm slowest). Cancel: ot-run --cancel <dir>.
+- Results: CP1 G4 reach405 ilm == flat 0.000 ps, seam PASS (TT +432.5 / FF hold +87.8 / spread 56.8). Trial dies v1:
+  TT setup OK on all 5, FF hold FAIL on all 5 (table below). Capacity: full die 970 GB (no) / 540 GB --reduce (yes).
+- Failures: none of the tool; trial dies FAIL FF seam hold (H-tree tap skew).
+- Next: when v2 done -> `python3 /tmp/trial_sum.py` on intel2 (copy in ~/wt/die-sta? no: script at intel2:/tmp/trial_sum.py),
+  copy run_ttff_v2/die_sta.json to results/die_sta/trial/<die>/v2_die_sta.json, update README.txt, commit, merge.
+- OWNER?: hbm_B2l NW_sm2 tap +440 ps and qwen_kvsys hub taps (216 ps spread) need spine rebalancing before any seam
+  can close hold; per-partition hold fixing cannot absorb -417/-173 ps.
+
+## 18:50 PDT (resumed after session limit)
+- OWNER DECISION ack: gate = TT setup / FF hold at 60/25 ps uncertainty (+ pin-flop spread <= 80 per AGENTS.md L32);
+  everything else (SS, TT hold, FF setup, extra margins) INFO only. die_sta.py verdict already does exactly this.
+- Trial-die seam STA v1 (current main plans, budget stand-ins, trial H-tree spine), seam slacks valid:
+  | die | groups/bits | TT setup | FF hold (neg bits) | verdict |
+  | s81 | 2151/1.06M | +654.4 | -52.5 (661k) | FAIL |
+  | s81_head | 425/212k | +626.3 | -82.1 (124k) | FAIL |
+  | qwen_compute | 2934/1.32M | +661.6 | -46.4 (1.0M) | FAIL |
+  | qwen_kvsys | 3939/620k | +501.9 | -173.4 (437k) | FAIL |
+  | hbm_B2l | 918/610k | +411.2 | -417.0 (369k) | FAIL |
+  Setup is never the problem (stand-in seams are flop-to-flop, >400 ps slack). Hold fails on every die because
+  stand-in seams have ~zero data delay (QN -> wire -> D) against H-tree tap skew of 50-440 ps: the capture tap is
+  later than launch. Worst: hbm_B2l NW_sm2 single tap +440 ps (FF) vs neighbours ~25-90 ps; qwen_kvsys hub_* taps
+  (spread 216 ps > 80 inside hub_Wi/Wo/Eo). Real partitions will add hold buffers inside each seam flop's input
+  cone, but -417/-173 ps is beyond per-partition hold fixing (~1 buffer = 10-15 ps): the H-tree tap skew must come
+  down (spine balancing / tap re-insertion) - OWNER? / TRIAL-HBM + TRIAL-QK: hbm NW_sm2 tap, kvsys hub taps.
+- BUG found + fixed: clock arrivals in launch/capture/FFSPREAD were wrapped by period/2 (hid the 440 ps tap; slacks
+  unaffected). v2 rerun of all 5 (correct spreads) running intel2 run_ttff_v2. Also fixed: empty pin connects
+  in rewritten tops ('{}'); 'ports' spine == gclk 0.000 ps on routed CP1 reach405 pair.
+
+## 14:20 PDT
+- MERGED main 96ce86b63e (CP1 G4 + die-scale fixes + capacity SUMMARY).
+- CP1 G4 (root reach405 pair, kits NOT SIGNED internally): ilm == flat 0.000 ps, 2 seam groups / 1533 bits, TT/FF/SS,
+  ideal + CP2 branch spine. Seams: TT setup +432.5, FF hold +87.8, spread TT 56.8 / FF 46.2 -> seam PASS.
+  Evidence results/die_sta/cp1_reach405.
+- Trial s81_head (current plan a00cc383, budget stand-ins, trial H-tree spine): FAIL: TT setup +626 OK, FF hold -82.1 ps
+  (123,852 neg seam bits; worst mesh0S->sst4/rx_i, launch 22.8 vs capture 101.6 ps clock), spread 105 ps (tW4b8,
+  tW4o8, tE4b8, +1 > 80). => H-tree tap skew alone breaks seam hold; matches TRIAL-S81 OCV finding (shared seam leaf
+  fallback = OWNER? item there).
+- s81 / qwen_compute / qwen_kvsys / hbm_B2l running (TT ~50 min/corner; hbm ~2 h/corner).
+
+## 13:50 PDT
+- Trial dies on CURRENT main plans (die_trial.py kit + clock TT/FF, my dirs; stand-ins = one face flop per pin bit,
+  spine = trial H-tree arrival per tap): intel2:/srv/opentallas-scratch2/claude/die-sta/trial/{s81,s81_head,
+  qwen_compute,qwen_kvsys,hbm_B2l}/sta/run_ttff (ot-run, 48 GB/8 thr each), logs ~/coord/part-cap-logs/die-sta-run-*.log.
+  die_sta fixes on the way (committed): per-bit seam slack (path enumeration too slow at 1M bits; == to 0.001 ps on
+  KV), spine as ONE clock + per-tap port source latency (generated clock per tap: 3.8k-8.2k clocks stalled).
+- CP1 G4 validation now possible: root's codex-cp1/reach405 pair both routed (NOT SIGNED): ilm + flat TT/FF/SS (+ branch
+  spine) running localhost:/srv/opentallas-scratch/claude/die-sta/cp1_reach405 (ot-run 24 GB).
+- Capacity SUMMARY committed (results/die_sta/capacity/SUMMARY.json): full die ~970 GB full parasitics (NOT feasible
+  on 1 TB), ~540 GB with --reduce (feasible, ~19 h/corner, SPEF reader bound).
+
 ## Current step (08:25 PDT)
 die_sta.py verdict switched to TT setup / FF hold / spread<=80 (7ba6155209).
 die_sta.py v1 committed + pushed (ilm / flat / etm modes, compare, replica). Flat capacity replicas running on intel2.

@@ -66,3 +66,26 @@ Branch claude/tok-hbm-1024 (worktree localhost ~/wt/tok-hbm, epyc2 ~/wt/tok-hbm)
   passthrough; consistent with SU programme-skew class).
 - diag su31_adv50/55/60 all FAIL 640/1046 (as Codex logged).
 - Leaf-split (unpadded) r18h5_ld_split binary BUILD_RC=0 09:40; launched split/{rec2_kq,corrected_rec2,ls_ds_l14_x4} on it.
+- 2026-10-24 14:25 leaf-split slice: rec2_kq PASS 287/287, ls_ds_l14_x4 PASS 3822/3822 (corrected_rec2 FAIL 72/287 kept). Price
+  bracket tools/hgi_sim/transport_fix_price_1024.py: HC +20 -> no AR change; SU +104 exposed -> DS 1561.2 / QW 893.4 tok/s.
+- 2026-10-24 14:25 HC gate (adopted): Codex run INFRA FAIL (neg prog.mem at ding 12); fixed generator --t0; my rerun
+  intel1 scratch2/claude/tok-hbm/hc_r8_t0fix: PASS 24/24 mixes + 4/4 outs, HC_MIX_CYCLES 1029, DING2 mutant CAUGHT.
+  Merged main 681cc61dab. prog_r8_leafslice build still compiling (Codex watcher will run SU31 diag).
+
+## PARKED 2026-10-24 18:56
+- Branch claude/tok-hbm-1024 @909ec66a01 (pushed). Last main merge 681cc61dab (= @a46de47f7b); 909ec66a01 (transport_gate WIP) NOT merged.
+- Live jobs (mine): intel2:/srv/opentallas-scratch/claude/tok-hbm/ld/t_qw_chain_r0, t_qw_chain_r5 (pids 150727 150729 ; exit.txt on finish).
+  All epyc2 runs finished; Codex jobs adopted and collected (prog_r8_leafslice build PASS + SU31 diag run; hc_r8 gate).
+- Results: XDIE 10/10 + AR-step DS/Qwen PASS; leaf-split slice rec2_kq 287/287 + ls_ds_l14_x4 3822/3822 PASS;
+  HC native unit gate XRD=XRU=10 PASS (24/24 mixes + 4/4 outs, HC_MIX 1029, DING2 mutant caught; my rerun
+  intel1:/srv/opentallas-scratch2/claude/tok-hbm/hc_r8_t0fix after Codex run infra FAIL).
+  Price (P7+leaf-split): DS 1885.7 tok/s (530.3 us), Qwen 942.7 (1060.8 us); SU advance exposed: 1561.2 / 893.4.
+- Failures: layer benches FAIL: DS L14 640/1991, _x1 1305/3234, _x2 38/4217; Qwen L0 r0/r5 1424/1424; prog_r8
+  padded-programme SU31 diag still FAIL 640/1046 (all 8 banks; fr_SW fault 5722).
+- transport_gate (r18h5): HC XRD/XRU bound 0 (need 10, pads 1/2/0/1 + 1/0/2/1, RAW0 185), HC launch skew 16; SU cfg
+  we/bank 26 short; SU cmd legs 9-19; SU bank read RT = READ_RETURN 22 OK (write-side trace gap for odd banks);
+  SU calendar relation slot-lg-rq per bank -1/-3/6/6/-1/-1/3/3 -> the remaining SU suspect.
+- Next: equalize SU calendar relation (pad lg_read/write per slice + rq per bank) on the prog_r8 die, rebuild, rerun
+  SU31; then HC die bind (pads + XRD/XRU=10) and HC_MIX replays re-emitted with RAW0; hand transport_gate to HBM-ARCH
+  as the B2l native-bind check.
+- OWNER?: none new (B2l native bind accepted 18:47).

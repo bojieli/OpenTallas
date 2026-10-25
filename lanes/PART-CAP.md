@@ -46,3 +46,25 @@ n27 GPL, n44 STILL in floorplan repair_timing after 4h45 (single thread).
   floorplan repair_timing after 4.8 h (n27: floorplan 3h41; n4: 20 min) -> extrapolates to >1 day of floorplan alone;
   kept running (not restarted), its rate is the evidence.
 - n4 DONE: 304.7k placed, DRC 0, TT +164.0 / FF +1.55 / SS -14.4, 3.6 h (48 thr, intel1 overloaded) / 2.8 h (16 thr epyc2), peak 38 GB DRT.
+- 13:25 NOTE: intel1 load avg 540 on 112 cores (other lanes' docker routes) -> n7 / n27_tt_tns10 wall times on intel1 are contention-inflated; report CPU-s per step alongside wall.
+
+## PARKED 2026-10-24 18:58 PDT
+Branch claude/part-cap-1024 @1381120171 (pushed; includes Codex codex/part-cap-1024 fef34728ce). Not merged to main yet (no README/report yet).
+Live jobs (keep running; ot-run clients on localhost, logs ~/coord/part-cap-logs/):
+- n14   intel2 /srv/opentallas-scratch2/claude/part-cap/pc_rep_n14          (WC route, tns100) in GRT
+- n27   epyc3  /srv/opentallas-scratch/claude/part-cap/pc_rep_n27           (WC, tns100) in 3_4 place_resized
+- n44   intel2 /srv/opentallas-scratch2/claude/part-cap/pc_rep_n44          (WC, tns100) in GPL (floorplan took ~7.5 h)
+- n44_tt_tns10 epyc3 /srv/opentallas-scratch/claude/part-cap/pc_rep_n44_tt_tns10 (TC, tns10) in GPL (floorplan 37 min)
+- n27_tt_tns10 (Codex, adopted) intel1 /srv/opentallas-scratch2/claude/codex-part-cap/pc_rep_n27_tt_tns10 (local PID 1888477) in DPL
+Results (runs/*.json via results/arch/part_capacity_1024/collect.py RUN_DIR on the host):
+- n1  77.7k placed: 41.5 min, peak 13.1 GB, DRC 0, TT +214.5 / FF +3.6 -> closes (SS -64 info)
+- n4  305k: 3.6 h (48 thr, contended) / 2.8 h (16 thr), peak 38 GB, DRC 0, TT +164.0 / FF +1.55 -> closes
+- n7  535k: 8.5 h (intel1 load ~540/112), peak 44.8 GB, DRC 0, TT +184.2, FF hold -19.5 (181 pins) -> FAIL hold
+Findings: no memory wall (DRT peak ~85 GB/M cells, everything else <15 GB); DRT is the only stage using >10 threads;
+floorplan/CTS/GRT repair_timing + 6_report are ~1-3 threads and dominate wall time; floorplan repair_timing -repair_tns 100
+at the WC (SS) route corner is superlinear (n1 2 min, n4 20 min, n7 53 min, n27 3h41, n44 ~7.5 h; 26,049 violators at n44)
+vs 4.4 min at TC + repair_tns 10 (396 violators). 400k cap origin: COORD 10-23 06:1x "L1-cap study" (closed-run census
+or_capacity_runs.csv, never committed) -- no failure behind it.
+Next: collect n14/n27/n44/n44_tt_tns10/n27_tt_tns10 when done; check n7 FF-hold cause (vehicle chain flops vs size);
+write README (stage table, scaling fits, recommendation, plan_census.py seam/type table, knobs) and merge.
+OWNER?: none.

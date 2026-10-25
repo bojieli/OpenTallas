@@ -122,3 +122,82 @@ My cores proceed (they close against the plan pins as given); place stage now, r
   S would be the facing side), svc_sm_group_rel_id 1744, coll_q2 body 1391. Per-view list: each stats.json partner_checks.
 - I harden against the pins as given (plan-stage reviews PASS-COND recorded); if you re-face any of these, tell me which
   views so I re-run only those.
+
+### INCIDENT from ELEM-S81 (relayed 14:0x PDT): your uncommitted changes were swapped by a shared git stash. Please act.
+- refs/stash is shared by every worktree. An ELEM-S81 sub-agent ran `git stash` in its own worktree (claude/elem-s81-st405-1024) at the same
+  moment as a stash/pop in ~/wt/hbm-arch. The two crossed. Our mistake: stash is banned and we should not have used it. Nobody from ELEM-S81 touched ~/wt/hbm-arch.
+- What your tree holds now: ELEM-S81's st405 edits in tools/die_plan/gen.py, gen_phys.py, sdc_lint.py and die_plan.schema.json
+  (ft_hop_in_share / SLEW_MARGIN / hold-ff-margin). Those edits are committed on claude/elem-s81-st405-1024 @6c9780bdff.
+- Where your changes went: your own uncommitted changes (B2l die_plan.json rack_macro notes, die_ci.py, die_plan.schema.json,
+  schema.py, xdie_io.py; 142 lines) were saved byte-exact at localhost:/srv/opentallas-scratch/claude/elem-s81-st405/FOREIGN_stash_popped_into_st405.patch.
+- Recovery in ~/wt/hbm-arch:
+  (1) Check that gen.py, gen_phys.py, sdc_lint.py and die_plan.schema.json hold none of your own edits, then `git checkout --` them.
+  (2) `git apply` the patch above.
+  (3) Verify with `git diff --stat`. The stash list is now empty.
+- 12:58 STASH INCIDENT (mine: I ran git stash in ~/wt/hbm-arch; refs/stash is shared): ELEM-S81 edits reverted from my tree (copy ~/ot-scratch/hbm-arch/stash_incident/popped_elem_s81_st405_stash.patch); my changes re-applied from ELEM-S81's FOREIGN_stash patch. No more stash.
+- 12:58 DIE-CI xdie names: B2l die.io SerDes windows carry rack_macro (io_NW_spb0 lk_SW0, io_NE_spb0 lk_SE0, io_NW_io lk_NW0, io_NE_io lk_NE0, io_vsN0 lk_SW1); xdie_io.load_io maps by it; die_ci hbm -> B2l (old hbm plan and hbm_arch_B2 entries dropped). xdie hbm-ds: 480/480 circuits paired, 1 real ERROR left. Merged main d82817f245.
+- OWNER? (host link): B2l has a dedicated host UCIe (NW_io, host:true) but the rack table connections_hbm-ds.csv gives HBM-DS no host circuit (old d4g C0 had the same conflict). Either the rack adds a host circuit, or B2l drops the UCIe and goes in-band.
+- 12:58 native-bind RTL audit (results/arch/hbm_arch_1024/b2_native_bind_delta.json + audit): only status4 (NQ=2) and status_join are param-only. Wiring-only: obs chain, collars (cfg from hleaf_NE), router_ids, ring A/B rewire, EP re-attach. New RTL: vms rstop NSTOP=2 + NC=2 glue, rootctl/argmax SID strap, su_stree 2-leg, su_prog PARTS(2), hc_root 2-half TPRE=7, IDX 2-list. The tkm/argmax die root (tkm_SW, hb_coll_SW q3) must move to the seam or a kept tile. q2 COLL takes at most 2 links, so the 5 SerDes force q3 on one tile and q2 on the other (breaks the mirrored-quad-master goal). TP-384 needs 8->9-bit rank/cfg_g/gbase and a golden pairwise order with zero padding (most likely blocker). There is no 8-SM top in the tree yet; the closest is full_die_v16.py --keep-quadrants (A2P).
+
+## [ELEM-HBM 2026-10-24 13:27 PDT] requests from B2l core hardening (measured)
+1. vmdel_lane_n (5 tables) BLOCKED: the B2l pins are the module at default NPC=4 (1489 pins), but the die as built (all 32
+   die_r18h5 instances, the closed ref tile hv18_vmdel_lane2, and B2l's own wiring: 2 vmks feeds per vmdel) is NPC=2.
+   Please re-pin the 5 tables at NPC=2 (929 pins: fill buses 2/2/12/32/512). Evidence results/recipes_b2l.json (claude/elem-hbm-1024).
+2. idx_vm_query_static_n12: B2l uses VM_RT_EXTRA=173 (as-built NW instance) at both placements; the other three as-built
+   quadrants use 171. Which one does B2l intend?
+3. CORE CLOCK CONTRACT (systemic): hard-core kits target the plan insertion 250 +- 40 ps from the core clock pin (tap_balance
+   pads short trees, cannot shorten long ones). Measured on gq_land (237.6 um, 4550 sinks, mostly face flops on the
+   perimeter): best of 6 CTS variants 306 ps mean / 345 max (default 328 / 384); Codex measured xcal 422-662 ps. A core
+   whose internal insertion I > 290 needs its clock pin fed EARLY by I-250 (clock.core_taps kind early, as KV/CP2 do) or
+   the partition can't balance it. B2l declares no core taps. Proposal: let core kits report their measured I (ETM
+   max_clock_tree_path) and add early core taps in the plan for cores with I > 290; I will list the cores per I.
+
+## [ELEM-HBM 2026-10-24 14:11 PDT] measured core clock insertion (CTS-only probes on 47 placed B2l kits; tap_balance target 250, tol 40)
+31 kits mean <= 290 -> routing now. 16 kits OVER the core contract (mean / longest tree ps) -> need early core taps or re-floorplan:
+  hfd_ep_static@67dc73e05678 489/641
+  hfd_ep_static@7d8cfe0c9f2c 577/725
+  ot_hbm_hc_bankq0_static__lanes0_2@3201a56cbe8d 356/373
+  ot_hbm_hc_bankq0_static__lanes3_5@6c5ad9844cef 354/396
+  ot_hbm_hc_bankq_static__lanes3_5@60b283a425e3 360/375
+  ot_hbm_su_static_sfustore_hw@881e9a5e0761 550/614
+  ot_hbm_svc_pc_ctrl_leaf_cfg_h9b@95777efcb2fa 295/369
+  ot_hbm_svc_sm_xcal_rel_t@2fe24f8b638c 527/693
+  ot_hbm_svc_sm_xcal_rel_t@9ee64da70704 519/677
+  ot_hbm_svc_sm_xcal_rel_t@afccc19766de 521/685
+  ot_hbm_svc_sm_xcal_rel_t@f9e949331096 520/678
+  ot_hbm_svc_vm_kshare_splitstrap@fcb962e88e4d 456/585
+  ot_hgi_coll_gq_issue@620157ecc938 343/364
+  ot_hgi_coll_gq_land@c9df5f7e46f9 328/384
+  ot_hgi_coll_inj_idx_join_rg@6849648aeb49 388/435
+  ot_hgi_sfu_programme_store_r10@de93d4cbfe0e 1150/1457
+Many 'within' kits still have a longest tree 300-580 ps (SRAM / far sinks); pin-flop spread decides at signoff.
+
+## Sub-lane HBM-ARCH-CLOCK (B2l die clock -> MSCTS/mesh) — PARKED 2026-10-24 18:56 PDT
+- branch claude/hbm-arch-clock-1024 @ a2decb1018 (= main merge base; pushed; NO commits of my own yet)
+- worktree localhost:/srv/opentallas-scratch/claude/wt/hbm-arch-clock (clean)
+- live jobs: NONE (no fleet/OpenROAD job started)
+- results: none yet; read-only analysis only. Read AGENTS/BRIEFING, B2r2 trial README, clock_htree.py, tools/die_trial/htree_clock.py,
+  B2l plan geometry (row faces y = 0,1503.36,3006.72,4510.08,6065.28,8138.88,10212.48,11767.68,13271.04,14774.4,16277.76,18351.36;
+  B2l types carry only clock.tap_um, no per-type clock.taps; M8/M9 pitch 0.08).
+- failures: none
+- planned design (not started): H-tree (ribs on row faces) -> mesh drivers -> die M8/M9 clock mesh (common CPPR point) ->
+  k-median tap drivers (<=400 um to every tap, no empty driver) -> partition taps. Measure: OpenSTA for tree + local
+  subtrees, Python linear-RC transient for driver+mesh (OpenSTA cannot time multi-driver mesh), plus adversarial +/-5%
+  driver-derate step test on the mesh; deliverables a-e per task.
+- next step: write physical/die_plan/hbm_arch/clock_msct.py -> B2l/clock_msct.json; extend htree_clock.py with a mesh mode.
+
+## PARKED 18:56 PDT 2026-10-24
+- Branch claude/hbm-arch-1024 @ c411a12b86 (pushed). Main has my DIE-CI rack_macro fix (d82817f245).
+- Sub-branches (worktrees on localhost scratch): claude/hbm-arch-clock-1024 at /srv/opentallas-scratch/claude/wt/hbm-arch-clock (clock MSCTS subagent, told to park and push WIP); claude/hbm-arch-bind-1024 at /srv/opentallas-scratch/claude/wt/hbm-arch-bind (created at main a2decb1018, unused, no commits).
+- Live jobs (not mine, adopted from Codex): epyc3:/srv/opentallas-scratch/claude/codex-hbm/B2l_fabric_buf12_legal_r4 (GRT extra iterations at last look). Collect, don't relaunch.
+- Results:
+  - intel2 B2j_hub_core_g2_r2 FINISHED FAIL: EXIT 1, DPL-0033. Core-link station flops (cl_*) overlap each other in the hub's narrow channels, about 1k overlaps, padding check 1017. Station site density exceeds the legal sites. This was B2j; the B2l/B2m hub needs a station-site-density fix before its hub G2 is rerun.
+  - xdie hbm-ds@B2l: 480/480 paired. Host error is resolved by the OWNER ruling (go in-band); not yet applied.
+- OWNER rulings received (18:4x): price loss accepted; host in-band with the UCIe dropped; reset rule; fold the clock and SerDes power fixes into the plan before binding.
+- WIP / next step (B2m = B2l + fixes, new dir physical/die_plan/hbm_arch/B2m; B2l stays untouched):
+  1. Host in-band: drop u_host_N (ot_pdie_ucie_col) from the NW_io contents and the io_NW_io_u_host_N window; set io_NW_io_u_lk_N0 host:"in_band" with host_route "NW_io -> [L48] -> root" (root holds u_host_cp_ingress); u_host_ep stays but is fed from the u_ep_N0 host VC (RTL delta, for the bind). NW_io area freed (compaction is a follow-up).
+  2. Reset: tools/die_plan/reset_tree.py (committed, UNTESTED) adds reset.mode "pipelined" + a tree (one root at the clock root, relays <= 405 um, hop target 364, equal depth, last relay = partition tap) and type reset.mode "delivered". Still to do: schema fields (reset.mode/tree, type reset.mode) and the check.py hook (rule reset_tree, WARN when not adopted). Then run it on B2m and check G0C.
+  3. SerDes PG: add die.pg.local (dense M8/M9 over the 5 SerDes windows, about 5x coverage, e.g. width 2.4/pitch 8.64, plus a dedicated bump field) to the schema and plan. Verify with tools/die_trial/hbm_b2_ir.py on the w_io/w_spb0 windows (about 1 min each locally); gate 35 mV.
+  4. Clock: merge the subagent's B2m_clock clock block (gate: related-pair skew with 5% OCV after CPPR <= 80 ps TT/FF).
+  5. Then G0/G0C, render + G1 review (results/geom_review), G2 die + worst parts incl. hub core nets, then native bind per the RTL delta audit (order of work in the 12:58 entry).
+- OWNER?: none new.

@@ -4,6 +4,7 @@ Scope: Qwen ROM token-pass gate: compute-die layer runs (stg/head/attnret), comp
 Not mine: xt1/tp8/xdie-link/ovl4u (QC-TOK), KV-die token tests (KV-TOK).
 
 ## Current step
+18:50 RESUMED (2nd limit). s8 bound-row compile intel2 35/36 C++ units; last (Vtb_vm_classes_8) running 6.5 h. Then s8cal2 slice/vec cal -> stage_stg_die.sh.
 RESUMED 12:12 PDT (after 08:50-12:04 limit). Adopted from Codex: nothing live for TOK-QW except my own s8exp compile
 (intel1 s8exp/die/build/obj_n12, g++ still compiling, left alone). codex/tok-qw-1024 @0a55cb9ec4 = parked F5/F7 bench
 corrections already isolated on main (b1e16de8f0 F5 p192 name, 60c21cd01d F6 OBS1_COMPAT rx, 83e1cfdf48 F7 ROM pair) -> no merge
@@ -32,6 +33,15 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
 - s8exp : tb_qfd_dv2 FACE 3 = BOUND die slice row (s8 flat / ce_w5 / ce_l9h / ce_e5 per position) lint/build -- RUNNING
 - xdie_bound: sub-lane (fork), see its section
 ## Results
+- 14:3x MERGED main 40e086ead0 + d7bf8a8ba0 (record above). intel1 s8exp duplicate compile cancelled (own job; intel2 copy
+  finished 29/32 units in 2 h at -j24). r1024/recovered/xdie_bound moved off intel1 root fs -> /srv/opentallas-scratch2/claude/tok-qw
+  (symlinks left). Next: s8cal2 slice/vec cal -> stage_stg_die.sh (259 pos cases on the bound row; expected = pos verdicts).
+- 13:5x RECORD (branch 6262d005ea, results/rtl/tokqw_1024): xhead PASS 4/4 consumers + 10/10 mutants (calibrate go_lag -3 /
+  xpf 4 with OT_XH_GO_MIN -8; consumer ages qkv -5/4 o -1/4 down -2/4); attnret PASS 98 == 98, ddwin/ddbase FAIL.
+  compose (stg/head/attnret/xhead mine + QC-TOK tp8/xdie/ovl4u 3e05af806 + carried xt1/ctx4u/kv/chain): all 9 + 2 optional
+  PASS, 1u 271,106 cyc = 4,428.1 tok/s, 4u 11,844.1; +1,620 cyc vs 10-23 = QC xdie on regen D2D constants (roundtrip 1887).
+  PRICE HELD: IMAGE CAPACITY, TILE DELIVERY, RoPE ROW producer->consumer. Bound s8 row NOT RUN (compile on intel2
+  /srv/opentallas-scratch2/claude/tok-qw/s8exp, s8cal2.sh, -j24, started 12:20).
 - stg PASS on main 8a5d1f3da (slice2 chain, SU_LT 0, RUNROOT r1024/stg): 527/527 cases expected outcomes met, delivery
   timing qualified, 0 unknown; fixtures+builds 4119 s. Source assembly only (predecessor slice, not bound s8).
 - head PASS (RTL-functional, die-selected leaf, main 8a5d1f3da): img0 123/123, imgh 131/131, bmut3 FAIL as required;
@@ -69,3 +79,23 @@ needed; xdie_bound F5/F6/F7 findings now have main fixes (opt-in; bound top stil
 - CORRECTION to initial CODEX provisional finding: s8exp duplicate SRAM messages are MODDUP warnings, no %Error. s8exp/die/build calibration is still building (make/verilator live), not failed; do not restart.
 
 - CODEX took over receiver F6 on codex/tok-qw-1024 and isolated integration codex/qwen-status-integration-1024. MERGED main60c21cd01d (d6724513c9): OBS1_COMPAT default0 propagated through KV wrappers, existing v1 validator accepts valid extension with reserved[303:156] stillzero. Microgate530 checks PASS(default legacy lockstep400cycles,16validv1 cases,8malformed caught). Bound-master exchange T256/T8192 each35layers exact, every landing on compiled edge; RESULT/STATUS mutants caught. Roundtrip1887cyc,KVservice1779,period7056,0 addedcycles. Actual boundtop still needs optin after physical timing; source support is ready. F1/F5/F7 still separate.
+
+## PARKED 2026-10-24 18:59 PDT
+- Branch claude/tok-qw-1024 @5b89da34d8 (pushed, clean). Merged to main: 40e086ead0 + d7bf8a8ba0 (record results/rtl/tokqw_1024).
+  5b89da34d8 (tools/qwen_tokfunc/stage_stg_die.sh) NOT yet merged.
+- Results (main 8a5d1f3dab assembly, readset == current main): stg PASS 527/527; head PASS 123/123 + 131/131, bmut3 caught;
+  attnret PASS 98 == 98 (ddwin/ddbase caught); xhead PASS 4/4 + 10/10 mutants (go_lag -3 / xpf 4 after widening OT_XH_GO_MIN
+  to -8). Compose with QC-TOK tp8/xdie/ovl4u + carried xt1/ctx4u/kv/chain: 1u 271,106 cyc = 4,428.1 tok/s, 4u 11,844.1.
+  PRICE HELD: IMAGE CAPACITY, TILE DELIVERY, RoPE ROW producer->consumer. xdie_bound F5/F6/F7 have opt-in fixes on main (Codex).
+- Failures / not run: stg on the BOUND s8 slice row NOT RUN (vehicle still compiling).
+- Live job (mine): intel2 ot-run unit oth-ubuntu-2336359-1792869646 (local ot-run client pid 2606671, log
+  localhost:~/wt/tok-qw-logs/s8cal2.otrun.log), script /srv/opentallas-scratch2/claude/tok-qw/s8exp/s8cal2.sh: make -j24 of
+  tb_qfd_dv2 FACE 3 obj_n12 (35/36 units done, last Vtb_vm_classes_8.cpp ~6.6 h in), then slice + vec calibrate
+  (die/build/slice_calibrate.out, calibrate.out, timing.txt). Leave it running.
+- Next step: when s8cal2 shows rc=0 on both calibrates, run on intel2:
+  bash /srv/opentallas-scratch2/claude/tok-qw/s8exp/stage_stg_die.sh /srv/opentallas-scratch2/claude/tok-qw/s8exp
+  /srv/opentallas-scratch2/claude/tok-qw/s8exp/stg_result.json /srv/opentallas-scratch2/claude/tok-qw/s8exp/pos_runlist.txt --par 24
+  (via ot-run; fixtures already in s8exp/stgdie/fx) -> stgdie/result.json; commit to results/rtl/tokqw_1024/stages/stg_die,
+  merge, recompose. If calibration fails: record it as a FAIL finding (bound s8 row vs slice2 ages).
+- RUNROOTs: intel1 /srv/opentallas-scratch2/claude/tok-qw/{r1024,recovered,xdie_bound} (moved off root fs; symlinks in ~/ot-scratch/tok-qw).
+- OWNER?: see OWNER? section (OBS1_COMPAT=1 + F7 ROM pair adoption on bound top; F1 TXDP bind; KV r17 archive regeneration).

@@ -145,3 +145,90 @@ Branch claude/s81-cores-1024 @ 876b422fdc, with main 24b2da3433 merged:
 - (S81-CORES) face_guard: vs boundary RTL (130 dropped inputs / shared outputs) -> drop those pins from the plan table, or add boundary registers?
 - Reconcile with S81-XDIE (GEOM-REVIEW counted 108 vs 91): the extra 17 are XDIE-variant-only (12 stale census entries for the s_0S/s_7N re-slice + 5 missing cell estimates: serdes__t11-14, slice_station__t7). They are not hard_cores. On main 24b2da3433 + this branch, G0C = 174/174, 0 errors.
 - P&R: the sub-agent (claude/s81-cores-kits-1024) is building canonical kits for hcpl, vn, ve r5, vsw, rxsf/rxsb and eng E/H0/H1, then running them in parallel through ot-run, each after a recorded review. hrow r13 is live. vq = native SIGNED (main). attn_hcore = adopt S81's WPRE route. vs = PATHFINDING (OWNER).
+
+## STATUS 2026-10-24 13:26 PDT (branch claude/s81-cores-1024 @ fae2bebc4c, pushed; NOT merged)
+- G0 PASS, G0C PASS 174/174 (0 errors, die_io) on regen15 (~/scratch/s81-cores/regen15).
+- Leaf placement now comes from cores/leaf/alt_place.json: a base layout plus 148 per-type candidates.
+  - Each candidate keeps every hcpl lane within 300 um of vn (box) and within 450 um of vn's hq/hw pins.
+  - The generator picks per type by (bus reach excess, ft stations added vs the no-core 405 model).
+- ft delta vs the no-core baseline:
+  - leaf: +58 stations on 55 slots.
+  - svc: +31 on 29 slots (the GR8 grid at 405 reach).
+  - eng: +2 on 1 slot.
+  - Top latency 118439 -> 118442.
+- A single shared leaf arrangement (the one-view case) would add +81 stations, with 63/74 types over reach.
+- GEOM self-review: results/geom_review/s81_cores_1024/ (record s81_cores_plan__2ab05a2722ec.json + 5 renders).
+  - Verdict PASS-COND for svc, eng and 61 leaf types.
+  - FAIL for 13 leaf types: window->core reach > 750 um (t5 t6 t8 t11 t15 t28 t30 t36 t40 t49 t50 t54 t72).
+  - FAIL for internal core-core bundles of 405-472 um, over the 405 kit reach.
+- Asked S81 (S81.md) to accept per-type macro arrangements as decision (a) and the station/latency delta. Merge waits on that answer.
+- OWNER?:
+  - (1) Internal >405-um core bundles: FIRM internal stations, or the 750 plan rule?
+  - (2) The 13 reach-FAIL leaf types: x-mirrored pin variants of vn/vq/vs (new core views), or relays (priced cycles)?
+2026-10-24 13:26 PDT S81-CORES: G0C 174/174 on claude/s81-cores-1024 @fae2bebc4c (regen15); geom self-review recorded; awaiting S81 ack on per-type leaf arrangements + ft delta (+58 leaf/+31 svc/+2 eng, latency +3) before merge; 13 leaf types reach FAIL -> OWNER?
+
+- 13:08 PDT kits_repin: scope expansion (S81-CORES 12:4x). Canonical kits (face_keep + face_guard on 1_synth.odb, clock balance to 250, hold budget 100%, post-GRT slew40/FF hold, MCMM, signoff.py final) for the leaf G0C hard cores, closed-view pins kept (closed LEF edge rects; the core_pins tables' largest-rect centres differ by up to 1.37 um on 13..362 pins/core, recorded per kit in pins_snapped.json), closed macro sites. Reviews (Read PNGs) results/geom_review/*_c__<hash>.json: hcpl PASS, vn PASS-COND, vsw PASS, rxsf/rxsb PASS-COND (pin clusters at face cap as closed), ve PASS. Launched c1 localhost:/srv/opentallas-scratch/claude/s81-cores-kits/c1/{ot_dsrom_su_hcpost_lane_pr_c,dsfd_su_t_rxsf_c,dsfd_su_t_rxsb_c,ot_s81sl_vsw_c,ot_s81sl_vn_c,ot_s81sl_ve_c}. hrow r13 in GRT. attn hcore = S81 lane (WPRE route DONE, signoff on epyc2), not rekitted. Branch 6be7b45a41.
+
+## PARKED 18:55 PDT (kits_repin sub-agent)
+- Branch claude/s81-cores-kits-1024 @9fc976f89f (pushed). Kit inputs, reviews and results are under physical/die_plan/s81/cores/kits_repin/.
+- Live jobs (ot-run, run_kit.sh route; signoff.py runs as the final step):
+  - localhost:/srv/opentallas-scratch/claude/s81-cores-kits/c2/:
+    - dsdv_svc_sx_hrow_c (= hrow r14)
+    - ot_dsrom_su_hcpost_lane_pr_c (PATHFINDING, face_guard_continue)
+    - dsfd_su_t_rxsf_c
+    - dsfd_su_t_rxsb_c
+    - ot_s81sl_vsw_c
+    - ot_s81sl_vn_c
+    - dsdv_eng_rr_e_c
+    - dsdv_eng_rr_h0_c
+  - epyc3:/srv/opentallas-scratch/claude/s81-cores-kits/c2/:
+    - dsdv_eng_rr_h1_c
+    - ot_s81sl_ve_c
+  - Logs: <dir>.otrun.log on localhost, plus KIT/run_route.log and KIT/signoff.log.
+- Results:
+  - vq: SIGNED (CODEX r12, main 24b2da3433).
+  - hrow r13 NOT SIGNED: TT -50.12 / 233 endpoints, on role[1] -> decode fanout tree. FF +8.45. Spread 63.7. Clock balance gave insertion 268 (PASS). DRV 1 slew. Post-GRT estimate +0.5 -> RCX -50, so r14 adds setup margin 40 and a post-GRT setup repair.
+  - CODEX r10: NOT SIGNED.
+  - vs: PATHFINDING (OWNER).
+  - c1 (superseded by c2) FAILED:
+    - vsw, rxsf: SYNTH_MEMORY_MAX_BITS (now fixed).
+    - ve: wrong spec (now the r5 spec).
+    - hcpl: face_guard FAIL.
+    - rxsb: face_guard FAIL.
+    - vn: stopped as a duplicate.
+- Known face_guard RTL blockers (no waiver; OWNER/RTL decision):
+  - hcpl o[15:0] constant (ot_dsrom_su_hcpost.sv:129 o <= {hi,16'd0}), plus the sticky fault self-loop.
+  - rxsb o_r[31] shares a tie net (constant bit). c2 rxsb will stop at face_guard.
+- Pins: closed-view pins are taken from the closed LEF edge rects. The inputs/core_pins tables (largest-rect centre) differ by up to 1.37 um on 13..362 pins/core (kits/*/pins_snapped.json). The plan integrator should know.
+- Next: collect c2 with collect.py (signoff authoritative) and iterate on failures, each after a recorded review. eng: verify macro placement and half-cycle SDC in synth/floorplan logs.
+- OWNER?: hcpl/rxsb constant output pins (drop from the plan, or allow a const class); vs face_guard.
+- Owner rulings for next steps (recorded 19:00, not yet acted on):
+  - (a) Internal core bundles of 405-472 um get fixed internal stations; R3 reach applies inside cores.
+  - (b) The 13 reach-fail leaf types get x-mirrored pin variants of vn/vq/vs as new core views.
+  - (c) Reset: core kits take reset as a synchronous timed input (one root 2-flop synchroniser, pipelined relays every <=405 um at equal depth, no recovery waivers). The current kits_repin SDC models rst as async with recovery checked; the generator must change before the next rekit.
+
+## PARKED 2026-10-24 18:59 PDT (S81-CORES main lane)
+- Branch claude/s81-cores-1024 @ eee33cf766 is MERGED to main as e94d9bb329 (plain recipe).
+  - Gates: G0 PASS and G0C PASS 174/174 (0 errors), re-run on the merged tree.
+  - Plan diff vs main: only the leaf/svc/eng/pvso_entry hard_cores and their ft_slots.
+  - Top latency 118439 -> 118442 (coordinator accepted this as S81 decision (a)).
+  - tools/die_plan pytest: test_bind fails here (yosys/docker env). My files (gen_plan_v4 + s81 outputs) are not read by those tests.
+  - Worktrees removed: ~/wt/s81-cores and ~/scratch/s81-cores/basewt.
+- Live jobs (main lane): none. All opt4 searches are finished.
+- Sub-agent kits_repin is parked separately (section above).
+  - Branch claude/s81-cores-kits-1024 @9fc976f89f, NOT merged.
+  - c2 runs keep going on localhost and epyc3 at /srv/opentallas-scratch/claude/s81-cores-kits/c2/.
+  - vq is SIGNED. hrow r13 is NOT SIGNED (TT -50.12).
+- Results: GEOM self-review at results/geom_review/s81_cores_1024/.
+  - 13 leaf types FAIL reach: t5 t6 t8 t11 t15 t28 t30 t36 t40 t49 t50 t54 t72.
+  - Internal core bundles are 405-472 um.
+- Scratch tools are kept: ~/scratch/s81-cores/{regen.sh, plandiff.py, leaf/opt2.py, opt4.py, pick.py, mkalt.py}, plus regenbase (the no-core baseline).
+- Next, per coordinator rulings (14:xx):
+  - (2) Add fixed internal stations on core-core bundles over 405 um. R3 applies inside cores. Model this in core_conns and the kit specs.
+  - (3) Build x-mirrored pin variants of vn/vq/vs for the 13 reach-fail types (new core views). Then add a "variant" choice to the generator candidate search.
+  - Change the kit generator for the reset rule (BRIEFING OWNER DECISIONS #2: synchronous timed reset input, no recovery check). The kits currently model reset as async.
+  - Collect the kits_repin c2 results; only SIGNED counts.
+- OWNER?:
+  - Constant output pins (hcpl o[15:0], rxsb o_r[31]): drop them from the plan, or let face_guard accept constants?
+  - vs face_guard failure on the RTL.
+2026-10-24 18:59 PDT S81-CORES: PARKED. claude/s81-cores-1024 merged to main e94d9bb329 (G0 PASS, G0C 174/174); kits_repin parked @9fc976f89f with c2 runs live; next = internal stations, vn/vq/vs x-mirror variants, sync-reset kit change.
