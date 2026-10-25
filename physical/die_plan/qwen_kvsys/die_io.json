@@ -594,5 +594,22 @@
   "basis": "UCIe-A x64 module: 2 x (64 data + valid + track + 2 clk) + 2 x 4 redundant = 144, 45-um bumps (ASSUMED); shoreline 0 um",
   "note": "die_io.py plan: ucie_rom; host link (BFS 10 port hop(s) from hub_Wi): CONFIRM",
   "host": true
+ },
+ {
+  "name": "io_pad_por_n",
+  "kind": "die_root_pad",
+  "iface": "reset",
+  "part": "hub_C",
+  "rect_um": [
+   5542.56,
+   13001.0,
+   5551.2,
+   13009.64
+  ],
+  "sites": 1,
+  "signals": 1,
+  "pad_port": "pad_por_n",
+  "basis": "the die's ONE external reset pad (power-on reset) = the die reset root pin gen_phys.die_root_pins 'rst_n' (spine root + 8.64 um, M8); bump/RDL to the pin",
+  "note": "PATH-KV-POR v3.9s(a): raw loads only u_rst_root.async_rst_n + u_pll.por_n in the root partition"
  }
 ]

@@ -1018,7 +1018,51 @@ class Binder:
             return ("err", k)
         return ("err", k)
 
+    # ---------------------------------------------------------------- die reset pad (PATH-KV-POR 10-25)
+    def _por_spec(self):
+        """reset_tree.pad_spec of a wavefront plan with a declared die reset pad, else None (cached)."""
+        if not hasattr(self, "_por"):
+            P = self.wavefront_plan()
+            import reset_tree as RT
+            self._por = RT.pad_spec(P) if P is not None else None
+            self.por_rebinds, self.por_analog = [], []
+        return self._por
+
+    def _por_inst_match(self, ci, inst):
+        rel = self.rel_of(ci)
+        return inst in {rel, "u_" + rel, short_id("u_" + rel, 90), self.F.cells[ci].path}
+
+    def _por_rule(self, p, ci, pn, i, s, cnt):
+        """PATH-KV DECISION 10-25 14:19 (3): the raw die reset pad reaches ONLY the root synchroniser (the partition's
+        arst_n) and the declared analog loads; every other sink of the pad, and every leaf input matching
+        reset.source.por_pins, is REBOUND to the partition's delivered wavefront reset rst_n (no raw pad net crosses
+        the die, no new face pins).  Returns the classified sink, or None when the rule does not apply."""
+        ps = self._por_spec()
+        if not ps:
+            return None
+        c = self.F.cells[ci]
+        on_pad = s[0] == "top" and s[1] == ps["port"]
+        analog = [a for a in ps["analog_loads"] if a["pin"] == pn and self._por_inst_match(ci, a["inst"])]
+        if analog:
+            if not on_pad:
+                raise BindError(f"die reset pad: declared analog load {c.path}.{pn}[{i}] is not driven by the pad "
+                                f"{ps['port']} (source {s[:2]})")
+            cnt["por_pad_analog"] += 1
+            self.por_analog.append(dict(part=p, pin=f"{c.path}.{pn}", bit=i, inst=analog[0]["inst"]))
+            return ("rootpad",)
+        is_por = bool(ps.get("por_pins")) and re.fullmatch(ps["por_pins"], pn) is not None and \
+            not c.module.startswith("$")
+        if on_pad or is_por:
+            cnt["por_rebind"] += 1
+            self.por_rebinds.append(dict(part=p, type=self.parts[p]["type"], pin=f"{c.path}.{pn}", bit=i,
+                                         module=c.module, source="pad" if on_pad else str(s[0])))
+            return ("rst", "low")
+        return None
+
     def _classify(self, p, ci, pn, i, s, cnt):
+        por = self._por_rule(p, ci, pn, i, s, cnt)
+        if por is not None:
+            return por
         if s[0] in ("or", "and"):
             subs = [self._src_desc(p, u, cnt, ci, pn, i) for u in s[1]]
             subs = [x for x in subs if x[0] in ("int", "x", "strap", "tied", "literal", "top")]
@@ -2096,7 +2140,7 @@ class Binder:
             import reset_tree as RT
             # Use the same control-only reset cells as physical kits, not another
             # synchronizer implementation. Datapath registers remain reset-less.
-            for name in ("ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3"):
+            for name in ("ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"):
                 m = re.search(r"module " + name + r"\b.*?\nendmodule", gen_rtl.CELLS, re.S)
                 cells += "\n(* keep_hierarchy *)\n" + m.group(0) + "\n"
             W = RT.wf_plan(P)
@@ -2120,6 +2164,15 @@ class Binder:
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
         f.write_text(self.emit_top())
         files.append(f)
+        if P is not None and self._por_spec():
+            # PATH-KV-POR 10-25: fail-closed die reset pad gate on the emitted RTL (por_gate.py G1-G4)
+            import por_gate
+            rec = dict(rebinds=self.por_rebinds, analog=self.por_analog)
+            (out.parent / "bind_por.json").write_text(json.dumps(rec, indent=1) + "\n")
+            g = por_gate.check(P, out, rec)
+            (out.parent / "bind_por_gate.json").write_text(json.dumps(g, indent=1) + "\n")
+            if g["verdict"] != "PASS":
+                raise BindError("die reset pad gate (por_gate.py): " + "; ".join(g["errors"][:6]))
         man = dict(schema="opentallas.parent_id_straps.v1", types=self.parent_id_ports,
                    instances=self.parent_id_values, added_data_cycles=0)
         if any(self.parent_id_ports.values()):
@@ -2303,6 +2356,16 @@ class Binder:
                     nm = short_id(f"w_{self.rel_of(ci)}__{pn}", 90)
                     drv_w[(ci, pn)] = nm
                     decl.append(f"    wire [{len(bits) - 1}:0] {nm};")
+        if rtree is not None and rtree.get("lock"):
+            # PLL lock qualifier input of the root entry (reset_tree LOCK_SRC): the declared lock leaf output, as data
+            lk = rtree["lock"]
+            cand = [ci for ci in self.members[p] if (ci, lk["pin"]) in drv_w and self._por_inst_match(ci, lk["inst"])]
+            if len(cand) != 1:
+                raise BindError(f"reset lock {lk['inst']}.{lk['pin']} in root partition {p}: expected one bound leaf "
+                                f"output, found {len(cand)}")
+            decl.append(f"    wire {RT.LOCK_SRC};")
+            body.append(f"    assign {RT.LOCK_SRC} = {drv_w[(cand[0], lk['pin'])]}[0];  // PLL lock -> u_rst_lockq "
+                        "(own 2-flop synchroniser; data, never a reset)")
         if self.ab.get("io_roles"):
             for role, v in sorted(self.io_bindings(p).items()):
                 if v["direction"] == "output":
@@ -2414,6 +2477,14 @@ class Binder:
                     return f"~({reset})"
                 need_rst = True
                 return "rst"
+            if k == "rootpad":
+                # declared analog load of the raw die reset pad (PLL por_n): only in the reset ROOT partition, where
+                # arst_n IS the pad (its other load is the root synchroniser u_rst_root)
+                if rtree is None or rtree.get("entry") != "sync" or self.wavefront_plan() is None or \
+                        p != RT.wf_plan(self.wavefront_plan())["root"]:
+                    raise BindError(f"die reset pad analog load {F.cells[ci].path}.{pn}[{i}] in partition {p}: the raw "
+                                    "pad exists only in the reset root partition")
+                return "arst_n"
             if k == "start":
                 if rtree is None or rtree.get("start_tap") is None:
                     raise BindError(f"START consumer {F.cells[ci].path}.{pn}[{i}] in partition {p} (type {tn}): only "
@@ -2508,10 +2579,13 @@ class Binder:
     def emit_top(self):
         die = sv_id(self.plan["die"]["name"])
         doms = sorted({d for p in self.members for d in self.clk_dom[p]} | {self.ab.get("default_clock", "core")})
-        ports = ["    input  wire rst_n"] + [f"    input  wire clk_{sv_id(d)}" for d in doms]
         P = self.wavefront_plan()
+        rst_port = "rst_n"
         if P is not None:
             import reset_tree as RT
+            rst_port = RT.die_reset_port(P)       # the die reset pad (PATH-KV-POR) or rst_n
+        ports = [f"    input  wire {sv_id(rst_port)}"] + [f"    input  wire clk_{sv_id(d)}" for d in doms]
+        if P is not None:
             if RT.start_broadcast(P):
                 ports.insert(1, "    input  wire start")
         if self.ab.get("io_roles"):
@@ -3326,7 +3400,7 @@ def cmd_kit_rtl(a):
         rep.get("extra_lib", []) + bindf_prefer(out, base)
     leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", btxt, re.M)) -
                    set(re.findall(r"^module\s+(\w+)", btxt, re.M)) -
-                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
+                   {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
     picks = {}
     cl, cl_missing, macros = kit_closure(leafm, idx, prefer, picks)
     if cl_missing:

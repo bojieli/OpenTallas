@@ -101,6 +101,20 @@ _lays = {"type": "array", "items": _layer, "minItems": 1, "maxItems": 3}   # 3 o
 _order = {"enum": ["lsb_low", "lsb_high"]}
 _end = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
         "properties": {"part": _name, "bus": _name}}
+# PATH-KV-POR 10-25 (reset_tree.py "die reset pad"): the die reset source may name its ONE external reset pad (a die_io
+# entry kind die_root_pad), the pad's declared analog loads (PLL por_n: {inst, pin} in the root partition), the leaf
+# power-on-reset pin regex the binder rebinds to the partition's wavefront reset, and the PLL lock that qualifies the
+# root release through its own synchroniser (ot_dp_lockq; stable_cycles consecutive locked cycles)
+_reset_source = {"type": "object", "required": ["part", "bus"], "additionalProperties": False,
+                 "properties": {"part": _name, "bus": _name, "pad": _name,
+                                "analog_loads": {"type": "array", "minItems": 1, "items": {
+                                    "type": "object", "required": ["inst", "pin"], "additionalProperties": False,
+                                    "properties": {"inst": _name, "pin": _name, "note": {"type": "string"}}}},
+                                "por_pins": {"type": "string"},
+                                "lock": {"type": "object", "required": ["inst", "pin"], "additionalProperties": False,
+                                         "properties": {"inst": _name, "pin": _name,
+                                                        "stable_cycles": {"type": "integer", "minimum": 1}}},
+                                "note": {"type": "string"}}}
 
 # B2 (PATH-QC-B12 10-25): hard-IP LINE SIDE of a hard core (its bumps, e.g. a UCIe PHY's link_* / far_*): pins absent
 # from the as-built die that the binder exports as die-top ports <partition>_<pin> (tools/die_plan/bind.py bump_pins)
@@ -178,10 +192,13 @@ SCHEMA = {
                     # in-band ("in_band", with the on-die `host_route`; S81-XDIE 10-24)
                     "type": "object", "required": ["name", "kind", "rect_um", "sites", "part"],
                     "additionalProperties": False,
-                    "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro"]}, "rect_um": _rect,
+                    # die_root_pad (PATH-KV-POR 10-25): the die's ONE external reset pad = the die reset root pin
+                    # (iface reset, part = the reset root partition, pad_port = the as-built top port it carries)
+                    "properties": {"name": _name, "kind": {"enum": ["bump", "pad", "phy_macro", "die_root_pad"]},
+                                   "rect_um": _rect, "pad_port": _name,
                                    "sites": {"type": "integer", "minimum": 1}, "pitch_um": _pos, "layer": _layer,
                                    "part": _name, "ports": {"type": "array", "items": _name, "minItems": 1},
-                                   "iface": {"enum": ["serdes", "ucie", "hbm_phy", "host", "refclk", "other"]},
+                                   "iface": {"enum": ["serdes", "ucie", "hbm_phy", "host", "refclk", "reset", "other"]},
                                    "signals": {"type": "integer", "minimum": 1}, "host": {"enum": [True, False, "in_band"]},
                                    "host_route": {"type": "string"},
                                    "basis": {"type": "string"}, "note": {"type": "string"},
@@ -490,7 +507,7 @@ SCHEMA = {
                 "part_die_origin_um": {"type": "object", "additionalProperties": _xy},
                 "branch_ps_per_mm": _pos, "branch_leaf_um": _pos}}}},
         "reset": {"type": "object", "additionalProperties": False, "properties": {
-            "source": _end, "sync_stages": {"type": "integer", "minimum": 2},
+            "source": _reset_source, "sync_stages": {"type": "integer", "minimum": 2},
             "data_reset": {"const": False}, "epoch_bit": {"const": True},
             # OWNER RESET RULE 2026-10-24 (BRIEFING decision 2; tools/die_plan/reset_tree.py): "pipelined" = ONE root
             # synchroniser per die region, then synchronous relay flops every <= relay_um (405) with equal depth to every

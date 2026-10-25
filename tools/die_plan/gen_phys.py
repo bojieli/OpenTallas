@@ -569,6 +569,14 @@ def sdc(P, tn, pins):
     # delay to +IO_BUDGET x T, which waived the sender's half of the seam hold check (hold uncertainty counted 0.5x
     # at kit level).  0 = the neighbour's face flop holds at the budgeted insertion; tightening only.
     out += (f"set_output_delay -min {t_lib(hold_out_min_ps(P)):.4f} -clock vclk [all_outputs]\n")
+    import reset_tree as RT
+    fp = RT.pad_false_path_pins(P, tn)
+    if fp:
+        # PATH-KV-POR 10-25 (CLOCK-RESET amendment): the reset ROOT type of a die reset pad plan: arst_n IS the raw pad.
+        # Its only false paths end at the root synchroniser's async pin and the declared PLL analog pin; everything
+        # downstream (rst_por_n, the lock qualifier, the wavefront relays) is timed (recovery / removal, data).
+        out += ("# die reset pad (reset_tree.pad_false_path_pins): raw pad -> u_rst_root async + PLL analog pin only\n"
+                f"set_false_path -from [get_ports arst_n] -to [get_pins {{{' '.join(fp)}}}]\n")
     return out + (f"set_load {IO_LOAD_FF / LIB_CAP_UNIT_FF:g} [all_outputs]\n"
                   "set_driving_cell -lib_cell BUFx4_ASAP7_75t_R -pin Y $non_clk_in\n")
 

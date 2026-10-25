@@ -80,7 +80,7 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
         t = Path(f).read_text(errors="replace")
         mods = re.findall(r"^module\s+(\w+)", t, re.M)
         leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) -
-                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3"})
+                       {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate", "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"})
         cl, _ = E.closure(leafm, idx, prefer)
         for m in mods:
             byfile[m] = [f] + cells + [str(rs)] + cl

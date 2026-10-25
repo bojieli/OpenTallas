@@ -192,7 +192,8 @@ def _num(x, what):
 def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs, outputs,
          unc_setup_ps=60.0, unc_hold_ps=25.0, time_unit_ps=1.0, liberty_unit_ps=None,
          io_floor_ps=None, port_latency_ps=None, port_period_mult=None, insertion_ff_ps=None, straps=None,
-         hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None):
+         hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
+         reset_pad_pins=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -237,10 +238,25 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     if len(set(strap_l)) != len(strap_l):
         err.append("straps: duplicate names")
     strap_fp = set()
+    pad_l, pad_fp = list(reset_pad_pins or []), []
     for cmd in _split_cmds(text):
         try:
             w = _words(cmd)
             c = w[0]
+            if c == "set_false_path" and pad_l and "-to" in w:
+                # PATH-KV-POR 10-25: the reset ROOT type of a die reset pad plan -- exactly
+                # set_false_path -from [get_ports arst_n] -to [get_pins {<reset_pad_pins>}], nothing wider
+                ok = len(w) == 5 and w[1] == "-from" and w[3] == "-to"
+                if ok:
+                    k, ps = _eval_obj(ctx, w[2])
+                    a = _words(w[4][1:-1]) if w[4].startswith("[") else []
+                    pins = [x for y in a[1:] for x in (y[1:-1].split() if y.startswith("{") else [y])]
+                    ok = k == "ports" and ps == ["arst_n"] and a[:1] == ["get_pins"] and sorted(pins) == sorted(pad_l)
+                if not ok:
+                    err.append(f"reset pad: only 'set_false_path -from [get_ports arst_n] -to [get_pins {{{' '.join(pad_l)}}}]'"
+                               f" is allowed (fail-closed): {cmd}")
+                pad_fp.append(cmd)
+                continue
             if c == "set_false_path" and strap_l:
                 if len(w) != 3 or w[1] != "-from":
                     err.append(f"straps: only 'set_false_path -from [get_ports {{strap_*}}]' is allowed (fail-closed): {cmd}")
@@ -385,6 +401,8 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     for x in strap_l:
         if x not in strap_fp:
             err.append(f"straps: declared strap {x} has no set_false_path -from (quasi-static ID input)")
+    if pad_l and len(pad_fp) != 1:
+        err.append(f"reset pad: {len(pad_fp)} raw-pad false paths (want exactly one, to {pad_l})")
     for ck in refs:
         if ck not in ctx.clocks:
             err.append(f"clocks: -clock {ck} is not defined")
@@ -488,7 +506,8 @@ def kit_context(P, tn):
         outs.append(n)
         floor[n] = gen_phys.IO_BUDGET * per
     ib = gen_phys.insertion_binding(P, tn)
-    return dict(period_ps=per, insertion_ps=ib["tt"], insertion_ff_ps=ib["ff"],
+    pad = {"reset_pad_pins": RT.pad_false_path_pins(P, tn)} if RT.pad_false_path_pins(P, tn) else {}
+    return dict(**pad, period_ps=per, insertion_ps=ib["tt"], insertion_ff_ps=ib["ff"],
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,

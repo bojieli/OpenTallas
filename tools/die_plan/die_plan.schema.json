@@ -182,7 +182,8 @@
         "enum": [
          "bump",
          "pad",
-         "phy_macro"
+         "phy_macro",
+         "die_root_pad"
         ]
        },
        "rect_um": {
@@ -192,6 +193,10 @@
         },
         "minItems": 4,
         "maxItems": 4
+       },
+       "pad_port": {
+        "type": "string",
+        "minLength": 1
        },
        "sites": {
         "type": "integer",
@@ -224,6 +229,7 @@
          "hbm_phy",
          "host",
          "refclk",
+         "reset",
          "other"
         ]
        },
@@ -2284,6 +2290,63 @@
       "bus": {
        "type": "string",
        "minLength": 1
+      },
+      "pad": {
+       "type": "string",
+       "minLength": 1
+      },
+      "analog_loads": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "type": "object",
+        "required": [
+         "inst",
+         "pin"
+        ],
+        "additionalProperties": false,
+        "properties": {
+         "inst": {
+          "type": "string",
+          "minLength": 1
+         },
+         "pin": {
+          "type": "string",
+          "minLength": 1
+         },
+         "note": {
+          "type": "string"
+         }
+        }
+       }
+      },
+      "por_pins": {
+       "type": "string"
+      },
+      "lock": {
+       "type": "object",
+       "required": [
+        "inst",
+        "pin"
+       ],
+       "additionalProperties": false,
+       "properties": {
+        "inst": {
+         "type": "string",
+         "minLength": 1
+        },
+        "pin": {
+         "type": "string",
+         "minLength": 1
+        },
+        "stable_cycles": {
+         "type": "integer",
+         "minimum": 1
+        }
+       }
+      },
+      "note": {
+       "type": "string"
       }
      }
     },

@@ -120,6 +120,31 @@ endmodule
 module ot_dp_rgate (input wire clk, input wire d, input wire run, output reg q);
     always @(posedge clk) q <= d & run;
 endmodule
+// ot_dp_lockq: PLL lock qualification of the die ROOT reset release (PATH-KV-POR 10-25, CLOCK-RESET amendment A).
+// d = the root synchroniser output (synchronous, active low); locked = the PLL lock flag (analog status, asynchronous):
+// own 2-flop synchroniser + STABLE consecutive synchronised-locked cycles, then a STICKY qualifier flop
+// q <= d & (q | stable): the root releases synchronously after sync(por) AND lock-stable; a later loss of lock never
+// re-asserts the die reset (HOST status).  No combinational path from locked (or the pad) into any reset; every flop
+// is cleared synchronously by d.  Release = STABLE + 3 clocks after d (lock already steady).
+(* keep_hierarchy, keep *)
+module ot_dp_lockq #(parameter integer STABLE = 16) (input wire clk, input wire d, input wire locked, output reg q);
+    localparam integer CW = $clog2(STABLE + 1);
+    (* async_reg = "true" *) reg [1:0] ls;
+    reg [CW-1:0] cnt;
+    wire stable = (cnt == STABLE);
+    always @(posedge clk) begin
+        if (!d) begin
+            ls <= 2'b00;
+            cnt <= {CW{1'b0}};
+            q <= 1'b0;
+        end else begin
+            ls <= {ls[0], locked};
+            if (!ls[1]) cnt <= {CW{1'b0}};
+            else if (!stable) cnt <= cnt + 1'b1;
+            q <= q | stable;
+        end
+    end
+endmodule
 `default_nettype wire
 """
 
