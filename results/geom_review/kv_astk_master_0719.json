@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-COND",
+  "stage": "placed review clears clock probe, not detailed route",
+  "image": "results/geom_review/kv_astk_master_0719.png",
+  "kit": "epyc1:/srv/opentallas-scratch2/claude/kv-cores-1025r/astk/M/kv3_astk__190.08x181.44",
+  "findings": [
+    "49% fill,max10um bin0.69,zero>.8,no macros/walls/slivers",
+    "Boundary capture/launch bands line faces, body has open local channels",
+    "All24955 synthesized registers have <=64 data loads, fixing prior2048load merged-select cause",
+    "Master LEC28432/28432 and all4corner lockstep passes",
+    "Before detailed route require actual per-corner clock/hold, control-to-AP physical path measurement, and current oriented parent pinmap"
+  ],
+  "added_cycles": 0
+}
