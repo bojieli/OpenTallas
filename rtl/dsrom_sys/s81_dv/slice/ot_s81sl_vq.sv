@@ -46,7 +46,7 @@ module ot_s81sl_vq #(
     output reg           xf_v,
     output reg           xf_s,
     output reg  [275:0]  xf,
-    output reg           fault
+    (* keep *) output reg fault          // keep: never merged with its internal copy fault_s
 );
     wire [1:0] rsv;
     ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
@@ -78,8 +78,27 @@ module ot_s81sl_vq #(
     wire sv_ = yv_c | uv_c; wire [2:0] si_ = yv_c ? yi_c : ui_c; wire [255:0] sd_ = yv_c ? y_c : u_c;
     // block assembly: 4 sub-beats of 8 FP32 words -> 32 words; BF16 copy of all 64
     reg [1023:0] blk; reg bv, bbk; reg [2:0] nexp; reg ord_f;
-    reg [1023:0] bf;
     integer l, j;
+    reg [1023:0] bf;
+    // S81-CORES2/RV (2026-10-25, GEOM PASS-COND 04:45; f5b TT -58.8/298 = yv_c -> bf load-enable broadcast over the
+    // whole 1024-flop bf array): the bf load is registered once more, from the pin flops: 8 per-group load enables
+    // bf_en[j] = (sv_ && si_ == j) (distinct functions, one 128-flop group each, placed with its group) and the BF16 half
+    // of sd_ (bf_d, 128 b), so no pin flop fans out into bf and each enable flop drives 128 loads.  bf is loaded one edge
+    // later than in the closed RTL; it is read only while the vector's XB beat is sent (>= 18 + 20 edges after the last
+    // sub-beat, the next vector's sub-beats come after that send), so xf / fault are cycle-identical
+    // (tools/s81_slice/vq_pinreg_eq.sh vs b6d9d4515; mutant OT_VQ_MUT_BFQ must FAIL).  Pin flops keep one load per pin.
+    reg [7:0] bf_en; reg [127:0] bf_d; integer jb, lb, jw;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) bf_en <= 8'd0;
+        else for (jb = 0; jb < 8; jb = jb + 1)
+`ifdef OT_VQ_MUT_BFQ
+            bf_en[jb] <= sv_ && si_ == (jb ^ 1);      // mutant: groups steered to the wrong slot (must FAIL)
+`else
+            bf_en[jb] <= sv_ && si_ == jb;
+`endif
+    always @(posedge clk) for (lb = 0; lb < 8; lb = lb + 1) bf_d[lb * 16 +: 16] <= sd_[lb * 32 + 16 +: 16];
+    always @(posedge clk)
+        for (jw = 0; jw < 8; jw = jw + 1) if (bf_en[jw]) bf[128 * jw +: 128] <= bf_d;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin bv <= 1'b0; nexp <= 3'd0; ord_f <= 1'b0; end
         else begin
@@ -90,7 +109,6 @@ module ot_s81sl_vq #(
     always @(posedge clk)
         if (sv_) begin
             for (j = 0; j < 4; j = j + 1) if (si_[1:0] == j) blk[256 * j +: 256] <= sd_;
-            for (j = 0; j < 8; j = j + 1) if (si_ == j) for (l = 0; l < 8; l = l + 1) bf[(8 * j + l) * 16 +: 16] <= sd_[l * 32 + 16 +: 16];
         end
     // the quantiser registers x itself (aq12 S0): blk feeds it directly; bv is high in the cycle after the block's last
     // sub-beat was written, so aq12 samples the complete block (the next sub-beat lands on the same edge)
@@ -158,14 +176,18 @@ module ot_s81sl_vq #(
     wire [7:0] gidx = mi;                                            // the vector's global beat index (command)
     // the beat being sent: header {idx, src sid, hops 1, kind, v} + payload
     assign xb_full = (st >= 6'd20) ? {59'd0, bf, gidx, sid_c, 5'd1, 3'd2, 1'b1} : {551'd0, xqd, gidx, sid_c, 5'd1, 3'd1, 1'b1};
+    // S81-CORES2/RV: the sticky term feeds back from an internal copy (fault_s), so the fault output flop drives only
+    // its port (face_guard: one load per output pin flop); same value every edge.
+    (* keep *) reg fault_s;
+    wire fault_n = fault_s | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);
     always @(posedge clk or negedge rs_q)
-        if (!rs_q) begin run <= 1'b0; st <= 6'd0; xf_v <= 1'b0; xf_s <= 1'b0; fault <= 1'b0; end
+        if (!rs_q) begin run <= 1'b0; st <= 6'd0; xf_v <= 1'b0; xf_s <= 1'b0; fault <= 1'b0; fault_s <= 1'b0; end
         else begin
             if (vo && blo) begin run <= 1'b1; st <= 6'd0; end
             else if (run) begin st <= st + 6'd1; if (st == 6'd39) run <= 1'b0; end
             xf_v <= run && ((mq && st[5:2] == {1'b0, k_c}) || (mb && st[5:2] == 4'd5 + {1'b0, k_c}));
             xf_s <= run && ((mq && st == {1'b0, k_c, 2'b00}) || (mb && st == 6'd20 + {1'b0, k_c, 2'b00}));
-            fault <= fault | (vo && af) | ord_f | mcol | (mv_c && umv_c) | (yv_c && uv_c) | (vo && blo && run);
+            fault <= fault_n; fault_s <= fault_n;
         end
     always @(posedge clk) begin
         if (vo && !blo) begin q0 <= q; e0 <= e; end
