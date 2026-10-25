@@ -271,6 +271,7 @@ def main():
     ap.add_argument("--hard-children", help="JSON {children: {master: view_dir}, blocks: [{inst, master, x, y, orient}]}: "
                     "macro-composed core (owner 10-11 top-down hierarchy): children are signed hard views, blackboxed in "
                     "synthesis and placed FIRM at the planned sites (MACRO_PLACEMENT_TCL)")
+    ap.add_argument("--astk-timing-regs", action="store_true", help="ASTK zn 8 read-address replicas + ctl next-state slot/z_k decode registers (0 cycles; miter results/astk_timing_1025)")
     ap.add_argument("--util", type=float, default=0.6)
     ap.add_argument("--sigmax", default="M5")
     a = ap.parse_args()
@@ -330,6 +331,13 @@ def main():
         # from the liberty, the models are not synthesisable input
         if not f.endswith((".svh", ".vh")) and not re.match(r"asap7sc7p5t_.*\.v$", dst.name):
             srcs.append(f"/work/rtl/{dst.name}")
+    if a.astk_timing_regs:
+        if not mod.startswith("kv3_astk_"):
+            raise SystemExit("--astk-timing-regs only applies to kv3_astk_* cores")
+        from astk_timing_regs import apply_kit
+        apply_kit(kd / "rtl")
+        (kd / "astk_timing_delta.json").write_text(json.dumps(dict(added_cycles=0, zn_read_replicas=8, zn_added_ff_per_z=40,
+            ctl_added_ff=22, miter="results/astk_timing_1025 nominal PASS / mutant FAIL"), indent=1) + "\n")
     if a.ectlk_three_taps:
         (kd / "ectlk_clock_delta.json").write_text(json.dumps(dict(
             source_ports=["ck[0]", "ck[1]", "ck[2]"], related_clock="one die clock, all edges co-timed",
