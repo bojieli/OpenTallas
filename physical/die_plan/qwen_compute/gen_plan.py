@@ -1863,6 +1863,76 @@ def align_slice_transits(P, facepairs, lanes, ports):
           f"{len(kept)} faces kept packed (no aligned fit): {kept}", file=sys.stderr)
 
 
+
+# PATH-QC-PLAN-D3 10-25 (G2 sle_ctl cws2 405.85 um, slw_st_a_v2 cws0 406.67 um at actual post-DPL station centres): an
+# N<->S feedthrough of a coreless slice partition took the WHOLE column jog between its packed N and S windows (sl_W5_ctl
+# cws2: hc2 x 3100 -> sc x 2848 = 252 um in ctl; sl_W5_st_a cws0 zig-zagged hc0 x 1865 -> fw x 1612 -> su_l1 channel
+# x 2045), so L/k sat at 401.9 um / 4 stations and the 517-bit station rows had ~3 um left for the D/Q offsets and the
+# row legalisation.  Rule: when a straight N<->S transit's hop L/k is within NS_TIGHT_UM of ST_LEN, the window on the
+# face it shares with the NEXT straight transit partition (not an SU face: those are laid by su free spans) is re-laid
+# at the midpoint of the two partitions' far windows, so both partitions share the jog (the station count of neither
+# grows, no cycle changes); other windows on that face keep their packed centres as targets (_lay_aligned legaliser).
+NS_BALANCE = __import__("os").environ.get("QC_NS_BALANCE", "1") == "1"
+NS_TIGHT_UM = 8.0
+
+
+def balance_ns_transits(P, facepairs, lanes, ports):
+    if not NS_BALANCE:
+        return
+    pmap = {pr["id"]: pr for pr in ports}
+
+    def face_of(pr, x):
+        return pr["face"] if pr["src"]["part"] == x else OPP[pr["face"]]
+
+    def centre(pr):
+        return sum(pr["window_um"]) / 2
+
+    def plain(n):
+        return n.startswith("sl_") and n.split("_", 2)[2] not in ("su_l0", "su_l1", "su_c") and not su_core_rects(P, n)
+
+    def hop(part, ca, cb):
+        X0, Y0, X1, Y1 = P.rect(part)
+        L = abs(ca - cb) + (Y1 - Y0)
+        return L / max(1, math.ceil(L / ST_LEN))
+
+    moves = {}
+    for ln in lanes:
+        ids = ln["ports"]
+        for j in range(1, len(ids) - 1):
+            pa, pb = pmap[ids[j - 1]], pmap[ids[j]]
+            part = pb["src"]["part"]
+            if not plain(part) or {face_of(pa, part), face_of(pb, part)} != {"N", "S"}:
+                continue
+            h = hop(part, centre(pa), centre(pb))
+            if h <= ST_LEN - NS_TIGHT_UM or j + 1 >= len(ids):
+                continue
+            pc, nb = pmap[ids[j + 1]], pb["dst"]["part"]
+            if not plain(nb) or {face_of(pb, nb), face_of(pc, nb)} != {"N", "S"}:
+                print(f"balance_ns_transits: {pb['id']} tight {h:.1f} um, next partition {nb} is not a plain transit",
+                      file=sys.stderr)
+                continue
+            t = (centre(pa) + centre(pc)) / 2
+            if hop(nb, t, centre(pc)) > ST_LEN - NS_TIGHT_UM:
+                print(f"balance_ns_transits: {pb['id']} tight {h:.1f} um, {nb} has no slack", file=sys.stderr)
+                continue
+            key = (part, nb) if part < nb else (nb, part)
+            moves.setdefault(key, {})[pb["id"]] = (t, part, nb, ids[j - 1], ids[j + 1], h)
+    for key, mv in sorted(moves.items()):
+        prs = facepairs[key]
+        tg = {pr["id"]: (mv[pr["id"]][0] if pr["id"] in mv else centre(pr), 0) for pr in prs}
+        before = {pr["id"]: list(pr["window_um"]) for pr in prs}
+        if not _lay_aligned(P, *key, prs, tg):
+            for pr in prs:
+                pr["window_um"] = before[pr["id"]]
+            print(f"balance_ns_transits: face {key[0]}|{key[1]} no aligned fit, kept packed", file=sys.stderr)
+            continue
+        for pid, (t, part, nb, ida, idc, h) in mv.items():
+            c = centre(pmap[pid])
+            print(f"balance_ns_transits: {pid} {part} hop {h:.1f} -> {hop(part, centre(pmap[ida]), c):.1f} um, "
+                  f"{nb} {hop(nb, c, centre(pmap[idc])):.1f} um (window centre {sum(before[pid]) / 2:.1f} -> {c:.1f})",
+                  file=sys.stderr)
+
+
 # PATH-QC-PLAN3 10-25 (G2 slw_su_l1 rsn 6701 / cws0 3313 gcells, slw_su_l0 2,820): a SU partition's N/S face windows
 # sat over its hard cores (su_l1 S cws0/rsf/rsn x 4-273 over u_lane4 x 17-432; core OBS M1-M5, so the M5 pins and every
 # turn had only M6/M7).  Top-down rule: the N/S faces of su_l0 / su_l1 / su_c are cut into macro-free spans (x not under
@@ -2121,6 +2191,7 @@ def materialize(P):
         del ref_lo, ref_hi
     align_coll_ft(P, facepairs, lanes, ports)
     align_slice_transits(P, facepairs, lanes, ports)
+    balance_ns_transits(P, facepairs, lanes, ports)
     pmap = {pr["id"]: pr for pr in ports}
     for ln in lanes:
         for a, b in zip(ln["ports"], ln["ports"][1:]):
