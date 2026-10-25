@@ -1,0 +1,70 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/pg_mixed.lef, created 1 library cells
+[WARNING ORD-2011] LEF master pg_mixed has no liberty cell.
+[INFO IFP-0001] Added 1280 rows of 6400 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 345.600 345.600 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 345.600 345.600 ) um
+[INFO IFP-0102] Core area:                       119439.360 um^2
+[INFO IFP-0103] Total instances area:            119439.360 um^2
+[INFO IFP-0104] Effective utilization:                1.000
+[INFO IFP-0105] Number of instances:                      1
+[INFO PDN-0001] Inserting grid: ot_pg_0
+[INFO PDN-0001] Inserting grid: ot_pg_1
+[INFO PDN-0001] Inserting grid: ot_pg_2
+[INFO PDN-0001] Inserting grid: ot_pg_3
+[INFO PDN-0001] Inserting grid: ot_pg_4
+[INFO PDN-0500] Runtime: 0.04s
+/usr/include/c++/11/bits/stl_vector.h:1045: std::vector<_Tp, _Alloc>::reference std::vector<_Tp, _Alloc>::operator[](std::vector<_Tp, _Alloc>::size_type) [with _Tp = std::vector<odb::dbITerm*>; _Alloc = std::allocator<std::vector<odb::dbITerm*> >; std::vector<_Tp, _Alloc>::reference = std::vector<odb::dbITerm*>&; std::vector<_Tp, _Alloc>::size_type = long unsigned int]: Assertion '__n < this->size()' failed.
+Signal 6 received
+Stack trace:
+ 0# 0x0000000000F1C787 in openroad
+ 1# 0x0000000000042520 in /lib/x86_64-linux-gnu/libc.so.6
+ 2# pthread_kill in /lib/x86_64-linux-gnu/libc.so.6
+ 3# raise in /lib/x86_64-linux-gnu/libc.so.6
+ 4# abort in /lib/x86_64-linux-gnu/libc.so.6
+ 5# 0x0000000000F13078 in openroad
+ 6# pdn::SRoute::addSrouteInst(odb::dbNet*, odb::dbInst*, char const*, std::vector<odb::dbSBox*, std::allocator<odb::dbSBox*> > const&) in openroad
+ 7# pdn::SRoute::createSrouteWires(char const*, char const*, odb::dbTechLayer*, odb::dbTechLayer*, int, int, std::vector<odb::dbTechViaGenerateRule*, std::allocator<odb::dbTechViaGenerateRule*> > const&, std::vector<odb::dbTechVia*, std::allocator<odb::dbTechVia*> > const&, int, int, std::vector<odb::dbTechLayer*, std::allocator<odb::dbTechLayer*> > const&, std::vector<int, std::allocator<int> > const&, std::vector<int, std::allocator<int> > const&, std::vector<odb::dbInst*, std::allocator<odb::dbInst*> > const&) in openroad
+ 8# 0x00000000016A8007 in openroad
+ 9# TclNRRunCallbacks in /lib/x86_64-linux-gnu/libtcl8.6.so
+10# 0x000000000003E028 in /lib/x86_64-linux-gnu/libtcl8.6.so
+11# Tcl_EvalEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+12# Tcl_Eval in /lib/x86_64-linux-gnu/libtcl8.6.so
+13# sta::sourceTclFile(char const*, bool, bool, Tcl_Interp*) in openroad
+14# 0x0000000003E22810 in openroad
+15# ord::tclAppInit(Tcl_Interp*) in openroad
+16# Tcl_MainEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+17# main in openroad
+18# 0x0000000000029D90 in /lib/x86_64-linux-gnu/libc.so.6
+19# __libc_start_main in /lib/x86_64-linux-gnu/libc.so.6
+20# _start in openroad
+Command terminated by signal 6
+	Command being timed: "openroad -no_init -threads 4 -exit /work/smoke.tcl"
+	User time (seconds): 0.21
+	System time (seconds): 0.04
+	Percent of CPU this job got: 56%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.46
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 103868
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 5
+	Minor (reclaiming a frame) page faults: 12298
+	Voluntary context switches: 17
+	Involuntary context switches: 2
+	Swaps: 0
+	File system inputs: 632
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
