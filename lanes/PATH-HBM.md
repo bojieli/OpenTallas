@@ -7,13 +7,13 @@ routed + signed off (TT setup / FF hold) + bound in the die + token test exercis
 ## Items (2026-10-25 08:09 PDT)  state legend: OPEN / WIP / PASS(gate) / SIGNED
 | # | item | state |
 |---|------|-------|
-| P1 | NW_hub (q_hub) TKM ingress source cores (u_hb_coll_Q_body/reduce/ring_ag etc. driving tkx_*) | BLOCKED: plan_direct3 NW_hub uses q2 ot_hfd_coll_q2_hard_v8g (SOLO=0: tkx_* driven 0, tkx_w*/busy/done/fault tied 0; split cores have NO tkx pins). Needs NW-only q3 type ot_hfd_coll_q3_hard_v8x (make_wiring.py W-EP, 'plan change owed'), its split (q2 already 465k) + kits. UNOWNED |
+| P1 | NW_hub (q_hub) TKM ingress source cores | BLOCKED on plan: needs q3 type q_hub_nw + NE NLINK2 re-split (OWNER?/COORD). q3 split built claude/path-hbm-q3-1025@94d0f65260 (body 229k/edge 82k/vm 73k/ring_ag 148k/reduce 130k); lockstep not run (Verilator C++ OOM); edge 44 cut bits unregistered (_pr twins owed) |
 | P2 | L74 NW_hub->root direct 2341 b, 2 cycles (plan_direct3 ecfb97d718) | PASS(cut 0.5968) analytic only; no G0/G0C on full plan, not on main |
 | P3 | L12 CTL / L13 DATA root->NW_hub direct 2 cycles each | PASS(cut) analytic only, same plan |
-| P4 | TKM root core u_tkm_SW_root (319.68x345.6, 3575 pins) | kit d944a428 synth+bench PASS; pins must change (P6); no P&R |
-| P5 | common TKM tile core (x32, tile_tid ID pin, owner decision B) | gen PASS 3387725, synth DONE, LEC UNPROVEN 689 pts (ovf_b/up_out); pins must change (P6); no P&R |
-| P6 | root<->tile0 + tile<->tile chain seam geometry | FAIL: up_out max 511 um, 75 b >405; and the 32 tiles are scattered (tile0 y518 -> tile1 y4735) |
-| P7 | tile_clk / clr / conv distribution (32 tiles, die-spine taps, static equal-latency broadcast) | OPEN |
+| P4 | TKM root core u_tkm_SW_root | kit 3c4973478cc5 (pins af59c2f2, cb21) FAIL_PREFLOOR LEC NOT EQUIV 1714 pts on merged flop u_x._67521_ (triage TOK-LEC) |
+| P5 | common TKM tile (x31) + terminal tile31 | leaf kit 1eb9610d674a (pins d9fa5aa8, new lanes) synth 26.8k um2, port-bind PASS; in-kit LEC 720 merged-reg pts -> FAIL_PREFLOOR (tool gap: TOK-LEC proved old RTL EQUIV with 360 merge hypotheses + 32/32 ID straps); terminal kit not generated |
+| P6 | root<->tile0 + tile chain seam | GEOM PASS-COND (snake + straight-through template, worst hop 345.6 um, 0 >405); lattice-snapped tables d9fa5aa8/af59c2f2 |
+| P7 | tile_clk / clr / conv | designed: conv = D21 relay root->tile31 + in-tile up wire (2 edges/hop); clr systolic down 1 flop/hop; tile_clk density taps; CTS hop table owed |
 | P8 | root partition (soft glue + stations) and NW_hub partition route/sign-off for path nets | OPEN |
 | P9 | die bind of the path (plan on main, raw bind, port-bind 0 errors) | OPEN |
 | P11 | SM/matvec leg: one SM half hnx_rp3lp3h_n (+ its _s pair) of the NW quadrant whose output feeds hb_coll_NW (SM -> coll -> TKM) | OPEN: NW_sm0 u_sm_t07_n/_s (L67 -> NW_hub VM -> coll, static schedule). Flat half = 765k/754k cells > 400k cap -> cluster route (8 child types: xs3, smh_bdc, smh_tct, smh_tcl, tr_group) on flow f90c555daf; no cap exception |
@@ -22,7 +22,7 @@ routed + signed off (TT setup / FF hold) + bound in the die + token test exercis
 | D3 | clock die root -> path flops (regional taps, related-pair skew + CPPR) incl. 32 tile_clk taps | OPEN (plan4 tile_clk data-station bug fixed in 7ff73a8320, not yet regenerated) |
 | D4 | reset + START broadcast (decision 13c) to path cores | OPEN (HBM plans still reset.release counted) |
 | D5 | long-reach L74 seam crossing NW_hub->root (and inside root to the TKM root core del_flit face) | OPEN (partition cut PASS only) |
-| P10 | token: TKM path test with face_shell wrappers instantiated, >=2 tile IDs, L74/L12/L13 final cycles | WIP: r3 baseline (no shells) live intel1 unit 2167534 |
+| P10 | token TKM path test (face shells, >=2 IDs) | r5 LIVE intel1 unit oth-ubuntu-2894588-1792944455 (claude/path-hbm-tok-1025@cb962ca41b, ft21); collect: grep TKM_L74|CAUGHT r5kit/r5.otrun.log (need 3 PASS + 4 mutants CAUGHT) |
 
 Signed off: 0 of 16.
 
@@ -90,3 +90,15 @@ OWNER?/COORD: who owns the NW-only q3 hub type + split (HBM-PLAN/B2o delta + HBM
 2026-10-25 09:55 PDT PATH-HBM/Q3: port_regclass: body_core + vm_core all cut bits registered; edge_core 44 cut input bits captured through logic (arg_mode/arg_in_slot/arg_in_v, link*_epoch_begin/epoch_new/held_epoch) -> OWED _pr input-reg twins (+1 edge, COLL compiler constant).
 2026-10-25 09:55 PDT PATH-HBM/Q3: lockstep OWED (PARKED): asm3+tb3 Verilator front-end done (epyc3 /srv/opentallas-scratch2/claude/path-hbm/q3split/obj_a3, 48 vm_classes), but cc1plus >13 GB/unit: OOM at -P20/240G and -P48/640G. Next: re-verilate with --output-split smaller/-fno-inline or -P~12 --mem 200 over ~hours, then ./run_ls.sh a3 2000 (4 pos + 5 mutants).
 2026-10-25 10:03 PDT GEOM-REVIEW-2 -> PATH-HBM: root_cb21 1d7cc749d634 FAIL_PREFLOOR LEC NOT EQUIVALENT is a netlist fault (merged flop). Fix in RTL/synth, rerun LEC and re-kit. Geometry stays under the 08:20 PASS-COND unless pins or the floorplan change.
+
+## PARKED 2026-10-25 10:03 PDT (PATH-HBM lane)
+- Signed off: 0 of 16. Steps done: P6 seam GEOM PASS-COND; root and leaf kits regenerated on the current flow (RCX, density taps); 32/32 ID straps proven (TOK-LEC); q3 split under 260k per piece.
+- Branches: claude/hbm-tkm-lec-1025@6663387df2 (lec.py pairing + split-top lanes); claude/path-hbm-tok-1025@bea7c655f8 (TKM RTL HOP/FRT/CB, cb21 root, tile lanes, bench); claude/path-hbm-q3-1025@94d0f65260 (q3 split). None merged to main.
+- Live: P10 r5 token sim, intel1 unit oth-ubuntu-2894588-1792944455 (kit epyc1 path-hbm-tok/r5kit). Autopilot adopt rows 1d7cc749d634 (root) and d8e5ea0d9433 (leaf) both ended FAIL_PREFLOOR LEC; the autopilot handles the cleanup.
+- Data: epyc1:/srv/opentallas-scratch2/claude/path-hbm/{geom_chain1,kits_chain1,repin_chain1,leafgen.sh}; epyc3 .../path-hbm/q3split (obj_a3 kept).
+- NEXT 1 (critical path, LEC tool): add TOK-LEC's merge-hypothesis pairing (synth-merged self-holding regs X[0..3]->up_out, gt->q_bg) to tools/die_plan/lec.py, with a negative control. Rerun LEC on the existing leaf netlist kits_chain1/...__idpin/run (EQUIV expected), then launch leaf CTS via the autopilot (GEOM PASS-COND PATH-HBM-TKMCHAIN). Route needs the CTS hop table + tile_clk tap check.
+- NEXT 2: root LEC triage (u_x._67521_ = u.cells[0] dropped by synth plus X sources from the extracted rest RTL): real or X-don't-care?
+- NEXT 3: generate the terminal tile (tile31 __terminal_idpin) kit from the same pins.
+- NEXT 4: collect P10 r5, commit the logs, delete r5kit.
+- NEXT 5: q3 lockstep: Verilator --output-split smaller or 12 units at --mem 200; add the edge _pr twins.
+- OWNER?/COORD: (a) who owns plan type q_hub_nw + NE NLINK2 re-split (P1 blocks the whole path); (b) KITS lane for the 8 SM cluster child types (P11); (c) die items D1-D5 wait for a real-view plan carrying the snake placement (DELTA-REQ in COORD-REVIEW-QUEUE).
